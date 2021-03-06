@@ -5,11 +5,15 @@ import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import BaseController from './BaseController';
 import { ServiceError } from 'exceptions';
 import ExchangeRatesService from 'services/ExchangeRates/ExchangeRatesService';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 
 @Service()
 export default class ExchangeRatesController extends BaseController {
   @Inject()
   exchangeRatesService: ExchangeRatesService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   /**
    * Constructor method.
@@ -22,7 +26,8 @@ export default class ExchangeRatesController extends BaseController {
       [...this.exchangeRatesListSchema],
       this.validationResult,
       asyncMiddleware(this.exchangeRates.bind(this)),
-      this.handleServiceError
+      this.dynamicListService.handlerErrorsToResponse,
+      this.handleServiceError,
     );
     router.post(
       '/',
@@ -59,6 +64,9 @@ export default class ExchangeRatesController extends BaseController {
     return [
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
+
+      query('column_sort_by').optional(),
+      query('sort_order').optional().isIn(['desc', 'asc']),
     ];
   }
 
@@ -96,8 +104,14 @@ export default class ExchangeRatesController extends BaseController {
     const filter = {
       page: 1,
       pageSize: 100,
-      ...req.query,
+      filterRoles: [],
+      columnSortBy: 'created_at',
+      sortOrder: 'asc',
+      ...this.matchedQueryData(req),
     };
+    if (filter.stringifiedFilterRoles) {
+      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
+    }
     try {
       const exchangeRates = await this.exchangeRatesService.listExchangeRates(
         tenantId,

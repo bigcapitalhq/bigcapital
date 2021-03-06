@@ -1,3 +1,4 @@
+import { IFilterRole } from './DynamicFilter';
 
 export interface IExchangeRate {
   id: number,
@@ -21,6 +22,9 @@ export interface IExchangeRateEditDTO {
 export interface IExchangeRateFilter {
   page: number,
   pageSize: number,
+  filterRoles?: IFilterRole[];
+  columnSortBy: string;
+  sortOrder: string;
 };
 
 export interface IExchangeRatesService {

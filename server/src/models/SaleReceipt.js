@@ -60,6 +60,13 @@ export default class SaleReceipt extends TenantModel {
       draft(query) {
         query.where('closed_at', null);
       },
+
+      /**
+       * Sorting the receipts order by status.
+       */
+      sortByStatus(query, order) {
+        query.orderByRaw(`CLOSED_AT IS NULL ${order}`);
+      }
     };
   }
 
@@ -196,6 +203,9 @@ export default class SaleReceipt extends TenantModel {
               break;
           }
         },
+        sortQuery(query, role) {
+          query.modify('sortByStatus', role.order);
+        }
       }
     };
   }

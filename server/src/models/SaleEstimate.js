@@ -125,6 +125,12 @@ export default class SaleEstimate extends TenantModel {
       approved(query) {
         query.whereNot('approved_at', null)
       },
+      /**
+       * Sorting the estimates orders by delivery status.
+       */
+      orderByDraft(query, order) {
+        query.orderByRaw(`delivered_at is null ${order}`)
+      }
     };
   }
 
@@ -238,6 +244,9 @@ export default class SaleEstimate extends TenantModel {
               query.modify('expired'); break;
           }
         },
+        sortQuery: (query, role) => {
+          query.modify('orderByDraft', role.order);
+        }
       },
       created_at: {
         label: 'Created at',

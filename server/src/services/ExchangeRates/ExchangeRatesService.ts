@@ -2,6 +2,7 @@ import moment from 'moment';
 import { difference } from 'lodash';
 import { Service, Inject } from 'typedi';
 import { ServiceError } from 'exceptions';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -31,6 +32,9 @@ export default class ExchangeRatesService implements IExchangeRatesService {
 
   @Inject()
   tenancy: TenancyService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   /**
    * Creates a new exchange rate.
@@ -116,10 +120,17 @@ export default class ExchangeRatesService implements IExchangeRatesService {
     exchangeRateFilter: IExchangeRateFilter
   ): Promise<void> {
     const { ExchangeRate } = this.tenancy.models(tenantId);
-    const exchangeRates = await ExchangeRate.query().pagination(
-      exchangeRateFilter.page - 1,
-      exchangeRateFilter.pageSize
+    const dynamicFilter = await this.dynamicListService.dynamicList(
+      tenantId,
+      ExchangeRate,
+      exchangeRateFilter
     );
+    // Retrieve exchange rates by the given query.
+    const exchangeRates = await ExchangeRate.query()
+      .onBuild((query) => {
+        dynamicFilter.buildQuery()(query);
+      })
+      .pagination(exchangeRateFilter.page - 1, exchangeRateFilter.pageSize);
 
     return exchangeRates;
   }

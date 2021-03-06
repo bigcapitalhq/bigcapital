@@ -16,4 +16,29 @@ export default class ExchangeRate extends TenantModel {
   get timestamps() {
     return ['createdAt', 'updatedAt'];
   }
+
+  /**
+   * Model defined fields.
+   */
+  static get fields(){
+    return {
+      currency_code: {
+        label: 'Currency',
+        column: 'currency_code'
+      },
+      exchange_rate: {
+        label: 'Exchange rate',
+        column: 'exchange_rate',
+      },
+      date: {
+        label: 'Date',
+        column: 'date',
+      },
+      created_at: {
+        label: "Created at",
+        column: "created_at",
+        columnType: "date",
+      },
+    }
+  }
 }

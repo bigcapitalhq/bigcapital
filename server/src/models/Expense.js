@@ -163,7 +163,7 @@ export default class Expense extends TenantModel {
       },
       published: {
         label: "Published",
-        column: "published",
+        column: "published_at",
       },
       created_at: {
         label: "Created at",

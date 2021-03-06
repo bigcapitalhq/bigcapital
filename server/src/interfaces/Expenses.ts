@@ -1,4 +1,5 @@
 import { ISystemUser } from './User';
+import { IFilterRole } from './DynamicFilter';
 
 export interface IPaginationMeta {
   total: number;
@@ -9,6 +10,9 @@ export interface IPaginationMeta {
 export interface IExpensesFilter {
   page: number;
   pageSize: number;
+  filterRoles?: IFilterRole[];
+  columnSortBy: string;
+  sortOrder: string;
 }
 
 export interface IExpense {
