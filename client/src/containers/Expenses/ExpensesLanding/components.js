@@ -158,6 +158,7 @@ export function useExpensesTableColumns() {
         accessor: ExpenseAccountAccessor,
         width: 160,
         className: 'expense_account',
+        disableSortBy: true,
       },
       {
         id: 'published',
@@ -170,9 +171,9 @@ export function useExpensesTableColumns() {
         id: 'description',
         Header: formatMessage({ id: 'description' }),
         accessor: DescriptionAccessor,
-        disableSorting: true,
         width: 150,
         className: 'description',
+        disableSortBy: true,
       },
       {
         id: 'actions',
