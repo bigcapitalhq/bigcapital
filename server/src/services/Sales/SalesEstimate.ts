@@ -19,6 +19,7 @@ import events from 'subscribers/events';
 import { ServiceError } from 'exceptions';
 import CustomersService from 'services/Contacts/CustomersService';
 import moment from 'moment';
+import AutoIncrementOrdersService from './AutoIncrementOrdersService';
 
 const ERRORS = {
   SALE_ESTIMATE_NOT_FOUND: 'SALE_ESTIMATE_NOT_FOUND',
@@ -30,6 +31,7 @@ const ERRORS = {
   SALE_ESTIMATE_ALREADY_REJECTED: 'SALE_ESTIMATE_ALREADY_REJECTED',
   SALE_ESTIMATE_ALREADY_APPROVED: 'SALE_ESTIMATE_ALREADY_APPROVED',
   SALE_ESTIMATE_NOT_DELIVERED: 'SALE_ESTIMATE_NOT_DELIVERED',
+  SALE_ESTIMATE_NO_IS_REQUIRED: 'SALE_ESTIMATE_NO_IS_REQUIRED'
 };
 
 /**
@@ -55,6 +57,9 @@ export default class SaleEstimateService {
 
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
+
+  @Inject()
+  autoIncrementOrdersService: AutoIncrementOrdersService;
 
   /**
    * Retrieve sale estimate or throw service error.
@@ -100,12 +105,55 @@ export default class SaleEstimateService {
 
   /**
    * Validates the given sale estimate not already converted to invoice.
-   * @param {ISaleEstimate} saleEstimate - 
+   * @param {ISaleEstimate} saleEstimate -
    */
   validateEstimateNotConverted(saleEstimate: ISaleEstimate) {
     if (saleEstimate.isConvertedToInvoice) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_CONVERTED_TO_INVOICE);
     }
+  }
+
+  /**
+   * Retrieve the next unique estimate number.
+   * @param  {number} tenantId - Tenant id.
+   * @return {string}
+   */
+  getNextEstimateNumber(tenantId: number): string {
+    return this.autoIncrementOrdersService.getNextTransactionNumber(
+      tenantId,
+      'sales_estimates'
+    );
+  }
+
+  /**
+   * Increment the estimate next number.
+   * @param {number} tenantId -
+   */
+  incrementNextEstimateNumber(tenantId: number) {
+    return this.autoIncrementOrdersService.incrementSettingsNextNumber(
+      tenantId,
+      'sales_estimates'
+    );
+  }
+
+  /**
+   * Retrieve estimate number to object model.
+   * @param {number} tenantId
+   * @param {ISaleEstimateDTO} saleEstimateDTO
+   * @param {ISaleEstimate} oldSaleEstimate
+   */
+  transformEstimateNumberToModel(
+    tenantId: number,
+    saleEstimateDTO: ISaleEstimateDTO,
+    oldSaleEstimate?: ISaleEstimate
+  ): string {
+    // Retreive the next invoice number.
+    const autoNextNumber = this.getNextEstimateNumber(tenantId);
+
+    if (saleEstimateDTO.estimateNumber) {
+      return saleEstimateDTO.estimateNumber;
+    }
+    return oldSaleEstimate ? oldSaleEstimate.estimateNumber : autoNextNumber;
   }
 
   /**
@@ -123,23 +171,40 @@ export default class SaleEstimateService {
     const { ItemEntry } = this.tenancy.models(tenantId);
     const amount = sumBy(estimateDTO.entries, (e) => ItemEntry.calcAmount(e));
 
+    // Retreive the next estimate number.
+    const estimateNumber = this.transformEstimateNumberToModel(
+      tenantId,
+      estimateDTO,
+      oldSaleEstimate
+    );
+
     return {
       amount,
       ...formatDateFields(omit(estimateDTO, ['delivered', 'entries']), [
         'estimateDate',
         'expirationDate',
       ]),
+      ...(estimateNumber ? { estimateNumber } : {}),
       entries: estimateDTO.entries.map((entry) => ({
         reference_type: 'SaleEstimate',
         ...omit(entry, ['total', 'amount', 'id']),
       })),
-
       // Avoid rewrite the deliver date in edit mode when already published.
       ...(estimateDTO.delivered &&
         !oldSaleEstimate?.deliveredAt && {
           deliveredAt: moment().toMySqlDateTime(),
         }),
     };
+  }
+  
+  /**
+   * Validate the sale estimate number require.
+   * @param {ISaleEstimate} saleInvoiceObj
+   */
+  validateEstimateNoRequire(saleInvoiceObj: ISaleEstimate) {
+    if (!saleInvoiceObj.estimateNumber) {
+      throw new ServiceError(ERRORS.SALE_ESTIMATE_NO_IS_REQUIRED);
+    }
   }
 
   /**
@@ -160,11 +225,14 @@ export default class SaleEstimateService {
     // Transform DTO object ot model object.
     const estimateObj = this.transformDTOToModel(tenantId, estimateDTO);
 
+    // Validate the sale estimate number require.
+    this.validateEstimateNoRequire(estimateObj);
+
     // Validate estimate number uniquiness on the storage.
-    if (estimateDTO.estimateNumber) {
+    if (estimateObj.estimateNumber) {
       await this.validateEstimateNumberExistance(
         tenantId,
-        estimateDTO.estimateNumber
+        estimateObj.estimateNumber
       );
     }
     // Retrieve the given customer or throw not found service error.
@@ -221,6 +289,9 @@ export default class SaleEstimateService {
       estimateDTO,
       oldSaleEstimate
     );
+    // Validate the sale estimate number require.
+    this.validateEstimateNoRequire(estimateObj);
+
     // Validate estimate number uniquiness on the storage.
     if (estimateDTO.estimateNumber) {
       await this.validateEstimateNumberExistance(

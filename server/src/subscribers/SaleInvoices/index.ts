@@ -50,17 +50,9 @@ export default class SaleInvoiceSubscriber {
   @On(events.saleInvoice.onCreated)
   public async handleInvoiceNextNumberIncrement({
     tenantId,
-    saleInvoiceId,
-    saleInvoice,
-    saleInvoiceDTO,
-    autoNextNumber,
   }) {
-    if (saleInvoiceDTO.invoiceNo || !autoNextNumber) return;
-
-    await this.saleInvoicesService.autoIncrementOrdersService.incrementSettingsNextNumber(
+    await this.saleInvoicesService.incrementNextInvoiceNumber(
       tenantId,
-      'sales_invoices',
-      autoNextNumber[1]
     );
   }
 }

@@ -130,9 +130,6 @@ export default class PaymentReceivesSubscriber {
     tenantId,
     paymentReceiveId,
   }) {
-    await this.settingsService.incrementNextNumber(tenantId, {
-      key: 'next_number',
-      group: 'payment_receives',
-    });
+    await this.paymentReceivesService.incrementNextPaymentReceiveNumber(tenantId);
   }
 }

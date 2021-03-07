@@ -1,4 +1,4 @@
-import { Service, Inject } from 'typedi';
+  import { Service, Inject } from 'typedi';
 import { Request, Response, Router, NextFunction } from 'express';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import BaseController from 'api/controllers/BaseController';

@@ -19,6 +19,7 @@ import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import { ItemEntry } from 'models';
 import InventoryService from 'services/Inventory/Inventory';
 import { ACCOUNT_PARENT_TYPE } from 'data/AccountTypes';
+import AutoIncrementOrdersService from './AutoIncrementOrdersService';
 
 const ERRORS = {
   SALE_RECEIPT_NOT_FOUND: 'SALE_RECEIPT_NOT_FOUND',
@@ -26,6 +27,7 @@ const ERRORS = {
   DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET: 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET',
   SALE_RECEIPT_NUMBER_NOT_UNIQUE: 'SALE_RECEIPT_NUMBER_NOT_UNIQUE',
   SALE_RECEIPT_IS_ALREADY_CLOSED: 'SALE_RECEIPT_IS_ALREADY_CLOSED',
+  SALE_RECEIPT_NO_IS_REQUIRED: 'SALE_RECEIPT_NO_IS_REQUIRED'
 };
 
 @Service()
@@ -50,6 +52,9 @@ export default class SalesReceiptService {
 
   @Inject('logger')
   logger: any;
+
+  @Inject()
+  autoIncrementOrdersService: AutoIncrementOrdersService;
 
   /**
    * Validate whether sale receipt exists on the storage.
@@ -131,17 +136,77 @@ export default class SalesReceiptService {
   }
 
   /**
+   * Validate the sale receipt number require.
+   * @param {ISaleReceipt} saleReceipt
+   */
+  validateReceiptNoRequire(saleReceipt: ISaleReceipt) {
+    if (!saleReceipt.receiptNumber) {
+      throw new ServiceError(ERRORS.SALE_RECEIPT_NO_IS_REQUIRED);
+    }
+  }
+
+  /**
+   * Retrieve the next unique receipt number.
+   * @param  {number} tenantId - Tenant id.
+   * @return {string}
+   */
+  getNextReceiptNumber(tenantId: number): string {
+    return this.autoIncrementOrdersService.getNextTransactionNumber(
+      tenantId,
+      'sales_receipts'
+    );
+  }
+
+  /**
+   * Increment the receipt next number.
+   * @param {number} tenantId -
+   */
+  incrementNextReceiptNumber(tenantId: number) {
+    return this.autoIncrementOrdersService.incrementSettingsNextNumber(
+      tenantId,
+      'sales_receipts'
+    );
+  }
+
+  /**
+   * Retrieve estimate number to object model.
+   * @param {number} tenantId
+   * @param {ISaleReceiptDTO} saleReceiptDTO - Sale receipt DTO.
+   * @param {ISaleReceipt} oldSaleReceipt - Old receipt model object.
+   */
+  transformReceiptNumberToModel(
+    tenantId: number,
+    saleReceiptDTO: ISaleReceiptDTO,
+    oldSaleReceipt?: ISaleReceipt
+  ): string {
+    // Retreive the next invoice number.
+    const autoNextNumber = this.getNextReceiptNumber(tenantId);
+
+    if (saleReceiptDTO.receiptNumber) {
+      return saleReceiptDTO.receiptNumber;
+    }
+    return oldSaleReceipt ? oldSaleReceipt.receiptNumber : autoNextNumber;
+  }
+
+  /**
    * Transform DTO object to model object.
    * @param {ISaleReceiptDTO} saleReceiptDTO -
    * @param {ISaleReceipt} oldSaleReceipt -
    * @returns {ISaleReceipt}
    */
   transformObjectDTOToModel(
+    tenantId: number,
     saleReceiptDTO: ISaleReceiptDTO,
     oldSaleReceipt?: ISaleReceipt
   ): ISaleReceipt {
     const amount = sumBy(saleReceiptDTO.entries, (e) =>
       ItemEntry.calcAmount(e)
+    );
+    // Retreive the receipt number.
+    const receiptNumber = this.transformReceiptNumberToModel(
+      tenantId,
+      saleReceiptDTO,
+      oldSaleReceipt
     );
 
     return {
@@ -149,6 +214,7 @@ export default class SalesReceiptService {
       ...formatDateFields(omit(saleReceiptDTO, ['closed', 'entries']), [
         'receiptDate',
       ]),
+      ...(receiptNumber ? { receiptNumber } : {}),
       // Avoid rewrite the deliver date in edit mode when already published.
       ...(saleReceiptDTO.closed &&
         !oldSaleReceipt?.closedAt && {
@@ -174,7 +240,12 @@ export default class SalesReceiptService {
     const { SaleReceipt } = this.tenancy.models(tenantId);
 
     // Transform sale receipt DTO to model.
-    const saleReceiptObj = this.transformObjectDTOToModel(saleReceiptDTO);
+    const saleReceiptObj = this.transformObjectDTOToModel(
+      tenantId,
+      saleReceiptDTO
+    );
+    // Validate receipt number is required.
+    this.validateReceiptNoRequire(saleReceiptObj);
 
     // Validate receipt deposit account existance and type.
     await this.validateReceiptDepositAccountExistance(
@@ -238,9 +309,13 @@ export default class SalesReceiptService {
     );
     // Transform sale receipt DTO to model.
     const saleReceiptObj = this.transformObjectDTOToModel(
+      tenantId,
       saleReceiptDTO,
       oldSaleReceipt
     );
+    // Validate receipt number is required.
+    this.validateReceiptNoRequire(saleReceiptObj);
+
     // Validate receipt deposit account existance and type.
     await this.validateReceiptDepositAccountExistance(
       tenantId,
@@ -309,7 +384,7 @@ export default class SalesReceiptService {
     await this.eventDispatcher.dispatch(events.saleReceipt.onDeleted, {
       tenantId,
       saleReceiptId,
-      oldSaleReceipt
+      oldSaleReceipt,
     });
   }
 
@@ -463,7 +538,7 @@ export default class SalesReceiptService {
       'SaleReceipt',
       saleReceipt.receiptDate,
       'OUT',
-      override,
+      override
     );
   }
 

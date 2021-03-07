@@ -22,7 +22,8 @@ export interface ISaleReceiptDTO {
   depositAccountId: number;
   receiptDate: Date;
   sendToEmail: string;
-  referenceNo: string;
+  referenceNo?: string;
+  receiptNumber?: string,
   receiptMessage: string;
   statement: string;
   closed: boolean;
