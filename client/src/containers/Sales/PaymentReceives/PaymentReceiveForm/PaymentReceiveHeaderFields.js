@@ -18,6 +18,7 @@ import {
   safeSumBy,
   momentFormatter,
   tansformDateValue,
+  handleDateChange,
   inputIntent,
 } from 'utils';
 import {
@@ -78,10 +79,9 @@ function PaymentReceiveHeaderFields({
     setFieldValue('entries', newEntries);
   };
 
-
   // Handle click open payment receive number dialog.
   const handleClickOpenDialog = () => {
-    openDialog('payment-receive-number-form')
+    openDialog('payment-receive-number-form');
   };
 
   return (
@@ -129,7 +129,9 @@ function PaymentReceiveHeaderFields({
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
               value={tansformDateValue(value)}
-              // onChange={handleDateChange('payment_date')}
+              onChange={handleDateChange((formattedDate) => {
+                form.setFieldValue('payment_date', formattedDate);
+              })}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               inputProps={{
                 leftIcon: <Icon icon={'date-range'} />,
@@ -264,5 +266,5 @@ export default compose(
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
   })),
-  withDialogActions
+  withDialogActions,
 )(PaymentReceiveHeaderFields);
