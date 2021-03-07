@@ -10,7 +10,7 @@ export default function ({ children, isOpen, isClose, drawerProps }) {
       position={Position.RIGHT}
       canOutsideClickClose={true}
       canEscapeKeyClose={true}
-      size={'65%'}
+      size={'700px'}
       onClose={isClose}
       {...drawerProps}
     >
