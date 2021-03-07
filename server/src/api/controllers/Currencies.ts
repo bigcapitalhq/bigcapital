@@ -17,33 +17,32 @@ export default class CurrenciesController extends BaseController {
   router() {
     const router = Router();
 
-    router.get('/', [
-      ...this.listSchema,
-    ],
+    router.get(
+      '/',
+      [...this.listSchema],
       this.validationResult,
       asyncMiddleware(this.all.bind(this))
     );
-    router.post('/', [
-      ...this.currencyDTOSchemaValidation,
-    ],
+    router.post(
+      '/',
+      [...this.currencyDTOSchemaValidation],
       this.validationResult,
       asyncMiddleware(this.newCurrency.bind(this)),
-      this.handlerServiceError,
+      this.handlerServiceError
     );
-    router.post('/:id', [
-      ...this.currencyIdParamSchema,
-      ...this.currencyEditDTOSchemaValidation
-    ],
+    router.post(
+      '/:id',
+      [...this.currencyIdParamSchema, ...this.currencyEditDTOSchemaValidation],
       this.validationResult,
       asyncMiddleware(this.editCurrency.bind(this)),
-      this.handlerServiceError,
+      this.handlerServiceError
     );
-    router.delete('/:currency_code', [
-      ...this.currencyParamSchema,
-    ],
+    router.delete(
+      '/:currency_code',
+      [...this.currencyParamSchema],
       this.validationResult,
       asyncMiddleware(this.deleteCurrency.bind(this)),
-      this.handlerServiceError,
+      this.handlerServiceError
     );
     return router;
   }
@@ -56,21 +55,15 @@ export default class CurrenciesController extends BaseController {
   }
 
   get currencyEditDTOSchemaValidation(): ValidationChain[] {
-    return [
-      check('currency_name').exists().trim().escape(),
-    ];
+    return [check('currency_name').exists().trim().escape()];
   }
 
   get currencyIdParamSchema(): ValidationChain[] {
-    return [
-      param('id').exists().isNumeric().toInt(),
-    ];
+    return [param('id').exists().isNumeric().toInt()];
   }
- 
+
   get currencyParamSchema(): ValidationChain[] {
-    return [
-      param('currency_code').exists().trim().escape(),
-    ];
+    return [param('currency_code').exists().trim().escape()];
   }
 
   get listSchema(): ValidationChain[] {
@@ -82,16 +75,16 @@ export default class CurrenciesController extends BaseController {
 
   /**
    * Retrieve all registered currency details.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async all(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
 
     try {
       const currencies = await this.currenciesService.listCurrencies(tenantId);
-      return res.status(200).send({ currencies: [ ...currencies, ] });
+      return res.status(200).send({ currencies: [...currencies] });
     } catch (error) {
       next(error);
     }
@@ -99,9 +92,9 @@ export default class CurrenciesController extends BaseController {
 
   /**
    * Creates a new currency on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async newCurrency(req: Request, res: Response, next: Function) {
     const { tenantId } = req;
@@ -121,13 +114,13 @@ export default class CurrenciesController extends BaseController {
 
   /**
    * Edits details of the given currency.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async deleteCurrency(req: Request, res: Response, next: Function) {
     const { tenantId } = req;
-    const { currency_code: currencyCode } = req.params; 
+    const { currency_code: currencyCode } = req.params;
 
     try {
       await this.currenciesService.deleteCurrency(tenantId, currencyCode);
@@ -142,9 +135,9 @@ export default class CurrenciesController extends BaseController {
 
   /**
    * Deletes the currency.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async editCurrency(req: Request, res: Response, next: Function) {
     const { tenantId } = req;
@@ -152,7 +145,11 @@ export default class CurrenciesController extends BaseController {
     const { body: editCurrencyDTO } = req;
 
     try {
-      const currency = await this.currenciesService.editCurrency(tenantId, currencyId, editCurrencyDTO);
+      const currency = await this.currenciesService.editCurrency(
+        tenantId,
+        currencyId,
+        editCurrencyDTO
+      );
       return res.status(200).send({
         currency_code: currency.currencyCode,
         message: 'The currency has been edited successfully.',
@@ -164,24 +161,29 @@ export default class CurrenciesController extends BaseController {
 
   /**
    * Handles currencies service error.
-   * @param {Error} error 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Error} error
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  handlerServiceError(error: Error, req: Request, res: Response, next: NextFunction) {
+  handlerServiceError(
+    error: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'currency_not_found') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'CURRENCY_NOT_FOUND', code: 100, }],
+          errors: [{ type: 'CURRENCY_NOT_FOUND', code: 100 }],
         });
       }
       if (error.errorType === 'currency_code_exists') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'CURRENCY_CODE_EXISTS', code: 200, }],
+          errors: [{ type: 'CURRENCY_CODE_EXISTS', code: 200 }],
         });
       }
     }
     next(error);
   }
-};
+}

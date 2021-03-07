@@ -6,6 +6,7 @@ export interface ISaleEstimate {
   amount: number,
   customerId: number,
   estimateDate: Date,
+  estimateNumber: string,
   reference: string,
   note: string,
   termsConditions: string,
@@ -19,8 +20,8 @@ export interface ISaleEstimate {
 export interface ISaleEstimateDTO {
   customerId: number,
   estimateDate?: Date,
-  reference: string,
-  estimateNumber: string,
+  reference?: string,
+  estimateNumber?: string,
   entries: IItemEntry[],
   note: string,
   termsConditions: string,

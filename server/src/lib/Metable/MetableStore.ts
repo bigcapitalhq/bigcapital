@@ -1,13 +1,9 @@
 import { Model } from 'objection';
 import { omit, isEmpty } from 'lodash';
-import {
-  IMetadata,
-  IMetaQuery,
-  IMetableStore,
-} from 'interfaces';
+import { IMetadata, IMetaQuery, IMetableStore } from 'interfaces';
 import { itemsStartWith } from 'utils';
 
-export default class MetableStore implements IMetableStore{
+export default class MetableStore implements IMetableStore {
   metadata: IMetadata[];
   model: Model;
   extraColumns: string[];
@@ -31,18 +27,19 @@ export default class MetableStore implements IMetableStore{
 
   /**
    * Find the given metadata key.
-   * @param {string|IMetaQuery} query - 
-   * @returns {IMetadata} - Metadata object. 
+   * @param {string|IMetaQuery} query -
+   * @returns {IMetadata} - Metadata object.
    */
-  find(query: string|IMetaQuery): IMetadata {
+  find(query: string | IMetaQuery): IMetadata {
     const { key, value, ...extraColumns } = this.parseQuery(query);
 
     return this.metadata.find((meta: IMetadata) => {
       const isSameKey = meta.key === key;
-      const sameExtraColumns = this.extraColumns
-        .some((extraColumn: string) => extraColumns[extraColumn] === meta[extraColumn]);
+      const sameExtraColumns = this.extraColumns.some(
+        (extraColumn: string) => extraColumns[extraColumn] === meta[extraColumn]
+      );
 
-      const isSameExtraColumns = (sameExtraColumns || isEmpty(extraColumns));
+      const isSameExtraColumns = sameExtraColumns || isEmpty(extraColumns);
 
       return isSameKey && isSameExtraColumns;
     });
@@ -55,10 +52,9 @@ export default class MetableStore implements IMetableStore{
   all(): IMetadata[] {
     return this.metadata
       .filter((meta: IMetadata) => !meta._markAsDeleted)
-      .map((meta: IMetadata) => omit(
-        meta,
-        itemsStartWith(Object.keys(meta), '_')
-      ));
+      .map((meta: IMetadata) =>
+        omit(meta, itemsStartWith(Object.keys(meta), '_'))
+      );
   }
 
   /**
@@ -66,16 +62,20 @@ export default class MetableStore implements IMetableStore{
    * @param {String} key -
    * @param {Mixied} defaultValue -
    */
-  get(query: string|IMetaQuery, defaultValue: any): any|false {
+  get(query: string | IMetaQuery, defaultValue: any): any | false {
     const metadata = this.find(query);
-    return metadata ? metadata.value : defaultValue || false;
+    return metadata
+      ? metadata.value
+      : typeof defaultValue !== 'undefined'
+      ? defaultValue
+      : false;
   }
 
   /**
    * Markes the metadata to should be deleted.
    * @param {String} key -
    */
-  remove(query: string|IMetaQuery): void {
+  remove(query: string | IMetaQuery): void {
     const metadata: IMetadata = this.find(query);
 
     if (metadata) {
@@ -99,7 +99,7 @@ export default class MetableStore implements IMetableStore{
    * @param {String} key -
    * @param {String} value -
    */
-  set(query: IMetaQuery|IMetadata[]|string, metaValue?: any): void {
+  set(query: IMetaQuery | IMetadata[] | string, metaValue?: any): void {
     if (Array.isArray(query)) {
       const metadata = query;
 
@@ -127,10 +127,10 @@ export default class MetableStore implements IMetableStore{
 
   /**
    * Parses query query.
-   * @param query 
-   * @param value 
+   * @param query
+   * @param value
    */
-  parseQuery(query: string|IMetaQuery): IMetaQuery {
+  parseQuery(query: string | IMetaQuery): IMetaQuery {
     return typeof query !== 'object' ? { key: query } : { ...query };
   }
 
@@ -141,9 +141,9 @@ export default class MetableStore implements IMetableStore{
    * @return {string|number|boolean} -
    */
   static formatMetaValue(
-    value: string|boolean|number,
+    value: string | boolean | number,
     valueType: string
-  ) : string|number|boolean {
+  ): string | number | boolean {
     let parsedValue;
 
     switch (valueType) {
@@ -168,7 +168,9 @@ export default class MetableStore implements IMetableStore{
    * @param {Array} collection -
    */
   mapMetadataToCollection(metadata: IMetadata[], parseType: string = 'parse') {
-    return metadata.map((model) => this.mapMetadataToCollection(model, parseType));
+    return metadata.map((model) =>
+      this.mapMetadataToCollection(model, parseType)
+    );
   }
 
   /**
@@ -177,14 +179,16 @@ export default class MetableStore implements IMetableStore{
    */
   from(meta: []) {
     if (Array.isArray(meta)) {
-      meta.forEach((m) => { this.from(m); });
+      meta.forEach((m) => {
+        this.from(m);
+      });
       return;
     }
     this.metadata.push(meta);
   }
 
   /**
-   * 
+   *
    * @returns {array}
    */
   toArray(): IMetadata[] {
@@ -193,7 +197,7 @@ export default class MetableStore implements IMetableStore{
 
   /**
    * Static method to load metadata to the collection.
-   * @param {Array} meta 
+   * @param {Array} meta
    */
   static from(meta) {
     const collection = new MetableCollection();

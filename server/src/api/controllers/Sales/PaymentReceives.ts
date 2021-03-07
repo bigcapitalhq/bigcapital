@@ -444,6 +444,11 @@ export default class PaymentReceivesController extends BaseController {
           ],
         });
       }
+      if (error.errorType === 'PAYMENT_RECEIVE_NO_IS_REQUIRED') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'PAYMENT_RECEIVE_NO_IS_REQUIRED', code: 1100 }],
+        });
+      }
     }
     next(error);
   }

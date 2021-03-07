@@ -1,6 +1,6 @@
 import { Service, Inject } from 'typedi';
 import TenancyService from 'services/Tenancy/TenancyService';
-import { transactionIncrement } from 'utils';
+import { transactionIncrement, parseBoolean } from 'utils';
 
 /**
  * Auto increment orders service.
@@ -15,38 +15,18 @@ export default class AutoIncrementOrdersService {
    * @param {number} tenantId
    * @param {string} settingsGroup
    * @param {Function} getMaxTransactionNo
-   * @return {Promise<[string, string]>}
+   * @return {Promise<string>}
    */
-  async getNextTransactionNumber(
-    tenantId: number,
-    settingsGroup: string,
-    getOrderTransaction: (prefix: string, number: string) => Promise<boolean>,
-    getMaxTransactionNumber: (prefix: string, number: string) => Promise<string>
-  ): Promise<[string, string]> {
+  getNextTransactionNumber(tenantId: number, settingsGroup: string): string {
     const settings = this.tenancy.settings(tenantId);
     const group = settingsGroup;
 
     // Settings service transaction number and prefix.
-    const settingNo = settings.get({ group, key: 'next_number' });
-    const settingPrefix = settings.get({ group, key: 'number_prefix' });
+    const autoIncrement = settings.get({ group, key: 'auto_increment' }, false);
+    const settingNo = settings.get({ group, key: 'next_number' }, '');
+    const settingPrefix = settings.get({ group, key: 'number_prefix' }, '');
 
-    let nextInvoiceNumber = settingNo;
-
-    const orderTransaction = await getOrderTransaction(
-      settingPrefix,
-      settingNo
-    );
-    if (orderTransaction) {
-      // Retrieve the max invoice number in the given prefix.
-      const maxInvoiceNo = await getMaxTransactionNumber(
-        settingPrefix,
-        settingNo
-      );
-      if (maxInvoiceNo) {
-        nextInvoiceNumber = transactionIncrement(maxInvoiceNo);
-      }
-    }
-    return [settingPrefix, nextInvoiceNumber];
+    return parseBoolean(autoIncrement, false) ? `${settingPrefix}${settingNo}` : '';
   }
 
   /**
@@ -55,16 +35,17 @@ export default class AutoIncrementOrdersService {
    * @param {string} orderGroup - Order group.
    * @param {string} orderNumber -Order number.
    */
-  async incrementSettingsNextNumber(
-    tenantId,
-    orderGroup: string,
-    orderNumber: string
-  ) {
+  async incrementSettingsNextNumber(tenantId: number, group: string) {
     const settings = this.tenancy.settings(tenantId);
+    const settingNo = settings.get({ group, key: 'next_number' });
+    const autoIncrement = settings.get({ group, key: 'auto_increment' });
+
+    // Can't continue if the auto-increment of the service was disabled.
+    if (!autoIncrement) return;
 
     settings.set(
-      { group: orderGroup, key: 'next_number' },
-      transactionIncrement(orderNumber)
+      { group, key: 'next_number' },
+      transactionIncrement(settingNo)
     );
     await settings.save();
   }

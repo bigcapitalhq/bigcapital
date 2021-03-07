@@ -101,7 +101,7 @@ export default class SalesEstimatesController extends BaseController {
       check('estimate_date').exists().isISO8601(),
       check('expiration_date').optional().isISO8601(),
       check('reference').optional(),
-      check('estimate_number').exists().trim().escape(),
+      check('estimate_number').optional().trim().escape(),
       check('delivered').default(false).isBoolean().toBoolean(),
 
       check('entries').exists().isArray({ min: 1 }),
@@ -399,6 +399,11 @@ export default class SalesEstimatesController extends BaseController {
       if (error.errorType === 'contact_not_found') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 1300 }],
+        });
+      }
+      if (error.errorType === 'SALE_ESTIMATE_NO_IS_REQUIRED') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SALE_ESTIMATE_NO_IS_REQUIRED', code: 1400 }],
         });
       }
     }

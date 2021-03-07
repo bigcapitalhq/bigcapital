@@ -31,6 +31,7 @@ import CustomersService from 'services/Contacts/CustomersService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import JournalCommands from 'services/Accounting/JournalCommands';
 import { ACCOUNT_PARENT_TYPE } from 'data/AccountTypes';
+import AutoIncrementOrdersService from './AutoIncrementOrdersService';
 
 const ERRORS = {
   PAYMENT_RECEIVE_NO_EXISTS: 'PAYMENT_RECEIVE_NO_EXISTS',
@@ -41,6 +42,7 @@ const ERRORS = {
   INVOICES_IDS_NOT_FOUND: 'INVOICES_IDS_NOT_FOUND',
   ENTRIES_IDS_NOT_EXISTS: 'ENTRIES_IDS_NOT_EXISTS',
   INVOICES_NOT_DELIVERED_YET: 'INVOICES_NOT_DELIVERED_YET',
+  PAYMENT_RECEIVE_NO_IS_REQUIRED: 'PAYMENT_RECEIVE_NO_IS_REQUIRED'
 };
 /**
  * Payment receive service.
@@ -65,6 +67,9 @@ export default class PaymentReceiveService {
 
   @Inject()
   dynamicListService: DynamicListingService;
+
+  @Inject()
+  autoIncrementOrdersService: AutoIncrementOrdersService;
 
   @Inject('logger')
   logger: any;
@@ -144,7 +149,8 @@ export default class PaymentReceiveService {
   /**
    * Validates the invoices IDs existance.
    * @param {number} tenantId -
-   * @param {} paymentReceiveEntries -
+   * @param {number} customerId -
+   * @param {IPaymentReceiveEntryDTO[]} paymentReceiveEntries -
    */
   async validateInvoicesIDsExistance(
     tenantId: number,
@@ -226,6 +232,61 @@ export default class PaymentReceiveService {
   }
 
   /**
+   * Retrieve the next unique payment receive number.
+   * @param  {number} tenantId - Tenant id.
+   * @return {string}
+   */
+  getNextPaymentReceiveNumber(tenantId: number): string {
+    return this.autoIncrementOrdersService.getNextTransactionNumber(
+      tenantId,
+      'payment_receives'
+    );
+  }
+
+  /**
+   * Increment the payment receive next number.
+   * @param {number} tenantId
+   */
+  incrementNextPaymentReceiveNumber(tenantId: number) {
+    return this.autoIncrementOrdersService.incrementSettingsNextNumber(
+      tenantId,
+      'payment_receives'
+    );
+  }
+
+  /**
+   * Validate the payment receive number require.
+   * @param {IPaymentReceive} paymentReceiveObj
+   */
+  validatePaymentReceiveNoRequire(paymentReceiveObj: IPaymentReceive) {
+    if (!paymentReceiveObj.paymentReceiveNo) {
+      throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NO_IS_REQUIRED);
+    }
+  }
+
+  /**
+   * Retrieve estimate number to object model.
+   * @param {number} tenantId
+   * @param {IPaymentReceiveCreateDTO | IPaymentReceiveEditDTO} paymentReceiveDTO - Payment receive DTO.
+   * @param {IPaymentReceive} oldPaymentReceive - Old payment model object.
+   */
+  transformPaymentNumberToModel(
+    tenantId: number,
+    paymentReceiveDTO: IPaymentReceiveCreateDTO | IPaymentReceiveEditDTO,
+    oldPaymentReceive?: IPaymentReceive
+  ): string {
+    // Retreive the next invoice number.
+    const autoNextNumber = this.getNextPaymentReceiveNumber(tenantId);
+
+    if (paymentReceiveDTO.paymentReceiveNo) {
+      return paymentReceiveDTO.paymentReceiveNo;
+    }
+    return oldPaymentReceive
+      ? oldPaymentReceive.paymentReceiveNo
+      : autoNextNumber;
+  }
+
+  /**
    * Validate the payment receive entries IDs existance.
    * @param {number} tenantId
    * @param {number} paymentReceiveId
@@ -246,13 +307,42 @@ export default class PaymentReceiveService {
       'payment_receive_id',
       paymentReceiveId
     );
-
     const storedEntriesIds = storedEntries.map((entry: any) => entry.id);
     const notFoundEntriesIds = difference(entriesIds, storedEntriesIds);
 
     if (notFoundEntriesIds.length > 0) {
       throw new ServiceError(ERRORS.ENTRIES_IDS_NOT_EXISTS);
     }
+  }
+
+  /**
+   * Transformes the create payment receive DTO to model object.
+   * @param {number} tenantId
+   * @param {IPaymentReceiveCreateDTO} paymentReceiveDTO
+   */
+  transformPaymentReceiveDTOToModel(
+    tenantId: number,
+    paymentReceiveDTO: IPaymentReceiveCreateDTO | IPaymentReceiveEditDTO,
+    oldPaymentReceive?: IPaymentReceive
+  ): IPaymentReceive {
+    const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
+
+    // Retrieve the next payment receive number.
+    const paymentReceiveNo = this.transformPaymentNumberToModel(
+      tenantId,
+      paymentReceiveDTO,
+      oldPaymentReceive
+    );
+    return {
+      amount: paymentAmount,
+      ...formatDateFields(omit(paymentReceiveDTO, ['entries']), [
+        'paymentDate',
+      ]),
+      ...(paymentReceiveNo ? { paymentReceiveNo } : {}),
+      entries: paymentReceiveDTO.entries.map((entry) => ({
+        ...omit(entry, ['id']),
+      })),
+    };
   }
 
   /**
@@ -268,34 +358,36 @@ export default class PaymentReceiveService {
     authorizedUser: ISystemUser
   ) {
     const { PaymentReceive } = this.tenancy.models(tenantId);
-    const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
+
+    // Transformes the payment receive DTO to model.
+    const paymentReceiveObj = this.transformPaymentReceiveDTOToModel(
+      tenantId,
+      paymentReceiveDTO
+    );
+    // Validate payment receive is required.
+    this.validatePaymentReceiveNoRequire(paymentReceiveObj);
 
     // Validate payment receive number uniquiness.
-    if (paymentReceiveDTO.paymentReceiveNo) {
-      await this.validatePaymentReceiveNoExistance(
-        tenantId,
-        paymentReceiveDTO.paymentReceiveNo
-      );
-    }
+    await this.validatePaymentReceiveNoExistance(
+      tenantId,
+      paymentReceiveObj.paymentReceiveNo
+    );
     // Validate customer existance.
     await this.customersService.getCustomerByIdOrThrowError(
       tenantId,
       paymentReceiveDTO.customerId
     );
-
     // Validate the deposit account existance and type.
     await this.getDepositAccountOrThrowError(
       tenantId,
       paymentReceiveDTO.depositAccountId
     );
-
     // Validate payment receive invoices IDs existance.
     await this.validateInvoicesIDsExistance(
       tenantId,
       paymentReceiveDTO.customerId,
       paymentReceiveDTO.entries
     );
-
     // Validate invoice payment amount.
     await this.validateInvoicesPaymentsAmount(
       tenantId,
@@ -304,15 +396,9 @@ export default class PaymentReceiveService {
 
     this.logger.info('[payment_receive] inserting to the storage.');
     const paymentReceive = await PaymentReceive.query().insertGraphAndFetch({
-      amount: paymentAmount,
-      ...formatDateFields(omit(paymentReceiveDTO, ['entries']), [
-        'paymentDate',
-      ]),
-      entries: paymentReceiveDTO.entries.map((entry) => ({
-        ...omit(entry, ['id']),
-      })),
+      ...paymentReceiveObj,
     });
-
+    // Triggers `onPaymentReceiveCreated` event.
     await this.eventDispatcher.dispatch(events.paymentReceive.onCreated, {
       tenantId,
       paymentReceive,
@@ -349,19 +435,26 @@ export default class PaymentReceiveService {
     authorizedUser: ISystemUser
   ) {
     const { PaymentReceive } = this.tenancy.models(tenantId);
-    const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
 
     this.logger.info('[payment_receive] trying to edit payment receive.', {
       tenantId,
       paymentReceiveId,
       paymentReceiveDTO,
     });
-
     // Validate the payment receive existance.
     const oldPaymentReceive = await this.getPaymentReceiveOrThrowError(
       tenantId,
       paymentReceiveId
     );
+    // Transformes the payment receive DTO to model.
+    const paymentReceiveObj = this.transformPaymentReceiveDTOToModel(
+      tenantId,
+      paymentReceiveDTO,
+      oldPaymentReceive
+    );
+    // Validate payment receive number existance.
+    this.validatePaymentReceiveNoRequire(paymentReceiveObj);
+
     // Validate payment receive number uniquiness.
     if (paymentReceiveDTO.paymentReceiveNo) {
       await this.validatePaymentReceiveNoExistance(
@@ -375,7 +468,6 @@ export default class PaymentReceiveService {
       tenantId,
       paymentReceiveDTO.depositAccountId
     );
-
     // Validate the entries ids existance on payment receive type.
     await this.validateEntriesIdsExistance(
       tenantId,
@@ -397,11 +489,7 @@ export default class PaymentReceiveService {
     // Update the payment receive transaction.
     const paymentReceive = await PaymentReceive.query().upsertGraphAndFetch({
       id: paymentReceiveId,
-      amount: paymentAmount,
-      ...formatDateFields(omit(paymentReceiveDTO, ['entries']), [
-        'paymentDate',
-      ]),
-      entries: paymentReceiveDTO.entries,
+      ...paymentReceiveObj,
     });
 
     await this.eventDispatcher.dispatch(events.paymentReceive.onEdited, {
