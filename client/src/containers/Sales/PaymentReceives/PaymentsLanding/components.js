@@ -37,7 +37,7 @@ export function ActionsMenu({
       <MenuItem
         icon={<Icon icon={'receipt-24'} iconSize={16} />}
         text={formatMessage({ id: 'payment_receive_paper' })}
-        onClick={() => onDrawer()}
+        onClick={safeCallback(onDrawer, paymentReceive)}
       />
       <MenuItem
         text={formatMessage({ id: 'delete_payment_receive' })}

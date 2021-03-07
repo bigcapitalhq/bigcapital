@@ -1,19 +1,20 @@
 import React, { lazy } from 'react';
+import { Drawer, DrawerSuspense } from 'components';
 import withDrawers from 'containers/Drawer/withDrawers';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Drawer, DrawerSuspense } from 'components';
 import { compose } from 'utils';
 
-const EstimateDrawerContent = lazy(() =>
-  import('containers/Drawers/PaperTemplate/PaperTemplate'),
-);
+const EstimateDrawerContent = lazy(() => import('./EstimateDrawerContent'));
 
+/**
+ *  Estimate drawer.
+ */
 function EstimateDrawer({
   name,
   //#withDrawer
   isOpen,
-  payload,
+  payload: { estimateId },
 
   closeDrawer,
 }) {
@@ -24,7 +25,7 @@ function EstimateDrawer({
   return (
     <Drawer isOpen={isOpen} isClose={handleDrawerClose}>
       <DrawerSuspense>
-        <EstimateDrawerContent />
+        <EstimateDrawerContent estimateId={estimateId} />
       </DrawerSuspense>
     </Drawer>
   );

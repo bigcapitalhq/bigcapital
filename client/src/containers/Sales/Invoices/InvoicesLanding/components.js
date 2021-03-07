@@ -90,6 +90,18 @@ export const handleDeleteErrors = (errors) => {
       intent: Intent.DANGER,
     });
   }
+  if (
+    errors.find(
+      (error) => error.type === 'INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT',
+    )
+  ) {
+    AppToaster.show({
+      message: formatMessage({
+        id: 'the_payment_amount_that_received',
+      }),
+      intent: Intent.DANGER,
+    });
+  }
 };
 
 export function ActionsMenu({
@@ -120,7 +132,7 @@ export function ActionsMenu({
       <MenuItem
         icon={<Icon icon={'receipt-24'} iconSize={16} />}
         text={formatMessage({ id: 'invoice_paper' })}
-        onClick={() => onDrawer()}
+        onClick={safeCallback(onDrawer, original)}
       />
       <MenuItem
         text={formatMessage({ id: 'delete_invoice' })}

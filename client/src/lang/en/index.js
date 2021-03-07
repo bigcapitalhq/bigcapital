@@ -996,4 +996,9 @@ export default {
   contact_type: 'Contact Type',
   duplicate_contact: 'Duplicate Contact',
   contact_type_: 'Contact type',
+  the_payment_amount_that_received:
+    'The payment amount that received from the customer is more than the due amount for this invoice.',
+  invoice_number: 'Invoice number',
+  invoice_date: 'Invoice date',
+  invoice_amount: 'Invoice amount',
 };

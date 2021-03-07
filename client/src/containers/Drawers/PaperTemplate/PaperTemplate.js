@@ -2,9 +2,11 @@ import React from 'react';
 import PaperTemplateHeader from './PaperTemplateHeader';
 import PaperTemplateTable from './PaperTemplateTable';
 import PaperTemplateFooter from './PaperTemplateFooter';
+import { updateItemsEntriesTotal } from 'containers/Entries/utils';
+
 import 'style/components/Drawer/DrawerTemplate.scss';
 
-export default function PaperTemplate({ labels: propLabels }) {
+function PaperTemplate({ labels: propLabels, paperData, entries }) {
   const labels = {
     name: 'Estimate',
     billedTo: 'Billed to',
@@ -15,13 +17,29 @@ export default function PaperTemplate({ labels: propLabels }) {
     dueDate: 'Due date',
     ...propLabels,
   };
+
+  const defaultValues = {
+    billedTo: paperData.customer.display_name,
+    date: paperData.estimate_date,
+    amount: '',
+    billedFrom: '',
+    dueDate: paperData.expiration_date,
+    referenceNo: paperData.estimate_number,
+    ...paperData,
+  };
+
   return (
     <div id={'page-size'}>
       <div className={'template'}>
-        <PaperTemplateHeader defaultLabels={labels} />
-        <PaperTemplateTable />
-        <PaperTemplateFooter />
+        <PaperTemplateHeader
+          defaultLabels={labels}
+          headerData={defaultValues}
+        />
+        <PaperTemplateTable tableData={updateItemsEntriesTotal(entries)} />
+        <PaperTemplateFooter footerData={defaultValues} />
       </div>
     </div>
   );
 }
+
+export default PaperTemplate;

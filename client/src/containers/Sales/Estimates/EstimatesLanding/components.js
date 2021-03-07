@@ -49,7 +49,15 @@ export const statusAccessor = (row) => (
  */
 export function ActionsMenu({
   row: { original },
-  payload: { onEdit, onDeliver, onReject, onApprove, onDelete, onDrawer ,onConvert },
+  payload: {
+    onEdit,
+    onDeliver,
+    onReject,
+    onApprove,
+    onDelete,
+    onDrawer,
+    onConvert,
+  },
 }) {
   const { formatMessage } = useIntl();
 
@@ -108,7 +116,7 @@ export function ActionsMenu({
       <MenuItem
         icon={<Icon icon={'receipt-24'} iconSize={16} />}
         text={formatMessage({ id: 'estimate_paper' })}
-        onClick={() => onDrawer()}
+        onClick={safeCallback(onDrawer, original)}
       />
       <MenuItem
         text={formatMessage({ id: 'delete_estimate' })}

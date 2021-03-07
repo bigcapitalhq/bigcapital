@@ -1,26 +1,44 @@
 import React from 'react';
 import PaymentPaperTemplateHeader from './PaymentPaperTemplateHeader';
 import PaymentPaperTemplateTable from './PaymentPaperTemplateTable';
+
 import 'style/components/Drawer/DrawerTemplate.scss';
 
-export default function PaymentPaperTemplate({ labels: propLabels }) {
+export default function PaymentPaperTemplate({
+  labels: propLabels,
+  paperData,
+}) {
   const labels = {
-    title: 'Payment receive',
+    name: 'Payment receive',
     billedTo: 'Billed to',
-    paymentDate: 'Payment date',
-    paymentNo: 'Payment No.',
+    date: 'Payment date',
+    refNo: 'Payment No.',
     billedFrom: 'Billed from',
     referenceNo: 'Reference No',
-    amountReceived: 'Amount received',
+    amount: 'Amount received',
+    dueDate: 'Due date',
     ...propLabels,
+  };
+  const defaultValues = {
+    billedTo: paperData.customer.display_name,
+    date: paperData.payment_date,
+    amount: '',
+    billedFrom: '',
+    referenceNo: paperData.payment_receive_no,
+    ...paperData,
   };
 
   return (
     <div id={'page-size'}>
-      <div className={'template'}>
-        <PaymentPaperTemplateHeader defaultLabels={labels} />
-        <PaymentPaperTemplateTable />
-      </div>
+      {[defaultValues].map(({ entries, ...defaultValues }) => (
+        <div className={'template'}>
+          <PaymentPaperTemplateHeader
+            defaultLabels={labels}
+            headerData={defaultValues}
+          />
+          <PaymentPaperTemplateTable tableData={entries} />
+        </div>
+      ))}
     </div>
   );
 }
