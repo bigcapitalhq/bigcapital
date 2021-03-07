@@ -26,7 +26,7 @@ export default function PaymentReceiveFormFloatingActions() {
   const { setSubmitPayload, isNewMode } = usePaymentReceiveFormContext();
 
   // Formik form context.
-  const { isSubmitting, submitForm } = useFormikContext();
+  const { isSubmitting, submitForm, resetForm } = useFormikContext();
 
   // History context.
   const history = useHistory();
@@ -38,7 +38,9 @@ export default function PaymentReceiveFormFloatingActions() {
   };
 
   // Handle clear button click.
-  const handleClearBtnClick = (event) => {};
+  const handleClearBtnClick = (event) => {
+    resetForm();
+  };
 
   // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
