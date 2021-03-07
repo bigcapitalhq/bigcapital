@@ -10,6 +10,7 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
+import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
@@ -21,8 +22,11 @@ import { Icon } from 'components';
  * Payment made floating actions bar.
  */
 export default function PaymentMadeFloatingActions() {
+  // History context.
+  const history = useHistory();
+
   // Formik context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting, resetForm } = useFormikContext();
 
   // Payment made form context.
   const { setSubmitPayload, paymentMadeId } = usePaymentMadeFormContext();
@@ -33,10 +37,14 @@ export default function PaymentMadeFloatingActions() {
   };
 
   // Handle clear button click.
-  const handleClearBtnClick = (event) => {};
+  const handleClearBtnClick = (event) => {
+    resetForm();
+  };
 
   // Handle cancel button click.
-  const handleCancelBtnClick = (event) => {};
+  const handleCancelBtnClick = (event) => {
+    history.goBack();
+  };
 
   // Handle submit & new button click.
   const handleSubmitAndNewClick = (event) => {

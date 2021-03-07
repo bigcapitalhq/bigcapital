@@ -5,7 +5,7 @@ import {
   Position,
   Classes,
   ControlGroup,
-  Button
+  Button,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
@@ -21,13 +21,14 @@ import {
   Money,
   Hint,
   Icon,
-  MoneyInputGroup
+  MoneyInputGroup,
 } from 'components';
 import withSettings from 'containers/Settings/withSettings';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import {
   momentFormatter,
   tansformDateValue,
+  handleDateChange,
   inputIntent,
   compose,
   safeSumBy,
@@ -40,7 +41,10 @@ import {
  */
 function PaymentMadeFormHeaderFields({ baseCurrency }) {
   // Formik form context.
-  const { values: { entries }, setFieldValue } = useFormikContext();
+  const {
+    values: { entries },
+    setFieldValue,
+  } = useFormikContext();
 
   // Payment made form context.
   const {
@@ -49,10 +53,12 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
     isNewMode,
     setPaymentVendorId,
   } = usePaymentMadeFormContext();
-  
+
   // Sumation of payable full-amount.
-  const payableFullAmount = useMemo(() => safeSumBy(entries, 'due_amount'), [entries]);
-  
+  const payableFullAmount = useMemo(() => safeSumBy(entries, 'due_amount'), [
+    entries,
+  ]);
+
   // Handle receive full-amount click.
   const handleReceiveFullAmountClick = () => {
     const newEntries = fullAmountPaymentEntries(entries);
@@ -97,7 +103,7 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
       </FastField>
 
       {/* ------------ Payment date ------------ */}
-      <FastField name={'customer_id'}>
+      <FastField name={'payment_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'payment_date'} />}
@@ -110,7 +116,9 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
               value={tansformDateValue(value)}
-              //   onChange={handleDateChange('payment_date')}
+              onChange={handleDateChange((formattedDate) => {
+                form.setFieldValue('payment_date', formattedDate);
+              })}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               inputProps={{
                 leftIcon: <Icon icon={'date-range'} />,
