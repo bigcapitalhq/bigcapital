@@ -209,7 +209,7 @@ export default class SaleEstimate extends TenantModel {
       },
       reference_no: {
         label: "Reference No.",
-        column: "reference_no",
+        column: "reference",
         columnType: "number",
         fieldType: "number",
       },
