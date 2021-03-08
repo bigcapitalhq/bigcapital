@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { formatMessage } from 'services/intl';
 import { DataTable, Money } from 'components';
 
-export default function DrawerTemplateTable({ tableData }) {
+export default function DrawerTemplateTable({ tableData, currencyCode }) {
   const columns = useMemo(
     () => [
       {
@@ -14,7 +14,7 @@ export default function DrawerTemplateTable({ tableData }) {
       {
         Header: formatMessage({ id: 'rate' }),
         accessor: 'rate',
-        accessor: ({ rate }) => <Money amount={rate} currency={'USD'} />,
+        accessor: ({ rate }) => <Money amount={rate} currency={currencyCode} />,
         disableSortBy: true,
         width: 50,
       },
@@ -26,7 +26,9 @@ export default function DrawerTemplateTable({ tableData }) {
       },
       {
         Header: formatMessage({ id: 'Total' }),
-        accessor: ({ total }) => <Money amount={total} currency={'USD'} />,
+        accessor: ({ total }) => (
+          <Money amount={total} currency={currencyCode} />
+        ),
         disableSortBy: true,
         width: 50,
       },

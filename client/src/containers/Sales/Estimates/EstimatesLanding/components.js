@@ -132,8 +132,8 @@ function DateCell({ value }) {
   return moment(value).format('YYYY MMM DD');
 }
 
-function AmountAccessor(row) {
-  return <Money amount={row.amount} currency={'USD'} />;
+function AmountAccessor({ amount, currency_code }) {
+  return <Money amount={amount} currency={currency_code} />;
 }
 
 function ActionsCell(props) {

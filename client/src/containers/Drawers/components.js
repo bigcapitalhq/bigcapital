@@ -20,6 +20,7 @@ export const TemplateContent = ({
   amount,
   billedFrom,
   dueDate,
+  currencyCode,
 }) => (
   <div className="template__content">
     <div className="template__content__info">
@@ -37,7 +38,7 @@ export const TemplateContent = ({
     <div className="template__content__info">
       <span> {defaultLabels.amount} </span>
       <p className={'info-paragraph-amount'}>
-        {<Money amount={amount} currency={'USD'} />}
+        {<Money amount={amount} currency={currencyCode} />}
       </p>
     </div>
     <div className="template__content__info">

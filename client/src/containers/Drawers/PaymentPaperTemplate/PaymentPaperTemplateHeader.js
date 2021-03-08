@@ -3,7 +3,7 @@ import { TemplateHeader, TemplateContent } from '../components';
 
 export default function PaymentPaperTemplateHeader({
   defaultLabels,
-  headerData: { referenceNo, amount, date, billedTo },
+  headerData: { referenceNo, amount, date, billedTo, currency_code },
 }) {
   return (
     <>
@@ -15,6 +15,7 @@ export default function PaymentPaperTemplateHeader({
         referenceNo={referenceNo}
         amount={amount}
         billedFrom={''}
+        currency={currency_code}
       />
     </>
   );

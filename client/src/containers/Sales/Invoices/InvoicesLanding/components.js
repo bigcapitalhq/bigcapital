@@ -180,7 +180,7 @@ export function useInvoicesTableColumns() {
       {
         id: 'balance',
         Header: formatMessage({ id: 'balance' }),
-        accessor: (r) => <Money amount={r.balance} currency={'USD'} />,
+        accessor: (r) => <Money amount={r.balance} currency={r.currency_code} />,
         width: 110,
         className: 'balance',
       },

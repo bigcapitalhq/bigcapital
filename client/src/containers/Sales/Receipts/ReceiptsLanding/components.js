@@ -128,7 +128,7 @@ export function useReceiptsTableColumns() {
       {
         id: 'amount',
         Header: formatMessage({ id: 'amount' }),
-        accessor: (r) => <Money amount={r.amount} currency={'USD'} />,
+        accessor: (r) => <Money amount={r.amount} currency={r.currency_code} />,
         width: 140,
         className: 'amount',
       },

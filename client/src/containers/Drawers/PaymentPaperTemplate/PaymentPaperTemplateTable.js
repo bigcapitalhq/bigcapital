@@ -3,7 +3,7 @@ import moment from 'moment';
 import { formatMessage } from 'services/intl';
 import { DataTable, Money } from 'components';
 
-export default function PaymentPaperTemplateTable({ tableData }) {
+export default function PaymentPaperTemplateTable({ tableData, currencyCode }) {
   const columns = React.useMemo(
     () => [
       {
@@ -20,14 +20,14 @@ export default function PaymentPaperTemplateTable({ tableData }) {
       {
         Header: formatMessage({ id: 'invoice_amount' }),
         accessor: ({ invoice }) => (
-          <Money amount={invoice.balance} currency={'USD'} />
+          <Money amount={invoice.balance} currency={currencyCode} />
         ),
         disableSortBy: true,
       },
       {
         Header: formatMessage({ id: 'payment_amount' }),
         accessor: ({ payment_amount }) => (
-          <Money amount={payment_amount} currency={'USD'} />
+          <Money amount={payment_amount} currency={currencyCode} />
         ),
         disableSortBy: true,
       },

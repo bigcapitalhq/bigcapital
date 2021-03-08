@@ -18,7 +18,7 @@ import { useIntl } from 'react-intl';
  */
 export function ActionsMenu({
   row: { original },
-  payload: { onEdit, onDelete ,onDuplicate },
+  payload: { onEdit, onDelete, onDuplicate },
 }) {
   const { formatMessage } = useIntl();
 
@@ -86,7 +86,7 @@ export function PhoneNumberAccessor(row) {
  * Balance accessor.
  */
 export function BalanceAccessor(row) {
-  return <Money amount={row.closing_balance} currency={'USD'} />;
+  return <Money amount={row.closing_balance} currency={row.currency_code} />;
 }
 
 /**

@@ -53,7 +53,7 @@ export function ActionsMenu({
  * Amount accessor.
  */
 export function AmountAccessor(row) {
-  return <Money amount={row.amount} currency={'USD'} />;
+  return <Money amount={row.amount} currency={row.currency_code} />;
 }
 
 /**
