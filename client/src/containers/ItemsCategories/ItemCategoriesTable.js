@@ -52,7 +52,6 @@ function ItemsCategoryTable({
       loading={isCategoriesLoading}
       headerLoading={isCategoriesLoading}
       progressBarLoading={isCategoriesFetching}
-      manualSortBy={true}
       expandable={true}
       sticky={true}
       selectionColumn={true}

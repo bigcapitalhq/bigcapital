@@ -1,22 +1,21 @@
 #page-size {
   margin: 0 auto;
   background-color: transparent;
-  width: 21cm;
-  // width: 680px;
+  width: 680px;
+  // width: 21cm;
   // height: 29.7cm;
   padding-bottom: 20px;
 }
 
 .template {
   background-color: transparent;
-  margin: 20px;
+  margin: 25px 20px;
 
   &__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    // margin: 0px 40px 16px 0px;
-    margin: 0px 5px 15px 5px;
+    margin: 0px 35px 20px 5px;
     &--title h1 {
       font-weight: 600;
       color: #1c4587;
@@ -31,11 +30,9 @@
     display: flex;
     flex-wrap: wrap;
     border-bottom: 2px solid #1155cc;
-    padding-bottom: 35px;
-
+    padding: 2px 2px 30px;
     &__info {
       flex: 0 1 24%;
-      // flex: 0 1 25%;
       padding-left: 5px;
       color: #999999;
       font-size: 16px;

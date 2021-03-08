@@ -200,9 +200,9 @@ export function useEstiamtesTableColumns() {
       {
         id: 'reference_no',
         Header: formatMessage({ id: 'reference_no' }),
-        accessor: 'reference_no',
+        accessor: 'reference',
         width: 90,
-        className: 'reference_no',
+        className: 'reference',
       },
       {
         id: 'actions',
