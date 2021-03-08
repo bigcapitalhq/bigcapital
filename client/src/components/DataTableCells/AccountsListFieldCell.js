@@ -7,12 +7,14 @@ import AccountsSuggestField from 'components/AccountsSuggestField';
 // import AccountsSelectList from 'components/AccountsSelectList';
 import { FormGroup, Classes, Intent } from '@blueprintjs/core';
 
-// Account cell renderer.
+/**
+ * Account cell renderer.
+ */
 export default function AccountCellRenderer({
   column: {
     id,
     accountsDataProp,
-    filterAccountsByRootType,
+    filterAccountsByRootTypes,
     filterAccountsByTypes,
   },
   row: { index, original },
@@ -55,7 +57,7 @@ export default function AccountCellRenderer({
         accounts={accounts}
         onAccountSelected={handleAccountSelected}
         selectedAccountId={initialValue}
-        filterByRootTypes={filterAccountsByRootType}
+        filterByRootTypes={filterAccountsByRootTypes}
         filterByTypes={filterAccountsByTypes}
         inputProps={{
           inputRef: (ref) => (accountRef.current = ref),

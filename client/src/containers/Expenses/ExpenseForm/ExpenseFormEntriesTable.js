@@ -32,7 +32,9 @@ export default function ExpenseFormEntriesTable({
   const handleUpdateData = useCallback(
     (rowIndex, columnId, value) => {
       const newRows = compose(
+        // Update auto-adding new line.
         updateAutoAddNewLine(defaultEntry, ['expense_account_id']),
+        // Update the row value of the given row index and column id.
         updateTableRow(rowIndex, columnId, value),
       )(entries);
 

@@ -89,7 +89,7 @@ export function useExpenseFormTableColumns() {
         className: 'expense_account_id',
         disableSortBy: true,
         width: 40,
-        filterAccountsByRootType: ['expense'],
+        filterAccountsByRootTypes: ['expense'],
       },
       {
         Header: formatMessage({ id: 'amount_currency' }, { currency: 'USD' }),

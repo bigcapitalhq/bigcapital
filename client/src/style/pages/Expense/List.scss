@@ -1,20 +1,16 @@
-
 // Blueprint framework.
 // @import '@blueprintjs/core/src/blueprint.scss';
 
 .dashboard__insider--expenses {
-    .bigcapital-datatable {
-      .table {
-        .tbody {
-          
-
-            .td.total_amount{
-                span{
-                    font-weight: 500;
-                }
-            }
+  .bigcapital-datatable {
+    .table {
+      .tbody {
+        .td.amount {
+          span {
+            font-weight: 600;
+          }
         }
       }
     }
   }
-  
+}

@@ -1,11 +1,11 @@
 import moment from 'moment';
-import _ from 'lodash';
+import _, { castArray } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import Currency from 'js-money/lib/currency';
 import accounting from 'accounting';
 import deepMapKeys from 'deep-map-keys';
 import { createSelectorCreator, defaultMemoize } from 'reselect';
-import { isEqual } from 'lodash'; 
+import { isEqual } from 'lodash';
 
 export function removeEmptyFromObject(obj) {
   obj = Object.assign({}, obj);
@@ -92,7 +92,6 @@ export const compose = (...funcs) =>
     (arg) => arg,
   );
 
-
 export const getObjectDiff = (a, b) => {
   return _.reduce(
     a,
@@ -158,9 +157,9 @@ export function formattedAmount(cents, currency, props) {
     symbol,
     precision: 0,
     format: {
-      pos : "%s%v",
-      neg : "%s%v",
-      zero: parsedProps.noZero ? "" : '%s%v'
+      pos: '%s%v',
+      neg: '%s%v',
+      zero: parsedProps.noZero ? '' : '%s%v',
     },
   };
 
@@ -352,7 +351,7 @@ export function treeToList(
     return tree.reduce((acc, o) => {
       depth += 1;
 
-      if (o[idFieldKey] && nodeFilter(o, depth)) {  
+      if (o[idFieldKey] && nodeFilter(o, depth)) {
         acc.push(nodeMapper(o, depth));
       }
       if (o[childrenFieldKey]) {
@@ -384,7 +383,7 @@ export function defaultToTransform(
 }
 
 export function isBlank(value) {
-  return _.isEmpty(value) && !_.isNumber(value) || _.isNaN(value);
+  return (_.isEmpty(value) && !_.isNumber(value)) || _.isNaN(value);
 }
 
 export const getColumnWidth = (
@@ -403,15 +402,12 @@ export const getColumnWidth = (
   return result;
 };
 
-export const getForceWidth = (
-  text,
-  magicSpacing = 14,
-) => {
+export const getForceWidth = (text, magicSpacing = 14) => {
   const textLength = text.length;
-  const result = textLength * magicSpacing
+  const result = textLength * magicSpacing;
 
   return result;
-}
+};
 
 export const toSafeNumber = (number) => {
   return _.toNumber(_.defaultTo(number, 0));
@@ -434,22 +430,21 @@ export function flatObject(obj) {
   const path = []; // current path
 
   function dig(obj) {
-      if (obj !== Object(obj))
-          /*is primitive, end of path*/
-          return flatObject[path.join('.')] = obj; /*<- value*/ 
-  
-      //no? so this is an object with keys. go deeper on each key down
-      for (let key in obj) {
-          path.push(key);
-          dig(obj[key]);
-          path.pop();
-      }
+    if (obj !== Object(obj))
+      /*is primitive, end of path*/
+      return (flatObject[path.join('.')] = obj); /*<- value*/
+
+    //no? so this is an object with keys. go deeper on each key down
+    for (let key in obj) {
+      path.push(key);
+      dig(obj[key]);
+      path.pop();
+    }
   }
 
   dig(obj);
   return flatObject;
 }
-
 
 export function randomNumber(min, max) {
   if (min > max) {
@@ -463,7 +458,6 @@ export function randomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 }
-
 
 export function transformResponse(response) {
   return transformToCamelCase(response);
@@ -479,7 +473,6 @@ export function transactionNumber(prefix, number) {
     codes.push(number);
   }
   return codes.join('-');
-
 }
 
 export function safeCallback(callback, ...args) {
@@ -488,7 +481,7 @@ export function safeCallback(callback, ...args) {
 
 export const createDeepEqualSelector = createSelectorCreator(
   defaultMemoize,
-  isEqual
+  isEqual,
 );
 
 /**
@@ -499,8 +492,8 @@ export const isTableEmptyStatus = ({ data, pagination, filterMeta }) => {
     _.isEmpty(data),
     _.isEmpty(filterMeta.view),
     pagination.page === 1,
-  ].every(cond => cond === true)
-}
+  ].every((cond) => cond === true);
+};
 
 /**
  * Transformes the pagination meta to table props.
@@ -545,7 +538,7 @@ export function globalTableStateToTable(globalState) {
  */
 export function transformPagination(pagination) {
   const transformed = transformResponse(pagination);
-  
+
   return {
     ...transformed,
     pagesCount: getPagesCountFromPaginationMeta(transformed),
@@ -559,23 +552,19 @@ export function removeRowsByIndex(rows, rowIndex) {
   return newRows;
 }
 
-
 export function safeSumBy(entries, getter) {
   return _.chain(entries)
-    .map(row => toSafeNumber(_.get(row, getter)))
+    .map((row) => toSafeNumber(_.get(row, getter)))
     .sum()
     .value();
 }
-
-
 
 export const fullAmountPaymentEntries = (entries) => {
   return entries.map((item) => ({
     ...item,
     payment_amount: item.due_amount,
   }));
-}
-
+};
 
 export const amountPaymentEntries = (amount, entries) => {
   let total = amount;
@@ -609,6 +598,7 @@ export const updateMinEntriesLines = (min, defaultEntry) => (lines) => {
     const diffLines = Math.max(min - lines.length, 0);
     return [...lines, ...repeatValue(defaultEntry, diffLines)];
   }
+  return lines;
 };
 
 export const updateRemoveLineByIndex = (rowIndex) => (entries) => {
@@ -622,8 +612,8 @@ export const updateTableRow = (rowIndex, columnId, value) => (old) => {
       return {
         ...old[rowIndex],
         [columnId]: value,
-      }
+      };
     }
-    return row
-  })
+    return row;
+  });
 };

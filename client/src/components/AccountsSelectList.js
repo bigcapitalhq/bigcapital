@@ -3,7 +3,7 @@ import { MenuItem, Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
-import { isEmpty } from 'lodash';
+import { filterAccountsByQuery } from './utils';
 import { CLASSES } from 'common/classes';
 
 export default function AccountsSelectList({
@@ -14,32 +14,30 @@ export default function AccountsSelectList({
   onAccountSelected,
   disabled = false,
   popoverFill = false,
-  filterByParentTypes = [],
-  filterByTypes = [],
+
+  filterByParentTypes,
+  filterByTypes,
   filterByNormal,
-  buttonProps = {}
+  filterByRootTypes,
+
+  buttonProps = {},
 }) {
   // Filters accounts based on filter props.
   const filteredAccounts = useMemo(() => {
-    let filteredAccounts = [...accounts];
-
-    if (!isEmpty(filterByParentTypes)) {
-      filteredAccounts = filteredAccounts.filter(
-        (account) => filterByParentTypes.indexOf(account.account_parent_type) !== -1,
-      );
-    }
-    if (!isEmpty(filterByTypes)) {
-      filteredAccounts = filteredAccounts.filter(
-        (account) => filterByTypes.indexOf(account.account_type) !== -1,
-      );
-    }
-    if (!isEmpty(filterByNormal)) {
-      filteredAccounts = filteredAccounts.filter(
-        (account) => filterByTypes.indexOf(account.account_normal) === filterByNormal,
-      );
-    }
+    let filteredAccounts = filterAccountsByQuery(accounts, {
+      filterByRootTypes,
+      filterByParentTypes,
+      filterByTypes,
+      filterByNormal,
+    });
     return filteredAccounts;
-  }, [accounts, filterByParentTypes, filterByTypes, filterByNormal]);
+  }, [
+    accounts,
+    filterByRootTypes,
+    filterByParentTypes,
+    filterByTypes,
+    filterByNormal,
+  ]);
 
   // Find initial account object to set it as default account in initial render.
   const initialAccount = useMemo(
@@ -103,7 +101,11 @@ export default function AccountsSelectList({
       noResults={<MenuItem disabled={true} text={<T id={'no_accounts'} />} />}
       itemRenderer={accountItem}
       itemPredicate={filterAccountsPredicater}
-      popoverProps={{ minimal: true, usePortal: !popoverFill, inline: popoverFill }}
+      popoverProps={{
+        minimal: true,
+        usePortal: !popoverFill,
+        inline: popoverFill,
+      }}
       filterable={true}
       onItemSelect={onAccountSelect}
       disabled={disabled}

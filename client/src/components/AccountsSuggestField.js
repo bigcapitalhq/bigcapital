@@ -1,48 +1,47 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
-import { isEmpty } from 'lodash';
 
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
 import { FormattedMessage as T } from 'react-intl';
+import { filterAccountsByQuery } from './utils';
 
+/**
+ * Accounts suggest field.
+ */
 export default function AccountsSuggestField({
   accounts,
   initialAccountId,
   selectedAccountId,
   defaultSelectText = 'Select account',
+  popoverFill = false,
   onAccountSelected,
 
   filterByParentTypes = [],
   filterByTypes = [],
   filterByNormal,
-  popoverFill = false,
+  filterByRootTypes = [],
 
   ...suggestProps
 }) {
   // Filters accounts based on filter props.
   const filteredAccounts = useMemo(() => {
-    let filteredAccounts = [...accounts];
-
-    if (!isEmpty(filterByParentTypes)) {
-      filteredAccounts = filteredAccounts.filter(
-        (account) => filterByParentTypes.indexOf(account.account_parent_type) !== -1,
-      );
-    }
-    if (!isEmpty(filterByTypes)) {
-      filteredAccounts = filteredAccounts.filter(
-        (account) => filterByTypes.indexOf(account.account_type) !== -1,
-      );
-    }
-    if (!isEmpty(filterByNormal)) {
-      filteredAccounts = filteredAccounts.filter(
-        (account) => filterByTypes.indexOf(account.account_normal) === filterByNormal,
-      );
-    }
+    let filteredAccounts = filterAccountsByQuery(accounts, {
+      filterByRootTypes,
+      filterByParentTypes,
+      filterByTypes,
+      filterByNormal,  
+    });
     return filteredAccounts;
-  }, [accounts, filterByParentTypes, filterByTypes, filterByNormal]);
+  }, [
+    accounts,
+    filterByRootTypes,
+    filterByParentTypes,
+    filterByTypes,
+    filterByNormal,
+  ]);
 
   // Find initial account object to set it as default account in initial render.
   const initialAccount = useMemo(
