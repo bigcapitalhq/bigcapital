@@ -21,19 +21,11 @@ function ShortcutBoxes({ sectionTitle, shortcuts }) {
       <div className="section-title">{sectionTitle}</div>
       <div className="financial-reports__list">
         <For render={ShortcutBox} of={shortcuts} />
-
-        {/* {shortcuts.map(({ title, link, description }) => (
-          <ShortcutBox title={title} description={description} link={link} />
-        ))} */}
       </div>
     </div>
   );
 }
 
 export default function ShortcutBoxesSection({ section }) {
-  return (
-    <div className="financial-reports">
-      <For render={ShortcutBoxes} of={section} />
-    </div>
-  );
+  return <For render={ShortcutBoxes} of={section} />;
 }
