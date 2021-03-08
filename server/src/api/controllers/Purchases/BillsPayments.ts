@@ -407,6 +407,11 @@ export default class BillsPayments extends BaseController {
           errors: [{ type: 'BILLS_NOT_FOUND', code: 1000 }],
         });
       }
+      if (error.errorType === 'PAYMENT_NUMBER_SHOULD_NOT_MODIFY') {
+        return res.status(400).send({
+          errors: [{ type: 'PAYMENT_NUMBER_SHOULD_NOT_MODIFY', code: 1100 }],
+        });
+      }
     }
     next(error);
   }

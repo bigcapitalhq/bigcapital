@@ -103,7 +103,7 @@ export default class ExchangeRatesController extends BaseController {
     const { tenantId } = req;
     const filter = {
       page: 1,
-      pageSize: 100,
+      pageSize: 12,
       filterRoles: [],
       columnSortBy: 'created_at',
       sortOrder: 'asc',

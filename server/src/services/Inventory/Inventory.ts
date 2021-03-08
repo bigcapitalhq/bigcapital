@@ -54,9 +54,9 @@ export default class InventoryService {
   /**
    * Computes the given item cost and records the inventory lots transactions
    * and journal entries based on the cost method FIFO, LIFO or average cost rate.
-   * @param {number} tenantId -
-   * @param {Date} fromDate -
-   * @param {number} itemId -
+   * @param {number} tenantId - Tenant id.
+   * @param {Date} fromDate - From date.
+   * @param {number} itemId - Item id.
    */
   async computeItemCost(tenantId: number, fromDate: Date, itemId: number) {
     const { Item } = this.tenancy.models(tenantId);

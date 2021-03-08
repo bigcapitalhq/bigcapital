@@ -4,6 +4,7 @@ exports.up = function(knex) {
   return knex.schema.createTable('sales_estimates', (table) => {
     table.increments();
     table.decimal('amount', 13, 3);
+    table.string('currency_code', 3);
     table.integer('customer_id').unsigned().index().references('id').inTable('contacts');
     table.date('estimate_date').index();
     table.date('expiration_date').index();

@@ -27,6 +27,7 @@ import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { entriesAmountDiff, formatDateFields } from 'utils';
 import { ServiceError } from 'exceptions';
 import { ACCOUNT_PARENT_TYPE } from 'data/AccountTypes';
+import VendorsService from 'services/Contacts/VendorsService';
 
 const ERRORS = {
   BILL_VENDOR_NOT_FOUND: 'VENDOR_NOT_FOUND',
@@ -38,6 +39,7 @@ const ERRORS = {
   BILL_ENTRIES_IDS_NOT_FOUND: 'BILL_ENTRIES_IDS_NOT_FOUND',
   BILL_PAYMENT_ENTRIES_NOT_FOUND: 'BILL_PAYMENT_ENTRIES_NOT_FOUND',
   INVALID_BILL_PAYMENT_AMOUNT: 'INVALID_BILL_PAYMENT_AMOUNT',
+  PAYMENT_NUMBER_SHOULD_NOT_MODIFY: 'PAYMENT_NUMBER_SHOULD_NOT_MODIFY',
 };
 
 /**
@@ -57,6 +59,9 @@ export default class BillPaymentsService {
 
   @Inject()
   dynamicListService: DynamicListingService;
+
+  @Inject()
+  vendorsService: VendorsService;
 
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
@@ -118,7 +123,6 @@ export default class BillPaymentsService {
     const paymentAccount = await accountRepository.findOneById(
       paymentAccountId
     );
-
     if (!paymentAccount) {
       throw new ServiceError(ERRORS.PAYMENT_ACCOUNT_NOT_FOUND);
     }
@@ -264,6 +268,45 @@ export default class BillPaymentsService {
   }
 
   /**
+   * * Validate the payment vendor whether modified.
+   * @param {string} billPaymentNo
+   */
+  validateVendorNotModified(
+    billPaymentDTO: IBillPaymentDTO,
+    oldBillPayment: IBillPayment
+  ) {
+    if (billPaymentDTO.vendorId !== oldBillPayment.vendorId) {
+      throw new ServiceError(ERRORS.PAYMENT_NUMBER_SHOULD_NOT_MODIFY);
+    }
+  }
+
+  /**
+   * Transforms create/edit DTO to model.
+   * @param {number} tenantId
+   * @param {IBillPaymentDTO} billPaymentDTO - Bill payment.
+   * @param {IBillPayment} oldBillPayment - Old bill payment.
+   * @return {Promise<IBillPayment>}
+   */
+  async transformDTOToModel(
+    tenantId: number,
+    billPaymentDTO: IBillPaymentDTO,
+    oldBillPayment?: IBillPayment
+  ): Promise<IBillPayment> {
+    // Retrieve vendor details by the given vendor id.
+    const vendor = await this.vendorsService.getVendorByIdOrThrowError(
+      tenantId,
+      billPaymentDTO.vendorId
+    );
+
+    return {
+      amount: sumBy(billPaymentDTO.entries, 'paymentAmount'),
+      currencyCode: vendor.currencyCode,
+      ...formatDateFields(billPaymentDTO, ['paymentDate']),
+      entries: billPaymentDTO.entries,
+    };
+  }
+
+  /**
    * Creates a new bill payment transcations and store it to the storage
    * with associated bills entries and journal transactions.
    *
@@ -288,11 +331,11 @@ export default class BillPaymentsService {
     });
     const { BillPayment } = this.tenancy.models(tenantId);
 
-    const billPaymentObj = {
-      amount: sumBy(billPaymentDTO.entries, 'paymentAmount'),
-      ...formatDateFields(billPaymentDTO, ['paymentDate']),
-    };
-
+    // Transform create DTO to model object.
+    const billPaymentObj = await this.transformDTOToModel(
+      tenantId,
+      billPaymentDTO
+    );
     // Validate vendor existance on the storage.
     await this.getVendorOrThrowError(tenantId, billPaymentObj.vendorId);
 
@@ -301,7 +344,6 @@ export default class BillPaymentsService {
       tenantId,
       billPaymentObj.paymentAccountId
     );
-
     // Validate the payment number uniquiness.
     if (billPaymentObj.paymentNumber) {
       await this.validatePaymentNumber(tenantId, billPaymentObj.paymentNumber);
@@ -312,15 +354,13 @@ export default class BillPaymentsService {
       billPaymentObj.entries,
       billPaymentDTO.vendorId
     );
-
     // Validates the bills due payment amount.
     await this.validateBillsDueAmount(tenantId, billPaymentObj.entries);
 
     const billPayment = await BillPayment.query().insertGraphAndFetch({
-      ...omit(billPaymentObj, ['entries']),
-      entries: billPaymentDTO.entries,
+      ...billPaymentObj,
     });
-
+    // Triggers `onBillPaymentCreated` event.
     await this.eventDispatcher.dispatch(events.billPayment.onCreated, {
       tenantId,
       billPayment,
@@ -363,11 +403,14 @@ export default class BillPaymentsService {
       tenantId,
       billPaymentId
     );
-
-    const billPaymentObj = {
-      amount: sumBy(billPaymentDTO.entries, 'paymentAmount'),
-      ...formatDateFields(billPaymentDTO, ['paymentDate']),
-    };
+    // Transform bill payment DTO to model object.
+    const billPaymentObj = await this.transformDTOToModel(
+      tenantId,
+      billPaymentDTO,
+      oldBillPayment
+    );
+    // Validate vendor not modified.
+    this.validateVendorNotModified(billPaymentDTO, oldBillPayment);
 
     // Validate vendor existance on the storage.
     await this.getVendorOrThrowError(tenantId, billPaymentObj.vendorId);
@@ -377,28 +420,24 @@ export default class BillPaymentsService {
       tenantId,
       billPaymentObj.paymentAccountId
     );
-
     // Validate the items entries IDs existance on the storage.
     await this.validateEntriesIdsExistance(
       tenantId,
       billPaymentId,
       billPaymentObj.entries
     );
-
     // Validate the bills existance and associated to the given vendor.
     await this.validateBillsExistance(
       tenantId,
       billPaymentObj.entries,
       billPaymentDTO.vendorId
     );
-
     // Validates the bills due payment amount.
     await this.validateBillsDueAmount(
       tenantId,
       billPaymentObj.entries,
       oldBillPayment.entries
     );
-
     // Validate the payment number uniquiness.
     if (billPaymentObj.paymentNumber) {
       await this.validatePaymentNumber(
@@ -409,8 +448,7 @@ export default class BillPaymentsService {
     }
     const billPayment = await BillPayment.query().upsertGraphAndFetch({
       id: billPaymentId,
-      ...omit(billPaymentObj, ['entries']),
-      entries: billPaymentDTO.entries,
+      ...billPaymentObj,
     });
     await this.eventDispatcher.dispatch(events.billPayment.onEdited, {
       tenantId,

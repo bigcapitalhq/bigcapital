@@ -301,6 +301,7 @@ export default class SaleInvoicesController extends BaseController {
         filterMeta,
         pagination,
       } = await this.saleInvoiceService.salesInvoicesList(tenantId, filter);
+
       return res.status(200).send({
         sales_invoices: salesInvoices,
         pagination: this.transfromToResponse(pagination),

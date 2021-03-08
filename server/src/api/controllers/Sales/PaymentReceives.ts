@@ -91,6 +91,7 @@ export default class PaymentReceivesController extends BaseController {
    */
   get paymentReceiveSchema(): ValidationChain[] {
     return [
+      check('customer_id').exists().isNumeric().toInt(),
       check('payment_date').exists(),
       check('reference_no').optional(),
       check('deposit_account_id').exists().isNumeric().toInt(),
@@ -132,7 +133,6 @@ export default class PaymentReceivesController extends BaseController {
    */
   get newPaymentReceiveValidation() {
     return [
-      check('customer_id').exists().isNumeric().toInt(),
       ...this.paymentReceiveSchema,
     ];
   }
@@ -447,6 +447,11 @@ export default class PaymentReceivesController extends BaseController {
       if (error.errorType === 'PAYMENT_RECEIVE_NO_IS_REQUIRED') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'PAYMENT_RECEIVE_NO_IS_REQUIRED', code: 1100 }],
+        });
+      }
+      if (error.errorType === 'PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE', code: 1200 }],
         });
       }
     }

@@ -31,7 +31,7 @@ const ERRORS = {
   SALE_ESTIMATE_ALREADY_REJECTED: 'SALE_ESTIMATE_ALREADY_REJECTED',
   SALE_ESTIMATE_ALREADY_APPROVED: 'SALE_ESTIMATE_ALREADY_APPROVED',
   SALE_ESTIMATE_NOT_DELIVERED: 'SALE_ESTIMATE_NOT_DELIVERED',
-  SALE_ESTIMATE_NO_IS_REQUIRED: 'SALE_ESTIMATE_NO_IS_REQUIRED'
+  SALE_ESTIMATE_NO_IS_REQUIRED: 'SALE_ESTIMATE_NO_IS_REQUIRED',
 };
 
 /**
@@ -157,25 +157,34 @@ export default class SaleEstimateService {
   }
 
   /**
-   * Transform DTO object ot model object.
+   * Transform create DTO object ot model object.
    * @param  {number} tenantId
-   * @param  {ISaleEstimateDTO} saleEstimateDTO
-   * @param  {ISaleEstimate} oldSaleEstimate
+   * @param  {ISaleEstimateDTO} saleEstimateDTO - Sale estimate DTO.
    * @return {ISaleEstimate}
    */
-  transformDTOToModel(
+  async transformDTOToModel(
     tenantId: number,
     estimateDTO: ISaleEstimateDTO,
     oldSaleEstimate?: ISaleEstimate
-  ): ISaleEstimate {
+  ): Promise<ISaleEstimate> {
     const { ItemEntry } = this.tenancy.models(tenantId);
     const amount = sumBy(estimateDTO.entries, (e) => ItemEntry.calcAmount(e));
 
+    // Retreive the next invoice number.
+    const autoNextNumber = this.getNextEstimateNumber(tenantId);
+
     // Retreive the next estimate number.
-    const estimateNumber = this.transformEstimateNumberToModel(
+    const estimateNumber = estimateDTO.estimateNumber ||
+      oldSaleEstimate?.estimateNumber ||
+      autoNextNumber;
+
+    // Validate the sale estimate number require.
+    this.validateEstimateNoRequire(estimateNumber);
+
+    // Retrieve customer details.
+    const customer = await this.customersService.getCustomerByIdOrThrowError(
       tenantId,
-      estimateDTO,
-      oldSaleEstimate
+      estimateDTO.customerId
     );
 
     return {
@@ -184,25 +193,26 @@ export default class SaleEstimateService {
         'estimateDate',
         'expirationDate',
       ]),
+      currencyCode: customer.currencyCode,
       ...(estimateNumber ? { estimateNumber } : {}),
       entries: estimateDTO.entries.map((entry) => ({
         reference_type: 'SaleEstimate',
-        ...omit(entry, ['total', 'amount', 'id']),
+        ...entry,
       })),
       // Avoid rewrite the deliver date in edit mode when already published.
       ...(estimateDTO.delivered &&
-        !oldSaleEstimate?.deliveredAt && {
-          deliveredAt: moment().toMySqlDateTime(),
-        }),
+          !oldSaleEstimate?.deliveredAt && {
+        deliveredAt: moment().toMySqlDateTime(),
+      }),
     };
   }
-  
+
   /**
    * Validate the sale estimate number require.
    * @param {ISaleEstimate} saleInvoiceObj
    */
-  validateEstimateNoRequire(saleInvoiceObj: ISaleEstimate) {
-    if (!saleInvoiceObj.estimateNumber) {
+  validateEstimateNoRequire(estimateNumber: string) {
+    if (!estimateNumber) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_NO_IS_REQUIRED);
     }
   }
@@ -223,27 +233,25 @@ export default class SaleEstimateService {
     this.logger.info('[sale_estimate] inserting sale estimate to the storage.');
 
     // Transform DTO object ot model object.
-    const estimateObj = this.transformDTOToModel(tenantId, estimateDTO);
-
-    // Validate the sale estimate number require.
-    this.validateEstimateNoRequire(estimateObj);
-
+    const estimateObj = await this.transformDTOToModel(
+      tenantId,
+      estimateDTO
+    );
     // Validate estimate number uniquiness on the storage.
-    if (estimateObj.estimateNumber) {
-      await this.validateEstimateNumberExistance(
-        tenantId,
-        estimateObj.estimateNumber
-      );
-    }
+    await this.validateEstimateNumberExistance(
+      tenantId,
+      estimateObj.estimateNumber
+    );
     // Retrieve the given customer or throw not found service error.
-    await this.customersService.getCustomer(tenantId, estimateDTO.customerId);
-
+    await this.customersService.getCustomerByIdOrThrowError(
+      tenantId,
+      estimateDTO.customerId
+    );
     // Validate items IDs existance on the storage.
     await this.itemsEntriesService.validateItemsIdsExistance(
       tenantId,
       estimateDTO.entries
     );
-
     // Validate non-sellable items.
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       tenantId,
@@ -284,14 +292,11 @@ export default class SaleEstimateService {
       estimateId
     );
     // Transform DTO object ot model object.
-    const estimateObj = this.transformDTOToModel(
+    const estimateObj = await this.transformDTOToModel(
       tenantId,
       estimateDTO,
       oldSaleEstimate
     );
-    // Validate the sale estimate number require.
-    this.validateEstimateNoRequire(estimateObj);
-
     // Validate estimate number uniquiness on the storage.
     if (estimateDTO.estimateNumber) {
       await this.validateEstimateNumberExistance(
@@ -301,13 +306,15 @@ export default class SaleEstimateService {
       );
     }
     // Retrieve the given customer or throw not found service error.
-    await this.customersService.getCustomer(tenantId, estimateDTO.customerId);
-
+    await this.customersService.getCustomerByIdOrThrowError(
+      tenantId,
+      estimateDTO.customerId
+    );
     // Validate sale estimate entries existance.
     await this.itemsEntriesService.validateEntriesIdsExistance(
       tenantId,
       estimateId,
-      'SaleEstiamte',
+      'SaleEstimate',
       estimateDTO.entries
     );
     // Validate items IDs existance on the storage.

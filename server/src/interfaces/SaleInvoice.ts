@@ -5,6 +5,7 @@ export interface ISaleInvoice {
   id: number,
   balance: number,
   paymentAmount: number,
+  currencyCode: string,
   invoiceDate: Date,
   dueDate: Date,
   dueAmount: number,

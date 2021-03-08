@@ -10,6 +10,7 @@ export interface ISaleReceipt {
   receiptMessage: string;
   receiptNumber: string;
   amount: number;
+  currencyCode: string,
   statement: string;
   closedAt: Date | string;
   entries: any[];

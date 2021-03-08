@@ -42,7 +42,9 @@ const ERRORS = {
   INVOICES_IDS_NOT_FOUND: 'INVOICES_IDS_NOT_FOUND',
   ENTRIES_IDS_NOT_EXISTS: 'ENTRIES_IDS_NOT_EXISTS',
   INVOICES_NOT_DELIVERED_YET: 'INVOICES_NOT_DELIVERED_YET',
-  PAYMENT_RECEIVE_NO_IS_REQUIRED: 'PAYMENT_RECEIVE_NO_IS_REQUIRED'
+  PAYMENT_RECEIVE_NO_IS_REQUIRED: 'PAYMENT_RECEIVE_NO_IS_REQUIRED',
+  PAYMENT_RECEIVE_NO_REQUIRED: 'PAYMENT_RECEIVE_NO_REQUIRED',
+  PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE: 'PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE',
 };
 /**
  * Payment receive service.
@@ -265,28 +267,6 @@ export default class PaymentReceiveService {
   }
 
   /**
-   * Retrieve estimate number to object model.
-   * @param {number} tenantId
-   * @param {IPaymentReceiveCreateDTO | IPaymentReceiveEditDTO} paymentReceiveDTO - Payment receive DTO.
-   * @param {IPaymentReceive} oldPaymentReceive - Old payment model object.
-   */
-  transformPaymentNumberToModel(
-    tenantId: number,
-    paymentReceiveDTO: IPaymentReceiveCreateDTO | IPaymentReceiveEditDTO,
-    oldPaymentReceive?: IPaymentReceive
-  ): string {
-    // Retreive the next invoice number.
-    const autoNextNumber = this.getNextPaymentReceiveNumber(tenantId);
-
-    if (paymentReceiveDTO.paymentReceiveNo) {
-      return paymentReceiveDTO.paymentReceiveNo;
-    }
-    return oldPaymentReceive
-      ? oldPaymentReceive.paymentReceiveNo
-      : autoNextNumber;
-  }
-
-  /**
    * Validate the payment receive entries IDs existance.
    * @param {number} tenantId
    * @param {number} paymentReceiveId
@@ -316,31 +296,68 @@ export default class PaymentReceiveService {
   }
 
   /**
+   * Validates the payment receive number require.
+   * @param {string} paymentReceiveNo
+   */
+  validatePaymentNoRequire(paymentReceiveNo: string) {
+    if (!paymentReceiveNo) {
+      throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NO_REQUIRED);
+    }
+  }
+
+  /**
+   * Validate the payment customer whether modified.
+   * @param {IPaymentReceiveEditDTO} paymentReceiveDTO
+   * @param {IPaymentReceive} oldPaymentReceive
+   */
+  validateCustomerNotModified(
+    paymentReceiveDTO: IPaymentReceiveEditDTO,
+    oldPaymentReceive: IPaymentReceive
+  ) {
+    if (paymentReceiveDTO.customerId !== oldPaymentReceive.customerId) {
+      throw new ServiceError(ERRORS.PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE);
+    }
+  }
+
+  /**
    * Transformes the create payment receive DTO to model object.
    * @param {number} tenantId
-   * @param {IPaymentReceiveCreateDTO} paymentReceiveDTO
+   * @param {IPaymentReceiveCreateDTO|IPaymentReceiveEditDTO} paymentReceiveDTO - Payment receive DTO.
+   * @param {IPaymentReceive} oldPaymentReceive -
+   * @return {IPaymentReceive}
    */
-  transformPaymentReceiveDTOToModel(
+  async transformPaymentReceiveDTOToModel(
     tenantId: number,
     paymentReceiveDTO: IPaymentReceiveCreateDTO | IPaymentReceiveEditDTO,
     oldPaymentReceive?: IPaymentReceive
-  ): IPaymentReceive {
+  ): Promise<IPaymentReceive> {
     const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
 
-    // Retrieve the next payment receive number.
-    const paymentReceiveNo = this.transformPaymentNumberToModel(
+    // Retrieve customer details.
+    const customer = await this.customersService.getCustomerByIdOrThrowError(
       tenantId,
-      paymentReceiveDTO,
-      oldPaymentReceive
+      paymentReceiveDTO.customerId
     );
+    // Retreive the next invoice number.
+    const autoNextNumber = this.getNextPaymentReceiveNumber(tenantId);
+
+    // Retrieve the next payment receive number.
+    const paymentReceiveNo =
+      paymentReceiveDTO.paymentReceiveNo ||
+      oldPaymentReceive?.paymentReceiveNo ||
+      autoNextNumber;
+
+    this.validatePaymentNoRequire(paymentReceiveNo);
+
     return {
       amount: paymentAmount,
+      currencyCode: customer.currencyCode,
       ...formatDateFields(omit(paymentReceiveDTO, ['entries']), [
         'paymentDate',
       ]),
       ...(paymentReceiveNo ? { paymentReceiveNo } : {}),
       entries: paymentReceiveDTO.entries.map((entry) => ({
-        ...omit(entry, ['id']),
+        ...entry,
       })),
     };
   }
@@ -360,13 +377,10 @@ export default class PaymentReceiveService {
     const { PaymentReceive } = this.tenancy.models(tenantId);
 
     // Transformes the payment receive DTO to model.
-    const paymentReceiveObj = this.transformPaymentReceiveDTOToModel(
+    const paymentReceiveObj = await this.transformPaymentReceiveDTOToModel(
       tenantId,
       paymentReceiveDTO
     );
-    // Validate payment receive is required.
-    this.validatePaymentReceiveNoRequire(paymentReceiveObj);
-
     // Validate payment receive number uniquiness.
     await this.validatePaymentReceiveNoExistance(
       tenantId,
@@ -393,7 +407,6 @@ export default class PaymentReceiveService {
       tenantId,
       paymentReceiveDTO.entries
     );
-
     this.logger.info('[payment_receive] inserting to the storage.');
     const paymentReceive = await PaymentReceive.query().insertGraphAndFetch({
       ...paymentReceiveObj,
@@ -447,13 +460,13 @@ export default class PaymentReceiveService {
       paymentReceiveId
     );
     // Transformes the payment receive DTO to model.
-    const paymentReceiveObj = this.transformPaymentReceiveDTOToModel(
+    const paymentReceiveObj = await this.transformPaymentReceiveDTOToModel(
       tenantId,
       paymentReceiveDTO,
       oldPaymentReceive
     );
-    // Validate payment receive number existance.
-    this.validatePaymentReceiveNoRequire(paymentReceiveObj);
+    // Validate customer whether modified.
+    this.validateCustomerNotModified(paymentReceiveDTO, oldPaymentReceive);
 
     // Validate payment receive number uniquiness.
     if (paymentReceiveDTO.paymentReceiveNo) {
@@ -527,7 +540,7 @@ export default class PaymentReceiveService {
     const { PaymentReceive, PaymentReceiveEntry } = this.tenancy.models(
       tenantId
     );
-
+    // Retreive payment receive or throw not found service error.
     const oldPaymentReceive = await this.getPaymentReceiveOrThrowError(
       tenantId,
       paymentReceiveId

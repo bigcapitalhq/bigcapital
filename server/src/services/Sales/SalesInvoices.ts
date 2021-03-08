@@ -181,46 +181,36 @@ export default class SaleInvoicesService {
   }
 
   /**
-   * Retrieve invoice number to object model.
-   * @param tenantId 
-   * @param saleInvoiceDTO 
-   * @param oldSaleInvoice 
+   * Transformes the create DTO to invoice object model.
+   * @param {ISaleInvoiceCreateDTO} saleInvoiceDTO - Sale invoice DTO.
+   * @param {ISaleInvoice} oldSaleInvoice - Old sale invoice.
+   * @return {ISaleInvoice}
    */
-  transformInvoiceNumberToModel(
+  private async transformDTOToModel(
     tenantId: number,
     saleInvoiceDTO: ISaleInvoiceCreateDTO | ISaleInvoiceEditDTO,
     oldSaleInvoice?: ISaleInvoice
-  ): string {
-    // Retreive the next invoice number.
-    const autoNextNumber = this.getNextInvoiceNumber(tenantId);
-
-    if (saleInvoiceDTO.invoiceNo) {
-      return saleInvoiceDTO.invoiceNo;
-    }
-    return oldSaleInvoice ? oldSaleInvoice.invoiceNo : autoNextNumber;
-  }
-
-  /**
-   * Transform DTO object to model object.
-   * @param {number} tenantId - Tenant id.
-   * @param {ISaleInvoiceDTO} saleInvoiceDTO - Sale invoice DTO.
-   */
-  transformDTOToModel(
-    tenantId: number,
-    saleInvoiceDTO: ISaleInvoiceCreateDTO | ISaleInvoiceEditDTO,
-    oldSaleInvoice?: ISaleInvoice
-  ): ISaleInvoice {
+  ): Promise<ISaleInvoice> {
     const { ItemEntry } = this.tenancy.models(tenantId);
 
     const balance = sumBy(saleInvoiceDTO.entries, (e) =>
       ItemEntry.calcAmount(e)
     );
-
-    const invoiceNo = this.transformInvoiceNumberToModel(
+    // Retrieve customer details.
+    const customer = await this.customersService.getCustomerByIdOrThrowError(
       tenantId,
-      saleInvoiceDTO,
-      oldSaleInvoice
+      saleInvoiceDTO.customerId
     );
+    // Retreive the next invoice number.
+    const autoNextNumber = this.getNextInvoiceNumber(tenantId);
+
+    // Invoice number.
+    const invoiceNo =
+      saleInvoiceDTO.invoiceNo || oldSaleInvoice?.invoiceNo || autoNextNumber;
+
+    // Validate the invoice is required.
+    this.validateInvoiceNoRequire(invoiceNo);
+
     return {
       ...formatDateFields(
         omit(saleInvoiceDTO, ['delivered', 'entries', 'fromEstimateId']),
@@ -228,20 +218,17 @@ export default class SaleInvoicesService {
       ),
       // Avoid rewrite the deliver date in edit mode when already published.
       balance,
+      currencyCode: customer.currencyCode,
       ...(saleInvoiceDTO.delivered &&
         !oldSaleInvoice?.deliveredAt && {
           deliveredAt: moment().toMySqlDateTime(),
         }),
-      // Avoid add payment amount in edit mode.
-      ...(!oldSaleInvoice
-        ? {
-            paymentAmount: 0,
-          }
-        : {}),
+      // Avoid override payment amount in edit mode.
+      ...(!oldSaleInvoice && { paymentAmount: 0 }),
       ...(invoiceNo ? { invoiceNo } : {}),
       entries: saleInvoiceDTO.entries.map((entry) => ({
         referenceType: 'SaleInvoice',
-        ...omit(entry, ['amount', 'id']),
+        ...entry,
       })),
     };
   }
@@ -250,8 +237,8 @@ export default class SaleInvoicesService {
    * Validate the invoice number require.
    * @param {ISaleInvoice} saleInvoiceObj
    */
-  validateInvoiceNoRequire(saleInvoiceObj: ISaleInvoice) {
-    if (!saleInvoiceObj.invoiceNo) {
+  validateInvoiceNoRequire(invoiceNo: string) {
+    if (!invoiceNo) {
       throw new ServiceError(ERRORS.SALE_INVOICE_NO_IS_REQUIRED);
     }
   }
@@ -272,19 +259,15 @@ export default class SaleInvoicesService {
     const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
 
     // Transform DTO object to model object.
-    const saleInvoiceObj = this.transformDTOToModel(
+    const saleInvoiceObj = await this.transformDTOToModel(
       tenantId,
-      saleInvoiceDTO,
-      null
+      saleInvoiceDTO
     );
-    this.validateInvoiceNoRequire(saleInvoiceObj);
-
     // Validate customer existance.
     await this.customersService.getCustomerByIdOrThrowError(
       tenantId,
       saleInvoiceDTO.customerId
     );
-
     // Validate sale invoice number uniquiness.
     if (saleInvoiceObj.invoiceNo) {
       await this.validateInvoiceNumberUnique(
@@ -354,7 +337,7 @@ export default class SaleInvoicesService {
       saleInvoiceId
     );
     // Transform DTO object to model object.
-    const saleInvoiceObj = this.transformDTOToModel(
+    const saleInvoiceObj = await this.transformDTOToModel(
       tenantId,
       saleInvoiceDTO,
       oldSaleInvoice
@@ -396,10 +379,10 @@ export default class SaleInvoicesService {
     );
 
     this.logger.info('[sale_invoice] trying to update sale invoice.');
-    const saleInvoice: ISaleInvoice = await saleInvoiceRepository.update(
-      { ...omit(saleInvoiceObj, ['paymentAmount']) },
-      { id: saleInvoiceId }
-    );
+    const saleInvoice: ISaleInvoice = await saleInvoiceRepository.upsertGraph({
+      id: saleInvoiceId,
+      ...saleInvoiceObj,
+    });
     // Triggers `onSaleInvoiceEdited` event.
     await this.eventDispatcher.dispatch(events.saleInvoice.onEdited, {
       tenantId,

@@ -48,7 +48,7 @@ export default class BillsController extends BaseController {
     );
     router.post(
       '/:id', [
-        ...this.billValidationSchema,
+        ...this.billEditValidationSchema,
         ...this.specificBillValidationSchema,
       ],
       this.validationResult,
@@ -106,7 +106,6 @@ export default class BillsController extends BaseController {
 
       check('entries').isArray({ min: 1 }),
 
-      check('entries.*.id').optional().isNumeric().toInt(),
       check('entries.*.index').exists().isNumeric().toInt(),
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
@@ -121,7 +120,7 @@ export default class BillsController extends BaseController {
    */
   get billEditValidationSchema() {
     return [
-      check('bill_number').exists().trim().escape(),
+      check('bill_number').optional().trim().escape(),
       check('reference_no').optional().trim().escape(),
       check('bill_date').exists().isISO8601(),
       check('due_date').optional().isISO8601(),

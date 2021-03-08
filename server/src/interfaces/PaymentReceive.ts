@@ -25,6 +25,7 @@ export interface IPaymentReceiveCreateDTO {
 };
 
 export interface IPaymentReceiveEditDTO {
+  customerId: number,
   paymentDate: Date,
   amount: number,
   referenceNo: string,

@@ -27,6 +27,7 @@ import ItemsService from 'services/Items/ItemsService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import JournalCommands from 'services/Accounting/JournalCommands';
 import JournalPosterService from 'services/Sales/JournalPosterService';
+import VendorsService from 'services/Contacts/VendorsService';
 import { ERRORS } from './constants';
 
 /**
@@ -46,7 +47,7 @@ export default class BillsService extends SalesInvoicesCost {
 
   @Inject()
   tenancy: TenancyService;
-  
+
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
 
@@ -61,6 +62,9 @@ export default class BillsService extends SalesInvoicesCost {
 
   @Inject()
   journalPosterService: JournalPosterService;
+
+  @Inject()
+  vendorsService: VendorsService;
 
   /**
    * Validates whether the vendor is exist.
@@ -136,16 +140,25 @@ export default class BillsService extends SalesInvoicesCost {
   }
 
   /**
-   * Converts bill DTO to model.
+   * Validate the bill number require.
+   * @param {string} billNo -
+   */
+  validateBillNoRequire(billNo: string) {
+    if (!billNo) {
+      throw new ServiceError(ERRORS.BILL_NO_IS_REQUIRED);
+    }
+  }
+
+  /**
+   * Converts create bill DTO to model.
    * @param {number} tenantId
    * @param {IBillDTO} billDTO
    * @param {IBill} oldBill
-   *
    * @returns {IBill}
    */
   private async billDTOToModel(
     tenantId: number,
-    billDTO: IBillDTO | IBillEditDTO,
+    billDTO: IBillDTO,
     authorizedUser: ISystemUser,
     oldBill?: IBill
   ) {
@@ -157,15 +170,25 @@ export default class BillsService extends SalesInvoicesCost {
     }));
     const amount = sumBy(entries, 'amount');
 
+    // Bill number from DTO or from auto-increment.
+    const billNumber = billDTO.billNumber || oldBill?.billNumber;
+
+    // Retrieve vendor details by the given vendor id.
+    const vendor = await this.vendorsService.getVendorByIdOrThrowError(
+      tenantId,
+      billDTO.vendorId
+    );
     return {
       ...formatDateFields(omit(billDTO, ['open', 'entries']), [
         'billDate',
         'dueDate',
       ]),
       amount,
+      currencyCode: vendor.currencyCode,
+      billNumber,
       entries: entries.map((entry) => ({
         reference_type: 'Bill',
-        ...omit(entry, ['amount', 'id']),
+        ...omit(entry, ['amount']),
       })),
       // Avoid rewrite the open date in edit mode when already opened.
       ...(billDTO.open &&
@@ -205,16 +228,14 @@ export default class BillsService extends SalesInvoicesCost {
     const billObj = await this.billDTOToModel(
       tenantId,
       billDTO,
-      authorizedUser,
-      null
+      authorizedUser
     );
     // Retrieve vendor or throw not found service error.
     await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
 
     // Validate the bill number uniqiness on the storage.
-    if (billDTO.billNumber) {
-      await this.validateBillNumberExists(tenantId, billDTO.billNumber);
-    }
+    await this.validateBillNumberExists(tenantId, billDTO.billNumber);
+
     // Validate items IDs existance.
     await this.itemsEntriesService.validateItemsIdsExistance(
       tenantId,
@@ -277,7 +298,6 @@ export default class BillsService extends SalesInvoicesCost {
       authorizedUser,
       oldBill
     );
-
     // Retrieve vendor details or throw not found service error.
     await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
 
@@ -292,7 +312,6 @@ export default class BillsService extends SalesInvoicesCost {
       'Bill',
       billDTO.entries
     );
-
     // Validate the items ids existance on the storage.
     await this.itemsEntriesService.validateItemsIdsExistance(
       tenantId,

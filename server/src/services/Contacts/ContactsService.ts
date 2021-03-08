@@ -63,6 +63,11 @@ export default class ContactsService {
    * @param {IContactNewDTO | IContactEditDTO} contactDTO
    */
   private transformContactObj(contactDTO: IContactNewDTO | IContactEditDTO) {
+    const baseCurrency = 'USD';
+    const currencyCode = typeof contactDTO.currencyCode !== 'undefined'
+    ? contactDTO.currencyCode
+    : baseCurrency;
+
     return {
       ...omit(contactDTO, [
         'billingAddress1',
@@ -74,6 +79,7 @@ export default class ContactsService {
       billing_address_2: contactDTO?.billingAddress2,
       shipping_address_1: contactDTO?.shippingAddress1,
       shipping_address_2: contactDTO?.shippingAddress2,
+      ...(currencyCode ? ({ currencyCode }) : {}),
     };
   }
 
@@ -99,7 +105,6 @@ export default class ContactsService {
       contactService,
       ...contactObj,
     });
-
     this.logger.info('[contacts] contact inserted successfully.', {
       tenantId,
       contact,
@@ -123,12 +128,12 @@ export default class ContactsService {
     const { contactRepository } = this.tenancy.repositories(tenantId);
     const contactObj = this.transformContactObj(contactDTO);
 
+    // Retrieve the given contact by id or throw not found service error.
     const contact = await this.getContactByIdOrThrowError(
       tenantId,
       contactId,
       contactService
     );
-
     this.logger.info('[contacts] trying to edit the given contact details.', {
       tenantId,
       contactId,
@@ -196,7 +201,7 @@ export default class ContactsService {
     const dynamicList = await this.dynamicListService.dynamicList(
       tenantId,
       Contact,
-      contactsFilter,
+      contactsFilter
     );
     // Retrieve contacts list by the given query.
     const contacts = await Contact.query().onBuild((builder) => {

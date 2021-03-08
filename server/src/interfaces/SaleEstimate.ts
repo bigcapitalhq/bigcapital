@@ -4,6 +4,7 @@ import { IDynamicListFilterDTO } from 'interfaces/DynamicFilter';
 export interface ISaleEstimate {
   id?: number,
   amount: number,
+  currencyCode: string,
   customerId: number,
   estimateDate: Date,
   estimateNumber: string,

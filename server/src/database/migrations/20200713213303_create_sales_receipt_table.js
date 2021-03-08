@@ -3,6 +3,7 @@ exports.up = function(knex) {
   return knex.schema.createTable('sales_receipts', table => {
     table.increments();
     table.decimal('amount', 13, 3);
+    table.string('currency_code', 3);
     table.integer('deposit_account_id').unsigned().index().references('id').inTable('accounts');
     table.integer('customer_id').unsigned().index().references('id').inTable('contacts');
     table.date('receipt_date').index();

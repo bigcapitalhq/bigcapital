@@ -10,6 +10,7 @@ exports.up = function(knex) {
     table.string('status').index();
     table.text('note');
     table.decimal('amount', 13, 3).defaultTo(0);
+    table.string('currency_code');
     table.decimal('payment_amount', 13, 3).defaultTo(0);
     table.string('inv_lot_number').index();
     table.date('opened_at').index();

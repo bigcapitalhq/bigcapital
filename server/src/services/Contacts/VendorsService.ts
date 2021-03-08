@@ -116,7 +116,7 @@ export default class VendorsService {
    * @param {number} tenantId
    * @param {number} customerId
    */
-  private getVendorByIdOrThrowError(tenantId: number, customerId: number) {
+  public getVendorByIdOrThrowError(tenantId: number, customerId: number) {
     return this.contactService.getContactByIdOrThrowError(
       tenantId,
       customerId,
