@@ -1,11 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
-import { Button } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import { useItem } from 'hooks/query';
-
-import ItemsEntriesDeleteAlert from 'containers/Alerts/ItemsEntries/ItemsEntriesDeleteAlert';
-import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { CLASSES } from 'common/classes';
 import { DataTableEditable } from 'components';
@@ -13,28 +8,18 @@ import { DataTableEditable } from 'components';
 import { useEditableItemsEntriesColumns } from './components';
 import {
   saveInvoke,
-  updateTableRow,
-  repeatValue,
-  removeRowsByIndex,
   compose,
+  updateTableRow,
+  updateMinEntriesLines,
+  updateAutoAddNewLine,
+  updateRemoveLineByIndex,
 } from 'utils';
 import { updateItemsEntriesTotal, ITEM_TYPE } from './utils';
-import { last } from 'lodash';
-
-const updateAutoAddNewLine = (defaultEntry) => (entries) => {
-  const newEntries = [...entries];
-  const lastEntry = last(newEntries);
-
-  return (lastEntry.item_id) ? [...entries, defaultEntry] : [...entries];
-};
 
 /**
  * Items entries table.
  */
 function ItemsEntriesTable({
-  // #withAlertActions
-  openAlert,
-
   // #ownProps
   items,
   entries,
@@ -116,7 +101,7 @@ function ItemsEntriesTable({
         setRowItem({ rowIndex, columnId, itemId: value });
       }
       const newRows = compose(
-        updateAutoAddNewLine(defaultEntry),
+        updateAutoAddNewLine(defaultEntry, ['item_id']),
         updateItemsEntriesTotal,
         updateTableRow(rowIndex, columnId, value),
       )(rows);
@@ -129,55 +114,35 @@ function ItemsEntriesTable({
 
   // Handle table rows removing by index.
   const handleRemoveRow = (rowIndex) => {
-    const newRows = removeRowsByIndex(rows, rowIndex);
-    setRows(newRows);
-    saveInvoke(onUpdateData, newRows);
-  };
+    const newRows = compose(
+      // Ensure minimum lines count.
+      updateMinEntriesLines(4, defaultEntry),
+      // Remove the line by the given index.
+      updateRemoveLineByIndex(rowIndex),
+    )(rows);
 
-  // Handle table rows adding a new row.
-  const onClickNewRow = (event) => {
-    const newRows = [...rows, defaultEntry];
-    setRows(newRows);
-    saveInvoke(onUpdateData, newRows);
-  };
-
-  // Handle table clearing all rows.
-  const handleClickClearAllLines = (event) => {
-    openAlert('items-entries-clear-lines');
-  };
-
-  // Handle alert confirm of clear all lines.
-  const handleClearLinesAlertConfirm = () => {
-    const newRows = repeatValue(defaultEntry, linesNumber);
     setRows(newRows);
     saveInvoke(onUpdateData, newRows);
   };
 
   return (
-    <>
-      <DataTableEditable
-        className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
-        columns={columns}
-        data={rows}
-        sticky={true}
-        progressBarLoading={isItemFetching}
-        cellsLoading={isItemFetching}
-        cellsLoadingCoords={cellsLoading}
-        footer={true}
-        payload={{
-          items,
-          errors: errors || [],
-          updateData: handleUpdateData,
-          removeRow: handleRemoveRow,
-          autoFocus: ['item_id', 0],
-        }}
-         
-      />
-      <ItemsEntriesDeleteAlert
-        name={'items-entries-clear-lines'}
-        onConfirm={handleClearLinesAlertConfirm}
-      />
-    </>
+    <DataTableEditable
+      className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
+      columns={columns}
+      data={rows}
+      sticky={true}
+      progressBarLoading={isItemFetching}
+      cellsLoading={isItemFetching}
+      cellsLoadingCoords={cellsLoading}
+      footer={true}
+      payload={{
+        items,
+        errors: errors || [],
+        updateData: handleUpdateData,
+        removeRow: handleRemoveRow,
+        autoFocus: ['item_id', 0],
+      }}
+    />
   );
 }
 
@@ -186,7 +151,7 @@ ItemsEntriesTable.defaultProps = {
     index: 0,
     item_id: '',
     description: '',
-    quantity: 1,
+    quantity: '',
     rate: '',
     discount: '',
   },
@@ -194,4 +159,4 @@ ItemsEntriesTable.defaultProps = {
   linesNumber: 4,
 };
 
-export default compose(withAlertActions)(ItemsEntriesTable);
+export default ItemsEntriesTable;

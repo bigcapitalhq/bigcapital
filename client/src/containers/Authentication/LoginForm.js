@@ -6,7 +6,7 @@ import {
   FormGroup,
   Checkbox,
 } from '@blueprintjs/core';
-import { Form, ErrorMessage, FastField } from 'formik';
+import { Form, ErrorMessage, Field } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
 import { inputIntent } from 'utils';
 import { PasswordRevealer } from './components';
@@ -14,12 +14,21 @@ import { PasswordRevealer } from './components';
 /**
  * Login form.
  */
-export default function LoginForm({
-  isSubmitting
-}) {
+export default function LoginForm({ isSubmitting }) {
+  const [passwordType, setPasswordType] = React.useState('password');
+
+  // Handle password revealer changing.
+  const handlePasswordRevealerChange = React.useCallback(
+    (shown) => {
+      const type = shown ? 'text' : 'password';
+      setPasswordType(type);
+    },
+    [setPasswordType],
+  );
+
   return (
     <Form className={'authentication-page__form'}>
-      <FastField name={'crediential'}>
+      <Field name={'crediential'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'email_or_phone_number'} />}
@@ -34,13 +43,15 @@ export default function LoginForm({
             />
           </FormGroup>
         )}
-      </FastField>
+      </Field>
 
-      <FastField name={'password'}>
+      <Field name={'password'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'password'} />}
-            labelInfo={<PasswordRevealer />}
+            labelInfo={
+              <PasswordRevealer onChange={handlePasswordRevealerChange} />
+            }
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'password'} />}
             className={'form-group--password has-password-revealer'}
@@ -48,12 +59,12 @@ export default function LoginForm({
             <InputGroup
               large={true}
               intent={inputIntent({ error, touched })}
-              // type={shown ? 'text' : 'password'}
+              type={passwordType}
               {...field}
             />
           </FormGroup>
         )}
-      </FastField>
+      </Field>
 
       <div className={'login-form__checkbox-section'}>
         <Checkbox large={true} className={'checkbox--remember-me'}>

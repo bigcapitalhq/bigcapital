@@ -173,26 +173,6 @@ export default class SalesReceiptService {
   }
 
   /**
-   * Retrieve estimate number to object model.
-   * @param {number} tenantId
-   * @param {ISaleReceiptDTO} saleReceiptDTO - Sale receipt DTO.
-   * @param {ISaleReceipt} oldSaleReceipt - Old receipt model object.
-   */
-  transformReceiptNumberToModel(
-    tenantId: number,
-    saleReceiptDTO: ISaleReceiptDTO,
-    oldSaleReceipt?: ISaleReceipt
-  ): string {
-    // Retreive the next invoice number.
-    const autoNextNumber = this.getNextReceiptNumber(tenantId);
-
-    if (saleReceiptDTO.receiptNumber) {
-      return saleReceiptDTO.receiptNumber;
-    }
-    return oldSaleReceipt ? oldSaleReceipt.receiptNumber : autoNextNumber;
-  }
-
-  /**
    * Transform create DTO object to model object.
    * @param {ISaleReceiptDTO} saleReceiptDTO -
    * @param {ISaleReceipt} oldSaleReceipt -
@@ -233,7 +213,7 @@ export default class SalesReceiptService {
       receiptNumber,
       // Avoid rewrite the deliver date in edit mode when already published.
       ...(saleReceiptDTO.closed &&
-        !oldSaleReceipt.closedAt && {
+        !oldSaleReceipt?.closedAt && {
           closedAt: moment().toMySqlDateTime(),
         }),
       entries: saleReceiptDTO.entries.map((entry) => ({

@@ -4,26 +4,35 @@ import {
   InputGroup,
   Intent,
   FormGroup,
-  Spinner
+  Spinner,
 } from '@blueprintjs/core';
-import { ErrorMessage, FastField, Form } from 'formik';
+import { ErrorMessage, Field, Form } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Row, Col, If } from 'components';
-
+import { PasswordRevealer } from './components';
 import { inputIntent } from 'utils';
 
 /**
  * Register form.
  */
-export default function RegisterForm({
-  isSubmitting,
-}) {
+export default function RegisterForm({ isSubmitting }) {
+  const [passwordType, setPasswordType] = React.useState('password');
+
+  // Handle password revealer changing.
+  const handlePasswordRevealerChange = React.useCallback(
+    (shown) => {
+      const type = shown ? 'text' : 'password';
+      setPasswordType(type);
+    },
+    [setPasswordType],
+  );
+
   return (
     <Form className={'authentication-page__form'}>
       <Row className={'name-section'}>
         <Col md={6}>
-          <FastField name={'first_name'}>
+          <Field name={'first_name'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'first_name'} />}
@@ -37,11 +46,11 @@ export default function RegisterForm({
                 />
               </FormGroup>
             )}
-          </FastField>
+          </Field>
         </Col>
 
         <Col md={6}>
-          <FastField name={'last_name'}>
+          <Field name={'last_name'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'last_name'} />}
@@ -55,11 +64,11 @@ export default function RegisterForm({
                 />
               </FormGroup>
             )}
-          </FastField>
+          </Field>
         </Col>
       </Row>
 
-      <FastField name={'phone_number'}>
+      <Field name={'phone_number'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'phone_number'} />}
@@ -70,8 +79,9 @@ export default function RegisterForm({
             <InputGroup intent={inputIntent({ error, touched })} {...field} />
           </FormGroup>
         )}
-      </FastField>
-      <FastField name={'email'}>
+      </Field>
+
+      <Field name={'email'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'email'} />}
@@ -82,28 +92,28 @@ export default function RegisterForm({
             <InputGroup intent={inputIntent({ error, touched })} {...field} />
           </FormGroup>
         )}
-      </FastField>
+      </Field>
 
-      <FastField name={'password'}>
+      <Field name={'password'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'password'} />}
-            // labelInfo={passwordRevealerTmp}
-            intent={inputIntent({ error, touched })}
-            helperText={
-              <ErrorMessage name={'password'} />
+            labelInfo={
+              <PasswordRevealer onChange={handlePasswordRevealerChange} />
             }
+            intent={inputIntent({ error, touched })}
+            helperText={<ErrorMessage name={'password'} />}
             className={'form-group--password has-password-revealer'}
           >
             <InputGroup
               lang={true}
-              // type={shown ? 'text' : 'password'}
+              type={passwordType}
               intent={inputIntent({ error, touched })}
               {...field}
             />
           </FormGroup>
         )}
-      </FastField>
+      </Field>
 
       <div className={'register-form__agreement-section'}>
         <p>

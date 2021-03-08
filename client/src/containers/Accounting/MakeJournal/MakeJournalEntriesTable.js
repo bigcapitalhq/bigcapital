@@ -1,23 +1,21 @@
 import React from 'react';
-import { Button } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
-import { saveInvoke, removeRowsByIndex } from 'utils';
 import { DataTableEditable } from 'components';
-import withAlertActions from 'containers/Alert/withAlertActions';
-
-import { updateDataReducer } from './utils';
+import {
+  compose,
+  saveInvoke,
+  updateMinEntriesLines,
+  updateRemoveLineByIndex,
+  updateAutoAddNewLine,
+  updateTableRow,
+} from 'utils';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { useJournalTableEntriesColumns } from './components';
-
-import { compose } from 'redux';
+import { updateAdjustEntries } from './utils';
 
 /**
  * Make journal entries table component.
  */
-function MakeJournalEntriesTable({
-  // #withAlertsActions
-  openAlert,
-
+export default function MakeJournalEntriesTable({
   // #ownPorps
   onChange,
   entries,
@@ -30,22 +28,34 @@ function MakeJournalEntriesTable({
 
   // Memorized data table columns.
   const columns = useJournalTableEntriesColumns();
- 
+
   // Handles update datatable data.
   const handleUpdateData = (rowIndex, columnId, value) => {
-    const newRows = updateDataReducer(entries, rowIndex, columnId, value);
+    const newRows = compose(
+      // Auto-adding new lines.
+      updateAutoAddNewLine(defaultEntry, ['account_id', 'credit', 'debit']),
+      // Update items entries total.
+      updateAdjustEntries(rowIndex, columnId, value),
+      // Update entry of the given row index and column id.
+      updateTableRow(rowIndex, columnId, value),
+    )(entries);
+
     saveInvoke(onChange, newRows);
   };
 
   // Handle remove datatable row.
   const handleRemoveRow = (rowIndex) => {
-    const newRows = removeRowsByIndex(entries, rowIndex);
+    const newRows = compose(
+      // Ensure minimum lines count.
+      updateMinEntriesLines(minLinesNumber, defaultEntry),
+      // Remove the line by the given index.
+      updateRemoveLineByIndex(rowIndex),
+    )(entries);
+
     saveInvoke(onChange, newRows);
   };
- 
- 
-  return (
 
+  return (
     <DataTableEditable
       columns={columns}
       data={entries}
@@ -63,8 +73,6 @@ function MakeJournalEntriesTable({
         })),
         autoFocus: ['account_id', 0],
       }}
-    /> 
+    />
   );
 }
-
-export default compose(withAlertActions)(MakeJournalEntriesTable);

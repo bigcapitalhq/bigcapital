@@ -2,10 +2,18 @@ import React from 'react';
 import { FormattedMessage as T } from 'react-intl';
 import ContentLoader from 'react-content-loader';
 import { If, Icon } from 'components';
+import { saveInvoke } from 'utils';
 
-export function PasswordRevealer({ shown, onClick }) {
+export function PasswordRevealer({ defaultShown = false, onChange }) {
+  const [shown, setShown] = React.useState(defaultShown);
+
+  const handleClick = () => {
+    setShown(!shown);
+    saveInvoke(onChange, !shown);
+  };
+
   return (
-    <span class="password-revealer" onClick={onClick}>
+    <span class="password-revealer" onClick={handleClick}>
       <If condition={shown}>
         <Icon icon="eye-slash" />{' '}
         <span class="text">

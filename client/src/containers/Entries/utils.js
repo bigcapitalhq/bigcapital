@@ -1,10 +1,11 @@
+import { repeat } from 'lodash';
 import { toSafeNumber } from 'utils';
 
 /**
  * Retrieve item entry total from the given rate, quantity and discount.
- * @param {number} rate 
- * @param {number} quantity 
- * @param {number} discount 
+ * @param {number} rate
+ * @param {number} quantity
+ * @param {number} discount
  * @return {number}
  */
 export const calcItemEntryTotal = (discount, quantity, rate) => {
@@ -21,9 +22,9 @@ export const calcItemEntryTotal = (discount, quantity, rate) => {
 export function updateItemsEntriesTotal(rows) {
   return rows.map((row) => ({
     ...row,
-    total: calcItemEntryTotal(row.discount, row.quantity, row.rate)
+    total: calcItemEntryTotal(row.discount, row.quantity, row.rate),
   }));
-};
+}
 
 export const ITEM_TYPE = {
   SELLABLE: 'SELLABLE',

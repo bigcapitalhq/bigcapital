@@ -1,23 +1,21 @@
 import React, { useCallback } from 'react';
-import { Button } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
 
 import { DataTableEditable } from 'components';
-import ExpenseDeleteEntriesAlert from 'containers/Alerts/Expenses/ExpenseDeleteEntriesAlert';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 import { useExpenseFormTableColumns } from './components';
-
-import withAlertActions from 'containers/Alert/withAlertActions';
-
-import { transformUpdatedRows, compose, saveInvoke, repeatValue } from 'utils';
+import {
+  saveInvoke,
+  compose,
+  updateTableRow,
+  updateMinEntriesLines,
+  updateAutoAddNewLine,
+  updateRemoveLineByIndex,
+} from 'utils';
 
 /**
  * Expenses form entries.
  */
-function ExpenseFormEntriesTable({
-  // #withAlertActions
-  openAlert,
-
+export default function ExpenseFormEntriesTable({
   // #ownPorps
   entries,
   defaultEntry,
@@ -32,29 +30,30 @@ function ExpenseFormEntriesTable({
 
   // Handles update datatable data.
   const handleUpdateData = useCallback(
-    (rowIndex, columnIdOrObj, value) => {
-      const newRows = transformUpdatedRows(
-        entries,
-        rowIndex,
-        columnIdOrObj,
-        value,
-      );
+    (rowIndex, columnId, value) => {
+      const newRows = compose(
+        updateAutoAddNewLine(defaultEntry, ['expense_account_id']),
+        updateTableRow(rowIndex, columnId, value),
+      )(entries);
+
       saveInvoke(onChange, newRows);
     },
-    [entries, onChange],
+    [entries, defaultEntry, onChange],
   );
 
   // Handles click remove datatable row.
   const handleRemoveRow = useCallback(
     (rowIndex) => {
-      // Can't continue if there is just one row line or less.
-      if (entries.length <= 1) {
-        return;
-      }
-      const newRows = entries.filter((row, index) => index !== rowIndex);
+      const newRows = compose(
+        // Ensure minimum lines count.
+        updateMinEntriesLines(4, defaultEntry),
+        // Remove the line by the given index.
+        updateRemoveLineByIndex(rowIndex),
+      )(entries);
+
       saveInvoke(onChange, newRows);
     },
-    [entries, onChange],
+    [entries, defaultEntry, onChange],
   );
 
   return (
@@ -73,5 +72,3 @@ function ExpenseFormEntriesTable({
     />
   );
 }
-
-export default compose(withAlertActions)(ExpenseFormEntriesTable);
