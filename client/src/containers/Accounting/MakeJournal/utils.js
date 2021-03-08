@@ -3,7 +3,7 @@ import { Intent } from '@blueprintjs/core';
 import { sumBy, setWith, toSafeInteger, get } from 'lodash';
 import moment from 'moment';
 
-import { transformUpdatedRows, repeatValue, transformToForm } from 'utils';
+import { updateTableRow, repeatValue, transformToForm } from 'utils';
 import { AppToaster } from 'components';
 import { formatMessage } from 'services/intl';
 
@@ -70,10 +70,14 @@ function adjustmentEntries(entries) {
 }
 
 /**
- *
+ * Adjustment credit/debit entries.
+ * @param {number} rowIndex
+ * @param {number} columnId
+ * @param {string} value
+ * @return {array}
  */
-export const updateDataReducer = (rows, rowIndex, columnId, value) => {
-  let newRows = transformUpdatedRows(rows, rowIndex, columnId, value);
+export const updateAdjustEntries = (rowIndex, columnId, value) => (rows) => {
+  let newRows = [...rows];
 
   const oldCredit = get(rows, `[${rowIndex}].credit`);
   const oldDebit = get(rows, `[${rowIndex}].debit`);
@@ -82,20 +86,10 @@ export const updateDataReducer = (rows, rowIndex, columnId, value) => {
     const adjustment = adjustmentEntries(rows);
 
     if (adjustment.credit) {
-      newRows = transformUpdatedRows(
-        newRows,
-        rowIndex,
-        'credit',
-        adjustment.credit,
-      );
+      newRows = updateTableRow(rowIndex, 'credit', adjustment.credit)(newRows);
     }
     if (adjustment.debit) {
-      newRows = transformUpdatedRows(
-        newRows,
-        rowIndex,
-        'debit',
-        adjustment.debit,
-      );
+      newRows = updateTableRow(rowIndex, 'debit', adjustment.debit)(newRows);
     }
   }
   return newRows;

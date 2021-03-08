@@ -17,6 +17,17 @@ export default function InviteUserFormContent() {
   // Formik context.
   const { isSubmitting } = useFormikContext();
 
+  const [passwordType, setPasswordType] = React.useState('password');
+
+  // Handle password revealer changing.
+  const handlePasswordRevealerChange = React.useCallback(
+    (shown) => {
+      const type = shown ? 'text' : 'password';
+      setPasswordType(type);
+    },
+    [setPasswordType],
+  );
+
   return (
     <Form>
       <Row>
@@ -74,14 +85,14 @@ export default function InviteUserFormContent() {
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'password'} />}
-            labelInfo={<PasswordRevealer />}
+            labelInfo={<PasswordRevealer onChange={handlePasswordRevealerChange} />}
             className={'form-group--password has-password-revealer'}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'password'} />}
           >
             <InputGroup
               lang={true}
-              // type={shown ? 'text' : 'password'}
+              type={passwordType}
               intent={inputIntent({ error, touched })}
               {...field}
             />

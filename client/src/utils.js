@@ -93,17 +93,6 @@ export const compose = (...funcs) =>
   );
 
 
-export const updateTableRow = (rowIndex, columnId, value) => (old) => {
-  return old.map((row, index) => {
-    if (index === rowIndex) {
-      return {
-        ...old[rowIndex],
-        [columnId]: value,
-      }
-    }
-    return row
-  })
-}
 export const getObjectDiff = (a, b) => {
   return _.reduce(
     a,
@@ -600,4 +589,41 @@ export const amountPaymentEntries = (amount, entries) => {
       payment_amount: diff,
     };
   });
+};
+
+export const updateAutoAddNewLine = (defaultEntry, props) => (entries) => {
+  const newEntries = [...entries];
+  const lastEntry = _.last(newEntries);
+  const newLine = props.filter((entryKey) => !isBlank(lastEntry[entryKey]));
+
+  return newLine.length > 0 ? [...entries, defaultEntry] : [...entries];
+};
+
+/**
+ * Ensure min entries lines.
+ * @param {number} min
+ * @param {any} defaultEntry
+ */
+export const updateMinEntriesLines = (min, defaultEntry) => (lines) => {
+  if (lines.length < min) {
+    const diffLines = Math.max(min - lines.length, 0);
+    return [...lines, ...repeatValue(defaultEntry, diffLines)];
+  }
+};
+
+export const updateRemoveLineByIndex = (rowIndex) => (entries) => {
+  const removeIndex = parseInt(rowIndex, 10);
+  return entries.filter((row, index) => index !== removeIndex);
+};
+
+export const updateTableRow = (rowIndex, columnId, value) => (old) => {
+  return old.map((row, index) => {
+    if (index === rowIndex) {
+      return {
+        ...old[rowIndex],
+        [columnId]: value,
+      }
+    }
+    return row
+  })
 };
