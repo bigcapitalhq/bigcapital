@@ -58,7 +58,7 @@ export function ActionsMenu({
  */
 export function AmountAccessor(bill) {
   return !isBlank(bill.amount) ? (
-    <Money amount={bill.amount} currency={'USD'} />
+    <Money amount={bill.amount} currency={bill.currency_code} />
   ) : (
     ''
   );

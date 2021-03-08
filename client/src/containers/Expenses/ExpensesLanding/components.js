@@ -89,7 +89,7 @@ export function ActionsCell(props) {
  * Total amount accessor.
  */
 export function TotalAmountAccessor(row) {
-  return <Money amount={row.total_amount} currency={'USD'} />;
+  return <Money amount={row.total_amount} currency={row.currency_code} />;
 }
 
 /**

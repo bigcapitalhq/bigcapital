@@ -35,7 +35,10 @@ function PaperTemplate({ labels: propLabels, paperData, entries }) {
           defaultLabels={labels}
           headerData={defaultValues}
         />
-        <PaperTemplateTable tableData={updateItemsEntriesTotal(entries)} />
+        <PaperTemplateTable
+          tableData={updateItemsEntriesTotal(entries)}
+          currencyCode={paperData.currency_code}
+        />
         <PaperTemplateFooter footerData={defaultValues} />
       </div>
     </div>

@@ -84,8 +84,8 @@ export function PhoneNumberAccessor(row) {
 /**
  * Balance accessor.
  */
-export function BalanceAccessor(row) {
-  return <Money amount={row.closing_balance} currency={'USD'} />;
+export function BalanceAccessor({ closing_balance, currency_code }) {
+  return <Money amount={closing_balance} currency={currency_code} />;
 }
 
 /**

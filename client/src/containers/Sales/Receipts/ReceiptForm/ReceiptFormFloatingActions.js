@@ -11,6 +11,7 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 import { useFormikContext } from 'formik';
+import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { If, Icon } from 'components';
@@ -20,6 +21,9 @@ import { useReceiptFormContext } from './ReceiptFormProvider';
  * Receipt floating actions bar.
  */
 export default function ReceiptFormFloatingActions() {
+  // History context.
+  const history = useHistory();
+
   // Formik context.
   const { resetForm, submitForm, isSubmitting } = useFormikContext();
 
@@ -63,7 +67,7 @@ export default function ReceiptFormFloatingActions() {
 
   // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
-    
+    history.goBack();
   };
 
   const handleClearBtnClick = (event) => {

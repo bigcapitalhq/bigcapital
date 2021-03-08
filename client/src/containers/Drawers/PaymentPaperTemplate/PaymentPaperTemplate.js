@@ -36,7 +36,10 @@ export default function PaymentPaperTemplate({
             defaultLabels={labels}
             headerData={defaultValues}
           />
-          <PaymentPaperTemplateTable tableData={entries} />
+          <PaymentPaperTemplateTable
+            tableData={entries}
+            currencyCode={paperData.currency_code}
+          />
         </div>
       ))}
     </div>
