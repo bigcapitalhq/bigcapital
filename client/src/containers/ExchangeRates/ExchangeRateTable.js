@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { DataTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import { useExchangeRatesContext } from './ExchangeRatesProvider';
 import { useExchangeRatesTableColumns, ActionMenuList } from './components';
 
+import withExchangeRates from './withExchangeRates';
+import withExchangeRatesActions from './withExchangeRatesActions';
+
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertActions from 'containers/Alert/withAlertActions';
-
 import { compose } from 'utils';
 
 /**
@@ -23,6 +26,12 @@ function ExchangeRateTable({
 
   // #withAlertActions
   openAlert,
+
+  // #withExchangeRatesActions
+  setExchangeRateTableState,
+
+  // #withExchangeRates
+  exchangeRatesTableState,
 }) {
   const {
     isExchangeRatesFetching,
@@ -48,28 +57,51 @@ function ExchangeRateTable({
     });
   };
 
+  const handleFetchData = useCallback(
+    ({ pageSize, pageIndex, sortBy }) => {
+      setExchangeRateTableState({
+        pageIndex,
+        pageSize,
+        sortBy,
+      });
+    },
+    [setExchangeRateTableState],
+  );
+
   return (
     <DataTable
+      noInitialFetch={true}
       columns={columns}
       data={exchangesRates}
-      noInitialFetch={true}
+      initialState={exchangeRatesTableState}
       loading={isExchangeRatesLoading}
       headerLoading={isExchangeRatesLoading}
       progressBarLoading={isExchangeRatesFetching}
       selectionColumn={true}
-      manualSortBy={true}
       expandable={true}
       sticky={true}
-      // pagination={true}
+      manualSortBy={true}
+      onFetchData={handleFetchData}
+      pagination={true}
+      manualPagination={true}
+      pagesCount={pagination.pagesCount}
       TableLoadingRenderer={TableSkeletonRows}
+      TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      ContextMenu={ActionMenuList}
       payload={{
         onDeleteExchangeRate: handleDeleteExchangeRate,
         onEditExchangeRate: handelEditExchangeRate,
       }}
-      ContextMenu={ActionMenuList}
       {...tableProps}
     />
   );
 }
 
-export default compose(withDialogActions, withAlertActions)(ExchangeRateTable);
+export default compose(
+  withDialogActions,
+  withAlertActions,
+  withExchangeRates(({ exchangeRatesTableState }) => ({
+    exchangeRatesTableState,
+  })),
+  withExchangeRatesActions,
+)(ExchangeRateTable);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { compose } from 'utils';
 
 import { DashboardContentTable, DashboardPageContent } from 'components';
 
@@ -7,13 +8,20 @@ import ExchangeRateActionsBar from './ExchangeRateActionsBar';
 
 import { ExchangeRatesProvider } from './ExchangeRatesProvider';
 import ExchangeRatesAlerts from './ExchangeRatesAlerts';
+import withExchangeRates from './withExchangeRates';
+import { transformTableStateToQuery } from 'utils';
 
 /**
  * Exchange Rates list.
  */
-export default function ExchangeRatesList() {
+function ExchangeRatesList({
+  // #withExchangeRates
+  exchangeRatesTableState,
+}) {
   return (
-    <ExchangeRatesProvider>
+    <ExchangeRatesProvider
+      query={transformTableStateToQuery(exchangeRatesTableState)}
+    >
       <ExchangeRateActionsBar />
 
       <DashboardPageContent>
@@ -25,3 +33,8 @@ export default function ExchangeRatesList() {
     </ExchangeRatesProvider>
   );
 }
+export default compose(
+  withExchangeRates(({ exchangeRatesTableState }) => ({
+    exchangeRatesTableState,
+  })),
+)(ExchangeRatesList);

@@ -1,4 +1,6 @@
 import React, { createContext } from 'react';
+import { transformTableQueryToParams } from 'utils';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { useExchangeRates } from 'hooks/query';
 
@@ -9,10 +11,15 @@ const ExchangesRatesContext = createContext();
  */
 function ExchangeRatesProvider({ query, ...props }) {
   const {
-    data: { exchangesRates, pagination },
+    data: { exchangesRates, pagination, filterMeta },
     isFetching: isExchangeRatesFetching,
     isLoading: isExchangeRatesLoading,
-  } = useExchangeRates();
+  } = useExchangeRates(
+    {
+      ...transformTableQueryToParams(query),
+    },
+    { keepPreviousData: true },
+  );
 
   const state = {
     isExchangeRatesFetching,
@@ -20,11 +27,10 @@ function ExchangeRatesProvider({ query, ...props }) {
 
     exchangesRates,
     pagination,
-    query,
   };
 
   return (
-    <DashboardInsider name={'exchange-rate-list'}>
+    <DashboardInsider name={'exchange-rate'}>
       <ExchangesRatesContext.Provider value={state} {...props} />
     </DashboardInsider>
   );
