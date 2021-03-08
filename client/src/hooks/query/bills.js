@@ -123,7 +123,7 @@ export function useOpenBill(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.delete(`purchases/bills/${id}/open`),
+    (id) => apiRequest.post(`purchases/bills/${id}/open`),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('BILLS');

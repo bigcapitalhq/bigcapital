@@ -38,6 +38,7 @@ export function ActionsMenu({
 
       <If condition={!original.is_open}>
         <MenuItem
+          icon={<Icon icon={'check'} iconSize={18} />}
           text={formatMessage({ id: 'mark_as_opened' })}
           onClick={safeCallback(onOpen, original)}
         />

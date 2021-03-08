@@ -96,7 +96,7 @@ export function ItemsActionMenuList({
         onClick={safeCallback(onEditItem, original)}
       />
       <MenuItem
-        icon={<Icon icon="duplicate-18" />}
+        icon={<Icon icon="duplicate-16" />}
         text={formatMessage({ id: 'duplicate' })}
         onClick={safeCallback(onDuplicate, original)}
       />
