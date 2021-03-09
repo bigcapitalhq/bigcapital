@@ -30,7 +30,6 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
   } = usePaymentReceiveEditPage(paymentReceiveId, {
     enabled: !!paymentReceiveId,
   });
-
   // Handle fetch accounts data.
   const { data: accounts, isFetching: isAccountsFetching } = useAccounts();
 

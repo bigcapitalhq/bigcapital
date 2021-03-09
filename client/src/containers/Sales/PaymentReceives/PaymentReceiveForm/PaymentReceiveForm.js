@@ -6,6 +6,8 @@ import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
+import 'style/pages/PaymentReceive/PageForm.scss';
+
 import { CLASSES } from 'common/classes';
 import PaymentReceiveHeader from './PaymentReceiveFormHeader';
 import PaymentReceiveFormBody from './PaymentReceiveFormBody';
@@ -28,8 +30,6 @@ import {
   defaultPaymentReceive,
   transformToEditForm,
 } from './utils';
-
-import 'style/pages/PaymentReceive/PageForm.scss';
 
 /**
  * Payment Receive form.

@@ -4,7 +4,8 @@ import { Inject, Service } from 'typedi';
 import { IPaymentReceiveDTO } from 'interfaces';
 import BaseController from 'api/controllers/BaseController';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
-import PaymentReceiveService from 'services/Sales/PaymentsReceives';
+import PaymentReceiveService from 'services/Sales/PaymentReceives/PaymentsReceives';
+import PaymentReceivesPages from 'services/Sales/PaymentReceives/PaymentReceivesPages';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from 'exceptions';
 
@@ -16,6 +17,9 @@ import { ServiceError } from 'exceptions';
 export default class PaymentReceivesController extends BaseController {
   @Inject()
   paymentReceiveService: PaymentReceiveService;
+
+  @Inject()
+  PaymentReceivesPages: PaymentReceivesPages;
 
   @Inject()
   dynamicListService: DynamicListingService;
@@ -132,9 +136,7 @@ export default class PaymentReceivesController extends BaseController {
    * @return {Array}
    */
   get newPaymentReceiveValidation() {
-    return [
-      ...this.paymentReceiveSchema,
-    ];
+    return [...this.paymentReceiveSchema];
   }
 
   /**
@@ -149,6 +151,9 @@ export default class PaymentReceivesController extends BaseController {
 
   /**
    * Records payment receive to the given customer with associated invoices.
+   * @param {Request} req
+   * @param {Response} res
+   * @return {Response}
    */
   async newPaymentReceive(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
@@ -165,6 +170,7 @@ export default class PaymentReceivesController extends BaseController {
         message: 'The payment receive has been created successfully.',
       });
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
@@ -216,39 +222,6 @@ export default class PaymentReceivesController extends BaseController {
       return res.status(200).send({
         id: paymentReceiveId,
         message: 'The payment receive has been deleted successfully',
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Retrieve the given payment receive details.
-   * @asycn
-   * @param {Request} req -
-   * @param {Response} res -
-   */
-  async getPaymentReceiveEditPage(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    const { tenantId, user } = req;
-    const { id: paymentReceiveId } = req.params;
-
-    try {
-      const {
-        paymentReceive,
-        entries,
-      } = await this.paymentReceiveService.getPaymentReceiveEditPage(
-        tenantId,
-        paymentReceiveId,
-        user
-      );
-
-      return res.status(200).send({
-        payment_receive: this.transfromToResponse({ ...paymentReceive }),
-        entries: this.transfromToResponse([...entries]),
       });
     } catch (error) {
       next(error);
@@ -334,12 +307,45 @@ export default class PaymentReceivesController extends BaseController {
     const { customerId } = this.matchedQueryData(req);
 
     try {
-      const entries = await this.paymentReceiveService.getNewPageEntries(
+      const entries = await this.PaymentReceivesPages.getNewPageEntries(
         tenantId,
         customerId
       );
       return res.status(200).send({
         entries: this.transfromToResponse(entries),
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieve the given payment receive details.
+   * @asycn
+   * @param {Request} req -
+   * @param {Response} res -
+   */
+   async getPaymentReceiveEditPage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId, user } = req;
+    const { id: paymentReceiveId } = req.params;
+
+    try {
+      const {
+        paymentReceive,
+        entries,
+      } = await this.PaymentReceivesPages.getPaymentReceiveEditPage(
+        tenantId,
+        paymentReceiveId,
+        user
+      );
+
+      return res.status(200).send({
+        payment_receive: this.transfromToResponse({ ...paymentReceive }),
+        entries: this.transfromToResponse([...entries]),
       });
     } catch (error) {
       next(error);
@@ -452,6 +458,11 @@ export default class PaymentReceivesController extends BaseController {
       if (error.errorType === 'PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE', code: 1200 }],
+        });
+      }
+      if (error.errorType === 'PAYMENT_RECEIVE_NO_REQUIRED') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'PAYMENT_RECEIVE_NO_REQUIRED', code: 1300 }],
         });
       }
     }

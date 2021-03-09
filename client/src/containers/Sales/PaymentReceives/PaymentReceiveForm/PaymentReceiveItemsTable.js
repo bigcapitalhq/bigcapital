@@ -1,38 +1,34 @@
 import React, { useCallback } from 'react';
-import { Button } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
 import { CloudLoadingIndicator } from 'components';
 import classNames from 'classnames';
+import { useFormikContext } from 'formik';
 
 import { CLASSES } from 'common/classes';
-import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
+import { usePaymentReceiveInnerContext } from './PaymentReceiveInnerProvider';
 import { DataTableEditable } from 'components';
 import { usePaymentReceiveEntriesColumns } from './components';
-import { compose, updateTableRow, safeSumBy } from 'utils';
-import withAlertActions from 'containers/Alert/withAlertActions';
-
+import { compose, updateTableRow } from 'utils';
 
 /**
  * Payment receive items table.
  */
-function PaymentReceiveItemsTable({
+export default function PaymentReceiveItemsTable({
   entries,
   onUpdateData,
-
-  // #withDialogActions
-  openAlert
 }) {
   // Payment receive form context.
   const {
     isDueInvoicesFetching,
-    paymentCustomerId,
-  } = usePaymentReceiveFormContext();
+  } = usePaymentReceiveInnerContext();
 
   // Payment receive entries form context.
   const columns = usePaymentReceiveEntriesColumns();
 
+  // Formik context.
+  const { values: { customer_id } } = useFormikContext();
+
   // No results message.
-  const noResultsMessage = paymentCustomerId
+  const noResultsMessage = customer_id
     ? 'There is no receivable invoices for this customer that can be applied for this payment'
     : 'Please select a customer to display all open invoices for it.';
 
@@ -63,5 +59,3 @@ function PaymentReceiveItemsTable({
     </CloudLoadingIndicator>
   );
 }
-
-export default compose(withAlertActions)(PaymentReceiveItemsTable);

@@ -1,7 +1,7 @@
 import { Container, Inject, Service } from 'typedi';
 import { EventSubscriber, On } from 'event-dispatch';
 import events from 'subscribers/events';
-import BillPaymentsService from 'services/Purchases/BillPayments';
+import BillPaymentsService from 'services/Purchases/BillPayments/BillPayments';
 import TenancyService from 'services/Tenancy/TenancyService';
 
 @EventSubscriber()

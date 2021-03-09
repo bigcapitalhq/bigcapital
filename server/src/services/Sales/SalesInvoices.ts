@@ -656,6 +656,7 @@ export default class SaleInvoicesService {
 
     const salesInvoices = await SaleInvoice.query().onBuild((query) => {
       query.modify('dueInvoices');
+      query.modify('delivered');
 
       if (customerId) {
         query.where('customer_id', customerId);

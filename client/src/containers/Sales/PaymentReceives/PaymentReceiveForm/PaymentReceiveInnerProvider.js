@@ -29,10 +29,10 @@ function PaymentReceiveInnerProvider({ ...props }) {
   });
 
   useEffect(() => {
-    if (!isDueInvoicesFetching && !isEmpty(dueInvoices)) {
+    if (!isDueInvoicesFetching && dueInvoices && isNewMode) {
       setFieldValue('entries', transformInvoicesNewPageEntries(dueInvoices));
     }
-  }, [isDueInvoicesFetching, dueInvoices, setFieldValue]);
+  }, [isDueInvoicesFetching, dueInvoices, isNewMode, setFieldValue]);
 
   // Provider payload.
   const provider = {

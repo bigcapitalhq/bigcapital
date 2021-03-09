@@ -32,6 +32,7 @@ export const transformToEditForm = (paymentReceive, paymentReceiveEntries) => ({
   entries: [
     ...paymentReceiveEntries.map((paymentReceiveEntry) => ({
       ...transformToForm(paymentReceiveEntry, defaultPaymentReceiveEntry),
+      payment_amount: paymentReceiveEntry.payment_amount || '',
     })),
   ],
 });
@@ -47,7 +48,7 @@ export const transformInvoicesNewPageEntries = (invoices) => [
     due_amount: invoice.due_amount,
     date: invoice.invoice_date,
     amount: invoice.balance,
-    payment_amount: 0,
+    payment_amount: '',
     invoice_no: invoice.invoice_no,
     total_payment_amount: invoice.payment_amount,
   })),

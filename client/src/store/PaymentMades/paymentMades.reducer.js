@@ -6,11 +6,11 @@ import {
 const initialState = {
   tableState: {
     pageSize: 12,
-    pageIndex: 1,
+    pageIndex: 0,
     sortBy: [],
   },
 };
- 
+
 export default createReducer(initialState, {
   ...createTableStateReducers('PAYMENT_MADES'),
 });

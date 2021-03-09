@@ -147,6 +147,12 @@ export function useDueInvoices(customerId, props) {
       }),
     {
       select: (res) => res.data.sales_invoices,
+      initialDataUpdatedAt: 0,
+      initialData: {
+        data: {
+          sales_invoices: [],
+        },
+      },
       ...props,
     },
   );

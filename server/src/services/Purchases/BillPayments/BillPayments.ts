@@ -15,7 +15,6 @@ import {
   IPaginationMeta,
   IFilterMeta,
   IBillPaymentEntry,
-  IBillReceivePageEntry,
 } from 'interfaces';
 import AccountsService from 'services/Accounts/AccountsService';
 import JournalPoster from 'services/Accounting/JournalPoster';
@@ -28,19 +27,7 @@ import { entriesAmountDiff, formatDateFields } from 'utils';
 import { ServiceError } from 'exceptions';
 import { ACCOUNT_PARENT_TYPE } from 'data/AccountTypes';
 import VendorsService from 'services/Contacts/VendorsService';
-
-const ERRORS = {
-  BILL_VENDOR_NOT_FOUND: 'VENDOR_NOT_FOUND',
-  PAYMENT_MADE_NOT_FOUND: 'PAYMENT_MADE_NOT_FOUND',
-  BILL_PAYMENT_NUMBER_NOT_UNQIUE: 'BILL_PAYMENT_NUMBER_NOT_UNQIUE',
-  PAYMENT_ACCOUNT_NOT_FOUND: 'PAYMENT_ACCOUNT_NOT_FOUND',
-  PAYMENT_ACCOUNT_NOT_CURRENT_ASSET_TYPE:
-    'PAYMENT_ACCOUNT_NOT_CURRENT_ASSET_TYPE',
-  BILL_ENTRIES_IDS_NOT_FOUND: 'BILL_ENTRIES_IDS_NOT_FOUND',
-  BILL_PAYMENT_ENTRIES_NOT_FOUND: 'BILL_PAYMENT_ENTRIES_NOT_FOUND',
-  INVALID_BILL_PAYMENT_AMOUNT: 'INVALID_BILL_PAYMENT_AMOUNT',
-  PAYMENT_NUMBER_SHOULD_NOT_MODIFY: 'PAYMENT_NUMBER_SHOULD_NOT_MODIFY',
-};
+import { ERRORS } from './constants';
 
 /**
  * Bill payments service.
@@ -271,7 +258,7 @@ export default class BillPaymentsService {
    * * Validate the payment vendor whether modified.
    * @param {string} billPaymentNo
    */
-  validateVendorNotModified(
+  private validateVendorNotModified(
     billPaymentDTO: IBillPaymentDTO,
     oldBillPayment: IBillPayment
   ) {
@@ -646,7 +633,6 @@ export default class BillPaymentsService {
       BillPayment,
       billPaymentsFilter
     );
-
     this.logger.info('[bill_payment] try to get bill payments list.', {
       tenantId,
     });
@@ -663,51 +649,6 @@ export default class BillPaymentsService {
       billPayments: results,
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
-    };
-  }
-
-  /**
-   * Retrieve bill payment with associated metadata.
-   * @param {number} billPaymentId - The bill payment id.
-   * @return {object}
-   */
-  public async getBillPaymentEditPage(
-    tenantId: number,
-    billPaymentId: number
-  ): Promise<{
-    billPayment: Omit<IBillPayment, 'entries'>;
-    entries: IBillReceivePageEntry[];
-  }> {
-    const { BillPayment, Bill } = this.tenancy.models(tenantId);
-    const billPayment = await BillPayment.query()
-      .findById(billPaymentId)
-      .withGraphFetched('entries.bill');
-
-    // Throw not found the bill payment.
-    if (!billPayment) {
-      throw new ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND);
-    }
-    const paymentEntries = billPayment.entries.map((entry) => ({
-      ...this.mapBillToPageEntry(entry.bill),
-      paymentAmount: entry.paymentAmount,
-    }));
-
-    const resPayableBills = await Bill.query()
-      .modify('dueBills')
-      .where('vendor_id', billPayment.vendorId)
-      .whereNotIn(
-        'id',
-        billPayment.entries.map((e) => e.billId)
-      )
-      .orderBy('bill_date', 'ASC');
-
-    // Mapping the payable bills to entries.
-    const restPayableEntries = resPayableBills.map(this.mapBillToPageEntry);
-    const entries = [...paymentEntries, ...restPayableEntries];
-
-    return {
-      billPayment: omit(billPayment, ['entries']),
-      entries,
     };
   }
 
@@ -745,56 +686,5 @@ export default class BillPaymentsService {
       }
     );
     await Promise.all(opers);
-  }
-
-  /**
-   * Retrive edit page invoices entries from the given sale invoices models.
-   * @param  {ISaleInvoice[]} invoices - Invoices.
-   * @return {IPaymentReceiveEditPageEntry}
-   */
-  public mapBillToPageEntry(bill: IBill): IBillReceivePageEntry {
-    return {
-      entryType: 'invoice',
-      billId: bill.id,
-      dueAmount: bill.dueAmount + bill.paymentAmount,
-      amount: bill.amount,
-      billNo: bill.billNumber,
-      totalPaymentAmount: bill.paymentAmount,
-      paymentAmount: bill.paymentAmount,
-      date: bill.billDate,
-    };
-  }
-
-  public mapBillToNewPageEntry(bill: IBill): IBillReceivePageEntry {
-    return {
-      entryType: 'invoice',
-      billId: bill.id,
-      dueAmount: bill.dueAmount,
-      amount: bill.amount,
-      billNo: bill.billNumber,
-      date: bill.billDate,
-      totalPaymentAmount: bill.paymentAmount,
-      paymentAmount: 0,
-    };
-  }
-
-  /**
-   * Retrieve the payable entries of the new page once vendor be selected.
-   * @param {number} tenantId
-   * @param {number} vendorId
-   */
-  async getNewPageEntries(
-    tenantId: number,
-    vendorId: number
-  ): Promise<IBillReceivePageEntry[]> {
-    const { Bill } = this.tenancy.models(tenantId);
-
-    // Retrieve all payable bills that assocaited to the payment made transaction.
-    const payableBills = await Bill.query()
-      .modify('dueBills')
-      .where('vendor_id', vendorId)
-      .orderBy('bill_date', 'ASC');
-
-    return payableBills.map(this.mapBillToNewPageEntry);
   }
 }

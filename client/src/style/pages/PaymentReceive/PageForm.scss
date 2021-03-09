@@ -70,11 +70,8 @@ body.page-payment-receive-edit{
     }
 
     .table {
-
-
       .th,
       .td {
-
         &.invoice_amount,
         &.amount_due,
         &.payment_amount {
@@ -87,7 +84,6 @@ body.page-payment-receive-edit{
       }
 
       .tr {
-
         .td:first-of-type,
         .th:first-of-type {
 

@@ -1,8 +1,8 @@
 import { useFormikContext } from 'formik';
-import { isEmpty } from 'lodash';
 import React, { createContext, useContext, useEffect } from 'react';
 import { usePaymentMadeNewPageEntries } from 'hooks/query';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
+import { transformToNewPageEntries } from './utils';
 
 const PaymentMadeInnerContext = createContext();
 
@@ -10,6 +10,7 @@ const PaymentMadeInnerContext = createContext();
  * Payment made inner form provider.
  */
 function PaymentMadeInnerProvider({ ...props }) {
+  // Payment made form context.
   const { isNewMode } = usePaymentMadeFormContext();
 
   // Formik context.
@@ -27,16 +28,16 @@ function PaymentMadeInnerProvider({ ...props }) {
   });
 
   useEffect(() => {
-    if (!isNewEntriesFetching && !isEmpty(newPageEntries)) {
-      setFieldValue('entries', newPageEntries)
+    if (!isNewEntriesFetching && newPageEntries && isNewMode) {
+      setFieldValue('entries', transformToNewPageEntries(newPageEntries));
     }
-  }, [isNewEntriesFetching, newPageEntries, setFieldValue]);
+  }, [isNewEntriesFetching, newPageEntries, isNewMode, setFieldValue]);
 
   // Provider payload.
   const provider = {
     newPageEntries,
     isNewEntriesLoading,
-    isNewEntriesFetching
+    isNewEntriesFetching,
   };
 
   return <PaymentMadeInnerContext.Provider value={provider} {...props} />;

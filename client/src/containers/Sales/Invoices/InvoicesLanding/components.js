@@ -54,8 +54,7 @@ export const statusAccessor = (row) => {
               <T
                 id={'day_partially_paid'}
                 values={{
-                  due: round(row.due_amount, 2),
-                  currencySign: '$',
+                  due: <Money amount={row.due_amount} currency={'USD'} />,
                 }}
               />
             </span>

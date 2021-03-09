@@ -44,9 +44,6 @@ body.hide-scrollbar .Pane2{
   overflow: hidden;
 }
 
-
-
-
 .bp3-fill{
   .bp3-popover-wrapper,
   .bp3-popover-target {
@@ -96,8 +93,10 @@ body.hide-scrollbar .Pane2{
 }
 
 
-
-
 .bp3-progress-bar.bp3-intent-primary .bp3-progress-meter{
   background-color: #0066ff;
+}
+
+.bp3-overlay-backdrop{
+  background-color: rgba(0,10,30, .7);
 }

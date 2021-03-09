@@ -72,6 +72,7 @@ export function usePaymentMadeEntriesTableColumns() {
         Cell: BillDateCell,
         disableSortBy: true,
         width: 250,
+        className: 'bill_date',
       },
       {
         Header: formatMessage({ id: 'bill_number' }),
@@ -85,7 +86,7 @@ export function usePaymentMadeEntriesTableColumns() {
         Cell: MoneyTableCell,
         Footer: AmountFooterCell,
         disableSortBy: true,
-        className: '',
+        className: 'amount',
       },
       {
         Header: formatMessage({ id: 'amount_due' }),
@@ -93,7 +94,7 @@ export function usePaymentMadeEntriesTableColumns() {
         Cell: MoneyTableCell,
         Footer: DueAmountFooterCell,
         disableSortBy: true,
-        className: '',
+        className: 'due_amount',
       },
       {
         Header: formatMessage({ id: 'payment_amount' }),
@@ -101,7 +102,7 @@ export function usePaymentMadeEntriesTableColumns() {
         Cell: MoneyFieldCell,
         Footer: PaymentAmountFooterCell,
         disableSortBy: true,
-        className: '',
+        className: 'payment_amount',
       },
     ],
     [formatMessage],

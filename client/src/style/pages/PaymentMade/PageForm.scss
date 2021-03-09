@@ -67,6 +67,19 @@ body.page-payment-made-edit{
     }
 
     .table{
+      .th,
+      .td {
+        &.amount,
+        &.due_amount,
+        &.payment_amount {
+
+          &,
+          input {
+            text-align: right;
+          }
+        }
+      }
+     
       .tr{
         .td:first-of-type,
         .th:first-of-type{

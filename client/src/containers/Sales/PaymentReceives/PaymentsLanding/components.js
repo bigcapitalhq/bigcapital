@@ -115,18 +115,18 @@ export function usePaymentReceivesColumns() {
         className: 'payment_receive_no',
       },
       {
-        id: 'reference_no',
-        Header: formatMessage({ id: 'reference_no' }),
-        accessor: 'reference_no',
-        width: 140,
-        className: 'reference_no',
-      },
-      {
         id: 'deposit_account',
         Header: formatMessage({ id: 'deposit_account' }),
         accessor: 'deposit_account.name',
         width: 140,
         className: 'deposit_account_id',
+      },
+      {
+        id: 'reference_no',
+        Header: formatMessage({ id: 'reference_no' }),
+        accessor: 'reference_no',
+        width: 140,
+        className: 'reference_no',
       },
       {
         id: 'actions',

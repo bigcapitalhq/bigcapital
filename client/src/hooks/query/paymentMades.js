@@ -131,6 +131,12 @@ export function usePaymentMadeNewPageEntries(vendorId, props) {
       }),
     {
       select: (res) => res.data.entries,
+      initialDataUpdatedAt: 0,
+      initialData: {
+        data: {
+          entries: [],
+        }
+      },
       ...props,
     },
   );

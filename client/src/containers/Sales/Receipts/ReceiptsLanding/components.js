@@ -34,6 +34,7 @@ export function ActionsMenu({
       />
       <If condition={!receipt.is_closed}>
         <MenuItem
+          icon={<Icon icon={'check'} iconSize={18} />}
           text={formatMessage({ id: 'mark_as_closed' })}
           onClick={safeCallback(onClose, receipt)}
         />

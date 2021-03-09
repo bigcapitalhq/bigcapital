@@ -32,7 +32,18 @@ export const transformToEditForm = (paymentMade, paymentMadeEntries) => {
     entries: [
       ...paymentMadeEntries.map((paymentMadeEntry) => ({
         ...transformToForm(paymentMadeEntry, defaultPaymentMadeEntry),
+        payment_amount: paymentMadeEntry.payment_amount || '',
       })),
     ],
   };
 };
+
+/**
+ * Transform the new page entries.
+ */
+export const transformToNewPageEntries = (entries) => {
+  return entries.map((entry) => ({
+    ...transformToForm(entry, defaultPaymentMadeEntry),
+    payment_amount: '',
+  }));
+}

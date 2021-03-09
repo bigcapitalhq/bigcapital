@@ -17,7 +17,6 @@ export default function PaymentMadeFormBody() {
           />
         )}
       </FastField>
-
     </div>
   )
 }

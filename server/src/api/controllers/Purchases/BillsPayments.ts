@@ -4,11 +4,11 @@ import { check, param, query, ValidationChain } from 'express-validator';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import { ServiceError } from 'exceptions';
 import BaseController from 'api/controllers/BaseController';
-import BillPaymentsService from 'services/Purchases/BillPayments';
+import BillPaymentsService from 'services/Purchases/BillPayments/BillPayments';
+import BillPaymentsPages from 'services/Purchases/BillPayments/BillPaymentsPages';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import AccountsService from 'services/Accounts/AccountsService';
-import ResourceController from '../Resources';
-import { Request } from 'express-validator/src/base';
+
 
 /**
  * Bills payments controller.
@@ -24,6 +24,9 @@ export default class BillsPayments extends BaseController {
 
   @Inject()
   dynamicListService: DynamicListingService;
+
+  @Inject()
+  billPaymentsPages: BillPaymentsPages;
 
   /**
    * Router constructor.
@@ -144,7 +147,7 @@ export default class BillsPayments extends BaseController {
     const { vendorId } = this.matchedQueryData(req);
 
     try {
-      const entries = await this.billPaymentService.getNewPageEntries(
+      const entries = await this.billPaymentsPages.getNewPageEntries(
         tenantId,
         vendorId
       );
@@ -171,7 +174,7 @@ export default class BillsPayments extends BaseController {
       const {
         billPayment,
         entries,
-      } = await this.billPaymentService.getBillPaymentEditPage(
+      } = await this.billPaymentsPages.getBillPaymentEditPage(
         tenantId,
         paymentReceiveId
       );

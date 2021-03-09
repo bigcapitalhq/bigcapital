@@ -17,7 +17,6 @@ import {
   IPaymentReceivesFilter,
   ISaleInvoice,
   ISystemUser,
-  IPaymentReceivePageEntry,
 } from 'interfaces';
 import AccountsService from 'services/Accounts/AccountsService';
 import JournalPoster from 'services/Accounting/JournalPoster';
@@ -31,21 +30,9 @@ import CustomersService from 'services/Contacts/CustomersService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import JournalCommands from 'services/Accounting/JournalCommands';
 import { ACCOUNT_PARENT_TYPE } from 'data/AccountTypes';
-import AutoIncrementOrdersService from './AutoIncrementOrdersService';
+import AutoIncrementOrdersService from '../AutoIncrementOrdersService';
+import { ERRORS } from './constants';
 
-const ERRORS = {
-  PAYMENT_RECEIVE_NO_EXISTS: 'PAYMENT_RECEIVE_NO_EXISTS',
-  PAYMENT_RECEIVE_NOT_EXISTS: 'PAYMENT_RECEIVE_NOT_EXISTS',
-  DEPOSIT_ACCOUNT_NOT_FOUND: 'DEPOSIT_ACCOUNT_NOT_FOUND',
-  DEPOSIT_ACCOUNT_INVALID_TYPE: 'DEPOSIT_ACCOUNT_INVALID_TYPE',
-  INVALID_PAYMENT_AMOUNT: 'INVALID_PAYMENT_AMOUNT',
-  INVOICES_IDS_NOT_FOUND: 'INVOICES_IDS_NOT_FOUND',
-  ENTRIES_IDS_NOT_EXISTS: 'ENTRIES_IDS_NOT_EXISTS',
-  INVOICES_NOT_DELIVERED_YET: 'INVOICES_NOT_DELIVERED_YET',
-  PAYMENT_RECEIVE_NO_IS_REQUIRED: 'PAYMENT_RECEIVE_NO_IS_REQUIRED',
-  PAYMENT_RECEIVE_NO_REQUIRED: 'PAYMENT_RECEIVE_NO_REQUIRED',
-  PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE: 'PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE',
-};
 /**
  * Payment receive service.
  * @service
@@ -532,7 +519,7 @@ export default class PaymentReceiveService {
    * @param {Integer} paymentReceiveId - Payment receive id.
    * @param {IPaymentReceive} paymentReceive - Payment receive object.
    */
-  async deletePaymentReceive(
+  public async deletePaymentReceive(
     tenantId: number,
     paymentReceiveId: number,
     authorizedUser: ISystemUser
@@ -572,7 +559,7 @@ export default class PaymentReceiveService {
    * @param {number} paymentReceiveId - Payment receive id.
    * @return {Promise<IPaymentReceive>}
    */
-  async getPaymentReceive(
+  public async getPaymentReceive(
     tenantId: number,
     paymentReceiveId: number
   ): Promise<IPaymentReceive> {
@@ -589,76 +576,6 @@ export default class PaymentReceiveService {
     }
 
     return paymentReceive;
-  }
-
-  /**
-   * Retrive edit page invoices entries from the given sale invoices models.
-   * @param  {ISaleInvoice[]} invoices - Invoices.
-   * @return {IPaymentReceiveEditPageEntry}
-   */
-  public invoiceToPageEntry(
-    invoice: ISaleInvoice
-  ): IPaymentReceiveEditPageEntry {
-    return {
-      entryType: 'invoice',
-      invoiceId: invoice.id,
-      dueAmount: invoice.dueAmount + invoice.paymentAmount,
-      amount: invoice.balance,
-      invoiceNo: invoice.invoiceNo,
-      totalPaymentAmount: invoice.paymentAmount,
-      paymentAmount: invoice.paymentAmount,
-      date: invoice.invoiceDate,
-    };
-  }
-
-  /**
-   * Retrieve the payment receive details of the given id.
-   * @param {number} tenantId - Tenant id.
-   * @param {Integer} paymentReceiveId - Payment receive id.
-   */
-  public async getPaymentReceiveEditPage(
-    tenantId: number,
-    paymentReceiveId: number,
-    authorizedUser: ISystemUser
-  ): Promise<{
-    paymentReceive: Omit<IPaymentReceive, 'entries'>;
-    entries: IPaymentReceivePageEntry[];
-  }> {
-    const { PaymentReceive, SaleInvoice } = this.tenancy.models(tenantId);
-
-    // Retrieve payment receive.
-    const paymentReceive = await PaymentReceive.query()
-      .findById(paymentReceiveId)
-      .withGraphFetched('entries.invoice');
-
-    // Throw not found the payment receive.
-    if (!paymentReceive) {
-      throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NOT_EXISTS);
-    }
-    const paymentEntries = paymentReceive.entries.map((entry) => ({
-      ...this.invoiceToPageEntry(entry.invoice),
-      paymentAmount: entry.paymentAmount,
-    }));
-
-    // Retrieves all receivable bills that associated to the payment receive transaction.
-    const restReceivableInvoices = await SaleInvoice.query()
-      .modify('dueInvoices')
-      .where('customer_id', paymentReceive.customerId)
-      .whereNotIn(
-        'id',
-        paymentReceive.entries.map((entry) => entry.invoiceId)
-      )
-      .orderBy('invoice_date', 'ASC');
-
-    const restReceivableEntries = restReceivableInvoices.map(
-      this.invoiceToPageEntry
-    );
-    const entries = [...paymentEntries, ...restReceivableEntries];
-
-    return {
-      paymentReceive: omit(paymentReceive, ['entries']),
-      entries,
-    };
   }
 
   /**
@@ -680,7 +597,6 @@ export default class PaymentReceiveService {
     const paymentReceiveInvoicesIds = paymentReceive.entries.map(
       (entry) => entry.invoiceId
     );
-
     const saleInvoices = await SaleInvoice.query().whereIn(
       'id',
       paymentReceiveInvoicesIds
@@ -724,22 +640,6 @@ export default class PaymentReceiveService {
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };
-  }
-
-  /**
-   * Retrieve the payment receive details with associated invoices.
-   * @param {Integer} paymentReceiveId
-   */
-  async getPaymentReceiveWithInvoices(
-    tenantId: number,
-    paymentReceiveId: number
-  ) {
-    const { PaymentReceive } = this.tenancy.models(tenantId);
-
-    return PaymentReceive.query()
-      .where('id', paymentReceiveId)
-      .withGraphFetched('invoices')
-      .first();
   }
 
   /**
@@ -870,23 +770,5 @@ export default class PaymentReceiveService {
       opers.push(oper);
     });
     await Promise.all([...opers]);
-  }
-
-  /**
-   * Retrieve payment receive new page receivable entries.
-   * @param {number} tenantId - Tenant id.
-   * @param {number} vendorId - Vendor id.
-   * @return {IPaymentReceivePageEntry[]}
-   */
-  async getNewPageEntries(tenantId: number, customerId: number) {
-    const { SaleInvoice } = this.tenancy.models(tenantId);
-
-    // Retrieve due invoices.
-    const entries = await SaleInvoice.query()
-      .modify('dueInvoices')
-      .where('customer_id', customerId)
-      .orderBy('invoice_date', 'ASC');
-
-    return entries.map(this.invoiceToPageEntry);
   }
 }
