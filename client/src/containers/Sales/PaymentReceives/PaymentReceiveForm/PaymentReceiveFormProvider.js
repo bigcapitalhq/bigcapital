@@ -41,7 +41,7 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
   const {
     data: { customers },
     isFetching: isCustomersFetching,
-  } = useCustomers();
+  } = useCustomers({ page_size: 10000 });
 
   // Detarmines whether the new mode.
   const isNewMode = !paymentReceiveId;

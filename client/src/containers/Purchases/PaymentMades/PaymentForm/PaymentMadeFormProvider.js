@@ -28,13 +28,13 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
     data: { items },
     isFetching: isItemsFetching,
     isLoading: isItemsLoading,
-  } = useItems();
+  } = useItems({ page_size: 10000 });
 
   // Handle fetch venders data table or list.
   const {
     data: { vendors },
     isFetching: isVendorsFetching,
-  } = useVendors();
+  } = useVendors({ page_size: 10000 });
 
   // Handle fetch specific payment made details.
   const {

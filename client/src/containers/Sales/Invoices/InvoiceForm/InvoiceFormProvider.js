@@ -20,7 +20,6 @@ const InvoiceFormContext = createContext();
  */
 function InvoiceFormProvider({ invoiceId, ...props }) {
   const { state } = useLocation();
-
   const estimateId = state?.action;
 
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
@@ -42,13 +41,13 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
   const {
     data: { items },
     isLoading: isItemsLoading,
-  } = useItems();
+  } = useItems({ page_size: 10000 });
 
   // Handle fetch customers data table or list
   const {
     data: { customers },
     isLoading: isCustomersLoading,
-  } = useCustomers();
+  } = useCustomers({ page_size: 10000 });
 
   // Handle fetching settings.
   const { isLoading: isSettingsLoading } = useSettingsInvoices();

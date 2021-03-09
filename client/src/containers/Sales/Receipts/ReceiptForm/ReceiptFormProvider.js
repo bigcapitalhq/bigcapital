@@ -30,13 +30,13 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   const {
     data: { customers },
     isFetching: isCustomersLoading,
-  } = useCustomers();
+  } = useCustomers({ page_size: 10000 });
 
   // Handle fetch Items data table or list
   const {
     data: { items },
     isFetching: isItemsLoading,
-  } = useItems();
+  } = useItems({ page_size: 10000 });
 
   // Fetch receipt settings.
   const { isLoading: isSettingLoading } = useSettings();

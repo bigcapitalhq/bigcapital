@@ -23,13 +23,13 @@ function BillFormProvider({ billId, ...props }) {
   const {
     data: { vendors },
     isFetching: isVendorsLoading,
-  } = useVendors();
+  } = useVendors({ page_size: 10000 });
 
   // Handle fetch Items data table or list
   const {
     data: { items },
     isFetching: isItemsLoading,
-  } = useItems();
+  } = useItems({ page_size: 10000 });
 
   // Handle fetch bill details.
   const { data: bill, isFetching: isBillLoading } = useBill(billId, {

@@ -23,13 +23,13 @@ function EstimateFormProvider({ estimateId, ...props }) {
   const {
     data: { items },
     isFetching: isItemsFetching,
-  } = useItems();
+  } = useItems({ page_size: 10000 });
 
   // Handle fetch customers data table or list
   const {
     data: { customers },
     isFetch: isCustomersFetching,
-  } = useCustomers();
+  } = useCustomers({ page_size: 10000 });
 
   // Handle fetch settings.
   useSettings();
