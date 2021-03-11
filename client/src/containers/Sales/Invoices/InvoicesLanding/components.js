@@ -104,7 +104,7 @@ export const handleDeleteErrors = (errors) => {
 };
 
 export function ActionsMenu({
-  payload: { onEdit, onDeliver, onDelete, onDrawer },
+  payload: { onEdit, onDeliver, onDelete, onDrawer, onQuick },
   row: { original },
 }) {
   const { formatMessage } = useIntl();
@@ -126,6 +126,13 @@ export function ActionsMenu({
           icon={<Icon icon="send" iconSize={16} />}
           text={formatMessage({ id: 'mark_as_delivered' })}
           onClick={safeCallback(onDeliver, original)}
+        />
+      </If>
+      <If condition={!original.is_fully_paid}>
+        <MenuItem
+          // icon={<Icon />}
+          text={formatMessage({ id: 'make_as_payment' })}
+          onClick={safeCallback(onQuick, original)}
         />
       </If>
       <MenuItem
@@ -179,7 +186,9 @@ export function useInvoicesTableColumns() {
       {
         id: 'balance',
         Header: formatMessage({ id: 'balance' }),
-        accessor: (r) => <Money amount={r.balance} currency={r.currency_code} />,
+        accessor: (r) => (
+          <Money amount={r.balance} currency={r.currency_code} />
+        ),
         width: 110,
         className: 'balance',
       },

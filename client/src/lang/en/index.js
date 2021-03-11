@@ -1001,4 +1001,10 @@ export default {
   invoice_number: 'Invoice number',
   invoice_date: 'Invoice date',
   invoice_amount: 'Invoice amount',
+  make_payment: 'Make Payment',
+  make_as_payment: 'Make as payment',
+  quick_receive_payment: 'Quick Receive Payment',
+  amount_received: 'Amount Received',
+  payment_no: 'Payment No.',
+  payment_receive_number_required: 'Payment receive number required',
 };
