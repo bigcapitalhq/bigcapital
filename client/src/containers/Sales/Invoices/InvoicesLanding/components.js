@@ -130,8 +130,8 @@ export function ActionsMenu({
       </If>
       <If condition={!original.is_fully_paid}>
         <MenuItem
-          // icon={<Icon />}
-          text={formatMessage({ id: 'make_as_payment' })}
+          icon={<Icon icon="quick-payment-16" iconSize={16} />}
+          text={formatMessage({ id: 'add_payment' })}
           onClick={safeCallback(onQuick, original)}
         />
       </If>
