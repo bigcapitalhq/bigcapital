@@ -14,7 +14,12 @@ import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { DateInput } from '@blueprintjs/datetime';
 import { FieldRequiredHint, Col, Row } from 'components';
-import { AccountsSelectList, InputPrependText, Icon } from 'components';
+import {
+  AccountsSelectList,
+  InputPrependText,
+  MoneyInputGroup,
+  Icon,
+} from 'components';
 import {
   inputIntent,
   momentFormatter,
@@ -78,7 +83,11 @@ export default function QuickPaymentReceiveFormFields({}) {
       </Row>
       {/*------------ Amount Received -----------*/}
       <FastField name={'payment_amount'}>
-        {({ form: { values }, field, meta: { error, touched } }) => (
+        {({
+          form: { values, setFieldValue },
+          field: { value },
+          meta: { error, touched },
+        }) => (
           <FormGroup
             label={<T id={'amount_received'} />}
             labelInfo={<FieldRequiredHint />}
@@ -89,11 +98,14 @@ export default function QuickPaymentReceiveFormFields({}) {
             <ControlGroup>
               <InputPrependText text={values.currency_code} />
 
-              <InputGroup
-                intent={inputIntent({ error, touched })}
+              <MoneyInputGroup
+                value={value}
                 minimal={true}
+                onChange={(amount) => {
+                  setFieldValue('payment_amount', amount);
+                }}
+                intent={inputIntent({ error, touched })}
                 inputRef={(ref) => (paymentReceiveFieldRef.current = ref)}
-                {...field}
               />
             </ControlGroup>
           </FormGroup>
