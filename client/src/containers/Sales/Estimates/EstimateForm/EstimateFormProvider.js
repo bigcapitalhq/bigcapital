@@ -4,7 +4,7 @@ import {
   useEstimate,
   useCustomers,
   useItems,
-  useSettings,
+  useSettingsEstimates,
   useCreateEstimate,
   useEditEstimate
 } from 'hooks/query';
@@ -32,7 +32,7 @@ function EstimateFormProvider({ estimateId, ...props }) {
   } = useCustomers({ page_size: 10000 });
 
   // Handle fetch settings.
-  useSettings();
+  useSettingsEstimates();
 
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = React.useState({});

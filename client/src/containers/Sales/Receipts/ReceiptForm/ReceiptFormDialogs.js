@@ -1,7 +1,6 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import ReceiptNumberDialog from 'containers/Dialogs/ReceiptNumberDialog';
-import { transactionNumber } from 'utils';
 
 /**
  * Receipt form dialogs.
@@ -10,11 +9,9 @@ export default function ReceiptFormDialogs() {
   const { setFieldValue } = useFormikContext();
 
   // Update the form once the receipt number form submit confirm.
-  const handleReceiptNumberFormConfirm = (values) => {
-    setFieldValue(
-      'receipt_number',
-      transactionNumber(values.number_prefix, values.next_number),
-    );
+  const handleReceiptNumberFormConfirm = ({ incrementNumber, manually }) => {
+    setFieldValue('receipt_number', incrementNumber || '');
+    setFieldValue('receipt_number_manually', manually);
   };
 
   return (

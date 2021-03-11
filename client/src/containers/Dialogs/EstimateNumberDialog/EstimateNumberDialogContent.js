@@ -6,41 +6,52 @@ import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
 
-import { compose, optionsMapToArray, saveInvoke } from 'utils';
+import { compose, saveInvoke } from 'utils';
+import {
+  transformFormToSettings,
+  transformSettingsToForm,
+} from 'containers/JournalNumber/utils';
 
 /**
  * Estimate number dialog's content.
  */
-
 function EstimateNumberDialogContent({
   // #withSettings
   nextNumber,
   numberPrefix,
+  autoIncrement,
 
   // #withDialogActions
   closeDialog,
 
   // #ownProps
+  initialValues,
   onConfirm,
 }) {
+  // Fetches the estimates settings.
   const { isLoading: isSettingsLoading } = useSettingsEstimates();
+
+  // Mutates the settings.
   const { mutateAsync: saveSettingsMutate } = useSaveSettings();
 
+  // Handle the submit form.
   const handleSubmitForm = (values, { setSubmitting }) => {
-    const options = optionsMapToArray(values).map((option) => ({
-      key: option.key,
-      ...option,
-      group: 'sales_estimates',
-    }));
-    saveSettingsMutate({ options })
-      .then(() => {
-        setSubmitting(false);
-        closeDialog('estimate-number-form');
-        saveInvoke(onConfirm, values);
-      })
-      .catch(() => {
-        setSubmitting(false);
-      });
+    // Transformes the form values to settings to save it.
+    const options = transformFormToSettings(values, 'sales_estimates');
+
+    const handleSuccess = () => {
+      setSubmitting(false);
+      closeDialog('estimate-number-form');
+      saveInvoke(onConfirm, values);
+    };
+    const handleErrors = () => {
+      setSubmitting(false);
+    };
+    if (values.incrementMode === 'manual-transaction') {
+      handleSuccess();
+      return;
+    }
+    saveSettingsMutate({ options }).then(handleSuccess).catch(handleErrors);
   };
 
   const handleClose = useCallback(() => {
@@ -50,8 +61,14 @@ function EstimateNumberDialogContent({
   return (
     <DialogContent isLoading={isSettingsLoading}>
       <ReferenceNumberForm
-        initialNumber={nextNumber}
-        initialPrefix={numberPrefix}
+        initialValues={{
+          ...transformSettingsToForm({
+            nextNumber,
+            numberPrefix,
+            autoIncrement,
+          }),
+          ...initialValues,
+        }}
         onSubmit={handleSubmitForm}
         onClose={handleClose}
       />
@@ -64,5 +81,6 @@ export default compose(
   withSettings(({ estimatesSettings }) => ({
     nextNumber: estimatesSettings?.nextNumber,
     numberPrefix: estimatesSettings?.numberPrefix,
+    autoIncrement: estimatesSettings?.autoIncrement,
   })),
 )(EstimateNumberDialogContent);

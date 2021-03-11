@@ -161,7 +161,8 @@
       // .total,
       .quantity,
       .rate,
-      .discount{
+      .discount,
+      .total{
 
         &,
         input{
@@ -216,7 +217,6 @@
       border-top-color: #e9e9ef;
       border-top-style: solid;
       min-height: 40px;
-
       font-weight: 500;
 
 

@@ -10,7 +10,7 @@ import { CLASSES } from 'common/classes';
 import { ERROR } from 'common/errors';
 import {
   EditReceiptFormSchema,
-  CreateReceiptFormSchema,   
+  CreateReceiptFormSchema,
 } from './ReceiptForm.schema';
 
 import { useReceiptFormContext } from './ReceiptFormProvider';
@@ -25,13 +25,8 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
-import {
-  compose,
-  orderingLinesIndexes,
-  transactionNumber,
-} from 'utils';
-import { transformToEditForm, defaultReceipt } from './utils'
-
+import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
+import { transformToEditForm, defaultReceipt } from './utils';
 
 /**
  * Receipt form.
@@ -40,6 +35,7 @@ function ReceiptForm({
   // #withSettings
   receiptNextNumber,
   receiptNumberPrefix,
+  receiptAutoIncrement,
   preferredDepositAccount,
 }) {
   const { formatMessage } = useIntl();
@@ -47,16 +43,15 @@ function ReceiptForm({
 
   // Receipt form context.
   const {
-    receiptId,
     receipt,
     editReceiptMutate,
     createReceiptMutate,
     submitPayload,
-    isNewMode
+    isNewMode,
   } = useReceiptFormContext();
 
   // The next receipt number.
-  const receiptNumber = transactionNumber(
+  const nextReceiptNumber = transactionNumber(
     receiptNumberPrefix,
     receiptNextNumber,
   );
@@ -67,12 +62,14 @@ function ReceiptForm({
         ? transformToEditForm(receipt)
         : {
             ...defaultReceipt,
-            receipt_number: receiptNumber,
+            ...(receiptAutoIncrement && {
+              receipt_number: nextReceiptNumber,
+            }),
             deposit_account_id: parseInt(preferredDepositAccount),
             entries: orderingLinesIndexes(defaultReceipt.entries),
           }),
     }),
-    [receipt, preferredDepositAccount, receiptNumber],
+    [receipt, preferredDepositAccount, nextReceiptNumber, receiptAutoIncrement],
   );
 
   // Transform response error to fields.
@@ -107,9 +104,12 @@ function ReceiptForm({
       return;
     }
     const form = {
-      ...values,
+      ...omit(values, ['receipt_number_manually', 'receipt_number']),
+      ...(values.receipt_number_manually) && ({
+        receipt_number: values.receipt_number,
+      }),
       closed: submitPayload.status,
-      entries: entries.map((entry) => ({ ...omit(entry, ['total']), })),
+      entries: entries.map((entry) => ({ ...omit(entry, ['total']) })),
     };
     // Handle the request success.
     const onSuccess = (response) => {
@@ -135,13 +135,16 @@ function ReceiptForm({
     };
 
     // Handle the request error.
-    const onError = ({response:{data:{errors}}}) => {
-      if(errors){
+    const onError = ({
+      response: {
+        data: { errors },
+      },
+    }) => {
+      if (errors) {
         handleErrors(errors, { setErrors });
       }
       setSubmitting(false);
     };
-
     if (!isNewMode) {
       editReceiptMutate([receipt.id, form]).then(onSuccess).catch(onError);
     } else {
@@ -182,6 +185,7 @@ export default compose(
   withSettings(({ receiptSettings }) => ({
     receiptNextNumber: receiptSettings?.nextNumber,
     receiptNumberPrefix: receiptSettings?.numberPrefix,
+    receiptAutoIncrement: receiptSettings?.autoIncrement,
     preferredDepositAccount: receiptSettings?.preferredDepositAccount,
   })),
 )(ReceiptForm);

@@ -30,7 +30,7 @@ function ItemDeleteAlert({
   closeAlert,
 
   // #withItemsActions
-  addItemsTableQueries,
+  setItemsTableState,
 }) {
   const { mutateAsync: deleteItem, isLoading } = useDeleteItem();
   const { formatMessage } = useIntl();
@@ -51,7 +51,7 @@ function ItemDeleteAlert({
           intent: Intent.SUCCESS,
         });
         // Reset to page number one.
-        addItemsTableQueries({ page: 1 });
+        setItemsTableState({ page: 1 });
       })
       .catch(
         ({

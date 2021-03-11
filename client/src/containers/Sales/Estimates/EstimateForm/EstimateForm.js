@@ -22,7 +22,7 @@ import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
 import { ERROR } from 'common/errors';
-import { compose, orderingLinesIndexes } from 'utils';
+import { compose, transactionNumber, orderingLinesIndexes } from 'utils';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import { transformToEditForm, defaultEstimate } from './utils';
 
@@ -33,6 +33,7 @@ function EstimateForm({
   // #withSettings
   estimateNextNumber,
   estimateNumberPrefix,
+  estimateIncrementMode,
 }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
@@ -44,24 +45,25 @@ function EstimateForm({
     editEstimateMutate,
   } = useEstimateFormContext();
 
-  const estimateNumber = estimateNumberPrefix
-    ? `${estimateNumberPrefix}-${estimateNextNumber}`
-    : estimateNextNumber;
+  const estimateNumber = transactionNumber(
+    estimateNumberPrefix,
+    estimateNextNumber,
+  );
 
   // Initial values in create and edit mode.
   const initialValues = useMemo(
     () => ({
       ...(!isEmpty(estimate)
-        ? {
-            ...transformToEditForm(estimate),
-          }
+        ? { ...transformToEditForm(estimate) }
         : {
             ...defaultEstimate,
-            estimate_number: estimateNumber,
+            ...(estimateIncrementMode) && ({
+              estimate_number: estimateNumber,
+            }),
             entries: orderingLinesIndexes(defaultEstimate.entries),
           }),
     }),
-    [estimate, estimateNumber],
+    [estimate, estimateNumber, estimateIncrementMode],
   );
 
   // Transform response errors to fields.
@@ -98,7 +100,10 @@ function EstimateForm({
       return;
     }
     const form = {
-      ...values,
+      ...omit(values, ['estimate_number_manually', 'estimate_number']),
+      ...(values.estimate_number_manually) && ({
+        estimate_number: values.estimate_number,
+      }),
       delivered: submitPayload.deliver,
       entries: entries.map((entry) => ({ ...omit(entry, ['total']) })),
     };
@@ -134,7 +139,6 @@ function EstimateForm({
       }
       setSubmitting(false);
     };
-
     if (!isNewMode) {
       editEstimateMutate([estimate.id, form]).then(onSuccess).catch(onError);
     } else {
@@ -174,5 +178,6 @@ export default compose(
   withSettings(({ estimatesSettings }) => ({
     estimateNextNumber: estimatesSettings?.nextNumber,
     estimateNumberPrefix: estimatesSettings?.numberPrefix,
+    estimateIncrementMode: estimatesSettings?.autoIncrement,
   })),
 )(EstimateForm);

@@ -11,7 +11,7 @@ exports.up = function(knex) {
     table.string('payment_method');
     table.string('reference');
     table.integer('user_id').unsigned().index();
-    table.text('description');
+    table.text('statement');
     table.timestamps();
   }); 
 };

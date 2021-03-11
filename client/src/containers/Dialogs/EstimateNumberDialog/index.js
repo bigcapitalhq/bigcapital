@@ -8,12 +8,19 @@ const EstimateNumberDialogContent = lazy(() =>
   import('./EstimateNumberDialogContent'),
 );
 
+/**
+ * Estimate number dialog.
+ */
 function EstimateNumberDialog({
   dialogName,
-  paylaod = { id: null },
+  payload: { initialFormValues },
   isOpen,
   onConfirm
 }) {
+  const handleConfirm = (values) => {
+    saveInvoke(onConfirm, values);
+  };
+
   return (
     <Dialog
       name={dialogName}
@@ -25,8 +32,8 @@ function EstimateNumberDialog({
     >
       <DialogSuspense>
         <EstimateNumberDialogContent
-          estimateNumberId={paylaod.id}
-          onConfirm={(values) => saveInvoke(onConfirm, values)}/>
+          initialValues={{ ...initialFormValues }}
+          onConfirm={handleConfirm}/>
       </DialogSuspense>
     </Dialog>
   );

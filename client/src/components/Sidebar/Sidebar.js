@@ -9,7 +9,7 @@ export default function Sidebar() {
   return (
     <SidebarContainer>
       <SidebarHead />
-      
+
       <div className="sidebar__menu">
         <SidebarMenu />
       </div>

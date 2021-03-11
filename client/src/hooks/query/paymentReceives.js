@@ -51,6 +51,7 @@ export function useCreatePaymentReceive(props) {
         client.invalidateQueries('SALE_INVOICE_DUE');
         client.invalidateQueries('SALE_INVOICES');
         client.invalidateQueries('SALE_INVOICE');
+        client.invalidateQueries(['SETTINGS', 'PAYMENT_RECEIVES']);
 
         saveInvoke(props?.onSuccess, data);
       },
@@ -74,6 +75,7 @@ export function useEditPaymentReceive(props) {
         client.invalidateQueries('SALE_INVOICE_DUE');
         client.invalidateQueries('SALE_INVOICES');
         client.invalidateQueries('SALE_INVOICE');
+        client.invalidateQueries(['SETTINGS', 'PAYMENT_RECEIVES']);
 
         saveInvoke(props?.onSuccess, data);
       },

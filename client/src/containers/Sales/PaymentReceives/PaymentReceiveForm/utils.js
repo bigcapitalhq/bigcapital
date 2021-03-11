@@ -1,5 +1,7 @@
+import React from 'react';
+import { useFormikContext } from 'formik';
 import moment from 'moment';
-import { transformToForm, safeSumBy } from 'utils';
+import { transactionNumber, transformToForm, safeSumBy } from 'utils';
 
 // Default payment receive entry.
 export const defaultPaymentReceiveEntry = {
@@ -18,7 +20,7 @@ export const defaultPaymentReceive = {
   payment_date: moment(new Date()).format('YYYY-MM-DD'),
   reference_no: '',
   payment_receive_no: '',
-  description: '',
+  statement: '',
   full_amount: '',
   entries: [],
 };
@@ -82,3 +84,15 @@ export const fullAmountPaymentEntries = (entries) => {
     payment_amount: item.due_amount,
   }));
 }
+
+/**
+ * Syncs payment receive number settings with form.
+ */
+ export const useObservePaymentNoSettings = (prefix, nextNumber) => {
+  const { setFieldValue } = useFormikContext();
+
+  React.useEffect(() => {
+    const invoiceNo = transactionNumber(prefix, nextNumber);
+    setFieldValue('payment_receive_no', invoiceNo);
+  }, [setFieldValue, prefix, nextNumber]);
+};

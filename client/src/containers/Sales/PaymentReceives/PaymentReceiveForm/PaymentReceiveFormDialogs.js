@@ -1,7 +1,6 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import PaymentReceiveNumberDialog from 'containers/Dialogs/PaymentReceiveNumberDialog';
-import { transactionNumber } from 'utils';
 
 /**
  * Payment receive form dialogs.
@@ -9,11 +8,9 @@ import { transactionNumber } from 'utils';
 export default function PaymentReceiveFormDialogs() {
   const { setFieldValue } = useFormikContext();
 
-  const handleUpdatePaymentNumber = (values) => {
-    setFieldValue(
-      'payment_receive_no',
-      transactionNumber(values.number_prefix, values.next_number),
-    );
+  const handleUpdatePaymentNumber = ({ incrementNumber, manually }) => {
+    setFieldValue('payment_receive_no', incrementNumber);
+    setFieldValue('payment_receive_no_manually', manually)
   };
 
   return (

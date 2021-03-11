@@ -8,24 +8,32 @@ const InvoiceNumberDialogContent = lazy(() =>
   import('./InvoiceNumberDialogContent'),
 );
 
+/**
+ * Invoice number dialog.
+ */
 function InvoiceNumberDialog({
   dialogName,
-  payload = { id: null },
+  payload: { initialFormValues },
   isOpen,
   onConfirm,
 }) {
+  const handleConfirm = (values) => {
+    saveInvoke(onConfirm, values);
+  };
+
   return (
     <Dialog
-    title={<T id={'invoice_number_settings'} />}
-    name={dialogName}
-    autoFocus={true}
-    canEscapeKeyClose={true}
-    isOpen={isOpen}
+      title={<T id={'invoice_number_settings'} />}
+      name={dialogName}
+      autoFocus={true}
+      canEscapeKeyClose={true}
+      isOpen={isOpen}
     >
       <DialogSuspense>
         <InvoiceNumberDialogContent
-          InvoiceNumberId={payload.id}
-          onConfirm={(values) => saveInvoke(onConfirm, values)} />
+          initialValues={{ ...initialFormValues }}
+          onConfirm={handleConfirm}
+        />
       </DialogSuspense>
     </Dialog>
   );

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { useIntl } from 'react-intl';
-import { sumBy, pick, isEmpty } from 'lodash';
+import { omit, sumBy, pick, isEmpty } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
@@ -23,13 +23,10 @@ import {
   CreatePaymentReceiveFormSchema,
 } from './PaymentReceiveForm.schema';
 import { AppToaster } from 'components';
-import { compose } from 'utils';
+import { transactionNumber, compose } from 'utils';
 
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
-import {
-  defaultPaymentReceive,
-  transformToEditForm,
-} from './utils';
+import { defaultPaymentReceive, transformToEditForm } from './utils';
 
 /**
  * Payment Receive form.
@@ -38,6 +35,7 @@ function PaymentReceiveForm({
   // #withSettings
   paymentReceiveNextNumber,
   paymentReceiveNumberPrefix,
+  paymentReceiveAutoIncrement,
 }) {
   const history = useHistory();
   const { formatMessage } = useIntl();
@@ -54,10 +52,10 @@ function PaymentReceiveForm({
   } = usePaymentReceiveFormContext();
 
   // Payment receive number.
-  const paymentReceiveNumber = paymentReceiveNumberPrefix
-    ? `${paymentReceiveNumberPrefix}-${paymentReceiveNextNumber}`
-    : paymentReceiveNextNumber;
-
+  const nextPaymentNumber = transactionNumber(
+    paymentReceiveNumberPrefix,
+    paymentReceiveNextNumber
+  );
   // Form initial values.
   const initialValues = useMemo(
     () => ({
@@ -65,10 +63,17 @@ function PaymentReceiveForm({
         ? transformToEditForm(paymentReceiveEditPage, paymentEntriesEditPage)
         : {
             ...defaultPaymentReceive,
-            payment_receive_no: paymentReceiveNumber,
+            ...(paymentReceiveAutoIncrement && {
+              payment_receive_no: nextPaymentNumber,
+            }),
           }),
     }),
-    [paymentReceiveEditPage, paymentReceiveNumber, paymentEntriesEditPage],
+    [
+      paymentReceiveEditPage,
+      nextPaymentNumber,
+      paymentEntriesEditPage,
+      paymentReceiveAutoIncrement,
+    ],
   );
 
   // Handle form submit.
@@ -98,7 +103,13 @@ function PaymentReceiveForm({
       setSubmitting(false);
       return;
     }
-    const form = { ...values, entries };
+    const form = {
+      ...omit(values, ['payment_receive_no_manually', 'payment_receive_no']),
+      ...(values.payment_receive_no_manually) && ({
+        payment_receive_no: values.payment_receive_no,
+      }),
+      entries
+    };
 
     // Handle request response success.
     const onSaved = (response) => {
@@ -120,7 +131,11 @@ function PaymentReceiveForm({
       }
     };
     // Handle request response errors.
-    const onError = ({ response: { data: { errors } } }) => {
+    const onError = ({
+      response: {
+        data: { errors },
+      },
+    }) => {
       const getError = (errorType) => errors.find((e) => e.type === errorType);
 
       if (getError('PAYMENT_RECEIVE_NO_EXISTS')) {
@@ -179,5 +194,6 @@ export default compose(
   withSettings(({ paymentReceiveSettings }) => ({
     paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
     paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
+    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
   })),
 )(PaymentReceiveForm);

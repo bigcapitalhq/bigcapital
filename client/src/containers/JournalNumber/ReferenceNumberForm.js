@@ -4,8 +4,12 @@ import { Formik, Form } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
 import { Button, Classes } from '@blueprintjs/core';
 import { Intent } from '@blueprintjs/core';
-import { saveInvoke } from 'utils';
+
+import 'style/pages/ReferenceNumber/ReferenceNumber.scss';
+
 import ReferenceNumberFormContent from './ReferenceNumberFormContent';
+import { transformValuesToForm } from './utils';
+import { saveInvoke } from 'utils';
 
 /**
  * Reference number form.
@@ -13,42 +17,45 @@ import ReferenceNumberFormContent from './ReferenceNumberFormContent';
 export default function ReferenceNumberForm({
   onSubmit,
   onClose,
-  initialPrefix,
-  initialNumber,
+  initialValues,
 }) {
+  // Validation schema.
   const validationSchema = Yup.object().shape({
-    // mode: Yup.string(),
-    number_prefix: Yup.string(),
-    next_number: Yup.number(),
+    incrementMode: Yup.string(),
+    numberPrefix: Yup.string(),
+    nextNumber: Yup.number(),
+    manualTransactionNo: Yup.string(),
   });
-
-  const initialValues = useMemo(
+  // Initial values.
+  const formInitialValues = useMemo(
     () => ({
-      number_prefix: initialPrefix || '',
-      next_number: initialNumber || '',
+      ...initialValues,
+      incrementMode:
+        initialValues.incrementMode === 'auto' &&
+        initialValues.manualTransactionNo
+          ? 'manual-transaction'
+          : initialValues.incrementMode,
     }),
-    [initialPrefix, initialNumber],
+    [initialValues],
   );
-
-  const handleSubmit = (values) => {
-    debugger;
-    saveInvoke(onSubmit, values);
+  // Handle the form submit.
+  const handleSubmit = (values, methods) => {
+    const parsed = transformValuesToForm(values);
+    saveInvoke(onSubmit, { ...parsed, ...values }, methods);
   };
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={formInitialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
       {({ isSubmitting }) => (
-        <Form>
+        <Form className={'reference-number-form'}>
           <div className={Classes.DIALOG_BODY}>
             <p className="paragraph">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
-              tincidunt porta quam,
+              Your invoice numbers are set on auto-increment mod. Are you sure changing this setting?
             </p>
-
             <ReferenceNumberFormContent />
           </div>
 
