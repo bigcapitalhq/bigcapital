@@ -3,7 +3,7 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useReceipt,
   useAccounts,
-  useSettings,
+  useSettingsReceipts,
   useCustomers,
   useItems,
   useCreateReceipt,
@@ -39,7 +39,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   } = useItems({ page_size: 10000 });
 
   // Fetch receipt settings.
-  const { isLoading: isSettingLoading } = useSettings();
+  const { isLoading: isSettingLoading } = useSettingsReceipts();
 
   const { mutateAsync: createReceiptMutate } = useCreateReceipt();
   const { mutateAsync: editReceiptMutate } = useEditReceipt();

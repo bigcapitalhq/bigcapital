@@ -33,6 +33,7 @@ function InvoiceForm({
   // #withSettings
   invoiceNextNumber,
   invoiceNumberPrefix,
+  invoiceIncrementMode,
 }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
@@ -53,7 +54,6 @@ function InvoiceForm({
     invoiceNumberPrefix,
     invoiceNextNumber,
   );
-
   // Form initial values.
   const initialValues = useMemo(
     () => ({
@@ -61,12 +61,14 @@ function InvoiceForm({
         ? transformToEditForm(invoice)
         : {
             ...defaultInvoice,
-            invoice_no: invoiceNumber,
+            ...(invoiceIncrementMode) && ({
+              invoice_no: invoiceNumber,
+            }),
             entries: orderingLinesIndexes(defaultInvoice.entries),
             ...newInvoice,
           }),
     }),
-    [invoice, newInvoice,invoiceNumber],
+    [invoice, newInvoice, invoiceNumber, invoiceIncrementMode],
   );
 
   // Handles form submit.
@@ -88,7 +90,10 @@ function InvoiceForm({
       return;
     }
     const form = {
-      ...values,
+      ...omit(values, ['invoice_no', 'invoice_no_manually']),
+      ...(values.invoice_no_manually) && ({
+        invoice_no: values.invoice_no,
+      }),
       delivered: submitPayload.deliver,
       from_estimate_id: estimateId,
       entries: entries.map((entry) => ({ ...omit(entry, ['total']) })),
@@ -127,7 +132,6 @@ function InvoiceForm({
       }
       setSubmitting(false);
     };
-
     if (!isEmpty(invoice)) {
       editInvoiceMutate([invoice.id, form]).then(onSuccess).catch(onError);
     } else {
@@ -144,7 +148,6 @@ function InvoiceForm({
       )}
     >
       <Formik
-        enableReinitialize={true}
         validationSchema={
           isNewMode ? CreateInvoiceFormSchema : EditInvoiceFormSchema
         }
@@ -169,5 +172,6 @@ export default compose(
   withSettings(({ invoiceSettings }) => ({
     invoiceNextNumber: invoiceSettings?.nextNumber,
     invoiceNumberPrefix: invoiceSettings?.numberPrefix,
+    invoiceIncrementMode: invoiceSettings?.incrementMode,
   })),
 )(InvoiceForm);

@@ -13,6 +13,7 @@ export function useCreateReceipt(props) {
   return useMutation((values) => apiRequest.post('sales/receipts', values), {
     onSuccess: () => {
       queryClient.invalidateQueries('SALE_RECEIPTS');
+      queryClient.invalidateQueries(['SETTINGS', 'RECEIPTS']);
     },
     ...props,
   });
@@ -30,6 +31,7 @@ export function useEditReceipt(props) {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('SALE_RECEIPTS');
+        queryClient.invalidateQueries(['SETTINGS', 'RECEIPTS']);
       },
       ...props,
     },

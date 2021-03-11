@@ -16,7 +16,7 @@ export default function PaymentMadeFooter() {
         <Row>
           <Col md={8}>
             {/* --------- Statement --------- */}
-            <FastField name={'customer_name'}>
+            <FastField name={'statement'}>
               {({ form, field, meta: { error, touched } }) => (
                 <FormGroup
                   label={<T id={'statement'} />}

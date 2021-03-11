@@ -5,12 +5,10 @@ import {
   Position,
   ControlGroup,
 } from '@blueprintjs/core';
-
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import { FastField, ErrorMessage } from 'formik';
-
 import { CLASSES } from 'common/classes';
 import {
   AccountsSelectList,
@@ -19,17 +17,17 @@ import {
   Icon,
   InputPrependButton,
 } from 'components';
-
+import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import {
   momentFormatter,
   compose,
   tansformDateValue,
-  saveInvoke,
   handleDateChange,
   inputIntent,
 } from 'utils';
 import { useReceiptFormContext } from './ReceiptFormProvider';
+import { useObserveReceiptNoSettings } from './utils';
 
 /**
  * Receipt form header fields.
@@ -40,6 +38,11 @@ function ReceiptFormHeader({
 
   // #ownProps
   onReceiptNumberChanged,
+
+  // #withSettings
+  receiptAutoIncrement,
+  receiptNextNumber,
+  receiptNumberPrefix,
 }) {
   const { accounts, customers } = useReceiptFormContext();
 
@@ -47,9 +50,24 @@ function ReceiptFormHeader({
     openDialog('receipt-number-form', {});
   }, [openDialog]);
 
-  const handleReceiptNumberChanged = (event) => {
-    saveInvoke(onReceiptNumberChanged, event.currentTarget.value);
+  const handleReceiptNoBlur = (form, field) => (event) => {
+    const newValue = event.target.value;
+
+    if (field.value !== newValue && receiptAutoIncrement) {
+      openDialog('receipt-number-form', {
+        initialFormValues: {
+          manualTransactionNo: newValue,
+          incrementMode: 'manual-transaction',
+        },
+      });
+    }
   };
+
+  // Synsc receipt number settings with the form.
+  useObserveReceiptNoSettings(
+    receiptNumberPrefix,
+    receiptNextNumber,
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -129,7 +147,7 @@ function ReceiptFormHeader({
 
       {/* ----------- Receipt number ----------- */}
       <FastField name={'receipt_number'}>
-        {({ field, meta: { error, touched } }) => (
+        {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'receipt'} />}
             inline={true}
@@ -141,8 +159,9 @@ function ReceiptFormHeader({
             <ControlGroup fill={true}>
               <InputGroup
                 minimal={true}
-                {...field}
-                onBlur={handleReceiptNumberChanged}
+                value={field.value}
+                asyncControl={true}
+                onBlur={handleReceiptNoBlur(form, field)}
               />
               <InputPrependButton
                 buttonProps={{
@@ -183,4 +202,9 @@ function ReceiptFormHeader({
 
 export default compose(
   withDialogActions,
+  withSettings(({ receiptSettings }) => ({
+    receiptAutoIncrement: receiptSettings?.autoIncrement,
+    receiptNextNumber: receiptSettings?.nextNumber,
+    receiptNumberPrefix: receiptSettings?.numberPrefix,
+  })),
 )(ReceiptFormHeader);

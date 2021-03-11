@@ -24,6 +24,9 @@ import withSettings from 'containers/Settings/withSettings';
 import QuickNewDropdown from 'containers/QuickNewDropdown/QuickNewDropdown';
 import { compose } from 'utils';
 
+/**
+ * Dashboard topbar.
+ */
 function DashboardTopbar({
   // #withDashboard
   pageTitle,
@@ -116,11 +119,7 @@ function DashboardTopbar({
         <div class="dashboard__breadcrumbs">
           <DashboardBreadcrumbs />
         </div>
-
-        {/* <div class="dashboard__organization-name">
-          { organizationName }
-        </div> */}
-
+      
         <DashboardBackLink />
       </div>
 

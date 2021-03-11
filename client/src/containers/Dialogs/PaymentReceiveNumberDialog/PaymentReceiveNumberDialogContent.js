@@ -8,43 +8,50 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withSettings from 'containers/Settings/withSettings';
 
-import { saveInvoke, compose, optionsMapToArray } from 'utils';
+import { saveInvoke, compose } from 'utils';
+import {
+  transformFormToSettings,
+  transformSettingsToForm,
+} from 'containers/JournalNumber/utils';
 
 /**
- * payment receive number dialog's content.
+ * Payment receive number dialog's content.
  */
-
 function PaymentNumberDialogContent({
   // #withSettings
   nextNumber,
   numberPrefix,
+  autoIncrement,
 
   // #withDialogActions
   closeDialog,
 
   // #ownProps
   onConfirm,
+  initialValues
 }) {
   const { isLoading: isSettingsLoading } = useSettingsPaymentReceives();
   const { mutateAsync: saveSettingsMutate } = useSaveSettings();
 
+  // Handle submit form.
   const handleSubmitForm = (values, { setSubmitting }) => {
-    const options = optionsMapToArray(values).map((option) => ({
-      key: option.key,
-      ...option,
-      group: 'payment_receives',
-    }));
+    // Transformes the form values to settings to save it.
+    const options = transformFormToSettings(values, 'payment_receives');
 
-    saveSettingsMutate({ options })
-      .then(() => {
-        setSubmitting(false);
-        closeDialog('payment-receive-number-form');
+    const handleSuccess = () => {
+      setSubmitting(false);
+      closeDialog('payment-receive-number-form');
 
-        saveInvoke(onConfirm, values);
-      })
-      .catch(() => {
-        setSubmitting(false);
-      });
+      saveInvoke(onConfirm, values);
+    };
+    const handleErrors = () => {
+      setSubmitting(false);
+    };
+    if (values.incrementMode === 'manual-transaction') {
+      handleSuccess();
+      return;
+    }
+    saveSettingsMutate({ options }).then(handleSuccess).catch(handleErrors);
   };
 
   const handleClose = useCallback(() => {
@@ -54,8 +61,14 @@ function PaymentNumberDialogContent({
   return (
     <DialogContent isLoading={isSettingsLoading}>
       <ReferenceNumberForm
-        initialNumber={nextNumber}
-        initialPrefix={numberPrefix}
+        initialValues={{
+          ...transformSettingsToForm({
+            nextNumber,
+            numberPrefix,
+            autoIncrement,
+          }),
+          ...initialValues,
+        }}
         onSubmit={handleSubmitForm}
         onClose={handleClose}
       />
@@ -69,5 +82,6 @@ export default compose(
   withSettings(({ paymentReceiveSettings }) => ({
     nextNumber: paymentReceiveSettings?.nextNumber,
     numberPrefix: paymentReceiveSettings?.numberPrefix,
+    autoIncrement: paymentReceiveSettings?.autoIncrement,
   })),
 )(PaymentNumberDialogContent);

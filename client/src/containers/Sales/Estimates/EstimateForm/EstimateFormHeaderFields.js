@@ -8,7 +8,13 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
 import { FastField, ErrorMessage } from 'formik';
-import { momentFormatter, compose, tansformDateValue } from 'utils';
+import {
+  momentFormatter,
+  compose,
+  tansformDateValue,
+  inputIntent,
+  handleDateChange,
+} from 'utils';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
@@ -19,8 +25,9 @@ import {
 } from 'components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withSettings from 'containers/Settings/withSettings';
 
-import { inputIntent, handleDateChange } from 'utils';
+import { useObserveEstimateNoSettings } from './utils';
 import { useEstimateFormContext } from './EstimateFormProvider';
 
 /**
@@ -29,12 +36,33 @@ import { useEstimateFormContext } from './EstimateFormProvider';
 function EstimateFormHeader({
   // #withDialogActions
   openDialog,
+
+  // #withSettings
+  estimateAutoIncrement,
+  estimateNumberPrefix,
+  estimateNextNumber,
 }) {
   const { customers } = useEstimateFormContext();
 
   const handleEstimateNumberBtnClick = () => {
     openDialog('estimate-number-form', {});
   };
+
+  const handleEstimateNoBlur = (form, field) => (event) => {
+    const newValue = event.target.value;
+
+    if (field.value !== newValue && estimateAutoIncrement) {
+      openDialog('estimate-number-form', {
+        initialFormValues: {
+          manualTransactionNo: newValue,
+          incrementMode: 'manual-transaction',
+        },
+      });
+    }
+  };
+
+  // Syncs estimate number settings with the form.
+  useObserveEstimateNoSettings(estimateNumberPrefix, estimateNextNumber);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -131,7 +159,9 @@ function EstimateFormHeader({
             <ControlGroup fill={true}>
               <InputGroup
                 minimal={true}
-                {...field}
+                value={field.value}
+                asyncControl={true}
+                onBlur={handleEstimateNoBlur(form, field)}
               />
               <InputPrependButton
                 buttonProps={{
@@ -169,4 +199,9 @@ function EstimateFormHeader({
 
 export default compose(
   withDialogActions,
+  withSettings(({ estimatesSettings }) => ({
+    estimateNextNumber: estimatesSettings?.nextNumber,
+    estimateNumberPrefix: estimatesSettings?.numberPrefix,
+    estimateAutoIncrement: estimatesSettings?.autoIncrement,
+  })),
 )(EstimateFormHeader);

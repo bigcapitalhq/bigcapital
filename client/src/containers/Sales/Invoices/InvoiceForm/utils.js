@@ -1,10 +1,19 @@
+import React from 'react';
 import moment from 'moment';
-import { compose, transformToForm, repeatValue } from 'utils';
+import { isEmpty } from 'lodash';
+import {
+  compose,
+  transformToForm,
+  repeatValue,
+  transactionNumber,
+} from 'utils';
 import { updateItemsEntriesTotal } from 'containers/Entries/utils';
-import { ERROR } from 'common/errors';
-
+import { useFormikContext } from 'formik';
 import { Intent } from '@blueprintjs/core';
+
+import { orderingLinesIndexes } from 'utils';
 import { formatMessage } from 'services/intl';
+import { ERROR } from 'common/errors';
 import { AppToaster } from 'components';
 
 export const MIN_LINES_NUMBER = 4;
@@ -27,6 +36,7 @@ export const defaultInvoice = {
   due_date: moment().format('YYYY-MM-DD'),
   delivered: '',
   invoice_no: '',
+  invoice_no_manually: false,
   reference_no: '',
   invoice_message: '',
   terms_conditions: '',
@@ -72,4 +82,24 @@ export const transformErrors = (errors, { setErrors }) => {
       intent: Intent.DANGER,
     });
   }
+  if (
+    errors.some((error) => error.type === ERROR.SALE_INVOICE_NO_IS_REQUIRED)
+  ) {
+    setErrors({
+      invoice_no:
+        'Invoice number is required, use auto-increment mode or enter manually.',
+    });
+  }
+};
+
+/**
+ * Syncs invoice no. settings with form.
+ */
+export const useObserveInvoiceNoSettings = (prefix, nextNumber) => {
+  const { setFieldValue } = useFormikContext();
+
+  React.useEffect(() => {
+    const invoiceNo = transactionNumber(prefix, nextNumber);
+    setFieldValue('invoice_no', invoiceNo);
+  }, [setFieldValue, prefix, nextNumber]);
 };

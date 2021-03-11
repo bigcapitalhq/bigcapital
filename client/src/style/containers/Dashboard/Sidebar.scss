@@ -8,12 +8,15 @@
   z-index: $sidebar-zindex;
 
   .ScrollbarsCustom-Track {
+
     &.ScrollbarsCustom-TrackY,
     &.ScrollbarsCustom-TrackX {
       background: rgba(0, 0, 0, 0);
     }
   }
+
   .ScrollbarsCustom-Thumb {
+
     &.ScrollbarsCustom-ThumbX,
     &.ScrollbarsCustom-ThumbY {
       background: rgba(0, 0, 0, 0);
@@ -22,27 +25,69 @@
 
   &:hover {
     .ScrollbarsCustom-Thumb {
+
       &.ScrollbarsCustom-ThumbX,
       &.ScrollbarsCustom-ThumbY {
         background: rgba(255, 255, 255, 0.25);
       }
     }
   }
+
   &__head {
-    padding: 18px 20px;
+    padding: 20px 20px;
 
     &-logo {
-      position: relative;
-      top: 2px;
+      position: absolute;
+      top: 16px;
+      left: 12px;
+      opacity: 0;
+      visibility: hidden;
 
-      svg {
+      svg{
         opacity: $sidebar-logo-opacity;
       }
     }
-    .sidebar__head-logo{
+
+    &-organization {
+      .title {
+        background: transparent;
+        padding: 0;
+        min-height: auto;
+        min-width: auto;
+        font-weight: 600;
+        outline: 0;
+        font-size: 15px;
+
+        &:not([class*="bp3-intent-"]):not(.bp3-minimal) {
+          color: rgba(255, 255, 255, 0.8);
+        }
+        &:hover,
+        &:focus,
+        &:active,
+        &.bp3-active {
+          background: transparent;
+        }
+        .bp3-button-text {
+          margin-right: 4px;
+        }
+        svg {
+          fill: rgba(255, 255, 255, 0.3);
+        }
+      }
+
+      .subtitle {
+        display: block;
+        font-size: 12px;
+        margin-top: 6px;
+        color: rgba(255, 255, 255, 0.6);
+      }
+    }
+
+    .sidebar__head-logo {
       transition: transform 0.05s ease-in-out;
     }
   }
+
   &__scroll-wrapper {
     height: 100%;
   }
@@ -66,20 +111,24 @@
         background: $sidebar-submenu-item-bg-color;
         color: $sidebar-menu-item-color-active;
       }
+
       &:focus,
       &:active {
         background: #01143e;
       }
-      > .#{$ns}-icon {
+
+      >.#{$ns}-icon {
         color: #767b9b;
         margin-right: 16px;
         margin-top: 0;
       }
-      > .#{$ns}-icon-caret-right {
+
+      >.#{$ns}-icon-caret-right {
         margin-right: -4px;
         margin-top: 3px;
         color: rgba(255, 255, 255, 0.25);
       }
+
       &-labeler {
         display: block;
         color: $sidebar-menu-label-color;
@@ -113,11 +162,13 @@
             background: transparent;
             color: $sidebar-submenu-item-hover-color;
           }
+
           &.bp3-active {
             font-weight: 500;
           }
         }
       }
+
       .#{$ns}-popover {
         padding: 0;
 
@@ -126,14 +177,17 @@
         }
       }
     }
+
     .#{$ns}-popover-target.#{$ns}-popover-open .#{$ns}-menu-item {
       color: $sidebar-menu-item-color;
     }
+
     .#{$ns}-menu-divider {
       border-top-color: rgba(255, 255, 255, 0.1);
       color: #6b708c;
       margin: 4px 0;
     }
+
     .#{$ns}-menu-spacer {
       margin: 4px 0;
       height: 1px;
@@ -145,20 +199,20 @@
     white-space: nowrap;
     width: 50px;
 
-    .sidebar__head{
-      .sidebar__head-logo{
-        transform: translate(-8px, 0);
+    .sidebar__head {
+      .sidebar__head-logo {
+        transition: opacity 0.3s ease-in-out;
+        transition-delay: 0.15s;
+        opacity: 1;
+        visibility: visible;
       }
-    }
-    // Hide text of bigcapital logo.
-    .sidebar__head-logo {
-      .bp3-icon-bigcapital {
-        path {
-          transition: opacity 0.3s ease-in-out;
-        }
-        path:not(.path-1):not(.path-2) {
-          opacity: 0;
-        }
+      // Hide text of bigcapital logo.
+      &-logo {
+
+      }
+      &-organization{
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
       }
     }
 
@@ -175,15 +229,14 @@
       &:hover {
         min-width: 220px;
 
-        .sidebar__head-logo {  
-          transform: translate(0px, 0);
-          
-          .bp3-icon-bigcapital {
-            path:not(.path-1):not(.path-2) {
-              opacity: 1;
-            }
-          }
+        .sidebar__head-logo {
+          opacity: 0;
+          transition-delay: 0s;
         }
+        .sidebar__head-organization{
+          opacity: 1;
+        }
+
         .sidebar__menu {
           opacity: 1;
         }
@@ -205,6 +258,7 @@
       .bp3-icon {
         color: rgba(255, 255, 255, 0.4);
       }
+
       &,
       &:hover {
         min-height: auto;
@@ -221,9 +275,34 @@
         }
       }
     }
+
     .bp3-icon {
       margin: 0;
       display: block;
+    }
+  }
+}
+.menu--dashboard-organization{
+  padding: 10px;
+  .org-item {
+    display: flex;
+    align-items: center;
+  
+    &__logo {
+      height: 40px;
+      width: 40px;
+      line-height: 40px;
+      border-radius: 3px;
+      background-color: #CB22E5;
+      text-align: center;
+      font-weight: 400;
+      font-size: 16px;
+      color: #fff;
+    }
+  
+    &__name {
+      margin-left: 12px;
+      font-weight: 600;
     }
   }
 }

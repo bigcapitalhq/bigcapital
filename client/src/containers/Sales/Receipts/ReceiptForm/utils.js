@@ -1,5 +1,7 @@
+import React from 'react';
+import { useFormikContext } from 'formik';
 import moment from 'moment';
-import { repeatValue, transformToForm } from 'utils';
+import { transactionNumber, repeatValue, transformToForm } from 'utils';
 
 export const MIN_LINES_NUMBER = 4;
 
@@ -39,3 +41,13 @@ export const transformToEditForm = (receipt) => ({
     ),
   ],
 });
+
+
+export const useObserveReceiptNoSettings = (prefix, nextNumber) => {
+  const { setFieldValue } = useFormikContext();
+
+  React.useEffect(() => {
+    const receiptNo = transactionNumber(prefix, nextNumber);
+    setFieldValue('receipt_number', receiptNo);
+  }, [setFieldValue, prefix, nextNumber]);
+}

@@ -54,7 +54,7 @@ function ContactDuplicateForm({
       {({ isSubmitting }) => (
         <Form>
           <div className={Classes.DIALOG_BODY}>
-            <p>
+            <p class="paragraph">
               <T id={'are_you_sure_want_to_duplicate'} />
             </p>
 
@@ -66,7 +66,6 @@ function ContactDuplicateForm({
                   labelInfo={<FieldRequiredHint />}
                   intent={inputIntent({ error, touched })}
                   className={'form-group--select-list'}
-                  inline={true}
                   helperText={<ErrorMessage name="contact_type" />}
                 >
                   <ListSelect

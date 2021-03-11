@@ -472,7 +472,7 @@ export function transactionNumber(prefix, number) {
   if (number) {
     codes.push(number);
   }
-  return codes.join('-');
+  return codes.join('');
 }
 
 export function safeCallback(callback, ...args) {

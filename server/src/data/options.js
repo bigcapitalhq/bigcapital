@@ -52,16 +52,10 @@ export default {
       key: "number_prefix",
       type: "string",
     },
-  ],
-  bills: [
     {
-      key: "next_number",
-      type: "number",
-    },
-    {
-      key: "number_prefix",
-      type: "string",
-    },
+      key: "auto_increment",
+      type: "boolean",
+    }
   ],
   bill_payments: [
     {
@@ -82,6 +76,10 @@ export default {
       key: "number_prefix",
       type: "string",
     },
+    {
+      key: "auto_increment",
+      type: "boolean",
+    }
   ],
   sales_receipts: [
     {
@@ -91,6 +89,10 @@ export default {
     {
       key: "number_prefix",
       type: "string",
+    },
+    {
+      key: "auto_increment",
+      type: "boolean",
     },
     {
       key: "preferred_deposit_account",
@@ -107,8 +109,8 @@ export default {
       type: "string",
     },
     {
-      key: 'increment_mode',
-      type: 'string'
+      key: "auto_increment",
+      type: "boolean",
     }
   ],
   payment_receives: [
@@ -120,6 +122,10 @@ export default {
       key: "number_prefix",
       type: "string",
     },
+    {
+      key: "auto_increment",
+      type: "boolean",
+    }
   ],
   items: [
     {

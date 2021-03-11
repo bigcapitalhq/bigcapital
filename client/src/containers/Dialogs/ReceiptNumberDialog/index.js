@@ -13,7 +13,7 @@ const ReceiptNumberDialogContent = lazy(() =>
  */
 function ReceiptNumberDialog({
   dialogName,
-  paylaod = { id: null },
+  payload: { initialFormValues = {} },
   isOpen,
   onConfirm,
 }) {
@@ -31,7 +31,7 @@ function ReceiptNumberDialog({
     >
       <DialogSuspense>
         <ReceiptNumberDialogContent
-          receiptId={paylaod.id}
+          initialValues={{ ...initialFormValues }}
           onConfirm={handleConfirm}
         />
       </DialogSuspense>

@@ -36,7 +36,11 @@ import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
 
-import { amountPaymentEntries, fullAmountPaymentEntries } from './utils';
+import {
+  useObservePaymentNoSettings,
+  amountPaymentEntries,
+  fullAmountPaymentEntries,
+} from './utils';
 import { toSafeInteger } from 'lodash';
 
 /**
@@ -47,6 +51,11 @@ function PaymentReceiveHeaderFields({
 
   // #withDialogActions
   openDialog,
+
+  // #withSettings
+  paymentReceiveAutoIncrement,
+  paymentReceiveNumberPrefix,
+  paymentReceiveNextNumber,
 }) {
   // Payment receive form context.
   const { customers, accounts, isNewMode } = usePaymentReceiveFormContext();
@@ -63,7 +72,6 @@ function PaymentReceiveHeaderFields({
   const totalDueAmount = useMemo(() => safeSumBy(entries, 'due_amount'), [
     entries,
   ]);
-
   // Handle receive full-amount link click.
   const handleReceiveFullAmountClick = () => {
     const newEntries = fullAmountPaymentEntries(entries);
@@ -72,17 +80,35 @@ function PaymentReceiveHeaderFields({
     setFieldValue('entries', newEntries);
     setFieldValue('full_amount', fullAmount);
   };
-
   // Handles the full-amount field blur.
   const onFullAmountBlur = (value) => {
     const newEntries = amountPaymentEntries(toSafeInteger(value), entries);
     setFieldValue('entries', newEntries);
   };
-
   // Handle click open payment receive number dialog.
   const handleClickOpenDialog = () => {
     openDialog('payment-receive-number-form');
   };
+
+  // Handle payment number field blur.
+  const handlePaymentNoBlur = (form, field) => (event) => {
+    const newValue = event.target.value;
+
+    if (field.value !== newValue && paymentReceiveAutoIncrement) {
+      openDialog('payment-receive-number-form', {
+        initialFormValues: {
+          manualTransactionNo: newValue,
+          incrementMode: 'manual-transaction',
+        },
+      });
+    }
+  };
+
+  // Syncs payment receive number from settings to the form.
+  useObservePaymentNoSettings(
+    paymentReceiveNumberPrefix,
+    paymentReceiveNextNumber,
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -194,7 +220,9 @@ function PaymentReceiveHeaderFields({
               <InputGroup
                 intent={inputIntent({ error, touched })}
                 minimal={true}
-                {...field}
+                value={field.value}
+                asyncControl={true}
+                onBlur={handlePaymentNoBlur(form, field)}
               />
               <InputPrependButton
                 buttonProps={{
@@ -263,8 +291,11 @@ function PaymentReceiveHeaderFields({
 }
 
 export default compose(
-  withSettings(({ organizationSettings }) => ({
+  withSettings(({ organizationSettings, paymentReceiveSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
+    paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
+    paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
+    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
   })),
   withDialogActions,
 )(PaymentReceiveHeaderFields);

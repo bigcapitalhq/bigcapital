@@ -114,8 +114,7 @@ export function useReceiptsTableColumns() {
       {
         id: 'receipt_number',
         Header: formatMessage({ id: 'receipt_number' }),
-        accessor: (row) =>
-          row.receipt_number ? `#${row.receipt_number}` : null,
+        accessor: 'receipt_number',
         width: 140,
         className: 'receipt_number',
       },
@@ -138,7 +137,7 @@ export function useReceiptsTableColumns() {
         Header: formatMessage({ id: 'status' }),
         accessor: StatusAccessor,
         width: 140,
-        className: 'amount',
+        className: 'status',
       },
       {
         id: 'reference_no',

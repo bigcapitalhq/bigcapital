@@ -9,7 +9,7 @@ export interface IPaymentReceive {
   referenceNo: string,
   depositAccountId: number,
   paymentReceiveNo: string,
-  description: string,
+  statement: string,
   entries: IPaymentReceiveEntry[],
   userId: number,
 };
@@ -20,7 +20,7 @@ export interface IPaymentReceiveCreateDTO {
   referenceNo: string,
   depositAccountId: number,
   paymentReceiveNo?: string,
-  description: string,
+  statement: string,
   entries: IPaymentReceiveEntryDTO[],
 };
 
@@ -31,7 +31,7 @@ export interface IPaymentReceiveEditDTO {
   referenceNo: string,
   depositAccountId: number,
   paymentReceiveNo?: string,
-  description: string,
+  statement: string,
   entries: IPaymentReceiveEntryDTO[],
 };
 

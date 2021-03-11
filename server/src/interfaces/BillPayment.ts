@@ -17,6 +17,7 @@ export interface IBillPayment {
   paymentDate: Date,
   userId: number,
   entries: IBillPaymentEntry[],
+  statement: string,
 }
 
 export interface IBillPaymentEntryDTO {
@@ -29,7 +30,7 @@ export interface IBillPaymentDTO {
   paymentAccountId: number,
   paymentNumber?: string,
   paymentDate: Date,
-  description: string,
+  statement: string,
   reference: string,
   entries: IBillPaymentEntryDTO[],
 };

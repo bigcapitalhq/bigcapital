@@ -4,7 +4,7 @@ import { Dialog, DialogSuspense } from 'components';
 import withDialogRedux from 'components/DialogReduxConnect';
 import { saveInvoke, compose } from 'utils';
 
-const PaymentReceiveNumbereDialogConetnet = lazy(() =>
+const PaymentReceiveNumbereDialogContent = lazy(() =>
   import('./PaymentReceiveNumberDialogContent'),
 );
 
@@ -13,7 +13,7 @@ const PaymentReceiveNumbereDialogConetnet = lazy(() =>
  */
 function PaymentReceiveNumberDialog({
   dialogName,
-  payload = { id: null },
+  payload: { initialFormValues },
   isOpen,
   onConfirm
 }) {
@@ -26,8 +26,8 @@ function PaymentReceiveNumberDialog({
       isOpen={isOpen}
     >
       <DialogSuspense>
-        <PaymentReceiveNumbereDialogConetnet
-          paymentReceiveNumberId={payload.id}
+        <PaymentReceiveNumbereDialogContent
+          initialValues={initialFormValues}
           onConfirm={(values) => saveInvoke(onConfirm, values)}
         />
       </DialogSuspense>

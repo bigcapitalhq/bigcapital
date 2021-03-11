@@ -14,7 +14,7 @@ function PageFade(props) {
 }
 
 export default function AuthenticationWrapper({ ...rest }) {
-  const to = { pathname: '/homepage' };
+  const to = { pathname: '/' };
   const location = useLocation();
   const isAuthenticated = useIsAuthenticated();
   const locationKey = location.pathname;

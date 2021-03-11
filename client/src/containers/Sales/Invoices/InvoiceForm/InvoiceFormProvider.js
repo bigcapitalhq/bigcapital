@@ -26,6 +26,7 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     enabled: !!invoiceId,
   });
 
+  // Fetches the estimate by the given id.
   const {
     data: estimate,
     isFetching: isEstimateFetching,

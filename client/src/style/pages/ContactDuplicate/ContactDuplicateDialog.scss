@@ -1,9 +1,13 @@
 .dialog--contact-duplicate {
   .bp3-dialog-body {
-    .bp3-form-group.bp3-inline {
-      margin: 18px 0px;
+    > .paragraph {
+      margin-bottom: 1rem;
+    }
+    .bp3-form-group {
+      margin-bottom: 1.4rem;
+
       .bp3-label {
-        min-width: 100px;
+        font-size: 13px;
       }
     }
     .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {

@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react';
 import { DashboardInsider } from 'components';
 import {
-  useSettings,
+  useSettingsPaymentReceives,
   usePaymentReceiveEditPage,
   useAccounts,
   useCustomers,
@@ -34,7 +34,7 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
   const { data: accounts, isFetching: isAccountsFetching } = useAccounts();
 
   // Fetch payment made settings.
-  const fetchSettings = useSettings();
+  const fetchSettings = useSettingsPaymentReceives();
 
   // Fetches customers list.
   const {

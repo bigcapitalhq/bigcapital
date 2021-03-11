@@ -10,7 +10,7 @@ exports.up = function(knex) {
     table.string('reference_no').index();
     table.integer('deposit_account_id').unsigned().references('id').inTable('accounts');
     table.string('payment_receive_no').nullable();
-    table.text('description');
+    table.text('statement');
     table.integer('user_id').unsigned().index();
     table.timestamps();
   });

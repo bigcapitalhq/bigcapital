@@ -6,10 +6,11 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FastField, ErrorMessage } from 'formik';
+import { FastField, Field, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
+import { useObserveInvoiceNoSettings } from './utils';
 import { CLASSES } from 'common/classes';
 import {
   ContactSelecetList,
@@ -17,8 +18,8 @@ import {
   Icon,
   InputPrependButton,
 } from 'components';
-
 import { useInvoiceFormContext } from './InvoiceFormProvider';
+import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { inputIntent, handleDateChange } from 'utils';
 
@@ -28,14 +29,39 @@ import { inputIntent, handleDateChange } from 'utils';
 function InvoiceFormHeaderFields({
   // #withDialogActions
   openDialog,
+
+  // #withSettings
+  invoiceAutoIncrement,
+  invoiceNumberPrefix,
+  invoiceNextNumber,
 }) {
   // Invoice form context.
   const { customers } = useInvoiceFormContext();
 
   // Handle invoice number changing.
   const handleInvoiceNumberChange = () => {
-    openDialog('invoice-number-form', {});
+    openDialog('invoice-number-form');
   };
+
+  // Handle invoice no. field blur.
+  const handleInvoiceNoBlur = (form, field) => (event) => {
+    const newValue = event.target.value;
+
+    if (field.value !== newValue && invoiceAutoIncrement) {
+      openDialog('invoice-number-form', {
+        initialFormValues: {
+          manualTransactionNo: newValue,
+          incrementMode: 'manual-transaction',
+        },
+      });
+    }
+  };
+
+  // Syncs invoice number settings with form.
+  useObserveInvoiceNoSettings(
+    invoiceNumberPrefix,
+    invoiceNextNumber,
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -45,7 +71,11 @@ function InvoiceFormHeaderFields({
           <FormGroup
             label={<T id={'customer_name'} />}
             inline={true}
-            className={classNames('form-group--customer-name', 'form-group--select-list', CLASSES.FILL)}
+            className={classNames(
+              'form-group--customer-name',
+              'form-group--select-list',
+              CLASSES.FILL,
+            )}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_id'} />}
@@ -115,7 +145,7 @@ function InvoiceFormHeaderFields({
       </FastField>
 
       {/* ----------- Invoice number ----------- */}
-      <FastField name={'invoice_no'}>
+      <Field name={'invoice_no'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'invoice_no'} />}
@@ -127,7 +157,9 @@ function InvoiceFormHeaderFields({
             <ControlGroup fill={true}>
               <InputGroup
                 minimal={true}
-                {...field}
+                value={field.value}
+                asyncControl={true}
+                onBlur={handleInvoiceNoBlur(form, field)}
               />
               <InputPrependButton
                 buttonProps={{
@@ -143,7 +175,7 @@ function InvoiceFormHeaderFields({
             </ControlGroup>
           </FormGroup>
         )}
-      </FastField>
+      </Field>
 
       {/* ----------- Reference ----------- */}
       <FastField name={'reference_no'}>
@@ -165,4 +197,9 @@ function InvoiceFormHeaderFields({
 
 export default compose(
   withDialogActions,
+  withSettings(({ invoiceSettings }) => ({
+    invoiceAutoIncrement: invoiceSettings?.autoIncrement,
+    invoiceNextNumber: invoiceSettings?.nextNumber,
+    invoiceNumberPrefix: invoiceSettings?.numberPrefix,
+  })),
 )(InvoiceFormHeaderFields);

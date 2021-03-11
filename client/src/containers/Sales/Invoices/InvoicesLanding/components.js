@@ -195,7 +195,7 @@ export function useInvoicesTableColumns() {
       {
         id: 'invoice_no',
         Header: formatMessage({ id: 'invoice_no__' }),
-        accessor: (row) => (row.invoice_no ? `#${row.invoice_no}` : null),
+        accessor: 'invoice_no',
         width: 100,
         className: 'invoice_no',
       },
