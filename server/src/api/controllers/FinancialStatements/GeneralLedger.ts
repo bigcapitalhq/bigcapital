@@ -51,24 +51,14 @@ export default class GeneralLedgerReportController extends BaseFinancialReportCo
   async generalLedger(req: Request, res: Response, next: NextFunction) {
     const { tenantId, settings } = req;
     const filter = this.matchedQueryData(req);
-
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
+ 
     try {
-      const { data, query } = await this.generalLedgetService.generalLedger(
+      const { data, query, meta } = await this.generalLedgetService.generalLedger(
         tenantId,
         filter
       );
       return res.status(200).send({
-        organization_name: organizationName,
-        base_currency: baseCurrency,
+        meta: this.transfromToResponse(meta),
         data: this.transfromToResponse(data),
         query: this.transfromToResponse(query),
       });

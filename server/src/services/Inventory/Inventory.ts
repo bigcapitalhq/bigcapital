@@ -17,6 +17,7 @@ import InventoryCostLotTracker from 'services/Inventory/InventoryCostLotTracker'
 import TenancyService from 'services/Tenancy/TenancyService';
 import events from 'subscribers/events';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
+import SettingsMiddleware from 'api/middleware/SettingsMiddleware';
 
 type TCostMethod = 'FIFO' | 'LIFO' | 'AVG';
 
@@ -345,5 +346,38 @@ export default class InventoryService {
     await settings.save();
 
     return lotNumber;
+  }
+
+  /**
+   * Mark item cost computing is running.
+   * @param {number} tenantId - 
+   * @param {boolean} isRunning - 
+   */
+  async markItemsCostComputeRunning(
+    tenantId: number,
+    isRunning: boolean = true
+  ) {
+    const settings = this.tenancy.settings(tenantId);
+
+    settings.set({
+      key: 'cost_compute_running',
+      group: 'inventory',
+      value: isRunning,
+    });
+    await settings.save();
+  }
+
+  /**
+   * 
+   * @param {number} tenantId 
+   * @returns 
+   */
+  isItemsCostComputeRunning(tenantId) {
+    const settings = this.tenancy.settings(tenantId);
+
+    return settings.get({
+      key: 'cost_compute_running',
+      group: 'inventory'
+    });
   }
 }

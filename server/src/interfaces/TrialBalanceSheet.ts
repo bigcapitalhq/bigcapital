@@ -21,6 +21,12 @@ export interface ITrialBalanceTotal {
   formattedBalance: string;
 }
 
+export interface ITrialBalanceSheetMeta {
+  isCostComputeRunning: boolean,
+  organizationName: string,
+  baseCurrency: string,
+};
+
 export interface ITrialBalanceAccount extends ITrialBalanceTotal {
   id: number;
   parentAccountId: number;
@@ -38,4 +44,5 @@ export type ITrialBalanceSheetData = {
 export interface ITrialBalanceStatement {
   data: ITrialBalanceSheetData;
   query: ITrialBalanceSheetQuery;
+  meta: ITrialBalanceSheetMeta,
 }

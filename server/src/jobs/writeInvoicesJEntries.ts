@@ -1,13 +1,24 @@
 import { Container } from 'typedi';
+import {EventDispatcher} from "event-dispatch";
+import events from 'subscribers/events';
 import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
 
 export default class WriteInvoicesJournalEntries {
+  eventDispatcher: EventDispatcher;
+
+  /**
+   * Constructor method.
+   */
   constructor(agenda) {
+    const eventName = 'rewrite-invoices-journal-entries';
+    this.eventDispatcher = new EventDispatcher();
+
     agenda.define(
-      'rewrite-invoices-journal-entries',
+      eventName,
       { priority: 'normal', concurrency: 1 },
       this.handler.bind(this)
     );
+    agenda.on(`complete:${eventName}`, this.onJobCompleted.bind(this));
   }
 
   public async handler(job, done: Function): Promise<void> {
@@ -35,5 +46,17 @@ export default class WriteInvoicesJournalEntries {
       );
       done(e);
     }
+  }
+
+  /**
+   * Handle the job complete.
+   */
+   async onJobCompleted(job) {
+    const { startingDate, itemId, tenantId } = job.attrs.data;
+
+    await this.eventDispatcher.dispatch(
+      events.inventory.onInventoryCostEntriesWritten,
+      { startingDate, itemId, tenantId }
+    );
   }
 }

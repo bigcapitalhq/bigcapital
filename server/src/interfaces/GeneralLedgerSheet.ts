@@ -72,3 +72,9 @@ export interface IAccountTransaction {
   createdAt: string|Date,
   updatedAt: string|Date,
 }
+
+export interface IGeneralLedgerMeta {
+  isCostComputeRunning: boolean,
+  organizationName: string,
+  baseCurrency: string,
+};

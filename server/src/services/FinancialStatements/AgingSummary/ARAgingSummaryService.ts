@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
-import { IARAgingSummaryQuery } from 'interfaces';
+import { IARAgingSummaryQuery, IARAgingSummaryMeta } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
 import ARAgingSummarySheet from './ARAgingSummarySheet';
 
@@ -29,6 +29,29 @@ export default class ARAgingSummaryService {
       },
       customersIds: [],
       noneZero: false,
+    };
+  }
+
+  /**
+   * Retrieve the balance sheet meta.
+   * @param {number} tenantId -
+   * @returns {IBalanceSheetMeta}
+   */
+  reportMetadata(tenantId: number): IARAgingSummaryMeta {
+    const settings = this.tenancy.settings(tenantId);
+
+    const organizationName = settings.get({
+      group: 'organization',
+      key: 'name',
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
+
+    return {
+      organizationName,
+      baseCurrency,
     };
   }
 
@@ -85,6 +108,11 @@ export default class ARAgingSummaryService {
     const data = ARAgingSummaryReport.reportData();
     const columns = ARAgingSummaryReport.reportColumns();
 
-    return { data, columns, query: filter };
+    return {
+      data,
+      columns,
+      query: filter,
+      meta: this.reportMetadata(tenantId),
+    };
   }
 }

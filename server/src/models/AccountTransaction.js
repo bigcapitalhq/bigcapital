@@ -17,6 +17,9 @@ export default class AccountTransaction extends TenantModel {
     return ['createdAt'];
   }
 
+  /**
+   * Virtual attributes.
+   */
   static get virtualAttributes() {
     return ['referenceTypeFormatted'];
   }
@@ -37,6 +40,7 @@ export default class AccountTransaction extends TenantModel {
       'SaleInvoice': 'Sale invoice',
       'SaleReceipt': 'Sale receipt',
       'PaymentReceive': 'Payment receive',
+      'Bill': 'Bill',
       'BillPayment': 'Payment made',
       'VendorOpeningBalance': 'Vendor opening balance',
       'CustomerOpeningBalance': 'Customer opening balance',

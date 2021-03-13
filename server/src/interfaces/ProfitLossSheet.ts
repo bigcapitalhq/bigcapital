@@ -55,3 +55,9 @@ export interface IProfitLossSheetStatement {
   operatingProfit: IProfitLossSheetTotalSection;
   grossProfit: IProfitLossSheetTotalSection;
 };
+
+export interface IProfitLossSheetMeta {
+  isCostComputeRunning: boolean,
+  organizationName: string,
+  baseCurrency: string,
+}
