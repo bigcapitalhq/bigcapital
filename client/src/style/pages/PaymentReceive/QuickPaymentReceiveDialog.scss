@@ -1,0 +1,20 @@
+.dialog--quick-payment-receive {
+  .bp3-form-group {
+    margin-bottom: 15px;
+  }
+  .form-group {
+    &--statement {
+      .bp3-form-content {
+        textarea {
+          width: 100%;
+          min-width: 100%;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .bp3-dialog-footer {
+    padding-top: 10px;
+  }
+}

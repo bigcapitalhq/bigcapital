@@ -54,7 +54,7 @@ function PaymentReceiveForm({
   // Payment receive number.
   const nextPaymentNumber = transactionNumber(
     paymentReceiveNumberPrefix,
-    paymentReceiveNextNumber
+    paymentReceiveNextNumber,
   );
   // Form initial values.
   const initialValues = useMemo(
@@ -105,10 +105,10 @@ function PaymentReceiveForm({
     }
     const form = {
       ...omit(values, ['payment_receive_no_manually', 'payment_receive_no']),
-      ...(values.payment_receive_no_manually) && ({
+      ...(values.payment_receive_no_manually && {
         payment_receive_no: values.payment_receive_no,
       }),
-      entries
+      entries,
     };
 
     // Handle request response success.
@@ -142,6 +142,12 @@ function PaymentReceiveForm({
         setFieldError(
           'payment_receive_no',
           formatMessage({ id: 'payment_number_is_not_unique' }),
+        );
+      }
+      if (getError('PAYMENT_RECEIVE_NO_REQUIRED')) {
+        setFieldError(
+          'payment_receive_no',
+          formatMessage({ id: 'payment_receive_number_required' }),
         );
       }
       setSubmitting(false);

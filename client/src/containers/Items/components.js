@@ -51,7 +51,7 @@ export const ItemCodeAccessor = (row) =>
 
 export const QuantityOnHandCell = ({ cell: { value } }) => {
   return isNumber(value) ? (
-    <span className={'quantity_on_hand'}>{value}</span>
+    <span className={value < 0 ? 'quantity_on_hand' : null}>{value}</span>
   ) : null;
 };
 

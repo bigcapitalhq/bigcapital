@@ -10,6 +10,7 @@ import InventoryAdjustmentDialog from 'containers/Dialogs/InventoryAdjustmentFor
 import PaymentViaVoucherDialog from 'containers/Dialogs/PaymentViaVoucherDialog';
 import KeyboardShortcutsDialog from 'containers/Dialogs/keyboardShortcutsDialog';
 import ContactDuplicateDialog from 'containers/Dialogs/ContactDuplicateDialog';
+import QuickPaymentReceiveFormDialog from 'containers/Dialogs/QuickPaymentReceiveFormDialog';
 /**
  * Dialogs container.
  */
@@ -25,6 +26,7 @@ export default function DialogsContainer() {
       <PaymentViaVoucherDialog dialogName={'payment-via-voucher'} />
       <KeyboardShortcutsDialog dialogName={'keyboard-shortcuts'} />
       <ContactDuplicateDialog dialogName={'contact-duplicate'} />
+   <QuickPaymentReceiveFormDialog dialogName={'quick-payment-receive'}/>
     </div>
   );
 }

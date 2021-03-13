@@ -14,6 +14,7 @@ import withInvoiceActions from './withInvoiceActions';
 import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { useInvoicesTableColumns, ActionsMenu } from './components';
 import { useInvoicesListContext } from './InvoicesListProvider';
@@ -36,6 +37,9 @@ function InvoicesDataTable({
 
   // #withDrawerActions
   openDrawer,
+
+  // #withDialogAction
+  openDialog,
 }) {
   const history = useHistory();
 
@@ -71,6 +75,10 @@ function InvoicesDataTable({
     openDrawer('invoice-drawer', { invoiceId: id });
   };
 
+  // handle quick payment receive.
+  const handleQuickPaymentReceive = ({ id }) => {
+    openDialog('quick-payment-receive', { invoiceId: id });
+  };
   // Handles fetch data once the table state change.
   const handleDataTableFetchData = useCallback(
     ({ pageSize, pageIndex, sortBy }) => {
@@ -114,6 +122,7 @@ function InvoicesDataTable({
         onDeliver: handleDeliverInvoice,
         onEdit: handleEditInvoice,
         onDrawer: handleDrawerInvoice,
+        onQuick: handleQuickPaymentReceive,
         baseCurrency,
       }}
     />
@@ -125,6 +134,7 @@ export default compose(
   withInvoiceActions,
   withAlertsActions,
   withDrawerActions,
+  withDialogActions,
   withInvoices(({ invoicesTableState }) => ({ invoicesTableState })),
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
