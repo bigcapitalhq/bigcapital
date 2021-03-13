@@ -1,16 +1,24 @@
-import { License } from "system/models";
+import { License } from 'system/models';
 import PaymentMethod from 'services/Payment/PaymentMethod';
 import { Plan } from 'system/models';
 import { IPaymentMethod, ILicensePaymentModel } from 'interfaces';
-import { ILicensePaymentModel } from "interfaces";
-import { PaymentInputInvalid, PaymentAmountInvalidWithPlan } from 'exceptions';
+import { ILicensePaymentModel } from 'interfaces';
+import {
+  PaymentInputInvalid,
+  PaymentAmountInvalidWithPlan,
+  VoucherCodeRequired,
+} from 'exceptions';
 
-export default class LicensePaymentMethod extends PaymentMethod implements IPaymentMethod {
+export default class LicensePaymentMethod
+  extends PaymentMethod
+  implements IPaymentMethod {
   /**
    * Payment subscription of organization via license code.
    * @param {ILicensePaymentModel} licensePaymentModel -
    */
   async payment(licensePaymentModel: ILicensePaymentModel, plan: Plan) {
+    this.validateLicensePaymentModel(licensePaymentModel);
+
     const license = await this.getLicenseOrThrowInvalid(licensePaymentModel);
     this.validatePaymentAmountWithPlan(license, plan);
 
@@ -36,12 +44,22 @@ export default class LicensePaymentMethod extends PaymentMethod implements IPaym
 
   /**
    * Validates the payment amount with given plan price.
-   * @param {License} license 
-   * @param {Plan} plan 
+   * @param {License} license
+   * @param {Plan} plan
    */
   validatePaymentAmountWithPlan(license: License, plan: Plan) {
     if (license.planId !== plan.id) {
       throw new PaymentAmountInvalidWithPlan();
+    }
+  }
+
+  /**
+   * Validate voucher payload.
+   * @param {ILicensePaymentModel} licenseModel -
+   */
+  validateLicensePaymentModel(licenseModel: ILicensePaymentModel) {
+    if (!licenseModel || !licenseModel.licenseCode) {
+      throw new VoucherCodeRequired();
     }
   }
 }

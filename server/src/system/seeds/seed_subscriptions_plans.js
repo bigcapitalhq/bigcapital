@@ -6,21 +6,42 @@ exports.seed = (knex) => {
       // Inserts seed entries
       return knex('subscription_plans').insert([
         {
-          id: 1,
-          name: 'free',
+          name: 'Free',
           slug: 'free',
           price: 0,
           active: true,
           currency: 'LYD',
 
-          trial_period: 15,
+          trial_period: 7,
           trial_interval: 'days',
 
-          invoice_period: 3,
+          index: 1,
+          voucher_required: true,
+        },
+        {
+          name: 'Starter',
+          slug: 'starter',
+          price: 500,
+          active: true,
+          currency: 'LYD',
+
+          invoice_period: 12,
           invoice_interval: 'month',
 
-          index: 1,
-        }
+          index: 2,
+        },
+        {
+          name: 'Growth',
+          slug: 'growth',
+          price: 1000,
+          active: true,
+          currency: 'LYD',
+        
+          invoice_period: 12,
+          invoice_interval: 'month',
+
+          index: 3,
+        },
       ]);
     });
 };

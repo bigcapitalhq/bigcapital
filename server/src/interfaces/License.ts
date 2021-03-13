@@ -15,3 +15,11 @@ export interface ILicensesFilter {
   used: boolean,
   sent: boolean,
 };
+
+export interface ISendLicenseDTO {
+  phoneNumber: string,
+  email: string,
+  period: string,
+  periodInterval: string,
+  planSlug: string,
+};

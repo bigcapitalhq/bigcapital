@@ -1,4 +1,4 @@
-import { pick, get, last } from 'lodash';
+import { isEmpty, get, last } from 'lodash';
 import {
   IGeneralLedgerSheetQuery,
   IGeneralLedgerSheetAccount,
@@ -73,10 +73,9 @@ export default class GeneralLedgerSheet extends FinancialSheet {
   entryReducer(
     entries: IGeneralLedgerSheetAccountTransaction[],
     entry: IJournalEntry,
-    index: number
+    openingBalance: number
   ): IGeneralLedgerSheetAccountTransaction[] {
     const lastEntry = last(entries);
-    const openingBalance = 0;
 
     const contact = this.contactsMap.get(entry.contactId);
     const amount = this.getAmount(
@@ -85,11 +84,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
       entry.accountNormal
     );
     const runningBalance =
-      (entries.length === 0
-        ? openingBalance
-        : lastEntry
-        ? lastEntry.runningBalance
-          : 0) + amount;
+      amount + (!isEmpty(entries) ? lastEntry.runningBalance : openingBalance);
 
     const newEntry = {
       date: entry.date,
@@ -182,9 +177,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
    * @param {IAccount} account
    * @return {IGeneralLedgerSheetAccount}
    */
-  private accountMapper(
-    account: IAccount
-  ): IGeneralLedgerSheetAccount {
+  private accountMapper(account: IAccount): IGeneralLedgerSheetAccount {
     const openingBalance = this.accountOpeningBalance(account);
     const closingBalance = this.accountClosingBalance(account);
 
@@ -208,14 +201,10 @@ export default class GeneralLedgerSheet extends FinancialSheet {
    * @param {IAccount[]} accounts -
    * @return {IGeneralLedgerSheetAccount[]}
    */
-  private accountsWalker(
-    accounts: IAccount[]
-  ): IGeneralLedgerSheetAccount[] {
+  private accountsWalker(accounts: IAccount[]): IGeneralLedgerSheetAccount[] {
     return (
       accounts
-        .map((account: IAccount) =>
-          this.accountMapper(account)
-        )
+        .map((account: IAccount) => this.accountMapper(account))
         // Filter general ledger accounts that have no transactions
         // when`noneTransactions` is on.
         .filter(
