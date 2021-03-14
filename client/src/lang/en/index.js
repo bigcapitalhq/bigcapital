@@ -1007,4 +1007,5 @@ export default {
   amount_received: 'Amount Received',
   payment_no: 'Payment No.',
   payment_receive_number_required: 'Payment receive number required',
+  quick_made_payment: 'Quick Made Payment',
 };

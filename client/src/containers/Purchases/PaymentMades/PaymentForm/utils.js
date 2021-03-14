@@ -21,7 +21,7 @@ export const defaultPaymentMade = {
   payment_date: moment(new Date()).format('YYYY-MM-DD'),
   reference: '',
   payment_number: '',
-  statement: '',
+  // statement: '',
   entries: [],
 };
 

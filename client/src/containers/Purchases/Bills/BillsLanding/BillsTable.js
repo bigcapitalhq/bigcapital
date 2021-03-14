@@ -13,6 +13,7 @@ import withBills from './withBills';
 import withBillActions from './withBillsActions';
 import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import { useBillsTableColumns, ActionsMenu } from './components';
 import { useBillsListContext } from './BillsListProvider';
 
@@ -28,6 +29,9 @@ function BillsDataTable({
 
   // #withAlerts
   openAlert,
+
+  // #withDialogActions
+  openDialog,
 }) {
   // Bills list context.
   const {
@@ -69,6 +73,11 @@ function BillsDataTable({
     openAlert('bill-open', { billId: bill.id });
   };
 
+  // Handle quick payment made action.
+  const handleQuickPaymentMade = ({ id }) => {
+    openDialog('quick-payment-made', { billId: id });
+  };
+
   if (isEmptyStatus) {
     return <BillsEmptyStatus />;
   }
@@ -95,6 +104,7 @@ function BillsDataTable({
         onDelete: handleDeleteBill,
         onEdit: handleEditBill,
         onOpen: handleOpenBill,
+        onQuick: handleQuickPaymentMade,
       }}
     />
   );
@@ -104,6 +114,7 @@ export default compose(
   withBills(({ billsTableState }) => ({ billsTableState })),
   withBillActions,
   withAlertsActions,
+  withDialogActions,
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
   })),

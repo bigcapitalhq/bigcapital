@@ -18,7 +18,7 @@ const Schema = Yup.object().shape({
     .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'payment_receive_no_' })),
   reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
-  statement: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
+  // statement: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
   entries: Yup.array().of(
     Yup.object().shape({
       id: Yup.number().nullable(),

@@ -11,6 +11,8 @@ import PaymentViaVoucherDialog from 'containers/Dialogs/PaymentViaVoucherDialog'
 import KeyboardShortcutsDialog from 'containers/Dialogs/keyboardShortcutsDialog';
 import ContactDuplicateDialog from 'containers/Dialogs/ContactDuplicateDialog';
 import QuickPaymentReceiveFormDialog from 'containers/Dialogs/QuickPaymentReceiveFormDialog';
+import QuickPaymentMadeFormDialog from 'containers/Dialogs/QuickPaymentMadeFormDialog';
+
 /**
  * Dialogs container.
  */
@@ -26,7 +28,8 @@ export default function DialogsContainer() {
       <PaymentViaVoucherDialog dialogName={'payment-via-voucher'} />
       <KeyboardShortcutsDialog dialogName={'keyboard-shortcuts'} />
       <ContactDuplicateDialog dialogName={'contact-duplicate'} />
-   <QuickPaymentReceiveFormDialog dialogName={'quick-payment-receive'}/>
+      <QuickPaymentReceiveFormDialog dialogName={'quick-payment-receive'} />
+      <QuickPaymentMadeFormDialog dialogName={'quick-payment-made'} />
     </div>
   );
 }
