@@ -17,13 +17,13 @@ import {
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-  toSafeNumber
+  toSafeNumber,
 } from 'utils';
 import { CLASSES } from 'common/classes';
 import adjustmentType from 'common/adjustmentType';
 
 import AccountsSuggestField from 'components/AccountsSuggestField';
-import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider'
+import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
 import { diffQuantity } from './utils';
 import InventoryAdjustmentQuantityFields from './InventoryAdjustmentQuantityFields';
 
@@ -74,7 +74,11 @@ export default function InventoryAdjustmentFormDialogFields() {
         <Col xs={5}>
           {/*------------ Adjustment type -----------*/}
           <Field name={'type'}>
-            {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
+            {({
+              form: { values, setFieldValue },
+              field: { value },
+              meta: { error, touched },
+            }) => (
               <FormGroup
                 label={<T id={'adjustment_type'} />}
                 labelInfo={<FieldRequiredHint />}
@@ -88,7 +92,7 @@ export default function InventoryAdjustmentFormDialogFields() {
                     const result = diffQuantity(
                       toSafeNumber(values.quantity),
                       toSafeNumber(values.quantity_on_hand),
-                      type.value
+                      type.value,
                     );
                     setFieldValue('type', type.value);
                     setFieldValue('new_quantity', result);
@@ -119,8 +123,8 @@ export default function InventoryAdjustmentFormDialogFields() {
           >
             <AccountsSuggestField
               accounts={accounts}
-              onAccountSelected={(item) =>
-                form.setFieldValue('adjustment_account_id', item.id)
+              onAccountSelected={({ id }) =>
+                form.setFieldValue('adjustment_account_id', id)
               }
               inputProps={{
                 placeholder: formatMessage({

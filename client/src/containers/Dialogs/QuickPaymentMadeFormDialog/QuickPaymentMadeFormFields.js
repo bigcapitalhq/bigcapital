@@ -1,6 +1,6 @@
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import {
   Classes,
   FormGroup,
@@ -15,7 +15,7 @@ import { CLASSES } from 'common/classes';
 import { DateInput } from '@blueprintjs/datetime';
 import { FieldRequiredHint, Col, Row } from 'components';
 import {
-  AccountsSelectList,
+  AccountsSuggestField,
   InputPrependText,
   MoneyInputGroup,
   Icon,
@@ -33,6 +33,9 @@ import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
  */
 export default function QuickPaymentMadeFormFields() {
   const { accounts } = useQuickPaymentMadeContext();
+
+  // Intl context.
+  const { formatMessage } = useIntl();
   const paymentMadeFieldRef = useAutofocus();
 
   return (
@@ -151,13 +154,16 @@ export default function QuickPaymentMadeFormFields() {
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name={'payment_account_id'} />}
               >
-                <AccountsSelectList
+                <AccountsSuggestField
                   accounts={accounts}
-                  labelInfo={<FieldRequiredHint />}
-                  onAccountSelected={(account) => {
-                    form.setFieldValue('payment_account_id', account.id);
+                  onAccountSelected={({ id }) =>
+                    form.setFieldValue('payment_account_id', id)
+                  }
+                  inputProps={{
+                    placeholder: formatMessage({
+                      id: 'select_account',
+                    }),
                   }}
-                  selectedAccountId={value}
                 />
               </FormGroup>
             )}
