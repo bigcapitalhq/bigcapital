@@ -18,7 +18,7 @@ import moment from 'moment';
  * Actions menu.
  */
 export function ActionsMenu({
-  payload: { onEdit, onOpen, onDelete },
+  payload: { onEdit, onOpen, onDelete, onQuick },
   row: { original },
 }) {
   const { formatMessage } = useIntl();
@@ -41,6 +41,13 @@ export function ActionsMenu({
           icon={<Icon icon={'check'} iconSize={18} />}
           text={formatMessage({ id: 'mark_as_opened' })}
           onClick={safeCallback(onOpen, original)}
+        />
+      </If>
+      <If condition={!original.is_fully_paid}>
+        <MenuItem
+          icon={<Icon icon="quick-payment-16" iconSize={16} />}
+          text={formatMessage({ id: 'add_payment' })}
+          onClick={safeCallback(onQuick, original)}
         />
       </If>
 
