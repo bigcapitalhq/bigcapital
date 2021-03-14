@@ -162,11 +162,11 @@ export default [
         href: '/financial-reports/profit-loss-sheet',
       },
       {
-        text: <T id={'receivable_a_r'} />,
+        text: <T id={'AR_Aging_Summary'} />,
         href: '/financial-reports/receivable-aging-summary',
       },
       {
-        text: <T id={'payable_a_p'} />,
+        text: <T id={'AP_Aging_Summary'} />,
         href: '/financial-reports/payable-aging-summary',
       },
     ],

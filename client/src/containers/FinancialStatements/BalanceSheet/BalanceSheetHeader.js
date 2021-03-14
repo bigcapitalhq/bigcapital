@@ -13,6 +13,9 @@ import withBalanceSheetActions from './withBalanceSheetActions';
 import { compose } from 'utils';
 import BalanceSheetHeaderGeneralPanal from './BalanceSheetHeaderGeneralPanal';
 
+/**
+ * Balance sheet header.
+ */
 function BalanceSheetHeader({
   // #ownProps
   onSubmitFilter,

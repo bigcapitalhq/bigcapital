@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 
-import 'style/pages/FinancialStatements/ARAgingSummary.scss';
+import 'style/pages/FinancialStatements/APAgingSummary.scss';
 
 import { FinancialStatement } from 'components';
 

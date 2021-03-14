@@ -15,7 +15,6 @@ import { Col, Row, ListSelect, MODIFIER } from 'components';
 import { filterAccountsOptions } from './common';
 
 
-
 export default function FinancialAccountsFilter({ ...restProps }) {
   const SUBMENU_POPOVER_MODIFIERS = {
     flip: { boundariesElement: 'viewport', padding: 20 },

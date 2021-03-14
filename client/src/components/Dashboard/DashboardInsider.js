@@ -7,13 +7,14 @@ export default function DashboardInsider({
   children,
   name,
   mount = false,
+  className,
 }) {
   return (
     <div className={classnames({
       'dashboard__insider': true,
       'dashboard__insider--loading': loading,
       [`dashboard__insider--${name}`]: !!name,
-    })}>
+    }, className)}>
       <LoadingIndicator loading={loading} mount={mount}>
         { children }
       </LoadingIndicator>

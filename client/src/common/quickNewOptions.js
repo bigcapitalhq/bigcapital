@@ -1,6 +1,6 @@
 export default [
   { path: 'invoices/new', name: 'Sale invoice' },
-  { path: 'bill//new', name: 'Purchase invoice' },
+  { path: 'bills//new', name: 'Purchase invoice' },
   { path: 'make-journal-entry', name: 'Manual journal' },
   { path: 'expenses/new', name: 'Expense'  },
   { path: 'customers/new', name: 'Customer' },
