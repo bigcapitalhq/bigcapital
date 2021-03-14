@@ -1,6 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { defaultTo } from 'lodash';
 import useApiRequest from '../useRequest';
+import t from './types';
+
+const commonInvalidateQueries = (queryClient) => {
+  // Invalidate items categories.
+  queryClient.invalidateQueries(t.ITEMS_CATEGORIES);
+
+  // Invalidate items.
+  queryClient.invalidateQueries(t.ITEMS);
+};
 
 /**
  * Creates a new item category.
@@ -11,7 +19,8 @@ export function useCreateItemCategory(props) {
 
   return useMutation((values) => apiRequest.post('item_categories', values), {
     onSuccess: () => {
-      queryClient.invalidateQueries('ITEMS_CATEGORIES');
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -27,9 +36,12 @@ export function useEditItemCategory(props) {
   return useMutation(
     ([id, values]) => apiRequest.post(`item_categories/${id}`, values),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries('ITEMS_CATEGORIES');
-        queryClient.invalidateQueries('ITEMS');
+      onSuccess: (res, [id, values]) => {
+        // Invalidate specific item category.
+        queryClient.invalidateQueries([t.ITEM_CATEGORY, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
       },
       ...props,
     },
@@ -44,21 +56,16 @@ export function useDeleteItemCategory(props) {
   const apiRequest = useApiRequest();
 
   return useMutation((id) => apiRequest.delete(`item_categories/${id}`), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('ITEMS_CATEGORIES');
-      queryClient.invalidateQueries('ITEMS');
+    onSuccess: (res, id) => {
+      // Invalidate specific item category.
+      queryClient.invalidateQueries([t.ITEM_CATEGORY, id]);
+
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
 }
-
-// Transforms items categories.
-const transformItemsCategories = (response) => {
-  return {
-    itemsCategories: response.data.item_categories,
-    pagination: response.data.pagination,
-  };
-};
 
 /**
  * Retrieve the items categories.
@@ -66,22 +73,24 @@ const transformItemsCategories = (response) => {
 export function useItemsCategories(query, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
-    ['ITEMS_CATEGORIES', query],
-    () =>
-      apiRequest.get(`item_categories`, { params: query }).then(
-        transformItemsCategories,
-      ),
-    props,
+  return useQuery(
+    [t.ITEMS_CATEGORIES, query],
+    () => apiRequest.get(`item_categories`, { params: query }),
+    {
+      select: (response) => ({
+        itemsCategories: response.data.item_categories,
+        pagination: response.data.pagination,
+      }),
+      initialDataUpdatedAt: 0,
+      initialData: {
+        data: {
+          item_categories: [],
+          pagination: {}
+        },
+      },
+      ...props,
+    },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      itemsCategories: [],
-      pagination: {},
-    }),
-  };
 }
 
 /**
@@ -91,15 +100,14 @@ export function useItemsCategories(query, props) {
 export function useItemCategory(id, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
-    ['ITEMS_CATEGORY', id],
+  return useQuery(
+    [t.ITEM_CATEGORY, id],
     () =>
       apiRequest.get(`item_categories/${id}`).then((res) => res.data.category),
-    props,
+    {
+      initialDataUpdatedAt: 0,
+      initialData: {},
+      ...props,
+    },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {}),
-  };
 }

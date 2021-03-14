@@ -1,12 +1,25 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { defaultTo } from 'lodash';
 import useApiRequest from '../useRequest';
 import { transformPagination } from 'utils';
+import t from './types';
 
 const defaultPagination = {
   pageSize: 12,
   page: 0,
   pagesCount: 0,
+};
+
+// Common invalidate queries.
+const commonInvalidateQueries = (queryClient) => {
+  // Invalidate expenses.
+  queryClient.invalidateQueries(t.EXPENSES);
+
+  // Invalidate accounts.
+  queryClient.invalidateQueries(t.ACCOUNTS);
+  queryClient.invalidateQueries(t.ACCOUNT);
+
+  // Invalidate financial reports.
+  queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 };
 
 /**
@@ -15,8 +28,8 @@ const defaultPagination = {
 export function useExpenses(query, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
-    ['EXPENSES', query],
+  return useQuery(
+    [t.EXPENSES, query],
     () => apiRequest.get(`expenses`, { params: { ...query } }),
     {
       select: (response) => ({
@@ -24,18 +37,17 @@ export function useExpenses(query, props) {
         pagination: transformPagination(response.data.pagination),
         filterMeta: response.data.filter_meta,
       }),
+      initialDataUpdatedAt: 0,
+      initialData: {
+        data: {
+          expenses: [],
+          pagination: defaultPagination,
+          filter_meta: {},
+        },
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      customers: [],
-      pagination: defaultPagination,
-      filterMeta: {},
-    }),
-  };
 }
 
 /**
@@ -45,19 +57,20 @@ export function useExpenses(query, props) {
 export function useExpense(id, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
-    ['EXPENSE', id],
+  return useQuery(
+    [t.EXPENSE, id],
     () => apiRequest.get(`expenses/${id}`),
     {
       select: (res) => res.data.expense,
+      initialDataUpdatedAt: 0,
+      initialData: {
+        data: {
+          expense: {},
+        }
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {}),
-  };
 }
 
 /**
@@ -68,9 +81,12 @@ export function useDeleteExpense(props) {
   const queryClient = useQueryClient();
 
   return useMutation((id) => apiRequest.delete(`expenses/${id}`), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('EXPENSES');
-      queryClient.invalidateQueries('EXPENSE');
+    onSuccess: (res, id) => {
+      // Invalidate specific expense.
+      queryClient.invalidateQueries([t.EXPENSE, id]);
+
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -86,9 +102,12 @@ export function useEditExpense(props) {
   return useMutation(
     ([id, values]) => apiRequest.post(`expenses/${id}`, values),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries('EXPENSES');
-        queryClient.invalidateQueries('EXPENSE');
+      onSuccess: (res, [id, values]) => {
+        // Invalidate specific expense.
+        queryClient.invalidateQueries([t.EXPENSE, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
       },
       ...props,
     },
@@ -103,9 +122,9 @@ export function useCreateExpense(props) {
   const apiRequest = useApiRequest();
 
   return useMutation((values) => apiRequest.post('expenses', values), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('EXPENSES');
-      queryClient.invalidateQueries('EXPENSE');
+    onSuccess: (res, [values]) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -119,9 +138,12 @@ export function usePublishExpense(props) {
   const apiRequest = useApiRequest();
 
   return useMutation((id) => apiRequest.post(`expenses/${id}/publish`), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('EXPENSES');
-      queryClient.invalidateQueries('EXPENSE');
+    onSuccess: (res, id) => {
+      // Invalidate specific expense.
+      queryClient.invalidateQueries([t.EXPENSE, id]);
+
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });

@@ -32,13 +32,6 @@ function CustomerFormProvider({ customerId, ...props }) {
       enabled: !!contactId,
     },
   );
-
-  // Handle fetch customers data table
-  const {
-    data: { customers },
-    isFetching: isCustomersLoading,
-  } = useCustomers();
-
   // Handle fetch Currencies data table
   const { data: currencies, isFetching: isCurrenciesLoading } = useCurrencies();
 
@@ -54,14 +47,12 @@ function CustomerFormProvider({ customerId, ...props }) {
   const provider = {
     customerId,
     customer,
-    customers,
     currencies,
     contactDuplicate,
     submitPayload,
     isNewMode,
 
     isCustomerLoading,
-    isCustomersLoading,
     isCurrenciesLoading,
 
     setSubmitPayload,

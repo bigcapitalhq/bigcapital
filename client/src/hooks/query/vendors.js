@@ -1,7 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { defaultTo } from 'lodash';
+import t from './types';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
+
+// Common invalidate queries.
+const commonInvalidateQueries = (queryClient) => {
+  // Invalidate vendors list.
+  queryClient.invalidateQueries(t.VENDORS);
+
+  // Invalidate financial reports.
+  queryClient.invalidateQueries(t.ACCOUNTS);
+  queryClient.invalidateQueries(t.ACCOUNT);
+
+  // Invalidate financial reports.
+  queryClient.invalidateQueries(t.FINANCIAL_REPORT);
+};
 
 /**
  * Retrieve vendors list.
@@ -9,8 +22,8 @@ import useApiRequest from '../useRequest';
 export function useVendors(query, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
-    ['VENDORS', query],
+  return useQuery(
+    [t.VENDORS, query],
     () => apiRequest.get(`vendors`, { params: query }),
     {
       select: (res) => ({
@@ -18,18 +31,17 @@ export function useVendors(query, props) {
         pagination: transformPagination(res.data.pagination),
         filterMeta: res.data.filter_meta,
       }),
+      initialDataUpdatedAt: 0,
+      initialData: {
+        data: {
+          vendors: [],
+          pagination: {},
+          filter_meta: {},
+        },
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      vendors: [],
-      pagination: {},
-      filterMeta: {}
-    }),
-  };
 }
 
 /**
@@ -42,11 +54,14 @@ export function useEditVendor(props) {
   return useMutation(
     ([id, values]) => apiRequest.post(`vendors/${id}`, values),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries('VENDORS');
-        queryClient.invalidateQueries('VENDOR');
+      onSuccess: (res, [id, values]) => {
+        // Invalidate specific vendor.
+        queryClient.invalidateQueries([t.VENDOR, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
       },
-      ...props
+      ...props,
     },
   );
 }
@@ -58,15 +73,16 @@ export function useDeleteVendor(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.delete(`vendors/${id}`),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('VENDORS');
-        queryClient.invalidateQueries('VENDOR');
-      },
-      ...props
-    });
+  return useMutation((id) => apiRequest.delete(`vendors/${id}`), {
+    onSuccess: (res, id) => {
+      // Invalidate specific vendor.
+      queryClient.invalidateQueries([t.VENDOR, id]);
+
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
 }
 
 /**
@@ -76,15 +92,13 @@ export function useCreateVendor(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.post('vendors', values),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('VENDORS');
-      },
-      ...props
-    }
-  );
+  return useMutation((values) => apiRequest.post('vendors', values), {
+    onSuccess: () => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
 }
 
 /**
@@ -93,12 +107,12 @@ export function useCreateVendor(props) {
 export function useVendor(id, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
-    ['VENDOR', id],
-    () => apiRequest.get(`vendors/${id}`),
-    {
-      select: (res) => res.data.vendor,
-      ...props
+  return useQuery([t.VENDOR, id], () => apiRequest.get(`vendors/${id}`), {
+    select: (res) => res.data.vendor,
+    initialDataUpdatedAt: 0,
+    initialData: {
+      data: { vendor: {} },
     },
-  );
+    ...props,
+  });
 }

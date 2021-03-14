@@ -1,12 +1,24 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { defaultTo } from 'lodash';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
+import t from './types';
 
 const defaultPagination = {
   pageSize: 12,
   page: 0,
   pagesCount: 0,
+};
+
+const commonInvalidateQueries = (queryClient) => {
+  // Invalidate customers.
+  queryClient.invalidateQueries(t.CUSTOMERS);
+
+  // Invalidate the financial reports.
+  queryClient.invalidateQueries(t.ACCOUNTS);
+  queryClient.invalidateQueries(t.ACCOUNT);
+
+  // Invalidate the financial reports.
+  queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 };
 
 /**
@@ -15,27 +27,26 @@ const defaultPagination = {
 export function useCustomers(query, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
-    ['CUSTOMERS', query],
+  return useQuery(
+    [t.CUSTOMERS, query],
     () => apiRequest.get(`customers`, { params: query }),
     {
       select: (response) => ({
         customers: response.data.customers,
         pagination: transformPagination(response.data.pagination),
-        filterMeta: response.data.filter_meta
+        filterMeta: response.data.filter_meta,
       }),
+      initialDataUpdatedAt: 0,
+      initialData: {  
+        data: {
+          customers: [],
+          pagination: defaultPagination,
+          filter_meta: {},
+        }
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      customers: [],
-      pagination: defaultPagination,
-      filterMeta: {},
-    })
-  }
 }
 
 /**
@@ -49,9 +60,12 @@ export function useEditCustomer(props) {
   return useMutation(
     ([id, values]) => apiRequest.post(`customers/${id}`, values),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries('CUSTOMERS');
-        queryClient.invalidateQueries('CUSTOMER');
+      onSuccess: (res, [id, values]) => {
+        // Invalidate specific customer.
+        queryClient.invalidateQueries([t.CUSTOMER, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
       },
       ...props
     },
@@ -68,9 +82,12 @@ export function useDeleteCustomer(props) {
   return useMutation(
     (id) => apiRequest.delete(`customers/${id}`),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries('CUSTOMERS');
-        queryClient.invalidateQueries('CUSTOMER');
+      onSuccess: (res, id) => {
+        // Invalidate specific customer.
+        queryClient.invalidateQueries([t.CUSTOMER, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
       },
       ...props,
     }
@@ -88,8 +105,8 @@ export function useCreateCustomer(props) {
     (values) => apiRequest.post('customers', values),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('CUSTOMERS');
-        queryClient.invalidateQueries('CUSTOMER');
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
       },
       ...props
     });
@@ -99,14 +116,19 @@ export function useCreateCustomer(props) {
  * Retrieve the customer details.
  */
 export function useCustomer(id, props) {
-  const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
   return useQuery(
-    ['CUSTOMER', id],
+    [t.CUSTOMER, id],
     () => apiRequest.get(`customers/${id}`),
     {
       select: (res) => res.data.customer,
+      initialDataUpdatedAt: 0,
+      initialData: {
+        data: {
+          customer: {}
+        }
+      },
       ...props
     },
   );

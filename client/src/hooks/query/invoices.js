@@ -1,7 +1,30 @@
-import { defaultTo } from 'lodash';
 import { useQueryClient, useQuery, useMutation } from 'react-query';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
+import t from './types';
+
+// Common invalidate queries.
+const commonInvalidateQueries = (queryClient) => {
+  // Invalidate invoices.
+  queryClient.invalidateQueries(t.SALE_INVOICES);
+
+  // Invalidate customers.
+  queryClient.invalidateQueries(t.CUSTOMERS);
+
+  // Invalidate accounts.
+  queryClient.invalidateQueries(t.ITEMS);
+  queryClient.invalidateQueries(t.ITEM);
+
+  // Invalidate settings.
+  queryClient.invalidateQueries([t.SETTING, t.SETTING_INVOICES]);
+
+  // Invalidate financial reports.
+  queryClient.invalidateQueries(t.FINANCIAL_REPORT);
+
+  // Invalidate accounts.
+  queryClient.invalidateQueries(t.ACCOUNTS);
+  queryClient.invalidateQueries(t.ACCOUNT);
+};
 
 /**
  * Creates a new sale invoice.
@@ -11,13 +34,12 @@ export function useCreateInvoice(props) {
   const apiRequest = useApiRequest();
 
   return useMutation((values) => apiRequest.post('sales/invoices', values), {
-    onSuccess: (values) => {
-      queryClient.invalidateQueries('SALE_INVOICES');
+    onSuccess: (res, values) => {
+      // Invalidate invoice customer.
+      queryClient.invalidateQueries([t.CUSTOMER, values.customer_id]);
 
-      queryClient.invalidateQueries('CUSTOMERS');
-      queryClient.invalidateQueries(['CUSTOMER', values.customer_id]);
-
-      queryClient.invalidateQueries(['SETTINGS', 'INVOICES']);
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -34,10 +56,14 @@ export function useEditInvoice(props) {
     ([id, values]) => apiRequest.post(`sales/invoices/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
-        queryClient.invalidateQueries('SALE_INVOICES');
-        queryClient.invalidateQueries(['SALE_INVOICE', id]);
-        queryClient.invalidateQueries('CUSTOMERS');
-        queryClient.invalidateQueries(['CUSTOMER', values.customer_id]);
+        // Invalidate specific sale invoice.
+        queryClient.invalidateQueries([t.SALE_INVOICE, id]);
+
+        // Invalidate invoice customer.
+        queryClient.invalidateQueries([t.CUSTOMER, values.customer_id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
       },
       ...props,
     },
@@ -53,9 +79,11 @@ export function useDeleteInvoice(props) {
 
   return useMutation((id) => apiRequest.delete(`sales/invoices/${id}`), {
     onSuccess: (res, id) => {
-      queryClient.invalidateQueries('SALE_INVOICES');
-      queryClient.invalidateQueries(['SALE_INVOICE', id]);
-      queryClient.invalidateQueries('CUSTOMERS');
+      // Invalidate specific invoice.
+      queryClient.invalidateQueries([t.SALE_INVOICE, id]);
+
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -67,8 +95,8 @@ export function useDeleteInvoice(props) {
 export function useInvoices(query, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
-    ['SALE_INVOICES', query],
+  return useQuery(
+    [t.SALE_INVOICES, query],
     () => apiRequest.get('sales/invoices', { params: query }),
     {
       select: (res) => ({
@@ -76,22 +104,21 @@ export function useInvoices(query, props) {
         pagination: transformPagination(res.data.pagination),
         filterMeta: res.data.filter_meta,
       }),
+      initialDataUpdatedAt: 0,
+      initialData: {
+        data: {
+          sales_invoices: [],
+          pagination: {
+            page: 1,
+            pageSize: 12,
+            total: 0,
+          },
+          filter_meta: {},
+        },
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      invoices: [],
-      pagination: {
-        page: 1,
-        pageSize: 12,
-        total: 0,
-      },
-      filterMeta: {},
-    }),
-  };
 }
 
 /**
@@ -101,35 +128,42 @@ export function useDeliverInvoice(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`sales/invoices/${id}/deliver`), {
-    onSuccess: (res, id) => {
-      queryClient.invalidateQueries('SALE_INVOICES');
-      queryClient.invalidateQueries(['SALE_INVOICE', id]);
-      queryClient.invalidateQueries('CUSTOMERS');
+  return useMutation(
+    (invoiceId) => apiRequest.post(`sales/invoices/${invoiceId}/deliver`),
+    {
+      onSuccess: (res, invoiceId) => {
+        // Invalidate specific invoice.
+        queryClient.invalidateQueries([t.SALE_INVOICE, invoiceId]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
     },
-    ...props,
-  });
+  );
 }
 
 /**
  * Retrieve the sale invoice details.
+ * @param {number} invoiceId - Invoice id.
  */
-export function useInvoice(id, props) {
+export function useInvoice(invoiceId, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
-    ['SALE_INVOICE', id],
-    () => apiRequest.get(`sales/invoices/${id}`),
+  return useQuery(
+    [t.SALE_INVOICE, invoiceId],
+    () => apiRequest.get(`sales/invoices/${invoiceId}`),
     {
       select: (res) => res.data.sale_invoice,
+      initialDataUpdatedAt: 0,
+      initialData: {
+        data: {
+          sale_invoice: {}
+        },
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {}),
-  };
 }
 
 /**
@@ -139,8 +173,8 @@ export function useInvoice(id, props) {
 export function useDueInvoices(customerId, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
-    ['SALE_INVOICE_DUE', customerId],
+  return useQuery(
+    [t.SALE_INVOICES, t.SALE_INVOICES_DUE, customerId],
     () =>
       apiRequest.get(`sales/invoices/payable`, {
         params: { customer_id: customerId },
@@ -156,9 +190,4 @@ export function useDueInvoices(customerId, props) {
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, []),
-  };
 }

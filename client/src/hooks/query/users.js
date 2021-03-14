@@ -1,7 +1,12 @@
 import { useMutation, useQueryClient, useQuery } from 'react-query';
 import { defaultTo } from 'lodash';
 import useApiRequest from '../useRequest';
+import t from './types';
 
+// Common invalidate queries.
+const commonInvalidateQueries = (queryClient) => {
+  queryClient.invalidateQueries(t.USERS);
+};
 
 /**
  * Create a new invite user.
@@ -12,7 +17,8 @@ export function useCreateInviteUser(props) {
 
   return useMutation((values) => apiRequest.post('invite/send', values), {
     onSuccess: () => {
-      queryClient.invalidateQueries('USERS');
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -27,8 +33,11 @@ export function useEditUser(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(([id, values]) => apiRequest.post(`users/${id}`, values), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('USERS');
+    onSuccess: (res, [id, values]) => {
+      queryClient.invalidateQueries([t.USER, id]);
+
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -42,9 +51,11 @@ export function useDeleteUser(props) {
   const apiRequest = useApiRequest();
 
   return useMutation((id) => apiRequest.delete(`users/${id}`), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('USERS');
-      queryClient.invalidateQueries('USER');
+    onSuccess: (res, id) => {
+      queryClient.invalidateQueries([t.USER, id]);
+      
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -57,7 +68,7 @@ export function useUsers(props) {
   const apiRequest = useApiRequest();
 
   const result = useQuery(
-    ['USERS'],
+    [t.USERS],
     () => apiRequest.get(`USERS`).then((response) => response.data.users),
     props,
   );

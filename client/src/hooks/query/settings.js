@@ -13,7 +13,7 @@ export function useSaveSettings(props) {
 
   return useMutation((settings) => apiRequest.post('settings', settings), {
     onSuccess: () => {
-      queryClient.invalidateQueries('SETTINGS');
+      queryClient.invalidateQueries(t.SETTING);
     },
     ...props,
   });
@@ -51,7 +51,7 @@ function useSettingsQuery(key, query, props) {
  * Retrieve the all settings of the organization.
  */
 export function useSettings() {
-  return useSettingsQuery(['SETTINGS', 'ALL'], {});
+  return useSettingsQuery([t.SETTING, 'ALL'], {});
 }
 
 /**
@@ -59,7 +59,7 @@ export function useSettings() {
  */
 export function useSettingsInvoices(props) {
   return useSettingsQuery(
-    ['SETTINGS', 'INVOICES'],
+    [t.SETTING, t.SETTING_INVOICES],
     { group: 'sale_invoices' },
     props,
   );
@@ -70,7 +70,7 @@ export function useSettingsInvoices(props) {
  */
 export function useSettingsEstimates(props) {
   return useSettingsQuery(
-    ['SETTINGS', 'ESTIMATES'],
+    [t.SETTING, t.SETTING_ESTIMATES],
     { group: 'sale_estimates' },
     props,
   );
@@ -81,7 +81,7 @@ export function useSettingsEstimates(props) {
  */
 export function useSettingsPaymentReceives(props) {
   return useSettingsQuery(
-    ['SETTINGS', 'PAYMENT_RECEIVES'],
+    [t.SETTING, t.SETTING_PAYMENT_RECEIVES],
     { group: 'payment_receives' },
     props,
   );
@@ -93,7 +93,7 @@ export function useSettingsPaymentReceives(props) {
  */
 export function useSettingsReceipts(props) {
   return useSettingsQuery(
-    ['SETTINGS', 'RECEIPTS'],
+    [t.SETTING, t.SETTING_RECEIPTS],
     { group: 'sale_receipts' },
     props,
   );
@@ -105,7 +105,7 @@ export function useSettingsReceipts(props) {
  */
 export function useSettingsManualJournals(props) {
   return useSettingsQuery(
-    ['SETTINGS', 'MANUAL_JOURNALS'],
+    [t.SETTING, t.SETTING_MANUAL_JOURNALS],
     { group: 'sale_receipts' },
     props,
   );

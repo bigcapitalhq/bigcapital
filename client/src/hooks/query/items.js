@@ -1,12 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { defaultTo } from 'lodash';
 import { transformPagination, transformResponse } from 'utils';
 import useApiRequest from '../useRequest';
+import t from './types';
 
-const defaultPagination = {
+const DEFAULT_PAGINATION = {
   pageSize: 12,
   page: 0,
   pagesCount: 0,
+};
+
+// Common invalidate queries.
+const commonInvalidateQueries = (queryClient) => {
+  // Invalidate items.
+  queryClient.invalidateQueries(t.ITEMS);
+
+  // Invalidate items categories.
+  queryClient.invalidateQueries(t.ITEMS_CATEGORIES);
 };
 
 /**
@@ -17,9 +26,8 @@ export function useCreateItem(props) {
   const apiRequest = useApiRequest();
 
   return useMutation((values) => apiRequest.post('items', values), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('ITEMS');
-      queryClient.invalidateQueries('ITEMS_CATEGORIES');
+    onSuccess: (res, values) => {
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -33,10 +41,12 @@ export function useEditItem(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(([id, values]) => apiRequest.post(`items/${id}`, values), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('ITEMS');
-      queryClient.invalidateQueries('ITEM');
-      queryClient.invalidateQueries('ITEMS_CATEGORIES');
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific item.
+      queryClient.invalidateQueries([t.ITEM, id]);
+
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -50,10 +60,50 @@ export function useDeleteItem(props) {
   const apiRequest = useApiRequest();
 
   return useMutation((id) => apiRequest.delete(`items/${id}`), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('ITEMS');
-      queryClient.invalidateQueries('ITEM');
-      queryClient.invalidateQueries('ITEMS_CATEGORIES');
+    onSuccess: (res, id) => {
+      // Invalidate specific item.
+      queryClient.invalidateQueries([t.ITEM, id]);
+
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
+}
+
+/**
+ * Activate the given item.
+ */
+ export function useActivateItem(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation((id) => apiRequest.post(`items/${id}/activate`), {
+    onSuccess: (res, id) => {
+      // Invalidate specific item.
+      queryClient.invalidateQueries([t.ITEM, id]);
+
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
+}
+
+/**
+ * Inactivate the given item.
+ */
+export function useInactivateItem(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation((id) => apiRequest.post(`items/${id}/inactivate`), {
+    onSuccess: (res, id) => {
+      // Invalidate specific item.
+      queryClient.invalidateQueries([t.ITEM, id]);
+
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -76,21 +126,19 @@ const transformItemsResponse = (response) => {
 export function useItems(query, props) {
   const apiRequest = useApiRequest();
 
-  const result = useQuery(
+  return useQuery(
     ['ITEMS', query],
-    () =>
-      apiRequest.get(`items`, { params: query }).then(transformItemsResponse),
-    props,
+    () => apiRequest.get(`items`, { params: query }).then(transformItemsResponse),
+    {
+      initialDataUpdatedAt: 0,
+      initialData: {
+        items: [],
+        pagination: DEFAULT_PAGINATION,
+        filterMeta: {},
+      },
+      ...props,
+    }
   );
-
-  return {
-    ...result,
-    data: defaultTo(result.data, {
-      items: [],
-      pagination: defaultPagination,
-      filterMeta: {},
-    }),
-  };
 }
 
 /**
@@ -103,38 +151,10 @@ export function useItem(id, props) {
   return useQuery(
     ['ITEM', id],
     () => apiRequest.get(`items/${id}`).then((response) => response.data.item),
-    props,
+    {
+      initialDataUpdatedAt: 0,
+      initialData: {},
+      ...props
+    },
   );
-}
-
-/**
- * Activate the given item.
- */
-export function useActivateItem(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation((id) => apiRequest.post(`items/${id}/activate`), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('ITEMS');
-      queryClient.invalidateQueries('ITEM');
-    },
-    ...props,
-  });
-}
-
-/**
- * Inactivate the given item.
- */
-export function useInactivateItem(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation((id) => apiRequest.post(`items/${id}/inactivate`), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('ITEMS');
-      queryClient.invalidateQueries('ITEM');
-    },
-    ...props,
-  });
 }

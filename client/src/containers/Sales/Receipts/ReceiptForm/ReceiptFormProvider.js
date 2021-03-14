@@ -32,11 +32,19 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     isFetching: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
+  // Filter all sellable items only.
+  const stringifiedFilterRoles = React.useMemo(() => JSON.stringify(
+    [{ "fieldKey": "sellable", "value":true, "condition":"equals"}]
+  ), []);
+
   // Handle fetch Items data table or list
   const {
     data: { items },
     isFetching: isItemsLoading,
-  } = useItems({ page_size: 10000 });
+  } = useItems({
+    page_size: 10000,
+    stringified_filter_roles: stringifiedFilterRoles
+  });
 
   // Fetch receipt settings.
   const { isLoading: isSettingLoading } = useSettingsReceipts();

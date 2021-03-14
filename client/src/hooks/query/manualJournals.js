@@ -2,6 +2,27 @@ import { defaultTo } from 'lodash';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
+import t from './types';
+
+const commonInvalidateQueries = (client) => {
+  // Invalidate manual journals.
+  client.invalidateQueries(t.MANUAL_JOURNALS);
+
+  // Invalidate customers.
+  client.invalidateQueries(t.CUSTOMERS);
+  client.invalidateQueries(t.CUSTOMER);
+
+  // Invalidate vendors.
+  client.invalidateQueries(t.VENDORS);
+  client.invalidateQueries(t.VENDOR);
+
+  // Invalidate accounts.
+  client.invalidateQueries(t.ACCOUNTS);
+  client.invalidateQueries(t.ACCOUNT);
+
+  // Invalidate financial reports.
+  client.invalidateQueries(t.FINANCIAL_REPORT);
+};
 
 /**
  * Creates a new manual journal.
@@ -14,7 +35,8 @@ export function useCreateJournal(props) {
     (values) => apiRequest.post('manual-journals', values),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('JOURNALS');
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
       },
       ...props
     },
@@ -32,8 +54,11 @@ export function useEditJournal(props) {
     ([id, values]) => apiRequest.post(`manual-journals/${id}`, values),
     {
       onSuccess: (res, [id]) => {
-        queryClient.invalidateQueries('JOURNALS');
-        queryClient.invalidateQueries('JOURNAL', id);
+        // Invalidate specific manual journal.
+        queryClient.invalidateQueries(t.MANUAL_JOURNAL, id);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
       },
       ...props
     },
@@ -51,8 +76,10 @@ export function useDeleteJournal(props) {
     (id) => apiRequest.delete(`manual-journals/${id}`),
     {
       onSuccess: (res, id) => {
-        queryClient.invalidateQueries('JOURNALS');
-        queryClient.invalidateQueries('JOURNAL', id);
+        // Invalidate specific manual journal.
+        queryClient.invalidateQueries(t.MANUAL_JOURNAL, id);
+
+        commonInvalidateQueries(queryClient);
       },
       ...props
     },
@@ -70,8 +97,10 @@ export function usePublishJournal(props) {
     (id) => apiRequest.post(`manual-journals/${id}/publish`),
     {
       onSuccess: (res, id) => {
-        queryClient.invalidateQueries('JOURNALS');
-        queryClient.invalidateQueries('JOURNAL', id);
+        // Invalidate specific manual journal.
+        queryClient.invalidateQueries(t.MANUAL_JOURNAL, id);
+
+        commonInvalidateQueries(queryClient);
       },
       ...props
     },
@@ -85,7 +114,7 @@ export function useJournals(query, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
-    ['JOURNALS', query],
+    [t.MANUAL_JOURNALS, query],
     () => apiRequest.get('manual-journals', { params: query }),
     {
       select: (response) => ({
@@ -114,7 +143,7 @@ export function useJournal(id, props) {
   const apiRequest = useApiRequest();
 
   return useQuery(
-    ['JOURNAL', id],
+    [t.MANUAL_JOURNAL, id],
     () => apiRequest.get(`manual-journals/${id}`),
     {
       select: (res) => res.data.manual_journal,

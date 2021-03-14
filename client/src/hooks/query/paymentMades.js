@@ -2,6 +2,32 @@ import { defaultTo } from 'lodash';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
+import t from './types';
+
+
+const commonInvalidateQueries = (client) => {
+  // Invalidate payment mades.
+  client.invalidateQueries(t.PAYMENT_MADES);
+        
+  // Invalidate payment made new entries.
+  client.invalidateQueries(t.PAYMENT_MADE_NEW_ENTRIES);
+  client.invalidateQueries(t.PAYMENT_MADE_EDIT_PAGE);
+
+  // Invalidate financial reports.
+  client.invalidateQueries(t.FINANCIAL_REPORT);
+
+  // Invalidate accounts.
+  client.invalidateQueries(t.ACCOUNTS);
+  client.invalidateQueries(t.ACCOUNT);
+
+  // Invalidate bills.
+  client.invalidateQueries(t.BILLS);
+  client.invalidateQueries(t.BILL);
+
+  // Invalidate vendors.
+  client.invalidateQueries(t.VENDORS);
+  client.invalidateQueries(t.VENDOR);
+};
 
 /**
  * Retrieve payment mades list.
@@ -10,7 +36,7 @@ export function usePaymentMades(query, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
-    ['PAYMENT_MADES', query],
+    [t.PAYMENT_MADES, query],
     () => apiRequest.get('purchases/bill_payments', { params: query }),
     {
       select: (res) => ({
@@ -43,8 +69,8 @@ export function useCreatePaymentMade(props) {
     (values) => apiRequest.post('purchases/bill_payments', values),
     {
       onSuccess: (res, values) => {
-        client.invalidateQueries('PAYMENT_MADES');
-        client.invalidateQueries(['PAYMENT_MADE_NEW_PAGE_ENTRIES', values.vendor_id]);
+        // Common invalidation queries.
+        commonInvalidateQueries(client);
       },
       ...props,
     },
@@ -62,10 +88,11 @@ export function useEditPaymentMade(props) {
     ([id, values]) => apiRequest.post(`purchases/bill_payments/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
-        client.invalidateQueries('PAYMENT_MADES');
-        client.invalidateQueries(['PAYMENT_MADE', id]);
+        // Common invalidation queries.
+        commonInvalidateQueries(client);
 
-        client.invalidateQueries(['PAYMENT_MADE_NEW_PAGE_ENTRIES', values.vendor_id]);
+        // Invalidate specific payment made.
+        client.invalidateQueries([t.PAYMENT_MADE, id]);
       },
       ...props,
     },
@@ -83,9 +110,11 @@ export function useDeletePaymentMade(props) {
     (id) => apiRequest.delete(`purchases/bill_payments/${id}`),
     {
       onSuccess: (res, id) => {
-        client.invalidateQueries('PAYMENT_MADES');
-        client.invalidateQueries(['PAYMENT_MADE', id]);
-        
+        // Common invalidation queries.
+        commonInvalidateQueries(client);
+
+        // Invalidate specific payment made.
+        client.invalidateQueries([t.PAYMENT_MADE, id]);
       },
       ...props,
     },
@@ -99,7 +128,7 @@ export function usePaymentMadeEditPage(id, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
-    ['PAYMENT_MADE', id],
+    [t.PAYMENT_MADE_EDIT_PAGE, id],
     () => apiRequest.get(`purchases/bill_payments/${id}/edit-page`),
     {
       select: (res) => ({
@@ -124,7 +153,7 @@ export function usePaymentMadeNewPageEntries(vendorId, props) {
   const apiRequest = useApiRequest();
 
   return useQuery(
-    ['PAYMENT_MADE_NEW_PAGE_ENTRIES', vendorId],
+    [t.PAYMENT_MADE_NEW_ENTRIES, vendorId],
     () =>
       apiRequest.get(`purchases/bill_payments/new-page/entries`, {
         params: { vendor_id: vendorId },
@@ -135,7 +164,7 @@ export function usePaymentMadeNewPageEntries(vendorId, props) {
       initialData: {
         data: {
           entries: [],
-        }
+        },
       },
       ...props,
     },

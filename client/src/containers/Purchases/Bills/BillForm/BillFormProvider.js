@@ -25,11 +25,19 @@ function BillFormProvider({ billId, ...props }) {
     isFetching: isVendorsLoading,
   } = useVendors({ page_size: 10000 });
 
+  // Filter all purchasable items only.
+  const stringifiedFilterRoles = React.useMemo(() => JSON.stringify(
+    [{ "fieldKey": "purchasable", "value":true, "condition":"equals"}]
+  ), []);
+
   // Handle fetch Items data table or list
   const {
     data: { items },
     isFetching: isItemsLoading,
-  } = useItems({ page_size: 10000 });
+  } = useItems({
+    page_size: 10000,
+    stringified_filter_roles: stringifiedFilterRoles
+  });
 
   // Handle fetch bill details.
   const { data: bill, isFetching: isBillLoading } = useBill(billId, {

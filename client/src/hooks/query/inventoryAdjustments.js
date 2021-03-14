@@ -1,13 +1,23 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { defaultTo } from 'lodash';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
+import t from './types';
 
-const invalidateQueries = (queryClient) => {
-  queryClient.invalidateQueries('INVENTORY_ADJUSTMENTS');
 
-  queryClient.invalidateQueries('ITEMS');
-  queryClient.invalidateQueries('ITEM');
+const commonInvalidateQueries = (queryClient) => {
+  // Invalidate inventory adjustments.
+  queryClient.invalidateQueries(t.INVENTORY_ADJUSTMENTS);
+
+  // Invalidate items.
+  queryClient.invalidateQueries(t.ITEMS);
+  queryClient.invalidateQueries(t.ITEM);
+
+  // Invalidate accounts.
+  queryClient.invalidateQueries(t.ACCOUNTS);
+  queryClient.invalidateQueries(t.ACCOUNT);
+
+  // Invalidate financial reports.
+  queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 };
 
 /**
@@ -21,7 +31,8 @@ export function useCreateInventoryAdjustment(props) {
     (values) => apiRequest.post('inventory_adjustments/quick', values),
     {
       onSuccess: () => {
-        invalidateQueries(queryClient)
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
       },
       ...props,
     },
@@ -38,8 +49,9 @@ export function useDeleteInventoryAdjustment(props) {
   return useMutation(
     (id) => apiRequest.delete(`inventory_adjustments/${id}`),
     {
-      onSuccess: () => {
-        invalidateQueries(queryClient)
+      onSuccess: (res, id) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
       },
       ...props
     },
@@ -59,22 +71,24 @@ const inventoryAdjustmentsTransformer = (response) => {
 export function useInventoryAdjustments(query, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  return useQuery(
     ['INVENTORY_ADJUSTMENTS', query],
     () => apiRequest.get('inventory_adjustments', { params: query })  
       .then(inventoryAdjustmentsTransformer),
-    props,
+    {
+      initialDataUpdatedAt: 0,
+      initialData: {
+        data: {
+          transactions: [],
+          pagination: {
+            page: 1,
+            pageSize: 12,
+            total: 0,
+            pagesCount: 0,
+          },
+        }
+      },
+      ...props
+    },
   );
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      transactions: [],
-      pagination: {
-        page: 1,
-        pageSize: 12,
-        total: 0,
-        pagesCount: 0,
-      }
-    })
-  }
 }

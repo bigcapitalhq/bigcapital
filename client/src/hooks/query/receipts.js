@@ -2,6 +2,26 @@ import { useQueryClient, useQuery, useMutation } from 'react-query';
 import { defaultTo } from 'lodash';
 import useApiRequest from '../useRequest';
 import { transformPagination } from 'utils';
+import t from './types';
+
+const commonInvalidateQueries = (queryClient) => {
+  // Invalidate receipts.
+  queryClient.invalidateQueries(t.SALE_RECEIPTS);
+
+  // Invalidate accounts.
+  queryClient.invalidateQueries(t.ITEMS);
+  queryClient.invalidateQueries(t.ITEM);
+
+  // Invalidate accounts.
+  queryClient.invalidateQueries(t.ACCOUNTS);
+  queryClient.invalidateQueries(t.ACCOUNT);
+
+  // Invalidate financial reports.
+  queryClient.invalidateQueries(t.FINANCIAL_REPORT);
+
+  // Invalidate the settings.
+  queryClient.invalidateQueries([t.SETTING, t.SETTING_RECEIPTS]);
+};
 
 /**
  * Creates a new sale invoice.
@@ -12,8 +32,8 @@ export function useCreateReceipt(props) {
 
   return useMutation((values) => apiRequest.post('sales/receipts', values), {
     onSuccess: () => {
-      queryClient.invalidateQueries('SALE_RECEIPTS');
-      queryClient.invalidateQueries(['SETTINGS', 'RECEIPTS']);
+      // Invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -29,9 +49,12 @@ export function useEditReceipt(props) {
   return useMutation(
     ([id, values]) => apiRequest.post(`sales/receipts/${id}`, values),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries('SALE_RECEIPTS');
-        queryClient.invalidateQueries(['SETTINGS', 'RECEIPTS']);
+      onSuccess: (res, [id, values]) => {
+        // Invalidate specific receipt.
+        queryClient.invalidateQueries([t.SALE_RECEIPT, id]);
+
+        // Invalidate queries.
+        commonInvalidateQueries(queryClient);
       },
       ...props,
     },
@@ -46,8 +69,12 @@ export function useDeleteReceipt(props) {
   const apiRequest = useApiRequest();
 
   return useMutation((id) => apiRequest.delete(`sales/receipts/${id}`), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('SALE_RECEIPTS');
+    onSuccess: (res, id) => {
+      // Invalidate specific receipt.
+      queryClient.invalidateQueries([t.SALE_RECEIPT, id]);
+
+      // Invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -61,8 +88,11 @@ export function useCloseReceipt(props) {
   const apiRequest = useApiRequest();
 
   return useMutation((id) => apiRequest.post(`sales/receipts/${id}/close`), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('SALE_RECEIPTS');
+    onSuccess: (res, id) => {
+      queryClient.invalidateQueries([t.SALE_RECEIPT, id]);
+      
+      // Invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });

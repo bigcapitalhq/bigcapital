@@ -19,11 +19,19 @@ function EstimateFormProvider({ estimateId, ...props }) {
     estimateId, { enabled: !!estimateId }
   );
 
+  // Filter all sellable items only.
+  const stringifiedFilterRoles = React.useMemo(() => JSON.stringify(
+    [{ "fieldKey": "sellable", "value":true, "condition":"equals"}]
+  ), []);
+
   // Handle fetch Items data table or list
   const {
     data: { items },
     isFetching: isItemsFetching,
-  } = useItems({ page_size: 10000 });
+  } = useItems({
+    page_size: 10000,
+    stringified_filter_roles: stringifiedFilterRoles
+  });
 
   // Handle fetch customers data table or list
   const {

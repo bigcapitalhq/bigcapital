@@ -2,6 +2,29 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
 import useApiRequest from '../useRequest';
 import { transformPagination, saveInvoke } from 'utils';
+import t from './types';
+
+// Common invalidate queries.
+const commonInvalidateQueries = (client) => {
+  // Invalidate payment receives.
+  client.invalidateQueries(t.PAYMENT_RECEIVES);
+  client.invalidateQueries(t.PAYMENT_RECEIVE_EDIT_PAGE);
+
+  // Invalidate invoices.
+  client.invalidateQueries(t.SALE_INVOICES);
+  client.invalidateQueries(t.SALE_INVOICE);
+
+  // Invalidate accounts.
+  client.invalidateQueries(t.ACCOUNTS);
+  client.invalidateQueries(t.ACCOUNT);
+
+  // Invalidate financial reports.
+  client.invalidateQueries(t.FINANCIAL_REPORT);
+
+  // Invalidate customers.
+  client.invalidateQueries(t.CUSTOMERS);
+  client.invalidateQueries(t.CUSTOMER);
+};
 
 /**
  * Retrieve accounts list.
@@ -10,7 +33,7 @@ export function usePaymentReceives(query, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
-    ['PAYMENT_RECEIVES', query],
+    [t.PAYMENT_RECEIVES, query],
     () => apiRequest.get('sales/payment_receives', { params: query }),
     {
       select: (res) => ({
@@ -47,11 +70,11 @@ export function useCreatePaymentReceive(props) {
     (values) => apiRequest.post('sales/payment_receives', values),
     {
       onSuccess: (data, values) => {
-        client.invalidateQueries('PAYMENT_RECEIVES');
-        client.invalidateQueries('SALE_INVOICE_DUE');
-        client.invalidateQueries('SALE_INVOICES');
-        client.invalidateQueries('SALE_INVOICE');
-        client.invalidateQueries(['SETTINGS', 'PAYMENT_RECEIVES']);
+        // Invalidate specific payment receive.
+        commonInvalidateQueries(client);
+
+        // Invalidate payment receive settings.
+        client.invalidateQueries([t.SETTING, t.SETTING_PAYMENT_RECEIVES]);
 
         saveInvoke(props?.onSuccess, data);
       },
@@ -70,12 +93,12 @@ export function useEditPaymentReceive(props) {
   return useMutation(
     ([id, values]) => apiRequest.post(`sales/payment_receives/${id}`, values),
     {
-      onSuccess: (data) => {
-        client.invalidateQueries('PAYMENT_RECEIVES');
-        client.invalidateQueries('SALE_INVOICE_DUE');
-        client.invalidateQueries('SALE_INVOICES');
-        client.invalidateQueries('SALE_INVOICE');
-        client.invalidateQueries(['SETTINGS', 'PAYMENT_RECEIVES']);
+      onSuccess: (data, [id, values]) => {
+        // Invalidate specific payment receive.
+        client.invalidateQueries([t.PAYMENT_RECEIVE, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(client);
 
         saveInvoke(props?.onSuccess, data);
       },
@@ -94,11 +117,11 @@ export function useDeletePaymentReceive(props) {
   return useMutation(
     (id) => apiRequest.delete(`sales/payment_receives/${id}`),
     {
-      onSuccess: (data, [id]) => {
-        client.invalidateQueries('PAYMENT_RECEIVES');
-        client.invalidateQueries('SALE_INVOICE_DUE');
-        client.invalidateQueries('SALE_INVOICES');
-        client.invalidateQueries('SALE_INVOICE');
+      onSuccess: (data, id) => {
+        // Invalidate specific payment receive.
+        client.invalidateQueries([t.PAYMENT_RECEIVE, id]);
+
+        commonInvalidateQueries(client);
 
         saveInvoke(props?.onSuccess, data);
       },
@@ -115,7 +138,7 @@ export function usePaymentReceive(id, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
-    ['PAYMENT_RECEIVE', id],
+    [t.PAYMENT_RECEIVE, id],
     () => apiRequest.get(`sales/payment_receives/${id}`),
     {
       select: (res) => ({
@@ -139,7 +162,7 @@ export function usePaymentReceiveEditPage(id, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
-    ['PAYMENT_RECEIVE_EDIT_PAGE', id],
+    [t.PAYMENT_RECEIVE_EDIT_PAGE, id],
     () => apiRequest.get(`sales/payment_receives/${id}/edit-page`),
     {
       select: (res) => ({

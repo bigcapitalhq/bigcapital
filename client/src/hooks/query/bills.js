@@ -2,6 +2,27 @@ import { useQueryClient, useQuery, useMutation } from 'react-query';
 import { defaultTo } from 'lodash';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
+import t from './types';
+
+const commonInvalidateQueries = (queryClient) => {
+  // Invalidate bills.
+  queryClient.invalidateQueries(t.BILLS);
+
+  // Invalidate items.
+  queryClient.invalidateQueries(t.ITEMS);
+  queryClient.invalidateQueries(t.ITEM);
+
+  // Invalidate vendors.
+  queryClient.invalidateQueries([t.VENDORS]);
+  queryClient.invalidateQueries(t.VENDOR);
+
+  // Invalidate accounts.
+  queryClient.invalidateQueries(t.ACCOUNTS);
+  queryClient.invalidateQueries(t.ACCOUNT);
+
+  // Invalidate financial reports.
+  queryClient.invalidateQueries(t.FINANCIAL_REPORT);
+};
 
 /**
  * Creates a new sale invoice.
@@ -12,10 +33,8 @@ export function useCreateBill(props) {
 
   return useMutation((values) => apiRequest.post('purchases/bills', values), {
     onSuccess: (res, values) => {
-      queryClient.invalidateQueries('BILLS');
-      queryClient.invalidateQueries('BILL');
-      queryClient.invalidateQueries(['VENDORS']);
-      queryClient.invalidateQueries(['VENDOR', values.vendor_id]);
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -32,10 +51,27 @@ export function useEditBill(props) {
     ([id, values]) => apiRequest.post(`purchases/bills/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
-        queryClient.invalidateQueries('BILLS');
-        queryClient.invalidateQueries('BILL');
-        queryClient.invalidateQueries(['VENDORS']);
-        queryClient.invalidateQueries(['VENDOR', values.vendor_id]);
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Marks the given bill as open.
+ */
+ export function useOpenBill(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (id) => apiRequest.post(`purchases/bills/${id}/open`),
+    {
+      onSuccess: (res, id) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
       },
       ...props,
     },
@@ -51,9 +87,8 @@ export function useDeleteBill(props) {
 
   return useMutation((id) => apiRequest.delete(`purchases/bills/${id}`), {
     onSuccess: (res, id) => {
-      queryClient.invalidateQueries('BILLS');
-      queryClient.invalidateQueries('BILL');
-      queryClient.invalidateQueries(['VENDORS']);
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
@@ -66,7 +101,7 @@ export function useBills(query, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
-    ['BILLS', query],
+    [t.BILLS, query],
     () =>
       apiRequest.get('purchases/bills', { params: query }),
     {
@@ -101,7 +136,7 @@ export function useBill(id, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
-    ['BILL', id],
+    [t.BILL, id],
     () => apiRequest.get(`/purchases/bills/${id}`),
     {
       select: (res) => res.data.bill,
@@ -116,33 +151,14 @@ export function useBill(id, props) {
 }
 
 /**
- * Marks the given bill as open.
- */
-export function useOpenBill(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation(
-    (id) => apiRequest.post(`purchases/bills/${id}/open`),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('BILLS');
-        queryClient.invalidateQueries(['VENDORS']);
-      },
-      ...props,
-    },
-  );
-}
-
-/**
  * Retrieve the due bills of the given vendor id.
  * @param {number} vendorId -
  */
-export function useDueBills(vendorId, props) {
+ export function useDueBills(vendorId, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
-    ['BILLS_DUE', vendorId],
+    [t.BILLS, t.BILLS_DUE, vendorId],
     () =>
       apiRequest.get(`purchases/bills/due`, {
         params: { vendor_id: vendorId },

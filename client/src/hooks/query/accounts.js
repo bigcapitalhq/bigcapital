@@ -1,11 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { defaultTo } from 'lodash';
 import useApiRequest from '../useRequest';
+import t from './types';
 
 // Transform the account.
 const transformAccount = (response) => {
   return response.data.account;
 };
+
+const commonInvalidateQueries = (query) => {
+  // Invalidate accounts.
+  query.invalidateQueries(t.ACCOUNTS);
+
+  // Invalidate financial reports.
+  query.invalidateQueries(t.FINANCIAL_REPORT);
+}
 
 /**
  * Retrieve accounts list.
@@ -13,38 +21,42 @@ const transformAccount = (response) => {
 export function useAccounts(query, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
-    ['ACCOUNTS', query],
+  return useQuery(
+    [t.ACCOUNTS, query],
     () => apiRequest.get('accounts', { params: query }),
     {
       select: (response) => {
         return response.data.accounts;
       },
+      initialDataUpdatedAt: 0,
+      initialData: {
+        data: {
+          accounts: []
+        },
+      },
       ...props,
     },
   );
-  return {
-    ...states,
-    data: defaultTo(states.data, []),
-  };
 }
 
 /**
  * Retrieve the given account details.
- * @param {number} id -
+ * @param {number} id - Account id.
  */
 export function useAccount(id, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
-    ['ACCOUNT', id],
+  return useQuery(
+    [t.ACCOUNT, id],
     () => apiRequest.get(`accounts/${id}`).then(transformAccount),
-    props,
+    {
+      initialDataUpdatedAt: 0,
+      initialData: {
+        data: { account: {} }
+      },
+      ...props
+    },
   );
-  return {
-    ...states,
-    data: defaultTo(states.data, {}),
-  };
 }
 
 /**
@@ -53,18 +65,20 @@ export function useAccount(id, props) {
 export function useAccountsTypes(props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
-    ['ACCOUNTS_TYPES'],
+  return useQuery(
+    [t.ACCOUNTS_TYPES],
     () => apiRequest.get('account_types'),
     {
       select: (res) => res.data.account_types,
+      initialData: {
+        data: {
+          account_types: [],
+        },
+      },
+      initialDataUpdatedAt: 0,
       ...props,
     },
   );
-  return {
-    ...states,
-    data: defaultTo(states.data, {}),
-  };
 }
 
 /**
@@ -76,7 +90,8 @@ export function useCreateAccount(props) {
 
   return useMutation((values) => apiRequest.post('accounts', values), {
     onSuccess: () => {
-      client.invalidateQueries('ACCOUNTS');
+      // Common invalidate queries.
+      commonInvalidateQueries(client);
     },
     ...props,
   });
@@ -86,14 +101,15 @@ export function useCreateAccount(props) {
  * Edits the given account.
  */
 export function useEditAccount(props) {
-  const query = useQueryClient();
+  const client = useQueryClient();
   const apiRequest = useApiRequest();
 
   return useMutation(
     ([id, values]) => apiRequest.post(`accounts/${id}`, values),
     {
       onSuccess: () => {
-        query.invalidateQueries('ACCOUNTS');
+        // Common invalidate queries.
+        commonInvalidateQueries(client);
       },
       ...props,
     },
@@ -104,12 +120,13 @@ export function useEditAccount(props) {
  * Edits the given account.
  */
 export function useDeleteAccount(props) {
-  const query = useQueryClient();
+  const client = useQueryClient();
   const apiRequest = useApiRequest();
 
   return useMutation((id) => apiRequest.delete(`accounts/${id}`), {
     onSuccess: () => {
-      query.invalidateQueries('ACCOUNTS');
+      // Common invalidate queries.
+      commonInvalidateQueries(client);
     },
     ...props,
   });
@@ -119,12 +136,13 @@ export function useDeleteAccount(props) {
  * Actiavte the give account.
  */
 export function useActivateAccount(props) {
-  const query = useQueryClient();
+  const client = useQueryClient();
   const apiRequest = useApiRequest();
 
   return useMutation((id) => apiRequest.post(`accounts/${id}/activate`), {
     onSuccess: () => {
-      query.invalidateQueries('ACCOUNTS');
+      // Common invalidate queries.
+      commonInvalidateQueries(client);
     },
     ...props,
   });
@@ -139,7 +157,8 @@ export function useInactivateAccount(props) {
 
   return useMutation((id) => apiRequest.post(`accounts/${id}/inactivate`), {
     onSuccess: () => {
-      query.invalidateQueries('ACCOUNTS');
+      // Common invalidate queries.
+      commonInvalidateQueries(query);
     },
     ...props,
   });

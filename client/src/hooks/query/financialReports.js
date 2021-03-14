@@ -10,6 +10,7 @@ import {
   APAgingSummaryTableRowsMapper
 } from 'containers/FinancialStatements/reducers';
 import useApiRequest from '../useRequest';
+import t from './types';
 
 /**
  * Retrieve balance sheet.
@@ -18,7 +19,7 @@ export function useBalanceSheet(query, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
-    ['FINANCIAL-REPORT', 'BALANCE-SHEET', query],
+    [t.FINANCIAL_REPORT, t.BALANCE_SHEET, query],
     () =>
       apiRequest.get('/financial_statements/balance_sheet', {
         params: query,
@@ -50,7 +51,7 @@ export function useTrialBalanceSheet(query, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
-    ['FINANCIAL-REPORT', 'TRIAL-BALANCE-SHEET', query],
+    [t.FINANCIAL_REPORT, t.TRIAL_BALANCE_SHEET, query],
     () =>
       apiRequest.get('/financial_statements/trial_balance_sheet', {
         params: query,
@@ -81,7 +82,7 @@ export function useProfitLossSheet(query, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
-    ['FINANCIAL-REPORT', 'PROFIT-LOSS-SHEET', query],
+    [t.FINANCIAL_REPORT, t.PROFIT_LOSS_SHEET, query],
     () =>
       apiRequest.get('/financial_statements/profit_loss_sheet', {
         params: query,
@@ -112,7 +113,7 @@ export function useGeneralLedgerSheet(query, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
-    ['FINANCIAL-REPORT', 'GENERAL-LEDGER', query],
+    [t.FINANCIAL_REPORT, t.GENERAL_LEDGER, query],
     () =>
       apiRequest.get('/financial_statements/general_ledger', {
         params: query,
@@ -143,7 +144,7 @@ export function useJournalSheet(query, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
-    ['FINANCIAL-REPORT', 'JOURNAL', query],
+    [t.FINANCIAL_REPORT, t.JOURNAL, query],
     () => apiRequest.get('/financial_statements/journal', { params: query }),
     {
       select: (res) => ({
@@ -165,13 +166,13 @@ export function useJournalSheet(query, props) {
 }
 
 /**
- * Retrieve AR aging summary report.
+ * Retrieve A/R aging summary report.
  */
 export function useARAgingSummaryReport(query, props) {
   const apiRequest = useApiRequest();
 
   return useQuery(
-    ['FINANCIAL-REPORT', 'AR-AGING-SUMMARY', query],
+    [t.FINANCIAL_REPORT, t.AR_AGING_SUMMARY, query],
     () =>
       apiRequest.get('/financial_statements/receivable_aging_summary', {
         params: query,
@@ -204,13 +205,13 @@ export function useARAgingSummaryReport(query, props) {
 }
 
 /**
- * Retrieve AP aging summary report.
+ * Retrieve A/P aging summary report.
  */
 export function useAPAgingSummaryReport(query, props) {
   const apiRequest = useApiRequest();
 
   return useQuery(
-    ['FINANCIAL-REPORT', 'AP-AGING-SUMMARY', query],
+    [t.FINANCIAL_REPORT, t.AP_AGING_SUMMARY, query],
     () =>
       apiRequest.get('/financial_statements/payable_aging_summary', {
         params: query,
