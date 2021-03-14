@@ -52,6 +52,7 @@ import DashboardInsider from './Dashboard/DashboardInsider';
 import Drawer from './Drawer/Drawer';
 import DrawerSuspense from './Drawer/DrawerSuspense';
 import Postbox from './Postbox';
+import AccountsSuggestField from './AccountsSuggestField';
 
 const Hint = FieldHint;
 
@@ -110,5 +111,6 @@ export {
   DashboardInsider,
   Drawer,
   DrawerSuspense,
-  Postbox
+  Postbox,
+  AccountsSuggestField
 };
