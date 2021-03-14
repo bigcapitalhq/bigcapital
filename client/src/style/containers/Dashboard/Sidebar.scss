@@ -54,6 +54,7 @@
         padding: 0;
         min-height: auto;
         min-width: auto;
+        max-width: 100%;
         font-weight: 600;
         outline: 0;
         font-size: 15px;
@@ -69,16 +70,26 @@
         }
         .bp3-button-text {
           margin-right: 4px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          display: block;
         }
         svg {
           fill: rgba(255, 255, 255, 0.3);
         }
       }
 
+      .bp3-popover-wrapper,
+      .bp3-popover-target{
+        max-width: 100%;
+        display: inline-block;
+      }
+
       .subtitle {
         display: block;
         font-size: 12px;
-        margin-top: 6px;
+        margin-top: 8px;
         color: rgba(255, 255, 255, 0.6);
       }
     }

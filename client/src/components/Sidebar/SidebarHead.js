@@ -7,7 +7,7 @@ import { compose, firstLettersArgs } from 'utils';
 
 // Popover modifiers.
 const POPOVER_MODIFIERS = {
-  offset: { offset: '20, 8' },
+  offset: { offset: '28, 8' },
 };
 
 /**
@@ -24,6 +24,7 @@ function SidebarHead({
       <div className="sidebar__head-organization">
         <Popover
           modifiers={POPOVER_MODIFIERS}
+          boundary={'window'}
           content={
             <Menu className={'menu--dashboard-organization'}>
               <div class="org-item">
