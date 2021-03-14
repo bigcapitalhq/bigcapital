@@ -25,7 +25,7 @@ export default class ARAgingSummaryReportController extends BaseFinancialReportC
   }
 
   /**
-   * Receivable aging summary validation roles.
+   * AR aging summary validation roles.
    */
   get validationSchema() {
     return [
@@ -41,34 +41,25 @@ export default class ARAgingSummaryReportController extends BaseFinancialReportC
   }
 
   /**
-   * Retrieve receivable aging summary report.
+   * Retrieve AR aging summary report.
    */
   async receivableAgingSummary(req: Request, res: Response) {
     const { tenantId, settings } = req;
     const filter = this.matchedQueryData(req);
-
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
 
     try {
       const {
         data,
         columns,
         query,
+        meta,
       } = await this.ARAgingSummaryService.ARAgingSummary(tenantId, filter);
 
       return res.status(200).send({
-        organization_name: organizationName,
-        base_currency: baseCurrency,
         data: this.transfromToResponse(data),
         columns: this.transfromToResponse(columns),
         query: this.transfromToResponse(query),
+        meta: this.transfromToResponse(meta),
       });
     } catch (error) {
       console.log(error);

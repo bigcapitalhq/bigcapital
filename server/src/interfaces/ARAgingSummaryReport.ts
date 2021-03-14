@@ -29,3 +29,8 @@ export interface IARAgingSummaryData {
 }
 
 export type IARAgingSummaryColumns = IAgingPeriod[];
+
+export interface IARAgingSummaryMeta {
+  organizationName: string,
+  baseCurrency: string,
+}

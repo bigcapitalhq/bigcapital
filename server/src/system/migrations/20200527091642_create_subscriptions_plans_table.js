@@ -6,7 +6,6 @@ exports.up = function(knex) {
     table.string('name');
     table.string('description');
     table.decimal('price');
-    table.decimal('signup_fee');
     table.string('currency', 3);
 
     table.integer('trial_period');
@@ -14,7 +13,6 @@ exports.up = function(knex) {
     
     table.integer('invoice_period');
     table.string('invoice_interval');
-
     table.timestamps();
   });
 };

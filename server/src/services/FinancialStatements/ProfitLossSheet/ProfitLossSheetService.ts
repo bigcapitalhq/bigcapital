@@ -1,10 +1,12 @@
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
 import Journal from 'services/Accounting/JournalPoster';
-import { IProfitLossSheetQuery } from 'interfaces';
+import { IProfitLossSheetQuery, IProfitLossSheetMeta } from 'interfaces';
 import ProfitLossSheet from './ProfitLossSheet';
 import TenancyService from 'services/Tenancy/TenancyService';
 import AccountsService from 'services/Accounts/AccountsService';
+import InventoryService from 'services/Inventory/Inventory';
+import { parseBoolean } from 'utils';
 
 // Profit/Loss sheet service.
 @Service()
@@ -14,6 +16,9 @@ export default class ProfitLossSheetService {
 
   @Inject('logger')
   logger: any;
+
+  @Inject()
+  inventoryService: InventoryService;
 
   @Inject()
   accountsService: AccountsService;
@@ -39,6 +44,34 @@ export default class ProfitLossSheetService {
       displayColumnsType: 'total',
       displayColumnsBy: 'month',
       accountsIds: [],
+    };
+  }
+
+
+  /**
+   * Retrieve the trial balance sheet meta.
+   * @param {number} tenantId - Tenant id.
+   * @returns {ITrialBalanceSheetMeta}
+   */
+   reportMetadata(tenantId: number): IProfitLossSheetMeta {
+    const settings = this.tenancy.settings(tenantId);
+
+    const isCostComputeRunning = this.inventoryService.isItemsCostComputeRunning(
+      tenantId
+    );
+    const organizationName = settings.get({
+      group: 'organization',
+      key: 'name',
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
+
+    return {
+      isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
+      organizationName,
+      baseCurrency,
     };
   }
 
@@ -107,6 +140,7 @@ export default class ProfitLossSheetService {
       data: profitLossData,
       columns: profitLossColumns,
       query: filter,
+      meta: this.reportMetadata(tenantId),
     };
   }
 }

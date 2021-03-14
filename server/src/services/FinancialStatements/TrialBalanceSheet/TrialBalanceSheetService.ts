@@ -2,14 +2,19 @@ import { Service, Inject } from 'typedi';
 import moment from 'moment';
 import TenancyService from 'services/Tenancy/TenancyService';
 import Journal from 'services/Accounting/JournalPoster';
-import { INumberFormatQuery, ITrialBalanceSheetQuery, ITrialBalanceStatement } from 'interfaces';
+import { ITrialBalanceSheetMeta, ITrialBalanceSheetQuery, ITrialBalanceStatement } from 'interfaces';
 import TrialBalanceSheet from './TrialBalanceSheet';
 import FinancialSheet from '../FinancialSheet';
+import InventoryService from 'services/Inventory/Inventory';
+import { parseBoolean } from 'utils';
 
 @Service()
 export default class TrialBalanceSheetService extends FinancialSheet {
   @Inject()
   tenancy: TenancyService;
+
+  @Inject()
+  inventoryService: InventoryService;
 
   @Inject('logger')
   logger: any;
@@ -37,6 +42,33 @@ export default class TrialBalanceSheetService extends FinancialSheet {
   }
 
   /**
+   * Retrieve the trial balance sheet meta.
+   * @param {number} tenantId - Tenant id.
+   * @returns {ITrialBalanceSheetMeta}
+   */
+  reportMetadata(tenantId: number): ITrialBalanceSheetMeta {
+    const settings = this.tenancy.settings(tenantId);
+
+    const isCostComputeRunning = this.inventoryService.isItemsCostComputeRunning(
+      tenantId
+    );
+    const organizationName = settings.get({
+      group: 'organization',
+      key: 'name',
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
+
+    return {
+      isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
+      organizationName,
+      baseCurrency,
+    };
+  }
+
+  /**
    * Retrieve trial balance sheet statement.
    * -------------
    * @param {number} tenantId
@@ -46,7 +78,7 @@ export default class TrialBalanceSheetService extends FinancialSheet {
    */
   public async trialBalanceSheet(
     tenantId: number,
-    query: ITrialBalanceSheetQuery,
+    query: ITrialBalanceSheetQuery
   ): Promise<ITrialBalanceStatement> {
     const filter = {
       ...this.defaultQuery,
@@ -98,6 +130,7 @@ export default class TrialBalanceSheetService extends FinancialSheet {
     return {
       data: trialBalanceSheetData,
       query: filter,
+      meta: this.reportMetadata(tenantId),
     };
   }
 }

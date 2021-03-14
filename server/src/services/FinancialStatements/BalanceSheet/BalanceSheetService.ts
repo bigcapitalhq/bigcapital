@@ -4,10 +4,13 @@ import {
   IBalanceSheetStatementService,
   IBalanceSheetQuery,
   IBalanceSheetStatement,
+  IBalanceSheetMeta,
 } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
 import Journal from 'services/Accounting/JournalPoster';
 import BalanceSheetStatement from './BalanceSheet';
+import InventoryService from 'services/Inventory/Inventory';
+import { parseBoolean } from 'utils';
 
 @Service()
 export default class BalanceSheetStatementService
@@ -17,6 +20,9 @@ export default class BalanceSheetStatementService
 
   @Inject('logger')
   logger: any;
+
+  @Inject()
+  inventoryService: InventoryService;
 
   /**
    * Defaults balance sheet filter query.
@@ -33,12 +39,39 @@ export default class BalanceSheetStatementService
         divideOn1000: false,
         showZero: false,
         formatMoney: 'total',
-        negativeFormat: 'mines'
+        negativeFormat: 'mines',
       },
       noneZero: false,
       noneTransactions: false,
       basis: 'cash',
       accountIds: [],
+    };
+  }
+
+  /**
+   * Retrieve the balance sheet meta.
+   * @param {number} tenantId - 
+   * @returns {IBalanceSheetMeta}
+   */
+  reportMetadata(tenantId: number): IBalanceSheetMeta {
+    const settings = this.tenancy.settings(tenantId);
+
+    const isCostComputeRunning = this.inventoryService
+      .isItemsCostComputeRunning(tenantId);
+
+    const organizationName = settings.get({
+      group: 'organization',
+      key: 'name',
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
+
+    return {
+      isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
+      organizationName,
+      baseCurrency
     };
   }
 
@@ -61,14 +94,19 @@ export default class BalanceSheetStatementService
 
     // Settings tenant service.
     const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({ group: 'organization', key: 'base_currency' });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
 
     const filter = {
       ...this.defaultQuery,
       ...query,
     };
-    this.logger.info('[balance_sheet] trying to calculate the report.', { filter, tenantId });
-
+    this.logger.info('[balance_sheet] trying to calculate the report.', {
+      filter,
+      tenantId,
+    });
     // Retrieve all accounts on the storage.
     const accounts = await accountRepository.all();
     const accountsGraph = await accountRepository.getDependencyGraph();
@@ -82,7 +120,7 @@ export default class BalanceSheetStatementService
     const transactionsJournal = Journal.fromTransactions(
       transactions,
       tenantId,
-      accountsGraph,
+      accountsGraph
     );
     // Balance sheet report instance.
     const balanceSheetInstanace = new BalanceSheetStatement(
@@ -102,6 +140,7 @@ export default class BalanceSheetStatementService
       data: balanceSheetData,
       columns: balanceSheetColumns,
       query: filter,
+      meta: this.reportMetadata(tenantId),
     };
   }
 }

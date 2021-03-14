@@ -1,17 +1,20 @@
 import { Service, Inject } from 'typedi';
-import { IJournalReportQuery } from 'interfaces';
 import moment from 'moment';
+import { IJournalReportQuery, IJournalSheetMeta } from 'interfaces';
 
 import JournalSheet from './JournalSheet';
 import TenancyService from 'services/Tenancy/TenancyService';
 import Journal from 'services/Accounting/JournalPoster';
-
-import { transformToMap } from 'utils';
+import InventoryService from 'services/Inventory/Inventory';
+import { parseBoolean, transformToMap } from 'utils';
 
 @Service()
 export default class JournalSheetService {
   @Inject()
   tenancy: TenancyService;
+
+  @Inject()
+  inventoryService: InventoryService;
 
   @Inject('logger')
   logger: any;
@@ -31,6 +34,33 @@ export default class JournalSheetService {
         noCents: false,
         divideOn1000: false,
       },
+    };
+  }
+
+  /**
+   * Retrieve the balance sheet meta.
+   * @param {number} tenantId - 
+   * @returns {IBalanceSheetMeta}
+   */
+   reportMetadata(tenantId: number): IJournalSheetMeta {
+    const settings = this.tenancy.settings(tenantId);
+
+    const isCostComputeRunning = this.inventoryService
+      .isItemsCostComputeRunning(tenantId);
+
+    const organizationName = settings.get({
+      group: 'organization',
+      key: 'name',
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
+
+    return {
+      isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
+      organizationName,
+      baseCurrency
     };
   }
 
@@ -96,6 +126,7 @@ export default class JournalSheetService {
     return {
       data: journalSheetData,
       query: filter,
+      meta: this.reportMetadata(tenantId),
     };
   }
 }

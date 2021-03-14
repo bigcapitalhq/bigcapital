@@ -2,12 +2,12 @@ import { Service, Inject } from 'typedi';
 import moment from 'moment';
 import { ServiceError } from 'exceptions';
 import { difference } from 'lodash';
-import { IGeneralLedgerSheetQuery } from 'interfaces';
+import { IGeneralLedgerSheetQuery, IGeneralLedgerMeta } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
 import Journal from 'services/Accounting/JournalPoster';
 import GeneralLedgerSheet from 'services/FinancialStatements/GeneralLedger/GeneralLedger';
-
-import { transformToMap } from 'utils';
+import InventoryService from 'services/Inventory/Inventory';
+import { transformToMap, parseBoolean } from 'utils';
 
 const ERRORS = {
   ACCOUNTS_NOT_FOUND: 'ACCOUNTS_NOT_FOUND',
@@ -17,6 +17,9 @@ const ERRORS = {
 export default class GeneralLedgerService {
   @Inject()
   tenancy: TenancyService;
+
+  @Inject()
+  inventoryService: InventoryService;
 
   @Inject('logger')
   logger: any;
@@ -56,6 +59,33 @@ export default class GeneralLedgerService {
   }
 
   /**
+   * Retrieve the balance sheet meta.
+   * @param {number} tenantId - 
+   * @returns {IGeneralLedgerMeta}
+   */
+   reportMetadata(tenantId: number): IGeneralLedgerMeta {
+    const settings = this.tenancy.settings(tenantId);
+
+    const isCostComputeRunning = this.inventoryService
+      .isItemsCostComputeRunning(tenantId);
+
+    const organizationName = settings.get({
+      group: 'organization',
+      key: 'name',
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
+
+    return {
+      isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
+      organizationName,
+      baseCurrency
+    };
+  }
+
+  /**
    * Retrieve general ledger report statement.
    * ----------
    * @param {number} tenantId
@@ -68,6 +98,7 @@ export default class GeneralLedgerService {
   ): Promise<{
     data: any;
     query: IGeneralLedgerSheetQuery;
+    meta: IGeneralLedgerMeta
   }> {
     const {
       accountRepository,
@@ -146,6 +177,7 @@ export default class GeneralLedgerService {
     return {
       data: reportData,
       query: filter,
+      meta: this.reportMetadata(tenantId),
     };
   }
 }

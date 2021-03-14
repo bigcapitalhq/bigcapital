@@ -8,6 +8,7 @@ import TenantAlreadyInitialized from './TenantAlreadyInitialized';
 import TenantAlreadySeeded from './TenantAlreadySeeded';
 import TenantDBAlreadyExists from './TenantDBAlreadyExists';
 import TenantDatabaseNotBuilt from './TenantDatabaseNotBuilt';
+import VoucherCodeRequired from './VoucherCodeRequired';
 
 export {
   NotAllowedChangeSubscriptionPlan,
@@ -20,4 +21,5 @@ export {
   TenantAlreadySeeded,
   TenantDBAlreadyExists,
   TenantDatabaseNotBuilt,
+  VoucherCodeRequired,
 };

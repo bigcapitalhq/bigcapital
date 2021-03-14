@@ -1,13 +1,14 @@
 import { Service, Inject } from 'typedi';
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { check, oneOf, ValidationChain } from 'express-validator';
 import basicAuth from 'express-basic-auth';
 import config from 'config';
-import { License, Plan } from 'system/models';
+import { License } from 'system/models';
+import { ServiceError } from 'exceptions';
 import BaseController from 'api/controllers/BaseController';
 import LicenseService from 'services/Payment/License';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
-import { ILicensesFilter } from 'interfaces';
+import { ILicensesFilter, ISendLicenseDTO } from 'interfaces';
 
 @Service()
 export default class LicensesController extends BaseController {
@@ -32,26 +33,26 @@ export default class LicensesController extends BaseController {
       '/generate',
       this.generateLicenseSchema,
       this.validationResult,
-      asyncMiddleware(this.validatePlanExistance.bind(this)),
-      asyncMiddleware(this.generateLicense.bind(this))
+      asyncMiddleware(this.generateLicense.bind(this)),
+      this.catchServiceErrors,
     );
     router.post(
       '/disable/:licenseId',
       this.validationResult,
-      asyncMiddleware(this.validateLicenseExistance.bind(this)),
-      asyncMiddleware(this.validateNotDisabledLicense.bind(this)),
-      asyncMiddleware(this.disableLicense.bind(this))
+      asyncMiddleware(this.disableLicense.bind(this)),
+      this.catchServiceErrors,
     );
     router.post(
       '/send',
       this.sendLicenseSchemaValidation,
       this.validationResult,
-      asyncMiddleware(this.sendLicense.bind(this))
+      asyncMiddleware(this.sendLicense.bind(this)),
+      this.catchServiceErrors,
     );
     router.delete(
       '/:licenseId',
-      asyncMiddleware(this.validateLicenseExistance.bind(this)),
-      asyncMiddleware(this.deleteLicense.bind(this))
+      asyncMiddleware(this.deleteLicense.bind(this)),
+      this.catchServiceErrors,
     );
     router.get('/', asyncMiddleware(this.listLicenses.bind(this)));
     return router;
@@ -67,7 +68,7 @@ export default class LicensesController extends BaseController {
       check('period_interval')
         .exists()
         .isIn(['month', 'months', 'year', 'years', 'day', 'days']),
-      check('plan_id').exists().isNumeric().toInt(),
+      check('plan_slug').exists().trim().escape(),
     ];
   }
 
@@ -90,73 +91,12 @@ export default class LicensesController extends BaseController {
     return [
       check('period').exists().isNumeric(),
       check('period_interval').exists().trim().escape(),
-      check('plan_id').exists().isNumeric().toInt(),
+      check('plan_slug').exists().trim().escape(),
       oneOf([
         check('phone_number').exists().trim().escape(),
         check('email').exists().trim().escape(),
       ]),
     ];
-  }
-
-  /**
-   * Validate the plan existance on the storage.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  async validatePlanExistance(req: Request, res: Response, next: Function) {
-    const body = this.matchedBodyData(req);
-    const planId: number = body.planId || req.params.planId;
-    const foundPlan = await Plan.query().findById(planId);
-
-    if (!foundPlan) {
-      return res.status(400).send({
-        erorrs: [{ type: 'PLAN.NOT.FOUND', code: 100 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Valdiate the license existance on the storage.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function}
-   */
-  async validateLicenseExistance(req: Request, res: Response, next: Function) {
-    const body = this.matchedBodyData(req);
-
-    const licenseId = body.licenseId || req.params.licenseId;
-    const foundLicense = await License.query().findById(licenseId);
-
-    if (!foundLicense) {
-      return res.status(400).send({
-        errors: [{ type: 'LICENSE.NOT.FOUND', code: 200 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validates whether the license id is disabled.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  async validateNotDisabledLicense(
-    req: Request,
-    res: Response,
-    next: Function
-  ) {
-    const licenseId = req.params.licenseId || req.query.licenseId;
-    const foundLicense = await License.query().findById(licenseId);
-
-    if (foundLicense.disabled) {
-      return res.status(400).send({
-        errors: [{ type: 'LICENSE.ALREADY.DISABLED', code: 200 }],
-      });
-    }
-    next();
   }
 
   /**
@@ -166,7 +106,7 @@ export default class LicensesController extends BaseController {
    * @return {Response}
    */
   async generateLicense(req: Request, res: Response, next: Function) {
-    const { loop = 10, period, periodInterval, planId } = this.matchedBodyData(
+    const { loop = 10, period, periodInterval, planSlug } = this.matchedBodyData(
       req
     );
 
@@ -175,7 +115,7 @@ export default class LicensesController extends BaseController {
         loop,
         period,
         periodInterval,
-        planId
+        planSlug
       );
       return res.status(200).send({
         code: 100,
@@ -193,12 +133,16 @@ export default class LicensesController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  async disableLicense(req: Request, res: Response) {
+  async disableLicense(req: Request, res: Response, next: Function) {
     const { licenseId } = req.params;
 
-    await this.licenseService.disableLicense(licenseId);
+    try {
+      await this.licenseService.disableLicense(licenseId);
 
-    return res.status(200).send({ license_id: licenseId });
+      return res.status(200).send({ license_id: licenseId });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -207,12 +151,16 @@ export default class LicensesController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  async deleteLicense(req: Request, res: Response) {
+  async deleteLicense(req: Request, res: Response, next: Function) {
     const { licenseId } = req.params;
 
-    await this.licenseService.deleteLicense(licenseId);
+    try {
+      await this.licenseService.deleteLicense(licenseId);
 
-    return res.status(200).send({ license_id: licenseId });
+      return res.status(200).send({ license_id: licenseId });
+    } catch (error) {
+      next(error)
+    }
   }
 
   /**
@@ -221,40 +169,20 @@ export default class LicensesController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  async sendLicense(req: Request, res: Response) {
-    const {
-      phoneNumber,
-      email,
-      period,
-      periodInterval,
-      planId,
-    } = this.matchedBodyData(req);
+  async sendLicense(req: Request, res: Response, next: Function) {
+    const sendLicenseDTO: ISendLicenseDTO = this.matchedBodyData(req);
 
-    const license = await License.query()
-      .modify('filterActiveLicense')
-      .where('license_period', period)
-      .where('period_interval', periodInterval)
-      .where('plan_id', planId)
-      .first();
+    try {
+      await this.licenseService.sendLicenseToCustomer(sendLicenseDTO);
 
-    if (!license) {
-      return res.status(400).send({
-        status: 110,
-        message:
-          'There is no licenses availiable right now with the given period and plan.',
-        code: 'NO.AVALIABLE.LICENSE.CODE',
+      return res.status(200).send({
+        status: 100,
+        code: 'LICENSE.CODE.SENT',
+        message: 'The license has been sent to the given customer.',
       });
+    } catch (error) {
+      next(error);
     }
-    await this.licenseService.sendLicenseToCustomer(
-      license.licenseCode,
-      phoneNumber,
-      email
-    );
-    return res.status(200).send({
-      status: 100,
-      code: 'LICENSE.CODE.SENT',
-      message: 'The license has been sent to the given customer.',
-    });
   }
 
   /**
@@ -275,5 +203,48 @@ export default class LicensesController extends BaseController {
       builder.orderBy('createdAt', 'ASC');
     });
     return res.status(200).send({ licenses });
+  }
+
+  /**
+   * Catches all service errors.
+   */
+  catchServiceErrors(error, req: Request, res: Response, next: NextFunction) {
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'PLAN_NOT_FOUND') {
+        return res.status(400).send({
+          errors: [{
+            type: 'PLAN.NOT.FOUND',
+            code: 100,
+            message: 'The given plan not found.',
+        }],
+        });
+      }
+      if (error.errorType === 'LICENSE_NOT_FOUND') {
+        return res.status(400).send({
+          errors: [{
+            type: 'LICENSE_NOT_FOUND',
+            code: 200,
+            message: 'The given license id not found.'
+          }],
+        });
+      }
+      if (error.errorType === 'LICENSE_ALREADY_DISABLED') {
+        return res.status(400).send({
+          errors: [{
+            type: 'LICENSE.ALREADY.DISABLED',
+            code: 200, 
+            message: 'License is already disabled.'
+          }],
+        });
+      }
+      if (error.errorType === 'NO_AVALIABLE_LICENSE_CODE') {
+        return res.status(400).send({
+          status: 110,
+          message: 'There is no licenses availiable right now with the given period and plan.',
+          code: 'NO.AVALIABLE.LICENSE.CODE',
+        });
+      }
+    }
+    next(error);
   }
 }

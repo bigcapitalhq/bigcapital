@@ -31,10 +31,8 @@ export default class Subscription<PaymentModel> {
   ) {
     this.validateIfPlanHasPriceNoPayment(plan, paymentModel);
 
-    // @todo
-    if (plan.price > 0) {
-      await this.paymentContext.makePayment(paymentModel, plan);
-    }
+    await this.paymentContext.makePayment(paymentModel, plan);
+
     const subscription = await tenant.$relatedQuery('subscriptions')
       .modify('subscriptionBySlug', subscriptionSlug)
       .first();

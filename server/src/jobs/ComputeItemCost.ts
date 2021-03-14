@@ -1,8 +1,5 @@
 import { Container } from 'typedi';
 import {EventDispatcher} from "event-dispatch";
-// import {
-//   EventDispatcher,
-// } from 'decorators/eventDispatcher';
 import events from 'subscribers/events';
 import InventoryService from 'services/Inventory/Inventory';
 
@@ -11,7 +8,7 @@ export default class ComputeItemCostJob {
   eventDispatcher: EventDispatcher;
   
   /**
-   * 
+   * Constructor method.
    * @param agenda 
    */
   constructor(agenda) {

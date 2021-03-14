@@ -26,3 +26,9 @@ export interface IJournalReportEntriesGroup {
 export interface IJournalReport {
   entries: IJournalReportEntriesGroup[],
 }
+
+export interface IJournalSheetMeta {
+  isCostComputeRunning: boolean,
+  organizationName: string,
+  baseCurrency: string,
+}

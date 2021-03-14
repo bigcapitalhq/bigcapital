@@ -59,28 +59,20 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
       ...filter,
       accountsIds: castArray(filter.accountsIds),
     };
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
+    
     try {
       const {
         data,
         columns,
         query,
+        meta,
       } = await this.balanceSheetService.balanceSheet(tenantId, filter);
 
       return res.status(200).send({
-        organization_name: organizationName,
-        base_currency: baseCurrency,
         data: this.transfromToResponse(data),
         columns: this.transfromToResponse(columns),
         query: this.transfromToResponse(query),
+        meta: this.transfromToResponse(meta),
       });
     } catch (error) {
       next(error);

@@ -35,3 +35,15 @@ export interface IAPAgingSummaryData {
 };
 
 export type IAPAgingSummaryColumns = IAgingPeriod[];
+
+
+export interface IARAgingSummaryMeta {
+  baseCurrency: string,
+  organizationName: string,
+}
+
+
+export interface IAPAgingSummaryMeta {
+  baseCurrency: string,
+  organizationName: string,
+}

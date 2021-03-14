@@ -190,7 +190,9 @@ export default {
 
     onComputeItemCostJobScheduled: 'onComputeItemCostJobScheduled',
     onComputeItemCostJobStarted: 'onComputeItemCostJobStarted',
-    onComputeItemCostJobCompleted: 'onComputeItemCostJobCompleted'
+    onComputeItemCostJobCompleted: 'onComputeItemCostJobCompleted',
+
+    onInventoryCostEntriesWritten: 'onInventoryCostEntriesWritten'
   },
 
   /**

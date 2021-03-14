@@ -15,10 +15,16 @@ export interface IBalanceSheetQuery {
   accountIds: number[];
 }
 
+export interface IBalanceSheetMeta {
+  isCostComputeRunning: boolean,
+  organizationName: string,
+  baseCurrency: string,
+};
+
 export interface IBalanceSheetFormatNumberSettings
   extends IFormatNumberSettings {
   type: string;
-}
+};
 
 export interface IBalanceSheetStatementService {
   balanceSheet(
@@ -35,6 +41,7 @@ export interface IBalanceSheetStatement {
   query: IBalanceSheetQuery;
   columns: IBalanceSheetStatementColumns;
   data: IBalanceSheetStatementData;
+  meta: IBalanceSheetMeta;
 }
 
 export interface IBalanceSheetStructureSection {

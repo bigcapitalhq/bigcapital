@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
-import { IAPAgingSummaryQuery } from 'interfaces';
+import { IAPAgingSummaryQuery, IARAgingSummaryMeta } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
 import APAgingSummarySheet from './APAgingSummarySheet';
 
@@ -25,10 +25,33 @@ export default class PayableAgingSummaryService {
         divideOn1000: false,
         showZero: false,
         formatMoney: 'total',
-        negativeFormat: 'mines'
+        negativeFormat: 'mines',
       },
       vendorsIds: [],
       noneZero: false,
+    };
+  }
+
+  /**
+   * Retrieve the balance sheet meta.
+   * @param {number} tenantId -
+   * @returns {IBalanceSheetMeta}
+   */
+  reportMetadata(tenantId: number): IARAgingSummaryMeta {
+    const settings = this.tenancy.settings(tenantId);
+
+    const organizationName = settings.get({
+      group: 'organization',
+      key: 'name',
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
+
+    return {
+      organizationName,
+      baseCurrency,
     };
   }
 
@@ -81,6 +104,11 @@ export default class PayableAgingSummaryService {
     const data = APAgingSummaryReport.reportData();
     const columns = APAgingSummaryReport.reportColumns();
 
-    return { data, columns, query: filter };
+    return {
+      data,
+      columns,
+      query: filter,
+      meta: this.reportMetadata(tenantId),
+    };
   }
 }
