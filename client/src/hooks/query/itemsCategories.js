@@ -1,4 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
+import { useQueryTenant } from '../useQueryTenant';
 import useApiRequest from '../useRequest';
 import t from './types';
 
@@ -73,7 +74,7 @@ export function useDeleteItemCategory(props) {
 export function useItemsCategories(query, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.ITEMS_CATEGORIES, query],
     () => apiRequest.get(`item_categories`, { params: query }),
     {
@@ -100,7 +101,7 @@ export function useItemsCategories(query, props) {
 export function useItemCategory(id, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.ITEM_CATEGORY, id],
     () =>
       apiRequest.get(`item_categories/${id}`).then((res) => res.data.category),

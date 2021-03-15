@@ -1,4 +1,5 @@
-import { useMutation, useQueryClient, useQuery } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
+import { useQueryTenant } from '../useQueryTenant';
 import useApiRequest from '../useRequest';
 import t from './types';
 
@@ -63,7 +64,7 @@ export function useDeleteCurrency(props) {
 export function useCurrencies(props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.CURRENCIES],
     () => apiRequest.get('currencies').then((res) => res.data.currencies),
     {

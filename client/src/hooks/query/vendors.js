@@ -1,7 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import t from './types';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
+import { useQueryTenant } from '../useQueryTenant';
 
 // Common invalidate queries.
 const commonInvalidateQueries = (queryClient) => {
@@ -22,7 +23,7 @@ const commonInvalidateQueries = (queryClient) => {
 export function useVendors(query, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.VENDORS, query],
     () => apiRequest.get(`vendors`, { params: query }),
     {
@@ -107,7 +108,7 @@ export function useCreateVendor(props) {
 export function useVendor(id, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery([t.VENDOR, id], () => apiRequest.get(`vendors/${id}`), {
+  return useQueryTenant([t.VENDOR, id], () => apiRequest.get(`vendors/${id}`), {
     select: (res) => res.data.vendor,
     initialDataUpdatedAt: 0,
     initialData: {

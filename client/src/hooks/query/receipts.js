@@ -1,4 +1,5 @@
-import { useQueryClient, useQuery, useMutation } from 'react-query';
+import { useQueryClient, useMutation } from 'react-query';
+import { useQueryTenant } from '../useQueryTenant';
 import { defaultTo } from 'lodash';
 import useApiRequest from '../useRequest';
 import { transformPagination } from 'utils';
@@ -104,7 +105,7 @@ export function useCloseReceipt(props) {
 export function useReceipts(query, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  const states = useQueryTenant(
     ['SALE_RECEIPTS', query],
     () => apiRequest.get('sales/receipts', { params: query }),
     {
@@ -137,7 +138,7 @@ export function useReceipts(query, props) {
 export function useReceipt(id, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  const states = useQueryTenant(
     ['SALE_RECEIPT', id],
     () => apiRequest.get(`sales/receipts/${id}`),
     {

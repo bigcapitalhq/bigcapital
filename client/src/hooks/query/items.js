@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { transformPagination, transformResponse } from 'utils';
+import { useQueryTenant } from '../useQueryTenant';
 import useApiRequest from '../useRequest';
 import t from './types';
 
@@ -126,8 +127,8 @@ const transformItemsResponse = (response) => {
 export function useItems(query, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
-    ['ITEMS', query],
+  return useQueryTenant(
+    [t.ITEMS, query],
     () => apiRequest.get(`items`, { params: query }).then(transformItemsResponse),
     {
       initialDataUpdatedAt: 0,
@@ -148,8 +149,8 @@ export function useItems(query, props) {
 export function useItem(id, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
-    ['ITEM', id],
+  return useQueryTenant(
+    [t.ITEM, id],
     () => apiRequest.get(`items/${id}`).then((response) => response.data.item),
     {
       initialDataUpdatedAt: 0,

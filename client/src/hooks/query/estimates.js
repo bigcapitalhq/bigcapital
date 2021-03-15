@@ -1,4 +1,5 @@
-import { useQueryClient, useQuery, useMutation } from 'react-query';
+import { useQueryClient, useMutation } from 'react-query';
+import { useQueryTenant } from '../useQueryTenant';
 import useApiRequest from '../useRequest';
 import { transformPagination } from 'utils';
 import t from './types';
@@ -56,7 +57,7 @@ export function useEditEstimate(props) {
 export function useEstimate(id, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.SALE_ESTIMATE, id],
     () => apiRequest.get(`sales/estimates/${id}`),
     {
@@ -76,7 +77,7 @@ export function useEstimate(id, props) {
 export function useEstimates(query, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.SALE_ESTIMATES, query],
     () => apiRequest.get('sales/estimates', { params: query }),
     {

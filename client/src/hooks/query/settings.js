@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
+import { useQueryTenant } from '../useQueryTenant';
 import { useDispatch } from 'react-redux';
 import useApiRequest from '../useRequest';
 import t from 'store/types';
@@ -23,7 +24,7 @@ function useSettingsQuery(key, query, props) {
   const dispatch = useDispatch();
   const apiRequest = useApiRequest();
 
-  const state = useQuery(
+  const state = useQueryTenant(
     key,
     () => apiRequest.get('settings', { params: query }),
     {

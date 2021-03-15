@@ -1,5 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import useApiRequest from '../useRequest';
+import { useQueryTenant } from '../useQueryTenant';
 import { transformPagination } from 'utils';
 import t from './types';
 
@@ -28,7 +29,7 @@ const commonInvalidateQueries = (queryClient) => {
 export function useExpenses(query, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.EXPENSES, query],
     () => apiRequest.get(`expenses`, { params: { ...query } }),
     {
@@ -57,7 +58,7 @@ export function useExpenses(query, props) {
 export function useExpense(id, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.EXPENSE, id],
     () => apiRequest.get(`expenses/${id}`),
     {

@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
+import { useQueryTenant } from '../useQueryTenant';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 import t from './types';
@@ -27,7 +28,7 @@ const commonInvalidateQueries = (queryClient) => {
 export function useCustomers(query, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.CUSTOMERS, query],
     () => apiRequest.get(`customers`, { params: query }),
     {
@@ -118,7 +119,7 @@ export function useCreateCustomer(props) {
 export function useCustomer(id, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.CUSTOMER, id],
     () => apiRequest.get(`customers/${id}`),
     {

@@ -1,5 +1,6 @@
-import { useMutation, useQueryClient, useQuery } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
+import { useQueryTenant } from '../useQueryTenant';
 import useApiRequest from '../useRequest';
 import t from './types';
 
@@ -26,7 +27,6 @@ export function useCreateInviteUser(props) {
 
 /**
  * Edits the given user.
- *
  */
 export function useEditUser(props) {
   const queryClient = useQueryClient();
@@ -67,7 +67,7 @@ export function useDeleteUser(props) {
 export function useUsers(props) {
   const apiRequest = useApiRequest();
 
-  const result = useQuery(
+  const result = useQueryTenant(
     [t.USERS],
     () => apiRequest.get(`USERS`).then((response) => response.data.users),
     props,
@@ -85,7 +85,7 @@ export function useUsers(props) {
 export function useUser(id, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     ['USER', id],
     () => apiRequest.get(`users/${id}`).then((response) => response.data.item),
     props,

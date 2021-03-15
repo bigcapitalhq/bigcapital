@@ -1,5 +1,5 @@
-import { useQuery } from 'react-query';
 import useApiRequest from '../useRequest';
+import { useQueryTenant } from '../useQueryTenant';
 
 /**
  * Retrieve the contact duplicate.
@@ -7,7 +7,7 @@ import useApiRequest from '../useRequest';
 export function useContact(id, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(['CONTACT', id], () => apiRequest.get(`contacts/${id}`), {
+  return useQueryTenant(['CONTACT', id], () => apiRequest.get(`contacts/${id}`), {
     select: (res) => res.data.customer,
     ...props,
   });

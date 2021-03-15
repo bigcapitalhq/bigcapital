@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
+import { useQueryTenant } from '../useQueryTenant';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 import t from './types';
@@ -71,7 +72,7 @@ const inventoryAdjustmentsTransformer = (response) => {
 export function useInventoryAdjustments(query, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     ['INVENTORY_ADJUSTMENTS', query],
     () => apiRequest.get('inventory_adjustments', { params: query })  
       .then(inventoryAdjustmentsTransformer),

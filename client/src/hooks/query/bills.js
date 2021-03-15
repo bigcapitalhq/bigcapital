@@ -1,4 +1,5 @@
-import { useQueryClient, useQuery, useMutation } from 'react-query';
+import { useQueryClient, useMutation } from 'react-query';
+import { useQueryTenant } from '../useQueryTenant';
 import { defaultTo } from 'lodash';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
@@ -100,7 +101,7 @@ export function useDeleteBill(props) {
 export function useBills(query, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  const states = useQueryTenant(
     [t.BILLS, query],
     () =>
       apiRequest.get('purchases/bills', { params: query }),
@@ -135,7 +136,7 @@ export function useBills(query, props) {
 export function useBill(id, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  const states = useQueryTenant(
     [t.BILL, id],
     () => apiRequest.get(`/purchases/bills/${id}`),
     {
@@ -157,7 +158,7 @@ export function useBill(id, props) {
  export function useDueBills(vendorId, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  const states = useQueryTenant(
     [t.BILLS, t.BILLS_DUE, vendorId],
     () =>
       apiRequest.get(`purchases/bills/due`, {

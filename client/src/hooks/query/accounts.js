@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
+import { useQueryTenant } from '../useQueryTenant';
 import useApiRequest from '../useRequest';
 import t from './types';
 
@@ -21,7 +22,7 @@ const commonInvalidateQueries = (query) => {
 export function useAccounts(query, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.ACCOUNTS, query],
     () => apiRequest.get('accounts', { params: query }),
     {
@@ -46,7 +47,7 @@ export function useAccounts(query, props) {
 export function useAccount(id, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.ACCOUNT, id],
     () => apiRequest.get(`accounts/${id}`).then(transformAccount),
     {
@@ -65,7 +66,7 @@ export function useAccount(id, props) {
 export function useAccountsTypes(props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.ACCOUNTS_TYPES],
     () => apiRequest.get('account_types'),
     {

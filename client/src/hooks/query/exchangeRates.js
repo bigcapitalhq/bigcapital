@@ -1,6 +1,7 @@
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
-import { transformPagination, transformResponse } from 'utils';
+import { useQueryTenant } from '../useQueryTenant';
+import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 
 const defaultPagination = {
@@ -62,7 +63,7 @@ export function useDeleteExchangeRate(props) {
 export function useExchangeRates(query, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  const states = useQueryTenant(
     ['EXCHANGES_RATES', query],
     () => apiRequest.get('exchange_rates', { params: query }),
     {

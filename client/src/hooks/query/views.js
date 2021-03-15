@@ -1,11 +1,11 @@
-import { useQuery } from 'react-query';
 import { defaultTo } from 'lodash';
 import useApiRequest from '../useRequest';
+import { useQueryTenant } from '../useQueryTenant';
 
 export function useResourceViews(resourceSlug) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  const states = useQueryTenant(
     ['RESOURCE_VIEW', resourceSlug],
     () => apiRequest.get(`views/resource/${resourceSlug}`)
       .then((response) => response.data.views),
@@ -17,11 +17,10 @@ export function useResourceViews(resourceSlug) {
   }
 }
  
-
 export function useResourceColumns(resourceSlug) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     ['RESOURCE_COLUMNS', resourceSlug],
     () => apiRequest.get(`resources/${resourceSlug}/columns`),
     {
@@ -33,7 +32,7 @@ export function useResourceColumns(resourceSlug) {
 export function useResourceFields(resourceSlug, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  const states = useQueryTenant(
     ['RESOURCE_FIELDS', resourceSlug], 
     () => apiRequest.get(`resources/${resourceSlug}/fields`)
       .then((res) => res.data.resource_fields),

@@ -3,6 +3,8 @@ import { RawIntlProvider } from 'react-intl';
 import { Router, Switch, Route } from 'react-router';
 import { createBrowserHistory } from 'history';
 import { QueryClientProvider, QueryClient } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+
 import 'style/App.scss';
 
 import PrivateRoute from 'components/Guards/PrivateRoute';
@@ -42,6 +44,8 @@ function App({ locale }) {
 
           <GlobalErrors />
         </div>
+
+        <ReactQueryDevtools initialIsOpen />
       </QueryClientProvider>
     </RawIntlProvider>
   );

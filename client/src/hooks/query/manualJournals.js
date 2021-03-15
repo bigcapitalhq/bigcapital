@@ -1,5 +1,6 @@
 import { defaultTo } from 'lodash';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
+import { useQueryTenant } from '../useQueryTenant';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 import t from './types';
@@ -113,7 +114,7 @@ export function usePublishJournal(props) {
 export function useJournals(query, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  const states = useQueryTenant(
     [t.MANUAL_JOURNALS, query],
     () => apiRequest.get('manual-journals', { params: query }),
     {
@@ -142,7 +143,7 @@ export function useJournals(query, props) {
 export function useJournal(id, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.MANUAL_JOURNAL, id],
     () => apiRequest.get(`manual-journals/${id}`),
     {

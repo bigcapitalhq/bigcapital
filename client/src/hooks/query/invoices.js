@@ -1,4 +1,5 @@
-import { useQueryClient, useQuery, useMutation } from 'react-query';
+import { useQueryClient, useMutation } from 'react-query';
+import { useQueryTenant } from '../useQueryTenant';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 import t from './types';
@@ -95,7 +96,7 @@ export function useDeleteInvoice(props) {
 export function useInvoices(query, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.SALE_INVOICES, query],
     () => apiRequest.get('sales/invoices', { params: query }),
     {
@@ -150,7 +151,7 @@ export function useDeliverInvoice(props) {
 export function useInvoice(invoiceId, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.SALE_INVOICE, invoiceId],
     () => apiRequest.get(`sales/invoices/${invoiceId}`),
     {
@@ -173,7 +174,7 @@ export function useInvoice(invoiceId, props) {
 export function useDueInvoices(customerId, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.SALE_INVOICES, t.SALE_INVOICES_DUE, customerId],
     () =>
       apiRequest.get(`sales/invoices/payable`, {

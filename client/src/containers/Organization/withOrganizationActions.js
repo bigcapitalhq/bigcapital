@@ -10,6 +10,7 @@ const mapDispatchToProps = (dispatch) => ({
   requestOrganizationBuild: () => dispatch(buildTenant()),
   requestOrganizationSeed: () => dispatch(seedTenant()),
   requestAllOrganizations: () => dispatch(fetchOrganizations()),
+
   setOrganizationSetupCompleted: (congrats) => dispatch(setOrganizationSetupCompleted(congrats)),
 });
 

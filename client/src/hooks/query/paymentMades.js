@@ -1,5 +1,6 @@
 import { defaultTo } from 'lodash';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
+import { useQueryTenant } from '../useQueryTenant';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 import t from './types';
@@ -35,7 +36,7 @@ const commonInvalidateQueries = (client) => {
 export function usePaymentMades(query, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  const states = useQueryTenant(
     [t.PAYMENT_MADES, query],
     () => apiRequest.get('purchases/bill_payments', { params: query }),
     {
@@ -127,7 +128,7 @@ export function useDeletePaymentMade(props) {
 export function usePaymentMadeEditPage(id, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  const states = useQueryTenant(
     [t.PAYMENT_MADE_EDIT_PAGE, id],
     () => apiRequest.get(`purchases/bill_payments/${id}/edit-page`),
     {
@@ -152,7 +153,7 @@ export function usePaymentMadeEditPage(id, props) {
 export function usePaymentMadeNewPageEntries(vendorId, props) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  return useQueryTenant(
     [t.PAYMENT_MADE_NEW_ENTRIES, vendorId],
     () =>
       apiRequest.get(`purchases/bill_payments/new-page/entries`, {

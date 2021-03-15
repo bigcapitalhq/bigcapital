@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
+import { useQueryTenant } from '../useQueryTenant';
 import { defaultTo } from 'lodash';
 import useApiRequest from '../useRequest';
 import { transformPagination, saveInvoke } from 'utils';
@@ -32,7 +33,7 @@ const commonInvalidateQueries = (client) => {
 export function usePaymentReceives(query, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  const states = useQueryTenant(
     [t.PAYMENT_RECEIVES, query],
     () => apiRequest.get('sales/payment_receives', { params: query }),
     {
@@ -137,7 +138,7 @@ export function useDeletePaymentReceive(props) {
 export function usePaymentReceive(id, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  const states = useQueryTenant(
     [t.PAYMENT_RECEIVE, id],
     () => apiRequest.get(`sales/payment_receives/${id}`),
     {
@@ -161,7 +162,7 @@ export function usePaymentReceive(id, props) {
 export function usePaymentReceiveEditPage(id, props) {
   const apiRequest = useApiRequest();
 
-  const states = useQuery(
+  const states = useQueryTenant(
     [t.PAYMENT_RECEIVE_EDIT_PAGE, id],
     () => apiRequest.get(`sales/payment_receives/${id}/edit-page`),
     {

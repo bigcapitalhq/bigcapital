@@ -89,6 +89,10 @@ const SETTING = {
   SETTING_MANUAL_JOURNALS: 'SETTING_MANUAL_JOURNALS',
 };
 
+const ORGANIZATIONS = {
+  ORGANIZATIONS: 'ORGANIZATIONS'
+};
+
 export default {
   ...ACCOUNTS,
   ...BILLS,
@@ -104,5 +108,6 @@ export default {
   ...PAYMENT_RECEIVES,
   ...SALE_INVOICES,
   ...USERS,
-  ...SETTING
+  ...SETTING,
+  ...ORGANIZATIONS,
 }
