@@ -118,7 +118,7 @@ export default function InventoryAdjustmentFormDialogFields() {
             label={<T id={'adjustment_account'} />}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reason" />}
+            helperText={<ErrorMessage name="adjustment_account_id" />}
             className={'form-group--adjustment-account'}
           >
             <AccountsSuggestField
@@ -150,14 +150,14 @@ export default function InventoryAdjustmentFormDialogFields() {
         )}
       </FastField>
 
-      {/*------------ description -----------*/}
+      {/*------------ Adjustment reasons -----------*/}
       <FastField name={'reason'}>
         {({ field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'adjustment_reasons'} />}
             className={'form-group--adjustment-reasons'}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'adjustment_reasons'} />}
+            helperText={<ErrorMessage name={'reason'} />}
           >
             <TextArea growVertically={true} large={true} {...field} />
           </FormGroup>
