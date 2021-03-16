@@ -5,6 +5,8 @@ import { useIntl } from 'react-intl';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
+import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
+import TableFastCell from 'components/Datatable/TableFastCell';
 
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import { useGeneralLedgerTableColumns } from './components';
@@ -12,25 +14,22 @@ import { useGeneralLedgerTableColumns } from './components';
 /**
  * General ledger table.
  */
-export default function GeneralLedgerTable({
-  companyName,
-}) {
+export default function GeneralLedgerTable({ companyName }) {
   const { formatMessage } = useIntl();
 
   // General ledger context.
   const {
     generalLedger: { tableRows, query },
-    isSheetLoading
+    isLoading,
   } = useGeneralLedgerContext();
 
   // General ledger table columns.
   const columns = useGeneralLedgerTableColumns();
 
   // Default expanded rows of general ledger table.
-  const expandedRows = useMemo(
-    () => defaultExpanderReducer(tableRows, 1),
-    [tableRows],
-  );
+  const expandedRows = useMemo(() => defaultExpanderReducer(tableRows, 1), [
+    tableRows,
+  ]);
 
   const rowClassNames = (row) => [`row-type--${row.original.rowType}`];
 
@@ -41,11 +40,11 @@ export default function GeneralLedgerTable({
       fromDate={query.from_date}
       toDate={query.to_date}
       name="general-ledger"
-      loading={isSheetLoading}
+      loading={isLoading}
       fullWidth={true}
     >
       <DataTable
-      className="bigcapital-datatable--financial-report"
+        className="bigcapital-datatable--financial-report"
         noResults={formatMessage({
           id: 'this_report_does_not_contain_any_data_between_date_period',
         })}
@@ -59,6 +58,11 @@ export default function GeneralLedgerTable({
         expandable={true}
         expandToggleColumn={1}
         sticky={true}
+        TableRowsRenderer={TableVirtualizedListRows}
+        // #TableVirtualizedListRows props.
+        vListrowHeight={28}
+        vListOverscanRowCount={0}
+        TableCellRenderer={TableFastCell}
       />
     </FinancialSheet>
   );

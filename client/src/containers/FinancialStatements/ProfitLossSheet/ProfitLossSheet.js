@@ -14,6 +14,10 @@ import withSettings from 'containers/Settings/withSettings';
 
 import 'style/pages/FinancialStatements/ProfitLossSheet.scss';
 import { ProfitLossSheetProvider } from './ProfitLossProvider';
+import {
+  ProfitLossSheetLoadingBar,
+  ProfitLossSheetAlerts
+} from './components';
 
 /**
  * Profit/Loss financial statement sheet.
@@ -23,7 +27,7 @@ function ProfitLossSheet({
   organizationName,
 
   // #withProfitLossActions
-  toggleProfitLossFilterDrawer: toggleDisplayFilterDrawer
+  toggleProfitLossFilterDrawer: toggleDisplayFilterDrawer,
 }) {
   const [filter, setFilter] = useState({
     basis: 'cash',
@@ -32,7 +36,7 @@ function ProfitLossSheet({
     displayColumnsType: 'total',
     accountsFilter: 'all-accounts',
   });
- 
+
   // Handle submit filter.
   const handleSubmitFilter = (filter) => {
     const _filter = {
@@ -52,9 +56,12 @@ function ProfitLossSheet({
   };
 
   // Hide the filter drawer once the page unmount.
-  React.useEffect(() => () => {
-    toggleDisplayFilterDrawer(false);
-  }, [toggleDisplayFilterDrawer])
+  React.useEffect(
+    () => () => {
+      toggleDisplayFilterDrawer(false);
+    },
+    [toggleDisplayFilterDrawer],
+  );
 
   return (
     <ProfitLossSheetProvider query={filter}>
@@ -62,6 +69,8 @@ function ProfitLossSheet({
         numberFormat={filter.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
+      <ProfitLossSheetLoadingBar />
+      <ProfitLossSheetAlerts />
 
       <DashboardPageContent>
         <div class="financial-statement">
@@ -71,9 +80,7 @@ function ProfitLossSheet({
           />
 
           <div class="financial-statement__body">
-            <ProfitLossSheetTable
-              companyName={organizationName}
-            />
+            <ProfitLossSheetTable companyName={organizationName} />
           </div>
         </div>
       </DashboardPageContent>

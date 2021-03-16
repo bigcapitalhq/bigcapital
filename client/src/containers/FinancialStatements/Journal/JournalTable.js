@@ -4,7 +4,8 @@ import { useIntl } from 'react-intl';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import { useJournalSheetContext } from './JournalProvider';
-
+import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
+import TableFastCell from 'components/Datatable/TableFastCell';
 import { defaultExpanderReducer } from 'utils';
 import { useJournalTableColumns } from './components';
 
@@ -41,6 +42,8 @@ export default function JournalSheetTable({
     };
   }, []);
 
+
+  
   return (
     <FinancialSheet
       companyName={companyName}
@@ -62,6 +65,13 @@ export default function JournalSheetTable({
         })}
         expanded={expandedRows}
         sticky={true}
+        TableRowsRenderer={TableVirtualizedListRows}
+        // #TableVirtualizedListRows props.
+        vListrowHeight={28}
+        vListOverscanRowCount={2}
+
+        TableCellRenderer={TableFastCell}
+        id={'journal'}
       />
     </FinancialSheet>
   );

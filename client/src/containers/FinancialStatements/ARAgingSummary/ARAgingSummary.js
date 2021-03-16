@@ -10,6 +10,7 @@ import ARAgingSummaryActionsBar from './ARAgingSummaryActionsBar';
 import ARAgingSummaryTable from './ARAgingSummaryTable';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import { ARAgingSummaryProvider } from './ARAgingSummaryProvider';
+import { ARAgingSummarySheetLoadingBar } from './components';
 
 import withARAgingSummaryActions from './withARAgingSummaryActions'
 import withSettings from 'containers/Settings/withSettings';
@@ -57,6 +58,8 @@ function ReceivableAgingSummarySheet({
         numberFormat={filter.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
+      <ARAgingSummarySheetLoadingBar />
+
       <DashboardPageContent>
         <FinancialStatement>
           <ARAgingSummaryHeader

@@ -10,14 +10,14 @@ const InvoicesListContext = createContext();
  */
 function InvoicesListProvider({ query, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: invoicesViews, isFetching: isViewsLoading } = useResourceViews(
+  const { data: invoicesViews, isLoading: isViewsLoading } = useResourceViews(
     'sale_invoices',
   );
 
   // Fetch the accounts resource fields.
   const {
     data: invoicesFields,
-    isFetching: isFieldsLoading,
+    isLoading: isFieldsLoading,
   } = useResourceFields('sale_invoices');
 
   // Fetch accounts list according to the given custom view id.

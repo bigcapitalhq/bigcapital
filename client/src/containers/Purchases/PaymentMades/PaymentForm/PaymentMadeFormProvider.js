@@ -21,7 +21,7 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
   const [paymentVendorId, setPaymentVendorId] = React.useState(null);
 
   // Handle fetch accounts data.
-  const { data: accounts, isFetching: isAccountsFetching } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
   // Handle fetch Items data table or list.
   const {
@@ -33,7 +33,7 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
   // Handle fetch venders data table or list.
   const {
     data: { vendors },
-    isFetching: isVendorsFetching,
+    isLoading: isVendorsLoading,
   } = useVendors({ page_size: 10000 });
 
   // Handle fetch specific payment made details.
@@ -66,10 +66,10 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
     paymentVendorId,
 
     isNewMode,
-    isAccountsFetching,
+    isAccountsLoading,
     isItemsFetching,
     isItemsLoading,
-    isVendorsFetching,
+    isVendorsLoading,
     isPaymentFetching,
     isPaymentLoading,
 
@@ -83,9 +83,9 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
   return (
     <DashboardInsider
       loading={
-        isVendorsFetching ||
+        isVendorsLoading ||
         isItemsFetching ||
-        isAccountsFetching ||
+        isAccountsLoading ||
         isPaymentFetching ||
         isPaymentLoading
       }

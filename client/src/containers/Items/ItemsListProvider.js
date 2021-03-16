@@ -17,12 +17,12 @@ function ItemsListProvider({
   ...props
 }) {
   // Fetch accounts resource views and fields.
-  const { data: itemsViews, isFetching: isViewsLoading } = useResourceViews(
+  const { data: itemsViews, isLoading: isViewsLoading } = useResourceViews(
     'items',
   );
 
   // Fetch the accounts resource fields.
-  const { data: itemsFields, isFetching: isFieldsLoading } = useResourceFields(
+  const { data: itemsFields, isLoading: isFieldsLoading } = useResourceFields(
     'items',
   );
 

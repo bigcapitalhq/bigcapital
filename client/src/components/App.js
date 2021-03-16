@@ -19,7 +19,7 @@ function App({ locale }) {
   const queryConfig = {
     defaultOptions: {
       queries: {
-        refetchOnWindowFocus: false,
+        refetchOnWindowFocus: true,
         staleTime: 30000,
       },
     },

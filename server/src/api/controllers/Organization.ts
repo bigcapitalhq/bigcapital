@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import asyncMiddleware from "api/middleware/asyncMiddleware";
+import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import JWTAuth from 'api/middleware/jwtAuth';
 import TenancyMiddleware from 'api/middleware/TenancyMiddleware';
 import SubscriptionMiddleware from 'api/middleware/SubscriptionMiddleware';
@@ -12,7 +12,7 @@ import EnsureConfiguredMiddleware from 'api/middleware/EnsureConfiguredMiddlewar
 import SettingsMiddleware from 'api/middleware/SettingsMiddleware';
 
 @Service()
-export default class OrganizationController extends BaseController{
+export default class OrganizationController extends BaseController {
   @Inject()
   organizationService: OrganizationService;
 
@@ -22,12 +22,12 @@ export default class OrganizationController extends BaseController{
   router() {
     const router = Router();
 
-    // Should before build tenant database the user be authorized and 
+    // Should before build tenant database the user be authorized and
     // most important than that, should be subscribed to any plan.
     router.use(JWTAuth);
     router.use(AttachCurrentTenantUser);
     router.use(TenancyMiddleware);
-    
+
     // Should to seed organization tenant be configured.
     router.use('/seed', SubscriptionMiddleware('main'));
     router.use('/seed', SettingsMiddleware);
@@ -35,17 +35,12 @@ export default class OrganizationController extends BaseController{
 
     router.use('/build', SubscriptionMiddleware('main'));
 
-    router.post(
-      '/build',
-      asyncMiddleware(this.build.bind(this))
-    );
-    router.post(
-      '/seed',
-      asyncMiddleware(this.seed.bind(this)),
-    );
+    router.post('/build', asyncMiddleware(this.build.bind(this)));
+    router.post('/seed', asyncMiddleware(this.seed.bind(this)));
+    router.get('/all', asyncMiddleware(this.allOrganizations.bind(this)));
     router.get(
-      '/all',
-      asyncMiddleware(this.allOrganizations.bind(this)),
+      '/current',
+      asyncMiddleware(this.currentOrganization.bind(this))
     );
     return router;
   }
@@ -54,19 +49,19 @@ export default class OrganizationController extends BaseController{
    * Builds tenant database and migrate database schema.
    * @param {Request} req - Express request.
    * @param {Response} res - Express response.
-   * @param {NextFunction} next 
+   * @param {NextFunction} next
    */
   async build(req: Request, res: Response, next: Function) {
     const { organizationId } = req.tenant;
     const { user } = req;
-  
+
     try {
       await this.organizationService.build(organizationId, user);
 
       return res.status(200).send({
         type: 'success',
         code: 'ORGANIZATION.DATABASE.INITIALIZED',
-        message: 'The organization database has been initialized.'
+        message: 'The organization database has been initialized.',
       });
     } catch (error) {
       if (error instanceof ServiceError) {
@@ -87,9 +82,9 @@ export default class OrganizationController extends BaseController{
 
   /**
    * Seeds initial data to tenant database.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async seed(req: Request, res: Response, next: Function) {
     const { organizationId } = req.tenant;
@@ -100,7 +95,7 @@ export default class OrganizationController extends BaseController{
       return res.status(200).send({
         type: 'success',
         code: 'ORGANIZATION.DATABASE.SEED',
-        message: 'The organization database has been seeded.'
+        message: 'The organization database has been seeded.',
       });
     } catch (error) {
       if (error instanceof ServiceError) {
@@ -126,16 +121,37 @@ export default class OrganizationController extends BaseController{
 
   /**
    * Listing all organizations that assocaited to the authorized user.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async allOrganizations(req: Request, res: Response, next: NextFunction) {
     const { user } = req;
 
     try {
-      const organizations = await this.organizationService.listOrganizations(user);
+      const organizations = await this.organizationService.listOrganizations(
+        user
+      );
       return res.status(200).send({ organizations });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieve the current organization of the associated authenticated user.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  async currentOrganization(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+
+    try {
+      const organization = await this.organizationService.currentOrganization(
+        tenantId
+      );
+      return res.status(200).send({ organization });
     } catch (error) {
       next(error);
     }

@@ -16,7 +16,7 @@ export default function ReceivableAgingSummaryTable({
   const { formatMessage } = useIntl();
 
   // AR aging summary report context.
-  const { ARAgingSummary, isARAgingFetching } = useARAgingSummaryContext();
+  const { ARAgingSummary, isARAgingLoading } = useARAgingSummaryContext();
 
   // AR aging summary columns.
   const columns = useARAgingSummaryColumns();
@@ -33,7 +33,7 @@ export default function ReceivableAgingSummaryTable({
       name={'receivable-aging-summary'}
       sheetType={formatMessage({ id: 'receivable_aging_summary' })}
       asDate={new Date()}
-      loading={isARAgingFetching}
+      loading={isARAgingLoading}
     >
       <DataTable
         className="bigcapital-datatable--financial-report"

@@ -29,6 +29,8 @@ export default createReducer(initialState, {
     state.token = '';
     state.user = {};
     state.organization = '';
+    state.organizationId = null;
+    state.tenant = {};
   },
 
   [t.LOGIN_CLEAR_ERRORS]: (state) => {

@@ -66,7 +66,7 @@ function TableHeaderGroup({ headerGroup }) {
   return (
     <div {...headerGroup.getHeaderGroupProps()} className="tr">
       {headerGroup.headers.map((column, index) => (
-        <TableHeaderCell column={column} index={index} />
+        <TableHeaderCell key={index} column={column} index={index} />
       ))}
     </div>
   );
@@ -87,8 +87,8 @@ export default function TableHeader() {
   return (
     <ScrollSyncPane>
       <div className="thead">
-        {headerGroups.map((headerGroup) => (
-          <TableHeaderGroup headerGroup={headerGroup} />
+        {headerGroups.map((headerGroup, index) => (
+          <TableHeaderGroup key={index} headerGroup={headerGroup} />
         ))}
         <If condition={progressBarLoading}>
           <MaterialProgressBar />

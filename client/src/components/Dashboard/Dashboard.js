@@ -4,8 +4,6 @@ import { useQuery } from 'react-query';
 
 import 'style/pages/Dashboard/Dashboard.scss';
 
-import DashboardLoadingIndicator from './DashboardLoadingIndicator';
-
 import Sidebar from 'components/Sidebar/Sidebar';
 import DashboardContent from 'components/Dashboard/DashboardContent';
 import DialogsContainer from 'components/DialogsContainer';
@@ -13,22 +11,15 @@ import PreferencesPage from 'components/Preferences/PreferencesPage';
 import Search from 'containers/GeneralSearch/Search';
 import DashboardSplitPane from 'components/Dashboard/DashboardSplitePane';
 import GlobalHotkeys from './GlobalHotkeys';
-import withSettingsActions from 'containers/Settings/withSettingsActions';
+import DashboardProvider from './DashboardProvider';
 import DrawersContainer from 'components/DrawersContainer';
-
-import { compose } from 'utils';
 
 /**
  * Dashboard page.
  */
-function Dashboard({
-  // #withSettings
-  requestFetchOptions,
-}) {
-  const fetchOptions = useQuery(['options'], () => requestFetchOptions());
-
+export default function Dashboard() {
   return (
-    <DashboardLoadingIndicator isLoading={fetchOptions.isFetching}>
+    <DashboardProvider>
       <Switch>
         <Route path="/preferences">
           <DashboardSplitPane>
@@ -49,8 +40,6 @@ function Dashboard({
       <DialogsContainer />
       <GlobalHotkeys />
       <DrawersContainer />
-    </DashboardLoadingIndicator>
+    </DashboardProvider>
   );
-} 
-
-export default compose(withSettingsActions)(Dashboard);
+}

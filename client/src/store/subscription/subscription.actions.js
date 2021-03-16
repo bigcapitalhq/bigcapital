@@ -12,3 +12,13 @@ export const fetchSubscriptions = () => (dispatch) => new Promise((resolve, reje
     resolve(response);
   }).catch((error) => { reject(error); })
 });
+
+
+export const setSubscriptions = (subscriptions) => {
+  return {
+    type: t.SET_PLAN_SUBSCRIPTIONS_LIST,
+    payload: {
+      subscriptions,
+    },
+  }
+};

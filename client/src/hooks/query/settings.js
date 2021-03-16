@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useQueryTenant } from '../useQueryTenant';
-import { useDispatch } from 'react-redux';
 import useApiRequest from '../useRequest';
-import t from 'store/types';
+import { useSetSettings } from 'hooks/state';
+import t from './types';
 
 /**
  * Saves the settings.
@@ -21,8 +21,8 @@ export function useSaveSettings(props) {
 }
 
 function useSettingsQuery(key, query, props) {
-  const dispatch = useDispatch();
   const apiRequest = useApiRequest();
+  const setSettings = useSetSettings();
 
   const state = useQueryTenant(
     key,
@@ -40,10 +40,10 @@ function useSettingsQuery(key, query, props) {
   );
 
   useEffect(() => {
-    if (typeof state.data !== 'undefined') {
-      dispatch({ type: t.SETTING_SET, options: state.data });
+    if (state.isSuccess) {
+      setSettings(state.data);
     }
-  }, [state.data, dispatch]);
+  }, [state.data, state.isSuccess, setSettings]);
 
   return state.data;
 }

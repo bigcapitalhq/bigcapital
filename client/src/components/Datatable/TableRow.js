@@ -1,23 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
+import { ContextMenu } from 'components';
 import classNames from 'classnames';
 import useContextMenu from 'react-use-context-menu';
 
 import TableContext from './TableContext';
-import { saveInvoke } from 'utils';
-import { ContextMenu } from 'components';
-
+import { saveInvoke, ConditionalWrapper } from 'utils';
 
 /**
- * Table row.
+ * Table row context wrapper.
  */
-export default function TableRow({ row, className, style }) {
+function TableRowContextMenu({ children, row }) {
+  // Table context.
   const {
-    props: {
-      TableCellRenderer,
-      rowContextMenu,
-      rowClassNames,
-      ContextMenu: ContextMenuContent,
-    },
+    props: { ContextMenu: ContextMenuContent },
     table,
   } = useContext(TableContext);
 
@@ -32,33 +27,64 @@ export default function TableRow({ row, className, style }) {
     collect: () => 'Title',
   });
 
+  const handleClose = useCallback(() => {
+    setVisible(false);
+  }, [setVisible]);
+
   return (
-    <div
-      {...row.getRowProps({
-        className: classNames(
-          'tr',
-          {
-            'is-expanded': row.isExpanded && row.canExpand,
-          },
-          saveInvoke(rowClassNames, row),
-          className,
-        ),
-        style,
-      })}
-      {...bindTrigger}
-    >
-      {row.cells.map((cell, index) => (
-        <TableCellRenderer cell={cell} row={row} index={index + 1} />
-      ))}
+    <div class="tr-context" {...bindTrigger}>
+      {children}
 
       <ContextMenu
         bindMenu={bindMenu}
         isOpen={isVisible}
         coords={coords}
-        onClosed={() => setVisible(false)}
+        onClosed={handleClose}
       >
         <ContextMenuContent {...table} row={row} />
       </ContextMenu>
+    </div>
+  );
+}
+
+/**
+ * Table row.
+ */
+export default function TableRow({ row, className, style }) {
+  const {
+    props: {
+      TableCellRenderer,
+      rowClassNames,
+      ContextMenu: ContextMenuContent,
+    },
+  } = useContext(TableContext);
+
+  return (
+    <div
+      {...row.getRowProps({
+        className: classNames(
+          'tr',
+          { 'is-expanded': row.isExpanded && row.canExpand },
+          saveInvoke(rowClassNames, row),
+          className,
+        ),
+        style,
+      })}
+    >
+      <ConditionalWrapper
+        condition={ContextMenuContent}
+        wrapper={TableRowContextMenu}
+        row={row}
+      >
+        {row.cells.map((cell, index) => (
+          <TableCellRenderer
+            key={index}
+            cell={cell}
+            row={row}
+            index={index + 1}
+          />
+        ))}
+      </ConditionalWrapper>
     </div>
   );
 }

@@ -10,14 +10,14 @@ const EstimatesListContext = createContext();
  */
 function EstimatesListProvider({ query, ...props }) {
   // Fetches estimates resource views and fields.
-  const { data: estimatesViews, isFetching: isViewsLoading } = useResourceViews(
+  const { data: estimatesViews, isLoading: isViewsLoading } = useResourceViews(
     'sale_estimates',
   );
 
   // Fetches the estimates resource fields.
   const {
     data: estimatesFields,
-    isFetching: isFieldsLoading,
+    isLoading: isFieldsLoading,
   } = useResourceFields('sale_estimates');
 
   // Fetch estimates list according to the given custom view id.

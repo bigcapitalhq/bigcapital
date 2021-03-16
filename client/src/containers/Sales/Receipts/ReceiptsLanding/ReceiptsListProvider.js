@@ -1,6 +1,6 @@
 import React, { createContext } from 'react';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import { useResourceViews, useResourceFields, useReceipts } from 'hooks/query';
+import { useResourceViews, useReceipts } from 'hooks/query';
 import { isTableEmptyStatus } from 'utils';
 
 const ReceiptsListContext = createContext();
@@ -8,7 +8,7 @@ const ReceiptsListContext = createContext();
 // Receipts list provider.
 function ReceiptsListProvider({ query, ...props }) {
   // Fetch receipts resource views and fields.
-  const { data: receiptsViews, isFetching: isViewsLoading } = useResourceViews(
+  const { data: receiptsViews, isLoading: isViewsLoading } = useResourceViews(
     'sale_receipt',
   );
 

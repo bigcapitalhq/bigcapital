@@ -99,7 +99,7 @@ function AccountsDataTable({
 
       // #TableVirtualizedListRows props.
       vListrowHeight={42}
-      vListOverscanRowCount={10}
+      vListOverscanRowCount={0}
 
       payload={{
         onEdit: handleEditAccount,

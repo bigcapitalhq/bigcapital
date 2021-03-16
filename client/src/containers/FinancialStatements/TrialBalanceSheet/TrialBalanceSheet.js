@@ -9,6 +9,11 @@ import TrialBalanceSheetHeader from './TrialBalanceSheetHeader';
 import TrialBalanceSheetTable from './TrialBalanceSheetTable';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import {
+  TrialBalanceSheetAlerts,
+  TrialBalanceSheetLoadingBar,
+} from './components';
+
 import withTrialBalanceActions from './withTrialBalanceActions';
 import withSettings from 'containers/Settings/withSettings';
 
@@ -22,7 +27,7 @@ function TrialBalanceSheet({
   organizationName,
 
   // #withTrialBalanceSheetActions
-  toggleTrialBalanceFilterDrawer: toggleFilterDrawer
+  toggleTrialBalanceFilterDrawer: toggleFilterDrawer,
 }) {
   const [filter, setFilter] = useState({
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
@@ -53,9 +58,12 @@ function TrialBalanceSheet({
   };
 
   // Hide the filter drawer once the page unmount.
-  useEffect(() => () => {
-    toggleFilterDrawer(false)
-  }, [toggleFilterDrawer]);
+  useEffect(
+    () => () => {
+      toggleFilterDrawer(false);
+    },
+    [toggleFilterDrawer],
+  );
 
   return (
     <TrialBalanceSheetProvider query={filter}>
@@ -63,6 +71,9 @@ function TrialBalanceSheet({
         numberFormat={filter.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
+      <TrialBalanceSheetLoadingBar />
+      <TrialBalanceSheetAlerts />
+
       <DashboardPageContent>
         <div class="financial-statement">
           <TrialBalanceSheetHeader

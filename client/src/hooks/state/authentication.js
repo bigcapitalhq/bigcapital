@@ -2,13 +2,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import { isAuthenticated } from 'store/authentication/authentication.reducer';
 import { setLogin, setLogout } from 'store/authentication/authentication.actions';
+import { useQueryClient } from 'react-query';
 
 export const useAuthActions = () => {
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   return {
     setLogin: useCallback((login) => dispatch(setLogin(login)), [dispatch]),
-    setLogout: useCallback(() => dispatch(setLogout()), [dispatch]),
+    setLogout: useCallback(() => {
+
+      // Logout action.
+      dispatch(setLogout());
+
+      // Remove all cached queries.
+      queryClient.removeQueries();
+    }, [dispatch, queryClient]),
   };
 };
 

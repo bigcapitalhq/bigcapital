@@ -2,6 +2,8 @@ import React from 'react';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import { getColumnWidth } from 'utils';
 import { FormattedMessage as T } from 'react-intl';
+import { If } from 'components';
+import FinancialLoadingBar from '../FinancialLoadingBar';
 
 /**
  * Retrieve AR aging summary columns.
@@ -56,3 +58,18 @@ export const useARAgingSummaryColumns = () => {
     [tableRows, agingColumns],
   );
 };
+
+/**
+ * A/R aging summary sheet loading bar.
+ */
+ export function ARAgingSummarySheetLoadingBar() {
+  const {
+    isARAgingFetching,
+  } = useARAgingSummaryContext();
+
+  return (
+    <If condition={isARAgingFetching}>
+      <FinancialLoadingBar />
+    </If>
+  )
+}

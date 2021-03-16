@@ -10,14 +10,14 @@ const BillsListContext = createContext();
  */
 function BillsListProvider({ query, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: billsViews, isFetching: isViewsLoading } = useResourceViews(
+  const { data: billsViews, isLoading: isViewsLoading } = useResourceViews(
     'bills',
   );
 
   // Fetch the accounts resource fields.
   const {
     data: billsFields,
-    isFetching: isFieldsLoading,
+    isLoading: isFieldsLoading,
   } = useResourceFields('bills');
 
   // Fetch accounts list according to the given custom view id.

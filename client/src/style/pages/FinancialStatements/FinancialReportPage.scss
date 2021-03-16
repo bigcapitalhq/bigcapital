@@ -9,7 +9,7 @@
     border-radius: 2px;
     background-color: #fdecda;
     color: #342515;
-    font-size: 12px;
+    font-size: 13px;
 
     button{
       font-size: 12px;
@@ -27,6 +27,12 @@
       position: relative;
       top: -2px;
       fill: #975f19;
+    }
+  }
+
+  .financial-progressbar{
+    .progress-materializecss{
+      top: -2px;
     }
   }
 }

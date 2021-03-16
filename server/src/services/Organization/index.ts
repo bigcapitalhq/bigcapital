@@ -19,6 +19,7 @@ const ERRORS = {
   TENANT_ALREADY_SEEDED: 'tenant_already_seeded',
   TENANT_DB_NOT_BUILT: 'tenant_db_not_built',
 };
+
 @Service()
 export default class OrganizationService {
   @EventDispatcher()
@@ -109,6 +110,20 @@ export default class OrganizationService {
     const tenant = await tenantRepository.findOneById(user.tenantId);
 
     return [tenant];
+  }
+
+  /**
+   * Retrieve the current organization metadata.
+   * @param {number} tenantId 
+   * @returns {Promise<ITenant[]>} 
+   */
+  public async currentOrganization(tenantId: number): Promise<ITenant[]> {
+    const { tenantRepository } = this.sysRepositories;
+    const tenant = await tenantRepository.findOneById(tenantId, ['subscriptions']);
+
+    this.throwIfTenantNotExists(tenant);
+
+    return tenant;
   }
 
   /**

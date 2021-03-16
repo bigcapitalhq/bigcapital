@@ -1,6 +1,15 @@
 import ApiService from 'services/ApiService';
 import t from 'store/types';
 
+export const setOrganizations = (organizations) => {
+  return {
+    type: t.ORGANIZATIONS_LIST_SET,
+    payload: {
+      organizations,
+    },
+  };
+}
+
 export const fetchOrganizations = () => (dispatch) => new Promise((resolve, reject) => {
   ApiService.get('organization/all').then((response) => {
     dispatch({

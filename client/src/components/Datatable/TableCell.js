@@ -62,7 +62,7 @@ export default function TableCell({
           'cell-inner',
         )}
         style={{
-          'padding-left':
+          paddingLeft:
             isExpandColumn && expandable
               ? `${depth * expandColumnSpace}rem`
               : '',

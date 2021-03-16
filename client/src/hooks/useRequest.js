@@ -18,10 +18,11 @@ export default function useApiRequest() {
   const organizationId = useAuthOrganizationId();
 
   const http = React.useMemo(() => {
-    axios.create();
+    // Axios instance.
+    const instance = axios.create();
 
     // Request interceptors.
-    axios.interceptors.request.use(
+    instance.interceptors.request.use(
       (request) => {
         const locale = 'en';
 
@@ -40,9 +41,8 @@ export default function useApiRequest() {
         return Promise.reject(error);
       },
     );
-
     // Response interceptors.
-    axios.interceptors.response.use(
+    instance.interceptors.response.use(
       (response) => response,
       (error) => {
         const { status } = error.response;
@@ -57,8 +57,7 @@ export default function useApiRequest() {
         return Promise.reject(error);
       },
     );
-
-    return axios;
+    return instance;
   }, [token, organizationId, setGlobalErrors, setLogout]);
 
   return {

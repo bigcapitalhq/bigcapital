@@ -1,13 +1,9 @@
-import React, { useEffect } from 'react';
-import { useIntl } from 'react-intl';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { For } from 'components';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import financialReportMenus from 'config/financialReportsMenu';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-
-import { compose } from 'utils';
 
 import 'style/pages/FinancialStatements/FinancialSheets.scss';
 
@@ -34,6 +30,9 @@ function FinancialReportsSection({ sectionTitle, reports }) {
   );
 }
 
+/**
+ * Financial reports.
+ */
 export default function FinancialReports() {
   return (
     <DashboardInsider name={'financial-reports'}>

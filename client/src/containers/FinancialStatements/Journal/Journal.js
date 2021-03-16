@@ -1,20 +1,21 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
-import { useIntl } from 'react-intl';
 
-import { compose } from 'utils';
+import 'style/pages/FinancialStatements/Journal.scss';
+
+import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+
 import JournalTable from './JournalTable';
-
 import JournalHeader from './JournalHeader';
 import JournalActionsBar from './JournalActionsBar';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import { JournalSheetProvider } from './JournalProvider';
+import { JournalSheetLoadingBar, JournalSheetAlerts } from './components';
 
 import withSettings from 'containers/Settings/withSettings';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withJournalActions from './withJournalActions';
 
-import 'style/pages/FinancialStatements/Journal.scss';
+import { compose } from 'utils';
 
 /**
  * Journal sheet.
@@ -60,6 +61,9 @@ function Journal({
             onSubmitFilter={handleFilterSubmit}
             pageFilter={filter}
           />
+          <JournalSheetLoadingBar />
+          <JournalSheetAlerts />
+
           <div class="financial-statement__body">
             <JournalTable
               companyName={organizationName}

@@ -9,6 +9,10 @@ import GeneralLedgerHeader from './GeneralLedgerHeader';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import GeneralLedgerActionsBar from './GeneralLedgerActionsBar';
 import { GeneralLedgerProvider } from './GeneralLedgerProvider';
+import {
+  GeneralLedgerSheetAlerts,
+  GeneralLedgerSheetLoadingBar,
+} from './components';
 
 import withGeneralLedgerActions from './withGeneralLedgerActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -64,6 +68,8 @@ function GeneralLedger({
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
           />
+          <GeneralLedgerSheetLoadingBar />
+          <GeneralLedgerSheetAlerts />
 
           <div class="financial-statement__body">
             <GeneralLedgerTable

@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { transformPagination, transformResponse } from 'utils';
 import { useQueryTenant } from '../useQueryTenant';
 import useApiRequest from '../useRequest';

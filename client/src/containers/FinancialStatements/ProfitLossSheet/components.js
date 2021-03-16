@@ -1,52 +1,51 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 import { Icon, If } from 'components';
-import { useBalanceSheetContext } from './BalanceSheetProvider';
+import { useProfitLossSheetContext } from './ProfitLossProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
+
+/**
+ * Profit/loss sheet loading bar.
+ */
+export function ProfitLossSheetLoadingBar() {
+  const { isFetching } = useProfitLossSheetContext();
+
+  return (
+    <If condition={isFetching}>
+      <FinancialLoadingBar />
+    </If>
+  );
+}
 
 /**
  * Balance sheet alerts.
  */
-export function BalanceSheetAlerts() {
+export function ProfitLossSheetAlerts() {
   const {
     isLoading,
-    refetchBalanceSheet,
-    balanceSheet,
-  } = useBalanceSheetContext();
+    sheetRefetch,
+    profitLossSheet,
+  } = useProfitLossSheetContext();
 
   // Handle refetch the report sheet.
   const handleRecalcReport = () => {
-    refetchBalanceSheet();
+    sheetRefetch();
   };
   // Can't display any error if the report is loading.
-  if (isLoading) { return null; }
+  if (isLoading) {
+    return null;
+  }
 
   return (
-    <If condition={balanceSheet.meta.is_cost_compute_running}>
+    <If condition={profitLossSheet.meta.is_cost_compute_running}>
       <div class="alert-compute-running">
         <Icon icon="info-block" iconSize={12} /> Just a moment! We're
         calculating your cost transactions and this doesn't take much time.
         Please check after sometime.{' '}
-
         <Button onClick={handleRecalcReport} minimal={true} small={true}>
           Refresh
         </Button>
       </div>
     </If>
   );
-}
-
-/**
- * Balance sheet loading bar.
- */
-export function BalanceSheetLoadingBar() {
-  const {
-    isFetching
-  } = useBalanceSheetContext();
-
-  return (
-    <If condition={isFetching}>
-      <FinancialLoadingBar />
-    </If>
-  )
 }

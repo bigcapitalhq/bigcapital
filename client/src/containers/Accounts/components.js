@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   Position,
   Classes,
@@ -75,7 +75,7 @@ export function ActionsMenu({
 /**
  * Actions cell.
  */
-export const ActionsCell = (props) => {
+export function ActionsCell(props) {
   return (
     <Popover
       position={Position.RIGHT_BOTTOM}
@@ -84,7 +84,7 @@ export const ActionsCell = (props) => {
       <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
     </Popover>
   );
-};
+}
 
 /**
  * Normal cell.

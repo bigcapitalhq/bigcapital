@@ -7,7 +7,6 @@ import 'style/pages/FinancialStatements/FinancialSheet.scss';
 
 import { If, LoadingIndicator, MODIFIER } from 'components';
 
-
 export default function FinancialSheet({
   companyName,
   sheetType,
@@ -57,49 +56,47 @@ export default function FinancialSheet({
         'is-full-width': fullWidth,
       })}
     >
-      <LoadingIndicator loading={loading} spinnerSize={34} />
-
-      <div
-        className={classnames('financial-sheet__inner', {
-          'is-loading': loading,
-        })}
-      >
-        <If condition={!!companyName}>
-          <h1 class="financial-sheet__title">{companyName}</h1>
-        </If>
-
-        <If condition={!!sheetType}>
-          <h6 class="financial-sheet__sheet-type">{sheetType}</h6>
-        </If>
-
-        <div class="financial-sheet__date">
-          <If condition={asDate}>
-            <T id={'as'} /> {formattedAsDate}
+      {loading ? (
+        <LoadingIndicator loading={loading} spinnerSize={34} />
+      ) : (
+        <div className={classnames('financial-sheet__inner')}>
+          <If condition={!!companyName}>
+            <h1 class="financial-sheet__title">{companyName}</h1>
           </If>
 
-          <If condition={fromDate && toDate}>
-            <T id={'from'} /> {formattedFromDate} | <T id={'to'} />{' '}
-            {formattedToDate}
+          <If condition={!!sheetType}>
+            <h6 class="financial-sheet__sheet-type">{sheetType}</h6>
           </If>
+
+          <div class="financial-sheet__date">
+            <If condition={asDate}>
+              <T id={'as'} /> {formattedAsDate}
+            </If>
+
+            <If condition={fromDate && toDate}>
+              <T id={'from'} /> {formattedFromDate} | <T id={'to'} />{' '}
+              {formattedToDate}
+            </If>
+          </div>
+
+          <div class="financial-sheet__table">{children}</div>
+          <div class="financial-sheet__accounting-basis">{accountingBasis}</div>
+
+          <div class="financial-sheet__footer">
+            <If condition={basisLabel}>
+              <span class="financial-sheet__basis">
+                <T id={'accounting_basis'} /> {basisLabel}
+              </span>
+            </If>
+
+            <If condition={currentDate}>
+              <span class="financial-sheet__current-date">
+                {moment().format('YYYY MMM DD  HH:MM')}
+              </span>
+            </If>
+          </div>
         </div>
-
-        <div class="financial-sheet__table">{children}</div>
-        <div class="financial-sheet__accounting-basis">{accountingBasis}</div>
-
-        <div class="financial-sheet__footer">
-          <If condition={basisLabel}>
-            <span class="financial-sheet__basis">
-              <T id={'accounting_basis'} /> {basisLabel}
-            </span>
-          </If>
-
-          <If condition={currentDate}>
-            <span class="financial-sheet__current-date">
-              {moment().format('YYYY MMM DD  HH:MM')}
-            </span>
-          </If>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

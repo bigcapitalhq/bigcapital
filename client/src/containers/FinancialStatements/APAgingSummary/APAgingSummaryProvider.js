@@ -1,6 +1,6 @@
 import React, { useMemo, createContext, useContext } from 'react';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import { useAPAgingSummaryReport,useARAgingSummaryReport , useVendors } from 'hooks/query';
+import FinancialReportPage from '../FinancialReportPage';
+import { useAPAgingSummaryReport, useVendors } from 'hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const APAgingSummaryContext = createContext();
@@ -17,7 +17,7 @@ function APAgingSummaryProvider({ filter, ...props }) {
     isLoading: isAPAgingLoading,
     isFetching: isAPAgingFetching,
     refetch,
-  } = useAPAgingSummaryReport(query);
+  } = useAPAgingSummaryReport(query, { keepPreviousData: true });
 
   // Retrieve the vendors list.
   const {
@@ -36,14 +36,12 @@ function APAgingSummaryProvider({ filter, ...props }) {
   };
 
   return (
-    <DashboardInsider name={'AP-Aging-Summary'}>
+    <FinancialReportPage name={'AP-Aging-Summary'}>
       <APAgingSummaryContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </FinancialReportPage>
   );
 }
 
-
 const useAPAgingSummaryContext = () => useContext(APAgingSummaryContext);
-
 
 export { APAgingSummaryProvider, useAPAgingSummaryContext };

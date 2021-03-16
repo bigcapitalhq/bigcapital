@@ -31,7 +31,7 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
     enabled: !!paymentReceiveId,
   });
   // Handle fetch accounts data.
-  const { data: accounts, isFetching: isAccountsFetching } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
   // Fetch payment made settings.
   const fetchSettings = useSettingsPaymentReceives();
@@ -39,7 +39,7 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
   // Fetches customers list.
   const {
     data: { customers },
-    isFetching: isCustomersFetching,
+    isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
   // Detarmines whether the new mode.
@@ -58,9 +58,9 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
     customers,
 
     isPaymentLoading,
+    isAccountsLoading,
     isPaymentFetching,
-    isAccountsFetching,
-    isCustomersFetching,
+    isCustomersLoading,
     isNewMode,
 
     submitPayload,
@@ -72,7 +72,7 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
 
   return (
     <DashboardInsider
-      loading={isPaymentLoading || isAccountsFetching || isCustomersFetching}
+      loading={isPaymentLoading || isAccountsLoading || isCustomersLoading}
       name={'payment-receive-form'}
     >
       <PaymentReceiveFormContext.Provider value={provider} {...props} />

@@ -10,6 +10,7 @@ import APAgingSummaryActionsBar from './APAgingSummaryActionsBar';
 import APAgingSummaryTable from './APAgingSummaryTable';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import { APAgingSummaryProvider } from './APAgingSummaryProvider';
+import { APAgingSummarySheetLoadingBar } from './components';
 
 import withSettings from 'containers/Settings/withSettings';
 import withAPAgingSummaryActions from './withAPAgingSummaryActions'
@@ -59,6 +60,8 @@ function APAgingSummary({
         numberFormat={filter.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
+      <APAgingSummarySheetLoadingBar />
+
       <DashboardPageContent>
         <FinancialStatement>
           <APAgingSummaryHeader

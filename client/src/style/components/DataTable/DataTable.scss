@@ -68,6 +68,11 @@
       .bp3-context-menu-popover-target{
         z-index: 100;
       }
+
+      .tr-context{
+        display: flex;
+        flex: 1 0 auto;
+      }
     }
 
     .th,
@@ -256,6 +261,11 @@
         }
       }
     }
+
+    .tr-inner{
+      display: flex;
+      width: 100%;
+    }
   }
 
   .no-results {
@@ -313,5 +323,10 @@
       overflow-y: scroll;
       overflow-x: hidden;
     }
+  }
+
+
+  .ReactVirtualized__Grid{
+    will-change: auto !important;
   }
 }

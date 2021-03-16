@@ -53,6 +53,7 @@ import Drawer from './Drawer/Drawer';
 import DrawerSuspense from './Drawer/DrawerSuspense';
 import Postbox from './Postbox';
 import AccountsSuggestField from './AccountsSuggestField';
+import MaterialProgressBar from './MaterialProgressBar';
 
 const Hint = FieldHint;
 
@@ -112,5 +113,6 @@ export {
   Drawer,
   DrawerSuspense,
   Postbox,
-  AccountsSuggestField
+  AccountsSuggestField,
+  MaterialProgressBar
 };

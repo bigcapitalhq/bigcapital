@@ -29,3 +29,11 @@ export const FetchOptions = ({ form }) => {
         });
     });
 };
+
+
+export const setSettings = (settings) => {
+  return {
+    type: t.SETTING_SET,
+    options: settings,
+  };
+}

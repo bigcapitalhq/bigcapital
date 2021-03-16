@@ -5,6 +5,9 @@ import { compose } from 'utils';
 import withAuthentication from 'containers/Authentication/withAuthentication';
 import withOrganization from 'containers/Organization/withOrganization';
 
+/**
+ * Ensures organization is not ready.
+ */
 function EnsureOrganizationIsNotReady({
   children,
 

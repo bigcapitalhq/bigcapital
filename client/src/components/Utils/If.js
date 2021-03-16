@@ -5,7 +5,7 @@ const If = props => props.condition
   ? (props.render ? props.render() : props.children) : null;
 
 If.propTypes = {
-	condition: PropTypes.bool.isRequired,
+	// condition: PropTypes.bool.isRequired,
 	children: PropTypes.node,
 	render: PropTypes.func
 };

@@ -1,46 +1,21 @@
 import React from 'react';
 import { Switch, Route } from 'react-router';
-import { useQuery } from 'react-query';
 
 import Dashboard from 'components/Dashboard/Dashboard';
 import SetupWizardPage from 'containers/Setup/WizardSetupPage';
-import DashboardLoadingIndicator from 'components/Dashboard/DashboardLoadingIndicator';
-
-import withOrganizationActions from 'containers/Organization/withOrganizationActions';
-import withSubscriptionsActions from 'containers/Subscriptions/withSubscriptionsActions';
 
 import EnsureOrganizationIsReady from 'components/Guards/EnsureOrganizationIsReady';
 import EnsureOrganizationIsNotReady from 'components/Guards/EnsureOrganizationIsNotReady';
-
-import { compose } from 'utils';
+import { PrivatePagesProvider } from './PrivatePagesProvider';
 
 import 'style/pages/Dashboard/Dashboard.scss';
 
 /**
  * Dashboard inner private pages.
  */
-function DashboardPrivatePages({
-  // #withOrganizationActions
-  requestAllOrganizations,
-
-  // #withSubscriptionsActions
-  requestFetchSubscriptions,
-}) {
-  // Fetches all user's organizatins.
-  const fetchOrganizations = useQuery(
-    ['organizations'], () => requestAllOrganizations(),
-  );
-
-  // Fetches organization subscriptions.
-  const fetchSuscriptions = useQuery(
-    ['susbcriptions'], () => requestFetchSubscriptions(),
-  )
-
+export default function DashboardPrivatePages() {
   return (
-    <DashboardLoadingIndicator isLoading={
-      fetchOrganizations.isFetching ||
-      fetchSuscriptions.isFetching
-    }>
+    <PrivatePagesProvider>
       <Switch>
         <Route path={'/setup'}>
           <EnsureOrganizationIsNotReady>
@@ -54,11 +29,6 @@ function DashboardPrivatePages({
           </EnsureOrganizationIsReady>
         </Route>
       </Switch>
-    </DashboardLoadingIndicator>
+    </PrivatePagesProvider>
   );
 }
-
-export default compose(
-  withOrganizationActions,
-  withSubscriptionsActions,
-)(DashboardPrivatePages);

@@ -18,7 +18,7 @@ export default function APAgingSummaryTable({
   // AP aging summary report content.
   const {
     APAgingSummary: { tableRows },
-    isAPAgingFetching,
+    isAPAgingLoading,
   } = useAPAgingSummaryContext();
 
   // AP aging summary columns.
@@ -32,7 +32,7 @@ export default function APAgingSummaryTable({
       name={'payable-aging-summary'}
       sheetType={formatMessage({ id: 'payable_aging_summary' })}
       asDate={new Date()}
-      loading={isAPAgingFetching}
+      loading={isAPAgingLoading}
     >
       <DataTable
         className={'bigcapital-datatable--financial-report'}

@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import FinancialReportPage from '../FinancialReportPage';
 import { useGeneralLedgerSheet, useAccounts } from 'hooks/query';
 
 const GeneralLedgerContext = createContext();
@@ -8,7 +8,14 @@ const GeneralLedgerContext = createContext();
  * General ledger provider.
  */
 function GeneralLedgerProvider({ query, ...props }) {
-  const { data: generalLedger, isFetching, refetch } = useGeneralLedgerSheet(query);
+  const {
+    data: generalLedger,
+    isFetching,
+    isLoading,
+    refetch,
+  } = useGeneralLedgerSheet(query, {
+    keepPreviousData: true,
+  });
 
   // Accounts list.
   const { data: accounts, isFetching: isAccountsLoading } = useAccounts();
@@ -17,13 +24,14 @@ function GeneralLedgerProvider({ query, ...props }) {
     generalLedger,
     accounts,
     sheetRefresh: refetch,
-    isSheetLoading: isFetching,
+    isFetching,
+    isLoading,
     isAccountsLoading,
   };
   return (
-    <DashboardInsider name={'general-ledger-sheet'}>
+    <FinancialReportPage name={'general-ledger-sheet'}>
       <GeneralLedgerContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </FinancialReportPage>
   );
 }
 

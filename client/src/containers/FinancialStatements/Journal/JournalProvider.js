@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import FinancialReportPage from '../FinancialReportPage';
 import { useJournalSheet } from 'hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
@@ -9,20 +9,27 @@ const JournalSheetContext = createContext();
  * Journal sheet provider.
  */
 function JournalSheetProvider({ query, ...props }) {
-  const { data: journalSheet, isFetching, refetch } = useJournalSheet({
-    ...transformFilterFormToQuery(query)
-  });
+  const {
+    data: journalSheet,
+    isFetching,
+    isLoading,
+    refetch,
+  } = useJournalSheet(
+    { ...transformFilterFormToQuery(query) },
+    { keepPreviousData: true },
+  );
 
   const provider = {
     journalSheet,
-    isLoading: isFetching,
-    refetchSheet: refetch
+    isLoading,
+    isFetching,
+    refetchSheet: refetch,
   };
 
   return (
-    <DashboardInsider name={'balance-sheet'}>
+    <FinancialReportPage name={'journal-sheet'}>
       <JournalSheetContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </FinancialReportPage>
   );
 }
 

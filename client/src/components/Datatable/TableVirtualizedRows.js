@@ -3,11 +3,13 @@ import { WindowScroller, AutoSizer, List } from 'react-virtualized';
 import { CLASSES } from 'common/classes';
 import TableContext from './TableContext';
 
+/**
+ * Table virtualized list row.
+ */
 function TableVirtualizedListRow({
   index,
   isScrolling,
   isVisible,
-  key,
   style,
 }) {
   const {
@@ -18,7 +20,7 @@ function TableVirtualizedListRow({
   const row = page[index];
   prepareRow(row);
 
-  return <TableRowRenderer row={row} style={style} />;
+  return (<TableRowRenderer row={row} style={style} />);
 }
 
 /**
@@ -27,39 +29,38 @@ function TableVirtualizedListRow({
 export default function TableVirtualizedListRows() {
   const {
     table: { page },
-    props: { vListrowHeight, vListOverscanRowCount }
+    props: { vListrowHeight, vListOverscanRowCount },
   } = useContext(TableContext);
 
   // Dashboard content pane.
-  const dashboardContentPane = document.querySelector(
+  const dashboardContentPane = React.useMemo(()=> document.querySelector(
     `.${CLASSES.DASHBOARD_CONTENT_PANE}`,
-  );
+  ), []);
+
+  const rowRenderer = React.useCallback(({ key, ...args }) => (
+    <TableVirtualizedListRow {...args} key={key} />
+  ), []);
+
   return (
     <WindowScroller scrollElement={dashboardContentPane}>
-      {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) => (
-        <div className={'WindowScrollerWrapper'}>
-          <AutoSizer disableHeight>
-            {({ width }) => (
-              <div ref={registerChild}>
-                <List
-                  autoHeight={true}
-                  className={'List'}
-                  height={height}
-                  isScrolling={isScrolling}
-                  onScroll={onChildScroll}
-                  overscanRowCount={vListOverscanRowCount}
-                  rowCount={page.length}
-                  rowHeight={vListrowHeight}
-                  rowRenderer={({ ...args }) => {
-                    return <TableVirtualizedListRow {...args} />;
-                  }}
-                  scrollTop={scrollTop}
-                  width={width}
-                />
-              </div>
-            )}
-          </AutoSizer>
-        </div>
+      {({ height, isScrolling, onChildScroll, scrollTop }) => (
+        <AutoSizer disableHeight>
+          {({ width }) => (
+            <List
+              autoHeight={true}
+              className={'List'}
+              height={height}
+              isScrolling={isScrolling}
+              onScroll={onChildScroll}
+              overscanRowCount={vListOverscanRowCount}
+              rowCount={page.length}
+              rowHeight={vListrowHeight}
+              rowRenderer={rowRenderer}
+              scrollTop={scrollTop}
+              width={width}
+            />
+          )}
+        </AutoSizer>
       )}
     </WindowScroller>
   );

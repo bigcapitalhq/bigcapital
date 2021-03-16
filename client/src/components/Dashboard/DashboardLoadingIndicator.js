@@ -10,7 +10,7 @@ export default function DashboardLoadingIndicator({
   className,
   children,
 }) {
-  return (  
+  return (
     <Choose>
       <Choose.When condition={isLoading}>
         <BigcapitalLoading />        

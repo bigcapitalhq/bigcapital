@@ -178,8 +178,8 @@ export function formattedExchangeRate(amount, currency) {
   return formatter.format(amount);
 }
 
-export const ConditionalWrapper = ({ condition, wrapper, children }) =>
-  condition ? wrapper(children) : children;
+export const ConditionalWrapper = ({ condition, wrapper, children, ...rest }) =>
+  condition ? wrapper({ children, ...rest }) : children;
 
 export const checkRequiredProperties = (obj, properties) => {
   return properties.some((prop) => {

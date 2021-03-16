@@ -12,20 +12,24 @@ function BalanceSheetProvider({ filter, ...props }) {
   ]);
 
   // Fetches the balance sheet report.
-  const { data: balanceSheet, isFetching, refetch } = useBalanceSheet(query);
+  const {
+    data: balanceSheet,
+    isFetching,
+    isLoading,
+    refetch,
+  } = useBalanceSheet(query, { keepPreviousData: true });
 
   const provider = {
     balanceSheet,
-    isLoading: isFetching,
+    isFetching,
+    isLoading,
     refetchBalanceSheet: refetch,
 
     query,
     filter,
   };
   return (
-    <FinancialReportPage
-      name={'balance-sheet'}
-    >
+    <FinancialReportPage name={'balance-sheet'}>
       <BalanceSheetContext.Provider value={provider} {...props} />
     </FinancialReportPage>
   );

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-
 import 'style/pages/FinancialStatements/BalanceSheet.scss';
 
 import BalanceSheetHeader from './BalanceSheetHeader';
 import BalanceSheetTable from './BalanceSheetTable';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import BalanceSheetActionsBar from './BalanceSheetActionsBar';
-import { BalanceSheetAlerts } from './components';
+import { BalanceSheetAlerts, BalanceSheetLoadingBar } from './components';
 import { FinancialStatement } from 'components';
 
 import withBalanceSheetActions from './withBalanceSheetActions';
@@ -63,6 +62,7 @@ function BalanceSheet({
         numberFormat={filter.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
+      <BalanceSheetLoadingBar />
       <BalanceSheetAlerts />
 
       <DashboardPageContent>

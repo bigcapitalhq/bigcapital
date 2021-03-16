@@ -1,5 +1,5 @@
 import React, { useMemo, createContext, useContext } from 'react';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import FinancialReportPage from '../FinancialReportPage';
 import { useARAgingSummaryReport, useCustomers } from 'hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
@@ -12,12 +12,13 @@ function ARAgingSummaryProvider({ filter, ...props }) {
   // Transformes the filter from to the Url query.
   const query = useMemo(() => transformFilterFormToQuery(filter), [filter]);
 
+  // A/R aging summary sheet context.
   const {
     data: ARAgingSummary,
     isLoading: isARAgingLoading,
     isFetching: isARAgingFetching,
     refetch,
-  } = useARAgingSummaryReport(query);
+  } = useARAgingSummaryReport(query, { keepPreviousData: true });
 
   // Retrieve the customers list.
   const {
@@ -36,9 +37,9 @@ function ARAgingSummaryProvider({ filter, ...props }) {
   };
 
   return (
-    <DashboardInsider name={'AR-Aging-Summary'}>
+    <FinancialReportPage name={'AR-Aging-Summary'}>
       <ARAgingSummaryContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </FinancialReportPage>
   );
 }
 

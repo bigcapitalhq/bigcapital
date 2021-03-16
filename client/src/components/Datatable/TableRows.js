@@ -10,8 +10,8 @@ export default function TableRows() {
     props: { TableRowRenderer, TableCellRenderer },
   } = useContext(TableContext);
 
-  return page.map((row) => {
+  return page.map((row, index) => {
     prepareRow(row);
-    return <TableRowRenderer row={row} TableCellRenderer={TableCellRenderer} />;
+    return <TableRowRenderer key={index} row={row} TableCellRenderer={TableCellRenderer} />;
   });
 }

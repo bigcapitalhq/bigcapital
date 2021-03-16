@@ -1,25 +1,31 @@
 import React, { createContext, useContext } from 'react';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import FinancialReportPage from '../FinancialReportPage';
 import { useProfitLossSheet } from 'hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const ProfitLossSheetContext = createContext();
 
 function ProfitLossSheetProvider({ query, ...props }) {
-  const { data: profitLossSheet, isFetching, refetch } = useProfitLossSheet({
+  const {
+    data: profitLossSheet,
+    isFetching,
+    isLoading,
+    refetch,
+  } = useProfitLossSheet({
     ...transformFilterFormToQuery(query),
   });
 
   const provider = {
     profitLossSheet,
-    isLoading: isFetching,
+    isLoading,
+    isFetching,
     sheetRefetch: refetch,
   };
 
   return (
-    <DashboardInsider>
+    <FinancialReportPage name={'profit-loss-sheet'}>
       <ProfitLossSheetContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </FinancialReportPage>
   );
 }
 

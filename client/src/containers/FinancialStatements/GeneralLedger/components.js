@@ -1,7 +1,10 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
+import { Button } from '@blueprintjs/core';
+import { Icon, If } from 'components';
 import { getForceWidth, getColumnWidth } from 'utils';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
+import FinancialLoadingBar from '../FinancialLoadingBar';
 
 /**
  * Retrieve the general ledger table columns.
@@ -46,6 +49,7 @@ export function useGeneralLedgerTableColumns() {
         accessor: 'reference_type_formatted',
         className: 'transaction_type',
         width: 125,
+        textOverview: true,
       },
       {
         Header: formatMessage({ id: 'transaction_number' }),
@@ -98,4 +102,52 @@ export function useGeneralLedgerTableColumns() {
     ],
     [formatMessage, tableRows],
   );
+}
+
+
+/**
+ * General ledger sheet alerts.
+ */
+ export function GeneralLedgerSheetAlerts() {
+  const {
+    generalLedger,
+    isLoading,
+    sheetRefresh
+  } = useGeneralLedgerContext();
+
+  // Handle refetch the report sheet.
+  const handleRecalcReport = () => {
+    sheetRefresh();
+  };
+  // Can't display any error if the report is loading.
+  if (isLoading) { return null; }
+
+  return (
+    <If condition={generalLedger.meta.is_cost_compute_running}>
+      <div class="alert-compute-running">
+        <Icon icon="info-block" iconSize={12} /> Just a moment! We're
+        calculating your cost transactions and this doesn't take much time.
+        Please check after sometime.{' '}
+
+        <Button onClick={handleRecalcReport} minimal={true} small={true}>
+          Refresh
+        </Button>
+      </div>
+    </If>
+  );
+}
+
+/**
+ * General ledger sheet loading bar.
+ */
+export function GeneralLedgerSheetLoadingBar() {
+  const {
+    isFetching,
+  } = useGeneralLedgerContext();
+
+  return (
+    <If condition={isFetching}>
+      <FinancialLoadingBar />
+    </If>
+  )
 }
