@@ -1,7 +1,13 @@
 .dialog--quick-payment-receive {
   .bp3-form-group {
-    margin-bottom: 15px;
+    // margin-bottom: 15px;
+
+    label.bp3-label {
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
   }
+
   .form-group {
     &--statement {
       .bp3-form-content {
