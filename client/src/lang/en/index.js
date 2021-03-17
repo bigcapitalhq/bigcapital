@@ -1009,4 +1009,6 @@ export default {
   payment_no: 'Payment No.',
   payment_receive_number_required: 'Payment receive number required',
   quick_made_payment: 'Quick Made Payment',
+  the_payment_amount_bigger_than_invoice_due_amount:
+    'The payment amount bigger than invoice due amount.',
 };

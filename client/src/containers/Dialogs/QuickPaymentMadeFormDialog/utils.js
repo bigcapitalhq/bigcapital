@@ -21,4 +21,12 @@ export const transformErrors = (errors, { setFieldError }) => {
       formatMessage({ id: 'payment_number_is_not_unique' }),
     );
   }
+  if (getError('INVALID_PAYMENT_AMOUNT')) {
+    setFieldError(
+      'payment_amount',
+      formatMessage({
+        id: 'the_payment_amount_bigger_than_invoice_due_amount',
+      }),
+    );
+  }
 };

@@ -26,4 +26,12 @@ export const transformErrors = (errors, { setFieldError }) => {
       formatMessage({ id: 'payment_receive_number_required' }),
     );
   }
+  if (getError('INVALID_PAYMENT_AMOUNT')) {
+    setFieldError(
+      'payment_amount',
+      formatMessage({
+        id: 'the_payment_amount_bigger_than_invoice_due_amount',
+      }),
+    );
+  }
 };
