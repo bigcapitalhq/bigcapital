@@ -41,6 +41,7 @@ export interface IBill {
   note: string,
   amount: number,
   paymentAmount: number,
+  currencyCode: string,
 
   dueAmount: number,
   overdueDays: number,

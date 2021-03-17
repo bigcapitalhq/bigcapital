@@ -30,11 +30,12 @@ export default class PaymentReceivesPages {
     return {
       entryType: 'invoice',
       invoiceId: invoice.id,
-      dueAmount: invoice.dueAmount,
-      amount: invoice.balance,
       invoiceNo: invoice.invoiceNo,
-      totalPaymentAmount: invoice.paymentAmount,
+      amount: invoice.balance,
+      dueAmount: invoice.dueAmount,
       paymentAmount: invoice.paymentAmount,
+      totalPaymentAmount: invoice.paymentAmount,
+      currencyCode: invoice.currencyCode,
       date: invoice.invoiceDate,
     };
   }

@@ -90,11 +90,12 @@ export default class BillPaymentsPages {
     return {
       entryType: 'invoice',
       billId: bill.id,
-      dueAmount: bill.dueAmount,
-      amount: bill.amount,
       billNo: bill.billNumber,
+      amount: bill.amount,
+      dueAmount: bill.dueAmount,
       totalPaymentAmount: bill.paymentAmount,
       paymentAmount: bill.paymentAmount,
+      currencyCode: bill.currencyCode,
       date: bill.billDate,
     };
   }

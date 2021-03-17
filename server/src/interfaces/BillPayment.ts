@@ -43,5 +43,6 @@ export interface IBillReceivePageEntry {
   amount: number,
   totalPaymentAmount: number,
   paymentAmount: number,
+  currencyCode: string,
   date: Date|string,
 };
