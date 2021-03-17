@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form } from 'formik';
+import { Form, FastField, Field } from 'formik';
 import {
   FormGroup,
   RadioGroup,
@@ -10,25 +10,35 @@ import {
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { AccountsSelectList } from 'components';
-import {
-  FieldRequiredHint,
-} from 'components';
-import { FormattedMessage as T } from 'react-intl';
-import { compose } from 'utils';
-import withAccounts from 'containers/Accounts/withAccounts';
+import { FieldRequiredHint } from 'components';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+// import {  } from 'common/accountTypes';
+import { handleStringChange, saveInvoke } from 'utils';
 
-function AccountantForm({
-  // #withAccounts
-  accountsList,
-}) {
+import { useAccountantFormContext } from './AccountantFormProvider';
+
+
+
+export default function AccountantForm() {
   const history = useHistory();
+  const { formatMessage } = useIntl();
+
   const handleCloseClick = () => {
     history.go(-1);
   };
 
+  const { accounts } = useAccountantFormContext();
+
   return (
     <Form>
-      <FormGroup label={<strong>Accounts</strong>}>
+      {/* ----------- accounts  ----------- */}
+      <FormGroup
+        label={
+          <strong>
+            <T id={'accounts'} />
+          </strong>
+        }
+      >
         <Checkbox
           label={'Make account code required when create a new accounts.'}
         />
@@ -36,58 +46,93 @@ function AccountantForm({
           label={'Should account code be unique when create a new account.'}
         />
       </FormGroup>
+      {/* ----------- accounting basis ----------- */}
+      <FastField name={'accounting_basis'}>
+        {({ form, field: { value }, meta: { error, touched } }) => (
+          <FormGroup
+            labelInfo={<FieldRequiredHint />}
+            label={
+              <strong>
+                <T id={'accounting_basis_'} />
+              </strong>
+            }
+          >
+            <RadioGroup inline={true}>
+              <Radio label={formatMessage({ id: 'Cash' })} value="cash" />
+              <Radio label={formatMessage({ id: 'accrual' })} value="accrual" />
+            </RadioGroup>
+          </FormGroup>
+        )}
+      </FastField>
+      {/* ----------- deposit customer account ----------- */}
+      <FastField name={'deposit_customer_account'}>
+        {({ form, field: { value }, meta: { error, touched } }) => (
+          <FormGroup
+            label={
+              <strong>
+                <T id={'deposit_customer_account'} />
+              </strong>
+            }
+            helperText={
+              'Select a preferred account to deposit into it after customer make payment.'
+            }
+            labelInfo={<FieldRequiredHint />}
+          >
+            <AccountsSelectList
+              accounts={accounts}
+              // onAccountSelected
+              defaultSelectText={<T id={'select_payment_account'} />}
+              // filterByTypes={['current_asset']}
+            />
+          </FormGroup>
+        )}
+      </FastField>
 
-      <FormGroup
-        labelInfo={<FieldRequiredHint />}
-        label={<strong>Accounting Basis</strong>}>
-        <RadioGroup inline={true}>
-          <Radio label="Cash" value="cash" />
-          <Radio label="Accural" value="accural" />
-        </RadioGroup>
-      </FormGroup>
+      {/* ----------- withdrawal customer account ----------- */}
+      <FastField name={'withdrawal_customer_account'}>
+        {({ form, field: { value }, meta: { error, touched } }) => (
+          <FormGroup
+            label={
+              <strong>
+                <T id={'withdrawal_customer_account'} />
+              </strong>
+            }
+            helperText={
+              'Select a preferred account to deposit into it after customer make payment.'
+            }
+            labelInfo={<FieldRequiredHint />}
+          >
+            <AccountsSelectList
+              accounts={accounts}
+              defaultSelectText={<T id={'select_payment_account'} />}
+              // filterByTypes={['current_asset']}
+            />
+          </FormGroup>
+        )}
+      </FastField>
 
-      <FormGroup
-        label={<strong>Deposit customer account</strong>}
-        helperText={
-          'Select a preferred account to deposit into it after customer make payment.'
-        }
-        labelInfo={<FieldRequiredHint />}
-      >
-        <AccountsSelectList
-          accounts={accountsList}
-          defaultSelectText={<T id={'select_payment_account'} />}
-          filterByTypes={['current_asset']}
-        />
-      </FormGroup>
-
-      <FormGroup
-        label={<strong>Withdrawal customer account</strong>}
-        helperText={
-          'Select a preferred account to deposit into it after customer make payment.'
-        }
-        labelInfo={<FieldRequiredHint />}
-      >
-        <AccountsSelectList
-          accounts={accountsList}
-          defaultSelectText={<T id={'select_payment_account'} />}
-          filterByTypes={['current_asset']}
-        />
-      </FormGroup>
-
-      <FormGroup
-        label={<strong>Vendor advance deposit</strong>}
-        helperText={
-          'Select a preferred account to deposit into it vendor advanced deposits.'
-        }
-        labelInfo={<FieldRequiredHint />}
-      >
-        <AccountsSelectList
-          accounts={accountsList}
-          defaultSelectText={<T id={'select_payment_account'} />}
-          filterByTypes={['current_asset', 'other_current_asset']}
-        />
-      </FormGroup>
-
+      {/* ----------- withdrawal customer account ----------- */}
+      <FastField name={'vendor_advance_deposit'}>
+        {({ form, field: { value }, meta: { error, touched } }) => (
+          <FormGroup
+            label={
+              <strong>
+                <T id={'vendor_advance_deposit'} />
+              </strong>
+            }
+            helperText={
+              'Select a preferred account to deposit into it vendor advanced deposits.'
+            }
+            labelInfo={<FieldRequiredHint />}
+          >
+            <AccountsSelectList
+              accounts={accounts}
+              defaultSelectText={<T id={'select_payment_account'} />}
+              // filterByTypes={['current_asset', 'other_current_asset']}
+            />
+          </FormGroup>
+        )}
+      </FastField>
       <div className={'card__footer'}>
         <Button intent={Intent.PRIMARY} type="submit">
           <T id={'save'} />
@@ -99,7 +144,3 @@ function AccountantForm({
     </Form>
   );
 }
-
-export default compose(
-  withAccounts(({ accountsList }) => ({ accountsList })),
-)(AccountantForm);
