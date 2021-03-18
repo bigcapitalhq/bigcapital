@@ -6,7 +6,11 @@ import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
-import { saveInvoke, compose, optionsMapToArray } from 'utils';
+import { saveInvoke, compose } from 'utils';
+import {
+  transformFormToSettings,
+  transformSettingsToForm,
+} from 'containers/JournalNumber/utils';
 
 import 'style/pages/ManualJournal/JournalNumberDialog.scss'
 
@@ -17,29 +21,38 @@ function JournalNumberDialogContent({
   // #withSettings
   nextNumber,
   numberPrefix,
+  autoIncrement,
 
   // #withDialogActions
   closeDialog,
 
   // #ownProps
-  onConfirm
+  onConfirm,
+  initialValues
 }) {
   const { isLoading: isSettingsLoading } = useSettingsManualJournals();
   const { mutateAsync: saveSettingsMutate } = useSaveSettings();
 
   // Handle the form submit. 
   const handleSubmitForm = (values, { setSubmitting }) => {
-    const options = optionsMapToArray(values).map((option) => ({
-      key: option.key, ...option, group: 'manual_journals',
-    }));
+    // Transformes the form values to settings to save it.
+    const options = transformFormToSettings(values, 'manual_journals');
 
-    saveSettingsMutate({ options }).then(() => {
+    // Handle success.
+    const handleSuccess = () => {
       setSubmitting(false);
       closeDialog('journal-number-form');
       saveInvoke(onConfirm, values);
-    }).catch(() => {
+    };
+    // Handle errors.
+    const handleErrors = () => {
       setSubmitting(false);
-    });
+    };
+    if (values.incrementMode === 'manual-transaction') {
+      handleSuccess();
+      return;
+    }
+    saveSettingsMutate({ options }).then(handleSuccess).catch(handleErrors);
   };
 
   const handleClose = useCallback(() => {
@@ -49,8 +62,14 @@ function JournalNumberDialogContent({
   return (
     <DialogContent isLoading={isSettingsLoading}>
       <ReferenceNumberForm
-        initialNumber={nextNumber}
-        initialPrefix={numberPrefix}
+        initialValues={{
+          ...transformSettingsToForm({
+            nextNumber,
+            numberPrefix,
+            autoIncrement,
+          }),
+          ...initialValues,
+        }}
         onSubmit={handleSubmitForm}
         onClose={handleClose}
       />
@@ -63,5 +82,6 @@ export default compose(
   withSettings(({ manualJournalsSettings }) => ({
     nextNumber: manualJournalsSettings?.nextNumber,
     numberPrefix: manualJournalsSettings?.numberPrefix,
+    autoIncrement: manualJournalsSettings?.autoIncrement,
   })),
 )(JournalNumberDialogContent);

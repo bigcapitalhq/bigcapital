@@ -8,14 +8,14 @@ const JournalNumberDialogContent = lazy(() => import('./JournalNumberDialogConte
 
 function JournalNumberDialog({
   dialogName,
-  payload = { id: null },
+  payload: { initialFormValues },
   isOpen,
   onConfirm
 }) {
-
   const handleConfirm = (values) => {
     saveInvoke(onConfirm, values)
   };
+
   return (
     <Dialog
       name={dialogName}
@@ -27,7 +27,7 @@ function JournalNumberDialog({
     >
       <DialogSuspense>
         <JournalNumberDialogContent
-          journalNumberId={payload.id}
+          initialValues={{ ...initialFormValues }}
           onConfirm={handleConfirm}
         />
       </DialogSuspense>

@@ -17,19 +17,19 @@ const MakeJournalFormContext = createContext();
  */
 function MakeJournalProvider({ journalId, ...props }) {
   // Load the accounts list.
-  const { data: accounts, isFetching: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
   // Load the customers list.
   const {
     data: { customers },
-    isFetching: isCustomersLoading,
+    isLoading: isCustomersLoading,
   } = useCustomers();
 
   // Load the currencies list.
-  const { data: currencies, isFetching: isCurrenciesLoading } = useCurrencies();
+  const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 
   // Load the details of the given manual journal.
-  const { data: manualJournal, isFetching: isJournalLoading } = useJournal(
+  const { data: manualJournal, isLoading: isJournalLoading } = useJournal(
     journalId,
     {
       enabled: !!journalId,
@@ -40,7 +40,7 @@ function MakeJournalProvider({ journalId, ...props }) {
   const { mutateAsync: editJournalMutate } = useEditJournal();
 
   // Loading the journal settings.
-  const { isFetching: isSettingsLoading } = useSettings();
+  const { isLoading: isSettingsLoading } = useSettings();
 
   // Submit form payload.
   const [submitPayload, setSubmitPayload] = useState({});
