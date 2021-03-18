@@ -43,7 +43,7 @@ export function ActionsMenu({
           onClick={safeCallback(onOpen, original)}
         />
       </If>
-      <If condition={!original.is_fully_paid}>
+      <If condition={original.is_delivered && !original.is_fully_paid}>
         <MenuItem
           icon={<Icon icon="quick-payment-16" iconSize={16} />}
           text={formatMessage({ id: 'add_payment' })}
