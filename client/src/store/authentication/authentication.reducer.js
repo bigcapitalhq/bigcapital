@@ -1,4 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import t from 'store/types';
 
 const initialState = {
@@ -11,7 +13,9 @@ const initialState = {
   errors: [],
 };
 
-export default createReducer(initialState, {
+const STORAGE_KEY = 'bigcapital:authentication';
+
+const reducerInstance = createReducer(initialState, {
   [t.LOGIN_SUCCESS]: (state, action) => {
     const { token, user, tenant } = action.payload;
     state.token = token;
@@ -25,18 +29,19 @@ export default createReducer(initialState, {
     state.errors = action.errors;
   },
 
-  [t.LOGOUT]: (state) => {
-    state.token = '';
-    state.user = {};
-    state.organization = '';
-    state.organizationId = null;
-    state.tenant = {};
-  },
-
   [t.LOGIN_CLEAR_ERRORS]: (state) => {
     state.errors = [];
   },
 });
+
+export default persistReducer(
+  {
+    key: STORAGE_KEY,
+    blacklist: ['errors'],
+    storage,
+  },
+  reducerInstance,
+);
 
 export const isAuthenticated = (state) => !!state.authentication.token;
 export const hasErrorType = (state, errorType) => {

@@ -40,3 +40,4 @@ export * from './ARAgingSummaryReport';
 export * from './APAgingSummaryReport';
 export * from './Mailable';
 export * from './InventoryAdjustment';
+export * from './Setup'

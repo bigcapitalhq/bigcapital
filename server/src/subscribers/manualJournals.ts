@@ -24,10 +24,18 @@ export class ManualJournalSubscriber {
     // Ingore writing manual journal journal entries in case was not published.
     if (manualJournal.publishedAt) {
       await this.manualJournalsService.writeJournalEntries(
-        tenantId, 
+        tenantId,
         manualJournal
       );
     }
+  }
+
+  /**
+   * Handles the manual journal next number increment once the journal be created.
+   */
+  @On(events.manualJournals.onCreated)
+  public async handleJournalNumberIncrement({ tenantId }) {
+    await this.manualJournalsService.incrementNextJournalNumber(tenantId);
   }
 
   /**
@@ -106,17 +114,5 @@ export class ManualJournalSubscriber {
       tenantId,
       manualJournalsIds
     );
-  }
-
-  /**
-   * Handle increment next number of manual journal once be created.
-   */
-  @On(events.manualJournals.onCreated)
-  public async handleJournalNextNumberIncrement({ tenantId }) {
-    const query = {
-      group: 'manual_journals',
-      key: 'next_number',
-    };
-    await this.settingsService.incrementNextNumber(tenantId, query);
   }
 }

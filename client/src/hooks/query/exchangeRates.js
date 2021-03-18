@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
-import { useQueryTenant } from '../useQueryTenant';
+import { useQueryTenant } from '../useQueryRequest';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 

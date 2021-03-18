@@ -1,5 +1,5 @@
 import { useMutation } from 'react-query';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 
 /**
@@ -19,11 +19,9 @@ export const useAuthInviteAccept = (props) => {
  * @param {string} token - Token.
  */
 export const useInviteMetaByToken = (token, props) => {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     ['INVITE_META', token],
-    () => apiRequest.get(`invite/invited/${token}`),
+    { method: 'get', url: `invite/invited/${token}` },
     {
       select: (res) => res.data,
       ...props

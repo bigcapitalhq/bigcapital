@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { transformPagination, transformResponse } from 'utils';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import t from './types';
 
@@ -114,9 +114,7 @@ export function useInactivateItem(props) {
 const transformItemsResponse = (response) => {
   return {
     items: response.data.items,
-    pagination: transformPagination(
-      transformResponse(response.data.pagination)
-    ),
+    pagination: transformPagination(transformResponse(response.data.pagination)),
     filterMeta: transformResponse(response.data.filter_meta),
   };
 };
@@ -125,19 +123,21 @@ const transformItemsResponse = (response) => {
  * Retrieves items list.
  */
 export function useItems(query, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.ITEMS, query],
-    () => apiRequest.get(`items`, { params: query }).then(transformItemsResponse),
     {
-      initialDataUpdatedAt: 0,
-      initialData: {
+      method: 'get',
+      url: 'items',
+      params: { ...query },
+    },
+    {
+      select: transformItemsResponse,
+      defaultData: {
         items: [],
         pagination: DEFAULT_PAGINATION,
         filterMeta: {},
       },
-      ...props,
+      ...props
     }
   );
 }
@@ -147,14 +147,15 @@ export function useItems(query, props) {
  * @param {number} id - Item id.
  */
 export function useItem(id, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.ITEM, id],
-    () => apiRequest.get(`items/${id}`).then((response) => response.data.item),
     {
-      initialDataUpdatedAt: 0,
-      initialData: {},
+      method: 'get',
+      url: `items/${id}`,
+    },
+    {
+      select: (response) => response.data.item,
+      defaultData: {},
       ...props
     },
   );

@@ -3,9 +3,9 @@ import { IJournalEntry } from './Journal';
 import { ISystemUser } from './User';
 
 export interface IManualJournal {
-  id: number;
+  id?: number;
   date: Date | string;
-  journalNumber: number;
+  journalNumber: string;
   journalType: string;
   reference: string;
   amount: number;
@@ -37,7 +37,7 @@ export interface IManualJournalEntryDTO {
 
 export interface IManualJournalDTO {
   date: Date;
-  journalNumber: number;
+  journalNumber: string;
   journalType: string;
   reference?: string;
   description?: string;

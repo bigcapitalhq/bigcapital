@@ -547,6 +547,14 @@ export default class ItemsController extends BaseController {
           }],
         });
       }
+      if (error.errorType === 'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS') {
+        return res.status(400).send({
+          errors: [{
+            type: 'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS',
+            message: 'Cannot change item type to inventory with item has associated transactions.',
+          }],
+        });
+      }
     }
     next(error);
   }

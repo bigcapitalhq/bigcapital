@@ -67,7 +67,7 @@ export default class OrganizationController extends BaseController {
       if (error instanceof ServiceError) {
         if (error.errorType === 'tenant_not_found') {
           return res.status(400).send({
-            errors: [{ type: 'TENANT.NOT.FOUND', code: 100 }],
+            // errors: [{ type: 'TENANT.NOT.FOUND', code: 100 }],
           });
         }
         if (error.errorType === 'tenant_already_initialized') {

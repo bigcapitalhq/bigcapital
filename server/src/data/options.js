@@ -46,7 +46,7 @@ export default {
   manual_journals: [
     {
       key: "next_number",
-      type: "number",
+      type: "string",
     },
     {
       key: "number_prefix",

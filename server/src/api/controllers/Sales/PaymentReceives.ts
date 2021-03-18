@@ -170,7 +170,6 @@ export default class PaymentReceivesController extends BaseController {
         message: 'The payment receive has been created successfully.',
       });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }

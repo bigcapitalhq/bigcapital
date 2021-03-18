@@ -16,13 +16,13 @@ function PaymentMadesListProvider({ query, ...props }) {
   // Fetch accounts resource views and fields.
   const {
     data: paymentMadesViews,
-    isFetching: isViewsLoading,
+    isLoading: isViewsLoading,
   } = useResourceViews('bill_payments');
 
   // Fetch the accounts resource fields.
   const {
     data: paymentMadesFields,
-    isFetching: isFieldsLoading,
+    isLoading: isFieldsLoading,
   } = useResourceFields('bill_payments');
 
   // Fetch accounts list according to the given custom view id.

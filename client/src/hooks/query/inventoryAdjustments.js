@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 import t from './types';
-
 
 const commonInvalidateQueries = (queryClient) => {
   // Invalidate inventory adjustments.
@@ -47,16 +46,13 @@ export function useDeleteInventoryAdjustment(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.delete(`inventory_adjustments/${id}`),
-    {
-      onSuccess: (res, id) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props
+  return useMutation((id) => apiRequest.delete(`inventory_adjustments/${id}`), {
+    onSuccess: (res, id) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 const inventoryAdjustmentsTransformer = (response) => {
@@ -64,32 +60,27 @@ const inventoryAdjustmentsTransformer = (response) => {
     transactions: response.data.inventoy_adjustments,
     pagination: transformPagination(response.data.pagination),
   };
-}
+};
 
 /**
  * Retrieve inventory adjustment list with pagination meta.
  */
 export function useInventoryAdjustments(query, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     ['INVENTORY_ADJUSTMENTS', query],
-    () => apiRequest.get('inventory_adjustments', { params: query })  
-      .then(inventoryAdjustmentsTransformer),
+    { url: 'inventory_adjustments', params: query },
     {
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: {
-          transactions: [],
-          pagination: {
-            page: 1,
-            pageSize: 12,
-            total: 0,
-            pagesCount: 0,
-          },
-        }
+      select: inventoryAdjustmentsTransformer,
+      defaultData: {
+        transactions: [],
+        pagination: {
+          page: 1,
+          pageSize: 12,
+          total: 0,
+          pagesCount: 0,
+        },
       },
-      ...props
+      ...props,
     },
   );
 }

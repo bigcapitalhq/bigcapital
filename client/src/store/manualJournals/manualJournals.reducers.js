@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
-import {
-  createTableStateReducers,
-} from 'store/tableState.reducer';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import { createTableStateReducers } from 'store/tableState.reducer';
 
 const initialState = {
   tableState: {
@@ -10,6 +10,17 @@ const initialState = {
   },
 };
 
-export default createReducer(initialState, {
+const reducerInstance = createReducer(initialState, {
   ...createTableStateReducers('MANUAL_JOURNALS'),
 });
+
+const STORAGE_KEY = 'bigcapital:manualJournals';
+
+export default persistReducer(
+  {
+    key: STORAGE_KEY,
+    whitelist: ['tableState'],
+    storage,
+  },
+  reducerInstance,
+);

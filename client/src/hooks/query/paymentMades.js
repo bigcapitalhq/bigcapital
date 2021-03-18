@@ -1,6 +1,5 @@
-import { defaultTo } from 'lodash';
 import { useMutation, useQueryClient } from 'react-query';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 import t from './types';
@@ -34,29 +33,23 @@ const commonInvalidateQueries = (client) => {
  * Retrieve payment mades list.
  */
 export function usePaymentMades(query, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     [t.PAYMENT_MADES, query],
-    () => apiRequest.get('purchases/bill_payments', { params: query }),
+    { url: 'purchases/bill_payments', params: query },
     {
       select: (res) => ({
         paymentMades: res.data.bill_payments,
         pagination: transformPagination(res.data.pagination),
         filterMeta: res.data.filter_meta,
       }),
+      defaultData: {
+        paymentMades: [],
+        pagination: {},
+        filterMeta: {},
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      paymentMades: [],
-      pagination: {},
-      filterMeta: {},
-    }),
-  };
 }
 
 /**
@@ -126,24 +119,24 @@ export function useDeletePaymentMade(props) {
  * Retrieve specific payment made.
  */
 export function usePaymentMadeEditPage(id, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     [t.PAYMENT_MADE_EDIT_PAGE, id],
-    () => apiRequest.get(`purchases/bill_payments/${id}/edit-page`),
+    {
+      method: 'get',
+      url: `purchases/bill_payments/${id}/edit-page`,
+    },
     {
       select: (res) => ({
         paymentMade: res.data.bill_payment,
         entries: res.data.entries,
       }),
+      defaultData: {
+        paymentMade: {},
+        entries: [],
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {}),
-  };
 }
 
 /**
@@ -151,22 +144,16 @@ export function usePaymentMadeEditPage(id, props) {
  * @param {number} vendorId -
  */
 export function usePaymentMadeNewPageEntries(vendorId, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.PAYMENT_MADE_NEW_ENTRIES, vendorId],
-    () =>
-      apiRequest.get(`purchases/bill_payments/new-page/entries`, {
-        params: { vendor_id: vendorId },
-      }),
+    {
+      method: 'get',
+      url: `purchases/bill_payments/new-page/entries`,
+      params: { vendor_id: vendorId },
+    },
     {
       select: (res) => res.data.entries,
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: {
-          entries: [],
-        },
-      },
+      defaultData: [],
       ...props,
     },
   );

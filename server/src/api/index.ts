@@ -40,6 +40,8 @@ import Subscription from 'api/controllers/Subscription';
 import Licenses from 'api/controllers/Subscription/Licenses';
 import InventoryAdjustments from 'api/controllers/Inventory/InventoryAdjustments';
 
+import Setup from 'api/controllers/Setup';
+
 export default () => {
   const app = Router();
 
@@ -53,22 +55,7 @@ export default () => {
   app.use('/subscription', Container.get(Subscription).router());
   app.use('/organization', Container.get(Organization).router());
   app.use('/ping', Container.get(Ping).router());
-  
-  // - Settings routes.
-  // ---------------------------
-  const settings = Router();
-
-  settings.use(JWTAuth);
-  settings.use(AttachCurrentTenantUser);
-  settings.use(TenancyMiddleware);
-  settings.use(SubscriptionMiddleware('main'));
-  settings.use(EnsureTenantIsInitialized);
-  settings.use(SettingsMiddleware);
-
-  settings.use('/', Container.get(Settings).router());
-
-  app.use('/settings', settings);
-
+  app.use('/setup', Container.get(Setup).router());
   // - Dashboard routes.
   // ---------------------------
   const dashboard = Router();
@@ -86,6 +73,7 @@ export default () => {
   dashboard.use('/users', Container.get(Users).router());
   dashboard.use('/invite', Container.get(InviteUsers).authRouter());
   dashboard.use('/currencies', Container.get(Currencies).router());
+  dashboard.use('/settings', Container.get(Settings).router());
   dashboard.use('/accounts', Container.get(Accounts).router());
   dashboard.use('/account_types', Container.get(AccountTypes).router());
   dashboard.use('/manual-journals', Container.get(ManualJournals).router());

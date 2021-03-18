@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 import t from './types';
@@ -22,28 +22,26 @@ const commonInvalidateQueries = (queryClient) => {
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 };
 
+// Customers response selector.
+const customersSelector = (response) => ({
+  customers: response.data.customers,
+  pagination: transformPagination(response.data.pagination),
+  filterMeta: response.data.filter_meta,  
+});
+
 /**
  * Retrieve customers list with pagination meta.
  */
 export function useCustomers(query, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.CUSTOMERS, query],
-    () => apiRequest.get(`customers`, { params: query }),
+    { method: 'get', url: `customers`, params: query },
     {
-      select: (response) => ({
-        customers: response.data.customers,
-        pagination: transformPagination(response.data.pagination),
-        filterMeta: response.data.filter_meta,
-      }),
-      initialDataUpdatedAt: 0,
-      initialData: {  
-        data: {
-          customers: [],
-          pagination: defaultPagination,
-          filter_meta: {},
-        }
+      select: customersSelector,
+      defaultData: {
+        customers: [],
+        pagination: defaultPagination,
+        filterMeta: {},
       },
       ...props,
     },
@@ -117,19 +115,12 @@ export function useCreateCustomer(props) {
  * Retrieve the customer details.
  */
 export function useCustomer(id, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.CUSTOMER, id],
-    () => apiRequest.get(`customers/${id}`),
+    { method: 'get', url: `customers/${id}` },
     {
       select: (res) => res.data.customer,
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: {
-          customer: {}
-        }
-      },
+      defaultData: {},
       ...props
     },
   );

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import t from './types';
 
@@ -68,26 +68,24 @@ export function useDeleteItemCategory(props) {
   });
 }
 
+
+const transformCategories = (res) => ({
+  itemsCategories: res.data.item_categories,
+  pagination: res.data.pagination,  
+});
+
 /**
  * Retrieve the items categories.
  */
 export function useItemsCategories(query, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.ITEMS_CATEGORIES, query],
-    () => apiRequest.get(`item_categories`, { params: query }),
+    { method: 'get', url: `item_categories`, params: query },
     {
-      select: (response) => ({
-        itemsCategories: response.data.item_categories,
-        pagination: response.data.pagination,
-      }),
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: {
-          item_categories: [],
-          pagination: {}
-        },
+      select: transformCategories,
+      defaultData: {
+        itemsCategories: [],
+        pagination: {}
       },
       ...props,
     },
@@ -99,15 +97,12 @@ export function useItemsCategories(query, props) {
  * @param {number} id - Item category.
  */
 export function useItemCategory(id, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.ITEM_CATEGORY, id],
-    () =>
-      apiRequest.get(`item_categories/${id}`).then((res) => res.data.category),
+    { method: 'get', url: `item_categories/${id}` },
     {
-      initialDataUpdatedAt: 0,
-      initialData: {},
+      select: (res) => res.data.category,
+      defaultData: {},
       ...props,
     },
   );

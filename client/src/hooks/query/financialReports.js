@@ -1,5 +1,4 @@
-import { defaultTo } from 'lodash';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 import {
   trialBalanceSheetReducer,
   balanceSheetRowsReducer,
@@ -7,176 +6,150 @@ import {
   generalLedgerTableRowsReducer,
   journalTableRowsReducer,
   ARAgingSummaryTableRowsMapper,
-  APAgingSummaryTableRowsMapper
+  APAgingSummaryTableRowsMapper,
 } from 'containers/FinancialStatements/reducers';
-import useApiRequest from '../useRequest';
 import t from './types';
 
 /**
  * Retrieve balance sheet.
  */
 export function useBalanceSheet(query, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     [t.FINANCIAL_REPORT, t.BALANCE_SHEET, query],
-    () =>
-      apiRequest.get('/financial_statements/balance_sheet', {
-        params: query,
-      }),
+    {
+      method: 'get',
+      url: '/financial_statements/balance_sheet',
+      params: query,
+    },
     {
       select: (res) => ({
         tableRows: balanceSheetRowsReducer(res.data.data),
         ...res.data,
       }),
+      defaultData: {
+        data: [],
+        columns: [],
+        query: {},
+        tableRows: [],
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      data: [],
-      columns: [],
-      query: {},
-      tableRows: [],
-    }),
-  };
 }
 
 /**
  * Retrieve trial balance sheet.
  */
 export function useTrialBalanceSheet(query, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     [t.FINANCIAL_REPORT, t.TRIAL_BALANCE_SHEET, query],
-    () =>
-      apiRequest.get('/financial_statements/trial_balance_sheet', {
-        params: query,
-      }),
+    {
+      method: 'get',
+      url: '/financial_statements/trial_balance_sheet',
+      params: query,
+    },
     {
       select: (res) => ({
         tableRows: trialBalanceSheetReducer(res.data.data),
         ...res.data,
       }),
+      defaultData: {
+        tableRows: [],
+        data: [],
+        query: {},
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      tableRows: [],
-      data: [],
-      query: {},
-    }),
-  };
 }
 
 /**
  * Retrieve profit/loss (P&L) sheet.
  */
 export function useProfitLossSheet(query, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     [t.FINANCIAL_REPORT, t.PROFIT_LOSS_SHEET, query],
-    () =>
-      apiRequest.get('/financial_statements/profit_loss_sheet', {
-        params: query,
-      }),
+    {
+      method: 'get',
+      url: '/financial_statements/profit_loss_sheet',
+      params: query,
+    },
     {
       select: (res) => ({
         tableRows: profitLossSheetReducer(res.data.data),
         ...res.data,
       }),
+      defaultData: {
+        data: {},
+        tableRows: [],
+        columns: [],
+        query: {},
+      },
       ...props,
     },
   );
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      data: {},
-      tableRows: [],
-      columns: [],
-      query: {},
-    }),
-  };
 }
 
 /**
  * Retrieve general ledger (GL) sheet.
  */
 export function useGeneralLedgerSheet(query, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  
+  return useRequestQuery(
     [t.FINANCIAL_REPORT, t.GENERAL_LEDGER, query],
-    () =>
-      apiRequest.get('/financial_statements/general_ledger', {
+    {
+        method: 'get',
+        url: '/financial_statements/general_ledger',
         params: query,
-      }),
+    },
     {
       select: (res) => ({
         tableRows: generalLedgerTableRowsReducer(res.data.data),
         ...res.data,
       }),
+      defaultData: {
+        tableRows: [],
+        data: {},
+        query: {},
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      tableRows: [],
-      data: {},
-      query: {},
-    }),
-  };
 }
 
 /**
  * Retrieve journal sheet.
  */
 export function useJournalSheet(query, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     [t.FINANCIAL_REPORT, t.JOURNAL, query],
-    () => apiRequest.get('/financial_statements/journal', { params: query }),
+    { method: 'get', url: '/financial_statements/journal', params: query },
     {
       select: (res) => ({
         tableRows: journalTableRowsReducer(res.data.data),
         ...res.data,
       }),
+      defaultData: {
+        data: {},
+        tableRows: [],
+        query: {},
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      data: {},
-      tableRows: [],
-      query: {},
-    }),
-  };
 }
 
 /**
  * Retrieve A/R aging summary report.
  */
 export function useARAgingSummaryReport(query, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.FINANCIAL_REPORT, t.AR_AGING_SUMMARY, query],
-    () =>
-      apiRequest.get('/financial_statements/receivable_aging_summary', {
-        params: query,
-      }),
+    {
+      method: 'get',
+      url: '/financial_statements/receivable_aging_summary',
+      params: query,
+    },
     {
       select: (res) => ({
         columns: res.data.columns,
@@ -188,17 +161,14 @@ export function useARAgingSummaryReport(query, props) {
           columns: res.data.columns,
         }),
       }),
-      initialData: {
+      defaultData: {
         data: {
-          data: {
-            customers: [],
-            total: {},
-          },
-          columns: [],
-          tableRows: [],
+          customers: [],
+          total: {},
         },
+        columns: [],
+        tableRows: [],
       },
-      initialDataUpdatedAt: 0,
       ...props,
     },
   );
@@ -208,14 +178,13 @@ export function useARAgingSummaryReport(query, props) {
  * Retrieve A/P aging summary report.
  */
 export function useAPAgingSummaryReport(query, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.FINANCIAL_REPORT, t.AP_AGING_SUMMARY, query],
-    () =>
-      apiRequest.get('/financial_statements/payable_aging_summary', {
-        params: query,
-      }),
+    {
+      method: 'get',
+      url: '/financial_statements/payable_aging_summary',
+      params: query,
+    },
     {
       select: (res) => ({
         columns: res.data.columns,
@@ -227,17 +196,14 @@ export function useAPAgingSummaryReport(query, props) {
           columns: res.data.columns,
         }),
       }),
-      initialData: {
+      defaultData: {
         data: {
-          data: {
-            vendors: [],
-            total: {},
-          },
-          columns: [],
-          tableRows: [],
+          vendors: [],
+          total: {},
         },
+        columns: [],
+        tableRows: [],
       },
-      initialDataUpdatedAt: 0,
       ...props,
     },
   );

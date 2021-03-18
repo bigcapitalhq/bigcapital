@@ -1,5 +1,5 @@
 import { useQueryClient, useMutation } from 'react-query';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import { transformPagination } from 'utils';
 import t from './types';
@@ -55,48 +55,40 @@ export function useEditEstimate(props) {
  * Retrieve sale estimate details.
  */
 export function useEstimate(id, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.SALE_ESTIMATE, id],
-    () => apiRequest.get(`sales/estimates/${id}`),
+    { method: 'get', url: `sales/estimates/${id}` },
     {
       select: (res) => res.data.estimate,
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: { estimate: {} },
-      },
+      defaultData: {},
       ...props,
     },
   );
 }
 
+const transformEstimates = (res) => ({
+  estimates: res.data.sales_estimates,
+  pagination: transformPagination(res.data.pagination),
+  filterMeta: res.data.filter_meta,  
+});
+
 /**
  * Retrieve sale invoices list with pagination meta.
  */
 export function useEstimates(query, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.SALE_ESTIMATES, query],
-    () => apiRequest.get('sales/estimates', { params: query }),
+    { method: 'get', url: 'sales/estimates', params: query },
     {
-      select: (res) => ({
-        estimates: res.data.sales_estimates,
-        pagination: transformPagination(res.data.pagination),
-        filterMeta: res.data.filter_meta,
-      }),
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data:{ 
-          sales_estimates: [],
-          pagination: {
-            page: 1,
-            pageSize: 12,
-            total: 0,
-          },
-          filter_meta: {},
-        }
+      select: transformEstimates,
+      defaultData: {
+        estimates: [],
+        pagination: {
+          page: 1,
+          pageSize: 12,
+          total: 0,
+        },
+        filterMeta: {},
       },
       ...props,
     },

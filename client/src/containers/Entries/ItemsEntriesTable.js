@@ -35,10 +35,10 @@ function ItemsEntriesTable({
   const [cellsLoading, setCellsLoading] = React.useState(null);
 
   // Fetches the item details.
-  const { data: item, isFetching: isItemFetching } = useItem(
+  const { data: item, isFetching: isItemFetching, isSuccess: isItemSuccess } = useItem(
     rowItem && rowItem.itemId,
     {
-      enabled: !!rowItem,
+      enabled: !!(rowItem && rowItem.itemId),
     },
   );
 
@@ -58,7 +58,7 @@ function ItemsEntriesTable({
 
   // Once the item selected and fetched set the initial details to the table.
   useEffect(() => {
-    if (item && rowItem) {
+    if (isItemSuccess && item && rowItem) {
       const { rowIndex } = rowItem;
       const price =
         itemType === ITEM_TYPE.PURCHASABLE
@@ -82,7 +82,7 @@ function ItemsEntriesTable({
       setRowItem(null);
       saveInvoke(onUpdateData, newRows);
     }
-  }, [item, rowItem, rows, itemType, onUpdateData]);
+  }, [item, rowItem, rows, itemType, onUpdateData, isItemSuccess]);
 
   // Allows to observes `entries` to make table rows outside controlled.
   useEffect(() => {

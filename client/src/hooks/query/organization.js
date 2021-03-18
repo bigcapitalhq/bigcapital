@@ -1,7 +1,7 @@
 import { useMutation } from 'react-query';
 import t from './types';
 import useApiRequest from '../useRequest';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 import { useEffect } from 'react';
 import { useSetOrganizations, useSetSubscriptions } from '../state';
 import { omit } from 'lodash';
@@ -10,11 +10,9 @@ import { omit } from 'lodash';
  * Retrieve organizations of the authenticated user.
  */
 export function useOrganizations(props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.ORGANIZATIONS],
-    () => apiRequest.get(`organization/all`),
+    { method: 'get', url: `organization/all` },
     {
       select: (res) => res.data.organizations,
       initialDataUpdatedAt: 0,
@@ -32,21 +30,15 @@ export function useOrganizations(props) {
  * Retrieve the current organization metadata.
  */
 export function useCurrentOrganization(props) {
-  const apiRequest = useApiRequest();
   const setOrganizations = useSetOrganizations();
   const setSubscriptions = useSetSubscriptions();
 
-  const query = useQueryTenant(
+  const query = useRequestQuery(
     [t.ORGANIZATION_CURRENT],
-    () => apiRequest.get(`organization/current`),
+    { method: 'get', url: `organization/current` },
     {
       select: (res) => res.data.organization,
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: {
-          organization: {},
-        },
-      },
+      defaultData: {},
       ...props,
     },
   );

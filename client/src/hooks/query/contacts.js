@@ -1,5 +1,5 @@
 import useApiRequest from '../useRequest';
-import { useQueryTenant } from '../useQueryTenant';
+import { useQueryTenant } from '../useQueryRequest';
 
 /**
  * Retrieve the contact duplicate.

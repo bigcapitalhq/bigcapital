@@ -1,4 +1,5 @@
-import { Inject, Container, Service } from 'typedi';
+import { Inject, Service } from 'typedi';
+import Currencies from 'js-money/lib/currency';
 import {
   ICurrencyEditDTO,
   ICurrencyDTO,
@@ -15,6 +16,7 @@ import TenancyService from 'services/Tenancy/TenancyService';
 const ERRORS = {
   CURRENCY_NOT_FOUND: 'currency_not_found',
   CURRENCY_CODE_EXISTS: 'currency_code_exists',
+  BASE_CURRENCY_INVALID: 'BASE_CURRENCY_INVALID'
 };
 
 @Service()
@@ -129,7 +131,6 @@ export default class CurrenciesService implements ICurrenciesService {
       tenantId,
       currencyDTO,
     });
-
     await this.validateCurrencyCodeUniquiness(
       tenantId,
       currencyDTO.currencyCode
@@ -210,5 +211,26 @@ export default class CurrenciesService implements ICurrenciesService {
       query.orderBy('createdAt', 'ASC');
     });
     return currencies;
+  }
+
+  /**
+   * Seeds the given base currency to the currencies list.
+   * @param {number} tenantId
+   * @param {string} baseCurrency
+   */
+  public async seedBaseCurrency(tenantId: number, baseCurrency: string) {
+    const { Currency } = this.tenancy.models(tenantId);
+    const currencyMeta = Currencies[baseCurrency];
+
+    const foundBaseCurrency = await Currency.query().findOne(
+      'currency_code',
+      baseCurrency
+    );
+    if (!foundBaseCurrency) {
+      await Currency.query().insert({
+        currency_code: currencyMeta.code,
+        currency_name: currencyMeta.name,
+      });
+    }
   }
 }

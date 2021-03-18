@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux';
 
+import types from './types';
+
 import authentication from './authentication/authentication.reducer';
 import dashboard from './dashboard/dashboard.reducer';
 import users from './users/users.reducer';
@@ -30,7 +32,7 @@ import subscriptions from './subscription/subscription.reducer';
 import inventoryAdjustments from './inventoryAdjustments/inventoryAdjustment.reducer';
 import plans from './plans/plans.reducer';
 
-export default combineReducers({
+const appReducer = combineReducers({
   authentication,
   organizations,
   subscriptions,
@@ -61,3 +63,13 @@ export default combineReducers({
   inventoryAdjustments,
   plans
 });
+
+// Reset the state of a redux store
+const rootReducer = (state, action) => {
+  if (action.type === types.RESET) {
+    state = undefined;
+  }
+  return appReducer(state, action)
+}
+
+export default rootReducer;
