@@ -1011,4 +1011,8 @@ export default {
   quick_made_payment: 'Quick Made Payment',
   the_payment_amount_bigger_than_invoice_due_amount:
     'The payment amount bigger than invoice due amount.',
+  accounting_basis_: 'Accounting Basis',
+  deposit_customer_account: 'Deposit customer account',
+  withdrawal_customer_account: 'Withdrawal customer account',
+  vendor_advance_deposit: 'Vendor advance deposit',
 };

@@ -9,6 +9,7 @@ export const ERRORS = {
 export const defaultPaymentMadeEntry = {
   bill_id: '',
   payment_amount: '',
+  currency_code:'',
   id: null,
   due_amount: null,
 };
