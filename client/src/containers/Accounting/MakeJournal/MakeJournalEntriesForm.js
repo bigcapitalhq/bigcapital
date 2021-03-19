@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
-import { defaultTo, isEmpty } from 'lodash';
+import { defaultTo, isEmpty, omit } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
@@ -36,6 +36,7 @@ function MakeJournalEntriesForm({
   // #withSettings
   journalNextNumber,
   journalNumberPrefix,
+  journalAutoIncrement,
   baseCurrency,
 }) {
   // Journal form context.
@@ -64,7 +65,9 @@ function MakeJournalEntriesForm({
           }
         : {
             ...defaultManualJournal,
-            journal_number: defaultTo(journalNumber, ''),
+            ...(journalAutoIncrement) && ({
+              journal_number: defaultTo(journalNumber, ''),
+            }),
             currency_code: defaultTo(baseCurrency, ''),
             entries: orderingLinesIndexes(defaultManualJournal.entries),
           }),
@@ -106,7 +109,14 @@ function MakeJournalEntriesForm({
       setSubmitting(false);
       return;
     }
-    const form = { ...values, publish: submitPayload.publish, entries };
+    const form = {
+      ...omit(values, ['journal_number', 'journal_number_manually']),
+      ...(values.journal_number_manually) && ({
+        journal_number: values.journal_number,
+      }),
+      entries,
+      publish: submitPayload.publish,
+    };
 
     // Handle the request error.
     const handleError = ({
@@ -182,6 +192,7 @@ export default compose(
   withSettings(({ manualJournalsSettings, organizationSettings }) => ({
     journalNextNumber: parseInt(manualJournalsSettings?.nextNumber, 10),
     journalNumberPrefix: manualJournalsSettings?.numberPrefix,
+    journalAutoIncrement: manualJournalsSettings?.autoIncrement,
     baseCurrency: organizationSettings?.baseCurrency,
   })),
 )(MakeJournalEntriesForm);

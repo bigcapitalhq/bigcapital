@@ -1,6 +1,5 @@
 import { useQueryClient, useMutation } from 'react-query';
-import { useQueryTenant } from '../useQueryTenant';
-import { defaultTo } from 'lodash';
+import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import { transformPagination } from 'utils';
 import t from './types';
@@ -99,56 +98,46 @@ export function useCloseReceipt(props) {
   });
 }
 
+const transformReceipts = (res) => ({
+  receipts: res.data.sale_receipts,
+  pagination: transformPagination(res.data.pagination),
+  filterMeta: res.data.filter_meta,
+});
+
 /**
  * Retrieve sale invoices list with pagination meta.
  */
 export function useReceipts(query, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     ['SALE_RECEIPTS', query],
-    () => apiRequest.get('sales/receipts', { params: query }),
+    { method: 'get', url: 'sales/receipts', params: query },
     {
-      select: (response) => ({
-        receipts: response.data.sale_receipts,
-        pagination: transformPagination(response.data.pagination),
-        filterMeta: response.data.filter_meta,
-      }),
+      select: transformReceipts,
+      defaultData: {
+        receipts: [],
+        pagination: {
+          page: 1,
+          page_size: 12,
+          total: 0,
+        },
+        filterMeta: {},
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      receipts: [],
-      pagination: {
-        page: 1,
-        page_size: 12,
-        total: 0,
-      },
-      filterMeta: {},
-    }),
-  };
 }
 
 /**
  * Retrieve sale invoices list with pagination meta.
  */
 export function useReceipt(id, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     ['SALE_RECEIPT', id],
-    () => apiRequest.get(`sales/receipts/${id}`),
+    { method: 'get', url: `sales/receipts/${id}` },
     {
       select: (res) => res.data.sale_receipt,
+      defaultData: {},
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {}),
-  }
 }

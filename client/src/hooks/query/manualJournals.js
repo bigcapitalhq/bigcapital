@@ -1,6 +1,5 @@
-import { defaultTo } from 'lodash';
 import { useMutation, useQueryClient } from 'react-query';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 import t from './types';
@@ -108,46 +107,41 @@ export function usePublishJournal(props) {
   );
 }
 
+const transformJournals = (response) => ({
+  manualJournals: response.data.manual_journals,
+  pagination: transformPagination(response.data.pagination),
+  filterMeta: response.data.filter_meta
+});
+
 /**
  * Retrieve the manual journals with pagination meta.
  */
 export function useJournals(query, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     [t.MANUAL_JOURNALS, query],
-    () => apiRequest.get('manual-journals', { params: query }),
+    { method: 'get', url: 'manual-journals', params: query },
     {
-      select: (response) => ({
-        manualJournals: response.data.manual_journals,
-        pagination: transformPagination(response.data.pagination),
-        filterMeta: response.data.filter_meta
-      }),
+      select: transformJournals,
+      defaultData: {
+        manualJournals: [],
+        pagination: {},
+        filterMeta: {},
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      manualJournals: [],
-      pagination: {},
-      filterMeta: {},
-    }),
-  };
 }
 
 /**
  * Retrieve the manual journal details.
  */
 export function useJournal(id, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.MANUAL_JOURNAL, id],
-    () => apiRequest.get(`manual-journals/${id}`),
+    { method: 'get', url: `manual-journals/${id}` },
     {
       select: (res) => res.data.manual_journal,
+      defaultData: {},
       ...props,
     },
   );

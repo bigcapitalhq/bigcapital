@@ -4,7 +4,7 @@ import {
   compose,
 } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { persistStore, persistReducer } from 'redux-persist';
+import { persistStore, persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import monitorReducerEnhancer from 'store/enhancers/monitorReducer';
 import loggerMiddleware from 'middleware/logger';
@@ -44,7 +44,7 @@ const createStoreFactory = (initialState = {}) => {
   |--------------------------------------------------
   */
   const store = createReduxStore(
-    persistReducer(persistConfig, rootReducer),
+    rootReducer,
     initialState,
     composeEnhancers(applyMiddleware(...middleware), ...enhancers),
   );

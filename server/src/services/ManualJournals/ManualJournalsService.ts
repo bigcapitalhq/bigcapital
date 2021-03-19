@@ -21,6 +21,7 @@ import {
 import JournalPoster from 'services/Accounting/JournalPoster';
 import JournalCommands from 'services/Accounting/JournalCommands';
 import JournalPosterService from 'services/Sales/JournalPosterService';
+import AutoIncrementOrdersService from 'services/Sales/AutoIncrementOrdersService';
 import { ERRORS } from './constants';
 
 @Service()
@@ -39,6 +40,9 @@ export default class ManualJournalsService implements IManualJournalsService {
 
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
+
+  @Inject()
+  autoIncrementOrdersService: AutoIncrementOrdersService;
 
   /**
    * Validates the manual journal existance.
@@ -157,18 +161,18 @@ export default class ManualJournalsService implements IManualJournalsService {
    */
   private async validateManualJournalNoUnique(
     tenantId: number,
-    manualJournalDTO: IManualJournalDTO,
+    journalNumber: string,
     notId?: number
   ) {
     const { ManualJournal } = this.tenancy.models(tenantId);
-    const journalNumber = await ManualJournal.query()
-      .where('journal_number', manualJournalDTO.journalNumber)
+    const journals = await ManualJournal.query()
+      .where('journal_number', journalNumber)
       .onBuild((builder) => {
         if (notId) {
           builder.whereNot('id', notId);
         }
       });
-    if (journalNumber.length > 0) {
+    if (journals.length > 0) {
       throw new ServiceError(ERRORS.JOURNAL_NUMBER_EXISTS);
     }
   }
@@ -206,7 +210,7 @@ export default class ManualJournalsService implements IManualJournalsService {
     );
     // Throw error in case one of entries that has invalid contact type.
     if (entriesNoContact.length > 0) {
-      const indexes = entriesNoContact.map(e => e.index);
+      const indexes = entriesNoContact.map((e) => e.index);
 
       throw new ServiceError(ERRORS.ENTRIES_SHOULD_ASSIGN_WITH_CONTACT, '', {
         accountSlug: accountBySlug,
@@ -292,16 +296,56 @@ export default class ManualJournalsService implements IManualJournalsService {
   }
 
   /**
+   * Retrieve the next journal number.
+   */
+  getNextJournalNumber(tenantId: number): string {
+    return this.autoIncrementOrdersService.getNextTransactionNumber(
+      tenantId,
+      'manual_journals'
+    );
+  }
+
+  /**
+   * Increment the manual journal number.
+   * @param {number} tenantId
+   */
+  incrementNextJournalNumber(tenantId: number) {
+    return this.autoIncrementOrdersService.incrementSettingsNextNumber(
+      tenantId,
+      'manual_journals'
+    );
+  }
+
+  /**
+   * Validates the manual journal number require.
+   * @param {string} journalNumber
+   */
+  private validateJournalNoRequire(journalNumber: string) {
+    if (!journalNumber) {
+      throw new ServiceError(ERRORS.MANUAL_JOURNAL_NO_REQUIRED);
+    }
+  }
+
+  /**
    * Transform the new manual journal DTO to upsert graph operation.
    * @param {IManualJournalDTO} manualJournalDTO - Manual jorunal DTO.
    * @param {ISystemUser} authorizedUser
    */
   private transformNewDTOToModel(
+    tenantId,
     manualJournalDTO: IManualJournalDTO,
     authorizedUser: ISystemUser
   ) {
     const amount = sumBy(manualJournalDTO.entries, 'credit') || 0;
     const date = moment(manualJournalDTO.date).format('YYYY-MM-DD');
+
+    // Retrieve the next manual journal number.
+    const autoNextNumber = this.getNextJournalNumber(tenantId);
+
+    const journalNumber = manualJournalDTO.journalNumber || autoNextNumber;
+
+    // Validate manual journal number require.
+    this.validateJournalNoRequire(journalNumber);
 
     return {
       ...omit(manualJournalDTO, ['publish']),
@@ -310,6 +354,7 @@ export default class ManualJournalsService implements IManualJournalsService {
         : {}),
       amount,
       date,
+      journalNumber,
       userId: authorizedUser.id,
     };
   }
@@ -350,6 +395,12 @@ export default class ManualJournalsService implements IManualJournalsService {
   ): Promise<{ manualJournal: IManualJournal }> {
     const { ManualJournal } = this.tenancy.models(tenantId);
 
+    // Transformes the next DTO to model.
+    const manualJournalObj = this.transformNewDTOToModel(
+      tenantId,
+      manualJournalDTO,
+      authorizedUser
+    );
     // Validate the total credit should equals debit.
     this.valdiateCreditDebitTotalEquals(manualJournalDTO);
 
@@ -360,8 +411,10 @@ export default class ManualJournalsService implements IManualJournalsService {
     await this.validateAccountsExistance(tenantId, manualJournalDTO);
 
     // Validate manual journal uniquiness on the storage.
-    await this.validateManualJournalNoUnique(tenantId, manualJournalDTO);
-
+    await this.validateManualJournalNoUnique(
+      tenantId,
+      manualJournalObj.journalNumber
+    );
     // Validate accounts with contact type from the given config.
     await this.dynamicValidateAccountsWithContactType(
       tenantId,
@@ -371,10 +424,7 @@ export default class ManualJournalsService implements IManualJournalsService {
       '[manual_journal] trying to save manual journal to the storage.',
       { tenantId, manualJournalDTO }
     );
-    const manualJournalObj = this.transformNewDTOToModel(
-      manualJournalDTO,
-      authorizedUser
-    );
+
     const manualJournal = await ManualJournal.query().upsertGraph({
       ...manualJournalObj,
     });
@@ -415,6 +465,11 @@ export default class ManualJournalsService implements IManualJournalsService {
       tenantId,
       manualJournalId
     );
+    // Transform manual journal DTO to model.
+    const manualJournalObj = this.transformEditDTOToModel(
+      manualJournalDTO,
+      oldManualJournal
+    );
     // Validates the total credit and debit to be equals.
     this.valdiateCreditDebitTotalEquals(manualJournalDTO);
 
@@ -425,21 +480,19 @@ export default class ManualJournalsService implements IManualJournalsService {
     await this.validateAccountsExistance(tenantId, manualJournalDTO);
 
     // Validates the manual journal number uniquiness.
-    await this.validateManualJournalNoUnique(
-      tenantId,
-      manualJournalDTO,
-      manualJournalId
-    );
+    if (manualJournalDTO.journalNumber) {
+      await this.validateManualJournalNoUnique(
+        tenantId,
+        manualJournalDTO.journalNumber,
+        manualJournalId
+      );
+    }
     // Validate accounts with contact type from the given config.
     await this.dynamicValidateAccountsWithContactType(
       tenantId,
       manualJournalDTO.entries
     );
-    // Transform manual journal DTO to model.
-    const manualJournalObj = this.transformEditDTOToModel(
-      manualJournalDTO,
-      oldManualJournal
-    );
+    
     await ManualJournal.query().upsertGraph({
       ...manualJournalObj,
     });

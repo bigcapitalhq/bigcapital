@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { useQueryTenant } from '../useQueryTenant';
+import { useQueryTenant, useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import t from './types';
 
@@ -14,27 +14,20 @@ const commonInvalidateQueries = (query) => {
 
   // Invalidate financial reports.
   query.invalidateQueries(t.FINANCIAL_REPORT);
-}
+};
 
 /**
  * Retrieve accounts list.
  */
 export function useAccounts(query, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.ACCOUNTS, query],
-    () => apiRequest.get('accounts', { params: query }),
+    { method: 'get', url: 'accounts', params: query },
     {
       select: (response) => {
         return response.data.accounts;
       },
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: {
-          accounts: []
-        },
-      },
+      defaultData: [],
       ...props,
     },
   );
@@ -45,17 +38,13 @@ export function useAccounts(query, props) {
  * @param {number} id - Account id.
  */
 export function useAccount(id, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.ACCOUNT, id],
-    () => apiRequest.get(`accounts/${id}`).then(transformAccount),
+    { method: 'get', url: `accounts/${id}` },
     {
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: { account: {} }
-      },
-      ...props
+      select: transformAccount,
+      defaultData: {},
+      ...props,
     },
   );
 }
@@ -64,19 +53,12 @@ export function useAccount(id, props) {
  * Retrieve accounts types list.
  */
 export function useAccountsTypes(props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.ACCOUNTS_TYPES],
-    () => apiRequest.get('account_types'),
+    { method: 'get', url: 'account_types' },
     {
       select: (res) => res.data.account_types,
-      initialData: {
-        data: {
-          account_types: [],
-        },
-      },
-      initialDataUpdatedAt: 0,
+      defaultData: [],
       ...props,
     },
   );

@@ -23,6 +23,7 @@ export default class AutoIncrementOrdersService {
 
     // Settings service transaction number and prefix.
     const autoIncrement = settings.get({ group, key: 'auto_increment' }, false);
+
     const settingNo = settings.get({ group, key: 'next_number' }, '');
     const settingPrefix = settings.get({ group, key: 'number_prefix' }, '');
 
@@ -37,11 +38,12 @@ export default class AutoIncrementOrdersService {
    */
   async incrementSettingsNextNumber(tenantId: number, group: string) {
     const settings = this.tenancy.settings(tenantId);
+
     const settingNo = settings.get({ group, key: 'next_number' });
     const autoIncrement = settings.get({ group, key: 'auto_increment' });
 
     // Can't continue if the auto-increment of the service was disabled.
-    if (!autoIncrement) return;
+    if (!autoIncrement) { return; }
 
     settings.set(
       { group, key: 'next_number' },

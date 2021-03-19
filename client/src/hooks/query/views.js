@@ -1,46 +1,46 @@
-import { defaultTo } from 'lodash';
-import useApiRequest from '../useRequest';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 
+/**
+ * Retrieve the resource views.
+ * @param {string} resourceSlug - Resource slug.
+ */
 export function useResourceViews(resourceSlug) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     ['RESOURCE_VIEW', resourceSlug],
-    () => apiRequest.get(`views/resource/${resourceSlug}`)
-      .then((response) => response.data.views),
-  );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, []),
-  }
-}
- 
-export function useResourceColumns(resourceSlug) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
-    ['RESOURCE_COLUMNS', resourceSlug],
-    () => apiRequest.get(`resources/${resourceSlug}/columns`),
+    { method: 'get', url: `views/resource/${resourceSlug}` },
     {
-      initialData: [],
+      select: (response) => response.data.views,
+      defaultData: [],
     },
   );
 }
  
-export function useResourceFields(resourceSlug, props) {
-  const apiRequest = useApiRequest();
+/**
+ * Retrieve the resource columns.
+ * @param {string} resourceSlug - Resource slug.
+ */
+export function useResourceColumns(resourceSlug) {
+  return useRequestQuery(
+    ['RESOURCE_COLUMNS', resourceSlug],
+    { method: 'get', url: `resources/${resourceSlug}/columns` },
+    {
+      defaultData: [],
+    },
+  );
+}
 
-  const states = useQueryTenant(
+/**
+ * Retrieve the resource fields.
+ * @param {string} resourceSlug - Resource slug.
+ */
+export function useResourceFields(resourceSlug, props) {
+  return useRequestQuery(
     ['RESOURCE_FIELDS', resourceSlug], 
-    () => apiRequest.get(`resources/${resourceSlug}/fields`)
-      .then((res) => res.data.resource_fields),
+    { method: 'get', url: `resources/${resourceSlug}/fields` },
+    {
+      select: (res) => res.data.resource_fields,
+      defaultData: [],
+    },
     props
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, []),
-  }
 }

@@ -1,7 +1,7 @@
 import t from 'store/types';
 import { createReducer } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
+import storage from 'redux-persist/lib/storage';
 
 const initialState = {
   pageTitle: '',
@@ -17,6 +17,8 @@ const initialState = {
   requestsLoading: 0,
   backLink: false,
 };
+
+const STORAGE_KEY = 'bigcapital:dashboard';
 
 const reducerInstance = createReducer(initialState, {
   [t.CHANGE_DASHBOARD_PAGE_TITLE]: (state, action) => {
@@ -117,14 +119,10 @@ const reducerInstance = createReducer(initialState, {
 
 export default persistReducer(
   {
-    key: 'bigcapital:dashboard',
-    blacklist: [
-      'pageTitle',
-      'pageSubtitle',
-      'pageHint',
-      'preferencesPageTitle',
-      'topbarEditViewId',
-      'backLink',
+    key: STORAGE_KEY,
+    whitelist: [
+      'sidebarExpended',
+      'previousSidebarExpended',
     ],
     storage,
   },

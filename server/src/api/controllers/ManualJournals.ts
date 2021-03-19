@@ -104,7 +104,7 @@ export default class ManualJournalsController extends BaseController {
     return [
       check('date').exists().isISO8601(),
       check('journal_number')
-        .exists()
+        .optional()
         .isString()
         .trim()
         .escape()
@@ -468,6 +468,15 @@ export default class ManualJournalsController extends BaseController {
       if (error.errorType === 'MANUAL_JOURNAL_ALREADY_PUBLISHED') {
         return res.boom.badRequest('', {
           errors: [{ type: 'MANUAL_JOURNAL_ALREADY_PUBLISHED', code: 900 }],
+        });
+      }
+      if (error.errorType === 'MANUAL_JOURNAL_NO_REQUIRED') {
+        return res.boom.badRequest('', {
+          errors: [{
+            type: 'MANUAL_JOURNAL_NO_REQUIRED',
+            message: 'The manual journal number required.',
+            code: 1000
+          }],
         });
       }
     }

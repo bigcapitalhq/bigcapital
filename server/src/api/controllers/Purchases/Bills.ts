@@ -31,62 +31,54 @@ export default class BillsController extends BaseController {
     const router = Router();
 
     router.post(
-      '/', [
-        ...this.billValidationSchema,
-      ],
+      '/',
+      [...this.billValidationSchema],
       this.validationResult,
       asyncMiddleware(this.newBill.bind(this)),
-      this.handleServiceError,
+      this.handleServiceError
     );
     router.post(
-      '/:id/open', [
-      ...this.specificBillValidationSchema,
-    ],
+      '/:id/open',
+      [...this.specificBillValidationSchema],
       this.validationResult,
       asyncMiddleware(this.openBill.bind(this)),
-      this.handleServiceError,
+      this.handleServiceError
     );
     router.post(
-      '/:id', [
-        ...this.billEditValidationSchema,
-        ...this.specificBillValidationSchema,
-      ],
+      '/:id',
+      [...this.billEditValidationSchema, ...this.specificBillValidationSchema],
       this.validationResult,
       asyncMiddleware(this.editBill.bind(this)),
-      this.handleServiceError,
+      this.handleServiceError
     );
     router.get(
-      '/due', [
-        ...this.dueBillsListingValidationSchema
-      ],
+      '/due',
+      [...this.dueBillsListingValidationSchema],
       this.validationResult,
       asyncMiddleware(this.getDueBills.bind(this)),
-      this.handleServiceError,
-    )
-    router.get(
-      '/:id', [
-        ...this.specificBillValidationSchema,
-      ],
-      this.validationResult,
-      asyncMiddleware(this.getBill.bind(this)),
-      this.handleServiceError,
+      this.handleServiceError
     );
     router.get(
-      '/', [
-        ...this.billsListingValidationSchema,
-      ],
+      '/:id',
+      [...this.specificBillValidationSchema],
+      this.validationResult,
+      asyncMiddleware(this.getBill.bind(this)),
+      this.handleServiceError
+    );
+    router.get(
+      '/',
+      [...this.billsListingValidationSchema],
       this.validationResult,
       asyncMiddleware(this.billsList.bind(this)),
       this.handleServiceError,
-      this.dynamicListService.handlerErrorsToResponse,
+      this.dynamicListService.handlerErrorsToResponse
     );
     router.delete(
-      '/:id', [
-        ...this.specificBillValidationSchema
-      ],
+      '/:id',
+      [...this.specificBillValidationSchema],
       this.validationResult,
       asyncMiddleware(this.deleteBill.bind(this)),
-      this.handleServiceError,
+      this.handleServiceError
     );
     return router;
   }
@@ -110,8 +102,14 @@ export default class BillsController extends BaseController {
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.quantity').exists().isNumeric().toFloat(),
-      check('entries.*.discount').optional({ nullable: true }).isNumeric().toFloat(),
-      check('entries.*.description').optional({ nullable: true }).trim().escape(),
+      check('entries.*.discount')
+        .optional({ nullable: true })
+        .isNumeric()
+        .toFloat(),
+      check('entries.*.description')
+        .optional({ nullable: true })
+        .trim()
+        .escape(),
     ];
   }
 
@@ -135,8 +133,14 @@ export default class BillsController extends BaseController {
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.quantity').exists().isNumeric().toFloat(),
-      check('entries.*.discount').optional({ nullable: true }).isNumeric().toFloat(),
-      check('entries.*.description').optional({ nullable: true }).trim().escape(),
+      check('entries.*.discount')
+        .optional({ nullable: true })
+        .isNumeric()
+        .toFloat(),
+      check('entries.*.description')
+        .optional({ nullable: true })
+        .trim()
+        .escape(),
     ];
   }
 
@@ -167,7 +171,7 @@ export default class BillsController extends BaseController {
       query('payment_made_id').optional().trim().escape(),
     ];
   }
- 
+
   /**
    * Creates a new bill and records journal transactions.
    * @param {Request} req
@@ -179,7 +183,11 @@ export default class BillsController extends BaseController {
     const billDTO: IBillDTO = this.matchedBodyData(req);
 
     try {
-      const storedBill = await this.billsService.createBill(tenantId, billDTO, user);
+      const storedBill = await this.billsService.createBill(
+        tenantId,
+        billDTO,
+        user
+      );
 
       return res.status(200).send({
         id: storedBill.id,
@@ -293,7 +301,11 @@ export default class BillsController extends BaseController {
       filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
     }
     try {
-      const { bills, pagination, filterMeta } = await this.billsService.getBills(tenantId, filter);
+      const {
+        bills,
+        pagination,
+        filterMeta,
+      } = await this.billsService.getBills(tenantId, filter);
 
       return res.status(200).send({
         bills,
@@ -307,9 +319,9 @@ export default class BillsController extends BaseController {
 
   /**
    * Listing all due bills of the given vendor.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   public async getDueBills(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -325,12 +337,17 @@ export default class BillsController extends BaseController {
 
   /**
    * Handles service errors.
-   * @param {Error} error 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Error} error
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  handleServiceError(error: Error, req: Request, res: Response, next: NextFunction) {
+  handleServiceError(
+    error: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'BILL_NOT_FOUND') {
         return res.status(400).send({
@@ -349,8 +366,8 @@ export default class BillsController extends BaseController {
       }
       if (error.errorType === 'BILL_ITEMS_NOT_PURCHASABLE') {
         return res.status(400).send({
-          errors: [{ type: 'BILL_ITEMS_NOT_PURCHASABLE', code: 700 }]
-        })
+          errors: [{ type: 'BILL_ITEMS_NOT_PURCHASABLE', code: 700 }],
+        });
       }
       if (error.errorType === 'NOT_PURCHASE_ABLE_ITEMS') {
         return res.status(400).send({
@@ -377,7 +394,23 @@ export default class BillsController extends BaseController {
           errors: [{ type: 'BILL_ALREADY_OPEN', code: 1100 }],
         });
       }
+      if (error.errorType === 'contact_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [
+            { type: 'VENDOR_NOT_FOUND', message: 'Vendor not found.', code: 1200 },
+          ],
+        });
+      }
+      if (error.errorType === 'BILL_HAS_ASSOCIATED_PAYMENT_ENTRIES') {
+        return res.status(400).send({
+          errors: [{
+            type: 'BILL_HAS_ASSOCIATED_PAYMENT_ENTRIES',
+            message: 'Cannot delete bill that has associated payment transactions.',
+            code: 1200
+          }],
+        });
+      }
     }
-    next(error);    
+    next(error);
   }
 }

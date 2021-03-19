@@ -11,7 +11,13 @@ import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
-import { momentFormatter, tansformDateValue, saveInvoke } from 'utils';
+import {
+  momentFormatter,
+  compose,
+  inputIntent,
+  handleDateChange,
+  tansformDateValue,
+} from 'utils';
 import {
   Hint,
   FieldHint,
@@ -20,12 +26,10 @@ import {
   InputPrependButton,
   CurrencySelectList,
 } from 'components';
-
+import withSettings from 'containers/Settings/withSettings';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-
-import { compose, inputIntent, handleDateChange } from 'utils';
-
+import { useObserveJournalNoSettings } from './utils';
 /**
  * Make journal entries header.
  */
@@ -35,6 +39,11 @@ function MakeJournalEntriesHeader({
 
   // #withDialog
   openDialog,
+
+  // #withSettings
+  journalAutoIncrement,
+  journalNextNumber,
+  journalNumberPrefix,
 }) {
   const { currencies } = useMakeJournalFormContext();
 
@@ -43,10 +52,21 @@ function MakeJournalEntriesHeader({
     openDialog('journal-number-form', {});
   };
 
-  // Handle journal number field blur event.
-  const handleJournalNumberChanged = (event) => {
-    saveInvoke(onJournalNumberChanged, event.currentTarget.value);
+  // Handle journal number blur.
+  const handleJournalNoBlur = (form, field) => (event) => {
+    const newValue = event.target.value;
+
+    if (field.value !== newValue) {
+      openDialog('journal-number-form', {
+        initialFormValues: {
+          manualTransactionNo: newValue,
+          incrementMode: 'manual-transaction',
+        },
+      });
+    }
   };
+
+  useObserveJournalNoSettings(journalNumberPrefix, journalNextNumber);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -100,8 +120,9 @@ function MakeJournalEntriesHeader({
             <ControlGroup fill={true}>
               <InputGroup
                 fill={true}
-                {...field}
-                onBlur={handleJournalNumberChanged}
+                value={field.value}
+                asyncControl={true}
+                onBlur={handleJournalNoBlur(form, field)}
               />
               <InputPrependButton
                 buttonProps={{
@@ -183,4 +204,9 @@ function MakeJournalEntriesHeader({
 
 export default compose(
   withDialogActions,
+  withSettings(({ manualJournalsSettings }) => ({
+    journalAutoIncrement: manualJournalsSettings?.autoIncrement,
+    journalNextNumber: manualJournalsSettings?.nextNumber,
+    journalNumberPrefix: manualJournalsSettings?.numberPrefix,
+  })),
 )(MakeJournalEntriesHeader);

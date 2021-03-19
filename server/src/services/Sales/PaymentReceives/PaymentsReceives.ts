@@ -522,7 +522,7 @@ export default class PaymentReceiveService {
   public async deletePaymentReceive(
     tenantId: number,
     paymentReceiveId: number,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ) {
     const { PaymentReceive, PaymentReceiveEntry } = this.tenancy.models(
       tenantId
@@ -541,6 +541,7 @@ export default class PaymentReceiveService {
     // Deletes the payment receive transaction.
     await PaymentReceive.query().findById(paymentReceiveId).delete();
 
+    // Triggers `onPaymentReceiveDeleted` event.
     await this.eventDispatcher.dispatch(events.paymentReceive.onDeleted, {
       tenantId,
       paymentReceiveId,

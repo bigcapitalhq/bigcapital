@@ -244,17 +244,47 @@ export default class ItemsService implements IItemsService {
   }
 
   /**
-   * Validate item type in edit item mode, cannot change item inventory type.
+   * Validate edit item type from inventory to another type that not allowed.
    * @param {IItemDTO} itemDTO
    * @param {IItem} oldItem
    */
-  private validateEditItemInventoryType(itemDTO: IItemDTO, oldItem: IItem) {
+  private validateEditItemFromInventory(itemDTO: IItemDTO, oldItem: IItem) {
     if (
       itemDTO.type &&
       oldItem.type === 'inventory' &&
       itemDTO.type !== oldItem.type
     ) {
       throw new ServiceError(ERRORS.ITEM_CANNOT_CHANGE_INVENTORY_TYPE);
+    }
+  }
+
+  /**
+   * Validates edit item type from service/non-inventory to inventory.
+   * Should item has no any relations with accounts transactions.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} itemId - Item id.
+   */
+  private async validateEditItemTypeToInventory(
+    tenantId: number,
+    oldItem: IItem,
+    newItemDTO: IItemDTO
+  ) {
+    const { AccountTransaction } = this.tenancy.models(tenantId);
+
+    // We have no problem in case the item type not modified.
+    if (newItemDTO.type === oldItem.type || oldItem.type === 'inventory') {
+      return;
+    }
+    // Retrieve all transactions that associated to the given item id.
+    const itemTransactionsCount = await AccountTransaction.query()
+      .where('item_id', oldItem.id)
+      .count('item_id', { as: 'transactions' })
+      .first();
+
+    if (itemTransactionsCount.transactions > 0) {
+      throw new ServiceError(
+        ERRORS.TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS
+      );
     }
   }
 
@@ -319,7 +349,11 @@ export default class ItemsService implements IItemsService {
     // Validates the given item existance on the storage.
     const oldItem = await this.getItemOrThrowError(tenantId, itemId);
 
-    this.validateEditItemInventoryType(itemDTO, oldItem);
+    // Validate edit item type from inventory type.
+    this.validateEditItemFromInventory(itemDTO, oldItem);
+
+    // Validate edit item type to inventory type.
+    await this.validateEditItemTypeToInventory(tenantId, oldItem, itemDTO);
 
     // Transform the edit item DTO to model.
     const itemModel = this.transformEditItemDTOToModel(itemDTO, oldItem);
@@ -580,8 +614,7 @@ export default class ItemsService implements IItemsService {
     const { ItemEntry } = this.tenancy.models(tenantId);
 
     const ids = Array.isArray(itemId) ? itemId : [itemId];
-    const foundItemEntries = await ItemEntry.query()
-      .whereIn('item_id', ids);
+    const foundItemEntries = await ItemEntry.query().whereIn('item_id', ids);
 
     if (foundItemEntries.length > 0) {
       throw new ServiceError(

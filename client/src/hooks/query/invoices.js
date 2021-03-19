@@ -1,5 +1,5 @@
 import { useQueryClient, useMutation } from 'react-query';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 import t from './types';
@@ -90,32 +90,29 @@ export function useDeleteInvoice(props) {
   });
 }
 
+const transformInvoices = (res) => ({
+  invoices: res.data.sales_invoices,
+  pagination: transformPagination(res.data.pagination),
+  filterMeta: res.data.filter_meta,
+});
+
 /**
  * Retrieve sale invoices list with pagination meta.
  */
 export function useInvoices(query, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.SALE_INVOICES, query],
-    () => apiRequest.get('sales/invoices', { params: query }),
+    { method: 'get', url: 'sales/invoices', params: query },
     {
-      select: (res) => ({
-        invoices: res.data.sales_invoices,
-        pagination: transformPagination(res.data.pagination),
-        filterMeta: res.data.filter_meta,
-      }),
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: {
-          sales_invoices: [],
-          pagination: {
-            page: 1,
-            pageSize: 12,
-            total: 0,
-          },
-          filter_meta: {},
+      select: transformInvoices,
+      defaultData: {
+        invoices: [],
+        pagination: {
+          page: 1,
+          pageSize: 12,
+          total: 0,
         },
+        filterMeta: {},
       },
       ...props,
     },
@@ -149,19 +146,12 @@ export function useDeliverInvoice(props) {
  * @param {number} invoiceId - Invoice id.
  */
 export function useInvoice(invoiceId, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.SALE_INVOICE, invoiceId],
-    () => apiRequest.get(`sales/invoices/${invoiceId}`),
+    { method: 'get', url: `sales/invoices/${invoiceId}` },
     {
       select: (res) => res.data.sale_invoice,
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: {
-          sale_invoice: {}
-        },
-      },
+      defaultData: {},
       ...props,
     },
   );
@@ -172,22 +162,16 @@ export function useInvoice(invoiceId, props) {
  * @param {number} customerId - Customer id.
  */
 export function useDueInvoices(customerId, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.SALE_INVOICES, t.SALE_INVOICES_DUE, customerId],
-    () =>
-      apiRequest.get(`sales/invoices/payable`, {
-        params: { customer_id: customerId },
-      }),
+    {
+      method: 'get',
+      url: `sales/invoices/payable`,
+      params: { customer_id: customerId },
+    },
     {
       select: (res) => res.data.sales_invoices,
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: {
-          sales_invoices: [],
-        },
-      },
+      defaultData: [],
       ...props,
     },
   );

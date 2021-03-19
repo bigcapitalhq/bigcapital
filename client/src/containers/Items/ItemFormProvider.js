@@ -20,17 +20,18 @@ function ItemFormProvider({ itemId, ...props }) {
   const { state } = useLocation();
 
   const duplicateId = state?.action;
+
   // Fetches the accounts list.
-  const { isFetching: isAccountsLoading, data: accounts } = useAccounts();
+  const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
 
   // Fetches the items categories list.
   const {
-    isFetching: isItemsCategoriesLoading,
+    isLoading: isItemsCategoriesLoading,
     data: { itemsCategories },
   } = useItemsCategories();
 
   // Fetches the given item details.
-  const { isFetching: isItemLoading, data: item } = useItem(
+  const { isLoading: isItemLoading, data: item } = useItem(
     itemId || duplicateId,
     {
       enabled: !!itemId || !!duplicateId,

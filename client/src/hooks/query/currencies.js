@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import t from './types';
 
@@ -62,14 +62,12 @@ export function useDeleteCurrency(props) {
  * Retrieve the currencies list.
  */
 export function useCurrencies(props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.CURRENCIES],
-    () => apiRequest.get('currencies').then((res) => res.data.currencies),
+    { method: 'get', url: 'currencies' },
     {
-      initialDataUpdatedAt: 0,
-      initialData: [],
+      select: (res) => res.data.currencies,
+      defaultData: [],
       ...props
     },
   );

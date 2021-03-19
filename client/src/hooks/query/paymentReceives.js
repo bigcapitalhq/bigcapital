@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { useQueryTenant } from '../useQueryTenant';
-import { defaultTo } from 'lodash';
+import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import { transformPagination, saveInvoke } from 'utils';
 import t from './types';
@@ -27,37 +26,30 @@ const commonInvalidateQueries = (client) => {
   client.invalidateQueries(t.CUSTOMER);
 };
 
+// Transform payment receives.
+const transformPaymentReceives = (res) => ({
+  paymentReceives: res.data.payment_receives,
+  pagination: transformPagination(res.data.pagination),
+  filterMeta: res.data.filter_meta,  
+});
+
 /**
  * Retrieve accounts list.
  */
 export function usePaymentReceives(query, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     [t.PAYMENT_RECEIVES, query],
-    () => apiRequest.get('sales/payment_receives', { params: query }),
+    { method: 'get', url: 'sales/payment_receives', params: query },
     {
-      select: (res) => ({
-        paymentReceives: res.data.payment_receives,
-        pagination: transformPagination(res.data.pagination),
-        filterMeta: res.data.filter_meta,
-      }),
+      select: transformPaymentReceives,
+      defaultData: {
+        paymentReceives: [],
+        pagination: { page: 1, pageSize: 12, total: 0 },
+        filterMeta: {},
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      paymentReceives: [],
-      pagination: {
-        page: 1,
-        pageSize: 12,
-        total: 0,
-      },
-      filterMeta: {},
-    }),
-  };
 }
 
 /**
@@ -136,23 +128,15 @@ export function useDeletePaymentReceive(props) {
  * @param {number} id - Payment receive.
  */
 export function usePaymentReceive(id, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     [t.PAYMENT_RECEIVE, id],
-    () => apiRequest.get(`sales/payment_receives/${id}`),
+    { method: 'get', url: `sales/payment_receives/${id}` },
     {
-      select: (res) => ({
-        paymentReceive: res.data.payment_receive,
-      }),
+      select: (res) => res.data.payment_receive,
+      defaultData: {},
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {}),
-  };
 }
 
 /**
@@ -160,25 +144,19 @@ export function usePaymentReceive(id, props) {
  * @param {number} id - Payment receive id.
  */
 export function usePaymentReceiveEditPage(id, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     [t.PAYMENT_RECEIVE_EDIT_PAGE, id],
-    () => apiRequest.get(`sales/payment_receives/${id}/edit-page`),
+    { method: 'get', url: `sales/payment_receives/${id}/edit-page` },
     {
       select: (res) => ({
         paymentReceive: res.data.payment_receive,
         entries: res.data.entries,
       }),
+      defaultData: {
+        paymentReceive: {},
+        entries: [],
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      paymentReceive: {},
-      entries: [],
-    }),
-  };
 }

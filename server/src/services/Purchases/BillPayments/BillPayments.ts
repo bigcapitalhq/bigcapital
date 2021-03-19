@@ -172,6 +172,15 @@ export default class BillPaymentsService {
     if (notFoundBillsIds.length > 0) {
       throw new ServiceError(ERRORS.BILL_ENTRIES_IDS_NOT_FOUND);
     }
+
+    // Validate the not opened bills.
+    const notOpenedBills = storedBills.filter((bill) => !bill.openedAt);
+
+    if (notOpenedBills.length > 0) {
+      throw new ServiceError(ERRORS.BILLS_NOT_OPENED_YET, null, {
+        notOpenedBills
+      });
+    }
   }
 
   /**

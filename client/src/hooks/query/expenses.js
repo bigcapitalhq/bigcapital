@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
 import useApiRequest from '../useRequest';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination } from 'utils';
 import t from './types';
 
@@ -23,28 +23,29 @@ const commonInvalidateQueries = (queryClient) => {
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 };
 
+const transformExpenses = (response) => ({
+  expenses: response.data.expenses,
+  pagination: transformPagination(response.data.pagination),
+  filterMeta: response.data.filter_meta,
+});
+
 /**
  * Retrieve the expenses list.
  */
 export function useExpenses(query, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.EXPENSES, query],
-    () => apiRequest.get(`expenses`, { params: { ...query } }),
     {
-      select: (response) => ({
-        expenses: response.data.expenses,
-        pagination: transformPagination(response.data.pagination),
-        filterMeta: response.data.filter_meta,
-      }),
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: {
-          expenses: [],
-          pagination: defaultPagination,
-          filter_meta: {},
-        },
+      method: 'get',
+      url: `expenses`,
+      params: { ...query }
+    },
+    {
+      select: transformExpenses,
+      defaultData: {
+        expenses: [],
+        pagination: defaultPagination,
+        filterMeta: {},
       },
       ...props,
     },
@@ -56,19 +57,15 @@ export function useExpenses(query, props) {
  * @param {number} id - Expense id.
  */
 export function useExpense(id, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.EXPENSE, id],
-    () => apiRequest.get(`expenses/${id}`),
+    {
+      method: 'get',
+      url: `expenses/${id}`
+    },
     {
       select: (res) => res.data.expense,
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: {
-          expense: {},
-        }
-      },
+      defaultData: {},
       ...props,
     },
   );

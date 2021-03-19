@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import { useSetSettings } from 'hooks/state';
 import t from './types';
@@ -21,20 +21,14 @@ export function useSaveSettings(props) {
 }
 
 function useSettingsQuery(key, query, props) {
-  const apiRequest = useApiRequest();
   const setSettings = useSetSettings();
 
-  const state = useQueryTenant(
+  const state = useRequestQuery(
     key,
-    () => apiRequest.get('settings', { params: query }),
+    { method: 'get', url: 'settings', params: query },
     {
       select: (res) => res.data.settings,
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: {
-          settings: [],
-        },
-      },
+      defaultData: [],
       ...props,
     },
   );

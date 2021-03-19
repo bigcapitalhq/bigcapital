@@ -61,6 +61,8 @@ export default function useApiRequest() {
   }, [token, organizationId, setGlobalErrors, setLogout]);
 
   return {
+    http,
+
     get(resource, params) {
       return http.get(`/api/${resource}`, params);
     },

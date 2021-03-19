@@ -415,6 +415,15 @@ export default class BillsPayments extends BaseController {
           errors: [{ type: 'PAYMENT_NUMBER_SHOULD_NOT_MODIFY', code: 1100 }],
         });
       }
+      if (error.errorType === 'BILLS_NOT_OPENED_YET') {
+        return res.status(400).send({
+          errors: [{
+            type: 'BILLS_NOT_OPENED_YET',
+            message: 'The given bills are not opened yet.',
+            code: 1200,
+          }],
+        });
+      }
     }
     next(error);
   }

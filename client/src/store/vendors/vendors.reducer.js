@@ -1,4 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import {
   createTableStateReducers,
 } from 'store/tableState.reducer';
@@ -9,6 +11,17 @@ const initialState = {
     pageIndex: 0,
   },
 };
-export default createReducer(initialState, {
+const reducerInstance = createReducer(initialState, {
   ...createTableStateReducers('VENDORS'),
 });
+
+const STORAGE_KEY = 'bigcapital:vendors';
+
+export default persistReducer(
+  {
+    key: STORAGE_KEY,
+    whitelist: ['tableState'],
+    storage,
+  },
+  reducerInstance,
+);

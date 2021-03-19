@@ -34,19 +34,19 @@ export default  class SettingsController extends BaseController{
   /**
    * Save settings validation schema.
    */
-  get saveSettingsValidationSchema() {
+  private get saveSettingsValidationSchema() {
     return [
       body('options').isArray({ min: 1 }),
-      body('options.*.key').exists().trim().escape().isLength({ min: 1 }),
-      body('options.*.value').exists().trim().escape().isLength({ min: 1 }),
-      body('options.*.group').exists().trim().escape().isLength({ min: 1 }),
+      body('options.*.key').exists().trim().isLength({ min: 1 }),
+      body('options.*.value').exists().trim().isLength({ min: 1 }),
+      body('options.*.group').exists().trim().isLength({ min: 1 }),
     ];
   }
 
   /**
    * Retrieve the application options from the storage.
    */
-  get getSettingsSchema() {
+   private get getSettingsSchema() {
     return [
       query('key').optional().trim().escape(),
       query('group').optional().trim().escape(),
@@ -54,32 +54,11 @@ export default  class SettingsController extends BaseController{
   }
 
   /**
-   * Observes application configuration option, whether all options configured
-   * sets `app_configured` option.
-   * @param {Setting} settings 
-   */
-  observeAppConfigsComplete(settings) {
-    if (!settings.get('app_configured', false)) {
-      const definedOptions = getDefinedOptions();
-
-      const isNotConfigured = definedOptions.some((option) => {
-        const isDefined = isDefinedOptionConfigurable(option.key, option.group);
-        const hasStoredOption = settings.get({ key: option.key, group: option.group });
-
-        return (isDefined && !hasStoredOption);
-      });
-      if (!isNotConfigured) {
-        settings.set('app_configured', true);
-      }
-    }
-  }
-
-  /**
    * Saves the given options to the storage.
    * @param {Request} req - 
    * @param {Response} res - 
    */
-  async saveSettings(req: Request, res: Response) {
+  public async saveSettings(req: Request, res: Response, next) {
     const { Option } = req.models;
     const optionsDTO: IOptionsDTO = this.matchedBodyData(req);
     const { settings } = req;
@@ -100,15 +79,17 @@ export default  class SettingsController extends BaseController{
     optionsDTO.options.forEach((option: IOptionDTO) => {
       settings.set({ ...option });
     });
-    this.observeAppConfigsComplete(settings);
+    try {
+      await settings.save();
 
-    await settings.save();
-
-    return res.status(200).send({ 
-      type: 'success',
-      code: 'OPTIONS.SAVED.SUCCESSFULLY',
-      message: 'Options have been saved successfully.',
-    });
+      return res.status(200).send({ 
+        type: 'success',
+        code: 'OPTIONS.SAVED.SUCCESSFULLY',
+        message: 'Options have been saved successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -116,7 +97,7 @@ export default  class SettingsController extends BaseController{
    * @param {Request} req 
    * @param {Response} res 
    */
-  getSettings(req: Request, res: Response) {
+  public getSettings(req: Request, res: Response) {
     const { settings } = req;
     const allSettings = settings.all();
 

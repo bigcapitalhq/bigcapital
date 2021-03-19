@@ -1,6 +1,5 @@
 import { useQueryClient, useMutation } from 'react-query';
-import { useQueryTenant } from '../useQueryTenant';
-import { defaultTo } from 'lodash';
+import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 import t from './types';
@@ -63,20 +62,17 @@ export function useEditBill(props) {
 /**
  * Marks the given bill as open.
  */
- export function useOpenBill(props) {
+export function useOpenBill(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.post(`purchases/bills/${id}/open`),
-    {
-      onSuccess: (res, id) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation((id) => apiRequest.post(`purchases/bills/${id}/open`), {
+    onSuccess: (res, id) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -95,38 +91,37 @@ export function useDeleteBill(props) {
   });
 }
 
+const transformBillsResponse = (response) => ({  
+  bills: response.data.bills,
+  pagination: transformPagination(response.data.pagination),
+  filterMeta: response.data.filter_meta,
+});
+
 /**
  * Retrieve sale invoices list with pagination meta.
  */
 export function useBills(query, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     [t.BILLS, query],
-    () =>
-      apiRequest.get('purchases/bills', { params: query }),
     {
-      select: (response) => ({
-        bills: response.data.bills,
-        pagination: transformPagination(response.data.pagination),
-        filterMeta: response.data.filter_meta,
-      }),
+      method: 'get',
+      url: 'purchases/bills',
+      params: query,
+    },
+    {
+      select: transformBillsResponse,
+      defaultData: {
+        bills: [],
+        pagination: {
+          page: 1,
+          page_size: 12,
+          total: 0,
+        },
+        filterMeta: {},
+      },
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      bills: [],
-      pagination: {
-        page: 1,
-        page_size: 12,
-        total: 0,
-      },
-      filterMeta: {},
-    })
-  }
 }
 
 /**
@@ -134,44 +129,33 @@ export function useBills(query, props) {
  * @param {number} id - Bill id.
  */
 export function useBill(id, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+  return useRequestQuery(
     [t.BILL, id],
-    () => apiRequest.get(`/purchases/bills/${id}`),
+    { method: 'get', url: `/purchases/bills/${id}`, },
     {
       select: (res) => res.data.bill,
+      defaultData: {},
       ...props,
-    }
+    },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {}),
-  }
 }
 
 /**
  * Retrieve the due bills of the given vendor id.
  * @param {number} vendorId -
  */
- export function useDueBills(vendorId, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
+export function useDueBills(vendorId, props) {
+  return useRequestQuery(
     [t.BILLS, t.BILLS_DUE, vendorId],
-    () =>
-      apiRequest.get(`purchases/bills/due`, {
-        params: { vendor_id: vendorId },
-      }),
+    {
+      method: 'get',
+      url: 'purchases/bills/due',
+      params: { vendor_id: vendorId },
+    },
     {
       select: (res) => res.data.bills,
+      defaultData: [],
       ...props,
     },
   );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, []),
-  };
 }

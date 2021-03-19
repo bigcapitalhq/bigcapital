@@ -1,11 +1,17 @@
 import React from 'react';
 import { Intent } from '@blueprintjs/core';
-import { sumBy, setWith, toSafeInteger, get } from 'lodash';
+import { sumBy, setWith, toSafeInteger, get, values } from 'lodash';
 import moment from 'moment';
 
-import { updateTableRow, repeatValue, transformToForm } from 'utils';
+import {
+  transactionNumber,
+  updateTableRow,
+  repeatValue,
+  transformToForm,
+} from 'utils';
 import { AppToaster } from 'components';
 import { formatMessage } from 'services/intl';
+import { useFormikContext } from 'formik';
 
 const ERROR = {
   JOURNAL_NUMBER_ALREADY_EXISTS: 'JOURNAL.NUMBER.ALREADY.EXISTS',
@@ -152,4 +158,13 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
       intent: Intent.DANGER,
     });
   }
+};
+
+export const useObserveJournalNoSettings = (prefix, nextNumber) => {
+  const { setFieldValue } = useFormikContext();
+
+  React.useEffect(() => {
+    const journalNo = transactionNumber(prefix, nextNumber);  
+    setFieldValue('journal_number', journalNo);
+  }, [setFieldValue, prefix, nextNumber]);
 };

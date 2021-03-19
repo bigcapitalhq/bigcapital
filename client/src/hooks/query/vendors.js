@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import t from './types';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
-import { useQueryTenant } from '../useQueryTenant';
+import { useRequestQuery } from '../useQueryRequest';
 
 // Common invalidate queries.
 const commonInvalidateQueries = (queryClient) => {
@@ -17,28 +17,26 @@ const commonInvalidateQueries = (queryClient) => {
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 };
 
+// Transformes vendors response.
+const transformVendorsResponse = (res) => ({
+  vendors: res.data.vendors,
+  pagination: transformPagination(res.data.pagination),
+  filterMeta: res.data.filter_meta,
+});
+
 /**
  * Retrieve vendors list.
  */
 export function useVendors(query, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.VENDORS, query],
-    () => apiRequest.get(`vendors`, { params: query }),
+    { method: 'get', url: `vendors`, params: query },
     {
-      select: (res) => ({
-        vendors: res.data.vendors,
-        pagination: transformPagination(res.data.pagination),
-        filterMeta: res.data.filter_meta,
-      }),
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: {
-          vendors: [],
-          pagination: {},
-          filter_meta: {},
-        },
+      select: transformVendorsResponse,
+      defaultData: {
+        vendors: [],
+        pagination: {},
+        filterMeta: {},
       },
       ...props,
     },
@@ -106,14 +104,13 @@ export function useCreateVendor(props) {
  * Retrieve vendor details.
  */
 export function useVendor(id, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant([t.VENDOR, id], () => apiRequest.get(`vendors/${id}`), {
-    select: (res) => res.data.vendor,
-    initialDataUpdatedAt: 0,
-    initialData: {
-      data: { vendor: {} },
+  return useRequestQuery(
+    [t.VENDOR, id],
+    { method: 'get', url: `vendors/${id}` },
+    {
+      select: (res) => res.data.vendor,
+      defaultData: {},
+      ...props,
     },
-    ...props,
-  });
+  );
 }

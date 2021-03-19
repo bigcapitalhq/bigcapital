@@ -140,6 +140,26 @@ export default class BillsService extends SalesInvoicesCost {
   }
 
   /**
+   * Validate the bill has no payment entries.
+   * @param {number} tenantId 
+   * @param {number} billId - Bill id.
+   */
+  private async validateBillHasNoEntries(
+    tenantId,
+    billId: number,
+  ) {
+    const { BillPaymentEntry } = this.tenancy.models(tenantId);
+
+    // Retireve the bill associate payment made entries.
+    const entries = await BillPaymentEntry.query().where('bill_id', billId);
+
+    if (entries.length > 0) {
+      throw new ServiceError(ERRORS.BILL_HAS_ASSOCIATED_PAYMENT_ENTRIES);
+    }
+    return entries;
+  }
+
+  /**
    * Validate the bill number require.
    * @param {string} billNo -
    */
@@ -353,6 +373,9 @@ export default class BillsService extends SalesInvoicesCost {
 
     // Retrieve the given bill or throw not found error.
     const oldBill = await this.getBillOrThrowError(tenantId, billId);
+
+    // Validate the purchase bill has no assocaited payments transactions.
+    await this.validateBillHasNoEntries(tenantId, billId);
 
     // Delete all associated bill entries.
     const deleteBillEntriesOper = ItemEntry.query()

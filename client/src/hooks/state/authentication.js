@@ -1,7 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import { isAuthenticated } from 'store/authentication/authentication.reducer';
-import { setLogin, setLogout } from 'store/authentication/authentication.actions';
+import {
+  setLogin,
+  setLogout,
+  setStoreReset,
+} from 'store/authentication/authentication.actions';
+import { purgePersistedState } from 'store/createStore';
 import { useQueryClient } from 'react-query';
 
 export const useAuthActions = () => {
@@ -11,9 +16,8 @@ export const useAuthActions = () => {
   return {
     setLogin: useCallback((login) => dispatch(setLogin(login)), [dispatch]),
     setLogout: useCallback(() => {
-
-      // Logout action.
-      dispatch(setLogout());
+      // Resets store state.
+      dispatch(setStoreReset());
 
       // Remove all cached queries.
       queryClient.removeQueries();
