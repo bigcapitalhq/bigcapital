@@ -37,4 +37,17 @@ export const handleDeleteErrors = (errors) => {
       intent: Intent.DANGER,
     });
   }
+  if (
+    errors.find(
+      (error) => error.type === 'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS',
+    )
+  ) {
+    AppToaster.show({
+      message: formatMessage({
+        id:
+          'cannot_change_item_type_to_inventory_with_item_has_associated_transactions',
+      }),
+      intent: Intent.DANGER,
+    });
+  }
 };
