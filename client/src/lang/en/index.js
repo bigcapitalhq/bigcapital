@@ -1015,4 +1015,8 @@ export default {
   deposit_customer_account: 'Deposit customer account',
   withdrawal_customer_account: 'Withdrawal customer account',
   vendor_advance_deposit: 'Vendor advance deposit',
+  cannot_delete_bill_that_has_payment_transactions:
+    'Cannot delete bill that has associated payment transactions.',
+  cannot_change_item_type_to_inventory_with_item_has_associated_transactions:
+    'Cannot change item type to inventory with item has associated transactions.',
 };

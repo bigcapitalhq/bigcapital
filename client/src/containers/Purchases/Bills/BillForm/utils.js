@@ -1,4 +1,7 @@
 import moment from 'moment';
+import { formatMessage } from 'services/intl';
+import { Intent } from '@blueprintjs/core';
+import { AppToaster } from 'components';
 import { transformToForm, repeatValue } from 'utils';
 
 export const MIN_LINES_NUMBER = 4;
@@ -36,4 +39,18 @@ export const transformToEditForm = (bill) => {
       ),
     ],
   };
-}
+};
+
+// handle delete errors.
+export const handleDeleteErrors = (errors) => {
+  if (
+    errors.find((error) => error.type === 'BILL_HAS_ASSOCIATED_PAYMENT_ENTRIES')
+  ) {
+    AppToaster.show({
+      message: formatMessage({
+        id: 'cannot_delete_bill_that_has_payment_transactions',
+      }),
+      intent: Intent.DANGER,
+    });
+  }
+};
