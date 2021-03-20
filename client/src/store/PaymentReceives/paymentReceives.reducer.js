@@ -1,9 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { persistReducer } from 'redux-persist';
+import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import {
   createTableStateReducers,
 } from 'store/tableState.reducer';
+import t from 'store/types';
 
 const initialState = {
   tableState: {
@@ -12,17 +13,23 @@ const initialState = {
   },
 };
 
-const reducerInstance = createReducer(initialState, {
-  ...createTableStateReducers('PAYMENT_RECEIVES'),
-});
-
 const STORAGE_KEY = 'bigcapital:paymentReceives';
 
-export default persistReducer(
-  {
-    key: STORAGE_KEY,
-    whitelist: ['tableState'],
-    storage,
+const CONFIG = {
+  key: STORAGE_KEY,
+  whitelist: ['tableState'],
+  storage,
+};
+
+const reducerInstance = createReducer(initialState, {
+  ...createTableStateReducers('PAYMENT_RECEIVES'),
+
+  [t.RESET]: () => {
+    purgeStoredState(CONFIG);
   },
+});
+
+export default persistReducer(
+  CONFIG,
   reducerInstance,
 );

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { useQueryTenant, useRequestQuery } from '../useQueryRequest';
+import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import t from './types';
 
@@ -24,9 +24,7 @@ export function useAccounts(query, props) {
     [t.ACCOUNTS, query],
     { method: 'get', url: 'accounts', params: query },
     {
-      select: (response) => {
-        return response.data.accounts;
-      },
+      select: (res) => res.data.accounts,
       defaultData: [],
       ...props,
     },

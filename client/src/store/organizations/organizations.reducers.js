@@ -14,7 +14,10 @@ const reducer = createReducer(initialState, {
     const _dataByOrganizationId = {};
 
     organizations.forEach((organization) => {
-      _data[organization.id] = organization;
+      _data[organization.id] = {
+        ...state.data[organization.id],
+        ...organization,
+      };
       _dataByOrganizationId[organization.organization_id] = organization.id;
     });
     state.data = _data;

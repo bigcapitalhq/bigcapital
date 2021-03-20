@@ -7,16 +7,14 @@ import withDialogRedux from 'components/DialogReduxConnect';
 import { compose } from 'utils';
 
 // Lazy loading the content.
-const PaymentViaLicenseDialogContent = lazy(() => import('./PaymentViaVoucherDialogContent'));
+const PaymentViaLicenseDialogContent = lazy(() =>
+  import('./PaymentViaVoucherDialogContent'),
+);
 
 /**
  * Payment via license dialog.
  */
-function PaymentViaLicenseDialog({
-  dialogName,
-  payload,
-  isOpen
-}) {
+function PaymentViaLicenseDialog({ dialogName, payload, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -33,9 +31,7 @@ function PaymentViaLicenseDialog({
         />
       </DialogSuspense>
     </Dialog>
-  )
+  );
 }
 
-export default compose(
-  withDialogRedux(),
-)(PaymentViaLicenseDialog);
+export default compose(withDialogRedux())(PaymentViaLicenseDialog);

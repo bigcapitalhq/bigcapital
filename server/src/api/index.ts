@@ -56,6 +56,7 @@ export default () => {
   app.use('/organization', Container.get(Organization).router());
   app.use('/ping', Container.get(Ping).router());
   app.use('/setup', Container.get(Setup).router());
+ 
   // - Dashboard routes.
   // ---------------------------
   const dashboard = Router();

@@ -63,7 +63,6 @@
     "postcss-preset-env": "6.7.0",
     "postcss-safe-parser": "4.0.1",
     "react": "^16.12.0",
-    "react-albus": "^2.0.0",
     "react-app-polyfill": "^1.0.6",
     "react-body-classname": "^1.3.1",
     "react-content-loader": "^6.0.1",

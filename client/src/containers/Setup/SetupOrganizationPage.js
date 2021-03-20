@@ -3,49 +3,33 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 import moment from 'moment';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { snakeCase } from 'lodash';
-
-import { withWizard } from 'react-albus';
-import { useQuery } from 'react-query';
 
 import 'style/pages/Setup/Organization.scss';
 
 import SetupOrganizationForm from './SetupOrganizationForm';
 
+import { useOrganizationSetup } from 'hooks/query';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withSettings from 'containers/Settings/withSettings';
 import withOrganizationActions from 'containers/Organization/withOrganizationActions';
 
 import {
   compose,
-  transformToForm,
-  optionsMapToArray,
+  transfromToSnakeCase,
 } from 'utils';
 
 /**
  * Setup organization form.
  */
 function SetupOrganizationPage({
-  // #withSettingsActions
-  requestSubmitOptions,
-  requestFetchOptions,
-
-  // #withOrganizationActions
-  requestOrganizationSeed,
-
-  // #withSettings
-  organizationSettings,
-
   wizard,
   setOrganizationSetupCompleted,
 }) {
   const { formatMessage } = useIntl();
-
-  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
+  const { mutateAsync: organizationSetupMutate } = useOrganizationSetup();
 
   // Validation schema.
   const validationSchema = Yup.object().shape({
-    name: Yup.string()
+    organization_name: Yup.string()
       .required()
       .label(formatMessage({ id: 'organization_name_' })),
     financialDateStart: Yup.date()
@@ -67,35 +51,21 @@ function SetupOrganizationPage({
 
   // Initial values.
   const defaultValues = {
-    name: '',
+    organization_name: '',
     financialDateStart: moment(new Date()).format('YYYY-MM-DD'),
     baseCurrency: '',
-    language: '',
+    language: 'en',
     fiscalYear: '',
     timeZone: '',
-    ...organizationSettings,
   };
 
   const initialValues = {
     ...defaultValues,
-
-    /**
-     * We only care about the fields in the form. Previously unfilled optional
-     * values such as `notes` come back from the API as null, so remove those
-     * as well.
-     */
-    ...transformToForm(organizationSettings, defaultValues),
   };
 
   // Handle the form submit.
   const handleSubmit = (values, { setSubmitting, setErrors }) => {
-    const options = optionsMapToArray(values).map((option) => {
-      return { ...option, key: snakeCase(option.key), group: 'organization' };
-    });
-    requestSubmitOptions({ options })
-      .then(() => {
-        return requestOrganizationSeed();
-      })
+    organizationSetupMutate({ ...transfromToSnakeCase(values) })
       .then(() => {
         return setOrganizationSetupCompleted(true);
       })
@@ -132,8 +102,4 @@ function SetupOrganizationPage({
 export default compose(
   withSettingsActions,
   withOrganizationActions,
-  withWizard,
-  withSettings(({ organizationSettings }) => ({
-    organizationSettings,
-  })),
 )(SetupOrganizationPage);

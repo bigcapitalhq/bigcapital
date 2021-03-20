@@ -1,9 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { persistReducer } from 'redux-persist';
+import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import {
-  createTableStateReducers,
-} from 'store/tableState.reducer';
+import { createTableStateReducers } from 'store/tableState.reducer';
+import t from 'store/types';
 
 const initialState = {
   tableState: {
@@ -11,17 +10,21 @@ const initialState = {
     pageIndex: 0,
   },
 };
-const reducerInstance = createReducer(initialState, {
-  ...createTableStateReducers('VENDORS'),
-});
 
 const STORAGE_KEY = 'bigcapital:vendors';
 
-export default persistReducer(
-  {
-    key: STORAGE_KEY,
-    whitelist: ['tableState'],
-    storage,
-  },
-  reducerInstance,
-);
+const CONFIG = {
+  key: STORAGE_KEY,
+  whitelist: ['tableState'],
+  storage,
+};
+
+const reducerInstance = createReducer(initialState, {
+  ...createTableStateReducers('VENDORS'),
+
+  [t.RESET]: () => {
+    purgeStoredState(CONFIG);
+  }
+});
+
+export default persistReducer(CONFIG, reducerInstance);

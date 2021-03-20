@@ -94,6 +94,10 @@ const ORGANIZATIONS = {
   ORGANIZATION_CURRENT: 'ORGANIZATION_CURRENT',
 };
 
+const SUBSCRIPTIONS = {
+  SUBSCRIPTIONS: 'SUBSCRIPTIONS',
+}
+
 export default {
   ...ACCOUNTS,
   ...BILLS,
@@ -111,4 +115,5 @@ export default {
   ...USERS,
   ...SETTING,
   ...ORGANIZATIONS,
+  ...SUBSCRIPTIONS
 };

@@ -14,7 +14,7 @@ import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { FormattedMessage as T } from 'react-intl';
 
-import { Col, Row, ListSelect } from 'components';
+import { FieldRequiredHint, Col, Row, ListSelect } from 'components';
 import {
   momentFormatter,
   tansformDateValue,
@@ -38,9 +38,10 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       </h3>
 
       {/* ---------- Organization name ----------  */}
-      <FastField name={'name'}>
+      <FastField name={'organization_name'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
+            labelInfo={<FieldRequiredHint />}
             label={<T id={'legal_organization_name'} />}
             className={'form-group--name'}
             intent={inputIntent({ error, touched })}
@@ -55,6 +56,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       <FastField name={'financialDateStart'}>
         {({ form: { setFieldValue }, field: { value }, meta: { error, touched } }) => (
           <FormGroup
+            labelInfo={<FieldRequiredHint />}
             label={<T id={'financial_starting_date'} />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="financialDateStart" />}
@@ -82,6 +84,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
               meta: { error, touched },
             }) => (
               <FormGroup
+                labelInfo={<FieldRequiredHint />}
                 label={<T id={'base_currency'} />}
                 className={classNames(
                   'form-group--base-currency',
@@ -137,6 +140,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
                   selectedItemProp={'value'}
                   defaultText={<T id={'select_language'} />}
                   popoverProps={{ minimal: true }}
+                  filterable={false}
                 />
               </FormGroup>
             )}
@@ -147,6 +151,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       <FastField name={'fiscalYear'}>
         {({ form: { setFieldValue }, field: { value }, meta: { error, touched } }) => (
           <FormGroup
+            labelInfo={<FieldRequiredHint />}
             label={<T id={'fiscal_year'} />}
             className={classNames(
               'form-group--fiscal_year',
@@ -167,6 +172,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
               onItemSelect={(item) => {
                 setFieldValue('fiscalYear', item.value)
               }}
+              filterable={false}
             />
           </FormGroup>
         )}
@@ -180,6 +186,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
           meta: { error, touched },
         }) => (
           <FormGroup
+          labelInfo={<FieldRequiredHint />}
             label={<T id={'time_zone'} />}
             className={classNames(
               'form-group--time-zone',

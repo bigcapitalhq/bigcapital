@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useMutation } from 'react-query';
 import useApiRequest from '../useRequest';
 import { useAuthActions } from '../state';
@@ -10,20 +9,16 @@ export const useAuthLogin = (props) => {
   const { setLogin } = useAuthActions();
   const apiRequest = useApiRequest();
 
-  const states = useMutation(
+  return useMutation(
     (values) => apiRequest.post('auth/login', values),
     {
       select: (res) => res.data,
+      onSuccess: (data) => {
+        setLogin(data.data);
+      },
       ...props
     }
   );
-  const { isSuccess, data: response } = states;
-
-  useEffect(() => {
-    if (isSuccess) { setLogin(response.data); }
-  }, [isSuccess, response, setLogin]);
-
-  return states;
 };
 
 /**

@@ -4,18 +4,17 @@ import { Formik } from 'formik';
 import { useIntl } from 'react-intl';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
+import Toaster from 'components/AppToaster';
 
 import 'style/pages/Setup/PaymentViaVoucherDialog.scss';
 
-
+import { usePaymentByVoucher } from 'hooks/query';
 import { DialogContent } from 'components';
 import PaymentViaLicenseForm from './PaymentViaVoucherForm';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import withBillingActions from 'containers/Subscriptions/withBillingActions';
-import withSubscriptionsActions from 'containers/Subscriptions/withSubscriptionsActions';
-
 import { compose } from 'utils';
+import { Intent } from '@blueprintjs/core';
 
 /**
  * Payment via license dialog content.
@@ -26,30 +25,43 @@ function PaymentViaLicenseDialogContent({
 
   // #withDialog
   closeDialog,
-
-  // #withBillingActions
-  requestSubmitBilling,
-
-  // #withSubscriptionsActions
-  requestFetchSubscriptions,
 }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
 
+  // Payment via voucher
+  const {
+    mutateAsync: paymentViaVoucherMutate,
+  } = usePaymentByVoucher();
+
   // Handle submit.
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = (values, { setSubmitting, setErrors }) => {
     setSubmitting(true);
 
-    requestSubmitBilling({ ...values, ...subscriptionForm })
+    paymentViaVoucherMutate({ ...values })
       .then(() => {
-        return requestFetchSubscriptions();
-      })
-      .then(() => {
+        Toaster.show({
+          message: 'Payment has been done successfully.',
+          intent: Intent.SUCCESS,
+        });
         return closeDialog('payment-via-voucher');
       })
       .then(() => {
         history.push('initializing');
       })
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          if (errors.find((e) => e.type === 'LICENSE.CODE.IS.INVALID')) {
+            setErrors({
+              license_code: 'The license code is not valid, please try agin.',
+            });
+          }
+        },
+      )
       .finally((errors) => {
         setSubmitting(false);
       });
@@ -57,17 +69,18 @@ function PaymentViaLicenseDialogContent({
 
   // Initial values.
   const initialValues = {
-    license_number: '',
+    license_code: '',
     plan_slug: '',
     period: '',
+    ...subscriptionForm,
   };
   // Validation schema.
   const validationSchema = Yup.object().shape({
-    license_number: Yup.string()
+    license_code: Yup.string()
       .required()
       .min(10)
       .max(10)
-      .label(formatMessage({ id: 'license_number' })),
+      .label(formatMessage({ id: 'license_code' })),
   });
 
   return (
@@ -82,8 +95,4 @@ function PaymentViaLicenseDialogContent({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withBillingActions,
-  withSubscriptionsActions,
-)(PaymentViaLicenseDialogContent);
+export default compose(withDialogActions)(PaymentViaLicenseDialogContent);

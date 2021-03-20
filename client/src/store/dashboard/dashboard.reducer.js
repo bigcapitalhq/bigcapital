@@ -1,6 +1,6 @@
 import t from 'store/types';
 import { createReducer } from '@reduxjs/toolkit';
-import { persistReducer } from 'redux-persist';
+import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 const initialState = {
@@ -19,6 +19,12 @@ const initialState = {
 };
 
 const STORAGE_KEY = 'bigcapital:dashboard';
+
+const CONFIG = {
+  key: STORAGE_KEY,
+  whitelist: ['sidebarExpended', 'previousSidebarExpended'],
+  storage,
+};
 
 const reducerInstance = createReducer(initialState, {
   [t.CHANGE_DASHBOARD_PAGE_TITLE]: (state, action) => {
@@ -115,19 +121,13 @@ const reducerInstance = createReducer(initialState, {
     const { backLink } = action.payload;
     state.backLink = backLink;
   },
+
+  [t.RESET]: () => {
+    purgeStoredState(CONFIG);
+  },
 });
 
-export default persistReducer(
-  {
-    key: STORAGE_KEY,
-    whitelist: [
-      'sidebarExpended',
-      'previousSidebarExpended',
-    ],
-    storage,
-  },
-  reducerInstance,
-);
+export default persistReducer(CONFIG, reducerInstance);
 
 export const getDialogPayload = (state, dialogName) => {
   return typeof state.dashboard.dialogs[dialogName] !== 'undefined'

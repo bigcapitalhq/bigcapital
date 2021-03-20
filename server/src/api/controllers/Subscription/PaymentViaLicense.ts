@@ -8,8 +8,10 @@ import {
   NoPaymentModelWithPricedPlan,
   PaymentAmountInvalidWithPlan,
   PaymentInputInvalid,
+  VoucherCodeRequired
 } from 'exceptions';
 import { ILicensePaymentModel } from 'interfaces';
+import instance from 'tsyringe/dist/typings/dependency-container';
 
 @Service()
 export default class PaymentViaLicenseController extends PaymentMethodController { 
@@ -67,6 +69,11 @@ export default class PaymentViaLicenseController extends PaymentMethodController
     } catch (exception) {
       const errorReasons = [];
 
+      if (exception instanceof VoucherCodeRequired) {
+        errorReasons.push({
+          type: 'VOUCHER_CODE_REQUIRED', code: 100,
+        });
+      }
       if (exception instanceof NoPaymentModelWithPricedPlan) {
         errorReasons.push({
           type: 'NO_PAYMENT_WITH_PRICED_PLAN',

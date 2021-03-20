@@ -1,7 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { persistReducer } from 'redux-persist';
+import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { createTableStateReducers } from 'store/tableState.reducer';
+import t from 'store/types';
 
 const initialState = {
   tableState: {
@@ -12,17 +13,20 @@ const initialState = {
   selectedRows: [],
 };
 
-const reducerInstance = createReducer(initialState, {
-  ...createTableStateReducers('INVENTORY_ADJUSTMENTS'), 
-});
-
 const STORAGE_KEY = 'bigcapital:inventoryAdjustments';
 
-export default persistReducer(
-  {
-    key: STORAGE_KEY,
-    whitelist: ['tableState'],
-    storage,
+const CONFIG = {
+  key: STORAGE_KEY,
+  whitelist: ['tableState'],
+  storage,
+};
+
+const reducerInstance = createReducer(initialState, {
+  ...createTableStateReducers('INVENTORY_ADJUSTMENTS'),
+
+  [t.RESET]: () => {
+    purgeStoredState(CONFIG);
   },
-  reducerInstance,
-);
+});
+
+export default persistReducer(CONFIG, reducerInstance);

@@ -1,11 +1,11 @@
 import { camelCase } from 'lodash';
 import { createReducer } from '@reduxjs/toolkit';
 import t from 'store/types';
-import { optionsArrayToMap } from 'utils';
+
 const initialState = {
   data: {
     organization: {
-      name: 'Bigcapital, Limited Liabilities',
+      name: 'Bigcapital, LLC',
     },
     manualJournals: {},
     bills: {},

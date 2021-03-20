@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
+import purgeStoredState from 'redux-persist/es/purgeStoredState';
 import storage from 'redux-persist/lib/storage';
 import t from 'store/types';
 
@@ -14,10 +15,16 @@ const initialState = {
 };
 
 const STORAGE_KEY = 'bigcapital:authentication';
+const CONFIG = {
+  key: STORAGE_KEY,
+  blacklist: ['errors'],
+  storage,
+};
 
 const reducerInstance = createReducer(initialState, {
   [t.LOGIN_SUCCESS]: (state, action) => {
     const { token, user, tenant } = action.payload;
+
     state.token = token;
     state.user = user;
     state.organization = tenant.organization_id;
@@ -32,14 +39,14 @@ const reducerInstance = createReducer(initialState, {
   [t.LOGIN_CLEAR_ERRORS]: (state) => {
     state.errors = [];
   },
+
+  [t.RESET]: () => {
+    purgeStoredState(CONFIG);
+  }
 });
 
 export default persistReducer(
-  {
-    key: STORAGE_KEY,
-    blacklist: ['errors'],
-    storage,
-  },
+  CONFIG,
   reducerInstance,
 );
 
