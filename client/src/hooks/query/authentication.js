@@ -1,6 +1,7 @@
 import { useMutation } from 'react-query';
 import useApiRequest from '../useRequest';
 import { useAuthActions } from '../state';
+import { persistor } from 'store/createStore';
 
 /**
  * Authentication login.
@@ -15,6 +16,9 @@ export const useAuthLogin = (props) => {
       select: (res) => res.data,
       onSuccess: (data) => {
         setLogin(data.data);
+
+        // Run the store persist.
+        persistor.persist();
       },
       ...props
     }

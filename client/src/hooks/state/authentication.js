@@ -3,10 +3,8 @@ import { useCallback } from 'react';
 import { isAuthenticated } from 'store/authentication/authentication.reducer';
 import {
   setLogin,
-  setLogout,
   setStoreReset,
 } from 'store/authentication/authentication.actions';
-import { purgePersistedState } from 'store/createStore';
 import { useQueryClient } from 'react-query';
 
 export const useAuthActions = () => {

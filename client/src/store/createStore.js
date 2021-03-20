@@ -4,17 +4,11 @@ import {
   compose,
 } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { persistStore, persistReducer, purgeStoredState } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import { persistStore } from 'redux-persist';
 import monitorReducerEnhancer from 'store/enhancers/monitorReducer';
 import loggerMiddleware from 'middleware/logger';
 import rootReducer from 'store/reducers';
-
-const persistConfig = {
-  key: 'bigcapital:root',
-  blacklist: ['dashboard'],
-  storage,
-};
+import ResetMiddleware from './ResetMiddleware';
 
 const createStoreFactory = (initialState = {}) => {
   /**
@@ -22,14 +16,14 @@ const createStoreFactory = (initialState = {}) => {
   | Middleware Configuration
   |--------------------------------------------------
   */
-  const middleware = [thunkMiddleware, loggerMiddleware];
+  const middleware = [thunkMiddleware, loggerMiddleware ];
 
   /**
   |--------------------------------------------------
   | Store Enhancers
   |--------------------------------------------------
   */
-  const enhancers = [monitorReducerEnhancer];
+  const enhancers = [monitorReducerEnhancer, ResetMiddleware];
   let composeEnhancers = compose;
 
   if (process.env.NODE_ENV === 'development') {
@@ -47,6 +41,8 @@ const createStoreFactory = (initialState = {}) => {
     rootReducer,
     initialState,
     composeEnhancers(applyMiddleware(...middleware), ...enhancers),
+    
+    
   );
   store.asyncReducers = {};
   return store;
