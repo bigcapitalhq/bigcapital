@@ -821,7 +821,7 @@ export default {
   average_rate: 'Average rate',
   the_name_used_before: 'The name is already used.',
   the_item_has_associated_transactions: 'The item has associated transactions.',
-  customer_has_sales_invoices: 'Customer has sales invoices',
+  customer_has_sales_invoices: 'Cannot delete customer has associated sales invoices.',
   account_name_is_already_used: 'Account name is already used.',
   vendors: 'Vendors',
   vendor_email: 'Vendor Email',
