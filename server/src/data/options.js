@@ -35,13 +35,15 @@ export default {
     {
       key: "time_zone",
       type: "string",
-      // config: true,
     },
     {
       key: "date_format",
       type: "string",
-      // config: true,
     },
+    {
+      key: 'accounting_basis',
+      type: 'string',
+    }
   ],
   manual_journals: [
     {
@@ -59,13 +61,9 @@ export default {
   ],
   bill_payments: [
     {
-      key: "next_number",
-      type: "number",
-    },
-    {
-      key: "number_prefix",
-      type: "string",
-    },
+      key: 'withdrawal_account',
+      type: 'string'
+    }
   ],
   sales_estimates: [
     {
@@ -125,19 +123,27 @@ export default {
     {
       key: "auto_increment",
       type: "boolean",
+    },
+    {
+      key: 'deposit_account',
+      type: 'string'
+    },
+    {
+      key: 'advance_deposit',
+      key: 'string'
     }
   ],
   items: [
     {
-      key: "preferred_sell_account",
+      key: "sell_account",
       type: "number",
     },
     {
-      key: "preferred_cost_account",
+      key: "cost_account",
       type: "number",
     },
     {
-      key: "preferred_inventory_account",
+      key: "inventory_account",
       type: "number",
     },
   ],
@@ -147,4 +153,14 @@ export default {
       type: "number",
     },
   ],
+  accounts: [
+    {
+      key: 'account_code_required',
+      type: 'boolean',
+    },
+    {
+      key: 'account_code_unique',
+      type: 'boolean',
+    },
+  ]
 };

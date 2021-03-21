@@ -31,7 +31,7 @@ export default function AccountantForm() {
 
   return (
     <Form>
-      {/* ----------- accounts  ----------- */}
+      {/* ----------- Accounts  ----------- */}
       <FormGroup
         label={
           <strong>
@@ -46,7 +46,7 @@ export default function AccountantForm() {
           label={'Should account code be unique when create a new account.'}
         />
       </FormGroup>
-      {/* ----------- accounting basis ----------- */}
+      {/* ----------- Accounting basis ----------- */}
       <FastField name={'accounting_basis'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
@@ -64,7 +64,8 @@ export default function AccountantForm() {
           </FormGroup>
         )}
       </FastField>
-      {/* ----------- deposit customer account ----------- */}
+
+      {/* ----------- Deposit customer account ----------- */}
       <FastField name={'deposit_customer_account'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
@@ -88,13 +89,13 @@ export default function AccountantForm() {
         )}
       </FastField>
 
-      {/* ----------- withdrawal customer account ----------- */}
+      {/* ----------- Withdrawal customer account ----------- */}
       <FastField name={'withdrawal_customer_account'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={
               <strong>
-                <T id={'withdrawal_customer_account'} />
+                <T id={'withdrawal_vendor_account'} />
               </strong>
             }
             helperText={
@@ -111,13 +112,13 @@ export default function AccountantForm() {
         )}
       </FastField>
 
-      {/* ----------- withdrawal customer account ----------- */}
+      {/* ----------- Withdrawal customer account ----------- */}
       <FastField name={'vendor_advance_deposit'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={
               <strong>
-                <T id={'vendor_advance_deposit'} />
+                <T id={'customer_advance_deposit'} />
               </strong>
             }
             helperText={

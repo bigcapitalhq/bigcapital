@@ -9,10 +9,10 @@ const AccountantFormContext = React.createContext();
  */
 function AccountantFormProvider({ ...props }) {
   // Fetches the accounts list.
-  const { isFetching: isAccountsLoading, data: accounts } = useAccounts();
+  const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
 
   //Fetches Organization Settings.
-  const { isFetching: isSettingsLoading } = useSettings();
+  const { isLoading: isSettingsLoading } = useSettings();
 
   // Save Organization Settings.
   const { mutateAsync: saveSettingMutate } = useSaveSettings();

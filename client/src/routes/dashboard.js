@@ -547,6 +547,5 @@ export default [
     path: `/`,
     component: lazy(() => import('containers/Homepage/Homepage')),
     breadcrumb: 'Home',
-    pageTitle: 'Homepage',
   },
 ];
