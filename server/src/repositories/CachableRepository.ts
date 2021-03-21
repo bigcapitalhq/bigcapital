@@ -16,6 +16,10 @@ export default class CachableRepository extends EntityRepository{
     this.repositoryName = this.constructor.name;
   }
 
+  getByCache(key, callback) {
+    return callback();
+  }
+
   /**
    * Retrieve the cache key of the method name and arguments.
    * @param {string} method 
@@ -36,7 +40,7 @@ export default class CachableRepository extends EntityRepository{
   all(withRelations?) {
     const cacheKey = this.getCacheKey('all', withRelations);
 
-    return this.cache.get(cacheKey, () => {
+    return this.getByCache(cacheKey, () => {
       return super.all(withRelations);
     });
   }
@@ -50,7 +54,7 @@ export default class CachableRepository extends EntityRepository{
   find(attributeValues = {}, withRelations?) {
     const cacheKey = this.getCacheKey('find', attributeValues, withRelations);
 
-    return this.cache.get(cacheKey, () => {
+    return this.getByCache(cacheKey, () => {
       return super.find(attributeValues, withRelations);
     });
   }
@@ -64,7 +68,7 @@ export default class CachableRepository extends EntityRepository{
   findWhereNot(attributeValues = {}, withRelations?) {
     const cacheKey = this.getCacheKey('findWhereNot', attributeValues, withRelations);
 
-    return this.cache.get(cacheKey, () => {
+    return this.getByCache(cacheKey, () => {
       return super.findWhereNot(attributeValues, withRelations);
     });
   }
@@ -81,7 +85,7 @@ export default class CachableRepository extends EntityRepository{
   findWhereIn(searchParam, attributeValues, withRelations?) {
     const cacheKey = this.getCacheKey('findWhereIn', attributeValues, withRelations);
 
-    return this.cache.get(cacheKey, () => {
+    return this.getByCache(cacheKey, () => {
       return super.findWhereIn(searchParam, attributeValues, withRelations);
     });
   }
@@ -96,7 +100,7 @@ export default class CachableRepository extends EntityRepository{
   findOne(attributeValues = {}, withRelations?) {
     const cacheKey = this.getCacheKey('findOne', attributeValues, withRelations);
 
-    return this.cache.get(cacheKey, () => {
+    return this.getByCache(cacheKey, () => {
       return super.findOne(attributeValues, withRelations);
     });
   }
@@ -111,7 +115,7 @@ export default class CachableRepository extends EntityRepository{
   findOneById(id, withRelations?) {
     const cacheKey = this.getCacheKey('findOneById', id, withRelations);
 
-    return this.cache.get(cacheKey, () => {
+    return this.getByCache(cacheKey, () => {
       return super.findOneById(id, withRelations);
     });
   }
