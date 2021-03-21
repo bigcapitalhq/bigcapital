@@ -29,7 +29,7 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
   // Fetches the estimate by the given id.
   const {
     data: estimate,
-    isFetching: isEstimateFetching,
+    isLoading: isEstimateLoading,
   } = useEstimate(estimateId, { enabled: !!estimateId });
 
   const newInvoice = !isEmpty(estimate)
@@ -97,7 +97,7 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
         isInvoiceLoading ||
         isItemsLoading ||
         isCustomersLoading ||
-        isEstimateFetching ||
+        isEstimateLoading ||
         isSettingsLoading
       }
       name={'invoice-form'}

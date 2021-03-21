@@ -237,6 +237,10 @@
       transition: min-width 0.15s ease-in-out;
       min-width: 50px;
 
+      .ScrollbarsCustom-Scroller{
+        overflow: hidden !important;
+      }
+
       &:hover {
         min-width: 220px;
 
@@ -250,6 +254,10 @@
 
         .sidebar__menu {
           opacity: 1;
+        }
+
+        .ScrollbarsCustom-Scroller{
+          overflow: scroll !important;
         }
       }
     }

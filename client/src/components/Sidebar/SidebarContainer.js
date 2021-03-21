@@ -16,9 +16,28 @@ function SidebarContainer({
   // #withDashboard
   sidebarExpended,
 }) {
+  const sidebarScrollerRef = React.useRef();
+
   useEffect(() => {
     document.body.classList.toggle('has-mini-sidebar', !sidebarExpended);
+
+    if (!sidebarExpended && sidebarScrollerRef.current) {
+      sidebarScrollerRef.current.scrollTo({
+        top: 0,
+        left: 0,
+      });
+    }
   }, [sidebarExpended]);
+
+  const handleSidebarMouseLeave = () => {
+    if (!sidebarExpended && sidebarScrollerRef.current) {  
+      sidebarScrollerRef.current.scrollTo({ top: 0, left: 0, });
+    }
+  };
+
+  const scrollerElementRef = (ref) => {
+    sidebarScrollerRef.current = ref;
+  };
 
   return (
     <div
@@ -26,9 +45,13 @@ function SidebarContainer({
         'sidebar--mini-sidebar': !sidebarExpended,
       })}
       id="sidebar"
+      onMouseLeave={handleSidebarMouseLeave}
     >
       <div className={'sidebar__scroll-wrapper'}>
-        <Scrollbar noDefaultStyles={true}>
+        <Scrollbar
+          noDefaultStyles={true}
+          scrollerProps={{ elementRef: scrollerElementRef }}
+        >
           <div className="sidebar__inner">{children}</div>
         </Scrollbar>
       </div>

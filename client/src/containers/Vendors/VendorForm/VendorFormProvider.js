@@ -20,21 +20,19 @@ function VendorFormProvider({ vendorId, ...props }) {
   const { state } = useLocation();
 
   // Handle fetch Currencies data table
-  const { data: currencies, isFetching: isCurrenciesLoading } = useCurrencies();
+  const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 
   // Handle fetch vendor details.
-  const { data: vendor, isFetching: isVendorLoading } = useVendor(vendorId, {
+  const { data: vendor, isLoading: isVendorLoading } = useVendor(vendorId, {
     enabled: !!vendorId,
   });
 
   const contactId = state?.action;
 
   // Handle fetch contact duplicate details.
-  const { data: contactDuplicate, isFetching: isContactLoading } = useContact(
+  const { data: contactDuplicate, isLoading: isContactLoading } = useContact(
     contactId,
-    {
-      enabled: !!contactId,
-    },
+    { enabled: !!contactId },
   );
 
   // Create and edit vendor mutations.

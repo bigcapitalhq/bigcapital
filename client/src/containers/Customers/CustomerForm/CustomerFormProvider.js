@@ -2,7 +2,6 @@ import React, { useState, createContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
-  useCustomers,
   useCustomer,
   useCurrencies,
   useCreateCustomer,
@@ -18,22 +17,17 @@ function CustomerFormProvider({ customerId, ...props }) {
   const contactId = state?.action;
 
   // Handle fetch customer details.
-  const { data: customer, isFetching: isCustomerLoading } = useCustomer(
+  const { data: customer, isLoading: isCustomerLoading } = useCustomer(
     customerId,
-    {
-      enabled: !!customerId,
-    },
+    { enabled: !!customerId },
   );
-
   // Handle fetch contact duplicate details.
-  const { data: contactDuplicate, isFetching: isContactLoading } = useContact(
+  const { data: contactDuplicate, isLoading: isContactLoading } = useContact(
     contactId,
-    {
-      enabled: !!contactId,
-    },
+    { enabled: !!contactId, },
   );
   // Handle fetch Currencies data table
-  const { data: currencies, isFetching: isCurrenciesLoading } = useCurrencies();
+  const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = useState({});
