@@ -52,9 +52,8 @@ export default class SetupService {
     const settings = this.tenancy.settings(tenantId);
 
     // Can't continue if app is already configured.
-    if (settings.get('app_configured')) {
-      return;
-    }
+    if (settings.get('app_configured')) { return; }
+
     settings.set([
       ...this.transformSetupDTOToOptions(organizationSetupDTO)
         .filter((option) => typeof option.value !== 'undefined')

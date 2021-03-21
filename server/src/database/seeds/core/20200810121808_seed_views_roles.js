@@ -18,6 +18,10 @@ exports.up = (knex) => {
         { field_key: 'type', index: 1, comparator: 'equals', value: 'inventory', view_id: 7 },
         { field_key: 'type', index: 1, comparator: 'equals', value: 'non-inventory', view_id: 8 },
 
+        // Expenses.
+        { field_key: 'status', index: 1, comparator: 'equals', value: 'draft', view_id: 12 }, 
+        { field_key: 'status', index: 1, comparator: 'equals', value: 'published', view_id: 13 }, 
+
         // Manual Journals.
         { field_key: 'journal_type', index: 1, comparator: 'equals', value: 'Journal', view_id: 9 },
         { field_key: 'journal_type', index: 1, comparator: 'equals', value: 'CreditNote', view_id: 10 },

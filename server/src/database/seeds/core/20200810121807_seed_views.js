@@ -11,17 +11,17 @@ exports.up = (knex) => {
       // Inserts seed entries
       return knex('views').insert([
         // Accounts.
-        { id: 15, name: i18n.__('Inactive'), roles_logic_expression: '1', resource_model: 'Account', predefined: true },
-        { id: 1, name: i18n.__('Assets'), roles_logic_expression: '1', resource_model: 'Account', predefined: true },
-        { id: 2, name: i18n.__('Liabilities'), roles_logic_expression: '1', resource_model: 'Account', predefined: true },
-        { id: 3, name: i18n.__('Equity'), roles_logic_expression: '1', resource_model: 'Account', predefined: true },
-        { id: 4, name: i18n.__('Income'), roles_logic_expression: '1', resource_model: 'Account', predefined: true },
-        { id: 5, name: i18n.__('Expenses'), roles_logic_expression: '1', resource_model: 'Account', predefined: true },
+        { id: 15, name: i18n.__('Inactive'), slug: 'inactive', roles_logic_expression: '1', resource_model: 'Account', predefined: true },
+        { id: 1, name: i18n.__('Assets'), slug: 'assets', roles_logic_expression: '1', resource_model: 'Account', predefined: true },
+        { id: 2, name: i18n.__('Liabilities'), slug: 'liabilities', roles_logic_expression: '1', resource_model: 'Account', predefined: true },
+        { id: 3, name: i18n.__('Equity'), slug: 'equity', roles_logic_expression: '1', resource_model: 'Account', predefined: true },
+        { id: 4, name: i18n.__('Income'), slug: 'income', roles_logic_expression: '1', resource_model: 'Account', predefined: true },
+        { id: 5, name: i18n.__('Expenses'), slug: 'expenses', roles_logic_expression: '1', resource_model: 'Account', predefined: true },
 
         // Items.
-        { id: 6, name: i18n.__('Services'), roles_logic_expression: '1', resource_model: 'Item', predefined: true },
-        { id: 7, name: i18n.__('Inventory'), roles_logic_expression: '1', resource_model: 'Item', predefined: true },
-        { id: 8, name: i18n.__('Non-Inventory'), roles_logic_expression: '1', resource_model: 'Item', predefined: true },
+        { id: 6, name: i18n.__('Services'), slug: 'services', roles_logic_expression: '1', resource_model: 'Item', predefined: true },
+        { id: 7, name: i18n.__('Inventory'), slug: 'inventory', roles_logic_expression: '1', resource_model: 'Item', predefined: true },
+        { id: 8, name: i18n.__('Non-Inventory'), slug: 'non-inventory', roles_logic_expression: '1', resource_model: 'Item', predefined: true },
 
         // Manual Journals
         { id: 9, name: i18n.__('Journal'), roles_logic_expression: '1', resource_model: 'ManualJournal', predefined: true },
@@ -29,9 +29,8 @@ exports.up = (knex) => {
         { id: 11, name: i18n.__('Reconciliation'), roles_logic_expression: '1', resource_model: 'ManualJournal', predefined: true },
 
         // Expenses.
-        { id: 12, name: i18n.__('Interest'), roles_logic_expression: '1', resource_model: 'Expense', predefined: false, },
-        { id: 13, name: i18n.__('Depreciation'), roles_logic_expression: '1', resource_model: 'Expense', predefined: false, },
-        { id: 14, name: i18n.__('Payroll'), roles_logic_expression: '1', resource_model: 'Expense', predefined: false },
+        { id: 12, name: i18n.__('Draft'), slug: 'draft', roles_logic_expression: '1', resource_model: 'Expense', predefined: true, },
+        { id: 13, name: i18n.__('Published'), slug: 'published', roles_logic_expression: '1', resource_model: 'Expense', predefined: true, },
 
         // Sales invoices.
         { id: 16, name: 'Draft', slug: 'draft', roles_logic_expression: '1', resource_model: 'SaleInvoice', predefined: true, },

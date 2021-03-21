@@ -104,7 +104,7 @@ export default class MetableStore implements IMetableStore {
       const metadata = query;
 
       metadata.forEach((meta: IMetadata) => {
-        this.set(meta.key, meta.value);
+        this.set(meta);
       });
       return;
     }

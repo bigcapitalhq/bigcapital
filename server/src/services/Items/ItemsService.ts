@@ -566,6 +566,7 @@ export default class ItemsService implements IItemsService {
         dynamicFilter.buildQuery()(builder);
       })
       .pagination(itemsFilter.page - 1, itemsFilter.pageSize);
+
     return {
       items: results,
       pagination,

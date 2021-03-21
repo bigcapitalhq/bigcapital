@@ -79,6 +79,14 @@ export default class Expense extends TenantModel {
       viewRolesBuilder(query, conditionals, expression) {
         viewRolesBuilder(conditionals, expression)(query);
       },
+
+      filterByDraft(query) {
+        query.where('published_at', null);
+      },
+
+      filterByPublished(query) {
+        query.whereNot('published_at', null);
+      },
     };
   }
 
@@ -164,6 +172,26 @@ export default class Expense extends TenantModel {
       published: {
         label: "Published",
         column: "published_at",
+      },
+      status: {
+        label: 'Status',
+        options: [
+          { key: 'draft', label: 'Draft' },
+          { key: 'published', label: 'Published' },
+        ],
+        query: (query, role) => {
+          switch (role.value) {
+            case 'draft':
+              query.modify('filterByDraft');
+              break;
+            case 'published':
+              query.modify('filterByPublished');
+              break;
+          }
+        },
+        sortQuery(query, role) {
+          query.modify('sortByStatus', role.order);
+        },
       },
       created_at: {
         label: "Created at",

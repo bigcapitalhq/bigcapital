@@ -11,12 +11,9 @@ exports.seed = (knex) => {
           price: 0,
           active: true,
           currency: 'LYD',
-
           trial_period: 7,
           trial_interval: 'days',
-
           index: 1,
-          voucher_required: true,
         },
         {
           name: 'Starter',
@@ -24,10 +21,8 @@ exports.seed = (knex) => {
           price: 500,
           active: true,
           currency: 'LYD',
-
           invoice_period: 12,
           invoice_interval: 'month',
-
           index: 2,
         },
         {
@@ -36,10 +31,8 @@ exports.seed = (knex) => {
           price: 1000,
           active: true,
           currency: 'LYD',
-        
           invoice_period: 12,
           invoice_interval: 'month',
-
           index: 3,
         },
       ]);
