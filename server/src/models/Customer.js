@@ -129,6 +129,42 @@ export default class Customer extends TenantModel {
 
   static get fields() {
     return {
+      contact_service: {
+        column: 'contact_service',
+      },
+      display_name: {
+        column: 'display_name',
+      },
+      email: {
+        column: 'email',
+      },
+      work_phone: {
+        column: 'work_phone',
+      },
+      personal_phone: {
+        column: 'personal_phone',
+      },
+      company_name: {
+        column: 'company_name',
+      },
+      website: {
+        column: 'website'
+      },
+      created_at: {
+        column: 'created_at',
+      },
+      balance: {
+        column: 'balance',
+      },
+      opening_balance: {
+        column: 'opening_balance',
+      },
+      opening_balance_at: {
+        column: 'opening_balance_at',
+      },
+      currency_code: {
+        column: 'currency_code',
+      },
       status: {
         label: 'Status',
         options: [

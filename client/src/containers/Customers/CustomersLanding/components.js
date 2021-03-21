@@ -74,12 +74,7 @@ export function AvatarCell(row) {
  * Phone number accessor.
  */
 export function PhoneNumberAccessor(row) {
-  return (
-    <div>
-      <div className={'work_phone'}>{row.work_phone}</div>
-      <div className={'personal_phone'}>{row.personal_phone}</div>
-    </div>
-  );
+  return <div className={'work_phone'}>{row.work_phone}</div>;
 }
 
 /**
@@ -121,14 +116,14 @@ export function useCustomersTableColumns() {
         width: 150,
       },
       {
-        id: 'phone_number',
-        Header: formatMessage({ id: 'phone_number' }),
+        id: 'work_phone',
+        Header: formatMessage({ id: 'work_phone' }),
         accessor: PhoneNumberAccessor,
         className: 'phone_number',
         width: 100,
       },
       {
-        id: 'receivable_balance',
+        id: 'balance',
         Header: formatMessage({ id: 'receivable_balance' }),
         accessor: BalanceAccessor,
         className: 'receivable_balance',

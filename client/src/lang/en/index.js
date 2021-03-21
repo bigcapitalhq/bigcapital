@@ -1019,4 +1019,5 @@ export default {
     'Cannot delete bill that has associated payment transactions.',
   cannot_change_item_type_to_inventory_with_item_has_associated_transactions:
     'Cannot change item type to inventory with item has associated transactions.',
+  work_phone: 'Work Phone',
 };
