@@ -1020,4 +1020,5 @@ export default {
   cannot_change_item_type_to_inventory_with_item_has_associated_transactions:
     'Cannot change item type to inventory with item has associated transactions.',
   work_phone: 'Work Phone',
+  cannot_delete_vendor_that_has_associated_purchase_bills:'Cannot delete vendor that has associated purchase bills.'
 };
