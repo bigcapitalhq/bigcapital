@@ -30,4 +30,24 @@ export default class SettingsService {
       await settings.save();
     }
   }
+
+  /**
+   * Validates the given options is defined or either not.
+   * @param {Array} options
+   * @return {Boolean}
+   */
+  validateNotDefinedSettings(tenantId: number, options) {
+    const notDefined = [];
+
+    const settings = this.tenancy.settings(tenantId);
+
+    options.forEach((option) => {
+      const setting = settings.config.getMetaConfig(option.key, option.group);
+
+      if (!setting) {
+        notDefined.push(option);
+      }
+    });
+    return notDefined;
+  }
 }

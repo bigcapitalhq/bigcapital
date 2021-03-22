@@ -492,59 +492,6 @@ export default class ItemsService implements IItemsService {
   }
 
   /**
-   * Validates the given items IDs exists or throw not found service error.
-   * @param {number} tenantId -
-   * @param {number[]} itemsIDs -
-   * @return {Promise<void>}
-   */
-  private async validateItemsIdsExists(
-    tenantId: number,
-    itemsIDs: number[]
-  ): Promise<void> {
-    const { Item } = this.tenancy.models(tenantId);
-
-    const storedItems = await Item.query().whereIn('id', itemsIDs);
-    const storedItemsIds = storedItems.map((t: IItem) => t.id);
-
-    const notFoundItemsIds = difference(itemsIDs, storedItemsIds);
-
-    if (notFoundItemsIds.length > 0) {
-      throw new ServiceError(ERRORS.ITEMS_NOT_FOUND, null, {
-        notFoundItemsIds,
-      });
-    }
-  }
-
-  /**
-   * Deletes items in bulk.
-   * @param {number} tenantId
-   * @param {number[]} itemsIds - Items ids.
-   */
-  public async bulkDeleteItems(tenantId: number, itemsIds: number[]) {
-    const { Item } = this.tenancy.models(tenantId);
-
-    this.logger.info('[items] trying to delete items in bulk.', {
-      tenantId,
-      itemsIds,
-    });
-    // Validates the given items exist on the storage.
-    await this.validateItemsIdsExists(tenantId, itemsIds);
-
-    // Validate the item has no associated inventory transactions.
-    await this.validateHasNoInventoryAdjustments(tenantId, itemsIds);
-
-    // Validate the items have no associated invoices or bills.
-    await this.validateHasNoInvoicesOrBills(tenantId, itemsIds);
-
-    await Item.query().whereIn('id', itemsIds).delete();
-
-    this.logger.info('[items] deleted successfully in bulk.', {
-      tenantId,
-      itemsIds,
-    });
-  }
-
-  /**
    * Retrieve items datatable list.
    * @param {number} tenantId
    * @param {IItemsFilter} itemsFilter

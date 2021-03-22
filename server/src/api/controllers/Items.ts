@@ -52,13 +52,6 @@ export default class ItemsController extends BaseController {
       this.handlerServiceErrors
     );
     router.delete(
-      '/',
-      [...this.validateBulkSelectSchema],
-      this.validationResult,
-      asyncMiddleware(this.bulkDeleteItems.bind(this)),
-      this.handlerServiceErrors
-    );
-    router.delete(
       '/:id',
       [...this.validateSpecificItemSchema],
       this.validationResult,
@@ -409,28 +402,6 @@ export default class ItemsController extends BaseController {
       );
       return res.status(200).send({
         items,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Deletes items in bulk.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  async bulkDeleteItems(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
-    const { ids: itemsIds } = req.query;
-
-    try {
-      await this.itemsService.bulkDeleteItems(tenantId, itemsIds);
-
-      return res.status(200).send({
-        ids: itemsIds,
-        message: 'Items have been deleted successfully.',
       });
     } catch (error) {
       next(error);

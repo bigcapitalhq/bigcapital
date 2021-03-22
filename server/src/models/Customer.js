@@ -48,7 +48,7 @@ export default class Customer extends TenantModel {
    * Closing balance attribute.
    */
   get closingBalance() {
-    return this.openingBalance + this.balance;
+    return this.balance;
   }
 
   /**

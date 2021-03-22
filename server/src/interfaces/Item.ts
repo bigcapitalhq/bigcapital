@@ -61,14 +61,10 @@ export interface IItemDTO {
 }
 
 export interface IItemsService {
-  bulkDeleteItems(tenantId: number, itemsIds: number[]): Promise<void>;
-
   getItem(tenantId: number, itemId: number): Promise<IItem>;
   deleteItem(tenantId: number, itemId: number): Promise<void>;
   editItem(tenantId: number, itemId: number, itemDTO: IItemDTO): Promise<IItem>;
-
   newItem(tenantId: number, itemDTO: IItemDTO): Promise<IItem>;
-
   itemsList(tenantId: number, itemsFilter: IItemsFilter): Promise<{items: IItem[]}>;
 }
 
