@@ -1,27 +1,71 @@
 import React, { useEffect } from 'react';
 import classNames from 'classnames';
 import { Formik } from 'formik';
+import { pick } from 'lodash';
+import { Intent } from '@blueprintjs/core';
 import { CLASSES } from 'common/classes';
+import { AppToaster } from 'components';
+import { useIntl } from 'react-intl';
+
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withSettings from 'containers/Settings/withSettings';
+
 import AccountantForm from './AccountantForm';
 import { AccountantSchema } from './Accountant.schema';
 import { useAccountantFormContext } from './AccountantFormProvider';
-
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-
-import { compose } from 'utils';
+import { transformToOptions } from './utils';
+import { compose, transformGeneralSettings } from 'utils';
 
 import 'style/pages/Preferences/Accounting.scss';
 
 // Accountant preferences.
-function AccountantFormPage({ changePreferencesPageTitle }) {
+function AccountantFormPage({
+  //# withDashboardActions
+  changePreferencesPageTitle,
+
+  // #withSettings
+  organizationSettings,
+  paymentReceiveSettings,
+  accountsSettings,
+  billPaymentSettings,
+}) {
+  const { formatMessage } = useIntl();
 
   const { saveSettingMutate } = useAccountantFormContext();
 
-  const initialValues = {};
+  const accountantSettings = {
+    ...billPaymentSettings,
+    ...accountsSettings,
+    ...pick(organizationSettings, ['accountingBasis']),
+    ...pick(paymentReceiveSettings, ['depositAccount', 'advanceDeposit']),
+  };
+
+  const initialValues = {
+    ...transformGeneralSettings(accountantSettings),
+  };
 
   useEffect(() => {
-    changePreferencesPageTitle('Accountant');
+    changePreferencesPageTitle(formatMessage({ id: 'accountant' }));
   }, [changePreferencesPageTitle]);
+
+  const handleFormSubmit = (values, { setSubmitting }) => {
+    const options = transformToOptions(values);
+    setSubmitting(true);
+    const onSuccess = () => {
+      AppToaster.show({
+        message: formatMessage({
+          id: 'the_accountant_preferences_has_been_saved',
+        }),
+        intent: Intent.SUCCESS,
+      });
+      setSubmitting(false);
+    };
+
+    const onError = (errors) => {
+      setSubmitting(false);
+    };
+    saveSettingMutate({ options }).then(onSuccess).catch(onError);
+  };
 
   return (
     <div
@@ -34,6 +78,7 @@ function AccountantFormPage({ changePreferencesPageTitle }) {
         <Formik
           initialValues={initialValues}
           validationSchema={AccountantSchema}
+          onSubmit={handleFormSubmit}
           component={AccountantForm}
         />
       </div>
@@ -41,4 +86,19 @@ function AccountantFormPage({ changePreferencesPageTitle }) {
   );
 }
 
-export default compose(withDashboardActions)(AccountantFormPage);
+export default compose(
+  withSettings(
+    ({
+      organizationSettings,
+      paymentReceiveSettings,
+      accountsSettings,
+      billPaymentSettings,
+    }) => ({
+      organizationSettings,
+      paymentReceiveSettings,
+      accountsSettings,
+      billPaymentSettings,
+    }),
+  ),
+  withDashboardActions,
+)(AccountantFormPage);

@@ -617,3 +617,6 @@ export const updateTableRow = (rowIndex, columnId, value) => (old) => {
     return row;
   });
 };
+export const transformGeneralSettings = (data) => {
+  return _.mapKeys(data, (value, key) => _.snakeCase(key));
+};

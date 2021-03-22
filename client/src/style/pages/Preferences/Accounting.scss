@@ -1,4 +1,3 @@
-
 // Accountant.
 // ---------------------------------
 .preferences-page__inside-content--accountant {
@@ -13,27 +12,33 @@
       .bp3-button {
         min-width: 60px;
 
-        + .bp3-button{
+        + .bp3-button {
           margin-left: 10px;
         }
       }
     }
   }
 
-  .form-group--select-list{
-
-    button{
+  .form-group--select-list {
+    button {
       min-width: 250px;
     }
   }
   .bp3-form-group {
-    
-    .bp3-form-helper-text{
+    .bp3-form-helper-text {
       margin-top: 7px;
     }
 
     label.bp3-label {
       margin-bottom: 7px;
+    }
+  }
+  .bp3-form-group.accounts-checkbox {
+    .bp3-form-group.bp3-inline {
+      margin-bottom: 7px;
+    }
+    .bp3-control.bp3-inline {
+      margin-bottom: 0;
     }
   }
 }
