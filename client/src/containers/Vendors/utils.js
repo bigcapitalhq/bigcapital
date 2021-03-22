@@ -12,4 +12,13 @@ export const transformErrors = (errors) => {
       intent: Intent.DANGER,
     });
   }
+  if (errors.find((error) => error.type === 'VENDOR_HAS_TRANSACTIONS')) {
+    AppToaster.show({
+      message: formatMessage({
+        id:
+          'this_vendor_cannot_be_deleted_as_it_is_associated_with_transactions',
+      }),
+      intent: Intent.DANGER,
+    });
+  }
 };
