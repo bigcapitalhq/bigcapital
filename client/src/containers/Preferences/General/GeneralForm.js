@@ -43,8 +43,8 @@ export default function PreferencesGeneralForm({}) {
           labelInfo={<FieldRequiredHint />}
           inline={true}
           intent={inputIntent({ error, touched })}
-          helperText={<ErrorMessage name="name" />}
           className={'form-group--org-name'}
+          helperText={'Shown on sales forms and purchase orders.'}
         >
           <InputGroup medium={'true'} {...field} />
         </FormGroup>
@@ -58,8 +58,8 @@ export default function PreferencesGeneralForm({}) {
           labelInfo={<FieldRequiredHint />}
           inline={true}
           intent={inputIntent({ error, touched })}
-          helperText={<ErrorMessage name="financial_date_start" />}
           className={classNames('form-group--select-list', CLASSES.FILL)}
+          helperText={'For reporting, you can specify any month as the start of your financial year (also called your financial reporting year or accounting year).'}
         >
           <DateInput
             {...momentFormatter('MMMM Do YYYY')}
@@ -121,8 +121,8 @@ export default function PreferencesGeneralForm({}) {
           labelInfo={<FieldRequiredHint />}
           className={classNames('form-group--base-currency', CLASSES.FILL)}
           inline={true}
-          helperText={<ErrorMessage name="base_currency" />}
           intent={inputIntent({ error, touched })}
+          helperText={"You can't change the base currency as there are transactions recorded in your organization."}
         >
           <ListSelect
             items={currencies}

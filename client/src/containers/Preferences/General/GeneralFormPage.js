@@ -48,9 +48,7 @@ function GeneralFormPage({
     });
     const onSuccess = (response) => {
       AppToaster.show({
-        message: formatMessage({
-          id: 'the_options_has_been_created_successfully',
-        }),
+        message: 'The general preferences has been saved.',
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
