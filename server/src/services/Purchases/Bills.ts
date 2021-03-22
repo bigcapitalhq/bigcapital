@@ -21,6 +21,7 @@ import {
   IPaginationMeta,
   IFilterMeta,
   IBillsFilter,
+  IBillsService
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import ItemsService from 'services/Items/ItemsService';
@@ -34,8 +35,8 @@ import { ERRORS } from './constants';
  * Vendor bills services.
  * @service
  */
-@Service()
-export default class BillsService extends SalesInvoicesCost {
+@Service('Bills')
+export default class BillsService extends SalesInvoicesCost implements IBillsService {
   @Inject()
   inventoryService: InventoryService;
 
@@ -141,13 +142,10 @@ export default class BillsService extends SalesInvoicesCost {
 
   /**
    * Validate the bill has no payment entries.
-   * @param {number} tenantId 
+   * @param {number} tenantId
    * @param {number} billId - Bill id.
    */
-  private async validateBillHasNoEntries(
-    tenantId,
-    billId: number,
-  ) {
+  private async validateBillHasNoEntries(tenantId, billId: number) {
     const { BillPaymentEntry } = this.tenancy.models(tenantId);
 
     // Retireve the bill associate payment made entries.
@@ -577,5 +575,23 @@ export default class BillsService extends SalesInvoicesCost {
       billId,
       'Bill'
     );
+  }
+
+  /**
+   * Validate the given vendor has no associated bills transactions.
+   * @param {number} tenantId
+   * @param {number} vendorId - Vendor id.
+   */
+  public async validateVendorHasNoBills(
+    tenantId: number,
+    vendorId: number
+  ) {
+    const { Bill } = this.tenancy.models(tenantId);
+
+    const bills = await Bill.query().where('vendor_id', vendorId);
+
+    if (bills.length > 0) {
+      throw new ServiceError(ERRORS.VENDOR_HAS_BILLS);
+    }
   }
 }

@@ -10,7 +10,7 @@ export interface ISaleReceipt {
   receiptMessage: string;
   receiptNumber: string;
   amount: number;
-  currencyCode: string,
+  currencyCode: string;
   statement: string;
   closedAt: Date | string;
   entries: any[];
@@ -24,14 +24,14 @@ export interface ISaleReceiptDTO {
   receiptDate: Date;
   sendToEmail: string;
   referenceNo?: string;
-  receiptNumber?: string,
+  receiptNumber?: string;
   receiptMessage: string;
   statement: string;
   closed: boolean;
   entries: any[];
 }
 
-export interface ISalesReceiptService {
+export interface ISalesReceiptsService {
   createSaleReceipt(
     tenantId: number,
     saleReceiptDTO: ISaleReceiptDTO
@@ -49,4 +49,9 @@ export interface ISalesReceiptService {
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }>;
+
+  validateCustomerHasNoReceipts(
+    tenantId: number,
+    customerId: number
+  ): Promise<void>;
 }

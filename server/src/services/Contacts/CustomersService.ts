@@ -1,5 +1,6 @@
 import { Inject, Service } from 'typedi';
-import { omit, intersection, defaultTo } from 'lodash';
+import { omit, defaultTo } from 'lodash';
+import async from 'async';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -7,6 +8,7 @@ import {
 import JournalPoster from 'services/Accounting/JournalPoster';
 import JournalCommands from 'services/Accounting/JournalCommands';
 import ContactsService from 'services/Contacts/ContactsService';
+import moment from 'moment';
 import {
   ICustomerNewDTO,
   ICustomerEditDTO,
@@ -16,15 +18,20 @@ import {
   IContactNewDTO,
   IContactEditDTO,
   IContact,
-  ISaleInvoice,
   ISystemUser,
+  ISalesInvoicesService,
+  ISalesReceiptsService,
+  ISalesEstimatesService,
+  IPaymentsReceiveService,
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
-import moment from 'moment';
 
+const ERRORS = {
+  CUSTOMER_HAS_TRANSACTIONS: 'CUSTOMER_HAS_TRANSACTIONS',
+};
 @Service()
 export default class CustomersService {
   @Inject()
@@ -41,6 +48,18 @@ export default class CustomersService {
 
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
+
+  @Inject('SalesInvoices')
+  invoicesService: ISalesInvoicesService;
+
+  @Inject('SalesReceipts')
+  receiptsService: ISalesReceiptsService;
+
+  @Inject('PaymentReceives')
+  paymentsService: IPaymentsReceiveService;
+
+  @Inject('SalesEstimates')
+  estimatesService: ISalesEstimatesService;
 
   /**
    * Converts customer to contact DTO.
@@ -159,6 +178,40 @@ export default class CustomersService {
   }
 
   /**
+   * Validate the customer associated relations.
+   * @param {number} tenantId
+   * @param {number} customerId - Customer id.
+   */
+  private async validateCustomerAssociatedRelations(
+    tenantId: number,
+    customerId: number
+  ) {
+    try {
+      // Validate whether the customer has no associated estimates transactions.
+      await this.estimatesService.validateCustomerHasNoEstimates(
+        tenantId,
+        customerId
+      );
+      // Validate whether the customer has no assocaited invoices tranasctions.
+      await this.invoicesService.validateCustomerHasNoInvoices(
+        tenantId,
+        customerId
+      );
+      // Validate whether the customer has no associated receipts transactions.
+      await this.receiptsService.validateCustomerHasNoReceipts(
+        tenantId,
+        customerId
+      );
+      // Validate whether the customer has no associated payment receives transactions.
+      await this.paymentsService.validateCustomerHasNoPayments(
+        tenantId,
+        customerId
+      );
+    } catch (error) {
+      throw new ServiceError(ERRORS.CUSTOMER_HAS_TRANSACTIONS);
+    }
+  }
+  /**
    * Deletes the given customer from the storage.
    * @param {number} tenantId
    * @param {number} customerId
@@ -176,9 +229,10 @@ export default class CustomersService {
     // Retrieve the customer of throw not found service error.
     await this.getCustomerByIdOrThrowError(tenantId, customerId);
 
-    // Validate whether the customer has no assocaited invoices tranasctions.
-    await this.customerHasNoInvoicesOrThrowError(tenantId, customerId);
+    // Validate the customer associated relations.
+    await this.validateCustomerAssociatedRelations(tenantId, customerId);
 
+    // Delete the customer from the storage.
     await this.contactService.deleteContact(tenantId, customerId, 'customer');
 
     // Throws `onCustomerDeleted` event.
@@ -225,12 +279,13 @@ export default class CustomersService {
     filterMeta: IFilterMeta;
   }> {
     const { Customer } = this.tenancy.models(tenantId);
+
+    // Dynamic list.
     const dynamicList = await this.dynamicListService.dynamicList(
       tenantId,
       Customer,
       customersFilter
     );
-
     const { results, pagination } = await Customer.query()
       .onBuild((query) => {
         dynamicList.buildQuery()(query);
@@ -308,104 +363,6 @@ export default class CustomersService {
       customerId,
       'customer'
     );
-  }
-
-  /**
-   * Retrieve the given customers or throw error if one of them not found.
-   * @param {numebr} tenantId
-   * @param {number[]} customersIds
-   */
-  private getCustomersOrThrowErrorNotFound(
-    tenantId: number,
-    customersIds: number[]
-  ) {
-    return this.contactService.getContactsOrThrowErrorNotFound(
-      tenantId,
-      customersIds,
-      'customer'
-    );
-  }
-
-  /**
-   * Deletes the given customers from the storage.
-   * @param {number} tenantId
-   * @param {number[]} customersIds
-   * @return {Promise<void>}
-   */
-  public async deleteBulkCustomers(
-    tenantId: number,
-    customersIds: number[],
-    authorizedUser: ISystemUser,
-  ): Promise<void> {
-    const { Contact } = this.tenancy.models(tenantId);
-
-    // Validate the customers existance on the storage.
-    await this.getCustomersOrThrowErrorNotFound(tenantId, customersIds);
-
-    // Validate the customers have no associated invoices.
-    await this.customersHaveNoInvoicesOrThrowError(tenantId, customersIds);
-
-    // Deletes the given customers.
-    await Contact.query().whereIn('id', customersIds).delete();
-
-    // Triggers `onCustomersBulkDeleted` event.
-    await this.eventDispatcher.dispatch(events.customers.onBulkDeleted, {
-      tenantId,
-      customersIds,
-      authorizedUser,
-    });
-  }
-
-  /**
-   * Validates the customer has no associated sales invoice
-   * or throw service error.
-   * @param {number} tenantId
-   * @param {number} customerId
-   * @throws {ServiceError}
-   * @return {Promise<void>}
-   */
-  private async customerHasNoInvoicesOrThrowError(
-    tenantId: number,
-    customerId: number
-  ) {
-    const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
-
-    // Retrieve the sales invoices that assocaited to the given customer.
-    const salesInvoice = await saleInvoiceRepository.find({
-      customer_id: customerId,
-    });
-    if (salesInvoice.length > 0) {
-      throw new ServiceError('customer_has_invoices');
-    }
-  }
-
-  /**
-   * Throws error in case one of customers have associated sales invoices.
-   * @param  {number} tenantId
-   * @param  {number[]} customersIds
-   * @throws {ServiceError}
-   * @return {Promise<void>}
-   */
-  private async customersHaveNoInvoicesOrThrowError(
-    tenantId: number,
-    customersIds: number[]
-  ) {
-    const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
-
-    const customersInvoices = await saleInvoiceRepository.findWhereIn(
-      'customer_id',
-      customersIds
-    );
-    const customersIdsWithInvoice = customersInvoices.map(
-      (saleInvoice: ISaleInvoice) => saleInvoice.customerId
-    );
-    const customersHaveInvoices = intersection(
-      customersIds,
-      customersIdsWithInvoice
-    );
-    if (customersHaveInvoices.length > 0) {
-      throw new ServiceError('some_customers_have_invoices');
-    }
   }
 
   /**

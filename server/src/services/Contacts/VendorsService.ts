@@ -15,11 +15,17 @@ import {
   IPaginationMeta,
   IFilterMeta,
   ISystemUser,
+  IBillsService,
+  IBillPaymentsService,
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import events from 'subscribers/events';
+
+const ERRORS = {
+  VENDOR_HAS_TRANSACTIONS: 'VENDOR_HAS_TRANSACTIONS',
+};
 
 @Service()
 export default class VendorsService {
@@ -37,6 +43,12 @@ export default class VendorsService {
 
   @Inject('logger')
   logger: any;
+
+  @Inject('Bills')
+  billsService: IBillsService;
+
+  @Inject('BillPayments')
+  billPaymentsService: IBillPaymentsService;
 
   /**
    * Converts vendor to contact DTO.
@@ -125,6 +137,27 @@ export default class VendorsService {
   }
 
   /**
+   * Validate the given vendor has no associated transactions.
+   * @param {number} tenantId 
+   * @param {number} vendorId 
+   */
+  private async validateAssociatedTransactions(
+    tenantId: number,
+    vendorId: number
+  ) {
+    try {
+      // Validate vendor has no bills.
+      await this.billsService.validateVendorHasNoBills(tenantId, vendorId);
+
+      // Validate vendor has no paymentys.
+      await this.billPaymentsService.validateVendorHasNoPayments(tenantId, vendorId);
+
+    } catch (error) {
+      throw new ServiceError(ERRORS.VENDOR_HAS_TRANSACTIONS);
+    }
+  }
+
+  /**
    * Deletes the given vendor from the storage.
    * @param {number} tenantId
    * @param {number} vendorId
@@ -138,8 +171,8 @@ export default class VendorsService {
     // Validate the vendor existance on the storage.
     await this.getVendorByIdOrThrowError(tenantId, vendorId);
 
-    // Validate the vendor has no associated bills.
-    await this.vendorHasNoBillsOrThrowError(tenantId, vendorId);
+    // Validate associated vendor transactions.
+    await this.validateAssociatedTransactions(tenantId, vendorId);
 
     this.logger.info('[vendor] trying to delete vendor.', {
       tenantId,
@@ -220,102 +253,6 @@ export default class VendorsService {
       id,
       'vendor'
     );
-  }
-
-  /**
-   * Retrieve the given vendors or throw error if one of them not found.
-   * @param {numebr} tenantId
-   * @param {number[]} vendorsIds
-   */
-  private getVendorsOrThrowErrorNotFound(
-    tenantId: number,
-    vendorsIds: number[]
-  ) {
-    return this.contactService.getContactsOrThrowErrorNotFound(
-      tenantId,
-      vendorsIds,
-      'vendor'
-    );
-  }
-
-  /**
-   * Deletes the given vendors from the storage.
-   * @param {number} tenantId
-   * @param {number[]} vendorsIds
-   * @return {Promise<void>}
-   */
-  public async deleteBulkVendors(
-    tenantId: number,
-    vendorsIds: number[],
-    authorizedUser: ISystemUser
-  ): Promise<void> {
-    const { Contact } = this.tenancy.models(tenantId);
-
-    // Validate the given vendors exists on the storage.
-    await this.getVendorsOrThrowErrorNotFound(tenantId, vendorsIds);
-
-    // Validate the given vendors have no assocaited bills.
-    await this.vendorsHaveNoBillsOrThrowError(tenantId, vendorsIds);
-
-    await Contact.query().whereIn('id', vendorsIds).delete();
-
-    // Triggers `onVendorsBulkDeleted` event.
-    await this.eventDispatcher.dispatch(events.vendors.onBulkDeleted, {
-      tenantId,
-      vendorsIds,
-      authorizedUser,
-    });
-
-    this.logger.info('[vendor] bulk deleted successfully.', {
-      tenantId,
-      vendorsIds,
-    });
-  }
-
-  /**
-   * Validates the vendor has no associated bills or throw service error.
-   * @param {number} tenantId
-   * @param {number} vendorId
-   */
-  private async vendorHasNoBillsOrThrowError(
-    tenantId: number,
-    vendorId: number
-  ) {
-    const { billRepository } = this.tenancy.repositories(tenantId);
-
-    // Retrieve the bill that associated to the given vendor id.
-    const bills = await billRepository.find({ vendor_id: vendorId });
-
-    if (bills.length > 0) {
-      throw new ServiceError('vendor_has_bills');
-    }
-  }
-
-  /**
-   * Throws error in case one of vendors have associated bills.
-   * @param  {number} tenantId
-   * @param  {number[]} customersIds
-   * @throws {ServiceError}
-   */
-  private async vendorsHaveNoBillsOrThrowError(
-    tenantId: number,
-    vendorsIds: number[]
-  ) {
-    const { billRepository } = this.tenancy.repositories(tenantId);
-
-    // Retrieves bills that assocaited to the given vendors.
-    const vendorsBills = await billRepository.findWhereIn(
-      'vendor_id',
-      vendorsIds
-    );
-    const billsVendorsIds = vendorsBills.map((bill) => bill.vendorId);
-
-    // The intersection between vendors and vendors that have bills.
-    const vendorsHaveInvoices = intersection(vendorsIds, billsVendorsIds);
-
-    if (vendorsHaveInvoices.length > 0) {
-      throw new ServiceError('some_vendors_have_bills');
-    }
   }
 
   /**

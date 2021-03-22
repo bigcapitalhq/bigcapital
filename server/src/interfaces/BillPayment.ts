@@ -46,3 +46,8 @@ export interface IBillReceivePageEntry {
   currencyCode: string,
   date: Date|string,
 };
+
+
+export interface IBillPaymentsService {
+  validateVendorHasNoPayments(tenantId: number, vendorId): Promise<void>;
+}
