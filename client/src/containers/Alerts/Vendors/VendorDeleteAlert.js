@@ -6,7 +6,7 @@ import {
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
-import { transformErrors } from 'containers/Customers/utils';
+import { transformErrors } from 'containers/Vendors/utils';
 import { useDeleteVendor } from 'hooks/query';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
@@ -28,10 +28,7 @@ function VendorDeleteAlert({
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const {
-    mutateAsync: deleteVendorMutate,
-    isLoading
-  } = useDeleteVendor();
+  const { mutateAsync: deleteVendorMutate, isLoading } = useDeleteVendor();
 
   // Handle cancel delete the vendor.
   const handleCancelDeleteAlert = () => {
@@ -49,9 +46,15 @@ function VendorDeleteAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((errors) => {
-        transformErrors(errors);
-      })
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          transformErrors(errors);
+        },
+      )
       .finally(() => {
         closeAlert(name);
       });

@@ -821,7 +821,8 @@ export default {
   average_rate: 'Average rate',
   the_name_used_before: 'The name is already used.',
   the_item_has_associated_transactions: 'The item has associated transactions.',
-  customer_has_sales_invoices: 'Cannot delete customer has associated sales invoices.',
+  customer_has_sales_invoices:
+    'Cannot delete customer has associated sales invoices.',
   account_name_is_already_used: 'Account name is already used.',
   vendors: 'Vendors',
   vendor_email: 'Vendor Email',
@@ -1013,11 +1014,23 @@ export default {
     'The payment amount bigger than invoice due amount.',
   accounting_basis_: 'Accounting Basis',
   deposit_customer_account: 'Deposit customer account',
-  withdrawal_customer_account: 'Withdrawal customer account',
-  vendor_advance_deposit: 'Vendor advance deposit',
+  withdrawal_vendor_account: 'Withdrawal vendor account',
+  customer_advance_deposit: 'Customer advance deposit',
   cannot_delete_bill_that_has_payment_transactions:
     'Cannot delete bill that has associated payment transactions.',
   cannot_change_item_type_to_inventory_with_item_has_associated_transactions:
     'Cannot change item type to inventory with item has associated transactions.',
   work_phone: 'Work Phone',
+  cannot_delete_vendor_that_has_associated_purchase_bills:
+    'Cannot delete vendor that has associated purchase bills.',
+  the_accountant_preferences_has_been_saved:
+    'The accountant preferences has been saved.',
+  the_items_preferences_has_been_saved: 'The items preferences has been saved.',
+  preferred_sell_account: 'Preferred sell account',
+  preferred_cost_account: 'Preferred cost account',
+  preferred_inventory_account: 'Preferred inventory account',
+  this_customer_cannot_be_deleted_as_it_is_associated_with_transactions:
+    'This customer cannot be deleted as it is associated with transactions.',
+  this_vendor_cannot_be_deleted_as_it_is_associated_with_transactions:
+    'This vendor cannot be deleted as it is associated with transactions.',
 };

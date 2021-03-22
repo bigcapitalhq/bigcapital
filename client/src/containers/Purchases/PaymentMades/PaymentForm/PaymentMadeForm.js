@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
-import { sumBy, pick } from 'lodash';
+import { sumBy, pick, defaultTo } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
@@ -26,7 +26,10 @@ import { defaultPaymentMade, transformToEditForm, ERRORS } from './utils';
 /**
  * Payment made form component.
  */
-function PaymentMadeForm() {
+function PaymentMadeForm({
+  // #withSettings
+  preferredPaymentAccount,
+}) {
   const history = useHistory();
   const { formatMessage } = useIntl();
 
@@ -50,6 +53,7 @@ function PaymentMadeForm() {
           }
         : {
             ...defaultPaymentMade,
+            payment_account_id: defaultTo(preferredPaymentAccount),
             entries: orderingLinesIndexes(defaultPaymentMade.entries),
           }),
     }),
@@ -156,5 +160,6 @@ export default compose(
   withSettings(({ billPaymentSettings }) => ({
     paymentNextNumber: billPaymentSettings?.next_number,
     paymentNumberPrefix: billPaymentSettings?.number_prefix,
+    preferredPaymentAccount: parseInt(billPaymentSettings?.withdrawalAccount),
   })),
 )(PaymentMadeForm);
