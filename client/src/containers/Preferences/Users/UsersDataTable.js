@@ -3,6 +3,8 @@ import React, { useCallback } from 'react';
 import { compose } from 'utils';
 import { DataTable } from 'components';
 
+import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
@@ -60,6 +62,7 @@ function UsersDataTable({
       loading={isUsersLoading}
       headerLoading={isUsersLoading}
       progressBarLoading={isUsersFetching}
+      TableLoadingRenderer={TableSkeletonRows}
       noInitialFetch={true}
       ContextMenu={ActionsMenu}
       payload={{

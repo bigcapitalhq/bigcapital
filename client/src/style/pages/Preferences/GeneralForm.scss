@@ -22,10 +22,13 @@
   }
 
   .bp3-form-group {
-    max-width: 550px;
+    max-width: 650px;
+    margin-bottom: 24px;
 
     .bp3-label {
-      min-width: 180px;
+      min-width: 190px;
+      font-weight: 600;
+      color: #38414e;
     }
 
     .bp3-form-content {
