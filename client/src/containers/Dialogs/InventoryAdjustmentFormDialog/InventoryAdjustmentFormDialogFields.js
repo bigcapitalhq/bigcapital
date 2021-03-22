@@ -155,6 +155,7 @@ export default function InventoryAdjustmentFormDialogFields() {
         {({ field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'adjustment_reasons'} />}
+            labelInfo={<FieldRequiredHint />}
             className={'form-group--adjustment-reasons'}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'reason'} />}
