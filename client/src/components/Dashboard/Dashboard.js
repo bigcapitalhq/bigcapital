@@ -1,6 +1,5 @@
 import React from 'react';
 import { Switch, Route } from 'react-router';
-import { useQuery } from 'react-query';
 
 import 'style/pages/Dashboard/Dashboard.scss';
 

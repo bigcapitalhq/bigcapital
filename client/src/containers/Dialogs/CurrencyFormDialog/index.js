@@ -1,5 +1,5 @@
 import React, { lazy } from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
 import { Dialog, DialogSuspense } from 'components';
 import withDialogRedux from 'components/DialogReduxConnect';
 import { compose } from 'utils';
@@ -30,6 +30,7 @@ function CurrencyFormDialog({
       isOpen={isOpen}
       autoFocus={true}
       canEscapeKeyClose={true}
+      style={{ width: '450px' }}
     >
       <DialogSuspense>
         <CurrencyFormDialogContent

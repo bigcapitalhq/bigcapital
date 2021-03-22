@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { defaultTo } from 'lodash';
-import { useQueryTenant } from '../useQueryRequest';
+import { useQueryTenant, useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import t from './types';
 
@@ -43,6 +42,24 @@ export function useEditUser(props) {
   });
 }
 
+export function useInactivateUser(props) {
+  const apiRequest = useApiRequest();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    ([id, values]) => apiRequest.post(`users/${id}/inactivate`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        queryClient.invalidateQueries([t.USER, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
 /**
  * Deletes the given user.
  */
@@ -53,7 +70,7 @@ export function useDeleteUser(props) {
   return useMutation((id) => apiRequest.delete(`users/${id}`), {
     onSuccess: (res, id) => {
       queryClient.invalidateQueries([t.USER, id]);
-      
+
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
     },
@@ -65,18 +82,18 @@ export function useDeleteUser(props) {
  * Retrieves users list.
  */
 export function useUsers(props) {
-  const apiRequest = useApiRequest();
-
-  const result = useQueryTenant(
+  return useRequestQuery(
     [t.USERS],
-    () => apiRequest.get(`USERS`).then((response) => response.data.users),
-    props,
+    {
+      method: 'get',
+      url: 'users',
+    },
+    {
+      select: (res) => res.data.users,
+      defaultData: [],
+      ...props,
+    },
   );
-
-  return {
-    ...result,
-    data: defaultTo(result.data, {}),
-  };
 }
 
 /**

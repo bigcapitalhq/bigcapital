@@ -4,7 +4,7 @@ import {Switch, Route, useRouteMatch} from 'react-router-dom';
 
 export default function PreferencesSubContent({ preferenceTab }) {
   const routes = preferencesTabs[preferenceTab];
-  const {path} = useRouteMatch();
+  const { path } = useRouteMatch();
 
   if (routes.length <= 0) { return null; }
 

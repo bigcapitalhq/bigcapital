@@ -12,7 +12,7 @@ function InviteUserFormProvider({ userId, isEditMode, dialogName, ...props }) {
   const { mutateAsync: inviteUserMutate } = useCreateInviteUser();
 
   // fetch users list.
-  const { isFetching: isUsersLoading } = useUsers();
+  const { isLoading: isUsersLoading } = useUsers();
 
   // Provider state.
   const provider = {

@@ -1,19 +1,14 @@
-import React, { useMemo, useCallback } from 'react';
+import React from 'react';
 import {
-  Button,
   Classes,
   FormGroup,
   InputGroup,
-  Intent,
 } from '@blueprintjs/core';
-import { Form, useFormikContext, FastField } from 'formik';
-import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick } from 'lodash';
+import { FastField } from 'formik';
+import { FormattedMessage as T } from 'react-intl';
 import {
   ErrorMessage,
-  AppToaster,
   FieldRequiredHint,
-  DialogContent,
 } from 'components';
 
 import { useAutofocus } from 'hooks';
@@ -33,7 +28,7 @@ export default function CurrencyFormFields() {
             className={'form-group--currency-name'}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="currency_name" />}
-            inline={true}
+            // inline={true}
           >
             <InputGroup
               inputRef={(ref) => (currencyNameFieldRef.current = ref)}
@@ -51,7 +46,7 @@ export default function CurrencyFormFields() {
             className={'form-group--currency-code'}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="currency_code" />}
-            inline={true}
+            // inline={true}
           >
             <InputGroup {...field} />
           </FormGroup>

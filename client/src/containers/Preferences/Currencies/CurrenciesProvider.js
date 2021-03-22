@@ -8,7 +8,7 @@ const CurrenciesContext = createContext();
  */
 function CurrenciesProvider({ ...props }) {
   // fetches the currencies list.
-  const { data: currencies, isFetching: isCurrenciesLoading } = useCurrencies();
+  const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 
   const state = {
     currencies,
@@ -16,9 +16,7 @@ function CurrenciesProvider({ ...props }) {
   };
 
   return (
-    <>
-      <CurrenciesContext.Provider value={state} {...props} />
-    </>
+    <CurrenciesContext.Provider value={state} {...props} />  
   );
 }
 

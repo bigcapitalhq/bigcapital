@@ -3,10 +3,11 @@
 // ---------------------------------
 .preferences-page__inside-content--users{
 
-  .bigcapital-datatable {
+.bigcapital-datatable {
 
     .td{
       .avatar{
+        display: block;
         height: 28px;
         width: 28px;
         text-align: center;

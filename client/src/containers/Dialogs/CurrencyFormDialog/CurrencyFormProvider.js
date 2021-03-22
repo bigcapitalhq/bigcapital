@@ -14,7 +14,7 @@ function CurrencyFormProvider({ isEditMode, currency, dialogName, ...props }) {
   const { mutateAsync: editCurrencyMutate } = useEditCurrency();
 
   // fetch Currencies list.
-  const { data: currencies, isFetching: isCurrenciesLoading } = useCurrencies();
+  const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 
   // Provider state.
   const provider = {

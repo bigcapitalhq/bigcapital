@@ -2,10 +2,16 @@ import React from 'react';
 import { Tabs, Tab } from '@blueprintjs/core';
 import classNames from 'classnames';
 
+import 'style/pages/Preferences/Users.scss'
+
 import { CLASSES } from 'common/classes';
 import PreferencesSubContent from 'components/Preferences/PreferencesSubContent';
+
 import withUserPreferences from 'containers/Preferences/Users/withUserPreferences';
 
+/**
+ * Preferences page - Users page.
+ */
 function UsersPreferences({ openDialog }) {
   const onChangeTabs = (currentTabId) => {};
 
