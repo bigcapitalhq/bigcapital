@@ -1,32 +1,35 @@
-import { Service } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { Router, Request, Response } from 'express';
 import { body, query } from 'express-validator';
 import { pick } from 'lodash';
 import { IOptionDTO, IOptionsDTO } from 'interfaces';
 import BaseController from 'api/controllers/BaseController';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
-import {
-  getDefinedOptions,
-  isDefinedOptionConfigurable,
-} from 'utils';
+import { getDefinedOptions, isDefinedOptionConfigurable } from 'utils';
+import SettingsService from 'services/Settings/SettingsService';
 
 @Service()
-export default  class SettingsController extends BaseController{
+export default class SettingsController extends BaseController {
+  @Inject()
+  settingsService: SettingsService;
+
   /**
    * Router constructor.
    */
   router() {
     const router = Router();
 
-    router.post('/',
+    router.post(
+      '/',
       this.saveSettingsValidationSchema,
       this.validationResult,
-      asyncMiddleware(this.saveSettings.bind(this)),
+      asyncMiddleware(this.saveSettings.bind(this))
     );
-    router.get('/',
+    router.get(
+      '/',
       this.getSettingsSchema,
       this.validationResult,
-      asyncMiddleware(this.getSettings.bind(this)),
+      asyncMiddleware(this.getSettings.bind(this))
     );
     return router;
   }
@@ -46,7 +49,7 @@ export default  class SettingsController extends BaseController{
   /**
    * Retrieve the application options from the storage.
    */
-   private get getSettingsSchema() {
+  private get getSettingsSchema() {
     return [
       query('key').optional().trim().escape(),
       query('group').optional().trim().escape(),
@@ -55,16 +58,19 @@ export default  class SettingsController extends BaseController{
 
   /**
    * Saves the given options to the storage.
-   * @param {Request} req - 
-   * @param {Response} res - 
+   * @param {Request} req -
+   * @param {Response} res -
    */
   public async saveSettings(req: Request, res: Response, next) {
-    const { Option } = req.models;
+    const { tenantId } = req;
     const optionsDTO: IOptionsDTO = this.matchedBodyData(req);
     const { settings } = req;
 
-    const errorReasons: { type: string, code: number, keys: [] }[] = [];
-    const notDefinedOptions = Option.validateDefined(optionsDTO.options);
+    const errorReasons: { type: string; code: number; keys: [] }[] = [];
+    const notDefinedOptions = this.settingsService.validateNotDefinedSettings(
+      tenantId,
+      optionsDTO.options
+    );
 
     if (notDefinedOptions.length) {
       errorReasons.push({
@@ -82,7 +88,7 @@ export default  class SettingsController extends BaseController{
     try {
       await settings.save();
 
-      return res.status(200).send({ 
+      return res.status(200).send({
         type: 'success',
         code: 'OPTIONS.SAVED.SUCCESSFULLY',
         message: 'Options have been saved successfully.',
@@ -94,8 +100,8 @@ export default  class SettingsController extends BaseController{
 
   /**
    * Retrieve settings.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   public getSettings(req: Request, res: Response) {
     const { settings } = req;
@@ -103,4 +109,4 @@ export default  class SettingsController extends BaseController{
 
     return res.status(200).send({ settings: allSettings });
   }
-};
+}

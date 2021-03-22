@@ -1,19 +1,19 @@
-import { Model } from 'objection';
-import {
-  IMetadata,
-  IMetableStoreStorage,
-} from 'interfaces';
+import { IMetadata, IMetableStoreStorage } from 'interfaces';
 import MetableStore from './MetableStore';
-import { isBlank } from 'utils';
-
-export default class MetableDBStore extends MetableStore implements IMetableStoreStorage{
+import { isBlank, parseBoolean } from 'utils';
+import MetableConfig from './MetableConfig';
+import config from 'data/options'
+export default class MetableDBStore
+  extends MetableStore
+  implements IMetableStoreStorage {
   repository: any;
   KEY_COLUMN: string;
   VALUE_COLUMN: string;
   TYPE_COLUMN: string;
   extraQuery: Function;
   loaded: Boolean;
- 
+  config: MetableConfig;
+
   /**
    * Constructor method.
    */
@@ -32,11 +32,12 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
         ...this.transfromMetaExtraColumns(meta),
       };
     };
+    this.config = new MetableConfig(config);
   }
 
   /**
    * Transformes meta query.
-   * @param {IMetadata} meta 
+   * @param {IMetadata} meta
    */
   private transfromMetaExtraColumns(meta: IMetadata) {
     return this.extraColumns.reduce((obj, column) => {
@@ -56,10 +57,10 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
   setRepository(repository) {
     this.repository = repository;
   }
-  
+
   /**
    * Sets a extra query callback.
-   * @param callback 
+   * @param callback
    */
   setExtraQuery(callback) {
     this.extraQuery = callback;
@@ -84,17 +85,18 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
    * @returns {Promise}
    */
   saveUpdated(metadata: IMetadata[]) {
-    const updated = metadata.filter((m) => (m._markAsUpdated === true));
+    const updated = metadata.filter((m) => m._markAsUpdated === true);
     const opers = [];
 
     updated.forEach((meta) => {
-      const updateOper = this.repository.update({
-        [this.VALUE_COLUMN]: meta.value,
-      }, {
-        ...this.extraQuery(meta),
-      }).then(() => {
-        meta._markAsUpdated = false;
-      });
+      const updateOper = this.repository
+        .update(
+          { [this.VALUE_COLUMN]: meta.value },
+          { ...this.extraQuery(meta) }
+        )
+        .then(() => {
+          meta._markAsUpdated = false;
+        });
       opers.push(updateOper);
     });
     return Promise.all(opers);
@@ -106,16 +108,20 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
    * @returns {Promise}
    */
   saveDeleted(metadata: IMetadata[]) {
-    const deleted = metadata.filter((m: IMetadata) => (m._markAsDeleted === true));
+    const deleted = metadata.filter(
+      (m: IMetadata) => m._markAsDeleted === true
+    );
     const opers: Promise<void> = [];
 
     if (deleted.length > 0) {
       deleted.forEach((meta) => {
-        const deleteOper = this.repository.deleteBy({
-          ...this.extraQuery(meta),
-        }).then(() => {
-          meta._markAsDeleted = false;
-        });
+        const deleteOper = this.repository
+          .deleteBy({
+            ...this.extraQuery(meta),
+          })
+          .then(() => {
+            meta._markAsDeleted = false;
+          });
         opers.push(deleteOper);
       });
     }
@@ -128,7 +134,9 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
    * @returns {Promise}
    */
   saveInserted(metadata: IMetadata[]) {
-    const inserted = metadata.filter((m: IMetadata) => (m._markAsInserted === true));
+    const inserted = metadata.filter(
+      (m: IMetadata) => m._markAsInserted === true
+    );
     const opers: Promise<void> = [];
 
     inserted.forEach((meta) => {
@@ -137,10 +145,9 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
         [this.VALUE_COLUMN]: meta.value,
         ...this.transfromMetaExtraColumns(meta),
       };
-      const insertOper = this.repository.create(insertData)
-        .then(() => {
-          meta._markAsInserted = false;
-        });
+      const insertOper = this.repository.create(insertData).then(() => {
+        meta._markAsInserted = false;
+      });
       opers.push(insertOper);
     });
     return Promise.all(opers);
@@ -164,20 +171,23 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
   }
 
   /**
-   * Format the metadata before saving to the database.
+   * Parse the metadata values after fetching it from the storage.
    * @param {String|Number|Boolean} value -
    * @param {String} valueType -
    * @return {String|Number|Boolean} -
    */
-  static formatMetaValue(value: string|number|boolean, valueType: string|false) {
-    let parsedValue: string|number|boolean;
+  static parseMetaValue(
+    value: string,
+    valueType: string | false
+  ): string | boolean | number {
+    let parsedValue: string | number | boolean;
 
     switch (valueType) {
       case 'number':
-        parsedValue = `${value}`;
+        parsedValue = parseFloat(value);
         break;
       case 'boolean':
-        parsedValue = value ? '1' : '0';
+        parsedValue = parseBoolean(value, false);
         break;
       case 'json':
         parsedValue = JSON.stringify(parsedValue);
@@ -195,11 +205,15 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
    * @param {String} parseType -
    */
   mapMetadata(metadata: IMetadata) {
+    const metaType = this.config.getMetaType(
+      metadata[this.KEY_COLUMN],
+      metadata['group'],
+    );
     return {
       key: metadata[this.KEY_COLUMN],
-      value: MetableDBStore.formatMetaValue(
+      value: MetableDBStore.parseMetaValue(
         metadata[this.VALUE_COLUMN],
-        this.TYPE_COLUMN ? metadata[this.TYPE_COLUMN] : false,
+        metaType
       ),
       ...this.extraColumns.reduce((obj, extraCol: string) => {
         obj[extraCol] = metadata[extraCol] || null;
@@ -220,8 +234,10 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
    * Throw error in case the store is not loaded yet.
    */
   private validateStoreIsLoaded() {
-    if (!this.loaded)  {
-      throw new Error('You could not save the store before loaded from the storage.');
+    if (!this.loaded) {
+      throw new Error(
+        'You could not save the store before loaded from the storage.'
+      );
     }
   }
 }

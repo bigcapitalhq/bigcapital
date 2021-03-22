@@ -1,166 +1,127 @@
 export default {
-  organization: [
-    {
-      key: "name",
-      type: "string",
-      config: true,
-    },
-    {
-      key: "base_currency",
-      type: "string",
-      config: true,
-    },
-    {
-      key: "industry",
+  organization: {
+    name: {
       type: "string",
     },
-    {
-      key: "location",
+    base_currency: {
+      type: 'string',
+    },
+    industry: {
       type: "string",
     },
-    {
-      key: "fiscal_year",
-      type: "string",
-      // config: true,
-    },
-    {
-      key: "financial_date_start",
+    location: {
       type: "string",
     },
-    {
-      key: "language",
-      type: "string",
-      config: true,
+    fiscal_year: {
+      type: 'string',
     },
-    {
-      key: "time_zone",
-      type: "string",
+    financial_date_start: {
+      type: 'string',
     },
-    {
-      key: "date_format",
-      type: "string",
+    language: {
+      type: 'string',
     },
-    {
-      key: 'accounting_basis',
+    time_zone: {
+      type: 'string',
+    },
+    date_format: {
+      type: 'string',
+    },
+    accounting_basis: {
       type: 'string',
     }
-  ],
-  manual_journals: [
-    {
-      key: "next_number",
-      type: "string",
+  },
+  manual_journals: {
+    next_number: {
+      type: 'string',
     },
-    {
-      key: "number_prefix",
-      type: "string",
+    number_prefix: {
+      type: 'string',
     },
-    {
-      key: "auto_increment",
-      type: "boolean",
+    auto_increment: {
+      type: 'boolean',
     }
-  ],
-  bill_payments: [
-    {
-      key: 'withdrawal_account',
-      type: 'string'
-    }
-  ],
-  sales_estimates: [
-    {
-      key: "next_number",
-      type: "number",
-    },
-    {
-      key: "number_prefix",
-      type: "string",
-    },
-    {
-      key: "auto_increment",
-      type: "boolean",
-    }
-  ],
-  sales_receipts: [
-    {
-      key: "next_number",
-      type: "number",
-    },
-    {
-      key: "number_prefix",
-      type: "string",
-    },
-    {
-      key: "auto_increment",
-      type: "boolean",
-    },
-    {
-      key: "preferred_deposit_account",
-      type: "number",
-    },
-  ],
-  sales_invoices: [
-    {
-      key: "next_number",
-      type: "number",
-    },
-    {
-      key: "number_prefix",
-      type: "string",
-    },
-    {
-      key: "auto_increment",
-      type: "boolean",
-    }
-  ],
-  payment_receives: [
-    {
-      key: "next_number",
-      type: "number",
-    },
-    {
-      key: "number_prefix",
-      type: "string",
-    },
-    {
-      key: "auto_increment",
-      type: "boolean",
-    },
-    {
-      key: 'deposit_account',
+  },
+  bill_payments: {
+    withdrawal_account: {
       type: 'string'
     },
-    {
-      key: 'advance_deposit',
-      key: 'string'
+  },
+  sales_estimates: {
+    next_number: {
+      type: 'string',
+    },
+    number_prefix: {
+      type: 'string',
+    },
+    auto_increment: {
+      type: "boolean",
     }
-  ],
-  items: [
-    {
-      key: "sell_account",
-      type: "number",
+  },
+  sales_receipts: {
+    next_number: {
+      type: "string",
     },
-    {
-      key: "cost_account",
-      type: "number",
+    number_prefix: {
+      type: "string",
     },
-    {
-      key: "inventory_account",
-      type: "number",
+    auto_increment: {
+      type: "boolean",
     },
-  ],
-  expenses: [
-    {
-      key: "preferred_payment_account",
+    preferred_deposit_account: {
       type: "number",
+    }
+  },
+  sales_invoices: {
+    next_number: {
+      type: "string",
     },
-  ],
-  accounts: [
-    {
-      key: 'account_code_required',
+    number_prefix: {
+      type: "string",
+    },
+    auto_increment: {
+      type: "boolean",
+    },
+  },
+  payment_receives: {
+    next_number: {
+      type: "string",
+    },
+    number_prefix: {
+      type: "string",
+    },
+    auto_increment: {
       type: 'boolean',
     },
-    {
-      key: 'account_code_unique',
+    deposit_account: {
+      type: 'number',
+    },
+    advance_deposit: {
+      type: 'number',
+    }
+  },
+  items: {
+    sell_account: {
+      type: 'number',
+    },
+    cost_account: {
+      type: 'number',
+    },
+    inventory_account: {
+      type: 'number',
+    },
+  },
+  expenses: {
+    preferred_payment_account: {
+      type: "number",
+    }
+  },
+  accounts: {
+    account_code_required: {
       type: 'boolean',
     },
-  ]
+    account_code_unique: {
+      type: 'boolean',
+    }
+  }
 };

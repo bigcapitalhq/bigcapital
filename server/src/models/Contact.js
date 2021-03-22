@@ -20,7 +20,7 @@ export default class Contact extends TenantModel {
    * Defined virtual attributes.
    */
   static get virtualAttributes() {
-    return ['contactNormal', 'closingBalance'];
+    return ['contactNormal', 'closingBalance', 'formattedContactService'];
   }
 
   /**
@@ -35,17 +35,36 @@ export default class Contact extends TenantModel {
   }
 
   /**
-   * Retrieve the contact noraml;
+   * Retrieve the contact normal by the given contact service.
+   * @param {string} contactService 
+   */
+  static getFormattedContactService(contactService) {
+    const types = {
+      'customer': 'Customer',
+      'vendor': 'Vendor',
+    };
+    return types[contactService];
+  }
+
+  /**
+   * Retrieve the contact normal.
    */
   get contactNormal() {
     return Contact.getContactNormalByType(this.contactService);
   }
 
   /**
+   * Retrieve formatted contact service.
+   */
+  get formattedContactService() {
+    return Contact.getFormattedContactService(this.contactService);
+  }
+
+  /**
    * Closing balance attribute.
    */
   get closingBalance() {
-    return this.openingBalance + this.balance;
+    return this.balance;
   }
 
   /**
