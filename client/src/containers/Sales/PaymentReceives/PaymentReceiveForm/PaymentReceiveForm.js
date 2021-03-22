@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { useIntl } from 'react-intl';
-import { omit, sumBy, pick, isEmpty } from 'lodash';
+import { omit, sumBy, pick, isEmpty, defaultTo } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
@@ -33,6 +33,7 @@ import { defaultPaymentReceive, transformToEditForm } from './utils';
  */
 function PaymentReceiveForm({
   // #withSettings
+  preferredDepositAccount,
   paymentReceiveNextNumber,
   paymentReceiveNumberPrefix,
   paymentReceiveAutoIncrement,
@@ -65,6 +66,7 @@ function PaymentReceiveForm({
             ...defaultPaymentReceive,
             ...(paymentReceiveAutoIncrement && {
               payment_receive_no: nextPaymentNumber,
+              deposit_account_id: defaultTo(preferredDepositAccount, ''),
             }),
           }),
     }),
@@ -161,7 +163,6 @@ function PaymentReceiveForm({
       createPaymentReceiveMutate(form).then(onSaved).catch(onError);
     }
   };
-
   return (
     <div
       className={classNames(
@@ -198,8 +199,10 @@ function PaymentReceiveForm({
 
 export default compose(
   withSettings(({ paymentReceiveSettings }) => ({
+    paymentReceiveSettings,
     paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
     paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
     paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
+    preferredDepositAccount: paymentReceiveSettings?.depositAccount,
   })),
 )(PaymentReceiveForm);

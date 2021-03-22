@@ -67,7 +67,7 @@ function ItemForm({
   const history = useHistory();
 
   const { formatMessage } = useIntl();
-  
+
   /**
    * Initial values in create and edit mode.
    */
@@ -122,10 +122,9 @@ function ItemForm({
       AppToaster.show({
         message: formatMessage(
           {
-            id:
-              isNewMode 
-                ? 'the_item_has_been_created_successfully'
-                : 'the_item_has_been_edited_successfully',
+            id: isNewMode
+              ? 'the_item_has_been_created_successfully'
+              : 'the_item_has_been_edited_successfully',
           },
           {
             number: itemId,
@@ -181,10 +180,8 @@ function ItemForm({
 
 export default compose(
   withSettings(({ itemsSettings }) => ({
-    preferredCostAccount: parseInt(itemsSettings?.preferredCostAccount),
-    preferredSellAccount: parseInt(itemsSettings?.preferredSellAccount),
-    preferredInventoryAccount: parseInt(
-      itemsSettings?.preferredInventoryAccount,
-    ),
+    preferredCostAccount: parseInt(itemsSettings?.costAccount),
+    preferredSellAccount: parseInt(itemsSettings?.sellAccount),
+    preferredInventoryAccount: parseInt(itemsSettings?.inventoryAccount),
   })),
 )(ItemForm);
