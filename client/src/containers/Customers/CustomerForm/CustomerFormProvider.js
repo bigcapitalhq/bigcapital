@@ -58,7 +58,6 @@ function CustomerFormProvider({ customerId, ...props }) {
     <DashboardInsider
       loading={
         isCustomerLoading ||
-        isCustomerLoading ||
         isCurrenciesLoading ||
         isContactLoading
       }

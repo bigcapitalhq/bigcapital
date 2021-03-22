@@ -19,6 +19,8 @@ const VendorFormContext = createContext();
 function VendorFormProvider({ vendorId, ...props }) {
   const { state } = useLocation();
 
+  const contactId = state?.action;
+
   // Handle fetch Currencies data table
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 
@@ -27,13 +29,11 @@ function VendorFormProvider({ vendorId, ...props }) {
     enabled: !!vendorId,
   });
 
-  const contactId = state?.action;
-
   // Handle fetch contact duplicate details.
-  const { data: contactDuplicate, isLoading: isContactLoading } = useContact(
-    contactId,
-    { enabled: !!contactId },
-  );
+  const {
+    data: contactDuplicate,
+    isLoading: isContactLoading,
+  } = useContact(contactId, { enabled: !!contactId });
 
   // Create and edit vendor mutations.
   const { mutateAsync: createVendorMutate } = useCreateVendor();
@@ -42,12 +42,16 @@ function VendorFormProvider({ vendorId, ...props }) {
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = useState({});
 
+  // determines whether the form new or duplicate mode.
+  const isNewMode = contactId || !vendorId;
+
   const provider = {
     vendorId,
     currencies,
     vendor,
     contactDuplicate: { ...omit(contactDuplicate, ['opening_balance_at']) },
     submitPayload,
+    isNewMode,
 
     createVendorMutate,
     editVendorMutate,

@@ -25,7 +25,7 @@ export default function VendorFloatingActions() {
   const { resetForm, isSubmitting, submitForm } = useFormikContext();
 
   // Vendor form context.
-  const { vendor, setSubmitPayload } = useVendorFormContext();
+  const { isNewMode, setSubmitPayload } = useVendorFormContext();
 
   // History.
   const history = useHistory();
@@ -62,7 +62,7 @@ export default function VendorFloatingActions() {
           intent={Intent.PRIMARY}
           type="submit"
           onClick={handleSubmitBtnClick}
-          text={vendor ? <T id={'edit'} /> : <T id={'save'} />}
+          text={!isNewMode ? <T id={'edit'} /> : <T id={'save'} />}
         />
         <Popover
           content={
@@ -89,7 +89,7 @@ export default function VendorFloatingActions() {
         className={'ml1'}
         disabled={isSubmitting}
         onClick={handleClearBtnClick}
-        text={vendor ? <T id={'reset'} /> : <T id={'clear'} />}
+        text={!isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel  ----------- */}
       <Button

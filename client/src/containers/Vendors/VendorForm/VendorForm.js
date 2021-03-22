@@ -78,9 +78,10 @@ function VendorForm({
     editVendorMutate,
     setSubmitPayload,
     submitPayload,
+    isNewMode,
   } = useVendorFormContext();
 
-  const isNewMode = !vendorId;
+  // const isNewMode = !vendorId;
 
   // History context.
   const history = useHistory();
@@ -94,16 +95,10 @@ function VendorForm({
     () => ({
       ...defaultInitialValues,
       currency_code: baseCurrency,
-      ...transformToForm(vendor || contactDuplicate, defaultInitialValues),
+      ...transformToForm(contactDuplicate || vendor, defaultInitialValues),
     }),
     [vendor, contactDuplicate, baseCurrency],
   );
-
-  useEffect(() => {
-    !isNewMode
-      ? changePageTitle(formatMessage({ id: 'edit_vendor' }))
-      : changePageTitle(formatMessage({ id: 'new_vendor' }));
-  }, [changePageTitle, isNewMode, formatMessage]);
 
   // Handles the form submit.
   const handleFormSubmit = (
@@ -136,10 +131,10 @@ function VendorForm({
       setSubmitting(false);
     };
 
-    if (vendor && vendor.id) {
-      editVendorMutate([vendor.id, requestForm]).then(onSuccess).catch(onError);
-    } else {
+    if (isNewMode) {
       createVendorMutate(requestForm).then(onSuccess).catch(onError);
+    } else {
+      editVendorMutate([vendor.id, requestForm]).then(onSuccess).catch(onError);
     }
   };
 

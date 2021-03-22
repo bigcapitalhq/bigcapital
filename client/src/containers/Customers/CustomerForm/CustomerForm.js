@@ -84,7 +84,7 @@ function CustomerForm({
     () => ({
       ...defaultInitialValues,
       currency_code: baseCurrency,
-      ...transformToForm(customer || contactDuplicate, defaultInitialValues),
+      ...transformToForm(contactDuplicate || customer, defaultInitialValues),
     }),
     [customer, contactDuplicate, baseCurrency],
   );
