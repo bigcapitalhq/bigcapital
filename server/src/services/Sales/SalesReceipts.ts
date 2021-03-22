@@ -8,11 +8,18 @@ import {
 import events from 'subscribers/events';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import JournalCommands from 'services/Accounting/JournalCommands';
-import { ISaleReceipt, ISaleReceiptDTO, IItemEntry, IItem } from 'interfaces';
+import {
+  IFilterMeta,
+  IPaginationMeta,
+  ISaleReceipt,
+  ISaleReceiptDTO,
+  ISalesReceiptsService,
+  IItemEntry,
+  IItem,
+} from 'interfaces';
 import JournalPosterService from 'services/Sales/JournalPosterService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import { formatDateFields } from 'utils';
-import { IFilterMeta, IPaginationMeta } from 'interfaces';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from 'exceptions';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
@@ -29,10 +36,11 @@ const ERRORS = {
   SALE_RECEIPT_NUMBER_NOT_UNIQUE: 'SALE_RECEIPT_NUMBER_NOT_UNIQUE',
   SALE_RECEIPT_IS_ALREADY_CLOSED: 'SALE_RECEIPT_IS_ALREADY_CLOSED',
   SALE_RECEIPT_NO_IS_REQUIRED: 'SALE_RECEIPT_NO_IS_REQUIRED',
+  CUSTOMER_HAS_SALES_INVOICES: 'CUSTOMER_HAS_SALES_INVOICES',
 };
 
-@Service()
-export default class SalesReceiptService {
+@Service('SalesReceipts')
+export default class SalesReceiptService implements ISalesReceiptsService {
   @Inject()
   tenancy: TenancyService;
 
@@ -547,5 +555,23 @@ export default class SalesReceiptService {
       receiptId,
       'SaleReceipt'
     );
+  }
+
+  /**
+   * Validate the given customer has no sales receipts.
+   * @param {number} tenantId
+   * @param {number} customerId - Customer id.
+   */
+  public async validateCustomerHasNoReceipts(
+    tenantId: number,
+    customerId: number
+  ) {
+    const { SaleReceipt } = this.tenancy.models(tenantId);
+
+    const receipts = await SaleReceipt.query().where('customer_id', customerId);
+
+    if (receipts.length > 0) {
+      throw new ServiceError(ERRORS.CUSTOMER_HAS_SALES_INVOICES);
+    }
   }
 }

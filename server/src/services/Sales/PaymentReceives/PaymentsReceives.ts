@@ -15,6 +15,7 @@ import {
   IPaymentReceiveEntry,
   IPaymentReceiveEntryDTO,
   IPaymentReceivesFilter,
+  IPaymentsReceiveService,
   ISaleInvoice,
   ISystemUser,
 } from 'interfaces';
@@ -37,8 +38,8 @@ import { ERRORS } from './constants';
  * Payment receive service.
  * @service
  */
-@Service()
-export default class PaymentReceiveService {
+@Service('PaymentReceives')
+export default class PaymentReceiveService implements IPaymentsReceiveService {
   @Inject()
   accountsService: AccountsService;
 
@@ -522,7 +523,7 @@ export default class PaymentReceiveService {
   public async deletePaymentReceive(
     tenantId: number,
     paymentReceiveId: number,
-    authorizedUser: ISystemUser,
+    authorizedUser: ISystemUser
   ) {
     const { PaymentReceive, PaymentReceiveEntry } = this.tenancy.models(
       tenantId
@@ -771,5 +772,25 @@ export default class PaymentReceiveService {
       opers.push(oper);
     });
     await Promise.all([...opers]);
+  }
+
+  /**
+   * Validate the given customer has no payments receives.
+   * @param {number} tenantId
+   * @param {number} customerId - Customer id.
+   */
+  public async validateCustomerHasNoPayments(
+    tenantId: number,
+    customerId: number
+  ) {
+    const { PaymentReceive } = this.tenancy.models(tenantId);
+
+    const paymentReceives = await PaymentReceive.query().where(
+      'customer_id',
+      customerId
+    );
+    if (paymentReceives.length > 0) {
+      throw new ServiceError(ERRORS.CUSTOMER_HAS_PAYMENT_RECEIVES);
+    }
   }
 }

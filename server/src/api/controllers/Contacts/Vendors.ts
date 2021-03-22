@@ -55,13 +55,6 @@ export default class VendorsController extends ContactsController {
       asyncMiddleware(this.deleteVendor.bind(this)),
       this.handlerServiceErrors,
     );
-    router.delete('/', [
-      ...this.bulkContactsSchema,
-    ],
-      this.validationResult,
-      asyncMiddleware(this.deleteBulkVendors.bind(this)),
-      this.handlerServiceErrors,
-    );
     router.get('/:id', [
       ...this.specificContactSchema,
     ],
@@ -297,19 +290,14 @@ export default class VendorsController extends ContactsController {
           errors: [{ type: 'VENDORS.NOT.FOUND', code: 200 }],
         });
       }
-      if (error.errorType === 'some_vendors_have_bills') {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'SOME.VENDORS.HAVE.ASSOCIATED.BILLS', code: 300 }],
-        });
-      }
-      if (error.errorType === 'vendor_has_bills') {
-        return res.status(400).send({
-          errors: [{ type: 'VENDOR.HAS.ASSOCIATED.BILLS', code: 400 }],
-        });
-      }
       if (error.errorType === 'OPENING_BALANCE_DATE_REQUIRED') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'OPENING_BALANCE_DATE_REQUIRED', code: 500 }],
+        });
+      }
+      if (error.errorType === 'VENDOR_HAS_TRANSACTIONS') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'VENDOR_HAS_TRANSACTIONS', code: 600 }],
         });
       }
     }

@@ -33,8 +33,8 @@ import { ERRORS } from './constants';
  * Bill payments service.
  * @service
  */
-@Service()
-export default class BillPaymentsService {
+@Service('BillPayments')
+export default class BillPaymentsService implements IBillPaymentsService {
   @Inject()
   accountsService: AccountsService;
 
@@ -178,7 +178,7 @@ export default class BillPaymentsService {
 
     if (notOpenedBills.length > 0) {
       throw new ServiceError(ERRORS.BILLS_NOT_OPENED_YET, null, {
-        notOpenedBills
+        notOpenedBills,
       });
     }
   }
@@ -695,5 +695,20 @@ export default class BillPaymentsService {
       }
     );
     await Promise.all(opers);
+  }
+
+  /**
+   * Validates the given vendor has no associated payments.
+   * @param {number} tenantId
+   * @param {number} vendorId
+   */
+  public async validateVendorHasNoPayments(tenantId: number, vendorId: number) {
+    const { BillPayment } = this.tenancy.models(tenantId);
+
+    const payments = await BillPayment.query().where('vendor_id', vendorId);
+
+    if (payments.length > 0) {
+      throw new ServiceError(ERRORS.VENDOR_HAS_PAYMENTS);
+    }
   }
 }

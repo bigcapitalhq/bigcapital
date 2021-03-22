@@ -33,3 +33,11 @@ export interface ISaleEstimateDTO {
 export interface ISalesEstimatesFilter extends IDynamicListFilterDTO { 
   stringifiedFilterRoles?: string,
 }
+
+
+export interface ISalesEstimatesService {
+  validateCustomerHasNoEstimates(
+    tenantId: number,
+    customerId: number,
+  ): Promise<void>;
+}

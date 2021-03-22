@@ -63,13 +63,6 @@ export default class CustomersController extends ContactsController {
       asyncMiddleware(this.deleteCustomer.bind(this)),
       this.handlerServiceErrors
     );
-    router.delete(
-      '/',
-      [...this.bulkContactsSchema],
-      this.validationResult,
-      asyncMiddleware(this.deleteBulkCustomers.bind(this)),
-      this.handlerServiceErrors
-    );
     router.get(
       '/',
       [...this.validateListQuerySchema],
@@ -264,32 +257,6 @@ export default class CustomersController extends ContactsController {
   }
 
   /**
-   * Deletes customers in bulk.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  async deleteBulkCustomers(req: Request, res: Response, next: NextFunction) {
-    const { ids: contactsIds } = req.query;
-    const { tenantId, user } = req;
-
-    try {
-      await this.customersService.deleteBulkCustomers(
-        tenantId,
-        contactsIds,
-        user
-      );
-
-      return res.status(200).send({
-        ids: contactsIds,
-        message: 'The customers have been deleted successfully.',
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
    * Retrieve customers paginated and filterable list.
    * @param {Request} req
    * @param {Response} res
@@ -350,19 +317,14 @@ export default class CustomersController extends ContactsController {
           errors: [{ type: 'CUSTOMERS.NOT.FOUND', code: 200 }],
         });
       }
-      if (error.errorType === 'some_customers_have_invoices') {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'SOME.CUSTOMERS.HAVE.SALES_INVOICES', code: 300 }],
-        });
-      }
-      if (error.errorType === 'customer_has_invoices') {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'CUSTOMER.HAS.SALES_INVOICES', code: 400 }],
-        });
-      }
       if (error.errorType === 'OPENING_BALANCE_DATE_REQUIRED') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'OPENING_BALANCE_DATE_REQUIRED', code: 500 }],
+        });
+      }
+      if (error.errorType === 'CUSTOMER_HAS_TRANSACTIONS') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CUSTOMER_HAS_TRANSACTIONS', code: 600 }],
         });
       }
     }

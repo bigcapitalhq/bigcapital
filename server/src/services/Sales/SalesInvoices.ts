@@ -15,6 +15,7 @@ import {
   ISystemUser,
   IItem,
   IItemEntry,
+  ISalesInvoicesService
 } from 'interfaces';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import JournalCommands from 'services/Accounting/JournalCommands';
@@ -36,8 +37,8 @@ import { ERRORS } from './constants';
  * Sales invoices service
  * @service
  */
-@Service()
-export default class SaleInvoicesService {
+@Service('SalesInvoices')
+export default class SaleInvoicesService implements ISalesInvoicesService {
   @Inject()
   tenancy: TenancyService;
 
@@ -664,5 +665,23 @@ export default class SaleInvoicesService {
     });
 
     return salesInvoices;
+  }
+
+  /**
+   * Validate the given customer has no sales invoices.
+   * @param {number} tenantId
+   * @param {number} customerId - Customer id.
+   */
+  public async validateCustomerHasNoInvoices(
+    tenantId: number,
+    customerId: number
+  ) {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+
+    const invoices = await SaleInvoice.query().where('customer_id', customerId);
+
+    if (invoices.length > 0) {
+      throw new ServiceError(ERRORS.CUSTOMER_HAS_SALES_INVOICES);
+    }
   }
 }

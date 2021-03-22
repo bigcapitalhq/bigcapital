@@ -56,3 +56,7 @@ export interface IBill {
 export interface IBillsFilter extends IDynamicListFilterDTO { 
   stringifiedFilterRoles?: string,
 }
+
+export interface IBillsService {
+  validateVendorHasNoBills(tenantId: number, vendorId: number): Promise<void>;
+}

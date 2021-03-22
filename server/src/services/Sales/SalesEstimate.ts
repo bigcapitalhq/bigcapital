@@ -6,6 +6,7 @@ import {
   IPaginationMeta,
   ISaleEstimate,
   ISaleEstimateDTO,
+  ISalesEstimatesService,
 } from 'interfaces';
 import {
   EventDispatcher,
@@ -32,14 +33,15 @@ const ERRORS = {
   SALE_ESTIMATE_ALREADY_APPROVED: 'SALE_ESTIMATE_ALREADY_APPROVED',
   SALE_ESTIMATE_NOT_DELIVERED: 'SALE_ESTIMATE_NOT_DELIVERED',
   SALE_ESTIMATE_NO_IS_REQUIRED: 'SALE_ESTIMATE_NO_IS_REQUIRED',
+  CUSTOMER_HAS_SALES_ESTIMATES: 'CUSTOMER_HAS_SALES_ESTIMATES',
 };
 
 /**
  * Sale estimate service.
  * @Service
  */
-@Service()
-export default class SaleEstimateService {
+@Service('SalesEstimates')
+export default class SaleEstimateService implements ISalesEstimatesService{
   @Inject()
   tenancy: TenancyService;
 
@@ -174,7 +176,8 @@ export default class SaleEstimateService {
     const autoNextNumber = this.getNextEstimateNumber(tenantId);
 
     // Retreive the next estimate number.
-    const estimateNumber = estimateDTO.estimateNumber ||
+    const estimateNumber =
+      estimateDTO.estimateNumber ||
       oldSaleEstimate?.estimateNumber ||
       autoNextNumber;
 
@@ -201,9 +204,9 @@ export default class SaleEstimateService {
       })),
       // Avoid rewrite the deliver date in edit mode when already published.
       ...(estimateDTO.delivered &&
-          !oldSaleEstimate?.deliveredAt && {
-        deliveredAt: moment().toMySqlDateTime(),
-      }),
+        !oldSaleEstimate?.deliveredAt && {
+          deliveredAt: moment().toMySqlDateTime(),
+        }),
     };
   }
 
@@ -233,10 +236,7 @@ export default class SaleEstimateService {
     this.logger.info('[sale_estimate] inserting sale estimate to the storage.');
 
     // Transform DTO object ot model object.
-    const estimateObj = await this.transformDTOToModel(
-      tenantId,
-      estimateDTO
-    );
+    const estimateObj = await this.transformDTOToModel(tenantId, estimateDTO);
     // Validate estimate number uniquiness on the storage.
     await this.validateEstimateNumberExistance(
       tenantId,
@@ -582,5 +582,25 @@ export default class SaleEstimateService {
       rejectedAt: moment().toMySqlDateTime(),
       approvedAt: null,
     });
+  }
+
+  /**
+   * Validate the given customer has no sales estimates.
+   * @param {number} tenantId
+   * @param {number} customerId - Customer id.
+   */
+  public async validateCustomerHasNoEstimates(
+    tenantId: number,
+    customerId: number
+  ) {
+    const { SaleEstimate } = this.tenancy.models(tenantId);
+
+    const estimates = await SaleEstimate.query().where(
+      'customer_id',
+      customerId
+    );
+    if (estimates.length > 0) {
+      throw new ServiceError(ERRORS.CUSTOMER_HAS_SALES_ESTIMATES);
+    }
   }
 }
