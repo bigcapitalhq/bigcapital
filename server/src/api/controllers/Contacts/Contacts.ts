@@ -304,14 +304,4 @@ export default class ContactsController extends BaseController {
   get specificContactSchema(): ValidationChain[] {
     return [param('id').exists().isNumeric().toInt()];
   }
-
-  /**
-   * @returns {ValidationChain[]}
-   */
-  get bulkContactsSchema(): ValidationChain[] {
-    return [
-      query('ids').isArray({ min: 1 }),
-      query('ids.*').isNumeric().toInt(),
-    ];
-  }
 }

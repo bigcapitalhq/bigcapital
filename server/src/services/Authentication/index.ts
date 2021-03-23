@@ -177,7 +177,8 @@ export default class AuthenticationService implements IAuthenticationService {
       ...omit(registerDTO, 'country'),
       active: true,
       password: hashedPassword,
-      tenant_id: tenant.id,
+      tenantId: tenant.id,
+      inviteAcceptedAt: moment().format('YYYY-MM-DD'),
     });
     // Triggers `onRegister` event.
     this.eventDispatcher.dispatch(events.auth.register, {

@@ -10,6 +10,7 @@ const Schema = Yup.object().shape({
     .max(4)
     .required()
     .label(formatMessage({ id: 'currency_code_' })),
+  currency_sign: Yup.string().required(),
 });
 
 export const CreateCurrencyFormSchema = Schema;

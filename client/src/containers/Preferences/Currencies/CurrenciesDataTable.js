@@ -52,6 +52,7 @@ function CurrenciesDataTable({
       loading={isCurrenciesLoading}
       progressBarLoading={isCurrenciesLoading}
       TableLoadingRenderer={TableSkeletonRows}
+      ContextMenu={ActionMenuList}
       noInitialFetch={true}
       payload={{
         onDeleteCurrency: handleDeleteCurrency,

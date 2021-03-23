@@ -28,3 +28,13 @@ export const useInviteMetaByToken = (token, props) => {
     }
   );
 }
+
+
+export const useResendInvitation = (props) => {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (userId) => apiRequest.post(`invite/resend/${userId}`),
+    props
+  )
+}

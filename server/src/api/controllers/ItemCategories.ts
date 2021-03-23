@@ -41,13 +41,6 @@ export default class ItemsCategoriesController extends BaseController {
       this.handlerServiceError
     );
     router.delete(
-      '/',
-      [...this.categoriesBulkValidationSchema],
-      this.validationResult,
-      asyncMiddleware(this.bulkDeleteCategories.bind(this)),
-      this.handlerServiceError
-    );
-    router.delete(
       '/:id',
       [...this.specificCategoryValidationSchema],
       this.validationResult,
@@ -100,16 +93,6 @@ export default class ItemsCategoriesController extends BaseController {
         .optional({ nullable: true })
         .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
         .toInt(),
-    ];
-  }
-
-  /**
-   * Validate items categories bulk actions.
-   */
-  get categoriesBulkValidationSchema() {
-    return [
-      query('ids').isArray({ min: 1 }),
-      query('ids.*').isNumeric().toInt(),
     ];
   }
 
@@ -258,31 +241,6 @@ export default class ItemsCategoriesController extends BaseController {
         user
       );
       return res.status(200).send({ category: itemCategory });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Bulk delete the given item categories.
-   * @param  {Request} req -
-   * @param  {Response} res -
-   * @return {Response}
-   */
-  async bulkDeleteCategories(req: Request, res: Response, next: NextFunction) {
-    const itemCategoriesIds = req.query.ids;
-    const { tenantId, user } = req;
-
-    try {
-      await this.itemCategoriesService.deleteItemCategories(
-        tenantId,
-        itemCategoriesIds,
-        user
-      );
-      return res.status(200).send({
-        ids: itemCategoriesIds,
-        message: 'The item categories have been deleted successfully.',
-      });
     } catch (error) {
       next(error);
     }

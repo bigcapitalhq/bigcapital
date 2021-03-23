@@ -7,13 +7,13 @@ import BaseController from 'api/controllers/BaseController';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import AuthenticationService from 'services/Authentication';
 import { ILoginDTO, ISystemUser, IRegisterDTO } from 'interfaces';
-import { ServiceError, ServiceErrors } from "exceptions";
+import { ServiceError, ServiceErrors } from 'exceptions';
 import { DATATYPES_LENGTH } from 'data/DataTypes';
 import LoginThrottlerMiddleware from 'api/middleware/LoginThrottlerMiddleware';
 import config from 'config';
 
 @Service()
-export default class AuthenticationController extends BaseController{
+export default class AuthenticationController extends BaseController {
   @Inject()
   authService: AuthenticationService;
 
@@ -116,19 +116,21 @@ export default class AuthenticationController extends BaseController{
    * Country validator.
    */
   countryValidator(value, { req }) {
-    const { countries: { whitelist, blacklist } } = config.registration;
+    const {
+      countries: { whitelist, blacklist },
+    } = config.registration;
     const foundCountry = countries.findOne('countryCode', value);
 
     if (!foundCountry) {
       throw new Error('The country code is invalid.');
     }
     if (
-      // Focus with me! In case whitelist is not empty and the given coutry is not 
+      // Focus with me! In case whitelist is not empty and the given coutry is not
       // in whitelist throw the error.
-      // 
-      // Or in case the blacklist is not empty and the given country exists 
+      //
+      // Or in case the blacklist is not empty and the given country exists
       // in the blacklist throw the goddamn error.
-      (whitelist.length > 0 && whitelist.indexOf(value) === -1) || 
+      (whitelist.length > 0 && whitelist.indexOf(value) === -1) ||
       (blacklist.length > 0 && blacklist.indexOf(value) !== -1)
     ) {
       throw new Error('The country code is not supported yet.');
@@ -153,7 +155,9 @@ export default class AuthenticationController extends BaseController{
    */
   get resetPasswordSchema(): ValidationChain[] {
     return [
-      check('password').exists().isLength({ min: 5 })
+      check('password')
+        .exists()
+        .isLength({ min: 5 })
         .custom((value, { req }) => {
           if (value !== req.body.confirm_password) {
             throw new Error("Passwords don't match");
@@ -168,15 +172,13 @@ export default class AuthenticationController extends BaseController{
    * Send reset password validation schema.
    */
   get sendResetPasswordSchema(): ValidationChain[] {
-    return [
-      check('email').exists().isEmail().trim().escape(),
-    ];
+    return [check('email').exists().isEmail().trim().escape()];
   }
 
   /**
    * Handle user login.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async login(req: Request, res: Response, next: Function): Response {
     const userDTO: ILoginDTO = this.matchedBodyData(req);
@@ -194,14 +196,16 @@ export default class AuthenticationController extends BaseController{
 
   /**
    * Organization register handler.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async register(req: Request, res: Response, next: Function) {
     const registerDTO: IRegisterDTO = this.matchedBodyData(req);
 
     try {
-      const registeredUser: ISystemUser = await this.authService.register(registerDTO);
+      const registeredUser: ISystemUser = await this.authService.register(
+        registerDTO
+      );
 
       return res.status(200).send({
         type: 'success',
@@ -215,8 +219,8 @@ export default class AuthenticationController extends BaseController{
 
   /**
    * Send reset password handler
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async sendResetPassword(req: Request, res: Response, next: Function) {
     const { email } = this.matchedBodyData(req);
@@ -226,11 +230,10 @@ export default class AuthenticationController extends BaseController{
 
       return res.status(200).send({
         code: 'SEND_RESET_PASSWORD_SUCCESS',
-        message: 'The reset password message has been sent successfully.'
+        message: 'The reset password message has been sent successfully.',
       });
-    } catch(error) {
+    } catch (error) {
       if (error instanceof ServiceError) {
-        
       }
       next(error);
     }
@@ -238,8 +241,8 @@ export default class AuthenticationController extends BaseController{
 
   /**
    * Reset password handler
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async resetPassword(req: Request, res: Response, next: Function) {
     const { token } = req.params;
@@ -250,9 +253,9 @@ export default class AuthenticationController extends BaseController{
 
       return res.status(200).send({
         type: 'RESET_PASSWORD_SUCCESS',
-        message: 'The password has been reset successfully.'
-      })
-    } catch(error) {
+        message: 'The password has been reset successfully.',
+      });
+    } catch (error) {
       next(error);
     }
   }
@@ -262,7 +265,9 @@ export default class AuthenticationController extends BaseController{
    */
   handlerErrors(error, req: Request, res: Response, next: Function) {
     if (error instanceof ServiceError) {
-      if (['INVALID_DETAILS', 'invalid_password'].indexOf(error.errorType) !== -1) {
+      if (
+        ['INVALID_DETAILS', 'invalid_password'].indexOf(error.errorType) !== -1
+      ) {
         return res.boom.badRequest(null, {
           errors: [{ type: 'INVALID_DETAILS', code: 100 }],
         });
@@ -272,7 +277,10 @@ export default class AuthenticationController extends BaseController{
           errors: [{ type: 'USER_INACTIVE', code: 200 }],
         });
       }
-      if (error.errorType === 'TOKEN_INVALID' || error.errorType === 'TOKEN_EXPIRED') {
+      if (
+        error.errorType === 'TOKEN_INVALID' ||
+        error.errorType === 'TOKEN_EXPIRED'
+      ) {
         return res.boom.badRequest(null, {
           errors: [{ type: 'TOKEN_INVALID', code: 300 }],
         });
@@ -303,4 +311,4 @@ export default class AuthenticationController extends BaseController{
     }
     next(error);
   }
-};
+}

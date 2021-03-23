@@ -113,7 +113,7 @@ export default class UsersService {
     // Throw serivce error if the user is already activated.
     this.throwErrorIfUserActive(user);
 
-    await systemUserRepository.activateUser(userId);
+    await systemUserRepository.activateById(userId);
   }
 
   /**

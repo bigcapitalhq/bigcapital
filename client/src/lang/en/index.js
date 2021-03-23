@@ -318,6 +318,7 @@ export default {
   edit_user: 'Edit User',
   edit_invite: 'Edit Invite',
   inactivate_user: 'Inactivate User',
+  activate_user: 'Activate User',
   delete_user: 'Delete User',
   full_name: 'Full Name',
   the_user_has_been_inactivated_successfully:
@@ -1033,4 +1034,6 @@ export default {
     'This customer cannot be deleted as it is associated with transactions.',
   this_vendor_cannot_be_deleted_as_it_is_associated_with_transactions:
     'This vendor cannot be deleted as it is associated with transactions.',
+
+  currency_sign: 'Currency sign',
 };

@@ -24,12 +24,6 @@ export default class AccountsController extends BaseController {
     const router = Router();
 
     router.post(
-      '/bulk/:type(activate|inactivate)',
-      [...this.bulkSelectIdsQuerySchema],
-      this.validationResult,
-      asyncMiddleware(this.bulkToggleActivateAccounts.bind(this))
-    );
-    router.post(
       '/:id/activate',
       [...this.accountParamSchema],
       asyncMiddleware(this.activateAccount.bind(this)),
@@ -75,13 +69,6 @@ export default class AccountsController extends BaseController {
       this.validationResult,
       asyncMiddleware(this.getAccountsList.bind(this)),
       this.dynamicListService.handlerErrorsToResponse,
-      this.catchServiceErrors
-    );
-    router.delete(
-      '/',
-      [...this.bulkSelectIdsQuerySchema],
-      this.validationResult,
-      asyncMiddleware(this.deleteBulkAccounts.bind(this)),
       this.catchServiceErrors
     );
     router.delete(
@@ -137,13 +124,6 @@ export default class AccountsController extends BaseController {
 
       query('column_sort_by').optional(),
       query('sort_order').optional().isIn(['desc', 'asc']),
-    ];
-  }
-
-  get bulkSelectIdsQuerySchema() {
-    return [
-      query('ids').isArray({ min: 1 }),
-      query('ids.*').isNumeric().toInt(),
     ];
   }
 
@@ -287,62 +267,6 @@ export default class AccountsController extends BaseController {
       return res.status(200).send({
         id: accountId,
         message: 'The account has been inactivated successfully.',
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Bulk activate/inactivate accounts.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  async bulkToggleActivateAccounts(
-    req: Request,
-    res: Response,
-    next: Function
-  ) {
-    const { type } = req.params;
-    const { tenantId } = req;
-    const { ids: accountsIds } = req.query;
-
-    try {
-      const isActive = type === 'activate' ? true : false;
-      await this.accountsService.activateAccounts(
-        tenantId,
-        accountsIds,
-        isActive
-      );
-
-      const activatedText = isActive ? 'activated' : 'inactivated';
-
-      return res.status(200).send({
-        ids: accountsIds,
-        message: `The given accounts have been ${activatedText} successfully`,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Deletes accounts in bulk.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  async deleteBulkAccounts(req: Request, res: Response, next: NextFunction) {
-    const { ids: accountsIds } = req.query;
-    const { tenantId } = req;
-
-    try {
-      await this.accountsService.deleteAccounts(tenantId, accountsIds);
-
-      return res.status(200).send({
-        ids: accountsIds,
-        message: 'The given accounts have been deleted successfully.',
       });
     } catch (error) {
       next(error);

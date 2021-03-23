@@ -14,11 +14,11 @@
   }
   .plan-radio,
   .period-radio{
-    background: transparent;
+    background: #fff;
     border-color: #bbcad4;
 
     &.is-selected{
-      background: #f1f3fb;
+      background: #fff;
       border-color: #0269ff
     }
   }

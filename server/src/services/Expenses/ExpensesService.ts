@@ -571,48 +571,6 @@ export default class ExpensesService implements IExpensesService {
   }
 
   /**
-   * Deletes the given expenses in bulk.
-   * @param {number} tenantId
-   * @param {number[]} expensesIds
-   * @param {ISystemUser} authorizedUser
-   */
-  public async deleteBulkExpenses(
-    tenantId: number,
-    expensesIds: number[],
-    authorizedUser: ISystemUser
-  ) {
-    const {
-      expenseRepository,
-      expenseEntryRepository,
-    } = this.tenancy.repositories(tenantId);
-
-    // Retrieve olds expenses.
-    const oldExpenses = await this.getExpensesOrThrowError(
-      tenantId,
-      expensesIds
-    );
-
-    this.logger.info('[expense] trying to delete the given expenses.', {
-      tenantId,
-      expensesIds,
-    });
-    await expenseEntryRepository.deleteWhereIn('expenseId', expensesIds);
-    await expenseRepository.deleteWhereIdIn(expensesIds);
-
-    this.logger.info('[expense] the given expenses deleted successfully.', {
-      tenantId,
-      expensesIds,
-    });
-    // Triggers `onExpenseBulkDeleted` event.
-    this.eventDispatcher.dispatch(events.expenses.onBulkDeleted, {
-      tenantId,
-      expensesIds,
-      oldExpenses,
-      authorizedUser,
-    });
-  }
-
-  /**
    * Filters the not published expenses.
    * @param {IExpense[]} expenses - 
    */
@@ -627,74 +585,6 @@ export default class ExpensesService implements IExpensesService {
    */
   public getPublishedExpenses(expenses: IExpense[]): IExpense[] {
     return expenses.filter((expense) => expense.publishedAt);
-  }
-
-  /**
-   * Deletes the given expenses in bulk.
-   * @param {number} tenantId
-   * @param {number[]} expensesIds
-   * @param {ISystemUser} authorizedUser
-   */
-  public async publishBulkExpenses(
-    tenantId: number,
-    expensesIds: number[],
-    authorizedUser: ISystemUser
-  ): Promise<{
-    meta: {
-      alreadyPublished: number;
-      published: number;
-      total: number,
-    },
-  }> {
-    const oldExpenses = await this.getExpensesOrThrowError(
-      tenantId,
-      expensesIds
-    );
-    const { expenseRepository } = this.tenancy.repositories(tenantId);
-
-    // Filters the not published expenses.
-    const notPublishedExpenses = this.getNonePublishedExpenses(oldExpenses);
-
-    // Filters the published expenses.
-    const publishedExpenses = this.getPublishedExpenses(oldExpenses);
-
-    // Mappes the not-published expenses to get id.
-    const notPublishedExpensesIds = map(notPublishedExpenses, 'id');
-
-    if (notPublishedExpensesIds.length > 0) {
-      this.logger.info('[expense] trying to publish the given expenses.', {
-        tenantId,
-        expensesIds,
-      });
-      await expenseRepository.whereIdInPublish(notPublishedExpensesIds);
-
-      this.logger.info(
-        '[expense] the given expenses ids published successfully.',
-        { tenantId, expensesIds }
-      );
-    }
-    // Retrieve the new expenses after modification.
-    const expenses = await expenseRepository.findWhereIn(
-      'id',
-      expensesIds,
-      'categories'
-    );
-    // Triggers `onExpenseBulkDeleted` event.
-    this.eventDispatcher.dispatch(events.expenses.onBulkPublished, {
-      tenantId,
-      expensesIds,
-      oldExpenses,
-      expenses,
-      authorizedUser,
-    });
-
-    return {
-      meta: {
-        alreadyPublished: publishedExpenses.length,
-        published: notPublishedExpenses.length,
-        total: oldExpenses.length,
-      },
-    };
   }
 
   /**
