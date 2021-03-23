@@ -1,5 +1,7 @@
 import moment from 'moment';
 import _, { castArray } from 'lodash';
+import Currencies from 'js-money/lib/currency';
+
 import { Intent } from '@blueprintjs/core';
 import Currency from 'js-money/lib/currency';
 import accounting from 'accounting';
@@ -620,3 +622,17 @@ export const updateTableRow = (rowIndex, columnId, value) => (old) => {
 export const transformGeneralSettings = (data) => {
   return _.mapKeys(data, (value, key) => _.snakeCase(key));
 };
+
+const getCurrenciesOptions = () => {
+  return Object.keys(Currencies).map((currencyCode) => {
+    const currency = Currencies[currencyCode];
+
+    return {
+      ...currency,
+      currency_code: currencyCode,
+      formatted_name: `${currencyCode} - ${currency.name}`,
+    };
+  })
+}
+
+export const currenciesOptions = getCurrenciesOptions();

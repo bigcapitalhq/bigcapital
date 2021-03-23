@@ -16,7 +16,8 @@ import TenancyService from 'services/Tenancy/TenancyService';
 const ERRORS = {
   CURRENCY_NOT_FOUND: 'currency_not_found',
   CURRENCY_CODE_EXISTS: 'currency_code_exists',
-  BASE_CURRENCY_INVALID: 'BASE_CURRENCY_INVALID'
+  BASE_CURRENCY_INVALID: 'BASE_CURRENCY_INVALID',
+  CANNOT_DELETE_BASE_CURRENCY: 'CANNOT_DELETE_BASE_CURRENCY'
 };
 
 @Service()
@@ -131,6 +132,7 @@ export default class CurrenciesService implements ICurrenciesService {
       tenantId,
       currencyDTO,
     });
+    // Validate currency code uniquiness.
     await this.validateCurrencyCodeUniquiness(
       tenantId,
       currencyDTO.currencyCode
@@ -175,6 +177,22 @@ export default class CurrenciesService implements ICurrenciesService {
   }
 
   /**
+   * Validate cannot delete base currency.
+   * @param {number} tenantId 
+   * @param {string} currencyCode 
+   */
+  validateCannotDeleteBaseCurrency(tenantId: number, currencyCode: string) {
+    const settings = this.tenancy.settings(tenantId);
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
+    if (baseCurrency === currencyCode) {
+      throw new ServiceError(ERRORS.CANNOT_DELETE_BASE_CURRENCY);
+    }
+  }
+
+  /**
    * Delete the given currency code.
    * @param {number} tenantId
    * @param {string} currencyCode
@@ -192,6 +210,9 @@ export default class CurrenciesService implements ICurrenciesService {
 
     await this.getCurrencyByCodeOrThrowError(tenantId, currencyCode);
 
+    // Validate currency code not equals base currency.
+    await this.validateCannotDeleteBaseCurrency(tenantId, currencyCode);
+
     await Currency.query().where('currency_code', currencyCode).delete();
     this.logger.info('[currencies] the currency deleted successfully.', {
       tenantId,
@@ -207,10 +228,20 @@ export default class CurrenciesService implements ICurrenciesService {
   public async listCurrencies(tenantId: number): Promise<ICurrency[]> {
     const { Currency } = this.tenancy.models(tenantId);
 
+    const settings = this.tenancy.settings(tenantId);
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
+
     const currencies = await Currency.query().onBuild((query) => {
       query.orderBy('createdAt', 'ASC');
     });
-    return currencies;
+    const formattedCurrencies = currencies.map((currency) => ({
+      isBaseCurrency: baseCurrency === currency.currencyCode,
+      ...currency,
+    }));
+    return formattedCurrencies;
   }
 
   /**

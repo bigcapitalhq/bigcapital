@@ -3,14 +3,17 @@
 export interface ICurrencyDTO {
   currencyName: string,
   currencyCode: string,
+  currencySign: string,
 };
 export interface ICurrencyEditDTO {
   currencyName: string,
+  currencySign: string,
 }
 export interface ICurrency {
   id: number,
   currencyName: string,
   currencyCode: string,
+  currencySign: string,
   createdAt: Date,
   updatedAt: Date,
 };

@@ -49,13 +49,17 @@ export default class CurrenciesController extends BaseController {
 
   get currencyDTOSchemaValidation(): ValidationChain[] {
     return [
-      check('currency_name').exists().trim().escape(),
-      check('currency_code').exists().trim().escape(),
+      check('currency_name').exists().trim(),
+      check('currency_code').exists().trim(),
+      check('currency_sign').exists().trim(),
     ];
   }
 
   get currencyEditDTOSchemaValidation(): ValidationChain[] {
-    return [check('currency_name').exists().trim().escape()];
+    return [
+      check('currency_name').exists().trim(),
+      check('currency_sign').exists().trim(),
+    ];
   }
 
   get currencyIdParamSchema(): ValidationChain[] {
@@ -84,7 +88,10 @@ export default class CurrenciesController extends BaseController {
 
     try {
       const currencies = await this.currenciesService.listCurrencies(tenantId);
-      return res.status(200).send({ currencies: [...currencies] });
+
+      return res.status(200).send({
+        currencies: this.transfromToResponse(currencies),
+      });
     } catch (error) {
       next(error);
     }
@@ -142,7 +149,7 @@ export default class CurrenciesController extends BaseController {
   async editCurrency(req: Request, res: Response, next: Function) {
     const { tenantId } = req;
     const { id: currencyId } = req.params;
-    const { body: editCurrencyDTO } = req;
+    const editCurrencyDTO = this.matchedBodyData(req);
 
     try {
       const currency = await this.currenciesService.editCurrency(
@@ -180,7 +187,22 @@ export default class CurrenciesController extends BaseController {
       }
       if (error.errorType === 'currency_code_exists') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'CURRENCY_CODE_EXISTS', code: 200 }],
+          errors: [{
+            type: 'CURRENCY_CODE_EXISTS',
+            message: 'The given currency code is already exists.',
+            code: 200,
+           }],
+        });
+      }
+      if (error.errorType === 'CANNOT_DELETE_BASE_CURRENCY') {
+        return res.boom.badRequest(null, {
+          errors: [
+            {
+              type: 'CANNOT_DELETE_BASE_CURRENCY',
+              code: 300,
+              message: 'Cannot delete the base currency.',
+            },
+          ],
         });
       }
     }

@@ -220,28 +220,6 @@ export default class VendorsController extends ContactsController {
   }
 
   /**
-   * Deletes vendors in bulk.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
-   */
-  async deleteBulkVendors(req: Request, res: Response, next: NextFunction) {
-    const { ids: contactsIds } = req.query;
-    const { tenantId, user } = req;
-
-    try {
-      await this.vendorsService.deleteBulkVendors(tenantId, contactsIds, user)
-
-      return res.status(200).send({
-        ids: contactsIds,
-        message: 'The vendors have been deleted successfully.',
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
    * Retrieve vendors datatable list.
    * @param {Request} req 
    * @param {Response} res 

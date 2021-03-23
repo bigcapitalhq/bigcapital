@@ -1,6 +1,5 @@
 import React from 'react';
 import { CurrencyFormProvider } from './CurrencyFormProvider';
-import { pick } from 'lodash';
 
 import CurrencyForm from './CurrencyForm';
 import withCurrencyDetail from 'containers/Currencies/withCurrencyDetail';

@@ -173,17 +173,6 @@ export default class ItemsController extends BaseController {
   }
 
   /**
-   * Bulk select validation schema.
-   * @return {ValidationChain[]}
-   */
-  get validateBulkSelectSchema(): ValidationChain[] {
-    return [
-      query('ids').isArray({ min: 1 }),
-      query('ids.*').isNumeric().toInt(),
-    ];
-  }
-
-  /**
    * Validate list query schema
    */
   get validateListQuerySchema() {

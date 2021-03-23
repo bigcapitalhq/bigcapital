@@ -115,7 +115,7 @@ export function NormalCell({ cell: { value } }) {
 export function BalanceCell({ cell }) {
   const account = cell.row.original;
 
-  return account.amount ? (
+  return account.amount !== null ? (
     <span>
       <Money amount={account.amount} currency={'USD'} />
     </span>

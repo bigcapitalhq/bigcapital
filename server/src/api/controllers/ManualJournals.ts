@@ -36,13 +36,6 @@ export default class ManualJournalsController extends BaseController {
       this.catchServiceErrors.bind(this)
     );
     router.post(
-      '/publish',
-      [...this.manualJournalIdsSchema],
-      this.validationResult,
-      asyncMiddleware(this.publishManualJournals.bind(this)),
-      this.catchServiceErrors.bind(this)
-    );
-    router.post(
       '/:id/publish',
       [...this.manualJournalParamSchema],
       this.validationResult,
@@ -63,13 +56,6 @@ export default class ManualJournalsController extends BaseController {
       asyncMiddleware(this.deleteManualJournal.bind(this)),
       this.catchServiceErrors.bind(this)
     );
-    router.delete(
-      '/',
-      [...this.manualJournalIdsSchema],
-      this.validationResult,
-      asyncMiddleware(this.deleteBulkManualJournals.bind(this)),
-      this.catchServiceErrors.bind(this)
-    );
     router.post(
       '/',
       [...this.manualJournalValidationSchema],
@@ -85,16 +71,6 @@ export default class ManualJournalsController extends BaseController {
    */
   get manualJournalParamSchema() {
     return [param('id').exists().isNumeric().toInt()];
-  }
-
-  /**
-   * Manual journal bulk ids validation schema.
-   */
-  get manualJournalIdsSchema() {
-    return [
-      query('ids').isArray({ min: 1 }),
-      query('ids.*').isNumeric().toInt(),
-    ];
   }
 
   /**
@@ -278,34 +254,6 @@ export default class ManualJournalsController extends BaseController {
   }
 
   /**
-   * Publish the given manual journals in bulk.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  async publishManualJournals(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
-    const { ids: manualJournalsIds } = req.query;
-
-    try {
-      const {
-        meta: { alreadyPublished, published, total },
-      } = await this.manualJournalsService.publishManualJournals(
-        tenantId,
-        manualJournalsIds
-      );
-
-      return res.status(200).send({
-        ids: manualJournalsIds,
-        message: 'The manual journals have been published successfully.',
-        meta: { alreadyPublished, published, total },
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
    * Delete the given manual journal.
    * @param {Request} req
    * @param {Response} res
@@ -324,35 +272,6 @@ export default class ManualJournalsController extends BaseController {
       return res.status(200).send({
         id: manualJournalId,
         message: 'Manual journal has been deleted successfully.',
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Deletes manual journals in bulk.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  async deleteBulkManualJournals(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    const { tenantId } = req;
-    const { ids: manualJournalsIds } = req.query;
-
-    try {
-      await this.manualJournalsService.deleteManualJournals(
-        tenantId,
-        manualJournalsIds
-      );
-
-      return res.status(200).send({
-        ids: manualJournalsIds,
-        message: 'Manual journal have been delete successfully.',
       });
     } catch (error) {
       next(error);

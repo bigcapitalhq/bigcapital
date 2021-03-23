@@ -121,13 +121,6 @@ export default class ExpensesController extends BaseController {
     return [param('id').exists().isNumeric().toInt()];
   }
 
-  get bulkSelectSchema() {
-    return [
-      query('ids').isArray({ min: 1 }),
-      query('ids.*').isNumeric().toInt(),
-    ];
-  }
-
   get expensesListSchema() {
     return [
       query('custom_view_id').optional().isNumeric().toInt(),

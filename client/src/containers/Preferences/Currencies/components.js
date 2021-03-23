@@ -69,6 +69,7 @@ export function useCurrenciesTableColumns() {
       {
         Header: 'Currency sign',
         width: 120,
+        accessor: 'currency_sign'
       },
       {
         id: 'actions',

@@ -95,8 +95,7 @@ export default class BalanceSheetStatementService
     // Settings tenant service.
     const settings = this.tenancy.settings(tenantId);
     const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
+      group: 'organization', key: 'base_currency',
     });
 
     const filter = {

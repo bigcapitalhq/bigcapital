@@ -1034,4 +1034,6 @@ export default {
     'This customer cannot be deleted as it is associated with transactions.',
   this_vendor_cannot_be_deleted_as_it_is_associated_with_transactions:
     'This vendor cannot be deleted as it is associated with transactions.',
+
+  currency_sign: 'Currency sign',
 };
