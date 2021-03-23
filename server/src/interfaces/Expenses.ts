@@ -84,24 +84,6 @@ export interface IExpensesService {
     authorizedUser: ISystemUser
   ): Promise<void>;
 
-  deleteBulkExpenses(
-    tenantId: number,
-    expensesIds: number[],
-    authorizedUser: ISystemUser
-  ): Promise<void>;
-
-  publishBulkExpenses(
-    tenantId: number,
-    expensesIds: number[],
-    authorizedUser: ISystemUser
-  ): Promise<{
-    meta: {
-      alreadyPublished: number;
-      published: number;
-      total: number,
-    },
-  }>;
-
   getExpensesList(
     tenantId: number,
     expensesFilter: IExpensesFilter

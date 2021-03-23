@@ -40,6 +40,7 @@ function UserDeleteAlert({
           }),
           intent: Intent.SUCCESS,
         });
+        closeAlert(name);
       })
       .catch(({ response: { data: { errors } } }) => {
         if (errors.find(e => e.type === 'CANNOT_DELETE_LAST_USER')) {

@@ -2,6 +2,8 @@ import React, { useCallback } from 'react';
 
 import { compose } from 'utils';
 import { DataTable } from 'components';
+import { useResendInvitation } from 'hooks/query';
+import AppToaster from 'components/AppToaster';
 
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 
@@ -10,6 +12,7 @@ import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { ActionsMenu, useUsersListColumns } from './components';
 import { useUsersListContext } from './UsersProvider';
+import { Intent } from '@blueprintjs/core';
 
 /**
  * Users datatable.
@@ -49,6 +52,26 @@ function UsersDataTable({
     },
     [openAlert]
   );
+
+  const { mutateAsync: resendInviation } = useResendInvitation();
+
+  const handleResendInvitation = useCallback(
+    (user) => {
+      resendInviation(user.id).then(() => {
+        AppToaster.show({
+          message: 'User invitation has been re-sent to the user.',
+          intent: Intent.SUCCESS
+        });
+      }).catch(({ response: { data: { errors } } }) => {
+        if (errors.find(e => e.type === 'USER_RECENTLY_INVITED')) {
+          AppToaster.show({
+            message: 'This person was recently invited. No need to invite them again just yet.',
+            intent: Intent.DANGER
+          });
+        }
+      });
+    }
+  )
   // Users list columns.
   const columns = useUsersListColumns();
 
@@ -67,9 +90,10 @@ function UsersDataTable({
       ContextMenu={ActionsMenu}
       payload={{
         onEdit: handleEditUserAction,
-        onActivate: handleInactivateUser,
-        onInactivate: handleActivateuser,
-        onDelete: handleDeleteUser
+        onActivate: handleActivateuser,
+        onInactivate: handleInactivateUser,
+        onDelete: handleDeleteUser,
+        onResendInvitation: handleResendInvitation
       }}
     />
   );

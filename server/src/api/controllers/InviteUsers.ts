@@ -1,5 +1,5 @@
 import { Service, Inject } from 'typedi';
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { check, body, param } from 'express-validator';
 import { IInviteUserInput } from 'interfaces';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
@@ -23,6 +23,15 @@ export default class InviteUsersController extends BaseController {
       [body('email').exists().trim().escape()],
       this.validationResult,
       asyncMiddleware(this.sendInvite.bind(this)),
+      this.handleServicesError
+    );
+    router.post(
+      '/resend/:userId',
+      [
+        param('userId').exists().isNumeric().toInt()
+      ],
+      this.validationResult,
+      this.asyncMiddleware(this.resendInvite.bind(this)),
       this.handleServicesError
     );
     return router;
@@ -67,9 +76,9 @@ export default class InviteUsersController extends BaseController {
 
   /**
    * Invite a user to the authorized user organization.
-   * @param {Request} req -
-   * @param {Response} res -
-   * @param {NextFunction} next -
+   * @param {Request} req - Request object.
+   * @param {Response} res - Response object.
+   * @param {NextFunction} next - Next function.
    */
   async sendInvite(req: Request, res: Response, next: Function) {
     const { email } = req.body;
@@ -90,7 +99,29 @@ export default class InviteUsersController extends BaseController {
     } catch (error) {
       next(error);
     }
-    return res.status(200).send();
+  }
+
+  /**
+   * Resend the user invite.
+   * @param {Request} req - Request object.
+   * @param {Response} res - Response object.
+   * @param {NextFunction} next - Next function.
+   */
+  async resendInvite(req: Request, res: Response, next: NextFunction) {
+    const { tenantId, user } = req;
+    const { userId } = req.params;
+
+    try {
+      await this.inviteUsersService.resendInvite(tenantId, userId, user);
+
+      return res.status(200).send({
+        type: 'success',
+        code: 'INVITE.RESEND.SUCCESSFULLY',
+        message: 'The invite has been sent to the given email.',
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -151,38 +182,59 @@ export default class InviteUsersController extends BaseController {
     if (error instanceof ServiceError) {
       if (error.errorType === 'EMAIL_EXISTS') {
         return res.status(400).send({
-          errors: [{
-            type: 'EMAIL.ALREADY.EXISTS',
-            code: 100,
-            message: 'Email already exists in the users.'
-          }],
+          errors: [
+            {
+              type: 'EMAIL.ALREADY.EXISTS',
+              code: 100,
+              message: 'Email already exists in the users.',
+            },
+          ],
         });
       }
       if (error.errorType === 'EMAIL_ALREADY_INVITED') {
         return res.status(400).send({
-          errors: [{
-            type: 'EMAIL.ALREADY.INVITED',
-            code: 200,
-            message: 'Email already invited.',
-          }],
+          errors: [
+            {
+              type: 'EMAIL.ALREADY.INVITED',
+              code: 200,
+              message: 'Email already invited.',
+            },
+          ],
         });
       }
       if (error.errorType === 'INVITE_TOKEN_INVALID') {
         return res.status(400).send({
-          errors: [{
-            type: 'INVITE.TOKEN.INVALID',
-            code: 300,
-            message: 'Invite token is invalid, please try another one.',
-          }],
+          errors: [
+            {
+              type: 'INVITE.TOKEN.INVALID',
+              code: 300,
+              message: 'Invite token is invalid, please try another one.',
+            },
+          ],
         });
       }
       if (error.errorType === 'PHONE_NUMBER_EXISTS') {
         return res.status(400).send({
-          errors: [{
-            type: 'PHONE_NUMBER.EXISTS',
-            code: 400,
-            message: 'Phone number is already invited, please try another unique one.'
-          }],
+          errors: [
+            {
+              type: 'PHONE_NUMBER.EXISTS',
+              code: 400,
+              message:
+                'Phone number is already invited, please try another unique one.',
+            },
+          ],
+        });
+      }
+      if (error.errorType === 'USER_RECENTLY_INVITED') {
+        return res.status(400).send({
+          errors: [
+            {
+              type: 'USER_RECENTLY_INVITED',
+              code: 500,
+              message:
+                'This person was recently invited. No need to invite them again just yet.',
+            },
+          ],
         });
       }
     }

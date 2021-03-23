@@ -47,10 +47,30 @@ export function useInactivateUser(props) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`users/${id}/inactivate`, values),
+    (userId) => apiRequest.put(`users/${userId}/inactivate`),
     {
-      onSuccess: (res, [id, values]) => {
-        queryClient.invalidateQueries([t.USER, id]);
+      onSuccess: (res, userId) => {
+        queryClient.invalidateQueries([t.USER, userId]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+
+
+export function useActivateUser(props) {
+  const apiRequest = useApiRequest();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (userId) => apiRequest.put(`users/${userId}/activate`),
+    {
+      onSuccess: (res, userId) => {
+        queryClient.invalidateQueries([t.USER, userId]);
 
         // Common invalidate queries.
         commonInvalidateQueries(queryClient);

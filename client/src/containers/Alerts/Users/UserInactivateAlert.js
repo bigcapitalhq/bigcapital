@@ -36,9 +36,16 @@ function UserInactivateAlert({
           }),
           intent: Intent.SUCCESS,
         });
+        closeAlert(name);
       })
-      .catch((error) => {
-        
+      .catch(({ response: { data: { errors } } }) => {
+        if (errors.find(e => e.type === 'CANNOT.TOGGLE.ACTIVATE.AUTHORIZED.USER')) {
+          AppToaster.show({
+            message: 'You could not activate/inactivate the same authorized user.',
+            intent: Intent.DANGER,
+          });
+        }
+        closeAlert(name);
       });
   };
 

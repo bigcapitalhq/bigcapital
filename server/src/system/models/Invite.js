@@ -1,4 +1,5 @@
 import SystemModel from 'system/models/SystemModel';
+import moment from 'moment';
 
 export default class UserInvite extends SystemModel {
   /**
@@ -13,5 +14,17 @@ export default class UserInvite extends SystemModel {
    */
   get timestamps() {
     return ['createdAt'];
+  }
+
+  /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      notExpired(query) {
+        const comp = moment().subtract(24, 'hours').toMySqlDateTime();
+        query.where('created_at', '>=', comp);
+      }
+    }
   }
 }

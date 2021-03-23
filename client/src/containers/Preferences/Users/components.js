@@ -25,12 +25,7 @@ function AvatarCell(row) {
  */
 export function ActionsMenu({
   row: { original },
-  payload: {
-    onEdit,
-    onInactivate,
-    onActivate,
-    onDelete
-  }
+  payload: { onEdit, onInactivate, onActivate, onDelete, onResendInvitation },
 }) {
   const { formatMessage } = useIntl();
 
@@ -44,9 +39,26 @@ export function ActionsMenu({
         />
         <MenuDivider />
 
+        {original.active ? (
+          <MenuItem
+            text={formatMessage({ id: 'inactivate_user' })}
+            onClick={safeCallback(onInactivate, original)}
+            icon={<Icon icon="pause-16" iconSize={16} />}
+          />
+        ) : (
+          <MenuItem
+            text={formatMessage({ id: 'activate_user' })}
+            onClick={safeCallback(onActivate, original)}
+            icon={<Icon icon="play-16" iconSize={16} />}
+          />
+        )}
+      </If>
+
+      <If condition={!original.invite_accepted_at}>
         <MenuItem
-          text={formatMessage({ id: 'inactivate_user' })}
-          onClick={safeCallback(onInactivate, original)}
+          text={'Resend invitation'}
+          onClick={safeCallback(onResendInvitation, original)}
+          icon={<Icon icon="send" iconSize={16} />}
         />
       </If>
 
@@ -64,7 +76,7 @@ export function ActionsMenu({
  * Status accessor.
  */
 function StatusAccessor(user) {
-  return !user.invite_accepted_at ? (
+  return !user.is_invite_accepted ? (
     <Tag minimal={true}>
       <T id={'inviting'} />
     </Tag>
@@ -93,6 +105,10 @@ function ActionsCell(props) {
   );
 }
 
+function FullNameAccessor(user) {
+  return user.is_invite_accepted ? user.full_name : user.email;
+}
+
 export const useUsersListColumns = () => {
   const { formatMessage } = useIntl();
 
@@ -107,7 +123,7 @@ export const useUsersListColumns = () => {
       {
         id: 'full_name',
         Header: formatMessage({ id: 'full_name' }),
-        accessor: 'full_name',
+        accessor: FullNameAccessor,
         width: 150,
       },
       {

@@ -31,12 +31,6 @@ export default class ExpensesController extends BaseController {
       this.catchServiceErrors
     );
     router.post(
-      '/publish',
-      [...this.bulkSelectSchema],
-      this.bulkPublishExpenses.bind(this),
-      this.catchServiceErrors
-    );
-    router.post(
       '/:id/publish',
       [...this.expenseParamSchema],
       this.validationResult,
@@ -55,13 +49,6 @@ export default class ExpensesController extends BaseController {
       [...this.expenseParamSchema],
       this.validationResult,
       asyncMiddleware(this.deleteExpense.bind(this)),
-      this.catchServiceErrors
-    );
-    router.delete(
-      '/',
-      [...this.bulkSelectSchema],
-      this.validationResult,
-      asyncMiddleware(this.bulkDeleteExpenses.bind(this)),
       this.catchServiceErrors
     );
     router.get(
@@ -244,63 +231,6 @@ export default class ExpensesController extends BaseController {
       return res.status(200).send({
         id: expenseId,
         message: 'The expense has been published successfully',
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Deletes the expenses in bulk.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  async bulkDeleteExpenses(req: Request, res: Response, next: NextFunction) {
-    const { tenantId, user } = req;
-    const { ids: expensesIds } = req.query;
-
-    try {
-      await this.expensesService.deleteBulkExpenses(
-        tenantId,
-        expensesIds,
-        user
-      );
-      return res.status(200).send({
-        ids: expensesIds,
-        message: 'The expenses have been deleted successfully.',
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Publishes the given expenses in bulk.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  async bulkPublishExpenses(req: Request, res: Response, next: NextFunction) {
-    const { tenantId, user } = req;
-    const { ids: expensesIds } = req.query;
-
-    try {
-      const {
-        meta: { alreadyPublished, published, total },
-      } = await this.expensesService.publishBulkExpenses(
-        tenantId,
-        expensesIds,
-        user
-      );
-      return res.status(200).send({
-        ids: expensesIds,
-        message: 'The expenses have been published successfully.',
-        meta: {
-          alreadyPublished,
-          published,
-          total,
-        },
       });
     } catch (error) {
       next(error);
