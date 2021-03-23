@@ -12,7 +12,7 @@ export default function ContactsListCellRenderer({
 }) {
   const handleContactSelected = useCallback(
     (contact) => {
-      updateData(index, {
+      updateData(index, id, {
         contact_id: contact.id,
         contact_type: contact.contact_type,
       });
