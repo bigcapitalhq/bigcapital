@@ -34,6 +34,18 @@
         .tr:not(.no-results) .td{
           border-left: 1px solid #ececec;
         }
+
+        .tr{
+          &.is-expanded{
+
+            .td.amount{
+
+              .cell-inner{
+                display: none
+              }
+            }
+          }
+        }
         .tr.row-type{
 
 

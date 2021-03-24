@@ -53,6 +53,7 @@ export interface IProfitLossSheetStatement {
   otherIncome: IProfitLossSheetAccountsSection,
   netIncome: IProfitLossSheetTotalSection;
   operatingProfit: IProfitLossSheetTotalSection;
+  netOtherIncome: IProfitLossSheetTotalSection,
   grossProfit: IProfitLossSheetTotalSection;
 };
 

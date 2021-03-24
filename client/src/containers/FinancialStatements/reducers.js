@@ -140,6 +140,14 @@ export const profitLossSheetReducer = (profitLoss) => {
       ],
     });
   }
+  if (profitLoss.net_other_income) {
+    results.push({
+      name: 'Net other income',
+      total: profitLoss.net_other_income.total,
+      total_periods: profitLoss.net_other_income.total_periods,
+      rowTypes: ['net_other_income', 'section_total', 'total'],
+    });
+  }
   if (profitLoss.net_income) {
     results.push({
       name: 'Net Income',
@@ -209,6 +217,7 @@ export const generalLedgerTableRowsReducer = (accounts) => {
             ...account.opening_balance,
             name: 'Opening balance',
             rowType: 'OPENING_BALANCE',
+            date: moment(account.opening_balance.date).format('DD MMM YYYY'),
           },
           ...account.transactions.map((transaction) => ({
             ...transaction,
@@ -220,8 +229,11 @@ export const generalLedgerTableRowsReducer = (accounts) => {
             ...account.closing_balance,
             name: 'Closing balance',
             rowType: 'CLOSING_BALANCE',
+            date: moment(account.closing_balance.date).format('DD MMM YYYY'),
           },
         ],
+        amount: account.closing_balance.amount,
+        formatted_amount: account.closing_balance.formatted_amount,
       };
     })
     .value();

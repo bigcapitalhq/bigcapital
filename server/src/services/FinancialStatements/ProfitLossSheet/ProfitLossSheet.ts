@@ -52,7 +52,9 @@ export default class ProfitLossSheet extends FinancialSheet {
   }
 
   get otherIncomeAccounts() {
-    return this.accounts.filter((a) => a.accountType === ACCOUNT_TYPE.OTHER_INCOME);
+    return this.accounts.filter(
+      (a) => a.accountType === ACCOUNT_TYPE.OTHER_INCOME
+    );
   }
 
   /**
@@ -76,7 +78,9 @@ export default class ProfitLossSheet extends FinancialSheet {
    * @return {IAccount & { type: IAccountType }[]}}
    */
   get otherExpensesAccounts() {
-    return this.accounts.filter((a) => a.accountType === ACCOUNT_TYPE.OTHER_EXPENSE);
+    return this.accounts.filter(
+      (a) => a.accountType === ACCOUNT_TYPE.OTHER_EXPENSE
+    );
   }
 
   /**
@@ -84,7 +88,9 @@ export default class ProfitLossSheet extends FinancialSheet {
    * @return {IAccount & { type: IAccountType }[]}
    */
   get costOfSalesAccounts() {
-    return this.accounts.filter((a) => a.accountType === ACCOUNT_TYPE.COST_OF_GOODS_SOLD);
+    return this.accounts.filter(
+      (a) => a.accountType === ACCOUNT_TYPE.COST_OF_GOODS_SOLD
+    );
   }
 
   /**
@@ -244,8 +250,8 @@ export default class ProfitLossSheet extends FinancialSheet {
     return {
       name: 'Other Income',
       entryNormal: 'credit',
-      ...this.sectionMapper(this.otherIncomeAccounts)
-    }
+      ...this.sectionMapper(this.otherIncomeAccounts),
+    };
   }
 
   /**
@@ -369,12 +375,16 @@ export default class ProfitLossSheet extends FinancialSheet {
     const grossProfit = this.getSummarySection(income, costOfSales);
 
     // - Operating profit = Gross profit - Expenses.
-    const operatingProfit = this.getSummarySection(grossProfit, [
-      expenses,
-      costOfSales,
-    ]);
-    // - Net income = Operating profit - Other expenses.
-    const netIncome = this.getSummarySection(operatingProfit, otherExpenses);
+    const operatingProfit = this.getSummarySection(grossProfit, expenses);
+
+    // Net other income = Other income - other expenses.
+    const netOtherIncome = this.getSummarySection(otherIncome, otherExpenses);
+
+    // - Net income = (Operating profit + other income) - Other expenses.
+    const netIncome = this.getSummarySection(
+      [operatingProfit, netOtherIncome],
+      [],
+    );
 
     return {
       income,
@@ -383,8 +393,9 @@ export default class ProfitLossSheet extends FinancialSheet {
       expenses,
       otherIncome,
       otherExpenses,
-      netIncome,
       operatingProfit,
+      netOtherIncome,
+      netIncome,
     };
   }
 
