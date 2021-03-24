@@ -623,6 +623,10 @@ export const transformGeneralSettings = (data) => {
   return _.mapKeys(data, (value, key) => _.snakeCase(key));
 };
 
+export const calculateStatus = (paymentAmount, balanceAmount) => {
+  return _.round(paymentAmount / balanceAmount, 2);
+};
+
 const getCurrenciesOptions = () => {
   return Object.keys(Currencies).map((currencyCode) => {
     const currency = Currencies[currencyCode];

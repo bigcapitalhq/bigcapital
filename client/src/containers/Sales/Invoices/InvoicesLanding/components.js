@@ -12,15 +12,10 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
-import { round } from 'lodash';
 import { Choose, If, Icon } from 'components';
 import { Money, AppToaster } from 'components';
 import { formatMessage } from 'services/intl';
-import { safeCallback } from 'utils';
-
-const calculateStatus = (paymentAmount, balanceAmount) => {
-  return round(paymentAmount / balanceAmount, 2);
-};
+import { safeCallback, calculateStatus } from 'utils';
 
 export const statusAccessor = (row) => {
   return (
@@ -54,7 +49,12 @@ export const statusAccessor = (row) => {
               <T
                 id={'day_partially_paid'}
                 values={{
-                  due: <Money amount={row.due_amount} currency={'USD'} />,
+                  due: (
+                    <Money
+                      amount={row.due_amount}
+                      currency={row.currency_code}
+                    />
+                  ),
                 }}
               />
             </span>
@@ -183,21 +183,22 @@ export function useInvoicesTableColumns() {
         width: 180,
         className: 'customer_id',
       },
-      {
-        id: 'balance',
-        Header: formatMessage({ id: 'balance' }),
-        accessor: (r) => (
-          <Money amount={r.balance} currency={r.currency_code} />
-        ),
-        width: 110,
-        className: 'balance',
-      },
+
       {
         id: 'invoice_no',
         Header: formatMessage({ id: 'invoice_no__' }),
         accessor: 'invoice_no',
         width: 100,
         className: 'invoice_no',
+      },
+      {
+        id: 'balance',
+        Header: formatMessage({ id: 'balance' }),
+        accessor: (r) => (
+          <Money amount={r.balance} currency={r.currency_code} />
+        ),
+        width: 120,
+        className: 'balance',
       },
       {
         id: 'status',

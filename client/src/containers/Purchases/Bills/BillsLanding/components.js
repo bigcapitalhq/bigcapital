@@ -8,10 +8,11 @@ import {
   Button,
   Position,
   Tag,
+  ProgressBar,
 } from '@blueprintjs/core';
 import { useIntl, FormattedMessage as T } from 'react-intl';
 import { Icon, If, Choose, Money } from 'components';
-import { safeCallback, isBlank } from 'utils';
+import { safeCallback, isBlank, calculateStatus } from 'utils';
 import moment from 'moment';
 
 /**
@@ -77,19 +78,58 @@ export function AmountAccessor(bill) {
  */
 export function StatusAccessor(bill) {
   return (
-    <Choose>
-      <Choose.When condition={bill.is_open}>
-        <Tag minimal={true} intent={Intent.SUCCESS}>
-          <T id={'opened'} />
-        </Tag>
-      </Choose.When>
-
-      <Choose.Otherwise>
-        <Tag minimal={true}>
-          <T id={'draft'} />
-        </Tag>
-      </Choose.Otherwise>
-    </Choose>
+    <div className={'status-accessor'}>
+      <Choose>
+        <Choose.When condition={bill.is_fully_paid && bill.is_open}>
+          <span className={'fully-paid-icon'}>
+            <Icon icon="small-tick" iconSize={18} />
+          </span>
+          <span class="fully-paid-text">
+            <T id={'paid'} />
+          </span>
+        </Choose.When>
+        <Choose.When condition={bill.is_open}>
+          <Choose>
+            <Choose.When condition={bill.is_overdue}>
+              <span className={'overdue-status'}>
+                <T id={'overdue_by'} values={{ overdue: bill.overdue_days }} />
+              </span>
+            </Choose.When>
+            <Choose.Otherwise>
+              <span className={'due-status'}>
+                <T id={'due_in'} values={{ due: bill.remaining_days }} />
+              </span>
+            </Choose.Otherwise>
+          </Choose>
+          <If condition={bill.is_partially_paid}>
+            <span className="partial-paid">
+              <T
+                id={'day_partially_paid'}
+                values={{
+                  due: (
+                    <Money
+                      amount={bill.due_amount}
+                      currency={bill.currency_code}
+                    />
+                  ),
+                }}
+              />
+            </span>
+            <ProgressBar
+              animate={false}
+              stripes={false}
+              intent={Intent.PRIMARY}
+              value={calculateStatus(bill.payment_amount, bill.amount)}
+            />
+          </If>
+        </Choose.When>
+        <Choose.Otherwise>
+          <Tag minimal={true}>
+            <T id={'draft'} />
+          </Tag>
+        </Choose.Otherwise>
+      </Choose>
+    </div>
   );
 }
 
@@ -116,49 +156,49 @@ export function useBillsTableColumns() {
         id: 'bill_date',
         Header: formatMessage({ id: 'bill_date' }),
         accessor: (r) => moment(r.bill_date).format('YYYY MMM DD'),
-        width: 140,
+        width: 110,
         className: 'bill_date',
       },
       {
         id: 'vendor',
         Header: formatMessage({ id: 'vendor_name' }),
         accessor: 'vendor.display_name',
-        width: 140,
+        width: 180,
         className: 'vendor',
       },
       {
         id: 'bill_number',
         Header: formatMessage({ id: 'bill_number' }),
         accessor: (row) => (row.bill_number ? `#${row.bill_number}` : null),
-        width: 140,
+        width: 100,
         className: 'bill_number',
-      },
-      {
-        id: 'due_date',
-        Header: formatMessage({ id: 'due_date' }),
-        accessor: (r) => moment(r.due_date).format('YYYY MMM DD'),
-        width: 140,
-        className: 'due_date',
       },
       {
         id: 'amount',
         Header: formatMessage({ id: 'amount' }),
         accessor: AmountAccessor,
-        width: 140,
+        width: 120,
         className: 'amount',
       },
       {
         id: 'status',
         Header: formatMessage({ id: 'status' }),
         accessor: StatusAccessor,
-        width: 140,
+        width: 160,
         className: 'status',
+      },
+      {
+        id: 'due_date',
+        Header: formatMessage({ id: 'due_date' }),
+        accessor: (r) => moment(r.due_date).format('YYYY MMM DD'),
+        width: 110,
+        className: 'due_date',
       },
       {
         id: 'reference_no',
         Header: formatMessage({ id: 'reference_no' }),
         accessor: 'reference_no',
-        width: 140,
+        width: 90,
         className: 'reference_no',
       },
       {
