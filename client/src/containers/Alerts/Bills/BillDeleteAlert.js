@@ -6,6 +6,7 @@ import { AppToaster } from 'components';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
+import { handleDeleteErrors } from 'containers/Purchases/Bills/BillForm/utils';
 import { useDeleteBill } from 'hooks/query';
 import { compose } from 'utils';
 
@@ -32,15 +33,27 @@ function BillDeleteAlert({
 
   // Handle confirm delete invoice
   const handleConfirmBillDelete = () => {
-    deleteBillMutate(billId).then(() => {
-      AppToaster.show({
-        message: formatMessage({
-          id: 'the_bill_has_been_deleted_successfully',
-        }),
-        intent: Intent.SUCCESS,
+    deleteBillMutate(billId)
+      .then(() => {
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_bill_has_been_deleted_successfully',
+          }),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          handleDeleteErrors(errors);
+        },
+      )
+      .finally(() => {
+        closeAlert(name);
       });
-      closeAlert(name);
-    });
   };
 
   return (
