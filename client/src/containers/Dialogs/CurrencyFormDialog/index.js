@@ -30,7 +30,7 @@ function CurrencyFormDialog({
       isOpen={isOpen}
       autoFocus={true}
       canEscapeKeyClose={true}
-      style={{ width: '450px' }}
+      style={{ width: '400px' }}
     >
       <DialogSuspense>
         <CurrencyFormDialogContent

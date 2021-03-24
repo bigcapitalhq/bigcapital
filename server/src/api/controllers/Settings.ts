@@ -41,7 +41,7 @@ export default class SettingsController extends BaseController {
     return [
       body('options').isArray({ min: 1 }),
       body('options.*.key').exists().trim().isLength({ min: 1 }),
-      body('options.*.value').exists().trim().isLength({ min: 1 }),
+      body('options.*.value').exists().trim(),
       body('options.*.group').exists().trim().isLength({ min: 1 }),
     ];
   }

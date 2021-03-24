@@ -1,7 +1,9 @@
 import React, { useContext, createContext } from 'react';
-import { LoadingIndicator } from 'components';
+import classNames from 'classnames';
+import { CLASSES } from 'common/classes';
 
 import { useAccounts, useSaveSettings } from 'hooks/query';
+import PreferencesPageLoader from '../PreferencesPageLoader';
 
 const ItemFormContext = createContext();
 
@@ -22,10 +24,23 @@ function ItemFormProvider({ ...props }) {
     saveSettingMutate,
   };
 
+  const isLoading = isAccountsLoading;
+
   return (
-    <LoadingIndicator loading={isAccountsLoading}>
-      <ItemFormContext.Provider value={provider} {...props} />
-    </LoadingIndicator>
+    <div
+      className={classNames(
+        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT,
+        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_ACCOUNTANT,
+      )}
+    >
+      <div className={classNames(CLASSES.CARD)}>
+        {isLoading ? (
+          <PreferencesPageLoader />
+        ) : (
+          <ItemFormContext.Provider value={provider} {...props} />
+        )}
+      </div>
+    </div>
   );
 }
 

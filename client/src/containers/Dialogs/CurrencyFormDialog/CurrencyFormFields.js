@@ -2,7 +2,9 @@ import React from 'react';
 import { Classes, FormGroup, InputGroup } from '@blueprintjs/core';
 import { FastField } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
+import classNames from 'classnames';
 
+import { CLASSES } from 'common/classes';
 import { useCurrencyFormContext } from './CurrencyFormProvider';
 import { ErrorMessage, FieldRequiredHint, ListSelect } from 'components';
 
@@ -25,7 +27,7 @@ export default function CurrencyFormFields() {
           field: { value },
           meta: { error, touched },
         }) => (
-          <FormGroup label={'Currency code'}>
+          <FormGroup label={'Currency code'} className={classNames(CLASSES.FILL, 'form-group--type')}>
             <ListSelect
               items={currenciesOptions}
               selectedItemProp={'currency_code'}
@@ -38,6 +40,7 @@ export default function CurrencyFormFields() {
                 setFieldValue('currency_sign', currency.symbol);
               }}
               disabled={isEditMode}
+              popoverProps={{ minimal: true }}
             />
           </FormGroup>
         )}

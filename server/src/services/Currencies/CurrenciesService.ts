@@ -261,6 +261,7 @@ export default class CurrenciesService implements ICurrenciesService {
       await Currency.query().insert({
         currency_code: currencyMeta.code,
         currency_name: currencyMeta.name,
+        currency_sign: currencyMeta.symbol,
       });
     }
   }

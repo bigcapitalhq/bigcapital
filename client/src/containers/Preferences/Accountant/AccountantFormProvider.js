@@ -1,6 +1,8 @@
 import React from 'react';
-import { LoadingIndicator } from 'components';
+import classNames from 'classnames';
+import { CLASSES } from 'common/classes';
 import { useAccounts, useSaveSettings, useSettings } from 'hooks/query';
+import PreferencesPageLoader from '../PreferencesPageLoader';
 
 const AccountantFormContext = React.createContext();
 
@@ -24,10 +26,23 @@ function AccountantFormProvider({ ...props }) {
     saveSettingMutate,
   };
 
+  const isLoading = isSettingsLoading || isAccountsLoading;
+
   return (
-    <LoadingIndicator loading={isSettingsLoading || isAccountsLoading}>
-      <AccountantFormContext.Provider value={provider} {...props} />
-    </LoadingIndicator>
+    <div
+      className={classNames(
+        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT,
+        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_ACCOUNTANT,
+      )}
+    >
+      <div className={classNames(CLASSES.CARD)}>
+        {isLoading ? (
+          <PreferencesPageLoader />
+        ) : (
+          <AccountantFormContext.Provider value={provider} {...props} />
+        )}
+      </div>
+    </div>
   );
 }
 

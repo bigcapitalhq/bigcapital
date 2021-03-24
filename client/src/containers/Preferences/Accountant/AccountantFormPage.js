@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-import classNames from 'classnames';
 import { Formik } from 'formik';
 import { pick } from 'lodash';
 import { Intent } from '@blueprintjs/core';
-import { CLASSES } from 'common/classes';
+
 import { AppToaster } from 'components';
 import { useIntl } from 'react-intl';
 
@@ -50,6 +49,7 @@ function AccountantFormPage({
 
   const handleFormSubmit = (values, { setSubmitting }) => {
     const options = transformToOptions(values);
+
     setSubmitting(true);
     const onSuccess = () => {
       AppToaster.show({
@@ -68,21 +68,12 @@ function AccountantFormPage({
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT,
-        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_ACCOUNTANT,
-      )}
-    >
-      <div className={classNames(CLASSES.CARD)}>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={AccountantSchema}
-          onSubmit={handleFormSubmit}
-          component={AccountantForm}
-        />
-      </div>
-    </div>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={AccountantSchema}
+      onSubmit={handleFormSubmit}
+      component={AccountantForm}
+    />
   );
 }
 

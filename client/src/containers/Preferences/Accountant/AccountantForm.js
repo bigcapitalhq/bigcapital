@@ -11,11 +11,13 @@ import {
 import { useHistory } from 'react-router-dom';
 import { AccountsSelectList, FieldRequiredHint } from 'components';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { ACCOUNT_PARENT_TYPE } from 'common/accountTypes';
 import { handleStringChange, inputIntent } from 'utils';
 
 import { useAccountantFormContext } from './AccountantFormProvider';
 
+/**
+ * Accountant form.
+ */
 export default function AccountantForm() {
   const history = useHistory();
 

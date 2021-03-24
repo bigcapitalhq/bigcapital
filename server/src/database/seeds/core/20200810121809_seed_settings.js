@@ -5,6 +5,12 @@ exports.up = (knex) => {
   const tenancyService = Container.get(TenancyService);
   const settings = tenancyService.settings(knex.userParams.tenantId);
 
+  // Orgnization settings.
+  settings.set({ group: 'organization', key: 'accounting_basis', value: 'accural' });
+
+  // Accounts settings.
+  settings.set({ group: 'accounts', key: 'account_code_unique', value: true });
+
   // Manual journals settings.
   settings.set({ group: 'manual_journals', key: 'next_number', value: '00001' });
   settings.set({ group: 'manual_journals', key: 'auto_increment', value: true });
