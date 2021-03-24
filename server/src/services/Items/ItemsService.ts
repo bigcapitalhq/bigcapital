@@ -22,6 +22,7 @@ import {
   ACCOUNT_TYPE,
 } from 'data/AccountTypes';
 import { ERRORS } from './constants';
+import { AccountTransaction } from 'models';
 
 @Service()
 export default class ItemsService implements IItemsService {
@@ -289,6 +290,37 @@ export default class ItemsService implements IItemsService {
   }
 
   /**
+   * Validate the item inventory account whether modified and item 
+   * has assocaited inventory transactions.
+   * @param {numnber} tenantId 
+   * @param {IItem} oldItem 
+   * @param {IItemDTO} newItemDTO 
+   * @returns 
+   */
+  async validateItemInvnetoryAccountModified(
+    tenantId: number,
+    oldItem: IItem,
+    newItemDTO: IItemDTO
+  ) {
+    const { AccountTransaction } = this.tenancy.models(tenantId);
+
+    if (
+      newItemDTO.type !== 'inventory' ||
+      oldItem.inventoryAccountId === newItemDTO.inventoryAccountId
+    ) {
+      return;
+    }
+    // Inventory transactions associated to the given item id.
+    const transactions = await AccountTransaction.query().where({
+      itemId: oldItem.id,
+    });
+    // Throw the service error in case item has associated inventory transactions.
+    if (transactions.length > 0) {
+      throw new ServiceError(ERRORS.INVENTORY_ACCOUNT_CANNOT_MODIFIED);
+    }
+  }
+
+  /**
    * Creates a new item.
    * @param {number} tenantId DTO
    * @param {IItemDTO} item
@@ -386,6 +418,12 @@ export default class ItemsService implements IItemsService {
         itemDTO.inventoryAccountId
       );
     }
+
+    await this.validateItemInvnetoryAccountModified(
+      tenantId,
+      oldItem,
+      itemDTO
+    );
 
     const newItem = await Item.query().patchAndFetchById(itemId, {
       ...itemModel,

@@ -512,8 +512,18 @@ export default class ItemsController extends BaseController {
           errors: [{
             type: 'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS',
             message: 'Cannot change item type to inventory with item has associated transactions.',
+            code: 350,
           }],
         });
+      }
+      if (error.errorType === 'INVENTORY_ACCOUNT_CANNOT_MODIFIED') {
+        return res.status(400).send({
+          errors: [{
+            type: 'INVENTORY_ACCOUNT_CANNOT_MODIFIED',
+            message: 'Cannot change item inventory account while the item has transactions.',
+            code: 360,
+          }]
+        })
       }
     }
     next(error);

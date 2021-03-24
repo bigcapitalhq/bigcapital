@@ -178,6 +178,10 @@ export default class Item extends TenantModel {
         relation: "items_categories.id",
         relationColumn: "items_categories.name",
       },
+      active: {
+        label: "Active",
+        column: "active",
+      },
       // user: {
       //   label: 'User',
       //   column: 'user_id',

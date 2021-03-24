@@ -7,7 +7,7 @@ import {
   useBill,
   useSettings,
   useCreateBill,
-  useEditBill
+  useEditBill,
 } from 'hooks/query';
 
 const BillFormContext = createContext();
@@ -26,9 +26,14 @@ function BillFormProvider({ billId, ...props }) {
   } = useVendors({ page_size: 10000 });
 
   // Filter all purchasable items only.
-  const stringifiedFilterRoles = React.useMemo(() => JSON.stringify(
-    [{ "fieldKey": "purchasable", "value":true, "condition":"equals"}]
-  ), []);
+  const stringifiedFilterRoles = React.useMemo(
+    () =>
+      JSON.stringify([
+        { index: 1, fieldKey: 'purchasable', value: true, condition: '&&', comparator: 'equals' },
+        { index: 2, fieldKey: 'active', value: true, condition: '&&', comparator: 'equals' },
+      ]),
+    [],
+  );
 
   // Handle fetch Items data table or list
   const {
@@ -36,7 +41,7 @@ function BillFormProvider({ billId, ...props }) {
     isFetching: isItemsLoading,
   } = useItems({
     page_size: 10000,
-    stringified_filter_roles: stringifiedFilterRoles
+    stringified_filter_roles: stringifiedFilterRoles,
   });
 
   // Handle fetch bill details.
@@ -72,7 +77,7 @@ function BillFormProvider({ billId, ...props }) {
 
     createBillMutate,
     editBillMutate,
-    setSubmitPayload
+    setSubmitPayload,
   };
 
   return (
