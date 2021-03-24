@@ -30,7 +30,7 @@ export default function DrawerTemplateTable({ tableData, currencyCode }) {
           <Money amount={total} currency={currencyCode} />
         ),
         disableSortBy: true,
-        width: 50,
+        width: 70,
       },
     ],
     [],

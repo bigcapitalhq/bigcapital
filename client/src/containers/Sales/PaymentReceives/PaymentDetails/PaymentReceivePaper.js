@@ -5,5 +5,5 @@ import { usePaymentReceiveDrawerContext } from './PaymentReceiveDrawerProvider';
 export default function PaymentReceivePaper() {
   const { paymentReceive } = usePaymentReceiveDrawerContext();
 
-  return <PaymentPaperTemplate paperData={paymentReceive.paymentReceive} />;
+  return <PaymentPaperTemplate paperData={paymentReceive} />;
 }

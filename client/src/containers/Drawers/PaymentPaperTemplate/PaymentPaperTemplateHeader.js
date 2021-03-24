@@ -15,7 +15,7 @@ export default function PaymentPaperTemplateHeader({
         referenceNo={referenceNo}
         amount={amount}
         billedFrom={''}
-        currency={currency_code}
+        currencyCode={currency_code}
       />
     </>
   );
