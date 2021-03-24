@@ -6,7 +6,7 @@ import {
   useItems,
   useSettingsEstimates,
   useCreateEstimate,
-  useEditEstimate
+  useEditEstimate,
 } from 'hooks/query';
 
 const EstimateFormContext = createContext();
@@ -15,14 +15,20 @@ const EstimateFormContext = createContext();
  * Estimate form provider.
  */
 function EstimateFormProvider({ estimateId, ...props }) {
-  const { data: estimate, isFetching: isEstimateFetching } = useEstimate(
-    estimateId, { enabled: !!estimateId }
-  );
+  const {
+    data: estimate,
+    isFetching: isEstimateFetching,
+  } = useEstimate(estimateId, { enabled: !!estimateId });
 
   // Filter all sellable items only.
-  const stringifiedFilterRoles = React.useMemo(() => JSON.stringify(
-    [{ "fieldKey": "sellable", "value":true, "condition":"equals"}]
-  ), []);
+  const stringifiedFilterRoles = React.useMemo(
+    () =>
+      JSON.stringify([
+        { index: 1, fieldKey: 'sellable', value: true, condition: '&&', comparator: 'equals', },
+        { index: 2, fieldKey: 'active', value: true, condition: '&&', comparator: 'equals' },
+      ]),
+    [],
+  );
 
   // Handle fetch Items data table or list
   const {
@@ -30,7 +36,7 @@ function EstimateFormProvider({ estimateId, ...props }) {
     isFetching: isItemsFetching,
   } = useItems({
     page_size: 10000,
-    stringified_filter_roles: stringifiedFilterRoles
+    stringified_filter_roles: stringifiedFilterRoles,
   });
 
   // Handle fetch customers data table or list
@@ -44,11 +50,11 @@ function EstimateFormProvider({ estimateId, ...props }) {
 
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = React.useState({});
-  
+
   // Create and edit estimate form.
   const { mutateAsync: createEstimateMutate } = useCreateEstimate();
   const { mutateAsync: editEstimateMutate } = useEditEstimate();
-  
+
   const isNewMode = !estimateId;
 
   // Provider payload.
@@ -66,7 +72,7 @@ function EstimateFormProvider({ estimateId, ...props }) {
     setSubmitPayload,
 
     createEstimateMutate,
-    editEstimateMutate
+    editEstimateMutate,
   };
 
   return (

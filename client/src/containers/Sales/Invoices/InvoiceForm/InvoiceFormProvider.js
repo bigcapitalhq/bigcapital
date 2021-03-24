@@ -39,9 +39,14 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     : [];
 
   // Filter all sellable items only.
-  const stringifiedFilterRoles = React.useMemo(() => JSON.stringify(
-    [{ "fieldKey": "sellable", "value":true, "condition":"equals"}]
-  ), []);
+  const stringifiedFilterRoles = React.useMemo(
+    () =>
+      JSON.stringify([
+        { index: 1, fieldKey: 'sellable', value: true, condition: '&&', comparator: 'equals', },
+        { index: 2, fieldKey: 'active', value: true, condition: '&&', comparator: 'equals' },
+      ]),
+    [],
+  );
 
   // Handle fetching the items table based on the given query.
   const {
@@ -49,7 +54,7 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     isLoading: isItemsLoading,
   } = useItems({
     page_size: 10000,
-    stringified_filter_roles: stringifiedFilterRoles
+    stringified_filter_roles: stringifiedFilterRoles,
   });
 
   // Handle fetch customers data table or list

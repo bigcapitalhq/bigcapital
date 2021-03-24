@@ -7,7 +7,7 @@ import {
   useCustomers,
   useItems,
   useCreateReceipt,
-  useEditReceipt
+  useEditReceipt,
 } from 'hooks/query';
 
 const ReceiptFormContext = createContext();
@@ -33,9 +33,14 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   } = useCustomers({ page_size: 10000 });
 
   // Filter all sellable items only.
-  const stringifiedFilterRoles = React.useMemo(() => JSON.stringify(
-    [{ "fieldKey": "sellable", "value":true, "condition":"equals"}]
-  ), []);
+  const stringifiedFilterRoles = React.useMemo(
+    () =>
+      JSON.stringify([
+        { index: 1, fieldKey: 'sellable', value: true, condition: '&&', comparator: 'equals', },
+        { index: 2, fieldKey: 'active', value: true, condition: '&&', comparator: 'equals' },
+      ]),
+    [],
+  );
 
   // Handle fetch Items data table or list
   const {
@@ -43,7 +48,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     isFetching: isItemsLoading,
   } = useItems({
     page_size: 10000,
-    stringified_filter_roles: stringifiedFilterRoles
+    stringified_filter_roles: stringifiedFilterRoles,
   });
 
   // Fetch receipt settings.
@@ -73,7 +78,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
 
     createReceiptMutate,
     editReceiptMutate,
-    setSubmitPayload
+    setSubmitPayload,
   };
   return (
     <DashboardInsider
