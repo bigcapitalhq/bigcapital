@@ -107,6 +107,14 @@ function ItemForm({
     if (errors.find((e) => e.type === 'ITEM.NAME.ALREADY.EXISTS')) {
       fields.name = formatMessage({ id: 'the_name_used_before' });
     }
+    if (errors.find((e) => e.type === 'INVENTORY_ACCOUNT_CANNOT_MODIFIED')) {
+      AppToaster.show({
+        message: formatMessage({
+          id: 'cannot_change_item_inventory_account',
+        }),
+        intent: Intent.DANGER,
+      });
+    }
     return fields;
   };
 
