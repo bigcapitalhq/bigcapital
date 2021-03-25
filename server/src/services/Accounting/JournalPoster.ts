@@ -278,13 +278,13 @@ export default class JournalPoster implements IJournalPoster {
         let change = 0;
 
         if (accountChange.credit) {
-          change =
+          change +=
             normal === 'credit'
               ? accountChange.credit
               : -1 * accountChange.credit;
         }
         if (accountChange.debit) {
-          change =
+          change +=
             normal === 'debit' ? accountChange.debit : -1 * accountChange.debit;
         }
         mappedList.push({ account, change });

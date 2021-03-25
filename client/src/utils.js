@@ -160,7 +160,7 @@ export function formattedAmount(cents, currency, props) {
     precision: 0,
     format: {
       pos: '%s%v',
-      neg: '%s%v',
+      neg: '%s-%v',
       zero: parsedProps.noZero ? '' : '%s%v',
     },
   };

@@ -424,7 +424,7 @@ export default class ManualJournalsService implements IManualJournalsService {
       '[manual_journal] trying to save manual journal to the storage.',
       { tenantId, manualJournalDTO }
     );
-
+    // Upsert the manual journal object.
     const manualJournal = await ManualJournal.query().upsertGraph({
       ...manualJournalObj,
     });
@@ -492,7 +492,7 @@ export default class ManualJournalsService implements IManualJournalsService {
       tenantId,
       manualJournalDTO.entries
     );
-    
+
     await ManualJournal.query().upsertGraph({
       ...manualJournalObj,
     });
@@ -797,7 +797,7 @@ export default class ManualJournalsService implements IManualJournalsService {
 
     return manualJournal;
   }
-
+  
   /**
    * Reverts the manual journal journal entries.
    * @param {number} tenantId

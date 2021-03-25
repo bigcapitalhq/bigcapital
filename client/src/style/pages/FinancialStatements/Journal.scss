@@ -36,7 +36,7 @@
           font-weight: 600;
         }
 
-        .tr{
+        .tr:not(.no-results) {
           height: 28px;
         }
 

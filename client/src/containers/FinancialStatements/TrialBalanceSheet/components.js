@@ -24,7 +24,7 @@ export const useTrialBalanceTableColumns = () => {
         Header: formatMessage({ id: 'account_name' }),
         accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'name',
-        width: 160,
+        width: 180,
         textOverview: true,
       },
       {
@@ -33,14 +33,14 @@ export const useTrialBalanceTableColumns = () => {
         accessor: 'formatted_credit',
         className: 'credit',
         width: getColumnWidth(tableRows, `credit`, {
-          minWidth: 95,
+          minWidth: 80,
         }),
       },
       {
         Header: formatMessage({ id: 'debit' }),
         Cell: CellTextSpan,
         accessor: 'formatted_debit',
-        width: getColumnWidth(tableRows, `debit`, { minWidth: 95 }),
+        width: getColumnWidth(tableRows, `debit`, { minWidth: 80 }),
       },
       {
         Header: formatMessage({ id: 'balance' }),
@@ -48,7 +48,7 @@ export const useTrialBalanceTableColumns = () => {
         accessor: 'formatted_balance',
         className: 'balance',
         width: getColumnWidth(tableRows, `balance`, {
-          minWidth: 95,
+          minWidth: 80,
         }),
       },
     ],

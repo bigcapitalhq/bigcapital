@@ -72,7 +72,14 @@ export default class Bill extends TenantModel {
        */
       fromDate(query, fromDate) {
         query.where('bill_date', '<=', fromDate)
-      }
+      },
+
+      /**
+       * Sort the bills by full-payment bills.
+       */
+       sortByStatus(query, order) {
+        query.orderByRaw(`PAYMENT_AMOUNT = AMOUNT ${order}`);
+      },
     };
   }
 
@@ -298,6 +305,9 @@ export default class Bill extends TenantModel {
               query.modify('paid');
               break;
           }
+        },
+        sortQuery(query, role) {
+          query.modify('sortByStatus', role.order);
         },
       },
       amount: {
