@@ -38,7 +38,7 @@ export function useExpenses(query, props) {
     {
       method: 'get',
       url: `expenses`,
-      params: { ...query }
+      params: { ...query },
     },
     {
       select: transformExpenses,
@@ -61,7 +61,7 @@ export function useExpense(id, props) {
     [t.EXPENSE, id],
     {
       method: 'get',
-      url: `expenses/${id}`
+      url: `expenses/${id}`,
     },
     {
       select: (res) => res.data.expense,
@@ -120,7 +120,7 @@ export function useCreateExpense(props) {
   const apiRequest = useApiRequest();
 
   return useMutation((values) => apiRequest.post('expenses', values), {
-    onSuccess: (res, [values]) => {
+    onSuccess: () => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
     },
