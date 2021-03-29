@@ -62,12 +62,7 @@ export default class ContactsService {
    * Converts contact DTO object to model object attributes to insert or update.
    * @param {IContactNewDTO | IContactEditDTO} contactDTO
    */
-  private transformContactObj(contactDTO: IContactNewDTO | IContactEditDTO) {
-    const baseCurrency = 'USD';
-    const currencyCode = typeof contactDTO.currencyCode !== 'undefined'
-    ? contactDTO.currencyCode
-    : baseCurrency;
-
+  private commonTransformContactObj(contactDTO: IContactNewDTO | IContactEditDTO) {
     return {
       ...omit(contactDTO, [
         'billingAddress1',
@@ -79,7 +74,32 @@ export default class ContactsService {
       billing_address_2: contactDTO?.billingAddress2,
       shipping_address_1: contactDTO?.shippingAddress1,
       shipping_address_2: contactDTO?.shippingAddress2,
+    };
+  }
+
+  /**
+   * Transforms contact new DTO object to model object to insert to the storage.
+   * @param {IContactNewDTO} contactDTO
+   */
+  private transformNewContactDTO(contactDTO: IContactNewDTO) {
+    const baseCurrency = 'USD';
+    const currencyCode = typeof contactDTO.currencyCode !== 'undefined'
+    ? contactDTO.currencyCode
+    : baseCurrency;
+
+    return {
+      ...this.commonTransformContactObj(contactDTO),
       ...(currencyCode ? ({ currencyCode }) : {}),
+    };
+  }
+
+  /**
+   * Transforms contact edit DTO object to model object to update to the storage.
+   * @param {IContactEditDTO} contactDTO
+   */
+  private transformEditContactDTO(contactDTO: IContactEditDTO) {
+    return {
+      ...this.commonTransformContactObj(contactDTO),
     };
   }
 
@@ -95,7 +115,7 @@ export default class ContactsService {
     contactService: TContactService
   ) {
     const { contactRepository } = this.tenancy.repositories(tenantId);
-    const contactObj = this.transformContactObj(contactDTO);
+    const contactObj = this.transformNewContactDTO(contactDTO);
 
     this.logger.info('[contacts] trying to insert contact to the storage.', {
       tenantId,
@@ -126,7 +146,7 @@ export default class ContactsService {
     contactService: TContactService
   ) {
     const { contactRepository } = this.tenancy.repositories(tenantId);
-    const contactObj = this.transformContactObj(contactDTO);
+    const contactObj = this.transformEditContactDTO(contactDTO);
 
     // Retrieve the given contact by id or throw not found service error.
     const contact = await this.getContactByIdOrThrowError(
