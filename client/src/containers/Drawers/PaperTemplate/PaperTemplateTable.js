@@ -16,7 +16,7 @@ export default function DrawerTemplateTable({ tableData, currencyCode }) {
         accessor: 'rate',
         accessor: ({ rate }) => <Money amount={rate} currency={currencyCode} />,
         disableSortBy: true,
-        width: 50,
+        width: 80,
       },
       {
         Header: formatMessage({ id: 'Qty' }),

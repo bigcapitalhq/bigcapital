@@ -63,11 +63,7 @@ function ExpenseForm({
             categories: orderingLinesIndexes(defaultExpense.categories),
           }),
     }),
-    [
-      expense,
-      baseCurrency,
-      preferredPaymentAccount,
-    ],
+    [expense, baseCurrency, preferredPaymentAccount],
   );
 
   //  Handle form submit.
@@ -117,8 +113,12 @@ function ExpenseForm({
       }
     };
 
-    // Handle request error
-    const handleError = ({ response: { data: { errors } } }) => {
+    // Handle the request error.
+    const handleError = ({
+      response: {
+        data: { errors },
+      },
+    }) => {
       transformErrors(errors, { setErrors });
       setSubmitting(false);
     };
