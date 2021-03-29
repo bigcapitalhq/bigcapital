@@ -1,0 +1,27 @@
+.financial-sheet {
+  &--sales-by-items {
+    min-width: 800px;
+
+    .financial-sheet__table {
+      .thead,
+      .tbody {
+        .tr .td:not(:first-child),
+        .tr .th:not(:first-child) {
+          text-align: right;
+        }
+      }
+      .tbody {
+        .tr .td {
+          border-bottom: 0;
+          padding-top: 0.4rem;
+          padding-bottom: 0.4rem;
+        }
+        .tr.row_type--total .td {
+          border-top: 1px solid #000;
+          font-weight: 500;
+          border-bottom: 3px double #000;
+        }
+      }
+    }
+  }
+}
