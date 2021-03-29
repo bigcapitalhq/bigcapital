@@ -134,12 +134,7 @@ export default class GeneralLedgerService {
     });
     // Retreive opening balance credit/debit sumation.
     const openingBalanceTrans = await transactionsRepository.journal({
-      toDate: filter.fromDate,
-      sumationCreditDebit: true,
-    });
-    // Retreive closing balance credit/debit sumation.
-    const closingBalanceTrans = await transactionsRepository.journal({
-      toDate: filter.toDate,
+      toDate: moment(filter.fromDate).subtract(1, 'day'),
       sumationCreditDebit: true,
     });
     // Transform array transactions to journal collection.
@@ -154,12 +149,6 @@ export default class GeneralLedgerService {
       tenantId,
       accountsGraph
     );
-    // Accounts closing transactions.
-    const closingTransJournal = Journal.fromTransactions(
-      closingBalanceTrans,
-      tenantId,
-      accountsGraph
-    );
     // General ledger report instance.
     const generalLedgerInstance = new GeneralLedgerSheet(
       tenantId,
@@ -168,7 +157,6 @@ export default class GeneralLedgerService {
       contactsByIdMap,
       transactionsJournal,
       openingTransJournal,
-      closingTransJournal,
       baseCurrency
     );
     // Retrieve general ledger report data.
