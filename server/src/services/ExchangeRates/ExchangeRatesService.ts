@@ -136,30 +136,6 @@ export default class ExchangeRatesService implements IExchangeRatesService {
   }
 
   /**
-   * Deletes exchange rates in bulk.
-   * @param {number} tenantId
-   * @param {number[]} exchangeRatesIds
-   */
-  public async deleteBulkExchangeRates(
-    tenantId: number,
-    exchangeRatesIds: number[]
-  ): Promise<void> {
-    const { ExchangeRate } = this.tenancy.models(tenantId);
-
-    this.logger.info('[exchange_rates] trying delete in bulk.', {
-      tenantId,
-      exchangeRatesIds,
-    });
-    await this.validateExchangeRatesIdsExistance(tenantId, exchangeRatesIds);
-
-    await ExchangeRate.query().whereIn('id', exchangeRatesIds).delete();
-    this.logger.info('[exchange_rates] deleted successfully.', {
-      tenantId,
-      exchangeRatesIds,
-    });
-  }
-
-  /**
    * Validates period of the exchange rate existance.
    * @param {number} tenantId - Tenant id.
    * @param {IExchangeRateDTO} exchangeRateDTO - Exchange rate DTO.
@@ -212,35 +188,6 @@ export default class ExchangeRatesService implements IExchangeRatesService {
         exchangeRateId,
       });
       throw new ServiceError(ERRORS.EXCHANGE_RATE_NOT_FOUND);
-    }
-  }
-
-  /**
-   * Validates exchange rates ids existance.
-   * @param {number} tenantId - Tenant id.
-   * @param {number[]} exchangeRatesIds - Exchange rates ids.
-   * @returns {Promise<void>}
-   */
-  private async validateExchangeRatesIdsExistance(
-    tenantId: number,
-    exchangeRatesIds: number[]
-  ): Promise<void> {
-    const { ExchangeRate } = this.tenancy.models(tenantId);
-
-    const storedExchangeRates = await ExchangeRate.query().whereIn(
-      'id',
-      exchangeRatesIds
-    );
-    const storedExchangeRatesIds = storedExchangeRates.map(
-      (category) => category.id
-    );
-    const notFoundExRates = difference(
-      exchangeRatesIds,
-      storedExchangeRatesIds
-    );
-
-    if (notFoundExRates.length > 0) {
-      throw new ServiceError(ERRORS.NOT_FOUND_EXCHANGE_RATES);
     }
   }
 }

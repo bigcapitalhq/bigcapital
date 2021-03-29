@@ -44,13 +44,6 @@ export default class ExchangeRatesController extends BaseController {
       this.handleServiceError
     );
     router.delete(
-      '/bulk',
-      [...this.exchangeRatesIdsSchema],
-      this.validationResult,
-      asyncMiddleware(this.bulkDeleteExchangeRates.bind(this)),
-      this.handleServiceError
-    );
-    router.delete(
       '/:id',
       [...this.exchangeRateIdSchema],
       this.validationResult,
@@ -187,31 +180,6 @@ export default class ExchangeRatesController extends BaseController {
         exchangeRateId
       );
       return res.status(200).send({ id: exchangeRateId });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Deletes the given exchange rates in bulk.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  async bulkDeleteExchangeRates(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    const { tenantId } = req;
-    const { ids: exchangeRateIds } = req.query;
-
-    try {
-      await this.exchangeRatesService.deleteBulkExchangeRates(
-        tenantId,
-        exchangeRateIds
-      );
-      return res.status(200).send();
     } catch (error) {
       next(error);
     }

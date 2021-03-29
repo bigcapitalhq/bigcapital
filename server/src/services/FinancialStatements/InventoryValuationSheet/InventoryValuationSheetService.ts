@@ -89,11 +89,12 @@ export default class InventoryValuationSheetService {
       builder.select('itemId');
       builder.groupBy('itemId');
     };
-
+    // Retrieve the inventory cost `IN` transactions.
     const INTransactions = await InventoryCostLotTracker.query()
       .onBuild(commonQuery)
       .where('direction', 'IN');
 
+    // Retrieve the inventory cost `OUT` transactions.
     const OUTTransactions = await InventoryCostLotTracker.query()
       .onBuild(commonQuery)
       .where('direction', 'OUT');
@@ -105,7 +106,7 @@ export default class InventoryValuationSheetService {
       OUTTransactions,
       baseCurrency,
     );
-
+    // Retrieve the inventory valuation report data.
     const inventoryValuationData = inventoryValuationInstance.reportData();
 
     return {
