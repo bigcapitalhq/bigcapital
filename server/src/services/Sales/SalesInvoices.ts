@@ -1,6 +1,7 @@
 import { Service, Inject } from 'typedi';
-import { omit, sumBy, join } from 'lodash';
+import { omit, sumBy, join, entries } from 'lodash';
 import moment from 'moment';
+import composeAsync from 'async/compose';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -15,7 +16,7 @@ import {
   ISystemUser,
   IItem,
   IItemEntry,
-  ISalesInvoicesService
+  ISalesInvoicesService,
 } from 'interfaces';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import JournalCommands from 'services/Accounting/JournalCommands';
@@ -182,6 +183,30 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
   }
 
   /**
+   * Sets the cost/sell accounts to the invoice entries.
+   */
+  setInvoiceEntriesDefaultAccounts(tenantId: number) {
+    return async (entries: IItemEntry[]) => {
+      const { Item } = this.tenancy.models(tenantId);
+
+      const entriesItemsIds = entries.map((e) => e.itemId);
+      const items = await Item.query().whereIn('id', entriesItemsIds);
+
+      return entries.map((entry) => {
+        const item = items.find((i) => i.id === entry.itemId);
+
+        return {
+          ...entry,
+          sellAccountId: entry.sellAccountId || item.sellAccountId,
+          ...(item.type === 'inventory' && {
+            costAccountId: entry.costAccountId || item.costAccountId,
+          }),
+        };
+      });
+    };
+  }
+
+  /**
    * Transformes the create DTO to invoice object model.
    * @param {ISaleInvoiceCreateDTO} saleInvoiceDTO - Sale invoice DTO.
    * @param {ISaleInvoice} oldSaleInvoice - Old sale invoice.
@@ -212,6 +237,16 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
     // Validate the invoice is required.
     this.validateInvoiceNoRequire(invoiceNo);
 
+    const initialEntries = saleInvoiceDTO.entries.map((entry) => ({
+      referenceType: 'SaleInvoice',
+      ...entry,
+    }));
+
+    const entries = await composeAsync(
+      // Sets default cost and sell account to invoice items entries.
+      this.setInvoiceEntriesDefaultAccounts(tenantId)
+    )(initialEntries);
+
     return {
       ...formatDateFields(
         omit(saleInvoiceDTO, ['delivered', 'entries', 'fromEstimateId']),
@@ -227,10 +262,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       // Avoid override payment amount in edit mode.
       ...(!oldSaleInvoice && { paymentAmount: 0 }),
       ...(invoiceNo ? { invoiceNo } : {}),
-      entries: saleInvoiceDTO.entries.map((entry) => ({
-        referenceType: 'SaleInvoice',
-        ...entry,
-      })),
+      entries,
     };
   }
 
@@ -259,23 +291,11 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
   ): Promise<ISaleInvoice> {
     const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
 
-    // Transform DTO object to model object.
-    const saleInvoiceObj = await this.transformDTOToModel(
-      tenantId,
-      saleInvoiceDTO
-    );
     // Validate customer existance.
     await this.customersService.getCustomerByIdOrThrowError(
       tenantId,
       saleInvoiceDTO.customerId
     );
-    // Validate sale invoice number uniquiness.
-    if (saleInvoiceObj.invoiceNo) {
-      await this.validateInvoiceNumberUnique(
-        tenantId,
-        saleInvoiceObj.invoiceNo
-      );
-    }
     // Validate the from estimate id exists on the storage.
     if (saleInvoiceDTO.fromEstimateId) {
       const fromEstimate = await this.saleEstimatesService.getSaleEstimateOrThrowError(
@@ -295,11 +315,21 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       tenantId,
       saleInvoiceDTO.entries
     );
-
+    // Transform DTO object to model object.
+    const saleInvoiceObj = await this.transformDTOToModel(
+      tenantId,
+      saleInvoiceDTO
+    );
+    // Validate sale invoice number uniquiness.
+    if (saleInvoiceObj.invoiceNo) {
+      await this.validateInvoiceNumberUnique(
+        tenantId,
+        saleInvoiceObj.invoiceNo
+      );
+    }
     this.logger.info('[sale_invoice] inserting sale invoice to the storage.');
-    const saleInvoice = await saleInvoiceRepository.upsertGraph({
-      ...saleInvoiceObj,
-    });
+    const saleInvoice = await saleInvoiceRepository.upsertGraph(saleInvoiceObj);
+
     // Triggers the event `onSaleInvoiceCreated`.
     await this.eventDispatcher.dispatch(events.saleInvoice.onCreated, {
       tenantId,
@@ -337,25 +367,11 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       tenantId,
       saleInvoiceId
     );
-    // Transform DTO object to model object.
-    const saleInvoiceObj = await this.transformDTOToModel(
-      tenantId,
-      saleInvoiceDTO,
-      oldSaleInvoice
-    );
     // Validate customer existance.
     await this.customersService.getCustomerByIdOrThrowError(
       tenantId,
       saleInvoiceDTO.customerId
     );
-    // Validate sale invoice number uniquiness.
-    if (saleInvoiceDTO.invoiceNo) {
-      await this.validateInvoiceNumberUnique(
-        tenantId,
-        saleInvoiceDTO.invoiceNo,
-        saleInvoiceId
-      );
-    }
     // Validate items ids existance.
     await this.itemsEntriesService.validateItemsIdsExistance(
       tenantId,
@@ -373,6 +389,20 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       'SaleInvoice',
       saleInvoiceDTO.entries
     );
+    // Transform DTO object to model object.
+    const saleInvoiceObj = await this.transformDTOToModel(
+      tenantId,
+      saleInvoiceDTO,
+      oldSaleInvoice
+    );
+    // Validate sale invoice number uniquiness.
+    if (saleInvoiceObj.invoiceNo) {
+      await this.validateInvoiceNumberUnique(
+        tenantId,
+        saleInvoiceDTO.invoiceNo,
+        saleInvoiceId
+      );
+    }
     // Validate the invoice amount is not smaller than the invoice payment amount.
     this.validateInvoiceAmountBiggerPaymentAmount(
       saleInvoiceObj.balance,
@@ -445,7 +475,8 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
     const { ItemEntry } = this.tenancy.models(tenantId);
     const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
 
-    // Retrieve the given sale invoice with associated entries or throw not found error.
+    // Retrieve the given sale invoice with associated entries
+    // or throw not found error.
     const oldSaleInvoice = await this.getInvoiceOrThrowError(
       tenantId,
       saleInvoiceId
@@ -497,12 +528,23 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
     saleInvoice: ISaleInvoice,
     override?: boolean
   ): Promise<void> {
+    // Loads the inventory items entries of the given sale invoice.
+    const inventoryEntries = await this.itemsEntriesService.filterInventoryEntries(
+      tenantId,
+      saleInvoice.entries
+    );
+    const transaction = {
+      transactionId: saleInvoice.id,
+      transactionType: 'SaleInvoice',
+
+      date: saleInvoice.invoiceDate,
+      direction: 'OUT',
+      entries: inventoryEntries,
+      createdAt: saleInvoice.created_at,
+    };
     await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
       tenantId,
-      saleInvoice.id,
-      'SaleInvoice',
-      saleInvoice.invoiceDate,
-      'OUT',
+      transaction,
       override
     );
   }

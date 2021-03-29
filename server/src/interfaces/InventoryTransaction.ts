@@ -10,7 +10,6 @@ export interface IInventoryTransaction {
   rate: number,
   transactionType: string,
   transactionId: number,
-  lotNumber: number,
   entryId: number,
   createdAt?: Date,
   updatedAt?: Date,
@@ -25,10 +24,12 @@ export interface IInventoryLotCost {
   rate: number,
   remaining: number,
   cost: number,
-  lotNumber: number,
   transactionType: string,
   transactionId: number,
-  entryId: number
+  costAccountId: number,
+  sellAccountId: number,
+  entryId: number,
+  createdAt: Date,
 };
 
 export interface IItemsQuantityChanges {

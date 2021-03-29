@@ -1,11 +1,13 @@
-import { sumBy, chain } from 'lodash';
-import moment, { LongDateFormatKey } from 'moment';
-import { IBill, IManualJournalEntry, ISaleReceipt, ISystemUser } from 'interfaces';
+import moment from 'moment';
+import {
+  IBill,
+  IManualJournalEntry,
+  ISaleReceipt,
+  ISystemUser,
+} from 'interfaces';
 import JournalPoster from './JournalPoster';
 import JournalEntry from './JournalEntry';
-import { AccountTransaction } from 'models';
 import {
-  IInventoryTransaction,
   IManualJournal,
   IExpense,
   IExpenseCategory,
@@ -14,6 +16,7 @@ import {
   IInventoryLotCost,
   IItemEntry,
 } from 'interfaces';
+import { increment } from 'utils';
 
 export default class JournalCommands {
   journal: JournalPoster;
@@ -61,6 +64,8 @@ export default class JournalCommands {
 
       referenceNumber: bill.referenceNo,
       transactionNumber: bill.billNumber,
+
+      createdAt: bill.createdAt,
     };
     // Overrides the old bill entries.
     if (override) {
@@ -90,9 +95,9 @@ export default class JournalCommands {
         account:
           ['inventory'].indexOf(item.type) !== -1
             ? item.inventoryAccountId
-            : item.costAccountId,
+            : entry.costAccountId,
         index: index + 2,
-        itemId: entry.itemId
+        itemId: entry.itemId,
       });
       this.journal.debit(debitEntry);
     });
@@ -257,7 +262,7 @@ export default class JournalCommands {
     const transactions = await transactionsRepository.journal({
       fromDate: startingDate,
       referenceType: ['SaleInvoice'],
-      index: [3, 4],
+      indexGroup: 20
     });
     this.journal.fromTransactions(transactions);
     this.journal.removeEntries();
@@ -265,11 +270,9 @@ export default class JournalCommands {
 
   /**
    * Reverts sale invoice the income journal entries.
-   * @param {number} saleInvoiceId 
+   * @param {number} saleInvoiceId
    */
-  async revertInvoiceIncomeEntries(
-    saleInvoiceId: number,
-  ) {
+  async revertInvoiceIncomeEntries(saleInvoiceId: number) {
     const { transactionsRepository } = this.repositories;
 
     const transactions = await transactionsRepository.journal({
@@ -289,6 +292,7 @@ export default class JournalCommands {
     const commonEntry = {
       transaction_number: manualJournalObj.journalNumber,
       reference_number: manualJournalObj.reference,
+      createdAt: manualJournalObj.createdAt,
     };
     manualJournalObj.entries.forEach((entry: IManualJournalEntry) => {
       const jouranlEntry = new JournalEntry({
@@ -317,36 +321,50 @@ export default class JournalCommands {
    * -------
    * - Cost of goods sold -> Debit -> YYYY
    *    - Inventory assets -> Credit -> YYYY
-   *
+   * --------
    * @param {ISaleInvoice} saleInvoice
    * @param {JournalPoster} journal
    */
   saleInvoiceInventoryCost(
-    inventoryCostLot: IInventoryLotCost & { item: IItem }
+    inventoryCostLots: IInventoryLotCost &
+      { item: IItem; itemEntry: IItemEntry }[]
   ) {
-    const commonEntry = {
-      referenceType: inventoryCostLot.transactionType,
-      referenceId: inventoryCostLot.transactionId,
-      date: inventoryCostLot.date,
-    };
-    // XXX Debit - Cost account.
-    const costEntry = new JournalEntry({
-      ...commonEntry,
-      debit: inventoryCostLot.cost,
-      account: inventoryCostLot.item.costAccountId,
-      index: 3,
-      itemId: inventoryCostLot.itemId
-    });
-    // XXX Credit - Inventory account.
-    const inventoryEntry = new JournalEntry({
-      ...commonEntry,
-      credit: inventoryCostLot.cost,
-      account: inventoryCostLot.item.inventoryAccountId,
-      index: 4,
-      itemId: inventoryCostLot.itemId
-    });
-    this.journal.credit(inventoryEntry);
-    this.journal.debit(costEntry);
+    const getIndexIncrement = increment(0);
+
+    inventoryCostLots.forEach(
+      (
+        inventoryCostLot: IInventoryLotCost & {
+          item: IItem;
+          itemEntry: IItemEntry;
+        }
+      ) => {
+        const commonEntry = {
+          referenceType: inventoryCostLot.transactionType,
+          referenceId: inventoryCostLot.transactionId,
+          date: inventoryCostLot.date,
+          indexGroup: 20,
+          createdAt: inventoryCostLot.createdAt,
+        };
+        // XXX Debit - Cost account.
+        const costEntry = new JournalEntry({
+          ...commonEntry,
+          debit: inventoryCostLot.cost,
+          account: inventoryCostLot.itemEntry.costAccountId,
+          itemId: inventoryCostLot.itemId,
+          index: getIndexIncrement(),
+        });
+        // XXX Credit - Inventory account.
+        const inventoryEntry = new JournalEntry({
+          ...commonEntry,
+          credit: inventoryCostLot.cost,
+          account: inventoryCostLot.item.inventoryAccountId,
+          itemId: inventoryCostLot.itemId,
+          index: getIndexIncrement(),
+        });
+        this.journal.credit(inventoryEntry);
+        this.journal.debit(costEntry);
+      }
+    );
   }
 
   /**
@@ -354,7 +372,7 @@ export default class JournalCommands {
    * -----
    * - Receivable accounts -> Debit -> XXXX
    *    - Income -> Credit -> XXXX
-   * 
+   *
    * @param {ISaleInvoice} saleInvoice
    * @param {number} receivableAccountsId
    * @param {number} authorizedUserId
@@ -373,6 +391,9 @@ export default class JournalCommands {
 
       transactionNumber: saleInvoice.invoiceNo,
       referenceNumber: saleInvoice.referenceNo,
+
+      createdAt: saleInvoice.createdAt,
+      indexGroup: 10,
     };
     // XXX Debit - Receivable account.
     const receivableEntry = new JournalEntry({
@@ -384,22 +405,20 @@ export default class JournalCommands {
     });
     this.journal.debit(receivableEntry);
 
-    saleInvoice.entries.forEach(
-      (entry: IItemEntry & { item: IItem }, index: number) => {
-        const income: number = entry.quantity * entry.rate;
+    saleInvoice.entries.forEach((entry: IItemEntry, index: number) => {
+      const income: number = entry.quantity * entry.rate;
 
-        // XXX Credit - Income account.
-        const incomeEntry = new JournalEntry({
-          ...commonEntry,
-          credit: income,
-          account: entry.item.sellAccountId,
-          note: entry.description,
-          index: index + 2,
-          itemId: entry.itemId,
-        });
-        this.journal.credit(incomeEntry);
-      }
-    );
+      // XXX Credit - Income account.
+      const incomeEntry = new JournalEntry({
+        ...commonEntry,
+        credit: income,
+        account: entry.sellAccountId,
+        note: entry.description,
+        index: index + 2,
+        itemId: entry.itemId,
+      });
+      this.journal.credit(incomeEntry);
+    });
   }
 
   /**
@@ -407,7 +426,7 @@ export default class JournalCommands {
    * -----
    * - Deposit account -> Debit -> XXXX
    *    - Income -> Credit -> XXXX
-   * 
+   *
    * @param {ISaleInvoice} saleInvoice
    * @param {number} receivableAccountsId
    * @param {number} authorizedUserId
@@ -415,7 +434,7 @@ export default class JournalCommands {
   async saleReceiptIncomeEntries(
     saleReceipt: ISaleReceipt & {
       entries: IItemEntry & { item: IItem };
-    },
+    }
   ): Promise<void> {
     const commonEntry = {
       referenceType: 'SaleReceipt',
@@ -424,6 +443,7 @@ export default class JournalCommands {
       userId: saleReceipt.userId,
       transactionNumber: saleReceipt.receiptNumber,
       referenceNumber: saleReceipt.referenceNo,
+      createdAt: saleReceipt.createdAt,
     };
     // XXX Debit - Deposit account.
     const depositEntry = new JournalEntry({

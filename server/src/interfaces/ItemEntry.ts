@@ -14,6 +14,9 @@ export interface IItemEntry {
   discount: number,
   quantity: number,
   rate: number,
+
+  sellAccountId: number,
+  costAccountId: number,
 }
 
 export interface IItemEntryDTO {

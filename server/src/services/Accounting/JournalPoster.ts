@@ -164,10 +164,12 @@ export default class JournalPoster implements IJournalPoster {
     );
 
     const balanceEntries = chain(balanceChanges)
-      .map((change) => change.entries.map(entry => ({
-        ...entry,
-        contactId: change.contactId
-      })))
+      .map((change) =>
+        change.entries.map((entry) => ({
+          ...entry,
+          contactId: change.contactId,
+        }))
+      )
       .flatten()
       .value();
 
@@ -375,6 +377,8 @@ export default class JournalPoster implements IJournalPoster {
   public async saveEntries() {
     const { transactionsRepository } = this.repositories;
     const saveOperations: Promise<void>[] = [];
+
+    this.logger.info('[journal] trying to insert accounts transactions.');
 
     this.entries.forEach((entry) => {
       const oper = transactionsRepository.create({

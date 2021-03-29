@@ -11,6 +11,8 @@ export interface IPaymentReceive {
   statement: string;
   entries: IPaymentReceiveEntry[];
   userId: number;
+  createdAt: Date,
+  updatedAt: Date,
 }
 export interface IPaymentReceiveCreateDTO {
   customerId: number;

@@ -569,7 +569,12 @@ export default class BillPaymentsService implements IBillPaymentsService {
       credit: 0,
       referenceId: billPayment.id,
       referenceType: 'BillPayment',
+
+      transactionNumber: billPayment.paymentNumber,
+      referenceNumber: billPayment.reference,
+
       date: formattedDate,
+      createdAt: billPayment.createdAt,
     };
     if (override) {
       const transactions = await AccountTransaction.query()

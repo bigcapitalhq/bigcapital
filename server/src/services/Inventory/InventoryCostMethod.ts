@@ -19,10 +19,12 @@ export default class InventoryCostMethod {
 
   /**
    * Stores the inventory lots costs transactions in bulk.
-   * @param  {IInventoryLotCost[]} costLotsTransactions 
+   * @param  {IInventoryLotCost[]} costLotsTransactions
    * @return {Promise[]}
    */
-  public storeInventoryLotsCost(costLotsTransactions: IInventoryLotCost[]): Promise<object> {
+  public storeInventoryLotsCost(
+    costLotsTransactions: IInventoryLotCost[]
+  ): Promise<object> {
     const { InventoryCostLotTracker } = this.tenantModels;
     const opers: any = [];
 
@@ -32,12 +34,10 @@ export default class InventoryCostMethod {
           .where('id', transaction.lotTransId)
           .decrement('remaining', transaction.decrement);
         opers.push(decrementOper);
-
-      } else if(!transaction.lotTransId) {
-        const operation = InventoryCostLotTracker.query()
-          .insert({
-            ...omit(transaction, ['decrement', 'invTransId', 'lotTransId']),
-          });
+      } else if (!transaction.lotTransId) {
+        const operation = InventoryCostLotTracker.query().insert({
+          ...omit(transaction, ['decrement', 'invTransId', 'lotTransId']),
+        });
         opers.push(operation);
       }
     });

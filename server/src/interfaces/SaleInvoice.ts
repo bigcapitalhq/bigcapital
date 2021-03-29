@@ -16,6 +16,7 @@ export interface ISaleInvoice {
   entries: IItemEntry[];
   deliveredAt: string | Date;
   userId: number;
+  createdAt: Date,
 }
 
 export interface ISaleInvoiceDTO {

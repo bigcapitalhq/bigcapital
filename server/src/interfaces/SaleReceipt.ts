@@ -14,6 +14,8 @@ export interface ISaleReceipt {
   statement: string;
   closedAt: Date | string;
   entries: any[];
+  createdAt: Date,
+  updatedAt: Date,
 }
 
 export interface ISalesReceiptsFilter {}

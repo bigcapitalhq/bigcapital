@@ -11,8 +11,10 @@ export default (Model) => {
       const maybePromise = super.$beforeUpdate(opt, context);
 
       return Promise.resolve(maybePromise).then(() => {
-        if (this.timestamps[1]) {
-          this[this.timestamps[1]] = moment().format('YYYY/MM/DD HH:mm:ss');
+        const key = this.timestamps[1];
+
+        if (key && !this[key]) {
+          this[key] = moment().format('YYYY/MM/DD HH:mm:ss');
         }
       });
     }
@@ -21,8 +23,10 @@ export default (Model) => {
       const maybePromise = super.$beforeInsert(context);
 
       return Promise.resolve(maybePromise).then(() => {
-        if (this.timestamps[0]) {
-          this[this.timestamps[0]] = moment().format('YYYY/MM/DD HH:mm:ss');
+        const key = this.timestamps[0];
+
+        if (key && !this[key]) {
+          this[key] = moment().format('YYYY/MM/DD HH:mm:ss');
         }
       });
     }

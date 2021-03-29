@@ -20,6 +20,7 @@ import ItemsService from 'services/Items/ItemsService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import HasTenancyService from 'services/Tenancy/TenancyService';
 import InventoryService from './Inventory';
+import { increment } from 'utils';
 
 const ERRORS = {
   INVENTORY_ADJUSTMENT_NOT_FOUND: 'INVENTORY_ADJUSTMENT_NOT_FOUND',
@@ -310,24 +311,21 @@ export default class InventoryAdjustmentService {
     inventoryAdjustment: IInventoryAdjustment,
     override: boolean = false
   ): Promise<void> {
-    // Gets the next inventory lot number.
-    const lotNumber = this.inventoryService.getNextLotNumber(tenantId);
-
     const commonTransaction = {
       direction: inventoryAdjustment.inventoryDirection,
       date: inventoryAdjustment.date,
       transactionType: 'InventoryAdjustment',
       transactionId: inventoryAdjustment.id,
+      createdAt: inventoryAdjustment.createdAt
     };
     const inventoryTransactions = [];
-
+    
     inventoryAdjustment.entries.forEach((entry) => {
       inventoryTransactions.push({
         ...commonTransaction,
         itemId: entry.itemId,
         quantity: entry.quantity,
         rate: entry.cost,
-        lotNumber,
       });
     });
     // Saves the given inventory transactions to the storage.
@@ -335,9 +333,7 @@ export default class InventoryAdjustmentService {
       tenantId,
       inventoryTransactions,
       override
-    );
-    // Increment and save the next lot number settings.
-    await this.inventoryService.incrementNextLotNumber(tenantId);
+    )
   }
 
   /**

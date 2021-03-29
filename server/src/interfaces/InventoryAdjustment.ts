@@ -24,6 +24,7 @@ export interface IInventoryAdjustment {
   entries: IInventoryAdjustmentEntry[];
   userId: number;
   publishedAt?: Date|null;
+  createdAt?: Date,
 }
 
 export interface IInventoryAdjustmentEntry {

@@ -22,7 +22,6 @@ import {
   ACCOUNT_TYPE,
 } from 'data/AccountTypes';
 import { ERRORS } from './constants';
-import { AccountTransaction } from 'models';
 
 @Service()
 export default class ItemsService implements IItemsService {

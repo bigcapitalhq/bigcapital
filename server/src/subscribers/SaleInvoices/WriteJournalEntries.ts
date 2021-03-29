@@ -51,15 +51,9 @@ export default class SaleInvoiceSubscriber {
     saleInvoice,
     authorizedUser,
   }) {
-    const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
-
-    const saleInvoiceWithItems = await saleInvoiceRepository.findOneById(
-      saleInvoiceId,
-      'entries.item'
-    );
     await this.saleInvoicesService.writesIncomeJournalEntries(
       tenantId,
-      saleInvoiceWithItems,
+      saleInvoice,
       true
     );
   }

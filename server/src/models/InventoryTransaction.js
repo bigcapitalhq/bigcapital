@@ -42,6 +42,7 @@ export default class InventoryTransaction extends TenantModel {
    */
   static get relationMappings() {
     const Item = require('models/Item');
+    const ItemEntry = require('models/ItemEntry');
 
     return {
       item: {
@@ -52,6 +53,14 @@ export default class InventoryTransaction extends TenantModel {
           to: 'items.id',
         },
       },
+      itemEntry: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: ItemEntry.default,
+        join: {
+          from: 'inventory_transactions.entryId',
+          to: 'items_entries.id',
+        },
+      }
     };
   }
 }

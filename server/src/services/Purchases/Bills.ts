@@ -1,6 +1,7 @@
 import { omit, sumBy } from 'lodash';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
+import composeAsync from 'async/compose';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -21,7 +22,8 @@ import {
   IPaginationMeta,
   IFilterMeta,
   IBillsFilter,
-  IBillsService
+  IBillsService,
+  IItemEntry,
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import ItemsService from 'services/Items/ItemsService';
@@ -36,7 +38,9 @@ import { ERRORS } from './constants';
  * @service
  */
 @Service('Bills')
-export default class BillsService extends SalesInvoicesCost implements IBillsService {
+export default class BillsService
+  extends SalesInvoicesCost
+  implements IBillsService {
   @Inject()
   inventoryService: InventoryService;
 
@@ -168,6 +172,29 @@ export default class BillsService extends SalesInvoicesCost implements IBillsSer
   }
 
   /**
+   * Sets the default cost account to the bill entries.
+   */
+  setBillEntriesDefaultAccounts(tenantId: number) {
+    return async (entries: IItemEntry[]) => {
+      const { Item } = this.tenancy.models(tenantId);
+
+      const entriesItemsIds = entries.map((e) => e.itemId);
+      const items = await Item.query().whereIn('id', entriesItemsIds);
+
+      return entries.map((entry) => {
+        const item = items.find((i) => i.id === entry.itemId);
+
+        return {
+          ...entry,
+          ...(item.type !== 'inventory' && {
+            costAccountId: entry.costAccountId || item.costAccountId,
+          }),
+        };
+      });
+    };
+  }
+
+  /**
    * Converts create bill DTO to model.
    * @param {number} tenantId
    * @param {IBillDTO} billDTO
@@ -182,11 +209,7 @@ export default class BillsService extends SalesInvoicesCost implements IBillsSer
   ) {
     const { ItemEntry } = this.tenancy.models(tenantId);
 
-    const entries = billDTO.entries.map((entry) => ({
-      ...entry,
-      amount: ItemEntry.calcAmount(entry),
-    }));
-    const amount = sumBy(entries, 'amount');
+    const amount = sumBy(billDTO.entries, (e) => ItemEntry.calcAmount(e));
 
     // Bill number from DTO or from auto-increment.
     const billNumber = billDTO.billNumber || oldBill?.billNumber;
@@ -196,6 +219,15 @@ export default class BillsService extends SalesInvoicesCost implements IBillsSer
       tenantId,
       billDTO.vendorId
     );
+    const initialEntries = billDTO.entries.map((entry) => ({
+      reference_type: 'Bill',
+      ...omit(entry, ['amount']),
+    }));
+    const entries = await composeAsync(
+      // Sets the default cost account to the bill entries.
+      this.setBillEntriesDefaultAccounts(tenantId)
+    )(initialEntries);
+
     return {
       ...formatDateFields(omit(billDTO, ['open', 'entries']), [
         'billDate',
@@ -204,10 +236,7 @@ export default class BillsService extends SalesInvoicesCost implements IBillsSer
       amount,
       currencyCode: vendor.currencyCode,
       billNumber,
-      entries: entries.map((entry) => ({
-        reference_type: 'Bill',
-        ...omit(entry, ['amount']),
-      })),
+      entries,
       // Avoid rewrite the open date in edit mode when already opened.
       ...(billDTO.open &&
         !oldBill?.openedAt && {
@@ -239,15 +268,6 @@ export default class BillsService extends SalesInvoicesCost implements IBillsSer
   ): Promise<IBill> {
     const { billRepository } = this.tenancy.repositories(tenantId);
 
-    this.logger.info('[bill] trying to create a new bill', {
-      tenantId,
-      billDTO,
-    });
-    const billObj = await this.billDTOToModel(
-      tenantId,
-      billDTO,
-      authorizedUser
-    );
     // Retrieve vendor or throw not found service error.
     await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
 
@@ -264,8 +284,18 @@ export default class BillsService extends SalesInvoicesCost implements IBillsSer
       tenantId,
       billDTO.entries
     );
+    this.logger.info('[bill] trying to create a new bill', {
+      tenantId,
+      billDTO,
+    });
+    // Transform the bill DTO to model object.
+    const billObj = await this.billDTOToModel(
+      tenantId,
+      billDTO,
+      authorizedUser
+    );
     // Inserts the bill graph object to the storage.
-    const bill = await billRepository.upsertGraph({ ...billObj });
+    const bill = await billRepository.upsertGraph(billObj);
 
     // Triggers `onBillCreated` event.
     await this.eventDispatcher.dispatch(events.bill.onCreated, {
@@ -309,13 +339,6 @@ export default class BillsService extends SalesInvoicesCost implements IBillsSer
     this.logger.info('[bill] trying to edit bill.', { tenantId, billId });
     const oldBill = await this.getBillOrThrowError(tenantId, billId);
 
-    // Transforms the bill DTO object to model object.
-    const billObj = await this.billDTOToModel(
-      tenantId,
-      billDTO,
-      authorizedUser,
-      oldBill
-    );
     // Retrieve vendor details or throw not found service error.
     await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
 
@@ -339,6 +362,13 @@ export default class BillsService extends SalesInvoicesCost implements IBillsSer
     await this.itemsEntriesService.validateNonPurchasableEntriesItems(
       tenantId,
       billDTO.entries
+    );
+    // Transforms the bill DTO to model object.
+    const billObj = await this.billDTOToModel(
+      tenantId,
+      billDTO,
+      authorizedUser,
+      oldBill
     );
     // Update the bill transaction.
     const bill = await billRepository.upsertGraph({
@@ -498,8 +528,8 @@ export default class BillsService extends SalesInvoicesCost implements IBillsSer
 
   /**
    * Records the inventory transactions from the given bill input.
-   * @param {Bill} bill - Bill model object.
-   * @param {number} billId - Bill id.
+   * @param  {Bill} bill - Bill model object.
+   * @param  {number} billId - Bill id.
    * @return {Promise<void>}
    */
   public async recordInventoryTransactions(
@@ -507,19 +537,25 @@ export default class BillsService extends SalesInvoicesCost implements IBillsSer
     bill: IBill,
     override?: boolean
   ): Promise<void> {
+    // Loads the inventory items entries of the given sale invoice.
+    const inventoryEntries = await this.itemsEntriesService.filterInventoryEntries(
+      tenantId,
+      bill.entries
+    );
+    const transaction = {
+      transactionId: bill.id,
+      transactionType: 'Bill',
+
+      date: bill.billDate,
+      direction: 'IN',
+      entries: inventoryEntries,
+      createdAt: bill.createdAt,
+    };
     await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
       tenantId,
-      bill.id,
-      'Bill',
-      bill.billDate,
-      'IN',
+      transaction,
       override
     );
-    // Triggers `onInventoryTransactionsCreated` event.
-    this.eventDispatcher.dispatch(events.bill.onInventoryTransactionsCreated, {
-      tenantId,
-      bill,
-    });
   }
 
   /**
@@ -582,10 +618,7 @@ export default class BillsService extends SalesInvoicesCost implements IBillsSer
    * @param {number} tenantId
    * @param {number} vendorId - Vendor id.
    */
-  public async validateVendorHasNoBills(
-    tenantId: number,
-    vendorId: number
-  ) {
+  public async validateVendorHasNoBills(tenantId: number, vendorId: number) {
     const { Bill } = this.tenancy.models(tenantId);
 
     const bills = await Bill.query().where('vendor_id', vendorId);

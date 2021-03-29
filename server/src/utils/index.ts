@@ -313,7 +313,16 @@ export const parseBoolean = <T>(value: any, defaultValue: T): T | boolean => {
   return booleanValuesRepresentingTrue.indexOf(normalizedValue) !== -1;
 };
 
+var increment = (n) => {
+  return () => {
+    n += 1;
+    return n;
+  };
+};
+
+
 export {
+  increment,
   hashPassword,
   origin,
   dateRangeCollection,

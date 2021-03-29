@@ -112,12 +112,10 @@ export default class AccountTransaction extends TenantModel {
       filterContactIds(query, contactIds) {
         query.whereIn('contact_id', contactIds);
       },
-
       openingBalance(query, fromDate) {
         query.modify('filterDateRange', null, fromDate)
         query.modify('sumationCreditDebit')
       },
-
       closingBalance(query, toDate) {
         query.modify('filterDateRange', null, toDate)
         query.modify('sumationCreditDebit')

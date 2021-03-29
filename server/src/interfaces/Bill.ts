@@ -46,11 +46,13 @@ export interface IBill {
   dueAmount: number,
   overdueDays: number,
 
-  invLotNumber: string,
   openedAt: Date | string,
 
   entries: IItemEntry[],
   userId: number,
+
+  createdAt: Date,
+  updateAt: Date,
 };
 
 export interface IBillsFilter extends IDynamicListFilterDTO { 

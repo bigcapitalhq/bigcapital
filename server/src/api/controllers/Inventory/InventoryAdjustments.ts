@@ -106,7 +106,6 @@ export default class InventoryAdjustmentsController extends BaseController {
   ) {
     const { tenantId, user } = req;
     const quickInventoryAdjustment = this.matchedBodyData(req);
-    console.log(quickInventoryAdjustment);
 
     try {
       const inventoryAdjustment = await this.inventoryAdjustmentService.createQuickAdjustment(

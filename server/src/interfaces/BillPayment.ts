@@ -1,3 +1,4 @@
+import { LongDateFormatKey } from "moment";
 
 
 export interface IBillPaymentEntry {
@@ -18,6 +19,8 @@ export interface IBillPayment {
   userId: number,
   entries: IBillPaymentEntry[],
   statement: string,
+  createdAt: Date,
+  updatedAt: Date,
 }
 
 export interface IBillPaymentEntryDTO {

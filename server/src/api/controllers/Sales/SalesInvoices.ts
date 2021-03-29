@@ -435,9 +435,7 @@ export default class SaleInvoicesController extends BaseController {
       }
       if (error.errorType === 'SALE_INVOICE_NO_IS_REQUIRED') {
         return res.boom.badRequest(null, {
-          errors: [
-            { type: 'SALE_INVOICE_NO_IS_REQUIRED', code: 1500 },
-          ],
+          errors: [{ type: 'SALE_INVOICE_NO_IS_REQUIRED', code: 1500 }],
         });
       }
     }

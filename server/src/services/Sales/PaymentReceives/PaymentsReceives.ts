@@ -678,8 +678,13 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
       credit: 0,
       referenceId: paymentReceive.id,
       referenceType: 'PaymentReceive',
+
+      transactionNumber: paymentReceive.paymentReceiveNo,
+      referenceNumber: paymentReceive.referenceNo,
+
       date: paymentReceive.paymentDate,
       userId: authorizedUserId,
+      createdAt: paymentReceive.createdAt,
     };
     if (override) {
       const transactions = await transactionsRepository.journal({

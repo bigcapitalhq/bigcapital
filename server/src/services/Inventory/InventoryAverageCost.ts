@@ -50,10 +50,10 @@ export default class InventoryAverageCostMethod
       .modify('filterDateRange', this.startingDate)
       .orderBy('date', 'ASC')
       .orderByRaw("FIELD(direction, 'IN', 'OUT')")
-      .orderBy('lot_number', 'ASC')
+      .orderBy('createdAt', 'ASC')
       .where('item_id', this.itemId)
       .withGraphFetched('item');
-    
+
     // Tracking inventroy transactions and retrieve cost transactions based on
     // average rate cost method.
     const costTransactions = this.trackingCostTransactions(
@@ -164,7 +164,9 @@ export default class InventoryAverageCostMethod
           'entryId',
           'transactionId',
           'transactionType',
-          'lotNumber',
+          'createdAt',
+          'sellAccountId',
+          'costAccountId',
         ]),
       };
       switch (invTransaction.direction) {

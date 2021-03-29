@@ -51,6 +51,29 @@ export default class ItemsEntriesService {
   }
 
   /**
+   * Filter the given entries to inventory entries.
+   * @param {IItemEntry[]} entries -
+   * @returns {IItemEntry[]}
+   */
+  public async filterInventoryEntries(
+    tenantId: number,
+    entries: IItemEntry[]
+  ): Promise<IItemEntry[]> {
+    const { Item } = this.tenancy.models(tenantId);
+    const entriesItemsIds = entries.map((e) => e.itemId);
+
+    // Retrieve entries inventory items.
+    const inventoryItems = await Item.query()
+      .whereIn('id', entriesItemsIds)
+      .where('type', 'inventory');
+
+    const inventoryEntries = entries.filter((entry) =>
+      inventoryItems.some((item) => item.id === entry.itemId)
+    );
+    return inventoryEntries;
+  }
+
+  /**
    * Validates the entries items ids.
    * @async
    * @param {number} tenantId -

@@ -15,9 +15,12 @@ exports.up = function(knex) {
     table.integer('item_id').unsigned().nullable().index();
     table.string('note');
     table.integer('user_id').unsigned().index();
-    table.integer('index').unsigned();
+
+    table.integer('index_group').unsigned().index();
+    table.integer('index').unsigned().index();
+
     table.date('date').index();
-    table.timestamps();
+    table.datetime('created_at').index();
   }).raw('ALTER TABLE `ACCOUNTS_TRANSACTIONS` AUTO_INCREMENT = 1000');
 };
 

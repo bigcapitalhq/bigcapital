@@ -21,6 +21,9 @@ export default class WriteInvoicesJournalEntries {
     agenda.on(`complete:${eventName}`, this.onJobCompleted.bind(this));
   }
 
+  /**
+   * Handle the job execuation. 
+   */
   public async handler(job, done: Function): Promise<void> {
     const Logger = Container.get('logger');
     const { startingDate, tenantId } = job.attrs.data;

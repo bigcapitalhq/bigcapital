@@ -1,5 +1,5 @@
 import { Container, Service, Inject } from 'typedi';
-import { chain } from 'lodash';
+import { chain, groupBy } from 'lodash';
 import moment from 'moment';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import InventoryService from 'services/Inventory/Inventory';
@@ -109,6 +109,20 @@ export default class SaleInvoicesCost {
   }
 
   /**
+   * Grpups by transaction type and id the inventory transactions.
+   * @param {IInventoryTransaction} invTransactions
+   * @returns
+   */
+  inventoryTransactionsGroupByType(
+    invTransactions: { transactionType: string; transactionId: number }[]
+  ): { transactionType: string; transactionId: number }[][] {
+    return chain(invTransactions)
+      .groupBy((t) => `${t.transactionType}-${t.transactionId}`)
+      .values()
+      .value();
+  }
+
+  /**
    * Writes journal entries from sales invoices.
    * @param {number} tenantId - The tenant id.
    * @param {Date} startingDate - Starting date.
@@ -124,25 +138,28 @@ export default class SaleInvoicesCost {
 
     const inventoryCostLotTrans = await InventoryCostLotTracker.query()
       .where('direction', 'OUT')
-      .modify('groupedEntriesCost')
       .modify('filterDateRange', startingDate)
       .orderBy('date', 'ASC')
       .where('cost', '>', 0)
-      .withGraphFetched('item');
+      .withGraphFetched('item')
+      .withGraphFetched('itemEntry');
 
     const accountsDepGraph = await accountRepository.getDependencyGraph();
 
     const journal = new JournalPoster(tenantId, accountsDepGraph);
     const journalCommands = new JournalCommands(journal);
 
+    // Groups the inventory cost lots transactions.
+    const inventoryTransactions = this.inventoryTransactionsGroupByType(
+      inventoryCostLotTrans
+    );
     if (override) {
       await journalCommands.revertInventoryCostJournalEntries(startingDate);
     }
-    inventoryCostLotTrans.forEach(
-      (inventoryCostLot: IInventoryLotCost & { item: IItem }) => {
-        journalCommands.saleInvoiceInventoryCost(inventoryCostLot);
-      }
-    );
+    inventoryTransactions.forEach((inventoryLots) => {
+      journalCommands.saleInvoiceInventoryCost(inventoryLots);
+    });
+
     return Promise.all([
       journal.deleteEntries(),
       journal.saveEntries(),

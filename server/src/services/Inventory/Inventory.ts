@@ -17,7 +17,6 @@ import InventoryCostLotTracker from 'services/Inventory/InventoryCostLotTracker'
 import TenancyService from 'services/Tenancy/TenancyService';
 import events from 'subscribers/events';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
-import SettingsMiddleware from 'api/middleware/SettingsMiddleware';
 
 type TCostMethod = 'FIFO' | 'LIFO' | 'AVG';
 
@@ -35,20 +34,27 @@ export default class InventoryService {
   /**
    * Transforms the items entries to inventory transactions.
    */
-  transformItemEntriesToInventory(
-    itemEntries: IItemEntry[],
-    direction: TInventoryTransactionDirection,
-    date: Date | string,
-    lotNumber: number
-  ): IInventoryTransaction[] {
-    return itemEntries.map((entry: IItemEntry) => ({
-      ...pick(entry, ['itemId', 'quantity', 'rate']),
-      lotNumber,
-      transactionType: entry.referenceType,
-      transactionId: entry.referenceId,
-      direction,
-      date,
+  transformItemEntriesToInventory(transaction: {
+    transactionId: number;
+    transactionType: IItemEntryTransactionType;
+
+    date: Date | string;
+    direction: TInventoryTransactionDirection;
+    entries: IItemEntry[];
+    createdAt: Date;
+  }): IInventoryTransaction[] {
+    return transaction.entries.map((entry: IItemEntry) => ({
+      ...pick(entry, [
+        'itemId',
+        'quantity',
+        'rate',
+      ]),
+      transactionType: transaction.transactionType,
+      transactionId: transaction.transactionId,
+      direction: transaction.direction,
+      date: transaction.date,
       entryId: entry.id,
+      createdAt: transaction.createdAt,
     }));
   }
 
@@ -200,7 +206,6 @@ export default class InventoryService {
     }
     return InventoryTransaction.query().insert({
       ...inventoryEntry,
-      lotNumber: inventoryEntry.lotNumber,
     });
   }
 
@@ -215,31 +220,24 @@ export default class InventoryService {
    */
   async recordInventoryTransactionsFromItemsEntries(
     tenantId: number,
-    transactionId: number,
-    transactionType: IItemEntryTransactionType,
-    transactionDate: Date | string,
-    transactionDirection: TInventoryTransactionDirection,
+    transaction: {
+      transactionId: number;
+      transactionType: IItemEntryTransactionType;
+
+      date: Date | string;
+      direction: TInventoryTransactionDirection;
+      entries: IItemEntry[];
+      createdAt: Date | string;
+    },
     override: boolean = false
   ): Promise<void> {
-    // Retrieve the next inventory lot number.
-    const lotNumber = this.getNextLotNumber(tenantId);
-
-    // Loads the inventory items entries of the given sale invoice.
-    const inventoryEntries = await this.itemsEntriesService.getInventoryEntries(
-      tenantId,
-      transactionType,
-      transactionId
-    );
     // Can't continue if there is no entries has inventory items in the invoice.
-    if (inventoryEntries.length <= 0) {
+    if (transaction.entries.length <= 0) {
       return;
     }
     // Inventory transactions.
     const inventoryTranscations = this.transformItemEntriesToInventory(
-      inventoryEntries,
-      transactionDirection,
-      transactionDate,
-      lotNumber
+      transaction
     );
     // Records the inventory transactions of the given sale invoice.
     await this.recordInventoryTransactions(
@@ -247,8 +245,6 @@ export default class InventoryService {
       inventoryTranscations,
       override
     );
-    // Increment and save the next lot number settings.
-    await this.incrementNextLotNumber(tenantId);
   }
 
   /**
@@ -310,48 +306,9 @@ export default class InventoryService {
   }
 
   /**
-   * Retrieve the lot number after the increment.
-   * @param {number} tenantId - Tenant id.
-   */
-  getNextLotNumber(tenantId: number) {
-    const settings = this.tenancy.settings(tenantId);
-
-    const LOT_NUMBER_KEY = 'lot_number_increment';
-    const storedLotNumber = settings.find({ key: LOT_NUMBER_KEY });
-
-    return storedLotNumber && storedLotNumber.value
-      ? parseInt(storedLotNumber.value, 10)
-      : 1;
-  }
-
-  /**
-   * Increment the next inventory LOT number.
-   * @param {number} tenantId
-   * @return {Promise<number>}
-   */
-  async incrementNextLotNumber(tenantId: number) {
-    const settings = this.tenancy.settings(tenantId);
-
-    const LOT_NUMBER_KEY = 'lot_number_increment';
-    const storedLotNumber = settings.find({ key: LOT_NUMBER_KEY });
-
-    let lotNumber = 1;
-
-    if (storedLotNumber && storedLotNumber.value) {
-      lotNumber = parseInt(storedLotNumber.value, 10);
-      lotNumber += 1;
-    }
-    settings.set({ key: LOT_NUMBER_KEY }, lotNumber);
-
-    await settings.save();
-
-    return lotNumber;
-  }
-
-  /**
    * Mark item cost computing is running.
-   * @param {number} tenantId - 
-   * @param {boolean} isRunning - 
+   * @param {number} tenantId -
+   * @param {boolean} isRunning -
    */
   async markItemsCostComputeRunning(
     tenantId: number,
@@ -368,16 +325,16 @@ export default class InventoryService {
   }
 
   /**
-   * 
-   * @param {number} tenantId 
-   * @returns 
+   *
+   * @param {number} tenantId
+   * @returns
    */
   isItemsCostComputeRunning(tenantId) {
     const settings = this.tenancy.settings(tenantId);
 
     return settings.get({
       key: 'cost_compute_running',
-      group: 'inventory'
+      group: 'inventory',
     });
   }
 }

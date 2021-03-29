@@ -11,6 +11,10 @@ exports.up = function(knex) {
     table.integer('discount').unsigned();
     table.integer('quantity').unsigned();
     table.integer('rate').unsigned();
+
+    table.integer('sell_account_id').unsigned().references('id').inTable('accounts');
+    table.integer('cost_account_id').unsigned().references('id').inTable('accounts');
+
     table.timestamps();
   });
 };

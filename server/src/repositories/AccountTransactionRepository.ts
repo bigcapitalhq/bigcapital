@@ -13,7 +13,8 @@ interface IJournalTransactionsFilter {
   contactType?: string,
   referenceType?: string[],
   referenceId?: number[],
-  index: number|number[]
+  index: number|number[],
+  indexGroup: number|number[],
 };
 
 export default class AccountTransactionsRepository extends TenantRepository {
@@ -56,6 +57,13 @@ export default class AccountTransactionsRepository extends TenantRepository {
               query.whereIn('index', filter.index);
             } else {
               query.where('index', filter.index);
+            }
+          }
+          if (filter.indexGroup) {
+            if (Array.isArray(filter.indexGroup)) {
+              query.whereIn('index_group', filter.indexGroup);
+            } else {
+              query.where('index_group', filter.indexGroup);
             }
           }
         });

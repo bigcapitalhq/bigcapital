@@ -13,6 +13,8 @@ export interface IManualJournal {
   description: string;
   userId: number;
   entries: IManualJournalEntry[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IManualJournalEntry {

@@ -22,7 +22,7 @@ export default class InventoryCostLotTracker extends TenantModel {
    */
   static get modifiers() {
     return {
-      groupedEntriesCost(query) {
+      groupedEntriesCost(query) { 
         query.select(['date', 'item_id', 'transaction_id', 'transaction_type']);
         query.sum('cost as cost');
 
@@ -46,12 +46,13 @@ export default class InventoryCostLotTracker extends TenantModel {
     };
   }
 
-
   /**
    * Relationship mapping.
    */
   static get relationMappings() {
     const Item = require('models/Item');
+    const SaleInvoice = require('models/SaleInvoice');
+    const ItemEntry = require('models/ItemEntry');
 
     return {
       item: {
@@ -62,6 +63,25 @@ export default class InventoryCostLotTracker extends TenantModel {
           to: 'items.id',
         },
       },
+      invoice: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: SaleInvoice.default,
+        join: {
+          from: 'inventory_cost_lot_tracker.transactionId',
+          to: 'sales_invoices.id',
+        },
+        filter(query) {
+          query.where('transaction_type', 'SaleInvoice');
+        },
+      },
+      itemEntry: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: ItemEntry.default,
+        join: {
+          from: 'inventory_cost_lot_tracker.entryId',
+          to: 'items_entries.id',
+        },
+      }
     };
   }
 }

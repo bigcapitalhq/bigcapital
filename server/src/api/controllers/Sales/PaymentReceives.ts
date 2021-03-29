@@ -324,7 +324,7 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Request} req -
    * @param {Response} res -
    */
-   async getPaymentReceiveEditPage(
+  async getPaymentReceiveEditPage(
     req: Request,
     res: Response,
     next: NextFunction
