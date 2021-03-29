@@ -183,6 +183,43 @@ export default [
     backLink: true,
   },
   {
+    path: `/financial-reports/purchases-by-items`,
+    component: lazy(() =>
+      import(
+        'containers/FinancialStatements/PurchasesByItems/PurchasesByItems'
+      ),
+    ),
+    breadcrumb: 'Purchases by Items',
+    // hotkey: '',
+    pageTitle: formatMessage({ id: 'purchases_by_items' }),
+    backLink: true,
+    sidebarShrink: true,
+  },
+  {
+    path: `/financial-reports/sales-by-items`,
+    component: lazy(() =>
+      import('containers/FinancialStatements/SalesByItems/SalesByItems'),
+    ),
+    breadcrumb: 'Sales by Items',
+    // hotkey: '',
+    pageTitle: formatMessage({ id: 'sales_by_items' }),
+    backLink: true,
+    sidebarShrink: true,
+  },
+  {
+    path: `/financial-reports/inventory-valuation`,
+    component: lazy(() =>
+      import(
+        'containers/FinancialStatements/InventoryValuation/InventoryValuation'
+      ),
+    ),
+    breadcrumb: 'Inventory Valuation ',
+    // hotkey: '',
+    pageTitle: formatMessage({ id: 'inventory_valuation' }),
+    backLink: true,
+    sidebarShrink: true,
+  },
+  {
     path: '/financial-reports',
     component: lazy(() =>
       import('containers/FinancialStatements/FinancialReports'),

@@ -36,8 +36,18 @@ export const ARAgingSummaryFilterDrawerSelector = (state) => {
 
 export const APAgingSummaryFilterDrawerSelector = (state) => {
   return filterDrawerByTypeSelector('APAgingSummary')(state);
-}
+};
 
+export const purchasesByItemsFilterDrawerSelector = (state) => {
+  return filterDrawerByTypeSelector('purchasesByItems')(state);
+};
+
+export const salesByItemsFilterDrawerSelector = (state) => {
+  return filterDrawerByTypeSelector('salesByItems')(state);
+};
+export const inventoryValuationFilterDrawerSelector = (state) => {
+  return filterDrawerByTypeSelector('inventoryValuation')(state);
+};
 
 /**
  * Retrieve balance sheet filter drawer.
@@ -99,7 +109,6 @@ export const getARAgingSummaryFilterDrawer = createSelector(
   },
 );
 
-
 /**
  * Retrieve whether display AR aging summary drawer filter.
  */
@@ -117,3 +126,33 @@ export const getFinancialSheetQueryFactory = (sheetType) =>
   createSelector(sheetByTypeSelector(sheetType), (sheet) => {
     return sheet && sheet.query ? sheet.query : {};
   });
+
+/**
+ * Retrieve whether purchases by items display filter drawer.
+ */
+export const getPurchasesByItemsFilterDrawer = createSelector(
+  purchasesByItemsFilterDrawerSelector,
+  (isOpen) => {
+    return isOpen;
+  },
+);
+
+/**
+ * Retrieve whether sales by items display filter drawer.
+ */
+export const getSalesByItemsFilterDrawer = createSelector(
+  salesByItemsFilterDrawerSelector,
+  (isOpen) => {
+    return isOpen;
+  },
+);
+
+/**
+ * Retrieve whether sells by items display filter drawer.
+ */
+export const getInventoryValuationFilterDrawer = createSelector(
+  inventoryValuationFilterDrawerSelector,
+  (isOpen) => {
+    return isOpen;
+  },
+);

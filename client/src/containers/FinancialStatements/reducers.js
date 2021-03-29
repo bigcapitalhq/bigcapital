@@ -308,3 +308,53 @@ export const APAgingSummaryTableRowsMapper = (sheet, total) => {
     },
   ];
 };
+
+export const inventoryValuationReducer = (sheet) => {
+  const results = [];
+
+  if (sheet.items) {
+    sheet.items.forEach((item) => {
+      results.push(item);
+    });
+  }
+  if (sheet.total) {
+    results.push({
+      rowType: 'total',
+      ...sheet.total,
+    });
+  }
+  return results;
+};
+
+export const purchasesByItemsReducer = (sheet) => {
+  const results = [];
+
+  if (sheet.items) {
+    sheet.items.forEach((item) => {
+      results.push(item);
+    });
+  }
+  if (sheet.total) {
+    results.push({
+      rowType: 'total',
+      ...sheet.total,
+    });
+  }
+  return results;
+};
+export const salesByItemsReducer = (sheet) => {
+  const results = [];
+
+  if (sheet.items) {
+    sheet.items.forEach((item) => {
+      results.push(item);
+    });
+  }
+  if (sheet.total) {
+    results.push({
+      rowType: 'total',
+      ...sheet.total,
+    });
+  }
+  return results;
+};

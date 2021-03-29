@@ -24,6 +24,15 @@ const initialState = {
   APAgingSummary: {
     displayFilterDrawer: false,
   },
+  purchasesByItems: {
+    displayFilterDrawer: false,
+  },
+  salesByItems: {
+    displayFilterDrawer: false,
+  },
+  inventoryValuation: {
+    displayFilterDrawer: false,
+  },
 };
 
 /**
@@ -48,4 +57,10 @@ export default createReducer(initialState, {
   ...financialStatementFilterToggle(t.PROFIT_LOSS, 'profitLoss'),
   ...financialStatementFilterToggle(t.AR_AGING_SUMMARY, 'ARAgingSummary'),
   ...financialStatementFilterToggle(t.AP_AGING_SUMMARY, 'APAgingSummary'),
+  ...financialStatementFilterToggle(t.PURCHASES_BY_ITEMS, 'purchasesByItems'),
+  ...financialStatementFilterToggle(t.SALES_BY_ITEMS, 'salesByItems'),
+  ...financialStatementFilterToggle(
+    t.INVENTORY_VALUATION,
+    'inventoryValuation',
+  ),
 });

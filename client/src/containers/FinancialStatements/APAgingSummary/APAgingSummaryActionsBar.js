@@ -27,7 +27,7 @@ import { saveInvoke, compose } from 'utils';
  */
 function APAgingSummaryActionsBar({
   // #withPayableAgingSummary
-  payableAgingFilter,
+  isFilterDrawerOpen,
 
   // #withARAgingSummaryActions
   toggleAPAgingSummaryFilterDrawer: toggleFilterDrawerDisplay,
@@ -66,14 +66,14 @@ function APAgingSummaryActionsBar({
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
           text={
-            payableAgingFilter ? (
+            isFilterDrawerOpen ? (
               <T id={'hide_customizer'} />
             ) : (
               <T id={'customize_report'} />
             )
           }
           onClick={handleFilterToggleClick}
-          active={payableAgingFilter}
+          active={isFilterDrawerOpen}
         />
         <NavbarDivider />
         <Popover

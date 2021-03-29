@@ -7,6 +7,9 @@ import {
   journalTableRowsReducer,
   ARAgingSummaryTableRowsMapper,
   APAgingSummaryTableRowsMapper,
+  inventoryValuationReducer,
+  purchasesByItemsReducer,
+  salesByItemsReducer,
 } from 'containers/FinancialStatements/reducers';
 import t from './types';
 
@@ -94,13 +97,12 @@ export function useProfitLossSheet(query, props) {
  * Retrieve general ledger (GL) sheet.
  */
 export function useGeneralLedgerSheet(query, props) {
-  
   return useRequestQuery(
     [t.FINANCIAL_REPORT, t.GENERAL_LEDGER, query],
     {
-        method: 'get',
-        url: '/financial_statements/general_ledger',
-        params: query,
+      method: 'get',
+      url: '/financial_statements/general_ledger',
+      params: query,
     },
     {
       select: (res) => ({
@@ -203,6 +205,83 @@ export function useAPAgingSummaryReport(query, props) {
         },
         columns: [],
         tableRows: [],
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve inventory valuation.
+ */
+export function useInventoryValuation(query, props) {
+  return useRequestQuery(
+    [t.FINANCIAL_REPORT, t.INVENTORY_VALUATION, query],
+    {
+      method: 'get',
+      url: '/financial_statements/inventory-valuation',
+      params: query,
+    },
+    {
+      select: (res) => ({
+        tableRows: inventoryValuationReducer(res.data.data),
+        ...res.data,
+      }),
+      defaultData: {
+        tableRows: [],
+        data: [],
+        query: {},
+      },
+      ...props,
+    },
+  );
+}
+/**
+ * Retrieve purchases by items.
+ */
+export function usePurchasesByItems(query, props) {
+  return useRequestQuery(
+    [t.FINANCIAL_REPORT, t.PURCHASES_BY_ITEMS, query],
+    {
+      method: 'get',
+      url: '/financial_statements/purchases-by-items',
+      params: query,
+    },
+    {
+      select: (res) => ({
+        tableRows: purchasesByItemsReducer(res.data.data),
+        ...res.data,
+      }),
+      defaultData: {
+        tableRows: [],
+        data: [],
+        query: {},
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve sales by items.
+ */
+export function useSalesByItems(query, props) {
+  return useRequestQuery(
+    [t.FINANCIAL_REPORT, t.SALES_BY_ITEMS, query],
+    {
+      method: 'get',
+      url: '/financial_statements/sales-by-items',
+      params: query,
+    },
+    {
+      select: (res) => ({
+        tableRows: salesByItemsReducer(res.data.data),
+        ...res.data,
+      }),
+      defaultData: {
+        tableRows: [],
+        data: [],
+        query: {},
       },
       ...props,
     },

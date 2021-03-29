@@ -1037,4 +1037,16 @@ export default {
   currency_sign: 'Currency sign',
   cannot_change_item_inventory_account:
     'Cannot change item inventory account while the item has transactions.',
+
+  purchases_by_items: 'Purchases by items',
+  quantity_purchased: 'Quantity purchased',
+  purchase_amount: 'Purchase amount',
+  average_price: 'Average price', 
+  sales_by_items: 'Sales by items',
+  sold_quantity: 'Sold quantity',
+  sold_amount: 'Sold amount',
+  average_price: 'Average price',
+  asset_value: 'Asset value',
+  average: 'Average',
+  inventory_valuation: 'Inventory valuation',
 };
