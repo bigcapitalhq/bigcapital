@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import moment from 'moment';
 
-import 'style/pages/FinancialStatements/SalesByItems.scss';
+
+import 'style/pages/FinancialStatements/SalesAndPurchasesSheet.scss';
 
 import { SalesByItemProvider } from './SalesByItemProvider';
 import SalesByItemsActionsBar from './SalesByItemsActionsBar';

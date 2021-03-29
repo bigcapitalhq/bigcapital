@@ -1,5 +1,7 @@
 .financial-sheet {
-  &--purchases-by-items {
+  &--sales-by-items,
+  &--purchases-by-items,
+  &--inventory-valuation {
     min-width: 800px;
 
     .financial-sheet__table {

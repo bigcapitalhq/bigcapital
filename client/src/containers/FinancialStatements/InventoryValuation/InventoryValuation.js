@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import moment from 'moment';
 
-import 'style/pages/FinancialStatements/InventoryValuation.scss';
+import 'style/pages/FinancialStatements/SalesAndPurchasesSheet.scss';
 
 import { InventoryValuationProvider } from './InventoryValuationProvider';
 import InventoryValuationActionsBar from './InventoryValuationActionsBar';
