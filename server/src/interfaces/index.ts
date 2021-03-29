@@ -41,3 +41,5 @@ export * from './APAgingSummaryReport';
 export * from './Mailable';
 export * from './InventoryAdjustment';
 export * from './Setup'
+export * from './IInventoryValuationSheet';
+export * from './SalesByItemsSheet';

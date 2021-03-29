@@ -98,6 +98,7 @@ export default class JournalCommands {
             : entry.costAccountId,
         index: index + 2,
         itemId: entry.itemId,
+        itemQuantity: entry.quantity,
       });
       this.journal.debit(debitEntry);
     });
@@ -416,6 +417,7 @@ export default class JournalCommands {
         note: entry.description,
         index: index + 2,
         itemId: entry.itemId,
+        itemQuantity: entry.quantity,
       });
       this.journal.credit(incomeEntry);
     });
@@ -465,6 +467,8 @@ export default class JournalCommands {
           account: entry.item.sellAccountId,
           note: entry.description,
           index: index + 2,
+          itemId: entry.itemId,
+          itemQuantity: entry.quantity,
         });
         this.journal.credit(incomeEntry);
       }

@@ -9,8 +9,8 @@ export interface IBalanceSheetQuery {
   fromDate: Date | string;
   toDate: Date | string;
   numberFormat: INumberFormatQuery;
-  noneZero: boolean;
   noneTransactions: boolean;
+  noneZero: boolean;
   basis: 'cash' | 'accural';
   accountIds: number[];
 }

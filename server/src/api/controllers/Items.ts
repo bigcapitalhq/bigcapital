@@ -16,7 +16,7 @@ export default class ItemsController extends BaseController {
 
   @Inject()
   dynamicListService: DynamicListingService;
-
+    
   /**
    * Router constructor.
    */

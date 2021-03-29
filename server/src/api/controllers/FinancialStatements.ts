@@ -8,6 +8,9 @@ import JournalSheetController from './FinancialStatements/JournalSheet';
 import ProfitLossController from './FinancialStatements/ProfitLossSheet';
 import ARAgingSummary from './FinancialStatements/ARAgingSummary';
 import APAgingSummary from './FinancialStatements/APAgingSummary';
+import PurchasesByItemsController from './FinancialStatements/PurchasesByItem';
+import SalesByItemsController from './FinancialStatements/SalesByItems';
+import InventoryValuationController from './FinancialStatements/InventoryValuationSheet';
 
 @Service()
 export default class FinancialStatementsService {
@@ -42,7 +45,18 @@ export default class FinancialStatementsService {
       '/payable_aging_summary',
       Container.get(APAgingSummary).router()
     );
-
+    router.use(
+      '/purchases-by-items',
+      Container.get(PurchasesByItemsController).router()
+    );
+    router.use(
+      '/sales-by-items',
+      Container.get(SalesByItemsController).router()
+    );
+    router.use(
+      '/inventory-valuation',
+      Container.get(InventoryValuationController).router()
+    );
     return router;
   }
 }

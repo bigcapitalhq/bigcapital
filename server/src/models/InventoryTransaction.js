@@ -1,4 +1,4 @@
-import { Model } from 'objection';
+import { Model, raw } from 'objection';
 import moment from 'moment';
 import TenantModel from 'models/TenantModel';
 
@@ -33,6 +33,22 @@ export default class InventoryTransaction extends TenantModel {
         if (endDate) {
           query.where('date', '<=', toDate);
         }
+      },
+
+      itemsTotals(builder) {
+        builder.select('itemId');
+        builder.sum('rate as rate');
+        builder.sum('quantity as quantity');
+        builder.select(raw('SUM(`QUANTITY` * `RATE`) as COST'));
+        builder.groupBy('itemId');
+      },
+
+      INDirection(builder) {
+        builder.where('direction', 'IN');
+      },
+
+      OUTDirection(builder) {
+        builder.where('direction', 'OUT');
       },
     };
   }
