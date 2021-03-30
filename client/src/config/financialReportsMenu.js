@@ -53,7 +53,7 @@ export const financialReportMenus = [
 
 export const SalesAndPurchasesReportMenus = [
   {
-    sectionTitle: 'Sales & Purchases',
+    sectionTitle: 'Sales/Purchases Reports',
     reports: [
       {
         title: 'Purchases By Items',
