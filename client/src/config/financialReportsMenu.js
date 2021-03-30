@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage as T } from 'react-intl';
 
-export default [
+export const financialReportMenus = [
   {
     sectionTitle: 'Financial Accounting',
     reports: [
@@ -47,6 +47,14 @@ export default [
           'Shows the average age of unresolved issues for a project or filter. This helps you see whether your backlog is being kept up to date.',
         link: '/financial-reports/payable-aging-summary',
       },
+    ],
+  },
+];
+
+export const SalesAndPurchasesReportMenus = [
+  {
+    sectionTitle: 'Sales/Purchases Reports',
+    reports: [
       {
         title: 'Purchases By Items',
         desc:

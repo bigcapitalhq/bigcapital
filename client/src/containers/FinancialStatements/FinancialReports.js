@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import { For } from 'components';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import financialReportMenus from 'config/financialReportsMenu';
+import {
+  financialReportMenus,
+  SalesAndPurchasesReportMenus,
+} from 'config/financialReportsMenu';
 
 import 'style/pages/FinancialStatements/FinancialSheets.scss';
 
@@ -38,8 +41,11 @@ export default function FinancialReports() {
     <DashboardInsider name={'financial-reports'}>
       <div class="financial-reports">
         <For render={FinancialReportsSection} of={financialReportMenus} />
+        <For
+          render={FinancialReportsSection}
+          of={SalesAndPurchasesReportMenus}
+        />
       </div>
     </DashboardInsider>
   );
 }
-
