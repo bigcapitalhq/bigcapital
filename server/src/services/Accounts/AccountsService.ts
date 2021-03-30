@@ -639,7 +639,7 @@ export default class AccountsService {
     });
 
     return accounts.map((account) => ({
-      ...account,
+      ...account.toJSON(),
       currencyCode: baseCurrency,
     }));
   }
