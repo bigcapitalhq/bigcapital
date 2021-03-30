@@ -20,7 +20,7 @@ import {
   MoneyInputGroup,
   Icon,
 } from 'components';
-
+import { ACCOUNT_TYPE } from 'common/accountTypes';
 import {
   inputIntent,
   momentFormatter,
@@ -166,6 +166,11 @@ export default function QuickPaymentReceiveFormFields({}) {
                       id: 'select_account',
                     }),
                   }}
+                  filterByTypes={[
+                    ACCOUNT_TYPE.CASH,
+                    ACCOUNT_TYPE.BANK,
+                    ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+                  ]}
                 />
               </FormGroup>
             )}

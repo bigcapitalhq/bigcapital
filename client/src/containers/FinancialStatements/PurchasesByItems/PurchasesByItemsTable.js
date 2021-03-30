@@ -55,6 +55,7 @@ export default function PurchasesByItemsTable({ companyName }) {
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={rowClassNames}
+        noResults={'There were no purchases during the selected date range.'}
       />
     </FinancialSheet>
   );

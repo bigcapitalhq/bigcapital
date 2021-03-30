@@ -12,6 +12,7 @@ export interface IInventoryValuationReportQuery {
 export interface IInventoryValuationSheetMeta {
   organizationName: string,
   baseCurrency: string,
+  isCostComputeRunning: boolean
 };
 
 export interface IInventoryValuationItem {
@@ -35,8 +36,8 @@ export interface IInventoryValuationTotal {
   quantityFormatted: string,
 }
 
-export interface IInventoryValuationStatement {
+export type IInventoryValuationStatement = {
   items: IInventoryValuationItem[],
   total: IInventoryValuationTotal
-};
+} | {};
 

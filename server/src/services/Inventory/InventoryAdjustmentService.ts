@@ -20,7 +20,6 @@ import ItemsService from 'services/Items/ItemsService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import HasTenancyService from 'services/Tenancy/TenancyService';
 import InventoryService from './Inventory';
-import { increment } from 'utils';
 
 const ERRORS = {
   INVENTORY_ADJUSTMENT_NOT_FOUND: 'INVENTORY_ADJUSTMENT_NOT_FOUND',

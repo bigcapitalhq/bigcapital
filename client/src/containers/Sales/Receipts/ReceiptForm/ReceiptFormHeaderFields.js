@@ -19,6 +19,7 @@ import {
 } from 'components';
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import { ACCOUNT_TYPE } from 'common/accountTypes';
 import {
   momentFormatter,
   compose,
@@ -113,8 +114,12 @@ function ReceiptFormHeader({
               }}
               defaultSelectText={<T id={'select_deposit_account'} />}
               selectedAccountId={value}
-              // filterByTypes={['current_asset']}
               popoverFill={true}
+              filterByTypes={[
+                ACCOUNT_TYPE.CASH,
+                ACCOUNT_TYPE.BANK,
+                ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+              ]}
             />
           </FormGroup>
         )}

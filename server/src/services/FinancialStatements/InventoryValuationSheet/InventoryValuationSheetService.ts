@@ -6,6 +6,7 @@ import {
 } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
 import InventoryValuationSheet from './InventoryValuationSheet';
+import InventoryService from 'services/Inventory/Inventory';
 
 @Service()
 export default class InventoryValuationSheetService {
@@ -14,6 +15,9 @@ export default class InventoryValuationSheetService {
 
   @Inject('logger')
   logger: any;
+
+  @Inject()
+  inventoryService: InventoryService;
 
   /**
    * Defaults balance sheet filter query.
@@ -41,6 +45,9 @@ export default class InventoryValuationSheetService {
   reportMetadata(tenantId: number): IInventoryValuationSheetMeta {
     const settings = this.tenancy.settings(tenantId);
 
+    const isCostComputeRunning = this.inventoryService
+      .isItemsCostComputeRunning(tenantId);
+
     const organizationName = settings.get({
       group: 'organization',
       key: 'name',
@@ -53,6 +60,7 @@ export default class InventoryValuationSheetService {
     return {
       organizationName,
       baseCurrency,
+      isCostComputeRunning
     };
   }
 

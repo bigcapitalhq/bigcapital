@@ -10,10 +10,10 @@ import {
 import FinancialSheet from '../FinancialSheet';
 
 export default class JournalSheet extends FinancialSheet {
-  tenantId: number;
-  journal: IJournalPoster;
-  query: IJournalReportQuery;
-  baseCurrency: string;
+  readonly tenantId: number;
+  readonly journal: IJournalPoster;
+  readonly query: IJournalReportQuery;
+  readonly baseCurrency: string;
   readonly contactsById: Map<number | string, IContact>;
 
   /**

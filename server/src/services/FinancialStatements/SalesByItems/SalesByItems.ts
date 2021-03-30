@@ -99,10 +99,10 @@ export default class SalesByItemsReport extends FinancialSheet {
     return {
       quantitySold,
       soldCost,
-      quantitySoldFormatted: this.formatNumber(quantitySold, {
+      quantitySoldFormatted: this.formatTotalNumber(quantitySold, {
         money: false,
       }),
-      soldCostFormatted: this.formatNumber(soldCost),
+      soldCostFormatted: this.formatTotalNumber(soldCost),
       currencyCode: this.baseCurrency,
     };
   }
@@ -115,6 +115,6 @@ export default class SalesByItemsReport extends FinancialSheet {
     const items = this.itemsSection();
     const total = this.totalSection(items);
 
-    return { items, total };
+    return items.length > 0 ? { items, total } : {};
   }
 }

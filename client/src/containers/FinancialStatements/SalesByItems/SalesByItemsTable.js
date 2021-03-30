@@ -53,6 +53,7 @@ export default function SalesByItemsTable({ companyName }) {
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={rowClassNames}
+        noResults={'There were no sales during the selected date range.'}
       />
     </FinancialSheet>
   );

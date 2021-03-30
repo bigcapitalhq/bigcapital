@@ -29,7 +29,7 @@ export const useJournalTableColumns = () => {
       },
       {
         Header: formatMessage({ id: 'num' }),
-        accessor: 'reference_id',
+        accessor: 'transaction_number',
         className: 'reference_id',
         width: 70,
       },

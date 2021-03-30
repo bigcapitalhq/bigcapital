@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import moment from 'moment';
 import _ from 'lodash';
 import accounting from 'accounting';
+import Currencies from 'js-money/lib/currency';
 import definedOptions from 'data/options';
 
 const hashPassword = (password) =>
@@ -224,6 +225,10 @@ const getNegativeFormat = (formatName) => {
   }
 };
 
+const getCurrencySign = (currencyCode) => {
+  return _.get(Currencies, `${currencyCode}.symbol`);
+};
+
 const formatNumber = (
   balance,
   {
@@ -234,10 +239,11 @@ const formatNumber = (
     thousand = ',',
     decimal = '.',
     zeroSign = '',
-    symbol = '$',
     money = true,
+    currencyCode
   }
 ) => {
+  const symbol = getCurrencySign(currencyCode);
   const negForamt = getNegativeFormat(negativeFormat);
   const format = '%s%v';
 

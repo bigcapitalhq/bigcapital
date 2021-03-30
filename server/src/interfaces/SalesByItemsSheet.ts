@@ -36,8 +36,8 @@ export interface ISalesByItemsTotal {
   currencyCode: string,
 };
 
-export interface ISalesByItemsSheetStatement {
+export type ISalesByItemsSheetStatement = {
   items: ISalesByItemsItem[],
   total: ISalesByItemsTotal
-};
+} | {};
 

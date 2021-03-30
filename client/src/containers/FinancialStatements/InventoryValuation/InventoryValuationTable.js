@@ -56,6 +56,7 @@ export default function InventoryValuationTable({
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={rowClassNames}
+        noResults={'There were no inventory transactions during the selected date range.'}
       />
     </FinancialSheet>
   );

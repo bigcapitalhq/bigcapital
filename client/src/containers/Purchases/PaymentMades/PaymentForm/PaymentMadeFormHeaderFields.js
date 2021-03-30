@@ -25,6 +25,7 @@ import {
 } from 'components';
 import withSettings from 'containers/Settings/withSettings';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
+import { ACCOUNT_TYPE } from 'common/accountTypes';
 import {
   momentFormatter,
   tansformDateValue,
@@ -205,6 +206,11 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
               }}
               defaultSelectText={<T id={'select_payment_account'} />}
               selectedAccountId={value}
+              filterByTypes={[
+                ACCOUNT_TYPE.CASH,
+                ACCOUNT_TYPE.BANK,
+                ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+              ]}
             />
           </FormGroup>
         )}

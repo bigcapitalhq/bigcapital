@@ -8,6 +8,7 @@ import {
   IAccount,
   IAccountsFilter,
   IFilterMeta,
+  IAccountResponse
 } from 'interfaces';
 import {
   EventDispatcher,
@@ -38,11 +39,9 @@ export default class AccountsService {
    * @param {number} accountTypeId -
    * @return {IAccountType}
    */
-  private getAccountTypeOrThrowError(
-    accountTypeKey: string
-  ) {
+  private getAccountTypeOrThrowError(accountTypeKey: string) {
     this.logger.info('[accounts] validating account type existance.', {
-      accountTypeKey
+      accountTypeKey,
     });
     const accountType = AccountTypesUtils.getType(accountTypeKey);
 
@@ -298,7 +297,7 @@ export default class AccountsService {
     }
     // Update the account on the storage.
     const account = await accountRepository.update(
-      { ...accountDTO, },
+      { ...accountDTO },
       { id: oldAccount.id }
     );
     this.logger.info('[account] account edited successfully.', {
@@ -549,9 +548,9 @@ export default class AccountsService {
       { accountsIds }
     );
     // Activate or inactivate the given accounts ids in bulk.
-    (activate) ?
-      await accountRepository.activateByIds(patchAccountsIds) :
-      await accountRepository.inactivateByIds(patchAccountsIds);
+    activate
+      ? await accountRepository.activateByIds(patchAccountsIds)
+      : await accountRepository.inactivateByIds(patchAccountsIds);
 
     this.logger.info('[account] accounts have been activated successfully.', {
       tenantId,
@@ -587,9 +586,9 @@ export default class AccountsService {
     const patchAccountsIds = [...dependenciesAccounts, accountId];
 
     // Activate and inactivate the given accounts ids.
-    (activate) ?
-      await accountRepository.activateByIds(patchAccountsIds) :
-      await accountRepository.inactivateByIds(patchAccountsIds);
+    activate
+      ? await accountRepository.activateByIds(patchAccountsIds)
+      : await accountRepository.inactivateByIds(patchAccountsIds);
 
     this.logger.info('[account] account have been activated successfully.', {
       tenantId,
@@ -607,7 +606,7 @@ export default class AccountsService {
   public async getAccountsList(
     tenantId: number,
     filter: IAccountsFilter
-  ): Promise<{ accounts: IAccount[]; filterMeta: IFilterMeta }> {
+  ): Promise<{ accounts: IAccountResponse[]; filterMeta: IFilterMeta }> {
     const { Account } = this.tenancy.models(tenantId);
     const dynamicList = await this.dynamicListService.dynamicList(
       tenantId,
@@ -624,9 +623,25 @@ export default class AccountsService {
     });
 
     return {
-      accounts,
+      accounts: this.transformAccountsResponse(tenantId, accounts),
       filterMeta: dynamicList.getResponseMeta(),
     };
+  }
+
+  /**
+   * Transformes the accounts models to accounts response.
+   */
+  private transformAccountsResponse(tenantId: number, accounts: IAccount[]) {
+    const settings = this.tenancy.settings(tenantId);
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
+
+    return accounts.map((account) => ({
+      ...account,
+      currencyCode: baseCurrency,
+    }));
   }
 
   /**
@@ -655,9 +670,7 @@ export default class AccountsService {
       deleteAfterClosing,
     });
     const { AccountTransaction } = this.tenancy.models(tenantId);
-    const {
-      accountRepository,
-    } = this.tenancy.repositories(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
     const account = await this.getAccountOrThrowError(tenantId, accountId);
     const toAccount = await this.getAccountOrThrowError(tenantId, toAccountId);

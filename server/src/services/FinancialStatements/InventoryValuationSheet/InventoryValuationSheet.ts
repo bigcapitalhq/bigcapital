@@ -48,7 +48,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
    * @param {number} itemId 
    * @returns 
    */
-  getItemTransaction(
+  private getItemTransaction(
     transactionsMap: Map<number, InventoryCostLotTracker[]>,
     itemId: number,
   ): { cost: number, quantity: number } {
@@ -64,7 +64,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
    * Retrieve the cost and quantity of the givne item from `IN` transactions.
    * @param {number} itemId -
    */
-  getItemINTransaction(
+  private getItemINTransaction(
     itemId: number,
   ): { cost: number, quantity: number } {
     return this.getItemTransaction(this.INInventoryCostLots, itemId);
@@ -74,7 +74,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
    * Retrieve the cost and quantity of the given item from `OUT` transactions.
    * @param {number} itemId - 
    */
-  getItemOUTTransaction(
+  private getItemOUTTransaction(
     itemId: number,
   ): { cost: number, quantity: number } {
     return this.getItemTransaction(this.OUTInventoryCostLots, itemId);
@@ -84,7 +84,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
    * Retrieve the item closing valuation.
    * @param {number} itemId - Item id.
    */
-  getItemValuation(itemId: number): number {
+  private getItemValuation(itemId: number): number {
     const { cost: INValuation } = this.getItemINTransaction(itemId);
     const { cost: OUTValuation } = this.getItemOUTTransaction(itemId);
 
@@ -95,7 +95,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
    * Retrieve the item closing quantity. 
    * @param {number} itemId - Item id.
    */
-  getItemQuantity(itemId: number): number {
+  private getItemQuantity(itemId: number): number {
     const { quantity: INQuantity } = this.getItemINTransaction(itemId);
     const { quantity: OUTQuantity } = this.getItemOUTTransaction(itemId);
 
@@ -108,7 +108,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
    * @param {number} quantity 
    * @returns {number}
    */
-  calcAverage(valuation: number, quantity: number): number {
+  private calcAverage(valuation: number, quantity: number): number {
     return quantity ? valuation / quantity : 0;
   }
 
@@ -117,7 +117,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
    * @param {IItem} item 
    * @returns {IInventoryValuationItem}
    */
-  itemMapper(item: IItem): IInventoryValuationItem {
+  private itemMapper(item: IItem): IInventoryValuationItem {
     const valuation = this.getItemValuation(item.id);
     const quantity = this.getItemQuantity(item.id);
     const average = this.calcAverage(valuation, quantity);
@@ -140,7 +140,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
    * Retrieve the inventory valuation items.
    * @returns {IInventoryValuationItem[]}
    */
-  itemsSection(): IInventoryValuationItem[] {
+  private itemsSection(): IInventoryValuationItem[] {
     return this.items.map(this.itemMapper.bind(this));
   }
 
@@ -149,15 +149,15 @@ export default class InventoryValuationSheet extends FinancialSheet {
    * @param {IInventoryValuationItem[]} items 
    * @returns {IInventoryValuationTotal}
    */
-  totalSection(items: IInventoryValuationItem[]): IInventoryValuationTotal {
+  private totalSection(items: IInventoryValuationItem[]): IInventoryValuationTotal {
     const valuation = sumBy(items, item => item.valuation);
     const quantity = sumBy(items, item => item.quantity);
 
     return {
       valuation,
       quantity,
-      valuationFormatted: this.formatNumber(valuation),
-      quantityFormatted: this.formatNumber(quantity, { money: false }),
+      valuationFormatted: this.formatTotalNumber(valuation),
+      quantityFormatted: this.formatTotalNumber(quantity, { money: false }),
     };
   }
 
@@ -165,10 +165,10 @@ export default class InventoryValuationSheet extends FinancialSheet {
    * Retrieve the inventory valuation report data.
    * @returns {IInventoryValuationStatement}
    */
-  reportData(): IInventoryValuationStatement {
+  public reportData(): IInventoryValuationStatement {
     const items = this.itemsSection();
     const total = this.totalSection(items);
 
-    return { items, total };
+    return items.length > 0 ? { items, total } : {};
   }
 }

@@ -55,6 +55,7 @@ export default class InventoryService {
       date: transaction.date,
       entryId: entry.id,
       createdAt: transaction.createdAt,
+      costAccountId: entry.costAccountId,
     }));
   }
 

@@ -76,6 +76,8 @@ export default class JournalSheetService {
       contactRepository,
     } = this.tenancy.repositories(tenantId);
 
+    const { AccountTransaction } = this.tenancy.models(tenantId);
+
     const filter = {
       ...this.defaultQuery,
       ...query,
@@ -98,12 +100,12 @@ export default class JournalSheetService {
     const contactsByIdMap = transformToMap(contacts, 'id');
 
     // Retrieve all journal transactions based on the given query.
-    const transactions = await transactionsRepository.journal({
-      fromDate: filter.fromDate,
-      toDate: filter.toDate,
-      transactionsTypes: filter.transactionTypes,
-      fromAmount: filter.fromRange,
-      toAmount: filter.toRange,
+    const transactions = await AccountTransaction.query().onBuild((query) => {
+      if (filter.fromRange || filter.toRange) {
+        query.modify('filterAmountRange', filter.fromRange, filter.toRange);
+      }
+      query.modify('filterDateRange', filter.fromDate, filter.toDate);
+      query.orderBy(['date', 'createdAt', 'indexGroup', 'index']);
     });
     // Transform the transactions array to journal collection.
     const transactionsJournal = Journal.fromTransactions(

@@ -350,7 +350,7 @@ export default class JournalCommands {
         const costEntry = new JournalEntry({
           ...commonEntry,
           debit: inventoryCostLot.cost,
-          account: inventoryCostLot.itemEntry.costAccountId,
+          account: inventoryCostLot.costAccountId,
           itemId: inventoryCostLot.itemId,
           index: getIndexIncrement(),
         });

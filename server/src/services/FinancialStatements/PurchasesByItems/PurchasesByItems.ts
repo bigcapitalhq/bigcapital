@@ -99,10 +99,10 @@ export default class InventoryValuationReport extends FinancialSheet {
     return {
       quantityPurchased,
       purchaseCost,
-      quantityPurchasedFormatted: this.formatNumber(quantityPurchased, {
+      quantityPurchasedFormatted: this.formatTotalNumber(quantityPurchased, {
         money: false,
       }),
-      purchaseCostFormatted: this.formatNumber(purchaseCost),
+      purchaseCostFormatted: this.formatTotalNumber(purchaseCost),
       currencyCode: this.baseCurrency,
     };
   }
@@ -115,6 +115,6 @@ export default class InventoryValuationReport extends FinancialSheet {
     const items = this.itemsSection();
     const total = this.totalSection(items);
 
-    return { items, total };
+    return items.length > 0 ? { items, total } : {};
   }
 }

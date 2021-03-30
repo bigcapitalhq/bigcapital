@@ -2,7 +2,8 @@ import { IFormatNumberSettings, INumberFormatQuery } from 'interfaces';
 import { formatNumber } from 'utils';
 
 export default class FinancialSheet {
-  numberFormat: INumberFormatQuery;
+  readonly numberFormat: INumberFormatQuery;
+  readonly baseCurrency: string;
 
   /**
    * Transformes the number format query to settings
@@ -16,6 +17,7 @@ export default class FinancialSheet {
       excerptZero: !numberFormat.showZero,
       negativeFormat: numberFormat.negativeFormat,
       money: numberFormat.formatMoney === 'always',
+      currencyCode: this.baseCurrency,
     };
   }
 

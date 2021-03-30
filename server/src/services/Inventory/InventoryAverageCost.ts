@@ -165,6 +165,8 @@ export default class InventoryAverageCostMethod
           'transactionId',
           'transactionType',
           'createdAt',
+
+          'costAccountId',
         ]),
       };
       switch (invTransaction.direction) {

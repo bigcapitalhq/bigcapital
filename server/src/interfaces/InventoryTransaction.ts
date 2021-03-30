@@ -11,6 +11,7 @@ export interface IInventoryTransaction {
   transactionType: string,
   transactionId: number,
   entryId: number,
+  costAccountId: number,
   createdAt?: Date,
   updatedAt?: Date,
 };
@@ -27,7 +28,6 @@ export interface IInventoryLotCost {
   transactionType: string,
   transactionId: number,
   costAccountId: number,
-  sellAccountId: number,
   entryId: number,
   createdAt: Date,
 };

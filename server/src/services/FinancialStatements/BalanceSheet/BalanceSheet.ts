@@ -8,6 +8,7 @@ import {
   IAccount,
   IJournalPoster,
   IAccountType,
+  INumberFormatQuery,
 } from 'interfaces';
 import { dateRangeCollection, flatToNestedArray } from 'utils';
 import BalanceSheetStructure from 'data/BalanceSheetStructure';
@@ -21,6 +22,7 @@ export default class BalanceSheetStatement extends FinancialSheet {
   readonly comparatorDateType: string;
   readonly dateRangeSet: string[];
   readonly baseCurrency: string;
+  readonly numberFormat: INumberFormatQuery;
 
   /**
    * Constructor method.

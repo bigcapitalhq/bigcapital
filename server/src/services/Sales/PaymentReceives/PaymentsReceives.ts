@@ -30,7 +30,7 @@ import { ServiceError } from 'exceptions';
 import CustomersService from 'services/Contacts/CustomersService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import JournalCommands from 'services/Accounting/JournalCommands';
-import { ACCOUNT_PARENT_TYPE } from 'data/AccountTypes';
+import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from 'data/AccountTypes';
 import AutoIncrementOrdersService from '../AutoIncrementOrdersService';
 import { ERRORS } from './constants';
 
@@ -129,8 +129,14 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
     if (!depositAccount) {
       throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_NOT_FOUND);
     }
-    // Detarmines whether the account is cash equivalents.
-    if (!depositAccount.isParentType(ACCOUNT_PARENT_TYPE.CURRENT_ASSET)) {
+    // Detarmines whether the account is cash, bank or other current asset.
+    if (
+      !depositAccount.isAccountType([
+        ACCOUNT_TYPE.CASH,
+        ACCOUNT_TYPE.BANK,
+        ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+      ])
+    ) {
       throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_INVALID_TYPE);
     }
     return depositAccount;

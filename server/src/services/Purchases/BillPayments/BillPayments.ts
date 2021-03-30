@@ -25,7 +25,7 @@ import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { entriesAmountDiff, formatDateFields } from 'utils';
 import { ServiceError } from 'exceptions';
-import { ACCOUNT_PARENT_TYPE } from 'data/AccountTypes';
+import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from 'data/AccountTypes';
 import VendorsService from 'services/Contacts/VendorsService';
 import { ERRORS } from './constants';
 
@@ -113,7 +113,14 @@ export default class BillPaymentsService implements IBillPaymentsService {
     if (!paymentAccount) {
       throw new ServiceError(ERRORS.PAYMENT_ACCOUNT_NOT_FOUND);
     }
-    if (!paymentAccount.isParentType(ACCOUNT_PARENT_TYPE.CURRENT_ASSET)) {
+    // Validate the payment account type.
+    if (
+      !paymentAccount.isAccountType([
+        ACCOUNT_TYPE.BANK,
+        ACCOUNT_TYPE.CASH,
+        ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+      ])
+    ) {
       throw new ServiceError(ERRORS.PAYMENT_ACCOUNT_NOT_CURRENT_ASSET_TYPE);
     }
     return paymentAccount;

@@ -33,6 +33,7 @@ import {
   Money,
 } from 'components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
+import { ACCOUNT_TYPE } from 'common/accountTypes';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
 
@@ -263,6 +264,11 @@ function PaymentReceiveHeaderFields({
               }}
               defaultSelectText={<T id={'select_deposit_account'} />}
               selectedAccountId={value}
+              filterByTypes={[
+                ACCOUNT_TYPE.CASH,
+                ACCOUNT_TYPE.BANK,
+                ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+              ]}
             />
           </FormGroup>
         )}

@@ -14,6 +14,6 @@ export interface IFormatNumberSettings {
   thousand?: string;
   decimal?: string;
   zeroSign?: string;
-  symbol?: string;
+  currencyCode?: string;
   money?: boolean,
 }

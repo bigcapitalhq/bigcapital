@@ -14,6 +14,7 @@ import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { DateInput } from '@blueprintjs/datetime';
 import { FieldRequiredHint, Col, Row } from 'components';
+import { ACCOUNT_TYPE } from 'common/accountTypes';
 import {
   AccountsSuggestField,
   InputPrependText,
@@ -164,6 +165,11 @@ export default function QuickPaymentMadeFormFields() {
                       id: 'select_account',
                     }),
                   }}
+                  filterByTypes={[
+                    ACCOUNT_TYPE.CASH,
+                    ACCOUNT_TYPE.BANK,
+                    ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+                  ]}
                 />
               </FormGroup>
             )}
