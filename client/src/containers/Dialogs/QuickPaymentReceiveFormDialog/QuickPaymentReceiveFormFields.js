@@ -26,13 +26,17 @@ import {
   momentFormatter,
   tansformDateValue,
   handleDateChange,
+  compose
 } from 'utils';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
+import withSettings from 'containers/Settings/withSettings';
 
 /**
  * Quick payment receive form fields.
  */
-export default function QuickPaymentReceiveFormFields({}) {
+function QuickPaymentReceiveFormFields({
+  paymentReceiveAutoIncrement
+}) {
   const { accounts } = useQuickPaymentReceiveContext();
 
   // Intl context.
@@ -78,6 +82,7 @@ export default function QuickPaymentReceiveFormFields({}) {
                   intent={inputIntent({ error, touched })}
                   minimal={true}
                   {...field}
+                  disabled={paymentReceiveAutoIncrement}
                 />
               </FormGroup>
             )}
@@ -157,6 +162,7 @@ export default function QuickPaymentReceiveFormFields({}) {
                 helperText={<ErrorMessage name={'deposit_account_id'} />}
               >
                 <AccountsSuggestField
+                  selectedAccountId={value}
                   accounts={accounts}
                   onAccountSelected={({ id }) =>
                     form.setFieldValue('deposit_account_id', id)
@@ -208,3 +214,9 @@ export default function QuickPaymentReceiveFormFields({}) {
     </div>
   );
 }
+
+export default compose(
+  withSettings(({ paymentReceiveSettings }) => ({
+    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
+  })),
+)(QuickPaymentReceiveFormFields)

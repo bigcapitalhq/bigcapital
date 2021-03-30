@@ -2,16 +2,17 @@ import React from 'react';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick } from 'lodash';
+import { pick, defaultTo } from 'lodash';
 
 import { AppToaster } from 'components';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
 import { CreateQuickPaymentReceiveFormSchema } from './QuickPaymentReceive.schema';
 import QuickPaymentReceiveFormContent from './QuickPaymentReceiveFormContent';
 
+import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { defaultInitialValues, transformErrors } from './utils';
-import { compose } from 'utils';
+import { compose, transactionNumber } from 'utils';
 
 /**
  * Quick payment receive form.
@@ -19,6 +20,12 @@ import { compose } from 'utils';
 function QuickPaymentReceiveForm({
   // #withDialogActions
   closeDialog,
+
+  // #withSettings
+  paymentReceiveAutoIncrement,
+  paymentReceiveNumberPrefix,
+  paymentReceiveNextNumber,
+  preferredDepositAccount
 }) {
   const { formatMessage } = useIntl();
   const {
@@ -27,14 +34,25 @@ function QuickPaymentReceiveForm({
     createPaymentReceiveMutate,
   } = useQuickPaymentReceiveContext();
 
+  // Payment receive number.
+  const nextPaymentNumber = transactionNumber(
+    paymentReceiveNumberPrefix,
+    paymentReceiveNextNumber,
+  );
+
   // Initial form values
   const initialValues = {
     ...defaultInitialValues,
+    ...(paymentReceiveAutoIncrement && {
+      payment_receive_no: nextPaymentNumber,
+    }),
+    deposit_account_id: defaultTo(preferredDepositAccount, ''),
     ...invoice,
   };
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setFieldError }) => {
+  const handleFormSubmit = (values, { setSubmitting, setFieldError, status }) => {
+    debugger;
     const entries = [values]
       .filter((entry) => entry.id && entry.payment_amount)
       .map((entry) => ({
@@ -69,7 +87,6 @@ function QuickPaymentReceiveForm({
       }
       setSubmitting(false);
     };
-
     createPaymentReceiveMutate(form).then(onSaved).catch(onError);
   };
 
@@ -83,4 +100,12 @@ function QuickPaymentReceiveForm({
   );
 }
 
-export default compose(withDialogActions)(QuickPaymentReceiveForm);
+export default compose(
+  withDialogActions,
+  withSettings(({ paymentReceiveSettings }) => ({
+    paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
+    paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
+    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
+    preferredDepositAccount: paymentReceiveSettings?.depositAccount,
+  })),
+)(QuickPaymentReceiveForm);

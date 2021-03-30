@@ -75,6 +75,7 @@ function PaymentReceiveForm({
       nextPaymentNumber,
       paymentEntriesEditPage,
       paymentReceiveAutoIncrement,
+      preferredDepositAccount
     ],
   );
 

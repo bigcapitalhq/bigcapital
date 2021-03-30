@@ -1,7 +1,7 @@
 import React, { useContext, createContext } from 'react';
 import { pick } from 'lodash';
 import { DialogContent } from 'components';
-import { useAccounts, useInvoice, useCreatePaymentReceive } from 'hooks/query';
+import { useAccounts, useInvoice, useSettingsPaymentReceives, useCreatePaymentReceive } from 'hooks/query';
 
 const QuickPaymentReceiveContext = createContext();
 
@@ -16,9 +16,11 @@ function QuickPaymentReceiveFormProvider({ invoiceId, dialogName, ...props }) {
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
     enabled: !!invoiceId,
   });
-
   // Create and edit payment receive mutations.
   const { mutateAsync: createPaymentReceiveMutate } = useCreatePaymentReceive();
+
+  // Fetch payment made settings.
+  const { isLoading: isSettingsLoading } = useSettingsPaymentReceives();
 
   // State provider.
   const provider = {
@@ -28,8 +30,8 @@ function QuickPaymentReceiveFormProvider({ invoiceId, dialogName, ...props }) {
       customer_id: invoice?.customer?.display_name,
       payment_amount: invoice.due_amount,
     },
-
     isAccountsLoading,
+    isSettingsLoading,
     dialogName,
 
     createPaymentReceiveMutate,
