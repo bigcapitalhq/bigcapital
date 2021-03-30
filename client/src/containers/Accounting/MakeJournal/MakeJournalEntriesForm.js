@@ -65,10 +65,10 @@ function MakeJournalEntriesForm({
           }
         : {
             ...defaultManualJournal,
-            ...(journalAutoIncrement) && ({
+            ...(journalAutoIncrement && {
               journal_number: defaultTo(journalNumber, ''),
             }),
-            currency_code: defaultTo(baseCurrency, ''),
+            currency_code: baseCurrency,
             entries: orderingLinesIndexes(defaultManualJournal.entries),
           }),
     }),
@@ -111,7 +111,7 @@ function MakeJournalEntriesForm({
     }
     const form = {
       ...omit(values, ['journal_number', 'journal_number_manually']),
-      ...(values.journal_number_manually) && ({
+      ...(values.journal_number_manually && {
         journal_number: values.journal_number,
       }),
       entries,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from "react-intl";
+import { useIntl } from 'react-intl';
 import moment from 'moment';
 import { Money } from 'components';
 import { safeSumBy, formattedAmount } from 'utils';
@@ -10,7 +10,7 @@ function BillNumberAccessor(row) {
 }
 
 function IndexTableCell({ row: { index } }) {
-  return (<span>{index + 1}</span>);
+  return <span>{index + 1}</span>;
 }
 
 function BillDateCell({ value }) {
@@ -19,34 +19,33 @@ function BillDateCell({ value }) {
 /**
  * Balance footer cell.
  */
-function AmountFooterCell({ rows }) {
+function AmountFooterCell({ payload: { currencyCode }, rows }) {
   const total = safeSumBy(rows, 'original.amount');
-  return <span>{ formattedAmount(total, 'USD') }</span>;
+  return <span>{formattedAmount(total, currencyCode)}</span>;
 }
 
 /**
  * Due amount footer cell.
  */
-function DueAmountFooterCell({ rows }) {
+function DueAmountFooterCell({ payload: { currencyCode }, rows }) {
   const totalDueAmount = safeSumBy(rows, 'original.due_amount');
-  return <span>{ formattedAmount(totalDueAmount, 'USD') }</span>;
+  return <span>{formattedAmount(totalDueAmount, currencyCode)}</span>;
 }
 
 /**
  * Payment amount footer cell.
  */
-function PaymentAmountFooterCell({ rows }) {
+function PaymentAmountFooterCell({ payload: { currencyCode }, rows }) {
   const totalPaymentAmount = safeSumBy(rows, 'original.payment_amount');
-  return <span>{ formattedAmount(totalPaymentAmount, 'USD') }</span>;
+  return <span>{formattedAmount(totalPaymentAmount, currencyCode)}</span>;
 }
 
 /**
  * Mobey table cell.
  */
-function MoneyTableCell({ value }) {
-  return <Money amount={value} currency={"USD"} />
+function MoneyTableCell({ row: { original }, value }) {
+  return <Money amount={value} currency={original.currency_code} />;
 }
-
 
 /**
  * Payment made entries table columns
@@ -63,7 +62,7 @@ export function usePaymentMadeEntriesTableColumns() {
         width: 40,
         disableResizing: true,
         disableSortBy: true,
-        className: 'index'
+        className: 'index',
       },
       {
         Header: formatMessage({ id: 'Date' }),
@@ -106,5 +105,5 @@ export function usePaymentMadeEntriesTableColumns() {
       },
     ],
     [formatMessage],
-  )
+  );
 }

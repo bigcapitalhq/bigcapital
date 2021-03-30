@@ -15,6 +15,7 @@ import { compose, updateTableRow } from 'utils';
 export default function PaymentReceiveItemsTable({
   entries,
   onUpdateData,
+  currencyCode
 }) {
   // Payment receive form context.
   const {
@@ -52,6 +53,7 @@ export default function PaymentReceiveItemsTable({
         payload={{
           errors: [],
           updateData: handleUpdateData,
+          currencyCode
         }}
         noResults={noResultsMessage}
         footer={true}

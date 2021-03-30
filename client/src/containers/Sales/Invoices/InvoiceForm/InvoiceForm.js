@@ -34,6 +34,7 @@ function InvoiceForm({
   invoiceNextNumber,
   invoiceNumberPrefix,
   invoiceIncrementMode,
+  baseCurrency,
 }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
@@ -61,11 +62,12 @@ function InvoiceForm({
         ? transformToEditForm(invoice)
         : {
             ...defaultInvoice,
-            ...(invoiceIncrementMode) && ({
+            ...(invoiceIncrementMode && {
               invoice_no: invoiceNumber,
             }),
             entries: orderingLinesIndexes(defaultInvoice.entries),
             ...newInvoice,
+            currency_code: baseCurrency,
           }),
     }),
     [invoice, newInvoice, invoiceNumber, invoiceIncrementMode],
@@ -91,7 +93,7 @@ function InvoiceForm({
     }
     const form = {
       ...omit(values, ['invoice_no', 'invoice_no_manually']),
-      ...(values.invoice_no_manually) && ({
+      ...(values.invoice_no_manually && {
         invoice_no: values.invoice_no,
       }),
       delivered: submitPayload.deliver,
@@ -169,9 +171,10 @@ function InvoiceForm({
 export default compose(
   withDashboardActions,
   withMediaActions,
-  withSettings(({ invoiceSettings }) => ({
+  withSettings(({ invoiceSettings, organizationSettings }) => ({
     invoiceNextNumber: invoiceSettings?.nextNumber,
     invoiceNumberPrefix: invoiceSettings?.numberPrefix,
     invoiceIncrementMode: invoiceSettings?.incrementMode,
+    baseCurrency: organizationSettings?.baseCurrency,
   })),
 )(InvoiceForm);

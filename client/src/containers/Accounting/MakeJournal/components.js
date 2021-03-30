@@ -1,7 +1,8 @@
 import React from 'react';
 import { Intent, Position, Button, Tooltip } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
 import { Icon, Money, Hint } from 'components';
+import { formatMessage } from 'services/intl';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,
@@ -26,21 +27,35 @@ export function ContactHeaderCell() {
 }
 
 /**
+ * Credit header cell.
+ */
+export function CreditHeaderCell({ payload: { currencyCode } }) {
+  return formatMessage({ id: 'credit_currency' }, { currency: currencyCode });
+}
+
+/**
+ * debit header cell.
+ */
+export function DebitHeaderCell({ payload: { currencyCode } }) {
+  return formatMessage({ id: 'debit_currency' }, { currency: currencyCode });
+}
+
+/**
  * Account footer cell.
  */
-function AccountFooterCell() {
-  return <span>{'Total USD'}</span>;
+function AccountFooterCell({ payload: { currencyCode } }) {
+  return <span>{`Total ${currencyCode} `}</span>;
 }
 
 /**
  * Total credit table footer cell.
  */
-function TotalCreditFooterCell({ rows }) {
+function TotalCreditFooterCell({ payload: { currencyCode }, rows }) {
   const credit = safeSumBy(rows, 'original.credit');
 
   return (
     <span>
-      <Money amount={credit} currency={'USD'} />
+      <Money amount={credit} currency={currencyCode} />
     </span>
   );
 }
@@ -48,12 +63,12 @@ function TotalCreditFooterCell({ rows }) {
 /**
  * Total debit table footer cell.
  */
-function TotalDebitFooterCell({ rows }) {
+function TotalDebitFooterCell({ payload: { currencyCode }, rows }) {
   const debit = safeSumBy(rows, 'original.debit');
 
   return (
     <span>
-      <Money amount={debit} currency={'USD'} />
+      <Money amount={debit} currency={currencyCode} />
     </span>
   );
 }
@@ -88,8 +103,6 @@ export const ActionsCellRenderer = ({
  * Retrieve columns of make journal entries table.
  */
 export const useJournalTableEntriesColumns = () => {
-  const { formatMessage } = useIntl();
-
   return React.useMemo(
     () => [
       {
@@ -113,7 +126,7 @@ export const useJournalTableEntriesColumns = () => {
         width: 160,
       },
       {
-        Header: formatMessage({ id: 'credit_currency' }, { currency: 'USD' }),
+        Header: CreditHeaderCell,
         accessor: 'credit',
         Cell: MoneyFieldCell,
         Footer: TotalCreditFooterCell,
@@ -122,7 +135,7 @@ export const useJournalTableEntriesColumns = () => {
         width: 100,
       },
       {
-        Header: formatMessage({ id: 'debit_currency' }, { currency: 'USD' }),
+        Header: DebitHeaderCell,
         accessor: 'debit',
         Cell: MoneyFieldCell,
         Footer: TotalDebitFooterCell,

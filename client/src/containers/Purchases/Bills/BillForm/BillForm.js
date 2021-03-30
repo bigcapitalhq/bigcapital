@@ -17,13 +17,17 @@ import { AppToaster } from 'components';
 
 import { ERROR } from 'common/errors';
 import { useBillFormContext } from './BillFormProvider';
-import { orderingLinesIndexes, safeSumBy } from 'utils';
+import { compose, orderingLinesIndexes, safeSumBy } from 'utils';
 import { defaultBill, transformToEditForm } from './utils';
+import withSettings from 'containers/Settings/withSettings';
 
 /**
  * Bill form.
  */
-export default function BillForm() {
+function BillForm({
+  // #withSettings
+  baseCurrency,
+}) {
   const { formatMessage } = useIntl();
   const history = useHistory();
 
@@ -46,6 +50,7 @@ export default function BillForm() {
         : {
             ...defaultBill,
             entries: orderingLinesIndexes(defaultBill.entries),
+            currency_code: baseCurrency,
           }),
     }),
     [bill],
@@ -142,3 +147,8 @@ export default function BillForm() {
     </div>
   );
 }
+export default compose(
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
+  })),
+)(BillForm);

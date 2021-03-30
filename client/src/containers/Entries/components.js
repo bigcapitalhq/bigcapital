@@ -8,7 +8,7 @@ import {
   MoneyFieldCell,
   ItemsListCell,
   PercentFieldCell,
-  NumericInputCell
+  NumericInputCell,
 } from 'components/DataTableCells';
 
 /**
@@ -62,27 +62,27 @@ export function ActionsCellRenderer({
  */
 export function QuantityTotalFooterCell({ rows }) {
   const quantity = safeSumBy(rows, 'original.quantity');
-  return <span>{ quantity }</span>;
+  return <span>{quantity}</span>;
 }
 
 /**
  * Total footer cell.
  */
-export function TotalFooterCell({ rows }) {
+export function TotalFooterCell({ payload: { currencyCode }, rows }) {
   const total = safeSumBy(rows, 'original.total');
-  return <span>{ formattedAmount(total, 'USD') }</span>;
+  return <span>{formattedAmount(total, currencyCode)}</span>;
 }
 
 /**
  * Total accessor.
  */
-export function TotalCell({ value }) {
-  return <span>{ formattedAmount(value, 'USD', { noZero: true }) }</span>;
+export function TotalCell({ payload: { currencyCode }, value }) {
+  return <span>{formattedAmount(value, currencyCode, { noZero: true })}</span>;
 }
 
 // Index table cell.
-export function IndexTableCell({ row: { index } }){
-  return (<span>{index + 1}</span>); 
+export function IndexTableCell({ row: { index } }) {
+  return <span>{index + 1}</span>;
 }
 
 /**
@@ -167,4 +167,3 @@ export function useEditableItemsEntriesColumns() {
     [formatMessage],
   );
 }
- 

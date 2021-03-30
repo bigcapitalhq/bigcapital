@@ -1,7 +1,8 @@
 import React from 'react';
 import { Button, Tooltip, Intent, Position } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
 import { Icon, Hint } from 'components';
+import { formatMessage } from 'services/intl';
 import {
   InputGroupCell,
   MoneyFieldCell,
@@ -51,9 +52,16 @@ const ActionsCellRenderer = ({
 /**
  * Amount footer cell.
  */
-function AmountFooterCell({ rows }) {
+function AmountFooterCell({ payload: { currencyCode }, rows }) {
   const total = safeSumBy(rows, 'original.amount');
-  return <span>{formattedAmount(total, 'USD')}</span>;
+  return <span>{formattedAmount(total, currencyCode)}</span>;
+}
+
+/**
+ * Expense amount header cell.
+ */
+ export function ExpenseAmountHeaderCell({ payload: { currencyCode } }) {
+  return formatMessage({ id: 'amount_currency' }, { currency: currencyCode });
 }
 
 /**
@@ -67,7 +75,6 @@ function ExpenseAccountFooterCell() {
  * Retrieve expense form table entries columns.
  */
 export function useExpenseFormTableColumns() {
-  const { formatMessage } = useIntl();
 
   return React.useMemo(
     () => [
@@ -92,7 +99,7 @@ export function useExpenseFormTableColumns() {
         filterAccountsByRootTypes: ['expense'],
       },
       {
-        Header: formatMessage({ id: 'amount_currency' }, { currency: 'USD' }),
+        Header: ExpenseAmountHeaderCell,
         accessor: 'amount',
         Cell: MoneyFieldCell,
         Footer: AmountFooterCell,

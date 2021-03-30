@@ -34,6 +34,7 @@ function EstimateForm({
   estimateNextNumber,
   estimateNumberPrefix,
   estimateIncrementMode,
+  baseCurrency,
 }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
@@ -57,10 +58,11 @@ function EstimateForm({
         ? { ...transformToEditForm(estimate) }
         : {
             ...defaultEstimate,
-            ...(estimateIncrementMode) && ({
+            ...(estimateIncrementMode && {
               estimate_number: estimateNumber,
             }),
             entries: orderingLinesIndexes(defaultEstimate.entries),
+            currency_code: baseCurrency,
           }),
     }),
     [estimate, estimateNumber, estimateIncrementMode],
@@ -101,7 +103,7 @@ function EstimateForm({
     }
     const form = {
       ...omit(values, ['estimate_number_manually', 'estimate_number']),
-      ...(values.estimate_number_manually) && ({
+      ...(values.estimate_number_manually && {
         estimate_number: values.estimate_number,
       }),
       delivered: submitPayload.deliver,
@@ -175,9 +177,10 @@ function EstimateForm({
 }
 
 export default compose(
-  withSettings(({ estimatesSettings }) => ({
+  withSettings(({ estimatesSettings, organizationSettings }) => ({
     estimateNextNumber: estimatesSettings?.nextNumber,
     estimateNumberPrefix: estimatesSettings?.numberPrefix,
     estimateIncrementMode: estimatesSettings?.autoIncrement,
+    baseCurrency: organizationSettings?.baseCurrency,
   })),
 )(EstimateForm);

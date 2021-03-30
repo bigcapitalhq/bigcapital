@@ -14,15 +14,20 @@ export default function EstimateFormItemsEntriesField() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
       <FastField name={'entries'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
+        {({
+          form: { values, setFieldValue },
+          field: { value },
+          meta: { error, touched },
+        }) => (
           <ItemsEntriesTable
             entries={value}
             onUpdateData={(entries) => {
-              form.setFieldValue('entries', entries);
+              setFieldValue('entries', entries);
             }}
             items={items}
             errors={error}
             linesNumber={4}
+            currencyCode={values.currency_code}
           />
         )}
       </FastField>

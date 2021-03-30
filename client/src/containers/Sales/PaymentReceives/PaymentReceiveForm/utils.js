@@ -50,6 +50,7 @@ export const transformInvoicesNewPageEntries = (invoices) => [
     due_amount: invoice.due_amount,
     date: invoice.invoice_date,
     amount: invoice.balance,
+    currency_code:invoice.currency_code,
     payment_amount: '',
     invoice_no: invoice.invoice_no,
     total_payment_amount: invoice.payment_amount,

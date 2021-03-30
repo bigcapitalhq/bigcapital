@@ -11,12 +11,13 @@ export default function PaymentReceiveFormBody() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
       <FastField name={'entries'}>
-        {({ form, field: { value } }) => (
+        {({ form: { values, setFieldValue }, field: { value } }) => (
           <PaymentReceiveItemsTable
             entries={value}
             onUpdateData={(newEntries) => {
-              form.setFieldValue('entries', newEntries);
+              setFieldValue('entries', newEntries);
             }}
+            currencyCode={values.currency_code}
           />
         )}
       </FastField>

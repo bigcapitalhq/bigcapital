@@ -28,6 +28,7 @@ function ItemsEntriesTable({
   errors,
   onUpdateData,
   linesNumber,
+  currencyCode,
   itemType, // sellable or purchasable
 }) {
   const [rows, setRows] = React.useState(initialEntries);
@@ -35,13 +36,14 @@ function ItemsEntriesTable({
   const [cellsLoading, setCellsLoading] = React.useState(null);
 
   // Fetches the item details.
-  const { data: item, isFetching: isItemFetching, isSuccess: isItemSuccess } = useItem(
-    rowItem && rowItem.itemId,
-    {
-      enabled: !!(rowItem && rowItem.itemId),
-    },
-  );
-
+  const {
+    data: item,
+    isFetching: isItemFetching,
+    isSuccess: isItemSuccess,
+  } = useItem(rowItem && rowItem.itemId, {
+    enabled: !!(rowItem && rowItem.itemId),
+  });
+  
   // Once the item start loading give the table cells loading state.
   useEffect(() => {
     if (rowItem && isItemFetching) {
@@ -141,6 +143,7 @@ function ItemsEntriesTable({
         updateData: handleUpdateData,
         removeRow: handleRemoveRow,
         autoFocus: ['item_id', 0],
+        currencyCode,
       }}
     />
   );

@@ -94,6 +94,7 @@ function VendorForm({
   const initialValues = useMemo(
     () => ({
       ...defaultInitialValues,
+      currency_code: baseCurrency,
       ...transformToForm(vendor, defaultInitialValues),
       ...transformToForm(contactDuplicate, defaultInitialValues),
     }),
