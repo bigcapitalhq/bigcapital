@@ -36,7 +36,7 @@ const reducerInstance = createReducer(initialState, {
   },
 
   [t.CHANGE_DASHBOARD_PAGE_HINT]: (state, action) => {
-    state.pageHint = action.pageHint;
+    state.pageHint = action.payload.pageHint;
   },
 
   [t.CHANGE_PREFERENCES_PAGE_TITLE]: (state, action) => {

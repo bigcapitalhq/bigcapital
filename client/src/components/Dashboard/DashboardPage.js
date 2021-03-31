@@ -12,12 +12,14 @@ function DashboardPage({
   sidebarShrink,
   Component,
   name,
+  hint,
 
   // #withDashboardActions
   changePageTitle,
   setDashboardBackLink,
   setSidebarShrink,
   resetSidebarPreviousExpand,
+  changePageHint,
 }) {
   useEffect(() => {
     pageTitle && changePageTitle(pageTitle);
@@ -26,6 +28,14 @@ function DashboardPage({
       pageTitle && changePageTitle('');
     };
   });
+
+  useEffect(() => {
+    hint && changePageHint(hint);
+
+    return () => {
+      hint && changePageHint('');
+    }
+  }, [hint, changePageHint]);
 
   useEffect(() => {
     backLink && setDashboardBackLink(backLink);

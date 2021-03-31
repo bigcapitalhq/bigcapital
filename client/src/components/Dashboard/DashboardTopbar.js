@@ -31,6 +31,7 @@ function DashboardTopbar({
   // #withDashboard
   pageTitle,
   editViewId,
+  pageHint,
 
   // #withDashboardActions
   toggleSidebarExpend,
@@ -97,13 +98,9 @@ function DashboardTopbar({
         <div class="dashboard__title">
           <h1>{pageTitle}</h1>
 
-          <If condition={true}>
+          <If condition={pageHint}>
             <div class="dashboard__hint">
-              <Hint
-                content={
-                  'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.'
-                }
-              />
+              <Hint content={pageHint} />
             </div>
           </If>
 
@@ -119,7 +116,7 @@ function DashboardTopbar({
         <div class="dashboard__breadcrumbs">
           <DashboardBreadcrumbs />
         </div>
-      
+
         <DashboardBackLink />
       </div>
 
@@ -132,7 +129,7 @@ function DashboardTopbar({
               icon={<Icon icon={'search-24'} iconSize={20} />}
               text={<T id={'quick_find'} />}
             />
-            <QuickNewDropdown/>
+            <QuickNewDropdown />
             <Tooltip
               content={<T id={'notifications'} />}
               position={Position.BOTTOM}
@@ -161,10 +158,11 @@ function DashboardTopbar({
 
 export default compose(
   withSearch,
-  withDashboard(({ pageTitle, editViewId, sidebarExpended }) => ({
+  withDashboard(({ pageTitle, pageHint, editViewId, sidebarExpended }) => ({
     pageTitle,
     editViewId,
     sidebarExpended,
+    pageHint,
   })),
   withSettings(({ organizationSettings }) => ({
     organizationName: organizationSettings.name,

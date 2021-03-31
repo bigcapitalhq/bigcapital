@@ -21,6 +21,7 @@ export default function DashboardContentRoute() {
               Component={route.component}
               pageTitle={route.pageTitle}
               backLink={route.backLink}
+              hint={route.hint}
               sidebarShrink={route.sidebarShrink}
             />
           </Route>

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick, defaultTo } from 'lodash';
+import { useIntl } from 'react-intl';
+import { pick, defaultTo, omit } from 'lodash';
 
 import { AppToaster } from 'components';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
@@ -51,8 +51,7 @@ function QuickPaymentReceiveForm({
   };
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setFieldError, status }) => {
-    debugger;
+  const handleFormSubmit = (values, { setSubmitting, setFieldError }) => {
     const entries = [values]
       .filter((entry) => entry.id && entry.payment_amount)
       .map((entry) => ({
@@ -61,7 +60,10 @@ function QuickPaymentReceiveForm({
       }));
 
     const form = {
-      ...values,
+      ...omit(values, ['payment_receive_no']),
+      ...(!paymentReceiveAutoIncrement && {
+        payment_receive_no: values.payment_receive_no,
+      }),
       customer_id: values.customer.id,
       entries,
     };

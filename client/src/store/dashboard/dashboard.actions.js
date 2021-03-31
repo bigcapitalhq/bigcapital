@@ -7,6 +7,13 @@ export function dashboardPageTitle(pageTitle) {
   };
 }
 
+export function dashboardPageHint(pageHint) {
+  return {
+    type: t.CHANGE_DASHBOARD_PAGE_HINT,
+    pageHint,
+  };
+}
+
 export function openDialog(name, payload) {
   return {
     type: t.OPEN_DIALOG,
