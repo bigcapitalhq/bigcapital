@@ -271,7 +271,6 @@ export default class SaleInvoicesController extends BaseController {
       next(error);
     }
   }
-
   /**
    * Retrieve paginated sales invoices with custom view metadata.
    * @param {Request} req
