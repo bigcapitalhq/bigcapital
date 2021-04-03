@@ -91,9 +91,11 @@
     "mocha": "^5.2.0",
     "module-alias": "^2.2.2",
     "nyc": "^14.1.1",
+    "regenerator-runtime": "^0.13.7",
     "sinon": "^7.4.2",
     "ts-node": "^9.0.0",
     "typedi": "^0.8.0",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "webpack-cli": "^4.6.0"
   }
 }
