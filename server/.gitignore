@@ -4,3 +4,4 @@
 package-lock.json
 stdout.log
 /dist
+/build

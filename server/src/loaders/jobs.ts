@@ -1,5 +1,5 @@
 import Agenda from 'agenda';
-import WelcomeEmailJob from 'jobs/WelcomeEmail';
+import WelcomeEmailJob from 'jobs/welcomeEmail';
 import WelcomeSMSJob from 'jobs/WelcomeSMS';
 import ResetPasswordMailJob from 'jobs/ResetPasswordMail';
 import ComputeItemCost from 'jobs/ComputeItemCost';
