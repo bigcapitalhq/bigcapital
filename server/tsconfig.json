@@ -31,5 +31,25 @@
   "exclude": [
     "node_modules",
     "tests"
-  ]
+  ],
+  "paths": {
+    "loaders": ["src/loaders/**/*"],
+    "collection": ["src/collection/**/*"],
+    "config": ["src/config/**/*"],
+    "api": ["src/api/**/*"],
+    "data": ["src/data/**/*"],
+    "database": ["src/database/**/*"],
+    "decorators": ["src/decorators/**/*"],
+    "exceptions": ["src/exceptions/**/*"],
+    "interfaces": ["src/interfaces/**/*"],
+    "jobs": ["src/jobs/**/*"],
+    "lib": ["src/lib/**/*"],
+    "utils": ["src/utils/**/*"],
+    "locales": ["src/locales/**/*"],
+    "models": ["src/models/**/*"],
+    "repositories": ["src/repositories/**/*"],
+    "services": ["src/services/**/*"],
+    "subscribers": ["src/subscribers/**/*"],
+    "system": ["src/system/**/*"],
+  }
 }
