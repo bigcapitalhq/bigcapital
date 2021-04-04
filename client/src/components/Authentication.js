@@ -7,7 +7,7 @@ import { FormattedMessage as T } from 'react-intl';
 import Icon from 'components/Icon';
 import { useIsAuthenticated } from 'hooks/state';
 
-import 'style/pages/Authentication/Auth.scss'
+import 'style/pages/Authentication/Auth.scss';
 
 function PageFade(props) {
   return <CSSTransition {...props} classNames="authTransition" timeout={500} />;
@@ -26,13 +26,12 @@ export default function AuthenticationWrapper({ ...rest }) {
       ) : (
         <BodyClassName className={'authentication'}>
           <div class="authentication-page">
-            <Link
-              to={'bigcapital.io'}
+            <a
+              href={'http://bigcapital.ly'}
               className={'authentication-page__goto-bigcapital'}
             >
               <T id={'go_to_bigcapital_com'} />
-            </Link>
-
+            </a>
             <div class="authentication-page__form-wrapper">
               <div class="authentication-insider">
                 <div className={'authentication-insider__logo-section'}>
