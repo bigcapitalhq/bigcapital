@@ -81,6 +81,7 @@ export default function ReceiptFormFloatingActions() {
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
+            loading={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitCloseBtnClick}
             text={<T id={'save_close'} />}
