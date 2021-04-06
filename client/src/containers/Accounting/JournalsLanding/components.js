@@ -22,18 +22,23 @@ import { formatMessage } from 'services/intl';
  */
 export const AmountAccessor = (r) => (
   <Tooltip
-    content={<AmountPopoverContent journalEntries={r.entries} />}
+    content={
+      <AmountPopoverContent
+        journalEntries={r.entries}
+        currencyCode={r.currency_code}
+      />
+    }
     position={Position.RIGHT_TOP}
     boundary={'viewport'}
   >
-    <Money amount={r.amount} currency={'USD'} />
+    {r.amount_formatted}
   </Tooltip>
 );
 
 /**
  * Amount popover content line.
  */
-export const AmountPopoverContentLine = ({ journalEntry }) => {
+export const AmountPopoverContentLine = ({ journalEntry, currencyCode }) => {
   const isCredit = !!journalEntry.credit;
   const isDebit = !!journalEntry.debit;
   const { account } = journalEntry;
@@ -42,14 +47,14 @@ export const AmountPopoverContentLine = ({ journalEntry }) => {
     <Choose>
       <Choose.When condition={isDebit}>
         <div>
-          C. <Money amount={journalEntry.debit} currency={'USD'} /> USD -{' '}
+          C. <Money amount={journalEntry.debit} currency={currencyCode} /> -{' '}
           {account.name} <If condition={account.code}>({account.code})</If>
         </div>
       </Choose.When>
 
       <Choose.When condition={isCredit}>
         <div>
-          D. <Money amount={journalEntry.credit} currency={'USD'} /> USD -{' '}
+          D. <Money amount={journalEntry.credit} currency={currencyCode} /> -{' '}
           {account.name} <If condition={account.code}>({account.code})</If>
         </div>
       </Choose.When>
@@ -60,7 +65,7 @@ export const AmountPopoverContentLine = ({ journalEntry }) => {
 /**
  * Amount popover content.
  */
-export function AmountPopoverContent({ journalEntries }) {
+export function AmountPopoverContent({ journalEntries, currencyCode }) {
   const journalLinesProps = journalEntries.map((journalEntry) => ({
     journalEntry,
     accountId: journalEntry.account_id,
@@ -72,6 +77,7 @@ export function AmountPopoverContent({ journalEntries }) {
         <AmountPopoverContentLine
           journalEntry={journalEntry}
           accountId={accountId}
+          currencyCode={currencyCode}
         />
       ))}
     </div>

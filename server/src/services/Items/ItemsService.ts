@@ -22,6 +22,7 @@ import {
   ACCOUNT_TYPE,
 } from 'data/AccountTypes';
 import { ERRORS } from './constants';
+import { formatNumber } from 'utils';
 
 @Service()
 export default class ItemsService implements IItemsService {
@@ -289,12 +290,12 @@ export default class ItemsService implements IItemsService {
   }
 
   /**
-   * Validate the item inventory account whether modified and item 
+   * Validate the item inventory account whether modified and item
    * has assocaited inventory transactions.
-   * @param {numnber} tenantId 
-   * @param {IItem} oldItem 
-   * @param {IItemDTO} newItemDTO 
-   * @returns 
+   * @param {numnber} tenantId
+   * @param {IItem} oldItem
+   * @param {IItemDTO} newItemDTO
+   * @returns
    */
   async validateItemInvnetoryAccountModified(
     tenantId: number,
@@ -418,11 +419,7 @@ export default class ItemsService implements IItemsService {
       );
     }
 
-    await this.validateItemInvnetoryAccountModified(
-      tenantId,
-      oldItem,
-      itemDTO
-    );
+    await this.validateItemInvnetoryAccountModified(tenantId, oldItem, itemDTO);
 
     const newItem = await Item.query().patchAndFetchById(itemId, {
       ...itemModel,
@@ -525,7 +522,7 @@ export default class ItemsService implements IItemsService {
     if (!item) {
       throw new ServiceError(ERRORS.NOT_FOUND);
     }
-    return item;
+    return this.transformItemToResponse(tenantId, item);
   }
 
   /**
@@ -540,7 +537,7 @@ export default class ItemsService implements IItemsService {
       Item,
       itemsFilter
     );
-    const { results, pagination } = await Item.query()
+    const { results: items, pagination } = await Item.query()
       .onBuild((builder) => {
         builder.withGraphFetched('inventoryAccount');
         builder.withGraphFetched('sellAccount');
@@ -550,6 +547,10 @@ export default class ItemsService implements IItemsService {
         dynamicFilter.buildQuery()(builder);
       })
       .pagination(itemsFilter.page - 1, itemsFilter.pageSize);
+
+    const results = items.map((item) =>
+      this.transformItemToResponse(tenantId, item)
+    );
 
     return {
       items: results,
@@ -583,7 +584,7 @@ export default class ItemsService implements IItemsService {
         builder.where('name', 'LIKE', `%${itemsFilter.keyword}%`);
       }
     });
-    return items;
+    return items.map((item) => this.transformItemToResponse(tenantId, item));
   }
 
   /**
@@ -629,5 +630,25 @@ export default class ItemsService implements IItemsService {
     if (inventoryAdjEntries.length > 0) {
       throw new ServiceError(ERRORS.ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT);
     }
+  }
+
+  /**
+   * Transformes the item object to response.
+   * @param {number} tenantId -
+   * @param {IItem} item -
+   * @returns
+   */
+  private transformItemToResponse(tenantId: number, item: IItem) {
+    // Settings tenant service.
+    const settings = this.tenancy.settings(tenantId);
+    const currencyCode = settings.get({
+      group: 'organization', key: 'base_currency',
+    });
+
+    return {
+      ...item,
+      sellPriceFormatted: formatNumber(item.sellPrice, { currencyCode }),
+      costPriceFormatted: formatNumber(item.costPrice, { currencyCode }),
+    };
   }
 }

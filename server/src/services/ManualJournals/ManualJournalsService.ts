@@ -344,6 +344,11 @@ export default class ManualJournalsService implements IManualJournalsService {
 
     const journalNumber = manualJournalDTO.journalNumber || autoNextNumber;
 
+    // Settings tenant service.
+    const settings = this.tenancy.settings(tenantId);
+    const currencyCode = settings.get({
+      group: 'organization', key: 'base_currency',
+    });
     // Validate manual journal number require.
     this.validateJournalNoRequire(journalNumber);
 
@@ -353,6 +358,7 @@ export default class ManualJournalsService implements IManualJournalsService {
         ? { publishedAt: moment().toMySqlDateTime() }
         : {}),
       amount,
+      currencyCode,
       date,
       journalNumber,
       userId: authorizedUser.id,
