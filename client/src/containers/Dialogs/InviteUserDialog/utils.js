@@ -6,5 +6,8 @@ export const transformApiErrors = (errors) => {
   if (errors.find((error) => error.type === 'EMAIL.ALREADY.INVITED')) {
     fields.email = formatMessage({ id: 'email_is_already_used' });
   }
+  if (errors.find((error) => error.type === 'EMAIL.ALREADY.EXISTS')) {
+    fields.email = formatMessage({ id: 'email_is_already_used' });
+  }
   return fields;
 };

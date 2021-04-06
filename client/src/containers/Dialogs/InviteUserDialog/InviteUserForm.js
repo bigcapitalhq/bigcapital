@@ -55,7 +55,13 @@ function InviteUserForm({
     };
 
     // Handle the response error.
-    const onError = (errors) => {
+    const onError = (error) => {
+      const {
+        response: {
+          data: { errors },
+        },
+      } = error;
+      
       const errorsTransformed = transformApiErrors(errors);
 
       setErrors({ ...errorsTransformed });
