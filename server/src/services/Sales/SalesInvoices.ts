@@ -399,7 +399,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
     if (saleInvoiceObj.invoiceNo) {
       await this.validateInvoiceNumberUnique(
         tenantId,
-        saleInvoiceDTO.invoiceNo,
+        saleInvoiceObj.invoiceNo,
         saleInvoiceId
       );
     }

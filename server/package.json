@@ -4,11 +4,12 @@
   "description": "",
   "main": "src/server.ts",
   "scripts": {
-    "build": "clear && tsc -p tsconfig.json && copy-18n",
     "start": "cross-env NODE_PATH=./src nodemon",
     "inspect": "cross-env NODE_PATH=./src nodemon src/server.ts",
     "copy-18n": "cpy --cwd=src/locales --parents '**/*.json' ../../build/locales",
-    "clear": "rimraf build"
+    "clear": "rimraf build",
+    "build:ts": "tsc -p tsconfig.json",
+    "build": "npm-run-all clear build:ts copy-18n"
   },
   "author": "Ahmed Bouhuolia, <a.bouhuolia@gmail.com>",
   "license": "ISC",
@@ -94,13 +95,15 @@
     "knex-factory": "0.0.6",
     "mocha": "^5.2.0",
     "module-alias": "^2.2.2",
+    "npm-run-all": "^4.1.5",
     "nyc": "^14.1.1",
     "regenerator-runtime": "^0.13.7",
     "sinon": "^7.4.2",
     "ts-node": "^9.0.0",
     "typedi": "^0.8.0",
     "typescript": "^3.9.7",
-    "webpack-cli": "^4.6.0"
+    "webpack-cli": "^4.6.0",
+    "rimraf": "^3.0.2"
   },
   "_moduleAliases": {
     "loaders": "build/loaders",
@@ -121,5 +124,6 @@
     "services": "build/services",
     "subscribers": "build/subscribers",
     "system": "build/system"
-  }
+  },
+  "_moduleAliases": {}
 }
