@@ -324,7 +324,9 @@ export default class ItemsController extends BaseController {
     try {
       const storedItem = await this.itemsService.getItem(tenantId, itemId);
 
-      return res.status(200).send({ item: storedItem });
+      return res.status(200).send({
+        item: this.transfromToResponse(storedItem)
+      });
     } catch (error) {
       next(error);
     }
@@ -356,7 +358,7 @@ export default class ItemsController extends BaseController {
       } = await this.itemsService.itemsList(tenantId, filter);
 
       return res.status(200).send({
-        items,
+        items: this.transfromToResponse(items),
         pagination: this.transfromToResponse(pagination),
         filter_meta: this.transfromToResponse(filterMeta),
       });
@@ -390,7 +392,7 @@ export default class ItemsController extends BaseController {
         filter
       );
       return res.status(200).send({
-        items,
+        items: this.transfromToResponse(items),
       });
     } catch (error) {
       next(error);

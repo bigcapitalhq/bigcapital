@@ -39,7 +39,7 @@ const MoneyFieldCellRenderer = ({
       className={CLASSES.FILL}>
       <MoneyInputGroup
         value={value}
-        prefix={'$'}
+        // prefix={'$'}
         onChange={handleFieldChange}
         onBlur={handleFieldBlur}
         {...moneyInputGroupProps}

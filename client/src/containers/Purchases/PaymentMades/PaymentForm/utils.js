@@ -12,6 +12,7 @@ export const defaultPaymentMadeEntry = {
   currency_code:'',
   id: null,
   due_amount: null,
+  amount:''
 };
 
 // Default initial values of payment made.
@@ -46,5 +47,7 @@ export const transformToNewPageEntries = (entries) => {
   return entries.map((entry) => ({
     ...transformToForm(entry, defaultPaymentMadeEntry),
     payment_amount: '',
+    currency_code:entry.currency_code,
+
   }));
 }

@@ -78,7 +78,7 @@ export const useAccountsTableColumns = () => {
       {
         id: 'currency',
         Header: formatMessage({ id: 'currency' }),
-        accessor: (row) => 'USD',
+        accessor: 'currency_code',
         width: 75,
       },
       {

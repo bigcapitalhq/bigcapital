@@ -9,14 +9,14 @@ import { safeSumBy, formattedAmount } from 'utils';
  * Invoice date cell.
  */
 function InvoiceDateCell({ value }) {
-  return <span>{ moment(value).format('YYYY MMM DD') }</span>
+  return <span>{moment(value).format('YYYY MMM DD')}</span>;
 }
 
 /**
  * Index table cell.
  */
 function IndexCell({ row: { index } }) {
-  return (<span>{index + 1}</span>);
+  return <span>{index + 1}</span>;
 }
 
 /**
@@ -29,33 +29,32 @@ function InvNumberCellAccessor(row) {
 /**
  * Balance footer cell.
  */
-function BalanceFooterCell({ rows }) {
+function BalanceFooterCell({ payload: { currencyCode }, rows }) {
   const total = safeSumBy(rows, 'original.amount');
-  return <span>{ formattedAmount(total, 'USD') }</span>;
+  return <span>{formattedAmount(total, currencyCode)}</span>;
 }
 
 /**
  * Due amount footer cell.
  */
-function DueAmountFooterCell({ rows }) {
+function DueAmountFooterCell({ payload: { currencyCode }, rows }) {
   const totalDueAmount = safeSumBy(rows, 'original.due_amount');
-  return <span>{ formattedAmount(totalDueAmount, 'USD') }</span>;
+  return <span>{formattedAmount(totalDueAmount, currencyCode)}</span>;
 }
 
 /**
  * Payment amount footer cell.
  */
-function PaymentAmountFooterCell({ rows }) {
+function PaymentAmountFooterCell({ payload: { currencyCode }, rows }) {
   const totalPaymentAmount = safeSumBy(rows, 'original.payment_amount');
-  return <span>{ formattedAmount(totalPaymentAmount, 'USD') }</span>;
+  return <span>{formattedAmount(totalPaymentAmount, currencyCode)}</span>;
 }
-
 
 /**
  * Mobey table cell.
  */
-function MoneyTableCell({ value }) {
-  return <Money amount={value} currency={"USD"} />
+function MoneyTableCell({ row: { original }, value }) {
+  return <Money amount={value} currency={original.currency_code} />;
 }
 
 function DateFooterCell() {
@@ -77,7 +76,7 @@ export const usePaymentReceiveEntriesColumns = () => {
         width: 40,
         disableResizing: true,
         disableSortBy: true,
-        className: 'index'
+        className: 'index',
       },
       {
         Header: formatMessage({ id: 'Date' }),
@@ -88,7 +87,7 @@ export const usePaymentReceiveEntriesColumns = () => {
         disableSortBy: true,
         disableResizing: true,
         width: 250,
-        className: 'date'
+        className: 'date',
       },
       {
         Header: formatMessage({ id: 'invocie_number' }),
@@ -125,5 +124,5 @@ export const usePaymentReceiveEntriesColumns = () => {
       },
     ],
     [formatMessage],
-  )
-}
+  );
+};

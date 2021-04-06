@@ -37,6 +37,7 @@ function PaymentReceiveForm({
   paymentReceiveNextNumber,
   paymentReceiveNumberPrefix,
   paymentReceiveAutoIncrement,
+  baseCurrency,
 }) {
   const history = useHistory();
   const { formatMessage } = useIntl();
@@ -68,6 +69,7 @@ function PaymentReceiveForm({
               payment_receive_no: nextPaymentNumber,
               deposit_account_id: defaultTo(preferredDepositAccount, ''),
             }),
+            currency_code: baseCurrency,
           }),
     }),
     [
@@ -199,11 +201,12 @@ function PaymentReceiveForm({
 }
 
 export default compose(
-  withSettings(({ paymentReceiveSettings }) => ({
+  withSettings(({ paymentReceiveSettings, organizationSettings }) => ({
     paymentReceiveSettings,
     paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
     paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
     paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
     preferredDepositAccount: paymentReceiveSettings?.depositAccount,
+    baseCurrency: organizationSettings?.baseCurrency,
   })),
 )(PaymentReceiveForm);

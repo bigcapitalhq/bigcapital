@@ -23,6 +23,7 @@ export default function MakeJournalEntriesTable({
   error,
   initialLinesNumber = 4,
   minLinesNumber = 4,
+  currencyCode,
 }) {
   const { accounts, customers } = useMakeJournalFormContext();
 
@@ -72,6 +73,7 @@ export default function MakeJournalEntriesTable({
           contact_type: 'customer',
         })),
         autoFocus: ['account_id', 0],
+        currencyCode,
       }}
     />
   );

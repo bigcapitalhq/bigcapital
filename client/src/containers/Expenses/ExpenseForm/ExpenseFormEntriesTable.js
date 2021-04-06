@@ -21,6 +21,7 @@ export default function ExpenseFormEntriesTable({
   defaultEntry,
   error,
   onChange,
+  currencyCode,
 }) {
   // Expense form context.
   const { accounts } = useExpenseFormContext();
@@ -69,6 +70,7 @@ export default function ExpenseFormEntriesTable({
         updateData: handleUpdateData,
         removeRow: handleRemoveRow,
         autoFocus: ['expense_account_id', 0],
+        currencyCode
       }}
       footer={true}
     />

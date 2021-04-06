@@ -6,6 +6,7 @@ exports.up = function(knex) {
     table.string('reference').index();
     table.string('journal_type').index();
     table.decimal('amount', 13, 3);
+    table.string('currency_code', 3);
     table.date('date').index();
     table.string('description');
     table.date('published_at').index();

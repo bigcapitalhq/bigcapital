@@ -12,15 +12,16 @@ export default function MakeJournalEntriesField() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
       <FastField name={'entries'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
+        {({ form:{values ,setFieldValue}, field: { value }, meta: { error, touched } }) => (
           <MakeJournalEntriesTable
             onChange={(entries) => {
-              form.setFieldValue('entries', entries);
+              setFieldValue('entries', entries);
             }}
             entries={value}
             defaultEntry={defaultEntry}
             initialLinesNumber={MIN_LINES_NUMBER}
             error={error}
+            currencyCode={values.currency_code}
           />
         )}
       </FastField>

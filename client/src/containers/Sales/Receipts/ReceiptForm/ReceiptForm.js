@@ -37,6 +37,7 @@ function ReceiptForm({
   receiptNumberPrefix,
   receiptAutoIncrement,
   preferredDepositAccount,
+  baseCurrency,
 }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
@@ -67,6 +68,7 @@ function ReceiptForm({
             }),
             deposit_account_id: parseInt(preferredDepositAccount),
             entries: orderingLinesIndexes(defaultReceipt.entries),
+            currency_code: baseCurrency,
           }),
     }),
     [receipt, preferredDepositAccount, nextReceiptNumber, receiptAutoIncrement],
@@ -105,8 +107,9 @@ function ReceiptForm({
     }
     const form = {
       ...omit(values, ['receipt_number_manually', 'receipt_number']),
-      ...(values.receipt_number_manually) && ({
+      ...(values.receipt_number_manually && {
         receipt_number: values.receipt_number,
+        currency_code: baseCurrency,
       }),
       closed: submitPayload.status,
       entries: entries.map((entry) => ({ ...omit(entry, ['total']) })),
@@ -182,10 +185,11 @@ function ReceiptForm({
 
 export default compose(
   withDashboardActions,
-  withSettings(({ receiptSettings }) => ({
+  withSettings(({ receiptSettings, organizationSettings }) => ({
     receiptNextNumber: receiptSettings?.nextNumber,
     receiptNumberPrefix: receiptSettings?.numberPrefix,
     receiptAutoIncrement: receiptSettings?.autoIncrement,
     preferredDepositAccount: receiptSettings?.preferredDepositAccount,
+    baseCurrency: organizationSettings?.baseCurrency,
   })),
 )(ReceiptForm);

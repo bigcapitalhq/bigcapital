@@ -1,6 +1,6 @@
 import { Model } from 'objection';
 import TenantModel from 'models/TenantModel';
-import { query } from 'winston';
+import { formatNumber } from 'utils';
 
 export default class ManualJournal extends TenantModel {
   /**
@@ -21,7 +21,14 @@ export default class ManualJournal extends TenantModel {
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return ['isPublished'];
+    return ['isPublished', 'amountFormatted'];
+  }
+
+  /**
+   * Retrieve the amount formatted value.
+   */
+  get amountFormatted() {
+    return formatNumber(this.amount, { currencyCode: this.currencyCode });
   }
 
   /**

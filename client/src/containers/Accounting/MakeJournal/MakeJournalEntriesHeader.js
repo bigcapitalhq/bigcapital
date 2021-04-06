@@ -2,12 +2,14 @@ import React from 'react';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { CLASSES } from 'common/classes';
-import MakeJournalEntriesHeaderFields from "./MakeJournalEntriesHeaderFields";
+import MakeJournalEntriesHeaderFields from './MakeJournalEntriesHeaderFields';
 import { PageFormBigNumber } from 'components';
 import { safeSumBy } from 'utils';
 
 export default function MakeJournalEntriesHeader() {
-  const { values: { entries } } = useFormikContext();
+  const {
+    values: { entries, currency_code },
+  } = useFormikContext();
   const totalCredit = safeSumBy(entries, 'credit');
   const totalDebit = safeSumBy(entries, 'debit');
 
@@ -20,8 +22,8 @@ export default function MakeJournalEntriesHeader() {
       <PageFormBigNumber
         label={'Due Amount'}
         amount={total}
-        currencyCode={'USD'}
+        currencyCode={currency_code}
       />
     </div>
-  )
+  );
 }

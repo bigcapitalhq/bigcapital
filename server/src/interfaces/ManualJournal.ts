@@ -9,6 +9,7 @@ export interface IManualJournal {
   journalType: string;
   reference: string;
   amount: number;
+  currencyCode: string;
   publishedAt: Date | null;
   description: string;
   userId: number;

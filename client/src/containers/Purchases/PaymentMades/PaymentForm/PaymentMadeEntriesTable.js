@@ -16,6 +16,7 @@ import { useFormikContext } from 'formik';
 export default function PaymentMadeEntriesTable({
   onUpdateData,
   entries,
+  currencyCode,
 }) {
   // Payment made inner context.
   const { isNewEntriesFetching } = usePaymentMadeInnerContext();
@@ -24,7 +25,9 @@ export default function PaymentMadeEntriesTable({
   const columns = usePaymentMadeEntriesTableColumns();
 
   // Formik context.
-  const { values: { vendor_id } } = useFormikContext();
+  const {
+    values: { vendor_id },
+  } = useFormikContext();
 
   // Handle update data.
   const handleUpdateData = useCallback(
@@ -54,6 +57,7 @@ export default function PaymentMadeEntriesTable({
         payload={{
           errors: [],
           updateData: handleUpdateData,
+          currencyCode,
         }}
         noResults={noResultsMessage}
         footer={true}

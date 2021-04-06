@@ -117,7 +117,7 @@ export function BalanceCell({ cell }) {
 
   return account.amount !== null ? (
     <span>
-      <Money amount={account.amount} currency={'USD'} />
+      <Money amount={account.amount} currency={account.currency_code} />
     </span>
   ) : (
     <span class="placeholder">—</span>

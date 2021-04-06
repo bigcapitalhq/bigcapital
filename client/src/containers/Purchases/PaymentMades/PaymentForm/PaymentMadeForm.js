@@ -29,6 +29,7 @@ import { defaultPaymentMade, transformToEditForm, ERRORS } from './utils';
 function PaymentMadeForm({
   // #withSettings
   preferredPaymentAccount,
+  baseCurrency,
 }) {
   const history = useHistory();
   const { formatMessage } = useIntl();
@@ -54,6 +55,7 @@ function PaymentMadeForm({
         : {
             ...defaultPaymentMade,
             payment_account_id: defaultTo(preferredPaymentAccount),
+            currency_code: baseCurrency,
             entries: orderingLinesIndexes(defaultPaymentMade.entries),
           }),
     }),
@@ -157,9 +159,10 @@ function PaymentMadeForm({
 }
 
 export default compose(
-  withSettings(({ billPaymentSettings }) => ({
+  withSettings(({ billPaymentSettings, organizationSettings }) => ({
     paymentNextNumber: billPaymentSettings?.next_number,
     paymentNumberPrefix: billPaymentSettings?.number_prefix,
     preferredPaymentAccount: parseInt(billPaymentSettings?.withdrawalAccount),
+    baseCurrency: organizationSettings?.baseCurrency,
   })),
 )(PaymentMadeForm);
