@@ -2,9 +2,9 @@
   padding: 20px 32px;
 
   .section-title {
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 1.4rem;
-    font-size: 20px;
+    font-size: 18px;
     color: rgb(31, 50, 85);
     margin-top: 10px;
   }
@@ -15,7 +15,8 @@
     margin-left: -20px;
   }
   &__item {
-    width: 260px;
+    width: 250px;
+    min-height: 140px;
     margin-bottom: 16px;
     margin-left: 16px;
     border: 1px solid #d1dee2;
