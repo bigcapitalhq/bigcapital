@@ -110,7 +110,7 @@ export default function CustomerFinancialPanel() {
                   onCurrencySelected={(currency) => {
                     form.setFieldValue('currency_code', currency.currency_code);
                   }}
-                  disabled={customerId}
+                  disabled={true}
                 />
               </FormGroup>
             )}

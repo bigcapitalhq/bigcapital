@@ -98,6 +98,7 @@ export default function ExpenseFormHeader() {
                 form.setFieldValue('currency_code', currencyItem.currency_code);
               }}
               defaultSelectText={value}
+              disabled={true}
             />
           </FormGroup>
         )}
