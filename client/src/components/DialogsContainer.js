@@ -2,6 +2,7 @@ import React from 'react';
 
 import AccountDialog from 'containers/Dialogs/AccountDialog';
 import InviteUserDialog from 'containers/Dialogs/InviteUserDialog';
+import UserFormDialog from 'containers/Dialogs/UserFormDialog';
 import ItemCategoryDialog from 'containers/Dialogs/ItemCategoryDialog';
 import CurrencyFormDialog from 'containers/Dialogs/CurrencyFormDialog';
 import ExchangeRateFormDialog from 'containers/Dialogs/ExchangeRateFormDialog';
@@ -22,6 +23,7 @@ export default function DialogsContainer() {
       <AccountDialog dialogName={'account-form'} />
       <CurrencyFormDialog dialogName={'currency-form'} />
       <InviteUserDialog dialogName={'invite-user'} />
+      <UserFormDialog dialogName={'user-form'} />
       <ExchangeRateFormDialog dialogName={'exchangeRate-form'} />
       <ItemCategoryDialog dialogName={'item-category-form'} />
       <InventoryAdjustmentDialog dialogName={'inventory-adjustment'} />
