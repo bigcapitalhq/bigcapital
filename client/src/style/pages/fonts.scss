@@ -1,80 +1,31 @@
-// Regular 1
 @font-face {
   font-family: Noto Sans;
-  src: url('../fonts/NotoSans-Regular.woff') format('woff');
+  src: local('Noto Sans'), url('../fonts/NotoSans-SemiBold.woff') format('woff');
   font-style: normal;
-  display: swap;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Noto Sans;
+  src: local('Noto Sans'), url('../fonts/NotoSans-Regular.woff') format('woff');
+  font-style: normal;
   font-weight: 400;
+  font-display: swap;
 }
 
-//Bold 2
 @font-face {
   font-family: Noto Sans;
-  src: url('../fonts/NotoSans-Black.woff') format('woff');
+  src: local('Noto Sans'), url('../fonts/NotoSans-Medium.woff') format('woff');
   font-style: normal;
-  display: swap;
-  font-weight: 700;
+  font-weight: 500;
+  font-display: swap;
 }
 
-// Extra Bold 3
 @font-face {
   font-family: Noto Sans;
-  src: url('../fonts/NotoSans-ExtraBold.woff') format('woff');
+  src: local('Noto Sans'), url('../fonts/NotoSans-Black.woff') format('woff');
   font-style: normal;
   font-weight: 900;
-  display: swap;
-}
-
-// Medium 4
-@font-face {
-  font-family: Noto Sans;
-  src: url('../fonts/NotoSans-Medium.woff') format('woff');
-  font-style: normal;
-  display: swap;
-  font-weight: 500;
-}
-
-// Light 5
-@font-face {
-  font-family: Noto Sans;
-  src: url('../fonts/NotoSans-Light.woff') format('woff');
-  font-style: normal;
-  display: swap;
-  font-weight: 300;
-}
-
-// Thin 6
-@font-face {
-  font-family: Noto Sans;
-  src: url('../fonts/NotoSans-Thin.woff') format('woff');
-  font-style: normal;
-  display: swap;
-  font-weight: 100;
-}
-
-// Italic 7
-@font-face {
-  font-family: Noto Sans;
-  src: url('../fonts/NotoSans-Italic.woff') format('woff');
-  font-style: italic;
-  display: swap;
-  font-weight: 400;
-}
-
-// Extra Light 8
-@font-face {
-  font-family: Noto Sans;
-  src: url('../fonts/NotoSans-ExtraLight.woff') format('woff');
-  font-style: normal;
-  display: swap;
-  font-weight: 400;
-}
-
-// SemiBold 9
-@font-face {
-  font-family: Noto Sans;
-  src: url('../fonts/NotoSans-SemiBold.woff') format('woff');
-  font-style: normal;
-  display: swap;
-  font-weight: 400;
+  font-display: swap;
 }
