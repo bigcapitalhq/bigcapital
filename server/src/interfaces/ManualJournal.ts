@@ -25,7 +25,6 @@ export interface IManualJournalEntry {
   accountId: number;
   note: string;
   contactId?: number;
-  contactType?: string;
 }
 
 export interface IManualJournalEntryDTO {
@@ -35,7 +34,6 @@ export interface IManualJournalEntryDTO {
   accountId: number;
   note: string;
   contactId?: number;
-  contactType?: string;
 }
 
 export interface IManualJournalDTO {

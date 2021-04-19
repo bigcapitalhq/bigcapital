@@ -1,7 +1,7 @@
 import { difference, sumBy, omit, map } from 'lodash';
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
-import { ServiceError } from 'exceptions';
+import { ServiceError, ServiceErrors } from 'exceptions';
 import {
   IManualJournalDTO,
   IManualJournalsService,
@@ -187,14 +187,26 @@ export default class ManualJournalsService implements IManualJournalsService {
   private async validateAccountWithContactType(
     tenantId: number,
     entriesDTO: IManualJournalEntry[],
-
     accountBySlug: string,
     contactType: string
-  ): Promise<void> {
-    const { Account, Contact } = this.tenancy.models(tenantId);
+  ): Promise<void | ServiceError> {
+    const { Account } = this.tenancy.models(tenantId);
+    const { contactRepository } = this.tenancy.repositories(tenantId);
 
     // Retrieve account meta by the given account slug.
     const account = await Account.query().findOne('slug', accountBySlug);
+
+    // Retrieve all stored contacts on the storage from contacts entries.
+    const storedContacts = await contactRepository.findWhereIn(
+      'id',
+      entriesDTO
+        .filter((entry) => entry.contactId)
+        .map((entry) => entry.contactId)
+    );
+    // Converts the stored contacts to map with id as key and entry as value.
+    const storedContactsMap = new Map(
+      storedContacts.map((contact) => [contact.id, contact])
+    );
 
     // Filter all entries of the given account.
     const accountEntries = entriesDTO.filter(
@@ -205,14 +217,15 @@ export default class ManualJournalsService implements IManualJournalsService {
       return;
     }
     // Filter entries that have no contact type or not equal the valid type.
-    const entriesNoContact = accountEntries.filter(
-      (entry) => !entry.contactType || entry.contactType !== contactType
-    );
+    const entriesNoContact = accountEntries.filter((entry) => {
+      const contact = storedContactsMap.get(entry.contactId);
+      return !contact || contact.contactService !== contactType;
+    });
     // Throw error in case one of entries that has invalid contact type.
     if (entriesNoContact.length > 0) {
       const indexes = entriesNoContact.map((e) => e.index);
 
-      throw new ServiceError(ERRORS.ENTRIES_SHOULD_ASSIGN_WITH_CONTACT, '', {
+      return new ServiceError(ERRORS.ENTRIES_SHOULD_ASSIGN_WITH_CONTACT, '', {
         accountSlug: accountBySlug,
         contactType,
         indexes,
@@ -242,11 +255,25 @@ export default class ManualJournalsService implements IManualJournalsService {
         'accounts-payable',
         'vendor'
       ),
-    ]);
+    ]).then((results) => {
+      const metadataErrors = results
+        .filter((result) => result instanceof ServiceError)
+        .map((result: ServiceError) => result.payload);
+
+      if (metadataErrors.length > 0) {
+        throw new ServiceError(
+          ERRORS.ENTRIES_SHOULD_ASSIGN_WITH_CONTACT,
+          '',
+          metadataErrors
+        );
+      }
+
+      return results;
+    });
   }
 
   /**
-   * Vaplidate entries contacts existance.
+   * Validate entries contacts existance.
    * @param {number} tenantId -
    * @param {IManualJournalDTO} manualJournalDTO
    */
@@ -280,10 +307,7 @@ export default class ManualJournalsService implements IManualJournalsService {
         const storedContact = storedContactsMap.get(contactEntry.contactId);
 
         // in case the contact id not found.
-        if (
-          !storedContact ||
-          storedContact.contactService !== contactEntry.contactType
-        ) {
+        if (!storedContact) {
           notFoundContactsIds.push(storedContact);
         }
       });
@@ -347,7 +371,8 @@ export default class ManualJournalsService implements IManualJournalsService {
     // Settings tenant service.
     const settings = this.tenancy.settings(tenantId);
     const currencyCode = settings.get({
-      group: 'organization', key: 'base_currency',
+      group: 'organization',
+      key: 'base_currency',
     });
     // Validate manual journal number require.
     this.validateJournalNoRequire(journalNumber);
@@ -803,7 +828,7 @@ export default class ManualJournalsService implements IManualJournalsService {
 
     return manualJournal;
   }
-  
+
   /**
    * Reverts the manual journal journal entries.
    * @param {number} tenantId

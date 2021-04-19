@@ -128,7 +128,6 @@ export default class ManualJournalsController extends BaseController {
         .optional({ nullable: true })
         .isInt({ max: DATATYPES_LENGTH.INT_10 })
         .toInt(),
-      check('entries.*.contact_type').optional().isIn(['vendor', 'customer']),
     ];
   }
 

@@ -6,7 +6,6 @@ exports.up = function(knex) {
     table.decimal('debit', 13, 3);
     table.integer('index').unsigned();
     table.integer('account_id').unsigned().index().references('id').inTable('accounts');
-    table.string('contact_type').nullable().index();
     table.integer('contact_id').unsigned().nullable().index();
     table.string('note');
     table.integer('manual_journal_id').unsigned().index().references('id').inTable('manual_journals');

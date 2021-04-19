@@ -2,7 +2,7 @@ import React, { createContext, useState } from 'react';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useAccounts,
-  useCustomers,
+  useAutoCompleteContacts,
   useCurrencies,
   useJournal,
   useCreateJournal,
@@ -21,9 +21,9 @@ function MakeJournalProvider({ journalId, ...props }) {
 
   // Load the customers list.
   const {
-    data: { customers },
-    isLoading: isCustomersLoading,
-  } = useCustomers();
+    data: contacts,
+    isLoading: isContactsLoading,
+  } = useAutoCompleteContacts();
 
   // Load the currencies list.
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
@@ -47,7 +47,7 @@ function MakeJournalProvider({ journalId, ...props }) {
 
   const provider = {
     accounts,
-    customers,
+    contacts,
     currencies,
     manualJournal,
 
@@ -55,7 +55,7 @@ function MakeJournalProvider({ journalId, ...props }) {
     editJournalMutate,
 
     isAccountsLoading,
-    isCustomersLoading,
+    isContactsLoading,
     isCurrenciesLoading,
     isJournalLoading,
     isSettingsLoading,
@@ -72,7 +72,7 @@ function MakeJournalProvider({ journalId, ...props }) {
         isJournalLoading ||
         isAccountsLoading ||
         isCurrenciesLoading ||
-        isCustomersLoading || 
+        isContactsLoading || 
         isSettingsLoading
       }
       name={'make-journal-page'}

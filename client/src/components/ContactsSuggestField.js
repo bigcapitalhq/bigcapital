@@ -51,6 +51,7 @@ export default function ContactsSuggestField({
       <MenuItem
         key={contact.id}
         text={contact.display_name}
+        label={contact.formatted_contact_service}
         onClick={handleClick}
       />
     ),
