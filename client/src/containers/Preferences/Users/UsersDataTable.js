@@ -27,7 +27,7 @@ function UsersDataTable({
   // Handle edit user action.
   const handleEditUserAction = useCallback(
     (user) => {
-      openDialog('userList-form', { action: 'edit', userId: user.id });
+      openDialog('user-form', { action: 'edit', userId: user.id });
     },
     [openDialog],
   );

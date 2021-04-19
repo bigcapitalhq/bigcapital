@@ -33,6 +33,8 @@
 // Views
 @import 'views/filter-dropdown';
 
+// fonts
+@import 'pages/fonts';
 
 .App {
   min-width: 960px;
@@ -40,11 +42,11 @@
 
 // =======
 
-body.hide-scrollbar .Pane2{
+body.hide-scrollbar .Pane2 {
   overflow: hidden;
 }
 
-.bp3-fill{
+.bp3-fill {
   .bp3-popover-wrapper,
   .bp3-popover-target {
     display: block;
@@ -82,24 +84,21 @@ body.hide-scrollbar .Pane2{
   max-width: 300px;
 }
 
-.bp3-timezone-picker{
-
-  .bp3-button{
-
-    [icon="caret-down"] {
+.bp3-timezone-picker {
+  .bp3-button {
+    [icon='caret-down'] {
       display: none;
     }
   }
 }
 
-.bp3-progress-bar.bp3-intent-primary .bp3-progress-meter{
+.bp3-progress-bar.bp3-intent-primary .bp3-progress-meter {
   background-color: #0066ff;
 }
 
-.bp3-overlay-backdrop{
-  background-color: rgba(0,10,30, .7);
+.bp3-overlay-backdrop {
+  background-color: rgba(0, 10, 30, 0.7);
 }
-
 
 .ReactVirtualized__Collection {
 }

@@ -46,38 +46,30 @@ export function useInactivateUser(props) {
   const apiRequest = useApiRequest();
   const queryClient = useQueryClient();
 
-  return useMutation(
-    (userId) => apiRequest.put(`users/${userId}/inactivate`),
-    {
-      onSuccess: (res, userId) => {
-        queryClient.invalidateQueries([t.USER, userId]);
+  return useMutation((userId) => apiRequest.put(`users/${userId}/inactivate`), {
+    onSuccess: (res, userId) => {
+      queryClient.invalidateQueries([t.USER, userId]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
-
-
 
 export function useActivateUser(props) {
   const apiRequest = useApiRequest();
   const queryClient = useQueryClient();
 
-  return useMutation(
-    (userId) => apiRequest.put(`users/${userId}/activate`),
-    {
-      onSuccess: (res, userId) => {
-        queryClient.invalidateQueries([t.USER, userId]);
+  return useMutation((userId) => apiRequest.put(`users/${userId}/activate`), {
+    onSuccess: (res, userId) => {
+      queryClient.invalidateQueries([t.USER, userId]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -123,8 +115,8 @@ export function useUser(id, props) {
   const apiRequest = useApiRequest();
 
   return useQueryTenant(
-    ['USER', id],
-    () => apiRequest.get(`users/${id}`).then((response) => response.data.item),
+    [t.USER, id],
+    () => apiRequest.get(`users/${id}`).then((response) => response.data.user),
     props,
   );
 }

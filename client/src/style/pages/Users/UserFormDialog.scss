@@ -1,0 +1,28 @@
+.dialog--user-form {
+  width: 450px;
+
+  .bp3-form-group {
+    margin-bottom: 15px;
+  }
+  .bp3-dialog-body {
+    margin-bottom: 30px;
+
+    .bp3-form-group.bp3-inline {
+      .bp3-label {
+        min-width: 140px;
+      }
+      .bp3-form-content {
+        width: 250px;
+      }
+    }
+    .bp3-dialog-header {
+      height: 170px;
+    }
+  }
+
+  .bp3-dialog-footer {
+    .bp3-button {
+      min-width: 75px;
+    }
+  }
+}

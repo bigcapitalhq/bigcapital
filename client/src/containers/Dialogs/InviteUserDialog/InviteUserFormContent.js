@@ -35,7 +35,6 @@ function InviteUserFormContent({
               className={classNames('form-group--email', CLASSES.FILL)}
               intent={inputIntent({ error, touched })}
               helperText={<ErrorMessage name="email" />}
-              inline={true}
             >
               <InputGroup medium={true} {...field} />
             </FormGroup>

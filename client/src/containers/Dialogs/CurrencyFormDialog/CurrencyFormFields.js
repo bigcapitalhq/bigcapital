@@ -19,6 +19,17 @@ export default function CurrencyFormFields() {
 
   const { isEditMode } = useCurrencyFormContext();
 
+  // Filter currency code
+  const filterCurrencyCode = (query, currency, _index, exactMatch) => {
+    const normalizedTitle = currency.name.toLowerCase();
+    const normalizedQuery = query.toLowerCase();
+    if (exactMatch) {
+      return normalizedTitle === normalizedQuery;
+    } else {
+      return normalizedTitle.indexOf(normalizedQuery) >= 0;
+    }
+  };
+
   return (
     <div className={Classes.DIALOG_BODY}>
       <FastField name={'currency_code'}>
@@ -27,7 +38,10 @@ export default function CurrencyFormFields() {
           field: { value },
           meta: { error, touched },
         }) => (
-          <FormGroup label={'Currency code'} className={classNames(CLASSES.FILL, 'form-group--type')}>
+          <FormGroup
+            label={'Currency code'}
+            className={classNames(CLASSES.FILL, 'form-group--type')}
+          >
             <ListSelect
               items={currenciesOptions}
               selectedItemProp={'currency_code'}
@@ -39,6 +53,7 @@ export default function CurrencyFormFields() {
                 setFieldValue('currency_name', currency.name);
                 setFieldValue('currency_sign', currency.symbol);
               }}
+              itemPredicate={filterCurrencyCode}
               disabled={isEditMode}
               popoverProps={{ minimal: true }}
             />
