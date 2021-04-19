@@ -25,7 +25,7 @@ function ItemsCategoriesProvider({ query, ...props }) {
   };
 
   return (
-    <DashboardInsider name={'item-category-list'}>
+    <DashboardInsider name={'items-categories-list'}>
       <ItemsCategoriesContext.Provider value={state} {...props} />
     </DashboardInsider>
   );

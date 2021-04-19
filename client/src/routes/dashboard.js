@@ -32,7 +32,7 @@ export default [
     breadcrumb: 'Make Journal Entry',
     hotkey: 'ctrl+shift+m',
     pageTitle: formatMessage({ id: 'new_journal' }),
-    sidebarShrink: true,
+    sidebarExpand: false,
     backLink: true,
   },
   {
@@ -42,7 +42,7 @@ export default [
     ),
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_journal' }),
-    sidebarShrink: true,
+    sidebarExpand: false,
     backLink: true,
   },
   {
@@ -92,6 +92,7 @@ export default [
     component: lazy(() => import('containers/Items/ItemsList')),
     breadcrumb: 'Items',
     hotkey: 'shift+w',
+    pageTitle: formatMessage({ id: 'items_list' }),
   },
 
   // Inventory adjustments.
@@ -115,7 +116,7 @@ export default [
     hotkey: 'shift+4',
     pageTitle: formatMessage({ id: 'general_ledger' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: `/financial-reports/balance-sheet`,
@@ -127,7 +128,7 @@ export default [
     hotkey: 'shift+1',
     pageTitle: formatMessage({ id: 'balance_sheet' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: `/financial-reports/trial-balance-sheet`,
@@ -141,7 +142,7 @@ export default [
     hotkey: 'shift+5',
     pageTitle: formatMessage({ id: 'trial_balance_sheet' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: `/financial-reports/profit-loss-sheet`,
@@ -153,7 +154,7 @@ export default [
     hotkey: 'shift+2',
     pageTitle: formatMessage({ id: 'profit_loss_sheet' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: '/financial-reports/receivable-aging-summary',
@@ -164,7 +165,7 @@ export default [
     hint: "Summarize total unpaid balances of customers invoices with number of days the unpaid invoice is overdue.",
     pageTitle: formatMessage({ id: 'receivable_aging_summary' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: '/financial-reports/payable-aging-summary',
@@ -175,7 +176,7 @@ export default [
     hint: "Summarize total unpaid balances of vendors purchase invoices with the number of days the unpaid invoice is overdue.",
     pageTitle: formatMessage({ id: 'payable_aging_summary' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: `/financial-reports/journal-sheet`,
@@ -186,7 +187,7 @@ export default [
     hint: "The debit and credit entries of system transactions, sorted by date.",
     hotkey: 'shift+3',
     pageTitle: formatMessage({ id: 'journal_sheet' }),
-    sidebarShrink: true,
+    sidebarExpand: false,
     backLink: true,
   },
   {
@@ -200,7 +201,7 @@ export default [
     // hotkey: '',
     pageTitle: formatMessage({ id: 'purchases_by_items' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: `/financial-reports/sales-by-items`,
@@ -211,7 +212,7 @@ export default [
     pageTitle: formatMessage({ id: 'sales_by_items' }),
     hint: 'Summarize the business’s sold items quantity, income and average income rate of each item during a specific point in time.',
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: `/financial-reports/inventory-valuation`,
@@ -224,7 +225,7 @@ export default [
     hint: 'Summerize your transactions for each inventory item and how they affect quantity, valuation and weighted average.',
     pageTitle: formatMessage({ id: 'inventory_valuation' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: '/financial-reports',
@@ -250,7 +251,7 @@ export default [
     breadcrumb: 'Expenses',
     hotkey: 'ctrl+shift+x',
     pageTitle: formatMessage({ id: 'new_expense' }),
-    sidebarShrink: true,
+    sidebarExpand: false,
     backLink: true,
   },
   {
@@ -260,7 +261,7 @@ export default [
     ),
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_expense' }),
-    sidebarShrink: true,
+    sidebarExpand: false,
     backLink: true,
   },
   {
@@ -367,7 +368,7 @@ export default [
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_estimate' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: `/invoices/new?from_estimate_id=/:id`,
@@ -378,7 +379,7 @@ export default [
     breadcrumb: 'New Estimate',
     pageTitle: formatMessage({ id: 'new_estimate' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: `/estimates/new`,
@@ -390,7 +391,7 @@ export default [
     hotkey: 'ctrl+shift+e',
     pageTitle: formatMessage({ id: 'new_estimate' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: `/estimates`,
@@ -412,7 +413,7 @@ export default [
     name: 'invoice-edit',
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_invoice' }),
-    sidebarShrink: true,
+    sidebarExpand: false,
     backLink: true,
   },
   {
@@ -424,7 +425,7 @@ export default [
     breadcrumb: 'New Invoice',
     hotkey: 'ctrl+shift+i',
     pageTitle: formatMessage({ id: 'new_invoice' }),
-    sidebarShrink: true,
+    sidebarExpand: false,
     backLink: true,
   },
   {
@@ -447,7 +448,7 @@ export default [
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_receipt' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: `/receipts/new`,
@@ -459,7 +460,7 @@ export default [
     hotkey: 'ctrl+shift+r',
     pageTitle: formatMessage({ id: 'new_receipt' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: `/receipts`,
@@ -483,7 +484,7 @@ export default [
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_payment_receive' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: `/payment-receives/new`,
@@ -496,7 +497,7 @@ export default [
     breadcrumb: 'New Payment Receive',
     pageTitle: formatMessage({ id: 'new_payment_receive' }),
     backLink: true,
-    sidebarShrink: true,
+    sidebarExpand: false,
   },
   {
     path: `/payment-receives`,
@@ -518,7 +519,7 @@ export default [
     name: 'bill-edit',
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_bill' }),
-    sidebarShrink: true,
+    sidebarExpand: false,
     backLink: true,
   },
   {
@@ -530,7 +531,7 @@ export default [
     breadcrumb: 'New Bill',
     hotkey: 'ctrl+shift+b',
     pageTitle: formatMessage({ id: 'new_bill' }),
-    sidebarShrink: true,
+    sidebarExpand: false,
     backLink: true,
   },
   {
@@ -560,7 +561,7 @@ export default [
     name: 'payment-made-edit',
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_payment_made' }),
-    sidebarShrink: true,
+    sidebarExpand: false,
     backLink: true,
   },
   {
@@ -573,7 +574,7 @@ export default [
     name: 'payment-made-new',
     breadcrumb: 'New Payment Made',
     pageTitle: formatMessage({ id: 'new_payment_made' }),
-    sidebarShrink: true,
+    sidebarExpand: false,
     backLink: true,
   },
   {

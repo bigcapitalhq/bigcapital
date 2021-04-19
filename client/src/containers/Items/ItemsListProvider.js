@@ -1,11 +1,9 @@
-import React, { useEffect, createContext } from 'react';
-import { useIntl } from 'react-intl';
+import React, { createContext } from 'react';
 
 import { transformTableQueryToParams, isTableEmptyStatus } from 'utils';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { useResourceViews, useResourceFields, useItems } from 'hooks/query';
-import { useDashboardPageTitle } from 'hooks/state';
 
 const ItemsContext = createContext();
 
@@ -39,17 +37,6 @@ function ItemsListProvider({
   const isEmptyStatus = isTableEmptyStatus({
     data: items, pagination, filterMeta,
   }) && !isItemsFetching;
-
-  // Format message intl.
-  const { formatMessage } = useIntl();
-  
-  // Change page title dispatcher.
-  const changePageTitle = useDashboardPageTitle();
-
-  // Changeas the page title once the page mount.
-  useEffect(() => {
-    changePageTitle(formatMessage({ id: 'items_list' }));
-  }, [changePageTitle, formatMessage]);
 
   const state = {
     itemsViews,

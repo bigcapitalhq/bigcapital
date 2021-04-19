@@ -223,13 +223,14 @@ export default class UsersController extends BaseController{
    * @param {NextFunction} next 
    */
   catchServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
+ 
     if (error instanceof ServiceErrors) {
       const errorReasons = [];
-      
-      if (error.errorType === 'EMAIL_ALREADY_EXISTS') {
+
+      if (error.hasType('EMAIL_ALREADY_EXISTS')) {
         errorReasons.push({ type: 'EMAIL_ALREADY_EXIST', code: 100 });
       }
-      if (error.errorType === 'PHONE_NUMBER_ALREADY_EXIST') {
+      if (error.hasType('PHONE_NUMBER_ALREADY_EXIST')) {
         errorReasons.push({ type: 'PHONE_NUMBER_ALREADY_EXIST', code: 200 });
       }
       if (errorReasons.length > 0) {

@@ -307,6 +307,17 @@ $dashboard-views-bar-height: 45px;
     flex: 1 0 0;
   }
 
+  &__fallback-loading{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #fbfbfb;
+
+    .bp3-spinner{
+      margin: auto;
+    }
+  }
+
   &__page-content {
     display: flex;
     flex-direction: column;

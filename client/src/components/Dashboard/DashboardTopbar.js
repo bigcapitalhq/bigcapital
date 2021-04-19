@@ -34,8 +34,7 @@ function DashboardTopbar({
   pageHint,
 
   // #withDashboardActions
-  toggleSidebarExpend,
-  recordSidebarPreviousExpand,
+  toggleSidebarExpand,
 
   // #withDashboard
   sidebarExpended,
@@ -53,8 +52,7 @@ function DashboardTopbar({
   };
 
   const handleSidebarToggleBtn = () => {
-    toggleSidebarExpend();
-    recordSidebarPreviousExpand();
+    toggleSidebarExpand();
   };
 
   return (

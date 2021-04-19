@@ -1,5 +1,7 @@
 import React from 'react';
 
+import 'style/pages/InventoryAdjustments/List.scss';
+
 import { DashboardContentTable, DashboardPageContent } from 'components';
 import InventoryAdjustmentsAlerts from './InventoryAdjustmentsAlerts';
 

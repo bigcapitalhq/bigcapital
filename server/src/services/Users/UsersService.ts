@@ -2,6 +2,7 @@ import TenancyService from 'services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
 import { ServiceError, ServiceErrors } from 'exceptions';
 import { ISystemUser, ISystemUserDTO } from 'interfaces';
+import { SystemUser } from 'system/models';
 
 const ERRORS = {
   CANNOT_DELETE_LAST_USER: 'CANNOT_DELETE_LAST_USER',
@@ -38,20 +39,20 @@ export default class UsersService {
   ): Promise<ISystemUser> {
     const { systemUserRepository } = this.repositories;
 
-    const userByEmail = await systemUserRepository.findOne({
-      email: userDTO.email,
-      id: userId,
-    });
-    const userByPhoneNumber = await systemUserRepository.findOne({
-      phoneNumber: userDTO.phoneNumber,
-      id: userId,
-    });
+    const userByEmail = await SystemUser.query()
+      .where('email', userDTO.email)
+      .whereNot('id', userId);
+
+    const userByPhoneNumber = await SystemUser.query()
+      .where('phone_number', userDTO.phoneNumber)
+      .whereNot('id', userId);
+
     const serviceErrors: ServiceError[] = [];
 
-    if (userByEmail) {
+    if (userByEmail.length > 0) {
       serviceErrors.push(new ServiceError(ERRORS.EMAIL_ALREADY_EXISTS));
     }
-    if (userByPhoneNumber) {
+    if (userByPhoneNumber.length > 0) {
       serviceErrors.push(new ServiceError(ERRORS.PHONE_NUMBER_ALREADY_EXIST));
     }
     if (serviceErrors.length > 0) {

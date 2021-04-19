@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import classNames from 'classnames';
 import TableContext from './TableContext';
 
 /**
@@ -20,10 +21,12 @@ export default function TableFooter() {
           {group.headers.map((column) => (
             <div
               {...column.getFooterProps({
-                className: 'td',
+                className: classNames(column.className || '', 'td'),
               })}
             >
-              {column.render('Footer')}
+              <div className={'cell-inner'}>
+                {column.render('Footer')}
+              </div>
             </div>
           ))}
         </div>

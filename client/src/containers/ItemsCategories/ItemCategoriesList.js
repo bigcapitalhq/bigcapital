@@ -1,4 +1,6 @@
 import React from 'react';
+import 'style/pages/ItemsCategories/List.scss';
+
 import { DashboardContentTable, DashboardPageContent } from 'components';
 
 import ItemsCategoriesAlerts from './ItemsCategoriesAlerts';
@@ -11,7 +13,7 @@ import ItemCategoriesTable from './ItemCategoriesTable';
  */
 export default function ItemCategoryList() {
   return (
-    <ItemsCategoriesProvider query={{}}>
+    <ItemsCategoriesProvider>
       <ItemsCategoryActionsBar />
 
       <DashboardPageContent>

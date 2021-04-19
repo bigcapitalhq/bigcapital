@@ -1,8 +1,8 @@
 import React from 'react';
-import { Intent } from '@blueprintjs/core';
+import { Intent, Tag } from '@blueprintjs/core';
 import { If, AppToaster } from 'components';
 import { formatMessage } from 'services/intl';
-import { NormalCell, BalanceCell, ActionsCell } from './components';
+import { NormalCell, BalanceCell } from './components';
 
 /**
  * Account name accessor.
@@ -40,6 +40,13 @@ export const handleDeleteErrors = (errors) => {
   }
 };
 
+
+export const AccountCodeAccessor = (row) => (
+  <Tag minimal={true} round={true} intent={Intent.NONE}>
+    { row.code }
+  </Tag>
+);
+
 /**
  * Accounts table columns.
  */
@@ -56,7 +63,7 @@ export const useAccountsTableColumns = () => {
       {
         id: 'code',
         Header: formatMessage({ id: 'code' }),
-        accessor: 'code',
+        accessor: AccountCodeAccessor,
         className: 'code',
         width: 80,
       },
@@ -87,14 +94,6 @@ export const useAccountsTableColumns = () => {
         accessor: 'amount',
         Cell: BalanceCell,
         width: 150,
-      },
-      {
-        id: 'actions',
-        Header: '',
-        Cell: ActionsCell,
-        className: 'actions',
-        width: 50,
-        skeletonWidthMin: 100,
       },
     ],
     [],

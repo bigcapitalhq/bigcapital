@@ -50,20 +50,6 @@ export function ActionsMenu({
 }
 
 /**
- * Actions cell.
- */
-export function ActionsCell(props) {
-  return (
-    <Popover
-      content={<ActionsMenu {...props} />}
-      position={Position.RIGHT_BOTTOM}
-    >
-      <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
-    </Popover>
-  );
-}
-
-/**
  * Avatar cell.
  */
 export function AvatarCell(row) {
@@ -128,14 +114,6 @@ export function useCustomersTableColumns() {
         accessor: BalanceAccessor,
         className: 'receivable_balance',
         width: 100,
-      },
-      {
-        id: 'actions',
-        Cell: ActionsCell,
-        className: 'actions',
-        width: 70,
-        disableResizing: true,
-        disableSortBy: true,
       },
     ],
     [formatMessage],

@@ -858,7 +858,7 @@ export default {
   the_item_categories_has_been_deleted_successfully:
     'The item categories has been deleted successfully .',
   receivable_accounts_should_assign_with_customers:
-    'receivable accounts should assign with customers',
+    'Receivable accounts should assign with customers.',
   delivered: 'Delivered',
   save_and_deliver: 'Save & Deliver',
   deliver_and_new: 'Deliver and new',
@@ -1049,4 +1049,5 @@ export default {
   asset_value: 'Asset value',
   average: 'Average',
   inventory_valuation: 'Inventory valuation',
+  payable_accounts_should_assign_with_vendors: 'Payable accounts should assign with vendors.'
 };

@@ -1,5 +1,8 @@
 import { connect } from 'react-redux';
 import t from 'store/types';
+import {
+  toggleExpendSidebar,
+} from 'store/dashboard/dashboard.actions';
 
 const mapActionsToProps = (dispatch) => ({
   changePageTitle: (pageTitle) =>
@@ -14,10 +17,10 @@ const mapActionsToProps = (dispatch) => ({
       pageSubtitle,
     }),
 
-  changePageHint: (pageHint) => 
+  changePageHint: (pageHint) =>
     dispatch({
       type: t.CHANGE_DASHBOARD_PAGE_HINT,
-      payload: { pageHint }
+      payload: { pageHint },
     }),
 
   setTopbarEditView: (id) =>
@@ -36,32 +39,22 @@ const mapActionsToProps = (dispatch) => ({
       type: t.SET_DASHBOARD_REQUEST_COMPLETED,
     }),
 
-  toggleSidebarExpend: () =>
+  /**
+   * Toggles the sidebar expend.
+   */
+  toggleSidebarExpand: (toggle) => dispatch(toggleExpendSidebar(toggle)),
+
+  changePreferencesPageTitle: (pageTitle) =>
     dispatch({
-      type: t.SIDEBAR_EXPEND_TOGGLE,
+      type: 'CHANGE_PREFERENCES_PAGE_TITLE',
+      pageTitle,
+    }),  
+
+  setDashboardBackLink: (backLink) =>
+    dispatch({
+      type: t.SET_DASHBOARD_BACK_LINK,
+      payload: { backLink },
     }),
-
-  changePreferencesPageTitle: (pageTitle) => dispatch({
-    type: 'CHANGE_PREFERENCES_PAGE_TITLE',
-    pageTitle,
-  }),
-  setSidebarShrink: () => dispatch({
-    type: t.SIDEBAR_SHRINK,
-  }),
-  setSidebarExpand: () => dispatch({
-    type: t.SIDEBAR_SHRINK,
-  }),
-  resetSidebarPreviousExpand: () => dispatch({
-    type: t.RESET_SIDEBAR_PREVIOUS_EXPAND,
-  }),
-  recordSidebarPreviousExpand: () => dispatch({
-    type: t.RECORD_SIDEBAR_PREVIOUS_EXPAND,
-  }),
-
-  setDashboardBackLink: (backLink) => dispatch({
-    type: t.SET_DASHBOARD_BACK_LINK,
-    payload: { backLink }
-  })
 });
 
 export default connect(null, mapActionsToProps);

@@ -1,5 +1,6 @@
-import t from 'store/types';
 import { createReducer } from '@reduxjs/toolkit';
+import { isUndefined } from 'lodash';
+import t from 'store/types';
 import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
@@ -9,7 +10,6 @@ const initialState = {
   pageHint: '',
   preferencesPageTitle: '',
   sidebarExpended: true,
-  previousSidebarExpended: null,
   dialogs: {},
   alerts: {},
   drawers: {},
@@ -22,7 +22,7 @@ const STORAGE_KEY = 'bigcapital:dashboard';
 
 const CONFIG = {
   key: STORAGE_KEY,
-  whitelist: ['sidebarExpended', 'previousSidebarExpended'],
+  whitelist: [],
   storage,
 };
 
@@ -88,33 +88,11 @@ const reducerInstance = createReducer(initialState, {
     state.topbarEditViewId = action.id;
   },
 
-  [t.SET_DASHBOARD_REQUEST_LOADING]: (state, action) => {
-    state.requestsLoading = state.requestsLoading + 1;
-  },
-
-  [t.SET_DASHBOARD_REQUEST_COMPLETED]: (state, action) => {
-    const requestsLoading = state.requestsLoading - 1;
-    state.requestsLoading = Math.max(requestsLoading, 0);
-  },
-
-  [t.RECORD_SIDEBAR_PREVIOUS_EXPAND]: (state) => {
-    state.previousSidebarExpended = state.sidebarExpended;
-  },
-
-  [t.SIDEBAR_EXPEND_TOGGLE]: (state) => {
-    state.sidebarExpended = !state.sidebarExpended;
-  },
-
-  [t.SIDEBAR_EXPAND]: (state) => {
-    state.sidebarExpended = true;
-  },
-
-  [t.SIDEBAR_SHRINK]: (state) => {
-    state.sidebarExpended = false;
-  },
-
-  [t.RESET_SIDEBAR_PREVIOUS_EXPAND]: (state) => {
-    state.sidebarExpended = state.previousSidebarExpended;
+  [t.SIDEBAR_EXPEND_TOGGLE]: (state, action) => {
+    const { toggle } = action.payload;
+    state.sidebarExpended = isUndefined(toggle)
+      ? !state.sidebarExpended
+      : !!toggle;
   },
 
   [t.SET_DASHBOARD_BACK_LINK]: (state, action) => {

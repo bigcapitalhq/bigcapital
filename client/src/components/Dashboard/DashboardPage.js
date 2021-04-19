@@ -1,7 +1,10 @@
 import React, { useEffect, Suspense } from 'react';
+import { isUndefined } from 'lodash';
 import { CLASSES } from 'common/classes';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import { compose } from 'utils';
+import { Spinner } from '@blueprintjs/core';
+
 /**
  * Dashboard pages wrapper.
  */
@@ -9,7 +12,7 @@ function DashboardPage({
   // #ownProps
   pageTitle,
   backLink,
-  sidebarShrink,
+  sidebarExpand = true,
   Component,
   name,
   hint,
@@ -17,10 +20,10 @@ function DashboardPage({
   // #withDashboardActions
   changePageTitle,
   setDashboardBackLink,
-  setSidebarShrink,
-  resetSidebarPreviousExpand,
   changePageHint,
+  toggleSidebarExpand
 }) {
+  // Hydrate the given page title.
   useEffect(() => {
     pageTitle && changePageTitle(pageTitle);
 
@@ -29,6 +32,7 @@ function DashboardPage({
     };
   });
 
+  // Hydrate the given page hint.
   useEffect(() => {
     hint && changePageHint(hint);
 
@@ -37,6 +41,7 @@ function DashboardPage({
     }
   }, [hint, changePageHint]);
 
+  // Hydrate the dashboard back link status.
   useEffect(() => {
     backLink && setDashboardBackLink(backLink);
 
@@ -44,16 +49,6 @@ function DashboardPage({
       backLink && setDashboardBackLink(false);
     };
   }, [backLink, setDashboardBackLink]);
-
-  // Handle sidebar shrink in mount and reset to the pervious state
-  // once the page unmount.
-  useEffect(() => {
-    sidebarShrink && setSidebarShrink();
-
-    return () => {
-      sidebarShrink && resetSidebarPreviousExpand();
-    };
-  }, [resetSidebarPreviousExpand, sidebarShrink, setSidebarShrink]);
 
   useEffect(() => {
     const className = `page-${name}`;
@@ -64,13 +59,23 @@ function DashboardPage({
     };
   }, [name]);
 
+  useEffect(() => {
+    toggleSidebarExpand(sidebarExpand);
+  }, [toggleSidebarExpand, sidebarExpand])
+
   return (
     <div className={CLASSES.DASHBOARD_PAGE}>
-      <Suspense fallback={''}>
+      <Suspense fallback={
+        <div class="dashboard__fallback-loading">
+          <Spinner size={40} value={null} />
+        </div>
+      }>
         <Component />
       </Suspense>
     </div>
   );
 }
 
-export default compose(withDashboardActions)(DashboardPage);
+export default compose(
+  withDashboardActions,
+)(DashboardPage);

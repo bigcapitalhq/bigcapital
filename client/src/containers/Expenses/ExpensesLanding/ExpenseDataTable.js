@@ -1,12 +1,8 @@
 import React, { useCallback } from 'react';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import { compose } from 'utils';
 import { useExpensesListContext } from './ExpensesListProvider';
-
-import { Choose } from 'components';
-import { CLASSES } from 'common/classes';
 
 import DataTable from 'components/DataTable';
 import ExpensesEmptyStatus from './ExpensesEmptyStatus';

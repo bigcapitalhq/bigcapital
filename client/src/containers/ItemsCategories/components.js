@@ -81,14 +81,7 @@ export function useItemsCategoriesTableColumns() {
         accessor: 'description',
         className: 'description',
         width: 220,
-      },
-      {
-        id: 'actions',
-        Header: '',
-        Cell: TableActionsCell,
-        className: 'actions',
-        width: 50,
-      },
+      }
     ],
     [formatMessage],
   );

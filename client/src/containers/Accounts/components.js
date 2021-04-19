@@ -73,20 +73,6 @@ export function ActionsMenu({
 }
 
 /**
- * Actions cell.
- */
-export function ActionsCell(props) {
-  return (
-    <Popover
-      position={Position.RIGHT_BOTTOM}
-      content={<ActionsMenu {...props} />}
-    >
-      <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
-    </Popover>
-  );
-}
-
-/**
  * Normal cell.
  */
 export function NormalCell({ cell: { value } }) {

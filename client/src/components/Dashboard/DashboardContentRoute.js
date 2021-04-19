@@ -22,7 +22,8 @@ export default function DashboardContentRoute() {
               pageTitle={route.pageTitle}
               backLink={route.backLink}
               hint={route.hint}
-              sidebarShrink={route.sidebarShrink}
+              sidebarExpand={route.sidebarExpand}
+              pageType={route.pageType}
             />
           </Route>
         ))}

@@ -181,7 +181,6 @@ export const useItemsTableColumns = () => {
       {
         id: 'sell_price',
         Header: formatMessage({ id: 'sell_price' }),
-        // Cell: SellPriceCell,
         accessor: 'sell_price_formatted',
         className: 'sell-price',
         width: 150,
@@ -189,7 +188,6 @@ export const useItemsTableColumns = () => {
       {
         id: 'cost_price',
         Header: formatMessage({ id: 'cost_price' }),
-        // Cell: CostPriceCell,
         accessor: 'cost_price_formatted',
         className: 'cost-price',
         width: 150,
@@ -200,12 +198,6 @@ export const useItemsTableColumns = () => {
         accessor: 'quantity_on_hand',
         Cell: QuantityOnHandCell,
         width: 140,
-      },
-      {
-        id: 'actions',
-        Cell: ItemsActionsTableCell,
-        width: 60,
-        skeletonWidthMin: 100,
       },
     ],
     [formatMessage],

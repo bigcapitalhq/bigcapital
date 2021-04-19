@@ -175,14 +175,6 @@ export function useExpensesTableColumns() {
         className: 'description',
         disableSortBy: true,
       },
-      {
-        id: 'actions',
-        Header: '',
-        Cell: ActionsCell,
-        className: 'actions',
-        width: 50,
-        disableResizing: true,
-      },
     ],
     [],
   );

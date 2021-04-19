@@ -60,3 +60,13 @@ export function closeDrawer(name, payload) {
     payload,
   };
 }
+
+/**
+ * Toggles the sidebar expend.
+ */
+export function toggleExpendSidebar(toggle) {
+  return {
+    type: t.SIDEBAR_EXPEND_TOGGLE,
+    payload: { toggle }
+  };
+}

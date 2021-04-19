@@ -179,14 +179,6 @@ export const useInventoryAdjustmentsColumns = () => {
         width: 125,
         className: 'created_at',
       },
-      {
-        id: 'actions',
-        Header: '',
-        Cell: ActionsCell,
-        className: 'actions',
-        width: 50,
-        disableResizing: true,
-      },
     ],
     [formatMessage],
   );
