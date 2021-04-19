@@ -6,7 +6,6 @@ import {
   StatusAccessor,
   DateAccessor,
   AmountAccessor,
-  ActionsCell,
 } from './components';
 
 /**
@@ -64,14 +63,6 @@ export const useManualJournalsColumns = () => {
         accessor: (r) => moment(r.created_at).format('YYYY MMM DD'),
         width: 125,
         className: 'created_at',
-      },
-      {
-        id: 'actions',
-        Header: '',
-        Cell: ActionsCell,
-        className: 'actions',
-        width: 50,
-        disableResizing: true,
       },
     ],
     [],

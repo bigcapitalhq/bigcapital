@@ -118,15 +118,6 @@ export function usePaymentMadesTableColumns() {
         width: 140,
         className: 'reference',
       },
-
-      {
-        id: 'actions',
-        Header: '',
-        Cell: ActionsCell,
-        className: 'actions',
-        width: 50,
-        disableResizing: true,
-      },
     ],
     [formatMessage],
   );

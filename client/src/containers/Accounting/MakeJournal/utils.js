@@ -125,19 +125,20 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
     setEntriesErrors(error.indexes, 'contact_id', 'error');
   }
   if ((error = getError(ERROR.ENTRIES_SHOULD_ASSIGN_WITH_CONTACT))) {
-    if (error.meta.contact_type === 'customer') {
+    if (error.meta.find(meta => meta.contact_type === 'customer')) {
       toastMessages.push(
         formatMessage({
           id: 'receivable_accounts_should_assign_with_customers',
         }),
       );
     }
-    if (error.meta.contact_type === 'vendor') {
+    if (error.meta.find(meta => meta.contact_type === 'vendor')) {
       toastMessages.push(
         formatMessage({ id: 'payable_accounts_should_assign_with_vendors' }),
       );
     }
-    setEntriesErrors(error.meta.indexes, 'contact_id', 'error');
+    const indexes = error.meta.map((meta => meta.indexes)).flat();
+    setEntriesErrors(indexes, 'contact_id', 'error');
   }
   if ((error = getError(ERROR.JOURNAL_NUMBER_ALREADY_EXISTS))) {
     newErrors = setWith(
@@ -153,7 +154,7 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
   if (toastMessages.length > 0) {
     AppToaster.show({
       message: toastMessages.map((message) => {
-        return <div>- {message}</div>;
+        return <div>{message}</div>;
       }),
       intent: Intent.DANGER,
     });

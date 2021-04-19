@@ -4,6 +4,9 @@
   .bigcapital-datatable{
 
     .tbody{
+      .tr .td{
+        min-height: 50px;
+      }
 
       .td.amount {
 

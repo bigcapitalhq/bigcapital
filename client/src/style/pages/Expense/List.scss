@@ -5,6 +5,10 @@
   .bigcapital-datatable {
     .table {
       .tbody {
+
+        .tr{
+          min-height: 50px;
+        }
         .td.amount {
           span {
             font-weight: 600;

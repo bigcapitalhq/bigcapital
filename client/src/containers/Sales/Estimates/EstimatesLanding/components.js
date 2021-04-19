@@ -203,15 +203,7 @@ export function useEstiamtesTableColumns() {
         accessor: 'reference',
         width: 90,
         className: 'reference',
-      },
-      {
-        id: 'actions',
-        Header: '',
-        Cell: ActionsCell,
-        className: 'actions',
-        width: 50,
-        disableResizing: true,
-      },
+      }
     ],
     [formatMessage],
   );

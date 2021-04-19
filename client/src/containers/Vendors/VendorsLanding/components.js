@@ -127,15 +127,7 @@ export function useVendorsTableColumns() {
         accessor: BalanceAccessor,
         className: 'receivable_balance',
         width: 100,
-      },
-      {
-        id: 'actions',
-        Cell: ActionsCell,
-        className: 'actions',
-        width: 70,
-        disableResizing: true,
-        disableSortBy: true,
-      },
+      }
     ],
     [formatMessage],
   );

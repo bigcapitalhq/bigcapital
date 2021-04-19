@@ -127,15 +127,7 @@ export function usePaymentReceivesColumns() {
         accessor: 'reference_no',
         width: 140,
         className: 'reference_no',
-      },
-      {
-        id: 'actions',
-        Header: '',
-        Cell: ActionsCell,
-        className: 'actions',
-        width: 50,
-        disableResizing: true,
-      },
+      }
     ],
     [formatMessage],
   );

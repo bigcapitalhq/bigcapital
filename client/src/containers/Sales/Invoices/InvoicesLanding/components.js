@@ -221,14 +221,6 @@ export function useInvoicesTableColumns() {
         width: 90,
         className: 'reference_no',
       },
-      {
-        id: 'actions',
-        Header: '',
-        Cell: ActionsCell,
-        className: 'actions',
-        width: 50,
-        disableResizing: true,
-      },
     ],
     [formatMessage],
   );

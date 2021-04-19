@@ -6,6 +6,9 @@
   .bigcapital-datatable {
     .table {
       .tbody {
+        .tr{
+          min-height: 50px;
+        }
         .item_type.td {
           .bp3-tag {
             font-size: 13px;
