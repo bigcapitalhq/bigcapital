@@ -60,7 +60,7 @@ function ReceiptForm({
   const initialValues = useMemo(
     () => ({
       ...(!isEmpty(receipt)
-        ? transformToEditForm(receipt)
+        ? { ...transformToEditForm(receipt), currency_code: baseCurrency }
         : {
             ...defaultReceipt,
             ...(receiptAutoIncrement && {
