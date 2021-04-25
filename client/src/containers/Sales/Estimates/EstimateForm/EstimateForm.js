@@ -55,7 +55,7 @@ function EstimateForm({
   const initialValues = useMemo(
     () => ({
       ...(!isEmpty(estimate)
-        ? { ...transformToEditForm(estimate) }
+        ? { ...transformToEditForm(estimate), currency_code: baseCurrency }
         : {
             ...defaultEstimate,
             ...(estimateIncrementMode && {

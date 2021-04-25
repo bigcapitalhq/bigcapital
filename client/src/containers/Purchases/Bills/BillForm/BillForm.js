@@ -46,6 +46,7 @@ function BillForm({
       ...(!isEmpty(bill)
         ? {
             ...transformToEditForm(bill),
+            currency_code: baseCurrency,
           }
         : {
             ...defaultBill,
