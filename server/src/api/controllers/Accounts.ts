@@ -23,6 +23,14 @@ export default class AccountsController extends BaseController {
   router() {
     const router = Router();
 
+    router.get(
+      '/transactions',
+      [
+        query('account_id').optional().isInt().toInt(),
+      ],
+      this.asyncMiddleware(this.accountTransactions.bind(this)),
+      this.catchServiceErrors,
+    );
     router.post(
       '/:id/activate',
       [...this.accountParamSchema],
@@ -324,6 +332,28 @@ export default class AccountsController extends BaseController {
         closeAccountQuery.deleteAfterClosing
       );
       return res.status(200).send({ id: accountId });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieve accounts transactions list.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   * @returns {Response}
+   */
+  async accountTransactions(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const transactionsFilter = this.matchedQueryData(req);
+
+    try {
+      const { transactions } = await this.accountsService.getAccountsTransactions(
+        tenantId,
+        transactionsFilter
+      );
+      return res.status(200).send({ transactions });
     } catch (error) {
       next(error);
     }

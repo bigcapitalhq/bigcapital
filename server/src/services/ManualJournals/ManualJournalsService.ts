@@ -822,7 +822,8 @@ export default class ManualJournalsService implements IManualJournalsService {
     );
     const manualJournal = await ManualJournal.query()
       .findById(manualJournalId)
-      .withGraphFetched('entries')
+      .withGraphFetched('entries.account')
+      .withGraphFetched('entries.contact')
       .withGraphFetched('transactions')
       .withGraphFetched('media');
 

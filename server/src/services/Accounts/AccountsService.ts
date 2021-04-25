@@ -8,7 +8,9 @@ import {
   IAccount,
   IAccountsFilter,
   IFilterMeta,
-  IAccountResponse
+  IAccountResponse,
+  IAccountsTransactionsFilter,
+  IAccountTransaction
 } from 'interfaces';
 import {
   EventDispatcher,
@@ -317,7 +319,8 @@ export default class AccountsService {
    * @param {number} accountId
    */
   public async getAccount(tenantId: number, accountId: number) {
-    return this.getAccountOrThrowError(tenantId, accountId);
+    const account = await this.getAccountOrThrowError(tenantId, accountId);
+    return this.transformAccountResponse(tenantId, account);
   }
 
   /**
@@ -625,6 +628,45 @@ export default class AccountsService {
     return {
       accounts: this.transformAccountsResponse(tenantId, accounts),
       filterMeta: dynamicList.getResponseMeta(),
+    };
+  }
+
+  /**
+   * Retrieve the accounts transactions.
+   * @param {number} tenantId -
+   * @param {IAccountsTransactionsFilter} filter -
+   */
+  public async getAccountsTransactions(
+    tenantId: number,
+    filter: IAccountsTransactionsFilter,
+  ): Promise<{ transactions: IAccountTransaction }> {
+    const { AccountTransaction } = this.tenancy.models(tenantId);
+
+    this.logger.info('[accounts] trying to get accounts transactions list.');
+    const transactions = await AccountTransaction.query().onBuild((query) => {
+      query.orderBy('date', 'DESC');
+
+      if (filter.accountId) {
+        query.where('account_id', filter.accountId);
+      }
+      query.withGraphFetched('account');
+      query.withGraphFetched('contact');
+    });
+    return { transactions };
+  }
+
+  /**
+   * Transformes the account model to specific account response.
+   */
+  private transformAccountResponse(tenantId: number, account: IAccount) {
+    const settings = this.tenancy.settings(tenantId);
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
+    return {
+      ...account,
+      currencyCode: baseCurrency,
     };
   }
 

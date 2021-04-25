@@ -21,6 +21,7 @@ export default class ManualJournalEntry extends TenantModel {
    */
   static get relationMappings() {
     const Account = require('models/Account');
+    const Contact = require('models/Contact');
 
     return {
       account: {
@@ -29,6 +30,14 @@ export default class ManualJournalEntry extends TenantModel {
         join: {
           from: 'manual_journals_entries.accountId',
           to: 'accounts.id',
+        },
+      },
+      contact: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Contact.default,
+        join: {
+          from: 'manual_journals_entries.contactId',
+          to: 'contacts.id',
         },
       },
     };

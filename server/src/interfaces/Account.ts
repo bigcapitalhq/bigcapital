@@ -28,6 +28,13 @@ export interface IAccount {
   accountParentType: string,
 };
 
+export interface IAccountsTransactionsFilter {
+  accountId?: number,
+}
+
+export interface IAccountTransaction {
+  
+}
 export interface IAccountResponse extends IAccount {
   
 }

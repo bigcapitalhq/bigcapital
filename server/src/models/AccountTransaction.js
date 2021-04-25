@@ -128,6 +128,7 @@ export default class AccountTransaction extends TenantModel {
    */
   static get relationMappings() {
     const Account = require('models/Account');
+    const Contact = require('models/Contact');
 
     return {
       account: {
@@ -136,6 +137,14 @@ export default class AccountTransaction extends TenantModel {
         join: {
           from: 'accounts_transactions.accountId',
           to: 'accounts.id',
+        },
+      },
+      contact: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Contact.default,
+        join: {
+          from: 'accounts_transactions.contactId',
+          to: 'contacts.id',
         },
       },
     };
