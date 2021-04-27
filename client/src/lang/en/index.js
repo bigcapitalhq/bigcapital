@@ -1041,7 +1041,7 @@ export default {
   purchases_by_items: 'Purchases by items',
   quantity_purchased: 'Quantity purchased',
   purchase_amount: 'Purchase amount',
-  average_price: 'Average price', 
+  average_price: 'Average price',
   sales_by_items: 'Sales by items',
   sold_quantity: 'Sold quantity',
   sold_amount: 'Sold amount',
@@ -1049,5 +1049,12 @@ export default {
   asset_value: 'Asset value',
   average: 'Average',
   inventory_valuation: 'Inventory valuation',
-  payable_accounts_should_assign_with_vendors: 'Payable accounts should assign with vendors.'
+  payable_accounts_should_assign_with_vendors:
+    'Payable accounts should assign with vendors.',
+  account_paper: 'Account Paper',
+  transaction_date: 'Transaction date',
+  transaction_type: 'Transaction type',
+  running_balance: 'Running Balance',
+  account_normal:'Account normal',
+  published_at:'Published at',
 };
