@@ -10,6 +10,7 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 import withManualJournals from './withManualJournals';
 import withManualJournalsActions from './withManualJournalsActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { useManualJournalsContext } from './ManualJournalsListProvider';
 import { useManualJournalsColumns } from './utils';
@@ -26,6 +27,9 @@ function ManualJournalsDataTable({
 
   // #withAlertsActions
   openAlert,
+
+  // #withDrawerActions
+  openDrawer,
 
   // #withManualJournals
   manualJournalsTableState,
@@ -60,6 +64,14 @@ function ManualJournalsDataTable({
   // Handle the journal delete action.
   const handleDeleteJournal = ({ id }) => {
     openAlert('journal-delete', { manualJournalId: id });
+  };
+
+  // Handle view detail journal.
+  const handleViewDetailJournal = ({ id, journal_number }) => {
+    openDrawer('journal-drawer', {
+      manualJournalId: id,
+      title: `Manual Journal ${journal_number}`,
+    });
   };
 
   // Handle fetch data once the page index, size or sort by of the table change.
@@ -104,6 +116,7 @@ function ManualJournalsDataTable({
         onDelete: handleDeleteJournal,
         onPublish: handlePublishJournal,
         onEdit: handleEditJournal,
+        onViewDetails: handleViewDetailJournal,
       }}
     />
   );
@@ -115,4 +128,5 @@ export default compose(
     manualJournalsTableState,
   })),
   withAlertsActions,
+  withDrawerActions,
 )(ManualJournalsDataTable);

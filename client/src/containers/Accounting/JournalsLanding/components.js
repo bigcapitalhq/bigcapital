@@ -148,7 +148,7 @@ export const ActionsCell = (props) => {
  * Actions menu of the table.
  */
 export const ActionsMenu = ({
-  payload: { onPublish, onEdit, onDelete },
+  payload: { onPublish, onEdit, onDelete, onViewDetails },
   row: { original },
 }) => {
   return (
@@ -156,6 +156,7 @@ export const ActionsMenu = ({
       <MenuItem
         icon={<Icon icon="reader-18" />}
         text={formatMessage({ id: 'view_details' })}
+        onClick={safeCallback(onViewDetails, original)}
       />
       <MenuDivider />
       <If condition={!original.is_published}>
