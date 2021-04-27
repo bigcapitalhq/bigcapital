@@ -28,6 +28,6 @@ export default [
   },
   {
     title: 'Bigcapital',
-    link: '#',
+    link: 'http://bigcapital.ly',
   }
 ]
