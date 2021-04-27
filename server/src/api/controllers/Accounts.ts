@@ -209,7 +209,7 @@ export default class AccountsController extends BaseController {
         tenantId,
         accountId
       );
-      return res.status(200).send({ account });
+    return res.status(200).send({ account: this.transfromToResponse(account) });
     } catch (error) {
       next(error);
     }

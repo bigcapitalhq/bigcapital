@@ -13,6 +13,7 @@ import { useAccountsChartContext } from './AccountsChartProvider';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 /**
  * Accounts data-table.
@@ -23,6 +24,9 @@ function AccountsDataTable({
 
   // #withDial
   openDialog,
+
+  // #withDrawerActions
+  openDrawer,
 }) {
   const {
     isAccountsLoading,
@@ -59,6 +63,11 @@ function AccountsDataTable({
     openDialog('account-form', { action: 'edit', id: account.id });
   };
 
+  // Handle view detail account.
+  const handleViewDetailAccount = ({ id, name, code }) => {
+    openDrawer('account-drawer', { accountId: id, title: `${name} ${code}` });
+  };
+
   // Handle new child button click.
   const handleNewChildAccount = (account) => {
     openDialog('account-form', {
@@ -76,40 +85,38 @@ function AccountsDataTable({
       selectionColumn={true}
       expandable={true}
       sticky={true}
-
       loading={isAccountsLoading}
       headerLoading={isAccountsLoading}
       progressBarLoading={isAccountsFetching}
-      
       rowClassNames={rowClassNames}
-
       autoResetExpanded={false}
       autoResetSortBy={false}
       autoResetSelectedRows={false}
-
       expandColumnSpace={1}
       expandToggleColumn={2}
       selectionColumnWidth={50}
-
       TableCellRenderer={TableFastCell}
       TableRowsRenderer={TableVirtualizedListRows}
       TableLoadingRenderer={TableSkeletonRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       ContextMenu={ActionsMenu}
-
       // #TableVirtualizedListRows props.
       vListrowHeight={42}
       vListOverscanRowCount={0}
-
       payload={{
         onEdit: handleEditAccount,
         onDelete: handleDeleteAccount,
         onActivate: handleActivateAccount,
         onInactivate: handleInactivateAccount,
-        onNewChild: handleNewChildAccount
+        onNewChild: handleNewChildAccount,
+        onViewDetails: handleViewDetailAccount,
       }}
     />
   );
 }
 
-export default compose(withAlertsActions, withDialogActions)(AccountsDataTable);
+export default compose(
+  withAlertsActions,
+  withDrawerActions,
+  withDialogActions,
+)(AccountsDataTable);

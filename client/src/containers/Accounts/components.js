@@ -27,6 +27,7 @@ export function ActionsMenu({
     onNewChild,
     onActivate,
     onInactivate,
+    // onDrawer,
   },
 }) {
   return (

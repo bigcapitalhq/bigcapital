@@ -665,7 +665,7 @@ export default class AccountsService {
       key: 'base_currency',
     });
     return {
-      ...account,
+      ...account.toJSON(),
       currencyCode: baseCurrency,
     };
   }

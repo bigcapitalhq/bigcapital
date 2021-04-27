@@ -144,3 +144,19 @@ export function useInactivateAccount(props) {
     ...props,
   });
 }
+
+/**
+ * Retrieve account transactions.
+ */
+export function useAccountTransactions(id, props) {
+  console.log(id, 'FF');
+  return useRequestQuery(
+    [t.ACCOUNT_TRANSACTION, id],
+    { method: 'get', url: `accounts/transactions?account_id=${id}` },
+    {
+      select: (res) => res.data.transactions,
+      defaultData: [],
+      ...props,
+    },
+  );
+}

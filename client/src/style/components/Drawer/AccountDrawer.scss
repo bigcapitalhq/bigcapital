@@ -1,0 +1,79 @@
+.account-drawer {
+  background-color: #fbfbfb;
+
+  &__content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: 18px;
+    padding: 15px;
+    background: white;
+    border: 1px solid #d2dce2;
+    color: #666666;
+
+    > div {
+      flex-grow: 1;
+      font-size: 14px;
+      margin: 15px 0;
+
+      .balance,
+      p {
+        text-transform: capitalize;
+        margin: 5px 0;
+      }
+      .balance {
+        font-size: 26px;
+        font-weight: 500;
+        color: #000;
+        margin: 10px 0;
+      }
+    }
+    &--desc {
+      flex-basis: 100%;
+      b {
+        color: #000;
+      }
+    }
+  }
+
+  &__table {
+    margin: 18px;
+    background: #fff;
+    border: 1px solid #d2dce2;
+
+    .table {
+      .thead .tr .th .resizer {
+        display: none;
+      }
+      .thead .th,
+      .tbody .tr .td {
+        padding: 0.8rem;
+        font-size: 14px;
+        font-weight: 400;
+        color: #666666;
+      }
+    }
+  }
+}
+
+.bp3-drawer.bp3-position-right {
+  bottom: 0;
+  right: 0;
+  top: 0;
+  overflow: auto;
+  height: 100%;
+
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  .bp3-drawer-header {
+    margin-bottom: 2px;
+    box-shadow: (0, 0, 0);
+    background-color: #6a7993;
+    .bp3-heading,
+    .bp3-icon {
+      color: white;
+    }
+  }
+}
