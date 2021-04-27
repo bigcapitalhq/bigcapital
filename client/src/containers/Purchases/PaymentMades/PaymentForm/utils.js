@@ -24,6 +24,7 @@ export const defaultPaymentMade = {
   reference: '',
   payment_number: '',
   // statement: '',
+  currency_code: '',
   entries: [],
 };
 

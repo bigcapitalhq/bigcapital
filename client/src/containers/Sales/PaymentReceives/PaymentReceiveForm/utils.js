@@ -11,6 +11,7 @@ export const defaultPaymentReceiveEntry = {
   due_amount: '',
   date: '',
   amount: '',
+  currency_code: '',
 };
 
 // Form initial values.
@@ -22,11 +23,12 @@ export const defaultPaymentReceive = {
   payment_receive_no: '',
   statement: '',
   full_amount: '',
+  currency_code: '',
   entries: [],
 };
 
 /**
- * 
+ *
  */
 export const transformToEditForm = (paymentReceive, paymentReceiveEntries) => ({
   ...transformToForm(paymentReceive, defaultPaymentReceive),
@@ -50,7 +52,7 @@ export const transformInvoicesNewPageEntries = (invoices) => [
     due_amount: invoice.due_amount,
     date: invoice.invoice_date,
     amount: invoice.balance,
-    currency_code:invoice.currency_code,
+    currency_code: invoice.currency_code,
     payment_amount: '',
     invoice_no: invoice.invoice_no,
     total_payment_amount: invoice.payment_amount,
@@ -84,12 +86,12 @@ export const fullAmountPaymentEntries = (entries) => {
     ...item,
     payment_amount: item.due_amount,
   }));
-}
+};
 
 /**
  * Syncs payment receive number settings with form.
  */
- export const useObservePaymentNoSettings = (prefix, nextNumber) => {
+export const useObservePaymentNoSettings = (prefix, nextNumber) => {
   const { setFieldValue } = useFormikContext();
 
   React.useEffect(() => {
