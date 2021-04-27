@@ -12,6 +12,7 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withExpensesActions from './withExpensesActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { ActionsMenu, useExpensesTableColumns } from './components';
 
@@ -21,6 +22,9 @@ import { ActionsMenu, useExpensesTableColumns } from './components';
 function ExpensesDataTable({
   // #withExpensesActions
   setExpensesTableState,
+
+  // #withDrawerActions
+  openDrawer,
 
   // #withAlertsActions
   openAlert,
@@ -32,7 +36,7 @@ function ExpensesDataTable({
 
     isExpensesLoading,
     isExpensesFetching,
-    isEmptyStatus
+    isEmptyStatus,
   } = useExpensesListContext();
 
   const history = useHistory();
@@ -67,6 +71,14 @@ function ExpensesDataTable({
     openAlert('expense-delete', { expenseId: expense.id });
   };
 
+  // Handle view detail expense.
+  const handleViewDetailExpense = ({ id }) => {
+    openDrawer('expense-drawer', {
+      expenseId: id,
+      title: `Expense`,
+    });
+  };
+
   // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <ExpensesEmptyStatus />;
@@ -76,34 +88,27 @@ function ExpensesDataTable({
     <DataTable
       columns={columns}
       data={expenses}
-      
       loading={isExpensesLoading}
       headerLoading={isExpensesLoading}
       progressBarLoading={isExpensesFetching}
-
       selectionColumn={true}
       noInitialFetch={true}
       sticky={true}
-
       onFetchData={handleFetchData}
-      
       pagination={true}
       manualSortBy={true}
       manualPagination={true}
       pagesCount={pagination.pagesCount}
-
       autoResetSortBy={false}
       autoResetPage={false}
-
       TableLoadingRenderer={TableSkeletonRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
-
       ContextMenu={ActionsMenu}
-
       payload={{
         onPublish: handlePublishExpense,
         onDelete: handleDeleteExpense,
-        onEdit: handleEditExpense
+        onEdit: handleEditExpense,
+        onViewDetails: handleViewDetailExpense,
       }}
     />
   );
@@ -112,5 +117,6 @@ function ExpensesDataTable({
 export default compose(
   withDashboardActions,
   withAlertsActions,
+  withDrawerActions,
   withExpensesActions,
 )(ExpensesDataTable);
