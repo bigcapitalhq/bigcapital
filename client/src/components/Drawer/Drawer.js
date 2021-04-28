@@ -1,27 +1,29 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Position, Drawer } from '@blueprintjs/core';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-export default function ({
-  title = <T id={'view_paper'} />,
-  children,
-  isOpen,
-  isClose,
-  drawerProps,
-}) {
-  
+import { compose } from 'utils';
+
+function DrawerComponent(props) {
+  const { name, children, onClose, closeDrawer } = props;
+
+  const handleClose = (event) => {
+    closeDrawer(name);
+    onClose && onClose(event);
+  };
+
   return (
     <Drawer
-      isOpen={isOpen}
-      title={title}
-      position={Position.RIGHT}
+      size={'700px'}
       canOutsideClickClose={true}
       canEscapeKeyClose={true}
-      size={'700px'}
-      onClose={isClose}
-      {...drawerProps}
+      position={Position.RIGHT}
+      onClose={handleClose}
+      {...props}
     >
       {children}
     </Drawer>
   );
 }
+
+export default compose(withDrawerActions)(DrawerComponent);

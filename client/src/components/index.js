@@ -51,6 +51,7 @@ import DashboardPageContent from './Dashboard/DashboardPageContent';
 import DashboardInsider from './Dashboard/DashboardInsider';
 import Drawer from './Drawer/Drawer';
 import DrawerSuspense from './Drawer/DrawerSuspense';
+import DrawerHeaderContent from './Drawer/DrawerHeaderContent';
 import Postbox from './Postbox';
 import AccountsSuggestField from './AccountsSuggestField';
 import MaterialProgressBar from './MaterialProgressBar';
@@ -112,7 +113,8 @@ export {
   DashboardInsider,
   Drawer,
   DrawerSuspense,
+  DrawerHeaderContent,
   Postbox,
   AccountsSuggestField,
-  MaterialProgressBar
+  MaterialProgressBar,
 };
