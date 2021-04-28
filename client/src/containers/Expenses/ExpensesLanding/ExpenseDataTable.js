@@ -75,7 +75,6 @@ function ExpensesDataTable({
   const handleViewDetailExpense = ({ id }) => {
     openDrawer('expense-drawer', {
       expenseId: id,
-      title: `Expense`,
     });
   };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useExpense } from 'hooks/query';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import { DrawerHeaderContent, DashboardInsider } from 'components';
 
 const ExpenseDrawerDrawerContext = React.createContext();
 
