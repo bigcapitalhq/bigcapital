@@ -67,10 +67,9 @@ function ManualJournalsDataTable({
   };
 
   // Handle view detail journal.
-  const handleViewDetailJournal = ({ id, journal_number }) => {
+  const handleViewDetailJournal = ({ id }) => {
     openDrawer('journal-drawer', {
       manualJournalId: id,
-      title: `Manual Journal ${journal_number}`,
     });
   };
 
