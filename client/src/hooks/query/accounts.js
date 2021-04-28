@@ -11,6 +11,7 @@ const transformAccount = (response) => {
 const commonInvalidateQueries = (query) => {
   // Invalidate accounts.
   query.invalidateQueries(t.ACCOUNTS);
+  query.invalidateQueries(t.ACCOUNT);
 
   // Invalidate financial reports.
   query.invalidateQueries(t.FINANCIAL_REPORT);
@@ -149,7 +150,6 @@ export function useInactivateAccount(props) {
  * Retrieve account transactions.
  */
 export function useAccountTransactions(id, props) {
-  console.log(id, 'FF');
   return useRequestQuery(
     [t.ACCOUNT_TRANSACTION, id],
     { method: 'get', url: `accounts/transactions?account_id=${id}` },

@@ -64,8 +64,8 @@ function AccountsDataTable({
   };
 
   // Handle view detail account.
-  const handleViewDetailAccount = ({ id, name, code }) => {
-    openDrawer('account-drawer', { accountId: id, title: `${name} ${code}` });
+  const handleViewDetailAccount = ({ id }) => {
+    openDrawer('account-drawer', { accountId: id });
   };
 
   // Handle new child button click.

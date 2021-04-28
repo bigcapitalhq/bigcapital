@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAccount, useAccountTransactions } from 'hooks/query';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import { DrawerHeaderContent, DashboardInsider } from 'components';
 
 const AccountDrawerContext = React.createContext();
 
@@ -20,6 +20,7 @@ function AccountDrawerProvider({ accountId, ...props }) {
   } = useAccountTransactions(accountId, {
     enabled: !!accountId,
   });
+  const name = `${account.name} ${account.code}`;
 
   // provider.
   const provider = {
@@ -30,6 +31,7 @@ function AccountDrawerProvider({ accountId, ...props }) {
 
   return (
     <DashboardInsider loading={isAccountLoading || isAccountsLoading}>
+      <DrawerHeaderContent name={'account-drawer'} title={name} />
       <AccountDrawerContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
