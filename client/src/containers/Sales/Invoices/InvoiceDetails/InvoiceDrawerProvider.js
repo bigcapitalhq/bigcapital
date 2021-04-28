@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { useInvoice } from 'hooks/query';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import { DrawerHeaderContent, DashboardInsider } from 'components';
 
 const InvoiceDrawerContext = createContext();
 
@@ -26,6 +26,7 @@ function InvoiceDrawerProvider({ invoiceId, ...props }) {
 
   return (
     <DashboardInsider loading={isInvoiceLoading}>
+      <DrawerHeaderContent name={'invoice-drawer'} />
       <InvoiceDrawerContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

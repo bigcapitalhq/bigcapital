@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { useReceipt } from 'hooks/query';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import { DrawerHeaderContent, DashboardInsider } from 'components';
 
 const ReceiptDrawerContext = createContext();
 
@@ -23,6 +23,7 @@ function ReceiptDrawerProvider({ receiptId, ...props }) {
 
   return (
     <DashboardInsider loading={isReceiptLoading}>
+      <DrawerHeaderContent name={'receipt-drawer'} />
       <ReceiptDrawerContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

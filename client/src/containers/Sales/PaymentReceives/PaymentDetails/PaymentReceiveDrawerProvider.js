@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { usePaymentReceive } from 'hooks/query';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import { DrawerHeaderContent, DashboardInsider } from 'components';
 
 const PaymentReceiveDrawerContext = createContext();
 
@@ -20,6 +20,7 @@ function PaymentReceiveDrawerProvider({ paymentReceiveId, ...props }) {
 
   return (
     <DashboardInsider loading={isPaymentReceiveLoading}>
+      <DrawerHeaderContent name={'payment-receive-drawer'} />
       <PaymentReceiveDrawerContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

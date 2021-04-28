@@ -1,7 +1,6 @@
 import React, { lazy } from 'react';
 import { Drawer, DrawerSuspense } from 'components';
 import withDrawers from 'containers/Drawer/withDrawers';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -15,15 +14,9 @@ function EstimateDrawer({
   //#withDrawer
   isOpen,
   payload: { estimateId },
-
-  closeDrawer,
 }) {
-  // handle close Drawer
-  const handleDrawerClose = () => {
-    closeDrawer(name);
-  };
   return (
-    <Drawer isOpen={isOpen} isClose={handleDrawerClose}>
+    <Drawer isOpen={isOpen} name={name}>
       <DrawerSuspense>
         <EstimateDrawerContent estimateId={estimateId} />
       </DrawerSuspense>
@@ -31,4 +24,4 @@ function EstimateDrawer({
   );
 }
 
-export default compose(withDrawers(), withDrawerActions)(EstimateDrawer);
+export default compose(withDrawers())(EstimateDrawer);

@@ -1,6 +1,6 @@
 import React, { createContext } from 'react';
 import { useEstimate } from 'hooks/query';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import { DrawerHeaderContent, DashboardInsider } from 'components';
 
 const EstimateDrawerContext = createContext();
 
@@ -24,6 +24,7 @@ function EstimateDrawerProvider({ estimateId, ...props }) {
 
   return (
     <DashboardInsider loading={isEstimateLoading}>
+      <DrawerHeaderContent name={'estimate-drawer'} />
       <EstimateDrawerContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
