@@ -8,9 +8,10 @@ import AccountDrawerDetails from './AccountDrawerDetails';
 export default function AccountDrawerContent({
   // #ownProp
   accountId,
+  name
 }) {
   return (
-    <AccountDrawerProvider accountId={accountId}>
+    <AccountDrawerProvider name={name} accountId={accountId}>
       <AccountDrawerDetails />
     </AccountDrawerProvider>
   );

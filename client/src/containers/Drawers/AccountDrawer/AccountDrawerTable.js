@@ -1,18 +1,23 @@
 import React from 'react';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
 
 import { formatMessage } from 'services/intl';
 import { DataTable, Money } from 'components';
-import { isBlank } from 'utils';
+import { isBlank, compose } from 'utils';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 /**
  * account drawer table.
  */
-export default function AccountDrawerTable() {
+function AccountDrawerTable({
+  closeDrawer
+}) {
   const {
     account: { currency_code },
     accounts,
+    drawerName
   } = useAccountDrawerContext();
 
   const columns = React.useMemo(
@@ -45,16 +50,33 @@ export default function AccountDrawerTable() {
       },
       {
         Header: formatMessage({ id: 'running_balance' }),
-        accessor: 'balance',
+        accessor: ({ running_balance }) => (
+          <Money amount={running_balance} currency={currency_code} />
+        ),
         width: 110,
       },
     ],
     [],
   );
 
+  // Handle view more link click.
+  const handleLinkClick = () => {
+    closeDrawer(drawerName);
+  };
+
   return (
     <div className={'account-drawer__table'}>
       <DataTable columns={columns} data={accounts} />
+
+      <div class="account-drawer__table-footer">
+        <Link to={`/financial-reports/general-ledger`} onClick={handleLinkClick}>
+          ← View more transactions.
+        </Link>
+      </div>
     </div>
   );
 }
+
+export default compose(
+  withDrawerActions
+)(AccountDrawerTable);

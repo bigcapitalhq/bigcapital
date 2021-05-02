@@ -11,15 +11,15 @@ const AccountDrawerContent = lazy(() => import('./AccountDrawerContent'));
  */
 function AccountDrawer({
   name,
-  //#withDrawer
+  // #withDrawer
   isOpen,
   payload: { accountId },
 }) {
 
   return (
-    <Drawer isOpen={isOpen} name={name}>
+    <Drawer isOpen={isOpen} name={name} size={'900px'}>
       <DrawerSuspense>
-        <AccountDrawerContent accountId={accountId} />
+        <AccountDrawerContent name={name} accountId={accountId} />
       </DrawerSuspense>
     </Drawer>
   );

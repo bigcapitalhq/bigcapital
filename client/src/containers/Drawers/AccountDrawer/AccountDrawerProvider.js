@@ -7,7 +7,7 @@ const AccountDrawerContext = React.createContext();
 /**
  * Account drawer provider.
  */
-function AccountDrawerProvider({ accountId, ...props }) {
+function AccountDrawerProvider({ accountId, name, ...props }) {
   // Fetches the specific account details.
   const { data: account, isLoading: isAccountLoading } = useAccount(accountId, {
     enabled: !!accountId,
@@ -20,18 +20,19 @@ function AccountDrawerProvider({ accountId, ...props }) {
   } = useAccountTransactions(accountId, {
     enabled: !!accountId,
   });
-  const name = `${account.name} ${account.code}`;
+  const drawerTitle = `${account.name} ${account.code}`;
 
   // provider.
   const provider = {
     accountId,
     account,
     accounts,
+    drawerName: name,
   };
 
   return (
     <DashboardInsider loading={isAccountLoading || isAccountsLoading}>
-      <DrawerHeaderContent name={'account-drawer'} title={name} />
+      <DrawerHeaderContent name={'account-drawer'} title={drawerTitle} />
       <AccountDrawerContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

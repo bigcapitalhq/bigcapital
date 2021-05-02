@@ -353,7 +353,9 @@ export default class AccountsController extends BaseController {
         tenantId,
         transactionsFilter
       );
-      return res.status(200).send({ transactions });
+      return res.status(200).send({
+        transactions: this.transfromToResponse(transactions),
+      });
     } catch (error) {
       next(error);
     }

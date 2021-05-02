@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage as T } from 'react-intl';
-import { If, Money } from 'components';
+import { Icon, Money } from 'components';
 
 /**
  *  Account drawer header.
@@ -23,17 +23,24 @@ export default function AccountDrawerHeader({
           {<Money amount={amount} currency={currency_code} />}
         </p>
       </div>
-      <div>
+      <div class={'account-type'}>
         <span>
           <T id={'account_type'} />
         </span>
         <p>{account_type_label}</p>
       </div>
-      <div>
+      <div class={'account-normal'}>
         <span>
           <T id={'account_normal'} />
         </span>
-        <p> {account_normal}</p>
+        <p>
+          {' '}
+          {account_normal}{' '}
+          <Icon
+            iconSize={14}
+            icon={`arrow-${account_normal === 'credit' ? 'down' : 'up'}`}
+          />
+        </p>
       </div>
       <div>
         <span>
@@ -49,12 +56,10 @@ export default function AccountDrawerHeader({
       </div>
 
       <p className={'account-drawer__content--desc'}>
-        <If condition={description}>
-          <b>
-            <T id={'description'} />
-          </b>
-          : {description}
-        </If>
+        <b>
+          <T id={'description'} />
+        </b>
+        : {description ? description : '--'}
       </p>
     </div>
   );

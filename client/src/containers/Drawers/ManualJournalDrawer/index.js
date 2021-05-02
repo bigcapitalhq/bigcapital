@@ -19,7 +19,7 @@ function ManualJournalDrawer({
   payload: { manualJournalId },
 }) {
   return (
-    <Drawer isOpen={isOpen} name={name}>
+    <Drawer isOpen={isOpen} name={name} size={'900px'}>
       <DrawerSuspense>
         <ManualJournalDrawerContent manualJournalId={manualJournalId} />
       </DrawerSuspense>

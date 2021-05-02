@@ -1,3 +1,15 @@
+.bp3-drawer-header {
+  box-shadow: 0 0 0;
+
+  .bp3-heading{
+    font-size: 16px;
+  }
+  .bp3-button{
+    min-height: 28px;
+    min-width: 28px;
+  }
+}
+
 .account-drawer {
   background-color: #fbfbfb;
 
@@ -9,30 +21,47 @@
     padding: 15px;
     background: white;
     border: 1px solid #d2dce2;
-    color: #666666;
 
-    > div {
+    > div{
       flex-grow: 1;
       font-size: 14px;
       margin: 15px 0;
+
+      > span {
+        color: #666666;
+        font-weight: 500;
+      }
 
       .balance,
       p {
         text-transform: capitalize;
         margin: 5px 0;
       }
+
       .balance {
-        font-size: 26px;
-        font-weight: 500;
-        color: #000;
-        margin: 10px 0;
+        font-size: 28px;
+        color: #c06361;
+        margin: 6px 0;
+        font-weight: 600;
+        margin-bottom: 0;
+      }
+
+      &.account-normal{
+
+        .bp3-icon{
+          position: relative;
+          top: -2px;
+          margin-left: 2px;
+
+          svg{
+            fill: #6a7994;
+          }
+        }
       }
     }
+
     &--desc {
       flex-basis: 100%;
-      b {
-        color: #000;
-      }
     }
   }
 
@@ -42,15 +71,26 @@
     border: 1px solid #d2dce2;
 
     .table {
-      .thead .tr .th .resizer {
-        display: none;
+      .thead {
+        .tr .th {
+          padding: 0.7rem 0.8rem;
+          font-weight: 500;
+        }
       }
-      .thead .th,
+
       .tbody .tr .td {
         padding: 0.8rem;
-        font-size: 14px;
-        font-weight: 400;
-        color: #666666;
+      }
+    }
+
+    &-footer{
+      padding: 12px 14px;
+      display: inline-block;
+      
+      a{
+        text-decoration: underline;
+        font-size: 12px;
+        color: #37639c;
       }
     }
   }
@@ -64,13 +104,16 @@
   height: 100%;
 
   scrollbar-width: none;
+
   &::-webkit-scrollbar {
     display: none;
   }
+
   .bp3-drawer-header {
     margin-bottom: 2px;
     box-shadow: (0, 0, 0);
     background-color: #6a7993;
+
     .bp3-heading,
     .bp3-icon {
       color: white;

@@ -20,6 +20,7 @@ import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
 import AccountTypesUtils from 'lib/AccountTypes';
 import { ERRORS } from './constants';
+import { transaction } from 'objection';
 
 @Service()
 export default class AccountsService {
@@ -631,6 +632,30 @@ export default class AccountsService {
     };
   }
 
+
+  runningBalanceFromClosing(
+    transactions: IAccountTransaction[],
+    closingBalance: number,
+    accountNormal: string,
+  ) {
+    let remain = closingBalance;
+
+    return transactions.map((entry, index) => {
+      const { credit, debit } = entry;
+      const amount = accountNormal === 'credit' ?
+        credit - debit : debit - credit;
+
+      const runningBalance = Math.min(amount, remain);
+      const output = {
+        ...entry.toJSON(),
+        runningBalance: remain,
+        runningBalanceFormatted: remain,
+      };
+      remain -= Math.max(runningBalance, 0);
+      return output;
+    });
+  }
+
   /**
    * Retrieve the accounts transactions.
    * @param {number} tenantId -
@@ -642,6 +667,9 @@ export default class AccountsService {
   ): Promise<{ transactions: IAccountTransaction }> {
     const { AccountTransaction } = this.tenancy.models(tenantId);
 
+    // Retrieve the given account or throw not found error.
+    const account = await this.getAccountOrThrowError(tenantId, filter.accountId);
+
     this.logger.info('[accounts] trying to get accounts transactions list.');
     const transactions = await AccountTransaction.query().onBuild((query) => {
       query.orderBy('date', 'DESC');
@@ -652,7 +680,14 @@ export default class AccountsService {
       query.withGraphFetched('account');
       query.withGraphFetched('contact');
     });
-    return { transactions };
+
+    return {
+      transactions: this.runningBalanceFromClosing(
+        transactions,
+        account.amount,
+        account.accountNormal,
+      )
+    };
   }
 
   /**

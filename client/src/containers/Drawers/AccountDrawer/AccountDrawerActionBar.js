@@ -28,8 +28,6 @@ function AccountDrawerActionBar({
   // #ownProps
   account,
 }) {
-
-
   // Handle new child button click.
   const onNewChildAccount = () => {
     openDialog('account-form', {
@@ -69,9 +67,9 @@ function AccountDrawerActionBar({
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon style={{ color: 'red' }} icon="trash-18" iconSize={18} />}
+          icon={<Icon icon="trash-18" iconSize={18} />}
           text={<T id={'delete'} />}
-          // intent={Intent.DANGER}
+          intent={Intent.DANGER}
           onClick={safeCallback(onDeleteAccount)}
         />
       </NavbarGroup>
