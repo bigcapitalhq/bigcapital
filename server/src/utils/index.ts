@@ -5,6 +5,8 @@ import accounting from 'accounting';
 import Currencies from 'js-money/lib/currency';
 import definedOptions from 'data/options';
 
+export * from './table';
+
 const hashPassword = (password) =>
   new Promise((resolve) => {
     bcrypt.genSalt(10, (error, salt) => {

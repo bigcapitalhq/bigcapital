@@ -44,4 +44,7 @@ export * from './Setup'
 export * from './IInventoryValuationSheet';
 export * from './SalesByItemsSheet';
 export * from './CustomerBalanceSummary';
+export * from './VendorBalanceSummary';
+export * from './ContactBalanceSummary';
 export * from './TransactionsByCustomers';
+export * from './Table';

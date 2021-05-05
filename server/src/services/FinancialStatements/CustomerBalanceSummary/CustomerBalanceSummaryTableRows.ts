@@ -1,53 +1,15 @@
-import { get } from 'lodash';
+import { Service } from 'typedi';
 import {
   ICustomerBalanceSummaryData,
   ICustomerBalanceSummaryCustomer,
   ICustomerBalanceSummaryTotal,
+  ITableRow,
 } from 'interfaces';
-import { Service } from 'typedi';
-
-interface IColumnMapperMeta {
-  key: string;
-  accessor?: string;
-  value?: string;
-}
-
-interface ITableCell {
-  value: string;
-  key: string;
-}
-
-type ITableRow = {
-  rows: ITableCell[];
-};
+import { tableMapper, tableRowMapper } from 'utils';
 
 enum TABLE_ROWS_TYPES {
   CUSTOMER = 'CUSTOMER',
   TOTAL = 'TOTAL',
-}
-
-function tableMapper(
-  data: Object[],
-  columns: IColumnMapperMeta[],
-  rowsMeta
-): ITableRow[] {
-  return data.map((object) => tableRowMapper(object, columns, rowsMeta));
-}
-
-function tableRowMapper(
-  object: Object,
-  columns: IColumnMapperMeta[],
-  rowMeta
-): ITableRow {
-  const cells = columns.map((column) => ({
-    key: column.key,
-    value: column.value ? column.value : get(object, column.accessor),
-  }));
-
-  return {
-    cells,
-    ...rowMeta,
-  };
 }
 
 @Service()
@@ -100,9 +62,11 @@ export default class CustomerBalanceSummaryTableRows {
   public tableRowsTransformer(
     customerBalanceSummary: ICustomerBalanceSummaryData
   ): ITableRow[] {
-    return [
-      ...this.customersTransformer(customerBalanceSummary.customers),
-      this.totalTransformer(customerBalanceSummary.total),
-    ];
+    const customers = this.customersTransformer(
+      customerBalanceSummary.customers
+    );
+    const total = this.totalTransformer(customerBalanceSummary.total);
+
+    return customers.length > 0 ? [...customers, total] : [];
   }
 }

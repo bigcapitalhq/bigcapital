@@ -60,7 +60,7 @@ export default class CustomerBalanceSummaryReportController extends BaseFinancia
       const tableRows = this.customerBalanceSummaryTableRows.tableRowsTransformer(
         data
       );
-      return res.status(200).send({
+      return res.status( 200).send({
         table: {
           rows: tableRows
         },

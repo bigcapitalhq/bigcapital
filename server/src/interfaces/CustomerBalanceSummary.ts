@@ -1,24 +1,20 @@
 import { INumberFormatQuery } from './FinancialStatements';
 
-export interface ICustomerBalanceSummaryQuery {
-  asDate: Date;
-  numberFormat: INumberFormatQuery;
-  comparison: {
-    percentageOfColumn: boolean;
-  };
-  noneTransactions: boolean;
-  noneZero: boolean;
-}
+import {
+  IContactBalanceSummaryQuery,
+  IContactBalanceSummaryAmount,
+  IContactBalanceSummaryPercentage,
+  IContactBalanceSummaryTotal
+} from './ContactBalanceSummary';
 
-export interface ICustomerBalanceSummaryAmount {
-  amount: number;
-  formattedAmount: string;
-  currencyCode: string;
-}
-export interface ICustomerBalanceSummaryPercentage {
-  amount: number;
-  formattedAmount: string;
-}
+export interface ICustomerBalanceSummaryQuery
+  extends IContactBalanceSummaryQuery {}
+
+export interface ICustomerBalanceSummaryAmount
+  extends IContactBalanceSummaryAmount {}
+
+export interface ICustomerBalanceSummaryPercentage
+  extends IContactBalanceSummaryPercentage {}
 
 export interface ICustomerBalanceSummaryCustomer {
   customerName: string;
@@ -26,7 +22,7 @@ export interface ICustomerBalanceSummaryCustomer {
   percentageOfColumn?: ICustomerBalanceSummaryPercentage;
 }
 
-export interface ICustomerBalanceSummaryTotal {
+export interface ICustomerBalanceSummaryTotal extends IContactBalanceSummaryTotal {
   total: ICustomerBalanceSummaryAmount;
   percentageOfColumn?: ICustomerBalanceSummaryPercentage;
 }
@@ -45,6 +41,6 @@ export interface ICustomerBalanceSummaryStatement {
 export interface ICustomerBalanceSummaryService {
   customerBalanceSummary(
     tenantId: number,
-    query: ICustomerBalanceSummaryQuery,
+    query: ICustomerBalanceSummaryQuery
   ): Promise<ICustomerBalanceSummaryStatement>;
 }

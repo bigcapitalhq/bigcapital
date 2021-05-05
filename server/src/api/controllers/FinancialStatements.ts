@@ -65,13 +65,14 @@ export default class FinancialStatementsService {
       Container.get(CustomerBalanceSummaryController).router(),
     );
     router.use(
+      '/vendor-balance-summary',
+      Container.get(VendorBalanceSummaryController).router(),
+    );
+    router.use(
       '/transactions-by-customers',
       Container.get(TransactionsByCustomers).router(),
     )
-    // router.use(
-    //   '/vendor-balance-summary',
-    //   Container.get(VendorBalanceSummaryController).router(),
-    // )
+    
     return router;
   }
 }
