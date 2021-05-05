@@ -689,6 +689,7 @@ export default class JournalPoster implements IJournalPoster {
     });
     return balance;
   }
+  
 
   getAccountEntries(accountId: number) {
     return this.entries.filter((entry) => entry.account === accountId);

@@ -55,4 +55,11 @@ export default class FinancialSheet {
       ...settings
     });
   }
+
+
+  protected formatPercentage(
+    amount
+  ): string {
+    return `%${amount * 100}`;
+  }
 }

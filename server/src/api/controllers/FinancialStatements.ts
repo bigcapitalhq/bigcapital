@@ -11,6 +11,9 @@ import APAgingSummary from './FinancialStatements/APAgingSummary';
 import PurchasesByItemsController from './FinancialStatements/PurchasesByItem';
 import SalesByItemsController from './FinancialStatements/SalesByItems';
 import InventoryValuationController from './FinancialStatements/InventoryValuationSheet';
+import CustomerBalanceSummaryController from './FinancialStatements/CustomerBalanceSummary';
+import VendorBalanceSummaryController from './FinancialStatements/VendorBalanceSummary';
+import TransactionsByCustomers from './FinancialStatements/TransactionsByCustomers';
 
 @Service()
 export default class FinancialStatementsService {
@@ -57,6 +60,18 @@ export default class FinancialStatementsService {
       '/inventory-valuation',
       Container.get(InventoryValuationController).router()
     );
+    router.use(
+      '/customer-balance-summary',
+      Container.get(CustomerBalanceSummaryController).router(),
+    );
+    router.use(
+      '/transactions-by-customers',
+      Container.get(TransactionsByCustomers).router(),
+    )
+    // router.use(
+    //   '/vendor-balance-summary',
+    //   Container.get(VendorBalanceSummaryController).router(),
+    // )
     return router;
   }
 }

@@ -43,3 +43,5 @@ export * from './InventoryAdjustment';
 export * from './Setup'
 export * from './IInventoryValuationSheet';
 export * from './SalesByItemsSheet';
+export * from './CustomerBalanceSummary';
+export * from './TransactionsByCustomers';
