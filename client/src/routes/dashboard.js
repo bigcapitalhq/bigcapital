@@ -112,7 +112,8 @@ export default [
       import('containers/FinancialStatements/GeneralLedger/GeneralLedger'),
     ),
     breadcrumb: 'General Ledger',
-    hint: "Reports every transaction going in and out of your accounts and organized by accounts and date to monitoring activity of accounts.",
+    hint:
+      'Reports every transaction going in and out of your accounts and organized by accounts and date to monitoring activity of accounts.',
     hotkey: 'shift+4',
     pageTitle: formatMessage({ id: 'general_ledger' }),
     backLink: true,
@@ -124,7 +125,8 @@ export default [
       import('containers/FinancialStatements/BalanceSheet/BalanceSheet'),
     ),
     breadcrumb: 'Balance Sheet',
-    hint: "Reports a company's assets, liabilities and shareholders' equity at a specific point in time with comparison period(s).",
+    hint:
+      "Reports a company's assets, liabilities and shareholders' equity at a specific point in time with comparison period(s).",
     hotkey: 'shift+1',
     pageTitle: formatMessage({ id: 'balance_sheet' }),
     backLink: true,
@@ -138,7 +140,8 @@ export default [
       ),
     ),
     breadcrumb: 'Trial Balance Sheet',
-    hint: "Summarizes the credit and debit balance of each account in your chart of accounts at a specific point in time. ",
+    hint:
+      'Summarizes the credit and debit balance of each account in your chart of accounts at a specific point in time. ',
     hotkey: 'shift+5',
     pageTitle: formatMessage({ id: 'trial_balance_sheet' }),
     backLink: true,
@@ -150,7 +153,8 @@ export default [
       import('containers/FinancialStatements/ProfitLossSheet/ProfitLossSheet'),
     ),
     breadcrumb: 'Profit Loss Sheet',
-    hint: "Reports the revenues, costs and expenses incurred during a specific point in time with comparison period(s).",
+    hint:
+      'Reports the revenues, costs and expenses incurred during a specific point in time with comparison period(s).',
     hotkey: 'shift+2',
     pageTitle: formatMessage({ id: 'profit_loss_sheet' }),
     backLink: true,
@@ -162,7 +166,8 @@ export default [
       import('containers/FinancialStatements/ARAgingSummary/ARAgingSummary'),
     ),
     breadcrumb: 'Receivable Aging Summary',
-    hint: "Summarize total unpaid balances of customers invoices with number of days the unpaid invoice is overdue.",
+    hint:
+      'Summarize total unpaid balances of customers invoices with number of days the unpaid invoice is overdue.',
     pageTitle: formatMessage({ id: 'receivable_aging_summary' }),
     backLink: true,
     sidebarExpand: false,
@@ -173,7 +178,8 @@ export default [
       import('containers/FinancialStatements/APAgingSummary/APAgingSummary'),
     ),
     breadcrumb: 'Payable Aging Summary',
-    hint: "Summarize total unpaid balances of vendors purchase invoices with the number of days the unpaid invoice is overdue.",
+    hint:
+      'Summarize total unpaid balances of vendors purchase invoices with the number of days the unpaid invoice is overdue.',
     pageTitle: formatMessage({ id: 'payable_aging_summary' }),
     backLink: true,
     sidebarExpand: false,
@@ -184,7 +190,8 @@ export default [
       import('containers/FinancialStatements/Journal/Journal'),
     ),
     breadcrumb: 'Journal Sheet',
-    hint: "The debit and credit entries of system transactions, sorted by date.",
+    hint:
+      'The debit and credit entries of system transactions, sorted by date.',
     hotkey: 'shift+3',
     pageTitle: formatMessage({ id: 'journal_sheet' }),
     sidebarExpand: false,
@@ -210,7 +217,8 @@ export default [
     ),
     breadcrumb: 'Sales by Items',
     pageTitle: formatMessage({ id: 'sales_by_items' }),
-    hint: 'Summarize the business’s sold items quantity, income and average income rate of each item during a specific point in time.',
+    hint:
+      'Summarize the business’s sold items quantity, income and average income rate of each item during a specific point in time.',
     backLink: true,
     sidebarExpand: false,
   },
@@ -222,8 +230,61 @@ export default [
       ),
     ),
     breadcrumb: 'Inventory Valuation ',
-    hint: 'Summerize your transactions for each inventory item and how they affect quantity, valuation and weighted average.',
+    hint:
+      'Summerize your transactions for each inventory item and how they affect quantity, valuation and weighted average.',
     pageTitle: formatMessage({ id: 'inventory_valuation' }),
+    backLink: true,
+    sidebarExpand: false,
+  },
+  {
+    path: `/financial-reports/customers-balance-summary`,
+    component: lazy(() =>
+      import(
+        'containers/FinancialStatements/CustomersBalanceSummary/CustomersBalanceSummary'
+      ),
+    ),
+    breadcrumb: 'Customers Balance Summary ',
+    hint: '..',
+    pageTitle: formatMessage({ id: 'customers_balance_summary' }),
+    backLink: true,
+    sidebarExpand: false,
+  },
+  {
+    path: `/financial-reports/vendors-balance-summary`,
+    component: lazy(() =>
+      import(
+        'containers/FinancialStatements/VendorsBalanceSummary/VendorsBalanceSummary'
+      ),
+    ),
+    breadcrumb: 'Vendors Balance Summary ',
+    hint: '..',
+    pageTitle: formatMessage({ id: 'vendors_balance_summary' }),
+    backLink: true,
+    sidebarExpand: false,
+  },
+  {
+    path: `/financial-reports/transactions-by-customers`,
+    // component: lazy(() =>
+    //   import(
+    //     'containers/FinancialStatements/CustomersTransactions/CustomersTransactions'
+    //   ),
+    // ),
+    breadcrumb: 'Customers Transactions ',
+    hint: '..',
+    pageTitle: formatMessage({ id: 'customers_transactions' }),
+    backLink: true,
+    sidebarExpand: false,
+  },
+  {
+    path: `/financial-reports/vendors-transactions`,
+    // component: lazy(() =>
+    //   import(
+    //     'containers/FinancialStatements/'
+    //   ),
+    // ),
+    breadcrumb: 'Vendors Transactions ',
+    hint: '..',
+    pageTitle: formatMessage({ id: 'vendors_transactions' }),
     backLink: true,
     sidebarExpand: false,
   },

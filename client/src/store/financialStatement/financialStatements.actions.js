@@ -128,3 +128,54 @@ export function toggleInventoryValuationFilterDrawer(toggle) {
     },
   };
 }
+
+
+/**
+ * Toggles display of the customers balance summary filter drawer.
+ * @param {boolean} toggle
+ */
+ export function toggleCustomersBalanceSummaryFilterDrawer(toggle) {
+  return {
+    type: `${t.CUSTOMERS_BALANCE_SUMMARY}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle,
+    },
+  };
+}
+/**
+ * Toggles display of the vendors balance summary filter drawer.
+ * @param {boolean} toggle
+ */
+ export function toggleVendorsBalanceSummaryFilterDrawer(toggle) {
+  return {
+    type: `${t.VENDORS_BALANCE_SUMMARY}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle,
+    },
+  };
+}
+/**
+ * Toggles display of the customers transactions filter drawer.
+ * @param {boolean} toggle
+ */
+ export function toggleCustomersTransactionsFilterDrawer(toggle) {
+  return {
+    type: `${t.CUSTOMERS_TRANSACTIONS}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle,
+    },
+  };
+}
+
+// /**
+//  * Toggles display of the vendors transactions filter drawer.
+//  * @param {boolean} toggle
+//  */
+//  export function toggleVendorsTransactionsFilterDrawer(toggle) {
+//   return {
+//     type: `${t.VENDORS_TRANSACTIONS}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+//     payload: {
+//       toggle,
+//     },
+//   };
+// }
