@@ -10,7 +10,8 @@ export const financialReportMenus = [
       },
       {
         title: 'Trial Balance Sheet',
-        desc: 'Summarizes the credit and debit balance of each account in your chart of accounts at a specific point in time.',
+        desc:
+          'Summarizes the credit and debit balance of each account in your chart of accounts at a specific point in time.',
         link: '/financial-reports/trial-balance-sheet',
       },
       {
@@ -21,22 +22,26 @@ export const financialReportMenus = [
       },
       {
         title: 'Profit/Loss Report',
-        desc: "Reports the revenues, costs and expenses incurred during a specific point in time with comparison period(s).",
+        desc:
+          'Reports the revenues, costs and expenses incurred during a specific point in time with comparison period(s).',
         link: '/financial-reports/profit-loss-sheet',
       },
       {
         title: 'General Ledger Report',
-        desc: "Reports every transaction going in and out of your accounts and organized by accounts and date to monitoring activity of accounts.",
+        desc:
+          'Reports every transaction going in and out of your accounts and organized by accounts and date to monitoring activity of accounts.',
         link: '/financial-reports/general-ledger',
       },
       {
         title: 'Receivable Aging Summary',
-        desc: "Summarize total unpaid balances of customers invoices with number of days the unpaid invoice is overdue.",
+        desc:
+          'Summarize total unpaid balances of customers invoices with number of days the unpaid invoice is overdue.',
         link: '/financial-reports/receivable-aging-summary',
       },
       {
         title: 'Payable Aging Summary',
-        desc: "Summarize total unpaid balances of vendors purchase invoices with the number of days the unpaid invoice is overdue.",
+        desc:
+          'Summarize total unpaid balances of vendors purchase invoices with the number of days the unpaid invoice is overdue.',
         link: '/financial-reports/payable-aging-summary',
       },
     ],
@@ -54,15 +59,36 @@ export const SalesAndPurchasesReportMenus = [
         link: '/financial-reports/purchases-by-items',
       },
       {
-        title: 'Sales by Items',
+        title: 'Sales By Items',
         desc:
-          "Summarize the business’s sold items quantity, income and average income rate of each item during a specific point in time.",
+          'Summarize the business’s sold items quantity, income and average income rate of each item during a specific point in time.',
         link: '/financial-reports/sales-by-items',
       },
       {
         title: 'Inventory valuation',
-        desc: 'Summarize the business’s purchase items quantity, cost and average cost rate of each item during a specific point in time.',
+        desc:
+          'Summarize the business’s purchase items quantity, cost and average cost rate of each item during a specific point in time.',
         link: '/financial-reports/inventory-valuation',
+      },
+      {
+        title: 'Customer Balance summary',
+        desc: '',
+        link: '/financial-reports/customers-balance-summary',
+      },
+      {
+        title: 'Vendors Balance summary',
+        desc: '',
+        link: '/financial-reports/vendors-balance-summary',
+      },
+      {
+        title: 'Customers Transactions',
+        desc: '',
+        link: '/financial-reports/transactions-by-customers',
+      },
+      {
+        title: 'Vendors Transactions',
+        desc: '',
+        link: '/financial-reports/transactions-by-vendors',
       },
     ],
   },
