@@ -47,4 +47,6 @@ export * from './CustomerBalanceSummary';
 export * from './VendorBalanceSummary';
 export * from './ContactBalanceSummary';
 export * from './TransactionsByCustomers';
+export * from './TransactionsByContacts';
+export * from './TransactionsByVendors';
 export * from './Table';
