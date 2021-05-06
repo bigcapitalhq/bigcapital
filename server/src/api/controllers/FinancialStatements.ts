@@ -71,8 +71,7 @@ export default class FinancialStatementsService {
     router.use(
       '/transactions-by-customers',
       Container.get(TransactionsByCustomers).router(),
-    )
-    
+    );
     return router;
   }
 }

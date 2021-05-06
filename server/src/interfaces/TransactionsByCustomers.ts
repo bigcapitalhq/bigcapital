@@ -3,6 +3,7 @@ import { INumberFormatQuery } from './FinancialStatements';
 export interface ITransactionsByCustomersAmount {
   amount: number;
   formattedAmount: string;
+  currencyCode: string;
 }
 
 export interface ITransactionsByCustomersTransaction {
@@ -10,9 +11,11 @@ export interface ITransactionsByCustomersTransaction {
   credit: ITransactionsByCustomersAmount;
   debit: ITransactionsByCustomersAmount;
   runningBalance: ITransactionsByCustomersAmount;
+  currencyCode: string;
   referenceNumber: string;
   transactionNumber: string;
-}
+  createdAt: string|Date,
+};
 
 export interface ITransactionsByCustomersCustomer {
   customerName: string;
@@ -29,9 +32,7 @@ export interface ITransactionsByCustomersFilter {
   noneZero: boolean;
 }
 
-export interface ITransactionsByCustomersData {
-  customers: ITransactionsByCustomersCustomer[];
-}
+export type ITransactionsByCustomersData = ITransactionsByCustomersCustomer[];
 
 export interface ITransactionsByCustomersStatement {
   data: ITransactionsByCustomersData;

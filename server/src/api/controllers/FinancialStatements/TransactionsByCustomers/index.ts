@@ -4,10 +4,14 @@ import { Inject } from 'typedi';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import BaseFinancialReportController from '../BaseFinancialReportController';
 import TransactionsByCustomersService from 'services/FinancialStatements/TransactionsByCustomer/TransactionsByCustomersService';
+import TransactionsByCustomersTableRows from 'services/FinancialStatements/TransactionsByCustomer/TransactionsByCustomersTableRows';
 
 export default class TransactionsByCustomersReportController extends BaseFinancialReportController {
   @Inject()
   transactionsByCustomersService: TransactionsByCustomersService;
+
+  @Inject()
+  transactionsByCustomersTableRows: TransactionsByCustomersTableRows;
 
   /**
    * Router constructor.
@@ -59,6 +63,12 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
         tenantId,
         filter
       );
+
+      return res.status(200).send({
+        table: {
+          rows: this.transactionsByCustomersTableRows.tableRows(data),
+        },
+      });
 
       return res.status(200).send({
         data: this.transfromToResponse(data),

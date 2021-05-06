@@ -9,7 +9,8 @@ import {
 } from 'interfaces';
 import TransactionsByCustomers from './TransactionsByCustomers';
 
-export default class TransactionsByCustomersService implements ITransactionsByCustomersService {
+export default class TransactionsByCustomersService
+  implements ITransactionsByCustomersService {
   @Inject()
   tenancy: TenancyService;
 
@@ -59,6 +60,10 @@ export default class TransactionsByCustomersService implements ITransactionsByCu
       key: 'base_currency',
     });
 
+    const filter = {
+      ...this.defaultQuery,
+      ...query,
+    };
     const customers = await Customer.query().orderBy('displayName');
 
     // Retrieve all journal transactions based on the given query.
@@ -66,10 +71,15 @@ export default class TransactionsByCustomersService implements ITransactionsByCu
       fromDate: query.fromDate,
       toDate: query.toDate,
     });
+    // Transactions map by contact id.
+    const transactionsMap = new Map(
+      Object.entries(groupBy(transactions, 'contactId'))
+    );
     // Transactions by customers data mapper.
     const reportInstance = new TransactionsByCustomers(
       customers,
-      new Map(Object.entries(groupBy(transactions, 'contactId'))),
+      transactionsMap,
+      filter,
       baseCurrency
     );
     const reportData = reportInstance.reportData();
