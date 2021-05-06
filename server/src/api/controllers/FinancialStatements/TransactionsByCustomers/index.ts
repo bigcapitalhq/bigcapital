@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { query } from 'express-validator';
 import { Inject } from 'typedi';
+import { ITransactionsByCustomersStatement } from 'interfaces';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import BaseFinancialReportController from '../BaseFinancialReportController';
 import TransactionsByCustomersService from 'services/FinancialStatements/TransactionsByCustomer/TransactionsByCustomersService';
@@ -41,6 +42,33 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
   }
 
   /**
+   * Transformes the statement to table rows response.
+   * @param {ITransactionsByCustomersStatement} statement -
+   */
+  transformToTableResponse({ data }: ITransactionsByCustomersStatement) {
+    return {
+      table: {
+        rows: this.transactionsByCustomersTableRows.tableRows(data),
+      },
+    };
+  }
+
+  /**
+   * Transformes the statement to json response.
+   * @param {ITransactionsByCustomersStatement} statement -
+   */
+  transfromToJsonResponse({
+    data,
+    columns,
+  }: ITransactionsByCustomersStatement) {
+    return {
+      data: this.transfromToResponse(data),
+      columns: this.transfromToResponse(columns),
+      query: this.transfromToResponse(query),
+    };
+  }
+
+  /**
    * Retrieve payable aging summary report.
    * @param {Request} req -
    * @param {Response} res -
@@ -55,26 +83,24 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
     const filter = this.matchedQueryData(req);
 
     try {
-      const {
-        data,
-        columns,
-        query,
-      } = await this.transactionsByCustomersService.transactionsByCustomers(
+      const transactionsByCustomers = await this.transactionsByCustomersService.transactionsByCustomers(
         tenantId,
         filter
       );
+      const accept = this.accepts(req);
+      const acceptType = accept.types(['json', 'application/json+table']);
 
-      return res.status(200).send({
-        table: {
-          rows: this.transactionsByCustomersTableRows.tableRows(data),
-        },
-      });
-
-      return res.status(200).send({
-        data: this.transfromToResponse(data),
-        columns: this.transfromToResponse(columns),
-        query: this.transfromToResponse(query),
-      });
+      switch (acceptType) {
+        case 'json':
+          return res
+            .status(200)
+            .send(this.transfromToJsonResponse(transactionsByCustomers));
+        case 'application/json+table':
+        default:
+          return res
+            .status(200)
+            .send(this.transformToTableResponse(transactionsByCustomers));
+      }
     } catch (error) {
       next(error);
     }

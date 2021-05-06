@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { query } from 'express-validator';
 import { Inject } from 'typedi';
+import { ICustomerBalanceSummaryStatement } from 'interfaces';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import CustomerBalanceSummary from 'services/FinancialStatements/CustomerBalanceSummary/CustomerBalanceSummaryService';
 import BaseFinancialReportController from '../BaseFinancialReportController';
@@ -38,35 +39,72 @@ export default class CustomerBalanceSummaryReportController extends BaseFinancia
   }
 
   /**
-   * Retrieve payable aging summary report.
-   * @param {Request} req - 
-   * @param {Response} res - 
-   * @param {NextFunction} next - 
+   * Transformes the balance summary statement to table rows.
+   * @param {ICustomerBalanceSummaryStatement} statement -
    */
-  async customerBalanceSummary(req: Request, res: Response, next: NextFunction) {
+  private transformToTableRows({
+    data,
+    columns,
+  }: ICustomerBalanceSummaryStatement) {
+    return {
+      table: {
+        rows: this.customerBalanceSummaryTableRows.tableRowsTransformer(data),
+        columns: this.transfromToResponse(columns),
+      },
+      query: this.transfromToResponse(query),
+    };
+  }
+
+  /**
+   * Transformes the balance summary statement to raw json.
+   * @param {ICustomerBalanceSummaryStatement} customerBalance -
+   */
+  private transformToJsonResponse({
+    data,
+    columns,
+    query,
+  }: ICustomerBalanceSummaryStatement) {
+    return {
+      data: this.transfromToResponse(data),
+      columns: this.transfromToResponse(columns),
+      query: this.transfromToResponse(query),
+    };
+  }
+
+  /**
+   * Retrieve payable aging summary report.
+   * @param {Request} req -
+   * @param {Response} res -
+   * @param {NextFunction} next -
+   */
+  async customerBalanceSummary(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId, settings } = req;
     const filter = this.matchedQueryData(req);
 
     try {
-      const {
-        data,
-        columns,
-        query,
-      } = await this.customerBalanceSummaryService.customerBalanceSummary(
+      const customerBalanceSummary = await this.customerBalanceSummaryService.customerBalanceSummary(
         tenantId,
         filter
       );
 
-      const tableRows = this.customerBalanceSummaryTableRows.tableRowsTransformer(
-        data
-      );
-      return res.status( 200).send({
-        table: {
-          rows: tableRows
-        },
-        columns: this.transfromToResponse(columns),
-        query: this.transfromToResponse(query),
-      });
+      const accept = this.accepts(req);
+      const acceptType = accept.types(['json', 'application/json+table']);
+
+      switch (acceptType) {
+        case 'application/json+table':
+          return res
+            .status(200)
+            .send(this.transformToTableRows(customerBalanceSummary));
+        case 'application/json':
+        default:
+          return res
+            .status(200)
+            .send(this.transformToJsonResponse(customerBalanceSummary));
+      }
     } catch (error) {
       next(error);
     }

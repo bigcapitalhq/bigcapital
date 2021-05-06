@@ -1,13 +1,14 @@
 import { Response, Request, NextFunction } from 'express';
-import { matchedData, validationResult } from "express-validator";
-import { camelCase, snakeCase, omit, set, get } from "lodash";
-import { mapKeysDeep } from 'utils'
+import { matchedData, validationResult } from 'express-validator';
+import accepts from 'accepts';
+import { camelCase, snakeCase, omit, set, get } from 'lodash';
+import { mapKeysDeep } from 'utils';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 
 export default class BaseController {
   /**
    * Converts plain object keys to cameCase style.
-   * @param {Object} data 
+   * @param {Object} data
    */
   private dataToCamelCase(data) {
     return mapKeysDeep(data, (v, k) => camelCase(k));
@@ -15,8 +16,8 @@ export default class BaseController {
 
   /**
    * Matches the body data from validation schema.
-   * @param {Request} req 
-   * @param options 
+   * @param {Request} req
+   * @param options
    */
   matchedBodyData(req: Request, options: any = {}) {
     const data = matchedData(req, {
@@ -29,7 +30,7 @@ export default class BaseController {
 
   /**
    * Matches the query data from validation schema.
-   * @param {Request} req 
+   * @param {Request} req
    */
   matchedQueryData(req: Request) {
     const data = matchedData(req, {
@@ -40,13 +41,13 @@ export default class BaseController {
 
   /**
    * Validate validation schema middleware.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   validationResult(req: Request, res: Response, next: NextFunction) {
     const validationErrors = validationResult(req);
-    
+
     if (!validationErrors.isEmpty()) {
       return res.boom.badData(null, {
         code: 'validation_error',
@@ -58,13 +59,19 @@ export default class BaseController {
 
   /**
    * Transform the given data to response.
-   * @param {any} data 
+   * @param {any} data
    */
-  transfromToResponse(data: any, translatable?: string | string[], req?: Request) {
+  transfromToResponse(
+    data: any,
+    translatable?: string | string[],
+    req?: Request
+  ) {
     const response = mapKeysDeep(data, (v, k) => snakeCase(k));
 
     if (translatable) {
-      const translatables = Array.isArray(translatable) ? translatable : [translatable];
+      const translatables = Array.isArray(translatable)
+        ? translatable
+        : [translatable];
 
       translatables.forEach((path) => {
         const value = get(response, path);
@@ -76,9 +83,18 @@ export default class BaseController {
 
   /**
    * Async middleware.
-   * @param {function} callback 
+   * @param {function} callback
    */
   asyncMiddleware(callback) {
     return asyncMiddleware(callback);
+  }
+
+  /**
+   * 
+   * @param {Request} req 
+   * @returns 
+   */
+  accepts(req) {
+    return accepts(req);
   }
 }

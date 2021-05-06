@@ -5,7 +5,7 @@ import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import BaseFinancialReportController from '../BaseFinancialReportController';
 import VendorBalanceSummaryTableRows from 'services/FinancialStatements/VendorBalanceSummary/VendorBalanceSummaryTableRows';
 import VendorBalanceSummaryService from 'services/FinancialStatements/VendorBalanceSummary/VendorBalanceSummaryService';
-
+import { IVendorBalanceSummaryStatement } from 'interfaces';
 export default class VendorBalanceSummaryReportController extends BaseFinancialReportController {
   @Inject()
   vendorBalanceSummaryService: VendorBalanceSummaryService;
@@ -38,35 +38,60 @@ export default class VendorBalanceSummaryReportController extends BaseFinancialR
   }
 
   /**
+   * Transformes the report statement to table rows.
+   * @param {IVendorBalanceSummaryStatement} statement -
+   */
+  transformToTableRows({ data }: IVendorBalanceSummaryStatement) {
+    return {
+      table: {
+        data: this.vendorBalanceSummaryTableRows.tableRowsTransformer(data),
+      },
+    };
+  }
+
+  /**
+   * Transformes the report statement to raw json.
+   * @param {IVendorBalanceSummaryStatement} statement -
+   */
+  transformToJsonResponse({ data, columns }: IVendorBalanceSummaryStatement) {
+    return {
+      data: this.transfromToResponse(data),
+      columns: this.transfromToResponse(columns),
+      query: this.transfromToResponse(query),
+    };
+  }
+
+  /**
    * Retrieve vendors balance summary.
-   * @param {Request} req - 
-   * @param {Response} res - 
-   * @param {NextFunction} next - 
+   * @param {Request} req -
+   * @param {Response} res -
+   * @param {NextFunction} next -
    */
   async vendorBalanceSummary(req: Request, res: Response, next: NextFunction) {
     const { tenantId, settings } = req;
     const filter = this.matchedQueryData(req);
 
     try {
-      const {
-        data,
-        columns,
-        query,
-      } = await this.vendorBalanceSummaryService.vendorBalanceSummary(
+      const vendorBalanceSummary = await this.vendorBalanceSummaryService.vendorBalanceSummary(
         tenantId,
         filter
       );
+      const accept = this.accepts(req);
+      const acceptType = accept.types(['json', 'application/json+table']);
 
-      const tableRows = this.vendorBalanceSummaryTableRows.tableRowsTransformer(
-        data
-      );
-      return res.status( 200).send({
-        table: {
-          rows: tableRows
-        },
-        columns: this.transfromToResponse(columns),
-        query: this.transfromToResponse(query),
-      });
+      switch (acceptType) {
+        case 'application/json+table':
+          return res
+            .status(200)
+            .send(this.transformToTableRows(vendorBalanceSummary));
+        case 'json':
+        default:
+          return res
+            .status(200)
+            .send(this.transformToJsonResponse(vendorBalanceSummary));
+      }
+
+      return res.status(200).send({});
     } catch (error) {
       next(error);
     }

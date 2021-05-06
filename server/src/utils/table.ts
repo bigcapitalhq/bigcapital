@@ -9,6 +9,12 @@ export function tableMapper(
   return data.map((object) => tableRowMapper(object, columns, rowsMeta));
 }
 
+function getAccessor(object, accessor) {
+  return typeof accessor === 'function'
+    ? accessor(object)
+    : get(object, accessor);
+}
+
 export function tableRowMapper(
   object: Object,
   columns: IColumnMapperMeta[],
@@ -16,7 +22,7 @@ export function tableRowMapper(
 ): ITableRow {
   const cells = columns.map((column) => ({
     key: column.key,
-    value: column.value ? column.value : get(object, column.accessor),
+    value: column.value ? column.value : getAccessor(object, column.accessor),
   }));
 
   return {

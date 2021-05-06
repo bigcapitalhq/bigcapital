@@ -22,8 +22,8 @@ export default class TransactionsByCustomersTableRows extends TransactionsByCont
     return {
       ...tableRowMapper(customer, columns, { rowTypes: [ROW_TYPE.CUSTOMER] }),
       children: R.pipe(
-        R.append(this.contactOpeningBalance(customer)),
         R.concat(this.contactTransactions(customer)),
+        R.prepend(this.contactOpeningBalance(customer)),
         R.append(this.contactClosingBalance(customer))
       )([]),
     };
@@ -35,7 +35,7 @@ export default class TransactionsByCustomersTableRows extends TransactionsByCont
    * @returns {ITableRow[]}
    */
   private customerRowsMapper(customer: ITransactionsByCustomersCustomer) {
-    return R.pipe(R.append(this.customerDetails(customer))).bind(this)([]);
+    return R.pipe(this.customerDetails).bind(this)(customer);
   }
 
   /**

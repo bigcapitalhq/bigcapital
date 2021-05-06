@@ -9,7 +9,6 @@ export default class FinancialSheet {
    * Transformes the number format query to settings
    */
   protected transfromFormatQueryToSettings(): IFormatNumberSettings {
-    console.log(this.numberFormat, 'XX');
     const { numberFormat } = this;
 
     return {

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { tableMapper, tableRowMapper } from 'utils';
 import {
   ITransactionsByContactsContact,
@@ -12,6 +13,11 @@ enum ROW_TYPE {
 }
 
 export default class TransactionsByContactsTableRows {
+  
+  private dateAccessor(value) {
+    return moment(value.date).format('YYYY MMM DD');
+  }
+
   /**
    * Retrieve the table rows of contact transactions.
    * @param {ITransactionsByCustomersCustomer} contact
@@ -21,7 +27,7 @@ export default class TransactionsByContactsTableRows {
     contact: ITransactionsByContactsContact
   ): ITableRow[] {
     const columns = [
-      { key: 'date', accessor: 'date' },
+      { key: 'date', accessor: this.dateAccessor },
       { key: 'account', accessor: 'account.name' },
       { key: 'referenceType', accessor: 'referenceType' },
       { key: 'transactionType', accessor: 'transactionType' },
@@ -62,9 +68,9 @@ export default class TransactionsByContactsTableRows {
     contact: ITransactionsByContactsContact
   ): ITableRow {
     const columns = [
-      { key: 'openingBalanceLabel', value: 'Closing balance' },
+      { key: 'closingBalanceLabel', value: 'Closing balance' },
       {
-        key: 'openingBalanceValue',
+        key: 'closingBalanceValue',
         accessor: 'closingBalance.formattedAmount',
       },
     ];

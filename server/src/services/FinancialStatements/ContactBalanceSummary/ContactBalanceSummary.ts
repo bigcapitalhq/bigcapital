@@ -5,7 +5,7 @@ import {
   IContactBalanceSummaryContact,
   IContactBalanceSummaryTotal,
   IContactBalanceSummaryAmount,
-  IContactBalanceSummaryPercentage
+  IContactBalanceSummaryPercentage,
 } from 'interfaces';
 
 export class ContactBalanceSummaryReport extends FinancialSheet {
@@ -60,7 +60,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    * @param {IContactBalanceSummaryContact} contact
    * @returns {IContactBalanceSummaryContact}
    */
-   private contactCamparsionPercentageOfColumnMapper(
+  private contactCamparsionPercentageOfColumnMapper(
     total: number,
     contact: IContactBalanceSummaryContact
   ): IContactBalanceSummaryContact {
@@ -90,7 +90,14 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
     return contacts.map(camparsionPercentageOfColummn);
   }
 
-  getContactTotalFormat(amount: number) {
+  /**
+   * Retrieve the contact total format.
+   * @param {number} amount -
+   * @return {IContactBalanceSummaryAmount}
+   */
+  protected getContactTotalFormat(
+    amount: number
+  ): IContactBalanceSummaryAmount {
     return {
       amount,
       formattedAmount: this.formatNumber(amount),
@@ -100,10 +107,10 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
 
   /**
    * Retrieve the total amount of contacts sections.
-   * @param {number} amount 
+   * @param {number} amount
    * @returns {IContactBalanceSummaryAmount}
    */
-  getTotalFormat(amount: number): IContactBalanceSummaryAmount {
+  protected getTotalFormat(amount: number): IContactBalanceSummaryAmount {
     return {
       amount,
       formattedAmount: this.formatNumber(amount),
@@ -113,10 +120,12 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
 
   /**
    * Retrieve the percentage amount object.
-   * @param {number} amount 
+   * @param {number} amount
    * @returns {IContactBalanceSummaryPercentage}
    */
-  getPercentageMeta(amount: number): IContactBalanceSummaryPercentage {
+  protected getPercentageMeta(
+    amount: number
+  ): IContactBalanceSummaryPercentage {
     return {
       amount,
       formattedAmount: this.formatPercentage(amount),
