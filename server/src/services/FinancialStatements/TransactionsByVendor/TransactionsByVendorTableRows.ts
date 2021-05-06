@@ -35,7 +35,7 @@ export default class TransactionsByVendorsTableRows extends TransactionsByContac
    * @returns {ITableRow[]}
    */
   private vendorRowsMapper(vendor: ITransactionsByVendorsVendor) {
-    return R.pipe(R.append(this.vendorDetails(vendor))).bind(this)([]);
+    return R.pipe(this.vendorDetails).bind(this)(vendor);
   }
 
   /**
