@@ -49,6 +49,22 @@ export const inventoryValuationFilterDrawerSelector = (state) => {
   return filterDrawerByTypeSelector('inventoryValuation')(state);
 };
 
+export const customerBalanceSummaryFilterDrawerSelector = (state) => {
+  return filterDrawerByTypeSelector('customersBalanceSummary')(state);
+};
+
+export const vendorsBalanceSummaryFilterDrawerSelector = (state) => {
+  return filterDrawerByTypeSelector('vendorsBalanceSummary')(state);
+};
+
+export const customersTransactionsFilterDrawerSelector = (state) => {
+  return filterDrawerByTypeSelector('customersTransactions')(state);
+};
+
+export const vendorsTransactionsFilterDrawerSelector = (state) => {
+  return filterDrawerByTypeSelector('vendorsTransactions')(state);
+};
+
 /**
  * Retrieve balance sheet filter drawer.
  */
@@ -152,6 +168,45 @@ export const getSalesByItemsFilterDrawer = createSelector(
  */
 export const getInventoryValuationFilterDrawer = createSelector(
   inventoryValuationFilterDrawerSelector,
+  (isOpen) => {
+    return isOpen;
+  },
+);
+
+/**
+ * Retrieve customers balance summary filter drawer.
+ */
+export const getCustomersBalanceSummaryFilterDrawer = createSelector(
+  customerBalanceSummaryFilterDrawerSelector,
+  (isOpen) => {
+    return isOpen;
+  },
+);
+/**
+ * Retrieve vendors balance summary filter drawer.
+ */
+export const getVendorsBalanceSummaryFilterDrawer = createSelector(
+  vendorsBalanceSummaryFilterDrawerSelector,
+  (isOpen) => {
+    return isOpen;
+  },
+);
+
+/**
+ * Retrieve customers transactions filter drawer.
+ */
+export const getCustomersTransactionsFilterDrawer = createSelector(
+  customersTransactionsFilterDrawerSelector,
+  (isOpen) => {
+    return isOpen;
+  },
+);
+
+/**
+ * Retrieve vendors transactions filter drawer.
+ */
+export const getVendorsTransactionsFilterDrawer = createSelector(
+  vendorsTransactionsFilterDrawerSelector,
   (isOpen) => {
     return isOpen;
   },

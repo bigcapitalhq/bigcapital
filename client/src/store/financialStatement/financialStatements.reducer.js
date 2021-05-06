@@ -33,6 +33,18 @@ const initialState = {
   inventoryValuation: {
     displayFilterDrawer: false,
   },
+  customersBalanceSummary: {
+    displayFilterDrawer: false,
+  },
+  vendorsBalanceSummary: {
+    displayFilterDrawer: false,
+  },
+  customersTransactions: {
+    displayFilterDrawer: false,
+  },
+  vendorsTransactions: {
+    displayFilterDrawer: false,
+  },
 };
 
 /**
@@ -62,5 +74,21 @@ export default createReducer(initialState, {
   ...financialStatementFilterToggle(
     t.INVENTORY_VALUATION,
     'inventoryValuation',
+  ),
+  ...financialStatementFilterToggle(
+    t.CUSTOMERS_BALANCE_SUMMARY,
+    'customersBalanceSummary',
+  ),
+  ...financialStatementFilterToggle(
+    t.VENDORS_BALANCE_SUMMARY,
+    'vendorsBalanceSummary',
+  ),
+  ...financialStatementFilterToggle(
+    t.CUSTOMERS_TRANSACTIONS,
+    'customersTransactions',
+  ),
+  ...financialStatementFilterToggle(
+    t.VENDORS_TRANSACTIONS,
+    'vendorsTransactions',
   ),
 });

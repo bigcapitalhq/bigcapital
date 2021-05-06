@@ -287,3 +287,80 @@ export function useSalesByItems(query, props) {
     },
   );
 }
+
+/**
+ * Retrieve customers balance summary report.
+ */
+export function useCustomerBalanceSummaryReport(query, props) {
+  return useRequestQuery(
+    [t.FINANCIAL_REPORT, t.CUSTOMERS_BALANCE_SUMMARY, query],
+    {
+      method: 'get',
+      url: '/financial_statements/customer-balance-summary',
+      params: query,
+    },
+    {
+      select: (res) => ({
+        columns: res.data.columns,
+        query: res.data.query,
+        tableRows: res.data.table.rows,
+      }),
+      defaultData: {
+        tableRows: [],
+        query: {},
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve vendors balance summary report.
+ */
+export function useVendorsBalanceSummaryReport(query, props) {
+  return useRequestQuery(
+    [t.FINANCIAL_REPORT, t.VENDORS_BALANCE_SUMMARY, query],
+    {
+      method: 'get',
+      url: '/financial_statements/vendor-balance-summary',
+      params: query,
+    },
+    {
+      select: (res) => ({
+        columns: res.data.columns,
+        query: res.data.query,
+        tableRows: res.data.table.rows,
+      }),
+      defaultData: {
+        tableRows: [],
+        query: {},
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve customers transcations report.
+ */
+export function useCustomersTranscationsReport(query, props) {
+  return useRequestQuery(
+    [t.FINANCIAL_REPORT, t.CUSTOMERS_TRANSACTIONS, query],
+    {
+      method: 'get',
+      url: '/financial_statements/transactions-by-customers',
+      params: query,
+    },
+    {
+      select: (res) => ({
+        data: res.data.table,
+        tableRows: res.data.table.rows,
+      }),
+      defaultData: {
+        tableRows: [],
+        data: [],
+      },
+      ...props,
+    },
+  );
+}
