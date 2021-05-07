@@ -1,14 +1,18 @@
-import { sumBy } from 'lodash';
+import { sumBy, defaultTo } from 'lodash';
 import {
   ITransactionsByContactsTransaction,
   ITransactionsByContactsAmount,
-  ITransactionsByContacts,
+  ITransactionsByContactsFilter,
   IContact,
+  ILedger,
 } from 'interfaces';
 import FinancialSheet from '../FinancialSheet';
 
 export default class TransactionsByContact extends FinancialSheet {
   readonly contacts: IContact[];
+  readonly ledger: ILedger;
+  readonly filter: ITransactionsByContactsFilter;
+  readonly accountsGraph: any;
 
   /**
    * Customer transaction mapper.
@@ -18,11 +22,13 @@ export default class TransactionsByContact extends FinancialSheet {
   protected contactTransactionMapper(
     transaction
   ): Omit<ITransactionsByContactsTransaction, 'runningBalance'> {
+    const account = this.accountsGraph.getNodeData(transaction.accountId);
     const currencyCode = 'USD';
 
     return {
       credit: this.getContactAmount(transaction.credit, currencyCode),
       debit: this.getContactAmount(transaction.debit, currencyCode),
+      accountName: account.name,
       currencyCode: 'USD',
       transactionNumber: transaction.transactionNumber,
       referenceNumber: transaction.referenceNumber,
@@ -69,8 +75,8 @@ export default class TransactionsByContact extends FinancialSheet {
   ): number {
     const closingBalance = openingBalance;
 
-    const totalCredit = sumBy(customerTransactions, 'credit');
-    const totalDebit = sumBy(customerTransactions, 'debit');
+    const totalCredit = sumBy(customerTransactions, 'credit.amount');
+    const totalDebit = sumBy(customerTransactions, 'debit.amount');
 
     return closingBalance + (totalDebit - totalCredit);
   }
@@ -81,7 +87,14 @@ export default class TransactionsByContact extends FinancialSheet {
    * @returns {number}
    */
   protected getContactOpeningBalance(customerId: number): number {
-    return 0;
+    const openingBalanceLedger = this.ledger
+      .whereContactId(customerId)
+      .whereToDate(this.filter.fromDate);
+
+    // Retrieve the closing balance of the ledger.
+    const openingBalance = openingBalanceLedger.getClosingBalance();
+
+    return defaultTo(openingBalance, 0);
   }
 
   /**
@@ -97,6 +110,23 @@ export default class TransactionsByContact extends FinancialSheet {
     return {
       amount,
       formattedAmount: this.formatNumber(amount, { currencyCode }),
+      currencyCode,
+    };
+  }
+
+  /**
+   * Retrieve the contact total amount format meta.
+   * @param {number} amount - Amount.
+   * @param {string} currencyCode - Currency code./
+   * @returns {ITransactionsByContactsAmount}
+   */
+  protected getTotalAmountMeta(
+    amount: number,
+    currencyCode: string
+  ) {
+    return {
+      amount,
+      formattedAmount: this.formatTotalNumber(amount, { currencyCode }),
       currencyCode,
     };
   }

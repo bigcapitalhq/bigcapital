@@ -1,4 +1,5 @@
 import moment from 'moment';
+import * as R from 'ramda';
 import { tableMapper, tableRowMapper } from 'utils';
 import {
   ITransactionsByContactsContact,
@@ -28,11 +29,12 @@ export default class TransactionsByContactsTableRows {
   ): ITableRow[] {
     const columns = [
       { key: 'date', accessor: this.dateAccessor },
-      { key: 'account', accessor: 'account.name' },
-      { key: 'referenceType', accessor: 'referenceType' },
-      { key: 'transactionType', accessor: 'transactionType' },
+      { key: 'account', accessor: 'accountName' },
+      { key: 'referenceNumber', accessor: 'referenceNumber' },
+      { key: 'transactionNumber', accessor: 'transactionNumber' },
       { key: 'credit', accessor: 'credit.formattedAmount' },
       { key: 'debit', accessor: 'debit.formattedAmount' },
+      { key: 'runningBalance', accessor: 'runningBalance.formattedAmount' },
     ];
     return tableMapper(contact.transactions, columns, {
       rowTypes: [ROW_TYPE.TRANSACTION],
@@ -49,6 +51,7 @@ export default class TransactionsByContactsTableRows {
   ): ITableRow {
     const columns = [
       { key: 'openingBalanceLabel', value: 'Opening balance' },
+      ...R.repeat({ key: 'empty', value: '' }, 5),
       {
         key: 'openingBalanceValue',
         accessor: 'openingBalance.formattedAmount',
@@ -69,6 +72,7 @@ export default class TransactionsByContactsTableRows {
   ): ITableRow {
     const columns = [
       { key: 'closingBalanceLabel', value: 'Closing balance' },
+      ...R.repeat({ key: 'empty', value: '' }, 5),
       {
         key: 'closingBalanceValue',
         accessor: 'closingBalance.formattedAmount',

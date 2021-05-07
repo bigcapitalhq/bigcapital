@@ -120,6 +120,25 @@ export default class AccountTransaction extends TenantModel {
         query.modify('filterDateRange', null, toDate)
         query.modify('sumationCreditDebit')
       },
+
+      contactsOpeningBalance(query, openingDate, receivableAccounts, customersIds) {
+        // Filter by date.
+        query.modify('filterDateRange', null, openingDate);
+
+        // Filter by customers.
+        query.whereNot('contactId', null);
+        query.where('accountId', receivableAccounts);
+
+        if (customersIds) {
+          query.whereIn('contactId', customersIds);
+        }
+        
+        // Group by the contact transactions.
+        query.groupBy('contactId');
+        query.sum('credit as credit');
+        query.sum('debit as debit');
+        query.select('contactId');
+      }
     };
   }
 

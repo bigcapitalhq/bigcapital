@@ -56,10 +56,20 @@ export default class FinancialSheet {
     });
   }
 
-
+  /**
+   * Formates the amount to the percentage string.
+   * @param {number} amount 
+   * @returns {string}
+   */
   protected formatPercentage(
     amount
   ): string {
-    return `%${amount * 100}`;
+    const percentage = amount * 100;
+
+    return formatNumber(percentage, {
+      symbol: '%',
+      excerptZero: true,
+      money: false,
+    })
   }
 }

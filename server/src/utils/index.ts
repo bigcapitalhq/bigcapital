@@ -242,10 +242,11 @@ const formatNumber = (
     decimal = '.',
     zeroSign = '',
     money = true,
-    currencyCode
+    currencyCode,
+    symbol
   }
 ) => {
-  const symbol = getCurrencySign(currencyCode);
+  const formattedSymbol = getCurrencySign(currencyCode);
   const negForamt = getNegativeFormat(negativeFormat);
   const format = '%s%v';
 
@@ -256,7 +257,7 @@ const formatNumber = (
   }
   return accounting.formatMoney(
     formattedBalance,
-    money ? symbol : '',
+    money ? formattedSymbol : symbol ? symbol : '',
     precision,
     thousand,
     decimal,

@@ -10,6 +10,7 @@ export interface ITransactionsByContactsTransaction {
   date: string|Date,
   credit: ITransactionsByContactsAmount;
   debit: ITransactionsByContactsAmount;
+  accountName: string,
   runningBalance: ITransactionsByContactsAmount;
   currencyCode: string;
   referenceNumber: string;

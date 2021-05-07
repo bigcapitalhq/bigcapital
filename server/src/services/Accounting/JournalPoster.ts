@@ -694,4 +694,51 @@ export default class JournalPoster implements IJournalPoster {
   getAccountEntries(accountId: number) {
     return this.entries.filter((entry) => entry.account === accountId);
   }
+
+  /**
+   * Retrieve total balnace of the given customer/vendor contact.
+   * @param {Number} accountId
+   * @param {Number} contactId
+   * @param {String} contactType
+   * @param {Date} closingDate
+   */
+  getEntriesBalance(
+    entries
+  ) {
+    let balance = 0;
+
+    entries.forEach((entry) => {
+      if (entry.credit) {
+        balance -= entry.credit;
+      }
+      if (entry.debit) {
+        balance += entry.debit;
+      }
+    });
+    return balance;
+  }
+
+  getContactEntries(
+    contactId: number,
+    openingDate: Date,
+    closingDate?: Date,
+  ) {
+    const momentClosingDate = moment(closingDate);
+    const momentOpeningDate = moment(openingDate);
+
+    return this.entries.filter((entry) => {
+      if (
+        (closingDate &&
+          !momentClosingDate.isAfter(entry.date, 'day') &&
+          !momentClosingDate.isSame(entry.date, 'day')) ||
+        (openingDate &&
+          !momentOpeningDate.isBefore(entry.date, 'day') &&
+          !momentOpeningDate.isSame(entry.date)) ||
+        (entry.contactId === contactId)
+      ) {
+        return true;
+      }
+      return false;
+    });
+  }
 }

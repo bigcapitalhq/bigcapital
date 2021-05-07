@@ -6,6 +6,7 @@ import BaseFinancialReportController from '../BaseFinancialReportController';
 import TransactionsByVendorsTableRows from 'services/FinancialStatements/TransactionsByVendor/TransactionsByVendorTableRows';
 import TransactionsByVendorsService from 'services/FinancialStatements/TransactionsByVendor/TransactionsByVendorService';
 import { ITransactionsByVendorsStatement } from 'interfaces';
+
 export default class TransactionsByVendorsReportController extends BaseFinancialReportController {
   @Inject()
   transactionsByVendorsService: TransactionsByVendorsService;
@@ -44,7 +45,7 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
    * Transformes the report statement to table rows.
    * @param {ITransactionsByVendorsStatement} statement -
    */
-  transformToTableRows({ data }: ITransactionsByVendorsStatement) {
+  private transformToTableRows({ data }: ITransactionsByVendorsStatement) {
     return {
       table: {
         data: this.transactionsByVendorsTableRows.tableRows(data),
@@ -56,7 +57,7 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
    * Transformes the report statement to json response.
    * @param {ITransactionsByVendorsStatement} statement -
    */
-  transformToJsonResponse({
+  private transformToJsonResponse({
     data,
     columns,
     query,

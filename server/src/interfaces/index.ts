@@ -50,3 +50,4 @@ export * from './TransactionsByCustomers';
 export * from './TransactionsByContacts';
 export * from './TransactionsByVendors';
 export * from './Table';
+export * from './Ledger';

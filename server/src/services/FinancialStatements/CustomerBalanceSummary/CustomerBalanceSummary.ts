@@ -1,4 +1,4 @@
-import { sumBy } from 'lodash';
+import { get } from 'lodash';
 import * as R from 'ramda';
 import {
   IJournalPoster,
@@ -45,11 +45,12 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @returns {ICustomerBalanceSummaryCustomer}
    */
   private customerMapper(customer: ICustomer): ICustomerBalanceSummaryCustomer {
-    const balance = this.receivableLedger.getContactBalance(null, customer.id);
+    const customerBalance = this.receivableLedger.get(customer.id);
+    const balanceAmount = get(customerBalance, 'balance', 0);
 
     return {
       customerName: customer.displayName,
-      total: this.getContactTotalFormat(balance),
+      total: this.getContactTotalFormat(balanceAmount),
     };
   }
  
