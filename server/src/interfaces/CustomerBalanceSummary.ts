@@ -4,11 +4,13 @@ import {
   IContactBalanceSummaryQuery,
   IContactBalanceSummaryAmount,
   IContactBalanceSummaryPercentage,
-  IContactBalanceSummaryTotal
+  IContactBalanceSummaryTotal,
 } from './ContactBalanceSummary';
 
 export interface ICustomerBalanceSummaryQuery
-  extends IContactBalanceSummaryQuery {}
+  extends IContactBalanceSummaryQuery {
+  customersIds?: number[];
+}
 
 export interface ICustomerBalanceSummaryAmount
   extends IContactBalanceSummaryAmount {}
@@ -22,7 +24,8 @@ export interface ICustomerBalanceSummaryCustomer {
   percentageOfColumn?: ICustomerBalanceSummaryPercentage;
 }
 
-export interface ICustomerBalanceSummaryTotal extends IContactBalanceSummaryTotal {
+export interface ICustomerBalanceSummaryTotal
+  extends IContactBalanceSummaryTotal {
   total: ICustomerBalanceSummaryAmount;
   percentageOfColumn?: ICustomerBalanceSummaryPercentage;
 }

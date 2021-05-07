@@ -1,7 +1,7 @@
 import { get } from 'lodash';
 import * as R from 'ramda';
 import {
-  IJournalPoster,
+  ILedger,
   ICustomer,
   ICustomerBalanceSummaryCustomer,
   ICustomerBalanceSummaryQuery,
@@ -11,7 +11,7 @@ import {
 import { ContactBalanceSummaryReport } from '../ContactBalanceSummary/ContactBalanceSummary';
 
 export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
-  readonly receivableLedger: IJournalPoster;
+  readonly ledger: ILedger;
   readonly baseCurrency: string;
   readonly customers: ICustomer[];
   readonly filter: ICustomerBalanceSummaryQuery;
@@ -25,14 +25,14 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @param {string} baseCurrency
    */
   constructor(
-    receivableLedger: IJournalPoster,
+    ledger: ILedger,
     customers: ICustomer[],
     filter: ICustomerBalanceSummaryQuery,
     baseCurrency: string
   ) {
     super();
 
-    this.receivableLedger = receivableLedger;
+    this.ledger = ledger;
     this.baseCurrency = baseCurrency;
     this.customers = customers;
     this.filter = filter;
@@ -45,12 +45,13 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @returns {ICustomerBalanceSummaryCustomer}
    */
   private customerMapper(customer: ICustomer): ICustomerBalanceSummaryCustomer {
-    const customerBalance = this.receivableLedger.get(customer.id);
-    const balanceAmount = get(customerBalance, 'balance', 0);
+    const closingBalance = this.ledger
+      .whereContactId(customer.id)
+      .getClosingBalance();
 
     return {
       customerName: customer.displayName,
-      total: this.getContactTotalFormat(balanceAmount),
+      total: this.getContactTotalFormat(closingBalance),
     };
   }
  
@@ -96,7 +97,11 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
     };
   }
 
-  reportColumns() {
+  /**
+   * Retrieve the report statement columns
+   * @returns 
+   */
+  public reportColumns() {
     return [];
   }
 }

@@ -1,16 +1,17 @@
 import { Inject } from 'typedi';
 import moment from 'moment';
-import { map } from 'lodash';
+import { isEmpty, map } from 'lodash';
 import TenancyService from 'services/Tenancy/TenancyService';
 import * as R from 'ramda';
-import { transformToMap } from 'utils';
 import {
   ICustomerBalanceSummaryService,
   ICustomerBalanceSummaryQuery,
   ICustomerBalanceSummaryStatement,
+  ICustomer
 } from 'interfaces';
 import { CustomerBalanceSummaryReport } from './CustomerBalanceSummary';
 import { ACCOUNT_TYPE } from 'data/AccountTypes';
+import Ledger from 'services/Accounting/Ledger';
 
 export default class CustomerBalanceSummaryService
   implements ICustomerBalanceSummaryService {
@@ -42,39 +43,64 @@ export default class CustomerBalanceSummaryService
     };
   }
 
-  customersBalancesQuery(query) {
-    query.groupBy('contactId');
-    query.sum('credit as credit');
-    query.sum('debit as debit');
-    query.select('contactId');
+  /**
+   * Retrieve the A/R accounts.
+   * @param tenantId
+   * @returns
+   */
+  private getReceivableAccounts(tenantId: number) {
+    const { Account } = this.tenancy.models(tenantId);
+
+    return Account.query().where(
+      'accountType',
+      ACCOUNT_TYPE.ACCOUNTS_RECEIVABLE
+    );
   }
 
   /**
    * Retrieve the customers credit/debit totals
-   * @param {number} tenantId 
-   * @returns 
+   * @param {number} tenantId
+   * @returns
    */
-  async getCustomersCreditDebitTotals(tenantId: number) {
-    const { AccountTransaction, Account } = this.tenancy.models(tenantId);
+  private async getReportCustomersTransactions(tenantId: number, asDate: any) {
+    const { AccountTransaction } = this.tenancy.models(tenantId);
 
-    const receivableAccounts = await Account.query().where(
-      'accountType',
-      ACCOUNT_TYPE.ACCOUNTS_RECEIVABLE
-    );
+    // Retrieve the receivable accounts A/R.
+    const receivableAccounts = await this.getReceivableAccounts(tenantId);
     const receivableAccountsIds = map(receivableAccounts, 'id');
 
-    const customersTotals = await AccountTransaction.query().onBuild((query) => {
-      query.whereIn('accountId', receivableAccountsIds);
-      this.customersBalancesQuery(query);
-    });
+    // Retrieve the customers transactions of A/R accounts.
+    const customersTranasctions = await AccountTransaction.query().onBuild(
+      (query) => {
+        query.whereIn('accountId', receivableAccountsIds);
+        query.modify('filterDateRange', null, asDate);
+        query.groupBy('contactId');
+        query.sum('credit as credit');
+        query.sum('debit as debit');
+        query.select('contactId');
+      }
+    );
+    const commonProps = { accountNormal: 'debit', date: asDate };
 
-    return R.compose(
-      (customers) => transformToMap(customers, 'contactId'),
-      (customers) => customers.map((customer) => ({
-        ...customer,
-        balance: customer.debit - customer.credit
-      })),
-    )(customersTotals);
+    return R.map(R.merge(commonProps))(customersTranasctions);
+  }
+
+  /**
+   * Retrieve the report customers.
+   * @param {number} tenantId 
+   * @param {number[]} customersIds 
+   * @returns {ICustomer[]}
+   */
+  private getReportCustomers(tenantId: number, customersIds: number[]): ICustomer[] {
+    const { Customer } = this.tenancy.models(tenantId);
+
+    return Customer.query()
+      .orderBy('displayName')
+      .onBuild((query) => {
+        if (!isEmpty(customersIds)) {
+          query.whereIn('id', customersIds);
+        }
+      });
   }
 
   /**
@@ -87,19 +113,15 @@ export default class CustomerBalanceSummaryService
     tenantId: number,
     query: ICustomerBalanceSummaryQuery
   ): Promise<ICustomerBalanceSummaryStatement> {
-    const { Customer } = this.tenancy.models(tenantId);
-
     // Settings tenant service.
     const settings = this.tenancy.settings(tenantId);
     const baseCurrency = settings.get({
       group: 'organization',
       key: 'base_currency',
     });
+    // Merges the default query and request query.
+    const filter = { ...this.defaultQuery, ...query };
 
-    const filter = {
-      ...this.defaultQuery,
-      ...query,
-    };
     this.logger.info(
       '[customer_balance_summary] trying to calculate the report.',
       {
@@ -108,27 +130,30 @@ export default class CustomerBalanceSummaryService
       }
     );
     // Retrieve the customers list ordered by the display name.
-    const customers = await Customer.query().orderBy('displayName');
-
+    const customers = await this.getReportCustomers(
+      tenantId,
+      query.customersIds
+    );
     // Retrieve the customers debit/credit totals.
-    const customersBalances = await this.getCustomersCreditDebitTotals(tenantId);
+    const customersTransactions = await this.getReportCustomersTransactions(
+      tenantId,
+      filter.asDate
+    );
+    // Ledger query.
+    const ledger = new Ledger(customersTransactions);
 
     // Report instance.
-    const reportInstance = new CustomerBalanceSummaryReport(
-      customersBalances,
+    const report = new CustomerBalanceSummaryReport(
+      ledger,
       customers,
       filter,
       baseCurrency
     );
-    // Retrieve the report statement.
-    const reportData = reportInstance.reportData();
-
-    // Retrieve the report columns.
-    const reportColumns = reportInstance.reportColumns();
 
     return {
-      data: reportData,
-      columns: reportColumns,
+      data: report.reportData(),
+      columns: report.reportColumns(),
+      query: filter
     };
   }
 }

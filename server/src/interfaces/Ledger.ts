@@ -5,6 +5,7 @@ export interface ILedger {
   whereContactId(contactId: number): ILedger;
   whereFromDate(fromDate: Date | string): ILedger;
   whereToDate(toDate: Date | string): ILedger;
+  getClosingBalance(): number;
 }
 
 export interface ILedgerEntry {

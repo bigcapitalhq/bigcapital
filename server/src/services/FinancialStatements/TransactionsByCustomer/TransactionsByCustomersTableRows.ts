@@ -17,7 +17,11 @@ export default class TransactionsByCustomersTableRows extends TransactionsByCont
    * @returns {ITableRow[]}
    */
   private customerDetails(customer: ITransactionsByCustomersCustomer) {
-    const columns = [{ key: 'customerName', accessor: 'customerName' }];
+    const columns = [
+      { key: 'customerName', accessor: 'customerName' },
+      ...R.repeat({ key: 'empty', value: '' }, 5),
+      { key: 'closingBalanceValue', accessor: 'closingBalance.formattedAmount' },
+    ];
 
     return {
       ...tableRowMapper(customer, columns, { rowTypes: [ROW_TYPE.CUSTOMER] }),

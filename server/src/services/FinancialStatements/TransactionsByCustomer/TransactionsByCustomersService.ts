@@ -142,7 +142,6 @@ export default class TransactionsByCustomersService
       ...this.defaultQuery,
       ...query,
     };
-
     const accountsGraph = await accountRepository.getDependencyGraph();
     const customers = await Customer.query().orderBy('displayName');
 
@@ -181,6 +180,7 @@ export default class TransactionsByCustomersService
     return {
       data: reportData,
       columns: reportColumns,
+      query: filter,
     };
   }
 }
