@@ -41,8 +41,8 @@ export default function VendorsTransactionsTable({
       companyName={companyName}
       sheetType={formatMessage({ id: 'vendors_transactions' })}
       loading={isVendorsTransactionsLoading}
-      fromDate={query.fromDate}
-      toDate={query.toDate}
+      fromDate={query.from_date}
+      toDate={query.to_date}
     >
       <DataTable
         className="bigcapital-datatable--financial-report"

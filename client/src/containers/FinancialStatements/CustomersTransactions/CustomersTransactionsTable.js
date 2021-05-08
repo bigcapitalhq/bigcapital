@@ -40,8 +40,8 @@ export default function CustomersTransactionsTable({
       companyName={companyName}
       sheetType={formatMessage({ id: 'customers_transactions' })}
       loading={isCustomersTransactionsLoading}
-      fromDate={query.fromDate}
-      toDate={query.toDate}
+      fromDate={query.from_date}
+      toDate={query.to_date}
     >
       <DataTable
         className="bigcapital-datatable--financial-report"
