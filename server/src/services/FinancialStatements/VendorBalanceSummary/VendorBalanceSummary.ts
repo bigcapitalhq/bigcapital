@@ -1,17 +1,16 @@
 import * as R from 'ramda';
 import {
-  IJournalPoster,
+  ILedger,
   IVendor,
   IVendorBalanceSummaryVendor,
   IVendorBalanceSummaryQuery,
   IVendorBalanceSummaryData,
-  IVendorBalanceSummaryTotal,
   INumberFormatQuery,
 } from 'interfaces';
 import { ContactBalanceSummaryReport } from '../ContactBalanceSummary/ContactBalanceSummary';
 
 export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
-  readonly payableLedger: IJournalPoster;
+  readonly ledger: ILedger;
   readonly baseCurrency: string;
   readonly vendors: IVendor[];
   readonly filter: IVendorBalanceSummaryQuery;
@@ -25,14 +24,14 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @param {string} baseCurrency
    */
   constructor(
-    payableLedger: IJournalPoster,
+    ledger: ILedger,
     vendors: IVendor[],
     filter: IVendorBalanceSummaryQuery,
     baseCurrency: string
   ) {
     super();
 
-    this.payableLedger = payableLedger;
+    this.ledger = ledger;
     this.baseCurrency = baseCurrency;
     this.vendors = vendors;
     this.filter = filter;
@@ -45,11 +44,13 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @returns {IVendorBalanceSummaryVendor}
    */
   private vendorMapper(vendor: IVendor): IVendorBalanceSummaryVendor {
-    const balance = this.payableLedger.getContactBalance(null, vendor.id);
+    const closingBalance = this.ledger
+      .whereContactId(vendor.id)
+      .getClosingBalance();
 
     return {
       vendorName: vendor.displayName,
-      total: this.getContactTotalFormat(balance),
+      total: this.getContactTotalFormat(closingBalance),
     };
   }
 

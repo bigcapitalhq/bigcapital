@@ -4,9 +4,8 @@ import {
   ITransactionsByVendorsFilter,
   ITransactionsByVendorsTransaction,
   ITransactionsByVendorsVendor,
-  ITransactionsByVendorsAmount,
   ITransactionsByVendorsData,
-  IAccountTransaction,
+  ILedger,
   INumberFormatQuery,
   IVendor
 } from 'interfaces';
@@ -18,6 +17,8 @@ export default class TransactionsByVendors extends TransactionsByContact{
   readonly filter: ITransactionsByVendorsFilter;
   readonly baseCurrency: string;
   readonly numberFormat: INumberFormatQuery;
+  readonly accountsGraph: any;
+  readonly ledger: ILedger;
 
   /**
    * Constructor method.
@@ -27,14 +28,16 @@ export default class TransactionsByVendors extends TransactionsByContact{
    */
   constructor(
     vendors: IVendor[],
-    transactionsByContact: Map<number, IAccountTransaction[]>,
+    accountsGraph: any,
+    ledger: ILedger,
     filter: ITransactionsByVendorsFilter,
     baseCurrency: string
   ) {
     super();
 
     this.contacts = vendors;
-    this.transactionsByContact = transactionsByContact;
+    this.accountsGraph = accountsGraph;
+    this.ledger = ledger;
     this.baseCurrency = baseCurrency;
     this.filter = filter;
     this.numberFormat = this.filter.numberFormat;
@@ -50,12 +53,17 @@ export default class TransactionsByVendors extends TransactionsByContact{
     vendorId: number,
     openingBalance: number
   ): ITransactionsByVendorsTransaction[] {
-    const transactions = this.transactionsByContact.get(vendorId + '') || [];
+    const openingBalanceLedger = this.ledger
+      .whereContactId(vendorId)
+      .whereFromDate(this.filter.fromDate)
+      .whereToDate(this.filter.toDate);
+
+    const openingEntries = openingBalanceLedger.getEntries();
 
     return R.compose(
       R.curry(this.contactTransactionRunningBalance)(openingBalance),
       R.map(this.contactTransactionMapper.bind(this))
-    ).bind(this)(transactions);
+    ).bind(this)(openingEntries);
   }
 
   /**
@@ -66,17 +74,17 @@ export default class TransactionsByVendors extends TransactionsByContact{
   private vendorMapper(
     vendor: IVendor
   ): ITransactionsByVendorsVendor {
-    const openingBalance = this.getContactOpeningBalance(1);
+    const openingBalance = this.getContactOpeningBalance(vendor.id);
     const transactions = this.vendorTransactions(vendor.id, openingBalance);
-    const closingBalance = this.getContactClosingBalance(transactions, 0);
+    const closingBalance = this.getContactClosingBalance(transactions, openingBalance);
 
     return {
       vendorName: vendor.displayName,
-      openingBalance: this.getContactAmount(
+      openingBalance: this.getTotalAmountMeta(
         openingBalance,
         vendor.currencyCode
       ),
-      closingBalance: this.getContactAmount(
+      closingBalance: this.getTotalAmountMeta(
         closingBalance,
         vendor.currencyCode
       ),

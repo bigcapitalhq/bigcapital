@@ -2,6 +2,7 @@ import { INumberFormatQuery } from './FinancialStatements';
 
 export interface IVendorBalanceSummaryQuery {
   asDate: Date;
+  vendorsIds: number[],
   numberFormat: INumberFormatQuery;
   comparison: {
     percentageOfColumn: boolean;

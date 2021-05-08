@@ -113,7 +113,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
   protected getTotalFormat(amount: number): IContactBalanceSummaryAmount {
     return {
       amount,
-      formattedAmount: this.formatNumber(amount, { money: true }),
+      formattedAmount: this.formatTotalNumber(amount, { money: true }),
       currencyCode: this.baseCurrency,
     };
   }

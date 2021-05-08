@@ -1,13 +1,10 @@
 import * as R from 'ramda';
-import { sumBy } from 'lodash';
 import {
   ITransactionsByCustomersTransaction,
   ITransactionsByCustomersFilter,
   ITransactionsByCustomersCustomer,
-  ITransactionsByCustomersAmount,
   ITransactionsByCustomersData,
   INumberFormatQuery,
-  IAccountTransaction,
   ICustomer,
 } from 'interfaces';
 import TransactionsByContact from '../TransactionsByContact/TransactionsByContact';

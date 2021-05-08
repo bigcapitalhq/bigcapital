@@ -173,13 +173,10 @@ export default class TransactionsByCustomersService
       filter,
       baseCurrency
     );
-    const reportData = reportInstance.reportData();
-
-    const reportColumns = reportInstance.reportColumns();
 
     return {
-      data: reportData,
-      columns: reportColumns,
+      data: reportInstance.reportData(),
+      columns: reportInstance.reportColumns(),
       query: filter,
     };
   }
