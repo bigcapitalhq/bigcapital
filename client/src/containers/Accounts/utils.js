@@ -3,6 +3,7 @@ import { Intent, Tag } from '@blueprintjs/core';
 import { If, AppToaster } from 'components';
 import { formatMessage } from 'services/intl';
 import { NormalCell, BalanceCell } from './components';
+import { isBlank, compose } from 'utils';
 
 /**
  * Account name accessor.
@@ -40,12 +41,12 @@ export const handleDeleteErrors = (errors) => {
   }
 };
 
-
-export const AccountCodeAccessor = (row) => (
-  <Tag minimal={true} round={true} intent={Intent.NONE}>
-    { row.code }
-  </Tag>
-);
+export const AccountCodeAccessor = (row) =>
+  !isBlank(row.code) ? (
+    <Tag minimal={true} round={true} intent={Intent.NONE}>
+      {row.code}
+    </Tag>
+  ) : null;
 
 /**
  * Accounts table columns.
@@ -97,8 +98,8 @@ export const useAccountsTableColumns = () => {
       },
     ],
     [],
-  )
-}
+  );
+};
 
 export const rowClassNames = (row) => ({
   inactive: !row.original.active,
