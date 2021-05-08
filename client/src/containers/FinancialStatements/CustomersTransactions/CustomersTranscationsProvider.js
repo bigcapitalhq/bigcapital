@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 import { useCustomersTranscationsReport } from 'hooks/query';
+import { transformFilterFormToQuery } from '../common';
 
 const CustomersTranscationsContext = createContext();
 
@@ -8,13 +9,17 @@ const CustomersTranscationsContext = createContext();
  * Customers transcations provider.
  */
 function CustomersTranscationsProvider({ filter, ...props }) {
+  const query = useMemo(() => transformFilterFormToQuery(filter), [
+    filter,
+  ]);
+
   // fetches the customers transcations.
   const {
     data: customersTransactions,
     isFetching: isCustomersTransactionsFetching,
     isLoading: isCustomersTransactionsLoading,
     refetch: CustomersTransactionsRefetch,
-  } = useCustomersTranscationsReport(filter, { keepPreviousData: true });
+  } = useCustomersTranscationsReport(query, { keepPreviousData: true });
 
   const provider = {
     customersTransactions,
@@ -22,6 +27,7 @@ function CustomersTranscationsProvider({ filter, ...props }) {
     isCustomersTransactionsLoading,
     CustomersTransactionsRefetch,
     filter,
+    query
   };
 
   return (
