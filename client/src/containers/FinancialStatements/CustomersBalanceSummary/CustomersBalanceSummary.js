@@ -55,7 +55,7 @@ function CustomersBalanceSummary({
     },
     [toggleCustomerBalanceFilterDrawer],
   );
-  console.log(filter, 'EE');
+
   return (
     <CustomersBalanceSummaryProvider filter={filter}>
       <CustomersBalanceSummaryActionsBar
@@ -66,12 +66,14 @@ function CustomersBalanceSummary({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <CustomersBalanceSummaryHeader
-            pageFilter={filter}
-            onSubmitFilter={handleFilterSubmit}
-          />
-          <div className="financial-statement__body">
-            <CustomersBalanceSummaryTable companyName={organizationName} />
+          <div className="financial-statement--balance-summary ">
+            <CustomersBalanceSummaryHeader
+              pageFilter={filter}
+              onSubmitFilter={handleFilterSubmit}
+            />
+            <div className="financial-statement__body">
+              <CustomersBalanceSummaryTable companyName={organizationName} />
+            </div>
           </div>
         </FinancialStatement>
       </DashboardPageContent>

@@ -66,12 +66,14 @@ function VendorsBalanceSummary({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <VendorsBalanceSummaryHeader
-            pageFilter={filter}
-            onSubmitFilter={handleFilterSubmit}
-          />
-          <div className={'financial-statement__body'}>
-            <VendorsBalanceSummaryTable organizationName={organizationName} />
+          <div className="financial-statement--balance-summary ">
+            <VendorsBalanceSummaryHeader
+              pageFilter={filter}
+              onSubmitFilter={handleFilterSubmit}
+            />
+            <div className={'financial-statement__body'}>
+              <VendorsBalanceSummaryTable organizationName={organizationName} />
+            </div>
           </div>
         </FinancialStatement>
       </DashboardPageContent>
