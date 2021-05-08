@@ -15,16 +15,16 @@ import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import NumberFormatDropdown from 'components/NumberFormatDropdown';
 
-import { useCustomersTranscationsContext } from './CustomersTranscationsProvider';
+import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 import withCustomersTransactions from './withCustomersTransactions';
 import withCustomersTransactionsActions from './withCustomersTransactionsActions';
 
 import { compose, saveInvoke } from 'utils';
 
 /**
- * Customers transcations actions bar.
+ * Customers transactions actions bar.
  */
-function CustomersTranscationsActionsBar({
+function CustomersTransactionsActionsBar({
   // #ownProps
   numberFormat,
   onNumberFormatSubmit,
@@ -38,7 +38,7 @@ function CustomersTranscationsActionsBar({
   const {
     isCustomersTransactionsLoading,
     CustomersTransactionsRefetch,
-  } = useCustomersTranscationsContext();
+  } = useCustomersTransactionsContext();
 
   // Handle filter toggle click.
   const handleFilterToggleClick = () => {
@@ -70,9 +70,9 @@ function CustomersTranscationsActionsBar({
           icon={<Icon icon="cog-16" iconSize={16} />}
           text={
             isFilterDrawerOpen ? (
-              <T id={'customize_report'} />
-            ) : (
               <T id={'hide_customizer'} />
+            ) : (
+              <T id={'customize_report'} />
             )
           }
           onClick={handleFilterToggleClick}
@@ -132,4 +132,4 @@ export default compose(
     isFilterDrawerOpen: customersTransactionsDrawerFilter,
   })),
   withCustomersTransactionsActions,
-)(CustomersTranscationsActionsBar);
+)(CustomersTransactionsActionsBar);

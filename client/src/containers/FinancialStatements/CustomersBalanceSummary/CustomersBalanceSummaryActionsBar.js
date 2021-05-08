@@ -69,9 +69,9 @@ function CustomersBalanceSummaryActionsBar({
           icon={<Icon icon="cog-16" iconSize={16} />}
           text={
             isFilterDrawerOpen ? (
-              <T id={'customize_report'} />
-            ) : (
               <T id={'hide_customizer'} />
+            ) : (
+              <T id={'customize_report'} />
             )
           }
           onClick={handleFilterToggleClick}

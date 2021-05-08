@@ -15,14 +15,14 @@ import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import NumberFormatDropdown from 'components/NumberFormatDropdown';
 
-import { useVendorsTranscationsContext } from './VendorsTransactionsProvider';
+import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 import withVendorsTransaction from './withVendorsTransaction';
 import withVendorsTransactionsActions from './withVendorsTransactionsActions';
 
 import { compose, saveInvoke } from 'utils';
 
 /**
- * vendors transcations actions bar.
+ * vendors transactions actions bar.
  */
 function VendorsTransactionsActionsBar({
   // #ownProps
@@ -38,7 +38,7 @@ function VendorsTransactionsActionsBar({
   const {
     isVendorsTransactionsLoading,
     refetch,
-  } = useVendorsTranscationsContext();
+  } = useVendorsTransactionsContext();
 
   // Handle filter toggle click.
   const handleFilterToggleClick = () => {
@@ -70,9 +70,9 @@ function VendorsTransactionsActionsBar({
           icon={<Icon icon="cog-16" iconSize={16} />}
           text={
             isFilterDrawerOpen ? (
-              <T id={'customize_report'} />
-            ) : (
               <T id={'hide_customizer'} />
+            ) : (
+              <T id={'customize_report'} />
             )
           }
           onClick={handleFilterToggleClick}
