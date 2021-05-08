@@ -1,8 +1,10 @@
 import moment from 'moment';
+import { defaultTo } from 'lodash';
 import {
   ILedger,
   ILedgerEntry
 } from 'interfaces';
+import EntityRepository from 'repositories/EntityRepository';
 
 export default class Ledger implements ILedger {
   readonly entries: ILedgerEntry[];
@@ -64,10 +66,10 @@ export default class Ledger implements ILedger {
 
     this.entries.forEach((entry) => {
       if (entry.accountNormal === 'credit') {
-        closingBalance += entry.credit ? entry.credit : -1 * entry.debit;
+        closingBalance += entry.credit - entry.debit;
 
       } else if (entry.accountNormal === 'debit') {
-        closingBalance += entry.debit ? entry.debit : -1 * entry.credit;
+        closingBalance += entry.debit - entry.credit;
       }
     });
     return closingBalance;
@@ -79,8 +81,8 @@ export default class Ledger implements ILedger {
   
   static mapEntry(entry): ILedgerEntry {
     return {
-      credit: entry.credit,
-      debit: entry.debit,
+      credit: defaultTo(entry.credit, 0),
+      debit: defaultTo(entry.debit, 0),
       accountNormal: entry.accountNormal,
       accountId: entry.accountId,
       contactId: entry.contactId,
