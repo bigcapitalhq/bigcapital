@@ -264,11 +264,11 @@ export default [
   },
   {
     path: `/financial-reports/transactions-by-customers`,
-    // component: lazy(() =>
-    //   import(
-    //     'containers/FinancialStatements/CustomersTransactions/CustomersTransactions'
-    //   ),
-    // ),
+    component: lazy(() =>
+      import(
+        'containers/FinancialStatements/CustomersTransactions/CustomersTransactions'
+      ),
+    ),
     breadcrumb: 'Customers Transactions ',
     hint: '..',
     pageTitle: formatMessage({ id: 'customers_transactions' }),
@@ -276,12 +276,12 @@ export default [
     sidebarExpand: false,
   },
   {
-    path: `/financial-reports/vendors-transactions`,
-    // component: lazy(() =>
-    //   import(
-    //     'containers/FinancialStatements/'
-    //   ),
-    // ),
+    path: `/financial-reports/transactions-by-vendors`,
+    component: lazy(() =>
+      import(
+        'containers/FinancialStatements/VendorsTransactions/VendorsTransactions'
+      ),
+    ),
     breadcrumb: 'Vendors Transactions ',
     hint: '..',
     pageTitle: formatMessage({ id: 'vendors_transactions' }),

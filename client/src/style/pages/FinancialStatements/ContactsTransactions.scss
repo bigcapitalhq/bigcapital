@@ -1,0 +1,75 @@
+.financial-sheet {
+  &--customer-transactions,
+  &--vendor-transactions {
+    .financial-sheet__table {
+      .tbody,
+      .thead {
+        .tr .td,
+        .tr .th {
+          &.credit,
+          &.debit,
+          &.running_balance {
+            text-align: right;
+          }
+        }
+      }
+      .tbody {
+        .tr .td {
+          padding-top: 0.2rem;
+          padding-bottom: 0.2rem;
+          border-top-color: transparent;
+          border-bottom-color: transparent;
+
+          &.customer_name,
+          &.vendor_name {
+            > div {
+              display: flex;
+            }
+            span.force-width {
+              position: relative;
+            }
+          }
+        }
+        .tr:not(.no-results) .td {
+          // border-left: 1px solid #ececec;
+        }
+
+        .tr.row-type {
+          &--CUSTOMER,
+          &--VENDOR {
+            .td {
+              &.customer_name,
+              &.vendor_name {
+                font-weight: 500;
+              }
+              &.name {
+                border-left-color: transparent;
+              }
+            }
+            &:not(:first-child).is-expanded .td {
+              border-top: 1px solid #ddd;
+            }
+          }
+          &--OPENING_BALANCE,
+          // &--TRANSACTION,
+          &--CLOSING_BALANCE {
+            font-weight: 500;
+          }
+          &--CUSTOMER:last-child {
+            .td {
+              border-bottom: 1px solid #ddd;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.financial-statement--transactions {
+  .financial-header-drawer {
+    .bp3-drawer {
+      max-height: 350px;
+    }
+  }
+}

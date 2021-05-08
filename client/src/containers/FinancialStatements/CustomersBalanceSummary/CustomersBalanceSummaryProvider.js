@@ -10,16 +10,16 @@ const CustomersBalanceSummaryContext = createContext();
  */
 function CustomersBalanceSummaryProvider({ filter, ...props }) {
  
-  // const query = React.useMemo(() => transformFilterFormToQuery(filter), [
-  //   filter,
-  // ]);
+  const query = React.useMemo(() => transformFilterFormToQuery(filter), [
+    filter,
+  ]);
 
   const {
     data: CustomerBalanceSummary,
     isLoading: isCustomersBalanceLoading,
     isFetching: isCustomersBalanceFetching,
     refetch
-  } = useCustomerBalanceSummaryReport(filter, {
+  } = useCustomerBalanceSummaryReport(query, {
     keepPreviousData: true,
   });
 

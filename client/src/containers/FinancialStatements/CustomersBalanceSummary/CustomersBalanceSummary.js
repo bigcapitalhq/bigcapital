@@ -28,7 +28,6 @@ function CustomersBalanceSummary({
   // #withCustomersBalanceSummaryActions
   toggleCustomerBalanceFilterDrawer,
 }) {
-
   const [filter, setFilter] = useState({
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
   });
@@ -41,7 +40,7 @@ function CustomersBalanceSummary({
     };
     setFilter({ ..._filter });
   };
-  
+
   // Handle number format.
   const handleNumberFormat = (values) => {
     setFilter({
@@ -56,7 +55,7 @@ function CustomersBalanceSummary({
     },
     [toggleCustomerBalanceFilterDrawer],
   );
-
+  console.log(filter, 'EE');
   return (
     <CustomersBalanceSummaryProvider filter={filter}>
       <CustomersBalanceSummaryActionsBar
