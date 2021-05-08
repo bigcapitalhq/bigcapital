@@ -72,22 +72,22 @@ export const SalesAndPurchasesReportMenus = [
       },
       {
         title: 'Customer Balance summary',
-        desc: '',
+        desc: 'Summerize the total amount of each customer owes your business.',
         link: '/financial-reports/customers-balance-summary',
       },
       {
         title: 'Vendors Balance summary',
-        desc: '',
+        desc: 'Summerize the total amount your business owes each vendor.',
         link: '/financial-reports/vendors-balance-summary',
       },
       {
         title: 'Customers Transactions',
-        desc: '',
+        desc: 'Reports every transaction going in and out of each customer.',
         link: '/financial-reports/transactions-by-customers',
       },
       {
         title: 'Vendors Transactions',
-        desc: '',
+        desc: 'Reports every transaction going in and out of each vendor/supplier.',
         link: '/financial-reports/transactions-by-vendors',
       },
     ],

@@ -17,13 +17,25 @@ export default class TransactionsByVendorsTableRows extends TransactionsByContac
    * @returns {ITableRow[]}
    */
   private vendorDetails(vendor: ITransactionsByVendorsVendor) {
-    const columns = [{ key: 'vendorName', accessor: 'vendorName' }];
+    const columns = [
+      { key: 'vendorName', accessor: 'vendorName' },
+      ...R.repeat({ key: 'empty', value: '' }, 5),
+      {
+        key: 'closingBalanceValue',
+        accessor: 'closingBalance.formattedAmount',
+      },
+    ];
 
     return {
       ...tableRowMapper(vendor, columns, { rowTypes: [ROW_TYPE.VENDOR] }),
       children: R.pipe(
-        R.append(this.contactOpeningBalance(vendor)),
-        R.concat(this.contactTransactions(vendor)),
+        R.when(
+          R.always(vendor.transactions.length > 0),
+          R.pipe(
+            R.append(this.contactOpeningBalance(vendor)),
+            R.concat(this.contactTransactions(vendor))
+          )
+        ),
         R.append(this.contactClosingBalance(vendor))
       )([]),
     };

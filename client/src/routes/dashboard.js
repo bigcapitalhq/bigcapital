@@ -244,7 +244,7 @@ export default [
       ),
     ),
     breadcrumb: 'Customers Balance Summary ',
-    hint: '..',
+    hint: 'Summerize how much each customer owes your business.',
     pageTitle: formatMessage({ id: 'customers_balance_summary' }),
     backLink: true,
     sidebarExpand: false,
