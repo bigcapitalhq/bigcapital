@@ -59,13 +59,18 @@
           }
           &--CUSTOMER,
           &--VENDOR {
-            &.is-expanded{
-              .td.running_balance .cell-inner{
+            &.is-expanded {
+              .td.running_balance .cell-inner {
                 display: none;
               }
             }
           }
           &--CUSTOMER:last-child {
+            .td {
+              border-bottom: 1px solid #ddd;
+            }
+          }
+          &--VENDOR:last-child {
             .td {
               border-bottom: 1px solid #ddd;
             }
