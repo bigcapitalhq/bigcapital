@@ -37,47 +37,56 @@ export const useVendorsTransactionsColumns = () => {
         accessor: 'cells[1].value',
         className: 'name',
         textOverview: true,
-        width: 180,
+        width: 170,
       },
       {
         Header: formatMessage({ id: 'reference_type' }),
         accessor: 'cells[2].value',
         textOverview: true,
-        width: 180,
+        width: 120,
       },
       {
         Header: formatMessage({ id: 'transaction_type' }),
         accessor: 'cells[3].value',
         textOverview: true,
-        width: 180,
+        width: 120,
+      },
+      {
+        Header: formatMessage({ id: 'transaction_number' }),
+        accessor: 'cells[4].value',
+        width: getColumnWidth(tableRows, 'cells[4].value', {
+          minWidth: 140,
+          magicSpacing: 10,
+        }),
+        textOverview: true,
       },
       {
         Header: formatMessage({ id: 'credit' }),
-        accessor: 'cells[4].value',
+        accessor: 'cells[5].value',
         className: 'credit',
         textOverview: true,
-        width: getColumnWidth(tableRows, 'credit', {
-          minWidth: 140,
+        width: getColumnWidth(tableRows, 'cells[5].value', {
+          minWidth: 100,
           magicSpacing: 10,
         }),
       },
       {
         Header: formatMessage({ id: 'debit' }),
-        accessor: 'cells[5].value',
+        accessor: 'cells[6].value',
         className: 'debit',
         textOverview: true,
-        width: getColumnWidth(tableRows, 'debit', {
-          minWidth: 140,
+        width: getColumnWidth(tableRows, 'cells[6].value', {
+          minWidth: 100,
           magicSpacing: 10,
         }),
       },
       {
         Header: formatMessage({ id: 'running_balance' }),
-        accessor: 'cells[6].value',
+        accessor: 'cells[7].value',
         className: 'running_balance',
         textOverview: true,
-        width: getColumnWidth(tableRows, 'running_balance', {
-          minWidth: 140,
+        width: getColumnWidth(tableRows, 'cells[7].value', {
+          minWidth: 120,
           magicSpacing: 10,
         }),
       },

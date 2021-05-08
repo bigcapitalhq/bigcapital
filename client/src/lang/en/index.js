@@ -1063,4 +1063,5 @@ export default {
   customers_transactions: 'Customers Transactions',
   vendors_transactions: 'Vendors Transactions',
   reference_type: 'Reference type',
+  transaction_number: 'Transaction number',
 };

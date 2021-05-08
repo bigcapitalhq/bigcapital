@@ -68,6 +68,7 @@ export function useGeneralLedgerTableColumns() {
         accessor: 'formatted_credit',
         className: 'credit',
         width: getColumnWidth(tableRows, 'formatted_credit', {
+        
           minWidth: 100,
           magicSpacing: 10,
         }),
