@@ -32,8 +32,8 @@ export default class TransactionsByVendorsTableRows extends TransactionsByContac
         R.when(
           R.always(vendor.transactions.length > 0),
           R.pipe(
-            R.append(this.contactOpeningBalance(vendor)),
-            R.concat(this.contactTransactions(vendor))
+            R.concat(this.contactTransactions(vendor)),
+            R.prepend(this.contactOpeningBalance(vendor)),
           )
         ),
         R.append(this.contactClosingBalance(vendor))

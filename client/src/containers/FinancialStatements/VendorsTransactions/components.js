@@ -52,17 +52,8 @@ export const useVendorsTransactionsColumns = () => {
         width: 120,
       },
       {
-        Header: formatMessage({ id: 'transaction_number' }),
-        accessor: 'cells[4].value',
-        width: getColumnWidth(tableRows, 'cells[4].value', {
-          minWidth: 140,
-          magicSpacing: 10,
-        }),
-        textOverview: true,
-      },
-      {
         Header: formatMessage({ id: 'credit' }),
-        accessor: 'cells[5].value',
+        accessor: 'cells[4].value',
         className: 'credit',
         textOverview: true,
         width: getColumnWidth(tableRows, 'cells[5].value', {
@@ -72,7 +63,7 @@ export const useVendorsTransactionsColumns = () => {
       },
       {
         Header: formatMessage({ id: 'debit' }),
-        accessor: 'cells[6].value',
+        accessor: 'cells[5].value',
         className: 'debit',
         textOverview: true,
         width: getColumnWidth(tableRows, 'cells[6].value', {
@@ -82,7 +73,7 @@ export const useVendorsTransactionsColumns = () => {
       },
       {
         Header: formatMessage({ id: 'running_balance' }),
-        accessor: 'cells[7].value',
+        accessor: 'cells[6].value',
         className: 'running_balance',
         textOverview: true,
         width: getColumnWidth(tableRows, 'cells[7].value', {

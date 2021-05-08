@@ -10,6 +10,8 @@ import {
 import TransactionsByContact from '../TransactionsByContact/TransactionsByContact';
 import Ledger from 'services/Accounting/Ledger';
 
+const CUSTOMER_NORMAL = 'debit';
+
 export default class TransactionsByCustomers extends TransactionsByContact {
   readonly customers: ICustomer[];
   readonly ledger: Ledger;
@@ -58,8 +60,8 @@ export default class TransactionsByCustomers extends TransactionsByContact {
 
     const ledgerEntries = ledger.getEntries();
 
-    return R.compose(    
-      R.curry(this.contactTransactionRunningBalance)(openingBalance),
+    return R.compose(
+      R.curry(this.contactTransactionRunningBalance)(openingBalance, 'debit'),
       R.map(this.contactTransactionMapper.bind(this))
     ).bind(this)(ledgerEntries);
   }
@@ -74,7 +76,10 @@ export default class TransactionsByCustomers extends TransactionsByContact {
   ): ITransactionsByCustomersCustomer {
     const openingBalance = this.getContactOpeningBalance(customer.id);
     const transactions = this.customerTransactions(customer.id, openingBalance);
-    const closingBalance = this.getContactClosingBalance(transactions, openingBalance);
+    const closingBalance = this.getCustomerClosingBalance(
+      transactions,
+      openingBalance
+    );
 
     return {
       customerName: customer.displayName,
@@ -88,6 +93,23 @@ export default class TransactionsByCustomers extends TransactionsByContact {
       ),
       transactions,
     };
+  }
+
+  /**
+   * Retrieve the vendor closing balance from the given customer transactions.
+   * @param {ITransactionsByContactsTransaction[]} customerTransactions
+   * @param {number} openingBalance
+   * @returns
+   */
+  private getCustomerClosingBalance(
+    customerTransactions: ITransactionsByCustomersTransaction[],
+    openingBalance: number
+  ): number {
+    return this.getContactClosingBalance(
+      customerTransactions,
+      CUSTOMER_NORMAL,
+      openingBalance
+    );
   }
 
   /**

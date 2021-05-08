@@ -45,16 +45,24 @@ export default class TransactionsByContact extends FinancialSheet {
    */
   protected contactTransactionRunningBalance(
     openingBalance: number,
+    accountNormal: 'credit' | 'debit',
     transactions: Omit<ITransactionsByContactsTransaction, 'runningBalance'>[]
   ): any {
     let _openingBalance = openingBalance;
 
     return transactions.map(
       (transaction: ITransactionsByContactsTransaction) => {
-        _openingBalance += transaction.debit.amount;
-        _openingBalance -= transaction.credit.amount;
+        _openingBalance +=
+          accountNormal === 'debit'
+            ? transaction.debit.amount
+            : -1 * transaction.debit.amount;
 
-        const runningBalance = this.getContactAmount(
+        _openingBalance +=
+          accountNormal === 'credit'
+            ? transaction.credit.amount
+            : -1 * transaction.credit.amount;
+
+        const runningBalance = this.getTotalAmountMeta(
           _openingBalance,
           transaction.currencyCode
         );
@@ -71,6 +79,7 @@ export default class TransactionsByContact extends FinancialSheet {
    */
   protected getContactClosingBalance(
     customerTransactions: ITransactionsByContactsTransaction[],
+    contactNormal: 'credit' | 'debit',
     openingBalance: number
   ): number {
     const closingBalance = openingBalance;
@@ -78,7 +87,11 @@ export default class TransactionsByContact extends FinancialSheet {
     const totalCredit = sumBy(customerTransactions, 'credit.amount');
     const totalDebit = sumBy(customerTransactions, 'debit.amount');
 
-    return closingBalance + (totalDebit - totalCredit);
+    const total = contactNormal === 'debit' ? 
+      totalDebit - totalCredit :
+      totalCredit - totalDebit;
+
+    return closingBalance + total;
   }
 
   /**
@@ -120,10 +133,7 @@ export default class TransactionsByContact extends FinancialSheet {
    * @param {string} currencyCode - Currency code./
    * @returns {ITransactionsByContactsAmount}
    */
-  protected getTotalAmountMeta(
-    amount: number,
-    currencyCode: string
-  ) {
+  protected getTotalAmountMeta(amount: number, currencyCode: string) {
     return {
       amount,
       formattedAmount: this.formatTotalNumber(amount, { currencyCode }),

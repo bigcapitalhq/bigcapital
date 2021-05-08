@@ -1,17 +1,20 @@
 import * as R from 'ramda';
 import { sumBy } from 'lodash';
 import {
+  ITransactionsByContactsTransaction,
   ITransactionsByVendorsFilter,
   ITransactionsByVendorsTransaction,
   ITransactionsByVendorsVendor,
   ITransactionsByVendorsData,
   ILedger,
   INumberFormatQuery,
-  IVendor
+  IVendor,
 } from 'interfaces';
-import TransactionsByContact from "../TransactionsByContact/TransactionsByContact";
+import TransactionsByContact from '../TransactionsByContact/TransactionsByContact';
 
-export default class TransactionsByVendors extends TransactionsByContact{
+const VENDOR_NORMAL = 'credit';
+
+export default class TransactionsByVendors extends TransactionsByContact {
   readonly contacts: IVendor[];
   readonly transactionsByContact: any;
   readonly filter: ITransactionsByVendorsFilter;
@@ -61,7 +64,7 @@ export default class TransactionsByVendors extends TransactionsByContact{
     const openingEntries = openingBalanceLedger.getEntries();
 
     return R.compose(
-      R.curry(this.contactTransactionRunningBalance)(openingBalance),
+      R.curry(this.contactTransactionRunningBalance)(openingBalance, 'credit'),
       R.map(this.contactTransactionMapper.bind(this))
     ).bind(this)(openingEntries);
   }
@@ -71,12 +74,13 @@ export default class TransactionsByVendors extends TransactionsByContact{
    * @param {IVendor} vendor
    * @returns {ITransactionsByVendorsVendor}
    */
-  private vendorMapper(
-    vendor: IVendor
-  ): ITransactionsByVendorsVendor {
+  private vendorMapper(vendor: IVendor): ITransactionsByVendorsVendor {
     const openingBalance = this.getContactOpeningBalance(vendor.id);
     const transactions = this.vendorTransactions(vendor.id, openingBalance);
-    const closingBalance = this.getContactClosingBalance(transactions, openingBalance);
+    const closingBalance = this.getVendorClosingBalance(
+      transactions,
+      openingBalance
+    );
 
     return {
       vendorName: vendor.displayName,
@@ -93,16 +97,29 @@ export default class TransactionsByVendors extends TransactionsByContact{
   }
 
   /**
+   * Retrieve the vendor closing balance from the given customer transactions.
+   * @param {ITransactionsByContactsTransaction[]} customerTransactions
+   * @param {number} openingBalance
+   * @returns
+   */
+  private getVendorClosingBalance(
+    customerTransactions: ITransactionsByContactsTransaction[],
+    openingBalance: number
+  ) {
+    return this.getContactClosingBalance(
+      customerTransactions,
+      VENDOR_NORMAL,
+      openingBalance
+    );
+  }
+
+  /**
    * Retrieve the vendors sections of the report.
    * @param {IVendor[]} vendors
    * @returns {ITransactionsByVendorsVendor[]}
    */
-  private vendorsMapper(
-    vendors: IVendor[]
-  ): ITransactionsByVendorsVendor[] {
-    return R.compose(R.map(this.vendorMapper.bind(this))).bind(this)(
-      vendors
-    );
+  private vendorsMapper(vendors: IVendor[]): ITransactionsByVendorsVendor[] {
+    return R.compose(R.map(this.vendorMapper.bind(this))).bind(this)(vendors);
   }
 
   /**
