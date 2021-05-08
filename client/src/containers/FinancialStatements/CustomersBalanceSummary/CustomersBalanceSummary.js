@@ -30,14 +30,14 @@ function CustomersBalanceSummary({
 }) {
 
   const [filter, setFilter] = useState({
-    asDate: moment().endOf('day').format('YYYY-MM-DD'),
+    as_date: moment().endOf('day').format('YYYY-MM-DD'),
   });
 
   // Handle re-fetch customers balance summary after filter change.
   const handleFilterSubmit = (filter) => {
     const _filter = {
       ...filter,
-      asDate: moment(filter.asDate).format('YYYY-MM-DD'),
+      as_date: moment(filter.as_date).format('YYYY-MM-DD'),
     };
     setFilter({ ..._filter });
   };

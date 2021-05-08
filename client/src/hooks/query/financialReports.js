@@ -298,6 +298,9 @@ export function useCustomerBalanceSummaryReport(query, props) {
       method: 'get',
       url: '/financial_statements/customer-balance-summary',
       params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
     },
     {
       select: (res) => ({
@@ -324,12 +327,16 @@ export function useVendorsBalanceSummaryReport(query, props) {
       method: 'get',
       url: '/financial_statements/vendor-balance-summary',
       params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
     },
+
     {
       select: (res) => ({
         columns: res.data.columns,
         query: res.data.query,
-        tableRows: res.data.table.rows,
+        tableRows: res.data.table.data,
       }),
       defaultData: {
         tableRows: [],
@@ -350,11 +357,42 @@ export function useCustomersTranscationsReport(query, props) {
       method: 'get',
       url: '/financial_statements/transactions-by-customers',
       params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
     },
     {
       select: (res) => ({
         data: res.data.table,
         tableRows: res.data.table.rows,
+      }),
+      defaultData: {
+        tableRows: [],
+        data: [],
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve vendors transcations report.
+ */
+export function useVendorsTranscationsReport(query, props) {
+  return useRequestQuery(
+    [t.FINANCIAL_REPORT, t.VENDORS_TRANSACTIONS, query],
+    {
+      method: 'get',
+      url: '/financial_statements/transactions-by-vendors',
+      params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
+    },
+    {
+      select: (res) => ({
+        data: res.data.table,
+        tableRows: res.data.table.data,
       }),
       defaultData: {
         tableRows: [],

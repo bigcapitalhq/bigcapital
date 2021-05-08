@@ -29,13 +29,13 @@ function CustomersBalanceSummaryHeader({
 
   // validation schema.
   const validationSchema = Yup.object().shape({
-    asDate: Yup.date().required().label('asDate'),
+    as_date: Yup.date().required().label('asDate'),
   });
 
   // filter form initial values.
   const initialValues = {
     ...pageFilter,
-    asDate: moment(pageFilter.asDate).toDate(),
+    as_date: moment(pageFilter.as_date).toDate(),
   };
 
   // handle form submit.
