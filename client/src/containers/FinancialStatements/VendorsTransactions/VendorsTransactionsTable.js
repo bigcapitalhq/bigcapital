@@ -5,12 +5,12 @@ import classNames from 'classnames';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import { useVendorsTransactionsColumns } from './components';
-import { useVendorsTranscationsContext } from './VendorsTransactionsProvider';
+import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 
 import { defaultExpanderReducer, getColumnWidth } from 'utils';
 
 /**
- * Vendors transcations table.
+ * Vendors transactions table.
  */
 
 export default function VendorsTransactionsTable({
@@ -22,8 +22,8 @@ export default function VendorsTransactionsTable({
   const {
     vendorsTransactions: { tableRows },
     isVendorsTransactionsLoading,
-    filter,
-  } = useVendorsTranscationsContext();
+    query,
+  } = useVendorsTransactionsContext();
 
   const columns = useVendorsTransactionsColumns();
 
@@ -41,8 +41,8 @@ export default function VendorsTransactionsTable({
       companyName={companyName}
       sheetType={formatMessage({ id: 'vendors_transactions' })}
       loading={isVendorsTransactionsLoading}
-      fromDate={filter.fromDate}
-      toDate={filter.toDate}
+      fromDate={query.fromDate}
+      toDate={query.toDate}
     >
       <DataTable
         className="bigcapital-datatable--financial-report"

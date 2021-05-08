@@ -348,9 +348,9 @@ export function useVendorsBalanceSummaryReport(query, props) {
 }
 
 /**
- * Retrieve customers transcations report.
+ * Retrieve customers transactions report.
  */
-export function useCustomersTranscationsReport(query, props) {
+export function useCustomersTransactionsReport(query, props) {
   return useRequestQuery(
     [t.FINANCIAL_REPORT, t.CUSTOMERS_TRANSACTIONS, query],
     {
@@ -376,9 +376,9 @@ export function useCustomersTranscationsReport(query, props) {
 }
 
 /**
- * Retrieve vendors transcations report.
+ * Retrieve vendors transactions report.
  */
-export function useVendorsTranscationsReport(query, props) {
+export function useVendorsTransactionsReport(query, props) {
   return useRequestQuery(
     [t.FINANCIAL_REPORT, t.VENDORS_TRANSACTIONS, query],
     {

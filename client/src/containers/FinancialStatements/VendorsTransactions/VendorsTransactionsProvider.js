@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { useVendorsTranscationsReport } from 'hooks/query';
+import { useVendorsTransactionsReport } from 'hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const VendorsTransactionsContext = createContext();
 
 /**
- * Vendors transcations provider.
+ * Vendors transactions provider.
  */
 function VendorsTransactionsProvider({ filter, ...props }) {
   const query = useMemo(() => transformFilterFormToQuery(filter), [filter]);
@@ -16,7 +16,7 @@ function VendorsTransactionsProvider({ filter, ...props }) {
     isFetching: isVendorsTransactionFetching,
     isLoading: isVendorsTransactionsLoading,
     refetch,
-  } = useVendorsTranscationsReport();
+  } = useVendorsTransactionsReport(query, { keepPreviousData: true });
 
   const provider = {
     vendorsTransactions,
@@ -34,7 +34,7 @@ function VendorsTransactionsProvider({ filter, ...props }) {
   );
 }
 
-const useVendorsTranscationsContext = () =>
+const useVendorsTransactionsContext = () =>
   useContext(VendorsTransactionsContext);
 
-export { VendorsTransactionsProvider, useVendorsTranscationsContext };
+export { VendorsTransactionsProvider, useVendorsTransactionsContext };

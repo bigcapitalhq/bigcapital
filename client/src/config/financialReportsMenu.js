@@ -71,7 +71,7 @@ export const SalesAndPurchasesReportMenus = [
         link: '/financial-reports/inventory-valuation',
       },
       {
-        title: 'Customer Balance summary',
+        title: 'Customers Balance summary',
         desc: 'Summerize the total amount of each customer owes your business.',
         link: '/financial-reports/customers-balance-summary',
       },

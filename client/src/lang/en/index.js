@@ -1060,7 +1060,7 @@ export default {
   customers_balance_summary: 'Customers Balance Summary',
   vendors_balance_summary: 'Vendors Balance Summary',
   percentage_of_column: 'Percentage',
-  customers_transactions: 'Customers Transcations',
-  vendors_transactions: 'Vendors Transcations',
+  customers_transactions: 'Customers Transactions',
+  vendors_transactions: 'Vendors Transactions',
   reference_type: 'Reference type',
 };

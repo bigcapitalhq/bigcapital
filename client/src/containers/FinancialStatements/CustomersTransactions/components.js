@@ -1,19 +1,18 @@
 import React from 'react';
 import { formatMessage } from 'services/intl';
 import { If } from 'components';
-import { useCustomersTranscationsContext } from './CustomersTranscationsProvider';
+import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { getForceWidth, defaultExpanderReducer, getColumnWidth } from 'utils';
 import { CellTextSpan } from 'components/Datatable/Cells';
 
 /**
- * Retrieve customers transcations columns.
+ * Retrieve customers transactions columns.
  */
-export const useCustomersTranscationsColumns = () => {
+export const useCustomersTransactionsColumns = () => {
   const {
     customersTransactions: { tableRows },
-    isCustomersTransactionsLoading,
-  } = useCustomersTranscationsContext();
+  } = useCustomersTransactionsContext();
 
   return React.useMemo(
     () => [
@@ -88,10 +87,10 @@ export const useCustomersTranscationsColumns = () => {
 };
 
 /**
- * customers transcations loading bar.
+ * customers transactions loading bar.
  */
-export function CustomersTranscationsLoadingBar() {
-  const { isCustomersTransactionsLoading } = useCustomersTranscationsContext();
+export function CustomersTransactionsLoadingBar() {
+  const { isCustomersTransactionsLoading } = useCustomersTransactionsContext();
 
   return (
     <If condition={isCustomersTransactionsLoading}>

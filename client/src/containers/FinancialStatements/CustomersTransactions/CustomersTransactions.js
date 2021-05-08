@@ -7,12 +7,12 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import CustomersTransactionsHeader from './CustomersTransactionsHeader';
 import CustomersTransactionsTable from './CustomersTransactionsTable';
-import CustomersTranscationsActionsBar from './CustomersTranscationsActionsBar';
+import CustomersTransactionsActionsBar from './CustomersTransactionsActionsBar';
 
 import withCustomersTransactionsActions from './withCustomersTransactionsActions';
 import withSettings from 'containers/Settings/withSettings';
-import { CustomersTranscationsLoadingBar } from './components';
-import { CustomersTranscationsProvider } from './CustomersTranscationsProvider';
+import { CustomersTransactionsLoadingBar } from './components';
+import { CustomersTransactionsProvider } from './CustomersTransactionsProvider';
 
 import { compose } from 'utils';
 
@@ -57,12 +57,12 @@ function CustomersTransactions({
   );
 
   return (
-    <CustomersTranscationsProvider filter={filter}>
-      <CustomersTranscationsActionsBar
+    <CustomersTransactionsProvider filter={filter}>
+      <CustomersTransactionsActionsBar
         numberFormat={filter.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
-      <CustomersTranscationsLoadingBar />
+      <CustomersTransactionsLoadingBar />
       <DashboardPageContent>
         <FinancialStatement>
           <div className={'financial-statement--transactions'}>
@@ -77,7 +77,7 @@ function CustomersTransactions({
           </div>
         </FinancialStatement>
       </DashboardPageContent>
-    </CustomersTranscationsProvider>
+    </CustomersTransactionsProvider>
   );
 }
 export default compose(

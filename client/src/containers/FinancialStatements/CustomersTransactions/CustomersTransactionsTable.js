@@ -4,13 +4,13 @@ import classNames from 'classnames';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
-import { useCustomersTranscationsColumns } from './components';
-import { useCustomersTranscationsContext } from './CustomersTranscationsProvider';
+import { useCustomersTransactionsColumns } from './components';
+import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 
 import { defaultExpanderReducer, getColumnWidth } from 'utils';
 
 /**
- * Customers transcations table.
+ * Customers transactions table.
  */
 export default function CustomersTransactionsTable({
   // #ownProps
@@ -21,10 +21,10 @@ export default function CustomersTransactionsTable({
   const {
     customersTransactions: { tableRows },
     isCustomersTransactionsLoading,
-    filter,
-  } = useCustomersTranscationsContext();
+    query,
+  } = useCustomersTransactionsContext();
 
-  const columns = useCustomersTranscationsColumns();
+  const columns = useCustomersTransactionsColumns();
 
   const expandedRows = useMemo(() => defaultExpanderReducer(tableRows, 4), [
     tableRows,
@@ -40,8 +40,8 @@ export default function CustomersTransactionsTable({
       companyName={companyName}
       sheetType={formatMessage({ id: 'customers_transactions' })}
       loading={isCustomersTransactionsLoading}
-      fromDate={filter.fromDate}
-      toDate={filter.toDate}
+      fromDate={query.fromDate}
+      toDate={query.toDate}
     >
       <DataTable
         className="bigcapital-datatable--financial-report"

@@ -1,18 +1,18 @@
 import React from 'react';
 import { formatMessage } from 'services/intl';
 import { If } from 'components';
-import { useVendorsTranscationsContext } from './VendorsTransactionsProvider';
+import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { defaultExpanderReducer, getColumnWidth, getForceWidth } from 'utils';
 import { CellTextSpan } from 'components/Datatable/Cells';
 
 /**
- * Retrieve vendors transcations columns.
+ * Retrieve vendors transactions columns.
  */
 export const useVendorsTransactionsColumns = () => {
   const {
     vendorsTransactions: { tableRows },
-  } = useVendorsTranscationsContext();
+  } = useVendorsTransactionsContext();
 
   return React.useMemo(
     () => [
@@ -87,10 +87,10 @@ export const useVendorsTransactionsColumns = () => {
 };
 
 /**
- * vendors transcations loading bar.
+ * vendors transactions loading bar.
  */
 export function VendorsTransactionsLoadingBar() {
-  const { isVendorsTransactionsLoading } = useVendorsTranscationsContext();
+  const { isVendorsTransactionsLoading } = useVendorsTransactionsContext();
   return (
     <If condition={isVendorsTransactionsLoading}>
       <FinancialLoadingBar />
