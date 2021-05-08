@@ -114,7 +114,11 @@ function BillForm({
       }
     };
     // Handle the request error.
-    const onError = (errors) => {
+    const onError = ({
+      response: {
+        data: { errors },
+      },
+    }) => {
       handleErrors(errors, { setErrors });
       setSubmitting(false);
     };
