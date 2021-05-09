@@ -134,7 +134,7 @@ export default class VendorBalanceSummaryService
     const vendors = await this.getReportVendors(tenantId, query.vendorsIds);
 
     // Ledger query.
-    const ledger = new Ledger(vendorsTransactions);
+    const ledger = Ledger.fromTransactions(vendorsTransactions);
 
     // Report instance.
     const reportInstance = new VendorBalanceSummaryReport(

@@ -11,7 +11,6 @@ import {
 import TransactionsByCustomers from './TransactionsByCustomers';
 import Ledger from 'services/Accounting/Ledger';
 import { ACCOUNT_TYPE } from 'data/AccountTypes';
-import AccountRepository from 'repositories/AccountRepository';
 
 export default class TransactionsByCustomersService
   implements ITransactionsByCustomersService {
@@ -97,7 +96,7 @@ export default class TransactionsByCustomersService
   async getCustomersPeriodTransactions(
     tenantId: number,
     fromDate: Date,
-    toDate: Date,
+    toDate: Date
   ): Promise<ILedgerEntry[]> {
     const { AccountTransaction } = this.tenancy.models(tenantId);
 
@@ -115,7 +114,13 @@ export default class TransactionsByCustomersService
       query.whereIn('accountId', receivableAccountsIds);
     });
 
-    return R.compose(R.map(R.assoc('accountNormal', 'debit')))(transactions);
+    return R.compose(
+      R.map(R.assoc('accountNormal', 'debit')),
+      R.map((trans) => ({
+        ...trans,
+        referenceTypeFormatted: trans.referenceTypeFormatted,
+      })),
+    )(transactions);
   }
 
   /**
@@ -145,25 +150,27 @@ export default class TransactionsByCustomersService
     const accountsGraph = await accountRepository.getDependencyGraph();
     const customers = await Customer.query().orderBy('displayName');
 
-    const openingBalanceDate = moment(filter.fromDate).subtract(1, 'days').toDate();
+    const openingBalanceDate = moment(filter.fromDate)
+      .subtract(1, 'days')
+      .toDate();
 
     // Retrieve all ledger transactions of the opening balance of.
     const openingBalanceTransactions = await this.getCustomersOpeningBalance(
       tenantId,
-      openingBalanceDate,
+      openingBalanceDate
     );
     // Retrieve all ledger transactions between opeing and closing period.
     const customersTransactions = await this.getCustomersPeriodTransactions(
       tenantId,
       query.fromDate,
-      query.toDate,
+      query.toDate
     );
     // Concats the opening balance and period customer ledger transactions.
     const journalTransactions = [
       ...openingBalanceTransactions,
       ...customersTransactions,
     ];
-    const journal = new Ledger(journalTransactions);
+    const journal = Ledger.fromTransactions(journalTransactions);
 
     // Transactions by customers data mapper.
     const reportInstance = new TransactionsByCustomers(

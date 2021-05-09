@@ -13,7 +13,7 @@ export interface ITransactionsByContactsTransaction {
   accountName: string,
   runningBalance: ITransactionsByContactsAmount;
   currencyCode: string;
-  referenceNumber: string;
+  transactionType: string;
   transactionNumber: string;
   createdAt: string|Date,
 };

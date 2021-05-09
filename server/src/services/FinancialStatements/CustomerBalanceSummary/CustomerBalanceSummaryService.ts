@@ -140,7 +140,7 @@ export default class CustomerBalanceSummaryService
       filter.asDate
     );
     // Ledger query.
-    const ledger = new Ledger(customersTransactions);
+    const ledger = Ledger.fromTransactions(customersTransactions);
 
     // Report instance.
     const report = new CustomerBalanceSummaryReport(

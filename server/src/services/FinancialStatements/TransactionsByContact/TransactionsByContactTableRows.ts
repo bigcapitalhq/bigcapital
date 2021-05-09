@@ -30,7 +30,7 @@ export default class TransactionsByContactsTableRows {
     const columns = [
       { key: 'date', accessor: this.dateAccessor },
       { key: 'account', accessor: 'accountName' },
-      { key: 'referenceNumber', accessor: 'referenceNumber' },
+      { key: 'transactionType', accessor: 'transactionType' },
       { key: 'transactionNumber', accessor: 'transactionNumber' },
       { key: 'credit', accessor: 'credit.formattedAmount' },
       { key: 'debit', accessor: 'debit.formattedAmount' },

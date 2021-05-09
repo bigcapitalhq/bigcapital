@@ -30,7 +30,6 @@ export const useCustomersTransactionsColumns = () => {
         },
         className: 'customer_name',
         textOverview: true,
-        // width: 240,
       },
       {
         Header: formatMessage({ id: 'account_name' }),

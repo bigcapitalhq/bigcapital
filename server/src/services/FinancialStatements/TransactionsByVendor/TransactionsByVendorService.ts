@@ -126,7 +126,13 @@ export default class TransactionsByVendorsService
       query.whereIn('accountId', receivableAccountsIds);
     });
 
-    return R.compose(R.map(R.assoc('accountNormal', 'credit')))(transactions);
+    return R.compose(
+      R.map(R.assoc('accountNormal', 'credit')),
+      R.map((trans) => ({
+        ...trans,
+        referenceTypeFormatted: trans.referenceTypeFormatted,
+      })),
+    )(transactions);
   }
 
   async getReportTransactions(tenantId: number, fromDate: Date, toDate: Date) {
@@ -172,7 +178,7 @@ export default class TransactionsByVendorsService
       filter.toDate
     );
     // Ledger collection.
-    const journal = new Ledger(journalTransactions);
+    const journal = Ledger.fromTransactions(journalTransactions);
 
     // Transactions by customers data mapper.
     const reportInstance = new TransactionsByVendor(

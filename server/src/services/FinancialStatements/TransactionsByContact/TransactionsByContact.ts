@@ -31,7 +31,7 @@ export default class TransactionsByContact extends FinancialSheet {
       accountName: account.name,
       currencyCode: 'USD',
       transactionNumber: transaction.transactionNumber,
-      referenceNumber: transaction.referenceNumber,
+      transactionType: transaction.transactionType,
       date: transaction.date,
       createdAt: transaction.createdAt,
     };

@@ -14,7 +14,7 @@ export default class Ledger implements ILedger {
    * @param {ILedgerEntry[]} entries 
    */
   constructor(entries: ILedgerEntry[]) {
-    this.entries = Ledger.mappingEntries(entries);
+    this.entries = entries;
   }
 
   /**
@@ -75,11 +75,11 @@ export default class Ledger implements ILedger {
     return closingBalance;
   }
 
-  static mappingEntries(entries): ILedgerEntry[] {
-    return entries.map(this.mapEntry);
+  static mappingTransactions(entries): ILedgerEntry[] {
+    return entries.map(this.mapTransaction);
   }
   
-  static mapEntry(entry): ILedgerEntry {
+  static mapTransaction(entry): ILedgerEntry {
     return {
       credit: defaultTo(entry.credit, 0),
       debit: defaultTo(entry.debit, 0),
@@ -88,7 +88,14 @@ export default class Ledger implements ILedger {
       contactId: entry.contactId,
       date: entry.date,
       transactionNumber: entry.transactionNumber,
+      transactionType: entry.referenceTypeFormatted,
       referenceNumber: entry.referenceNumber,
+      referenceType: entry.referenceType,
     }
+  }
+
+  static fromTransactions(transactions) {
+    const entries = Ledger.mappingTransactions(transactions);
+    return new Ledger(entries);
   }
 }

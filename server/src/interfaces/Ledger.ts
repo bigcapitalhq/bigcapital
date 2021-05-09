@@ -15,4 +15,6 @@ export interface ILedgerEntry {
   accountNormal: string;
   contactId?: number;
   date: Date | string;
+  transactionType: string,
+  transactionNumber: string,
 }
