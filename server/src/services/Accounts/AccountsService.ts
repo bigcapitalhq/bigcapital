@@ -10,7 +10,7 @@ import {
   IFilterMeta,
   IAccountResponse,
   IAccountsTransactionsFilter,
-  IAccountTransaction
+  IAccountTransaction,
 } from 'interfaces';
 import {
   EventDispatcher,
@@ -20,7 +20,7 @@ import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
 import AccountTypesUtils from 'lib/AccountTypes';
 import { ERRORS } from './constants';
-import { transaction } from 'objection';
+import { flatToNestedArray } from 'utils';
 
 @Service()
 export default class AccountsService {
@@ -632,18 +632,17 @@ export default class AccountsService {
     };
   }
 
-
   runningBalanceFromClosing(
     transactions: IAccountTransaction[],
     closingBalance: number,
-    accountNormal: string,
+    accountNormal: string
   ) {
     let remain = closingBalance;
 
     return transactions.map((entry, index) => {
       const { credit, debit } = entry;
-      const amount = accountNormal === 'credit' ?
-        credit - debit : debit - credit;
+      const amount =
+        accountNormal === 'credit' ? credit - debit : debit - credit;
 
       const runningBalance = Math.min(amount, remain);
       const output = {
@@ -663,12 +662,15 @@ export default class AccountsService {
    */
   public async getAccountsTransactions(
     tenantId: number,
-    filter: IAccountsTransactionsFilter,
+    filter: IAccountsTransactionsFilter
   ): Promise<{ transactions: IAccountTransaction }> {
     const { AccountTransaction } = this.tenancy.models(tenantId);
 
     // Retrieve the given account or throw not found error.
-    const account = await this.getAccountOrThrowError(tenantId, filter.accountId);
+    const account = await this.getAccountOrThrowError(
+      tenantId,
+      filter.accountId
+    );
 
     this.logger.info('[accounts] trying to get accounts transactions list.');
     const transactions = await AccountTransaction.query().onBuild((query) => {
@@ -685,8 +687,8 @@ export default class AccountsService {
       transactions: this.runningBalanceFromClosing(
         transactions,
         account.amount,
-        account.accountNormal,
-      )
+        account.accountNormal
+      ),
     };
   }
 
@@ -715,10 +717,14 @@ export default class AccountsService {
       key: 'base_currency',
     });
 
-    return accounts.map((account) => ({
+    const _accounts = accounts.map((account) => ({
       ...account.toJSON(),
       currencyCode: baseCurrency,
     }));
+    return flatToNestedArray(_accounts, {
+      id: 'id',
+      parentId: 'parent_account_id',
+    });
   }
 
   /**
