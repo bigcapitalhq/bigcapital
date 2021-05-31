@@ -25,8 +25,8 @@ export interface ITransactionsByContactsContact {
 }
 
 export interface ITransactionsByContactsFilter {
-  fromDate: Date;
-  toDate: Date;
+  fromDate: Date|string;
+  toDate: Date|string;
   numberFormat: INumberFormatQuery;
   noneTransactions: boolean;
   noneZero: boolean;

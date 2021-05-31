@@ -15,6 +15,7 @@ exports.up = function (knex) {
 
     table.integer('entry_id').unsigned().index();
     table.integer('cost_account_id').unsigned();
+    table.integer('inventory_transaction_id').unsigned().index();
 
     table.datetime('created_at').index();
   });

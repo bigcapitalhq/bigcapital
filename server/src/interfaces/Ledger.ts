@@ -2,6 +2,7 @@ export interface ILedger {
   entries: ILedgerEntry[];
 
   getEntries(): ILedgerEntry[];
+  whereAccountId(accountId: number): ILedger;
   whereContactId(contactId: number): ILedger;
   whereFromDate(fromDate: Date | string): ILedger;
   whereToDate(toDate: Date | string): ILedger;
@@ -15,6 +16,6 @@ export interface ILedgerEntry {
   accountNormal: string;
   contactId?: number;
   date: Date | string;
-  transactionType: string,
-  transactionNumber: string,
+  transactionType?: string,
+  transactionNumber?: string,
 }

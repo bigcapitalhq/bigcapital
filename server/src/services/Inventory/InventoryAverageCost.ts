@@ -165,9 +165,9 @@ export default class InventoryAverageCostMethod
           'transactionId',
           'transactionType',
           'createdAt',
-
           'costAccountId',
         ]),
+        inventoryTransactionId: invTransaction.id,
       };
       switch (invTransaction.direction) {
         case 'IN':

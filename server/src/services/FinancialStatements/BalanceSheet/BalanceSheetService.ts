@@ -53,7 +53,7 @@ export default class BalanceSheetStatementService
    * @param {number} tenantId - 
    * @returns {IBalanceSheetMeta}
    */
-  reportMetadata(tenantId: number): IBalanceSheetMeta {
+  private reportMetadata(tenantId: number): IBalanceSheetMeta {
     const settings = this.tenancy.settings(tenantId);
 
     const isCostComputeRunning = this.inventoryService
@@ -113,7 +113,7 @@ export default class BalanceSheetStatementService
     // Retrieve all journal transactions based on the given query.
     const transactions = await transactionsRepository.journal({
       fromDate: query.fromDate,
-      toDate: query.toDate,
+    toDate: query.toDate,
     });
     // Transform transactions to journal collection.
     const transactionsJournal = Journal.fromTransactions(

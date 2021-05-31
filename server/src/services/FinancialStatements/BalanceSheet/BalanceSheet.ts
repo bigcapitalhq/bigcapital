@@ -16,13 +16,13 @@ import FinancialSheet from '../FinancialSheet';
 
 export default class BalanceSheetStatement extends FinancialSheet {
   readonly query: IBalanceSheetQuery;
+  readonly numberFormat: INumberFormatQuery;
   readonly tenantId: number;
   readonly accounts: IAccount & { type: IAccountType }[];
   readonly journalFinancial: IJournalPoster;
   readonly comparatorDateType: string;
   readonly dateRangeSet: string[];
   readonly baseCurrency: string;
-  readonly numberFormat: INumberFormatQuery;
 
   /**
    * Constructor method.
@@ -46,7 +46,6 @@ export default class BalanceSheetStatement extends FinancialSheet {
     this.accounts = accounts;
     this.journalFinancial = journalFinancial;
     this.baseCurrency = baseCurrency;
-
     this.comparatorDateType =
       query.displayColumnsType === 'total' ? 'day' : query.displayColumnsBy;
 

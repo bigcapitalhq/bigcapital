@@ -4,22 +4,26 @@ import * as R from 'ramda';
 import { map } from 'lodash';
 import TenancyService from 'services/Tenancy/TenancyService';
 import {
-  IVendor,
   ITransactionsByVendorsService,
   ITransactionsByVendorsFilter,
   ITransactionsByVendorsStatement,
+  ILedgerEntry,
 } from 'interfaces';
 import TransactionsByVendor from './TransactionsByVendor';
-import { ACCOUNT_TYPE } from 'data/AccountTypes';
 import Ledger from 'services/Accounting/Ledger';
+import TransactionsByVendorRepository from './TransactionsByVendorRepository';
 
 export default class TransactionsByVendorsService
-  implements ITransactionsByVendorsService {
+  implements ITransactionsByVendorsService
+{
   @Inject()
   tenancy: TenancyService;
 
   @Inject('logger')
   logger: any;
+
+  @Inject()
+  reportRepository: TransactionsByVendorRepository;
 
   /**
    * Defaults balance sheet filter query.
@@ -45,54 +49,23 @@ export default class TransactionsByVendorsService
   }
 
   /**
-   * Retrieve the report vendors.
-   * @param tenantId
-   * @returns
-   */
-  private getReportVendors(tenantId: number): Promise<IVendor[]> {
-    const { Vendor } = this.tenancy.models(tenantId);
-
-    return Vendor.query().orderBy('displayName');
-  }
-
-  /**
-   * Retrieve the accounts receivable.
-   * @param {number} tenantId
-   * @returns
-   */
-  private async getPayableAccounts(tenantId: number) {
-    const { Account } = this.tenancy.models(tenantId);
-
-    const accounts = await Account.query().where(
-      'accountType',
-      ACCOUNT_TYPE.ACCOUNTS_PAYABLE
-    );
-    return accounts;
-  }
-
-  /**
    * Retrieve the customers opening balance transactions.
    * @param {number} tenantId
    * @param {number} openingDate
    * @param {number} customersIds
-   * @returns {}
+   * @returns {Promise<ILedgerEntry[]>}
    */
-  private async getVendorsOpeningBalance(
+  private async getVendorsOpeningBalanceEntries(
     tenantId: number,
     openingDate: Date,
     customersIds?: number[]
   ): Promise<ILedgerEntry[]> {
-    const { AccountTransaction } = this.tenancy.models(tenantId);
-
-    const payableAccounts = await this.getPayableAccounts(tenantId);
-    const payableAccountsIds = map(payableAccounts, 'id');
-
-    const openingTransactions = await AccountTransaction.query().modify(
-      'contactsOpeningBalance',
-      openingDate,
-      payableAccountsIds,
-      customersIds
-    );
+    const openingTransactions =
+      await this.reportRepository.getVendorsOpeningBalance(
+        tenantId,
+        openingDate,
+        customersIds
+      );
     return R.compose(
       R.map(R.assoc('date', openingDate)),
       R.map(R.assoc('accountNormal', 'credit'))
@@ -105,42 +78,46 @@ export default class TransactionsByVendorsService
    * @param {Date|string} openingDate
    * @param {number[]} customersIds
    */
-  async getVendorsPeriodTransactions(
+  private async getVendorsPeriodEntries(
     tenantId: number,
     fromDate: Date,
     toDate: Date
   ): Promise<ILedgerEntry[]> {
-    const { AccountTransaction } = this.tenancy.models(tenantId);
-
-    const receivableAccounts = await this.getPayableAccounts(tenantId);
-    const receivableAccountsIds = map(receivableAccounts, 'id');
-
-    const transactions = await AccountTransaction.query().onBuild((query) => {
-      // Filter by date.
-      query.modify('filterDateRange', fromDate, toDate);
-
-      // Filter by customers.
-      query.whereNot('contactId', null);
-
-      // Filter by accounts.
-      query.whereIn('accountId', receivableAccountsIds);
-    });
-
+    const transactions =
+      await this.reportRepository.getVendorsPeriodTransactions(
+        tenantId,
+        fromDate,
+        toDate
+      );
     return R.compose(
       R.map(R.assoc('accountNormal', 'credit')),
       R.map((trans) => ({
         ...trans,
         referenceTypeFormatted: trans.referenceTypeFormatted,
-      })),
+      }))
     )(transactions);
   }
 
-  async getReportTransactions(tenantId: number, fromDate: Date, toDate: Date) {
+  /**
+   * Retrieve the report ledger entries from repository.
+   * @param {number} tenantId
+   * @param {Date} fromDate
+   * @param {Date} toDate
+   * @returns {Promise<ILedgerEntry[]>}
+   */
+  private async getReportEntries(
+    tenantId: number,
+    fromDate: Date,
+    toDate: Date
+  ): Promise<ILedgerEntry[]> {
     const openingBalanceDate = moment(fromDate).subtract(1, 'days').toDate();
 
     return [
-      ...(await this.getVendorsOpeningBalance(tenantId, openingBalanceDate)),
-      ...(await this.getVendorsPeriodTransactions(tenantId, fromDate, toDate)),
+      ...(await this.getVendorsOpeningBalanceEntries(
+        tenantId,
+        openingBalanceDate
+      )),
+      ...(await this.getVendorsPeriodEntries(tenantId, fromDate, toDate)),
     ];
   }
 
@@ -155,7 +132,7 @@ export default class TransactionsByVendorsService
     query: ITransactionsByVendorsFilter
   ): Promise<ITransactionsByVendorsStatement> {
     const { accountRepository } = this.tenancy.repositories(tenantId);
-    
+
     // Settings tenant service.
     const settings = this.tenancy.settings(tenantId);
     const baseCurrency = settings.get({
@@ -166,19 +143,19 @@ export default class TransactionsByVendorsService
     const filter = { ...this.defaultQuery, ...query };
 
     // Retrieve the report vendors.
-    const vendors = await this.getReportVendors(tenantId);
+    const vendors = await this.reportRepository.getVendors(tenantId);
 
     // Retrieve the accounts graph.
     const accountsGraph = await accountRepository.getDependencyGraph();
 
     // Journal transactions.
-    const journalTransactions = await this.getReportTransactions(
+    const reportEntries = await this.getReportEntries(
       tenantId,
       filter.fromDate,
       filter.toDate
     );
     // Ledger collection.
-    const journal = Ledger.fromTransactions(journalTransactions);
+    const journal = new Ledger(reportEntries);
 
     // Transactions by customers data mapper.
     const reportInstance = new TransactionsByVendor(

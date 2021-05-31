@@ -7,19 +7,25 @@ import {
   ICustomerBalanceSummaryService,
   ICustomerBalanceSummaryQuery,
   ICustomerBalanceSummaryStatement,
-  ICustomer
+  ICustomer,
+  ILedgerEntry,
 } from 'interfaces';
 import { CustomerBalanceSummaryReport } from './CustomerBalanceSummary';
-import { ACCOUNT_TYPE } from 'data/AccountTypes';
+
 import Ledger from 'services/Accounting/Ledger';
+import CustomerBalanceSummaryRepository from './CustomerBalanceSummaryRepository';
 
 export default class CustomerBalanceSummaryService
-  implements ICustomerBalanceSummaryService {
+  implements ICustomerBalanceSummaryService
+{
   @Inject()
   tenancy: TenancyService;
 
   @Inject('logger')
   logger: any;
+
+  @Inject()
+  reportRepository: CustomerBalanceSummaryRepository;
 
   /**
    * Defaults balance sheet filter query.
@@ -43,64 +49,24 @@ export default class CustomerBalanceSummaryService
     };
   }
 
-  /**
-   * Retrieve the A/R accounts.
-   * @param tenantId
-   * @returns
-   */
-  private getReceivableAccounts(tenantId: number) {
-    const { Account } = this.tenancy.models(tenantId);
-
-    return Account.query().where(
-      'accountType',
-      ACCOUNT_TYPE.ACCOUNTS_RECEIVABLE
-    );
-  }
 
   /**
-   * Retrieve the customers credit/debit totals
+   * Retrieve the customers ledger entries mapped from accounts transactions.
    * @param {number} tenantId
-   * @returns
+   * @param {Date|string} asDate
+   * @returns {Promise<ILedgerEntry[]>}
    */
-  private async getReportCustomersTransactions(tenantId: number, asDate: any) {
-    const { AccountTransaction } = this.tenancy.models(tenantId);
-
-    // Retrieve the receivable accounts A/R.
-    const receivableAccounts = await this.getReceivableAccounts(tenantId);
-    const receivableAccountsIds = map(receivableAccounts, 'id');
-
-    // Retrieve the customers transactions of A/R accounts.
-    const customersTranasctions = await AccountTransaction.query().onBuild(
-      (query) => {
-        query.whereIn('accountId', receivableAccountsIds);
-        query.modify('filterDateRange', null, asDate);
-        query.groupBy('contactId');
-        query.sum('credit as credit');
-        query.sum('debit as debit');
-        query.select('contactId');
-      }
+  private async getReportCustomersEntries(
+    tenantId: number,
+    asDate: Date | string
+  ): Promise<ILedgerEntry[]> {
+    const transactions = await this.reportRepository.getCustomersTransactions(
+      tenantId,
+      asDate
     );
     const commonProps = { accountNormal: 'debit', date: asDate };
 
-    return R.map(R.merge(commonProps))(customersTranasctions);
-  }
-
-  /**
-   * Retrieve the report customers.
-   * @param {number} tenantId 
-   * @param {number[]} customersIds 
-   * @returns {ICustomer[]}
-   */
-  private getReportCustomers(tenantId: number, customersIds: number[]): ICustomer[] {
-    const { Customer } = this.tenancy.models(tenantId);
-
-    return Customer.query()
-      .orderBy('displayName')
-      .onBuild((query) => {
-        if (!isEmpty(customersIds)) {
-          query.whereIn('id', customersIds);
-        }
-      });
+    return R.map(R.merge(commonProps))(transactions);
   }
 
   /**
@@ -130,17 +96,17 @@ export default class CustomerBalanceSummaryService
       }
     );
     // Retrieve the customers list ordered by the display name.
-    const customers = await this.getReportCustomers(
+    const customers = await this.reportRepository.getCustomers(
       tenantId,
       query.customersIds
     );
     // Retrieve the customers debit/credit totals.
-    const customersTransactions = await this.getReportCustomersTransactions(
+    const customersEntries = await this.getReportCustomersEntries(
       tenantId,
       filter.asDate
     );
     // Ledger query.
-    const ledger = Ledger.fromTransactions(customersTransactions);
+    const ledger = new Ledger(customersEntries);
 
     // Report instance.
     const report = new CustomerBalanceSummaryReport(
@@ -153,7 +119,7 @@ export default class CustomerBalanceSummaryService
     return {
       data: report.reportData(),
       columns: report.reportColumns(),
-      query: filter
+      query: filter,
     };
   }
 }

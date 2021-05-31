@@ -37,6 +37,7 @@ export default class InventoryService {
   transformItemEntriesToInventory(transaction: {
     transactionId: number;
     transactionType: IItemEntryTransactionType;
+    transactionNumber?: string;
 
     date: Date | string;
     direction: TInventoryTransactionDirection;
@@ -56,6 +57,10 @@ export default class InventoryService {
       entryId: entry.id,
       createdAt: transaction.createdAt,
       costAccountId: entry.costAccountId,
+      meta: {
+        transactionNumber: transaction.transactionNumber,
+        description: entry.description,
+      }
     }));
   }
 
@@ -205,7 +210,7 @@ export default class InventoryService {
         inventoryEntry.transactionType
       );
     }
-    return InventoryTransaction.query().insert({
+    return InventoryTransaction.query().insertGraph({
       ...inventoryEntry,
     });
   }

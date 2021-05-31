@@ -9,6 +9,7 @@ import { CellTextSpan } from 'components/Datatable/Cells';
 /**
  * Retrieve customers transactions columns.
  */
+
 export const useCustomersTransactionsColumns = () => {
   const {
     customersTransactions: { tableRows },

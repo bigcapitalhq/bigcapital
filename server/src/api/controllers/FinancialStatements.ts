@@ -15,6 +15,8 @@ import CustomerBalanceSummaryController from './FinancialStatements/CustomerBala
 import VendorBalanceSummaryController from './FinancialStatements/VendorBalanceSummary';
 import TransactionsByCustomers from './FinancialStatements/TransactionsByCustomers';
 import TransactionsByVendors from './FinancialStatements/TransactionsByVendors';
+import CashFlowStatementController from './FinancialStatements/CashFlow/CashFlow';
+import InventoryDetailsController from './FinancialStatements/InventoryDetails';
 
 @Service()
 export default class FinancialStatementsService {
@@ -76,6 +78,14 @@ export default class FinancialStatementsService {
     router.use(
       '/transactions-by-vendors',
       Container.get(TransactionsByVendors).router(),
+    );
+    router.use(
+      '/cash-flow',
+      Container.get(CashFlowStatementController).router(),
+    );
+    router.use(
+      '/inventory-item-details',
+      Container.get(InventoryDetailsController).router(),
     );
     return router;
   }

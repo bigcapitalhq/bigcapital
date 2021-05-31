@@ -33,7 +33,13 @@ export interface IAccountsTransactionsFilter {
 }
 
 export interface IAccountTransaction {
-  
+  credit: number;
+  debit: number;
+  accountId: number;
+  contactId: number;
+  date: string|Date;
+  referenceNumber: string;
+  account: IAccount;
 }
 export interface IAccountResponse extends IAccount {
   

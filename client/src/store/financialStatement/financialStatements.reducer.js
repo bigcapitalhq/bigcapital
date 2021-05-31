@@ -45,6 +45,12 @@ const initialState = {
   vendorsTransactions: {
     displayFilterDrawer: false,
   },
+  cashFlowStatement: {
+    displayFilterDrawer: false,
+  },
+  inventoryItemDetails: {
+    displayFilterDrawer: false,
+  },
 };
 
 /**
@@ -90,5 +96,10 @@ export default createReducer(initialState, {
   ...financialStatementFilterToggle(
     t.VENDORS_TRANSACTIONS,
     'vendorsTransactions',
+  ),
+  ...financialStatementFilterToggle(t.CASH_FLOW_STATEMENT, 'cashFlowStatement'),
+  ...financialStatementFilterToggle(
+    t.INVENTORY_ITEM_DETAILS,
+    'inventoryItemDetails',
   ),
 });

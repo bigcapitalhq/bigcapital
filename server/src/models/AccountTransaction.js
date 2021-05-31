@@ -1,4 +1,4 @@
-import { Model } from 'objection';
+import { Model, raw } from 'objection';
 import moment from 'moment';
 import TenantModel from 'models/TenantModel';
 
@@ -138,6 +138,21 @@ export default class AccountTransaction extends TenantModel {
         query.sum('credit as credit');
         query.sum('debit as debit');
         query.select('contactId');
+      },
+      creditDebitSummation(query) {
+        query.sum('credit as credit');
+        query.sum('debit as debit');
+      },
+      groupByDateFormat(query, groupType = 'month') {
+        const groupBy = {
+          'day': '%Y-%m-%d',
+          'month': '%Y-%m',
+          'year': '%Y',
+        };
+        const dateFormat = groupBy[groupType];
+
+        query.select(raw(`DATE_FORMAT(DATE, '${dateFormat}')`).as('date'));
+        query.groupByRaw(`DATE_FORMAT(DATE, '${dateFormat}')`);
       }
     };
   }

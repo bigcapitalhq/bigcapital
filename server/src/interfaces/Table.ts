@@ -13,3 +13,13 @@ export interface ITableCell {
 export type ITableRow = {
   rows: ITableCell[];
 };
+
+export interface ITableColumn {
+  key: string,
+  label: string,
+}
+
+export interface ITable {
+  columns: ITableColumn[],
+  data: ITableRow[],
+}

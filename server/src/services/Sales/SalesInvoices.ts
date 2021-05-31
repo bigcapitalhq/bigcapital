@@ -536,6 +536,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
     const transaction = {
       transactionId: saleInvoice.id,
       transactionType: 'SaleInvoice',
+      transactionNumber: saleInvoice.invoiceNo,
 
       date: saleInvoice.invoiceDate,
       direction: 'OUT',

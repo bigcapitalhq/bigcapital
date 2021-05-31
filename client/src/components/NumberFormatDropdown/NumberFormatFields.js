@@ -73,7 +73,7 @@ export default function NumberFormatFields({}) {
             label={<T id={'money_format'} />}
             helperText={<ErrorMessage name="formatMoney" />}
             intent={inputIntent({ error, touched })}
-            className={classNames(CLASSES.FILL)}
+            className={classNames('form-group--money-format', CLASSES.FILL)}
           >
             <ListSelect
               items={moneyFormat}

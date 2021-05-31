@@ -65,6 +65,14 @@ export const vendorsTransactionsFilterDrawerSelector = (state) => {
   return filterDrawerByTypeSelector('vendorsTransactions')(state);
 };
 
+export const cashFlowStatementFilterDrawerSelector = (state) => {
+  return filterDrawerByTypeSelector('cashFlowStatement')(state);
+};
+
+export const inventoryItemDetailsDrawerFilter = (state) => {
+  return filterDrawerByTypeSelector('inventoryItemDetails')(state);
+};
+
 /**
  * Retrieve balance sheet filter drawer.
  */
@@ -207,6 +215,26 @@ export const getCustomersTransactionsFilterDrawer = createSelector(
  */
 export const getVendorsTransactionsFilterDrawer = createSelector(
   vendorsTransactionsFilterDrawerSelector,
+  (isOpen) => {
+    return isOpen;
+  },
+);
+
+/**
+ * Retrieve cash flow statement filter drawer.
+ */
+export const getCashFlowStatementFilterDrawer = createSelector(
+  cashFlowStatementFilterDrawerSelector,
+  (isOpen) => {
+    return isOpen;
+  },
+);
+
+/**
+ * Retrieve inventory item details filter drawer.
+ */
+export const getInventoryItemDetailsFilterDrawer = createSelector(
+  inventoryItemDetailsDrawerFilter,
   (isOpen) => {
     return isOpen;
   },
