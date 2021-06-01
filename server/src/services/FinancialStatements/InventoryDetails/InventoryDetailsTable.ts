@@ -22,8 +22,8 @@ const MAP_CONFIG = { childrenPath: 'children', pathFormat: 'array' };
 
 export default class InventoryDetailsTable {
   /**
-   * Constructor methiod.
-   * @param {ICashFlowStatement} reportStatement
+   * Constructor method.
+   * @param {ICashFlowStatement} reportStatement - Report statement.
    */
   constructor(reportStatement) {
     this.report = reportStatement;
@@ -59,8 +59,8 @@ export default class InventoryDetailsTable {
         accessor: 'quantityMovement.formattedNumber',
       },
       { key: 'rate', accessor: 'rate.formattedNumber' },
-      { key: 'value_movement', accessor: 'valueMovement.formattedNumber' },
-      { key: 'cost', accessor: 'cost.formattedNumber' },
+      { key: 'total', accessor: 'total.formattedNumber' },
+      { key: 'value', accessor: 'valueMovement.formattedNumber' },
       { key: 'profit_margin', accessor: 'profitMargin.formattedNumber' },
       { key: 'running_quantity', accessor: 'runningQuantity.formattedNumber' },
       { key: 'running_valuation', accessor: 'runningValuation.formattedNumber' },
@@ -82,9 +82,9 @@ export default class InventoryDetailsTable {
       { key: 'empty' },
       { key: 'quantity', accessor: 'quantity.formattedNumber' },
       { key: 'empty' },
+      { key: 'empty' },
       { key: 'value', accessor: 'value.formattedNumber' },
     ];
-
     return tableRowMapper(transaction, columns, {
       rowTypes: [IROW_TYPE.OPENING_ENTRY],
     });
@@ -102,8 +102,8 @@ export default class InventoryDetailsTable {
       { key: 'empty' },
       { key: 'quantity', accessor: 'quantity.formattedNumber' },
       { key: 'empty' },
+      { key: 'empty' },
       { key: 'value', accessor: 'value.formattedNumber' },
-      { key: 'cost', accessor: 'cost.formattedNumber' },
       { key: 'profitMargin', accessor: 'profitMargin.formattedNumber' },
     ];
 
@@ -171,13 +171,13 @@ export default class InventoryDetailsTable {
       { key: 'date', label: 'Date' },
       { key: 'transaction_type', label: 'Transaction type' },
       { key: 'transaction_id', label: 'Transaction #' },
-      { key: 'quantity_movement', label: 'Quantity' },
+      { key: 'quantity', label: 'Quantity' },
       { key: 'rate', label: 'Rate' },
-      { key: 'value_movement', label: 'Value' },
-      { key: 'cost', label: 'Cost' },
+      { key: 'total', label: 'Total' },
+      { key: 'value', label: 'Value' },
       { key: 'profit_margin', label: 'Profit Margin' },
-      { key: 'quantity_on_hand', label: 'Running quantity' },
-      { key: 'value', label: 'Running Value' },
+      { key: 'running_quantity', label: 'Running quantity' },
+      { key: 'running_value', label: 'Running Value' },
     ];
   }
 }

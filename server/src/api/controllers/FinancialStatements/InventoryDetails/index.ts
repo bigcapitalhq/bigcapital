@@ -59,11 +59,12 @@ export default class InventoryDetailsController extends BaseController {
    * @param {ICashFlowStatement} cashFlow -
    */
   private transformJsonResponse(inventoryDetails) {
-    const { data, query } = inventoryDetails;
+    const { data, query, meta } = inventoryDetails;
 
     return {
       data: this.transfromToResponse(data),
-      meta: this.transfromToResponse(query),
+      query: this.transfromToResponse(query),
+      meta: this.transfromToResponse(meta),
     };
   }
 
@@ -78,7 +79,8 @@ export default class InventoryDetailsController extends BaseController {
         data: inventoryDetailsTable.tableData(),
         columns: inventoryDetailsTable.tableColumns(),
       },
-      meta: this.transfromToResponse(inventoryDetails.query),
+      query: this.transfromToResponse(inventoryDetails.query),
+      meta: this.transfromToResponse(inventoryDetails.meta),
     };
   }
 

@@ -1,7 +1,11 @@
 import { Inject } from 'typedi';
 import { raw } from 'objection';
 import moment from 'moment';
-import { IItem, IInventoryDetailsQuery, IInventoryTransaction } from 'interfaces';
+import {
+  IItem,
+  IInventoryDetailsQuery,
+  IInventoryTransaction,
+} from 'interfaces';
 import HasTenancyService from 'services/Tenancy/TenancyService';
 
 export default class InventoryDetailsRepository {
@@ -10,7 +14,7 @@ export default class InventoryDetailsRepository {
 
   /**
    * Retrieve inventory items.
-   * @param {number} tenantId - 
+   * @param {number} tenantId -
    * @returns {Promise<IItem>}
    */
   public getInventoryItems(tenantId: number): Promise<IItem[]> {
@@ -47,6 +51,7 @@ export default class InventoryDetailsRepository {
         raw("IF(`DIRECTION` = 'OUT', `QUANTITY` * `RATE`, 0) as 'VALUE_OUT'")
       )
       .modify('filterDateRange', null, openingBalanceDate)
+      .orderBy('date', 'ASC')
       .as('inventory_transactions');
 
     const openingBalanceTransactions = await InventoryTransaction.query()
@@ -79,6 +84,7 @@ export default class InventoryDetailsRepository {
 
     const inventoryTransactions = InventoryTransaction.query()
       .modify('filterDateRange', filter.fromDate, filter.toDate)
+      .orderBy('date', 'ASC')
       .withGraphFetched('meta')
       .withGraphFetched('costLotAggregated');
 

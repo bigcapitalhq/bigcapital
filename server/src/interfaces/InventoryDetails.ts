@@ -58,8 +58,9 @@ export interface IInventoryDetailsItemTransaction {
   valueMovement: IInventoryDetailsNumber;
 
   quantity: IInventoryDetailsNumber;
-  value: IInventoryDetailsNumber;
+  total: IInventoryDetailsNumber;
   cost: IInventoryDetailsNumber;
+  value: IInventoryDetailsNumber;
   profitMargin: IInventoryDetailsNumber;
   
   rate: IInventoryDetailsNumber;
@@ -74,3 +75,16 @@ export type IInventoryDetailsNode =
   | IInventoryDetailsItem
   | IInventoryDetailsItemTransaction;
 export type IInventoryDetailsData = IInventoryDetailsItem[];
+
+
+export interface IInventoryItemDetailMeta {
+  isCostComputeRunning: boolean;
+  organizationName: string;
+  baseCurrency: string;
+}
+
+export interface IInvetoryItemDetailDOO {
+  data: IInventoryDetailsData;
+  query: IInventoryDetailsQuery;
+  meta: IInventoryItemDetailMeta;
+}

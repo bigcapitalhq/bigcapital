@@ -1,11 +1,16 @@
 import moment from 'moment';
 import { Service, Inject } from 'typedi';
-import { raw } from 'objection';
-import { IInventoryDetailsQuery, IInventoryTransaction } from 'interfaces';
+import {
+  IInventoryDetailsQuery,
+  IInvetoryItemDetailDOO,
+  IInventoryItemDetailMeta,
+} from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
 import InventoryDetails from './InventoryDetails';
 import FinancialSheet from '../FinancialSheet';
 import InventoryDetailsRepository from './InventoryDetailsRepository';
+import InventoryService from 'services/Inventory/Inventory';
+import { parseBoolean } from 'utils';
 
 @Service()
 export default class InventoryDetailsService extends FinancialSheet {
@@ -15,11 +20,14 @@ export default class InventoryDetailsService extends FinancialSheet {
   @Inject()
   reportRepo: InventoryDetailsRepository;
 
+  @Inject()
+  inventoryService: InventoryService;
+
   /**
    * Defaults balance sheet filter query.
    * @return {IBalanceSheetQuery}
    */
-  get defaultQuery(): IInventoryDetailsQuery {
+  private get defaultQuery(): IInventoryDetailsQuery {
     return {
       fromDate: moment().startOf('year').format('YYYY-MM-DD'),
       toDate: moment().endOf('year').format('YYYY-MM-DD'),
@@ -35,14 +43,42 @@ export default class InventoryDetailsService extends FinancialSheet {
   }
 
   /**
+   * Retrieve the balance sheet meta.
+   * @param {number} tenantId -
+   * @returns {IInventoryItemDetailMeta}
+   */
+  private reportMetadata(tenantId: number): IInventoryItemDetailMeta {
+    const settings = this.tenancy.settings(tenantId);
+
+    const isCostComputeRunning =
+      this.inventoryService.isItemsCostComputeRunning(tenantId);
+
+    const organizationName = settings.get({
+      group: 'organization',
+      key: 'name',
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
+
+    return {
+      isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
+      organizationName,
+      baseCurrency,
+    };
+  }
+
+  /**
    * Retrieve the inventory details report data.
    * @param {number} tenantId -
    * @param {IInventoryDetailsQuery} query -
+   * @return {Promise<IInvetoryItemDetailDOO>}
    */
   public async inventoryDetails(
     tenantId: number,
     query: IInventoryDetailsQuery
-  ): Promise<any> {
+  ): Promise<IInvetoryItemDetailDOO> {
     // Settings tenant service.
     const settings = this.tenancy.settings(tenantId);
     const baseCurrency = settings.get({
@@ -76,6 +112,8 @@ export default class InventoryDetailsService extends FinancialSheet {
 
     return {
       data: inventoryDetailsInstance.reportData(),
+      query: filter,
+      meta: this.reportMetadata(tenantId),
     };
   }
 }

@@ -1,5 +1,6 @@
 import * as R from 'ramda';
 import { defaultTo, sumBy, get } from 'lodash';
+import moment from 'moment';
 import {
   IInventoryDetailsQuery,
   IItem,
@@ -18,7 +19,6 @@ import {
 import FinancialSheet from '../FinancialSheet';
 import { transformToMapBy, transformToMapKeyValue } from 'utils';
 import { filterDeep } from 'utils/deepdash';
-import moment from 'moment';
 
 const MAP_CONFIG = { childrenPath: 'children', pathFormat: 'array' };
 
@@ -159,7 +159,8 @@ export default class InventoryDetails extends FinancialSheet {
     const initial = this.getNumberMeta(0);
 
     const mapAccumAppender = (a, b) => {
-      const total = a.runningValuation.number + b.valueMovement.number;
+      const adjusmtent = b.direction === 'OUT' ? -1 : 1;
+      const total = a.runningValuation.number + b.cost.number * adjusmtent;
       const totalMeta = this.getNumberMeta(total, { excerptZero: false });
       const accum = { ...b, runningValuation: totalMeta };
 
@@ -182,19 +183,22 @@ export default class InventoryDetails extends FinancialSheet {
     item: IItem,
     transaction: IInventoryTransaction
   ): IInventoryDetailsItemTransaction {
-    const value = transaction.quantity * transaction.rate;
+    const total = transaction.quantity * transaction.rate;
     const amountMovement = R.curry(this.adjustAmountMovement)(
       transaction.direction
     );
     // Quantity movement.
     const quantityMovement = amountMovement(transaction.quantity);
-    const valueMovement = amountMovement(value);
+    const cost = defaultTo(transaction?.costLotAggregated.cost, 0);
 
-    // Profit margin.
-    const profitMargin = Math.max(
-      value - transaction.costLotAggregated.cost,
-      0
-    );
+    // Profit margin. 
+    const profitMargin = total - cost;
+
+    // Value from computed cost in `OUT` or from total sell price in `IN` transaction.
+    const value = transaction.direction === 'OUT' ? cost : total;
+
+    // Value movement depends on transaction direction.
+    const valueMovement = amountMovement(value);
 
     return {
       nodeType: INodeTypes.TRANSACTION,
@@ -207,10 +211,11 @@ export default class InventoryDetails extends FinancialSheet {
       valueMovement: this.getNumberMeta(valueMovement),
 
       quantity: this.getNumberMeta(transaction.quantity),
-      value: this.getNumberMeta(value),
+      total: this.getNumberMeta(total),
 
       rate: this.getNumberMeta(transaction.rate),
       cost: this.getNumberMeta(transaction.costLotAggregated.cost),
+      value: this.getNumberMeta(value),
 
       profitMargin: this.getNumberMeta(profitMargin),
 
@@ -314,14 +319,12 @@ export default class InventoryDetails extends FinancialSheet {
     const value = sumBy(transactions, 'valueMovement.number');
     const quantity = sumBy(transactions, 'quantityMovement.number');
     const profitMargin = sumBy(transactions, 'profitMargin.number');
-    const cost = sumBy(transactions, 'cost.number');
 
     return {
       nodeType: INodeTypes.CLOSING_ENTRY,
       date: this.getDateMeta(this.query.toDate),
       quantity: this.getTotalNumberMeta(quantity),
       value: this.getTotalNumberMeta(value),
-      cost: this.getTotalNumberMeta(cost),
       profitMargin: this.getTotalNumberMeta(profitMargin),
     };
   }
