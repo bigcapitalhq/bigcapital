@@ -8,7 +8,8 @@ import {
   ITableRow,
   ITableColumn,
   ICashFlowStatementQuery,
-  IDateRange
+  IDateRange,
+  ICashFlowStatementDOO
 } from 'interfaces';
 import { dateRangeFromToCollection, tableRowMapper } from 'utils';
 import { mapValuesDeep } from 'utils/deepdash';
@@ -28,20 +29,14 @@ const DISPLAY_COLUMNS_BY = {
 
 
 export default class CashFlowTable implements ICashFlowTable {
-  private report: {
-    data: ICashFlowStatement;
-    query: ICashFlowStatementQuery;
-  };
+  private report: ICashFlowStatementDOO;
   private dateRangeSet: IDateRange[];
 
   /**
    * Constructor method.
    * @param {ICashFlowStatement} reportStatement
    */
-  constructor(reportStatement: {
-    data: ICashFlowStatement;
-    query: ICashFlowStatementQuery;
-  }) {
+  constructor(reportStatement: ICashFlowStatementDOO) {
     this.report = reportStatement;
     this.dateRangeSet = [];
     this.initDateRangeCollection();

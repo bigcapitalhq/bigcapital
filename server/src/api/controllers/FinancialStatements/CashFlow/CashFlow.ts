@@ -9,7 +9,7 @@ import {
 } from 'express';
 import BaseFinancialReportController from '../BaseFinancialReportController';
 import CashFlowStatementService from 'services/FinancialStatements/CashFlow/CashFlowService';
-import { ICashFlowStatement } from 'interfaces';
+import { ICashFlowStatementDOO, ICashFlowStatement } from 'interfaces';
 import CashFlowTable from 'services/FinancialStatements/CashFlow/CashFlowTable';
 
 @Service()
@@ -54,12 +54,13 @@ export default class CashFlowController extends BaseFinancialReportController {
    * Retrieve the cashflow statment to json response.
    * @param {ICashFlowStatement} cashFlow -
    */
-  private transformJsonResponse(cashFlow: ICashFlowStatement) {
-    const { data, query } = cashFlow;
+  private transformJsonResponse(cashFlowDOO: ICashFlowStatementDOO) {
+    const { data, query, meta } = cashFlowDOO;
 
     return {
       data: this.transfromToResponse(data),
-      meta: this.transfromToResponse(query),
+      query: this.transfromToResponse(query),
+      meta: this.transfromToResponse(meta),
     };
   }
 
@@ -68,15 +69,16 @@ export default class CashFlowController extends BaseFinancialReportController {
    * @param {ITransactionsByVendorsStatement} statement -
    *
    */
-  private transformToTableRows(cashFlow: ICashFlowStatement) {
-    const cashFlowTable = new CashFlowTable(cashFlow);
+  private transformToTableRows(cashFlowDOO: ICashFlowStatementDOO) {
+    const cashFlowTable = new CashFlowTable(cashFlowDOO);
 
     return {
       table: {
         data: cashFlowTable.tableRows(),
         columns: cashFlowTable.tableColumns(),
       },
-      meta: this.transfromToResponse(cashFlow.query),
+      query: this.transfromToResponse(cashFlowDOO.query),
+      meta: this.transfromToResponse(cashFlowDOO.meta),
     };
   }
 

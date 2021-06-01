@@ -4,8 +4,8 @@ import { ILedger } from './Ledger';
 import { ITableRow } from './Table';
 
 export interface ICashFlowStatementQuery {
-  fromDate: Date|string;
-  toDate: Date|string;
+  fromDate: Date | string;
+  toDate: Date | string;
   displayColumnsBy: string;
   displayColumnsType: string;
   noneZero: boolean;
@@ -77,13 +77,23 @@ export type ICashFlowStatementSection =
   | ICashFlowStatementCommonSection;
 
 export interface ICashFlowStatementColumn {}
-export interface ICashFlowStatementMeta {}
+export interface ICashFlowStatementMeta {
+  isCostComputeRunning: boolean;
+  organizationName: string;
+  baseCurrency: string;
+}
+
+export interface ICashFlowStatementDOO {
+  data: ICashFlowStatementData;
+  meta: ICashFlowStatementMeta;
+  query: ICashFlowStatementQuery;
+}
 
 export interface ICashFlowStatementService {
   cashFlow(
     tenantId: number,
     query: ICashFlowStatementQuery
-  ): Promise<ICashFlowStatement>;
+  ): Promise<ICashFlowStatementDOO>;
 }
 
 // CASH FLOW SCHEMA TYPES.
@@ -185,6 +195,6 @@ export interface ICashFlowTable {
 }
 
 export interface IDateRange {
-  fromDate: Date,
-  toDate: Date,
+  fromDate: Date;
+  toDate: Date;
 }
