@@ -191,7 +191,7 @@ export default class InventoryDetails extends FinancialSheet {
     const quantityMovement = amountMovement(transaction.quantity);
     const cost = defaultTo(transaction?.costLotAggregated.cost, 0);
 
-    // Profit margin. 
+    // Profit margin.
     const profitMargin = total - cost;
 
     // Value from computed cost in `OUT` or from total sell price in `IN` transaction.
@@ -268,8 +268,11 @@ export default class InventoryDetails extends FinancialSheet {
   )[] {
     const transactions = this.getItemTransactions(item);
     const openingValuation = this.getItemOpeingValuation(item);
-    const closingValuation = this.getItemClosingValuation(item, transactions);
-
+    const closingValuation = this.getItemClosingValuation(
+      item,
+      transactions,
+      openingValuation
+    );
     const hasTransactions = transactions.length > 0;
     const isItemHasOpeningBalance = this.isItemHasOpeningBalance(item.id);
 
@@ -314,17 +317,21 @@ export default class InventoryDetails extends FinancialSheet {
    */
   private getItemClosingValuation(
     item: IItem,
-    transactions: IInventoryDetailsItemTransaction[]
+    transactions: IInventoryDetailsItemTransaction[],
+    openingValuation: IInventoryDetailsOpening
   ): IInventoryDetailsOpening {
     const value = sumBy(transactions, 'valueMovement.number');
     const quantity = sumBy(transactions, 'quantityMovement.number');
     const profitMargin = sumBy(transactions, 'profitMargin.number');
 
+    const closingQuantity = quantity + openingValuation.quantity.number;
+    const closingValue = value + openingValuation.value.number;
+
     return {
       nodeType: INodeTypes.CLOSING_ENTRY,
       date: this.getDateMeta(this.query.toDate),
-      quantity: this.getTotalNumberMeta(quantity),
-      value: this.getTotalNumberMeta(value),
+      quantity: this.getTotalNumberMeta(closingQuantity),
+      value: this.getTotalNumberMeta(closingValue),
       profitMargin: this.getTotalNumberMeta(profitMargin),
     };
   }
@@ -385,7 +392,12 @@ export default class InventoryDetails extends FinancialSheet {
    * @returns {IInventoryDetailsItem[]}
    */
   private filterItemsNodes(items: IInventoryDetailsItem[]) {
-    return filterDeep(items, this.isFilterNode.bind(this), MAP_CONFIG);
+    const filtered = filterDeep(
+      items,
+      this.isFilterNode.bind(this),
+      MAP_CONFIG
+    );
+    return defaultTo(filtered, []);
   }
 
   /**

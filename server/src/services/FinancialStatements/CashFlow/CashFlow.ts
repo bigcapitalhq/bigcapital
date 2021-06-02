@@ -700,7 +700,7 @@ class CashFlowStatement extends FinancialSheet implements ICashFlowStatement {
       sections,
       this.isAccountLeafNoneZero.bind(this),
       MAP_CONFIG
-    );
+    ) || [];
   }
 
   /**
@@ -713,7 +713,7 @@ class CashFlowStatement extends FinancialSheet implements ICashFlowStatement {
       sections,
       this.isAccountsSectionHasChildren.bind(this),
       MAP_CONFIG
-    );
+    ) || [];
   }
 
   /**
