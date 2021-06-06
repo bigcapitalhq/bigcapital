@@ -85,7 +85,9 @@ export default function InviteUserFormContent() {
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'password'} />}
-            labelInfo={<PasswordRevealer onChange={handlePasswordRevealerChange} />}
+            labelInfo={
+              <PasswordRevealer onChange={handlePasswordRevealerChange} />
+            }
             className={'form-group--password has-password-revealer'}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'password'} />}
@@ -106,15 +108,13 @@ export default function InviteUserFormContent() {
           <T id={'you_will_use_this_address_to_sign_in_to_bigcapital'} />
         </p>
         <p>
-          <T id={'signing_in_or_creating'} /> <br />
-          <Link>
-            <T id={'terms_conditions'} />
-          </Link>{' '}
-          <T id={'and'} />
-          <Link>
-            {' '}
-            <T id={'privacy_statement'} />
-          </Link>
+          <T
+            id={'signing_in_or_creating'}
+            values={{
+              terms: (msg) => <Link>{msg}</Link>,
+              privacy: (msg) => <Link>{msg}</Link>,
+            }}
+          />
         </p>
       </div>
 

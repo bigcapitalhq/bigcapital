@@ -117,15 +117,13 @@ export default function RegisterForm({ isSubmitting }) {
 
       <div className={'register-form__agreement-section'}>
         <p>
-          <T id={'signing_in_or_creating'} /> <br />
-          <Link>
-            <T id={'terms_conditions'} />
-          </Link>{' '}
-          <T id={'and'} />
-          <Link>
-            {' '}
-            <T id={'privacy_statement'} />
-          </Link>
+          <T
+            id={'signing_in_or_creating'}
+            values={{
+              terms: (msg) => <Link>{msg}</Link>,
+              privacy: (msg) => <Link>{msg}</Link>,
+            }}
+          />
         </p>
       </div>
 
