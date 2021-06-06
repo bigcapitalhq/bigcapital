@@ -2,16 +2,17 @@ import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
+import { FormattedMessage as T } from 'react-intl';
 
 export default function ItemsEmptyStatus() {
   const history = useHistory();
 
   return (
     <EmptyStatus
-      title={'Manage the organization’s services and products.'}
+      title={<T id={'manage_the_organization_s_services_and_products'} />}
       description={
         <p>
-          Here a list of your organization products and services, to be used when you create invoices or bills to your customers or vendors.
+          <T id={'here_a_list_of_your_organization_products_and_services'} />
         </p>
       }
       action={
@@ -23,11 +24,11 @@ export default function ItemsEmptyStatus() {
               history.push('/items/new');
             }}
           >
-            New Item
+            <T id={'new_item'} />
           </Button>
 
           <Button intent={Intent.NONE} large={true}>
-            Learn more
+            <T id={'learn_more'}/>
           </Button>
         </>
       }

@@ -157,7 +157,7 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
               small={true}
               minimal={true}
             >
-              Receive full amount (
+             <T id={'receive_full_amount'} /> (
               <Money amount={payableFullAmount} currency={baseCurrency} />)
             </Button>
           </FormGroup>

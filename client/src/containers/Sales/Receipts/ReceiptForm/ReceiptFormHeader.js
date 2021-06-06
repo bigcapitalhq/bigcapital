@@ -7,6 +7,8 @@ import { CLASSES } from 'common/classes';
 import ReceiptFormHeaderFields from './ReceiptFormHeaderFields';
 
 import { PageFormBigNumber } from 'components';
+import { formatMessage } from 'services/intl';
+
 import withSettings from 'containers/Settings/withSettings';
 import { compose } from 'redux';
 
@@ -22,9 +24,10 @@ function ReceiptFormHeader({
   const { values } = useFormikContext();
 
   // Calculate the total due amount of bill entries.
-  const totalDueAmount = useMemo(() => sumBy(values.entries, 'total'), [
-    values.entries,
-  ]);
+  const totalDueAmount = useMemo(
+    () => sumBy(values.entries, 'total'),
+    [values.entries],
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
@@ -32,7 +35,7 @@ function ReceiptFormHeader({
         onReceiptNumberChanged={onReceiptNumberChanged}
       />
       <PageFormBigNumber
-        label={'Due Amount'}
+        label={formatMessage({ id: 'due_amount' })}
         amount={totalDueAmount}
         currencyCode={baseCurrency}
       />

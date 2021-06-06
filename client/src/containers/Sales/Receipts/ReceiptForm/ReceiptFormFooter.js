@@ -10,7 +10,7 @@ import { inputIntent } from 'utils';
 export default function ReceiptFormFooter({}) {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <Postbox title={'Invoice details'} defaultOpen={false}>
+      <Postbox title={<T id={'receipt_details'}/>} defaultOpen={false}>
         <Row>
           <Col md={8}>
             {/* --------- Receipt message --------- */}
@@ -45,7 +45,8 @@ export default function ReceiptFormFooter({}) {
               initialFiles={[]}
               // onDrop={handleDropFiles}
               // onDeleteFile={handleDeleteFile}
-              hint={'Attachments: Maxiumum size: 20MB'}
+              hint={<T id={'attachments_maximum'} />}
+
             />
           </Col>
         </Row>

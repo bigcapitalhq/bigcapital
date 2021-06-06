@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { Money } from 'components';
 import { MoneyFieldCell } from 'components/DataTableCells';
 import { safeSumBy, formattedAmount } from 'utils';
+import { formatMessage } from 'services/intl';
 
 /**
  * Invoice date cell.
@@ -58,14 +59,14 @@ function MoneyTableCell({ row: { original }, value }) {
 }
 
 function DateFooterCell() {
-  return 'Total';
+  return formatMessage({id:'total'})
 }
 
 /**
  * Retrieve payment receive form entries columns.
  */
 export const usePaymentReceiveEntriesColumns = () => {
-  const { formatMessage } = useIntl();
+ 
 
   return React.useMemo(
     () => [

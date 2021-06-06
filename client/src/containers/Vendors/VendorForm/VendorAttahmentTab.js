@@ -1,5 +1,6 @@
 import React from 'react';
 import Dragzone from 'components/Dragzone';
+import { FormattedMessage as T } from 'react-intl';
 
 /**
  * Vendor Attahment Tab.
@@ -11,7 +12,7 @@ function VendorAttahmentTab() {
         initialFiles={[]}
         onDrop={null}
         onDeleteFile={[]}
-        hint={'Attachments: Maxiumum size: 20MB'}
+        hint={<T id={'attachments_maximum'} />}
       />
     </div>
   );

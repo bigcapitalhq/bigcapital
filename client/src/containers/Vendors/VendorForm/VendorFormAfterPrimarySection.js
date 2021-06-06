@@ -1,13 +1,15 @@
 import React from 'react';
 import { FormGroup, InputGroup, ControlGroup } from '@blueprintjs/core';
 import { FastField, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { inputIntent } from 'utils';
 
 /**
  * Vendor form  after primary section.
  */
 function VendorFormAfterPrimarySection() {
+  const { formatMessage } = useIntl();
+
   return (
     <div class="customer-form__after-primary-section-content">
       {/*------------ Vendor email -----------*/}
@@ -36,7 +38,7 @@ function VendorFormAfterPrimarySection() {
             {({ field, meta: { error, touched } }) => (
               <InputGroup
                 intent={inputIntent({ error, touched })}
-                placeholder={'Work'}
+                placeholder={formatMessage({ id: 'work' })}
                 {...field}
               />
             )}
@@ -45,7 +47,7 @@ function VendorFormAfterPrimarySection() {
             {({ field, meta: { error, touched } }) => (
               <InputGroup
                 intent={inputIntent({ error, touched })}
-                placeholder={'Mobile'}
+                placeholder={formatMessage({ id: 'Mobile' })}
                 {...field}
               />
             )}

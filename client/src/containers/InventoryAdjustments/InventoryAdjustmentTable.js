@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { DataTable } from 'components';
 import { useInventoryAdjustmentsColumns, ActionsMenu } from './components';
+import { formatMessage } from 'services/intl';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withInventoryAdjustmentActions from './withInventoryAdjustmentActions';
@@ -23,14 +24,14 @@ function InventoryAdjustmentDataTable({
   openAlert,
 
   // #ownProps
-  tableProps
+  tableProps,
 }) {
   const {
     isAdjustmentsLoading,
     isAdjustmentsFetching,
 
     inventoryAdjustments,
-    pagination
+    pagination,
   } = useInventoryAdjustmentsContext();
 
   // Handle delete inventory adjustment transaction.
@@ -47,40 +48,35 @@ function InventoryAdjustmentDataTable({
       setInventoryAdjustmentTableState({
         pageSize,
         pageIndex,
-        sortBy
-      })
+        sortBy,
+      });
     },
     [setInventoryAdjustmentTableState],
   );
 
-  return (  
+  return (
     <DataTable
       columns={columns}
       data={inventoryAdjustments}
-
       loading={isAdjustmentsLoading}
       headerLoading={isAdjustmentsLoading}
       progressBarLoading={isAdjustmentsFetching}
-      
       initialState={inventoryAdjustmentTableState}
       noInitialFetch={true}
-
       onFetchData={handleDataTableFetchData}
-      
       manualSortBy={true}
       selectionColumn={true}
-
       pagination={true}
       pagesCount={pagination.pagesCount}
-
       autoResetSortBy={false}
       autoResetPage={false}
-
       payload={{
         onDelete: handleDeleteAdjustment,
       }}
       ContextMenu={ActionsMenu}
-      noResults={'There is no inventory adjustments transactions yet.'}
+      noResults={formatMessage({
+        id: 'there_is_no_inventory_adjustments_transactions_yet',
+      })}
       {...tableProps}
     />
   );

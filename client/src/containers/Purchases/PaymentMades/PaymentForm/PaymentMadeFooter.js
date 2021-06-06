@@ -12,7 +12,7 @@ import { CLASSES } from 'common/classes';
 export default function PaymentMadeFooter() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <Postbox title={'Payment made details'} defaultOpen={false}>
+      <Postbox title={<T id={'payment_made_details'} />} defaultOpen={false}>
         <Row>
           <Col md={8}>
             {/* --------- Statement --------- */}
