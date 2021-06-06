@@ -12,7 +12,7 @@ import { CLASSES } from 'common/classes';
 export default function PaymentReceiveFormFooter({ getFieldProps }) {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <Postbox title={'Payment receive details'} defaultOpen={false}>
+      <Postbox title={<T id={'payment_receive_details'} />} defaultOpen={false}>
         <Row>
           <Col md={8}>
             {/* --------- Statement --------- */}

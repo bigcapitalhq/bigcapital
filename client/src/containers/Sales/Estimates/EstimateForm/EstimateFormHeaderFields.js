@@ -170,7 +170,7 @@ function EstimateFormHeader({
                 }}
                 tooltip={true}
                 tooltipProps={{
-                  content: 'Setting your auto-generated estimate number',
+                  content: <T id={'setting_your_auto_generated_estimate_number'}/>,
                   position: Position.BOTTOM_LEFT,
                 }}
               />

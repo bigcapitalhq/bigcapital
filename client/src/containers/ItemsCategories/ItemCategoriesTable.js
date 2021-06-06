@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatMessage } from 'services/intl';
 
 import { useItemsCategoriesTableColumns, ActionMenuList } from './components';
 import DataTable from 'components/DataTable';
@@ -25,11 +26,8 @@ function ItemsCategoryTable({
   openAlert,
 }) {
   // Items categories context.
-  const {
-    isCategoriesLoading,
-    isCategoriesFetching,
-    itemsCategories,
-  } = useItemsCategoriesContext();
+  const { isCategoriesLoading, isCategoriesFetching, itemsCategories } =
+    useItemsCategoriesContext();
 
   // Table columns.
   const columns = useItemsCategoriesTableColumns();
@@ -56,7 +54,9 @@ function ItemsCategoryTable({
       sticky={true}
       selectionColumn={true}
       TableLoadingRenderer={TableSkeletonRows}
-      noResults={'There is no items categories in table yet.'}
+      noResults={formatMessage({
+        id: 'there_is_no_items_categories_in_table_yet',
+      })}
       payload={{
         onDeleteCategory: handleDeleteCategory,
         onEditCategory: handleEditCategory,

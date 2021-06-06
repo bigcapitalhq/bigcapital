@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
+import { formatMessage } from 'services/intl';
 
 import { CLASSES } from 'common/classes';
 
@@ -18,15 +19,16 @@ function EstimateFormHeader({
   const { values } = useFormikContext();
 
   // Calculate the total due amount of bill entries.
-  const totalDueAmount = useMemo(() => sumBy(values.entries, 'total'), [
-    values.entries,
-  ]);
+  const totalDueAmount = useMemo(
+    () => sumBy(values.entries, 'total'),
+    [values.entries],
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <EstimateFormHeaderFields />
       <PageFormBigNumber
-        label={'Amount'}
+        label={formatMessage({ id: 'amount' })}
         amount={totalDueAmount}
         currencyCode={baseCurrency}
       />

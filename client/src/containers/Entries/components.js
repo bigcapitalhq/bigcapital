@@ -27,7 +27,7 @@ export function ItemHeaderCell() {
  * Item column footer cell.
  */
 export function ItemFooterCell() {
-  return <span>Total</span>;
+  return <span><T id={'total'}/></span>;
 }
 
 /**

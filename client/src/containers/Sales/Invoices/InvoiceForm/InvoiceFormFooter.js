@@ -12,7 +12,7 @@ import { inputIntent } from 'utils';
 export default function InvoiceFormFooter() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <Postbox title={'Invoice details'} defaultOpen={false}>
+      <Postbox title={<T id={'invoice_details'} />} defaultOpen={false}>
         <Row>
           <Col md={8}>
             {/* --------- Invoice message --------- */}
@@ -47,7 +47,7 @@ export default function InvoiceFormFooter() {
               initialFiles={[]}
               // onDrop={handleDropFiles}
               // onDeleteFile={handleDeleteFile}
-              hint={'Attachments: Maxiumum size: 20MB'}
+              hint={<T id={'attachments_maximum'} />}
             />
           </Col>
         </Row>

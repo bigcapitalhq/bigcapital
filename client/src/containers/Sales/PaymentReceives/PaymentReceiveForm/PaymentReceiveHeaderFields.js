@@ -70,9 +70,10 @@ function PaymentReceiveHeaderFields({
   const customerFieldRef = useAutofocus();
 
   // Calculates the full-amount received.
-  const totalDueAmount = useMemo(() => safeSumBy(entries, 'due_amount'), [
-    entries,
-  ]);
+  const totalDueAmount = useMemo(
+    () => safeSumBy(entries, 'due_amount'),
+    [entries],
+  );
   // Handle receive full-amount link click.
   const handleReceiveFullAmountClick = () => {
     const newEntries = fullAmountPaymentEntries(entries);
@@ -200,7 +201,7 @@ function PaymentReceiveHeaderFields({
               small={true}
               minimal={true}
             >
-              Receive full amount (
+              <T id={'receive_full_amount'} /> (
               <Money amount={totalDueAmount} currency={baseCurrency} />)
             </Button>
           </FormGroup>
@@ -232,7 +233,11 @@ function PaymentReceiveHeaderFields({
                 }}
                 tooltip={true}
                 tooltipProps={{
-                  content: 'Setting your auto-generated Payment Receive number',
+                  content: (
+                    <T
+                      id={'setting_your_auto_generated_payment_receive_number'}
+                    />
+                  ),
                   position: Position.BOTTOM_LEFT,
                 }}
               />

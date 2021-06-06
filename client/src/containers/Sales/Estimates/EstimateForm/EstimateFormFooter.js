@@ -15,7 +15,7 @@ import { inputIntent } from 'utils';
 export default function EstiamteFormFooter({}) {
   return (
     <div class={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <Postbox title={'Estimate details'} defaultOpen={false}>
+      <Postbox title={<T id={'estimate_details'} />} defaultOpen={false}>
         <Row>
           <Col md={8}>
             {/* --------- Customer Note --------- */}
@@ -50,7 +50,7 @@ export default function EstiamteFormFooter({}) {
               initialFiles={[]}
               // onDrop={handleDropFiles}
               // onDeleteFile={handleDeleteFile}
-              hint={'Attachments: Maxiumum size: 20MB'}
+              hint={<T id={'attachments_maximum'} />}
             />
           </Col>
         </Row>

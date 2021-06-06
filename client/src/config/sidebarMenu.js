@@ -9,7 +9,7 @@ export default [
     matchExact: true,
   },
   {
-    text: 'Sales & inventory',
+    text: <T id={'sales_inventory'} />,
     label: true,
   },
   {

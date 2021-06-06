@@ -115,7 +115,7 @@ function Pagination({
 
               const page = state.currentPage - 1;
               const { size: pageSize } = state;
- 
+
               onPageChange({ page, pageSize });
             }}
             minimal={true}
@@ -187,7 +187,7 @@ function Pagination({
         </div>
 
         <div class="pagination__pagesize-control">
-          Page size
+          <T id={'page_size'} />
           <HTMLSelect
             minimal={true}
             options={pageSizesOptions}

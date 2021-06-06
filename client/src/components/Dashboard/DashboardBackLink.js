@@ -3,6 +3,7 @@ import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
 import { useHistory } from 'react-router-dom';
 import routes from 'routes/dashboard';
 import { If, Icon } from 'components';
+import { FormattedMessage as T } from 'react-intl';
 import withDashboard from 'containers/Dashboard/withDashboard';
 import { compose } from 'utils';
 
@@ -23,7 +24,7 @@ function DashboardBackLink({ dashboardBackLink, breadcrumbs }) {
     <If condition={dashboardBackLink && crumb}>
       <div class="dashboard__back-link">
         <a href="#no-link" onClick={handleClick}>
-          <Icon icon={'arrow-left'} iconSize={18} /> Back to list.
+          <Icon icon={'arrow-left'} iconSize={18} /> <T id={'back_to_list'} />
         </a>
       </div>
     </If>

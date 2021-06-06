@@ -131,7 +131,9 @@ function MakeJournalEntriesHeader({
                 }}
                 tooltip={true}
                 tooltipProps={{
-                  content: 'Setting your auto-generated journal number',
+                  content: (
+                    <T id={'setting_your_auto_generated_journal_number'} />
+                  ),
                   position: Position.BOTTOM_LEFT,
                 }}
               />

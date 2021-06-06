@@ -65,10 +65,7 @@ function ReceiptFormHeader({
   };
 
   // Synsc receipt number settings with the form.
-  useObserveReceiptNoSettings(
-    receiptNumberPrefix,
-    receiptNextNumber,
-  );
+  useObserveReceiptNoSettings(receiptNumberPrefix, receiptNextNumber);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -175,7 +172,11 @@ function ReceiptFormHeader({
                 }}
                 tooltip={true}
                 tooltipProps={{
-                  content: 'Setting your auto-generated receipt number',
+                  content: (
+                    <T
+                      id={'setting_your_auto_generated_payment_receive_number'}
+                    />
+                  ),
                   position: Position.BOTTOM_LEFT,
                 }}
                 inputProps={{

@@ -168,7 +168,7 @@ function InvoiceFormHeaderFields({
                 }}
                 tooltip={true}
                 tooltipProps={{
-                  content: 'Setting your auto-generated invoice number',
+                  content: <T id={'setting_your_auto_generated_invoice_number'}/>,
                   position: Position.BOTTOM_LEFT,
                 }}
               />

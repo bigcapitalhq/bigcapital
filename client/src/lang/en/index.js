@@ -1066,5 +1066,6 @@ export default {
   transaction_number: 'Transaction number',
   cash_flow_statement: 'Cash Flow Statement',
   statement_of_cash_flow: 'Statement of Cash Flow ',
-  inventory_item_details:'Inventory Item Details'
+  inventory_item_details: 'Inventory Item Details',
 };
+

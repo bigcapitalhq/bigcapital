@@ -3,6 +3,7 @@ import { sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
 import classNames from 'classnames';
 import { Money } from 'components';
+import { FormattedMessage as T } from 'react-intl';
 
 import { CLASSES } from 'common/classes';
 import PaymentReceiveHeaderFields from './PaymentReceiveHeaderFields';
@@ -33,7 +34,9 @@ function PaymentReceiveFormHeader({
 
         <div className={classNames(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>
           <div class="big-amount">
-            <span class="big-amount__label">Amount Received</span>
+            <span class="big-amount__label">
+              <T id={'amount_received'} />
+            </span>
             <h1 class="big-amount__number">
               <Money amount={paymentFullAmount} currency={baseCurrency} />
             </h1>
