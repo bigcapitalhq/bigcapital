@@ -12,7 +12,10 @@ import InventoryItemDetailsTable from './InventoryItemDetailsTable';
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
 import withSettings from 'containers/Settings/withSettings';
 import { InventoryItemDetailsProvider } from './InventoryItemDetailsProvider';
-import { InventoryItemDetailsLoadingBar } from './components';
+import {
+  InventoryItemDetailsLoadingBar,
+  InventoryItemDetailsAlerts,
+} from './components';
 
 import { compose } from 'utils';
 
@@ -26,7 +29,6 @@ function InventoryItemDetails({
   //#withInventoryItemDetailsActions
   toggleInventoryItemDetailsFilterDrawer: toggleFilterDrawer,
 }) {
- 
   const [filter, setFilter] = useState({
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
@@ -58,6 +60,8 @@ function InventoryItemDetails({
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <InventoryItemDetailsLoadingBar />
+      <InventoryItemDetailsAlerts />
+      
       <DashboardPageContent>
         <FinancialStatement>
           <div className={'financial-statement--inventory-details'}>

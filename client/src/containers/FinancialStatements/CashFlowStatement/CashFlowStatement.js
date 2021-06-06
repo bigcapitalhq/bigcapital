@@ -12,7 +12,10 @@ import CashFlowStatementActionsBar from './CashFlowStatementActionsBar';
 import withSettings from 'containers/Settings/withSettings';
 import withCashFlowStatementActions from './withCashFlowStatementActions';
 import { CashFlowStatementProvider } from './CashFlowStatementProvider';
-import { CashFlowStatementLoadingBar } from './components';
+import {
+  CashFlowStatementLoadingBar,
+  CashFlowStatementAlerts,
+} from './components';
 
 import { compose } from 'utils';
 
@@ -65,6 +68,7 @@ function CashFlowStatement({
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <CashFlowStatementLoadingBar />
+      <CashFlowStatementAlerts />
       <DashboardPageContent>
         <FinancialStatement>
           <CashFlowStatementHeader

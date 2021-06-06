@@ -27,6 +27,7 @@ const columnsMapper = (data, index, column) => ({
     magicSpacing: 10,
   }),
   disableSortBy: true,
+  // textOverview: true,
 });
 
 /**

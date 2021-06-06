@@ -420,13 +420,15 @@ export function useCashFlowStatementReport(query, props) {
     {
       select: (res) => ({
         columns: res.data.table.columns,
-        data: res.data.table.data,
+        query: res.data.query,
+        meta: res.data.meta,
         tableRows: res.data.table.data,
       }),
       defaultData: {
         tableRows: [],
-        data: [],
         columns: [],
+        query: {},
+        meta: {},
       },
       ...props,
     },
@@ -436,7 +438,7 @@ export function useCashFlowStatementReport(query, props) {
 /**
  * Retrieve inventory item detail report.
  */
- export function useInventoryItemDetailsReport(query, props) {
+export function useInventoryItemDetailsReport(query, props) {
   return useRequestQuery(
     [t.FINANCIAL_REPORT, t.INVENTORY_ITEM_DETAILS, query],
     {
@@ -450,13 +452,15 @@ export function useCashFlowStatementReport(query, props) {
     {
       select: (res) => ({
         columns: res.data.table.columns,
-        data: res.data.table.data,
+        query: res.data.query,
+        meta: res.data.meta,
         tableRows: res.data.table.data,
       }),
       defaultData: {
         tableRows: [],
-        data: [],
         columns: [],
+        query: {},
+        meta: {},
       },
       ...props,
     },

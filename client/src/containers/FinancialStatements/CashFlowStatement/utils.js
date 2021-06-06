@@ -28,6 +28,7 @@ const dateRangeMapper = (data, index, column) => ({
   width: getColumnWidth(data, `cells.${index}.value`, { minWidth: 100 }),
   className: `date-period ${column.key}`,
   disableSortBy: true,
+  textOverview: true,
 });
 
 /**
@@ -40,10 +41,9 @@ const totalMapper = (data, index, column) => ({
   className: 'total',
   textOverview: true,
   Cell: CellTextSpan,
-  width: getColumnWidth(data, `cells[${index}].value`, { minWidth: 100  }),
+  width: getColumnWidth(data, `cells[${index}].value`, { minWidth: 100 }),
   disableSortBy: true,
 });
-
 
 /**
  * Detarmines the given string starts with `date-range` string.
