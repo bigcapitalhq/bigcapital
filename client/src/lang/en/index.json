@@ -1002,4 +1002,8 @@
   "receipt_amount": "Receipt amount",
   "please_enter_your_preferred_payment_method_below": "Please enter your preferred payment method below.",
   "submit_voucher": "Submit Voucher",
+  "sale_invoice": "Sale invoice",
+  "purchase_invoice": "Purchase invoice",
+  "expense": "Expense",
+  "vendor": "Vendor"
 }
