@@ -81,7 +81,7 @@ function ExpensesActionsBar({
             className={classNames(Classes.MINIMAL, 'button--filter', {
               'has-active-filters': filterCount > 0,
             })}
-            text="Filter"
+            text={<T id={'filter'}/>}
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>

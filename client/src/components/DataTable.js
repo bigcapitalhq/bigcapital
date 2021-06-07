@@ -10,6 +10,7 @@ import {
   useAsyncDebounce,
 } from 'react-table';
 import { useSticky } from 'react-table-sticky';
+import { formatMessage } from 'services/intl';
 
 import { useUpdateEffect } from 'hooks';
 import { saveInvoke } from 'utils';
@@ -52,7 +53,7 @@ export default function DataTable(props) {
     payload,
     expandable = false,
     noInitialFetch = false,
-    
+
     pagesCount: controlledPageCount,
 
     // Pagination props.
@@ -122,7 +123,7 @@ export default function DataTable(props) {
       autoResetFilters,
       autoResetRowState,
 
-      ...restProps
+      ...restProps,
     },
     useSortBy,
     useExpanded,
@@ -181,7 +182,6 @@ export default function DataTable(props) {
   );
 }
 
-
 DataTable.defaultProps = {
   pagination: false,
   spinnerProps: { size: 30 },
@@ -209,6 +209,6 @@ DataTable.defaultProps = {
   TablePaginationRenderer: TablePagination,
   TableNoResultsRowRenderer: TableNoResultsRow,
 
-  noResults: 'There is no results in the table.',
+  noResults: formatMessage({ id: 'there_is_no_results_in_the_table' }),
   payload: {},
 };

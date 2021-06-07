@@ -11,13 +11,11 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 /**
  * account drawer table.
  */
-function AccountDrawerTable({
-  closeDrawer
-}) {
+function AccountDrawerTable({ closeDrawer }) {
   const {
     account: { currency_code },
     accounts,
-    drawerName
+    drawerName,
   } = useAccountDrawerContext();
 
   const columns = React.useMemo(
@@ -69,14 +67,15 @@ function AccountDrawerTable({
       <DataTable columns={columns} data={accounts} />
 
       <div class="account-drawer__table-footer">
-        <Link to={`/financial-reports/general-ledger`} onClick={handleLinkClick}>
-          ← View more transactions.
+        <Link
+          to={`/financial-reports/general-ledger`}
+          onClick={handleLinkClick}
+        >
+          ←{formatMessage({ id: 'view_more_transactions' })}
         </Link>
       </div>
     </div>
   );
 }
 
-export default compose(
-  withDrawerActions
-)(AccountDrawerTable);
+export default compose(withDrawerActions)(AccountDrawerTable);

@@ -60,7 +60,7 @@ function AmountFooterCell({ payload: { currencyCode }, rows }) {
 /**
  * Expense amount header cell.
  */
- export function ExpenseAmountHeaderCell({ payload: { currencyCode } }) {
+export function ExpenseAmountHeaderCell({ payload: { currencyCode } }) {
   return formatMessage({ id: 'amount_currency' }, { currency: currencyCode });
 }
 
@@ -68,14 +68,13 @@ function AmountFooterCell({ payload: { currencyCode }, rows }) {
  * Expense account footer cell.
  */
 function ExpenseAccountFooterCell() {
-  return 'Total';
+  return <T id={'total'} />;
 }
 
 /**
  * Retrieve expense form table entries columns.
  */
 export function useExpenseFormTableColumns() {
-
   return React.useMemo(
     () => [
       {

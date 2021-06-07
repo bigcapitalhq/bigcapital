@@ -19,7 +19,7 @@ export default function DrawerTemplateTable({ tableData, currencyCode }) {
         width: 80,
       },
       {
-        Header: formatMessage({ id: 'Qty' }),
+        Header: formatMessage({ id: 'qty' }),
         accessor: 'quantity',
         disableSortBy: true,
         width: 50,
