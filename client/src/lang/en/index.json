@@ -999,5 +999,7 @@
   "invoice": "Invoice",
   "receipt_": "Receipt",
   "receipt_no": "Receipt No.",
-  "receipt_amount": "Receipt amount"
+  "receipt_amount": "Receipt amount",
+  "please_enter_your_preferred_payment_method_below": "Please enter your preferred payment method below.",
+  "submit_voucher": "Submit Voucher",
 }

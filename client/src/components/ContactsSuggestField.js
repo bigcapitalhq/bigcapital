@@ -5,12 +5,13 @@ import { Suggest } from '@blueprintjs/select';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
+import { formatMessage } from 'services/intl';
 
 export default function ContactsSuggestField({
   contactsList,
   initialContactId,
   selectedContactId,
-  defaultTextSelect = 'Select contact',
+  defaultTextSelect = formatMessage({id:'select_contact'}),
   onContactSelected,
 
   selectedContactType = [],
