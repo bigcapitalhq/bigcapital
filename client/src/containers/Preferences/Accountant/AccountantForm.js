@@ -48,7 +48,11 @@ export default function AccountantForm() {
             <FormGroup inline={true}>
               <Checkbox
                 inline={true}
-                label={'Make account code required when create a new accounts.'}
+                label={
+                  <T
+                    id={'make_account_code_required_when_create_a_new_accounts'}
+                  />
+                }
                 name={'account_code_required'}
                 {...field}
               />
@@ -62,7 +66,11 @@ export default function AccountantForm() {
               <Checkbox
                 inline={true}
                 label={
-                  'Should account code be unique when create a new account.'
+                  <T
+                    id={
+                      'should_account_code_be_unique_when_create_a_new_account'
+                    }
+                  />
                 }
                 name={'account_code_unique'}
                 {...field}
@@ -115,7 +123,11 @@ export default function AccountantForm() {
               </strong>
             }
             helperText={
-              'Select a preferred account to deposit into it after customer make payment.'
+              <T
+                id={
+                  'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'
+                }
+              />
             }
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
@@ -147,7 +159,11 @@ export default function AccountantForm() {
               </strong>
             }
             helperText={
-              'Select a preferred account to deposit into it after customer make payment.'
+              <T
+                id={
+                  'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'
+                }
+              />
             }
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
@@ -178,7 +194,11 @@ export default function AccountantForm() {
               </strong>
             }
             helperText={
-              'Select a preferred account to deposit into it vendor advanced deposits.'
+              <T
+                id={
+                  'select_a_preferred_account_to_deposit_into_it_vendor_advanced_deposits'
+                }
+              />
             }
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
