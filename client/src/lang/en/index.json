@@ -969,9 +969,8 @@
 "shows_the_average_age_of_unresolved_issues_for_a_project_or_filter":"Shows the average age of unresolved issues for a project or filter. This helps you see whether your backlog is being kept up to date",
 "categories":"Categories",
 "duplicate_item":"Duplicate item",
-"summerize_your_transactions_for_each_inventory_item":"Summarize your transactions for each inventory item and how they affect quantity, valuation and weighted average.",,
+"summerize_your_transactions_for_each_inventory_item":"Summarize your transactions for each inventory item and how they affect quantity, valuation and weighted average.",
 "summerize_how_much_each_customer_owes_your_business":"Summarize how much each customer owes your business.",
-"summerize_the_total_amount_your_business_owes_each_vendor":"Summarize the total amount your business owes each vendor.",
 "duplicate_customer":"Duplicate customer",
 "duplicate_vendor":"Duplicate vendor",
 "new_billing":"New Billing"
