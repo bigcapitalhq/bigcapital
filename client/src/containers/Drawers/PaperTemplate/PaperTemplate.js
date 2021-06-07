@@ -3,18 +3,19 @@ import PaperTemplateHeader from './PaperTemplateHeader';
 import PaperTemplateTable from './PaperTemplateTable';
 import PaperTemplateFooter from './PaperTemplateFooter';
 import { updateItemsEntriesTotal } from 'containers/Entries/utils';
+import { formatMessage } from 'services/intl';
 
 import 'style/components/Drawer/DrawerTemplate.scss';
 
 function PaperTemplate({ labels: propLabels, paperData, entries }) {
   const labels = {
-    name: 'Estimate',
-    billedTo: 'Billed to',
-    date: 'Estimate date',
-    refNo: 'Estimate No.',
-    billedFrom: 'Billed from',
-    amount: 'Estimate amount',
-    dueDate: 'Due date',
+    name: formatMessage({ id: 'estimate_' }),
+    billedTo: formatMessage({ id: 'billed_to' }),
+    date: formatMessage({ id: 'estimate_date' }),
+    refNo: formatMessage({ id: 'estimate_no' }),
+    billedFrom: formatMessage({ id: 'billed_from' }),
+    amount: formatMessage({ id: 'estimate_amount' }),
+    dueDate: formatMessage({ id: 'due_date_' }),
     ...propLabels,
   };
 

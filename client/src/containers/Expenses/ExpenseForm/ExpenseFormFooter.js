@@ -10,7 +10,7 @@ import { CLASSES } from 'common/classes';
 export default function ExpenseFormFooter() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <Postbox title={'Expense details'} defaultOpen={false}>
+      <Postbox title={<T id={'expense_details'} />} defaultOpen={false}>
         <Row>
           <Col md={8}>
             <FastField name={'description'}>
@@ -31,7 +31,7 @@ export default function ExpenseFormFooter() {
               initialFiles={[]}
               // onDrop={handleDropFiles}
               // onDeleteFile={handleDeleteFile}
-              hint={'Attachments: Maxiumum size: 20MB'}
+              hint={<T id={'attachments_maximum'} />}
             />
           </Col>
         </Row>

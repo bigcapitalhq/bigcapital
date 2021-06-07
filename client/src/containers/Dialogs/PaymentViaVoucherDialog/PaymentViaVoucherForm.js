@@ -10,7 +10,6 @@ import { useAutofocus } from 'hooks';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
-
 /**
  * Payment via license form.
  */
@@ -31,7 +30,9 @@ function PaymentViaLicenseForm({
   return (
     <Form>
       <div className={CLASSES.DIALOG_BODY}>
-        <p>Please enter your preferred payment method below.</p>
+        <p>
+          <T id={'please_enter_your_preferred_payment_method_below'} />
+        </p>
 
         <FastField name="license_code">
           {({ field, meta: { error, touched } }) => (
@@ -72,6 +73,4 @@ function PaymentViaLicenseForm({
   );
 }
 
-export default compose(
-  withDialogActions
-)(PaymentViaLicenseForm);
+export default compose(withDialogActions)(PaymentViaLicenseForm);

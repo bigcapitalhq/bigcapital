@@ -12,12 +12,12 @@ export default function ExpenseDrawerTable({
   const columns = React.useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'Expense account' }),
+        Header: formatMessage({ id: 'expense_account' }),
         accessor: 'expense_account.name',
         width: 110,
       },
       {
-        Header: formatMessage({ id: 'Amount' }),
+        Header: formatMessage({ id: 'amount' }),
         accessor: ({ amount }) => (
           <Money amount={amount} currency={currency_code} />
         ),

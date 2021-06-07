@@ -44,7 +44,11 @@ export function DebitHeaderCell({ payload: { currencyCode } }) {
  * Account footer cell.
  */
 function AccountFooterCell({ payload: { currencyCode } }) {
-  return <span>{`Total ${currencyCode} `}</span>;
+  return (
+    <span>
+      {formatMessage({ id: 'total_currency' }, { currency: currencyCode })}
+    </span>
+  );
 }
 
 /**

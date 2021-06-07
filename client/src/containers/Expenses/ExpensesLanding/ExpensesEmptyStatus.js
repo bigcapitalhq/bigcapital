@@ -2,17 +2,17 @@ import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
+import { FormattedMessage as T } from 'react-intl';
 
 export default function InvoicesEmptyStatus() {
   const history = useHistory();
 
   return (
     <EmptyStatus
-      title={"Create and manage your organization's expenses"}
+      title={<T id={'create_and_manage_your_organization_s_expenses'} />}
       description={
         <p>
-          It is a long established fact that a reader will be distracted by the
-          readable content of a page when looking at its layout.
+          <T id={'it_is_a_long_established_fact_that_a_reader'} />
         </p>
       }
       action={
@@ -24,11 +24,11 @@ export default function InvoicesEmptyStatus() {
               history.push('/expenses/new');
             }}
           >
-            New expense
+            <T id={'new_expense'} />
           </Button>
 
           <Button intent={Intent.NONE} large={true}>
-            Learn more
+            <T id={'learn_more'} />
           </Button>
         </>
       }
