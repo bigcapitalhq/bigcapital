@@ -1,4 +1,7 @@
+import React from 'react';
+import { formatMessage } from 'services/intl';
+
 export default [
-  { name: 'Customer', path: 'customers' },
-  { name: 'Vendor', path: 'vendors' },
+  { name: formatMessage({ id: 'customer' }), path: 'customers' },
+  { name: formatMessage({ id: 'vendor' }), path: 'vendors' },
 ];
