@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { RawIntlProvider } from 'react-intl';
 import { Router, Switch, Route } from 'react-router';
 import { createBrowserHistory } from 'history';
@@ -6,6 +7,8 @@ import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
 import 'style/App.scss';
+import 'moment/locale/ar-ly';
+import 'moment/locale/es-us'
 
 import PrivateRoute from 'components/Guards/PrivateRoute';
 import Authentication from 'components/Authentication';
@@ -14,6 +17,9 @@ import GlobalErrors from 'containers/GlobalErrors/GlobalErrors';
 import intl from 'services/intl';
 
 function App({ locale }) {
+  moment.locale('ar-ly');
+  moment().format('LLLL');
+
   const history = createBrowserHistory();
 
   const queryConfig = {
