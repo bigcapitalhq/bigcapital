@@ -1,7 +1,9 @@
+import { formatMessage } from 'services/intl';
+
 export const moneyFormat = [
-  { key: 'total', text: 'Total rows' },
-  { key: 'always', text: 'Always' },
-  { key: 'none', text: 'None' },
+  { key: 'total', text: formatMessage({ id: 'total_rows' }) },
+  { key: 'always', text: formatMessage({ id: 'always' }) },
+  { key: 'none', text: formatMessage({ id: 'none' }) },
 ];
 
 export const negativeFormat = [

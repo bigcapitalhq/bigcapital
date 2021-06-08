@@ -1,5 +1,6 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
 import { Button } from '@blueprintjs/core';
 import { getColumnWidth } from 'utils';
 import { If, Icon } from 'components';
@@ -60,15 +61,13 @@ export const useTrialBalanceTableColumns = () => {
  * Trial balance sheet progress loading bar.
  */
 export function TrialBalanceSheetLoadingBar() {
-  const {
-    isFetching
-  } = useTrialBalanceSheetContext();
+  const { isFetching } = useTrialBalanceSheetContext();
 
   return (
     <If condition={isFetching}>
       <FinancialLoadingBar />
     </If>
-  )
+  );
 }
 
 /**
@@ -78,7 +77,7 @@ export function TrialBalanceSheetAlerts() {
   const {
     trialBalanceSheet: { meta },
     isLoading,
-    refetchSheet
+    refetchSheet,
   } = useTrialBalanceSheetContext();
 
   // Handle refetch the sheet.
@@ -86,19 +85,20 @@ export function TrialBalanceSheetAlerts() {
     refetchSheet();
   };
   // Can't display any error if the report is loading.
-  if (isLoading) { return null; }
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <If condition={meta.is_cost_compute_running}>
       <div class="alert-compute-running">
-        <Icon icon="info-block" iconSize={12} /> Just a moment! We're
-        calculating your cost transactions and this doesn't take much time.
-        Please check after sometime.{' '}
+        <Icon icon="info-block" iconSize={12} />
+        <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
 
         <Button onClick={handleRecalcReport} minimal={true} small={true}>
-          Refresh
+          <T id={'refresh'} />
         </Button>
       </div>
     </If>
-  )
+  );
 }

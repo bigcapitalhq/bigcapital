@@ -2,6 +2,7 @@ import React from 'react';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import { getColumnWidth } from 'utils';
 import { FormattedMessage as T } from 'react-intl';
+import { formatMessage } from 'services/intl';
 import { If } from 'components';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
@@ -16,7 +17,9 @@ export const useARAgingSummaryColumns = () => {
   const agingColumns = React.useMemo(() => {
     return columns.map(
       (agingColumn) =>
-        `${agingColumn.before_days} - ${agingColumn.to_days || 'And Over'}`,
+        `${agingColumn.before_days} - ${
+          agingColumn.to_days || formatMessage({ id: 'and_over' })
+        }`,
     );
   }, [columns]);
 
@@ -62,14 +65,12 @@ export const useARAgingSummaryColumns = () => {
 /**
  * A/R aging summary sheet loading bar.
  */
- export function ARAgingSummarySheetLoadingBar() {
-  const {
-    isARAgingFetching,
-  } = useARAgingSummaryContext();
+export function ARAgingSummarySheetLoadingBar() {
+  const { isARAgingFetching } = useARAgingSummaryContext();
 
   return (
     <If condition={isARAgingFetching}>
       <FinancialLoadingBar />
     </If>
-  )
+  );
 }

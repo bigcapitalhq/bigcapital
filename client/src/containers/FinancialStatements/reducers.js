@@ -1,5 +1,7 @@
+import React from 'react';
 import { chain } from 'lodash';
 import moment from 'moment';
+import { FormattedMessage as T } from 'react-intl';
 
 export const balanceSheetRowsReducer = (accounts) => {
   return accounts.map((account) => {
@@ -10,7 +12,7 @@ export const balanceSheetRowsReducer = (accounts) => {
         ...(account.total && account.children && account.children.length > 0
           ? [
               {
-                name: `Total ${account.name}`,
+                name: <T id={'total_name'} values={{ name: account.name }} />,
                 row_types: ['total-row', account.section_type],
                 total: { ...account.total },
                 ...(account.total_periods && {
@@ -46,12 +48,12 @@ export const profitLossSheetReducer = (profitLoss) => {
 
   if (profitLoss.income) {
     results.push({
-      name: 'Income',
+      name: <T id={'income'} />,
       total: profitLoss.income.total,
       children: [
         ...profitLoss.income.accounts,
         {
-          name: 'Total Income',
+          name: <T id={'total_income'} />,
           total: profitLoss.income.total,
           total_periods: profitLoss.income.total_periods,
           rowTypes: ['income_total', 'section_total', 'total'],
@@ -62,12 +64,12 @@ export const profitLossSheetReducer = (profitLoss) => {
   }
   if (profitLoss.cost_of_sales) {
     results.push({
-      name: 'Cost of sales',
+      name: <T id={'cost_of_sales'} />,
       total: profitLoss.cost_of_sales.total,
       children: [
         ...profitLoss.cost_of_sales.accounts,
         {
-          name: 'Total cost of sales',
+          name: <T id={'total_cost_of_sales'} />,
           total: profitLoss.cost_of_sales.total,
           total_periods: profitLoss.cost_of_sales.total_periods,
           rowTypes: ['cogs_total', 'section_total', 'total'],
@@ -78,7 +80,7 @@ export const profitLossSheetReducer = (profitLoss) => {
   }
   if (profitLoss.gross_profit) {
     results.push({
-      name: 'Gross profit',
+      name: <T id={'gross_profit'} />,
       total: profitLoss.gross_profit.total,
       total_periods: profitLoss.gross_profit.total_periods,
       rowTypes: ['gross_total', 'section_total', 'total'],
@@ -86,12 +88,12 @@ export const profitLossSheetReducer = (profitLoss) => {
   }
   if (profitLoss.expenses) {
     results.push({
-      name: 'Expenses',
+      name: <T id={'expenses'} />,
       total: profitLoss.expenses.total,
       children: [
         ...profitLoss.expenses.accounts,
         {
-          name: 'Total Expenses',
+          name: <T id={'total_expenses'} />,
           total: profitLoss.expenses.total,
           total_periods: profitLoss.expenses.total_periods,
           rowTypes: ['expenses_total', 'section_total', 'total'],
@@ -102,7 +104,7 @@ export const profitLossSheetReducer = (profitLoss) => {
   }
   if (profitLoss.operating_profit) {
     results.push({
-      name: 'Net Operating income',
+      name: <T id={'net_operating_income'} />,
       total: profitLoss.operating_profit.total,
       total_periods: profitLoss.income.total_periods,
       rowTypes: ['net_operating_total', 'section_total', 'total'],
@@ -110,13 +112,13 @@ export const profitLossSheetReducer = (profitLoss) => {
   }
   if (profitLoss.other_income) {
     results.push({
-      name: 'Other Income',
+      name: 'other_income',
       total: profitLoss.other_income.total,
       total_periods: profitLoss.other_income.total_periods,
       children: [
         ...profitLoss.other_income.accounts,
         {
-          name: 'Total other income',
+          name: <T id={'total_other_income'} />,
           total: profitLoss.other_income.total,
           total_periods: profitLoss.other_income.total_periods,
           rowTypes: ['expenses_total', 'section_total', 'total'],
@@ -126,13 +128,13 @@ export const profitLossSheetReducer = (profitLoss) => {
   }
   if (profitLoss.other_expenses) {
     results.push({
-      name: 'Other expenses',
+      name: <T id={'other_expenses'} />,
       total: profitLoss.other_expenses.total,
       total_periods: profitLoss.other_expenses.total_periods,
       children: [
         ...profitLoss.other_expenses.accounts,
         {
-          name: 'Total other expenses',
+          name: <T id={'total_other_expenses'} />,
           total: profitLoss.other_expenses.total,
           total_periods: profitLoss.other_expenses.total_periods,
           rowTypes: ['expenses_total', 'section_total', 'total'],
@@ -142,7 +144,7 @@ export const profitLossSheetReducer = (profitLoss) => {
   }
   if (profitLoss.net_other_income) {
     results.push({
-      name: 'Net other income',
+      name: <T id={'net_other_income'} />,
       total: profitLoss.net_other_income.total,
       total_periods: profitLoss.net_other_income.total_periods,
       rowTypes: ['net_other_income', 'section_total', 'total'],
@@ -150,7 +152,7 @@ export const profitLossSheetReducer = (profitLoss) => {
   }
   if (profitLoss.net_income) {
     results.push({
-      name: 'Net Income',
+      name: <T id={'net_income'} />,
       total: profitLoss.net_income.total,
       total_periods: profitLoss.net_income.total_periods,
       rowTypes: ['net_income_total', 'section_total', 'total'],
@@ -215,7 +217,7 @@ export const generalLedgerTableRowsReducer = (accounts) => {
         children: [
           {
             ...account.opening_balance,
-            name: 'Opening balance',
+            name: <T id={'opening_balance'} />,
             rowType: 'OPENING_BALANCE',
             date: moment(account.opening_balance.date).format('DD MMM YYYY'),
           },
@@ -227,7 +229,7 @@ export const generalLedgerTableRowsReducer = (accounts) => {
           })),
           {
             ...account.closing_balance,
-            name: 'Closing balance',
+            name: <T id={'closing_balance'} />,
             rowType: 'CLOSING_BALANCE',
             date: moment(account.closing_balance.date).format('DD MMM YYYY'),
           },

@@ -1,6 +1,6 @@
-
+import { formatMessage } from 'services/intl';
 
 export default [
-  { name: 'English', value: 'en' },
-  { name: 'Arabic', value: 'ar' },
+  { name: formatMessage({ id: 'english' }), value: 'en' },
+  { name: formatMessage({ id: 'arabic' }), value: 'ar' },
 ];

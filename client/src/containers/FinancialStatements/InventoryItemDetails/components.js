@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 import { Icon, If } from 'components';
+import { FormattedMessage as T } from 'react-intl';
 
 import { dynamicColumns } from './utils';
 import FinancialLoadingBar from '../FinancialLoadingBar';
@@ -51,15 +52,15 @@ export function InventoryItemDetailsAlerts() {
   if (isInventoryItemDetailsLoading) {
     return null;
   }
- 
+
   return (
     <If condition={inventoryItemDetails.meta.is_cost_compute_running}>
       <div className="alert-compute-running">
-        <Icon icon="info-block" iconSize={12} /> Just a moment! We're
-        calculating your cost transactions and this doesn't take much time.
-        Please check after sometime.
+        <Icon icon="info-block" iconSize={12} />
+        <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
+
         <Button onClick={handleRecalcReport} minimal={true} small={true}>
-          Refresh
+          <T id={'refresh'} />
         </Button>
       </div>
     </If>
