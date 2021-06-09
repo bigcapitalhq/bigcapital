@@ -102,7 +102,7 @@ export default function AccountantForm() {
                 setFieldValue('accounting_basis', _value);
               })}
             >
-              <Radio label={formatMessage({ id: 'Cash' })} value="cash" />
+              <Radio label={formatMessage({ id: 'cash' })} value="cash" />
               <Radio label={formatMessage({ id: 'accrual' })} value="accrual" />
             </RadioGroup>
           </FormGroup>

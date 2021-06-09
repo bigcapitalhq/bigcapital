@@ -1,5 +1,3 @@
+import { formatMessage } from 'services/intl';
 
-
-export default [
-  { name: 'Libya', value: 'libya' },
-]
+export default [{ name: formatMessage({ id: 'libya' }), value: 'libya' }];

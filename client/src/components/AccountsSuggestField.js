@@ -6,6 +6,8 @@ import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
 import { FormattedMessage as T } from 'react-intl';
+import { formatMessage } from 'services/intl';
+
 import { filterAccountsByQuery } from './utils';
 
 /**
@@ -15,7 +17,7 @@ export default function AccountsSuggestField({
   accounts,
   initialAccountId,
   selectedAccountId,
-  defaultSelectText = 'Select account',
+  defaultSelectText = formatMessage({ id: 'select_account' }),
   popoverFill = false,
   onAccountSelected,
 
@@ -32,7 +34,7 @@ export default function AccountsSuggestField({
       filterByRootTypes,
       filterByParentTypes,
       filterByTypes,
-      filterByNormal,  
+      filterByNormal,
     });
     return filteredAccounts;
   }, [

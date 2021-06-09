@@ -7,7 +7,7 @@ import {
   Radio,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T, FormattedHTMLMessage } from 'react-intl';
 import { ErrorMessage, FastField } from 'formik';
 import {
   CategoriesSelectList,
@@ -41,18 +41,15 @@ export default function ItemFormPrimarySection() {
   const itemTypeHintContent = (
     <>
       <div class="mb1">
-        <strong>{'Service: '}</strong>
-        {'Services that you provide to customers. '}
+        <FormattedHTMLMessage id={'services_that_you_provide_to_customers'} />
       </div>
       <div class="mb1">
-        <strong>{'Inventory: '}</strong>
-        {'Products you buy and/or sell and that you track quantities of.'}
+        <FormattedHTMLMessage id={'products_you_buy_and_or_sell'} />
       </div>
       <div class="mb1">
-        <strong>{'Non-Inventory: '}</strong>
-        {
-          'Products you buy and/or sell but don’t need to (or can’t) track quantities of, for example, nuts and bolts used in an installation.'
-        }
+        <FormattedHTMLMessage
+          id={'products_you_buy_and_or_sell_but_don_t_need'}
+        />
       </div>
     </>
   );

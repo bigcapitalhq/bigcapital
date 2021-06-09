@@ -50,7 +50,7 @@ export default function VendorsBalanceSummaryHeaderGeneral() {
                 <Checkbox
                   inline={true}
                   small={true}
-                  label={'Percentage Of Column'}
+                  label={<T id={'percentage_of_column'} />}
                   name={'percentage'}
                   {...field}
                 />

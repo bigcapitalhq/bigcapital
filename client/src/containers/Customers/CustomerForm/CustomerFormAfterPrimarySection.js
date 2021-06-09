@@ -44,7 +44,7 @@ export default function CustomerFormAfterPrimarySection({}) {
             {({ field, meta: { error, touched } }) => (
               <InputGroup
                 intent={inputIntent({ error, touched })}
-                placeholder={formatMessage({id:'Mobile'})}
+                placeholder={formatMessage({ id: 'Mobile' })}
                 {...field}
               />
             )}

@@ -53,7 +53,7 @@ function TrialBalanceActionsBar({
       <NavbarGroup>
         <Button
           className={classNames(Classes.MINIMAL, 'button--gray-highlight')}
-          text={'Re-calc Report'}
+          text={<T id={'recalc_report'} />}
           onClick={handleRecalcReport}
           icon={<Icon icon="refresh-16" iconSize={16} />}
         />

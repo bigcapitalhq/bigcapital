@@ -4,7 +4,13 @@ import { formatMessage } from 'services/intl';
 import { ListSelect } from 'components';
 
 export default function SalutationList({ ...restProps }) {
-  const saluations = ['Mr.', 'Mrs.', 'Ms.', 'Miss', 'Dr.'];
+  const saluations = [
+    formatMessage({ id: 'mr' }),
+    formatMessage({ id: 'mrs' }),
+    formatMessage({ id: 'ms' }),
+    formatMessage({ id: 'miss' }),
+    formatMessage({ id: 'dr' }),
+  ];
   const items = saluations.map((saluation) => ({
     key: saluation,
     label: saluation,
