@@ -31,7 +31,7 @@
   "phone_number": "Phone Number",
   "you_email_address_is": "You email address is",
   "you_will_use_this_address_to_sign_in_to_bigcapital": "You will use this address to sign in to Bigcapital.",
-  "signing_in_or_creating": "By signing in or creating an account, you agree with our <a> Terms & Conditions </a> and <a> Privacy Statement </a> ",
+  "signing_in_or_creating": "By signing in or creating an account, you agree with our <br/> <a>Terms & Conditions </a> and <a> Privacy Statement </a> ",
   "and": "And",
   "create_account": "Create Account",
   "success": "Success",
@@ -1101,5 +1101,6 @@
   "yy_mm_dd": "YY/MM/DD",
   "mm_dd_yy_": "MM-DD-YY",
   "dd_mm_yy_": "DD-MM-YY",
-  "yy_mm_dd_": "YY-MM-DD"
+  "yy_mm_dd_": "YY-MM-DD",
+  "plan_radio_name":"{name}"
 }

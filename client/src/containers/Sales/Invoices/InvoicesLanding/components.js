@@ -35,29 +35,23 @@ export const statusAccessor = (row) => {
           <Choose>
             <Choose.When condition={row.is_overdue}>
               <span className={'overdue-status'}>
-                <T id={'overdue_by'} values={{ overdue: row.overdue_days }} />
+                {intl.get('overdue_by', { overdue: row.overdue_days })}
               </span>
             </Choose.When>
             <Choose.Otherwise>
               <span className={'due-status'}>
-                <T id={'due_in'} values={{ due: row.remaining_days }} />
+                {intl.get('due_in', { due: row.remaining_days })}
               </span>
             </Choose.Otherwise>
           </Choose>
 
           <If condition={row.is_partially_paid}>
             <span class="partial-paid">
-              <T
-                id={'day_partially_paid'}
-                values={{
-                  due: (
-                    <Money
-                      amount={row.due_amount}
-                      currency={row.currency_code}
-                    />
-                  ),
-                }}
-              />
+              {intl.get('day_partially_paid', {
+                due: (
+                  <Money amount={row.due_amount} currency={row.currency_code} />
+                ),
+              })}
             </span>
             <ProgressBar
               animate={false}
@@ -104,8 +98,6 @@ export function ActionsMenu({
   payload: { onEdit, onDeliver, onDelete, onDrawer, onQuick },
   row: { original },
 }) {
-  
-
   return (
     <Menu>
       <MenuItem
@@ -162,8 +154,6 @@ function ActionsCell(props) {
  * Retrieve invoices table columns.
  */
 export function useInvoicesTableColumns() {
-  
-
   return React.useMemo(
     () => [
       {

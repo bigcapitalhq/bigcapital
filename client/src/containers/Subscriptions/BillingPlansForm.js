@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import 'style/pages/Subscription/BillingPlans.scss';
 
@@ -14,15 +15,15 @@ export default function BillingPlansForm() {
   return (
     <div class="billing-plans">
       <BillingPlansInput
-        title={<T id={'select_a_plan'} values={{ order: 1 }} />}
+        title={intl.get('select_a_plan', { order: 1 })}
         description={<T id={'please_enter_your_preferred_payment_method'} />}
       />
       <BillingPeriodsInput
-        title={<T id={'choose_your_billing'} values={{ order: 2 }} />}
+        title={intl.get('choose_your_billing', { order: 2 })}
         description={<T id={'please_enter_your_preferred_payment_method'} />}
       />
       <BillingPaymentMethod
-        title={<T id={'payment_methods'} values={{ order: 3 }} />}
+        title={intl.get('payment_methods', { order: 3 })}
         description={<T id={'please_enter_your_preferred_payment_method'} />}
       />
     </div>

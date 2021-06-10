@@ -11,7 +11,7 @@ import {
   ProgressBar,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import {  FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from 'components';
 import { Icon, If, Choose, Money } from 'components';
 import { safeCallback, isBlank, calculateStatus } from 'utils';
 import moment from 'moment';
@@ -23,8 +23,6 @@ export function ActionsMenu({
   payload: { onEdit, onOpen, onDelete, onQuick },
   row: { original },
 }) {
-  
-
   return (
     <Menu>
       <MenuItem
@@ -93,28 +91,25 @@ export function StatusAccessor(bill) {
           <Choose>
             <Choose.When condition={bill.is_overdue}>
               <span className={'overdue-status'}>
-                <T id={'overdue_by'} values={{ overdue: bill.overdue_days }} />
+                {intl.get('overdue_by', { overdue: bill.overdue_days })}
               </span>
             </Choose.When>
             <Choose.Otherwise>
               <span className={'due-status'}>
-                <T id={'due_in'} values={{ due: bill.remaining_days }} />
+                {intl.get('due_in', { due: bill.remaining_days })}
               </span>
             </Choose.Otherwise>
           </Choose>
           <If condition={bill.is_partially_paid}>
             <span className="partial-paid">
-              <T
-                id={'day_partially_paid'}
-                values={{
-                  due: (
-                    <Money
-                      amount={bill.due_amount}
-                      currency={bill.currency_code}
-                    />
-                  ),
-                }}
-              />
+              {intl.get('day_partially_paid', {
+                due: (
+                  <Money
+                    amount={bill.due_amount}
+                    currency={bill.currency_code}
+                  />
+                ),
+              })}
             </span>
             <ProgressBar
               animate={false}
@@ -149,8 +144,6 @@ export function ActionsCell(props) {
  * Retrieve bills table columns.
  */
 export function useBillsTableColumns() {
-  
-
   return React.useMemo(
     () => [
       {

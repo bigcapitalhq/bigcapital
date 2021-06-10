@@ -21,7 +21,7 @@ export default function MakeJournalEntriesHeader() {
       <MakeJournalEntriesHeaderFields />
 
       <PageFormBigNumber
-        label={<T id={'due_amount'} />}
+        label={<T id={'amount'} />}
         amount={total}
         currencyCode={currency_code}
       />

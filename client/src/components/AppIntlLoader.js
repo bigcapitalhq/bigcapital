@@ -6,8 +6,8 @@ import rtlDetect from 'rtl-detect';
 import DashboardLoadingIndicator from 'components/Dashboard/DashboardLoadingIndicator';
 
 const SUPPORTED_LOCALES = [
-  { name: "English", value: "en" },
-  { name: 'العربية', value: 'ar' }
+  { name: 'English', value: 'en' },
+  { name: 'العربية', value: 'ar-ly' },
 ];
 
 /**
@@ -15,12 +15,12 @@ const SUPPORTED_LOCALES = [
  */
 function getCurrentLocal() {
   let currentLocale = intl.determineLocale({
-    urlLocaleKey: "lang",
-    cookieLocaleKey: "lang",
-    localStorageLocaleKey: "lang",
+    urlLocaleKey: 'lang',
+    cookieLocaleKey: 'lang',
+    localStorageLocaleKey: 'lang',
   });
   if (!find(SUPPORTED_LOCALES, { value: currentLocale })) {
-    currentLocale = "en";
+    currentLocale = 'en';
   }
   return currentLocale;
 }
@@ -50,9 +50,7 @@ function useDocumentDirectionModifier(locale) {
 /**
  * Application Intl loader.
  */
-export default function AppIntlLoader({
-  children
-}) {
+export default function AppIntlLoader({ children }) {
   const [isLoading, setIsLoading] = React.useState(true);
   const currentLocale = getCurrentLocal();
 
@@ -61,22 +59,24 @@ export default function AppIntlLoader({
 
   React.useEffect(() => {
     // Lodas the locales data file.
-    loadLocales(currentLocale).then((results) => {
-      return intl.init({
-        currentLocale,
-        locales: {
-          [currentLocale]: results,
-        },
+    loadLocales(currentLocale)
+      .then((results) => {
+        return intl.init({
+          currentLocale,
+          locales: {
+            [currentLocale]: results,
+          },
+        });
+      })
+      .then(() => {
+        moment.locale(currentLocale);
+        setIsLoading(false);
       });
-    }).then(() => {
-      moment.locale('ar-ly');
-      setIsLoading(false);
-    });
   }, [currentLocale, setIsLoading]);
 
   return (
     <DashboardLoadingIndicator isLoading={isLoading}>
       {children}
     </DashboardLoadingIndicator>
-  ); 
+  );
 }

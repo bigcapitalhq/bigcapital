@@ -2,6 +2,7 @@ import React from 'react';
 import { chain } from 'lodash';
 import moment from 'moment';
 import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 export const balanceSheetRowsReducer = (accounts) => {
   return accounts.map((account) => {
@@ -12,7 +13,7 @@ export const balanceSheetRowsReducer = (accounts) => {
         ...(account.total && account.children && account.children.length > 0
           ? [
               {
-                name: <T id={'total_name'} values={{ name: account.name }} />,
+                name: intl.get('total_name', { name: account.name }),
                 row_types: ['total-row', account.section_type],
                 total: { ...account.total },
                 ...(account.total_periods && {
