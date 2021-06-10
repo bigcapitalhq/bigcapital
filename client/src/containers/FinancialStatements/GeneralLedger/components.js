@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
 import { Icon, If } from 'components';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import { getForceWidth, getColumnWidth } from 'utils';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';

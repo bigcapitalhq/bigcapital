@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@blueprintjs/core';
 import { Icon, If } from 'components';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
 /**

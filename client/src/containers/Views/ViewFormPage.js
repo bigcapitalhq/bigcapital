@@ -2,7 +2,7 @@ import React, {useEffect, useState, useCallback} from 'react';
 import { useAsync } from 'react-use';
 import { useParams } from 'react-router-dom';
 import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedMessage as T, FormattedHTMLMessage } from 'react-intl';
+import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
