@@ -34,7 +34,7 @@
 @font-face {
   font-family: Noto Sans Arabic;
   src: local('Noto Sans'),
-    url('../fonts/NotoSansArabicUI-Regular.woff') format('woff');
+    url('../fonts/NotoSansArabicUI-SemiCondensed.woff') format('woff');
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -44,49 +44,9 @@
 @font-face {
   font-family: Noto Sans Arabic;
   src: local('Noto Sans'),
-    url('../fonts/NotoSansArabicUI-Black.woff') format('woff');
+    url('../fonts/NotoSansArabicUI-SemiCondensedBlack.woff') format('woff');
   font-style: normal;
   font-weight: 900;
-  font-display: swap;
-}
-
-// arabic Bold
-@font-face {
-  font-family: Noto Sans Arabic;
-  src: local('Noto Sans'),
-    url('../fonts/NotoSansArabicUI-Bold.woff') format('woff');
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-}
-
-// arabic ExtraBold
-@font-face {
-  font-family: Noto Sans Arabic;
-  src: local('Noto Sans'),
-    url('../fonts/NotoSansArabicUI-ExtraBold.woff') format('woff');
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-}
-
-//arabic light
-@font-face {
-  font-family: Noto Sans Arabic;
-  src: local('Noto Sans'),
-    url('../fonts/NotoSansArabicUI-Light.woff') format('woff');
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
-}
-
-//arabic ExtraLight
-@font-face {
-  font-family: Noto Sans Arabic;
-  src: local('Noto Sans'),
-    url('../fonts/NotoSansArabicUI-ExtraLight.woff') format('woff');
-  font-style: normal;
-  font-weight: 200;
   font-display: swap;
 }
 
@@ -94,7 +54,7 @@
 @font-face {
   font-family: Noto Sans Arabic;
   src: local('Noto Sans'),
-    url('../fonts/NotoSansArabicUI-Medium.woff') format('woff');
+    url('../fonts/NotoSansArabicUI-SemiCondensedMedium.woff') format('woff');
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -104,18 +64,8 @@
 @font-face {
   font-family: Noto Sans Arabic;
   src: local('Noto Sans'),
-    url('../fonts/NotoSansArabicUI-SemiBold.woff') format('woff');
+    url('../fonts/NotoSansArabicUI-SemiCondensedSemiBold.woff') format('woff');
   font-style: normal;
   font-weight: 600;
-  font-display: swap;
-}
-
-//arabic Thin
-@font-face {
-  font-family: Noto Sans Arabic;
-  src: local('Noto Sans'),
-    url('../fonts/NotoSansArabicUI-Thin.woff') format('woff');
-  font-style: normal;
-  font-weight: 100;
   font-display: swap;
 }
