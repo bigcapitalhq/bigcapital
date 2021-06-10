@@ -69,3 +69,33 @@
   font-weight: 600;
   font-display: swap;
 }
+
+//  Segoe UI Arabic - Regular
+@font-face {
+  font-family: 'Segoe UI';
+  src: local('Noto Sans'),
+    url('../fonts/SegoeArabicUI-Regular.woff2') format('woff');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+//  Segoe UI Arabic - Bold
+@font-face {
+  font-family: 'Segoe UI';
+  src: local('Noto Sans'),
+    url('../fonts/SegoeArabicUI-Bold.woff2') format('woff');
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+}
+
+// Segoe UI Arabic - Semi Bold
+@font-face {
+  font-family: 'Segoe UI';
+  src: local('Noto Sans'),
+    url('../fonts/SegoeArabicUI-SemiBold.woff2') format('woff');
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
