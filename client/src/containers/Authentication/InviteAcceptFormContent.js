@@ -3,6 +3,7 @@ import { Button, InputGroup, Intent, FormGroup } from '@blueprintjs/core';
 import { Form, ErrorMessage, FastField, useFormikContext } from 'formik';
 import { Link } from 'react-router-dom';
 import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { inputIntent } from 'utils';
 import { Col, Row } from 'components';
 import { useInviteAcceptContext } from './InviteAcceptProvider';
@@ -108,13 +109,10 @@ export default function InviteUserFormContent() {
           <T id={'you_will_use_this_address_to_sign_in_to_bigcapital'} />
         </p>
         <p>
-          <T
-            id={'signing_in_or_creating'}
-            values={{
-              terms: (msg) => <Link>{msg}</Link>,
-              privacy: (msg) => <Link>{msg}</Link>,
-            }}
-          />
+          {intl.getHTML('signing_in_or_creating', {
+            terms: (msg) => <Link>{msg}</Link>,
+            privacy: (msg) => <Link>{msg}</Link>,
+          })}
         </p>
       </div>
 

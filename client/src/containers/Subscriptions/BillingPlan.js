@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import 'style/pages/Subscription/PlanRadio.scss';
 
@@ -32,7 +33,7 @@ export default function BillingPlan({
     >
       <div className={'plan-radio__header'}>
         <div className={'plan-radio__name'}>
-          <T id={name} />
+          {intl.get('plan_radio_name', { name: name })}
         </div>
       </div>
 

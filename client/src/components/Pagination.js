@@ -2,6 +2,7 @@ import React, { useReducer, useEffect } from 'react';
 import classNames from 'classnames';
 import { Button, ButtonGroup, Intent, HTMLSelect } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import PropTypes from 'prop-types';
 import { range } from 'lodash';
 import { Icon } from 'components';
@@ -204,14 +205,11 @@ function Pagination({
       </div>
 
       <div class="pagination__info">
-        <T
-          id={'showing_current_page_to_total'}
-          values={{
-            currentPage: state.currentPage,
-            totalPages: state.totalPages,
-            total: total,
-          }}
-        />
+        {intl.get('showing_current_page_to_total', {
+          currentPage: state.currentPage,
+          totalPages: state.totalPages,
+          total: total,
+        })}
       </div>
     </div>
   );
