@@ -94,6 +94,8 @@ export default class CashFlowStatementService
     tenantId: number,
     query: ICashFlowStatementQuery
   ): Promise<ICashFlowStatementDOO> {
+    const i18n = this.tenancy.i18n(tenantId);
+
     // Retrieve all accounts on the storage.
     const accounts = await this.cashFlowRepo.cashFlowAccounts(tenantId);
 
@@ -135,7 +137,8 @@ export default class CashFlowStatementService
       cashLedger,
       netIncomeLedger,
       filter,
-      baseCurrency
+      baseCurrency,
+      i18n
     );
 
     return {

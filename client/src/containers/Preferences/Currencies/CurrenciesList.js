@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import { CurrenciesProvider } from './CurrenciesProvider';
 import CurrenciesDataTable from './CurrenciesDataTable';
@@ -14,11 +15,11 @@ function CurrenciesList({
   // #withDashboardActions
   changePreferencesPageTitle,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   useEffect(() => {
-    changePreferencesPageTitle(formatMessage({ id: 'currencies' }));
-  }, [changePreferencesPageTitle, formatMessage]);
+    changePreferencesPageTitle(intl.get('currencies'));
+  }, [changePreferencesPageTitle]);
 
   return (
     <CurrenciesProvider>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormGroup, InputGroup, TextArea } from '@blueprintjs/core';
 import { Row, Col } from 'components';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { FastField, ErrorMessage } from 'formik';
 import { inputIntent } from 'utils';
 

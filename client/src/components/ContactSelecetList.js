@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { MenuItem, Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import classNames from 'classnames';

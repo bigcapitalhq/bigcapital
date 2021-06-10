@@ -1,6 +1,7 @@
 import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { useDeleteJournal } from 'hooks/query';
 
 import { AppToaster } from 'components';
@@ -23,7 +24,7 @@ function JournalDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { mutateAsync: deleteJournalMutate, isLoading } = useDeleteJournal();
 
   // Handle cancel delete manual journal.
@@ -36,8 +37,8 @@ function JournalDeleteAlert({
     deleteJournalMutate(manualJournalId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage(
-            { id: 'the_journal_has_been_deleted_successfully' },
+          message: intl.get(
+            'the_journal_has_been_deleted_successfully',
             { number: journalNumber },
           ),
           intent: Intent.SUCCESS,

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { DataTable } from 'components';
 import { useInventoryAdjustmentsColumns, ActionsMenu } from './components';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withInventoryAdjustmentActions from './withInventoryAdjustmentActions';
@@ -74,9 +74,7 @@ function InventoryAdjustmentDataTable({
         onDelete: handleDeleteAdjustment,
       }}
       ContextMenu={ActionsMenu}
-      noResults={formatMessage({
-        id: 'there_is_no_inventory_adjustments_transactions_yet',
-      })}
+      noResults={intl.get('there_is_no_inventory_adjustments_transactions_yet')}
       {...tableProps}
     />
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { If, Money } from 'components';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 /**
  * Expense drawer content.

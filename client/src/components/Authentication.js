@@ -3,7 +3,7 @@ import { Redirect, Route, Switch, Link, useLocation } from 'react-router-dom';
 import BodyClassName from 'react-body-classname';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import authenticationRoutes from 'routes/authentication';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import Icon from 'components/Icon';
 import { useIsAuthenticated } from 'hooks/state';
 
@@ -32,6 +32,7 @@ export default function AuthenticationWrapper({ ...rest }) {
             >
               <T id={'go_to_bigcapital_com'} />
             </a>
+
             <div class="authentication-page__form-wrapper">
               <div class="authentication-insider">
                 <div className={'authentication-insider__logo-section'}>

@@ -9,7 +9,7 @@ import {
   Tooltip,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
 import DashboardBreadcrumbs from 'components/Dashboard/DashboardBreadcrumbs';

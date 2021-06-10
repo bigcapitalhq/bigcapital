@@ -10,7 +10,8 @@ import {
   Tag,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import moment from 'moment';
 
 import { CLASSES } from 'common/classes';
@@ -49,7 +50,7 @@ function EstimatesDataTable({
   onDrawerEstimate,
   onSelectedRowsChange,
 }) {
-  const { formatMessage } = useIntl();
+  
   const isLoaded = useIsValuePassed(estimatesLoading, false);
 
   const handleEditEstimate = useCallback(
@@ -71,17 +72,17 @@ function EstimatesDataTable({
       <Menu>
         <MenuItem
           icon={<Icon icon="reader-18" />}
-          text={formatMessage({ id: 'view_details' })}
+          text={intl.get('view_details')}
         />
         <MenuDivider />
         <MenuItem
           icon={<Icon icon="pen-18" />}
-          text={formatMessage({ id: 'edit_estimate' })}
+          text={intl.get('edit_estimate')}
           onClick={handleEditEstimate(estimate)}
         />
         <If condition={!estimate.is_delivered}>
           <MenuItem
-            text={formatMessage({ id: 'mark_as_delivered' })}
+            text={intl.get('mark_as_delivered')}
             onClick={() => onDeliverEstimate(estimate)}
           />
         </If>
@@ -90,7 +91,7 @@ function EstimatesDataTable({
             condition={estimate.is_delivered && estimate.is_approved}
           >
             <MenuItem
-              text={formatMessage({ id: 'mark_as_rejected' })}
+              text={intl.get('mark_as_rejected')}
               onClick={() => onRejectEstimate(estimate)}
             />
           </Choose.When>
@@ -98,35 +99,35 @@ function EstimatesDataTable({
             condition={estimate.is_delivered && estimate.is_rejected}
           >
             <MenuItem
-              text={formatMessage({ id: 'mark_as_approved' })}
+              text={intl.get('mark_as_approved')}
               onClick={() => onApproveEstimate(estimate)}
             />
           </Choose.When>
           <Choose.When condition={estimate.is_delivered}>
             <MenuItem
-              text={formatMessage({ id: 'mark_as_approved' })}
+              text={intl.get('mark_as_approved')}
               onClick={() => onApproveEstimate(estimate)}
             />
             <MenuItem
-              text={formatMessage({ id: 'mark_as_rejected' })}
+              text={intl.get('mark_as_rejected')}
               onClick={() => onRejectEstimate(estimate)}
             />
           </Choose.When>
         </Choose>
         <MenuItem
-          text={formatMessage({ id: 'estimate_paper' })}
+          text={intl.get('estimate_paper')}
           onClick={() => onDrawerEstimate()}
         />
 
         <MenuItem
-          text={formatMessage({ id: 'delete_estimate' })}
+          text={intl.get('delete_estimate')}
           intent={Intent.DANGER}
           onClick={handleDeleteEstimate(estimate)}
           icon={<Icon icon="trash-16" iconSize={16} />}
         />
       </Menu>
     ),
-    [handleDeleteEstimate, handleEditEstimate, formatMessage],
+    [handleDeleteEstimate, handleEditEstimate],
   );
 
   const onRowContextMenu = useCallback(
@@ -140,28 +141,28 @@ function EstimatesDataTable({
     () => [
       {
         id: 'estimate_date',
-        Header: formatMessage({ id: 'estimate_date' }),
+        Header: intl.get('estimate_date'),
         accessor: (r) => moment(r.estimate_date).format('YYYY MMM DD'),
         width: 140,
         className: 'estimate_date',
       },
       {
         id: 'customer_id',
-        Header: formatMessage({ id: 'customer_name' }),
+        Header: intl.get('customer_name'),
         accessor: 'customer.display_name',
         width: 140,
         className: 'customer_id',
       },
       {
         id: 'expiration_date',
-        Header: formatMessage({ id: 'expiration_date' }),
+        Header: intl.get('expiration_date'),
         accessor: (r) => moment(r.expiration_date).format('YYYY MMM DD'),
         width: 140,
         className: 'expiration_date',
       },
       {
         id: 'estimate_number',
-        Header: formatMessage({ id: 'estimate_number' }),
+        Header: intl.get('estimate_number'),
         accessor: (row) =>
           row.estimate_number ? `#${row.estimate_number}` : null,
         width: 140,
@@ -169,7 +170,7 @@ function EstimatesDataTable({
       },
       {
         id: 'amount',
-        Header: formatMessage({ id: 'amount' }),
+        Header: intl.get('amount'),
         accessor: (r) => <Money amount={r.amount} currency={baseCurrency} />,
 
         width: 140,
@@ -178,7 +179,7 @@ function EstimatesDataTable({
 
       {
         id: 'status',
-        Header: formatMessage({ id: 'status' }),
+        Header: intl.get('status'),
         accessor: (row) => statusAccessor(row),
         width: 140,
         className: 'status',
@@ -186,7 +187,7 @@ function EstimatesDataTable({
 
       {
         id: 'reference',
-        Header: formatMessage({ id: 'reference_no' }),
+        Header: intl.get('reference_no'),
         accessor: 'reference',
         width: 140,
         className: 'reference',
@@ -208,7 +209,7 @@ function EstimatesDataTable({
         disableResizing: true,
       },
     ],
-    [actionMenuList, formatMessage],
+    [actionMenuList],
   );
 
   const handleFetchData = useCallback(

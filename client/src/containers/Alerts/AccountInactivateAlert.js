@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
@@ -22,7 +23,7 @@ function AccountInactivateAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const {
     mutateAsync: inactivateAccount,
     isLoading
@@ -35,9 +36,7 @@ function AccountInactivateAlert({
   const handleConfirmAccountActive = () => {
     inactivateAccount(accountId).then(() => {
       AppToaster.show({
-        message: formatMessage({
-          id: 'the_account_has_been_successfully_inactivated',
-        }),
+        message: intl.get('the_account_has_been_successfully_inactivated'),
         intent: Intent.SUCCESS,
       });
     }).catch(() => {

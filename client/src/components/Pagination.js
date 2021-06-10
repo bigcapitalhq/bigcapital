@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import classNames from 'classnames';
 import { Button, ButtonGroup, Intent, HTMLSelect } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import PropTypes from 'prop-types';
 import { range } from 'lodash';
 import { Icon } from 'components';

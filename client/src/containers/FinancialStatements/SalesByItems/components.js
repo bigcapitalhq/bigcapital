@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
 import { getColumnWidth } from 'utils';
 import { If, Icon } from 'components';
@@ -11,7 +11,7 @@ import FinancialLoadingBar from '../FinancialLoadingBar';
  * Retrieve sales by items table columns.
  */
 export const useSalesByItemsTableColumns = () => {
-  const { formatMessage } = useIntl();
+  
 
   //sales by items context.
   const {
@@ -21,14 +21,14 @@ export const useSalesByItemsTableColumns = () => {
   return useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'item_name' }),
+        Header: intl.get('item_name'),
         accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'name',
         width: 180,
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'sold_quantity' }),
+        Header: intl.get('sold_quantity'),
         accessor: 'quantity_sold_formatted',
         Cell: CellTextSpan,
         className: 'quantity_sold',
@@ -38,7 +38,7 @@ export const useSalesByItemsTableColumns = () => {
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'sold_amount' }),
+        Header: intl.get('sold_amount'),
         accessor: 'sold_cost_formatted',
         Cell: CellTextSpan,
         className: 'sold_cost',
@@ -48,7 +48,7 @@ export const useSalesByItemsTableColumns = () => {
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'average_price' }),
+        Header: intl.get('average_price'),
         accessor: 'average_sell_price_formatted',
         Cell: CellTextSpan,
         className: 'average_sell_price',
@@ -58,7 +58,7 @@ export const useSalesByItemsTableColumns = () => {
         textOverview: true,
       },
     ],
-    [tableRows, formatMessage],
+    [tableRows],
   );
 };
 

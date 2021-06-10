@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { If } from 'components';
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
@@ -18,7 +18,7 @@ export const useCustomersTransactionsColumns = () => {
   return React.useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'customer_name' }),
+        Header: intl.get('customer_name'),
         accessor: ({ cells }) => {
           return (
             <span
@@ -33,26 +33,26 @@ export const useCustomersTransactionsColumns = () => {
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'account_name' }),
+        Header: intl.get('account_name'),
         accessor: 'cells[1].value',
         className: 'name',
         textOverview: true,
         width: 170,
       },
       {
-        Header: formatMessage({ id: 'reference_type' }),
+        Header: intl.get('reference_type'),
         accessor: 'cells[2].value',
         width: 120,
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'transaction_type' }),
+        Header: intl.get('transaction_type'),
         accessor: 'cells[3].value',
         width: 120,
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'credit' }),
+        Header: intl.get('credit'),
         accessor: 'cells[4].value',
         className: 'credit',
         textOverview: true,
@@ -62,7 +62,7 @@ export const useCustomersTransactionsColumns = () => {
         }),
       },
       {
-        Header: formatMessage({ id: 'debit' }),
+        Header: intl.get('debit'),
         accessor: 'cells[5].value',
         className: 'debit',
         textOverview: true,
@@ -72,7 +72,7 @@ export const useCustomersTransactionsColumns = () => {
         }),
       },
       {
-        Header: formatMessage({ id: 'running_balance' }),
+        Header: intl.get('running_balance'),
         accessor: 'cells[6].value',
         className: 'running_balance',
         textOverview: true,
@@ -82,7 +82,7 @@ export const useCustomersTransactionsColumns = () => {
         }),
       },
     ],
-    [tableRows, formatMessage],
+    [tableRows],
   );
 };
 

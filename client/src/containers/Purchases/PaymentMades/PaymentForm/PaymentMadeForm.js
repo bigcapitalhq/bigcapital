@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { sumBy, pick, defaultTo } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
@@ -32,7 +32,6 @@ function PaymentMadeForm({
   baseCurrency,
 }) {
   const history = useHistory();
-  const { formatMessage } = useIntl();
 
   // Payment made form context.
   const {
@@ -80,10 +79,8 @@ function PaymentMadeForm({
 
     if (totalPaymentAmount <= 0) {
       AppToaster.show({
-        message: formatMessage({
-          id: 'you_cannot_make_payment_with_zero_total_amount',
-          intent: Intent.WARNING,
-        }),
+        message: intl.get('you_cannot_make_payment_with_zero_total_amount'),
+        intent: Intent.WARNING,
       });
       return;
     }
@@ -92,11 +89,11 @@ function PaymentMadeForm({
     // Triggers once the save request success.
     const onSaved = (response) => {
       AppToaster.show({
-        message: formatMessage({
-          id: isNewMode
+        message: intl.get(
+          isNewMode
             ? 'the_payment_made_has_been_edited_successfully'
             : 'the_payment_made_has_been_created_successfully',
-        }),
+        ),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
@@ -117,7 +114,7 @@ function PaymentMadeForm({
       if (getError(ERRORS.PAYMENT_NUMBER_NOT_UNIQUE)) {
         setFieldError(
           'payment_number',
-          formatMessage({ id: 'payment_number_is_not_unique' }),
+          intl.get('payment_number_is_not_unique'),
         );
       }
       setSubmitting(false);

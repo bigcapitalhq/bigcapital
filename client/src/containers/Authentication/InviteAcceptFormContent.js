@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, InputGroup, Intent, FormGroup } from '@blueprintjs/core';
 import { Form, ErrorMessage, FastField, useFormikContext } from 'formik';
 import { Link } from 'react-router-dom';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { inputIntent } from 'utils';
 import { Col, Row } from 'components';
 import { useInviteAcceptContext } from './InviteAcceptProvider';

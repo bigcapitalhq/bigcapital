@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
 import { Formik } from 'formik';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 import { Intent } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 
+import { FormattedMessage as T } from 'components';
 import { useAuthSendResetPassword } from 'hooks/query';
 import Toaster from 'components/AppToaster';
 import SendResetPasswordForm from './SendResetPasswordForm';
@@ -16,7 +17,6 @@ import AuthInsider from 'containers/Authentication/AuthInsider';
  * Send reset password page.
  */
 export default function SendResetPassword({ requestSendResetPassword }) {
-  const { formatMessage } = useIntl();
   const history = useHistory();
 
   const { mutateAsync: sendResetPasswordMutate } = useAuthSendResetPassword();
@@ -34,9 +34,7 @@ export default function SendResetPassword({ requestSendResetPassword }) {
     sendResetPasswordMutate({ email: values.crediential })
       .then((response) => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'check_your_email_for_a_link_to_reset',
-          }),
+          message: intl.get('check_your_email_for_a_link_to_reset'),
           intent: Intent.SUCCESS,
         });
         history.push('/auth/login');

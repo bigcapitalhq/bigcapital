@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import DataTable from 'components/DataTable';
 import FinancialSheet from 'components/FinancialSheet';
 
@@ -13,7 +13,7 @@ export default function ReceivableAgingSummaryTable({
   // #ownProps
   organizationName,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   // AR aging summary report context.
   const { ARAgingSummary, isARAgingLoading } = useARAgingSummaryContext();
@@ -31,7 +31,7 @@ export default function ReceivableAgingSummaryTable({
     <FinancialSheet
       companyName={organizationName}
       name={'receivable-aging-summary'}
-      sheetType={formatMessage({ id: 'receivable_aging_summary' })}
+      sheetType={intl.get('receivable_aging_summary')}
       asDate={new Date()}
       loading={isARAgingLoading}
     >

@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { DataTable } from 'components';
 import FinancialSheet from 'components/FinancialSheet';
 
@@ -13,7 +14,7 @@ export default function APAgingSummaryTable({
   //#ownProps
   organizationName,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   // AP aging summary report content.
   const {
@@ -30,7 +31,7 @@ export default function APAgingSummaryTable({
     <FinancialSheet
       companyName={organizationName}
       name={'payable-aging-summary'}
-      sheetType={formatMessage({ id: 'payable_aging_summary' })}
+      sheetType={intl.get('payable_aging_summary')}
       asDate={new Date()}
       loading={isAPAgingLoading}
     >

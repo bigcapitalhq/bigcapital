@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
 
 const Schema = Yup.object().shape({
@@ -7,15 +7,15 @@ const Schema = Yup.object().shape({
     .required()
     .min(1)
     .max(DATATYPES_LENGTH.STRING)
-    .label(formatMessage({ id: 'journal_number_' })),
+    .label(intl.get('journal_number_')),
   journal_type: Yup.string()
     .required()
     .min(1)
     .max(DATATYPES_LENGTH.STRING)
-    .label(formatMessage({ id: 'journal_type' })),
+    .label(intl.get('journal_type')),
   date: Yup.date()
     .required()
-    .label(formatMessage({ id: 'date' })),
+    .label(intl.get('date')),
   currency_code: Yup.string().max(3),
   publish: Yup.boolean(),
   reference: Yup.string().nullable().min(1).max(DATATYPES_LENGTH.STRING),

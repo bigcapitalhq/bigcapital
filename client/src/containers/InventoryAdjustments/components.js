@@ -9,9 +9,10 @@ import {
   Button,
   Popover,
 } from '@blueprintjs/core';
-import { useIntl, FormattedMessage as T } from 'react-intl';
+import intl from 'react-intl-universal';
 import moment from 'moment';
-import { formatMessage } from 'services/intl';
+
+import {  FormattedMessage as T } from 'components';
 import { isNumber } from 'lodash';
 import { Icon, Money, If } from 'components';
 import { isBlank, safeCallback } from 'utils';
@@ -37,7 +38,7 @@ export const PublishAccessor = (r) => {
 export const TypeAccessor = (row) => {
   return row.type ? (
     <Tag minimal={true} round={true} intent={Intent.NONE}>
-      {formatMessage({ id: row.type })}
+      {intl.get(row.type)}
     </Tag>
   ) : (
     ''
@@ -50,7 +51,7 @@ export const TypeAccessor = (row) => {
 export const ItemCodeAccessor = (row) =>
   row.type ? (
     <Tag minimal={true} round={true} intent={Intent.NONE}>
-      {formatMessage({ id: row.type })}
+      {intl.get(row.type)}
     </Tag>
   ) : (
     ''
@@ -85,7 +86,7 @@ export const SellPriceCell = ({ cell: { value } }) => {
 export const ItemTypeAccessor = (row) => {
   return row.type ? (
     <Tag minimal={true} round={true} intent={Intent.NONE}>
-      {formatMessage({ id: row.type })}
+      {intl.get(row.type)}
     </Tag>
   ) : null;
 };
@@ -98,11 +99,11 @@ export const ActionsMenu = ({
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
-        text={formatMessage({ id: 'view_details' })}
+        text={intl.get('view_details')}
       />
       <MenuDivider />
       <MenuItem
-        text={formatMessage({ id: 'delete_adjustment' })}
+        text={intl.get('delete_adjustment')}
         intent={Intent.DANGER}
         onClick={safeCallback(onDelete, original)}
         icon={<Icon icon="trash-16" iconSize={16} />}
@@ -125,48 +126,48 @@ export const ActionsCell = (props) => {
  * Retrieve inventory adjustments columns.
  */
 export const useInventoryAdjustmentsColumns = () => {
-  const { formatMessage } = useIntl();
+  
 
   return React.useMemo(
     () => [
       {
         id: 'date',
-        Header: formatMessage({ id: 'date' }),
+        Header: intl.get('date'),
         accessor: (r) => moment(r.date).format('YYYY MMM DD'),
         width: 115,
         className: 'date',
       },
       {
         id: 'type',
-        Header: formatMessage({ id: 'type' }),
+        Header: intl.get('type'),
         accessor: TypeAccessor,
         className: 'type',
         width: 100,
       },
       {
         id: 'reason',
-        Header: formatMessage({ id: 'reason' }),
+        Header: intl.get('reason'),
         accessor: 'reason',
         className: 'reason',
         width: 115,
       },
       {
         id: 'reference_no',
-        Header: formatMessage({ id: 'reference_no' }),
+        Header: intl.get('reference_no'),
         accessor: 'reference_no',
         className: 'reference_no',
         width: 100,
       },
       {
         id: 'published_at',
-        Header: formatMessage({ id: 'status' }),
+        Header: intl.get('status'),
         accessor: PublishAccessor,
         width: 95,
         className: 'publish',
       },
       {
         id: 'description',
-        Header: formatMessage({ id: 'description' }),
+        Header: intl.get('description'),
         accessor: 'description',
         disableSorting: true,
         width: 85,
@@ -174,12 +175,12 @@ export const useInventoryAdjustmentsColumns = () => {
       },
       {
         id: 'created_at',
-        Header: formatMessage({ id: 'created_at' }),
+        Header: intl.get('created_at'),
         accessor: (r) => moment(r.created_at).format('YYYY MMM DD'),
         width: 125,
         className: 'created_at',
       },
     ],
-    [formatMessage],
+    [],
   );
 };

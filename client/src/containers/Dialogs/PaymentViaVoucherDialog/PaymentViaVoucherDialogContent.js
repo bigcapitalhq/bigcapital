@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik } from 'formik';
 
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
 import Toaster from 'components/AppToaster';
@@ -26,7 +26,7 @@ function PaymentViaLicenseDialogContent({
   // #withDialog
   closeDialog,
 }) {
-  const { formatMessage } = useIntl();
+  
   const history = useHistory();
 
   // Payment via voucher
@@ -80,7 +80,7 @@ function PaymentViaLicenseDialogContent({
       .required()
       .min(10)
       .max(10)
-      .label(formatMessage({ id: 'license_code' })),
+      .label(intl.get('license_code')),
   });
 
   return (

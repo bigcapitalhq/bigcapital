@@ -1,7 +1,8 @@
 import React from 'react';
 import * as Yup from 'yup';
 import moment from 'moment';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 
@@ -27,17 +28,17 @@ function TrialBalanceSheetHeader({
   // #withTrialBalanceActions
   toggleTrialBalanceFilterDrawer: toggleFilterDrawer,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   // Form validation schema.
   const validationSchema = Yup.object().shape({
     fromDate: Yup.date()
       .required()
-      .label(formatMessage({ id: 'from_date' })),
+      .label(intl.get('from_date')),
     toDate: Yup.date()
       .min(Yup.ref('fromDate'))
       .required()
-      .label(formatMessage({ id: 'to_date' })),
+      .label(intl.get('to_date')),
   });
 
   // Initial values.

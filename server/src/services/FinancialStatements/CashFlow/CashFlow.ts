@@ -37,6 +37,7 @@ import {
 } from 'utils/deepdash';
 import { ACCOUNT_ROOT_TYPE } from 'data/AccountTypes';
 import CashFlowDatePeriods from './CashFlowDatePeriods';
+import I18nService from 'services/I18n/I18nService';
 
 const MAP_CONFIG = { childrenPath: 'children', pathFormat: 'array' };
 
@@ -47,6 +48,7 @@ const DISPLAY_COLUMNS_BY = {
 
 class CashFlowStatement extends FinancialSheet implements ICashFlowStatement {
   readonly baseCurrency: string;
+  readonly i18n: I18nService;
   readonly sectionsByIds = {};
   readonly cashFlowSchemaMap: Map<string, ICashFlowSchemaSection>;
   readonly cashFlowSchemaSeq: Array<string>;
@@ -58,7 +60,6 @@ class CashFlowStatement extends FinancialSheet implements ICashFlowStatement {
   readonly schemaSectionParserIteratee: any;
   readonly query: ICashFlowStatementQuery;
   readonly numberFormat: INumberFormatQuery;
-
   readonly comparatorDateType: string;
   readonly dateRangeSet: { fromDate: Date; toDate: Date }[];
 
@@ -72,11 +73,13 @@ class CashFlowStatement extends FinancialSheet implements ICashFlowStatement {
     cashLedger: ILedger,
     netIncomeLedger: ILedger,
     query: ICashFlowStatementQuery,
-    baseCurrency: string
+    baseCurrency: string,
+    i18n
   ) {
     super();
 
     this.baseCurrency = baseCurrency;
+    this.i18n = i18n;
     this.ledger = ledger;
     this.cashLedger = cashLedger;
     this.netIncomeLedger = netIncomeLedger;
@@ -87,8 +90,8 @@ class CashFlowStatement extends FinancialSheet implements ICashFlowStatement {
     this.numberFormat = this.query.numberFormat;
     this.dateRangeSet = [];
 
-    this.comparatorDateType =
-      query.displayColumnsType === 'total' ? 'day' : query.displayColumnsBy;
+    this.comparatorDateType = query.displayColumnsType === 'total'
+      ? 'day' : query.displayColumnsBy;
 
     this.initDateRangeCollection();
   }
@@ -177,7 +180,7 @@ class CashFlowStatement extends FinancialSheet implements ICashFlowStatement {
       )
     )({
       id: sectionSchema.id,
-      label: sectionSchema.label,
+      label: this.i18n.__(sectionSchema.label),
       total: this.getAmountMeta(netIncome),
       sectionType: ICashFlowStatementSectionType.NET_INCOME,
     });
@@ -283,8 +286,8 @@ class CashFlowStatement extends FinancialSheet implements ICashFlowStatement {
     )({
       sectionType: ICashFlowStatementSectionType.ACCOUNTS,
       id: sectionSchema.id,
-      label: sectionSchema.label,
-      footerLabel: sectionSchema.footerLabel,
+      label: this.i18n.__(sectionSchema.label),
+      footerLabel: this.i18n.__(sectionSchema.footerLabel),
       children: accounts,
       total: this.getTotalAmountMeta(total),
     });
@@ -317,8 +320,8 @@ class CashFlowStatement extends FinancialSheet implements ICashFlowStatement {
   ): ICashFlowStatementSection {
     return {
       id: schemaSection.id,
-      label: schemaSection.label,
-      footerLabel: schemaSection.footerLabel,
+      label: this.i18n.__(schemaSection.label),
+      footerLabel: this.i18n.__(schemaSection.footerLabel),
       sectionType: ICashFlowStatementSectionType.REGULAR,
     };
   }
@@ -383,7 +386,7 @@ class CashFlowStatement extends FinancialSheet implements ICashFlowStatement {
     )({
       sectionType: ICashFlowStatementSectionType.TOTAL,
       id: sectionSchema.id,
-      label: sectionSchema.label,
+      label: this.i18n.__(sectionSchema.label),
       total: this.getTotalAmountMeta(total),
     });
   }
@@ -477,7 +480,7 @@ class CashFlowStatement extends FinancialSheet implements ICashFlowStatement {
     )({
       sectionType: ICashFlowStatementSectionType.CASH_AT_BEGINNING,
       id: sectionSchema.id,
-      label: sectionSchema.label,
+      label: this.i18n.__(sectionSchema.label),
       children,
       total: this.getTotalAmountMeta(total),
     });

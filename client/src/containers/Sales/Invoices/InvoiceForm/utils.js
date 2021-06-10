@@ -12,7 +12,7 @@ import { useFormikContext } from 'formik';
 import { Intent } from '@blueprintjs/core';
 
 import { orderingLinesIndexes } from 'utils';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { ERROR } from 'common/errors';
 import { AppToaster } from 'components';
 
@@ -66,7 +66,7 @@ export function transformToEditForm(invoice) {
 export const transformErrors = (errors, { setErrors }) => {
   if (errors.some((e) => e.type === ERROR.SALE_INVOICE_NUMBER_IS_EXISTS)) {
     setErrors({
-      invoice_no: formatMessage({ id: 'sale_invoice_number_is_exists' }),
+      invoice_no: intl.get('sale_invoice_number_is_exists'),
     });
   }
   if (
@@ -76,9 +76,7 @@ export const transformErrors = (errors, { setErrors }) => {
     )
   ) {
     AppToaster.show({
-      message: formatMessage({
-        id: 'sale_estimate_is_already_converted_to_invoice',
-      }),
+      message: intl.get('sale_estimate_is_already_converted_to_invoice'),
       intent: Intent.DANGER,
     });
   }

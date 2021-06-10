@@ -11,11 +11,15 @@ import BaseFinancialReportController from '../BaseFinancialReportController';
 import CashFlowStatementService from 'services/FinancialStatements/CashFlow/CashFlowService';
 import { ICashFlowStatementDOO, ICashFlowStatement } from 'interfaces';
 import CashFlowTable from 'services/FinancialStatements/CashFlow/CashFlowTable';
+import HasTenancyService from 'services/Tenancy/TenancyService';
 
 @Service()
 export default class CashFlowController extends BaseFinancialReportController {
   @Inject()
   cashFlowService: CashFlowStatementService;
+
+  @Inject()
+  tenancy: HasTenancyService;
 
   /**
    * Router constructor.
@@ -69,8 +73,9 @@ export default class CashFlowController extends BaseFinancialReportController {
    * @param {ITransactionsByVendorsStatement} statement -
    *
    */
-  private transformToTableRows(cashFlowDOO: ICashFlowStatementDOO) {
-    const cashFlowTable = new CashFlowTable(cashFlowDOO);
+  private transformToTableRows(cashFlowDOO: ICashFlowStatementDOO, tenantId: number) {
+    const i18n = this.tenancy.i18n(tenantId);
+    const cashFlowTable = new CashFlowTable(cashFlowDOO, i18n);
 
     return {
       table: {
@@ -103,7 +108,7 @@ export default class CashFlowController extends BaseFinancialReportController {
 
       switch (acceptType) {
         case 'application/json+table':
-          return res.status(200).send(this.transformToTableRows(cashFlow));
+          return res.status(200).send(this.transformToTableRows(cashFlow, tenantId));
         case 'json':
         default:
           return res.status(200).send(this.transformJsonResponse(cashFlow));

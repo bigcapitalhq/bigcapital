@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, Tab } from '@blueprintjs/core';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
 
 import 'style/pages/Preferences/Users.scss';
@@ -26,8 +26,8 @@ function UsersPreferences({ openDialog }) {
       <div className={classNames(CLASSES.CARD)}>
         <div className={classNames(CLASSES.PREFERENCES_PAGE_TABS)}>
           <Tabs animate={true} onChange={onChangeTabs}>
-            <Tab id="users" title={formatMessage({ id: 'users' })} />
-            <Tab id="roles" title={formatMessage({ id: 'roles' })} />
+            <Tab id="users" title={intl.get('users')} />
+            <Tab id="roles" title={intl.get('roles')} />
           </Tabs>
         </div>
         <PreferencesSubContent preferenceTab="users" />

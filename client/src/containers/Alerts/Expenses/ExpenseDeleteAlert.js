@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
@@ -20,7 +21,7 @@ function ExpenseDeleteAlert({
   isOpen,
   payload: { expenseId },
 }) {
-  const { formatMessage } = useIntl();
+  
   const {
     mutateAsync: deleteExpenseMutate,
     isLoading,
@@ -35,8 +36,8 @@ function ExpenseDeleteAlert({
   const handleConfirmExpenseDelete = () => {
     deleteExpenseMutate(expenseId).then(() => {
       AppToaster.show({
-        message: formatMessage(
-          { id: 'the_expense_has_been_deleted_successfully' },
+        message: intl.get(
+          'the_expense_has_been_deleted_successfully',
           { number: expenseId },
         ),
         intent: Intent.SUCCESS,

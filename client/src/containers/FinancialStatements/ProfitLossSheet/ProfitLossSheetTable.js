@@ -1,5 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
@@ -12,7 +13,7 @@ export default function ProfitLossSheetTable({
   // #ownProps
   companyName,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   // Profit/Loss sheet context.
   const {
@@ -23,7 +24,7 @@ export default function ProfitLossSheetTable({
   const tableColumns = useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'account' }),
+        Header: intl.get('account'),
         accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'name',
         textOverview: true,
@@ -32,7 +33,7 @@ export default function ProfitLossSheetTable({
       ...(query.display_columns_type === 'total'
         ? [
             {
-              Header: formatMessage({ id: 'total' }),
+              Header: intl.get('total'),
               Cell: CellTextSpan,
               accessor: 'total.formatted_amount',
               className: 'total',
@@ -59,7 +60,6 @@ export default function ProfitLossSheetTable({
       query.display_columns_type,
       tableRows,
       columns,
-      formatMessage,
     ],
   );
 

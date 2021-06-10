@@ -1,7 +1,7 @@
 import React from 'react';
 import PaymentPaperTemplateHeader from './PaymentPaperTemplateHeader';
 import PaymentPaperTemplateTable from './PaymentPaperTemplateTable';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 import 'style/components/Drawer/DrawerTemplate.scss';
 
@@ -10,14 +10,14 @@ export default function PaymentPaperTemplate({
   paperData,
 }) {
   const labels = {
-    name: formatMessage({ id: 'payment_receive' }),
-    billedTo: formatMessage({ id: 'billed_to' }),
-    date: formatMessage({ id: 'payment_date_' }),
-    refNo: formatMessage({ id: 'payment_no' }),
-    billedFrom: formatMessage({ id: 'billed_from' }),
-    referenceNo: formatMessage({ id: 'reference_no' }),
-    amount: formatMessage({ id: 'amount_received' }),
-    dueDate: formatMessage({ id: 'due_date_' }),
+    name: intl.get('payment_receive'),
+    billedTo: intl.get('billed_to'),
+    date: intl.get('payment_date_'),
+    refNo: intl.get('payment_no'),
+    billedFrom: intl.get('billed_from'),
+    referenceNo: intl.get('reference_no'),
+    amount: intl.get('amount_received'),
+    dueDate: intl.get('due_date_'),
     ...propLabels,
   };
   const defaultValues = {

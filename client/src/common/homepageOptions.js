@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 export const accountsReceivable = [
   {
@@ -21,12 +21,12 @@ export const accountsReceivable = [
         link: '/receipts',
       },
       {
-        title: <T id={'Customers'} />,
+        title: <T id={'customers'} />,
         description: <T id={'manage_the_customers_relations_with_customer'} />,
         link: '/customers',
       },
       {
-        title: <T id={'customers_payment'} />,
+        title: <T id={'customers_payments'} />,
         description: (
           <T id={'manage_payment_transactions_from_your_customers'} />
         ),

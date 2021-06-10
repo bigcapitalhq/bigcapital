@@ -1,11 +1,10 @@
-import React from 'react';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
-export default [
-  { path: 'invoices/new', name: formatMessage({ id: 'sale_invoice' }) },
-  { path: 'bills//new', name: formatMessage({ id: 'purchase_invoice' }) },
-  { path: 'make-journal-entry', name: formatMessage({ id: 'manual_journal' }) },
-  { path: 'expenses/new', name: formatMessage({ id: 'expense' }) },
-  { path: 'customers/new', name: formatMessage({ id: 'customer' }) },
-  { path: 'vendors/new', name: formatMessage({ id: 'vendor' }) },
+export const getQuickNewActions = () => [
+  { path: 'invoices/new', name: intl.get('sale_invoice') },
+  { path: 'bills//new', name: intl.get('purchase_invoice') },
+  { path: 'make-journal-entry', name: intl.get('manual_journal') },
+  { path: 'expenses/new', name: intl.get('expense') },
+  { path: 'customers/new', name: intl.get('customer') },
+  { path: 'vendors/new', name: intl.get('vendor') },
 ];

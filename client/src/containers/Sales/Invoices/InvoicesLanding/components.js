@@ -10,11 +10,12 @@ import {
   Position,
   Button,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
+
+import { FormattedMessage as T } from 'components';
 import moment from 'moment';
 import { Choose, If, Icon } from 'components';
 import { Money, AppToaster } from 'components';
-import { formatMessage } from 'services/intl';
 import { safeCallback, calculateStatus } from 'utils';
 
 export const statusAccessor = (row) => {
@@ -83,9 +84,7 @@ export const handleDeleteErrors = (errors) => {
     )
   ) {
     AppToaster.show({
-      message: formatMessage({
-        id: 'the_invoice_cannot_be_deleted',
-      }),
+      message: intl.get('the_invoice_cannot_be_deleted'),
       intent: Intent.DANGER,
     });
   }
@@ -95,9 +94,7 @@ export const handleDeleteErrors = (errors) => {
     )
   ) {
     AppToaster.show({
-      message: formatMessage({
-        id: 'the_payment_amount_that_received',
-      }),
+      message: intl.get('the_payment_amount_that_received'),
       intent: Intent.DANGER,
     });
   }
@@ -107,41 +104,41 @@ export function ActionsMenu({
   payload: { onEdit, onDeliver, onDelete, onDrawer, onQuick },
   row: { original },
 }) {
-  const { formatMessage } = useIntl();
+  
 
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
-        text={formatMessage({ id: 'view_details' })}
+        text={intl.get('view_details')}
       />
       <MenuDivider />
       <MenuItem
         icon={<Icon icon="pen-18" />}
-        text={formatMessage({ id: 'edit_invoice' })}
+        text={intl.get('edit_invoice')}
         onClick={safeCallback(onEdit, original)}
       />
       <If condition={!original.is_delivered}>
         <MenuItem
           icon={<Icon icon="send" iconSize={16} />}
-          text={formatMessage({ id: 'mark_as_delivered' })}
+          text={intl.get('mark_as_delivered')}
           onClick={safeCallback(onDeliver, original)}
         />
       </If>
       <If condition={original.is_delivered && !original.is_fully_paid}>
         <MenuItem
           icon={<Icon icon="quick-payment-16" iconSize={16} />}
-          text={formatMessage({ id: 'add_payment' })}
+          text={intl.get('add_payment')}
           onClick={safeCallback(onQuick, original)}
         />
       </If>
       <MenuItem
         icon={<Icon icon={'receipt-24'} iconSize={16} />}
-        text={formatMessage({ id: 'invoice_paper' })}
+        text={intl.get('invoice_paper')}
         onClick={safeCallback(onDrawer, original)}
       />
       <MenuItem
-        text={formatMessage({ id: 'delete_invoice' })}
+        text={intl.get('delete_invoice')}
         intent={Intent.DANGER}
         onClick={safeCallback(onDelete, original)}
         icon={<Icon icon="trash-16" iconSize={16} />}
@@ -165,20 +162,20 @@ function ActionsCell(props) {
  * Retrieve invoices table columns.
  */
 export function useInvoicesTableColumns() {
-  const { formatMessage } = useIntl();
+  
 
   return React.useMemo(
     () => [
       {
         id: 'invoice_date',
-        Header: formatMessage({ id: 'invoice_date' }),
+        Header: intl.get('invoice_date'),
         accessor: (r) => moment(r.invoice_date).format('YYYY MMM DD'),
         width: 110,
         className: 'invoice_date',
       },
       {
         id: 'customer',
-        Header: formatMessage({ id: 'customer_name' }),
+        Header: intl.get('customer_name'),
         accessor: 'customer.display_name',
         width: 180,
         className: 'customer_id',
@@ -186,14 +183,14 @@ export function useInvoicesTableColumns() {
 
       {
         id: 'invoice_no',
-        Header: formatMessage({ id: 'invoice_no__' }),
+        Header: intl.get('invoice_no__'),
         accessor: 'invoice_no',
         width: 100,
         className: 'invoice_no',
       },
       {
         id: 'balance',
-        Header: formatMessage({ id: 'balance' }),
+        Header: intl.get('balance'),
         accessor: (r) => (
           <Money amount={r.balance} currency={r.currency_code} />
         ),
@@ -202,26 +199,26 @@ export function useInvoicesTableColumns() {
       },
       {
         id: 'status',
-        Header: formatMessage({ id: 'status' }),
+        Header: intl.get('status'),
         accessor: (row) => statusAccessor(row),
         width: 160,
         className: 'status',
       },
       {
         id: 'due_date',
-        Header: formatMessage({ id: 'due_date' }),
+        Header: intl.get('due_date'),
         accessor: (r) => moment(r.due_date).format('YYYY MMM DD'),
         width: 110,
         className: 'due_date',
       },
       {
         id: 'reference_no',
-        Header: formatMessage({ id: 'reference_no' }),
+        Header: intl.get('reference_no'),
         accessor: 'reference_no',
         width: 90,
         className: 'reference_no',
       },
     ],
-    [formatMessage],
+    [],
   );
 }

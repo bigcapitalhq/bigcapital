@@ -1,7 +1,7 @@
 import React from 'react';
 import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { useHistory, useLocation } from 'react-router-dom';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import preferencesMenu from 'config/preferencesMenu';
 import PreferencesSidebarContainer from './PreferencesSidebarContainer';
 

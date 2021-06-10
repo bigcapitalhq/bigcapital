@@ -1,6 +1,6 @@
 import React from 'react';
 import { If, Money } from 'components';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 export default function ExpenseDrawerFooter({
   expense: { total_amount, currency_code },

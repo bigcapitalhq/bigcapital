@@ -8,7 +8,7 @@ import {
   MenuDivider,
   Intent,
 } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { Icon, Money } from 'components';
 import moment from 'moment';
 import { safeCallback } from 'utils';
@@ -20,18 +20,18 @@ export function ActionMenuList({
   row: { original },
   payload: { onEditExchangeRate, onDeleteExchangeRate },
 }) {
-  const { formatMessage } = useIntl();
+  
 
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="pen-18" />}
-        text={formatMessage({ id: 'edit_exchange_rate' })}
+        text={intl.get('edit_exchange_rate')}
         onClick={safeCallback(onEditExchangeRate, original)}
       />
       <MenuDivider />
       <MenuItem
-        text={formatMessage({ id: 'delete_exchange_rate' })}
+        text={intl.get('delete_exchange_rate')}
         intent={Intent.DANGER}
         onClick={safeCallback(onDeleteExchangeRate, original)}
         icon={<Icon icon="trash-16" iconSize={16} />}
@@ -55,26 +55,26 @@ export function TableActionsCell(props) {
 }
 
 export function useExchangeRatesTableColumns() {
-  const { formatMessage } = useIntl();
+  
 
   return useMemo(
     () => [
       {
         id: 'date',
-        Header: formatMessage({ id: 'date' }),
+        Header: intl.get('date'),
         accessor: (r) => moment(r.date).format('YYYY MMM DD'),
         width: 150,
       },
       {
         id: 'currency_code',
-        Header: formatMessage({ id: 'currency_code' }),
+        Header: intl.get('currency_code'),
         accessor: 'currency_code',
         className: 'currency_code',
         width: 150,
       },
       {
         id: 'exchange_rate',
-        Header: formatMessage({ id: 'exchange_rate' }),
+        Header: intl.get('exchange_rate'),
         accessor: (r) => (
           <Money amount={r.exchange_rate} currency={r.currency_code} />
         ),
@@ -89,6 +89,6 @@ export function useExchangeRatesTableColumns() {
         width: 50,
       },
     ],
-    [formatMessage],
+    [],
   );
 }

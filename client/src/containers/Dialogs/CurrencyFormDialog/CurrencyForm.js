@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { AppToaster } from 'components';
 import CurrencyFormContent from './CurrencyFormContent';
 
@@ -27,8 +28,6 @@ function CurrencyForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { formatMessage } = useIntl();
-
   const {
     createCurrencyMutate,
     editCurrencyMutate,
@@ -62,18 +61,22 @@ function CurrencyForm({
     // Handle the request success.
     const onSuccess = ({ response }) => {
       AppToaster.show({
-        message: formatMessage({
-          id: isEditMode
+        message: intl.get(
+          isEditMode
             ? 'the_currency_has_been_edited_successfully'
             : 'the_currency_has_been_created_successfully',
-        }),
+        ),
         intent: Intent.SUCCESS,
       });
       afterSubmit(response);
     };
     // Handle the response error.
-    const onError = ({ response: { data: { errors } } }) => {
-      if (errors.find(e => e.type === 'CURRENCY_CODE_EXISTS')) {
+    const onError = ({
+      response: {
+        data: { errors },
+      },
+    }) => {
+      if (errors.find((e) => e.type === 'CURRENCY_CODE_EXISTS')) {
         AppToaster.show({
           message: 'The given currency code is already exists.',
           intent: Intent.DANGER,

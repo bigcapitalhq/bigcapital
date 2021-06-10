@@ -11,5 +11,6 @@ export default (req: Request, res: Response, next: NextFunction) => {
   }
   Logger.info('[i18n_middleware] set locale language to i18n.', { language, user: req.user });
   i18n.setLocale(req, language);
+
   next();
 };

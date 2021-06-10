@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icon, For } from 'components';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import footerLinks from 'config/footerLinks';
 import { useAuthActions, useAuthOrganizationId } from 'hooks/state';

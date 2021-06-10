@@ -10,7 +10,8 @@ import {
   PopoverInteractionKind,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
 
 import { If } from 'components';
@@ -43,7 +44,7 @@ function ExchangeRateActionsBar({
   onBulkDelete,
 }) {
   const [filterCount, setFilterCount] = useState(0);
-  const { formatMessage } = useIntl();
+  
 
   const onClickNewExchangeRate = () => {
     openDialog('exchangeRate-form', {});
@@ -95,7 +96,7 @@ function ExchangeRateActionsBar({
               filterCount <= 0 ? (
                 <T id={'filter'} />
               ) : (
-                `${filterCount} ${formatMessage({ id: 'filters_applied' })}`
+                `${filterCount} ${intl.get('filters_applied')}`
               )
             }
             icon={<Icon icon="filter-16" iconSize={16} />}

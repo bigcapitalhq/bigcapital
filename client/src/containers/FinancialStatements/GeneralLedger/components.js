@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
 import { Icon, If } from 'components';
 import { getForceWidth, getColumnWidth } from 'utils';
@@ -10,7 +10,7 @@ import FinancialLoadingBar from '../FinancialLoadingBar';
  * Retrieve the general ledger table columns.
  */
 export function useGeneralLedgerTableColumns() {
-  const { formatMessage } = useIntl();
+  
 
   // General ledger context.
   const {
@@ -20,7 +20,7 @@ export function useGeneralLedgerTableColumns() {
   return React.useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'date' }),
+        Header: intl.get('date'),
         accessor: (row) => {
           if (row.rowType === 'ACCOUNT_ROW') {
             return (
@@ -38,33 +38,33 @@ export function useGeneralLedgerTableColumns() {
         width: 120,
       },
       {
-        Header: formatMessage({ id: 'account_name' }),
+        Header: intl.get('account_name'),
         accessor: 'name',
         className: 'name',
         textOverview: true,
         // width: 200,
       },
       {
-        Header: formatMessage({ id: 'transaction_type' }),
+        Header: intl.get('transaction_type'),
         accessor: 'reference_type_formatted',
         className: 'transaction_type',
         width: 125,
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'transaction_number' }),
+        Header: intl.get('transaction_number'),
         accessor: 'reference_id',
         className: 'transaction_number',
         width: 100,
       },
       {
-        Header: formatMessage({ id: 'description' }),
+        Header: intl.get('description'),
         accessor: 'note',
         className: 'description',
         // width: 145,
       },
       {
-        Header: formatMessage({ id: 'credit' }),
+        Header: intl.get('credit'),
         accessor: 'formatted_credit',
         className: 'credit',
         width: getColumnWidth(tableRows, 'formatted_credit', {
@@ -74,7 +74,7 @@ export function useGeneralLedgerTableColumns() {
         }),
       },
       {
-        Header: formatMessage({ id: 'debit' }),
+        Header: intl.get('debit'),
         accessor: 'formatted_debit',
         className: 'debit',
         width: getColumnWidth(tableRows, 'formatted_debit', {
@@ -83,7 +83,7 @@ export function useGeneralLedgerTableColumns() {
         }),
       },
       {
-        Header: formatMessage({ id: 'amount' }),
+        Header: intl.get('amount'),
         accessor: 'formatted_amount',
         className: 'amount',
         width: getColumnWidth(tableRows, 'formatted_amount', {
@@ -92,7 +92,7 @@ export function useGeneralLedgerTableColumns() {
         }),
       },
       {
-        Header: formatMessage({ id: 'running_balance' }),
+        Header: intl.get('running_balance'),
         accessor: 'formatted_running_balance',
         className: 'running_balance',
         width: getColumnWidth(tableRows, 'formatted_running_balance', {
@@ -101,7 +101,7 @@ export function useGeneralLedgerTableColumns() {
         }),
       },
     ],
-    [formatMessage, tableRows],
+    [tableRows],
   );
 }
 

@@ -7,7 +7,7 @@ import {
   Classes,
   Checkbox,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import { Row, Col, FieldHint } from 'components';
 import {

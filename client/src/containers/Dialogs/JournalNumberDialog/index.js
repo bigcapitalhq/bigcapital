@@ -1,5 +1,5 @@
 import React, { lazy } from 'react';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { Dialog, DialogSuspense } from 'components';
 import withDialogRedux from 'components/DialogReduxConnect';
 import { saveInvoke, compose } from 'utils';

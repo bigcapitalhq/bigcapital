@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { If } from 'components';
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
@@ -17,7 +17,7 @@ export const useVendorsTransactionsColumns = () => {
   return React.useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'vendor_name' }),
+        Header: intl.get('vendor_name'),
         accessor: ({ cells }) => {
           return (
             <span
@@ -33,26 +33,26 @@ export const useVendorsTransactionsColumns = () => {
         // width: 240,
       },
       {
-        Header: formatMessage({ id: 'account_name' }),
+        Header: intl.get('account_name'),
         accessor: 'cells[1].value',
         className: 'name',
         textOverview: true,
         width: 170,
       },
       {
-        Header: formatMessage({ id: 'reference_type' }),
+        Header: intl.get('reference_type'),
         accessor: 'cells[2].value',
         textOverview: true,
         width: 120,
       },
       {
-        Header: formatMessage({ id: 'transaction_type' }),
+        Header: intl.get('transaction_type'),
         accessor: 'cells[3].value',
         textOverview: true,
         width: 120,
       },
       {
-        Header: formatMessage({ id: 'credit' }),
+        Header: intl.get('credit'),
         accessor: 'cells[4].value',
         className: 'credit',
         textOverview: true,
@@ -62,7 +62,7 @@ export const useVendorsTransactionsColumns = () => {
         }),
       },
       {
-        Header: formatMessage({ id: 'debit' }),
+        Header: intl.get('debit'),
         accessor: 'cells[5].value',
         className: 'debit',
         textOverview: true,
@@ -72,7 +72,7 @@ export const useVendorsTransactionsColumns = () => {
         }),
       },
       {
-        Header: formatMessage({ id: 'running_balance' }),
+        Header: intl.get('running_balance'),
         accessor: 'cells[6].value',
         className: 'running_balance',
         textOverview: true,
@@ -82,7 +82,7 @@ export const useVendorsTransactionsColumns = () => {
         }),
       },
     ],
-    [tableRows, formatMessage],
+    [tableRows],
   );
 };
 

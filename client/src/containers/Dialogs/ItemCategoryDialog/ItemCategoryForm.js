@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
 
@@ -30,7 +30,7 @@ function ItemCategoryForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { formatMessage } = useIntl();
+  
   const {
     isNewMode,
     itemCategory,
@@ -53,7 +53,7 @@ function ItemCategoryForm({
   const transformErrors = (errors, { setErrors }) => {
     if (errors.find((error) => error.type === 'CATEGORY_NAME_EXISTS')) {
       setErrors({
-        name: formatMessage({ id: 'category_name_exists' }),
+        name: intl.get('category_name_exists'),
       });
     }
   };
@@ -70,11 +70,11 @@ function ItemCategoryForm({
     // Handle the response success.
     const onSuccess = ({ response }) => {
       AppToaster.show({
-        message: formatMessage({
-          id: isNewMode
+        message: intl.get(
+          isNewMode
             ? 'the_item_category_has_been_created_successfully'
             : 'the_item_category_has_been_edited_successfully',
-        }),
+        ),
         intent: Intent.SUCCESS,
       });
       afterSubmit(response);

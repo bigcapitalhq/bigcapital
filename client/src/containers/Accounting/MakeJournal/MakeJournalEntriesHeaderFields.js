@@ -7,7 +7,7 @@ import {
 } from '@blueprintjs/core';
 import { FastField, ErrorMessage } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';

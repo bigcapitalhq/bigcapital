@@ -11,7 +11,8 @@ import {
   Classes,
   Intent,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
 import { If, DashboardActionViewsList } from 'components';
@@ -41,7 +42,7 @@ function ItemsActionsBar({
   const { itemsViews } = useItemsListContext();
 
   // React intl.
-  const { formatMessage } = useIntl();
+  
 
   // History context.
   const history = useHistory();
@@ -86,7 +87,7 @@ function ItemsActionsBar({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={`${formatMessage({ id: 'filter' })}`}
+            text={`${intl.get('filter')}`}
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>

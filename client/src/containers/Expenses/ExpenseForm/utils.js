@@ -1,6 +1,6 @@
 import { AppToaster } from 'components';
 import moment from 'moment';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { transformToForm, repeatValue } from 'utils';
 
 const ERROR = {
@@ -14,9 +14,7 @@ export const transformErrors = (errors, { setErrors }) => {
   if (hasError(ERROR.EXPENSE_ALREADY_PUBLISHED)) {
     setErrors(
       AppToaster.show({
-        message: formatMessage({
-          id: 'the_expense_is_already_published',
-        }),
+        message: intl.get('the_expense_is_already_published'),
       }),
     );
   }

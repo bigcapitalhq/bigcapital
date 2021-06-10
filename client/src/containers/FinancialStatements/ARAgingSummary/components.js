@@ -1,7 +1,7 @@
 import React from 'react';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import { getColumnWidth } from 'utils';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { If } from 'components';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 

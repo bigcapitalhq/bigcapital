@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import ListSelect from 'components/ListSelect';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 function PaymentReceiveListField({
   invoices,

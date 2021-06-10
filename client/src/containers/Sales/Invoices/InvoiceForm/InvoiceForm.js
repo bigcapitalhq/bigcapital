@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { sumBy, omit, isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from 'common/classes';
 import {
-  CreateInvoiceFormSchema,
-  EditInvoiceFormSchema,
+  getCreateInvoiceFormSchema,
+  getEditInvoiceFormSchema,
 } from './InvoiceForm.schema';
 
 import InvoiceFormHeader from './InvoiceFormHeader';
@@ -36,7 +36,6 @@ function InvoiceForm({
   invoiceIncrementMode,
   baseCurrency,
 }) {
-  const { formatMessage } = useIntl();
   const history = useHistory();
 
   // Invoice form context.
@@ -85,7 +84,7 @@ function InvoiceForm({
     // Throw danger toaster in case total quantity equals zero.
     if (totalQuantity === 0) {
       AppToaster.show({
-        message: formatMessage({ id: 'quantity_cannot_be_zero_or_empty' }),
+        message: intl.get('quantity_cannot_be_zero_or_empty'),
         intent: Intent.DANGER,
       });
       setSubmitting(false);
@@ -103,12 +102,10 @@ function InvoiceForm({
     // Handle the request success.
     const onSuccess = () => {
       AppToaster.show({
-        message: formatMessage(
-          {
-            id: isNewMode
-              ? 'the_invoice_has_been_created_successfully'
-              : 'the_invoice_has_been_edited_successfully',
-          },
+        message: intl.get(
+          isNewMode
+            ? 'the_invoice_has_been_created_successfully'
+            : 'the_invoice_has_been_edited_successfully',
           { number: values.invoice_no },
         ),
         intent: Intent.SUCCESS,
@@ -140,6 +137,9 @@ function InvoiceForm({
       createInvoiceMutate(form).then(onSuccess).catch(onError);
     }
   };
+
+  const CreateInvoiceFormSchema = getCreateInvoiceFormSchema();
+  const EditInvoiceFormSchema = getEditInvoiceFormSchema();
 
   return (
     <div

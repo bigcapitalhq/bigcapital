@@ -10,7 +10,7 @@ import {
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { ErrorMessage, FastField } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useHistory } from 'react-router-dom';
 import { ListSelect, FieldRequiredHint } from 'components';
@@ -23,12 +23,13 @@ import {
 import { CLASSES } from 'common/classes';
 import countriesOptions from 'common/countries';
 import currencies from 'common/currencies';
-import fiscalYearOptions from 'common/fiscalYearOptions';
+import { getFiscalYearOptions } from 'common/fiscalYearOptions';
 import languages from 'common/languagesOptions';
 import dateFormatsOptions from 'common/dateFormatsOptions';
 
 export default function PreferencesGeneralForm({}) {
   const history = useHistory();
+  const fiscalYearOptions = getFiscalYearOptions();
 
   const handleCloseClick = () => {
     history.go(-1);

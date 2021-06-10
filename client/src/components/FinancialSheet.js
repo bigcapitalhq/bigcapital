@@ -1,7 +1,8 @@
 import React, { useMemo, useCallback } from 'react';
 import moment from 'moment';
 import classnames from 'classnames';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import 'style/pages/FinancialStatements/FinancialSheet.scss';
 
@@ -23,7 +24,7 @@ export default function FinancialSheet({
   fullWidth = false,
   currentDate = true,
 }) {
-  const { formatMessage } = useIntl();
+  
   const format = 'DD MMMM YYYY';
   const formattedFromDate = useMemo(() => moment(fromDate).format(format), [
     fromDate,
@@ -38,10 +39,10 @@ export default function FinancialSheet({
   const nameModifer = name ? `financial-sheet--${name}` : '';
   const methodsLabels = useMemo(
     () => ({
-      cash: formatMessage({ id: 'cash' }),
-      accrual: formatMessage({ id: 'accrual' }),
+      cash: intl.get('cash'),
+      accrual: intl.get('accrual'),
     }),
-    [formatMessage],
+    [],
   );
   const getBasisLabel = useCallback((b) => methodsLabels[b], [methodsLabels]);
   const basisLabel = useMemo(() => getBasisLabel(basis), [

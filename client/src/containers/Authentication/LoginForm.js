@@ -7,7 +7,7 @@ import {
   Checkbox,
 } from '@blueprintjs/core';
 import { Form, ErrorMessage, Field } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { T } from 'components';
 import { inputIntent } from 'utils';
 import { PasswordRevealer } from './components';
 

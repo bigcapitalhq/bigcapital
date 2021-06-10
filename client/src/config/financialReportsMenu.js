@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 export const financialReportMenus = [
   {
@@ -66,7 +66,7 @@ export const SalesAndPurchasesReportMenus = [
         desc: (
           <T
             id={
-              'shows_the_average_age_of_unresolved_issues_for_a_project_or_filter'
+              'summarize_the_business_s_purchase_items_quantity_cost_and_average'
             }
           />
         ),
@@ -107,7 +107,9 @@ export const SalesAndPurchasesReportMenus = [
       },
       {
         title: <T id={'vendors_balance_summary'} />,
-        desc: 'summerize_the_total_amount_your_business_owes_each_vendor',
+        desc: (
+          <T id={'summerize_the_total_amount_your_business_owes_each_vendor'} />
+        ),
         link: '/financial-reports/vendors-balance-summary',
       },
       {

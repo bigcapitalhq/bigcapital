@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { useDeliverInvoice } from 'hooks/query';
@@ -23,7 +24,7 @@ function InvoiceDeliverAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const {
     mutateAsync: deliverInvoiceMutate,
     isLoading
@@ -39,9 +40,7 @@ function InvoiceDeliverAlert({
     deliverInvoiceMutate(invoiceId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_invoice_has_been_delivered_successfully',
-          }),
+          message: intl.get('the_invoice_has_been_delivered_successfully'),
           intent: Intent.SUCCESS,
         });
       })

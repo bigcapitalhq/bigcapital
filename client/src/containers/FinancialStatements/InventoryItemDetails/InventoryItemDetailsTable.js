@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 import classNames from 'classnames';
 
@@ -38,7 +38,7 @@ export default function InventoryItemDetailsTable({
     <FinancialSheet
       name="inventory-item-details"
       companyName={companyName}
-      sheetType={formatMessage({ id: 'inventory_item_details' })}
+      sheetType={intl.get('inventory_item_details')}
       loading={isInventoryItemDetailsLoading}
       fromDate={query.from_date}
       toDate={query.to_date}

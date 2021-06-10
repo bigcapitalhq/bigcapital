@@ -27,7 +27,8 @@ export default class JournalSheet extends FinancialSheet {
     journal: IJournalPoster,
     accountsGraph: any,
     contactsById: Map<number | string, IContact>,
-    baseCurrency: string
+    baseCurrency: string,
+    i18n
   ) {
     super();
 
@@ -38,6 +39,7 @@ export default class JournalSheet extends FinancialSheet {
     this.accountsGraph = accountsGraph;
     this.contactsById = contactsById;
     this.baseCurrency = baseCurrency;
+    this.i18n = i18n;
   }
 
   /**
@@ -96,7 +98,7 @@ export default class JournalSheet extends FinancialSheet {
       date: groupEntry.date,
       referenceType: groupEntry.referenceType,
       referenceId: groupEntry.referenceId,
-      referenceTypeFormatted: groupEntry.referenceTypeFormatted,
+      referenceTypeFormatted: this.i18n.__(groupEntry.referenceTypeFormatted),
 
       entries: this.entriesMapper(entriesGroup),
 

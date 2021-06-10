@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { pick } from 'lodash';
 

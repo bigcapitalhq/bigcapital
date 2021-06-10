@@ -4,7 +4,7 @@ import { pick } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 
 import { AppToaster } from 'components';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -28,7 +28,7 @@ function AccountantFormPage({
   accountsSettings,
   billPaymentSettings,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   const { saveSettingMutate } = useAccountantFormContext();
 
@@ -44,7 +44,7 @@ function AccountantFormPage({
   };
 
   useEffect(() => {
-    changePreferencesPageTitle(formatMessage({ id: 'accountant' }));
+    changePreferencesPageTitle(intl.get('accountant'));
   }, [changePreferencesPageTitle]);
 
   const handleFormSubmit = (values, { setSubmitting }) => {
@@ -53,9 +53,7 @@ function AccountantFormPage({
     setSubmitting(true);
     const onSuccess = () => {
       AppToaster.show({
-        message: formatMessage({
-          id: 'the_accountant_preferences_has_been_saved',
-        }),
+        message: intl.get('the_accountant_preferences_has_been_saved'),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import PropTypes from 'prop-types';
 import { Button, Tabs, Tab, Tooltip, Position } from '@blueprintjs/core';
 import { useHistory } from 'react-router';

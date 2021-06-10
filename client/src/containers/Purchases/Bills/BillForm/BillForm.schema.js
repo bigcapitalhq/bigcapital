@@ -1,27 +1,27 @@
 import * as Yup from 'yup';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
 import { isBlank } from 'utils';
 
 const BillFormSchema = Yup.object().shape({
   vendor_id: Yup.number()
     .required()
-    .label(formatMessage({ id: 'vendor_name_' })),
+    .label(intl.get('vendor_name_')),
   bill_date: Yup.date()
     .required()
-    .label(formatMessage({ id: 'bill_date_' })),
+    .label(intl.get('bill_date_')),
   due_date: Yup.date()
     .required()
-    .label(formatMessage({ id: 'due_date_' })),
+    .label(intl.get('due_date_')),
   bill_number: Yup.string()
     .max(DATATYPES_LENGTH.STRING)
-    .label(formatMessage({ id: 'bill_number_' })),
+    .label(intl.get('bill_number_')),
   reference_no: Yup.string().nullable().min(1).max(DATATYPES_LENGTH.STRING),
   note: Yup.string()
     .trim()
     .min(1)
     .max(DATATYPES_LENGTH.TEXT)
-    .label(formatMessage({ id: 'note' })),
+    .label(intl.get('note')),
   open: Yup.boolean(),
   entries: Yup.array().of(
     Yup.object().shape({

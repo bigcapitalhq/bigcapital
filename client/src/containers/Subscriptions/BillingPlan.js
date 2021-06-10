@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import 'style/pages/Subscription/PlanRadio.scss';
 

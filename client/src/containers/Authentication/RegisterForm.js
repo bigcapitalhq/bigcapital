@@ -7,7 +7,7 @@ import {
   Spinner,
 } from '@blueprintjs/core';
 import { ErrorMessage, Field, Form } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { Link } from 'react-router-dom';
 import { Row, Col, If } from 'components';
 import { PasswordRevealer } from './components';

@@ -1,5 +1,5 @@
 import { Intent } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import AppToaster from 'components/AppToaster';
 
 import withGlobalErrors from './withGlobalErrors';
@@ -16,11 +16,9 @@ function GlobalErrors({
   // #withGlobalErrorsActions
   globalErrorsSet,
 }) {
-  const { formatMessage } = useIntl();
-
   if (globalErrors.something_wrong) {
     toastKeySessionExpired = AppToaster.show({
-      message: formatMessage({ id: 'ops_something_went_wrong' }),
+      message: intl.get('ops_something_went_wrong'),
       intent: Intent.DANGER,
       onDismiss: () => {
         globalErrorsSet({ something_wrong: false });
@@ -30,7 +28,7 @@ function GlobalErrors({
 
   if (globalErrors.session_expired) {
     toastKeySomethingWrong = AppToaster.show({
-      message: formatMessage({ id: 'session_expired' }),
+      message: intl.get('session_expired'),
       intent: Intent.DANGER,
       onDismiss: () => {
         globalErrorsSet({ session_expired: false });

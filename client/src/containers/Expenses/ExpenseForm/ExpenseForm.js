@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Intent } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { defaultTo, sumBy, isEmpty } from 'lodash';
 import { Formik, Form } from 'formik';
 import classNames from 'classnames';
@@ -44,7 +44,6 @@ function ExpenseForm({
   } = useExpenseFormContext();
 
   const isNewMode = !expenseId;
-  const { formatMessage } = useIntl();
 
   // History context.
   const history = useHistory();
@@ -73,9 +72,7 @@ function ExpenseForm({
 
     if (totalAmount <= 0) {
       AppToaster.show({
-        message: formatMessage({
-          id: 'amount_cannot_be_zero_or_empty',
-        }),
+        message: intl.get('amount_cannot_be_zero_or_empty'),
         intent: Intent.DANGER,
       });
       return;
@@ -93,12 +90,10 @@ function ExpenseForm({
     // Handle request success.
     const handleSuccess = (response) => {
       AppToaster.show({
-        message: formatMessage(
-          {
-            id: isNewMode
-              ? 'the_expense_has_been_created_successfully'
-              : 'the_expense_has_been_edited_successfully',
-          },
+        message: intl.get(
+          isNewMode
+            ? 'the_expense_has_been_created_successfully'
+            : 'the_expense_has_been_edited_successfully',
           { number: values.payment_account_id },
         ),
         intent: Intent.SUCCESS,

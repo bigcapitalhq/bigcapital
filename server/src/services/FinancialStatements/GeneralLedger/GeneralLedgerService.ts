@@ -106,6 +106,7 @@ export default class GeneralLedgerService {
       contactRepository
     } = this.tenancy.repositories(tenantId);
     const settings = this.tenancy.settings(tenantId);
+    const i18n = this.tenancy.i18n(tenantId);
 
     const filter = {
       ...this.defaultQuery,
@@ -157,7 +158,8 @@ export default class GeneralLedgerService {
       contactsByIdMap,
       transactionsJournal,
       openingTransJournal,
-      baseCurrency
+      baseCurrency,
+      i18n
     );
     // Retrieve general ledger report data.
     const reportData = generalLedgerInstance.reportData();

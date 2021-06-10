@@ -4,8 +4,9 @@ import { Link, useHistory } from 'react-router-dom';
 import {
   Intent,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 
+import { FormattedMessage as T } from 'components';
 import AppToaster from 'components/AppToaster';
 import AuthInsider from 'containers/Authentication/AuthInsider';
 import { useAuthLogin, useAuthRegister } from '../../hooks/query/authentication';
@@ -17,7 +18,6 @@ import { RegisterSchema, transformRegisterErrorsToForm } from './utils';
  * Register form.
  */
 export default function RegisterUserForm() {
-  const { formatMessage } = useIntl();
   const history = useHistory();
 
   const { mutateAsync: authLoginMutate }  = useAuthLogin();
@@ -48,7 +48,7 @@ export default function RegisterUserForm() {
           })
           .catch(({ response: { data: { errors } } }) => {
             AppToaster.show({
-              message: formatMessage({ id: 'something_wentwrong' }),
+              message: intl.get('something_wentwrong'),
               intent: Intent.SUCCESS,
             });
           });

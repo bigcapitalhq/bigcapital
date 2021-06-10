@@ -2,7 +2,7 @@ import React, { useMemo, useCallback, useState } from 'react';
 import { MenuItem, Button } from '@blueprintjs/core';
 import { omit } from 'lodash';
 import MultiSelect from 'components/MultiSelect';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 export default function ContactsMultiSelect({
   contacts,

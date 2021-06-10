@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 
 import  {UsersListProvider } from './UsersProvider';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -15,11 +15,10 @@ function UsersListPreferences({
   // #withDashboardActions
   changePreferencesPageTitle,
 }) {
-  const { formatMessage } = useIntl();
 
   useEffect(() => {
-    changePreferencesPageTitle(formatMessage({ id: 'users' }));
-  }, [changePreferencesPageTitle, formatMessage]);
+    changePreferencesPageTitle(intl.get('users'));
+  }, [changePreferencesPageTitle]);
 
   return (
     <UsersListProvider>

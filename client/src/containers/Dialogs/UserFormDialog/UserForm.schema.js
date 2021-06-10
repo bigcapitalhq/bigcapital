@@ -1,21 +1,21 @@
 import * as Yup from 'yup';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 const Schema = Yup.object().shape({
   email: Yup.string()
     .email()
     .required()
-    .label(formatMessage({ id: 'email' })),
+    .label(intl.get('email')),
   first_name: Yup.string()
     .required()
-    .label(formatMessage({ id: 'first_name_' })),
+    .label(intl.get('first_name_')),
   last_name: Yup.string()
     .required()
-    .label(formatMessage({ id: 'last_name_' })),
+    .label(intl.get('last_name_')),
   phone_number: Yup.string()
     .matches()
     .required()
-    .label(formatMessage({ id: 'phone_number_' })),
+    .label(intl.get('phone_number_')),
 });
 
 export const UserFormSchema = Schema;

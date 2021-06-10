@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { getColumnWidth } from 'utils';
 import { If } from 'components';
 import { CellTextSpan } from 'components/Datatable/Cells';
@@ -11,7 +11,7 @@ import FinancialLoadingBar from '../FinancialLoadingBar';
  */
 
 export const useInventoryValuationTableColumns = () => {
-  const { formatMessage } = useIntl();
+  
 
   // inventory valuation context
   const {
@@ -21,14 +21,14 @@ export const useInventoryValuationTableColumns = () => {
   return useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'item_name' }),
+        Header: intl.get('item_name'),
         accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'name',
         width: 240,
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'quantity' }),
+        Header: intl.get('quantity'),
         accessor: 'quantity_formatted',
         Cell: CellTextSpan,
         className: 'quantity_formatted',
@@ -38,7 +38,7 @@ export const useInventoryValuationTableColumns = () => {
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'asset_value' }),
+        Header: intl.get('asset_value'),
         accessor: 'valuation_formatted',
         Cell: CellTextSpan,
         className: 'valuation',
@@ -48,7 +48,7 @@ export const useInventoryValuationTableColumns = () => {
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'average' }),
+        Header: intl.get('average'),
         accessor: 'average_formatted',
         Cell: CellTextSpan,
         className: 'average_formatted',
@@ -58,7 +58,7 @@ export const useInventoryValuationTableColumns = () => {
         textOverview: true,
       },
     ],
-    [tableRows, formatMessage],
+    [tableRows],
   );
 };
 

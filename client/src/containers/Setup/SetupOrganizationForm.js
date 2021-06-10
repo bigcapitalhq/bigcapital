@@ -12,7 +12,7 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import { FieldRequiredHint, Col, Row, ListSelect } from 'components';
 import {
@@ -22,7 +22,7 @@ import {
   handleDateChange
 } from 'utils';
 
-import fiscalYearOptions from 'common/fiscalYearOptions';
+import { getFiscalYearOptions } from 'common/fiscalYearOptions';
 import languages from 'common/languagesOptions';
 import currencies from 'common/currencies';
 
@@ -31,6 +31,8 @@ import currencies from 'common/currencies';
  * Setup organization form.
  */
 export default function SetupOrganizationForm({ isSubmitting, values }) {
+  const fiscalYearOptions = getFiscalYearOptions();
+
   return (
     <Form>
       <h3>

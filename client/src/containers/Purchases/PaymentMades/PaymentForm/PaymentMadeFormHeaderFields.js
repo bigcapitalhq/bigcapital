@@ -9,7 +9,7 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { toSafeInteger } from 'lodash';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';

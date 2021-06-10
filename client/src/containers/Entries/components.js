@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Tooltip, Button, Intent, Position } from '@blueprintjs/core';
 import { Hint, Icon } from 'components';
 import { formattedAmount, safeSumBy } from 'utils';
@@ -89,7 +90,7 @@ export function IndexTableCell({ row: { index } }) {
  * Retrieve editable items entries columns.
  */
 export function useEditableItemsEntriesColumns() {
-  const { formatMessage } = useIntl();
+  
 
   return React.useMemo(
     () => [
@@ -113,7 +114,7 @@ export function useEditableItemsEntriesColumns() {
         className: 'item',
       },
       {
-        Header: formatMessage({ id: 'description' }),
+        Header: intl.get('description'),
         accessor: 'description',
         Cell: InputGroupCell,
         disableSortBy: true,
@@ -121,7 +122,7 @@ export function useEditableItemsEntriesColumns() {
         width: 120,
       },
       {
-        Header: formatMessage({ id: 'quantity' }),
+        Header: intl.get('quantity'),
         accessor: 'quantity',
         Cell: NumericInputCell,
         Footer: QuantityTotalFooterCell,
@@ -130,7 +131,7 @@ export function useEditableItemsEntriesColumns() {
         className: 'quantity',
       },
       {
-        Header: formatMessage({ id: 'rate' }),
+        Header: intl.get('rate'),
         accessor: 'rate',
         Cell: MoneyFieldCell,
         disableSortBy: true,
@@ -138,7 +139,7 @@ export function useEditableItemsEntriesColumns() {
         className: 'rate',
       },
       {
-        Header: formatMessage({ id: 'discount' }),
+        Header: intl.get('discount'),
         accessor: 'discount',
         Cell: PercentFieldCell,
         disableSortBy: true,
@@ -146,7 +147,7 @@ export function useEditableItemsEntriesColumns() {
         className: 'discount',
       },
       {
-        Header: formatMessage({ id: 'total' }),
+        Header: intl.get('total'),
         Footer: TotalFooterCell,
         accessor: 'total',
         Cell: TotalCell,
@@ -164,6 +165,6 @@ export function useEditableItemsEntriesColumns() {
         width: 45,
       },
     ],
-    [formatMessage],
+    [],
   );
 }

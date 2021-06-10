@@ -1,6 +1,7 @@
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { useAutofocus } from 'hooks';
 import {
   Classes,
@@ -40,7 +41,7 @@ function QuickPaymentReceiveFormFields({
   const { accounts } = useQuickPaymentReceiveContext();
 
   // Intl context.
-  const { formatMessage } = useIntl();
+  
   const paymentReceiveFieldRef = useAutofocus();
 
   return (
@@ -168,9 +169,7 @@ function QuickPaymentReceiveFormFields({
                     form.setFieldValue('deposit_account_id', id)
                   }
                   inputProps={{
-                    placeholder: formatMessage({
-                      id: 'select_account',
-                    }),
+                    placeholder: intl.get('select_account'),
                   }}
                   filterByTypes={[
                     ACCOUNT_TYPE.CASH,

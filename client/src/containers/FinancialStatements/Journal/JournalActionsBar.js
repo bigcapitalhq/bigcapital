@@ -8,7 +8,7 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import classNames from 'classnames';

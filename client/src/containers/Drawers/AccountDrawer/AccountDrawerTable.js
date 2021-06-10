@@ -3,7 +3,7 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
 
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { DataTable, Money } from 'components';
 import { isBlank, compose } from 'utils';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
@@ -21,17 +21,17 @@ function AccountDrawerTable({ closeDrawer }) {
   const columns = React.useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'transaction_date' }),
+        Header: intl.get('transaction_date'),
         accessor: ({ date }) => moment(date).format('YYYY MMM DD'),
         width: 110,
       },
       {
-        Header: formatMessage({ id: 'transaction_type' }),
+        Header: intl.get('transaction_type'),
         accessor: 'reference_type_formatted',
         width: 100,
       },
       {
-        Header: formatMessage({ id: 'credit' }),
+        Header: intl.get('credit'),
         accessor: ({ credit }) =>
           !isBlank(credit) && credit !== 0 ? (
             <Money amount={credit} currency={currency_code} />
@@ -39,7 +39,7 @@ function AccountDrawerTable({ closeDrawer }) {
         width: 80,
       },
       {
-        Header: formatMessage({ id: 'debit' }),
+        Header: intl.get('debit'),
         accessor: ({ debit }) =>
           !isBlank(debit) && debit !== 0 ? (
             <Money amount={debit} currency={currency_code} />
@@ -47,7 +47,7 @@ function AccountDrawerTable({ closeDrawer }) {
         width: 80,
       },
       {
-        Header: formatMessage({ id: 'running_balance' }),
+        Header: intl.get('running_balance'),
         accessor: ({ running_balance }) => (
           <Money amount={running_balance} currency={currency_code} />
         ),
@@ -71,7 +71,7 @@ function AccountDrawerTable({ closeDrawer }) {
           to={`/financial-reports/general-ledger`}
           onClick={handleLinkClick}
         >
-          ←{formatMessage({ id: 'view_more_transactions' })}
+          ←{intl.get('view_more_transactions')}
         </Link>
       </div>
     </div>

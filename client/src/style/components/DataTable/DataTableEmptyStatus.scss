@@ -14,12 +14,20 @@
     margin-right: auto;
     margin-top: 0;
     line-height: 1.4;
+
+    html[lang='ar'] & {
+      font-size: 22px;
+    }
   }
   &__desc {
     font-size: 16px;
     color: #1f3255;
     opacity: 0.8;
     line-height: 1.6;
+
+    html[lang='ar'] & {
+      font-size: 18px;
+    }
   }
   &__actions {
     margin-top: 26px;

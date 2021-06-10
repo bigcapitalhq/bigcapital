@@ -1,6 +1,6 @@
 import React from 'react';
 import { Classes, FormGroup, InputGroup, TextArea } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { ErrorMessage, FastField } from 'formik';
 
 import { useAutofocus } from 'hooks';

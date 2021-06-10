@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 import { CLASSES } from 'common/classes';
 
@@ -29,7 +29,7 @@ function BillFormHeader({
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <BillFormHeaderFields />
       <PageFormBigNumber
-        label={formatMessage({id:'due_amount'})}
+        label={intl.get('due_amount')}
         amount={totalDueAmount}
         currencyCode={baseCurrency}
       />

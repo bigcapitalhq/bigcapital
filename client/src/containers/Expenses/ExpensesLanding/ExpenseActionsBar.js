@@ -12,7 +12,7 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withDialogActions from 'containers/Dialog/withDialogActions';

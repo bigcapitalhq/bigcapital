@@ -8,7 +8,8 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import moment from 'moment';
 import { Money, Icon } from 'components';
 import { safeCallback } from 'utils';
@@ -20,27 +21,27 @@ export function ActionsMenu({
   row: { original: paymentReceive },
   payload: { onEdit, onDelete, onDrawer },
 }) {
-  const { formatMessage } = useIntl();
+  
 
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
-        text={formatMessage({ id: 'view_details' })}
+        text={intl.get('view_details')}
       />
       <MenuDivider />
       <MenuItem
         icon={<Icon icon="pen-18" />}
-        text={formatMessage({ id: 'edit_payment_receive' })}
+        text={intl.get('edit_payment_receive')}
         onClick={safeCallback(onEdit, paymentReceive)}
       />
       <MenuItem
         icon={<Icon icon={'receipt-24'} iconSize={16} />}
-        text={formatMessage({ id: 'payment_receive_paper' })}
+        text={intl.get('payment_receive_paper')}
         onClick={safeCallback(onDrawer, paymentReceive)}
       />
       <MenuItem
-        text={formatMessage({ id: 'delete_payment_receive' })}
+        text={intl.get('delete_payment_receive')}
         intent={Intent.DANGER}
         onClick={safeCallback(onDelete, paymentReceive)}
         icon={<Icon icon="trash-16" iconSize={16} />}
@@ -81,34 +82,34 @@ export function ActionsCell(props) {
  * Retrieve payment receives columns.
  */
 export function usePaymentReceivesColumns() {
-  const { formatMessage } = useIntl();
+  
 
   return React.useMemo(
     () => [
       {
         id: 'payment_date',
-        Header: formatMessage({ id: 'payment_date' }),
+        Header: intl.get('payment_date'),
         accessor: PaymentDateAccessor,
         width: 140,
         className: 'payment_date',
       },
       {
         id: 'customer',
-        Header: formatMessage({ id: 'customer_name' }),
+        Header: intl.get('customer_name'),
         accessor: 'customer.display_name',
         width: 160,
         className: 'customer_id',
       },
       {
         id: 'amount',
-        Header: formatMessage({ id: 'amount' }),
+        Header: intl.get('amount'),
         accessor: AmountAccessor,
         width: 120,
         className: 'amount',
       },
       {
         id: 'payment_receive_no',
-        Header: formatMessage({ id: 'payment_receive_no' }),
+        Header: intl.get('payment_receive_no'),
         accessor: (row) =>
           row.payment_receive_no ? `#${row.payment_receive_no}` : null,
         width: 140,
@@ -116,19 +117,19 @@ export function usePaymentReceivesColumns() {
       },
       {
         id: 'deposit_account',
-        Header: formatMessage({ id: 'deposit_account' }),
+        Header: intl.get('deposit_account'),
         accessor: 'deposit_account.name',
         width: 140,
         className: 'deposit_account_id',
       },
       {
         id: 'reference_no',
-        Header: formatMessage({ id: 'reference_no' }),
+        Header: intl.get('reference_no'),
         accessor: 'reference_no',
         width: 140,
         className: 'reference_no',
       }
     ],
-    [formatMessage],
+    [],
   );
 }

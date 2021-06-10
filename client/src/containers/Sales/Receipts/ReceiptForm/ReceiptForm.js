@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { omit, sumBy, isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
@@ -39,7 +39,6 @@ function ReceiptForm({
   preferredDepositAccount,
   baseCurrency,
 }) {
-  const { formatMessage } = useIntl();
   const history = useHistory();
 
   // Receipt form context.
@@ -78,9 +77,7 @@ function ReceiptForm({
   const handleErrors = (errors, { setErrors }) => {
     if (errors.some((e) => e.type === ERROR.SALE_RECEIPT_NUMBER_NOT_UNIQUE)) {
       setErrors({
-        receipt_number: formatMessage({
-          id: 'sale_receipt_number_not_unique',
-        }),
+        receipt_number: intl.get('sale_receipt_number_not_unique'),
       });
     }
   };
@@ -97,9 +94,7 @@ function ReceiptForm({
 
     if (totalQuantity === 0) {
       AppToaster.show({
-        message: formatMessage({
-          id: 'quantity_cannot_be_zero_or_empty',
-        }),
+        message: intl.get('quantity_cannot_be_zero_or_empty'),
         intent: Intent.DANGER,
       });
       setSubmitting(false);
@@ -117,12 +112,10 @@ function ReceiptForm({
     // Handle the request success.
     const onSuccess = (response) => {
       AppToaster.show({
-        message: formatMessage(
-          {
-            id: isNewMode
-              ? 'the_receipt_has_been_created_successfully'
-              : 'the_receipt_has_been_edited_successfully',
-          },
+        message: intl.get(
+          isNewMode
+            ? 'the_receipt_has_been_created_successfully'
+            : 'the_receipt_has_been_edited_successfully',
           { number: values.receipt_number },
         ),
         intent: Intent.SUCCESS,

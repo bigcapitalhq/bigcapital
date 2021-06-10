@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
@@ -14,7 +14,7 @@ export default function JournalSheetTable({
   onFetchData,
   companyName,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   // Journal sheet context.
   const {
@@ -47,7 +47,7 @@ export default function JournalSheetTable({
   return (
     <FinancialSheet
       companyName={companyName}
-      sheetType={formatMessage({ id: 'journal_sheet' })}
+      sheetType={intl.get('journal_sheet')}
       fromDate={query.from_date}
       toDate={query.to_date}
       name="journal"
@@ -60,9 +60,7 @@ export default function JournalSheetTable({
         columns={columns}
         data={tableRows}
         rowClassNames={rowClassNames}
-        noResults={formatMessage({
-          id: 'this_report_does_not_contain_any_data_between_date_period',
-        })}
+        noResults={intl.get('this_report_does_not_contain_any_data_between_date_period')}
         expanded={expandedRows}
         sticky={true}
         TableRowsRenderer={TableVirtualizedListRows}

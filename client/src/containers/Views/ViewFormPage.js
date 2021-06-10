@@ -2,7 +2,7 @@ import React, {useEffect, useState, useCallback} from 'react';
 import { useAsync } from 'react-use';
 import { useParams } from 'react-router-dom';
 import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedMessage as T, FormattedHTMLMessage, useIntl } from 'react-intl';
+import { FormattedMessage as T, FormattedHTMLMessage } from 'react-intl';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
@@ -33,7 +33,7 @@ function ViewFormPage({
   const { resource_slug: resourceSlug, view_id: viewId } = useParams();
   const [stateDeleteView, setStateDeleteView] = useState(null);
 
-  const { formatMessage } = useIntl();  
+    
 
   const fetchHook = useAsync(async () => {
     return Promise.all([
@@ -51,14 +51,14 @@ function ViewFormPage({
 
   useEffect(() => {
     if (viewId) {
-      changePageTitle(formatMessage({id:'edit_custom_view'}));
+      changePageTitle(intl.get('edit_custom_view'));
     } else {
-      changePageTitle(formatMessage({id:'new_custom_view'}));
+      changePageTitle(intl.get('new_custom_view'));
     }
     return () => {
       changePageTitle('');
     };
-  }, [viewId, changePageTitle,formatMessage]);
+  }, [viewId, changePageTitle]);
 
 
   // Handle delete view button click.
@@ -76,9 +76,7 @@ function ViewFormPage({
     requestDeleteView(stateDeleteView.id).then((response) => {
       setStateDeleteView(null);
       AppToaster.show({
-        message: formatMessage({
-          id: 'the_custom_view_has_been_deleted_successfully',
-        }),
+        message: intl.get('the_custom_view_has_been_deleted_successfully'),
         intent: Intent.SUCCESS,
       });
     })

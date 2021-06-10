@@ -27,6 +27,8 @@ const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 const CompressionPlugin = require("compression-webpack-plugin");
 
 const postcssNormalize = require('postcss-normalize');
+const { postcssRTLCSS} = require('postcss-rtlcss');
+
 
 const appPackageJson = require(paths.appPackageJson);
 
@@ -92,6 +94,14 @@ module.exports = function(webpackEnv) {
           // https://github.com/facebook/create-react-app/issues/2677
           ident: 'postcss',
           plugins: () => [
+            // Postcss rtlcss plugin.
+            // require( 'postcss-rtl' )({
+            //   // options here.
+            //   removeComments: false,
+            // }),
+            postcssRTLCSS({
+
+            }),    
             require('postcss-flexbugs-fixes'),
             require('postcss-preset-env')({
               autoprefixer: {
@@ -103,11 +113,6 @@ module.exports = function(webpackEnv) {
             // so that it honors browserslist config in package.json
             // which in turn let's users customize the target behavior as per their needs.
             postcssNormalize(),
-
-            // Postcss rtlcss plugin.
-            require( 'postcss-rtl' )({
-              // options here.
-            }),
           ],
           sourceMap: isEnvProduction && shouldUseSourceMap,
         },
@@ -125,6 +130,10 @@ module.exports = function(webpackEnv) {
           loader: require.resolve(preProcessor),
           options: {
             sourceMap: true,
+            sassOptions: {
+              sourceComments: true,
+              outputStyle: 'expanded'
+            }
           },
         }
       );

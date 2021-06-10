@@ -1,7 +1,7 @@
 import React from 'react';
 import { Classes, FormGroup, InputGroup } from '@blueprintjs/core';
 import { FastField } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';

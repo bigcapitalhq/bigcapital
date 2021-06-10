@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import { CellTextSpan } from 'components/Datatable/Cells';
 import { getColumnWidth } from 'utils';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 /**
  * Account name column mapper.
@@ -9,7 +9,7 @@ import { formatMessage } from 'services/intl';
 const accountNameMapper = (column) => ({
   id: column.key,
   key: column.key,
-  Header: formatMessage({ id: 'account_name' }),
+  Header: intl.get('account_name'),
   accessor: 'cells[0].value',
   className: 'account_name',
   textOverview: true,
@@ -36,7 +36,7 @@ const dateRangeMapper = (data, index, column) => ({
  */
 const totalMapper = (data, index, column) => ({
   key: 'total',
-  Header: formatMessage({ id: 'total' }),
+  Header: intl.get('total'),
   accessor: `cells[${index}].value`,
   className: 'total',
   textOverview: true,

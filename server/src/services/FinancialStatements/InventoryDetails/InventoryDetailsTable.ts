@@ -21,12 +21,16 @@ enum IROW_TYPE {
 const MAP_CONFIG = { childrenPath: 'children', pathFormat: 'array' };
 
 export default class InventoryDetailsTable {
+  i18n: any;
+  report: any;
+
   /**
    * Constructor method.
    * @param {ICashFlowStatement} reportStatement - Report statement.
    */
-  constructor(reportStatement) {
+  constructor(reportStatement, i18n) {
     this.report = reportStatement;
+    this.i18n = i18n;
   }
 
   /**
@@ -63,7 +67,10 @@ export default class InventoryDetailsTable {
       { key: 'value', accessor: 'valueMovement.formattedNumber' },
       { key: 'profit_margin', accessor: 'profitMargin.formattedNumber' },
       { key: 'running_quantity', accessor: 'runningQuantity.formattedNumber' },
-      { key: 'running_valuation', accessor: 'runningValuation.formattedNumber' },
+      {
+        key: 'running_valuation',
+        accessor: 'runningValuation.formattedNumber',
+      },
     ];
     return tableRowMapper(transaction, columns, {
       rowTypes: [IROW_TYPE.TRANSACTION],
@@ -168,16 +175,16 @@ export default class InventoryDetailsTable {
    */
   public tableColumns(): ITableColumn[] {
     return [
-      { key: 'date', label: 'Date' },
-      { key: 'transaction_type', label: 'Transaction type' },
-      { key: 'transaction_id', label: 'Transaction #' },
-      { key: 'quantity', label: 'Quantity' },
-      { key: 'rate', label: 'Rate' },
-      { key: 'total', label: 'Total' },
-      { key: 'value', label: 'Value' },
-      { key: 'profit_margin', label: 'Profit Margin' },
-      { key: 'running_quantity', label: 'Running quantity' },
-      { key: 'running_value', label: 'Running Value' },
+      { key: 'date', label: this.i18n.__('Date') },
+      { key: 'transaction_type', label: this.i18n.__('Transaction type') },
+      { key: 'transaction_id', label: this.i18n.__('Transaction #') },
+      { key: 'quantity', label: this.i18n.__('Quantity') },
+      { key: 'rate', label: this.i18n.__('Rate') },
+      { key: 'total', label: this.i18n.__('Total') },
+      { key: 'value', label: this.i18n.__('Value') },
+      { key: 'profit_margin', label: this.i18n.__('Profit Margin') },
+      { key: 'running_quantity', label: this.i18n.__('Running quantity') },
+      { key: 'running_value', label: this.i18n.__('Running Value') },
     ];
   }
 }

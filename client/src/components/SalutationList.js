@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 import { ListSelect } from 'components';
 
@@ -15,7 +15,7 @@ export default function SalutationList({ ...restProps }) {
       items={items}
       selectedItemProp={'key'}
       textProp={'label'}
-      defaultText={formatMessage({ id: 'salutation' })}
+      defaultText={intl.get('salutation')}
       filterable={false}
       {...restProps}
     />

@@ -7,7 +7,7 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
 import { useObserveInvoiceNoSettings } from './utils';

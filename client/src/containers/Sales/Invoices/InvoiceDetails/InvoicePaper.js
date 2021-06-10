@@ -1,20 +1,20 @@
 import React from 'react';
 import { useInvoiceDrawerContext } from './InvoiceDrawerProvider';
 import PaperTemplate from 'containers/Drawers/PaperTemplate/PaperTemplate';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 export default function InvoicePaper() {
   const { invoice, entries } = useInvoiceDrawerContext();
 
   const propLabels = {
     labels: {
-      name: formatMessage({ id: 'invoice' }),
-      billedTo: formatMessage({ id: 'billed_to' }),
-      date: formatMessage({ id: 'invoice_date_' }),
-      refNo: formatMessage({ id: 'invoice_no__' }),
-      billedFrom: formatMessage({ id: 'billed_from' }),
-      amount: formatMessage({ id: 'invoice_amount' }),
-      dueDate: formatMessage({ id: 'due_date_' }),
+      name: intl.get('invoice'),
+      billedTo: intl.get('billed_to'),
+      date: intl.get('invoice_date_'),
+      refNo: intl.get('invoice_no__'),
+      billedFrom: intl.get('billed_from'),
+      amount: intl.get('invoice_amount'),
+      dueDate: intl.get('due_date_'),
     },
   };
 

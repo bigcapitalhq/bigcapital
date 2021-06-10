@@ -171,7 +171,7 @@ body.hide-scrollbar .Pane2 {
   width: 1em;
   fill: currentColor;
 }
-
+.ReactVirtualized__Grid, .ReactVirtualized__List { direction: inherit !important; }
 /* List default theme */
 
 .ReactVirtualized__List {
@@ -180,4 +180,12 @@ body.hide-scrollbar .Pane2 {
 
 .bp3-drawer{
   box-shadow: 0 0 0;
+}
+
+// RTL Icons.
+html[dir="rtl"] {
+
+  .bp3-icon-caret-right{
+    transform: scaleX(-1);
+  }
 }

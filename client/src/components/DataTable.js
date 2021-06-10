@@ -10,7 +10,7 @@ import {
   useAsyncDebounce,
 } from 'react-table';
 import { useSticky } from 'react-table-sticky';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 import { useUpdateEffect } from 'hooks';
 import { saveInvoke } from 'utils';
@@ -209,6 +209,6 @@ DataTable.defaultProps = {
   TablePaginationRenderer: TablePagination,
   TableNoResultsRowRenderer: TableNoResultsRow,
 
-  noResults: formatMessage({ id: 'there_is_no_results_in_the_table' }),
+  noResults: '',
   payload: {},
 };

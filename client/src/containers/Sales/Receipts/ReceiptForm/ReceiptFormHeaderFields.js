@@ -6,7 +6,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 import { FastField, ErrorMessage } from 'formik';
 import { CLASSES } from 'common/classes';

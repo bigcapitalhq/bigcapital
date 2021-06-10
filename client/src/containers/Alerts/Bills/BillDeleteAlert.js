@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
@@ -23,7 +24,7 @@ function BillDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { isLoading, mutateAsync: deleteBillMutate } = useDeleteBill();
 
   // Handle cancel Bill
@@ -36,9 +37,7 @@ function BillDeleteAlert({
     deleteBillMutate(billId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_bill_has_been_deleted_successfully',
-          }),
+          message: intl.get('the_bill_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
       })

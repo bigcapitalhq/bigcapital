@@ -4,7 +4,7 @@ import { FormGroup, InputGroup } from '@blueprintjs/core';
 import { useAutofocus } from 'hooks';
 import { Row, Col, MoneyInputGroup } from 'components';
 import { inputIntent, toSafeNumber } from 'utils';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { decrementQuantity, incrementQuantity } from './utils';
 
 export default function IncrementAdjustmentFields() {

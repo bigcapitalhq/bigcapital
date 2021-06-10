@@ -1,20 +1,20 @@
 import React from 'react';
 import { useReceiptDrawerContext } from './ReceiptDrawerProvider';
 import PaperTemplate from 'containers/Drawers/PaperTemplate/PaperTemplate';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 export default function ReceiptPaper() {
   const { receipt, entries } = useReceiptDrawerContext();
 
   const propLabels = {
     labels: {
-      name: formatMessage({ id: 'receipt_' }),
-      billedTo: formatMessage({ id: 'billed_to' }),
-      date: formatMessage({ id: 'receipt_date_' }),
-      refNo: formatMessage({ id: 'receipt_no' }),
-      billedFrom: formatMessage({ id: 'billed_from' }),
-      amount: formatMessage({ id: 'receipt_amount' }),
-      dueDate: formatMessage({ id: 'due_date_' }),
+      name: intl.get('receipt_'),
+      billedTo: intl.get('billed_to'),
+      date: intl.get('receipt_date_'),
+      refNo: intl.get('receipt_no'),
+      billedFrom: intl.get('billed_from'),
+      amount: intl.get('receipt_amount'),
+      dueDate: intl.get('due_date_'),
     },
   };
 

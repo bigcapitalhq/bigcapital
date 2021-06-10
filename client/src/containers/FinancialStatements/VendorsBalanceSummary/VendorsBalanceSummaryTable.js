@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { DataTable } from 'components';
 import FinancialSheet from 'components/FinancialSheet';
 
@@ -13,7 +14,7 @@ export default function VendorsBalanceSummaryTable({
   //#ownProps
   organizationName,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   const {
     VendorBalanceSummary,
@@ -31,7 +32,7 @@ export default function VendorsBalanceSummaryTable({
     <FinancialSheet
       companyName={organizationName}
       name={'vendors-balance-summary'}
-      sheetType={formatMessage({ id: 'vendors_balance_summary' })}
+      sheetType={intl.get('vendors_balance_summary')}
       asDate={new Date()}
       loading={isVendorsBalanceLoading}
     >

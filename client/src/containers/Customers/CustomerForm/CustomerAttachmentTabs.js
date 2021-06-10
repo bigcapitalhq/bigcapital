@@ -6,7 +6,7 @@ import React, {
   useCallback,
 } from 'react';
 import Dragzone from 'components/Dragzone';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 function CustomerAttachmentTabs() {
   return (

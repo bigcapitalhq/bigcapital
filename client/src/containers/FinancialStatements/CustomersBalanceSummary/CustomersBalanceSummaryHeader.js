@@ -3,7 +3,8 @@ import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import withCustomersBalanceSummary from './withCustomersBalanceSummary';

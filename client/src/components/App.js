@@ -1,5 +1,4 @@
 import React from 'react';
-import { RawIntlProvider } from 'react-intl';
 import { Router, Switch, Route } from 'react-router';
 import { createBrowserHistory } from 'history';
 import { QueryClientProvider, QueryClient } from 'react-query';
@@ -7,47 +6,60 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 
 import 'style/App.scss';
 
+import AppIntlLoader from './AppIntlLoader';
 import PrivateRoute from 'components/Guards/PrivateRoute';
-import Authentication from 'components/Authentication';
-import DashboardPrivatePages from 'components/Dashboard/PrivatePages';
 import GlobalErrors from 'containers/GlobalErrors/GlobalErrors';
-import intl from 'services/intl';
+import DashboardPrivatePages from 'components/Dashboard/PrivatePages';
+import Authentication from 'components/Authentication';
 
+// Query client config.
+const queryConfig = {
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: true,
+      staleTime: 30000,
+    },
+  },
+};
+
+// Global fetch query.
+function GlobalFetchQuery({
+  children
+}) {
+  window.localStorage.setItem('lang', 'en');
+  return children
+}
+
+/**
+ * Core application.
+ */
 function App({ locale }) {
   const history = createBrowserHistory();
 
-  const queryConfig = {
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: true,
-        staleTime: 30000,
-      },
-    },
-  };
+  // Query client.
   const queryClient = new QueryClient(queryConfig);
 
   return (
-    <RawIntlProvider value={intl}>
-      <QueryClientProvider client={queryClient}>
-        <div className="App">
-          <Router history={history}>
-            <Switch>
-              <Route path={'/auth'}>
-                <Authentication />
-              </Route>
+    <QueryClientProvider client={queryClient}>
+      <GlobalFetchQuery>
+        <AppIntlLoader>
+          <div className="App">
+            <Router history={history}>
+              <Switch>
+                <Route path={'/auth'} component={Authentication} />
+                <Route path={'/'}>
+                  <PrivateRoute component={DashboardPrivatePages} />
+                </Route>
+              </Switch>
+            </Router>
 
-              <Route path={'/'}>
-                <PrivateRoute component={DashboardPrivatePages} />
-              </Route>
-            </Switch>
-          </Router>
+            <GlobalErrors />
+          </div>
+        </AppIntlLoader>
+      </GlobalFetchQuery>
 
-          <GlobalErrors />
-        </div>
-
-        <ReactQueryDevtools initialIsOpen />
-      </QueryClientProvider>
-    </RawIntlProvider>
+      <ReactQueryDevtools initialIsOpen />
+    </QueryClientProvider>
   );
 }
 

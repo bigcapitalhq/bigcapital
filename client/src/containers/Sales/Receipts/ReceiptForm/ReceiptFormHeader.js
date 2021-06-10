@@ -7,7 +7,7 @@ import { CLASSES } from 'common/classes';
 import ReceiptFormHeaderFields from './ReceiptFormHeaderFields';
 
 import { PageFormBigNumber } from 'components';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 import withSettings from 'containers/Settings/withSettings';
 import { compose } from 'redux';
@@ -35,7 +35,7 @@ function ReceiptFormHeader({
         onReceiptNumberChanged={onReceiptNumberChanged}
       />
       <PageFormBigNumber
-        label={formatMessage({ id: 'due_amount' })}
+        label={intl.get('due_amount')}
         amount={totalDueAmount}
         currencyCode={baseCurrency}
       />

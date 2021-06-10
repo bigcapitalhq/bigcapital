@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 
 import FinancialSheet from 'components/FinancialSheet';
 import { DataTable } from 'components';
@@ -14,7 +14,7 @@ export default function InventoryValuationTable({
   //#ownProps
   companyName,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   // inventory valuation context.
   const {
@@ -43,7 +43,7 @@ export default function InventoryValuationTable({
     <FinancialSheet
       companyName={companyName}
       name="inventory-valuation"
-      sheetType={formatMessage({ id: 'inventory_valuation' })}
+      sheetType={intl.get('inventory_valuation')}
       asDate={new Date()}
       loading={isLoading}
     >

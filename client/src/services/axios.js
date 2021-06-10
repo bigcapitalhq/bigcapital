@@ -17,6 +17,8 @@ http.interceptors.request.use((request) => {
   if (locale) {
     request.headers.common['Accept-Language'] = locale;
   }
+  request.headers.common['Accept-Language'] = 'ar';
+
   return request;
 }, (error) => {
   return Promise.reject(error);

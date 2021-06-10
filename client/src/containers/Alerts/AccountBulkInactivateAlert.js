@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
@@ -20,7 +21,7 @@ function AccountBulkInactivateAlert({
 
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const [isLoading, setLoading] = useState(false);
   const selectedRowsCount = 0;
 
@@ -34,9 +35,7 @@ function AccountBulkInactivateAlert({
     requestBulkInactiveAccounts(accountsIds)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_accounts_have_been_successfully_inactivated',
-          }),
+          message: intl.get('the_accounts_have_been_successfully_inactivated'),
           intent: Intent.SUCCESS,
         });
         queryCache.invalidateQueries('accounts-table');
@@ -51,9 +50,7 @@ function AccountBulkInactivateAlert({
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={`${formatMessage({
-        id: 'inactivate',
-      })} (${selectedRowsCount})`}
+      confirmButtonText={`${intl.get('inactivate')} (${selectedRowsCount})`}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancel}

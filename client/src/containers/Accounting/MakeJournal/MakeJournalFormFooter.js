@@ -3,7 +3,7 @@ import { FastField } from 'formik';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { FormGroup, TextArea } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { Postbox, ErrorMessage, Row, Col } from 'components';
 import Dragzone from 'components/Dragzone';
 import { inputIntent } from 'utils';

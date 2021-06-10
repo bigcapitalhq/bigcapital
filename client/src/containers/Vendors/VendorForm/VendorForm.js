@@ -2,11 +2,12 @@ import React, { useMemo, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from 'common/classes';
+import { FormattedMessage as T } from 'components';
 import AppToaster from 'components/AppToaster';
 import {
   CreateVendorFormSchema,
@@ -86,8 +87,6 @@ function VendorForm({
   // History context.
   const history = useHistory();
 
-  const { formatMessage } = useIntl();
-
   /**
    * Initial values in create and edit mode.
    */
@@ -111,11 +110,11 @@ function VendorForm({
 
     const onSuccess = () => {
       AppToaster.show({
-        message: formatMessage({
-          id: isNewMode
+        message: intl.get(
+          isNewMode
             ? 'the_vendor_has_been_created_successfully'
             : 'the_item_vendor_has_been_edited_successfully',
-        }),
+        ),
         intent: Intent.SUCCESS,
       });
       setSubmitPayload(false);

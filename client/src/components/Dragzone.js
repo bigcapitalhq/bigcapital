@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import classNames from 'classnames';
 import Icon from 'components/Icon';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 // const initialFile: {
 //   file: ?File,
@@ -12,7 +12,7 @@ import { formatMessage } from 'services/intl';
 // };
 
 export default function Dropzone({
-  text = formatMessage({ id: 'drag_drop_files_here_or_click_here' }),
+  text = intl.get('drag_drop_files_here_or_click_here'),
   onDrop,
   initialFiles = [],
   onDeleteFile,

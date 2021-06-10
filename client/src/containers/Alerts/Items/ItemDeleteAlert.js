@@ -1,9 +1,6 @@
 import React from 'react';
-import {
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-  useIntl,
-} from 'react-intl';
+import intl from 'react-intl-universal';
+import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
@@ -33,7 +30,7 @@ function ItemDeleteAlert({
   setItemsTableState,
 }) {
   const { mutateAsync: deleteItem, isLoading } = useDeleteItem();
-  const { formatMessage } = useIntl();
+  
 
   // Handle cancel delete item alert.
   const handleCancelItemDelete = () => {
@@ -45,9 +42,7 @@ function ItemDeleteAlert({
     deleteItem(itemId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_item_has_been_deleted_successfully',
-          }),
+          message: intl.get('the_item_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
         // Reset to page number one.

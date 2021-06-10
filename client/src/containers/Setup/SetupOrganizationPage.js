@@ -2,7 +2,8 @@ import React from 'react';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import moment from 'moment';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import 'style/pages/Setup/Organization.scss';
 
@@ -24,29 +25,29 @@ function SetupOrganizationPage({
   wizard,
   setOrganizationSetupCompleted,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { mutateAsync: organizationSetupMutate } = useOrganizationSetup();
 
   // Validation schema.
   const validationSchema = Yup.object().shape({
     organization_name: Yup.string()
       .required()
-      .label(formatMessage({ id: 'organization_name_' })),
+      .label(intl.get('organization_name_')),
     financialDateStart: Yup.date()
       .required()
-      .label(formatMessage({ id: 'date_start_' })),
+      .label(intl.get('date_start_')),
     baseCurrency: Yup.string()
       .required()
-      .label(formatMessage({ id: 'base_currency_' })),
+      .label(intl.get('base_currency_')),
     language: Yup.string()
       .required()
-      .label(formatMessage({ id: 'language' })),
+      .label(intl.get('language')),
     fiscalYear: Yup.string()
       .required()
-      .label(formatMessage({ id: 'fiscal_year_' })),
+      .label(intl.get('fiscal_year_')),
     timeZone: Yup.string()
       .required()
-      .label(formatMessage({ id: 'time_zone_' })),
+      .label(intl.get('time_zone_')),
   });
 
   // Initial values.

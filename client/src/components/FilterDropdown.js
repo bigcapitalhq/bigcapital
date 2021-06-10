@@ -12,7 +12,8 @@ import { isEqual, last } from 'lodash';
 import { usePrevious } from 'react-use';
 import Icon from 'components/Icon';
 import { checkRequiredProperties, uniqueMultiProps } from 'utils';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import {
   DynamicFilterValueField,
   DynamicFilterCompatatorField,
@@ -41,7 +42,7 @@ export default function FilterDropdown({
   initialCondition,
   initialConditions,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   // Fields key -> metadata table.
   const fieldsKeyMapped = useMemo(() =>
@@ -51,10 +52,10 @@ export default function FilterDropdown({
   // Conditions options.
   const conditionalsOptions = useMemo(
     () => [
-      { value: '&&', label: formatMessage({ id: 'and' }) },
-      { value: '||', label: formatMessage({ id: 'or' }) },
+      { value: '&&', label: intl.get('and') },
+      { value: '||', label: intl.get('or') },
     ],
-    [formatMessage],
+    [],
   );
   // Resources fileds options for fields options.
   const resourceFieldsOptions = useMemo(
@@ -91,7 +92,7 @@ export default function FilterDropdown({
     if (values.conditions.length >= 12) {
       limitToast = Toaster.show(
         {
-          message: formatMessage({ id: 'you_reached_conditions_limit' }),
+          message: intl.get('you_reached_conditions_limit'),
           intent: Intent.WARNING,
         },
         limitToast,
@@ -102,7 +103,7 @@ export default function FilterDropdown({
         defaultFilterCondition
       ]);
     }
-  }, [values, setFieldValue, formatMessage, defaultFilterCondition]);
+  }, [values, setFieldValue, defaultFilterCondition]);
 
   // Filtered conditions that filters conditions that don't contain atleast 
   // on required fields or fileds keys that not exists. 

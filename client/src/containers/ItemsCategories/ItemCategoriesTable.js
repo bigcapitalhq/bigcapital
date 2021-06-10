@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 import { useItemsCategoriesTableColumns, ActionMenuList } from './components';
 import DataTable from 'components/DataTable';
@@ -54,9 +54,7 @@ function ItemsCategoryTable({
       sticky={true}
       selectionColumn={true}
       TableLoadingRenderer={TableSkeletonRows}
-      noResults={formatMessage({
-        id: 'there_is_no_items_categories_in_table_yet',
-      })}
+      noResults={intl.get('there_is_no_items_categories_in_table_yet')}
       payload={{
         onDeleteCategory: handleDeleteCategory,
         onEditCategory: handleEditCategory,

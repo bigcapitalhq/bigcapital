@@ -1,7 +1,7 @@
 import React from 'react';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';

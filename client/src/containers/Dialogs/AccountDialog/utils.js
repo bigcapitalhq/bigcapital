@@ -1,12 +1,12 @@
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 export const transformApiErrors = (errors) => {
   const fields = {};
   if (errors.find((e) => e.type === 'NOT_UNIQUE_CODE')) {
-    fields.code = formatMessage({ id: 'account_code_is_not_unique' });
+    fields.code = intl.get('account_code_is_not_unique');
   }
   if (errors.find((e) => e.type === 'ACCOUNT.NAME.NOT.UNIQUE')) {
-    fields.name = formatMessage({ id: 'account_name_is_already_used' });
+    fields.name = intl.get('account_name_is_already_used');
   }
   return fields;
 };

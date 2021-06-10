@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 
 import { DataTable } from 'components';
 import FinancialSheet from 'components/FinancialSheet';
@@ -15,7 +15,7 @@ export default function CashFlowStatementTable({
   // #ownProps
   companyName,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   const {
     cashFlowStatement: { tableRows },
@@ -41,7 +41,7 @@ export default function CashFlowStatementTable({
     <FinancialSheet
       name="cash-flow-statement"
       companyName={companyName}
-      sheetType={formatMessage({ id: 'statement_of_cash_flow' })}
+      sheetType={intl.get('statement_of_cash_flow')}
       loading={isCashFlowLoading}
       fromDate={query.from_date}
       toDate={query.to_date}

@@ -1,10 +1,8 @@
 import React from 'react';
-import {
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-  useIntl,
-} from 'react-intl';
+import intl from 'react-intl-universal';
+import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
+
 import { AppToaster } from 'components';
 
 import { handleDeleteErrors } from 'containers/Accounts/utils';
@@ -28,7 +26,6 @@ function AccountDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
   const { isLoading, mutateAsync: deleteAccount } = useDeleteAccount();
 
   // handle cancel delete account alert.
@@ -40,9 +37,7 @@ function AccountDeleteAlert({
     deleteAccount(accountId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_account_has_been_successfully_deleted',
-          }),
+          message: intl.get('the_account_has_been_successfully_deleted'),
           intent: Intent.SUCCESS,
         });
         closeAlert(name);

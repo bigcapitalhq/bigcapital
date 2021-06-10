@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, Tab } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import BillingTab from './BillingTab';
 import LicenseTab from './LicenseTab';
 
@@ -8,18 +8,16 @@ import LicenseTab from './LicenseTab';
  * Master billing tabs.
  */
 export const MasterBillingTabs = ({ formik }) => {
-  const { formatMessage } = useIntl();
-
   return (
     <div>
       <Tabs animate={true} large={true}>
         <Tab
-          title={formatMessage({ id: 'billing' })}
+          title={intl.get('billing')}
           id={'billing'}
           panel={<BillingTab formik={formik} />}
         />
         <Tab
-          title={formatMessage({ id: 'usage' })}
+          title={intl.get('usage')}
           id={'usage'}
           disabled={true}
         />
@@ -32,23 +30,21 @@ export const MasterBillingTabs = ({ formik }) => {
  * Payment methods tabs.
  */
 export const PaymentMethodTabs = ({ formik }) => {
-  const { formatMessage } = useIntl();
-
   return (
     <div>
       <Tabs animate={true} large={true}>
         <Tab
-          title={formatMessage({ id: 'voucher' })}
+          title={intl.get('voucher')}
           id={'voucher'}
           panel={<LicenseTab formik={formik} />}
         />
         <Tab
-          title={formatMessage({ id: 'credit_card' })}
+          title={intl.get('credit_card')}
           id={'credit_card'}
           disabled={true}
         />
         <Tab
-          title={formatMessage({ id: 'paypal' })}
+          title={intl.get('paypal')}
           id={'paypal'}
           disabled={true}
         />

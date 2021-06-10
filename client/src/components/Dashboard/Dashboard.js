@@ -30,7 +30,7 @@ export default function Dashboard() {
         <Route path="/">
           <DashboardSplitPane>
             <Sidebar />
-            <DashboardContent />
+          <DashboardContent />
           </DashboardSplitPane>
         </Route>
       </Switch>

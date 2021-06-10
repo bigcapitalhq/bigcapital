@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useFormik } from 'formik';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import {useHistory } from 'react-router-dom';
 import {
@@ -339,7 +340,7 @@ function ViewForm({
                 intent={hasError(`roles[${index}].value`) && Intent.DANGER}
               >
                 <InputGroup
-                  placeholder={intl.formatMessage({ id: 'value' })}
+                  placeholder={intl.get('value')}
                   {...getFieldProps(`roles[${index}].value`)}
                 />
               </FormGroup>
@@ -370,7 +371,7 @@ function ViewForm({
           <Row>
             <Col sm={8}>
               <FormGroup
-                label={intl.formatMessage({ id: 'Logic Expression' })}
+                label={intl.get('Logic Expression')}
                 className={'form-group--logic-expression'}
                 intent={
                   errors.logic_expression &&
@@ -408,7 +409,7 @@ function ViewForm({
               <H6 className='dragable-columns__title'>Available Columns</H6>
 
               <InputGroup
-                placeholder={intl.formatMessage({ id: 'search' })}
+                placeholder={intl.get('search')}
                 leftIcon='search'
               />
 
@@ -449,7 +450,7 @@ function ViewForm({
             <Col sm={4} className='dragable-columns__column'>
               <H6 className='dragable-columns__title'>Selected Columns</H6>
               <InputGroup
-                placeholder={intl.formatMessage({ id: 'search' })}
+                placeholder={intl.get('search')}
                 leftIcon='search'
               />
 

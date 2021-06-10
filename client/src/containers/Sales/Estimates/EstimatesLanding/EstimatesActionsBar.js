@@ -12,7 +12,8 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import { If, DashboardActionViewsList } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -30,7 +31,7 @@ function EstimateActionsBar({
   setEstimatesTableState,
 }) {
   const history = useHistory();
-  const { formatMessage } = useIntl();
+  
 
   const [filterCount, setFilterCount] = useState(0);
 
@@ -75,7 +76,7 @@ function EstimateActionsBar({
               filterCount <= 0 ? (
                 <T id={'filter'} />
               ) : (
-                `${filterCount} ${formatMessage({ id: 'filters_applied' })}`
+                `${filterCount} ${intl.get('filters_applied')}`
               )
             }
             icon={<Icon icon={'filter-16'} iconSize={16} />}

@@ -1,7 +1,7 @@
 import React from 'react';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 export default [
-  { name: formatMessage({ id: 'customer' }), path: 'customers' },
-  { name: formatMessage({ id: 'vendor' }), path: 'vendors' },
+  { name: intl.get('customer'), path: 'customers' },
+  { name: intl.get('vendor'), path: 'vendors' },
 ];

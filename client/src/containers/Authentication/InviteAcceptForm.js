@@ -2,7 +2,8 @@ import React from 'react';
 import { Intent, Position } from '@blueprintjs/core';
 import { Formik } from 'formik';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { isEmpty } from 'lodash';
 
 import { useInviteAcceptContext } from './InviteAcceptProvider';
@@ -12,7 +13,7 @@ import InviteAcceptFormContent from './InviteAcceptFormContent';
 
 export default function InviteAcceptForm() {
   const history = useHistory();
-  const { formatMessage } = useIntl();
+  
 
   // Invite accept context.
   const {
@@ -53,7 +54,7 @@ export default function InviteAcceptForm() {
         }) => {
           if (errors.find((e) => e.type === 'INVITE.TOKEN.NOT.FOUND')) {
             AppToaster.show({
-              message: formatMessage({ id: 'an_unexpected_error_occurred' }),
+              message: intl.get('an_unexpected_error_occurred'),
               intent: Intent.DANGER,
               position: Position.BOTTOM,
             });

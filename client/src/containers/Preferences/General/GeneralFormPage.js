@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import { mapKeys, snakeCase } from 'lodash';
 import { Intent } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 
 import { AppToaster } from 'components';
 import GeneralForm from './GeneralForm';
@@ -25,12 +25,12 @@ function GeneralFormPage({
   //# withDashboardActions
   changePreferencesPageTitle,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { saveSettingMutate } = useGeneralFormContext();
 
   useEffect(() => {
-    changePreferencesPageTitle(formatMessage({ id: 'general' }));
-  }, [changePreferencesPageTitle, formatMessage]);
+    changePreferencesPageTitle(intl.get('general'));
+  }, [changePreferencesPageTitle]);
 
   function transformGeneralSettings(data) {
     return mapKeys(data, (value, key) => snakeCase(key));

@@ -5,7 +5,7 @@ import { Suggest } from '@blueprintjs/select';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { filterAccountsByQuery } from './utils';
 
 /**

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 import { defaultExpanderReducer } from 'utils';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
@@ -15,7 +15,7 @@ import { useGeneralLedgerTableColumns } from './components';
  * General ledger table.
  */
 export default function GeneralLedgerTable({ companyName }) {
-  const { formatMessage } = useIntl();
+  
 
   // General ledger context.
   const {
@@ -36,7 +36,7 @@ export default function GeneralLedgerTable({ companyName }) {
   return (
     <FinancialSheet
       companyName={companyName}
-      sheetType={formatMessage({ id: 'general_ledger_sheet' })}
+      sheetType={intl.get('general_ledger_sheet')}
       fromDate={query.from_date}
       toDate={query.to_date}
       name="general-ledger"
@@ -45,9 +45,7 @@ export default function GeneralLedgerTable({ companyName }) {
     >
       <DataTable
         className="bigcapital-datatable--financial-report"
-        noResults={formatMessage({
-          id: 'this_report_does_not_contain_any_data_between_date_period',
-        })}
+        noResults={intl.get('this_report_does_not_contain_any_data_between_date_period')}
         columns={columns}
         data={tableRows}
         rowClassNames={rowClassNames}

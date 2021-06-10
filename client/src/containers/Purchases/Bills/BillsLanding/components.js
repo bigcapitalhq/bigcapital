@@ -10,7 +10,8 @@ import {
   Tag,
   ProgressBar,
 } from '@blueprintjs/core';
-import { useIntl, FormattedMessage as T } from 'react-intl';
+import intl from 'react-intl-universal';
+import {  FormattedMessage as T } from 'components';
 import { Icon, If, Choose, Money } from 'components';
 import { safeCallback, isBlank, calculateStatus } from 'utils';
 import moment from 'moment';
@@ -22,38 +23,38 @@ export function ActionsMenu({
   payload: { onEdit, onOpen, onDelete, onQuick },
   row: { original },
 }) {
-  const { formatMessage } = useIntl();
+  
 
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
-        text={formatMessage({ id: 'view_details' })}
+        text={intl.get('view_details')}
       />
       <MenuDivider />
       <MenuItem
         icon={<Icon icon="pen-18" />}
-        text={formatMessage({ id: 'edit_bill' })}
+        text={intl.get('edit_bill')}
         onClick={safeCallback(onEdit, original)}
       />
 
       <If condition={!original.is_open}>
         <MenuItem
           icon={<Icon icon={'check'} iconSize={18} />}
-          text={formatMessage({ id: 'mark_as_opened' })}
+          text={intl.get('mark_as_opened')}
           onClick={safeCallback(onOpen, original)}
         />
       </If>
       <If condition={original.is_open && !original.is_fully_paid}>
         <MenuItem
           icon={<Icon icon="quick-payment-16" iconSize={16} />}
-          text={formatMessage({ id: 'add_payment' })}
+          text={intl.get('add_payment')}
           onClick={safeCallback(onQuick, original)}
         />
       </If>
 
       <MenuItem
-        text={formatMessage({ id: 'delete_bill' })}
+        text={intl.get('delete_bill')}
         intent={Intent.DANGER}
         onClick={safeCallback(onDelete, original)}
         icon={<Icon icon="trash-16" iconSize={16} />}
@@ -148,60 +149,60 @@ export function ActionsCell(props) {
  * Retrieve bills table columns.
  */
 export function useBillsTableColumns() {
-  const { formatMessage } = useIntl();
+  
 
   return React.useMemo(
     () => [
       {
         id: 'bill_date',
-        Header: formatMessage({ id: 'bill_date' }),
+        Header: intl.get('bill_date'),
         accessor: (r) => moment(r.bill_date).format('YYYY MMM DD'),
         width: 110,
         className: 'bill_date',
       },
       {
         id: 'vendor',
-        Header: formatMessage({ id: 'vendor_name' }),
+        Header: intl.get('vendor_name'),
         accessor: 'vendor.display_name',
         width: 180,
         className: 'vendor',
       },
       {
         id: 'bill_number',
-        Header: formatMessage({ id: 'bill_number' }),
+        Header: intl.get('bill_number'),
         accessor: (row) => (row.bill_number ? `#${row.bill_number}` : null),
         width: 100,
         className: 'bill_number',
       },
       {
         id: 'amount',
-        Header: formatMessage({ id: 'amount' }),
+        Header: intl.get('amount'),
         accessor: AmountAccessor,
         width: 120,
         className: 'amount',
       },
       {
         id: 'status',
-        Header: formatMessage({ id: 'status' }),
+        Header: intl.get('status'),
         accessor: StatusAccessor,
         width: 160,
         className: 'status',
       },
       {
         id: 'due_date',
-        Header: formatMessage({ id: 'due_date' }),
+        Header: intl.get('due_date'),
         accessor: (r) => moment(r.due_date).format('YYYY MMM DD'),
         width: 110,
         className: 'due_date',
       },
       {
         id: 'reference_no',
-        Header: formatMessage({ id: 'reference_no' }),
+        Header: intl.get('reference_no'),
         accessor: 'reference_no',
         width: 90,
         className: 'reference_no',
       },
     ],
-    [formatMessage],
+    [],
   );
 }

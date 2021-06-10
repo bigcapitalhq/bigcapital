@@ -1,6 +1,6 @@
 import { omit } from 'lodash';
 import { transfromToSnakeCase, flatObject } from 'utils';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 export const displayColumnsByOptions = [
   { key: 'total', name: 'Total', type: 'total', by: '' },
@@ -23,22 +23,18 @@ export const dateRangeOptions = [
 export const filterAccountsOptions = [
   {
     key: 'all-accounts',
-    name: formatMessage({ id: 'all_accounts' }),
-    hint: formatMessage({ id: 'all_accounts_including_with_zero_balance' }),
+    name: intl.get('all_accounts'),
+    hint: intl.get('all_accounts_including_with_zero_balance'),
   },
   {
     key: 'without-zero-balance',
-    name: formatMessage({ id: 'accounts_without_zero_balance' }),
-    hint: formatMessage({
-      id: 'include_accounts_and_exclude_zero_balance',
-    }),
+    name: intl.get('accounts_without_zero_balance'),
+    hint: intl.get('include_accounts_and_exclude_zero_balance'),
   },
   {
     key: 'with-transactions',
-    name: formatMessage({ id: 'accounts_with_transactions' }),
-    hint: formatMessage({
-      id: 'include_accounts_once_has_transactions_on_given_date_period',
-    }),
+    name: intl.get('accounts_with_transactions'),
+    hint: intl.get('include_accounts_once_has_transactions_on_given_date_period'),
   },
 ];
 

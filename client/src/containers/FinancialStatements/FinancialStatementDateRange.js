@@ -5,14 +5,14 @@ import moment from 'moment';
 import { Row, Col, Hint } from 'components';
 import { momentFormatter, parseDateRangeQuery } from 'utils';
 import { DateInput } from '@blueprintjs/datetime';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { dateRangeOptions } from 'containers/FinancialStatements/common';
 
 /**
  * Financial statement - Date range select.
  */
 export default function FinancialStatementDateRange() {
-  const { formatMessage } = useIntl();
+  
 
   return (
     <>
@@ -24,7 +24,7 @@ export default function FinancialStatementDateRange() {
               field: { value },
             }) => (
               <FormGroup
-                label={formatMessage({ id: 'report_date_range' })}
+                label={intl.get('report_date_range')}
                 labelInfo={<Hint />}
                 minimal={true}
                 fill={true}
@@ -62,7 +62,7 @@ export default function FinancialStatementDateRange() {
               meta: { error, touched },
             }) => (
               <FormGroup
-                label={formatMessage({ id: 'from_date' })}
+                label={intl.get('from_date')}
                 labelInfo={<Hint />}
                 fill={true}
                 intent={error && Intent.DANGER}
@@ -92,7 +92,7 @@ export default function FinancialStatementDateRange() {
               meta: { error },
             }) => (
               <FormGroup
-                label={formatMessage({ id: 'to_date' })}
+                label={intl.get('to_date')}
                 labelInfo={<Hint />}
                 fill={true}
                 intent={error && Intent.DANGER}

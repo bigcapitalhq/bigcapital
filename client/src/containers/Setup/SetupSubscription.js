@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import 'style/pages/Setup/Subscription.scss';
 
 import SetupSubscriptionForm from './SetupSubscriptionForm';
-import { SubscriptionFormSchema } from './SubscriptionForm.schema';
+import { getSubscriptionFormSchema } from './SubscriptionForm.schema';
 
 /**
  * Subscription step of wizard setup.
@@ -19,6 +19,8 @@ export default function SetupSubscription() {
 
   // Handle form submit.
   const handleSubmit = () => {};
+
+  const SubscriptionFormSchema = getSubscriptionFormSchema();
 
   return (
     <div className={'setup-subscription-form'}>  

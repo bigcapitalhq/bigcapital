@@ -9,7 +9,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import { Icon } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';

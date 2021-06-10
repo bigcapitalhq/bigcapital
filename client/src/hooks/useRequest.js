@@ -24,7 +24,7 @@ export default function useApiRequest() {
     // Request interceptors.
     instance.interceptors.request.use(
       (request) => {
-        const locale = 'en';
+        const locale = 'ar';
 
         if (token) {
           request.headers.common['X-Access-Token'] = token;

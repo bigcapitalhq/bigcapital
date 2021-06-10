@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { size } from 'lodash';
 import { AppToaster } from 'components';
@@ -26,7 +27,7 @@ function ItemBulkDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const [isLoading, setLoading] = useState(false);
 
   // handle cancel item bulk delete alert.
@@ -39,9 +40,7 @@ function ItemBulkDeleteAlert({
     requestDeleteBulkItems(itemsIds)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_items_has_been_deleted_successfully',
-          }),
+          message: intl.get('the_items_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
       })

@@ -1,7 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import { RadioGroup, Radio, FormGroup } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { FastField } from 'formik';
 
 import { handleStringChange, saveInvoke } from 'utils';
@@ -11,7 +12,7 @@ import { handleStringChange, saveInvoke } from 'utils';
  */
 export default function RadioCustomer(props) {
   const { onChange, ...rest } = props;
-  const { formatMessage } = useIntl();
+  
 
   return (
     <FastField name={'customer_type'}>
@@ -29,9 +30,9 @@ export default function RadioCustomer(props) {
             })}
             selectedValue={value}
           >
-            <Radio label={formatMessage({ id: 'business' })} value="business" />
+            <Radio label={intl.get('business')} value="business" />
             <Radio
-              label={formatMessage({ id: 'individual' })}
+              label={intl.get('individual')}
               value="individual"
             />
           </RadioGroup>

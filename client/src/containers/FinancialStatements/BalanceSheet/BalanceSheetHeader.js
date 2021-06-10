@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import moment from 'moment';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
@@ -27,7 +28,7 @@ function BalanceSheetHeader({
   // #withBalanceSheetActions
   toggleBalanceSheetFilterDrawer: toggleFilterDrawer,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   // Filter form initial values.
   const initialValues = {
@@ -42,11 +43,11 @@ function BalanceSheetHeader({
     dateRange: Yup.string().optional(),
     fromDate: Yup.date()
       .required()
-      .label(formatMessage({ id: 'fromDate' })),
+      .label(intl.get('fromDate')),
     toDate: Yup.date()
       .min(Yup.ref('fromDate'))
       .required()
-      .label(formatMessage({ id: 'toDate' })),
+      .label(intl.get('toDate')),
     accountsFilter: Yup.string(),
     displayColumnsType: Yup.string(),
   });

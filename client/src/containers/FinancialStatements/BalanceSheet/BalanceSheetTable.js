@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
 
 import FinancialSheet from 'components/FinancialSheet';
@@ -16,7 +16,7 @@ export default function BalanceSheetTable({
   // #ownProps
   companyName,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   // Balance sheet context.
   const {
@@ -27,7 +27,7 @@ export default function BalanceSheetTable({
   const tableColumns = useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'account_name' }),
+        Header: intl.get('account_name'),
         accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'account_name',
         textOverview: true,
@@ -36,7 +36,7 @@ export default function BalanceSheetTable({
       ...(query.display_columns_type === 'total'
         ? [
             {
-              Header: formatMessage({ id: 'total' }),
+              Header: intl.get('total'),
               accessor: 'total.formatted_amount',
               Cell: CellTextSpan,
               className: 'total',
@@ -59,7 +59,7 @@ export default function BalanceSheetTable({
           }))
         : []),
     ],
-    [query, columns, tableRows, formatMessage],
+    [query, columns, tableRows],
   );
 
   // Calculates the default expanded rows of balance sheet table.
@@ -83,7 +83,7 @@ export default function BalanceSheetTable({
     <FinancialSheet
       name="balance-sheet"
       companyName={companyName}
-      sheetType={formatMessage({ id: 'balance_sheet' })}
+      sheetType={intl.get('balance_sheet')}
       fromDate={query.from_date}
       toDate={query.to_date}
       basis={query.basis}

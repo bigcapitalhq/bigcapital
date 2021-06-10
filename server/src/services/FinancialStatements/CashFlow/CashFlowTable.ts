@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { isEmpty } from 'lodash';
+import { isEmpty, times } from 'lodash';
 import moment from 'moment';
 import {
   ICashFlowStatementSection,
@@ -9,7 +9,7 @@ import {
   ITableColumn,
   ICashFlowStatementQuery,
   IDateRange,
-  ICashFlowStatementDOO
+  ICashFlowStatementDOO,
 } from 'interfaces';
 import { dateRangeFromToCollection, tableRowMapper } from 'utils';
 import { mapValuesDeep } from 'utils/deepdash';
@@ -27,29 +27,30 @@ const DISPLAY_COLUMNS_BY = {
   TOTAL: 'total',
 };
 
-
 export default class CashFlowTable implements ICashFlowTable {
   private report: ICashFlowStatementDOO;
+  private i18n;
   private dateRangeSet: IDateRange[];
 
   /**
    * Constructor method.
    * @param {ICashFlowStatement} reportStatement
    */
-  constructor(reportStatement: ICashFlowStatementDOO) {
+  constructor(reportStatement: ICashFlowStatementDOO, i18n) {
     this.report = reportStatement;
+    this.i18n = i18n;
     this.dateRangeSet = [];
     this.initDateRangeCollection();
   }
 
-  /** 
+  /**
    * Initialize date range set.
    */
   private initDateRangeCollection() {
     this.dateRangeSet = dateRangeFromToCollection(
       this.report.query.fromDate,
       this.report.query.toDate,
-      this.report.query.displayColumnsBy,
+      this.report.query.displayColumnsBy
     );
   }
 
@@ -78,9 +79,9 @@ export default class CashFlowTable implements ICashFlowTable {
       R.concat([{ key: 'label', accessor: 'label' }]),
       R.when(
         R.always(this.isDisplayColumnsBy(DISPLAY_COLUMNS_BY.DATE_PERIODS)),
-        R.concat(this.datePeriodsColumnsAccessors()),
+        R.concat(this.datePeriodsColumnsAccessors())
       ),
-      R.concat(this.totalColumnAccessor()),
+      R.concat(this.totalColumnAccessor())
     )([]);
   }
 
@@ -230,7 +231,7 @@ export default class CashFlowTable implements ICashFlowTable {
   ): ICashFlowStatementSection {
     const label = section.footerLabel
       ? section.footerLabel
-      : `Total ${section.label}`;
+      : this.i18n.__('Total {{accountName}}', { accountName: section.label });
 
     section.children.push({
       sectionType: ICashFlowStatementSectionType.TOTAL,
@@ -288,12 +289,12 @@ export default class CashFlowTable implements ICashFlowTable {
    * @returns {ITableColumn}
    */
   private totalColumns(): ITableColumn[] {
-    return [{ key: 'total', label: 'Total' }];
+    return [{ key: 'total', label: this.i18n.__('Total') }];
   }
 
   /**
    * Retrieve the formatted column label from the given date range.
-   * @param {ICashFlowDateRange} dateRange - 
+   * @param {ICashFlowDateRange} dateRange -
    * @return {string}
    */
   private formatColumnLabel(dateRange: ICashFlowDateRange) {
@@ -308,9 +309,13 @@ export default class CashFlowTable implements ICashFlowTable {
       ['quarter', monthFormat],
       ['week', dayFormat],
     ];
-    const conditionsPairs = R.map(([type, formatFn]) => ([
-      R.always(this.isDisplayColumnsType(type)), formatFn,
-    ]), conditions);
+    const conditionsPairs = R.map(
+      ([type, formatFn]) => [
+        R.always(this.isDisplayColumnsType(type)),
+        formatFn,
+      ],
+      conditions
+    );
 
     return R.compose(R.cond(conditionsPairs))(dateRange);
   }
@@ -336,11 +341,11 @@ export default class CashFlowTable implements ICashFlowTable {
 
   /**
    * Detarmines whether the given display columns type is the current.
-   * @param {string} displayColumnsBy 
+   * @param {string} displayColumnsBy
    * @returns {boolean}
    */
   private isDisplayColumnsType(displayColumnsBy: string): Boolean {
-    return this.report.query.displayColumnsBy === displayColumnsBy; 
+    return this.report.query.displayColumnsBy === displayColumnsBy;
   }
 
   /**
@@ -349,7 +354,7 @@ export default class CashFlowTable implements ICashFlowTable {
    */
   public tableColumns(): ITableColumn[] {
     return R.compose(
-      R.concat([{ key: 'name', label: 'Account name' }]),
+      R.concat([{ key: 'name', label: this.i18n.__('Account name') }]),
       R.when(
         R.always(this.isDisplayColumnsBy(DISPLAY_COLUMNS_BY.DATE_PERIODS)),
         R.concat(this.datePeriodsColumns())

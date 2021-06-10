@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { omit, sumBy, pick, isEmpty, defaultTo } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
@@ -40,7 +40,6 @@ function PaymentReceiveForm({
   baseCurrency,
 }) {
   const history = useHistory();
-  const { formatMessage } = useIntl();
 
   // Payment receive form context.
   const {
@@ -77,7 +76,7 @@ function PaymentReceiveForm({
       nextPaymentNumber,
       paymentEntriesEditPage,
       paymentReceiveAutoIncrement,
-      preferredDepositAccount
+      preferredDepositAccount,
     ],
   );
 
@@ -100,9 +99,7 @@ function PaymentReceiveForm({
 
     if (totalPaymentAmount <= 0) {
       AppToaster.show({
-        message: formatMessage({
-          id: 'you_cannot_make_payment_with_zero_total_amount',
-        }),
+        message: intl.get('you_cannot_make_payment_with_zero_total_amount'),
         intent: Intent.DANGER,
       });
       setSubmitting(false);
@@ -119,11 +116,11 @@ function PaymentReceiveForm({
     // Handle request response success.
     const onSaved = (response) => {
       AppToaster.show({
-        message: formatMessage({
-          id: paymentReceiveId
+        message: intl.get(
+          paymentReceiveId
             ? 'the_payment_receive_transaction_has_been_edited'
             : 'the_payment_receive_transaction_has_been_created',
-        }),
+        ),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
@@ -146,13 +143,13 @@ function PaymentReceiveForm({
       if (getError('PAYMENT_RECEIVE_NO_EXISTS')) {
         setFieldError(
           'payment_receive_no',
-          formatMessage({ id: 'payment_number_is_not_unique' }),
+          intl.get('payment_number_is_not_unique'),
         );
       }
       if (getError('PAYMENT_RECEIVE_NO_REQUIRED')) {
         setFieldError(
           'payment_receive_no',
-          formatMessage({ id: 'payment_receive_number_required' }),
+          intl.get('payment_receive_number_required'),
         );
       }
       setSubmitting(false);

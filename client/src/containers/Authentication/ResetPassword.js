@@ -5,7 +5,8 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { Link, useParams, useHistory } from 'react-router-dom';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import { useAuthResetPassword } from 'hooks/query';
 
@@ -18,7 +19,7 @@ import { ResetPasswordSchema } from './utils';
  * Reset password page.
  */
 export default function ResetPassword() {
-  const { formatMessage } = useIntl();
+  
   const { token } = useParams();
   const history = useHistory();
 
@@ -39,7 +40,7 @@ export default function ResetPassword() {
     authResetPasswordMutate([token, values])
       .then((response) => {
         AppToaster.show({
-          message: formatMessage('password_successfully_updated'),
+          message: intl.get('password_successfully_updated'),
           intent: Intent.DANGER,
           position: Position.BOTTOM,
         });
@@ -49,7 +50,7 @@ export default function ResetPassword() {
       .catch(({ response: { data: { errors } } }) => {
         if (errors.find((e) => e.type === 'TOKEN_INVALID')) {
           AppToaster.show({
-            message: formatMessage({ id: 'an_unexpected_error_occurred' }),
+            message: intl.get('an_unexpected_error_occurred'),
             intent: Intent.DANGER,
             position: Position.BOTTOM,
           });

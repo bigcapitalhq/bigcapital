@@ -1,12 +1,12 @@
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
 export const transitionItemTypeKeyToLabel = (itemTypeKey) => {
   const table = {
-    service: formatMessage({ id: 'service' }),
-    inventory: formatMessage({ id: 'inventory' }),
-    'non-inventory': formatMessage({ id: 'non_inventory' }),
+    service: intl.get('service'),
+    inventory: intl.get('inventory'),
+    'non-inventory': intl.get('non_inventory'),
   };
   return typeof table[itemTypeKey] === 'string' ? table[itemTypeKey] : '';
 };
@@ -17,9 +17,7 @@ export const handleDeleteErrors = (errors) => {
     errors.find((error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTINS')
   ) {
     AppToaster.show({
-      message: formatMessage({
-        id: 'the_item_has_associated_transactions',
-      }),
+      message: intl.get('the_item_has_associated_transactions'),
       intent: Intent.DANGER,
     });
   }
@@ -30,10 +28,7 @@ export const handleDeleteErrors = (errors) => {
     )
   ) {
     AppToaster.show({
-      message: formatMessage({
-        id:
-          'you_could_not_delete_item_that_has_associated_inventory_adjustments_transacions',
-      }),
+      message: intl.get('you_could_not_delete_item_that_has_associated_inventory_adjustments_transacions'),
       intent: Intent.DANGER,
     });
   }
@@ -43,10 +38,7 @@ export const handleDeleteErrors = (errors) => {
     )
   ) {
     AppToaster.show({
-      message: formatMessage({
-        id:
-          'cannot_change_item_type_to_inventory_with_item_has_associated_transactions',
-      }),
+      message: intl.get('cannot_change_item_type_to_inventory_with_item_has_associated_transactions'),
       intent: Intent.DANGER,
     });
   }

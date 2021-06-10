@@ -1,6 +1,7 @@
 import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import { useDeleteUser } from 'hooks/query';
 import { AppToaster } from 'components';
@@ -24,7 +25,7 @@ function UserDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { mutateAsync: deleteUserMutate, isLoading } = useDeleteUser();
 
   const handleCancelUserDelete = () => {
@@ -35,9 +36,7 @@ function UserDeleteAlert({
     deleteUserMutate(userId)
       .then((response) => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_user_has_been_deleted_successfully',
-          }),
+          message: intl.get('the_user_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
         closeAlert(name);

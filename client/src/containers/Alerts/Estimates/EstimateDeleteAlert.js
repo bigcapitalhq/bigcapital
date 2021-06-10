@@ -1,10 +1,8 @@
 import React, { useCallback } from 'react';
-import {
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-  useIntl,
-} from 'react-intl';
+import intl from 'react-intl-universal';
+import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
+
 import { useDeleteEstimate } from 'hooks/query';
 
 import { AppToaster } from 'components';
@@ -27,7 +25,7 @@ function EstimateDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { mutateAsync: deleteEstimateMutate, isLoading } = useDeleteEstimate();
 
   // handle cancel delete  alert.
@@ -40,9 +38,7 @@ function EstimateDeleteAlert({
     deleteEstimateMutate(estimateId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_estimate_has_been_deleted_successfully',
-          }),
+          message: intl.get('the_estimate_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
       })

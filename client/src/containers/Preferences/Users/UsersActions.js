@@ -3,7 +3,7 @@ import {
   Button,
   Intent,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import Icon from 'components/Icon';
 import withDialogActions from 'containers/Dialog/withDialogActions';

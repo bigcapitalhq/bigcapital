@@ -7,7 +7,7 @@ import {
   Button,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 
 import { useAutofocus } from 'hooks';

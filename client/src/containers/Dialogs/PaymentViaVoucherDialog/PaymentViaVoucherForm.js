@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, FormGroup, InputGroup, Intent } from '@blueprintjs/core';
 import { Form, FastField, ErrorMessage, useFormikContext } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { compose } from 'redux';
 
 import { CLASSES } from 'common/classes';

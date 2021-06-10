@@ -5,7 +5,7 @@ import { sumBy } from 'lodash';
 import { CLASSES } from 'common/classes';
 import { compose } from 'utils';
 import { Money } from 'components';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import PaymentMadeFormHeaderFields from './PaymentMadeFormHeaderFields';
 import withSettings from 'containers/Settings/withSettings';

@@ -3,7 +3,7 @@ import {
   FormGroup,
   Classes,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 
 import { AccountsMultiSelect, Row, Col } from 'components';

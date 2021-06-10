@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
 import { getColumnWidth } from 'utils';
 import { If, Icon } from 'components';
@@ -11,7 +11,7 @@ import FinancialLoadingBar from '../FinancialLoadingBar';
  * Retrieve purchases by items table columns.
  */
 export const usePurchasesByItemsTableColumns = () => {
-  const { formatMessage } = useIntl();
+  
 
   // purchases by items context.
   const {
@@ -21,14 +21,14 @@ export const usePurchasesByItemsTableColumns = () => {
   return React.useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'item_name' }),
+        Header: intl.get('item_name'),
         accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'name',
         width: 180,
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'quantity_purchased' }),
+        Header: intl.get('quantity_purchased'),
         accessor: 'quantity_purchased_formatted',
         Cell: CellTextSpan,
         className: 'quantity_purchased_formatted',
@@ -38,7 +38,7 @@ export const usePurchasesByItemsTableColumns = () => {
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'purchase_amount' }),
+        Header: intl.get('purchase_amount'),
         accessor: 'purchase_cost_formatted',
         Cell: CellTextSpan,
         className: 'purchase_cost_formatted',
@@ -48,7 +48,7 @@ export const usePurchasesByItemsTableColumns = () => {
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'average_price' }),
+        Header: intl.get('average_price'),
         accessor: 'average_cost_price_formatted',
         Cell: CellTextSpan,
         className: 'average_cost_price_formatted',
@@ -58,7 +58,7 @@ export const usePurchasesByItemsTableColumns = () => {
         textOverview: true,
       },
     ],
-    [tableRows,formatMessage],
+    [tableRows],
   );
 };
 

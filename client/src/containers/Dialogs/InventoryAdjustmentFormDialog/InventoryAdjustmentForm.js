@@ -3,7 +3,7 @@ import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
 import { omit, get } from 'lodash';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 
 import 'style/pages/Items/ItemAdjustmentDialog.scss';
 
@@ -44,7 +44,7 @@ function InventoryAdjustmentForm({
     createInventoryAdjMutate,
   } = useInventoryAdjContext();
 
-  const { formatMessage } = useIntl();
+  
 
   // Initial form values.
   const initialValues = {
@@ -65,9 +65,7 @@ function InventoryAdjustmentForm({
         closeDialog(dialogName);
 
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_make_adjustment_has_been_created_successfully',
-          }),
+          message: intl.get('the_make_adjustment_has_been_created_successfully'),
           intent: Intent.SUCCESS,
         });
       })

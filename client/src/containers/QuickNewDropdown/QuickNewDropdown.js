@@ -1,22 +1,25 @@
 import React from 'react';
 import { Button, MenuItem } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { useHistory } from 'react-router-dom';
 import { Icon } from 'components';
 import { Position } from '@blueprintjs/core';
-import quickNewOptions from 'common/quickNewOptions';
+import { getQuickNewActions } from 'common/quickNewOptions';
 import { Select } from '@blueprintjs/select';
 
 /**
  * Quick New Dropdown.
  */
-function QuickNewDropdown() {
+export default function QuickNewDropdown() {
   const history = useHistory();
+  const quickNewOptions = getQuickNewActions();
 
+  // Handle click quick new button.
   const handleClickQuickNew = ({ path }) => {
     history.push(`/${path}`);
   };
 
+  // Item renderer.
   const itemRenderer = (item, { handleClick, modifiers, query }) => (
     <MenuItem text={item.name} label={item.label} onClick={handleClick} />
   );
@@ -38,5 +41,3 @@ function QuickNewDropdown() {
     </Select>
   );
 }
-
-export default QuickNewDropdown;

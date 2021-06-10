@@ -10,7 +10,7 @@ import {
   transformToForm,
 } from 'utils';
 import { AppToaster } from 'components';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { useFormikContext } from 'formik';
 
 const ERROR = {
@@ -118,23 +118,19 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
 
   if ((error = getError(ERROR.RECEIVABLE_ENTRIES_HAS_NO_CUSTOMERS))) {
     toastMessages.push(
-      formatMessage({
-        id: 'should_select_customers_with_entries_have_receivable_account',
-      }),
+      intl.get('should_select_customers_with_entries_have_receivable_account'),
     );
     setEntriesErrors(error.indexes, 'contact_id', 'error');
   }
   if ((error = getError(ERROR.ENTRIES_SHOULD_ASSIGN_WITH_CONTACT))) {
     if (error.meta.find(meta => meta.contact_type === 'customer')) {
       toastMessages.push(
-        formatMessage({
-          id: 'receivable_accounts_should_assign_with_customers',
-        }),
+        intl.get('receivable_accounts_should_assign_with_customers'),
       );
     }
     if (error.meta.find(meta => meta.contact_type === 'vendor')) {
       toastMessages.push(
-        formatMessage({ id: 'payable_accounts_should_assign_with_vendors' }),
+        intl.get('payable_accounts_should_assign_with_vendors'),
       );
     }
     const indexes = error.meta.map((meta => meta.indexes)).flat();
@@ -144,9 +140,7 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
     newErrors = setWith(
       newErrors,
       'journal_number',
-      formatMessage({
-        id: 'journal_number_is_already_used',
-      }),
+      intl.get('journal_number_is_already_used'),
     );
   }
   setErrors({ ...newErrors });

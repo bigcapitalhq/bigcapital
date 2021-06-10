@@ -10,11 +10,15 @@ import {
 import BaseController from 'api/controllers/BaseController';
 import InventoryDetailsService from 'services/FinancialStatements/InventoryDetails/InventoryDetailsService';
 import InventoryDetailsTable from 'services/FinancialStatements/InventoryDetails/InventoryDetailsTable';
+import HasTenancyService from 'services/Tenancy/TenancyService';
 
 @Service()
 export default class InventoryDetailsController extends BaseController {
   @Inject()
   inventoryDetailsService: InventoryDetailsService;
+
+  @Inject()
+  tenancy: HasTenancyService;
 
   /**
    * Router constructor.
@@ -71,8 +75,9 @@ export default class InventoryDetailsController extends BaseController {
   /**
    * Transformes the report statement to table rows.
    */
-  private transformToTableRows(inventoryDetails) {
-    const inventoryDetailsTable = new InventoryDetailsTable(inventoryDetails);
+  private transformToTableRows(inventoryDetails, tenantId: number) {
+    const i18n = this.tenancy.i18n(tenantId);
+    const inventoryDetailsTable = new InventoryDetailsTable(inventoryDetails, i18n);
 
     return {
       table: {
@@ -108,7 +113,7 @@ export default class InventoryDetailsController extends BaseController {
         case 'application/json+table':
           return res
             .status(200)
-            .send(this.transformToTableRows(inventoryDetails));
+            .send(this.transformToTableRows(inventoryDetails, tenantId));
         case 'json':
         default:
           return res

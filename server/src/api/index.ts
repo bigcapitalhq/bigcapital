@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { Container } from 'typedi';
+import i18n from 'i18n';
 
 // Middlewares
 import JWTAuth from 'api/middleware/jwtAuth';
@@ -47,6 +48,7 @@ export default () => {
 
   // - Global routes.
   // ---------------------------
+  app.use(i18n.init);
   app.use(I18nMiddleware);
 
   app.use('/auth', Container.get(Authentication).router());

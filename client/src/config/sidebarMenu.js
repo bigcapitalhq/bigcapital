@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 export default [
   {
@@ -16,7 +16,7 @@ export default [
     text: <T id={'items'} />,
     children: [
       {
-        text: <T id={'items_list'} />,
+        text: <T id={'items'} />,
         href: '/items',
       },
       {
@@ -67,7 +67,7 @@ export default [
         newTabHref: '/bills/new',
       },
       {
-        text: <T id={'payment_made'} />,
+        text: <T id={'payment_mades'} />,
         href: '/payment-mades',
         newTabHref: '/payment-mades/new',
       },

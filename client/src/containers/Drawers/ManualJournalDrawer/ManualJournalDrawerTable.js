@@ -1,7 +1,7 @@
 import React from 'react';
 import { Classes, Tooltip, Position } from '@blueprintjs/core';
 
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { DataTable, Money, If, Icon } from 'components';
 import { isBlank } from 'utils';
 
@@ -32,17 +32,17 @@ export default function ManualJournalDrawerTable({
   const columns = React.useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'account_name' }),
+        Header: intl.get('account_name'),
         accessor: 'account.name',
         width: 130,
       },
       {
-        Header: formatMessage({ id: 'contact' }),
+        Header: intl.get('contact'),
         accessor: 'contact.display_name',
         width: 130,
       },
       {
-        Header: formatMessage({ id: 'credit' }),
+        Header: intl.get('credit'),
         accessor: ({ credit }) =>
           !isBlank(credit) && credit !== 0 ? (
             <Money amount={credit} currency={currency_code} />
@@ -50,7 +50,7 @@ export default function ManualJournalDrawerTable({
         width: 80,
       },
       {
-        Header: formatMessage({ id: 'debit' }),
+        Header: intl.get('debit'),
         accessor: ({ debit }) =>
           !isBlank(debit) && debit !== 0 ? (
             <Money amount={debit} currency={currency_code} />
@@ -58,7 +58,7 @@ export default function ManualJournalDrawerTable({
         width: 80,
       },
       {
-        Header: formatMessage({ id: 'note' }),
+        Header: intl.get('note'),
         accessor: NoteAccessor,
         width: 80,
       },

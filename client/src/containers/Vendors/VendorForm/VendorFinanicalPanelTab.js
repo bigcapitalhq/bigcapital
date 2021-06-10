@@ -11,7 +11,7 @@ import {
   Row,
   Col,
 } from 'components';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { momentFormatter, tansformDateValue, inputIntent } from 'utils';
 import { useVendorFormContext } from './VendorFormProvider';
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import {
   Position,
   Menu,
@@ -18,34 +19,34 @@ export function ActionsMenu({
   payload: { onEdit, onDelete, onClose, onDrawer },
   row: { original: receipt },
 }) {
-  const { formatMessage } = useIntl();
+  
 
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
-        text={formatMessage({ id: 'view_details' })}
+        text={intl.get('view_details')}
       />
       <MenuDivider />
       <MenuItem
         icon={<Icon icon="pen-18" />}
-        text={formatMessage({ id: 'edit_receipt' })}
+        text={intl.get('edit_receipt')}
         onClick={safeCallback(onEdit, receipt)}
       />
       <If condition={!receipt.is_closed}>
         <MenuItem
           icon={<Icon icon={'check'} iconSize={18} />}
-          text={formatMessage({ id: 'mark_as_closed' })}
+          text={intl.get('mark_as_closed')}
           onClick={safeCallback(onClose, receipt)}
         />
       </If>
       <MenuItem
         icon={<Icon icon={'receipt-24'} iconSize={16} />}
-        text={formatMessage({ id: 'receipt_paper' })}
+        text={intl.get('receipt_paper')}
         onClick={safeCallback(onDrawer, receipt)}
       />
       <MenuItem
-        text={formatMessage({ id: 'delete_receipt' })}
+        text={intl.get('delete_receipt')}
         intent={Intent.DANGER}
         onClick={safeCallback(onDelete, receipt)}
         icon={<Icon icon="trash-16" iconSize={16} />}
@@ -93,60 +94,60 @@ export function StatusAccessor(receipt) {
  * Retrieve receipts table columns.
  */
 export function useReceiptsTableColumns() {
-  const { formatMessage } = useIntl();
+  
 
   return React.useMemo(
     () => [
       {
         id: 'receipt_date',
-        Header: formatMessage({ id: 'receipt_date' }),
+        Header: intl.get('receipt_date'),
         accessor: (r) => moment(r.receipt_date).format('YYYY MMM DD'),
         width: 140,
         className: 'receipt_date',
       },
       {
         id: 'customer',
-        Header: formatMessage({ id: 'customer_name' }),
+        Header: intl.get('customer_name'),
         accessor: 'customer.display_name',
         width: 140,
         className: 'customer_id',
       },
       {
         id: 'receipt_number',
-        Header: formatMessage({ id: 'receipt_number' }),
+        Header: intl.get('receipt_number'),
         accessor: 'receipt_number',
         width: 140,
         className: 'receipt_number',
       },
       {
         id: 'deposit_account',
-        Header: formatMessage({ id: 'deposit_account' }),
+        Header: intl.get('deposit_account'),
         accessor: 'deposit_account.name',
         width: 140,
         className: 'deposit_account',
       },
       {
         id: 'amount',
-        Header: formatMessage({ id: 'amount' }),
+        Header: intl.get('amount'),
         accessor: (r) => <Money amount={r.amount} currency={r.currency_code} />,
         width: 140,
         className: 'amount',
       },
       {
         id: 'status',
-        Header: formatMessage({ id: 'status' }),
+        Header: intl.get('status'),
         accessor: StatusAccessor,
         width: 140,
         className: 'status',
       },
       {
         id: 'reference_no',
-        Header: formatMessage({ id: 'reference_no' }),
+        Header: intl.get('reference_no'),
         accessor: 'reference_no',
         width: 140,
         className: 'reference_no',
       },
     ],
-    [formatMessage],
+    [],
   );
 }

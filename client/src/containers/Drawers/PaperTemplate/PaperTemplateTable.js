@@ -1,31 +1,31 @@
 import React, { useMemo } from 'react';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { DataTable, Money } from 'components';
 
 export default function DrawerTemplateTable({ tableData, currencyCode }) {
   const columns = useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'description' }),
+        Header: intl.get('description'),
         accessor: 'description',
         disableSortBy: true,
         width: 150,
       },
       {
-        Header: formatMessage({ id: 'rate' }),
+        Header: intl.get('rate'),
         accessor: 'rate',
         accessor: ({ rate }) => <Money amount={rate} currency={currencyCode} />,
         disableSortBy: true,
         width: 80,
       },
       {
-        Header: formatMessage({ id: 'qty' }),
+        Header: intl.get('qty'),
         accessor: 'quantity',
         disableSortBy: true,
         width: 50,
       },
       {
-        Header: formatMessage({ id: 'Total' }),
+        Header: intl.get('Total'),
         accessor: ({ total }) => (
           <Money amount={total} currency={currencyCode} />
         ),

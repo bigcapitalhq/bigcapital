@@ -2,7 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 import { FormGroup, InputGroup, ControlGroup } from '@blueprintjs/core';
 import { FastField, Field, ErrorMessage } from 'formik';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import {
   Hint,
   FieldRequiredHint,
@@ -20,7 +21,7 @@ import { useAutofocus } from 'hooks';
  */
 function VendorFormPrimarySection() {
   const firstNameFieldRef = useAutofocus();
-  const { formatMessage } = useIntl();
+  
 
   return (
     <div className={'customer-form__primary-section-content'}>
@@ -52,7 +53,7 @@ function VendorFormPrimarySection() {
           <FastField name={'first_name'}>
             {({ field, meta: { error, touched } }) => (
               <InputGroup
-                placeholder={formatMessage({ id: 'first_name' })}
+                placeholder={intl.get('first_name')}
                 intent={inputIntent({ error, touched })}
                 className={classNames('input-group--first-name')}
                 inputRef={(ref) => (firstNameFieldRef.current = ref)}
@@ -64,7 +65,7 @@ function VendorFormPrimarySection() {
           <FastField name={'last_name'}>
             {({ field, meta: { error, touched } }) => (
               <InputGroup
-                placeholder={formatMessage({ id: 'last_name' })}
+                placeholder={intl.get('last_name')}
                 intent={inputIntent({ error, touched })}
                 className={classNames('input-group--last-name')}
                 {...field}

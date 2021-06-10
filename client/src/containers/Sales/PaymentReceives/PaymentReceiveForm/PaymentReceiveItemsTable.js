@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { CloudLoadingIndicator } from 'components';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import { CLASSES } from 'common/classes';
 import { usePaymentReceiveInnerContext } from './PaymentReceiveInnerProvider';

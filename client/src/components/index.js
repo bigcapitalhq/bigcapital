@@ -3,6 +3,7 @@ import Money from './Money';
 import Icon from './Icon';
 import Choose from './Utils/Choose';
 import For from './Utils/For';
+import { FormattedMessage, FormattedHTMLMessage } from './FormattedMessage';
 import ListSelect from './ListSelect';
 import FinancialStatement from './FinancialStatement';
 import DynamicFilterValueField from './DynamicFilter/DynamicFilterValueField';
@@ -58,14 +59,19 @@ import MaterialProgressBar from './MaterialProgressBar';
 
 const Hint = FieldHint;
 
+const T = FormattedMessage;
+
 export {
   If,
   For,
-  Money,
+  Choose,
   Icon,
+  FormattedMessage,
+  FormattedHTMLMessage,
+  T,
+  Money,
   ListSelect,
   FinancialStatement,
-  Choose,
   DynamicFilterValueField,
   DynamicFilterCompatatorField,
   MODIFIER,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import moment from 'moment';
 import { Button } from '@blueprintjs/core';
 import { Icon, If } from 'components';
@@ -10,58 +10,58 @@ import FinancialLoadingBar from '../FinancialLoadingBar';
  * Retrieve the journal table columns.
  */
 export const useJournalTableColumns = () => {
-  const { formatMessage } = useIntl();
+  
 
   return React.useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'date' }),
+        Header: intl.get('date'),
         accessor: (row) =>
           row.date ? moment(row.date).format('YYYY MMM DD') : '',
         className: 'date',
         width: 100,
       },
       {
-        Header: formatMessage({ id: 'transaction_type' }),
+        Header: intl.get('transaction_type'),
         accessor: 'reference_type_formatted',
         className: 'reference_type_formatted',
         width: 120,
       },
       {
-        Header: formatMessage({ id: 'num' }),
+        Header: intl.get('num'),
         accessor: 'transaction_number',
         className: 'reference_id',
         width: 70,
       },
       {
-        Header: formatMessage({ id: 'description' }),
+        Header: intl.get('description'),
         accessor: 'note',
         className: 'note',
       },
       {
-        Header: formatMessage({ id: 'acc_code' }),
+        Header: intl.get('acc_code'),
         accessor: 'account_code',
         width: 95,
         className: 'account_code',
       },
       {
-        Header: formatMessage({ id: 'account' }),
+        Header: intl.get('account'),
         accessor: 'account_name',
         className: 'account_name',
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'credit' }),
+        Header: intl.get('credit'),
         accessor: 'formatted_credit',
         className: 'credit',
       },
       {
-        Header: formatMessage({ id: 'debit' }),
+        Header: intl.get('debit'),
         accessor: 'formatted_debit',
         className: 'debit',
       },
     ],
-    [formatMessage],
+    [],
   );
 };
 

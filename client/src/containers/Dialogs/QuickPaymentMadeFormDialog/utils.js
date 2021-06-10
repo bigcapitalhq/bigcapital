@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 // Default initial values of payment made.
 export const defaultPaymentMade = {
@@ -18,15 +18,13 @@ export const transformErrors = (errors, { setFieldError }) => {
   if (getError('PAYMENT.NUMBER.NOT.UNIQUE')) {
     setFieldError(
       'payment_number',
-      formatMessage({ id: 'payment_number_is_not_unique' }),
+      intl.get('payment_number_is_not_unique'),
     );
   }
   if (getError('INVALID_PAYMENT_AMOUNT')) {
     setFieldError(
       'payment_amount',
-      formatMessage({
-        id: 'the_payment_amount_bigger_than_invoice_due_amount',
-      }),
+      intl.get('the_payment_amount_bigger_than_invoice_due_amount'),
     );
   }
 };
