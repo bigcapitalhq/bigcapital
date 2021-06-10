@@ -1,6 +1,8 @@
 import React, { useMemo, useCallback } from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { pick } from 'lodash';
+import intl from 'react-intl-universal';
+
 
 import { DashboardViewsTabs } from 'components';
 import { useAccountsChartContext } from 'containers/Accounts/AccountsChartProvider';
@@ -45,7 +47,7 @@ function AccountsViewsTabs({
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          defaultTabText={'All Accounts'}
+          defaultTabText={intl.get('all_accounts_')}
           currentViewId={accountsCustomViewId}
           resourceName={'accounts'}
           onChange={handleTabChange}

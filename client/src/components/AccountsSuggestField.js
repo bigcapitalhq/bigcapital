@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
+import intl from 'react-intl-universal';
 
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
@@ -15,7 +16,7 @@ export default function AccountsSuggestField({
   accounts,
   initialAccountId,
   selectedAccountId,
-  defaultSelectText = 'Select account',
+  defaultSelectText = intl.formatMessage({ id: 'select_account' }),
   popoverFill = false,
   onAccountSelected,
 
@@ -32,7 +33,7 @@ export default function AccountsSuggestField({
       filterByRootTypes,
       filterByParentTypes,
       filterByTypes,
-      filterByNormal,  
+      filterByNormal,
     });
     return filteredAccounts;
   }, [

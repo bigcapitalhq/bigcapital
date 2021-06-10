@@ -9,9 +9,13 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-import { AccountsSelectList, FieldRequiredHint } from 'components';
-import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
+
+import {
+  FormattedMessage as T,
+  AccountsSelectList,
+  FieldRequiredHint,
+} from 'components';
 import { handleStringChange, inputIntent } from 'utils';
 
 import { useAccountantFormContext } from './AccountantFormProvider';
@@ -21,8 +25,6 @@ import { useAccountantFormContext } from './AccountantFormProvider';
  */
 export default function AccountantForm() {
   const history = useHistory();
-
-  
 
   const { isSubmitting } = useFormikContext();
 
@@ -103,7 +105,7 @@ export default function AccountantForm() {
                 setFieldValue('accounting_basis', _value);
               })}
             >
-              <Radio label={intl.get('Cash')} value="cash" />
+              <Radio label={intl.get('cash')} value="cash" />
               <Radio label={intl.get('accrual')} value="accrual" />
             </RadioGroup>
           </FormGroup>

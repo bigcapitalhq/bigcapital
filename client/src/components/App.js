@@ -5,6 +5,8 @@ import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
 import 'style/App.scss';
+import 'moment/locale/ar-ly';
+import 'moment/locale/es-us'
 
 import AppIntlLoader from './AppIntlLoader';
 import PrivateRoute from 'components/Guards/PrivateRoute';

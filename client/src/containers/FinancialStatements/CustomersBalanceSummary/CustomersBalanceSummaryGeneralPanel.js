@@ -57,7 +57,7 @@ export default function CustomersBalanceSummaryGeneralPanel() {
                   inline={true}
                   name={'percentage'}
                   small={true}
-                  label={'Percentage Of Column'}
+                  label={<T id={'percentage_of_column'}/>}
                   {...field}
                 />
               </FormGroup>

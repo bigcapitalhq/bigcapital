@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import { getColumnWidth } from 'utils';
 import { FormattedMessage as T } from 'components';
@@ -16,7 +17,9 @@ export const useAPAgingSummaryColumns = () => {
   const agingColumns = React.useMemo(() => {
     return columns.map(
       (agingColumn) =>
-        `${agingColumn.before_days} - ${agingColumn.to_days || 'And Over'}`,
+        `${agingColumn.before_days} - ${
+          agingColumn.to_days || intl.get('and_over')
+        }`,
     );
   }, [columns]);
 
@@ -60,14 +63,12 @@ export const useAPAgingSummaryColumns = () => {
 /**
  * A/P aging summary sheet loading bar.
  */
- export function APAgingSummarySheetLoadingBar() {
-  const {
-    isAPAgingFetching
-  } = useAPAgingSummaryContext();
+export function APAgingSummarySheetLoadingBar() {
+  const { isAPAgingFetching } = useAPAgingSummaryContext();
 
   return (
     <If condition={isAPAgingFetching}>
       <FinancialLoadingBar />
     </If>
-  )
+  );
 }

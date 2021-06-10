@@ -22,10 +22,10 @@ export default function DrawerTemplateTable({ tableData, currencyCode }) {
         Header: intl.get('qty'),
         accessor: 'quantity',
         disableSortBy: true,
-        width: 50,
+        width: 80,
       },
       {
-        Header: intl.get('Total'),
+        Header: intl.get('total'),
         accessor: ({ total }) => (
           <Money amount={total} currency={currencyCode} />
         ),

@@ -68,7 +68,7 @@ function JournalHeader({
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
             <Tab
               id="general"
-              title={'General'}
+              title={<T id={'general'} />}
               panel={<JournalSheetHeaderGeneral />}
             />
           </Tabs>

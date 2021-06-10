@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import intl from 'react-intl-universal';
 import { find } from 'lodash';
 import rtlDetect from 'rtl-detect';
@@ -68,6 +69,7 @@ export default function AppIntlLoader({
         },
       });
     }).then(() => {
+      moment.locale('ar-ly');
       setIsLoading(false);
     });
   }, [currentLocale, setIsLoading]);

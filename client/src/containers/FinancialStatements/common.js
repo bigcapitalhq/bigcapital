@@ -3,21 +3,46 @@ import { transfromToSnakeCase, flatObject } from 'utils';
 import intl from 'react-intl-universal';
 
 export const displayColumnsByOptions = [
-  { key: 'total', name: 'Total', type: 'total', by: '' },
-  { key: 'year', name: 'Date/Year', type: 'date_periods', by: 'year' },
-  { key: 'month', name: 'Date/Month', type: 'date_periods', by: 'month' },
-  { key: 'week', name: 'Date/Week', type: 'date_periods', by: 'month' },
-  { key: 'day', name: 'Date/Day', type: 'date_periods', by: 'day' },
-  { key: 'quarter', name: 'Date/Quarter', type: 'date_periods', by: 'quarter' },
+  { key: 'total', name: intl.get('total'), type: 'total', by: '' },
+  {
+    key: 'year',
+    name: intl.get('date_year'),
+    type: 'date_periods',
+    by: 'year',
+  },
+  {
+    key: 'month',
+    name: intl.get('date_month'),
+    type: 'date_periods',
+    by: 'month',
+  },
+  {
+    key: 'week',
+    name: intl.get('date_week'),
+    type: 'date_periods',
+    by: 'month',
+  },
+  {
+    key: 'day',
+    name: intl.get('date_day'),
+    type: 'date_periods',
+    by: 'day',
+  },
+  {
+    key: 'quarter',
+    name: intl.get('date_quarter'),
+    type: 'date_periods',
+    by: 'quarter',
+  },
 ];
 
 export const dateRangeOptions = [
-  { value: 'today', label: 'Today' },
-  { value: 'this_week', label: 'This Week' },
-  { value: 'this_month', label: 'This Month' },
-  { value: 'this_quarter', label: 'This Quarter' },
-  { value: 'this_year', label: 'This Year' },
-  { value: 'custom', label: 'Custom Range' },
+  { value: 'today', label: intl.get('today') },
+  { value: 'this_week', label: intl.get('this_week') },
+  { value: 'this_month', label: intl.get('this_month') },
+  { value: 'this_quarter', label: intl.get('this_quarter') },
+  { value: 'this_year', label: intl.get('this_year') },
+  { value: 'custom', label: intl.get('custom_range') },
 ];
 
 export const filterAccountsOptions = [
@@ -34,7 +59,9 @@ export const filterAccountsOptions = [
   {
     key: 'with-transactions',
     name: intl.get('accounts_with_transactions'),
-    hint: intl.get('include_accounts_once_has_transactions_on_given_date_period'),
+    hint: intl.get(
+      'include_accounts_once_has_transactions_on_given_date_period',
+    ),
   },
 ];
 

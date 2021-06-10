@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
 import { Button } from '@blueprintjs/core';
-import { Icon, If } from 'components';
+import { Icon, If, FormattedMessage as T } from 'components';
 import { useJournalSheetContext } from './JournalProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
@@ -10,7 +10,6 @@ import FinancialLoadingBar from '../FinancialLoadingBar';
  * Retrieve the journal table columns.
  */
 export const useJournalTableColumns = () => {
-  
 
   return React.useMemo(
     () => [
@@ -69,43 +68,38 @@ export const useJournalTableColumns = () => {
  * Journal sheet loading bar.
  */
 export function JournalSheetLoadingBar() {
-  const {
-    isFetching
-  } = useJournalSheetContext();
+  const { isFetching } = useJournalSheetContext();
 
   return (
     <If condition={isFetching}>
       <FinancialLoadingBar />
     </If>
-  )
+  );
 }
 
 /**
  * Journal sheet alerts.
  */
- export function JournalSheetAlerts() {
-  const {
-    isLoading,
-    refetchSheet,
-    journalSheet,
-  } = useJournalSheetContext();
+export function JournalSheetAlerts() {
+  const { isLoading, refetchSheet, journalSheet } = useJournalSheetContext();
 
   // Handle refetch the report sheet.
   const handleRecalcReport = () => {
     refetchSheet();
   };
   // Can't display any error if the report is loading.
-  if (isLoading) { return null; }
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <If condition={journalSheet.meta.is_cost_compute_running}>
       <div class="alert-compute-running">
-        <Icon icon="info-block" iconSize={12} /> Just a moment! We're
-        calculating your cost transactions and this doesn't take much time.
-        Please check after sometime.{' '}
+        <Icon icon="info-block" iconSize={12} />
+        <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
 
         <Button onClick={handleRecalcReport} minimal={true} small={true}>
-          Refresh
+          <T id={'refresh'} />
         </Button>
       </div>
     </If>

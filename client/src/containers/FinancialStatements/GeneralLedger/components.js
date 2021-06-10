@@ -2,6 +2,8 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
 import { Icon, If } from 'components';
+import { FormattedMessage as T } from 'react-intl';
+
 import { getForceWidth, getColumnWidth } from 'utils';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
@@ -68,7 +70,6 @@ export function useGeneralLedgerTableColumns() {
         accessor: 'formatted_credit',
         className: 'credit',
         width: getColumnWidth(tableRows, 'formatted_credit', {
-        
           minWidth: 100,
           magicSpacing: 10,
         }),
@@ -105,33 +106,28 @@ export function useGeneralLedgerTableColumns() {
   );
 }
 
-
 /**
  * General ledger sheet alerts.
  */
- export function GeneralLedgerSheetAlerts() {
-  const {
-    generalLedger,
-    isLoading,
-    sheetRefresh
-  } = useGeneralLedgerContext();
+export function GeneralLedgerSheetAlerts() {
+  const { generalLedger, isLoading, sheetRefresh } = useGeneralLedgerContext();
 
   // Handle refetch the report sheet.
   const handleRecalcReport = () => {
     sheetRefresh();
   };
   // Can't display any error if the report is loading.
-  if (isLoading) { return null; }
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <If condition={generalLedger.meta.is_cost_compute_running}>
       <div class="alert-compute-running">
-        <Icon icon="info-block" iconSize={12} /> Just a moment! We're
-        calculating your cost transactions and this doesn't take much time.
-        Please check after sometime.{' '}
-
+        <Icon icon="info-block" iconSize={12} />
+        <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
         <Button onClick={handleRecalcReport} minimal={true} small={true}>
-          Refresh
+          <T id={'refresh'} />
         </Button>
       </div>
     </If>
@@ -142,13 +138,11 @@ export function useGeneralLedgerTableColumns() {
  * General ledger sheet loading bar.
  */
 export function GeneralLedgerSheetLoadingBar() {
-  const {
-    isFetching,
-  } = useGeneralLedgerContext();
+  const { isFetching } = useGeneralLedgerContext();
 
   return (
     <If condition={isFetching}>
       <FinancialLoadingBar />
     </If>
-  )
+  );
 }
