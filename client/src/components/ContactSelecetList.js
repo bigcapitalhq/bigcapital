@@ -1,5 +1,7 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
+
 import { MenuItem, Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import classNames from 'classnames';
@@ -14,7 +16,7 @@ export default function ContactSelecetList({
   onContactSelected,
   popoverFill = false,
   disabled = false,
-  buttonProps
+  buttonProps,
 }) {
   const contacts = useMemo(
     () =>
@@ -89,6 +91,9 @@ export default function ContactSelecetList({
       className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, {
         [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
       })}
+      inputProps={{
+        placeholder: intl.get('filter_')
+      }}
     >
       <Button
         disabled={disabled}

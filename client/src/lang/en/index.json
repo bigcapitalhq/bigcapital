@@ -1105,5 +1105,6 @@
   "plan_radio_name":"{name}",
   "there_were_no_purchases_during_the_selected_date_range":"There were no purchases during the selected date range.",
   "there_were_no_sales_during_the_selected_date_range":"There were no sales during the selected date range.",
-  "there_were_no_inventory_transactions_during_the_selected_date_range":"There were no inventory transactions during the selected date range."
+  "there_were_no_inventory_transactions_during_the_selected_date_range":"There were no inventory transactions during the selected date range.",
+  "filter_":"Filter..."
 }
