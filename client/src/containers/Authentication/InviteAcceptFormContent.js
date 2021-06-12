@@ -36,7 +36,7 @@ export default function InviteUserFormContent() {
           <FastField name={'first_name'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
-                label={<T id={'First Name'} />}
+                label={<T id={'first_name'} />}
                 className={'form-group--first_name'}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name={'first_name'} />}
@@ -54,7 +54,7 @@ export default function InviteUserFormContent() {
           <FastField name={'last_name'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
-                label={<T id={'Last Name'} />}
+                label={<T id={'last_name'} />}
                 className={'form-group--last_name'}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name={'last_name'} />}
@@ -72,7 +72,7 @@ export default function InviteUserFormContent() {
       <FastField name={'phone_number'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
-            label={<T id={'Phone Number'} />}
+            label={<T id={'phone_number'} />}
             className={'form-group--phone_number'}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'phone_number'} />}
@@ -105,7 +105,7 @@ export default function InviteUserFormContent() {
 
       <div className={'invite-form__statement-section'}>
         <p>
-          <T id={'You email address is'} /> <b>{inviteMeta.email},</b> <br />
+          <T id={'you_email_address_is'} /> <b>{inviteMeta.email},</b> <br />
           <T id={'you_will_use_this_address_to_sign_in_to_bigcapital'} />
         </p>
         <p>
