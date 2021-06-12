@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import { setLocale } from 'yup';
 import intl from 'react-intl-universal';
 import { find } from 'lodash';
 import rtlDetect from 'rtl-detect';
@@ -30,6 +31,10 @@ function getCurrentLocal() {
  */
 function loadLocales(currentLocale) {
   return import(`../lang/${currentLocale}/index.json`);
+}
+
+function loadYupLocales(currentLocale) {
+  return import(`../lang/${currentLocale}/locale`);
 }
 
 /**
@@ -74,6 +79,14 @@ export default function AppIntlLoader({ children }) {
       });
   }, [currentLocale, setIsLoading]);
 
+  React.useEffect(() => {
+    loadYupLocales(currentLocale)
+      .then(({ locale }) => {
+        setLocale(locale);
+      })
+      .then(() => {});
+  }, [currentLocale]);
+  
   return (
     <DashboardLoadingIndicator isLoading={isLoading}>
       {children}
