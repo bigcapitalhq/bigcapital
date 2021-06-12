@@ -98,7 +98,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
               >
                 <ListSelect
                   items={currencies}
-                  noResults={<MenuItem disabled={true} text="No results." />}
+                  noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
                   popoverProps={{ minimal: true }}
                   onItemSelect={(item) => {
                     setFieldValue('baseCurrency', item.code);
@@ -133,7 +133,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
               >
                 <ListSelect
                   items={languages}
-                  noResults={<MenuItem disabled={true} text="No results." />}
+                  noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
                   onItemSelect={(item) => {
                     setFieldValue('language', item.value);
                   }}
@@ -165,7 +165,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
           >
             <ListSelect
               items={fiscalYearOptions}
-              noResults={<MenuItem disabled={true} text="No results." />}
+              noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
               selectedItem={value}
               selectedItemProp={'value'}
               textProp={'name'}

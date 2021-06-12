@@ -58,7 +58,7 @@ export default function ContactsMultiSelect({
   return (
     <MultiSelect
       items={contacts}
-      noResults={<MenuItem disabled={true} text="No results." />}
+      noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
       itemRenderer={contactRenderer}
       popoverProps={{ minimal: true }}
       filterable={true}

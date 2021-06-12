@@ -12,8 +12,6 @@ import { usePurchasesByItemsTableColumns } from './components';
  * purchases by items data table.
  */
 export default function PurchasesByItemsTable({ companyName }) {
-  
-
   // Purchases by items context.
   const {
     purchaseByItems: { tableRows, query },
@@ -55,7 +53,9 @@ export default function PurchasesByItemsTable({ companyName }) {
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={rowClassNames}
-        noResults={'There were no purchases during the selected date range.'}
+        noResults={intl.get(
+          'there_were_no_purchases_during_the_selected_date_range',
+        )}
       />
     </FinancialSheet>
   );

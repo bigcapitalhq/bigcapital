@@ -68,7 +68,7 @@ function ItemsListField({
   return (
     <ListSelect
       items={filteredItems}
-      noResults={<MenuItem disabled={true} text="No results." />}
+      noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
       itemRenderer={itemRenderer}
       itemPredicate={filterItem}
       popoverProps={{ minimal: true }}

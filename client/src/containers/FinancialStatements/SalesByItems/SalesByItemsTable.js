@@ -10,8 +10,6 @@ import { useSalesByItemsTableColumns } from './components';
  * Sales by items data table.
  */
 export default function SalesByItemsTable({ companyName }) {
-  
-
   // Sales by items context.
   const {
     salesByItems: { tableRows, query },
@@ -53,7 +51,9 @@ export default function SalesByItemsTable({ companyName }) {
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={rowClassNames}
-        noResults={'There were no sales during the selected date range.'}
+        noResults={intl.get(
+          'there_were_no_sales_during_the_selected_date_range',
+        )}
       />
     </FinancialSheet>
   );

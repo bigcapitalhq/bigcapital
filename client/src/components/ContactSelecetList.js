@@ -79,7 +79,7 @@ export default function ContactSelecetList({
   return (
     <Select
       items={contacts}
-      noResults={<MenuItem disabled={true} text="No results." />}
+      noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
       itemRenderer={handleContactRenderer}
       itemPredicate={filterContacts}
       filterable={true}
