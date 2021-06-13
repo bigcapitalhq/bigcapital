@@ -1,6 +1,7 @@
 import React from 'react';
 import { Omnibar } from '@blueprintjs/select';
 import { MenuItem } from '@blueprintjs/core';
+import { FormattedMessage as T } from 'components';
 import { compose } from 'utils';
 import withSearch from 'containers/GeneralSearch/withSearch';
 
@@ -30,7 +31,7 @@ function Search({
       <Omnibar
         className={'navbar-omnibar'}
         isOpen={globalSearchShow}
-        noResults={<MenuItem disabled={true} text="No results." />}
+        noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
         onClose={() => closeGlobalSearch(false)}
         resetOnSelect={true}
         itemRenderer={renderSearch}

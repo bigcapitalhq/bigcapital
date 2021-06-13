@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { ProgressBar, Intent } from '@blueprintjs/core';
 import { useBuildTenant } from 'hooks/query';
+import { FormattedMessage as T } from 'components';
 
 import 'style/pages/Setup/Initializing.scss';
 
@@ -25,22 +26,34 @@ export default function SetupInitializingForm() {
       <div className={'setup-initializing-form__title'}>
         {isLoading ? (
           <>
-            <h1>It's time to make your accounting really simple!</h1>
+            <h1>
+              <T id={'it_s_time_to_make_your_accounting_really_simple'} />
+            </h1>
             <p className={'paragraph'}>
-              while we set up your account, please remember to verify your
-              account by clicking on the link we sent to yout registered email
-              address
+              <T
+                id={
+                  'while_we_set_up_your_account_please_remember_to_verify_your_account'
+                }
+              />
             </p>
           </>
         ) : isError ? (
           <>
-            <h1>Something went wrong!</h1>
-            <p class="paragraph">Please refresh the page</p>
+            <h1>
+              <T id={'something_went_wrong'} />
+            </h1>
+            <p class="paragraph">
+              <T id={'please_refresh_the_page'} />
+            </p>
           </>
         ) : (
           <>
-            <h1>Waiting to redirect</h1>
-            <p class="paragraph">Refresh the page if redirect not worked.</p>
+            <h1>
+              <T id={'waiting_to_redirect'} />
+            </h1>
+            <p class="paragraph">
+              <T id={'refresh_the_page_if_redirect_not_worked'} />
+            </p>
           </>
         )}
       </div>

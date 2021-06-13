@@ -23,7 +23,7 @@ function PaymentReceiveListField({
   return (
     <ListSelect
       item={invoices}
-      noResults={<MenuItem disabled={true} text="No results." />}
+      noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
       itemRenderer={handleInvoiceRenderer}
       popoverProps={{ minimal: true }}
       onItemSelect={onInvoiceSelect}

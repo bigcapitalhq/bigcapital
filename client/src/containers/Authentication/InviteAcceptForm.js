@@ -13,15 +13,10 @@ import InviteAcceptFormContent from './InviteAcceptFormContent';
 
 export default function InviteAcceptForm() {
   const history = useHistory();
-  
 
   // Invite accept context.
-  const {
-    inviteAcceptMutate,
-    inviteMeta,
-    token,
-  } = useInviteAcceptContext();
- 
+  const { inviteAcceptMutate, inviteMeta, token } = useInviteAcceptContext();
+
   // Invite value.
   const inviteValue = {
     organization_name: '',
@@ -39,8 +34,13 @@ export default function InviteAcceptForm() {
     inviteAcceptMutate([values, token])
       .then((response) => {
         AppToaster.show({
-          message: `Congrats! Your account has been created and invited to
-            <strong>${inviteValue.organization_name}</strong> organization successfully.`,
+          message: intl.getHTML(
+            'congrats_your_account_has_been_created_and_invited',
+            {
+              organization_name: inviteValue.organization_name,
+            },
+          ),
+
           intent: Intent.SUCCESS,
         });
         history.push('/auth/login');
@@ -67,7 +67,7 @@ export default function InviteAcceptForm() {
           }
           if (errors.find((e) => e.type === 'INVITE.TOKEN.NOT.FOUND')) {
             AppToaster.show({
-              message: 'An unexpected error occurred',
+              message: intl.get('an_unexpected_error_occurred'),
               intent: Intent.DANGER,
               position: Position.BOTTOM,
             });

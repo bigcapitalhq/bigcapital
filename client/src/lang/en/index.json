@@ -348,7 +348,7 @@
   "session_expired": "Session Expired!",
   "this_report_does_not_contain_any_data_between_date_period": "This report does not contain any data between date period.",
   "welcome_organization_account_has_been_created": "👋 Welcome, You organization account has been created, Sign in now!",
-  "the_phone_number_already_used_in_another_account": "he phone number is already used in another account",
+  "the_phone_number_already_used_in_another_account": "the phone number is already used in another account",
   "the_email_already_used_in_another_account": "The email is already used in another account",
   "hide_filter": "Hide filter",
   "show_filter": "Show filter",
@@ -1109,5 +1109,17 @@
   "payment_made_empty_status_description": "The payments transactions will appear once payments made to purchases invoices.",
   "bill_empty_status_description": "Record purchases transactions from vendors who make no or partial payment and help you keep track of accounts payable with a vendor.",
   "invoices_empty_status_description": "Record sales transactions from customers who make no or partial payment and help you keep track of accounts receivable with a customer.",
-  "receipt_empty_status_description": "Create a sales receipt any time your customer immediately pays for products or services at the time of sale."
+  "receipt_empty_status_description": "Create a sales receipt any time your customer immediately pays for products or services at the time of sale.",
+  "there_were_no_purchases_during_the_selected_date_range": "There were no purchases during the selected date range.",
+  "there_were_no_sales_during_the_selected_date_range": "There were no sales during the selected date range.",
+  "there_were_no_inventory_transactions_during_the_selected_date_range": "There were no inventory transactions during the selected date range.",
+  "filter_": "Filter...",
+  "all_rights_reserved": "© {pre}-{current} All Rights Reserved.",
+  "congrats_your_account_has_been_created_and_invited": "Congrats! Your account has been created and invited to <strong>{organization_name} </strong> organization successfully.",
+  "it_s_time_to_make_your_accounting_really_simple": "It's time to make your accounting really simple!",
+  "while_we_set_up_your_account_please_remember_to_verify_your_account": "while we set up your account, please remember to verify your account by clicking on the link we sent to your registered email address",
+  "something_went_wrong": "Something went wrong!",
+  "please_refresh_the_page": "Please refresh the page",
+  "waiting_to_redirect": "Waiting to redirect",
+  "refresh_the_page_if_redirect_not_worked": "Refresh the page if redirect not worked."
 }

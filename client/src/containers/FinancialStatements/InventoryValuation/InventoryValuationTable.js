@@ -1,5 +1,5 @@
 import React from 'react';
-import intl from 'react-intl-universal';
+import intl, { init } from 'react-intl-universal';
 
 import FinancialSheet from 'components/FinancialSheet';
 import { DataTable } from 'components';
@@ -14,8 +14,6 @@ export default function InventoryValuationTable({
   //#ownProps
   companyName,
 }) {
-  
-
   // inventory valuation context.
   const {
     inventoryValuation: { tableRows },
@@ -56,7 +54,9 @@ export default function InventoryValuationTable({
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={rowClassNames}
-        noResults={'There were no inventory transactions during the selected date range.'}
+        noResults={intl.get(
+          'there_were_no_inventory_transactions_during_the_selected_date_range',
+        )}
       />
     </FinancialSheet>
   );

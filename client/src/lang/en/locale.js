@@ -1,4 +1,5 @@
 import printValue from '../printValue';
+
 export const locale = {
   mixed: {
     default: '${path} is invalid',

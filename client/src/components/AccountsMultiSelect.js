@@ -56,7 +56,7 @@ export default function AccountsMultiSelect({ accounts, onAccountSelected }) {
   return (
     <MultiSelect
       items={accounts}
-      noResults={<MenuItem disabled={true} text="No results." />}
+      noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
       itemRenderer={accountItem}
       popoverProps={{ minimal: true }}
       filterable={true}

@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import WorkflowIcon from './WorkflowIcon';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import withOrganizationActions from 'containers/Organization/withOrganizationActions';
 
 import 'style/pages/Setup/Congrats.scss';
