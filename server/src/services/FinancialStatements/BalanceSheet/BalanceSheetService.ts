@@ -92,6 +92,8 @@ export default class BalanceSheetStatementService
       transactionsRepository,
     } = this.tenancy.repositories(tenantId);
 
+    const i18n = this.tenancy.i18n(tenantId);
+
     // Settings tenant service.
     const settings = this.tenancy.settings(tenantId);
     const baseCurrency = settings.get({
@@ -127,7 +129,8 @@ export default class BalanceSheetStatementService
       filter,
       accounts,
       transactionsJournal,
-      baseCurrency
+      baseCurrency,
+      i18n
     );
     // Balance sheet data.
     const balanceSheetData = balanceSheetInstanace.reportData();

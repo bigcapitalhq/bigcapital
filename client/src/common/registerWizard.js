@@ -11,6 +11,6 @@ export const registerWizardSteps = [
     label: 'getting_started',
   },
   {
-    label: 'Congratulations',
+    label: 'congratulations',
   },
 ];

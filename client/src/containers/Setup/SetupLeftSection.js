@@ -42,7 +42,7 @@ export default function SetupLeftSection() {
 
         <div className={'content__organization'}>
           <span class="organization-id">
-            Oragnization ID: <span class="id">{ organizationId }</span>,
+            <T id={'organization_id'} />: <span class="id">{ organizationId }</span>,
           </span>
           <br />
           <span class="signout">

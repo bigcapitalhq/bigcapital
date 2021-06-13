@@ -21,6 +21,7 @@ import events from 'subscribers/events';
 import AccountTypesUtils from 'lib/AccountTypes';
 import { ERRORS } from './constants';
 import { flatToNestedArray } from 'utils';
+import I18nService from 'services/I18n/I18nService';
 
 @Service()
 export default class AccountsService {
@@ -35,6 +36,9 @@ export default class AccountsService {
 
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
+
+  @Inject()
+  i18nService: I18nService;
 
   /**
    * Retrieve account type or throws service error.
@@ -721,7 +725,9 @@ export default class AccountsService {
       ...account.toJSON(),
       currencyCode: baseCurrency,
     }));
-    return flatToNestedArray(_accounts, {
+    return flatToNestedArray(
+      this.i18nService.i18nMapper(_accounts, ['account_type_label'], tenantId),
+    {
       id: 'id',
       parentId: 'parent_account_id',
     });

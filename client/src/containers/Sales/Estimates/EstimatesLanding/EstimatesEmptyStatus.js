@@ -6,13 +6,12 @@ import { FormattedMessage as T } from 'components';
 
 export default function EstimatesEmptyStatus() {
   const history = useHistory();
-
   return (
     <EmptyStatus
       title={<T id={'it_s_time_to_send_estimates_to_your_customers'} />}
       description={
         <p>
-          <T id={'it_is_a_long_established_fact_that_a_reader'} />
+          <T id={'estimate_is_used_to_create_bid_proposal_or_quote'} />
         </p>
       }
       action={

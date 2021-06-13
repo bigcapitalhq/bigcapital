@@ -184,8 +184,13 @@ body.hide-scrollbar .Pane2 {
 
 // RTL Icons.
 html[dir="rtl"] {
-
   .bp3-icon-caret-right{
     transform: scaleX(-1);
+  }
+}
+
+html[lang^="ar"] {
+  body{
+    letter-spacing: -0.01rem;
   }
 }

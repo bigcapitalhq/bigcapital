@@ -12,7 +12,7 @@ export default function ReceiptsEmptyStatus() {
       title={<T id={'manage_the_organization_s_services_and_products'} />}
       description={
         <p>
-          <T id={'here_a_list_of_your_organization_products_and_services'} />
+          <T id={'receipt_empty_status_description'} />
         </p>
       }
       action={

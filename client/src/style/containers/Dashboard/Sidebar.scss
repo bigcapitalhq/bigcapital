@@ -169,7 +169,7 @@
         font-weight: 500;
         letter-spacing: 1px;
 
-        html[lang="ar"] &{
+        html[lang^="ar"] &{
           font-size: 12px;
           letter-spacing: 0;
         }

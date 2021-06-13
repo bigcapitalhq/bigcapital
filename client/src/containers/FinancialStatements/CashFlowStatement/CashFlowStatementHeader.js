@@ -28,8 +28,6 @@ function CashFlowStatementHeader({
   //#withCashStatementActions
   toggleCashFlowStatementFilterDrawer,
 }) {
-  
-
   // filter form initial values.
   const initialValues = {
     ...pageFilter,

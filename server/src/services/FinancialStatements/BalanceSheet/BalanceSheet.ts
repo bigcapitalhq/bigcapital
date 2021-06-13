@@ -36,7 +36,8 @@ export default class BalanceSheetStatement extends FinancialSheet {
     query: IBalanceSheetQuery,
     accounts: IAccount & { type: IAccountType }[],
     journalFinancial: IJournalPoster,
-    baseCurrency: string
+    baseCurrency: string,
+    i18n
   ) {
     super();
 
@@ -48,6 +49,8 @@ export default class BalanceSheetStatement extends FinancialSheet {
     this.baseCurrency = baseCurrency;
     this.comparatorDateType =
       query.displayColumnsType === 'total' ? 'day' : query.displayColumnsBy;
+
+    this.i18n = i18n;
 
     this.initDateRangeCollection();
   }
@@ -255,7 +258,7 @@ export default class BalanceSheetStatement extends FinancialSheet {
     accounts: IAccount & { type: IAccountType }[]
   ): IBalanceSheetSection {
     const result = {
-      name: structure.name,
+      name: this.i18n.__(structure.name),
       sectionType: structure.sectionType,
       type: structure.type,
       ...(structure.type === 'accounts_section'

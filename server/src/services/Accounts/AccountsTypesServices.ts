@@ -16,7 +16,6 @@ export default class AccountsTypesService implements IAccountsTypesService {
    */
   public getAccountsTypes(tenantId: number): IAccountType[] {
     const accountTypes = AccountTypesUtils.getList();
-
-    return this.i18nService.i18nMapper(accountTypes, ['name'], tenantId);
+    return this.i18nService.i18nMapper(accountTypes, ['label'], tenantId);
   }
 }

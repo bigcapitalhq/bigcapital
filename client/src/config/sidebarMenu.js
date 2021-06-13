@@ -100,7 +100,7 @@ export default [
         href: '/accounts',
       },
       {
-        text: <T id={'manual_journal'} />,
+        text: <T id={'manual_journals'} />,
         href: '/manual-journals',
       },
       {

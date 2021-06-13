@@ -12,7 +12,7 @@ export default function PaymentReceivesEmptyStatus() {
       title={<T id={'the_organization_doesn_t_receive_money_yet'} />}
       description={
         <p>
-          <T id={'it_is_a_long_established_fact_that_a_reader'} />
+          <T id={'receiving_customer_payments_is_one_pleasant_accounting_tasks'} />
         </p>
       }
       action={

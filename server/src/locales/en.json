@@ -149,5 +149,13 @@
   "An account that holds valuation of products or goods that availiable for sale.": "An account that holds valuation of products or goods that availiable for sale.",
   "Tracks the gain and losses of the exchange differences.": "Tracks the gain and losses of the exchange differences.",
   "Any bank fees levied is recorded into the bank fees and charges account. A bank account maintenance fee, transaction charges, a late payment fee are some examples.": "Any bank fees levied is recorded into the bank fees and charges account. A bank account maintenance fee, transaction charges, a late payment fee are some examples.",
-  "The income activities are not associated to the core business.": "The income activities are not associated to the core business."
+  "The income activities are not associated to the core business.": "The income activities are not associated to the core business.",
+  "Cash and cash equivalents": "Cash and cash equivalents",
+  "Inventories": "Inventories",
+  "Other current assets": "Other current assets",
+  "Non-Current Assets": "Non-Current Assets",
+  "Current Liabilties": "Current Liabilties",
+  "Long-Term Liabilities": "Long-Term Liabilities",
+  "Non-Current Liabilities": "Non-Current Liabilities",
+  "Liabilities and Equity": "Liabilities and Equity"
 }

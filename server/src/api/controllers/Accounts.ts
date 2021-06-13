@@ -8,6 +8,7 @@ import { IAccountDTO, IAccountsFilter } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { DATATYPES_LENGTH } from 'data/DataTypes';
+import I18nService from 'services/I18n/I18nService';
 
 @Service()
 export default class AccountsController extends BaseController {
@@ -16,6 +17,9 @@ export default class AccountsController extends BaseController {
 
   @Inject()
   dynamicListService: DynamicListingService;
+
+  @Inject()
+  i18nService: I18nService;
 
   /**
    * Router constructor method.

@@ -12,7 +12,7 @@ export default function PaymentMadesEmptyStatus() {
       title={<T id={'the_organization_doesn_t_receive_money_yet'} />}
       description={
         <p>
-          <T id={'it_is_a_long_established_fact_that_a_reader'} />
+          <T id="payment_made_empty_status_description" />
         </p>
       }
       action={

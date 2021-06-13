@@ -92,7 +92,7 @@ export default [
   },
   {
     shortcut_key: 'Ctrl + Shift  + M ',
-    description: intl.get('create_a_new_make_journal'),
+    description: intl.get('create_a_new_journal'),
   },
   {
     shortcut_key: 'Ctrl + Shift  + W ',

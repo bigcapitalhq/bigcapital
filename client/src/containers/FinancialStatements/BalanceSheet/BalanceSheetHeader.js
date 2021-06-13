@@ -28,8 +28,6 @@ function BalanceSheetHeader({
   // #withBalanceSheetActions
   toggleBalanceSheetFilterDrawer: toggleFilterDrawer,
 }) {
-  
-
   // Filter form initial values.
   const initialValues = {
     basis: 'cash',

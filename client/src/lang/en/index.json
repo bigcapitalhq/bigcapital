@@ -1028,7 +1028,7 @@
   "create_a_new_customer": "create_a_new_customer",
   "create_a_new_vendor": "Create a new vendor.",
   "create_a_new_bill": "Create a new bill.",
-  "create_a_new_make_journal": "Create a new Make Journal.",
+  "create_a_new_journal": "Create a new journal.",
   "create_a_new_item": "Create a new item.",
   "close_and_open_sidebar": "Close and open sidebar.",
   "and_over": "And Over",
@@ -1102,5 +1102,12 @@
   "mm_dd_yy_": "MM-DD-YY",
   "dd_mm_yy_": "DD-MM-YY",
   "yy_mm_dd_": "YY-MM-DD",
-  "plan_radio_name":"{name}"
+  "plan_radio_name":"{name}",
+  "customers_payments": "Customers Payments",
+  "receiving_customer_payments_is_one_pleasant_accounting_tasks": "Receiving payments is one of your more pleasant accounting tasks. The payments transactions will appear once receive payments to invoices.",
+  "estimate_is_used_to_create_bid_proposal_or_quote": "An estimate is used to create a bid, proposal, or quote. The estimate can later be turned into a sales order or an invoice.",
+  "payment_made_empty_status_description": "The payments transactions will appear once payments made to purchases invoices.",
+  "bill_empty_status_description": "Record purchases transactions from vendors who make no or partial payment and help you keep track of accounts payable with a vendor.",
+  "invoices_empty_status_description": "Record sales transactions from customers who make no or partial payment and help you keep track of accounts receivable with a customer.",
+  "receipt_empty_status_description": "Create a sales receipt any time your customer immediately pays for products or services at the time of sale."
 }

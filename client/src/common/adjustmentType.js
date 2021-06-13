@@ -1,4 +1,6 @@
+import intl from 'react-intl-universal';
+
 export default [
-  { name: 'Decrement', value: 'decrement' },
-  { name: 'Increment', value: 'increment' },
+  { name: intl.get('decrement'), value: 'decrement' },
+  { name: intl.get('increment'), value: 'increment' },
 ]
