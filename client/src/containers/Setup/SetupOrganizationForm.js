@@ -22,16 +22,19 @@ import {
   handleDateChange
 } from 'utils';
 
-import { getFiscalYearOptions } from 'common/fiscalYearOptions';
-import languages from 'common/languagesOptions';
-import currencies from 'common/currencies';
+import { getFiscalYear } from 'common/fiscalYearOptions';
+import { getLanguages } from 'common/languagesOptions';
+import { getCurrencies } from 'common/currencies';
+
 
 
 /**
  * Setup organization form.
  */
 export default function SetupOrganizationForm({ isSubmitting, values }) {
-  const fiscalYearOptions = getFiscalYearOptions();
+  const FiscalYear = getFiscalYear();
+  const Languages = getLanguages();
+  const Currencies = getCurrencies();
 
   return (
     <Form>
@@ -97,7 +100,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
                 helperText={<ErrorMessage name={'baseCurrency'} />}
               >
                 <ListSelect
-                  items={currencies}
+                  items={Currencies}
                   noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
                   popoverProps={{ minimal: true }}
                   onItemSelect={(item) => {
@@ -132,7 +135,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
                 helperText={<ErrorMessage name={'language'} />}
               >
                 <ListSelect
-                  items={languages}
+                  items={Languages}
                   noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
                   onItemSelect={(item) => {
                     setFieldValue('language', item.value);
@@ -164,7 +167,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
             helperText={<ErrorMessage name={'fiscalYear'} />}
           >
             <ListSelect
-              items={fiscalYearOptions}
+              items={FiscalYear}
               noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
               selectedItem={value}
               selectedItemProp={'value'}

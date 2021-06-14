@@ -1,7 +1,7 @@
 import moment from 'moment';
 import intl from 'react-intl-universal';
 
-export default [
+export const getDateFormats =()=> [
   {
     id: 1,
     name: intl.get('mm_dd_yy'),
