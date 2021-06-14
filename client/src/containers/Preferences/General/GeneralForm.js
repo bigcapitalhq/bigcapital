@@ -10,9 +10,10 @@ import {
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { ErrorMessage, FastField } from 'formik';
-import { FormattedMessage as T } from 'components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useHistory } from 'react-router-dom';
+
+import { FormattedMessage as T } from 'components';
 import { ListSelect, FieldRequiredHint } from 'components';
 import {
   inputIntent,

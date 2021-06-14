@@ -1,34 +1,34 @@
 import * as Yup from 'yup';
-import { get } from 'react-intl-universal';
+import intl from 'react-intl-universal';
 
 const Schema = Yup.object().shape({
   name: Yup.string()
     .required()
-    .label(get({ id: 'organization_name_' })),
+    .label(intl.get('organization_name_')),
   financial_date_start: Yup.date()
     .required()
-    .label(get({ id: 'date_start_' })),
+    .label(intl.get('date_start_')),
   industry: Yup.string()
     .nullable()
-    .label(get({ id: 'organization_industry_' })),
+    .label(intl.get('organization_industry_')),
   location: Yup.string()
     .nullable()
-    .label(get({ id: 'location' })),
+    .label(intl.get('location')),
   base_currency: Yup.string()
     .required()
-    .label(get({ id: 'base_currency_' })),
+    .label(intl.get('base_currency_')),
   fiscal_year: Yup.string()
     .required()
-    .label(get({ id: 'fiscal_year_' })),
+    .label(intl.get('fiscal_year_')),
   language: Yup.string()
     .required()
-    .label(get({ id: 'language' })),
+    .label(intl.get('language')),
   time_zone: Yup.string()
     .required()
-    .label(get({ id: 'time_zone_' })),
+    .label(intl.get('time_zone_')),
   date_format: Yup.string()
     .required()
-    .label(get({ id: 'date_format_' })),
+    .label(intl.get('date_format_')),
 });
 
 export const PreferencesGeneralSchema = Schema;

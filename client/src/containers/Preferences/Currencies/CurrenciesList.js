@@ -15,8 +15,6 @@ function CurrenciesList({
   // #withDashboardActions
   changePreferencesPageTitle,
 }) {
-  
-
   useEffect(() => {
     changePreferencesPageTitle(intl.get('currencies'));
   }, [changePreferencesPageTitle]);
