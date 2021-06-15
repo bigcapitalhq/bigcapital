@@ -1121,5 +1121,6 @@
   "something_went_wrong": "Something went wrong!",
   "please_refresh_the_page": "Please refresh the page",
   "waiting_to_redirect": "Waiting to redirect",
-  "refresh_the_page_if_redirect_not_worked": "Refresh the page if redirect not worked."
+  "refresh_the_page_if_redirect_not_worked": "Refresh the page if redirect not worked.",
+  "payment_has_been_done_successfully":"Payment has been done successfully."
 }

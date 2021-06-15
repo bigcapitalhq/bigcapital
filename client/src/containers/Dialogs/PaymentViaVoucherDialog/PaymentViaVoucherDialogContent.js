@@ -26,13 +26,10 @@ function PaymentViaLicenseDialogContent({
   // #withDialog
   closeDialog,
 }) {
-  
   const history = useHistory();
 
   // Payment via voucher
-  const {
-    mutateAsync: paymentViaVoucherMutate,
-  } = usePaymentByVoucher();
+  const { mutateAsync: paymentViaVoucherMutate } = usePaymentByVoucher();
 
   // Handle submit.
   const handleSubmit = (values, { setSubmitting, setErrors }) => {
@@ -41,7 +38,7 @@ function PaymentViaLicenseDialogContent({
     paymentViaVoucherMutate({ ...values })
       .then(() => {
         Toaster.show({
-          message: 'Payment has been done successfully.',
+          message: intl.get('payment_has_been_done_successfully'),
           intent: Intent.SUCCESS,
         });
         return closeDialog('payment-via-voucher');
