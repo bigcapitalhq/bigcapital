@@ -1,29 +1,28 @@
+import intl from 'react-intl-universal';
 
-
-
-export default [
+export const getFooterLinks = () => [
   {
-    title: 'Blog',
+    title: intl.get('blog'),
     link: '#',
   },
   {
-    title: 'Support',
+    title: intl.get('support'),
     link: '#',
   },
   {
-    title: 'Status',
+    title: intl.get('service_status'),
     link: '#',
   },
   {
-    title: 'Pricing',
+    title: intl.get('pricing'),
     link: '#',
   },
   {
-    title: 'Solution Partner Program',
+    title: intl.get('reseller_partner'),
     link: '#',
   },
   {
-    title: 'Docs',
+    title: intl.get('docs'),
     link: '#',
   },
   {

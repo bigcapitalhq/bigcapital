@@ -1,6 +1,5 @@
 import React from 'react';
-
-import footerLinks from 'config/footerLinks';
+import { getFooterLinks } from 'config/footerLinks';
 import { For } from 'components';
 
 function FooterLinkItem({ title, link }) {
@@ -14,6 +13,8 @@ function FooterLinkItem({ title, link }) {
 }
 
 export default function DashboardFooter() {
+  const footerLinks = getFooterLinks();
+
   return (
     <div class="dashboard__footer">
       <div class="footer-links">

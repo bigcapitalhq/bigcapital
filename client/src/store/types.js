@@ -27,6 +27,7 @@ import paymentMades from './PaymentMades/paymentMades.type';
 import organizations from './organizations/organizations.types';
 import subscription from './subscription/subscription.types';
 import inventoryAdjustments from './inventoryAdjustments/inventoryAdjustment.type';
+import plans from './plans/plans.types';
 
 export default {
   ...authentication,
@@ -57,5 +58,6 @@ export default {
   ...paymentMades,
   ...organizations,
   ...subscription,
-  ...inventoryAdjustments
+  ...inventoryAdjustments,
+  ...plans
 };

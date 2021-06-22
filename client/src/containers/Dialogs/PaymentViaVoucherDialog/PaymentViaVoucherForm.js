@@ -31,7 +31,7 @@ function PaymentViaLicenseForm({
     <Form>
       <div className={CLASSES.DIALOG_BODY}>
         <p>
-          <T id={'please_enter_your_preferred_payment_method_below'} />
+          <T id={'Pleasse enter your voucher number that you received from reseller.'} />
         </p>
 
         <FastField name="license_code">

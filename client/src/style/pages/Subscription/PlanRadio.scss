@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   width: 215px;
-  height: 267px;
+  min-height: 277px;
   border-radius: 5px;
   padding: 15px;
   border: 1px solid #dcdcdc;
@@ -32,10 +32,10 @@
   &__name {
     background: #3657ff;
     border-radius: 3px;
-    padding: 2px 8px 2px 8px;
+    padding: 2px 10px;
     font-size: 13px;
     color: #fff;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
     height: 21px;
     text-transform: uppercase;
   }
@@ -47,13 +47,23 @@
       list-style: none;
 
       li{
+        position: relative;
+        padding-left: 12px;
         margin-bottom: 9px;
+
+        &:before{
+          content: '-';
+          position: absolute;
+          left: 0;
+          opacity: 0.6;
+        }
       }
     }
   }
   &__price {
     margin-top: auto;
     font-size: 15px;
+    padding-top: 10px;
   }
   &__amount {
     font-weight: 600;

@@ -1,12 +1,16 @@
 
 .billing-plans{
+  
+  .paragraph{
+    font-size: 15px;
+  }
 
   &__section{
-    margin-bottom: 35px;
+    margin-bottom: 40px;
 
     .title{
-      font-size: 22px;
-      font-weight: 500;
+      font-size: 20px;
+      font-weight: 600;
       color: #6b7382;
       margin-top: 0;
       margin-bottom: 12px;

@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon, For } from 'components';
 import { FormattedMessage as T } from 'components';
 
-import footerLinks from 'config/footerLinks';
+import { getFooterLinks } from 'config/footerLinks';
 import { useAuthActions, useAuthOrganizationId } from 'hooks/state';
 
 function FooterLinkItem({ title, link }) {
@@ -20,6 +20,10 @@ export default function SetupLeftSection() {
   const { setLogout } = useAuthActions();
   const organizationId = useAuthOrganizationId();
 
+  // Retrieve the footer links.
+  const footerLinks = getFooterLinks();
+
+  // Handle logout link click.
   const onClickLogout = () => {
     setLogout();
   };

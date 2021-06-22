@@ -1,7 +1,6 @@
 import LazyLoader from 'components/LazyLoader';
 
 export default [
-  
   {
     path: '/register/subscription',
     component: LazyLoader({
