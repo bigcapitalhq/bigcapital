@@ -57,11 +57,11 @@ const initialState = {
   periods: [
     {
       slug: 'month',
-      label: 'Monthly',
+      label: <T id={'monthly'}/>
     },
     {
       slug: 'year',
-      label: 'Yearly',
+      label: <T id={'yearly'}/>
     },
   ],
 };

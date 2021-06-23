@@ -8,7 +8,9 @@ import { useAuthActions, useAuthOrganizationId } from 'hooks/state';
 function FooterLinkItem({ title, link }) {
   return (
     <div class="">
-      <a href={link} target="_blank">{ title }</a>
+      <a href={link} target="_blank">
+        {title}
+      </a>
     </div>
   );
 }
@@ -28,7 +30,12 @@ export default function SetupLeftSection() {
     <section className={'setup-page__left-section'}>
       <div className={'content'}>
         <div className={'content__logo'}>
-          <Icon icon="bigcapital" className={'bigcapital--alt'} height={37} width={190} />
+          <Icon
+            icon="bigcapital"
+            className={'bigcapital--alt'}
+            height={37}
+            width={190}
+          />
         </div>
 
         <h1 className={'content__title'}>
@@ -42,17 +49,22 @@ export default function SetupLeftSection() {
 
         <div className={'content__organization'}>
           <span class="organization-id">
-            <T id={'organization_id'} />: <span class="id">{ organizationId }</span>,
+            <T id={'organization_id'} />:{' '}
+            <span class="id">{organizationId}</span>,
           </span>
           <br />
           <span class="signout">
-            <a onClick={onClickLogout} href="#"><T id={'sign_out'} /></a>
+            <a onClick={onClickLogout} href="#">
+              <T id={'sign_out'} />
+            </a>
           </span>
         </div>
 
         <div className={'content__footer'}>
-          <div className={'content__contact-info'}> 
-            <p><T id={'we_re_here_to_help'} /> {'+21892-791-8381'}</p>
+          <div className={'content__contact-info'}>
+            <p>
+              <T id={'we_re_here_to_help'} />  <span>{'+21892-738-1987'}</span>
+            </p>
           </div>
 
           <div className={'content__links'}>
@@ -61,5 +73,5 @@ export default function SetupLeftSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
