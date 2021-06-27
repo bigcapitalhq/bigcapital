@@ -1,6 +1,7 @@
 import React, { lazy } from 'react';
 import { Drawer, DrawerSuspense } from 'components';
 import withDrawers from 'containers/Drawer/withDrawers';
+import intl from 'react-intl-universal';
 
 import { compose } from 'utils';
 
@@ -17,7 +18,7 @@ function ExpenseDrawer({
   payload: { expenseId, title },
 }) {
   return (
-    <Drawer isOpen={isOpen} name={name} title={'Expense'}>
+    <Drawer isOpen={isOpen} name={name} title={intl.get('expense')}>
       <DrawerSuspense>
         <ExpenseDrawerContent expenseId={expenseId} />
       </DrawerSuspense>

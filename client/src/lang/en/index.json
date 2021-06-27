@@ -1102,7 +1102,7 @@
   "mm_dd_yy_": "MM-DD-YY",
   "dd_mm_yy_": "DD-MM-YY",
   "yy_mm_dd_": "YY-MM-DD",
-  "plan_radio_name":"{name}",
+  "plan_radio_name": "{name}",
   "customers_payments": "Customers Payments",
   "receiving_customer_payments_is_one_pleasant_accounting_tasks": "Receiving payments is one of your more pleasant accounting tasks. The payments transactions will appear once receive payments to invoices.",
   "estimate_is_used_to_create_bid_proposal_or_quote": "An estimate is used to create a bid, proposal, or quote. The estimate can later be turned into a sales order or an invoice.",
@@ -1122,5 +1122,7 @@
   "please_refresh_the_page": "Please refresh the page",
   "waiting_to_redirect": "Waiting to redirect",
   "refresh_the_page_if_redirect_not_worked": "Refresh the page if redirect not worked.",
-  "payment_has_been_done_successfully":"Payment has been done successfully."
+  "payment_has_been_done_successfully": "Payment has been done successfully.",
+  "manual_journal_number": "Manual journal {number}",
+"conditions_and_terms":"Conditions and terms"
 }
