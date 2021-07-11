@@ -1,9 +1,6 @@
 import moment from 'moment';
 import { defaultTo } from 'lodash';
-import {
-  ILedger,
-  ILedgerEntry
-} from 'interfaces';
+import { IAccountTransaction, ILedger, ILedgerEntry } from 'interfaces';
 import EntityRepository from 'repositories/EntityRepository';
 
 export default class Ledger implements ILedger {
@@ -11,7 +8,7 @@ export default class Ledger implements ILedger {
 
   /**
    * Constructor method.
-   * @param {ILedgerEntry[]} entries 
+   * @param {ILedgerEntry[]} entries
    */
   constructor(entries: ILedgerEntry[]) {
     this.entries = entries;
@@ -20,26 +17,45 @@ export default class Ledger implements ILedger {
   /**
    * Filters the ledegr entries.
    * @param callback
-   * @returns
+   * @returns {ILedger}
    */
-  filter(callback) {
+  public filter(callback): ILedger {
     const entries = this.entries.filter(callback);
     return new Ledger(entries);
   }
 
-  getEntries(): ILedgerEntry[] {
+  /**
+   * Retrieve the all entries of the ledger.
+   * @return {ILedgerEntry[]}
+   */
+  public getEntries(): ILedgerEntry[] {
     return this.entries;
   }
 
-  whereContactId(contactId: number): ILedger {
+  /**
+   * Filters entries by th given contact id and returns a new ledger.
+   * @param {number} contactId
+   * @returns {ILedger}
+   */
+  public whereContactId(contactId: number): ILedger {
     return this.filter((entry) => entry.contactId === contactId);
   }
 
-  whereAccountId(accountId: number): ILedger {
+  /**
+   * Filters entries by the given account id and returns a new ledger.
+   * @param {number} accountId
+   * @returns {ILedger}
+   */
+  public whereAccountId(accountId: number): ILedger {
     return this.filter((entry) => entry.accountId === accountId);
   }
 
-  whereFromDate(fromDate: Date | string): ILedger {
+  /**
+   * Filters entries that before or same the given date and returns a new ledger.
+   * @param {Date|string} fromDate
+   * @returns {ILedger}
+   */
+  public whereFromDate(fromDate: Date | string): ILedger {
     const fromDateParsed = moment(fromDate);
 
     return this.filter(
@@ -48,7 +64,12 @@ export default class Ledger implements ILedger {
     );
   }
 
-  whereToDate(toDate: Date | string): ILedger {
+  /**
+   * Filters ledger entries that after the given date and retruns a new ledger.
+   * @param {Date|string} toDate
+   * @returns {ILedger}
+   */
+  public whereToDate(toDate: Date | string): ILedger {
     const toDateParsed = moment(toDate);
 
     return this.filter(
@@ -59,15 +80,14 @@ export default class Ledger implements ILedger {
 
   /**
    * Retrieve the closing balance of the entries.
-   * @returns {number} 
+   * @returns {number}
    */
-  getClosingBalance() {
+  public getClosingBalance(): number {
     let closingBalance = 0;
 
     this.entries.forEach((entry) => {
       if (entry.accountNormal === 'credit') {
         closingBalance += entry.credit - entry.debit;
-
       } else if (entry.accountNormal === 'debit') {
         closingBalance += entry.debit - entry.credit;
       }
@@ -75,15 +95,25 @@ export default class Ledger implements ILedger {
     return closingBalance;
   }
 
-  static mappingTransactions(entries): ILedgerEntry[] {
+  /**
+   * Mappes the account transactions to ledger entries.
+   * @param {IAccountTransaction[]} entries
+   * @returns {ILedgerEntry[]}
+   */
+  static mappingTransactions(entries: IAccountTransaction[]): ILedgerEntry[] {
     return entries.map(this.mapTransaction);
   }
-  
-  static mapTransaction(entry): ILedgerEntry {
+
+  /**
+   * Mappes the account transaction to ledger entry.
+   * @param {IAccountTransaction} entry
+   * @returns {ILedgerEntry}
+   */
+  static mapTransaction(entry: IAccountTransaction): ILedgerEntry {
     return {
       credit: defaultTo(entry.credit, 0),
       debit: defaultTo(entry.debit, 0),
-      accountNormal: entry.accountNormal,
+      accountNormal: entry.account.accountNormal,
       accountId: entry.accountId,
       contactId: entry.contactId,
       date: entry.date,
@@ -91,10 +121,15 @@ export default class Ledger implements ILedger {
       transactionType: entry.referenceTypeFormatted,
       referenceNumber: entry.referenceNumber,
       referenceType: entry.referenceType,
-    }
+    };
   }
 
-  static fromTransactions(transactions) {
+  /**
+   * Mappes the account transactions to ledger entries.
+   * @param {IAccountTransaction[]} transactions
+   * @returns {ILedger}
+   */
+  static fromTransactions(transactions: IAccountTransaction[]): ILedger {
     const entries = Ledger.mappingTransactions(transactions);
     return new Ledger(entries);
   }

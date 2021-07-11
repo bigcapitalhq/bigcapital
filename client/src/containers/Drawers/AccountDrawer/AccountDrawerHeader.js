@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { Icon, Money } from 'components';
 
 /**
@@ -18,7 +18,9 @@ export default function AccountDrawerHeader({
   return (
     <div className={'account-drawer__content'}>
       <div>
-        <span>Closing Balance</span>
+        <span>
+          <T id={'closing_balance'} />
+        </span>
         <p className={'balance'}>
           {<Money amount={amount} currency={currency_code} />}
         </p>

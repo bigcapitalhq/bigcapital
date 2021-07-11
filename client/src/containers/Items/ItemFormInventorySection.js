@@ -3,7 +3,7 @@ import { FastField, ErrorMessage } from 'formik';
 import { FormGroup } from '@blueprintjs/core';
 import { AccountsSelectList, Col, Row } from 'components';
 import { CLASSES } from 'common/classes';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 
 import withSettings from 'containers/Settings/withSettings';

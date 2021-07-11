@@ -1,8 +1,8 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
 import { getColumnWidth } from 'utils';
-import { If, Icon } from 'components';
+import { If, Icon, FormattedMessage as T } from 'components';
 import { CellTextSpan } from 'components/Datatable/Cells';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
@@ -11,7 +11,7 @@ import FinancialLoadingBar from '../FinancialLoadingBar';
  * Retrieve trial balance sheet table columns.
  */
 export const useTrialBalanceTableColumns = () => {
-  const { formatMessage } = useIntl();
+  
 
   // Trial balance sheet context.
   const {
@@ -21,14 +21,14 @@ export const useTrialBalanceTableColumns = () => {
   return React.useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'account_name' }),
+        Header: intl.get('account_name'),
         accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'name',
         width: 180,
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'credit' }),
+        Header: intl.get('credit'),
         Cell: CellTextSpan,
         accessor: 'formatted_credit',
         className: 'credit',
@@ -37,13 +37,13 @@ export const useTrialBalanceTableColumns = () => {
         }),
       },
       {
-        Header: formatMessage({ id: 'debit' }),
+        Header: intl.get('debit'),
         Cell: CellTextSpan,
         accessor: 'formatted_debit',
         width: getColumnWidth(tableRows, `debit`, { minWidth: 80 }),
       },
       {
-        Header: formatMessage({ id: 'balance' }),
+        Header: intl.get('balance'),
         Cell: CellTextSpan,
         accessor: 'formatted_balance',
         className: 'balance',
@@ -52,7 +52,7 @@ export const useTrialBalanceTableColumns = () => {
         }),
       },
     ],
-    [tableRows, formatMessage],
+    [tableRows],
   );
 };
 
@@ -60,15 +60,13 @@ export const useTrialBalanceTableColumns = () => {
  * Trial balance sheet progress loading bar.
  */
 export function TrialBalanceSheetLoadingBar() {
-  const {
-    isFetching
-  } = useTrialBalanceSheetContext();
+  const { isFetching } = useTrialBalanceSheetContext();
 
   return (
     <If condition={isFetching}>
       <FinancialLoadingBar />
     </If>
-  )
+  );
 }
 
 /**
@@ -78,7 +76,7 @@ export function TrialBalanceSheetAlerts() {
   const {
     trialBalanceSheet: { meta },
     isLoading,
-    refetchSheet
+    refetchSheet,
   } = useTrialBalanceSheetContext();
 
   // Handle refetch the sheet.
@@ -86,19 +84,20 @@ export function TrialBalanceSheetAlerts() {
     refetchSheet();
   };
   // Can't display any error if the report is loading.
-  if (isLoading) { return null; }
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <If condition={meta.is_cost_compute_running}>
       <div class="alert-compute-running">
-        <Icon icon="info-block" iconSize={12} /> Just a moment! We're
-        calculating your cost transactions and this doesn't take much time.
-        Please check after sometime.{' '}
+        <Icon icon="info-block" iconSize={12} />
+        <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
 
         <Button onClick={handleRecalcReport} minimal={true} small={true}>
-          Refresh
+          <T id={'refresh'} />
         </Button>
       </div>
     </If>
-  )
+  );
 }

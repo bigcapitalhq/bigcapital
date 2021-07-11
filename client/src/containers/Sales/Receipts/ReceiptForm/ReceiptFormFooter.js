@@ -2,7 +2,7 @@ import React from 'react';
 import { FormGroup, TextArea } from '@blueprintjs/core';
 import { FastField } from 'formik';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { Dragzone, Postbox, Row, Col } from 'components';
 import { CLASSES } from 'common/classes';
 import { inputIntent } from 'utils';
@@ -10,7 +10,7 @@ import { inputIntent } from 'utils';
 export default function ReceiptFormFooter({}) {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <Postbox title={'Invoice details'} defaultOpen={false}>
+      <Postbox title={<T id={'receipt_details'}/>} defaultOpen={false}>
         <Row>
           <Col md={8}>
             {/* --------- Receipt message --------- */}
@@ -45,7 +45,8 @@ export default function ReceiptFormFooter({}) {
               initialFiles={[]}
               // onDrop={handleDropFiles}
               // onDeleteFile={handleDeleteFile}
-              hint={'Attachments: Maxiumum size: 20MB'}
+              hint={<T id={'attachments_maximum'} />}
+
             />
           </Col>
         </Row>

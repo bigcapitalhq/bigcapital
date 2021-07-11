@@ -1,9 +1,6 @@
 import React from 'react';
-import {
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-  useIntl,
-} from 'react-intl';
+import intl from 'react-intl-universal';
+import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { useDeletePaymentReceive } from 'hooks/query';
@@ -27,7 +24,7 @@ function PaymentReceiveDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const {
     mutateAsync: deletePaymentReceiveMutate,
     isLoading,
@@ -43,9 +40,7 @@ function PaymentReceiveDeleteAlert({
     deletePaymentReceiveMutate(paymentReceiveId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_payment_receive_has_been_deleted_successfully',
-          }),
+          message: intl.get('the_payment_receive_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
       })

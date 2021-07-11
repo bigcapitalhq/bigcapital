@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
 
 const Schema = Yup.object().shape({
@@ -7,11 +7,11 @@ const Schema = Yup.object().shape({
     .required()
     .min(3)
     .max(DATATYPES_LENGTH.STRING)
-    .label(formatMessage({ id: 'account_name_' })),
+    .label(intl.get('account_name_')),
   code: Yup.string().nullable().min(3).max(6),
   account_type: Yup.string()
     .required()
-    .label(formatMessage({ id: 'account_type' })),
+    .label(intl.get('account_type')),
   description: Yup.string().min(3).max(DATATYPES_LENGTH.TEXT).nullable().trim(),
   parent_account_id: Yup.number().nullable(),
 });

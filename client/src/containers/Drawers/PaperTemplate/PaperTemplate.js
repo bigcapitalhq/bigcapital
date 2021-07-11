@@ -3,18 +3,19 @@ import PaperTemplateHeader from './PaperTemplateHeader';
 import PaperTemplateTable from './PaperTemplateTable';
 import PaperTemplateFooter from './PaperTemplateFooter';
 import { updateItemsEntriesTotal } from 'containers/Entries/utils';
+import intl from 'react-intl-universal';
 
 import 'style/components/Drawer/DrawerTemplate.scss';
 
 function PaperTemplate({ labels: propLabels, paperData, entries }) {
   const labels = {
-    name: 'Estimate',
-    billedTo: 'Billed to',
-    date: 'Estimate date',
-    refNo: 'Estimate No.',
-    billedFrom: 'Billed from',
-    amount: 'Estimate amount',
-    dueDate: 'Due date',
+    name: intl.get('estimate_'),
+    billedTo: intl.get('billed_to'),
+    date: intl.get('estimate_date'),
+    refNo: intl.get('estimate_no'),
+    billedFrom: intl.get('billed_from'),
+    amount: intl.get('estimate_amount'),
+    dueDate: intl.get('due_date_'),
     ...propLabels,
   };
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { AppToaster } from 'components';
@@ -23,7 +24,7 @@ function EstimateRejectAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const {
     mutateAsync: rejectEstimateMutate,
     isLoading
@@ -39,9 +40,7 @@ function EstimateRejectAlert({
     rejectEstimateMutate(estimateId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_estimate_has_been_rejected_successfully',
-          }),
+          message: intl.get('the_estimate_has_been_rejected_successfully'),
           intent: Intent.SUCCESS,
         });
       })

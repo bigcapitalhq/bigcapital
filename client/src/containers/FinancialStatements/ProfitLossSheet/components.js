@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 import { Icon, If } from 'components';
+import { FormattedMessage as T } from 'components';
+
 import { useProfitLossSheetContext } from './ProfitLossProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
@@ -21,11 +23,8 @@ export function ProfitLossSheetLoadingBar() {
  * Balance sheet alerts.
  */
 export function ProfitLossSheetAlerts() {
-  const {
-    isLoading,
-    sheetRefetch,
-    profitLossSheet,
-  } = useProfitLossSheetContext();
+  const { isLoading, sheetRefetch, profitLossSheet } =
+    useProfitLossSheetContext();
 
   // Handle refetch the report sheet.
   const handleRecalcReport = () => {
@@ -39,11 +38,11 @@ export function ProfitLossSheetAlerts() {
   return (
     <If condition={profitLossSheet.meta.is_cost_compute_running}>
       <div class="alert-compute-running">
-        <Icon icon="info-block" iconSize={12} /> Just a moment! We're
-        calculating your cost transactions and this doesn't take much time.
-        Please check after sometime.{' '}
+        <Icon icon="info-block" iconSize={12} />
+        <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
+
         <Button onClick={handleRecalcReport} minimal={true} small={true}>
-          Refresh
+          <T id={'refresh'} />
         </Button>
       </div>
     </If>

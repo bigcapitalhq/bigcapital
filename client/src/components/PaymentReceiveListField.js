@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import ListSelect from 'components/ListSelect';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 function PaymentReceiveListField({
   invoices,
@@ -23,7 +23,7 @@ function PaymentReceiveListField({
   return (
     <ListSelect
       item={invoices}
-      noResults={<MenuItem disabled={true} text="No results." />}
+      noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
       itemRenderer={handleInvoiceRenderer}
       popoverProps={{ minimal: true }}
       onItemSelect={onInvoiceSelect}

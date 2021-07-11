@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { defaultTo, isEmpty, omit } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
@@ -48,7 +48,6 @@ function MakeJournalEntriesForm({
     submitPayload,
   } = useMakeJournalFormContext();
 
-  const { formatMessage } = useIntl();
   const history = useHistory();
 
   // New journal number.
@@ -92,18 +91,14 @@ function MakeJournalEntriesForm({
     // Validate the total credit should be eqials total debit.
     if (totalCredit !== totalDebit) {
       AppToaster.show({
-        message: formatMessage({
-          id: 'should_total_of_credit_and_debit_be_equal',
-        }),
+        message: intl.get('should_total_of_credit_and_debit_be_equal'),
         intent: Intent.DANGER,
       });
       setSubmitting(false);
       return;
     } else if (totalCredit === 0 || totalDebit === 0) {
       AppToaster.show({
-        message: formatMessage({
-          id: 'amount_cannot_be_zero_or_empty',
-        }),
+        message: intl.get('amount_cannot_be_zero_or_empty'),
         intent: Intent.DANGER,
       });
       setSubmitting(false);
@@ -131,12 +126,10 @@ function MakeJournalEntriesForm({
     // Handle the request success.
     const handleSuccess = (errors) => {
       AppToaster.show({
-        message: formatMessage(
-          {
-            id: isNewMode
-              ? 'the_journal_has_been_created_successfully'
-              : 'the_journal_has_been_edited_successfully',
-          },
+        message: intl.get(
+          isNewMode
+            ? 'the_journal_has_been_created_successfully'
+            : 'the_journal_has_been_edited_successfully',
           { number: values.journal_number },
         ),
         intent: Intent.SUCCESS,

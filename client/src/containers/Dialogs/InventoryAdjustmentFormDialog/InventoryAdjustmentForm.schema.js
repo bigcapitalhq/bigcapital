@@ -1,11 +1,11 @@
 import * as Yup from 'yup';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
 
 const Schema = Yup.object().shape({
   date: Yup.date()
     .required()
-    .label(formatMessage({ id: 'date' })),
+    .label(intl.get('date')),
   type: Yup.string().required(),
   adjustment_account_id: Yup.string().required(),
   item_id: Yup.number().required(),
@@ -13,10 +13,10 @@ const Schema = Yup.object().shape({
     .required()
     .min(3)
     .max(DATATYPES_LENGTH.TEXT)
-    .label(formatMessage({ id: 'reason' })),
+    .label(intl.get('reason')),
   quantity_on_hand: Yup.number()
     .required()
-    .label(formatMessage({ id: 'qty' })),
+    .label(intl.get('qty')),
   quantity: Yup.number().integer().min(1).required(),
   cost: Yup.number().when(['type'], {
     is: (type) => type === 'increment',

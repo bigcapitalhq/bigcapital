@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { defaultTo } from 'lodash';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
 
 const Schema = Yup.object().shape({
@@ -9,13 +9,13 @@ const Schema = Yup.object().shape({
     .required()
     .min(0)
     .max(DATATYPES_LENGTH.STRING)
-    .label(formatMessage({ id: 'item_name_' })),
+    .label(intl.get('item_name_')),
   type: Yup.string()
     .trim()
     .required()
     .min(0)
     .max(DATATYPES_LENGTH.STRING)
-    .label(formatMessage({ id: 'item_type_' })),
+    .label(intl.get('item_type_')),
   code: Yup.string().trim().min(0).max(DATATYPES_LENGTH.STRING),
   cost_price: Yup.number()
     .min(0)
@@ -24,7 +24,7 @@ const Schema = Yup.object().shape({
       is: true,
       then: Yup.number()
         .required()
-        .label(formatMessage({ id: 'cost_price_' })),
+        .label(intl.get('cost_price_')),
       otherwise: Yup.number().nullable(true),
     }),
   sell_price: Yup.number()
@@ -34,7 +34,7 @@ const Schema = Yup.object().shape({
       is: true,
       then: Yup.number()
         .required()
-        .label(formatMessage({ id: 'sell_price_' })),
+        .label(intl.get('sell_price_')),
       otherwise: Yup.number().nullable(true),
     }),
   cost_account_id: Yup.number()
@@ -43,21 +43,21 @@ const Schema = Yup.object().shape({
       then: Yup.number().required(),
       otherwise: Yup.number().nullable(true),
     })
-    .label(formatMessage({ id: 'cost_account_id' })),
+    .label(intl.get('cost_account_id')),
   sell_account_id: Yup.number()
     .when(['sellable'], {
       is: true,
       then: Yup.number().required(),
       otherwise: Yup.number().nullable(),
     })
-    .label(formatMessage({ id: 'sell_account_id' })),
+    .label(intl.get('sell_account_id')),
   inventory_account_id: Yup.number()
     .when(['type'], {
       is: (value) => value === 'inventory',
       then: Yup.number().required(),
       otherwise: Yup.number().nullable(),
     })
-    .label(formatMessage({ id: 'inventory_account' })),
+    .label(intl.get('inventory_account')),
   category_id: Yup.number().positive().nullable(),
   stock: Yup.string() || Yup.boolean(),
   sellable: Yup.boolean().required(),

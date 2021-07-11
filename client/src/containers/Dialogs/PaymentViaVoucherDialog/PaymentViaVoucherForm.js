@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, FormGroup, InputGroup, Intent } from '@blueprintjs/core';
 import { Form, FastField, ErrorMessage, useFormikContext } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { compose } from 'redux';
 
 import { CLASSES } from 'common/classes';
@@ -9,7 +9,6 @@ import { inputIntent } from 'utils';
 import { useAutofocus } from 'hooks';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-
 
 /**
  * Payment via license form.
@@ -31,7 +30,9 @@ function PaymentViaLicenseForm({
   return (
     <Form>
       <div className={CLASSES.DIALOG_BODY}>
-        <p>Please enter your preferred payment method below.</p>
+        <p>
+          <T id={'Pleasse enter your voucher number that you received from reseller.'} />
+        </p>
 
         <FastField name="license_code">
           {({ field, meta: { error, touched } }) => (
@@ -72,6 +73,4 @@ function PaymentViaLicenseForm({
   );
 }
 
-export default compose(
-  withDialogActions
-)(PaymentViaLicenseForm);
+export default compose(withDialogActions)(PaymentViaLicenseForm);

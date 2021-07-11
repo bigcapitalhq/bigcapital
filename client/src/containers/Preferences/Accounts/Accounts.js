@@ -2,7 +2,7 @@ import React from 'react';
 import {Tabs, Tab} from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import PreferencesSubContent from 'components/Preferences/PreferencesSubContent';
-import { FormattedMessage as T} from 'react-intl';
+import {  FormattedMessage as T } from 'components';
 
 export default function AccountsPreferences() {
   const history = useHistory();

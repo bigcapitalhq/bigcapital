@@ -1,88 +1,64 @@
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
-export default [
+export const getFiscalYearOptions = () => [
   {
     id: 0,
-    name: `${formatMessage({ id: 'january' })} - ${formatMessage({
-      id: 'december',
-    })}`,
+    name: `${intl.get('january')} - ${intl.get('december')}`,
     value: 'january',
   },
   {
     id: 1,
-    name: `${formatMessage({ id: 'february' })} - ${formatMessage({
-      id: 'january',
-    })}`,
+    name: `${intl.get('february')} - ${intl.get('january')}`,
     value: 'february',
   },
   {
     id: 2,
-    name: `${formatMessage({ id: 'march' })} - ${formatMessage({
-      id: 'february',
-    })}`,
+    name: `${intl.get('march')} - ${intl.get('february')}`,
     value: 'March',
   },
   {
     id: 3,
-    name: `${formatMessage({ id: 'april' })} - ${formatMessage({
-      id: 'march',
-    })}`,
+    name: `${intl.get('april')} - ${intl.get('march')}`,
     value: 'april',
   },
   {
     id: 4,
-    name: `${formatMessage({ id: 'may' })} - ${formatMessage({
-      id: 'april',
-    })}`,
+    name: `${intl.get('may')} - ${intl.get('april')}`,
     value: 'may',
   },
   {
     id: 5,
-    name: `${formatMessage({ id: 'june' })} - ${formatMessage({
-      id: 'may',
-    })}`,
+    name: `${intl.get('june')} - ${intl.get('may')}`,
     value: 'june',
   },
   {
     id: 6,
-    name: `${formatMessage({ id: 'july' })} - ${formatMessage({
-      id: 'june',
-    })}`,
+    name: `${intl.get('july')} - ${intl.get('june')}`,
     value: 'july',
   },
   {
     id: 7,
-    name: `${formatMessage({ id: 'august' })} - ${formatMessage({
-      id: 'july',
-    })}`,
+    name: `${intl.get('august')} - ${intl.get('july')}`,
     value: 'August',
   },
   {
     id: 8,
-    name: `${formatMessage({ id: 'september' })} - ${formatMessage({
-      id: 'august',
-    })}`,
+    name: `${intl.get('september')} - ${intl.get('august')}`,
     value: 'september',
   },
   {
     id: 9,
-    name: `${formatMessage({ id: 'october' })} - ${formatMessage({
-      id: 'november',
-    })}`,
+    name: `${intl.get('october')} - ${intl.get('november')}`,
     value: 'october',
   },
   {
     id: 10,
-    name: `${formatMessage({ id: 'november' })} - ${formatMessage({
-      id: 'october',
-    })}`,
+    name: `${intl.get('november')} - ${intl.get('october')}`,
     value: 'november',
   },
   {
     id: 11,
-    name: `${formatMessage({ id: 'december' })} - ${formatMessage({
-      id: 'november',
-    })}`,
+    name: `${intl.get('december')} - ${intl.get('november')}`,
     value: 'december',
   },
 ]

@@ -70,6 +70,7 @@ export default class JournalSheetService {
    * @param {IJournalSheetFilterQuery} query
    */
   async journalSheet(tenantId: number, query: IJournalReportQuery) {
+    const i18n = this.tenancy.i18n(tenantId);
     const {
       accountRepository,
       transactionsRepository,
@@ -120,7 +121,8 @@ export default class JournalSheetService {
       transactionsJournal,
       accountsGraph,
       contactsByIdMap,
-      baseCurrency
+      baseCurrency,
+      i18n
     );
     // Retrieve journal report columns.
     const journalSheetData = journalSheetInstance.reportData();

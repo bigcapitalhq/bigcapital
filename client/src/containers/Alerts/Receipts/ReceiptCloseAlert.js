@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { useCloseReceipt } from 'hooks/query';
@@ -23,7 +24,7 @@ function ReceiptCloseAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { mutateAsync: closeReceiptMutate, isLoading } = useCloseReceipt();
 
   // handle cancel delete alert.
@@ -36,9 +37,7 @@ function ReceiptCloseAlert({
     closeReceiptMutate(receiptId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_receipt_has_been_closed_successfully',
-          }),
+          message: intl.get('the_receipt_has_been_closed_successfully'),
           intent: Intent.SUCCESS,
         });
       })

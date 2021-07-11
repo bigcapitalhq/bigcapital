@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useHistory } from 'react-router-dom';
-import routes from 'routes/dashboard';
+import { getDashboardRoutes } from 'routes/dashboard';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import { compose } from 'utils';
 
@@ -10,6 +10,7 @@ function GlobalHotkeys({
   toggleSidebarExpend,
 }) {
   const history = useHistory();
+  const routes = getDashboardRoutes();
 
   const globalHotkeys = routes
     .filter(({ hotkey }) => hotkey)

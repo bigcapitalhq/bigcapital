@@ -13,7 +13,8 @@ import {
 
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import { If, DashboardActionViewsList } from 'components';
@@ -33,7 +34,7 @@ function BillActionsBar({
   const history = useHistory();
 
   // React intl.
-  const { formatMessage } = useIntl();
+  
 
   // Bills list context.
   const { billsViews } = useBillsListContext();
@@ -79,7 +80,7 @@ function BillActionsBar({
               true ? (
                 <T id={'filter'} />
               ) : (
-                `${filterCount} ${formatMessage({ id: 'filters_applied' })}`
+                `${filterCount} ${intl.get('filters_applied')}`
               )
             }
             icon={<Icon icon={'filter-16'} iconSize={16} />}

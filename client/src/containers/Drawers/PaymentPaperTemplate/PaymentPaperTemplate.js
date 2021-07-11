@@ -1,6 +1,7 @@
 import React from 'react';
 import PaymentPaperTemplateHeader from './PaymentPaperTemplateHeader';
 import PaymentPaperTemplateTable from './PaymentPaperTemplateTable';
+import intl from 'react-intl-universal';
 
 import 'style/components/Drawer/DrawerTemplate.scss';
 
@@ -9,14 +10,14 @@ export default function PaymentPaperTemplate({
   paperData,
 }) {
   const labels = {
-    name: 'Payment receive',
-    billedTo: 'Billed to',
-    date: 'Payment date',
-    refNo: 'Payment No.',
-    billedFrom: 'Billed from',
-    referenceNo: 'Reference No',
-    amount: 'Amount received',
-    dueDate: 'Due date',
+    name: intl.get('payment_receive'),
+    billedTo: intl.get('billed_to'),
+    date: intl.get('payment_date_'),
+    refNo: intl.get('payment_no'),
+    billedFrom: intl.get('billed_from'),
+    referenceNo: intl.get('reference_no'),
+    amount: intl.get('amount_received'),
+    dueDate: intl.get('due_date_'),
     ...propLabels,
   };
   const defaultValues = {

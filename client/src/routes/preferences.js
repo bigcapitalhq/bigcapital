@@ -1,7 +1,7 @@
 import General from 'containers/Preferences/General/General';
 import Users from 'containers/Preferences/Users/Users';
 import Accountant from 'containers/Preferences/Accountant/Accountant';
-import Accounts from 'containers/Preferences/Accounts/Accounts';
+// import Accounts from 'containers/Preferences/Accounts/Accounts';
 import Currencies from 'containers/Preferences/Currencies/Currencies';
 import Item from 'containers/Preferences/Item/Item';
 import DefaultRoute from '../containers/Preferences/DefaultRoute';

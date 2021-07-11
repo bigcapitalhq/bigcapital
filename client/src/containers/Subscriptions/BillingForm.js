@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
 import 'style/pages/Billing/BillingPage.scss';
@@ -23,11 +23,9 @@ function BillingForm({
   //#withBillingActions
   requestSubmitBilling,
 }) {
-  const { formatMessage } = useIntl();
-
   useEffect(() => {
-    changePageTitle(formatMessage({ id: 'billing' }));
-  }, [changePageTitle, formatMessage]);
+    changePageTitle(intl.get('billing'));
+  }, [changePageTitle]);
 
   const validationSchema = Yup.object().shape({
     plan_slug: Yup.string()

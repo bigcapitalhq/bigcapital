@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import {
   Intent,
   Button,
@@ -27,27 +28,27 @@ export function ActionsMenu({
   row: { original },
   payload: { onEdit, onInactivate, onActivate, onDelete, onResendInvitation },
 }) {
-  const { formatMessage } = useIntl();
+  
 
   return (
     <Menu>
       <If condition={original.invite_accepted_at}>
         <MenuItem
           icon={<Icon icon="pen-18" />}
-          text={formatMessage({ id: 'edit_user' })}
+          text={intl.get('edit_user')}
           onClick={safeCallback(onEdit, original)}
         />
         <MenuDivider />
 
         {original.active ? (
           <MenuItem
-            text={formatMessage({ id: 'inactivate_user' })}
+            text={intl.get('inactivate_user')}
             onClick={safeCallback(onInactivate, original)}
             icon={<Icon icon="pause-16" iconSize={16} />}
           />
         ) : (
           <MenuItem
-            text={formatMessage({ id: 'activate_user' })}
+            text={intl.get('activate_user')}
             onClick={safeCallback(onActivate, original)}
             icon={<Icon icon="play-16" iconSize={16} />}
           />
@@ -64,7 +65,7 @@ export function ActionsMenu({
 
       <MenuItem
         icon={<Icon icon="trash-16" iconSize={16} />}
-        text={formatMessage({ id: 'delete_user' })}
+        text={intl.get('delete_user')}
         onClick={safeCallback(onDelete, original)}
         intent={Intent.DANGER}
       />
@@ -110,7 +111,7 @@ function FullNameAccessor(user) {
 }
 
 export const useUsersListColumns = () => {
-  const { formatMessage } = useIntl();
+  
 
   return React.useMemo(
     () => [
@@ -122,19 +123,19 @@ export const useUsersListColumns = () => {
       },
       {
         id: 'full_name',
-        Header: formatMessage({ id: 'full_name' }),
+        Header: intl.get('full_name'),
         accessor: FullNameAccessor,
         width: 150,
       },
       {
         id: 'email',
-        Header: formatMessage({ id: 'email' }),
+        Header: intl.get('email'),
         accessor: 'email',
         width: 150,
       },
       {
         id: 'phone_number',
-        Header: formatMessage({ id: 'phone_number' }),
+        Header: intl.get('phone_number'),
         accessor: 'phone_number',
         width: 120,
       },
@@ -154,6 +155,6 @@ export const useUsersListColumns = () => {
         disableResizing: true,
       },
     ],
-    [formatMessage],
+    [],
   );
 };

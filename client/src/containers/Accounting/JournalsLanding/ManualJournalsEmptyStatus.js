@@ -2,17 +2,17 @@ import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
+import { FormattedMessage as T } from 'components';
 
 export default function ManualJournalsEmptyStatus() {
   const history = useHistory();
 
   return (
     <EmptyStatus
-      title={'Create your first journal entries on accounts chart.'}
+      title={<T id={'create_your_first_journal_entries_on_accounts_chart'} />}
       description={
         <p>
-          It is a long established fact that a reader will be distracted by the
-          readable content of a page when looking at its layout.
+          <T id={'it_is_a_long_established_fact_that_a_reader'} />
         </p>
       }
       action={
@@ -24,11 +24,11 @@ export default function ManualJournalsEmptyStatus() {
               history.push('/make-journal-entry');
             }}
           >
-            Make journal
+            <T id={'make_journal'} />
           </Button>
 
           <Button intent={Intent.NONE} large={true}>
-            Learn more
+            <T id={'learn_more'} />
           </Button>
         </>
       }

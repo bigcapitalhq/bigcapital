@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Alert, Intent } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 import { useActivateUser } from 'hooks/query';
@@ -23,7 +24,7 @@ function UserActivateAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   const { mutateAsync: userActivateMutate } = useActivateUser();
 
@@ -31,9 +32,7 @@ function UserActivateAlert({
     userActivateMutate(userId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_user_has_been_activated_successfully',
-          }),
+          message: intl.get('the_user_has_been_activated_successfully'),
           intent: Intent.SUCCESS,
         });
         closeAlert(name);

@@ -4,9 +4,9 @@ import { useFormikContext } from 'formik';
 import { sumBy } from 'lodash';
 import { CLASSES } from 'common/classes';
 import { compose } from 'utils';
-import {
-  Money,
-} from 'components';
+import { Money } from 'components';
+import { FormattedMessage as T } from 'components';
+
 import PaymentMadeFormHeaderFields from './PaymentMadeFormHeaderFields';
 import withSettings from 'containers/Settings/withSettings';
 
@@ -18,7 +18,9 @@ function PaymentMadeFormHeader({
   baseCurrency,
 }) {
   // Formik form context.
-  const { values: { entries } } = useFormikContext();
+  const {
+    values: { entries },
+  } = useFormikContext();
 
   // Calculate the payment amount of the entries.
   const amountPaid = useMemo(() => sumBy(entries, 'payment_amount'), [entries]);
@@ -30,7 +32,9 @@ function PaymentMadeFormHeader({
 
         <div className={classNames(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>
           <div class="big-amount">
-            <span class="big-amount__label">Amount Received</span>
+            <span class="big-amount__label">
+              <T id={'amount_received'} />
+            </span>
             <h1 class="big-amount__number">
               <Money amount={amountPaid} currency={baseCurrency} />
             </h1>

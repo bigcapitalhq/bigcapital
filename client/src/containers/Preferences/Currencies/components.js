@@ -7,7 +7,7 @@ import {
   MenuItem,
   Intent,
 } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { Icon } from 'components';
 import { safeCallback } from 'utils';
 
@@ -18,17 +18,17 @@ export function ActionMenuList({
   row: { original },
   payload: { onEditCurrency, onDeleteCurrency },
 }) {
-  const { formatMessage } = useIntl();
+  
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="pen-18" />}
-        text={formatMessage({ id: 'edit_currency' })}
+        text={intl.get('edit_currency')}
         onClick={safeCallback(onEditCurrency, original)}
       />
       <MenuItem
         icon={<Icon icon="trash-16" iconSize={16} />}
-        text={formatMessage({ id: 'delete_currency' })}
+        text={intl.get('delete_currency')}
         onClick={safeCallback(onDeleteCurrency, original)}
         intent={Intent.DANGER}
       />
@@ -51,17 +51,17 @@ export const ActionsCell = (props) => {
 };
 
 export function useCurrenciesTableColumns() {
-  const { formatMessage } = useIntl();
+  
 
   return useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'currency_name' }),
+        Header: intl.get('currency_name'),
         accessor: 'currency_name',
         width: 150,
       },
       {
-        Header: formatMessage({ id: 'currency_code' }),
+        Header: intl.get('currency_code'),
         accessor: 'currency_code',
         className: 'currency_code',
         width: 120,
@@ -80,6 +80,6 @@ export function useCurrenciesTableColumns() {
         disableResizing: true,
       },
     ],
-    [formatMessage],
+    [],
   );
 }

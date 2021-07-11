@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, Tooltip, Intent, Position } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { Icon, Hint } from 'components';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import {
   InputGroupCell,
   MoneyFieldCell,
@@ -60,22 +60,21 @@ function AmountFooterCell({ payload: { currencyCode }, rows }) {
 /**
  * Expense amount header cell.
  */
- export function ExpenseAmountHeaderCell({ payload: { currencyCode } }) {
-  return formatMessage({ id: 'amount_currency' }, { currency: currencyCode });
+export function ExpenseAmountHeaderCell({ payload: { currencyCode } }) {
+  return intl.get('amount_currency', { currency: currencyCode });
 }
 
 /**
  * Expense account footer cell.
  */
 function ExpenseAccountFooterCell() {
-  return 'Total';
+  return <T id={'total'} />;
 }
 
 /**
  * Retrieve expense form table entries columns.
  */
 export function useExpenseFormTableColumns() {
-
   return React.useMemo(
     () => [
       {
@@ -108,7 +107,7 @@ export function useExpenseFormTableColumns() {
         className: 'amount',
       },
       {
-        Header: formatMessage({ id: 'description' }),
+        Header: intl.get('description'),
         accessor: 'description',
         Cell: InputGroupCell,
         disableSortBy: true,
@@ -125,6 +124,6 @@ export function useExpenseFormTableColumns() {
         width: 45,
       },
     ],
-    [formatMessage],
+    [],
   );
 }

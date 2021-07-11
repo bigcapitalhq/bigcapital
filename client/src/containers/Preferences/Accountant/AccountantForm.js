@@ -9,8 +9,13 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-import { AccountsSelectList, FieldRequiredHint } from 'components';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
+
+import {
+  FormattedMessage as T,
+  AccountsSelectList,
+  FieldRequiredHint,
+} from 'components';
 import { handleStringChange, inputIntent } from 'utils';
 
 import { useAccountantFormContext } from './AccountantFormProvider';
@@ -20,8 +25,6 @@ import { useAccountantFormContext } from './AccountantFormProvider';
  */
 export default function AccountantForm() {
   const history = useHistory();
-
-  const { formatMessage } = useIntl();
 
   const { isSubmitting } = useFormikContext();
 
@@ -48,7 +51,11 @@ export default function AccountantForm() {
             <FormGroup inline={true}>
               <Checkbox
                 inline={true}
-                label={'Make account code required when create a new accounts.'}
+                label={
+                  <T
+                    id={'make_account_code_required_when_create_a_new_accounts'}
+                  />
+                }
                 name={'account_code_required'}
                 {...field}
               />
@@ -62,7 +69,11 @@ export default function AccountantForm() {
               <Checkbox
                 inline={true}
                 label={
-                  'Should account code be unique when create a new account.'
+                  <T
+                    id={
+                      'should_account_code_be_unique_when_create_a_new_account'
+                    }
+                  />
                 }
                 name={'account_code_unique'}
                 {...field}
@@ -94,8 +105,8 @@ export default function AccountantForm() {
                 setFieldValue('accounting_basis', _value);
               })}
             >
-              <Radio label={formatMessage({ id: 'Cash' })} value="cash" />
-              <Radio label={formatMessage({ id: 'accrual' })} value="accrual" />
+              <Radio label={intl.get('cash')} value="cash" />
+              <Radio label={intl.get('accrual')} value="accrual" />
             </RadioGroup>
           </FormGroup>
         )}
@@ -115,7 +126,11 @@ export default function AccountantForm() {
               </strong>
             }
             helperText={
-              'Select a preferred account to deposit into it after customer make payment.'
+              <T
+                id={
+                  'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'
+                }
+              />
             }
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
@@ -147,7 +162,11 @@ export default function AccountantForm() {
               </strong>
             }
             helperText={
-              'Select a preferred account to deposit into it after customer make payment.'
+              <T
+                id={
+                  'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'
+                }
+              />
             }
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
@@ -178,7 +197,11 @@ export default function AccountantForm() {
               </strong>
             }
             helperText={
-              'Select a preferred account to deposit into it vendor advanced deposits.'
+              <T
+                id={
+                  'select_a_preferred_account_to_deposit_into_it_vendor_advanced_deposits'
+                }
+              />
             }
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}

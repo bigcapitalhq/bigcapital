@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, FastField, Field, ErrorMessage, useFormikContext } from 'formik';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import {
   Button,
   Classes,

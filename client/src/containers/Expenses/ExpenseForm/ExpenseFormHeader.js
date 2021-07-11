@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
+import { FormattedMessage as T } from 'components';
 
 import { CLASSES } from 'common/classes';
 
@@ -21,7 +22,7 @@ export default function ExpenseFormHeader() {
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <ExpenseFormHeaderFields />
       <PageFormBigNumber
-        label={'Expense Amount'}
+        label={<T id={'expense_amount'}/>}
         amount={totalExpenseAmount}
         currencyCode={values?.currency_code}
       />

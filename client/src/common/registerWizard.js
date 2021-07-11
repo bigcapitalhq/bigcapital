@@ -1,16 +1,16 @@
+import intl from 'react-intl-universal';
 
-
-export const registerWizardSteps = [
+export const getSetupWizardSteps = () => [
   {
-    label: 'payment_or_trial',
+    label: intl.get('Plans & Payment'),
   },
   {
-    label: 'initializing',
+    label: intl.get('Initializing'),
   },
   {
-    label: 'getting_started',
+    label: intl.get('Getting started'),
   },
   {
-    label: 'Congratulations',
+    label: intl.get('Congratulations'),
   },
 ];

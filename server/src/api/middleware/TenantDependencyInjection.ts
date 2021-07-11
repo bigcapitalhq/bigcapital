@@ -6,6 +6,7 @@ import TenantsManagerService from 'services/Tenancy/TenantsManager';
 
 export default (req: Request, tenant: ITenant) => {
   const { id: tenantId, organizationId } = tenant;
+
   const tenantServices = Container.get(TenancyService);
   const tenantsManager = Container.get(TenantsManagerService);
 
@@ -17,7 +18,9 @@ export default (req: Request, tenant: ITenant) => {
   const repositories = tenantServices.repositories(tenantId)
   const cacheInstance = tenantServices.cache(tenantId);
 
-  tenantServices.setI18nLocals(tenantId, { __: req.__ });
+  const tenantContainer = tenantServices.tenantContainer(tenantId);
+
+  tenantContainer.set('i18n', { __: req.__ });
 
   req.knex = knexInstance;
   req.organizationId = organizationId;

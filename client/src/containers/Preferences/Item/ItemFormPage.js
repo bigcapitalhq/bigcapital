@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from 'components';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { ItemPreferencesSchema } from './Item.schema';
 import ItemForm from './ItemForm';
 
@@ -21,7 +21,7 @@ function ItemFormPage({
   // #withDashboardActions
   changePreferencesPageTitle,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { saveSettingMutate } = useItemFormContext();
 
   const initialValues = {
@@ -32,8 +32,8 @@ function ItemFormPage({
   };
 
   useEffect(() => {
-    changePreferencesPageTitle(formatMessage({ id: 'items' }));
-  }, [formatMessage, changePreferencesPageTitle]);
+    changePreferencesPageTitle(intl.get('items'));
+  }, [changePreferencesPageTitle]);
 
   // Handle form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
@@ -42,9 +42,7 @@ function ItemFormPage({
 
     const onSuccess = () => {
       AppToaster.show({
-        message: formatMessage({
-          id: 'the_items_preferences_has_been_saved',
-        }),
+        message: intl.get('the_items_preferences_has_been_saved'),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);

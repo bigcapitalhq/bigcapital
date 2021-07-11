@@ -1,20 +1,27 @@
 import React from 'react';
-import {
-  ListSelect,
-} from 'components';
+import intl from 'react-intl-universal';
 
-export default function SalutationList({
-  ...restProps
-}) {
-  const saluations = ['Mr.', 'Mrs.', 'Ms.', 'Miss', 'Dr.'];
-  const items = saluations.map((saluation) => ({ key: saluation, label: saluation }));
+import { ListSelect } from 'components';
+
+export default function SalutationList({ ...restProps }) {
+  const saluations = [
+    intl.get('mr'),
+    intl.get('mrs'),
+    intl.get('ms'),
+    intl.get('miss'),
+    intl.get('dr'),
+  ];
+  const items = saluations.map((saluation) => ({
+    key: saluation,
+    label: saluation,
+  }));
 
   return (
     <ListSelect
       items={items}
       selectedItemProp={'key'}
       textProp={'label'}
-      defaultText={'Salutation'}
+      defaultText={intl.get('salutation')}
       filterable={false}
       {...restProps}
     />

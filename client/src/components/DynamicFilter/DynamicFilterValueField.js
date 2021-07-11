@@ -10,7 +10,8 @@ import { connect } from 'react-redux';
 import { useQuery } from 'react-query';
 import { DateInput } from '@blueprintjs/datetime';
 import classNames from 'classnames';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { debounce } from 'lodash';
 import moment from 'moment';
 
@@ -45,7 +46,7 @@ function DynamicFilterValueField({
   onChange,
   inputDebounceWait = 250,
 }) {
-  const { formatMessage } = useIntl();
+  
   const [localValue, setLocalValue] = useState();
 
   // Makes `localValue` controlled mode from `value`.
@@ -185,7 +186,7 @@ function DynamicFilterValueField({
 
         <Choose.Otherwise>
           <InputGroup
-            placeholder={formatMessage({ id: 'value' })}
+            placeholder={intl.get('value')}
             onChange={handleInputChange}
             value={localValue}
           />

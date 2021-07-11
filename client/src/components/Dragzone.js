@@ -1,7 +1,8 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import { useDropzone } from 'react-dropzone'
+import React, { useState, useCallback, useEffect } from 'react';
+import { useDropzone } from 'react-dropzone';
 import classNames from 'classnames';
 import Icon from 'components/Icon';
+import intl from 'react-intl-universal';
 
 // const initialFile: {
 //   file: ?File,
@@ -11,7 +12,7 @@ import Icon from 'components/Icon';
 // };
 
 export default function Dropzone({
-  text = 'Drag/Drop files here or click here',
+  text = intl.get('drag_drop_files_here_or_click_here'),
   onDrop,
   initialFiles = [],
   onDeleteFile,
@@ -21,10 +22,10 @@ export default function Dropzone({
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
-    setFiles([ ...initialFiles ]);
+    setFiles([...initialFiles]);
   }, [initialFiles]);
 
-  const {getRootProps, getInputProps} = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     onDrop: (acceptedFiles) => {
       const _files = acceptedFiles.map((file) => ({
@@ -33,27 +34,35 @@ export default function Dropzone({
         uploaded: false,
       }));
       setFiles(_files);
-    }
+    },
   });
 
-  const handleRemove = useCallback((index) => {
-    const deletedFile = files.splice(index, 1);
-    setFiles([...files]);
-    onDeleteFile && onDeleteFile(deletedFile);
-  }, [files, onDeleteFile]);
+  const handleRemove = useCallback(
+    (index) => {
+      const deletedFile = files.splice(index, 1);
+      setFiles([...files]);
+      onDeleteFile && onDeleteFile(deletedFile);
+    },
+    [files, onDeleteFile],
+  );
 
   const thumbs = files.map((file, index) => (
     <div className={'dropzone-thumb'} key={file.name}>
-      <div><img src={file.preview} /></div>
+      <div>
+        <img src={file.preview} />
+      </div>
       <button onClick={() => handleRemove(index)}>
         <Icon icon={'times'} iconSize={12} />
       </button>
     </div>
   ));
 
-  useEffect(() => () => {
-    files.forEach(file => URL.revokeObjectURL(file.preview));
-  }, [files, onDrop]);
+  useEffect(
+    () => () => {
+      files.forEach((file) => URL.revokeObjectURL(file.preview));
+    },
+    [files, onDrop],
+  );
 
   useEffect(() => {
     onDrop && onDrop(files);
@@ -61,16 +70,14 @@ export default function Dropzone({
 
   return (
     <section className={classNames('dropzone-container', className)}>
-      {(hint) && <div class="dropzone-hint">{ hint }</div>}
+      {hint && <div class="dropzone-hint">{hint}</div>}
 
       <div {...getRootProps({ className: 'dropzone' })}>
         <input {...getInputProps()} />
-        <p>{ text }</p>
+        <p>{text}</p>
       </div>
 
-      <div className={'dropzone-thumbs'}>
-        { thumbs }
-      </div>
+      <div className={'dropzone-thumbs'}>{thumbs}</div>
     </section>
   );
 }

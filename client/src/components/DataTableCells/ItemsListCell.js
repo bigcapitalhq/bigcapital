@@ -4,6 +4,7 @@ import ItemsSuggestField from 'components/ItemsSuggestField';
 import classNames from 'classnames';
 
 import { FormGroup, Classes, Intent } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 
 import { useCellAutoFocus } from 'hooks';
 
@@ -40,7 +41,7 @@ export default function ItemsListCell({
         purchasable={filterPurchasable}
         inputProps={{
           inputRef: (ref) => (fieldRef.current = ref),
-          placeholder: 'Enter an item...'
+          placeholder: intl.get('enter_an_item'),
         }}
         openOnKeyDown={true}
         blurOnSelectClose={false}

@@ -2,7 +2,8 @@ import React from 'react';
 import { Button, InputGroup, Intent, FormGroup } from '@blueprintjs/core';
 import { Form, ErrorMessage, FastField, useFormikContext } from 'formik';
 import { Link } from 'react-router-dom';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { inputIntent } from 'utils';
 import { Col, Row } from 'components';
 import { useInviteAcceptContext } from './InviteAcceptProvider';
@@ -35,7 +36,7 @@ export default function InviteUserFormContent() {
           <FastField name={'first_name'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
-                label={<T id={'First Name'} />}
+                label={<T id={'first_name'} />}
                 className={'form-group--first_name'}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name={'first_name'} />}
@@ -53,7 +54,7 @@ export default function InviteUserFormContent() {
           <FastField name={'last_name'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
-                label={<T id={'Last Name'} />}
+                label={<T id={'last_name'} />}
                 className={'form-group--last_name'}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name={'last_name'} />}
@@ -71,7 +72,7 @@ export default function InviteUserFormContent() {
       <FastField name={'phone_number'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
-            label={<T id={'Phone Number'} />}
+            label={<T id={'phone_number'} />}
             className={'form-group--phone_number'}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'phone_number'} />}
@@ -85,7 +86,9 @@ export default function InviteUserFormContent() {
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'password'} />}
-            labelInfo={<PasswordRevealer onChange={handlePasswordRevealerChange} />}
+            labelInfo={
+              <PasswordRevealer onChange={handlePasswordRevealerChange} />
+            }
             className={'form-group--password has-password-revealer'}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'password'} />}
@@ -102,19 +105,14 @@ export default function InviteUserFormContent() {
 
       <div className={'invite-form__statement-section'}>
         <p>
-          <T id={'You email address is'} /> <b>{inviteMeta.email},</b> <br />
+          <T id={'you_email_address_is'} /> <b>{inviteMeta.email},</b> <br />
           <T id={'you_will_use_this_address_to_sign_in_to_bigcapital'} />
         </p>
         <p>
-          <T id={'signing_in_or_creating'} /> <br />
-          <Link>
-            <T id={'terms_conditions'} />
-          </Link>{' '}
-          <T id={'and'} />
-          <Link>
-            {' '}
-            <T id={'privacy_statement'} />
-          </Link>
+          {intl.getHTML('signing_in_or_creating', {
+            terms: (msg) => <Link>{msg}</Link>,
+            privacy: (msg) => <Link>{msg}</Link>,
+          })}
         </p>
       </div>
 

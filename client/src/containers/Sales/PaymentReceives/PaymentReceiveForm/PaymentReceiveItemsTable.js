@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { CloudLoadingIndicator } from 'components';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
+import { FormattedMessage as T } from 'components';
 
 import { CLASSES } from 'common/classes';
 import { usePaymentReceiveInnerContext } from './PaymentReceiveInnerProvider';
@@ -15,32 +16,37 @@ import { compose, updateTableRow } from 'utils';
 export default function PaymentReceiveItemsTable({
   entries,
   onUpdateData,
-  currencyCode
+  currencyCode,
 }) {
   // Payment receive form context.
-  const {
-    isDueInvoicesFetching,
-  } = usePaymentReceiveInnerContext();
+  const { isDueInvoicesFetching } = usePaymentReceiveInnerContext();
 
   // Payment receive entries form context.
   const columns = usePaymentReceiveEntriesColumns();
 
   // Formik context.
-  const { values: { customer_id } } = useFormikContext();
+  const {
+    values: { customer_id },
+  } = useFormikContext();
 
   // No results message.
-  const noResultsMessage = customer_id
-    ? 'There is no receivable invoices for this customer that can be applied for this payment'
-    : 'Please select a customer to display all open invoices for it.';
+  const noResultsMessage = customer_id ? (
+    <T id={'there_is_no_receivable_invoices_for_this_customer'} />
+  ) : (
+    <T id={'please_select_a_customer_to_display_all_open_invoices_for_it'} />
+  );
 
   // Handle update data.
-  const handleUpdateData = useCallback((rowIndex, columnId, value) => {
-    const newRows = compose(
-      updateTableRow(rowIndex, columnId, value),
-    )(entries);
+  const handleUpdateData = useCallback(
+    (rowIndex, columnId, value) => {
+      const newRows = compose(updateTableRow(rowIndex, columnId, value))(
+        entries,
+      );
 
-    onUpdateData(newRows);
-  }, [entries, onUpdateData]);
+      onUpdateData(newRows);
+    },
+    [entries, onUpdateData],
+  );
 
   return (
     <CloudLoadingIndicator isLoading={isDueInvoicesFetching}>
@@ -53,7 +59,7 @@ export default function PaymentReceiveItemsTable({
         payload={{
           errors: [],
           updateData: handleUpdateData,
-          currencyCode
+          currencyCode,
         }}
         noResults={noResultsMessage}
         footer={true}

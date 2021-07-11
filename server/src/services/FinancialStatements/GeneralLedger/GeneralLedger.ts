@@ -22,6 +22,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
   transactions: IJournalPoster;
   contactsMap: Map<number, IContact>;
   baseCurrency: string;
+  i18n: any;
 
   /**
    * Constructor method.
@@ -38,8 +39,8 @@ export default class GeneralLedgerSheet extends FinancialSheet {
     contactsByIdMap: Map<number, IContact>,
     transactions: IJournalPoster,
     openingBalancesJournal: IJournalPoster,
-    
-    baseCurrency: string
+    baseCurrency: string,
+    i18n
   ) {
     super();
 
@@ -51,6 +52,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
     this.transactions = transactions;
     this.openingBalancesJournal = openingBalancesJournal;
     this.baseCurrency = baseCurrency;
+    this.i18n = i18n;
   }
 
   /**
@@ -90,7 +92,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
 
       referenceType: entry.referenceType,
       referenceId: entry.referenceId,
-      referenceTypeFormatted: entry.referenceTypeFormatted,
+      referenceTypeFormatted: this.i18n.__(entry.referenceTypeFormatted),
 
       contactName: get(contact, 'displayName'),
       contactType: get(contact, 'contactService'),

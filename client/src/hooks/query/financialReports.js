@@ -402,3 +402,67 @@ export function useVendorsTransactionsReport(query, props) {
     },
   );
 }
+
+/**
+ * Retrieve cash flow statement report.
+ */
+export function useCashFlowStatementReport(query, props) {
+  return useRequestQuery(
+    [t.FINANCIAL_REPORT, t.CASH_FLOW_STATEMENT, query],
+    {
+      method: 'get',
+      url: '/financial_statements/cash-flow',
+      params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
+    },
+    {
+      select: (res) => ({
+        columns: res.data.table.columns,
+        query: res.data.query,
+        meta: res.data.meta,
+        tableRows: res.data.table.data,
+      }),
+      defaultData: {
+        tableRows: [],
+        columns: [],
+        query: {},
+        meta: {},
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve inventory item detail report.
+ */
+export function useInventoryItemDetailsReport(query, props) {
+  return useRequestQuery(
+    [t.FINANCIAL_REPORT, t.INVENTORY_ITEM_DETAILS, query],
+    {
+      method: 'get',
+      url: '/financial_statements/inventory-item-details',
+      params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
+    },
+    {
+      select: (res) => ({
+        columns: res.data.table.columns,
+        query: res.data.query,
+        meta: res.data.meta,
+        tableRows: res.data.table.data,
+      }),
+      defaultData: {
+        tableRows: [],
+        columns: [],
+        query: {},
+        meta: {},
+      },
+      ...props,
+    },
+  );
+}

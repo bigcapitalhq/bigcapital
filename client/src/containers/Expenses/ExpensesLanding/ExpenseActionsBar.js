@@ -12,7 +12,7 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -81,7 +81,7 @@ function ExpensesActionsBar({
             className={classNames(Classes.MINIMAL, 'button--filter', {
               'has-active-filters': filterCount > 0,
             })}
-            text="Filter"
+            text={<T id={'filter'}/>}
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>

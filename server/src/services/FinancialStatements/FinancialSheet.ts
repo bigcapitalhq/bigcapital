@@ -1,4 +1,9 @@
-import { IFormatNumberSettings, INumberFormatQuery } from 'interfaces';
+import moment from 'moment';
+import {
+  ICashFlowStatementTotal,
+  IFormatNumberSettings,
+  INumberFormatQuery,
+} from 'interfaces';
 import { formatNumber } from 'utils';
 
 export default class FinancialSheet {
@@ -37,7 +42,7 @@ export default class FinancialSheet {
     };
     return formatNumber(number, settings);
   }
-  
+
   /**
    * Formatting full amount with different format settings.
    * @param {number} amount -
@@ -52,24 +57,68 @@ export default class FinancialSheet {
     return this.formatNumber(amount, {
       money: numberFormat.formatMoney === 'none' ? false : true,
       excerptZero: false,
-      ...settings
+      ...settings,
     });
   }
 
   /**
    * Formates the amount to the percentage string.
-   * @param {number} amount 
+   * @param {number} amount
    * @returns {string}
    */
-  protected formatPercentage(
-    amount
-  ): string {
+  protected formatPercentage(amount): string {
     const percentage = amount * 100;
 
     return formatNumber(percentage, {
       symbol: '%',
       excerptZero: true,
       money: false,
-    })
+    });
+  }
+
+  /**
+   * Retrieve the amount meta object.
+   * @param {number} amount
+   * @returns {ICashFlowStatementTotal}
+   */
+  protected getAmountMeta(
+    amount: number,
+    overrideSettings?: IFormatNumberSettings
+  ): ICashFlowStatementTotal {
+    return {
+      amount,
+      formattedAmount: this.formatNumber(amount, overrideSettings),
+      currencyCode: this.baseCurrency,
+    };
+  }
+
+  /**
+   * Retrieve the total amount meta object.
+   * @param {number} amount
+   * @returns {ICashFlowStatementTotal}
+   */
+  protected getTotalAmountMeta(
+    amount: number,
+    title?: string
+  ): ICashFlowStatementTotal {
+    return {
+      ...(title ? { title } : {}),
+      amount,
+      formattedAmount: this.formatTotalNumber(amount),
+      currencyCode: this.baseCurrency,
+    };
+  }
+
+  /**
+   * Retrieve the date meta.
+   * @param {Date} date
+   * @param {string} format
+   * @returns
+   */
+  protected getDateMeta(date: Date, format = 'YYYY-MM-DD') {
+    return {
+      formattedDate: moment(date).format(format),
+      date: moment(date).toDate(),
+    };
   }
 }

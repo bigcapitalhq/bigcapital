@@ -11,7 +11,7 @@ import {
 } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { CLASSES } from 'common/classes';
 import { Icon, If } from 'components';
 import { useHistory } from 'react-router-dom';

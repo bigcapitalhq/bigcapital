@@ -1,7 +1,9 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
 import { Icon, If } from 'components';
+import { FormattedMessage as T } from 'components';
+
 import { getForceWidth, getColumnWidth } from 'utils';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
@@ -10,7 +12,7 @@ import FinancialLoadingBar from '../FinancialLoadingBar';
  * Retrieve the general ledger table columns.
  */
 export function useGeneralLedgerTableColumns() {
-  const { formatMessage } = useIntl();
+  
 
   // General ledger context.
   const {
@@ -20,7 +22,7 @@ export function useGeneralLedgerTableColumns() {
   return React.useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'date' }),
+        Header: intl.get('date'),
         accessor: (row) => {
           if (row.rowType === 'ACCOUNT_ROW') {
             return (
@@ -38,43 +40,42 @@ export function useGeneralLedgerTableColumns() {
         width: 120,
       },
       {
-        Header: formatMessage({ id: 'account_name' }),
+        Header: intl.get('account_name'),
         accessor: 'name',
         className: 'name',
         textOverview: true,
         // width: 200,
       },
       {
-        Header: formatMessage({ id: 'transaction_type' }),
+        Header: intl.get('transaction_type'),
         accessor: 'reference_type_formatted',
         className: 'transaction_type',
         width: 125,
         textOverview: true,
       },
       {
-        Header: formatMessage({ id: 'transaction_number' }),
+        Header: intl.get('transaction_number'),
         accessor: 'reference_id',
         className: 'transaction_number',
         width: 100,
       },
       {
-        Header: formatMessage({ id: 'description' }),
+        Header: intl.get('description'),
         accessor: 'note',
         className: 'description',
         // width: 145,
       },
       {
-        Header: formatMessage({ id: 'credit' }),
+        Header: intl.get('credit'),
         accessor: 'formatted_credit',
         className: 'credit',
         width: getColumnWidth(tableRows, 'formatted_credit', {
-        
           minWidth: 100,
           magicSpacing: 10,
         }),
       },
       {
-        Header: formatMessage({ id: 'debit' }),
+        Header: intl.get('debit'),
         accessor: 'formatted_debit',
         className: 'debit',
         width: getColumnWidth(tableRows, 'formatted_debit', {
@@ -83,7 +84,7 @@ export function useGeneralLedgerTableColumns() {
         }),
       },
       {
-        Header: formatMessage({ id: 'amount' }),
+        Header: intl.get('amount'),
         accessor: 'formatted_amount',
         className: 'amount',
         width: getColumnWidth(tableRows, 'formatted_amount', {
@@ -92,7 +93,7 @@ export function useGeneralLedgerTableColumns() {
         }),
       },
       {
-        Header: formatMessage({ id: 'running_balance' }),
+        Header: intl.get('running_balance'),
         accessor: 'formatted_running_balance',
         className: 'running_balance',
         width: getColumnWidth(tableRows, 'formatted_running_balance', {
@@ -101,37 +102,32 @@ export function useGeneralLedgerTableColumns() {
         }),
       },
     ],
-    [formatMessage, tableRows],
+    [tableRows],
   );
 }
-
 
 /**
  * General ledger sheet alerts.
  */
- export function GeneralLedgerSheetAlerts() {
-  const {
-    generalLedger,
-    isLoading,
-    sheetRefresh
-  } = useGeneralLedgerContext();
+export function GeneralLedgerSheetAlerts() {
+  const { generalLedger, isLoading, sheetRefresh } = useGeneralLedgerContext();
 
   // Handle refetch the report sheet.
   const handleRecalcReport = () => {
     sheetRefresh();
   };
   // Can't display any error if the report is loading.
-  if (isLoading) { return null; }
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <If condition={generalLedger.meta.is_cost_compute_running}>
       <div class="alert-compute-running">
-        <Icon icon="info-block" iconSize={12} /> Just a moment! We're
-        calculating your cost transactions and this doesn't take much time.
-        Please check after sometime.{' '}
-
+        <Icon icon="info-block" iconSize={12} />
+        <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
         <Button onClick={handleRecalcReport} minimal={true} small={true}>
-          Refresh
+          <T id={'refresh'} />
         </Button>
       </div>
     </If>
@@ -142,13 +138,11 @@ export function useGeneralLedgerTableColumns() {
  * General ledger sheet loading bar.
  */
 export function GeneralLedgerSheetLoadingBar() {
-  const {
-    isFetching,
-  } = useGeneralLedgerContext();
+  const { isFetching } = useGeneralLedgerContext();
 
   return (
     <If condition={isFetching}>
       <FinancialLoadingBar />
     </If>
-  )
+  );
 }

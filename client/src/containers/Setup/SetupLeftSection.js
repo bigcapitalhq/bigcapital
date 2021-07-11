@@ -1,8 +1,8 @@
 import React from 'react';
 import { Icon, For } from 'components';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
-import footerLinks from 'config/footerLinks';
+import { getFooterLinks } from 'config/footerLinks';
 import { useAuthActions, useAuthOrganizationId } from 'hooks/state';
 
 function FooterLinkItem({ title, link }) {
@@ -20,6 +20,10 @@ export default function SetupLeftSection() {
   const { setLogout } = useAuthActions();
   const organizationId = useAuthOrganizationId();
 
+  // Retrieve the footer links.
+  const footerLinks = getFooterLinks();
+
+  // Handle logout link click.
   const onClickLogout = () => {
     setLogout();
   };
@@ -42,7 +46,7 @@ export default function SetupLeftSection() {
 
         <div className={'content__organization'}>
           <span class="organization-id">
-            Oragnization ID: <span class="id">{ organizationId }</span>,
+            <T id={'organization_id'} />: <span class="id">{ organizationId }</span>,
           </span>
           <br />
           <span class="signout">

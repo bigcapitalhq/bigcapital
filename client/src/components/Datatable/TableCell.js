@@ -46,6 +46,8 @@ export default function TableCell({
     );
   }
 
+  const isRTL = true;
+
   return (
     <div
       {...cell.getCellProps({
@@ -62,7 +64,7 @@ export default function TableCell({
           'cell-inner',
         )}
         style={{
-          paddingLeft:
+          [isRTL ? 'paddingRight' : 'paddingLeft']:
             isExpandColumn && expandable
               ? `${depth * expandColumnSpace}rem`
               : '',

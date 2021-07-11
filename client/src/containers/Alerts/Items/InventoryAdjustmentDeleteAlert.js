@@ -1,9 +1,6 @@
 import React from 'react';
-import {
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-  useIntl,
-} from 'react-intl';
+import intl from 'react-intl-universal';
+import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
@@ -28,7 +25,7 @@ function InventoryAdjustmentDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const {
     mutateAsync: deleteInventoryAdjMutate,
     isLoading
@@ -44,9 +41,7 @@ function InventoryAdjustmentDeleteAlert({
     deleteInventoryAdjMutate(inventoryId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_adjustment_has_been_deleted_successfully',
-          }),
+          message: intl.get('the_adjustment_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
       })

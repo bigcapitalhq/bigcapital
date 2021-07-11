@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Intent, FormGroup, Checkbox } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 import { FastField, useFormikContext } from 'formik';

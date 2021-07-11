@@ -27,8 +27,10 @@ export default class AccountsTypesController extends BaseController {
    * @return {Response}
    */
   getAccountTypesList(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+
     try {
-      const accountTypes = this.accountsTypesService.getAccountsTypes();
+      const accountTypes = this.accountsTypesService.getAccountsTypes(tenantId);
 
       return res.status(200).send({
         account_types: this.transfromToResponse(accountTypes, ['label'], req),

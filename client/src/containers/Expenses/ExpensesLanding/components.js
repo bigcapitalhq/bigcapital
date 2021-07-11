@@ -12,9 +12,9 @@ import {
   MenuDivider,
 } from '@blueprintjs/core';
 import moment from 'moment';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { Money, Icon, If } from 'components';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { safeCallback } from 'utils';
 
 /**
@@ -46,25 +46,25 @@ export function ActionsMenu({
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
-        text={formatMessage({ id: 'view_details' })}
+        text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
       <MenuDivider />
       <If condition={!original.is_published}>
         <MenuItem
           icon={<Icon icon={'arrow-to-top'} size={16} />}
-          text={formatMessage({ id: 'publish_expense' })}
+          text={intl.get('publish_expense')}
           onClick={safeCallback(onPublish, original)}
         />
       </If>
       <MenuItem
         icon={<Icon icon="pen-18" />}
-        text={formatMessage({ id: 'edit_expense' })}
+        text={intl.get('edit_expense')}
         onClick={safeCallback(onEdit, original)}
       />
       <MenuItem
         icon={<Icon icon="trash-16" iconSize={16} />}
-        text={formatMessage({ id: 'delete_expense' })}
+        text={intl.get('delete_expense')}
         intent={Intent.DANGER}
         onClick={safeCallback(onDelete, original)}
       />
@@ -134,28 +134,28 @@ export function useExpensesTableColumns() {
     () => [
       {
         id: 'payment_date',
-        Header: formatMessage({ id: 'payment_date' }),
+        Header: intl.get('payment_date'),
         accessor: (r) => moment(r.payment_date).format('YYYY MMM DD'),
         width: 140,
         className: 'payment_date',
       },
       {
         id: 'amount',
-        Header: formatMessage({ id: 'full_amount' }),
+        Header: intl.get('full_amount'),
         accessor: TotalAmountAccessor,
         className: 'amount',
         width: 150,
       },
       {
         id: 'payment_account',
-        Header: formatMessage({ id: 'payment_account' }),
+        Header: intl.get('payment_account'),
         accessor: 'payment_account.name',
         className: 'payment_account',
         width: 150,
       },
       {
         id: 'expense_account',
-        Header: formatMessage({ id: 'expense_account' }),
+        Header: intl.get('expense_account'),
         accessor: ExpenseAccountAccessor,
         width: 160,
         className: 'expense_account',
@@ -163,14 +163,14 @@ export function useExpensesTableColumns() {
       },
       {
         id: 'published',
-        Header: formatMessage({ id: 'publish' }),
+        Header: intl.get('publish'),
         accessor: PublishAccessor,
         width: 100,
         className: 'publish',
       },
       {
         id: 'description',
-        Header: formatMessage({ id: 'description' }),
+        Header: intl.get('description'),
         accessor: DescriptionAccessor,
         width: 150,
         className: 'description',

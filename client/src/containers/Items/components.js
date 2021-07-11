@@ -9,8 +9,8 @@ import {
   Button,
   Popover,
 } from '@blueprintjs/core';
-import { useIntl, FormattedMessage as T } from 'react-intl';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
+import {  FormattedMessage as T } from 'components';
 import { isNumber } from 'lodash';
 import { Icon, Money, If } from 'components';
 import { isBlank, safeCallback } from 'utils';
@@ -33,7 +33,7 @@ export const PublishAccessor = (r) => {
 export const TypeAccessor = (row) => {
   return row.type ? (
     <Tag minimal={true} round={true} intent={Intent.NONE}>
-      {formatMessage({ id: row.type })}
+      {intl.get(row.type)}
     </Tag>
   ) : (
     ''
@@ -43,7 +43,7 @@ export const TypeAccessor = (row) => {
 export const ItemCodeAccessor = (row) =>
   row.type ? (
     <Tag minimal={true} round={true} intent={Intent.NONE}>
-      {formatMessage({ id: row.type })}
+      {intl.get(row.type)}
     </Tag>
   ) : (
     ''
@@ -66,7 +66,7 @@ export const SellPriceCell = ({ cell: { value } }) => {
 export const ItemTypeAccessor = (row) => {
   return row.type ? (
     <Tag minimal={true} round={true} intent={Intent.NONE}>
-      {formatMessage({ id: row.type })}
+      {intl.get(row.type)}
     </Tag>
   ) : null;
 };
@@ -82,7 +82,7 @@ export function ItemsActionMenuList({
     onDuplicate,
   },
 }) {
-  const { formatMessage } = useIntl();
+  
   return (
     <Menu>
       <MenuItem
@@ -92,37 +92,37 @@ export function ItemsActionMenuList({
       <MenuDivider />
       <MenuItem
         icon={<Icon icon="pen-18" />}
-        text={formatMessage({ id: 'edit_item' })}
+        text={intl.get('edit_item')}
         onClick={safeCallback(onEditItem, original)}
       />
       <MenuItem
         icon={<Icon icon="duplicate-16" />}
-        text={formatMessage({ id: 'duplicate' })}
+        text={intl.get('duplicate')}
         onClick={safeCallback(onDuplicate, original)}
       />
       <If condition={original.active}>
         <MenuItem
-          text={formatMessage({ id: 'inactivate_item' })}
+          text={intl.get('inactivate_item')}
           icon={<Icon icon="pause-16" iconSize={16} />}
           onClick={safeCallback(onInactivateItem, original)}
         />
       </If>
       <If condition={!original.active}>
         <MenuItem
-          text={formatMessage({ id: 'activate_item' })}
+          text={intl.get('activate_item')}
           icon={<Icon icon="play-16" iconSize={16} />}
           onClick={safeCallback(onActivateItem, original)}
         />
       </If>
       <If condition={original.type === 'inventory'}>
         <MenuItem
-          text={formatMessage({ id: 'make_adjustment' })}
+          text={intl.get('make_adjustment')}
           icon={<Icon icon={'swap-vert'} iconSize={16} />}
           onClick={safeCallback(onMakeAdjustment, original)}
         />
       </If>
       <MenuItem
-        text={formatMessage({ id: 'delete_item' })}
+        text={intl.get('delete_item')}
         icon={<Icon icon="trash-16" iconSize={16} />}
         onClick={safeCallback(onDeleteItem, original)}
         intent={Intent.DANGER}
@@ -146,60 +146,60 @@ export const ItemsActionsTableCell = (props) => {
  * Retrieve all items table columns.
  */
 export const useItemsTableColumns = () => {
-  const { formatMessage } = useIntl();
+  
 
   return React.useMemo(
     () => [
       {
         id: 'name',
-        Header: formatMessage({ id: 'item_name' }),
+        Header: intl.get('item_name'),
         accessor: 'name',
         className: 'name',
         width: 180,
       },
       {
         id: 'code',
-        Header: formatMessage({ id: 'item_code' }),
+        Header: intl.get('item_code'),
         accessor: 'code',
         className: 'code',
         width: 120,
       },
       {
         id: 'type',
-        Header: formatMessage({ id: 'item_type' }),
+        Header: intl.get('item_type'),
         accessor: ItemTypeAccessor,
         className: 'item_type',
         width: 120,
       },
       {
         id: 'category',
-        Header: formatMessage({ id: 'category' }),
+        Header: intl.get('category'),
         accessor: 'category.name',
         className: 'category',
         width: 150,
       },
       {
         id: 'sell_price',
-        Header: formatMessage({ id: 'sell_price' }),
+        Header: intl.get('sell_price'),
         accessor: 'sell_price_formatted',
         className: 'sell-price',
         width: 150,
       },
       {
         id: 'cost_price',
-        Header: formatMessage({ id: 'cost_price' }),
+        Header: intl.get('cost_price'),
         accessor: 'cost_price_formatted',
         className: 'cost-price',
         width: 150,
       },
       {
         id: 'quantity_on_hand',
-        Header: formatMessage({ id: 'quantity_on_hand' }),
+        Header: intl.get('quantity_on_hand'),
         accessor: 'quantity_on_hand',
         Cell: QuantityOnHandCell,
         width: 140,
       },
     ],
-    [formatMessage],
+    [],
   );
 };

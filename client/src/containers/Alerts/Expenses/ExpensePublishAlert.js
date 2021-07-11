@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
@@ -20,7 +21,7 @@ function ExpensePublishAlert({
   payload: { expenseId },
   isOpen,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { mutateAsync: publishExpenseMutate, isLoading } = usePublishExpense();
 
   const handleCancelPublishExpense = () => {
@@ -32,9 +33,7 @@ function ExpensePublishAlert({
     publishExpenseMutate(expenseId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_expense_has_been_published',
-          }),
+          message: intl.get('the_expense_has_been_published'),
           intent: Intent.SUCCESS,
         });
         closeAlert(name)

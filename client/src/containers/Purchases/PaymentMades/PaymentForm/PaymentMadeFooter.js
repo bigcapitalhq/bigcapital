@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { FormGroup, TextArea } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { FastField } from 'formik';
 import { Postbox, Row, Col } from 'components';
 import { CLASSES } from 'common/classes';
@@ -12,7 +12,7 @@ import { CLASSES } from 'common/classes';
 export default function PaymentMadeFooter() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <Postbox title={'Payment made details'} defaultOpen={false}>
+      <Postbox title={<T id={'payment_made_details'} />} defaultOpen={false}>
         <Row>
           <Col md={8}>
             {/* --------- Statement --------- */}

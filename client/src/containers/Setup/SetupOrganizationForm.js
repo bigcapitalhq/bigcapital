@@ -12,7 +12,7 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import { FieldRequiredHint, Col, Row, ListSelect } from 'components';
 import {
@@ -22,7 +22,7 @@ import {
   handleDateChange
 } from 'utils';
 
-import fiscalYearOptions from 'common/fiscalYearOptions';
+import { getFiscalYearOptions } from 'common/fiscalYearOptions';
 import languages from 'common/languagesOptions';
 import currencies from 'common/currencies';
 
@@ -31,6 +31,8 @@ import currencies from 'common/currencies';
  * Setup organization form.
  */
 export default function SetupOrganizationForm({ isSubmitting, values }) {
+  const fiscalYearOptions = getFiscalYearOptions();
+
   return (
     <Form>
       <h3>
@@ -96,7 +98,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
               >
                 <ListSelect
                   items={currencies}
-                  noResults={<MenuItem disabled={true} text="No results." />}
+                  noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
                   popoverProps={{ minimal: true }}
                   onItemSelect={(item) => {
                     setFieldValue('baseCurrency', item.code);
@@ -131,7 +133,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
               >
                 <ListSelect
                   items={languages}
-                  noResults={<MenuItem disabled={true} text="No results." />}
+                  noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
                   onItemSelect={(item) => {
                     setFieldValue('language', item.value);
                   }}
@@ -163,7 +165,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
           >
             <ListSelect
               items={fiscalYearOptions}
-              noResults={<MenuItem disabled={true} text="No results." />}
+              noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
               selectedItem={value}
               selectedItemProp={'value'}
               textProp={'name'}

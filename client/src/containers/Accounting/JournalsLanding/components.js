@@ -11,11 +11,11 @@ import {
   MenuDivider,
   Popover,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import moment from 'moment';
 import { Choose, Money, If, Icon } from 'components';
 import { safeCallback } from 'utils';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 /**
  * Amount accessor.
@@ -155,24 +155,24 @@ export const ActionsMenu = ({
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
-        text={formatMessage({ id: 'view_details' })}
+        text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
       <MenuDivider />
       <If condition={!original.is_published}>
         <MenuItem
           icon={<Icon icon="arrow-to-top" />}
-          text={formatMessage({ id: 'publish_journal' })}
+          text={intl.get('publish_journal')}
           onClick={safeCallback(onPublish, original)}
         />
       </If>
       <MenuItem
         icon={<Icon icon="pen-18" />}
-        text={formatMessage({ id: 'edit_journal' })}
+        text={intl.get('edit_journal')}
         onClick={safeCallback(onEdit, original)}
       />
       <MenuItem
-        text={formatMessage({ id: 'delete_journal' })}
+        text={intl.get('delete_journal')}
         icon={<Icon icon="trash-16" iconSize={16} />}
         intent={Intent.DANGER}
         onClick={safeCallback(onDelete, original)}

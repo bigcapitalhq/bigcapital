@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { isEmpty, omit } from 'lodash';
 import { CLASSES } from 'common/classes';
@@ -28,17 +28,11 @@ function BillForm({
   // #withSettings
   baseCurrency,
 }) {
-  const { formatMessage } = useIntl();
   const history = useHistory();
 
   // Bill form context.
-  const {
-    bill,
-    isNewMode,
-    submitPayload,
-    createBillMutate,
-    editBillMutate,
-  } = useBillFormContext();
+  const { bill, isNewMode, submitPayload, createBillMutate, editBillMutate } =
+    useBillFormContext();
 
   // Initial values in create and edit mode.
   const initialValues = useMemo(
@@ -61,7 +55,7 @@ function BillForm({
   const handleErrors = (errors, { setErrors }) => {
     if (errors.some((e) => e.type === ERROR.BILL_NUMBER_EXISTS)) {
       setErrors({
-        bill_number: formatMessage({ id: 'bill_number_exists' }),
+        bill_number: intl.get('bill_number_exists'),
       });
     }
   };
@@ -78,9 +72,7 @@ function BillForm({
 
     if (totalQuantity === 0) {
       AppToaster.show({
-        message: formatMessage({
-          id: 'quantity_cannot_be_zero_or_empty',
-        }),
+        message: intl.get('quantity_cannot_be_zero_or_empty'),
         intent: Intent.DANGER,
       });
       setSubmitting(false);
@@ -94,12 +86,10 @@ function BillForm({
     // Handle the request success.
     const onSuccess = (response) => {
       AppToaster.show({
-        message: formatMessage(
-          {
-            id: isNewMode
-              ? 'the_bill_has_been_created_successfully'
-              : 'the_bill_has_been_edited_successfully',
-          },
+        message: intl.get(
+          isNewMode
+            ? 'the_bill_has_been_created_successfully'
+            : 'the_bill_has_been_edited_successfully',
           { number: values.bill_number },
         ),
         intent: Intent.SUCCESS,

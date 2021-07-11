@@ -10,9 +10,10 @@ import {
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { ErrorMessage, FastField } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
 import { DateInput } from '@blueprintjs/datetime';
 import { useHistory } from 'react-router-dom';
+
+import { FormattedMessage as T } from 'components';
 import { ListSelect, FieldRequiredHint } from 'components';
 import {
   inputIntent,
@@ -23,12 +24,13 @@ import {
 import { CLASSES } from 'common/classes';
 import countriesOptions from 'common/countries';
 import currencies from 'common/currencies';
-import fiscalYearOptions from 'common/fiscalYearOptions';
+import { getFiscalYearOptions } from 'common/fiscalYearOptions';
 import languages from 'common/languagesOptions';
 import dateFormatsOptions from 'common/dateFormatsOptions';
 
 export default function PreferencesGeneralForm({}) {
   const history = useHistory();
+  const fiscalYearOptions = getFiscalYearOptions();
 
   const handleCloseClick = () => {
     history.go(-1);
@@ -44,7 +46,7 @@ export default function PreferencesGeneralForm({}) {
             inline={true}
             intent={inputIntent({ error, touched })}
             className={'form-group--org-name'}
-            helperText={'Shown on sales forms and purchase orders.'}
+            helperText={<T id={'shown_on_sales_forms_and_purchase_orders'} />}
           >
             <InputGroup medium={'true'} {...field} />
           </FormGroup>
@@ -59,9 +61,7 @@ export default function PreferencesGeneralForm({}) {
             inline={true}
             intent={inputIntent({ error, touched })}
             className={classNames('form-group--select-list', CLASSES.FILL)}
-            helperText={
-              'For reporting, you can specify any month as the start of your financial year (also called your financial reporting year or accounting year).'
-            }
+            helperText={<T id={'for_reporting_you_can_specify_any_month'} />}
           >
             <DateInput
               {...momentFormatter('MMMM Do YYYY')}
@@ -125,7 +125,11 @@ export default function PreferencesGeneralForm({}) {
             inline={true}
             intent={inputIntent({ error, touched })}
             helperText={
-              "You can't change the base currency as there are transactions recorded in your organization."
+              <T
+                id={
+                  'you_can_t_change_the_base_currency_as_there_are_transactions'
+                }
+              />
             }
           >
             <ListSelect

@@ -1,37 +1,26 @@
-import { lazy } from 'react';
-import { formatMessage } from 'services/intl';
+import React, { lazy } from 'react';
+import intl from 'react-intl-universal';
 
 // const BASE_URL = '/dashboard';
 
-export default [
-  // Accounts.
+export const getDashboardRoutes = () => [
+  // // Accounts.
   {
     path: `/accounts`,
     component: lazy(() => import('containers/Accounts/AccountsChart')),
-    breadcrumb: 'Accounts Chart',
+    breadcrumb: intl.get('accounts_chart'),
     hotkey: 'shift+a',
-    pageTitle: 'Accounts Chart',
+    pageTitle: intl.get('accounts_chart'),
   },
-  // Custom views.
-  // {
-  //   path: `/custom_views/:resource_slug/new`,
-  //   component: lazy(() => import('containers/Views/ViewFormPage')),
-  //   breadcrumb: 'New',
-  // },
-  // {
-  //   path: `/custom_views/:view_id/edit`,
-  //   component: lazy(() => import('containers/Views/ViewFormPage')),
-  //   breadcrumb: 'Edit',
-  // },
   // Accounting.
   {
     path: `/make-journal-entry`,
     component: lazy(() =>
       import('containers/Accounting/MakeJournal/MakeJournalEntriesPage'),
     ),
-    breadcrumb: 'Make Journal Entry',
+    breadcrumb: intl.get('make_journal_entry'),
     hotkey: 'ctrl+shift+m',
-    pageTitle: formatMessage({ id: 'new_journal' }),
+    pageTitle: intl.get('new_journal'),
     sidebarExpand: false,
     backLink: true,
   },
@@ -40,8 +29,8 @@ export default [
     component: lazy(() =>
       import('containers/Accounting/MakeJournal/MakeJournalEntriesPage'),
     ),
-    breadcrumb: 'Edit',
-    pageTitle: formatMessage({ id: 'edit_journal' }),
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_journal'),
     sidebarExpand: false,
     backLink: true,
   },
@@ -50,25 +39,25 @@ export default [
     component: lazy(() =>
       import('containers/Accounting/JournalsLanding/ManualJournalsList'),
     ),
-    breadcrumb: 'Manual Journals',
+    breadcrumb: intl.get('manual_journals'),
     hotkey: 'shift+m',
-    pageTitle: formatMessage({ id: 'manual_journals' }),
+    pageTitle: intl.get('manual_journals'),
   },
   {
     path: `/items/categories`,
     component: lazy(() =>
       import('containers/ItemsCategories/ItemCategoriesList'),
     ),
-    breadcrumb: 'Categories',
-    pageTitle: formatMessage({ id: 'category_list' }),
+    breadcrumb: intl.get('categories'),
+    pageTitle: intl.get('category_list'),
   },
   // Items.
   {
     path: `/items/:id/edit`,
     component: lazy(() => import('containers/Items/ItemFormPage')),
     name: 'item-edit',
-    breadcrumb: 'Edit Item',
-    pageTitle: formatMessage({ id: 'edit_item' }),
+    breadcrumb: intl.get('edit_item'),
+    pageTitle: intl.get('edit_item'),
     backLink: true,
   },
   {
@@ -76,23 +65,23 @@ export default [
     component: lazy({
       loader: () => import('containers/Items/ItemFormPage'),
     }),
-    breadcrumb: 'Duplicate Item',
+    breadcrumb: intl.get('duplicate_item'),
   },
   {
     path: `/items/new`,
     component: lazy(() => import('containers/Items/ItemFormPage')),
     name: 'item-new',
-    breadcrumb: 'New Item',
+    breadcrumb: intl.get('new_item'),
     hotkey: 'ctrl+shift+w',
-    pageTitle: formatMessage({ id: 'new_item' }),
+    pageTitle: intl.get('new_item'),
     backLink: true,
   },
   {
     path: `/items`,
     component: lazy(() => import('containers/Items/ItemsList')),
-    breadcrumb: 'Items',
+    breadcrumb: intl.get('items'),
     hotkey: 'shift+w',
-    pageTitle: formatMessage({ id: 'items_list' }),
+    pageTitle: intl.get('items_list'),
   },
 
   // Inventory adjustments.
@@ -101,8 +90,8 @@ export default [
     component: lazy(() =>
       import('containers/InventoryAdjustments/InventoryAdjustmentList'),
     ),
-    breadcrumb: 'Inventory a adjustments',
-    pageTitle: formatMessage({ id: 'inventory_adjustment_list' }),
+    breadcrumb: intl.get('inventory_adjustments'),
+    pageTitle: intl.get('inventory_adjustment_list'),
   },
 
   // Financial Reports.
@@ -111,11 +100,10 @@ export default [
     component: lazy(() =>
       import('containers/FinancialStatements/GeneralLedger/GeneralLedger'),
     ),
-    breadcrumb: 'General Ledger',
-    hint:
-      'Reports every transaction going in and out of your accounts and organized by accounts and date to monitoring activity of accounts.',
+    breadcrumb: intl.get('general_ledger'),
+    hint: intl.get('reports_every_transaction_going_in_and_out_of_your'),
     hotkey: 'shift+4',
-    pageTitle: formatMessage({ id: 'general_ledger' }),
+    pageTitle: intl.get('general_ledger'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -124,11 +112,10 @@ export default [
     component: lazy(() =>
       import('containers/FinancialStatements/BalanceSheet/BalanceSheet'),
     ),
-    breadcrumb: 'Balance Sheet',
-    hint:
-      "Reports a company's assets, liabilities and shareholders' equity at a specific point in time with comparison period(s).",
+    breadcrumb: intl.get('balance_sheet'),
+    hint: intl.get('reports_a_company_s_assets_liabilities_and_shareholders'),
     hotkey: 'shift+1',
-    pageTitle: formatMessage({ id: 'balance_sheet' }),
+    pageTitle: intl.get('balance_sheet'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -139,11 +126,10 @@ export default [
         'containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
       ),
     ),
-    breadcrumb: 'Trial Balance Sheet',
-    hint:
-      'Summarizes the credit and debit balance of each account in your chart of accounts at a specific point in time. ',
+    breadcrumb: intl.get('trial_balance_sheet'),
+    hint: intl.get('summarizes_the_credit_and_debit_balance_of_each_account'),
     hotkey: 'shift+5',
-    pageTitle: formatMessage({ id: 'trial_balance_sheet' }),
+    pageTitle: intl.get('trial_balance_sheet'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -152,11 +138,10 @@ export default [
     component: lazy(() =>
       import('containers/FinancialStatements/ProfitLossSheet/ProfitLossSheet'),
     ),
-    breadcrumb: 'Profit Loss Sheet',
-    hint:
-      'Reports the revenues, costs and expenses incurred during a specific point in time with comparison period(s).',
+    breadcrumb: intl.get('profit_loss_sheet'),
+    hint: intl.get('reports_the_revenues_costs_and_expenses'),
     hotkey: 'shift+2',
-    pageTitle: formatMessage({ id: 'profit_loss_sheet' }),
+    pageTitle: intl.get('profit_loss_sheet'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -165,10 +150,9 @@ export default [
     component: lazy(() =>
       import('containers/FinancialStatements/ARAgingSummary/ARAgingSummary'),
     ),
-    breadcrumb: 'Receivable Aging Summary',
-    hint:
-      'Summarize total unpaid balances of customers invoices with number of days the unpaid invoice is overdue.',
-    pageTitle: formatMessage({ id: 'receivable_aging_summary' }),
+    breadcrumb: intl.get('receivable_aging_summary'),
+    hint: intl.get('summarize_total_unpaid_balances_of_customers_invoices'),
+    pageTitle: intl.get('receivable_aging_summary'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -177,10 +161,9 @@ export default [
     component: lazy(() =>
       import('containers/FinancialStatements/APAgingSummary/APAgingSummary'),
     ),
-    breadcrumb: 'Payable Aging Summary',
-    hint:
-      'Summarize total unpaid balances of vendors purchase invoices with the number of days the unpaid invoice is overdue.',
-    pageTitle: formatMessage({ id: 'payable_aging_summary' }),
+    breadcrumb: intl.get('payable_aging_summary'),
+    hint: intl.get('summarize_total_unpaid_balances_of_vendors_purchase'),
+    pageTitle: intl.get('payable_aging_summary'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -189,11 +172,10 @@ export default [
     component: lazy(() =>
       import('containers/FinancialStatements/Journal/Journal'),
     ),
-    breadcrumb: 'Journal Sheet',
-    hint:
-      'The debit and credit entries of system transactions, sorted by date.',
+    breadcrumb: intl.get('journal_sheet'),
+    hint: intl.get('the_debit_and_credit_entries_of_system_transactions'),
     hotkey: 'shift+3',
-    pageTitle: formatMessage({ id: 'journal_sheet' }),
+    pageTitle: intl.get('journal_sheet'),
     sidebarExpand: false,
     backLink: true,
   },
@@ -204,9 +186,9 @@ export default [
         'containers/FinancialStatements/PurchasesByItems/PurchasesByItems'
       ),
     ),
-    breadcrumb: 'Purchases by Items',
+    breadcrumb: intl.get('purchases_by_items'),
     // hotkey: '',
-    pageTitle: formatMessage({ id: 'purchases_by_items' }),
+    pageTitle: intl.get('purchases_by_items'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -215,10 +197,11 @@ export default [
     component: lazy(() =>
       import('containers/FinancialStatements/SalesByItems/SalesByItems'),
     ),
-    breadcrumb: 'Sales by Items',
-    pageTitle: formatMessage({ id: 'sales_by_items' }),
-    hint:
-      'Summarize the business’s sold items quantity, income and average income rate of each item during a specific point in time.',
+    breadcrumb: intl.get('sales_by_items'),
+    pageTitle: intl.get('sales_by_items'),
+    hint: intl.get(
+      'summarize_the_business_s_sold_items_quantity_income_and_average_income_rate',
+    ),
     backLink: true,
     sidebarExpand: false,
   },
@@ -229,10 +212,9 @@ export default [
         'containers/FinancialStatements/InventoryValuation/InventoryValuation'
       ),
     ),
-    breadcrumb: 'Inventory Valuation ',
-    hint:
-      'Summerize your transactions for each inventory item and how they affect quantity, valuation and weighted average.',
-    pageTitle: formatMessage({ id: 'inventory_valuation' }),
+    breadcrumb: intl.get('inventory_valuation'),
+    hint: intl.get('summerize_your_transactions_for_each_inventory_item'),
+    pageTitle: intl.get('inventory_valuation'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -243,9 +225,9 @@ export default [
         'containers/FinancialStatements/CustomersBalanceSummary/CustomersBalanceSummary'
       ),
     ),
-    breadcrumb: 'Customers Balance Summary ',
-    hint: 'Summerize how much each customer owes your business.',
-    pageTitle: formatMessage({ id: 'customers_balance_summary' }),
+    breadcrumb: intl.get('customers_balance_summary'),
+    hint: intl.get('summerize_how_much_each_customer_owes_your_business'),
+    pageTitle: intl.get('customers_balance_summary'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -256,9 +238,9 @@ export default [
         'containers/FinancialStatements/VendorsBalanceSummary/VendorsBalanceSummary'
       ),
     ),
-    breadcrumb: 'Vendors Balance Summary ',
-    hint: '..',
-    pageTitle: formatMessage({ id: 'vendors_balance_summary' }),
+    breadcrumb: intl.get('vendors_balance_summary'),
+    hint: intl.get('summerize_the_total_amount_your_business_owes_each_vendor'),
+    pageTitle: intl.get('vendors_balance_summary'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -269,9 +251,9 @@ export default [
         'containers/FinancialStatements/CustomersTransactions/CustomersTransactions'
       ),
     ),
-    breadcrumb: 'Customers Transactions ',
-    hint: '..',
-    pageTitle: formatMessage({ id: 'customers_transactions' }),
+    breadcrumb: intl.get('customers_transactions'),
+    hint: intl.get('reports_every_transaction_going_in_and_out_of_each_customer'),
+    pageTitle: intl.get('customers_transactions'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -282,9 +264,35 @@ export default [
         'containers/FinancialStatements/VendorsTransactions/VendorsTransactions'
       ),
     ),
-    breadcrumb: 'Vendors Transactions ',
-    hint: '..',
-    pageTitle: formatMessage({ id: 'vendors_transactions' }),
+    breadcrumb: intl.get('vendors_transactions'),
+    hint: intl.get('reports_every_transaction_going_in_and_out_of_each_vendor_supplier'),
+    pageTitle: intl.get('vendors_transactions'),
+    backLink: true,
+    sidebarExpand: false,
+  },
+  {
+    path: `/financial-reports/cash-flow`,
+    component: lazy(() =>
+      import(
+        'containers/FinancialStatements/CashFlowStatement/CashFlowStatement'
+      ),
+    ),
+    breadcrumb: intl.get('cash_flow_statement'),
+    hint: intl.get('reports_inflow_and_outflow_of_cash_and_cash_equivalents'),
+    pageTitle: intl.get('cash_flow_statement'),
+    backLink: true,
+    sidebarExpand: false,
+  },
+  {
+    path: `/financial-reports/inventory-item-details`,
+    component: lazy(() =>
+      import(
+        'containers/FinancialStatements/InventoryItemDetails/InventoryItemDetails'
+      ),
+    ),
+    breadcrumb: intl.get('inventory_item_details'),
+    hint: intl.get('reports_every_transaction_going_in_and_out_of_your_items'),
+    pageTitle: intl.get('inventory_item_details'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -293,15 +301,15 @@ export default [
     component: lazy(() =>
       import('containers/FinancialStatements/FinancialReports'),
     ),
-    breadcrumb: 'Financial Reports',
-    pageTitle: formatMessage({ id: 'all_financial_reports' }),
+    breadcrumb: intl.get('financial_reports'),
+    pageTitle: intl.get('all_financial_reports'),
   },
   // Exchange Rates
   {
     path: `/exchange-rates`,
     component: lazy(() => import('containers/ExchangeRates/ExchangeRatesList')),
-    breadcrumb: 'Exchange Rates',
-    pageTitle: formatMessage({ id: 'exchange_rates_list' }),
+    breadcrumb: intl.get('exchange_rates_list'),
+    pageTitle: intl.get('exchange_rates_list'),
   },
   // Expenses.
   {
@@ -309,9 +317,9 @@ export default [
     component: lazy(() =>
       import('containers/Expenses/ExpenseForm/ExpenseFormPage'),
     ),
-    breadcrumb: 'Expenses',
+    breadcrumb: intl.get('expenses'),
     hotkey: 'ctrl+shift+x',
-    pageTitle: formatMessage({ id: 'new_expense' }),
+    pageTitle: intl.get('new_expense'),
     sidebarExpand: false,
     backLink: true,
   },
@@ -320,8 +328,8 @@ export default [
     component: lazy(() =>
       import('containers/Expenses/ExpenseForm/ExpenseFormPage'),
     ),
-    breadcrumb: 'Edit',
-    pageTitle: formatMessage({ id: 'edit_expense' }),
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_expense'),
     sidebarExpand: false,
     backLink: true,
   },
@@ -330,8 +338,8 @@ export default [
     component: lazy(() =>
       import('containers/Expenses/ExpensesLanding/ExpensesList'),
     ),
-    breadcrumb: 'Expenses List',
-    pageTitle: formatMessage({ id: 'expenses_list' }),
+    breadcrumb: intl.get('expenses_list'),
+    pageTitle: intl.get('expenses_list'),
     hotkey: 'shift+x',
   },
 
@@ -342,8 +350,8 @@ export default [
       import('containers/Customers/CustomerForm/CustomerFormPage'),
     ),
     name: 'customer-edit',
-    breadcrumb: 'Edit Customer',
-    pageTitle: formatMessage({ id: 'edit_customer' }),
+    breadcrumb: intl.get('edit_customer'),
+    pageTitle: intl.get('edit_customer'),
     backLink: true,
   },
   {
@@ -352,9 +360,9 @@ export default [
       import('containers/Customers/CustomerForm/CustomerFormPage'),
     ),
     name: 'customer-new',
-    breadcrumb: 'New Customer',
+    breadcrumb: intl.get('new_customer'),
     hotkey: 'ctrl+shift+c',
-    pageTitle: formatMessage({ id: 'new_customer' }),
+    pageTitle: intl.get('new_customer'),
     backLink: true,
   },
   {
@@ -362,9 +370,9 @@ export default [
     component: lazy(() =>
       import('containers/Customers/CustomersLanding/CustomersList'),
     ),
-    breadcrumb: 'Customers',
+    breadcrumb: intl.get('customers'),
     hotkey: 'shift+c',
-    pageTitle: formatMessage({ id: 'customers_list' }),
+    pageTitle: intl.get('customers_list'),
   },
   {
     path: `/customers/contact_duplicate=/:id`,
@@ -372,8 +380,8 @@ export default [
       import('containers/Customers/CustomerForm/CustomerFormPage'),
     ),
     name: 'duplicate-customer',
-    breadcrumb: 'Duplicate  Customer',
-    pageTitle: formatMessage({ id: 'new_customer' }),
+    breadcrumb: intl.get('duplicate_customer'),
+    pageTitle: intl.get('new_customer'),
     backLink: true,
   },
 
@@ -384,8 +392,8 @@ export default [
       import('containers/Vendors/VendorForm/VendorFormPage'),
     ),
     name: 'vendor-edit',
-    breadcrumb: 'Edit Vendor',
-    pageTitle: formatMessage({ id: 'edit_vendor' }),
+    breadcrumb: intl.get('edit_vendor'),
+    pageTitle: intl.get('edit_vendor'),
     backLink: true,
   },
   {
@@ -394,9 +402,9 @@ export default [
       import('containers/Vendors/VendorForm/VendorFormPage'),
     ),
     name: 'vendor-new',
-    breadcrumb: 'New Vendor',
+    breadcrumb: intl.get('new_vendor'),
     hotkey: 'ctrl+shift+v',
-    pageTitle: formatMessage({ id: 'new_vendor' }),
+    pageTitle: intl.get('new_vendor'),
     backLink: true,
   },
   {
@@ -404,9 +412,9 @@ export default [
     component: lazy(() =>
       import('containers/Vendors/VendorsLanding/VendorsList'),
     ),
-    breadcrumb: 'Vendors',
+    breadcrumb: intl.get('vendors'),
     hotkey: 'shift+v',
-    pageTitle: formatMessage({ id: 'vendors_list' }),
+    pageTitle: intl.get('vendors_list'),
   },
   {
     path: `/vendors/contact_duplicate=/:id`,
@@ -414,8 +422,8 @@ export default [
       import('containers/Vendors/VendorForm/VendorFormPage'),
     ),
     name: 'duplicate-vendor',
-    breadcrumb: 'Duplicate  Vendor',
-    pageTitle: formatMessage({ id: 'new_vendor' }),
+    breadcrumb: intl.get('duplicate_vendor'),
+    pageTitle: intl.get('new_vendor'),
     backLink: true,
   },
 
@@ -426,8 +434,8 @@ export default [
       import('containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
     ),
     name: 'estimate-edit',
-    breadcrumb: 'Edit',
-    pageTitle: formatMessage({ id: 'edit_estimate' }),
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_estimate'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -437,8 +445,8 @@ export default [
       import('containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
     ),
     name: 'convert-to-invoice',
-    breadcrumb: 'New Estimate',
-    pageTitle: formatMessage({ id: 'new_estimate' }),
+    breadcrumb: intl.get('new_estimate'),
+    pageTitle: intl.get('new_estimate'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -448,9 +456,9 @@ export default [
       import('containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
     ),
     name: 'estimate-new',
-    breadcrumb: 'New Estimate',
+    breadcrumb: intl.get('new_estimate'),
     hotkey: 'ctrl+shift+e',
-    pageTitle: formatMessage({ id: 'new_estimate' }),
+    pageTitle: intl.get('new_estimate'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -460,9 +468,9 @@ export default [
       import('containers/Sales/Estimates/EstimatesLanding/EstimatesList'),
     ),
     name: 'estimates-list',
-    breadcrumb: 'Estimates List',
+    breadcrumb: intl.get('estimates_list'),
     hotkey: 'shift+e',
-    pageTitle: formatMessage({ id: 'estimates_list' }),
+    pageTitle: intl.get('estimates_list'),
   },
 
   // Invoices.
@@ -472,8 +480,8 @@ export default [
       import('containers/Sales/Invoices/InvoiceForm/InvoiceFormPage'),
     ),
     name: 'invoice-edit',
-    breadcrumb: 'Edit',
-    pageTitle: formatMessage({ id: 'edit_invoice' }),
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_invoice'),
     sidebarExpand: false,
     backLink: true,
   },
@@ -483,9 +491,9 @@ export default [
       import('containers/Sales/Invoices/InvoiceForm/InvoiceFormPage'),
     ),
     name: 'invoice-new',
-    breadcrumb: 'New Invoice',
+    breadcrumb: intl.get('new_invoice'),
     hotkey: 'ctrl+shift+i',
-    pageTitle: formatMessage({ id: 'new_invoice' }),
+    pageTitle: intl.get('new_invoice'),
     sidebarExpand: false,
     backLink: true,
   },
@@ -494,9 +502,9 @@ export default [
     component: lazy(() =>
       import('containers/Sales/Invoices/InvoicesLanding/InvoicesList'),
     ),
-    breadcrumb: 'Invoices List',
+    breadcrumb: intl.get('invoices_list'),
     hotkey: 'shift+i',
-    pageTitle: formatMessage({ id: 'invoices_list' }),
+    pageTitle: intl.get('invoices_list'),
   },
 
   // Sales Receipts.
@@ -506,8 +514,8 @@ export default [
       import('containers/Sales/Receipts/ReceiptForm/ReceiptFormPage'),
     ),
     name: 'receipt-edit',
-    breadcrumb: 'Edit',
-    pageTitle: formatMessage({ id: 'edit_receipt' }),
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_receipt'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -517,9 +525,9 @@ export default [
       import('containers/Sales/Receipts/ReceiptForm/ReceiptFormPage'),
     ),
     name: 'receipt-new',
-    breadcrumb: 'New Receipt',
+    breadcrumb: intl.get('new_receipt'),
     hotkey: 'ctrl+shift+r',
-    pageTitle: formatMessage({ id: 'new_receipt' }),
+    pageTitle: intl.get('new_receipt'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -528,9 +536,9 @@ export default [
     component: lazy(() =>
       import('containers/Sales/Receipts/ReceiptsLanding/ReceiptsList'),
     ),
-    breadcrumb: 'Receipts List',
+    breadcrumb: intl.get('receipts_list'),
     hotkey: 'shift+r',
-    pageTitle: formatMessage({ id: 'receipts_list' }),
+    pageTitle: intl.get('receipts_list'),
   },
 
   // Payment receives
@@ -542,8 +550,8 @@ export default [
       ),
     ),
     name: 'payment-receive-edit',
-    breadcrumb: 'Edit',
-    pageTitle: formatMessage({ id: 'edit_payment_receive' }),
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_payment_receive'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -555,8 +563,8 @@ export default [
       ),
     ),
     name: 'payment-receive-new',
-    breadcrumb: 'New Payment Receive',
-    pageTitle: formatMessage({ id: 'new_payment_receive' }),
+    breadcrumb: intl.get('new_payment_receive'),
+    pageTitle: intl.get('new_payment_receive'),
     backLink: true,
     sidebarExpand: false,
   },
@@ -567,8 +575,8 @@ export default [
         'containers/Sales/PaymentReceives/PaymentsLanding/PaymentReceivesList'
       ),
     ),
-    breadcrumb: 'Payment Receives List',
-    pageTitle: formatMessage({ id: 'payment_receives_list' }),
+    breadcrumb: intl.get('payment_receives_list'),
+    pageTitle: intl.get('payment_receives_list'),
   },
 
   // Bills
@@ -578,8 +586,8 @@ export default [
       import('containers/Purchases/Bills/BillForm/BillFormPage'),
     ),
     name: 'bill-edit',
-    breadcrumb: 'Edit',
-    pageTitle: formatMessage({ id: 'edit_bill' }),
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_bill'),
     sidebarExpand: false,
     backLink: true,
   },
@@ -589,9 +597,9 @@ export default [
       import('containers/Purchases/Bills/BillForm/BillFormPage'),
     ),
     name: 'bill-new',
-    breadcrumb: 'New Bill',
+    breadcrumb: intl.get('new_bill'),
     hotkey: 'ctrl+shift+b',
-    pageTitle: formatMessage({ id: 'new_bill' }),
+    pageTitle: intl.get('new_bill'),
     sidebarExpand: false,
     backLink: true,
   },
@@ -600,16 +608,16 @@ export default [
     component: lazy(() =>
       import('containers/Purchases/Bills/BillsLanding/BillsList'),
     ),
-    breadcrumb: 'Bills List',
+    breadcrumb: intl.get('bills_list'),
     hotkey: 'shift+b',
-    pageTitle: formatMessage({ id: 'bills_list' }),
+    pageTitle: intl.get('bills_list'),
   },
 
   // Subscription billing.
   {
     path: `/billing`,
     component: lazy(() => import('containers/Subscriptions/BillingForm')),
-    breadcrumb: 'New Billing',
+    breadcrumb: intl.get('new_billing'),
   },
   // Payment modes.
   {
@@ -620,8 +628,8 @@ export default [
       ),
     ),
     name: 'payment-made-edit',
-    breadcrumb: 'Edit',
-    pageTitle: formatMessage({ id: 'edit_payment_made' }),
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_payment_made'),
     sidebarExpand: false,
     backLink: true,
   },
@@ -633,8 +641,8 @@ export default [
       ),
     ),
     name: 'payment-made-new',
-    breadcrumb: 'New Payment Made',
-    pageTitle: formatMessage({ id: 'new_payment_made' }),
+    breadcrumb: intl.get('new_payment_made'),
+    pageTitle: intl.get('new_payment_made'),
     sidebarExpand: false,
     backLink: true,
   },
@@ -645,13 +653,13 @@ export default [
         'containers/Purchases/PaymentMades/PaymentsLanding/PaymentMadeList'
       ),
     ),
-    breadcrumb: 'Payment Made List',
-    pageTitle: formatMessage({ id: 'payment_made_list' }),
+    breadcrumb: intl.get('payment_made_list'),
+    pageTitle: intl.get('payment_made_list'),
   },
   // Homepage
   {
     path: `/`,
     component: lazy(() => import('containers/Homepage/Homepage')),
-    breadcrumb: 'Home',
+    breadcrumb: intl.get('homepage'),
   },
 ];

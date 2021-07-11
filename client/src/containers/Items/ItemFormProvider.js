@@ -1,5 +1,5 @@
 import React, { useEffect, createContext, useState } from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { useLocation, useParams } from 'react-router-dom';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
@@ -66,7 +66,7 @@ function ItemFormProvider({ itemId, ...props }) {
   };
 
   // Format message intl.
-  const { formatMessage } = useIntl();
+  
 
   // Change page title dispatcher.
   const changePageTitle = useDashboardPageTitle();
@@ -74,9 +74,9 @@ function ItemFormProvider({ itemId, ...props }) {
   // Changes the page title in new and edit mode.
   useEffect(() => {
     isNewMode
-      ? changePageTitle(formatMessage({ id: 'new_item' }))
-      : changePageTitle(formatMessage({ id: 'edit_item_details' }));
-  }, [changePageTitle, isNewMode, formatMessage]);
+      ? changePageTitle(intl.get('new_item'))
+      : changePageTitle(intl.get('edit_item_details'));
+  }, [changePageTitle, isNewMode]);
 
   return (
     <DashboardInsider

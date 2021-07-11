@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { ListSelect } from 'components';
 import { MenuItem } from '@blueprintjs/core';
 import { saveInvoke } from 'utils';

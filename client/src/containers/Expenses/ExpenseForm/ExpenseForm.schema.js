@@ -1,27 +1,27 @@
 import * as Yup from 'yup';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
 import { isBlank } from 'utils';
 
 const Schema = Yup.object().shape({
-  beneficiary: Yup.string().label(formatMessage({ id: 'beneficiary' })),
+  beneficiary: Yup.string().label(intl.get('beneficiary')),
   payment_account_id: Yup.number()
     .required()
-    .label(formatMessage({ id: 'payment_account_' })),
+    .label(intl.get('payment_account_')),
   payment_date: Yup.date()
     .required()
-    .label(formatMessage({ id: 'payment_date_' })),
+    .label(intl.get('payment_date_')),
   reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
   currency_code: Yup.string()
     .nullable()
     .max(3)
-    .label(formatMessage({ id: 'currency_code' })),
+    .label(intl.get('currency_code')),
   description: Yup.string()
     .trim()
     .min(1)
     .max(DATATYPES_LENGTH.TEXT)
     .nullable()
-    .label(formatMessage({ id: 'description' })),
+    .label(intl.get('description')),
   publish: Yup.boolean(),
   categories: Yup.array().of(
     Yup.object().shape({

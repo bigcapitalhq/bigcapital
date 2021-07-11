@@ -51,3 +51,9 @@ export * from './TransactionsByContacts';
 export * from './TransactionsByVendors';
 export * from './Table';
 export * from './Ledger';
+export * from './CashFlow';
+export * from './InventoryDetails';
+
+export interface I18nService {
+  __: (input: string) => string;
+}

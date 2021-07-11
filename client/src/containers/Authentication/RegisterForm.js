@@ -7,7 +7,8 @@ import {
   Spinner,
 } from '@blueprintjs/core';
 import { ErrorMessage, Field, Form } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Link } from 'react-router-dom';
 import { Row, Col, If } from 'components';
 import { PasswordRevealer } from './components';
@@ -117,15 +118,10 @@ export default function RegisterForm({ isSubmitting }) {
 
       <div className={'register-form__agreement-section'}>
         <p>
-          <T id={'signing_in_or_creating'} /> <br />
-          <Link>
-            <T id={'terms_conditions'} />
-          </Link>{' '}
-          <T id={'and'} />
-          <Link>
-            {' '}
-            <T id={'privacy_statement'} />
-          </Link>
+          {intl.getHTML('signing_in_or_creating', {
+            terms: (msg) => <Link>{msg}</Link>,
+            privacy: (msg) => <Link>{msg}</Link>,
+          })}
         </p>
       </div>
 

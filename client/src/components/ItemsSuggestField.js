@@ -5,7 +5,7 @@ import { CLASSES } from 'common/classes';
 
 import { Suggest } from '@blueprintjs/select';
 
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 export default function ItemsSuggestField({
   items,

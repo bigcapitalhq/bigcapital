@@ -51,6 +51,30 @@ const dateRangeCollection = (
   return collection;
 };
 
+const dateRangeFromToCollection = (
+  fromDate,
+  toDate,
+  addType = 'day',
+  increment = 1
+) => {
+  const collection = [];
+  const momentFromDate = moment(fromDate);
+  const dateFormat = 'YYYY-MM-DD';
+
+  for (
+    let i = momentFromDate;
+    i.isBefore(toDate, addType) || i.isSame(toDate, addType);
+    i.add(increment, `${addType}s`)
+  ) {
+    collection.push({
+      fromDate: i.startOf(addType).format(dateFormat),
+      toDate: i.endOf(addType).format(dateFormat),
+    });
+  }
+  return collection;
+};
+
+
 const dateRangeFormat = (rangeType) => {
   switch (rangeType) {
     case 'year':
@@ -329,8 +353,28 @@ var increment = (n) => {
   };
 };
 
+const transformToMapBy = (collection, key) => {
+  return new Map(
+    Object.entries(_.groupBy(collection, key)),
+  );
+}
+
+const transformToMapKeyValue = (collection, key) => {
+  return new Map(
+    collection.map((item) => [item[key], item]),
+  );
+};
+
+
+const accumSum = (data, callback) => {
+  return data.reduce((acc, _data) => {
+    const amount = callback(_data);
+    return acc + amount;
+  }, 0)
+}
 
 export {
+  accumSum,
   increment,
   hashPassword,
   origin,
@@ -354,4 +398,7 @@ export {
   defaultToTransform,
   transformToMap,
   transactionIncrement,
+  transformToMapBy,
+  dateRangeFromToCollection,
+  transformToMapKeyValue
 };

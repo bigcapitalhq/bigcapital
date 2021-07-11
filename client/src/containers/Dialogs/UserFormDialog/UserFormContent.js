@@ -7,7 +7,7 @@ import {
   Button,
 } from '@blueprintjs/core';
 import { FastField, Form, useFormikContext, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
 import { inputIntent } from 'utils';

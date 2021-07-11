@@ -1,5 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { FormattedMessage as T } from 'components';
 
 import { DataTable } from 'components';
 
@@ -36,13 +37,8 @@ function ItemsDataTable({
   tableProps,
 }) {
   // Items list context.
-  const {
-    items,
-    pagination,
-    isItemsLoading,
-    isEmptyStatus,
-    isItemsFetching,
-  } = useItemsListContext();
+  const { items, pagination, isItemsLoading, isEmptyStatus, isItemsFetching } =
+    useItemsListContext();
 
   // Datatable columns.
   const columns = useItemsTableColumns();
@@ -134,7 +130,7 @@ function ItemsDataTable({
         onMakeAdjustment: handleMakeAdjustment,
         onDuplicate: handleDuplicate,
       }}
-      noResults={'There is no items in the table yet.'}
+      noResults={<T id={'there_is_no_items_in_the_table_yet'} />}
       {...tableProps}
     />
   );

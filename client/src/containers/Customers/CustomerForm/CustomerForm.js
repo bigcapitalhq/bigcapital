@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
@@ -75,7 +75,7 @@ function CustomerForm({
 
   // const isNewMode = !customerId;
   const history = useHistory();
-  const { formatMessage } = useIntl();
+  
 
   /**
    * Initial values in create and edit mode.
@@ -98,11 +98,11 @@ function CustomerForm({
 
     const onSuccess = () => {
       AppToaster.show({
-        message: formatMessage({
-          id: isNewMode
+        message: intl.get(
+          isNewMode
             ? 'the_customer_has_been_created_successfully'
             : 'the_item_customer_has_been_edited_successfully',
-        }),
+        ),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);

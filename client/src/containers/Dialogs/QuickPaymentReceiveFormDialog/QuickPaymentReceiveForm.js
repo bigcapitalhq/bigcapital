@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { pick, defaultTo, omit } from 'lodash';
 
 import { AppToaster } from 'components';
@@ -27,7 +27,7 @@ function QuickPaymentReceiveForm({
   paymentReceiveNextNumber,
   preferredDepositAccount
 }) {
-  const { formatMessage } = useIntl();
+  
   const {
     dialogName,
     invoice,
@@ -71,9 +71,7 @@ function QuickPaymentReceiveForm({
     // Handle request response success.
     const onSaved = (response) => {
       AppToaster.show({
-        message: formatMessage({
-          id: 'the_payment_receive_transaction_has_been_created',
-        }),
+        message: intl.get('the_payment_receive_transaction_has_been_created'),
         intent: Intent.SUCCESS,
       });
       closeDialog(dialogName);

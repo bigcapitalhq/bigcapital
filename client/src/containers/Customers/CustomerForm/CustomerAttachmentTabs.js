@@ -6,6 +6,7 @@ import React, {
   useCallback,
 } from 'react';
 import Dragzone from 'components/Dragzone';
+import { FormattedMessage as T } from 'components';
 
 function CustomerAttachmentTabs() {
   return (
@@ -14,7 +15,7 @@ function CustomerAttachmentTabs() {
         initialFiles={[]}
         onDrop={null}
         onDeleteFile={[]}
-        hint={'Attachments: Maxiumum size: 20MB'}
+        hint={<T id={'attachments_maximum'} />}
       />
     </div>
   );

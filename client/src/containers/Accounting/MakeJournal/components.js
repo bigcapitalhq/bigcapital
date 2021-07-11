@@ -1,8 +1,8 @@
 import React from 'react';
 import { Intent, Position, Button, Tooltip } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { Icon, Money, Hint } from 'components';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,
@@ -30,21 +30,25 @@ export function ContactHeaderCell() {
  * Credit header cell.
  */
 export function CreditHeaderCell({ payload: { currencyCode } }) {
-  return formatMessage({ id: 'credit_currency' }, { currency: currencyCode });
+  return intl.get('credit_currency', { currency: currencyCode });
 }
 
 /**
  * debit header cell.
  */
 export function DebitHeaderCell({ payload: { currencyCode } }) {
-  return formatMessage({ id: 'debit_currency' }, { currency: currencyCode });
+  return intl.get('debit_currency', { currency: currencyCode });
 }
 
 /**
  * Account footer cell.
  */
 function AccountFooterCell({ payload: { currencyCode } }) {
-  return <span>{`Total ${currencyCode} `}</span>;
+  return (
+    <span>
+      {intl.get('total_currency', { currency: currencyCode })}
+    </span>
+  );
 }
 
 /**
@@ -116,7 +120,7 @@ export const useJournalTableEntriesColumns = () => {
         sticky: 'left',
       },
       {
-        Header: formatMessage({ id: 'account' }),
+        Header: intl.get('account'),
         id: 'account_id',
         accessor: 'account_id',
         Cell: AccountsListFieldCell,
@@ -153,7 +157,7 @@ export const useJournalTableEntriesColumns = () => {
         width: 120,
       },
       {
-        Header: formatMessage({ id: 'note' }),
+        Header: intl.get('note'),
         accessor: 'note',
         Cell: InputGroupCell,
         disableSortBy: true,
@@ -170,6 +174,6 @@ export const useJournalTableEntriesColumns = () => {
         width: 45,
       },
     ],
-    [formatMessage],
+    [],
   );
 };

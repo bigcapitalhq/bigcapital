@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
@@ -7,9 +7,7 @@ import { AppToaster } from 'components';
 export const transformErrors = useCallback((errors) => {
   if (errors.some((e) => e.type === 'VENDOR.HAS.BILLS')) {
     AppToaster.show({
-      message: formatMessage({
-        id: 'vendor_has_bills',
-      }),
+      message: intl.get('vendor_has_bills'),
       intent: Intent.DANGER,
     });
   }

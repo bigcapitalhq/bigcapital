@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import Toaster from 'components/AppToaster';
 import AuthInsider from 'containers/Authentication/AuthInsider';
@@ -15,7 +15,7 @@ import { LoginSchema, transformLoginErrorsToToasts } from './utils';
  */
 export default function Login() {
   const { mutateAsync: loginMutate } = useAuthLogin();
-  
+
   const handleSubmit = (values, { setSubmitting }) => {
     loginMutate({
       crediential: values.crediential,

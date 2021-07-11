@@ -18,6 +18,33 @@ export default class InventoryTransaction extends TenantModel {
   }
 
   /**
+   * Retrieve formatted reference type.
+   * @return {string}
+   */
+   get transcationTypeFormatted() {
+    return InventoryTransaction.getReferenceTypeFormatted(this.transactionType);
+  }
+
+  /**
+   * Reference type formatted.
+   */
+   static getReferenceTypeFormatted(referenceType) {
+    const mapped = {
+      'SaleInvoice': 'Sale invoice',
+      'SaleReceipt': 'Sale receipt',
+      'PaymentReceive': 'Payment receive',
+      'Bill': 'Bill',
+      'BillPayment': 'Payment made',
+      'VendorOpeningBalance': 'Vendor opening balance',
+      'CustomerOpeningBalance': 'Customer opening balance',
+      'InventoryAdjustment': 'Inventory adjustment',
+      'ManualJournal': 'Manual journal',
+      'Journal': 'Manual journal',
+    };
+    return mapped[referenceType] || '';
+  }
+
+  /**
    * Model modifiers.
    */
   static get modifiers() {
@@ -59,8 +86,47 @@ export default class InventoryTransaction extends TenantModel {
   static get relationMappings() {
     const Item = require('models/Item');
     const ItemEntry = require('models/ItemEntry');
+    const InventoryTransactionMeta = require('models/InventoryTransactionMeta');
+    const InventoryCostLots = require('models/InventoryCostLotTracker');
 
     return {
+      // Transaction meta.
+      meta: {
+        relation: Model.HasOneRelation,
+        modelClass: InventoryTransactionMeta.default,
+        join: {
+          from: 'inventory_transactions.id',
+          to: 'inventory_transaction_meta.inventoryTransactionId',
+        },
+      },
+      // Item cost aggregated.
+      itemCostAggregated: {
+        relation: Model.HasOneRelation,
+        modelClass: InventoryCostLots.default,
+        join: {
+          from: 'inventory_transactions.itemId',
+          to: 'inventory_cost_lot_tracker.itemId',
+        },
+        filter(query) {
+          query.select('itemId');
+          query.sum('cost as cost');
+          query.sum('quantity as quantity');
+          query.groupBy('itemId');
+        },
+      },
+      costLotAggregated: {
+        relation: Model.HasOneRelation,
+        modelClass: InventoryCostLots.default,
+        join: {
+          from: 'inventory_transactions.id',
+          to: 'inventory_cost_lot_tracker.inventoryTransactionId',
+        },
+        filter(query) {
+          query.sum('cost as cost');
+          query.sum('quantity as quantity');
+          query.groupBy('inventoryTransactionId');
+        }
+      },
       item: {
         relation: Model.BelongsToOneRelation,
         modelClass: Item.default,

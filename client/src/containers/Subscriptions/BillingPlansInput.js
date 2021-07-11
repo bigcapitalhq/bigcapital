@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField } from 'formik';
+import { FastField, Field } from 'formik';
 import BillingPlan from './BillingPlan';
 
 import withPlans from './withPlans';
@@ -16,7 +16,7 @@ function BillingPlans({ plans, title, description, selectedOption }) {
         <p className="paragraph">{description}</p>
       </div>
 
-      <FastField name={'plan_slug'}>
+      <Field name={'plan_slug'}>
         {({ form: { setFieldValue }, field: { value } }) => (
           <div className={'plan-radios'}>
             {plans.map((plan) => (
@@ -33,7 +33,7 @@ function BillingPlans({ plans, title, description, selectedOption }) {
             ))}
           </div>
         )}
-      </FastField>
+      </Field>
     </section>
   );
 }

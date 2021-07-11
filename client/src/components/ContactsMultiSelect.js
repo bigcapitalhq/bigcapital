@@ -2,7 +2,8 @@ import React, { useMemo, useCallback, useState } from 'react';
 import { MenuItem, Button } from '@blueprintjs/core';
 import { omit } from 'lodash';
 import MultiSelect from 'components/MultiSelect';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 export default function ContactsMultiSelect({
   contacts,
@@ -31,9 +32,10 @@ export default function ContactsMultiSelect({
     [isContactSelect],
   );
 
-  const countSelected = useMemo(() => Object.values(selectedContacts).length, [
-    selectedContacts,
-  ]);
+  const countSelected = useMemo(
+    () => Object.values(selectedContacts).length,
+    [selectedContacts],
+  );
 
   const onContactSelect = useCallback(
     ({ id }) => {
@@ -50,18 +52,13 @@ export default function ContactsMultiSelect({
       setSelectedContacts({ ...selected });
       onContactSelected && onContactSelected(selected);
     },
-    [
-      setSelectedContacts,
-      selectedContacts,
-      isContactSelect,
-      onContactSelected,
-    ],
+    [setSelectedContacts, selectedContacts, isContactSelect, onContactSelected],
   );
 
   return (
     <MultiSelect
       items={contacts}
-      noResults={<MenuItem disabled={true} text="No results." />}
+      noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
       itemRenderer={contactRenderer}
       popoverProps={{ minimal: true }}
       filterable={true}
@@ -69,11 +66,9 @@ export default function ContactsMultiSelect({
     >
       <Button
         text={
-          countSelected === 0 ? (
-            defaultText
-          ) : (
-            <T id={'selected_customers'} values={{ count: countSelected }} />
-          )
+          countSelected === 0
+            ? defaultText
+            : intl.get('selected_customers', { count: countSelected })
         }
         {...buttonProps}
       />

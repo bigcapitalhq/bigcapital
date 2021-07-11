@@ -1,9 +1,6 @@
 import React from 'react';
-import {
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-  useIntl,
-} from 'react-intl';
+import intl from 'react-intl-universal';
+import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
@@ -30,7 +27,7 @@ function ExchangeRateDeleteAlert({
     mutateAsync: deleteExchangeRate,
     isLoading,
   } = useDeleteExchangeRate();
-  const { formatMessage } = useIntl();
+  
 
   // Handle cancel delete exchange rate alert.
   const handleCancelExchangeRateDelete = () => closeAlert(name);
@@ -39,9 +36,7 @@ function ExchangeRateDeleteAlert({
     deleteExchangeRate(exchangeRateId)
       .then((response) => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_exchange_rates_has_been_deleted_successfully',
-          }),
+          message: intl.get('the_exchange_rates_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
         closeAlert(name);

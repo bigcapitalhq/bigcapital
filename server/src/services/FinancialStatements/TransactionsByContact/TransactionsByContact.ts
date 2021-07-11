@@ -5,6 +5,7 @@ import {
   ITransactionsByContactsFilter,
   IContact,
   ILedger,
+  ILedgerEntry,
 } from 'interfaces';
 import FinancialSheet from '../FinancialSheet';
 
@@ -20,20 +21,20 @@ export default class TransactionsByContact extends FinancialSheet {
    * @return {Omit<ITransactionsByContactsTransaction, 'runningBalance'>}
    */
   protected contactTransactionMapper(
-    transaction
+    entry: ILedgerEntry,
   ): Omit<ITransactionsByContactsTransaction, 'runningBalance'> {
-    const account = this.accountsGraph.getNodeData(transaction.accountId);
+    const account = this.accountsGraph.getNodeData(entry.accountId);
     const currencyCode = 'USD';
 
     return {
-      credit: this.getContactAmount(transaction.credit, currencyCode),
-      debit: this.getContactAmount(transaction.debit, currencyCode),
+      credit: this.getContactAmount(entry.credit, currencyCode),
+      debit: this.getContactAmount(entry.debit, currencyCode),
       accountName: account.name,
       currencyCode: 'USD',
-      transactionNumber: transaction.transactionNumber,
-      transactionType: transaction.transactionType,
-      date: transaction.date,
-      createdAt: transaction.createdAt,
+      transactionNumber: entry.transactionNumber,
+      transactionType: entry.referenceTypeFormatted,
+      date: entry.date,
+      createdAt: entry.createdAt,
     };
   }
 

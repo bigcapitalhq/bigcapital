@@ -3,7 +3,7 @@ import moment from 'moment';
 import { Formik, Form } from 'formik';
 import { Tab, Tabs, Button, Intent } from '@blueprintjs/core';
 import * as Yup from 'yup';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import JournalSheetHeaderGeneral from './JournalSheetHeaderGeneral';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
@@ -68,7 +68,7 @@ function JournalHeader({
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
             <Tab
               id="general"
-              title={'General'}
+              title={<T id={'general'} />}
               panel={<JournalSheetHeaderGeneral />}
             />
           </Tabs>

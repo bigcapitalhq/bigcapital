@@ -1,32 +1,32 @@
 import * as Yup from 'yup';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
 import { isBlank } from 'utils';
 
 const Schema = Yup.object().shape({
   customer_id: Yup.number()
-    .label(formatMessage({ id: 'customer_name_' }))
+    .label(intl.get('customer_name_'))
     .required(),
   estimate_date: Yup.date()
     .required()
-    .label(formatMessage({ id: 'estimate_date_' })),
+    .label(intl.get('estimate_date_')),
   expiration_date: Yup.date()
     .required()
-    .label(formatMessage({ id: 'expiration_date_' })),
+    .label(intl.get('expiration_date_')),
   estimate_number: Yup.string()
     .max(DATATYPES_LENGTH.STRING)
-    .label(formatMessage({ id: 'estimate_number_' })),
+    .label(intl.get('estimate_number_')),
   reference: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
   note: Yup.string()
     .trim()
     .min(1)
     .max(DATATYPES_LENGTH.STRING)
-    .label(formatMessage({ id: 'note' })),
+    .label(intl.get('note')),
   terms_conditions: Yup.string()
     .trim()
     .min(1)
     .max(DATATYPES_LENGTH.TEXT)
-    .label(formatMessage({ id: 'note' })),
+    .label(intl.get('note')),
   delivered: Yup.boolean(),
   entries: Yup.array().of(
     Yup.object().shape({

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 export default [
   {
@@ -9,14 +9,14 @@ export default [
     matchExact: true,
   },
   {
-    text: 'Sales & inventory',
+    text: <T id={'sales_inventory'} />,
     label: true,
   },
   {
     text: <T id={'items'} />,
     children: [
       {
-        text: <T id={'items_list'} />,
+        text: <T id={'items'} />,
         href: '/items',
       },
       {
@@ -67,7 +67,7 @@ export default [
         newTabHref: '/bills/new',
       },
       {
-        text: <T id={'payment_made'} />,
+        text: <T id={'payment_mades'} />,
         href: '/payment-mades',
         newTabHref: '/payment-mades/new',
       },
@@ -100,7 +100,7 @@ export default [
         href: '/accounts',
       },
       {
-        text: <T id={'manual_journal'} />,
+        text: <T id={'manual_journals'} />,
         href: '/manual-journals',
       },
       {

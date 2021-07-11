@@ -1,6 +1,7 @@
 import React, { useRef, useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 import { useCellAutoFocus } from 'hooks';
+import intl from 'react-intl-universal';
 
 import AccountsSuggestField from 'components/AccountsSuggestField';
 
@@ -61,6 +62,7 @@ export default function AccountCellRenderer({
         filterByTypes={filterAccountsByTypes}
         inputProps={{
           inputRef: (ref) => (accountRef.current = ref),
+          placeholder: intl.get('search'),
         }}
         openOnKeyDown={true}
         blurOnSelectClose={false}

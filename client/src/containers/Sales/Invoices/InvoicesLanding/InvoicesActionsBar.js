@@ -13,7 +13,8 @@ import {
 
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
@@ -32,7 +33,7 @@ function InvoiceActionsBar({
   setInvoicesTableState,
 }) {
   const history = useHistory();
-  const { formatMessage } = useIntl();
+  
 
   const [filterCount, setFilterCount] = useState(0);
 
@@ -76,7 +77,7 @@ function InvoiceActionsBar({
               filterCount <= 0 ? (
                 <T id={'filter'} />
               ) : (
-                `${filterCount} ${formatMessage({ id: 'filters_applied' })}`
+                `${filterCount} ${intl.get('filters_applied')}`
               )
             }
             icon={<Icon icon={'filter-16'} iconSize={16} />}

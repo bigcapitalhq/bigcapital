@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { CloudLoadingIndicator } from 'components';
 import classNames from 'classnames';
+import { FormattedMessage as T } from 'components';
 
 import { CLASSES } from 'common/classes';
 import { DataTableEditable } from 'components';
@@ -42,9 +43,15 @@ export default function PaymentMadeEntriesTable({
 
   // Detarmines the right no results message before selecting vendor and aftering
   // selecting vendor id.
-  const noResultsMessage = vendor_id
-    ? 'There is no payable bills for this vendor that can be applied for this payment'
-    : 'Please select a vendor to display all open bills for it.';
+  const noResultsMessage = vendor_id ? (
+    <T
+      id={
+        'there_is_no_payable_bills_for_this_vendor_that_can_be_applied_for_this_payment'
+      }
+    />
+  ) : (
+    <T id={'please_select_a_vendor_to_display_all_open_bills_for_it'} />
+  );
 
   return (
     <CloudLoadingIndicator isLoading={isNewEntriesFetching}>

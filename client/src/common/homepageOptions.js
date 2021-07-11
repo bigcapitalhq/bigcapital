@@ -1,38 +1,35 @@
 import React from 'react';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 export const accountsReceivable = [
   {
     sectionTitle: <T id={'accounts_receivable_a_r'} />,
     shortcuts: [
       {
-        title: 'Sales invoices',
-        description: 'Tracking sales invoices with your customers with payment due date.',
+        title: <T id={'sales_invoices'} />,
+        description: <T id={'tracking_sales_invoices_with_your_customers'} />,
         link: '/invoices',
       },
       {
-        title: 'Sales estimates',
-        description:
-          'Manage your sales estimates to create quotes that can later be turned to a sale invoice.',
-
+        title: <T id={'sales_estimates'} />,
+        description: <T id={'manage_your_sales_estimates_to_create_quotes'} />,
         link: '/estimates',
       },
       {
-        title: 'Sales receipts',
-        description:
-          'Manage sales receipts for sales that get paid immediately from the customer.',
-
+        title: <T id={'sales_receipts'} />,
+        description: <T id={'manage_sales_receipts_for_sales_that_get_paid'} />,
         link: '/receipts',
       },
       {
-        title: 'Customers',
-        description: 'Manage the customers relations with customer receivable and credit balances.',
+        title: <T id={'customers'} />,
+        description: <T id={'manage_the_customers_relations_with_customer'} />,
         link: '/customers',
       },
       {
-        title: 'Customers payment',
-        description:
-          'Manage payment transactions from your customers with sale invoices.',
+        title: <T id={'customers_payments'} />,
+        description: (
+          <T id={'manage_payment_transactions_from_your_customers'} />
+        ),
         link: '/payment-receives',
       },
     ],
@@ -44,20 +41,22 @@ export const accountsPayable = [
     sectionTitle: <T id={'accounts_payable_a_p'} />,
     shortcuts: [
       {
-        title: 'Purchase invoices',
-        description: 'Manage the purchase invoices with your vendors with payment due date.',
+        title: <T id={'purchase_invoices'} />,
+        description: (
+          <T id={'manage_the_purchase_invoices_with_your_vendors'} />
+        ),
         link: '/bills',
       },
       {
-        title: 'Vendors',
-        description: 'Manage the vendors relations with vendor payable and debit balances.',
+        title: <T id={'vendors'} />,
+        description: (
+          <T id={'manage_the_vendors_relations_with_vendor_relations'} />
+        ),
         link: '/vendors',
       },
       {
-        title: 'Vendors payments',
-        description:
-          'Manage payments transactions to your vendors with purchase invoices.',
-
+        title: <T id={'vendors_payments'} />,
+        description: <T id={'manage_payments_transactions_to_your_vendors'} />,
         link: '/payment-mades',
       },
     ],
@@ -69,26 +68,29 @@ export const financialAccounting = [
     sectionTitle: <T id={'financial_accounting'} />,
     shortcuts: [
       {
-        title: 'Chart of accounts',
-        description:
-          'Manage your accounts chart to record your transactions and categorise your transactions in parent accounts.',
+        title: <T id={'chart_of_accounts'} />,
+        description: (
+          <T
+            id={
+              'manage_your_accounts_chart_to_record_your_transactions_and_categories'
+            }
+          />
+        ),
         link: '/accounts',
       },
       {
-        title: 'Manual journal',
-        description: 'Manage manual journal transactions on accounts, cost centra and projects.',
+        title: <T id={'manual_journal'}/>,
+        description:<T id={'manage_manual_journal_transactions_on_accounts'}/>,
         link: '/manual-journals',
       },
       {
-        title: 'Expenses',
-        description:
-          'Track your indirect expenses under specific categories such as payroll, rent.',
+        title: <T id={'expenses'}/>,
+        description:<T id={'track_your_indirect_expenses_under_specific_categories'}/>,
         link: '/expenses',
       },
       {
-        title: 'Financial statements',
-        description:
-          'Show financial reports about your organization to summarize your business’s financial performance.',
+        title: <T id={'financial_statements'}/>,
+        description:<T id={'show_financial_reports_about_your_organization'}/>,
         link: '/financial-reports',
       },
     ],
@@ -100,20 +102,18 @@ export const productsServices = [
     sectionTitle: <T id={'products_services_inventory'} />,
     shortcuts: [
       {
-        title: 'Products & Services',
-        description:
-          'Manage your products (inventory or non-inventory) and services and place them into categories.',
+        title: <T id={'products_services'}/>,
+        description:<T id={'manage_your_products_inventory_or_non_inventory'}/>,
         link: '/items',
       },
       {
-        title: 'Products & Services Categories',
-        description:
-          'Group your products and service into different categories.',
+        title: <T id={'products_services_categories'}/>,
+        description:<T id={'group_your_products_and_service'}/>,
         link: 'items/categories',
       },
       {
-        title: 'Inventory Adjustments',
-        description: 'Manage your inventory adjustment of inventory items.',
+        title: <T id={'inventory_adjustments'}/>,
+        description: <T id={'manage_your_inventory_adjustment_of_inventory_items'}/>,
         link: '/inventory-adjustments',
       },
     ],

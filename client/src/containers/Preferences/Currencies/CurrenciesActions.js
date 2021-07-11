@@ -1,15 +1,11 @@
-import React, {useCallback} from 'react';
-import {
-  Button,
-  Intent,
-} from '@blueprintjs/core';
+import React, { useCallback } from 'react';
+import { Button, Intent } from '@blueprintjs/core';
 import Icon from 'components/Icon';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import {compose} from 'utils';
+import { compose } from 'utils';
+import { FormattedMessage as T } from 'components';
 
-function CurrenciesActions({
-  openDialog,
-}) {
+function CurrenciesActions({ openDialog }) {
   const handleClickNewCurrency = useCallback(() => {
     openDialog('currency-form');
   }, [openDialog]);
@@ -17,15 +13,14 @@ function CurrenciesActions({
   return (
     <div class="users-actions">
       <Button
-        icon={<Icon icon='plus' iconSize={12} />}
+        icon={<Icon icon="plus" iconSize={12} />}
         onClick={handleClickNewCurrency}
-        intent={Intent.PRIMARY}>
-        New Currency
+        intent={Intent.PRIMARY}
+      >
+        <T id={'new_currency'} />
       </Button>
-    </div>    
+    </div>
   );
 }
 
-export default compose(
-  withDialogActions,
-)(CurrenciesActions);
+export default compose(withDialogActions)(CurrenciesActions);

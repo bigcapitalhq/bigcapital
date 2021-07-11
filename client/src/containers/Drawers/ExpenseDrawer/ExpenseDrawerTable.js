@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { DataTable, Money } from 'components';
 
 /**
@@ -12,19 +12,19 @@ export default function ExpenseDrawerTable({
   const columns = React.useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'Expense account' }),
+        Header: intl.get('expense_account'),
         accessor: 'expense_account.name',
         width: 110,
       },
       {
-        Header: formatMessage({ id: 'Amount' }),
+        Header: intl.get('amount'),
         accessor: ({ amount }) => (
           <Money amount={amount} currency={currency_code} />
         ),
         width: 100,
       },
       {
-        Header: formatMessage({ id: 'description' }),
+        Header: intl.get('description'),
         accessor: 'description',
         width: 110,
       },

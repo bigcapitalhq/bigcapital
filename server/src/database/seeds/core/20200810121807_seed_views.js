@@ -33,44 +33,44 @@ exports.up = (knex) => {
         { id: 13, name: i18n.__('Published'), slug: 'published', roles_logic_expression: '1', resource_model: 'Expense', predefined: true, },
 
         // Sales invoices.
-        { id: 16, name: 'Draft', slug: 'draft', roles_logic_expression: '1', resource_model: 'SaleInvoice', predefined: true, },
-        { id: 17, name: 'Delivered', slug: 'delivered', roles_logic_expression: '1', resource_model: 'SaleInvoice', predefined: true },
-        { id: 18, name: 'Unpaid', slug: 'unpaid', roles_logic_expression: '1', resource_model: 'SaleInvoice', predefined: true },
-        { id: 19, name: 'Overdue', slug: 'overdue', roles_logic_expression: '1', resource_model: 'SaleInvoice', predefined: true },
-        { id: 20, name: 'Partially paid', slug: 'partially-paid', roles_logic_expression: '1', resource_model: 'SaleInvoice', predefined: true },
-        { id: 21, name: 'Paid', slug: 'paid', roles_logic_expression: '1', resource_model: 'SaleInvoice', predefined: true },
+        { id: 16, name: i18n.__('Draft'), slug: 'draft', roles_logic_expression: '1', resource_model: 'SaleInvoice', predefined: true, },
+        { id: 17, name: i18n.__('Delivered'), slug: 'delivered', roles_logic_expression: '1', resource_model: 'SaleInvoice', predefined: true },
+        { id: 18, name: i18n.__('Unpaid'), slug: 'unpaid', roles_logic_expression: '1', resource_model: 'SaleInvoice', predefined: true },
+        { id: 19, name: i18n.__('Overdue'), slug: 'overdue', roles_logic_expression: '1', resource_model: 'SaleInvoice', predefined: true },
+        { id: 20, name: i18n.__('Partially paid'), slug: 'partially-paid', roles_logic_expression: '1', resource_model: 'SaleInvoice', predefined: true },
+        { id: 21, name: i18n.__('Paid'), slug: 'paid', roles_logic_expression: '1', resource_model: 'SaleInvoice', predefined: true },
 
         // Bills.
-        { id: 22, name: 'Draft', slug: 'draft', roles_logic_expression: '1', resource_model: 'Bill', predefined: true, },
-        { id: 23, name: 'Opened', slug: 'opened', roles_logic_expression: '1', resource_model: 'Bill', predefined: true },
-        { id: 24, name: 'Unpaid', slug: 'unpaid', roles_logic_expression: '1', resource_model: 'Bill', predefined: true },
-        { id: 25, name: 'Overdue', slug: 'overdue', roles_logic_expression: '1', resource_model: 'Bill', predefined: true },
-        { id: 26, name: 'Partially paid', slug: 'partially-paid', roles_logic_expression: '1', resource_model: 'Bill', predefined: true },
-        { id: 27, name: 'Paid', slug: 'paid', roles_logic_expression: '1', resource_model: 'Bill', predefined: true },
+        { id: 22, name: i18n.__('Draft'), slug: 'draft', roles_logic_expression: '1', resource_model: 'Bill', predefined: true, },
+        { id: 23, name: i18n.__('Opened'), slug: 'opened', roles_logic_expression: '1', resource_model: 'Bill', predefined: true },
+        { id: 24, name: i18n.__('Unpaid'), slug: 'unpaid', roles_logic_expression: '1', resource_model: 'Bill', predefined: true },
+        { id: 25, name: i18n.__('Overdue'), slug: 'overdue', roles_logic_expression: '1', resource_model: 'Bill', predefined: true },
+        { id: 26, name: i18n.__('Partially paid'), slug: 'partially-paid', roles_logic_expression: '1', resource_model: 'Bill', predefined: true },
+        { id: 27, name: i18n.__('Paid'), slug: 'paid', roles_logic_expression: '1', resource_model: 'Bill', predefined: true },
 
         // Sale estimate.
-        { id: 28, name: 'Draft', slug: 'draft', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
-        { id: 29, name: 'Delivered', slug: 'delivered', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
-        { id: 30, name: 'Approved', slug: 'approved', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
-        { id: 31, name: 'Rejected', slug: 'rejected', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
-        { id: 32, name: 'Invoiced', slug: 'invoiced', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
-        { id: 33, name: 'Expired', slug: 'expired', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
+        { id: 28, name: i18n.__('Draft'), slug: 'draft', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
+        { id: 29, name: i18n.__('Delivered'), slug: 'delivered', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
+        { id: 30, name: i18n.__('Approved'), slug: 'approved', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
+        { id: 31, name: i18n.__('Rejected'), slug: 'rejected', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
+        { id: 32, name: i18n.__('Invoiced'), slug: 'invoiced', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
+        { id: 33, name: i18n.__('Expired'), slug: 'expired', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
 
         // Sale receipts.
-        { id: 34, name: 'Draft', slug: 'draft', roles_logic_expression: '1', resource_model: 'SaleReceipt', predefined: true },
-        { id: 35, name: 'Closed', slug: 'closed', roles_logic_expression: '1', resource_model: 'SaleReceipt', predefined: true },
+        { id: 34, name: i18n.__('Draft'), slug: 'draft', roles_logic_expression: '1', resource_model: 'SaleReceipt', predefined: true },
+        { id: 35, name: i18n.__('Closed'), slug: 'closed', roles_logic_expression: '1', resource_model: 'SaleReceipt', predefined: true },
 
         // Customers
-        { id: 36, name: 'Active', slug: 'active', roles_logic_expression: '1', resource_model: 'Customer', predefined: true },
-        { id: 37, name: 'Inactive', slug: 'inactive', roles_logic_expression: '1', resource_model: 'Customer', predefined: true },
-        { id: 38, name: 'Overdue', slug: 'overdue', roles_logic_expression: '1', resource_model: 'Customer', predefined: true },
-        { id: 39, name: 'Unpaid', slug: 'inpaid', roles_logic_expression: '1', resource_model: 'Customer', predefined: true },
+        { id: 36, name: i18n.__('Active'), slug: 'active', roles_logic_expression: '1', resource_model: 'Customer', predefined: true },
+        { id: 37, name: i18n.__('Inactive'), slug: 'inactive', roles_logic_expression: '1', resource_model: 'Customer', predefined: true },
+        { id: 38, name: i18n.__('Overdue'), slug: 'overdue', roles_logic_expression: '1', resource_model: 'Customer', predefined: true },
+        { id: 39, name: i18n.__('Unpaid'), slug: 'inpaid', roles_logic_expression: '1', resource_model: 'Customer', predefined: true },
 
         // Vendors
-        { id: 40, name: 'Active', slug: 'active', roles_logic_expression: '1', resource_model: 'Vendor', predefined: true },
-        { id: 41, name: 'Inactive', slug: 'inactive', roles_logic_expression: '1', resource_model: 'Vendor', predefined: true },
-        { id: 42, name: 'Overdue', slug: 'overdue', roles_logic_expression: '1', resource_model: 'Vendor', predefined: true },
-        { id: 43, name: 'Unpaid', slug: 'overdue', roles_logic_expression: '1', resource_model: 'Vendor', predefined: true },
+        { id: 40, name: i18n.__('Active'), slug: 'active', roles_logic_expression: '1', resource_model: 'Vendor', predefined: true },
+        { id: 41, name: i18n.__('Inactive'), slug: 'inactive', roles_logic_expression: '1', resource_model: 'Vendor', predefined: true },
+        { id: 42, name: i18n.__('Overdue'), slug: 'overdue', roles_logic_expression: '1', resource_model: 'Vendor', predefined: true },
+        { id: 43, name: i18n.__('Unpaid'), slug: 'overdue', roles_logic_expression: '1', resource_model: 'Vendor', predefined: true },
       ]);
     });
 };

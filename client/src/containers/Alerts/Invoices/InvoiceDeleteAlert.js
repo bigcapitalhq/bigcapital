@@ -1,9 +1,6 @@
 import React from 'react';
-import {
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-  useIntl,
-} from 'react-intl';
+import intl from 'react-intl-universal';
+import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 import { useDeleteInvoice } from 'hooks/query';
@@ -28,7 +25,7 @@ function InvoiceDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { mutateAsync: deleteInvoiceMutate, isLoading } = useDeleteInvoice();
 
   // handle cancel delete invoice alert.
@@ -41,9 +38,7 @@ function InvoiceDeleteAlert({
     deleteInvoiceMutate(invoiceId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_invoice_has_been_deleted_successfully',
-          }),
+          message: intl.get('the_invoice_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
       })

@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
@@ -22,7 +23,7 @@ function BillOpenAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { isLoading, mutateAsync: openBillMutate } = useOpenBill();
 
   // Handle cancel open bill alert.
@@ -35,9 +36,7 @@ function BillOpenAlert({
     openBillMutate(billId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_bill_has_been_opened_successfully',
-          }),
+          message: intl.get('the_bill_has_been_opened_successfully'),
           intent: Intent.SUCCESS,
         });
         closeAlert(name);

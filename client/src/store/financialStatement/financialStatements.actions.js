@@ -178,3 +178,29 @@ export function toggleVendorsTransactionsFilterDrawer(toggle) {
     },
   };
 }
+
+/**
+ *  Toggle display of the cash flow statement filter drawer.
+ * @param {boolean} toggle
+ */
+export function toggleCashFlowStatementFilterDrawer(toggle) {
+  return {
+    type: `${t.CASH_FLOW_STATEMENT}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle,
+    },
+  };
+}
+
+/**
+ * Toggles display of the inventory item details filter drawer.
+ * @param {boolean} toggle
+ */
+ export function toggleInventoryItemDetailsFilterDrawer(toggle) {
+  return {
+    type: `${t.INVENTORY_ITEM_DETAILS}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle,
+    },
+  };
+}

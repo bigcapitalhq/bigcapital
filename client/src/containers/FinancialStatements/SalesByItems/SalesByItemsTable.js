@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 
 import FinancialSheet from 'components/FinancialSheet';
 import { DataTable } from 'components';
@@ -10,8 +10,6 @@ import { useSalesByItemsTableColumns } from './components';
  * Sales by items data table.
  */
 export default function SalesByItemsTable({ companyName }) {
-  const { formatMessage } = useIntl();
-
   // Sales by items context.
   const {
     salesByItems: { tableRows, query },
@@ -38,7 +36,7 @@ export default function SalesByItemsTable({ companyName }) {
   return (
     <FinancialSheet
       companyName={companyName}
-      sheetType={formatMessage({ id: 'sales_by_items' })}
+      sheetType={intl.get('sales_by_items')}
       fromDate={query.from_date}
       toDate={query.to_date}
       name="sales-by-items"
@@ -53,7 +51,9 @@ export default function SalesByItemsTable({ companyName }) {
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={rowClassNames}
-        noResults={'There were no sales during the selected date range.'}
+        noResults={intl.get(
+          'there_were_no_sales_during_the_selected_date_range',
+        )}
       />
     </FinancialSheet>
   );

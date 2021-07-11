@@ -1,7 +1,8 @@
 import React from 'react';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { pick } from 'lodash';
 
 import { AppToaster } from 'components';
@@ -20,7 +21,7 @@ function QuickPaymentMadeForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { formatMessage } = useIntl();
+  
   const {
     bill,
     dialogName,
@@ -51,9 +52,7 @@ function QuickPaymentMadeForm({
     // Handle request response success.
     const onSuccess = () => {
       AppToaster.show({
-        message: formatMessage({
-          id: 'the_payment_made_has_been_created_successfully',
-        }),
+        message: intl.get('the_payment_made_has_been_created_successfully'),
         intent: Intent.SUCCESS,
       });
       closeDialog(dialogName);

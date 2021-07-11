@@ -1,9 +1,6 @@
 import React, { useCallback } from 'react';
-import {
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-  useIntl,
-} from 'react-intl';
+import intl from 'react-intl-universal';
+import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 import { transformErrors } from 'containers/Customers/utils';
@@ -28,7 +25,7 @@ function CustomerDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const {
     mutateAsync: deleteCustomerMutate,
     isLoading
@@ -44,9 +41,7 @@ function CustomerDeleteAlert({
     deleteCustomerMutate(customerId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_customer_has_been_deleted_successfully',
-          }),
+          message: intl.get('the_customer_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
       })
@@ -56,7 +51,7 @@ function CustomerDeleteAlert({
       .finally(() => {
         closeAlert(name);
       });
-  }, [deleteCustomerMutate, customerId, closeAlert, name, formatMessage]);
+  }, [deleteCustomerMutate, customerId, closeAlert, name]);
 
   return (
     <Alert

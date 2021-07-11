@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { omit, sumBy, isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
@@ -36,7 +37,6 @@ function EstimateForm({
   estimateIncrementMode,
   baseCurrency,
 }) {
-  const { formatMessage } = useIntl();
   const history = useHistory();
   const {
     estimate,
@@ -72,9 +72,7 @@ function EstimateForm({
   const handleErrors = (errors, { setErrors }) => {
     if (errors.some((e) => e.type === ERROR.ESTIMATE_NUMBER_IS_NOT_UNQIUE)) {
       setErrors({
-        estimate_number: formatMessage({
-          id: 'estimate_number_is_not_unqiue',
-        }),
+        estimate_number: intl.get('estimate_number_is_not_unqiue'),
       });
     }
   };
@@ -93,9 +91,7 @@ function EstimateForm({
 
     if (totalQuantity === 0) {
       AppToaster.show({
-        message: formatMessage({
-          id: 'quantity_cannot_be_zero_or_empty',
-        }),
+        message: intl.get('quantity_cannot_be_zero_or_empty'),
         intent: Intent.DANGER,
       });
       setSubmitting(false);
@@ -111,12 +107,10 @@ function EstimateForm({
     };
     const onSuccess = (response) => {
       AppToaster.show({
-        message: formatMessage(
-          {
-            id: isNewMode
-              ? 'the_estimate_has_been_edited_successfully'
-              : 'the_estimate_has_been_created_successfully',
-          },
+        message: intl.get(
+          isNewMode
+            ? 'the_estimate_has_been_edited_successfully'
+            : 'the_estimate_has_been_created_successfully',
           { number: values.estimate_number },
         ),
         intent: Intent.SUCCESS,

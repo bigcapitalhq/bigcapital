@@ -1,12 +1,15 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import routes from 'routes/dashboard';
+
+import { getDashboardRoutes } from 'routes/dashboard';
 import DashboardPage from './DashboardPage';
 
 /**
  * Dashboard content route.
  */
 export default function DashboardContentRoute() {
+  const routes = getDashboardRoutes();
+
   return (
     <Route pathname="/">
       <Switch>

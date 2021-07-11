@@ -9,7 +9,8 @@ import {
   Position,
   PopoverInteractionKind,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
@@ -41,7 +42,7 @@ function CustomerActionsBar({
   const history = useHistory();
   
   // React intl
-  const { formatMessage } = useIntl();
+  
 
   // Customers list context.
   const { customersViews } = useCustomersListContext();
@@ -85,7 +86,7 @@ function CustomerActionsBar({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={`${formatMessage({ id: 'filters_applied' })}`}
+            text={`${intl.get('filters_applied')}`}
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>

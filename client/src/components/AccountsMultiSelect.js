@@ -2,7 +2,7 @@ import React, { useMemo, useCallback, useState } from 'react';
 import { omit } from 'lodash';
 import { MenuItem, Button } from '@blueprintjs/core';
 import MultiSelect from 'components/MultiSelect';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 export default function AccountsMultiSelect({ accounts, onAccountSelected }) {
   const [selectedAccounts, setSelectedAccounts] = useState({});
@@ -56,7 +56,7 @@ export default function AccountsMultiSelect({ accounts, onAccountSelected }) {
   return (
     <MultiSelect
       items={accounts}
-      noResults={<MenuItem disabled={true} text="No results." />}
+      noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
       itemRenderer={accountItem}
       popoverProps={{ minimal: true }}
       filterable={true}

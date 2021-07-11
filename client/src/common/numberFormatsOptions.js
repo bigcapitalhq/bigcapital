@@ -1,7 +1,9 @@
+import intl from 'react-intl-universal';
+
 export const moneyFormat = [
-  { key: 'total', text: 'Total rows' },
-  { key: 'always', text: 'Always' },
-  { key: 'none', text: 'None' },
+  { key: 'total', text: intl.get('total_rows') },
+  { key: 'always', text: intl.get('always') },
+  { key: 'none', text: intl.get('none') },
 ];
 
 export const negativeFormat = [

@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 import { If } from 'components';
 import FinancialLoadingBar from '../FinancialLoadingBar';
@@ -12,25 +12,25 @@ export const useCustomersSummaryColumns = () => {
   return React.useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'customer_name' }),
+        Header: intl.get('customer_name'),
         accessor: 'cells[0].value',
         className: 'customer_name',
         width: 240,
       },
       {
-        Header: formatMessage({ id: 'total' }),
+        Header: intl.get('total'),
         accessor: 'cells[1].value',
         className: 'total',
         width: 140,
       },
       {
-        Header: formatMessage({ id: 'percentage_of_column' }),
+        Header: intl.get('percentage_of_column'),
         accessor: 'cells[2].value',
         className: 'total',
         width: 140,
       },
     ],
-    [formatMessage],
+    [],
   );
 };
 

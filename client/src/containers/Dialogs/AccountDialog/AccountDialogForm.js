@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { omit } from 'lodash';
 import { AppToaster } from 'components';
 
@@ -35,8 +35,6 @@ function AccountFormDialogContent({
   // #withDialogActions
   closeDialog,
 }) {
-  const { formatMessage } = useIntl();
-
   // Account form context.
   const {
     editAccountMutate,
@@ -48,7 +46,7 @@ function AccountFormDialogContent({
     parentAccountId,
     accountType,
     isNewMode,
-    dialogName
+    dialogName,
   } = useAccountDialogContext();
 
   // Form validation schema in create and edit mode.
@@ -68,15 +66,13 @@ function AccountFormDialogContent({
       closeDialog(dialogName);
 
       AppToaster.show({
-        message: formatMessage(
-          {
-            id: isNewMode
-              ? 'service_has_been_created_successfully'
-              : 'service_has_been_edited_successfully',
-          },
+        message: intl.get(
+          isNewMode
+            ? 'service_has_been_created_successfully'
+            : 'service_has_been_edited_successfully',
           {
             name: toastAccountName,
-            service: formatMessage({ id: 'account' }),
+            service: intl.get('account'),
           },
         ),
         intent: Intent.SUCCESS,
@@ -95,7 +91,9 @@ function AccountFormDialogContent({
       setSubmitting(false);
     };
     if (accountId) {
-      editAccountMutate([accountId, form]).then(handleSuccess).catch(handleError);
+      editAccountMutate([accountId, form])
+        .then(handleSuccess)
+        .catch(handleError);
     } else {
       createAccountMutate({ ...form })
         .then(handleSuccess)

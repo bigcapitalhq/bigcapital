@@ -1,8 +1,10 @@
-export default [
-  { path: 'invoices/new', name: 'Sale invoice' },
-  { path: 'bills//new', name: 'Purchase invoice' },
-  { path: 'make-journal-entry', name: 'Manual journal' },
-  { path: 'expenses/new', name: 'Expense'  },
-  { path: 'customers/new', name: 'Customer' },
-  { path: 'vendors/new', name: 'Vendor' },
+import intl from 'react-intl-universal';
+
+export const getQuickNewActions = () => [
+  { path: 'invoices/new', name: intl.get('sale_invoice') },
+  { path: 'bills//new', name: intl.get('purchase_invoice') },
+  { path: 'make-journal-entry', name: intl.get('manual_journal') },
+  { path: 'expenses/new', name: intl.get('expense') },
+  { path: 'customers/new', name: intl.get('customer') },
+  { path: 'vendors/new', name: intl.get('vendor') },
 ];

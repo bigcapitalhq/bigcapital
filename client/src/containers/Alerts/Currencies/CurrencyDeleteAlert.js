@@ -1,10 +1,8 @@
 import React from 'react';
-import {
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-  useIntl,
-} from 'react-intl';
+import intl from 'react-intl-universal';
+import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
+
 import { AppToaster } from 'components';
 
 import { useDeleteCurrency } from 'hooks/query';
@@ -27,7 +25,7 @@ function CurrencyDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { mutateAsync: deleteCurrency, isLoading } = useDeleteCurrency();
 
   // handle cancel delete currency alert.
@@ -38,9 +36,7 @@ function CurrencyDeleteAlert({
     deleteCurrency(currency_code)
       .then((response) => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_currency_has_been_deleted_successfully',
-          }),
+          message: intl.get('the_currency_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
         closeAlert(name);

@@ -1,11 +1,11 @@
 import * as Yup from 'yup';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 const Schema = Yup.object().shape({
   email: Yup.string()
     .email()
     .required()
-    .label(formatMessage({ id: 'email' })),
+    .label(intl.get('email')),
 });
 
 export const InviteUserFormSchema = Schema;

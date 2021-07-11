@@ -53,7 +53,7 @@ export default class BalanceSheetStatementService
    * @param {number} tenantId - 
    * @returns {IBalanceSheetMeta}
    */
-  reportMetadata(tenantId: number): IBalanceSheetMeta {
+  private reportMetadata(tenantId: number): IBalanceSheetMeta {
     const settings = this.tenancy.settings(tenantId);
 
     const isCostComputeRunning = this.inventoryService
@@ -92,6 +92,8 @@ export default class BalanceSheetStatementService
       transactionsRepository,
     } = this.tenancy.repositories(tenantId);
 
+    const i18n = this.tenancy.i18n(tenantId);
+
     // Settings tenant service.
     const settings = this.tenancy.settings(tenantId);
     const baseCurrency = settings.get({
@@ -113,7 +115,7 @@ export default class BalanceSheetStatementService
     // Retrieve all journal transactions based on the given query.
     const transactions = await transactionsRepository.journal({
       fromDate: query.fromDate,
-      toDate: query.toDate,
+    toDate: query.toDate,
     });
     // Transform transactions to journal collection.
     const transactionsJournal = Journal.fromTransactions(
@@ -127,7 +129,8 @@ export default class BalanceSheetStatementService
       filter,
       accounts,
       transactionsJournal,
-      baseCurrency
+      baseCurrency,
+      i18n
     );
     // Balance sheet data.
     const balanceSheetData = balanceSheetInstanace.reportData();

@@ -1,21 +1,21 @@
 import * as Yup from 'yup';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
 import { isBlank } from 'utils';
 
-const Schema = Yup.object().shape({
+const getSchema = () => Yup.object().shape({
   customer_id: Yup.string()
-    .label(formatMessage({ id: 'customer_name_' }))
+    .label(intl.get('customer_name_'))
     .required(),
   invoice_date: Yup.date()
     .required()
-    .label(formatMessage({ id: 'invoice_date_' })),
+    .label(intl.get('invoice_date_')),
   due_date: Yup.date()
     .required()
-    .label(formatMessage({ id: 'due_date_' })),
+    .label(intl.get('due_date_')),
   invoice_no: Yup.string()
     .max(DATATYPES_LENGTH.STRING)
-    .label(formatMessage({ id: 'invoice_no_' })),
+    .label(intl.get('invoice_no_')),
   reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
   delivered: Yup.boolean(),
   from_estimate_id: Yup.string(),
@@ -23,12 +23,12 @@ const Schema = Yup.object().shape({
     .trim()
     .min(1)
     .max(DATATYPES_LENGTH.TEXT)
-    .label(formatMessage({ id: 'note' })),
+    .label(intl.get('note')),
   terms_conditions: Yup.string()
     .trim()
     .min(1)
     .max(DATATYPES_LENGTH.TEXT)
-    .label(formatMessage({ id: 'note' })),
+    .label(intl.get('note')),
   entries: Yup.array().of(
     Yup.object().shape({
       quantity: Yup.number()
@@ -51,5 +51,5 @@ const Schema = Yup.object().shape({
   ),
 });
 
-export const CreateInvoiceFormSchema = Schema;
-export const EditInvoiceFormSchema = Schema;
+export const getCreateInvoiceFormSchema = getSchema;
+export const getEditInvoiceFormSchema = getSchema;

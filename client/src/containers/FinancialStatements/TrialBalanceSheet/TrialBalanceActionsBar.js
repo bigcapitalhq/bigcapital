@@ -9,7 +9,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -53,7 +53,7 @@ function TrialBalanceActionsBar({
       <NavbarGroup>
         <Button
           className={classNames(Classes.MINIMAL, 'button--gray-highlight')}
-          text={'Re-calc Report'}
+          text={<T id={'recalc_report'} />}
           onClick={handleRecalcReport}
           icon={<Icon icon="refresh-16" iconSize={16} />}
         />

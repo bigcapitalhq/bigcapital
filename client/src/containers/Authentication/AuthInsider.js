@@ -11,7 +11,6 @@ export default function AuthInsider({
 }) {
   return (
     <div class="authentication-insider__content">
-      
       <div class="authentication-insider__form">
         { children }
       </div>

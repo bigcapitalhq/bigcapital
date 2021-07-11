@@ -13,7 +13,8 @@ import {
 
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import { If, DashboardActionViewsList } from 'components';
@@ -31,7 +32,7 @@ function PaymentMadeActionsBar({
   setPaymentMadesTableState,
 }) {
   const history = useHistory();
-  const { formatMessage } = useIntl();
+  
 
   // Payment receives list context.
   const { paymentMadesViews } = usePaymentMadesListContext();
@@ -73,7 +74,7 @@ function PaymentMadeActionsBar({
               true ? (
                 <T id={'filter'} />
               ) : (
-                `${0} ${formatMessage({ id: 'filters_applied' })}`
+                `${0} ${intl.get('filters_applied')}`
               )
             }
             icon={<Icon icon={'filter-16'} iconSize={16} />}

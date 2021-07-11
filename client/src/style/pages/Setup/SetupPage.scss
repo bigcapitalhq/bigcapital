@@ -1,5 +1,5 @@
 .setup-page {
-  max-width: 1400px;
+  max-width: 1600px;
 
   &__right-section {
     display: flex;
@@ -26,7 +26,7 @@
   }
 
   &__content {
-    width: 70%;
+    width: 100%;
     padding-bottom: 40px;
   }
 
@@ -127,7 +127,6 @@
 
 .setup-page-steps {
   &-container {
-    width: 80%;
     margin: 0 auto;
     padding: 50px 0 0;
   }
@@ -167,13 +166,15 @@
       display: none;
     }
     &.is-active {
+      text-decoration: underline;
+
       &::before {
         background-color: #75859c;
       }
       ~ li {
         &:before,
         &:after {
-          background: #ebebeb;
+          background: #e0e0e0;
         }
       }
       p.wizard-info {

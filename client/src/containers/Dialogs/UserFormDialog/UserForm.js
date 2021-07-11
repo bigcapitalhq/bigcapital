@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { pick, snakeCase } from 'lodash';
 import { AppToaster } from 'components';
 
@@ -20,7 +20,7 @@ function UserForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   const {
     dialogName,
@@ -48,9 +48,7 @@ function UserForm({
 
     const onSuccess = ({ response }) => {
       AppToaster.show({
-        message: formatMessage({
-          id: 'teammate_invited_to_organization_account',
-        }),
+        message: intl.get('teammate_invited_to_organization_account'),
         intent: Intent.SUCCESS,
       });
       afterSubmit(response);

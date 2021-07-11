@@ -2,7 +2,8 @@ import React from 'react';
 import { Form, FastField, useFormikContext } from 'formik';
 import { FormGroup, Button, Intent } from '@blueprintjs/core';
 import { AccountsSelectList, FieldRequiredHint } from 'components';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { inputIntent } from 'utils';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from 'common/accountTypes';
@@ -38,7 +39,11 @@ export default function ItemForm() {
               </strong>
             }
             helperText={
-              'Select a preferred account to deposit into it after customer make payment.'
+              <T
+                id={
+                  'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'
+                }
+              />
             }
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
@@ -70,7 +75,11 @@ export default function ItemForm() {
               </strong>
             }
             helperText={
-              'Select a preferred account to deposit into it after customer make payment.'
+              <T
+                id={
+                  'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'
+                }
+              />
             }
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
@@ -102,7 +111,11 @@ export default function ItemForm() {
               </strong>
             }
             helperText={
-              'Select a preferred account to deposit into it vendor advanced deposits.'
+              <T
+                id={
+                  'select_a_preferred_account_to_deposit_into_it_vendor_advanced_deposits'
+                }
+              />
             }
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}

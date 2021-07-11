@@ -1,10 +1,8 @@
 import React, { useCallback } from 'react';
-import {
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-  useIntl,
-} from 'react-intl';
+import intl from 'react-intl-universal';
+import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
+
 import { AppToaster } from 'components';
 import { transformErrors } from 'containers/Vendors/utils';
 import { useDeleteVendor } from 'hooks/query';
@@ -27,7 +25,7 @@ function VendorDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { mutateAsync: deleteVendorMutate, isLoading } = useDeleteVendor();
 
   // Handle cancel delete the vendor.
@@ -40,9 +38,7 @@ function VendorDeleteAlert({
     deleteVendorMutate(vendorId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_vendor_has_been_deleted_successfully',
-          }),
+          message: intl.get('the_vendor_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
       })
@@ -58,7 +54,7 @@ function VendorDeleteAlert({
       .finally(() => {
         closeAlert(name);
       });
-  }, [deleteVendorMutate, name, closeAlert, vendorId, formatMessage]);
+  }, [deleteVendorMutate, name, closeAlert, vendorId]);
 
   return (
     <Alert

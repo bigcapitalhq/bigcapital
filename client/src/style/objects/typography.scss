@@ -2,6 +2,10 @@
 
 body{
   color: #1f3255;
+
+  [lang='ar'] &{
+    font-size: 15px;
+  }
 }
 
 .#{$ns}-heading{

@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { CLASSES } from 'common/classes';
+import { FormattedMessage as T } from 'components';
 import MakeJournalEntriesHeaderFields from './MakeJournalEntriesHeaderFields';
 import { PageFormBigNumber } from 'components';
 import { safeSumBy } from 'utils';
@@ -20,7 +21,7 @@ export default function MakeJournalEntriesHeader() {
       <MakeJournalEntriesHeaderFields />
 
       <PageFormBigNumber
-        label={'Due Amount'}
+        label={<T id={'amount'} />}
         amount={total}
         currencyCode={currency_code}
       />

@@ -1,24 +1,36 @@
 import React from 'react';
 import { Formik } from 'formik';
+import * as R from 'ramda';
 
 import 'style/pages/Setup/Subscription.scss';
 
 import SetupSubscriptionForm from './SetupSubscriptionForm';
-import { SubscriptionFormSchema } from './SubscriptionForm.schema';
+import { getSubscriptionFormSchema } from './SubscriptionForm.schema';
+import withSubscriptionPlansActions from '../Subscriptions/withSubscriptionPlansActions';
 
 /**
  * Subscription step of wizard setup.
  */
-export default function SetupSubscription() {
+function SetupSubscription({
+  // #withSubscriptionPlansActions
+  initSubscriptionPlans
+}) {
+  React.useEffect(() => {
+    initSubscriptionPlans();
+  }, [
+    initSubscriptionPlans
+  ]);
+
   // Initial values.
   const initialValues = {
-    plan_slug: 'free',
+    plan_slug: 'starter',
     period: 'month',
     license_code: '',
   };
-
   // Handle form submit.
   const handleSubmit = () => {};
+
+  const SubscriptionFormSchema = getSubscriptionFormSchema();
 
   return (
     <div className={'setup-subscription-form'}>  
@@ -31,3 +43,7 @@ export default function SetupSubscription() {
     </div>
   );
 }
+
+export default R.compose(
+  withSubscriptionPlansActions,
+)(SetupSubscription);

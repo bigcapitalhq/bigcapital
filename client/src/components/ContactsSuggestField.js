@@ -2,15 +2,16 @@ import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
+import intl from 'react-intl-universal';
 
 export default function ContactsSuggestField({
   contactsList,
   initialContactId,
   selectedContactId,
-  defaultTextSelect = 'Select contact',
+  defaultTextSelect = intl.get('select_contact'),
   onContactSelected,
 
   selectedContactType = [],

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import ContentLoader from 'react-content-loader';
 import { If, Icon } from 'components';
 import { saveInvoke } from 'utils';

@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import moment from 'moment';
 import { Formik, Form } from 'formik';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import * as Yup from 'yup';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 
@@ -24,17 +25,17 @@ function ProfitLossHeader({
   // #withProfitLossActions
   toggleProfitLossFilterDrawer: toggleFilterDrawer,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   // Validation schema.
   const validationSchema = Yup.object().shape({
     fromDate: Yup.date()
       .required()
-      .label(formatMessage({ id: 'from_date' })),
+      .label(intl.get('from_date')),
     toDate: Yup.date()
       .min(Yup.ref('fromDate'))
       .required()
-      .label(formatMessage({ id: 'to_date' })),
+      .label(intl.get('to_date')),
     accountsFilter: Yup.string(),
     displayColumnsType: Yup.string(),
   });

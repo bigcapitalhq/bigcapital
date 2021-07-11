@@ -1,11 +1,11 @@
 import * as Yup from 'yup';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 
 const Schema = Yup.object().shape({
   customer_type: Yup.string()
     .required()
     .trim()
-    .label(formatMessage({ id: 'customer_type_' })),
+    .label(intl.get('customer_type_')),
   salutation: Yup.string().trim(),
   first_name: Yup.string().trim(),
   last_name: Yup.string().trim(),
@@ -13,7 +13,7 @@ const Schema = Yup.object().shape({
   display_name: Yup.string()
     .trim()
     .required()
-    .label(formatMessage({ id: 'display_name_' })),
+    .label(intl.get('display_name_')),
 
   email: Yup.string().email().nullable(),
   work_phone: Yup.number(),

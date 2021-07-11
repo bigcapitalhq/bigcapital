@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
@@ -29,7 +30,7 @@ function AccountBulkDeleteAlert({
   // #withAccountsActions
   requestDeleteBulkAccounts,
 }) {
-  const { formatMessage } = useIntl();
+  
   const [isLoading, setLoading] = useState(false);
 
   const selectedRowsCount = 0;
@@ -43,9 +44,7 @@ function AccountBulkDeleteAlert({
     requestDeleteBulkAccounts(accountsIds)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_accounts_has_been_successfully_deleted',
-          }),
+          message: intl.get('the_accounts_has_been_successfully_deleted'),
           intent: Intent.SUCCESS,
         });
         queryCache.invalidateQueries('accounts-table');
@@ -62,9 +61,7 @@ function AccountBulkDeleteAlert({
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={`${formatMessage({
-        id: 'delete',
-      })} (${selectedRowsCount})`}
+      confirmButtonText={`${intl.get('delete')} (${selectedRowsCount})`}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}

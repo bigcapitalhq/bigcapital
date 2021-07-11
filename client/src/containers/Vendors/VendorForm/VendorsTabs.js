@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tabs, Tab } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
@@ -14,7 +15,7 @@ import CustomerNotePanel from 'containers/Customers/CustomerForm/CustomerNotePan
  * Vendor form tabs.
  */
 export default function VendorTabs() {
-  const { formatMessage } = useIntl();
+  
   return (
     <div className={classNames(CLASSES.PAGE_FORM_TABS)}>
       <Tabs
@@ -25,22 +26,22 @@ export default function VendorTabs() {
       >
         <Tab
           id={'financial'}
-          title={formatMessage({ id: 'financial_details' })}
+          title={intl.get('financial_details')}
           panel={<VendorFinanicalPanelTab  />}
         />
         <Tab
           id={'address'}
-          title={formatMessage({ id: 'address' })}
+          title={intl.get('address')}
           panel={<CustomerAddressTabs />}
         />
         <Tab
           id="notes"
-          title={formatMessage({ id: 'notes' })}
+          title={intl.get('notes')}
           panel={<CustomerNotePanel />}
         />
         <Tab
           id={'attachement'}
-          title={formatMessage({ id: 'attachement' })}
+          title={intl.get('attachement')}
           panel={<VendorAttahmentTab />}
         />
       </Tabs>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { usePublishJournal } from 'hooks/query';
 
 import { AppToaster } from 'components';
@@ -23,7 +24,7 @@ function JournalPublishAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { mutateAsync: publishJournalMutate, isLoading } = usePublishJournal();
 
   // Handle cancel manual journal alert.
@@ -36,9 +37,7 @@ function JournalPublishAlert({
     publishJournalMutate(manualJournalId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_manual_journal_has_been_published',
-          }),
+          message: intl.get('the_manual_journal_has_been_published'),
           intent: Intent.SUCCESS,
         });
       })

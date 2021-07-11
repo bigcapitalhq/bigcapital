@@ -1,12 +1,12 @@
 import React from 'react';
 import { FastField } from 'formik';
 import { handleStringChange } from 'utils';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { RadioGroup, Radio } from '@blueprintjs/core';
 
 export default function RadiosAccountingBasis(props) {
   const { key = 'basis', ...rest } = props;
-  const { formatMessage } = useIntl();
+  
 
   return (
     <FastField name={'basis'}>
@@ -16,7 +16,7 @@ export default function RadiosAccountingBasis(props) {
       }) => (
         <RadioGroup
           inline={true}
-          label={formatMessage({ id: 'accounting_basis' })}
+          label={intl.get('accounting_basis')}
           name="basis"
           onChange={handleStringChange((value) => {
             setFieldValue(key, value);
@@ -25,8 +25,8 @@ export default function RadiosAccountingBasis(props) {
           selectedValue={value}
           {...rest}
         >
-          <Radio label={formatMessage({ id: 'cash' })} value="cash" />
-          <Radio label={formatMessage({ id: 'accrual' })} value="accural" />
+          <Radio label={intl.get('cash')} value="cash" />
+          <Radio label={intl.get('accrual')} value="accural" />
         </RadioGroup>
       )}
     </FastField>

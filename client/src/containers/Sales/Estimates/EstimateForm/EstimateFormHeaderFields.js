@@ -6,7 +6,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { FastField, ErrorMessage } from 'formik';
 import {
   momentFormatter,
@@ -170,7 +170,7 @@ function EstimateFormHeader({
                 }}
                 tooltip={true}
                 tooltipProps={{
-                  content: 'Setting your auto-generated estimate number',
+                  content: <T id={'setting_your_auto_generated_estimate_number'}/>,
                   position: Position.BOTTOM_LEFT,
                 }}
               />

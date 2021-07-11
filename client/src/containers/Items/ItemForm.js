@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { defaultTo } from 'lodash';
 
@@ -66,8 +66,6 @@ function ItemForm({
   // History context.
   const history = useHistory();
 
-  const { formatMessage } = useIntl();
-
   /**
    * Initial values in create and edit mode.
    */
@@ -105,13 +103,11 @@ function ItemForm({
     const fields = {};
 
     if (errors.find((e) => e.type === 'ITEM.NAME.ALREADY.EXISTS')) {
-      fields.name = formatMessage({ id: 'the_name_used_before' });
+      fields.name = intl.get('the_name_used_before');
     }
     if (errors.find((e) => e.type === 'INVENTORY_ACCOUNT_CANNOT_MODIFIED')) {
       AppToaster.show({
-        message: formatMessage({
-          id: 'cannot_change_item_inventory_account',
-        }),
+        message: intl.get('cannot_change_item_inventory_account'),
         intent: Intent.DANGER,
       });
     }
@@ -128,12 +124,10 @@ function ItemForm({
 
     const onSuccess = (response) => {
       AppToaster.show({
-        message: formatMessage(
-          {
-            id: isNewMode
-              ? 'the_item_has_been_created_successfully'
-              : 'the_item_has_been_edited_successfully',
-          },
+        message: intl.get(
+          isNewMode
+            ? 'the_item_has_been_created_successfully'
+            : 'the_item_has_been_edited_successfully',
           {
             number: itemId,
           },

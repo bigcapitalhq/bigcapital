@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
 
 import FinancialSheet from 'components/FinancialSheet';
@@ -15,7 +15,7 @@ export default function CustomersBalanceSummaryTable({
   // #ownProps
   companyName,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   const {
     isCustomersBalanceLoading,
@@ -32,7 +32,7 @@ export default function CustomersBalanceSummaryTable({
     <FinancialSheet
       name={'customers-balance-summary'}
       companyName={companyName}
-      sheetType={formatMessage({ id: 'customers_balance_summary' })}
+      sheetType={intl.get('customers_balance_summary')}
       asDate={new Date()}
       loading={isCustomersBalanceLoading}
     >

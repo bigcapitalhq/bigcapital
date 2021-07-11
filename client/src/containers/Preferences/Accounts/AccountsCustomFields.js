@@ -18,7 +18,8 @@ import {connect} from 'react-redux';
 import {
   fetchResourceFields,
 } from 'store/customFields/customFields.actions';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 function AccountsCustomFields({ fetchResourceFields, fields }) {
   const fetchHook = useAsync(async () => {

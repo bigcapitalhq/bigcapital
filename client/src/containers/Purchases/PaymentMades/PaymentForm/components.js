@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import moment from 'moment';
 import { Money } from 'components';
 import { safeSumBy, formattedAmount } from 'utils';
@@ -51,7 +51,7 @@ function MoneyTableCell({ row: { original }, value }) {
  * Payment made entries table columns
  */
 export function usePaymentMadeEntriesTableColumns() {
-  const { formatMessage } = useIntl();
+  
 
   return React.useMemo(
     () => [
@@ -65,7 +65,7 @@ export function usePaymentMadeEntriesTableColumns() {
         className: 'index',
       },
       {
-        Header: formatMessage({ id: 'Date' }),
+        Header: intl.get('Date'),
         id: 'bill_date',
         accessor: 'bill_date',
         Cell: BillDateCell,
@@ -74,13 +74,13 @@ export function usePaymentMadeEntriesTableColumns() {
         className: 'bill_date',
       },
       {
-        Header: formatMessage({ id: 'bill_number' }),
+        Header: intl.get('bill_number'),
         accessor: BillNumberAccessor,
         disableSortBy: true,
         className: 'bill_number',
       },
       {
-        Header: formatMessage({ id: 'bill_amount' }),
+        Header: intl.get('bill_amount'),
         accessor: 'amount',
         Cell: MoneyTableCell,
         Footer: AmountFooterCell,
@@ -88,7 +88,7 @@ export function usePaymentMadeEntriesTableColumns() {
         className: 'amount',
       },
       {
-        Header: formatMessage({ id: 'amount_due' }),
+        Header: intl.get('amount_due'),
         accessor: 'due_amount',
         Cell: MoneyTableCell,
         Footer: DueAmountFooterCell,
@@ -96,7 +96,7 @@ export function usePaymentMadeEntriesTableColumns() {
         className: 'due_amount',
       },
       {
-        Header: formatMessage({ id: 'payment_amount' }),
+        Header: intl.get('payment_amount'),
         accessor: 'payment_amount',
         Cell: MoneyFieldCell,
         Footer: PaymentAmountFooterCell,
@@ -104,6 +104,6 @@ export function usePaymentMadeEntriesTableColumns() {
         className: 'payment_amount',
       },
     ],
-    [formatMessage],
+    [],
   );
 }

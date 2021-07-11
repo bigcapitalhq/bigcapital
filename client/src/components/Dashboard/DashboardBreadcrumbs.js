@@ -6,7 +6,7 @@ import {
   Boundary,
 } from '@blueprintjs/core';
 import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
-import routes from 'routes/dashboard';
+import { getDashboardRoutes } from 'routes/dashboard';
 import { useHistory } from 'react-router-dom';
 
 function DashboardBreadcrumbs({ breadcrumbs }){
@@ -31,4 +31,4 @@ function DashboardBreadcrumbs({ breadcrumbs }){
   )
 }
 
-export default withBreadcrumbs(routes)(DashboardBreadcrumbs)
+export default withBreadcrumbs([])(DashboardBreadcrumbs)

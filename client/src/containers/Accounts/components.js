@@ -10,9 +10,8 @@ import {
   Popover,
   Button,
 } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
 import { Icon, Money, If } from 'components';
-import { formatMessage } from 'services/intl';
+import intl from 'react-intl-universal';
 import { safeCallback } from 'utils';
 
 /**
@@ -34,37 +33,37 @@ export function ActionsMenu({
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
-        text={formatMessage({ id: 'view_details' })}
+        text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
       <MenuDivider />
       <MenuItem
         icon={<Icon icon="pen-18" />}
-        text={formatMessage({ id: 'edit_account' })}
+        text={intl.get('edit_account')}
         onClick={safeCallback(onEdit, original)}
       />
       <MenuItem
         icon={<Icon icon="plus" />}
-        text={formatMessage({ id: 'new_child_account' })}
+        text={intl.get('new_child_account')}
         onClick={safeCallback(onNewChild, original)}
       />
       <MenuDivider />
       <If condition={original.active}>
         <MenuItem
-          text={formatMessage({ id: 'inactivate_account' })}
+          text={intl.get('inactivate_account')}
           icon={<Icon icon="pause-16" iconSize={16} />}
           onClick={safeCallback(onInactivate, original)}
         />
       </If>
       <If condition={!original.active}>
         <MenuItem
-          text={formatMessage({ id: 'activate_account' })}
+          text={intl.get('activate_account')}
           icon={<Icon icon="play-16" iconSize={16} />}
           onClick={safeCallback(onActivate, original)}
         />
       </If>
       <MenuItem
-        text={formatMessage({ id: 'delete_account' })}
+        text={intl.get('delete_account')}
         icon={<Icon icon="trash-16" iconSize={16} />}
         intent={Intent.DANGER}
         onClick={safeCallback(onDelete, original)}
@@ -77,7 +76,6 @@ export function ActionsMenu({
  * Normal cell.
  */
 export function NormalCell({ cell: { value } }) {
-  const { formatMessage } = useIntl();
   const arrowDirection = value === 'credit' ? 'down' : 'up';
 
   // Can't continue if the value is not `credit` or `debit`.
@@ -87,7 +85,7 @@ export function NormalCell({ cell: { value } }) {
   return (
     <Tooltip
       className={Classes.TOOLTIP_INDICATOR}
-      content={formatMessage({ id: value })}
+      content={intl.get(value)}
       position={Position.RIGHT}
       hoverOpenDelay={100}
     >

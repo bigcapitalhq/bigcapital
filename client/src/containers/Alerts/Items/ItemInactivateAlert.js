@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
@@ -23,7 +24,7 @@ function ItemInactivateAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const { mutateAsync: inactivateItem, isLoading } = useInactivateItem();
 
   // Handle cancel inactivate alert.
@@ -36,9 +37,7 @@ function ItemInactivateAlert({
     inactivateItem(itemId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_item_has_been_inactivated_successfully',
-          }),
+          message: intl.get('the_item_has_been_inactivated_successfully'),
           intent: Intent.SUCCESS,
         });
       })

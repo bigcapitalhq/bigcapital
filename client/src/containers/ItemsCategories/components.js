@@ -8,7 +8,7 @@ import {
   MenuDivider,
   Intent,
 } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { Icon } from 'components';
 import { safeCallback } from 'utils';
 
@@ -19,18 +19,18 @@ export function ActionMenuList({
   row: { original },
   payload: { onEditCategory, onDeleteCategory },
 }) {
-  const { formatMessage } = useIntl();
+  
 
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="pen-18" />}
-        text={formatMessage({ id: 'edit_category' })}
+        text={intl.get('edit_category')}
         onClick={safeCallback(onEditCategory, original)}
       />
       <MenuDivider />
       <MenuItem
-        text={formatMessage({ id: 'delete_category' })}
+        text={intl.get('delete_category')}
         intent={Intent.DANGER}
         onClick={safeCallback(onDeleteCategory, original)}
         icon={<Icon icon="trash-16" iconSize={16} />}
@@ -57,32 +57,32 @@ export function TableActionsCell(props) {
  * Retrieve the items categories table columns.
  */
 export function useItemsCategoriesTableColumns() {
-  const { formatMessage } = useIntl();
+  
 
   return React.useMemo(
     () => [
       {
         id: 'name',
-        Header: formatMessage({ id: 'category_name' }),
+        Header: intl.get('category_name'),
         accessor: 'name',
         width: 220,
       },
       
       {
         id: 'count',
-        Header: formatMessage({ id: 'count' }),
+        Header: intl.get('count'),
         accessor: 'count',
         className: 'count',
         width: 180,
       },
       {
         id: 'description',
-        Header: formatMessage({ id: 'description' }),
+        Header: intl.get('description'),
         accessor: 'description',
         className: 'description',
         width: 220,
       }
     ],
-    [formatMessage],
+    [],
   );
 }

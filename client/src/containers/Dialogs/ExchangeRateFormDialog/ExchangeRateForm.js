@@ -2,7 +2,8 @@ import React, { useMemo } from 'react';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
 import moment from 'moment';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { AppToaster } from 'components';
 import {
   CreateExchangeRateFormSchema,
@@ -27,7 +28,6 @@ function ExchangeRateForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { formatMessage } = useIntl();
   const {
     createExchangeRateMutate,
     editExchangeRateMutate,
@@ -54,9 +54,9 @@ function ExchangeRateForm({
       errors.find((error) => error.type === 'EXCHANGE.RATE.DATE.PERIOD.DEFINED')
     ) {
       setErrors({
-        exchange_rate: formatMessage({
-          id: 'there_is_exchange_rate_in_this_date_with_the_same_currency',
-        }),
+        exchange_rate: intl.get(
+          'there_is_exchange_rate_in_this_date_with_the_same_currency',
+        ),
       });
     }
   };
@@ -71,11 +71,11 @@ function ExchangeRateForm({
     };
     const onSuccess = ({ response }) => {
       AppToaster.show({
-        message: formatMessage({
-          id: !isNewMode
+        message: intl.get(
+          !isNewMode
             ? 'the_exchange_rate_has_been_edited_successfully'
             : 'the_exchange_rate_has_been_created_successfully',
-        }),
+        ),
         intent: Intent.SUCCESS,
       });
       afterSubmit(response);

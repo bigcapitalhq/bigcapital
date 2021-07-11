@@ -8,7 +8,8 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from 'hooks';
 import { ListSelect, FieldRequiredHint, Col, Row } from 'components';
@@ -37,7 +38,7 @@ export default function InventoryAdjustmentFormDialogFields() {
   const { accounts } = useInventoryAdjContext();
 
   // Intl context.
-  const { formatMessage } = useIntl();
+  
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -127,9 +128,7 @@ export default function InventoryAdjustmentFormDialogFields() {
                 form.setFieldValue('adjustment_account_id', id)
               }
               inputProps={{
-                placeholder: formatMessage({
-                  id: 'select_adjustment_account',
-                }),
+                placeholder: intl.get('select_adjustment_account'),
               }}
             />
           </FormGroup>

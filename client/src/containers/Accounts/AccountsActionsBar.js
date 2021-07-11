@@ -12,7 +12,8 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { If, DashboardActionViewsList } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -104,7 +105,7 @@ function AccountsActionsBar({
               true ? (
                 <T id={'filter'} />
               ) : (
-                <T id={'count_filters_applied'} values={{ count: 0 }} />
+                intl.get('count_filters_applied', { count: 0 })
               )
             }
             icon={<Icon icon="filter-16" iconSize={16} />}
@@ -159,5 +160,5 @@ export default compose(
   withAccounts(({ accountsSelectedRows }) => ({
     accountsSelectedRows,
   })),
-  withAccountsTableActions
+  withAccountsTableActions,
 )(AccountsActionsBar);

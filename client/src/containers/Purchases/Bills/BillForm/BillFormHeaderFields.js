@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormGroup, InputGroup, Position } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { FastField, ErrorMessage } from 'formik';
 import classNames from 'classnames';
 

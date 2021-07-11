@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
@@ -15,7 +15,7 @@ import { useTrialBalanceTableColumns } from './components';
 export default function TrialBalanceSheetTable({
   companyName,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   // Trial balance sheet context.
   const {
@@ -43,7 +43,7 @@ export default function TrialBalanceSheetTable({
   return (
     <FinancialSheet
       companyName={companyName}
-      sheetType={formatMessage({ id: 'trial_balance_sheet' })}
+      sheetType={intl.get('trial_balance_sheet')}
       fromDate={query.from_date}
       toDate={query.to_date}
       name="trial-balance"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 
 import FinancialSheet from 'components/FinancialSheet';
 import { DataTable } from 'components';
@@ -12,8 +12,6 @@ import { usePurchasesByItemsTableColumns } from './components';
  * purchases by items data table.
  */
 export default function PurchasesByItemsTable({ companyName }) {
-  const { formatMessage } = useIntl();
-
   // Purchases by items context.
   const {
     purchaseByItems: { tableRows, query },
@@ -40,7 +38,7 @@ export default function PurchasesByItemsTable({ companyName }) {
   return (
     <FinancialSheet
       companyName={companyName}
-      sheetType={formatMessage({ id: 'purchases_by_items' })}
+      sheetType={intl.get('purchases_by_items')}
       fromDate={query.from_date}
       toDate={query.to_date}
       name="purchases-by-items"
@@ -55,7 +53,9 @@ export default function PurchasesByItemsTable({ companyName }) {
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={rowClassNames}
-        noResults={'There were no purchases during the selected date range.'}
+        noResults={intl.get(
+          'there_were_no_purchases_during_the_selected_date_range',
+        )}
       />
     </FinancialSheet>
   );

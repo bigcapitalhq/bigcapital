@@ -9,7 +9,8 @@ import {
   Position,
   PopoverInteractionKind,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -31,7 +32,7 @@ function VendorActionsBar({
   setVendorsTableState,
 }) {
   const history = useHistory();
-  const { formatMessage } = useIntl();
+  
 
   // Vendors list context.
   const { vendorsViews } = useVendorsListContext();
@@ -73,7 +74,7 @@ function VendorActionsBar({
               true ? (
                 <T id={'filter'} />
               ) : (
-                `${9} ${formatMessage({ id: 'filters_applied' })}`
+                `${9} ${intl.get('filters_applied')}`
               )
             }
             icon={<Icon icon="filter-16" iconSize={16} />}

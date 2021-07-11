@@ -10,7 +10,8 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { Money, Choose, Icon, If } from 'components';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { safeCallback } from 'utils';
 import moment from 'moment';
 
@@ -59,29 +60,29 @@ export function ActionsMenu({
     onConvert,
   },
 }) {
-  const { formatMessage } = useIntl();
+  
 
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
-        text={formatMessage({ id: 'view_details' })}
+        text={intl.get('view_details')}
       />
       <MenuDivider />
       <MenuItem
         icon={<Icon icon="pen-18" />}
-        text={formatMessage({ id: 'edit_estimate' })}
+        text={intl.get('edit_estimate')}
         onClick={safeCallback(onEdit, original)}
       />
       <MenuItem
         icon={<Icon icon="convert_to" />}
-        text={formatMessage({ id: 'convert_to_invoice' })}
+        text={intl.get('convert_to_invoice')}
         onClick={safeCallback(onConvert, original)}
       />
       <If condition={!original.is_delivered}>
         <MenuItem
           icon={<Icon icon={'check'} iconSize={18} />}
-          text={formatMessage({ id: 'mark_as_delivered' })}
+          text={intl.get('mark_as_delivered')}
           onClick={safeCallback(onDeliver, original)}
         />
       </If>
@@ -89,37 +90,37 @@ export function ActionsMenu({
         <Choose.When condition={original.is_delivered && original.is_approved}>
           <MenuItem
             icon={<Icon icon={'close-black'} />}
-            text={formatMessage({ id: 'mark_as_rejected' })}
+            text={intl.get('mark_as_rejected')}
             onClick={safeCallback(onReject, original)}
           />
         </Choose.When>
         <Choose.When condition={original.is_delivered && original.is_rejected}>
           <MenuItem
             icon={<Icon icon={'check'} iconSize={18} />}
-            text={formatMessage({ id: 'mark_as_approved' })}
+            text={intl.get('mark_as_approved')}
             onClick={safeCallback(onApprove, original)}
           />
         </Choose.When>
         <Choose.When condition={original.is_delivered}>
           <MenuItem
             icon={<Icon icon={'check'} iconSize={18} />}
-            text={formatMessage({ id: 'mark_as_approved' })}
+            text={intl.get('mark_as_approved')}
             onClick={safeCallback(onApprove, original)}
           />
           <MenuItem
             icon={<Icon icon={'close-black'} />}
-            text={formatMessage({ id: 'mark_as_rejected' })}
+            text={intl.get('mark_as_rejected')}
             onClick={safeCallback(onReject, original)}
           />
         </Choose.When>
       </Choose>
       <MenuItem
         icon={<Icon icon={'receipt-24'} iconSize={16} />}
-        text={formatMessage({ id: 'estimate_paper' })}
+        text={intl.get('estimate_paper')}
         onClick={safeCallback(onDrawer, original)}
       />
       <MenuItem
-        text={formatMessage({ id: 'delete_estimate' })}
+        text={intl.get('delete_estimate')}
         intent={Intent.DANGER}
         onClick={safeCallback(onDelete, original)}
         icon={<Icon icon="trash-16" iconSize={16} />}
@@ -148,13 +149,13 @@ function ActionsCell(props) {
 }
 
 export function useEstiamtesTableColumns() {
-  const { formatMessage } = useIntl();
+  
 
   return React.useMemo(
     () => [
       {
         id: 'estimate_date',
-        Header: formatMessage({ id: 'estimate_date' }),
+        Header: intl.get('estimate_date'),
         accessor: 'estimate_date',
         Cell: DateCell,
         width: 140,
@@ -162,14 +163,14 @@ export function useEstiamtesTableColumns() {
       },
       {
         id: 'customer',
-        Header: formatMessage({ id: 'customer_name' }),
+        Header: intl.get('customer_name'),
         accessor: 'customer.display_name',
         width: 140,
         className: 'customer_id',
       },
       {
         id: 'expiration_date',
-        Header: formatMessage({ id: 'expiration_date' }),
+        Header: intl.get('expiration_date'),
         accessor: 'expiration_date',
         Cell: DateCell,
         width: 140,
@@ -177,7 +178,7 @@ export function useEstiamtesTableColumns() {
       },
       {
         id: 'estimate_number',
-        Header: formatMessage({ id: 'estimate_number' }),
+        Header: intl.get('estimate_number'),
         accessor: (row) =>
           row.estimate_number ? `#${row.estimate_number}` : null,
         width: 140,
@@ -185,26 +186,26 @@ export function useEstiamtesTableColumns() {
       },
       {
         id: 'amount',
-        Header: formatMessage({ id: 'amount' }),
+        Header: intl.get('amount'),
         accessor: AmountAccessor,
         width: 140,
         className: 'amount',
       },
       {
         id: 'status',
-        Header: formatMessage({ id: 'status' }),
+        Header: intl.get('status'),
         accessor: (row) => statusAccessor(row),
         width: 140,
         className: 'status',
       },
       {
         id: 'reference_no',
-        Header: formatMessage({ id: 'reference_no' }),
+        Header: intl.get('reference_no'),
         accessor: 'reference',
         width: 90,
         className: 'reference',
       }
     ],
-    [formatMessage],
+    [],
   );
 }

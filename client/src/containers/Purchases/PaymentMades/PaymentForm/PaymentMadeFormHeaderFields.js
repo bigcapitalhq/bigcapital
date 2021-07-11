@@ -9,7 +9,7 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 import { toSafeInteger } from 'lodash';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
@@ -157,7 +157,7 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
               small={true}
               minimal={true}
             >
-              Receive full amount (
+             <T id={'receive_full_amount'} /> (
               <Money amount={payableFullAmount} currency={baseCurrency} />)
             </Button>
           </FormGroup>

@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
 
 import FinancialSheet from 'components/FinancialSheet';
@@ -17,7 +17,7 @@ export default function VendorsTransactionsTable({
   // #ownProps
   companyName,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   const {
     vendorsTransactions: { tableRows },
@@ -39,7 +39,7 @@ export default function VendorsTransactionsTable({
     <FinancialSheet
       name="vendor-transactions"
       companyName={companyName}
-      sheetType={formatMessage({ id: 'vendors_transactions' })}
+      sheetType={intl.get('vendors_transactions')}
       loading={isVendorsTransactionsLoading}
       fromDate={query.from_date}
       toDate={query.to_date}

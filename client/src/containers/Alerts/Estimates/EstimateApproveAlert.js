@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 
@@ -24,7 +25,7 @@ function EstimateApproveAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { formatMessage } = useIntl();
+  
   const {
     mutateAsync: deliverEstimateMutate,
     isLoading,
@@ -39,9 +40,7 @@ function EstimateApproveAlert({
     deliverEstimateMutate(estimateId)
       .then(() => {
         AppToaster.show({
-          message: formatMessage({
-            id: 'the_estimate_has_been_approved_successfully',
-          }),
+          message: intl.get('the_estimate_has_been_approved_successfully'),
           intent: Intent.SUCCESS,
         });
         queryCache.invalidateQueries('estimates-table');
@@ -50,7 +49,7 @@ function EstimateApproveAlert({
       .finally(() => {
         closeAlert(name);
       });
-  }, [estimateId, deliverEstimateMutate, closeAlert, name, formatMessage]);
+  }, [estimateId, deliverEstimateMutate, closeAlert, name]);
 
   return (
     <Alert

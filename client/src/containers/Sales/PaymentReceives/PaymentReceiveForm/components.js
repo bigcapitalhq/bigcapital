@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
+
 import { Money } from 'components';
 import { MoneyFieldCell } from 'components/DataTableCells';
 import { safeSumBy, formattedAmount } from 'utils';
@@ -58,14 +59,14 @@ function MoneyTableCell({ row: { original }, value }) {
 }
 
 function DateFooterCell() {
-  return 'Total';
+  return intl.get('total')
 }
 
 /**
  * Retrieve payment receive form entries columns.
  */
 export const usePaymentReceiveEntriesColumns = () => {
-  const { formatMessage } = useIntl();
+ 
 
   return React.useMemo(
     () => [
@@ -79,7 +80,7 @@ export const usePaymentReceiveEntriesColumns = () => {
         className: 'index',
       },
       {
-        Header: formatMessage({ id: 'Date' }),
+        Header: intl.get('Date'),
         id: 'invoice_date',
         accessor: 'invoice_date',
         Cell: InvoiceDateCell,
@@ -90,13 +91,13 @@ export const usePaymentReceiveEntriesColumns = () => {
         className: 'date',
       },
       {
-        Header: formatMessage({ id: 'invocie_number' }),
+        Header: intl.get('invocie_number'),
         accessor: InvNumberCellAccessor,
         disableSortBy: true,
         className: 'invoice_number',
       },
       {
-        Header: formatMessage({ id: 'invoice_amount' }),
+        Header: intl.get('invoice_amount'),
         accessor: 'amount',
         Footer: BalanceFooterCell,
         Cell: MoneyTableCell,
@@ -105,7 +106,7 @@ export const usePaymentReceiveEntriesColumns = () => {
         className: 'invoice_amount',
       },
       {
-        Header: formatMessage({ id: 'amount_due' }),
+        Header: intl.get('amount_due'),
         accessor: 'due_amount',
         Footer: DueAmountFooterCell,
         Cell: MoneyTableCell,
@@ -114,7 +115,7 @@ export const usePaymentReceiveEntriesColumns = () => {
         className: 'amount_due',
       },
       {
-        Header: formatMessage({ id: 'payment_amount' }),
+        Header: intl.get('payment_amount'),
         accessor: 'payment_amount',
         Cell: MoneyFieldCell,
         Footer: PaymentAmountFooterCell,
@@ -123,6 +124,6 @@ export const usePaymentReceiveEntriesColumns = () => {
         className: 'payment_amount',
       },
     ],
-    [formatMessage],
+    [],
   );
 };

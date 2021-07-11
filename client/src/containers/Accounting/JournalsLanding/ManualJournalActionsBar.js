@@ -12,7 +12,7 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import { useManualJournalsContext } from './ManualJournalsListProvider';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -42,9 +42,7 @@ function ManualJournalActionsBar({
   };
 
   // Handle delete button click.
-  const handleBulkDelete = () => {
-
-  };
+  const handleBulkDelete = () => {};
 
   // Handle tab change.
   const handleTabChange = (customView) => {
@@ -77,7 +75,7 @@ function ManualJournalActionsBar({
             className={classNames(Classes.MINIMAL, 'button--filter', {
               'has-active-filters': false,
             })}
-            text="Filter"
+            text={<T id={'filter'} />}
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>

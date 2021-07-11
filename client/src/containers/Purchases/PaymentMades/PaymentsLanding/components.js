@@ -9,7 +9,7 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import intl from 'react-intl-universal';
 import { Icon, Money } from 'components';
 import { safeCallback } from 'utils';
 
@@ -28,22 +28,22 @@ export function ActionsMenu({
   row: { original },
   payload: { onEdit, onDelete },
 }) {
-  const { formatMessage } = useIntl();
+  
 
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
-        text={formatMessage({ id: 'view_details' })}
+        text={intl.get('view_details')}
       />
       <MenuDivider />
       <MenuItem
         icon={<Icon icon="pen-18" />}
-        text={formatMessage({ id: 'edit_payment_made' })}
+        text={intl.get('edit_payment_made')}
         onClick={safeCallback(onEdit, original)}
       />
       <MenuItem
-        text={formatMessage({ id: 'delete_payment_made' })}
+        text={intl.get('delete_payment_made')}
         intent={Intent.DANGER}
         onClick={safeCallback(onDelete, original)}
         icon={<Icon icon="trash-16" iconSize={16} />}
@@ -70,13 +70,13 @@ export function ActionsCell(props) {
  * Retrieve payment mades table columns.
  */
 export function usePaymentMadesTableColumns() {
-  const { formatMessage } = useIntl();
+  
 
   return React.useMemo(
     () => [
       {
         id: 'payment_date',
-        Header: formatMessage({ id: 'payment_date' }),
+        Header: intl.get('payment_date'),
         Cell: DateCell,
         accessor: 'payment_date',
         width: 140,
@@ -84,14 +84,14 @@ export function usePaymentMadesTableColumns() {
       },
       {
         id: 'vendor',
-        Header: formatMessage({ id: 'vendor_name' }),
+        Header: intl.get('vendor_name'),
         accessor: 'vendor.display_name',
         width: 140,
         className: 'vendor_id',
       },
       {
         id: 'payment_number',
-        Header: formatMessage({ id: 'payment_number' }),
+        Header: intl.get('payment_number'),
         accessor: (row) =>
           row.payment_number ? `#${row.payment_number}` : null,
         width: 140,
@@ -99,26 +99,26 @@ export function usePaymentMadesTableColumns() {
       },
       {
         id: 'payment_account',
-        Header: formatMessage({ id: 'payment_account' }),
+        Header: intl.get('payment_account'),
         accessor: 'payment_account.name',
         width: 140,
         className: 'payment_account_id',
       },
       {
         id: 'amount',
-        Header: formatMessage({ id: 'amount' }),
+        Header: intl.get('amount'),
         accessor: AmountAccessor,
         width: 140,
         className: 'amount',
       },
       {
         id: 'reference_no',
-        Header: formatMessage({ id: 'reference' }),
+        Header: intl.get('reference'),
         accessor: 'reference',
         width: 140,
         className: 'reference',
       },
     ],
-    [formatMessage],
+    [],
   );
 }

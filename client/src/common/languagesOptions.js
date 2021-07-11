@@ -1,6 +1,6 @@
-
+import intl from 'react-intl-universal';
 
 export default [
-  { name: 'English', value: 'en' },
-  { name: 'Arabic', value: 'ar' },
+  { name: intl.get('english'), value: 'en' },
+  { name: intl.get('arabic'), value: 'ar' },
 ];

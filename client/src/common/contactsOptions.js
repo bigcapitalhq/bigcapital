@@ -1,4 +1,7 @@
+import React from 'react';
+import intl from 'react-intl-universal';
+
 export default [
-  { name: 'Customer', path: 'customers' },
-  { name: 'Vendor', path: 'vendors' },
+  { name: intl.get('customer'), path: 'customers' },
+  { name: intl.get('vendor'), path: 'vendors' },
 ];

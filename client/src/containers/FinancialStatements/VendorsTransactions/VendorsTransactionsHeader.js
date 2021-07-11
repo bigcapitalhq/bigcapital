@@ -3,7 +3,8 @@ import * as Yup from 'yup';
 import moment from 'moment';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import VendorsTransactionsHeaderGeneralPanel from './VendorsTransactionsHeaderGeneralPanel';
@@ -28,7 +29,7 @@ function VendorsTransactionsHeader({
   //#withVendorsTransactionsActions
   toggleVendorsTransactionsFilterDrawer: toggleFilterDrawer,
 }) {
-  const { formatMessage } = useIntl();
+  
 
   // Filter form initial values.
   const initialValues = {
@@ -41,11 +42,11 @@ function VendorsTransactionsHeader({
   const validationSchema = Yup.object().shape({
     fromDate: Yup.date()
       .required()
-      .label(formatMessage({ id: 'fromDate' })),
+      .label(intl.get('fromDate')),
     toDate: Yup.date()
       .min(Yup.ref('fromDate'))
       .required()
-      .label(formatMessage({ id: 'toDate' })),
+      .label(intl.get('toDate')),
   });
 
   // Handle form submit.

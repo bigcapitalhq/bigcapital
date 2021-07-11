@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T } from 'components';
 
 import { Intent, Button } from '@blueprintjs/core';
 
@@ -28,8 +28,12 @@ function LicenseTab({ openDialog }) {
         <T id={'cards_will_be_charged'} />
       </p>
 
-      <Button onClick={handleSubmitBtnClick} intent={Intent.PRIMARY} large={true}>
-        Submit Voucher
+      <Button
+        onClick={handleSubmitBtnClick}
+        intent={Intent.PRIMARY}
+        large={true}
+      >
+        <T id={'submit_voucher'} />
       </Button>
     </div>
   );
