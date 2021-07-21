@@ -34,13 +34,8 @@ function BillsDataTable({
   openDialog,
 }) {
   // Bills list context.
-  const {
-    bills,
-    pagination,
-    isBillsLoading,
-    isBillsFetching,
-    isEmptyStatus,
-  } = useBillsListContext();
+  const { bills, pagination, isBillsLoading, isBillsFetching, isEmptyStatus } =
+    useBillsListContext();
 
   const history = useHistory();
 
@@ -78,6 +73,11 @@ function BillsDataTable({
     openDialog('quick-payment-made', { billId: id });
   };
 
+  // handle allocate landed cost.
+  const handleAllocateLandedCost = ({ id }) => {
+    openDialog('allocate-landed-cost', { billId: id });
+  };
+
   if (isEmptyStatus) {
     return <BillsEmptyStatus />;
   }
@@ -105,6 +105,7 @@ function BillsDataTable({
         onEdit: handleEditBill,
         onOpen: handleOpenBill,
         onQuick: handleQuickPaymentMade,
+        onAllocateLandedCost: handleAllocateLandedCost,
       }}
     />
   );

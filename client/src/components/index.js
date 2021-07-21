@@ -56,6 +56,7 @@ import DrawerHeaderContent from './Drawer/DrawerHeaderContent';
 import Postbox from './Postbox';
 import AccountsSuggestField from './AccountsSuggestField';
 import MaterialProgressBar from './MaterialProgressBar';
+import { MoneyFieldCell } from './DataTableCells';
 
 const Hint = FieldHint;
 
@@ -123,4 +124,5 @@ export {
   Postbox,
   AccountsSuggestField,
   MaterialProgressBar,
+  MoneyFieldCell,
 };

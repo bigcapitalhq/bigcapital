@@ -1124,5 +1124,14 @@
   "refresh_the_page_if_redirect_not_worked": "Refresh the page if redirect not worked.",
   "payment_has_been_done_successfully": "Payment has been done successfully.",
   "manual_journal_number": "Manual journal {number}",
-"conditions_and_terms":"Conditions and terms"
+  "conditions_and_terms": "Conditions and terms",
+  "allocate_landed_coast": "Allocate landed cost",
+  "transaction_date":"Transaction date",
+  "transaction_type":"Transaction type",
+  "transaction_id":"Transaction #",
+  "transaction_number":"Transaction number",
+  "transaction_line":"Transaction line",
+  "allocation_method":"Allocation method",
+  "valuation":"Valuation",
+  "select_transaction":"Select transaction account"
 }

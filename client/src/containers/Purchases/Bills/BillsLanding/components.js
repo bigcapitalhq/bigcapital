@@ -20,7 +20,7 @@ import moment from 'moment';
  * Actions menu.
  */
 export function ActionsMenu({
-  payload: { onEdit, onOpen, onDelete, onQuick },
+  payload: { onEdit, onOpen, onDelete, onQuick, onAllocateLandedCost },
   row: { original },
 }) {
   return (
@@ -50,7 +50,11 @@ export function ActionsMenu({
           onClick={safeCallback(onQuick, original)}
         />
       </If>
-
+      <MenuItem
+        // icon={<Icon icon="quick-payment-16" iconSize={16} />}
+        text={intl.get('allocate_landed_coast')}
+        onClick={safeCallback(onAllocateLandedCost, original)}
+      />
       <MenuItem
         text={intl.get('delete_bill')}
         intent={Intent.DANGER}
