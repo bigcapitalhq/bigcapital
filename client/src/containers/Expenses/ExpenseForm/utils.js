@@ -27,6 +27,7 @@ export const defaultExpenseEntry = {
   amount: '',
   expense_account_id: '',
   description: '',
+  landed_cost: false,
 };
 
 export const defaultExpense = {

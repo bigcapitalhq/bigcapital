@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Tooltip, Intent, Position } from '@blueprintjs/core';
+import { Button, Tooltip, Intent, Position, Checkbox } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
 import { Icon, Hint } from 'components';
 import intl from 'react-intl-universal';
@@ -46,6 +46,35 @@ const ActionsCellRenderer = ({
         onClick={onClickRemoveRole}
       />
     </Tooltip>
+  );
+};
+
+/**
+ * Landed cost cell.
+ */
+const LandedCostCell = ({
+  row: { index },
+  column: { id },
+  cell: { value: initialValue },
+  data,
+  payload,
+}) => {
+  return (
+    <Tooltip content={''} position={Position.RIGHT}>
+      <Checkbox minimal={true} className="ml2" />
+    </Tooltip>
+  );
+};
+
+/**
+ * Landed cost header cell.
+ */
+const LandedCostHeaderCell = () => {
+  return (
+    <>
+      <T id={'cost'} />
+      <Hint content={''} />
+    </>
   );
 };
 
@@ -113,6 +142,15 @@ export function useExpenseFormTableColumns() {
         disableSortBy: true,
         className: 'description',
         width: 100,
+      },
+      {
+        Header: LandedCostHeaderCell,
+        accessor: 'landed_cost',
+        Cell: LandedCostCell,
+        disableSortBy: true,
+        disableResizing: true,
+        width: 70,
+        className: 'landed_cost',
       },
       {
         Header: '',

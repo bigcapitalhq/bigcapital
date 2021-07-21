@@ -8,9 +8,7 @@ const Schema = Yup.object().shape({
   payment_account_id: Yup.number()
     .required()
     .label(intl.get('payment_account_')),
-  payment_date: Yup.date()
-    .required()
-    .label(intl.get('payment_date_')),
+  payment_date: Yup.date().required().label(intl.get('payment_date_')),
   reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
   currency_code: Yup.string()
     .nullable()
@@ -33,6 +31,7 @@ const Schema = Yup.object().shape({
           is: (amount) => !isBlank(amount),
           then: Yup.number().required(),
         }),
+      landed_cost: Yup.boolean(),
       description: Yup.string().max(DATATYPES_LENGTH.TEXT).nullable(),
     }),
   ),
