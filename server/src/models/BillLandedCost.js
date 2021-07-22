@@ -19,10 +19,19 @@ export default class BillLandedCost extends TenantModel {
   /**
    * Relationship mapping.
    */
-   static get relationMappings() {
+  static get relationMappings() {
     const BillLandedCostEntry = require('models/BillLandedCostEntry');
+    const Bill = require('models/Bill');
 
     return {
+      bill: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Bill.default,
+        join: {
+          from: 'bill_located_costs.billId',
+          to: 'bills.id',
+        },
+      },
       allocateEntries: {
         relation: Model.HasManyRelation,
         modelClass: BillLandedCostEntry.default,

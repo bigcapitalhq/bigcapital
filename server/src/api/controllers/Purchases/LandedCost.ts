@@ -5,7 +5,6 @@ import { ServiceError } from 'exceptions';
 import AllocateLandedCostService from 'services/Purchases/LandedCost';
 import LandedCostListing from 'services/Purchases/LandedCost/LandedCostListing';
 import BaseController from '../BaseController';
-import { ResultSetDependencies } from 'mathjs';
 
 @Service()
 export default class BillAllocateLandedCost extends BaseController {
@@ -221,8 +220,8 @@ export default class BillAllocateLandedCost extends BaseController {
           errors: [
             {
               type: 'BILL_NOT_FOUND',
-              code: 400,
               message: 'The give bill id not found.',
+              code: 100,
             },
           ],
         });
@@ -232,8 +231,8 @@ export default class BillAllocateLandedCost extends BaseController {
           errors: [
             {
               type: 'LANDED_COST_TRANSACTION_NOT_FOUND',
-              code: 200,
               message: 'The given landed cost transaction id not found.',
+              code: 200,
             },
           ],
         });
@@ -243,8 +242,8 @@ export default class BillAllocateLandedCost extends BaseController {
           errors: [
             {
               type: 'LANDED_COST_ENTRY_NOT_FOUND',
-              code: 300,
               message: 'The given landed cost tranasction entry id not found.',
+              code: 300,
             },
           ],
         });
@@ -252,7 +251,10 @@ export default class BillAllocateLandedCost extends BaseController {
       if (error.errorType === 'COST_AMOUNT_BIGGER_THAN_UNALLOCATED_AMOUNT') {
         return res.status(400).send({
           errors: [
-            { type: 'COST_AMOUNT_BIGGER_THAN_UNALLOCATED_AMOUNT', code: 300 },
+            {
+              type: 'COST_AMOUNT_BIGGER_THAN_UNALLOCATED_AMOUNT',
+              code: 400,
+            },
           ],
         });
       }
@@ -261,8 +263,8 @@ export default class BillAllocateLandedCost extends BaseController {
           errors: [
             {
               type: 'LANDED_COST_ITEMS_IDS_NOT_FOUND',
-              code: 200,
               message: 'The given entries ids of purchase invoice not found.',
+              code: 500,
             },
           ],
         });
@@ -272,8 +274,8 @@ export default class BillAllocateLandedCost extends BaseController {
           errors: [
             {
               type: 'BILL_LANDED_COST_NOT_FOUND',
-              code: 200,
               message: 'The given bill located landed cost not found.',
+              code: 600,
             },
           ],
         });
