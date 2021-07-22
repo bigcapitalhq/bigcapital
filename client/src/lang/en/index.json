@@ -1133,5 +1133,8 @@
   "transaction_line":"Transaction line",
   "allocation_method":"Allocation method",
   "valuation":"Valuation",
-  "select_transaction":"Select transaction account"
+  "select_transaction":"Select transaction account",
+  "details":"Details",
+  "located_landed_cost":"Located Landed Cost",
+  "delete_transaction":"Delete transaction"
 }

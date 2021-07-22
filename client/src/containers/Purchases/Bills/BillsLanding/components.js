@@ -20,7 +20,14 @@ import moment from 'moment';
  * Actions menu.
  */
 export function ActionsMenu({
-  payload: { onEdit, onOpen, onDelete, onQuick, onAllocateLandedCost },
+  payload: {
+    onEdit,
+    onOpen,
+    onDelete,
+    onQuick,
+    onViewDetails,
+    onAllocateLandedCost,
+  },
   row: { original },
 }) {
   return (
@@ -28,6 +35,7 @@ export function ActionsMenu({
       <MenuItem
         icon={<Icon icon="reader-18" />}
         text={intl.get('view_details')}
+        onClick={safeCallback(onViewDetails, original)}
       />
       <MenuDivider />
       <MenuItem

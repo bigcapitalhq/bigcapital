@@ -66,6 +66,30 @@ export default function AllocateLandedCostEntriesTable({
       rate: '100000',
       amount: '400',
     },
+    {
+      item_id: 'ITEM',
+      quantity: '30000',
+      rate: '100000',
+      amount: '400',
+    },
+    {
+      item_id: 'ITEM',
+      quantity: '30000',
+      rate: '100000',
+      amount: '400',
+    },
+    {
+      item_id: 'ITEM',
+      quantity: '30000',
+      rate: '100000',
+      amount: '400',
+    },
+    {
+      item_id: 'ITEM',
+      quantity: '30000',
+      rate: '100000',
+      amount: '400',
+    },
   ];
 
   return <DataTableEditable columns={columns} data={LL} />;

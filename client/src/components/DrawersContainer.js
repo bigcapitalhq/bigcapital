@@ -6,6 +6,7 @@ import PaymentReceiveDrawer from 'containers/Sales/PaymentReceives/PaymentDetail
 import AccountDrawer from 'containers/Drawers/AccountDrawer';
 import ManualJournalDrawer from 'containers/Drawers/ManualJournalDrawer';
 import ExpenseDrawer from 'containers/Drawers/ExpenseDrawer';
+import BillDrawer from 'containers/Drawers/BillDrawer';
 
 export default function DrawersContainer() {
   return (
@@ -17,6 +18,7 @@ export default function DrawersContainer() {
       <AccountDrawer name={'account-drawer'} />
       <ManualJournalDrawer name={'journal-drawer'} />
       <ExpenseDrawer name={'expense-drawer'} />
+      <BillDrawer name={'bill-drawer'} />
     </div>
   );
 }

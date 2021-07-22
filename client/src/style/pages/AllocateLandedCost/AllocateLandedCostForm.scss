@@ -19,12 +19,13 @@
 
   .bigcapital-datatable {
     .table {
-      max-height: 300px;
+      // max-height: 300px;
       border: 1px solid #d1dee2;
       min-width: auto;
 
       .tbody,
       .tbody-inner {
+        height: auto;
         scrollbar-width: none;
         &::-webkit-scrollbar {
           display: none;

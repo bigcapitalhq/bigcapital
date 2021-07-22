@@ -1,0 +1,81 @@
+@import '../../Base.scss';
+
+.bill-drawer {
+  .bp3-tabs {
+    .bp3-tab-list {
+      position: relative;
+
+      &:before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        background: #f0f0f0;
+      }
+
+      > *:not(:last-child) {
+        margin-right: 25px;
+      }
+
+      &.bp3-large > .bp3-tab {
+        font-size: 15px;
+        color: #555;
+        margin: 0 0.8rem;
+
+        &[aria-selected='true'],
+        &:not([aria-disabled='true']):hover {
+          color: $pt-link-color;
+        }
+      }
+    }
+  }
+
+  .bigcapital-datatable {
+    .table {
+      max-height: 500px;
+      border: 1px solid #d1dee2;
+      min-width: auto;
+      margin: 12px;
+
+      .tbody,
+      .tbody-inner {
+        height: auto;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+      .tbody {
+        .tr .td {
+          padding: 0.8rem;
+        }
+      }
+    }
+  }
+}
+
+.bp3-drawer.bp3-position-right {
+  bottom: 0;
+  right: 0;
+  top: 0;
+  overflow: auto;
+  height: 100%;
+
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .bp3-drawer-header {
+    margin-bottom: 2px;
+    box-shadow: (0, 0, 0);
+    background-color: #6a7993;
+
+    .bp3-heading,
+    .bp3-icon {
+      color: white;
+    }
+  }
+}
