@@ -36,6 +36,8 @@ import Media from 'models/Media';
 import MediaLink from 'models/MediaLink';
 import InventoryAdjustment from 'models/InventoryAdjustment';
 import InventoryAdjustmentEntry from 'models/InventoryAdjustmentEntry';
+import BillLandedCost from 'models/BillLandedCost';
+import BillLandedCostEntry from 'models/BillLandedCostEntry';
 
 export default (knex) => {
   const models = {
@@ -75,6 +77,8 @@ export default (knex) => {
     Contact,
     InventoryAdjustment,
     InventoryAdjustmentEntry,
+    BillLandedCost,
+    BillLandedCostEntry
   };
   return mapValues(models, (model) => model.bindKnex(knex));
 }

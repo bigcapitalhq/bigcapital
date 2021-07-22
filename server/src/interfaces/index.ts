@@ -53,6 +53,7 @@ export * from './Table';
 export * from './Ledger';
 export * from './CashFlow';
 export * from './InventoryDetails';
+export * from './LandedCost';
 
 export interface I18nService {
   __: (input: string) => string;

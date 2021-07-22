@@ -40,7 +40,8 @@ import { ERRORS } from './constants';
 @Service('Bills')
 export default class BillsService
   extends SalesInvoicesCost
-  implements IBillsService {
+  implements IBillsService
+{
   @Inject()
   inventoryService: InventoryService;
 
@@ -100,7 +101,7 @@ export default class BillsService
    * @param {number} tenantId -
    * @param {number} billId -
    */
-  private async getBillOrThrowError(tenantId: number, billId: number) {
+  public async getBillOrThrowError(tenantId: number, billId: number) {
     const { Bill } = this.tenancy.models(tenantId);
 
     this.logger.info('[bill] trying to get bill.', { tenantId, billId });
@@ -195,6 +196,28 @@ export default class BillsService
   }
 
   /**
+   * Retrieve the bill entries total.
+   * @param {IItemEntry[]} entries
+   * @returns {number}
+   */
+  private getBillEntriesTotal(tenantId: number, entries: IItemEntry[]): number {
+    const { ItemEntry } = this.tenancy.models(tenantId);
+
+    return sumBy(entries, (e) => ItemEntry.calcAmount(e));
+  }
+
+  /**
+   * Retrieve the bill landed cost amount.
+   * @param {IBillDTO} billDTO
+   * @returns {number}
+   */
+  private getBillLandedCostAmount(tenantId: number, billDTO: IBillDTO): number {
+    const costEntries = billDTO.entries.filter((entry) => entry.landedCost);
+
+    return this.getBillEntriesTotal(tenantId, costEntries);
+  }
+
+  /**
    * Converts create bill DTO to model.
    * @param {number} tenantId
    * @param {IBillDTO} billDTO
@@ -210,6 +233,9 @@ export default class BillsService
     const { ItemEntry } = this.tenancy.models(tenantId);
 
     const amount = sumBy(billDTO.entries, (e) => ItemEntry.calcAmount(e));
+
+    // Retrieve the landed cost amount from landed cost entries.
+    const landedCostAmount = this.getBillLandedCostAmount(tenantId, billDTO);
 
     // Bill number from DTO or from auto-increment.
     const billNumber = billDTO.billNumber || oldBill?.billNumber;
@@ -234,6 +260,7 @@ export default class BillsService
         'dueDate',
       ]),
       amount,
+      landedCostAmount,
       currencyCode: vendor.currencyCode,
       billNumber,
       entries,
@@ -498,7 +525,7 @@ export default class BillsService
     const bill = await Bill.query()
       .findById(billId)
       .withGraphFetched('vendor')
-      .withGraphFetched('entries');
+      .withGraphFetched('entries.item');
 
     if (!bill) {
       throw new ServiceError(ERRORS.BILL_NOT_FOUND);
@@ -538,10 +565,11 @@ export default class BillsService
     override?: boolean
   ): Promise<void> {
     // Loads the inventory items entries of the given sale invoice.
-    const inventoryEntries = await this.itemsEntriesService.filterInventoryEntries(
-      tenantId,
-      bill.entries
-    );
+    const inventoryEntries =
+      await this.itemsEntriesService.filterInventoryEntries(
+        tenantId,
+        bill.entries
+      );
     const transaction = {
       transactionId: bill.id,
       transactionType: 'Bill',

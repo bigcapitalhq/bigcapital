@@ -15,6 +15,8 @@ exports.up = function(knex) {
     table.integer('sell_account_id').unsigned().references('id').inTable('accounts');
     table.integer('cost_account_id').unsigned().references('id').inTable('accounts');
 
+    table.boolean('landed_cost').defaultTo(false);
+    table.decimal('allocated_cost_amount', 13, 3);
     table.timestamps();
   });
 };

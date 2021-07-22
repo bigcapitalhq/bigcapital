@@ -347,7 +347,7 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  handleServiceErrors(
+  private handleServiceErrors(
     error: Error,
     req: Request,
     res: Response,

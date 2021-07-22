@@ -111,6 +111,7 @@ export default class ExpensesController extends BaseController {
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('categories.*.landed_cost').optional().isBoolean().toBoolean(),
     ];
   }
 
@@ -251,11 +252,8 @@ export default class ExpensesController extends BaseController {
     }
 
     try {
-      const {
-        expenses,
-        pagination,
-        filterMeta,
-      } = await this.expensesService.getExpensesList(tenantId, filter);
+      const { expenses, pagination, filterMeta } =
+        await this.expensesService.getExpensesList(tenantId, filter);
 
       return res.status(200).send({
         expenses,
@@ -343,6 +341,11 @@ export default class ExpensesController extends BaseController {
       if (error.errorType === 'contact_not_found') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'CONTACT_NOT_FOUND', code: 800 }],
+        });
+      }
+      if (error.errorType === 'EXPENSE_HAS_ASSOCIATED_LANDED_COST') {
+        return res.status(400).send({
+          errors: [{ type: 'EXPENSE_HAS_ASSOCIATED_LANDED_COST', code: 900 }],
         });
       }
     }

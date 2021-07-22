@@ -10,6 +10,21 @@ export default class ExpenseCategory extends TenantModel {
   }
 
   /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return ['unallocatedLandedCost'];
+  }
+
+  /**
+   * Remain unallocated landed cost.
+   * @return {number}
+   */
+  get unallocatedLandedCost() {
+    return Math.max(this.amount - this.allocatedCostAmount, 0);
+  }
+
+  /**
    * Relationship mapping.
    */
   static get relationMappings() {

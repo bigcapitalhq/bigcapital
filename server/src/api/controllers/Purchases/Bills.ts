@@ -110,6 +110,10 @@ export default class BillsController extends BaseController {
         .optional({ nullable: true })
         .trim()
         .escape(),
+      check('entries.*.landed_cost')
+        .optional({ nullable: true })
+        .isBoolean()
+        .toBoolean(),
     ];
   }
 
@@ -141,6 +145,10 @@ export default class BillsController extends BaseController {
         .optional({ nullable: true })
         .trim()
         .escape(),
+      check('entries.*.landedCost')
+        .optional({ nullable: true })
+        .isBoolean()
+        .toBoolean(),
     ];
   }
 
@@ -301,11 +309,8 @@ export default class BillsController extends BaseController {
       filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
     }
     try {
-      const {
-        bills,
-        pagination,
-        filterMeta,
-      } = await this.billsService.getBills(tenantId, filter);
+      const { bills, pagination, filterMeta } =
+        await this.billsService.getBills(tenantId, filter);
 
       return res.status(200).send({
         bills,
@@ -397,17 +402,24 @@ export default class BillsController extends BaseController {
       if (error.errorType === 'contact_not_found') {
         return res.boom.badRequest(null, {
           errors: [
-            { type: 'VENDOR_NOT_FOUND', message: 'Vendor not found.', code: 1200 },
+            {
+              type: 'VENDOR_NOT_FOUND',
+              message: 'Vendor not found.',
+              code: 1200,
+            },
           ],
         });
       }
       if (error.errorType === 'BILL_HAS_ASSOCIATED_PAYMENT_ENTRIES') {
         return res.status(400).send({
-          errors: [{
-            type: 'BILL_HAS_ASSOCIATED_PAYMENT_ENTRIES',
-            message: 'Cannot delete bill that has associated payment transactions.',
-            code: 1200
-          }],
+          errors: [
+            {
+              type: 'BILL_HAS_ASSOCIATED_PAYMENT_ENTRIES',
+              message:
+                'Cannot delete bill that has associated payment transactions.',
+              code: 1200,
+            },
+          ],
         });
       }
     }

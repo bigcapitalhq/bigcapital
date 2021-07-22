@@ -17,8 +17,10 @@ export interface IItemEntry {
 
   sellAccountId: number,
   costAccountId: number,
+
+  landedCost?: boolean,
 }
 
 export interface IItemEntryDTO {
-  
+  landedCost?: boolean
 }

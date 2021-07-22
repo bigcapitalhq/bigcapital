@@ -203,5 +203,15 @@ export default {
     onQuickCreated: 'onInventoryAdjustmentQuickCreated',
     onDeleted: 'onInventoryAdjustmentDeleted',
     onPublished: 'onInventoryAdjustmentPublished',
+  },
+
+  /**
+   * Bill landed cost.
+   */
+  billLandedCost: {
+    onCreate: 'onBillLandedCostCreate',
+    onCreated: 'onBillLandedCostCreated',
+    onDelete: 'onBillLandedCostDelete',
+    onDeleted: 'onBillLandedCostDeleted'
   }
 }

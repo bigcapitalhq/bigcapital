@@ -17,6 +17,7 @@ exports.up = function (knex) {
     table.text('sell_description').nullable();
     table.text('purchase_description').nullable();
     table.integer('quantity_on_hand');
+    table.boolean('landed_cost').nullable();
 
     table.text('note').nullable();
     table.boolean('active');

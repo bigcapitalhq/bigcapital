@@ -27,15 +27,20 @@ export interface IExpense {
   userId: number;
   paymentDate: Date;
   payeeId: number;
+  landedCostAmount: number;
+  allocatedCostAmount: number;
+  unallocatedCostAmount: number;
   categories: IExpenseCategory[];
 }
 
 export interface IExpenseCategory {
+  id?: number;
   expenseAccountId: number;
   index: number;
   description: string;
   expenseId: number;
   amount: number;
+  landedCost: boolean;
 }
 
 export interface IExpenseDTO {
@@ -56,6 +61,7 @@ export interface IExpenseCategoryDTO {
   index: number;
   description?: string;
   expenseId: number;
+  landedCost?: boolean;
 }
 
 export interface IExpensesService {
