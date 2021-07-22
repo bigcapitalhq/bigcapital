@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
-import { Tooltip, Button, Intent, Position } from '@blueprintjs/core';
+import { Tooltip, Button, Checkbox, Intent, Position } from '@blueprintjs/core';
 import { Hint, Icon } from 'components';
 import { formattedAmount, safeSumBy } from 'utils';
 import {
@@ -28,7 +28,11 @@ export function ItemHeaderCell() {
  * Item column footer cell.
  */
 export function ItemFooterCell() {
-  return <span><T id={'total'}/></span>;
+  return (
+    <span>
+      <T id={'total'} />
+    </span>
+  );
 }
 
 /**
@@ -87,11 +91,34 @@ export function IndexTableCell({ row: { index } }) {
 }
 
 /**
+ * Landed cost cell.
+ */
+const LandedCostCell = ({
+  row: { index },
+  column: { id },
+  cell: { value: initialValue },
+  data,
+  payload,
+}) => {
+  return <Checkbox minimal={true} className="ml2" />;
+};
+
+/**
+ * Landed cost header cell.
+ */
+const LandedCostHeaderCell = () => {
+  return (
+    <>
+      <T id={'cost'} />
+      <Hint content={''} />
+    </>
+  );
+};
+
+/**
  * Retrieve editable items entries columns.
  */
 export function useEditableItemsEntriesColumns() {
-  
-
   return React.useMemo(
     () => [
       {
@@ -154,6 +181,14 @@ export function useEditableItemsEntriesColumns() {
         disableSortBy: true,
         width: 100,
         className: 'total',
+      },
+      {
+        Header: '',
+        accessor: 'landed_cost',
+        Cell: LandedCostCell,
+        width: 70,
+        disableSortBy: true,
+        disableResizing: true,
       },
       {
         Header: '',

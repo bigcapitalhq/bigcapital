@@ -59,11 +59,7 @@ const LandedCostCell = ({
   data,
   payload,
 }) => {
-  return (
-    <Tooltip content={''} position={Position.RIGHT}>
-      <Checkbox minimal={true} className="ml2" />
-    </Tooltip>
-  );
+  return <Checkbox minimal={true} className="ml2" />;
 };
 
 /**
