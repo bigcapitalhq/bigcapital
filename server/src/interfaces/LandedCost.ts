@@ -82,4 +82,12 @@ export interface IBillLandedCostTransaction {
   allocationMethod: string;
   costAccountId: number,
   description: string;
+
+  allocatedEntries?: IBillLandedCostTransactionEntry[],
 };
+
+export interface IBillLandedCostTransactionEntry {
+  cost: number;
+  entryId: number;
+  billLocatedCostId: number,
+}
