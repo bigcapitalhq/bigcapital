@@ -1136,5 +1136,8 @@
   "select_transaction":"Select transaction account",
   "details":"Details",
   "located_landed_cost":"Located Landed Cost",
-  "delete_transaction":"Delete transaction"
+  "delete_transaction":"Delete transaction",
+  "cannot_delete_bill_that_has_associated_landed_cost_transactions":"Cannot delete bill that has associated landed cost transactions.",
+  "couldn_t_delete_expense_transaction_has_associated_located_landed_cost_transaction":"Couldn't delete expense transaction has associated located landed cost transaction"
+
 }
