@@ -14,7 +14,7 @@ export function ActionsMenu({ row: { original }, payload: { onDelete } }) {
         icon={<Icon icon="trash-16" iconSize={16} />}
         text={intl.get('delete_transaction')}
         intent={Intent.DANGER}
-        // onClick={safeCallback(onDelete, original)}
+        onClick={safeCallback(onDelete, original)}
       />
     </Menu>
   );
@@ -24,7 +24,7 @@ export function useLocatedLandedCostColumns() {
   return React.useMemo(() => [
     {
       Header: intl.get('name'),
-      accessor: 'name',
+      accessor: 'description',
       width: 150,
     },
     {
