@@ -1,34 +1,39 @@
 import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
+import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
 import {
   Classes,
   FormGroup,
   RadioGroup,
   Radio,
   InputGroup,
-  Position,
 } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
 import classNames from 'classnames';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-  handleStringChange,
-} from 'utils';
+import { inputIntent, handleStringChange } from 'utils';
 import { FieldRequiredHint, ListSelect } from 'components';
 import { CLASSES } from 'common/classes';
 import allocateLandedCostType from 'common/allocateLandedCostType';
-import AccountsSuggestField from 'components/AccountsSuggestField';
+import { useLandedCostTransaction } from 'hooks/query';
+
 import AllocateLandedCostFormBody from './AllocateLandedCostFormBody';
+import { getEntriesByTransactionId } from './utils';
 
 /**
  * Allocate landed cost form fields.
  */
 export default function AllocateLandedCostFormFields() {
+  const { values } = useFormikContext();
+
+  const {
+    data: { transactions },
+  } = useLandedCostTransaction(values.transaction_type);
+
+  const transactionEntry = getEntriesByTransactionId(
+    transactions,
+    values.transaction_id,
+  );
+
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------Transaction type -----------*/}
@@ -61,69 +66,64 @@ export default function AllocateLandedCostFormFields() {
         )}
       </FastField>
 
-      {/*------------Transaction date -----------*/}
-      <FastField name={'transaction_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'transaction_date'} />}
-            // labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="transaction_date" />}
-            minimal={true}
-            className={classNames(CLASSES.FILL, 'form-group--transaction_date')}
-            inline={true}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('transaction_date', formattedDate);
-              })}
-              value={tansformDateValue(value)}
-              popoverProps={{
-                position: Position.BOTTOM,
-                minimal: true,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
       {/*------------ Transaction  -----------*/}
-      <FastField name={'transaction_id'}>
-        {({ form, field, meta: { error, touched } }) => (
+      <Field name={'transaction_id'}>
+        {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'transaction_id'} />}
             // labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="transaction_id" />}
-            className={'form-group--transaction_id'}
+            className={classNames(CLASSES.FILL, 'form-group--transaction_id')}
             inline={true}
           >
-            <AccountsSuggestField
-              accounts={[]}
-              onAccountSelected={({ id }) =>
-                form.setFieldValue('transaction_id', id)
-              }
-              inputProps={{
-                placeholder: intl.get('select_transaction'),
+            <ListSelect
+              items={transactions}
+              onItemSelect={({ id }) => {
+                form.setFieldValue('transaction_id', id);
               }}
+              filterable={false}
+              selectedItem={value}
+              selectedItemProp={'id'}
+              textProp={'name'}
+              labelProp={'id'}
+              defaultText={intl.get('select_transaction')}
+              popoverProps={{ minimal: true }}
             />
           </FormGroup>
         )}
-      </FastField>
+      </Field>
+
       {/*------------ Transaction line  -----------*/}
-      <FastField name={'transaction_entry_id'}>
-        {({ form, field, meta: { error, touched } }) => (
+      <Field name={'transaction_entry_id'}>
+        {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'transaction_line'} />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="transaction_entry_id" />}
-            className={'form-group--transaction_entry_id'}
+            className={classNames(
+              CLASSES.FILL,
+              'form-group--transaction_entry_id',
+            )}
             inline={true}
           >
-            <InputGroup {...field} />
+            <ListSelect
+              items={transactionEntry}
+              onItemSelect={({ id }) => {
+                form.setFieldValue('transaction_entry_id', id);
+              }}
+              filterable={false}
+              selectedItem={value}
+              selectedItemProp={'id'}
+              textProp={'name'}
+              labelProp={'id'}
+              defaultText={intl.get('select_transaction')}
+              popoverProps={{ minimal: true }}
+            />
           </FormGroup>
         )}
-      </FastField>
+      </Field>
+
       {/*------------ Amount -----------*/}
       <FastField name={'amount'}>
         {({ form, field, meta: { error, touched } }) => (
@@ -138,6 +138,7 @@ export default function AllocateLandedCostFormFields() {
           </FormGroup>
         )}
       </FastField>
+
       {/*------------ Allocation method -----------*/}
       <FastField name={'allocation_method'}>
         {({ form, field: { value }, meta: { touched, error } }) => (
@@ -158,7 +159,7 @@ export default function AllocateLandedCostFormFields() {
               inline={true}
             >
               <Radio label={<T id={'quantity'} />} value="quantity" />
-              <Radio label={<T id={'valuation'} />} value="valuation" />
+              <Radio label={<T id={'valuation'} />} value="value" />
             </RadioGroup>
           </FormGroup>
         )}
