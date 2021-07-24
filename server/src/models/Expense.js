@@ -39,14 +39,18 @@ export default class Expense extends TenantModel {
   }
 
   static get virtualAttributes() {
-    return ['isPublished', 'unallocatedLandedCost'];
+    return ['isPublished', 'unallocatedCostAmount'];
   }
 
   isPublished() {
     return Boolean(this.publishedAt);
   }
 
-  unallocatedLandedCost() {
+  /**
+   * Retrieve the unallocated cost amount.
+   * @return {number}
+   */
+  get unallocatedCostAmount() {
     return Math.max(this.amount - this.allocatedCostAmount, 0);
   }
 

@@ -1,11 +1,12 @@
 import { Inject, Service } from 'typedi';
 import * as R from 'ramda';
-import { IBill, IExpense, ILandedCostTransaction } from 'interfaces';
+import { Model } from 'objection';
+import { IBill, IExpense, ILandedCostTransaction, ILandedCostTransactionEntry } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import BillLandedCost from './BillLandedCost';
 import ExpenseLandedCost from './ExpenseLandedCost';
 import HasTenancyService from 'services/Tenancy/TenancyService';
-import { ERRORS } from './constants';
+import { ERRORS } from './utils';
 
 @Service()
 export default class TransactionLandedCost {
@@ -27,7 +28,7 @@ export default class TransactionLandedCost {
   public getModel = (
     tenantId: number,
     transactionType: string
-  ): IBill | IExpense => {
+  ): Model => {
     const Models = this.tenancy.models(tenantId);
     const Model = Models[transactionType];
 
@@ -57,5 +58,27 @@ export default class TransactionLandedCost {
         this.expenseLandedCost.transformToLandedCost,
       ),
     )(transaction);
+  }
+
+  /**
+   * Transformes the given expense or bill entry to landed cost transaction entry.
+   * @param {string} transactionType 
+   * @param {} transactionEntry 
+   * @returns {ILandedCostTransactionEntry}
+   */
+  public transformToLandedCostEntry = (
+    transactionType: 'Bill' | 'Expense',
+    transactionEntry,
+  ): ILandedCostTransactionEntry => {
+    return R.compose(
+      R.when(
+        R.always(transactionType === 'Bill'),
+        this.billLandedCost.transformToLandedCostEntry,
+      ),
+      R.when(
+        R.always(transactionType === 'Expense'),
+        this.expenseLandedCost.transformToLandedCostEntry,
+      ),
+    )(transactionEntry);
   }
 }

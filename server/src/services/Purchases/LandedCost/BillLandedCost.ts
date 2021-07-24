@@ -12,8 +12,8 @@ import {
 export default class BillLandedCost {
   /**
    * Retrieve the landed cost transaction from the given bill transaction.
-   * @param {IBill} bill
-   * @returns {ILandedCostTransaction}
+   * @param {IBill} bill - Bill transaction.
+   * @returns {ILandedCostTransaction} - Landed cost transaction.
    */
   public transformToLandedCost = (bill: IBill): ILandedCostTransaction => {
     const number = bill.billNumber || bill.referenceNo;
@@ -49,7 +49,10 @@ export default class BillLandedCost {
       name: billEntry.item.name,
       code: billEntry.item.code,
       amount: billEntry.amount,
+      unallocatedCostAmount: billEntry.unallocatedCostAmount,
+      allocatedCostAmount: billEntry.allocatedCostAmount,
       description: billEntry.description,
+      costAccountId: billEntry.costAccountId || billEntry.item.costAccountId,
     };
   }
 }

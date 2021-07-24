@@ -40,7 +40,6 @@ import Ping from 'api/controllers/Ping';
 import Subscription from 'api/controllers/Subscription';
 import Licenses from 'api/controllers/Subscription/Licenses';
 import InventoryAdjustments from 'api/controllers/Inventory/InventoryAdjustments';
-
 import Setup from 'api/controllers/Setup';
 
 export default () => {

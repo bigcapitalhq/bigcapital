@@ -1,5 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { difference, sumBy } from 'lodash';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from 'decorators/eventDispatcher';
 import BillsService from '../Bills';
 import { ServiceError } from 'exceptions';
 import {
@@ -9,15 +13,14 @@ import {
   ILandedCostItemDTO,
   ILandedCostDTO,
   IBillLandedCostTransaction,
-  IBillLandedCostTransactionEntry,
+  ILandedCostTransaction,
+  ILandedCostTransactionEntry,
 } from 'interfaces';
+import events from 'subscribers/events';
 import InventoryService from 'services/Inventory/Inventory';
 import HasTenancyService from 'services/Tenancy/TenancyService';
-import { ERRORS } from './constants';
-import { transformToMap } from 'utils';
-import JournalPoster from 'services/Accounting/JournalPoster';
-import JournalEntry from 'services/Accounting/JournalEntry';
 import TransactionLandedCost from './TransctionLandedCost';
+import { ERRORS, mergeLocatedWithBillEntries } from './utils';
 
 const CONFIG = {
   COST_TYPES: {
@@ -47,6 +50,9 @@ export default class AllocateLandedCostService {
   @Inject()
   public transactionLandedCost: TransactionLandedCost;
 
+  @EventDispatcher()
+  eventDispatcher: EventDispatcherInterface;
+
   /**
    * Validates allocate cost items association with the purchase invoice entries.
    * @param {IItemEntry[]} purchaseInvoiceEntries
@@ -72,23 +78,23 @@ export default class AllocateLandedCostService {
   };
 
   /**
-   * Saves the bill landed cost model.
-   * @param {number} tenantId
-   * @param {ILandedCostDTO} landedCostDTO
-   * @param {number} purchaseInvoiceId
-   * @returns {Promise<void>}
+   * Transformes DTO to bill landed cost model object.
+   * @param landedCostDTO
+   * @param bill
+   * @param costTransaction
+   * @param costTransactionEntry
+   * @returns
    */
-  private saveBillLandedCostModel = (
-    tenantId: number,
+  private transformToBillLandedCost(
     landedCostDTO: ILandedCostDTO,
-    purchaseInvoiceId: number
-  ): Promise<IBillLandedCost> => {
-    const { BillLandedCost } = this.tenancy.models(tenantId);
+    bill: IBill,
+    costTransaction: ILandedCostTransaction,
+    costTransactionEntry: ILandedCostTransactionEntry
+  ) {
     const amount = sumBy(landedCostDTO.items, 'cost');
 
-    // Inserts the bill landed cost to the storage.
-    return BillLandedCost.query().insertGraph({
-      billId: purchaseInvoiceId,
+    return {
+      billId: bill.id,
       fromTransactionType: landedCostDTO.transactionType,
       fromTransactionId: landedCostDTO.transactionId,
       fromTransactionEntryId: landedCostDTO.transactionEntryId,
@@ -96,8 +102,9 @@ export default class AllocateLandedCostService {
       allocationMethod: landedCostDTO.allocationMethod,
       description: landedCostDTO.description,
       allocateEntries: landedCostDTO.items,
-    });
-  };
+      costAccountId: costTransactionEntry.costAccountId,
+    };
+  }
 
   /**
    * Allocate the landed cost amount to cost transactions.
@@ -147,7 +154,6 @@ export default class AllocateLandedCostService {
       tenantId,
       transactionType
     );
-
     // Decrement the allocate cost amount of cost transaction.
     return Model.query()
       .where('id', transactionId)
@@ -202,12 +208,22 @@ export default class AllocateLandedCostService {
     const entry = await Model.relatedQuery(relation)
       .for(transactionId)
       .findOne('id', transactionEntryId)
-      .where('landedCost', true);
+      .where('landedCost', true)
+      .onBuild((q) => {
+        if (transactionType === 'Bill') {
+          q.withGraphFetched('item');
+        } else if (transactionType === 'Expense') {
+          q.withGraphFetched('expenseAccount');
+        }
+      });
 
     if (!entry) {
       throw new ServiceError(ERRORS.LANDED_COST_ENTRY_NOT_FOUND);
     }
-    return entry;
+    return this.transactionLandedCost.transformToLandedCostEntry(
+      transactionType,
+      entry
+    );
   };
 
   /**
@@ -230,29 +246,9 @@ export default class AllocateLandedCostService {
     unallocatedCost: number,
     amount: number
   ): void => {
-    console.log(unallocatedCost, amount, '123');
-
     if (unallocatedCost < amount) {
       throw new ServiceError(ERRORS.COST_AMOUNT_BIGGER_THAN_UNALLOCATED_AMOUNT);
     }
-  };
-
-  /**
-   * Merges item entry to bill located landed cost entry.
-   * @param {IBillLandedCostTransactionEntry[]} locatedEntries -
-   * @param {IItemEntry[]} billEntries -
-   * @returns {(IBillLandedCostTransactionEntry & { entry: IItemEntry })[]}
-   */
-  private mergeLocatedWithBillEntries = (
-    locatedEntries: IBillLandedCostTransactionEntry[],
-    billEntries: IItemEntry[]
-  ): (IBillLandedCostTransactionEntry & { entry: IItemEntry })[] => {
-    const billEntriesByEntryId = transformToMap(billEntries, 'id');
-
-    return locatedEntries.map((entry) => ({
-      ...entry,
-      entry: billEntriesByEntryId.get(entry.entryId),
-    }));
   };
 
   /**
@@ -266,7 +262,7 @@ export default class AllocateLandedCostService {
     bill: IBill
   ) => {
     // Retrieve the merged allocated entries with bill entries.
-    const allocateEntries = this.mergeLocatedWithBillEntries(
+    const allocateEntries = mergeLocatedWithBillEntries(
       billLandedCost.allocateEntries,
       bill.entries
     );
@@ -304,22 +300,24 @@ export default class AllocateLandedCostService {
    *
    * @param {ILandedCostDTO} landedCostDTO - Landed cost DTO.
    * @param {number} tenantId - Tenant id.
-   * @param {number} purchaseInvoiceId - Purchase invoice id.
+   * @param {number} billId - Purchase invoice id.
    */
   public allocateLandedCost = async (
     tenantId: number,
     allocateCostDTO: ILandedCostDTO,
-    purchaseInvoiceId: number
+    billId: number
   ): Promise<{
     billLandedCost: IBillLandedCost;
   }> => {
+    const { BillLandedCost } = this.tenancy.models(tenantId);
+
     // Retrieve total cost of allocated items.
     const amount = this.getAllocateItemsCostTotal(allocateCostDTO);
 
     // Retrieve the purchase invoice or throw not found error.
-    const purchaseInvoice = await this.billsService.getBillOrThrowError(
+    const bill = await this.billsService.getBillOrThrowError(
       tenantId,
-      purchaseInvoiceId
+      billId
     );
     // Retrieve landed cost transaction or throw not found service error.
     const landedCostTransaction = await this.getLandedCostOrThrowError(
@@ -336,25 +334,36 @@ export default class AllocateLandedCostService {
     );
     // Validates allocate cost items association with the purchase invoice entries.
     this.validateAllocateCostItems(
-      purchaseInvoice.entries,
+      bill.entries,
       allocateCostDTO.items
     );
     // Validate the amount of cost with unallocated landed cost.
     this.validateLandedCostEntryAmount(
-      landedCostEntry.unallocatedLandedCost,
+      landedCostEntry.unallocatedCostAmount,
       amount
     );
-    // Save the bill landed cost model.
-    const billLandedCost = await this.saveBillLandedCostModel(
-      tenantId,
+    // Transformes DTO to bill landed cost model object.
+    const billLandedCostObj = this.transformToBillLandedCost(
       allocateCostDTO,
-      purchaseInvoiceId
+      bill,
+      landedCostTransaction,
+      landedCostEntry
     );
+    // Save the bill landed cost model.
+    const billLandedCost = await BillLandedCost.query().insertGraph(
+      billLandedCostObj
+    );
+    // Triggers the event `onBillLandedCostCreated`.
+    await this.eventDispatcher.dispatch(events.billLandedCost.onCreated, {
+      tenantId,
+      billId,
+      billLandedCostId: billLandedCost.id,
+    });
     // Records the inventory transactions.
     await this.recordInventoryTransactions(
       tenantId,
       billLandedCost,
-      purchaseInvoice
+      bill
     );
     // Increment landed cost amount on transaction and entry.
     await this.incrementLandedCostAmount(
@@ -364,53 +373,7 @@ export default class AllocateLandedCostService {
       allocateCostDTO.transactionEntryId,
       amount
     );
-    // Write the landed cost journal entries.
-    // await this.writeJournalEntry(tenantId, billLandedCost, purchaseInvoice);
-
     return { billLandedCost };
-  };
-
-  /**
-   * Write journal entries of the given purchase invoice landed cost.
-   * @param tenantId
-   * @param purchaseInvoice
-   * @param landedCost
-   */
-  private writeJournalEntry = async (
-    tenantId: number,
-    landedCostEntry: any,
-    purchaseInvoice: IBill,
-    landedCost: IBillLandedCost
-  ) => {
-    const journal = new JournalPoster(tenantId);
-    const billEntriesById = purchaseInvoice.entries;
-
-    const commonEntry = {
-      referenceType: 'Bill',
-      referenceId: purchaseInvoice.id,
-      date: purchaseInvoice.billDate,
-      indexGroup: 300,
-    };
-    const costEntry = new JournalEntry({
-      ...commonEntry,
-      credit: landedCost.amount,
-      account: landedCost.costAccountId,
-      index: 1,
-    });
-    journal.credit(costEntry);
-
-    landedCost.allocateEntries.forEach((entry, index) => {
-      const billEntry = billEntriesById[entry.entryId];
-
-      const inventoryEntry = new JournalEntry({
-        ...commonEntry,
-        debit: entry.cost,
-        account: billEntry.item.inventoryAccountId,
-        index: 1 + index,
-      });
-      journal.debit(inventoryEntry);
-    });
-    return journal;
   };
 
   /**
@@ -422,7 +385,7 @@ export default class AllocateLandedCostService {
   public getBillLandedCostOrThrowError = async (
     tenantId: number,
     landedCostId: number
-  ): Promise<IBillLandedCost> => {
+  ): Promise<IBillLandedCostTransaction> => {
     const { BillLandedCost } = this.tenancy.models(tenantId);
 
     // Retrieve the bill landed cost model.
@@ -462,7 +425,7 @@ export default class AllocateLandedCostService {
    * - Delete the associated inventory transactions.
    * - Decrement allocated amount of landed cost transaction and entry.
    * - Revert journal entries.
-   *
+   * ----------------------------------
    * @param {number} tenantId - Tenant id.
    * @param {number} landedCostId - Landed cost id.
    * @return {Promise<void>}
@@ -481,6 +444,12 @@ export default class AllocateLandedCostService {
     // Delete landed cost transaction with assocaited locate entries.
     await this.deleteLandedCost(tenantId, landedCostId);
 
+    // Triggers the event `onBillLandedCostCreated`.
+    await this.eventDispatcher.dispatch(events.billLandedCost.onDeleted, {
+      tenantId,
+      billLandedCostId: oldBillLandedCost.id,
+      billId: oldBillLandedCost.billId,
+    });
     // Removes the inventory transactions.
     await this.removeInventoryTransactions(tenantId, landedCostId);
 

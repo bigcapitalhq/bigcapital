@@ -1,26 +1,29 @@
-
 export type IItemEntryTransactionType = 'SaleInvoice' | 'Bill' | 'SaleReceipt';
 
 export interface IItemEntry {
-  id?: number,
+  id?: number;
 
-  referenceType: string,
-  referenceId: number,
+  referenceType: string;
+  referenceId: number;
 
-  index: number,
+  index: number;
 
-  itemId: number,
-  description: string,
-  discount: number,
-  quantity: number,
-  rate: number,
+  itemId: number;
+  description: string;
+  discount: number;
+  quantity: number;
+  rate: number;
+  amount: number;
 
-  sellAccountId: number,
-  costAccountId: number,
+  landedCost: number;
+  allocatedCostAmount: number;
+  unallocatedCostAmount: number;
 
-  landedCost?: boolean,
+  sellAccountId: number;
+  costAccountId: number;
 }
 
 export interface IItemEntryDTO {
-  landedCost?: boolean
+  id?: number,
+  landedCost?: boolean;
 }

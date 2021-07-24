@@ -48,6 +48,9 @@ export default class ExpenseLandedCost {
       code: expenseEntry.expenseAccount.code,
       amount: expenseEntry.amount,
       description: expenseEntry.description,
+      allocatedCostAmount: expenseEntry.allocatedCostAmount,
+      unallocatedCostAmount: expenseEntry.unallocatedCostAmount,
+      costAccountId: expenseEntry.expenseAccount.id,
     };
   };
 }

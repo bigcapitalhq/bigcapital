@@ -40,6 +40,9 @@ export interface IExpenseCategory {
   description: string;
   expenseId: number;
   amount: number;
+
+  allocatedCostAmount: number;
+  unallocatedCostAmount: number;
   landedCost: boolean;
 }
 
@@ -57,8 +60,10 @@ export interface IExpenseDTO {
 }
 
 export interface IExpenseCategoryDTO {
+  id?: number;
   expenseAccountId: number;
   index: number;
+  amount: number;
   description?: string;
   expenseId: number;
   landedCost?: boolean;

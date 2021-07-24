@@ -1,4 +1,5 @@
 import { Model } from 'objection';
+import { lowerCase } from 'lodash';
 import TenantModel from 'models/TenantModel';
 
 export default class BillLandedCost extends TenantModel {
@@ -14,6 +15,25 @@ export default class BillLandedCost extends TenantModel {
    */
   get timestamps() {
     return ['createdAt', 'updatedAt'];
+  }
+
+  /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return ['allocationMethodFormatted'];
+  }
+
+  /**
+   * Allocation method formatted.
+   */
+  get allocationMethodFormatted() {
+    const allocationMethod = lowerCase(this.allocationMethod);
+    const keyLabelsPairs = {
+      value: 'Value',
+      quantity: 'Quantity',
+    };
+    return keyLabelsPairs[allocationMethod] || '';
   }
 
   /**

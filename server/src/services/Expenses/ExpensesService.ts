@@ -23,6 +23,7 @@ import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
 import ContactsService from 'services/Contacts/ContactsService';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_ROOT_TYPE } from 'data/AccountTypes';
+import EntriesService from 'services/Entries';
 
 const ERRORS = {
   EXPENSE_NOT_FOUND: 'expense_not_found',
@@ -52,6 +53,9 @@ export default class ExpensesService implements IExpensesService {
 
   @Inject()
   contactsService: ContactsService;
+
+  @Inject()
+  entriesService: EntriesService;
 
   /**
    * Retrieve the payment account details or returns not found server error in case the
@@ -251,14 +255,16 @@ export default class ExpensesService implements IExpensesService {
    * @returns {IExpense|ServiceError}
    */
   private async getExpenseOrThrowError(tenantId: number, expenseId: number) {
-    const { expenseRepository } = this.tenancy.repositories(tenantId);
+    const { Expense } = this.tenancy.models(tenantId);
 
     this.logger.info('[expense] trying to get the given expense.', {
       tenantId,
       expenseId,
     });
     // Retrieve the given expense by id.
-    const expense = await expenseRepository.findOneById(expenseId);
+    const expense = await Expense.query()
+      .findById(expenseId)
+      .withGraphFetched('categories');
 
     if (!expense) {
       this.logger.info('[expense] the given expense not found.', {
@@ -459,36 +465,47 @@ export default class ExpensesService implements IExpensesService {
     const { expenseRepository } = this.tenancy.repositories(tenantId);
     const oldExpense = await this.getExpenseOrThrowError(tenantId, expenseId);
 
-    // - Validate payment account existance on the storage.
+    // Validate payment account existance on the storage.
     const paymentAccount = await this.getPaymentAccountOrThrowError(
       tenantId,
       expenseDTO.paymentAccountId
     );
-    // - Validate expense accounts exist on the storage.
+    // Validate expense accounts exist on the storage.
     const expensesAccounts = await this.getExpensesAccountsOrThrowError(
       tenantId,
       this.mapExpensesAccountsIdsFromDTO(expenseDTO)
     );
-    // - Validate payment account type.
+    // Validate payment account type.
     await this.validatePaymentAccountType(tenantId, paymentAccount);
 
-    // - Validate expenses accounts type.
+    // Validate expenses accounts type.
     await this.validateExpensesAccountsType(tenantId, expensesAccounts);
 
-    // - Validate the expense payee contact id existance on storage.
+    // Validate the expense payee contact id existance on storage.
     if (expenseDTO.payeeId) {
       await this.contactsService.getContactByIdOrThrowError(
         tenantId,
         expenseDTO.payeeId
       );
     }
-    // - Validate the given expense categories not equal zero.
+    // Validate the given expense categories not equal zero.
     this.validateCategoriesNotEqualZero(expenseDTO);
 
-    // - Update the expense on the storage.
+    // Update the expense on the storage.
     const expenseObj = this.expenseDTOToModel(expenseDTO);
 
-    // - Upsert the expense object with expense entries.
+    // Validate expense entries that have allocated landed cost cannot be deleted.
+    this.entriesService.validateLandedCostEntriesNotDeleted(
+      oldExpense.categories,
+      expenseDTO.categories,
+    );
+    // Validate expense entries that have allocated cost amount should be bigger than amount.
+    this.entriesService.validateLocatedCostEntriesSmallerThanNewEntries(
+      oldExpense.categories,
+      expenseDTO.categories,
+    );
+
+    // Upsert the expense object with expense entries.
     const expense = await expenseRepository.upsertGraph({
       id: expenseId,
       ...expenseObj,

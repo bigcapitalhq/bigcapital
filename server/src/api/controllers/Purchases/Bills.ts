@@ -145,7 +145,7 @@ export default class BillsController extends BaseController {
         .optional({ nullable: true })
         .trim()
         .escape(),
-      check('entries.*.landedCost')
+      check('entries.*.landed_cost')
         .optional({ nullable: true })
         .isBoolean()
         .toBoolean(),
@@ -347,7 +347,7 @@ export default class BillsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  handleServiceError(
+  private handleServiceError(
     error: Error,
     req: Request,
     res: Response,
@@ -418,6 +418,40 @@ export default class BillsController extends BaseController {
               message:
                 'Cannot delete bill that has associated payment transactions.',
               code: 1200,
+            },
+          ],
+        });
+      }
+      if (error.errorType === 'BILL_HAS_ASSOCIATED_LANDED_COSTS') {
+        return res.status(400).send({
+          errors: [
+            {
+              type: 'BILL_HAS_ASSOCIATED_LANDED_COSTS',
+              message:
+                'Cannot delete bill that has associated landed cost transactions.',
+              code: 1300,
+            },
+          ],
+        });
+      }
+      if (error.errorType === 'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED') {
+        return res.status(400).send({
+          errors: [
+            {
+              type: 'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
+              code: 1400,
+              message:
+                'Bill entries that have landed cost type can not be deleted.',
+            },
+          ],
+        });
+      }
+      if (error.errorType === 'LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES') {
+        return res.status(400).send({
+          errors: [
+            {
+              type: 'LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES',
+              code: 1500,
             },
           ],
         });

@@ -64,7 +64,10 @@ export interface ILandedCostTransactionEntry {
   name: string;
   code: string;
   amount: number;
+  unallocatedCostAmount: number;
+  allocatedCostAmount: number;
   description: string;
+  costAccountId: number;
 }
 
 interface ILandedCostEntry {
@@ -83,7 +86,7 @@ export interface IBillLandedCostTransaction {
   costAccountId: number,
   description: string;
 
-  allocatedEntries?: IBillLandedCostTransactionEntry[],
+  allocateEntries?: IBillLandedCostTransactionEntry[],
 };
 
 export interface IBillLandedCostTransactionEntry {

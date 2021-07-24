@@ -64,9 +64,9 @@ export default class BillAllocateLandedCost extends BaseController {
 
   /**
    * Retrieve the landed cost transactions of the given query.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
+   * @param {Request} req - Request
+   * @param {Response} res - Response.
+   * @param {NextFunction} next - Next function.
    */
   private async getLandedCostTransactions(
     req: Request,
@@ -192,10 +192,7 @@ export default class BillAllocateLandedCost extends BaseController {
           billId
         );
 
-      return res.status(200).send({
-        billId,
-        transactions,
-      });
+      return res.status(200).send({ billId, transactions });
     } catch (error) {
       next(error);
     }

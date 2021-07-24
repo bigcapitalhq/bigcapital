@@ -1,3 +1,4 @@
+import { Model } from 'objection';
 import TenantModel from 'models/TenantModel';
 
 export default class BillLandedCostEntry extends TenantModel {
@@ -6,5 +7,26 @@ export default class BillLandedCostEntry extends TenantModel {
    */
   static get tableName() {
     return 'bill_located_cost_entries';
+  }
+
+  /**
+   * Relationship mapping.
+   */
+  static get relationMappings() {
+    const ItemEntry = require('models/ItemEntry');
+
+    return {
+      itemEntry: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: ItemEntry.default,
+        join: {
+          from: 'bill_located_cost_entries.entryId',
+          to: 'items_entries.referenceId',
+        },
+        filter(builder) {
+          builder.where('reference_type', 'Bill');
+        },
+      },
+    };
   }
 }

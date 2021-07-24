@@ -28,7 +28,8 @@ exports.up = function (knex) {
       .inTable('accounts');
 
     table.boolean('landed_cost').defaultTo(false);
-    table.decimal('allocated_cost_amount', 13, 3);
+    table.decimal('allocated_cost_amount', 13, 3).defaultTo(0);
+
     table.timestamps();
   });
 };
