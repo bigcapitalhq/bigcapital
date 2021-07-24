@@ -17,16 +17,16 @@ const ERRORS = {
 export default class EntriesService {
   /**
    * Validates bill entries that has allocated landed cost amount not deleted.
-   * @param {IItemEntry[]} oldBillEntries -
+   * @param {IItemEntry[]} oldCommonEntries -
    * @param {IItemEntry[]} newBillEntries -
    */
   public getLandedCostEntriesDeleted(
-    oldBillEntries: ICommonLandedCostEntry[],
-    newBillEntriesDTO: ICommonLandedCostEntryDTO[]
+    oldCommonEntries: ICommonLandedCostEntry[],
+    newCommonEntriesDTO: ICommonLandedCostEntryDTO[]
   ): ICommonLandedCostEntry[] {
-    const newBillEntriesById = transformToMap(newBillEntriesDTO, 'id');
+    const newBillEntriesById = transformToMap(newCommonEntriesDTO, 'id');
 
-    return oldBillEntries.filter((entry) => {
+    return oldCommonEntries.filter((entry) => {
       const newEntry = newBillEntriesById.get(entry.id);
 
       if (entry.allocatedCostAmount > 0 && typeof newEntry === 'undefined') {
@@ -38,16 +38,16 @@ export default class EntriesService {
 
   /**
    * Validates the bill entries that have located cost amount should not be deleted.
-   * @param {IItemEntry[]} oldBillEntries - Old bill entries.
+   * @param {IItemEntry[]} oldCommonEntries - Old bill entries.
    * @param {IItemEntryDTO[]} newBillEntries - New DTO bill entries.
    */
   public validateLandedCostEntriesNotDeleted(
-    oldBillEntries: ICommonLandedCostEntry[],
-    newBillEntriesDTO: ICommonLandedCostEntryDTO[]
+    oldCommonEntries: ICommonLandedCostEntry[],
+    newCommonEntriesDTO: ICommonLandedCostEntryDTO[]
   ): void {
     const entriesDeleted = this.getLandedCostEntriesDeleted(
-      oldBillEntries,
-      newBillEntriesDTO
+      oldCommonEntries,
+      newCommonEntriesDTO
     );
     if (entriesDeleted.length > 0) {
       throw new ServiceError(ERRORS.ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED);
@@ -56,16 +56,16 @@ export default class EntriesService {
 
   /**
    * Validate allocated cost amount entries should be smaller than new entries amount.
-   * @param {IItemEntry[]} oldBillEntries - Old bill entries.
+   * @param {IItemEntry[]} oldCommonEntries - Old bill entries.
    * @param {IItemEntryDTO[]} newBillEntries - New DTO bill entries.
    */
   public validateLocatedCostEntriesSmallerThanNewEntries(
-    oldBillEntries: ICommonLandedCostEntry[],
-    newBillEntriesDTO: ICommonLandedCostEntryDTO[]
+    oldCommonEntries: ICommonLandedCostEntry[],
+    newCommonEntriesDTO: ICommonLandedCostEntryDTO[]
   ): void {
-    const oldBillEntriesById = transformToMap(oldBillEntries, 'id');
+    const oldBillEntriesById = transformToMap(oldCommonEntries, 'id');
 
-    newBillEntriesDTO.forEach((entry) => {
+    newCommonEntriesDTO.forEach((entry) => {
       const oldEntry = oldBillEntriesById.get(entry.id);
 
       if (oldEntry && oldEntry.allocatedCostAmount > entry.amount) {

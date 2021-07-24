@@ -13,7 +13,7 @@ import InventoryService from 'services/Inventory/Inventory';
 import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
-import { formatDateFields } from 'utils';
+import { formatDateFields, transformToMap } from 'utils';
 import {
   IBillDTO,
   IBill,
@@ -195,6 +195,36 @@ export default class BillsService
   }
 
   /**
+   * Validate transaction entries that have landed cost type should not be
+   * inventory items.
+   * @param {number} tenantId - 
+   * @param {IItemEntryDTO[]} newEntriesDTO - 
+   */
+  public async validateCostEntriesShouldBeInventoryItems(
+    tenantId: number,
+    newEntriesDTO: IItemEntryDTO[]
+  ) {
+    const { Item } = this.tenancy.models(tenantId);
+
+    const entriesItemsIds = newEntriesDTO.map((e) => e.itemId);
+    const entriesItems = await Item.query().whereIn('id', entriesItemsIds);
+
+    const entriesItemsById = transformToMap(entriesItems, 'id');
+
+    // Filter the landed cost entries that not associated with inventory item.
+    const nonInventoryHasCost = newEntriesDTO.filter((entry) => {
+      const item = entriesItemsById.get(entry.itemId);
+
+      return entry.landedCost && item.type !== 'inventory';
+    });
+    if (nonInventoryHasCost.length > 0) {
+      throw new ServiceError(
+        ERRORS.LANDED_COST_ENTRIES_SHOULD_BE_INVENTORY_ITEMS
+      );
+    }
+  }
+
+  /**
    * Sets the default cost account to the bill entries.
    */
   private setBillEntriesDefaultAccounts(tenantId: number) {
@@ -334,6 +364,10 @@ export default class BillsService
       tenantId,
       billDTO.entries
     );
+    await this.validateCostEntriesShouldBeInventoryItems(
+      tenantId,
+      billDTO.entries,
+    );
     this.logger.info('[bill] trying to create a new bill', {
       tenantId,
       billDTO,
@@ -423,7 +457,7 @@ export default class BillsService
     // Validate landed cost entries that have allocated cost could not be deleted.
     await this.entriesService.validateLandedCostEntriesNotDeleted(
       oldBill.entries,
-      billObj.entries,
+      billObj.entries
     );
     // Validate new landed cost entries should be bigger than new entries.
     await this.entriesService.validateLocatedCostEntriesSmallerThanNewEntries(

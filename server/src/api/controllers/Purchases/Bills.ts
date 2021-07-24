@@ -446,12 +446,26 @@ export default class BillsController extends BaseController {
           ],
         });
       }
-      if (error.errorType === 'LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES') {
+      if (
+        error.errorType === 'LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES'
+      ) {
         return res.status(400).send({
           errors: [
             {
               type: 'LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES',
               code: 1500,
+            },
+          ],
+        });
+      }
+      if (error.errorType === 'LANDED_COST_ENTRIES_SHOULD_BE_INVENTORY_ITEMS') {
+        return res.status(400).send({
+          errors: [
+            {
+              type: 'LANDED_COST_ENTRIES_SHOULD_BE_INVENTORY_ITEMS',
+              message:
+                'Landed cost entries should be only with inventory items.',
+              code: 1600,
             },
           ],
         });

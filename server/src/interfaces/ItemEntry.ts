@@ -25,5 +25,6 @@ export interface IItemEntry {
 
 export interface IItemEntryDTO {
   id?: number,
+  itemId: number;
   landedCost?: boolean;
 }
