@@ -8,10 +8,10 @@ import AllocateLandedCostForm from './AllocateLandedCostForm';
 export default function AllocateLandedCostDialogContent({
   // #ownProps
   dialogName,
-  bill,
+  billId,
 }) {
   return (
-    <AllocateLandedCostDialogProvider billId={bill} dialogName={dialogName}>
+    <AllocateLandedCostDialogProvider billId={billId} dialogName={dialogName}>
       <AllocateLandedCostForm />
     </AllocateLandedCostDialogProvider>
   );

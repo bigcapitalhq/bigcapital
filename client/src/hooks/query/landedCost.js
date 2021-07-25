@@ -21,7 +21,8 @@ export function useCreateLandedCost(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.post(`purchases/landed-cost/bills/${id}/allocate`),
+    ([id, values]) =>
+      apiRequest.post(`purchases/landed-cost/bills/${id}/allocate`, values),
     {
       onSuccess: (res, id) => {
         // Common invalidate queries.

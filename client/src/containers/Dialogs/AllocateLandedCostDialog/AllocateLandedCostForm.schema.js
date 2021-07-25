@@ -8,7 +8,7 @@ const Schema = Yup.object().shape({
   transaction_entry_id: Yup.string().label(intl.get('transaction_line')),
   amount: Yup.number().label(intl.get('amount')),
   allocation_method: Yup.string().trim(),
-  entries: Yup.array().of(
+  items: Yup.array().of(
     Yup.object().shape({
       entry_id: Yup.number().nullable(),
       cost: Yup.number().nullable(),

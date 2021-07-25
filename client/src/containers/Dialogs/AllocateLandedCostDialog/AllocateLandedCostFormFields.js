@@ -8,7 +8,7 @@ import {
   InputGroup,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T, If } from 'components';
 import intl from 'react-intl-universal';
 import { inputIntent, handleStringChange } from 'utils';
 import { FieldRequiredHint, ListSelect } from 'components';
@@ -29,10 +29,11 @@ export default function AllocateLandedCostFormFields() {
     data: { transactions },
   } = useLandedCostTransaction(values.transaction_type);
 
-  const transactionEntry = getEntriesByTransactionId(
+  // Retrieve entries of the given transaction id.
+  const transactionEntries = React.useMemo(() => getEntriesByTransactionId(
     transactions,
     values.transaction_id,
-  );
+  ), [transactions, values.transaction_id]);
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -71,7 +72,7 @@ export default function AllocateLandedCostFormFields() {
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'transaction_id'} />}
-            // labelInfo={<FieldRequiredHint />}
+            labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="transaction_id" />}
             className={classNames(CLASSES.FILL, 'form-group--transaction_id')}
@@ -95,34 +96,37 @@ export default function AllocateLandedCostFormFields() {
       </Field>
 
       {/*------------ Transaction line  -----------*/}
-      <Field name={'transaction_entry_id'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'transaction_line'} />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="transaction_entry_id" />}
-            className={classNames(
-              CLASSES.FILL,
-              'form-group--transaction_entry_id',
-            )}
-            inline={true}
-          >
-            <ListSelect
-              items={transactionEntry}
-              onItemSelect={({ id }) => {
-                form.setFieldValue('transaction_entry_id', id);
-              }}
-              filterable={false}
-              selectedItem={value}
-              selectedItemProp={'id'}
-              textProp={'name'}
-              labelProp={'id'}
-              defaultText={intl.get('select_transaction')}
-              popoverProps={{ minimal: true }}
-            />
-          </FormGroup>
-        )}
-      </Field>
+      <If condition={transactionEntries.length > 0}>
+        <Field name={'transaction_entry_id'}>
+          {({ form, field: { value }, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'transaction_line'} />}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name="transaction_entry_id" />}
+              className={classNames(
+                CLASSES.FILL,
+                'form-group--transaction_entry_id',
+              )}
+              inline={true}
+            >
+              <ListSelect
+                items={transactionEntries}
+                onItemSelect={({ id, amount }) => {
+                  form.setFieldValue('amount', amount)
+                  form.setFieldValue('transaction_entry_id', id);
+                }}
+                filterable={false}
+                selectedItem={value}
+                selectedItemProp={'id'}
+                textProp={'name'}
+                labelProp={'id'}
+                defaultText={intl.get('select_transaction')}
+                popoverProps={{ minimal: true }}
+              />
+            </FormGroup>
+          )}
+        </Field>
+      </If>
 
       {/*------------ Amount -----------*/}
       <FastField name={'amount'}>

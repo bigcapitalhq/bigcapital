@@ -3,7 +3,6 @@ import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import moment from 'moment';
-import { pick, omit } from 'lodash';
 
 import 'style/pages/AllocateLandedCost/AllocateLandedCostForm.scss';
 
@@ -12,8 +11,9 @@ import { AllocateLandedCostFormSchema } from './AllocateLandedCostForm.schema';
 import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogProvider';
 import AllocateLandedCostFormContent from './AllocateLandedCostFormContent';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
 
+// Default form initial values.
 const defaultInitialValues = {
   transaction_type: 'Bill',
   transaction_date: moment(new Date()).format('YYYY-MM-DD'),
@@ -21,10 +21,12 @@ const defaultInitialValues = {
   transaction_entry_id: '',
   amount: '',
   allocation_method: 'quantity',
-  items: {
-    entry_id: '',
-    cost: '',
-  },
+  items: [
+    {
+      entry_id: '',
+      cost: '',
+    },
+  ],
 };
 
 /**
@@ -34,32 +36,36 @@ function AllocateLandedCostForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { items, dialogName, createLandedCostMutate } =
+  const { dialogName, bill, billId, createLandedCostMutate } =
     useAllocateLandedConstDialogContext();
 
   // Initial form values.
   const initialValues = {
     ...defaultInitialValues,
-    ...items,
+    items: bill.entries.map((entry) => ({
+      ...entry,
+      entry_id: entry.id,
+      cost: '',
+    })),
   };
 
   // Handle form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
     setSubmitting(false);
-    closeDialog(dialogName);
 
-    const entries = [values]
-      .filter((entry) => entry.id && entry.cost)
-      .map((entry) => ({
-        entry_id: entry.id,
-        ...pick(entry, ['cost']),
-      }));
+    // Filters the entries has no cost.
+    const entries = values.items
+      .filter((entry) => entry.entry_id && entry.cost)
+      .map((entry) => transformToForm(entry, defaultInitialValues.items[0]));
 
+    if (entries.length <= 0) {
+      AppToaster.show({ message: 'Something wrong!', intent: Intent.DANGER });
+      return;
+    }
     const form = {
       ...values,
-      // items:{entries},
+      items: entries,
     };
-
     // Handle the request success.
     const onSuccess = (response) => {
       AppToaster.show({
@@ -67,17 +73,15 @@ function AllocateLandedCostForm({
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
+      closeDialog(dialogName);
     };
 
     // Handle the request error.
-    const onError = ({
-      response: {
-        data: { errors },
-      },
-    }) => {
+    const onError = () => {
       setSubmitting(false);
+      AppToaster.show({ message: 'Something went wrong!', intent: Intent.DANGER });
     };
-    createLandedCostMutate(form).then(onSuccess).catch(onError);
+    createLandedCostMutate([billId, form]).then(onSuccess).catch(onError);
   };
 
   return (

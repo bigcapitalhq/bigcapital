@@ -23,14 +23,14 @@ function AllocateLandedCostFloatingActions({
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-        <Button onClick={handleCancelBtnClick} style={{ minWidth: '75px' }}>
+        <Button onClick={handleCancelBtnClick} style={{ minWidth: '85px' }}>
           <T id={'cancel'} />
         </Button>
         <Button
           intent={Intent.PRIMARY}
-          disabled={isSubmitting}
-          style={{ minWidth: '75px' }}
+          style={{ minWidth: '85px' }}
           type="submit"
+          loading={isSubmitting}
         >
           {<T id={'save'} />}
         </Button>

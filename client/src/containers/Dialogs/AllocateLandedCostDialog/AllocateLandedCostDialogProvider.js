@@ -2,9 +2,6 @@ import React from 'react';
 import { DialogContent } from 'components';
 import { useBill, useCreateLandedCost } from 'hooks/query';
 
-import { map, omit, pick } from 'lodash';
-import * as R from 'ramda';
-
 const AllocateLandedCostDialogContext = React.createContext();
 
 /**
@@ -24,21 +21,10 @@ function AllocateLandedCostDialogProvider({
   // Create landed cost mutations.
   const { mutateAsync: createLandedCostMutate } = useCreateLandedCost();
 
-  // const L = [bill].map(({ entries: items }) => ({
-  //   items,
-  // }));
-  // let obj = { oldKey: 1, b: 2, c: 3 };
-  // const { oldKey: newKey, ...rest } = obj;
-  // obj = { newKey, ...rest };
-
-  // const obj = { ...pick(bill, ['entries']).map((index) => index) };
-
-
   // provider payload.
   const provider = {
-    items: {
-      ...pick(bill, ['entries']),
-    },
+    isBillLoading,
+    bill,
     dialogName,
     query,
     createLandedCostMutate,

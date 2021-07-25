@@ -7,20 +7,18 @@ import AllocateLandedCostEntriesTable from './AllocateLandedCostEntriesTable';
 export default function AllocateLandedCostFormBody() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-      <FastField name={'entries'}>
+      <FastField name={'items'}>
         {({
           form: { setFieldValue, values },
           field: { value },
           meta: { error, touched },
         }) => (
-          <>
-            <AllocateLandedCostEntriesTable
-              entries={value}
-              onUpdateData={(newEntries) => {
-                setFieldValue('entries', newEntries);
-              }}
-            />
-          </>
+          <AllocateLandedCostEntriesTable
+            entries={value}
+            onUpdateData={(newEntries) => {
+              setFieldValue('items', newEntries);
+            }}
+          />
         )}
       </FastField>
     </div>

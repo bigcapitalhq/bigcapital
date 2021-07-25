@@ -10,8 +10,7 @@ export default function AllocateLandedCostEntriesTable({
   onUpdateData,
   entries,
 }) {
-
-  // allocate landed cost entries table columns.
+  // Allocate landed cost entries table columns.
   const columns = React.useMemo(
     () => [
       {

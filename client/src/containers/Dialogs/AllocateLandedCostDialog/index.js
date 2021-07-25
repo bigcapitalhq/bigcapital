@@ -25,7 +25,7 @@ function AllocateLandedCostDialog({
     >
       <DialogSuspense>
         <AllocateLandedCostDialogContent
-          bill={payload.billId}
+          billId={payload.billId}
           dialogName={dialogName}
         />
       </DialogSuspense>
