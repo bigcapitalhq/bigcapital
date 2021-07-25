@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { DataTable, MoneyFieldCell, DataTableEditable } from 'components';
+import { MoneyFieldCell, DataTableEditable } from 'components';
 import { compose, updateTableRow } from 'utils';
 
 /**
@@ -10,12 +10,13 @@ export default function AllocateLandedCostEntriesTable({
   onUpdateData,
   entries,
 }) {
+
   // allocate landed cost entries table columns.
   const columns = React.useMemo(
     () => [
       {
         Header: intl.get('item'),
-        accessor: 'item_id',
+        accessor: 'item.name',
         disableSortBy: true,
         width: '150',
       },
@@ -59,38 +60,14 @@ export default function AllocateLandedCostEntriesTable({
     [onUpdateData, entries],
   );
 
-  const LL = [
-    {
-      item_id: 'ITEM',
-      quantity: '30000',
-      rate: '100000',
-      amount: '400',
-    },
-    {
-      item_id: 'ITEM',
-      quantity: '30000',
-      rate: '100000',
-      amount: '400',
-    },
-    {
-      item_id: 'ITEM',
-      quantity: '30000',
-      rate: '100000',
-      amount: '400',
-    },
-    {
-      item_id: 'ITEM',
-      quantity: '30000',
-      rate: '100000',
-      amount: '400',
-    },
-    {
-      item_id: 'ITEM',
-      quantity: '30000',
-      rate: '100000',
-      amount: '400',
-    },
-  ];
-
-  return <DataTableEditable columns={columns} data={LL} />;
+  return (
+    <DataTableEditable
+      columns={columns}
+      data={entries}
+      payload={{
+        errors: [],
+        updateData: handleUpdateData,
+      }}
+    />
+  );
 }

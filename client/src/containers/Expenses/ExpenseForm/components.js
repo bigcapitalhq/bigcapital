@@ -7,6 +7,7 @@ import {
   InputGroupCell,
   MoneyFieldCell,
   AccountsListFieldCell,
+  CheckBoxFieldCell,
 } from 'components/DataTableCells';
 import { formattedAmount, safeSumBy } from 'utils';
 
@@ -47,19 +48,6 @@ const ActionsCellRenderer = ({
       />
     </Tooltip>
   );
-};
-
-/**
- * Landed cost cell.
- */
-const LandedCostCell = ({
-  row: { index },
-  column: { id },
-  cell: { value: initialValue },
-  data,
-  payload,
-}) => {
-  return <Checkbox minimal={true} className="ml2" />;
 };
 
 /**
@@ -142,7 +130,7 @@ export function useExpenseFormTableColumns() {
       {
         Header: LandedCostHeaderCell,
         accessor: 'landed_cost',
-        Cell: LandedCostCell,
+        Cell: CheckBoxFieldCell,
         disableSortBy: true,
         disableResizing: true,
         width: 70,

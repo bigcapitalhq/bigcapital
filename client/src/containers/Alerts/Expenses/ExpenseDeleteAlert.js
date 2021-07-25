@@ -21,11 +21,7 @@ function ExpenseDeleteAlert({
   isOpen,
   payload: { expenseId },
 }) {
-  
-  const {
-    mutateAsync: deleteExpenseMutate,
-    isLoading,
-  } = useDeleteExpense();
+  const { mutateAsync: deleteExpenseMutate, isLoading } = useDeleteExpense();
 
   // Handle cancel expense journal.
   const handleCancelExpenseDelete = () => {
@@ -34,17 +30,34 @@ function ExpenseDeleteAlert({
 
   // Handle confirm delete expense.
   const handleConfirmExpenseDelete = () => {
-    deleteExpenseMutate(expenseId).then(() => {
-      AppToaster.show({
-        message: intl.get(
-          'the_expense_has_been_deleted_successfully',
-          { number: expenseId },
-        ),
-        intent: Intent.SUCCESS,
-      });
-    }).finally(() => {
-      closeAlert('expense-delete');
-    });
+    deleteExpenseMutate(expenseId)
+      .then(() => {
+        AppToaster.show({
+          message: intl.get('the_expense_has_been_deleted_successfully', {
+            number: expenseId,
+          }),
+          intent: Intent.SUCCESS,
+        });
+        closeAlert('expense-delete');
+      })
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          if (
+            errors.find((e) => e.type === 'EXPENSE_HAS_ASSOCIATED_LANDED_COST')
+          ) {
+            AppToaster.show({
+              intent: Intent.DANGER,
+              message: intl.get(
+                'couldn_t_delete_expense_transaction_has_associated_located_landed_cost_transaction',
+              ),
+            });
+          }
+        },
+      );
   };
 
   return (

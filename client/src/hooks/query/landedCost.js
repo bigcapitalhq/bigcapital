@@ -63,8 +63,11 @@ export function useLandedCostTransaction(query, props) {
       params: { transaction_type: query },
     },
     {
-      select: (res) => res.data.transactions,
-      defaultData: [],
+      select: (res) => res.data,
+
+      defaultData: {
+        transactions: [],
+      },
       ...props,
     },
   );

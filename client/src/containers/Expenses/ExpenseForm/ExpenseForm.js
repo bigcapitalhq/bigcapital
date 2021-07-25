@@ -79,7 +79,10 @@ function ExpenseForm({
     }
     const categories = values.categories.filter(
       (category) =>
-        category.amount && category.index && category.expense_account_id,
+        category.amount &&
+        category.index &&
+        category.expense_account_id &&
+        category.landed_cost,
     );
 
     const form = {

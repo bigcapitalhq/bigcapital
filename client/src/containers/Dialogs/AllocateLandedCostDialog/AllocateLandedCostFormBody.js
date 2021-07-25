@@ -13,12 +13,14 @@ export default function AllocateLandedCostFormBody() {
           field: { value },
           meta: { error, touched },
         }) => (
-          <AllocateLandedCostEntriesTable
-            entries={value}
-            onUpdateData={(newEntries) => {
-              setFieldValue('entries', newEntries);
-            }}
-          />
+          <>
+            <AllocateLandedCostEntriesTable
+              entries={value}
+              onUpdateData={(newEntries) => {
+                setFieldValue('entries', newEntries);
+              }}
+            />
+          </>
         )}
       </FastField>
     </div>

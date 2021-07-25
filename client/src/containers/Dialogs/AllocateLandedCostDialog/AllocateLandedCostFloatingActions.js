@@ -13,7 +13,6 @@ function AllocateLandedCostFloatingActions({
 }) {
   // Formik context.
   const { isSubmitting } = useFormikContext();
-
   const { dialogName } = useAllocateLandedConstDialogContext();
 
   // Handle cancel button click.

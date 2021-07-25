@@ -51,4 +51,14 @@ export const handleDeleteErrors = (errors) => {
       intent: Intent.DANGER,
     });
   }
+  if (
+    errors.find((error) => error.type === 'BILL_HAS_ASSOCIATED_LANDED_COSTS')
+  ) {
+    AppToaster.show({
+      message: intl.get(
+        'cannot_delete_bill_that_has_associated_landed_cost_transactions',
+      ),
+      intent: Intent.DANGER,
+    });
+  }
 };
