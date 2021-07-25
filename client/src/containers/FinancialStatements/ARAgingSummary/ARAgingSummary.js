@@ -18,7 +18,7 @@ import withSettings from 'containers/Settings/withSettings';
 import { compose } from 'utils';
 
 /**
- * AR aging summary report.
+ * A/R aging summary report.
  */
 function ReceivableAgingSummarySheet({
   // #withSettings
@@ -31,6 +31,7 @@ function ReceivableAgingSummarySheet({
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
     agingDaysBefore: 30,
     agingPeriods: 3,
+    customersIds: [],
   });
 
   // Handle filter submit.
@@ -61,7 +62,7 @@ function ReceivableAgingSummarySheet({
       <ARAgingSummarySheetLoadingBar />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement name={'AR-aging-summary'}>
           <ARAgingSummaryHeader
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}

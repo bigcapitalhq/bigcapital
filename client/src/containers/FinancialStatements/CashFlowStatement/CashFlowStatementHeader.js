@@ -12,7 +12,7 @@ import CashFlowStatementGeneralPanel from './CashFlowStatementGeneralPanel';
 import withCashFlowStatement from './withCashFlowStatement';
 import withCashFlowStatementActions from './withCashFlowStatementActions';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
 
 /**
  * Cash flow statement header.
@@ -22,18 +22,24 @@ function CashFlowStatementHeader({
   onSubmitFilter,
   pageFilter,
 
-  //#withCashFlowStatement
+  // #withCashFlowStatement
   isFilterDrawerOpen,
 
-  //#withCashStatementActions
+  // #withCashStatementActions
   toggleCashFlowStatementFilterDrawer,
 }) {
-  // filter form initial values.
-  const initialValues = {
+  // Filter form default values.
+  const defaultValues = {
+    fromDate: moment().toDate(),
+    toDate: moment().toDate(),
+  };
+
+  // Initial form values.
+  const initialValues = transformToForm({
     ...pageFilter,
     fromDate: moment(pageFilter.fromDate).toDate(),
     toDate: moment(pageFilter.toDate).toDate(),
-  };
+  }, defaultValues);
 
   // Validation schema.
   const validationSchema = Yup.object().shape({

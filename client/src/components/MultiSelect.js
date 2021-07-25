@@ -13,18 +13,16 @@
  * limitations under the License.
  */
 
-import classNames from "classnames";
-import * as React from "react";
+import classNames from 'classnames';
+import * as React from 'react';
 import {
   Classes,
   DISPLAYNAME_PREFIX,
   Popover,
   Position,
   Utils,
-} from "@blueprintjs/core";
-import {
-  QueryList,
-} from '@blueprintjs/select';
+} from '@blueprintjs/core';
+import { QueryList } from '@blueprintjs/select';
 
 // export interface IMultiSelectProps<T> extends IListItemsProps<T> {
 //     /**
@@ -63,114 +61,124 @@ import {
 // }
 
 export default class MultiSelect extends React.Component {
-    static get displayName() {
-      return `${DISPLAYNAME_PREFIX}.MultiSelect`;
-    }
+  static get displayName() {
+    return `${DISPLAYNAME_PREFIX}.MultiSelect`;
+  }
 
-    static get defaultProps()  {
-      return {
-        fill: false,
-        placeholder: "Search...",
-      };
+  static get defaultProps() {
+    return {
+      fill: false,
+      placeholder: 'Search...',
     };
+  }
 
-    constructor(props) {
-      super(props);
+  constructor(props) {
+    super(props);
 
-      this.state = { isOpen: (this.props.popoverProps && this.props.popoverProps.isOpen) || false };
-      this.input = null;
-      this.queryList = null;
-      this.listRef = React.createRef();
+    this.state = {
+      isOpen:
+        (this.props.popoverProps && this.props.popoverProps.isOpen) || false,
+    };
+    this.input = null;
+    this.queryList = null;
+    this.listRef = React.createRef();
 
-      this.refHandlers = {
-        queryList: (ref) => {
-          this.queryList = ref;
-        },
-      };
+    this.refHandlers = {
+      queryList: (ref) => {
+        this.queryList = ref;
+      },
+    };
+  }
+
+  render() {
+    // omit props specific to this component, spread the rest.
+    const { openOnKeyDown, popoverProps, tagInputProps, ...restProps } =
+      this.props;
+
+    return (
+      <QueryList
+        {...restProps}
+        onItemSelect={this.handleItemSelect.bind(this)}
+        onQueryChange={this.handleQueryChange.bind(this)}
+        ref={this.refHandlers.queryList}
+        renderer={this.renderQueryList.bind(this)}
+      />
+    );
+  }
+
+  renderQueryList(listProps) {
+    const { fill, tagInputProps = {}, popoverProps = {} } = this.props;
+    const { handleKeyDown, handleKeyUp } = listProps;
+
+    if (fill) {
+      popoverProps.fill = true;
+      tagInputProps.fill = true;
     }
 
-    render() {
-      // omit props specific to this component, spread the rest.
-      const { openOnKeyDown, popoverProps, tagInputProps, ...restProps } = this.props;
-      
-      return (
-        <QueryList
-          {...restProps}
-          onItemSelect={this.handleItemSelect.bind(this)}
-          onQueryChange={this.handleQueryChange.bind(this)}
-          ref={this.refHandlers.queryList}
-          renderer={this.renderQueryList.bind(this)}
-        />
-      );
-    }
+    // add our own inputProps.className so that we can reference it in event handlers
+    const { inputProps = {} } = tagInputProps;
+    inputProps.className = classNames(
+      inputProps.className,
+      Classes.MULTISELECT_TAG_INPUT_INPUT,
+    );
 
-    renderQueryList(listProps) {
-      const { fill, tagInputProps = {}, popoverProps = {} } = this.props;
-      const { handleKeyDown, handleKeyUp } = listProps;
-
-      if (fill) {
-        popoverProps.fill = true;
-        tagInputProps.fill = true;
-      }
-
-      // add our own inputProps.className so that we can reference it in event handlers
-      const { inputProps = {} } = tagInputProps;
-      inputProps.className = classNames(inputProps.className, Classes.MULTISELECT_TAG_INPUT_INPUT);
-
-      return (
-        <Popover
-          autoFocus={false}
-          canEscapeKeyClose={true}
-          enforceFocus={false}
-          isOpen={this.state.isOpen}
-          position={Position.BOTTOM_LEFT}
-          {...popoverProps}
-          className={classNames(listProps.className, popoverProps.className)}
-          onInteraction={this.handlePopoverInteraction.bind(this)}
-          popoverClassName={classNames(Classes.MULTISELECT_POPOVER, popoverProps.popoverClassName)}
-          onOpened={this.handlePopoverOpened.bind(this)}
+    return (
+      <Popover
+        autoFocus={false}
+        canEscapeKeyClose={true}
+        enforceFocus={false}
+        isOpen={this.state.isOpen}
+        position={Position.BOTTOM_LEFT}
+        {...popoverProps}
+        className={classNames(listProps.className, popoverProps.className)}
+        onInteraction={this.handlePopoverInteraction.bind(this)}
+        popoverClassName={classNames(
+          Classes.MULTISELECT_POPOVER,
+          popoverProps.popoverClassName,
+        )}
+        onOpened={this.handlePopoverOpened.bind(this)}
+      >
+        <div
+          onKeyDown={
+            this.state.isOpen ? handleKeyDown : this.handleTargetKeyDown
+          }
+          onKeyUp={this.state.isOpen ? handleKeyUp : undefined}
         >
-          <div
-            onKeyDown={this.state.isOpen ? handleKeyDown : this.handleTargetKeyDown}
-            onKeyUp={this.state.isOpen ? handleKeyUp : undefined}
-          >
-            {this.props.children}
-          </div>
-          <div onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} ref={this.listRef}>
-            {listProps.itemList}
-          </div>
-        </Popover>
-      );
-    };
+          {this.props.children}
+        </div>
+        <div onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} ref={this.listRef}>
+          {listProps.itemList}
+        </div>
+      </Popover>
+    );
+  }
 
-    handleItemSelect(item, evt) {
-      if (this.input != null) {
-        this.input.focus();
-      }
-      Utils.safeInvoke(this.props.onItemSelect, item, evt);
-    };
-
-    handleQueryChange(query, evt) {
-      this.setState({ isOpen: query.length > 0 || !this.props.openOnKeyDown });
-      Utils.safeInvoke(this.props.onQueryChange, query, evt);
-    };
-
-    handlePopoverInteraction = (isOpen, e) => {
-      if (e && this.listRef.current && this.listRef.current.contains(e.target)) {
-        this.setState({ isOpen: true })
-      } else {
-        this.setState({ isOpen });
-      }
-      Utils.safeInvokeMember(this.props.popoverProps, "onInteraction", isOpen);
+  handleItemSelect(item, evt) {
+    if (this.input != null) {
+      this.input.focus();
     }
-    
+    Utils.safeInvoke(this.props.onItemSelect, item, evt);
+  }
 
-    handlePopoverOpened(node) {
-      if (this.queryList != null) {
-        // scroll active item into view after popover transition completes and all dimensions are stable.
-        this.queryList.scrollActiveItemIntoView();
-      }
-      Utils.safeInvokeMember(this.props.popoverProps, "onOpened", node);
-    };
+  handleQueryChange(query, evt) {
+    this.setState({ isOpen: query.length > 0 || !this.props.openOnKeyDown });
+    Utils.safeInvoke(this.props.onQueryChange, query, evt);
+  }
 
+  handlePopoverInteraction = (isOpen, e) => {
+    if (e && this.listRef.current && this.listRef.current.contains(e.target)) {
+      this.setState({ isOpen: true });
+    } else {
+      this.setState({ isOpen });
+    }
+    Utils.safeInvokeMember(this.props.popoverProps, 'onInteraction', isOpen);
+  };
+
+  handlePopoverOpened(node) {
+    if (this.queryList != null) {
+      // scroll active item into view after popover transition completes and all dimensions are stable.
+      this.queryList.scrollActiveItemIntoView();
+    }
+    Utils.safeInvokeMember(this.props.popoverProps, 'onOpened', node);
+  }
 }

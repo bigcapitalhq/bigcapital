@@ -6,32 +6,32 @@ import { FormattedMessage as T } from 'components';
 import { safeInvoke } from 'utils';
 
 /**
- * Contacts multi-select component.
+ * Items multi-select.
  */
-export default function ContactsMultiSelect({
-  contacts,
-  defaultText = <T id={'all_customers'} />,
+export function ItemsMultiSelect({
+  items,
+  defaultText = <T id={'All items'} />,
   buttonProps,
 
-  onContactSelect,
-  contactsSelected = [],
+  selectedItems = [],
+  onItemSelect,
   ...multiSelectProps
 }) {
-  const [localSelected, setLocalSelected] = useState([ ...contactsSelected]);
+  const [localSelected, setLocalSelected] = useState([...selectedItems]);
 
   // Detarmines the given id is selected.
   const isItemSelected = useCallback(
-    (id) => localSelected.some(s => s === id),
+    (id) => localSelected.some((s) => s === id),
     [localSelected],
   );
 
   // Contact item renderer.
-  const contactRenderer = useCallback(
-    (contact, { handleClick }) => (
+  const itemRenderer = useCallback(
+    (item, { handleClick }) => (
       <MenuItem
-        icon={isItemSelected(contact.id) ? 'tick' : 'blank'}
-        text={contact.display_name}
-        key={contact.id}
+        icon={isItemSelected(item.id) ? 'tick' : 'blank'}
+        text={item.name}
+        key={item.id}
         onClick={handleClick}
       />
     ),
@@ -45,20 +45,20 @@ export default function ContactsMultiSelect({
   const handleItemSelect = useCallback(
     ({ id }) => {
       const selected = isItemSelected(id)
-        ? localSelected.filter(s => s !== id)
+        ? localSelected.filter((s) => s !== id)
         : [...localSelected, id];
-      
-      setLocalSelected([ ...selected ]);
-      safeInvoke(onContactSelect, selected);
+
+      setLocalSelected([...selected]);
+      safeInvoke(onItemSelect, selected);
     },
-    [setLocalSelected, localSelected, isItemSelected, onContactSelect],
+    [setLocalSelected, localSelected, isItemSelected, onItemSelect],
   );
 
   return (
     <MultiSelect
-      items={contacts}
-      noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
-      itemRenderer={contactRenderer}
+      items={items}
+      noResults={<MenuItem disabled={true} text={<T id={'No items'} />} />}
+      itemRenderer={itemRenderer}
       popoverProps={{ minimal: true }}
       filterable={true}
       onItemSelect={handleItemSelect}
@@ -68,7 +68,7 @@ export default function ContactsMultiSelect({
         text={
           countSelected === 0
             ? defaultText
-            : intl.get('selected_customers', { count: countSelected })
+            : intl.get('Selected items ({count})', { count: countSelected })
         }
         {...buttonProps}
       />

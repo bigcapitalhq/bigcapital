@@ -1,12 +1,13 @@
 import React, { createContext, useContext } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { usePurchasesByItems } from 'hooks/query';
+import { usePurchasesByItems, useItems } from 'hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 
 const PurchasesByItemsContext = createContext();
 
 function PurchasesByItemsProvider({ query, ...props }) {
+  // Handle fetching the purchases by items report based on the given query.
   const {
     data: purchaseByItems,
     isFetching,
@@ -21,11 +22,23 @@ function PurchasesByItemsProvider({ query, ...props }) {
     },
   );
 
+  // Handle fetching the items based on the given query.
+  const {
+    data: { items },
+    isLoading: isItemsLoading,
+    isFetching: isItemsFetching,
+  } = useItems({ page_size: 10000 });
+
   const provider = {
     purchaseByItems,
     isFetching,
     isLoading,
-     refetchSheet: refetch,
+
+    items,
+    isItemsLoading,
+    isItemsFetching,
+
+    refetchSheet: refetch,
   };
   return (
     <FinancialReportPage name={'purchase-by-items'}>

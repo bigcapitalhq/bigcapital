@@ -45,6 +45,8 @@ export default class TransactionsByVendorsService
       },
       noneZero: false,
       noneTransactions: false,
+
+      vendorsIds: [],
     };
   }
 
@@ -139,12 +141,13 @@ export default class TransactionsByVendorsService
       group: 'organization',
       key: 'base_currency',
     });
-
     const filter = { ...this.defaultQuery, ...query };
 
     // Retrieve the report vendors.
-    const vendors = await this.reportRepository.getVendors(tenantId);
-
+    const vendors = await this.reportRepository.getVendors(
+      tenantId,
+      filter.vendorsIds
+    );
     // Retrieve the accounts graph.
     const accountsGraph = await accountRepository.getDependencyGraph();
 

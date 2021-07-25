@@ -10,7 +10,7 @@ import withVendorsBalanceSummary from './withVendorsBalanceSummary';
 import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions';
 import VendorsBalanceSummaryHeaderGeneral from './VendorsBalanceSummaryHeaderGeneral';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
 
 /**
  * Vendors balance summary drawer header.
@@ -32,10 +32,15 @@ function VendorsBalanceSummaryHeader({
   });
 
   // filter form initial values.
-  const initialValues = {
+  const defaultValues = {
+    asDate: moment().toDate(),
+    vendorsIds: [],
+  };
+  // Initial form values.
+  const initialValues = transformToForm({
     ...pageFilter,
     asDate: moment(pageFilter.asDate).toDate(),
-  };
+  }, defaultValues);
 
   // handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {

@@ -11,7 +11,7 @@ import ARAgingSummaryHeaderGeneral from './ARAgingSummaryHeaderGeneral';
 import withARAgingSummary from './withARAgingSummary';
 import withARAgingSummaryActions from './withARAgingSummaryActions';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
 
 /**
  * AR Aging Summary Report - Drawer Header.
@@ -41,11 +41,20 @@ function ARAgingSummaryHeader({
       .label('agingPeriods'),
   });
   // Initial values.
-  const initialValues = {
-    asDate: moment(pageFilter.asDate).toDate(),
+  const defaultValues = {
+    asDate: moment().toDate(),
     agingDaysBefore: 30,
     agingPeriods: 3,
+    customersIds: [],
   };
+  // Initial values.
+  const initialValues = transformToForm(
+    {
+      ...pageFilter,
+      asDate: moment(pageFilter.asDate).toDate(),
+    },
+    defaultValues,
+  );
 
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
@@ -58,7 +67,7 @@ function ARAgingSummaryHeader({
   const handleCancelClick = () => {
     toggleFilterDrawerDisplay(false);
   };
- 
+
   // Handle the drawer close.
   const handleDrawerClose = () => {
     toggleFilterDrawerDisplay(false);

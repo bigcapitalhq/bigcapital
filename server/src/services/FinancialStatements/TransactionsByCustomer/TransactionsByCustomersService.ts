@@ -44,6 +44,8 @@ export default class TransactionsByCustomersService
       },
       noneZero: false,
       noneTransactions: false,
+
+      customersIds: [],
     };
   }
 
@@ -125,7 +127,7 @@ export default class TransactionsByCustomersService
     const accountsGraph = await accountRepository.getDependencyGraph();
 
     // Retrieve the report customers.
-    const customers = await this.reportRepository.getCustomers(tenantId);
+    const customers = await this.reportRepository.getCustomers(tenantId, filter.customersIds);
 
     const openingBalanceDate = moment(filter.fromDate)
       .subtract(1, 'days')

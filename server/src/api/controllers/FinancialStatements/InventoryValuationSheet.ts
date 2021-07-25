@@ -32,6 +32,10 @@ export default class InventoryValuationReportController extends BaseFinancialRep
     return [
       query('from_date').optional().isISO8601(),
       query('to_date').optional().isISO8601(),
+
+      query('items_ids').optional().isArray(),
+      query('items_ids.*').optional().isInt().toInt(),
+
       query('number_format.no_cents').optional().isBoolean().toBoolean(),
       query('number_format.divide_1000').optional().isBoolean().toBoolean(),
       query('none_transactions').default(true).isBoolean().toBoolean(),

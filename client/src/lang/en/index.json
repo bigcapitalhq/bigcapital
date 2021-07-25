@@ -1136,5 +1136,12 @@
   "select_transaction":"Select transaction account",
   "details":"Details",
   "located_landed_cost":"Located Landed Cost",
-  "delete_transaction":"Delete transaction"
+  "delete_transaction":"Delete transaction",
+  "all_items": "All items",
+  "Specific items": "Specific items",
+  "Selected contacts": "Selected contacts",
+  "All contacts": "All contacts",
+  "Selected items ({count})": "Selected items ({count})",
+  "All items": "All items",
+  "No items": "No items"
 }

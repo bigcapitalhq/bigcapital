@@ -24,6 +24,7 @@ export default class InventoryValuationReportService {
     return {
       fromDate: moment().startOf('year').format('YYYY-MM-DD'),
       toDate: moment().endOf('year').format('YYYY-MM-DD'),
+      itemsIds: [],
       numberFormat: {
         precision: 2,
         divideOn1000: false,
@@ -91,7 +92,13 @@ export default class InventoryValuationReportService {
       filter,
       tenantId,
     });
-    const inventoryItems = await Item.query().where('type', 'inventory');
+    const inventoryItems = await Item.query().onBuild(q => {
+      q.where('type', 'inventory');
+
+      if (filter.itemsIds.length > 0) {
+        q.whereIn('id', filter.itemsIds);
+      }
+    });
     const inventoryItemsIds = inventoryItems.map((item) => item.id);
 
     // Calculates the total inventory total quantity and rate `IN` transactions.

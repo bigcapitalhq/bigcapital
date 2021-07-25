@@ -58,6 +58,8 @@ import AccountsSuggestField from './AccountsSuggestField';
 import MaterialProgressBar from './MaterialProgressBar';
 import { MoneyFieldCell } from './DataTableCells';
 
+import { ItemsMultiSelect } from './Items';
+
 const Hint = FieldHint;
 
 const T = FormattedMessage;
@@ -125,4 +127,5 @@ export {
   AccountsSuggestField,
   MaterialProgressBar,
   MoneyFieldCell,
+  ItemsMultiSelect
 };

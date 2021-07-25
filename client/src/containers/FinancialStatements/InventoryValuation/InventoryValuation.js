@@ -64,7 +64,7 @@ function InventoryValuation({
       <InventoryValuationLoadingBar />
 
       <DashboardPageContent>
-        <div class="financial-statement">
+        <div class="financial-statement financial-statement--inventory-valuation">
           <InventoryValuationHeader
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}

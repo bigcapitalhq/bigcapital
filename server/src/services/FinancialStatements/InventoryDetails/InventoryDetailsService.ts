@@ -31,6 +31,7 @@ export default class InventoryDetailsService extends FinancialSheet {
     return {
       fromDate: moment().startOf('year').format('YYYY-MM-DD'),
       toDate: moment().endOf('year').format('YYYY-MM-DD'),
+      itemsIds: [],
       numberFormat: {
         precision: 2,
         divideOn1000: false,
@@ -91,8 +92,10 @@ export default class InventoryDetailsService extends FinancialSheet {
       ...query,
     };
     // Retrieves the items.
-    const items = await this.reportRepo.getInventoryItems(tenantId);
-
+    const items = await this.reportRepo.getInventoryItems(
+      tenantId,
+      filter.itemsIds
+    );
     // Opening balance transactions.
     const openingBalanceTransactions =
       await this.reportRepo.openingBalanceTransactions(tenantId, filter);

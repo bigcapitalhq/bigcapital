@@ -11,7 +11,7 @@ import FinancialStatementHeader from 'containers/FinancialStatements/FinancialSt
 import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
 import BalanceSheetHeaderGeneralPanal from './BalanceSheetHeaderGeneralPanal';
 
 /**
@@ -28,20 +28,25 @@ function BalanceSheetHeader({
   // #withBalanceSheetActions
   toggleBalanceSheetFilterDrawer: toggleFilterDrawer,
 }) {
-  // Filter form initial values.
-  const initialValues = {
-    basis: 'cash',
-    ...pageFilter,
-    fromDate: moment(pageFilter.fromDate).toDate(),
-    toDate: moment(pageFilter.toDate).toDate(),
+  const defaultValues = {
+    basic: 'cash',
+    fromDate: moment().toDate(),
+    toDate: moment().toDate(),
   };
+  // Filter form initial values.
+  const initialValues = transformToForm(
+    {
+      ...pageFilter,
+      fromDate: moment(pageFilter.fromDate).toDate(),
+      toDate: moment(pageFilter.toDate).toDate(),
+    },
+    defaultValues,
+  );
 
   // Validation schema.
   const validationSchema = Yup.object().shape({
     dateRange: Yup.string().optional(),
-    fromDate: Yup.date()
-      .required()
-      .label(intl.get('fromDate')),
+    fromDate: Yup.date().required().label(intl.get('fromDate')),
     toDate: Yup.date()
       .min(Yup.ref('fromDate'))
       .required()
@@ -58,14 +63,10 @@ function BalanceSheetHeader({
   };
 
   // Handle cancel button click.
-  const handleCancelClick = () => {
-    toggleFilterDrawer(false);
-  };
+  const handleCancelClick = () => { toggleFilterDrawer(false); };
 
   // Handle drawer close action.
-  const handleDrawerClose = () => {
-    toggleFilterDrawer(false);
-  };
+  const handleDrawerClose = () => { toggleFilterDrawer(false); };
 
   return (
     <FinancialStatementHeader

@@ -1,4 +1,4 @@
-import { map } from 'lodash';
+import { isEmpty, map } from 'lodash';
 import { IAccount, IAccountTransaction } from 'interfaces';
 import { ACCOUNT_TYPE } from 'data/AccountTypes';
 import HasTenancyService from 'services/Tenancy/TenancyService';
@@ -13,10 +13,16 @@ export default class TransactionsByCustomersRepository {
    * @param {number} tenantId 
    * @returns {Promise<ICustomer[]>}
    */
-  public async getCustomers(tenantId: number) {
+  public async getCustomers(tenantId: number, customersIds?: number[]) {
     const { Customer } = this.tenancy.models(tenantId);
 
-    return Customer.query().orderBy('displayName');
+    return Customer.query().onBuild((q) => {
+      q.orderBy('displayName');
+
+      if (!isEmpty(customersIds)) {
+        q.whereIn('id', customersIds);
+      }
+    });
   }
 
   /**

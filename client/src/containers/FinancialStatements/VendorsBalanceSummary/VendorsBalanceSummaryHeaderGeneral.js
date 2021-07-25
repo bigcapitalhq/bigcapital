@@ -1,8 +1,9 @@
 import React from 'react';
-import { FastField } from 'formik';
+import { Field, FastField } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
+import classNames from 'classnames';
 import { FormGroup, Position, Classes, Checkbox } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { ContactsMultiSelect, FormattedMessage as T } from 'components';
 import { Row, Col, FieldHint } from 'components';
 import {
   momentFormatter,
@@ -10,11 +11,14 @@ import {
   inputIntent,
   handleDateChange,
 } from 'utils';
+import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 
 /**
  * Vendors balance header -general panel.
  */
 export default function VendorsBalanceSummaryHeaderGeneral() {
+  const { vendors } = useVendorsBalanceSummaryContext();
+
   return (
     <div>
       <Row>
@@ -42,6 +46,7 @@ export default function VendorsBalanceSummaryHeaderGeneral() {
           </FastField>
         </Col>
       </Row>
+
       <Row>
         <Col xs={5}>
           <FastField name={'percentage'} type={'checkbox'}>
@@ -57,6 +62,31 @@ export default function VendorsBalanceSummaryHeaderGeneral() {
               </FormGroup>
             )}
           </FastField>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col xs={4}>
+          <Field name={'vendorsIds'}>
+            {({
+              form: { setFieldValue },
+              field: { value },
+              meta: { error, touched },
+            }) => (
+              <FormGroup
+                label={<T id={'specific_vendors'} />}
+                className={classNames('form-group--select-list', Classes.FILL)}
+              >
+                <ContactsMultiSelect
+                  onContactSelect={(contactsIds) => {
+                    setFieldValue('vendorsIds', contactsIds);
+                  }}
+                  contacts={vendors}
+                  contactsSelected={value}
+                />
+              </FormGroup>
+            )}
+          </Field>
         </Col>
       </Row>
     </div>

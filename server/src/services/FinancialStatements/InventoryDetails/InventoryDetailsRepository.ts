@@ -1,5 +1,6 @@
 import { Inject } from 'typedi';
 import { raw } from 'objection';
+import { isEmpty } from 'lodash';
 import moment from 'moment';
 import {
   IItem,
@@ -17,10 +18,16 @@ export default class InventoryDetailsRepository {
    * @param {number} tenantId -
    * @returns {Promise<IItem>}
    */
-  public getInventoryItems(tenantId: number): Promise<IItem[]> {
+  public getInventoryItems(tenantId: number, itemsIds?: number[]): Promise<IItem[]> {
     const { Item } = this.tenancy.models(tenantId);
 
-    return Item.query().where('type', 'inventory');
+    return Item.query().onBuild((q) => {
+      q.where('type', 'inventory');
+
+      if (!isEmpty(itemsIds)) {
+        q.whereIn('id', itemsIds);
+      }
+    })
   }
 
   /**

@@ -23,6 +23,7 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
     router.get(
       '/',
       this.validationSchema,
+      this.validationResult,
       asyncMiddleware(this.transactionsByVendors.bind(this))
     );
     return router;
@@ -34,10 +35,16 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
   get validationSchema(): ValidationChain[] {
     return [
       ...this.sheetNumberFormatValidationSchema,
+
       query('from_date').optional().isISO8601(),
       query('to_date').optional().isISO8601(),
+
       query('none_zero').optional().isBoolean().toBoolean(),
       query('none_transactions').optional().isBoolean().toBoolean(),
+
+      // Vendors ids.
+      query('vendors_ids').optional().isArray({ min: 1 }),
+      query('vendors_ids.*').exists().isInt().toInt(),
     ];
   }
 
@@ -80,10 +87,11 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
     const filter = this.matchedQueryData(req);
 
     try {
-      const transactionsByVendors = await this.transactionsByVendorsService.transactionsByVendors(
-        tenantId,
-        filter
-      );
+      const transactionsByVendors =
+        await this.transactionsByVendorsService.transactionsByVendors(
+          tenantId,
+          filter
+        );
       const accept = this.accepts(req);
       const acceptType = accept.types(['json', 'application/json+table']);
 

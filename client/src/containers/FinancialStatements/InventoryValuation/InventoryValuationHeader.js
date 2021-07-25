@@ -2,7 +2,6 @@ import React from 'react';
 import * as Yup from 'yup';
 import moment from 'moment';
 import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 
@@ -11,7 +10,7 @@ import InventoryValuationHeaderGeneralPanel from './InventoryValuationHeaderGene
 import withInventoryValuation from './withInventoryValuation';
 import withInventoryValuationActions from './withInventoryValuationActions';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
 
 /**
  * inventory valuation header.
@@ -27,18 +26,23 @@ function InventoryValuationHeader({
   // #withInventoryValuationActions
   toggleInventoryValuationFilterDrawer,
 }) {
-  
-
   // Form validation schema.
   const validationSchema = Yup.object().shape({
-    as_date: Yup.date().required().label('asDate'),
+    asDate: Yup.date().required().label('asDate'),
   });
 
-  // Initial values.
-  const initialValues = {
-    as_date: moment(pageFilter.asDate).toDate(),
+  // Default values.
+  const defaultValues = {
+    asDate: moment().toDate(),
+    itemsIds: [],
   };
+  // Initial values.
+  const initialValues = transformToForm({
+    ...pageFilter,
+    asDate: moment(pageFilter.asDate).toDate(),
+  }, defaultValues);
 
+  // Handle the form of header submit.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
     toggleInventoryValuationFilterDrawer(false);

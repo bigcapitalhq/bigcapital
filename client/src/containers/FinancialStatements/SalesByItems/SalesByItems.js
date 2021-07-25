@@ -68,7 +68,7 @@ function SalesByItems({
       />
       <SalesByItemsLoadingBar />
       <DashboardPageContent>
-        <div class="financial-statement">
+        <div class="financial-statement financial-statement--sales-by-items">
           <SalesByItemsHeader
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}

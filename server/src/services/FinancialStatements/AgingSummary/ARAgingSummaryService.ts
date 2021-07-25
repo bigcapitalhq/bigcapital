@@ -83,7 +83,7 @@ export default class ARAgingSummaryService {
     });
     // Retrieve all customers from the storage.
     const customers =
-      filter.customersIds.length > 0
+      (filter.customersIds.length > 0)
         ? await customerRepository.findWhereIn('id', filter.customersIds)
         : await customerRepository.all();
 

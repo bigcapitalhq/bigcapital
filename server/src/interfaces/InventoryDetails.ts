@@ -7,6 +7,7 @@ export interface IInventoryDetailsQuery {
   toDate: Date | string;
   numberFormat: INumberFormatQuery;
   noneTransactions: boolean;
+  itemsIds: number[]
 }
 
 export interface IInventoryDetailsNumber {

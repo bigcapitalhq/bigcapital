@@ -12,7 +12,7 @@ import PurchasesByItemsGeneralPanel from './PurchasesByItemsGeneralPanel';
 import withPurchasesByItems from './withPurchasesByItems';
 import withPurchasesByItemsActions from './withPurchasesByItemsActions';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
 
 /**
  * Purchases by items header.
@@ -28,25 +28,31 @@ function PurchasesByItemsHeader({
   // #withPurchasesByItems
   togglePurchasesByItemsFilterDrawer,
 }) {
-  
-
   // Form validation schema.
   const validationSchema = Yup.object().shape({
-    fromDate: Yup.date()
-      .required()
-      .label(intl.get('from_date')),
+    fromDate: Yup.date().required().label(intl.get('from_date')),
     toDate: Yup.date()
       .min(Yup.ref('fromDate'))
       .required()
       .label(intl.get('to_date')),
   });
 
-  // Initial values.
-  const initialValues = {
+  // Default form values.
+  const defaultValues = {
     ...pageFilter,
-    fromDate: moment(pageFilter.fromDate).toDate(),
-    toDate: moment(pageFilter.toDate).toDate(),
+    fromDate: moment().toDate(),
+    toDate: moment().toDate(),
+    itemsIds: [],
   };
+  // Initial form values.
+  const initialValues = transformToForm(
+    {
+      ...pageFilter,
+      fromDate: moment(pageFilter.fromDate).toDate(),
+      toDate: moment(pageFilter.toDate).toDate(),
+    },
+    defaultValues,
+  );
 
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {

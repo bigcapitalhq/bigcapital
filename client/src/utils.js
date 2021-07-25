@@ -297,6 +297,10 @@ export const saveInvoke = (func, ...rest) => {
   return func && func(...rest);
 };
 
+export const safeInvoke = (func, ...rest) => {
+  return func && func(...rest);
+};
+
 export const transformToForm = (obj, emptyInitialValues) => {
   return _.pickBy(
     obj,
@@ -432,11 +436,10 @@ export function flatObject(obj) {
   const path = []; // current path
 
   function dig(obj) {
-    if (obj !== Object(obj))
-      /*is primitive, end of path*/
-      return (flatObject[path.join('.')] = obj); /*<- value*/
+    if (obj !== Object(obj)) {
+      return (flatObject[path.join('.')] = obj);
+    }
 
-    //no? so this is an object with keys. go deeper on each key down
     for (let key in obj) {
       path.push(key);
       dig(obj[key]);

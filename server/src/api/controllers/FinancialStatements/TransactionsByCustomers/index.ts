@@ -23,6 +23,7 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
     router.get(
       '/',
       this.validationSchema,
+      this.validationResult,
       asyncMiddleware(this.transactionsByCustomers.bind(this))
     );
     return router;
@@ -31,13 +32,18 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
   /**
    * Validation schema.
    */
-  get validationSchema() {
+  private get validationSchema() {
     return [
       ...this.sheetNumberFormatValidationSchema,
       query('from_date').optional().isISO8601(),
       query('to_date').optional().isISO8601(),
+
       query('none_zero').optional().isBoolean().toBoolean(),
       query('none_transactions').optional().isBoolean().toBoolean(),
+
+      // Customers ids.
+      query('customers_ids').optional().isArray({ min: 1 }),
+      query('customers_ids.*').exists().isInt().toInt(),
     ];
   }
 
@@ -45,7 +51,9 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
    * Transformes the statement to table rows response.
    * @param {ITransactionsByCustomersStatement} statement -
    */
-  transformToTableResponse({ data }: ITransactionsByCustomersStatement) {
+  private transformToTableResponse({
+    data,
+  }: ITransactionsByCustomersStatement) {
     return {
       table: {
         rows: this.transactionsByCustomersTableRows.tableRows(data),
@@ -57,7 +65,7 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
    * Transformes the statement to json response.
    * @param {ITransactionsByCustomersStatement} statement -
    */
-  transfromToJsonResponse({
+  private transfromToJsonResponse({
     data,
     columns,
   }: ITransactionsByCustomersStatement) {
@@ -83,10 +91,11 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
     const filter = this.matchedQueryData(req);
 
     try {
-      const transactionsByCustomers = await this.transactionsByCustomersService.transactionsByCustomers(
-        tenantId,
-        filter
-      );
+      const transactionsByCustomers =
+        await this.transactionsByCustomersService.transactionsByCustomers(
+          tenantId,
+          filter
+        );
       const accept = this.accepts(req);
       const acceptType = accept.types(['json', 'application/json+table']);
 

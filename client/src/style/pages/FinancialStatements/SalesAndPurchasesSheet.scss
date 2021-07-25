@@ -27,3 +27,23 @@
     }
   }
 }
+
+.financial-statement--sales-by-items,
+.financial-statement--purchases-by-items{
+
+  .financial-header-drawer{
+    .bp3-drawer{
+      max-height: 400px;
+    }
+  }
+}
+
+
+.financial-statement--inventory-valuation{
+
+  .financial-header-drawer{
+    .bp3-drawer{
+      max-height: 350px;
+    }
+  }
+}

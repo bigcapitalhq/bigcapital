@@ -34,6 +34,10 @@ export default class VendorBalanceSummaryReportController extends BaseFinancialR
     return [
       ...this.sheetNumberFormatValidationSchema,
       query('as_date').optional().isISO8601(),
+
+      // Vendors ids.
+      query('vendors_ids').optional().isArray({ min: 1 }),
+      query('vendors_ids.*').exists().isInt().toInt(),
     ];
   }
 

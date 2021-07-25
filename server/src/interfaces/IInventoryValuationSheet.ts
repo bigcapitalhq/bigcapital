@@ -7,6 +7,7 @@ export interface IInventoryValuationReportQuery {
   asDate: Date | string;
   numberFormat: INumberFormatQuery;
   noneTransactions: boolean;  
+  itemsIds: number[],
 };
 
 export interface IInventoryValuationSheetMeta {

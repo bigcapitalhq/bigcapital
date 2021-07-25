@@ -5,6 +5,7 @@ import {
 export interface ISalesByItemsReportQuery {
   fromDate: Date | string;
   toDate: Date | string;
+  itemsIds: number[],
   numberFormat: INumberFormatQuery;
   noneTransactions: boolean;  
 };
