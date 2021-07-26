@@ -1,13 +1,13 @@
 import React from 'react';
 import { Intent } from '@blueprintjs/core';
-import { sumBy, setWith, toSafeInteger, get, values } from 'lodash';
+import { sumBy, setWith, toSafeInteger, get } from 'lodash';
 import moment from 'moment';
-
 import {
   transactionNumber,
   updateTableRow,
   repeatValue,
   transformToForm,
+  defaultFastFieldShouldUpdate,
 } from 'utils';
 import { AppToaster } from 'components';
 import intl from 'react-intl-universal';
@@ -123,17 +123,17 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
     setEntriesErrors(error.indexes, 'contact_id', 'error');
   }
   if ((error = getError(ERROR.ENTRIES_SHOULD_ASSIGN_WITH_CONTACT))) {
-    if (error.meta.find(meta => meta.contact_type === 'customer')) {
+    if (error.meta.find((meta) => meta.contact_type === 'customer')) {
       toastMessages.push(
         intl.get('receivable_accounts_should_assign_with_customers'),
       );
     }
-    if (error.meta.find(meta => meta.contact_type === 'vendor')) {
+    if (error.meta.find((meta) => meta.contact_type === 'vendor')) {
       toastMessages.push(
         intl.get('payable_accounts_should_assign_with_vendors'),
       );
     }
-    const indexes = error.meta.map((meta => meta.indexes)).flat();
+    const indexes = error.meta.map((meta) => meta.indexes).flat();
     setEntriesErrors(indexes, 'contact_id', 'error');
   }
   if ((error = getError(ERROR.JOURNAL_NUMBER_ALREADY_EXISTS))) {
@@ -159,7 +159,28 @@ export const useObserveJournalNoSettings = (prefix, nextNumber) => {
   const { setFieldValue } = useFormikContext();
 
   React.useEffect(() => {
-    const journalNo = transactionNumber(prefix, nextNumber);  
+    const journalNo = transactionNumber(prefix, nextNumber);
     setFieldValue('journal_number', journalNo);
   }, [setFieldValue, prefix, nextNumber]);
+};
+
+/**
+ * Detarmines entries fast field should update.
+ */
+export const entriesFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.accounts !== oldProps.accounts ||
+    newProps.contacts !== oldProps.contacts ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
+};
+
+/**
+ * Detarmines currencies fast field should update.
+ */
+export const currenciesFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.currencies !== oldProps.currencies ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
 };

@@ -8,6 +8,7 @@ import classNames from 'classnames';
 
 import withSettings from 'containers/Settings/withSettings';
 
+import { accountsFieldShouldUpdate } from './utils';
 import { compose, inputIntent } from 'utils';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
 import { useItemFormContext } from './ItemFormProvider';
@@ -27,7 +28,11 @@ function ItemFormInventorySection({ baseCurrency }) {
       <Row>
         <Col xs={6}>
           {/*------------- Inventory account ------------- */}
-          <FastField name={'inventory_account_id'}>
+          <FastField
+            name={'inventory_account_id'}
+            accounts={accounts}
+            shouldUpdate={accountsFieldShouldUpdate}
+          >
             {({ form, field: { value }, meta: { touched, error } }) => (
               <FormGroup
                 label={<T id={'inventory_account'} />}

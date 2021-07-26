@@ -10,6 +10,7 @@ import {
   ItemsListCell,
   PercentFieldCell,
   NumericInputCell,
+  CheckBoxFieldCell,
 } from 'components/DataTableCells';
 
 /**
@@ -91,26 +92,17 @@ export function IndexTableCell({ row: { index } }) {
 }
 
 /**
- * Landed cost cell.
- */
-const LandedCostCell = ({
-  row: { index },
-  column: { id },
-  cell: { value: initialValue },
-  data,
-  payload,
-}) => {
-  return <Checkbox minimal={true} className="ml2" />;
-};
-
-/**
  * Landed cost header cell.
  */
 const LandedCostHeaderCell = () => {
   return (
     <>
-      <T id={'cost'} />
-      <Hint content={''} />
+      <T id={'Landed'} />
+      <Hint
+        content={
+          'This options allows you to be able to add additional cost eg. freight then allocate cost to the items in your bills.'
+        }
+      />
     </>
   );
 };
@@ -118,7 +110,7 @@ const LandedCostHeaderCell = () => {
 /**
  * Retrieve editable items entries columns.
  */
-export function useEditableItemsEntriesColumns() {
+export function useEditableItemsEntriesColumns({ landedCost }) {
   return React.useMemo(
     () => [
       {
@@ -182,14 +174,19 @@ export function useEditableItemsEntriesColumns() {
         width: 100,
         className: 'total',
       },
-      {
-        Header: '',
-        accessor: 'landed_cost',
-        Cell: LandedCostCell,
-        width: 70,
-        disableSortBy: true,
-        disableResizing: true,
-      },
+      ...(landedCost
+        ? [
+            {
+              Header: LandedCostHeaderCell,
+              accessor: 'landed_cost',
+              Cell: CheckBoxFieldCell,
+              width: 100,
+              disableSortBy: true,
+              disableResizing: true,
+              className: 'landed-cost',
+            },
+          ]
+        : []),
       {
         Header: '',
         accessor: 'action',

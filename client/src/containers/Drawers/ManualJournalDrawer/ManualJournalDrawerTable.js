@@ -69,6 +69,7 @@ export default function ManualJournalDrawerTable({
   return (
     <div className="journal-drawer__content--table">
       <DataTable columns={columns} data={entries} />
+
       <If condition={description}>
         <p className={'desc'}>
           <b>Description</b>: {description}

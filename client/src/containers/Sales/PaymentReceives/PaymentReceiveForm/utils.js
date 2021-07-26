@@ -1,7 +1,12 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import moment from 'moment';
-import { transactionNumber, transformToForm, safeSumBy } from 'utils';
+import {
+  defaultFastFieldShouldUpdate,
+  transactionNumber,
+  transformToForm,
+  safeSumBy,
+} from 'utils';
 
 // Default payment receive entry.
 export const defaultPaymentReceiveEntry = {
@@ -98,4 +103,24 @@ export const useObservePaymentNoSettings = (prefix, nextNumber) => {
     const invoiceNo = transactionNumber(prefix, nextNumber);
     setFieldValue('payment_receive_no', invoiceNo);
   }, [setFieldValue, prefix, nextNumber]);
+};
+
+/**
+ * Detarmines the customers fast-field should update.
+ */
+export const customersFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.customers !== oldProps.customers ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
+};
+
+/**
+ * Detarmines the accounts fast-field should update.
+ */
+export const accountsFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.accounts !== oldProps.accounts ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
 };

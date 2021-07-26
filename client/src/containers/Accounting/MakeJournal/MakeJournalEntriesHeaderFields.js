@@ -29,7 +29,10 @@ import {
 import withSettings from 'containers/Settings/withSettings';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import { useObserveJournalNoSettings } from './utils';
+import {
+  currenciesFieldShouldUpdate,
+  useObserveJournalNoSettings,
+} from './utils';
 /**
  * Make journal entries header.
  */
@@ -182,7 +185,11 @@ function MakeJournalEntriesHeader({
       </FastField>
 
       {/*------------ Currency  -----------*/}
-      <FastField name={'currency_code'}>
+      <FastField
+        name={'currency_code'}
+        currencies={currencies}
+        shouldUpdate={currenciesFieldShouldUpdate}
+      >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'currency'} />}

@@ -6,8 +6,6 @@ import ManualJournalDrawerFooter from './ManualJournalDrawerFooter';
 
 import { useManualJournalDrawerContext } from 'containers/Drawers/ManualJournalDrawer/ManualJournalDrawerProvider';
 
-import 'style/components/Drawer/ViewDetails.scss';
-
 /**
  * Manual journal view details.
  */

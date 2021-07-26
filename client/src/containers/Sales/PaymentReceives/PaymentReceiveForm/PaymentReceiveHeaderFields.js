@@ -34,6 +34,7 @@ import {
 } from 'components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
+
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
 
@@ -41,6 +42,8 @@ import {
   useObservePaymentNoSettings,
   amountPaymentEntries,
   fullAmountPaymentEntries,
+  customersFieldShouldUpdate,
+  accountsFieldShouldUpdate,
 } from './utils';
 import { toSafeInteger } from 'lodash';
 
@@ -115,7 +118,11 @@ function PaymentReceiveHeaderFields({
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ------------- Customer name ------------- */}
-      <FastField name={'customer_id'}>
+      <FastField
+        name={'customer_id'}
+        customers={customers}
+        shouldUpdate={customersFieldShouldUpdate}
+      >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'customer_name'} />}
@@ -247,7 +254,11 @@ function PaymentReceiveHeaderFields({
       </FastField>
 
       {/* ------------ Deposit account ------------ */}
-      <FastField name={'deposit_account_id'}>
+      <FastField
+        name={'deposit_account_id'}
+        accounts={accounts}
+        shouldUpdate={accountsFieldShouldUpdate}
+      >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'deposit_to'} />}

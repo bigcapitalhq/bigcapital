@@ -1,7 +1,12 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import moment from 'moment';
-import { transactionNumber, repeatValue, transformToForm } from 'utils';
+import {
+  defaultFastFieldShouldUpdate,
+  transactionNumber,
+  repeatValue,
+  transformToForm,
+} from 'utils';
 
 export const MIN_LINES_NUMBER = 4;
 
@@ -49,4 +54,24 @@ export const useObserveEstimateNoSettings = (prefix, nextNumber) => {
     const estimateNo = transactionNumber(prefix, nextNumber);
     setFieldValue('estimate_number', estimateNo);
   }, [setFieldValue, prefix, nextNumber]);
-}
+};
+  
+/**
+ * Detarmines customers fast field when update.
+ */
+export const customersFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.customers !== oldProps.customers ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
+};
+
+/**
+ * Detarmines entries fast field should update.
+ */
+export const entriesFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.items !== oldProps.items ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
+};

@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import ItemsEntriesTable from 'containers/Entries/ItemsEntriesTable';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
+import { entriesFieldShouldUpdate } from './utils';
 
 /**
  * Invoice items entries editor field.
@@ -13,7 +14,11 @@ export default function InvoiceItemsEntriesEditorField() {
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-      <FastField name={'entries'}>
+      <FastField
+        name={'entries'}
+        items={items}
+        shouldUpdate={entriesFieldShouldUpdate}
+      >
         {({
           form: { values, setFieldValue },
           field: { value },

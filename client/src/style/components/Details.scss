@@ -1,0 +1,21 @@
+.details-menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+
+    &.is-vertical {}
+
+    .detail-item {
+
+
+        &__label {
+            color: #666666;
+            font-weight: 500;
+        }
+
+        &__content {
+            text-transform: capitalize;
+            margin: 5px 0;
+        }
+    }
+}

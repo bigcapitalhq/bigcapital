@@ -36,6 +36,7 @@ import {
   fullAmountPaymentEntries,
   amountPaymentEntries,
 } from 'utils';
+import { accountsFieldShouldUpdate, vendorsFieldShouldUpdate } from './utils';
 
 /**
  * Payment made form header fields.
@@ -48,17 +49,14 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
   } = useFormikContext();
 
   // Payment made form context.
-  const {
-    vendors,
-    accounts,
-    isNewMode,
-    setPaymentVendorId,
-  } = usePaymentMadeFormContext();
+  const { vendors, accounts, isNewMode, setPaymentVendorId } =
+    usePaymentMadeFormContext();
 
   // Sumation of payable full-amount.
-  const payableFullAmount = useMemo(() => safeSumBy(entries, 'due_amount'), [
-    entries,
-  ]);
+  const payableFullAmount = useMemo(
+    () => safeSumBy(entries, 'due_amount'),
+    [entries],
+  );
 
   // Handle receive full-amount click.
   const handleReceiveFullAmountClick = () => {
@@ -78,7 +76,11 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ------------ Vendor name ------------ */}
-      <FastField name={'vendor_id'}>
+      <FastField
+        name={'vendor_id'}
+        vendors={vendors}
+        shouldUpdate={vendorsFieldShouldUpdate}
+      >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'vendor_name'} />}
@@ -157,7 +159,7 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
               small={true}
               minimal={true}
             >
-             <T id={'receive_full_amount'} /> (
+              <T id={'receive_full_amount'} /> (
               <Money amount={payableFullAmount} currency={baseCurrency} />)
             </Button>
           </FormGroup>
@@ -184,7 +186,11 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
       </FastField>
 
       {/* ------------ Payment account ------------ */}
-      <FastField name={'payment_account_id'}>
+      <FastField
+        name={'payment_account_id'}
+        accounts={accounts}
+        shouldUpdate={accountsFieldShouldUpdate}
+      >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'payment_account'} />}

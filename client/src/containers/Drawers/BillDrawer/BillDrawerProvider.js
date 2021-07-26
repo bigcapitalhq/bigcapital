@@ -18,7 +18,9 @@ function BillDrawerProvider({ billId, ...props }) {
   //provider.
   const provider = {
     transactions,
+    billId,
   };
+
   return (
     <DashboardInsider loading={isLandedCostLoading}>
       <DrawerHeaderContent

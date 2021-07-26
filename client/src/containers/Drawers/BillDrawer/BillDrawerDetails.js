@@ -4,8 +4,6 @@ import intl from 'react-intl-universal';
 
 import LocatedLandedCostTable from './LocatedLandedCostTable';
 
-import 'style/components/Drawer/BillDrawer.scss';
-
 /**
  * Bill view details.
  */

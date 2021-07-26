@@ -17,7 +17,7 @@ import allocateLandedCostType from 'common/allocateLandedCostType';
 import { useLandedCostTransaction } from 'hooks/query';
 
 import AllocateLandedCostFormBody from './AllocateLandedCostFormBody';
-import { getEntriesByTransactionId } from './utils';
+import { getEntriesByTransactionId, allocateCostToEntries } from './utils';
 
 /**
  * Allocate landed cost form fields.
@@ -30,10 +30,10 @@ export default function AllocateLandedCostFormFields() {
   } = useLandedCostTransaction(values.transaction_type);
 
   // Retrieve entries of the given transaction id.
-  const transactionEntries = React.useMemo(() => getEntriesByTransactionId(
-    transactions,
-    values.transaction_id,
-  ), [transactions, values.transaction_id]);
+  const transactionEntries = React.useMemo(
+    () => getEntriesByTransactionId(transactions, values.transaction_id),
+    [transactions, values.transaction_id],
+  );
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -56,6 +56,8 @@ export default function AllocateLandedCostFormFields() {
               items={allocateLandedCostType}
               onItemSelect={(type) => {
                 setFieldValue('transaction_type', type.value);
+                setFieldValue('transaction_id', '');
+                setFieldValue('transaction_entry_id', '');
               }}
               filterable={false}
               selectedItem={value}
@@ -82,13 +84,14 @@ export default function AllocateLandedCostFormFields() {
               items={transactions}
               onItemSelect={({ id }) => {
                 form.setFieldValue('transaction_id', id);
+                form.setFieldValue('transaction_entry_id', '');
               }}
               filterable={false}
               selectedItem={value}
               selectedItemProp={'id'}
               textProp={'name'}
               labelProp={'id'}
-              defaultText={intl.get('select_transaction')}
+              defaultText={intl.get('Select transaction')}
               popoverProps={{ minimal: true }}
             />
           </FormGroup>
@@ -112,15 +115,21 @@ export default function AllocateLandedCostFormFields() {
               <ListSelect
                 items={transactionEntries}
                 onItemSelect={({ id, amount }) => {
-                  form.setFieldValue('amount', amount)
+                  const { items, allocation_method } = form.values;
+
+                  form.setFieldValue('amount', amount);
                   form.setFieldValue('transaction_entry_id', id);
+
+                  form.setFieldValue(
+                    'items',
+                    allocateCostToEntries(amount, allocation_method, items),
+                  );
                 }}
                 filterable={false}
                 selectedItem={value}
                 selectedItemProp={'id'}
                 textProp={'name'}
-                labelProp={'id'}
-                defaultText={intl.get('select_transaction')}
+                defaultText={intl.get('Select transaction entry')}
                 popoverProps={{ minimal: true }}
               />
             </FormGroup>
@@ -138,13 +147,24 @@ export default function AllocateLandedCostFormFields() {
             className={'form-group--amount'}
             inline={true}
           >
-            <InputGroup {...field} />
+            <InputGroup
+              {...field}
+              onBlur={(e) => {
+                const amount = e.target.value;
+                const { allocation_method, items } = form.values;
+
+                form.setFieldValue(
+                  'items',
+                  allocateCostToEntries(amount, allocation_method, items),
+                );
+              }}
+            />
           </FormGroup>
         )}
       </FastField>
 
       {/*------------ Allocation method -----------*/}
-      <FastField name={'allocation_method'}>
+      <Field name={'allocation_method'}>
         {({ form, field: { value }, meta: { touched, error } }) => (
           <FormGroup
             medium={true}
@@ -157,7 +177,13 @@ export default function AllocateLandedCostFormFields() {
           >
             <RadioGroup
               onChange={handleStringChange((_value) => {
+                const { amount, items, allocation_method } = form.values;
+
                 form.setFieldValue('allocation_method', _value);
+                form.setFieldValue(
+                  'items',
+                  allocateCostToEntries(amount, allocation_method, items),
+                );
               })}
               selectedValue={value}
               inline={true}
@@ -167,7 +193,7 @@ export default function AllocateLandedCostFormFields() {
             </RadioGroup>
           </FormGroup>
         )}
-      </FastField>
+      </Field>
 
       {/*------------ Allocate Landed cost Table -----------*/}
       <AllocateLandedCostFormBody />

@@ -90,7 +90,9 @@ export const objectKeysTransform = (obj, transform) => {
 
 export const compose = (...funcs) =>
   funcs.reduce(
-    (a, b) => (...args) => a(b(...args)),
+    (a, b) =>
+      (...args) =>
+        a(b(...args)),
     (arg) => arg,
   );
 
@@ -639,7 +641,32 @@ const getCurrenciesOptions = () => {
       currency_code: currencyCode,
       formatted_name: `${currencyCode} - ${currency.name}`,
     };
-  })
-}
+  });
+};
 
 export const currenciesOptions = getCurrenciesOptions();
+
+/**
+ * Deeply get a value from an object via its path.
+ */
+function getIn(obj, key, def, p = 0) {
+  const path = _.toPath(key);
+  while (obj && p < path.length) {
+    obj = obj[path[p++]];
+  }
+  return obj === undefined ? def : obj;
+}
+
+export const defaultFastFieldShouldUpdate = (props, prevProps) => {
+  return (
+    props.name !== prevProps.name ||
+    getIn(props.formik.values, prevProps.name) !==
+      getIn(prevProps.formik.values, prevProps.name) ||
+    getIn(props.formik.errors, prevProps.name) !==
+      getIn(prevProps.formik.errors, prevProps.name) ||
+    getIn(props.formik.touched, prevProps.name) !==
+      getIn(prevProps.formik.touched, prevProps.name) ||
+    Object.keys(prevProps).length !== Object.keys(props).length ||
+    props.formik.isSubmitting !== prevProps.formik.isSubmitting
+  );
+};

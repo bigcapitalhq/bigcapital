@@ -27,6 +27,7 @@ function EstimateFormHeader({
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <EstimateFormHeaderFields />
+
       <PageFormBigNumber
         label={intl.get('amount')}
         amount={totalDueAmount}

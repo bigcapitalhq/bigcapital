@@ -1,5 +1,5 @@
 import React from 'react';
-import BillTransactionDeleteAlert from 'containers/Alerts/Bills/BillTransactionDeleteAlert';
+import BillLocatedLandedCostDeleteAlert from 'containers/Alerts/Bills/BillLocatedLandedCostDeleteAlert';
 
 /**
  * Bill drawer alert.
@@ -7,7 +7,7 @@ import BillTransactionDeleteAlert from 'containers/Alerts/Bills/BillTransactionD
 export default function BillDrawerAlerts() {
   return (
     <div class="bills-alerts">
-      <BillTransactionDeleteAlert name="transaction-delete" />
+      <BillLocatedLandedCostDeleteAlert name="bill-located-cost-delete" />
     </div>
   );
 }

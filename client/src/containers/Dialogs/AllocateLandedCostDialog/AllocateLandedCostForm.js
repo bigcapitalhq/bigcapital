@@ -3,6 +3,7 @@ import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import moment from 'moment';
+import { sumBy } from 'lodash';
 
 import 'style/pages/AllocateLandedCost/AllocateLandedCostForm.scss';
 
@@ -48,6 +49,7 @@ function AllocateLandedCostForm({
       cost: '',
     })),
   };
+  const amount = sumBy(initialValues.items, 'amount');
 
   // Handle form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
@@ -84,9 +86,12 @@ function AllocateLandedCostForm({
     createLandedCostMutate([billId, form]).then(onSuccess).catch(onError);
   };
 
+  // Computed validation schema.
+  const validationSchema =  AllocateLandedCostFormSchema(amount);
+
   return (
     <Formik
-      validationSchema={AllocateLandedCostFormSchema}
+      validationSchema={validationSchema}
       initialValues={initialValues}
       onSubmit={handleFormSubmit}
       component={AllocateLandedCostFormContent}

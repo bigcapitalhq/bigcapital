@@ -5,8 +5,6 @@ import AccountDrawerHeader from './AccountDrawerHeader';
 import AccountDrawerTable from './AccountDrawerTable';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
 
-import 'style/components/Drawer/AccountDrawer.scss';
-
 /**
  * Account view details.
  */

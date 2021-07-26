@@ -4,14 +4,15 @@
   .bp3-tabs {
     .bp3-tab-list {
       position: relative;
-
+      background-color: #FFF;
+      
       &:before {
         content: '';
         position: absolute;
         bottom: 0;
         width: 100%;
         height: 2px;
-        background: #f0f0f0;
+        background: #e1e2e8;
       }
 
       > *:not(:last-child) {
@@ -29,14 +30,18 @@
         }
       }
     }
+
+    .bp3-tab-panel{
+      margin-top: 0;
+
+      .card{
+        margin: 15px;
+      }
+    }
   }
 
-  .bigcapital-datatable {
+  .datatable--landed-cost-transactions {
     .table {
-      max-height: 500px;
-      border: 1px solid #d1dee2;
-      min-width: auto;
-      margin: 12px;
 
       .tbody,
       .tbody-inner {
@@ -48,34 +53,13 @@
       }
       .tbody {
         .tr .td {
-          padding: 0.8rem;
+          padding: 0.6rem;
+
+          &.amount{
+            font-weight: 600;
+          }
         }
       }
-    }
-  }
-}
-
-.bp3-drawer.bp3-position-right {
-  bottom: 0;
-  right: 0;
-  top: 0;
-  overflow: auto;
-  height: 100%;
-
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .bp3-drawer-header {
-    margin-bottom: 2px;
-    box-shadow: (0, 0, 0);
-    background-color: #6a7993;
-
-    .bp3-heading,
-    .bp3-icon {
-      color: white;
     }
   }
 }

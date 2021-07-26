@@ -1,7 +1,7 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { useJournal } from 'hooks/query';
 import { DashboardInsider, DrawerHeaderContent } from 'components';
-import intl from 'react-intl-universal';
 
 const ManualJournalDrawerContext = React.createContext();
 

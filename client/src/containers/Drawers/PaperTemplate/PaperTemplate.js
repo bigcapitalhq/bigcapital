@@ -1,11 +1,13 @@
 import React from 'react';
+
+import 'style/components/Drawers/DrawerTemplate.scss';
+
 import PaperTemplateHeader from './PaperTemplateHeader';
 import PaperTemplateTable from './PaperTemplateTable';
 import PaperTemplateFooter from './PaperTemplateFooter';
 import { updateItemsEntriesTotal } from 'containers/Entries/utils';
 import intl from 'react-intl-universal';
 
-import 'style/components/Drawer/DrawerTemplate.scss';
 
 function PaperTemplate({ labels: propLabels, paperData, entries }) {
   const labels = {

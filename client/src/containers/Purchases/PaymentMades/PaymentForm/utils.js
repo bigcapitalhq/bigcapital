@@ -1,5 +1,9 @@
 import moment from 'moment';
-import { safeSumBy, transformToForm } from 'utils';
+import {
+  defaultFastFieldShouldUpdate,
+  safeSumBy,
+  transformToForm,
+} from 'utils';
 
 export const ERRORS = {
   PAYMENT_NUMBER_NOT_UNIQUE: 'PAYMENT.NUMBER.NOT.UNIQUE',
@@ -9,10 +13,10 @@ export const ERRORS = {
 export const defaultPaymentMadeEntry = {
   bill_id: '',
   payment_amount: '',
-  currency_code:'',
+  currency_code: '',
   id: null,
   due_amount: null,
-  amount:''
+  amount: '',
 };
 
 // Default initial values of payment made.
@@ -48,7 +52,26 @@ export const transformToNewPageEntries = (entries) => {
   return entries.map((entry) => ({
     ...transformToForm(entry, defaultPaymentMadeEntry),
     payment_amount: '',
-    currency_code:entry.currency_code,
-
+    currency_code: entry.currency_code,
   }));
-}
+};
+
+/**
+ * Detarmines vendors fast field when update. 
+ */
+export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.vendors !== oldProps.vendors ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
+};
+
+/**
+ * Detarmines accounts fast field when update.
+ */
+export const accountsFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.accounts !== oldProps.accounts ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
+};

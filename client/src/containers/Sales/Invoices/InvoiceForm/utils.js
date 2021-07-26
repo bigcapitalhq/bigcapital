@@ -11,7 +11,7 @@ import { updateItemsEntriesTotal } from 'containers/Entries/utils';
 import { useFormikContext } from 'formik';
 import { Intent } from '@blueprintjs/core';
 
-import { orderingLinesIndexes } from 'utils';
+import { defaultFastFieldShouldUpdate } from 'utils';
 import intl from 'react-intl-universal';
 import { ERROR } from 'common/errors';
 import { AppToaster } from 'components';
@@ -100,4 +100,18 @@ export const useObserveInvoiceNoSettings = (prefix, nextNumber) => {
     const invoiceNo = transactionNumber(prefix, nextNumber);
     setFieldValue('invoice_no', invoiceNo);
   }, [setFieldValue, prefix, nextNumber]);
+};
+
+export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.customers !== oldProps.customers ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
+};
+
+export const entriesFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.items !== oldProps.items ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
 };

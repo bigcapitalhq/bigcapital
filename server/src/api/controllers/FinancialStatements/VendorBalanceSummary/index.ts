@@ -45,7 +45,7 @@ export default class VendorBalanceSummaryReportController extends BaseFinancialR
    * Transformes the report statement to table rows.
    * @param {IVendorBalanceSummaryStatement} statement -
    */
-  transformToTableRows({ data }: IVendorBalanceSummaryStatement) {
+  private transformToTableRows({ data }: IVendorBalanceSummaryStatement) {
     return {
       table: {
         data: this.vendorBalanceSummaryTableRows.tableRowsTransformer(data),
@@ -57,7 +57,10 @@ export default class VendorBalanceSummaryReportController extends BaseFinancialR
    * Transformes the report statement to raw json.
    * @param {IVendorBalanceSummaryStatement} statement -
    */
-  transformToJsonResponse({ data, columns }: IVendorBalanceSummaryStatement) {
+  private transformToJsonResponse({
+    data,
+    columns,
+  }: IVendorBalanceSummaryStatement) {
     return {
       data: this.transfromToResponse(data),
       columns: this.transfromToResponse(columns),
@@ -76,10 +79,11 @@ export default class VendorBalanceSummaryReportController extends BaseFinancialR
     const filter = this.matchedQueryData(req);
 
     try {
-      const vendorBalanceSummary = await this.vendorBalanceSummaryService.vendorBalanceSummary(
-        tenantId,
-        filter
-      );
+      const vendorBalanceSummary =
+        await this.vendorBalanceSummaryService.vendorBalanceSummary(
+          tenantId,
+          filter
+        );
       const accept = this.accepts(req);
       const acceptType = accept.types(['json', 'application/json+table']);
 

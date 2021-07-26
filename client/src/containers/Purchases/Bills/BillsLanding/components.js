@@ -59,7 +59,7 @@ export function ActionsMenu({
         />
       </If>
       <MenuItem
-        // icon={<Icon icon="quick-payment-16" iconSize={16} />}
+        icon={<Icon icon="receipt-24" iconSize={16} />}
         text={intl.get('allocate_landed_coast')}
         onClick={safeCallback(onAllocateLandedCost, original)}
       />

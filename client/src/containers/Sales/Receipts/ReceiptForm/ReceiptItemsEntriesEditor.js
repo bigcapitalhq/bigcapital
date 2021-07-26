@@ -4,13 +4,14 @@ import { FastField } from 'formik';
 import ItemsEntriesTable from 'containers/Entries/ItemsEntriesTable';
 import { CLASSES } from 'common/classes';
 import { useReceiptFormContext } from './ReceiptFormProvider';
+import { entriesFieldShouldUpdate } from './utils';
 
 export default function ReceiptItemsEntriesEditor({ defaultReceipt }) {
   const { items } = useReceiptFormContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-      <FastField name={'entries'}>
+      <FastField name={'entries'} items={items} shouldUpdate={entriesFieldShouldUpdate}>
         {({
           form: { values, setFieldValue },
           field: { value },

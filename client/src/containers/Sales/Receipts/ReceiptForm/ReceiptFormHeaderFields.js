@@ -28,7 +28,11 @@ import {
   inputIntent,
 } from 'utils';
 import { useReceiptFormContext } from './ReceiptFormProvider';
-import { useObserveReceiptNoSettings } from './utils';
+import {
+  accountsFieldShouldUpdate,
+  customersFieldShouldUpdate,
+  useObserveReceiptNoSettings,
+} from './utils';
 
 /**
  * Receipt form header fields.
@@ -70,7 +74,11 @@ function ReceiptFormHeader({
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ----------- Customer name ----------- */}
-      <FastField name={'customer_id'}>
+      <FastField
+        name={'customer_id'}
+        customers={customers}
+        shouldUpdate={customersFieldShouldUpdate}
+      >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'customer_name'} />}
@@ -94,7 +102,11 @@ function ReceiptFormHeader({
       </FastField>
 
       {/* ----------- Deposit account ----------- */}
-      <FastField name={'deposit_account_id'}>
+      <FastField
+        name={'deposit_account_id'}
+        accounts={accounts}
+        shouldUpdate={accountsFieldShouldUpdate}
+      >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'deposit_account'} />}

@@ -57,6 +57,7 @@ import Postbox from './Postbox';
 import AccountsSuggestField from './AccountsSuggestField';
 import MaterialProgressBar from './MaterialProgressBar';
 import { MoneyFieldCell } from './DataTableCells';
+import Card from './Card';
 
 import { ItemsMultiSelect } from './Items';
 
@@ -127,5 +128,6 @@ export {
   AccountsSuggestField,
   MaterialProgressBar,
   MoneyFieldCell,
-  ItemsMultiSelect
+  ItemsMultiSelect,
+  Card
 };

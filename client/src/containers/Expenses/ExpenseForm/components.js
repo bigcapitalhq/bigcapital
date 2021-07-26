@@ -56,8 +56,12 @@ const ActionsCellRenderer = ({
 const LandedCostHeaderCell = () => {
   return (
     <>
-      <T id={'cost'} />
-      <Hint content={''} />
+      <T id={'Landed'} />
+      <Hint
+        content={
+          'This options allows you to be able to add additional cost eg. freight then allocate cost to the items in your bills.'
+        }
+      />
     </>
   );
 };
@@ -87,7 +91,7 @@ function ExpenseAccountFooterCell() {
 /**
  * Retrieve expense form table entries columns.
  */
-export function useExpenseFormTableColumns() {
+export function useExpenseFormTableColumns({ landedCost }) {
   return React.useMemo(
     () => [
       {
@@ -127,15 +131,19 @@ export function useExpenseFormTableColumns() {
         className: 'description',
         width: 100,
       },
-      {
-        Header: LandedCostHeaderCell,
-        accessor: 'landed_cost',
-        Cell: CheckBoxFieldCell,
-        disableSortBy: true,
-        disableResizing: true,
-        width: 70,
-        className: 'landed_cost',
-      },
+      ...(landedCost
+        ? [
+            {
+              Header: LandedCostHeaderCell,
+              accessor: 'landed_cost',
+              Cell: CheckBoxFieldCell,
+              disableSortBy: true,
+              disableResizing: true,
+              width: 100,
+              className: 'landed-cost',
+            },
+          ]
+        : []),
       {
         Header: '',
         accessor: 'action',

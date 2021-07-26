@@ -56,7 +56,7 @@ function BillTransactionDeleteAlert({
       onConfirm={handleConfirmLandedCostDelete}
       loading={isLoading}
     >
-      <p>{/* <T id={''}/> */}</p>
+      <p><T id={`Once your delete this located landed cost, you won't be able to restore it later, Are your sure you want to delete this transaction?`}/></p>
     </Alert>
   );
 }

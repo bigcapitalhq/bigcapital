@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { ref } from 'objection';
+import { ref, transaction } from 'objection';
 import {
   ILandedCostTransactionsQueryDTO,
   ILandedCostTransaction,
@@ -8,6 +8,7 @@ import {
 import TransactionLandedCost from './TransctionLandedCost';
 import BillsService from '../Bills';
 import HasTenancyService from 'services/Tenancy/TenancyService';
+import { formatNumber } from 'utils';
 
 @Service()
 export default class LandedCostListing {
@@ -71,8 +72,15 @@ export default class LandedCostListing {
 
     const landedCostTransactions = await BillLandedCost.query()
       .where('bill_id', billId)
-      .withGraphFetched('allocateEntries');
+      .withGraphFetched('allocateEntries')
+      .withGraphFetched('bill');
 
-    return landedCostTransactions;
+    return landedCostTransactions.map((transaction) => ({
+      ...transaction.toJSON(),
+      formattedAmount: formatNumber(
+        transaction.amount,
+        transaction.bill.currencyCode
+      ),
+    }));
   };
 }

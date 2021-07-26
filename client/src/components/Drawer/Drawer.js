@@ -1,9 +1,14 @@
 import React from 'react';
 import { Position, Drawer } from '@blueprintjs/core';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
+import 'style/components/Drawer.scss';
+
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { compose } from 'utils';
 
+/**
+ * Drawer component.
+ */
 function DrawerComponent(props) {
   const { name, children, onClose, closeDrawer } = props;
 

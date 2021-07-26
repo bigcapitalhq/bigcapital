@@ -1,9 +1,11 @@
 import React from 'react';
+
+import 'style/components/Drawers/DrawerTemplate.scss';
+
 import PaymentPaperTemplateHeader from './PaymentPaperTemplateHeader';
 import PaymentPaperTemplateTable from './PaymentPaperTemplateTable';
 import intl from 'react-intl-universal';
 
-import 'style/components/Drawer/DrawerTemplate.scss';
 
 export default function PaymentPaperTemplate({
   labels: propLabels,
