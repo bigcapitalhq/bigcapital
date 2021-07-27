@@ -12,6 +12,7 @@ import withAPAgingSummary from './withAPAgingSummary';
 import withAPAgingSummaryActions from './withAPAgingSummaryActions';
 
 import { compose } from 'utils';
+import { transformToForm } from '../../../utils';
 
 /**
  * AP Aging Summary Report - Drawer Header.
@@ -25,16 +26,17 @@ function APAgingSummaryHeader({
   toggleAPAgingSummaryFilterDrawer: toggleFilterDrawerDisplay,
 
   // #withAPAgingSummary
-  isFilterDrawerOpen
+  isFilterDrawerOpen,
 }) {
+  // Validation schema.
   const validationSchema = Yup.object({
-    as_date: Yup.date().required().label('asDate'),
-    aging_days_before: Yup.number()
+    asDate: Yup.date().required().label('asDate'),
+    agingDaysBefore: Yup.number()
       .required()
       .integer()
       .positive()
       .label('agingBeforeDays'),
-    aging_periods: Yup.number()
+    agingPeriods: Yup.number()
       .required()
       .integer()
       .positive()
@@ -42,11 +44,14 @@ function APAgingSummaryHeader({
   });
 
   // Initial values.
-  const initialValues = {
-    as_date: moment(pageFilter.asDate).toDate(),
-    aging_days_before: 30,
-    aging_periods: 3,
+  const defaultValues = {
+    asDate: moment(pageFilter.asDate).toDate(),
+    agingDaysBefore: 30,
+    agingPeriods: 3,
+    vendorsIds: [],
   };
+  // Formik initial values.
+  const initialValues = transformToForm(pageFilter, defaultValues);
 
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
@@ -55,18 +60,17 @@ function APAgingSummaryHeader({
     setSubmitting(false);
   };
 
-  // handle cancel button click.
-  const handleCancelClick = () => {
-    toggleFilterDrawerDisplay(false);
-  };
+  // Handle cancel button click.
+  const handleCancelClick = () => { toggleFilterDrawerDisplay(false); };
 
   // Handle the drawer closing.
-  const handleDrawerClose = () => {
-    toggleFilterDrawerDisplay(false);
-  };
+  const handleDrawerClose = () => { toggleFilterDrawerDisplay(false); };
 
   return (
-    <FinancialStatementHeader isOpen={isFilterDrawerOpen} drawerProps={{ onClose: handleDrawerClose }}>
+    <FinancialStatementHeader
+      isOpen={isFilterDrawerOpen}
+      drawerProps={{ onClose: handleDrawerClose }}
+    >
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

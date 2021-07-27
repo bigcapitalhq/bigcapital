@@ -82,5 +82,5 @@ export const transformFilterFormToQuery = (form) => {
     noneZero: form.accountsFilter === 'without-zero-balance',
     noneTransactions: form.accountsFilter === 'with-transactions',
   });
-  return flatObject(transformed);
+  return transformed;
 };

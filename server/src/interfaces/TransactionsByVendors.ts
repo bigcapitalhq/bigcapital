@@ -18,7 +18,9 @@ export interface ITransactionsByVendorsVendor {
 }
 
 export interface ITransactionsByVendorsFilter
-  extends ITransactionsByContactsFilter {}
+  extends ITransactionsByContactsFilter {
+  vendorsIds: number[];
+}
 
 export type ITransactionsByVendorsData = ITransactionsByVendorsVendor[];
 

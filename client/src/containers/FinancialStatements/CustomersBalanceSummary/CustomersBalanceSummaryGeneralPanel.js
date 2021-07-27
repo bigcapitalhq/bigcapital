@@ -1,14 +1,9 @@
 import React from 'react';
-import { FastField } from 'formik';
+import { FastField, Field } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import {
-  FormGroup,
-  Position,
-  Classes,
-  Checkbox,
-} from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
-
+import { Classes, FormGroup, Position, Checkbox } from '@blueprintjs/core';
+import { ContactsMultiSelect, FormattedMessage as T } from 'components';
+import classNames from 'classnames';
 import { Row, Col, FieldHint } from 'components';
 import {
   momentFormatter,
@@ -16,11 +11,14 @@ import {
   inputIntent,
   handleDateChange,
 } from 'utils';
+import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 
 /**
  * Customers balance header - general panel.
  */
 export default function CustomersBalanceSummaryGeneralPanel() {
+  const { customers } = useCustomersBalanceSummaryContext();
+
   return (
     <div>
       <Row>
@@ -48,6 +46,7 @@ export default function CustomersBalanceSummaryGeneralPanel() {
           </FastField>
         </Col>
       </Row>
+
       <Row>
         <Col xs={5}>
           <FastField name={'percentage'} type={'checkbox'}>
@@ -57,12 +56,37 @@ export default function CustomersBalanceSummaryGeneralPanel() {
                   inline={true}
                   name={'percentage'}
                   small={true}
-                  label={<T id={'percentage_of_column'}/>}
+                  label={<T id={'percentage_of_column'} />}
                   {...field}
                 />
               </FormGroup>
             )}
           </FastField>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col xs={5}>
+          <Field name={'customersIds'}>
+            {({
+              form: { setFieldValue },
+              field: { value },
+              meta: { error, touched },
+            }) => (
+              <FormGroup
+                label={<T id={'Specific customers'} />}
+                className={classNames('form-group--select-list', Classes.FILL)}
+              >
+                <ContactsMultiSelect
+                  onContactSelect={(contactsIds) => {
+                    setFieldValue('customersIds', contactsIds);
+                  }}
+                  contacts={customers}
+                  contactsSelected={value}
+                />
+              </FormGroup>
+            )}
+          </Field>
         </Col>
       </Row>
     </div>

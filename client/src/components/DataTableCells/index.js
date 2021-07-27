@@ -6,6 +6,7 @@ import ItemsListCell from './ItemsListCell';
 import PercentFieldCell from './PercentFieldCell';
 import { DivFieldCell, EmptyDiv } from './DivFieldCell';
 import NumericInputCell from './NumericInputCell';
+import CheckBoxFieldCell from './CheckBoxFieldCell'
 
 export {
   AccountsListFieldCell,
@@ -16,5 +17,6 @@ export {
   PercentFieldCell,
   DivFieldCell,
   EmptyDiv,
-  NumericInputCell
+  NumericInputCell,
+  CheckBoxFieldCell
 };

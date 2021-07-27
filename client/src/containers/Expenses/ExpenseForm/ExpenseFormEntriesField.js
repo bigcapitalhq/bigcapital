@@ -1,14 +1,22 @@
 import { FastField } from 'formik';
 import React from 'react';
 import ExpenseFormEntriesTable from './ExpenseFormEntriesTable';
-import { defaultExpenseEntry } from './utils';
+import { useExpenseFormContext } from './ExpenseFormPageProvider';
+import { defaultExpenseEntry, accountsFieldShouldUpdate } from './utils';
 
 /**
  * Expense form entries field.
  */
 export default function ExpenseFormEntriesField({ linesNumber = 4 }) {
+  // Expense form context.
+  const { accounts } = useExpenseFormContext();
+
   return (
-    <FastField name={'categories'}>
+    <FastField
+      name={'categories'}
+      accounts={accounts}
+      shouldUpdate={accountsFieldShouldUpdate}
+    >
       {({
         form: { values, setFieldValue },
         field: { value },

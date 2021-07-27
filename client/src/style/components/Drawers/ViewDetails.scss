@@ -1,6 +1,5 @@
 .journal-drawer,
 .expense-drawer {
-  background: #f5f5f5;
 
   &__content {
     display: flex;
@@ -18,8 +17,8 @@
       justify-content: flex-start;
       margin: 15px 0 20px;
       font-size: 14px;
-      // color: #333333;
       color: #666666;
+
       > div {
         flex-grow: 1;
         span {
@@ -44,17 +43,17 @@
     &--table {
       flex-grow: 1;
       flex-shrink: 0;
+
       .table {
         color: #666666;
         font-size: 14px;
-        .thead .tr .th .resizer {
-          display: none;
-        }
+
         .thead .th {
+          background: transparent;
           color: #222222;
           border-bottom: 1px solid #000000;
+          padding: 0.5rem;
         }
-        .thead .th,
         .tbody .tr .td {
           background: transparent;
           padding: 0.8rem 0.5rem;
@@ -63,7 +62,6 @@
       .desc {
         margin: 20px 0 60px;
 
-        // margin: 20px 0;
         > b {
           color: #2f2f2f;
         }
@@ -90,28 +88,6 @@
           font-weight: 500;
         }
       }
-    }
-  }
-}
-
-.bp3-drawer.bp3-position-right {
-  bottom: 0;
-  right: 0;
-  top: 0;
-  overflow: auto;
-  height: 100%;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .bp3-drawer-header {
-    margin-bottom: 2px;
-    box-shadow: (0, 0, 0);
-    background-color: #6a7993;
-    .bp3-heading,
-    .bp3-icon {
-      color: white;
     }
   }
 }

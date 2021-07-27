@@ -11,7 +11,6 @@ body.page-bill-edit{
   padding-bottom: 64px;
 }
 
-
 .page-form--bill{
   $self: '.page-form';
 
@@ -36,7 +35,7 @@ body.page-bill-edit{
         max-width: 440px; 
       }
 
-      &.form-group{  
+      &.form-group{
 
         &--expiration-date{
           max-width: 340px;

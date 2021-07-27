@@ -1,11 +1,10 @@
+.dashboard__insider--expenses {
 
-.dashboard__insider--expenses{
+  .bigcapital-datatable {
 
-  .bigcapital-datatable{
-
-    .tbody{
-      .tr .td.total_amount{
-        span{
+    .tbody {
+      .tr .td.total_amount {
+        span {
           font-weight: 600;
         }
       }
@@ -13,36 +12,64 @@
   }
 }
 
-.page-form--expense{
+.page-form--expense {
   $self: '.page-form';
 
-  #{$self}__header{
+  #{$self}__header {
     display: flex;
 
-    &-fields{
+    &-fields {
       flex: 1 0 0;
     }
 
-    .bp3-label{
+    .bp3-label {
       min-width: 140px;
     }
-    .bp3-form-content{
+
+    .bp3-form-content {
       width: 100%;
     }
 
-    .bp3-form-group{
+    .bp3-form-group {
       margin-bottom: 18px;
 
-      &.bp3-inline{
-        max-width: 440px; 
+      &.bp3-inline {
+        max-width: 440px;
       }
     }
   }
 
-  .form-group--description{
+  .datatable-editor--expense-form {
+
+
+    .table {
+
+      .tbody {
+        .tr .td {
+
+
+          &.landed-cost {
+
+            .bp3-control {
+              margin-top: 0;
+              margin-left: 34px;
+            }
+
+            .bp3-control-indicator {
+              height: 18px;
+              width: 18px;
+              border-color: #e0e0e0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .form-group--description {
     max-width: 500px;
 
-    textarea{
+    textarea {
       min-height: 60px;
       width: 100%;
     }

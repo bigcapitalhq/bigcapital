@@ -21,8 +21,8 @@ export default class ItemEntry extends TenantModel {
     return ['amount'];
   }
 
-  static amount() {
-    return this.calcAmount(this);
+  get amount() {
+    return ItemEntry.calcAmount(this);
   }
 
   static calcAmount(itemEntry) {
@@ -34,6 +34,7 @@ export default class ItemEntry extends TenantModel {
 
   static get relationMappings() {
     const Item = require('models/Item');
+    const BillLandedCostEntry = require('models/BillLandedCostEntry');
 
     return {
       item: {
@@ -42,6 +43,14 @@ export default class ItemEntry extends TenantModel {
         join: {
           from: 'items_entries.itemId',
           to: 'items.id',
+        },
+      },
+      allocatedCostEntries: {
+        relation: Model.HasManyRelation,
+        modelClass: BillLandedCostEntry.default,
+        join: {
+          from: 'items_entries.referenceId',
+          to: 'bill_located_cost_entries.entryId',
         },
       },
     };

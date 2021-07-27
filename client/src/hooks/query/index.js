@@ -23,3 +23,4 @@ export * from './exchangeRates';
 export * from './contacts';
 export * from './subscriptions';
 export * from './organization';
+export * from './landedCost';

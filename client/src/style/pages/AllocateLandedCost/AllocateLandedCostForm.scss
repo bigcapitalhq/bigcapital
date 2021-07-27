@@ -1,0 +1,63 @@
+// Allocate Landed Cost Form.
+.dialog--allocate-landed-cost-form {
+  width: 700px;
+
+  .bp3-dialog-body {
+    .bp3-form-group{
+      margin-bottom: 18px;
+    }
+    .bp3-form-group.bp3-inline {
+      .bp3-label {
+        min-width: 150px;
+      }
+      .bp3-form-content {
+        width: 300px;
+      }
+
+      &:not(.dialog--loading) .bp3-dialog-body {
+        margin-bottom: 30px;
+      }
+    }
+  }
+
+  .bp3-dialog-footer{
+    padding-top: 10px;
+  }
+
+  .bigcapital-datatable {
+    .table {
+      // max-height: 300px;
+      border: 1px solid #d1dee2;
+      min-width: auto;
+
+      .tbody,
+      .tbody-inner {
+        height: auto;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+      .tbody {
+        .tr .td {
+          padding: 0.4rem;
+          margin-left: -1px;
+          border-left: 1px solid #ececec;
+        }
+
+        .bp3-form-group{
+          margin-bottom: 0;
+
+          &:not(.bp3-intent-danger) .bp3-input{
+            border: 1px solid #d0dfe2;
+
+            &:focus{
+              box-shadow: 0 0 0 1px #116cd0;
+              border-color: #116cd0;
+            }
+          }
+        }
+      }
+    }
+  }
+}

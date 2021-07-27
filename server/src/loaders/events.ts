@@ -27,3 +27,5 @@ import 'subscribers/paymentMades';
 import 'subscribers/paymentReceives';
 import 'subscribers/saleEstimates';
 import 'subscribers/items';
+
+import 'subscribers/LandedCost';

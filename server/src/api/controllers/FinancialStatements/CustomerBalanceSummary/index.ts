@@ -23,6 +23,7 @@ export default class CustomerBalanceSummaryReportController extends BaseFinancia
     router.get(
       '/',
       this.validationSchema,
+      this.validationResult,
       asyncMiddleware(this.customerBalanceSummary.bind(this))
     );
     return router;
@@ -34,7 +35,13 @@ export default class CustomerBalanceSummaryReportController extends BaseFinancia
   get validationSchema() {
     return [
       ...this.sheetNumberFormatValidationSchema,
+
+      // As date.
       query('as_date').optional().isISO8601(),
+
+      // Customers ids.
+      query('customers_ids').optional().isArray({ min: 1 }),
+      query('customers_ids.*').exists().isInt().toInt(),
     ];
   }
 

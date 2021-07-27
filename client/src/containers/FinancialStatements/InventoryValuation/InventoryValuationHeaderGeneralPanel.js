@@ -1,20 +1,24 @@
 import React from 'react';
-import { FastField } from 'formik';
+import { FastField, Field } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormGroup, Position } from '@blueprintjs/core';
+import { FormGroup, Position, Classes } from '@blueprintjs/core';
+import classNames from 'classnames';
 import { FormattedMessage as T } from 'components';
-import { Row, Col, FieldHint } from 'components';
+import { ItemsMultiSelect, Row, Col, FieldHint } from 'components';
 import {
   momentFormatter,
   tansformDateValue,
   inputIntent,
   handleDateChange,
 } from 'utils';
+import { useInventoryValuationContext } from './InventoryValuationProvider';
 
 /**
- * inventory valuation - Drawer Header - General panel.
+ * Inventory valuation - Drawer Header - General panel.
  */
 export default function InventoryValuationHeaderGeneralPanel() {
+  const { items } = useInventoryValuationContext();
+
   return (
     <div>
       <Row>
@@ -40,6 +44,31 @@ export default function InventoryValuationHeaderGeneralPanel() {
               </FormGroup>
             )}
           </FastField>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col xs={5}>
+          <Field name={'itemsIds'}>
+            {({
+              form: { setFieldValue },
+              field: { value },
+              meta: { error, touched },
+            }) => (
+              <FormGroup
+                label={<T id={'Specific items'} />}
+                className={classNames('form-group--select-list', Classes.FILL)}
+              >
+                <ItemsMultiSelect
+                  items={items}
+                  selectedItems={value}
+                  onItemSelect={(itemsIds) => {
+                    setFieldValue('itemsIds', itemsIds);
+                  }}
+                />
+              </FormGroup>
+            )}
+          </Field>
         </Col>
       </Row>
     </div>

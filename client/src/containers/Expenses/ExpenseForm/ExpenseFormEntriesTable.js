@@ -22,12 +22,13 @@ export default function ExpenseFormEntriesTable({
   error,
   onChange,
   currencyCode,
+  landedCost = true,
 }) {
   // Expense form context.
   const { accounts } = useExpenseFormContext();
 
   // Memorized data table columns.
-  const columns = useExpenseFormTableColumns();
+  const columns = useExpenseFormTableColumns({ landedCost });
 
   // Handles update datatable data.
   const handleUpdateData = useCallback(
@@ -61,6 +62,7 @@ export default function ExpenseFormEntriesTable({
 
   return (
     <DataTableEditable
+      name={'expense-form'}
       columns={columns}
       data={entries}
       sticky={true}

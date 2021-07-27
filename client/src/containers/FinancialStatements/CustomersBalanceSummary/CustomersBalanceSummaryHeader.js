@@ -4,14 +4,13 @@ import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import withCustomersBalanceSummary from './withCustomersBalanceSummary';
 import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryActions';
 import CustomersBalanceSummaryGeneralPanel from './CustomersBalanceSummaryGeneralPanel';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
 
 /**
  * Customers balance summary.
@@ -33,11 +32,17 @@ function CustomersBalanceSummaryHeader({
     asDate: Yup.date().required().label('asDate'),
   });
 
-  // filter form initial values.
-  const initialValues = {
+  // Default form values.
+  const defaultValues = {
+    asDate: moment().toDate(),
+    customersIds: [],
+  };
+
+  // Filter form initial values.
+  const initialValues = transformToForm({
     ...pageFilter,
     asDate: moment(pageFilter.asDate).toDate(),
-  };
+  }, defaultValues);
 
   // handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {

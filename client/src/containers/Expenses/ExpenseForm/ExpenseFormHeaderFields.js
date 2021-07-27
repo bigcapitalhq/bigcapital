@@ -11,6 +11,7 @@ import {
   inputIntent,
   handleDateChange,
 } from 'utils';
+import { customersFieldShouldUpdate, accountsFieldShouldUpdate } from './utils';
 import {
   CurrencySelectList,
   ContactSelecetList,
@@ -51,7 +52,11 @@ export default function ExpenseFormHeader() {
         )}
       </FastField>
 
-      <FastField name={'payment_account_id'}>
+      <FastField
+        name={'payment_account_id'}
+        accounts={accounts}
+        shouldUpdate={accountsFieldShouldUpdate}
+      >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'payment_account'} />}
@@ -118,7 +123,11 @@ export default function ExpenseFormHeader() {
         )}
       </FastField>
 
-      <FastField name={'customer_id'}>
+      <FastField
+        name={'customer_id'}
+        customers={customers}
+        shouldUpdate={customersFieldShouldUpdate}
+      >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'customer'} />}

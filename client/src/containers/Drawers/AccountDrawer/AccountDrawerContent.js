@@ -1,4 +1,7 @@
 import React from 'react';
+
+import 'style/components/Drawers/AccountDrawer.scss';
+
 import { AccountDrawerProvider } from './AccountDrawerProvider';
 import AccountDrawerDetails from './AccountDrawerDetails';
 

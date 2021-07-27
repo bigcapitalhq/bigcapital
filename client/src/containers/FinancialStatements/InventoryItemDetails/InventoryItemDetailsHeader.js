@@ -12,7 +12,7 @@ import InventoryItemDetailsHeaderGeneralPanel from './InventoryItemDetailsHeader
 import withInventoryItemDetails from './withInventoryItemDetails';
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
 
 /**
  * Inventory item details header.
@@ -21,20 +21,25 @@ function InventoryItemDetailsHeader({
   // #ownProps
   onSubmitFilter,
   pageFilter,
-  //#withInventoryItemDetails
+  // #withInventoryItemDetails
   isFilterDrawerOpen,
 
-  //#withInventoryItemDetailsActions
+  // #withInventoryItemDetailsActions
   toggleInventoryItemDetailsFilterDrawer: toggleFilterDrawer,
 }) {
-  
+  // Default form values.
+  const defaultValues = {
+    fromDate: moment().toDate(),
+    toDate: moment().toDate(),
+    itemsIds: [],
+  };
 
-  //Filter form initial values.
-  const initialValues = {
+  // Filter form initial values.
+  const initialValues = transformToForm({
     ...pageFilter,
     fromDate: moment(pageFilter.fromDate).toDate(),
     toDate: moment(pageFilter.toDate).toDate(),
-  };
+  }, defaultValues);
 
   // Validation schema.
   const validationSchema = Yup.object().shape({
@@ -56,9 +61,7 @@ function InventoryItemDetailsHeader({
   };
 
   // Handle drawer close action.
-  const handleDrawerClose = () => {
-    toggleFilterDrawer(false);
-  };
+  const handleDrawerClose = () => { toggleFilterDrawer(false); };
   
   return (
     <FinancialStatementHeader

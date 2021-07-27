@@ -53,8 +53,12 @@ export default class InventoryDetailsController extends BaseController {
         .escape(),
       query('from_date').optional(),
       query('to_date').optional(),
+
       query('none_zero').optional().isBoolean().toBoolean(),
       query('none_transactions').optional().isBoolean().toBoolean(),
+
+      query('items_ids').optional().isArray(),
+      query('items_ids.*').optional().isInt().toInt(),
     ];
   }
 

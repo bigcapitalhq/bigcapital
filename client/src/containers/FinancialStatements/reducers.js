@@ -113,7 +113,8 @@ export const profitLossSheetReducer = (profitLoss) => {
   }
   if (profitLoss.other_income) {
     results.push({
-      name: 'other_income',
+      
+      name:<T id={'other_income'}/>,
       total: profitLoss.other_income.total,
       total_periods: profitLoss.other_income.total_periods,
       children: [

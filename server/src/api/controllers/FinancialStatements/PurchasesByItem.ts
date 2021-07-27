@@ -28,14 +28,20 @@ export default class PurchasesByItemReportController extends BaseFinancialReport
 
   /**
    * Validation schema.
+   * @return {ValidationChain[]}
    */
   get validationSchema(): ValidationChain[] {
     return [
       query('from_date').optional().isISO8601(),
       query('to_date').optional().isISO8601(),
+
       query('number_format.no_cents').optional().isBoolean().toBoolean(),
       query('number_format.divide_1000').optional().isBoolean().toBoolean(),
       query('none_transactions').default(true).isBoolean().toBoolean(),
+
+      query('items_ids').optional().isArray(),
+      query('items_ids.*').optional().isInt().toInt(),
+
       query('orderBy').optional().isIn(['created_at', 'name', 'code']),
       query('order').optional().isIn(['desc', 'asc']),
     ];

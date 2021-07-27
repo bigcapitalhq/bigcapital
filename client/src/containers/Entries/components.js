@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
-import { Tooltip, Button, Intent, Position } from '@blueprintjs/core';
+import { Tooltip, Button, Checkbox, Intent, Position } from '@blueprintjs/core';
 import { Hint, Icon } from 'components';
 import { formattedAmount, safeSumBy } from 'utils';
 import {
@@ -10,6 +10,7 @@ import {
   ItemsListCell,
   PercentFieldCell,
   NumericInputCell,
+  CheckBoxFieldCell,
 } from 'components/DataTableCells';
 
 /**
@@ -28,7 +29,11 @@ export function ItemHeaderCell() {
  * Item column footer cell.
  */
 export function ItemFooterCell() {
-  return <span><T id={'total'}/></span>;
+  return (
+    <span>
+      <T id={'total'} />
+    </span>
+  );
 }
 
 /**
@@ -87,11 +92,25 @@ export function IndexTableCell({ row: { index } }) {
 }
 
 /**
+ * Landed cost header cell.
+ */
+const LandedCostHeaderCell = () => {
+  return (
+    <>
+      <T id={'Landed'} />
+      <Hint
+        content={
+          'This options allows you to be able to add additional cost eg. freight then allocate cost to the items in your bills.'
+        }
+      />
+    </>
+  );
+};
+
+/**
  * Retrieve editable items entries columns.
  */
-export function useEditableItemsEntriesColumns() {
-  
-
+export function useEditableItemsEntriesColumns({ landedCost }) {
   return React.useMemo(
     () => [
       {
@@ -155,6 +174,19 @@ export function useEditableItemsEntriesColumns() {
         width: 100,
         className: 'total',
       },
+      ...(landedCost
+        ? [
+            {
+              Header: LandedCostHeaderCell,
+              accessor: 'landed_cost',
+              Cell: CheckBoxFieldCell,
+              width: 100,
+              disableSortBy: true,
+              disableResizing: true,
+              className: 'landed-cost',
+            },
+          ]
+        : []),
       {
         Header: '',
         accessor: 'action',

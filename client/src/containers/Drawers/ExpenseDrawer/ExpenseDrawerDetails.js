@@ -4,7 +4,6 @@ import ExpenseDrawerHeader from './ExpenseDrawerHeader';
 import ExpenseDrawerTable from './ExpenseDrawerTable';
 import ExpenseDrawerFooter from './ExpenseDrawerFooter';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
-import 'style/components/Drawer/ViewDetails.scss';
 
 /**
  * Expense view details.

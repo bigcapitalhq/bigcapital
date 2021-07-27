@@ -12,7 +12,7 @@ import CustomersTransactionsHeaderGeneralPanel from './CustomersTransactionsHead
 import withCustomersTransactions from './withCustomersTransactions';
 import withCustomersTransactionsActions from './withCustomersTransactionsActions';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
 
 /**
  * Customers transactions header.
@@ -28,14 +28,18 @@ function CustomersTransactionsHeader({
   //#withCustomersTransactionsActions
   toggleCustomersTransactionsFilterDrawer: toggleFilterDrawer,
 }) {
-  
-
-  // Filter form initial values.
-  const initialValues = {
+  // Default form values.
+  const defaultValues = {
+    fromDate: moment().toDate(),
+    toDate: moment().toDate(),
+    customersIds: [],
+  };
+  // Initial form values.
+  const initialValues = transformToForm({
     ...pageFilter,
     fromDate: moment(pageFilter.fromDate).toDate(),
     toDate: moment(pageFilter.toDate).toDate(),
-  };
+  }, defaultValues);
 
   // Validation schema.
   const validationSchema = Yup.object().shape({
@@ -54,11 +58,8 @@ function CustomersTransactionsHeader({
     toggleFilterDrawer(false);
     setSubmitting(false);
   };
-
   // Handle drawer close action.
-  const handleDrawerClose = () => {
-    toggleFilterDrawer(false);
-  };
+  const handleDrawerClose = () => { toggleFilterDrawer(false); };
 
   return (
     <FinancialStatementHeader

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField } from 'formik';
+import { FastField, Field } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
 import {
   Intent,
@@ -93,12 +93,22 @@ export default function ARAgingSummaryHeaderGeneral() {
       </Row>
       <Row>
         <Col xs={5}>
-          <FormGroup
-            label={<T id={'specific_customers'} />}
-            className={classNames('form-group--select-list', Classes.FILL)}
-          >
-            <ContactsMultiSelect contacts={customers} />
-          </FormGroup>
+          <Field name="customersIds">
+            {({ form: { setFieldValue }, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'specific_customers'} />}
+                className={classNames('form-group--select-list', Classes.FILL)}
+              >
+                <ContactsMultiSelect
+                  contacts={customers}
+                  contactsSelected={value}
+                  onContactSelect={(contactsIds) => {
+                    setFieldValue('customersIds', contactsIds);
+                  }}
+                />
+              </FormGroup>
+            )}
+          </Field>
         </Col>
       </Row>
     </div>

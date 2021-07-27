@@ -17,11 +17,13 @@ import {
   IExpensesService,
   ISystemUser,
   IPaginationMeta,
+  IExpenseCategory,
 } from 'interfaces';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
 import ContactsService from 'services/Contacts/ContactsService';
-import { ACCOUNT_PARENT_TYPE, ACCOUNT_ROOT_TYPE } from 'data/AccountTypes'
+import { ACCOUNT_PARENT_TYPE, ACCOUNT_ROOT_TYPE } from 'data/AccountTypes';
+import EntriesService from 'services/Entries';
 
 const ERRORS = {
   EXPENSE_NOT_FOUND: 'expense_not_found',
@@ -32,6 +34,7 @@ const ERRORS = {
   PAYMENT_ACCOUNT_HAS_INVALID_TYPE: 'payment_account_has_invalid_type',
   EXPENSES_ACCOUNT_HAS_INVALID_TYPE: 'expenses_account_has_invalid_type',
   EXPENSE_ALREADY_PUBLISHED: 'expense_already_published',
+  EXPENSE_HAS_ASSOCIATED_LANDED_COST: 'EXPENSE_HAS_ASSOCIATED_LANDED_COST',
 };
 
 @Service()
@@ -50,6 +53,9 @@ export default class ExpensesService implements IExpensesService {
 
   @Inject()
   contactsService: ContactsService;
+
+  @Inject()
+  entriesService: EntriesService;
 
   /**
    * Retrieve the payment account details or returns not found server error in case the
@@ -249,14 +255,16 @@ export default class ExpensesService implements IExpensesService {
    * @returns {IExpense|ServiceError}
    */
   private async getExpenseOrThrowError(tenantId: number, expenseId: number) {
-    const { expenseRepository } = this.tenancy.repositories(tenantId);
+    const { Expense } = this.tenancy.models(tenantId);
 
     this.logger.info('[expense] trying to get the given expense.', {
       tenantId,
       expenseId,
     });
     // Retrieve the given expense by id.
-    const expense = await expenseRepository.findOneById(expenseId);
+    const expense = await Expense.query()
+      .findById(expenseId)
+      .withGraphFetched('categories');
 
     if (!expense) {
       this.logger.info('[expense] the given expense not found.', {
@@ -309,18 +317,41 @@ export default class ExpensesService implements IExpensesService {
   }
 
   /**
+   * Retrieve the expense landed cost amount.
+   * @param {IExpenseDTO} expenseDTO
+   * @return {number}
+   */
+  private getExpenseLandedCostAmount(expenseDTO: IExpenseDTO): number {
+    const landedCostEntries = expenseDTO.categories.filter((entry) => {
+      return entry.landedCost === true;
+    });
+    return this.getExpenseCategoriesTotal(landedCostEntries);
+  }
+
+  /**
+   * Retrieve the given expense categories total.
+   * @param {IExpenseCategory} categories
+   * @returns {number}
+   */
+  private getExpenseCategoriesTotal(categories): number {
+    return sumBy(categories, 'amount');
+  }
+
+  /**
    * Mapping expense DTO to model.
    * @param  {IExpenseDTO} expenseDTO
    * @param  {ISystemUser} authorizedUser
    * @return {IExpense}
    */
   private expenseDTOToModel(expenseDTO: IExpenseDTO, user?: ISystemUser) {
-    const totalAmount = sumBy(expenseDTO.categories, 'amount');
+    const landedCostAmount = this.getExpenseLandedCostAmount(expenseDTO);
+    const totalAmount = this.getExpenseCategoriesTotal(expenseDTO.categories);
 
     return {
       categories: [],
       ...omit(expenseDTO, ['publish']),
       totalAmount,
+      landedCostAmount,
       paymentDate: moment(expenseDTO.paymentDate).toMySqlDateTime(),
       ...(user
         ? {
@@ -340,7 +371,7 @@ export default class ExpensesService implements IExpensesService {
    * @param  {IExpenseDTO} expenseDTO
    * @return {number[]}
    */
-  mapExpensesAccountsIdsFromDTO(expenseDTO: IExpenseDTO) {
+  private mapExpensesAccountsIdsFromDTO(expenseDTO: IExpenseDTO) {
     return expenseDTO.categories.map((category) => category.expenseAccountId);
   }
 
@@ -434,36 +465,47 @@ export default class ExpensesService implements IExpensesService {
     const { expenseRepository } = this.tenancy.repositories(tenantId);
     const oldExpense = await this.getExpenseOrThrowError(tenantId, expenseId);
 
-    // - Validate payment account existance on the storage.
+    // Validate payment account existance on the storage.
     const paymentAccount = await this.getPaymentAccountOrThrowError(
       tenantId,
       expenseDTO.paymentAccountId
     );
-    // - Validate expense accounts exist on the storage.
+    // Validate expense accounts exist on the storage.
     const expensesAccounts = await this.getExpensesAccountsOrThrowError(
       tenantId,
       this.mapExpensesAccountsIdsFromDTO(expenseDTO)
     );
-    // - Validate payment account type.
+    // Validate payment account type.
     await this.validatePaymentAccountType(tenantId, paymentAccount);
 
-    // - Validate expenses accounts type.
+    // Validate expenses accounts type.
     await this.validateExpensesAccountsType(tenantId, expensesAccounts);
 
-    // - Validate the expense payee contact id existance on storage.
+    // Validate the expense payee contact id existance on storage.
     if (expenseDTO.payeeId) {
       await this.contactsService.getContactByIdOrThrowError(
         tenantId,
         expenseDTO.payeeId
       );
     }
-    // - Validate the given expense categories not equal zero.
+    // Validate the given expense categories not equal zero.
     this.validateCategoriesNotEqualZero(expenseDTO);
 
-    // - Update the expense on the storage.
+    // Update the expense on the storage.
     const expenseObj = this.expenseDTOToModel(expenseDTO);
 
-    // - Upsert the expense object with expense entries.
+    // Validate expense entries that have allocated landed cost cannot be deleted.
+    this.entriesService.validateLandedCostEntriesNotDeleted(
+      oldExpense.categories,
+      expenseDTO.categories,
+    );
+    // Validate expense entries that have allocated cost amount should be bigger than amount.
+    this.entriesService.validateLocatedCostEntriesSmallerThanNewEntries(
+      oldExpense.categories,
+      expenseDTO.categories,
+    );
+
+    // Upsert the expense object with expense entries.
     const expense = await expenseRepository.upsertGraph({
       id: expenseId,
       ...expenseObj,
@@ -544,15 +586,16 @@ export default class ExpensesService implements IExpensesService {
     authorizedUser: ISystemUser
   ): Promise<void> {
     const oldExpense = await this.getExpenseOrThrowError(tenantId, expenseId);
-    const {
-      expenseRepository,
-      expenseEntryRepository,
-    } = this.tenancy.repositories(tenantId);
+    const { expenseRepository, expenseEntryRepository } =
+      this.tenancy.repositories(tenantId);
 
     this.logger.info('[expense] trying to delete the expense.', {
       tenantId,
       expenseId,
     });
+    // Validates the expense has no associated landed cost.
+    await this.validateNoAssociatedLandedCost(tenantId, expenseId);
+
     await expenseEntryRepository.deleteBy({ expenseId });
     await expenseRepository.deleteById(expenseId);
 
@@ -572,7 +615,7 @@ export default class ExpensesService implements IExpensesService {
 
   /**
    * Filters the not published expenses.
-   * @param {IExpense[]} expenses - 
+   * @param {IExpense[]} expenses -
    */
   public getNonePublishedExpenses(expenses: IExpense[]): IExpense[] {
     return expenses.filter((expense) => !expense.publishedAt);
@@ -647,5 +690,26 @@ export default class ExpensesService implements IExpensesService {
       throw new ServiceError(ERRORS.EXPENSE_NOT_FOUND);
     }
     return expense;
+  }
+
+  /**
+   * Validates the expense has not associated landed cost
+   * references to the given expense.
+   * @param {number} tenantId
+   * @param {number} expenseId
+   */
+  public async validateNoAssociatedLandedCost(
+    tenantId: number,
+    expenseId: number
+  ) {
+    const { BillLandedCost } = this.tenancy.models(tenantId);
+
+    const associatedLandedCosts = await BillLandedCost.query()
+      .where('fromTransactionType', 'Expense')
+      .where('fromTransactionId', expenseId);
+
+    if (associatedLandedCosts.length > 0) {
+      throw new ServiceError(ERRORS.EXPENSE_HAS_ASSOCIATED_LANDED_COST);
+    }
   }
 }

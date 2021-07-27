@@ -1,58 +1,57 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { MenuItem, Button } from '@blueprintjs/core';
-import { omit } from 'lodash';
+import intl from 'react-intl-universal';
 import MultiSelect from 'components/MultiSelect';
 import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
+import { safeInvoke } from 'utils';
 
+/**
+ * Contacts multi-select component.
+ */
 export default function ContactsMultiSelect({
   contacts,
   defaultText = <T id={'all_customers'} />,
   buttonProps,
 
-  onCustomerSelected: onContactSelected,
-  ...selectProps
+  onContactSelect,
+  contactsSelected = [],
+  ...multiSelectProps
 }) {
-  const [selectedContacts, setSelectedContacts] = useState({});
+  const [localSelected, setLocalSelected] = useState([ ...contactsSelected]);
 
-  const isContactSelect = useCallback(
-    (id) => typeof selectedContacts[id] !== 'undefined',
-    [selectedContacts],
+  // Detarmines the given id is selected.
+  const isItemSelected = useCallback(
+    (id) => localSelected.some(s => s === id),
+    [localSelected],
   );
 
+  // Contact item renderer.
   const contactRenderer = useCallback(
     (contact, { handleClick }) => (
       <MenuItem
-        icon={isContactSelect(contact.id) ? 'tick' : 'blank'}
+        icon={isItemSelected(contact.id) ? 'tick' : 'blank'}
         text={contact.display_name}
         key={contact.id}
         onClick={handleClick}
       />
     ),
-    [isContactSelect],
+    [isItemSelected],
   );
 
-  const countSelected = useMemo(
-    () => Object.values(selectedContacts).length,
-    [selectedContacts],
-  );
+  // Count selected items.
+  const countSelected = localSelected.length;
 
-  const onContactSelect = useCallback(
+  // Handle item selected.
+  const handleItemSelect = useCallback(
     ({ id }) => {
-      const selected = {
-        ...(isContactSelect(id)
-          ? {
-              ...omit(selectedContacts, [id]),
-            }
-          : {
-              ...selectedContacts,
-              [id]: true,
-            }),
-      };
-      setSelectedContacts({ ...selected });
-      onContactSelected && onContactSelected(selected);
+      const selected = isItemSelected(id)
+        ? localSelected.filter(s => s !== id)
+        : [...localSelected, id];
+      
+      setLocalSelected([ ...selected ]);
+      safeInvoke(onContactSelect, selected);
     },
-    [setSelectedContacts, selectedContacts, isContactSelect, onContactSelected],
+    [setLocalSelected, localSelected, isItemSelected, onContactSelect],
   );
 
   return (
@@ -62,7 +61,8 @@ export default function ContactsMultiSelect({
       itemRenderer={contactRenderer}
       popoverProps={{ minimal: true }}
       filterable={true}
-      onItemSelect={onContactSelect}
+      onItemSelect={handleItemSelect}
+      {...multiSelectProps}
     >
       <Button
         text={

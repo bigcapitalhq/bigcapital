@@ -33,7 +33,7 @@ function InventoryItemDetails({
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
   });
-
+  // Handle filter submit.
   const handleFilterSubmit = (filter) => {
     const _filter = {
       ...filter,
@@ -61,10 +61,14 @@ function InventoryItemDetails({
       />
       <InventoryItemDetailsLoadingBar />
       <InventoryItemDetailsAlerts />
-      
+
       <DashboardPageContent>
         <FinancialStatement>
-          <div className={'financial-statement--inventory-details'}>
+          <div
+            className={
+              'financial-statement financial-statement--inventory-details'
+            }
+          >
             <InventoryItemDetailsHeader
               pageFilter={filter}
               onSubmitFilter={handleFilterSubmit}

@@ -406,7 +406,7 @@ export default class ItemsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  handlerServiceErrors(
+  private handlerServiceErrors(
     error: Error,
     req: Request,
     res: Response,

@@ -1068,5 +1068,9 @@ export default {
   statement_of_cash_flow: 'Statement of Cash Flow ',
   inventory_item_details: 'Inventory Item Details',
   congratulations: 'Congratulations',
+<<<<<<< HEAD
+=======
+  "all_items"
+>>>>>>> feature/landed-cost
 };
 

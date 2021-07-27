@@ -1,4 +1,7 @@
 import React from 'react';
+
+import 'style/components/Drawers/ViewDetails.scss';
+
 import { ExpenseDrawerProvider } from './ExpenseDrawerProvider';
 import ExpenseDrawerDetails from './ExpenseDrawerDetails';
 

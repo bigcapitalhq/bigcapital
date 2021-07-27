@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField, Field, ErrorMessage } from 'formik';
+import { useFormikContext, FastField, Field, ErrorMessage } from 'formik';
 import {
   FormGroup,
   Classes,
@@ -23,12 +23,21 @@ import withSettings from 'containers/Settings/withSettings';
 import { ACCOUNT_PARENT_TYPE } from 'common/accountTypes';
 
 import { compose, inputIntent } from 'utils';
+import {
+  sellDescriptionFieldShouldUpdate,
+  sellAccountFieldShouldUpdate,
+  sellPriceFieldShouldUpdate,
+  costPriceFieldShouldUpdate,
+  costAccountFieldShouldUpdate,
+  purchaseDescFieldShouldUpdate,
+} from './utils';
 
 /**
  * Item form body.
  */
 function ItemFormBody({ baseCurrency }) {
   const { accounts } = useItemFormContext();
+  const { values } = useFormikContext();
 
   return (
     <div class="page-form__section page-form__section--selling-cost">
@@ -53,7 +62,11 @@ function ItemFormBody({ baseCurrency }) {
           </FastField>
 
           {/*------------- Selling price ------------- */}
-          <FastField name={'sell_price'}>
+          <FastField
+            name={'sell_price'}
+            sellable={values.sellable}
+            shouldUpdate={sellPriceFieldShouldUpdate}
+          >
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'selling_price'} />}
@@ -78,7 +91,12 @@ function ItemFormBody({ baseCurrency }) {
           </FastField>
 
           {/*------------- Selling account ------------- */}
-          <FastField name={'sell_account_id'}>
+          <FastField
+            name={'sell_account_id'}
+            sellable={values.sellable}
+            accounts={accounts}
+            shouldUpdate={sellAccountFieldShouldUpdate}
+          >
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'account'} />}
@@ -107,7 +125,11 @@ function ItemFormBody({ baseCurrency }) {
             )}
           </FastField>
 
-          <FastField name={'sell_description'}>
+          <FastField
+            name={'sell_description'}
+            sellable={values.sellable}
+            shouldUpdate={sellDescriptionFieldShouldUpdate}
+          >
             {({ form: { values }, field, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'description'} />}
@@ -146,7 +168,11 @@ function ItemFormBody({ baseCurrency }) {
           </FastField>
 
           {/*------------- Cost price ------------- */}
-          <FastField name={'cost_price'}>
+          <FastField
+            name={'cost_price'}
+            purchasable={values.purchasable}
+            shouldUpdate={costPriceFieldShouldUpdate}
+          >
             {({ field, form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'cost_price'} />}
@@ -171,7 +197,12 @@ function ItemFormBody({ baseCurrency }) {
           </FastField>
 
           {/*------------- Cost account ------------- */}
-          <FastField name={'cost_account_id'}>
+          <FastField
+            name={'cost_account_id'}
+            purchasable={values.purchasable}
+            accounts={accounts}
+            shouldUpdate={costAccountFieldShouldUpdate}
+          >
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'account'} />}
@@ -200,7 +231,11 @@ function ItemFormBody({ baseCurrency }) {
             )}
           </FastField>
 
-          <FastField name={'purchase_description'}>
+          <FastField
+            name={'purchase_description'}
+            purchasable={values.purchasable}
+            shouldUpdate={purchaseDescFieldShouldUpdate}
+          >
             {({ form: { values }, field, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'description'} />}

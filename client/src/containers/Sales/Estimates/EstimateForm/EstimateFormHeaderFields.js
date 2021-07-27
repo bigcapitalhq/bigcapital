@@ -15,6 +15,7 @@ import {
   inputIntent,
   handleDateChange,
 } from 'utils';
+import { customersFieldShouldUpdate } from './utils';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
@@ -67,7 +68,11 @@ function EstimateFormHeader({
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ----------- Customer name ----------- */}
-      <FastField name={'customer_id'}>
+      <FastField
+        name={'customer_id'}
+        customers={customers}
+        shouldUpdate={customersFieldShouldUpdate}
+      >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'customer_name'} />}
@@ -170,7 +175,9 @@ function EstimateFormHeader({
                 }}
                 tooltip={true}
                 tooltipProps={{
-                  content: <T id={'setting_your_auto_generated_estimate_number'}/>,
+                  content: (
+                    <T id={'setting_your_auto_generated_estimate_number'} />
+                  ),
                   position: Position.BOTTOM_LEFT,
                 }}
               />

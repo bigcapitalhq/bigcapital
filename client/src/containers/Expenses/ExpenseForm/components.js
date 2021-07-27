@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Tooltip, Intent, Position } from '@blueprintjs/core';
+import { Button, Tooltip, Intent, Position, Checkbox } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
 import { Icon, Hint } from 'components';
 import intl from 'react-intl-universal';
@@ -7,6 +7,7 @@ import {
   InputGroupCell,
   MoneyFieldCell,
   AccountsListFieldCell,
+  CheckBoxFieldCell,
 } from 'components/DataTableCells';
 import { formattedAmount, safeSumBy } from 'utils';
 
@@ -50,6 +51,22 @@ const ActionsCellRenderer = ({
 };
 
 /**
+ * Landed cost header cell.
+ */
+const LandedCostHeaderCell = () => {
+  return (
+    <>
+      <T id={'Landed'} />
+      <Hint
+        content={
+          'This options allows you to be able to add additional cost eg. freight then allocate cost to the items in your bills.'
+        }
+      />
+    </>
+  );
+};
+
+/**
  * Amount footer cell.
  */
 function AmountFooterCell({ payload: { currencyCode }, rows }) {
@@ -74,7 +91,7 @@ function ExpenseAccountFooterCell() {
 /**
  * Retrieve expense form table entries columns.
  */
-export function useExpenseFormTableColumns() {
+export function useExpenseFormTableColumns({ landedCost }) {
   return React.useMemo(
     () => [
       {
@@ -114,6 +131,19 @@ export function useExpenseFormTableColumns() {
         className: 'description',
         width: 100,
       },
+      ...(landedCost
+        ? [
+            {
+              Header: LandedCostHeaderCell,
+              accessor: 'landed_cost',
+              Cell: CheckBoxFieldCell,
+              disableSortBy: true,
+              disableResizing: true,
+              width: 100,
+              className: 'landed-cost',
+            },
+          ]
+        : []),
       {
         Header: '',
         accessor: 'action',

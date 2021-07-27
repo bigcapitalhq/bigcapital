@@ -21,6 +21,7 @@ import { CLASSES } from 'common/classes';
 
 import { useItemFormContext } from './ItemFormProvider';
 import { handleStringChange, inputIntent } from 'utils';
+import { categoriesFieldShouldUpdate } from './utils';
 
 /**
  * Item form primary section.
@@ -130,7 +131,11 @@ export default function ItemFormPrimarySection() {
           </FastField>
 
           {/*----------- Item category ----------*/}
-          <FastField name={'category_id'}>
+          <FastField
+            name={'category_id'}
+            categories={itemsCategories}
+            shouldUpdate={categoriesFieldShouldUpdate}
+          >
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'category'} />}

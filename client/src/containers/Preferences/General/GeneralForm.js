@@ -22,15 +22,20 @@ import {
   handleDateChange,
 } from 'utils';
 import { CLASSES } from 'common/classes';
-import countriesOptions from 'common/countries';
-import currencies from 'common/currencies';
-import { getFiscalYearOptions } from 'common/fiscalYearOptions';
-import languages from 'common/languagesOptions';
-import dateFormatsOptions from 'common/dateFormatsOptions';
+import { getCountries } from 'common/countries';
+import { getCurrencies } from 'common/currencies';
+import { getFiscalYear } from 'common/fiscalYearOptions';
+import { getLanguages } from 'common/languagesOptions';
+import { getDateFormats } from 'common/dateFormatsOptions';
 
 export default function PreferencesGeneralForm({}) {
   const history = useHistory();
-  const fiscalYearOptions = getFiscalYearOptions();
+
+  const FiscalYear = getFiscalYear();
+  const Countries = getCountries();
+  const Languages = getLanguages();
+  const Currencies = getCurrencies();
+  const DataFormats = getDateFormats();
 
   const handleCloseClick = () => {
     history.go(-1);
@@ -38,6 +43,7 @@ export default function PreferencesGeneralForm({}) {
 
   return (
     <Form>
+      {/* ---------- Organization name ----------  */}
       <FastField name={'name'}>
         {({ field, meta: { error, touched } }) => (
           <FormGroup
@@ -53,6 +59,7 @@ export default function PreferencesGeneralForm({}) {
         )}
       </FastField>
 
+      {/* ---------- Financial starting date ----------  */}
       <FastField name={'financial_date_start'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
@@ -89,6 +96,7 @@ export default function PreferencesGeneralForm({}) {
         )}
       </FastField>
 
+      {/* ---------- Location ---------- */}
       <FastField name={'location'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
@@ -102,7 +110,7 @@ export default function PreferencesGeneralForm({}) {
             intent={inputIntent({ error, touched })}
           >
             <ListSelect
-              items={countriesOptions}
+              items={Countries}
               onItemSelect={({ value }) => {
                 form.setFieldValue('location', value);
               }}
@@ -116,6 +124,7 @@ export default function PreferencesGeneralForm({}) {
         )}
       </FastField>
 
+      {/* ----------  Base currency ----------  */}
       <FastField name={'base_currency'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
@@ -133,7 +142,7 @@ export default function PreferencesGeneralForm({}) {
             }
           >
             <ListSelect
-              items={currencies}
+              items={Currencies}
               onItemSelect={(currency) => {
                 form.setFieldValue('base_currency', currency.code);
               }}
@@ -148,6 +157,7 @@ export default function PreferencesGeneralForm({}) {
         )}
       </FastField>
 
+      {/* --------- Fiscal Year ----------- */}
       <FastField name={'fiscal_year'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
@@ -159,7 +169,7 @@ export default function PreferencesGeneralForm({}) {
             intent={inputIntent({ error, touched })}
           >
             <ListSelect
-              items={fiscalYearOptions}
+              items={FiscalYear}
               onItemSelect={({ value }) =>
                 form.setFieldValue('fiscal_year', value)
               }
@@ -173,6 +183,7 @@ export default function PreferencesGeneralForm({}) {
         )}
       </FastField>
 
+      {/* ---------- Language ---------- */}
       <FastField name={'language'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
@@ -184,7 +195,7 @@ export default function PreferencesGeneralForm({}) {
             helperText={<ErrorMessage name="language" />}
           >
             <ListSelect
-              items={languages}
+              items={Languages}
               selectedItemProp={'value'}
               textProp={'name'}
               defaultText={<T id={'select_language'} />}
@@ -198,6 +209,7 @@ export default function PreferencesGeneralForm({}) {
         )}
       </FastField>
 
+      {/* ----------  Time zone ----------  */}
       <FastField name={'time_zone'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
@@ -224,6 +236,7 @@ export default function PreferencesGeneralForm({}) {
         )}
       </FastField>
 
+      {/* --------- Data format ----------- */}
       <FastField name={'date_format'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
@@ -235,7 +248,7 @@ export default function PreferencesGeneralForm({}) {
             helperText={<ErrorMessage name="date_format" />}
           >
             <ListSelect
-              items={dateFormatsOptions}
+              items={DataFormats}
               onItemSelect={(dateFormat) => {
                 form.setFieldValue('date_format', dateFormat.value);
               }}

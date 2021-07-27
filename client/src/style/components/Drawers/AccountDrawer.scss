@@ -1,14 +1,4 @@
-.bp3-drawer-header {
-  box-shadow: 0 0 0;
 
-  .bp3-heading{
-    font-size: 16px;
-  }
-  .bp3-button{
-    min-height: 28px;
-    min-width: 28px;
-  }
-}
 
 .account-drawer {
   background-color: #fbfbfb;
@@ -92,31 +82,6 @@
         font-size: 12px;
         color: #37639c;
       }
-    }
-  }
-}
-
-.bp3-drawer.bp3-position-right {
-  bottom: 0;
-  right: 0;
-  top: 0;
-  overflow: auto;
-  height: 100%;
-
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .bp3-drawer-header {
-    margin-bottom: 2px;
-    box-shadow: (0, 0, 0);
-    background-color: #6a7993;
-
-    .bp3-heading,
-    .bp3-icon {
-      color: white;
     }
   }
 }

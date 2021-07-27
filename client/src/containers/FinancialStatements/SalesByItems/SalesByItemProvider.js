@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { useSalesByItems } from 'hooks/query';
+import { useSalesByItems, useItems } from 'hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const SalesByItemsContext = createContext();
@@ -20,10 +20,22 @@ function SalesByItemProvider({ query, ...props }) {
     },
   );
 
+  // Handle fetching the items based on the given query.
+  const {
+    data: { items },
+    isLoading: isItemsLoading,
+    isFetching: isItemsFetching,
+  } = useItems({ page_size: 10000 });
+
   const provider = {
     salesByItems,
     isFetching,
     isLoading,
+
+    items,
+    isItemsLoading,
+    isItemsFetching,
+    
     refetchSheet: refetch,
   };
   return (

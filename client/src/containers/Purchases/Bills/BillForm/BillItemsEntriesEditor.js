@@ -4,13 +4,23 @@ import { FastField } from 'formik';
 import { CLASSES } from 'common/classes';
 import { useBillFormContext } from './BillFormProvider';
 import ItemsEntriesTable from 'containers/Entries/ItemsEntriesTable';
+import {
+  entriesFieldShouldUpdate
+} from './utils';
 
+/**
+ * Bill form body. 
+ */
 export default function BillFormBody({ defaultBill }) {
   const { items } = useBillFormContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-      <FastField name={'entries'}>
+      <FastField
+        name={'entries'}
+        items={items}
+        shouldUpdate={entriesFieldShouldUpdate}
+      >
         {({
           form: { values, setFieldValue },
           field: { value },
@@ -25,6 +35,7 @@ export default function BillFormBody({ defaultBill }) {
             errors={error}
             linesNumber={4}
             currencyCode={values.currency_code}
+            landedCost={true}
           />
         )}
       </FastField>

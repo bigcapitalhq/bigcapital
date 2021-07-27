@@ -12,7 +12,7 @@ import TrialBalanceSheetHeaderGeneralPanel from './TrialBalanceSheetHeaderGenera
 import withTrialBalance from './withTrialBalance';
 import withTrialBalanceActions from './withTrialBalanceActions';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
 
 /**
  * Trial balance sheet header.
@@ -28,42 +28,41 @@ function TrialBalanceSheetHeader({
   // #withTrialBalanceActions
   toggleTrialBalanceFilterDrawer: toggleFilterDrawer,
 }) {
-  
-
   // Form validation schema.
   const validationSchema = Yup.object().shape({
-    fromDate: Yup.date()
-      .required()
-      .label(intl.get('from_date')),
+    fromDate: Yup.date().required().label(intl.get('from_date')),
     toDate: Yup.date()
       .min(Yup.ref('fromDate'))
       .required()
       .label(intl.get('to_date')),
   });
 
-  // Initial values.
-  const initialValues = {
-    ...pageFilter,
-    fromDate: moment(pageFilter.fromDate).toDate(),
-    toDate: moment(pageFilter.toDate).toDate(),
+  // Default values.
+  const defaultValues = {
+    fromDate: moment().toDate(),
+    toDate: moment().toDate(),
   };
 
+  // Initial values.
+  const initialValues = transformToForm(
+    {
+      ...pageFilter,
+      fromDate: moment(pageFilter.fromDate).toDate(),
+      toDate: moment(pageFilter.toDate).toDate(),
+    },
+    defaultValues,
+  );
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
     setSubmitting(false);
     toggleFilterDrawer(false);
   };
-
   // Handle drawer close action.
-  const handleDrawerClose = () => {
-    toggleFilterDrawer(false);
-  };
+  const handleDrawerClose = () => { toggleFilterDrawer(false); };
 
   // Handle cancel button click.
-  const handleCancelClick = () => {
-    toggleFilterDrawer(false);
-  };
+  const handleCancelClick = () => { toggleFilterDrawer(false); };
 
   return (
     <FinancialStatementHeader

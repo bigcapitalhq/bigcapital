@@ -13,6 +13,7 @@ import KeyboardShortcutsDialog from 'containers/Dialogs/keyboardShortcutsDialog'
 import ContactDuplicateDialog from 'containers/Dialogs/ContactDuplicateDialog';
 import QuickPaymentReceiveFormDialog from 'containers/Dialogs/QuickPaymentReceiveFormDialog';
 import QuickPaymentMadeFormDialog from 'containers/Dialogs/QuickPaymentMadeFormDialog';
+import AllocateLandedCostDialog from 'containers/Dialogs/AllocateLandedCostDialog';
 
 /**
  * Dialogs container.
@@ -32,6 +33,7 @@ export default function DialogsContainer() {
       <ContactDuplicateDialog dialogName={'contact-duplicate'} />
       <QuickPaymentReceiveFormDialog dialogName={'quick-payment-receive'} />
       <QuickPaymentMadeFormDialog dialogName={'quick-payment-made'} />
+      <AllocateLandedCostDialog dialogName={'allocate-landed-cost'} />
     </div>
   );
 }

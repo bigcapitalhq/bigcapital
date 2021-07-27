@@ -14,6 +14,7 @@ import withBillActions from './withBillsActions';
 import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { useBillsTableColumns, ActionsMenu } from './components';
 import { useBillsListContext } from './BillsListProvider';
 
@@ -32,15 +33,13 @@ function BillsDataTable({
 
   // #withDialogActions
   openDialog,
+  
+  // #withDrawerActions
+  openDrawer,
 }) {
   // Bills list context.
-  const {
-    bills,
-    pagination,
-    isBillsLoading,
-    isBillsFetching,
-    isEmptyStatus,
-  } = useBillsListContext();
+  const { bills, pagination, isBillsLoading, isBillsFetching, isEmptyStatus } =
+    useBillsListContext();
 
   const history = useHistory();
 
@@ -78,6 +77,16 @@ function BillsDataTable({
     openDialog('quick-payment-made', { billId: id });
   };
 
+  // handle allocate landed cost.
+  const handleAllocateLandedCost = ({ id }) => {
+    openDialog('allocate-landed-cost', { billId: id });
+  };
+
+  // Handle view detail bill.
+  const handleViewDetailBill = ({ id }) => {
+    openDrawer('bill-drawer', { billId: id });
+  };
+
   if (isEmptyStatus) {
     return <BillsEmptyStatus />;
   }
@@ -105,6 +114,8 @@ function BillsDataTable({
         onEdit: handleEditBill,
         onOpen: handleOpenBill,
         onQuick: handleQuickPaymentMade,
+        onAllocateLandedCost: handleAllocateLandedCost,
+        onViewDetails: handleViewDetailBill,
       }}
     />
   );
@@ -114,6 +125,7 @@ export default compose(
   withBills(({ billsTableState }) => ({ billsTableState })),
   withBillActions,
   withAlertsActions,
+  withDrawerActions,
   withDialogActions,
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,

@@ -26,6 +26,7 @@ export default class InventoryValuationSheetService {
   get defaultQuery(): IInventoryValuationReportQuery {
     return {
       asDate: moment().endOf('year').format('YYYY-MM-DD'),
+      itemsIds: [],
       numberFormat: {
         precision: 2,
         divideOn1000: false,
@@ -75,9 +76,6 @@ export default class InventoryValuationSheetService {
   ) {
     const { Item, InventoryCostLotTracker } = this.tenancy.models(tenantId);
 
-    const inventoryItems = await Item.query().where('type', 'inventory');
-    const inventoryItemsIds = inventoryItems.map((item) => item.id);
-
     // Settings tenant service.
     const settings = this.tenancy.settings(tenantId);
     const baseCurrency = settings.get({
@@ -89,6 +87,15 @@ export default class InventoryValuationSheetService {
       ...this.defaultQuery,
       ...query,
     };
+    const inventoryItems = await Item.query().onBuild(q => {
+      q.where('type', 'inventory');
+
+      if (filter.itemsIds.length > 0) {
+        q.whereIn('id', filter.itemsIds);
+      }
+    });
+    const inventoryItemsIds = inventoryItems.map((item) => item.id);
+
     const commonQuery = (builder) => {
       builder.whereIn('item_id', inventoryItemsIds);
       builder.sum('rate as rate');

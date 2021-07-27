@@ -12,7 +12,7 @@ import VendorsTransactionsHeaderGeneralPanel from './VendorsTransactionsHeaderGe
 import withVendorsTransaction from './withVendorsTransaction';
 import withVendorsTransactionsActions from './withVendorsTransactionsActions';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
 
 /**
  * Vendors transactions header.
@@ -29,14 +29,19 @@ function VendorsTransactionsHeader({
   //#withVendorsTransactionsActions
   toggleVendorsTransactionsFilterDrawer: toggleFilterDrawer,
 }) {
-  
+  // Default form values.
+  const defaultValues = {
+    fromDate: moment().toDate(),
+    toDate: moment().toDate(),
+    vendorsIds: [],
+  };
 
-  // Filter form initial values.
-  const initialValues = {
+  // Initial form values.
+  const initialValues = transformToForm({
     ...pageFilter,
     fromDate: moment(pageFilter.fromDate).toDate(),
     toDate: moment(pageFilter.toDate).toDate(),
-  };
+  }, defaultValues);
 
   // Validation schema.
   const validationSchema = Yup.object().shape({
@@ -57,9 +62,7 @@ function VendorsTransactionsHeader({
   };
 
   // Handle drawer close action.
-  const handleDrawerClose = () => {
-    toggleFilterDrawer(false);
-  };
+  const handleDrawerClose = () => { toggleFilterDrawer(false); };
 
   return (
     <FinancialStatementHeader

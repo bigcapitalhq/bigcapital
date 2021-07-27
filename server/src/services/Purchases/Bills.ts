@@ -1,4 +1,4 @@
-import { omit, sumBy } from 'lodash';
+import { omit, runInContext, sumBy } from 'lodash';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import composeAsync from 'async/compose';
@@ -13,7 +13,7 @@ import InventoryService from 'services/Inventory/Inventory';
 import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
-import { formatDateFields } from 'utils';
+import { formatDateFields, transformToMap } from 'utils';
 import {
   IBillDTO,
   IBill,
@@ -24,6 +24,7 @@ import {
   IBillsFilter,
   IBillsService,
   IItemEntry,
+  IItemEntryDTO,
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import ItemsService from 'services/Items/ItemsService';
@@ -32,6 +33,7 @@ import JournalCommands from 'services/Accounting/JournalCommands';
 import JournalPosterService from 'services/Sales/JournalPosterService';
 import VendorsService from 'services/Contacts/VendorsService';
 import { ERRORS } from './constants';
+import EntriesService from 'services/Entries';
 
 /**
  * Vendor bills services.
@@ -40,7 +42,8 @@ import { ERRORS } from './constants';
 @Service('Bills')
 export default class BillsService
   extends SalesInvoicesCost
-  implements IBillsService {
+  implements IBillsService
+{
   @Inject()
   inventoryService: InventoryService;
 
@@ -71,6 +74,9 @@ export default class BillsService
   @Inject()
   vendorsService: VendorsService;
 
+  @Inject()
+  entriesService: EntriesService;
+
   /**
    * Validates whether the vendor is exist.
    * @async
@@ -100,7 +106,7 @@ export default class BillsService
    * @param {number} tenantId -
    * @param {number} billId -
    */
-  private async getBillOrThrowError(tenantId: number, billId: number) {
+  public async getBillOrThrowError(tenantId: number, billId: number) {
     const { Bill } = this.tenancy.models(tenantId);
 
     this.logger.info('[bill] trying to get bill.', { tenantId, billId });
@@ -165,16 +171,63 @@ export default class BillsService
    * Validate the bill number require.
    * @param {string} billNo -
    */
-  validateBillNoRequire(billNo: string) {
+  private validateBillNoRequire(billNo: string) {
     if (!billNo) {
       throw new ServiceError(ERRORS.BILL_NO_IS_REQUIRED);
     }
   }
 
   /**
+   * Validate bill transaction has no associated allocated landed cost transactions.
+   * @param {number} tenantId
+   * @param {number} billId
+   */
+  private async validateBillHasNoLandedCost(tenantId: number, billId: number) {
+    const { BillLandedCost } = this.tenancy.models(tenantId);
+
+    const billLandedCosts = await BillLandedCost.query().where(
+      'billId',
+      billId
+    );
+    if (billLandedCosts.length > 0) {
+      throw new ServiceError(ERRORS.BILL_HAS_ASSOCIATED_LANDED_COSTS);
+    }
+  }
+
+  /**
+   * Validate transaction entries that have landed cost type should not be
+   * inventory items.
+   * @param {number} tenantId - 
+   * @param {IItemEntryDTO[]} newEntriesDTO - 
+   */
+  public async validateCostEntriesShouldBeInventoryItems(
+    tenantId: number,
+    newEntriesDTO: IItemEntryDTO[]
+  ) {
+    const { Item } = this.tenancy.models(tenantId);
+
+    const entriesItemsIds = newEntriesDTO.map((e) => e.itemId);
+    const entriesItems = await Item.query().whereIn('id', entriesItemsIds);
+
+    const entriesItemsById = transformToMap(entriesItems, 'id');
+
+    // Filter the landed cost entries that not associated with inventory item.
+    const nonInventoryHasCost = newEntriesDTO.filter((entry) => {
+      const item = entriesItemsById.get(entry.itemId);
+
+      return entry.landedCost && item.type !== 'inventory';
+    });
+    if (nonInventoryHasCost.length > 0) {
+      throw new ServiceError(
+        ERRORS.LANDED_COST_ENTRIES_SHOULD_BE_INVENTORY_ITEMS
+      );
+    }
+  }
+
+  /**
    * Sets the default cost account to the bill entries.
    */
-  setBillEntriesDefaultAccounts(tenantId: number) {
+  private setBillEntriesDefaultAccounts(tenantId: number) {
     return async (entries: IItemEntry[]) => {
       const { Item } = this.tenancy.models(tenantId);
 
@@ -195,6 +248,28 @@ export default class BillsService
   }
 
   /**
+   * Retrieve the bill entries total.
+   * @param {IItemEntry[]} entries
+   * @returns {number}
+   */
+  private getBillEntriesTotal(tenantId: number, entries: IItemEntry[]): number {
+    const { ItemEntry } = this.tenancy.models(tenantId);
+
+    return sumBy(entries, (e) => ItemEntry.calcAmount(e));
+  }
+
+  /**
+   * Retrieve the bill landed cost amount.
+   * @param {IBillDTO} billDTO
+   * @returns {number}
+   */
+  private getBillLandedCostAmount(tenantId: number, billDTO: IBillDTO): number {
+    const costEntries = billDTO.entries.filter((entry) => entry.landedCost);
+
+    return this.getBillEntriesTotal(tenantId, costEntries);
+  }
+
+  /**
    * Converts create bill DTO to model.
    * @param {number} tenantId
    * @param {IBillDTO} billDTO
@@ -211,6 +286,9 @@ export default class BillsService
 
     const amount = sumBy(billDTO.entries, (e) => ItemEntry.calcAmount(e));
 
+    // Retrieve the landed cost amount from landed cost entries.
+    const landedCostAmount = this.getBillLandedCostAmount(tenantId, billDTO);
+
     // Bill number from DTO or from auto-increment.
     const billNumber = billDTO.billNumber || oldBill?.billNumber;
 
@@ -220,6 +298,7 @@ export default class BillsService
       billDTO.vendorId
     );
     const initialEntries = billDTO.entries.map((entry) => ({
+      amount: ItemEntry.calcAmount(entry),
       reference_type: 'Bill',
       ...omit(entry, ['amount']),
     }));
@@ -234,6 +313,7 @@ export default class BillsService
         'dueDate',
       ]),
       amount,
+      landedCostAmount,
       currencyCode: vendor.currencyCode,
       billNumber,
       entries,
@@ -283,6 +363,10 @@ export default class BillsService
     await this.itemsEntriesService.validateNonPurchasableEntriesItems(
       tenantId,
       billDTO.entries
+    );
+    await this.validateCostEntriesShouldBeInventoryItems(
+      tenantId,
+      billDTO.entries,
     );
     this.logger.info('[bill] trying to create a new bill', {
       tenantId,
@@ -370,6 +454,16 @@ export default class BillsService
       authorizedUser,
       oldBill
     );
+    // Validate landed cost entries that have allocated cost could not be deleted.
+    await this.entriesService.validateLandedCostEntriesNotDeleted(
+      oldBill.entries,
+      billObj.entries
+    );
+    // Validate new landed cost entries should be bigger than new entries.
+    await this.entriesService.validateLocatedCostEntriesSmallerThanNewEntries(
+      oldBill.entries,
+      billObj.entries
+    );
     // Update the bill transaction.
     const bill = await billRepository.upsertGraph({
       id: billId,
@@ -401,6 +495,9 @@ export default class BillsService
 
     // Retrieve the given bill or throw not found error.
     const oldBill = await this.getBillOrThrowError(tenantId, billId);
+
+    // Validate the givne bill has no associated landed cost transactions.
+    await this.validateBillHasNoLandedCost(tenantId, billId);
 
     // Validate the purchase bill has no assocaited payments transactions.
     await this.validateBillHasNoEntries(tenantId, billId);
@@ -498,7 +595,7 @@ export default class BillsService
     const bill = await Bill.query()
       .findById(billId)
       .withGraphFetched('vendor')
-      .withGraphFetched('entries');
+      .withGraphFetched('entries.item');
 
     if (!bill) {
       throw new ServiceError(ERRORS.BILL_NOT_FOUND);
@@ -534,18 +631,25 @@ export default class BillsService
    */
   public async recordInventoryTransactions(
     tenantId: number,
-    bill: IBill,
+    billId: number,
     override?: boolean
   ): Promise<void> {
+    const { Bill } = this.tenancy.models(tenantId);
+
+    // Retireve bill with assocaited entries and allocated cost entries.
+    const bill = await Bill.query()
+      .findById(billId)
+      .withGraphFetched('entries.allocatedCostEntries');
+
     // Loads the inventory items entries of the given sale invoice.
-    const inventoryEntries = await this.itemsEntriesService.filterInventoryEntries(
-      tenantId,
-      bill.entries
-    );
+    const inventoryEntries =
+      await this.itemsEntriesService.filterInventoryEntries(
+        tenantId,
+        bill.entries
+      );
     const transaction = {
       transactionId: bill.id,
       transactionType: 'Bill',
-
       date: bill.billDate,
       direction: 'IN',
       entries: inventoryEntries,
@@ -581,13 +685,30 @@ export default class BillsService
    */
   public async recordJournalTransactions(
     tenantId: number,
-    bill: IBill,
+    billId: number,
     override: boolean = false
   ) {
+    const { Bill, Account } = this.tenancy.models(tenantId);
+
     const journal = new JournalPoster(tenantId);
     const journalCommands = new JournalCommands(journal);
 
-    await journalCommands.bill(bill, override);
+    const bill = await Bill.query()
+      .findById(billId)
+      .withGraphFetched('entries.item')
+      .withGraphFetched('entries.allocatedCostEntries')
+      .withGraphFetched('locatedLandedCosts.allocateEntries');
+
+    const payableAccount = await Account.query().findOne({
+      slug: 'accounts-payable',
+    });
+
+    // Overrides the bill journal entries.
+    if (override) {
+      await journalCommands.revertJournalEntries(billId, 'Bill');
+    }
+    // Writes the bill journal entries.
+    journalCommands.bill(bill, payableAccount);
 
     return Promise.all([
       journal.deleteEntries(),

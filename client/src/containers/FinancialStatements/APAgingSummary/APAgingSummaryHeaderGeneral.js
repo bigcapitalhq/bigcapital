@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField } from 'formik';
+import { FastField, Field } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
 import {
   Intent,
@@ -51,9 +51,10 @@ export default function APAgingSummaryHeaderGeneral() {
           </FastField>
         </Col>
       </Row>
+
       <Row>
         <Col xs={5}>
-          <FastField name={'aging_days_before'}>
+          <FastField name={'agingDaysBefore'}>
             {({ field, meta: { error } }) => (
               <FormGroup
                 label={<T id={'aging_before_days'} />}
@@ -66,9 +67,10 @@ export default function APAgingSummaryHeaderGeneral() {
           </FastField>
         </Col>
       </Row>
+
       <Row>
         <Col xs={5}>
-          <FastField name={'aging_periods'}>
+          <FastField name={'agingPeriods'}>
             {({ field, meta: { error } }) => (
               <FormGroup
                 label={<T id={'aging_periods'} />}
@@ -81,17 +83,29 @@ export default function APAgingSummaryHeaderGeneral() {
           </FastField>
         </Col>
       </Row>
+
       <Row>
         <Col xs={5}>
-          <FormGroup
-            label={<T id={'specific_vendors'} />}
-            className={classNames('form-group--select-list', Classes.FILL)}
-          >
-            <ContactsMultiSelect
-              defaultText={<T id={'all_vendors'} />}
-              contacts={vendors}
-            />
-          </FormGroup>
+          <Field name={'vendorsIds'}>
+            {({
+              form: { setFieldValue },
+              field: { value },
+            }) => (
+              <FormGroup
+                label={<T id={'specific_vendors'} />}
+                className={classNames('form-group--select-list', Classes.FILL)}
+              >
+                <ContactsMultiSelect
+                  defaultText={<T id={'all_vendors'} />}
+                  contacts={vendors}
+                  contactsSelected={value}
+                  onContactSelect={(contactsIds) => {
+                    setFieldValue('vendorsIds', contactsIds);
+                  }}
+                />
+              </FormGroup>
+            )}
+          </Field>
         </Col>
       </Row>
     </div>

@@ -1,6 +1,6 @@
 import intl from 'react-intl-universal';
 
-export const getFiscalYearOptions = () => [
+export const getFiscalYear = () => [
   {
     id: 0,
     name: `${intl.get('january')} - ${intl.get('december')}`,

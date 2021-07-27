@@ -4,6 +4,7 @@ import { setLocale } from 'yup';
 import intl from 'react-intl-universal';
 import { find } from 'lodash';
 import rtlDetect from 'rtl-detect';
+import { AppIntlProvider } from './AppIntlProvider';
 import DashboardLoadingIndicator from 'components/Dashboard/DashboardLoadingIndicator';
 
 const SUPPORTED_LOCALES = [
@@ -40,16 +41,14 @@ function loadYupLocales(currentLocale) {
 /**
  * Modifies the html document direction to RTl if it was rtl-language.
  */
-function useDocumentDirectionModifier(locale) {
+function useDocumentDirectionModifier(locale, isRTL) {
   React.useEffect(() => {
-    const isRTL = rtlDetect.isRtlLang(locale);
-
     if (isRTL) {
       const htmlDocument = document.querySelector('html');
       htmlDocument.setAttribute('dir', 'rtl');
       htmlDocument.setAttribute('lang', locale);
     }
-  }, []);
+  }, [isRTL, locale]);
 }
 
 /**
@@ -59,8 +58,10 @@ export default function AppIntlLoader({ children }) {
   const [isLoading, setIsLoading] = React.useState(true);
   const currentLocale = getCurrentLocal();
 
+  const isRTL = rtlDetect.isRtlLang(currentLocale);
+
   // Modifies the html document direction
-  useDocumentDirectionModifier(currentLocale);
+  useDocumentDirectionModifier(currentLocale, isRTL);
 
   React.useEffect(() => {
     // Lodas the locales data file.
@@ -86,10 +87,12 @@ export default function AppIntlLoader({ children }) {
       })
       .then(() => {});
   }, [currentLocale]);
-  
+
   return (
-    <DashboardLoadingIndicator isLoading={isLoading}>
-      {children}
-    </DashboardLoadingIndicator>
+    <AppIntlProvider currentLocale={currentLocale} isRTL={isRTL}>
+      <DashboardLoadingIndicator isLoading={isLoading}>
+        {children}
+      </DashboardLoadingIndicator>
+    </AppIntlProvider>
   );
 }

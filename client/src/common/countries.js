@@ -1,3 +1,8 @@
 import intl from 'react-intl-universal';
 
-export default [{ name: intl.get('libya'), value: 'libya' }];
+export const getCountries = () => [
+  {
+    name: intl.get('libya'),
+    value: 'libya',
+  },
+];

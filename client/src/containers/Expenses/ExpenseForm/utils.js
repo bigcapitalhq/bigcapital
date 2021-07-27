@@ -1,7 +1,11 @@
 import { AppToaster } from 'components';
 import moment from 'moment';
 import intl from 'react-intl-universal';
-import { transformToForm, repeatValue } from 'utils';
+import {
+  defaultFastFieldShouldUpdate,
+  transformToForm,
+  repeatValue,
+} from 'utils';
 
 const ERROR = {
   EXPENSE_ALREADY_PUBLISHED: 'EXPENSE.ALREADY.PUBLISHED',
@@ -27,6 +31,7 @@ export const defaultExpenseEntry = {
   amount: '',
   expense_account_id: '',
   description: '',
+  landed_cost: false,
 };
 
 export const defaultExpense = {
@@ -60,4 +65,24 @@ export const transformToEditForm = (
       ),
     ],
   };
+};
+
+/**
+ * Detarmine cusotmers fast-field should update.
+ */
+export const customersFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.customers !== oldProps.customers ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
+};
+
+/**
+ * Detarmine accounts fast-field should update.
+ */
+export const accountsFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.accounts !== oldProps.accounts ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
 };

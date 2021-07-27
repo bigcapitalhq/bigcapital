@@ -103,6 +103,7 @@ export default class Bill extends TenantModel {
       'remainingDays',
       'overdueDays',
       'isOverdue',
+      'unallocatedCostAmount'
     ];
   }
 
@@ -178,6 +179,14 @@ export default class Bill extends TenantModel {
     return this.overdueDays > 0;
   }
 
+  /**
+   * Retrieve the unallocated cost amount.
+   * @return {number}
+   */
+  get unallocatedCostAmount() {
+    return Math.max(this.landedCostAmount - this.allocatedCostAmount, 0);
+  }
+
   getOverdueDays(asDate = moment().format('YYYY-MM-DD')) {
     // Can't continue in case due date not defined.
     if (!this.dueDate) {
@@ -195,6 +204,7 @@ export default class Bill extends TenantModel {
   static get relationMappings() {
     const Contact = require('models/Contact');
     const ItemEntry = require('models/ItemEntry');
+    const BillLandedCost = require('models/BillLandedCost');
 
     return {
       vendor: {
@@ -218,6 +228,15 @@ export default class Bill extends TenantModel {
         },
         filter(builder) {
           builder.where('reference_type', 'Bill');
+        },
+      },
+
+      locatedLandedCosts: {
+        relation: Model.HasManyRelation,
+        modelClass: BillLandedCost.default,
+        join: {
+          from: 'bills.id',
+          to: 'bill_located_costs.billId',
         },
       },
     };

@@ -7,6 +7,7 @@ import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
 import { ContactSelecetList, FieldRequiredHint, Icon } from 'components';
+import { vendorsFieldShouldUpdate } from './utils';
 
 import { useBillFormContext } from './BillFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -28,7 +29,11 @@ function BillFormHeader() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ------- Vendor name ------ */}
-      <FastField name={'vendor_id'}>
+      <FastField
+        name={'vendor_id'}
+        vendors={vendors}
+        shouldUpdate={vendorsFieldShouldUpdate}
+      >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'vendor_name'} />}

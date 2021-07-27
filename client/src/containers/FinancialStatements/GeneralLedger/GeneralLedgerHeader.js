@@ -11,7 +11,7 @@ import GeneralLedgerHeaderGeneralPane from './GeneralLedgerHeaderGeneralPane';
 import withGeneralLedger from './withGeneralLedger';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
 
-import { compose, saveInvoke } from 'utils';
+import { compose, transformToForm, saveInvoke } from 'utils';
 
 /**
  * Geenral Ledger (GL) - Header.
@@ -27,12 +27,21 @@ function GeneralLedgerHeader({
   // #withGeneralLedger
   isFilterDrawerOpen,
 }) {
-  // Initial values.
-  const initialValues = {
-    ...pageFilter,
-    fromDate: moment(pageFilter.fromDate).toDate(),
-    toDate: moment(pageFilter.toDate).toDate(),
+  // Default values.
+  const defaultValues = {
+    fromDate: moment().toDate(),
+    toDate: moment().toDate(),
   };
+
+  // Initial values.
+  const initialValues = transformToForm(
+    {
+      ...pageFilter,
+      fromDate: moment(pageFilter.fromDate).toDate(),
+      toDate: moment(pageFilter.toDate).toDate(),
+    },
+    defaultValues,
+  );
 
   // Validation schema.
   const validationSchema = Yup.object().shape({

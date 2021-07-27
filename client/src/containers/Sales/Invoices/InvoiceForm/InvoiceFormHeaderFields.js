@@ -10,7 +10,10 @@ import { FastField, Field, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from 'components';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
-import { useObserveInvoiceNoSettings } from './utils';
+import {
+  useObserveInvoiceNoSettings,
+  customerNameFieldShouldUpdate,
+} from './utils';
 import { CLASSES } from 'common/classes';
 import {
   ContactSelecetList,
@@ -58,15 +61,16 @@ function InvoiceFormHeaderFields({
   };
 
   // Syncs invoice number settings with form.
-  useObserveInvoiceNoSettings(
-    invoiceNumberPrefix,
-    invoiceNextNumber,
-  );
+  useObserveInvoiceNoSettings(invoiceNumberPrefix, invoiceNextNumber);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ----------- Customer name ----------- */}
-      <FastField name={'customer_id'}>
+      <FastField
+        name={'customer_id'}
+        customers={customers}
+        shouldUpdate={customerNameFieldShouldUpdate}
+      >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'customer_name'} />}
@@ -168,7 +172,9 @@ function InvoiceFormHeaderFields({
                 }}
                 tooltip={true}
                 tooltipProps={{
-                  content: <T id={'setting_your_auto_generated_invoice_number'}/>,
+                  content: (
+                    <T id={'setting_your_auto_generated_invoice_number'} />
+                  ),
                   position: Position.BOTTOM_LEFT,
                 }}
               />

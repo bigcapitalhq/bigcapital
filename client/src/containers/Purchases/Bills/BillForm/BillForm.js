@@ -48,7 +48,7 @@ function BillForm({
             currency_code: baseCurrency,
           }),
     }),
-    [bill],
+    [bill, baseCurrency],
   );
 
   // Transform response error to fields.

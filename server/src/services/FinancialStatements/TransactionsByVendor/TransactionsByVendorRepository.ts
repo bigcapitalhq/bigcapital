@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { map } from 'lodash';
+import { isEmpty, map } from 'lodash';
 import { IVendor, IAccount, IAccountTransaction } from 'interfaces';
 import HasTenancyService from 'services/Tenancy/TenancyService';
 import { ACCOUNT_TYPE } from 'data/AccountTypes';
@@ -14,10 +14,19 @@ export default class TransactionsByVendorRepository {
    * @param {number} tenantId
    * @returns {Promise<IVendor[]>}
    */
-  public getVendors(tenantId: number): Promise<IVendor[]> {
+  public getVendors(
+    tenantId: number,
+    vendorsIds?: number[]
+  ): Promise<IVendor[]> {
     const { Vendor } = this.tenancy.models(tenantId);
 
-    return Vendor.query().orderBy('displayName');
+    return Vendor.query().onBuild((q) => {
+      q.orderBy('displayName');
+
+      if (!isEmpty(vendorsIds)) {
+        q.whereIn('id', vendorsIds);
+      }
+    });
   }
 
   /**
@@ -67,7 +76,7 @@ export default class TransactionsByVendorRepository {
    * @param {Date|string} openingDate
    * @param {number[]} customersIds
    */
-   public async getVendorsPeriodTransactions(
+  public async getVendorsPeriodTransactions(
     tenantId: number,
     fromDate: Date,
     toDate: Date

@@ -39,7 +39,7 @@ export default class ExpensesController extends BaseController {
     );
     router.post(
       '/:id',
-      [...this.expenseDTOSchema, ...this.expenseParamSchema],
+      [...this.editExpenseDTOSchema, ...this.expenseParamSchema],
       this.validationResult,
       asyncMiddleware(this.editExpense.bind(this)),
       this.catchServiceErrors
@@ -111,16 +111,67 @@ export default class ExpensesController extends BaseController {
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('categories.*.landed_cost').optional().isBoolean().toBoolean(),
     ];
   }
 
   /**
-   * Expense param schema.
+   * Edit expense validation schema.
+   */
+  get editExpenseDTOSchema() {
+    return [
+      check('reference_no')
+        .optional({ nullable: true })
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('payment_date').exists().isISO8601(),
+      check('payment_account_id')
+        .exists()
+        .isInt({ max: DATATYPES_LENGTH.INT_10 })
+        .toInt(),
+      check('description')
+        .optional({ nullable: true })
+        .isString()
+        .isLength({ max: DATATYPES_LENGTH.TEXT }),
+      check('currency_code').optional().isString().isLength({ max: 3 }),
+      check('exchange_rate').optional({ nullable: true }).isNumeric().toFloat(),
+      check('publish').optional().isBoolean().toBoolean(),
+      check('payee_id').optional({ nullable: true }).isNumeric().toInt(),
+
+      check('categories').exists().isArray({ min: 1 }),
+      check('categories.*.id').optional().isNumeric().toInt(),
+      check('categories.*.index')
+        .exists()
+        .isInt({ max: DATATYPES_LENGTH.INT_10 })
+        .toInt(),
+      check('categories.*.expense_account_id')
+        .exists()
+        .isInt({ max: DATATYPES_LENGTH.INT_10 })
+        .toInt(),
+      check('categories.*.amount')
+        .optional({ nullable: true })
+        .isFloat({ max: DATATYPES_LENGTH.DECIMAL_13_3 }) // 13, 3
+        .toFloat(),
+      check('categories.*.description')
+        .optional()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('categories.*.landed_cost').optional().isBoolean().toBoolean(),
+    ];
+  }
+
+  /**
+   * Expense param validation schema.
    */
   get expenseParamSchema() {
     return [param('id').exists().isNumeric().toInt()];
   }
-
+  
+  /**
+   * Expenses list validation schema.
+   */
   get expensesListSchema() {
     return [
       query('custom_view_id').optional().isNumeric().toInt(),
@@ -251,11 +302,8 @@ export default class ExpensesController extends BaseController {
     }
 
     try {
-      const {
-        expenses,
-        pagination,
-        filterMeta,
-      } = await this.expensesService.getExpensesList(tenantId, filter);
+      const { expenses, pagination, filterMeta } =
+        await this.expensesService.getExpensesList(tenantId, filter);
 
       return res.status(200).send({
         expenses,
@@ -293,7 +341,7 @@ export default class ExpensesController extends BaseController {
    * @param {Response} res
    * @param {ServiceError} error
    */
-  catchServiceErrors(
+  private catchServiceErrors(
     error: Error,
     req: Request,
     res: Response,
@@ -343,6 +391,30 @@ export default class ExpensesController extends BaseController {
       if (error.errorType === 'contact_not_found') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'CONTACT_NOT_FOUND', code: 800 }],
+        });
+      }
+      if (error.errorType === 'EXPENSE_HAS_ASSOCIATED_LANDED_COST') {
+        return res.status(400).send({
+          errors: [{ type: 'EXPENSE_HAS_ASSOCIATED_LANDED_COST', code: 900 }],
+        });
+      }
+      if (error.errorType === 'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED') {
+        return res.status(400).send({
+          errors: [
+            { type: 'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED', code: 1000 },
+          ],
+        });
+      }
+      if (
+        error.errorType === 'LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES'
+      ) {
+        return res.status(400).send({
+          errors: [
+            {
+              type: 'LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES',
+              code: 1100,
+            },
+          ],
         });
       }
     }

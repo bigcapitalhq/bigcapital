@@ -30,6 +30,7 @@ function APAgingSummary({
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
     agingBeforeDays: 30,
     agingPeriods: 3,
+    vendorsIds: [],
   });
 
   // Handle filter submit.
@@ -63,7 +64,7 @@ function APAgingSummary({
       <APAgingSummarySheetLoadingBar />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement name={'AP-aging-summary'}>
           <APAgingSummaryHeader
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}

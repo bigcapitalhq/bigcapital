@@ -66,7 +66,7 @@ function PurchasesByItems({
       />
       <PurchasesByItemsLoadingBar />
       <DashboardPageContent>
-        <div className="financial-statement">
+        <div className="financial-statement financial-statement--purchases-by-items">
           <PurchasesByItemsHeader
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}

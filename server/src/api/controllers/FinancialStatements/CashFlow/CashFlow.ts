@@ -71,7 +71,6 @@ export default class CashFlowController extends BaseFinancialReportController {
   /**
    * Transformes the report statement to table rows.
    * @param {ITransactionsByVendorsStatement} statement -
-   *
    */
   private transformToTableRows(cashFlowDOO: ICashFlowStatementDOO, tenantId: number) {
     const i18n = this.tenancy.i18n(tenantId);

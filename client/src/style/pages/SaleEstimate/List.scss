@@ -4,6 +4,9 @@
   .bigcapital-datatable{
 
     .tbody{
+      .tr{
+        min-height: 46px;
+      }
 
       .tr .td{
         padding-top: 0.88rem;

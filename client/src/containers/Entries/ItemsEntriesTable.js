@@ -30,6 +30,7 @@ function ItemsEntriesTable({
   linesNumber,
   currencyCode,
   itemType, // sellable or purchasable
+  landedCost = false
 }) {
   const [rows, setRows] = React.useState(initialEntries);
   const [rowItem, setRowItem] = React.useState(null);
@@ -94,7 +95,7 @@ function ItemsEntriesTable({
   }, [entries, rows]);
 
   // Editiable items entries columns.
-  const columns = useEditableItemsEntriesColumns();
+  const columns = useEditableItemsEntriesColumns({ landedCost });
 
   // Handles the editor data update.
   const handleUpdateData = useCallback(

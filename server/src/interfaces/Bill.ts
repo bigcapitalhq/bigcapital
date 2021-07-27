@@ -1,62 +1,67 @@
-import { IDynamicListFilterDTO } from "./DynamicFilter";
-import { IItemEntry, IItemEntryDTO } from "./ItemEntry";
+import { IDynamicListFilterDTO } from './DynamicFilter';
+import { IItemEntry, IItemEntryDTO } from './ItemEntry';
 
 export interface IBillDTO {
-  vendorId: number,
-  billNumber: string,
-  billDate: Date,
-  dueDate: Date,
-  referenceNo: string,
-  status: string,
-  note: string,
-  amount: number,
-  paymentAmount: number,
-  open: boolean,
-  entries: IItemEntryDTO[],
-};
+  vendorId: number;
+  billNumber: string;
+  billDate: Date;
+  dueDate: Date;
+  referenceNo: string;
+  status: string;
+  note: string;
+  amount: number;
+  paymentAmount: number;
+  open: boolean;
+  entries: IItemEntryDTO[];
+}
 
 export interface IBillEditDTO {
-  vendorId: number,
-  billNumber: string,
-  billDate: Date,
-  dueDate: Date,
-  referenceNo: string,
-  status: string,
-  note: string,
-  amount: number,
-  paymentAmount: number,
-  open: boolean,
-  entries: IItemEntryDTO[],
-};
+  vendorId: number;
+  billNumber: string;
+  billDate: Date;
+  dueDate: Date;
+  referenceNo: string;
+  status: string;
+  note: string;
+  amount: number;
+  paymentAmount: number;
+  open: boolean;
+  entries: IItemEntryDTO[];
+}
 
 export interface IBill {
-  id?: number,
+  id?: number;
 
-  vendorId: number,
-  billNumber: string,
-  billDate: Date,
-  dueDate: Date,
-  referenceNo: string,
-  status: string,
-  note: string,
-  amount: number,
-  paymentAmount: number,
-  currencyCode: string,
+  vendorId: number;
+  billNumber: string;
+  billDate: Date;
+  dueDate: Date;
+  referenceNo: string;
+  status: string;
+  note: string;
 
-  dueAmount: number,
-  overdueDays: number,
+  amount: number;
+  allocatedCostAmount: number;
+  landedCostAmount: number;
+  unallocatedCostAmount: number;
 
-  openedAt: Date | string,
+  paymentAmount: number;
+  currencyCode: string;
 
-  entries: IItemEntry[],
-  userId: number,
+  dueAmount: number;
+  overdueDays: number;
 
-  createdAt: Date,
-  updateAt: Date,
-};
+  openedAt: Date | string;
 
-export interface IBillsFilter extends IDynamicListFilterDTO { 
-  stringifiedFilterRoles?: string,
+  entries: IItemEntry[];
+  userId: number;
+
+  createdAt: Date;
+  updateAt: Date;
+}
+
+export interface IBillsFilter extends IDynamicListFilterDTO {
+  stringifiedFilterRoles?: string;
 }
 
 export interface IBillsService {
