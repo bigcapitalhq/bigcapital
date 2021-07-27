@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import classNames from 'classnames';
 import { If } from 'components';
 import { Skeleton } from 'components';
+import { useAppIntlContext } from 'components/AppIntlProvider';
 import TableContext from './TableContext';
 import { isCellLoading } from './utils';
 
@@ -26,6 +27,9 @@ export default function TableCell({
   const isExpandColumn = expandToggleColumn === index;
   const { skeletonWidthMax = 100, skeletonWidthMin = 40 } = {};
 
+  // Application intl context.
+  const { isRTL } = useAppIntlContext();
+
   // Detarmines whether the current cell is loading.
   const cellLoading = isCellLoading(
     cellsLoading,
@@ -45,8 +49,6 @@ export default function TableCell({
       </div>
     );
   }
-
-  const isRTL = true;
 
   return (
     <div
