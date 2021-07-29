@@ -9,7 +9,7 @@ import { transformToForm } from 'utils';
 import {
   CreateItemCategoryFormSchema,
   EditItemCategoryFormSchema,
-} from './ItemCategoryForm.schema';
+} from './itemCategoryForm.schema';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import ItemCategoryFormContent from './ItemCategoryFormContent'

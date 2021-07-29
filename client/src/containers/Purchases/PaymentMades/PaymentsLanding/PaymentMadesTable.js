@@ -12,6 +12,7 @@ import withPaymentMadeActions from './withPaymentMadeActions';
 import withPaymentMade from './withPaymentMade';
 import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { usePaymentMadesTableColumns, ActionsMenu } from './components';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 
@@ -27,6 +28,9 @@ function PaymentMadesTable({
 
   // #withAlerts
   openAlert,
+
+  // #withDrawerActions
+  openDrawer,
 }) {
   // Payment mades table columns.
   const columns = usePaymentMadesTableColumns();
@@ -51,6 +55,11 @@ function PaymentMadesTable({
   // Handles the delete payment made action.
   const handleDeletePaymentMade = (paymentMade) => {
     openAlert('payment-made-delete', { paymentMadeId: paymentMade.id });
+  };
+
+  // Handle view detail  payment made.
+  const handleViewDetailPaymentMade = ({ id }) => {
+    openDrawer('payment-receive-detail-drawer', { paymentMadeId: id });
   };
 
   // Handle datatable fetch data once the table state change.
@@ -89,6 +98,7 @@ function PaymentMadesTable({
       payload={{
         onEdit: handleEditPaymentMade,
         onDelete: handleDeletePaymentMade,
+        onViewDetails: handleViewDetailPaymentMade,
       }}
     />
   );
@@ -98,6 +108,7 @@ export default compose(
   withPaymentMadeActions,
   withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
   withAlertsActions,
+  withDrawerActions,
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
   })),

@@ -62,6 +62,11 @@ function PaymentReceivesDataTable({
     openDrawer('payment-receive-drawer', { paymentReceiveId: id });
   };
 
+  // Handle view detail  payment receive..
+  const handleViewDetailPaymentReceive = ({ id }) => {
+    openDrawer('payment-receive-detail-drawer', { paymentReceiveId: id });
+  };
+
   // Handle datatable fetch once the table's state changing.
   const handleDataTableFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
@@ -103,6 +108,7 @@ function PaymentReceivesDataTable({
         onDelete: handleDeletePaymentReceive,
         onEdit: handleEditPaymentReceive,
         onDrawer: handleDrawerPaymentReceive,
+        onViewDetails: handleViewDetailPaymentReceive,
       }}
     />
   );

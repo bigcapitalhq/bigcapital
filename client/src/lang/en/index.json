@@ -1166,5 +1166,11 @@
   "From transaction": "From transaction",
   "Landed": "Landed",
   "This options allows you to be able to add additional cost eg. freight then allocate cost to the items in your bills.": "This options allows you to be able to add additional cost eg. freight then allocate cost to the items in your bills.",
-  "Once your delete this located landed cost, you won't be able to restore it later, Are your sure you want to delete this transaction?": "Once your delete this located landed cost, you won't be able to restore it later, Are your sure you want to delete this transaction?"
+  "Once your delete this located landed cost, you won't be able to restore it later, Are your sure you want to delete this transaction?": "Once your delete this located landed cost, you won't be able to restore it later, Are your sure you want to delete this transaction?",
+  "journal_entries":"Journal entries",
+  "contact":"Contact",
+  "invoice_details":"Invoice details",
+  "receipt_details":"Receipt details",
+  "payment_receive_details":"Payment receive details",
+  "payment_made_details":"Payment made details"
 }

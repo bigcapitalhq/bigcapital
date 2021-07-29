@@ -95,7 +95,7 @@ export const handleDeleteErrors = (errors) => {
 };
 
 export function ActionsMenu({
-  payload: { onEdit, onDeliver, onDelete, onDrawer, onQuick },
+  payload: { onEdit, onDeliver, onDelete, onDrawer, onQuick, onViewDetails },
   row: { original },
 }) {
   return (
@@ -103,6 +103,7 @@ export function ActionsMenu({
       <MenuItem
         icon={<Icon icon="reader-18" />}
         text={intl.get('view_details')}
+        onClick={safeCallback(onViewDetails, original)}
       />
       <MenuDivider />
       <MenuItem
