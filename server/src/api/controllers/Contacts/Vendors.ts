@@ -100,6 +100,8 @@ export default class VendorsController extends ContactsController {
 
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
+
+      query('inactive_mode').optional().isBoolean().toBoolean(),
     ];
   }
 
@@ -227,8 +229,13 @@ export default class VendorsController extends ContactsController {
    */
   async getVendorsList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
+
     const vendorsFilter: IVendorsFilter = {
-      filterRoles: [],
+      inactiveMode: false,
+      sortOrder: 'asc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
       ...this.matchedQueryData(req),
     };
 

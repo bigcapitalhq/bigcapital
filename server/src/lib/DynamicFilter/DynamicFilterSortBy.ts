@@ -5,8 +5,13 @@ import {
   getTableFromRelationColumn,
 } from 'lib/ViewRolesBuilder';
 
+interface ISortRole {
+  fieldKey: string;
+  order: string;
+}
+
 export default class DynamicFilterSortBy extends DynamicFilterRoleAbstructor {
-  sortRole: { fieldKey: string; order: string } = {};
+  private sortRole: ISortRole = {};
 
   /**
    * Constructor method.
@@ -23,39 +28,28 @@ export default class DynamicFilterSortBy extends DynamicFilterRoleAbstructor {
     this.setResponseMeta();
   }
 
-  /**
-   * Validate the given field key with the model.
-   */
-  validate() {
-    validateFieldKeyExistance(this.model, this.sortRole.fieldKey);
-  }
 
   /**
    * Builds database query of sort by column on the given direction.
    */
-  buildQuery() {
-    const fieldRelation = getRoleFieldColumn(
-      this.model,
-      this.sortRole.fieldKey
-    );
-    const comparatorColumn =
-      fieldRelation.relationColumn ||
-      `${this.tableName}.${fieldRelation.column}`;
+  public buildQuery() {
+    const field = this.model.getField(this.sortRole.fieldKey);
+    const comparatorColumn = `${this.tableName}.${field.column}`;
 
-    if (typeof fieldRelation.sortQuery !== 'undefined') {
+    if (typeof field.customSortQuery !== 'undefined') {
       return (builder) => {
-        fieldRelation.sortQuery(builder, this.sortRole);
+        field.customSortQuery(builder, this.sortRole);
       };
     }
+
     return (builder) => {
       if (this.sortRole.fieldKey) {
         builder.orderBy(`${comparatorColumn}`, this.sortRole.order);
       }
-      this.joinBuildQuery()(builder);
     };
   }
 
-  joinBuildQuery() {
+  private joinBuildQuery() {
     const fieldColumn = getRoleFieldColumn(this.model, this.sortRole.fieldKey);
 
     return (builder) => {
@@ -75,7 +69,7 @@ export default class DynamicFilterSortBy extends DynamicFilterRoleAbstructor {
   /**
    * Sets response meta.
    */
-  setResponseMeta() {
+  public setResponseMeta() {
     this.responseMeta = {
       sortOrder: this.sortRole.fieldKey,
       sortBy: this.sortRole.order,

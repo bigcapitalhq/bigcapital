@@ -1,7 +1,9 @@
-import { Model } from "objection";
+import { Model, mixin } from "objection";
 import TenantModel from "models/TenantModel";
+import ModelSetting from "./ModelSetting";
+import BillPaymentSettings from "./BillPayment.Settings";
 
-export default class BillPayment extends TenantModel {
+export default class BillPayment extends mixin(TenantModel, [ModelSetting]) {
   /**
    * Table name
    */
@@ -16,8 +18,11 @@ export default class BillPayment extends TenantModel {
     return ["createdAt", "updatedAt"];
   }
 
-  static get resourceable() {
-    return true;
+  /**
+   * Model settings.
+   */
+  static get meta() {
+    return BillPaymentSettings;
   }
 
   /**
@@ -70,72 +75,6 @@ export default class BillPayment extends TenantModel {
         filter(builder) {
           builder.where("reference_type", "BillPayment");
         },
-      },
-    };
-  }
-
-  /**
-   * Resource fields.
-   */
-  static get fields() {
-    return {
-      vendor: {
-        label: "Vendor name",
-        column: "vendor_id",
-        relation: "contacts.id",
-        relationColumn: "contacts.display_name",
-      },
-      amount: {
-        label: "Amount",
-        column: "amount",
-        columnType: "number",
-        fieldType: "number",
-      },
-      due_amount: {
-        label: "Due amount",
-        column: "due_amount",
-        columnType: "number",
-        fieldType: "number",
-      },
-      payment_account: {
-        label: "Payment account",
-        column: "payment_account_id",
-        relation: "accounts.id",
-        relationColumn: "accounts.name",
-
-        fieldType: "options",
-        optionsResource: "Account",
-        optionsKey: "id",
-        optionsLabel: "name",
-      },
-      payment_number: {
-        label: "Payment number",
-        column: "payment_number",
-        columnType: "string",
-        fieldType: "text",
-      },
-      payment_date: {
-        label: "Payment date",
-        column: "payment_date",
-        columnType: "date",
-        fieldType: "date",
-      },
-      reference_no: {
-        label: "Reference No.",
-        column: "reference",
-        columnType: "string",
-        fieldType: "text",
-      },
-      description: {
-        label: "Description",
-        column: "description",
-        columnType: "string",
-        fieldType: "text",
-      },
-      created_at: {
-        label: "Created at",
-        column: "created_at",
-        columnType: "date",
       },
     };
   }

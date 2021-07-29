@@ -1,10 +1,8 @@
-import { difference } from 'lodash';
-import DynamicFilterRoleAbstructor from 'lib/DynamicFilter/DynamicFilterRoleAbstructor';
-import { buildFilterQuery } from 'lib/ViewRolesBuilder';
+import DynamicFilterRoleAbstructor from './DynamicFilterRoleAbstructor';
 import { IFilterRole } from 'interfaces';
 
 export default class FilterRoles extends DynamicFilterRoleAbstructor {
-  filterRoles: IFilterRole[];
+  private filterRoles: IFilterRole[];
 
   /**
    * Constructor method.
@@ -13,7 +11,7 @@ export default class FilterRoles extends DynamicFilterRoleAbstructor {
    */
   constructor(filterRoles: IFilterRole[]) {
     super();
-    
+
     this.filterRoles = filterRoles;
     this.setResponseMeta();
   }
@@ -24,7 +22,7 @@ export default class FilterRoles extends DynamicFilterRoleAbstructor {
    */
   private buildLogicExpression(): string {
     let expression = '';
-
+    
     this.filterRoles.forEach((role, index) => {
       expression +=
         index === 0 ? `${role.index} ` : `${role.condition} ${role.index} `;
@@ -35,17 +33,22 @@ export default class FilterRoles extends DynamicFilterRoleAbstructor {
   /**
    * Builds database query of view roles.
    */
-  buildQuery() {
+  protected buildQuery() {
+    const logicExpression = this.buildLogicExpression();
+
     return (builder) => {
-      const logicExpression = this.buildLogicExpression();
-      buildFilterQuery(this.model, this.filterRoles, logicExpression)(builder);
+      this.buildFilterQuery(
+        this.model,
+        this.filterRoles,
+        logicExpression
+      )(builder);
     };
   }
 
   /**
    * Sets response meta.
    */
-  setResponseMeta() {
+  private setResponseMeta() {
     this.responseMeta = {
       filterRoles: this.filterRoles,
     };

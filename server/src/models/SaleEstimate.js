@@ -1,11 +1,11 @@
 import moment from 'moment';
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
 import { defaultToTransform } from 'utils';
-import HasItemEntries from 'services/Sales/HasItemsEntries';
-import { query } from 'winston';
+import SaleEstimateSettings from './SaleEstimate.Settings';
+import ModelSetting from './ModelSetting';
 
-export default class SaleEstimate extends TenantModel {
+export default class SaleEstimate extends mixin(TenantModel, [ModelSetting]) {
   /**
    * Table name
    */
@@ -29,9 +29,9 @@ export default class SaleEstimate extends TenantModel {
       'isExpired',
       'isConvertedToInvoice',
       'isApproved',
-      'isRejected'
+      'isRejected',
     ];
-  } 
+  }
 
   /**
    * Detarmines whether the sale estimate converted to sale invoice.
@@ -57,7 +57,7 @@ export default class SaleEstimate extends TenantModel {
     return defaultToTransform(
       this.expirationDate,
       moment().isAfter(this.expirationDate, 'day'),
-      false,
+      false
     );
   }
 
@@ -123,14 +123,14 @@ export default class SaleEstimate extends TenantModel {
        * Filters the approved estimates transactions.
        */
       approved(query) {
-        query.whereNot('approved_at', null)
+        query.whereNot('approved_at', null);
       },
       /**
        * Sorting the estimates orders by delivery status.
        */
       orderByDraft(query, order) {
-        query.orderByRaw(`delivered_at is null ${order}`)
-      }
+        query.orderByRaw(`delivered_at is null ${order}`);
+      },
     };
   }
 
@@ -151,7 +151,7 @@ export default class SaleEstimate extends TenantModel {
         },
         filter(query) {
           query.where('contact_service', 'customer');
-        }
+        },
       },
       entries: {
         relation: Model.HasManyRelation,
@@ -168,91 +168,9 @@ export default class SaleEstimate extends TenantModel {
   }
 
   /**
-   * Model defined fields.
+   * Model settings.
    */
-  static get fields() {
-    return {
-      amount: {
-        label: 'Amount',
-        column: 'amount',
-        columnType: 'number',
-        fieldType: 'number',
-      },
-      estimate_number: {
-        label: 'Estimate number',
-        column: 'estimate_number',
-        columnType: 'text',
-        fieldType: 'text',
-      },
-      customer: {
-        label: 'Customer',
-        column: 'customer_id',
-        relation: 'contacts.id',
-        relationColumn: 'contacts.displayName',
-
-        fieldType: 'options',
-        optionsResource: 'customers',
-        optionsKey: 'id',
-        optionsLable: 'displayName',
-      },
-      estimate_date: {
-        label: 'Estimate date',
-        column: 'estimate_date',
-        columnType: 'date',
-        fieldType: 'date',
-      },
-      expiration_date: {
-        label: 'Expiration date',
-        column: 'expiration_date',
-        columnType: 'date',
-        fieldType: 'date',
-      },
-      reference_no: {
-        label: "Reference No.",
-        column: "reference",
-        columnType: "number",
-        fieldType: "number",
-      },
-      note: {
-        label: 'Note',
-        column: 'note',
-        columnType: 'text',
-        fieldType: 'text',
-      },
-      terms_conditions: {
-        label: 'Terms & conditions',
-        column: 'terms_conditions',
-        columnType: 'text',
-        fieldType: 'text',
-      },
-      status: {
-        label: 'Status',
-        query: (query, role) => {
-          switch(role.value) {
-            case 'draft':
-              query.modify('draft'); break;
-            case 'delivered':
-              query.modify('delivered'); break;
-            case 'approved':
-              query.modify('approved'); break;
-            case 'rejected':
-              query.modify('rejected'); break;
-            case 'invoiced':
-              query.modify('invoiced');
-              break;
-            case 'expired':
-              query.modify('expired'); break;
-          }
-        },
-        sortQuery: (query, role) => {
-          query.modify('orderByDraft', role.order);
-        }
-      },
-      created_at: {
-        label: 'Created at',
-        column: 'created_at',
-        columnType: 'date',
-      },
-    };
+  static get meta() {
+    return SaleEstimateSettings;
   }
 }

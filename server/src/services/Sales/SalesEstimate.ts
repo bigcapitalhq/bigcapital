@@ -1,5 +1,6 @@
-import { omit, sumBy } from 'lodash';
+import { filter, omit, sumBy } from 'lodash';
 import { Service, Inject } from 'typedi';
+import * as R from 'ramda';
 import {
   IEstimatesFilter,
   IFilterMeta,
@@ -413,23 +414,38 @@ export default class SaleEstimateService implements ISalesEstimatesService{
   }
 
   /**
+   * Parses estimates list filter DTO.
+   * @param filterDTO 
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(
+      this.dynamicListService.parseStringifiedFilter
+    )(filterDTO);
+  }
+
+  /**
    * Retrieves estimates filterable and paginated list.
    * @param {number} tenantId -
    * @param {IEstimatesFilter} estimatesFilter -
    */
   public async estimatesList(
     tenantId: number,
-    estimatesFilter: IEstimatesFilter
+    filterDTO: IEstimatesFilter
   ): Promise<{
     salesEstimates: ISaleEstimate[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
     const { SaleEstimate } = this.tenancy.models(tenantId);
+
+    // Parses filter DTO.
+    const filter = this.parseListFilterDTO(filterDTO);
+
+    // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
       tenantId,
       SaleEstimate,
-      estimatesFilter
+      filter,
     );
 
     const { results, pagination } = await SaleEstimate.query()
@@ -438,7 +454,7 @@ export default class SaleEstimateService implements ISalesEstimatesService{
         builder.withGraphFetched('entries');
         dynamicFilter.buildQuery()(builder);
       })
-      .pagination(estimatesFilter.page - 1, estimatesFilter.pageSize);
+      .pagination(filter.page - 1, filter.pageSize);
 
     return {
       salesEstimates: results,

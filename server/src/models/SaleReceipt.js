@@ -1,7 +1,9 @@
 import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
+import ModelSetting from './ModelSetting';
+import SaleReceiptSettings from './SaleReceipt.Settings';
 
-export default class SaleReceipt extends TenantModel {
+export default class SaleReceipt extends mixin(TenantModel, [ModelSetting]) {
   /**
    * Table name
    */
@@ -16,14 +18,11 @@ export default class SaleReceipt extends TenantModel {
     return ['created_at', 'updated_at'];
   }
 
-   /**
+  /**
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return [
-      'isClosed',
-      'isDraft',
-    ];
+    return ['isClosed', 'isDraft'];
   }
 
   /**
@@ -66,7 +65,7 @@ export default class SaleReceipt extends TenantModel {
        */
       sortByStatus(query, order) {
         query.orderByRaw(`CLOSED_AT IS NULL ${order}`);
-      }
+      },
     };
   }
 
@@ -89,7 +88,7 @@ export default class SaleReceipt extends TenantModel {
         },
         filter(query) {
           query.where('contact_service', 'customer');
-        }
+        },
       },
 
       depositAccount: {
@@ -118,95 +117,19 @@ export default class SaleReceipt extends TenantModel {
         modelClass: AccountTransaction.default,
         join: {
           from: 'sales_receipts.id',
-          to: 'accounts_transactions.referenceId'
+          to: 'accounts_transactions.referenceId',
         },
         filter(builder) {
           builder.where('reference_type', 'SaleReceipt');
         },
-      }
+      },
     };
   }
 
   /**
-   * Model defined fields.
+   * Sale invoice meta.
    */
-  static get fields() {
-    return {
-      amount: {
-        label: 'Amount',
-        column: 'amount',
-        columnType: 'number',
-        fieldType: 'number',
-      },
-      deposit_account: {
-        column: 'deposit_account_id',
-        label: 'Deposit account',
-        relation: "accounts.id",
-        optionsResource: "account",
-      },
-      customer: {
-        label: 'Customer',
-        column: 'customer_id',
-        fieldType: 'options',
-        optionsResource: 'customers',
-        optionsKey: 'id',
-        optionsLable: 'displayName',
-      },
-      receipt_date: {
-        label: 'Receipt date',
-        column: 'receipt_date',
-        columnType: 'date',
-        fieldType: 'date',
-      },
-      receipt_number: {
-        label: 'Receipt No.',
-        column: 'receipt_number',
-        columnType: 'string',
-        fieldType: 'text',
-      },
-      reference_no: {
-        label: 'Reference No.',
-        column: 'reference_no',
-        columnType: 'text',
-        fieldType: 'text',
-      },
-      receipt_message: {
-        label: 'Receipt message',
-        column: 'receipt_message',
-        columnType: 'text',
-        fieldType: 'text',
-      },
-      statement: {
-        label: 'Statement',
-        column: 'statement',
-        columnType: 'text',
-        fieldType: 'text',
-      },
-      created_at: {
-        label: 'Created at',
-        column: 'created_at',
-        columnType: 'date',
-      },
-      status: {
-        label: 'Status',
-        options: [
-          { key: 'draft', label: 'Draft', },
-          { key: 'closed', label: 'Closed' },
-        ],
-        query: (query, role) => {
-          switch(role.value) {
-            case 'draft':
-              query.modify('draft');
-              break;
-            case 'closed':
-              query.modify('closed');
-              break;
-          }
-        },
-        sortQuery(query, role) {
-          query.modify('sortByStatus', role.order);
-        }
-      }
-    };
+  static get meta() {
+    return SaleReceiptSettings;
   }
 }

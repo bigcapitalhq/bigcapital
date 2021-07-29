@@ -290,16 +290,12 @@ export default class ExpensesController extends BaseController {
   async getExpensesList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = {
-      filterRoles: [],
       sortOrder: 'asc',
       columnSortBy: 'created_at',
       page: 1,
       pageSize: 12,
       ...this.matchedQueryData(req),
     };
-    if (filter.stringifiedFilterRoles) {
-      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
-    }
 
     try {
       const { expenses, pagination, filterMeta } =

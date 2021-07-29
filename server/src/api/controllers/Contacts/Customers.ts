@@ -120,6 +120,8 @@ export default class CustomersController extends ContactsController {
 
       query('custom_view_id').optional().isNumeric().toInt(),
       query('stringified_filter_roles').optional().isJSON(),
+
+      query('inactive_mode').optional().isBoolean().toBoolean(),
     ];
   }
 
@@ -264,17 +266,15 @@ export default class CustomersController extends ContactsController {
    */
   async getCustomersList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
+
     const filter = {
-      filterRoles: [],
+      inactiveMode: false,
       sortOrder: 'asc',
       columnSortBy: 'created_at',
       page: 1,
       pageSize: 12,
       ...this.matchedQueryData(req),
     };
-    if (filter.stringifiedFilterRoles) {
-      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
-    }
 
     try {
       const {

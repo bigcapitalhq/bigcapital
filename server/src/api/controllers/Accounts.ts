@@ -29,11 +29,9 @@ export default class AccountsController extends BaseController {
 
     router.get(
       '/transactions',
-      [
-        query('account_id').optional().isInt().toInt(),
-      ],
+      [query('account_id').optional().isInt().toInt()],
       this.asyncMiddleware(this.accountTransactions.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors
     );
     router.post(
       '/:id/activate',
@@ -136,6 +134,8 @@ export default class AccountsController extends BaseController {
 
       query('column_sort_by').optional(),
       query('sort_order').optional().isIn(['desc', 'asc']),
+
+      query('inactive_mode').optional().isBoolean().toBoolean(),
     ];
   }
 
@@ -213,7 +213,9 @@ export default class AccountsController extends BaseController {
         tenantId,
         accountId
       );
-    return res.status(200).send({ account: this.transfromToResponse(account) });
+      return res
+        .status(200)
+        .send({ account: this.transfromToResponse(account) });
     } catch (error) {
       next(error);
     }
@@ -256,7 +258,7 @@ export default class AccountsController extends BaseController {
 
       return res.status(200).send({
         id: accountId,
-        message: 'The account has been activated successfully.'
+        message: 'The account has been activated successfully.',
       });
     } catch (error) {
       next(error);
@@ -291,22 +293,24 @@ export default class AccountsController extends BaseController {
    * @param {Response} res
    * @param {Response}
    */
-  async getAccountsList(req: Request, res: Response, next: NextFunction) {
+  public async getAccountsList(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
-    const filter: IAccountsFilter = {
-      filterRoles: [],
+
+    // Filter query.
+    const filter = {
       sortOrder: 'asc',
       columnSortBy: 'name',
+      inactiveMode: false,
       ...this.matchedQueryData(req),
     };
-    if (filter.stringifiedFilterRoles) {
-      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
-    }
+
     try {
-      const {
-        accounts,
-        filterMeta,
-      } = await this.accountsService.getAccountsList(tenantId, filter);
+      const { accounts, filterMeta } =
+        await this.accountsService.getAccountsList(tenantId, filter);
 
       return res.status(200).send({
         accounts: this.transfromToResponse(accounts, 'accountTypeLabel', req),
@@ -343,9 +347,9 @@ export default class AccountsController extends BaseController {
 
   /**
    * Retrieve accounts transactions list.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    * @returns {Response}
    */
   async accountTransactions(req: Request, res: Response, next: NextFunction) {
@@ -353,10 +357,11 @@ export default class AccountsController extends BaseController {
     const transactionsFilter = this.matchedQueryData(req);
 
     try {
-      const { transactions } = await this.accountsService.getAccountsTransactions(
-        tenantId,
-        transactionsFilter
-      );
+      const { transactions } =
+        await this.accountsService.getAccountsTransactions(
+          tenantId,
+          transactionsFilter
+        );
       return res.status(200).send({
         transactions: this.transfromToResponse(transactions),
       });
@@ -372,7 +377,12 @@ export default class AccountsController extends BaseController {
    * @param {Response} res
    * @param {ServiceError} error
    */
-  catchServiceErrors(error, req: Request, res: Response, next: NextFunction) {
+  private catchServiceErrors(
+    error,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'account_not_found') {
         return res.boom.notFound('The given account not found.', {

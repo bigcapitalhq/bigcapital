@@ -1,7 +1,8 @@
 import { difference, sumBy, omit, map } from 'lodash';
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
-import { ServiceError, ServiceErrors } from 'exceptions';
+import * as R from 'ramda';
+import { ServiceError } from 'exceptions';
 import {
   IManualJournalDTO,
   IManualJournalsService,
@@ -769,32 +770,46 @@ export default class ManualJournalsService implements IManualJournalsService {
   }
 
   /**
+   * Parses filter DTO of the manual journals list.
+   * @param filterDTO 
+   */
+   private parseListFilterDTO(filterDTO) {
+    return R.compose(
+      this.dynamicListService.parseStringifiedFilter
+    )(filterDTO);
+  }
+
+  /**
    * Retrieve manual journals datatable list.
-   * @param {number} tenantId
-   * @param {IManualJournalsFilter} filter
+   * @param {number} tenantId - 
+   * @param {IManualJournalsFilter} filter - 
    */
   public async getManualJournals(
     tenantId: number,
-    filter: IManualJournalsFilter
+    filterDTO: IManualJournalsFilter
   ): Promise<{
     manualJournals: IManualJournal;
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
     const { ManualJournal } = this.tenancy.models(tenantId);
-    const dynamicList = await this.dynamicListService.dynamicList(
+
+    // Parses filter DTO.
+    const filter = this.parseListFilterDTO(filterDTO);
+
+    // Dynamic service.
+    const dynamicService = await this.dynamicListService.dynamicList(
       tenantId,
       ManualJournal,
       filter
     );
-
     this.logger.info('[manual_journals] trying to get manual journals list.', {
       tenantId,
       filter,
     });
     const { results, pagination } = await ManualJournal.query()
       .onBuild((builder) => {
-        dynamicList.buildQuery()(builder);
+        dynamicService.buildQuery()(builder);
         builder.withGraphFetched('entries.account');
       })
       .pagination(filter.page - 1, filter.pageSize);
@@ -802,7 +817,7 @@ export default class ManualJournalsService implements IManualJournalsService {
     return {
       manualJournals: results,
       pagination,
-      filterMeta: dynamicList.getResponseMeta(),
+      filterMeta: dynamicService.getResponseMeta(),
     };
   }
 

@@ -1,120 +1,6 @@
 import { difference } from 'lodash';
-import moment from 'moment';
-import { Lexer } from 'lib/LogicEvaluation/Lexer';
-import Parser from 'lib/LogicEvaluation/Parser';
-import QueryParser from 'lib/LogicEvaluation/QueryParser';
+
 import { IFilterRole, IModel } from 'interfaces';
-
-const numberRoleQueryBuilder = (
-  role: IFilterRole,
-  comparatorColumn: string
-) => {
-  switch (role.comparator) {
-    case 'equals':
-    case 'equal':
-    default:
-      return (builder) => {
-        builder.where(comparatorColumn, '=', role.value);
-      };
-    case 'not_equals':
-    case 'not_equal':
-      return (builder) => {
-        builder.whereNot(comparatorColumn, role.value);
-      };
-    case 'bigger_than':
-    case 'bigger':
-      return (builder) => {
-        builder.where(comparatorColumn, '>', role.value);
-      };
-    case 'bigger_or_equals':
-      return (builder) => {
-        builder.where(comparatorColumn, '>=', role.value);
-      };
-    case 'smaller_than':
-    case 'smaller':
-      return (builder) => {
-        builder.where(comparatorColumn, '<', role.value);
-      };
-    case 'smaller_or_equals':
-      return (builder) => {
-        builder.where(comparatorColumn, '<=', role.value);
-      };
-  }
-};
-
-const textRoleQueryBuilder = (role: IFilterRole, comparatorColumn: string) => {
-  switch (role.comparator) {
-    case 'equals':
-    case 'is':
-    default:
-      return (builder) => {
-        builder.where(comparatorColumn, role.value);
-      };
-    case 'not_equal':
-    case 'not_equals':
-    case 'is_not':
-      return (builder) => {
-        builder.whereNot(comparatorColumn, role.value);
-      };
-    case 'contain':
-    case 'contains':
-      return (builder) => {
-        builder.where(comparatorColumn, 'LIKE', `%${role.value}%`);
-      };
-    case 'not_contain':
-    case 'not_contains':
-      return (builder) => {
-        builder.whereNot(comparatorColumn, 'LIKE', `%${role.value}%`);
-      };
-  }
-};
-
-const dateQueryBuilder = (role: IFilterRole, comparatorColumn: string) => {
-  switch (role.comparator) {
-    case 'after':
-    case 'before':
-      return (builder) => {
-        const comparator = role.comparator === 'before' ? '<' : '>';
-        const hasTimeFormat = moment(
-          role.value,
-          'YYYY-MM-DD HH:MM',
-          true
-        ).isValid();
-        const targetDate = moment(role.value);
-        const dateFormat = 'YYYY-MM-DD HH:MM:SS';
-
-        if (!hasTimeFormat) {
-          if (role.comparator === 'before') {
-            targetDate.startOf('day');
-          } else {
-            targetDate.endOf('day');
-          }
-        }
-        const comparatorValue = targetDate.format(dateFormat);
-        builder.where(comparatorColumn, comparator, comparatorValue);
-      };
-    case 'in':
-      return (builder) => {
-        const hasTimeFormat = moment(
-          role.value,
-          'YYYY-MM-DD HH:MM',
-          true
-        ).isValid();
-        const dateFormat = 'YYYY-MM-DD HH:MM:SS';
-
-        if (hasTimeFormat) {
-          const targetDateTime = moment(role.value).format(dateFormat);
-          builder.where(comparatorColumn, '=', targetDateTime);
-        } else {
-          const startDate = moment(role.value).startOf('day');
-          const endDate = moment(role.value).endOf('day');
-
-          builder.where(comparatorColumn, '>=', startDate.format(dateFormat));
-          builder.where(comparatorColumn, '<=', endDate.format(dateFormat));
-        }
-      };
-  }
-};
 
 /**
  * Get field column metadata and its relation with other tables.
@@ -124,68 +10,6 @@ const dateQueryBuilder = (role: IFilterRole, comparatorColumn: string) => {
 export function getRoleFieldColumn(model: IModel, fieldKey: string) {
   const tableFields = model.fields;
   return tableFields[fieldKey] ? tableFields[fieldKey] : null;
-}
-
-/**
- * Builds roles queries.
- * @param {IModel} model -
- * @param {Object} role -
- */
-export function buildRoleQuery(model: IModel, role: IFilterRole) {
-  const fieldRelation = getRoleFieldColumn(model, role.fieldKey);
-  const comparatorColumn =
-    fieldRelation.relationColumn ||
-    `${model.tableName}.${fieldRelation.column}`;
-
-  if (typeof fieldRelation.query !== 'undefined') {
-    return (builder) => {
-      fieldRelation.query(builder, role);
-    };
-  }
-  switch (fieldRelation.columnType) {
-    case 'number':
-      return numberRoleQueryBuilder(role, comparatorColumn);
-    case 'date':
-      return dateQueryBuilder(role, comparatorColumn);
-    case 'text':
-    case 'varchar':
-    default:
-      return textRoleQueryBuilder(role, comparatorColumn);
-  }
-}
-
-/**
- * Extract relation table name from relation.
- * @param {String} column -
- * @return {String} - join relation table.
- */
-export const getTableFromRelationColumn = (column: string) => {
-  const splitedColumn = column.split('.');
-  return splitedColumn.length > 0 ? splitedColumn[0] : '';
-};
-
-/**
- * Builds view roles join queries.
- * @param {String} tableName - Table name.
- * @param {Array} roles - Roles.
- */
-export function buildFilterRolesJoins(model: IModel, roles: IFilterRole[]) {
-  return (builder) => {
-    roles.forEach((role) => {
-      const fieldColumn = getRoleFieldColumn(model, role.fieldKey);
-
-      if (fieldColumn.relation) {
-        const joinTable = getTableFromRelationColumn(fieldColumn.relation);
-
-        builder.join(
-          joinTable,
-          `${model.tableName}.${fieldColumn.column}`,
-          '=',
-          fieldColumn.relation
-        );
-      }
-    });
-  };
 }
 
 export function buildSortColumnJoin(model: IModel, sortColumnKey: string) {
@@ -203,50 +27,6 @@ export function buildSortColumnJoin(model: IModel, sortColumnKey: string) {
     }
   };
 }
-
-/**
- * Builds database query from stored view roles.
- *
- * @param {Array} roles -
- * @return {Function}
- */
-export function buildFilterRolesQuery(
-  model: IModel,
-  roles: IFilterRole[],
-  logicExpression: string = ''
-) {
-  const rolesIndexSet = {};
-
-  roles.forEach((role) => {
-    rolesIndexSet[role.index] = buildRoleQuery(model, role);
-  });
-  // Lexer for logic expression.
-  const lexer = new Lexer(logicExpression);
-  const tokens = lexer.getTokens();
-
-  // Parse the logic expression.
-  const parser = new Parser(tokens);
-  const parsedTree = parser.parse();
-
-  const queryParser = new QueryParser(parsedTree, rolesIndexSet);
-  return queryParser.parse();
-}
-
-/**
- * Builds filter query for query builder.
- * @param {String} tableName -
- * @param {Array} roles -
- * @param {String} logicExpression -
- */
-export const buildFilterQuery = (
-  model: IModel,
-  roles: IFilterRole[],
-  logicExpression: string
-) => {
-  return (builder) => {
-    buildFilterRolesQuery(model, roles, logicExpression)(builder);
-  };
-};
 
 /**
  * Mapes the view roles to view conditionals.
@@ -316,14 +96,6 @@ export function validateFieldKeyExistance(model: any, fieldKey: string) {
   return model?.fields?.[fieldKey] || false;
 }
 
-export function validateFilterRolesFieldsExistance(
-  model,
-  filterRoles: IFilterRole[]
-) {
-  return filterRoles.filter((filterRole: IFilterRole) => {
-    return !validateFieldKeyExistance(model, filterRole.fieldKey);
-  });
-}
 
 /**
  * Retrieve model fields keys.

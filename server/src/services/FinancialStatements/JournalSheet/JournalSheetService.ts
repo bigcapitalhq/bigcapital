@@ -29,7 +29,6 @@ export default class JournalSheetService {
       fromRange: null,
       toRange: null,
       accountsIds: [],
-      transactionTypes: [],
       numberFormat: {
         noCents: false,
         divideOn1000: false,
@@ -107,6 +106,13 @@ export default class JournalSheetService {
       }
       query.modify('filterDateRange', filter.fromDate, filter.toDate);
       query.orderBy(['date', 'createdAt', 'indexGroup', 'index']);
+
+      if (filter.transactionType) {
+        return query.where('reference_type', filter.transactionType);
+      }
+      if (filter.transactionType && filter.transactionId) {
+        return query.where('reference_id', filter.transactionId);
+      }
     });
     // Transform the transactions array to journal collection.
     const transactionsJournal = Journal.fromTransactions(

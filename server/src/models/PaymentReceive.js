@@ -1,7 +1,9 @@
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
+import ModelSetting from './ModelSetting';
+import PaymentReceiveSettings from './PaymentReceive.Settings';
 
-export default class PaymentReceive extends TenantModel {
+export default class PaymentReceive extends mixin(TenantModel, [ModelSetting]) {
   /**
    * Table name.
    */
@@ -75,63 +77,9 @@ export default class PaymentReceive extends TenantModel {
   }
 
   /**
-   * Model defined fields.
+   * 
    */
-  static get fields() {
-    return {
-      customer: {
-        label: 'Customer',
-        column: 'customer_id',
-        relation: 'contacts.id',
-        relationColumn: 'contacts.displayName',
-
-        fieldType: 'options',
-        optionsResource: 'customers',
-        optionsKey: 'id',
-        optionsLable: 'displayName',
-      },
-      payment_date: {
-        label: 'Payment date',
-        column: 'payment_date',
-        columnType: 'date',
-        fieldType: 'date',
-      },
-      amount: {
-        label: 'Amount',
-        column: 'amount',
-        columnType: 'number',
-        fieldType: 'number',
-      },
-      reference_no: {
-        label: 'Reference No.',
-        column: 'reference_no',
-        columnType: 'string',
-        fieldType: 'text',
-      },
-      deposit_account: {
-        column: 'deposit_account_id',
-        lable: 'Deposit account',
-        relation: "accounts.id",
-        relationColumn: 'accounts.name',
-        optionsResource: "account",
-      },
-      payment_receive_no: {
-        label: 'Payment receive No.',
-        column: 'payment_receive_no',
-        columnType: 'string',
-        fieldType: 'text',
-      },
-      description: {
-        label: 'description',
-        column: 'description',
-        columnType: 'string',
-        fieldType: 'text',
-      },
-      created_at: {
-        label: 'Created at',
-        column: 'created_at',
-        columnType: 'date',
-      },
-    };
+  static get meta() {
+    return PaymentReceiveSettings;
   }
 }

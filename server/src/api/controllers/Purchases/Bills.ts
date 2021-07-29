@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { check, param, query } from 'express-validator';
+import * as R from 'ramda';
 import { Service, Inject } from 'typedi';
 import { IBillDTO, IBillEditDTO } from 'interfaces';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
@@ -300,14 +301,11 @@ export default class BillsController extends BaseController {
     const filter = {
       page: 1,
       pageSize: 12,
-      filterRoles: [],
       sortOrder: 'asc',
       columnSortBy: 'created_at',
       ...this.matchedQueryData(req),
     };
-    if (filter.stringifiedFilterRoles) {
-      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
-    }
+
     try {
       const { bills, pagination, filterMeta } =
         await this.billsService.getBills(tenantId, filter);

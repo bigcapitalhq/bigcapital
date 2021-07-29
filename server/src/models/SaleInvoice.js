@@ -1,8 +1,10 @@
-import { Model, raw } from 'objection';
+import { mixin, Model, raw } from 'objection';
 import moment from 'moment';
 import TenantModel from 'models/TenantModel';
+import ModelSetting from './ModelSetting';
+import SaleInvoiceMeta from './SaleInvoice.Settings';
 
-export default class SaleInvoice extends TenantModel {
+export default class SaleInvoice extends mixin(TenantModel, [ModelSetting]) {
   /**
    * Table name
    */
@@ -243,6 +245,9 @@ export default class SaleInvoice extends TenantModel {
     const PaymentReceiveEntry = require('models/PaymentReceiveEntry');
 
     return {
+      /**
+       * Sale invoice associated entries.
+       */
       entries: {
         relation: Model.HasManyRelation,
         modelClass: ItemEntry.default,
@@ -255,6 +260,9 @@ export default class SaleInvoice extends TenantModel {
         },
       },
 
+      /**
+       * Belongs to customer model.
+       */
       customer: {
         relation: Model.BelongsToOneRelation,
         modelClass: Contact.default,
@@ -267,6 +275,9 @@ export default class SaleInvoice extends TenantModel {
         },
       },
 
+      /**
+       * Invoice has associated account transactions.
+       */
       transactions: {
         relation: Model.HasManyRelation,
         modelClass: AccountTransaction.default,
@@ -316,125 +327,40 @@ export default class SaleInvoice extends TenantModel {
   }
 
   /**
-   * Model defined fields.
+   * Sale invoice meta.
    */
-  static get fields() {
-    return {
-      customer: {
-        label: 'Customer',
-        column: 'customer_id',
-        relation: 'contacts.id',
-        relationColumn: 'contacts.displayName',
+  static get meta() {
+    return SaleInvoiceMeta;
+  }
 
-        fieldType: 'options',
-        optionsResource: 'customers',
-        optionsKey: 'id',
-        optionsLable: 'displayName',
-      },
-      invoice_date: {
-        label: 'Invoice date',
-        column: 'invoice_date',
-        columnType: 'date',
-        fieldType: 'date',
-      },
-      due_date: {
-        label: 'Due date',
-        column: 'due_date',
-        columnType: 'date',
-        fieldType: 'date',
-      },
-      invoice_no: {
-        label: 'Invoice No.',
-        column: 'invoice_no',
-        columnType: 'number',
-        fieldType: 'number',
-      },
-      reference_no: {
-        label: 'Reference No.',
-        column: 'reference_no',
-        columnType: 'number',
-        fieldType: 'number',
-      },
-      invoice_message: {
-        label: 'Invoice message',
-        column: 'invoice_message',
-        columnType: 'text',
-        fieldType: 'text',
-      },
-      terms_conditions: {
-        label: 'Terms & conditions',
-        column: 'terms_conditions',
-        columnType: 'text',
-        fieldType: 'text',
-      },
-      invoice_amount: {
-        label: 'Invoice amount',
-        column: 'invoice_amount',
-        columnType: 'number',
-        fieldType: 'number',
-      },
-      payment_amount: {
-        label: 'Payment amount',
-        column: 'payment_amount',
-        columnType: 'number',
-        fieldType: 'number',
-      },
-      balance: {
-        label: 'Balance',
-        column: 'balance',
-        columnType: 'number',
-        fieldType: 'number',
-      },
-      due_amount: {
-        label: 'Due amount',
-        column: 'due_amount',
-        columnType: 'number',
-        fieldType: 'number',
-        sortQuery(query, role) {
-          query.modify('sortByDueAmount', role.order);
-        },
-      },
-      created_at: {
-        label: 'Created at',
-        column: 'created_at',
-        columnType: 'date',
-      },
-      status: {
-        label: 'Status',
-        options: [
-          { key: 'draft', label: 'Draft' },
-          { key: 'delivered', label: 'Delivered' },
-          { key: 'unpaid', label: 'Unpaid' },
-          { key: 'overdue', label: 'Overdue' },
-          { key: 'partially-paid', label: 'Partially paid' },
-          { key: 'paid', label: 'Paid' },
-        ],
-        query: (query, role) => {
-          switch (role.value) {
-            case 'draft':
-              query.modify('draft');
-              break;
-            case 'delivered':
-              query.modify('delivered');
-              break;
-            case 'unpaid':
-              query.modify('unpaid');
-              break;
-            case 'overdue':
-              query.modify('overdue');
-              break;
-            case 'partially-paid':
-              query.modify('partiallyPaid');
-              break;
-            case 'paid':
-              query.modify('paid');
-              break;
-          }
-        },
-        sortQuery(query, role) {
-          query.modify('sortByStatus', role.order);
-        },
-      },
-    };
+  static dueAmountFieldSortQuery(query, role) {
+    query.modify('sortByDueAmount', role.order);
+  }
+
+  static statusFieldFilterQuery(query, role) {
+    switch (role.value) {
+      case 'draft':
+        query.modify('draft');
+        break;
+      case 'delivered':
+        query.modify('delivered');
+        break;
+      case 'unpaid':
+        query.modify('unpaid');
+        break;
+      case 'overdue':
+        query.modify('overdue');
+        break;
+      case 'partially-paid':
+        query.modify('partiallyPaid');
+        break;
+      case 'paid':
+        query.modify('paid');
+        break;
+    }
+  }
+
+  static statusFieldSortQuery(query, role) {
+    query.modify('sortByStatus', role.order);
   }
 }
