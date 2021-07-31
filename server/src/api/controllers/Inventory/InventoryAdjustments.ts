@@ -62,6 +62,8 @@ export default class InventoryAdjustmentsController extends BaseController {
 
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
+
+      query('stringified_filter_roles').optional().isJSON(),
     ];
   }
 

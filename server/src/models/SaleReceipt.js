@@ -66,6 +66,21 @@ export default class SaleReceipt extends mixin(TenantModel, [ModelSetting]) {
       sortByStatus(query, order) {
         query.orderByRaw(`CLOSED_AT IS NULL ${order}`);
       },
+
+      /**
+       * Filtering the receipts orders by status.
+       */
+      filterByStatus(query, status) {
+        switch (status) {
+          case 'draft':
+            query.modify('draft');
+            break;
+          case 'closed':
+          default:
+            query.modify('closed');
+            break;
+        }
+      }
     };
   }
 
@@ -73,7 +88,7 @@ export default class SaleReceipt extends mixin(TenantModel, [ModelSetting]) {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Contact = require('models/Contact');
+    const Customer = require('models/Customer');
     const Account = require('models/Account');
     const AccountTransaction = require('models/AccountTransaction');
     const ItemEntry = require('models/ItemEntry');
@@ -81,7 +96,7 @@ export default class SaleReceipt extends mixin(TenantModel, [ModelSetting]) {
     return {
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Contact.default,
+        modelClass: Customer.default,
         join: {
           from: 'sales_receipts.customerId',
           to: 'contacts.id',

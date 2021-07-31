@@ -39,7 +39,7 @@ export default {
       label: 'Status',
       column: 'status',
       fieldType: 'enumeration',
-      sortQuery: statusFieldSortQuery,
+      sortCustomQuery: StatusFieldSortQuery,
     },
     'created_at': {
       label: 'Created at',
@@ -49,6 +49,6 @@ export default {
   },
 };
 
-function statusFieldSortQuery(query, role) {
+function StatusFieldSortQuery(query, role) {
   return query.modify('sortByStatus', role.order);
 }

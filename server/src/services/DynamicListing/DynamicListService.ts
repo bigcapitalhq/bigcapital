@@ -30,6 +30,8 @@ export default class DynamicListService implements IDynamicListService {
 
   /**
    * Parses filter DTO.
+   * @param {IMode} model - 
+   * @param {} filterDTO - 
    */
   private parseFilterObject = (model, filterDTO) => {
     return {

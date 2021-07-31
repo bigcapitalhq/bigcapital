@@ -42,7 +42,7 @@ export default class Item extends mixin(TenantModel, [ModelSetting]) {
        * Inactive/Active mode.
        */
       inactiveMode(query, active = false) {
-        query.where('active', !active);
+        query.where('items.active', !active);
       },
     };
   }

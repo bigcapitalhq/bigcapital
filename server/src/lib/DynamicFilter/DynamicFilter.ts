@@ -25,6 +25,9 @@ export default class DynamicFilter extends DynamicFilterAbstructor{
    */
   public setFilter = (dynamicFilter: IDynamicFilter) => {
     dynamicFilter.setModel(this.model);
+
+    dynamicFilter.onInitialize();
+
     this.dynamicFilters.push(dynamicFilter);
   }
 
@@ -66,11 +69,7 @@ export default class DynamicFilter extends DynamicFilterAbstructor{
       buildersCallbacks.forEach((builderCallback) => {
         builderCallback(builder);
       });
-
-      this.buildFilterRolesJoins(
-        this.model,
-        uniqBy(tableColumns, 'columnKey')
-      )(builder);
+      this.buildFilterRolesJoins(builder);
     };
   }
 

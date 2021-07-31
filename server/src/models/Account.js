@@ -8,6 +8,7 @@ import DependencyGraph from 'lib/DependencyGraph';
 import AccountTypesUtils from 'lib/AccountTypes';
 import AccountSettings from './Account.Settings';
 import ModelSettings from './ModelSetting';
+import { ACCOUNT_TYPES } from 'data/AccountTypes';
 
 export default class Account extends mixin(TenantModel, [ModelSettings]) {
   /**
@@ -98,7 +99,7 @@ export default class Account extends mixin(TenantModel, [ModelSettings]) {
        * Inactive/Active mode.
        */
       inactiveMode(query, active = false) {
-        query.where('active', !active);
+        query.where('accounts.active', !active);
       },
 
       filterAccounts(query, accountIds) {
@@ -116,6 +117,28 @@ export default class Account extends mixin(TenantModel, [ModelSettings]) {
       },
       sortColumnBuilder(query, columnKey, direction) {
         buildSortColumnQuery(Account.tableName, columnKey, direction)(query);
+      },
+
+      /**
+       * Filter by root type.
+       */
+      filterByRootType(query, rootType) {
+        const filterTypes = ACCOUNT_TYPES.filter(
+          (accountType) => accountType.rootType === rootType
+        ).map((accountType) => accountType.key);
+
+        query.whereIn('account_type', filterTypes);
+      },
+
+      /**
+       * Filter by account normal
+       */
+      filterByAccountNormal(query, accountNormal) {
+        const filterTypes = ACCOUNT_TYPES.filter(
+          (accountType) => accountType.normal === accountNormal,
+        ).map((accountType) => accountType.key);
+
+        query.whereIn('account_type', filterTypes);
       },
     };
   }

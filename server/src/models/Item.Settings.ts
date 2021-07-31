@@ -8,7 +8,6 @@ export default {
     'type': {
       name: 'Item type',
       column: 'type',
-      columnable: true,
       fieldType: 'enumeration',
       options: [
         { key: 'inventory', label: 'Inventory', },
@@ -19,13 +18,11 @@ export default {
     'name': {
       name: 'Name',
       column: 'name',
-      columnable: true,
       fieldType: 'text',
     },
     'code': {
       name: 'Code',
       column: 'code',
-      columnable: true,
       fieldType: 'text',
     },
     'sellable': {
@@ -51,15 +48,34 @@ export default {
     'cost_account': {
       name: 'Cost account',
       column: 'cost_account_id',
-      columnable: true,
+      fieldType: 'relation',
+
+      relationType: 'enumeration',
+      relationKey: 'costAccount',
+
+      relationEntityLabel: 'name',
+      relationEntityKey: 'slug',
     },
     'sell_account': {
       name: 'Sell account',
       column: 'sell_account_id',
+      fieldType: 'relation',
+
+      relationType: 'enumeration',
+      relationKey: 'sellAccount',
+
+      relationEntityLabel: 'name',
+      relationEntityKey: 'slug',
     },
     'inventory_account': {
       name: 'Inventory account',
       column: 'inventory_account_id',
+
+      relationType: 'enumeration',
+      relationKey: 'inventoryAccount',
+
+      relationEntityLabel: 'name',
+      relationEntityKey: 'slug',
     },
     'sell_description': {
       name: 'Sell description',
@@ -80,17 +96,22 @@ export default {
       name: 'Note',
       column: 'note',
       fieldType: 'text',
-      columnable: true,
     },
     'category': {
       name: 'Category',
       column: 'category_id',
-      columnable: true,
+
+      relationType: 'enumeration',
+      relationKey: 'category',
+
+      relationEntityLabel: 'name',
+      relationEntityKey: 'id',
     },
     'active': {
       name: 'Active',
       column: 'active',
       fieldType: 'boolean',
+      filterable: false,
     },
     'created_at': {
       name: 'Created at',

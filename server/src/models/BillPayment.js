@@ -31,7 +31,7 @@ export default class BillPayment extends mixin(TenantModel, [ModelSetting]) {
   static get relationMappings() {
     const BillPaymentEntry = require("models/BillPaymentEntry");
     const AccountTransaction = require("models/AccountTransaction");
-    const Contact = require("models/Contact");
+    const Vendor = require("models/Vendor");
     const Account = require("models/Account");
 
     return {
@@ -46,7 +46,7 @@ export default class BillPayment extends mixin(TenantModel, [ModelSetting]) {
 
       vendor: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Contact.default,
+        modelClass: Vendor.default,
         join: {
           from: "bills_payments.vendorId",
           to: "contacts.id",

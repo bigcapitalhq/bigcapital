@@ -18,6 +18,13 @@ export default {
     'customer': {
       name: 'Customer',
       column: 'customer_id',
+      fieldType: 'relation',
+
+      relationType: 'enumeration',
+      relationKey: 'customer',
+
+      relationEntityLabel: 'display_name',
+      relationEntityKey: 'id',
     },
     'estimate_date': {
       name: 'Estimate date',
@@ -46,8 +53,16 @@ export default {
     },
     'status': {
       name: 'Status',
-      filterQuery: statusFieldFilterQuery,
-      sortQuery: statusFieldSortQuery,
+      fieldType: 'enumeration',
+      options: [
+        { name: 'Delivered', key: 'delivered' },
+        { name: 'Rejected', key: 'rejected' },
+        { name: 'Approved', key: 'approved' },
+        { name: 'Delivered', key: 'delivered' },
+        { name: 'Draft', key: 'draft' },
+      ],
+      filterCustomQuery: StatusFieldFilterQuery,
+      sortCustomQuery: StatusFieldSortQuery,
     },
     'created_at': {
       name: 'Created at',
@@ -57,29 +72,10 @@ export default {
   },
 };
 
-function statusFieldSortQuery(query, role) {
-  return query.modify('orderByDraft', role.order);
+function StatusFieldSortQuery(query, role) {
+  query.modify('orderByStatus', role.order);
 }
 
-function statusFieldFilterQuery(query, role) {
-  switch (role.value) {
-    case 'draft':
-      query.modify('draft');
-      break;
-    case 'delivered':
-      query.modify('delivered');
-      break;
-    case 'approved':
-      query.modify('approved');
-      break;
-    case 'rejected':
-      query.modify('rejected');
-      break;
-    case 'invoiced':
-      query.modify('invoiced');
-      break;
-    case 'expired':
-      query.modify('expired');
-      break;
-  }
+function StatusFieldFilterQuery(query, role) {
+  query.modify('filterByStatus', role.value);
 }

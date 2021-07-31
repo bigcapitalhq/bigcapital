@@ -27,13 +27,8 @@ export default class Expense extends mixin(TenantModel, [ModelSetting]) {
   }
 
   /**
-   * Allows to mark model as resourceable to viewable and filterable.
+   * Virtual attributes.
    */
-  static get resourceable() {
-    return true;
-  }
-
-
   static get virtualAttributes() {
     return ['isPublished', 'unallocatedCostAmount'];
   }
@@ -91,6 +86,18 @@ export default class Expense extends mixin(TenantModel, [ModelSetting]) {
 
       filterByPublished(query) {
         query.whereNot('published_at', null);
+      },
+
+      filterByStatus(query, status) {
+        switch (status) {
+          case 'draft':
+            query.modify('filterByDraft');
+            break;
+          case 'published':
+          default:
+            query.modify('filterByPublished');
+            break;
+        }
       },
     };
   }

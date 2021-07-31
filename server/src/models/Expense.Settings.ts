@@ -16,23 +16,19 @@ export default {
     'payment_account': {
       name: 'Payment account',
       column: 'payment_account_id',
-
       fieldType: 'relation',
-      fieldRelation: 'paymentAccount',
 
-      fieldRelationType: 'enumeration',
-      relationLabelField: 'name',
-      relationKeyField: 'slug',
+      relationType: 'enumeration',
+      relationKey: 'paymentAccount',
+
+      relationEntityLabel: 'name',
+      relationEntityKey: 'slug',
     },
     'amount': {
       name: 'Amount',
       column: 'total_amount',
       fieldType: 'number',
     },
-    // currency_code: {
-    //   name: 'Currency',
-    //   column: 'currency_code',
-    // },
     'reference_no': {
       name: 'Reference No.',
       column: 'reference_no',
@@ -55,8 +51,8 @@ export default {
         { key: 'draft', name: 'Draft' },
         { key: 'published', name: 'Published' },
       ],
-      filterQuery: statusFieldFilterQuery,
-      sortQuery: statusFieldSortQuery,
+      filterCustomQuery: StatusFieldFilterQuery,
+      sortCustomQuery: StatusFieldSortQuery,
     },
     'created_at': {
       name: 'Created at',
@@ -66,17 +62,10 @@ export default {
   },
 };
 
-function statusFieldFilterQuery(query, role) {
-  switch (role.value) {
-    case 'draft':
-      query.modify('filterByDraft');
-      break;
-    case 'published':
-      query.modify('filterByPublished');
-      break;
-  }
+function StatusFieldFilterQuery(query, role) {
+  query.modify('filterByStatus', role.value);
 }
 
-function statusFieldSortQuery(query, role) {
-  return query.modify('sortByStatus', role.order);
+function StatusFieldSortQuery(query, role) {
+  query.modify('sortByStatus', role.order);
 }

@@ -13,7 +13,12 @@ export default class FilterRoles extends DynamicFilterRoleAbstructor {
     super();
 
     this.filterRoles = filterRoles;
+
     this.setResponseMeta();
+  }
+
+  public onInitialize() {
+    this.setFilterRolesRelations();
   }
 
   /**
@@ -52,5 +57,14 @@ export default class FilterRoles extends DynamicFilterRoleAbstructor {
     this.responseMeta = {
       filterRoles: this.filterRoles,
     };
+  }
+
+  /**
+   * Sets filter roles relations if field was relation type.
+   */
+  private setFilterRolesRelations() {
+    this.filterRoles.forEach((relationRole) => {
+      this.setRelationIfRelationField(relationRole.fieldKey);
+    });
   }
 }

@@ -1,8 +1,9 @@
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
 import InventoryAdjustmentSettings from './InventoryAdjustment.Settings';
+import ModelSetting from './ModelSetting';
 
-export default class InventoryAdjustment extends TenantModel {
+export default class InventoryAdjustment extends mixin(TenantModel, [ModelSetting]) {
   /**
    * Table name
    */

@@ -1,4 +1,5 @@
 import { IModel, IFilterRole } from 'interfaces';
+import { FIELD_TYPE } from './constants';
 
 export default class DynamicFilterAbstructor {
   /**
@@ -16,22 +17,24 @@ export default class DynamicFilterAbstructor {
    * @param {String} tableName - Table name.
    * @param {Array} roles - Roles.
    */
-  protected buildFilterRolesJoins = (model: IModel, roles: IFilterRole[]) => {
-    return (builder) => {
-      roles.forEach((role) => {
-        const field = model.getField(role.fieldKey);
+  protected buildFilterRolesJoins = (builder) => {
+    this.dynamicFilters.forEach((dynamicFilter) => {
+      const relationsFields = dynamicFilter.relationFields;
 
-        if (field.relation) {
-          const joinTable = this.getTableFromRelationColumn(field.relation);
+      this.buildFieldsJoinQueries(builder, relationsFields);
+    });
+  };
 
-          builder.join(
-            joinTable,
-            `${model.tableName}.${field.column}`,
-            '=',
-            field.relation
-          );
-        }
-      });
-    };
+  private buildFieldsJoinQueries = (builder, fieldsRelations: string[]) => {
+    fieldsRelations.forEach((fieldRelation) => {
+      const relation = this.model.relationMappings[fieldRelation];
+
+      if (relation) {
+        const splitToRelation = relation.join.to.split('.');
+        const relationTable = splitToRelation[0] || '';
+
+        builder.join(relationTable, relation.join.from, '=', relation.join.to);
+      }
+    });
   };
 }

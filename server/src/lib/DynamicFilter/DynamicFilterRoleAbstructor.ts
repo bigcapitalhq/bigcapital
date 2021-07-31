@@ -12,6 +12,7 @@ export default abstract class DynamicFilterAbstructor
   protected tableName: string;
   protected model: IModel;
   protected responseMeta: { [key: string]: any } = {};
+  public relationFields = [];
 
   /**
    * Sets model the dynamic filter service.
@@ -79,21 +80,49 @@ export default abstract class DynamicFilterAbstructor
   };
 
   /**
+   * Retrieve relation column of comparator fieldز
+   */
+  private getFieldComparatorRelationColumn(field) {
+    const relation = this.model.relationMappings[field.relationKey];
+
+    if (relation) {
+      const relationModel = relation.modelClass;
+      const relationColumn =
+        field.relationEntityKey === 'id'
+          ? 'id'
+          : relationModel.getField(field.relationEntityKey, 'column');
+
+      return `${relationModel.tableName}.${relationColumn}`;
+    }
+  }
+
+  /**
+   * Retrieve the comparator field column.
+   * @param {IModel} model -
+   * @param {} -
+   */
+  private getFieldComparatorColumn = (field) => {
+    return field.fieldType === FIELD_TYPE.RELATION
+      ? this.getFieldComparatorRelationColumn(field)
+      : `${this.tableName}.${field.column}`;
+  };
+
+  /**
    * Builds roles queries.
    * @param {IModel} model -
    * @param {Object} role -
    */
   protected buildRoleQuery = (model: IModel, role: IFilterRole) => {
-    const fieldRelation = model.getField(role.fieldKey);
-    const comparatorColumn = `${model.tableName}.${fieldRelation.column}`;
+    const field = model.getField(role.fieldKey);
+    const comparatorColumn = this.getFieldComparatorColumn(field);
 
     // Field relation custom query.
-    if (typeof fieldRelation.customQuery !== 'undefined') {
+    if (typeof field.filterCustomQuery !== 'undefined') {
       return (builder) => {
-        fieldRelation.customQuery(builder, role);
+        field.filterCustomQuery(builder, role);
       };
     }
-    switch (fieldRelation.fieldType) {
+    switch (field.fieldType) {
       case FIELD_TYPE.BOOLEAN:
       case FIELD_TYPE.ENUMERATION:
         return this.booleanRoleQueryBuilder(role, comparatorColumn);
@@ -265,7 +294,7 @@ export default abstract class DynamicFilterAbstructor
       builder.where(comparatorColumn, '>=', startDate.format(dateFormat));
       builder.where(comparatorColumn, '<=', endDate.format(dateFormat));
     }
-  }
+  };
 
   /**
    * Date query after/before comparator type.
@@ -296,5 +325,25 @@ export default abstract class DynamicFilterAbstructor
     }
     const comparatorValue = targetDate.format(dateFormat);
     builder.where(comparatorColumn, comparator, comparatorValue);
-  }
+  };
+
+  /**
+   * Registers relation field if the given field was relation type
+   * and not registered.
+   * @param {string} fieldKey - Field key.
+   */
+  protected setRelationIfRelationField = (fieldKey: string): void => {
+    const field = this.model.getField(fieldKey);
+    const isAlreadyRegistered = this.relationFields.some(
+      (field) => field === fieldKey
+    );
+
+    if (
+      !isAlreadyRegistered &&
+      field &&
+      field.fieldType === FIELD_TYPE.RELATION
+    ) {
+      this.relationFields.push(field.relationKey);
+    }
+  };
 }

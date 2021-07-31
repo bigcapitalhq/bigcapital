@@ -59,11 +59,20 @@ export interface IModelMetaEnumerationField {
   options: IModelMetaEnumerationOption[];
 }
 
-export interface IModelMetaRelationField {
+export interface IModelMetaRelationFieldCommon {
   fieldType: 'relation';
-  relationToModel: IModel;
-  relationToField: string;
 }
+
+export interface IModelMetaRelationEnumerationField {
+  relationType: 'enumeration';
+  relationKey: string;
+  relationEntityLabel: string;
+  relationEntityKey: string;
+}
+
+export type IModelMetaRelationField = IModelMetaRelationFieldCommon & (
+  IModelMetaRelationEnumerationField
+);
 
 export interface IModelMeta {
   defaultFilterField: string;

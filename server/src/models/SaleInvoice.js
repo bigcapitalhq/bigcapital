@@ -108,10 +108,6 @@ export default class SaleInvoice extends mixin(TenantModel, [ModelSetting]) {
     return this.getOverdueDays();
   }
 
-  static get resourceable() {
-    return true;
-  }
-
   /**
    *
    * @param {*} asDate
@@ -231,6 +227,33 @@ export default class SaleInvoice extends mixin(TenantModel, [ModelSetting]) {
       byPrefixAndNumber(query, prefix, number) {
         query.where('invoice_no', `${prefix}${number}`);
       },
+
+      /**
+       * Status filter.
+       */
+      statusFilter(query, filterType) {
+        switch (filterType) {
+          case 'draft':
+            query.modify('draft');
+            break;
+          case 'delivered':
+            query.modify('delivered');
+            break;
+          case 'unpaid':
+            query.modify('unpaid');
+            break;
+          case 'overdue':
+          default:
+            query.modify('overdue');
+            break;
+          case 'partially-paid':
+            query.modify('partiallyPaid');
+            break;
+          case 'paid':
+            query.modify('paid');
+            break;
+        }
+      },
     };
   }
 
@@ -240,7 +263,7 @@ export default class SaleInvoice extends mixin(TenantModel, [ModelSetting]) {
   static get relationMappings() {
     const AccountTransaction = require('models/AccountTransaction');
     const ItemEntry = require('models/ItemEntry');
-    const Contact = require('models/Contact');
+    const Customer = require('models/Customer');
     const InventoryCostLotTracker = require('models/InventoryCostLotTracker');
     const PaymentReceiveEntry = require('models/PaymentReceiveEntry');
 
@@ -265,7 +288,7 @@ export default class SaleInvoice extends mixin(TenantModel, [ModelSetting]) {
        */
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Contact.default,
+        modelClass: Customer.default,
         join: {
           from: 'sales_invoices.customerId',
           to: 'contacts.id',
@@ -335,32 +358,5 @@ export default class SaleInvoice extends mixin(TenantModel, [ModelSetting]) {
 
   static dueAmountFieldSortQuery(query, role) {
     query.modify('sortByDueAmount', role.order);
-  }
-
-  static statusFieldFilterQuery(query, role) {
-    switch (role.value) {
-      case 'draft':
-        query.modify('draft');
-        break;
-      case 'delivered':
-        query.modify('delivered');
-        break;
-      case 'unpaid':
-        query.modify('unpaid');
-        break;
-      case 'overdue':
-        query.modify('overdue');
-        break;
-      case 'partially-paid':
-        query.modify('partiallyPaid');
-        break;
-      case 'paid':
-        query.modify('paid');
-        break;
-    }
-  }
-
-  static statusFieldSortQuery(query, role) {
-    query.modify('sortByStatus', role.order);
   }
 }

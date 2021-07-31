@@ -4,6 +4,13 @@ export default {
     customer: {
       name: 'Customer',
       column: 'customer_id',
+      fieldType: 'relation',
+
+      relationType: 'enumeration',
+      relationKey: 'customer',
+
+      relationEntityLabel: 'name',
+      relationEntityKey: 'id',
     },
     payment_date: {
       name: 'Payment date',
@@ -23,6 +30,13 @@ export default {
     deposit_account: {
       name: 'Deposit account',
       column: 'deposit_account_id',
+      fieldType: 'relation',
+
+      relationType: 'enumeration',
+      relationKey: 'depositAccount',
+
+      relationEntityLabel: 'name',
+      relationEntityKey: 'slug',
     },
     payment_receive_no: {
       name: 'Payment receive No.',

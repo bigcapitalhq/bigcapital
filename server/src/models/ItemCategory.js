@@ -1,17 +1,14 @@
-import path from 'path';
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
+import ModelSetting from './ModelSetting';
+import ItemCategorySettings from './ItemCategory.Settings';
 
-export default class ItemCategory extends TenantModel {
+export default class ItemCategory extends mixin(TenantModel, [ModelSetting]) {
   /**
    * Table name.
    */
   static get tableName() {
     return 'items_categories';
-  }
-
-  static get resourceable() {
-    return true;
   }
 
   /**
@@ -42,7 +39,24 @@ export default class ItemCategory extends TenantModel {
     };
   }
 
-  static sortCountQuery(query, role) {
-    query.orderBy('count', role.order);
-  } 
+  /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      /**
+       * Inactive/Active mode.
+       */
+      sortByCount(query, order = 'asc') {
+        query.orderBy('count', order);
+      },
+    };
+  }
+
+  /**
+   * Model meta.
+   */
+  static get meta() {
+    return ItemCategorySettings;
+  }
 }

@@ -33,4 +33,5 @@ export const FIELD_TYPE = {
   BOOLEAN: 'boolean',
   RELATION: 'relation',
   DATE: 'date',
+  COMPUTED: 'computed'
 };

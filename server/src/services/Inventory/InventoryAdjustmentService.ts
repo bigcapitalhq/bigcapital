@@ -268,8 +268,7 @@ export default class InventoryAdjustmentService {
 
   /**
    * Parses inventory adjustments list filter DTO.
-   * @param filterDTO 
-   * @returns 
+   * @param filterDTO - 
    */
   private parseListFilterDTO(filterDTO) {
     return R.compose(
@@ -282,7 +281,7 @@ export default class InventoryAdjustmentService {
    * @param {number} tenantId
    * @param {IInventoryAdjustmentsFilter} adjustmentsFilter
    */
-  async getInventoryAdjustments(
+  public async getInventoryAdjustments(
     tenantId: number,
     filterDTO: IInventoryAdjustmentsFilter
   ): Promise<{

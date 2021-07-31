@@ -128,9 +128,34 @@ export default class SaleEstimate extends mixin(TenantModel, [ModelSetting]) {
       /**
        * Sorting the estimates orders by delivery status.
        */
-      orderByDraft(query, order) {
+      orderByStatus(query, order) {
         query.orderByRaw(`delivered_at is null ${order}`);
       },
+      /**
+       * Filtering the estimates oreders by status field.
+       */
+      filterByStatus(query, filterType) {
+        switch (filterType) {
+          case 'draft':
+            query.modify('draft');
+            break;
+          case 'delivered':
+            query.modify('delivered');
+            break;
+          case 'approved':
+            query.modify('approved');
+            break;
+          case 'rejected':
+            query.modify('rejected');
+            break;
+          case 'invoiced':
+            query.modify('invoiced');
+            break;
+          case 'expired':
+            query.modify('expired');
+            break;
+        }
+      }
     };
   }
 

@@ -15,8 +15,10 @@ export default (Model) =>
      * @param {string} key
      * @returns {IModelMetaField}
      */
-    public static getField(key: string): IModelMetaField {
-      return get(this.meta.fields, key);
+    public static getField(key: string, attribute?:string): IModelMetaField {
+      const field = get(this.meta.fields, key);
+
+      return attribute ? get(field, attribute) : field;
     }
 
     /**

@@ -71,14 +71,41 @@ export default class Bill extends mixin(TenantModel, [ModelSetting]) {
        * Filters the bills from the given date.
        */
       fromDate(query, fromDate) {
-        query.where('bill_date', '<=', fromDate)
+        query.where('bill_date', '<=', fromDate);
       },
 
       /**
        * Sort the bills by full-payment bills.
        */
-       sortByStatus(query, order) {
+      sortByStatus(query, order) {
         query.orderByRaw(`PAYMENT_AMOUNT = AMOUNT ${order}`);
+      },
+
+      /**
+       * Status filter.
+       */
+      statusFilter(query, filterType) {
+        switch (filterType) {
+          case 'draft':
+            query.modify('draft');
+            break;
+          case 'delivered':
+            query.modify('delivered');
+            break;
+          case 'unpaid':
+            query.modify('unpaid');
+            break;
+          case 'overdue':
+          default:
+            query.modify('overdue');
+            break;
+          case 'partially-paid':
+            query.modify('partiallyPaid');
+            break;
+          case 'paid':
+            query.modify('paid');
+            break;
+        }
       },
     };
   }
@@ -103,7 +130,7 @@ export default class Bill extends mixin(TenantModel, [ModelSetting]) {
       'remainingDays',
       'overdueDays',
       'isOverdue',
-      'unallocatedCostAmount'
+      'unallocatedCostAmount',
     ];
   }
 
@@ -276,32 +303,4 @@ export default class Bill extends mixin(TenantModel, [ModelSetting]) {
       .where('id', billId)
       [changeMethod]('payment_amount', Math.abs(amount));
   }
-
-
-  static statusFieldFilterQuery(query, role) {
-    switch (role.value) {
-      case 'draft':
-        query.modify('draft');
-        break;
-      case 'opened':
-        query.modify('opened');
-        break;
-      case 'unpaid':
-        query.modify('unpaid');
-        break;
-      case 'overdue':
-        query.modify('overdue');
-        break;
-      case 'partially-paid':
-        query.modify('partiallyPaid');
-        break;
-      case 'paid':
-        query.modify('paid');
-        break;
-    }
-  };
-  
-  static statusFieldSortQuery(query, role)  {
-    return query.modify('sortByStatus', role.order);
-  };
 }
