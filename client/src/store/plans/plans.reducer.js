@@ -6,7 +6,8 @@ import t from 'store/types';
 const getSubscriptionPlans = () => [
   {
     name: intl.get('Starter'),
-    slug: 'starter',
+    slug: 'free',
+    // slug: 'starter',
     description: [
       intl.get('Sale and purchase invoices.'),
       intl.get('Customers/vendors accounts.'),
