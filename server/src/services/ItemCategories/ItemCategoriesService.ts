@@ -1,5 +1,6 @@
 import { Inject } from 'typedi';
 import { difference } from 'lodash';
+import * as R from 'ramda';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -378,22 +379,40 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   }
 
   /**
+   * Parses items categories filter DTO.
+   * @param {} filterDTO 
+   * @returns 
+   */
+  private parsesListFilterDTO(filterDTO) {
+    return R.compose(
+      // Parses stringified filter roles.
+      this.dynamicListService.parseStringifiedFilter,
+    )(filterDTO);
+  }
+
+  /**
    * Retrieve item categories list.
    * @param {number} tenantId
    * @param filter
    */
   public async getItemCategoriesList(
     tenantId: number,
-    filter: IItemCategoriesFilter,
+    filterDTO: IItemCategoriesFilter,
     authorizedUser: ISystemUser
   ): Promise<{ itemCategories: IItemCategory[]; filterMeta: IFilterMeta }> {
     const { ItemCategory } = this.tenancy.models(tenantId);
+
+    // Parses list filter DTO.
+    const filter = this.parsesListFilterDTO(filterDTO);
+
+    // Dynamic list service.
     const dynamicList = await this.dynamicListService.dynamicList(
       tenantId,
       ItemCategory,
       filter
     );
 
+    // Items categories.
     const itemCategories = await ItemCategory.query().onBuild((query) => {
       // Subquery to calculate sumation of assocaited items to the item category.
       query.select('*', ItemCategory.relatedQuery('items').count().as('count'));

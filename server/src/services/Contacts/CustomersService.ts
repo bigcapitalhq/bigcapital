@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { omit, defaultTo } from 'lodash';
-import async from 'async';
+import * as R from 'ramda';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -266,13 +266,23 @@ export default class CustomersService {
   }
 
   /**
+   * Parses customers list filter DTO.
+   * @param filterDTO - 
+   */
+  private parseCustomersListFilterDTO(filterDTO) {
+    return R.compose(
+      this.dynamicListService.parseStringifiedFilter
+    )(filterDTO);
+  }
+
+  /**
    * Retrieve customers paginated list.
    * @param {number} tenantId - Tenant id.
    * @param {ICustomersFilter} filter - Cusotmers filter.
    */
   public async getCustomersList(
     tenantId: number,
-    customersFilter: ICustomersFilter
+    filterDTO: ICustomersFilter
   ): Promise<{
     customers: ICustomer[];
     pagination: IPaginationMeta;
@@ -280,17 +290,23 @@ export default class CustomersService {
   }> {
     const { Customer } = this.tenancy.models(tenantId);
 
+    // Parses customers list filter DTO.
+    const filter = this.parseCustomersListFilterDTO(filterDTO);
+
     // Dynamic list.
     const dynamicList = await this.dynamicListService.dynamicList(
       tenantId,
       Customer,
-      customersFilter
+      filter
     );
+
+    // Customers.
     const { results, pagination } = await Customer.query()
-      .onBuild((query) => {
-        dynamicList.buildQuery()(query);
+      .onBuild((builder) => {
+        dynamicList.buildQuery()(builder);
+        builder.modify('inactiveMode', filter.inactiveMode);
       })
-      .pagination(customersFilter.page - 1, customersFilter.pageSize);
+      .pagination(filter.page - 1, filter.pageSize);
 
     return {
       customers: results.map(this.transformContactToCustomer),

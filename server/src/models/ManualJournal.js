@@ -1,8 +1,10 @@
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
 import { formatNumber } from 'utils';
+import ModelSetting from './ModelSetting';
+import ManualJournalSettings from './ManualJournal.Settings';
 
-export default class ManualJournal extends TenantModel {
+export default class ManualJournal extends mixin(TenantModel, [ModelSetting]) {
   /**
    * Table name.
    */
@@ -99,52 +101,7 @@ export default class ManualJournal extends TenantModel {
     };
   }
 
-  /**
-   * Model defined fields.
-   */
-  static get fields() {
-    return {
-      date: {
-        label: 'Date',
-        column: 'date',
-        columnType: 'date',
-      },
-      journal_number: {
-        label: 'Journal number',
-        column: 'journal_number',
-        columnType: 'string',
-      },
-      reference: {
-        label: 'Reference No.',
-        column: 'reference',
-        columnType: 'string',
-      },
-      journal_type: {
-        label: 'Journal type',
-        column: 'journal_type',
-        columnType: 'string',
-      },
-      amount: {
-        label: 'Amount',
-        column: 'amount',
-        columnType: 'number',
-      },
-      description: {
-        label: 'Description',
-        column: 'description',
-        columnType: 'string',
-      },
-      status: {
-        label: 'Status',
-        column: 'status',
-        sortQuery(query, role) {
-          query.modify('sortByStatus', role.order);
-        },
-      },
-      created_at: {
-        label: 'Created at',
-        column: 'created_at',
-      },
-    };
+  static get meta() {
+    return ManualJournalSettings;
   }
 }

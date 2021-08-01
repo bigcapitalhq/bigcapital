@@ -288,14 +288,10 @@ export default class ManualJournalsController extends BaseController {
     const filter = {
       sortOrder: 'asc',
       columnSortBy: 'created_at',
-      filterRoles: [],
       page: 1,
       pageSize: 12,
       ...this.matchedQueryData(req),
     };
-    if (filter.stringifiedFilterRoles) {
-      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
-    }
     try {
       const {
         manualJournals,

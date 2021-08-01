@@ -1,161 +1,90 @@
 import { Service, Inject } from 'typedi';
-import validator from 'is-my-json-valid';
 import { Request, Response, NextFunction } from 'express';
+import { castArray, isEmpty } from 'lodash';
 import { ServiceError } from 'exceptions';
+import { DynamicFilter } from 'lib/DynamicFilter';
 import {
-  DynamicFilter,
-  DynamicFilterSortBy,
-  DynamicFilterViews,
-  DynamicFilterFilterRoles,
-} from 'lib/DynamicFilter';
-import {
-  validateFieldKeyExistance,
-  validateFilterRolesFieldsExistance,
-} from 'lib/ViewRolesBuilder';
-import {
-  IDynamicListFilterDTO,
-  IFilterRole,
+  IDynamicListFilter,
   IDynamicListService,
+  IFilterRole,
   IModel,
 } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
-
-const ERRORS = {
-  VIEW_NOT_FOUND: 'view_not_found',
-  SORT_COLUMN_NOT_FOUND: 'sort_column_not_found',
-  FILTER_ROLES_FIELDS_NOT_FOUND: 'filter_roles_fields_not_found',
-};
+import DynamicListFilterRoles from './DynamicListFilterRoles';
+import DynamicListSortBy from './DynamicListSortBy';
+import DynamicListCustomView from './DynamicListCustomView';
 
 @Service()
 export default class DynamicListService implements IDynamicListService {
   @Inject()
   tenancy: TenancyService;
 
-  /**
-   * Retreive custom view or throws error not found.
-   * @param  {number} tenantId
-   * @param  {number} viewId
-   * @return {Promise<IView>}
-   */
-  private async getCustomViewOrThrowError(
-    tenantId: number,
-    viewId: number,
-    model: IModel
-  ) {
-    const { viewRepository } = this.tenancy.repositories(tenantId);
-    const view = await viewRepository.findOneById(viewId, 'roles');
+  @Inject()
+  dynamicListFilterRoles: DynamicListFilterRoles;
 
-    if (!view || view.resourceModel !== model.name) {
-      throw new ServiceError(ERRORS.VIEW_NOT_FOUND);
-    }
-    return view;
-  }
+  @Inject()
+  dynamicListSortBy: DynamicListSortBy;
+
+  @Inject()
+  dynamicListView: DynamicListCustomView;
 
   /**
-   * Validates the sort column whether exists.
-   * @param  {IModel} model
-   * @param  {string} columnSortBy - Sort column
-   * @throws {ServiceError}
+   * Parses filter DTO.
+   * @param {IMode} model - 
+   * @param {} filterDTO - 
    */
-  private validateSortColumnExistance(model: any, columnSortBy: string) {
-    const notExistsField = validateFieldKeyExistance(model, columnSortBy);
-
-    if (!notExistsField) {
-      throw new ServiceError(ERRORS.SORT_COLUMN_NOT_FOUND);
-    }
-  }
-
-  /**
-   * Validates existance the fields of filter roles.
-   * @param  {IModel} model
-   * @param  {IFilterRole[]} filterRoles
-   * @throws {ServiceError}
-   */
-  private validateRolesFieldsExistance(
-    model: IModel,
-    filterRoles: IFilterRole[]
-  ) {
-    const invalidFieldsKeys = validateFilterRolesFieldsExistance(
-      model,
-      filterRoles
-    );
-
-    if (invalidFieldsKeys.length > 0) {
-      throw new ServiceError(ERRORS.FILTER_ROLES_FIELDS_NOT_FOUND);
-    }
-  }
-
-  /**
-   * Validates filter roles schema.
-   * @param {IFilterRole[]} filterRoles
-   */
-  private validateFilterRolesSchema(filterRoles: IFilterRole[]) {
-    const validate = validator({
-      required: true,
-      type: 'object',
-      properties: {
-        condition: { type: 'string' },
-        fieldKey: { required: true, type: 'string' },
-        value: { required: true },
-      },
-    });
-    const invalidFields = filterRoles.filter((filterRole) => {
-      const isValid = validate(filterRole);
-      return isValid ? false : true;
-    });
-    if (invalidFields.length > 0) {
-      throw new ServiceError('stringified_filter_roles_invalid');
-    }
-  }
+  private parseFilterObject = (model, filterDTO) => {
+    return {
+      // Merges the default properties with filter object.
+      ...model.defaultSort ? {
+        sortOrder: model.defaultSort.sortOrder,
+        columnSortBy: model.defaultSort.sortOrder,
+      } : {},
+      ...filterDTO,
+    };
+  };
 
   /**
    * Dynamic listing.
    * @param {number} tenantId - Tenant id.
    * @param {IModel} model - Model.
-   * @param {IDynamicListFilterDTO} filter - Dynamic filter DTO.
+   * @param {IDynamicListFilter} filter - Dynamic filter DTO.
    */
-  public async dynamicList(
+  public dynamicList = async (
     tenantId: number,
     model: IModel,
-    filter: IDynamicListFilterDTO
-  ) {
+    filter: IDynamicListFilter
+  ) => {
     const dynamicFilter = new DynamicFilter(model);
 
-    // Custom view filter roles.
-    if (filter.customViewId) {
-      const view = await this.getCustomViewOrThrowError(
-        tenantId,
-        filter.customViewId,
-        model
-      );
-      const viewFilter = new DynamicFilterViews(view);
-      dynamicFilter.setFilter(viewFilter);
-    }
-    // Sort by the given column.
-    if (filter.columnSortBy) {
-      this.validateSortColumnExistance(model, filter.columnSortBy);
+    // Parses the filter object.
+    const parsedFilter = this.parseFilterObject(model, filter);
 
-      const sortByFilter = new DynamicFilterSortBy(
-        filter.columnSortBy,
-        filter.sortOrder
+    // Custom view filter roles.
+    // if (filter.customViewId) {
+    //   const dynamicListCustomView = this.dynamicListView.dynamicListCustomView();
+
+    //   dynamicFilter.setFilter(dynamicListCustomView);
+    // }
+    // Sort by the given column.
+    if (parsedFilter.columnSortBy) {
+      const dynmaicListSortBy = this.dynamicListSortBy.dynamicSortBy(
+        model,
+        parsedFilter.columnSortBy,
+        parsedFilter.sortOrder,
       );
-      dynamicFilter.setFilter(sortByFilter);
+      dynamicFilter.setFilter(dynmaicListSortBy);
     }
     // Filter roles.
-    if (filter.filterRoles.length > 0) {
-      const filterRoles = filter.filterRoles.map((filterRole, index) => ({
-        ...filterRole,
-        index: index + 1,
-      }));
-      this.validateFilterRolesSchema(filterRoles);
-      this.validateRolesFieldsExistance(model, filterRoles);
-
-      // Validate the model resource fields.
-      const dynamicFilterRoles = new DynamicFilterFilterRoles(filterRoles);
+    if (!isEmpty(parsedFilter.filterRoles)) {
+      const dynamicFilterRoles = this.dynamicListFilterRoles.dynamicList(
+        model,
+        parsedFilter.filterRoles
+      );
       dynamicFilter.setFilter(dynamicFilterRoles);
     }
     return dynamicFilter;
-  }
+  };
 
   /**
    * Middleware to catch services errors
@@ -173,25 +102,62 @@ export default class DynamicListService implements IDynamicListService {
     if (error instanceof ServiceError) {
       if (error.errorType === 'sort_column_not_found') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'SORT.COLUMN.NOT.FOUND', code: 200 }],
+          errors: [
+            {
+              type: 'SORT.COLUMN.NOT.FOUND',
+              message: 'Sort column not found.',
+              code: 200,
+            },
+          ],
         });
       }
       if (error.errorType === 'view_not_found') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'CUSTOM.VIEW.NOT.FOUND', code: 100 }],
+          errors: [
+            {
+              type: 'CUSTOM.VIEW.NOT.FOUND',
+              message: 'Custom view not found.',
+              code: 100,
+            },
+          ],
         });
       }
       if (error.errorType === 'filter_roles_fields_not_found') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'FILTER.ROLES.FIELDS.NOT.FOUND', code: 300 }],
+          errors: [
+            {
+              type: 'FILTER.ROLES.FIELDS.NOT.FOUND',
+              message: 'Filter roles fields not found.',
+              code: 300,
+            },
+          ],
         });
       }
       if (error.errorType === 'stringified_filter_roles_invalid') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'STRINGIFIED_FILTER_ROLES_INVALID', code: 400 }],
+          errors: [
+            {
+              type: 'STRINGIFIED_FILTER_ROLES_INVALID',
+              message: 'Stringified filter roles json invalid.',
+              code: 400,
+            },
+          ],
         });
       }
     }
     next(error);
   }
+
+  /**
+   * Parses stringified filter roles.
+   * @param {string} stringifiedFilterRoles - Stringified filter roles.
+   */
+  public parseStringifiedFilter = (filterRoles: IDynamicListFilter) => {
+    return {
+      ...filterRoles,
+      filterRoles: filterRoles.stringifiedFilterRoles
+        ? castArray(JSON.parse(filterRoles.stringifiedFilterRoles))
+        : [],
+    };
+  };
 }

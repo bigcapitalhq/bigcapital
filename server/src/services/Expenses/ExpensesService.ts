@@ -1,6 +1,7 @@
 import { Service, Inject } from 'typedi';
-import { difference, sumBy, omit, map } from 'lodash';
+import { difference, sumBy, omit } from 'lodash';
 import moment from 'moment';
+import * as R from 'ramda';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -631,6 +632,16 @@ export default class ExpensesService implements IExpensesService {
   }
 
   /**
+   * Parses filter DTO of expenses list. 
+   * @param filterDTO - 
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(
+      this.dynamicListService.parseStringifiedFilter,
+    )(filterDTO);
+  }
+
+  /**
    * Retrieve expenses datatable lsit.
    * @param  {number} tenantId
    * @param  {IExpensesFilter} expensesFilter
@@ -638,35 +649,41 @@ export default class ExpensesService implements IExpensesService {
    */
   public async getExpensesList(
     tenantId: number,
-    expensesFilter: IExpensesFilter
+    filterDTO: IExpensesFilter
   ): Promise<{
     expenses: IExpense[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
     const { Expense } = this.tenancy.models(tenantId);
-    const dynamicFilter = await this.dynamicListService.dynamicList(
+
+    // Parses list filter DTO.
+    const filter = this.parseListFilterDTO(filterDTO);
+
+    // Dynamic list service.
+    const dynamicList = await this.dynamicListService.dynamicList(
       tenantId,
       Expense,
-      expensesFilter
+      filter,
     );
 
     this.logger.info('[expense] trying to get expenses datatable list.', {
       tenantId,
-      expensesFilter,
+      filter,
     });
     const { results, pagination } = await Expense.query()
       .onBuild((builder) => {
         builder.withGraphFetched('paymentAccount');
         builder.withGraphFetched('categories.expenseAccount');
-        dynamicFilter.buildQuery()(builder);
+
+        dynamicList.buildQuery()(builder);
       })
-      .pagination(expensesFilter.page - 1, expensesFilter.pageSize);
+      .pagination(filter.page - 1, filter.pageSize);
 
     return {
       expenses: results,
       pagination,
-      filterMeta: dynamicFilter.getResponseMeta(),
+      filterMeta: dynamicList.getResponseMeta(),
     };
   }
 

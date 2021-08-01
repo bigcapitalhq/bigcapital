@@ -72,6 +72,7 @@ export interface IItemsFilter extends IDynamicListFilterDTO {
   stringifiedFilterRoles?: string,
   page: number,
   pageSize: number,
+  inactiveMode: boolean,
 };
 
 export interface IItemsAutoCompleteFilter {

@@ -1,17 +1,14 @@
-import path from 'path';
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
+import ModelSetting from './ModelSetting';
+import ItemCategorySettings from './ItemCategory.Settings';
 
-export default class ItemCategory extends TenantModel {
+export default class ItemCategory extends mixin(TenantModel, [ModelSetting]) {
   /**
    * Table name.
    */
   static get tableName() {
     return 'items_categories';
-  }
-
-  static get resourceable() {
-    return true;
   }
 
   /**
@@ -43,68 +40,23 @@ export default class ItemCategory extends TenantModel {
   }
 
   /**
-   * Item category fields.
+   * Model modifiers.
    */
-  static get fields() {
+  static get modifiers() {
     return {
-      name: {
-        label: 'Name',
-        column: 'name',
-        columnType: 'string'
-      },
-      description: {
-        label: 'Description',
-        column: 'description',
-        columnType: 'string'
-      },
-      user: {
-        label: 'User',
-        column: 'user_id',
-        relation: 'users.id',
-        relationColumn: 'users.id',
-      },
-      cost_account: {
-        label: 'Cost account',
-        column: 'cost_account_id',
-        relation: 'accounts.id',
-        optionsResource: 'account'
-      },
-      sell_account: {
-        label: 'Sell account',
-        column: 'sell_account_id',
-        relation: 'accounts.id',
-        optionsResource: 'account'
-      },
-      inventory_account: {
-        label: 'Inventory account',
-        column: 'inventory_account_id',
-        relation: 'accounts.id',
-        optionsResource: 'account'
-      },
-      cost_method: {
-        label: 'Cost method',
-        column: 'cost_method',
-        options: [{
-          key: 'FIFO', label: 'First-in first-out (FIFO)',
-          key: 'LIFO', label: 'Last-in first-out (LIFO)',
-          key: 'average', label: 'Average rate',
-        }],
-        columnType: 'string',
-      },
-      count: {
-        label: 'Count',
-        column: 'count',
-        sortQuery: this.sortCountQuery
-      },
-      created_at: {
-        label: 'Created at',
-        column: 'created_at',
-        columnType: 'date',
+      /**
+       * Inactive/Active mode.
+       */
+      sortByCount(query, order = 'asc') {
+        query.orderBy('count', order);
       },
     };
   }
 
-  static sortCountQuery(query, role) {
-    query.orderBy('count', role.order);
-  } 
+  /**
+   * Model meta.
+   */
+  static get meta() {
+    return ItemCategorySettings;
+  }
 }

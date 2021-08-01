@@ -1,5 +1,6 @@
 import { Inject, Service } from 'typedi';
-import { intersection, defaultTo } from 'lodash';
+import { defaultTo } from 'lodash';
+import * as R from 'ramda';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -255,6 +256,12 @@ export default class VendorsService {
     );
   }
 
+  private parseVendorsListFilterDTO(filterDTO) {
+    return R.compose(
+      this.dynamicListService.parseStringifiedFilter
+    )(filterDTO);
+  }
+
   /**
    * Retrieve vendors datatable list.
    * @param {number} tenantId - Tenant id.
@@ -262,7 +269,7 @@ export default class VendorsService {
    */
   public async getVendorsList(
     tenantId: number,
-    vendorsFilter: IVendorsFilter
+    filterDTO: IVendorsFilter
   ): Promise<{
     vendors: IVendor[];
     pagination: IPaginationMeta;
@@ -270,21 +277,28 @@ export default class VendorsService {
   }> {
     const { Vendor } = this.tenancy.models(tenantId);
 
-    const dynamicFilter = await this.dynamicListService.dynamicList(
+    // Parses vendors list filter DTO.
+    const filter = this.parseVendorsListFilterDTO(filterDTO);
+
+    // Dynamic list service.
+    const dynamicList = await this.dynamicListService.dynamicList(
       tenantId,
       Vendor,
-      vendorsFilter
+      filter
     );
+
+    // Vendors list.
     const { results, pagination } = await Vendor.query()
       .onBuild((builder) => {
-        dynamicFilter.buildQuery()(builder);
+        dynamicList.buildQuery()(builder);
+        builder.modify('inactiveMode', filter.inactiveMode);
       })
-      .pagination(vendorsFilter.page - 1, vendorsFilter.pageSize);
+      .pagination(filter.page - 1, filter.pageSize);
 
     return {
       vendors: results,
       pagination,
-      filterMeta: dynamicFilter.getResponseMeta(),
+      filterMeta: dynamicList.getResponseMeta(),
     };
   }
 

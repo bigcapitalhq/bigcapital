@@ -1,6 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { omit } from 'lodash';
 import moment from 'moment';
+import * as R from 'ramda';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -225,8 +226,8 @@ export default class InventoryAdjustmentService {
 
   /**
    * Publish the inventory adjustment transaction.
-   * @param tenantId
-   * @param inventoryAdjustmentId
+   * @param {number} tenantId
+   * @param {number} inventoryAdjustmentId
    */
   async publishInventoryAdjustment(
     tenantId: number,
@@ -266,23 +267,37 @@ export default class InventoryAdjustmentService {
   }
 
   /**
+   * Parses inventory adjustments list filter DTO.
+   * @param filterDTO - 
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(
+      this.dynamicListService.parseStringifiedFilter,
+    )(filterDTO);
+  }
+
+  /**
    * Retrieve the inventory adjustments paginated list.
    * @param {number} tenantId
    * @param {IInventoryAdjustmentsFilter} adjustmentsFilter
    */
-  async getInventoryAdjustments(
+  public async getInventoryAdjustments(
     tenantId: number,
-    adjustmentsFilter: IInventoryAdjustmentsFilter
+    filterDTO: IInventoryAdjustmentsFilter
   ): Promise<{
     inventoryAdjustments: IInventoryAdjustment[];
     pagination: IPaginationMeta;
   }> {
     const { InventoryAdjustment } = this.tenancy.models(tenantId);
 
+    // Parses inventory adjustments list filter DTO.
+    const filter = this.parseListFilterDTO(filterDTO);
+
+    // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
       tenantId,
       InventoryAdjustment,
-      adjustmentsFilter
+      filter,
     );
     const { results, pagination } = await InventoryAdjustment.query()
       .onBuild((query) => {
@@ -291,7 +306,7 @@ export default class InventoryAdjustmentService {
 
         dynamicFilter.buildQuery()(query);
       })
-      .pagination(adjustmentsFilter.page - 1, adjustmentsFilter.pageSize);
+      .pagination(filter.page - 1, filter.pageSize);
 
     return {
       inventoryAdjustments: results,

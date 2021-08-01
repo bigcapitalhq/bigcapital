@@ -1,6 +1,7 @@
 import { omit, sumBy } from 'lodash';
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
+import * as R from 'ramda';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -407,23 +408,38 @@ export default class SalesReceiptService implements ISalesReceiptsService {
   }
 
   /**
+   * Parses the sale receipts list filter DTO.
+   * @param filterDTO 
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(
+      this.dynamicListService.parseStringifiedFilter,
+    )(filterDTO);
+  }
+
+  /**
    * Retrieve sales receipts paginated and filterable list.
    * @param {number} tenantId
    * @param {ISaleReceiptFilter} salesReceiptsFilter
    */
   public async salesReceiptsList(
     tenantId: number,
-    salesReceiptsFilter: ISaleReceiptFilter
+    filterDTO: ISaleReceiptFilter
   ): Promise<{
     salesReceipts: ISaleReceipt[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
     const { SaleReceipt } = this.tenancy.models(tenantId);
+
+    // Parses the stringified filter roles.
+    const filter = this.parseListFilterDTO(filterDTO);
+
+    // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
       tenantId,
       SaleReceipt,
-      salesReceiptsFilter
+      filter,
     );
 
     this.logger.info('[sale_receipt] try to get sales receipts list.', {
@@ -437,7 +453,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
 
         dynamicFilter.buildQuery()(builder);
       })
-      .pagination(salesReceiptsFilter.page - 1, salesReceiptsFilter.pageSize);
+      .pagination(filter.page - 1, filter.pageSize);
 
     return {
       salesReceipts: results,

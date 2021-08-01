@@ -1,12 +1,13 @@
 import DynamicFilterRoleAbstructor from 'lib/DynamicFilter/DynamicFilterRoleAbstructor';
-import {
-  getRoleFieldColumn,
-  validateFieldKeyExistance,
-  getTableFromRelationColumn,
-} from 'lib/ViewRolesBuilder';
+import { FIELD_TYPE } from './constants';
+
+interface ISortRole {
+  fieldKey: string;
+  order: string;
+}
 
 export default class DynamicFilterSortBy extends DynamicFilterRoleAbstructor {
-  sortRole: { fieldKey: string; order: string } = {};
+  private sortRole: ISortRole = {};
 
   /**
    * Constructor method.
@@ -24,58 +25,65 @@ export default class DynamicFilterSortBy extends DynamicFilterRoleAbstructor {
   }
 
   /**
-   * Validate the given field key with the model.
+   * On initialize the dyanmic sort by.
    */
-  validate() {
-    validateFieldKeyExistance(this.model, this.sortRole.fieldKey);
+  public onInitialize() {
+    this.setRelationIfRelationField(this.sortRole.fieldKey);
   }
+
+  /**
+   * Retrieve field comparator relatin column.
+   * @param field 
+   * @returns {string}
+   */
+  private getFieldComparatorRelationColumn = (field): string => {
+    const relation = this.model.relationMappings[field.relationKey];
+
+    if (relation) {
+      const relationModel = relation.modelClass;
+      const relationField = relationModel.getField(field.relationEntityLabel);
+
+      return `${relationModel.tableName}.${relationField.column}`;
+    }
+    return '';
+  };
+
+  /**
+   * Retrieve the comparator field column.
+   * @param {IModel} field
+   * @returns {string}
+   */
+  private getFieldComparatorColumn = (field): string => {
+    return field.fieldType === FIELD_TYPE.RELATION
+      ? this.getFieldComparatorRelationColumn(field)
+      : `${this.tableName}.${field.column}`;
+  };
 
   /**
    * Builds database query of sort by column on the given direction.
    */
-  buildQuery() {
-    const fieldRelation = getRoleFieldColumn(
-      this.model,
-      this.sortRole.fieldKey
-    );
-    const comparatorColumn =
-      fieldRelation.relationColumn ||
-      `${this.tableName}.${fieldRelation.column}`;
+  public buildQuery = () => {
+    const field = this.model.getField(this.sortRole.fieldKey);
+    const comparatorColumn = this.getFieldComparatorColumn(field);
 
-    if (typeof fieldRelation.sortQuery !== 'undefined') {
+    // Sort custom query.
+    if (typeof field.sortCustomQuery !== 'undefined') {
       return (builder) => {
-        fieldRelation.sortQuery(builder, this.sortRole);
+        field.sortCustomQuery(builder, this.sortRole);
       };
     }
+
     return (builder) => {
       if (this.sortRole.fieldKey) {
         builder.orderBy(`${comparatorColumn}`, this.sortRole.order);
       }
-      this.joinBuildQuery()(builder);
     };
-  }
-
-  joinBuildQuery() {
-    const fieldColumn = getRoleFieldColumn(this.model, this.sortRole.fieldKey);
-
-    return (builder) => {
-      if (fieldColumn.relation) {
-        const joinTable = getTableFromRelationColumn(fieldColumn.relation);
-
-        builder.join(
-          joinTable,
-          `${this.model.tableName}.${fieldColumn.column}`,
-          '=',
-          fieldColumn.relation
-        );
-      }
-    };
-  }
+  };
 
   /**
    * Sets response meta.
    */
-  setResponseMeta() {
+  public setResponseMeta() {
     this.responseMeta = {
       sortOrder: this.sortRole.fieldKey,
       sortBy: this.sortRole.order,

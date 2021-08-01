@@ -1,6 +1,9 @@
+import { IModel, ISortOrder } from "./Model";
+
 export interface IDynamicFilter {
-  setTableName(tableName: string): void;
+  setModel(model: IModel): void;
   buildQuery(): void;
+  getResponseMeta();
 }
 
 export interface IFilterRole {
@@ -10,19 +13,19 @@ export interface IFilterRole {
   index?: number;
   comparator?: string;
 }
-
-export interface IDynamicListFilterDTO {
+export interface IDynamicListFilter {
   customViewId?: number;
   filterRoles?: IFilterRole[];
-  columnSortBy: string;
+  columnSortBy: ISortOrder;
   sortOrder: string;
+  stringifiedFilterRoles: string;
 }
 
 export interface IDynamicListService {
   dynamicList(
     tenantId: number,
     model: any,
-    filter: IDynamicListFilterDTO
+    filter: IDynamicListFilter
   ): Promise<any>;
   handlerErrorsToResponse(error, req, res, next): void;
 }

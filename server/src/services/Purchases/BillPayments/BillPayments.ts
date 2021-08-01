@@ -1,5 +1,6 @@
 import { Inject, Service } from 'typedi';
-import { omit, sumBy, difference } from 'lodash';
+import { sumBy, difference } from 'lodash';
+import * as R from 'ramda';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -25,7 +26,7 @@ import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { entriesAmountDiff, formatDateFields } from 'utils';
 import { ServiceError } from 'exceptions';
-import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from 'data/AccountTypes';
+import { ACCOUNT_TYPE } from 'data/AccountTypes';
 import VendorsService from 'services/Contacts/VendorsService';
 import { ERRORS } from './constants';
 
@@ -635,6 +636,12 @@ export default class BillPaymentsService implements IBillPaymentsService {
     ]);
   }
 
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(
+      this.dynamicListService.parseStringifiedFilter
+    )(filterDTO);
+  }
+
   /**
    * Retrieve bill payment paginted and filterable list.
    * @param {number} tenantId
@@ -642,34 +649,40 @@ export default class BillPaymentsService implements IBillPaymentsService {
    */
   public async listBillPayments(
     tenantId: number,
-    billPaymentsFilter: IBillPaymentsFilter
+    filterDTO: IBillPaymentsFilter
   ): Promise<{
     billPayments: IBillPayment;
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
     const { BillPayment } = this.tenancy.models(tenantId);
-    const dynamicFilter = await this.dynamicListService.dynamicList(
+
+    // Parses filter DTO.
+    const filter = this.parseListFilterDTO(filterDTO);
+
+    // Dynamic list service.
+    const dynamicList = await this.dynamicListService.dynamicList(
       tenantId,
       BillPayment,
-      billPaymentsFilter
+      filter
     );
     this.logger.info('[bill_payment] try to get bill payments list.', {
       tenantId,
     });
+
     const { results, pagination } = await BillPayment.query()
       .onBuild((builder) => {
         builder.withGraphFetched('vendor');
         builder.withGraphFetched('paymentAccount');
 
-        dynamicFilter.buildQuery()(builder);
+        dynamicList.buildQuery()(builder);
       })
-      .pagination(billPaymentsFilter.page - 1, billPaymentsFilter.pageSize);
+      .pagination(filter.page - 1, filter.pageSize);
 
     return {
       billPayments: results,
       pagination,
-      filterMeta: dynamicFilter.getResponseMeta(),
+      filterMeta: dynamicList.getResponseMeta(),
     };
   }
 

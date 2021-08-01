@@ -1,5 +1,6 @@
 import { Service, Inject } from 'typedi';
-import { omit, sumBy, join, entries } from 'lodash';
+import { omit, sumBy } from 'lodash';
+import * as R from 'ramda';
 import moment from 'moment';
 import composeAsync from 'async/compose';
 import {
@@ -648,6 +649,17 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
   }
 
   /**
+   * Parses the sale invoice list filter DTO.
+   * @param filterDTO 
+   * @returns 
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(
+      this.dynamicListService.parseStringifiedFilter,
+    )(filterDTO);
+  }
+
+  /**
    * Retrieve sales invoices filterable and paginated list.
    * @param {Request} req
    * @param {Response} res
@@ -655,22 +667,27 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
    */
   public async salesInvoicesList(
     tenantId: number,
-    salesInvoicesFilter: ISalesInvoicesFilter
+    filterDTO: ISalesInvoicesFilter
   ): Promise<{
     salesInvoices: ISaleInvoice[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
+
+    // Parses stringified filter roles.
+    const filter = this.parseListFilterDTO(filterDTO);
+
+    // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
       tenantId,
       SaleInvoice,
-      salesInvoicesFilter
+      filter
     );
 
     this.logger.info('[sale_invoice] try to get sales invoices list.', {
       tenantId,
-      salesInvoicesFilter,
+      filter,
     });
     const { results, pagination } = await SaleInvoice.query()
       .onBuild((builder) => {
@@ -678,7 +695,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
         builder.withGraphFetched('customer');
         dynamicFilter.buildQuery()(builder);
       })
-      .pagination(salesInvoicesFilter.page - 1, salesInvoicesFilter.pageSize);
+      .pagination(filter.page - 1, filter.pageSize);
 
     return {
       salesInvoices: results,

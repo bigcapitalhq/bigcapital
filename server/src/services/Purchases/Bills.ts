@@ -1,6 +1,7 @@
 import { omit, runInContext, sumBy } from 'lodash';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
+import * as R from 'ramda';
 import composeAsync from 'async/compose';
 import {
   EventDispatcher,
@@ -522,34 +523,49 @@ export default class BillsService
   }
 
   /**
+   * Parses bills list filter DTO.
+   * @param filterDTO - 
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(
+      this.dynamicListService.parseStringifiedFilter,
+    )(filterDTO);
+  }
+
+  /**
    * Retrieve bills data table list.
    * @param {number} tenantId -
    * @param {IBillsFilter} billsFilter -
    */
   public async getBills(
     tenantId: number,
-    billsFilter: IBillsFilter
+    filterDTO: IBillsFilter
   ): Promise<{
     bills: IBill;
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
     const { Bill } = this.tenancy.models(tenantId);
+
+    // Parses bills list filter DTO.
+    const filter = this.parseListFilterDTO(filterDTO);
+
+    // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
       tenantId,
       Bill,
-      billsFilter
+      filter,
     );
     this.logger.info('[bills] trying to get bills data table.', {
       tenantId,
-      billsFilter,
+      filter,
     });
     const { results, pagination } = await Bill.query()
       .onBuild((builder) => {
         builder.withGraphFetched('vendor');
         dynamicFilter.buildQuery()(builder);
       })
-      .pagination(billsFilter.page - 1, billsFilter.pageSize);
+      .pagination(filter.page - 1, filter.pageSize);
 
     return {
       bills: results,

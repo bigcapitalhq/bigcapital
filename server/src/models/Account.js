@@ -1,16 +1,16 @@
 /* eslint-disable global-require */
-import { Model } from 'objection';
-import { flatten, castArray } from 'lodash';
+import { mixin, Model } from 'objection';
+import { castArray } from 'lodash';
 import TenantModel from 'models/TenantModel';
-import {
-  buildFilterQuery,
-  buildSortColumnQuery,
-} from 'lib/ViewRolesBuilder';
+import { buildFilterQuery, buildSortColumnQuery } from 'lib/ViewRolesBuilder';
 import { flatToNestedArray } from 'utils';
 import DependencyGraph from 'lib/DependencyGraph';
-import AccountTypesUtils from 'lib/AccountTypes'
+import AccountTypesUtils from 'lib/AccountTypes';
+import AccountSettings from './Account.Settings';
+import ModelSettings from './ModelSetting';
+import { ACCOUNT_TYPES } from 'data/AccountTypes';
 
-export default class Account extends TenantModel {
+export default class Account extends mixin(TenantModel, [ModelSettings]) {
   /**
    * Table name.
    */
@@ -21,7 +21,7 @@ export default class Account extends TenantModel {
   /**
    * Timestamps columns.
    */
-  get timestamps() {
+  static get timestamps() {
     return ['createdAt', 'updatedAt'];
   }
 
@@ -35,7 +35,7 @@ export default class Account extends TenantModel {
       'accountRootType',
       'accountNormal',
       'isBalanceSheetAccount',
-      'isPLSheet'
+      'isPLSheet',
     ];
   }
 
@@ -95,6 +95,13 @@ export default class Account extends TenantModel {
     const TABLE_NAME = Account.tableName;
 
     return {
+      /**
+       * Inactive/Active mode.
+       */
+      inactiveMode(query, active = false) {
+        query.where('accounts.active', !active);
+      },
+
       filterAccounts(query, accountIds) {
         if (accountIds.length > 0) {
           query.whereIn(`${TABLE_NAME}.id`, accountIds);
@@ -110,6 +117,28 @@ export default class Account extends TenantModel {
       },
       sortColumnBuilder(query, columnKey, direction) {
         buildSortColumnQuery(Account.tableName, columnKey, direction)(query);
+      },
+
+      /**
+       * Filter by root type.
+       */
+      filterByRootType(query, rootType) {
+        const filterTypes = ACCOUNT_TYPES.filter(
+          (accountType) => accountType.rootType === rootType
+        ).map((accountType) => accountType.key);
+
+        query.whereIn('account_type', filterTypes);
+      },
+
+      /**
+       * Filter by account normal
+       */
+      filterByAccountNormal(query, accountNormal) {
+        const filterTypes = ACCOUNT_TYPES.filter(
+          (accountType) => accountType.normal === accountNormal,
+        ).map((accountType) => accountType.key);
+
+        query.whereIn('account_type', filterTypes);
       },
     };
   }
@@ -134,10 +163,10 @@ export default class Account extends TenantModel {
       },
     };
   }
-  
+
   /**
    * Detarmines whether the given type equals the account type.
-   * @param {string} accountType 
+   * @param {string} accountType
    * @return {boolean}
    */
   isAccountType(accountType) {
@@ -147,7 +176,7 @@ export default class Account extends TenantModel {
 
   /**
    * Detarmines whether the given root type equals the account type.
-   * @param {string} rootType 
+   * @param {string} rootType
    * @return {boolean}
    */
   isRootType(rootType) {
@@ -156,11 +185,14 @@ export default class Account extends TenantModel {
 
   /**
    * Detarmine whether the given parent type equals the account type.
-   * @param {string} parentType 
+   * @param {string} parentType
    * @return {boolean}
    */
   isParentType(parentType) {
-    return AccountTypesUtils.isParentTypeEqualsKey(this.accountType, parentType);
+    return AccountTypesUtils.isParentTypeEqualsKey(
+      this.accountType,
+      parentType
+    );
   }
 
   /**
@@ -188,105 +220,32 @@ export default class Account extends TenantModel {
   }
 
   /**
-   * Converts flatten accounts list to nested array. 
-   * @param {Array} accounts 
-   * @param {Object} options 
+   * Converts flatten accounts list to nested array.
+   * @param {Array} accounts
+   * @param {Object} options
    */
   static toNestedArray(accounts, options = { children: 'children' }) {
-    return flatToNestedArray(accounts, { id: 'id', parentId: 'parentAccountId' })
+    return flatToNestedArray(accounts, {
+      id: 'id',
+      parentId: 'parentAccountId',
+    });
   }
 
   /**
    * Transformes the accounts list to depenedency graph structure.
-   * @param {IAccount[]} accounts 
-   */  
+   * @param {IAccount[]} accounts
+   */
   static toDependencyGraph(accounts) {
-    return DependencyGraph.fromArray(
-      accounts, { itemId: 'id', parentItemId: 'parentAccountId' }
-    );
+    return DependencyGraph.fromArray(accounts, {
+      itemId: 'id',
+      parentItemId: 'parentAccountId',
+    });
   }
 
   /**
-   * Model defined fields.
+   * Model settings.
    */
-  static get fields() {
-    return {
-      name: {
-        label: 'Account name',
-        column: 'name',
-        columnType: 'string',
-        fieldType: 'text',
-      },
-      type: {
-        label: 'Account type',
-        column: 'account_type',
-      },
-      description: {
-        label: 'Description',
-        column: 'description',
-        columnType: 'string',
-
-        fieldType: 'text',
-      },
-      code: {
-        label: 'Account code',
-        column: 'code',
-        columnType: 'string',
-        fieldType: 'text',
-      },
-      root_type: {
-        label: 'Root type',
-        options: [
-          { key: 'asset', label: 'Asset', },
-          { key: 'liability', label: 'Liability' },
-          { key: 'equity', label: 'Equity' },
-          { key: 'Income', label: 'Income' },
-          { key: 'expense', label: 'Expense' },
-        ],
-        query: (query, role) => {
-          const accountsTypes = AccountTypesUtils.getTypesByRootType(role.value);
-          const accountsTypesKeys = accountsTypes.map(type => type.key);
-
-          query.whereIn('account_type', accountsTypesKeys);
-        },
-      },
-      created_at: {
-        label: 'Created at',
-        column: 'created_at',
-        columnType: 'date',
-        fieldType: 'date',
-      },
-      active: {
-        label: 'Active',
-        column: 'active', 
-        columnType: 'boolean',
-        fieldType: 'checkbox',
-      },
-      balance: {
-        label: 'Balance',
-        column: 'amount',
-        columnType: 'number',
-        fieldType: 'number',
-      },
-      currency: {
-        label: 'Currency',
-        column: 'currency_code',
-        fieldType: 'options',
-        optionsResource: 'currency',
-        optionsKey: 'currency_code',
-        optionsLabel: 'currency_name',
-      },
-      normal: {
-        label: 'Account normal',
-        column: 'account_type_id',
-        fieldType: 'options',
-        relation: 'account_types.id',
-        relationColumn: 'account_types.normal',
-        options: [
-          { key: 'credit', label: 'Credit' },
-          { key: 'debit', label: 'Debit' },
-        ],
-      },
-    };
+  static get meta() {
+    return AccountSettings;
   }
 }

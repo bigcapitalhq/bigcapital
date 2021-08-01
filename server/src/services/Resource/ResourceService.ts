@@ -2,7 +2,7 @@ import { Service, Inject } from 'typedi';
 import { camelCase, upperFirst } from 'lodash';
 import pluralize from 'pluralize';
 import { buildFilter } from 'objection-filter';
-import { IModel } from 'interfaces';
+import { IModel, IModelMeta } from 'interfaces';
 import {
   getModelFields,
 } from 'lib/ViewRolesBuilder'
@@ -101,5 +101,19 @@ export default class ResourceService {
     this.shouldModelBeResourceable(resourceModel);
 
     return buildFilter(resourceModel).build(filter);
+  }
+
+  /**
+   * Retrieve the resource meta.
+   * @param {number} tenantId 
+   * @param {string} modelName 
+   * @returns {IModelMeta}
+   */
+  public getResourceMeta(tenantId: number, modelName: string): IModelMeta {
+    const resourceModel = this.getResourceModel(tenantId, modelName);
+
+    const settings = resourceModel.meta();
+
+    return settings;
   }
 }

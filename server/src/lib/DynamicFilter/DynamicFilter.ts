@@ -1,65 +1,85 @@
 import { forEach, uniqBy } from 'lodash';
-import { buildFilterRolesJoins } from 'lib/ViewRolesBuilder';
-import { IModel } from 'interfaces';
+import DynamicFilterAbstructor from './DynamicFilterAbstructor';
+import { IDynamicFilter, IFilterRole, IModel } from 'interfaces';
 
-export default class DynamicFilter {
-  model: IModel;
-  tableName: string;
+export default class DynamicFilter extends DynamicFilterAbstructor{
+  private model: IModel;
+  private tableName: string;
+  private dynamicFilters: IDynamicFilter[];
 
   /**
    * Constructor.
    * @param {String} tableName -
    */
   constructor(model) {
+    super();
+
     this.model = model;
     this.tableName = model.tableName;
-    this.filters = [];
+    this.dynamicFilters = [];
   }
 
   /**
-   * Set filter.
-   * @param {*} filterRole - Filter role.
+   * Registers the given dynamic filter.
+   * @param {IDynamicFilter} filterRole - Filter role.
    */
-  setFilter(filterRole) {
-    filterRole.setModel(this.model);
-    this.filters.push(filterRole);
+  public setFilter = (dynamicFilter: IDynamicFilter) => {
+    dynamicFilter.setModel(this.model);
+
+    dynamicFilter.onInitialize();
+
+    this.dynamicFilters.push(dynamicFilter);
+  }
+
+  /**
+   * Retrieve dynamic filter build queries.
+   * @returns 
+   */
+  private dynamicFiltersBuildQuery = () => {
+    return this.dynamicFilters.map((filter) => {
+      return filter.buildQuery()
+    });
+  }
+
+  /**
+   * Retrieve dynamic filter roles.
+   * @returns {IFilterRole[]}
+   */
+  private dynamicFilterTableColumns = (): IFilterRole[] => {
+    const localFilterRoles = [];
+
+    this.dynamicFilters.forEach((dynamicFilter) => {
+      const { filterRoles } = dynamicFilter;
+
+      localFilterRoles.push(
+        ...(Array.isArray(filterRoles) ? filterRoles : [filterRoles])
+      );
+    });
+    return localFilterRoles;
   }
 
   /**
    * Builds queries of filter roles.
    */
-  buildQuery() {
-    const buildersCallbacks = [];
-    const tableColumns = [];
-
-    this.filters.forEach((filter) => {
-      const { filterRoles } = filter;
-
-      buildersCallbacks.push(filter.buildQuery());
-      tableColumns.push(
-        ...(Array.isArray(filterRoles) ? filterRoles : [filterRoles])
-      );
-    });
+  public buildQuery = () => {
+    const buildersCallbacks = this.dynamicFiltersBuildQuery();
+    const tableColumns = this.dynamicFilterTableColumns();
 
     return (builder) => {
       buildersCallbacks.forEach((builderCallback) => {
         builderCallback(builder);
       });
-
-      buildFilterRolesJoins(
-        this.model,
-        uniqBy(tableColumns, 'columnKey')
-      )(builder);
+      this.buildFilterRolesJoins(builder);
     };
   }
 
   /**
    * Retrieve response metadata from all filters adapters.
    */
-  getResponseMeta() {
+  public getResponseMeta = () => {
     const responseMeta = {};
 
-    this.filters.forEach((filter) => {
+    this.dynamicFilters.forEach((filter) => {
       const { responseMeta: filterMeta } = filter;
 
       forEach(filterMeta, (value, key) => {

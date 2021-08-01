@@ -2,11 +2,11 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { check, param, query, matchedData } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import { ISaleEstimateDTO } from 'interfaces';
-import BaseController from 'api/controllers/BaseController'
+import BaseController from 'api/controllers/BaseController';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
-import { ServiceError } from "exceptions";
+import { ServiceError } from 'exceptions';
 
 @Service()
 export default class SalesEstimatesController extends BaseController {
@@ -23,63 +23,56 @@ export default class SalesEstimatesController extends BaseController {
     const router = Router();
 
     router.post(
-      '/', [
-        ...this.estimateValidationSchema,
-      ],
+      '/',
+      [...this.estimateValidationSchema],
       this.validationResult,
       asyncMiddleware(this.newEstimate.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.post(
       '/:id/deliver',
-      [
-        ...this.validateSpecificEstimateSchema,
-      ],
+      [...this.validateSpecificEstimateSchema],
       this.validationResult,
       asyncMiddleware(this.deliverSaleEstimate.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.post(
       '/:id/approve',
-      [
-        this.validateSpecificEstimateSchema,
-      ],
+      [this.validateSpecificEstimateSchema],
       this.validationResult,
       asyncMiddleware(this.approveSaleEstimate.bind(this)),
       this.handleServiceErrors
     );
     router.post(
       '/:id/reject',
-      [
-        this.validateSpecificEstimateSchema,
-      ],
+      [this.validateSpecificEstimateSchema],
       this.validationResult,
       asyncMiddleware(this.rejectSaleEstimate.bind(this)),
-      this.handleServiceErrors,
-    )
+      this.handleServiceErrors
+    );
     router.post(
-      '/:id', [
+      '/:id',
+      [
         ...this.validateSpecificEstimateSchema,
         ...this.estimateValidationSchema,
       ],
       this.validationResult,
       asyncMiddleware(this.editEstimate.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.delete(
-      '/:id', [
-        this.validateSpecificEstimateSchema,
-      ],
+      '/:id',
+      [this.validateSpecificEstimateSchema],
       this.validationResult,
       asyncMiddleware(this.deleteEstimate.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.get(
       '/:id',
       this.validateSpecificEstimateSchema,
       this.validationResult,
       asyncMiddleware(this.getEstimate.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.get(
       '/',
@@ -87,7 +80,7 @@ export default class SalesEstimatesController extends BaseController {
       this.validationResult,
       asyncMiddleware(this.getEstimates.bind(this)),
       this.handleServiceErrors,
-      this.dynamicListService.handlerErrorsToResponse,
+      this.dynamicListService.handlerErrorsToResponse
     );
     return router;
   }
@@ -109,8 +102,14 @@ export default class SalesEstimatesController extends BaseController {
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.quantity').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
-      check('entries.*.description').optional({ nullable: true }).trim().escape(),
-      check('entries.*.discount').optional({ nullable: true }).isNumeric().toFloat(),
+      check('entries.*.description')
+        .optional({ nullable: true })
+        .trim()
+        .escape(),
+      check('entries.*.discount')
+        .optional({ nullable: true })
+        .isNumeric()
+        .toFloat(),
 
       check('note').optional().trim().escape(),
       check('terms_conditions').optional().trim().escape(),
@@ -122,9 +121,7 @@ export default class SalesEstimatesController extends BaseController {
    * Specific sale estimate validation schema.
    */
   get validateSpecificEstimateSchema() {
-    return [
-      param('id').exists().isNumeric().toInt(),
-    ];
+    return [param('id').exists().isNumeric().toInt()];
   }
 
   /**
@@ -137,8 +134,8 @@ export default class SalesEstimatesController extends BaseController {
       query('column_sort_by').optional(),
       query('sort_order').optional().isIn(['desc', 'asc']),
       query('page').optional().isNumeric().toInt(),
-      query('page_size').optional().isNumeric().toInt(), 
-    ]
+      query('page_size').optional().isNumeric().toInt(),
+    ];
   }
 
   /**
@@ -152,7 +149,10 @@ export default class SalesEstimatesController extends BaseController {
     const estimateDTO: ISaleEstimateDTO = this.matchedBodyData(req);
 
     try {
-      const storedEstimate = await this.saleEstimateService.createEstimate(tenantId, estimateDTO);
+      const storedEstimate = await this.saleEstimateService.createEstimate(
+        tenantId,
+        estimateDTO
+      );
 
       return res.status(200).send({
         id: storedEstimate.id,
@@ -165,8 +165,8 @@ export default class SalesEstimatesController extends BaseController {
 
   /**
    * Handle update estimate details with associated entries.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async editEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
@@ -175,12 +175,16 @@ export default class SalesEstimatesController extends BaseController {
 
     try {
       // Update estimate with associated estimate entries.
-      await this.saleEstimateService.editEstimate(tenantId, estimateId, estimateDTO);
+      await this.saleEstimateService.editEstimate(
+        tenantId,
+        estimateId,
+        estimateDTO
+      );
 
       return res.status(200).send({
         id: estimateId,
         message: 'The sale estimate has been created successfully.',
-      });  
+      });
     } catch (error) {
       next(error);
     }
@@ -188,8 +192,8 @@ export default class SalesEstimatesController extends BaseController {
 
   /**
    * Deletes the given estimate with associated entries.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async deleteEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
@@ -200,7 +204,7 @@ export default class SalesEstimatesController extends BaseController {
 
       return res.status(200).send({
         id: estimateId,
-        message: 'The sale estimate has been deleted successfully.'
+        message: 'The sale estimate has been deleted successfully.',
       });
     } catch (error) {
       next(error);
@@ -209,8 +213,8 @@ export default class SalesEstimatesController extends BaseController {
 
   /**
    * Deliver the given sale estimate.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async deliverSaleEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
@@ -230,9 +234,9 @@ export default class SalesEstimatesController extends BaseController {
 
   /**
    * Marks the sale estimate as approved.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async approveSaleEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
@@ -252,9 +256,9 @@ export default class SalesEstimatesController extends BaseController {
 
   /**
    * Marks the sale estimate as rejected.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async rejectSaleEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
@@ -274,16 +278,19 @@ export default class SalesEstimatesController extends BaseController {
 
   /**
    * Retrieve the given estimate with associated entries.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async getEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
 
     try {
-      const estimate = await this.saleEstimateService.getEstimate(tenantId, estimateId);
+      const estimate = await this.saleEstimateService.getEstimate(
+        tenantId,
+        estimateId
+      );
 
       return res.status(200).send({ estimate });
     } catch (error) {
@@ -293,35 +300,28 @@ export default class SalesEstimatesController extends BaseController {
 
   /**
    * Retrieve estimates with pagination metadata.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async getEstimates(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = {
-      filterRoles: [],
       sortOrder: 'asc',
       columnSortBy: 'created_at',
       page: 1,
       pageSize: 12,
       ...this.matchedQueryData(req),
     };
-    if (filter.stringifiedFilterRoles) {
-      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
-    }
 
     try {
-      const {
-        salesEstimates,
-        pagination,
-        filterMeta
-      } = await this.saleEstimateService.estimatesList(tenantId, filter);
+      const { salesEstimates, pagination, filterMeta } =
+        await this.saleEstimateService.estimatesList(tenantId, filter);
 
       return res.status(200).send({
         sales_estimates: this.transfromToResponse(salesEstimates),
         pagination,
         filter_meta: this.transfromToResponse(filterMeta),
-      })
+      });
     } catch (error) {
       next(error);
     }
@@ -329,12 +329,17 @@ export default class SalesEstimatesController extends BaseController {
 
   /**
    * Handles service errors.
-   * @param {Error} error 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Error} error
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
+  private handleServiceErrors(
+    error: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'ITEMS_NOT_FOUND') {
         return res.boom.badRequest(null, {
@@ -409,4 +414,4 @@ export default class SalesEstimatesController extends BaseController {
     }
     next(error);
   }
-};
+}

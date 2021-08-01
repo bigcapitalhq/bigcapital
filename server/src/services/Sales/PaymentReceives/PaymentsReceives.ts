@@ -1,5 +1,6 @@
 import { omit, sumBy, difference } from 'lodash';
 import { Service, Inject } from 'typedi';
+import * as R from 'ramda';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -614,39 +615,55 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
   }
 
   /**
+   * Parses payments receive list filter DTO.
+   * @param filterDTO 
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(
+      this.dynamicListService.parseStringifiedFilter
+    )(filterDTO);
+  }
+
+  /**
    * Retrieve payment receives paginated and filterable list.
    * @param {number} tenantId
    * @param {IPaymentReceivesFilter} paymentReceivesFilter
    */
   public async listPaymentReceives(
     tenantId: number,
-    paymentReceivesFilter: IPaymentReceivesFilter
+    filterDTO: IPaymentReceivesFilter
   ): Promise<{
     paymentReceives: IPaymentReceive[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
     const { PaymentReceive } = this.tenancy.models(tenantId);
-    const dynamicFilter = await this.dynamicListService.dynamicList(
+
+    // Parses filter DTO.
+    const filter = this.parseListFilterDTO(filterDTO);
+
+    // Dynamic list service.
+    const dynamicList = await this.dynamicListService.dynamicList(
       tenantId,
       PaymentReceive,
-      paymentReceivesFilter
+      filter
     );
 
     const { results, pagination } = await PaymentReceive.query()
       .onBuild((builder) => {
         builder.withGraphFetched('customer');
         builder.withGraphFetched('depositAccount');
-        dynamicFilter.buildQuery()(builder);
+        dynamicList.buildQuery()(builder);
       })
       .pagination(
-        paymentReceivesFilter.page - 1,
-        paymentReceivesFilter.pageSize
+        filter.page - 1,
+        filter.pageSize
       );
+
     return {
       paymentReceives: results,
       pagination,
-      filterMeta: dynamicFilter.getResponseMeta(),
+      filterMeta: dynamicList.getResponseMeta(),
     };
   }
 

@@ -1,7 +1,9 @@
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
+import InventoryAdjustmentSettings from './InventoryAdjustment.Settings';
+import ModelSetting from './ModelSetting';
 
-export default class InventoryAdjustment extends TenantModel {
+export default class InventoryAdjustment extends mixin(TenantModel, [ModelSetting]) {
   /**
    * Table name
    */
@@ -40,8 +42,8 @@ export default class InventoryAdjustment extends TenantModel {
 
   static getInventoryDirection(type) {
     const directions = {
-      'increment': 'IN',
-      'decrement': 'OUT',
+      increment: 'IN',
+      decrement: 'OUT',
     };
     return directions[type] || '';
   }
@@ -81,52 +83,9 @@ export default class InventoryAdjustment extends TenantModel {
   }
 
   /**
-   * Model defined fields.
+   * Model settings.
    */
-  static get fields() {
-    return {
-      date: {
-        label: 'Date',
-        column: 'date',
-        columnType: 'date',
-      },
-      type: {
-        label: 'Adjustment type',
-        column: 'type',
-        options: [
-          { key: 'increment', label: 'Increment', },
-          { key: 'decrement', label: 'Decrement' },
-        ],
-      },
-      adjustment_account: {
-        column: 'adjustment_account_id',
-      },
-      reason: {
-        label: 'Reason',
-        column: 'reason',
-      },
-      reference_no: {
-        label: 'Reference No.',
-        column: 'reference_no',
-      },
-      description: {
-        label: 'Description',
-        column: 'description',
-      },
-      user: {
-        label: 'User',
-        column: 'user_id',
-      },
-      published_at: {
-        label: 'Published at',
-        column: 'published_at'
-      },
-      created_at: {
-        label: 'Created at',
-        column: 'created_at',
-        columnType: 'date',
-        fieldType: 'date',
-      },
-    };
+  static get meta() {
+    return InventoryAdjustmentSettings;
   }
 }

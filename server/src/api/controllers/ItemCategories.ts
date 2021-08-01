@@ -199,8 +199,8 @@ export default class ItemsCategoriesController extends BaseController {
    */
   async getList(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
+
     const itemCategoriesFilter = {
-      filterRoles: [],
       sortOrder: 'asc',
       columnSortBy: 'created_at',
       ...this.matchedQueryData(req),

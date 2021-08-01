@@ -47,6 +47,7 @@ export interface IAccountResponse extends IAccount {
 
 export interface IAccountsFilter extends IDynamicListFilterDTO {
   stringifiedFilterRoles?: string,
+  onlyInactive: boolean;
 };
 
 export interface IAccountType {

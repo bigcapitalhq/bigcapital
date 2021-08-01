@@ -1,10 +1,11 @@
-import { Model, raw } from 'objection';
+import { Model, raw, mixin } from 'objection';
 import moment from 'moment';
 import { difference } from 'lodash';
 import TenantModel from 'models/TenantModel';
-import { query } from 'winston';
+import BillSettings from './Bill.Settings';
+import ModelSetting from './ModelSetting';
 
-export default class Bill extends TenantModel {
+export default class Bill extends mixin(TenantModel, [ModelSetting]) {
   /**
    * Table name
    */
@@ -12,10 +13,9 @@ export default class Bill extends TenantModel {
     return 'bills';
   }
 
-  static get resourceable() {
-    return true;
-  }
-
+  /**
+   * Model modifiers.
+   */
   static get modifiers() {
     return {
       /**
@@ -71,14 +71,41 @@ export default class Bill extends TenantModel {
        * Filters the bills from the given date.
        */
       fromDate(query, fromDate) {
-        query.where('bill_date', '<=', fromDate)
+        query.where('bill_date', '<=', fromDate);
       },
 
       /**
        * Sort the bills by full-payment bills.
        */
-       sortByStatus(query, order) {
+      sortByStatus(query, order) {
         query.orderByRaw(`PAYMENT_AMOUNT = AMOUNT ${order}`);
+      },
+
+      /**
+       * Status filter.
+       */
+      statusFilter(query, filterType) {
+        switch (filterType) {
+          case 'draft':
+            query.modify('draft');
+            break;
+          case 'delivered':
+            query.modify('delivered');
+            break;
+          case 'unpaid':
+            query.modify('unpaid');
+            break;
+          case 'overdue':
+          default:
+            query.modify('overdue');
+            break;
+          case 'partially-paid':
+            query.modify('partiallyPaid');
+            break;
+          case 'paid':
+            query.modify('paid');
+            break;
+        }
       },
     };
   }
@@ -103,7 +130,7 @@ export default class Bill extends TenantModel {
       'remainingDays',
       'overdueDays',
       'isOverdue',
-      'unallocatedCostAmount'
+      'unallocatedCostAmount',
     ];
   }
 
@@ -199,6 +226,13 @@ export default class Bill extends TenantModel {
   }
 
   /**
+   * Bill model settings.
+   */
+  static get meta() {
+    return BillSettings;
+  }
+
+  /**
    * Relationship mapping.
    */
   static get relationMappings() {
@@ -268,89 +302,5 @@ export default class Bill extends TenantModel {
     return this.query()
       .where('id', billId)
       [changeMethod]('payment_amount', Math.abs(amount));
-  }
-
-  static get fields() {
-    return {
-      vendor: {
-        label: 'Vendor',
-        column: 'vendor_id',
-        relation: 'contacts.id',
-        relationColumn: 'contacts.display_name',
-      },
-      bill_number: {
-        label: 'Bill number',
-        column: 'bill_number',
-        columnType: 'string',
-        fieldType: 'text',
-      },
-      bill_date: {
-        label: 'Bill date',
-        column: 'bill_date',
-        columnType: 'date',
-        fieldType: 'date',
-      },
-      due_date: {
-        label: 'Due date',
-        column: 'due_date',
-      },
-      reference_no: {
-        label: 'Reference No.',
-        column: 'reference_no',
-        columnType: 'string',
-        fieldType: 'text',
-      },
-      status: {
-        label: 'Status',
-        options: [],
-        query: (query, role) => {
-          switch (role.value) {
-            case 'draft':
-              query.modify('draft');
-              break;
-            case 'opened':
-              query.modify('opened');
-              break;
-            case 'unpaid':
-              query.modify('unpaid');
-              break;
-            case 'overdue':
-              query.modify('overdue');
-              break;
-            case 'partially-paid':
-              query.modify('partiallyPaid');
-              break;
-            case 'paid':
-              query.modify('paid');
-              break;
-          }
-        },
-        sortQuery(query, role) {
-          query.modify('sortByStatus', role.order);
-        },
-      },
-      amount: {
-        label: 'Amount',
-        column: 'amount',
-        columnType: 'number',
-        fieldType: 'number',
-      },
-      payment_amount: {
-        label: 'Payment amount',
-        column: 'payment_amount',
-        columnType: 'number',
-        fieldType: 'number',
-      },
-      note: {
-        label: 'Note',
-        column: 'note',
-      },
-      user: {},
-      created_at: {
-        label: 'Created at',
-        column: 'created_at',
-        columnType: 'date',
-      },
-    };
   }
 }
