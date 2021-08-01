@@ -16,16 +16,15 @@ import { Choose, Money, Icon, If } from 'components';
 import moment from 'moment';
 
 export function ActionsMenu({
-  payload: { onEdit, onDelete, onClose, onDrawer },
+  payload: { onEdit, onDelete, onClose, onDrawer, onViewDetails },
   row: { original: receipt },
 }) {
-  
-
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
         text={intl.get('view_details')}
+        onClick={safeCallback(onViewDetails, receipt)}
       />
       <MenuDivider />
       <MenuItem
@@ -94,8 +93,6 @@ export function StatusAccessor(receipt) {
  * Retrieve receipts table columns.
  */
 export function useReceiptsTableColumns() {
-  
-
   return React.useMemo(
     () => [
       {

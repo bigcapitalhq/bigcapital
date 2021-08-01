@@ -19,15 +19,14 @@ import { safeCallback } from 'utils';
  */
 export function ActionsMenu({
   row: { original: paymentReceive },
-  payload: { onEdit, onDelete, onDrawer },
+  payload: { onEdit, onDelete, onDrawer, onViewDetails },
 }) {
-  
-
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
         text={intl.get('view_details')}
+        onClick={safeCallback(onViewDetails, paymentReceive)}
       />
       <MenuDivider />
       <MenuItem
@@ -82,8 +81,6 @@ export function ActionsCell(props) {
  * Retrieve payment receives columns.
  */
 export function usePaymentReceivesColumns() {
-  
-
   return React.useMemo(
     () => [
       {
@@ -128,7 +125,7 @@ export function usePaymentReceivesColumns() {
         accessor: 'reference_no',
         width: 140,
         className: 'reference_no',
-      }
+      },
     ],
     [],
   );

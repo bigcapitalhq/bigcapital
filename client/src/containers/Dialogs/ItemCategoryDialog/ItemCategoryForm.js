@@ -9,10 +9,10 @@ import { transformToForm } from 'utils';
 import {
   CreateItemCategoryFormSchema,
   EditItemCategoryFormSchema,
-} from './ItemCategoryForm.schema';
+} from './itemCategoryForm.schema';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import ItemCategoryFormContent from './ItemCategoryFormContent'
+import ItemCategoryFormContent from './ItemCategoryFormContent';
 import { compose } from 'utils';
 
 const defaultInitialValues = {
@@ -30,7 +30,6 @@ function ItemCategoryForm({
   // #withDialogActions
   closeDialog,
 }) {
-  
   const {
     isNewMode,
     itemCategory,
@@ -81,7 +80,11 @@ function ItemCategoryForm({
     };
     // Handle the response error.
     const onError = (error) => {
-      const { response: { data: { errors } } } = error;
+      const {
+        response: {
+          data: { errors },
+        },
+      } = error;
 
       transformErrors(errors, { setErrors });
       setSubmitting(false);
@@ -108,6 +111,4 @@ function ItemCategoryForm({
   );
 }
 
-export default compose(
-  withDialogActions,
-)(ItemCategoryForm);
+export default compose(withDialogActions)(ItemCategoryForm);

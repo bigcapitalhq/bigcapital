@@ -60,14 +60,19 @@ function ReceiptsDataTable({
     openAlert('receipt-delete', { receiptId: receipt.id });
   };
 
+  // Handle drawer receipts.
+  const handleDrawerReceipt = ({ id }) => {
+    openDrawer('receipt-drawer', { receiptId: id });
+  };
+
   // Handles receipt close action.
   const handleCloseReceipt = (receipt) => {
     openAlert('receipt-close', { receiptId: receipt.id });
   };
 
-  // Handle drawer receipts.
-  const handleDrawerReceipt = ({ id }) => {
-    openDrawer('receipt-drawer', { receiptId: id });
+  // Handle view detail receipt.
+  const handleViewDetailReceipt = ({ id }) => {
+    openDrawer('receipt-detail-drawer', { receiptId: id });
   };
 
   // Handles the datable fetch data once the state changing.
@@ -112,6 +117,7 @@ function ReceiptsDataTable({
         onDelete: handleDeleteReceipt,
         onClose: handleCloseReceipt,
         onDrawer: handleDrawerReceipt,
+        onViewDetails: handleViewDetailReceipt,
         baseCurrency,
       }}
     />

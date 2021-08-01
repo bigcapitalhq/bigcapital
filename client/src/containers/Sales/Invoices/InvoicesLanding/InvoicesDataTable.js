@@ -79,6 +79,12 @@ function InvoicesDataTable({
   const handleQuickPaymentReceive = ({ id }) => {
     openDialog('quick-payment-receive', { invoiceId: id });
   };
+
+  // Handle view detail invoice.
+  const handleViewDetailInvoice = ({ id }) => {
+    openDrawer('invoice-detail-drawer', { invoiceId: id });
+  };
+
   // Handles fetch data once the table state change.
   const handleDataTableFetchData = useCallback(
     ({ pageSize, pageIndex, sortBy }) => {
@@ -123,6 +129,7 @@ function InvoicesDataTable({
         onEdit: handleEditInvoice,
         onDrawer: handleDrawerInvoice,
         onQuick: handleQuickPaymentReceive,
+        onViewDetails: handleViewDetailInvoice,
         baseCurrency,
       }}
     />
