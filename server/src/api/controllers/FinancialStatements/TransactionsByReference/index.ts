@@ -3,7 +3,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { query, ValidationChain } from 'express-validator';
 import BaseController from 'api/controllers/BaseController';
 import TransactionsByReferenceService from 'services/FinancialStatements/TransactionsByReference';
-
+import { ITransactionsByReferenceTransaction } from 'interfaces';
 @Service()
 export default class TransactionsByReferenceController extends BaseController {
   @Inject()
@@ -61,27 +61,30 @@ export default class TransactionsByReferenceController extends BaseController {
     const filter = this.matchedQueryData(req);
 
     try {
-      const transactions =
+      const data =
         await this.transactionsByReferenceService.getTransactionsByReference(
           tenantId,
           filter
         );
-      const accept = this.accepts(req);
-      const acceptType = accept.types(['json']);
 
-      switch (acceptType) {
-        case 'json':
-        default:
-          return res
-            .status(200)
-            .send(this.transformToJsonResponse(transactions));
-      }
+      return res
+        .status(200)
+        .send(this.transformToJsonResponse(data.transactions));
     } catch (error) {
       next(error);
     }
   }
 
-  private transformToJsonResponse(transactions) {
-    return transactions;
+  /**
+   * Transformes the given report transaction to json response.
+   * @param transactions
+   * @returns
+   */
+  private transformToJsonResponse(
+    transactions: ITransactionsByReferenceTransaction[]
+  ) {
+    return {
+      transactions: this.transfromToResponse(transactions),
+    };
   }
 }

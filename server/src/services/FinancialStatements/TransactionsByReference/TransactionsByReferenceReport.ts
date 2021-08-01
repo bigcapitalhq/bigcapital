@@ -41,6 +41,8 @@ export default class TransactionsByReference extends FinancialSheet {
     transaction: IAccountTransaction
   ): ITransactionsByReferenceTransaction => {
     return {
+      date: this.getDateMeta(transaction.date),
+
       credit: this.getAmountMeta(transaction.credit, { money: true }),
       debit: this.getAmountMeta(transaction.debit, { money: true }),
 

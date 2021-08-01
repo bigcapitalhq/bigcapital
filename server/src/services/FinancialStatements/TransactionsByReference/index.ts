@@ -42,7 +42,7 @@ export default class TransactionsByReferenceService {
     tenantId: number,
     query: ITransactionsByReferenceQuery
   ): Promise<{
-    data: ITransactionsByReferenceTransaction[];
+    transactions: ITransactionsByReferenceTransaction[];
   }> {
     const filter = {
       ...this.defaultQuery,
@@ -71,7 +71,7 @@ export default class TransactionsByReferenceService {
     );
 
     return {
-      data: report.reportData(),
+      transactions: report.reportData(),
     };
   }
 }
