@@ -9,8 +9,8 @@ import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
  * payment receive view detail.
  */
 export default function PaymentReceiveDetail() {
-  const { data } = usePaymentReceiveDetailContext();
-  
+  const { transactions } = usePaymentReceiveDetailContext();
+
   return (
     <div className="view-detail-drawer">
       <Tabs animate={true} large={true} defaultSelectedTabId="journal_entries">
@@ -18,7 +18,7 @@ export default function PaymentReceiveDetail() {
         <Tab
           title={intl.get('journal_entries')}
           id={'journal_entries'}
-          panel={<JournalEntriesTable transactions={data} />}
+          panel={<JournalEntriesTable transactions={transactions} />}
         />
       </Tabs>
     </div>

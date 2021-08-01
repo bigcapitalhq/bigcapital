@@ -10,7 +10,9 @@ import { useBillDrawerContext } from './BillDrawerProvider';
  * Bill view details.
  */
 export default function BillDrawerDetails() {
-  const { data } = useBillDrawerContext();
+  const {
+    data: { transactions },
+  } = useBillDrawerContext();
 
   return (
     <div className="view-detail-drawer">
@@ -19,7 +21,7 @@ export default function BillDrawerDetails() {
         <Tab
           title={intl.get('journal_entries')}
           id={'journal_entries'}
-          panel={<JournalEntriesTable transactions={data} />}
+          panel={<JournalEntriesTable transactions={transactions} />}
         />
         <Tab
           title={intl.get('located_landed_cost')}

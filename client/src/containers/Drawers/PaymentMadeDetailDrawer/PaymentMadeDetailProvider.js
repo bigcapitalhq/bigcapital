@@ -9,9 +9,11 @@ const PaymentMadeDetailContext = React.createContext();
  * Payment made detail provider.
  */
 function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
-  
   // Handle fetch transaction by reference.
-  const { data, isLoading: isTransactionLoading } = useTransactionsByReference(
+  const {
+    data: { transactions },
+    isLoading: isTransactionLoading,
+  } = useTransactionsByReference(
     {
       reference_id: paymentMadeId,
       reference_type: 'paymentMade',
@@ -21,7 +23,7 @@ function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
 
   //provider.
   const provider = {
-    data,
+    transactions,
   };
   return (
     <DashboardInsider loading={isTransactionLoading}>

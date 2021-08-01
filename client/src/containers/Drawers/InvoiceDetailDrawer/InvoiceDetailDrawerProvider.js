@@ -8,9 +8,11 @@ const InvoiceDetailDrawerContext = React.createContext();
  * Invoice detail provider.
  */
 function InvoiceDetailDrawerProvider({ invoiceId, ...props }) {
-  
   // Handle fetch transaction by reference.
-  const { data, isLoading: isTransactionLoading } = useTransactionsByReference(
+  const {
+    data: { transactions },
+    isLoading: isTransactionLoading,
+  } = useTransactionsByReference(
     {
       reference_id: invoiceId,
       reference_type: 'SaleInvoice',
@@ -20,7 +22,7 @@ function InvoiceDetailDrawerProvider({ invoiceId, ...props }) {
 
   //provider.
   const provider = {
-    data,
+    transactions,
   };
   return (
     <DashboardInsider loading={isTransactionLoading}>

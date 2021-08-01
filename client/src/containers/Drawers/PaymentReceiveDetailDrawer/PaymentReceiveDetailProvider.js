@@ -9,9 +9,11 @@ const PaymentReceiveDetailContext = React.createContext();
  * Payment receive detail provider.
  */
 function PaymentReceiveDetailProvider({ paymentReceiveId, ...props }) {
-
   // Handle fetch transaction by reference.
-  const { data, isLoading: isTransactionLoading } = useTransactionsByReference(
+  const {
+    data: { transactions },
+    isLoading: isTransactionLoading,
+  } = useTransactionsByReference(
     {
       reference_id: paymentReceiveId,
       reference_type: 'paymentReceive',
@@ -20,7 +22,7 @@ function PaymentReceiveDetailProvider({ paymentReceiveId, ...props }) {
   );
 
   //provider.
-  const provider = { data };
+  const provider = { transactions };
 
   return (
     <DashboardInsider loading={isTransactionLoading}>

@@ -11,7 +11,10 @@ const ReceiptDetailDrawerContext = React.createContext();
  */
 function ReceiptDetailDrawerProvider({ receiptId, ...props }) {
   // Handle fetch transaction by reference.
-  const { data, isLoading: isTransactionLoading } = useTransactionsByReference(
+  const {
+    data: { transactions },
+    isLoading: isTransactionLoading,
+  } = useTransactionsByReference(
     {
       reference_id: receiptId,
       reference_type: 'SaleReceipt',
@@ -21,7 +24,7 @@ function ReceiptDetailDrawerProvider({ receiptId, ...props }) {
 
   //provider.
   const provider = {
-    data,
+    transactions,
   };
 
   return (

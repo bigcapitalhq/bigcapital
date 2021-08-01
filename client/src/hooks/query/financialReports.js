@@ -479,8 +479,10 @@ export function useTransactionsByReference(query, props) {
       params: query,
     },
     {
-      select: (res) => res.data.data,
-      defaultData: {},
+      select: (res) => res.data,
+      defaultData: {
+        transactions: [],
+      },
       ...props,
     },
   );

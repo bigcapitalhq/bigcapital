@@ -9,7 +9,7 @@ import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
  * Invoice view detail.
  */
 export default function InvoiceDetail() {
-  const { data } = useInvoiceDetailDrawerContext();
+  const { transactions } = useInvoiceDetailDrawerContext();
 
   return (
     <div className="view-detail-drawer">
@@ -23,7 +23,7 @@ export default function InvoiceDetail() {
         <Tab
           title={intl.get('journal_entries')}
           id={'journal_entries'}
-          panel={<JournalEntriesTable transactions={data} />}
+          panel={<JournalEntriesTable transactions={transactions} />}
         />
       </Tabs>
     </div>

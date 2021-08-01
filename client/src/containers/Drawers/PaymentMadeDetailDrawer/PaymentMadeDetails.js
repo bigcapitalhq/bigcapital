@@ -3,11 +3,14 @@ import { Tabs, Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
 import JournalEntriesTable from '../../JournalEntriesTable/JournalEntriesTable';
+import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
 
 /**
  * payment made view detail.
  */
 export default function PaymentMadeDetails() {
+  const { transactions } = usePaymentMadeDetailContext();
+
   return (
     <div className="view-detail-drawer">
       <Tabs animate={true} large={true} defaultSelectedTabId="journal_entries">
@@ -15,7 +18,7 @@ export default function PaymentMadeDetails() {
         <Tab
           title={intl.get('journal_entries')}
           id={'journal_entries'}
-          panel={<JournalEntriesTable journal={[]} />}
+          panel={<JournalEntriesTable transactions={transactions} />}
         />
       </Tabs>
     </div>

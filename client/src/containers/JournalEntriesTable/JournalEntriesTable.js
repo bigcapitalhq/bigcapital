@@ -12,27 +12,28 @@ export default function JournalEntriesTable({ transactions }) {
       {
         Header: intl.get('date'),
         accessor: 'date',
-        // accessor: (r) => moment(new Date()).format('YYYY MMM DD'),
-        width: 150,
+        accessor: ({ formatted_date }) =>
+          moment(formatted_date).format('YYYY MMM DD'),
+        width: 140,
       },
       {
         Header: intl.get('account_name'),
-        accessor: 'accountName',
-        width: 150,
+        accessor: 'account_name',
+        width: 140,
       },
       {
         Header: intl.get('contact'),
         accessor: 'contactTypeFormatted',
-        width: 150,
+        width: 140,
       },
       {
         Header: intl.get('credit'),
-        accessor: ({ credit }) => credit.formattedAmount,
+        accessor: ({ credit }) => credit.formatted_amount,
         width: 100,
       },
       {
         Header: intl.get('debit'),
-        accessor: ({ debit }) => debit.formattedAmount,
+        accessor: ({ debit }) => debit.formatted_amount,
         width: 100,
       },
     ],
