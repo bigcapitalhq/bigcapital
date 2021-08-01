@@ -6,10 +6,14 @@ import Icon from 'components/Icon';
 import MenuItem from 'components/MenuItem';
 import { MenuItemLabel } from 'components';
 import classNames from 'classnames';
+import SidebarOverlay from 'components/SidebarOverlay';
 
 export default function SidebarMenu() {
   const history = useHistory();
   const location = useLocation();
+
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [currentItem, setCurrentItem] = React.useState(null);
 
   const menuItemsMapper = (list) => {
     return list.map((item, index) => {
@@ -18,33 +22,41 @@ export default function SidebarMenu() {
         : null;
 
       const matchPath = (pathname, path) => {
-        return item.matchExact ? pathname === path : pathname.indexOf(path) !== -1;
+        return item.matchExact
+          ? pathname === path
+          : pathname.indexOf(path) !== -1;
       };
-      const isActive = (item.children) ?
-        item.children.some((c) => matchPath(location.pathname, c.href)) :
-        (item.href && matchPath(location.pathname, item.href));
+      const isActive = item.children
+        ? item.children.some((c) => matchPath(location.pathname, c.href))
+        : item.href && matchPath(location.pathname, item.href);
 
       const handleItemClick = () => {
         if (item.href) {
           history.push(item.href);
         }
+        setIsOpen(true);
+        setCurrentItem(item);
       };
 
-      const maybeRenderLabel = (item) => item.newTabHref ? (
-        <Button
-          className="menu-item__add-btn"
-          icon={<Icon icon={'plus'} iconSize={16} />}
-          onClick={(event) => {
-            history.push(item.newTabHref);
-            event.stopPropagation();
-          }}
-        />
-      ) : null;
+      const maybeRenderLabel = (item) =>
+        item.newTabHref ? (
+          <Button
+            className="menu-item__add-btn"
+            icon={<Icon icon={'plus'} iconSize={16} />}
+            onClick={(event) => {
+              history.push(item.newTabHref);
+              event.stopPropagation();
+            }}
+          />
+        ) : null;
 
       return item.spacer ? (
-        <div class="bp3-menu-spacer" style={{
-          'height': `${item.spacer}px`,
-        }}></div>
+        <div
+          class="bp3-menu-spacer"
+          style={{
+            height: `${item.spacer}px`,
+          }}
+        ></div>
       ) : item.divider ? (
         <MenuDivider key={index} title={item.title} />
       ) : item.label ? (
@@ -72,5 +84,14 @@ export default function SidebarMenu() {
   };
   const items = menuItemsMapper(sidebarMenuList);
 
-  return <Menu className="sidebar-menu">{items}</Menu>;
+  return (
+    <div>
+      <Menu className="sidebar-menu">{items}</Menu>{' '}
+
+      <SidebarOverlay
+        isOpen={isOpen}
+        items={currentItem?.children || []}
+      />
+    </div>
+  );
 }

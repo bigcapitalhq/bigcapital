@@ -6,6 +6,7 @@
   color: $sidebar-text-color;
   height: 100%;
   z-index: $sidebar-zindex;
+  position: relative;
 
   .ScrollbarsCustom-Track {
 
@@ -346,6 +347,12 @@
     &__name {
       margin-left: 12px;
       font-weight: 600;
+    }
+
+    &__divider{
+      margin: 4px 0;
+      height: 1px;
+      background: #ebebeb;
     }
   }
 }

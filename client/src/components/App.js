@@ -48,7 +48,7 @@ function App({ locale }) {
           <div className="App">
             <Router history={history}>
               <Switch>
-                <Route path={'/auth'} component={Authentication} />
+                {/* <Route path={'/auth'} component={Authentication} /> */}
                 <Route path={'/'}>
                   <PrivateRoute component={DashboardPrivatePages} />
                 </Route>

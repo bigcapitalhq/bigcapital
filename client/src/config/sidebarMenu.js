@@ -137,6 +137,7 @@ export default [
         text: <T id={'all_reports'} />,
         href: '/financial-reports',
         matchExact: true,
+        label: true
       },
       {
         divider: true,
