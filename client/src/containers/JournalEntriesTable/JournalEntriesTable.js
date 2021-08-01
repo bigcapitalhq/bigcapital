@@ -6,7 +6,7 @@ import moment from 'moment';
 /**
  * Journal entries table.
  */
-export default function JournalEntriesTable({ journal }) {
+export default function JournalEntriesTable({ transactions }) {
   const columns = React.useMemo(
     () => [
       {
@@ -17,22 +17,22 @@ export default function JournalEntriesTable({ journal }) {
       },
       {
         Header: intl.get('account_name'),
-        accessor: 'account_name',
+        accessor: 'accountName',
         width: 150,
       },
       {
         Header: intl.get('contact'),
-        accessor: 'contact',
+        accessor: 'contactTypeFormatted',
         width: 150,
       },
       {
         Header: intl.get('credit'),
-        accessor: 'credit',
+        accessor: ({ credit }) => credit.formattedAmount,
         width: 100,
       },
       {
         Header: intl.get('debit'),
-        accessor: 'debit',
+        accessor: ({ debit }) => debit.formattedAmount,
         width: 100,
       },
     ],
@@ -43,7 +43,7 @@ export default function JournalEntriesTable({ journal }) {
     <Card>
       <DataTable
         columns={columns}
-        data={journal}
+        data={transactions}
         className={'datatable--journal-entries'}
       />
     </Card>

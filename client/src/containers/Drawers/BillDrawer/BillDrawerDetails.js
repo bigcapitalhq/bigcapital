@@ -4,11 +4,14 @@ import intl from 'react-intl-universal';
 
 import LocatedLandedCostTable from './LocatedLandedCostTable';
 import JournalEntriesTable from '../../JournalEntriesTable/JournalEntriesTable';
+import { useBillDrawerContext } from './BillDrawerProvider';
 
 /**
  * Bill view details.
  */
 export default function BillDrawerDetails() {
+  const { data } = useBillDrawerContext();
+
   return (
     <div className="view-detail-drawer">
       <Tabs animate={true} large={true} defaultSelectedTabId="landed_cost">
@@ -16,7 +19,7 @@ export default function BillDrawerDetails() {
         <Tab
           title={intl.get('journal_entries')}
           id={'journal_entries'}
-          panel={<JournalEntriesTable />}
+          panel={<JournalEntriesTable transactions={data} />}
         />
         <Tab
           title={intl.get('located_landed_cost')}

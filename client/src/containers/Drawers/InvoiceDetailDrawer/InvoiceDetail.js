@@ -3,11 +3,14 @@ import { Tabs, Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
 import JournalEntriesTable from '../../JournalEntriesTable/JournalEntriesTable';
+import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 /**
  * Invoice view detail.
  */
 export default function InvoiceDetail() {
+  const { data } = useInvoiceDetailDrawerContext();
+
   return (
     <div className="view-detail-drawer">
       <Tabs
@@ -20,7 +23,7 @@ export default function InvoiceDetail() {
         <Tab
           title={intl.get('journal_entries')}
           id={'journal_entries'}
-          panel={<JournalEntriesTable journal={[]} />}
+          panel={<JournalEntriesTable transactions={data} />}
         />
       </Tabs>
     </div>
