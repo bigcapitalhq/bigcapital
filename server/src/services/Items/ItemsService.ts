@@ -1,5 +1,6 @@
-import { defaultTo, difference } from 'lodash';
+import { defaultTo } from 'lodash';
 import { Service, Inject } from 'typedi';
+import * as R from 'ramda';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -526,19 +527,36 @@ export default class ItemsService implements IItemsService {
   }
 
   /**
+   * Parses items list filter DTO.
+   * @param {} filterDTO - Filter DTO.
+   */
+  private parseItemsListFilterDTO(filterDTO) {
+    return R.compose(
+      this.dynamicListService.parseStringifiedFilter,
+    )(filterDTO);
+  }
+
+  /**
    * Retrieve items datatable list.
    * @param {number} tenantId
    * @param {IItemsFilter} itemsFilter
    */
-  public async itemsList(tenantId: number, itemsFilter: IItemsFilter) {
+  public async itemsList(tenantId: number, filterDTO: IItemsFilter) {
     const { Item } = this.tenancy.models(tenantId);
+
+    // Parses items list filter DTO.
+    const filter = this.parseItemsListFilterDTO(filterDTO);
+
+    // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
       tenantId,
       Item,
-      itemsFilter
+      filter
     );
     const { results: items, pagination } = await Item.query()
       .onBuild((builder) => {
+        builder.modify('inactiveMode', filter.inactiveMode);
+
         builder.withGraphFetched('inventoryAccount');
         builder.withGraphFetched('sellAccount');
         builder.withGraphFetched('costAccount');
@@ -546,7 +564,7 @@ export default class ItemsService implements IItemsService {
 
         dynamicFilter.buildQuery()(builder);
       })
-      .pagination(itemsFilter.page - 1, itemsFilter.pageSize);
+      .pagination(filter.page - 1, filter.pageSize);
 
     const results = items.map((item) =>
       this.transformItemToResponse(tenantId, item)

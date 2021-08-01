@@ -1,7 +1,9 @@
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
 import PaginationQueryBuilder from './Pagination';
 import QueryParser from 'lib/LogicEvaluation/QueryParser';
+import ModelSetting from './ModelSetting';
+import CustomerSettings from './Customer.Settings';
 
 class CustomerQueryBuilder extends PaginationQueryBuilder {
   constructor(...args) {
@@ -15,7 +17,7 @@ class CustomerQueryBuilder extends PaginationQueryBuilder {
   }
 }
 
-export default class Customer extends TenantModel {
+export default class Customer extends mixin(TenantModel, [ModelSetting]) {
   /**
    * Query builder.
    */
@@ -64,6 +66,13 @@ export default class Customer extends TenantModel {
   static get modifiers() {
     return {
       /**
+       * Inactive/Active mode.
+       */
+      inactiveMode(query, active = false) {
+        query.where('active', !active);
+      },
+
+      /**
        * Filters the active customers.
        */
       active(query) {
@@ -81,10 +90,9 @@ export default class Customer extends TenantModel {
       overdue(query) {
         query.select(
           '*',
-          Customer
-            .relatedQuery('overDueInvoices', query.knex())
+          Customer.relatedQuery('overDueInvoices', query.knex())
             .count()
-            .as('countOverdue'),
+            .as('countOverdue')
         );
         query.having('countOverdue', '>', 0);
       },
@@ -93,7 +101,7 @@ export default class Customer extends TenantModel {
        */
       unpaid(query) {
         query.whereRaw('`BALANCE` + `OPENING_BALANCE` <> 0');
-      }
+      },
     };
   }
 
@@ -122,77 +130,12 @@ export default class Customer extends TenantModel {
         },
         filter: (query) => {
           query.modify('overdue');
-        }
-      }
+        },
+      },
     };
   }
 
-  static get fields() {
-    return {
-      contact_service: {
-        column: 'contact_service',
-      },
-      display_name: {
-        column: 'display_name',
-      },
-      email: {
-        column: 'email',
-      },
-      work_phone: {
-        column: 'work_phone',
-      },
-      personal_phone: {
-        column: 'personal_phone',
-      },
-      company_name: {
-        column: 'company_name',
-      },
-      website: {
-        column: 'website'
-      },
-      created_at: {
-        column: 'created_at',
-      },
-      balance: {
-        column: 'balance',
-      },
-      opening_balance: {
-        column: 'opening_balance',
-      },
-      opening_balance_at: {
-        column: 'opening_balance_at',
-      },
-      currency_code: {
-        column: 'currency_code',
-      },
-      status: {
-        label: 'Status',
-        options: [
-          { key: 'active', label: 'Active' },
-          { key: 'inactive', label: 'Inactive' },
-          { key: 'overdue', label: 'Overdue' },
-          { key: 'unpaid', label: 'Unpaid' },
-        ],
-        query: (query, role) => {
-          switch(role.value) {
-            case 'active':
-              query.modify('active');
-              break;
-            case 'inactive':
-              query.modify('inactive');
-              break;
-            case 'overdue':
-              query.modify('overdue');
-              break;
-            case 'unpaid':
-              query.modify('unpaid');
-              break;
-          }
-        },
-      },
-      created_at: {
-        column: 'created_at',
-      }
-    };
+  static get meta() {
+    return CustomerSettings;
   }
 }

@@ -284,23 +284,15 @@ export default class SaleInvoicesController extends BaseController {
   ) {
     const { tenantId } = req;
     const filter = {
-      filterRoles: [],
       sortOrder: 'asc',
       columnSortBy: 'created_at',
       page: 1,
       pageSize: 12,
       ...this.matchedQueryData(req),
     };
-    if (filter.stringifiedFilterRoles) {
-      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
-    }
-
     try {
-      const {
-        salesInvoices,
-        filterMeta,
-        pagination,
-      } = await this.saleInvoiceService.salesInvoicesList(tenantId, filter);
+      const { salesInvoices, filterMeta, pagination } =
+        await this.saleInvoiceService.salesInvoicesList(tenantId, filter);
 
       return res.status(200).send({
         sales_invoices: salesInvoices,

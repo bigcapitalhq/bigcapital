@@ -7,7 +7,9 @@ export interface IJournalReportQuery {
     noCents: boolean,
     divideOn1000: boolean,
   },
-  transactionTypes: string | string[],
+  transactionType: string,
+  transactionId: string,
+
   accountsIds: number | number[],
   fromRange: number,
   toRange: number,

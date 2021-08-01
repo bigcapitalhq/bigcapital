@@ -55,6 +55,7 @@ export * from './CashFlow';
 export * from './InventoryDetails';
 export * from './LandedCost';
 export * from './Entry';
+export * from './TransactionsByReference';
 
 export interface I18nService {
   __: (input: string) => string;

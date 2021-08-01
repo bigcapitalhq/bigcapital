@@ -185,6 +185,8 @@ export default class ItemsController extends BaseController {
 
       query('custom_view_id').optional().isNumeric().toInt(),
       query('stringified_filter_roles').optional().isJSON(),
+
+      query('inactive_mode').optional().isBoolean().toBoolean(),
     ];
   }
 
@@ -339,17 +341,16 @@ export default class ItemsController extends BaseController {
    */
   async getItemsList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
+
     const filter = {
-      filterRoles: [],
       sortOrder: 'asc',
       columnSortBy: 'created_at',
       page: 1,
       pageSize: 12,
+      inactiveMode: false,
       ...this.matchedQueryData(req),
     };
-    if (filter.stringifiedFilterRoles) {
-      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
-    }
+
     try {
       const {
         items,

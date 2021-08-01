@@ -1,6 +1,8 @@
-import { Model, QueryBuilder } from 'objection';
+import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
 import PaginationQueryBuilder from './Pagination';
+import ModelSetting from './ModelSetting';
+import VendorSettings from './Vendor.Settings';
 
 class VendorQueryBuilder extends PaginationQueryBuilder {
   constructor(...args) {
@@ -14,7 +16,7 @@ class VendorQueryBuilder extends PaginationQueryBuilder {
   }
 }
 
-export default class Vendor extends TenantModel {
+export default class Vendor extends mixin(TenantModel, [ModelSetting]) {
   /**
    * Query builder.
    */
@@ -62,6 +64,13 @@ export default class Vendor extends TenantModel {
    */
   static get modifiers() {
     return {
+      /**
+       * Inactive/Active mode.
+       */
+       inactiveMode(query, active = false) {
+        query.where('active', !active);
+      },
+
       /**
        * Filters the active customers.
        */
@@ -125,72 +134,7 @@ export default class Vendor extends TenantModel {
     };
   }
 
-  static get fields() {
-    return {
-      contact_service: {
-        column: 'contact_service',
-      },
-      display_name: {
-        column: 'display_name',
-      },
-      email: {
-        column: 'email',
-      },
-      work_phone: {
-        column: 'work_phone',
-      },
-      personal_phone: {
-        column: 'personal_phone',
-      },
-      company_name: {
-        column: 'company_name',
-      },
-      website: {
-        column: 'website'
-      },
-      created_at: {
-        column: 'created_at',
-      },
-      balance: {
-        column: 'balance',
-      },
-      opening_balance: {
-        column: 'opening_balance',
-      },
-      opening_balance_at: {
-        column: 'opening_balance_at',
-      },
-      currency_code: {
-        column: 'currency_code',
-      },
-      status: {
-        label: 'Status',
-        options: [
-          { key: 'active', label: 'Active' },
-          { key: 'inactive', label: 'Inactive' },
-          { key: 'overdue', label: 'Overdue' },
-          { key: 'unpaid', label: 'Unpaid' },
-        ],
-        query: (query, role) => {
-          switch(role.value) {
-            case 'active':
-              query.modify('active');
-              break;
-            case 'inactive':
-              query.modify('inactive');
-              break;
-            case 'overdue':
-              query.modify('overdue');
-              break;
-            case 'unpaid':
-              query.modify('unpaid');
-              break;
-          }
-        },
-      },
-      created_at: {
-        column: 'created_at',
-      }
-    };
+  static get meta() {
+    return VendorSettings;
   }
 }

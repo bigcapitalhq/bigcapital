@@ -1,11 +1,11 @@
-@import '../../Base.scss';
+@import '../../../Base.scss';
 
-.bill-drawer {
+.view-detail-drawer {
   .bp3-tabs {
     .bp3-tab-list {
       position: relative;
-      background-color: #FFF;
-      
+      background-color: #fff;
+
       &:before {
         content: '';
         position: absolute;
@@ -31,10 +31,10 @@
       }
     }
 
-    .bp3-tab-panel{
+    .bp3-tab-panel {
       margin-top: 0;
 
-      .card{
+      .card {
         margin: 15px;
       }
     }
@@ -42,7 +42,6 @@
 
   .datatable--landed-cost-transactions {
     .table {
-
       .tbody,
       .tbody-inner {
         height: auto;
@@ -55,7 +54,7 @@
         .tr .td {
           padding: 0.6rem;
 
-          &.amount{
+          &.amount {
             font-weight: 600;
           }
         }

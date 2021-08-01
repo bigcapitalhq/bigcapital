@@ -1,6 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { difference, chain, uniq } from 'lodash';
 import { kebabCase } from 'lodash';
+import R from 'ramda';
 import TenancyService from 'services/Tenancy/TenancyService';
 import { ServiceError } from 'exceptions';
 import {
@@ -607,27 +608,43 @@ export default class AccountsService {
   }
 
   /**
+   * Parsees accounts list filter DTO.
+   * @param filterDTO 
+   * @returns 
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(
+      this.dynamicListService.parseStringifiedFilter
+    )(filterDTO);
+  }
+
+  /**
    * Retrieve accounts datatable list.
    * @param {number} tenantId
    * @param {IAccountsFilter} accountsFilter
    */
   public async getAccountsList(
     tenantId: number,
-    filter: IAccountsFilter
+    filterDTO: IAccountsFilter
   ): Promise<{ accounts: IAccountResponse[]; filterMeta: IFilterMeta }> {
     const { Account } = this.tenancy.models(tenantId);
+
+    // Parses the stringified filter roles.
+    const filter = this.parseListFilterDTO(filterDTO);
+
+    // Dynamic list service.
     const dynamicList = await this.dynamicListService.dynamicList(
       tenantId,
       Account,
       filter
     );
-
     this.logger.info('[accounts] trying to get accounts datatable list.', {
       tenantId,
       filter,
     });
     const accounts = await Account.query().onBuild((builder) => {
       dynamicList.buildQuery()(builder);
+      builder.modify('inactiveMode', filter.inactiveMode);
     });
 
     return {
@@ -727,10 +744,11 @@ export default class AccountsService {
     }));
     return flatToNestedArray(
       this.i18nService.i18nMapper(_accounts, ['account_type_label'], tenantId),
-    {
-      id: 'id',
-      parentId: 'parent_account_id',
-    });
+      {
+        id: 'id',
+        parentId: 'parent_account_id',
+      }
+    );
   }
 
   /**

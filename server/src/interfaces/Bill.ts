@@ -62,6 +62,8 @@ export interface IBill {
 
 export interface IBillsFilter extends IDynamicListFilterDTO {
   stringifiedFilterRoles?: string;
+  page: number;
+  pageSize: number;
 }
 
 export interface IBillsService {

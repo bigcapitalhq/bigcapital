@@ -1,8 +1,10 @@
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
 import { viewRolesBuilder } from 'lib/ViewRolesBuilder';
+import ModelSetting from './ModelSetting';
+import ExpenseSettings from './Expense.Settings';
 
-export default class Expense extends TenantModel {
+export default class Expense extends mixin(TenantModel, [ModelSetting]) {
   /**
    * Table name
    */
@@ -25,19 +27,8 @@ export default class Expense extends TenantModel {
   }
 
   /**
-   * Allows to mark model as resourceable to viewable and filterable.
+   * Virtual attributes.
    */
-  static get resourceable() {
-    return true;
-  }
-
-  /**
-   *
-   */
-  static get media() {
-    return true;
-  }
-
   static get virtualAttributes() {
     return ['isPublished', 'unallocatedCostAmount'];
   }
@@ -96,6 +87,18 @@ export default class Expense extends TenantModel {
       filterByPublished(query) {
         query.whereNot('published_at', null);
       },
+
+      filterByStatus(query, status) {
+        switch (status) {
+          case 'draft':
+            query.modify('filterByDraft');
+            break;
+          case 'published':
+          default:
+            query.modify('filterByPublished');
+            break;
+        }
+      },
     };
   }
 
@@ -142,71 +145,7 @@ export default class Expense extends TenantModel {
     };
   }
 
-  /**
-   * Model defined fields.
-   */
-  static get fields() {
-    return {
-      payment_date: {
-        label: 'Payment date',
-        column: 'payment_date',
-        columnType: 'date',
-      },
-      payment_account: {
-        label: 'Payment account',
-        column: 'payment_account_id',
-        relation: 'accounts.id',
-        optionsResource: 'account',
-      },
-      amount: {
-        label: 'Amount',
-        column: 'total_amount',
-        columnType: 'number',
-      },
-      currency_code: {
-        label: 'Currency',
-        column: 'currency_code',
-        optionsResource: 'currency',
-      },
-      reference_no: {
-        label: 'Reference No.',
-        column: 'reference_no',
-        columnType: 'string',
-      },
-      description: {
-        label: 'Description',
-        column: 'description',
-        columnType: 'string',
-      },
-      published: {
-        label: 'Published',
-        column: 'published_at',
-      },
-      status: {
-        label: 'Status',
-        options: [
-          { key: 'draft', label: 'Draft' },
-          { key: 'published', label: 'Published' },
-        ],
-        query: (query, role) => {
-          switch (role.value) {
-            case 'draft':
-              query.modify('filterByDraft');
-              break;
-            case 'published':
-              query.modify('filterByPublished');
-              break;
-          }
-        },
-        sortQuery(query, role) {
-          query.modify('sortByStatus', role.order);
-        },
-      },
-      created_at: {
-        label: 'Created at',
-        column: 'created_at',
-        columnType: 'date',
-      },
-    };
+  static get meta() {
+    return ExpenseSettings;
   }
 }

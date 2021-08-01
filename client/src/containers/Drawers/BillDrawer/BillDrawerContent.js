@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/components/Drawers/BillDrawer.scss';
+import 'style/components/Drawers/ViewDetail/ViewDetail.scss';
 
 import { BillDrawerProvider } from './BillDrawerProvider';
 import BillDrawerDetails from './BillDrawerDetails';

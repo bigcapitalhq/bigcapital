@@ -11,7 +11,7 @@ const CheckboxEditableCell = ({
   const [value, setValue] = React.useState(initialValue);
 
   const onChange = (e) => {
-    setValue(e.target.value);
+    setValue(e.target.checked);
   };
   const onBlur = () => {
     payload.updateData(index, id, value);
@@ -24,12 +24,13 @@ const CheckboxEditableCell = ({
 
   return (
     <FormGroup
-      // intent={error ? Intent.DANGER : null}
+      intent={error ? Intent.DANGER : null}
       className={classNames(Classes.FILL)}
     >
       <Checkbox
         value={value}
         onChange={onChange}
+        checked={initialValue}
         onBlur={onBlur}
         minimal={true}
         className="ml2"

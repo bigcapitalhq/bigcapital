@@ -26,15 +26,14 @@ export function AmountAccessor(row) {
  */
 export function ActionsMenu({
   row: { original },
-  payload: { onEdit, onDelete },
+  payload: { onEdit, onDelete, onViewDetails },
 }) {
-  
-
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
         text={intl.get('view_details')}
+        onClick={safeCallback(onViewDetails, original)}
       />
       <MenuDivider />
       <MenuItem
@@ -70,8 +69,6 @@ export function ActionsCell(props) {
  * Retrieve payment mades table columns.
  */
 export function usePaymentMadesTableColumns() {
-  
-
   return React.useMemo(
     () => [
       {
