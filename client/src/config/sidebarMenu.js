@@ -245,7 +245,7 @@ export default [
         href: '/financial-reports/payable-aging-summary',
       },
       {
-        text: <T id={'sales_purchases_reports'} />,
+        text: <T id={'Sales/Purchases'} />,
         label: true,
       },
       {
