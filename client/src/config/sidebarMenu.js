@@ -27,6 +27,28 @@ export default [
         text: <T id={'category_list'} />,
         href: '/items/categories',
       },
+      {
+        text: 'New tasks',
+        label: true,
+      },
+      {
+        divider: true,
+      },
+      {
+        text: <T id={'New inventory item'} />,
+        href: '/items/new',
+      },
+      {
+        text: <T id={'New service'} />,
+        href: '/items/new',
+      },
+      {
+        text: <T id={'New item category'} />,
+        href: '/items/categories/new',
+      },
+      {
+        text: 'New inventory adjustment',
+      },
     ],
   },
   {
@@ -49,12 +71,32 @@ export default [
         newTabHref: '/payment-receives/new',
       },
       {
-        divider: true,
-      },
-      {
         text: <T id={'receipts'} />,
         href: '/receipts',
         newTabHref: '/receipts/new',
+      },
+      {
+        text: 'New tasks',
+        label: true,
+      },
+      {
+        divider: true,
+      },
+      {
+        text: <T id={'new_estimate'} />,
+        href: '/estimates/new',
+      },
+      {
+        text: <T id={'new_invoice'} />,
+        href: '/invoices/new',
+      },
+      {
+        text: <T id={'new_receipt'} />,
+        href: '/receipts/new',
+      },
+      {
+        text: <T id={'new_payment_receive'} />,
+        href: '/payment-receives/new',
       },
     ],
   },
@@ -71,6 +113,21 @@ export default [
         href: '/payment-mades',
         newTabHref: '/payment-mades/new',
       },
+      {
+        text: 'New tasks',
+        label: true,
+      },
+      {
+        divider: true,
+      },
+      {
+        text: <T id={'New purchase invoice'} />,
+        href: '/bills/new',
+      },
+      {
+        text: <T id={'new_payment_made'} />,
+        href: '/payment-mades/new',
+      },
     ],
   },
   {
@@ -85,6 +142,21 @@ export default [
         text: <T id={'vendors'} />,
         href: '/vendors',
         newTabHref: '/vendors/new',
+      },
+      {
+        text: 'New tasks',
+        label: true,
+      },
+      {
+        divider: true,
+      },
+      {
+        text: <T id={'new_customer'} />,
+        href: '/customers/new',
+      },
+      {
+        text: <T id={'new_vendor'} />,
+        href: '/vendors/new',
       },
     ],
   },
@@ -104,12 +176,19 @@ export default [
         href: '/manual-journals',
       },
       {
-        text: <T id={'make_journal_entry'} />,
-        href: '/make-journal-entry',
-      },
-      {
         text: <T id={'exchange_rate'} />,
         href: '/exchange-rates',
+      },
+      {
+        text: 'New tasks',
+        label: true,
+      },
+      {
+        divider: true,
+      },
+      {
+        text: <T id={'make_journal_entry'} />,
+        href: '/make-journal-entry',
       },
     ],
   },
@@ -134,15 +213,6 @@ export default [
     text: <T id={'financial_reports'} />,
     children: [
       {
-        text: <T id={'all_reports'} />,
-        href: '/financial-reports',
-        matchExact: true,
-        label: true
-      },
-      {
-        divider: true,
-      },
-      {
         text: <T id={'balance_sheet'} />,
         href: '/financial-reports/balance-sheet',
       },
@@ -163,12 +233,62 @@ export default [
         href: '/financial-reports/profit-loss-sheet',
       },
       {
+        text: <T id={'cash_flow_statement'} />,
+        href: '/financial-reports/cash-flow',
+      },
+      {
         text: <T id={'AR_Aging_Summary'} />,
         href: '/financial-reports/receivable-aging-summary',
       },
       {
         text: <T id={'AP_Aging_Summary'} />,
         href: '/financial-reports/payable-aging-summary',
+      },
+      {
+        text: <T id={'sales_purchases_reports'} />,
+        label: true,
+      },
+      {
+        divider: true,
+      },
+      {
+        text: <T id={'purchases_by_items'} />,
+        href: '/financial-reports/purchases-by-items',
+      },
+      {
+        text: <T id={'sales_by_items'} />,
+        href: '/financial-reports/sales-by-items',
+      },
+      {
+        text: <T id={'customers_transactions'} />,
+        href: '/financial-reports/transactions-by-customers',
+      },
+      {
+        text: <T id={'vendors_transactions'} />,
+        href: '/financial-reports/transactions-by-vendors',
+      },
+      {
+        text: <T id={'customers_balance_summary'} />,
+        href: '/financial-reports/customers-balance-summary',
+      },
+      {
+        text: <T id={'vendors_balance_summary'} />,
+        href: '/financial-reports/vendors-balance-summary',
+      },
+      {
+        text: <T id={'inventory'} />,
+        label: true,
+      },
+      {
+        divider: true,
+      },
+      {
+        text: <T id={'inventory_item_details'} />,
+        href: '/financial-reports/inventory-item-details',
+      },
+      {
+        text: <T id={'inventory_valuation'} />,
+        href: '/financial-reports/inventory-valuation',
       },
     ],
   },

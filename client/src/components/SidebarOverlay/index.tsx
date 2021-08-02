@@ -2,24 +2,24 @@ import React from 'react';
 import { Overlay } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import SidebarOverlayContainer from './SidebarOverlayContainer';
-
 interface ISidebarOverlayItem {
   text: string;
   href: string;
   divider?: boolean;
-  label?: boolean
+  label?: boolean;
 }
 
 interface ISidebarOverlayProps {
   isOpen: boolean;
   items: ISidebarOverlayItem[];
-  overlayProps: any;
-  overlayContainerRef: any;
+  label: string;
+  onClose: Function;
 }
 
 interface ISidebarOverlayItemProps {
   text: string;
   href: string;
+  onLinkClick: Function;
 }
 
 interface ISidebarOverlayItemDivider {
@@ -28,16 +28,25 @@ interface ISidebarOverlayItemDivider {
 /**
  * Sidebar overlay item.
  */
-function SidebarOverlayItem({ text, href }: ISidebarOverlayItemProps) {
+function SidebarOverlayItem({
+  text,
+  href,
+  onLinkClick,
+}: ISidebarOverlayItemProps) {
+  const handleLinkClick = () => {
+    onLinkClick && onLinkClick();
+  };
   return (
     <div className="sidebar-overlay__item">
-      <Link to={href}>{text}</Link>
+      <Link onClick={handleLinkClick} to={href}>
+        {text}
+      </Link>
     </div>
   );
 }
 
 interface ISidebarOverlayItemLabel {
-	text: string;
+  text: string;
 }
 
 function SidebarOverlayLabel({ text }: ISidebarOverlayItemLabel) {
@@ -52,34 +61,75 @@ function SidebarOverlayDivider() {
  * Sidebar overlay component.
  */
 export default function SidebarOverlay({
-  isOpen = false,
+  label,
+  isOpen: controllerdIsOpen,
+  onClose,
   items,
 }: ISidebarOverlayProps) {
-  //
-  if (!isOpen) {
+  const [isEverOpened, setEverOpened] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(controllerdIsOpen);
+
+  React.useEffect(() => {
+    if (controllerdIsOpen && isOpen !== controllerdIsOpen) {
+      setIsOpen(controllerdIsOpen);
+    }
+  }, [controllerdIsOpen, setIsOpen, isOpen]);
+
+  React.useEffect(() => {
+    if (isOpen && !isEverOpened) {
+      setEverOpened(true);
+    }
+  }, [isEverOpened, isOpen]);
+
+  if (!isEverOpened) {
     return '';
   }
 
+  // Handle overlay close event.
   const handleOverlayClose = () => {
-	
+    setIsOpen(false);
+    onClose && onClose();
+  };
+  // Handle overlay open event.
+  const handleOverlayOpen = () => {
+    setIsOpen(true);
+  };
+  // Handle sidebar item link click.
+  const handleItemClick = () => {
+    setIsOpen(false);
+    onClose && onClose();
   };
 
   return (
     <Overlay
       isOpen={isOpen}
       portalContainer={document.getElementById('dashboard') || document.body}
-	  onClose={handleOverlayClose}
+      onClose={handleOverlayClose}
+      onOpening={handleOverlayOpen}
+      transitionDuration={200}
+      backdropClassName={'sidebar-overlay-backdrop'}
     >
-      <div className="sidebar-overlay">
+      <div className="sidebar-overlay sidebar-overlay-transition">
         <SidebarOverlayContainer>
           <div className="sidebar-overlay__menu">
+            {label && (
+              <>
+                <SidebarOverlayLabel text={label} />
+                <SidebarOverlayDivider />
+              </>
+            )}
+
             {items.map((item) =>
               item.divider ? (
                 <SidebarOverlayDivider />
               ) : item.label ? (
                 <SidebarOverlayLabel text={item.text} />
               ) : (
-                <SidebarOverlayItem text={item.text} href={item.href} />
+                <SidebarOverlayItem
+                  onLinkClick={handleItemClick}
+                  text={item.text}
+                  href={item.href}
+                />
               ),
             )}
           </div>
