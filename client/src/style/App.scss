@@ -295,7 +295,7 @@ html[lang^="ar"] {
     &-appear-active,
     &-enter-active {
       transform: translateX(0) !important;
-      transition: all 200ms ease-in-out;
+      transition: all 100ms ease-in-out;
     }
     
     &-appear-done,
@@ -308,7 +308,7 @@ html[lang^="ar"] {
     }   
     &-exit-active {
       transform: translateX(-100%) !important;
-      transition: all 200ms ease-in-out;
+      transition: all 100ms ease-in-out;
     }
     &-exit-done{
       transform: translateX(-100%) !important;

@@ -106,7 +106,7 @@ export default function SidebarOverlay({
       portalContainer={document.getElementById('dashboard') || document.body}
       onClose={handleOverlayClose}
       onOpening={handleOverlayOpen}
-      transitionDuration={200}
+      transitionDuration={100}
       backdropClassName={'sidebar-overlay-backdrop'}
     >
       <div className="sidebar-overlay sidebar-overlay-transition">
