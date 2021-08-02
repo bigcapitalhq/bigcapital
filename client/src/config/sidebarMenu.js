@@ -204,6 +204,13 @@ export default [
         href: '/expenses',
       },
       {
+        text: 'New tasks',
+        label: true,
+      },
+      {
+        divider: true,
+      },
+      {
         text: <T id={'new_expense'} />,
         href: '/expenses/new',
       },
