@@ -8,6 +8,11 @@ import { MenuItemLabel } from 'components';
 import classNames from 'classnames';
 import SidebarOverlay from 'components/SidebarOverlay';
 
+const DEFAULT_ITEM = {
+  text: '',
+  href: '',
+}
+
 export default function SidebarMenu() {
   const history = useHistory();
   const location = useLocation();
@@ -17,18 +22,16 @@ export default function SidebarMenu() {
 
   const menuItemsMapper = (list) => {
     return list.map((item, index) => {
-      const children = Array.isArray(item.children)
-        ? menuItemsMapper(item.children)
-        : null;
+      const hasChildren = Array.isArray(item.children);
 
       const matchPath = (pathname, path) => {
         return item.matchExact
           ? pathname === path
           : pathname.indexOf(path) !== -1;
       };
-      const isActive = item.children
+      const isActive = (item.children
         ? item.children.some((c) => matchPath(location.pathname, c.href))
-        : item.href && matchPath(location.pathname, item.href);
+        : item.href && matchPath(location.pathname, item.href)) || currentItem ===item;
 
       const handleItemClick = () => {
         if (item.href) {
@@ -69,20 +72,24 @@ export default function SidebarMenu() {
           text={item.text}
           label={maybeRenderLabel(item)}
           disabled={item.disabled}
-          children={children}
           dropdownType={item.dropdownType || 'collapse'}
           caretIconSize={16}
           onClick={handleItemClick}
           callapseActive={!!isActive}
           itemClassName={classNames({
             'is-active': isActive,
-            'has-icon': !children && item.icon,
+            'has-icon': !hasChildren && item.icon,
           })}
+          hasSubmenu={hasChildren}
         />
       );
     });
   };
   const items = menuItemsMapper(sidebarMenuList);
+
+  const handleSidebarOverlayClose = () => {
+    setIsOpen(false);
+  }
 
   return (
     <div>
@@ -90,7 +97,9 @@ export default function SidebarMenu() {
 
       <SidebarOverlay
         isOpen={isOpen}
+        label={currentItem?.text || ''}
         items={currentItem?.children || []}
+        onClose={handleSidebarOverlayClose}
       />
     </div>
   );
