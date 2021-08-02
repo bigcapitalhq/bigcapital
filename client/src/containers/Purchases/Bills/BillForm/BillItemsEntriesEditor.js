@@ -4,9 +4,8 @@ import { FastField } from 'formik';
 import { CLASSES } from 'common/classes';
 import { useBillFormContext } from './BillFormProvider';
 import ItemsEntriesTable from 'containers/Entries/ItemsEntriesTable';
-import {
-  entriesFieldShouldUpdate
-} from './utils';
+import { entriesFieldShouldUpdate } from './utils';
+import { ITEM_TYPE } from 'containers/Entries/utils';
 
 /**
  * Bill form body. 
@@ -35,6 +34,7 @@ export default function BillFormBody({ defaultBill }) {
             errors={error}
             linesNumber={4}
             currencyCode={values.currency_code}
+            itemType={ITEM_TYPE.PURCHASABLE}
             landedCost={true}
           />
         )}

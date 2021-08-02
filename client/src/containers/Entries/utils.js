@@ -1,4 +1,3 @@
-import { repeat } from 'lodash';
 import { toSafeNumber } from 'utils';
 
 /**

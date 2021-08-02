@@ -65,12 +65,12 @@ function ItemsEntriesTable({
       const { rowIndex } = rowItem;
       const price =
         itemType === ITEM_TYPE.PURCHASABLE
-          ? item.purchase_price
+          ? item.cost_price
           : item.sell_price;
 
       const description =
         itemType === ITEM_TYPE.PURCHASABLE
-          ? item.purchase_description
+          ? item.cost_description
           : item.sell_description;
 
       // Update the rate, description and quantity data of the row.
