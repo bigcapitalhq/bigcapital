@@ -1,0 +1,14 @@
+.datatable--journal-entries {
+  .table {
+    .tbody {
+      .tr .td {
+        min-height: 42px;
+
+        &.credit,
+        &.debit {
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
