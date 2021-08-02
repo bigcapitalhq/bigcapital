@@ -16,7 +16,7 @@ export default function BillDrawerDetails() {
 
   return (
     <div className="view-detail-drawer">
-      <Tabs animate={true} large={true} defaultSelectedTabId="landed_cost">
+      <Tabs animate={true} large={true} defaultSelectedTabId="journal_entries">
         <Tab title={intl.get('details')} id={'details'} disabled={true} />
         <Tab
           title={intl.get('journal_entries')}
@@ -32,3 +32,5 @@ export default function BillDrawerDetails() {
     </div>
   );
 }
+
+// 42 / fon-w 600
