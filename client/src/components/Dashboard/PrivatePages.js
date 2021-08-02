@@ -17,16 +17,16 @@ export default function DashboardPrivatePages() {
   return (
     <PrivatePagesProvider>
       <Switch>
-        <Route path={'/setup'}>
+        {/* <Route path={'/setup'}>
           <EnsureOrganizationIsNotReady>
             <SetupWizardPage />
           </EnsureOrganizationIsNotReady>
-        </Route>
+        </Route> */}
 
         <Route path='/'>
-          <EnsureOrganizationIsReady>
+          {/* <EnsureOrganizationIsReady> */}
             <Dashboard />
-          </EnsureOrganizationIsReady>
+          {/* </EnsureOrganizationIsReady> */}
         </Route>
       </Switch>
     </PrivatePagesProvider>

@@ -5,14 +5,14 @@ import DashboardContentRoute from 'components/Dashboard/DashboardContentRoute';
 import DashboardFooter from 'components/Dashboard/DashboardFooter';
 import DashboardErrorBoundary from './DashboardErrorBoundary';
 
-export default function () {
+export default React.forwardRef(({}, ref) => {
   return (
     <ErrorBoundary FallbackComponent={DashboardErrorBoundary}>
-      <div className="dashboard-content" id="dashboard">
+      <div className="dashboard-content" id="dashboard" ref={ref}>
         <DashboardTopbar />
         <DashboardContentRoute />
         <DashboardFooter />
       </div>
     </ErrorBoundary>
   );
-}
+});

@@ -145,9 +145,10 @@ export default class MenuItem extends AbstractPureComponent2 {
             tagName = "a",
             dropdownType,
             caretIconSize = 16,
+            hasSubmenu,
             ...htmlProps
         } = this.props;
-        const hasSubmenu = children != null;
+        
 
         const intentClass = Classes.intentClass(intent);
         const anchorClasses = classNames(

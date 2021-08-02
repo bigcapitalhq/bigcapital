@@ -1172,5 +1172,10 @@
   "invoice_details":"Invoice details",
   "receipt_details":"Receipt details",
   "payment_receive_details":"Payment receive details",
-  "payment_made_details":"Payment made details"
+  "payment_made_details":"Payment made details",
+  "New item category": "New item category",
+  "New service": "New service",
+  "New inventory item": "New inventory item",
+  "New purchase invoice": "New purchase invoice",
+  "Sales/Purchases": "Sales/Purchases"
 }
