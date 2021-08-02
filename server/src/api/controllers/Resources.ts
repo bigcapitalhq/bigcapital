@@ -84,13 +84,13 @@ export default class ResourceController extends BaseController {
     const { resource_model: resourceModel } = req.params;
 
     try {
-      const resourceFields = this.resourcesService.getResourceFields(
-        tenantId,
-        resourceModel
-      );
+      // const resourceFields = this.resourcesService.getResourceFields(
+      //   tenantId,
+      //   resourceModel
+      // );
 
       return res.status(200).send({
-        resource_fields: this.transfromToResponse(resourceFields),
+        resource_fields: [],
       });
     } catch (error) {
       next(error);

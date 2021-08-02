@@ -1,6 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { difference, upperFirst, omit } from 'lodash';
 import moment from 'moment';
+import * as R from 'ramda';
 import { ServiceError } from 'exceptions';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
@@ -206,6 +207,16 @@ export default class ContactsService {
   }
 
   /**
+   * Parsees accounts list filter DTO.
+   * @param filterDTO
+   */
+   private parseAutocompleteListFilterDTO(filterDTO) {
+    return R.compose(
+      this.dynamicListService.parseStringifiedFilter
+    )(filterDTO);
+  }
+
+  /**
    * Retrieve auto-complete contacts list.
    * @param {number} tenantId -
    * @param {IContactsAutoCompleteFilter} contactsFilter -
@@ -213,23 +224,26 @@ export default class ContactsService {
    */
   async autocompleteContacts(
     tenantId: number,
-    contactsFilter: IContactsAutoCompleteFilter
+    query: IContactsAutoCompleteFilter
   ) {
     const { Contact } = this.tenancy.models(tenantId);
 
+    // Parses auto-complete list filter DTO.
+    const filter = this.parseAutocompleteListFilterDTO(query);
+
     // Dynamic list.
-    const dynamicList = await this.dynamicListService.dynamicList(
-      tenantId,
-      Contact,
-      contactsFilter
-    );
+    // const dynamicList = await this.dynamicListService.dynamicList(
+    //   tenantId,
+    //   Contact,
+    //   filter
+    // );
     // Retrieve contacts list by the given query.
     const contacts = await Contact.query().onBuild((builder) => {
-      if (contactsFilter.keyword) {
-        builder.where('display_name', 'LIKE', `%${contactsFilter.keyword}%`);
+      if (filter.keyword) {
+        builder.where('display_name', 'LIKE', `%${filter.keyword}%`);
       }
-      dynamicList.buildQuery()(builder);
-      builder.limit(contactsFilter.limit);
+      // dynamicList.buildQuery()(builder);
+      builder.limit(filter.limit);
     });
     return contacts;
   }

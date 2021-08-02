@@ -1,6 +1,7 @@
 import { check, param, query, body, ValidationChain } from 'express-validator';
 import { Router, Request, Response, NextFunction } from 'express';
 import { Inject, Service } from 'typedi';
+import * as R from 'ramda';
 import BaseController from 'api/controllers/BaseController';
 import ContactsService from 'services/Contacts/ContactsService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
@@ -87,9 +88,6 @@ export default class ContactsController extends BaseController {
       limit: 10,
       ...this.matchedQueryData(req),
     };
-    if (filter.stringifiedFilterRoles) {
-      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
-    }
     try {
       const contacts = await this.contactsService.autocompleteContacts(
         tenantId,
