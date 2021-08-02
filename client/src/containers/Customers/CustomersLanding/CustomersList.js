@@ -11,7 +11,7 @@ import CustomersAlerts from 'containers/Customers/CustomersAlerts';
 import { CustomersListProvider } from './CustomersListProvider';
 
 import withCustomers from './withCustomers';
-import { transformTableStateToQuery, compose } from 'utils';
+import { compose } from 'utils';
 
 /**
  * Customers list.
@@ -21,9 +21,7 @@ function CustomersList({
   customersTableState,
 }) {
   return (
-    <CustomersListProvider
-      query={transformTableStateToQuery(customersTableState)}
-    >
+    <CustomersListProvider tableState={customersTableState}>
       <CustomersActionsBar />
 
       <DashboardPageContent>

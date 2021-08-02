@@ -1,7 +1,10 @@
 import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from 'components';
-import { defaultFastFieldShouldUpdate } from 'utils';
+import {
+  transformTableStateToQuery,
+  defaultFastFieldShouldUpdate,
+} from 'utils';
 
 export const transitionItemTypeKeyToLabel = (itemTypeKey) => {
   const table = {
@@ -121,3 +124,10 @@ export const purchaseDescFieldShouldUpdate = (newProps, oldProps) => {
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
+
+export function transformItemsTableState(tableState) {
+  return {
+    ...transformTableStateToQuery(tableState),
+    inactive_mode: tableState.inactiveMode,
+  };
+}

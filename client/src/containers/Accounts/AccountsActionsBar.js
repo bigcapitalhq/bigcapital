@@ -10,6 +10,7 @@ import {
   PopoverInteractionKind,
   Position,
   Intent,
+  Switch,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { FormattedMessage as T } from 'components';
@@ -36,6 +37,7 @@ function AccountsActionsBar({
 
   // #withAccounts
   accountsSelectedRows,
+  accountsInactiveMode,
 
   // #withAlertActions
   openAlert,
@@ -72,6 +74,12 @@ function AccountsActionsBar({
   // Handle tab changing.
   const handleTabChange = (customView) => {
     setAccountsTableState({ customViewId: customView.id || null });
+  };
+
+  // Handle inactive switch changing.
+  const handleInactiveSwitchChange = (event) => {
+    const checked = event.target.checked;
+    setAccountsTableState({ inactiveMode: checked });
   };
 
   return (
@@ -149,6 +157,11 @@ function AccountsActionsBar({
           icon={<Icon icon="file-import-16" iconSize={16} />}
           text={<T id={'import'} />}
         />
+        <Switch
+          labelElement={<T id={'inactive'} />}
+          defaultChecked={accountsInactiveMode}
+          onChange={handleInactiveSwitchChange}
+        />
       </NavbarGroup>
     </DashboardActionsBar>
   );
@@ -157,8 +170,9 @@ function AccountsActionsBar({
 export default compose(
   withDialogActions,
   withAlertActions,
-  withAccounts(({ accountsSelectedRows }) => ({
+  withAccounts(({ accountsSelectedRows, accountsTableState }) => ({
     accountsSelectedRows,
+    accountsInactiveMode: accountsTableState.inactiveMode,
   })),
   withAccountsTableActions,
 )(AccountsActionsBar);

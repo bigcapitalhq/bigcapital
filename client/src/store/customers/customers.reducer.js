@@ -7,6 +7,7 @@ const initialState = {
   tableState: {
     pageSize: 12,
     pageIndex: 0,
+    inactiveMode: false,
   },
 };
 

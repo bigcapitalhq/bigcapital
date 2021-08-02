@@ -217,6 +217,26 @@ $dashboard-views-bar-height: 45px;
           margin-right: 0;
         }
       }
+
+      .bp3-control.bp3-switch{
+        margin-bottom: 0;
+        margin-left: 8px;
+
+        .bp3-control-indicator{
+          height: 16px;
+          min-width: 1.8em;
+        }
+
+        .bp3-control-indicator::before{
+          box-shadow: 0 0 0;
+        }
+        input ~ .bp3-control-indicator{
+          background: rgba(167, 182, 194, 0.55);
+        }
+        input:checked ~ .bp3-control-indicator{
+          background: #0069ff;
+        }
+      }
     }
   }
 

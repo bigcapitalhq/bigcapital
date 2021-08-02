@@ -8,6 +8,7 @@ import {
   Popover,
   Position,
   PopoverInteractionKind,
+  Switch
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
@@ -34,15 +35,13 @@ function CustomerActionsBar({
 
   // #withCustomersActions
   setCustomersTableState,
+  accountsInactiveMode,
 
   // #withAlertActions
   openAlert,
 }) {
   // History context.
   const history = useHistory();
-  
-  // React intl
-  
 
   // Customers list context.
   const { customersViews } = useCustomersListContext();
@@ -60,6 +59,11 @@ function CustomerActionsBar({
     setCustomersTableState({
       customViewId: viewId.id || null,
     });
+  };
+  // Handle inactive switch changing.
+  const handleInactiveSwitchChange = (event) => {
+    const checked = event.target.checked;
+    setCustomersTableState({ inactiveMode: checked });
   };
 
   return (
@@ -86,7 +90,7 @@ function CustomerActionsBar({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={`${intl.get('filters_applied')}`}
+            text={`${intl.get('filter')}`}
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>
@@ -110,6 +114,11 @@ function CustomerActionsBar({
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
         />
+        <Switch
+          labelElement={<T id={'inactive'} />}
+          defaultChecked={accountsInactiveMode}
+          onChange={handleInactiveSwitchChange}
+        />
       </NavbarGroup>
     </DashboardActionsBar>
   );
@@ -117,8 +126,9 @@ function CustomerActionsBar({
 
 export default compose(
   withCustomersActions,
-  withCustomers(({ customersSelectedRows }) => ({
+  withCustomers(({ customersSelectedRows, customersTableState }) => ({
     customersSelectedRows,
+    accountsInactiveMode: customersTableState.inactiveMode,
   })),
   withAlertActions,
 )(CustomerActionsBar);

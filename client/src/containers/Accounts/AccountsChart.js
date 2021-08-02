@@ -12,7 +12,8 @@ import AccountsDataTable from './AccountsDataTable';
 
 import withAccounts from 'containers/Accounts/withAccounts';
 
-import { transformTableStateToQuery, compose } from 'utils';
+import { compose } from 'utils';
+import { transformAccountsStateToQuery } from './utils';
 
 /**
  * Accounts chart list.
@@ -23,7 +24,7 @@ function AccountsChart({
 }) {
   return (
     <AccountsChartProvider
-      query={transformTableStateToQuery(accountsTableState)}
+      query={transformAccountsStateToQuery(accountsTableState)}
     >
       <AccountsActionsBar />
 

@@ -12,7 +12,7 @@ import VendorsTable from './VendorsTable';
 
 import withVendors from './withVendors';
 
-import { transformTableStateToQuery, compose } from 'utils';
+import { compose } from 'utils';
 
 /**
  * Vendors list page.
@@ -22,7 +22,7 @@ function VendorsList({
   vendorsTableState,
 }) {
   return (
-    <VendorsListProvider query={transformTableStateToQuery(vendorsTableState)}>
+    <VendorsListProvider tableState={vendorsTableState}>
       <VendorActionsBar />
 
       <DashboardPageContent>

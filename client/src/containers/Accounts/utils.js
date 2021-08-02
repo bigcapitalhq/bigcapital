@@ -3,7 +3,7 @@ import { Intent, Tag } from '@blueprintjs/core';
 import { If, AppToaster } from 'components';
 import intl from 'react-intl-universal';
 import { NormalCell, BalanceCell } from './components';
-import { isBlank, compose } from 'utils';
+import { transformTableStateToQuery, isBlank } from 'utils';
 
 /**
  * Account name accessor.
@@ -100,3 +100,13 @@ export const useAccountsTableColumns = () => {
 export const rowClassNames = (row) => ({
   inactive: !row.original.active,
 });
+
+/**
+ * Transformes the table state to list query.
+ */
+export const transformAccountsStateToQuery = (tableState) => {
+  return {
+    ...transformTableStateToQuery(tableState),
+    inactive_mode: tableState.inactiveMode,
+  }
+}

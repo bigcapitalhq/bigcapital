@@ -10,6 +10,7 @@ import {
   Button,
   Classes,
   Intent,
+  Switch,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
@@ -34,6 +35,7 @@ function ItemsActionsBar({
 
   // #withItemActions
   setItemsTableState,
+  itemsInactiveMode,
 
   // #withAlertActions
   openAlert,
@@ -42,7 +44,6 @@ function ItemsActionsBar({
   const { itemsViews } = useItemsListContext();
 
   // React intl.
-  
 
   // History context.
   const history = useHistory();
@@ -60,6 +61,12 @@ function ItemsActionsBar({
   // Handle cancel/confirm items bulk.
   const handleBulkDelete = () => {
     openAlert('items-bulk-delete', { itemsIds: itemsSelectedRows });
+  };
+
+  // Handle inactive switch changing.
+  const handleInactiveSwitchChange = (event) => {
+    const checked = event.target.checked;
+    setItemsTableState({ inactiveMode: checked });
   };
 
   return (
@@ -112,13 +119,21 @@ function ItemsActionsBar({
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
         />
+        <Switch
+          labelElement={<T id={'inactive'} />}
+          defaultChecked={itemsInactiveMode}
+          onChange={handleInactiveSwitchChange}
+        />
       </NavbarGroup>
     </DashboardActionsBar>
   );
 }
 
 export default compose(
-  withItems(({ itemsSelectedRows }) => ({ itemsSelectedRows })),
+  withItems(({ itemsSelectedRows, itemsTableState }) => ({
+    itemsSelectedRows,
+    itemsInactiveMode: itemsTableState.inactiveMode,
+  })),
   withItemsActions,
   withAlertActions,
 )(ItemsActionsBar);

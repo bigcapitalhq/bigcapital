@@ -217,7 +217,7 @@ export default [
     ],
   },
   {
-    text: <T id={'financial_reports'} />,
+    text: <T id={'Reports'} />,
     children: [
       {
         text: <T id={'balance_sheet'} />,

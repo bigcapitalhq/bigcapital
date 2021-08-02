@@ -12,7 +12,6 @@ import ItemsDataTable from './ItemsDataTable';
 
 import { ItemsListProvider } from './ItemsListProvider';
 import withItems from './withItems';
-import { transformTableStateToQuery } from 'utils';
 
 /**
  * Items list.
@@ -22,7 +21,7 @@ function ItemsList({
   itemsTableState,
 }) {
   return (
-    <ItemsListProvider query={transformTableStateToQuery(itemsTableState)}>
+    <ItemsListProvider tableState={itemsTableState}>
       <ItemsActionsBar />
 
       <DashboardPageContent>

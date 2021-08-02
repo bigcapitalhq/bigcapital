@@ -9,6 +9,7 @@ const initialState = {
     pageSize: 12,
     pageIndex: 0,
     filters: [],
+    inactiveMode: false,
   },
   selectedRows: [],
 };

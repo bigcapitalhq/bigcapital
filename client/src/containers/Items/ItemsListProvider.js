@@ -1,6 +1,7 @@
 import React, { createContext } from 'react';
 
 import { transformTableQueryToParams, isTableEmptyStatus } from 'utils';
+import { transformItemsTableState } from './utils';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { useResourceViews, useResourceFields, useItems } from 'hooks/query';
@@ -11,9 +12,11 @@ const ItemsContext = createContext();
  * Items list provider.
  */
 function ItemsListProvider({
-  query,
+  tableState,
   ...props
 }) {
+  const tableQuery = transformItemsTableState(tableState);
+
   // Fetch accounts resource views and fields.
   const { data: itemsViews, isLoading: isViewsLoading } = useResourceViews(
     'items',
@@ -30,13 +33,13 @@ function ItemsListProvider({
     isFetching: isItemsFetching,
     isLoading: isItemsLoading,
   } = useItems({
-    ...transformTableQueryToParams(query)
+    ...transformTableQueryToParams(tableQuery)
   }, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus = isTableEmptyStatus({
     data: items, pagination, filterMeta,
-  }) && !isItemsFetching;
+  }) && !isItemsFetching && !tableState.inactiveMode;
 
   const state = {
     itemsViews,

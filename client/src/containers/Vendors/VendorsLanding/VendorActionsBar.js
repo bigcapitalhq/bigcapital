@@ -8,6 +8,7 @@ import {
   Popover,
   Position,
   PopoverInteractionKind,
+  Switch
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
@@ -21,6 +22,7 @@ import { useVendorsListContext } from './VendorsListProvider';
 import { useHistory } from 'react-router-dom';
 
 import withVendorsActions from './withVendorsActions';
+import withVendors from './withVendors';
 
 import { compose } from 'utils';
 
@@ -30,6 +32,7 @@ import { compose } from 'utils';
 function VendorActionsBar({
   // #withVendorActions
   setVendorsTableState,
+  vendorsInactiveMode
 }) {
   const history = useHistory();
   
@@ -45,6 +48,12 @@ function VendorActionsBar({
   // Handle the active tab change.
   const handleTabChange = (customView) => {
     setVendorsTableState({ customViewId: customView.id || null });
+  };
+
+  // Handle inactive switch changing.
+  const handleInactiveSwitchChange = (event) => {
+    const checked = event.target.checked;
+    setVendorsTableState({ inactiveMode: checked });
   };
   
   return (
@@ -98,6 +107,11 @@ function VendorActionsBar({
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
         />
+        <Switch
+          labelElement={<T id={'inactive'} />}
+          defaultChecked={vendorsInactiveMode}
+          onChange={handleInactiveSwitchChange}
+        />
       </NavbarGroup>
     </DashboardActionsBar>
   );
@@ -105,4 +119,7 @@ function VendorActionsBar({
 
 export default compose(
   withVendorsActions,
+  withVendors(({ vendorsTableState }) => ({
+    vendorsInactiveMode: vendorsTableState.inactiveMode,
+  })),
 )(VendorActionsBar);

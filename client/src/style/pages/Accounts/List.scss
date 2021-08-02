@@ -16,13 +16,6 @@
           padding-bottom: 0.3rem;
         }
 
-        .tr.inactive .td {
-          color: #646b82;
-
-          &.normal .#{$ns}-icon {
-            color: #9eaab6;
-          }
-        }
         .account_name {
           .bp3-popover-wrapper--inactive-semafro {
             margin-left: 8px;
