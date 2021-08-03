@@ -2,12 +2,14 @@ import React from 'react';
 import { Intent } from '@blueprintjs/core';
 import { sumBy, setWith, toSafeInteger, get } from 'lodash';
 import moment from 'moment';
+import * as R from 'ramda';
 import {
   transactionNumber,
   updateTableRow,
   repeatValue,
   transformToForm,
   defaultFastFieldShouldUpdate,
+  ensureEntriesHasEmptyLine
 } from 'utils';
 import { AppToaster } from 'components';
 import intl from 'react-intl-universal';
@@ -27,7 +29,6 @@ const ERROR = {
 export const MIN_LINES_NUMBER = 4;
 
 export const defaultEntry = {
-  index: 0,
   account_id: '',
   credit: '',
   debit: '',
@@ -48,17 +49,24 @@ export const defaultManualJournal = {
 
 // Transform to edit form.
 export function transformToEditForm(manualJournal) {
+  const defaultEntry = defaultManualJournal.entries[0];
+  const initialEntries = [
+    ...manualJournal.entries.map((entry) => ({
+      ...transformToForm(entry, defaultEntry),
+    })),
+    ...repeatValue(
+      defaultEntry,
+      Math.max(MIN_LINES_NUMBER - manualJournal.entries.length, 0),
+    ),
+  ];
+
+  const entries = R.compose(
+    ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, defaultEntry),
+  )(initialEntries);
+
   return {
     ...transformToForm(manualJournal, defaultManualJournal),
-    entries: [
-      ...manualJournal.entries.map((entry) => ({
-        ...transformToForm(entry, defaultManualJournal.entries[0]),
-      })),
-      ...repeatValue(
-        defaultEntry,
-        Math.max(MIN_LINES_NUMBER - manualJournal.entries.length, 0),
-      ),
-    ],
+    entries,
   };
 }
 

@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import * as R from 'ramda';
 import { defaultTo, isEmpty, omit } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
@@ -68,7 +69,6 @@ function MakeJournalEntriesForm({
               journal_number: defaultTo(journalNumber, ''),
             }),
             currency_code: baseCurrency,
-            entries: orderingLinesIndexes(defaultManualJournal.entries),
           }),
     }),
     [manualJournal, baseCurrency, journalNumber],
@@ -109,7 +109,7 @@ function MakeJournalEntriesForm({
       ...(values.journal_number_manually && {
         journal_number: values.journal_number,
       }),
-      entries,
+      entries: R.compose(orderingLinesIndexes)(entries),
       publish: submitPayload.publish,
     };
 

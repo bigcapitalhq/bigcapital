@@ -1,10 +1,12 @@
 import { AppToaster } from 'components';
 import moment from 'moment';
 import intl from 'react-intl-universal';
+import * as R from 'ramda';
 import {
   defaultFastFieldShouldUpdate,
   transformToForm,
   repeatValue,
+  ensureEntriesHasEmptyLine
 } from 'utils';
 
 const ERROR = {
@@ -27,7 +29,6 @@ export const transformErrors = (errors, { setErrors }) => {
 export const MIN_LINES_NUMBER = 4;
 
 export const defaultExpenseEntry = {
-  index: 0,
   amount: '',
   expense_account_id: '',
   description: '',
@@ -53,17 +54,23 @@ export const transformToEditForm = (
   defaultExpense,
   linesNumber = 4,
 ) => {
+  const expenseEntry = defaultExpense.categories[0];
+  const initialEntries = [
+    ...expense.categories.map((category) => ({
+      ...transformToForm(category, expenseEntry),
+    })),
+    ...repeatValue(
+      expenseEntry,
+      Math.max(linesNumber - expense.categories.length, 0),
+    ),
+  ];
+  const categories = R.compose(
+    ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, expenseEntry),
+  )(initialEntries);
+
   return {
     ...transformToForm(expense, defaultExpense),
-    categories: [
-      ...expense.categories.map((category) => ({
-        ...transformToForm(category, defaultExpense.categories[0]),
-      })),
-      ...repeatValue(
-        expense,
-        Math.max(linesNumber - expense.categories.length, 0),
-      ),
-    ],
+    categories,
   };
 };
 

@@ -11,9 +11,10 @@ import { ExpenseFormPageProvider } from './ExpenseFormPageProvider';
  */
 export default function ExpenseFormPage() {
   const { id } = useParams();
+  const expenseId = parseInt(id, 10);
 
   return (
-    <ExpenseFormPageProvider expenseId={id}>
+    <ExpenseFormPageProvider expenseId={expenseId}>
       <ExpenseForm />
     </ExpenseFormPageProvider>
   );

@@ -10,6 +10,7 @@ import {
   updateMinEntriesLines,
   updateAutoAddNewLine,
   updateRemoveLineByIndex,
+  orderingLinesIndexes,
 } from 'utils';
 
 /**

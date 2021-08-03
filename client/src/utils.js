@@ -1,5 +1,6 @@
 import moment from 'moment';
-import _, { castArray } from 'lodash';
+import _ from 'lodash';
+import * as R from 'ramda';
 import Currencies from 'js-money/lib/currency';
 
 import { Intent } from '@blueprintjs/core';
@@ -670,3 +671,13 @@ export const defaultFastFieldShouldUpdate = (props, prevProps) => {
     props.formik.isSubmitting !== prevProps.formik.isSubmitting
   );
 };
+
+
+export const ensureEntriesHasEmptyLine = R.curry(
+  (minLinesNumber, defaultEntry, entries) => {
+    if (entries.length >= minLinesNumber) {
+      return [...entries, defaultEntry];
+    }
+    return entries;
+  },
+);
