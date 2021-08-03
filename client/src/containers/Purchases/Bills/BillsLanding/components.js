@@ -13,7 +13,7 @@ import {
 import intl from 'react-intl-universal';
 import { FormattedMessage as T } from 'components';
 import { Icon, If, Choose, Money } from 'components';
-import { safeCallback, isBlank, calculateStatus } from 'utils';
+import { formattedAmount, safeCallback, isBlank, calculateStatus } from 'utils';
 import moment from 'moment';
 
 /**
@@ -115,12 +115,7 @@ export function StatusAccessor(bill) {
           <If condition={bill.is_partially_paid}>
             <span className="partial-paid">
               {intl.get('day_partially_paid', {
-                due: (
-                  <Money
-                    amount={bill.due_amount}
-                    currency={bill.currency_code}
-                  />
-                ),
+                due: formattedAmount(bill.due_amount, bill.currency_code),
               })}
             </span>
             <ProgressBar

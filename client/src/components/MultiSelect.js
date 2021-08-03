@@ -21,6 +21,9 @@ import {
   Popover,
   Position,
   Utils,
+  InputGroup,
+  Button,
+  refHandler,
 } from '@blueprintjs/core';
 import { QueryList } from '@blueprintjs/select';
 
@@ -61,6 +64,13 @@ import { QueryList } from '@blueprintjs/select';
 // }
 
 export default class MultiSelect extends React.Component {
+  inputElement = null;
+  handleInputRef = refHandler(
+    this,
+    'inputElement',
+    this.props.inputProps?.inputRef,
+  );
+
   static get displayName() {
     return `${DISPLAYNAME_PREFIX}.MultiSelect`;
   }
@@ -92,8 +102,7 @@ export default class MultiSelect extends React.Component {
 
   render() {
     // omit props specific to this component, spread the rest.
-    const { openOnKeyDown, popoverProps, tagInputProps, ...restProps } =
-      this.props;
+    const { openOnKeyDown, popoverProps, ...restProps } = this.props;
 
     return (
       <QueryList
@@ -106,20 +115,36 @@ export default class MultiSelect extends React.Component {
     );
   }
 
+  maybeRenderClearButton(query) {
+    return query.length > 0 ? (
+      <Button icon="cross" minimal={true} onClick={this.resetQuery} />
+    ) : undefined;
+  }
+
   renderQueryList(listProps) {
-    const { fill, tagInputProps = {}, popoverProps = {} } = this.props;
+    const { filterable, fill, inputProps = {}, popoverProps = {} } = this.props;
     const { handleKeyDown, handleKeyUp } = listProps;
 
     if (fill) {
       popoverProps.fill = true;
-      tagInputProps.fill = true;
     }
 
-    // add our own inputProps.className so that we can reference it in event handlers
-    const { inputProps = {} } = tagInputProps;
-    inputProps.className = classNames(
-      inputProps.className,
-      Classes.MULTISELECT_TAG_INPUT_INPUT,
+    // const handleInputRef = refHandler(
+    //   this,
+    //   'inputElement',
+    //   this.props.inputProps?.inputRef,
+    // );
+
+    const input = (
+      <InputGroup
+        leftIcon="search"
+        placeholder="Filter..."
+        rightElement={this.maybeRenderClearButton(listProps.query)}
+        {...inputProps}
+        inputRef={this.handleInputRef}
+        onChange={listProps.handleQueryChange}
+        value={listProps.query}
+      />
     );
 
     return (
@@ -147,6 +172,7 @@ export default class MultiSelect extends React.Component {
           {this.props.children}
         </div>
         <div onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} ref={this.listRef}>
+          {filterable ? input : undefined}
           {listProps.itemList}
         </div>
       </Popover>
@@ -179,6 +205,15 @@ export default class MultiSelect extends React.Component {
       // scroll active item into view after popover transition completes and all dimensions are stable.
       this.queryList.scrollActiveItemIntoView();
     }
+    requestAnimationFrame(() => {
+      const { inputProps = {} } = this.props;
+      // autofocus is enabled by default
+      if (inputProps.autoFocus !== false) {
+        this.inputElement.focus();
+      }
+    });
     Utils.safeInvokeMember(this.props.popoverProps, 'onOpened', node);
   }
+
+  resetQuery = () => this.queryList && this.queryList.setQuery("", true);
 }

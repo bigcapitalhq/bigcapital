@@ -25,7 +25,12 @@ function SalesByItemProvider({ query, ...props }) {
     data: { items },
     isLoading: isItemsLoading,
     isFetching: isItemsFetching,
-  } = useItems({ page_size: 10000 });
+  } = useItems({
+    page_size: 10000,
+    stringified_filter_roles: JSON.stringify([
+      { fieldKey: 'type', comparator: 'is', value: 'inventory', index: 1 },
+    ]),
+  });
 
   const provider = {
     salesByItems,
@@ -35,7 +40,7 @@ function SalesByItemProvider({ query, ...props }) {
     items,
     isItemsLoading,
     isItemsFetching,
-    
+
     refetchSheet: refetch,
   };
   return (

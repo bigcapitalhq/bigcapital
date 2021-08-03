@@ -17,11 +17,11 @@ export default function ContactsMultiSelect({
   contactsSelected = [],
   ...multiSelectProps
 }) {
-  const [localSelected, setLocalSelected] = useState([ ...contactsSelected]);
+  const [localSelected, setLocalSelected] = useState([...contactsSelected]);
 
   // Detarmines the given id is selected.
   const isItemSelected = useCallback(
-    (id) => localSelected.some(s => s === id),
+    (id) => localSelected.some((s) => s === id),
     [localSelected],
   );
 
@@ -45,13 +45,28 @@ export default function ContactsMultiSelect({
   const handleItemSelect = useCallback(
     ({ id }) => {
       const selected = isItemSelected(id)
-        ? localSelected.filter(s => s !== id)
+        ? localSelected.filter((s) => s !== id)
         : [...localSelected, id];
-      
-      setLocalSelected([ ...selected ]);
+
+      setLocalSelected([...selected]);
       safeInvoke(onContactSelect, selected);
     },
     [setLocalSelected, localSelected, isItemSelected, onContactSelect],
+  );
+
+  // Filters accounts items.
+  const filterContactsPredicater = useCallback(
+    (query, contact, _index, exactMatch) => {
+      const normalizedTitle = contact.display_name.toLowerCase();
+      const normalizedQuery = query.toLowerCase();
+
+      if (exactMatch) {
+        return normalizedTitle === normalizedQuery;
+      } else {
+        return normalizedTitle.indexOf(normalizedQuery) >= 0;
+      }
+    },
+    [],
   );
 
   return (
@@ -62,6 +77,7 @@ export default function ContactsMultiSelect({
       popoverProps={{ minimal: true }}
       filterable={true}
       onItemSelect={handleItemSelect}
+      itemPredicate={filterContactsPredicater}
       {...multiSelectProps}
     >
       <Button

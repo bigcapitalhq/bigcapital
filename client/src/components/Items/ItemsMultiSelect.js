@@ -31,6 +31,7 @@ export function ItemsMultiSelect({
       <MenuItem
         icon={isItemSelected(item.id) ? 'tick' : 'blank'}
         text={item.name}
+        label={item.code}
         key={item.id}
         onClick={handleClick}
       />
@@ -54,6 +55,21 @@ export function ItemsMultiSelect({
     [setLocalSelected, localSelected, isItemSelected, onItemSelect],
   );
 
+  // Filters accounts items.
+  const filterItemsPredicater = useCallback(
+    (query, item, _index, exactMatch) => {
+      const normalizedTitle = item.name.toLowerCase();
+      const normalizedQuery = query.toLowerCase();
+
+      if (exactMatch) {
+        return normalizedTitle === normalizedQuery;
+      } else {
+        return `${normalizedTitle} ${item.code}`.indexOf(normalizedQuery) >= 0;
+      }
+    },
+    [],
+  );
+
   return (
     <MultiSelect
       items={items}
@@ -62,6 +78,7 @@ export function ItemsMultiSelect({
       popoverProps={{ minimal: true }}
       filterable={true}
       onItemSelect={handleItemSelect}
+      itemPredicate={filterItemsPredicater}
       {...multiSelectProps}
     >
       <Button

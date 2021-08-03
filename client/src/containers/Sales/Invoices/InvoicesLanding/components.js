@@ -16,7 +16,7 @@ import { FormattedMessage as T } from 'components';
 import moment from 'moment';
 import { Choose, If, Icon } from 'components';
 import { Money, AppToaster } from 'components';
-import { safeCallback, calculateStatus } from 'utils';
+import { formattedAmount, safeCallback, calculateStatus } from 'utils';
 
 export const statusAccessor = (row) => {
   return (
@@ -48,9 +48,7 @@ export const statusAccessor = (row) => {
           <If condition={row.is_partially_paid}>
             <span class="partial-paid">
               {intl.get('day_partially_paid', {
-                due: (
-                  <Money amount={row.due_amount} currency={row.currency_code} />
-                ),
+                due: formattedAmount(row.due_amount, row.currency_code),
               })}
             </span>
             <ProgressBar

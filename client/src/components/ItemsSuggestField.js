@@ -83,7 +83,7 @@ export default function ItemsSuggestField({
       if (exactMatch) {
         return normalizedTitle === normalizedQuery;
       } else {
-        return normalizedTitle.indexOf(normalizedQuery) >= 0;
+        return `${normalizedTitle} ${item.code}`.indexOf(normalizedQuery) >= 0;
       }
     },
     [],

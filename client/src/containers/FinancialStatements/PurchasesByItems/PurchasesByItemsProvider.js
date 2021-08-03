@@ -3,7 +3,6 @@ import FinancialReportPage from '../FinancialReportPage';
 import { usePurchasesByItems, useItems } from 'hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
-
 const PurchasesByItemsContext = createContext();
 
 function PurchasesByItemsProvider({ query, ...props }) {
@@ -27,7 +26,12 @@ function PurchasesByItemsProvider({ query, ...props }) {
     data: { items },
     isLoading: isItemsLoading,
     isFetching: isItemsFetching,
-  } = useItems({ page_size: 10000 });
+  } = useItems({
+    page_size: 10000,
+    stringified_filter_roles: JSON.stringify([
+      { fieldKey: 'type', comparator: 'is', value: 'inventory', index: 1 },
+    ]),
+  });
 
   const provider = {
     purchaseByItems,
