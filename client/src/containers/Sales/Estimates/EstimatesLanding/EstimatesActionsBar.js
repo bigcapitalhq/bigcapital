@@ -9,6 +9,7 @@ import {
   PopoverInteractionKind,
   Position,
   Intent,
+  Alignment,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
@@ -20,6 +21,7 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withEstimatesActions from './withEstimatesActions';
 import { useEstimatesListContext } from './EstimatesListProvider';
+import { useRefreshEstimates } from 'hooks/query/estimates';
 
 import { compose } from 'utils';
 
@@ -31,7 +33,6 @@ function EstimateActionsBar({
   setEstimatesTableState,
 }) {
   const history = useHistory();
-  
 
   const [filterCount, setFilterCount] = useState(0);
 
@@ -43,6 +44,9 @@ function EstimateActionsBar({
     history.push('/estimates/new');
   };
 
+  // Estimates refresh action.
+  const { refresh } = useRefreshEstimates();
+
   // Handle tab change.
   const handleTabChange = (customView) => {
     setEstimatesTableState({
@@ -50,8 +54,13 @@ function EstimateActionsBar({
     });
   };
 
+  // Handle click a refresh sale estimates
+  const handleRefreshBtnClick = () => {
+    refresh();
+  };
+
   return (
-    <DashboardActionsBar> 
+    <DashboardActionsBar>
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'estimates'}
@@ -108,10 +117,15 @@ function EstimateActionsBar({
           text={<T id={'export'} />}
         />
       </NavbarGroup>
+      <NavbarGroup align={Alignment.RIGHT}>
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="refresh-16" iconSize={14} />}
+          onClick={handleRefreshBtnClick}
+        />
+      </NavbarGroup>
     </DashboardActionsBar>
   );
 }
 
-export default compose(
-  withEstimatesActions,
-)(EstimateActionsBar);
+export default compose(withEstimatesActions)(EstimateActionsBar);

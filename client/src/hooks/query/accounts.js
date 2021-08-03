@@ -160,3 +160,13 @@ export function useAccountTransactions(id, props) {
     },
   );
 }
+
+export function useRefreshAccounts() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.ACCOUNTS);
+    },
+  };
+}

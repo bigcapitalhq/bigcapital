@@ -114,3 +114,13 @@ export function useVendor(id, props) {
     },
   );
 }
+
+export function useRefreshVendors() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.VENDORS);
+    },
+  };
+}

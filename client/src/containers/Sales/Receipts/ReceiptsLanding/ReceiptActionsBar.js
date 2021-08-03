@@ -9,6 +9,7 @@ import {
   PopoverInteractionKind,
   Position,
   Intent,
+  Alignment,
 } from '@blueprintjs/core';
 
 import classNames from 'classnames';
@@ -21,7 +22,7 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withReceiptsActions from './withReceiptsActions';
 import { useReceiptsListContext } from './ReceiptsListProvider';
-
+import { useRefreshReceipts } from 'hooks/query/receipts';
 import { compose } from 'utils';
 
 /**
@@ -32,7 +33,6 @@ function ReceiptActionsBar({
   setReceiptsTableState,
 }) {
   const history = useHistory();
-  
 
   const [filterCount, setFilterCount] = useState(0);
 
@@ -44,10 +44,18 @@ function ReceiptActionsBar({
     history.push('/receipts/new');
   };
 
+  // Sale receipt refresh action.
+  const { refresh } = useRefreshReceipts();
+
   const handleTabChange = (customView) => {
     setReceiptsTableState({
       customViewId: customView.id || null,
     });
+  };
+
+  // Handle click a refresh sale estimates
+  const handleRefreshBtnClick = () => {
+    refresh();
   };
 
   return (
@@ -107,6 +115,13 @@ function ReceiptActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
+        />
+      </NavbarGroup>
+      <NavbarGroup align={Alignment.RIGHT}>
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="refresh-16" iconSize={14} />}
+          onClick={handleRefreshBtnClick}
         />
       </NavbarGroup>
     </DashboardActionsBar>

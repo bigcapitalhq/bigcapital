@@ -9,6 +9,7 @@ import {
   PopoverInteractionKind,
   Position,
   Intent,
+  Alignment,
 } from '@blueprintjs/core';
 
 import classNames from 'classnames';
@@ -21,7 +22,7 @@ import { If, DashboardActionViewsList } from 'components';
 
 import withBillsActions from './withBillsActions';
 import { useBillsListContext } from './BillsListProvider';
-
+import { useRefreshBills } from 'hooks/query/bills';
 import { compose } from 'utils';
 
 /**
@@ -33,8 +34,8 @@ function BillActionsBar({
 }) {
   const history = useHistory();
 
-  // React intl.
-  
+  // Bills refresh action.
+  const { refresh } = useRefreshBills();
 
   // Bills list context.
   const { billsViews } = useBillsListContext();
@@ -51,6 +52,11 @@ function BillActionsBar({
     setBillsTableState({
       customViewId: customView.id || null,
     });
+  };
+
+  // Handle click a refresh bills
+  const handleRefreshBtnClick = () => {
+    refresh();
   };
 
   return (
@@ -109,6 +115,13 @@ function BillActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
+        />
+      </NavbarGroup>
+      <NavbarGroup align={Alignment.RIGHT}>
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="refresh-16" iconSize={14} />}
+          onClick={handleRefreshBtnClick}
         />
       </NavbarGroup>
     </DashboardActionsBar>

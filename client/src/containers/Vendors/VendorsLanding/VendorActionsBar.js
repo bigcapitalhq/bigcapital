@@ -8,7 +8,8 @@ import {
   Popover,
   Position,
   PopoverInteractionKind,
-  Switch
+  Switch,
+  Alignment,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
@@ -18,6 +19,7 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
 import { If, DashboardActionViewsList } from 'components';
 
+import { useRefreshVendors } from 'hooks/query/vendors';
 import { useVendorsListContext } from './VendorsListProvider';
 import { useHistory } from 'react-router-dom';
 
@@ -32,18 +34,20 @@ import { compose } from 'utils';
 function VendorActionsBar({
   // #withVendorActions
   setVendorsTableState,
-  vendorsInactiveMode
+  vendorsInactiveMode,
 }) {
   const history = useHistory();
-  
 
   // Vendors list context.
   const { vendorsViews } = useVendorsListContext();
 
-  // Handles new vendor button click. 
+  // Handles new vendor button click.
   const onClickNewVendor = () => {
     history.push('/vendors/new');
   };
+
+  // Vendors refresh action.
+  const { refresh } = useRefreshVendors();
 
   // Handle the active tab change.
   const handleTabChange = (customView) => {
@@ -55,7 +59,12 @@ function VendorActionsBar({
     const checked = event.target.checked;
     setVendorsTableState({ inactiveMode: checked });
   };
-  
+
+  // Handle click a refresh sale estimates
+  const handleRefreshBtnClick = () => {
+    refresh();
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -80,11 +89,7 @@ function VendorActionsBar({
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
             text={
-              true ? (
-                <T id={'filter'} />
-              ) : (
-                `${9} ${intl.get('filters_applied')}`
-              )
+              true ? <T id={'filter'} /> : `${9} ${intl.get('filters_applied')}`
             }
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
@@ -111,6 +116,13 @@ function VendorActionsBar({
           labelElement={<T id={'inactive'} />}
           defaultChecked={vendorsInactiveMode}
           onChange={handleInactiveSwitchChange}
+        />
+      </NavbarGroup>
+      <NavbarGroup align={Alignment.RIGHT}>
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="refresh-16" iconSize={14} />}
+          onClick={handleRefreshBtnClick}
         />
       </NavbarGroup>
     </DashboardActionsBar>

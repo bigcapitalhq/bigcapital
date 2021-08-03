@@ -26,7 +26,7 @@ const commonInvalidateQueries = (queryClient) => {
 const customersSelector = (response) => ({
   customers: response.data.customers,
   pagination: transformPagination(response.data.pagination),
-  filterMeta: response.data.filter_meta,  
+  filterMeta: response.data.filter_meta,
 });
 
 /**
@@ -66,7 +66,7 @@ export function useEditCustomer(props) {
         // Common invalidate queries.
         commonInvalidateQueries(queryClient);
       },
-      ...props
+      ...props,
     },
   );
 }
@@ -78,19 +78,16 @@ export function useDeleteCustomer(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.delete(`customers/${id}`),
-    {
-      onSuccess: (res, id) => {
-        // Invalidate specific customer.
-        queryClient.invalidateQueries([t.CUSTOMER, id]);
+  return useMutation((id) => apiRequest.delete(`customers/${id}`), {
+    onSuccess: (res, id) => {
+      // Invalidate specific customer.
+      queryClient.invalidateQueries([t.CUSTOMER, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
-    }
-  );
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
 }
 
 /**
@@ -100,15 +97,13 @@ export function useCreateCustomer(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.post('customers', values),
-    {
-      onSuccess: () => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props
-    });
+  return useMutation((values) => apiRequest.post('customers', values), {
+    onSuccess: () => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
 }
 
 /**
@@ -121,7 +116,17 @@ export function useCustomer(id, props) {
     {
       select: (res) => res.data.customer,
       defaultData: {},
-      ...props
+      ...props,
     },
   );
+}
+
+export function useRefreshCustomers() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.CUSTOMERS);
+    },
+  };
 }

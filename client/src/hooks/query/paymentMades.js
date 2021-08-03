@@ -4,11 +4,10 @@ import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 import t from './types';
 
-
 const commonInvalidateQueries = (client) => {
   // Invalidate payment mades.
   client.invalidateQueries(t.PAYMENT_MADES);
-        
+
   // Invalidate payment made new entries.
   client.invalidateQueries(t.PAYMENT_MADE_NEW_ENTRIES);
   client.invalidateQueries(t.PAYMENT_MADE_EDIT_PAGE);
@@ -157,4 +156,14 @@ export function usePaymentMadeNewPageEntries(vendorId, props) {
       ...props,
     },
   );
+}
+
+export function useRefreshPaymentMades() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.PAYMENT_MADES);
+    },
+  };
 }

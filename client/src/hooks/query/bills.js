@@ -91,7 +91,7 @@ export function useDeleteBill(props) {
   });
 }
 
-const transformBillsResponse = (response) => ({  
+const transformBillsResponse = (response) => ({
   bills: response.data.bills,
   pagination: transformPagination(response.data.pagination),
   filterMeta: response.data.filter_meta,
@@ -131,7 +131,7 @@ export function useBills(query, props) {
 export function useBill(id, props) {
   return useRequestQuery(
     [t.BILL, id],
-    { method: 'get', url: `/purchases/bills/${id}`, },
+    { method: 'get', url: `/purchases/bills/${id}` },
     {
       select: (res) => res.data.bill,
       defaultData: {},
@@ -158,4 +158,14 @@ export function useDueBills(vendorId, props) {
       ...props,
     },
   );
+}
+
+export function useRefreshBills() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.BILLS);
+    },
+  };
 }

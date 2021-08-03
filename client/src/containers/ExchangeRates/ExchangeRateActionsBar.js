@@ -8,6 +8,7 @@ import {
   Popover,
   Position,
   PopoverInteractionKind,
+  Alignment,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { FormattedMessage as T } from 'components';
@@ -19,6 +20,7 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
 import FilterDropdown from 'components/FilterDropdown';
 
+import { useRefreshExchangeRate } from 'hooks/query/exchangeRates';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withExchangeRatesActions from './withExchangeRatesActions';
@@ -44,30 +46,23 @@ function ExchangeRateActionsBar({
   onBulkDelete,
 }) {
   const [filterCount, setFilterCount] = useState(0);
-  
 
   const onClickNewExchangeRate = () => {
     openDialog('exchangeRate-form', {});
   };
 
-  // const filterDropdown = FilterDropdown({
-  //   initialCondition: {
-  //   fieldKey: '',
-  //     compatator: 'contains',
-  //     value: '',
-  //   },
-  //   fields: resourceFields,
-  //   onFilterChange: (filterConditions) => {
-  //     addExchangeRatesTableQueries({
-  //       filter_roles: filterConditions || '',
-  //     });
-  //     onFilterChanged && onFilterChanged(filterConditions);
-  //   },
-  // });
+  // Exchange rates refresh action.
+  const { refresh } = useRefreshExchangeRate();
 
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
+  // Handle click a refresh sale estimates
+  const handleRefreshBtnClick = () => {
+    refresh();
+  };
+
+  const hasSelectedRows = useMemo(
+    () => selectedRows.length > 0,
+    [selectedRows],
+  );
 
   const handelBulkDelete = useCallback(() => {
     onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
@@ -122,6 +117,13 @@ function ExchangeRateActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
+        />
+      </NavbarGroup>
+      <NavbarGroup align={Alignment.RIGHT}>
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="refresh-16" iconSize={14} />}
+          onClick={handleRefreshBtnClick}
         />
       </NavbarGroup>
     </DashboardActionsBar>

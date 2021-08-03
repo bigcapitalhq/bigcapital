@@ -146,3 +146,13 @@ export function usePublishExpense(props) {
     ...props,
   });
 }
+
+export function useRefreshExpenses() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.EXPENSES);
+    },
+  };
+}

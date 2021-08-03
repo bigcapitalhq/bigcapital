@@ -8,7 +8,8 @@ import {
   Popover,
   Position,
   PopoverInteractionKind,
-  Switch
+  Switch,
+  Alignment,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
@@ -19,6 +20,7 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import { If, Icon, DashboardActionViewsList } from 'components';
 
 import { useCustomersListContext } from './CustomersListProvider';
+import { useRefreshCustomers } from 'hooks/query/customers';
 
 import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
@@ -46,6 +48,9 @@ function CustomerActionsBar({
   // Customers list context.
   const { customersViews } = useCustomersListContext();
 
+  // Customers refresh action.
+  const { refresh } = useRefreshCustomers();
+
   const onClickNewCustomer = () => {
     history.push('/customers/new');
   };
@@ -64,6 +69,11 @@ function CustomerActionsBar({
   const handleInactiveSwitchChange = (event) => {
     const checked = event.target.checked;
     setCustomersTableState({ inactiveMode: checked });
+  };
+
+  // Handle click a refresh customers
+  const handleRefreshBtnClick = () => {
+    refresh();
   };
 
   return (
@@ -120,9 +130,16 @@ function CustomerActionsBar({
           onChange={handleInactiveSwitchChange}
         />
       </NavbarGroup>
+      <NavbarGroup align={Alignment.RIGHT}>
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="refresh-16" iconSize={14} />}
+          onClick={handleRefreshBtnClick}
+        />
+      </NavbarGroup>
     </DashboardActionsBar>
   );
-};
+}
 
 export default compose(
   withCustomersActions,

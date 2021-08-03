@@ -30,7 +30,7 @@ const commonInvalidateQueries = (client) => {
 const transformPaymentReceives = (res) => ({
   paymentReceives: res.data.payment_receives,
   pagination: transformPagination(res.data.pagination),
-  filterMeta: res.data.filter_meta,  
+  filterMeta: res.data.filter_meta,
 });
 
 /**
@@ -159,4 +159,14 @@ export function usePaymentReceiveEditPage(id, props) {
       ...props,
     },
   );
+}
+
+export function useRefreshPaymentReceive() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.PAYMENT_RECEIVES);
+    },
+  };
 }

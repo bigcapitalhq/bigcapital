@@ -9,6 +9,7 @@ import {
   PopoverInteractionKind,
   Position,
   Intent,
+  Alignment,
 } from '@blueprintjs/core';
 
 import classNames from 'classnames';
@@ -24,6 +25,7 @@ import withPaymentReceives from './withPaymentReceives';
 
 import { compose } from 'utils';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
+import { useRefreshPaymentReceive } from 'hooks/query/paymentReceives';
 
 /**
  * Payment receives actions bar.
@@ -43,9 +45,17 @@ function PaymentReceiveActionsBar({
     history.push('/payment-receives/new');
   };
 
+  // Payment receive refresh action.
+  const { refresh } = useRefreshPaymentReceive();
+
   // Handle tab changing.
   const handleTabChange = (viewId) => {
     setPaymentReceivesTableState({ customViewId: viewId.id || null });
+  };
+
+  // Handle click a refresh payment receives
+  const handleRefreshBtnClick = () => {
+    refresh();
   };
 
   return (
@@ -98,6 +108,13 @@ function PaymentReceiveActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
+        />
+      </NavbarGroup>
+      <NavbarGroup align={Alignment.RIGHT}>
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="refresh-16" iconSize={14} />}
+          onClick={handleRefreshBtnClick}
         />
       </NavbarGroup>
     </DashboardActionsBar>

@@ -9,6 +9,7 @@ import {
   PopoverInteractionKind,
   Position,
   Intent,
+  Alignment,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
@@ -19,6 +20,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { If, DashboardActionViewsList } from 'components';
 
+import { useRefreshExpenses } from 'hooks/query/expenses';
 import { useExpensesListContext } from './ExpensesListProvider';
 import withExpensesActions from './withExpensesActions';
 
@@ -39,21 +41,27 @@ function ExpensesActionsBar({
   // Expenses list context.
   const { expensesViews } = useExpensesListContext();
 
+  // Expenses refresh action.
+  const { refresh } = useRefreshExpenses();
+
   // Handles the new expense buttn click.
   const onClickNewExpense = () => {
     history.push('/expenses/new');
   };
 
   // Handle delete button click.
-  const handleBulkDelete = () => {
-    
-  };
+  const handleBulkDelete = () => {};
 
   // Handles the tab chaning.
   const handleTabChange = (viewId) => {
     setExpensesTableState({
       customViewId: viewId.id || null,
     });
+  };
+
+  // Handle click a refresh
+  const handleRefreshBtnClick = () => {
+    refresh();
   };
   return (
     <DashboardActionsBar>
@@ -81,7 +89,7 @@ function ExpensesActionsBar({
             className={classNames(Classes.MINIMAL, 'button--filter', {
               'has-active-filters': filterCount > 0,
             })}
-            text={<T id={'filter'}/>}
+            text={<T id={'filter'} />}
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>
@@ -110,6 +118,13 @@ function ExpensesActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
+        />
+      </NavbarGroup>
+      <NavbarGroup align={Alignment.RIGHT}>
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="refresh-16" iconSize={14} />}
+          onClick={handleRefreshBtnClick}
         />
       </NavbarGroup>
     </DashboardActionsBar>

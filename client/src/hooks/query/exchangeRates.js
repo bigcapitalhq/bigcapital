@@ -89,3 +89,13 @@ export function useExchangeRates(query, props) {
     }),
   };
 }
+
+export function useRefreshExchangeRate() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries('EXCHANGES_RATES');
+    },
+  };
+}

@@ -176,3 +176,13 @@ export function useDueInvoices(customerId, props) {
     },
   );
 }
+
+export function useRefreshInvoices() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.SALE_INVOICES);
+    },
+  };
+}

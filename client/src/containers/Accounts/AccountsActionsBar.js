@@ -11,6 +11,7 @@ import {
   Position,
   Intent,
   Switch,
+  Alignment,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { FormattedMessage as T } from 'components';
@@ -20,6 +21,7 @@ import { If, DashboardActionViewsList } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import FilterDropdown from 'components/FilterDropdown';
 
+import { useRefreshAccounts } from 'hooks/query/accounts';
 import { useAccountsChartContext } from 'containers/Accounts/AccountsChartProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAccounts from 'containers/Accounts/withAccounts';
@@ -54,6 +56,9 @@ function AccountsActionsBar({
     openDialog('account-form', {});
   };
 
+  // Accounts refresh action.
+  const { refresh } = useRefreshAccounts();
+
   // Handle bulk accounts delete.
   const handleBulkDelete = () => {
     openAlert('accounts-bulk-delete', { accountsIds: accountsSelectedRows });
@@ -80,6 +85,11 @@ function AccountsActionsBar({
   const handleInactiveSwitchChange = (event) => {
     const checked = event.target.checked;
     setAccountsTableState({ inactiveMode: checked });
+  };
+
+  // Handle click a refresh accounts
+  const handleRefreshBtnClick = () => {
+    refresh();
   };
 
   return (
@@ -161,6 +171,13 @@ function AccountsActionsBar({
           labelElement={<T id={'inactive'} />}
           defaultChecked={accountsInactiveMode}
           onChange={handleInactiveSwitchChange}
+        />
+      </NavbarGroup>
+      <NavbarGroup align={Alignment.RIGHT}>
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="refresh-16" iconSize={14} />}
+          onClick={handleRefreshBtnClick}
         />
       </NavbarGroup>
     </DashboardActionsBar>

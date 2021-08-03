@@ -90,7 +90,7 @@ export function useCloseReceipt(props) {
   return useMutation((id) => apiRequest.post(`sales/receipts/${id}/close`), {
     onSuccess: (res, id) => {
       queryClient.invalidateQueries([t.SALE_RECEIPT, id]);
-      
+
       // Invalidate queries.
       commonInvalidateQueries(queryClient);
     },
@@ -140,4 +140,14 @@ export function useReceipt(id, props) {
       ...props,
     },
   );
+}
+
+export function useRefreshReceipts() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.SALE_RECEIPTS);
+    },
+  };
 }

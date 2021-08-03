@@ -31,16 +31,13 @@ export function useCreateJournal(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.post('manual-journals', values),
-    {
-      onSuccess: () => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props
+  return useMutation((values) => apiRequest.post('manual-journals', values), {
+    onSuccess: () => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -60,7 +57,7 @@ export function useEditJournal(props) {
         // Common invalidate queries.
         commonInvalidateQueries(queryClient);
       },
-      ...props
+      ...props,
     },
   );
 }
@@ -72,18 +69,15 @@ export function useDeleteJournal(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.delete(`manual-journals/${id}`),
-    {
-      onSuccess: (res, id) => {
-        // Invalidate specific manual journal.
-        queryClient.invalidateQueries(t.MANUAL_JOURNAL, id);
+  return useMutation((id) => apiRequest.delete(`manual-journals/${id}`), {
+    onSuccess: (res, id) => {
+      // Invalidate specific manual journal.
+      queryClient.invalidateQueries(t.MANUAL_JOURNAL, id);
 
-        commonInvalidateQueries(queryClient);
-      },
-      ...props
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -93,24 +87,21 @@ export function usePublishJournal(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.post(`manual-journals/${id}/publish`),
-    {
-      onSuccess: (res, id) => {
-        // Invalidate specific manual journal.
-        queryClient.invalidateQueries(t.MANUAL_JOURNAL, id);
+  return useMutation((id) => apiRequest.post(`manual-journals/${id}/publish`), {
+    onSuccess: (res, id) => {
+      // Invalidate specific manual journal.
+      queryClient.invalidateQueries(t.MANUAL_JOURNAL, id);
 
-        commonInvalidateQueries(queryClient);
-      },
-      ...props
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 const transformJournals = (response) => ({
   manualJournals: response.data.manual_journals,
   pagination: transformPagination(response.data.pagination),
-  filterMeta: response.data.filter_meta
+  filterMeta: response.data.filter_meta,
 });
 
 /**
@@ -145,4 +136,14 @@ export function useJournal(id, props) {
       ...props,
     },
   );
+}
+
+export function useRefreshJournals() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.MANUAL_JOURNALS);
+    },
+  };
 }

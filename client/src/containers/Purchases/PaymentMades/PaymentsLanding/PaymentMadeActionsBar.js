@@ -9,6 +9,7 @@ import {
   PopoverInteractionKind,
   Position,
   Intent,
+  Alignment,
 } from '@blueprintjs/core';
 
 import classNames from 'classnames';
@@ -21,7 +22,7 @@ import { If, DashboardActionViewsList } from 'components';
 
 import withPaymentMadeActions from './withPaymentMadeActions';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
-
+import { useRefreshPaymentMades } from 'hooks/query/paymentMades';
 import { compose } from 'utils';
 
 /**
@@ -32,7 +33,6 @@ function PaymentMadeActionsBar({
   setPaymentMadesTableState,
 }) {
   const history = useHistory();
-  
 
   // Payment receives list context.
   const { paymentMadesViews } = usePaymentMadesListContext();
@@ -42,11 +42,18 @@ function PaymentMadeActionsBar({
     history.push('/payment-mades/new');
   };
 
+  // Payment receive refresh action.
+  const { refresh } = useRefreshPaymentMades();
+
   // Handle tab changing.
   const handleTabChange = (customView) => {
     setPaymentMadesTableState({ customViewId: customView.id || null });
   };
 
+  // Handle click a refresh payment receives.
+  const handleRefreshBtnClick = () => {
+    refresh();
+  };
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -71,11 +78,7 @@ function PaymentMadeActionsBar({
           <Button
             className={classNames(Classes.MINIMAL)}
             text={
-              true ? (
-                <T id={'filter'} />
-              ) : (
-                `${0} ${intl.get('filters_applied')}`
-              )
+              true ? <T id={'filter'} /> : `${0} ${intl.get('filters_applied')}`
             }
             icon={<Icon icon={'filter-16'} iconSize={16} />}
           />
@@ -103,6 +106,13 @@ function PaymentMadeActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
+        />
+      </NavbarGroup>
+      <NavbarGroup align={Alignment.RIGHT}>
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="refresh-16" iconSize={14} />}
+          onClick={handleRefreshBtnClick}
         />
       </NavbarGroup>
     </DashboardActionsBar>

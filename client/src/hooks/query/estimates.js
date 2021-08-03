@@ -4,7 +4,6 @@ import useApiRequest from '../useRequest';
 import { transformPagination } from 'utils';
 import t from './types';
 
-
 const commonInvalidateQueries = (queryClient) => {
   // Invalidate estimates.
   queryClient.invalidateQueries(t.SALE_ESTIMATES);
@@ -69,7 +68,7 @@ export function useEstimate(id, props) {
 const transformEstimates = (res) => ({
   estimates: res.data.sales_estimates,
   pagination: transformPagination(res.data.pagination),
-  filterMeta: res.data.filter_meta,  
+  filterMeta: res.data.filter_meta,
 });
 
 /**
@@ -121,19 +120,16 @@ export function useDeliverEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.post(`sales/estimates/${id}/deliver`),
-    {
-      onSuccess: (res, id) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
+  return useMutation((id) => apiRequest.post(`sales/estimates/${id}/deliver`), {
+    onSuccess: (res, id) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
 
-        // Invalidate specific sale estimate.
-        queryClient.invalidateQueries([t.SALE_ESTIMATE, id]);
-      },
-      ...props,
+      // Invalidate specific sale estimate.
+      queryClient.invalidateQueries([t.SALE_ESTIMATE, id]);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -143,19 +139,16 @@ export function useApproveEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.post(`sales/estimates/${id}/approve`),
-    {
-      onSuccess: (res, id) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
+  return useMutation((id) => apiRequest.post(`sales/estimates/${id}/approve`), {
+    onSuccess: (res, id) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
 
-        // Invalidate specific sale estimate.
-        queryClient.invalidateQueries([t.SALE_ESTIMATE, id]);
-      },
-      ...props,
+      // Invalidate specific sale estimate.
+      queryClient.invalidateQueries([t.SALE_ESTIMATE, id]);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -165,17 +158,24 @@ export function useRejectEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.post(`sales/estimates/${id}/reject`),
-    {
-      onSuccess: (res, id) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
+  return useMutation((id) => apiRequest.post(`sales/estimates/${id}/reject`), {
+    onSuccess: (res, id) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
 
-        // Invalidate specific sale estimate.
-        queryClient.invalidateQueries([t.SALE_ESTIMATE, id]);
-      },
-      ...props,
+      // Invalidate specific sale estimate.
+      queryClient.invalidateQueries([t.SALE_ESTIMATE, id]);
     },
-  );
+    ...props,
+  });
+}
+
+export function useRefreshEstimates() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.SALE_ESTIMATES);
+    },
+  };
 }
