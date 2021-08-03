@@ -26,6 +26,7 @@
 @import 'components/PageForm';
 @import 'components/Tooltip';
 @import 'components/Postbox';
+@import 'components/Overlay';
 @import 'components/SidebarOverlay';
 
 // Pages
@@ -101,9 +102,6 @@ body.hide-scrollbar .Pane2 {
   background-color: #0066ff;
 }
 
-.bp3-overlay-backdrop {
-  background-color: rgba(0, 10, 30, 0.7);
-}
 
 .ReactVirtualized__Collection {}
 
@@ -210,3 +208,4 @@ html[lang^="ar"] {
 .bp3-tooltip2 .bp3-popover2-arrow:before{
   box-shadow: 0 0 0;
 }
+
