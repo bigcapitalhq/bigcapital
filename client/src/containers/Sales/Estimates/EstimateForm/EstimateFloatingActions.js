@@ -184,6 +184,7 @@ export default function EstimateFloatingActions() {
       {/* ----------- Cancel ----------- */}
       <Button
         className={'ml1'}
+        disabled={isSubmitting}
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />

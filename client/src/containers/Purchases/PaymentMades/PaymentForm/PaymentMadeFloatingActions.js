@@ -60,7 +60,7 @@ export default function PaymentMadeFloatingActions() {
       {/* ----------- Save and New ----------- */}
       <ButtonGroup>
         <Button
-          disabled={isSubmitting}
+          loading={isSubmitting}
           intent={Intent.PRIMARY}
           type="submit"
           onClick={handleSubmitBtnClick}
@@ -100,6 +100,7 @@ export default function PaymentMadeFloatingActions() {
       {/* ----------- Cancel  ----------- */}
       <Button
         className={'ml1'}
+        disabled={isSubmitting}
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />

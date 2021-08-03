@@ -183,6 +183,7 @@ export default function BillFloatingActions() {
       {/* ----------- Cancel ----------- */}
       <Button
         className={'ml1'}
+        disabled={isSubmitting}
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
