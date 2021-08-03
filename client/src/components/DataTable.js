@@ -10,7 +10,6 @@ import {
   useAsyncDebounce,
 } from 'react-table';
 import { useSticky } from 'react-table-sticky';
-import intl from 'react-intl-universal';
 
 import { useUpdateEffect } from 'hooks';
 import { saveInvoke } from 'utils';
