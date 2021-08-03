@@ -59,7 +59,7 @@ function PaymentMadesTable({
 
   // Handle view detail  payment made.
   const handleViewDetailPaymentMade = ({ id }) => {
-    openDrawer('payment-receive-detail-drawer', { paymentMadeId: id });
+    openDrawer('payment-made-detail-drawer', { paymentMadeId: id });
   };
 
   // Handle datatable fetch data once the table state change.
