@@ -86,7 +86,6 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
         isVendorsLoading ||
         isItemsFetching ||
         isAccountsLoading ||
-        isPaymentFetching ||
         isPaymentLoading
       }
       name={'payment-made'}

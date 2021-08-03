@@ -17,19 +17,19 @@ const ReceiptFormContext = createContext();
  */
 function ReceiptFormProvider({ receiptId, ...props }) {
   // Fetch sale receipt details.
-  const { data: receipt, isFetching: isReceiptLoading } = useReceipt(
+  const { data: receipt, isLoading: isReceiptLoading } = useReceipt(
     receiptId,
     {
       enabled: !!receiptId,
     },
   );
   // Fetch accounts list.
-  const { data: accounts, isFetching: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
   // Fetch customers list.
   const {
     data: { customers },
-    isFetching: isCustomersLoading,
+    isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
   // Filter all sellable items only.
@@ -45,7 +45,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   // Handle fetch Items data table or list
   const {
     data: { items },
-    isFetching: isItemsLoading,
+    isLoading: isItemsLoading,
   } = useItems({
     page_size: 10000,
     stringified_filter_roles: stringifiedFilterRoles,

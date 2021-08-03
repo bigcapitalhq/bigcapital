@@ -17,12 +17,12 @@ const BillFormContext = createContext();
  */
 function BillFormProvider({ billId, ...props }) {
   // Handle fetch accounts.
-  const { data: accounts, isFetching: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
   // Handle fetch vendors data table
   const {
     data: { vendors },
-    isFetching: isVendorsLoading,
+    isLoading: isVendorsLoading,
   } = useVendors({ page_size: 10000 });
 
   // Filter all purchasable items only.
@@ -38,14 +38,14 @@ function BillFormProvider({ billId, ...props }) {
   // Handle fetch Items data table or list
   const {
     data: { items },
-    isFetching: isItemsLoading,
+    isLoading: isItemsLoading,
   } = useItems({
     page_size: 10000,
     stringified_filter_roles: stringifiedFilterRoles,
   });
 
   // Handle fetch bill details.
-  const { data: bill, isFetching: isBillLoading } = useBill(billId, {
+  const { data: bill, isLoading: isBillLoading } = useBill(billId, {
     enabled: !!billId,
   });
 
