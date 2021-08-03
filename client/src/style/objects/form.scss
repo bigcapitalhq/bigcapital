@@ -50,7 +50,7 @@ label.bp3-label {
     background: #e9ecef;
   }
 
-  .bp3-input-group.bp3-intent-danger & {
+  &.bp3-intent-danger {
     box-shadow: 0 0 0 transparent;
     border-color: #db3737;
 
@@ -58,6 +58,23 @@ label.bp3-label {
     &.bp3-active {
       box-shadow: 0 0 0 1px #db3737;
       border-color: #db3737;
+    }
+  }
+}
+
+.bp3-input-group{
+
+  &.bp3-intent-danger{
+    
+    .bp3-input{
+      box-shadow: 0 0 0 transparent;
+      border-color: #db3737;
+
+      &:focus,
+      &.bp3-active {
+        box-shadow: 0 0 0 1px #db3737;
+        border-color: #db3737;
+      }
     }
   }
 }

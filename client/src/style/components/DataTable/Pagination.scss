@@ -36,6 +36,14 @@
       &.bp3-button{
         padding-left: 10px;
         padding-right: 10px;
+
+        .bp3-icon {
+
+          [dir="rtl"] & {
+            transform: scale(-1);
+          }
+        }
+
       }
     }
 

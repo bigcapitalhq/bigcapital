@@ -64,16 +64,13 @@ export default [
         href: '/invoices',
         newTabHref: '/invoices/new',
       },
-
-      {
-        text: <T id={'payment_receives'} />,
-        href: '/payment-receives',
-        newTabHref: '/payment-receives/new',
-      },
       {
         text: <T id={'receipts'} />,
         href: '/receipts',
-        newTabHref: '/receipts/new',
+      },
+      {
+        text: <T id={'payment_receives'} />,
+        href: '/payment-receives',
       },
       {
         text: <T id={'New tasks'} />,
