@@ -28,7 +28,7 @@ export default [
         href: '/items/categories',
       },
       {
-        text: 'New tasks',
+        text: <T id={'New tasks'} />,
         label: true,
       },
       {
@@ -46,9 +46,9 @@ export default [
         text: <T id={'New item category'} />,
         href: '/items/categories/new',
       },
-      {
-        text: 'New inventory adjustment',
-      },
+      // {
+      //   text: <T id={'New inventory adjustment'} />,
+      // },
     ],
   },
   {
@@ -76,7 +76,7 @@ export default [
         newTabHref: '/receipts/new',
       },
       {
-        text: 'New tasks',
+        text: <T id={'New tasks'} />,
         label: true,
       },
       {
@@ -114,7 +114,7 @@ export default [
         newTabHref: '/payment-mades/new',
       },
       {
-        text: 'New tasks',
+        text: <T id={'New tasks'} />,
         label: true,
       },
       {
@@ -144,7 +144,7 @@ export default [
         newTabHref: '/vendors/new',
       },
       {
-        text: 'New tasks',
+        text: <T id={'New tasks'} />,
         label: true,
       },
       {
@@ -180,7 +180,7 @@ export default [
         href: '/exchange-rates',
       },
       {
-        text: 'New tasks',
+        text: <T id={'New tasks'} />,
         label: true,
       },
       {
@@ -204,7 +204,7 @@ export default [
         href: '/expenses',
       },
       {
-        text: 'New tasks',
+        text: <T id={'New tasks'} />,
         label: true,
       },
       {

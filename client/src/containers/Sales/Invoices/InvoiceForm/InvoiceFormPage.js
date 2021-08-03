@@ -11,9 +11,10 @@ import { InvoiceFormProvider } from './InvoiceFormProvider';
  */
 export default function InvoiceFormPage() {
   const { id } = useParams();
+  const idAsInteger = parseInt(id, 10);
 
   return (
-    <InvoiceFormProvider invoiceId={id}>
+    <InvoiceFormProvider invoiceId={idAsInteger}>
       <InvoiceForm />
     </InvoiceFormProvider>
   );

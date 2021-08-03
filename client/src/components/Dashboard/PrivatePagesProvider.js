@@ -7,10 +7,10 @@ import { useCurrentOrganization } from '../../hooks/query/organization';
  */
 export function PrivatePagesProvider({ children }) {
   // Fetches the current user's organization.
-  // const { isLoading } = useCurrentOrganization();
+  const { isLoading } = useCurrentOrganization();
 
   return (
-    <DashboardLoadingIndicator isLoading={false}>
+    <DashboardLoadingIndicator isLoading={isLoading}>
       {children}
     </DashboardLoadingIndicator>
   )

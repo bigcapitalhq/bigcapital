@@ -9,10 +9,11 @@ import PaymentReceiveForm from './PaymentReceiveForm';
  */
 export default function PaymentReceiveFormPage() {
   const { id: paymentReceiveId } = useParams();
+  const paymentReceiveIdInt = parseInt(paymentReceiveId, 10);
 
   return (
-    <PaymentReceiveFormProvider paymentReceiveId={paymentReceiveId}>
-      <PaymentReceiveForm paymentReceiveId={paymentReceiveId} />
+    <PaymentReceiveFormProvider paymentReceiveId={paymentReceiveIdInt}>
+      <PaymentReceiveForm paymentReceiveId={paymentReceiveIdInt} />
     </PaymentReceiveFormProvider>
   );
 }

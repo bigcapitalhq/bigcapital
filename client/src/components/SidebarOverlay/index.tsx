@@ -70,7 +70,10 @@ export default function SidebarOverlay({
   const [isOpen, setIsOpen] = React.useState(controllerdIsOpen);
 
   React.useEffect(() => {
-    if (controllerdIsOpen && isOpen !== controllerdIsOpen) {
+    if (
+      typeof controllerdIsOpen !== 'undefined' &&
+      isOpen !== controllerdIsOpen
+    ) {
       setIsOpen(controllerdIsOpen);
     }
   }, [controllerdIsOpen, setIsOpen, isOpen]);
@@ -103,7 +106,10 @@ export default function SidebarOverlay({
   return (
     <Overlay
       isOpen={isOpen}
-      portalContainer={document.getElementById('dashboard') || document.body}
+      portalContainer={
+        (document.querySelector('.Pane.vertical.Pane2') as HTMLElement) ||
+        document.body
+      }
       onClose={handleOverlayClose}
       onOpening={handleOverlayOpen}
       transitionDuration={100}

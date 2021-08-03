@@ -11,9 +11,10 @@ import { ReceiptFormProvider } from './ReceiptFormProvider';
  */
 export default function ReceiptFormPage() {
   const { id } = useParams();
+  const idInt = parseInt(id, 10);
 
   return (
-    <ReceiptFormProvider receiptId={id}>
+    <ReceiptFormProvider receiptId={idInt}>
       <ReceiptFrom />
     </ReceiptFormProvider>
   );

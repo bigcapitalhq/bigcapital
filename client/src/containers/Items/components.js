@@ -146,8 +146,6 @@ export const ItemsActionsTableCell = (props) => {
  * Retrieve all items table columns.
  */
 export const useItemsTableColumns = () => {
-  
-
   return React.useMemo(
     () => [
       {

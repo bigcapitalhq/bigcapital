@@ -17,8 +17,6 @@ import DrawersContainer from 'components/DrawersContainer';
  * Dashboard page.
  */
 export default function Dashboard() {
-  const dashboardContentRef = React.createRef();
-
   return (
     <DashboardProvider>
       <Switch>
@@ -31,8 +29,8 @@ export default function Dashboard() {
 
         <Route path="/">
           <DashboardSplitPane>
-            <Sidebar dashboardContentRef={dashboardContentRef} />
-            <DashboardContent ref={dashboardContentRef} />
+            <Sidebar />
+            <DashboardContent />
           </DashboardSplitPane>
         </Route>
       </Switch>

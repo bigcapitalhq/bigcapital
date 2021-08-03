@@ -16,7 +16,7 @@ import 'style/pages/Preferences/Page.scss';
 export default function PreferencesPage() {
   return (
     <ErrorBoundary FallbackComponent={DashboardErrorBoundary}>
-      <div className={classNames(
+      <div id={'dashboard'} className={classNames(
         CLASSES.DASHBOARD_CONTENT,
         CLASSES.DASHBOARD_CONTENT_PREFERENCES,
       )}>

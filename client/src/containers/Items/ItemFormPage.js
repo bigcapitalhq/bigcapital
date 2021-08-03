@@ -10,9 +10,10 @@ import ItemForm from 'containers/Items/ItemForm';
  */
 export default function ItemFormPage() {
   const { id } = useParams();
- 
+  const idInteger = parseInt(id, 10);
+
   return (
-    <ItemFormProvider itemId={id}>
+    <ItemFormProvider itemId={idInteger}>
       <DashboardCard page>
         <ItemForm />
       </DashboardCard>

@@ -11,9 +11,10 @@ import { EstimateFormProvider } from './EstimateFormProvider';
  */
 export default function EstimateFormPage() {
   const { id } = useParams();
+  const idInteger = parseInt(id, 10);
 
   return (
-    <EstimateFormProvider estimateId={id}>
+    <EstimateFormProvider estimateId={idInteger}>
       <EstimateForm />
     </EstimateFormProvider>
   );

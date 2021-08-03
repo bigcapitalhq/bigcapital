@@ -206,6 +206,7 @@ html[lang^="ar"] {
   height: 100%;
   width: 225px;
   outline: 0;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
 
   &__scroll-wrapper {
     height: 100%
@@ -276,6 +277,12 @@ html[lang^="ar"] {
     padding: 14px 20px 10px;
     letter-spacing: 1px;
     color: #707a85;
+
+    html[lang^="ar"] & {
+      font-size: 13px;
+      letter-spacing: 0;
+      font-weight: 500;
+    }
   }
 
   &__label + .sidebar-overlay__divider{
