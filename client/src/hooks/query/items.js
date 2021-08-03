@@ -142,6 +142,16 @@ export function useItems(query, props) {
   );
 }
 
+export function useRefreshItems() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.ITEMS);
+    },
+  }
+}
+
 /**
  * Retrieve details of the given item.
  * @param {number} id - Item id.

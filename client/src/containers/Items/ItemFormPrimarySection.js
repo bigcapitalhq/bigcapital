@@ -109,6 +109,7 @@ export default function ItemFormPrimarySection() {
                 <InputGroup
                   medium={true}
                   {...field}
+                  intent={inputIntent({ error, touched })}
                   inputRef={(ref) => (nameFieldRef.current = ref)}
                 />
               </FormGroup>
@@ -125,7 +126,7 @@ export default function ItemFormPrimarySection() {
                 helperText={<ErrorMessage name={'code'} />}
                 inline={true}
               >
-                <InputGroup medium={true} {...field} />
+                <InputGroup medium={true} intent={inputIntent({ error, touched })} {...field} />
               </FormGroup>
             )}
           </FastField>

@@ -5,6 +5,7 @@
 // Blueprint framework.
 @import '@blueprintjs/core/src/blueprint.scss';
 @import '@blueprintjs/datetime/src/blueprint-datetime.scss';
+@import "@blueprintjs/popover2";
 
 @import 'basscss';
 
@@ -325,4 +326,14 @@ html[lang^="ar"] {
 }
 .sidebar-overlay-backdrop{
   background-color: rgba(0, 10, 30, 0.15);
+}
+
+
+.bp3-popover2{
+  box-shadow: 0 0 0;
+}
+
+
+.bp3-tooltip2 .bp3-popover2-arrow:before{
+  box-shadow: 0 0 0;
 }

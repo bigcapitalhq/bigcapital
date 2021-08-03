@@ -38,7 +38,6 @@ export default function InventoryAdjustmentFormDialogFields() {
   const { accounts } = useInventoryAdjContext();
 
   // Intl context.
-  
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -65,6 +64,7 @@ export default function InventoryAdjustmentFormDialogFields() {
                     position: Position.BOTTOM,
                     minimal: true,
                   }}
+                  intent={inputIntent({ error, touched })}
                   inputRef={(ref) => (dateFieldRef.current = ref)}
                 />
               </FormGroup>
@@ -103,6 +103,7 @@ export default function InventoryAdjustmentFormDialogFields() {
                   selectedItemProp={'value'}
                   textProp={'name'}
                   popoverProps={{ minimal: true }}
+                  intent={inputIntent({ error, touched })}
                 />
               </FormGroup>
             )}
@@ -129,6 +130,7 @@ export default function InventoryAdjustmentFormDialogFields() {
               }
               inputProps={{
                 placeholder: intl.get('select_adjustment_account'),
+                intent: inputIntent({ error, touched }),
               }}
             />
           </FormGroup>
@@ -144,7 +146,7 @@ export default function InventoryAdjustmentFormDialogFields() {
             helperText={<ErrorMessage name="reference_no" />}
             className={'form-group--reference-no'}
           >
-            <InputGroup {...field} />
+            <InputGroup intent={inputIntent({ error, touched })} {...field} />
           </FormGroup>
         )}
       </FastField>
@@ -159,7 +161,12 @@ export default function InventoryAdjustmentFormDialogFields() {
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'reason'} />}
           >
-            <TextArea growVertically={true} large={true} {...field} />
+            <TextArea
+              growVertically={true}
+              large={true}
+              intent={inputIntent({ error, touched })}
+              {...field}
+            />
           </FormGroup>
         )}
       </FastField>

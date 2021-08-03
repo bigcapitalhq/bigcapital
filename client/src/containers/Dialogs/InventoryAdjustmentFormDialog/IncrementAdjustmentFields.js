@@ -21,7 +21,12 @@ export default function IncrementAdjustmentFields() {
               intent={inputIntent({ error, touched })}
               helperText={<ErrorMessage name="quantity_on_hand" />}
             >
-              <InputGroup disabled={true} medium={'true'} {...field} />
+              <InputGroup
+                disabled={true}
+                medium={'true'}
+                intent={inputIntent({ error, touched })}
+                {...field}
+              />
             </FormGroup>
           )}
         </FastField>
@@ -63,6 +68,7 @@ export default function IncrementAdjustmentFields() {
                     ),
                   );
                 }}
+                intent={inputIntent({ error, touched })}
               />
             </FormGroup>
           )}
@@ -87,6 +93,7 @@ export default function IncrementAdjustmentFields() {
                 onChange={(value) => {
                   setFieldValue('cost', value);
                 }}
+                intent={inputIntent({ error, touched })}
               />
             </FormGroup>
           )}
@@ -127,6 +134,7 @@ export default function IncrementAdjustmentFields() {
                     ),
                   );
                 }}
+                intent={inputIntent({ error, touched })}
               />
             </FormGroup>
           )}

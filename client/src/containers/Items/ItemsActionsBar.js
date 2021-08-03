@@ -11,7 +11,9 @@ import {
   Classes,
   Intent,
   Switch,
+  Alignment,
 } from '@blueprintjs/core';
+import { Tooltip2 } from '@blueprintjs/popover2';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -19,6 +21,7 @@ import Icon from 'components/Icon';
 import { If, DashboardActionViewsList } from 'components';
 
 import { useItemsListContext } from './ItemsListProvider';
+import { useRefreshItems } from 'hooks/query/items';
 
 import withItems from 'containers/Items/withItems';
 import withItemsActions from './withItemsActions';
@@ -43,7 +46,8 @@ function ItemsActionsBar({
   // Items list context.
   const { itemsViews } = useItemsListContext();
 
-  // React intl.
+  // Items refresh action.
+  const { refresh } = useRefreshItems();
 
   // History context.
   const history = useHistory();
@@ -67,6 +71,10 @@ function ItemsActionsBar({
   const handleInactiveSwitchChange = (event) => {
     const checked = event.target.checked;
     setItemsTableState({ inactiveMode: checked });
+  };
+
+  const handleRefreshBtnClick = () => {
+    refresh();
   };
 
   return (
@@ -123,6 +131,14 @@ function ItemsActionsBar({
           labelElement={<T id={'inactive'} />}
           defaultChecked={itemsInactiveMode}
           onChange={handleInactiveSwitchChange}
+        />
+      </NavbarGroup>
+
+      <NavbarGroup align={Alignment.RIGHT}>
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="refresh-16" iconSize={14} />}
+          onClick={handleRefreshBtnClick}
         />
       </NavbarGroup>
     </DashboardActionsBar>

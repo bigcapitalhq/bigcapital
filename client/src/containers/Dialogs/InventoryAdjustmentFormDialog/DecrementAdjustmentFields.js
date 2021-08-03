@@ -25,7 +25,12 @@ function DecrementAdjustmentFields() {
               intent={inputIntent({ error, touched })}
               helperText={<ErrorMessage name="quantity_on_hand" />}
             >
-              <InputGroup disabled={true} medium={'true'} {...field} />
+              <InputGroup
+                disabled={true}
+                medium={'true'}
+                intent={inputIntent({ error, touched })}
+                {...field}
+              />
             </FormGroup>
           )}
         </FastField>
@@ -66,6 +71,7 @@ function DecrementAdjustmentFields() {
                     ),
                   );
                 }}
+                intent={inputIntent({ error, touched })}
               />
             </FormGroup>
           )}
@@ -104,6 +110,7 @@ function DecrementAdjustmentFields() {
                     ),
                   );
                 }}
+                intent={inputIntent({ error, touched })}
               />
             </FormGroup>
           )}

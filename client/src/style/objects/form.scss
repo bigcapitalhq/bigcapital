@@ -1,4 +1,3 @@
-
 .form {
   &__floating-footer {
     position: fixed;
@@ -14,7 +13,7 @@
   }
 }
 
-// Form
+// Form form.
 label.bp3-label {
   color: #353535;
   font-weight: 400;
@@ -31,6 +30,7 @@ label.bp3-label {
   }
 }
 
+// Form input.
 .#{$ns}-input {
   box-shadow: 0 0 0 transparent;
   border: 1px solid #ced4da;
@@ -44,12 +44,13 @@ label.bp3-label {
     box-shadow: 0 0 0 1px #116cd0;
     border-color: #116cd0;
   }
+
   &.bp3-disabled,
   &:disabled {
     background: #e9ecef;
   }
 
-  .bp3-form-group.bp3-intent-danger > & {
+  .bp3-input-group.bp3-intent-danger & {
     box-shadow: 0 0 0 transparent;
     border-color: #db3737;
 
@@ -92,6 +93,7 @@ label.bp3-label {
     box-shadow: none;
     border: 1px solid #ced4da;
   }
+
   &:focus {
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     border-color: #80bdff;
@@ -128,8 +130,9 @@ label.bp3-label {
   .bp3-input-group {
     flex: 1 1 auto;
   }
+
   .bp3-control-group {
-    > .input-group-prepend:first-child .input-group-text {
+    >.input-group-prepend:first-child .input-group-text {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
     }
@@ -141,7 +144,9 @@ label.bp3-label {
     display: none;
   }
 }
+
 .bp3-datepicker-caption select {
+
   &,
   &:hover {
     border-color: transparent;
@@ -180,18 +185,20 @@ label.bp3-label {
     padding-right: 25px;
     justify-content: start;
 
-    &:not([class*="bp3-intent-"]):not(.bp3-minimal){
+    &:not([class*="bp3-intent-"]):not(.bp3-minimal) {
+
       &,
       &:hover {
         outline: none;
         box-shadow: 0 0 0 transparent;
         border: 1px solid #ced4da;
-  
+
         &:not(:disabled) {
           background: #fff;
         }
       }
-      &:focus{
+
+      &:focus {
         box-shadow: 0 0 0 1px #116cd0;
         border-color: #116cd0;
       }
@@ -202,12 +209,12 @@ label.bp3-label {
     width: 100%;
   }
 
-  .bp3-popover-target.bp3-popover-open{
+  .bp3-popover-target.bp3-popover-open {
 
     .#{$ns}-button {
 
       &:not([class*="bp3-intent-"]):not(.bp3-minimal):not(:disabled),
-      &:not([class*="bp3-intent-"]):not(.bp3-minimal):hover:not(:disabled){
+      &:not([class*="bp3-intent-"]):not(.bp3-minimal):hover:not(:disabled) {
         background-color: #fafafa;
       }
     }
@@ -220,7 +227,7 @@ label.bp3-label {
       left: 0;
       margin: 7px;
 
-      + .bp3-button-text {
+      +.bp3-button-text {
         padding-left: 20px;
       }
     }
@@ -252,25 +259,25 @@ label.bp3-label {
 }
 
 @mixin control-checked-colors($selector: ':checked') {
-  input#{$selector} ~ .#{$ns}-control-indicator {
+  input#{$selector}~.#{$ns}-control-indicator {
     box-shadow: none;
     background-color: $control-checked-background-color;
     color: $white;
   }
 
-  &:hover input#{$selector} ~ .#{$ns}-control-indicator {
+  &:hover input#{$selector}~.#{$ns}-control-indicator {
     box-shadow: none;
     background-color: $control-checked-background-color-hover;
     border-color: $control-checked-background-color-active;
   }
 
-  input:not(:disabled):active#{$selector} ~ .#{$ns}-control-indicator {
+  input:not(:disabled):active#{$selector}~.#{$ns}-control-indicator {
     box-shadow: none;
     background-color: $control-checked-background-color-active;
     border-color: $control-checked-background-color-active;
   }
 
-  input:disabled#{$selector} ~ .#{$ns}-control-indicator {
+  input:disabled#{$selector}~.#{$ns}-control-indicator {
     box-shadow: none;
     background: rgba($control-checked-background-color, 0.5);
   }
@@ -278,20 +285,23 @@ label.bp3-label {
 
 ///@extend
 .#{$ns}-control {
-  input:checked ~ .#{$ns}-control-indicator {
+  input:checked~.#{$ns}-control-indicator {
     box-shadow: none;
     background-color: transparent;
     background-image: none;
   }
-  &:hover input:checked ~ .#{$ns}-control-indicator {
+
+  &:hover input:checked~.#{$ns}-control-indicator {
     box-shadow: none;
     background-color: transparent;
   }
-  input:not(:disabled):active:checked ~ .#{$ns}-control-indicator {
+
+  input:not(:disabled):active:checked~.#{$ns}-control-indicator {
     box-shadow: none;
     background: transparent;
   }
-  input:disabled:checked ~ .#{$ns}-control-indicator {
+
+  input:disabled:checked~.#{$ns}-control-indicator {
     box-shadow: none;
     background: transparent;
   }
@@ -334,7 +344,7 @@ label.bp3-label {
     background-color: transparent;
   }
 
-  input:not(:disabled):active ~ .#{$ns}-control-indicator {
+  input:not(:disabled):active~.#{$ns}-control-indicator {
     box-shadow: 0 0 0 transparent;
     background: transparent;
   }
@@ -359,7 +369,7 @@ label.bp3-label {
     Styleguide checkbox
   */
   &.#{$ns}-checkbox {
-    &:hover input:indeterminate ~ .#{$ns}-control-indicator {
+    &:hover input:indeterminate~.#{$ns}-control-indicator {
       // box-shadow: 0 0 0 transparent;
     }
 
@@ -371,6 +381,7 @@ label.bp3-label {
         width: 100%;
       }
     }
+
     @include control-checked-colors(':checked');
 
     // make :indeterminate look like :checked _for Checkbox only_
@@ -381,12 +392,14 @@ label.bp3-label {
       border-radius: $pt-border-radius;
       background-color: #fff;
     }
-    input:checked ~ .#{$ns}-control-indicator {
+
+    input:checked~.#{$ns}-control-indicator {
       background-image: escape-svg($form-check-input-checked-bg-image);
       border-color: $form-check-input-checked-bg-color;
       background-color: $form-check-input-checked-bg-color;
     }
-    input:indeterminate ~ .#{$ns}-control-indicator {
+
+    input:indeterminate~.#{$ns}-control-indicator {
       background-image: escape-svg($form-check-input-indeterminate-bg-image);
       border-color: $form-check-input-checked-bg-color;
       background-color: $form-check-input-checked-bg-color;
@@ -422,29 +435,27 @@ label.bp3-label {
       }
     }
 
-    input:checked ~ .#{$ns}-control-indicator {
+    input:checked~.#{$ns}-control-indicator {
       border-color: $form-check-input-checked-bg-color;
 
       &::before {
-        background-image: radial-gradient(
-          $form-check-input-checked-bg-color 40%,
-          transparent 40%
-        );
+        background-image: radial-gradient($form-check-input-checked-bg-color 40%,
+            transparent 40%);
       }
     }
 
-    input:checked:disabled ~ .#{$ns}-control-indicator::before {
+    input:checked:disabled~.#{$ns}-control-indicator::before {
       opacity: 0.5;
     }
 
-    input:focus ~ .#{$ns}-control-indicator {
+    input:focus~.#{$ns}-control-indicator {
       -moz-outline-radius: $control-indicator-size;
     }
   }
 }
 
 .bp3-menu-item::before,
-.bp3-menu-item > .bp3-icon {
+.bp3-menu-item>.bp3-icon {
   color: #4b5d6b;
 }
 
