@@ -1,3 +1,4 @@
+import { sumBy } from 'lodash';
 import { toSafeNumber } from 'utils';
 
 /**
@@ -21,7 +22,7 @@ export const calcItemEntryTotal = (discount, quantity, rate) => {
 export function updateItemsEntriesTotal(rows) {
   return rows.map((row) => ({
     ...row,
-    total: calcItemEntryTotal(row.discount, row.quantity, row.rate),
+    amount: calcItemEntryTotal(row.discount, row.quantity, row.rate),
   }));
 }
 
@@ -29,3 +30,10 @@ export const ITEM_TYPE = {
   SELLABLE: 'SELLABLE',
   PURCHASABLE: 'PURCHASABLE',
 };
+
+/**
+ * Retrieve total of the given items entries.
+ */
+export function getEntriesTotal(entries) {
+  return sumBy(entries, 'amount');
+}

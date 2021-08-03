@@ -8,6 +8,7 @@ import {
   useCreateEstimate,
   useEditEstimate,
 } from 'hooks/query';
+import { ITEMS_FILTER_ROLES } from './utils';
 
 const EstimateFormContext = createContext();
 
@@ -18,31 +19,24 @@ function EstimateFormProvider({ estimateId, ...props }) {
   const {
     data: estimate,
     isFetching: isEstimateFetching,
+    isLoading: isEstimateLoading,
   } = useEstimate(estimateId, { enabled: !!estimateId });
-
-  // Filter all sellable items only.
-  const stringifiedFilterRoles = React.useMemo(
-    () =>
-      JSON.stringify([
-        { index: 1, fieldKey: 'sellable', value: true, condition: '&&', comparator: 'equals', },
-        { index: 2, fieldKey: 'active', value: true, condition: '&&', comparator: 'equals' },
-      ]),
-    [],
-  );
 
   // Handle fetch Items data table or list
   const {
     data: { items },
     isFetching: isItemsFetching,
+    isLoading: isItemsLoading,
   } = useItems({
     page_size: 10000,
-    stringified_filter_roles: stringifiedFilterRoles,
+    stringified_filter_roles: ITEMS_FILTER_ROLES,
   });
 
   // Handle fetch customers data table or list
   const {
     data: { customers },
     isFetch: isCustomersFetching,
+    isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
   // Handle fetch settings.
@@ -68,6 +62,10 @@ function EstimateFormProvider({ estimateId, ...props }) {
     isItemsFetching,
     isEstimateFetching,
 
+    isCustomersLoading,
+    isItemsLoading,
+    isEstimateLoading,
+
     submitPayload,
     setSubmitPayload,
 
@@ -77,7 +75,7 @@ function EstimateFormProvider({ estimateId, ...props }) {
 
   return (
     <DashboardInsider
-      loading={isCustomersFetching || isItemsFetching || isEstimateFetching}
+      loading={isCustomersLoading || isItemsLoading || isEstimateLoading}
       name={'estimate-form'}
     >
       <EstimateFormContext.Provider value={provider} {...props} />

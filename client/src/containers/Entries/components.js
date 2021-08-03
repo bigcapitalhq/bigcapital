@@ -75,7 +75,7 @@ export function QuantityTotalFooterCell({ rows }) {
  * Total footer cell.
  */
 export function TotalFooterCell({ payload: { currencyCode }, rows }) {
-  const total = safeSumBy(rows, 'original.total');
+  const total = safeSumBy(rows, 'original.amount');
   return <span>{formattedAmount(total, currencyCode)}</span>;
 }
 
@@ -168,7 +168,7 @@ export function useEditableItemsEntriesColumns({ landedCost }) {
       {
         Header: intl.get('total'),
         Footer: TotalFooterCell,
-        accessor: 'total',
+        accessor: 'amount',
         Cell: TotalCell,
         disableSortBy: true,
         width: 100,

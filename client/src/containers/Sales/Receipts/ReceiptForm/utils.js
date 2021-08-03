@@ -17,6 +17,7 @@ export const defaultReceiptEntry = {
   discount: '',
   quantity: '',
   description: '',
+  amount: '',
 };
 
 export const defaultReceipt = {

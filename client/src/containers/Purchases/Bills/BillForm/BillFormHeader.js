@@ -21,7 +21,7 @@ function BillFormHeader({
   const { values } = useFormikContext();
 
   // Calculate the total due amount of bill entries.
-  const totalDueAmount = useMemo(() => sumBy(values.entries, 'total'), [
+  const totalDueAmount = useMemo(() => sumBy(values.entries, 'amount'), [
     values.entries,
   ]);
 

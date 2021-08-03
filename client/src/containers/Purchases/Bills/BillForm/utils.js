@@ -17,6 +17,7 @@ export const defaultBillEntry = {
   discount: '',
   quantity: '',
   description: '',
+  amount: '',
   landed_cost: false,
 };
 

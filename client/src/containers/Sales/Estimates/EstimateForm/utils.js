@@ -17,6 +17,7 @@ export const defaultEstimateEntry = {
   discount: '',
   quantity: '',
   description: '',
+  amount: '',
 };
 
 export const defaultEstimate = {
@@ -55,7 +56,7 @@ export const useObserveEstimateNoSettings = (prefix, nextNumber) => {
     setFieldValue('estimate_number', estimateNo);
   }, [setFieldValue, prefix, nextNumber]);
 };
-  
+
 /**
  * Detarmines customers fast field when update.
  */
@@ -75,3 +76,20 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
+
+export const ITEMS_FILTER_ROLES = JSON.stringify([
+  {
+    index: 1,
+    fieldKey: 'sellable',
+    value: true,
+    condition: '&&',
+    comparator: 'equals',
+  },
+  {
+    index: 2,
+    fieldKey: 'active',
+    value: true,
+    condition: '&&',
+    comparator: 'equals',
+  },
+]);

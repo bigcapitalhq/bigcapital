@@ -1,14 +1,15 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
-import { sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
 
 import { CLASSES } from 'common/classes';
-
 import EstimateFormHeaderFields from './EstimateFormHeaderFields';
-import { PageFormBigNumber } from 'components';
+
 import withSettings from 'containers/Settings/withSettings';
+
+import { getEntriesTotal } from 'containers/Entries/utils';
+import { PageFormBigNumber } from 'components';
 import { compose } from 'utils';
 
 // Estimate form top header.
@@ -20,7 +21,7 @@ function EstimateFormHeader({
 
   // Calculate the total due amount of bill entries.
   const totalDueAmount = useMemo(
-    () => sumBy(values.entries, 'total'),
+    () => getEntriesTotal(values.entries),
     [values.entries],
   );
 

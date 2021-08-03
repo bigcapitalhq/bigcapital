@@ -26,6 +26,7 @@
 @import 'components/PageForm';
 @import 'components/Tooltip';
 @import 'components/Postbox';
+@import 'components/SidebarOverlay';
 
 // Pages
 @import 'pages/view-form';
@@ -200,134 +201,6 @@ html[lang^="ar"] {
     letter-spacing: -0.01rem;
   }
 }
-
-
-.sidebar-overlay {
-  background: #fff;
-  height: 100%;
-  width: 225px;
-  outline: 0;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
-
-  &__scroll-wrapper {
-    height: 100%
-  }
-
-  .ScrollbarsCustom-Track {
-
-    &.ScrollbarsCustom-TrackY,
-    &.ScrollbarsCustom-TrackX {
-      background: rgba(0, 0, 0, 0);
-    }
-  }
-
-  .ScrollbarsCustom-Thumb {
-
-    &.ScrollbarsCustom-ThumbX,
-    &.ScrollbarsCustom-ThumbY {
-      background: rgba(0, 0, 0, 0);
-    }
-  }
-
-  .ScrollbarsCustom-Content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  &:hover {
-    .ScrollbarsCustom-Thumb {
-
-      &.ScrollbarsCustom-ThumbX,
-      &.ScrollbarsCustom-ThumbY {
-        background: rgba(0, 0, 0, 0.5);
-      }
-    }
-  }
-
-  &__menu {
-    margin: 16px 0;
-  }
-
-  &__item {
-    font-size: 15px;
-    color: #00102b;
-
-    a {
-      color: inherit;
-      display: block;
-      padding: 10px 22px;
-      text-decoration: none;
-
-      &:hover,
-      &:focus{
-        background: #f3f3f3;
-      }
-    }
-  }
-
-  &__divider {
-    height: 1px;
-    margin: 6px 0;
-    background: #e2e5ec;
-  }
-
-  &__label{
-    text-transform: uppercase;
-    font-size: 12px;
-    padding: 14px 20px 10px;
-    letter-spacing: 1px;
-    color: #707a85;
-
-    html[lang^="ar"] & {
-      font-size: 13px;
-      letter-spacing: 0;
-      font-weight: 500;
-    }
-  }
-
-  &__label + .sidebar-overlay__divider{
-    margin-top: 0;
-  }
-}
-
-.sidebar-overlay-transition {
-  transform: translateX(-100%);
-
-  &.bp3-overlay{
-    &-appear,
-    &-enter {
-      transform: translateX(-100%)
-    }
-    
-    &-appear-active,
-    &-enter-active {
-      transform: translateX(0) !important;
-      transition: all 100ms ease-in-out;
-    }
-    
-    &-appear-done,
-    &-enter-done {
-      transform: translateX(0) !important;
-    }
-
-    &-exit {
-      transform: translateX(0) !important;
-    }   
-    &-exit-active {
-      transform: translateX(-100%) !important;
-      transition: all 100ms ease-in-out;
-    }
-    &-exit-done{
-      transform: translateX(-100%) !important;
-    }
-  }
-
-}
-.sidebar-overlay-backdrop{
-  background-color: rgba(0, 10, 30, 0.15);
-}
-
 
 .bp3-popover2{
   box-shadow: 0 0 0;

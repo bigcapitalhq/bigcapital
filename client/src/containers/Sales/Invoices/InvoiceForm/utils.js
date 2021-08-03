@@ -26,7 +26,7 @@ export const defaultInvoiceEntry = {
   discount: '',
   quantity: '',
   description: '',
-  total: 0,
+  amount: '',
 };
 
 // Default invoice object.
@@ -63,6 +63,9 @@ export function transformToEditForm(invoice) {
   };
 }
 
+/**
+ * Transformes the response errors types.
+ */
 export const transformErrors = (errors, { setErrors }) => {
   if (errors.some((e) => e.type === ERROR.SALE_INVOICE_NUMBER_IS_EXISTS)) {
     setErrors({
@@ -102,6 +105,9 @@ export const useObserveInvoiceNoSettings = (prefix, nextNumber) => {
   }, [setFieldValue, prefix, nextNumber]);
 };
 
+/**
+ * Detarmines customer name field when should update.
+ */
 export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
   return (
     newProps.customers !== oldProps.customers ||
@@ -109,9 +115,29 @@ export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
   );
 };
 
+/**
+ * Detarmines invoice entries field when should update.
+ */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
     newProps.items !== oldProps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
+
+export const ITEMS_FILTER_ROLES_QUERY = JSON.stringify([
+  {
+    index: 1,
+    fieldKey: 'sellable',
+    value: true,
+    condition: '&&',
+    comparator: 'equals',
+  },
+  {
+    index: 2,
+    fieldKey: 'active',
+    value: true,
+    condition: '&&',
+    comparator: 'equals',
+  },
+]);

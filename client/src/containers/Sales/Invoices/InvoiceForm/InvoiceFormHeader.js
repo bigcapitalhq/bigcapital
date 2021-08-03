@@ -1,13 +1,14 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
-import { sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
 
 import { CLASSES } from 'common/classes';
 import InvoiceFormHeaderFields from './InvoiceFormHeaderFields';
 
+import { getEntriesTotal } from 'containers/Entries/utils';
 import { PageFormBigNumber } from 'components';
+
 import withSettings from 'containers/Settings/withSettings';
 
 import { compose } from 'redux';
@@ -23,7 +24,7 @@ function InvoiceFormHeader({
 
   // Calculate the total due amount of invoice entries.
   const totalDueAmount = useMemo(
-    () => sumBy(values.entries, 'total'),
+    () => getEntriesTotal(values.entries),
     [values.entries],
   );
 

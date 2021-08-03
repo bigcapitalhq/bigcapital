@@ -89,6 +89,7 @@ function EstimateForm({
     );
     const totalQuantity = sumBy(entries, (entry) => parseInt(entry.quantity));
 
+    // Validate the entries quantity should be bigger than zero.
     if (totalQuantity === 0) {
       AppToaster.show({
         message: intl.get('quantity_cannot_be_zero_or_empty'),
