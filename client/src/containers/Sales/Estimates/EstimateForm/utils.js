@@ -1,12 +1,17 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import moment from 'moment';
+import * as R from 'ramda';
 import {
   defaultFastFieldShouldUpdate,
   transactionNumber,
   repeatValue,
   transformToForm,
 } from 'utils';
+import {
+  updateItemsEntriesTotal,
+  ensureEntriesHaveEmptyLine,
+} from 'containers/Entries/utils';
 
 export const MIN_LINES_NUMBER = 4;
 
@@ -32,9 +37,8 @@ export const defaultEstimate = {
   entries: [...repeatValue(defaultEstimateEntry, MIN_LINES_NUMBER)],
 };
 
-export const transformToEditForm = (estimate) => ({
-  ...transformToForm(estimate, defaultEstimate),
-  entries: [
+export const transformToEditForm = (estimate) => {
+  const initialEntries = [
     ...estimate.entries.map((estimate) => ({
       ...transformToForm(estimate, defaultEstimateEntry),
     })),
@@ -42,8 +46,17 @@ export const transformToEditForm = (estimate) => ({
       defaultEstimateEntry,
       Math.max(MIN_LINES_NUMBER - estimate.entries.length, 0),
     ),
-  ],
-});
+  ];
+  const entries = R.compose(
+    ensureEntriesHaveEmptyLine(defaultEstimateEntry),
+    updateItemsEntriesTotal,
+  )(initialEntries);
+
+  return {
+    ...transformToForm(estimate, defaultEstimate),
+    entries
+  }
+};
 
 /**
  * Syncs estimate number of the settings with the context form.

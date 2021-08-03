@@ -1,13 +1,11 @@
 import React from 'react';
 import moment from 'moment';
-import { isEmpty } from 'lodash';
 import {
   compose,
   transformToForm,
   repeatValue,
   transactionNumber,
 } from 'utils';
-import { updateItemsEntriesTotal } from 'containers/Entries/utils';
 import { useFormikContext } from 'formik';
 import { Intent } from '@blueprintjs/core';
 
@@ -15,6 +13,10 @@ import { defaultFastFieldShouldUpdate } from 'utils';
 import intl from 'react-intl-universal';
 import { ERROR } from 'common/errors';
 import { AppToaster } from 'components';
+import {
+  updateItemsEntriesTotal,
+  ensureEntriesHaveEmptyLine,
+} from 'containers/Entries/utils';
 
 export const MIN_LINES_NUMBER = 4;
 
@@ -47,7 +49,7 @@ export const defaultInvoice = {
  * Transform invoice to initial values in edit mode.
  */
 export function transformToEditForm(invoice) {
-  const entries = compose(updateItemsEntriesTotal)([
+  const initialEntries = [
     ...invoice.entries.map((invoice) => ({
       ...transformToForm(invoice, defaultInvoiceEntry),
     })),
@@ -55,7 +57,11 @@ export function transformToEditForm(invoice) {
       defaultInvoiceEntry,
       Math.max(MIN_LINES_NUMBER - invoice.entries.length, 0),
     ),
-  ]);
+  ];
+  const entries = compose(
+    ensureEntriesHaveEmptyLine(defaultInvoiceEntry),
+    updateItemsEntriesTotal,
+  )(initialEntries);
 
   return {
     ...transformToForm(invoice, defaultInvoice),

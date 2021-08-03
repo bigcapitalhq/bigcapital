@@ -1,12 +1,17 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import moment from 'moment';
+import * as R from 'ramda';
 import {
   defaultFastFieldShouldUpdate,
   transactionNumber,
   repeatValue,
   transformToForm,
 } from 'utils';
+import {
+  updateItemsEntriesTotal,
+  ensureEntriesHaveEmptyLine,
+} from 'containers/Entries/utils';
 
 export const MIN_LINES_NUMBER = 4;
 
@@ -35,9 +40,8 @@ export const defaultReceipt = {
 /**
  * Transform to form in edit mode.
  */
-export const transformToEditForm = (receipt) => ({
-  ...transformToForm(receipt, defaultReceipt),
-  entries: [
+export const transformToEditForm = (receipt) => {
+  const initialEntries = [
     ...receipt.entries.map((entry) => ({
       ...transformToForm(entry, defaultReceiptEntry),
     })),
@@ -45,8 +49,17 @@ export const transformToEditForm = (receipt) => ({
       defaultReceiptEntry,
       Math.max(MIN_LINES_NUMBER - receipt.entries.length, 0),
     ),
-  ],
-});
+  ];
+  const entries = R.compose(
+    ensureEntriesHaveEmptyLine(defaultReceiptEntry),
+    updateItemsEntriesTotal,
+  )(initialEntries);
+
+  return {
+    ...transformToForm(receipt, defaultReceipt),
+    entries,
+  };
+};
 
 export const useObserveReceiptNoSettings = (prefix, nextNumber) => {
   const { setFieldValue } = useFormikContext();

@@ -1,4 +1,5 @@
-import { sumBy } from 'lodash';
+import { sumBy, isEmpty, last } from 'lodash';
+import * as R from  'ramda';
 import { toSafeNumber } from 'utils';
 
 /**
@@ -37,3 +38,18 @@ export const ITEM_TYPE = {
 export function getEntriesTotal(entries) {
   return sumBy(entries, 'amount');
 }
+
+/**
+ * Ensure the given entries have enough empty line on the last.
+ * @param {Object} defaultEntry - Default entry.
+ * @param {Array} entries - Entries.
+ * @return {Array}
+ */
+export const ensureEntriesHaveEmptyLine = R.curry((defaultEntry, entries) => {
+  const lastEntry = last(entries);
+
+  if (isEmpty(lastEntry.account_id) || isEmpty(lastEntry.amount)) {
+    return [...entries, defaultEntry];
+  }
+  return entries;
+});

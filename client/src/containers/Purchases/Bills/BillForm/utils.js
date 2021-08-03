@@ -1,5 +1,6 @@
 import moment from 'moment';
 import intl from 'react-intl-universal';
+import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 import {
@@ -7,6 +8,10 @@ import {
   transformToForm,
   repeatValue,
 } from 'utils';
+import {
+  updateItemsEntriesTotal,
+  ensureEntriesHaveEmptyLine,
+} from 'containers/Entries/utils';
 
 export const MIN_LINES_NUMBER = 4;
 
@@ -33,17 +38,23 @@ export const defaultBill = {
 };
 
 export const transformToEditForm = (bill) => {
+  const initialEntries = [
+    ...bill.entries.map((bill) => ({
+      ...transformToForm(bill, defaultBill.entries[0]),
+    })),
+    ...repeatValue(
+      defaultBill,
+      Math.max(MIN_LINES_NUMBER - bill.entries.length, 0),
+    ),
+  ];
+  const entries = R.compose(
+    ensureEntriesHaveEmptyLine(defaultBillEntry),
+    updateItemsEntriesTotal,
+  )(initialEntries);
+
   return {
     ...transformToForm(bill, defaultBill),
-    entries: [
-      ...bill.entries.map((bill) => ({
-        ...transformToForm(bill, defaultBill.entries[0]),
-      })),
-      ...repeatValue(
-        defaultBill,
-        Math.max(MIN_LINES_NUMBER - bill.entries.length, 0),
-      ),
-    ],
+    entries,
   };
 };
 
