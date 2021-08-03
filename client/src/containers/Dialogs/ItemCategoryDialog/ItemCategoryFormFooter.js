@@ -29,11 +29,11 @@ function ItemCategoryFormFooter({
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-        <Button onClick={handleCloseBtnClick}>
+        <Button disabled={isSubmitting} onClick={handleCloseBtnClick}>
           <T id={'close'} />
         </Button>
 
-        <Button intent={Intent.PRIMARY} type="submit" disabled={isSubmitting}>
+        <Button intent={Intent.PRIMARY} type="submit" loading={isSubmitting}>
           {isNewMode ? <T id={'submit'} /> : <T id={'edit'} />}
         </Button>
       </div>

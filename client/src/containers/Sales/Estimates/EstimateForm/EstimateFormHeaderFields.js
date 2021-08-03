@@ -90,6 +90,7 @@ function EstimateFormHeader({
                 form.setFieldValue('customer_id', customer.id);
               }}
               popoverFill={true}
+              intent={inputIntent({ error, touched })}
             />
           </FormGroup>
         )}

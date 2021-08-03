@@ -44,8 +44,6 @@ function InventoryAdjustmentForm({
     createInventoryAdjMutate,
   } = useInventoryAdjContext();
 
-  
-
   // Initial form values.
   const initialValues = {
     ...defaultInitialValues,

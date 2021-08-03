@@ -18,7 +18,8 @@ function InventoryAdjustmentFloatingActions({
   const { isSubmitting, submitForm } = useFormikContext();
 
   // Inventory adjustment dialog context.
-  const { dialogName, setSubmitPayload } = useInventoryAdjContext();
+  const { dialogName, setSubmitPayload, submitPayload } =
+    useInventoryAdjContext();
 
   // handle submit as draft button click.
   const handleSubmitDraftBtnClick = (event) => {
@@ -34,27 +35,34 @@ function InventoryAdjustmentFloatingActions({
 
   // Handle close button click.
   const handleCloseBtnClick = (event) => {
-    closeDialog(dialogName)
+    closeDialog(dialogName);
   };
 
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-        <Button onClick={handleCloseBtnClick} style={{ minWidth: '75px' }}>
+        <Button
+          disabled={isSubmitting}
+          onClick={handleCloseBtnClick}
+          style={{ minWidth: '75px' }}
+        >
           <T id={'close'} />
         </Button>
 
         <Button
           disabled={isSubmitting}
+          loading={isSubmitting && !submitPayload.publish}
           style={{ minWidth: '75px' }}
           type="submit"
           onClick={handleSubmitDraftBtnClick}
         >
           {<T id={'save_as_draft'} />}
         </Button>
+
         <Button
           intent={Intent.PRIMARY}
           disabled={isSubmitting}
+          loading={isSubmitting && submitPayload.publish}
           style={{ minWidth: '75px' }}
           type="submit"
           onClick={handleSubmitMakeAdjustmentBtnClick}
@@ -66,6 +74,4 @@ function InventoryAdjustmentFloatingActions({
   );
 }
 
-export default compose(
-  withDialogActions
-)(InventoryAdjustmentFloatingActions);
+export default compose(withDialogActions)(InventoryAdjustmentFloatingActions);
