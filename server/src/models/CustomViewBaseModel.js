@@ -13,4 +13,8 @@ export default (Model) =>
     static getDefaultViewBySlug(viewSlug) {
       return this.defaultViews.find((view) => view.slug === viewSlug) || null;
     }
+
+    static getDefaultViews() {
+      return this.defaultViews;
+    }
   };

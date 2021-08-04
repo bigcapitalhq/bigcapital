@@ -1,29 +1,11 @@
-import { Service, Inject } from "typedi";
-import { difference } from 'lodash';
-import { ServiceError } from 'exceptions';
+import { Service, Inject } from 'typedi';
 import {
   IViewsService,
-  IViewDTO,
   IView,
-  IViewEditDTO,
   IModel,
-  IViewColumnDTO,
-  IViewRoleDTO,
 } from 'interfaces';
-import { getModelFieldsKeys } from 'lib/ViewRolesBuilder';
 import TenancyService from 'services/Tenancy/TenancyService';
-import ResourceService from "services/Resource/ResourceService";
-import { validateRolesLogicExpression } from 'lib/ViewRolesBuilder';
-
-const ERRORS = {
-  VIEW_NOT_FOUND: 'VIEW_NOT_FOUND',
-  VIEW_PREDEFINED: 'VIEW_PREDEFINED',
-  VIEW_NAME_NOT_UNIQUE: 'VIEW_NAME_NOT_UNIQUE',
-  LOGIC_EXPRESSION_INVALID: 'INVALID_LOGIC_EXPRESSION',
-  RESOURCE_FIELDS_KEYS_NOT_FOUND: 'RESOURCE_FIELDS_KEYS_NOT_FOUND',
-  RESOURCE_COLUMNS_KEYS_NOT_FOUND: 'RESOURCE_COLUMNS_KEYS_NOT_FOUND',
-  RESOURCE_MODEL_NOT_FOUND: 'RESOURCE_MODEL_NOT_FOUND'
-};
+import ResourceService from 'services/Resource/ResourceService';
 
 @Service()
 export default class ViewsService implements IViewsService {
@@ -38,281 +20,33 @@ export default class ViewsService implements IViewsService {
 
   /**
    * Listing resource views.
-   * @param {number} tenantId - 
-   * @param {string} resourceModel - 
+   * @param {number} tenantId -
+   * @param {string} resourceModel -
    */
   public async listResourceViews(
     tenantId: number,
-    resourceModelName: string,
+    resourceModelName: string
   ): Promise<IView[]> {
-    this.logger.info('[views] trying to retrieve resource views.', { tenantId, resourceModelName });
-
     // Validate the resource model name is valid.
-    const resourceModel = this.getResourceModelOrThrowError(tenantId, resourceModelName);
+    const resourceModel = this.getResourceModelOrThrowError(
+      tenantId,
+      resourceModelName
+    );
+    // Default views.
+    const defaultViews = resourceModel.getDefaultViews();
 
-    const { viewRepository } = this.tenancy.repositories(tenantId);
-    return viewRepository.allByResource(resourceModel.name, 'roles');
-  }
-
-  /**
-   * Validate model resource conditions fields existance.
-   * @param {string} resourceName 
-   * @param {IViewRoleDTO[]} viewRoles 
-   */
-  private validateResourceRolesFieldsExistance(
-    ResourceModel: IModel,
-    viewRoles: IViewRoleDTO[],
-  ) {
-    const resourceFieldsKeys = getModelFieldsKeys(ResourceModel);
-
-    const fieldsKeys = viewRoles.map(viewRole => viewRole.fieldKey);
-    const notFoundFieldsKeys = difference(fieldsKeys, resourceFieldsKeys);
-
-    if (notFoundFieldsKeys.length > 0) {
-      throw new ServiceError(ERRORS.RESOURCE_FIELDS_KEYS_NOT_FOUND);
-    }
-    return notFoundFieldsKeys;
-  }
-
-  /**
-   * Validates model resource columns existance.
-   * @param {string} resourceName 
-   * @param {IViewColumnDTO[]} viewColumns 
-   */
-  private validateResourceColumnsExistance(
-    ResourceModel: IModel,
-    viewColumns: IViewColumnDTO[],
-  ) {
-    const resourceFieldsKeys = getModelFieldsKeys(ResourceModel);
-
-    const fieldsKeys = viewColumns.map((viewColumn: IViewColumnDTO) => viewColumn.fieldKey);
-    const notFoundFieldsKeys = difference(fieldsKeys, resourceFieldsKeys);
-
-    if (notFoundFieldsKeys.length > 0) {
-      throw new ServiceError(ERRORS.RESOURCE_COLUMNS_KEYS_NOT_FOUND);
-    }
-    return notFoundFieldsKeys;
-  }
-
-  /**
-   * Retrieve the given view details with associated conditions and columns.
-   * @param {number} tenantId - Tenant id.
-   * @param {number} viewId - View id.
-   */
-  public getView(tenantId: number, viewId: number): Promise<IView> {
-    this.logger.info('[view] trying to get view from storage.', { tenantId, viewId });
-    return this.getViewOrThrowError(tenantId, viewId);
-  }
-
-  /**
-   * Retrieve view or throw not found error.
-   * @param {number} tenantId - Tenant id.
-   * @param {number} viewId - View id.
-   */
-  private async getViewOrThrowError(tenantId: number, viewId: number): Promise<IView> {
-    const { viewRepository } = this.tenancy.repositories(tenantId);
-
-    this.logger.info('[view] trying to get view from storage.', { tenantId, viewId });
-    const view = await viewRepository.findOneById(viewId);
-
-    if (!view) {
-      this.logger.info('[view] view not found.', { tenantId, viewId });
-      throw new ServiceError(ERRORS.VIEW_NOT_FOUND);
-    }
-    return view;
+    return defaultViews;
   }
 
   /**
    * Retrieve resource model from resource name or throw not found error.
-   * @param {number} tenantId 
-   * @param {number} resourceModel 
+   * @param {number} tenantId
+   * @param {number} resourceModel
    */
   private getResourceModelOrThrowError(
     tenantId: number,
-    resourceModel: string,
+    resourceModel: string
   ): IModel {
     return this.resourceService.getResourceModel(tenantId, resourceModel);
-  }
-
-  /**
-   * Validates view name uniqiness in the given resource.
-   * @param {number} tenantId 
-   * @param {stirng} resourceModel 
-   * @param {string} viewName 
-   * @param {number} notViewId 
-   */
-  private async validateViewNameUniquiness(
-    tenantId: number,
-    resourceModel: string,
-    viewName: string,
-    notViewId?: number
-  ): void {
-    const { View } = this.tenancy.models(tenantId);
-
-    this.logger.info('[views] trying to validate view name uniqiness.', {
-      tenantId, resourceModel, viewName,
-    });
-    const foundViews = await View.query()
-      .where('resource_model', resourceModel)
-      .where('name', viewName)
-      .onBuild((builder) => {
-        if (notViewId) {
-          builder.whereNot('id', notViewId);
-        }
-      });
-
-    if (foundViews.length > 0) {
-      throw new ServiceError(ERRORS.VIEW_NAME_NOT_UNIQUE);
-    }
-  }
-
-  /**
-   * Creates a new custom view to specific resource.
-   * ----––––––
-   * Precedures.
-   * ----––––––
-   * - Validate resource fields existance.
-   * - Validate resource columns existance.
-   * - Validate view logic expression.
-   * - Store view to the storage.
-   * - Store view columns to the storage.
-   * - Store view roles/conditions to the storage.
-   * ---------
-   * @param {number} tenantId - Tenant id.
-   * @param {IViewDTO} viewDTO - New view DTO.
-   * 
-   * @return {Promise<IView>}
-   */
-  public async newView(tenantId: number, viewDTO: IViewDTO): Promise<IView> {
-    const { viewRepository } = this.tenancy.repositories(tenantId);
-    this.logger.info('[views] trying to create a new view.', { tenantId, viewDTO });
-
-    // Validate the resource name is exists and resourcable.
-    const ResourceModel = this.getResourceModelOrThrowError(tenantId, viewDTO.resourceModel);
-
-    // Validate view name uniquiness.
-    await this.validateViewNameUniquiness(tenantId, viewDTO.resourceModel, viewDTO.name);
-
-    // Validate the given fields keys exist on the storage.
-    this.validateResourceRolesFieldsExistance(ResourceModel, viewDTO.roles);
-
-    // Validate the given columnable fields keys exists on the storage.
-    this.validateResourceColumnsExistance(ResourceModel, viewDTO.columns);
-
-    // Validates the view conditional logic expression.
-    if (!validateRolesLogicExpression(viewDTO.logicExpression, viewDTO.roles)) {
-      throw new ServiceError(ERRORS.LOGIC_EXPRESSION_INVALID);
-    }
-    // Save view details.
-    this.logger.info('[views] trying to insert to storage.', { tenantId, viewDTO })
-    const view = await viewRepository.create({
-      predefined: false,
-      name: viewDTO.name,
-      rolesLogicExpression: viewDTO.logicExpression,
-      resourceModel: ResourceModel.name,
-      roles: viewDTO.roles,
-      columns: viewDTO.columns,
-    });
-    this.logger.info('[views] inserted to the storage successfully.', { tenantId, viewDTO });
-    return view;
-  }
-
-  /**
-   * Edits view details, roles and columns on the storage.
-   * --------
-   * Precedures.
-   * --------
-   * - Validate view existance.
-   * - Validate view resource fields existance.
-   * - Validate view resource columns existance.
-   * - Validate view logic expression.
-   * - Delete old view columns and roles.
-   * - Re-save view columns and roles.
-   * 
-   * @param {number} tenantId -
-   * @param {number} viewId -
-   * @param {IViewEditDTO} viewEditDTO - 
-   * @return {Promise<IView>}
-   */
-  public async editView(tenantId: number, viewId: number, viewEditDTO: IViewEditDTO): Promise<IView> {
-    const { viewRepository } = this.tenancy.repositories(tenantId);
-    this.logger.info('[view] trying to edit custom view.', { tenantId, viewId });
-
-    // Retrieve view details or throw not found error.
-    const oldView = await this.getViewOrThrowError(tenantId, viewId);
-
-    // Validate the resource name is exists and resourcable.
-    const ResourceModel = this.getResourceModelOrThrowError(tenantId, oldView.resourceModel);
-
-    // Validate view name uniquiness.
-    await this.validateViewNameUniquiness(tenantId, oldView.resourceModel, viewEditDTO.name, viewId);
-
-    // Validate the given fields keys exist on the storage.
-    this.validateResourceRolesFieldsExistance(ResourceModel, viewEditDTO.roles);
-
-    // Validate the given columnable fields keys exists on the storage.
-    this.validateResourceColumnsExistance(ResourceModel, viewEditDTO.columns);
-
-    // Validates the view conditional logic expression.
-    if (!validateRolesLogicExpression(viewEditDTO.logicExpression, viewEditDTO.roles)) {
-      throw new ServiceError(ERRORS.LOGIC_EXPRESSION_INVALID);
-    }
-    // Update view details.
-    this.logger.info('[views] trying to update view details.', { tenantId, viewId });
-    const view = await viewRepository.upsertGraph({
-      id: viewId,
-      predefined: false,
-      name: viewEditDTO.name,
-      rolesLogicExpression: viewEditDTO.logicExpression,
-      roles: viewEditDTO.roles,
-      columns: viewEditDTO.columns,
-    })
-    this.logger.info('[view] edited successfully.', { tenantId, viewId });
-
-    return view;
-  }
-
-  /**
-   * Retrieve views details of the given id or throw not found error.
-   * @private
-   * @param {number} tenantId 
-   * @param {number} viewId 
-   * @return {Promise<IView>}
-   */
-  private async getViewByIdOrThrowError(tenantId: number, viewId: number): Promise<IView> { 
-    const { View } = this.tenancy.models(tenantId);
-
-    this.logger.info('[views] get stored view.', { tenantId, viewId });
-    const view = await View.query().findById(viewId);
-
-    if (!view) {
-      this.logger.info('[views] the given id not found.', { tenantId, viewId });
-      throw new ServiceError(ERRORS.VIEW_NOT_FOUND);
-    }
-    return view;
-  }
-
-  /**
-   * Deletes the given view with associated roles and columns.
-   * @param {number} tenantId - Tenant id.
-   * @param {number} viewId - View id.
-   * @return {Promise<void>}
-   */
-  public async deleteView(tenantId: number, viewId: number): Promise<void> {
-    const { View } = this.tenancy.models(tenantId);
-
-    this.logger.info('[views] trying to delete the given view.', { tenantId, viewId });
-    const view = await this.getViewByIdOrThrowError(tenantId, viewId);
-
-    if (view.predefined) {
-      this.logger.info('[views] cannot delete predefined.', { tenantId, viewId });
-      throw new ServiceError(ERRORS.VIEW_PREDEFINED);
-    }
-    await Promise.all([
-      view.$relatedQuery('roles').delete(),
-      view.$relatedQuery('columns').delete(),
-    ]);
-    await View.query().where('id', view.id).delete();
-    this.logger.info('[views] deleted successfully.', { tenantId, viewId });
   }
 }
