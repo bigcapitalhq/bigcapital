@@ -28,7 +28,10 @@ export default function DashboardViewsTabs({
   const [currentView, setCurrentView] = useState(initialViewSlug || 0);
 
   useEffect(() => {
-    if (typeof currentViewSlug !== 'undefined' && currentViewSlug !== currentView) {
+    if (
+      typeof currentViewSlug !== 'undefined' &&
+      currentViewSlug !== currentView
+    ) {
       setCurrentView(currentViewSlug || 0);
     }
   }, [currentView, setCurrentView, currentViewSlug]);
@@ -52,37 +55,39 @@ export default function DashboardViewsTabs({
   // Handle tabs change.
   const handleTabsChange = (viewSlug) => {
     setCurrentView(viewSlug);
-    triggerOnChange(viewSlug)
+    triggerOnChange(viewSlug);
   };
 
   return (
-    <Tabs
-      id="navbar"
-      large={true}
-      selectedTabId={currentView}
-      className="tabs--dashboard-views"
-      onChange={handleTabsChange}
-      animate={false}
-    >
-      {allTab && <Tab id={0} title={defaultTabText} />}
+    <div class="dashboard__views-tabs">
+      <Tabs
+        id="navbar"
+        large={true}
+        selectedTabId={currentView}
+        className="tabs--dashboard-views"
+        onChange={handleTabsChange}
+        animate={false}
+      >
+        {allTab && <Tab id={0} title={defaultTabText} />}
 
-      {tabs.map((tab) => (
-        <Tab id={tab.slug} title={tab.name} />
-      ))}
-      <If condition={newViewTab}>
-        <Tooltip
-          content={<T id={'create_a_new_view'} />}
-          position={Position.RIGHT}
-        >
-          <Button
-            className="button--new-view"
-            icon={<Icon icon="plus" />}
-            onClick={handleClickNewView}
-            minimal={true}
-          />
-        </Tooltip>
-      </If>
-    </Tabs>
+        {tabs.map((tab) => (
+          <Tab id={tab.slug} title={tab.name} />
+        ))}
+        <If condition={newViewTab}>
+          <Tooltip
+            content={<T id={'create_a_new_view'} />}
+            position={Position.RIGHT}
+          >
+            <Button
+              className="button--new-view"
+              icon={<Icon icon="plus" />}
+              onClick={handleClickNewView}
+              minimal={true}
+            />
+          </Tooltip>
+        </If>
+      </Tabs>
+    </div>
   );
 }
 

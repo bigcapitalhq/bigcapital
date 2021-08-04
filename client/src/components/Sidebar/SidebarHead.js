@@ -51,7 +51,7 @@ function SidebarHead({
       <div className="sidebar__head-logo">
         <Icon
           icon={'mini-bigcapital'}
-          width={140}
+          width={28}
           height={28}
           className="bigcapital--alt"
         />

@@ -456,16 +456,18 @@ $dashboard-views-bar-height: 44px;
 }
 
 .tabs--dashboard-views {
+  user-select: none;
 
   .#{$ns}-tab {
     color: #646a7d;
     font-size: 14px;
-    line-height: $dashboard-views-bar-height;
+    line-height: $dashboard-views-bar-height - 2px;
     font-weight: 400;
     padding: 0;
     margin-right: 0;
     padding-left: 16px;
     padding-right: 16px;
+    padding-top: 2px;
 
     &[aria-selected='true'] {
       color: #0052cc;
