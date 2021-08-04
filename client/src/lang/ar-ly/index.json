@@ -1192,5 +1192,7 @@
   "New purchase invoice": "فاتورة شراء جديدة",
   "Sales/Purchases": "المبيعات والمشتريات",
   "Reports": "التقارير",
-  "New tasks": "مهام جديدة"
+  "New tasks": "مهام جديدة",
+  "sorry_about_that_something_went_wrong": "نتأسف بشأن ذلك! هناك خطأ ما",
+  "if_the_problem_stuck_please_contact_us_as_soon_as_possible": "إذا تكررت المشكلة اكتر من مرة ، الرجاء الاتصال بنا في أقرب وقت ممكن."
 }

@@ -1179,5 +1179,7 @@
   "New purchase invoice": "New purchase invoice",
   "Sales/Purchases": "Sales/Purchases",
   "Reports": "Reports",
-  "New tasks": "New tasks"
+  "New tasks": "New tasks",
+  "sorry_about_that_something_went_wrong": "Sorry about that! Something went wrong",
+  "if_the_problem_stuck_please_contact_us_as_soon_as_possible": "If the problem stuck, please contact us as soon as possible."
 }
