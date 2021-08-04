@@ -219,6 +219,7 @@ $dashboard-views-bar-height: 44px;
       .bp3-control.bp3-switch{
         margin-bottom: 0;
         margin-left: 8px;
+        color: #3d3b53;
 
         .bp3-control-indicator{
           height: 16px;
@@ -507,6 +508,10 @@ $dashboard-views-bar-height: 44px;
 
   .bp3-navbar-group{
     height: $dashboard-views-bar-height;
+  }
+
+  .bp3-tab[aria-selected="true"]{
+    box-shadow: inset 0 -2px 0 #0052cc;
   }
 }
 

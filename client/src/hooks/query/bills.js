@@ -53,6 +53,9 @@ export function useEditBill(props) {
       onSuccess: (res, [id, values]) => {
         // Common invalidate queries.
         commonInvalidateQueries(queryClient);
+
+        // Invalidate bill query.
+        queryClient.invalidateQueries([t.BILL, id]);
       },
       ...props,
     },
@@ -70,6 +73,9 @@ export function useOpenBill(props) {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
+
+      // Invalidate bill query.
+      queryClient.invalidateQueries([t.BILL, id]);
     },
     ...props,
   });
@@ -86,6 +92,9 @@ export function useDeleteBill(props) {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
+
+      // Invalidate bill query.
+      queryClient.invalidateQueries([t.BILL, id]);
     },
     ...props,
   });

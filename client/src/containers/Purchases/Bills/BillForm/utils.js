@@ -39,11 +39,11 @@ export const defaultBill = {
 
 export const transformToEditForm = (bill) => {
   const initialEntries = [
-    ...bill.entries.map((bill) => ({
-      ...transformToForm(bill, defaultBill.entries[0]),
+    ...bill.entries.map((entry) => ({
+      ...transformToForm(entry, defaultBillEntry),
     })),
     ...repeatValue(
-      defaultBill,
+      defaultBillEntry,
       Math.max(MIN_LINES_NUMBER - bill.entries.length, 0),
     ),
   ];

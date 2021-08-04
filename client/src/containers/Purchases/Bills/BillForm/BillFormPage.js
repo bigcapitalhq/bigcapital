@@ -8,10 +8,10 @@ import 'style/pages/Bills/PageForm.scss';
 
 export default function BillFormPage() {
   const { id } = useParams();
-  const idInt = parseInt(id, 10);
+  const billId = parseInt(id, 10);
 
   return (
-    <BillFormProvider billId={idInt}>
+    <BillFormProvider billId={billId}>
       <BillForm />
     </BillFormProvider>
   );

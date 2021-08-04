@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as R from 'ramda';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { isEmpty, omit } from 'lodash';
@@ -44,7 +45,6 @@ function BillForm({
           }
         : {
             ...defaultBill,
-            entries: orderingLinesIndexes(defaultBill.entries),
             currency_code: baseCurrency,
           }),
     }),
@@ -81,7 +81,7 @@ function BillForm({
     const form = {
       ...values,
       open: submitPayload.status,
-      entries: entries.map((entry) => ({ ...omit(entry, ['total']) })),
+      entries: R.compose(orderingLinesIndexes)(entries),
     };
     // Handle the request success.
     const onSuccess = (response) => {

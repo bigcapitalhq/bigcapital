@@ -146,7 +146,7 @@ export default function BillFloatingActions() {
       <If condition={bill && bill?.is_open}>
         <ButtonGroup>
           <Button
-            disabled={isSubmitting}
+            loading={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitOpenBtnClick}
             text={<T id={'save'} />}
