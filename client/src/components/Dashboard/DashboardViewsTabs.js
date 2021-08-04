@@ -62,6 +62,7 @@ export default function DashboardViewsTabs({
       selectedTabId={currentView}
       className="tabs--dashboard-views"
       onChange={handleTabsChange}
+      animate={false}
     >
       {allTab && <Tab id={0} title={defaultTabText} />}
 
