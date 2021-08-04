@@ -2,8 +2,13 @@ import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
 import ModelSetting from './ModelSetting';
 import PaymentReceiveSettings from './PaymentReceive.Settings';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import { DEFAULT_VIEWS } from 'services/Sales/PaymentReceives/constants';
 
-export default class PaymentReceive extends mixin(TenantModel, [ModelSetting]) {
+export default class PaymentReceive extends mixin(TenantModel, [
+  ModelSetting,
+  CustomViewBaseModel,
+]) {
   /**
    * Table name.
    */
@@ -44,7 +49,7 @@ export default class PaymentReceive extends mixin(TenantModel, [ModelSetting]) {
         },
         filter(query) {
           query.where('contact_service', 'customer');
-        }
+        },
       },
       depositAccount: {
         relation: Model.BelongsToOneRelation,
@@ -67,19 +72,26 @@ export default class PaymentReceive extends mixin(TenantModel, [ModelSetting]) {
         modelClass: AccountTransaction.default,
         join: {
           from: 'payment_receives.id',
-          to: 'accounts_transactions.referenceId'
+          to: 'accounts_transactions.referenceId',
         },
         filter(builder) {
           builder.where('reference_type', 'PaymentReceive');
         },
-      }
+      },
     };
   }
 
   /**
-   * 
+   *
    */
   static get meta() {
     return PaymentReceiveSettings;
+  }
+
+  /**
+   * Retrieve the default custom views, roles and columns.
+   */
+  static get defaultViews() {
+    return DEFAULT_VIEWS;
   }
 }

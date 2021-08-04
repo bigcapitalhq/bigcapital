@@ -1,14 +1,13 @@
 import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { compose } from 'utils';
 import { DashboardViewsTabs } from 'components';
-import { pick } from 'lodash';
 import { withRouter } from 'react-router-dom';
 
 import withItemsActions from 'containers/Items/withItemsActions';
 import withItems from 'containers/Items/withItems';
 
 import { useItemsListContext } from './ItemsListProvider';
+import { compose, transfromViewsToTabs } from 'utils';
 
 /**
  * Items views tabs.
@@ -18,28 +17,23 @@ function ItemsViewsTabs({
   setItemsTableState,
 
   // #withItems
-  itemsCustomViewId
+  itemsCurrentView,
 }) {
   const { itemsViews } = useItemsListContext();
 
   // Mapped items views.
-  const tabs = itemsViews.map((view) => ({
-    ...pick(view, ['name', 'id']),
-  }));
+  const tabs = transfromViewsToTabs(itemsViews)
 
   // Handles the active tab change.
-  const handleTabChange = (viewId) => {
-    setItemsTableState({
-      pageIndex: 0,
-      customViewId: viewId || null,
-    });
+  const handleTabChange = (viewSlug) => {
+    setItemsTableState({ viewSlug });
   };
 
   return (
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          currentViewId={itemsCustomViewId}
+          currentViewSlug={itemsCurrentView}
           resourceName={'items'}
           tabs={tabs}
           onChange={handleTabChange}
@@ -52,7 +46,7 @@ function ItemsViewsTabs({
 export default compose(
   withRouter,
   withItems(({ itemsTableState }) => ({
-    itemsCustomViewId: itemsTableState?.customViewId
+    itemsCurrentView: itemsTableState?.viewSlug
   })),
   withItemsActions,
 )(ItemsViewsTabs);

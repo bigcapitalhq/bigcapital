@@ -3,8 +3,12 @@ import TenantModel from 'models/TenantModel';
 import { formatNumber } from 'utils';
 import ModelSetting from './ModelSetting';
 import ManualJournalSettings from './ManualJournal.Settings';
-
-export default class ManualJournal extends mixin(TenantModel, [ModelSetting]) {
+import CustomViewBaseModel from './CustomViewBaseModel';
+import { DEFAULT_VIEWS } from 'services/ManualJournals/constants';
+export default class ManualJournal extends mixin(TenantModel, [
+  ModelSetting,
+  CustomViewBaseModel,
+]) {
   /**
    * Table name.
    */
@@ -103,5 +107,12 @@ export default class ManualJournal extends mixin(TenantModel, [ModelSetting]) {
 
   static get meta() {
     return ManualJournalSettings;
+  }
+
+  /**
+   * Retrieve the default custom views, roles and columns.
+   */
+  static get defaultViews() {
+    return DEFAULT_VIEWS;
   }
 }

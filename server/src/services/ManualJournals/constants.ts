@@ -23,3 +23,6 @@ export const CONTACTS_CONFIG = [
     assignRequired: true,
   },
 ];
+
+
+export const DEFAULT_VIEWS = [];

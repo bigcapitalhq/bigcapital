@@ -1,5 +1,5 @@
 @import '../../Base.scss';
-$dashboard-views-bar-height: 45px;
+$dashboard-views-bar-height: 44px;
 
 .dashboard {
   display: flex;
@@ -457,24 +457,24 @@ $dashboard-views-bar-height: 45px;
 .tabs--dashboard-views {
 
   .#{$ns}-tab {
-    color: #474d5e;
+    color: #646a7d;
     font-size: 14px;
     line-height: $dashboard-views-bar-height;
     font-weight: 400;
     padding: 0;
     margin-right: 0;
-    padding-left: 14px;
-    padding-right: 14px;
+    padding-left: 16px;
+    padding-right: 16px;
 
     &[aria-selected='true'] {
       color: #0052cc;
-      font-weight: 500;
+      font-weight: 600;
     }
   }
 
   .#{$ns}-tab-indicator-wrapper {
     .#{$ns}-tab-indicator {
-      height: 3px;
+      height: 2px;
     }
   }
   .button--new-view {

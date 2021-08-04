@@ -1,6 +1,5 @@
 import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { pick } from 'lodash';
 
 import { DashboardViewsTabs } from 'components';
 
@@ -8,7 +7,7 @@ import { useExpensesListContext } from './ExpensesListProvider';
 import withExpenses from './withExpenses';
 import withExpensesActions from './withExpensesActions';
 
-import { compose } from 'utils';
+import { compose, transfromViewsToTabs } from 'utils';
 
 /**
  * Expesne views tabs.
@@ -16,23 +15,21 @@ import { compose } from 'utils';
 function ExpenseViewTabs({
   // #withExpensesActions
   setExpensesTableState,
-  
+
   // #withExpenses
-  expensesTableState
+  expensesCurrentView,
 }) {
   // Expenses list context.
   const { expensesViews } = useExpensesListContext();
 
   // Handle the tabs change.
-  const handleTabChange = (viewId) => {
+  const handleTabChange = (viewSlug) => {
     setExpensesTableState({
-      customViewId: viewId || null,
+      viewSlug: viewSlug || null,
     });
   };
 
-  const tabs = expensesViews.map((view) => ({
-    ...pick(view, ['name', 'id']),
-  }));
+  const tabs = transfromViewsToTabs(expensesViews);
 
   // Handle click a new view tab.
   const handleClickNewView = () => {};
@@ -41,7 +38,7 @@ function ExpenseViewTabs({
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          customViewId={expensesTableState.customViewId}
+          currentViewSlug={expensesCurrentView}
           resourceName={'expenses'}
           tabs={tabs}
           onNewViewTabClick={handleClickNewView}
@@ -52,8 +49,9 @@ function ExpenseViewTabs({
   );
 }
 
- 
 export default compose(
   withExpensesActions,
-  withExpenses(({ expensesTableState }) => ({ expensesTableState }))
+  withExpenses(({ expensesTableState }) => ({
+    expensesCurrentView: expensesTableState.viewSlug,
+  })),
 )(ExpenseViewTabs);

@@ -1,6 +1,5 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { pick } from 'lodash';
 
 import { DashboardViewsTabs } from 'components';
 
@@ -9,7 +8,7 @@ import withCustomersActions from './withCustomersActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { useCustomersListContext } from './CustomersListProvider';
-import { compose } from 'utils';
+import { compose, transfromViewsToTabs } from 'utils';
 
 /**
  * Customers views tabs.
@@ -19,29 +18,24 @@ function CustomersViewsTabs({
   setCustomersTableState,
 
   // #withCustomers
-  customersTableState,
+  customersCurrentView,
 }) {
   // Customers list context.
   const { customersViews } = useCustomersListContext();
 
-  const tabs = useMemo(
-    () =>
-      customersViews.map((view) => pick(view, ['name', 'id']), [
-        customersViews,
-      ]),
-    [customersViews],
-  );
+  // Transformes the views to tabs.
+  const tabs = transfromViewsToTabs(customersViews);
 
   // Handle tabs change.
-  const handleTabsChange = (viewId) => {
-    setCustomersTableState({ customViewId: viewId || null });
+  const handleTabsChange = (viewSlug) => {
+    setCustomersTableState({ viewSlug: viewSlug || null });
   };
 
   return (
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          currentViewId={customersTableState.customViewId}
+          currentViewSlug={customersCurrentView}
           resourceName={'customers'}
           tabs={tabs}
           onChange={handleTabsChange}
@@ -54,5 +48,7 @@ function CustomersViewsTabs({
 export default compose(
   withDashboardActions,
   withCustomersActions,
-  withCustomers(({ customersTableState }) => ({ customersTableState })),
+  withCustomers(({ customersTableState }) => ({
+    customersCurrentView: customersTableState.viewSlug,
+  })),
 )(CustomersViewsTabs);

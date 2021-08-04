@@ -516,12 +516,12 @@ export function getPagesCountFromPaginationMeta(pagination) {
  * Transformes the table state to url query.
  */
 export function transformTableStateToQuery(tableState) {
-  const { pageSize, pageIndex, customViewId, sortBy } = tableState;
+  const { pageSize, pageIndex, viewSlug, sortBy } = tableState;
 
   const query = {
     pageSize,
     page: pageIndex + 1,
-    ...(customViewId ? { customViewId } : {}),
+    ...(viewSlug ? { viewSlug } : {}),
     ...(Array.isArray(sortBy) && sortBy.length > 0
       ? {
           column_sort_by: sortBy[0].id,
@@ -681,3 +681,7 @@ export const ensureEntriesHasEmptyLine = R.curry(
     return entries;
   },
 );
+
+export const transfromViewsToTabs = (views) => {
+  return views.map(view => ({ ..._.pick(view, ['slug', 'name']) }))
+}

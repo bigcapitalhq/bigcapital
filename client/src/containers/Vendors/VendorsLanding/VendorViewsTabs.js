@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { compose } from 'redux';
 
@@ -7,7 +7,8 @@ import { DashboardViewsTabs } from 'components';
 
 import withVendorsActions from './withVendorsActions';
 import withVendors from './withVendors';
-import { pick } from 'lodash';
+
+import { transfromViewsToTabs } from 'utils';
 
 /**
  * Vendors views tabs.
@@ -17,30 +18,23 @@ function VendorViewsTabs({
   setVendorsTableState,
 
   // #withVendors
-  vendorsTableState
+  vendorsCurrentView,
 }) {
   const { vendorsViews } = useVendorsListContext();
- 
-  const tabs = useMemo(() =>
-    vendorsViews.map(
-      (view) => ({
-        ...pick(view, ['name', 'id']),
-      }),
-    ),
-    [vendorsViews],
-  );
 
-  const handleTabsChange = (viewId) => {
+  const tabs = transfromViewsToTabs(vendorsViews);
+
+  const handleTabsChange = (viewSlug) => {
     setVendorsTableState({
-      customViewId: viewId || null,
+      viewSlug: viewSlug || null,
     });
   };
-  
+
   return (
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          currentViewId={vendorsTableState.customViewId}
+          currentViewSlug={vendorsCurrentView}
           resourceName={'vendors'}
           tabs={tabs}
           onChange={handleTabsChange}
@@ -52,5 +46,7 @@ function VendorViewsTabs({
 
 export default compose(
   withVendorsActions,
-  withVendors(({ vendorsTableState }) => ({ vendorsTableState }))
+  withVendors(({ vendorsTableState }) => ({
+    vendorsCurrentView: vendorsTableState.viewSlug,
+  })),
 )(VendorViewsTabs);

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { pick } from 'lodash';
 
 import { DashboardViewsTabs } from 'components';
 
@@ -9,7 +8,7 @@ import { useBillsListContext } from './BillsListProvider';
 import withBillActions from './withBillsActions';
 import withBills from './withBills';
 
-import { compose } from 'utils';
+import { compose, transfromViewsToTabs } from 'utils';
 
 /**
  * Bills view tabs.
@@ -19,27 +18,25 @@ function BillViewTabs({
   setBillsTableState,
 
   // #withBills
-  billsTableState
+  billsCurrentView,
 }) {
   // Bills list context.
   const { billsViews } = useBillsListContext();
 
   // Handle tab chaging.
-  const handleTabsChange = (customView) => {
+  const handleTabsChange = (viewSlug) => {
     setBillsTableState({
-      customViewId: customView || null,
+      viewSlug: viewSlug || null,
     });
   };
 
-  const tabs = billsViews.map((view) => ({
-    ...pick(view, ['name', 'id']),
-  }));
+  const tabs = transfromViewsToTabs(billsViews);
 
   return (
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          currentViewId={billsTableState.customViewId}
+          currentViewSlug={billsCurrentView}
           resourceName={'bills'}
           tabs={tabs}
           onChange={handleTabsChange}
@@ -51,5 +48,7 @@ function BillViewTabs({
 
 export default compose(
   withBillActions,
-  withBills(({ billsTableState }) => ({ billsTableState }))
+  withBills(({ billsTableState }) => ({
+    billsCurrentView: billsTableState.viewSlug,
+  })),
 )(BillViewTabs);

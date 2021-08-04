@@ -1,12 +1,11 @@
 import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { pick } from 'lodash';
 
 import { DashboardViewsTabs } from 'components';
 import withReceiptActions from './withReceiptsActions';
 import withReceipts from './withReceipts';
 
-import { compose } from 'utils';
+import { compose, transfromViewsToTabs } from 'utils';
 import { useReceiptsListContext } from './ReceiptsListProvider';
 
 /**
@@ -17,19 +16,17 @@ function ReceiptViewTabs({
   setReceiptsTableState,
 
   // #withReceipts
-  receiptTableState,
+  receiptsCurrentView,
 }) {
   // Receipts list context.
   const { receiptsViews } = useReceiptsListContext();
 
-  const tabs = receiptsViews.map((view) => ({
-    ...pick(view, ['name', 'id']),
-  }));
+  const tabs = transfromViewsToTabs(receiptsViews);
 
   // Handles the active tab chaning.
-  const handleTabsChange = (customViewId) => {
+  const handleTabsChange = (viewSlug) => {
     setReceiptsTableState({
-      customViewId: customViewId || null,
+      viewSlug: viewSlug || null,
     });
   };
 
@@ -37,7 +34,7 @@ function ReceiptViewTabs({
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          currentViewId={receiptTableState.customViewId}
+          currentViewSlug={receiptsCurrentView}
           tabs={tabs}
           resourceName={'receipts'}
           onChange={handleTabsChange}
@@ -49,5 +46,7 @@ function ReceiptViewTabs({
 
 export default compose(
   withReceiptActions,
-  withReceipts(({ receiptTableState }) => ({ receiptTableState })),
+  withReceipts(({ receiptTableState }) => ({
+    receiptsCurrentView: receiptTableState.viewSlug,
+  })),
 )(ReceiptViewTabs);

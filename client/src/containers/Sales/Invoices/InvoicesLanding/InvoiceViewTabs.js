@@ -1,14 +1,13 @@
 import React from 'react';
 import { useHistory } from 'react-router';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { pick } from 'lodash';
 
 import { DashboardViewsTabs } from 'components';
 
 import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
 
-import { compose } from 'utils';
+import { compose, transfromViewsToTabs } from 'utils';
 import { useInvoicesListContext } from './InvoicesListProvider';
 
 /**
@@ -19,24 +18,21 @@ function InvoiceViewTabs({
   setInvoicesTableState,
 
   // #withInvoices
-  invoicesTableState
+  invoicesCurrentView,
 }) {
   const history = useHistory();
 
   // Invoices list context.
   const { invoicesViews } = useInvoicesListContext();
 
-  const tabs = invoicesViews.map((view) => ({
-    ...pick(view, ['name', 'id']),
-  }));
+  const tabs = transfromViewsToTabs(invoicesViews);
 
   // Handle tab change.
-  const handleTabsChange = (customViewId) => {    
+  const handleTabsChange = (viewSlug) => {
     setInvoicesTableState({
-      customViewId: customViewId || null,
+      viewSlug: viewSlug || null,
     });
   };
-
   // Handle click a new view tab.
   const handleClickNewView = () => {
     history.push('/custom_views/invoices/new');
@@ -46,7 +42,7 @@ function InvoiceViewTabs({
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          currentViewId={invoicesTableState.customViewId}
+          currentViewSlug={invoicesCurrentView}
           resourceName={'invoices'}
           tabs={tabs}
           onNewViewTabClick={handleClickNewView}
@@ -59,5 +55,7 @@ function InvoiceViewTabs({
 
 export default compose(
   withInvoiceActions,
-  withInvoices(({ invoicesTableState }) => ({ invoicesTableState })),
+  withInvoices(({ invoicesTableState }) => ({
+    invoicesCurrentView: invoicesTableState.viewSlug,
+  })),
 )(InvoiceViewTabs);

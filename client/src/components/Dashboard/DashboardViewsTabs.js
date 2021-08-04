@@ -12,8 +12,8 @@ import { saveInvoke } from 'utils';
  *
  */
 export default function DashboardViewsTabs({
-  initialViewId = 0,
-  currentViewId,
+  initialViewSlug = 0,
+  currentViewSlug,
   tabs,
   defaultTabText = <T id={'all'} />,
   allTab = true,
@@ -25,22 +25,22 @@ export default function DashboardViewsTabs({
   throttleTime = 250,
 }) {
   const history = useHistory();
-  const [currentView, setCurrentView] = useState(initialViewId || 0);
+  const [currentView, setCurrentView] = useState(initialViewSlug || 0);
 
   useEffect(() => {
-    if (typeof currentViewId !== 'undefined' && currentViewId !== currentView) {
-      setCurrentView(currentViewId || 0);
+    if (typeof currentViewSlug !== 'undefined' && currentViewSlug !== currentView) {
+      setCurrentView(currentViewSlug || 0);
     }
-  }, [currentView, setCurrentView, currentViewId]);
+  }, [currentView, setCurrentView, currentViewSlug]);
 
   const throttledOnChange = useRef(
     debounce((viewId) => saveInvoke(OnThrottledChange, viewId), throttleTime),
   );
 
   // Trigger `onChange` and `onThrottledChange` events.
-  const triggerOnChange = (viewId) => {
-    saveInvoke(onChange, viewId);
-    throttledOnChange.current(viewId);
+  const triggerOnChange = (viewSlug) => {
+    saveInvoke(onChange, viewSlug);
+    throttledOnChange.current(viewSlug);
   };
 
   // Handles click a new view.
@@ -50,9 +50,9 @@ export default function DashboardViewsTabs({
   };
 
   // Handle tabs change.
-  const handleTabsChange = (viewId) => {
-    setCurrentView(viewId);
-    triggerOnChange(viewId)
+  const handleTabsChange = (viewSlug) => {
+    setCurrentView(viewSlug);
+    triggerOnChange(viewSlug)
   };
 
   return (
@@ -66,7 +66,7 @@ export default function DashboardViewsTabs({
       {allTab && <Tab id={0} title={defaultTabText} />}
 
       {tabs.map((tab) => (
-        <Tab id={tab.id} title={tab.name} />
+        <Tab id={tab.slug} title={tab.name} />
       ))}
       <If condition={newViewTab}>
         <Tooltip

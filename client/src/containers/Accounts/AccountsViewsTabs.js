@@ -1,8 +1,6 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { pick } from 'lodash';
 import intl from 'react-intl-universal';
-
 
 import { DashboardViewsTabs } from 'components';
 import { useAccountsChartContext } from 'containers/Accounts/AccountsChartProvider';
@@ -10,7 +8,7 @@ import { useAccountsChartContext } from 'containers/Accounts/AccountsChartProvid
 import withAccountsTableActions from './withAccountsTableActions';
 import withAccounts from './withAccounts';
 
-import { compose } from 'utils';
+import { compose, transfromViewsToTabs } from 'utils';
 
 /**
  * Accounts views tabs.
@@ -20,35 +18,30 @@ function AccountsViewsTabs({
   setAccountsTableState,
 
   // #withAccounts
-  accountsCustomViewId
+  accountsCurrentView
 }) {
   // Accounts chart context.
   const { resourceViews } = useAccountsChartContext();
 
   // Handles the tab change.
   const handleTabChange = useCallback(
-    (viewId) => {
+    (viewSlug) => {
       setAccountsTableState({
-        customViewId: viewId || null,
+        viewSlug: viewSlug || null,
       });
     },
     [setAccountsTableState],
   );
 
-  const tabs = useMemo(
-    () =>
-      resourceViews.map((view) => ({
-        ...pick(view, ['name', 'id']),
-      })),
-    [resourceViews],
-  );
+  // Transfromes the accounts views to tabs.
+  const tabs = transfromViewsToTabs(resourceViews);
 
   return (
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
           defaultTabText={intl.get('all_accounts_')}
-          currentViewId={accountsCustomViewId}
+          currentViewSlug={accountsCurrentView}
           resourceName={'accounts'}
           onChange={handleTabChange}
           tabs={tabs}
@@ -61,6 +54,6 @@ function AccountsViewsTabs({
 export default compose(
   withAccountsTableActions,
   withAccounts(({ accountsTableState }) => ({
-    accountsCustomViewId: accountsTableState.customViewId
+    accountsCurrentView: accountsTableState.viewSlug
   }))
 )(AccountsViewsTabs);

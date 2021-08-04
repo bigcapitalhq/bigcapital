@@ -1,6 +1,5 @@
 import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { pick } from 'lodash';
 
 import { DashboardViewsTabs } from 'components';
 
@@ -8,7 +7,7 @@ import withEstimatesActions from './withEstimatesActions';
 import withEstimates from './withEstimates';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
-import { compose } from 'utils';
+import { compose, transfromViewsToTabs } from 'utils';
 
 /**
  * Estimates views tabs.
@@ -18,26 +17,24 @@ function EstimateViewTabs({
   setEstimatesTableState,
 
   // #withEstimates
-  estimatesTableState
+  estimatesCurrentView,
 }) {
   // Estimates list context.
   const { estimatesViews } = useEstimatesListContext();
  
   // Estimates views.
-  const tabs = estimatesViews.map((view) => ({
-    ...pick(view, ['name', 'id']),
-  }));
+  const tabs = transfromViewsToTabs(estimatesViews);
 
   // Handle tab change.
-  const handleTabsChange = (customViewId) => {
-    setEstimatesTableState({ customViewId: customViewId || null });
+  const handleTabsChange = (viewSlug) => {
+    setEstimatesTableState({ viewSlug: viewSlug || null });
   };
 
   return (
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          currentViewId={estimatesTableState.customViewId}
+          currentViewSlug={estimatesCurrentView}
           resourceName={'estimates'}
           tabs={tabs}
           onChange={handleTabsChange}
@@ -49,5 +46,7 @@ function EstimateViewTabs({
 
 export default compose(
   withEstimatesActions,
-  withEstimates(({ estimatesTableState }) => ({ estimatesTableState })),
+  withEstimates(({ estimatesTableState }) => ({
+    estimatesCurrentView: estimatesTableState.viewSlug
+  })),
 )(EstimateViewTabs);
