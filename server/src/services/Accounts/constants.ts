@@ -14,3 +14,62 @@ export const ERRORS = {
     'close_account_and_to_account_not_same_type',
   ACCOUNTS_NOT_FOUND: 'accounts_not_found',
 };
+
+// Default views columns.
+export const DEFAULT_VIEW_COLUMNS = [
+  { key: 'name', label: 'Account name' },
+  { key: 'code', label: 'Account code' },
+  { key: 'account_type_label', label: 'Account type' },
+  { key: 'account_normal', label: 'Account normal' },
+  { key: 'amount', label: 'Balance' },
+  { key: 'currencyCode', label: 'Currency' },
+];
+
+// Accounts default views.
+export const DEFAULT_VIEWS = [
+  {
+    name: 'Assets',
+    slug: 'assets',
+    rolesLogicExpression: '1',
+    roles: [
+      { index: 1, fieldKey: 'root_type', comparator: 'equals', value: 'asset' },
+    ],
+    columns: DEFAULT_VIEW_COLUMNS,
+  },
+  {
+    name: 'Liabilities',
+    slug: 'liabilities',
+    rolesLogicExpression: '1',
+    roles: [
+      { fieldKey: 'root_type', index: 1, comparator: 'equals', value: 'liability' },
+    ],
+    columns: DEFAULT_VIEW_COLUMNS,
+  },
+  {
+    name: 'Equity',
+    slug: 'equity',
+    rolesLogicExpression: '1',
+    roles: [
+      { fieldKey: 'root_type', index: 1, comparator: 'equals', value: 'equity' },
+    ],
+    columns: DEFAULT_VIEW_COLUMNS,
+  },
+  {
+    name: 'Income',
+    slug: 'income',
+    rolesLogicExpression: '1',
+    roles: [
+      { fieldKey: 'root_type', index: 1, comparator: 'equals', value: 'income' },
+    ],
+    columns: DEFAULT_VIEW_COLUMNS,
+  },
+  {
+    name: 'Expenses',
+    slug: 'expenses',
+    rolesLogicExpression: '1',
+    roles: [
+      { fieldKey: 'root_type', index: 1, comparator: 'equals', value: 'expense' },
+    ],
+    columns: DEFAULT_VIEW_COLUMNS,
+  },
+];

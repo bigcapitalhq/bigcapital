@@ -3,8 +3,13 @@ import TenantModel from 'models/TenantModel';
 import { buildFilterQuery } from 'lib/ViewRolesBuilder';
 import ItemSettings from './Item.Settings';
 import ModelSetting from './ModelSetting';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import { DEFAULT_VIEWS } from 'services/Items/constants';
 
-export default class Item extends mixin(TenantModel, [ModelSetting]) {
+export default class Item extends mixin(TenantModel, [
+  ModelSetting,
+  CustomViewBaseModel,
+]) {
   /**
    * Table name
    */
@@ -115,5 +120,12 @@ export default class Item extends mixin(TenantModel, [ModelSetting]) {
    */
   static get meta() {
     return ItemSettings;
+  }
+
+  /**
+   * Retrieve the default custom views, roles and columns.
+   */
+  static get defaultViews() {
+    return DEFAULT_VIEWS;
   }
 }

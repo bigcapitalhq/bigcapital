@@ -30,16 +30,18 @@ export default class DynamicListService implements IDynamicListService {
 
   /**
    * Parses filter DTO.
-   * @param {IMode} model - 
-   * @param {} filterDTO - 
+   * @param {IMode} model -
+   * @param {} filterDTO -
    */
   private parseFilterObject = (model, filterDTO) => {
     return {
       // Merges the default properties with filter object.
-      ...model.defaultSort ? {
-        sortOrder: model.defaultSort.sortOrder,
-        columnSortBy: model.defaultSort.sortOrder,
-      } : {},
+      ...(model.defaultSort
+        ? {
+            sortOrder: model.defaultSort.sortOrder,
+            columnSortBy: model.defaultSort.sortOrder,
+          }
+        : {}),
       ...filterDTO,
     };
   };
@@ -61,17 +63,21 @@ export default class DynamicListService implements IDynamicListService {
     const parsedFilter = this.parseFilterObject(model, filter);
 
     // Custom view filter roles.
-    // if (filter.customViewId) {
-    //   const dynamicListCustomView = this.dynamicListView.dynamicListCustomView();
-
-    //   dynamicFilter.setFilter(dynamicListCustomView);
-    // }
+    if (filter.viewSlug) {
+      const dynamicListCustomView =
+        await this.dynamicListView.dynamicListCustomView(
+          dynamicFilter,
+          filter.viewSlug,
+          tenantId
+        );
+      dynamicFilter.setFilter(dynamicListCustomView);
+    }
     // Sort by the given column.
     if (parsedFilter.columnSortBy) {
       const dynmaicListSortBy = this.dynamicListSortBy.dynamicSortBy(
         model,
         parsedFilter.columnSortBy,
-        parsedFilter.sortOrder,
+        parsedFilter.sortOrder
       );
       dynamicFilter.setFilter(dynmaicListSortBy);
     }

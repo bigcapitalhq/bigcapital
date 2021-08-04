@@ -115,7 +115,7 @@ export default class PaymentReceivesController extends BaseController {
    */
   get validatePaymentReceiveList(): ValidationChain[] {
     return [
-      query('custom_view_id').optional().isNumeric().toInt(),
+      query('view_slug').optional({ nullable: true }).isString().trim(),
       query('stringified_filter_roles').optional().isJSON(),
       query('column_sort_by').optional(),
       query('sort_order').optional().isIn(['desc', 'asc']),

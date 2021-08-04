@@ -92,7 +92,7 @@ export default class VendorsController extends ContactsController {
    */
   get vendorsListSchema() {
     return [
-      query('custom_view_id').optional().isNumeric().toInt(),
+      query('view_slug').optional().isString().trim(),
       query('stringified_filter_roles').optional().isJSON(),
 
       query('column_sort_by').optional(),

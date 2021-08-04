@@ -75,19 +75,13 @@ export default {
         { key: 'unpaid', label: 'Unpaid' },
       ],
       columnable: true,
-      filterQuery: statusFieldFilterQuery,
+      filterCustomQuery: statusFieldFilterQuery,
     },
   },
 };
 
 function statusFieldFilterQuery(query, role) {
   switch (role.value) {
-    case 'active':
-      query.modify('active');
-      break;
-    case 'inactive':
-      query.modify('inactive');
-      break;
     case 'overdue':
       query.modify('overdue');
       break;

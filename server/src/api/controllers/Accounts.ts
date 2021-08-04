@@ -127,9 +127,12 @@ export default class AccountsController extends BaseController {
     return [param('id').exists().isNumeric().toInt()];
   }
 
+  /**
+   * Accounts list validation schema.
+   */
   get accountsListSchema() {
     return [
-      query('custom_view_id').optional().isNumeric().toInt(),
+      query('view_slug').optional({ nullable: true }).isString().trim(),
       query('stringified_filter_roles').optional().isJSON(),
 
       query('column_sort_by').optional(),

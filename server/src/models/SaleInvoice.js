@@ -3,8 +3,13 @@ import moment from 'moment';
 import TenantModel from 'models/TenantModel';
 import ModelSetting from './ModelSetting';
 import SaleInvoiceMeta from './SaleInvoice.Settings';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import { DEFAULT_VIEWS } from 'services/Sales/constants';
 
-export default class SaleInvoice extends mixin(TenantModel, [ModelSetting]) {
+export default class SaleInvoice extends mixin(TenantModel, [
+  ModelSetting,
+  CustomViewBaseModel,
+]) {
   /**
    * Table name
    */
@@ -358,5 +363,12 @@ export default class SaleInvoice extends mixin(TenantModel, [ModelSetting]) {
 
   static dueAmountFieldSortQuery(query, role) {
     query.modify('sortByDueAmount', role.order);
+  }
+
+  /**
+   * Retrieve the default custom views, roles and columns.
+   */
+  static get defaultViews() {
+    return DEFAULT_VIEWS;
   }
 }

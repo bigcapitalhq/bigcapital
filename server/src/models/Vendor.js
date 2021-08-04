@@ -3,6 +3,8 @@ import TenantModel from 'models/TenantModel';
 import PaginationQueryBuilder from './Pagination';
 import ModelSetting from './ModelSetting';
 import VendorSettings from './Vendor.Settings';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import { DEFAULT_VIEWS } from 'services/Contacts/Vendors/constants';
 
 class VendorQueryBuilder extends PaginationQueryBuilder {
   constructor(...args) {
@@ -16,7 +18,10 @@ class VendorQueryBuilder extends PaginationQueryBuilder {
   }
 }
 
-export default class Vendor extends mixin(TenantModel, [ModelSetting]) {
+export default class Vendor extends mixin(TenantModel, [
+  ModelSetting,
+  CustomViewBaseModel,
+]) {
   /**
    * Query builder.
    */
@@ -67,7 +72,7 @@ export default class Vendor extends mixin(TenantModel, [ModelSetting]) {
       /**
        * Inactive/Active mode.
        */
-       inactiveMode(query, active = false) {
+      inactiveMode(query, active = false) {
         query.where('active', !active);
       },
 
@@ -89,10 +94,9 @@ export default class Vendor extends mixin(TenantModel, [ModelSetting]) {
       overdue(query) {
         query.select(
           '*',
-          Vendor
-            .relatedQuery('overdueBills', query.knex())
+          Vendor.relatedQuery('overdueBills', query.knex())
             .count()
-            .as('countOverdue'),
+            .as('countOverdue')
         );
         query.having('countOverdue', '>', 0);
       },
@@ -101,7 +105,7 @@ export default class Vendor extends mixin(TenantModel, [ModelSetting]) {
        */
       unpaid(query) {
         query.whereRaw('`BALANCE` + `OPENING_BALANCE` <> 0');
-      }
+      },
     };
   }
 
@@ -129,12 +133,19 @@ export default class Vendor extends mixin(TenantModel, [ModelSetting]) {
         },
         filter: (query) => {
           query.modify('overdue');
-        }
-      }
+        },
+      },
     };
   }
 
   static get meta() {
     return VendorSettings;
+  }
+
+  /**
+   * Retrieve the default custom views, roles and columns.
+   */
+  static get defaultViews() {
+    return DEFAULT_VIEWS;
   }
 }

@@ -1,9 +1,10 @@
 import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
 import PaginationQueryBuilder from './Pagination';
-import QueryParser from 'lib/LogicEvaluation/QueryParser';
 import ModelSetting from './ModelSetting';
 import CustomerSettings from './Customer.Settings';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import { DEFAULT_VIEWS } from 'services/Contacts/Customers/constants';
 
 class CustomerQueryBuilder extends PaginationQueryBuilder {
   constructor(...args) {
@@ -17,7 +18,10 @@ class CustomerQueryBuilder extends PaginationQueryBuilder {
   }
 }
 
-export default class Customer extends mixin(TenantModel, [ModelSetting]) {
+export default class Customer extends mixin(TenantModel, [
+  ModelSetting,
+  CustomViewBaseModel,
+]) {
   /**
    * Query builder.
    */
@@ -137,5 +141,12 @@ export default class Customer extends mixin(TenantModel, [ModelSetting]) {
 
   static get meta() {
     return CustomerSettings;
+  }
+
+  /**
+   * Retrieve the default custom views, roles and columns.
+   */
+  static get defaultViews() {
+    return DEFAULT_VIEWS;
   }
 }

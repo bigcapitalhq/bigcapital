@@ -4,8 +4,13 @@ import { difference } from 'lodash';
 import TenantModel from 'models/TenantModel';
 import BillSettings from './Bill.Settings';
 import ModelSetting from './ModelSetting';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import { DEFAULT_VIEWS } from 'services/Purchases/constants';
 
-export default class Bill extends mixin(TenantModel, [ModelSetting]) {
+export default class Bill extends mixin(TenantModel, [
+  ModelSetting,
+  CustomViewBaseModel,
+]) {
   /**
    * Table name
    */
@@ -302,5 +307,12 @@ export default class Bill extends mixin(TenantModel, [ModelSetting]) {
     return this.query()
       .where('id', billId)
       [changeMethod]('payment_amount', Math.abs(amount));
+  }
+
+  /**
+   * Retrieve the default custom views, roles and columns.
+   */
+  static get defaultViews() {
+    return DEFAULT_VIEWS;
   }
 }

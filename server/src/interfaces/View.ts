@@ -2,6 +2,7 @@
 export interface IView {
   id: number,
   name: string,
+  slug: string;
   predefined: boolean,
   resourceModel: string,
   favourite: boolean,
@@ -13,7 +14,7 @@ export interface IView {
 
 export interface IViewRole {
   id: number,
-  fieldId: number,
+  fieldKey: string,
   index: number, 
   comparator: string,
   value: string,

@@ -63,19 +63,11 @@ export default {
     'status': {
       label: 'Status',
       options: [
-        { key: 'active', label: 'Active' },
-        { key: 'inactive', label: 'Inactive' },
         { key: 'overdue', label: 'Overdue' },
         { key: 'unpaid', label: 'Unpaid' },
       ],
-      query: (query, role) => {
+      filterCustomQuery: (query, role) => {
         switch (role.value) {
-          case 'active':
-            query.modify('active');
-            break;
-          case 'inactive':
-            query.modify('inactive');
-            break;
           case 'overdue':
             query.modify('overdue');
             break;

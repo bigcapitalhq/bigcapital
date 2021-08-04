@@ -3,8 +3,8 @@ import DynamicListAbstruct from './DynamicListAbstruct';
 import DynamicFilterViews from 'lib/DynamicFilter/DynamicFilterViews';
 import { ServiceError } from 'exceptions';
 import HasTenancyService from 'services/Tenancy/TenancyService';
-import {ERRORS } from './constants';
-import { IModel }from 'interfaces';
+import { ERRORS } from './constants';
+import { IModel } from 'interfaces';
 
 @Service()
 export default class DynamicListCustomView extends DynamicListAbstruct {
@@ -19,16 +19,18 @@ export default class DynamicListCustomView extends DynamicListAbstruct {
    */
   private getCustomViewOrThrowError = async (
     tenantId: number,
-    viewId: number,
+    viewSlug: string,
     model: IModel
   ) => {
-    const { viewRepository } = this.tenancy.repositories(tenantId);
-    const view = await viewRepository.findOneById(viewId, 'roles');
+    const { View } = this.tenancy.models(tenantId);
 
-    if (!view || view.resourceModel !== model.name) {
+    // Finds the default view by the given view slug.
+    const defaultView = model.getDefaultViewBySlug(viewSlug);
+
+    if (!defaultView) {
       throw new ServiceError(ERRORS.VIEW_NOT_FOUND);
     }
-    return view;
+    return defaultView;
   };
 
   /**
@@ -38,14 +40,17 @@ export default class DynamicListCustomView extends DynamicListAbstruct {
    * @returns
    */
   public dynamicListCustomView = async (
-    tenantId: number,
-    model,
-    customViewId: number
+    dynamicFilter: any,
+    customViewSlug: string,
+    tenantId: number
   ) => {
+    const model = dynamicFilter.getModel();
+
+    // Retrieve the custom view or throw not found.
     const view = await this.getCustomViewOrThrowError(
       tenantId,
-      customViewId,
-      model
+      customViewSlug,
+      model,
     );
     return new DynamicFilterViews(view);
   };

@@ -9,8 +9,13 @@ import AccountTypesUtils from 'lib/AccountTypes';
 import AccountSettings from './Account.Settings';
 import ModelSettings from './ModelSetting';
 import { ACCOUNT_TYPES } from 'data/AccountTypes';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import { DEFAULT_VIEWS } from 'services/Accounts/constants';
 
-export default class Account extends mixin(TenantModel, [ModelSettings]) {
+export default class Account extends mixin(TenantModel, [
+  ModelSettings,
+  CustomViewBaseModel,
+]) {
   /**
    * Table name.
    */
@@ -135,7 +140,7 @@ export default class Account extends mixin(TenantModel, [ModelSettings]) {
        */
       filterByAccountNormal(query, accountNormal) {
         const filterTypes = ACCOUNT_TYPES.filter(
-          (accountType) => accountType.normal === accountNormal,
+          (accountType) => accountType.normal === accountNormal
         ).map((accountType) => accountType.key);
 
         query.whereIn('account_type', filterTypes);
@@ -247,5 +252,12 @@ export default class Account extends mixin(TenantModel, [ModelSettings]) {
    */
   static get meta() {
     return AccountSettings;
+  }
+
+  /**
+   * Retrieve the default custom views, roles and columns.
+   */
+   static get defaultViews() {
+    return DEFAULT_VIEWS;
   }
 }

@@ -638,10 +638,7 @@ export default class AccountsService {
       Account,
       filter
     );
-    this.logger.info('[accounts] trying to get accounts datatable list.', {
-      tenantId,
-      filter,
-    });
+    // Retrieve accounts model based on the given query.
     const accounts = await Account.query().onBuild((builder) => {
       dynamicList.buildQuery()(builder);
       builder.modify('inactiveMode', filter.inactiveMode);

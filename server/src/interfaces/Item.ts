@@ -73,6 +73,7 @@ export interface IItemsFilter extends IDynamicListFilterDTO {
   page: number,
   pageSize: number,
   inactiveMode: boolean,
+  viewSlug?: string,
 };
 
 export interface IItemsAutoCompleteFilter {

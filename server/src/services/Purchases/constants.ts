@@ -11,7 +11,65 @@ export const ERRORS = {
   BILL_HAS_ASSOCIATED_PAYMENT_ENTRIES: 'BILL_HAS_ASSOCIATED_PAYMENT_ENTRIES',
   VENDOR_HAS_BILLS: 'VENDOR_HAS_BILLS',
   BILL_HAS_ASSOCIATED_LANDED_COSTS: 'BILL_HAS_ASSOCIATED_LANDED_COSTS',
-  BILL_ENTRIES_ALLOCATED_COST_COULD_DELETED: 'BILL_ENTRIES_ALLOCATED_COST_COULD_DELETED',
-  LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES: 'LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES',
-  LANDED_COST_ENTRIES_SHOULD_BE_INVENTORY_ITEMS: 'LANDED_COST_ENTRIES_SHOULD_BE_INVENTORY_ITEMS'
+  BILL_ENTRIES_ALLOCATED_COST_COULD_DELETED:
+    'BILL_ENTRIES_ALLOCATED_COST_COULD_DELETED',
+  LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES:
+    'LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES',
+  LANDED_COST_ENTRIES_SHOULD_BE_INVENTORY_ITEMS:
+    'LANDED_COST_ENTRIES_SHOULD_BE_INVENTORY_ITEMS',
 };
+
+export const DEFAULT_VIEW_COLUMNS = [];
+
+export const DEFAULT_VIEWS = [
+  {
+    name: 'Draft',
+    slug: 'draft',
+    rolesLogicExpression: '1',
+    roles: [
+      { index: 1, fieldKey: 'status', comparator: 'equals', value: 'draft' },
+    ],
+    columns: DEFAULT_VIEW_COLUMNS,
+  },
+  {
+    name: 'Opended',
+    slug: 'opened',
+    rolesLogicExpression: '1',
+    roles: [
+      { index: 1, fieldKey: 'status', comparator: 'equals', value: 'opened' },
+    ],
+    columns: DEFAULT_VIEW_COLUMNS,
+  },
+  {
+    name: 'Unpaid',
+    slug: 'unpaid',
+    rolesLogicExpression: '1',
+    roles: [
+      { index: 1, fieldKey: 'status', comparator: 'equals', value: 'unpaid' },
+    ],
+    columns: DEFAULT_VIEW_COLUMNS,
+  },
+  {
+    name: 'Overdue',
+    slug: 'overdue',
+    rolesLogicExpression: '1',
+    roles: [
+      { index: 1, fieldKey: 'status', comparator: 'equals', value: 'overdue' },
+    ],
+    columns: DEFAULT_VIEW_COLUMNS,
+  },
+  {
+    name: 'Partially Paid',
+    slug: 'partially-paid',
+    rolesLogicExpression: '1',
+    roles: [
+      {
+        index: 1,
+        fieldKey: 'status',
+        comparator: 'equals',
+        value: 'partially-paid',
+      },
+    ],
+    columns: DEFAULT_VIEW_COLUMNS,
+  },
+];

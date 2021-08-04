@@ -1,12 +1,12 @@
 import { omit } from 'lodash';
 import { IView, IViewRole } from 'interfaces';
-import DynamicFilterRoleAbstructor from 'lib/DynamicFilter/DynamicFilterRoleAbstructor';
-import { buildFilterQuery } from 'lib/ViewRolesBuilder';
+import DynamicFilterRoleAbstructor from './DynamicFilterRoleAbstructor';
 
 export default class DynamicFilterViews extends DynamicFilterRoleAbstructor {
-  viewId: number;
-  logicExpression: string;
-  filterRoles: IViewRole[];
+  private viewSlug: string;
+  private logicExpression: string;
+  private filterRoles: IViewRole[];
+  private viewColumns = [];
 
   /**
    * Constructor method.
@@ -15,8 +15,9 @@ export default class DynamicFilterViews extends DynamicFilterRoleAbstructor {
   constructor(view: IView) {
     super();
 
-    this.viewId = view.id;
+    this.viewSlug = view.slug;
     this.filterRoles = view.roles;
+    this.viewColumns = view.columns;
     this.logicExpression = view.rolesLogicExpression
       .replace('AND', '&&')
       .replace('OR', '||');
@@ -25,18 +26,11 @@ export default class DynamicFilterViews extends DynamicFilterRoleAbstructor {
   }
 
   /**
-   * Retrieve logic expression.
-   */
-  buildLogicExpression() {
-    return this.logicExpression;
-  }
-
-  /**
    * Builds database query of view roles.
    */
-  buildQuery() {
+  public buildQuery() {
     return (builder) => {
-      buildFilterQuery(
+      this.buildFilterQuery(
         this.model,
         this.filterRoles,
         this.logicExpression
@@ -47,14 +41,15 @@ export default class DynamicFilterViews extends DynamicFilterRoleAbstructor {
   /**
    * Sets response meta.
    */
-  setResponseMeta() {
+  public setResponseMeta() {
     this.responseMeta = {
       view: {
         logicExpression: this.logicExpression,
         filterRoles: this.filterRoles.map((filterRole) => ({
           ...omit(filterRole, ['id', 'viewId']),
         })),
-        customViewId: this.viewId,
+        viewSlug: this.viewSlug,
+        viewColumns: this.viewColumns,
       },
     };
   }

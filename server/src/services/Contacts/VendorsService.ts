@@ -286,11 +286,12 @@ export default class VendorsService {
       Vendor,
       filter
     );
-
     // Vendors list.
     const { results, pagination } = await Vendor.query()
       .onBuild((builder) => {
         dynamicList.buildQuery()(builder);
+
+        // Switches between active/inactive modes.
         builder.modify('inactiveMode', filter.inactiveMode);
       })
       .pagination(filter.page - 1, filter.pageSize);

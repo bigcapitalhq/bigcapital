@@ -13,6 +13,7 @@ export interface IExpensesFilter {
   filterRoles?: IFilterRole[];
   columnSortBy: string;
   sortOrder: string;
+  viewSlug?: string;
 }
 
 export interface IExpense {

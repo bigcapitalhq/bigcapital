@@ -4,8 +4,13 @@ import TenantModel from 'models/TenantModel';
 import { defaultToTransform } from 'utils';
 import SaleEstimateSettings from './SaleEstimate.Settings';
 import ModelSetting from './ModelSetting';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import { DEFAULT_VIEWS } from 'services/Sales/Estimates/constants';
 
-export default class SaleEstimate extends mixin(TenantModel, [ModelSetting]) {
+export default class SaleEstimate extends mixin(TenantModel, [
+  ModelSetting,
+  CustomViewBaseModel,
+]) {
   /**
    * Table name
    */
@@ -155,7 +160,7 @@ export default class SaleEstimate extends mixin(TenantModel, [ModelSetting]) {
             query.modify('expired');
             break;
         }
-      }
+      },
     };
   }
 
@@ -197,5 +202,12 @@ export default class SaleEstimate extends mixin(TenantModel, [ModelSetting]) {
    */
   static get meta() {
     return SaleEstimateSettings;
+  }
+
+  /**
+   * Retrieve the default custom views, roles and columns.
+   */
+  static get defaultViews() {
+    return DEFAULT_VIEWS;
   }
 }

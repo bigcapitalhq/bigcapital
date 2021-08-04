@@ -165,7 +165,7 @@ export default class BillsController extends BaseController {
    */
   get billsListingValidationSchema() {
     return [
-      query('custom_view_id').optional().isNumeric().toInt(),
+      query('view_slug').optional().isString().trim(),
       query('stringified_filter_roles').optional().isJSON(),
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),

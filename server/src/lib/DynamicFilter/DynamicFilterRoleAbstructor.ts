@@ -346,4 +346,12 @@ export default abstract class DynamicFilterAbstructor
       this.relationFields.push(field.relationKey);
     }
   };
+
+  getModel() {
+    return this.model;
+  }
+
+  onInitialize() {
+    
+  }
 }

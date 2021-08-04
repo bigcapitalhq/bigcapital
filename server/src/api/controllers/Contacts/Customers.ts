@@ -118,7 +118,7 @@ export default class CustomersController extends ContactsController {
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
 
-      query('custom_view_id').optional().isNumeric().toInt(),
+      query('view_slug').optional().isString().trim(),
       query('stringified_filter_roles').optional().isJSON(),
 
       query('inactive_mode').optional().isBoolean().toBoolean(),

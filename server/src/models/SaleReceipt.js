@@ -2,8 +2,13 @@ import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
 import ModelSetting from './ModelSetting';
 import SaleReceiptSettings from './SaleReceipt.Settings';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import { DEFAULT_VIEWS } from 'services/Sales/Receipts/constants';
 
-export default class SaleReceipt extends mixin(TenantModel, [ModelSetting]) {
+export default class SaleReceipt extends mixin(TenantModel, [
+  ModelSetting,
+  CustomViewBaseModel,
+]) {
   /**
    * Table name
    */
@@ -80,7 +85,7 @@ export default class SaleReceipt extends mixin(TenantModel, [ModelSetting]) {
             query.modify('closed');
             break;
         }
-      }
+      },
     };
   }
 
@@ -146,5 +151,12 @@ export default class SaleReceipt extends mixin(TenantModel, [ModelSetting]) {
    */
   static get meta() {
     return SaleReceiptSettings;
+  }
+
+  /**
+   * Retrieve the default custom views, roles and columns.
+   */
+  static get defaultViews() {
+    return DEFAULT_VIEWS;
   }
 }

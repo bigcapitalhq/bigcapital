@@ -37,4 +37,8 @@ export default class DynamicFilterAbstructor {
       }
     });
   };
+
+  getModel() {
+    return this.model;
+  }
 }

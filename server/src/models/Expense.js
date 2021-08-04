@@ -3,8 +3,13 @@ import TenantModel from 'models/TenantModel';
 import { viewRolesBuilder } from 'lib/ViewRolesBuilder';
 import ModelSetting from './ModelSetting';
 import ExpenseSettings from './Expense.Settings';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import { DEFAULT_VIEWS } from 'services/Expenses/constants';
 
-export default class Expense extends mixin(TenantModel, [ModelSetting]) {
+export default class Expense extends mixin(TenantModel, [
+  ModelSetting,
+  CustomViewBaseModel,
+]) {
   /**
    * Table name
    */
@@ -147,5 +152,12 @@ export default class Expense extends mixin(TenantModel, [ModelSetting]) {
 
   static get meta() {
     return ExpenseSettings;
+  }
+
+  /**
+   * Retrieve the default custom views, roles and columns.
+   */
+  static get defaultViews() {
+    return DEFAULT_VIEWS;
   }
 }
