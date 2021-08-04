@@ -34,6 +34,7 @@ export default function SalesByItemsHeaderGeneralPanel() {
                   onItemSelect={(itemsIds) => {
                     setFieldValue('itemsIds', itemsIds);
                   }}
+                  onTagRenderer={(value) => value}
                 />
               </FormGroup>
             )}

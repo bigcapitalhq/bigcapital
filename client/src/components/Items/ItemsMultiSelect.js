@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { MenuItem, Button } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
-import MultiSelect from 'components/MultiSelect';
+import { MenuItem, Button, Intent } from '@blueprintjs/core';
+import { MultiSelect } from '@blueprintjs/select';
 import { FormattedMessage as T } from 'components';
 import { safeInvoke } from 'utils';
 
@@ -12,7 +11,7 @@ export function ItemsMultiSelect({
   items,
   defaultText = <T id={'All items'} />,
   buttonProps,
-
+  onTagRenderer,
   selectedItems = [],
   onItemSelect,
   ...multiSelectProps
@@ -55,6 +54,14 @@ export function ItemsMultiSelect({
     [setLocalSelected, localSelected, isItemSelected, onItemSelect],
   );
 
+  const itemsSelected = () => {
+    const results = [];
+    items.map(({ id, name }) => {
+      return isItemSelected(id) ? results.push(name) : [];
+    });
+    return results;
+  };
+
   // Filters accounts items.
   const filterItemsPredicater = useCallback(
     (query, item, _index, exactMatch) => {
@@ -70,25 +77,42 @@ export function ItemsMultiSelect({
     [],
   );
 
+  // Clear Button
+  const clearButton =
+    countSelected > 0 ? (
+      <Button
+        icon="cross"
+        minimal={true}
+        onClick={() => setLocalSelected([])}
+      />
+    ) : undefined;
+
+  // handle remove tag
+  const handleTagRemove = (tag) => {
+    let tagList = localSelected.filter((s) => s !== tag);
+    setLocalSelected(tagList);
+  };
+
   return (
     <MultiSelect
       items={items}
       noResults={<MenuItem disabled={true} text={<T id={'No items'} />} />}
       itemRenderer={itemRenderer}
       popoverProps={{ minimal: true }}
+      selectedItems={itemsSelected()}
       filterable={true}
+      fill={true}
       onItemSelect={handleItemSelect}
       itemPredicate={filterItemsPredicater}
+      tagRenderer={onTagRenderer}
+      tagInputProps={{
+        tagProps: { intent: Intent.NONE, minimal: false },
+        onRemove: handleTagRemove,
+        // rightElement: clearButton,
+      }}
+      resetOnSelect={true}
+      // openOnKeyDown={true}
       {...multiSelectProps}
-    >
-      <Button
-        text={
-          countSelected === 0
-            ? defaultText
-            : intl.get('Selected items ({count})', { count: countSelected })
-        }
-        {...buttonProps}
-      />
-    </MultiSelect>
+    />
   );
 }
