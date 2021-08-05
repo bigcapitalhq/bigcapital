@@ -38,9 +38,6 @@ export function ItemsMultiSelect({
     [isItemSelected],
   );
 
-  // Count selected items.
-  const countSelected = localSelected.length;
-
   // Handle item selected.
   const handleItemSelect = useCallback(
     ({ id }) => {
@@ -77,13 +74,16 @@ export function ItemsMultiSelect({
     [],
   );
 
+  // Count selected items.
+  const countSelected = itemsSelected().length;
+
   // Clear Button
   const clearButton =
     countSelected > 0 ? (
       <Button
         icon="cross"
         minimal={true}
-        onClick={() => setLocalSelected([])}
+        // onClick={() => setLocalSelected([])}
       />
     ) : undefined;
 
