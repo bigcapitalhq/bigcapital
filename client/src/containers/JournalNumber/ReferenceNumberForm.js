@@ -4,6 +4,7 @@ import { Formik, Form } from 'formik';
 import { FormattedMessage as T } from 'components';
 import { Button, Classes } from '@blueprintjs/core';
 import { Intent } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 
 import 'style/pages/ReferenceNumber/ReferenceNumber.scss';
 
@@ -54,7 +55,9 @@ export default function ReferenceNumberForm({
         <Form className={'reference-number-form'}>
           <div className={Classes.DIALOG_BODY}>
             <p className="paragraph">
-              Your invoice numbers are set on auto-increment mod. Are you sure changing this setting?
+              {intl.get(
+                'your_invoice_numbers_are_set_on_auto_increment_mod_are_you_sure_changing_this_setting',
+              )}
             </p>
             <ReferenceNumberFormContent />
           </div>

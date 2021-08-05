@@ -98,9 +98,12 @@ export function ItemsMultiSelect({
       items={items}
       noResults={<MenuItem disabled={true} text={<T id={'No items'} />} />}
       itemRenderer={itemRenderer}
-      popoverProps={{ minimal: true }}
+      popoverProps={{
+        minimal: true,
+        usePortal: false,
+        targetTagName: 'div ',
+      }}
       selectedItems={itemsSelected()}
-      filterable={true}
       fill={true}
       onItemSelect={handleItemSelect}
       itemPredicate={filterItemsPredicater}

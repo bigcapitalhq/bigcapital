@@ -17,7 +17,7 @@ export default function ReferenceNumberFormContent() {
       <FastField name={'incrementMode'}>
         {({ form, field, meta: { error, touched } }) => (
           <Radio
-            label="Auto-incrementing invoice number."
+            label={<T id={'auto_incrementing_number'} />}
             value="auto-increment"
             onChange={() => {
               form.setFieldValue('incrementMode', 'auto');
