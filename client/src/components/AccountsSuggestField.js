@@ -6,8 +6,9 @@ import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
-import { FormattedMessage as T } from 'components';
+import { MenuItemNestedText, FormattedMessage as T } from 'components';
 import { filterAccountsByQuery } from './utils';
+import { nestedArrayToflatten } from 'utils';
 
 /**
  * Accounts suggest field.
@@ -27,9 +28,14 @@ export default function AccountsSuggestField({
 
   ...suggestProps
 }) {
+  const flattenAccounts = useMemo(
+    () => nestedArrayToflatten(accounts),
+    [accounts],
+  );
+
   // Filters accounts based on filter props.
   const filteredAccounts = useMemo(() => {
-    let filteredAccounts = filterAccountsByQuery(accounts, {
+    let filteredAccounts = filterAccountsByQuery(flattenAccounts, {
       filterByRootTypes,
       filterByParentTypes,
       filterByTypes,
@@ -37,7 +43,7 @@ export default function AccountsSuggestField({
     });
     return filteredAccounts;
   }, [
-    accounts,
+    flattenAccounts,
     filterByRootTypes,
     filterByParentTypes,
     filterByTypes,
@@ -84,7 +90,7 @@ export default function AccountsSuggestField({
   const accountItem = useCallback((item, { handleClick, modifiers, query }) => {
     return (
       <MenuItem
-        text={item.htmlName || item.name}
+        text={<MenuItemNestedText level={item.level} text={item.name} />}
         label={item.code}
         key={item.id}
         onClick={handleClick}

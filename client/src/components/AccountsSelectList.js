@@ -1,9 +1,10 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { MenuItem, Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import { FormattedMessage as T } from 'components';
+import { MenuItemNestedText, FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 import { filterAccountsByQuery } from './utils';
+import { nestedArrayToflatten } from 'utils';
 import { CLASSES } from 'common/classes';
 
 export default function AccountsSelectList({
@@ -22,9 +23,14 @@ export default function AccountsSelectList({
 
   buttonProps = {},
 }) {
+  const flattenAccounts = useMemo(
+    () => nestedArrayToflatten(accounts),
+    [accounts],
+  );
+
   // Filters accounts based on filter props.
   const filteredAccounts = useMemo(() => {
-    let filteredAccounts = filterAccountsByQuery(accounts, {
+    let filteredAccounts = filterAccountsByQuery(flattenAccounts, {
       filterByRootTypes,
       filterByParentTypes,
       filterByTypes,
@@ -32,7 +38,7 @@ export default function AccountsSelectList({
     });
     return filteredAccounts;
   }, [
-    accounts,
+    flattenAccounts,
     filterByRootTypes,
     filterByParentTypes,
     filterByTypes,
@@ -62,7 +68,7 @@ export default function AccountsSelectList({
   const accountItem = useCallback((item, { handleClick, modifiers, query }) => {
     return (
       <MenuItem
-        text={item.htmlName || item.name}
+        text={<MenuItemNestedText level={item.level} text={item.name} />}
         label={item.code}
         key={item.id}
         onClick={handleClick}

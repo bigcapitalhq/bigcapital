@@ -672,7 +672,6 @@ export const defaultFastFieldShouldUpdate = (props, prevProps) => {
   );
 };
 
-
 export const ensureEntriesHasEmptyLine = R.curry(
   (minLinesNumber, defaultEntry, entries) => {
     if (entries.length >= minLinesNumber) {
@@ -683,5 +682,34 @@ export const ensureEntriesHasEmptyLine = R.curry(
 );
 
 export const transfromViewsToTabs = (views) => {
-  return views.map(view => ({ ..._.pick(view, ['slug', 'name']) }))
+  return views.map((view) => ({ ..._.pick(view, ['slug', 'name']) }));
+};
+
+export function nestedArrayToflatten(
+  collection,
+  property = 'children',
+  parseItem = (a, level) => a,
+  level = 1,
+) {
+  const parseObject = (obj) => parseItem({
+    ..._.omit(obj, [property]),
+    level,
+  }, level);
+
+  return collection.reduce((items, currentValue, index) => {
+    let localItems = [...items];
+    const parsedItem = parseObject(currentValue, level);
+    localItems.push(parsedItem);
+
+    if (Array.isArray(currentValue[property])) {
+      const flattenArray = nestedArrayToflatten(
+        currentValue[property],
+        property,
+        parseItem,
+        level + 1,
+      );
+      localItems = _.concat(localItems, flattenArray);
+    }
+    return localItems;
+  }, []);
 }

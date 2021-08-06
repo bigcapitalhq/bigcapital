@@ -172,13 +172,13 @@ function AccountFormDialogFields({
 
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button onClick={onClose} style={{ minWidth: '75px' }}>
+          <Button disabled={isSubmitting} onClick={onClose} style={{ minWidth: '75px' }}>
             <T id={'close'} />
           </Button>
 
           <Button
             intent={Intent.PRIMARY}
-            disabled={isSubmitting}
+            loading={isSubmitting}
             style={{ minWidth: '75px' }}
             type="submit"
           >

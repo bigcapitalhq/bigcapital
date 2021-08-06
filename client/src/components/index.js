@@ -61,6 +61,8 @@ import Card from './Card';
 
 import { ItemsMultiSelect } from './Items';
 
+export * from './Menu';
+
 const Hint = FieldHint;
 
 const T = FormattedMessage;
