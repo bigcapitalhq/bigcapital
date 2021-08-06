@@ -38,9 +38,6 @@ export function ItemsMultiSelect({
     [isItemSelected],
   );
 
-  // Count selected items.
-  const countSelected = localSelected.length;
-
   // Handle item selected.
   const handleItemSelect = useCallback(
     ({ id }) => {
@@ -77,13 +74,16 @@ export function ItemsMultiSelect({
     [],
   );
 
+  // Count selected items.
+  const countSelected = itemsSelected().length;
+
   // Clear Button
   const clearButton =
     countSelected > 0 ? (
       <Button
         icon="cross"
         minimal={true}
-        onClick={() => setLocalSelected([])}
+        // onClick={() => setLocalSelected([])}
       />
     ) : undefined;
 
@@ -98,9 +98,12 @@ export function ItemsMultiSelect({
       items={items}
       noResults={<MenuItem disabled={true} text={<T id={'No items'} />} />}
       itemRenderer={itemRenderer}
-      popoverProps={{ minimal: true }}
+      popoverProps={{
+        minimal: true,
+        usePortal: false,
+        targetTagName: 'div ',
+      }}
       selectedItems={itemsSelected()}
-      filterable={true}
       fill={true}
       onItemSelect={handleItemSelect}
       itemPredicate={filterItemsPredicater}

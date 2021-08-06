@@ -1194,5 +1194,9 @@
   "Reports": "التقارير",
   "New tasks": "مهام جديدة",
   "sorry_about_that_something_went_wrong": "نتأسف بشأن ذلك! هناك خطأ ما",
-  "if_the_problem_stuck_please_contact_us_as_soon_as_possible": "إذا تكررت المشكلة اكتر من مرة ، الرجاء الاتصال بنا في أقرب وقت ممكن."
+  "if_the_problem_stuck_please_contact_us_as_soon_as_possible": "إذا تكررت المشكلة اكتر من مرة ، الرجاء الاتصال بنا في أقرب وقت ممكن.",
+  "non-inventory":"غير مخزون",
+  "terms_conditions":"الشروط والأحكام",
+  "your_invoice_numbers_are_set_on_auto_increment_mod_are_you_sure_changing_this_setting":"Your invoice numbers are set on auto-increment mod. Are you sure changing this setting?",
+  "auto_incrementing_number":"Auto-incrementing number"
 }
