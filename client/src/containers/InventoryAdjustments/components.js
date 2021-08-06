@@ -12,7 +12,7 @@ import {
 import intl from 'react-intl-universal';
 import moment from 'moment';
 
-import {  FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from 'components';
 import { isNumber } from 'lodash';
 import { Icon, Money, If } from 'components';
 import { isBlank, safeCallback } from 'utils';
@@ -93,7 +93,7 @@ export const ItemTypeAccessor = (row) => {
 
 export const ActionsMenu = ({
   row: { original },
-  payload: { onDelete },
+  payload: { onDelete, onPublish },
 }) => {
   return (
     <Menu>
@@ -102,6 +102,13 @@ export const ActionsMenu = ({
         text={intl.get('view_details')}
       />
       <MenuDivider />
+      <If condition={!original.is_published}>
+        <MenuItem
+          icon={<Icon icon={'arrow-to-top'} size={16} />}
+          text={intl.get('publish_expense')}
+          onClick={safeCallback(onPublish, original)}
+        />
+      </If>
       <MenuItem
         text={intl.get('delete_adjustment')}
         intent={Intent.DANGER}
@@ -113,12 +120,13 @@ export const ActionsMenu = ({
 };
 
 export const ActionsCell = (props) => {
-  return (<Popover
-    content={<ActionsMenu {...props} />}
-    position={Position.RIGHT_BOTTOM}
-  >
-    <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
-  </Popover>
+  return (
+    <Popover
+      content={<ActionsMenu {...props} />}
+      position={Position.RIGHT_BOTTOM}
+    >
+      <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
+    </Popover>
   );
 };
 
@@ -126,8 +134,6 @@ export const ActionsCell = (props) => {
  * Retrieve inventory adjustments columns.
  */
 export const useInventoryAdjustmentsColumns = () => {
-  
-
   return React.useMemo(
     () => [
       {
