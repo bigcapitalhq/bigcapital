@@ -8,7 +8,7 @@ import {
   Position,
   Intent,
 } from '@blueprintjs/core';
-import { Icon, Money } from 'components';
+import { Icon, Money, If } from 'components';
 import { safeCallback } from 'utils';
 import { firstLettersArgs } from 'utils';
 import intl from 'react-intl-universal';
@@ -18,10 +18,8 @@ import intl from 'react-intl-universal';
  */
 export function ActionsMenu({
   row: { original },
-  payload: { onEdit, onDelete, onDuplicate },
+  payload: { onEdit, onDelete, onDuplicate, onInactivate, onActivate },
 }) {
-  
-
   return (
     <Menu>
       <MenuItem
@@ -39,6 +37,20 @@ export function ActionsMenu({
         text={intl.get('duplicate')}
         onClick={safeCallback(onDuplicate, original)}
       />
+      <If condition={original.active}>
+        <MenuItem
+          text={intl.get('inactivate_item')}
+          icon={<Icon icon="pause-16" iconSize={16} />}
+          onClick={safeCallback(onInactivate, original)}
+        />
+      </If>
+      <If condition={!original.active}>
+        <MenuItem
+          text={intl.get('activate_item')}
+          icon={<Icon icon="play-16" iconSize={16} />}
+          onClick={safeCallback(onActivate, original)}
+        />
+      </If>
       <MenuItem
         icon={<Icon icon="trash-16" iconSize={16} />}
         text={intl.get('delete_customer')}
@@ -74,8 +86,6 @@ export function BalanceAccessor(row) {
  * Retrieve customers table columns.
  */
 export function useCustomersTableColumns() {
-  
-
   return useMemo(
     () => [
       {

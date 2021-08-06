@@ -9,7 +9,7 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { Icon, Money } from 'components';
+import { Icon, Money, If } from 'components';
 import { safeCallback, firstLettersArgs } from 'utils';
 
 /**
@@ -17,10 +17,8 @@ import { safeCallback, firstLettersArgs } from 'utils';
  */
 export function ActionsMenu({
   row: { original },
-  payload: { onEdit, onDelete, onDuplicate },
+  payload: { onEdit, onDelete, onDuplicate, onInactivate, onActivate },
 }) {
-  
-
   return (
     <Menu>
       <MenuItem
@@ -38,6 +36,20 @@ export function ActionsMenu({
         text={intl.get('duplicate')}
         onClick={safeCallback(onDuplicate, original)}
       />
+      <If condition={original.active}>
+        <MenuItem
+          text={intl.get('inactivate_item')}
+          icon={<Icon icon="pause-16" iconSize={16} />}
+          onClick={safeCallback(onInactivate, original)}
+        />
+      </If>
+      <If condition={!original.active}>
+        <MenuItem
+          text={intl.get('activate_item')}
+          icon={<Icon icon="play-16" iconSize={16} />}
+          onClick={safeCallback(onActivate, original)}
+        />
+      </If>
       <MenuItem
         icon={<Icon icon="trash-16" iconSize={16} />}
         text={intl.get('delete_vendor')}
@@ -87,8 +99,6 @@ export function BalanceAccessor({ closing_balance, currency_code }) {
  * Retrieve the vendors table columns.
  */
 export function useVendorsTableColumns() {
-  
-
   return React.useMemo(
     () => [
       {
@@ -127,7 +137,7 @@ export function useVendorsTableColumns() {
         accessor: BalanceAccessor,
         className: 'receivable_balance',
         width: 100,
-      }
+      },
     ],
     [],
   );

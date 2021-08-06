@@ -126,6 +126,11 @@ const LANDED_COSTS = {
   LANDED_COST_TRANSACTION: 'LANDED_COST_TRANSACTION',
 };
 
+const CONTACTS = {
+  CONTACTS: 'CONTACTS',
+  CONTACT: 'CONTACT',
+};
+
 export default {
   ...ACCOUNTS,
   ...BILLS,
@@ -147,4 +152,5 @@ export default {
   ...EXPENSES,
   ...MANUAL_JOURNALS,
   ...LANDED_COSTS,
+  ...CONTACTS,
 };

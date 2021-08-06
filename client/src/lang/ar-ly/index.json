@@ -1198,5 +1198,12 @@
   "non-inventory":"غير مخزون",
   "terms_conditions":"الشروط والأحكام",
   "your_invoice_numbers_are_set_on_auto_increment_mod_are_you_sure_changing_this_setting":"Your invoice numbers are set on auto-increment mod. Are you sure changing this setting?",
-  "auto_incrementing_number":"Auto-incrementing number"
+  "auto_incrementing_number":"Auto-incrementing number",
+  "the_inventory_adjustment_has_been_published": "تم نشر تسوية المخزون",
+  "are_sure_to_publish_this_inventory_adjustment": "هل أنت متأكد أنك تريد نشر هذا المخزون ؟",
+  "the_contact_has_been_activated_successfully": "تم تفعيل جهة اتصال بنجاح.",
+  "the_contact_has_been_inactivated_successfully": "تم إلغاء تنشيط جهة اتصال بنجاح.",
+  "are_sure_to_inactive_this_contact": "هل أنت متأكد أنك تريد إلغاء تنشيط جهة اتصال؟ ستكون قادرًا على تنشيطه لاحقًا",
+  "are_sure_to_activate_this_contact": "هل أنت متأكد أنك تريد تفعيل جهة اتصال؟ ستتمكن من تعطيله لاحقًا"
 }
+
