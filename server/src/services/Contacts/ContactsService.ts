@@ -12,12 +12,9 @@ import {
   IContactsAutoCompleteFilter,
 } from 'interfaces';
 import JournalPoster from '../Accounting/JournalPoster';
+import { ERRORS } from './constants';
 
 type TContactService = 'customer' | 'vendor';
-
-const ERRORS = {
-  OPENING_BALANCE_DATE_REQUIRED: 'OPENING_BALANCE_DATE_REQUIRED',
-};
 
 @Service()
 export default class ContactsService {
@@ -360,5 +357,35 @@ export default class ContactsService {
         contactService,
       }
     );
+  }
+
+  /**
+   * Inactive the given contact.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} contactId - Contact id.
+   */
+  async inactivateContact(tenantId: number, contactId: number): Promise<void> {
+    const { Contact } = this.tenancy.models(tenantId);
+    const contact = await this.getContactByIdOrThrowError(tenantId, contactId);
+
+    if(!contact.active) {
+      throw new ServiceError(ERRORS.CONTACT_ALREADY_INACTIVE);
+    }
+    await Contact.query().findById(contactId).update({ active: false });
+  }
+
+  /**
+   * Inactive the given contact.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} contactId - Contact id.
+   */
+   async activateContact(tenantId: number, contactId: number): Promise<void> {
+    const { Contact } = this.tenancy.models(tenantId);
+    const contact = await this.getContactByIdOrThrowError(tenantId, contactId);
+
+    if(contact.active) {
+      throw new ServiceError(ERRORS.CONTACT_ALREADY_ACTIVE);
+    }
+    await Contact.query().findById(contactId).update({ active: true });
   }
 }

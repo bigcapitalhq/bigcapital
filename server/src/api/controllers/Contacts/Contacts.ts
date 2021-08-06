@@ -1,7 +1,7 @@
 import { check, param, query, body, ValidationChain } from 'express-validator';
 import { Router, Request, Response, NextFunction } from 'express';
 import { Inject, Service } from 'typedi';
-import * as R from 'ramda';
+import { ServiceError } from 'exceptions';
 import BaseController from 'api/controllers/BaseController';
 import ContactsService from 'services/Contacts/ContactsService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
@@ -33,6 +33,20 @@ export default class ContactsController extends BaseController {
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.getContact.bind(this))
+    );
+    router.post(
+      '/:id/inactivate',
+      [param('id').exists().isNumeric().toInt()],
+      this.validationResult,
+      this.asyncMiddleware(this.inactivateContact.bind(this)),
+      this.handlerServiceErrors
+    );
+    router.post(
+      '/:id/activate',
+      [param('id').exists().isNumeric().toInt()],
+      this.validationResult,
+      this.asyncMiddleware(this.activateContact.bind(this)),
+      this.handlerServiceErrors
     );
     return router;
   }
@@ -301,5 +315,82 @@ export default class ContactsController extends BaseController {
    */
   get specificContactSchema(): ValidationChain[] {
     return [param('id').exists().isNumeric().toInt()];
+  }
+
+  /**
+   * Activates the given contact.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async activateContact(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: contactId } = req.params;
+
+    try {
+      await this.contactsService.activateContact(tenantId, contactId);
+
+      return res.status(200).send({
+        id: contactId,
+        message: 'The given contact activated successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Inactivate the given contact.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async inactivateContact(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: contactId } = req.params;
+
+    try {
+      await this.contactsService.inactivateContact(tenantId, contactId);
+
+      return res.status(200).send({
+        id: contactId,
+        message: 'The given contact inactivated successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Handles service errors.
+   * @param {Error} error
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+   private handlerServiceErrors(
+    error: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'contact_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CONTACT.NOT.FOUND', code: 100 }],
+        });
+      }
+      if (error.errorType === 'CONTACT_ALREADY_ACTIVE') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CONTACT_ALREADY_ACTIVE', code: 700 }],
+        });
+      }
+      if (error.errorType === 'CONTACT_ALREADY_INACTIVE') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CONTACT_ALREADY_INACTIVE', code: 800 }],
+        });
+      }
+    }
+    next(error);
   }
 }
