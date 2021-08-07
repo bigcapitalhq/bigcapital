@@ -8,6 +8,9 @@ import { FormattedMessage as T } from 'components';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
+/**
+ * Currency dialog form footer action.
+ */
 function CurrencyFormFooter({
   // #withDialogActions
   closeDialog,
@@ -23,10 +26,10 @@ function CurrencyFormFooter({
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-        <Button onClick={handleClose}>
+        <Button onClick={handleClose} disabled={isSubmitting}>
           <T id={'cancel'} />
         </Button>
-        <Button intent={Intent.PRIMARY} type="submit" disabled={isSubmitting}>
+        <Button intent={Intent.PRIMARY} type="submit" loading={isSubmitting}>
           {!isEditMode ? <T id={'submit'} /> : <T id={'edit'} />}
         </Button>
       </div>

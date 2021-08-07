@@ -13,7 +13,7 @@ const accountNameMapper = (column) => ({
   accessor: 'cells[0].value',
   className: 'account_name',
   textOverview: true,
-  width: 240,
+  width: 400,
   disableSortBy: true,
 });
 
@@ -25,7 +25,10 @@ const dateRangeMapper = (data, index, column) => ({
   Header: column.label,
   key: column.key,
   accessor: `cells[${index}].value`,
-  width: getColumnWidth(data, `cells.${index}.value`, { minWidth: 100 }),
+  width: getColumnWidth(data, `cells.${index}.value`, {
+    magicSpacing: 10,
+    minWidth: 100,
+  }),
   className: `date-period ${column.key}`,
   disableSortBy: true,
   textOverview: true,
@@ -41,7 +44,10 @@ const totalMapper = (data, index, column) => ({
   className: 'total',
   textOverview: true,
   Cell: CellTextSpan,
-  width: getColumnWidth(data, `cells[${index}].value`, { minWidth: 100 }),
+  width: getColumnWidth(data, `cells[${index}].value`, {
+    magicSpacing: 10,
+    minWidth: 100,
+  }),
   disableSortBy: true,
 });
 

@@ -83,7 +83,7 @@ export function useCustomersTableColumns() {
         Header: '',
         accessor: AvatarCell,
         className: 'avatar',
-        width: 50,
+        width: 45,
         disableResizing: true,
         disableSortBy: true,
       },
