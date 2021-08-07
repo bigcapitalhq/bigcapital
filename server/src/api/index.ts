@@ -10,6 +10,7 @@ import TenancyMiddleware from 'api/middleware/TenancyMiddleware';
 import EnsureTenantIsInitialized from 'api/middleware/EnsureTenantIsInitialized';
 import SettingsMiddleware from 'api/middleware/SettingsMiddleware';
 import I18nMiddleware from 'api/middleware/I18nMiddleware';
+import I18nAuthenticatedMiddlware from 'api/middleware/I18nAuthenticatedMiddlware';
 import EnsureConfiguredMiddleware from 'api/middleware/EnsureConfiguredMiddleware';
 import EnsureTenantIsSeeded from 'api/middleware/EnsureTenantIsSeeded';
 
@@ -65,10 +66,10 @@ export default () => {
   dashboard.use(JWTAuth);
   dashboard.use(AttachCurrentTenantUser);
   dashboard.use(TenancyMiddleware);
-  dashboard.use(I18nMiddleware);
   dashboard.use(SubscriptionMiddleware('main'));
   dashboard.use(EnsureTenantIsInitialized);
   dashboard.use(SettingsMiddleware);
+  dashboard.use(I18nAuthenticatedMiddlware);
   dashboard.use(EnsureConfiguredMiddleware);
   dashboard.use(EnsureTenantIsSeeded);
 

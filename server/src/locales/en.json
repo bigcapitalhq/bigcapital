@@ -4,7 +4,6 @@
   "Bank": "Bank",
   "Other Income": "Other Income",
   "Interest Income": "Interest Income",
-  "Opening Balance": "Opening Balance",
   "Depreciation Expense": "Depreciation Expense",
   "Interest Expense": "Interest Expense",
   "Sales of Product Income": "Sales of Product Income",
@@ -102,7 +101,7 @@
   "Expenses": "Expenses",
   "Services": "Services",
   "Inventory": "Inventory",
-  "Non-Inventory": "Non-Inventory",
+  "Non Inventory": "Non Inventory",
   "Draft": "Draft",
   "Published": "Published",
   "Delivered": "Delivered",
@@ -157,5 +156,8 @@
   "Current Liabilties": "Current Liabilties",
   "Long-Term Liabilities": "Long-Term Liabilities",
   "Non-Current Liabilities": "Non-Current Liabilities",
-  "Liabilities and Equity": "Liabilities and Equity"
+  "Liabilities and Equity": "Liabilities and Equity",
+  "Closing balance": "Closing balance",
+  "Opening Balance": "Opening balance",
+  "Total {{accountName}}": "Total {{accountName}}"
 }

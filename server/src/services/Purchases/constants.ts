@@ -32,7 +32,7 @@ export const DEFAULT_VIEWS = [
     columns: DEFAULT_VIEW_COLUMNS,
   },
   {
-    name: 'Opended',
+    name: 'Opened',
     slug: 'opened',
     rolesLogicExpression: '1',
     roles: [
@@ -59,7 +59,7 @@ export const DEFAULT_VIEWS = [
     columns: DEFAULT_VIEW_COLUMNS,
   },
   {
-    name: 'Partially Paid',
+    name: 'Partially paid',
     slug: 'partially-paid',
     rolesLogicExpression: '1',
     roles: [

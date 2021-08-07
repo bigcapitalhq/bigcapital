@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import { matchedData, validationResult } from 'express-validator';
 import accepts from 'accepts';
-import { camelCase, snakeCase, omit, set, get } from 'lodash';
+import { isArray, drop, first, camelCase, snakeCase, omit, set, get } from 'lodash';
 import { mapKeysDeep } from 'utils';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 
@@ -58,6 +58,37 @@ export default class BaseController {
   }
 
   /**
+   * Sets localization to response object by the given path.
+   * @param {Response} response - 
+   * @param {string} path - 
+   * @param {Request} req - 
+   */
+  private setLocalizationByPath(
+    response: any,
+    path: string,
+    req: Request,
+  ) {
+    const DOT = '.';
+
+    if (isArray(response)) {
+      response.forEach((va) => {
+        const currentPath = first(path.split(DOT));
+        const value = get(va, currentPath);
+
+        if (isArray(value)) {
+          const nextPath = drop(path.split(DOT)).join(DOT);
+          this.setLocalizationByPath(value, nextPath, req);
+        } else {
+          set(va, path, req.__(value));
+        }
+      })
+    } else {
+      const value = get(response, path);
+      set(response, path, req.__(value));
+    }
+  }
+
+  /**
    * Transform the given data to response.
    * @param {any} data
    */
@@ -74,12 +105,13 @@ export default class BaseController {
         : [translatable];
 
       translatables.forEach((path) => {
-        const value = get(response, path);
-        set(response, path, req.__(value));
+        this.setLocalizationByPath(response, path, req);
       });
     }
     return response;
   }
+
+  
 
   /**
    * Async middleware.

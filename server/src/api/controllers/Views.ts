@@ -37,9 +37,9 @@ export default class ViewsController extends BaseController {
 
   /**
    * List all views that associated with the given resource.
-   * @param {Request} req -
-   * @param {Response} res -
-   * @param {NextFunction} next  -
+   * @param {Request} req - Request object.
+   * @param {Response} res - Response object.
+   * @param {NextFunction} next  - Next function.
    */
   async listResourceViews(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -50,8 +50,9 @@ export default class ViewsController extends BaseController {
         tenantId,
         resourceModel
       );
-
-      return res.status(200).send({ views });
+      return res.status(200).send({
+        views: this.transfromToResponse(views, ['name', 'columns.label'], req),
+      });
     } catch (error) {
       next(error);
     }

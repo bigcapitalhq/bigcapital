@@ -1,127 +1,127 @@
 export default {
   organization: {
     name: {
-      type: "string",
+      type: 'string',
     },
     base_currency: {
-      type: "string",
+      type: 'string',
     },
     industry: {
-      type: "string",
+      type: 'string',
     },
     location: {
-      type: "string",
+      type: 'string',
     },
     fiscal_year: {
-      type: "string",
+      type: 'string',
     },
     financial_date_start: {
-      type: "string",
+      type: 'string',
     },
     language: {
-      type: "string",
+      type: 'string',
     },
     time_zone: {
-      type: "string",
+      type: 'string',
     },
     date_format: {
-      type: "string",
+      type: 'string',
     },
     accounting_basis: {
-      type: "string",
+      type: 'string',
     },
   },
   manual_journals: {
     next_number: {
-      type: "string",
+      type: 'string',
     },
     number_prefix: {
-      type: "string",
+      type: 'string',
     },
     auto_increment: {
-      type: "boolean",
+      type: 'boolean',
     },
   },
   bill_payments: {
     withdrawal_account: {
-      type: "number",
+      type: 'number',
     },
   },
   sales_estimates: {
     next_number: {
-      type: "string",
+      type: 'string',
     },
     number_prefix: {
-      type: "string",
+      type: 'string',
     },
     auto_increment: {
-      type: "boolean",
+      type: 'boolean',
     },
   },
   sales_receipts: {
     next_number: {
-      type: "string",
+      type: 'string',
     },
     number_prefix: {
-      type: "string",
+      type: 'string',
     },
     auto_increment: {
-      type: "boolean",
+      type: 'boolean',
     },
     preferred_deposit_account: {
-      type: "number",
+      type: 'number',
     },
   },
   sales_invoices: {
     next_number: {
-      type: "string",
+      type: 'string',
     },
     number_prefix: {
-      type: "string",
+      type: 'string',
     },
     auto_increment: {
-      type: "boolean",
+      type: 'boolean',
     },
   },
   payment_receives: {
     next_number: {
-      type: "string",
+      type: 'string',
     },
     number_prefix: {
-      type: "string",
+      type: 'string',
     },
     auto_increment: {
-      type: "boolean",
+      type: 'boolean',
     },
     deposit_account: {
-      type: "number",
+      type: 'number',
     },
     advance_deposit: {
-      type: "number",
+      type: 'number',
     },
   },
   items: {
     sell_account: {
-      type: "number",
+      type: 'number',
     },
     cost_account: {
-      type: "number",
+      type: 'number',
     },
     inventory_account: {
-      type: "number",
+      type: 'number',
     },
   },
   expenses: {
     preferred_payment_account: {
-      type: "number",
+      type: 'number',
     },
   },
   accounts: {
     account_code_required: {
-      type: "boolean",
+      type: 'boolean',
     },
     account_code_unique: {
-      type: "boolean",
+      type: 'boolean',
     },
   },
 };
