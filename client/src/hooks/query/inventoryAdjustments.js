@@ -84,3 +84,24 @@ export function useInventoryAdjustments(query, props) {
     },
   );
 }
+
+/**
+ * Publishes the given inventory adjustment.
+ */
+export function usePublishInventoryAdjustment(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (id) => apiRequest.post(`inventory_adjustments/${id}/publish`),
+    {
+      onSuccess: (res, id) => {
+        // Invalidate specific inventory adjustment.
+        queryClient.invalidateQueries([t.INVENTORY_ADJUSTMENT, id]);
+
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}

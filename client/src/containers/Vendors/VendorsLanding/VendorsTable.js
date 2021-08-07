@@ -51,6 +51,19 @@ function VendorsTable({
     history.push(`/vendors/${vendor.id}/edit`);
   };
 
+  // Handle cancel/confirm inactive.
+  const handleInactiveVendor = ({ id, contact_service }) => {
+    openAlert('contact-inactivate', {
+      contactId: id,
+      service: contact_service,
+    });
+  };
+
+  // Handle cancel/confirm  activate.
+  const handleActivateVendor = ({ id, contact_service }) => {
+    openAlert('contact-activate', { contactId: id, service: contact_service });
+  };
+
   // Handle click delete vendor.
   const handleDeleteVendor = ({ id }) => {
     openAlert('vendor-delete', { vendorId: id });
@@ -104,6 +117,8 @@ function VendorsTable({
         onEdit: handleEditVendor,
         onDelete: handleDeleteVendor,
         onDuplicate: handleContactDuplicate,
+        onInactivate: handleInactiveVendor,
+        onActivate: handleActivateVendor,
       }}
     />
   );

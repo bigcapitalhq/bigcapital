@@ -72,6 +72,19 @@ function CustomersTable({
     openDialog('contact-duplicate', { contactId: id });
   };
 
+  // Handle cancel/confirm inactive.
+  const handleInactiveCustomer = ({ id, contact_service }) => {
+    openAlert('contact-inactivate', {
+      contactId: id,
+      service: contact_service,
+    });
+  };
+
+  // Handle cancel/confirm  activate.
+  const handleActivateCustomer = ({ id, contact_service }) => {
+    openAlert('contact-activate', { contactId: id, service: contact_service });
+  };
+
   if (isEmptyStatus) {
     return <CustomersEmptyStatus />;
   }
@@ -102,6 +115,8 @@ function CustomersTable({
         onDelete: handleCustomerDelete,
         onEdit: handleCustomerEdit,
         onDuplicate: handleContactDuplicate,
+        onInactivate: handleInactiveCustomer,
+        onActivate: handleActivateCustomer,
       }}
       ContextMenu={ActionsMenu}
     />

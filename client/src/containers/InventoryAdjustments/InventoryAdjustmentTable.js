@@ -39,6 +39,11 @@ function InventoryAdjustmentDataTable({
     openAlert('inventory-adjustment-delete', { inventoryId: id });
   };
 
+  // Handle the inventory adjustment publish action.
+  const handlePublishInventoryAdjustment = ({ id }) => {
+    openAlert('inventory-adjustment-publish', { inventoryId: id });
+  };
+
   // Inventory adjustments columns.
   const columns = useInventoryAdjustmentsColumns();
 
@@ -72,6 +77,7 @@ function InventoryAdjustmentDataTable({
       autoResetPage={false}
       payload={{
         onDelete: handleDeleteAdjustment,
+        onPublish: handlePublishInventoryAdjustment,
       }}
       ContextMenu={ActionsMenu}
       noResults={intl.get('there_is_no_inventory_adjustments_transactions_yet')}
