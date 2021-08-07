@@ -40,6 +40,7 @@ export interface ISaleInvoiceEditDTO extends ISaleInvoiceDTO {}
 export interface ISalesInvoicesFilter extends IDynamicListFilter {
   page: number;
   pageSize: number;
+  searchKeyword?: string;
 }
 
 export interface ISalesInvoicesService {

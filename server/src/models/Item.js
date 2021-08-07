@@ -5,10 +5,12 @@ import ItemSettings from './Item.Settings';
 import ModelSetting from './ModelSetting';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from 'services/Items/constants';
+import ModelSearchable from './ModelSearchable';
 
 export default class Item extends mixin(TenantModel, [
   ModelSetting,
   CustomViewBaseModel,
+  ModelSearchable,
 ]) {
   /**
    * Table name
@@ -127,5 +129,15 @@ export default class Item extends mixin(TenantModel, [
    */
   static get defaultViews() {
     return DEFAULT_VIEWS;
+  }
+
+  /**
+   * Model search roles.
+   */
+  static get searchRoles() {
+    return [
+      { fieldKey: 'name', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'code', comparator: 'like' },
+    ];
   }
 }

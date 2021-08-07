@@ -3,7 +3,7 @@ import * as R from 'ramda';
 import validator from 'is-my-json-valid';
 import { IFilterRole, IModel } from 'interfaces';
 import DynamicListAbstruct from './DynamicListAbstruct';
-import DynamicFilterFilterRoles from 'lib/DynamicFilter/DynamicFilterFilterRoles';
+import DynamicFilterAdvancedFilter from 'lib/DynamicFilter/DynamicFilterAdvancedFilter';
 import { ERRORS } from './constants';
 import { ServiceError } from 'exceptions';
 
@@ -88,7 +88,7 @@ export default class DynamicListFilterRoles extends DynamicListAbstruct {
   public dynamicList = (
     model: IModel,
     filterRoles: IFilterRole[]
-  ): DynamicFilterFilterRoles => {
+  ): DynamicFilterAdvancedFilter => {
     const filterRolesParsed = R.compose(this.incrementFilterRolesIndex)(
       filterRoles
     );
@@ -98,6 +98,6 @@ export default class DynamicListFilterRoles extends DynamicListAbstruct {
     // Validate the model resource fields.
     this.validateFilterRolesFieldsExistance(model, filterRoles);
 
-    return new DynamicFilterFilterRoles(filterRolesParsed);
+    return new DynamicFilterAdvancedFilter(filterRolesParsed);
   };
 }

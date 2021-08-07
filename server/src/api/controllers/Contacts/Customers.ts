@@ -122,8 +122,9 @@ export default class CustomersController extends ContactsController {
       query('stringified_filter_roles').optional().isJSON(),
 
       query('inactive_mode').optional().isBoolean().toBoolean(),
+      query('search_keyword').optional({ nullable: true }).isString().trim()
     ];
-  }
+  } 
 
   /**
    * Creates a new customer.

@@ -5,9 +5,11 @@ import ModelSetting from './ModelSetting';
 import ManualJournalSettings from './ManualJournal.Settings';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from 'services/ManualJournals/constants';
+import ModelSearchable from './ModelSearchable';
 export default class ManualJournal extends mixin(TenantModel, [
   ModelSetting,
   CustomViewBaseModel,
+  ModelSearchable,
 ]) {
   /**
    * Table name.
@@ -114,5 +116,16 @@ export default class ManualJournal extends mixin(TenantModel, [
    */
   static get defaultViews() {
     return DEFAULT_VIEWS;
+  }
+
+  /**
+   * Model search attributes.
+   */
+  static get searchRoles() {
+    return [
+      { fieldKey: 'journal_number', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'reference', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'amount', comparator: 'equals' },
+    ];
   }
 }

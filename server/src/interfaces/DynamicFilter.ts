@@ -19,6 +19,7 @@ export interface IDynamicListFilter {
   columnSortBy: ISortOrder;
   sortOrder: string;
   stringifiedFilterRoles: string;
+  searchKeyword?: string;
 }
 
 export interface IDynamicListService {
@@ -28,4 +29,10 @@ export interface IDynamicListService {
     filter: IDynamicListFilter
   ): Promise<any>;
   handlerErrorsToResponse(error, req, res, next): void;
+}
+
+// Search role.
+export interface ISearchRole {
+  fieldKey: string;
+  comparator: string;
 }

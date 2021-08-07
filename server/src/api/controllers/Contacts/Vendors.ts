@@ -102,6 +102,7 @@ export default class VendorsController extends ContactsController {
       query('page_size').optional().isNumeric().toInt(),
 
       query('inactive_mode').optional().isBoolean().toBoolean(),
+      query('search_keyword').optional({ nullable: true }).isString().trim()
     ];
   }
 

@@ -182,6 +182,8 @@ export default class ExpensesController extends BaseController {
 
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
+
+      query('search_keyword').optional({ nullable: true }).isString().trim(),
     ];
   }
 

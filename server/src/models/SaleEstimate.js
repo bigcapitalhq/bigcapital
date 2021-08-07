@@ -6,10 +6,12 @@ import SaleEstimateSettings from './SaleEstimate.Settings';
 import ModelSetting from './ModelSetting';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from 'services/Sales/Estimates/constants';
+import ModelSearchable from './ModelSearchable';
 
 export default class SaleEstimate extends mixin(TenantModel, [
   ModelSetting,
   CustomViewBaseModel,
+  ModelSearchable,
 ]) {
   /**
    * Table name
@@ -209,5 +211,16 @@ export default class SaleEstimate extends mixin(TenantModel, [
    */
   static get defaultViews() {
     return DEFAULT_VIEWS;
+  }
+
+  /**
+   * Model search roles.
+   */
+  static get searchRoles() {
+    return [
+      { fieldKey: 'amount', comparator: 'equals' },
+      { condition: 'or', fieldKey: 'estimate_number', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'reference_no', comparator: 'contains' },
+    ];
   }
 }

@@ -13,6 +13,7 @@ import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListFilterRoles from './DynamicListFilterRoles';
 import DynamicListSortBy from './DynamicListSortBy';
 import DynamicListCustomView from './DynamicListCustomView';
+import DynamicListSearch from './DynamicListSearch';
 
 @Service()
 export default class DynamicListService implements IDynamicListService {
@@ -27,6 +28,9 @@ export default class DynamicListService implements IDynamicListService {
 
   @Inject()
   dynamicListView: DynamicListCustomView;
+
+  @Inject()
+  dynamicListSearch: DynamicListSearch;
 
   /**
    * Parses filter DTO.
@@ -62,6 +66,14 @@ export default class DynamicListService implements IDynamicListService {
     // Parses the filter object.
     const parsedFilter = this.parseFilterObject(model, filter);
 
+    // Search by keyword.
+    if (filter.searchKeyword) {
+      const dynamicListSearch = this.dynamicListSearch.dynamicSearch(
+        model,
+        filter.searchKeyword
+      );
+      dynamicFilter.setFilter(dynamicListSearch);
+    }
     // Custom view filter roles.
     if (filter.viewSlug) {
       const dynamicListCustomView =

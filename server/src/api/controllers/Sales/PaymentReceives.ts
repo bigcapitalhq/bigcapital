@@ -115,12 +115,17 @@ export default class PaymentReceivesController extends BaseController {
    */
   get validatePaymentReceiveList(): ValidationChain[] {
     return [
-      query('view_slug').optional({ nullable: true }).isString().trim(),
       query('stringified_filter_roles').optional().isJSON(),
+
+      query('view_slug').optional({ nullable: true }).isString().trim(),
+
       query('column_sort_by').optional(),
       query('sort_order').optional().isIn(['desc', 'asc']),
+
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
+
+      query('search_keyword').optional({ nullable: true }).isString().trim(),
     ];
   }
 

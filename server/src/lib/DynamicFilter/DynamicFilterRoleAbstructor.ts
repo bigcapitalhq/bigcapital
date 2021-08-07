@@ -1,4 +1,5 @@
 import moment from 'moment';
+import * as R from 'ramda';
 import { IFilterRole, IDynamicFilter, IModel } from 'interfaces';
 import { Lexer } from 'lib/LogicEvaluation/Lexer';
 import Parser from 'lib/LogicEvaluation/Parser';
@@ -64,6 +65,18 @@ export default abstract class DynamicFilterAbstructor
   };
 
   /**
+   * Parses the logic expression to base expression.
+   * @param {string} logicExpression - 
+   * @return {string}
+   */
+  private parseLogicExpression(logicExpression: string): string {
+    return R.compose(
+      R.replace(/or|OR/g, '||'),
+      R.replace(/and|AND/g, '&&'),
+    )(logicExpression);
+  }
+
+  /**
    * Builds filter query for query builder.
    * @param {String} tableName - Table name.
    * @param {Array} roles - Filter roles.
@@ -74,8 +87,10 @@ export default abstract class DynamicFilterAbstructor
     roles: IFilterRole[],
     logicExpression: string
   ) => {
+    const basicExpression = this.parseLogicExpression(logicExpression);
+
     return (builder) => {
-      this.buildFilterRolesQuery(model, roles, logicExpression)(builder);
+      this.buildFilterRolesQuery(model, roles, basicExpression)(builder);
     };
   };
 
@@ -347,11 +362,15 @@ export default abstract class DynamicFilterAbstructor
     }
   };
 
+  /**
+   * Retrieve the model.
+   */
   getModel() {
     return this.model;
   }
 
-  onInitialize() {
-    
-  }
+  /**
+   * On initialize the registered dynamic filter.
+   */
+  onInitialize() {}
 }

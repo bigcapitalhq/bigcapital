@@ -5,6 +5,16 @@ export default {
     sortField: 'created_at',
   },
   fields: {
+    first_name: {
+      name: 'First name',
+      column: 'first_name',
+      fieldType: 'text',
+    },
+    last_name: {
+      name: 'Last name',
+      column: 'last_name',
+      fieldType: 'text',
+    },
     'display_name': {
       name: 'Display name',
       column: 'display_name',

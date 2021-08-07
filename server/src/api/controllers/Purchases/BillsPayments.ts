@@ -134,6 +134,7 @@ export default class BillsPayments extends BaseController {
       query('sort_order').optional().isIn(['desc', 'asc']),
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
+      query('search_keyword').optional({ nullable: true }).isString().trim(),
     ];
   }
 

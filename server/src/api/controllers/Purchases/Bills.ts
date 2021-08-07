@@ -171,6 +171,7 @@ export default class BillsController extends BaseController {
       query('page_size').optional().isNumeric().toInt(),
       query('column_sort_by').optional(),
       query('sort_order').optional().isIn(['desc', 'asc']),
+      query('search_keyword').optional({ nullable: true }).isString().trim(),
     ];
   }
 

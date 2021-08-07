@@ -5,19 +5,10 @@ export default class FilterRoles extends DynamicFilterRoleAbstructor {
   private filterRoles: IFilterRole[];
 
   /**
-   * Constructor method.
-   * @param {Array} filterRoles -
-   * @param {Array} resourceFields -
+   * On initialize filter roles.
    */
-  constructor(filterRoles: IFilterRole[]) {
-    super();
-
-    this.filterRoles = filterRoles;
-
-    this.setResponseMeta();
-  }
-
   public onInitialize() {
+    super.onInitialize();
     this.setFilterRolesRelations();
   }
 
@@ -27,7 +18,7 @@ export default class FilterRoles extends DynamicFilterRoleAbstructor {
    */
   private buildLogicExpression(): string {
     let expression = '';
-    
+
     this.filterRoles.forEach((role, index) => {
       expression +=
         index === 0 ? `${role.index} ` : `${role.condition} ${role.index} `;
@@ -47,15 +38,6 @@ export default class FilterRoles extends DynamicFilterRoleAbstructor {
         this.filterRoles,
         logicExpression
       )(builder);
-    };
-  }
-
-  /**
-   * Sets response meta.
-   */
-  private setResponseMeta() {
-    this.responseMeta = {
-      filterRoles: this.filterRoles,
     };
   }
 

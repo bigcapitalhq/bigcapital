@@ -5,10 +5,12 @@ import ModelSetting from './ModelSetting';
 import SaleInvoiceMeta from './SaleInvoice.Settings';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from 'services/Sales/constants';
+import ModelSearchable from './ModelSearchable';
 
 export default class SaleInvoice extends mixin(TenantModel, [
   ModelSetting,
   CustomViewBaseModel,
+  ModelSearchable,
 ]) {
   /**
    * Table name
@@ -370,5 +372,23 @@ export default class SaleInvoice extends mixin(TenantModel, [
    */
   static get defaultViews() {
     return DEFAULT_VIEWS;
+  }
+
+  /**
+   * Model searchable.
+   */
+  static get searchable() {
+    return true;
+  }
+
+  /**
+   * Model search attributes.
+   */
+  static get searchRoles() {
+    return [
+      { fieldKey: 'invoice_no', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'reference_no', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'amount', comparator: 'equals' },
+    ];
   }
 }

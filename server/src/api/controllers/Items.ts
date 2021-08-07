@@ -187,6 +187,7 @@ export default class ItemsController extends BaseController {
       query('stringified_filter_roles').optional().isJSON(),
 
       query('inactive_mode').optional().isBoolean().toBoolean(),
+      query('search_keyword').optional({ nullable: true }).isString().trim(),
     ];
   }
 
