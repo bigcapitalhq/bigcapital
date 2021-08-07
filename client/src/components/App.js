@@ -28,7 +28,7 @@ const queryConfig = {
 function GlobalFetchQuery({
   children
 }) {
-  window.localStorage.setItem('lang', 'en');
+  window.localStorage.setItem('lang', 'ar-ly');
   return children
 }
 
