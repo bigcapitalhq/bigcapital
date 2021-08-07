@@ -5,6 +5,7 @@ import ModelSetting from './ModelSetting';
 import CustomerSettings from './Customer.Settings';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from 'services/Contacts/Customers/constants';
+import ModelSearchable from './ModelSearchable';
 
 class CustomerQueryBuilder extends PaginationQueryBuilder {
   constructor(...args) {
@@ -21,6 +22,7 @@ class CustomerQueryBuilder extends PaginationQueryBuilder {
 export default class Customer extends mixin(TenantModel, [
   ModelSetting,
   CustomViewBaseModel,
+  ModelSearchable
 ]) {
   /**
    * Query builder.
@@ -148,5 +150,21 @@ export default class Customer extends mixin(TenantModel, [
    */
   static get defaultViews() {
     return DEFAULT_VIEWS;
+  }
+
+  /**
+   * Model search attributes.
+   */
+   static get searchRoles() {
+    return [
+      { fieldKey: 'display_name', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'first_name', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'last_name', comparator: 'equals' },
+      { condition: 'or', fieldKey: 'company_name', comparator: 'equals' },
+      { condition: 'or', fieldKey: 'email', comparator: 'equals' },
+      { condition: 'or', fieldKey: 'work_phone', comparator: 'equals' },
+      { condition: 'or', fieldKey: 'personal_phone', comparator: 'equals' },
+      { condition: 'or', fieldKey: 'website', comparator: 'equals' },
+    ];
   }
 }

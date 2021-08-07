@@ -6,10 +6,12 @@ import BillSettings from './Bill.Settings';
 import ModelSetting from './ModelSetting';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from 'services/Purchases/constants';
+import ModelSearchable from './ModelSearchable';
 
 export default class Bill extends mixin(TenantModel, [
   ModelSetting,
   CustomViewBaseModel,
+  ModelSearchable
 ]) {
   /**
    * Table name
@@ -314,5 +316,16 @@ export default class Bill extends mixin(TenantModel, [
    */
   static get defaultViews() {
     return DEFAULT_VIEWS;
+  }
+
+  /**
+   * Model search attributes.
+   */
+  static get searchRoles() {
+    return [
+      { fieldKey: 'bill_number', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'reference_no', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'amount', comparator: 'equals' },
+    ];
   }
 }

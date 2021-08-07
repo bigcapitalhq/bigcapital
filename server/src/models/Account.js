@@ -11,10 +11,12 @@ import ModelSettings from './ModelSetting';
 import { ACCOUNT_TYPES } from 'data/AccountTypes';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from 'services/Accounts/constants';
+import ModelSearchable from './ModelSearchable';
 
 export default class Account extends mixin(TenantModel, [
   ModelSettings,
   CustomViewBaseModel,
+  ModelSearchable,
 ]) {
   /**
    * Table name.
@@ -257,7 +259,17 @@ export default class Account extends mixin(TenantModel, [
   /**
    * Retrieve the default custom views, roles and columns.
    */
-   static get defaultViews() {
+  static get defaultViews() {
     return DEFAULT_VIEWS;
+  }
+
+  /**
+   * Model search roles.
+   */
+  static get searchRoles() {
+    return [
+      { condition: 'or', fieldKey: 'name', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'code', comparator: 'like' },
+    ];
   }
 }

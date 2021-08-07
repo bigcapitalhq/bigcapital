@@ -139,6 +139,7 @@ export default class AccountsController extends BaseController {
       query('sort_order').optional().isIn(['desc', 'asc']),
 
       query('inactive_mode').optional().isBoolean().toBoolean(),
+      query('search_keyword').optional({ nullable: true }).isString().trim(),
     ];
   }
 

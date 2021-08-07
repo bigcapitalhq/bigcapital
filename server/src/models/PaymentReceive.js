@@ -4,10 +4,12 @@ import ModelSetting from './ModelSetting';
 import PaymentReceiveSettings from './PaymentReceive.Settings';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from 'services/Sales/PaymentReceives/constants';
+import ModelSearchable from './ModelSearchable';
 
 export default class PaymentReceive extends mixin(TenantModel, [
   ModelSetting,
   CustomViewBaseModel,
+  ModelSearchable
 ]) {
   /**
    * Table name.
@@ -93,5 +95,16 @@ export default class PaymentReceive extends mixin(TenantModel, [
    */
   static get defaultViews() {
     return DEFAULT_VIEWS;
+  }
+
+  /**
+   * Model search attributes.
+   */
+  static get searchRoles() {
+    return [
+      { fieldKey: 'payment_receive_no', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'reference_no', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'amount', comparator: 'equals' },
+    ];
   }
 }

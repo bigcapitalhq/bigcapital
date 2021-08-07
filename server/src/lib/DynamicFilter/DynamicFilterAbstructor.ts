@@ -1,5 +1,3 @@
-import { IModel, IFilterRole } from 'interfaces';
-import { FIELD_TYPE } from './constants';
 
 export default class DynamicFilterAbstructor {
   /**
@@ -25,6 +23,11 @@ export default class DynamicFilterAbstructor {
     });
   };
 
+  /**
+   * Builds join queries of fields.
+   * @param builder - 
+   * @param {string[]} fieldsRelations -
+   */
   private buildFieldsJoinQueries = (builder, fieldsRelations: string[]) => {
     fieldsRelations.forEach((fieldRelation) => {
       const relation = this.model.relationMappings[fieldRelation];
@@ -38,7 +41,10 @@ export default class DynamicFilterAbstructor {
     });
   };
 
-  getModel() {
+  /**
+   * Retrieve the dynamic filter mode.
+   */
+  protected getModel() {
     return this.model;
   }
 }

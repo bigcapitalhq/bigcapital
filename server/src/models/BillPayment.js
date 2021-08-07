@@ -4,10 +4,12 @@ import ModelSetting from './ModelSetting';
 import BillPaymentSettings from './BillPayment.Settings';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from 'services/Sales/PaymentReceives/constants';
+import ModelSearchable from './ModelSearchable';
 
 export default class BillPayment extends mixin(TenantModel, [
   ModelSetting,
   CustomViewBaseModel,
+  ModelSearchable,
 ]) {
   /**
    * Table name
@@ -89,5 +91,16 @@ export default class BillPayment extends mixin(TenantModel, [
    */
   static get defaultViews() {
     return DEFAULT_VIEWS;
+  }
+
+  /**
+   * Model search attributes.
+   */
+  static get searchRoles() {
+    return [
+      { fieldKey: 'payment_number', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'reference_no', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'amount', comparator: 'equals' },
+    ];
   }
 }

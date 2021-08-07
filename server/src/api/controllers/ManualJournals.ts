@@ -144,6 +144,7 @@ export default class ManualJournalsController extends BaseController {
       query('sort_order').optional().isIn(['desc', 'asc']),
 
       query('stringified_filter_roles').optional().isJSON(),
+      query('search_keyword').optional({ nullable: true }).isString().trim(),
     ];
   }
 
