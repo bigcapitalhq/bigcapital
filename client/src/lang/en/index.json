@@ -770,7 +770,7 @@
   "qty_on_hand": "Qty on hand",
   "adjustment_account": "Adjustment account",
   "inventory_adjustment_list": "Inventory Adjustment List",
-  "delete_adjustment": "Delete Adjustment",
+  "delete_adjustment": "Delete adjustment",
   "the_make_adjustment_has_been_created_successfully": "The make adjustment has been created successfully.",
   "the_adjustment_has_been_deleted_successfully": "The adjustment has been deleted successfully.",
   "once_delete_this_inventory_a_adjustment_you_will_able_to_restore_it": "Once you delete this inventory a adjustment, you won't be able to restore it later. Are you sure you want to delete this invoice?",
@@ -1186,10 +1186,13 @@
   "terms_conditions":"Terms conditions",
   "your_invoice_numbers_are_set_on_auto_increment_mod_are_you_sure_changing_this_setting":"Your invoice numbers are set on auto-increment mod. Are you sure changing this setting?",
   "auto_incrementing_number":"Auto-incrementing number",
-  "the_inventory_adjustment_has_been_published": "The Inventory adjustment has been published",
-  "are_sure_to_publish_this_inventory_adjustment": "Are you sure you want to publish this inventory?",
+  "inventory_adjustment.publish.success_message": "The inventory adjustment has been published successfully.",
+  "inventory_adjustment.publish.alert_message": "Are you sure you want to publish this inventory adjustment?",
   "the_contact_has_been_activated_successfully": "The contact has been inactivated successfully.",
   "the_contact_has_been_inactivated_successfully": "The contact has been inactivated successfully.",
   "are_sure_to_inactive_this_contact": "Are you sure you want to inactive this contact ? You will be able to activate it later",
-  "are_sure_to_activate_this_contact": "Are you sure you want to activate this contact ? You will be able to inactivate it later"
+  "are_sure_to_activate_this_contact": "Are you sure you want to activate this contact ? You will be able to inactivate it later",
+  "publish_adjustment": "Publish adjustment",
+  "inactivate_customer": "Inactivate customer",
+  "activate_customer": "Activate customer"
 }

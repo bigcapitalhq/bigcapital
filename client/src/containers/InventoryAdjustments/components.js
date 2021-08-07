@@ -105,7 +105,7 @@ export const ActionsMenu = ({
       <If condition={!original.is_published}>
         <MenuItem
           icon={<Icon icon={'arrow-to-top'} size={16} />}
-          text={intl.get('publish_expense')}
+          text={intl.get('publish_adjustment')}
           onClick={safeCallback(onPublish, original)}
         />
       </If>

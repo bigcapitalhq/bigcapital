@@ -39,14 +39,14 @@ export function ActionsMenu({
       />
       <If condition={original.active}>
         <MenuItem
-          text={intl.get('inactivate_item')}
+          text={intl.get('inactivate_customer')}
           icon={<Icon icon="pause-16" iconSize={16} />}
           onClick={safeCallback(onInactivate, original)}
         />
       </If>
       <If condition={!original.active}>
         <MenuItem
-          text={intl.get('activate_item')}
+          text={intl.get('activate_customer')}
           icon={<Icon icon="play-16" iconSize={16} />}
           onClick={safeCallback(onActivate, original)}
         />

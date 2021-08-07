@@ -38,7 +38,7 @@ function InventoryAdjustmentPublishAlert({
     publishInventoryAdjustmentMutate(inventoryId)
       .then(() => {
         AppToaster.show({
-          message: intl.get('the_inventory_adjustment_has_been_published'),
+          message: intl.get('inventory_adjustment.publish.success_message'),
           intent: Intent.SUCCESS,
         });
         closeAlert(name);
@@ -59,7 +59,7 @@ function InventoryAdjustmentPublishAlert({
       loading={isLoading}
     >
       <p>
-        <T id={'are_sure_to_publish_this_inventory_adjustment'} />
+        <T id={'inventory_adjustment.publish.alert_message'} />
       </p>
     </Alert>
   );
