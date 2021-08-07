@@ -36,7 +36,7 @@ export default {
     db_client: process.env.TENANT_DB_CLIENT,
     db_name_prefix: process.env.TENANT_DB_NAME_PERFIX,
     db_host: process.env.TENANT_DB_HOST,
-    db_user: process.env.TEANNT_DB_USER,
+    db_user: process.env.TENANT_DB_USER,
     db_password: process.env.TENANT_DB_PASSWORD,
     charset: process.env.TENANT_DB_CHARSET,
     migrations_dir: process.env.TENANT_MIGRATIONS_DIR,
