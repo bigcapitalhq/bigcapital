@@ -220,10 +220,10 @@ export default function AccountantForm() {
       </FastField>
 
       <div className={'card__footer'}>
-        <Button intent={Intent.PRIMARY} disabled={isSubmitting} type="submit">
+        <Button intent={Intent.PRIMARY} loading={isSubmitting} type="submit">
           <T id={'save'} />
         </Button>
-        <Button onClick={handleCloseClick}>
+        <Button disabled={isSubmitting} onClick={handleCloseClick}>
           <T id={'close'} />
         </Button>
       </div>

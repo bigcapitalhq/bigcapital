@@ -19,8 +19,6 @@ export function ActionsMenu({
   row: { original },
   payload: { onEdit, onDelete, onDuplicate },
 }) {
-  
-
   return (
     <Menu>
       <MenuItem
@@ -87,8 +85,6 @@ export function BalanceAccessor({ closing_balance, currency_code }) {
  * Retrieve the vendors table columns.
  */
 export function useVendorsTableColumns() {
-  
-
   return React.useMemo(
     () => [
       {
@@ -96,7 +92,7 @@ export function useVendorsTableColumns() {
         Header: '',
         accessor: AvatarAccessor,
         className: 'avatar',
-        width: 50,
+        width: 45,
         disableResizing: true,
         disableSortBy: true,
       },

@@ -134,10 +134,10 @@ export default function ItemForm() {
       </FastField>
 
       <div className={'card__footer'}>
-        <Button intent={Intent.PRIMARY} disabled={isSubmitting} type="submit">
+        <Button intent={Intent.PRIMARY} loading={isSubmitting} type="submit">
           <T id={'save'} />
         </Button>
-        <Button onClick={handleCloseClick}>
+        <Button onClick={handleCloseClick} disabled={isSubmitting}>
           <T id={'close'} />
         </Button>
       </div>
