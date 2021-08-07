@@ -1,40 +1,63 @@
 import React from 'react';
-import { Omnibar } from '@blueprintjs/select';
-import { MenuItem } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { Intent, Spinner } from '@blueprintjs/core';
+import {
+  UniversalSearch,
+  ListSelect,
+  If,
+  FormattedMessage as T,
+} from 'components';
+import { defaultTo } from 'lodash';
+import intl from 'react-intl-universal';
+import { useAccounts } from 'hooks/query';
+import UniversalSearchOptions from 'common/universalSearchOptions';
+
 import { compose } from 'utils';
+
 import withSearch from 'containers/GeneralSearch/withSearch';
 
-function Search({
-  resultSearch,
-  globalSearchShow,
-  openGlobalSearch,
-  closeGlobalSearch,
-}) {
-  const items = [];
+function Search({ globalSearchShow }) {
+  const [query, setQuery] = React.useState();
+  const [labelState, setLabelState] = React.useState();
 
-  const renderSearch = (search, { handleClick }) => (
-    <MenuItem
-      key={search.year}
-      text={search.title}
-      label={search.title}
-      onClick={handleClick}
-    />
+  const { data: accounts, isFetching: isAccountsFetching } = useAccounts({
+    search_keyword: query,
+  });
+
+  const handleClick = (placeholder) => {
+    setLabelState(placeholder);
+  };
+
+  const MenuSelectType = (
+    <div style={{ display: 'flex' }}>
+      <If condition={isAccountsFetching}>
+        <Spinner tagName="div" intent={Intent.NONE} size={20} value={null} />
+      </If>
+      <ListSelect
+        items={UniversalSearchOptions}
+        onItemSelect={(holder) => handleClick(holder)}
+        filterable={false}
+        selectedItem={labelState?.name}
+        selectedItemProp={'name'}
+        textProp={'name'}
+        defaultText={intl.get('type')}
+        popoverProps={{ minimal: false, captureDismiss: true }}
+        buttonProps={{
+          minimal: true,
+        }}
+      />
+    </div>
   );
 
   return (
-    <div>
-      <Omnibar
-        className={'navbar-omnibar'}
-        isOpen={globalSearchShow}
-        noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
-        onClose={() => closeGlobalSearch(false)}
-        resetOnSelect={true}
-        itemRenderer={renderSearch}
-        items={items}
-        // onItemSelect={onItemsSelect()}
-      />
-    </div>
+    <UniversalSearch
+      results={accounts}
+      isOpen={globalSearchShow}
+      onQueryChange={(q) => setQuery(q)}
+      inputProps={{
+        rightElement: MenuSelectType,
+        placeholder: `${defaultTo(labelState?.placeholder, '')}`,
+      }}
+    />
   );
 }
 
