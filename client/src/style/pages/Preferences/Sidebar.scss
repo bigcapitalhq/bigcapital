@@ -41,11 +41,11 @@
     align-items: center;
     height: 60px;
     padding: 0 22px;
-    border-bottom: 1px solid #c9d9de;
+    border-bottom: 1px solid #bbcbd0;
 
     h2 {
       font-size: 22px;
-      color: #48485b;
+      color: #3b3b4c;
       font-weight: 400;
       margin: 0;
     }
@@ -63,7 +63,7 @@
 
       &:hover,
       &.#{$ns}-active {
-        background-color: rgba(255, 255, 255, 0.5);
+        background-color: rgba(255, 255, 255, 0.6);
         color: #333;
       }
     }
