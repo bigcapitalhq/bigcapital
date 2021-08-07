@@ -1,10 +1,7 @@
 import moment from 'moment';
 import * as R from 'ramda';
 import { tableMapper, tableRowMapper } from 'utils';
-import {
-  ITransactionsByContactsContact,
-  ITableRow,
-} from 'interfaces';
+import { ITransactionsByContactsContact, ITableRow } from 'interfaces';
 
 enum ROW_TYPE {
   OPENING_BALANCE = 'OPENING_BALANCE',
@@ -14,19 +11,18 @@ enum ROW_TYPE {
 }
 
 export default class TransactionsByContactsTableRows {
-  
-  private dateAccessor(value) {
+  private dateAccessor = (value): string => {
     return moment(value.date).format('YYYY MMM DD');
-  }
+  };
 
   /**
    * Retrieve the table rows of contact transactions.
    * @param {ITransactionsByCustomersCustomer} contact
    * @returns {ITableRow[]}
    */
-  protected contactTransactions(
+  protected contactTransactions = (
     contact: ITransactionsByContactsContact
-  ): ITableRow[] {
+  ): ITableRow[] => {
     const columns = [
       { key: 'date', accessor: this.dateAccessor },
       { key: 'account', accessor: 'accountName' },
@@ -39,18 +35,18 @@ export default class TransactionsByContactsTableRows {
     return tableMapper(contact.transactions, columns, {
       rowTypes: [ROW_TYPE.TRANSACTION],
     });
-  }
+  };
 
   /**
    * Retrieve the table row of contact opening balance.
    * @param {ITransactionsByCustomersCustomer} contact
    * @returns {ITableRow}
    */
-  protected contactOpeningBalance(
+  protected contactOpeningBalance = (
     contact: ITransactionsByContactsContact
-  ): ITableRow {
+  ): ITableRow => {
     const columns = [
-      { key: 'openingBalanceLabel', value: 'Opening balance' },
+      { key: 'openingBalanceLabel', value: this.i18n.__('Opening balance') },
       ...R.repeat({ key: 'empty', value: '' }, 5),
       {
         key: 'openingBalanceValue',
@@ -60,18 +56,18 @@ export default class TransactionsByContactsTableRows {
     return tableRowMapper(contact, columns, {
       rowTypes: [ROW_TYPE.OPENING_BALANCE],
     });
-  }
+  };
 
   /**
    * Retrieve the table row of contact closing balance.
    * @param {ITransactionsByCustomersCustomer} contact -
    * @returns {ITableRow}
    */
-  protected contactClosingBalance(
+  protected contactClosingBalance = (
     contact: ITransactionsByContactsContact
-  ): ITableRow {
+  ): ITableRow => {
     const columns = [
-      { key: 'closingBalanceLabel', value: 'Closing balance' },
+      { key: 'closingBalanceLabel', value: this.i18n.__('Closing balance') },
       ...R.repeat({ key: 'empty', value: '' }, 5),
       {
         key: 'closingBalanceValue',
@@ -81,5 +77,5 @@ export default class TransactionsByContactsTableRows {
     return tableRowMapper(contact, columns, {
       rowTypes: [ROW_TYPE.CLOSING_BALANCE],
     });
-  }
+  };
 }

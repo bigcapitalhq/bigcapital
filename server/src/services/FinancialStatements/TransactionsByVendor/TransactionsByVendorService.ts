@@ -137,6 +137,8 @@ export default class TransactionsByVendorsService
 
     // Settings tenant service.
     const settings = this.tenancy.settings(tenantId);
+    const i18n = this.tenancy.i18n(tenantId);
+
     const baseCurrency = settings.get({
       group: 'organization',
       key: 'base_currency',
@@ -166,7 +168,8 @@ export default class TransactionsByVendorsService
       accountsGraph,
       journal,
       filter,
-      baseCurrency
+      baseCurrency,
+      i18n
     );
     return {
       data: reportInstance.reportData(),

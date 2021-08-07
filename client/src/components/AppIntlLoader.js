@@ -34,6 +34,9 @@ function loadLocales(currentLocale) {
   return import(`../lang/${currentLocale}/index.json`);
 }
 
+/**
+ * Loads the localization data of yup validation library.
+ */
 function loadYupLocales(currentLocale) {
   return import(`../lang/${currentLocale}/locale`);
 }

@@ -11,12 +11,27 @@ enum ROW_TYPE {
 }
 
 export default class TransactionsByVendorsTableRows extends TransactionsByContactsTableRows {
+  vendorsTransactions: ITransactionsByVendorsVendor[];
+
+  /**
+   * Constructor method.
+   */
+  constructor(
+    vendorsTransactions: ITransactionsByVendorsVendor[],
+    i18n
+  ) {
+    super();
+
+    this.vendorsTransactions = vendorsTransactions;
+    this.i18n = i18n;
+  }
+
   /**
    * Retrieve the table row of vendor details.
    * @param {ITransactionsByVendorsVendor} vendor -
    * @returns {ITableRow[]}
    */
-  private vendorDetails(vendor: ITransactionsByVendorsVendor) {
+  private vendorDetails = (vendor: ITransactionsByVendorsVendor) => {
     const columns = [
       { key: 'vendorName', accessor: 'vendorName' },
       ...R.repeat({ key: 'empty', value: '' }, 5),
@@ -33,29 +48,29 @@ export default class TransactionsByVendorsTableRows extends TransactionsByContac
           R.always(vendor.transactions.length > 0),
           R.pipe(
             R.concat(this.contactTransactions(vendor)),
-            R.prepend(this.contactOpeningBalance(vendor)),
+            R.prepend(this.contactOpeningBalance(vendor))
           )
         ),
         R.append(this.contactClosingBalance(vendor))
       )([]),
     };
-  }
+  };
 
   /**
    * Retrieve the table rows of the vendor section.
    * @param {ITransactionsByVendorsVendor} vendor
    * @returns {ITableRow[]}
    */
-  private vendorRowsMapper(vendor: ITransactionsByVendorsVendor) {
-    return R.pipe(this.vendorDetails).bind(this)(vendor);
-  }
+  private vendorRowsMapper = (vendor: ITransactionsByVendorsVendor) => {
+    return R.pipe(this.vendorDetails)(vendor);
+  };
 
   /**
    * Retrieve the table rows of transactions by vendors report.
    * @param {ITransactionsByVendorsVendor[]} vendors
    * @returns {ITableRow[]}
    */
-  public tableRows(vendors: ITransactionsByVendorsVendor[]): ITableRow[] {
-    return R.map(this.vendorRowsMapper.bind(this))(vendors);
-  }
+  public tableRows = (): ITableRow[] => {
+    return R.map(this.vendorRowsMapper)(this.vendorsTransactions);
+  };
 }

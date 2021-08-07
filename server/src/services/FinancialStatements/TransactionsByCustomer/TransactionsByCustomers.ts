@@ -31,7 +31,8 @@ export default class TransactionsByCustomers extends TransactionsByContact {
     accountsGraph: any,
     ledger: Ledger,
     filter: ITransactionsByCustomersFilter,
-    baseCurrency: string
+    baseCurrency: string,
+    i18n
   ) {
     super();
 
@@ -41,6 +42,7 @@ export default class TransactionsByCustomers extends TransactionsByContact {
     this.baseCurrency = baseCurrency;
     this.filter = filter;
     this.numberFormat = this.filter.numberFormat;
+    this.i18n = i18n;
   }
 
   /**
@@ -80,17 +82,12 @@ export default class TransactionsByCustomers extends TransactionsByContact {
       transactions,
       openingBalance
     );
+    const currencyCode = this.baseCurrency;
 
     return {
       customerName: customer.displayName,
-      openingBalance: this.getTotalAmountMeta(
-        openingBalance,
-        customer.currencyCode
-      ),
-      closingBalance: this.getTotalAmountMeta(
-        closingBalance,
-        customer.currencyCode
-      ),
+      openingBalance: this.getTotalAmountMeta(openingBalance, currencyCode),
+      closingBalance: this.getTotalAmountMeta(closingBalance, currencyCode),
       transactions,
     };
   }

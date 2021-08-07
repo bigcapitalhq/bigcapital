@@ -53,7 +53,7 @@ export interface IInventoryDetailsItemTransaction {
   nodeType: string;
   date: IInventoryDetailsDate;
   transactionType: string;
-  transactionNumber: string;
+  transactionNumber?: string;
 
   quantityMovement: IInventoryDetailsNumber;
   valueMovement: IInventoryDetailsNumber;

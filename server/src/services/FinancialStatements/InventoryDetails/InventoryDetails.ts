@@ -49,7 +49,8 @@ export default class InventoryDetails extends FinancialSheet {
     openingBalanceTransactions: IInventoryTransaction[],
     inventoryTransactions: IInventoryTransaction[],
     query: IInventoryDetailsQuery,
-    baseCurrency: string
+    baseCurrency: string,
+    i18n: any,
   ) {
     super();
 
@@ -65,6 +66,7 @@ export default class InventoryDetails extends FinancialSheet {
     this.numberFormat = this.query.numberFormat;
     this.items = items;
     this.baseCurrency = baseCurrency;
+    this.i18n = i18n;
   }
 
   /**
@@ -203,8 +205,8 @@ export default class InventoryDetails extends FinancialSheet {
     return {
       nodeType: INodeTypes.TRANSACTION,
       date: this.getDateMeta(transaction.date),
-      transactionType: transaction.transcationTypeFormatted,
-      transactionNumber: transaction.meta.transactionNumber,
+      transactionType: this.i18n.__(transaction.transcationTypeFormatted),
+      transactionNumber: transaction?.meta?.transactionNumber,
       direction: transaction.direction,
 
       quantityMovement: this.getNumberMeta(quantityMovement),

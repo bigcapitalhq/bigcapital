@@ -11,16 +11,34 @@ enum ROW_TYPE {
 }
 
 export default class TransactionsByCustomersTableRows extends TransactionsByContactsTableRows {
+  private customersTransactions: ITransactionsByCustomersCustomer[];
+
+  /**
+   * Constructor method.
+   * @param {ITransactionsByCustomersCustomer[]} customersTransactions - Customers transactions.
+   */
+  constructor(
+    customersTransactions: ITransactionsByCustomersCustomer[],
+    i18n
+  ) {
+    super();
+    this.customersTransactions = customersTransactions;
+    this.i18n = i18n;
+  }
+
   /**
    * Retrieve the table row of customer details.
    * @param {ITransactionsByCustomersCustomer} customer -
    * @returns {ITableRow[]}
    */
-  private customerDetails(customer: ITransactionsByCustomersCustomer) {
+  private customerDetails = (customer: ITransactionsByCustomersCustomer) => {
     const columns = [
       { key: 'customerName', accessor: 'customerName' },
       ...R.repeat({ key: 'empty', value: '' }, 5),
-      { key: 'closingBalanceValue', accessor: 'closingBalance.formattedAmount' },
+      {
+        key: 'closingBalanceValue',
+        accessor: 'closingBalance.formattedAmount',
+      },
     ];
 
     return {
@@ -30,29 +48,31 @@ export default class TransactionsByCustomersTableRows extends TransactionsByCont
           R.always(customer.transactions.length > 0),
           R.pipe(
             R.concat(this.contactTransactions(customer)),
-            R.prepend(this.contactOpeningBalance(customer)),
-          ),
+            R.prepend(this.contactOpeningBalance(customer))
+          )
         ),
         R.append(this.contactClosingBalance(customer))
       )([]),
     };
-  }
+  };
 
   /**
    * Retrieve the table rows of the customer section.
    * @param {ITransactionsByCustomersCustomer} customer
    * @returns {ITableRow[]}
    */
-  private customerRowsMapper(customer: ITransactionsByCustomersCustomer) {
-    return R.pipe(this.customerDetails).bind(this)(customer);
-  }
+  private customerRowsMapper = (customer: ITransactionsByCustomersCustomer) => {
+    return R.pipe(this.customerDetails)(customer);
+  };
 
   /**
    * Retrieve the table rows of transactions by customers report.
    * @param {ITransactionsByCustomersCustomer[]} customers
    * @returns {ITableRow[]}
    */
-  public tableRows(customers: ITransactionsByCustomersCustomer[]): ITableRow[] {
-    return R.map(this.customerRowsMapper.bind(this))(customers);
-  }
+  public tableRows = (): ITableRow[] => {
+    return R.map(this.customerRowsMapper.bind(this))(
+      this.customersTransactions
+    );
+  };
 }

@@ -34,7 +34,8 @@ export default class TransactionsByVendors extends TransactionsByContact {
     accountsGraph: any,
     ledger: ILedger,
     filter: ITransactionsByVendorsFilter,
-    baseCurrency: string
+    baseCurrency: string,
+    i18n
   ) {
     super();
 
@@ -44,6 +45,7 @@ export default class TransactionsByVendors extends TransactionsByContact {
     this.baseCurrency = baseCurrency;
     this.filter = filter;
     this.numberFormat = this.filter.numberFormat;
+    this.i18n = i18n;
   }
 
   /**
@@ -81,17 +83,12 @@ export default class TransactionsByVendors extends TransactionsByContact {
       transactions,
       openingBalance
     );
+    const currencyCode = this.baseCurrency;
 
     return {
       vendorName: vendor.displayName,
-      openingBalance: this.getTotalAmountMeta(
-        openingBalance,
-        vendor.currencyCode
-      ),
-      closingBalance: this.getTotalAmountMeta(
-        closingBalance,
-        vendor.currencyCode
-      ),
+      openingBalance: this.getTotalAmountMeta(openingBalance, currencyCode),
+      closingBalance: this.getTotalAmountMeta(closingBalance, currencyCode),
       transactions,
     };
   }

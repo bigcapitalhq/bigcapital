@@ -83,8 +83,8 @@ export default class TransactionsByCustomersService
    */
   private async getCustomersPeriodsEntries(
     tenantId: number,
-    fromDate: Date|string,
-    toDate: Date|string,
+    fromDate: Date | string,
+    toDate: Date | string
   ): Promise<ILedgerEntry[]> {
     const transactions =
       await this.reportRepository.getCustomersPeriodTransactions(
@@ -115,6 +115,8 @@ export default class TransactionsByCustomersService
 
     // Settings tenant service.
     const settings = this.tenancy.settings(tenantId);
+    const i18n = this.tenancy.i18n(tenantId);
+
     const baseCurrency = settings.get({
       group: 'organization',
       key: 'base_currency',
@@ -127,7 +129,10 @@ export default class TransactionsByCustomersService
     const accountsGraph = await accountRepository.getDependencyGraph();
 
     // Retrieve the report customers.
-    const customers = await this.reportRepository.getCustomers(tenantId, filter.customersIds);
+    const customers = await this.reportRepository.getCustomers(
+      tenantId,
+      filter.customersIds
+    );
 
     const openingBalanceDate = moment(filter.fromDate)
       .subtract(1, 'days')
@@ -157,7 +162,8 @@ export default class TransactionsByCustomersService
       accountsGraph,
       journal,
       filter,
-      baseCurrency
+      baseCurrency,
+      i18n
     );
 
     return {

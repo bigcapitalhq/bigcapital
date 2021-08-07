@@ -6,13 +6,14 @@ import BaseFinancialReportController from '../BaseFinancialReportController';
 import TransactionsByVendorsTableRows from 'services/FinancialStatements/TransactionsByVendor/TransactionsByVendorTableRows';
 import TransactionsByVendorsService from 'services/FinancialStatements/TransactionsByVendor/TransactionsByVendorService';
 import { ITransactionsByVendorsStatement } from 'interfaces';
+import HasTenancyService from 'services/Tenancy/TenancyService';
 
 export default class TransactionsByVendorsReportController extends BaseFinancialReportController {
   @Inject()
   transactionsByVendorsService: TransactionsByVendorsService;
 
   @Inject()
-  transactionsByVendorsTableRows: TransactionsByVendorsTableRows;
+  tenancy: HasTenancyService;
 
   /**
    * Router constructor.
@@ -52,10 +53,16 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
    * Transformes the report statement to table rows.
    * @param {ITransactionsByVendorsStatement} statement -
    */
-  private transformToTableRows({ data }: ITransactionsByVendorsStatement) {
+  private transformToTableRows(
+    tenantId: number,
+    transactions: any[]
+  ) {
+    const i18n = this.tenancy.i18n(tenantId);
+    const table = new TransactionsByVendorsTableRows(transactions, i18n);
+
     return {
       table: {
-        data: this.transactionsByVendorsTableRows.tableRows(data),
+        data: table.tableRows(),
       },
     };
   }
@@ -87,7 +94,7 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
     const filter = this.matchedQueryData(req);
 
     try {
-      const transactionsByVendors =
+      const report =
         await this.transactionsByVendorsService.transactionsByVendors(
           tenantId,
           filter
@@ -99,12 +106,12 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
         case 'application/json+table':
           return res
             .status(200)
-            .send(this.transformToTableRows(transactionsByVendors));
+            .send(this.transformToTableRows(tenantId, report.data));
         case 'json':
         default:
           return res
             .status(200)
-            .send(this.transformToJsonResponse(transactionsByVendors));
+            .send(this.transformToJsonResponse(report));
       }
     } catch (error) {
       next(error);

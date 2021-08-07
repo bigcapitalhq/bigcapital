@@ -24,15 +24,15 @@ export default class TransactionsByContact extends FinancialSheet {
     entry: ILedgerEntry,
   ): Omit<ITransactionsByContactsTransaction, 'runningBalance'> {
     const account = this.accountsGraph.getNodeData(entry.accountId);
-    const currencyCode = 'USD';
+    const currencyCode = this.baseCurrency;
 
     return {
       credit: this.getContactAmount(entry.credit, currencyCode),
       debit: this.getContactAmount(entry.debit, currencyCode),
       accountName: account.name,
-      currencyCode: 'USD',
+      currencyCode: this.baseCurrency,
       transactionNumber: entry.transactionNumber,
-      transactionType: entry.referenceTypeFormatted,
+      transactionType: this.i18n.__(entry.referenceTypeFormatted),
       date: entry.date,
       createdAt: entry.createdAt,
     };

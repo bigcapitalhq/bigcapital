@@ -1,18 +1,20 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { query } from 'express-validator';
-import { Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { ITransactionsByCustomersStatement } from 'interfaces';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import BaseFinancialReportController from '../BaseFinancialReportController';
 import TransactionsByCustomersService from 'services/FinancialStatements/TransactionsByCustomer/TransactionsByCustomersService';
 import TransactionsByCustomersTableRows from 'services/FinancialStatements/TransactionsByCustomer/TransactionsByCustomersTableRows';
+import HasTenancyService from 'services/Tenancy/TenancyService';
 
+@Service()
 export default class TransactionsByCustomersReportController extends BaseFinancialReportController {
   @Inject()
   transactionsByCustomersService: TransactionsByCustomersService;
 
   @Inject()
-  transactionsByCustomersTableRows: TransactionsByCustomersTableRows;
+  tenancy: HasTenancyService;
 
   /**
    * Router constructor.
@@ -51,12 +53,18 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
    * Transformes the statement to table rows response.
    * @param {ITransactionsByCustomersStatement} statement -
    */
-  private transformToTableResponse({
-    data,
-  }: ITransactionsByCustomersStatement) {
+  private transformToTableResponse(
+    customersTransactions,
+    tenantId
+  ) {
+    const i18n = this.tenancy.i18n(tenantId);
+    const table = new TransactionsByCustomersTableRows(
+      customersTransactions,
+      i18n
+    );
     return {
       table: {
-        rows: this.transactionsByCustomersTableRows.tableRows(data),
+        rows: table.tableRows(),
       },
     };
   }
@@ -65,10 +73,10 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
    * Transformes the statement to json response.
    * @param {ITransactionsByCustomersStatement} statement -
    */
-  private transfromToJsonResponse({
+  private transfromToJsonResponse(
     data,
-    columns,
-  }: ITransactionsByCustomersStatement) {
+    columns
+  ): ITransactionsByCustomersStatement {
     return {
       data: this.transfromToResponse(data),
       columns: this.transfromToResponse(columns),
@@ -91,7 +99,7 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
     const filter = this.matchedQueryData(req);
 
     try {
-      const transactionsByCustomers =
+      const report =
         await this.transactionsByCustomersService.transactionsByCustomers(
           tenantId,
           filter
@@ -108,7 +116,9 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
         default:
           return res
             .status(200)
-            .send(this.transformToTableResponse(transactionsByCustomers));
+            .send(
+              this.transformToTableResponse(report.data, tenantId)
+            );
       }
     } catch (error) {
       next(error);
