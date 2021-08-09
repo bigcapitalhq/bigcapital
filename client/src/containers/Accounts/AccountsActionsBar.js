@@ -19,7 +19,7 @@ import intl from 'react-intl-universal';
 import { If, DashboardActionViewsList } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import FilterDropdown from 'components/FilterDropdown';
+import AdvancedFilterDropdown from 'components/AdvancedFilter/AdvancedFilterDropdown.tsx';
 
 import { useRefreshAccounts } from 'hooks/query/accounts';
 import { useAccountsChartContext } from 'containers/Accounts/AccountsChartProvider';
@@ -29,6 +29,46 @@ import withAlertActions from 'containers/Alert/withAlertActions';
 import withAccountsTableActions from './withAccountsTableActions';
 
 import { compose } from 'utils';
+
+const FIELDS = [
+  {
+    name: 'Name',
+    key: 'name',
+    fieldType: 'text',
+  },
+  {
+    name: 'Account code',
+    key: 'code',
+    fieldType: 'text',
+  },
+  {
+    name: 'Balance',
+    key: 'balance',
+    fieldType: 'number'
+  },
+  {
+    name: 'Active',
+    key: 'active',
+    fieldType: 'boolean'
+  },
+  {
+    name: 'Created at',
+    key: 'created_at',
+    fieldType: 'date'
+  },
+  {
+    name: 'Root type',
+    key: 'root_type',
+    fieldType: 'enumeration',
+    options: [
+      { key: 'asset', label: 'Asset' },
+      { key: 'liability', label: 'Liability' },
+      { key: 'equity', label: 'Equity' },
+      { key: 'Income', label: 'Income' },
+      { key: 'expense', label: 'Expense' },
+    ],
+  }
+];
 
 /**
  * Accounts actions bar.
@@ -110,7 +150,14 @@ function AccountsActionsBar({
         />
         <Popover
           minimal={true}
-          content={''}
+          content={
+            <AdvancedFilterDropdown
+              defaultFieldKey={'name'}
+              fields={FIELDS}
+              onFilterChange={(filterConditions) => {
+                console.log(filterConditions, 'XXX');
+              }} />
+          }
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
           canOutsideClickClose={true}

@@ -18,7 +18,6 @@ import { connect } from 'react-redux';
 import { If } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
-import FilterDropdown from 'components/FilterDropdown';
 
 import { useRefreshExchangeRate } from 'hooks/query/exchangeRates';
 import withDialogActions from 'containers/Dialog/withDialogActions';

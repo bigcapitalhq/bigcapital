@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { HTMLSelect, Classes } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { getConditionTypeCompatators } from './DynamicFilterCompatators';
+import { getConditionTypeCompatators } from './utils';
 
 export default function DynamicFilterCompatatorField({
   dataType,
@@ -9,7 +9,7 @@ export default function DynamicFilterCompatatorField({
 }) {
   const options = useMemo(
     () => getConditionTypeCompatators(dataType).map(comp => ({
-      value: comp.value, label: intl.get(comp.label_id),
+      value: comp.value, label: intl.get(comp.label),
     })),
     [dataType]
   );
