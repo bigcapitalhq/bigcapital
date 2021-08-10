@@ -10,6 +10,7 @@ const initialState = {
   tableState: {
     pageSize: 12,
     pageIndex: 0,
+    filterRoles: []
   },
 };
 
@@ -17,7 +18,7 @@ const STORAGE_KEY = 'bigcapital:invoices';
 
 const CONFIG = {
   key: STORAGE_KEY,
-  whitelist: ['tableState'],
+  whitelist: [],
   storage,
 };
 

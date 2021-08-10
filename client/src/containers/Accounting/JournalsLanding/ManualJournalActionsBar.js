@@ -5,24 +5,26 @@ import {
   NavbarGroup,
   Classes,
   NavbarDivider,
-  Popover,
-  PopoverInteractionKind,
-  Position,
   Intent,
   Alignment,
 } from '@blueprintjs/core';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'components';
+import {
+  AdvancedFilterPopover,
+  DashboardFilterButton,
+  FormattedMessage as T,
+} from 'components';
 
 import { useRefreshJournals } from 'hooks/query/manualJournals';
 import { useManualJournalsContext } from './ManualJournalsListProvider';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withManualJournalsActions from './withManualJournalsActions';
+import withManualJournals from './withManualJournals';
 
 import { If, DashboardActionViewsList } from 'components';
 
-import withManualJournalsActions from './withManualJournalsActions';
 import { compose } from 'utils';
 
 /**
@@ -31,12 +33,15 @@ import { compose } from 'utils';
 function ManualJournalActionsBar({
   // #withManualJournalsActions
   setManualJournalsTableState,
+
+  // #withManualJournals
+  manualJournalsFilterConditions,
 }) {
   // History context.
   const history = useHistory();
 
   // Manual journals context.
-  const { journalsViews } = useManualJournalsContext();
+  const { journalsViews, fields } = useManualJournalsContext();
 
   // Manual journals refresh action.
   const { refresh } = useRefreshJournals();
@@ -45,7 +50,6 @@ function ManualJournalActionsBar({
   const onClickNewManualJournal = () => {
     history.push('/make-journal-entry');
   };
-
   // Handle delete button click.
   const handleBulkDelete = () => {};
 
@@ -53,11 +57,10 @@ function ManualJournalActionsBar({
   const handleTabChange = (customView) => {
     setManualJournalsTableState({ customViewId: customView.id || null });
   };
-
   // Handle click a refresh Journals
-  const handleRefreshBtnClick = () => {
-    refresh();
-  };
+  const handleRefreshBtnClick = () => { refresh(); };
+
+  console.log(manualJournalsFilterConditions, fields, 'XXX');
 
   return (
     <DashboardActionsBar>
@@ -75,20 +78,20 @@ function ManualJournalActionsBar({
           text={<T id={'journal_entry'} />}
           onClick={onClickNewManualJournal}
         />
-        <Popover
-          minimal={true}
-          // content={filterDropdown}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: manualJournalsFilterConditions,
+            defaultFieldKey: 'journal_number',
+            fields,
+            onFilterChange: (filterConditions) => {
+              setManualJournalsTableState({ filterRoles: filterConditions });
+            },
+          }}
         >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--filter', {
-              'has-active-filters': false,
-            })}
-            text={<T id={'filter'} />}
-            icon={<Icon icon="filter-16" iconSize={16} />}
+          <DashboardFilterButton
+            conditionsCount={manualJournalsFilterConditions.length}
           />
-        </Popover>
+        </AdvancedFilterPopover>
 
         <If condition={false}>
           <Button
@@ -130,4 +133,7 @@ function ManualJournalActionsBar({
 export default compose(
   withDialogActions,
   withManualJournalsActions,
+  withManualJournals(({ manualJournalsTableState }) => ({
+    manualJournalsFilterConditions: manualJournalsTableState.filterRoles,
+  }))
 )(ManualJournalActionsBar);

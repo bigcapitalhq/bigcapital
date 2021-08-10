@@ -48,8 +48,8 @@ export default {
       name: 'Status',
       fieldType: 'enumeration',
       options: [
-        { key: 'draft', name: 'Draft' },
-        { key: 'published', name: 'Published' },
+        { key: 'draft', label: 'Draft' },
+        { key: 'published', label: 'Published' },
       ],
       filterCustomQuery: StatusFieldFilterQuery,
       sortCustomQuery: StatusFieldSortQuery,

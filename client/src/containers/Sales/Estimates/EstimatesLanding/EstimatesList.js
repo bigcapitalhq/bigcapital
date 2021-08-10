@@ -9,6 +9,7 @@ import EstimatesViewTabs from './EstimatesViewTabs';
 import EstimatesDataTable from './EstimatesDataTable';
 
 import withEstimates from './withEstimates';
+import withEstimatesActions from './withEstimatesActions';
 
 import { EstimatesListProvider } from './EstimatesListProvider';
 import { compose, transformTableStateToQuery } from 'utils';
@@ -19,7 +20,22 @@ import { compose, transformTableStateToQuery } from 'utils';
 function EstimatesList({
   // #withEstimate
   estimatesTableState,
+
+  // #withEstimatesActions
+  setEstimatesTableState
 }) {
+  // Resets the estimates table state once the page unmount.
+  React.useEffect(
+    () => () => {
+      setEstimatesTableState({
+        filterRoles: [],
+        viewSlug: '',
+        pageIndex: 0,
+      });
+    },
+    [setEstimatesTableState],
+  );
+
   return (
     <EstimatesListProvider
       query={transformTableStateToQuery(estimatesTableState)}
@@ -41,4 +57,5 @@ function EstimatesList({
 
 export default compose(
   withEstimates(({ estimatesTableState }) => ({ estimatesTableState })),
+  withEstimatesActions
 )(EstimatesList);

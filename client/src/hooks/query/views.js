@@ -14,33 +14,21 @@ export function useResourceViews(resourceSlug) {
     },
   );
 }
- 
-/**
- * Retrieve the resource columns.
- * @param {string} resourceSlug - Resource slug.
- */
-export function useResourceColumns(resourceSlug) {
-  return useRequestQuery(
-    ['RESOURCE_COLUMNS', resourceSlug],
-    { method: 'get', url: `resources/${resourceSlug}/columns` },
-    {
-      defaultData: [],
-    },
-  );
-}
 
 /**
- * Retrieve the resource fields.
+ * Retrieve the resource meta.
  * @param {string} resourceSlug - Resource slug.
  */
-export function useResourceFields(resourceSlug, props) {
+export function useResourceMeta(resourceSlug, props) {
   return useRequestQuery(
-    ['RESOURCE_FIELDS', resourceSlug], 
-    { method: 'get', url: `resources/${resourceSlug}/fields` },
+    ['RESOURCE_META', resourceSlug],
+    { method: 'get', url: `resources/${resourceSlug}/meta` },
     {
-      select: (res) => res.data.resource_fields,
-      defaultData: [],
+      select: (res) => res.data.resource_meta,
+      defaultData: {
+        fields: {},
+      },
     },
-    props
+    props,
   );
 }

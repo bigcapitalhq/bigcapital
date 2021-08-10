@@ -6,20 +6,20 @@ import {
   NavbarGroup,
   Classes,
   NavbarDivider,
-  Popover,
-  PopoverInteractionKind,
-  Position,
   Intent,
   Switch,
   Alignment,
 } from '@blueprintjs/core';
-import classNames from 'classnames';
+
 import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
-import { If, DashboardActionViewsList } from 'components';
+import {
+  AdvancedFilterPopover,
+  If,
+  DashboardActionViewsList,
+  DashboardFilterButton,
+} from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import AdvancedFilterDropdown from 'components/AdvancedFilter/AdvancedFilterDropdown.tsx';
 
 import { useRefreshAccounts } from 'hooks/query/accounts';
 import { useAccountsChartContext } from 'containers/Accounts/AccountsChartProvider';
@@ -29,46 +29,6 @@ import withAlertActions from 'containers/Alert/withAlertActions';
 import withAccountsTableActions from './withAccountsTableActions';
 
 import { compose } from 'utils';
-
-const FIELDS = [
-  {
-    name: 'Name',
-    key: 'name',
-    fieldType: 'text',
-  },
-  {
-    name: 'Account code',
-    key: 'code',
-    fieldType: 'text',
-  },
-  {
-    name: 'Balance',
-    key: 'balance',
-    fieldType: 'number'
-  },
-  {
-    name: 'Active',
-    key: 'active',
-    fieldType: 'boolean'
-  },
-  {
-    name: 'Created at',
-    key: 'created_at',
-    fieldType: 'date'
-  },
-  {
-    name: 'Root type',
-    key: 'root_type',
-    fieldType: 'enumeration',
-    options: [
-      { key: 'asset', label: 'Asset' },
-      { key: 'liability', label: 'Liability' },
-      { key: 'equity', label: 'Equity' },
-      { key: 'Income', label: 'Income' },
-      { key: 'expense', label: 'Expense' },
-    ],
-  }
-];
 
 /**
  * Accounts actions bar.
@@ -80,6 +40,7 @@ function AccountsActionsBar({
   // #withAccounts
   accountsSelectedRows,
   accountsInactiveMode,
+  accountsFilterConditions,
 
   // #withAlertActions
   openAlert,
@@ -90,7 +51,7 @@ function AccountsActionsBar({
   // #ownProps
   onFilterChanged,
 }) {
-  const { resourceViews } = useAccountsChartContext();
+  const { resourceViews, fields } = useAccountsChartContext();
 
   const onClickNewAccount = () => {
     openDialog('account-form', {});
@@ -148,34 +109,22 @@ function AccountsActionsBar({
           text={<T id={'new_account'} />}
           onClick={onClickNewAccount}
         />
-        <Popover
-          minimal={true}
-          content={
-            <AdvancedFilterDropdown
-              defaultFieldKey={'name'}
-              fields={FIELDS}
-              onFilterChange={(filterConditions) => {
-                console.log(filterConditions, 'XXX');
-              }} />
-          }
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
-          canOutsideClickClose={true}
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: accountsFilterConditions,
+            defaultFieldKey: 'name',
+            fields: fields,
+            onFilterChange: (filterConditions) => {
+              setAccountsTableState({ filterRoles: filterConditions });
+            },
+          }}
         >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--filter', {
-              'has-active-filters': false,
-            })}
-            text={
-              true ? (
-                <T id={'filter'} />
-              ) : (
-                intl.get('count_filters_applied', { count: 0 })
-              )
-            }
-            icon={<Icon icon="filter-16" iconSize={16} />}
+          <DashboardFilterButton
+            conditionsCount={accountsFilterConditions.length}
           />
-        </Popover>
+        </AdvancedFilterPopover>
+
+        <NavbarDivider />
 
         <If condition={!isEmpty(accountsSelectedRows)}>
           <Button
@@ -237,6 +186,7 @@ export default compose(
   withAccounts(({ accountsSelectedRows, accountsTableState }) => ({
     accountsSelectedRows,
     accountsInactiveMode: accountsTableState.inactiveMode,
+    accountsFilterConditions: accountsTableState.filterRoles,
   })),
   withAccountsTableActions,
 )(AccountsActionsBar);

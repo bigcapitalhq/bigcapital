@@ -10,6 +10,7 @@ const initialState = {
   tableState: {
     pageSize: 12,
     pageIndex: 0,
+    filterRoles: [],
     sortBy: [],
   },
 };

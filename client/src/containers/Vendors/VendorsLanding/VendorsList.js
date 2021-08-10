@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import 'style/pages/Vendors/List.scss';
 
@@ -11,6 +11,7 @@ import VendorsAlerts from '../VendorsAlerts';
 import VendorsTable from './VendorsTable';
 
 import withVendors from './withVendors';
+import withVendorsActions from './withVendorsActions';
 
 import { compose } from 'utils';
 
@@ -20,7 +21,22 @@ import { compose } from 'utils';
 function VendorsList({
   // #withVendors
   vendorsTableState,
+
+  // #withVendorsActions
+  setVendorsTableState
 }) {
+  // Resets the vendors table state once the page unmount.
+  useEffect(
+    () => () => {
+      setVendorsTableState({
+        filterRoles: [],
+        viewSlug: '',
+        pageIndex: 0,
+      });
+    },
+    [setVendorsTableState],
+  );
+  
   return (
     <VendorsListProvider tableState={vendorsTableState}>
       <VendorActionsBar />
@@ -40,4 +56,5 @@ function VendorsList({
 
 export default compose(
   withVendors(({ vendorsTableState }) => ({ vendorsTableState })),
+  withVendorsActions
 )(VendorsList);

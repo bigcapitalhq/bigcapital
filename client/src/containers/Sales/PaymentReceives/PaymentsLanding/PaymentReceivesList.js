@@ -10,6 +10,7 @@ import PaymentReceiveViewTabs from './PaymentReceiveViewTabs';
 import PaymentReceivesTable from './PaymentReceivesTable';
 
 import withPaymentReceives from './withPaymentReceives';
+import withPaymentReceivesActions from './withPaymentReceivesActions';
 
 import { compose, transformTableStateToQuery } from 'utils';
 
@@ -19,7 +20,22 @@ import { compose, transformTableStateToQuery } from 'utils';
 function PaymentReceiveList({
   // #withPaymentReceives
   paymentReceivesTableState,
+
+  // #withPaymentReceivesActions
+  setPaymentReceivesTableState
 }) {
+  // Resets the payment receives table state once the page unmount.
+  React.useEffect(
+    () => () => {
+      setPaymentReceivesTableState({
+        filterRoles: [],
+        viewSlug: '',
+        pageIndex: 0,
+      });
+    },
+    [setPaymentReceivesTableState],
+  );
+
   return (
     <PaymentReceivesListProvider
       query={transformTableStateToQuery(paymentReceivesTableState)}
@@ -43,4 +59,5 @@ export default compose(
   withPaymentReceives(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
   })),
+  withPaymentReceivesActions,
 )(PaymentReceiveList);

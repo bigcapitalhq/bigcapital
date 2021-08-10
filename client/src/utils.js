@@ -512,6 +512,10 @@ export function getPagesCountFromPaginationMeta(pagination) {
   return Math.ceil(total / pageSize);
 }
 
+function transformFilterRoles(filterRoles) {
+  return JSON.stringify(filterRoles);
+}
+
 /**
  * Transformes the table state to url query.
  */
@@ -521,6 +525,13 @@ export function transformTableStateToQuery(tableState) {
   const query = {
     pageSize,
     page: pageIndex + 1,
+    ...(tableState.filterRoles
+      ? {
+          stringified_filter_roles: transformFilterRoles(
+            tableState.filterRoles,
+          ),
+        }
+      : {}),
     ...(viewSlug ? { viewSlug } : {}),
     ...(Array.isArray(sortBy) && sortBy.length > 0
       ? {
@@ -691,10 +702,14 @@ export function nestedArrayToflatten(
   parseItem = (a, level) => a,
   level = 1,
 ) {
-  const parseObject = (obj) => parseItem({
-    ..._.omit(obj, [property]),
-    level,
-  }, level);
+  const parseObject = (obj) =>
+    parseItem(
+      {
+        ..._.omit(obj, [property]),
+        level,
+      },
+      level,
+    );
 
   return collection.reduce((items, currentValue, index) => {
     let localItems = [...items];
@@ -712,4 +727,28 @@ export function nestedArrayToflatten(
     }
     return localItems;
   }, []);
+}
+
+export function getFieldsFromResourceMeta(resourceFields) {
+  const fields = Object.keys(resourceFields)
+    .map((fieldKey) => {
+      const field = resourceFields[fieldKey];
+      return {
+        ...transformToCamelCase(field),
+        key: fieldKey,
+      };
+    })
+    .filter((field) => field.filterable !== false);
+
+  return _.orderBy(fields, ['label']);
+}
+
+export function getFilterableFieldsFromFields(fields) {
+  return fields.filter((field) => field.filterable !== false);
+}
+
+export const RESORUCE_TYPE = {
+  ACCOUNTS: 'account',
+  ITEMS: 'items',
+
 }

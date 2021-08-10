@@ -3,24 +3,25 @@ import Icon from 'components/Icon';
 import {
   Button,
   Classes,
-  Popover,
   NavbarDivider,
   NavbarGroup,
-  PopoverInteractionKind,
-  Position,
   Intent,
   Alignment,
 } from '@blueprintjs/core';
 
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
+import {
+  AdvancedFilterPopover,
+  DashboardFilterButton,
+  FormattedMessage as T,
+} from 'components';
 
 import { If, DashboardActionViewsList } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withReceiptsActions from './withReceiptsActions';
+import withReceipts from './withReceipts';
+
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useRefreshReceipts } from 'hooks/query/receipts';
 import { compose } from 'utils';
@@ -31,13 +32,14 @@ import { compose } from 'utils';
 function ReceiptActionsBar({
   // #withReceiptsActions
   setReceiptsTableState,
+
+  // #withReceipts
+  receiptsFilterConditions,
 }) {
   const history = useHistory();
 
-  const [filterCount, setFilterCount] = useState(0);
-
   // Sale receipts list context.
-  const { receiptsViews } = useReceiptsListContext();
+  const { receiptsViews, fields } = useReceiptsListContext();
 
   // Handle new receipt button click.
   const onClickNewReceipt = () => {
@@ -54,9 +56,9 @@ function ReceiptActionsBar({
   };
 
   // Handle click a refresh sale estimates
-  const handleRefreshBtnClick = () => {
-    refresh();
-  };
+  const handleRefreshBtnClick = () => { refresh(); };
+
+  console.log(receiptsFilterConditions, fields, 'XXX');
 
   return (
     <DashboardActionsBar>
@@ -74,24 +76,21 @@ function ReceiptActionsBar({
           text={<T id={'new_receipt'} />}
           onClick={onClickNewReceipt}
         />
-        <Popover
-          minimal={true}
-          // content={filterDropdown}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: receiptsFilterConditions,
+            defaultFieldKey: 'reference_no',
+            fields: fields,
+            onFilterChange: (filterConditions) => {
+              setReceiptsTableState({ filterRoles: filterConditions });
+            },
+          }}
         >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={
-              filterCount <= 0 ? (
-                <T id={'filter'} />
-              ) : (
-                `${filterCount} ${intl.get('filters_applied')}`
-              )
-            }
-            icon={<Icon icon={'filter-16'} iconSize={16} />}
+          <DashboardFilterButton
+            conditionsCount={receiptsFilterConditions.length}
           />
-        </Popover>
+        </AdvancedFilterPopover>
+
         <If condition={false}>
           <Button
             className={Classes.MINIMAL}
@@ -128,4 +127,9 @@ function ReceiptActionsBar({
   );
 }
 
-export default compose(withReceiptsActions)(ReceiptActionsBar);
+export default compose(
+  withReceiptsActions,
+  withReceipts(({ receiptTableState }) => ({
+    receiptsFilterConditions: receiptTableState.filterRoles,
+  })),
+)(ReceiptActionsBar);

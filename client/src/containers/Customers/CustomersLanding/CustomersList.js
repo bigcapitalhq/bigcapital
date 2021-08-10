@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import 'style/pages/Customers/List.scss';
 
@@ -11,6 +11,8 @@ import CustomersAlerts from 'containers/Customers/CustomersAlerts';
 import { CustomersListProvider } from './CustomersListProvider';
 
 import withCustomers from './withCustomers';
+import withCustomersActions from './withCustomersActions';
+
 import { compose } from 'utils';
 
 /**
@@ -19,7 +21,22 @@ import { compose } from 'utils';
 function CustomersList({
   // #withCustomers
   customersTableState,
+
+  // #withCustomersActions
+  setCustomersTableState
 }) {
+  // Resets the accounts table state once the page unmount.
+  useEffect(
+    () => () => {
+      setCustomersTableState({
+        filterRoles: [],
+        viewSlug: '',
+        pageIndex: 0,
+      });
+    },
+    [setCustomersTableState],
+  );
+
   return (
     <CustomersListProvider tableState={customersTableState}>
       <CustomersActionsBar />
@@ -38,4 +55,5 @@ function CustomersList({
 
 export default compose(
   withCustomers(({ customersTableState }) => ({ customersTableState })),
+  withCustomersActions
 )(CustomersList);

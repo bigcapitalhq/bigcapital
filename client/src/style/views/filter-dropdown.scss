@@ -1,121 +1,115 @@
 
 .filter-dropdown{
-  width: 550px;
+  width: 600px;
 
-  &__body{
-    padding: 12px;
+  &__form{
+    
+  }
+
+
+  &__conditions-wrap{
+    
+  }
+
+  &__conditions{
+    padding: 6px 0
   }
 
   &__condition{
     display: flex;
+    padding: 6px 12px;
 
-    &:not(:first-of-type) {
-      padding-top: 8px;
-      border-top: 1px solid #e6e6e6;
-      margin-top: 8px;
-    }
-  }
-
-  .bp3-form-group{
-    padding-right: 4px;
-    margin-bottom: 0;
-
-    &:not(:last-of-type) {
-      padding-right: 8px;
-    }
-
-    .bp3-html-select select,
-    .bp3-select select{
-      padding: 0 15px 0 4px;
-
-      &:after{
-        margin-right: 8px;
-      }
-    }
     .bp3-input{
       padding: 0 6px;
     }
-    .bp3-html-select select,
-    .bp3-select select,
-    .bp3-input-group .bp3-input{
-      height: 32px;
-      border-radius: 3px;
-      border-color: #dbd8d8;
-    }
+    .form-group--select-list .bp3-popover-target .bp3-button{
+      padding-left: 6px;
+    } 
 
     .bp3-html-select::after,
     .form-group--select-list .bp3-button::after{
-      border-top-color: #aaa;
-      margin-right: 8px;
+      margin-right: 6px;
+      border-top-color: #c5c5c5;
+    }
+    .bp3-html-select,
+    .bp3-input,
+    .form-group--select-list .bp3-button{
+      
+      &:not(:focus){
+        border-color: #d3d9de;
+      }
+    }
+
+    .form-group--select-list .bp3-button{
+      padding-right: 20px;
+    }
+    .bp3-form-group{
+      margin-bottom: 0;
+      padding-right: 10px;
+
+      .bp3-control.bp3-checkbox{
+        margin-left: 20px;
+      }
+
+      .bp3-popover-wrapper{
+        width: 100%;
+      }
+
+      .bp3-button{
+        text-overflow: ellipsis;
+        overflow: visible;
+        white-space: nowrap;
+        display: block;
+        overflow: hidden;
+      }
+    }
+    .form-group--condition{
+      width: 65px;
+
+      input[disabled] {
+        background: transparent;
+        border: 0;
+      }
+    }
+    .form-group--comparator{
+      width: 120px;
+    }
+    .form-group--fieldKey{
+      width: 145px; 
+    }
+    .form-group--value{
+      width: 220px;
+    }
+
+    .button--remove{
+      margin-left: -6px;
+
+      .bp3-icon{
+        color: #929aa0;
+      }
     }
   }
 
   &__footer{
-    border-top: 1px solid #e8e8e8;
-    padding: 5px 10px;
-  }
-  .form-group{
-    &--condition{
-      width: 65px;
-      min-width: 65px;
-    }
-    &--field{
-      width: 40%;
-    }
-    &--comparator{
-      min-width: 100px;
-      width: 100px;
-      max-width: 100px;
-    }
-    &--value{
-      width: 50%;
-
-      .bp3-control{
-        display: inline-block;
-        margin-left: 1.8rem;
-      }
-    }
+    padding: 10px 12px;
+    margin-top: -6px;
   }
 }
 
-.list-select--filter-dropdown{
+.bp3-popover{
 
-  .bp3-button:not([class*="bp3-intent-"]):not(.bp3-minimal),
-  .bp3-button:not([class*="bp3-intent-"]):not(.bp3-minimal){
-    &,
-    &:hover{
-      background-color: #E6EFFB;
-      border: 0;
-      border-radius: 3px;
-    }
-
-    &:after{
-      border-top-color: #afb9d0;
-    }
+  &,
+  & .bp3-popover-content{
+    border-radius: 5px;
   }
 }
 
-.popover--list-select-filter-dropdown{
-
-  .bp3-popover-content{
-    max-width: 200px;
+.bp3-menu-item{
+  .text-hint{
+    font-size: 11px;
+    line-height: 1.3;
+    display: block;
+    color: #5c7080;
   }
 
-  .bp3-menu{
-    max-height: 250px;
-    overflow: auto;
-  }
-
-  .bp3-input-group{
-    margin: 8px 8px 0;
-    padding-bottom: 4px;
-
-    .bp3-input:not(:first-child){
-      padding-left: 10px;
-    }
-
-    .bp3-icon-search{
-      display: none;
-    }
-  }
 }

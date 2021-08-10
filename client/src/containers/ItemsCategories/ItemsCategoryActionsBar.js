@@ -5,21 +5,20 @@ import {
   Button,
   Classes,
   Intent,
-  Popover,
-  Position,
-  PopoverInteractionKind,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
-import classNames from 'classnames';
 import { If, Icon } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import { AdvancedFilterPopover, DashboardFilterButton } from 'components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-// import withItemCategories from './withItemCategories';
+import withItemCategories from './withItemCategories';
+import withItemCategoriesActions from './withItemCategoriesActions';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
+import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
 
 /**
  * Items categories actions bar.
@@ -27,6 +26,10 @@ import { compose } from 'utils';
 function ItemsCategoryActionsBar({
   // #withItemCategories
   itemCategoriesSelectedRows = [],
+  categoriesFilterConditions,
+
+  // 
+  setItemsCategoriesTableState,
 
   // #withDialog
   openDialog,
@@ -34,6 +37,8 @@ function ItemsCategoryActionsBar({
   // #withAlertActions
   openAlert,
 }) {
+  const { fields } = useItemsCategoriesContext();
+
   const onClickNewCategory = () => {
     openDialog('item-category-form', {});
   };
@@ -44,7 +49,9 @@ function ItemsCategoryActionsBar({
       itemCategoriesIds: itemCategoriesSelectedRows,
     });
   };
-  
+
+  console.log(fields, categoriesFilterConditions, 'XXXX');
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -56,25 +63,20 @@ function ItemsCategoryActionsBar({
         />
         <NavbarDivider />
 
-        <Popover
-          minimal={true}
-          // content={filterDropdown}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
-          canOutsideClickClose={true}
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: categoriesFilterConditions,
+            defaultFieldKey: 'name',
+            fields: fields,
+            onFilterChange: (filterConditions) => {
+              setItemsCategoriesTableState({ filterRoles: filterConditions });
+            },
+          }}
         >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={
-              true ? (
-                <T id={'filter'} />
-              ) : (
-                `${0} filters applied`
-              )
-            }
-            icon={<Icon icon="filter-16" iconSize={16} />}
+          <DashboardFilterButton
+            conditionsCount={categoriesFilterConditions.length}
           />
-        </Popover>
+        </AdvancedFilterPopover>
 
         <If condition={itemCategoriesSelectedRows.length}>
           <Button
@@ -103,8 +105,12 @@ function ItemsCategoryActionsBar({
 
 export default compose(
   withDialogActions,
-  // withItemCategories(({ itemCategoriesSelectedRows }) => ({
-  //   itemCategoriesSelectedRows,
-  // })),
+  withItemCategories(
+    ({ itemCategoriesSelectedRows, itemsCategoriesTableState }) => ({
+      itemCategoriesSelectedRows,
+      categoriesFilterConditions: itemsCategoriesTableState.filterRoles,
+    }),
+  ),
   withAlertActions,
+  withItemCategoriesActions
 )(ItemsCategoryActionsBar);

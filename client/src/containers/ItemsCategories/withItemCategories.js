@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import {
   getItemsCategoriesTableStateFactory,
-} from 'store/itemCategories/itemsCategories.selectors';
+} from 'store/itemCategories/ItemsCategories.selectors';
 
 export default (mapState) => {
   const getItemsCategoriesTableState = getItemsCategoriesTableStateFactory();

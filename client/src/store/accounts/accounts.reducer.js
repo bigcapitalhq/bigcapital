@@ -5,14 +5,18 @@ import { createTableStateReducers } from 'store/tableState.reducer';
 import t from 'store/types';
 
 const initialState = {
-  tableState: {},
+  tableState: {
+    pageSize: 12,
+    pageIndex: 0,
+    filterRoles: [],
+  },
 };
 
 const STORAGE_KEY = 'bigcapital:accounts';
 
 const CONFIG = {
   key: STORAGE_KEY,
-  whitelist: ['tableState'],
+  whitelist: [],
   storage,
 };
 

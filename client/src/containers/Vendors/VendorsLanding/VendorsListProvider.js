@@ -1,8 +1,8 @@
 import React, { createContext } from 'react';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import { useResourceViews, useVendors } from 'hooks/query';
-import { isTableEmptyStatus } from 'utils';
+import { useResourceMeta, useResourceViews, useVendors } from 'hooks/query';
+import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
 import { transformVendorsStateToQuery } from './utils';
 
 const VendorsListContext = createContext();
@@ -22,6 +22,13 @@ function VendorsListProvider({ tableState, ...props }) {
   const { data: vendorsViews, isLoading: isVendorsViewsLoading } =
     useResourceViews('vendors');
 
+  // Fetch the customers resource fields.
+  const {
+    data: resourceMeta,
+    isLoading: isResourceMetaLoading,
+    isFetching: isResourceMetaFetching,
+  } = useResourceMeta('customers');
+
   // Detarmines the datatable empty status.
   const isEmptyStatus =
     isTableEmptyStatus({
@@ -37,15 +44,23 @@ function VendorsListProvider({ tableState, ...props }) {
     pagination,
     vendorsViews,
 
-    isVendorsLoading,
-    isVendorsFetching,
+    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    resourceMeta,
+    isResourceMetaLoading,
+    isResourceMetaFetching,
+
     isVendorsViewsLoading,
 
+    isVendorsLoading,
+    isVendorsFetching,
     isEmptyStatus,
   };
 
   return (
-    <DashboardInsider loading={isVendorsViewsLoading} name={'vendors-list'}>
+    <DashboardInsider
+      loading={isResourceMetaLoading || isVendorsLoading}
+      name={'vendors-list'}
+    >
       <VendorsListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

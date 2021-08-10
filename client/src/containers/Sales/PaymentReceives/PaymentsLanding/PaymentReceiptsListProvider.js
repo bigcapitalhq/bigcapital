@@ -2,10 +2,10 @@ import React, { createContext, useContext } from 'react';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useResourceViews,
-  useResourceFields,
+  useResourceMeta,
   usePaymentReceives,
 } from 'hooks/query';
-import { isTableEmptyStatus } from 'utils';
+import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
 
 const PaymentReceivesListContext = createContext();
 
@@ -21,9 +21,10 @@ function PaymentReceivesListProvider({ query, ...props }) {
 
   // Fetch the payment receives resource fields.
   const {
-    data: paymentReceivesFields,
-    isFetching: isFieldsLoading,
-  } = useResourceFields('payment_receives');
+    data: resourceMeta,
+    isLoading: isResourceLoading,
+    isFetching: isResourceFetching,
+  } = useResourceMeta('payment_receives');
 
   // Fetch payment receives list according to the given custom view id.
   const {
@@ -44,19 +45,23 @@ function PaymentReceivesListProvider({ query, ...props }) {
   const state = {
     paymentReceives,
     pagination,
-    paymentReceivesFields,
+
+    resourceMeta,
+    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+
     paymentReceivesViews,
 
     isPaymentReceivesLoading,
     isPaymentReceivesFetching,
-    isFieldsLoading,
+    isResourceFetching,
+    isResourceLoading,
     isViewsLoading,
     isEmptyStatus,
   };
 
   return (
     <DashboardInsider
-      loading={isViewsLoading || isFieldsLoading}
+      loading={isViewsLoading || isResourceLoading}
       name={'payment-receives-list'}
     >
       <PaymentReceivesListContext.Provider value={state} {...props} />

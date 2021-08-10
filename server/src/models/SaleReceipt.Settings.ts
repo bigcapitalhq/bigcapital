@@ -22,8 +22,8 @@ export default {
       relationEntityKey: 'slug',
     },
     'customer': {
-      name: 'Customer',
-      column: 'customer_id',
+      label: 'Customer',
+      name: 'customer_id',
       fieldType: 'relation',
 
       relationType: 'enumeration',
@@ -67,8 +67,8 @@ export default {
       name: 'Status',
       fieldType: 'enumeration',
       options: [
-        { key: 'draft', name: 'Draft' },
-        { key: 'closed', name: 'Closed' },
+        { key: 'draft', label: 'Draft' },
+        { key: 'closed', label: 'Closed' },
       ],
       filterCustomQuery: StatusFieldFilterQuery,
       sortCustomQuery: StatusFieldSortQuery,

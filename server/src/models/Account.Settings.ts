@@ -23,6 +23,7 @@ export default {
       column: 'slug',
       fieldType: 'text',
       columnable: false,
+      filterable: false,
     },
     code: {
       name: 'Account code',
@@ -76,6 +77,7 @@ export default {
       name: 'Currency',
       column: 'currency_code',
       fieldType: 'text',
+      filterable: false,
     },
     created_at: {
       name: 'Created at',

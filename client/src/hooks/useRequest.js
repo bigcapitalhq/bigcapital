@@ -6,10 +6,12 @@ import {
   useSetGlobalErrors,
   useAuthToken,
 } from './state';
+import { useAppIntlContext } from '../components/AppIntlProvider';
 
 export default function useApiRequest() {
   const setGlobalErrors = useSetGlobalErrors();
   const { setLogout } = useAuthActions();
+  const { currentLocale } = useAppIntlContext();
 
   // Authentication token.
   const token = useAuthToken();
@@ -24,7 +26,7 @@ export default function useApiRequest() {
     // Request interceptors.
     instance.interceptors.request.use(
       (request) => {
-        const locale = 'ar';
+        const locale = currentLocale;
 
         if (token) {
           request.headers.common['X-Access-Token'] = token;

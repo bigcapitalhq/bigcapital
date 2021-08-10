@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
@@ -66,10 +67,23 @@ export default function ListSelect({
     onItemSelect && onItemSelect(_item);
   };
 
+  // Filters accounts types items.
+  const filterItems = (query, item, _index, exactMatch) => {
+    const normalizedTitle = item[textProp].toLowerCase();
+    const normalizedQuery = query.toLowerCase();
+
+    if (exactMatch) {
+      return normalizedTitle === normalizedQuery;
+    } else {
+      return normalizedTitle.indexOf(normalizedQuery) >= 0;
+    }
+  };
+
   return (
     <Select
       itemRenderer={itemRenderer}
       onItemSelect={handleItemSelect}
+      itemPredicate={filterItems}
       {...selectProps}
       noResults={noResults}
       disabled={disabled}
@@ -83,6 +97,7 @@ export default function ListSelect({
         loading={isLoading}
         disabled={disabled}
         {...buttonProps}
+        fill={true}
       />
     </Select>
   );

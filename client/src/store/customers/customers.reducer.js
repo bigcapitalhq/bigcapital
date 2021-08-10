@@ -8,6 +8,7 @@ const initialState = {
     pageSize: 12,
     pageIndex: 0,
     inactiveMode: false,
+    filterRoles: []
   },
 };
 
@@ -20,7 +21,7 @@ const STORAGE_KEY = 'bigcapital:estimates';
 export default persistReducer(
 {
   key: STORAGE_KEY,
-  whitelist: ['tableState'],
+  whitelist: [],
   storage,
 },
 reducerInstance,

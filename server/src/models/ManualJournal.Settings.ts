@@ -6,43 +6,47 @@ export default {
   },
   fields: {
     'date': {
-      label: 'Date',
+      name: 'Date',
       column: 'date',
       fieldType: 'date',
     },
     'journal_number': {
-      label: 'Journal number',
+      name: 'Journal number',
       column: 'journal_number',
       fieldType: 'text',
     },
     'reference': {
-      label: 'Reference No.',
+      name: 'Reference No.',
       column: 'reference',
       fieldType: 'text',
     },
     'journal_type': {
-      label: 'Journal type',
+      name: 'Journal type',
       column: 'journal_type',
       fieldType: 'text',
     },
     'amount': {
-      label: 'Amount',
+      name: 'Amount',
       column: 'amount',
-      columnType: 'number',
+      fieldType: 'number',
     },
     'description': {
-      label: 'Description',
+      name: 'Description',
       column: 'description',
       fieldType: 'text',
     },
     'status': {
-      label: 'Status',
+      name: 'Status',
       column: 'status',
       fieldType: 'enumeration',
+      options: [
+        { key: 'draft', label: 'Draft' },
+        { key: 'published', label: 'published' }
+      ],
       sortCustomQuery: StatusFieldSortQuery,
     },
     'created_at': {
-      label: 'Created at',
+      name: 'Created at',
       column: 'created_at',
       fieldType: 'date',
     },

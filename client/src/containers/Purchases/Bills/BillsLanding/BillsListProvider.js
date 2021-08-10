@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import { useResourceViews, useResourceFields, useBills } from 'hooks/query';
-import { isTableEmptyStatus }  from 'utils';
+import { useResourceViews, useResourceMeta, useBills } from 'hooks/query';
+import { getFieldsFromResourceMeta, isTableEmptyStatus } from 'utils';
 
 const BillsListContext = createContext();
 
@@ -10,15 +10,15 @@ const BillsListContext = createContext();
  */
 function BillsListProvider({ query, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: billsViews, isLoading: isViewsLoading } = useResourceViews(
-    'bills',
-  );
+  const { data: billsViews, isLoading: isViewsLoading } =
+    useResourceViews('bills');
 
   // Fetch the accounts resource fields.
   const {
-    data: billsFields,
-    isLoading: isFieldsLoading,
-  } = useResourceFields('bills');
+    data: resourceMeta,
+    isLoading: isResourceLoading,
+    isFetching: isResourceFetching,
+  } = useResourceMeta('bills');
 
   // Fetch accounts list according to the given custom view id.
   const {
@@ -28,27 +28,33 @@ function BillsListProvider({ query, ...props }) {
   } = useBills(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus = isTableEmptyStatus({
-    data: bills, pagination, filterMeta,
-  }) && !isBillsFetching;
+  const isEmptyStatus =
+    isTableEmptyStatus({
+      data: bills,
+      pagination,
+      filterMeta,
+    }) && !isBillsFetching;
 
   // Provider payload.
   const provider = {
     bills,
     pagination,
-    billsFields,
     billsViews,
+
+    resourceMeta,
+    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    isResourceLoading,
+    isResourceFetching,
 
     isBillsLoading,
     isBillsFetching,
-    isFieldsLoading,
     isViewsLoading,
-    isEmptyStatus
+    isEmptyStatus,
   };
 
   return (
     <DashboardInsider
-      loading={isViewsLoading || isFieldsLoading}
+      loading={isViewsLoading || isResourceLoading}
       name={'bills'}
     >
       <BillsListContext.Provider value={provider} {...props} />

@@ -9,20 +9,20 @@ const PaymentMadesContext = createContext();
  */
 function PaymentMadesProvider({ query, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: paymentsViews, isFetching: isViewsLoading } = useResourceViews(
+  const { data: paymentsViews, isLoading: isViewsLoading } = useResourceViews(
     'bill_payments',
   );
 
   // Fetch the accounts resource fields.
   const {
     data: paymentsFields,
-    isFetching: isFieldsLoading,
+    isLoading: isFieldsLoading,
   } = useResourceFields('bill_payments');
 
   // Fetch accounts list according to the given custom view id.
   const {
     data: { paymentMades, pagination },
-    isFetching: isPaymentsLoading,
+    isLoading: isPaymentsLoading,
   } = usePaymentMades(query);
 
   // Provider payload.
@@ -39,7 +39,7 @@ function PaymentMadesProvider({ query, ...props }) {
 
   return (
     <DashboardInsider
-      loading={isViewsLoading || isFieldsLoading}
+      loading={isViewsLoading || isFieldsLoading || isPaymentsLoading}
       name={'payment_made'}
     >
       <PaymentMadesContext.Provider value={provider} {...props} />

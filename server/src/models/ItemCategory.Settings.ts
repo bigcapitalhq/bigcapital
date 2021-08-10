@@ -6,23 +6,23 @@ export default {
   },
   fields: {
     name: {
-      label: 'Name',
+      name: 'Name',
       column: 'name',
       fieldType: 'text',
     },
     description: {
-      label: 'Description',
+      name: 'Description',
       column: 'description',
       fieldType: 'text',
     },
     count: {
-      label: 'Count',
+      name: 'Count',
       column: 'count',
       fieldType: 'number',
       virtualColumn: true,
     },
     created_at: {
-      label: 'Created at',
+      name: 'Created at',
       column: 'created_at',
       columnType: 'date',
     },

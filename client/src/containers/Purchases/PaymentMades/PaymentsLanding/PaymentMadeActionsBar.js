@@ -3,26 +3,29 @@ import Icon from 'components/Icon';
 import {
   Button,
   Classes,
-  Popover,
   NavbarDivider,
   NavbarGroup,
-  PopoverInteractionKind,
-  Position,
   Intent,
   Alignment,
 } from '@blueprintjs/core';
 
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import { If, DashboardActionViewsList } from 'components';
+import {
+  If,
+  DashboardActionViewsList,
+  DashboardFilterButton,
+  AdvancedFilterPopover,
+} from 'components';
 
+import withPaymentMade from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
+
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { useRefreshPaymentMades } from 'hooks/query/paymentMades';
+
 import { compose } from 'utils';
 
 /**
@@ -31,11 +34,14 @@ import { compose } from 'utils';
 function PaymentMadeActionsBar({
   // #withPaymentMadesActions
   setPaymentMadesTableState,
+
+  // #withPaymentMades
+  paymentMadesFilterConditions
 }) {
   const history = useHistory();
 
   // Payment receives list context.
-  const { paymentMadesViews } = usePaymentMadesListContext();
+  const { paymentMadesViews, fields } = usePaymentMadesListContext();
 
   // Handle new payment made button click.
   const handleClickNewPaymentMade = () => {
@@ -69,20 +75,21 @@ function PaymentMadeActionsBar({
           text={<T id={'new_payment_made'} />}
           onClick={handleClickNewPaymentMade}
         />
-        <Popover
-          minimal={true}
-          // content={filterDropdown}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: paymentMadesFilterConditions,
+            defaultFieldKey: 'payment_number',
+            fields: fields,
+            onFilterChange: (filterConditions) => {
+              setPaymentMadesTableState({ filterRoles: filterConditions });
+            },
+          }}
         >
-          <Button
-            className={classNames(Classes.MINIMAL)}
-            text={
-              true ? <T id={'filter'} /> : `${0} ${intl.get('filters_applied')}`
-            }
-            icon={<Icon icon={'filter-16'} iconSize={16} />}
+          <DashboardFilterButton
+            conditionsCount={paymentMadesFilterConditions.length}
           />
-        </Popover>
+        </AdvancedFilterPopover>
+
         <If condition={false}>
           <Button
             className={Classes.MINIMAL}
@@ -119,4 +126,9 @@ function PaymentMadeActionsBar({
   );
 }
 
-export default compose(withPaymentMadeActions)(PaymentMadeActionsBar);
+export default compose(
+  withPaymentMadeActions,
+  withPaymentMade(({ paymentMadesTableState }) => ({
+    paymentMadesFilterConditions: paymentMadesTableState.filterRoles,
+  })),
+)(PaymentMadeActionsBar);

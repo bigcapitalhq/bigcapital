@@ -5,19 +5,19 @@ import {
   Button,
   Classes,
   Intent,
-  Popover,
-  Position,
-  PopoverInteractionKind,
   Switch,
   Alignment,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
-import classNames from 'classnames';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
-import { If, DashboardActionViewsList } from 'components';
+import {
+  If,
+  DashboardActionViewsList,
+  DashboardFilterButton,
+  AdvancedFilterPopover,
+} from 'components';
 
 import { useRefreshVendors } from 'hooks/query/vendors';
 import { useVendorsListContext } from './VendorsListProvider';
@@ -32,6 +32,9 @@ import { compose } from 'utils';
  * Vendors actions bar.
  */
 function VendorActionsBar({
+  // #withVendors
+  vendorsFilterConditions,
+
   // #withVendorActions
   setVendorsTableState,
   vendorsInactiveMode,
@@ -39,7 +42,7 @@ function VendorActionsBar({
   const history = useHistory();
 
   // Vendors list context.
-  const { vendorsViews } = useVendorsListContext();
+  const { vendorsViews, fields } = useVendorsListContext();
 
   // Handles new vendor button click.
   const onClickNewVendor = () => {
@@ -81,19 +84,21 @@ function VendorActionsBar({
           onClick={onClickNewVendor}
         />
         <NavbarDivider />
-        <Popover
-          // content={}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: vendorsFilterConditions,
+            defaultFieldKey: 'display_name',
+            fields: fields,
+            onFilterChange: (filterConditions) => {
+              setVendorsTableState({ filterRoles: filterConditions });
+            },
+          }}
         >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={
-              true ? <T id={'filter'} /> : `${9} ${intl.get('filters_applied')}`
-            }
-            icon={<Icon icon="filter-16" iconSize={16} />}
+          <DashboardFilterButton
+            conditionsCount={vendorsFilterConditions.length}
           />
-        </Popover>
+        </AdvancedFilterPopover>
+
         <If condition={false}>
           <Button
             className={Classes.MINIMAL}
@@ -133,5 +138,6 @@ export default compose(
   withVendorsActions,
   withVendors(({ vendorsTableState }) => ({
     vendorsInactiveMode: vendorsTableState.inactiveMode,
+    vendorsFilterConditions: vendorsTableState.filterRoles,
   })),
 )(VendorActionsBar);

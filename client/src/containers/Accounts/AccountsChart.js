@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import 'style/pages/Accounts/List.scss';
 import { DashboardPageContent, DashboardContentTable } from 'components';
@@ -14,6 +14,7 @@ import withAccounts from 'containers/Accounts/withAccounts';
 
 import { compose } from 'utils';
 import { transformAccountsStateToQuery } from './utils';
+import withAccountsTableActions from './withAccountsTableActions';
 
 /**
  * Accounts chart list.
@@ -21,7 +22,22 @@ import { transformAccountsStateToQuery } from './utils';
 function AccountsChart({
   // #withAccounts
   accountsTableState,
+
+  // #withAccountsActions
+  setAccountsTableState,
 }) {
+  // Resets the accounts table state once the page unmount.
+  useEffect(
+    () => () => {
+      setAccountsTableState({
+        filterRoles: [],
+        viewSlug: '',
+        pageIndex: 0,
+      });
+    },
+    [setAccountsTableState],
+  );
+
   return (
     <AccountsChartProvider
       query={transformAccountsStateToQuery(accountsTableState)}
@@ -43,4 +59,5 @@ function AccountsChart({
 
 export default compose(
   withAccounts(({ accountsTableState }) => ({ accountsTableState })),
+  withAccountsTableActions,
 )(AccountsChart);

@@ -7,6 +7,10 @@
   padding-right: 12px;
 }
 
+.bp3-button:not([class*='bp3-intent-']) {
+  color: #33304a;
+}
+
 .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
   color: #555555;
   box-shadow: 0 0 0 transparent;

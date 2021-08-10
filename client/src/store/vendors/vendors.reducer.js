@@ -9,6 +9,7 @@ const initialState = {
     pageSize: 12,
     pageIndex: 0,
     inactiveMode: false,
+    filterRoles: [],
   },
 };
 
@@ -16,7 +17,7 @@ const STORAGE_KEY = 'bigcapital:vendors';
 
 const CONFIG = {
   key: STORAGE_KEY,
-  whitelist: ['tableState'],
+  whitelist: [],
   storage,
 };
 

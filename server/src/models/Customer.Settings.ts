@@ -43,6 +43,7 @@ export default {
     created_at: {
       name: 'Created at',
       column: 'created_at',
+      fieldType: 'date',
     },
     balance: {
       name: 'Balance',
@@ -61,11 +62,13 @@ export default {
       fieldType: 'date',
     },
     currency_code: {
+      name: 'Curreny',
       column: 'currency_code',
       fieldType: 'text',
     },
     status: {
-      label: 'Status',
+      name: 'Status',
+      fieldType: 'enumeration',
       options: [
         { key: 'active', label: 'Active' },
         { key: 'inactive', label: 'Inactive' },

@@ -2,9 +2,10 @@ import React, { createContext } from 'react';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useResourceViews,
-  useResourceFields,
+  useResourceMeta,
   usePaymentReceives,
 } from 'hooks/query';
+import { getFieldsFromResourceMeta } from 'utils';
 
 const PaymentReceivesListContext = createContext();
 
@@ -20,9 +21,10 @@ function PaymentReceivesListProvider({ query, ...props }) {
 
   // Fetch the accounts resource fields.
   const {
-    data: paymentReceivesFields,
-    isFetching: isFieldsLoading,
-  } = useResourceFields('payment_receives');
+    data: resourceMeta,
+    isFetching: isResourceFetching,
+    isLoading: isResourceLoading,
+  } = useResourceMeta('payment_receives');
 
   // Fetch accounts list according to the given custom view id.
   const {
@@ -35,18 +37,21 @@ function PaymentReceivesListProvider({ query, ...props }) {
   const provider = {
     paymentReceives,
     paymentReceivesViews,
-    paymentReceivesFields,
     pagination,
+    resourceMeta,
+
+    fields: getFieldsFromResourceMeta(resourceMeta.fields),
 
     isViewsLoading,
-    isFieldsLoading,
+    isResourceFetching,
+    isResourceLoading,
     isPaymentReceivesLoading,
     isPaymentReceivesFetching
   };
 
   return (
     <DashboardInsider
-      loading={isViewsLoading || isFieldsLoading}
+      loading={isViewsLoading || isResourceLoading}
       name={'payment_receives'}
     >
       <PaymentReceivesListContext.Provider value={provider} {...props} />

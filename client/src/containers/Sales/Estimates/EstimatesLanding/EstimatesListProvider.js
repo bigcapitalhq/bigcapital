@@ -1,7 +1,9 @@
 import React, { createContext } from 'react';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import { useResourceViews, useResourceFields, useEstimates } from 'hooks/query';
-import { isTableEmptyStatus } from 'utils';
+
+import { useResourceViews, useResourceMeta, useEstimates } from 'hooks/query';
+import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
 
 const EstimatesListContext = createContext();
 
@@ -10,17 +12,17 @@ const EstimatesListContext = createContext();
  */
 function EstimatesListProvider({ query, ...props }) {
   // Fetches estimates resource views and fields.
-  const { data: estimatesViews, isLoading: isViewsLoading } = useResourceViews(
-    'sale_estimates',
-  );
+  const { data: estimatesViews, isLoading: isViewsLoading } =
+    useResourceViews('sale_estimates');
 
   // Fetches the estimates resource fields.
   const {
-    data: estimatesFields,
-    isLoading: isFieldsLoading,
-  } = useResourceFields('sale_estimates');
+    data: resourceMeta,
+    isLoading: isResourceLoading,
+    isFetching: isResourceFetching,
+  } = useResourceMeta('sale_estimates');
 
-  // Fetch estimates list according to the given custom view id.
+  // Fetches estimates list according to the given custom view id.
   const {
     data: { estimates, pagination, filterMeta },
     isLoading: isEstimatesLoading,
@@ -39,12 +41,15 @@ function EstimatesListProvider({ query, ...props }) {
   const provider = {
     estimates,
     pagination,
-    estimatesFields,
+
+    fields: getFieldsFromResourceMeta(resourceMeta.fields),
     estimatesViews,
+
+    isResourceLoading,
+    isResourceFetching,
 
     isEstimatesLoading,
     isEstimatesFetching,
-    isFieldsLoading,
     isViewsLoading,
 
     isEmptyStatus,
@@ -52,7 +57,7 @@ function EstimatesListProvider({ query, ...props }) {
 
   return (
     <DashboardInsider
-      loading={isViewsLoading || isFieldsLoading}
+      loading={isViewsLoading || isResourceLoading}
       name={'sale_estimate'}
     >
       <EstimatesListContext.Provider value={provider} {...props} />

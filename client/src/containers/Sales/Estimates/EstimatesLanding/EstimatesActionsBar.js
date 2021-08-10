@@ -1,25 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
   Classes,
-  Popover,
   NavbarDivider,
   NavbarGroup,
-  PopoverInteractionKind,
-  Position,
   Intent,
   Alignment,
 } from '@blueprintjs/core';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
 
-import { If, DashboardActionViewsList } from 'components';
+import {
+  AdvancedFilterPopover,
+  If,
+  DashboardActionViewsList,
+  DashboardFilterButton,
+} from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withEstimatesActions from './withEstimatesActions';
+import withEstimates from './withEstimates';
+
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useRefreshEstimates } from 'hooks/query/estimates';
 
@@ -31,13 +33,14 @@ import { compose } from 'utils';
 function EstimateActionsBar({
   // #withEstimateActions
   setEstimatesTableState,
+
+  // #withEstimates
+  estimatesFilterRoles
 }) {
   const history = useHistory();
 
-  const [filterCount, setFilterCount] = useState(0);
-
   // Estimates list context.
-  const { estimatesViews } = useEstimatesListContext();
+  const { estimatesViews, fields } = useEstimatesListContext();
 
   // Handle click a new sale estimate.
   const onClickNewEstimate = () => {
@@ -55,9 +58,7 @@ function EstimateActionsBar({
   };
 
   // Handle click a refresh sale estimates
-  const handleRefreshBtnClick = () => {
-    refresh();
-  };
+  const handleRefreshBtnClick = () => { refresh(); };
 
   return (
     <DashboardActionsBar>
@@ -74,23 +75,21 @@ function EstimateActionsBar({
           text={<T id={'new_estimate'} />}
           onClick={onClickNewEstimate}
         />
-        <Popover
-          minimal={true}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: estimatesFilterRoles,
+            defaultFieldKey: 'estimate_number',
+            fields: fields,
+            onFilterChange: (filterConditions) => {
+              setEstimatesTableState({ filterRoles: filterConditions });
+            },
+          }}
         >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={
-              filterCount <= 0 ? (
-                <T id={'filter'} />
-              ) : (
-                `${filterCount} ${intl.get('filters_applied')}`
-              )
-            }
-            icon={<Icon icon={'filter-16'} iconSize={16} />}
+          <DashboardFilterButton
+            conditionsCount={estimatesFilterRoles.length}
           />
-        </Popover>
+        </AdvancedFilterPopover>
+
         <If condition={false}>
           <Button
             className={Classes.MINIMAL}
@@ -128,4 +127,9 @@ function EstimateActionsBar({
   );
 }
 
-export default compose(withEstimatesActions)(EstimateActionsBar);
+export default compose(
+  withEstimatesActions,
+  withEstimates(({ estimatesTableState }) => ({
+    estimatesFilterRoles: estimatesTableState.filterRoles,
+  })),
+)(EstimateActionsBar);

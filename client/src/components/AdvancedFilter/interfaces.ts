@@ -1,4 +1,5 @@
 import { ArrayHelpers } from 'formik';
+import { IPopoverProps } from '@blueprintjs/core';
 
 export type IResourceFieldType = 'text' | 'number' | 'enumeration' | 'boolean';
 
@@ -10,9 +11,12 @@ export interface IResourceField {
 
 export interface IAdvancedFilterDropdown {
   fields: IResourceField[];
+  conditions?: IFilterRole[];
   defaultFieldKey: string;
   defaultComparator?: string;
   defaultValue?: string;
+  defaultCondition?: string;
+  onFilterChange?: (filterRoles: IFilterRole[]) => void;
 }
 
 export interface IAdvancedFilterDropdownFooter {
@@ -69,6 +73,7 @@ export interface IFilterOption {
 
 export interface IAdvancedFilterValueField {
   fieldType: string;
+  value?: string;
   key: string;
   label: string;
   options?: IFilterOption[];
@@ -81,4 +86,26 @@ export enum IFieldType {
   DATE = 'date',
   ENUMERATION = 'enumeration',
   BOOLEAN = 'boolean',
+}
+
+export interface IConditionTypeOption {
+  value: string;
+  label: string;
+}
+
+export interface IConditionOption {
+  label: string;
+  value: string;
+  text?: string;
+}
+
+export interface IAdvancedFilterPopover {
+  popoverProps?: IPopoverProps;
+  advancedFilterProps: IAdvancedFilterDropdown;
+  children: JSX.Element | JSX.Element[];
+}
+
+
+export interface IDynamicFilterCompatatorFieldProps {
+  dataType: string;
 }

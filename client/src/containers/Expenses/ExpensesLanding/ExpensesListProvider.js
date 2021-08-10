@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import { useExpenses, useResourceViews } from 'hooks/query';
-import { isTableEmptyStatus } from 'utils';
+import { useExpenses, useResourceMeta, useResourceViews } from 'hooks/query';
+import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
 
 const ExpensesListContext = createContext();
 
@@ -10,9 +10,8 @@ const ExpensesListContext = createContext();
  */
 function ExpensesListProvider({ query, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: expensesViews, isLoading: isViewsLoading } = useResourceViews(
-    'expenses',
-  );
+  const { data: expensesViews, isLoading: isViewsLoading } =
+    useResourceViews('expenses');
 
   // Fetches the expenses with pagination meta.
   const {
@@ -21,10 +20,20 @@ function ExpensesListProvider({ query, ...props }) {
     isFetching: isExpensesFetching,
   } = useExpenses(query, { keepPreviousData: true });
 
+  // Fetch the expenses resource fields.
+  const {
+    data: resourceMeta,
+    isLoading: isResourceMetaLoading,
+    isFetching: isResourceMetaFetching,
+  } = useResourceMeta('expenses');
+
   // Detarmines the datatable empty status.
-  const isEmptyStatus = isTableEmptyStatus({
-    data: expenses, pagination, filterMeta,
-  }) && !isExpensesFetching;
+  const isEmptyStatus =
+    isTableEmptyStatus({
+      data: expenses,
+      pagination,
+      filterMeta,
+    }) && !isExpensesFetching;
 
   // Provider payload.
   const provider = {
@@ -32,16 +41,21 @@ function ExpensesListProvider({ query, ...props }) {
     expenses,
     pagination,
 
+    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    resourceMeta,
+    isResourceMetaLoading,
+    isResourceMetaFetching,
+
     isViewsLoading,
     isExpensesLoading,
     isExpensesFetching,
 
-    isEmptyStatus
+    isEmptyStatus,
   };
 
   return (
     <DashboardInsider
-      loading={isViewsLoading || isExpensesLoading}
+      loading={isViewsLoading || isExpensesLoading || isResourceMetaLoading}
       name={'expenses'}
     >
       <ExpensesListContext.Provider value={provider} {...props} />
@@ -49,7 +63,6 @@ function ExpensesListProvider({ query, ...props }) {
   );
 }
 
-const useExpensesListContext = () =>
-  React.useContext(ExpensesListContext);
+const useExpensesListContext = () => React.useContext(ExpensesListContext);
 
 export { ExpensesListProvider, useExpensesListContext };

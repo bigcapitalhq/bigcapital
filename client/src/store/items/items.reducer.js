@@ -8,7 +8,7 @@ const initialState = {
   tableState: {
     pageSize: 12,
     pageIndex: 0,
-    filters: [],
+    filterRoles: [],
     inactiveMode: false,
   },
   selectedRows: [],

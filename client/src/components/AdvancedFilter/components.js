@@ -9,7 +9,7 @@ const DEBOUNCE_MS = 100;
  */
 export function useAdvancedFilterAutoSubmit() {
   const { submitForm, values } = useFormikContext();
-  const [isSubmit, setIsSubmit] = React.useState<boolean>(false);
+  const [isSubmit, setIsSubmit] = React.useState(false);
 
   const debouncedSubmit = React.useCallback(
     debounce(() => {

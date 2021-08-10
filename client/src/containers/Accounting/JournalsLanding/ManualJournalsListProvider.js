@@ -1,27 +1,36 @@
 import React, { createContext } from 'react';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import { useResourceViews, useJournals } from 'hooks/query';
-import { isTableEmptyStatus } from 'utils';
+import { useResourceViews, useResourceMeta, useJournals } from 'hooks/query';
+import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
 
 const ManualJournalsContext = createContext();
 
 function ManualJournalsListProvider({ query, ...props }) {
   // Fetches accounts resource views and fields.
-  const { data: journalsViews, isLoading: isViewsLoading } = useResourceViews(
-    'manual_journals',
-  );
+  const { data: journalsViews, isLoading: isViewsLoading } =
+    useResourceViews('manual_journals');
 
   // Fetches the manual journals transactions with pagination meta.
   const {
     data: { manualJournals, pagination, filterMeta },
     isLoading: isManualJournalsLoading,
-    isFetching: isManualJournalsFetching
+    isFetching: isManualJournalsFetching,
   } = useJournals(query, { keepPreviousData: true });
 
+  // Fetch the accounts resource fields.
+  const {
+    data: resourceMeta,
+    isLoading: isResourceMetaLoading,
+    isFetching: isResourceMetaFetching,
+  } = useResourceMeta('manual_journals');
+
   // Detarmines the datatable empty status.
-  const isEmptyStatus = isTableEmptyStatus({
-    data: manualJournals, pagination, filterMeta,
-  }) && !isManualJournalsFetching;
+  const isEmptyStatus =
+    isTableEmptyStatus({
+      data: manualJournals,
+      pagination,
+      filterMeta,
+    }) && !isManualJournalsFetching;
 
   // Global state.
   const state = {
@@ -29,15 +38,21 @@ function ManualJournalsListProvider({ query, ...props }) {
     pagination,
     journalsViews,
 
+    resourceMeta,
+    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+
     isManualJournalsLoading,
     isManualJournalsFetching,
     isViewsLoading,
 
-    isEmptyStatus
+    isEmptyStatus,
   };
 
+  const isPageLoading =
+    isManualJournalsLoading || isViewsLoading || isResourceMetaLoading;
+
   return (
-    <DashboardInsider loading={isViewsLoading} name={'manual-journals'}>
+    <DashboardInsider loading={isPageLoading} name={'manual-journals'}>
       <ManualJournalsContext.Provider value={state} {...props} />
     </DashboardInsider>
   );

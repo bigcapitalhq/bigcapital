@@ -71,7 +71,8 @@ export default {
       fieldType: 'text',
     },
     'status': {
-      label: 'Status',
+      name: 'Status',
+      type: 'enumeration',
       options: [
         { key: 'overdue', label: 'Overdue' },
         { key: 'unpaid', label: 'Unpaid' },

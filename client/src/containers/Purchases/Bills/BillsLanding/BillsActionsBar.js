@@ -3,24 +3,25 @@ import Icon from 'components/Icon';
 import {
   Button,
   Classes,
-  Popover,
   NavbarDivider,
   NavbarGroup,
-  PopoverInteractionKind,
-  Position,
   Intent,
   Alignment,
 } from '@blueprintjs/core';
 
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import { If, DashboardActionViewsList } from 'components';
+import {
+  If,
+  DashboardActionViewsList,
+  DashboardFilterButton,
+  AdvancedFilterPopover,
+} from 'components';
 
 import withBillsActions from './withBillsActions';
+import withBills from './withBills';
 import { useBillsListContext } from './BillsListProvider';
 import { useRefreshBills } from 'hooks/query/bills';
 import { compose } from 'utils';
@@ -31,6 +32,9 @@ import { compose } from 'utils';
 function BillActionsBar({
   // #withBillActions
   setBillsTableState,
+
+  // #withBills
+  billsConditionsRoles
 }) {
   const history = useHistory();
 
@@ -38,9 +42,7 @@ function BillActionsBar({
   const { refresh } = useRefreshBills();
 
   // Bills list context.
-  const { billsViews } = useBillsListContext();
-
-  const [filterCount] = useState(0);
+  const { billsViews, fields } = useBillsListContext();
 
   // Handle click a new bill.
   const handleClickNewBill = () => {
@@ -53,11 +55,8 @@ function BillActionsBar({
       customViewId: customView.id || null,
     });
   };
-
   // Handle click a refresh bills
-  const handleRefreshBtnClick = () => {
-    refresh();
-  };
+  const handleRefreshBtnClick = () => { refresh(); };
 
   return (
     <DashboardActionsBar>
@@ -74,24 +73,21 @@ function BillActionsBar({
           text={<T id={'new_bill'} />}
           onClick={handleClickNewBill}
         />
-        <Popover
-          minimal={true}
-          content={[]}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: billsConditionsRoles,
+            defaultFieldKey: 'bill_number',
+            fields: fields,
+            onFilterChange: (filterConditions) => {
+              setBillsTableState({ filterRoles: filterConditions });
+            },
+          }}
         >
-          <Button
-            className={classNames(Classes.MINIMAL)}
-            text={
-              true ? (
-                <T id={'filter'} />
-              ) : (
-                `${filterCount} ${intl.get('filters_applied')}`
-              )
-            }
-            icon={<Icon icon={'filter-16'} iconSize={16} />}
+          <DashboardFilterButton
+            conditionsCount={billsConditionsRoles.length}
           />
-        </Popover>
+        </AdvancedFilterPopover>
+
         <If condition={false}>
           <Button
             className={Classes.MINIMAL}
@@ -128,4 +124,9 @@ function BillActionsBar({
   );
 }
 
-export default compose(withBillsActions)(BillActionsBar);
+export default compose(
+  withBillsActions,
+  withBills(({ billsTableState }) => ({
+    billsConditionsRoles: billsTableState.filterRoles
+  }))
+)(BillActionsBar);

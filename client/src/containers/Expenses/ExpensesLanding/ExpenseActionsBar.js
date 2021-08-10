@@ -1,28 +1,31 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
   NavbarGroup,
   Classes,
   NavbarDivider,
-  Popover,
-  PopoverInteractionKind,
-  Position,
   Intent,
   Alignment,
 } from '@blueprintjs/core';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { FormattedMessage as T } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
-import { If, DashboardActionViewsList } from 'components';
+import {
+  If,
+  DashboardActionViewsList,
+  DashboardFilterButton,
+  AdvancedFilterPopover,
+} from 'components';
 
 import { useRefreshExpenses } from 'hooks/query/expenses';
 import { useExpensesListContext } from './ExpensesListProvider';
+
 import withExpensesActions from './withExpensesActions';
+import withExpenses from './withExpenses';
 
 import { compose } from 'utils';
 
@@ -32,14 +35,15 @@ import { compose } from 'utils';
 function ExpensesActionsBar({
   //#withExpensesActions
   setExpensesTableState,
-}) {
-  const [filterCount, setFilterCount] = useState(0);
 
+  // #withExpenses
+  expensesFilterConditions
+}) {
   // History context.
   const history = useHistory();
 
   // Expenses list context.
-  const { expensesViews } = useExpensesListContext();
+  const { expensesViews, fields } = useExpensesListContext();
 
   // Expenses refresh action.
   const { refresh } = useRefreshExpenses();
@@ -79,20 +83,20 @@ function ExpensesActionsBar({
           text={<T id={'new_expense'} />}
           onClick={onClickNewExpense}
         />
-        <Popover
-          minimal={true}
-          content={''}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: expensesFilterConditions,
+            defaultFieldKey: 'reference_no',
+            fields: fields,
+            onFilterChange: (filterConditions) => {
+              setExpensesTableState({ filterRoles: filterConditions });
+            },
+          }}
         >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--filter', {
-              'has-active-filters': filterCount > 0,
-            })}
-            text={<T id={'filter'} />}
-            icon={<Icon icon="filter-16" iconSize={16} />}
+          <DashboardFilterButton
+            conditionsCount={expensesFilterConditions.length}
           />
-        </Popover>
+        </AdvancedFilterPopover>
 
         <If condition={false}>
           <Button
@@ -134,4 +138,7 @@ function ExpensesActionsBar({
 export default compose(
   withDialogActions,
   withExpensesActions,
+  withExpenses(({ expensesTableState }) => ({
+    expensesFilterConditions: expensesTableState.filterRoles,
+  }))
 )(ExpensesActionsBar);

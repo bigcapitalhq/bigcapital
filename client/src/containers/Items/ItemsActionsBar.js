@@ -1,24 +1,23 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import classNames from 'classnames';
 import {
-  Popover,
   NavbarGroup,
   NavbarDivider,
-  PopoverInteractionKind,
-  Position,
   Button,
   Classes,
   Intent,
   Switch,
   Alignment,
 } from '@blueprintjs/core';
-import { Tooltip2 } from '@blueprintjs/popover2';
 import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
-import { If, DashboardActionViewsList } from 'components';
+import {
+  If,
+  DashboardActionViewsList,
+  AdvancedFilterPopover,
+  DashboardFilterButton,
+} from 'components';
 
 import { useItemsListContext } from './ItemsListProvider';
 import { useRefreshItems } from 'hooks/query/items';
@@ -35,6 +34,7 @@ import { compose } from 'utils';
 function ItemsActionsBar({
   // #withItems
   itemsSelectedRows,
+  itemsFilterRoles,
 
   // #withItemActions
   setItemsTableState,
@@ -44,7 +44,7 @@ function ItemsActionsBar({
   openAlert,
 }) {
   // Items list context.
-  const { itemsViews } = useItemsListContext();
+  const { itemsViews, fields } = useItemsListContext();
 
   // Items refresh action.
   const { refresh } = useRefreshItems();
@@ -93,19 +93,21 @@ function ItemsActionsBar({
           text={<T id={'new_item'} />}
           onClick={onClickNewItem}
         />
-        <NavbarDivider />
 
-        <Popover
-          content={''}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: itemsFilterRoles,
+            defaultFieldKey: 'name',
+            fields: fields,
+            onFilterChange: (filterConditions) => {
+              setItemsTableState({ filterRoles: filterConditions });
+            },
+          }}
         >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={`${intl.get('filter')}`}
-            icon={<Icon icon="filter-16" iconSize={16} />}
-          />
-        </Popover>
+          <DashboardFilterButton conditionsCount={itemsFilterRoles.length} />
+        </AdvancedFilterPopover>
+
+        <NavbarDivider />
 
         <If condition={itemsSelectedRows.length}>
           <Button
@@ -149,6 +151,7 @@ export default compose(
   withItems(({ itemsSelectedRows, itemsTableState }) => ({
     itemsSelectedRows,
     itemsInactiveMode: itemsTableState.inactiveMode,
+    itemsFilterRoles: itemsTableState.filterRoles,
   })),
   withItemsActions,
   withAlertActions,

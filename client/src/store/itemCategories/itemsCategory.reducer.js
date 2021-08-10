@@ -8,14 +8,16 @@ import t from 'store/types';
 
 // Initial state.
 const initialState = {
-  tableState: {},
+  tableState: {
+    filterRoles: []
+  },
 };
 
 const STORAGE_KEY = 'bigcapital:itemCategories';
 
 const CONFIG = {
   key: STORAGE_KEY,
-  whitelist: ['tableState'],
+  whitelist: [],
   storage,
 };
 

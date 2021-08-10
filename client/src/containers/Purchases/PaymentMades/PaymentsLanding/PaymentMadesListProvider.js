@@ -2,10 +2,10 @@ import React, { createContext } from 'react';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useResourceViews,
-  useResourceFields,
   usePaymentMades,
+  useResourceMeta
 } from 'hooks/query';
-import { isTableEmptyStatus } from 'utils';
+import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
 
 const PaymentMadesListContext = createContext();
 
@@ -21,9 +21,10 @@ function PaymentMadesListProvider({ query, ...props }) {
 
   // Fetch the accounts resource fields.
   const {
-    data: paymentMadesFields,
-    isLoading: isFieldsLoading,
-  } = useResourceFields('bill_payments');
+    data: resourceMeta,
+    isLoading: isResourceMetaLoading,
+    isFetching: isResourceMetaFetching,
+  } = useResourceMeta('bill_payments');
 
   // Fetch accounts list according to the given custom view id.
   const {
@@ -45,19 +46,22 @@ function PaymentMadesListProvider({ query, ...props }) {
     paymentMades,
     pagination,
     filterMeta,
-    paymentMadesFields,
     paymentMadesViews,
+
+    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    resourceMeta,
+    isResourceMetaLoading,
+    isResourceMetaFetching,
 
     isPaymentsLoading,
     isPaymentsFetching,
-    isFieldsLoading,
     isViewsLoading,
     isEmptyStatus
   };
 
   return (
     <DashboardInsider
-      loading={isViewsLoading || isFieldsLoading}
+      loading={isViewsLoading || isResourceMetaLoading}
       name={'payment-mades-list'}
     >
       <PaymentMadesListContext.Provider value={provider} {...props} />

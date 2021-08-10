@@ -1,8 +1,8 @@
 import React, { createContext } from 'react';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import { useResourceViews, useCustomers } from 'hooks/query';
-import { isTableEmptyStatus } from 'utils';
+import { useResourceMeta, useResourceViews, useCustomers } from 'hooks/query';
+import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
 import { transformCustomersStateToQuery } from './utils';
 
 const CustomersListContext = createContext();
@@ -12,10 +12,15 @@ function CustomersListProvider({ tableState, ...props }) {
   const tableQuery = transformCustomersStateToQuery(tableState);
 
   // Fetch customers resource views and fields.
+  const { data: customersViews, isLoading: isViewsLoading } =
+    useResourceViews('customers');
+
+  // Fetch the customers resource fields.
   const {
-    data: customersViews,
-    isLoading: isCustomersViewsLoading,
-  } = useResourceViews('customers');
+    data: resourceMeta,
+    isLoading: isResourceMetaLoading,
+    isFetching: isResourceMetaFetching,
+  } = useResourceMeta('customers');
 
   // Fetches customers data with pagination meta.
   const {
@@ -25,16 +30,26 @@ function CustomersListProvider({ tableState, ...props }) {
   } = useCustomers(tableQuery, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus = isTableEmptyStatus({
-    data: customers, pagination, filterMeta,
-  }) && !isCustomersFetching && !tableState.inactiveMode;
+  const isEmptyStatus =
+    isTableEmptyStatus({
+      data: customers,
+      pagination,
+      filterMeta,
+    }) &&
+    !isCustomersFetching &&
+    !tableState.inactiveMode;
 
   const state = {
     customersViews,
     customers,
     pagination,
 
-    isCustomersViewsLoading,
+    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    resourceMeta,
+    isResourceMetaLoading,
+    isResourceMetaFetching,
+
+    isViewsLoading,
     isCustomersLoading,
     isCustomersFetching,
 
@@ -42,7 +57,10 @@ function CustomersListProvider({ tableState, ...props }) {
   };
 
   return (
-    <DashboardInsider loading={isCustomersViewsLoading} name={'customers-list'}>
+    <DashboardInsider
+      loading={isViewsLoading || isResourceMetaLoading || isCustomersLoading}
+      name={'customers-list'}
+    >
       <CustomersListContext.Provider value={state} {...props} />
     </DashboardInsider>
   );

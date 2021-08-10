@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import { useResourceViews, useResourceFields, useInvoices } from 'hooks/query';
-import { isTableEmptyStatus } from 'utils';
+import { useResourceViews, useResourceMeta, useInvoices } from 'hooks/query';
+import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
 
 const InvoicesListContext = createContext();
 
@@ -10,15 +10,15 @@ const InvoicesListContext = createContext();
  */
 function InvoicesListProvider({ query, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: invoicesViews, isLoading: isViewsLoading } = useResourceViews(
-    'sale_invoices',
-  );
+  const { data: invoicesViews, isLoading: isViewsLoading } =
+    useResourceViews('sale_invoices');
 
   // Fetch the accounts resource fields.
   const {
-    data: invoicesFields,
-    isLoading: isFieldsLoading,
-  } = useResourceFields('sale_invoices');
+    data: resourceMeta,
+    isLoading: isResourceLoading,
+    isFetching: isResourceFetching,
+  } = useResourceMeta('sale_invoices');
 
   // Fetch accounts list according to the given custom view id.
   const {
@@ -39,20 +39,22 @@ function InvoicesListProvider({ query, ...props }) {
   const provider = {
     invoices,
     pagination,
-    invoicesFields,
+
+    invoicesFields: getFieldsFromResourceMeta(resourceMeta.fields),
     invoicesViews,
 
     isInvoicesLoading,
     isInvoicesFetching,
-    isFieldsLoading,
+    isResourceFetching,
+    isResourceLoading,
     isViewsLoading,
 
-    isEmptyStatus
+    isEmptyStatus,
   };
 
   return (
     <DashboardInsider
-      loading={isViewsLoading || isFieldsLoading}
+      loading={isViewsLoading || isResourceLoading}
       name={'sales-invoices-list'}
     >
       <InvoicesListContext.Provider value={provider} {...props} />

@@ -1,21 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
   Classes,
-  Popover,
   NavbarDivider,
   NavbarGroup,
-  PopoverInteractionKind,
-  Position,
   Intent,
   Alignment,
 } from '@blueprintjs/core';
-
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
+import {
+  FormattedMessage as T,
+  AdvancedFilterPopover,
+  DashboardFilterButton,
+} from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
@@ -23,7 +21,9 @@ import { If, DashboardActionViewsList } from 'components';
 
 import { useRefreshInvoices } from 'hooks/query/invoices';
 import { useInvoicesListContext } from './InvoicesListProvider';
+
 import withInvoiceActions from './withInvoiceActions';
+import withInvoices from './withInvoices';
 
 import { compose } from 'utils';
 
@@ -33,13 +33,14 @@ import { compose } from 'utils';
 function InvoiceActionsBar({
   // #withInvoiceActions
   setInvoicesTableState,
+
+  // #withInvoices
+  invoicesFilterRoles,
 }) {
   const history = useHistory();
 
-  const [filterCount, setFilterCount] = useState(0);
-
   // Sale invoices list context.
-  const { invoicesViews } = useInvoicesListContext();
+  const { invoicesViews, invoicesFields } = useInvoicesListContext();
 
   // Handle new invoice button click.
   const handleClickNewInvoice = () => {
@@ -74,31 +75,27 @@ function InvoiceActionsBar({
           text={<T id={'new_invoice'} />}
           onClick={handleClickNewInvoice}
         />
-        <Popover
-          minimal={true}
-          // content={filterDropdown}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: invoicesFilterRoles,
+            defaultFieldKey: 'invoice_no',
+            fields: invoicesFields,
+            onFilterChange: (filterConditions) => {
+              setInvoicesTableState({ filterRoles: filterConditions });
+            },
+          }}
         >
-          <Button
-            className={classNames(Classes.MINIMAL)}
-            text={
-              filterCount <= 0 ? (
-                <T id={'filter'} />
-              ) : (
-                `${filterCount} ${intl.get('filters_applied')}`
-              )
-            }
-            icon={<Icon icon={'filter-16'} iconSize={16} />}
-          />
-        </Popover>
+          <DashboardFilterButton conditionsCount={invoicesFilterRoles.length} />
+        </AdvancedFilterPopover>
+
+        <NavbarDivider />
+
         <If condition={false}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
-            // onClick={handleBulkDelete}
           />
         </If>
         <Button
@@ -128,4 +125,9 @@ function InvoiceActionsBar({
   );
 }
 
-export default compose(withInvoiceActions)(InvoiceActionsBar);
+export default compose(
+  withInvoiceActions,
+  withInvoices(({ invoicesTableState }) => ({
+    invoicesFilterRoles: invoicesTableState.filterRoles,
+  })),
+)(InvoiceActionsBar);

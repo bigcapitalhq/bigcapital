@@ -1,31 +1,50 @@
 import React, { createContext } from 'react';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import { useItemsCategories } from 'hooks/query';
+import { useItemsCategories, useResourceMeta } from 'hooks/query';
+import { transformTableStateToQuery, getFieldsFromResourceMeta } from 'utils';
 
 const ItemsCategoriesContext = createContext();
 
 /**
  * Items categories provider.
  */
-function ItemsCategoriesProvider({ query, ...props }) {
+function ItemsCategoriesProvider({ tableState, ...props }) {
+  // Transformes the table state to query.
+  const query = transformTableStateToQuery(tableState);
+
+  // Items categories list.
   const {
     data: { itemsCategories, pagination },
     isFetching: isCategoriesFetching,
     isLoading: isCategoriesLoading,
-  } = useItemsCategories();
+  } = useItemsCategories(query, { keepPreviousData: true });
+
+  // Fetch the accounts resource fields.
+  const {
+    data: resourceMeta,
+    isLoading: isResourceLoading,
+    isFetching: isResourceFetching,
+  } = useResourceMeta('item_category');
 
   const state = {
     isCategoriesFetching,
     isCategoriesLoading,
 
+    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    resourceMeta,
+    isResourceLoading,
+    isResourceFetching,
+
     itemsCategories,
     pagination,
-
     query,
   };
 
   return (
-    <DashboardInsider name={'items-categories-list'}>
+    <DashboardInsider
+      isLoading={isResourceLoading}
+      name={'items-categories-list'}
+    >
       <ItemsCategoriesContext.Provider value={state} {...props} />
     </DashboardInsider>
   );
@@ -34,7 +53,4 @@ function ItemsCategoriesProvider({ query, ...props }) {
 const useItemsCategoriesContext = () =>
   React.useContext(ItemsCategoriesContext);
 
-export {
-  ItemsCategoriesProvider,
-  useItemsCategoriesContext,
-};
+export { ItemsCategoriesProvider, useItemsCategoriesContext };

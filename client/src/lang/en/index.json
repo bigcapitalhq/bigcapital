@@ -435,7 +435,7 @@
   "once_delete_these_customers_you_will_not_able_restore_them": "Once you delete these customers, you won't be able to retrieve them later. Are you sure you want to delete them?",
   "after": "After",
   "before": "Before",
-  "count_filters_applied": "{count} filters applied",
+  "count_filters_applied": "{count} Filters applied",
   "is": "Is",
   "is_not": "Is Not",
   "create_a_new_view": "Create a new view",
@@ -1194,5 +1194,8 @@
   "are_sure_to_activate_this_contact": "Are you sure you want to activate this contact ? You will be able to inactivate it later",
   "publish_adjustment": "Publish adjustment",
   "inactivate_customer": "Inactivate customer",
-  "activate_customer": "Activate customer"
+  "activate_customer": "Activate customer",
+  "filter.all_filters_must_match": "Atleast one filter must match",
+  "filter.atleast_one_filter_must_match": "Atleast one filter must match",
+  "filter.when": "When"
 }

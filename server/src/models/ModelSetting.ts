@@ -26,8 +26,8 @@ export default (Model) =>
      * @param {string} key
      * @returns
      */
-    public static getMeta(key: string) {
-      return get(this.meta, key);
+    public static getMeta(key?: string) {
+      return key ? get(this.meta, key): this.meta; 
     }
 
     /**

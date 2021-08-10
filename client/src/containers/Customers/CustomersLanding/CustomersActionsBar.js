@@ -1,23 +1,24 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   NavbarGroup,
   NavbarDivider,
   Button,
   Classes,
   Intent,
-  Popover,
-  Position,
-  PopoverInteractionKind,
   Switch,
   Alignment,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import { If, Icon, DashboardActionViewsList } from 'components';
+import {
+  If,
+  Icon,
+  DashboardActionViewsList,
+  AdvancedFilterPopover,
+  DashboardFilterButton,
+} from 'components';
 
 import { useCustomersListContext } from './CustomersListProvider';
 import { useRefreshCustomers } from 'hooks/query/customers';
@@ -34,6 +35,7 @@ import { compose } from 'utils';
 function CustomerActionsBar({
   // #withCustomers
   customersSelectedRows = [],
+  customersFilterConditions,
 
   // #withCustomersActions
   setCustomersTableState,
@@ -46,7 +48,7 @@ function CustomerActionsBar({
   const history = useHistory();
 
   // Customers list context.
-  const { customersViews } = useCustomersListContext();
+  const { customersViews, fields } = useCustomersListContext();
 
   // Customers refresh action.
   const { refresh } = useRefreshCustomers();
@@ -72,9 +74,7 @@ function CustomerActionsBar({
   };
 
   // Handle click a refresh customers
-  const handleRefreshBtnClick = () => {
-    refresh();
-  };
+  const handleRefreshBtnClick = () => { refresh(); };
 
   return (
     <DashboardActionsBar>
@@ -93,17 +93,21 @@ function CustomerActionsBar({
           onClick={onClickNewCustomer}
         />
         <NavbarDivider />
-        <Popover
-          // content={filterDropdown}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
+
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: customersFilterConditions,
+            defaultFieldKey: 'display_name',
+            fields: fields,
+            onFilterChange: (filterConditions) => {
+              setCustomersTableState({ filterRoles: filterConditions });
+            },
+          }}
         >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={`${intl.get('filter')}`}
-            icon={<Icon icon="filter-16" iconSize={16} />}
+          <DashboardFilterButton
+            conditionsCount={customersFilterConditions.length}
           />
-        </Popover>
+        </AdvancedFilterPopover>
 
         <If condition={customersSelectedRows.length}>
           <Button
@@ -146,6 +150,7 @@ export default compose(
   withCustomers(({ customersSelectedRows, customersTableState }) => ({
     customersSelectedRows,
     accountsInactiveMode: customersTableState.inactiveMode,
+    customersFilterConditions: customersTableState.filterRoles,
   })),
   withAlertActions,
 )(CustomerActionsBar);

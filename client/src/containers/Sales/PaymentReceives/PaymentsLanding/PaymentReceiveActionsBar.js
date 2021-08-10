@@ -3,18 +3,18 @@ import Icon from 'components/Icon';
 import {
   Button,
   Classes,
-  Popover,
   NavbarDivider,
   NavbarGroup,
-  PopoverInteractionKind,
-  Position,
   Intent,
   Alignment,
 } from '@blueprintjs/core';
 
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'components';
+import {
+  DashboardFilterButton,
+  AdvancedFilterPopover,
+  FormattedMessage as T,
+} from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
@@ -33,12 +33,15 @@ import { useRefreshPaymentReceive } from 'hooks/query/paymentReceives';
 function PaymentReceiveActionsBar({
   // #withPaymentReceivesActions
   setPaymentReceivesTableState,
+
+  // #withPaymentReceives
+  paymentFilterConditions
 }) {
   // History context.
   const history = useHistory();
 
   // Payment receives list context.
-  const { paymentReceivesViews } = usePaymentReceivesListContext();
+  const { paymentReceivesViews, fields } = usePaymentReceivesListContext();
 
   // Handle new payment button click.
   const handleClickNewPaymentReceive = () => {
@@ -58,6 +61,8 @@ function PaymentReceiveActionsBar({
     refresh();
   };
 
+  console.log(fields, 'fields');
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -73,18 +78,21 @@ function PaymentReceiveActionsBar({
           text={<T id={'new_payment_receive'} />}
           onClick={handleClickNewPaymentReceive}
         />
-        <Popover
-          minimal={true}
-          // content={filterDropdown}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: paymentFilterConditions,
+            defaultFieldKey: 'payment_receive_no',
+            fields: fields,
+            onFilterChange: (filterConditions) => {
+              setPaymentReceivesTableState({ filterRoles: filterConditions });
+            },
+          }}
         >
-          <Button
-            className={classNames(Classes.MINIMAL)}
-            text={<T id={'filter'} />}
-            icon={<Icon icon={'filter-16'} iconSize={16} />}
+          <DashboardFilterButton
+            conditionsCount={paymentFilterConditions.length}
           />
-        </Popover>
+        </AdvancedFilterPopover>
+
         <If condition={false}>
           <Button
             className={Classes.MINIMAL}
@@ -125,5 +133,6 @@ export default compose(
   withPaymentReceivesActions,
   withPaymentReceives(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
+    paymentFilterConditions: paymentReceivesTableState.filterRoles,
   })),
 )(PaymentReceiveActionsBar);

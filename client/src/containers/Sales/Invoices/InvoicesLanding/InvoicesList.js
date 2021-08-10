@@ -11,6 +11,7 @@ import InvoicesDataTable from './InvoicesDataTable';
 import InvoicesAlerts from '../InvoicesAlerts';
 
 import withInvoices from './withInvoices';
+import withInvoiceActions from './withInvoiceActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 
 import { transformTableStateToQuery, compose } from 'utils';
@@ -21,7 +22,22 @@ import { transformTableStateToQuery, compose } from 'utils';
 function InvoicesList({
   // #withInvoice
   invoicesTableState,
+
+  // #withInvoicesActions
+  setInvoicesTableState
 }) {
+  // Resets the invoices table state once the page unmount.
+  React.useEffect(
+    () => () => {
+      setInvoicesTableState({
+        filterRoles: [],
+        viewSlug: '',
+        pageIndex: 0,
+      });
+    },
+    [setInvoicesTableState],
+  );
+
   return (
     <InvoicesListProvider
       query={transformTableStateToQuery(invoicesTableState)}
@@ -43,5 +59,6 @@ function InvoicesList({
 
 export default compose(
   withInvoices(({ invoicesTableState }) => ({ invoicesTableState })),
+  withInvoiceActions,
   withAlertsActions,
 )(InvoicesList);

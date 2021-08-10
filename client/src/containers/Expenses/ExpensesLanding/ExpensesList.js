@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import 'style/pages/Expense/List.scss';
 
@@ -10,6 +10,7 @@ import ExpenseDataTable from './ExpenseDataTable';
 import ExpensesAlerts from '../ExpensesAlerts';
 
 import withExpenses from './withExpenses';
+import withExpensesActions from './withExpensesActions';
 
 import { compose, transformTableStateToQuery } from 'utils';
 import { ExpensesListProvider } from './ExpensesListProvider';
@@ -20,7 +21,22 @@ import { ExpensesListProvider } from './ExpensesListProvider';
 function ExpensesList({
   // #withExpenses
   expensesTableState,
+
+  // #withExpensesActions
+  setExpensesTableState,
 }) {
+  // Resets the accounts table state once the page unmount.
+  useEffect(
+    () => () => {
+      setExpensesTableState({
+        filterRoles: [],
+        viewSlug: '',
+        pageIndex: 0,
+      });
+    },
+    [setExpensesTableState],
+  );
+
   return (
     <ExpensesListProvider
       query={transformTableStateToQuery(expensesTableState)}
@@ -42,4 +58,5 @@ function ExpensesList({
 
 export default compose(
   withExpenses(({ expensesTableState }) => ({ expensesTableState })),
+  withExpensesActions,
 )(ExpensesList);

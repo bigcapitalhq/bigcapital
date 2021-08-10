@@ -62,6 +62,10 @@ import Card from './Card';
 import { ItemsMultiSelect } from './Items';
 
 export * from './Menu';
+export * from './AdvancedFilter/AdvancedFilterDropdown';
+export * from './AdvancedFilter/AdvancedFilterPopover';
+export * from './Dashboard/DashboardFilterButton';
+export * from './Dashboard/DashboardRowsHeightButton';
 
 const Hint = FieldHint;
 
