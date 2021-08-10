@@ -123,12 +123,12 @@ $dashboard-views-bar-height: 44px;
 
     a {
       margin: auto 0;
-       /*!rtl:ignore*/
+      /*!rtl:ignore*/
       direction: ltr;
     }
   }
 
-  &__organization-name{
+  &__organization-name {
     font-size: 14px;
     font-weight: 400;
     color: #818ca9;
@@ -140,7 +140,7 @@ $dashboard-views-bar-height: 44px;
   &__actions-bar {
     border-bottom: 2px solid #e1e2e8;
 
-    .bp3-navbar-divider{
+    .bp3-navbar-divider {
       border-left-color: rgb(199, 214, 219);
     }
 
@@ -216,23 +216,23 @@ $dashboard-views-bar-height: 44px;
         }
       }
 
-      .bp3-control.bp3-switch{
+      .bp3-control.bp3-switch {
         margin-bottom: 0;
         margin-left: 8px;
         color: #3d3b53;
 
-        .bp3-control-indicator{
+        .bp3-control-indicator {
           height: 16px;
           min-width: 1.8em;
         }
 
-        .bp3-control-indicator::before{
+        .bp3-control-indicator::before {
           box-shadow: 0 0 0;
         }
-        input ~ .bp3-control-indicator{
+        input ~ .bp3-control-indicator {
           background: rgba(167, 182, 194, 0.55);
         }
-        input:checked ~ .bp3-control-indicator{
+        input:checked ~ .bp3-control-indicator {
           background: #0069ff;
         }
       }
@@ -257,7 +257,6 @@ $dashboard-views-bar-height: 44px;
       margin: 0;
     }
     h3 {
-      
     }
 
     .button--view-edit {
@@ -322,19 +321,19 @@ $dashboard-views-bar-height: 44px;
     }
   }
 
-  &__page{
+  &__page {
     display: flex;
     flex-direction: column;
     flex: 1 0 0;
   }
 
-  &__fallback-loading{
+  &__fallback-loading {
     display: flex;
     flex-direction: column;
     height: 100%;
     background-color: #fbfbfb;
 
-    .bp3-spinner{
+    .bp3-spinner {
       margin: auto;
     }
   }
@@ -508,16 +507,16 @@ $dashboard-views-bar-height: 44px;
   height: $dashboard-views-bar-height;
   padding: 0 20px;
 
-  .bp3-navbar-group{
+  .bp3-navbar-group {
     height: $dashboard-views-bar-height;
   }
 
-  .bp3-tab[aria-selected="true"]{
+  .bp3-tab[aria-selected='true'] {
     box-shadow: inset 0 -2px 0 #0052cc;
   }
 }
 
-.navbar-omnibar {
+.navbar--omnibar {
   -webkit-filter: blur(0);
   filter: blur(0);
   opacity: 1;
@@ -528,7 +527,11 @@ $dashboard-views-bar-height: 44px;
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 4px 8px rgba(16, 22, 26, 0.2),
     0 18px 46px 6px rgba(16, 22, 26, 0.2);
   background-color: #fff;
-  width: 500px;
+  width: 600px;
+
+  .bp3-input {
+    padding-left: 40px !important;
+  }
 }
 
 .menu--logged-user-dropdown {
@@ -539,5 +542,3 @@ $dashboard-views-bar-height: 44px;
     }
   }
 }
-
-

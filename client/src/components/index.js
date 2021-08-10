@@ -58,6 +58,7 @@ import AccountsSuggestField from './AccountsSuggestField';
 import MaterialProgressBar from './MaterialProgressBar';
 import { MoneyFieldCell } from './DataTableCells';
 import Card from './Card';
+import UniversalSearch from './UniversalSearch';
 
 import { ItemsMultiSelect } from './Items';
 
@@ -135,5 +136,6 @@ export {
   MaterialProgressBar,
   MoneyFieldCell,
   ItemsMultiSelect,
-  Card
+  Card,
+  UniversalSearch,
 };
