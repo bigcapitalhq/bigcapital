@@ -1,101 +1,149 @@
 // IONIC DEFAULT THEME COLORS
-$colors: (
-  primary:    #387ef5,
-  secondary:  #32db64,
-  danger:     #f53d3d,
-  light:      #f4f4f4,
-  dark:       #222
-);
+$colors: (primary: #387ef5,
+  secondary: #32db64,
+  danger: #f53d3d,
+  light: #f4f4f4,
+  dark: #222);
 
-// https://css-tricks.com/html5-progress-element/
-.progress, progress[value] {
-  width:              100%;
-  border:             none;
-  margin:             5px 0;
-  height:             5px;
-  display:            block;
-  appearance:         none;
+.progress,
+progress[value] {
+  width: 100%;
+  border: none;
+  margin: 5px 0;
+  height: 5px;
+  display: block;
+  appearance: none;
   -webkit-appearance: none;
+
   &::-webkit-progress-bar {
-    background-color: lighten( map-get($colors, primary), 35% );
+    background-color: lighten(map-get($colors, primary), 35%);
   }
+
   &::-webkit-progress-value {
     background-color: map-get($colors, primary);
   }
 }
 
-// http://materializecss.com/preloader.html
-// https://github.com/Dogfalo/materialize/blob/master/dist/css/materialize.css
 .progress-materializecss {
   position: absolute;
   top: -1px;
   height: 2px;
   display: block;
   width: 100%;
-  background-color:  transparent;
+  background-color: transparent;
   margin: 0;
   overflow: hidden;
-  
+
   .indeterminate {
     background-color: #002fff;
-    
-    &:before{
+
+    &:before {
       content: '';
       position: absolute;
       background-color: inherit;
       top: 0;
       left: 0;
       bottom: 0;
-      will-change:      left, right;
-      animation:        indeterminate 3.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+      animation: indeterminate-left 3.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+      will-change: left, right;
+
+      [dir="rtl"] & {
+        animation: indeterminate-right 3.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+      }
     }
+
     &:after {
-      content:          '';
-      position:         absolute;
+      content: '';
+      position: absolute;
       background-color: inherit;
-      top:              0;
-      left:             0;
-      bottom:           0;
-      will-change:      left, right;
-      animation:        indeterminate-short 3.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      will-change: left, right;
+      animation: indeterminate-short-left 3.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
       animation-delay: 2.15s;
+
+      [dir="rtl"] & {
+        animation: indeterminate-short-right 3.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+      }
     }
   }
 }
 
-@keyframes indeterminate {
+@keyframes indeterminate-left {
   0% {
     left: -35%;
     right: 100%;
   }
+
   60% {
     left: 100%;
     right: -90%;
   }
+
   100% {
     left: 100%;
     right: -90%;
   }
 }
 
-@keyframes indeterminate-short {
+@keyframes indeterminate-short-left {
   0% {
     left: -200%;
     right: 100%;
   }
+
   60% {
     left: 107%;
     right: -8%;
   }
+
   100% {
     left: 107%;
     right: -8%;
   }
 }
-.progress-container{
+
+
+@keyframes indeterminate-right {
+  0% {
+    right: -35%;
+    left: 100%;
+  }
+
+  60% {
+    right: 100%;
+    left: -90%;
+  }
+
+  100% {
+    right: 100%;
+    left: -90%;
+  }
+}
+
+@keyframes indeterminate-short-right {
+  0% {
+    right: -200%;
+    left: 100%;
+  }
+
+  60% {
+    right: 107%;
+    left: -8%;
+  }
+
+  100% {
+    right: 107%;
+    left: -8%;
+  }
+}
+
+.progress-container {
   width: 100%;
   position: relative;
 
 }
+
 //  IRRELEVANTS STYLES  //
 /////////////////////////
