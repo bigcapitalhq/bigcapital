@@ -162,6 +162,13 @@ export default {
     }
   },
 
+  /**
+   * Puppeteer remote browserless connection.
+   */
+  puppeteer: {
+    browserWSEndpoint: process.env.BROWSER_WS_ENDPOINT,
+  },
+
   protocol: '',
   hostname: '',
   scheduleComputeItemCost: 'in 5 seconds'

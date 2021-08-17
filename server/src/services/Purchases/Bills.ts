@@ -35,6 +35,7 @@ import JournalPosterService from 'services/Sales/JournalPosterService';
 import VendorsService from 'services/Contacts/VendorsService';
 import { ERRORS } from './constants';
 import EntriesService from 'services/Entries';
+import PurchaseInvoiceTransfromer from './PurchaseInvoices/PurchaseInvoiceTransformer';
 
 /**
  * Vendor bills services.
@@ -77,6 +78,9 @@ export default class BillsService
 
   @Inject()
   entriesService: EntriesService;
+
+  @Inject()
+  purchaseInvoiceTransformer: PurchaseInvoiceTransfromer;
 
   /**
    * Validates whether the vendor is exist.
@@ -568,7 +572,7 @@ export default class BillsService
       .pagination(filter.page - 1, filter.pageSize);
 
     return {
-      bills: results,
+      bills: this.purchaseInvoiceTransformer.transform(results),
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };
@@ -616,7 +620,7 @@ export default class BillsService
     if (!bill) {
       throw new ServiceError(ERRORS.BILL_NOT_FOUND);
     }
-    return bill;
+    return this.purchaseInvoiceTransformer.transform(bill);
   }
 
   /**

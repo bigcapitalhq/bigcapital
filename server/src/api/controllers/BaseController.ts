@@ -111,8 +111,6 @@ export default class BaseController {
     return response;
   }
 
-  
-
   /**
    * Async middleware.
    * @param {function} callback
@@ -128,5 +126,15 @@ export default class BaseController {
    */
   protected accepts(req) {
     return accepts(req);
+  }
+
+  /**
+   * 
+   * @param {Request} req 
+   * @param {string[]} types 
+   * @returns {string}
+   */
+  protected acceptTypes(req: Request, types: string[])  {
+    return this.accepts(req).types(types);
   }
 }

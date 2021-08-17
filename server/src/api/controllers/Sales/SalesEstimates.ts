@@ -7,7 +7,12 @@ import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from 'exceptions';
+import SaleEstimatesPdfService from 'services/Sales/Estimates/SaleEstimatesPdf';
 
+const ACCEPT_TYPE = {
+  APPLICATION_PDF: 'application/pdf',
+  APPLICATION_JSON: 'application/json',
+};
 @Service()
 export default class SalesEstimatesController extends BaseController {
   @Inject()
@@ -15,6 +20,9 @@ export default class SalesEstimatesController extends BaseController {
 
   @Inject()
   dynamicListService: DynamicListingService;
+
+  @Inject()
+  saleEstimatesPdf: SaleEstimatesPdfService;
 
   /**
    * Router constructor.
@@ -135,7 +143,7 @@ export default class SalesEstimatesController extends BaseController {
       query('sort_order').optional().isIn(['desc', 'asc']),
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
-      query('search_keyword').optional({ nullable: true }).isString().trim()
+      query('search_keyword').optional({ nullable: true }).isString().trim(),
     ];
   }
 
@@ -292,8 +300,25 @@ export default class SalesEstimatesController extends BaseController {
         tenantId,
         estimateId
       );
-
-      return res.status(200).send({ estimate });
+      // Response formatter.
+      res.format({
+        // PDF content type.
+        [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
+          const pdfContent = await this.saleEstimatesPdf.saleEstimatePdf(
+            tenantId,
+            estimate
+          );
+          res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Length': pdfContent.length,
+          });
+          res.send(pdfContent);
+        },
+        // JSON content type.
+        default: () => {
+          return res.status(200).send(this.transfromToResponse({ estimate }));
+        },
+      });
     } catch (error) {
       next(error);
     }
@@ -318,10 +343,16 @@ export default class SalesEstimatesController extends BaseController {
       const { salesEstimates, pagination, filterMeta } =
         await this.saleEstimateService.estimatesList(tenantId, filter);
 
-      return res.status(200).send({
-        sales_estimates: this.transfromToResponse(salesEstimates),
-        pagination,
-        filter_meta: this.transfromToResponse(filterMeta),
+      res.format({
+        [ACCEPT_TYPE.APPLICATION_JSON]: () => {
+          return res.status(200).send(
+            this.transfromToResponse({
+              salesEstimates,
+              pagination,
+              filterMeta,
+            })
+          );
+        },
       });
     } catch (error) {
       next(error);

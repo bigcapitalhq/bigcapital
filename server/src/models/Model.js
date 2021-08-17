@@ -1,5 +1,5 @@
 import { Model, mixin } from 'objection';
-import { snakeCase } from 'lodash';
+import { snakeCase, transform } from 'lodash';
 import { mapKeysDeep } from 'utils';
 import PaginationQueryBuilder from 'models/Pagination';
 import DateSession from 'models/DateSession';
@@ -46,5 +46,10 @@ export default class ModelBase extends mixin(Model, [DateSession]) {
 
   static relationBindKnex(model) {
     return this.knexBinded ? model.bindKnex(this.knexBinded) : model;
+  }
+
+  toObject(opt) {
+    const parsedJson = super.$formatJson(this, opt);
+    return parsedJson;
   }
 }

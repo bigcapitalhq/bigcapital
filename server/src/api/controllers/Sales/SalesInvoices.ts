@@ -8,7 +8,12 @@ import ItemsService from 'services/Items/ItemsService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from 'exceptions';
 import { ISaleInvoiceDTO, ISaleInvoiceCreateDTO } from 'interfaces';
+import SaleInvoicePdf from 'services/Sales/SaleInvoicePdf';
 
+const ACCEPT_TYPE = {
+  APPLICATION_PDF: 'application/pdf',
+  APPLICATION_JSON: 'application/json',
+};
 @Service()
 export default class SaleInvoicesController extends BaseController {
   @Inject()
@@ -19,6 +24,9 @@ export default class SaleInvoicesController extends BaseController {
 
   @Inject()
   dynamicListService: DynamicListingService;
+
+  @Inject()
+  saleInvoicePdf: SaleInvoicePdf;
 
   /**
    * Router constructor.
@@ -254,8 +262,8 @@ export default class SaleInvoicesController extends BaseController {
 
   /**
    * Retrieve the sale invoice with associated entries.
-   * @param {Request} req
-   * @param {Response} res
+   * @param {Request} req - Request object.
+   * @param {Response} res - Response object.
    */
   async getSaleInvoice(req: Request, res: Response, next: NextFunction) {
     const { id: saleInvoiceId } = req.params;
@@ -267,7 +275,25 @@ export default class SaleInvoicesController extends BaseController {
         saleInvoiceId,
         user
       );
-      return res.status(200).send({ sale_invoice: saleInvoice });
+      // Response formatter.
+      res.format({
+        // PDF content type.
+        [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
+          const pdfContent = await this.saleInvoicePdf.saleInvoicePdf(
+            tenantId,
+            saleInvoice
+          );
+          res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Length': pdfContent.length,
+          });
+          res.send(pdfContent);
+        },
+        // JSON content type.
+        [ACCEPT_TYPE.APPLICATION_JSON]: () => {
+          return res.status(200).send(this.transfromToResponse({ saleInvoice }));
+        },
+      });
     } catch (error) {
       next(error);
     }
@@ -296,7 +322,7 @@ export default class SaleInvoicesController extends BaseController {
         await this.saleInvoiceService.salesInvoicesList(tenantId, filter);
 
       return res.status(200).send({
-        sales_invoices: salesInvoices,
+        sales_invoices: this.transfromToResponse(salesInvoices),
         pagination: this.transfromToResponse(pagination),
         filter_meta: this.transfromToResponse(filterMeta),
       });

@@ -3,6 +3,7 @@ import { check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import SaleReceiptService from 'services/Sales/SalesReceipts';
+import SaleReceiptsPdfService from 'services/Sales/Receipts/SaleReceiptsPdfService';
 import BaseController from '../BaseController';
 import { ISaleReceiptDTO } from 'interfaces/SaleReceipt';
 import { ServiceError } from 'exceptions';
@@ -12,6 +13,9 @@ import DynamicListingService from 'services/DynamicListing/DynamicListService';
 export default class SalesReceiptsController extends BaseController {
   @Inject()
   saleReceiptService: SaleReceiptService;
+
+  @Inject()
+  saleReceiptsPdf: SaleReceiptsPdfService;
 
   @Inject()
   dynamicListService: DynamicListingService;
@@ -239,17 +243,13 @@ export default class SalesReceiptsController extends BaseController {
     };
 
     try {
-      const {
-        salesReceipts,
-        pagination,
-        filterMeta,
-      } = await this.saleReceiptService.salesReceiptsList(tenantId, filter);
+      const { salesReceipts, pagination, filterMeta } =
+        await this.saleReceiptService.salesReceiptsList(tenantId, filter);
 
-      return res.status(200).send({
-        sale_receipts: salesReceipts,
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
+      const response = this.transfromToResponse({
+        salesReceipts, pagination, filterMeta
       });
+      return res.status(200).send(response);
     } catch (error) {
       next(error);
     }
@@ -271,9 +271,22 @@ export default class SalesReceiptsController extends BaseController {
         saleReceiptId
       );
 
-      return res.status(200).send({
-        sale_receipt: saleReceipt,
-      });
+      res.format({
+        'application/pdf': async () => {
+          const pdfContent = await this.saleReceiptsPdf.saleReceiptPdf(
+            tenantId,
+            saleReceipt
+          );
+          res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Length': pdfContent.length,
+          });
+          res.send(pdfContent);
+        },
+        'application/json': () => {
+          return res.status(200).send(this.transfromToResponse({ saleReceipt }));
+        }
+      })
     } catch (error) {
       next(error);
     }

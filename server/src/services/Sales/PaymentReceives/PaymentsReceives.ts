@@ -34,6 +34,7 @@ import JournalCommands from 'services/Accounting/JournalCommands';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from 'data/AccountTypes';
 import AutoIncrementOrdersService from '../AutoIncrementOrdersService';
 import { ERRORS } from './constants';
+import PaymentReceiveTransfromer from './PaymentReceiveTransformer';
 
 /**
  * Payment receive service.
@@ -67,6 +68,9 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
 
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
+
+  @Inject()
+  paymentReceiveTransformer: PaymentReceiveTransfromer;
 
   /**
    * Validates the payment receive number existance.
@@ -584,7 +588,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
       throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NOT_EXISTS);
     }
 
-    return paymentReceive;
+    return this.paymentReceiveTransformer.transform(paymentReceive);
   }
 
   /**
@@ -661,7 +665,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
       );
 
     return {
-      paymentReceives: results,
+      paymentReceives: this.paymentReceiveTransformer.transform(results),
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };

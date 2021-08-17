@@ -22,20 +22,8 @@ import { ServiceError } from 'exceptions';
 import CustomersService from 'services/Contacts/CustomersService';
 import moment from 'moment';
 import AutoIncrementOrdersService from './AutoIncrementOrdersService';
-
-const ERRORS = {
-  SALE_ESTIMATE_NOT_FOUND: 'SALE_ESTIMATE_NOT_FOUND',
-  CUSTOMER_NOT_FOUND: 'CUSTOMER_NOT_FOUND',
-  SALE_ESTIMATE_NUMBER_EXISTANCE: 'SALE_ESTIMATE_NUMBER_EXISTANCE',
-  ITEMS_IDS_NOT_EXISTS: 'ITEMS_IDS_NOT_EXISTS',
-  SALE_ESTIMATE_ALREADY_DELIVERED: 'SALE_ESTIMATE_ALREADY_DELIVERED',
-  SALE_ESTIMATE_CONVERTED_TO_INVOICE: 'SALE_ESTIMATE_CONVERTED_TO_INVOICE',
-  SALE_ESTIMATE_ALREADY_REJECTED: 'SALE_ESTIMATE_ALREADY_REJECTED',
-  SALE_ESTIMATE_ALREADY_APPROVED: 'SALE_ESTIMATE_ALREADY_APPROVED',
-  SALE_ESTIMATE_NOT_DELIVERED: 'SALE_ESTIMATE_NOT_DELIVERED',
-  SALE_ESTIMATE_NO_IS_REQUIRED: 'SALE_ESTIMATE_NO_IS_REQUIRED',
-  CUSTOMER_HAS_SALES_ESTIMATES: 'CUSTOMER_HAS_SALES_ESTIMATES',
-};
+import { ERRORS } from './constants';
+import SaleEstimateTransfromer from './Estimates/SaleEstimateTransformer';
 
 /**
  * Sale estimate service.
@@ -63,6 +51,9 @@ export default class SaleEstimateService implements ISalesEstimatesService{
 
   @Inject()
   autoIncrementOrdersService: AutoIncrementOrdersService;
+
+  @Inject()
+  saleEstimateTransformer: SaleEstimateTransfromer;
 
   /**
    * Retrieve sale estimate or throw service error.
@@ -404,13 +395,13 @@ export default class SaleEstimateService implements ISalesEstimatesService{
     const { SaleEstimate } = this.tenancy.models(tenantId);
     const estimate = await SaleEstimate.query()
       .findById(estimateId)
-      .withGraphFetched('entries')
+      .withGraphFetched('entries.item')
       .withGraphFetched('customer');
 
     if (!estimate) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_NOT_FOUND);
     }
-    return estimate;
+    return this.saleEstimateTransformer.transform(estimate);
   }
 
   /**
@@ -457,7 +448,7 @@ export default class SaleEstimateService implements ISalesEstimatesService{
       .pagination(filter.page - 1, filter.pageSize);
 
     return {
-      salesEstimates: results,
+      salesEstimates: this.saleEstimateTransformer.transform(results),
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };

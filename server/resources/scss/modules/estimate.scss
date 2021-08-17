@@ -1,0 +1,141 @@
+@import "../layouts/paper-layout.scss";
+
+.estimate{
+  text-align: left;
+  padding: 45px;
+
+  &__header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 60px;
+
+    .organization{
+
+      .title{
+        margin: 0 0 10px;
+      }
+    }
+    
+    .paper{
+      
+      .title{
+        font-weight: 400;
+        text-transform: uppercase;
+        margin: 0 0 6px;
+        font-size: 26px;
+      }
+    }
+  }
+
+  &__meta{
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+    
+    &-item{
+      flex: 0 1 25%;
+      padding-right: 10px;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.6rem;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+
+      .value{
+        color: #000;
+      }
+      .label{
+        color: #555;
+        margin-bottom: 2px;
+      }
+
+      &--amount{
+        flex: 0 1 50%;
+
+        .value{
+          font-weight: bold;
+          font-size: 20px;
+        }
+      }
+
+      &--billed-to{
+        flex: 0 1 50%;
+      }
+    }
+  }
+
+  &__table {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 60px;
+
+    table {
+      font-size: 15px;
+      color: #000;
+      border-top: 2px solid #000;
+      text-align: left;
+
+      thead th,
+      tbody tr td {
+        margin-bottom: 15px;
+        background: transparent;
+      }
+      thead{
+        tr {
+          color: #000;
+        }
+      }
+      thead th {
+        font-size: 16px;
+        font-weight: 400;
+        border-bottom: none;
+        padding: 10px;
+
+        &:first-child{
+          padding-left: 0;
+        }
+
+        &:last-child{
+          padding-right: 0;
+        }
+      }
+      tbody tr td {
+        font-size: 15px;
+        padding: 10px;
+        border-bottom: 1px solid #cecbcb;
+
+        &:first-child{
+          padding-left: 0;
+        }
+
+        &::last-child{
+          padding-right: 0;
+        }
+      }
+
+      thead tr th{
+        &.item{
+            width: 45%;
+        }
+        &.rate{
+            width: 18%;
+        }
+        &.quantity{
+            width: 16%;
+        }
+        &.total{
+            width: 21%;
+        }
+      }
+    }
+  }
+
+  &__conditions{
+
+    &__title{
+      color: #666;
+    }
+  }
+}

@@ -42,12 +42,14 @@ import Subscription from 'api/controllers/Subscription';
 import Licenses from 'api/controllers/Subscription/Licenses';
 import InventoryAdjustments from 'api/controllers/Inventory/InventoryAdjustments';
 import Setup from 'api/controllers/Setup';
+import asyncRenderMiddleware from './middleware/AsyncRenderMiddleware';
 
 export default () => {
   const app = Router();
 
   // - Global routes.
   // ---------------------------
+  app.use(asyncRenderMiddleware);
   app.use(i18n.init);
   app.use(I18nMiddleware);
 

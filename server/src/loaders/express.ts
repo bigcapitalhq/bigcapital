@@ -10,10 +10,15 @@ import AgendashController from 'api/controllers/Agendash';
 import ConvertEmptyStringsToNull from 'api/middleware/ConvertEmptyStringsToNull';
 import RateLimiterMiddleware from 'api/middleware/RateLimiterMiddleware'
 import config from 'config';
+import path from 'path';
 
 export default ({ app }) => {
   // Express configuration.
   app.set('port', 3000);
+
+  // Template engine configuration.
+  app.set('views', path.join(__dirname, '../resources/views'));
+  app.set('view engine', 'pug');
 
   // Helmet helps you secure your Express apps by setting various HTTP headers.
   app.use(helmet());

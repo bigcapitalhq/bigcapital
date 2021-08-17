@@ -28,6 +28,7 @@ import { entriesAmountDiff, formatDateFields } from 'utils';
 import { ServiceError } from 'exceptions';
 import { ACCOUNT_TYPE } from 'data/AccountTypes';
 import VendorsService from 'services/Contacts/VendorsService';
+import BillPaymentTransformer from './BillPaymentTransformer';
 import { ERRORS } from './constants';
 
 /**
@@ -56,6 +57,9 @@ export default class BillPaymentsService implements IBillPaymentsService {
 
   @Inject('logger')
   logger: any;
+
+  @Inject()
+  billPaymentTransformer: BillPaymentTransformer;
 
   /**
    * Validate whether the bill payment vendor exists on the storage.
@@ -546,7 +550,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
     if (!billPayment) {
       throw new ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND);
     }
-    return billPayment;
+    return this.billPaymentTransformer.transform(billPayment);
   }
 
   /**
@@ -680,7 +684,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       .pagination(filter.page - 1, filter.pageSize);
 
     return {
-      billPayments: results,
+      billPayments: this.billPaymentTransformer.transform(results),
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };

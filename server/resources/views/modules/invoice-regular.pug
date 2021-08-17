@@ -1,0 +1,68 @@
+extends ../PaperTemplateLayout.pug
+
+block head 
+  style
+    include ../../css/modules/invoice.css
+
+block content 
+ div.invoice
+  div.invoice__header
+   div.organization
+    h3.title #{organizationName}
+    if organizationEmail
+     span.email #{organizationEmail}
+
+   div.paper
+    h1.title #{__("invoice.paper.invoice")}
+    if saleInvoice.invoiceNo
+     span.email #{saleInvoice.invoiceNo}
+
+  div.invoice__meta
+   div.invoice__meta-item.invoice__meta-item--amount
+    span.label #{__('estimate.paper.due_amount')}
+    span.value #{saleInvoice.formattedAmount}
+
+   div.invoice__meta-item.invoice__meta-item--billed-to
+    span.label #{__("invoice.paper.billed_to")}
+    span.value #{saleInvoice.customer.displayName}
+
+   div.invoice__meta-item.invoice__meta-item--invoice-date
+    span.label #{__("invoice.paper.invoice_date")}
+    span.value #{saleInvoice.formattedInvoiceDate}
+
+   if saleInvoice.invoiceNo
+    div.invoice__meta-item.invoice__meta-item--invoice-number
+     span.label #{__("invoice.paper.invoice_number")}
+     span.value #{saleInvoice.invoiceNo}
+
+   div.invoice__meta-item.invoice__meta-item--due-date
+    span.label #{__("invoice.paper.due_date")}
+    span.value #{saleInvoice.formattedDueDate}
+
+  div.invoice__table
+   table 
+    thead 
+     tr
+       th.item #{__("item_entry.paper.item_name")}
+       th.rate #{__("item_entry.paper.rate")}
+       th.quantity #{__("item_entry.paper.quantity")}
+       th.total #{__("item_entry.paper.total")}
+    tbody
+      each entry in saleInvoice.entries
+       tr
+        td.item
+         div.title=entry.item.name
+         span.description=entry.description
+        td.rate=entry.rate
+        td.quantity=entry.quantity
+        td.total=entry.amount
+
+  if saleInvoice.termsConditions
+   div.invoice__conditions
+    h3 #{__("invoice.paper.conditions_title")}
+    p #{saleInvoice.termsConditions}
+
+  if saleInvoice.invoiceMessage
+   div.invoice__notes
+    h3 #{__("invoice.paper.notes_title")}
+    p #{saleInvoice.invoiceMessage}

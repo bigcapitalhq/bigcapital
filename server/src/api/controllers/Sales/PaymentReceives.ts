@@ -165,11 +165,12 @@ export default class PaymentReceivesController extends BaseController {
     const paymentReceive: IPaymentReceiveDTO = this.matchedBodyData(req);
 
     try {
-      const storedPaymentReceive = await this.paymentReceiveService.createPaymentReceive(
-        tenantId,
-        paymentReceive,
-        user
-      );
+      const storedPaymentReceive =
+        await this.paymentReceiveService.createPaymentReceive(
+          tenantId,
+          paymentReceive,
+          user
+        );
       return res.status(200).send({
         id: storedPaymentReceive.id,
         message: 'The payment receive has been created successfully.',
@@ -247,11 +248,13 @@ export default class PaymentReceivesController extends BaseController {
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const invoices = await this.paymentReceiveService.getPaymentReceiveInvoices(
-        tenantId,
-        paymentReceiveId
-      );
-      return res.status(200).send({ sale_invoices: invoices });
+      const saleInvoices =
+        await this.paymentReceiveService.getPaymentReceiveInvoices(
+          tenantId,
+          paymentReceiveId
+        );
+
+      return res.status(200).send(this.transfromToResponse({ saleInvoices }));
     } catch (error) {
       next(error);
     }
@@ -274,17 +277,11 @@ export default class PaymentReceivesController extends BaseController {
     };
 
     try {
-      const {
-        paymentReceives,
-        pagination,
-        filterMeta,
-      } = await this.paymentReceiveService.listPaymentReceives(
-        tenantId,
-        filter
-      );
+      const { paymentReceives, pagination, filterMeta } =
+        await this.paymentReceiveService.listPaymentReceives(tenantId, filter);
 
       return res.status(200).send({
-        payment_receives: paymentReceives,
+        payment_receives: this.transfromToResponse(paymentReceives),
         pagination: this.transfromToResponse(pagination),
         filter_meta: this.transfromToResponse(filterMeta),
       });
@@ -334,14 +331,12 @@ export default class PaymentReceivesController extends BaseController {
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const {
-        paymentReceive,
-        entries,
-      } = await this.PaymentReceivesPages.getPaymentReceiveEditPage(
-        tenantId,
-        paymentReceiveId,
-        user
-      );
+      const { paymentReceive, entries } =
+        await this.PaymentReceivesPages.getPaymentReceiveEditPage(
+          tenantId,
+          paymentReceiveId,
+          user
+        );
 
       return res.status(200).send({
         payment_receive: this.transfromToResponse({ ...paymentReceive }),
@@ -442,9 +437,10 @@ export default class PaymentReceivesController extends BaseController {
               type: 'INVOICES_NOT_DELIVERED_YET',
               code: 200,
               data: {
-                not_delivered_invoices_ids: error.payload.notDeliveredInvoices.map(
-                  (invoice) => invoice.id
-                ),
+                not_delivered_invoices_ids:
+                  error.payload.notDeliveredInvoices.map(
+                    (invoice) => invoice.id
+                  ),
               },
             },
           ],

@@ -54,3 +54,21 @@ services:
         volumes:
           - ./certbot/letsencrypt/:/var/www/letsencrypt
           - ./certbot/certs/:/var/certs
+
+    browserless:
+        image: browserless/chrome:latest
+        environment:
+            - DEBUG=browserless:*
+            - MAX_CONCURRENT_SESSIONS=1
+            - MAX_QUEUE_LENGTH=20
+            - PREBOOT_CHROME=true
+            - HOST=0.0.0.0
+            - ENABLE_DEBUGGER=false
+            - PORT=3000
+            - WORKSPACE_DELETE_EXPIRED=true
+        container_name: "browserless_bigcapital"
+        restart: always
+        ports:
+            - "3000:3000"
+        expose:
+            - "3000"

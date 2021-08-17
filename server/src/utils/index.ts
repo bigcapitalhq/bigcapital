@@ -1,7 +1,9 @@
 import bcrypt from 'bcryptjs';
 import moment from 'moment';
 import _ from 'lodash';
+import path from 'path';
 import accounting from 'accounting';
+import pug from 'pug';
 import Currencies from 'js-money/lib/currency';
 import definedOptions from 'data/options';
 
@@ -378,7 +380,13 @@ const mergeObjectsBykey = (object1, object2, key) => {
   return _.values(merged);
 }
 
+function templateRender(filePath, options) {
+  const basePath = path.join(__dirname, '../../resources/views');
+  return pug.renderFile(`${basePath}/${filePath}.pug`, options);
+}
+
 export {
+  templateRender,
   accumSum,
   increment,
   hashPassword,

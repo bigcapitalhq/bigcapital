@@ -29,16 +29,8 @@ import InventoryService from 'services/Inventory/Inventory';
 import { ACCOUNT_PARENT_TYPE } from 'data/AccountTypes';
 import AutoIncrementOrdersService from './AutoIncrementOrdersService';
 import CustomersService from 'services/Contacts/CustomersService';
-
-const ERRORS = {
-  SALE_RECEIPT_NOT_FOUND: 'SALE_RECEIPT_NOT_FOUND',
-  DEPOSIT_ACCOUNT_NOT_FOUND: 'DEPOSIT_ACCOUNT_NOT_FOUND',
-  DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET: 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET',
-  SALE_RECEIPT_NUMBER_NOT_UNIQUE: 'SALE_RECEIPT_NUMBER_NOT_UNIQUE',
-  SALE_RECEIPT_IS_ALREADY_CLOSED: 'SALE_RECEIPT_IS_ALREADY_CLOSED',
-  SALE_RECEIPT_NO_IS_REQUIRED: 'SALE_RECEIPT_NO_IS_REQUIRED',
-  CUSTOMER_HAS_SALES_INVOICES: 'CUSTOMER_HAS_SALES_INVOICES',
-};
+import { ERRORS } from './Receipts/constants';
+import SaleReceiptTransfromer from './Receipts/SaleReceiptTransformer';
 
 @Service('SalesReceipts')
 export default class SalesReceiptService implements ISalesReceiptsService {
@@ -68,6 +60,9 @@ export default class SalesReceiptService implements ISalesReceiptsService {
 
   @Inject()
   customersService: CustomersService;
+
+  @Inject()
+  saleReceiptTransformer: SaleReceiptTransfromer;
 
   /**
    * Validate whether sale receipt exists on the storage.
@@ -397,14 +392,14 @@ export default class SalesReceiptService implements ISalesReceiptsService {
 
     const saleReceipt = await SaleReceipt.query()
       .findById(saleReceiptId)
-      .withGraphFetched('entries')
+      .withGraphFetched('entries.item')
       .withGraphFetched('customer')
       .withGraphFetched('depositAccount');
 
     if (!saleReceipt) {
       throw new ServiceError(ERRORS.SALE_RECEIPT_NOT_FOUND);
     }
-    return saleReceipt;
+    return this.saleReceiptTransformer.transform(saleReceipt);
   }
 
   /**
@@ -456,7 +451,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
       .pagination(filter.page - 1, filter.pageSize);
 
     return {
-      salesReceipts: results,
+      salesReceipts: this.saleReceiptTransformer.transform(results),
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };
