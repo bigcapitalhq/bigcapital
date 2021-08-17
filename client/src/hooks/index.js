@@ -63,4 +63,5 @@ export function useCellAutoFocus(ref, autoFocus, columnId, rowIndex) {
   return ref;
 }
 
+export * from './useRequestPdf';
 export { useAsync, useAutofocus };

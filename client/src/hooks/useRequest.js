@@ -62,7 +62,7 @@ export default function useApiRequest() {
     return instance;
   }, [token, organizationId, setGlobalErrors, setLogout]);
 
-  return {
+  return React.useMemo(() => ({
     http,
 
     get(resource, params) {
@@ -84,5 +84,5 @@ export default function useApiRequest() {
     delete(resource, params) {
       return http.delete(`/api/${resource}`, params);
     },
-  };
+  }), [http]);
 }

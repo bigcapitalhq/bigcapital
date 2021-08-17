@@ -1204,6 +1204,21 @@
   "the_contact_has_been_activated_successfully": "تم تفعيل جهة اتصال بنجاح.",
   "the_contact_has_been_inactivated_successfully": "تم إلغاء تنشيط جهة اتصال بنجاح.",
   "are_sure_to_inactive_this_contact": "هل أنت متأكد أنك تريد إلغاء تنشيط جهة اتصال؟ ستكون قادرًا على تنشيطه لاحقًا",
-  "are_sure_to_activate_this_contact": "هل أنت متأكد أنك تريد تفعيل جهة اتصال؟ ستتمكن من تعطيله لاحقًا"
+  "are_sure_to_activate_this_contact": "هل أنت متأكد أنك تريد تفعيل جهة اتصال؟ ستتمكن من تعطيله لاحقًا",
+  "publish_adjustment": "Publish adjustment",
+  "inactivate_customer": "Inactivate customer",
+  "activate_customer": "Activate customer",
+  "filter.all_filters_must_match": "Atleast one filter must match",
+  "filter.atleast_one_filter_must_match": "Atleast one filter must match",
+  "filter.when": "When",
+  "universal_search.placeholder": "Search...",
+  
+  "universal_search.enter_text": "To select",
+  "universal_search.close_text": "To close",
+  "universal_seach.navigate_text": "To navigate",
+  "pdf_preview.dialog.title": "PDF Preview",
+  "pdf_preview.download.button": "Download",
+  "pdf_preview.preview.button": "Preview",
+  "invoice_preview.dialog.title": "Invoice PDF Preview"
 }
 

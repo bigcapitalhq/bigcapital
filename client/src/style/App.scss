@@ -29,6 +29,7 @@
 @import 'components/Overlay';
 @import 'components/Menu';
 @import 'components/SidebarOverlay';
+@import 'components/UniversalSearch';
 
 // Pages
 @import 'pages/view-form';
@@ -201,12 +202,52 @@ html[lang^="ar"] {
   }
 }
 
-.bp3-popover2{
+.bp3-popover2 {
   box-shadow: 0 0 0;
 }
 
-
-.bp3-tooltip2 .bp3-popover2-arrow:before{
+.bp3-tooltip2 .bp3-popover2-arrow:before {
   box-shadow: 0 0 0;
 }
 
+.dialog--pdf-preview-dialog {
+  width: 1000px;
+  max-height: 800px;
+  margin: 10px 0;
+  overflow: hidden;
+  align-self: flex-start;
+  padding-bottom: 0;
+  position: relative;
+
+  .dialog__header-actions{
+    position: absolute;
+    right: 50px;
+    top: 0;
+    z-index: 9999999;
+    margin: 6px;
+
+    .bp3-button + .bp3-button{
+      margin-left: 8px;
+    }
+
+    .bp3-button{
+      border-color: rgba(0, 0, 0, 0.25);
+      color: rgb(25, 32, 37);
+      min-height: 30px;
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+  }
+
+  .bp3-dialog {
+
+    &-body {
+      margin: 0;
+
+      > .bp3-spinner {
+        margin: 20px 0;
+      }
+    }
+  }
+
+}

@@ -16,7 +16,7 @@ import DashboardBreadcrumbs from 'components/Dashboard/DashboardBreadcrumbs';
 import DashboardBackLink from 'components/Dashboard/DashboardBackLink';
 import { Icon, Hint, If } from 'components';
 
-import withSearch from 'containers/GeneralSearch/withSearch';
+import withUniversalSearch from 'containers/UniversalSearch/withUniversalSearch';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withDashboard from 'containers/Dashboard/withDashboard';
 import withSettings from 'containers/Settings/withSettings';
@@ -155,7 +155,7 @@ function DashboardTopbar({
 }
 
 export default compose(
-  withSearch,
+  withUniversalSearch,
   withDashboard(({ pageTitle, pageHint, editViewId, sidebarExpended }) => ({
     pageTitle,
     editViewId,

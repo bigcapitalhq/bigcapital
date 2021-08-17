@@ -5,14 +5,15 @@ import classNames from 'classnames';
 export default function DialogContent(props) {
   const { isLoading, children } = props;
 
-  const loadingContent = (
+  const loadingContent = <Spinner size={30} />;
+
+  return (
     <div
       className={classNames(Classes.DIALOG_BODY, {
         'is-loading': isLoading,
       })}
     >
-      <Spinner size={30} />
+      {isLoading ? loadingContent : children}
     </div>
   );
-  return <div>{isLoading ? loadingContent : children}</div>;
 }

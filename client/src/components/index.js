@@ -67,6 +67,8 @@ export * from './AdvancedFilter/AdvancedFilterDropdown';
 export * from './AdvancedFilter/AdvancedFilterPopover';
 export * from './Dashboard/DashboardFilterButton';
 export * from './Dashboard/DashboardRowsHeightButton';
+export * from './UniversalSearch/UniversalSearch';
+export * from './PdfPreview';
 
 const Hint = FieldHint;
 

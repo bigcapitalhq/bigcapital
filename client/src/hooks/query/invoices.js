@@ -2,6 +2,7 @@ import { useQueryClient, useMutation } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
+import { useRequestPdf } from '../useRequestPdf';
 import t from './types';
 
 // Common invalidate queries.
@@ -145,16 +146,23 @@ export function useDeliverInvoice(props) {
  * Retrieve the sale invoice details.
  * @param {number} invoiceId - Invoice id.
  */
-export function useInvoice(invoiceId, props) {
+export function useInvoice(invoiceId, props, requestProps) {
   return useRequestQuery(
     [t.SALE_INVOICE, invoiceId],
-    { method: 'get', url: `sales/invoices/${invoiceId}` },
+    { method: 'get', url: `sales/invoices/${invoiceId}`, ...requestProps },
     {
       select: (res) => res.data.sale_invoice,
       defaultData: {},
       ...props,
     },
   );
+}
+
+/**
+ * Retrieve the invoice pdf document data.
+ */
+export function usePdfInvoice(invoiceId) {
+  return useRequestPdf(`/sales/invoices/${invoiceId}`);
 }
 
 /**

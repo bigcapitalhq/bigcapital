@@ -68,6 +68,21 @@ const CLASSES = {
 
   FINANCIAL_REPORT_INSIDER: 'dashboard__insider--financial-report',
 
+
+  UNIVERSAL_SEARCH: 'universal-search',
+  UNIVERSAL_SEARCH_OMNIBAR: 'universal-search__omnibar',
+  UNIVERSAL_SEARCH_OVERLAY: 'universal-search-overlay',
+  UNIVERSAL_SEARCH_INPUT: 'universal-search__input',
+  UNIVERSAL_SEARCH_INPUT_RIGHT_ELEMENTS: 'universal-search-input-right-elements',
+  UNIVERSAL_SEARCH_FOOTER: 'universal-search__footer',
+
+  UNIVERSAL_SEARCH_ACTIONS: 'universal-search__actions',
+  UNIVERSAL_SEARCH_ACTION_SELECT: 'universal-search__action universal-search__action--select',
+  UNIVERSAL_SEARCH_ACTION_CLOSE: 'universal-search__action universal-search__action--close',
+  UNIVERSAL_SEARCH_ACTION_ARROWS: 'universal-search__action universal-search__action--arrows',
+
+  DIALOG_PDF_PREVIEW: 'dialog--pdf-preview-dialog',
+
   ...Classes,
   CARD: 'card',
 };
