@@ -1,57 +1,18 @@
 @import "../base.scss";
+@import "../fonts.scss";
 
 body {
   background: #f8f9fa;
-  font-family: 'Noto Sans', sans-serif;
   text-align: left;
+
+  html[lang^='ar'] & {
+    font-family: "Segoe UI";
+  }
+  html[lang^='en'] & {
+    font-family: "Noto Sans";
+  }
 
   @media print {
     background: #fff;
-  }
-}
-
-.page {
-  background: white;
-  display: block;
-  margin: 0.5cm auto;
-  box-shadow: rgba(122, 136, 146, 0.15) 0px 1px 3px 1px;
-  width: 21cm;
-  height: 29.7cm;
-
-  @media print {
-    margin: 0;
-    box-shadow: 0 0 0;
-    width: 100%;
-    height: auto;
-  }
-
-  &[size="A4"] {
-    width: 21cm;
-    height: 29.7cm;
-  }
-
-  &[size="A4"][layout="landscape"] {
-    width: 29.7cm;
-    height: 21cm;
-  }
-
-  &[size="A3"] {
-    width: 29.7cm;
-    height: 42cm;
-  }
-
-  &[size="A3"][layout="landscape"] {
-    width: 42cm;
-    height: 29.7cm;
-  }
-
-  &[size="A5"] {
-    width: 14.8cm;
-    height: 21cm;
-  }
-
-  &[size="A5"][layout="landscape"] {
-    width: 21cm;
-    height: 14.8cm;
   }
 }

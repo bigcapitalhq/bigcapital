@@ -2,7 +2,10 @@ extends ../PaperTemplateLayout.pug
 
 block head 
   style
-    include ../../css/modules/receipt.css
+    if (isRtl)
+      include ../../css/modules/receipt-rtl.css
+    else
+      include ../../css/modules/receipt.css
 
 block content 
  div.receipt

@@ -3,6 +3,7 @@ import { ITenant } from 'interfaces';
 import { Request } from 'express';
 import TenancyService from 'services/Tenancy/TenancyService';
 import TenantsManagerService from 'services/Tenancy/TenantsManager';
+import rtlDetect from 'rtl-detect';
 
 export default (req: Request, tenant: ITenant) => {
   const { id: tenantId, organizationId } = tenant;
@@ -20,7 +21,7 @@ export default (req: Request, tenant: ITenant) => {
 
   const tenantContainer = tenantServices.tenantContainer(tenantId);
 
-  tenantContainer.set('i18n', { __: req.__ });
+  tenantContainer.set('i18n', injectI18nUtils(req));
 
   req.knex = knexInstance;
   req.organizationId = organizationId;
@@ -29,4 +30,18 @@ export default (req: Request, tenant: ITenant) => {
   req.models = models;
   req.repositories = repositories;
   req.cache = cacheInstance;
+}
+
+
+export const injectI18nUtils =(req) => {
+  const locale = req.getLocale();
+  const direction = rtlDetect.getLangDir(locale);
+
+  return {
+    locale,
+    __: req.__,
+    direction,
+    isRtl: direction === 'rtl',
+    isLtr: direction === 'ltr',
+  }
 }

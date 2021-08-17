@@ -366,7 +366,7 @@ body {
   line-height: 1.5;
   color: #212529;
   background-color: #fff;
-  direction: ltr;
+  direction: rtl;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
@@ -387,7 +387,7 @@ body {
 }
 body {
   background: #f8f9fa;
-  text-align: left;
+  text-align: right;
 }
 html[lang^=ar] body {
   font-family: "Segoe UI";
@@ -442,33 +442,33 @@ html[lang^=en] body {
   height: 14.8cm;
 }
 
-.estimate {
-  text-align: left;
+.receipt {
+  text-align: right;
   padding: 45px;
 }
-.estimate__header {
+.receipt__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 0 0 60px;
 }
-.estimate__header .organization .title {
+.receipt__header .organization .title {
   margin: 0 0 10px;
 }
-.estimate__header .paper .title {
+.receipt__header .paper .title {
   font-weight: 400;
   text-transform: uppercase;
   margin: 0 0 6px;
   font-size: 26px;
 }
-.estimate__meta {
+.receipt__meta {
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 40px;
 }
-.estimate__meta-item {
+.receipt__meta-item {
   flex: 0 1 25%;
-  padding-right: 10px;
+  padding-left: 10px;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.6rem;
@@ -476,77 +476,77 @@ html[lang^=en] body {
   display: flex;
   flex-direction: column;
 }
-.estimate__meta-item .value {
+.receipt__meta-item .value {
   color: #000;
 }
-.estimate__meta-item .label {
+.receipt__meta-item .label {
   color: #555;
   margin-bottom: 2px;
 }
-.estimate__meta-item--amount {
+.receipt__meta-item--amount {
   flex: 0 1 50%;
 }
-.estimate__meta-item--amount .value {
+.receipt__meta-item--amount .value {
   font-weight: bold;
   font-size: 20px;
 }
-.estimate__meta-item--billed-to {
+.receipt__meta-item--billed-to {
   flex: 0 1 50%;
 }
-.estimate__table {
+.receipt__table {
   display: flex;
   flex-direction: column;
   margin-bottom: 60px;
 }
-.estimate__table table {
+.receipt__table table {
   font-size: 15px;
   color: #000;
   border-top: 2px solid #000;
-  text-align: left;
+  text-align: right;
 }
-.estimate__table table thead th,
-.estimate__table table tbody tr td {
+.receipt__table table thead th,
+.receipt__table table tbody tr td {
   margin-bottom: 15px;
   background: transparent;
 }
-.estimate__table table thead tr {
+.receipt__table table thead tr {
   color: #000;
 }
-.estimate__table table thead th {
+.receipt__table table thead th {
   font-size: 16px;
   font-weight: 400;
   border-bottom: none;
   padding: 10px;
 }
-.estimate__table table thead th:first-child {
-  padding-left: 0;
-}
-.estimate__table table thead th:last-child {
+.receipt__table table thead th:first-child {
   padding-right: 0;
 }
-.estimate__table table tbody tr td {
+.receipt__table table thead th:last-child {
+  padding-left: 0;
+}
+.receipt__table table tbody tr td {
   font-size: 15px;
   padding: 10px;
   border-bottom: 1px solid #cecbcb;
 }
-.estimate__table table tbody tr td:first-child {
-  padding-left: 0;
-}
-.estimate__table table tbody tr td::last-child {
+.receipt__table table tbody tr td:first-child {
   padding-right: 0;
 }
-.estimate__table table thead tr th.item {
+.receipt__table table tbody tr td::last-child {
+  padding-left: 0;
+}
+.receipt__table table thead tr th.item {
   width: 45%;
 }
-.estimate__table table thead tr th.rate {
+.receipt__table table thead tr th.rate {
   width: 18%;
 }
-.estimate__table table thead tr th.quantity {
+.receipt__table table thead tr th.quantity {
   width: 16%;
 }
-.estimate__table table thead tr th.total {
+.receipt__table table thead tr th.total {
   width: 21%;
 }
-.estimate__conditions__title {
+.receipt__conditions__title {
   color: #666;
 }

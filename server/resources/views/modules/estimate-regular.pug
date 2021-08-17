@@ -2,7 +2,10 @@ extends ../PaperTemplateLayout.pug
 
 block head 
   style
-    include ../../css/modules/estimate.css
+    if (isRtl)
+      include ../../css/modules/estimate-rtl.css
+    else
+      include ../../css/modules/estimate.css
 
 block content 
  div.estimate
@@ -18,7 +21,7 @@ block content
 
   div.estimate__meta
    div.estimate__meta-item.estimate__meta-item--amount
-     span.label #{__('estimate.paper.due_amount')}
+     span.label #{__('estimate.paper.amount')}
      span.value #{saleEstimate.formattedAmount}
 
    div.estimate__meta-item.estimate__meta-item--billed-to

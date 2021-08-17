@@ -37,20 +37,20 @@ module.exports = {
     clean: ['style.css', 'style.min.css', 'style-rtl.css', 'style-rtl.min.css'],
     build: [
       {
-        src: `${RESOURCES_PATH}/scss/modules/invoice.scss`, // Path to main .scss file.
-        dest: `${RESOURCES_PATH}/css/modules`, // Path to place the compiled CSS file.
+        src: `${RESOURCES_PATH}/scss/modules/invoice.scss`,
+        dest: `${RESOURCES_PATH}/css/modules`,
         // sourcemaps: true, // Allow to enable/disable sourcemaps or pass object to configure it.
         // minify: true, // Allow to enable/disable minify the source.
       },
       {
-        src: `${RESOURCES_PATH}/scss/modules/estimate.scss`, // Path to main .scss file.
-        dest: `${RESOURCES_PATH}/css/modules`, // Path to place the compiled CSS file.
+        src: `${RESOURCES_PATH}/scss/modules/estimate.scss`,
+        dest: `${RESOURCES_PATH}/css/modules`,
         // sourcemaps: true, // Allow to enable/disable sourcemaps or pass object to configure it.
         // minify: true, // Allow to enable/disable minify the source.
       },
       {
-        src: `${RESOURCES_PATH}/scss/modules/receipt.scss`, // Path to main .scss file.
-        dest: `${RESOURCES_PATH}/css/modules`, // Path to place the compiled CSS file.
+        src: `${RESOURCES_PATH}/scss/modules/receipt.scss`,
+        dest: `${RESOURCES_PATH}/css/modules`,
         // sourcemaps: true, // Allow to enable/disable sourcemaps or pass object to configure it.
         // minify: true, // Allow to enable/disable minify the source.
       },
@@ -61,11 +61,19 @@ module.exports = {
     //     minify: true,
     //   },
     ],
+    // RTL builds.
     rtl: [
-      // RTL builds.
       {
-        src: './style.css',
-        dest: './', // The source files will be converted and suffixed to `-rtl` in this destination.
+        src: `${RESOURCES_PATH}/css/modules/invoice.css`,
+        dest: `${RESOURCES_PATH}/css/modules`,
+      },
+      {
+        src: `${RESOURCES_PATH}/css/modules/estimate.css`,
+        dest: `${RESOURCES_PATH}/css/modules`,
+      },
+      {
+        src: `${RESOURCES_PATH}/css/modules/receipt.css`,
+        dest: `${RESOURCES_PATH}/css/modules`,
       },
     ],
 

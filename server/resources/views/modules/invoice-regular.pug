@@ -1,8 +1,11 @@
 extends ../PaperTemplateLayout.pug
 
-block head 
+block head
   style
-    include ../../css/modules/invoice.css
+    if (isRtl)
+      include ../../css/modules/invoice-rtl.css
+    else
+      include ../../css/modules/invoice.css
 
 block content 
  div.invoice
@@ -19,7 +22,7 @@ block content
 
   div.invoice__meta
    div.invoice__meta-item.invoice__meta-item--amount
-    span.label #{__('estimate.paper.due_amount')}
+    span.label #{__('invoice.paper.due_amount')}
     span.value #{saleInvoice.formattedAmount}
 
    div.invoice__meta-item.invoice__meta-item--billed-to

@@ -366,7 +366,7 @@ body {
   line-height: 1.5;
   color: #212529;
   background-color: #fff;
-  direction: ltr;
+  direction: rtl;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
@@ -387,7 +387,7 @@ body {
 }
 body {
   background: #f8f9fa;
-  text-align: left;
+  text-align: right;
 }
 html[lang^=ar] body {
   font-family: "Segoe UI";
@@ -443,7 +443,7 @@ html[lang^=en] body {
 }
 
 .estimate {
-  text-align: left;
+  text-align: right;
   padding: 45px;
 }
 .estimate__header {
@@ -468,7 +468,7 @@ html[lang^=en] body {
 }
 .estimate__meta-item {
   flex: 0 1 25%;
-  padding-right: 10px;
+  padding-left: 10px;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.6rem;
@@ -502,7 +502,7 @@ html[lang^=en] body {
   font-size: 15px;
   color: #000;
   border-top: 2px solid #000;
-  text-align: left;
+  text-align: right;
 }
 .estimate__table table thead th,
 .estimate__table table tbody tr td {
@@ -519,10 +519,10 @@ html[lang^=en] body {
   padding: 10px;
 }
 .estimate__table table thead th:first-child {
-  padding-left: 0;
+  padding-right: 0;
 }
 .estimate__table table thead th:last-child {
-  padding-right: 0;
+  padding-left: 0;
 }
 .estimate__table table tbody tr td {
   font-size: 15px;
@@ -530,10 +530,10 @@ html[lang^=en] body {
   border-bottom: 1px solid #cecbcb;
 }
 .estimate__table table tbody tr td:first-child {
-  padding-left: 0;
+  padding-right: 0;
 }
 .estimate__table table tbody tr td::last-child {
-  padding-right: 0;
+  padding-left: 0;
 }
 .estimate__table table thead tr th.item {
   width: 45%;
