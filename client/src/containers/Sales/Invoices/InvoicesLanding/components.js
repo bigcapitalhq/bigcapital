@@ -93,7 +93,15 @@ export const handleDeleteErrors = (errors) => {
 };
 
 export function ActionsMenu({
-  payload: { onEdit, onDeliver, onDelete, onDrawer, onQuick, onViewDetails },
+  payload: {
+    onEdit,
+    onDeliver,
+    onDelete,
+    onDrawer,
+    onQuick,
+    onViewDetails,
+    onPrint,
+  },
   row: { original },
 }) {
   return (
@@ -127,6 +135,11 @@ export function ActionsMenu({
         icon={<Icon icon={'receipt-24'} iconSize={16} />}
         text={intl.get('invoice_paper')}
         onClick={safeCallback(onDrawer, original)}
+      />
+      <MenuItem
+        icon={<Icon icon={'print-16'} iconSize={16} />}
+        text={intl.get('print')}
+        onClick={safeCallback(onPrint, original)}
       />
       <MenuItem
         text={intl.get('delete_invoice')}

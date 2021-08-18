@@ -23,6 +23,7 @@ function InvoiceDetailDrawerProvider({ invoiceId, ...props }) {
   //provider.
   const provider = {
     transactions,
+    invoiceId,
   };
   return (
     <DashboardInsider loading={isTransactionLoading}>

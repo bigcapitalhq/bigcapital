@@ -1,5 +1,6 @@
 import { useQueryClient, useMutation } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
+import { useRequestPdf } from '../useRequestPdf';
 import useApiRequest from '../useRequest';
 import { transformPagination } from 'utils';
 import t from './types';
@@ -99,7 +100,7 @@ export function useCloseReceipt(props) {
 }
 
 const transformReceipts = (res) => ({
-  receipts: res.data.sale_receipts,
+  receipts: res.data.sales_receipts,
   pagination: transformPagination(res.data.pagination),
   filterMeta: res.data.filter_meta,
 });
@@ -140,6 +141,13 @@ export function useReceipt(id, props) {
       ...props,
     },
   );
+}
+
+/**
+ * Retrieve the receipt pdf document data.
+ */
+export function usePdfReceipt(ReceiptId) {
+  return useRequestPdf(`sales/receipts/${ReceiptId}`);
 }
 
 export function useRefreshReceipts() {

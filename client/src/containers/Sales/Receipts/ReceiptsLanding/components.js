@@ -16,7 +16,7 @@ import { Choose, Money, Icon, If } from 'components';
 import moment from 'moment';
 
 export function ActionsMenu({
-  payload: { onEdit, onDelete, onClose, onDrawer, onViewDetails },
+  payload: { onEdit, onDelete, onClose, onDrawer, onViewDetails, onPrint },
   row: { original: receipt },
 }) {
   return (
@@ -43,6 +43,11 @@ export function ActionsMenu({
         icon={<Icon icon={'receipt-24'} iconSize={16} />}
         text={intl.get('receipt_paper')}
         onClick={safeCallback(onDrawer, receipt)}
+      />
+      <MenuItem
+        icon={<Icon icon={'print-16'} iconSize={16} />}
+        text={intl.get('print')}
+        onClick={safeCallback(onPrint, receipt)}
       />
       <MenuItem
         text={intl.get('delete_receipt')}

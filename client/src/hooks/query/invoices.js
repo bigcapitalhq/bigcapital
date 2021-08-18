@@ -162,7 +162,7 @@ export function useInvoice(invoiceId, props, requestProps) {
  * Retrieve the invoice pdf document data.
  */
 export function usePdfInvoice(invoiceId) {
-  return useRequestPdf(`/sales/invoices/${invoiceId}`);
+  return useRequestPdf(`sales/invoices/${invoiceId}`);
 }
 
 /**

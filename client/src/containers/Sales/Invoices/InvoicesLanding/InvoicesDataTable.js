@@ -85,6 +85,11 @@ function InvoicesDataTable({
     openDrawer('invoice-detail-drawer', { invoiceId: id });
   };
 
+  // Handle print invoices.
+  const handlePrintInvoice = ({ id }) => {
+    openDialog('invoice-pdf-preview', { invoiceId: id });
+  };
+
   // Handles fetch data once the table state change.
   const handleDataTableFetchData = useCallback(
     ({ pageSize, pageIndex, sortBy }) => {
@@ -130,6 +135,7 @@ function InvoicesDataTable({
         onDrawer: handleDrawerInvoice,
         onQuick: handleQuickPaymentReceive,
         onViewDetails: handleViewDetailInvoice,
+        onPrint: handlePrintInvoice,
         baseCurrency,
       }}
     />

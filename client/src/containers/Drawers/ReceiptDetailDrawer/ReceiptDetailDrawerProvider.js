@@ -25,6 +25,7 @@ function ReceiptDetailDrawerProvider({ receiptId, ...props }) {
   //provider.
   const provider = {
     transactions,
+    receiptId,
   };
 
   return (
