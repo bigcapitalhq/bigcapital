@@ -89,6 +89,8 @@
 
     .bp3-menu {
       border-top: 1px solid #d3dce2;
+      max-height: calc(60vh - 20px);
+      overflow: auto;
 
       .bp3-menu-item {
         .bp3-text-muted {
