@@ -8,6 +8,7 @@ import { IExpenseDTO } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { DATATYPES_LENGTH } from 'data/DataTypes';
+import HasItemEntries from 'services/Sales/HasItemsEntries';
 
 @Service()
 export default class ExpensesController extends BaseController {
@@ -304,7 +305,7 @@ export default class ExpensesController extends BaseController {
         await this.expensesService.getExpensesList(tenantId, filter);
 
       return res.status(200).send({
-        expenses,
+        expenses: this.transfromToResponse(expenses),
         pagination: this.transfromToResponse(pagination),
         filter_meta: this.transfromToResponse(filterMeta),
       });
@@ -328,7 +329,7 @@ export default class ExpensesController extends BaseController {
         tenantId,
         expenseId
       );
-      return res.status(200).send({ expense });
+      return res.status(200).send(this.transfromToResponse({ expense }));
     } catch (error) {
       next(error);
     }

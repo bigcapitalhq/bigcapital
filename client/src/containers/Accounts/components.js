@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import {
   Position,
   Classes,
@@ -6,13 +6,12 @@ import {
   MenuItem,
   Menu,
   MenuDivider,
-  Intent,
-  Popover,
-  Button,
+  Intent
 } from '@blueprintjs/core';
 import { Icon, Money, If } from 'components';
 import intl from 'react-intl-universal';
 import { safeCallback } from 'utils';
+
 
 /**
  * Accounts table actions menu.

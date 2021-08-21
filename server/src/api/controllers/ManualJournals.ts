@@ -221,7 +221,7 @@ export default class ManualJournalsController extends BaseController {
         manualJournalId
       );
       return res.status(200).send({
-        manual_journal: manualJournal,
+        manual_journal: this.transfromToResponse(manualJournal),
       });
     } catch (error) {
       next(error);
@@ -301,7 +301,7 @@ export default class ManualJournalsController extends BaseController {
       } = await this.manualJournalsService.getManualJournals(tenantId, filter);
 
       return res.status(200).send({
-        manual_journals: manualJournals,
+        manual_journals: this.transfromToResponse(manualJournals),
         pagination: this.transfromToResponse(pagination),
         filter_meta: this.transfromToResponse(filterMeta),
       });

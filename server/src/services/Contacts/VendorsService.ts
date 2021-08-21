@@ -23,6 +23,7 @@ import { ServiceError } from 'exceptions';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import events from 'subscribers/events';
+import VendorTransfromer from './Vendors/VendorTransformer';
 
 const ERRORS = {
   VENDOR_HAS_TRANSACTIONS: 'VENDOR_HAS_TRANSACTIONS',
@@ -50,6 +51,9 @@ export default class VendorsService {
 
   @Inject('BillPayments')
   billPaymentsService: IBillPaymentsService;
+
+  @Inject()
+  vendorTransformer: VendorTransfromer;
 
   /**
    * Converts vendor to contact DTO.
@@ -139,8 +143,8 @@ export default class VendorsService {
 
   /**
    * Validate the given vendor has no associated transactions.
-   * @param {number} tenantId 
-   * @param {number} vendorId 
+   * @param {number} tenantId
+   * @param {number} vendorId
    */
   private async validateAssociatedTransactions(
     tenantId: number,
@@ -151,8 +155,10 @@ export default class VendorsService {
       await this.billsService.validateVendorHasNoBills(tenantId, vendorId);
 
       // Validate vendor has no paymentys.
-      await this.billPaymentsService.validateVendorHasNoPayments(tenantId, vendorId);
-
+      await this.billPaymentsService.validateVendorHasNoPayments(
+        tenantId,
+        vendorId
+      );
     } catch (error) {
       throw new ServiceError(ERRORS.VENDOR_HAS_TRANSACTIONS);
     }
@@ -196,7 +202,9 @@ export default class VendorsService {
    * @param {number} vendorId
    */
   public async getVendor(tenantId: number, vendorId: number) {
-    return this.contactService.getContact(tenantId, vendorId, 'vendor');
+    const vendor = this.contactService.getContact(tenantId, vendorId, 'vendor');
+
+    return this.vendorTransformer.transform(vendor);
   }
 
   /**
@@ -257,9 +265,7 @@ export default class VendorsService {
   }
 
   private parseVendorsListFilterDTO(filterDTO) {
-    return R.compose(
-      this.dynamicListService.parseStringifiedFilter
-    )(filterDTO);
+    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
   }
 
   /**
@@ -297,7 +303,7 @@ export default class VendorsService {
       .pagination(filter.page - 1, filter.pageSize);
 
     return {
-      vendors: results,
+      vendors: this.vendorTransformer.transform(results),
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };

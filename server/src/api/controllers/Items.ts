@@ -173,7 +173,7 @@ export default class ItemsController extends BaseController {
   }
 
   /**
-   * Validate list query schema
+   * Validate list query schema.
    */
   get validateListQuerySchema() {
     return [

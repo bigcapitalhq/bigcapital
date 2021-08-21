@@ -74,6 +74,8 @@ const CLASSES = {
   UNIVERSAL_SEARCH_OVERLAY: 'universal-search-overlay',
   UNIVERSAL_SEARCH_INPUT: 'universal-search__input',
   UNIVERSAL_SEARCH_INPUT_RIGHT_ELEMENTS: 'universal-search-input-right-elements',
+  UNIVERSAL_SEARCH_TYPE_SELECT_OVERLAY: 'universal-search__type-select-overlay',
+  UNIVERSAL_SEARCH_TYPE_SELECT_BTN: 'universal-search__type-select-btn',
   UNIVERSAL_SEARCH_FOOTER: 'universal-search__footer',
 
   UNIVERSAL_SEARCH_ACTIONS: 'universal-search__actions',

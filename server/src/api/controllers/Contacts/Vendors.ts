@@ -19,14 +19,16 @@ export default class VendorsController extends ContactsController {
   router() {
     const router = Router();
 
-    router.post('/', [
-      ...this.contactDTOSchema,
-      ...this.contactNewDTOSchema,
-      ...this.vendorDTOSchema,
-    ],
+    router.post(
+      '/',
+      [
+        ...this.contactDTOSchema,
+        ...this.contactNewDTOSchema,
+        ...this.vendorDTOSchema,
+      ],
       this.validationResult,
       asyncMiddleware(this.newVendor.bind(this)),
-      this.handlerServiceErrors,
+      this.handlerServiceErrors
     );
     router.post(
       '/:id/opening_balance',
@@ -37,36 +39,38 @@ export default class VendorsController extends ContactsController {
       ],
       this.validationResult,
       asyncMiddleware(this.editOpeningBalanceVendor.bind(this)),
-      this.handlerServiceErrors,
+      this.handlerServiceErrors
     );
-    router.post('/:id', [
-      ...this.contactDTOSchema,
-      ...this.contactEditDTOSchema,
-      ...this.vendorDTOSchema,
-    ],
+    router.post(
+      '/:id',
+      [
+        ...this.contactDTOSchema,
+        ...this.contactEditDTOSchema,
+        ...this.vendorDTOSchema,
+      ],
       this.validationResult,
       asyncMiddleware(this.editVendor.bind(this)),
-      this.handlerServiceErrors,
+      this.handlerServiceErrors
     );
-    router.delete('/:id', [
-      ...this.specificContactSchema,
-    ],
+    router.delete(
+      '/:id',
+      [...this.specificContactSchema],
       this.validationResult,
       asyncMiddleware(this.deleteVendor.bind(this)),
-      this.handlerServiceErrors,
+      this.handlerServiceErrors
     );
-    router.get('/:id', [
-      ...this.specificContactSchema,
-    ],
+    router.get(
+      '/:id',
+      [...this.specificContactSchema],
       this.validationResult,
       asyncMiddleware(this.getVendor.bind(this)),
-      this.handlerServiceErrors,
+      this.handlerServiceErrors
     );
-    router.get('/', [
-      ...this.vendorsListSchema,
-    ],
+    router.get(
+      '/',
+      [...this.vendorsListSchema],
       this.validationResult,
-      asyncMiddleware(this.getVendorsList.bind(this)),
+      asyncMiddleware(this.getVendorsList.bind(this))
     );
     return router;
   }
@@ -102,22 +106,26 @@ export default class VendorsController extends ContactsController {
       query('page_size').optional().isNumeric().toInt(),
 
       query('inactive_mode').optional().isBoolean().toBoolean(),
-      query('search_keyword').optional({ nullable: true }).isString().trim()
+      query('search_keyword').optional({ nullable: true }).isString().trim(),
     ];
   }
 
   /**
    * Creates a new vendor.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async newVendor(req: Request, res: Response, next: NextFunction) {
     const contactDTO: IVendorNewDTO = this.matchedBodyData(req);
     const { tenantId, user } = req;
 
     try {
-      const vendor = await this.vendorsService.newVendor(tenantId, contactDTO, user);
+      const vendor = await this.vendorsService.newVendor(
+        tenantId,
+        contactDTO,
+        user
+      );
 
       return res.status(200).send({
         id: vendor.id,
@@ -130,9 +138,9 @@ export default class VendorsController extends ContactsController {
 
   /**
    * Edits the given vendor details.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async editVendor(req: Request, res: Response, next: NextFunction) {
     const contactDTO: IVendorEditDTO = this.matchedBodyData(req);
@@ -140,7 +148,12 @@ export default class VendorsController extends ContactsController {
     const { id: contactId } = req.params;
 
     try {
-      await this.vendorsService.editVendor(tenantId, contactId, contactDTO, user);
+      await this.vendorsService.editVendor(
+        tenantId,
+        contactId,
+        contactDTO,
+        user
+      );
 
       return res.status(200).send({
         id: contactId,
@@ -157,24 +170,26 @@ export default class VendorsController extends ContactsController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  async editOpeningBalanceVendor(req: Request, res: Response, next: NextFunction) {
+  async editOpeningBalanceVendor(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId, user } = req;
     const { id: vendorId } = req.params;
-    const {
-      openingBalance,
-      openingBalanceAt,
-    } = this.matchedBodyData(req);
+    const { openingBalance, openingBalanceAt } = this.matchedBodyData(req);
 
     try {
       await this.vendorsService.changeOpeningBalance(
         tenantId,
         vendorId,
         openingBalance,
-        openingBalanceAt,
+        openingBalanceAt
       );
       return res.status(200).send({
         id: vendorId,
-        message: 'The opening balance of the given vendor has been changed successfully.',
+        message:
+          'The opening balance of the given vendor has been changed successfully.',
       });
     } catch (error) {
       next(error);
@@ -183,16 +198,16 @@ export default class VendorsController extends ContactsController {
 
   /**
    * Deletes the given vendor from the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async deleteVendor(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const { id: contactId } = req.params;
 
     try {
-      await this.vendorsService.deleteVendor(tenantId, contactId, user)
+      await this.vendorsService.deleteVendor(tenantId, contactId, user);
 
       return res.status(200).send({
         id: contactId,
@@ -205,18 +220,21 @@ export default class VendorsController extends ContactsController {
 
   /**
    * Retrieve details of the given vendor id.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async getVendor(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const { id: vendorId } = req.params;
 
     try {
-      const vendor = await this.vendorsService.getVendor(tenantId, vendorId, user)
-
-      return res.status(200).send({ vendor });
+      const vendor = await this.vendorsService.getVendor(
+        tenantId,
+        vendorId,
+        user
+      );
+      return res.status(200).send(this.transfromToResponse({ vendor }));
     } catch (error) {
       next(error);
     }
@@ -224,9 +242,9 @@ export default class VendorsController extends ContactsController {
 
   /**
    * Retrieve vendors datatable list.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async getVendorsList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -241,14 +259,11 @@ export default class VendorsController extends ContactsController {
     };
 
     try {
-      const {
-        vendors,
-        pagination,
-        filterMeta,
-      } = await this.vendorsService.getVendorsList(tenantId, vendorsFilter);
+      const { vendors, pagination, filterMeta } =
+        await this.vendorsService.getVendorsList(tenantId, vendorsFilter);
 
       return res.status(200).send({
-        vendors,
+        vendors: this.transfromToResponse(vendors),
         pagination: this.transfromToResponse(pagination),
         filter_meta: this.transfromToResponse(filterMeta),
       });
@@ -259,7 +274,7 @@ export default class VendorsController extends ContactsController {
 
   /**
    * Handle service errors.
-   * @param {Error} error - 
+   * @param {Error} error -
    * @param {Request} req -
    * @param {Response} res -
    * @param {NextFunction} next -

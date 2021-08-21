@@ -58,8 +58,8 @@ function ItemsActionsBar({
   };
 
   // Handle tab changing.
-  const handleTabChange = (viewId) => {
-    setItemsTableState({ customViewId: viewId.id || null });
+  const handleTabChange = (view) => {
+    setItemsTableState({ viewSlug: view ? view.slug : null });
   };
 
   // Handle cancel/confirm items bulk.
@@ -82,6 +82,8 @@ function ItemsActionsBar({
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'items'}
+          allMenuItem={true}
+          allMenuItemText={<T id={'all_items'} />}
           views={itemsViews}
           onChange={handleTabChange}
         />

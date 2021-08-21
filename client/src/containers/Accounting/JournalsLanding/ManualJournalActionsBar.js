@@ -54,19 +54,20 @@ function ManualJournalActionsBar({
   const handleBulkDelete = () => {};
 
   // Handle tab change.
-  const handleTabChange = (customView) => {
-    setManualJournalsTableState({ customViewId: customView.id || null });
+  const handleTabChange = (view) => {
+    setManualJournalsTableState({ viewSlug: view ? view.slig : null });
   };
   // Handle click a refresh Journals
-  const handleRefreshBtnClick = () => { refresh(); };
-
-  console.log(manualJournalsFilterConditions, fields, 'XXX');
+  const handleRefreshBtnClick = () => {
+    refresh();
+  };
 
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'manual-journals'}
+          allMenuItem={true}
           views={journalsViews}
           onChange={handleTabChange}
         />
@@ -135,5 +136,5 @@ export default compose(
   withManualJournalsActions,
   withManualJournals(({ manualJournalsTableState }) => ({
     manualJournalsFilterConditions: manualJournalsTableState.filterRoles,
-  }))
+  })),
 )(ManualJournalActionsBar);

@@ -1,9 +1,12 @@
 import React, { useEffect, Suspense } from 'react';
-import { isUndefined } from 'lodash';
+// import { isUndefined } from 'lodash';
 import { CLASSES } from 'common/classes';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import { compose } from 'utils';
 import { Spinner } from '@blueprintjs/core';
+
+// import withUniversalSearch from '../../containers/UniversalSearch/withUniversalSearch';
+import withUniversalSearchActions from '../../containers/UniversalSearch/withUniversalSearchActions';
 
 /**
  * Dashboard pages wrapper.
@@ -16,12 +19,17 @@ function DashboardPage({
   Component,
   name,
   hint,
+  defaultSearchResource,
 
   // #withDashboardActions
   changePageTitle,
   setDashboardBackLink,
   changePageHint,
-  toggleSidebarExpand
+  toggleSidebarExpand,
+
+  // #withUniversalSearch
+  setResourceTypeUniversalSearch,
+  resetResourceTypeUniversalSearch,
 }) {
   // Hydrate the given page title.
   useEffect(() => {
@@ -38,7 +46,7 @@ function DashboardPage({
 
     return () => {
       hint && changePageHint('');
-    }
+    };
   }, [hint, changePageHint]);
 
   // Hydrate the dashboard back link status.
@@ -53,7 +61,7 @@ function DashboardPage({
   useEffect(() => {
     const className = `page-${name}`;
     name && document.body.classList.add(className);
-    
+
     return () => {
       name && document.body.classList.remove(className);
     };
@@ -61,15 +69,30 @@ function DashboardPage({
 
   useEffect(() => {
     toggleSidebarExpand(sidebarExpand);
-  }, [toggleSidebarExpand, sidebarExpand])
+  }, [toggleSidebarExpand, sidebarExpand]);
+
+  useEffect(() => {
+    if (defaultSearchResource) {
+      setResourceTypeUniversalSearch(defaultSearchResource);
+    }
+    return () => {
+      resetResourceTypeUniversalSearch();
+    };
+  }, [
+    defaultSearchResource,
+    resetResourceTypeUniversalSearch,
+    setResourceTypeUniversalSearch,
+  ]);
 
   return (
     <div className={CLASSES.DASHBOARD_PAGE}>
-      <Suspense fallback={
-        <div class="dashboard__fallback-loading">
-          <Spinner size={40} value={null} />
-        </div>
-      }>
+      <Suspense
+        fallback={
+          <div class="dashboard__fallback-loading">
+            <Spinner size={40} value={null} />
+          </div>
+        }
+      >
         <Component />
       </Suspense>
     </div>
@@ -78,4 +101,6 @@ function DashboardPage({
 
 export default compose(
   withDashboardActions,
+  // withUniversalSearch,
+  withUniversalSearchActions,
 )(DashboardPage);

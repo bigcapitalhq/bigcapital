@@ -51,8 +51,8 @@ function InvoiceActionsBar({
   const { refresh } = useRefreshInvoices();
 
   // Handle views tab change.
-  const handleTabChange = (customView) => {
-    setInvoicesTableState({ customViewId: customView.id || null });
+  const handleTabChange = (view) => {
+    setInvoicesTableState({ viewSlug: view ? view.slug : null });
   };
 
   // Handle click a refresh sale invoices
@@ -64,6 +64,7 @@ function InvoiceActionsBar({
     <DashboardActionsBar>
       <NavbarGroup>
         <DashboardActionViewsList
+          allMenuItem={true}
           resourceName={'invoices'}
           views={invoicesViews}
           onChange={handleTabChange}

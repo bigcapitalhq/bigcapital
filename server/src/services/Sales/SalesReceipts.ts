@@ -421,7 +421,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
     tenantId: number,
     filterDTO: ISaleReceiptFilter
   ): Promise<{
-    salesReceipts: ISaleReceipt[];
+    data: ISaleReceipt[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
@@ -451,7 +451,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
       .pagination(filter.page - 1, filter.pageSize);
 
     return {
-      salesReceipts: this.saleReceiptTransformer.transform(results),
+      data: this.saleReceiptTransformer.transform(results),
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };

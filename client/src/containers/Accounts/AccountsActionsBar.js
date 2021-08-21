@@ -78,8 +78,8 @@ function AccountsActionsBar({
   };
 
   // Handle tab changing.
-  const handleTabChange = (customView) => {
-    setAccountsTableState({ customViewId: customView.id || null });
+  const handleTabChange = (view) => {
+    setAccountsTableState({ viewSlug: view ? view.slug : null });
   };
 
   // Handle inactive switch changing.
@@ -98,6 +98,8 @@ function AccountsActionsBar({
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'accounts'}
+          allMenuItem={true}
+          allMenuItemText={<T id={'all_accounts'} />}
           views={resourceViews}
           onChange={handleTabChange}
         />

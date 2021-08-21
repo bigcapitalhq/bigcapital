@@ -27,6 +27,7 @@ export default function DashboardContentRoute() {
               hint={route.hint}
               sidebarExpand={route.sidebarExpand}
               pageType={route.pageType}
+              defaultSearchResource={route.defaultSearchResource}
             />
           </Route>
         ))}

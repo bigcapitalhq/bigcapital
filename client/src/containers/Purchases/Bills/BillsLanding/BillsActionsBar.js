@@ -34,7 +34,7 @@ function BillActionsBar({
   setBillsTableState,
 
   // #withBills
-  billsConditionsRoles
+  billsConditionsRoles,
 }) {
   const history = useHistory();
 
@@ -50,13 +50,15 @@ function BillActionsBar({
   };
 
   // Handle tab change.
-  const handleTabChange = (customView) => {
+  const handleTabChange = (view) => {
     setBillsTableState({
-      customViewId: customView.id || null,
+      viewSlug: view ? view.slug : null,
     });
   };
   // Handle click a refresh bills
-  const handleRefreshBtnClick = () => { refresh(); };
+  const handleRefreshBtnClick = () => {
+    refresh();
+  };
 
   return (
     <DashboardActionsBar>
@@ -64,6 +66,8 @@ function BillActionsBar({
         <DashboardActionViewsList
           resourceName={'bills'}
           views={billsViews}
+          allMenuItem={true}
+          allMenuItemText={<T id={'all'} />}
           onChange={handleTabChange}
         />
         <NavbarDivider />
@@ -127,6 +131,6 @@ function BillActionsBar({
 export default compose(
   withBillsActions,
   withBills(({ billsTableState }) => ({
-    billsConditionsRoles: billsTableState.filterRoles
-  }))
+    billsConditionsRoles: billsTableState.filterRoles,
+  })),
 )(BillActionsBar);

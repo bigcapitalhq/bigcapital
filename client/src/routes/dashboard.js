@@ -1,6 +1,7 @@
 
-import React, { lazy } from 'react';
+import { lazy } from 'react';
 import intl from 'react-intl-universal';
+import { RESOURCES_TYPES } from '../common/resourcesTypes';
 
 // const BASE_URL = '/dashboard';
 
@@ -12,6 +13,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('accounts_chart'),
     hotkey: 'shift+a',
     pageTitle: intl.get('accounts_chart'),
+    defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },
   // Accounting.
   {
@@ -24,6 +26,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('new_journal'),
     sidebarExpand: false,
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
   },
   {
     path: `/manual-journals/:id/edit`,
@@ -34,6 +37,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('edit_journal'),
     sidebarExpand: false,
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
   },
   {
     path: `/manual-journals`,
@@ -43,6 +47,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('manual_journals'),
     hotkey: 'shift+m',
     pageTitle: intl.get('manual_journals'),
+    defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
   },
   {
     path: `/items/categories`,
@@ -51,6 +56,7 @@ export const getDashboardRoutes = () => [
     ),
     breadcrumb: intl.get('categories'),
     pageTitle: intl.get('category_list'),
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
   },
   // Items.
   {
@@ -60,6 +66,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('edit_item'),
     pageTitle: intl.get('edit_item'),
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
   },
   {
     path: `/items/new?duplicate=/:id`,
@@ -67,6 +74,7 @@ export const getDashboardRoutes = () => [
       loader: () => import('containers/Items/ItemFormPage'),
     }),
     breadcrumb: intl.get('duplicate_item'),
+    defaultSearchResource: RESOURCES_TYPES.ITEM,  
   },
   {
     path: `/items/new`,
@@ -76,6 +84,7 @@ export const getDashboardRoutes = () => [
     hotkey: 'ctrl+shift+w',
     pageTitle: intl.get('new_item'),
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
   },
   {
     path: `/items`,
@@ -83,6 +92,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('items'),
     hotkey: 'shift+w',
     pageTitle: intl.get('items_list'),
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
   },
 
   // Inventory adjustments.
@@ -93,6 +103,7 @@ export const getDashboardRoutes = () => [
     ),
     breadcrumb: intl.get('inventory_adjustments'),
     pageTitle: intl.get('inventory_adjustment_list'),
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
   },
 
   // Financial Reports.
@@ -107,6 +118,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('general_ledger'),
     backLink: true,
     sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.INVENTORY_ADJUSTMENT,
   },
   {
     path: `/financial-reports/balance-sheet`,
@@ -323,6 +335,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('new_expense'),
     sidebarExpand: false,
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.EXPENSE,
   },
   {
     path: `/expenses/:id/edit`,
@@ -333,6 +346,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('edit_expense'),
     sidebarExpand: false,
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.EXPENSE,
   },
   {
     path: `/expenses`,
@@ -342,6 +356,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('expenses_list'),
     pageTitle: intl.get('expenses_list'),
     hotkey: 'shift+x',
+    defaultSearchResource: RESOURCES_TYPES.EXPENSE,
   },
 
   // Customers
@@ -354,6 +369,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('edit_customer'),
     pageTitle: intl.get('edit_customer'),
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.CUSTOMER,
   },
   {
     path: `/customers/new`,
@@ -365,6 +381,7 @@ export const getDashboardRoutes = () => [
     hotkey: 'ctrl+shift+c',
     pageTitle: intl.get('new_customer'),
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.CUSTOMER,
   },
   {
     path: `/customers`,
@@ -374,6 +391,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('customers'),
     hotkey: 'shift+c',
     pageTitle: intl.get('customers_list'),
+    defaultSearchResource: RESOURCES_TYPES.CUSTOMER,
   },
   {
     path: `/customers/contact_duplicate=/:id`,
@@ -384,6 +402,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('duplicate_customer'),
     pageTitle: intl.get('new_customer'),
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.CUSTOMER,
   },
 
   // Vendors
@@ -396,6 +415,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('edit_vendor'),
     pageTitle: intl.get('edit_vendor'),
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
   },
   {
     path: `/vendors/new`,
@@ -407,6 +427,7 @@ export const getDashboardRoutes = () => [
     hotkey: 'ctrl+shift+v',
     pageTitle: intl.get('new_vendor'),
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
   },
   {
     path: `/vendors`,
@@ -416,6 +437,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('vendors'),
     hotkey: 'shift+v',
     pageTitle: intl.get('vendors_list'),
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
   },
   {
     path: `/vendors/contact_duplicate=/:id`,
@@ -426,6 +448,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('duplicate_vendor'),
     pageTitle: intl.get('new_vendor'),
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
   },
 
   // Estimates
@@ -439,6 +462,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('edit_estimate'),
     backLink: true,
     sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
   },
   {
     path: `/invoices/new?from_estimate_id=/:id`,
@@ -450,6 +474,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('new_estimate'),
     backLink: true,
     sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
   },
   {
     path: `/estimates/new`,
@@ -462,6 +487,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('new_estimate'),
     backLink: true,
     sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
   },
   {
     path: `/estimates`,
@@ -472,6 +498,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('estimates_list'),
     hotkey: 'shift+e',
     pageTitle: intl.get('estimates_list'),
+    defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
   },
 
   // Invoices.
@@ -485,6 +512,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('edit_invoice'),
     sidebarExpand: false,
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
   },
   {
     path: `/invoices/new`,
@@ -497,6 +525,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('new_invoice'),
     sidebarExpand: false,
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
   },
   {
     path: `/invoices`,
@@ -506,6 +535,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('invoices_list'),
     hotkey: 'shift+i',
     pageTitle: intl.get('invoices_list'),
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
   },
 
   // Sales Receipts.
@@ -519,6 +549,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('edit_receipt'),
     backLink: true,
     sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.RECEIPT,
   },
   {
     path: `/receipts/new`,
@@ -531,6 +562,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('new_receipt'),
     backLink: true,
     sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.RECEIPT,
   },
   {
     path: `/receipts`,
@@ -540,6 +572,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('receipts_list'),
     hotkey: 'shift+r',
     pageTitle: intl.get('receipts_list'),
+    defaultSearchResource: RESOURCES_TYPES.RECEIPT,
   },
 
   // Payment receives
@@ -555,6 +588,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('edit_payment_receive'),
     backLink: true,
     sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
   },
   {
     path: `/payment-receives/new`,
@@ -568,6 +602,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('new_payment_receive'),
     backLink: true,
     sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
   },
   {
     path: `/payment-receives`,
@@ -578,6 +613,7 @@ export const getDashboardRoutes = () => [
     ),
     breadcrumb: intl.get('payment_receives_list'),
     pageTitle: intl.get('payment_receives_list'),
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
   },
 
   // Bills
@@ -591,6 +627,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('edit_bill'),
     sidebarExpand: false,
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.BILL,
   },
   {
     path: `/bills/new`,
@@ -603,6 +640,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('new_bill'),
     sidebarExpand: false,
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.BILL,
   },
   {
     path: `/bills`,
@@ -612,6 +650,7 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('bills_list'),
     hotkey: 'shift+b',
     pageTitle: intl.get('bills_list'),
+    defaultSearchResource: RESOURCES_TYPES.BILL,
   },
 
   // Subscription billing.
@@ -633,6 +672,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('edit_payment_made'),
     sidebarExpand: false,
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
   },
   {
     path: `/payment-mades/new`,
@@ -646,6 +686,7 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('new_payment_made'),
     sidebarExpand: false,
     backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
   },
   {
     path: `/payment-mades`,
@@ -656,6 +697,7 @@ export const getDashboardRoutes = () => [
     ),
     breadcrumb: intl.get('payment_made_list'),
     pageTitle: intl.get('payment_made_list'),
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
   },
   // Homepage
   {

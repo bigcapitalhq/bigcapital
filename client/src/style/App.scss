@@ -226,16 +226,16 @@ html[lang^="ar"] {
     z-index: 9999999;
     margin: 6px;
 
-    .bp3-button + .bp3-button{
-      margin-left: 8px;
-    }
-
     .bp3-button{
       border-color: rgba(0, 0, 0, 0.25);
       color: rgb(25, 32, 37);
       min-height: 30px;
       padding-left: 14px;
       padding-right: 14px;
+
+      & + .bp3-button{
+        margin-left: 8px;
+      }
     }
   }
 

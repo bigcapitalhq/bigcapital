@@ -1,0 +1,62 @@
+import { Service, Container } from 'typedi';
+import { Transformer } from 'lib/Transformer/Transformer';
+import { formatNumber } from 'utils';
+import { IExpense } from 'interfaces';
+
+@Service()
+export default class ExpenseTransfromer extends Transformer {
+  /**
+   * Include these attributes to expense object.
+   * @returns {Array}
+   */
+  protected includeAttributes = (): string[] => {
+    return [
+      'formattedAmount',
+      'formattedLandedCostAmount',
+      'formattedAllocatedCostAmount',
+      'formattedDate'
+    ];
+  };
+
+  /**
+   * Retrieve formatted expense amount.
+   * @param {IExpense} expense
+   * @returns {string}
+   */
+  protected formattedAmount = (expense: IExpense): string => {
+    return formatNumber(expense.totalAmount, {
+      currencyCode: expense.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieve formatted expense landed cost amount.
+   * @param {IExpense} expense
+   * @returns {string}
+   */
+  protected formattedLandedCostAmount = (expense: IExpense): string => {
+    return formatNumber(expense.landedCostAmount, {
+      currencyCode: expense.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieve formatted allocated cost amount.
+   * @param {IExpense} expense
+   * @returns {string}
+   */
+  protected formattedAllocatedCostAmount = (expense: IExpense): string => {
+    return formatNumber(expense.allocatedCostAmount, {
+      currencyCode: expense.currencyCode,
+    });
+  };
+
+  /**
+   * Retriecve fromatted date.
+   * @param {IExpense} expense
+   * @returns {string}
+   */
+  protected formattedDate = (expense: IExpense): string => {
+    return this.formatDate(expense.paymentDate);
+  }
+}

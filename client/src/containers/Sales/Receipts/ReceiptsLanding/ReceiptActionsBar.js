@@ -49,22 +49,24 @@ function ReceiptActionsBar({
   // Sale receipt refresh action.
   const { refresh } = useRefreshReceipts();
 
-  const handleTabChange = (customView) => {
+  const handleTabChange = (view) => {
     setReceiptsTableState({
-      customViewId: customView.id || null,
+      viewSlug: view ? view.slug : null,
     });
   };
 
   // Handle click a refresh sale estimates
-  const handleRefreshBtnClick = () => { refresh(); };
-
-  console.log(receiptsFilterConditions, fields, 'XXX');
+  const handleRefreshBtnClick = () => {
+    refresh();
+  };
 
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'receipts'}
+          allMenuItem={true}
+          allMenuItemText={<T id={'all'} />}
           views={receiptsViews}
           onChange={handleTabChange}
         />

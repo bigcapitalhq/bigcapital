@@ -62,9 +62,9 @@ function CustomerActionsBar({
     openAlert('customers-bulk-delete', { customersIds: customersSelectedRows });
   };
 
-  const handleTabChange = (viewId) => {
+  const handleTabChange = (view) => {
     setCustomersTableState({
-      customViewId: viewId.id || null,
+      viewSlug: view ? view.slug : null,
     });
   };
   // Handle inactive switch changing.
@@ -82,6 +82,8 @@ function CustomerActionsBar({
         <DashboardActionViewsList
           resourceName={'customers'}
           views={customersViews}
+          allMenuItem={true}
+          allMenuItemText={<T id={'all'} />}
           onChange={handleTabChange}
         />
         <NavbarDivider />

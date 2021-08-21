@@ -23,6 +23,7 @@ import AccountTypesUtils from 'lib/AccountTypes';
 import { ERRORS } from './constants';
 import { flatToNestedArray } from 'utils';
 import I18nService from 'services/I18n/I18nService';
+import AccountTransformer from './AccountTransform';
 
 @Service()
 export default class AccountsService {
@@ -40,6 +41,9 @@ export default class AccountsService {
 
   @Inject()
   i18nService: I18nService;
+
+  @Inject()
+  accountTransformer: AccountTransformer;
 
   /**
    * Retrieve account type or throws service error.
@@ -326,7 +330,10 @@ export default class AccountsService {
    */
   public async getAccount(tenantId: number, accountId: number) {
     const account = await this.getAccountOrThrowError(tenantId, accountId);
-    return this.transformAccountResponse(tenantId, account);
+
+    return this.accountTransformer.transform(
+      this.transformAccountResponse(tenantId, account)
+    );
   }
 
   /**
@@ -609,13 +616,11 @@ export default class AccountsService {
 
   /**
    * Parsees accounts list filter DTO.
-   * @param filterDTO 
-   * @returns 
+   * @param filterDTO
+   * @returns
    */
   private parseListFilterDTO(filterDTO) {
-    return R.compose(
-      this.dynamicListService.parseStringifiedFilter
-    )(filterDTO);
+    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
   }
 
   /**
@@ -735,10 +740,12 @@ export default class AccountsService {
       key: 'base_currency',
     });
 
-    const _accounts = accounts.map((account) => ({
-      ...account.toJSON(),
-      currencyCode: baseCurrency,
-    }));
+    const _accounts = this.accountTransformer.transform(
+      accounts.map((account) => ({
+        ...account.toJSON(),
+        currencyCode: baseCurrency,
+      }))
+    );
     return flatToNestedArray(
       this.i18nService.i18nMapper(_accounts, ['account_type_label'], tenantId),
       {

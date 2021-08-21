@@ -28,6 +28,7 @@ import { ServiceError } from 'exceptions';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
+import CustomerTransfromer from './Customers/CustomerTransformer';
 
 const ERRORS = {
   CUSTOMER_HAS_TRANSACTIONS: 'CUSTOMER_HAS_TRANSACTIONS',
@@ -60,6 +61,9 @@ export default class CustomersService {
 
   @Inject('SalesEstimates')
   estimatesService: ISalesEstimatesService;
+
+  @Inject()
+  customerTransformer: CustomerTransfromer;
 
   /**
    * Converts customer to contact DTO.
@@ -262,7 +266,10 @@ export default class CustomersService {
       customerId,
       'customer'
     );
-    return this.transformContactToCustomer(contact);
+    return R.compose(
+      this.customerTransformer.transform,
+      this.transformContactToCustomer,
+    )(contact);
   }
 
   /**

@@ -7,7 +7,7 @@ import Sidebar from 'components/Sidebar/Sidebar';
 import DashboardContent from 'components/Dashboard/DashboardContent';
 import DialogsContainer from 'components/DialogsContainer';
 import PreferencesPage from 'components/Preferences/PreferencesPage';
-import Search from 'containers/GeneralSearch/Search';
+import DashboardUniversalSearch from 'containers/UniversalSearch/DashboardUniversalSearch';
 import DashboardSplitPane from 'components/Dashboard/DashboardSplitePane';
 import GlobalHotkeys from './GlobalHotkeys';
 import DashboardProvider from './DashboardProvider';
@@ -35,7 +35,7 @@ export default function Dashboard() {
         </Route>
       </Switch>
 
-      <Search />
+      <DashboardUniversalSearch />
       <DialogsContainer />
       <GlobalHotkeys />
       <DrawersContainer />

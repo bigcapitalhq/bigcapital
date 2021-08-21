@@ -277,6 +277,10 @@ export default class SaleInvoicesController extends BaseController {
       );
       // Response formatter.
       res.format({
+        // JSON content type.
+        [ACCEPT_TYPE.APPLICATION_JSON]: () => {
+          return res.status(200).send(this.transfromToResponse({ saleInvoice }));
+        },
         // PDF content type.
         [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
           const pdfContent = await this.saleInvoicePdf.saleInvoicePdf(
@@ -288,10 +292,6 @@ export default class SaleInvoicesController extends BaseController {
             'Content-Length': pdfContent.length,
           });
           res.send(pdfContent);
-        },
-        // JSON content type.
-        [ACCEPT_TYPE.APPLICATION_JSON]: () => {
-          return res.status(200).send(this.transfromToResponse({ saleInvoice }));
         },
       });
     } catch (error) {

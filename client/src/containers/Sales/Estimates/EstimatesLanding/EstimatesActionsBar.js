@@ -35,7 +35,7 @@ function EstimateActionsBar({
   setEstimatesTableState,
 
   // #withEstimates
-  estimatesFilterRoles
+  estimatesFilterRoles,
 }) {
   const history = useHistory();
 
@@ -51,20 +51,24 @@ function EstimateActionsBar({
   const { refresh } = useRefreshEstimates();
 
   // Handle tab change.
-  const handleTabChange = (customView) => {
+  const handleTabChange = (view) => {
     setEstimatesTableState({
-      customViewId: customView.id || null,
+      viewSlug: view ? view.slug : null,
     });
   };
 
   // Handle click a refresh sale estimates
-  const handleRefreshBtnClick = () => { refresh(); };
+  const handleRefreshBtnClick = () => {
+    refresh();
+  };
 
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'estimates'}
+          allMenuItem={true}
+          allMenuItemText={<T id={'all'} />}
           views={estimatesViews}
           onChange={handleTabChange}
         />

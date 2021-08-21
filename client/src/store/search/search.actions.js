@@ -20,3 +20,36 @@ export function generalSearch(name, result) {
     result,
   };
 }
+
+export function universalSearchSetResourceType(resourceType) {
+  return {
+    type: t.UNIVERSAL_SEARCH_SET_RESOURCE_TYPE,
+    payload: {
+      resourceType,
+    },
+  };
+}
+
+export function universalSearchResetResourceType() {
+  return {
+    type: t.UNIVERSAL_SEARCH_RESET_RESOURCE_TYPE,
+  };
+}
+
+
+export function universalSearchSetSelectedItem(resourceType, resourceId) {
+  return {
+    type: t.UNIVERSAL_SEARCH_SET_ITEM_SELECT,
+    payload: {
+      resourceType,
+      resourceId
+    }
+  };
+}
+
+export function universalSearchResetSelectedItem() {
+  return {
+    type: t.UNIVERSAL_SEARCH_RESET_ITEM_SELECT,
+    payload: {}
+  };
+}

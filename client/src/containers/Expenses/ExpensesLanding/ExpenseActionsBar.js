@@ -37,7 +37,7 @@ function ExpensesActionsBar({
   setExpensesTableState,
 
   // #withExpenses
-  expensesFilterConditions
+  expensesFilterConditions,
 }) {
   // History context.
   const history = useHistory();
@@ -57,9 +57,9 @@ function ExpensesActionsBar({
   const handleBulkDelete = () => {};
 
   // Handles the tab chaning.
-  const handleTabChange = (viewId) => {
+  const handleTabChange = (view) => {
     setExpensesTableState({
-      customViewId: viewId.id || null,
+      viewSlug: view ? view.slug : null,
     });
   };
 
@@ -73,6 +73,7 @@ function ExpensesActionsBar({
         <DashboardActionViewsList
           resourceName={'expenses'}
           views={expensesViews}
+          allMenuItem={true}
           onChange={handleTabChange}
         />
         <NavbarDivider />
@@ -140,5 +141,5 @@ export default compose(
   withExpensesActions,
   withExpenses(({ expensesTableState }) => ({
     expensesFilterConditions: expensesTableState.filterRoles,
-  }))
+  })),
 )(ExpensesActionsBar);

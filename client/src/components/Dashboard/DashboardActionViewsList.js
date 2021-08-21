@@ -8,6 +8,7 @@ import {
   Popover,
   PopoverInteractionKind,
   Position,
+  Divider,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
 import { Icon } from 'components';
@@ -17,6 +18,8 @@ import { Icon } from 'components';
  */
 export default function DashboardActionViewsList({
   resourceName,
+  allMenuItem,
+  allMenuItemText,
   views,
   onChange,
 }) {
@@ -28,9 +31,28 @@ export default function DashboardActionViewsList({
     <MenuItem onClick={() => handleClickViewItem(view)} text={view.name} />
   ));
 
+  const handleAllTabClick = () => {
+    handleClickViewItem(null);
+  };
+
+  const content = (
+    <Menu>
+      {allMenuItem && (
+        <>
+          <MenuItem
+            onClick={handleAllTabClick}
+            text={allMenuItemText || 'All'}
+          />
+          <Divider />
+        </>
+      )}
+      {viewsMenuItems}
+    </Menu>
+  );
+
   return (
     <Popover
-      content={<Menu>{viewsMenuItems}</Menu>}
+      content={content}
       minimal={true}
       interactionKind={PopoverInteractionKind.CLICK}
       position={Position.BOTTOM_LEFT}

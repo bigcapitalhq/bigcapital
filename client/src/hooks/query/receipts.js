@@ -99,7 +99,7 @@ export function useCloseReceipt(props) {
 }
 
 const transformReceipts = (res) => ({
-  receipts: res.data.sale_receipts,
+  receipts: res.data.data,
   pagination: transformPagination(res.data.pagination),
   filterMeta: res.data.filter_meta,
 });

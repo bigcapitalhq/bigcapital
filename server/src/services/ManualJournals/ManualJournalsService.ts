@@ -24,6 +24,7 @@ import JournalCommands from 'services/Accounting/JournalCommands';
 import JournalPosterService from 'services/Sales/JournalPosterService';
 import AutoIncrementOrdersService from 'services/Sales/AutoIncrementOrdersService';
 import { ERRORS } from './constants';
+import ManualJournalTransfromer from './ManualJournalTransformer';
 
 @Service()
 export default class ManualJournalsService implements IManualJournalsService {
@@ -44,6 +45,9 @@ export default class ManualJournalsService implements IManualJournalsService {
 
   @Inject()
   autoIncrementOrdersService: AutoIncrementOrdersService;
+
+  @Inject()
+  manualJournalTransformer: ManualJournalTransfromer;
 
   /**
    * Validates the manual journal existance.
@@ -815,7 +819,7 @@ export default class ManualJournalsService implements IManualJournalsService {
       .pagination(filter.page - 1, filter.pageSize);
 
     return {
-      manualJournals: results,
+      manualJournals: this.manualJournalTransformer.transform(results),
       pagination,
       filterMeta: dynamicService.getResponseMeta(),
     };
@@ -842,7 +846,7 @@ export default class ManualJournalsService implements IManualJournalsService {
       .withGraphFetched('transactions')
       .withGraphFetched('media');
 
-    return manualJournal;
+    return this.manualJournalTransformer.transform(manualJournal);
   }
 
   /**

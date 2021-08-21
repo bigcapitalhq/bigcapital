@@ -243,11 +243,13 @@ export default class SalesReceiptsController extends BaseController {
     };
 
     try {
-      const { salesReceipts, pagination, filterMeta } =
+      const { data, pagination, filterMeta } =
         await this.saleReceiptService.salesReceiptsList(tenantId, filter);
 
       const response = this.transfromToResponse({
-        salesReceipts, pagination, filterMeta
+        data,
+        pagination,
+        filterMeta,
       });
       return res.status(200).send(response);
     } catch (error) {
@@ -272,6 +274,11 @@ export default class SalesReceiptsController extends BaseController {
       );
 
       res.format({
+        'application/json': () => {
+          return res
+            .status(200)
+            .send(this.transfromToResponse({ saleReceipt }));
+        },
         'application/pdf': async () => {
           const pdfContent = await this.saleReceiptsPdf.saleReceiptPdf(
             tenantId,
@@ -283,10 +290,7 @@ export default class SalesReceiptsController extends BaseController {
           });
           res.send(pdfContent);
         },
-        'application/json': () => {
-          return res.status(200).send(this.transfromToResponse({ saleReceipt }));
-        }
-      })
+      });
     } catch (error) {
       next(error);
     }

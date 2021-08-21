@@ -335,7 +335,7 @@ export default class BillsPayments extends BaseController {
       );
 
       return res.status(200).send({
-        bill_payments: billPayments,
+        bill_payments: this.transfromToResponse(billPayments),
         pagination: this.transfromToResponse(pagination),
         filter_meta: this.transfromToResponse(filterMeta),
       });

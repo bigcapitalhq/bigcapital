@@ -10,10 +10,7 @@ export default class PaymentReceiveTransfromer extends Transformer {
    * @returns {Array}
    */
   protected includeAttributes = (): string[] => {
-    return [
-      'formattedPaymentDate',
-      'formattedAmount',
-    ];
+    return ['formattedPaymentDate', 'formattedAmount'];
   };
 
   /**

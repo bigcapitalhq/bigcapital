@@ -25,6 +25,7 @@ import events from 'subscribers/events';
 import ContactsService from 'services/Contacts/ContactsService';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_ROOT_TYPE } from 'data/AccountTypes';
 import EntriesService from 'services/Entries';
+import ExpenseTransfromer from './ExpenseTransformer';
 
 const ERRORS = {
   EXPENSE_NOT_FOUND: 'expense_not_found',
@@ -57,6 +58,9 @@ export default class ExpensesService implements IExpensesService {
 
   @Inject()
   entriesService: EntriesService;
+
+  @Inject()
+  expenseTransfromer: ExpenseTransfromer;
 
   /**
    * Retrieve the payment account details or returns not found server error in case the
@@ -681,7 +685,7 @@ export default class ExpensesService implements IExpensesService {
       .pagination(filter.page - 1, filter.pageSize);
 
     return {
-      expenses: results,
+      expenses: this.expenseTransfromer.transform(results),
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };
@@ -706,7 +710,7 @@ export default class ExpensesService implements IExpensesService {
     if (!expense) {
       throw new ServiceError(ERRORS.EXPENSE_NOT_FOUND);
     }
-    return expense;
+    return this.expenseTransfromer.transform(expense);
   }
 
   /**
