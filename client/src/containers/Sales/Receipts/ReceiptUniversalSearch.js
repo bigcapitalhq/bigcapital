@@ -1,5 +1,6 @@
 
 import React from 'react';
+import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
 
 import { Icon, Choose, T } from 'components';
@@ -93,7 +94,7 @@ const transformReceiptsToSearch = (receipt) => ({
  */
 export const universalSearchReceiptBind = () => ({
   resourceType: RESOURCES_TYPES.RECEIPT,
-  optionItemLabel: 'Receipts',
+  optionItemLabel: intl.get('receipts'),
   selectItemAction: ReceiptUniversalSearchSelect,
   itemRenderer: ReceiptUniversalSearchItem,
   itemSelect: transformReceiptsToSearch,

@@ -1,3 +1,5 @@
+import intl from 'react-intl-universal';
+
 import { RESOURCES_TYPES } from '../../common/resourcesTypes';
 import withDrawerActions from '../Drawer/withDrawerActions';
 
@@ -27,7 +29,7 @@ const customersToSearch = (contact) => ({
  */
 export const universalSearchCustomerBind = () => ({
   resourceType: RESOURCES_TYPES.CUSTOMER,
-  optionItemLabel: 'Customers',
+  optionItemLabel: intl.get('customers'),
   selectItemAction: CustomerUniversalSearchSelectAction,
   itemSelect: customersToSearch,
 });

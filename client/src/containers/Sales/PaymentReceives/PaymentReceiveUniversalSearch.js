@@ -1,5 +1,7 @@
 import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
+
 import { RESOURCES_TYPES } from "../../../common/resourcesTypes";
 import withDrawerActions from "../../Drawer/withDrawerActions";
 import { highlightText } from 'utils';
@@ -71,7 +73,7 @@ export function PaymentReceiveUniversalSearchItem(
  */
  export const universalSearchPaymentReceiveBind = () => ({
   resourceType: RESOURCES_TYPES.PAYMENT_RECEIVE,
-  optionItemLabel: 'Payment receive',
+  optionItemLabel: intl.get('payment_receives'),
   selectItemAction: PaymentReceiveUniversalSearchSelect,
   itemRenderer: PaymentReceiveUniversalSearchItem,
   itemSelect: paymentReceivesToSearch,

@@ -1,9 +1,9 @@
 import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 
 import { formattedAmount } from 'utils';
 import { T, Icon, Choose, If } from 'components';
-import intl from 'react-intl-universal';
 
 import { RESOURCES_TYPES } from 'common/resourcesTypes';
 import withDrawerActions from '../../Drawer/withDrawerActions';
@@ -109,7 +109,7 @@ const billsToSearch = (bill) => ({
 
 export const universalSearchBillBind = () => ({
   resourceType: RESOURCES_TYPES.BILL,
-  optionItemLabel: 'Bills',
+  optionItemLabel: intl.get('bills'),
   selectItemAction: BillUniversalSearchSelect,
   itemRenderer: BillUniversalSearchItem,
   itemSelect: billsToSearch,

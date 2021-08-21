@@ -1,3 +1,4 @@
+import intl from 'react-intl-universal';
 import { RESOURCES_TYPES } from '../../common/resourcesTypes';
 import withDrawerActions from '../Drawer/withDrawerActions';
 
@@ -35,7 +36,7 @@ const accountToSearch = (account) => ({
  */
 export const universalSearchAccountBind = () => ({
   resourceType: RESOURCES_TYPES.ACCOUNT,
-  optionItemLabel: 'Account',
+  optionItemLabel: intl.get('accounts'),
   selectItemAction: AccountUniversalSearchItemSelect,
   itemSelect: accountToSearch,
 });

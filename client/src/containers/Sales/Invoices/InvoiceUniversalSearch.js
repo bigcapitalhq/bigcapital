@@ -114,7 +114,7 @@ export function InvoiceUniversalSearchItem(
  */
 export const universalSearchInvoiceBind = () => ({
   resourceType: RESOURCES_TYPES.INVOICE,
-  optionItemLabel: 'Invoices',
+  optionItemLabel: intl.get('invoices'),
   selectItemAction: InvoiceUniversalSearchSelect,
   itemRenderer: InvoiceUniversalSearchItem,
   itemSelect: transformInvoicesToSearch,

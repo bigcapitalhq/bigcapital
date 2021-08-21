@@ -1,3 +1,4 @@
+import intl from 'react-intl-universal';
 import { RESOURCES_TYPES } from '../../common/resourcesTypes';
 import withDrawerActions from '../Drawer/withDrawerActions';
 
@@ -39,7 +40,7 @@ const transfromItemsToSearch = (item) => ({
  */
 export const universalSearchItemBind = () => ({
   resourceType: RESOURCES_TYPES.ITEM,
-  optionItemLabel: 'Items',
+  optionItemLabel: intl.get('items'),
   selectItemAction: ItemUniversalSearchSelectAction,
   itemSelect: transfromItemsToSearch,
 });

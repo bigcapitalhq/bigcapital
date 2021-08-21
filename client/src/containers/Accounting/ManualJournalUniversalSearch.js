@@ -1,3 +1,4 @@
+import intl from 'react-intl-universal';
 import { RESOURCES_TYPES } from 'common/resourcesTypes';
 import withDrawerActions from '../Drawer/withDrawerActions';
 
@@ -37,7 +38,7 @@ const manualJournalsToSearch = (manualJournal) => ({
  */
 export const universalSearchJournalBind = () => ({
   resourceType: RESOURCES_TYPES.MANUAL_JOURNAL,
-  optionItemLabel: 'Manual journal',
+  optionItemLabel: intl.get('manual_journals'),
   selectItemAction: JournalUniversalSearchSelectAction,
   itemSelect: manualJournalsToSearch,
 });

@@ -1,5 +1,6 @@
 import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 
 import { Icon } from 'components';
 
@@ -72,7 +73,7 @@ const paymentMadeToSearch = (payment) => ({
  */
  export const universalSearchPaymentMadeBind = () => ({
   resourceType: RESOURCES_TYPES.PAYMENT_MADE,
-  optionItemLabel: 'Payment made',
+  optionItemLabel: intl.get('payment_mades'),
   selectItemAction: PaymentMadeUniversalSearchSelect,
   itemRenderer: PaymentMadeUniversalSearchItem,
   itemSelect: paymentMadeToSearch,

@@ -1,5 +1,6 @@
 import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 
 import { Choose, T, Icon } from 'components';
 
@@ -99,7 +100,7 @@ const transformEstimatesToSearch = (estimate) => ({
 
 export const universalSearchEstimateBind = () => ({
   resourceType: RESOURCES_TYPES.ESTIMATE,
-  optionItemLabel: 'Estimates',
+  optionItemLabel: intl.get('estimates'),
   selectItemAction: EstimateUniversalSearchSelect,
   itemRenderer: EstimateUniversalSearchItem,
   itemSelect: transformEstimatesToSearch

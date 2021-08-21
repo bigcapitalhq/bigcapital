@@ -1,3 +1,5 @@
+import intl from 'react-intl-universal';
+
 import { RESOURCES_TYPES } from '../../common/resourcesTypes';
 import withDrawerActions from '../Drawer/withDrawerActions';
 
@@ -25,7 +27,7 @@ const vendorToSearch = (contact) => ({
  */
 export const universalSearchVendorBind = () => ({
   resourceType: RESOURCES_TYPES.VENDOR,
-  optionItemLabel: 'Vendor',
+  optionItemLabel: intl.get('vendors'),
   selectItemAction: VendorUniversalSearchSelectAction,
   itemSelect: vendorToSearch,
 });
