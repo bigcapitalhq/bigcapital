@@ -1,6 +1,8 @@
 import { useQueryClient, useMutation } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
+import { useRequestPdf } from '../useRequestPdf';
+
 import { transformPagination } from 'utils';
 import t from './types';
 
@@ -168,6 +170,14 @@ export function useRejectEstimate(props) {
     },
     ...props,
   });
+}
+
+/**
+ * Retrieve the estimate pdf document data,
+ */
+
+export function usePdfEstimate(estimateId) {
+  return useRequestPdf(`sales/estimates/${estimateId}`);
 }
 
 export function useRefreshEstimates() {

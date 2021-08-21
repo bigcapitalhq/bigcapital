@@ -2,17 +2,17 @@ import React from 'react';
 import { AnchorButton } from '@blueprintjs/core';
 
 import { DialogContent, PdfDocumentPreview, T } from 'components';
-import { usePdfInvoice } from 'hooks/query';
+import { usePdfReceipt } from 'hooks/query';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
-function InvoicePdfPreviewDialogContent({
-  subscriptionForm: { invoiceId },
-  // #withDialog
+function ReceiptPdfPreviewDialogContent({
+  subscriptionForm: { receiptId },
+  // #withDialogActions
   closeDialog,
 }) {
-  const { isLoading, pdfUrl } = usePdfInvoice(invoiceId);
+  const { isLoading, pdfUrl } = usePdfReceipt(receiptId);
 
   return (
     <DialogContent>
@@ -28,7 +28,7 @@ function InvoicePdfPreviewDialogContent({
 
         <AnchorButton
           href={pdfUrl}
-          download={'invoice.pdf'}
+          download={'receipt.pdf'}
           minimal={true}
           outlined={true}
         >
@@ -46,4 +46,4 @@ function InvoicePdfPreviewDialogContent({
   );
 }
 
-export default compose(withDialogActions)(InvoicePdfPreviewDialogContent);
+export default compose(withDialogActions)(ReceiptPdfPreviewDialogContent);

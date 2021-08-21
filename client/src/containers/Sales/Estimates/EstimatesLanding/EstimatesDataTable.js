@@ -12,6 +12,7 @@ import withEstimatesActions from './withEstimatesActions';
 import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { ActionsMenu, useEstiamtesTableColumns } from './components';
@@ -28,6 +29,9 @@ function EstimatesDataTable({
 
   // #withDrawerActions
   openDrawer,
+
+  // #withDialogAction
+  openDialog,
 }) {
   const history = useHistory();
 
@@ -77,6 +81,16 @@ function EstimatesDataTable({
     history.push(`/invoices/new?from_estimate_id=${id}`, { action: id });
   };
 
+  // Handle view detail estimate.
+  const handleViewDetailEstimate = ({ id }) => {
+    openDrawer('estimate-detail-drawer', { estimateId: id });
+  };
+
+  // Handle print estimate.
+  const handlePrintEstimate = ({ id }) => {
+    openDialog('estimate-pdf-preview', { estimateId: id });
+  };
+
   // Handles fetch data.
   const handleFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
@@ -120,6 +134,8 @@ function EstimatesDataTable({
         onDelete: handleDeleteEstimate,
         onDrawer: handleDrawerEstimate,
         onConvert: handleConvertToInvoice,
+        onViewDetails: handleViewDetailEstimate,
+        onPrint: handlePrintEstimate,
       }}
     />
   );
@@ -129,6 +145,7 @@ export default compose(
   withEstimatesActions,
   withAlertsActions,
   withDrawerActions,
+  withDialogActions,
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
   })),

@@ -58,15 +58,16 @@ export function ActionsMenu({
     onDelete,
     onDrawer,
     onConvert,
+    onViewDetails,
+    onPrint,
   },
 }) {
-  
-
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
         text={intl.get('view_details')}
+        onClick={safeCallback(onViewDetails, original)}
       />
       <MenuDivider />
       <MenuItem
@@ -120,6 +121,11 @@ export function ActionsMenu({
         onClick={safeCallback(onDrawer, original)}
       />
       <MenuItem
+        icon={<Icon icon={'print-16'} iconSize={16} />}
+        text={intl.get('print')}
+        onClick={safeCallback(onPrint, original)}
+      />
+      <MenuItem
         text={intl.get('delete_estimate')}
         intent={Intent.DANGER}
         onClick={safeCallback(onDelete, original)}
@@ -149,8 +155,6 @@ function ActionsCell(props) {
 }
 
 export function useEstiamtesTableColumns() {
-  
-
   return React.useMemo(
     () => [
       {
@@ -204,7 +208,7 @@ export function useEstiamtesTableColumns() {
         accessor: 'reference',
         width: 90,
         className: 'reference',
-      }
+      },
     ],
     [],
   );

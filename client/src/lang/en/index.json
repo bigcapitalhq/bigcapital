@@ -1206,5 +1206,7 @@
   "pdf_preview.dialog.title": "PDF Preview",
   "pdf_preview.download.button": "Download",
   "pdf_preview.preview.button": "Preview",
-  "invoice_preview.dialog.title": "Invoice PDF Preview"
+  "invoice_preview.dialog.title": "Invoice PDF Preview",
+  "estimate_preview.dialog.title":"Estimate PDF Preview",
+  "receipt_preview.dialog.title":"Receipt PDF Preview"
 }

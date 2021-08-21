@@ -15,6 +15,8 @@ import QuickPaymentReceiveFormDialog from 'containers/Dialogs/QuickPaymentReceiv
 import QuickPaymentMadeFormDialog from 'containers/Dialogs/QuickPaymentMadeFormDialog';
 import AllocateLandedCostDialog from 'containers/Dialogs/AllocateLandedCostDialog';
 import InvoicePdfPreviewDialog from 'containers/Dialogs/InvoicePdfPreviewDialog';
+import EstimatePdfPreviewDialog from 'containers/Dialogs/EstimatePdfPreviewDialog';
+import ReceiptPdfPreviewDialog from '../containers/Dialogs/ReceiptPdfPreviewDialog';
 
 /**
  * Dialogs container.
@@ -35,7 +37,9 @@ export default function DialogsContainer() {
       <QuickPaymentReceiveFormDialog dialogName={'quick-payment-receive'} />
       <QuickPaymentMadeFormDialog dialogName={'quick-payment-made'} />
       <AllocateLandedCostDialog dialogName={'allocate-landed-cost'} />
-      <InvoicePdfPreviewDialog dialog={'invoice-pdf-preview'} />
+      <InvoicePdfPreviewDialog dialogName={'invoice-pdf-preview'} />
+      <EstimatePdfPreviewDialog dialogName={'estimate-pdf-preview'} />
+      <ReceiptPdfPreviewDialog dialogName={'receipt-pdf-preview'} />
     </div>
   );
 }

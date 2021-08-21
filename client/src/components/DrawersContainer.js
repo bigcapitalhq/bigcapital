@@ -11,6 +11,7 @@ import InvoiceDetailDrawer from 'containers/Drawers/InvoiceDetailDrawer';
 import ReceiptDetailDrawer from 'containers/Drawers/ReceiptDetailDrawer';
 import PaymentReceiveDetailDrawer from 'containers/Drawers/PaymentReceiveDetailDrawer';
 import PaymentMadeDetailDrawer from 'containers/Drawers/PaymentMadeDetailDrawer';
+import EstimateDetailDrawer from '../containers/Drawers/EstimateDetailDrawer';
 
 export default function DrawersContainer() {
   return (
@@ -24,6 +25,7 @@ export default function DrawersContainer() {
       <ExpenseDrawer name={'expense-drawer'} />
       <BillDrawer name={'bill-drawer'} />
       <InvoiceDetailDrawer name={'invoice-detail-drawer'} />
+      <EstimateDetailDrawer name={'estimate-detail-drawer'} />
       <ReceiptDetailDrawer name={'receipt-detail-drawer'} />
       <PaymentReceiveDetailDrawer name={'payment-receive-detail-drawer'} />
       <PaymentMadeDetailDrawer name={'payment-made-detail-drawer'} />
