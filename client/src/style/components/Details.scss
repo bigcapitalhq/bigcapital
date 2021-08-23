@@ -1,6 +1,5 @@
 .details-menu {
   margin: 15px;
-  border: 1px solid #d2dce2;
 
   &--vertical {
     display: flex;
@@ -8,7 +7,7 @@
     justify-content: flex-start;
     padding: 10px;
     margin-bottom: 15px;
-    // border-bottom: 1px solid #d2dce2;
+    border-bottom: 1px solid #d2dce2;
   }
 
   &--horizontal {
@@ -17,9 +16,14 @@
     line-height: 30px;
     padding: 10px;
 
-    .label {
-      color: #666666;
-      font-weight: 500;
+    .detail-item {
+      display: flex;
+      align-items: center;
+      &__label {
+        flex-basis: 25%;
+        color: #666666;
+        font-weight: 500;
+      }
     }
   }
 
@@ -27,7 +31,7 @@
   }
 
   .detail-item {
-    flex: 1;
+    flex: 0 0 25%;
     line-height: 1.3rem;
     &__label {
       color: #666666;

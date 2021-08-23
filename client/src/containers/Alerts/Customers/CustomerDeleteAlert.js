@@ -20,7 +20,7 @@ function CustomerDeleteAlert({
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { customerId },
+  payload: { contactId },
 
   // #withAlertActions
   closeAlert,
@@ -38,7 +38,7 @@ function CustomerDeleteAlert({
 
   // handle confirm delete customer.
   const handleConfirmDeleteCustomer = useCallback(() => {
-    deleteCustomerMutate(customerId)
+    deleteCustomerMutate(contactId)
       .then(() => {
         AppToaster.show({
           message: intl.get('the_customer_has_been_deleted_successfully'),
@@ -51,7 +51,7 @@ function CustomerDeleteAlert({
       .finally(() => {
         closeAlert(name);
       });
-  }, [deleteCustomerMutate, customerId, closeAlert, name]);
+  }, [deleteCustomerMutate, contactId, closeAlert, name]);
 
   return (
     <Alert

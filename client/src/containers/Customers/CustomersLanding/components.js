@@ -18,13 +18,21 @@ import intl from 'react-intl-universal';
  */
 export function ActionsMenu({
   row: { original },
-  payload: { onEdit, onDelete, onDuplicate, onInactivate, onActivate },
+  payload: {
+    onEdit,
+    onDelete,
+    onDuplicate,
+    onInactivate,
+    onActivate,
+    onViewDetails,
+  },
 }) {
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
         text={intl.get('view_details')}
+        onClick={safeCallback(onViewDetails, original)}
       />
       <MenuDivider />
       <MenuItem

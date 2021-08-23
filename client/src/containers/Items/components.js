@@ -10,7 +10,7 @@ import {
   Popover,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import {  FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from 'components';
 import { isNumber } from 'lodash';
 import { Icon, Money, If } from 'components';
 import { isBlank, safeCallback } from 'utils';
@@ -80,14 +80,15 @@ export function ItemsActionMenuList({
     onMakeAdjustment,
     onDeleteItem,
     onDuplicate,
+    onViewDetails,
   },
 }) {
-  
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
         text={<T id={'view_details'} />}
+        onClick={safeCallback(onViewDetails, original)}
       />
       <MenuDivider />
       <MenuItem

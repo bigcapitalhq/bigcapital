@@ -20,7 +20,7 @@ function VendorDeleteAlert({
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { vendorId },
+  payload: { contactId },
 
   // #withAlertActions
   closeAlert,
@@ -35,7 +35,7 @@ function VendorDeleteAlert({
 
   // Handle confirm delete vendor.
   const handleConfirmDeleteVendor = useCallback(() => {
-    deleteVendorMutate(vendorId)
+    deleteVendorMutate(contactId)
       .then(() => {
         AppToaster.show({
           message: intl.get('the_vendor_has_been_deleted_successfully'),
@@ -54,7 +54,7 @@ function VendorDeleteAlert({
       .finally(() => {
         closeAlert(name);
       });
-  }, [deleteVendorMutate, name, closeAlert, vendorId]);
+  }, [deleteVendorMutate, name, closeAlert, contactId]);
 
   return (
     <Alert

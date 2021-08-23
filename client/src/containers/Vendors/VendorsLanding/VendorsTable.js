@@ -12,6 +12,7 @@ import withVendorsActions from './withVendorsActions';
 import withVendors from './withVendors';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 import { ActionsMenu, useVendorsTableColumns } from './components';
@@ -28,6 +29,10 @@ function VendorsTable({
 
   // #withAlertsActions
   openAlert,
+
+  // #withDrawerActions
+  openDrawer,
+
   // #withDialogActions
   openDialog,
 }) {
@@ -66,7 +71,7 @@ function VendorsTable({
 
   // Handle click delete vendor.
   const handleDeleteVendor = ({ id }) => {
-    openAlert('vendor-delete', { vendorId: id });
+    openAlert('vendor-delete', { contactId: id });
   };
 
   // Handle contact duplicate .
@@ -75,6 +80,12 @@ function VendorsTable({
       contactId: id,
     });
   };
+
+  // Handle view detail item.
+  const handleViewDetailVendor = ({ id }) => {
+    openDrawer('contact-detail-drawer', { contactId: id });
+  };
+  
   // Handle fetch data once the page index, size or sort by of the table change.
   const handleFetchData = React.useCallback(
     ({ pageSize, pageIndex, sortBy }) => {
@@ -119,6 +130,7 @@ function VendorsTable({
         onDuplicate: handleContactDuplicate,
         onInactivate: handleInactiveVendor,
         onActivate: handleActivateVendor,
+        onViewDetails: handleViewDetailVendor,
       }}
     />
   );
@@ -128,5 +140,7 @@ export default compose(
   withVendorsActions,
   withAlertsActions,
   withDialogActions,
+  withDrawerActions,
+
   withVendors(({ vendorsTableState }) => ({ vendorsTableState })),
 )(VendorsTable);
