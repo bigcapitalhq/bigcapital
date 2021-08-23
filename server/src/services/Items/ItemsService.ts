@@ -513,12 +513,10 @@ export default class ItemsService implements IItemsService {
 
     const item = await Item.query()
       .findById(itemId)
-      .withGraphFetched(
-        'costAccount',
-        'sellAccount',
-        'inventoryAccount',
-        'category'
-      );
+      .withGraphFetched('sellAccount')
+      .withGraphFetched('inventoryAccount')
+      .withGraphFetched('category')
+      .withGraphFetched('costAccount');
 
     if (!item) {
       throw new ServiceError(ERRORS.NOT_FOUND);
@@ -664,7 +662,7 @@ export default class ItemsService implements IItemsService {
     });
 
     return {
-      ...item,
+      ...item.toObject ? item.toObject() : item,
       sellPriceFormatted: formatNumber(item.sellPrice, { currencyCode }),
       costPriceFormatted: formatNumber(item.costPrice, { currencyCode }),
     };
