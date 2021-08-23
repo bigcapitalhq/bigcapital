@@ -1,4 +1,3 @@
-
 export default {
   defaultFilterField: 'vendor',
   defaultSort: {
@@ -6,8 +5,8 @@ export default {
     sortField: 'bill_date',
   },
   fields: {
-    'vendor': {
-      name: 'Vendor name',
+    vendor: {
+      name: 'bill_payment.field.vendor',
       column: 'vendor_id',
       fieldType: 'relation',
 
@@ -17,18 +16,18 @@ export default {
       relationEntityLabel: 'display_name',
       relationEntityKey: 'id',
     },
-    'amount': {
-      name: 'Amount',
+    amount: {
+      name: 'bill_payment.field.amount',
       column: 'amount',
       fieldType: 'number',
     },
-    'due_amount': {
-      name: 'Due amount',
+    due_amount: {
+      name: 'bill_payment.field.due_amount',
       column: 'due_amount',
       fieldType: 'number',
     },
-    'payment_account': {
-      name: 'Payment account',
+    payment_account: {
+      name: 'bill_payment.field.payment_account',
       column: 'payment_account_id',
 
       fieldType: 'relation',
@@ -38,28 +37,28 @@ export default {
       relationLabelField: 'name',
       relationKeyField: 'slug',
     },
-    'payment_number': {
-      name: 'Payment number',
+    payment_number: {
+      name: 'bill_payment.field.payment_number',
       column: 'payment_number',
       fieldType: 'number',
     },
-    'payment_date': {
-      name: 'Payment date',
+    payment_date: {
+      name: 'bill_payment.field.payment_date',
       column: 'payment_date',
       fieldType: 'date',
     },
-    'reference_no': {
-      name: 'Reference No.',
+    reference_no: {
+      name: 'bill_payment.field.reference_no',
       column: 'reference',
       fieldType: 'text',
     },
-    'description': {
-      name: 'Description',
+    description: {
+      name: 'bill_payment.field.description',
       column: 'description',
       fieldType: 'text',
     },
-    'created_at': {
-      name: 'Created at',
+    created_at: {
+      name: 'bill_payment.field.created_at',
       column: 'created_at',
       fieldType: 'date',
     },

@@ -1,10 +1,12 @@
 import { Service, Inject } from 'typedi';
 import { camelCase, upperFirst } from 'lodash';
+import * as qim from 'qim';
 import pluralize from 'pluralize';
-import { buildFilter } from 'objection-filter';
-import { IModel, IModelMeta } from 'interfaces';
+import { IModelMeta } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
 import { ServiceError } from 'exceptions';
+import I18nService from 'services/I18n/I18nService';
+import { tenantKnexConfig } from 'config/knexConfig';
 
 const ERRORS = {
   RESOURCE_MODEL_NOT_FOUND: 'RESOURCE_MODEL_NOT_FOUND',
@@ -14,6 +16,9 @@ const ERRORS = {
 export default class ResourceService {
   @Inject()
   tenancy: TenancyService;
+
+  @Inject()
+  i18nService: I18nService;
 
   /**
    * Transform resource to model name.
@@ -50,6 +55,25 @@ export default class ResourceService {
     metakey?: string
   ): IModelMeta {
     const resourceModel = this.getResourceModel(tenantId, modelName);
-    return resourceModel.getMeta(metakey);
+
+    // Retrieve the resource meta.
+    const resourceMeta = resourceModel.getMeta(metakey);
+
+    // Localization the fields names.
+    return this.getResourceMetaLocalized(resourceMeta, tenantId);
+  }
+
+  /**
+   * Retrieve the resource meta localized based on the current user language.
+   */
+  public getResourceMetaLocalized(meta, tenantId) {
+    const $enumerationType = (field) =>
+      field.fieldType === 'enumeration' ? field : undefined;
+
+    const naviagations = [
+      ['fields', qim.$each, 'name'],
+      ['fields', qim.$each, $enumerationType, 'options', qim.$each, 'label'],
+    ];
+    return this.i18nService.i18nApply(naviagations, meta, tenantId);
   }
 }

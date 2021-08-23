@@ -47,9 +47,11 @@ export default class ResourceController extends BaseController {
         tenantId,
         resourceModel
       );
-      return res
-        .status(200)
-        .send({ resource_meta: this.transfromToResponse(resourceMeta) });
+      return res.status(200).send({
+        resource_meta: this.transfromToResponse(
+          resourceMeta,
+        ),
+      });
     } catch (error) {
       next(error);
     }

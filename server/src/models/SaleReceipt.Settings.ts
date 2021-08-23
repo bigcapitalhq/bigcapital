@@ -6,13 +6,13 @@ export default {
   },
   fields: {
     'amount': {
-      name: 'Amount',
+      name: 'receipt.field.amount',
       column: 'amount',
       fieldType: 'number',
     },
     'deposit_account': {
       column: 'deposit_account_id',
-      name: 'Deposit account',
+      name: 'receipt.field.deposit_account',
       fieldType: 'relation',
 
       relationType: 'enumeration',
@@ -22,8 +22,8 @@ export default {
       relationEntityKey: 'slug',
     },
     'customer': {
-      label: 'Customer',
-      name: 'customer_id',
+      name: 'receipt.field.customer',
+      column: 'customer_id',
       fieldType: 'relation',
 
       relationType: 'enumeration',
@@ -33,42 +33,42 @@ export default {
       relationEntityKey: 'id',
     },
     'receipt_date': {
-      name: 'Receipt date',
+      name: 'receipt.field.receipt_date',
       column: 'receipt_date',
       fieldType: 'date',
       
     },
     'receipt_number': {
-      name: 'Receipt No.',
+      name: 'receipt.field.receipt_number',
       column: 'receipt_number',
       fieldType: 'text',
     },
     'reference_no': {
-      name: 'Reference No.',
+      name: 'receipt.field.reference_no',
       column: 'reference_no',
       fieldType: 'text',
     },
     'receipt_message': {
-      name: 'Receipt message',
+      name: 'receipt.field.receipt_message',
       column: 'receipt_message',
       fieldType: 'text',
     },
     'statement': {
-      name: 'Statement',
+      name: 'receipt.field.statement',
       column: 'statement',
       fieldType: 'text',
     },
     'created_at': {
-      name: 'Created at',
+      name: 'receipt.field.created_at',
       column: 'created_at',
       fieldType: 'date',
     },
     'status': {
-      name: 'Status',
+      name: 'receipt.field.status',
       fieldType: 'enumeration',
       options: [
-        { key: 'draft', label: 'Draft' },
-        { key: 'closed', label: 'Closed' },
+        { key: 'draft', label: 'receipt.field.status.draft' },
+        { key: 'closed', label: 'receipt.field.status.closed' },
       ],
       filterCustomQuery: StatusFieldFilterQuery,
       sortCustomQuery: StatusFieldSortQuery,

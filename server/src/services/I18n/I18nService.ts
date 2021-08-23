@@ -1,3 +1,5 @@
+import * as R from 'ramda';
+import * as qim from 'qim';
 import HasTenancyService from 'services/Tenancy/TenancyService';
 import { Service, Inject } from 'typedi';
 
@@ -43,5 +45,20 @@ export default class I18nService {
         ...newData,
       };
     });
+  }
+
+  public i18nApply(
+    paths: (string|Function)[][],
+    data: Array<any>,
+    tenantId: number,
+  ) {
+    const i18n = this.tenancy.i18n(tenantId);
+    const applyCurry = R.curryN(3, qim.apply);
+
+    const transform = (value) => i18n.__(value) || value;
+
+    const curriedCallbacks = paths.map((path) => applyCurry(path, transform));
+
+    return R.compose(...curriedCallbacks)(data);
   }
 }

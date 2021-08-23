@@ -6,37 +6,37 @@ export default {
   },
   fields: {
     'date': {
-      name: 'Date',
+      name: 'manual_journal.field.date',
       column: 'date',
       fieldType: 'date',
     },
     'journal_number': {
-      name: 'Journal number',
+      name: 'manual_journal.field.journal_number',
       column: 'journal_number',
       fieldType: 'text',
     },
     'reference': {
-      name: 'Reference No.',
+      name: 'manual_journal.field.reference',
       column: 'reference',
       fieldType: 'text',
     },
     'journal_type': {
-      name: 'Journal type',
+      name: 'manual_journal.field.journal_type',
       column: 'journal_type',
       fieldType: 'text',
     },
     'amount': {
-      name: 'Amount',
+      name: 'manual_journal.field.amount',
       column: 'amount',
       fieldType: 'number',
     },
     'description': {
-      name: 'Description',
+      name: 'manual_journal.field.description',
       column: 'description',
       fieldType: 'text',
     },
     'status': {
-      name: 'Status',
+      name: 'manual_journal.field.status',
       column: 'status',
       fieldType: 'enumeration',
       options: [
@@ -46,7 +46,7 @@ export default {
       sortCustomQuery: StatusFieldSortQuery,
     },
     'created_at': {
-      name: 'Created at',
+      name: 'manual_journal.field.created_at',
       column: 'created_at',
       fieldType: 'date',
     },

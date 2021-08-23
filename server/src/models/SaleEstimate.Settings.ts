@@ -6,17 +6,17 @@ export default {
   },
   fields: {
     'amount': {
-      name: 'Amount',
+      name: 'estimate.field.amount',
       column: 'amount',
       fieldType: 'number',
     },
     'estimate_number': {
-      name: 'Estimate number',
+      name: 'estimate.field.estimate_number',
       column: 'estimate_number',
       fieldType: 'text',
     },
     'customer': {
-      name: 'Customer',
+      name: 'estimate.field.customer',
       column: 'customer_id',
       fieldType: 'relation',
 
@@ -27,45 +27,44 @@ export default {
       relationEntityKey: 'id',
     },
     'estimate_date': {
-      name: 'Estimate date',
+      name: 'estimate.field.estimate_date',
       column: 'estimate_date',
       fieldType: 'date',
     },
     'expiration_date': {
-      name: 'Expiration date',
+      name: 'estimate.field.expiration_date',
       column: 'expiration_date',
       fieldType: 'date',
     },
     'reference_no': {
-      name: 'Reference No.',
+      name: 'estimate.field.reference_no',
       column: 'reference',
       fieldType: 'text',
     },
     'note': {
-      name: 'Note',
+      name: 'estimate.field.note',
       column: 'note',
       fieldType: 'text',
     },
     'terms_conditions': {
-      name: 'Terms & conditions',
+      name: 'estimate.field.terms_conditions',
       column: 'terms_conditions',
       fieldType: 'text',
     },
     'status': {
-      name: 'Status',
+      name: 'estimate.field.status',
       fieldType: 'enumeration',
       options: [
-        { label: 'Delivered', key: 'delivered' },
-        { label: 'Rejected', key: 'rejected' },
-        { label: 'Approved', key: 'approved' },
-        { label: 'Delivered', key: 'delivered' },
-        { label: 'Draft', key: 'draft' },
+        { label: 'estimate.field.status.delivered', key: 'delivered' },
+        { label: 'estimate.field.status.rejected', key: 'rejected' },
+        { label: 'estimate.field.status.approved', key: 'approved' },
+        { label: 'estimate.field.status.draft', key: 'draft' },
       ],
       filterCustomQuery: StatusFieldFilterQuery,
       sortCustomQuery: StatusFieldSortQuery,
     },
     'created_at': {
-      name: 'Created at',
+      name: 'estimate.field.created_at',
       column: 'created_at',
       columnType: 'date',
     },

@@ -9,12 +9,12 @@ export default {
   },
   fields: {
     'payment_date': {
-      name: 'Payment date',
+      name: 'expense.field.payment_date',
       column: 'payment_date',
       fieldType: 'date',
     },
     'payment_account': {
-      name: 'Payment account',
+      name: 'expense.field.payment_account',
       column: 'payment_account_id',
       fieldType: 'relation',
 
@@ -25,37 +25,37 @@ export default {
       relationEntityKey: 'slug',
     },
     'amount': {
-      name: 'Amount',
+      name: 'expense.field.amount',
       column: 'total_amount',
       fieldType: 'number',
     },
     'reference_no': {
-      name: 'Reference No.',
+      name: 'expense.field.reference_no',
       column: 'reference_no',
       fieldType: 'text',
     },
     'description': {
-      name: 'Description',
+      name: 'expense.field.description',
       column: 'description',
       fieldType: 'text',
     },
     'published': {
-      name: 'Published',
+      name: 'expense.field.published',
       column: 'published_at',
       fieldType: 'date',
     },
     'status': {
-      name: 'Status',
+      name: 'expense.field.status',
       fieldType: 'enumeration',
       options: [
-        { key: 'draft', label: 'Draft' },
-        { key: 'published', label: 'Published' },
+        { label: 'expense.field.status.draft', key: 'draft' },
+        { label: 'expense.field.status.published', key: 'published' },
       ],
       filterCustomQuery: StatusFieldFilterQuery,
       sortCustomQuery: StatusFieldSortQuery,
     },
     'created_at': {
-      name: 'Created at',
+      name: 'expense.field.created_at',
       column: 'created_at',
       fieldType: 'date',
     },

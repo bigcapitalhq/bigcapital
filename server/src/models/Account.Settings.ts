@@ -1,4 +1,3 @@
-import { IModelMeta } from 'interfaces';
 import { ACCOUNT_TYPES } from 'data/AccountTypes';
 
 export default {
@@ -9,29 +8,29 @@ export default {
   },
   fields: {
     name: {
-      name: 'Account name',
+      name: 'account.field.name',
       column: 'name',
       fieldType: 'text',
     },
     description: {
-      name: 'Description',
+      name: 'account.field.description',
       column: 'description',
       fieldType: 'text',
     },
     slug: {
-      name: 'Account slug',
+      name: 'account.field.slug',
       column: 'slug',
       fieldType: 'text',
       columnable: false,
       filterable: false,
     },
     code: {
-      name: 'Account code',
+      name: 'account.field.code',
       column: 'code',
       fieldType: 'text',
     },
     root_type: {
-      name: 'Root type',
+      name: 'account.field.root_type',
       fieldType: 'enumeration',
       options: [
         { key: 'asset', label: 'Asset' },
@@ -44,17 +43,17 @@ export default {
       sortable: false,
     },
     normal: {
-      name: 'Account normal',
+      name: 'account.field.normal',
       fieldType: 'enumeration',
       options: [
-        { key: 'debit', label: 'Debit' },
-        { key: 'credit', label: 'Credit' },
+        { key: 'debit', label: 'account.field.normal.debit' },
+        { key: 'credit', label: 'account.field.normal.credit' },
       ],
       filterCustomQuery: NormalTypeFieldFilterQuery,
       sortable: false,
     },
     type: {
-      name: 'Type',
+      name: 'account.field.type',
       column: 'account_type',
       fieldType: 'enumeration',
       options: ACCOUNT_TYPES.map((accountType) => ({
@@ -63,24 +62,24 @@ export default {
       })),
     },
     active: {
-      name: 'Active',
+      name: 'account.field.active',
       column: 'active',
       fieldType: 'boolean',
       filterable: false,
     },
     balance: {
-      name: 'Account balance',
+      name: 'account.field.balance',
       column: 'amount',
       fieldType: 'number',
     },
     currency: {
-      name: 'Currency',
+      name: 'account.field.currency',
       column: 'currency_code',
       fieldType: 'text',
       filterable: false,
     },
     created_at: {
-      name: 'Created at',
+      name: 'account.field.created_at',
       column: 'created_at',
       fieldType: 'date',
     },

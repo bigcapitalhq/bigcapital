@@ -2,7 +2,7 @@
 export default {
   fields: {
     customer: {
-      name: 'Customer',
+      name: 'payment_receive.field.customer',
       column: 'customer_id',
       fieldType: 'relation',
 
@@ -13,22 +13,22 @@ export default {
       relationEntityKey: 'id',
     },
     payment_date: {
-      name: 'Payment date',
+      name: 'payment_receive.field.payment_date',
       column: 'payment_date',
       fieldType: 'date',
     },
     amount: {
-      name: 'Amount',
+      name: 'payment_receive.field.amount',
       column: 'amount',
       fieldType: 'number',
     },
     reference_no: {
-      name: 'Reference No.',
+      name: 'payment_receive.field.reference_no',
       column: 'reference_no',
       fieldType: 'text',
     },
     deposit_account: {
-      name: 'Deposit account',
+      name: 'payment_receive.field.deposit_account',
       column: 'deposit_account_id',
       fieldType: 'relation',
 
@@ -39,17 +39,17 @@ export default {
       relationEntityKey: 'slug',
     },
     payment_receive_no: {
-      name: 'Payment receive No.',
+      name: 'payment_receive.field.payment_receive_no',
       column: 'payment_receive_no',
       fieldType: 'text',
     },
     statement: {
-      name: 'Statement',
+      name: 'payment_receive.field.statement',
       column: 'statement',
       fieldType: 'text',
     },
     created_at: {
-      name: 'Created at',
+      name: 'payment_receive.field.created_at',
       column: 'created_at',
       fieldDate: 'date',
     },

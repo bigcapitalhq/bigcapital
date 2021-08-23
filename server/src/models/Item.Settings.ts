@@ -6,47 +6,47 @@ export default {
   },
   fields: {
     'type': {
-      name: 'Item type',
+      name: 'item.field.type',
       column: 'type',
       fieldType: 'enumeration',
       options: [
-        { key: 'inventory', label: 'Inventory', },
-        { key: 'service', label: 'Service' },
-        { key: 'non-inventory', label: 'Non Inventory', },
+        { key: 'inventory', label: 'item.field.type.inventory', },
+        { key: 'service', label: 'item.field.type.service' },
+        { key: 'non-inventory', label: 'item.field.type.non-inventory', },
       ],
     },
     'name': {
-      name: 'Name',
+      name: 'item.field.name',
       column: 'name',
       fieldType: 'text',
     },
     'code': {
-      name: 'Code',
+      name: 'item.field.code',
       column: 'code',
       fieldType: 'text',
     },
     'sellable': {
-      name: 'Sellable',
+      name: 'item.field.sellable',
       column: 'sellable',
       fieldType: 'boolean',
     },
     'purchasable': {
-      name: 'Purchasable',
+      name: 'item.field.purchasable',
       column: 'purchasable',
       fieldType: 'boolean',
     },
     'sell_price': {
-      name: 'Sell price',
+      name: 'item.field.cost_price',
       column: 'sell_price',
       fieldType: 'number',
     },
     'cost_price': {
-      name: 'Cost price',
+      name: 'item.field.cost_account',
       column: 'cost_price',
       fieldType: 'number',
     },
     'cost_account': {
-      name: 'Cost account',
+      name: 'item.field.sell_account',
       column: 'cost_account_id',
       fieldType: 'relation',
 
@@ -57,7 +57,7 @@ export default {
       relationEntityKey: 'slug',
     },
     'sell_account': {
-      name: 'Sell account',
+      name: 'item.field.sell_description',
       column: 'sell_account_id',
       fieldType: 'relation',
 
@@ -68,7 +68,7 @@ export default {
       relationEntityKey: 'slug',
     },
     'inventory_account': {
-      name: 'Inventory account',
+      name: 'item.field.inventory_account',
       column: 'inventory_account_id',
 
       relationType: 'enumeration',
@@ -88,17 +88,17 @@ export default {
       fieldType: 'text',
     },
     'quantity_on_hand': {
-      name: 'Quantity on hand',
+      name: 'item.field.quantity_on_hand',
       column: 'quantity_on_hand',
       fieldType: 'number',
     },
     'note': {
-      name: 'Note',
+      name: 'item.field.note',
       column: 'note',
       fieldType: 'text',
     },
     'category': {
-      name: 'Category',
+      name: 'item.field.category',
       column: 'category_id',
 
       relationType: 'enumeration',
@@ -108,13 +108,13 @@ export default {
       relationEntityKey: 'id',
     },
     'active': {
-      name: 'Active',
+      name: 'item.field.active',
       column: 'active',
       fieldType: 'boolean',
       filterable: false,
     },
     'created_at': {
-      name: 'Created at',
+      name: 'item.field.created_at',
       column: 'created_at',
       columnType: 'date',
       fieldType: 'date',
