@@ -21,7 +21,7 @@ function ItemDetailDrawer({
   return (
     <Drawer isOpen={isOpen} name={name} size={'750px'}>
       <DrawerSuspense>
-        <ItemDetailDrawerContent item={itemId} />
+        <ItemDetailDrawerContent itemId={itemId} />
       </DrawerSuspense>
     </Drawer>
   );

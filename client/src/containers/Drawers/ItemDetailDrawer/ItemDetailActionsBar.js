@@ -9,38 +9,39 @@ import {
 } from '@blueprintjs/core';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
+import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
+
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { Icon, FormattedMessage as T } from 'components';
 
-import { safeCallback, compose } from 'utils';
+import { compose } from 'utils';
 
+/**
+ * Item action-bar of readonly details drawer.
+ */
 function ItemDetailActionsBar({
-  itemId,
-
   // #withAlertsActions
   openAlert,
 
   // #withDrawerActions
   closeDrawer,
 }) {
+  // Item readonly drawer context.
+  const { itemId } = useItemDetailDrawerContext();
+
   const history = useHistory();
 
   // Handle edit item.
-  const onEditItem = () => {
-    return itemId
-      ? (history.push(`/items/${itemId}/edit`),
-        closeDrawer('item-detail-drawer'))
-      : null;
+  const handleEditItem = () => {
+    history.push(`/items/${itemId}/edit`);
+    closeDrawer('item-detail-drawer');
   };
 
   // Handle delete item.
-  const onDeleteItem = () => {
-    return itemId
-      ? (openAlert('item-delete', { itemId }),
-        closeDrawer('item-detail-drawer'))
-      : null;
+  const handleDeleteItem = () => {
+    openAlert('item-delete', { itemId });
   };
 
   return (
@@ -50,7 +51,7 @@ function ItemDetailActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="pen-18" />}
           text={<T id={'edit_item'} />}
-          onClick={safeCallback(onEditItem)}
+          onClick={handleEditItem}
         />
         <NavbarDivider />
         <Button
@@ -58,7 +59,7 @@ function ItemDetailActionsBar({
           icon={<Icon icon={'trash-16'} iconSize={16} />}
           text={<T id={'delete'} />}
           intent={Intent.DANGER}
-          onClick={safeCallback(onDeleteItem)}
+          onClick={handleDeleteItem}
         />
       </NavbarGroup>
     </DashboardActionsBar>

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import 'style/components/Drawers/ViewDetail/ViewDetail.scss';
+import 'style/components/Drawers/ItemDrawer.scss';
 
-import ItemDetail from './ItemDetail';
+import ItemContentDetails from './ItemContentDetails';
 import { ItemDetailDrawerProvider } from './ItemDetailDrawerProvider';
 
 /**
@@ -10,11 +10,11 @@ import { ItemDetailDrawerProvider } from './ItemDetailDrawerProvider';
  */
 export default function ItemDetailDrawerContent({
   // #ownProp
-  item,
+  itemId,
 }) {
   return (
-    <ItemDetailDrawerProvider itemId={item}>
-      <ItemDetail />
+    <ItemDetailDrawerProvider itemId={itemId}>
+      <ItemContentDetails />
     </ItemDetailDrawerProvider>
   );
 }

@@ -9,12 +9,14 @@ function ItemUniversalSearchSelectComponent({
   // #ownProps
   resourceType,
   resourceId,
+  onAction,
 
   // #withDrawerActions
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.ITEM) {
-
+    openDrawer('item-detail-drawer', { itemId: resourceId });
+    onAction && onAction();
   }
   return null;
 }
@@ -29,6 +31,7 @@ export const ItemUniversalSearchSelectAction = withDrawerActions(
  * @returns
  */
 const transfromItemsToSearch = (item) => ({
+  id: item.id,
   text: item.name,
   subText: item.code,
   label: item.type,

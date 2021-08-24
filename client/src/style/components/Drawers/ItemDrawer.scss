@@ -1,0 +1,45 @@
+.item-drawer {
+
+  .card {
+    margin: 15px;
+    padding: 22px 15px;
+  }
+
+  &__content {
+
+    .detail-item--name {
+      width: 30%;
+
+      .detail-item__content {
+        font-weight: 600;
+      }
+    }
+
+    .detail-item--quantity {
+
+      .detail-item__content {
+        font-weight: 600;
+
+        .mines {
+          color: #c23030;
+        }
+      }
+    }
+
+    .details-menu--vertical {
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e2e2e2;
+    }
+
+    .details-menu--horizantal {
+
+      .detail-item:not(:first-of-type) {
+        margin-top: 16px;
+      }
+
+      .detail-item__label {
+        min-width: 180px;
+      }
+    }
+  }
+}

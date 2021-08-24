@@ -1209,5 +1209,7 @@
   "invoice_preview.dialog.title": "Invoice PDF Preview",
   "estimate_preview.dialog.title":"Estimate PDF Preview",
   "receipt_preview.dialog.title":"Receipt PDF Preview",
-  "edit_contact":"Edit {name}"
+  "edit_contact":"Edit {name}",
+  "item.sell_description": "Sell description",
+  "item.purchase_description": "Purchase description"
 }

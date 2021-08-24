@@ -17,6 +17,7 @@ function ItemDetailDrawerProvider({ itemId, ...props }) {
   const provider = {
     item,
     itemId,
+    isItemLoading,
   };
 
   return (
