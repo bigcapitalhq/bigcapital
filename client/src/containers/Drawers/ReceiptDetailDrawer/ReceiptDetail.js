@@ -10,7 +10,7 @@ import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
  * Receipt view detail.
  */
 export default function ReceiptDetail() {
-  const { transactions, receiptId } = useReceiptDetailDrawerContext();
+  const { transactions } = useReceiptDetailDrawerContext();
 
   return (
     <div className="view-detail-drawer">
@@ -18,7 +18,7 @@ export default function ReceiptDetail() {
         <Tab
           title={intl.get('details')}
           id={'details'}
-          panel={<ReceiptDetailTab receiptId={receiptId} />}
+          panel={<ReceiptDetailTab />}
         />
         <Tab
           title={intl.get('journal_entries')}
