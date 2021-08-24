@@ -7,4 +7,8 @@ export const setReceiptsTableState = (queries) => {
   };
 };
 
-export const setSelectedRowsItems = () => {};
+export const resetReceiptsTableState = () => {
+  return {
+    type: t.RECEIPTS_TABLE_STATE_RESET,
+  };
+}

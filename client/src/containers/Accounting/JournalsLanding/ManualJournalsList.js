@@ -19,10 +19,12 @@ import { transformTableStateToQuery, compose } from 'utils';
 function ManualJournalsTable({
   // #withManualJournals
   journalsTableState,
+  journalsTableStateChanged,
 }) {
   return (
     <ManualJournalsListProvider
       query={transformTableStateToQuery(journalsTableState)}
+      tableStateChanged={journalsTableStateChanged}
     >
       <ManualJournalsActionsBar />
 
@@ -40,7 +42,8 @@ function ManualJournalsTable({
 }
 
 export default compose(
-  withManualJournals(({ manualJournalsTableState }) => ({
+  withManualJournals(({ manualJournalsTableState, manualJournalTableStateChanged }) => ({
     journalsTableState: manualJournalsTableState,
+    journalsTableStateChanged: manualJournalTableStateChanged,
   })),
 )(ManualJournalsTable);

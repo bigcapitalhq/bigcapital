@@ -8,7 +8,7 @@ const AccountsChartContext = createContext();
 /**
  * Accounts chart data provider.
  */
-function AccountsChartProvider({ query, ...props }) {
+function AccountsChartProvider({ query, tableStateChanged,...props }) {
   // Fetch accounts resource views and fields.
   const { data: resourceViews, isLoading: isViewsLoading } =
     useResourceViews('accounts');

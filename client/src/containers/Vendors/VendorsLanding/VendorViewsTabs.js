@@ -22,12 +22,12 @@ function VendorViewsTabs({
 }) {
   const { vendorsViews } = useVendorsListContext();
 
+  // Transformes the resource views to tabs.
   const tabs = transfromViewsToTabs(vendorsViews);
 
+  // Handle dashboard tabs change.
   const handleTabsChange = (viewSlug) => {
-    setVendorsTableState({
-      viewSlug: viewSlug || null,
-    });
+    setVendorsTableState({ viewSlug });
   };
 
   return (

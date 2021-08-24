@@ -29,9 +29,7 @@ function InvoiceViewTabs({
 
   // Handle tab change.
   const handleTabsChange = (viewSlug) => {
-    setInvoicesTableState({
-      viewSlug: viewSlug || null,
-    });
+    setInvoicesTableState({ viewSlug });
   };
   // Handle click a new view tab.
   const handleClickNewView = () => {

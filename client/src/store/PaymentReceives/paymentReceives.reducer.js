@@ -6,12 +6,15 @@ import {
 } from 'store/tableState.reducer';
 import t from 'store/types';
 
+export const defaultTableQuery = {
+  pageSize: 12,
+  pageIndex: 0,
+  filterRoles: [],
+  viewSlug: null,
+};
+
 const initialState = {
-  tableState: {
-    pageSize: 12,
-    pageIndex: 0,
-    filterRoles: [],
-  },
+  tableState: defaultTableQuery,
 };
 
 const STORAGE_KEY = 'bigcapital:paymentReceives';
@@ -23,7 +26,7 @@ const CONFIG = {
 };
 
 const reducerInstance = createReducer(initialState, {
-  ...createTableStateReducers('PAYMENT_RECEIVES'),
+  ...createTableStateReducers('PAYMENT_RECEIVES', defaultTableQuery),
 
   [t.RESET]: () => {
     purgeStoredState(CONFIG);

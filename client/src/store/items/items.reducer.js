@@ -4,13 +4,16 @@ import storage from 'redux-persist/lib/storage';
 import { createTableStateReducers } from 'store/tableState.reducer';
 import t from 'store/types';
 
+export const defaultTableQuery = {
+  pageSize: 12,
+  pageIndex: 0,
+  filterRoles: [],
+  inactiveMode: false,
+  viewSlug: null,
+};
+
 const initialState = {
-  tableState: {
-    pageSize: 12,
-    pageIndex: 0,
-    filterRoles: [],
-    inactiveMode: false,
-  },
+  tableState: defaultTableQuery,
   selectedRows: [],
 };
 
@@ -18,12 +21,12 @@ const STORAGE_KEY = 'bigcapital:items';
 
 const CONFIG = {
   key: STORAGE_KEY,
-  whitelist: ['tableState'],
+  whitelist: [],
   storage,
 };
 
 const reducerInstance = createReducer(initialState, {
-  ...createTableStateReducers('ITEMS'),
+  ...createTableStateReducers('ITEMS', defaultTableQuery),
 
   [t.RESET]: () => {
     purgeStoredState(CONFIG);

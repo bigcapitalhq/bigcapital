@@ -1,23 +1,26 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import Icon from 'components/Icon';
-import { Button, Classes, NavbarGroup, Intent } from '@blueprintjs/core';
+import {
+  Button,
+  Classes,
+  NavbarGroup,
+  Intent,
+  NavbarDivider,
+} from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
-import { safeCallback } from 'utils';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
+import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 
 /**
  * Manual journal action bar.
  */
 function ManualJournalDrawerActionBar({
-  // #ownProps
-  manualJournal,
-
   // #withAlertsDialog
   openAlert,
 
@@ -25,21 +28,17 @@ function ManualJournalDrawerActionBar({
   closeDrawer,
 }) {
   const history = useHistory();
+  const { manualJournalId } = useManualJournalDrawerContext();
 
   // Handle edit manual journal action.
-  const onEditManualJournal = () => {
-    if (manualJournal) {
-      history.push(`/manual-journals/${manualJournal.id}/edit`);
-      closeDrawer('journal-drawer');
-    }
+  const handleEditManualJournal = () => {
+    history.push(`/manual-journals/${manualJournalId}/edit`);
+    closeDrawer('journal-drawer');
   };
 
   // Handle manual journal delete action.
-  const onDeleteManualJournal = () => {
-    if (manualJournal) {
-      openAlert('journal-delete', { manualJournalId: manualJournal.id });
-      closeDrawer('journal-drawer');
-    }
+  const handleDeleteManualJournal = () => {
+    openAlert('journal-delete', { manualJournalId });
   };
 
   return (
@@ -49,14 +48,15 @@ function ManualJournalDrawerActionBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="pen-18" />}
           text={<T id={'edit_journal'} />}
-          onClick={safeCallback(onEditManualJournal)}
+          onClick={handleEditManualJournal}
         />
-
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon style={{ color: 'red' }} icon="trash-18" iconSize={18} />}
+          icon={<Icon icon="trash-16" iconSize={16} />}
           text={<T id={'delete'} />}
-          onClick={safeCallback(onDeleteManualJournal)}
+          intent={Intent.DANGER}
+          onClick={handleDeleteManualJournal}
         />
       </NavbarGroup>
     </DashboardActionsBar>

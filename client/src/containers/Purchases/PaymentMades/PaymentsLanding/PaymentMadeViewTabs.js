@@ -2,7 +2,6 @@ import React from 'react';
 import { useHistory } from 'react-router';
 import { FormattedMessage as T } from 'components';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { pick } from 'lodash';
 
 import { DashboardViewsTabs } from 'components';
 
@@ -10,6 +9,8 @@ import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import withPaymentMadeActions from './withPaymentMadeActions';
 
 import { compose } from 'utils';
+import { transformPaymentViewsToTabs } from './utils';
+
 import withPaymentMade from './withPaymentMade';
 
 /**
@@ -28,15 +29,14 @@ function PaymentMadeViewTabs({
   const { paymentMadesViews } = usePaymentMadesListContext();
 
   // Handle the active tab changning.
-  const handleTabsChange = (customView) => {
-    setPaymentMadesTableState({
-      customViewId: customView.id || null,
-    });
+  const handleTabsChange = (viewSlug) => {
+    setPaymentMadesTableState({ viewSlug });
   };
-
-  const tabs = paymentMadesViews.map((view) => ({
-    ...pick(view, ['name', 'id']),
-  }));
+  // Transformes payment views to tabs.
+  const tabs = React.useMemo(
+    () => transformPaymentViewsToTabs(paymentMadesViews),
+    [paymentMadesViews],
+  );
 
   const handleClickNewView = () => {
     history.push('/custom_views/payment-mades/new');
@@ -59,5 +59,5 @@ function PaymentMadeViewTabs({
 
 export default compose(
   withPaymentMadeActions,
-  withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState }))
+  withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
 )(PaymentMadeViewTabs);

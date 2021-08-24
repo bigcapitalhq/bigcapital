@@ -46,7 +46,6 @@ function EstimateActionsBar({
   const onClickNewEstimate = () => {
     history.push('/estimates/new');
   };
-
   // Estimates refresh action.
   const { refresh } = useRefreshEstimates();
 

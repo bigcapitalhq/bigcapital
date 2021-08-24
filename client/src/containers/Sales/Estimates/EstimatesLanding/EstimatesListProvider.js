@@ -1,16 +1,18 @@
 import React, { createContext } from 'react';
+import { isEmpty } from 'lodash';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
 import { useResourceViews, useResourceMeta, useEstimates } from 'hooks/query';
-import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
+import { getFieldsFromResourceMeta } from 'utils';
 
+// Estimates list context.
 const EstimatesListContext = createContext();
 
 /**
  * Sale estimates data provider.
  */
-function EstimatesListProvider({ query, ...props }) {
+function EstimatesListProvider({ query, tableStateChanged, ...props }) {
   // Fetches estimates resource views and fields.
   const { data: estimatesViews, isLoading: isViewsLoading } =
     useResourceViews('sale_estimates');
@@ -31,11 +33,7 @@ function EstimatesListProvider({ query, ...props }) {
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isTableEmptyStatus({
-      data: estimates,
-      pagination,
-      filterMeta,
-    }) && !isEstimatesFetching;
+    !isEstimatesLoading && !tableStateChanged && isEmpty(estimates);
 
   // Provider payload.
   const provider = {

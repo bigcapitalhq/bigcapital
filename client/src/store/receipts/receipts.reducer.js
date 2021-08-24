@@ -1,17 +1,18 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import {
-  createTableStateReducers,
-} from 'store/tableState.reducer';
+import { createTableStateReducers } from 'store/tableState.reducer';
 import t from 'store/types';
 
+export const defaultTableQuery = {
+  pageSize: 12,
+  pageIndex: 0,
+  filterRoles: [],
+  viewSlug: null,
+};
+
 const initialState = {
-  tableState: {
-    pageSize: 12,
-    pageIndex: 0,
-    filterRoles: []
-  },
+  tableState: defaultTableQuery,
 };
 
 const STORAGE_KEY = 'bigcapital:receipts';
@@ -23,14 +24,11 @@ const CONFIG = {
 };
 
 const reducerInstance = createReducer(initialState, {
-  ...createTableStateReducers('RECEIPTS'),
+  ...createTableStateReducers('RECEIPTS', defaultTableQuery),
 
   [t.RESET]: () => {
     purgeStoredState(CONFIG);
   },
 });
 
-export default persistReducer(
-  CONFIG,
-  reducerInstance,
-);
+export default persistReducer(CONFIG, reducerInstance);

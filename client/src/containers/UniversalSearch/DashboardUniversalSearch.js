@@ -66,19 +66,14 @@ function DashboardUniversalSearch({
     setSearchKeyword(query);
   };
   // Handle search type change.
-  const handleSearchTypeChange = (searchType) => {
+  const handleSearchTypeChange = (type) => {
     remove();
-    setSearchType(searchType.key);
-
-    if (searchKeyword && searchType) {
-      refetch();
-    }
+    setSearchType(type.key);
   };
   // Handle overlay of universal search close.
   const handleClose = () => {
     closeGlobalSearch();
   };
-
   // Handle universal search item select.
   const handleItemSelect = (item) => {
     setSelectedItemUniversalSearch(searchType, item.id);
@@ -92,10 +87,10 @@ function DashboardUniversalSearch({
   );
 
   React.useEffect(() => {
-    if (searchKeyword) {
+    if (searchKeyword && searchType) {
       debounceFetch.current();
     }
-  }, [searchKeyword]);
+  }, [searchKeyword, searchType]);
 
   // Handles the overlay once be closed.
   const handleOverlayClosed = () => {

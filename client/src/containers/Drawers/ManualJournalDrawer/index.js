@@ -19,7 +19,15 @@ function ManualJournalDrawer({
   payload: { manualJournalId },
 }) {
   return (
-    <Drawer isOpen={isOpen} name={name} size={'900px'}>
+    <Drawer
+      isOpen={isOpen}
+      name={name}
+      size={'65%'}
+      style={{
+        minWidth: '700px',
+        maxWidth: '900px',
+      }}
+    >
       <DrawerSuspense>
         <ManualJournalDrawerContent manualJournalId={manualJournalId} />
       </DrawerSuspense>

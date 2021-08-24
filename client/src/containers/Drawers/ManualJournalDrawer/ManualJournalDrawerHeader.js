@@ -1,47 +1,49 @@
 import React from 'react';
-import { FormattedMessage as T } from 'components';
+import { defaultTo } from 'lodash';
+import { DetailsMenu, DetailItem, FormattedMessage as T } from 'components';
+import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 
 /**
- *  Manual journal details header.
+ * Manual journal details header.
  */
-export default function ManualJournalDrawerHeader({
-  manualJournal: {
-    amount_formatted,
-    journal_type,
-    journal_number,
-    reference,
-    currency_code,
-  },
-}) {
+export default function ManualJournalDrawerHeader() {
+  const {
+    manualJournal: {
+      formatted_amount,
+      journal_type,
+      journal_number,
+      reference,
+      currency_code,
+      description,
+    },
+  } = useManualJournalDrawerContext();
+
   return (
-    <div className={'journal-drawer__content--header'}>
-      <div>
-        <T id={'total'} />
-        <p className="balance">{amount_formatted}</p>
-      </div>
-      <div>
-        <span>
-          <T id={'journal_type'} />
-        </span>
-        <p>{journal_type}</p>
-      </div>
-      <div>
-        <span>
-          <T id={'journal_no'} />
-        </span>
-        <p>{journal_number}</p>
-      </div>
-      <div>
-        <span>
-          <T id={'reference_no'} />
-        </span>
-        <p>{reference}</p>
-      </div>
-      <div>
-        <span>
-          <T id={'currency'} />
-        </span>
-        <p>{currency_code}</p>
+    <div className={'journal-drawer__content-header'}>
+      <DetailsMenu>
+        <DetailItem name={'total'} label={<T id={'total'} />}>
+          <h3 class="amount">{formatted_amount}</h3>
+        </DetailItem>
+
+        <DetailItem name={'journal-type'} label={<T id={'journal_type'} />}>
+          {journal_type}
+        </DetailItem>
+
+        <DetailItem name={'journal-number'} label={<T id={'journal_no'} />}>
+          {journal_number}
+        </DetailItem>
+
+        <DetailItem name={'reference-no'} label={<T id={'reference_no'} />}>
+          {defaultTo(reference, '-')}
+        </DetailItem>
+
+        <DetailItem name={'currency'} label={<T id={'currency'} />}>
+          {currency_code}
+        </DetailItem>
+      </DetailsMenu>
+
+      <div class="journal-drawer__content-description">
+        <b class="title">Description</b>: {defaultTo(description, '—')}
       </div>
     </div>
   );

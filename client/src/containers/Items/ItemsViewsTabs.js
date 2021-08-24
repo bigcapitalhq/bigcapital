@@ -22,7 +22,7 @@ function ItemsViewsTabs({
   const { itemsViews } = useItemsListContext();
 
   // Mapped items views.
-  const tabs = transfromViewsToTabs(itemsViews)
+  const tabs = transfromViewsToTabs(itemsViews);
 
   // Handles the active tab change.
   const handleTabChange = (viewSlug) => {
@@ -46,7 +46,7 @@ function ItemsViewsTabs({
 export default compose(
   withRouter,
   withItems(({ itemsTableState }) => ({
-    itemsCurrentView: itemsTableState?.viewSlug
+    itemsCurrentView: itemsTableState?.viewSlug,
   })),
   withItemsActions,
 )(ItemsViewsTabs);

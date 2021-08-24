@@ -21,9 +21,10 @@ import { transformTableStateToQuery, compose } from 'utils';
 function BillsList({
   // #withBills
   billsTableState,
+  billsTableStateChanged,
 
   // #withBillsActions
-  setBillsTableState
+  setBillsTableState,
 }) {
   // Resets the accounts table state once the page unmount.
   useEffect(
@@ -38,7 +39,10 @@ function BillsList({
   );
 
   return (
-    <BillsListProvider query={transformTableStateToQuery(billsTableState)}>
+    <BillsListProvider
+      query={transformTableStateToQuery(billsTableState)}
+      tableStateChanged={billsTableStateChanged}
+    >
       <BillsActionsBar />
 
       <DashboardPageContent>
@@ -55,6 +59,9 @@ function BillsList({
 }
 
 export default compose(
-  withBills(({ billsTableState }) => ({ billsTableState })),
-  withBillsActions
+  withBills(({ billsTableState, billsTableStateChanged }) => ({
+    billsTableState,
+    billsTableStateChanged,
+  })),
+  withBillsActions,
 )(BillsList);

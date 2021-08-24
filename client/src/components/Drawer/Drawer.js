@@ -24,6 +24,7 @@ function DrawerComponent(props) {
       canEscapeKeyClose={true}
       position={Position.RIGHT}
       onClose={handleClose}
+      portalClassName={'drawer-portal'}
       {...props}
     >
       {children}

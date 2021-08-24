@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-
+import { isEmpty } from 'lodash';
 import {
   getFieldsFromResourceMeta,
   transformTableQueryToParams,
@@ -15,7 +15,7 @@ const ItemsContext = createContext();
 /**
  * Items list provider.
  */
-function ItemsListProvider({ tableState, ...props }) {
+function ItemsListProvider({ tableState, tableStateChanged, ...props }) {
   const tableQuery = transformItemsTableState(tableState);
 
   // Fetch accounts resource views and fields.
@@ -43,13 +43,7 @@ function ItemsListProvider({ tableState, ...props }) {
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isTableEmptyStatus({
-      data: items,
-      pagination,
-      filterMeta,
-    }) &&
-    !isItemsFetching &&
-    !tableState.inactiveMode;
+    !tableStateChanged && !isItemsLoading && isEmpty(items);
 
   const state = {
     itemsViews,
@@ -68,7 +62,10 @@ function ItemsListProvider({ tableState, ...props }) {
   };
 
   return (
-    <DashboardInsider loading={isItemsLoading || isResourceLoading} name={'items-list'}>
+    <DashboardInsider
+      loading={isItemsLoading || isResourceLoading}
+      name={'items-list'}
+    >
       <ItemsContext.Provider value={state} {...props} />
     </DashboardInsider>
   );

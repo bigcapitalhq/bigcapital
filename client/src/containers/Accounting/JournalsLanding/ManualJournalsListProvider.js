@@ -1,11 +1,13 @@
 import React, { createContext } from 'react';
+import { isEmpty } from 'lodash';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { useResourceViews, useResourceMeta, useJournals } from 'hooks/query';
-import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
+import { getFieldsFromResourceMeta } from 'utils';
 
 const ManualJournalsContext = createContext();
 
-function ManualJournalsListProvider({ query, ...props }) {
+function ManualJournalsListProvider({ query, tableStateChanged, ...props }) {
   // Fetches accounts resource views and fields.
   const { data: journalsViews, isLoading: isViewsLoading } =
     useResourceViews('manual_journals');
@@ -26,11 +28,7 @@ function ManualJournalsListProvider({ query, ...props }) {
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isTableEmptyStatus({
-      data: manualJournals,
-      pagination,
-      filterMeta,
-    }) && !isManualJournalsFetching;
+    isEmpty(manualJournals) && !tableStateChanged && !isManualJournalsLoading;
 
   // Global state.
   const state = {

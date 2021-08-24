@@ -1,4 +1,5 @@
 import React, { createContext } from 'react';
+import { isEmpty } from 'lodash';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { useResourceMeta, useResourceViews, useVendors } from 'hooks/query';
@@ -7,7 +8,7 @@ import { transformVendorsStateToQuery } from './utils';
 
 const VendorsListContext = createContext();
 
-function VendorsListProvider({ tableState, ...props }) {
+function VendorsListProvider({ tableState, tableStateChanged, ...props }) {
   // Transformes the vendors table state to fetch query.
   const tableQuery = transformVendorsStateToQuery(tableState);
 
@@ -31,13 +32,7 @@ function VendorsListProvider({ tableState, ...props }) {
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isTableEmptyStatus({
-      data: vendors,
-      pagination,
-      filterMeta,
-    }) &&
-    !isVendorsLoading &&
-    !tableState.inactiveMode;
+    isEmpty(vendors) && !isVendorsLoading && !tableStateChanged;
 
   const provider = {
     vendors,

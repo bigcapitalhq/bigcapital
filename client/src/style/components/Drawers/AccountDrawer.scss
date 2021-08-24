@@ -3,32 +3,17 @@
 .account-drawer {
   background-color: #fbfbfb;
 
-  &__content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    margin: 18px;
-    padding: 15px;
-    background: white;
-    border: 1px solid #d2dce2;
+  .card-header{
+    margin: 15px;
+    padding: 22px 15px;
+  }
 
-    > div{
+  &__content-header {
+    
+    .detail-item{
       flex-grow: 1;
-      font-size: 14px;
-      margin: 15px 0;
 
-      > span {
-        color: #666666;
-        font-weight: 500;
-      }
-
-      .balance,
-      p {
-        text-transform: capitalize;
-        margin: 5px 0;
-      }
-
-      .balance {
+      .big-number {
         font-size: 28px;
         color: #c06361;
         margin: 6px 0;
@@ -36,22 +21,18 @@
         margin-bottom: 0;
       }
 
-      &.account-normal{
+      &--account-normal{
 
         .bp3-icon{
           position: relative;
           top: -2px;
           margin-left: 2px;
-
+  
           svg{
             fill: #6a7994;
           }
         }
       }
-    }
-
-    &--desc {
-      flex-basis: 100%;
     }
   }
 
@@ -69,12 +50,12 @@
       }
 
       .tbody .tr .td {
-        padding: 0.8rem;
+        padding: 0.6rem 0.8rem;
       }
     }
 
     &-footer{
-      padding: 12px 14px;
+      padding: 10px 14px;
       display: inline-block;
       
       a{

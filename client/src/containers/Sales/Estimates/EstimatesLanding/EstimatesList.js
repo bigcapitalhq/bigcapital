@@ -20,25 +20,23 @@ import { compose, transformTableStateToQuery } from 'utils';
 function EstimatesList({
   // #withEstimate
   estimatesTableState,
+  estimatesTableStateChanged,
 
   // #withEstimatesActions
-  setEstimatesTableState
+  resetEstimatesTableState,
 }) {
   // Resets the estimates table state once the page unmount.
   React.useEffect(
     () => () => {
-      setEstimatesTableState({
-        filterRoles: [],
-        viewSlug: '',
-        pageIndex: 0,
-      });
+      resetEstimatesTableState();
     },
-    [setEstimatesTableState],
+    [resetEstimatesTableState],
   );
 
   return (
     <EstimatesListProvider
       query={transformTableStateToQuery(estimatesTableState)}
+      tableStateChanged={estimatesTableStateChanged}
     >
       <EstimatesActionsBar />
 
@@ -56,6 +54,9 @@ function EstimatesList({
 }
 
 export default compose(
-  withEstimates(({ estimatesTableState }) => ({ estimatesTableState })),
-  withEstimatesActions
+  withEstimates(({ estimatesTableState, estimatesTableStateChanged }) => ({
+    estimatesTableState,
+    estimatesTableStateChanged,
+  })),
+  withEstimatesActions,
 )(EstimatesList);

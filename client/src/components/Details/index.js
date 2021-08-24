@@ -1,17 +1,22 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Col, Row } from 'components';
 
 import 'style/components/Details.scss';
+
+const DIRECTION = {
+  VERTICAL: 'vertical',
+  HORIZANTAL: 'horizantal',
+};
 
 /**
  * Details menu.
  */
-export function DetailsMenu({ children, vertical = false }) {
+export function DetailsMenu({ children, direction = DIRECTION.VERTICAL }) {
   return (
     <div
       className={classNames('details-menu', {
-        'is-vertical': vertical,
+        'details-menu--vertical': direction === DIRECTION.VERTICAL,
+        'details-menu--horizantal': direction === DIRECTION.HORIZANTAL,
       })}
     >
       {children}
@@ -20,27 +25,15 @@ export function DetailsMenu({ children, vertical = false }) {
 }
 
 /**
- * Detail item vertical .
+ * Detail item.
  */
-export function DetailItemVER({ label, children }) {
+export function DetailItem({ label, children, name }) {
   return (
-    <div class="detail-item">
+    <div className={classNames('detail-item', {
+      [`detail-item--${name}`]: name,
+    })}>
       <div class="detail-item__label">{label}</div>
       <div class="detail-item__content">{children}</div>
     </div>
-  );
-}
-
-/**
- * Detail item horizontal .
- */
-export function DetailItemHOR({ label, children }) {
-  return (
-    <Row>
-      <Col className="label" xs={3}>
-        {label}
-      </Col>
-      <Col xs={3}>{children}</Col>
-    </Row>
   );
 }

@@ -20,24 +20,24 @@ import { transformTableStateToQuery, compose } from 'utils';
 function ReceiptsList({
   // #withReceipts
   receiptTableState,
+  receiptsTableStateChanged,
 
   // #withReceiptsActions
-  setReceiptsTableState,
+  resetReceiptsTableState,
 }) {
   // Resets the receipts table state once the page unmount.
   React.useEffect(
     () => () => {
-      setReceiptsTableState({
-        filterRoles: [],
-        viewSlug: '',
-        pageIndex: 0,
-      });
+      resetReceiptsTableState();
     },
-    [setReceiptsTableState],
+    [resetReceiptsTableState],
   );
 
   return (
-    <ReceiptsListProvider query={transformTableStateToQuery(receiptTableState)}>
+    <ReceiptsListProvider
+      query={transformTableStateToQuery(receiptTableState)}
+      tableStateChanged={receiptsTableStateChanged}
+    >
       <DashboardPageContent>
         <ReceiptActionsBar />
 
@@ -56,8 +56,9 @@ function ReceiptsList({
 }
 
 export default compose(
-  withReceipts(({ receiptTableState }) => ({
+  withReceipts(({ receiptTableState, receiptsTableStateChanged }) => ({
     receiptTableState,
+    receiptsTableStateChanged,
   })),
   withReceiptsActions,
 )(ReceiptsList);

@@ -21,9 +21,10 @@ import { compose } from 'utils';
 function VendorsList({
   // #withVendors
   vendorsTableState,
+  vendorsTableStateChanged,
 
   // #withVendorsActions
-  setVendorsTableState
+  setVendorsTableState,
 }) {
   // Resets the vendors table state once the page unmount.
   useEffect(
@@ -36,9 +37,12 @@ function VendorsList({
     },
     [setVendorsTableState],
   );
-  
+
   return (
-    <VendorsListProvider tableState={vendorsTableState}>
+    <VendorsListProvider
+      tableState={vendorsTableState}
+      tableStateChanged={vendorsTableStateChanged}
+    >
       <VendorActionsBar />
 
       <DashboardPageContent>
@@ -55,6 +59,9 @@ function VendorsList({
 }
 
 export default compose(
-  withVendors(({ vendorsTableState }) => ({ vendorsTableState })),
-  withVendorsActions
+  withVendors(({ vendorsTableState, vendorsTableStateChanged }) => ({
+    vendorsTableState,
+    vendorsTableStateChanged,
+  })),
+  withVendorsActions,
 )(VendorsList);

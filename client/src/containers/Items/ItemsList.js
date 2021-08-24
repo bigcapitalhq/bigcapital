@@ -11,7 +11,9 @@ import ItemsViewsTabs from './ItemsViewsTabs';
 import ItemsDataTable from './ItemsDataTable';
 
 import { ItemsListProvider } from './ItemsListProvider';
+
 import withItems from './withItems';
+import withItemsActions from './withItemsActions';
 
 /**
  * Items list.
@@ -19,9 +21,24 @@ import withItems from './withItems';
 function ItemsList({
   // #withItems
   itemsTableState,
+  itemsTableStateChanged,
+
+  // #withItemsActions
+  resetItemsTableState,
 }) {
+  // Resets items table query state once the page unmount.
+  React.useEffect(
+    () => () => {
+      resetItemsTableState();
+    },
+    [resetItemsTableState],
+  );
+
   return (
-    <ItemsListProvider tableState={itemsTableState}>
+    <ItemsListProvider
+      tableState={itemsTableState}
+      tableStateChanged={itemsTableStateChanged}
+    >
       <ItemsActionsBar />
 
       <DashboardPageContent>
@@ -38,5 +55,9 @@ function ItemsList({
 }
 
 export default compose(
-  withItems(({ itemsTableState }) => ({ itemsTableState })),
+  withItemsActions,
+  withItems(({ itemsTableState, itemsTableStateChanged }) => ({
+    itemsTableState,
+    itemsTableStateChanged,
+  })),
 )(ItemsList);

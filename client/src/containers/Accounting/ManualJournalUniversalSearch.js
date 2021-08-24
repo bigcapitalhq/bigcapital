@@ -9,12 +9,14 @@ function JournalUniversalSearchSelectComponent({
   // #ownProps
   resourceType,
   resourceId,
+  onAction,
 
   // #withDrawerActions
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.MANUAL_JOURNAL) {
     openDrawer('journal-drawer', { manualJournalId: resourceId });
+    onAction && onAction();
   }
   return null;
 }
@@ -27,6 +29,7 @@ export const JournalUniversalSearchSelectAction = withDrawerActions(
  * Mappes the manual journal item to search item.
  */
 const manualJournalsToSearch = (manualJournal) => ({
+  id: manualJournal.id,
   text: manualJournal.journal_number,
   subText: manualJournal.formatted_date,
   label: manualJournal.formatted_amount,

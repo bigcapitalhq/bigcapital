@@ -7,4 +7,10 @@ export const setPaymentMadesTableState = (queries) => {
   };
 };
 
-export const setSelectedRowsItems = () => {};
+export const resetPaymentMadesTableState = (queries) => {
+  return {
+    type: t.PAYMENT_MADES_TABLE_STATE_RESET,
+    payload: { queries },
+  };
+};
+

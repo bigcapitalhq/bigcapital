@@ -4,12 +4,15 @@ import storage from 'redux-persist/lib/storage';
 import { createTableStateReducers } from 'store/tableState.reducer';
 import t from 'store/types';
 
+export const defaultTableQuery = {
+  pageSize: 12,
+  pageIndex: 0,
+  filterRoles: [],
+  viewSlug: null,
+}
+
 const initialState = {
-  tableState: {
-    pageSize: 12,
-    pageIndex: 0,
-    filterRoles: [],
-  },
+  tableState: defaultTableQuery,
 };
 
 const STORAGE_KEY = 'bigcapital:manualJournals';
@@ -21,7 +24,7 @@ const CONFIG = {
 };
 
 const reducerInstance = createReducer(initialState, {
-  ...createTableStateReducers('MANUAL_JOURNALS'),
+  ...createTableStateReducers('MANUAL_JOURNALS', defaultTableQuery),
 
   [t.RESET]: () => {
     purgeStoredState(CONFIG);

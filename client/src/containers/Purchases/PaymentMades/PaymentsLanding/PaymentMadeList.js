@@ -20,25 +20,23 @@ import { compose, transformTableStateToQuery } from 'utils';
 function PaymentMadeList({
   // #withPaymentMades
   paymentMadesTableState,
+  paymentsTableStateChanged,
 
   // #withPaymentMadeActions
-  setPaymentMadesTableState
+  resetPaymentMadesTableState,
 }) {
   // Resets the invoices table state once the page unmount.
   React.useEffect(
     () => () => {
-      setPaymentMadesTableState({
-        filterRoles: [],
-        viewSlug: '',
-        pageIndex: 0,
-      });
+      resetPaymentMadesTableState();
     },
-    [setPaymentMadesTableState],
+    [resetPaymentMadesTableState],
   );
 
   return (
     <PaymentMadesListProvider
       query={transformTableStateToQuery(paymentMadesTableState)}
+      tableStateChanged={paymentsTableStateChanged}
     >
       <PaymentMadeActionsBar />
 
@@ -56,8 +54,9 @@ function PaymentMadeList({
 }
 
 export default compose(
-  withPaymentMades(({ paymentMadesTableState }) => ({
+  withPaymentMades(({ paymentMadesTableState, paymentsTableStateChanged }) => ({
     paymentMadesTableState,
+    paymentsTableStateChanged,
   })),
-  withPaymentMadeActions
+  withPaymentMadeActions,
 )(PaymentMadeList);

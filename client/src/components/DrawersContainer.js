@@ -13,16 +13,21 @@ import PaymentReceiveDetailDrawer from 'containers/Drawers/PaymentReceiveDetailD
 import PaymentMadeDetailDrawer from 'containers/Drawers/PaymentMadeDetailDrawer';
 import EstimateDetailDrawer from '../containers/Drawers/EstimateDetailDrawer';
 
+import { DRAWERS } from 'common/drawers';
+
+/**
+ * Drawers container of the dashboard.
+ */
 export default function DrawersContainer() {
   return (
     <div>
-      <EstimateDrawer name={'estimate-drawer'} />
+      <EstimateDrawer name={DRAWERS.EstimateDrawer} />
       <InvoiceDrawer name={'invoice-drawer'} />
       <ReceiptDrawer name={'receipt-drawer'} />
       <PaymentReceiveDrawer name={'payment-receive-drawer'} />
-      <AccountDrawer name={'account-drawer'} />
-      <ManualJournalDrawer name={'journal-drawer'} />
-      <ExpenseDrawer name={'expense-drawer'} />
+      <AccountDrawer name={DRAWERS.ACCOUNT_DRAWER} />
+      <ManualJournalDrawer name={DRAWERS.JOURNAL_DRAWER} />
+      <ExpenseDrawer name={DRAWERS.EXPENSE_DRAWER} />
       <BillDrawer name={'bill-drawer'} />
       <InvoiceDetailDrawer name={'invoice-detail-drawer'} />
       <EstimateDetailDrawer name={'estimate-detail-drawer'} />

@@ -4,13 +4,16 @@ import storage from 'redux-persist/lib/storage';
 import { createTableStateReducers } from 'store/tableState.reducer';
 import t from 'store/types';
 
+export const defaultTableQueryState = {
+  pageSize: 12,
+  pageIndex: 0,
+  inactiveMode: false,
+  filterRoles: [],
+  viewSlug: null,
+};
+
 const initialState = {
-  tableState: {
-    pageSize: 12,
-    pageIndex: 0,
-    inactiveMode: false,
-    filterRoles: [],
-  },
+  tableState: defaultTableQueryState,
 };
 
 const STORAGE_KEY = 'bigcapital:vendors';
@@ -22,11 +25,11 @@ const CONFIG = {
 };
 
 const reducerInstance = createReducer(initialState, {
-  ...createTableStateReducers('VENDORS'),
+  ...createTableStateReducers('VENDORS', defaultTableQueryState),
 
   [t.RESET]: () => {
     purgeStoredState(CONFIG);
-  }
+  },
 });
 
 export default persistReducer(CONFIG, reducerInstance);

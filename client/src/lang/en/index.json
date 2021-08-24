@@ -1195,7 +1195,7 @@
   "publish_adjustment": "Publish adjustment",
   "inactivate_customer": "Inactivate customer",
   "activate_customer": "Activate customer",
-  "filter.all_filters_must_match": "Atleast one filter must match",
+  "filter.all_filters_must_match": "All filters must match",
   "filter.atleast_one_filter_must_match": "Atleast one filter must match",
   "filter.when": "When",
   "universal_search.placeholder": "Search...",

@@ -68,6 +68,7 @@ export * from './Dashboard/DashboardFilterButton';
 export * from './Dashboard/DashboardRowsHeightButton';
 export * from './UniversalSearch/UniversalSearch';
 export * from './PdfPreview';
+export * from './Details';
 
 const Hint = FieldHint;
 

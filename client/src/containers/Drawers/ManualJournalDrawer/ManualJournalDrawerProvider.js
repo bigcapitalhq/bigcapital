@@ -9,17 +9,22 @@ const ManualJournalDrawerContext = React.createContext();
  * Manual journal drawer provider.
  */
 function ManualJournalDrawerProvider({ manualJournalId, ...props }) {
-  // fetch the specific manual journal details.
-  const { data: manualJournal, isLoading: isJournalLoading } = useJournal(
-    manualJournalId,
-    {
-      enabled: !!manualJournalId,
-    },
-  );
-  // provider.
+  // Fetch the specific manual journal details.
+  const {
+    data: manualJournal,
+    isLoading: isJournalLoading,
+    isFetching: isJournalFetching,
+  } = useJournal(manualJournalId, {
+    enabled: !!manualJournalId,
+  });
+
+  // Provider.
   const provider = {
     manualJournalId,
     manualJournal,
+
+    isJournalFetching,
+    isJournalLoading,
   };
 
   return (

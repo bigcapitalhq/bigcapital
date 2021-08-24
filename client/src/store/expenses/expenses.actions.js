@@ -11,4 +11,9 @@ export const setExpensesTableState = (queries) => {
   };
 };
 
-export const setSelectedRowsItems = () => {};
+export const resetExpensesTableState = () => {
+  return {
+    type: t.EXPENSES_TABLE_STATE_RESET,
+  };
+};
+

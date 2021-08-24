@@ -1,6 +1,6 @@
 import React from 'react';
 import { useExpense } from 'hooks/query';
-import { DrawerHeaderContent, DashboardInsider } from 'components';
+import { DashboardInsider } from 'components';
 
 const ExpenseDrawerDrawerContext = React.createContext();
 
@@ -8,16 +8,22 @@ const ExpenseDrawerDrawerContext = React.createContext();
  * Expense drawer provider.
  */
 function ExpenseDrawerProvider({ expenseId, ...props }) {
-  
   // Fetch the expense details.
-  const { data: expense, isLoading: isExpenseLoading } = useExpense(expenseId, {
+  const {
+    data: expense,
+    isLoading: isExpenseLoading,
+    isFetching: isExpenseFetching,
+  } = useExpense(expenseId, {
     enabled: !!expenseId,
   });
 
-  // provider.
+  // Provider.
   const provider = {
     expenseId,
     expense,
+
+    isExpenseFetching,
+    isExpenseLoading,
   };
   return (
     <DashboardInsider loading={isExpenseLoading}>

@@ -1,23 +1,23 @@
 import React, { createContext } from 'react';
+import { isEmpty } from 'lodash';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useResourceViews,
   usePaymentMades,
-  useResourceMeta
+  useResourceMeta,
 } from 'hooks/query';
-import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
+import { getFieldsFromResourceMeta } from 'utils';
 
 const PaymentMadesListContext = createContext();
 
 /**
  * Accounts chart data provider.
  */
-function PaymentMadesListProvider({ query, ...props }) {
+function PaymentMadesListProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
-  const {
-    data: paymentMadesViews,
-    isLoading: isViewsLoading,
-  } = useResourceViews('bill_payments');
+  const { data: paymentMadesViews, isLoading: isViewsLoading } =
+    useResourceViews('bill_payments');
 
   // Fetch the accounts resource fields.
   const {
@@ -35,11 +35,7 @@ function PaymentMadesListProvider({ query, ...props }) {
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isTableEmptyStatus({
-      data: paymentMades,
-      pagination,
-      filterMeta,
-    }) && !isPaymentsLoading;
+    isEmpty(paymentMades) && !isPaymentsLoading && !tableStateChanged;
 
   // Provider payload.
   const provider = {
@@ -56,7 +52,7 @@ function PaymentMadesListProvider({ query, ...props }) {
     isPaymentsLoading,
     isPaymentsFetching,
     isViewsLoading,
-    isEmptyStatus
+    isEmptyStatus,
   };
 
   return (

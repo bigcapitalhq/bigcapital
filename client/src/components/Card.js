@@ -1,5 +1,6 @@
 import React from 'react';
+import classNames from 'classnames';
 
-export default function Card({ children }) {
-  return <div class="card">{children}</div>;
+export default function Card({ className, children }) {
+  return <div className={classNames('card', className)}>{children}</div>;
 }

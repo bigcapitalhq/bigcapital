@@ -1,5 +1,8 @@
+import { isEqual } from 'lodash';
+
 import { paginationLocationQuery } from 'store/selectors';
 import { createDeepEqualSelector } from 'utils';
+import { defaultTableQuery } from './receipts.reducer';
 
 const receiptTableStateSelector = (state) => state.salesReceipts.tableState;
 
@@ -15,3 +18,8 @@ export const getReceiptsTableStateFactory = () =>
       };
     },
   );
+
+export const receiptsTableStateChangedFactory = () =>
+  createDeepEqualSelector(receiptTableStateSelector, (tableState) => {
+    return !isEqual(tableState, defaultTableQuery);
+  });

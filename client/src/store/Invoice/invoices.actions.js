@@ -7,4 +7,10 @@ export const setInvoicesTableState = (queries) => {
   };
 };
 
+export const resetInvoicesTableState= () => {
+  return {
+    type: t.INVOICES_TABLE_STATE_RESET,
+  };
+}
+
 export const setSelectedRowsItems = () => {};

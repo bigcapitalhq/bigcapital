@@ -1,14 +1,16 @@
 import React, { createContext } from 'react';
+import { isEmpty } from 'lodash';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { useExpenses, useResourceMeta, useResourceViews } from 'hooks/query';
-import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
+import { getFieldsFromResourceMeta } from 'utils';
 
 const ExpensesListContext = createContext();
 
 /**
  * Accounts chart data provider.
  */
-function ExpensesListProvider({ query, ...props }) {
+function ExpensesListProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
   const { data: expensesViews, isLoading: isViewsLoading } =
     useResourceViews('expenses');
@@ -29,11 +31,7 @@ function ExpensesListProvider({ query, ...props }) {
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isTableEmptyStatus({
-      data: expenses,
-      pagination,
-      filterMeta,
-    }) && !isExpensesFetching;
+    isEmpty(expenses) && !isExpensesLoading && !tableStateChanged;
 
   // Provider payload.
   const provider = {

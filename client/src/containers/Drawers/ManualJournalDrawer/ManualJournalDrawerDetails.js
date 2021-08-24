@@ -1,4 +1,7 @@
 import React from 'react';
+
+import { Card } from 'components';
+
 import ManualJournalDrawerActionBar from './ManualJournalDrawerActionBar';
 import ManualJournalDrawerHeader from './ManualJournalDrawerHeader';
 import ManualJournalDrawerTable from './ManualJournalDrawerTable';
@@ -15,10 +18,13 @@ export default function ManualJournalDrawerDetails() {
   return (
     <div className={'journal-drawer'}>
       <ManualJournalDrawerActionBar manualJournal={manualJournal} />
+
       <div className="journal-drawer__content">
-        <ManualJournalDrawerHeader manualJournal={manualJournal} />
-        <ManualJournalDrawerTable manualJournal={manualJournal} />
-        <ManualJournalDrawerFooter manualJournal={manualJournal} />
+        <Card>
+          <ManualJournalDrawerHeader />
+          <ManualJournalDrawerTable />
+          <ManualJournalDrawerFooter />
+        </Card>
       </div>
     </div>
   );

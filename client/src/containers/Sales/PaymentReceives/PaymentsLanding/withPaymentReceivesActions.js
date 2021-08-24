@@ -1,9 +1,15 @@
 import { connect } from 'react-redux';
-import { setPaymentReceivesTableState } from 'store/PaymentReceives/paymentReceives.actions';
+import {
+  setPaymentReceivesTableState,
+  resetPaymentReceivesTableState,
+} from 'store/PaymentReceives/paymentReceives.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   setPaymentReceivesTableState: (state) =>
     dispatch(setPaymentReceivesTableState(state)),
+
+  resetPaymentReceivesTableState: () =>
+    dispatch(resetPaymentReceivesTableState()),
 });
 
 export default connect(null, mapDispatchToProps);

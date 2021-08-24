@@ -3,26 +3,31 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { createTableStateReducers } from 'store/tableState.reducer';
 
+// Default table query state.
+export const defaultTableQueryState = {
+  pageSize: 12,
+  pageIndex: 0,
+  inactiveMode: false,
+  filterRoles: [],
+  viewSlug: null,
+};
+
+// initial data.
 const initialState = {
-  tableState: {
-    pageSize: 12,
-    pageIndex: 0,
-    inactiveMode: false,
-    filterRoles: []
-  },
+  tableState: defaultTableQueryState,
 };
 
 const reducerInstance = createReducer(initialState, {
-  ...createTableStateReducers('CUSTOMERS'),
+  ...createTableStateReducers('CUSTOMERS', defaultTableQueryState),
 });
 
 const STORAGE_KEY = 'bigcapital:estimates';
 
 export default persistReducer(
-{
-  key: STORAGE_KEY,
-  whitelist: [],
-  storage,
-},
-reducerInstance,
+  {
+    key: STORAGE_KEY,
+    whitelist: [],
+    storage,
+  },
+  reducerInstance,
 );

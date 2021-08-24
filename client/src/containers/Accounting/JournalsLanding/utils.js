@@ -24,7 +24,7 @@ export const useManualJournalsColumns = () => {
       {
         id: 'amount',
         Header: intl.get('amount'),
-        accessor: AmountAccessor,
+        accessor: 'formatted_amount',
         className: 'amount',
         width: 115,
       },

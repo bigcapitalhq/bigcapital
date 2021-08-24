@@ -1,6 +1,12 @@
 import React from 'react';
 import Icon from 'components/Icon';
-import { Button, Classes, NavbarGroup, Intent } from '@blueprintjs/core';
+import {
+  Button,
+  Classes,
+  NavbarGroup,
+  Intent,
+  NavbarDivider,
+} from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -11,6 +17,7 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { safeCallback } from 'utils';
 
 import { compose } from 'utils';
+import { useAccountDrawerContext } from './AccountDrawerProvider';
 
 /**
  * Account drawer action bar.
@@ -24,10 +31,10 @@ function AccountDrawerActionBar({
 
   // #withDrawerActions
   closeDrawer,
-  
-  // #ownProps
-  account,
 }) {
+  // Account drawer context.
+  const { account } = useAccountDrawerContext();
+
   // Handle new child button click.
   const onNewChildAccount = () => {
     openDialog('account-form', {
@@ -44,10 +51,8 @@ function AccountDrawerActionBar({
 
   // Handle delete action account.
   const onDeleteAccount = () => {
-    if (account) {
-      openAlert('account-delete', { accountId: account.id });
-      closeDrawer('account-drawer');
-    }
+    openAlert('account-delete', { accountId: account.id });
+    closeDrawer('account-drawer');
   };
 
   return (
@@ -65,9 +70,10 @@ function AccountDrawerActionBar({
           text={<T id={'new_child_account'} />}
           onClick={safeCallback(onNewChildAccount)}
         />
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon="trash-18" iconSize={18} />}
+          icon={<Icon icon={'trash-16'} iconSize={16} />}
           text={<T id={'delete'} />}
           intent={Intent.DANGER}
           onClick={safeCallback(onDeleteAccount)}

@@ -43,17 +43,17 @@ function PaymentMadeActionsBar({
   // Payment receives list context.
   const { paymentMadesViews, fields } = usePaymentMadesListContext();
 
+  // Payment receive refresh action.
+  const { refresh } = useRefreshPaymentMades();
+
   // Handle new payment made button click.
   const handleClickNewPaymentMade = () => {
     history.push('/payment-mades/new');
   };
 
-  // Payment receive refresh action.
-  const { refresh } = useRefreshPaymentMades();
-
   // Handle tab changing.
-  const handleTabChange = (customView) => {
-    setPaymentMadesTableState({ customViewId: customView.id || null });
+  const handleTabChange = (viewSlug) => {
+    setPaymentMadesTableState({ viewSlug });
   };
 
   // Handle click a refresh payment receives.

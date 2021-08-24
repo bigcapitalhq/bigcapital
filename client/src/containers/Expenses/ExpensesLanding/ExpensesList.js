@@ -21,6 +21,7 @@ import { ExpensesListProvider } from './ExpensesListProvider';
 function ExpensesList({
   // #withExpenses
   expensesTableState,
+  expensesTableStateChanged,
 
   // #withExpensesActions
   setExpensesTableState,
@@ -40,6 +41,7 @@ function ExpensesList({
   return (
     <ExpensesListProvider
       query={transformTableStateToQuery(expensesTableState)}
+      tableStateChanged={expensesTableStateChanged}
     >
       <ExpenseActionsBar />
 
@@ -57,6 +59,9 @@ function ExpensesList({
 }
 
 export default compose(
-  withExpenses(({ expensesTableState }) => ({ expensesTableState })),
+  withExpenses(({ expensesTableState, expensesTableStateChanged }) => ({
+    expensesTableState,
+    expensesTableStateChanged,
+  })),
   withExpensesActions,
 )(ExpensesList);

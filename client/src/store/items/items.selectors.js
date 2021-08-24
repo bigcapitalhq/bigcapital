@@ -1,5 +1,8 @@
+import { isEqual } from 'lodash';
+
 import { paginationLocationQuery } from 'store/selectors';
 import { createDeepEqualSelector } from 'utils';
+import { defaultTableQuery } from './items.reducer';
 
 const itemsTableStateSelector = (state) => state.items.tableState;
 
@@ -15,3 +18,8 @@ export const getItemsTableStateFactory = () =>
       };
     },
   );
+
+export const isItemsTableStateChangedFactory = () =>
+  createDeepEqualSelector(itemsTableStateSelector, (tableState) => {
+    return !isEqual(tableState, defaultTableQuery);
+  });

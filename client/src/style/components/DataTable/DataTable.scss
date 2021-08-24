@@ -219,11 +219,18 @@
         }
       }
       .tr.no-results {
+        
         .td {
           flex-direction: column;
-          padding: 20px;
-          color: #666;
+          padding: 18px 20px;
+          color: #777;
           align-items: center;
+          font-size: 14px;
+          border-bottom: 0;
+
+          &:hover{
+            background: transparent;
+          }
         }
       }
 

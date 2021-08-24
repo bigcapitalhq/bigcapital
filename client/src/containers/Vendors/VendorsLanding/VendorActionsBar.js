@@ -53,8 +53,8 @@ function VendorActionsBar({
   const { refresh } = useRefreshVendors();
 
   // Handle the active tab change.
-  const handleTabChange = (customView) => {
-    setVendorsTableState({ customViewId: customView.id || null });
+  const handleTabChange = (viewSlug) => {
+    setVendorsTableState({ viewSlug });
   };
 
   // Handle inactive switch changing.

@@ -1,68 +1,56 @@
 import React from 'react';
+import { defaultTo } from 'lodash';
+
 import { FormattedMessage as T } from 'components';
-import { Icon, Money } from 'components';
+import { Icon, Money, DetailsMenu, DetailItem } from 'components';
+import { useAccountDrawerContext } from './AccountDrawerProvider';
 
 /**
  *  Account drawer header.
  */
-export default function AccountDrawerHeader({
-  account: {
-    account_normal,
-    account_type_label,
-    code,
-    amount,
-    currency_code,
-    description,
-  },
-}) {
+export default function AccountDrawerHeader() {
+  const { account } = useAccountDrawerContext();
+
   return (
-    <div className={'account-drawer__content'}>
-      <div>
-        <span>
-          <T id={'closing_balance'} />
-        </span>
-        <p className={'balance'}>
-          {<Money amount={amount} currency={currency_code} />}
-        </p>
-      </div>
-      <div class={'account-type'}>
-        <span>
-          <T id={'account_type'} />
-        </span>
-        <p>{account_type_label}</p>
-      </div>
-      <div class={'account-normal'}>
-        <span>
-          <T id={'account_normal'} />
-        </span>
-        <p>
-          {' '}
-          {account_normal}{' '}
+    <div className={'account-drawer__content-header'}>
+      <DetailsMenu>
+        <DetailItem
+          name={'closing-balance'}
+          label={<T id={'closing_balance'} />}
+        >
+          <h3 class={'big-number'}>
+            <Money amount={account.amount} currency={account.currency_code} />
+          </h3>
+        </DetailItem>
+
+        <DetailItem name={'account-type'} label={<T id={'account_type'} />}>
+          {account.account_type_label}
+        </DetailItem>
+
+        <DetailItem name={'account-normal'} label={<T id={'account_normal'} />}>
+          {account.account_normal}
           <Icon
             iconSize={14}
-            icon={`arrow-${account_normal === 'credit' ? 'down' : 'up'}`}
+            icon={`arrow-${
+              account.account_normal === 'credit' ? 'down' : 'up'
+            }`}
           />
-        </p>
-      </div>
-      <div>
-        <span>
-          <T id={'code'} />
-        </span>
-        <p>{code}</p>
-      </div>
-      <div>
-        <span>
-          <T id={'currency'} />
-        </span>
-        <p>{currency_code}</p>
-      </div>
+        </DetailItem>
 
-      <p className={'account-drawer__content--desc'}>
-        <b>
-          <T id={'description'} />
-        </b>
-        : {description ? description : '--'}
-      </p>
+        <DetailItem name={'code'} label={<T id={'code'} />}>
+          {account.code}
+        </DetailItem>
+
+        <DetailItem name={'currency'} label={<T id={'currency'} />}>
+          {account.currency_code}
+        </DetailItem>
+      </DetailsMenu>
+
+      <DetailsMenu direction={'horizantal'}>
+        <DetailItem name={'description'} label={<T id={'description'} />}>
+          {defaultTo(account.description, '--')}
+        </DetailItem>
+      </DetailsMenu>    
     </div>
   );
 }

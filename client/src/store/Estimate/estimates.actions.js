@@ -7,4 +7,8 @@ export const setEstimatesTableState = (queries) => {
   };
 };
 
-export const setSelectedRowsItems = () => {};
+export const resetEstimatesTableState = () => {
+  return {
+    type: t.ESTIMATES_TABLE_STATE_RESET,
+  };
+}

@@ -1,13 +1,15 @@
 import React, { createContext } from 'react';
+import { isEmpty } from 'lodash';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
 import { useResourceMeta, useResourceViews, useReceipts } from 'hooks/query';
-import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
+import { getFieldsFromResourceMeta } from 'utils';
 
 const ReceiptsListContext = createContext();
 
 // Receipts list provider.
-function ReceiptsListProvider({ query, ...props }) {
+function ReceiptsListProvider({ query, tableStateChanged, ...props }) {
   // Fetch receipts resource views and fields.
   const { data: receiptsViews, isLoading: isViewsLoading } =
     useResourceViews('sale_receipt');
@@ -27,11 +29,7 @@ function ReceiptsListProvider({ query, ...props }) {
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isTableEmptyStatus({
-      data: receipts,
-      pagination,
-      filterMeta,
-    }) && !isReceiptsLoading;
+    isEmpty(receipts) && !tableStateChanged && !isReceiptsLoading;
 
   const provider = {
     receipts,

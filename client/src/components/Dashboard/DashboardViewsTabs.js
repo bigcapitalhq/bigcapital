@@ -9,7 +9,6 @@ import { saveInvoke } from 'utils';
 
 /**
  * Dashboard views tabs.
- *
  */
 export default function DashboardViewsTabs({
   initialViewSlug = 0,
@@ -42,8 +41,9 @@ export default function DashboardViewsTabs({
 
   // Trigger `onChange` and `onThrottledChange` events.
   const triggerOnChange = (viewSlug) => {
-    saveInvoke(onChange, viewSlug);
-    throttledOnChange.current(viewSlug);
+    const value = viewSlug === 0 ? null : viewSlug;
+    saveInvoke(onChange, value);
+    throttledOnChange.current(value);
   };
 
   // Handles click a new view.

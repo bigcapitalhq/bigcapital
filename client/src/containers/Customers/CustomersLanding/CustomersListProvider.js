@@ -1,13 +1,14 @@
 import React, { createContext } from 'react';
+import { isEmpty } from 'lodash';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { useResourceMeta, useResourceViews, useCustomers } from 'hooks/query';
-import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
+import { getFieldsFromResourceMeta } from 'utils';
 import { transformCustomersStateToQuery } from './utils';
 
 const CustomersListContext = createContext();
 
-function CustomersListProvider({ tableState, ...props }) {
+function CustomersListProvider({ tableState, tableStateChanged, ...props }) {
   // Transformes the table state to fetch query.
   const tableQuery = transformCustomersStateToQuery(tableState);
 
@@ -31,13 +32,7 @@ function CustomersListProvider({ tableState, ...props }) {
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isTableEmptyStatus({
-      data: customers,
-      pagination,
-      filterMeta,
-    }) &&
-    !isCustomersFetching &&
-    !tableState.inactiveMode;
+    isEmpty(customers) && !isCustomersLoading && !tableStateChanged;
 
   const state = {
     customersViews,

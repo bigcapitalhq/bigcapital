@@ -15,10 +15,19 @@ function ExpenseDrawer({
 
   //#withDrawer
   isOpen,
-  payload: { expenseId, title },
+  payload: { expenseId },
 }) {
   return (
-    <Drawer isOpen={isOpen} name={name} title={intl.get('expense')}>
+    <Drawer
+      isOpen={isOpen}
+      name={name}
+      title={intl.get('expense')}
+      size={'65%'}
+      style={{
+        minWidth: '700px',
+        maxWidth: '900px',
+      }}
+    >
       <DrawerSuspense>
         <ExpenseDrawerContent expenseId={expenseId} />
       </DrawerSuspense>

@@ -6,12 +6,14 @@ function AccountUniversalSearchItemSelectComponent({
   // #ownProps
   resourceType,
   resourceId,
+  onAction,
 
   // #withDrawerActions
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.ACCOUNT) {
     openDrawer('account-drawer', { accountId: resourceId });
+    onAction && onAction();
   }
   return null;
 }
@@ -26,6 +28,7 @@ export const AccountUniversalSearchItemSelect = withDrawerActions(
  * @returns 
  */
 const accountToSearch = (account) => ({
+  id: account.id,
   text: `${account.name} - ${account.code}`,
   label: account.formatted_amount,
   reference: account,

@@ -22,25 +22,23 @@ import { transformTableStateToQuery, compose } from 'utils';
 function InvoicesList({
   // #withInvoice
   invoicesTableState,
+  invoicesTableStateChanged,
 
   // #withInvoicesActions
-  setInvoicesTableState
+  resetInvoicesTableState,
 }) {
   // Resets the invoices table state once the page unmount.
   React.useEffect(
     () => () => {
-      setInvoicesTableState({
-        filterRoles: [],
-        viewSlug: '',
-        pageIndex: 0,
-      });
+      resetInvoicesTableState();
     },
-    [setInvoicesTableState],
+    [resetInvoicesTableState],
   );
 
   return (
     <InvoicesListProvider
       query={transformTableStateToQuery(invoicesTableState)}
+      tableStateChanged={invoicesTableStateChanged}
     >
       <InvoicesActionsBar />
 
@@ -58,7 +56,10 @@ function InvoicesList({
 }
 
 export default compose(
-  withInvoices(({ invoicesTableState }) => ({ invoicesTableState })),
+  withInvoices(({ invoicesTableState, invoicesTableStateChanged }) => ({
+    invoicesTableState,
+    invoicesTableStateChanged,
+  })),
   withInvoiceActions,
   withAlertsActions,
 )(InvoicesList);

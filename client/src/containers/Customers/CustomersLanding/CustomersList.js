@@ -21,9 +21,10 @@ import { compose } from 'utils';
 function CustomersList({
   // #withCustomers
   customersTableState,
+  customersTableStateChanged,
 
   // #withCustomersActions
-  setCustomersTableState
+  setCustomersTableState,
 }) {
   // Resets the accounts table state once the page unmount.
   useEffect(
@@ -38,7 +39,10 @@ function CustomersList({
   );
 
   return (
-    <CustomersListProvider tableState={customersTableState}>
+    <CustomersListProvider
+      tableState={customersTableState}
+      tableStateChanged={customersTableStateChanged}
+    >
       <CustomersActionsBar />
 
       <DashboardPageContent>
@@ -54,6 +58,9 @@ function CustomersList({
 }
 
 export default compose(
-  withCustomers(({ customersTableState }) => ({ customersTableState })),
-  withCustomersActions
+  withCustomers(({ customersTableState, customersTableStateChanged }) => ({
+    customersTableState,
+    customersTableStateChanged,
+  })),
+  withCustomersActions,
 )(CustomersList);

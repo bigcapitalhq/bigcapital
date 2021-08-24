@@ -1,14 +1,16 @@
 import React, { createContext } from 'react';
+import { isEmpty } from 'lodash';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { useResourceViews, useResourceMeta, useInvoices } from 'hooks/query';
-import { isTableEmptyStatus, getFieldsFromResourceMeta } from 'utils';
+import { getFieldsFromResourceMeta } from 'utils';
 
 const InvoicesListContext = createContext();
 
 /**
  * Accounts chart data provider.
  */
-function InvoicesListProvider({ query, ...props }) {
+function InvoicesListProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
   const { data: invoicesViews, isLoading: isViewsLoading } =
     useResourceViews('sale_invoices');
@@ -29,11 +31,7 @@ function InvoicesListProvider({ query, ...props }) {
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isTableEmptyStatus({
-      data: invoices,
-      pagination,
-      filterMeta,
-    }) && !isInvoicesLoading;
+    isEmpty(invoices) && !tableStateChanged && !isInvoicesLoading;
 
   // Provider payload.
   const provider = {

@@ -1,23 +1,26 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import Icon from 'components/Icon';
-import { Button, Classes, NavbarGroup, Intent } from '@blueprintjs/core';
+import {
+  Button,
+  Classes,
+  NavbarGroup,
+  Intent,
+  NavbarDivider,
+} from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
-import { safeCallback } from 'utils';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
+import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 
 /**
  * Expense drawer action bar.
  */
 function ExpenseDrawerActionBar({
-  // #ownProps
-  expense,
-
   // #withAlertsDialog
   openAlert,
 
@@ -25,21 +28,18 @@ function ExpenseDrawerActionBar({
   closeDrawer,
 }) {
   const history = useHistory();
+  const { expense } = useExpenseDrawerContext();
 
   // Handle the expense edit action.
-  const onEditExpense = () => {
-    if (expense) {
-      history.push(`/expenses/${expense.id}/edit`);
-      closeDrawer('expense-drawer');
-    }
+  const handleEditExpense = () => {
+    history.push(`/expenses/${expense.id}/edit`);
+    closeDrawer('expense-drawer');
   };
 
   // Handle the expense delete action.
-  const onDeleteExpense = () => {
-    if (expense) {
-      openAlert('expense-delete', { expenseId: expense.id });
-      closeDrawer('expense-drawer');
-    }
+  const handleDeleteExpense = () => {
+    openAlert('expense-delete', { expenseId: expense.id });
+    closeDrawer('expense-drawer');
   };
 
   return (
@@ -49,15 +49,15 @@ function ExpenseDrawerActionBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="pen-18" />}
           text={<T id={'edit_expense'} />}
-          onClick={safeCallback(onEditExpense)}
+          onClick={handleEditExpense}
         />
-
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon style={{ color: 'red' }} icon="trash-18" iconSize={18} />}
+          icon={<Icon icon="trash-16" iconSize={16} />}
           text={<T id={'delete'} />}
-          // intent={Intent.DANGER}
-          onClick={safeCallback(onDeleteExpense)}
+          intent={Intent.DANGER}
+          onClick={handleDeleteExpense}
         />
       </NavbarGroup>
     </DashboardActionsBar>

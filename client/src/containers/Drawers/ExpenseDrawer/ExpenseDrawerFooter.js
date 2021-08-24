@@ -1,20 +1,19 @@
 import React from 'react';
-import { If, Money } from 'components';
-import { FormattedMessage as T } from 'components';
+import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 
-export default function ExpenseDrawerFooter({
-  expense: { total_amount, currency_code },
-}) {
+export default function ExpenseDrawerFooter() {
+  const { expense: { total_amount } } = useExpenseDrawerContext();
+
   return (
-    <div className="expense-drawer__content--footer">
-      <div className="wrapper">
-        <div>
-          <span><T id={'sub_total'}/></span>
-          <p>{<Money amount={total_amount} currency={currency_code} />}</p>
+    <div className="expense-drawer__content-footer">
+      <div class="total-lines">
+        <div class="total-lines__line total-lines__line--subtotal">
+          <div class="title">Subtotal</div>
+          <div class="amount">{total_amount}</div>
         </div>
-        <div>
-          <span><T id={'total'}/></span>
-          <p>{<Money amount={total_amount} currency={currency_code} />}</p>
+        <div class="total-lines__line total-lines__line--total">
+          <div class="title">TOTAL</div>
+          <div class="amount">{total_amount}</div>
         </div>
       </div>
     </div>

@@ -15,9 +15,16 @@ function AccountDrawer({
   isOpen,
   payload: { accountId },
 }) {
-
   return (
-    <Drawer isOpen={isOpen} name={name} size={'900px'}>
+    <Drawer
+      isOpen={isOpen}
+      name={name}
+      style={{
+        minWidth: '700px',
+        maxWidth: '900px',
+      }}
+      size={'65%'}
+    >
       <DrawerSuspense>
         <AccountDrawerContent name={name} accountId={accountId} />
       </DrawerSuspense>

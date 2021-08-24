@@ -242,12 +242,26 @@ html[lang^="ar"] {
   .bp3-dialog {
 
     &-body {
-      margin: 0;
-
+      
+      &:not(.loading){
+        margin: 0;
+      }
       > .bp3-spinner {
         margin: 20px 0;
       }
     }
   }
 
+}
+
+.bp3-drawer{
+  border-left: 1px solid #00115e;
+}
+
+
+.drawer-portal{
+
+  .bp3-overlay-backdrop{
+    background: rgba(0, 10, 30, 0.05);
+  }
 }

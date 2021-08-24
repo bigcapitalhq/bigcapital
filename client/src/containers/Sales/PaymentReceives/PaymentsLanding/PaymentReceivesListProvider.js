@@ -1,4 +1,6 @@
 import React, { createContext } from 'react';
+import { isEmpty } from 'lodash';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useResourceViews,
@@ -12,7 +14,7 @@ const PaymentReceivesListContext = createContext();
 /**
  * Payment receives data provider.
  */
-function PaymentReceivesListProvider({ query, ...props }) {
+function PaymentReceivesListProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
   const {
     data: paymentReceivesViews,
@@ -33,6 +35,10 @@ function PaymentReceivesListProvider({ query, ...props }) {
     isFetching: isPaymentReceivesFetching,
   } = usePaymentReceives(query, { keepPreviousData: true });
 
+  // Detarmines the datatable empty status.
+  const isEmptyStatus =
+    !isPaymentReceivesLoading && !tableStateChanged && isEmpty(paymentReceives);
+
   // Provider payload.
   const provider = {
     paymentReceives,
@@ -42,6 +48,7 @@ function PaymentReceivesListProvider({ query, ...props }) {
 
     fields: getFieldsFromResourceMeta(resourceMeta.fields),
 
+    isEmptyStatus,
     isViewsLoading,
     isResourceFetching,
     isResourceLoading,

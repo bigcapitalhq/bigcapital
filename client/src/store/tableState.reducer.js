@@ -1,9 +1,10 @@
 
 const TYPES = {
   TABLE_STATE_SET: 'TABLE_STATE_SET',
+  TABLE_STATE_RESET: 'TABLE_STATE_RESET'
 };
 
-export const createTableStateReducers = (RESOURCE_NAME) => ({
+export const createTableStateReducers = (RESOURCE_NAME, defaultTableQuery) => ({
   /**
    * Resource table state set.
    */
@@ -15,4 +16,10 @@ export const createTableStateReducers = (RESOURCE_NAME) => ({
       ...queries,
     };
   },
+
+  [`${RESOURCE_NAME}/${TYPES.TABLE_STATE_RESET}`]: (state, action) => {
+    state.tableState = {
+      ...defaultTableQuery,
+    };
+  }
 });

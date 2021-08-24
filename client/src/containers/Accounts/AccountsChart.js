@@ -22,6 +22,7 @@ import withAccountsTableActions from './withAccountsTableActions';
 function AccountsChart({
   // #withAccounts
   accountsTableState,
+  accountsTableStateChanged,
 
   // #withAccountsActions
   setAccountsTableState,
@@ -41,6 +42,7 @@ function AccountsChart({
   return (
     <AccountsChartProvider
       query={transformAccountsStateToQuery(accountsTableState)}
+      tableStateChanged={accountsTableStateChanged}
     >
       <AccountsActionsBar />
 
@@ -58,6 +60,9 @@ function AccountsChart({
 }
 
 export default compose(
-  withAccounts(({ accountsTableState }) => ({ accountsTableState })),
+  withAccounts(({ accountsTableState, accountsTableStateChanged }) => ({
+    accountsTableState,
+    accountsTableStateChanged,
+  })),
   withAccountsTableActions,
 )(AccountsChart);

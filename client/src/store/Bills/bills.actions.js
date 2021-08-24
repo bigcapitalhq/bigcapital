@@ -7,4 +7,9 @@ export const setBillsTableState = (queries) => {
   };
 };
 
-export const setSelectedRowsItems = () => {};
+export const resetBillsTableState = () => {
+  return {
+    type: t.BILLS_TABLE_STATE_RESET,
+  };
+};
+
