@@ -11,6 +11,7 @@ import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { useCustomersListContext } from './CustomersListProvider';
 import { ActionsMenu, useCustomersTableColumns } from './components';
@@ -29,6 +30,10 @@ function CustomersTable({
 
   // #withAlerts
   openAlert,
+
+  // #withDrawerActions
+  openDrawer,
+
   // #withDialogActions
   openDialog,
 }) {
@@ -59,8 +64,8 @@ function CustomersTable({
   );
 
   // Handles the customer delete action.
-  const handleCustomerDelete = (customer) => {
-    openAlert('customer-delete', { customerId: customer.id });
+  const handleCustomerDelete = ({ id }) => {
+    openAlert('customer-delete', { contactId: id });
   };
 
   // Handle the customer edit action.
@@ -83,6 +88,11 @@ function CustomersTable({
   // Handle cancel/confirm  activate.
   const handleActivateCustomer = ({ id, contact_service }) => {
     openAlert('contact-activate', { contactId: id, service: contact_service });
+  };
+
+  // Handle view detail contact.
+  const handleViewDetailCustomer = ({ id }) => {
+    openDrawer('contact-detail-drawer', { contactId: id });
   };
 
   if (isEmptyStatus) {
@@ -117,6 +127,7 @@ function CustomersTable({
         onDuplicate: handleContactDuplicate,
         onInactivate: handleInactiveCustomer,
         onActivate: handleActivateCustomer,
+        onViewDetails: handleViewDetailCustomer,
       }}
       ContextMenu={ActionsMenu}
     />
@@ -127,5 +138,6 @@ export default compose(
   withAlertsActions,
   withDialogActions,
   withCustomersActions,
+  withDrawerActions,
   withCustomers(({ customersTableState }) => ({ customersTableState })),
 )(CustomersTable);

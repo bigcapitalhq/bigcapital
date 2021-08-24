@@ -12,6 +12,7 @@ import withItems from 'containers/Items/withItems';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { useItemsListContext } from './ItemsListProvider';
 import { useItemsTableColumns, ItemsActionMenuList } from './components';
@@ -29,6 +30,9 @@ function ItemsDataTable({
 
   // #withAlertsActions
   openAlert,
+
+  // #withDrawerActions
+  openDrawer,
 
   // #withItems
   itemsTableState,
@@ -93,6 +97,11 @@ function ItemsDataTable({
     history.push(`/items/new?duplicate=${id}`, { action: id });
   };
 
+  // Handle view detail item.
+  const handleViewDetailItem = ({ id }) => {
+    openDrawer('item-detail-drawer', { itemId: id });
+  };
+
   // Cannot continue in case the items has empty status.
   if (isEmptyStatus) {
     return <ItemsEmptyStatus />;
@@ -129,6 +138,7 @@ function ItemsDataTable({
         onActivateItem: handleActivateItem,
         onMakeAdjustment: handleMakeAdjustment,
         onDuplicate: handleDuplicate,
+        onViewDetails: handleViewDetailItem,
       }}
       noResults={<T id={'there_is_no_items_in_the_table_yet'} />}
       {...tableProps}
@@ -139,6 +149,7 @@ function ItemsDataTable({
 export default compose(
   withItemsActions,
   withAlertsActions,
+  withDrawerActions,
   withDialogActions,
   withItems(({ itemsTableState }) => ({ itemsTableState })),
 )(ItemsDataTable);
