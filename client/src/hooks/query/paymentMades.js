@@ -167,3 +167,19 @@ export function useRefreshPaymentMades() {
     },
   };
 }
+
+/**
+ * Retrieve specific payment made.
+ * @param {number} id - Payment made.
+ */
+export function usePaymentMade(id, props) {
+  return useRequestQuery(
+    [t.PAYMENT_MADE, id],
+    { method: 'get', url: `purchases/bill_payments/${id}` },
+    {
+      select: (res) => res.data.bill_payment,
+      defaultData: {},
+      ...props,
+    },
+  );
+}
