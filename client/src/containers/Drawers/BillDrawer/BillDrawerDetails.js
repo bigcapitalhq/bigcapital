@@ -2,6 +2,7 @@ import React from 'react';
 import { Tabs, Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
+import BillDetailTab from './BillDetailTab';
 import LocatedLandedCostTable from './LocatedLandedCostTable';
 import JournalEntriesTable from '../../JournalEntriesTable/JournalEntriesTable';
 import { useBillDrawerContext } from './BillDrawerProvider';
@@ -17,7 +18,11 @@ export default function BillDrawerDetails() {
   return (
     <div className="view-detail-drawer">
       <Tabs animate={true} large={true} defaultSelectedTabId="journal_entries">
-        <Tab title={intl.get('details')} id={'details'} disabled={true} />
+        <Tab
+          title={intl.get('details')}
+          id={'details'}
+          panel={<BillDetailTab />}
+        />
         <Tab
           title={intl.get('journal_entries')}
           id={'journal_entries'}
@@ -32,5 +37,3 @@ export default function BillDrawerDetails() {
     </div>
   );
 }
-
-// 42 / fon-w 600
