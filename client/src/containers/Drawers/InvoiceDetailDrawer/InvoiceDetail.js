@@ -10,20 +10,15 @@ import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
  * Invoice view detail.
  */
 export default function InvoiceDetail() {
-  const { transactions, invoiceId } = useInvoiceDetailDrawerContext();
+  const { transactions } = useInvoiceDetailDrawerContext();
 
   return (
     <div className="view-detail-drawer">
-      <Tabs
-        animate={true}
-        large={true}
-        defaultSelectedTabId="journal_entries"
-        renderActiveTabPanelOnly={false}
-      >
+      <Tabs animate={true} large={true} defaultSelectedTabId="journal_entries">
         <Tab
           title={intl.get('details')}
           id={'details'}
-          panel={<InvoiceDetailTab invoiceId={invoiceId} />}
+          panel={<InvoiceDetailTab />}
         />
         <Tab
           title={intl.get('journal_entries')}
