@@ -1,21 +1,28 @@
 import React from 'react';
+import clsx from 'classnames';
 
 import { Card } from 'components';
 
 import PaymentMadeDetailActionsBar from './PaymentMadeDetailActionsBar';
 import PaymentMadeDetailHeader from './PaymentMadeDetailHeader';
 import PaymentMadeDetailTable from './PaymentMadeDetailTable';
+import PaymentMadeDetailFooter from './PaymentMadeDetailFooter';
 
+import PaymentDrawerCls from './PaymentMadeDrawer.module.scss';
+
+/**
+ * Payment made detail tab.
+ */
 export default function PaymentMadeDetailTab() {
   return (
-    <div className={'payment-drawer'}>
+    <div className={clsx(PaymentDrawerCls.detail_panel)}>
       <PaymentMadeDetailActionsBar />
-      <div>
-        <Card>
-          <PaymentMadeDetailHeader />
-          <PaymentMadeDetailTable />
-        </Card>
-      </div>
+
+      <Card>
+        <PaymentMadeDetailHeader />
+        <PaymentMadeDetailTable />
+        <PaymentMadeDetailFooter />
+      </Card>
     </div>
   );
 }

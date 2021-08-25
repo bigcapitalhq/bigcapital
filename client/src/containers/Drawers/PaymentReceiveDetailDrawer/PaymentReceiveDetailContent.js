@@ -1,8 +1,5 @@
 import React from 'react';
 
-
-import 'style/components/Drawers/ViewDetail/ViewDetail.scss';
-
 import PaymentReceiveDetail from './PaymentReceiveDetail';
 import { PaymentReceiveDetailProvider } from './PaymentReceiveDetailProvider';
 
@@ -11,10 +8,10 @@ import { PaymentReceiveDetailProvider } from './PaymentReceiveDetailProvider';
  */
 export default function PaymentReceiveDetailContent({
   // #ownProp
-  paymentReceive,
+  paymentReceiveId,
 }) {
   return (
-    <PaymentReceiveDetailProvider paymentReceiveId={paymentReceive}>
+    <PaymentReceiveDetailProvider paymentReceiveId={paymentReceiveId}>
       <PaymentReceiveDetail />
     </PaymentReceiveDetailProvider>
   );

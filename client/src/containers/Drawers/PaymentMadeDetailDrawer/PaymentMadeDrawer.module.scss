@@ -1,3 +1,4 @@
+.root {}
 
 .detail_panel {
   :global .card {
@@ -7,16 +8,14 @@
   &_header {
     margin-bottom: 30px;
   }
-
   &_table {
     :global .bigcapital-datatable {
 
       .thead,
       .tbody {
-
-        .quantity,
-        .rate,
-        .amount {
+        .bill_amount,
+        .amount_due,
+        .payment_amount {
           text-align: right;
         }
       }
@@ -29,7 +28,6 @@
     :global .total_lines {
       margin-left: auto;
     }
-
     :global .total_lines_line {
 
       .amount,
@@ -41,19 +39,15 @@
         text-align: right;
       }
     }
-    .total_line {
-      &_subtotal {
-        border-bottom: 1px solid #000;
-      }
+  }
 
-      &_total {
-        border-bottom: 3px double #000;
-        font-weight: 600;
-      }
-
-      &_dueAmount {
-        font-weight: 600;
-      }
+  .total_line {
+    &_subtotal {
+      border-bottom: 1px solid #000;
+    }
+    &_total {
+      border-bottom: 3px double #000;
+      font-weight: 600;
     }
   }
 }

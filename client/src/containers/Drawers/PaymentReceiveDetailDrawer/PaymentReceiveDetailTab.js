@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'classnames';
 
 import { Card } from 'components';
 
@@ -7,17 +8,18 @@ import PaymentReceiveDetailHeader from './PaymentReceiveDetailHeader';
 import PaymentReceiveDetailTable from './PaymentReceiveDetailTable';
 import PaymentReceiveDetailFooter from './PaymentReceiveDetailFooter';
 
+import PaymentDrawerCls from './PaymentReceiveDrawer.module.scss';
+
 export default function PaymentReceiveDetailTab() {
   return (
-    <div className={'payment-drawer'}>
+    <div className={clsx(PaymentDrawerCls.detail_panel)}>
       <PaymentReceiveActionsBar />
-      <div>
-        <Card>
-          <PaymentReceiveDetailHeader />
-          <PaymentReceiveDetailTable />
-          {/* <PaymentReceiveDetailFooter /> */}
-        </Card>
-      </div>
+
+      <Card>
+        <PaymentReceiveDetailHeader />
+        <PaymentReceiveDetailTable />
+        <PaymentReceiveDetailFooter />
+      </Card>
     </div>
   );
 }

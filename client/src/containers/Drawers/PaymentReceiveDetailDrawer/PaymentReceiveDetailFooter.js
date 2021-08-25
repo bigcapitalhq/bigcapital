@@ -1,24 +1,31 @@
 import React from 'react';
+import clsx from 'classnames';
 
+import { TotalLine, TotalLines } from 'components';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
+import PaymentDrawerCls from './PaymentReceiveDrawer.module.scss';
+
+/**
+ * Payment receive detail footer.
+ */
 export default function PaymentReceiveDetailFooter() {
-  const {
-    paymentReceive: { formatted_amount },
-  } = usePaymentReceiveDetailContext();
+  const { paymentReceive } = usePaymentReceiveDetailContext();
 
   return (
-    <div className="payment-drawer__content-footer">
-      <div class="total-lines">
-        <div class="total-lines__line total-lines__line--subtotal">
-          <div class="title">Subtotal</div>
-          <div class="amount">{formatted_amount}</div>
-        </div>
-        <div class="total-lines__line total-lines__line--total">
-          <div class="title">TOTAL</div>
-          <div class="amount">{'Amount'}</div>
-        </div>
-      </div>
+    <div className={clsx(PaymentDrawerCls.detail_panel_footer)}>
+      <TotalLines>
+        <TotalLine
+          title={'Subtotal'}
+          value={paymentReceive.amount}
+          className={PaymentDrawerCls.total_line_subtotal}
+        />
+        <TotalLine
+          title={'TOTAL'}
+          value={paymentReceive.amount}
+          className={PaymentDrawerCls.total_line_total}
+        />
+      </TotalLines>
     </div>
   );
 }

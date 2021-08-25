@@ -32,14 +32,13 @@ export default function InvoiceDetailHeader() {
           label={intl.get('invoice_date')}
           children={invoice.formatted_invoice_date}
         />
-
         <DetailItem
           label={intl.get('due_date')}
           children={invoice.formatted_due_date}
         />
       </DetailsMenu>
 
-      <DetailsMenu direction={'horizantal'}>
+      <DetailsMenu direction={'horizantal'} minLabelSize={'140px'}>
         <DetailItem
           label={intl.get('due_amount')}
           children={invoice.formatted_due_amount}

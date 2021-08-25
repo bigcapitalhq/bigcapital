@@ -22,7 +22,7 @@ export default function ReceiptDetailHeader() {
           <h3 class="big-number">{receipt.formatted_amount}</h3>
         </DetailItem>
         <DetailItem
-          label={intl.get('receipt_no')}
+          label={intl.get('receipt.details.receipt_number')}
           children={defaultTo(receipt.receipt_no, '-')}
         />
         <DetailItem

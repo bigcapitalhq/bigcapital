@@ -1212,5 +1212,10 @@
   "edit_contact":"Edit {name}",
   "item.sell_description": "Sell description",
   "item.purchase_description": "Purchase description",
-  "closed_date":"Closed date"
+  "closed_date":"Closed date",
+  "payment_made.details.payment_number": "Payment #",
+  "payment_receive.details.payment_number": "Payment #",
+  "estimate.details.estimate_number": "Estimate #",
+  "receipt.details.receipt_number": "Receipt #",
+  "bill.details.bill_number": "Bill #"
 }

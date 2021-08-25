@@ -21,7 +21,7 @@ export default function EstimateDetailHeader() {
           <span class="big-number">{estimate.formatted_amount}</span>
         </DetailItem>
         <DetailItem
-          label={intl.get('estimate_number')}
+          label={intl.get('estimate.details.estimate_number')}
           children={defaultTo(estimate.estimate_number, '-')}
         />
         <DetailItem

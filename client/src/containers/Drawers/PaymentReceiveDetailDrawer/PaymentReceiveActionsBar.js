@@ -18,7 +18,7 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { Icon, FormattedMessage as T } from 'components';
 
-import { safeCallback, compose } from 'utils';
+import { compose } from 'utils';
 
 function PaymentReceiveActionsBar({
   // #withAlertsActions
@@ -29,23 +29,18 @@ function PaymentReceiveActionsBar({
 }) {
   const history = useHistory();
 
+  // Retrieve the payment receive drawer context.
   const { paymentReceiveId } = usePaymentReceiveDetailContext();
 
-
   // Handle edit payment receive.
-  const onEditPaymentReceive = () => {
-    return paymentReceiveId
-      ? (history.push(`/payment-receives/${paymentReceiveId}/edit`),
-        closeDrawer('payment-receive-detail-drawer'))
-      : null;
+  const handleEditPaymentReceive = () => {
+    history.push(`/payment-receives/${paymentReceiveId}/edit`);
+    closeDrawer('payment-receive-detail-drawer');
   };
 
   // Handle delete payment receive.
-  const onDeletePaymentReceive = () => {
-    return paymentReceiveId
-      ? (openAlert('payment-receive-delete', { paymentReceiveId }),
-        closeDrawer('payment-receive-detail-drawer'))
-      : null;
+  const handleDeletePaymentReceive = () => {
+    openAlert('payment-receive-delete', { paymentReceiveId });
   };
 
   return (
@@ -55,7 +50,7 @@ function PaymentReceiveActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="pen-18" />}
           text={<T id={'edit_payment_receive'} />}
-          onClick={safeCallback(onEditPaymentReceive)}
+          onClick={handleEditPaymentReceive}
         />
         <NavbarDivider />
         <Button
@@ -63,7 +58,7 @@ function PaymentReceiveActionsBar({
           icon={<Icon icon={'trash-16'} iconSize={16} />}
           text={<T id={'delete'} />}
           intent={Intent.DANGER}
-          onClick={safeCallback(onDeletePaymentReceive)}
+          onClick={handleDeletePaymentReceive}
         />
       </NavbarGroup>
     </DashboardActionsBar>

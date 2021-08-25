@@ -19,7 +19,7 @@ function PaymentReceiveUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.PAYMENT_RECEIVE) {
-    openDrawer('payment-receive-drawer', { paymentReceiveId: resourceId });
+    openDrawer('payment-receive-detail-drawer', { paymentReceiveId: resourceId });
   }
   return null;
 }
@@ -58,10 +58,9 @@ export function PaymentReceiveUniversalSearchItem(
 
 /**
  * Transformes payment receives to search.
- * @param {*} payment
- * @returns
  */
  const paymentReceivesToSearch = (payment) => ({
+  id: payment.id,
   text: payment.customer.display_name,
   subText: payment.formatted_payment_date,
   label: payment.formatted_amount,

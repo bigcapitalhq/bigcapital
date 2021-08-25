@@ -9,27 +9,32 @@ export const usePaymentMadeEntriesColumns = () =>
       accessor: (row) => moment(row.date).format('YYYY MMM DD'),
       width: 100,
       disableSortBy: true,
+      className: 'date',
     },
     {
       Header: intl.get('bill_number'),
       accessor: 'bill_no',
       width: 150,
       disableSortBy: true,
+      className: 'bill_number',
     },
     {
       Header: intl.get('bill_amount'),
       accessor: 'amount',
+      className: 'amount',
     },
     {
       Header: intl.get('due_amount'),
       accessor: 'due_amount',
       width: 100,
       disableSortBy: true,
+      className: 'due_amount',
     },
     {
       Header: intl.get('payment_amount'),
       accessor: 'payment_amount',
       width: 100,
       disableSortBy: true,
+      className: 'payment_amount',
     },
-  ]);
+  ], []);

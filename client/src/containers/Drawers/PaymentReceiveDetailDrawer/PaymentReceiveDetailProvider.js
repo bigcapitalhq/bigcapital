@@ -9,10 +9,13 @@ const PaymentReceiveDetailContext = React.createContext();
  * Payment receive detail provider.
  */
 function PaymentReceiveDetailProvider({ paymentReceiveId, ...props }) {
-  const { data: paymentReceive, isFetching: isPaymentReceiveLoading } =
-    usePaymentReceive(paymentReceiveId, {
-      enabled: !!paymentReceiveId,
-    });
+  const {
+    data: paymentReceive,
+    isLoading: isPaymentLoading,
+    isFetching: isPaymentFetching,
+  } = usePaymentReceive(paymentReceiveId, {
+    enabled: !!paymentReceiveId,
+  });
 
   // Handle fetch transaction by reference.
   const {
@@ -26,11 +29,11 @@ function PaymentReceiveDetailProvider({ paymentReceiveId, ...props }) {
     { enabled: !!paymentReceiveId },
   );
 
-  //provider.
+  // Provider.
   const provider = { transactions, paymentReceive, paymentReceiveId };
 
   return (
-    <DashboardInsider loading={isTransactionLoading || isPaymentReceiveLoading}>
+    <DashboardInsider loading={isTransactionLoading || isPaymentLoading}>
       <DrawerHeaderContent
         name="payment-receive-detail-drawer"
         title={intl.get('payment_receive_details')}

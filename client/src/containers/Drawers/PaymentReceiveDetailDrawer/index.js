@@ -22,13 +22,10 @@ function PaymentReceiveDetailDrawer({
       isOpen={isOpen}
       name={name}
       size={'65%'}
-      style={{
-        minWidth: '700px',
-        maxWidth: '900px',
-      }}
+      style={{ minWidth: '700px', maxWidth: '900px' }}
     >
       <DrawerSuspense>
-        <PaymentReceiveDetailContent paymentReceive={paymentReceiveId} />
+        <PaymentReceiveDetailContent paymentReceiveId={paymentReceiveId} />
       </DrawerSuspense>
     </Drawer>
   );

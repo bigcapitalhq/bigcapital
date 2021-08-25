@@ -22,7 +22,7 @@ export default function BillDetailHeader() {
           children={<h3 class="big-number">{bill.formatted_amount}</h3>}
         />
         <DetailItem
-          label={intl.get('bill_number')}
+          label={intl.get('bill.details.bill_number')}
           children={defaultTo(bill.bill_number, '-')}
         />
         <DetailItem

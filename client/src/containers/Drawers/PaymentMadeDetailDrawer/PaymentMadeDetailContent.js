@@ -10,10 +10,10 @@ import { PaymentMadeDetailProvider } from './PaymentMadeDetailProvider';
  */
 export default function PaymentMadeDetailContent({
   // #ownProp
-  paymentMade,
+  paymentMadeId,
 }) {
   return (
-    <PaymentMadeDetailProvider paymentMadeId={paymentMade}>
+    <PaymentMadeDetailProvider paymentMadeId={paymentMadeId}>
       <PaymentMadeDetails />
     </PaymentMadeDetailProvider>
   );

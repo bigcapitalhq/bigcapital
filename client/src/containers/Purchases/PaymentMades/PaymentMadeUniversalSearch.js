@@ -62,6 +62,7 @@ export const PaymentMadeUniversalSearchSelect = withDrawerActions(
  * Payment made resource item to search item.
  */
 const paymentMadeToSearch = (payment) => ({
+  id: payment.id,
   text: payment.vendor.display_name,
   subText: payment.formatted_payment_date,
   label: payment.formatted_amount,

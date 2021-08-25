@@ -61,8 +61,6 @@ function PaymentReceiveActionsBar({
     refresh();
   };
 
-  console.log(fields, 'fields');
-
   return (
     <DashboardActionsBar>
       <NavbarGroup>

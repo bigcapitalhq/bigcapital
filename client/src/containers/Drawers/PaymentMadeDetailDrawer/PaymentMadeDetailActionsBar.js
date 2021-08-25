@@ -18,8 +18,11 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { Icon, FormattedMessage as T } from 'components';
 
-import { safeCallback, compose } from 'utils';
+import { compose } from 'utils';
 
+/**
+ * Payment made - Details panel - actions bar.
+ */
 function PaymentMadeDetailActionsBar({
   // #withAlertsActions
   openAlert,
@@ -32,19 +35,14 @@ function PaymentMadeDetailActionsBar({
   const { paymentMadeId } = usePaymentMadeDetailContext();
 
   // Handle edit payment made.
-  const onEditPaymentMade = () => {
-    return paymentMadeId
-      ? (history.push(`/payment-mades/${paymentMadeId}/edit`),
-        closeDrawer('payment-made-detail-drawer'))
-      : null;
+  const handleEditPaymentMade = () => {
+    history.push(`/payment-mades/${paymentMadeId}/edit`);
+    closeDrawer('payment-made-detail-drawer');
   };
 
   // Handle delete payment made.
-  const onDeletePaymentMade = () => {
-    return paymentMadeId
-      ? (openAlert('payment-made-delete', { paymentMadeId }),
-        closeDrawer('payment-made-detail-drawer'))
-      : null;
+  const handleDeletePaymentMade = () => {
+    openAlert('payment-made-delete', { paymentMadeId });
   };
 
   return (
@@ -54,7 +52,7 @@ function PaymentMadeDetailActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="pen-18" />}
           text={<T id={'edit_payment_made'} />}
-          onClick={safeCallback(onEditPaymentMade)}
+          onClick={handleEditPaymentMade}
         />
         <NavbarDivider />
         <Button
@@ -62,7 +60,7 @@ function PaymentMadeDetailActionsBar({
           icon={<Icon icon={'trash-16'} iconSize={16} />}
           text={<T id={'delete'} />}
           intent={Intent.DANGER}
-          onClick={safeCallback(onDeletePaymentMade)}
+          onClick={handleDeletePaymentMade}
         />
       </NavbarGroup>
     </DashboardActionsBar>

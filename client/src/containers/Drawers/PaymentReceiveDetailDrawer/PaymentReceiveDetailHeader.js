@@ -1,56 +1,58 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
+import clsx from 'classnames';
 
 import { defaultTo } from 'lodash';
 
-import { Card, DetailsMenu, DetailItem } from 'components';
+import { DetailsMenu, DetailItem } from 'components';
 
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
+
+import PaymentDrawerCls from './PaymentReceiveDrawer.module.scss';
 
 /**
  * Payment receive detail header.
  */
 export default function PaymentReceiveDetailHeader() {
-  const {
-    paymentReceive: {
-      formatted_amount,
-      payment_receive_no,
-      customer,
-      deposit_account,
-      formatted_payment_date,
-      statement,
-      created_at,
-    },
-  } = usePaymentReceiveDetailContext();
+  const { paymentReceive } = usePaymentReceiveDetailContext();
 
   return (
-    <div className={'payment-drawer__content-header'}>
+    <div className={clsx(PaymentDrawerCls.detail_panel_header)}>
       <DetailsMenu>
-        <DetailItem label={intl.get('amount')}>
-          <h3 class="big-number">{formatted_amount}</h3>
-        </DetailItem>
-        <DetailItem label={intl.get('payment_receive_no')}>
-          {payment_receive_no}
-        </DetailItem>
-        <DetailItem label={intl.get('customer_name')}>
-          {customer?.display_name}
-        </DetailItem>
-        <DetailItem label={intl.get('deposit_account')}>
-          {deposit_account?.name}
-        </DetailItem>
-        <DetailItem label={intl.get('payment_date')}>
-          {formatted_payment_date}
-        </DetailItem>
+        <DetailItem
+          label={intl.get('amount')}
+          children={
+            <h3 class="big-number">{paymentReceive.formatted_amount}</h3>
+          }
+        />
+        <DetailItem
+          label={intl.get('payment_receive.details.payment_number')}
+          children={defaultTo(paymentReceive.payment_receive_no, '-')}
+        />
+        <DetailItem
+          label={intl.get('customer_name')}
+          children={paymentReceive.customer?.display_name}
+        />
+        <DetailItem
+          label={intl.get('deposit_account')}
+          children={paymentReceive.deposit_account?.name}
+        />
+        <DetailItem
+          label={intl.get('payment_date')}
+          children={paymentReceive.formatted_payment_date}
+        />
       </DetailsMenu>
 
-      <DetailsMenu direction={'horizantal'}>
-        <DetailItem label={intl.get('description')}>
-          {defaultTo(statement, '—')}
-        </DetailItem>
-        <DetailItem label={intl.get('created_at')}>
-          {moment(created_at).format('YYYY MMM DD')}
-        </DetailItem>
+      <DetailsMenu direction={'horizantal'} minLabelSize={'140px'}>
+        <DetailItem
+          label={intl.get('description')}
+          children={defaultTo(paymentReceive.statement, '—')}
+        />
+        <DetailItem
+          label={intl.get('created_at')}
+          children={moment(paymentReceive.created_at).format('YYYY MMM DD')}
+        />
       </DetailsMenu>
     </div>
   );
