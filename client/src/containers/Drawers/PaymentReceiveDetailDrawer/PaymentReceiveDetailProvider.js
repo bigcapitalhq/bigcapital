@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DashboardInsider } from 'components';
-import { useTransactionsByReference } from 'hooks/query';
+import { useTransactionsByReference, usePaymentReceive } from 'hooks/query';
 
 const PaymentReceiveDetailContext = React.createContext();
 
@@ -9,6 +9,11 @@ const PaymentReceiveDetailContext = React.createContext();
  * Payment receive detail provider.
  */
 function PaymentReceiveDetailProvider({ paymentReceiveId, ...props }) {
+  const { data: paymentReceive, isFetching: isPaymentReceiveLoading } =
+    usePaymentReceive(paymentReceiveId, {
+      enabled: !!paymentReceiveId,
+    });
+
   // Handle fetch transaction by reference.
   const {
     data: { transactions },
@@ -22,10 +27,10 @@ function PaymentReceiveDetailProvider({ paymentReceiveId, ...props }) {
   );
 
   //provider.
-  const provider = { transactions };
+  const provider = { transactions, paymentReceive, paymentReceiveId };
 
   return (
-    <DashboardInsider loading={isTransactionLoading}>
+    <DashboardInsider loading={isTransactionLoading || isPaymentReceiveLoading}>
       <DrawerHeaderContent
         name="payment-receive-detail-drawer"
         title={intl.get('payment_receive_details')}

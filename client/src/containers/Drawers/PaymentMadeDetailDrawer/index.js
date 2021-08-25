@@ -18,7 +18,15 @@ function PaymentMadeDetailDrawer({
   payload: { paymentMadeId },
 }) {
   return (
-    <Drawer isOpen={isOpen} name={name} size={'750px'}>
+    <Drawer
+      isOpen={isOpen}
+      name={name}
+      size={'65%'}
+      style={{
+        minWidth: '700px',
+        maxWidth: '900px',
+      }}
+    >
       <DrawerSuspense>
         <PaymentMadeDetailContent paymentMade={paymentMadeId} />
       </DrawerSuspense>

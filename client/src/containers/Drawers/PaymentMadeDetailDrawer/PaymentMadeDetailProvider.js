@@ -1,7 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DashboardInsider } from 'components';
-import { useTransactionsByReference } from 'hooks/query';
+import {
+  useTransactionsByReference,
+  usePaymentMade,
+  usePaymentMadeEditPage,
+} from 'hooks/query';
 
 const PaymentMadeDetailContext = React.createContext();
 
@@ -9,6 +13,20 @@ const PaymentMadeDetailContext = React.createContext();
  * Payment made detail provider.
  */
 function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
+  // Handle fetch specific payment made details.
+  const { data: paymentMade, isFetching: isPaymentMadeLoading } =
+    usePaymentMade(paymentMadeId, {
+      enabled: !!paymentMadeId,
+    });
+
+  // Handle fetch specific payment made details.
+  const {
+    data: { entries: paymentEntries },
+    isLoading: isPaymentLoading,
+  } = usePaymentMadeEditPage(paymentMadeId, {
+    enabled: !!paymentMadeId,
+  });
+
   // Handle fetch transaction by reference.
   const {
     data: { transactions },
@@ -24,9 +42,14 @@ function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
   //provider.
   const provider = {
     transactions,
+    paymentMadeId,
+    paymentMade,
+    paymentEntries,
   };
   return (
-    <DashboardInsider loading={isTransactionLoading}>
+    <DashboardInsider
+      loading={isTransactionLoading || isPaymentMadeLoading || isPaymentLoading}
+    >
       <DrawerHeaderContent
         name="payment-made-detail-drawer"
         title={intl.get('payment_made_details')}
