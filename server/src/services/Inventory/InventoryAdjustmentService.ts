@@ -188,14 +188,13 @@ export default class InventoryAdjustmentService {
     inventoryAdjustmentId: number
   ): Promise<void> {
     // Retrieve the inventory adjustment or throw not found service error.
-    const oldInventoryAdjustment = await this.getInventoryAdjustmentOrThrowError(
-      tenantId,
-      inventoryAdjustmentId
-    );
-    const {
-      InventoryAdjustmentEntry,
-      InventoryAdjustment,
-    } = this.tenancy.models(tenantId);
+    const oldInventoryAdjustment =
+      await this.getInventoryAdjustmentOrThrowError(
+        tenantId,
+        inventoryAdjustmentId
+      );
+    const { InventoryAdjustmentEntry, InventoryAdjustment } =
+      this.tenancy.models(tenantId);
 
     this.logger.info('[inventory_adjustment] trying to delete adjustment.', {
       tenantId,
@@ -236,10 +235,11 @@ export default class InventoryAdjustmentService {
     const { InventoryAdjustment } = this.tenancy.models(tenantId);
 
     // Retrieve the inventory adjustment or throw not found service error.
-    const oldInventoryAdjustment = await this.getInventoryAdjustmentOrThrowError(
-      tenantId,
-      inventoryAdjustmentId
-    );
+    const oldInventoryAdjustment =
+      await this.getInventoryAdjustmentOrThrowError(
+        tenantId,
+        inventoryAdjustmentId
+      );
     this.logger.info('[inventory_adjustment] trying to publish adjustment.', {
       tenantId,
       inventoryAdjustmentId,
@@ -268,12 +268,10 @@ export default class InventoryAdjustmentService {
 
   /**
    * Parses inventory adjustments list filter DTO.
-   * @param filterDTO - 
+   * @param filterDTO -
    */
   private parseListFilterDTO(filterDTO) {
-    return R.compose(
-      this.dynamicListService.parseStringifiedFilter,
-    )(filterDTO);
+    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
   }
 
   /**
@@ -297,7 +295,7 @@ export default class InventoryAdjustmentService {
     const dynamicFilter = await this.dynamicListService.dynamicList(
       tenantId,
       InventoryAdjustment,
-      filter,
+      filter
     );
     const { results, pagination } = await InventoryAdjustment.query()
       .onBuild((query) => {
@@ -330,10 +328,10 @@ export default class InventoryAdjustmentService {
       date: inventoryAdjustment.date,
       transactionType: 'InventoryAdjustment',
       transactionId: inventoryAdjustment.id,
-      createdAt: inventoryAdjustment.createdAt
+      createdAt: inventoryAdjustment.createdAt,
     };
     const inventoryTransactions = [];
-    
+
     inventoryAdjustment.entries.forEach((entry) => {
       inventoryTransactions.push({
         ...commonTransaction,
@@ -347,7 +345,7 @@ export default class InventoryAdjustmentService {
       tenantId,
       inventoryTransactions,
       override
-    )
+    );
   }
 
   /**
@@ -364,5 +362,35 @@ export default class InventoryAdjustmentService {
       inventoryAdjustmentId,
       'InventoryAdjustment'
     );
+  }
+
+  /**
+   * Retrieve specific inventory adjustment transaction details.
+   * @param {number} tenantId
+   * @param {number} inventoryAdjustmentId
+   */
+  async getInventoryAdjustment(
+    tenantId: number,
+    inventoryAdjustmentId: number
+  ) {
+    const { InventoryAdjustment } = this.tenancy.models(tenantId);
+
+    // Retrieve inventory adjustment transation with associated models.
+    const inventoryAdjustment = await InventoryAdjustment.query()
+      .findById(inventoryAdjustmentId)
+      .withGraphFetched('entries.item')
+      .withGraphFetched('adjustmentAccount');
+
+    // Throw not found if the given adjustment transaction not exists.
+    this.throwIfAdjustmentNotFound(inventoryAdjustment)
+
+    return inventoryAdjustment;
+  }
+
+
+  throwIfAdjustmentNotFound(inventoryAdjustment) {
+    if (!inventoryAdjustment) {
+      throw new ServiceError(ERRORS.INVENTORY_ADJUSTMENT_NOT_FOUND);
+    }
   }
 }

@@ -5,6 +5,8 @@ import { ServiceError } from 'exceptions';
 import BaseController from '../BaseController';
 import InventoryAdjustmentService from 'services/Inventory/InventoryAdjustmentService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import { Request } from 'express-validator/src/base';
+import { ResponseType } from 'axios';
 
 @Service()
 export default class InventoryAdjustmentsController extends BaseController {
@@ -39,6 +41,13 @@ export default class InventoryAdjustmentsController extends BaseController {
       this.validatateQuickAdjustment,
       this.validationResult,
       this.asyncMiddleware(this.createQuickInventoryAdjustment.bind(this)),
+      this.handleServiceErrors
+    );
+    router.get(
+      '/:id',
+      [param('id').exists().isNumeric().toInt()],
+      this.validationResult,
+      this.asyncMiddleware(this.getInventoryAdjustment.bind(this)),
       this.handleServiceErrors
     );
     router.get(
@@ -110,11 +119,12 @@ export default class InventoryAdjustmentsController extends BaseController {
     const quickInventoryAdjustment = this.matchedBodyData(req);
 
     try {
-      const inventoryAdjustment = await this.inventoryAdjustmentService.createQuickAdjustment(
-        tenantId,
-        quickInventoryAdjustment,
-        user
-      );
+      const inventoryAdjustment =
+        await this.inventoryAdjustmentService.createQuickAdjustment(
+          tenantId,
+          quickInventoryAdjustment,
+          user
+        );
 
       return res.status(200).send({
         id: inventoryAdjustment.id,
@@ -182,6 +192,35 @@ export default class InventoryAdjustmentsController extends BaseController {
   }
 
   /**
+   * Retrieve the specific inventory adjustment transaction of  the given id.
+   * @param {Request} req -
+   * @param {Response} res -
+   * @param {NextFunction} next - 
+   */
+  async getInventoryAdjustment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { id: adjustmentId } = req.params;
+
+    try {
+      const inventoryAdjustment =
+        await this.inventoryAdjustmentService.getInventoryAdjustment(
+          tenantId,
+          adjustmentId
+        );
+
+      return res.status(200).send({
+        data: this.transfromToResponse(inventoryAdjustment),
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Retrieve the inventory adjustments paginated list.
    * @param {Request} req
    * @param {Response} res
@@ -203,13 +242,11 @@ export default class InventoryAdjustmentsController extends BaseController {
     };
 
     try {
-      const {
-        pagination,
-        inventoryAdjustments,
-      } = await this.inventoryAdjustmentService.getInventoryAdjustments(
-        tenantId,
-        filter
-      );
+      const { pagination, inventoryAdjustments } =
+        await this.inventoryAdjustmentService.getInventoryAdjustments(
+          tenantId,
+          filter
+        );
 
       return res.status(200).send({
         inventoy_adjustments: inventoryAdjustments,
