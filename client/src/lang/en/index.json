@@ -1217,5 +1217,6 @@
   "payment_receive.details.payment_number": "Payment #",
   "estimate.details.estimate_number": "Estimate #",
   "receipt.details.receipt_number": "Receipt #",
-  "bill.details.bill_number": "Bill #"
+  "bill.details.bill_number": "Bill #",
+  "inventory_adjustment_details":"Inventory adjustment details"
 }
