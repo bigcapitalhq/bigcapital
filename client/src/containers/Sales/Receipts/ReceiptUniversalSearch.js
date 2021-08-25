@@ -22,7 +22,8 @@ function ReceiptUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.RECEIPT) {
-    openDrawer('receipt-drawer', { estimateId: resourceId });
+    openDrawer('receipt-detail-drawer', { receiptId: resourceId });
+    onAction && onAction();
   }
   return null;
 }
@@ -84,6 +85,7 @@ export function ReceiptUniversalSearchItem(
  * Transformes receipt resource item to search item.
  */
 const transformReceiptsToSearch = (receipt) => ({
+  id: receipt.id,
   text: receipt.customer.display_name,
   label: receipt.formatted_amount,
   reference: receipt,

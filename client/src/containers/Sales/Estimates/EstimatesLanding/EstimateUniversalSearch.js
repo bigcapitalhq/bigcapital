@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 
 import { Choose, T, Icon } from 'components';
 
-import { RESOURCES_TYPES } from "../../../../common/resourcesTypes";
+import { RESOURCES_TYPES } from "common/resourcesTypes";
 import withDrawerActions from "../../../Drawer/withDrawerActions";
 
 /**
@@ -19,7 +19,7 @@ function EstimateUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.ESTIMATE) {
-    openDrawer('estimate-drawer', { estimateId: resourceId });
+    openDrawer('estimate-detail-drawer', { estimateId: resourceId });
   }
   return null;
 }
@@ -69,6 +69,7 @@ export function EstimateUniversalSearchItem(
 ) {
   return (
     <MenuItem
+      active={modifiers.active}
       text={
         <div>
           <div>{item.text}</div>
@@ -91,13 +92,19 @@ export function EstimateUniversalSearchItem(
   );
 }
 
-
+/**
+ * Transformes the estimates to search items.
+ */
 const transformEstimatesToSearch = (estimate) => ({
+  id: estimate.id,
   text: estimate.customer.display_name,
   label: estimate.formatted_balance,
   reference: estimate,
 });
 
+/**
+ * Estimate resource universal search bind configure.
+ */
 export const universalSearchEstimateBind = () => ({
   resourceType: RESOURCES_TYPES.ESTIMATE,
   optionItemLabel: intl.get('estimates'),

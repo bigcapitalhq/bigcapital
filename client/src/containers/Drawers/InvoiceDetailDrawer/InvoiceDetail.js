@@ -1,36 +1,36 @@
 import React from 'react';
-import { Tabs, Tab } from '@blueprintjs/core';
+import { Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import clsx from 'classnames';
+
+import { DrawerMainTabs } from 'components';
 
 import JournalEntriesTable from '../../JournalEntriesTable/JournalEntriesTable';
 import InvoiceDetailTab from './InvoiceDetailTab';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
+import InvoiceDrawerCls from 'style/components/Drawers/InvoiceDrawer.module.scss';
+
 /**
  * Invoice view detail.
  */
 export default function InvoiceDetail() {
-  const { transactions, invoiceId } = useInvoiceDetailDrawerContext();
+  const { transactions } = useInvoiceDetailDrawerContext();
 
   return (
-    <div className="view-detail-drawer">
-      <Tabs
-        animate={true}
-        large={true}
-        defaultSelectedTabId="journal_entries"
-        renderActiveTabPanelOnly={false}
-      >
+    <div className={clsx(InvoiceDrawerCls.invoice_details)}>
+      <DrawerMainTabs defaultSelectedTabId="details">
         <Tab
           title={intl.get('details')}
           id={'details'}
-          panel={<InvoiceDetailTab invoiceId={invoiceId} />}
+          panel={<InvoiceDetailTab />}
         />
         <Tab
           title={intl.get('journal_entries')}
           id={'journal_entries'}
           panel={<JournalEntriesTable transactions={transactions} />}
         />
-      </Tabs>
+      </DrawerMainTabs>
     </div>
   );
 }

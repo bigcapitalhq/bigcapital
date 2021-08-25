@@ -16,9 +16,14 @@ function BillDrawer({
   payload: { billId },
 }) {
   return (
-    <Drawer isOpen={isOpen} name={name} size={'750px'}>
+    <Drawer
+      isOpen={isOpen}
+      name={name}
+      style={{ minWidth: '700px', maxWidth: '900px' }}
+      size={'65%'}
+    >
       <DrawerSuspense>
-        <BillDrawerContent bill={billId} />
+        <BillDrawerContent billId={billId} />
       </DrawerSuspense>
     </Drawer>
   );

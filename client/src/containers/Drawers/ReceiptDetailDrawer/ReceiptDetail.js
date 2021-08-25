@@ -1,31 +1,35 @@
 import React from 'react';
-import { Tabs, Tab } from '@blueprintjs/core';
+import { Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import clsx from 'classnames';
 
+import { DrawerMainTabs } from 'components';
 import JournalEntriesTable from '../../JournalEntriesTable/JournalEntriesTable';
 import ReceiptDetailTab from './ReceiptDetailTab';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
+
+import ReceiptDrawerCls from 'style/components/Drawers/ReceiptDrawer.module.scss';
 
 /**
  * Receipt view detail.
  */
 export default function ReceiptDetail() {
-  const { transactions, receiptId } = useReceiptDetailDrawerContext();
+  const { transactions } = useReceiptDetailDrawerContext();
 
   return (
-    <div className="view-detail-drawer">
-      <Tabs animate={true} large={true} defaultSelectedTabId="journal_entries">
+    <div className={clsx(ReceiptDrawerCls.root)}>
+      <DrawerMainTabs defaultSelectedTabId="details">
         <Tab
           title={intl.get('details')}
           id={'details'}
-          panel={<ReceiptDetailTab receiptId={receiptId} />}
+          panel={<ReceiptDetailTab />}
         />
         <Tab
           title={intl.get('journal_entries')}
           id={'journal_entries'}
           panel={<JournalEntriesTable transactions={transactions} />}
         />
-      </Tabs>
+      </DrawerMainTabs>
     </div>
   );
 }

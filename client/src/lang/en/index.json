@@ -1211,5 +1211,6 @@
   "receipt_preview.dialog.title":"Receipt PDF Preview",
   "edit_contact":"Edit {name}",
   "item.sell_description": "Sell description",
-  "item.purchase_description": "Purchase description"
+  "item.purchase_description": "Purchase description",
+  "closed_date":"Closed date"
 }

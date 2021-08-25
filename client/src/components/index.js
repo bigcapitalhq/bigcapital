@@ -69,6 +69,9 @@ export * from './Dashboard/DashboardRowsHeightButton';
 export * from './UniversalSearch/UniversalSearch';
 export * from './PdfPreview';
 export * from './Details';
+export * from './Drawer/DrawerInsider';
+export * from './Drawer/DrawerMainTabs';
+export * from './TotalLines/index'
 
 const Hint = FieldHint;
 

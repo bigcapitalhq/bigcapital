@@ -1,7 +1,7 @@
 import React from 'react';
-import EstimateDrawer from 'containers/Sales/Estimates/EstimateDetails/EstimateDrawer';
-import InvoiceDrawer from 'containers/Sales/Invoices/InvoiceDetails/InvoiceDrawer';
-import ReceiptDrawer from 'containers/Sales/Receipts/ReceiptDetails/ReceiptDrawer';
+// import EstimateDrawer from 'containers/Sales/Estimates/EstimateDetails/EstimateDrawer';
+// import InvoiceDrawer from 'containers/Sales/Invoices/InvoiceDetails/InvoiceDrawer';
+// import ReceiptDrawer from 'containers/Sales/Receipts/ReceiptDetails/ReceiptDrawer';
 import PaymentReceiveDrawer from 'containers/Sales/PaymentReceives/PaymentDetails/PaymentReceiveDrawer';
 import AccountDrawer from 'containers/Drawers/AccountDrawer';
 import ManualJournalDrawer from 'containers/Drawers/ManualJournalDrawer';
@@ -23,9 +23,9 @@ import { DRAWERS } from 'common/drawers';
 export default function DrawersContainer() {
   return (
     <div>
-      <EstimateDrawer name={DRAWERS.EstimateDrawer} />
-      <InvoiceDrawer name={'invoice-drawer'} />
-      <ReceiptDrawer name={'receipt-drawer'} />
+      {/* <EstimateDrawer name={DRAWERS.EstimateDrawer} /> */}
+      {/* <InvoiceDrawer name={'invoice-drawer'} /> */}
+      {/* <ReceiptDrawer name={'receipt-drawer'} /> */}
       <PaymentReceiveDrawer name={'payment-receive-drawer'} />
       <AccountDrawer name={DRAWERS.ACCOUNT_DRAWER} />
       <ManualJournalDrawer name={DRAWERS.JOURNAL_DRAWER} />

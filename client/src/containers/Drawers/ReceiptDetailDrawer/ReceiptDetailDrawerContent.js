@@ -10,10 +10,10 @@ import { ReceiptDetailDrawerProvider } from './ReceiptDetailDrawerProvider';
  */
 export default function ReceiptDetailDrawerContent({
   // #ownProp
-  receipt,
+  receiptId,
 }) {
   return (
-    <ReceiptDetailDrawerProvider receiptId={receipt}>
+    <ReceiptDetailDrawerProvider receiptId={receiptId}>
       <ReceiptDetail />
     </ReceiptDetailDrawerProvider>
   );

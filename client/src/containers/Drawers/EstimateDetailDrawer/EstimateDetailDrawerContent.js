@@ -1,7 +1,5 @@
 import React from 'react';
 
-import 'style/components/Drawers/ViewDetail/ViewDetail.scss';
-
 import EstimateDetail from './EstimateDetail';
 import { EstimateDetailDrawerProvider } from './EstimateDetailDrawerProvider';
 
@@ -10,10 +8,10 @@ import { EstimateDetailDrawerProvider } from './EstimateDetailDrawerProvider';
  */
 export default function EstimateDetailDrawerContent({
   // #ownProp
-  estimate,
+  estimateId,
 }) {
   return (
-    <EstimateDetailDrawerProvider estimateId={estimate}>
+    <EstimateDetailDrawerProvider estimateId={estimateId}>
       <EstimateDetail />
     </EstimateDetailDrawerProvider>
   );

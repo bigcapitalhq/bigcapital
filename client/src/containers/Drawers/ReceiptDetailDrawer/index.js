@@ -18,9 +18,14 @@ function ReceiptDetailDrawer({
   payload: { receiptId },
 }) {
   return (
-    <Drawer isOpen={isOpen} name={name} size={'750px'}>
+    <Drawer
+      isOpen={isOpen}
+      name={name}
+      style={{ minWidth: '700px', maxWidth: '900px' }}
+      size={'65%'}
+    >
       <DrawerSuspense>
-        <ReceiptDetailDrawerContent receipt={receiptId} />
+        <ReceiptDetailDrawerContent receiptId={receiptId} />
       </DrawerSuspense>
     </Drawer>
   );

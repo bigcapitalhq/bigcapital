@@ -10,10 +10,10 @@ import { InvoiceDetailDrawerProvider } from './InvoiceDetailDrawerProvider';
  */
 export default function InvoiceDetailDrawerContent({
   // #ownProp
-  invoice,
+  invoiceId,
 }) {
   return (
-    <InvoiceDetailDrawerProvider invoiceId={invoice}>
+    <InvoiceDetailDrawerProvider invoiceId={invoiceId}>
       <InvoiceDetail />
     </InvoiceDetailDrawerProvider>
   );

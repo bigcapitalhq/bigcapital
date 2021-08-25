@@ -1,10 +1,16 @@
 import React from 'react';
-import { Tabs, Tab } from '@blueprintjs/core';
+import { Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import clsx from 'classnames';
 
+import { DrawerMainTabs } from 'components';
+
+import BillDetailTab from './BillDetailTab';
 import LocatedLandedCostTable from './LocatedLandedCostTable';
 import JournalEntriesTable from '../../JournalEntriesTable/JournalEntriesTable';
 import { useBillDrawerContext } from './BillDrawerProvider';
+
+import BillDrawerCls from 'style/components/Drawers/BillDrawer.module.scss';
 
 /**
  * Bill view details.
@@ -15,9 +21,13 @@ export default function BillDrawerDetails() {
   } = useBillDrawerContext();
 
   return (
-    <div className="view-detail-drawer">
-      <Tabs animate={true} large={true} defaultSelectedTabId="journal_entries">
-        <Tab title={intl.get('details')} id={'details'} disabled={true} />
+    <div className={clsx(BillDrawerCls.root)}>
+      <DrawerMainTabs defaultSelectedTabId="details">
+        <Tab
+          title={intl.get('details')}
+          id={'details'}
+          panel={<BillDetailTab />}
+        />
         <Tab
           title={intl.get('journal_entries')}
           id={'journal_entries'}
@@ -28,9 +38,7 @@ export default function BillDrawerDetails() {
           id={'landed_cost'}
           panel={<LocatedLandedCostTable />}
         />
-      </Tabs>
+      </DrawerMainTabs>
     </div>
   );
 }
-
-// 42 / fon-w 600

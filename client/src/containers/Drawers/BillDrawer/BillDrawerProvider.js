@@ -1,8 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DashboardInsider } from 'components';
-import { useBillLocatedLandedCost } from 'hooks/query';
-import { useTransactionsByReference } from 'hooks/query';
+import {
+  useBill,
+  useTransactionsByReference,
+  useBillLocatedLandedCost,
+} from 'hooks/query';
 
 const BillDrawerContext = React.createContext();
 
@@ -10,7 +13,11 @@ const BillDrawerContext = React.createContext();
  * Bill drawer provider.
  */
 function BillDrawerProvider({ billId, ...props }) {
-  
+  // Handle fetch bill details.
+  const { isLoading: isBillLoading, data: bill } = useBill(billId, {
+    enabled: !!billId,
+  });
+
   // Handle fetch transaction by reference.
   const { data, isLoading: isTransactionLoading } = useTransactionsByReference(
     {
@@ -31,10 +38,13 @@ function BillDrawerProvider({ billId, ...props }) {
     transactions,
     billId,
     data,
+    bill,
   };
 
   return (
-    <DashboardInsider loading={isLandedCostLoading || isTransactionLoading}>
+    <DashboardInsider
+      loading={isLandedCostLoading || isTransactionLoading || isBillLoading}
+    >
       <DrawerHeaderContent
         name="bill-drawer"
         title={intl.get('bill_details')}

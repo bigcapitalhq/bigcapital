@@ -337,3 +337,27 @@
     will-change: auto !important;
   }
 }
+
+
+
+.table-constrant {
+  .table {
+    .thead .th {
+      background: transparent;
+      color: #222222;
+      border-bottom: 1px solid #000000;
+      border-top: 1px solid #000000;
+      padding: 0.5rem;
+    }
+
+    .tbody .tr .td {
+      background: transparent;
+      padding: 0.5rem 0.5rem;
+      border-bottom: 0;
+    }
+
+    .tbody .tr:last-child .td {
+      border-bottom: 1px solid #d2dce2;
+    }
+  }
+}

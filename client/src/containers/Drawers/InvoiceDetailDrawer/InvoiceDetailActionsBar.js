@@ -9,7 +9,8 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
+
+import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
@@ -17,9 +18,12 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { Icon, FormattedMessage as T } from 'components';
 
-import { safeCallback, compose } from 'utils';
+import { compose } from 'utils';
 
-function EstimateDetailTab({
+/**
+ * Invoice details action bar.
+ */
+function InvoiceDetailActionsBar({
   // #withDialogActions
   openDialog,
 
@@ -31,27 +35,24 @@ function EstimateDetailTab({
 }) {
   const history = useHistory();
 
-  const { estimateId } = useEstimateDetailDrawerContext();
+  // Invoice detail drawer context.
+  const { invoiceId } = useInvoiceDetailDrawerContext();
 
-  // Handle edit sale estimate.
-  const onEditEstimate = () => {
-    return estimateId
-      ? (history.push(`/estimates/${estimateId}/edit`),
-        closeDrawer('estimate-detail-drawer'))
-      : null;
+  // Handle edit sale invoice.
+  const handleEditInvoice = () => {
+    history.push(`/invoices/${invoiceId}/edit`);
+    closeDrawer('invoice-detail-drawer');
   };
 
-  // Handle delete sale estimate.
-  const onDeleteEstimate = () => {
-    return estimateId
-      ? (openAlert('estimate-delete', { estimateId }),
-        closeDrawer('estimate-detail-drawer'))
-      : null;
+  // Handle delete sale invoice.
+  const handleDeleteInvoice = () => {
+    openAlert('invoice-delete', { invoiceId });
+    closeDrawer('invoice-detail-drawer');
   };
 
-  // Handle print estimate.
-  const onPrintEstimate = () => {
-    openDialog('estimate-pdf-preview', { estimateId });
+  // Handle print invoices.
+  const handlePrintInvoice = () => {
+    openDialog('invoice-pdf-preview', { invoiceId });
   };
 
   return (
@@ -60,22 +61,22 @@ function EstimateDetailTab({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="pen-18" />}
-          text={<T id={'edit_estimate'} />}
-          onClick={safeCallback(onEditEstimate)}
+          text={<T id={'edit_invoice'} />}
+          onClick={handleEditInvoice}
         />
         <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" />}
           text={<T id={'print'} />}
-          onClick={safeCallback(onPrintEstimate)}
+          onClick={handlePrintInvoice}
         />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'trash-16'} iconSize={16} />}
           text={<T id={'delete'} />}
           intent={Intent.DANGER}
-          onClick={safeCallback(onDeleteEstimate)}
+          onClick={handleDeleteInvoice}
         />
       </NavbarGroup>
     </DashboardActionsBar>
@@ -84,6 +85,6 @@ function EstimateDetailTab({
 
 export default compose(
   withDialogActions,
-  withAlertsActions,
   withDrawerActions,
-)(EstimateDetailTab);
+  withAlertsActions,
+)(InvoiceDetailActionsBar);

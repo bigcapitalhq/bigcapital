@@ -1,0 +1,12 @@
+.total_lines {}
+
+
+.total_line {
+    display: flex;
+    border-bottom: 1px solid #d2dde2;
+    
+    :global .amount,
+    :global .title{
+        padding: 8px;
+    }
+}

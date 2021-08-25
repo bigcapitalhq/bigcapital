@@ -1,6 +1,6 @@
+@import '../Base.scss';
+
 .bp3-drawer {
-
-
   .bp3-drawer-header {
     margin-bottom: 2px;
     background-color: #FFF;
@@ -13,5 +13,55 @@
     .bp3-icon {
       color: #354152;
     }
+  }
+}
+
+.drawer{
+  &__insider{
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 0;
+    background-color: #fbfbfb;
+  }
+
+  &__main-tabs{
+    .bp3-tabs {
+      .bp3-tab-list {
+        position: relative;
+        background-color: #fff;
+  
+        &:before {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          height: 2px;
+          background: #e1e2e8;
+        }
+  
+        > *:not(:last-child) {
+          margin-right: 25px;
+        }
+  
+        &.bp3-large > .bp3-tab {
+          font-size: 15px;
+          color: #555;
+          margin: 0 0.8rem;
+  
+          &[aria-selected='true'],
+          &:not([aria-disabled='true']):hover {
+            color: $pt-link-color;
+          }
+        }
+      }
+  
+      .bp3-tab-panel {
+        margin-top: 0;
+  
+        .card {
+          margin: 15px;
+        }
+      }
+    }  
   }
 }

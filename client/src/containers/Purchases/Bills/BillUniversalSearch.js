@@ -15,12 +15,14 @@ function BillUniversalSearchSelectComponent({
   // #ownProps
   resourceType,
   resourceId,
+  onAction,
 
   // #withDrawerActions
   openDrawer,
 }) {
-  if (resourceType === RESOURCES_TYPES.INVOICE) {
+  if (resourceType === RESOURCES_TYPES.BILL) {
     openDrawer('bill-drawer', { billId: resourceId });
+    onAction && onAction();
   }
   return null;
 }
@@ -103,6 +105,7 @@ export function BillUniversalSearchItem(
 }
 
 const billsToSearch = (bill) => ({
+  id: bill.id,
   text: bill.vendor.display_name,
   reference: bill,
 });
