@@ -1247,5 +1247,6 @@
   "setup.congrats.go_to_dashboard": "Go to dashboard",
   "billing.suspend_message.title": "Your account is suspended :(",
   "billing.suspend_message.description": "Your account has been suspended due to the expiration of the subscription period. Please renew the subscription to activate the account.",
-  "dashboard.subscription_msg.period_over": "Subscription period is over"
+  "dashboard.subscription_msg.period_over": "Subscription period is over",
+  "inventory_adjustment.details_drawer.title": "Inventory adjustment details"
 }

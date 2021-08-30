@@ -93,13 +93,14 @@ export const ItemTypeAccessor = (row) => {
 
 export const ActionsMenu = ({
   row: { original },
-  payload: { onDelete, onPublish },
+  payload: { onDelete, onPublish, onViewDetails },
 }) => {
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
         text={intl.get('view_details')}
+        onClick={safeCallback(onViewDetails, original)}
       />
       <MenuDivider />
       <If condition={!original.is_published}>

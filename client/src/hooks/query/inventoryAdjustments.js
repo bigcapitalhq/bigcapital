@@ -7,6 +7,7 @@ import t from './types';
 const commonInvalidateQueries = (queryClient) => {
   // Invalidate inventory adjustments.
   queryClient.invalidateQueries(t.INVENTORY_ADJUSTMENTS);
+  queryClient.invalidateQueries(t.INVENTORY_ADJUSTMENT);
 
   // Invalidate items.
   queryClient.invalidateQueries(t.ITEMS);
@@ -101,6 +102,22 @@ export function usePublishInventoryAdjustment(props) {
 
         commonInvalidateQueries(queryClient);
       },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve the inventory adjustment details.
+ * @param {number} id - inventory adjustment id.
+ */
+export function useInventoryAdjustment(id, props, requestProps) {
+  return useRequestQuery(
+    [t.INVENTORY_ADJUSTMENT, id],
+    { method: 'get', url: `inventory_adjustments/${id}`, ...requestProps },
+    {
+      select: (res) => res.data.data,
+      defaultData: {},
       ...props,
     },
   );

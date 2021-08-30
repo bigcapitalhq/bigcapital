@@ -4,6 +4,7 @@ import { useInventoryAdjustmentsColumns, ActionsMenu } from './components';
 import intl from 'react-intl-universal';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withInventoryAdjustmentActions from './withInventoryAdjustmentActions';
 
 import { useInventoryAdjustmentsContext } from './InventoryAdjustmentsProvider';
@@ -22,6 +23,9 @@ function InventoryAdjustmentDataTable({
 
   // #withAlertsActions
   openAlert,
+
+  // #withDrawerActions
+  openDrawer,
 
   // #ownProps
   tableProps,
@@ -42,6 +46,10 @@ function InventoryAdjustmentDataTable({
   // Handle the inventory adjustment publish action.
   const handlePublishInventoryAdjustment = ({ id }) => {
     openAlert('inventory-adjustment-publish', { inventoryId: id });
+  };
+  // Handle view detail inventory adjustment.
+  const handleViewDetailInventoryAdjustment = ({ id }) => {
+    openDrawer('inventory-adjustment-drawer', { inventoryId: id });
   };
 
   // Inventory adjustments columns.
@@ -78,6 +86,7 @@ function InventoryAdjustmentDataTable({
       payload={{
         onDelete: handleDeleteAdjustment,
         onPublish: handlePublishInventoryAdjustment,
+        onViewDetails: handleViewDetailInventoryAdjustment,
       }}
       ContextMenu={ActionsMenu}
       noResults={intl.get('there_is_no_inventory_adjustments_transactions_yet')}
@@ -89,6 +98,7 @@ function InventoryAdjustmentDataTable({
 export default compose(
   withAlertsActions,
   withInventoryAdjustmentActions,
+  withDrawerActions,
   withInventoryAdjustments(({ inventoryAdjustmentTableState }) => ({
     inventoryAdjustmentTableState,
   })),

@@ -1279,6 +1279,7 @@
   "setup.congrats.go_to_dashboard": "اذهب إلي لوحة التحكم",
   "billing.suspend_message.title": "حسابك معلق :(",
   "billing.suspend_message.description": "تم تعليق حسابك بسبب انتهاء فترة الاشتراك. الرجاء تجديد الاشتراك لتفعيل الحساب.",
-  "dashboard.subscription_msg.period_over": "انتهت فترة الاشتراك"
+  "dashboard.subscription_msg.period_over": "انتهت فترة الاشتراك",
+  "inventory_adjustment.details_drawer.title": "تفاصيل معاملة تسوية المخزون"
 }
 
