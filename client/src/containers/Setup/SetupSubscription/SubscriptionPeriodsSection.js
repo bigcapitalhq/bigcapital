@@ -4,11 +4,8 @@ import * as R from 'ramda';
 
 import { T, SubscriptionPeriods } from 'components';
 
-import withPlan from './withPlan';
+import withPlan from '../../Subscriptions/withPlan';
 
-/**
- * Sunscription periods enhanced.
- */
 const SubscriptionPeriodsEnhanced = R.compose(
   withPlan(({ plan }) => ({ plan })),
 )(({ plan, ...restProps }) => {
@@ -18,7 +15,7 @@ const SubscriptionPeriodsEnhanced = R.compose(
 /**
  * Billing periods.
  */
-export default function BillingPeriods() {
+export default function SubscriptionPeriodsSection() {
   return (
     <section class="billing-plans__section">
       <h1 class="title">
@@ -31,10 +28,10 @@ export default function BillingPeriods() {
       </div>
 
       <Field name={'period'}>
-        {({ field: { value }, form: { values, setFieldValue } }) => (
+        {({ form: { setFieldValue, values }, field: { value } }) => (
           <SubscriptionPeriodsEnhanced
-            selectedPeriod={value}
             planSlug={values.plan_slug}
+            selectedPeriod={value}
             onPeriodSelect={(period) => {
               setFieldValue('period', period);
             }}

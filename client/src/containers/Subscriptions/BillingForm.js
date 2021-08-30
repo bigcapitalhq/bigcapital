@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import intl from 'react-intl-universal';
+import { If, Alert, T } from 'components';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
 import 'style/pages/Billing/BillingPage.scss';
@@ -10,8 +11,11 @@ import { MasterBillingTabs } from './SubscriptionTabs';
 
 import withBillingActions from './withBillingActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withSubscriptionPlansActions from './withSubscriptionPlansActions';
 
 import { compose } from 'utils';
+import { getBillingFormValidationSchema } from './utils';
+import withSubscriptions from './withSubscriptions';
 
 /**
  * Billing form.
@@ -20,26 +24,30 @@ function BillingForm({
   // #withDashboardActions
   changePageTitle,
 
-  //#withBillingActions
+  // #withBillingActions
   requestSubmitBilling,
+
+  initSubscriptionPlans,
+
+  // #withSubscriptions
+  isSubscriptionInactive,
 }) {
   useEffect(() => {
     changePageTitle(intl.get('billing'));
   }, [changePageTitle]);
 
-  const validationSchema = Yup.object().shape({
-    plan_slug: Yup.string()
-      .required(),
-    period: Yup.string().required(),
-    license_code: Yup.string().trim(),
-  });
+  React.useEffect(() => {
+    initSubscriptionPlans();
+  }, [initSubscriptionPlans]);
 
+  // Initial values.
   const initialValues = {
     plan_slug: 'free',
     period: 'month',
     license_code: '',
   };
 
+  // Handle form submitting.
   const handleSubmit = (values, { setSubmitting }) => {
     requestSubmitBilling(values)
       .then((response) => {
@@ -53,20 +61,34 @@ function BillingForm({
   return (
     <DashboardInsider name={'billing-page'}>
       <div className={'billing-page'}>
+        <If condition={isSubscriptionInactive}>
+          <Alert
+            intent={'danger'}
+            title={<T id={'billing.suspend_message.title'} />}
+            description={<T id={'billing.suspend_message.description'} />}
+          />
+        </If>
+
         <Formik
-          validationSchema={validationSchema}
+          validationSchema={getBillingFormValidationSchema()}
           onSubmit={handleSubmit}
           initialValues={initialValues}
         >
-          {({ isSubmitting, handleSubmit }) => (
-            <Form>
-              <MasterBillingTabs />
-            </Form>
-          )}
+          <Form>
+            <MasterBillingTabs />
+          </Form>
         </Formik>
       </div>
     </DashboardInsider>
   );
 }
 
-export default compose(withDashboardActions, withBillingActions)(BillingForm);
+export default compose(
+  withDashboardActions,
+  withBillingActions,
+  withSubscriptionPlansActions,
+  withSubscriptions(
+    ({ isSubscriptionInactive }) => ({ isSubscriptionInactive }),
+    'main',
+  ),
+)(BillingForm);

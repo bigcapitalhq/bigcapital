@@ -5,6 +5,7 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withDashboard from 'containers/Dashboard/withDashboard';
 
 import { compose } from 'utils';
+import withSubscriptions from '../../containers/Subscriptions/withSubscriptions';
 
 function SidebarContainer({
   // #ownProps
@@ -15,6 +16,9 @@ function SidebarContainer({
 
   // #withDashboard
   sidebarExpended,
+
+  // #withSubscription
+  isSubscriptionActive,
 }) {
   const sidebarScrollerRef = React.useRef();
 
@@ -30,8 +34,8 @@ function SidebarContainer({
   }, [sidebarExpended]);
 
   const handleSidebarMouseLeave = () => {
-    if (!sidebarExpended && sidebarScrollerRef.current) {  
-      sidebarScrollerRef.current.scrollTo({ top: 0, left: 0, });
+    if (!sidebarExpended && sidebarScrollerRef.current) {
+      sidebarScrollerRef.current.scrollTo({ top: 0, left: 0 });
     }
   };
 
@@ -43,6 +47,7 @@ function SidebarContainer({
     <div
       className={classNames('sidebar', {
         'sidebar--mini-sidebar': !sidebarExpended,
+        'is-subscription-inactive': !isSubscriptionActive,
       })}
       id="sidebar"
       onMouseLeave={handleSidebarMouseLeave}
@@ -64,4 +69,8 @@ export default compose(
   withDashboard(({ sidebarExpended }) => ({
     sidebarExpended,
   })),
+  withSubscriptions(
+    ({ isSubscriptionActive }) => ({ isSubscriptionActive }),
+    'main',
+  ),
 )(SidebarContainer);

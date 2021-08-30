@@ -8,6 +8,8 @@ import MenuItem from 'components/MenuItem';
 import { MenuItemLabel } from 'components';
 import classNames from 'classnames';
 import SidebarOverlay from 'components/SidebarOverlay';
+import { compose } from 'redux';
+import withSubscriptions from '../../containers/Subscriptions/withSubscriptions';
 
 const DEFAULT_ITEM = {
   text: '',
@@ -19,12 +21,10 @@ function matchPath(pathname, path, matchExact) {
 }
 
 function SidebarMenuItemSpace({ space }) {
-  return (
-    <div class="bp3-menu-spacer" style={{ height: `${space}px` }} />
-  )
+  return <div class="bp3-menu-spacer" style={{ height: `${space}px` }} />;
 }
 
-export default function SidebarMenu() {
+function SidebarMenu({ isSubscriptionActive }) {
   const history = useHistory();
   const location = useLocation();
 
@@ -92,7 +92,11 @@ export default function SidebarMenu() {
       );
     });
   };
-  const items = menuItemsMapper(sidebarMenuList);
+
+  const filterItems = sidebarMenuList.filter(
+    (item) => isSubscriptionActive || item.enableBilling,
+  );
+  const items = menuItemsMapper(filterItems);
 
   const handleSidebarOverlayClose = () => {
     setIsOpen(false);
@@ -110,3 +114,10 @@ export default function SidebarMenu() {
     </div>
   );
 }
+
+export default compose(
+  withSubscriptions(
+    ({ isSubscriptionActive }) => ({ isSubscriptionActive }),
+    'main',
+  ),
+)(SidebarMenu);

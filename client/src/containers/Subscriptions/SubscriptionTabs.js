@@ -16,11 +16,7 @@ export const MasterBillingTabs = ({ formik }) => {
           id={'billing'}
           panel={<BillingTab formik={formik} />}
         />
-        <Tab
-          title={intl.get('usage')}
-          id={'usage'}
-          disabled={true}
-        />
+        <Tab title={intl.get('usage')} id={'usage'} disabled={true} />
       </Tabs>
     </div>
   );
@@ -43,11 +39,7 @@ export const PaymentMethodTabs = ({ formik }) => {
           id={'credit_card'}
           disabled={true}
         />
-        <Tab
-          title={intl.get('paypal')}
-          id={'paypal'}
-          disabled={true}
-        />
+        <Tab title={intl.get('paypal')} id={'paypal'} disabled={true} />
       </Tabs>
     </div>
   );

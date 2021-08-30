@@ -15,12 +15,14 @@ import { saveInvoke } from 'utils';
 function BillingPeriod({
   // #ownProps
   label,
-  currencyCode,
   value,
   selectedOption,
   onSelected,
   period,
+
+  // #withPlan
   price,
+  currencyCode,
 }) {
   const handlePeriodClick = () => {
     saveInvoke(onSelected, value);

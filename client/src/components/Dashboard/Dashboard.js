@@ -12,6 +12,33 @@ import DashboardSplitPane from 'components/Dashboard/DashboardSplitePane';
 import GlobalHotkeys from './GlobalHotkeys';
 import DashboardProvider from './DashboardProvider';
 import DrawersContainer from 'components/DrawersContainer';
+import EnsureSubscriptionIsActive from '../Guards/EnsureSubscriptionIsActive';
+
+/**
+ * Dashboard preferences.
+ */
+function DashboardPreferences() {
+  return (
+    <EnsureSubscriptionIsActive>
+      <DashboardSplitPane>
+        <Sidebar />
+        <PreferencesPage />
+      </DashboardSplitPane>
+    </EnsureSubscriptionIsActive>
+  );
+}
+
+/**
+ * Dashboard other routes.
+ */
+function DashboardAnyPage() {
+  return (
+    <DashboardSplitPane>
+      <Sidebar />
+      <DashboardContent />
+    </DashboardSplitPane>
+  );
+}
 
 /**
  * Dashboard page.
@@ -20,19 +47,8 @@ export default function Dashboard() {
   return (
     <DashboardProvider>
       <Switch>
-        <Route path="/preferences">
-          <DashboardSplitPane>
-            <Sidebar />
-            <PreferencesPage />
-          </DashboardSplitPane>
-        </Route>
-
-        <Route path="/">
-          <DashboardSplitPane>
-            <Sidebar />
-            <DashboardContent />
-          </DashboardSplitPane>
-        </Route>
+        <Route path="/preferences" component={DashboardPreferences} />
+        <Route path="/" component={DashboardAnyPage} />
       </Switch>
 
       <DashboardUniversalSearch />

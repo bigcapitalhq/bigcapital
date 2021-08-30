@@ -4,7 +4,7 @@ import * as R from 'ramda';
 
 import 'style/pages/Setup/Subscription.scss';
 
-import SetupSubscriptionForm from './SetupSubscriptionForm';
+import SetupSubscriptionForm from './SetupSubscription/SetupSubscriptionForm';
 import { getSubscriptionFormSchema } from './SubscriptionForm.schema';
 import withSubscriptionPlansActions from '../Subscriptions/withSubscriptionPlansActions';
 
@@ -13,13 +13,11 @@ import withSubscriptionPlansActions from '../Subscriptions/withSubscriptionPlans
  */
 function SetupSubscription({
   // #withSubscriptionPlansActions
-  initSubscriptionPlans
+  initSubscriptionPlans,
 }) {
   React.useEffect(() => {
     initSubscriptionPlans();
-  }, [
-    initSubscriptionPlans
-  ]);
+  }, [initSubscriptionPlans]);
 
   // Initial values.
   const initialValues = {
@@ -30,10 +28,14 @@ function SetupSubscription({
   // Handle form submit.
   const handleSubmit = () => {};
 
-  const SubscriptionFormSchema = getSubscriptionFormSchema();
+  // Retrieve momerized subscription form schema.
+  const SubscriptionFormSchema = React.useMemo(
+    () => getSubscriptionFormSchema(),
+    [],
+  );
 
   return (
-    <div className={'setup-subscription-form'}>  
+    <div className={'setup-subscription-form'}>
       <Formik
         validationSchema={SubscriptionFormSchema}
         initialValues={initialValues}
@@ -44,6 +46,4 @@ function SetupSubscription({
   );
 }
 
-export default R.compose(
-  withSubscriptionPlansActions,
-)(SetupSubscription);
+export default R.compose(withSubscriptionPlansActions)(SetupSubscription);

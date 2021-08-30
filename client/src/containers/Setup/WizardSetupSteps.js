@@ -5,9 +5,7 @@ import { getSetupWizardSteps } from 'common/registerWizard';
 function WizardSetupStep({ label, isActive = false }) {
   return (
     <li className={classNames({ 'is-active': isActive })}>
-      <p className={'wizard-info'}>
-        { label }
-      </p>
+      <p className={'wizard-info'}>{label}</p>
     </li>
   );
 }

@@ -1,20 +1,18 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
-import preferencesRoutes from 'routes/preferences'
-
+import { Route, Switch } from 'react-router-dom';
+import preferencesRoutes from 'routes/preferences';
 
 export default function DashboardContentRoute() {
- 
   return (
     <Route pathname="/preferences">
       <Switch>
-        { preferencesRoutes.map((route, index) => (
+        {preferencesRoutes.map((route, index) => (
           <Route
             key={index}
             path={`${route.path}`}
             exact={route.exact}
             component={route.component}
-          />          
+          />
         ))}
       </Switch>
     </Route>

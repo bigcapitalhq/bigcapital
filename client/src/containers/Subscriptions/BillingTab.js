@@ -1,10 +1,6 @@
 import React from 'react';
-import BillingPlansForm from 'containers/Subscriptions/BillingPlansForm';
+import BillingPlansForm from './BillingPlansForm';
 
 export default function BillingTab() {
-  return (
-    <div>
-      <BillingPlansForm />
-    </div>
-  );
+  return (<BillingPlansForm />);
 }

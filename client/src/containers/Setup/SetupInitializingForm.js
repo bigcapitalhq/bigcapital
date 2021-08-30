@@ -15,7 +15,7 @@ export default function SetupInitializingForm() {
     isError,
   } = useBuildTenant();
 
-  useEffect(() => {
+  React.useEffect(() => {
     buildTenantMutate();
   }, [buildTenantMutate]);
 
@@ -27,32 +27,32 @@ export default function SetupInitializingForm() {
         {isLoading ? (
           <>
             <h1>
-              <T id={'it_s_time_to_make_your_accounting_really_simple'} />
+              <T id={'setup.initializing.title'} />
             </h1>
             <p className={'paragraph'}>
-              <T
-                id={
-                  'while_we_set_up_your_account_please_remember_to_verify_your_account'
-                }
-              />
+              <T id={'setup.initializing.description'} />
             </p>
           </>
         ) : isError ? (
           <>
             <h1>
-              <T id={'something_went_wrong'} />
+              <T id={'setup.initializing.something_went_wrong'} />
             </h1>
             <p class="paragraph">
-              <T id={'please_refresh_the_page'} />
+              <T id={'setup.initializing.please_refresh_the_page'} />
             </p>
           </>
         ) : (
           <>
             <h1>
-              <T id={'waiting_to_redirect'} />
+              <T id={'setup.initializing.waiting_to_redirect'} />
             </h1>
             <p class="paragraph">
-              <T id={'refresh_the_page_if_redirect_not_worked'} />
+              <T
+                id={
+                  'setup.initializing.refresh_the_page_if_redirect_not_worked'
+                }
+              />
             </p>
           </>
         )}

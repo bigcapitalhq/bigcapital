@@ -8,15 +8,21 @@ import {
   Popover,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { If, FormattedMessage as T } from 'components';
 
 import { firstLettersArgs } from 'utils';
 import { useAuthActions, useAuthUser } from 'hooks/state';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
+import withSubscriptions from '../../containers/Subscriptions/withSubscriptions';
 
-function DashboardTopbarUser({ openDialog }) {
+function DashboardTopbarUser({
+  openDialog,
+
+  // #withSubscriptions
+  isSubscriptionActive
+}) {
   const history = useHistory();
   const { setLogout } = useAuthActions();
   const user = useAuthUser();
@@ -48,14 +54,16 @@ function DashboardTopbarUser({ openDialog }) {
             }
           />
           <MenuDivider />
-          <MenuItem
-            text={<T id={'keyboard_shortcuts'} />}
-            onClick={onKeyboardShortcut}
-          />
-          <MenuItem
-            text={<T id={'preferences'} />}
-            onClick={() => history.push('/preferences')}
-          />
+          <If condition={isSubscriptionActive}>
+            <MenuItem
+              text={<T id={'keyboard_shortcuts'} />}
+              onClick={onKeyboardShortcut}
+            />
+            <MenuItem
+              text={<T id={'preferences'} />}
+              onClick={() => history.push('/preferences')}
+            />
+          </If>
           <MenuItem text={<T id={'logout'} />} onClick={onClickLogout} />
         </Menu>
       }
@@ -69,4 +77,10 @@ function DashboardTopbarUser({ openDialog }) {
     </Popover>
   );
 }
-export default compose(withDialogActions)(DashboardTopbarUser);
+export default compose(
+  withDialogActions,
+  withSubscriptions(
+    ({ isSubscriptionActive }) => ({ isSubscriptionActive }),
+    'main',
+  ),
+)(DashboardTopbarUser);

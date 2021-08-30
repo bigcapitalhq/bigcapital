@@ -23,23 +23,18 @@ export function useSaveSettings(props) {
 function useSettingsQuery(key, query, props) {
   const setSettings = useSetSettings();
 
-  const state = useRequestQuery(
+  return useRequestQuery(
     key,
     { method: 'get', url: 'settings', params: query },
     {
       select: (res) => res.data.settings,
       defaultData: [],
+      onSuccess: (settings) => {
+        setSettings(settings);
+      },
       ...props,
     },
   );
-
-  useEffect(() => {
-    if (state.isSuccess) {
-      setSettings(state.data);
-    }
-  }, [state.data, state.isSuccess, setSettings]);
-
-  return state.data;
 }
 
 /**

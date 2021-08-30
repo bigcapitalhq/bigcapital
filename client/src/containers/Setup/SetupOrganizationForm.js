@@ -14,19 +14,17 @@ import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { FormattedMessage as T } from 'components';
 
-import { FieldRequiredHint, Col, Row, ListSelect } from 'components';
+import { Col, Row, ListSelect } from 'components';
 import {
   momentFormatter,
   tansformDateValue,
   inputIntent,
-  handleDateChange
+  handleDateChange,
 } from 'utils';
 
 import { getFiscalYear } from 'common/fiscalYearOptions';
 import { getLanguages } from 'common/languagesOptions';
 import { getCurrencies } from 'common/currencies';
-
-
 
 /**
  * Setup organization form.
@@ -46,22 +44,24 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       <FastField name={'organization_name'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
-            labelInfo={<FieldRequiredHint />}
             label={<T id={'legal_organization_name'} />}
             className={'form-group--name'}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'organization_name'} />}
           >
-            <InputGroup {...field} />
+            <InputGroup {...field} intent={inputIntent({ error, touched })} />
           </FormGroup>
         )}
       </FastField>
 
       {/* ---------- Financial starting date ----------  */}
       <FastField name={'financialDateStart'}>
-        {({ form: { setFieldValue }, field: { value }, meta: { error, touched } }) => (
+        {({
+          form: { setFieldValue },
+          field: { value },
+          meta: { error, touched },
+        }) => (
           <FormGroup
-            labelInfo={<FieldRequiredHint />}
             label={<T id={'financial_starting_date'} />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="financialDateStart" />}
@@ -74,6 +74,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
               onChange={handleDateChange((formattedDate) => {
                 setFieldValue('financialDateStart', formattedDate);
               })}
+              intent={inputIntent({ error, touched })}
             />
           </FormGroup>
         )}
@@ -89,7 +90,6 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
               meta: { error, touched },
             }) => (
               <FormGroup
-                labelInfo={<FieldRequiredHint />}
                 label={<T id={'base_currency'} />}
                 className={classNames(
                   'form-group--base-currency',
@@ -101,7 +101,9 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
               >
                 <ListSelect
                   items={Currencies}
-                  noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
+                  noResults={
+                    <MenuItem disabled={true} text={<T id={'no_results'} />} />
+                  }
                   popoverProps={{ minimal: true }}
                   onItemSelect={(item) => {
                     setFieldValue('baseCurrency', item.code);
@@ -110,6 +112,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
                   textProp={'name'}
                   defaultText={<T id={'select_base_currency'} />}
                   selectedItem={value}
+                  intent={inputIntent({ error, touched })}
                 />
               </FormGroup>
             )}
@@ -136,7 +139,9 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
               >
                 <ListSelect
                   items={Languages}
-                  noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
+                  noResults={
+                    <MenuItem disabled={true} text={<T id={'no_results'} />} />
+                  }
                   onItemSelect={(item) => {
                     setFieldValue('language', item.value);
                   }}
@@ -146,6 +151,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
                   defaultText={<T id={'select_language'} />}
                   popoverProps={{ minimal: true }}
                   filterable={false}
+                  intent={inputIntent({ error, touched })}
                 />
               </FormGroup>
             )}
@@ -154,9 +160,12 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       </Row>
       {/* --------- Fiscal Year ----------- */}
       <FastField name={'fiscalYear'}>
-        {({ form: { setFieldValue }, field: { value }, meta: { error, touched } }) => (
+        {({
+          form: { setFieldValue },
+          field: { value },
+          meta: { error, touched },
+        }) => (
           <FormGroup
-            labelInfo={<FieldRequiredHint />}
             label={<T id={'fiscal_year'} />}
             className={classNames(
               'form-group--fiscal_year',
@@ -168,14 +177,16 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
           >
             <ListSelect
               items={FiscalYear}
-              noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
+              noResults={
+                <MenuItem disabled={true} text={<T id={'no_results'} />} />
+              }
               selectedItem={value}
               selectedItemProp={'value'}
               textProp={'name'}
               defaultText={<T id={'select_fiscal_year'} />}
               popoverProps={{ minimal: true }}
               onItemSelect={(item) => {
-                setFieldValue('fiscalYear', item.value)
+                setFieldValue('fiscalYear', item.value);
               }}
               filterable={false}
             />
@@ -191,7 +202,6 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
           meta: { error, touched },
         }) => (
           <FormGroup
-          labelInfo={<FieldRequiredHint />}
             label={<T id={'time_zone'} />}
             className={classNames(
               'form-group--time-zone',
@@ -216,20 +226,11 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       </FastField>
 
       <p className={'register-org-note'}>
-        <T
-          id={
-            'note_you_can_change_your_preferences_later_in_dashboard_if_needed'
-          }
-        />
+        <T id={'setup.organization.note_you_can_change_your_preferences'} />
       </p>
 
       <div className={'register-org-button'}>
-        <Button
-          intent={Intent.PRIMARY}
-          disabled={isSubmitting}
-          loading={isSubmitting}
-          type="submit"
-        >
+        <Button intent={Intent.PRIMARY} loading={isSubmitting} type="submit">
           <T id={'save_continue'} />
         </Button>
       </div>

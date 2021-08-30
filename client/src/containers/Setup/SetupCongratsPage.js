@@ -1,13 +1,15 @@
 import React, { useCallback } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
+
 import WorkflowIcon from './WorkflowIcon';
 import { FormattedMessage as T } from 'components';
+
 import withOrganizationActions from 'containers/Organization/withOrganizationActions';
+import { compose } from 'utils';
 
 import 'style/pages/Setup/Congrats.scss';
 
-import { compose } from 'utils';
 
 /**
  * Setup congrats page.
@@ -28,15 +30,15 @@ function SetupCongratsPage({ setOrganizationSetupCompleted }) {
 
       <div class="setup-congrats__text">
         <h1>
-          <T id={'congrats_you_are_ready_to_go'} />
+          <T id={'setup.congrats.title'} />
         </h1>
 
         <p class="paragraph">
-          <T id={'it_is_a_long_established_fact_that_a_reader'} />
+          <T id={'setup.congrats.description'} />
         </p>
 
         <Button intent={Intent.PRIMARY} type="submit" onClick={handleBtnClick}>
-          <T id={'go_to_dashboard'} />
+          <T id={'setup.congrats.go_to_dashboard'} />
         </Button>
       </div>
     </div>

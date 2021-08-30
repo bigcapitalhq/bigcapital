@@ -298,6 +298,7 @@ export default [
   },
   {
     text: <T id={'system'} />,
+    enableBilling: true,
     label: true,
   },
   {
@@ -307,5 +308,6 @@ export default [
   {
     text: <T id={'billing'} />,
     href: '/billing',
+    enableBilling: true,
   },
 ];

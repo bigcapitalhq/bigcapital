@@ -1,9 +1,10 @@
 import React from 'react';
 import { Formik } from 'formik';
-
+import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
+
 import Toaster from 'components/AppToaster';
 
 import 'style/pages/Setup/PaymentViaVoucherDialog.scss';
@@ -14,7 +15,6 @@ import PaymentViaLicenseForm from './PaymentViaVoucherForm';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
-import { Intent } from '@blueprintjs/core';
 
 /**
  * Payment via license dialog content.
@@ -35,10 +35,11 @@ function PaymentViaLicenseDialogContent({
   const handleSubmit = (values, { setSubmitting, setErrors }) => {
     setSubmitting(true);
 
+    // Payment via voucher mutate.
     paymentViaVoucherMutate({ ...values })
       .then(() => {
         Toaster.show({
-          message: intl.get('payment_has_been_done_successfully'),
+          message: intl.get('payment_via_voucher.success_message'),
           intent: Intent.SUCCESS,
         });
         return closeDialog('payment-via-voucher');
@@ -54,7 +55,7 @@ function PaymentViaLicenseDialogContent({
         }) => {
           if (errors.find((e) => e.type === 'LICENSE.CODE.IS.INVALID')) {
             setErrors({
-              license_code: 'The license code is not valid, please try agin.',
+              license_code: 'payment_via_voucher.license_code_not_valid',
             });
           }
         },

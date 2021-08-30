@@ -3,11 +3,14 @@ import { Icon, For } from 'components';
 import { FormattedMessage as T } from 'components';
 
 import { getFooterLinks } from 'config/footerLinks';
-import { useAuthActions, useAuthOrganizationId } from 'hooks/state';
+import { useAuthActions } from 'hooks/state';
 
+/**
+ * Footer item link.
+ */
 function FooterLinkItem({ title, link }) {
   return (
-    <div class="">
+    <div class="content__links-item">
       <a href={link} target="_blank">
         {title}
       </a>
@@ -16,20 +19,65 @@ function FooterLinkItem({ title, link }) {
 }
 
 /**
- * Wizard setup left section.
+ * Setup left section footer.
  */
-export default function SetupLeftSection() {
-  const { setLogout } = useAuthActions();
-  const organizationId = useAuthOrganizationId();
-
+function SetupLeftSectionFooter() {
   // Retrieve the footer links.
   const footerLinks = getFooterLinks();
+
+  return (
+    <div className={'content__footer'}>
+      <div className={'content__contact-info'}>
+        <p>
+          <T id={'setup.left_side.footer_help'} />{' '}
+          <span>{'+21892-738-1987'}</span>
+        </p>
+      </div>
+
+      <div className={'content__links'}>
+        <For render={FooterLinkItem} of={footerLinks} />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Setup left section header.
+ */
+function SetupLeftSectionHeader() {
+  const { setLogout } = useAuthActions();
 
   // Handle logout link click.
   const onClickLogout = () => {
     setLogout();
   };
 
+  return (
+    <div className={'content__header'}>
+      <h1 className={'content__title'}>
+        <T id={'setup.left_side.title'} />
+      </h1>
+
+      <p className={'content__text'}>
+        <T id={'setup.left_side.description'} />
+      </p>
+      <div class="content__divider"></div>
+
+      <div className={'content__organization'}>
+        <span class="signout">
+          <a onClick={onClickLogout} href="#">
+            <T id={'sign_out'} />
+          </a>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Wizard setup left section.
+ */
+export default function SetupLeftSection() {
   return (
     <section className={'setup-page__left-section'}>
       <div className={'content'}>
@@ -41,40 +89,8 @@ export default function SetupLeftSection() {
             width={190}
           />
         </div>
-
-        <h1 className={'content__title'}>
-          <T id={'register_a_new_organization_now'} />
-        </h1>
-
-        <p className={'content__text'}>
-          <T id={'you_have_a_bigcapital_account'} />
-        </p>
-        <span class="content__divider"></span>
-
-        <div className={'content__organization'}>
-          <span class="organization-id">
-            <T id={'organization_id'} />:{' '}
-            <span class="id">{organizationId}</span>,
-          </span>
-          <br />
-          <span class="signout">
-            <a onClick={onClickLogout} href="#">
-              <T id={'sign_out'} />
-            </a>
-          </span>
-        </div>
-
-        <div className={'content__footer'}>
-          <div className={'content__contact-info'}>
-            <p>
-              <T id={'we_re_here_to_help'} />  <span>{'+21892-738-1987'}</span>
-            </p>
-          </div>
-
-          <div className={'content__links'}>
-            <For render={FooterLinkItem} of={footerLinks} />
-          </div>
-        </div>
+        <SetupLeftSectionHeader />
+        <SetupLeftSectionFooter />
       </div>
     </section>
   );

@@ -1,9 +1,8 @@
 import React from 'react';
-import * as Yup from 'yup';
 import { Formik } from 'formik';
 import moment from 'moment';
 import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
+
 
 import 'style/pages/Setup/Organization.scss';
 
@@ -13,53 +12,30 @@ import { useOrganizationSetup } from 'hooks/query';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withOrganizationActions from 'containers/Organization/withOrganizationActions';
 
-import {
-  compose,
-  transfromToSnakeCase,
-} from 'utils';
+import { compose, transfromToSnakeCase } from 'utils';
+import { getSetupOrganizationValidation } from './SetupOrganization.schema';
+
+
+// Initial values.
+const defaultValues = {
+  organization_name: '',
+  financialDateStart: moment(new Date()).format('YYYY-MM-DD'),
+  baseCurrency: '',
+  language: 'en',
+  fiscalYear: '',
+  timeZone: '',
+};
 
 /**
  * Setup organization form.
  */
-function SetupOrganizationPage({
-  wizard,
-  setOrganizationSetupCompleted,
-}) {
-  
+function SetupOrganizationPage({ wizard, setOrganizationSetupCompleted }) {
   const { mutateAsync: organizationSetupMutate } = useOrganizationSetup();
 
   // Validation schema.
-  const validationSchema = Yup.object().shape({
-    organization_name: Yup.string()
-      .required()
-      .label(intl.get('organization_name_')),
-    financialDateStart: Yup.date()
-      .required()
-      .label(intl.get('date_start_')),
-    baseCurrency: Yup.string()
-      .required()
-      .label(intl.get('base_currency_')),
-    language: Yup.string()
-      .required()
-      .label(intl.get('language')),
-    fiscalYear: Yup.string()
-      .required()
-      .label(intl.get('fiscal_year_')),
-    timeZone: Yup.string()
-      .required()
-      .label(intl.get('time_zone_')),
-  });
+  const validationSchema = getSetupOrganizationValidation();
 
-  // Initial values.
-  const defaultValues = {
-    organization_name: '',
-    financialDateStart: moment(new Date()).format('YYYY-MM-DD'),
-    baseCurrency: '',
-    language: 'en',
-    fiscalYear: '',
-    timeZone: '',
-  };
-
+  // Initialize values.
   const initialValues = {
     ...defaultValues,
   };
@@ -83,10 +59,10 @@ function SetupOrganizationPage({
     <div className={'setup-organization'}>
       <div className={'setup-organization__title-wrap'}>
         <h1>
-          <T id={'let_s_get_started'} />
+          <T id={'setup.organization.title'} />
         </h1>
         <p class="paragraph">
-          <T id={'tell_the_system_a_little_bit_about_your_organization'} />
+          <T id={'setup.organization.description'} />
         </p>
       </div>
 

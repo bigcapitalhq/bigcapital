@@ -24,7 +24,7 @@
     }
   }
 
-  .ScrollbarsCustom-Content{
+  .ScrollbarsCustom-Content {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -50,7 +50,7 @@
       opacity: 0;
       visibility: hidden;
 
-      svg{
+      svg {
         opacity: $sidebar-logo-opacity;
       }
     }
@@ -69,12 +69,14 @@
         &:not([class*="bp3-intent-"]):not(.bp3-minimal) {
           color: rgb(255, 255, 255);
         }
+
         &:hover,
         &:focus,
         &:active,
         &.bp3-active {
           background: transparent;
         }
+
         .bp3-button-text {
           margin-right: 4px;
           text-overflow: ellipsis;
@@ -82,13 +84,14 @@
           white-space: nowrap;
           display: block;
         }
+
         svg {
           fill: rgba(255, 255, 255, 0.3);
         }
       }
 
       .bp3-popover-wrapper,
-      .bp3-popover-target{
+      .bp3-popover-target {
         max-width: 100%;
         display: inline-block;
       }
@@ -104,20 +107,24 @@
     .sidebar__head-logo {
       transition: transform 0.05s ease-in-out;
     }
+
+    .is-subscription-inactive:not(.sidebar--mini-sidebar) & {
+      opacity: 0.6;
+    }
   }
 
   &__scroll-wrapper {
     height: 100%;
   }
- 
-  &__version{
+
+  &__version {
     margin-top: auto;
     padding: 0 20px 20px;
     font-size: 12px;
     color: rgba(255, 255, 255, 0.6);
   }
 
-  &__inner{
+  &__inner {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -170,7 +177,7 @@
         font-weight: 500;
         letter-spacing: 1px;
 
-        html[lang^="ar"] &{
+        html[lang^="ar"] & {
           font-size: 12px;
           letter-spacing: 0;
         }
@@ -188,6 +195,7 @@
           padding-bottom: 6px;
           padding-top: 6px;
         }
+
         .#{$ns}-menu-item {
           padding: 8px 20px;
           font-size: 15px;
@@ -242,11 +250,11 @@
         opacity: 1;
         visibility: visible;
       }
-      // Hide text of bigcapital logo.
-      &-logo {
 
-      }
-      &-organization{
+      // Hide text of bigcapital logo.
+      &-logo {}
+
+      &-organization {
         opacity: 0;
         transition: opacity 0.3s ease-in-out;
       }
@@ -263,7 +271,7 @@
       transition: min-width 0.15s ease-in-out;
       min-width: 50px;
 
-      .ScrollbarsCustom-Scroller{
+      .ScrollbarsCustom-Scroller {
         overflow: hidden !important;
       }
 
@@ -274,14 +282,14 @@
           opacity: 0;
           transition-delay: 0s;
         }
-        
+
         .sidebar__head-organization,
         .sidebar__menu,
         .sidebar__version {
           opacity: 1;
         }
 
-        .ScrollbarsCustom-Scroller{
+        .ScrollbarsCustom-Scroller {
           overflow: scroll !important;
         }
       }
@@ -326,12 +334,14 @@
     }
   }
 }
-.menu--dashboard-organization{
+
+.menu--dashboard-organization {
   padding: 10px;
+
   .org-item {
     display: flex;
     align-items: center;
-  
+
     &__logo {
       height: 40px;
       width: 40px;
@@ -343,13 +353,13 @@
       font-size: 16px;
       color: #fff;
     }
-  
+
     &__name {
       margin-left: 12px;
       font-weight: 600;
     }
 
-    &__divider{
+    &__divider {
       margin: 4px 0;
       height: 1px;
       background: #ebebeb;

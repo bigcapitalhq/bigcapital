@@ -1,69 +1,95 @@
-import React from 'react';
 import { createReducer } from '@reduxjs/toolkit';
 import intl from 'react-intl-universal';
 import t from 'store/types';
 
-const getSubscriptionPlans = () => [
-  {
-    name: intl.get('Starter'),
-    slug: 'free',
-    // slug: 'starter',
-    description: [
-      intl.get('Sale and purchase invoices.'),
-      intl.get('Customers/vendors accounts.'),
-      intl.get('Expenses tracking'),
-      intl.get('Manual journals.'),
-      intl.get('Financial reports.'),
-      intl.get('For one user and accountant.'),
-    ],
-    price: {
-      month: '100',
-      year: '1,200',
-    },
-    currencyCode: 'LYD',
-  },
-  {
-    name: intl.get('Essential'),
-    slug: 'plus',
-    description: [
-      intl.get('All Capital Starter features.'),
-      intl.get('Multi-currency.'),
-      intl.get('Purchase and sell orders.'),
-      intl.get('Inventory management.'),
-      intl.get('Three users with your accountant.'),
-      intl.get('Advanced financial reports.'),
-    ],
-    price: {
-      month: '200',
-      year: '2,400',
-    },
-    currencyCode: 'LYD',
-  },
-  {
-    name: intl.get('Enterprise'),
-    slug: 'enterprise',
-    description: [
-      intl.get('All Capital Essential features.'),
-      intl.get('Track multi-branches and locations.'),
-      intl.get('Projects accounting and timesheets.'),
-      intl.get('Accounting dimensions.'),
-    ],
-    price: {
-      month: '300',
-      year: '3,400',
-    },
-    currencyCode: 'LYD',
-  },
-];
 
 const getSubscriptionPeriods = () => [
   {
     slug: 'month',
-    label: intl.get('Monthly'),
+    label: intl.get('plan.monthly'),
   },
   {
     slug: 'year',
-    label: intl.get('Yearly'),
+    label: intl.get('plan.yearly'),
+  },
+];
+
+const getSubscriptionPlans = () => [
+  {
+    name: intl.get('plan.essential.title'),
+    slug: 'free',
+    description: [
+      intl.get('plan.feature.sale_purchase_invoice'),
+      intl.get('plan.feature.receivable_payable_accounts'),
+      intl.get('plan.feature.expenses_tracking'),
+      intl.get('plan.feature.manual_journal'),
+      intl.get('plan.feature.financial_reports'),
+      intl.get('plan.feature.one_user_with_accountant'),
+    ],
+    price: '100',
+    periods: [
+      {
+        slug: 'month',
+        label: intl.get('plan.monthly'),
+        price: '100'
+      },
+      {
+        slug: 'year',
+        label: intl.get('plan.yearly'),
+        price: '1,200',
+      },
+    ],
+    currencyCode: 'LYD',
+  },
+  {
+    name: intl.get('plan.professional.title'),
+    slug: 'plus',
+    description: [
+      intl.get('plan.feature.all_capital_essential'),
+      intl.get('plan.feature.multi_currency'),
+      intl.get('plan.feature.purchase_sell_orders'),
+      intl.get('plan.feature.multi_inventory_managment'),
+      intl.get('plan.feature.three_users'),
+      intl.get('plan.feature.advanced_financial_reports'),
+    ],
+    price: '200',
+    currencyCode: 'LYD',
+    periods: [
+      {
+        slug: 'month',
+        label: intl.get('plan.monthly'),
+        price: '200'
+      },
+      {
+        slug: 'year',
+        label: intl.get('plan.yearly'),
+        price: '1,200',
+      },
+    ],
+  },
+  {
+    name: intl.get('plan.plus.title'),
+    slug: 'enterprise',
+    description: [
+      intl.get('plan.feture.all_capital_professional_features'),
+      intl.get('plan.feature.tracking_multi_locations'),
+      intl.get('plan.feature.projects_accounting'),
+      intl.get('plan.feature.accounting_dimensions'),
+    ],
+    price: '300',
+    currencyCode: 'LYD',
+    periods: [
+      {
+        slug: 'month',
+        label: intl.get('plan.monthly'),
+        price: '300'
+      },
+      {
+        slug: 'year',
+        label: intl.get('plan.yearly'),
+        price: '1,200',
+      },
+    ],
   },
 ];
 

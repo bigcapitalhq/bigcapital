@@ -3,8 +3,6 @@ import classNames from 'classnames';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
 
-import 'style/pages/Subscription/PlanRadio.scss';
-
 import { saveInvoke } from 'utils';
 
 /**
@@ -32,9 +30,7 @@ export default function BillingPlan({
       onClick={handlePlanClick}
     >
       <div className={'plan-radio__header'}>
-        <div className={'plan-radio__name'}>
-          {intl.get('plan_radio_name', { name: name })}
-        </div>
+        <div className={'plan-radio__name'}>{name}</div>
       </div>
 
       <div className={'plan-radio__description'}>

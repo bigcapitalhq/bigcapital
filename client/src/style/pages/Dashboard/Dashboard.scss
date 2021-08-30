@@ -95,6 +95,17 @@ $dashboard-views-bar-height: 44px;
         }
       }
     }
+
+    &-subscription-msg{
+      display: flex;
+      flex-direction: row;
+      padding-right: 6px;
+      font-size: 12px;
+
+      span{
+        margin: auto;
+      }
+    }
   }
 
   &__breadcrumbs {
