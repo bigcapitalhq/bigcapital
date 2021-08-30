@@ -49,7 +49,7 @@ export default class ModelBase extends mixin(Model, [DateSession]) {
   }
 
   toObject(opt) {
-    const parsedJson = super.$formatJson(this, opt);
+    const parsedJson = super.$toJson(opt);
     return parsedJson;
   }
 }

@@ -31,7 +31,7 @@ export class Transformer {
     const attributes = this.getIncludeAttributesTransformed(item);
 
     return {
-      ...!isUndefined(item.toJSON) ? item.toObject() : item,
+      ...!isUndefined(item.toObject) ? item.toObject() : item,
       ...attributes
     };
   };
