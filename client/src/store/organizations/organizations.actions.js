@@ -8,66 +8,34 @@ export const setOrganizations = (organizations) => {
       organizations,
     },
   };
-}
+};
 
-export const fetchOrganizations = () => (dispatch) => new Promise((resolve, reject) => {
-  ApiService.get('organization/all').then((response) => {
+export const fetchOrganizations = () => (dispatch) =>
+  new Promise((resolve, reject) => {
+    ApiService.get('organization/all')
+      .then((response) => {
+        dispatch({
+          type: t.ORGANIZATIONS_LIST_SET,
+          payload: {
+            organizations: response.data.organizations,
+          },
+        });
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+
+export const setOrganizationSetupCompleted =
+  (congrats) => (dispatch, getState) => {
+    const organizationId = getState().authentication.organizationId;
+
     dispatch({
-      type: t.ORGANIZATIONS_LIST_SET,
+      type: t.SET_ORGANIZATION_CONGRATS,
       payload: {
-        organizations: response.data.organizations,
+        organizationId,
+        congrats,
       },
     });
-    resolve(response)
-  }).catch(error => { reject(error); });
-});
-
-export const buildTenant = () => (dispatch, getState) => new Promise((resolve, reject) => {
-  const organizationId = getState().authentication.organizationId;
-
-  dispatch({
-    type: t.SET_ORGANIZATION_INITIALIZING,
-    payload: { organizationId }
-  });
-  ApiService.post(`organization/build`).then((response) => {
-    resolve(response);
-    dispatch({
-      type: t.SET_ORGANIZATION_INITIALIZED,
-      payload: { organizationId }
-    });
-  })
-  .catch((error) => {
-    reject(error.response.data.errors || []);
-  });
-});
-
-export const seedTenant = () => (dispatch, getState) => new Promise((resolve, reject) => {
-  const organizationId = getState().authentication.organizationId;
-
-  dispatch({
-    type: t.SET_ORGANIZATION_SEEDING,
-    payload: { organizationId }
-  });
-  ApiService.post(`organization/seed/`).then((response) => {
-    dispatch({
-      type: t.SET_ORGANIZATION_SEEDED,
-      payload: { organizationId }
-    });
-    resolve(response);
-  })
-  .catch((error) => {
-    reject(error.response.data.errors || []);
-  });
-});
-
-export const setOrganizationSetupCompleted = (congrats) => (dispatch, getState) => {
-  const organizationId = getState().authentication.organizationId;
-
-  dispatch({
-    type: t.SET_ORGANIZATION_CONGRATS,
-    payload: {
-      organizationId,
-      congrats
-    },
-  });
-};
+  };

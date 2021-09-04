@@ -35,7 +35,7 @@ export function useCurrentOrganization(props) {
 
   return useRequestQuery(
     [t.ORGANIZATION_CURRENT],
-    { method: 'get', url: `organization/current` },
+    { method: 'get', url: `organization` },
     {
       select: (res) => res.data.organization,
       defaultData: {},
@@ -56,37 +56,6 @@ export function useCurrentOrganization(props) {
 }
 
 /**
- * Builds the current tenant.
- */
-export function useBuildTenant(props) {
-  const apiRequest = useApiRequest();
-  const queryClient = useQueryClient();
-
-  return useMutation((values) => apiRequest.post('organization/build'), {
-    onSuccess: (res, values) => {
-      queryClient.invalidateQueries(t.ORGANIZATION_CURRENT);
-      queryClient.invalidateQueries(t.ORGANIZATIONS);
-    },
-    ...props,
-  });
-}
-
-/**
- * Seeds the current tenant
- */
-export function useSeedTenant() {
-  const apiRequest = useApiRequest();
-  const queryClient = useQueryClient();
-
-  return useMutation((values) => apiRequest.post('organization/seed'), {
-    onSuccess: (res) => {
-      queryClient.invalidateQueries(t.ORGANIZATION_CURRENT);
-      queryClient.invalidateQueries(t.ORGANIZATIONS);
-    },
-  });
-}
-
-/**
  * Organization setup.
  */
 export function useOrganizationSetup() {
@@ -94,7 +63,7 @@ export function useOrganizationSetup() {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (values) => apiRequest.post(`setup/organization`, values),
+    (values) => apiRequest.post(`organization/build`, values),
     {
       onSuccess: (res) => {
         queryClient.invalidateQueries(t.ORGANIZATION_CURRENT);

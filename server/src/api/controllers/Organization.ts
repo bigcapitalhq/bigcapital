@@ -59,7 +59,7 @@ export default class OrganizationController extends BaseController {
       check('organization_name').exists().trim(),
       check('base_currency').exists().isIn(BASE_CURRENCY),
       check('timezone').exists(),
-      check('fiscal_year').exists().isISO8601(),
+      check('fiscal_year').exists(),
       check('industry').optional().isString(),
       check('date_format').optional().isIn(DATE_FORMATS),
     ];

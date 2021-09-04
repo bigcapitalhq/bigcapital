@@ -195,7 +195,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       </FastField>
 
       {/* ----------  Time zone ----------  */}
-      <FastField name={'timeZone'}>
+      <FastField name={'timezone'}>
         {({
           form: { setFieldValue },
           field: { value },
@@ -209,12 +209,12 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
               Classes.FILL,
             )}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'timeZone'} />}
+            helperText={<ErrorMessage name={'timezone'} />}
           >
             <TimezonePicker
               value={value}
               onChange={(item) => {
-                setFieldValue('timeZone', item);
+                setFieldValue('timezone', item);
               }}
               valueDisplayFormat="composite"
               showLocalTimezone={true}

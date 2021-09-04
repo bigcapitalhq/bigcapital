@@ -47,11 +47,13 @@ export default compose(
       isOrganizationInitialized,
       isOrganizationSeeded,
       isOrganizationSetupCompleted,
+      isOrganizationBuildRunning,
     }) => ({
       organization,
       isOrganizationInitialized,
       isOrganizationSeeded,
       isOrganizationSetupCompleted,
+      isOrganizationBuildRunning,
     }),
   ),
   withSubscriptions(

@@ -11,5 +11,5 @@ export const getSetupOrganizationValidation = () =>
     baseCurrency: Yup.string().required().label(intl.get('base_currency_')),
     language: Yup.string().required().label(intl.get('language')),
     fiscalYear: Yup.string().required().label(intl.get('fiscal_year_')),
-    timeZone: Yup.string().required().label(intl.get('time_zone_')),
+    timezone: Yup.string().required().label(intl.get('time_zone_')),
   });

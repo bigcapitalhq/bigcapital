@@ -26,3 +26,4 @@ export * from './organization';
 export * from './landedCost';
 export * from './UniversalSearch/UniversalSearch';
 export * from './GenericResource';
+export * from './jobs';

@@ -3,7 +3,6 @@ import { Formik } from 'formik';
 import moment from 'moment';
 import { FormattedMessage as T } from 'components';
 
-
 import 'style/pages/Setup/Organization.scss';
 
 import SetupOrganizationForm from './SetupOrganizationForm';
@@ -15,7 +14,6 @@ import withOrganizationActions from 'containers/Organization/withOrganizationAct
 import { compose, transfromToSnakeCase } from 'utils';
 import { getSetupOrganizationValidation } from './SetupOrganization.schema';
 
-
 // Initial values.
 const defaultValues = {
   organization_name: '',
@@ -23,7 +21,7 @@ const defaultValues = {
   baseCurrency: '',
   language: 'en',
   fiscalYear: '',
-  timeZone: '',
+  timezone: '',
 };
 
 /**
@@ -43,9 +41,6 @@ function SetupOrganizationPage({ wizard, setOrganizationSetupCompleted }) {
   // Handle the form submit.
   const handleSubmit = (values, { setSubmitting, setErrors }) => {
     organizationSetupMutate({ ...transfromToSnakeCase(values) })
-      .then(() => {
-        return setOrganizationSetupCompleted(true);
-      })
       .then((response) => {
         setSubmitting(false);
         wizard.next();

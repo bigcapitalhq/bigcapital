@@ -5,28 +5,27 @@ export default (mapState) => {
     const {
       isOrganizationSetupCompleted,
       isOrganizationInitialized,
-      isOrganizationSeeded,
-      isSubscriptionActive
+      isSubscriptionActive,
+      isOrganizationBuildRunning
     } = props;
 
     const condits = {
       isCongratsStep: isOrganizationSetupCompleted,
       isSubscriptionStep: !isSubscriptionActive,
-      isInitializingStep: isSubscriptionActive && !isOrganizationInitialized,
-      isOrganizationStep: isOrganizationInitialized && !isOrganizationSeeded,
+      isInitializingStep: isOrganizationBuildRunning,
+      isOrganizationStep: !isOrganizationInitialized && !isOrganizationBuildRunning,
     };
-
     const scenarios = [
-      { condition: condits.isCongratsStep, step: 'congrats' },
       { condition: condits.isSubscriptionStep, step: 'subscription' },
-      { condition: condits.isInitializingStep, step: 'initializing' },
       { condition: condits.isOrganizationStep, step: 'organization' },
+      { condition: condits.isInitializingStep, step: 'initializing' },
+      { condition: condits.isCongratsStep, step: 'congrats' },
     ];
     const setupStep = scenarios.find((scenario) => scenario.condition);
     const mapped = {
       ...condits,
       setupStepId: setupStep?.step,
-      setupStepIndex: scenarios.indexOf(setupStep) ,
+      setupStepIndex: scenarios.indexOf(setupStep) + 1,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

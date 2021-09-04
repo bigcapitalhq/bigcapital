@@ -24,45 +24,6 @@ const reducer = createReducer(initialState, {
     state.byOrganizationId = _dataByOrganizationId;
   },
 
-  [t.SET_ORGANIZATION_SEEDING]: (state, action) => {
-    const { organizationId } = action.payload;
-
-    state.data[organizationId] = {
-      ...(state.data[organizationId] || {}),
-      is_seeding: true,
-    };
-  },
-
-  [t.SET_ORGANIZATION_SEEDED]: (state, action) => {
-    const { organizationId } = action.payload;
-
-    state.data[organizationId] = {
-      ...(state.data[organizationId] || {}),
-      is_seeding: false,
-      seeded_at: new Date().toISOString(),
-      is_ready: true,
-    };
-  },
-
-  [t.SET_ORGANIZATION_INITIALIZING]: (state, action) => {
-    const { organizationId } = action.payload;
-
-    state.data[organizationId] = {
-      ...(state.data[organizationId] || {}),
-      is_initializing: true,
-    };
-  },
-
-  [t.SET_ORGANIZATION_INITIALIZED]: (state, action) => {
-    const { organizationId } = action.payload;
-
-    state.data[organizationId] = {
-      ...(state.data[organizationId] || {}),
-      is_initializing: false,
-      initialized_at: new Date().toISOString(),
-    };
-  },
-
   [t.SET_ORGANIZATION_CONGRATS]: (state, action) => {
     const { organizationId, congrats } = action.payload;
 

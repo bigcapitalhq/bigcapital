@@ -19,8 +19,8 @@ export default function SetupWizardContent({ setupStepIndex, setupStepId }) {
       <div class="setup-page-form">
         <SetupSteps step={{ id: setupStepId }}>
           <SetupSubscription id="subscription" />
-          <SetupInitializingForm id={'initializing'} />
           <SetupOrganizationPage id="organization" />
+          <SetupInitializingForm id={'initializing'} />
           <SetupCongratsPage id="congrats" />
         </SetupSteps>
       </div>

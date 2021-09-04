@@ -21,20 +21,6 @@ export const isOrganizationBuiltFactory = () => createSelector(
   },
 );
 
-export const isOrganizationInitializingFactory = () => createSelector(
-  organizationSelector,
-  (organization) => {
-    return organization?.is_initializing;
-  },
-);
-
-export const isOrganizationSeedingFactory = () => createSelector(
-  organizationSelector,
-  (organization) => {
-    return organization?.is_seeding;
-  },
-);
-
 export const isOrganizationReadyFactory = () => createSelector(
   organizationSelector,
   (organization) => {
@@ -55,3 +41,10 @@ export const isOrganizationCongratsFactory = () => createSelector(
     return !!organization?.is_congrats;
   }
 );
+
+export const isOrganizationBuildRunningFactory = () => createSelector(
+  organizationSelector,
+  (organization) => {
+    return !!organization?.is_build_running;
+  }
+)
