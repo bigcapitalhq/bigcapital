@@ -10,7 +10,7 @@ export interface IOrganizationSetupDTO{
 }
 
 export interface IOrganizationBuildDTO {
-  organizationName: string;
+  name: string;
   baseCurrency: string,
   timezone: string;
   fiscalYear: string;
@@ -18,7 +18,7 @@ export interface IOrganizationBuildDTO {
 }
 
 export interface IOrganizationUpdateDTO {
-  organizationName: string;
+  name: string;
   baseCurrency: string,
   timezone: string;
   fiscalYear: string;
