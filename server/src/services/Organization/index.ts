@@ -1,20 +1,17 @@
 import { Service, Inject } from 'typedi';
-import { Container } from 'typedi';
-// import { ObjectId } from 'mongoose';
 import { ServiceError } from 'exceptions';
-import { IOrganizationBuildDTO, ISystemUser, ITenant } from 'interfaces';
+import {
+  IOrganizationBuildDTO,
+  IOrganizationUpdateDTO,
+  ITenant,
+} from 'interfaces';
 import {
   EventDispatcher,
   EventDispatcherInterface,
 } from 'decorators/eventDispatcher';
 import events from 'subscribers/events';
-import {
-  TenantAlreadyInitialized,
-  TenantAlreadySeeded,
-  TenantDatabaseNotBuilt,
-} from 'exceptions';
 import TenantsManager from 'services/Tenancy/TenantsManager';
-import { Tenant, TenantMetadata } from 'system/models';
+import { Tenant } from 'system/models';
 import { ObjectId } from 'mongodb';
 
 const ERRORS = {
@@ -60,10 +57,13 @@ export default class OrganizationService {
     await this.tenantsManager.createDatabase(tenant);
 
     // Migrate the tenant.
-    const migratedTenant = await this.tenantsManager.migrateTenant(tenant);
+    await this.tenantsManager.migrateTenant(tenant);
+
+    // Migrated tenant.
+    const migratedTenant = await tenant.$query();
 
     // Seed tenant.
-    const seededTenant = await this.tenantsManager.seedTenant(migratedTenant);
+    await this.tenantsManager.seedTenant(migratedTenant);
 
     // Markes the tenant as completed builing.
     await Tenant.markAsBuilt(tenantId);
@@ -71,7 +71,7 @@ export default class OrganizationService {
 
     // Throws `onOrganizationBuild` event.
     this.eventDispatcher.dispatch(events.organization.build, {
-      tenant: seededTenant,
+      tenantId: tenant.id,
     });
   }
 
@@ -91,13 +91,14 @@ export default class OrganizationService {
     this.throwIfTenantIsBuilding(tenant);
 
     // Saves the tenant metadata.
-    await this.saveTenantMetadata(tenant, buildDTO);
+    await tenant.saveMetadata(buildDTO);
 
     // Send welcome mail to the user.
     const jobMeta = await this.agenda.now('organization-setup', {
       tenantId,
       buildDTO,
     });
+    // Transformes the mangodb id to string.
     const jobId = new ObjectId(jobMeta.attrs._id).toString();
 
     // Markes the tenant as currently building.
@@ -109,12 +110,11 @@ export default class OrganizationService {
     };
   }
 
-  throwIfTenantIsBuilding(tenant) {
-    if (tenant.buildJobId) {
-      throw new ServiceError(ERRORS.TENANT_IS_BUILDING);
-    }
-  }
-
+  /**
+   * Unlocks tenant build run job.
+   * @param {number} tenantId
+   * @param {number} jobId
+   */
   public async revertBuildRunJob(tenantId: number, jobId: string) {
     await Tenant.markAsBuildCompleted(tenantId, jobId);
   }
@@ -133,6 +133,23 @@ export default class OrganizationService {
     this.throwIfTenantNotExists(tenant);
 
     return tenant;
+  }
+
+  /**
+   * Updates organization information.
+   * @param {ITenant} tenantId 
+   * @param {IOrganizationUpdateDTO} organizationDTO 
+   */
+  public async updateOrganization(
+    tenantId: number,
+    organizationDTO: IOrganizationUpdateDTO
+  ): Promise<void> {
+    const tenant = await Tenant.query().findById(tenantId);
+
+    // Throw error if the tenant not exists.
+    this.throwIfTenantNotExists(tenant);
+
+    await tenant.saveMetadata(organizationDTO);
   }
 
   /**
@@ -156,16 +173,13 @@ export default class OrganizationService {
   }
 
   /**
-   * Saves the organization metadata.
-   * @param tenant
-   * @param buildDTO
-   * @returns
+   * Throw error if the tenant is building.
+   * @param {ITenant} tenant
    */
-  private saveTenantMetadata(tenant: ITenant, buildDTO) {
-    return TenantMetadata.query().insert({
-      tenantId: tenant.id,
-      ...buildDTO,
-    });
+  private throwIfTenantIsBuilding(tenant) {
+    if (tenant.buildJobId) {
+      throw new ServiceError(ERRORS.TENANT_IS_BUILDING);
+    }
   }
 
   /**

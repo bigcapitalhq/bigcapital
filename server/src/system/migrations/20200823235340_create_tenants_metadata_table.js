@@ -7,6 +7,7 @@ exports.up = function (knex) {
     table.string('industry');
 
     table.string('base_currency');
+    table.string('language');
 
     table.string('timezone');
     table.string('date_format');

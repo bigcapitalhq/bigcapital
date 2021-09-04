@@ -1,6 +1,5 @@
 import React from 'react';
 import { Formik } from 'formik';
-import moment from 'moment';
 import { FormattedMessage as T } from 'components';
 
 import 'style/pages/Setup/Organization.scss';
@@ -9,15 +8,14 @@ import SetupOrganizationForm from './SetupOrganizationForm';
 
 import { useOrganizationSetup } from 'hooks/query';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withOrganizationActions from 'containers/Organization/withOrganizationActions';
 
 import { compose, transfromToSnakeCase } from 'utils';
 import { getSetupOrganizationValidation } from './SetupOrganization.schema';
 
 // Initial values.
 const defaultValues = {
-  organization_name: '',
-  financialDateStart: moment(new Date()).format('YYYY-MM-DD'),
+  organizationName: '',
+  location: 'libya',
   baseCurrency: '',
   language: 'en',
   fiscalYear: '',
@@ -27,7 +25,7 @@ const defaultValues = {
 /**
  * Setup organization form.
  */
-function SetupOrganizationPage({ wizard, setOrganizationSetupCompleted }) {
+function SetupOrganizationPage({ wizard }) {
   const { mutateAsync: organizationSetupMutate } = useOrganizationSetup();
 
   // Validation schema.
@@ -73,5 +71,4 @@ function SetupOrganizationPage({ wizard, setOrganizationSetupCompleted }) {
 
 export default compose(
   withSettingsActions,
-  withOrganizationActions,
 )(SetupOrganizationPage);

@@ -353,7 +353,7 @@ export default {
   once_delete_this_exchange_rate_you_will_able_to_restore_it: `Once you delete this exchange rate, you won\'t be able to restore it later. Are you sure you want to delete this exchange rate?`,
   once_delete_these_exchange_rates_you_will_not_able_restore_them: `Once you delete these exchange rates, you won't be able to retrieve them later. Are you sure you want to delete them?`,
   once_delete_this_item_category_you_will_able_to_restore_it: `Once you delete this category, you won\'t be able to restore it later. Are you sure you want to delete this item?`,
-  select_business_location: 'Select Business Location',
+  select_business_location: 'Select business location',
   select_base_currency: 'Select base currency',
   select_fiscal_year: 'Select fiscal year',
   select_language: 'Select Language',

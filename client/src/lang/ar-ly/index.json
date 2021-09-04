@@ -1043,11 +1043,8 @@
   "total_rows": "",
   "always": "دائماً",
   "none": "",
-  "us_dollar": "",
-  "euro": "",
-  "libyan_diner": "",
-  "english": "",
-  "arabic": "",
+  "english": "English",
+  "arabic": "العربية",
   "just_a_moment_we_re_calculating_your_cost_transactions": "لحظة واحدة! نحن نحسب معاملات التكلفة الخاصة بك ، هذا لا يستغرق الكثير من الوقت ، يرجى التحقق بعد فترة.",
   "refresh": "",
   "total_name": "إجمالي {name}",
@@ -1280,6 +1277,7 @@
   "billing.suspend_message.title": "حسابك معلق :(",
   "billing.suspend_message.description": "تم تعليق حسابك بسبب انتهاء فترة الاشتراك. الرجاء تجديد الاشتراك لتفعيل الحساب.",
   "dashboard.subscription_msg.period_over": "انتهت فترة الاشتراك",
-  "inventory_adjustment.details_drawer.title": "تفاصيل معاملة تسوية المخزون"
+  "inventory_adjustment.details_drawer.title": "تفاصيل معاملة تسوية المخزون",
+  "setup.organization.location": "الموقع"
 }
 

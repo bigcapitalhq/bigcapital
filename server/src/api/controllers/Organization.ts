@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import moment from 'moment-timezone';
 import { Router, Request, Response, NextFunction } from 'express';
 import { check, ValidationChain } from 'express-validator';
 
@@ -8,11 +9,16 @@ import TenancyMiddleware from 'api/middleware/TenancyMiddleware';
 import SubscriptionMiddleware from 'api/middleware/SubscriptionMiddleware';
 import AttachCurrentTenantUser from 'api/middleware/AttachCurrentTenantUser';
 import OrganizationService from 'services/Organization';
+import {
+  ACCEPTED_CURRENCIES,
+  MONTHS,
+  ACCEPTED_LOCALES,
+  DATE_FORMATS,
+} from 'services/Organization/constants';
+
 import { ServiceError } from 'exceptions';
 import BaseController from 'api/controllers/BaseController';
 
-const DATE_FORMATS = ['MM/DD/YYYY', 'M/D/YYYY'];
-const BASE_CURRENCY = ['USD', 'LYD'];
 @Service()
 export default class OrganizationController extends BaseController {
   @Inject()
@@ -40,6 +46,8 @@ export default class OrganizationController extends BaseController {
     );
     router.put(
       '/',
+      this.buildValidationSchema,
+      this.validationResult,
       this.asyncMiddleware(this.updateOrganization.bind(this)),
       this.handleServiceErrors.bind(this)
     );
@@ -57,10 +65,11 @@ export default class OrganizationController extends BaseController {
   private get buildValidationSchema(): ValidationChain[] {
     return [
       check('organization_name').exists().trim(),
-      check('base_currency').exists().isIn(BASE_CURRENCY),
-      check('timezone').exists(),
-      check('fiscal_year').exists(),
+      check('base_currency').exists().isIn(ACCEPTED_CURRENCIES),
+      check('timezone').exists().isIn(moment.tz.names()),
+      check('fiscal_year').exists().isIn(MONTHS),
       check('industry').optional().isString(),
+      check('language').optional().isString().isIn(ACCEPTED_LOCALES),
       check('date_format').optional().isIn(DATE_FORMATS),
     ];
   }
@@ -80,7 +89,6 @@ export default class OrganizationController extends BaseController {
         tenantId,
         buildDTO
       );
-
       return res.status(200).send({
         type: 'success',
         code: 'ORGANIZATION.DATABASE.INITIALIZED',
@@ -117,10 +125,10 @@ export default class OrganizationController extends BaseController {
 
   /**
    * Update the organization information.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
-   * @returns 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns
    */
   private async updateOrganization(
     req: Request,

@@ -7,24 +7,18 @@ import {
   InputGroup,
   MenuItem,
   Classes,
-  Position,
 } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { FormattedMessage as T } from 'components';
+import { getCountries } from 'common/countries';
 
 import { Col, Row, ListSelect } from 'components';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from 'utils';
+import { inputIntent } from 'utils';
 
 import { getFiscalYear } from 'common/fiscalYearOptions';
 import { getLanguages } from 'common/languagesOptions';
-import { getCurrencies } from 'common/currencies';
+import { getAllCurrenciesOptions } from 'common/currencies';
 
 /**
  * Setup organization form.
@@ -32,7 +26,8 @@ import { getCurrencies } from 'common/currencies';
 export default function SetupOrganizationForm({ isSubmitting, values }) {
   const FiscalYear = getFiscalYear();
   const Languages = getLanguages();
-  const Currencies = getCurrencies();
+  const currencies = getAllCurrenciesOptions();
+  const countries = getCountries();
 
   return (
     <Form>
@@ -41,40 +36,41 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       </h3>
 
       {/* ---------- Organization name ----------  */}
-      <FastField name={'organization_name'}>
+      <FastField name={'organizationName'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'legal_organization_name'} />}
             className={'form-group--name'}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'organization_name'} />}
+            helperText={<ErrorMessage name={'organizationName'} />}
           >
             <InputGroup {...field} intent={inputIntent({ error, touched })} />
           </FormGroup>
         )}
       </FastField>
 
-      {/* ---------- Financial starting date ----------  */}
-      <FastField name={'financialDateStart'}>
-        {({
-          form: { setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
+      {/* ---------- Location ---------- */}
+      <FastField name={'location'}>
+        {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
-            label={<T id={'financial_starting_date'} />}
+            label={<T id={'business_location'} />}
+            className={classNames(
+              'form-group--business-location',
+              Classes.FILL,
+            )}
+            helperText={<ErrorMessage name="location" />}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="financialDateStart" />}
-            className={classNames('form-group--select-list', Classes.FILL)}
           >
-            <DateInput
-              {...momentFormatter('YYYY MMMM DD')}
-              value={tansformDateValue(value)}
-              popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              onChange={handleDateChange((formattedDate) => {
-                setFieldValue('financialDateStart', formattedDate);
-              })}
-              intent={inputIntent({ error, touched })}
+            <ListSelect
+              items={countries}
+              onItemSelect={({ value }) => {
+                form.setFieldValue('location', value);
+              }}
+              selectedItem={value}
+              selectedItemProp={'value'}
+              defaultText={<T id={'select_business_location'} />}
+              textProp={'name'}
+              popoverProps={{ minimal: true }}
             />
           </FormGroup>
         )}
@@ -100,15 +96,15 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
                 helperText={<ErrorMessage name={'baseCurrency'} />}
               >
                 <ListSelect
-                  items={Currencies}
+                  items={currencies}
                   noResults={
                     <MenuItem disabled={true} text={<T id={'no_results'} />} />
                   }
                   popoverProps={{ minimal: true }}
                   onItemSelect={(item) => {
-                    setFieldValue('baseCurrency', item.code);
+                    setFieldValue('baseCurrency', item.key);
                   }}
-                  selectedItemProp={'code'}
+                  selectedItemProp={'key'}
                   textProp={'name'}
                   defaultText={<T id={'select_base_currency'} />}
                   selectedItem={value}
@@ -181,12 +177,12 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
                 <MenuItem disabled={true} text={<T id={'no_results'} />} />
               }
               selectedItem={value}
-              selectedItemProp={'value'}
+              selectedItemProp={'key'}
               textProp={'name'}
               defaultText={<T id={'select_fiscal_year'} />}
               popoverProps={{ minimal: true }}
               onItemSelect={(item) => {
-                setFieldValue('fiscalYear', item.value);
+                setFieldValue('fiscalYear', item.key);
               }}
               filterable={false}
             />
