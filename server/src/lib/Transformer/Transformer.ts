@@ -3,7 +3,7 @@ import { isEmpty, isObject, isUndefined } from 'lodash';
 
 export class Transformer {
   /**
-   * 
+   * Includeded attributes.
    * @returns 
    */
   protected includeAttributes = (): string[] => {

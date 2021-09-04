@@ -7,9 +7,6 @@ exports.up = function(knex) {
     table.integer('plan_id').unsigned().index().references('id').inTable('subscription_plans');
     table.bigInteger('tenant_id').unsigned().index().references('id').inTable('tenants');
 
-    table.dateTime('trial_started_at').nullable();
-    table.dateTime('trial_ends_at').nullable();
-
     table.dateTime('starts_at').nullable();
     table.dateTime('ends_at').nullable();
 

@@ -1,6 +1,8 @@
 import { Service, Inject } from 'typedi';
+import { Container } from 'typedi';
+// import { ObjectId } from 'mongoose';
 import { ServiceError } from 'exceptions';
-import { ISystemService, ISystemUser, ITenant } from 'interfaces';
+import { IOrganizationBuildDTO, ISystemUser, ITenant } from 'interfaces';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -12,12 +14,15 @@ import {
   TenantDatabaseNotBuilt,
 } from 'exceptions';
 import TenantsManager from 'services/Tenancy/TenantsManager';
+import { Tenant, TenantMetadata } from 'system/models';
+import { ObjectId } from 'mongodb';
 
 const ERRORS = {
   TENANT_NOT_FOUND: 'tenant_not_found',
-  TENANT_ALREADY_INITIALIZED: 'tenant_already_initialized',
+  TENANT_ALREADY_BUILT: 'TENANT_ALREADY_BUILT',
   TENANT_ALREADY_SEEDED: 'tenant_already_seeded',
   TENANT_DB_NOT_BUILT: 'tenant_db_not_built',
+  TENANT_IS_BUILDING: 'TENANT_IS_BUILDING',
 };
 
 @Service()
@@ -34,92 +39,96 @@ export default class OrganizationService {
   @Inject()
   tenantsManager: TenantsManager;
 
+  @Inject('agenda')
+  agenda: any;
+
   /**
    * Builds the database schema and seed data of the given organization id.
    * @param  {srting} organizationId
    * @return {Promise<void>}
    */
-  public async build(organizationId: string, user: ISystemUser): Promise<void> {
-    const tenant = await this.getTenantByOrgIdOrThrowError(organizationId);
+  public async build(tenantId: number): Promise<void> {
+    const tenant = await this.getTenantOrThrowError(tenantId);
+
+    // Throw error if the tenant is already initialized.
     this.throwIfTenantInitizalized(tenant);
 
-    const tenantHasDB = await this.tenantsManager.hasDatabase(tenant);
+    // Drop the database if is already exists.
+    await this.tenantsManager.dropDatabaseIfExists(tenant);
 
-    try {
-      if (!tenantHasDB) {
-        this.logger.info('[organization] trying to create tenant database.', {
-          organizationId, userId: user.id,
-        });
-        await this.tenantsManager.createDatabase(tenant);
-      }
-      this.logger.info('[organization] trying to migrate tenant database.', {
-        organizationId, userId: user.id,
-      });
-      await this.tenantsManager.migrateTenant(tenant);
+    // Creates a new database.
+    await this.tenantsManager.createDatabase(tenant);
 
-      // Throws `onOrganizationBuild` event.
-      this.eventDispatcher.dispatch(events.organization.build, { tenant, user });
-    } catch (error) {
-      if (error instanceof TenantAlreadyInitialized) {
-        throw new ServiceError(ERRORS.TENANT_ALREADY_INITIALIZED);
-      } else {
-        throw error;
-      }
-    }
-  }
+    // Migrate the tenant.
+    const migratedTenant = await this.tenantsManager.migrateTenant(tenant);
 
-  /**
-   * Seeds initial core data to the given organization tenant.
-   * @param  {number} organizationId
-   * @return {Promise<void>}
-   */
-  public async seed(organizationId: string): Promise<void> {
-    const tenant = await this.getTenantByOrgIdOrThrowError(organizationId);
-    this.throwIfTenantSeeded(tenant);
+    // Seed tenant.
+    const seededTenant = await this.tenantsManager.seedTenant(migratedTenant);
 
-    try {
-      this.logger.info('[organization] trying to seed tenant database.', {
-        organizationId,
-      });
-      await this.tenantsManager.seedTenant(tenant);
+    // Markes the tenant as completed builing.
+    await Tenant.markAsBuilt(tenantId);
+    await Tenant.markAsBuildCompleted(tenantId);
 
-      // Throws `onOrganizationBuild` event.
-      this.eventDispatcher.dispatch(events.organization.seeded, { tenant });
-    } catch (error) {
-      if (error instanceof TenantAlreadySeeded) {
-        throw new ServiceError(ERRORS.TENANT_ALREADY_SEEDED);
-      } else if (error instanceof TenantDatabaseNotBuilt) {
-        throw new ServiceError(ERRORS.TENANT_DB_NOT_BUILT);
-      } else {
-        throw error;
-      }
-    }
-  }
-
-  /**
-   * Listing all associated organizations to the given user.
-   * @param {ISystemUser} user -
-   * @return {Promise<void>}
-   */
-  public async listOrganizations(user: ISystemUser): Promise<ITenant[]> {
-    this.logger.info('[organization] trying to list all organizations.', {
-      user,
+    // Throws `onOrganizationBuild` event.
+    this.eventDispatcher.dispatch(events.organization.build, {
+      tenant: seededTenant,
     });
+  }
 
-    const { tenantRepository } = this.sysRepositories;
-    const tenant = await tenantRepository.findOneById(user.tenantId);
+  /**
+   *
+   * @param tenantId
+   * @param buildDTO
+   * @returns
+   */
+  async buildRunJob(tenantId: number, buildDTO: IOrganizationBuildDTO) {
+    const tenant = await this.getTenantOrThrowError(tenantId);
 
-    return [tenant];
+    // Throw error if the tenant is already initialized.
+    this.throwIfTenantInitizalized(tenant);
+
+    // Throw error if tenant is currently building.
+    this.throwIfTenantIsBuilding(tenant);
+
+    // Saves the tenant metadata.
+    await this.saveTenantMetadata(tenant, buildDTO);
+
+    // Send welcome mail to the user.
+    const jobMeta = await this.agenda.now('organization-setup', {
+      tenantId,
+      buildDTO,
+    });
+    const jobId = new ObjectId(jobMeta.attrs._id).toString();
+
+    // Markes the tenant as currently building.
+    await Tenant.markAsBuilding(tenantId, jobId);
+
+    return {
+      nextRunAt: jobMeta.attrs.nextRunAt,
+      jobId: jobMeta.attrs._id,
+    };
+  }
+
+  throwIfTenantIsBuilding(tenant) {
+    if (tenant.buildJobId) {
+      throw new ServiceError(ERRORS.TENANT_IS_BUILDING);
+    }
+  }
+
+  public async revertBuildRunJob(tenantId: number, jobId: string) {
+    await Tenant.markAsBuildCompleted(tenantId, jobId);
   }
 
   /**
    * Retrieve the current organization metadata.
-   * @param {number} tenantId 
-   * @returns {Promise<ITenant[]>} 
+   * @param {number} tenantId
+   * @returns {Promise<ITenant[]>}
    */
-  public async currentOrganization(tenantId: number): Promise<ITenant[]> {
-    const { tenantRepository } = this.sysRepositories;
-    const tenant = await tenantRepository.findOneById(tenantId, ['subscriptions']);
+  public async currentOrganization(tenantId: number): Promise<ITenant> {
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('subscriptions')
+      .withGraphFetched('metadata');
 
     this.throwIfTenantNotExists(tenant);
 
@@ -132,7 +141,6 @@ export default class OrganizationService {
    */
   private throwIfTenantNotExists(tenant: ITenant) {
     if (!tenant) {
-      this.logger.info('[tenant_db_build] organization id not found.');
       throw new ServiceError(ERRORS.TENANT_NOT_FOUND);
     }
   }
@@ -142,33 +150,34 @@ export default class OrganizationService {
    * @param {ITenant} tenant
    */
   private throwIfTenantInitizalized(tenant: ITenant) {
-    if (tenant.initializedAt) {
-      throw new ServiceError(ERRORS.TENANT_ALREADY_INITIALIZED);
+    if (tenant.builtAt) {
+      throw new ServiceError(ERRORS.TENANT_ALREADY_BUILT);
     }
   }
 
   /**
-   * Throws service if the tenant already seeded.
-   * @param {ITenant} tenant
+   * Saves the organization metadata.
+   * @param tenant
+   * @param buildDTO
+   * @returns
    */
-  private throwIfTenantSeeded(tenant: ITenant) {
-    if (tenant.seededAt) {
-      throw new ServiceError(ERRORS.TENANT_ALREADY_SEEDED);
-    }
+  private saveTenantMetadata(tenant: ITenant, buildDTO) {
+    return TenantMetadata.query().insert({
+      tenantId: tenant.id,
+      ...buildDTO,
+    });
   }
 
   /**
-   * Retrieve tenant model by the given organization id or throw not found
-   * error if the tenant not exists on the storage.
-   * @param  {string} organizationId
-   * @return {ITenant}
+   * Retrieve tenant of throw not found error.
+   * @param {number} tenantId -
    */
-  private async getTenantByOrgIdOrThrowError(organizationId: string) {
-    const { tenantRepository } = this.sysRepositories;
-    const tenant = await tenantRepository.findOne({ organizationId });
+  async getTenantOrThrowError(tenantId: number): Promise<ITenant> {
+    const tenant = await Tenant.query().findById(tenantId);
 
-    this.throwIfTenantNotExists(tenant);
-
+    if (!tenant) {
+      throw new ServiceError(ERRORS.TENANT_NOT_FOUND);
+    }
     return tenant;
   }
 }

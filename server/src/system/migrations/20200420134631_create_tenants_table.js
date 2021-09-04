@@ -7,6 +7,9 @@ exports.up = function(knex) {
     table.dateTime('under_maintenance_since').nullable();
     table.dateTime('initialized_at').nullable();
     table.dateTime('seeded_at').nullable();
+    table.dateTime('built_at').nullable();
+    table.string('build_job_id');
+
     table.timestamps();
   });
 };

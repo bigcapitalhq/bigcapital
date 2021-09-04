@@ -6,6 +6,7 @@ export interface ITenant {
 
   initializedAt: Date|null,
   seededAt: Date|null,
+  builtAt: Date|null,
   createdAt: Date|null,
 }
 

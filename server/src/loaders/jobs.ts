@@ -11,6 +11,7 @@ import SendSMSNotificationTrialEnd from 'jobs/SMSNotificationTrialEnd';
 import SendMailNotificationSubscribeEnd from 'jobs/MailNotificationSubscribeEnd';
 import SendMailNotificationTrialEnd from 'jobs/MailNotificationTrialEnd';
 import UserInviteMailJob from 'jobs/UserInviteMail';
+import OrganizationSetupJob from 'jobs/OrganizationSetup';
 
 export default ({ agenda }: { agenda: Agenda }) => {
   new WelcomeEmailJob(agenda);
@@ -21,6 +22,7 @@ export default ({ agenda }: { agenda: Agenda }) => {
   new SendLicenseViaPhoneJob(agenda);
   new ComputeItemCost(agenda);
   new RewriteInvoicesJournalEntries(agenda);
+  new OrganizationSetupJob(agenda);
 
   agenda.define(
     'send-sms-notification-subscribe-end',

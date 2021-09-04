@@ -1,26 +1,27 @@
 import { Container, Inject, Service } from 'typedi';
 import { ServiceError } from 'exceptions';
-import {
-  ITenantManager,
-  ITenant,
-  ITenantDBManager,
-} from 'interfaces';
+import { ITenantManager, ITenant, ITenantDBManager } from 'interfaces';
 import {
   EventDispatcherInterface,
   EventDispatcher,
 } from 'decorators/eventDispatcher';
-import { TenantAlreadyInitialized, TenantAlreadySeeded, TenantDatabaseNotBuilt } from 'exceptions';
+import {
+  TenantAlreadyInitialized,
+  TenantAlreadySeeded,
+  TenantDatabaseNotBuilt,
+} from 'exceptions';
 import TenantDBManager from 'services/Tenancy/TenantDBManager';
 import events from 'subscribers/events';
+import { Tenant } from 'system/models';
 
 const ERRORS = {
   TENANT_ALREADY_CREATED: 'TENANT_ALREADY_CREATED',
-  TENANT_NOT_EXISTS:      'TENANT_NOT_EXISTS'
+  TENANT_NOT_EXISTS: 'TENANT_NOT_EXISTS',
 };
 
 // Tenants manager service.
 @Service()
-export default class TenantsManagerService implements ITenantManager{
+export default class TenantsManagerService implements ITenantManager {
   static instances: { [key: number]: ITenantManager } = {};
 
   @EventDispatcher()
@@ -34,7 +35,7 @@ export default class TenantsManagerService implements ITenantManager{
   /**
    * Constructor method.
    */
-  constructor() { 
+  constructor() {
     this.tenantDBManager = new TenantDBManager();
   }
 
@@ -52,15 +53,24 @@ export default class TenantsManagerService implements ITenantManager{
 
   /**
    * Creates a new tenant database.
-   * @param {ITenant} tenant - 
+   * @param {ITenant} tenant -
    * @return {Promise<void>}
    */
   public async createDatabase(tenant: ITenant): Promise<void> {
     this.throwErrorIfTenantAlreadyInitialized(tenant);
 
     await this.tenantDBManager.createDatabase(tenant);
-    
+
     this.eventDispatcher.dispatch(events.tenantManager.databaseCreated);
+  }
+
+  /**
+   * Drops the database if the given tenant.
+   * @param {number} tenantId 
+   */
+  async dropDatabaseIfExists(tenant: ITenant) {
+    // Drop the database if exists.
+    await this.tenantDBManager.dropDatabaseIfExists(tenant);
   }
 
   /**
@@ -77,15 +87,20 @@ export default class TenantsManagerService implements ITenantManager{
    * @param  {ITenant} tenant
    * @return {Promise<void>}
    */
-  public async migrateTenant(tenant: ITenant) {
+  public async migrateTenant(tenant: ITenant): Promise<void> {
+    // Throw error if the tenant already initialized.
     this.throwErrorIfTenantAlreadyInitialized(tenant);
 
-    const { tenantRepository } = this.sysRepositories;
-
+    // Migrate the database tenant.
     await this.tenantDBManager.migrate(tenant);
-    await tenantRepository.markAsInitialized(tenant.id);
 
-    this.eventDispatcher.dispatch(events.tenantManager.tenantMigrated, { tenant });
+    // Mark the tenant as initialized.
+    await Tenant.markAsInitialized(tenant.id);
+
+    // Triggers `onTenantMigrated` event.
+    this.eventDispatcher.dispatch(events.tenantManager.tenantMigrated, {
+      tenantId: tenant.id,
+    });
   }
 
   /**
@@ -93,19 +108,23 @@ export default class TenantsManagerService implements ITenantManager{
    * @param  {ITenant} tenant
    * @return {Promise<void>}
    */
-  public async seedTenant(tenant: ITenant) {
+  public async seedTenant(tenant: ITenant): Promise<void> {
+    // Throw error if the tenant is not built yet.
     this.throwErrorIfTenantNotBuilt(tenant);
-    this.throwErrorIfTenantAlreadySeeded(tenant);
 
-    const { tenantRepository } = this.sysRepositories;
+    // Throw error if the tenant is not seeded yet.
+    this.throwErrorIfTenantAlreadySeeded(tenant);
 
     // Seed the tenant database.
     await this.tenantDBManager.seed(tenant);
 
     // Mark the tenant as seeded in specific date.
-    await tenantRepository.markAsSeeded(tenant.id);
+    await Tenant.markAsSeeded(tenant.id);
 
-    this.eventDispatcher.dispatch(events.tenantManager.tenantSeeded);
+    // Triggers `onTenantSeeded` event.
+    this.eventDispatcher.dispatch(events.tenantManager.tenantSeeded, {
+      tenantId: tenant.id,
+    });
   }
 
   /**
@@ -138,7 +157,7 @@ export default class TenantsManagerService implements ITenantManager{
 
   /**
    * Throws error if the tenant database is not built yut.
-   * @param {ITenant} tenant 
+   * @param {ITenant} tenant
    */
   private throwErrorIfTenantNotBuilt(tenant: ITenant) {
     if (!tenant.initializedAt) {

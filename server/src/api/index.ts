@@ -11,7 +11,6 @@ import EnsureTenantIsInitialized from 'api/middleware/EnsureTenantIsInitialized'
 import SettingsMiddleware from 'api/middleware/SettingsMiddleware';
 import I18nMiddleware from 'api/middleware/I18nMiddleware';
 import I18nAuthenticatedMiddlware from 'api/middleware/I18nAuthenticatedMiddlware';
-import EnsureConfiguredMiddleware from 'api/middleware/EnsureConfiguredMiddleware';
 import EnsureTenantIsSeeded from 'api/middleware/EnsureTenantIsSeeded';
 
 // Routes
@@ -41,8 +40,8 @@ import Ping from 'api/controllers/Ping';
 import Subscription from 'api/controllers/Subscription';
 import Licenses from 'api/controllers/Subscription/Licenses';
 import InventoryAdjustments from 'api/controllers/Inventory/InventoryAdjustments';
-import Setup from 'api/controllers/Setup';
 import asyncRenderMiddleware from './middleware/AsyncRenderMiddleware';
+import Jobs from './controllers/Jobs';
 
 export default () => {
   const app = Router();
@@ -59,7 +58,7 @@ export default () => {
   app.use('/subscription', Container.get(Subscription).router());
   app.use('/organization', Container.get(Organization).router());
   app.use('/ping', Container.get(Ping).router());
-  app.use('/setup', Container.get(Setup).router());
+  app.use('/jobs', Container.get(Jobs).router());
  
   // - Dashboard routes.
   // ---------------------------
@@ -72,7 +71,6 @@ export default () => {
   dashboard.use(EnsureTenantIsInitialized);
   dashboard.use(SettingsMiddleware);
   dashboard.use(I18nAuthenticatedMiddlware);
-  dashboard.use(EnsureConfiguredMiddleware);
   dashboard.use(EnsureTenantIsSeeded);
 
   dashboard.use('/users', Container.get(Users).router());

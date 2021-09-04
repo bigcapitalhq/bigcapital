@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-  return knex.schema.createTable('subscription_licenses', table => {
+  return knex.schema.createTable('subscription_licenses', (table) => {
     table.increments();
 
     table.string('license_code').unique().index();

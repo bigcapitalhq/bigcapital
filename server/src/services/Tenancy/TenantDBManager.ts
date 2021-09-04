@@ -7,8 +7,8 @@ import SystemService from 'services/Tenancy/SystemService';
 import { TenantDBAlreadyExists } from 'exceptions';
 import { tenantKnexConfig, tenantSeedConfig } from 'config/knexConfig';
 
-export default class TenantDBManager implements ITenantDBManager{
-  static knexCache: { [key: string]: Knex; } = {};
+export default class TenantDBManager implements ITenantDBManager {
+  static knexCache: { [key: string]: Knex } = {};
 
   // System database manager.
   dbManager: any;
@@ -18,7 +18,7 @@ export default class TenantDBManager implements ITenantDBManager{
 
   /**
    * Constructor method.
-   * @param {ITenant} tenant 
+   * @param {ITenant} tenant
    */
   constructor() {
     const systemService = Container.get(SystemService);
@@ -41,8 +41,12 @@ export default class TenantDBManager implements ITenantDBManager{
    */
   public async databaseExists(tenant: ITenant) {
     const databaseName = this.getDatabaseName(tenant);
-    const results = await this.sysKnex
-      .raw('SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = "?"', databaseName);
+
+    const results = await this.sysKnex.raw(
+      'SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = "' +
+        databaseName +
+        '"'
+    );
 
     return results[0].length > 0;
   }
@@ -57,6 +61,30 @@ export default class TenantDBManager implements ITenantDBManager{
 
     const databaseName = this.getDatabaseName(tenant);
     await this.dbManager.createDb(databaseName);
+  }
+
+  /**
+   * Dropdowns the tenant database if it was exist.
+   * @param {ITenant} tenant -
+   */
+  public async dropDatabaseIfExists(tenant: ITenant) {
+    const isExists = await this.databaseExists(tenant);
+
+    if (!isExists) {
+      return;
+    }
+
+    await this.dropDatabase(tenant);
+  }
+
+  /**
+   * dropdowns the tenant's database.
+   * @param {ITenant} tenant
+   */
+  public async dropDatabase(tenant: ITenant) {
+    const databaseName = this.getDatabaseName(tenant);
+
+    await this.dbManager.dropDb(databaseName);
   }
 
   /**
@@ -100,6 +128,9 @@ export default class TenantDBManager implements ITenantDBManager{
     return knexInstance;
   }
 
+  /**
+   * Retrieve knex instance from the givne tenant.
+   */
   public getKnexInstance(tenantId: number) {
     const key: string = `${tenantId}`;
     let knexInstance = TenantDBManager.knexCache[key];

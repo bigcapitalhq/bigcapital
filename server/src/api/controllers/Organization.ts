@@ -1,5 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
+import { check, ValidationChain } from 'express-validator';
+
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import JWTAuth from 'api/middleware/jwtAuth';
 import TenancyMiddleware from 'api/middleware/TenancyMiddleware';
@@ -8,9 +10,9 @@ import AttachCurrentTenantUser from 'api/middleware/AttachCurrentTenantUser';
 import OrganizationService from 'services/Organization';
 import { ServiceError } from 'exceptions';
 import BaseController from 'api/controllers/BaseController';
-import EnsureConfiguredMiddleware from 'api/middleware/EnsureConfiguredMiddleware';
-import SettingsMiddleware from 'api/middleware/SettingsMiddleware';
 
+const DATE_FORMATS = ['MM/DD/YYYY', 'M/D/YYYY'];
+const BASE_CURRENCY = ['USD', 'LYD'];
 @Service()
 export default class OrganizationController extends BaseController {
   @Inject()
@@ -28,21 +30,39 @@ export default class OrganizationController extends BaseController {
     router.use(AttachCurrentTenantUser);
     router.use(TenancyMiddleware);
 
-    // Should to seed organization tenant be configured.
-    router.use('/seed', SubscriptionMiddleware('main'));
-    router.use('/seed', SettingsMiddleware);
-    router.use('/seed', EnsureConfiguredMiddleware);
-
     router.use('/build', SubscriptionMiddleware('main'));
-
-    router.post('/build', asyncMiddleware(this.build.bind(this)));
-    router.post('/seed', asyncMiddleware(this.seed.bind(this)));
-    router.get('/all', asyncMiddleware(this.allOrganizations.bind(this)));
+    router.post(
+      '/build',
+      this.buildValidationSchema,
+      this.validationResult,
+      asyncMiddleware(this.build.bind(this)),
+      this.handleServiceErrors.bind(this)
+    );
+    router.put(
+      '/',
+      this.asyncMiddleware(this.updateOrganization.bind(this)),
+      this.handleServiceErrors.bind(this)
+    );
     router.get(
-      '/current',
-      asyncMiddleware(this.currentOrganization.bind(this))
+      '/',
+      asyncMiddleware(this.currentOrganization.bind(this)),
+      this.handleServiceErrors.bind(this)
     );
     return router;
+  }
+
+  /**
+   * Organization setup schema.
+   */
+  private get buildValidationSchema(): ValidationChain[] {
+    return [
+      check('organization_name').exists().trim(),
+      check('base_currency').exists().isIn(BASE_CURRENCY),
+      check('timezone').exists(),
+      check('fiscal_year').exists().isISO8601(),
+      check('industry').optional().isString(),
+      check('date_format').optional().isIn(DATE_FORMATS),
+    ];
   }
 
   /**
@@ -51,88 +71,22 @@ export default class OrganizationController extends BaseController {
    * @param {Response} res - Express response.
    * @param {NextFunction} next
    */
-  async build(req: Request, res: Response, next: Function) {
-    const { organizationId } = req.tenant;
-    const { user } = req;
+  private async build(req: Request, res: Response, next: Function) {
+    const { tenantId } = req;
+    const buildDTO = this.matchedBodyData(req);
 
     try {
-      await this.organizationService.build(organizationId, user);
+      const result = await this.organizationService.buildRunJob(
+        tenantId,
+        buildDTO
+      );
 
       return res.status(200).send({
         type: 'success',
         code: 'ORGANIZATION.DATABASE.INITIALIZED',
         message: 'The organization database has been initialized.',
+        data: result,
       });
-    } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'tenant_not_found') {
-          return res.status(400).send({
-            // errors: [{ type: 'TENANT.NOT.FOUND', code: 100 }],
-          });
-        }
-        if (error.errorType === 'tenant_already_initialized') {
-          return res.status(400).send({
-            errors: [{ type: 'TENANT.DATABASE.ALREADY.BUILT', code: 200 }],
-          });
-        }
-      }
-      next(error);
-    }
-  }
-
-  /**
-   * Seeds initial data to tenant database.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  async seed(req: Request, res: Response, next: Function) {
-    const { organizationId } = req.tenant;
-
-    try {
-      await this.organizationService.seed(organizationId);
-
-      return res.status(200).send({
-        type: 'success',
-        code: 'ORGANIZATION.DATABASE.SEED',
-        message: 'The organization database has been seeded.',
-      });
-    } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'tenant_not_found') {
-          return res.status(400).send({
-            errors: [{ type: 'TENANT.NOT.FOUND', code: 100 }],
-          });
-        }
-        if (error.errorType === 'tenant_already_seeded') {
-          return res.status(400).send({
-            errors: [{ type: 'TENANT.DATABASE.ALREADY.SEEDED', code: 200 }],
-          });
-        }
-        if (error.errorType === 'tenant_db_not_built') {
-          return res.status(400).send({
-            errors: [{ type: 'TENANT.DATABASE.NOT.BUILT', code: 300 }],
-          });
-        }
-      }
-      next(error);
-    }
-  }
-
-  /**
-   * Listing all organizations that assocaited to the authorized user.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  async allOrganizations(req: Request, res: Response, next: NextFunction) {
-    const { user } = req;
-
-    try {
-      const organizations = await this.organizationService.listOrganizations(
-        user
-      );
-      return res.status(200).send({ organizations });
     } catch (error) {
       next(error);
     }
@@ -144,7 +98,11 @@ export default class OrganizationController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async currentOrganization(req: Request, res: Response, next: NextFunction) {
+  private async currentOrganization(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
 
     try {
@@ -155,5 +113,69 @@ export default class OrganizationController extends BaseController {
     } catch (error) {
       next(error);
     }
+  }
+
+  /**
+   * Update the organization information.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   * @returns 
+   */
+  private async updateOrganization(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const tenantDTO = this.matchedBodyData(req);
+
+    try {
+      const organization = await this.organizationService.updateOrganization(
+        tenantId,
+        tenantDTO
+      );
+      return res.status(200).send(
+        this.transfromToResponse({
+          tenantId,
+          message: 'Organization information has been updated successfully.',
+        })
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Handles service errors.
+   * @param {Error} error
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  private handleServiceErrors(
+    error: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'tenant_not_found') {
+        return res.status(400).send({
+          errors: [{ type: 'TENANT.NOT.FOUND', code: 100 }],
+        });
+      }
+      if (error.errorType === 'TENANT_ALREADY_BUILT') {
+        return res.status(400).send({
+          errors: [{ type: 'TENANT_ALREADY_BUILT', code: 200 }],
+        });
+      }
+      if (error.errorType === 'TENANT_IS_BUILDING') {
+        return res.status(400).send({
+          errors: [{ type: 'TENANT_IS_BUILDING', code: 300 }],
+        });
+      }
+    }
+    next(error);
   }
 }
