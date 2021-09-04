@@ -5,9 +5,6 @@ const Schema = Yup.object().shape({
   name: Yup.string()
     .required()
     .label(intl.get('organization_name_')),
-  financial_date_start: Yup.date()
-    .required()
-    .label(intl.get('date_start_')),
   industry: Yup.string()
     .nullable()
     .label(intl.get('organization_industry_')),
@@ -23,7 +20,7 @@ const Schema = Yup.object().shape({
   language: Yup.string()
     .required()
     .label(intl.get('language')),
-  time_zone: Yup.string()
+  timezone: Yup.string()
     .required()
     .label(intl.get('time_zone_')),
   date_format: Yup.string()

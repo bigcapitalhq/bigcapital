@@ -1,7 +1,11 @@
 import React, { createContext } from 'react';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
-import { useSaveSettings, useSettings } from 'hooks/query';
+import {
+  useCurrentOrganization,
+  useUpdateOrganization,
+  useDateFormats,
+} from 'hooks/query';
 import PreferencesPageLoader from '../PreferencesPageLoader';
 
 const GeneralFormContext = createContext();
@@ -10,19 +14,24 @@ const GeneralFormContext = createContext();
  * General form provider.
  */
 function GeneralFormProvider({ ...props }) {
-  // Fetches Organization Settings.
-  const { isLoading: isSettingsLoading } = useSettings();
+  // Fetches current organization information.
+  const { isLoading: isOrganizationLoading, data: organization } =
+    useCurrentOrganization();
 
-  // Save Organization Settings.
-  const { mutateAsync: saveSettingMutate } = useSaveSettings();
+  const { data: dateFormats, isLoading: isDateFormatsLoading } =
+    useDateFormats();
+
+  // Mutate organization information.
+  const { mutateAsync: updateOrganization } = useUpdateOrganization();
 
   // Provider state.
   const provider = {
-    isSettingsLoading,
-    saveSettingMutate,
+    isOrganizationLoading,
+    isDateFormatsLoading,
+    updateOrganization,
+    organization,
+    dateFormats,
   };
-
-  const loading = isSettingsLoading;
 
   return (
     <div
@@ -32,7 +41,7 @@ function GeneralFormProvider({ ...props }) {
       )}
     >
       <div className={classNames(CLASSES.CARD)}>
-        {loading ? (
+        {isOrganizationLoading || isDateFormatsLoading ? (
           <PreferencesPageLoader />
         ) : (
           <GeneralFormContext.Provider value={provider} {...props} />

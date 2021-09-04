@@ -14,7 +14,7 @@ import { getSetupOrganizationValidation } from './SetupOrganization.schema';
 
 // Initial values.
 const defaultValues = {
-  organizationName: '',
+  name: '',
   location: 'libya',
   baseCurrency: '',
   language: 'en',

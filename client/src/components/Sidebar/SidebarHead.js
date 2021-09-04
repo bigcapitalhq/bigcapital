@@ -2,8 +2,8 @@ import React from 'react';
 import { Button, Popover, Menu, Position } from '@blueprintjs/core';
 import Icon from 'components/Icon';
 import { useAuthUser } from 'hooks/state';
-import withSettings from 'containers/Settings/withSettings';
 import { compose, firstLettersArgs } from 'utils';
+import withCurrentOrganization from '../../containers/Organization/withCurrentOrganization';
 
 // Popover modifiers.
 const POPOVER_MODIFIERS = {
@@ -14,8 +14,8 @@ const POPOVER_MODIFIERS = {
  * Sideabr head.
  */
 function SidebarHead({
-  // #withSettings
-  organizationName,
+  // #withCurrentOrganization
+  organization,
 }) {
   const user = useAuthUser();
 
@@ -29,9 +29,9 @@ function SidebarHead({
             <Menu className={'menu--dashboard-organization'}>
               <div class="org-item">
                 <div class="org-item__logo">
-                  {firstLettersArgs(...organizationName.split(' '))}{' '}
+                  {firstLettersArgs(...(organization.name || '').split(' '))}{' '}
                 </div>
-                <div class="org-item__name">{organizationName}</div>
+                <div class="org-item__name">{organization.name}</div>
               </div>
             </Menu>
           }
@@ -42,7 +42,7 @@ function SidebarHead({
             className="title"
             rightIcon={<Icon icon={'caret-down-16'} size={16} />}
           >
-            {organizationName}
+            {organization.name}
           </Button>
         </Popover>
         <span class="subtitle">{user.full_name}</span>
@@ -61,7 +61,5 @@ function SidebarHead({
 }
 
 export default compose(
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings.name,
-  })),
+  withCurrentOrganization(({ organization }) => ({ organization })),
 )(SidebarHead);

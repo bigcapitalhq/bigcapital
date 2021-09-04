@@ -1,42 +1,35 @@
 import { Form } from 'formik';
 import React from 'react';
-import {
-  Button,
-  FormGroup,
-  InputGroup,
-  Intent,
-  Position,
-} from '@blueprintjs/core';
+import { Button, FormGroup, InputGroup, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { ErrorMessage, FastField } from 'formik';
-import { DateInput } from '@blueprintjs/datetime';
 import { useHistory } from 'react-router-dom';
 
 import { FormattedMessage as T } from 'components';
 import { ListSelect, FieldRequiredHint } from 'components';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from 'utils';
+import { inputIntent } from 'utils';
 import { CLASSES } from 'common/classes';
 import { getCountries } from 'common/countries';
-import { getCurrencies } from 'common/currencies';
+import { getAllCurrenciesOptions } from 'common/currencies';
 import { getFiscalYear } from 'common/fiscalYearOptions';
 import { getLanguages } from 'common/languagesOptions';
-import { getDateFormats } from 'common/dateFormatsOptions';
+import { useGeneralFormContext } from './GeneralFormProvider';
 
-export default function PreferencesGeneralForm({}) {
+/**
+ * Preferences general form.
+ */
+export default function PreferencesGeneralForm({ isSubmitting }) {
   const history = useHistory();
 
   const FiscalYear = getFiscalYear();
   const Countries = getCountries();
   const Languages = getLanguages();
-  const Currencies = getCurrencies();
-  const DataFormats = getDateFormats();
+  const Currencies = getAllCurrenciesOptions();
 
+  const { dateFormats } = useGeneralFormContext();
+
+  // Handle close click.
   const handleCloseClick = () => {
     history.go(-1);
   };
@@ -59,29 +52,7 @@ export default function PreferencesGeneralForm({}) {
         )}
       </FastField>
 
-      {/* ---------- Financial starting date ----------  */}
-      <FastField name={'financial_date_start'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'financial_starting_date'} />}
-            labelInfo={<FieldRequiredHint />}
-            inline={true}
-            intent={inputIntent({ error, touched })}
-            className={classNames('form-group--select-list', CLASSES.FILL)}
-            helperText={<T id={'for_reporting_you_can_specify_any_month'} />}
-          >
-            <DateInput
-              {...momentFormatter('MMMM Do YYYY')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('financial_date_start', formattedDate);
-              })}
-              popoverProps={{ position: Position.BOTTOM, minimal: true }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
-
+      {/* ---------- Industry ----------  */}
       <FastField name={'industry'}>
         {({ field, meta: { error, touched } }) => (
           <FormGroup
@@ -147,10 +118,10 @@ export default function PreferencesGeneralForm({}) {
                 form.setFieldValue('base_currency', currency.code);
               }}
               selectedItem={value}
-              selectedItemProp={'code'}
+              selectedItemProp={'key'}
               defaultText={<T id={'select_base_currency'} />}
               textProp={'name'}
-              labelProp={'code'}
+              labelProp={'key'}
               popoverProps={{ minimal: true }}
             />
           </FormGroup>
@@ -165,8 +136,8 @@ export default function PreferencesGeneralForm({}) {
             labelInfo={<FieldRequiredHint />}
             className={classNames('form-group--fiscal-year', CLASSES.FILL)}
             inline={true}
-            helperText={<ErrorMessage name="fiscal_year" />}
             intent={inputIntent({ error, touched })}
+            helperText={<T id={'for_reporting_you_can_specify_any_month'} />}
           >
             <ListSelect
               items={FiscalYear}
@@ -174,7 +145,7 @@ export default function PreferencesGeneralForm({}) {
                 form.setFieldValue('fiscal_year', value)
               }
               selectedItem={value}
-              selectedItemProp={'value'}
+              selectedItemProp={'key'}
               defaultText={<T id={'select_fiscal_year'} />}
               textProp={'name'}
               popoverProps={{ minimal: true }}
@@ -210,7 +181,7 @@ export default function PreferencesGeneralForm({}) {
       </FastField>
 
       {/* ----------  Time zone ----------  */}
-      <FastField name={'time_zone'}>
+      <FastField name={'timezone'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'time_zone'} />}
@@ -222,12 +193,12 @@ export default function PreferencesGeneralForm({}) {
               CLASSES.FILL,
             )}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="time_zone" />}
+            helperText={<ErrorMessage name="timezone" />}
           >
             <TimezonePicker
               value={value}
               onChange={(timezone) => {
-                form.setFieldValue('time_zone', timezone);
+                form.setFieldValue('timezone', timezone);
               }}
               valueDisplayFormat="composite"
               placeholder={<T id={'select_time_zone'} />}
@@ -248,15 +219,14 @@ export default function PreferencesGeneralForm({}) {
             helperText={<ErrorMessage name="date_format" />}
           >
             <ListSelect
-              items={DataFormats}
+              items={dateFormats}
               onItemSelect={(dateFormat) => {
-                form.setFieldValue('date_format', dateFormat.value);
+                form.setFieldValue('date_format', dateFormat.key);
               }}
               selectedItem={value}
-              selectedItemProp={'value'}
+              selectedItemProp={'key'}
               defaultText={<T id={'select_date_format'} />}
-              textProp={'name'}
-              labelProp={'label'}
+              textProp={'label'}
               popoverProps={{ minimal: true }}
             />
           </FormGroup>
@@ -264,7 +234,7 @@ export default function PreferencesGeneralForm({}) {
       </FastField>
 
       <div className={'card__footer'}>
-        <Button intent={Intent.PRIMARY} type="submit">
+        <Button loading={isSubmitting} intent={Intent.PRIMARY} type="submit">
           <T id={'save'} />
         </Button>
         <Button onClick={handleCloseClick}>

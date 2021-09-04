@@ -3,8 +3,9 @@ exports.up = function (knex) {
     table.bigIncrements();
     table.integer('tenant_id').unsigned();
 
-    table.string('organization_name');
+    table.string('name');
     table.string('industry');
+    table.string('location');
 
     table.string('base_currency');
     table.string('language');
@@ -13,7 +14,6 @@ exports.up = function (knex) {
     table.string('date_format');
 
     table.string('fiscal_year');
-    table.string('financial_start_date');
   });
 };
 

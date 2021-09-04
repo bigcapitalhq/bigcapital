@@ -1,53 +1,53 @@
 import React, { useEffect } from 'react';
 import { Formik } from 'formik';
-import { mapKeys, snakeCase } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+
+import 'style/pages/Preferences/GeneralForm.scss';
 
 import { AppToaster } from 'components';
 import GeneralForm from './GeneralForm';
 import { PreferencesGeneralSchema } from './General.schema';
 import { useGeneralFormContext } from './GeneralFormProvider';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withSettings from 'containers/Settings/withSettings';
 
-import { compose, optionsMapToArray } from 'utils';
+import { compose } from 'utils';
+import { transformToForm } from '../../../utils';
 
-import 'style/pages/Preferences/GeneralForm.scss';
+const defaultValues = {
+  name: '',
+  industry: '',
+  location: '',
+  base_currency: '',
+  language: '',
+  fiscal_year: '',
+  date_format: '',
+  timezone: '',
+};
 
 /**
  * Preferences - General form Page.
  */
 function GeneralFormPage({
-  // #withSettings
-  organizationSettings,
-
-  //# withDashboardActions
+  // #withDashboardActions
   changePreferencesPageTitle,
 }) {
-  
-  const { saveSettingMutate } = useGeneralFormContext();
+  const { updateOrganization, organization } = useGeneralFormContext();
 
   useEffect(() => {
     changePreferencesPageTitle(intl.get('general'));
   }, [changePreferencesPageTitle]);
 
-  function transformGeneralSettings(data) {
-    return mapKeys(data, (value, key) => snakeCase(key));
-  }
-
+  // Initial values.
   const initialValues = {
-    ...transformGeneralSettings(organizationSettings),
+    ...transformToForm(organization.metadata, defaultValues),
   };
 
   const handleFormSubmit = (values, { setSubmitting, resetForm }) => {
-    const options = optionsMapToArray(values).map((option) => {
-      return { key: option.key, ...option, group: 'organization' };
-    });
     // Handle request success.
     const onSuccess = (response) => {
       AppToaster.show({
-        message: 'The general preferences has been saved.',
+        message: intl.get('preferences.general.success_message'),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
@@ -57,7 +57,9 @@ function GeneralFormPage({
     const onError = (errors) => {
       setSubmitting(false);
     };
-    saveSettingMutate({ options }).then(onSuccess).catch(onError);
+    updateOrganization({ ...values })
+      .then(onSuccess)
+      .catch(onError);
   };
 
   return (
@@ -70,7 +72,4 @@ function GeneralFormPage({
   );
 }
 
-export default compose(
-  withSettings(({ organizationSettings }) => ({ organizationSettings })),
-  withDashboardActions,
-)(GeneralFormPage);
+export default compose(withDashboardActions)(GeneralFormPage);

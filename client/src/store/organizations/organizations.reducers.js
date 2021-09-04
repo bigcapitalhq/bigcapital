@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { omit } from 'lodash';
 import t from 'store/types';
 
 const initialState = {
@@ -16,7 +17,8 @@ const reducer = createReducer(initialState, {
     organizations.forEach((organization) => {
       _data[organization.id] = {
         ...state.data[organization.id],
-        ...organization,
+        ...organization.metadata,
+        ...omit(organization, ['metadata']),
       };
       _dataByOrganizationId[organization.organization_id] = organization.id;
     });

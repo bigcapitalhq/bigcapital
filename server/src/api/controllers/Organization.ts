@@ -13,8 +13,8 @@ import {
   ACCEPTED_CURRENCIES,
   MONTHS,
   ACCEPTED_LOCALES,
-  DATE_FORMATS,
 } from 'services/Organization/constants';
+import { DATE_FORMATS } from 'services/Miscellaneous/DateFormats/constants';
 
 import { ServiceError } from 'exceptions';
 import BaseController from 'api/controllers/BaseController';
@@ -64,7 +64,7 @@ export default class OrganizationController extends BaseController {
    */
   private get buildValidationSchema(): ValidationChain[] {
     return [
-      check('organization_name').exists().trim(),
+      check('name').exists().trim(),
       check('base_currency').exists().isIn(ACCEPTED_CURRENCIES),
       check('timezone').exists().isIn(moment.tz.names()),
       check('fiscal_year').exists().isIn(MONTHS),

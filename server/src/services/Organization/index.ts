@@ -1,4 +1,5 @@
 import { Service, Inject } from 'typedi';
+import { ObjectId } from 'mongodb';
 import { ServiceError } from 'exceptions';
 import {
   IOrganizationBuildDTO,
@@ -12,7 +13,6 @@ import {
 import events from 'subscribers/events';
 import TenantsManager from 'services/Tenancy/TenantsManager';
 import { Tenant } from 'system/models';
-import { ObjectId } from 'mongodb';
 
 const ERRORS = {
   TENANT_NOT_FOUND: 'tenant_not_found',
@@ -137,8 +137,8 @@ export default class OrganizationService {
 
   /**
    * Updates organization information.
-   * @param {ITenant} tenantId 
-   * @param {IOrganizationUpdateDTO} organizationDTO 
+   * @param {ITenant} tenantId
+   * @param {IOrganizationUpdateDTO} organizationDTO
    */
   public async updateOrganization(
     tenantId: number,

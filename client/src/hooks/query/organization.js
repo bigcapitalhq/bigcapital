@@ -72,3 +72,22 @@ export function useOrganizationSetup() {
     },
   );
 }
+
+/**
+ * Saves the settings.
+ */
+export function useUpdateOrganization(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (information) => apiRequest.put('organization', information),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(t.ORGANIZATION_CURRENT);
+        queryClient.invalidateQueries(t.ORGANIZATIONS);
+      },
+      ...props,
+    },
+  );
+}

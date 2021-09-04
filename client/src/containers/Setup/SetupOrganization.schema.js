@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 // Retrieve the setup organization form validation.
 export const getSetupOrganizationValidation = () =>
   Yup.object().shape({
-    organizationName: Yup.string()
+    name: Yup.string()
       .required()
       .label(intl.get('organization_name_')),
     location: Yup.string()

@@ -19,7 +19,6 @@ import { Icon, Hint, If } from 'components';
 import withUniversalSearchActions from 'containers/UniversalSearch/withUniversalSearchActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withDashboard from 'containers/Dashboard/withDashboard';
-import withSettings from 'containers/Settings/withSettings';
 
 import QuickNewDropdown from 'containers/QuickNewDropdown/QuickNewDropdown';
 import { compose } from 'utils';
@@ -75,9 +74,6 @@ function DashboardTopbar({
 
   // #withDashboard
   sidebarExpended,
-
-  // #withSettings
-  organizationName,
 
   // #withGlobalSearch
   openGlobalSearch,
@@ -189,9 +185,6 @@ export default compose(
     editViewId,
     sidebarExpended,
     pageHint,
-  })),
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings.name,
   })),
   withDashboardActions,
   withSubscriptions(

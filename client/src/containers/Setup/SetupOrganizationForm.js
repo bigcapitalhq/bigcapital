@@ -36,13 +36,13 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       </h3>
 
       {/* ---------- Organization name ----------  */}
-      <FastField name={'organizationName'}>
+      <FastField name={'name'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'legal_organization_name'} />}
             className={'form-group--name'}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'organizationName'} />}
+            helperText={<ErrorMessage name={'name'} />}
           >
             <InputGroup {...field} intent={inputIntent({ error, touched })} />
           </FormGroup>

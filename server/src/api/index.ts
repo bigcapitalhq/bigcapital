@@ -42,6 +42,7 @@ import Licenses from 'api/controllers/Subscription/Licenses';
 import InventoryAdjustments from 'api/controllers/Inventory/InventoryAdjustments';
 import asyncRenderMiddleware from './middleware/AsyncRenderMiddleware';
 import Jobs from './controllers/Jobs';
+import Miscellaneous from 'api/controllers/Miscellaneous';
 
 export default () => {
   const app = Router();
@@ -94,6 +95,8 @@ export default () => {
   dashboard.use('/exchange_rates', Container.get(ExchangeRates).router());
   dashboard.use('/media', Container.get(Media).router());
   dashboard.use('/inventory_adjustments', Container.get(InventoryAdjustments).router());
+
+  dashboard.use('/', Container.get(Miscellaneous).router());
 
   app.use('/', dashboard);
 
