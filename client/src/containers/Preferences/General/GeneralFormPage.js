@@ -51,7 +51,6 @@ function GeneralFormPage({
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
-      resetForm();
     };
     // Handle request error.
     const onError = (errors) => {

@@ -76,6 +76,10 @@ function AccountsDataTable({
       accountType: account.account_type,
     });
   };
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('account-drawer', { accountId: cell.row.original.id });
+  };
 
   return (
     <DataTable
@@ -103,6 +107,7 @@ function AccountsDataTable({
       // #TableVirtualizedListRows props.
       vListrowHeight={42}
       vListOverscanRowCount={0}
+      onCellClick={handleCellClick}
       payload={{
         onEdit: handleEditAccount,
         onDelete: handleDeleteAccount,

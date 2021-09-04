@@ -56,6 +56,7 @@ export const useAccountsTableColumns = () => {
         accessor: 'name',
         className: 'account_name',
         width: 200,
+        clickable: true,
       },
       {
         id: 'code',
@@ -63,6 +64,7 @@ export const useAccountsTableColumns = () => {
         accessor: AccountCodeAccessor,
         className: 'code',
         width: 80,
+        clickable: true,
       },
       {
         id: 'type',
@@ -70,6 +72,7 @@ export const useAccountsTableColumns = () => {
         accessor: 'account_type_label',
         className: 'type',
         width: 140,
+        clickable: true,
       },
       {
         id: 'normal',
@@ -78,12 +81,14 @@ export const useAccountsTableColumns = () => {
         accessor: 'account_normal',
         className: 'normal',
         width: 80,
+        clickable: true,
       },
       {
         id: 'currency',
         Header: intl.get('currency'),
         accessor: 'currency_code',
         width: 75,
+        clickable: true,
       },
       {
         id: 'balance',
@@ -91,6 +96,7 @@ export const useAccountsTableColumns = () => {
         accessor: 'amount',
         Cell: BalanceCell,
         width: 150,
+        clickable: true,
       },
     ],
     [],

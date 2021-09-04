@@ -73,6 +73,10 @@
         display: flex;
         flex: 1 0 auto;
       }
+
+      &:hover .td.clickable{
+        cursor: pointer;
+      }
     }
 
     .th,
@@ -108,10 +112,6 @@
         z-index: 1;
         touch-action: none;
 
-        &.isResizing {
-          // background: red;
-        }
-
         .inner-resizer {
           height: 100%;
           width: 1px;
@@ -125,12 +125,12 @@
       }
 
       .bp3-control.bp3-checkbox .bp3-control-indicator {
-        border: 2px solid #d7d7d7;
+        border: 1px solid #c2c2c2;
 
         &,
         &:hover {
-          height: 16px;
-          width: 16px;
+          height: 15px;
+          width: 15px;
         }
       }
 

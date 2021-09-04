@@ -4,16 +4,14 @@ import { If } from 'components';
 import { Skeleton } from 'components';
 import { useAppIntlContext } from 'components/AppIntlProvider';
 import TableContext from './TableContext';
+import { saveInvoke } from 'utils';
 import { isCellLoading } from './utils';
 
 /**
  * Table cell.
  */
-export default function TableCell({
-  cell,
-  row: { index: rowIndex, depth, getToggleRowExpandedProps, isExpanded },
-  index,
-}) {
+export default function TableCell({ cell, row, index }) {
+  const { index: rowIndex, depth, getToggleRowExpandedProps, isExpanded } = row;
   const {
     props: {
       expandToggleColumn,
@@ -21,6 +19,7 @@ export default function TableCell({
       expandable,
       cellsLoading,
       cellsLoadingCoords,
+      onCellClick,
     },
   } = useContext(TableContext);
 
@@ -49,13 +48,19 @@ export default function TableCell({
       </div>
     );
   }
+  // Handle cell click action.
+  const handleCellClick = (event) => {
+    saveInvoke(onCellClick, cell, event);
+  };
 
   return (
     <div
       {...cell.getCellProps({
         className: classNames(cell.column.className, 'td', {
           'is-text-overview': cell.column.textOverview,
+          'clickable': cell.column.clickable,
         }),
+        onClick: handleCellClick,
       })}
     >
       <div
