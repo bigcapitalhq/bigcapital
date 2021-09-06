@@ -12,7 +12,6 @@ import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
-import withSettings from 'containers/Settings/withSettings';
 import { usePaymentReceivesColumns, ActionsMenu } from './components';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
 
@@ -120,8 +119,5 @@ export default compose(
   withDrawerActions,
   withPaymentReceives(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
-  })),
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
   })),
 )(PaymentReceivesDataTable);

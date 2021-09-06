@@ -20,7 +20,7 @@ import VendorTabs from './VendorsTabs';
 import VendorFloatingActions from './VendorFloatingActions';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 import { useVendorFormContext } from './VendorFormProvider';
 import { compose, transformToForm } from 'utils';
@@ -67,8 +67,8 @@ function VendorForm({
   // #withDashboardActions
   changePageTitle,
 
-  // #withSettings
-  baseCurrency,
+  // #withCurrentOrganization
+  organization: { base_currency },
 }) {
   // Vendor form context.
   const {
@@ -93,11 +93,11 @@ function VendorForm({
   const initialValues = useMemo(
     () => ({
       ...defaultInitialValues,
-      currency_code: baseCurrency,
+      currency_code: base_currency,
       ...transformToForm(vendor, defaultInitialValues),
       ...transformToForm(contactDuplicate, defaultInitialValues),
     }),
-    [vendor, contactDuplicate, baseCurrency],
+    [vendor, contactDuplicate, base_currency],
   );
 
   // Handles the form submit.
@@ -169,7 +169,5 @@ function VendorForm({
 
 export default compose(
   withDashboardActions,
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
+  withCurrentOrganization(),
 )(VendorForm);

@@ -11,7 +11,6 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
-import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -28,9 +27,6 @@ function InvoicesDataTable({
 
   // #withInvoices
   invoicesTableState,
-
-  // #withSettings
-  baseCurrency,
 
   // #withAlertsActions
   openAlert,
@@ -136,7 +132,6 @@ function InvoicesDataTable({
         onQuick: handleQuickPaymentReceive,
         onViewDetails: handleViewDetailInvoice,
         onPrint: handlePrintInvoice,
-        baseCurrency,
       }}
     />
   );
@@ -149,7 +144,4 @@ export default compose(
   withDrawerActions,
   withDialogActions,
   withInvoices(({ invoicesTableState }) => ({ invoicesTableState })),
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
 )(InvoicesDataTable);

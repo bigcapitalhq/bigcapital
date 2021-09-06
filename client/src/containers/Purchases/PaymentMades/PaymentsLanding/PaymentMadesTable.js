@@ -10,7 +10,8 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import withPaymentMadeActions from './withPaymentMadeActions';
 import withPaymentMade from './withPaymentMade';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { usePaymentMadesTableColumns, ActionsMenu } from './components';
@@ -109,7 +110,5 @@ export default compose(
   withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
   withAlertsActions,
   withDrawerActions,
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
+  withCurrentOrganization(),
 )(PaymentMadesTable);

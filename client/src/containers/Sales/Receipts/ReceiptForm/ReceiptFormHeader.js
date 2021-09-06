@@ -7,7 +7,7 @@ import { CLASSES } from 'common/classes';
 import { PageFormBigNumber } from 'components';
 import ReceiptFormHeaderFields from './ReceiptFormHeaderFields';
 
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 import { getEntriesTotal } from 'containers/Entries/utils';
 import { compose } from 'redux';
@@ -18,8 +18,8 @@ import { compose } from 'redux';
 function ReceiptFormHeader({
   // #ownProps
   onReceiptNumberChanged,
-  // #withSettings
-  baseCurrency,
+  // #withCurrentOrganization
+  organization: { base_currency },
 }) {
   const { values } = useFormikContext();
 
@@ -37,14 +37,10 @@ function ReceiptFormHeader({
       <PageFormBigNumber
         label={intl.get('due_amount')}
         amount={totalDueAmount}
-        currencyCode={baseCurrency}
+        currencyCode={base_currency}
       />
     </div>
   );
 }
 
-export default compose(
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
-)(ReceiptFormHeader);
+export default compose(withCurrentOrganization())(ReceiptFormHeader);

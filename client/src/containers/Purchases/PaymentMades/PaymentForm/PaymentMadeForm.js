@@ -15,6 +15,8 @@ import PaymentMadeFormBody from './PaymentMadeFormBody';
 import { PaymentMadeInnerProvider } from './PaymentMadeInnerProvider';
 
 import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+
 import {
   EditPaymentMadeFormSchema,
   CreatePaymentMadeFormSchema,
@@ -29,7 +31,9 @@ import { defaultPaymentMade, transformToEditForm, ERRORS } from './utils';
 function PaymentMadeForm({
   // #withSettings
   preferredPaymentAccount,
-  baseCurrency,
+
+  // #withCurrentOrganization
+  organization: { base_currency },
 }) {
   const history = useHistory();
 
@@ -54,7 +58,7 @@ function PaymentMadeForm({
         : {
             ...defaultPaymentMade,
             payment_account_id: defaultTo(preferredPaymentAccount),
-            currency_code: baseCurrency,
+            currency_code: base_currency,
             entries: orderingLinesIndexes(defaultPaymentMade.entries),
           }),
     }),
@@ -156,10 +160,10 @@ function PaymentMadeForm({
 }
 
 export default compose(
-  withSettings(({ billPaymentSettings, organizationSettings }) => ({
+  withSettings(({ billPaymentSettings }) => ({
     paymentNextNumber: billPaymentSettings?.next_number,
     paymentNumberPrefix: billPaymentSettings?.number_prefix,
     preferredPaymentAccount: parseInt(billPaymentSettings?.withdrawalAccount),
-    baseCurrency: organizationSettings?.baseCurrency,
   })),
+  withCurrentOrganization(),
 )(PaymentMadeForm);

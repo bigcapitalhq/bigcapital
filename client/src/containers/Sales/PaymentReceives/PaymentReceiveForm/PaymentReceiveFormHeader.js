@@ -7,7 +7,7 @@ import { FormattedMessage as T } from 'components';
 
 import { CLASSES } from 'common/classes';
 import PaymentReceiveHeaderFields from './PaymentReceiveHeaderFields';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 import { compose } from 'utils';
 
@@ -15,8 +15,8 @@ import { compose } from 'utils';
  * Payment receive form header.
  */
 function PaymentReceiveFormHeader({
-  // #withSettings
-  baseCurrency,
+  // #withCurrentOrganization
+  organization: { base_currency },
 }) {
   // Formik form context.
   const { values } = useFormikContext();
@@ -38,7 +38,7 @@ function PaymentReceiveFormHeader({
               <T id={'amount_received'} />
             </span>
             <h1 class="big-amount__number">
-              <Money amount={paymentFullAmount} currency={baseCurrency} />
+              <Money amount={paymentFullAmount} currency={base_currency} />
             </h1>
           </div>
         </div>
@@ -47,8 +47,4 @@ function PaymentReceiveFormHeader({
   );
 }
 
-export default compose(
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
-)(PaymentReceiveFormHeader);
+export default compose(withCurrentOrganization())(PaymentReceiveFormHeader);

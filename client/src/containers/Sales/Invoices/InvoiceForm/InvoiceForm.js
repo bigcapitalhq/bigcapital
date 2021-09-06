@@ -20,6 +20,7 @@ import InvoiceFormDialogs from './InvoiceFormDialogs';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 import { AppToaster } from 'components';
 import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
@@ -34,7 +35,9 @@ function InvoiceForm({
   invoiceNextNumber,
   invoiceNumberPrefix,
   invoiceIncrementMode,
-  baseCurrency,
+
+  // #withCurrentOrganization
+  organization: { base_currency },
 }) {
   const history = useHistory();
 
@@ -58,7 +61,7 @@ function InvoiceForm({
   const initialValues = useMemo(
     () => ({
       ...(!isEmpty(invoice)
-        ? { ...transformToEditForm(invoice), currency_code: baseCurrency }
+        ? { ...transformToEditForm(invoice), currency_code: base_currency }
         : {
             ...defaultInvoice,
             ...(invoiceIncrementMode && {
@@ -66,7 +69,7 @@ function InvoiceForm({
             }),
             entries: orderingLinesIndexes(defaultInvoice.entries),
             ...newInvoice,
-            currency_code: baseCurrency,
+            currency_code: base_currency,
           }),
     }),
     [invoice, newInvoice, invoiceNumber, invoiceIncrementMode],
@@ -171,10 +174,10 @@ function InvoiceForm({
 export default compose(
   withDashboardActions,
   withMediaActions,
-  withSettings(({ invoiceSettings, organizationSettings }) => ({
+  withSettings(({ invoiceSettings }) => ({
     invoiceNextNumber: invoiceSettings?.nextNumber,
     invoiceNumberPrefix: invoiceSettings?.numberPrefix,
     invoiceIncrementMode: invoiceSettings?.incrementMode,
-    baseCurrency: organizationSettings?.baseCurrency,
   })),
+  withCurrentOrganization(),
 )(InvoiceForm);

@@ -10,7 +10,6 @@ import { useAccountDrawerContext } from './AccountDrawerProvider';
  */
 export default function AccountDrawerHeader() {
   const { account } = useAccountDrawerContext();
-
   return (
     <div className={'account-drawer__content-header'}>
       <DetailsMenu>
@@ -18,9 +17,7 @@ export default function AccountDrawerHeader() {
           name={'closing-balance'}
           label={<T id={'closing_balance'} />}
         >
-          <h3 class={'big-number'}>
-            <Money amount={account.amount} currency={account.currency_code} />
-          </h3>
+          <h3 class={'big-number'}>{account.formatted_amount}</h3>
         </DetailItem>
 
         <DetailItem name={'account-type'} label={<T id={'account_type'} />}>
@@ -50,7 +47,7 @@ export default function AccountDrawerHeader() {
         <DetailItem name={'description'} label={<T id={'description'} />}>
           {defaultTo(account.description, '--')}
         </DetailItem>
-      </DetailsMenu>    
+      </DetailsMenu>
     </div>
   );
 }

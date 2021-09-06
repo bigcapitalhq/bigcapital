@@ -20,14 +20,14 @@ import { ERROR } from 'common/errors';
 import { useBillFormContext } from './BillFormProvider';
 import { compose, orderingLinesIndexes, safeSumBy } from 'utils';
 import { defaultBill, transformToEditForm } from './utils';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 /**
  * Bill form.
  */
 function BillForm({
-  // #withSettings
-  baseCurrency,
+  // #withCurrentOrganization
+  organization: { base_currency },
 }) {
   const history = useHistory();
 
@@ -41,14 +41,14 @@ function BillForm({
       ...(!isEmpty(bill)
         ? {
             ...transformToEditForm(bill),
-            currency_code: baseCurrency,
+            currency_code: base_currency,
           }
         : {
             ...defaultBill,
-            currency_code: baseCurrency,
+            currency_code: base_currency,
           }),
     }),
-    [bill, baseCurrency],
+    [bill, base_currency],
   );
 
   // Transform response error to fields.
@@ -142,8 +142,4 @@ function BillForm({
     </div>
   );
 }
-export default compose(
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
-)(BillForm);
+export default compose(withCurrentOrganization())(BillForm);

@@ -19,7 +19,7 @@ import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 
 import { useItemFormContext } from './ItemFormProvider';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 import { ACCOUNT_PARENT_TYPE } from 'common/accountTypes';
 
 import { compose, inputIntent } from 'utils';
@@ -35,7 +35,7 @@ import {
 /**
  * Item form body.
  */
-function ItemFormBody({ baseCurrency }) {
+function ItemFormBody({ organization: { base_currency } }) {
   const { accounts } = useItemFormContext();
   const { values } = useFormikContext();
 
@@ -76,7 +76,7 @@ function ItemFormBody({ baseCurrency }) {
                 inline={true}
               >
                 <ControlGroup>
-                  <InputPrependText text={baseCurrency} />
+                  <InputPrependText text={base_currency} />
                   <MoneyInputGroup
                     value={value}
                     inputGroupProps={{ fill: true }}
@@ -182,7 +182,7 @@ function ItemFormBody({ baseCurrency }) {
                 inline={true}
               >
                 <ControlGroup>
-                  <InputPrependText text={baseCurrency} />
+                  <InputPrependText text={base_currency} />
                   <MoneyInputGroup
                     value={value}
                     inputGroupProps={{ medium: true }}
@@ -259,8 +259,4 @@ function ItemFormBody({ baseCurrency }) {
   );
 }
 
-export default compose(
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
-)(ItemFormBody);
+export default compose(withCurrentOrganization())(ItemFormBody);

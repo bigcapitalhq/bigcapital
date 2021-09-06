@@ -18,6 +18,8 @@ import PaymentReceiveFormDialogs from './PaymentReceiveFormDialogs';
 import { PaymentReceiveInnerProvider } from './PaymentReceiveInnerProvider';
 
 import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+
 import {
   EditPaymentReceiveFormSchema,
   CreatePaymentReceiveFormSchema,
@@ -37,7 +39,9 @@ function PaymentReceiveForm({
   paymentReceiveNextNumber,
   paymentReceiveNumberPrefix,
   paymentReceiveAutoIncrement,
-  baseCurrency,
+
+  // #withCurrentOrganization
+  organization: { base_currency },
 }) {
   const history = useHistory();
 
@@ -68,7 +72,7 @@ function PaymentReceiveForm({
               payment_receive_no: nextPaymentNumber,
               deposit_account_id: defaultTo(preferredDepositAccount, ''),
             }),
-            currency_code: baseCurrency,
+            currency_code: base_currency,
           }),
     }),
     [
@@ -198,12 +202,12 @@ function PaymentReceiveForm({
 }
 
 export default compose(
-  withSettings(({ paymentReceiveSettings, organizationSettings }) => ({
+  withSettings(({ paymentReceiveSettings }) => ({
     paymentReceiveSettings,
     paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
     paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
     paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
     preferredDepositAccount: paymentReceiveSettings?.depositAccount,
-    baseCurrency: organizationSettings?.baseCurrency,
   })),
+  withCurrentOrganization(),
 )(PaymentReceiveForm);

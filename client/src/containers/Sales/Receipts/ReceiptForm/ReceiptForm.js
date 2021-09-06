@@ -23,6 +23,7 @@ import ReceiptFormDialogs from './ReceiptFormDialogs';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 import { AppToaster } from 'components';
 import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
@@ -37,7 +38,9 @@ function ReceiptForm({
   receiptNumberPrefix,
   receiptAutoIncrement,
   preferredDepositAccount,
-  baseCurrency,
+
+  // #withCurrentOrganization
+  organization: { base_currency },
 }) {
   const history = useHistory();
 
@@ -59,7 +62,7 @@ function ReceiptForm({
   const initialValues = useMemo(
     () => ({
       ...(!isEmpty(receipt)
-        ? { ...transformToEditForm(receipt), currency_code: baseCurrency }
+        ? { ...transformToEditForm(receipt), currency_code: base_currency }
         : {
             ...defaultReceipt,
             ...(receiptAutoIncrement && {
@@ -67,7 +70,7 @@ function ReceiptForm({
             }),
             deposit_account_id: parseInt(preferredDepositAccount),
             entries: orderingLinesIndexes(defaultReceipt.entries),
-            currency_code: baseCurrency,
+            currency_code: base_currency,
           }),
     }),
     [receipt, preferredDepositAccount, nextReceiptNumber, receiptAutoIncrement],
@@ -104,7 +107,7 @@ function ReceiptForm({
       ...omit(values, ['receipt_number_manually', 'receipt_number']),
       ...(values.receipt_number_manually && {
         receipt_number: values.receipt_number,
-        currency_code: baseCurrency,
+        currency_code: base_currency,
       }),
       closed: submitPayload.status,
       entries: entries.map((entry) => ({ ...omit(entry, ['total']) })),
@@ -178,11 +181,11 @@ function ReceiptForm({
 
 export default compose(
   withDashboardActions,
-  withSettings(({ receiptSettings, organizationSettings }) => ({
+  withSettings(({ receiptSettings }) => ({
     receiptNextNumber: receiptSettings?.nextNumber,
     receiptNumberPrefix: receiptSettings?.numberPrefix,
     receiptAutoIncrement: receiptSettings?.autoIncrement,
     preferredDepositAccount: receiptSettings?.preferredDepositAccount,
-    baseCurrency: organizationSettings?.baseCurrency,
   })),
+  withCurrentOrganization(),
 )(ReceiptForm);

@@ -23,7 +23,7 @@ import {
   Icon,
   MoneyInputGroup,
 } from 'components';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
 import {
@@ -41,7 +41,7 @@ import { accountsFieldShouldUpdate, vendorsFieldShouldUpdate } from './utils';
 /**
  * Payment made form header fields.
  */
-function PaymentMadeFormHeaderFields({ baseCurrency }) {
+function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
   // Formik form context.
   const {
     values: { entries },
@@ -143,7 +143,7 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
             helperText={<ErrorMessage name="full_amount" />}
           >
             <ControlGroup>
-              <InputPrependText text={baseCurrency} />
+              <InputPrependText text={base_currency} />
               <MoneyInputGroup
                 value={value}
                 onChange={(value) => {
@@ -160,7 +160,7 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
               minimal={true}
             >
               <T id={'receive_full_amount'} /> (
-              <Money amount={payableFullAmount} currency={baseCurrency} />)
+              <Money amount={payableFullAmount} currency={base_currency} />)
             </Button>
           </FormGroup>
         )}
@@ -244,8 +244,4 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
   );
 }
 
-export default compose(
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
-)(PaymentMadeFormHeaderFields);
+export default compose(withCurrentOrganization())(PaymentMadeFormHeaderFields);

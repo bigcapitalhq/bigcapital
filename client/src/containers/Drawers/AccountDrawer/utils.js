@@ -9,9 +9,10 @@ import { isBlank } from 'utils';
  * Debit/credit table cell.
  */
 function DebitCreditTableCell({ value, payload: { account } }) {
-  return !isBlank(value) && value !== 0 ? (
-    <Money amount={value} currency={account.currency_code} />
-  ) : null;
+  return !isBlank(value) && value !== 0
+    ? // <Money amount={value} currency={account.currency_code} />
+      account.formatted_amount
+    : null;
 }
 
 /**
@@ -19,7 +20,8 @@ function DebitCreditTableCell({ value, payload: { account } }) {
  */
 function RunningBalanceTableCell({ value, payload: { account } }) {
   return (
-    <Money amount={value} currency={account.currency_code} />
+    // <Money amount={value} currency={account.currency_code} />
+    account.formatted_amount
   );
 }
 

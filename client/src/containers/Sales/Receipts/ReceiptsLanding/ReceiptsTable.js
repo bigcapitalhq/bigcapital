@@ -13,7 +13,6 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withReceipts from './withReceipts';
 import withReceiptsActions from './withReceiptsActions';
-import withSettings from 'containers/Settings/withSettings';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useReceiptsTableColumns, ActionsMenu } from './components';
@@ -27,9 +26,6 @@ function ReceiptsDataTable({
 
   // #withReceipts
   receiptTableState,
-
-  // #withSettings
-  baseCurrency,
 
   // #withAlertsActions
   openAlert,
@@ -128,7 +124,6 @@ function ReceiptsDataTable({
         onDrawer: handleDrawerReceipt,
         onViewDetails: handleViewDetailReceipt,
         onPrint: handlePrintInvoice,
-        baseCurrency,
       }}
     />
   );
@@ -141,8 +136,5 @@ export default compose(
   withDialogActions,
   withReceipts(({ receiptTableState }) => ({
     receiptTableState,
-  })),
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
   })),
 )(ReceiptsDataTable);

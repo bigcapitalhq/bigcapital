@@ -18,6 +18,7 @@ import { useExpenseFormContext } from './ExpenseFormPageProvider';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 import AppToaster from 'components/AppToaster';
 import {
@@ -32,8 +33,9 @@ import { compose, orderingLinesIndexes } from 'utils';
  */
 function ExpenseForm({
   // #withSettings
-  baseCurrency,
   preferredPaymentAccount,
+  // #withCurrentOrganization
+  organization: { base_currency },
 }) {
   // Expense form context.
   const {
@@ -58,11 +60,11 @@ function ExpenseForm({
           }
         : {
             ...defaultExpense,
-            currency_code: baseCurrency,
+            currency_code: base_currency,
             payment_account_id: defaultTo(preferredPaymentAccount, ''),
           }),
     }),
-    [expense, baseCurrency, preferredPaymentAccount],
+    [expense, base_currency, preferredPaymentAccount],
   );
 
   //  Handle form submit.
@@ -79,16 +81,13 @@ function ExpenseForm({
     }
     // Filter expense entries that has no amount or expense account.
     const categories = values.categories.filter(
-      (category) =>
-        category.amount && category.expense_account_id,
+      (category) => category.amount && category.expense_account_id,
     );
 
     const form = {
       ...values,
       publish: submitPayload.publish,
-      categories: R.compose(
-        orderingLinesIndexes,
-      )(categories),
+      categories: R.compose(orderingLinesIndexes)(categories),
     };
     // Handle request success.
     const handleSuccess = (response) => {
@@ -158,11 +157,11 @@ function ExpenseForm({
 export default compose(
   withDashboardActions,
   withMediaActions,
-  withSettings(({ organizationSettings, expenseSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
+  withSettings(({ expenseSettings }) => ({
     preferredPaymentAccount: parseInt(
       expenseSettings?.preferredPaymentAccount,
       10,
     ),
   })),
+  withCurrentOrganization(),
 )(ExpenseForm);

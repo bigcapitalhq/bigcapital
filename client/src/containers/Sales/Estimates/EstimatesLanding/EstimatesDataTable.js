@@ -9,7 +9,6 @@ import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import withEstimatesActions from './withEstimatesActions';
-import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -146,7 +145,4 @@ export default compose(
   withAlertsActions,
   withDrawerActions,
   withDialogActions,
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
 )(EstimatesDataTable);
