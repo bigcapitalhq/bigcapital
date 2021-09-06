@@ -117,6 +117,7 @@ export function useVendorsTableColumns() {
         width: 45,
         disableResizing: true,
         disableSortBy: true,
+        clickable: true,
       },
       {
         id: 'display_name',
@@ -124,6 +125,7 @@ export function useVendorsTableColumns() {
         accessor: 'display_name',
         className: 'display_name',
         width: 150,
+        clickable: true,
       },
       {
         id: 'company_name',
@@ -131,6 +133,7 @@ export function useVendorsTableColumns() {
         accessor: 'company_name',
         className: 'company_name',
         width: 150,
+        clickable: true,
       },
       {
         id: 'work_phone',
@@ -138,6 +141,7 @@ export function useVendorsTableColumns() {
         accessor: PhoneNumberAccessor,
         className: 'work_phone',
         width: 100,
+        clickable: true,
       },
       {
         id: 'balance',
@@ -145,6 +149,7 @@ export function useVendorsTableColumns() {
         accessor: BalanceAccessor,
         className: 'receivable_balance',
         width: 100,
+        clickable: true,
       },
     ],
     [],

@@ -66,6 +66,13 @@ function PaymentReceivesDataTable({
     openDrawer('payment-receive-detail-drawer', { paymentReceiveId: id });
   };
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('payment-receive-detail-drawer', {
+      paymentReceiveId: cell.row.original.id,
+    });
+  };
+
   // Handle datatable fetch once the table's state changing.
   const handleDataTableFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
@@ -103,6 +110,7 @@ function PaymentReceivesDataTable({
       TableLoadingRenderer={TableSkeletonRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       ContextMenu={ActionsMenu}
+      onCellClick={handleCellClick}
       payload={{
         onDelete: handleDeletePaymentReceive,
         onEdit: handleEditPaymentReceive,

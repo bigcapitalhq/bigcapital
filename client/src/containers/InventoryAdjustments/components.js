@@ -143,6 +143,7 @@ export const useInventoryAdjustmentsColumns = () => {
         accessor: (r) => moment(r.date).format('YYYY MMM DD'),
         width: 115,
         className: 'date',
+        clickable: true,
       },
       {
         id: 'type',
@@ -150,6 +151,7 @@ export const useInventoryAdjustmentsColumns = () => {
         accessor: TypeAccessor,
         className: 'type',
         width: 100,
+        clickable: true,
       },
       {
         id: 'reason',
@@ -157,6 +159,7 @@ export const useInventoryAdjustmentsColumns = () => {
         accessor: 'reason',
         className: 'reason',
         width: 115,
+        clickable: true,
       },
       {
         id: 'reference_no',
@@ -164,6 +167,7 @@ export const useInventoryAdjustmentsColumns = () => {
         accessor: 'reference_no',
         className: 'reference_no',
         width: 100,
+        clickable: true,
       },
       {
         id: 'published_at',
@@ -171,6 +175,7 @@ export const useInventoryAdjustmentsColumns = () => {
         accessor: PublishAccessor,
         width: 95,
         className: 'publish',
+        clickable: true,
       },
       {
         id: 'description',
@@ -179,6 +184,7 @@ export const useInventoryAdjustmentsColumns = () => {
         disableSorting: true,
         width: 85,
         className: 'description',
+        clickable: true,
       },
       {
         id: 'created_at',
@@ -186,6 +192,7 @@ export const useInventoryAdjustmentsColumns = () => {
         accessor: (r) => moment(r.created_at).format('YYYY MMM DD'),
         width: 125,
         className: 'created_at',
+        clickable: true,
       },
     ],
     [],

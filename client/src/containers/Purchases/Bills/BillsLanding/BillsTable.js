@@ -86,6 +86,11 @@ function BillsDataTable({
     openDrawer('bill-drawer', { billId: id });
   };
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('bill-drawer', { billId: cell.row.original.id });
+  };
+
   if (isEmptyStatus) {
     return <BillsEmptyStatus />;
   }
@@ -108,6 +113,7 @@ function BillsDataTable({
       TableLoadingRenderer={TableSkeletonRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       ContextMenu={ActionsMenu}
+      onCellClick={handleCellClick}
       payload={{
         onDelete: handleDeleteBill,
         onEdit: handleEditBill,

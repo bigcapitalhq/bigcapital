@@ -174,6 +174,7 @@ export function useInvoicesTableColumns() {
         accessor: (r) => moment(r.invoice_date).format('YYYY MMM DD'),
         width: 110,
         className: 'invoice_date',
+        clickable: true,
       },
       {
         id: 'customer',
@@ -181,6 +182,7 @@ export function useInvoicesTableColumns() {
         accessor: 'customer.display_name',
         width: 180,
         className: 'customer_id',
+        clickable: true,
       },
 
       {
@@ -189,6 +191,7 @@ export function useInvoicesTableColumns() {
         accessor: 'invoice_no',
         width: 100,
         className: 'invoice_no',
+        clickable: true,
       },
       {
         id: 'balance',
@@ -198,6 +201,7 @@ export function useInvoicesTableColumns() {
         ),
         width: 120,
         className: 'balance',
+        clickable: true,
       },
       {
         id: 'status',
@@ -205,6 +209,7 @@ export function useInvoicesTableColumns() {
         accessor: (row) => statusAccessor(row),
         width: 160,
         className: 'status',
+        clickable: true,
       },
       {
         id: 'due_date',
@@ -212,6 +217,7 @@ export function useInvoicesTableColumns() {
         accessor: (r) => moment(r.due_date).format('YYYY MMM DD'),
         width: 110,
         className: 'due_date',
+        clickable: true,
       },
       {
         id: 'reference_no',
@@ -219,6 +225,7 @@ export function useInvoicesTableColumns() {
         accessor: 'reference_no',
         width: 90,
         className: 'reference_no',
+        clickable: true,
       },
     ],
     [],

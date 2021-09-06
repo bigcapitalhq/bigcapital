@@ -86,6 +86,10 @@ function InvoicesDataTable({
     openDialog('invoice-pdf-preview', { invoiceId: id });
   };
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('invoice-detail-drawer', { invoiceId: cell.row.original.id });
+  };
   // Handles fetch data once the table state change.
   const handleDataTableFetchData = useCallback(
     ({ pageSize, pageIndex, sortBy }) => {
@@ -124,6 +128,7 @@ function InvoicesDataTable({
       TableLoadingRenderer={TableSkeletonRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       ContextMenu={ActionsMenu}
+      onCellClick={handleCellClick}
       payload={{
         onDelete: handleDeleteInvoice,
         onDeliver: handleDeliverInvoice,

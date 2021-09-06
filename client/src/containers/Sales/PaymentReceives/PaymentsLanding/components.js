@@ -89,6 +89,7 @@ export function usePaymentReceivesColumns() {
         accessor: PaymentDateAccessor,
         width: 140,
         className: 'payment_date',
+        clickable: true,
       },
       {
         id: 'customer',
@@ -96,6 +97,7 @@ export function usePaymentReceivesColumns() {
         accessor: 'customer.display_name',
         width: 160,
         className: 'customer_id',
+        clickable: true,
       },
       {
         id: 'amount',
@@ -103,6 +105,7 @@ export function usePaymentReceivesColumns() {
         accessor: AmountAccessor,
         width: 120,
         className: 'amount',
+        clickable: true,
       },
       {
         id: 'payment_receive_no',
@@ -111,6 +114,7 @@ export function usePaymentReceivesColumns() {
           row.payment_receive_no ? `#${row.payment_receive_no}` : null,
         width: 140,
         className: 'payment_receive_no',
+        clickable: true,
       },
       {
         id: 'deposit_account',
@@ -118,6 +122,7 @@ export function usePaymentReceivesColumns() {
         accessor: 'deposit_account.name',
         width: 140,
         className: 'deposit_account_id',
+        clickable: true,
       },
       {
         id: 'reference_no',
@@ -125,6 +130,7 @@ export function usePaymentReceivesColumns() {
         accessor: 'reference_no',
         width: 140,
         className: 'reference_no',
+        clickable: true,
       },
     ],
     [],

@@ -78,6 +78,7 @@ export function usePaymentMadesTableColumns() {
         accessor: 'payment_date',
         width: 140,
         className: 'payment_date',
+        clickable: true,
       },
       {
         id: 'vendor',
@@ -85,6 +86,7 @@ export function usePaymentMadesTableColumns() {
         accessor: 'vendor.display_name',
         width: 140,
         className: 'vendor_id',
+        clickable: true,
       },
       {
         id: 'payment_number',
@@ -93,6 +95,7 @@ export function usePaymentMadesTableColumns() {
           row.payment_number ? `#${row.payment_number}` : null,
         width: 140,
         className: 'payment_number',
+        clickable: true,
       },
       {
         id: 'payment_account',
@@ -100,6 +103,7 @@ export function usePaymentMadesTableColumns() {
         accessor: 'payment_account.name',
         width: 140,
         className: 'payment_account_id',
+        clickable: true,
       },
       {
         id: 'amount',
@@ -107,6 +111,7 @@ export function usePaymentMadesTableColumns() {
         accessor: AmountAccessor,
         width: 140,
         className: 'amount',
+        clickable: true,
       },
       {
         id: 'reference_no',
@@ -114,6 +119,7 @@ export function usePaymentMadesTableColumns() {
         accessor: 'reference',
         width: 140,
         className: 'reference',
+        clickable: true,
       },
     ],
     [],

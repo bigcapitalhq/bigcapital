@@ -106,6 +106,7 @@ export function useReceiptsTableColumns() {
         accessor: (r) => moment(r.receipt_date).format('YYYY MMM DD'),
         width: 140,
         className: 'receipt_date',
+        clickable: true,
       },
       {
         id: 'customer',
@@ -113,6 +114,7 @@ export function useReceiptsTableColumns() {
         accessor: 'customer.display_name',
         width: 140,
         className: 'customer_id',
+        clickable: true,
       },
       {
         id: 'receipt_number',
@@ -120,6 +122,7 @@ export function useReceiptsTableColumns() {
         accessor: 'receipt_number',
         width: 140,
         className: 'receipt_number',
+        clickable: true,
       },
       {
         id: 'deposit_account',
@@ -127,6 +130,7 @@ export function useReceiptsTableColumns() {
         accessor: 'deposit_account.name',
         width: 140,
         className: 'deposit_account',
+        clickable: true,
       },
       {
         id: 'amount',
@@ -134,6 +138,7 @@ export function useReceiptsTableColumns() {
         accessor: (r) => <Money amount={r.amount} currency={r.currency_code} />,
         width: 140,
         className: 'amount',
+        clickable: true,
       },
       {
         id: 'status',
@@ -141,6 +146,7 @@ export function useReceiptsTableColumns() {
         accessor: StatusAccessor,
         width: 140,
         className: 'status',
+        clickable: true,
       },
       {
         id: 'reference_no',
@@ -148,6 +154,7 @@ export function useReceiptsTableColumns() {
         accessor: 'reference_no',
         width: 140,
         className: 'reference_no',
+        clickable: true,
       },
     ],
     [],

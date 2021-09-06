@@ -95,6 +95,11 @@ function CustomersTable({
     openDrawer('contact-detail-drawer', { contactId: id });
   };
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('contact-detail-drawer', { contactId: cell.row.original.id });
+  };
+
   if (isEmptyStatus) {
     return <CustomersEmptyStatus />;
   }
@@ -121,6 +126,7 @@ function CustomersTable({
       autoResetPage={false}
       TableLoadingRenderer={TableSkeletonRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      onCellClick={handleCellClick}
       payload={{
         onDelete: handleCustomerDelete,
         onEdit: handleCustomerEdit,

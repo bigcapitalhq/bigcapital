@@ -164,6 +164,7 @@ export function useEstiamtesTableColumns() {
         Cell: DateCell,
         width: 140,
         className: 'estimate_date',
+        clickable: true,
       },
       {
         id: 'customer',
@@ -171,6 +172,7 @@ export function useEstiamtesTableColumns() {
         accessor: 'customer.display_name',
         width: 140,
         className: 'customer_id',
+        clickable: true,
       },
       {
         id: 'expiration_date',
@@ -179,6 +181,7 @@ export function useEstiamtesTableColumns() {
         Cell: DateCell,
         width: 140,
         className: 'expiration_date',
+        clickable: true,
       },
       {
         id: 'estimate_number',
@@ -187,6 +190,7 @@ export function useEstiamtesTableColumns() {
           row.estimate_number ? `#${row.estimate_number}` : null,
         width: 140,
         className: 'estimate_number',
+        clickable: true,
       },
       {
         id: 'amount',
@@ -194,6 +198,7 @@ export function useEstiamtesTableColumns() {
         accessor: AmountAccessor,
         width: 140,
         className: 'amount',
+        clickable: true,
       },
       {
         id: 'status',
@@ -201,6 +206,7 @@ export function useEstiamtesTableColumns() {
         accessor: (row) => statusAccessor(row),
         width: 140,
         className: 'status',
+        clickable: true,
       },
       {
         id: 'reference_no',
@@ -208,6 +214,7 @@ export function useEstiamtesTableColumns() {
         accessor: 'reference',
         width: 90,
         className: 'reference',
+        clickable: true,
       },
     ],
     [],

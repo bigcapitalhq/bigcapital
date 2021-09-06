@@ -107,6 +107,11 @@ function ItemsDataTable({
     return <ItemsEmptyStatus />;
   }
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('item-detail-drawer', { itemId: cell.row.original.id });
+  };
+
   return (
     <DataTable
       columns={columns}
@@ -131,6 +136,7 @@ function ItemsDataTable({
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       ContextMenu={ItemsActionMenuList}
       onFetchData={handleFetchData}
+      onCellClick={handleCellClick}
       payload={{
         onDeleteItem: handleDeleteItem,
         onEditItem: handleEditItem,

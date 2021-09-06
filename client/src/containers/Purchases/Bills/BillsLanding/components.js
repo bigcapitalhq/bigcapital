@@ -159,6 +159,7 @@ export function useBillsTableColumns() {
         accessor: (r) => moment(r.bill_date).format('YYYY MMM DD'),
         width: 110,
         className: 'bill_date',
+        clickable: true,
       },
       {
         id: 'vendor',
@@ -166,6 +167,7 @@ export function useBillsTableColumns() {
         accessor: 'vendor.display_name',
         width: 180,
         className: 'vendor',
+        clickable: true,
       },
       {
         id: 'bill_number',
@@ -173,6 +175,7 @@ export function useBillsTableColumns() {
         accessor: (row) => (row.bill_number ? `#${row.bill_number}` : null),
         width: 100,
         className: 'bill_number',
+        clickable: true,
       },
       {
         id: 'amount',
@@ -180,6 +183,7 @@ export function useBillsTableColumns() {
         accessor: AmountAccessor,
         width: 120,
         className: 'amount',
+        clickable: true,
       },
       {
         id: 'status',
@@ -187,6 +191,7 @@ export function useBillsTableColumns() {
         accessor: StatusAccessor,
         width: 160,
         className: 'status',
+        clickable: true,
       },
       {
         id: 'due_date',
@@ -194,6 +199,7 @@ export function useBillsTableColumns() {
         accessor: (r) => moment(r.due_date).format('YYYY MMM DD'),
         width: 110,
         className: 'due_date',
+        clickable: true,
       },
       {
         id: 'reference_no',
@@ -201,6 +207,7 @@ export function useBillsTableColumns() {
         accessor: 'reference_no',
         width: 90,
         className: 'reference_no',
+        clickable: true,
       },
     ],
     [],

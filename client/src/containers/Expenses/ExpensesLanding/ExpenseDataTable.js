@@ -78,6 +78,11 @@ function ExpensesDataTable({
     });
   };
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('expense-drawer', { expenseId: cell.row.original.id });
+  };
+
   // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <ExpensesEmptyStatus />;
@@ -103,6 +108,7 @@ function ExpensesDataTable({
       TableLoadingRenderer={TableSkeletonRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       ContextMenu={ActionsMenu}
+      onCellClick={handleCellClick}
       payload={{
         onPublish: handlePublishExpense,
         onDelete: handleDeleteExpense,

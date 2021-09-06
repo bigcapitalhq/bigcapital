@@ -20,6 +20,7 @@ export const useManualJournalsColumns = () => {
         accessor: DateAccessor,
         width: 115,
         className: 'date',
+        clickable: true,
       },
       {
         id: 'amount',
@@ -27,6 +28,7 @@ export const useManualJournalsColumns = () => {
         accessor: 'formatted_amount',
         className: 'amount',
         width: 115,
+        clickable: true,
       },
       {
         id: 'journal_number',
@@ -34,6 +36,7 @@ export const useManualJournalsColumns = () => {
         accessor: (row) => `#${row.journal_number}`,
         className: 'journal_number',
         width: 100,
+        clickable: true,
       },
       {
         id: 'journal_type',
@@ -41,6 +44,7 @@ export const useManualJournalsColumns = () => {
         accessor: 'journal_type',
         width: 110,
         className: 'journal_type',
+        clickable: true,
       },
       {
         id: 'status',
@@ -48,6 +52,7 @@ export const useManualJournalsColumns = () => {
         accessor: (row) => StatusAccessor(row),
         width: 95,
         className: 'status',
+        clickable: true,
       },
       {
         id: 'note',
@@ -56,6 +61,7 @@ export const useManualJournalsColumns = () => {
         disableSortBy: true,
         width: 85,
         className: 'note',
+        clickable: true,
       },
       {
         id: 'created_at',
@@ -63,6 +69,7 @@ export const useManualJournalsColumns = () => {
         accessor: (r) => moment(r.created_at).format('YYYY MMM DD'),
         width: 125,
         className: 'created_at',
+        clickable: true,
       },
     ],
     [],

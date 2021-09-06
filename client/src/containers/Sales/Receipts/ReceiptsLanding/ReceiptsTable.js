@@ -95,6 +95,10 @@ function ReceiptsDataTable({
   if (isEmptyStatus) {
     return <ReceiptsEmptyStatus />;
   }
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('receipt-detail-drawer', { receiptId: cell.row.original.id });
+  };
 
   return (
     <DataTable
@@ -117,6 +121,7 @@ function ReceiptsDataTable({
       TableLoadingRenderer={TableSkeletonRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       ContextMenu={ActionsMenu}
+      onCellClick={handleCellClick}
       payload={{
         onEdit: handleEditReceipt,
         onDelete: handleDeleteReceipt,

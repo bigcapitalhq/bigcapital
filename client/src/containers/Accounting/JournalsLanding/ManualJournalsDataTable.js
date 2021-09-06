@@ -73,6 +73,11 @@ function ManualJournalsDataTable({
     });
   };
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('journal-drawer', { manualJournalId: cell.row.original.id });
+  };
+
   // Handle fetch data once the page index, size or sort by of the table change.
   const handleFetchData = React.useCallback(
     ({ pageSize, pageIndex, sortBy }) => {
@@ -111,6 +116,7 @@ function ManualJournalsDataTable({
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       ContextMenu={ActionsMenu}
       onFetchData={handleFetchData}
+      onCellClick={handleCellClick}
       payload={{
         onDelete: handleDeleteJournal,
         onPublish: handlePublishJournal,

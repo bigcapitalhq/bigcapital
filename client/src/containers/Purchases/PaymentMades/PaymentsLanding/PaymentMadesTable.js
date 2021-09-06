@@ -63,6 +63,13 @@ function PaymentMadesTable({
     openDrawer('payment-made-detail-drawer', { paymentMadeId: id });
   };
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('payment-made-detail-drawer', {
+      paymentMadeId: cell.row.original.id,
+    });
+  };
+
   // Handle datatable fetch data once the table state change.
   const handleDataTableFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
@@ -96,6 +103,7 @@ function PaymentMadesTable({
       TableLoadingRenderer={TableSkeletonRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       ContextMenu={ActionsMenu}
+      onCellClick={handleCellClick}
       payload={{
         onEdit: handleEditPaymentMade,
         onDelete: handleDeletePaymentMade,
