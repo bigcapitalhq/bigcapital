@@ -5,9 +5,12 @@ import {
   query,
   param,
 } from 'express-validator';
+import JWTAuth from 'api/middleware/jwtAuth';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import BaseController from 'api/controllers/BaseController';
 import UsersService from 'services/Users/UsersService';
+import TenancyMiddleware from 'api/middleware/TenancyMiddleware';
+import AttachCurrentTenantUser from 'api/middleware/AttachCurrentTenantUser';
 import { ServiceError, ServiceErrors } from 'exceptions';
 import { ISystemUserDTO } from 'interfaces';
 
@@ -21,6 +24,10 @@ export default class UsersController extends BaseController{
    */
   router() {
     const router = Router();
+
+    router.use(JWTAuth);
+    router.use(AttachCurrentTenantUser);
+    router.use(TenancyMiddleware);
 
     router.put('/:id/inactivate', [
         ...this.specificUserSchema,

@@ -60,6 +60,7 @@ export default () => {
   app.use('/organization', Container.get(Organization).router());
   app.use('/ping', Container.get(Ping).router());
   app.use('/jobs', Container.get(Jobs).router());
+  app.use('/users', Container.get(Users).router());
  
   // - Dashboard routes.
   // ---------------------------
@@ -74,7 +75,6 @@ export default () => {
   dashboard.use(I18nAuthenticatedMiddlware);
   dashboard.use(EnsureTenantIsSeeded);
 
-  dashboard.use('/users', Container.get(Users).router());
   dashboard.use('/invite', Container.get(InviteUsers).authRouter());
   dashboard.use('/currencies', Container.get(Currencies).router());
   dashboard.use('/settings', Container.get(Settings).router());
