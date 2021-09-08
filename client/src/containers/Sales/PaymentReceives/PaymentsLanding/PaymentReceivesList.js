@@ -42,10 +42,7 @@ function PaymentReceiveList({
 
       <DashboardPageContent>
         <PaymentReceiveViewTabs />
-
-        <DashboardContentTable>
-          <PaymentReceivesTable />
-        </DashboardContentTable>
+        <PaymentReceivesTable />
       </DashboardPageContent>
 
       <PaymentReceiveAlerts />

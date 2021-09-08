@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button, Popover, Menu, Position } from '@blueprintjs/core';
 import Icon from 'components/Icon';
-import { useAuthUser } from 'hooks/state';
 import { compose, firstLettersArgs } from 'utils';
 import withCurrentOrganization from '../../containers/Organization/withCurrentOrganization';
+import { useAuthenticatedUser } from '../Dashboard/AuthenticatedUser';
 
 // Popover modifiers.
 const POPOVER_MODIFIERS = {
@@ -17,7 +17,8 @@ function SidebarHead({
   // #withCurrentOrganization
   organization,
 }) {
-  const user = useAuthUser();
+  // Retrieve authenticated user information.
+  const { user } = useAuthenticatedUser();
 
   return (
     <div className="sidebar__head">

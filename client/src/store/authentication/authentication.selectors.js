@@ -1,8 +1,8 @@
 import { defaultTo } from 'lodash';
 import { createSelector } from '@reduxjs/toolkit';
 
-const getCurrentOrganizationId = (state) => state.authentication.organization;
-const getCurrentTenantId = (state) => state.authentication.organizationId;
+const getCurrentOrganizationId = (state) => state.authentication.organizationId;
+const getCurrentTenantId = (state) => state.authentication.tenantId;
 const getOrganizationsMap = (state) => state.organizations.data;
 
 // Retrieve organization tenant id.

@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import { compose } from 'utils';
 
-import { DataTable } from 'components';
+import { DataTable, DashboardContentTable } from 'components';
 import EstimatesEmptyStatus from './EstimatesEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
@@ -109,35 +109,37 @@ function EstimatesDataTable({
   }
 
   return (
-    <DataTable
-      columns={columns}
-      data={estimates}
-      loading={isEstimatesLoading}
-      headerLoading={isEstimatesLoading}
-      progressBarLoading={isEstimatesFetching}
-      onFetchData={handleFetchData}
-      noInitialFetch={true}
-      manualSortBy={true}
-      selectionColumn={true}
-      sticky={true}
-      pagination={true}
-      manualPagination={true}
-      pagesCount={pagination.pagesCount}
-      TableLoadingRenderer={TableSkeletonRows}
-      TableHeaderSkeletonRenderer={TableSkeletonHeader}
-      ContextMenu={ActionsMenu}
-      payload={{
-        onApprove: handleApproveEstimate,
-        onEdit: handleEditEstimate,
-        onReject: handleRejectEstimate,
-        onDeliver: handleDeliverEstimate,
-        onDelete: handleDeleteEstimate,
-        onDrawer: handleDrawerEstimate,
-        onConvert: handleConvertToInvoice,
-        onViewDetails: handleViewDetailEstimate,
-        onPrint: handlePrintEstimate,
-      }}
-    />
+    <DashboardContentTable>
+      <DataTable
+        columns={columns}
+        data={estimates}
+        loading={isEstimatesLoading}
+        headerLoading={isEstimatesLoading}
+        progressBarLoading={isEstimatesFetching}
+        onFetchData={handleFetchData}
+        noInitialFetch={true}
+        manualSortBy={true}
+        selectionColumn={true}
+        sticky={true}
+        pagination={true}
+        manualPagination={true}
+        pagesCount={pagination.pagesCount}
+        TableLoadingRenderer={TableSkeletonRows}
+        TableHeaderSkeletonRenderer={TableSkeletonHeader}
+        ContextMenu={ActionsMenu}
+        payload={{
+          onApprove: handleApproveEstimate,
+          onEdit: handleEditEstimate,
+          onReject: handleRejectEstimate,
+          onDeliver: handleDeliverEstimate,
+          onDelete: handleDeleteEstimate,
+          onDrawer: handleDrawerEstimate,
+          onConvert: handleConvertToInvoice,
+          onViewDetails: handleViewDetailEstimate,
+          onPrint: handlePrintEstimate,
+        }}
+      />
+    </DashboardContentTable>
   );
 }
 

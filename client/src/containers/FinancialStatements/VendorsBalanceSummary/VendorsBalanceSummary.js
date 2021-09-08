@@ -14,7 +14,7 @@ import { VendorsBalanceSummaryProvider } from './VendorsBalanceSummaryProvider';
 import { VendorsSummarySheetLoadingBar } from './components';
 import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions';
 
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 
 import { compose } from 'utils';
 
@@ -82,8 +82,8 @@ function VendorsBalanceSummary({
 }
 
 export default compose(
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings?.name,
+  withCurrentOrganization(({ organization }) => ({
+    organizationName: organization.name,
   })),
   withVendorsBalanceSummaryActions,
 )(VendorsBalanceSummary);

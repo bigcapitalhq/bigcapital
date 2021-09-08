@@ -15,7 +15,7 @@ import {
 } from './components';
 
 import withTrialBalanceActions from './withTrialBalanceActions';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 
 import { compose } from 'utils';
 
@@ -91,7 +91,7 @@ function TrialBalanceSheet({
 
 export default compose(
   withTrialBalanceActions,
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings.name,
+  withCurrentOrganization(({ organization }) => ({
+    organizationName: organization.name,
   })),
 )(TrialBalanceSheet);

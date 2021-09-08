@@ -20,18 +20,20 @@ export default function Login() {
     loginMutate({
       crediential: values.crediential,
       password: values.password,
-    })
-      .then(() => {
-        setSubmitting(false);
-      })
-      .catch(({ response: { data: { errors } } }) => {
+    }).catch(
+      ({
+        response: {
+          data: { errors },
+        },
+      }) => {
         const toastBuilders = transformLoginErrorsToToasts(errors);
 
         toastBuilders.forEach((builder) => {
           Toaster.show(builder);
         });
         setSubmitting(false);
-      });
+      },
+    );
   };
 
   return (

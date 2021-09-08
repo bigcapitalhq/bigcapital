@@ -74,6 +74,7 @@ export * from './Drawer/DrawerMainTabs';
 export * from './TotalLines/index'
 export * from './Alert';
 export * from './Subscriptions';
+export * from './Dashboard';
 
 const Hint = FieldHint;
 

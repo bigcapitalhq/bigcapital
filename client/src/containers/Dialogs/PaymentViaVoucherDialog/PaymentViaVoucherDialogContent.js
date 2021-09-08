@@ -35,8 +35,12 @@ function PaymentViaLicenseDialogContent({
   const handleSubmit = (values, { setSubmitting, setErrors }) => {
     setSubmitting(true);
 
+    const mutateValues = {
+      plan_slug: `${values.plan_slug}-${values.period}ly`,
+      license_code: values.license_code,
+    };
     // Payment via voucher mutate.
-    paymentViaVoucherMutate({ ...values })
+    paymentViaVoucherMutate({ ...mutateValues })
       .then(() => {
         Toaster.show({
           message: intl.get('payment_via_voucher.success_message'),

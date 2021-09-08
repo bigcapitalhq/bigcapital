@@ -14,6 +14,7 @@ const CLASSES = {
   DASHBOARD_CONTENT: 'dashboard-content',
   DASHBOARD_CONTENT_PREFERENCES: 'dashboard-content--preferences',
   DASHBOARD_CONTENT_PANE: 'Pane2',
+  DASHBOARD_CENTERED_EMPTY_STATUS: 'dashboard__centered-empty-status',
   
   PAGE_FORM: 'page-form',
   PAGE_FORM_HEADER: 'page-form__header',

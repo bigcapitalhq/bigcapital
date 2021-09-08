@@ -3,8 +3,8 @@ import { useHistory } from 'react-router-dom';
 
 import { compose } from 'utils';
 
+import { DataTable, DashboardContentTable } from 'components';
 import PaymentReceivesEmptyStatus from './PaymentReceivesEmptyStatus';
-import { DataTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
@@ -85,32 +85,34 @@ function PaymentReceivesDataTable({
   }
 
   return (
-    <DataTable
-      columns={columns}
-      data={paymentReceives}
-      initialState={paymentReceivesTableState}
-      loading={isPaymentReceivesLoading}
-      headerLoading={isPaymentReceivesLoading}
-      progressBarLoading={isPaymentReceivesFetching}
-      onFetchData={handleDataTableFetchData}
-      manualSortBy={true}
-      selectionColumn={true}
-      noInitialFetch={true}
-      sticky={true}
-      autoResetSortBy={false}
-      autoResetPage={false}
-      pagination={true}
-      pagesCount={pagination.pagesCount}
-      TableLoadingRenderer={TableSkeletonRows}
-      TableHeaderSkeletonRenderer={TableSkeletonHeader}
-      ContextMenu={ActionsMenu}
-      payload={{
-        onDelete: handleDeletePaymentReceive,
-        onEdit: handleEditPaymentReceive,
-        onDrawer: handleDrawerPaymentReceive,
-        onViewDetails: handleViewDetailPaymentReceive,
-      }}
-    />
+    <DashboardContentTable>
+      <DataTable
+        columns={columns}
+        data={paymentReceives}
+        initialState={paymentReceivesTableState}
+        loading={isPaymentReceivesLoading}
+        headerLoading={isPaymentReceivesLoading}
+        progressBarLoading={isPaymentReceivesFetching}
+        onFetchData={handleDataTableFetchData}
+        manualSortBy={true}
+        selectionColumn={true}
+        noInitialFetch={true}
+        sticky={true}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        pagination={true}
+        pagesCount={pagination.pagesCount}
+        TableLoadingRenderer={TableSkeletonRows}
+        TableHeaderSkeletonRenderer={TableSkeletonHeader}
+        ContextMenu={ActionsMenu}
+        payload={{
+          onDelete: handleDeletePaymentReceive,
+          onEdit: handleEditPaymentReceive,
+          onDrawer: handleDrawerPaymentReceive,
+          onViewDetails: handleViewDetailPaymentReceive,
+        }}
+      />
+    </DashboardContentTable>
   );
 }
 

@@ -5,7 +5,7 @@ import CustomersEmptyStatus from './CustomersEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
-import { DataTable } from 'components';
+import { DataTable, DashboardContentTable } from 'components';
 
 import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
@@ -100,37 +100,39 @@ function CustomersTable({
   }
 
   return (
-    <DataTable
-      noInitialFetch={true}
-      columns={columns}
-      data={customers}
-      initialState={customersTableState}
-      loading={isCustomersLoading}
-      headerLoading={isCustomersLoading}
-      progressBarLoading={isCustomersFetching}
-      onFetchData={handleFetchData}
-      selectionColumn={true}
-      expandable={false}
-      sticky={true}
-      spinnerProps={{ size: 30 }}
-      pagination={true}
-      manualSortBy={true}
-      manualPagination={true}
-      pagesCount={pagination.pagesCount}
-      autoResetSortBy={false}
-      autoResetPage={false}
-      TableLoadingRenderer={TableSkeletonRows}
-      TableHeaderSkeletonRenderer={TableSkeletonHeader}
-      payload={{
-        onDelete: handleCustomerDelete,
-        onEdit: handleCustomerEdit,
-        onDuplicate: handleContactDuplicate,
-        onInactivate: handleInactiveCustomer,
-        onActivate: handleActivateCustomer,
-        onViewDetails: handleViewDetailCustomer,
-      }}
-      ContextMenu={ActionsMenu}
-    />
+    <DashboardContentTable>
+      <DataTable
+        noInitialFetch={true}
+        columns={columns}
+        data={customers}
+        initialState={customersTableState}
+        loading={isCustomersLoading}
+        headerLoading={isCustomersLoading}
+        progressBarLoading={isCustomersFetching}
+        onFetchData={handleFetchData}
+        selectionColumn={true}
+        expandable={false}
+        sticky={true}
+        spinnerProps={{ size: 30 }}
+        pagination={true}
+        manualSortBy={true}
+        manualPagination={true}
+        pagesCount={pagination.pagesCount}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        TableLoadingRenderer={TableSkeletonRows}
+        TableHeaderSkeletonRenderer={TableSkeletonHeader}
+        payload={{
+          onDelete: handleCustomerDelete,
+          onEdit: handleCustomerEdit,
+          onDuplicate: handleContactDuplicate,
+          onInactivate: handleInactiveCustomer,
+          onActivate: handleActivateCustomer,
+          onViewDetails: handleViewDetailCustomer,
+        }}
+        ContextMenu={ActionsMenu}
+      />
+    </DashboardContentTable>
   );
 }
 

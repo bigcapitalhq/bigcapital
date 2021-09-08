@@ -47,13 +47,9 @@ function VendorsList({
 
       <DashboardPageContent>
         <VendorViewsTabs />
-
-        <DashboardContentTable>
-          <VendorsTable />
-        </DashboardContentTable>
-
-        <VendorsAlerts />
+        <VendorsTable />
       </DashboardPageContent>
+      <VendorsAlerts />
     </VendorsListProvider>
   );
 }

@@ -2,36 +2,28 @@ import { createReducer } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import purgeStoredState from 'redux-persist/es/purgeStoredState';
 import storage from 'redux-persist/lib/storage';
+import { getCookie, setCookie } from 'utils';
 import t from 'store/types';
+import { removeCookie } from '../../utils';
 
+// Read stored data in cookies and merge it with the initial state.
 const initialState = {
-  token: '',
-  organization: '',
-  organizationId: null,
-  user: '',
-  tenant: {},
-  locale: '',
+  token: getCookie('token'),
+  organizationId: getCookie('organization_id'),
+  tenantId: getCookie('tenant_id'),
+  userId: getCookie('authenticated_user_id'),
+  locale: getCookie('locale'),
   errors: [],
 };
 
 const STORAGE_KEY = 'bigcapital:authentication';
 const CONFIG = {
   key: STORAGE_KEY,
-  blacklist: ['errors'],
+  whitelist: [],
   storage,
 };
 
 const reducerInstance = createReducer(initialState, {
-  [t.LOGIN_SUCCESS]: (state, action) => {
-    const { token, user, tenant } = action.payload;
-
-    state.token = token;
-    state.user = user;
-    state.organization = tenant.organization_id;
-    state.organizationId = tenant.id;
-    state.tenant = tenant;
-  },
-
   [t.LOGIN_FAILURE]: (state, action) => {
     state.errors = action.errors;
   },
@@ -40,15 +32,12 @@ const reducerInstance = createReducer(initialState, {
     state.errors = [];
   },
 
-  [t.RESET]: () => {
+  [t.RESET]: (state) => {
     purgeStoredState(CONFIG);
-  }
+  },
 });
 
-export default persistReducer(
-  CONFIG,
-  reducerInstance,
-);
+export default persistReducer(CONFIG, reducerInstance);
 
 export const isAuthenticated = (state) => !!state.authentication.token;
 export const hasErrorType = (state, errorType) => {

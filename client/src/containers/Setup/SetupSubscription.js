@@ -21,12 +21,12 @@ function SetupSubscription({
 
   // Initial values.
   const initialValues = {
-    plan_slug: 'starter',
+    plan_slug: 'essentials',
     period: 'month',
     license_code: '',
   };
   // Handle form submit.
-  const handleSubmit = () => {};
+  const handleSubmit = (values) => {};
 
   // Retrieve momerized subscription form schema.
   const SubscriptionFormSchema = React.useMemo(

@@ -4,12 +4,14 @@ import { setLocale } from 'yup';
 import intl from 'react-intl-universal';
 import { find } from 'lodash';
 import rtlDetect from 'rtl-detect';
+import * as R from 'ramda';
 import { AppIntlProvider } from './AppIntlProvider';
-import DashboardLoadingIndicator from 'components/Dashboard/DashboardLoadingIndicator';
+import withDashboardActions from '../containers/Dashboard/withDashboardActions';
+import withDashboard from '../containers/Dashboard/withDashboard';
 
 const SUPPORTED_LOCALES = [
   { name: 'English', value: 'en' },
-  { name: 'العربية', value: 'ar-ly' },
+  { name: 'العربية', value: 'ar' },
 ];
 
 /**
@@ -18,7 +20,7 @@ const SUPPORTED_LOCALES = [
 function getCurrentLocal() {
   let currentLocale = intl.determineLocale({
     urlLocaleKey: 'lang',
-    cookieLocaleKey: 'lang',
+    cookieLocaleKey: 'locale',
     localStorageLocaleKey: 'lang',
   });
   if (!find(SUPPORTED_LOCALES, { value: currentLocale })) {
@@ -57,10 +59,14 @@ function useDocumentDirectionModifier(locale, isRTL) {
 /**
  * Application Intl loader.
  */
-export default function AppIntlLoader({ children }) {
-  const [isLoading, setIsLoading] = React.useState(true);
+function AppIntlLoader({ appIntlIsLoading, setAppIntlIsLoading, children }) {
+  const [isLocalsLoading, setIsLocalsLoading] = React.useState(true);
+  const [isYupLoading, setIsYupLoading] = React.useState(true);
+
+  // Retrieve the current locale.
   const currentLocale = getCurrentLocal();
 
+  // Detarmines the document direction based on the given locale.
   const isRTL = rtlDetect.isRtlLang(currentLocale);
 
   // Modifies the html document direction
@@ -79,23 +85,33 @@ export default function AppIntlLoader({ children }) {
       })
       .then(() => {
         moment.locale(currentLocale);
-        setIsLoading(false);
+        setIsLocalsLoading(false);
       });
-  }, [currentLocale, setIsLoading]);
+  }, [currentLocale, setIsLocalsLoading]);
 
   React.useEffect(() => {
     loadYupLocales(currentLocale)
       .then(({ locale }) => {
         setLocale(locale);
+        setIsYupLoading(false);
       })
       .then(() => {});
   }, [currentLocale]);
 
+  React.useEffect(() => {
+    if (!isLocalsLoading && !isYupLoading) {
+      setAppIntlIsLoading(false);
+    }
+  });
+
   return (
     <AppIntlProvider currentLocale={currentLocale} isRTL={isRTL}>
-      <DashboardLoadingIndicator isLoading={isLoading}>
-        {children}
-      </DashboardLoadingIndicator>
+      {appIntlIsLoading ? null : children}
     </AppIntlProvider>
   );
 }
+
+export default R.compose(
+  withDashboardActions,
+  withDashboard(({ appIntlIsLoading }) => ({ appIntlIsLoading })),
+)(AppIntlLoader);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router';
 
-import { DataTable } from 'components';
+import { DataTable, DashboardContentTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
@@ -85,7 +85,7 @@ function VendorsTable({
   const handleViewDetailVendor = ({ id }) => {
     openDrawer('contact-detail-drawer', { contactId: id });
   };
-  
+
   // Handle fetch data once the page index, size or sort by of the table change.
   const handleFetchData = React.useCallback(
     ({ pageSize, pageIndex, sortBy }) => {
@@ -104,35 +104,37 @@ function VendorsTable({
   }
 
   return (
-    <DataTable
-      noInitialFetch={true}
-      columns={columns}
-      data={vendors}
-      initialState={vendorsTableState}
-      loading={isVendorsLoading}
-      headerLoading={isVendorsLoading}
-      progressBarLoading={isVendorsFetching}
-      onFetchData={handleFetchData}
-      selectionColumn={true}
-      expandable={false}
-      sticky={true}
-      pagination={true}
-      manualSortBy={true}
-      pagesCount={pagination.pagesCount}
-      autoResetSortBy={false}
-      autoResetPage={false}
-      TableLoadingRenderer={TableSkeletonRows}
-      TableHeaderSkeletonRenderer={TableSkeletonHeader}
-      ContextMenu={ActionsMenu}
-      payload={{
-        onEdit: handleEditVendor,
-        onDelete: handleDeleteVendor,
-        onDuplicate: handleContactDuplicate,
-        onInactivate: handleInactiveVendor,
-        onActivate: handleActivateVendor,
-        onViewDetails: handleViewDetailVendor,
-      }}
-    />
+    <DashboardContentTable>
+      <DataTable
+        noInitialFetch={true}
+        columns={columns}
+        data={vendors}
+        initialState={vendorsTableState}
+        loading={isVendorsLoading}
+        headerLoading={isVendorsLoading}
+        progressBarLoading={isVendorsFetching}
+        onFetchData={handleFetchData}
+        selectionColumn={true}
+        expandable={false}
+        sticky={true}
+        pagination={true}
+        manualSortBy={true}
+        pagesCount={pagination.pagesCount}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        TableLoadingRenderer={TableSkeletonRows}
+        TableHeaderSkeletonRenderer={TableSkeletonHeader}
+        ContextMenu={ActionsMenu}
+        payload={{
+          onEdit: handleEditVendor,
+          onDelete: handleDeleteVendor,
+          onDuplicate: handleContactDuplicate,
+          onInactivate: handleInactiveVendor,
+          onActivate: handleActivateVendor,
+          onViewDetails: handleViewDetailVendor,
+        }}
+      />
+    </DashboardContentTable>
   );
 }
 

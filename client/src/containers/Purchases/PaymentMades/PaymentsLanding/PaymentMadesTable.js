@@ -3,7 +3,8 @@ import { useHistory } from 'react-router-dom';
 
 import { compose } from 'utils';
 
-import { DataTable } from 'components';
+import { DataTable, DashboardContentTable } from 'components';
+
 import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
@@ -76,31 +77,33 @@ function PaymentMadesTable({
   }
 
   return (
-    <DataTable
-      columns={columns}
-      data={paymentMades}
-      initialState={paymentMadesTableState}
-      onFetchData={handleDataTableFetchData}
-      loading={isPaymentsLoading}
-      headerLoading={isPaymentsLoading}
-      progressBarLoading={isPaymentsFetching}
-      manualSortBy={true}
-      selectionColumn={true}
-      noInitialFetch={true}
-      sticky={true}
-      pagination={true}
-      pagesCount={pagination.pagesCount}
-      autoResetSortBy={false}
-      autoResetPage={false}
-      TableLoadingRenderer={TableSkeletonRows}
-      TableHeaderSkeletonRenderer={TableSkeletonHeader}
-      ContextMenu={ActionsMenu}
-      payload={{
-        onEdit: handleEditPaymentMade,
-        onDelete: handleDeletePaymentMade,
-        onViewDetails: handleViewDetailPaymentMade,
-      }}
-    />
+    <DashboardContentTable>
+      <DataTable
+        columns={columns}
+        data={paymentMades}
+        initialState={paymentMadesTableState}
+        onFetchData={handleDataTableFetchData}
+        loading={isPaymentsLoading}
+        headerLoading={isPaymentsLoading}
+        progressBarLoading={isPaymentsFetching}
+        manualSortBy={true}
+        selectionColumn={true}
+        noInitialFetch={true}
+        sticky={true}
+        pagination={true}
+        pagesCount={pagination.pagesCount}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        TableLoadingRenderer={TableSkeletonRows}
+        TableHeaderSkeletonRenderer={TableSkeletonHeader}
+        ContextMenu={ActionsMenu}
+        payload={{
+          onEdit: handleEditPaymentMade,
+          onDelete: handleDeletePaymentMade,
+          onViewDetails: handleViewDetailPaymentMade,
+        }}
+      />
+    </DashboardContentTable>
   );
 }
 

@@ -16,6 +16,8 @@ const initialState = {
   topbarEditViewId: null,
   requestsLoading: 0,
   backLink: false,
+  appIsLoading: true,
+  appIntlIsLoading: true,
 };
 
 const STORAGE_KEY = 'bigcapital:dashboard';
@@ -98,6 +100,16 @@ const reducerInstance = createReducer(initialState, {
   [t.SET_DASHBOARD_BACK_LINK]: (state, action) => {
     const { backLink } = action.payload;
     state.backLink = backLink;
+  },
+
+  [t.APP_IS_LOADING]: (state, action) => {
+    const { isLoading } = action.payload;
+    state.appIsLoading = isLoading;
+  },
+
+  [t.APP_INTL_IS_LOADING]: (state, action) => {
+    const { isLoading } = action.payload;
+    state.appIntlIsLoading = isLoading;
   },
 
   [t.RESET]: () => {

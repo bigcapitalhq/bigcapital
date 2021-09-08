@@ -10,7 +10,7 @@ import CustomersTransactionsTable from './CustomersTransactionsTable';
 import CustomersTransactionsActionsBar from './CustomersTransactionsActionsBar';
 
 import withCustomersTransactionsActions from './withCustomersTransactionsActions';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 import { CustomersTransactionsLoadingBar } from './components';
 import { CustomersTransactionsProvider } from './CustomersTransactionsProvider';
 
@@ -81,8 +81,8 @@ function CustomersTransactions({
   );
 }
 export default compose(
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings.name,
+  withCurrentOrganization(({ organization }) => ({
+    organizationName: organization.name,
   })),
   withCustomersTransactionsActions,
 )(CustomersTransactions);

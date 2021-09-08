@@ -15,7 +15,7 @@ import {
 } from './components';
 
 import withGeneralLedgerActions from './withGeneralLedgerActions';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 
 import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
 import { compose } from 'utils';
@@ -85,7 +85,7 @@ function GeneralLedger({
 
 export default compose(
   withGeneralLedgerActions,
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings.name,
+  withCurrentOrganization(({ organization }) => ({
+    organizationName: organization.name,
   })),
 )(GeneralLedger);

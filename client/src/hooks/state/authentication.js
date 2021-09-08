@@ -6,6 +6,15 @@ import {
   setStoreReset,
 } from 'store/authentication/authentication.actions';
 import { useQueryClient } from 'react-query';
+import { removeCookie } from '../../utils';
+
+function removeAuthenticationCookies() {
+  removeCookie('token');
+  removeCookie('organization_id');
+  removeCookie('tenant_id');
+  removeCookie('authenticated_user_id');
+  removeCookie('locale');
+}
 
 export const useAuthActions = () => {
   const dispatch = useDispatch();
@@ -15,11 +24,15 @@ export const useAuthActions = () => {
     setLogin: useCallback((login) => dispatch(setLogin(login)), [dispatch]),
     setLogout: useCallback(() => {
       // Resets store state.
-      dispatch(setStoreReset());
+      // dispatch(setStoreReset());
 
       // Remove all cached queries.
       queryClient.removeQueries();
-    }, [dispatch, queryClient]),
+
+      removeAuthenticationCookies();
+
+      window.location.reload();
+    }, [queryClient]),
   };
 };
 
@@ -41,12 +54,12 @@ export const useAuthToken = () => {
  * Retrieve the authentication user.
  */
 export const useAuthUser = () => {
-  return useSelector((state) => state.authentication.user);
+  return useSelector((state) => ({}));
 };
 
 /**
  * Retrieve the authenticated organization id.
  */
 export const useAuthOrganizationId = () => {
-  return useSelector((state) => state.authentication.organization);
+  return useSelector((state) => state.authentication.organizationId);
 };

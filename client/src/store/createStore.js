@@ -10,13 +10,14 @@ import loggerMiddleware from 'middleware/logger';
 import rootReducer from 'store/reducers';
 import ResetMiddleware from './ResetMiddleware';
 
+
 const createStoreFactory = (initialState = {}) => {
   /**
   |--------------------------------------------------
   | Middleware Configuration
   |--------------------------------------------------
   */
-  const middleware = [thunkMiddleware, loggerMiddleware ];
+  const middleware = [thunkMiddleware, loggerMiddleware];
 
   /**
   |--------------------------------------------------
@@ -41,8 +42,6 @@ const createStoreFactory = (initialState = {}) => {
     rootReducer,
     initialState,
     composeEnhancers(applyMiddleware(...middleware), ...enhancers),
-    
-    
   );
   store.asyncReducers = {};
   return store;

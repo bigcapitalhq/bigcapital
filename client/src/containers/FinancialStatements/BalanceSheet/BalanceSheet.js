@@ -10,7 +10,7 @@ import { BalanceSheetAlerts, BalanceSheetLoadingBar } from './components';
 import { FinancialStatement } from 'components';
 
 import withBalanceSheetActions from './withBalanceSheetActions';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 import { BalanceSheetProvider } from './BalanceSheetProvider';
 
 import { compose } from 'utils';
@@ -23,7 +23,7 @@ function BalanceSheet({
   organizationName,
 
   // #withBalanceSheetActions
-  toggleBalanceSheetFilterDrawer
+  toggleBalanceSheetFilterDrawer,
 }) {
   const [filter, setFilter] = useState({
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
@@ -52,9 +52,12 @@ function BalanceSheet({
   };
 
   // Hides the balance sheet filter drawer once the page unmount.
-  useEffect(() => () => {
-    toggleBalanceSheetFilterDrawer(false);
-  }, [toggleBalanceSheetFilterDrawer])
+  useEffect(
+    () => () => {
+      toggleBalanceSheetFilterDrawer(false);
+    },
+    [toggleBalanceSheetFilterDrawer],
+  );
 
   return (
     <BalanceSheetProvider filter={filter}>
@@ -81,8 +84,8 @@ function BalanceSheet({
 }
 
 export default compose(
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings.name,
+  withCurrentOrganization(({ organization }) => ({
+    organizationName: organization.name,
   })),
   withBalanceSheetActions,
 )(BalanceSheet);

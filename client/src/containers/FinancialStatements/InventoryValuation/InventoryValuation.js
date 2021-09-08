@@ -11,7 +11,7 @@ import InventoryValuationTable from './InventoryValuationTable';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import { InventoryValuationLoadingBar } from './components';
 import withInventoryValuationActions from './withInventoryValuationActions';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 
 import { compose } from 'utils';
 
@@ -80,7 +80,7 @@ function InventoryValuation({
 
 export default compose(
   withInventoryValuationActions,
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings?.name,
+  withCurrentOrganization(({ organization }) => ({
+    organizationName: organization.name,
   })),
 )(InventoryValuation);

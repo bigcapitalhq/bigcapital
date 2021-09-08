@@ -51,6 +51,11 @@ function GeneralFormPage({
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
+
+      // Reboot the application if the application's language is mutated.
+      if (organization.language !== values.language) {
+        window.location.reload();
+      }
     };
     // Handle request error.
     const onError = (errors) => {

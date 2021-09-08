@@ -13,29 +13,14 @@ import PrivateRoute from 'components/Guards/PrivateRoute';
 import GlobalErrors from 'containers/GlobalErrors/GlobalErrors';
 import DashboardPrivatePages from 'components/Dashboard/PrivatePages';
 import Authentication from 'components/Authentication';
-
-// Query client config.
-const queryConfig = {
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: true,
-      staleTime: 30000,
-    },
-  },
-};
-
-// Global fetch query.
-function GlobalFetchQuery({
-  children
-}) {
-  window.localStorage.setItem('lang', 'ar-ly');
-  return children
-}
+import { SplashScreen } from '../components';
+import { queryConfig } from '../hooks/query/base'
 
 /**
  * Core application.
  */
-function App({ locale }) {
+export default function App() {
+  // Browser history.
   const history = createBrowserHistory();
 
   // Query client.
@@ -43,30 +28,24 @@ function App({ locale }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <GlobalFetchQuery>
-        <AppIntlLoader>
-          <div className="App">
-            <Router history={history}>
-              <Switch>
-                <Route path={'/auth'} component={Authentication} />
-                <Route path={'/'}>
-                  <PrivateRoute component={DashboardPrivatePages} />
-                </Route>
-              </Switch>
-            </Router>
+      <SplashScreen />
 
-            <GlobalErrors />
-          </div>
-        </AppIntlLoader>
-      </GlobalFetchQuery>
+      <AppIntlLoader>
+        <div className="App">
+          <Router history={history}>
+            <Switch>
+              <Route path={'/auth'} component={Authentication} />
+              <Route path={'/'}>
+                <PrivateRoute component={DashboardPrivatePages} />
+              </Route>
+            </Switch>
+          </Router>
+
+          <GlobalErrors />
+        </div>
+      </AppIntlLoader>
 
       <ReactQueryDevtools initialIsOpen />
     </QueryClientProvider>
   );
 }
-
-App.defaultProps = {
-  locale: 'en',
-};
-
-export default App;

@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { compose } from 'utils';
 
 import DataTable from 'components/DataTable';
+import { DashboardContentTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
@@ -92,6 +93,7 @@ function BillsDataTable({
   }
 
   return (
+    <DashboardContentTable>
     <DataTable
       columns={columns}
       data={bills}
@@ -118,6 +120,7 @@ function BillsDataTable({
         onViewDetails: handleViewDetailBill,
       }}
     />
+    </DashboardContentTable>
   );
 }
 

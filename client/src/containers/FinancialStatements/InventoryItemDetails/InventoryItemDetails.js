@@ -10,7 +10,7 @@ import InventoryItemDetailsHeader from './InventoryItemDetailsHeader';
 import InventoryItemDetailsTable from './InventoryItemDetailsTable';
 
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 import { InventoryItemDetailsProvider } from './InventoryItemDetailsProvider';
 import {
   InventoryItemDetailsLoadingBar,
@@ -84,8 +84,8 @@ function InventoryItemDetails({
 }
 
 export default compose(
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings?.name,
+  withCurrentOrganization(({ organization }) => ({
+    organizationName: organization.name,
   })),
   withInventoryItemDetailsActions,
 )(InventoryItemDetails);

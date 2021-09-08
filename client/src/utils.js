@@ -11,6 +11,19 @@ import deepMapKeys from 'deep-map-keys';
 import { createSelectorCreator, defaultMemoize } from 'reselect';
 import { isEqual } from 'lodash';
 
+import jsCookie from 'js-cookie';
+
+export const getCookie = (name, defaultValue) => _.defaultTo(jsCookie.get(name), defaultValue);
+
+export const setCookie = (name, value, expiry = 365, secure = false) => {
+  jsCookie.set(name, value, { expires: expiry, path: '/', secure });
+};
+
+export const removeCookie = (name) => {
+  return jsCookie.remove(name, {  path: '/' });
+}
+
+
 export function removeEmptyFromObject(obj) {
   obj = Object.assign({}, obj);
   var keys = Object.keys(obj);
@@ -226,6 +239,7 @@ export const firstLettersArgs = (...args) => {
   });
   return letters.join('').toUpperCase();
 };
+
 
 export const uniqueMultiProps = (items, props) => {
   return _.uniqBy(items, (item) => {

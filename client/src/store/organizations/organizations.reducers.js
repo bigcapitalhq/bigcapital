@@ -27,10 +27,10 @@ const reducer = createReducer(initialState, {
   },
 
   [t.SET_ORGANIZATION_CONGRATS]: (state, action) => {
-    const { organizationId, congrats } = action.payload;
+    const { tenantId, congrats } = action.payload;
 
-    state.data[organizationId] = {
-      ...(state.data[organizationId] || {}),
+    state.data[tenantId] = {
+      ...(state.data[tenantId] || {}),
       is_congrats: !!congrats,
     };
   }

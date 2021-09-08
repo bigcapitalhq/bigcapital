@@ -11,6 +11,8 @@ export default (mapState) => {
       sidebarExpended: state.dashboard.sidebarExpended,
       preferencesPageTitle: state.dashboard.preferencesPageTitle,
       dashboardBackLink: state.dashboard.backLink,
+      appIsLoading: state.dashboard.appIsLoading,
+      appIntlIsLoading: state.dashboard.appIntlIsLoading
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

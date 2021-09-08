@@ -10,6 +10,7 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
+import useAutofocus from 'hooks/useAutofocus'
 import { FormattedMessage as T } from 'components';
 import { getCountries } from 'common/countries';
 
@@ -29,6 +30,8 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
   const currencies = getAllCurrenciesOptions();
   const countries = getCountries();
 
+  const accountRef = useAutofocus();
+
   return (
     <Form>
       <h3>
@@ -44,7 +47,11 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'name'} />}
           >
-            <InputGroup {...field} intent={inputIntent({ error, touched })} />
+            <InputGroup
+              {...field}
+              intent={inputIntent({ error, touched })}
+              inputRef={accountRef}
+            />
           </FormGroup>
         )}
       </FastField>

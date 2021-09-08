@@ -2,6 +2,8 @@ import { connect } from 'react-redux';
 import t from 'store/types';
 import {
   toggleExpendSidebar,
+  appIsLoading,
+  appIntlIsLoading
 } from 'store/dashboard/dashboard.actions';
 
 const mapActionsToProps = (dispatch) => ({
@@ -55,6 +57,8 @@ const mapActionsToProps = (dispatch) => ({
       type: t.SET_DASHBOARD_BACK_LINK,
       payload: { backLink },
     }),
+  setAppIsLoading: (isLoading) => dispatch(appIsLoading(isLoading)),
+  setAppIntlIsLoading: (isLoading) => dispatch(appIntlIsLoading(isLoading)),
 });
 
 export default connect(null, mapActionsToProps);

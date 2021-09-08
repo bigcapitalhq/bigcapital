@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { DataTable } from 'components';
+import { DataTable, DashboardContentTable } from 'components';
 
 import ManualJournalsEmptyStatus from './ManualJournalsEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
@@ -91,33 +91,35 @@ function ManualJournalsDataTable({
   }
 
   return (
-    <DataTable
-      noInitialFetch={true}
-      columns={columns}
-      data={manualJournals}
-      initialState={manualJournalsTableState}
-      manualSortBy={true}
-      selectionColumn={true}
-      expandable={true}
-      sticky={true}
-      loading={isManualJournalsLoading}
-      headerLoading={isManualJournalsLoading}
-      progressBarLoading={isManualJournalsFetching}
-      pagesCount={pagination.pagesCount}
-      pagination={true}
-      autoResetSortBy={false}
-      autoResetPage={false}
-      TableLoadingRenderer={TableSkeletonRows}
-      TableHeaderSkeletonRenderer={TableSkeletonHeader}
-      ContextMenu={ActionsMenu}
-      onFetchData={handleFetchData}
-      payload={{
-        onDelete: handleDeleteJournal,
-        onPublish: handlePublishJournal,
-        onEdit: handleEditJournal,
-        onViewDetails: handleViewDetailJournal,
-      }}
-    />
+    <DashboardContentTable>
+      <DataTable
+        noInitialFetch={true}
+        columns={columns}
+        data={manualJournals}
+        initialState={manualJournalsTableState}
+        manualSortBy={true}
+        selectionColumn={true}
+        expandable={true}
+        sticky={true}
+        loading={isManualJournalsLoading}
+        headerLoading={isManualJournalsLoading}
+        progressBarLoading={isManualJournalsFetching}
+        pagesCount={pagination.pagesCount}
+        pagination={true}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        TableLoadingRenderer={TableSkeletonRows}
+        TableHeaderSkeletonRenderer={TableSkeletonHeader}
+        ContextMenu={ActionsMenu}
+        onFetchData={handleFetchData}
+        payload={{
+          onDelete: handleDeleteJournal,
+          onPublish: handlePublishJournal,
+          onEdit: handleEditJournal,
+          onViewDetails: handleViewDetailJournal,
+        }}
+      />
+    </DashboardContentTable>
   );
 }
 

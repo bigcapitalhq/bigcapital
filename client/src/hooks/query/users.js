@@ -112,11 +112,16 @@ export function useUsers(props) {
  * Retrieve details of the given user.
  */
 export function useUser(id, props) {
-  const apiRequest = useApiRequest();
-
-  return useQueryTenant(
+  return useRequestQuery(
     [t.USER, id],
-    () => apiRequest.get(`users/${id}`).then((response) => response.data.user),
-    props,
+    {
+      method: 'get',
+      url: `users/${id}`,
+    },
+    {
+      select: (response) => response.data.user,
+      defaultData: {},
+      ...props,
+    },
   );
 }

@@ -30,20 +30,19 @@ function ManualJournalsTable({
 
       <DashboardPageContent>
         <ManualJournalsViewTabs />
-
-        <DashboardContentTable>
-          <ManualJournalsDataTable />
-        </DashboardContentTable>
-
-        <ManualJournalsAlerts />
+        <ManualJournalsDataTable />
       </DashboardPageContent>
+
+      <ManualJournalsAlerts />
     </ManualJournalsListProvider>
   );
 }
 
 export default compose(
-  withManualJournals(({ manualJournalsTableState, manualJournalTableStateChanged }) => ({
-    journalsTableState: manualJournalsTableState,
-    journalsTableStateChanged: manualJournalTableStateChanged,
-  })),
+  withManualJournals(
+    ({ manualJournalsTableState, manualJournalTableStateChanged }) => ({
+      journalsTableState: manualJournalsTableState,
+      journalsTableStateChanged: manualJournalTableStateChanged,
+    }),
+  ),
 )(ManualJournalsTable);

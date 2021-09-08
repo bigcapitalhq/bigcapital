@@ -47,10 +47,7 @@ function CustomersList({
 
       <DashboardPageContent>
         <CustomersViewsTabs />
-
-        <DashboardContentTable>
-          <CustomersTable />
-        </DashboardContentTable>
+        <CustomersTable />
       </DashboardPageContent>
       <CustomersAlerts />
     </CustomersListProvider>

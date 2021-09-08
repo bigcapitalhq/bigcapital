@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { FormattedMessage as T } from 'components';
 
-import { DataTable } from 'components';
+import { DashboardContentTable, DataTable } from 'components';
 
 import ItemsEmptyStatus from './ItemsEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
@@ -108,41 +108,43 @@ function ItemsDataTable({
   }
 
   return (
-    <DataTable
-      columns={columns}
-      data={items}
-      initialState={itemsTableState}
-      loading={isItemsLoading}
-      headerLoading={isItemsLoading}
-      progressBarLoading={isItemsFetching}
-      noInitialFetch={true}
-      selectionColumn={true}
-      spinnerProps={{ size: 30 }}
-      expandable={false}
-      sticky={true}
-      rowClassNames={rowClassNames}
-      pagination={true}
-      manualSortBy={true}
-      manualPagination={true}
-      pagesCount={pagination.pagesCount}
-      autoResetSortBy={false}
-      autoResetPage={true}
-      TableLoadingRenderer={TableSkeletonRows}
-      TableHeaderSkeletonRenderer={TableSkeletonHeader}
-      ContextMenu={ItemsActionMenuList}
-      onFetchData={handleFetchData}
-      payload={{
-        onDeleteItem: handleDeleteItem,
-        onEditItem: handleEditItem,
-        onInactivateItem: handleInactiveItem,
-        onActivateItem: handleActivateItem,
-        onMakeAdjustment: handleMakeAdjustment,
-        onDuplicate: handleDuplicate,
-        onViewDetails: handleViewDetailItem,
-      }}
-      noResults={<T id={'there_is_no_items_in_the_table_yet'} />}
-      {...tableProps}
-    />
+    <DashboardContentTable>
+      <DataTable
+        columns={columns}
+        data={items}
+        initialState={itemsTableState}
+        loading={isItemsLoading}
+        headerLoading={isItemsLoading}
+        progressBarLoading={isItemsFetching}
+        noInitialFetch={true}
+        selectionColumn={true}
+        spinnerProps={{ size: 30 }}
+        expandable={false}
+        sticky={true}
+        rowClassNames={rowClassNames}
+        pagination={true}
+        manualSortBy={true}
+        manualPagination={true}
+        pagesCount={pagination.pagesCount}
+        autoResetSortBy={false}
+        autoResetPage={true}
+        TableLoadingRenderer={TableSkeletonRows}
+        TableHeaderSkeletonRenderer={TableSkeletonHeader}
+        ContextMenu={ItemsActionMenuList}
+        onFetchData={handleFetchData}
+        payload={{
+          onDeleteItem: handleDeleteItem,
+          onEditItem: handleEditItem,
+          onInactivateItem: handleInactiveItem,
+          onActivateItem: handleActivateItem,
+          onMakeAdjustment: handleMakeAdjustment,
+          onDuplicate: handleDuplicate,
+          onViewDetails: handleViewDetailItem,
+        }}
+        noResults={<T id={'there_is_no_items_in_the_table_yet'} />}
+        {...tableProps}
+      />
+    </DashboardContentTable>
   );
 }
 

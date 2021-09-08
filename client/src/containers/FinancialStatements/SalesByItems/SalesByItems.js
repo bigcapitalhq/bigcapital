@@ -13,7 +13,7 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import { SalesByItemsLoadingBar } from './components';
 
 import withSalesByItemsActions from './withSalesByItemsActions';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 
 import { compose } from 'utils';
 
@@ -84,7 +84,7 @@ function SalesByItems({
 
 export default compose(
   withSalesByItemsActions,
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings.name,
+  withCurrentOrganization(({ organization }) => ({
+    organizationName: organization.name,
   })),
 )(SalesByItems);

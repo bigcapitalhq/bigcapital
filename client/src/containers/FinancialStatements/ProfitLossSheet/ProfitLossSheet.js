@@ -10,7 +10,7 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withProfitLossActions from './withProfitLossActions';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 
 import 'style/pages/FinancialStatements/ProfitLossSheet.scss';
 import { ProfitLossSheetProvider } from './ProfitLossProvider';
@@ -91,7 +91,7 @@ function ProfitLossSheet({
 export default compose(
   withDashboardActions,
   withProfitLossActions,
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings.name,
+  withCurrentOrganization(({ organization }) => ({
+    organizationName: organization.name,
   })),
 )(ProfitLossSheet);

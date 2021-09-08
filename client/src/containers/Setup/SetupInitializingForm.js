@@ -20,10 +20,12 @@ function SetupInitializingForm({
 }) {
   const { refetch, isSuccess } = useCurrentOrganization({ enabled: false });
 
+  // Job done state.
   const [isJobDone, setIsJobDone] = React.useState(false);
 
   const {
     data: { running, queued, failed, completed },
+    isFetching: isJobFetching,
   } = useJob(organization?.build_job_id, {
     refetchInterval: 2000,
     enabled: !!organization?.build_job_id,
@@ -45,17 +47,15 @@ function SetupInitializingForm({
 
   return (
     <div class="setup-initializing-form">
-      <ProgressBar intent={Intent.PRIMARY} value={null} />
-
-      <div className={'setup-initializing-form__title'}>
-        {failed ? (
-          <SetupInitializingFailed />
-        ) : running || queued ? (
-          <SetupInitializingRunning />
-        ) : completed ? (
-          <SetupInitializingCompleted />
-        ) : null}
-      </div>
+      {failed ? (
+        <SetupInitializingFailed />
+      ) : running || queued || isJobFetching ? (
+        <SetupInitializingRunning />
+      ) : completed ? (
+        <SetupInitializingCompleted />
+      ) : (
+        <SetupInitializingFailed />
+      )}
     </div>
   );
 }
@@ -68,41 +68,60 @@ export default R.compose(
   withOrganization(({ organization }) => ({ organization })),
 )(SetupInitializingForm);
 
+/**
+ * State initializing failed state.
+ */
 function SetupInitializingFailed() {
   return (
-    <div class="failed">
-      <h1>
-        <T id={'setup.initializing.something_went_wrong'} />
-      </h1>
-      <p class="paragraph">
-        <T id={'setup.initializing.please_refresh_the_page'} />
-      </p>
+    <div class="setup-initializing__content">
+      <div className={'setup-initializing-form__title'}>
+        <h1>
+          <T id={'setup.initializing.something_went_wrong'} />
+        </h1>
+        <p class="paragraph">
+          <T id={'setup.initializing.please_refresh_the_page'} />
+        </p>
+      </div>
     </div>
   );
 }
 
+/**
+ * Setup initializing running state.
+ */
 function SetupInitializingRunning() {
   return (
-    <div class="running">
-      <h1>
-        <T id={'setup.initializing.title'} />
-      </h1>
-      <p className={'paragraph'}>
-        <T id={'setup.initializing.description'} />
-      </p>
+    <div class="setup-initializing__content">
+      <ProgressBar intent={Intent.PRIMARY} value={null} />
+
+      <div className={'setup-initializing-form__title'}>
+        <h1>
+          <T id={'setup.initializing.title'} />
+        </h1>
+        <p className={'paragraph'}>
+          <T id={'setup.initializing.description'} />
+        </p>
+      </div>
     </div>
   );
 }
 
+/**
+ * Setup initializing completed state.
+ */
 function SetupInitializingCompleted() {
   return (
-    <div class="completed">
-      <h1>
-        <T id={'setup.initializing.waiting_to_redirect'} />
-      </h1>
-      <p class="paragraph">
-        <T id={'setup.initializing.refresh_the_page_if_redirect_not_worked'} />
-      </p>
+    <div class="setup-initializing__content">
+      <div className={'setup-initializing-form__title'}>
+        <h1>
+          <T id={'setup.initializing.waiting_to_redirect'} />
+        </h1>
+        <p class="paragraph">
+          <T
+            id={'setup.initializing.refresh_the_page_if_redirect_not_worked'}
+          />
+        </p>
+      </div>
     </div>
   );
 }

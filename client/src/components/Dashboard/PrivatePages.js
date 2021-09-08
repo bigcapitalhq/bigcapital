@@ -7,6 +7,7 @@ import SetupWizardPage from 'containers/Setup/WizardSetupPage';
 import EnsureOrganizationIsReady from 'components/Guards/EnsureOrganizationIsReady';
 import EnsureOrganizationIsNotReady from 'components/Guards/EnsureOrganizationIsNotReady';
 import { PrivatePagesProvider } from './PrivatePagesProvider';
+import { DashboardBoot } from '../../components';
 
 import 'style/pages/Dashboard/Dashboard.scss';
 
@@ -16,6 +17,8 @@ import 'style/pages/Dashboard/Dashboard.scss';
 export default function DashboardPrivatePages() {
   return (
     <PrivatePagesProvider>
+      <DashboardBoot />
+
       <Switch>
         <Route path={'/setup'}>
           <EnsureOrganizationIsNotReady>
@@ -23,7 +26,7 @@ export default function DashboardPrivatePages() {
           </EnsureOrganizationIsNotReady>
         </Route>
 
-        <Route path='/'>
+        <Route path="/">
           <EnsureOrganizationIsReady>
             <Dashboard />
           </EnsureOrganizationIsReady>

@@ -42,7 +42,7 @@ function BillingForm({
 
   // Initial values.
   const initialValues = {
-    plan_slug: 'free',
+    plan_slug: 'essentials',
     period: 'month',
     license_code: '',
   };

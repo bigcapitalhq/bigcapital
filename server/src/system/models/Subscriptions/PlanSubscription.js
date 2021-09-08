@@ -59,7 +59,7 @@ export default class PlanSubscription extends mixin(SystemModel) {
         const endDate = moment().format(dateFormat);
 
         builder.where('trial_ends_at', '<=', endDate);
-      }
+      },
     };
   }
 
@@ -79,7 +79,7 @@ export default class PlanSubscription extends mixin(SystemModel) {
         modelClass: Tenant.default,
         join: {
           from: 'subscription_plan_subscriptions.tenantId',
-          to: 'tenants.id'
+          to: 'tenants.id',
         },
       },
 
@@ -131,23 +131,18 @@ export default class PlanSubscription extends mixin(SystemModel) {
 
   /**
    * Set new period from the given details.
-   * @param {string} invoiceInterval 
-   * @param {number} invoicePeriod 
-   * @param {string} start 
-   * 
+   * @param {string} invoiceInterval
+   * @param {number} invoicePeriod
+   * @param {string} start
+   *
    * @return {Object}
    */
-  setNewPeriod(invoiceInterval, invoicePeriod, start) {
-    let _invoiceInterval = invoiceInterval;
-    let _invoicePeriod = invoicePeriod;
-    
-    if (!invoiceInterval) {
-      _invoiceInterval = this.plan.invoiceInterval;
-    }
-    if (!invoicePeriod) {
-      _invoicePeriod = this.plan.invoicePeriod;
-    }
-    const period = new SubscriptionPeriod(_invoiceInterval, _invoicePeriod, start);
+  static setNewPeriod(invoiceInterval, invoicePeriod, start) {
+    const period = new SubscriptionPeriod(
+      invoiceInterval,
+      invoicePeriod,
+      start,
+    );
 
     const startsAt = period.getStartDate();
     const endsAt = period.getEndDate();
@@ -159,12 +154,11 @@ export default class PlanSubscription extends mixin(SystemModel) {
    * Renews subscription period.
    * @Promise
    */
-  renew(plan) {
-    const { invoicePeriod, invoiceInterval } = plan;
-    const patch = { ...this.setNewPeriod(invoiceInterval, invoicePeriod) };
-    patch.cancelsAt = null;
-    patch.planId = plan.id;
-
-    return this.$query().patch(patch);
+  renew(invoiceInterval, invoicePeriod) {
+    const { startsAt, endsAt } = PlanSubscription.setNewPeriod(
+      invoiceInterval,
+      invoicePeriod,
+    );
+    return this.$query().update({ startsAt, endsAt });
   }
 }

@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { compose } from 'utils';
 import { useExpensesListContext } from './ExpensesListProvider';
 
+import { DashboardContentTable } from 'components';
 import DataTable from 'components/DataTable';
 import ExpensesEmptyStatus from './ExpensesEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
@@ -84,32 +85,34 @@ function ExpensesDataTable({
   }
 
   return (
-    <DataTable
-      columns={columns}
-      data={expenses}
-      loading={isExpensesLoading}
-      headerLoading={isExpensesLoading}
-      progressBarLoading={isExpensesFetching}
-      selectionColumn={true}
-      noInitialFetch={true}
-      sticky={true}
-      onFetchData={handleFetchData}
-      pagination={true}
-      manualSortBy={true}
-      manualPagination={true}
-      pagesCount={pagination.pagesCount}
-      autoResetSortBy={false}
-      autoResetPage={false}
-      TableLoadingRenderer={TableSkeletonRows}
-      TableHeaderSkeletonRenderer={TableSkeletonHeader}
-      ContextMenu={ActionsMenu}
-      payload={{
-        onPublish: handlePublishExpense,
-        onDelete: handleDeleteExpense,
-        onEdit: handleEditExpense,
-        onViewDetails: handleViewDetailExpense,
-      }}
-    />
+    <DashboardContentTable>
+      <DataTable
+        columns={columns}
+        data={expenses}
+        loading={isExpensesLoading}
+        headerLoading={isExpensesLoading}
+        progressBarLoading={isExpensesFetching}
+        selectionColumn={true}
+        noInitialFetch={true}
+        sticky={true}
+        onFetchData={handleFetchData}
+        pagination={true}
+        manualSortBy={true}
+        manualPagination={true}
+        pagesCount={pagination.pagesCount}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        TableLoadingRenderer={TableSkeletonRows}
+        TableHeaderSkeletonRenderer={TableSkeletonHeader}
+        ContextMenu={ActionsMenu}
+        payload={{
+          onPublish: handlePublishExpense,
+          onDelete: handleDeleteExpense,
+          onEdit: handleEditExpense,
+          onViewDetails: handleViewDetailExpense,
+        }}
+      />
+    </DashboardContentTable>
   );
 }
 

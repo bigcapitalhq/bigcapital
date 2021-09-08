@@ -9,7 +9,7 @@ import SetupOrganizationForm from './SetupOrganizationForm';
 import { useOrganizationSetup } from 'hooks/query';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 
-import { compose, transfromToSnakeCase } from 'utils';
+import { setCookie, compose, transfromToSnakeCase } from 'utils';
 import { getSetupOrganizationValidation } from './SetupOrganization.schema';
 
 // Initial values.
@@ -41,6 +41,9 @@ function SetupOrganizationPage({ wizard }) {
     organizationSetupMutate({ ...transfromToSnakeCase(values) })
       .then((response) => {
         setSubmitting(false);
+
+        // Sets locale cookie to next boot cycle.
+        setCookie('locale', values.language);
         wizard.next();
       })
       .catch((erros) => {

@@ -47,10 +47,7 @@ function ExpensesList({
 
       <DashboardPageContent>
         <ExpenseViewTabs />
-
-        <DashboardContentTable>
-          <ExpenseDataTable />
-        </DashboardContentTable>
+        <ExpenseDataTable />
       </DashboardPageContent>
 
       <ExpensesAlerts />

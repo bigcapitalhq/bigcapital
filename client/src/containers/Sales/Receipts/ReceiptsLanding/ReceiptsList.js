@@ -43,10 +43,7 @@ function ReceiptsList({
 
         <DashboardPageContent>
           <ReceiptViewTabs />
-
-          <DashboardContentTable>
-            <ReceiptsTable />
-          </DashboardContentTable>
+          <ReceiptsTable />
         </DashboardPageContent>
 
         <ReceiptsAlerts />

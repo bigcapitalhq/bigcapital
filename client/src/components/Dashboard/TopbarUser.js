@@ -11,11 +11,12 @@ import {
 import { If, FormattedMessage as T } from 'components';
 
 import { firstLettersArgs } from 'utils';
-import { useAuthActions, useAuthUser } from 'hooks/state';
+import { useAuthActions } from 'hooks/state';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 import withSubscriptions from '../../containers/Subscriptions/withSubscriptions';
+import { useAuthenticatedUser } from './AuthenticatedUser';
 
 function DashboardTopbarUser({
   openDialog,
@@ -25,7 +26,9 @@ function DashboardTopbarUser({
 }) {
   const history = useHistory();
   const { setLogout } = useAuthActions();
-  const user = useAuthUser();
+
+  // Retrieve authenticated user information.
+  const { user } = useAuthenticatedUser();
 
   const onClickLogout = () => {
     setLogout();

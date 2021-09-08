@@ -1,28 +1,37 @@
 import { useMutation } from 'react-query';
 import useApiRequest from '../useRequest';
-import { useAuthActions } from '../state';
-import { persistor } from 'store/createStore';
+import { setCookie } from '../../utils';
+
+/**
+ * Saves the response data to cookies.
+ */
+function setAuthLoginCookies(data) {
+  setCookie('token', data.token);
+  setCookie('authenticated_user_id', data.user.id);
+  setCookie('organization_id', data.tenant.organization_id);
+  setCookie('tenant_id', data.tenant.id);
+
+  if (data?.tenant?.metadata?.language)
+    setCookie('locale', data.tenant.metadata.language);
+}
 
 /**
  * Authentication login.
  */
 export const useAuthLogin = (props) => {
-  const { setLogin } = useAuthActions();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.post('auth/login', values),
-    {
-      select: (res) => res.data,
-      onSuccess: (data) => {
-        setLogin(data.data);
+  return useMutation((values) => apiRequest.post('auth/login', values), {
+    select: (res) => res.data,
+    onSuccess: (data) => {
+      // Set authentication cookies.
+      setAuthLoginCookies(data.data);
 
-        // Run the store persist.
-        persistor.persist();
-      },
-      ...props
-    }
-  );
+      // Reboot the application.
+      window.location.reload();
+    },
+    ...props,
+  });
 };
 
 /**
@@ -34,7 +43,7 @@ export const useAuthRegister = (props) => {
   return useMutation(
     (values) => apiRequest.post('auth/register', values),
     props,
-  )
+  );
 };
 
 /**
@@ -45,9 +54,9 @@ export const useAuthSendResetPassword = (props) => {
 
   return useMutation(
     (email) => apiRequest.post('auth/send_reset_password', email),
-    props
+    props,
   );
-}
+};
 
 /**
  * Authentication reset password.
@@ -58,5 +67,5 @@ export const useAuthResetPassword = (props) => {
   return useMutation(
     ([token, values]) => apiRequest.post(`auth/reset/${token}`, values),
     props,
-  )
-}
+  );
+};

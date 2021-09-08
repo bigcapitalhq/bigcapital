@@ -70,3 +70,18 @@ export function toggleExpendSidebar(toggle) {
     payload: { toggle }
   };
 }
+
+
+export function appIsLoading(toggle) {
+  return {
+    type: t.APP_IS_LOADING,
+    payload: { isLoading: toggle },
+  };
+}
+
+export function appIntlIsLoading(toggle) {
+  return {
+    type: t.APP_INTL_IS_LOADING,
+    payload: { isLoading: toggle },
+  }; 
+}

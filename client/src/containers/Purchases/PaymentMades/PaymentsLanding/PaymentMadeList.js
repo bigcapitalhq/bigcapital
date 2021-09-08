@@ -42,10 +42,7 @@ function PaymentMadeList({
 
       <DashboardPageContent>
         <PaymentMadeViewTabs />
-
-        <DashboardContentTable>
-          <PaymentMadesTable />
-        </DashboardContentTable>
+        <PaymentMadesTable />
       </DashboardPageContent>
 
       <PaymentMadesAlerts />

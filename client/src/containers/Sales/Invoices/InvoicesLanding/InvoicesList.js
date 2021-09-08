@@ -44,10 +44,7 @@ function InvoicesList({
 
       <DashboardPageContent>
         <InvoiceViewTabs />
-
-        <DashboardContentTable>
-          <InvoicesDataTable />
-        </DashboardContentTable>
+        <InvoicesDataTable />
       </DashboardPageContent>
 
       <InvoicesAlerts />

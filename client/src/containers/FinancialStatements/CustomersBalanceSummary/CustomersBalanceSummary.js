@@ -13,8 +13,7 @@ import CustomersBalanceSummaryTable from './CustomersBalanceSummaryTable';
 import { CustomersBalanceLoadingBar } from './components';
 import { CustomersBalanceSummaryProvider } from './CustomersBalanceSummaryProvider';
 import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryActions';
-
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 
 import { compose } from 'redux';
 
@@ -81,8 +80,8 @@ function CustomersBalanceSummary({
   );
 }
 export default compose(
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings.name,
+  withCurrentOrganization(({ organization }) => ({
+    organizationName: organization.name,
   })),
   withCustomersBalanceSummaryActions,
 )(CustomersBalanceSummary);

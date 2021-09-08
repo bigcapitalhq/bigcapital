@@ -12,6 +12,8 @@ import withPlan from './withPlan';
 const SubscriptionPeriodsEnhanced = R.compose(
   withPlan(({ plan }) => ({ plan })),
 )(({ plan, ...restProps }) => {
+  if (!plan) return null;
+
   return <SubscriptionPeriods periods={plan.periods} {...restProps} />;
 });
 

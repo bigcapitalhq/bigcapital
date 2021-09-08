@@ -9,7 +9,7 @@ import CashFlowStatementHeader from './CashFlowStatementHeader';
 import CashFlowStatementTable from './CashFlowStatementTable';
 import CashFlowStatementActionsBar from './CashFlowStatementActionsBar';
 
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 import withCashFlowStatementActions from './withCashFlowStatementActions';
 import { CashFlowStatementProvider } from './CashFlowStatementProvider';
 import {
@@ -85,8 +85,8 @@ function CashFlowStatement({
 }
 
 export default compose(
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings?.name,
+  withCurrentOrganization(({ organization }) => ({
+    organizationName: organization.name,
   })),
   withCashFlowStatementActions,
 )(CashFlowStatement);

@@ -17,7 +17,7 @@ const getSubscriptionPeriods = () => [
 const getSubscriptionPlans = () => [
   {
     name: intl.get('plan.essential.title'),
-    slug: 'free',
+    slug: 'essentials',
     description: [
       intl.get('plan.feature.sale_purchase_invoice'),
       intl.get('plan.feature.receivable_payable_accounts'),

@@ -29,12 +29,12 @@ export const fetchOrganizations = () => (dispatch) =>
 
 export const setOrganizationSetupCompleted =
   (congrats) => (dispatch, getState) => {
-    const organizationId = getState().authentication.organizationId;
+    const tenantId = getState().authentication.tenantId;
 
     dispatch({
       type: t.SET_ORGANIZATION_CONGRATS,
       payload: {
-        organizationId,
+        tenantId,
         congrats,
       },
     });

@@ -11,7 +11,7 @@ import JournalActionsBar from './JournalActionsBar';
 import { JournalSheetProvider } from './JournalProvider';
 import { JournalSheetLoadingBar, JournalSheetAlerts } from './components';
 
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withJournalActions from './withJournalActions';
 
@@ -79,7 +79,7 @@ function Journal({
 export default compose(
   withDashboardActions,
   withJournalActions,
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings.name,
+  withCurrentOrganization(({ organization }) => ({
+    organizationName: organization.name,
   })),
 )(Journal);

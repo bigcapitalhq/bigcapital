@@ -1,17 +1,9 @@
 import React from 'react';
-import DashboardLoadingIndicator from 'components/Dashboard/DashboardLoadingIndicator';
-import { useCurrentOrganization } from '../../hooks/query/organization';
+import { AuthenticatedUser } from './AuthenticatedUser';
 
 /**
  * Private pages provider.
  */
 export function PrivatePagesProvider({ children }) {
-  // Fetches the current user's organization.
-  const { isLoading } = useCurrentOrganization();
-
-  return (
-    <DashboardLoadingIndicator isLoading={isLoading}>
-      {children}
-    </DashboardLoadingIndicator>
-  )
+  return <AuthenticatedUser>{children}</AuthenticatedUser>;
 }

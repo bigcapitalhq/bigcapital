@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import InvoicesEmptyStatus from './InvoicesEmptyStatus';
 
 import { compose } from 'utils';
-import { DataTable } from 'components';
+import { DataTable, DashboardContentTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
@@ -108,37 +108,39 @@ function InvoicesDataTable({
   }
 
   return (
-    <DataTable
-      columns={columns}
-      data={invoices}
-      initialState={invoicesTableState}
-      loading={isInvoicesLoading}
-      headerLoading={isInvoicesLoading}
-      progressBarLoading={isInvoicesFetching}
-      onFetchData={handleDataTableFetchData}
-      manualSortBy={true}
-      selectionColumn={true}
-      noInitialFetch={true}
-      sticky={true}
-      pagination={true}
-      manualPagination={true}
-      pagesCount={pagination.pagesCount}
-      autoResetSortBy={false}
-      autoResetPage={false}
-      TableLoadingRenderer={TableSkeletonRows}
-      TableHeaderSkeletonRenderer={TableSkeletonHeader}
-      ContextMenu={ActionsMenu}
-      payload={{
-        onDelete: handleDeleteInvoice,
-        onDeliver: handleDeliverInvoice,
-        onEdit: handleEditInvoice,
-        onDrawer: handleDrawerInvoice,
-        onQuick: handleQuickPaymentReceive,
-        onViewDetails: handleViewDetailInvoice,
-        onPrint: handlePrintInvoice,
-        baseCurrency,
-      }}
-    />
+    <DashboardContentTable>
+      <DataTable
+        columns={columns}
+        data={invoices}
+        initialState={invoicesTableState}
+        loading={isInvoicesLoading}
+        headerLoading={isInvoicesLoading}
+        progressBarLoading={isInvoicesFetching}
+        onFetchData={handleDataTableFetchData}
+        manualSortBy={true}
+        selectionColumn={true}
+        noInitialFetch={true}
+        sticky={true}
+        pagination={true}
+        manualPagination={true}
+        pagesCount={pagination.pagesCount}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        TableLoadingRenderer={TableSkeletonRows}
+        TableHeaderSkeletonRenderer={TableSkeletonHeader}
+        ContextMenu={ActionsMenu}
+        payload={{
+          onDelete: handleDeleteInvoice,
+          onDeliver: handleDeliverInvoice,
+          onEdit: handleEditInvoice,
+          onDrawer: handleDrawerInvoice,
+          onQuick: handleQuickPaymentReceive,
+          onViewDetails: handleViewDetailInvoice,
+          onPrint: handlePrintInvoice,
+          baseCurrency,
+        }}
+      />
+    </DashboardContentTable>
   );
 }
 

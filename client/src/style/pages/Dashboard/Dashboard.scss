@@ -371,6 +371,18 @@ $dashboard-views-bar-height: 44px;
     }
   }
 
+  &__centered-empty-status{
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    margin: auto;
+
+    .datatable-empty-status{
+      margin: auto;
+      padding-bottom: 40px;
+    }
+  }
+
   &__datatable {
     display: flex;
     flex: 1 0 0;

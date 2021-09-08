@@ -1,15 +1,16 @@
-import React, { useMemo  } from 'react';
+import React, { useMemo } from 'react';
 import { Formik } from 'formik';
-import { Link, useHistory } from 'react-router-dom';
-import {
-  Intent,
-} from '@blueprintjs/core';
+import { Link } from 'react-router-dom';
+import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
 import { FormattedMessage as T } from 'components';
 import AppToaster from 'components/AppToaster';
 import AuthInsider from 'containers/Authentication/AuthInsider';
-import { useAuthLogin, useAuthRegister } from '../../hooks/query/authentication';
+import {
+  useAuthLogin,
+  useAuthRegister,
+} from '../../hooks/query/authentication';
 
 import RegisterForm from './RegisterForm';
 import { RegisterSchema, transformRegisterErrorsToForm } from './utils';
@@ -18,11 +19,9 @@ import { RegisterSchema, transformRegisterErrorsToForm } from './utils';
  * Register form.
  */
 export default function RegisterUserForm() {
-  const history = useHistory();
+  const { mutateAsync: authLoginMutate } = useAuthLogin();
+  const { mutateAsync: authRegisterMutate } = useAuthRegister();
 
-  const { mutateAsync: authLoginMutate }  = useAuthLogin();
-  const { mutateAsync: authRegisterMutate }  = useAuthRegister();
- 
   const initialValues = useMemo(
     () => ({
       first_name: '',
@@ -41,26 +40,33 @@ export default function RegisterUserForm() {
         authLoginMutate({
           crediential: values.email,
           password: values.password,
-        })
-          .then(() => {
-            history.push('/register/subscription');
-            setSubmitting(false);
-          })
-          .catch(({ response: { data: { errors } } }) => {
+        }).catch(
+          ({
+            response: {
+              data: { errors },
+            },
+          }) => {
             AppToaster.show({
               message: intl.get('something_wentwrong'),
               intent: Intent.SUCCESS,
             });
-          });
+          },
+        );
       })
-      .catch(({ response: { data: { errors } } }) => {
-        const formErrors = transformRegisterErrorsToForm(errors);
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          const formErrors = transformRegisterErrorsToForm(errors);
 
-        setErrors(formErrors);
-        setSubmitting(false);
-      });
+          setErrors(formErrors);
+          setSubmitting(false);
+        },
+      );
   };
- 
+
   return (
     <AuthInsider>
       <div className={'register-form'}>

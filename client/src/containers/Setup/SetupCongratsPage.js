@@ -1,6 +1,5 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
-import { useHistory } from 'react-router-dom';
 
 import WorkflowIcon from './WorkflowIcon';
 import { FormattedMessage as T } from 'components';
@@ -10,17 +9,16 @@ import { compose } from 'utils';
 
 import 'style/pages/Setup/Congrats.scss';
 
-
 /**
  * Setup congrats page.
  */
 function SetupCongratsPage({ setOrganizationSetupCompleted }) {
-  const history = useHistory();
+  const [isReloading, setIsReloading] = React.useState(false);
 
-  const handleBtnClick = useCallback(() => {
-    setOrganizationSetupCompleted(false);
-    history.push('/homepage');
-  }, [setOrganizationSetupCompleted, history]);
+  const handleBtnClick = () => {
+    setIsReloading(true);
+    window.location.reload();
+  };
 
   return (
     <div class="setup-congrats">
@@ -37,7 +35,12 @@ function SetupCongratsPage({ setOrganizationSetupCompleted }) {
           <T id={'setup.congrats.description'} />
         </p>
 
-        <Button intent={Intent.PRIMARY} type="submit" onClick={handleBtnClick}>
+        <Button
+          intent={Intent.PRIMARY}
+          type="submit"
+          loading={isReloading}
+          onClick={handleBtnClick}
+        >
           <T id={'setup.congrats.go_to_dashboard'} />
         </Button>
       </div>

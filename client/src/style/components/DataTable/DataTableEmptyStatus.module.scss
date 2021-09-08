@@ -1,11 +1,11 @@
-.datatable-empty-status {
-  max-width: 550px;
+.root {
+  max-width: 500px;
   width: 100%;
-  margin: 0 auto;
+  margin: auto;
+  padding-bottom: 40px;
   text-align: center;
-  margin-top: 200px;
 
-  &__title {
+  &_title {
     font-size: 20px;
     color: #2c3a5d;
     font-weight: 600;
@@ -19,20 +19,16 @@
       font-size: 22px;
     }
   }
-  &__desc {
+  &_desc {
     font-size: 16px;
     color: #1f3255;
     opacity: 0.8;
     line-height: 1.6;
-
-    html[lang='ar'] & {
-      font-size: 18px;
-    }
   }
-  &__actions {
+  &_actions {
     margin-top: 26px;
 
-    .bp3-button {
+    :global .bp3-button {
       min-height: 36px;
 
       & + .bp3-button {

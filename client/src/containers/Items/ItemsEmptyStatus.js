@@ -28,7 +28,7 @@ export default function ItemsEmptyStatus() {
           </Button>
 
           <Button intent={Intent.NONE} large={true}>
-            <T id={'learn_more'}/>
+            <T id={'learn_more'} />
           </Button>
         </>
       }

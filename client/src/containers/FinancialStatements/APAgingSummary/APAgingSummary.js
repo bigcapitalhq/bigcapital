@@ -12,8 +12,8 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import { APAgingSummaryProvider } from './APAgingSummaryProvider';
 import { APAgingSummarySheetLoadingBar } from './components';
 
-import withSettings from 'containers/Settings/withSettings';
-import withAPAgingSummaryActions from './withAPAgingSummaryActions'
+import withCurrentOrganization from '../../Organization/withCurrentOrganization';
+import withAPAgingSummaryActions from './withAPAgingSummaryActions';
 import { compose } from 'utils';
 
 /**
@@ -51,9 +51,12 @@ function APAgingSummary({
   };
 
   // Hide the report filter drawer once the page unmount.
-  useEffect(() => () => {
-    toggleDisplayFilterDrawer(false);
-  }, [toggleDisplayFilterDrawer])
+  useEffect(
+    () => () => {
+      toggleDisplayFilterDrawer(false);
+    },
+    [toggleDisplayFilterDrawer],
+  );
 
   return (
     <APAgingSummaryProvider filter={filter}>
@@ -79,8 +82,8 @@ function APAgingSummary({
 }
 
 export default compose(
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings?.name,
+  withCurrentOrganization(({ organization }) => ({
+    organizationName: organization?.name,
   })),
-  withAPAgingSummaryActions  
+  withAPAgingSummaryActions,
 )(APAgingSummary);

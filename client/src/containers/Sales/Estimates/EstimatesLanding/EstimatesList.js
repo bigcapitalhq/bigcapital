@@ -42,10 +42,7 @@ function EstimatesList({
 
       <DashboardPageContent>
         <EstimatesViewTabs />
-
-        <DashboardContentTable>
-          <EstimatesDataTable />
-        </DashboardContentTable>
+        <EstimatesDataTable />
       </DashboardPageContent>
 
       <EstimatesAlerts />

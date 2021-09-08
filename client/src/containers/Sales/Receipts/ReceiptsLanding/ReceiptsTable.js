@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { compose } from 'utils';
-import { DataTable } from 'components';
+import { DataTable, DashboardContentTable } from 'components';
 
 import ReceiptsEmptyStatus from './ReceiptsEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
@@ -101,36 +101,38 @@ function ReceiptsDataTable({
   }
 
   return (
-    <DataTable
-      columns={columns}
-      data={receipts}
-      initialState={receiptTableState}
-      loading={isReceiptsLoading}
-      headerLoading={isReceiptsLoading}
-      progressBarLoading={isReceiptsFetching}
-      onFetchData={handleDataTableFetchData}
-      manualSortBy={true}
-      selectionColumn={true}
-      noInitialFetch={true}
-      sticky={true}
-      pagination={true}
-      pagesCount={pagination.pagesCount}
-      manualPagination={true}
-      autoResetSortBy={false}
-      autoResetPage={false}
-      TableLoadingRenderer={TableSkeletonRows}
-      TableHeaderSkeletonRenderer={TableSkeletonHeader}
-      ContextMenu={ActionsMenu}
-      payload={{
-        onEdit: handleEditReceipt,
-        onDelete: handleDeleteReceipt,
-        onClose: handleCloseReceipt,
-        onDrawer: handleDrawerReceipt,
-        onViewDetails: handleViewDetailReceipt,
-        onPrint: handlePrintInvoice,
-        baseCurrency,
-      }}
-    />
+    <DashboardContentTable>
+      <DataTable
+        columns={columns}
+        data={receipts}
+        initialState={receiptTableState}
+        loading={isReceiptsLoading}
+        headerLoading={isReceiptsLoading}
+        progressBarLoading={isReceiptsFetching}
+        onFetchData={handleDataTableFetchData}
+        manualSortBy={true}
+        selectionColumn={true}
+        noInitialFetch={true}
+        sticky={true}
+        pagination={true}
+        pagesCount={pagination.pagesCount}
+        manualPagination={true}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        TableLoadingRenderer={TableSkeletonRows}
+        TableHeaderSkeletonRenderer={TableSkeletonHeader}
+        ContextMenu={ActionsMenu}
+        payload={{
+          onEdit: handleEditReceipt,
+          onDelete: handleDeleteReceipt,
+          onClose: handleCloseReceipt,
+          onDrawer: handleDrawerReceipt,
+          onViewDetails: handleViewDetailReceipt,
+          onPrint: handlePrintInvoice,
+          baseCurrency,
+        }}
+      />
+    </DashboardContentTable>
   );
 }
 

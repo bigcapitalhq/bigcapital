@@ -11,7 +11,7 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import { PurchasesByItemsLoadingBar } from './components';
 
 import withPurchasesByItemsActions from './withPurchasesByItemsActions';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 import { compose } from 'utils';
 
 /**
@@ -82,7 +82,7 @@ function PurchasesByItems({
 
 export default compose(
   withPurchasesByItemsActions,
-  withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings.name,
+  withCurrentOrganization(({ organization }) => ({
+    organizationName: organization.name,
   })),
 )(PurchasesByItems);

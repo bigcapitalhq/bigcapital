@@ -47,10 +47,7 @@ function BillsList({
 
       <DashboardPageContent>
         <BillsViewsTabs />
-
-        <DashboardContentTable>
-          <BillsTable />
-        </DashboardContentTable>
+        <BillsTable />
       </DashboardPageContent>
 
       <BillsAlerts />
