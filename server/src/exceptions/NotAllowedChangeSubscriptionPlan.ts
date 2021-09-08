@@ -2,7 +2,7 @@
 
 export default class NotAllowedChangeSubscriptionPlan {
 
-  constructor(message: string) {
+  constructor() {
     this.name = "NotAllowedChangeSubscriptionPlan";
   }
 }

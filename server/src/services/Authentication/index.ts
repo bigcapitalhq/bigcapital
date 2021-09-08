@@ -7,7 +7,7 @@ import {
   EventDispatcher,
   EventDispatcherInterface,
 } from 'decorators/eventDispatcher';
-import { PasswordReset } from 'system/models';
+import { PasswordReset, Tenant } from 'system/models';
 import {
   IRegisterDTO,
   ITenant,
@@ -117,7 +117,7 @@ export default class AuthenticationService implements IAuthenticationService {
       password,
       user,
     });
-    const tenant = await user.$relatedQuery('tenant');
+    const tenant = await Tenant.query().findById(user.tenantId).withGraphFetched('metadata');
 
     // Keep the user object immutable.
     const outputUser = cloneDeep(user);

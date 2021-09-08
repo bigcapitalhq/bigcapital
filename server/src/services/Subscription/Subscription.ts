@@ -1,11 +1,10 @@
-import { Inject, Service } from 'typedi';
+import { Inject } from 'typedi';
 import { Tenant, Plan } from 'system/models';
 import { IPaymentContext } from 'interfaces';
 import { NotAllowedChangeSubscriptionPlan } from 'exceptions';
-import { NoPaymentModelWithPricedPlan } from 'exceptions';
 
 export default class Subscription<PaymentModel> {
-  paymentContext: IPaymentContext|null;
+  paymentContext: IPaymentContext | null;
 
   @Inject('logger')
   logger: any;
@@ -19,46 +18,63 @@ export default class Subscription<PaymentModel> {
   }
 
   /**
-   * Subscripe to the given plan.
-   * @param  {Plan} plan 
-   * @throws {NotAllowedChangeSubscriptionPlan}
+   * Give the tenant a new subscription.
+   * @param {Tenant} tenant
+   * @param {Plan} plan
+   * @param {string} invoiceInterval
+   * @param {number} invoicePeriod
+   * @param {string} subscriptionSlug
    */
-  async subscribe(
-    tenant: Tenant,
-    plan: Plan,
-    paymentModel?: PaymentModel,
-    subscriptionSlug: string = 'main',
+  protected async newSubscribtion(
+    tenant,
+    plan,
+    invoiceInterval: string,
+    invoicePeriod: number,
+    subscriptionSlug: string = 'main'
   ) {
-    this.validateIfPlanHasPriceNoPayment(plan, paymentModel);
-
-    await this.paymentContext.makePayment(paymentModel, plan);
-
-    const subscription = await tenant.$relatedQuery('subscriptions')
+    const subscription = await tenant
+      .$relatedQuery('subscriptions')
       .modify('subscriptionBySlug', subscriptionSlug)
       .first();
 
     // No allowed to re-new the the subscription while the subscription is active.
     if (subscription && subscription.active()) {
-      throw new NotAllowedChangeSubscriptionPlan;
+      throw new NotAllowedChangeSubscriptionPlan();
 
-    // In case there is already subscription associated to the given tenant renew it.
-    } else if(subscription && subscription.inactive()) {
-      await subscription.renew(plan);
+      // In case there is already subscription associated to the given tenant renew it.
+    } else if (subscription && subscription.inactive()) {
+      await subscription.renew(invoiceInterval, invoicePeriod);
 
-    // No stored past tenant subscriptions create new one.
+      // No stored past tenant subscriptions create new one.
     } else {
-      await tenant.newSubscription(subscriptionSlug, plan);
-    }        
+      await tenant.newSubscription(
+        plan.id,
+        invoiceInterval,
+        invoicePeriod,
+        subscriptionSlug
+      );
+    }
   }
 
   /**
-   * Throw error in plan has price and no payment model.
-   * @param {Plan} plan -
-   * @param {PaymentModel} paymentModel - payment input.
+   * Subscripe to the given plan.
+   * @param {Plan} plan
+   * @throws {NotAllowedChangeSubscriptionPlan}
    */
-  validateIfPlanHasPriceNoPayment(plan: Plan, paymentModel: PaymentMode) {
-    if (plan.price > 0 && !paymentModel) {
-      throw new NoPaymentModelWithPricedPlan();
-    }
+  public async subscribe(
+    tenant: Tenant,
+    plan: Plan,
+    paymentModel?: PaymentModel,
+    subscriptionSlug: string = 'main'
+  ) {
+    await this.paymentContext.makePayment(paymentModel, plan);
+
+    return this.newSubscribtion(
+      tenant,
+      plan,
+      plan.invoiceInterval,
+      plan.invoicePeriod,
+      subscriptionSlug
+    );
   }
 }

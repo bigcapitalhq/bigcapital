@@ -16,9 +16,6 @@ const ERRORS = {
 
 @Service()
 export default class UsersService {
-  @Inject()
-  tenancy: TenancyService;
-
   @Inject('logger')
   logger: any;
 

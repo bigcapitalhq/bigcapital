@@ -4,6 +4,7 @@ import uniqid from 'uniqid';
 import SubscriptionPeriod from 'services/Subscription/SubscriptionPeriod';
 import BaseModel from 'models/Model';
 import TenantMetadata from './TenantMetadata';
+import PlanSubscription from './Subscriptions/PlanSubscription';
 
 export default class Tenant extends BaseModel {
   /**
@@ -89,19 +90,39 @@ export default class Tenant extends BaseModel {
   }
 
   /**
+   * 
+   * @param {*} planId 
+   * @param {*} invoiceInterval 
+   * @param {*} invoicePeriod 
+   * @param {*} subscriptionSlug 
+   * @returns 
+   */
+  newSubscription(planId, invoiceInterval, invoicePeriod, subscriptionSlug) {
+    return Tenant.newSubscription(
+      this.id,
+      planId,
+      invoiceInterval,
+      invoicePeriod,
+      subscriptionSlug,
+    );
+  }
+
+  /**
    * Records a new subscription for the associated tenant.
    */
-  newSubscription(subscriptionSlug, plan) {
-    const trial = new SubscriptionPeriod(plan.trialInterval, plan.trialPeriod);
-    const period = new SubscriptionPeriod(
-      plan.invoiceInterval,
-      plan.invoicePeriod,
-      trial.getEndDate()
-    );
+  static newSubscription(
+    tenantId,
+    planId,
+    invoiceInterval,
+    invoicePeriod,
+    subscriptionSlug
+  ) {
+    const period = new SubscriptionPeriod(invoiceInterval, invoicePeriod);
 
-    return this.$relatedQuery('subscriptions').insert({
+    return PlanSubscription.query().insert({
+      tenantId,
       slug: subscriptionSlug,
-      planId: plan.id,
+      planId,
       startsAt: period.getStartDate(),
       endsAt: period.getEndDate(),
     });

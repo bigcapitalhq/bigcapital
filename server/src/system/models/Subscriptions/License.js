@@ -41,18 +41,18 @@ export default class License extends SystemModel {
       // Filters licenses list.
       filter(builder, licensesFilter) {
         if (licensesFilter.active) {
-          builder.modify('filterActiveLicense')
+          builder.modify('filterActiveLicense');
         }
         if (licensesFilter.disabled) {
           builder.whereNot('disabled_at', null);
         }
         if (licensesFilter.used) {
           builder.whereNot('used_at', null);
-        } 
+        }
         if (licensesFilter.sent) {
           builder.whereNot('sent_at', null);
         }
-      }
+      },
     };
   }
 
@@ -76,38 +76,32 @@ export default class License extends SystemModel {
 
   /**
    * Deletes the given license code from the storage.
-   * @param {string} licenseCode 
+   * @param {string} licenseCode
    * @return {Promise}
    */
   static deleteLicense(licenseCode, viaAttribute = 'license_code') {
-    return this.query()
-      .where(viaAttribute, licenseCode)
-      .delete();
+    return this.query().where(viaAttribute, licenseCode).delete();
   }
 
   /**
    * Marks the given license code as disabled on the storage.
-   * @param {string} licenseCode 
+   * @param {string} licenseCode
    * @return {Promise}
    */
   static markLicenseAsDisabled(licenseCode, viaAttribute = 'license_code') {
-    return this.query()
-      .where(viaAttribute, licenseCode)
-      .patch({
-        disabled_at: moment().toMySqlDateTime(),
-      });
+    return this.query().where(viaAttribute, licenseCode).patch({
+      disabled_at: moment().toMySqlDateTime(),
+    });
   }
 
   /**
    * Marks the given license code as sent on the storage.
-   * @param {string} licenseCode 
+   * @param {string} licenseCode
    */
   static markLicenseAsSent(licenseCode, viaAttribute = 'license_code') {
-    return this.query()
-      .where(viaAttribute, licenseCode)
-      .patch({
-        sent_at: moment().toMySqlDateTime(),
-      });
+    return this.query().where(viaAttribute, licenseCode).patch({
+      sent_at: moment().toMySqlDateTime(),
+    });
   }
 
   /**
@@ -116,20 +110,20 @@ export default class License extends SystemModel {
    * @return {Promise}
    */
   static markLicenseAsUsed(licenseCode, viaAttribute = 'license_code') {
-    return this.query()
-      .where(viaAttribute, licenseCode)
-      .patch({
-        used_at: moment().toMySqlDateTime()
-      });
+    return this.query().where(viaAttribute, licenseCode).patch({
+      used_at: moment().toMySqlDateTime(),
+    });
   }
- 
+
   /**
-   * 
-   * @param {IIPlan} plan 
+   *
+   * @param {IIPlan} plan
    * @return {boolean}
    */
   isEqualPlanPeriod(plan) {
-    return (this.invoicePeriod === plan.invoiceInterval &&
-      license.licensePeriod === license.periodInterval);
+    return (
+      this.invoicePeriod === plan.invoiceInterval &&
+      license.licensePeriod === license.periodInterval
+    );
   }
 }

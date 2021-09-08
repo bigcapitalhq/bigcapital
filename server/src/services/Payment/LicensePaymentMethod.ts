@@ -2,7 +2,6 @@ import { License } from 'system/models';
 import PaymentMethod from 'services/Payment/PaymentMethod';
 import { Plan } from 'system/models';
 import { IPaymentMethod, ILicensePaymentModel } from 'interfaces';
-import { ILicensePaymentModel } from 'interfaces';
 import {
   PaymentInputInvalid,
   PaymentAmountInvalidWithPlan,
@@ -11,12 +10,13 @@ import {
 
 export default class LicensePaymentMethod
   extends PaymentMethod
-  implements IPaymentMethod {
+  implements IPaymentMethod
+{
   /**
    * Payment subscription of organization via license code.
    * @param {ILicensePaymentModel} licensePaymentModel -
    */
-  async payment(licensePaymentModel: ILicensePaymentModel, plan: Plan) {
+  public async payment(licensePaymentModel: ILicensePaymentModel, plan: Plan) {
     this.validateLicensePaymentModel(licensePaymentModel);
 
     const license = await this.getLicenseOrThrowInvalid(licensePaymentModel);
@@ -30,7 +30,9 @@ export default class LicensePaymentMethod
    * Validates the license code activation on the storage.
    * @param {ILicensePaymentModel} licensePaymentModel -
    */
-  async getLicenseOrThrowInvalid(licensePaymentModel: ILicensePaymentModel) {
+  private async getLicenseOrThrowInvalid(
+    licensePaymentModel: ILicensePaymentModel
+  ) {
     const foundLicense = await License.query()
       .modify('filterActiveLicense')
       .where('license_code', licensePaymentModel.licenseCode)
@@ -47,7 +49,7 @@ export default class LicensePaymentMethod
    * @param {License} license
    * @param {Plan} plan
    */
-  validatePaymentAmountWithPlan(license: License, plan: Plan) {
+  private validatePaymentAmountWithPlan(license: License, plan: Plan) {
     if (license.planId !== plan.id) {
       throw new PaymentAmountInvalidWithPlan();
     }
@@ -57,7 +59,7 @@ export default class LicensePaymentMethod
    * Validate voucher payload.
    * @param {ILicensePaymentModel} licenseModel -
    */
-  validateLicensePaymentModel(licenseModel: ILicensePaymentModel) {
+  private validateLicensePaymentModel(licenseModel: ILicensePaymentModel) {
     if (!licenseModel || !licenseModel.licenseCode) {
       throw new VoucherCodeRequired();
     }
