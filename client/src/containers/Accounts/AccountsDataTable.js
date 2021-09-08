@@ -15,6 +15,8 @@ import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
+import { useMemorizedColumnsWidths } from '../../hooks';
+
 /**
  * Accounts data-table.
  */
@@ -28,11 +30,8 @@ function AccountsDataTable({
   // #withDrawerActions
   openDrawer,
 }) {
-  const {
-    isAccountsLoading,
-    isAccountsFetching,
-    accounts,
-  } = useAccountsChartContext();
+  const { isAccountsLoading, isAccountsFetching, accounts } =
+    useAccountsChartContext();
 
   // Retrieve accounts table columns.
   const columns = useAccountsTableColumns();
@@ -80,6 +79,9 @@ function AccountsDataTable({
   const handleCellClick = (cell, event) => {
     openDrawer('account-drawer', { accountId: cell.row.original.id });
   };
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths('accounts');
 
   return (
     <DataTable
@@ -98,7 +100,7 @@ function AccountsDataTable({
       autoResetSelectedRows={false}
       expandColumnSpace={1}
       expandToggleColumn={2}
-      selectionColumnWidth={50}
+      selectionColumnWidth={45}
       TableCellRenderer={TableFastCell}
       TableRowsRenderer={TableVirtualizedListRows}
       TableLoadingRenderer={TableSkeletonRows}
@@ -108,6 +110,8 @@ function AccountsDataTable({
       vListrowHeight={42}
       vListOverscanRowCount={0}
       onCellClick={handleCellClick}
+      initialColumnsWidths={initialColumnsWidths}
+      onColumnResizing={handleColumnResizing}
       payload={{
         onEdit: handleEditAccount,
         onDelete: handleDeleteAccount,

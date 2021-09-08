@@ -32,6 +32,8 @@ import TableWrapper from './Datatable/TableWrapper';
 import TableIndeterminateCheckboxRow from './Datatable/TableIndeterminateCheckboxRow';
 import TableIndeterminateCheckboxHeader from './Datatable/TableIndeterminateCheckboxHeader';
 
+import { useResizeObserver } from './Datatable/utils';
+
 /**
  * Datatable component.
  */
@@ -78,6 +80,9 @@ export default function DataTable(props) {
     TablePaginationRenderer,
     TableFooterRenderer,
 
+    onColumnResizing,
+    initialColumnsWidths,
+
     ...restProps
   } = props;
 
@@ -106,6 +111,9 @@ export default function DataTable(props) {
         pageIndex: initialPageIndex,
         pageSize: initialPageSize,
         expanded,
+        columnResizing: {
+          columnWidths: initialColumnsWidths || {},
+        },
       },
       manualPagination,
       pageCount: controlledPageCount,
@@ -163,6 +171,11 @@ export default function DataTable(props) {
   useUpdateEffect(() => {
     saveInvoke(onSelectedRowsChange, selectedFlatRows);
   }, [selectedRowIds, onSelectedRowsChange]);
+
+  // Column resizing observer.
+  useResizeObserver(table.state, (current, columnWidth, columnsResizing) => {
+    onColumnResizing && onColumnResizing(current, columnWidth, columnsResizing);
+  });
 
   return (
     <TableContext.Provider value={{ table, props }}>

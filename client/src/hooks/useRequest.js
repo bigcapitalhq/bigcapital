@@ -6,13 +6,13 @@ import {
   useSetGlobalErrors,
   useAuthToken,
 } from './state';
-import { useAppIntlContext } from '../components/AppIntlProvider';
+import { getCookie } from '../utils';
 
 export default function useApiRequest() {
   const setGlobalErrors = useSetGlobalErrors();
   const { setLogout } = useAuthActions();
-  const { currentLocale } = useAppIntlContext();
-
+  const currentLocale = getCookie('locale');
+  
   // Authentication token.
   const token = useAuthToken();
 
