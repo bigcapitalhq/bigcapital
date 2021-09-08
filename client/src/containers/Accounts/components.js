@@ -6,12 +6,11 @@ import {
   MenuItem,
   Menu,
   MenuDivider,
-  Intent
+  Intent,
 } from '@blueprintjs/core';
 import { Icon, Money, If } from 'components';
 import intl from 'react-intl-universal';
 import { safeCallback } from 'utils';
-
 
 /**
  * Accounts table actions menu.
@@ -101,7 +100,8 @@ export function BalanceCell({ cell }) {
 
   return account.amount !== null ? (
     <span>
-      <Money amount={account.amount} currency={account.currency_code} />
+      {account.formatted_amount}
+      {/* <Money amount={account.amount} currency={account.currency_code} /> */}
     </span>
   ) : (
     <span class="placeholder">—</span>

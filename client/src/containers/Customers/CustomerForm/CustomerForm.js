@@ -14,7 +14,7 @@ import CustomerFormAfterPrimarySection from './CustomerFormAfterPrimarySection';
 import CustomersTabs from './CustomersTabs';
 import CustomerFloatingActions from './CustomerFloatingActions';
 
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 import { compose, transformToForm } from 'utils';
 import { useCustomerFormContext } from './CustomerFormProvider';
@@ -59,10 +59,7 @@ const defaultInitialValues = {
 /**
  * Customer form.
  */
-function CustomerForm({
-  // #withSettings
-  baseCurrency,
-}) {
+function CustomerForm({ organization: { base_currency } }) {
   const {
     customer,
     customerId,
@@ -75,7 +72,6 @@ function CustomerForm({
 
   // const isNewMode = !customerId;
   const history = useHistory();
-  
 
   /**
    * Initial values in create and edit mode.
@@ -83,10 +79,10 @@ function CustomerForm({
   const initialValues = useMemo(
     () => ({
       ...defaultInitialValues,
-      currency_code: baseCurrency,
+      currency_code: base_currency,
       ...transformToForm(contactDuplicate || customer, defaultInitialValues),
     }),
-    [customer, contactDuplicate, baseCurrency],
+    [customer, contactDuplicate, base_currency],
   );
 
   //Handles the form submit.
@@ -153,8 +149,4 @@ function CustomerForm({
   );
 }
 
-export default compose(
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
-)(CustomerForm);
+export default compose(withCurrentOrganization())(CustomerForm);

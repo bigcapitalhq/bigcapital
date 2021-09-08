@@ -12,7 +12,6 @@ import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
-import withSettings from 'containers/Settings/withSettings';
 import { usePaymentReceivesColumns, ActionsMenu } from './components';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
 
@@ -67,6 +66,13 @@ function PaymentReceivesDataTable({
     openDrawer('payment-receive-detail-drawer', { paymentReceiveId: id });
   };
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('payment-receive-detail-drawer', {
+      paymentReceiveId: cell.row.original.id,
+    });
+  };
+
   // Handle datatable fetch once the table's state changing.
   const handleDataTableFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
@@ -105,6 +111,7 @@ function PaymentReceivesDataTable({
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
+        onCellClick={handleCellClick}
         payload={{
           onDelete: handleDeletePaymentReceive,
           onEdit: handleEditPaymentReceive,
@@ -122,8 +129,5 @@ export default compose(
   withDrawerActions,
   withPaymentReceives(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
-  })),
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
   })),
 )(PaymentReceivesDataTable);

@@ -20,6 +20,7 @@ import EstimateFormFooter from './EstimateFormFooter';
 import EstimateFormDialogs from './EstimateFormDialogs';
 
 import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 import { AppToaster } from 'components';
 import { ERROR } from 'common/errors';
@@ -35,7 +36,9 @@ function EstimateForm({
   estimateNextNumber,
   estimateNumberPrefix,
   estimateIncrementMode,
-  baseCurrency,
+
+  // #withCurrentOrganization
+  organization: { base_currency },
 }) {
   const history = useHistory();
   const {
@@ -55,14 +58,14 @@ function EstimateForm({
   const initialValues = useMemo(
     () => ({
       ...(!isEmpty(estimate)
-        ? { ...transformToEditForm(estimate), currency_code: baseCurrency }
+        ? { ...transformToEditForm(estimate), currency_code: base_currency }
         : {
             ...defaultEstimate,
             ...(estimateIncrementMode && {
               estimate_number: estimateNumber,
             }),
             entries: orderingLinesIndexes(defaultEstimate.entries),
-            currency_code: baseCurrency,
+            currency_code: base_currency,
           }),
     }),
     [estimate, estimateNumber, estimateIncrementMode],
@@ -172,10 +175,10 @@ function EstimateForm({
 }
 
 export default compose(
-  withSettings(({ estimatesSettings, organizationSettings }) => ({
+  withSettings(({ estimatesSettings }) => ({
     estimateNextNumber: estimatesSettings?.nextNumber,
     estimateNumberPrefix: estimatesSettings?.numberPrefix,
     estimateIncrementMode: estimatesSettings?.autoIncrement,
-    baseCurrency: organizationSettings?.baseCurrency,
   })),
+  withCurrentOrganization(),
 )(EstimateForm);

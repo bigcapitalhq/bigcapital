@@ -8,22 +8,24 @@ import { CLASSES } from 'common/classes';
 
 import BillFormHeaderFields from './BillFormHeaderFields';
 import { PageFormBigNumber } from 'components';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+
 import { compose } from 'redux';
 
 /**
  * Fill form header.
  */
 function BillFormHeader({
-  // #withSettings
-  baseCurrency,
+  // #withCurrentOrganization
+  organization: { base_currency },
 }) {
   const { values } = useFormikContext();
 
   // Calculate the total due amount of bill entries.
-  const totalDueAmount = useMemo(() => sumBy(values.entries, 'amount'), [
-    values.entries,
-  ]);
+  const totalDueAmount = useMemo(
+    () => sumBy(values.entries, 'amount'),
+    [values.entries],
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
@@ -31,13 +33,9 @@ function BillFormHeader({
       <PageFormBigNumber
         label={intl.get('due_amount')}
         amount={totalDueAmount}
-        currencyCode={baseCurrency}
+        currencyCode={base_currency}
       />
     </div>
   );
 }
-export default compose(
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
-)(BillFormHeader);
+export default compose(withCurrentOrganization())(BillFormHeader);

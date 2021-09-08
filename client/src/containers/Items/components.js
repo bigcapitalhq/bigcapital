@@ -155,6 +155,7 @@ export const useItemsTableColumns = () => {
         accessor: 'name',
         className: 'name',
         width: 180,
+        clickable: true,
       },
       {
         id: 'code',
@@ -162,6 +163,7 @@ export const useItemsTableColumns = () => {
         accessor: 'code',
         className: 'code',
         width: 120,
+        clickable: true,
       },
       {
         id: 'type',
@@ -169,6 +171,7 @@ export const useItemsTableColumns = () => {
         accessor: ItemTypeAccessor,
         className: 'item_type',
         width: 120,
+        clickable: true,
       },
       {
         id: 'category',
@@ -176,6 +179,7 @@ export const useItemsTableColumns = () => {
         accessor: 'category.name',
         className: 'category',
         width: 150,
+        clickable: true,
       },
       {
         id: 'sell_price',
@@ -183,6 +187,7 @@ export const useItemsTableColumns = () => {
         accessor: 'sell_price_formatted',
         className: 'sell-price',
         width: 150,
+        clickable: true,
       },
       {
         id: 'cost_price',
@@ -190,6 +195,7 @@ export const useItemsTableColumns = () => {
         accessor: 'cost_price_formatted',
         className: 'cost-price',
         width: 150,
+        clickable: true,
       },
       {
         id: 'quantity_on_hand',
@@ -197,6 +203,7 @@ export const useItemsTableColumns = () => {
         accessor: 'quantity_on_hand',
         Cell: QuantityOnHandCell,
         width: 140,
+        clickable: true,
       },
     ],
     [],

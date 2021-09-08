@@ -11,7 +11,6 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
-import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -28,9 +27,6 @@ function InvoicesDataTable({
 
   // #withInvoices
   invoicesTableState,
-
-  // #withSettings
-  baseCurrency,
 
   // #withAlertsActions
   openAlert,
@@ -90,6 +86,10 @@ function InvoicesDataTable({
     openDialog('invoice-pdf-preview', { invoiceId: id });
   };
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('invoice-detail-drawer', { invoiceId: cell.row.original.id });
+  };
   // Handles fetch data once the table state change.
   const handleDataTableFetchData = useCallback(
     ({ pageSize, pageIndex, sortBy }) => {
@@ -129,6 +129,7 @@ function InvoicesDataTable({
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
+        onCellClick={handleCellClick}
         payload={{
           onDelete: handleDeleteInvoice,
           onDeliver: handleDeliverInvoice,
@@ -137,7 +138,6 @@ function InvoicesDataTable({
           onQuick: handleQuickPaymentReceive,
           onViewDetails: handleViewDetailInvoice,
           onPrint: handlePrintInvoice,
-          baseCurrency,
         }}
       />
     </DashboardContentTable>
@@ -151,7 +151,4 @@ export default compose(
   withDrawerActions,
   withDialogActions,
   withInvoices(({ invoicesTableState }) => ({ invoicesTableState })),
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
 )(InvoicesDataTable);

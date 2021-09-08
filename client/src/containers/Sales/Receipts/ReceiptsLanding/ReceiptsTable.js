@@ -13,7 +13,6 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withReceipts from './withReceipts';
 import withReceiptsActions from './withReceiptsActions';
-import withSettings from 'containers/Settings/withSettings';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useReceiptsTableColumns, ActionsMenu } from './components';
@@ -27,9 +26,6 @@ function ReceiptsDataTable({
 
   // #withReceipts
   receiptTableState,
-
-  // #withSettings
-  baseCurrency,
 
   // #withAlertsActions
   openAlert,
@@ -99,6 +95,10 @@ function ReceiptsDataTable({
   if (isEmptyStatus) {
     return <ReceiptsEmptyStatus />;
   }
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('receipt-detail-drawer', { receiptId: cell.row.original.id });
+  };
 
   return (
     <DashboardContentTable>
@@ -122,6 +122,7 @@ function ReceiptsDataTable({
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
+        onCellClick={handleCellClick}
         payload={{
           onEdit: handleEditReceipt,
           onDelete: handleDeleteReceipt,
@@ -129,7 +130,6 @@ function ReceiptsDataTable({
           onDrawer: handleDrawerReceipt,
           onViewDetails: handleViewDetailReceipt,
           onPrint: handlePrintInvoice,
-          baseCurrency,
         }}
       />
     </DashboardContentTable>
@@ -143,8 +143,5 @@ export default compose(
   withDialogActions,
   withReceipts(({ receiptTableState }) => ({
     receiptTableState,
-  })),
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
   })),
 )(ReceiptsDataTable);

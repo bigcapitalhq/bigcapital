@@ -11,7 +11,8 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import withPaymentMadeActions from './withPaymentMadeActions';
 import withPaymentMade from './withPaymentMade';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { usePaymentMadesTableColumns, ActionsMenu } from './components';
@@ -63,6 +64,13 @@ function PaymentMadesTable({
     openDrawer('payment-made-detail-drawer', { paymentMadeId: id });
   };
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('payment-made-detail-drawer', {
+      paymentMadeId: cell.row.original.id,
+    });
+  };
+
   // Handle datatable fetch data once the table state change.
   const handleDataTableFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
@@ -97,6 +105,7 @@ function PaymentMadesTable({
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
+        onCellClick={handleCellClick}
         payload={{
           onEdit: handleEditPaymentMade,
           onDelete: handleDeletePaymentMade,
@@ -112,7 +121,5 @@ export default compose(
   withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
   withAlertsActions,
   withDrawerActions,
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
+  withCurrentOrganization(),
 )(PaymentMadesTable);

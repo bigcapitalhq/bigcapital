@@ -138,6 +138,7 @@ export function useExpensesTableColumns() {
         accessor: (r) => moment(r.payment_date).format('YYYY MMM DD'),
         width: 140,
         className: 'payment_date',
+        clickable: true,
       },
       {
         id: 'amount',
@@ -145,6 +146,7 @@ export function useExpensesTableColumns() {
         accessor: TotalAmountAccessor,
         className: 'amount',
         width: 150,
+        clickable: true,
       },
       {
         id: 'payment_account',
@@ -152,6 +154,7 @@ export function useExpensesTableColumns() {
         accessor: 'payment_account.name',
         className: 'payment_account',
         width: 150,
+        clickable: true,
       },
       {
         id: 'expense_account',
@@ -160,6 +163,7 @@ export function useExpensesTableColumns() {
         width: 160,
         className: 'expense_account',
         disableSortBy: true,
+        clickable: true,
       },
       {
         id: 'published',
@@ -167,6 +171,7 @@ export function useExpensesTableColumns() {
         accessor: PublishAccessor,
         width: 100,
         className: 'publish',
+        clickable: true,
       },
       {
         id: 'description',
@@ -175,6 +180,7 @@ export function useExpensesTableColumns() {
         width: 150,
         className: 'description',
         disableSortBy: true,
+        clickable: true,
       },
     ],
     [],

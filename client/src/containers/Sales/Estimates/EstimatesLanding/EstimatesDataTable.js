@@ -9,7 +9,6 @@ import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import withEstimatesActions from './withEstimatesActions';
-import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -91,6 +90,10 @@ function EstimatesDataTable({
     openDialog('estimate-pdf-preview', { estimateId: id });
   };
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('estimate-detail-drawer', { estimateId: cell.row.original.id });
+  };
   // Handles fetch data.
   const handleFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
@@ -127,6 +130,7 @@ function EstimatesDataTable({
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
+        onCellClick={handleCellClick}
         payload={{
           onApprove: handleApproveEstimate,
           onEdit: handleEditEstimate,
@@ -148,7 +152,4 @@ export default compose(
   withAlertsActions,
   withDrawerActions,
   withDialogActions,
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
 )(EstimatesDataTable);

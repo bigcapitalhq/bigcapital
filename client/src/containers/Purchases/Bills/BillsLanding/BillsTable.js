@@ -12,7 +12,6 @@ import BillsEmptyStatus from './BillsEmptyStatus';
 
 import withBills from './withBills';
 import withBillActions from './withBillsActions';
-import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
@@ -34,7 +33,7 @@ function BillsDataTable({
 
   // #withDialogActions
   openDialog,
-  
+
   // #withDrawerActions
   openDrawer,
 }) {
@@ -88,6 +87,11 @@ function BillsDataTable({
     openDrawer('bill-drawer', { billId: id });
   };
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('bill-drawer', { billId: cell.row.original.id });
+  };
+
   if (isEmptyStatus) {
     return <BillsEmptyStatus />;
   }
@@ -111,6 +115,7 @@ function BillsDataTable({
       TableLoadingRenderer={TableSkeletonRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       ContextMenu={ActionsMenu}
+      onCellClick={handleCellClick}
       payload={{
         onDelete: handleDeleteBill,
         onEdit: handleEditBill,
@@ -130,7 +135,4 @@ export default compose(
   withAlertsActions,
   withDrawerActions,
   withDialogActions,
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
 )(BillsDataTable);

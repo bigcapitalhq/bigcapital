@@ -8,14 +8,14 @@ import { Money } from 'components';
 import { FormattedMessage as T } from 'components';
 
 import PaymentMadeFormHeaderFields from './PaymentMadeFormHeaderFields';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 /**
  * Payment made header form.
  */
 function PaymentMadeFormHeader({
-  // #withSettings
-  baseCurrency,
+  // #withCurrentOrganization
+  organization: { base_currency },
 }) {
   // Formik form context.
   const {
@@ -36,7 +36,7 @@ function PaymentMadeFormHeader({
               <T id={'amount_received'} />
             </span>
             <h1 class="big-amount__number">
-              <Money amount={amountPaid} currency={baseCurrency} />
+              <Money amount={amountPaid} currency={base_currency} />
             </h1>
           </div>
         </div>
@@ -45,8 +45,4 @@ function PaymentMadeFormHeader({
   );
 }
 
-export default compose(
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
-)(PaymentMadeFormHeader);
+export default compose(withCurrentOrganization())(PaymentMadeFormHeader);

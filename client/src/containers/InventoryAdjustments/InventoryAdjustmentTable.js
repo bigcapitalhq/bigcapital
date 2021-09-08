@@ -66,7 +66,12 @@ function InventoryAdjustmentDataTable({
     },
     [setInventoryAdjustmentTableState],
   );
-
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('inventory-adjustment-drawer', {
+      inventoryId: cell.row.original.id,
+    });
+  };
   return (
     <DataTable
       columns={columns}
@@ -83,6 +88,7 @@ function InventoryAdjustmentDataTable({
       pagesCount={pagination.pagesCount}
       autoResetSortBy={false}
       autoResetPage={false}
+      onCellClick={handleCellClick}
       payload={{
         onDelete: handleDeleteAdjustment,
         onPublish: handlePublishInventoryAdjustment,

@@ -6,7 +6,7 @@ import { CLASSES } from 'common/classes';
 import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 import { accountsFieldShouldUpdate } from './utils';
 import { compose, inputIntent } from 'utils';
@@ -16,7 +16,7 @@ import { useItemFormContext } from './ItemFormProvider';
 /**
  * Item form inventory sections.
  */
-function ItemFormInventorySection({ baseCurrency }) {
+function ItemFormInventorySection({ organization: { base_currency } }) {
   const { accounts } = useItemFormContext();
 
   return (
@@ -63,8 +63,4 @@ function ItemFormInventorySection({ baseCurrency }) {
   );
 }
 
-export default compose(
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
-)(ItemFormInventorySection);
+export default compose(withCurrentOrganization())(ItemFormInventorySection);

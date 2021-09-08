@@ -86,6 +86,11 @@ function VendorsTable({
     openDrawer('contact-detail-drawer', { contactId: id });
   };
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('contact-detail-drawer', { contactId: cell.row.original.id });
+  };
+
   // Handle fetch data once the page index, size or sort by of the table change.
   const handleFetchData = React.useCallback(
     ({ pageSize, pageIndex, sortBy }) => {
@@ -125,6 +130,7 @@ function VendorsTable({
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
+        onCellClick={handleCellClick}
         payload={{
           onEdit: handleEditVendor,
           onDelete: handleDeleteVendor,

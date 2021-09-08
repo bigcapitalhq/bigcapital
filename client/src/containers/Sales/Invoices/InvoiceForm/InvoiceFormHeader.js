@@ -9,7 +9,7 @@ import InvoiceFormHeaderFields from './InvoiceFormHeaderFields';
 import { getEntriesTotal } from 'containers/Entries/utils';
 import { PageFormBigNumber } from 'components';
 
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 import { compose } from 'redux';
 
@@ -17,8 +17,8 @@ import { compose } from 'redux';
  * Invoice form header section.
  */
 function InvoiceFormHeader({
-  // #withSettings
-  baseCurrency,
+  // #withCurrentOrganization
+  organization: { base_currency },
 }) {
   const { values } = useFormikContext();
 
@@ -34,13 +34,9 @@ function InvoiceFormHeader({
       <PageFormBigNumber
         label={intl.get('due_amount')}
         amount={totalDueAmount}
-        currencyCode={baseCurrency}
+        currencyCode={base_currency}
       />
     </div>
   );
 }
-export default compose(
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
-)(InvoiceFormHeader);
+export default compose(withCurrentOrganization())(InvoiceFormHeader);

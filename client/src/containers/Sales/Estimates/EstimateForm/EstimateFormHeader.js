@@ -6,7 +6,7 @@ import intl from 'react-intl-universal';
 import { CLASSES } from 'common/classes';
 import EstimateFormHeaderFields from './EstimateFormHeaderFields';
 
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 import { getEntriesTotal } from 'containers/Entries/utils';
 import { PageFormBigNumber } from 'components';
@@ -14,8 +14,8 @@ import { compose } from 'utils';
 
 // Estimate form top header.
 function EstimateFormHeader({
-  // #withSettings
-  baseCurrency,
+  // #withCurrentOrganization
+  organization: { base_currency },
 }) {
   const { values } = useFormikContext();
 
@@ -32,14 +32,10 @@ function EstimateFormHeader({
       <PageFormBigNumber
         label={intl.get('amount')}
         amount={totalDueAmount}
-        currencyCode={baseCurrency}
+        currencyCode={base_currency}
       />
     </div>
   );
 }
 
-export default compose(
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
-)(EstimateFormHeader);
+export default compose(withCurrentOrganization())(EstimateFormHeader);

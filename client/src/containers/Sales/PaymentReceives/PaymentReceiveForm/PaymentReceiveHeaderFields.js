@@ -37,6 +37,7 @@ import { ACCOUNT_TYPE } from 'common/accountTypes';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 import {
   useObservePaymentNoSettings,
@@ -51,7 +52,8 @@ import { toSafeInteger } from 'lodash';
  * Payment receive header fields.
  */
 function PaymentReceiveHeaderFields({
-  baseCurrency,
+  // #withCurrentOrganization
+  organization: { base_currency },
 
   // #withDialogActions
   openDialog,
@@ -192,7 +194,7 @@ function PaymentReceiveHeaderFields({
             helperText={<ErrorMessage name="full_amount" />}
           >
             <ControlGroup>
-              <InputPrependText text={baseCurrency} />
+              <InputPrependText text={base_currency} />
               <MoneyInputGroup
                 value={value}
                 onChange={(value) => {
@@ -209,7 +211,7 @@ function PaymentReceiveHeaderFields({
               minimal={true}
             >
               <T id={'receive_full_amount'} /> (
-              <Money amount={totalDueAmount} currency={baseCurrency} />)
+              <Money amount={totalDueAmount} currency={base_currency} />)
             </Button>
           </FormGroup>
         )}
@@ -313,11 +315,11 @@ function PaymentReceiveHeaderFields({
 }
 
 export default compose(
-  withSettings(({ organizationSettings, paymentReceiveSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
+  withSettings(({ paymentReceiveSettings }) => ({
     paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
     paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
     paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
   })),
   withDialogActions,
+  withCurrentOrganization(),
 )(PaymentReceiveHeaderFields);
