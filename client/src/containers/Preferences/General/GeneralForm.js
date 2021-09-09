@@ -16,6 +16,8 @@ import { getFiscalYear } from 'common/fiscalYearOptions';
 import { getLanguages } from 'common/languagesOptions';
 import { useGeneralFormContext } from './GeneralFormProvider';
 
+import { shouldBaseCurrencyUpdate } from './utils';
+
 /**
  * Preferences general form.
  */
@@ -27,7 +29,9 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
   const Languages = getLanguages();
   const Currencies = getAllCurrenciesOptions();
 
-  const { dateFormats } = useGeneralFormContext();
+  const { dateFormats, baseCurrencyMutateAbility } = useGeneralFormContext();
+
+  const baseCurrencyDisabled = baseCurrencyMutateAbility.length > 0;
 
   // Handle close click.
   const handleCloseClick = () => {
@@ -96,7 +100,11 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
       </FastField>
 
       {/* ----------  Base currency ----------  */}
-      <FastField name={'base_currency'}>
+      <FastField
+        name={'base_currency'}
+        baseCurrencyDisabled={baseCurrencyDisabled}
+        shouldUpdate={shouldBaseCurrencyUpdate}
+      >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'base_currency'} />}
@@ -115,7 +123,7 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
             <ListSelect
               items={Currencies}
               onItemSelect={(currency) => {
-                form.setFieldValue('base_currency', currency.code);
+                form.setFieldValue('base_currency', currency.key);
               }}
               selectedItem={value}
               selectedItemProp={'key'}
@@ -123,6 +131,7 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
               textProp={'name'}
               labelProp={'key'}
               popoverProps={{ minimal: true }}
+              disabled={baseCurrencyDisabled}
             />
           </FormGroup>
         )}
@@ -141,9 +150,9 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
           >
             <ListSelect
               items={FiscalYear}
-              onItemSelect={({ value }) =>
-                form.setFieldValue('fiscal_year', value)
-              }
+              onItemSelect={(option) => {
+                form.setFieldValue('fiscal_year', option.key)
+              }}
               selectedItem={value}
               selectedItemProp={'key'}
               defaultText={<T id={'select_fiscal_year'} />}

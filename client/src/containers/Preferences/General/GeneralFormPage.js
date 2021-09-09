@@ -53,7 +53,7 @@ function GeneralFormPage({
       setSubmitting(false);
 
       // Reboot the application if the application's language is mutated.
-      if (organization.language !== values.language) {
+      if (organization.metadata?.language !== values.language) {
         window.location.reload();
       }
     };

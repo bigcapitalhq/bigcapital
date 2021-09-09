@@ -5,6 +5,7 @@ import {
   useCurrentOrganization,
   useUpdateOrganization,
   useDateFormats,
+  useOrgBaseCurrencyMutateAbilities,
 } from 'hooks/query';
 import PreferencesPageLoader from '../PreferencesPageLoader';
 
@@ -21,6 +22,9 @@ function GeneralFormProvider({ ...props }) {
   const { data: dateFormats, isLoading: isDateFormatsLoading } =
     useDateFormats();
 
+  const { data: baseCurrencyMutateAbility } =
+    useOrgBaseCurrencyMutateAbilities();
+
   // Mutate organization information.
   const { mutateAsync: updateOrganization } = useUpdateOrganization();
 
@@ -29,6 +33,7 @@ function GeneralFormProvider({ ...props }) {
     isOrganizationLoading,
     isDateFormatsLoading,
     updateOrganization,
+    baseCurrencyMutateAbility,
     organization,
     dateFormats,
   };
