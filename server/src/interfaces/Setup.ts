@@ -11,14 +11,17 @@ export interface IOrganizationSetupDTO{
 
 export interface IOrganizationBuildDTO {
   name: string;
+  industry: string;
+  location: string;
   baseCurrency: string,
   timezone: string;
   fiscalYear: string;
-  industry: string;
+  dateFormat?: string;
 }
 
 export interface IOrganizationUpdateDTO {
   name: string;
+  location: string;
   baseCurrency: string,
   timezone: string;
   fiscalYear: string;

@@ -19,6 +19,8 @@ import { DATE_FORMATS } from 'services/Miscellaneous/DateFormats/constants';
 import { ServiceError } from 'exceptions';
 import BaseController from 'api/controllers/BaseController';
 
+const ACCEPTED_LOCATIONS = ['libya'];
+
 @Service()
 export default class OrganizationController extends BaseController {
   @Inject()
@@ -39,14 +41,14 @@ export default class OrganizationController extends BaseController {
     router.use('/build', SubscriptionMiddleware('main'));
     router.post(
       '/build',
-      this.buildValidationSchema,
+      this.organizationValidationSchema,
       this.validationResult,
       asyncMiddleware(this.build.bind(this)),
       this.handleServiceErrors.bind(this)
     );
     router.put(
       '/',
-      this.buildValidationSchema,
+      this.organizationValidationSchema,
       this.validationResult,
       this.asyncMiddleware(this.updateOrganization.bind(this)),
       this.handleServiceErrors.bind(this)
@@ -61,15 +63,17 @@ export default class OrganizationController extends BaseController {
 
   /**
    * Organization setup schema.
+   * @return {ValidationChain[]}
    */
-  private get buildValidationSchema(): ValidationChain[] {
+  private get organizationValidationSchema(): ValidationChain[] {
     return [
       check('name').exists().trim(),
+      check('industry').optional().isString(),
+      check('location').exists().isString().isIn(ACCEPTED_LOCATIONS),
       check('base_currency').exists().isIn(ACCEPTED_CURRENCIES),
       check('timezone').exists().isIn(moment.tz.names()),
       check('fiscal_year').exists().isIn(MONTHS),
-      check('industry').optional().isString(),
-      check('language').optional().isString().isIn(ACCEPTED_LOCALES),
+      check('language').exists().isString().isIn(ACCEPTED_LOCALES),
       check('date_format').optional().isIn(DATE_FORMATS),
     ];
   }
@@ -117,7 +121,9 @@ export default class OrganizationController extends BaseController {
       const organization = await this.organizationService.currentOrganization(
         tenantId
       );
-      return res.status(200).send({ organization });
+      return res.status(200).send({
+        organization: this.transfromToResponse(organization),
+      });
     } catch (error) {
       next(error);
     }
@@ -139,7 +145,7 @@ export default class OrganizationController extends BaseController {
     const tenantDTO = this.matchedBodyData(req);
 
     try {
-      const organization = await this.organizationService.updateOrganization(
+      await this.organizationService.updateOrganization(
         tenantId,
         tenantDTO
       );
@@ -181,6 +187,11 @@ export default class OrganizationController extends BaseController {
       if (error.errorType === 'TENANT_IS_BUILDING') {
         return res.status(400).send({
           errors: [{ type: 'TENANT_IS_BUILDING', code: 300 }],
+        });
+      }
+      if (error.errorType === 'BASE_CURRENCY_MUTATE_LOCKED') {
+        return res.status(400).send({
+          errors: [{ type: 'BASE_CURRENCY_MUTATE_LOCKED', code: 400 }],
         });
       }
     }

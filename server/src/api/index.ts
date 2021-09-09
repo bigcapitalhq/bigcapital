@@ -43,6 +43,7 @@ import InventoryAdjustments from 'api/controllers/Inventory/InventoryAdjustments
 import asyncRenderMiddleware from './middleware/AsyncRenderMiddleware';
 import Jobs from './controllers/Jobs';
 import Miscellaneous from 'api/controllers/Miscellaneous';
+import OrganizationDashboard from 'api/controllers/OrganizationDashboard';
 
 export default () => {
   const app = Router();
@@ -75,6 +76,7 @@ export default () => {
   dashboard.use(I18nAuthenticatedMiddlware);
   dashboard.use(EnsureTenantIsSeeded);
 
+  dashboard.use('/organization', Container.get(OrganizationDashboard).router());
   dashboard.use('/invite', Container.get(InviteUsers).authRouter());
   dashboard.use('/currencies', Container.get(Currencies).router());
   dashboard.use('/settings', Container.get(Settings).router());

@@ -1,5 +1,6 @@
 import { Service, Inject } from 'typedi';
 import { ObjectId } from 'mongodb';
+import { defaultTo } from 'lodash';
 import { ServiceError } from 'exceptions';
 import {
   IOrganizationBuildDTO,
@@ -13,6 +14,7 @@ import {
 import events from 'subscribers/events';
 import TenantsManager from 'services/Tenancy/TenantsManager';
 import { Tenant } from 'system/models';
+import OrganizationBaseCurrencyLocking from './OrganizationBaseCurrencyLocking';
 
 const ERRORS = {
   TENANT_NOT_FOUND: 'tenant_not_found',
@@ -20,6 +22,7 @@ const ERRORS = {
   TENANT_ALREADY_SEEDED: 'tenant_already_seeded',
   TENANT_DB_NOT_BUILT: 'tenant_db_not_built',
   TENANT_IS_BUILDING: 'TENANT_IS_BUILDING',
+  BASE_CURRENCY_MUTATE_LOCKED: 'BASE_CURRENCY_MUTATE_LOCKED',
 };
 
 @Service()
@@ -38,6 +41,9 @@ export default class OrganizationService {
 
   @Inject('agenda')
   agenda: any;
+
+  @Inject()
+  baseCurrencyMutateLocking: OrganizationBaseCurrencyLocking;
 
   /**
    * Builds the database schema and seed data of the given organization id.
@@ -90,8 +96,11 @@ export default class OrganizationService {
     // Throw error if tenant is currently building.
     this.throwIfTenantIsBuilding(tenant);
 
+    // Transformes build DTO object.
+    const transformedBuildDTO = this.transformBuildDTO(buildDTO);
+
     // Saves the tenant metadata.
-    await tenant.saveMetadata(buildDTO);
+    await tenant.saveMetadata(transformedBuildDTO);
 
     // Send welcome mail to the user.
     const jobMeta = await this.agenda.now('organization-setup', {
@@ -136,6 +145,15 @@ export default class OrganizationService {
   }
 
   /**
+   * Retrieve organization ability of mutate base currency
+   * @param {number} tenantId
+   * @returns
+   */
+  public mutateBaseCurrencyAbility(tenantId: number) {
+    return this.baseCurrencyMutateLocking.isBaseCurrencyMutateLocked(tenantId);
+  }
+
+  /**
    * Updates organization information.
    * @param {ITenant} tenantId
    * @param {IOrganizationUpdateDTO} organizationDTO
@@ -144,12 +162,64 @@ export default class OrganizationService {
     tenantId: number,
     organizationDTO: IOrganizationUpdateDTO
   ): Promise<void> {
-    const tenant = await Tenant.query().findById(tenantId);
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
 
     // Throw error if the tenant not exists.
     this.throwIfTenantNotExists(tenant);
 
+    // Validate organization transactions before mutate base currency.
+    await this.validateMutateBaseCurrency(
+      tenant,
+      organizationDTO.baseCurrency,
+      tenant.metadata?.baseCurrency
+    );
     await tenant.saveMetadata(organizationDTO);
+  }
+
+  /**
+   * Transformes build DTO object.
+   * @param {IOrganizationBuildDTO} buildDTO
+   * @returns {IOrganizationBuildDTO}
+   */
+  private transformBuildDTO(
+    buildDTO: IOrganizationBuildDTO
+  ): IOrganizationBuildDTO {
+    return {
+      ...buildDTO,
+      dateFormat: defaultTo(buildDTO.dateFormat, 'DD/MM/yyyy'),
+    };
+  }
+
+  /**
+   * Throw base currency mutate locked error.
+   */
+  private throwBaseCurrencyMutateLocked() {
+    throw new ServiceError(ERRORS.BASE_CURRENCY_MUTATE_LOCKED);
+  }
+
+  /**
+   * Validate mutate base currency ability.
+   * @param {Tenant} tenant -
+   * @param {string} newBaseCurrency -
+   * @param {string} oldBaseCurrency -
+   */
+  private async validateMutateBaseCurrency(
+    tenant: Tenant,
+    newBaseCurrency: string,
+    oldBaseCurrency: string
+  ) {
+    if (tenant.isReady && newBaseCurrency !== oldBaseCurrency) {
+      const isBaseCurrencyMutateLocked =
+        await this.baseCurrencyMutateLocking.isBaseCurrencyMutateLocked(
+          tenant.id
+        );
+
+      if (isBaseCurrencyMutateLocked.length > 0) {
+        this.throwBaseCurrencyMutateLocked();
+      }
+    }
   }
 
   /**
