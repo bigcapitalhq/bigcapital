@@ -1269,7 +1269,6 @@
   "customer.drawer.label.currency": "Currency code",
   "vendor.drawer.label.outstanding_payable": "Outstanding payable",
   "vendor.drawer.label.vendor": "Vendor name",
-  "vendor.drawer.label.vendor_type": "Vendor type",
   "vendor.drawer.label.unused_credits": "Unused Credits",
   "vendor.drawer.label.company_name": "Company name",
   "vendor.drawer.label.phone_number": "Phone number",
