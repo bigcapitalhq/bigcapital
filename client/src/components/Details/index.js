@@ -18,13 +18,18 @@ export function DetailsMenu({
   children,
   direction = DIRECTION.VERTICAL,
   minLabelSize,
+  className,
 }) {
   return (
     <div
-      className={classNames('details-menu', {
-        'details-menu--vertical': direction === DIRECTION.VERTICAL,
-        'details-menu--horizantal': direction === DIRECTION.HORIZANTAL,
-      })}
+      className={classNames(
+        'details-menu',
+        {
+          'details-menu--vertical': direction === DIRECTION.VERTICAL,
+          'details-menu--horizantal': direction === DIRECTION.HORIZANTAL,
+        },
+        className,
+      )}
     >
       <DetailsMenuContext.Provider value={{ minLabelSize }}>
         {children}
@@ -36,14 +41,18 @@ export function DetailsMenu({
 /**
  * Detail item.
  */
-export function DetailItem({ label, children, name }) {
+export function DetailItem({ label, children, name, className }) {
   const { minLabelSize } = useDetailsMenuContext();
 
   return (
     <div
-      className={classNames('detail-item', {
-        [`detail-item--${name}`]: name,
-      })}
+      className={classNames(
+        'detail-item',
+        {
+          [`detail-item--${name}`]: name,
+        },
+        className,
+      )}
     >
       <div
         style={{

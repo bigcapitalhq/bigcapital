@@ -3,14 +3,23 @@ import intl from 'react-intl-universal';
 import { RESOURCES_TYPES } from '../../common/resourcesTypes';
 import withDrawerActions from '../Drawer/withDrawerActions';
 
-function CustomerUniversalSearchSelectComponent({ resourceType, resourceId }) {
+function CustomerUniversalSearchSelectComponent({
+  resourceType,
+  resourceId,
+  onAction,
+
+  // #withDrawerActions
+  openDrawer,
+}) {
   if (resourceType === RESOURCES_TYPES.CUSTOMER) {
+    openDrawer('customer-details-drawer', { customerId: resourceId });
+    onAction && onAction();
   }
   return null;
 }
 
 const CustomerUniversalSearchSelectAction = withDrawerActions(
-  CustomerUniversalSearchSelectComponent
+  CustomerUniversalSearchSelectComponent,
 );
 
 /**
@@ -19,6 +28,7 @@ const CustomerUniversalSearchSelectAction = withDrawerActions(
  * @returns
  */
 const customersToSearch = (contact) => ({
+  id: contact.id,
   text: contact.display_name,
   label: contact.formatted_balance,
   reference: contact,

@@ -202,7 +202,7 @@ export default class VendorsService {
    * @param {number} vendorId
    */
   public async getVendor(tenantId: number, vendorId: number) {
-    const vendor = this.contactService.getContact(tenantId, vendorId, 'vendor');
+    const vendor = await this.contactService.getContact(tenantId, vendorId, 'vendor');
 
     return this.vendorTransformer.transform(vendor);
   }

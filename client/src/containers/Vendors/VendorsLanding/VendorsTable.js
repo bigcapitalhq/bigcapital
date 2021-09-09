@@ -83,12 +83,12 @@ function VendorsTable({
 
   // Handle view detail item.
   const handleViewDetailVendor = ({ id }) => {
-    openDrawer('contact-detail-drawer', { contactId: id });
+    openDrawer('vendor-details-drawer', { vendorId: id });
   };
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('contact-detail-drawer', { contactId: cell.row.original.id });
+    openDrawer('vendor-details-drawer', { vendorId: cell.row.original.id });
   };
 
   // Handle fetch data once the page index, size or sort by of the table change.

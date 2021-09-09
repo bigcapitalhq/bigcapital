@@ -32,6 +32,7 @@ straightforward as possible.
 - Inventory adjustment publish action.
 - Customers and vendors activate and inactivate action.
 - Add refresh button on dashboard actions bar to all datatables resources.
+- Add clickable datatable rows to display each row details. 
 
 ### Changed
 

@@ -1,0 +1,15 @@
+.root {
+
+  &_content {
+
+    &_primary {
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e2e2e2;
+    }
+  }
+
+  :global .card {
+    margin: 15px;
+    padding: 18px;
+  }
+}

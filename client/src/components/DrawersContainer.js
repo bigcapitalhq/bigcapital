@@ -1,8 +1,5 @@
 import React from 'react';
-// import EstimateDrawer from 'containers/Sales/Estimates/EstimateDetails/EstimateDrawer';
-// import InvoiceDrawer from 'containers/Sales/Invoices/InvoiceDetails/InvoiceDrawer';
-// import ReceiptDrawer from 'containers/Sales/Receipts/ReceiptDetails/ReceiptDrawer';
-// import PaymentReceiveDrawer from 'containers/Sales/PaymentReceives/PaymentDetails/PaymentReceiveDrawer';
+
 import AccountDrawer from 'containers/Drawers/AccountDrawer';
 import ManualJournalDrawer from 'containers/Drawers/ManualJournalDrawer';
 import ExpenseDrawer from 'containers/Drawers/ExpenseDrawer';
@@ -13,7 +10,8 @@ import PaymentReceiveDetailDrawer from 'containers/Drawers/PaymentReceiveDetailD
 import PaymentMadeDetailDrawer from 'containers/Drawers/PaymentMadeDetailDrawer';
 import EstimateDetailDrawer from '../containers/Drawers/EstimateDetailDrawer';
 import ItemDetailDrawer from '../containers/Drawers/ItemDetailDrawer';
-import ContactDetailDrawer from '../containers/Drawers/ContactDetailDrawer';
+import CustomerDetailsDrawer from '../containers/Drawers/CustomerDetailsDrawer';
+import VendorDetailsDrawer from '../containers/Drawers/VendorDetailsDrawer';
 import InventoryAdjustmentDetailDrawer from '../containers/Drawers/InventoryAdjustmentDetailDrawer';
 
 import { DRAWERS } from 'common/drawers';
@@ -34,7 +32,8 @@ export default function DrawersContainer() {
       <PaymentReceiveDetailDrawer name={'payment-receive-detail-drawer'} />
       <PaymentMadeDetailDrawer name={'payment-made-detail-drawer'} />
       <ItemDetailDrawer name={'item-detail-drawer'} />
-      <ContactDetailDrawer name={'contact-detail-drawer'} />
+      <CustomerDetailsDrawer name={'customer-details-drawer'} />
+      <VendorDetailsDrawer name={'vendor-details-drawer'} />
       <InventoryAdjustmentDetailDrawer
         name={DRAWERS.INVENTORY_ADJUSTMENT_DRAWER}
       />
