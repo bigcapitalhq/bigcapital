@@ -171,12 +171,12 @@ export default class SaleEstimate extends mixin(TenantModel, [
    */
   static get relationMappings() {
     const ItemEntry = require('models/ItemEntry');
-    const Contact = require('models/Contact');
+    const Customer = require('models/Customer');
 
     return {
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Contact.default,
+        modelClass: Customer.default,
         join: {
           from: 'sales_estimates.customerId',
           to: 'contacts.id',

@@ -9,7 +9,7 @@ export default {
       relationType: 'enumeration',
       relationKey: 'customer',
 
-      relationEntityLabel: 'name',
+      relationEntityLabel: 'display_name',
       relationEntityKey: 'id',
     },
     payment_date: {
