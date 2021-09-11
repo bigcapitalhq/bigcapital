@@ -974,9 +974,7 @@
   "closing_balance": "Closing Balance",
   "view_more_transactions": "View more transactions.",
   "there_is_no_results_in_the_table": "There is no results in the table.",
-  "create_your_first_journal_entries_on_accounts_chart": "Create your first journal entries on accounts chart.",
   "journal_details": "Journal details",
-  "create_and_manage_your_organization_s_expenses": "Create and manage your organization's expenses",
   "expense_amount": "Expense Amount",
   "expense_details": "Expense details",
   "sub_total": "Sub Total",
@@ -1280,5 +1278,9 @@
   "vendor.drawer.action.delete": "Delete",
   "vendor.drawer.action.new_transaction": "New transaction",
   "vendor.drawer.action.new_payment": "New payment",
-  "vendor.drawer.action.new_invoice": "New purchase invoice"
+  "vendor.drawer.action.new_invoice": "New purchase invoice",
+  "manual_journals.empty_status.description": "Manual journals can be used to record financial transactions manually, used by accountants to work with the ledger.",
+  "manual_journals.empty_status.title": "Create your first journal entries on accounts chart.",
+  "expenses.empty_status.description": "Create and manage expeses that are part of your organization's operating costs.",
+  "expenses.empty_status.title": "Create and manage your organization's expenses"
 }

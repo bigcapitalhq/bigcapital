@@ -9,10 +9,10 @@ export default function ManualJournalsEmptyStatus() {
 
   return (
     <EmptyStatus
-      title={<T id={'create_your_first_journal_entries_on_accounts_chart'} />}
+      title={<T id={'manual_journals.empty_status.title'} />}
       description={
         <p>
-          <T id={'it_is_a_long_established_fact_that_a_reader'} />
+          <T id={'manual_journals.empty_status.description'} />
         </p>
       }
       action={

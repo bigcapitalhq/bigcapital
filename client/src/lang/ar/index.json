@@ -983,9 +983,7 @@
   "closing_balance": "الرصيد الختامي",
   "view_more_transactions": "عرض المزيد من المعاملات.",
   "there_is_no_results_in_the_table": "لا توجد نتائج في الجدول.",
-  "create_your_first_journal_entries_on_accounts_chart": "قم بإدخال اول القيود اليدوية علي شجرة الحسابات.",
   "journal_details": "تفاصيل القيد",
-  "create_and_manage_your_organization_s_expenses": "إضافة وإدارة مصاريف مؤسستك",
   "expense_amount": "قيمة المصروف",
   "expense_details": "تفاصيل المصروف",
   "sub_total": "مبلغ إجمالي",
@@ -1309,6 +1307,10 @@
   "vendor.drawer.action.delete": "حذف",
   "vendor.drawer.action.new_transaction": "معاملة جديدة",
   "vendor.drawer.action.new_payment": "سند مورد جديد",
-  "vendor.drawer.action.new_invoice": "فاتورة شراء جديدة"
+  "vendor.drawer.action.new_invoice": "فاتورة شراء جديدة",
+  "expenses.empty_status.title": "إضافة وإدارة مصاريف مؤسستك",
+  "expenses.empty_status.description": "قم بإنشاء وإدارة المصروفات التي تُعد جزء من التكاليف التشغيلية لمؤسستك.",
+  "manual_journals.empty_status.title": "قم بإدخال اول القيود اليدوية علي شجرة الحسابات.",
+  "manual_journals.empty_status.description": "يمكن القيود اليدوية لتسجيل المعاملات المالية ، ويستخدمها المحاسبون للعمل مع دفتر الأستاذ."
 }
 

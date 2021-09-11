@@ -9,10 +9,10 @@ export default function InvoicesEmptyStatus() {
 
   return (
     <EmptyStatus
-      title={<T id={'create_and_manage_your_organization_s_expenses'} />}
+      title={<T id={'expenses.empty_status.title'} />}
       description={
         <p>
-          <T id={'it_is_a_long_established_fact_that_a_reader'} />
+          <T id={'expenses.empty_status.description'} />
         </p>
       }
       action={
