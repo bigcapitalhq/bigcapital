@@ -189,11 +189,9 @@ export function useInvoicesTableColumns() {
         clickable: true,
       },
       {
-        id: 'balance',
+        id: 'amount',
         Header: intl.get('balance'),
-        accessor: (r) => (
-          <Money amount={r.balance} currency={r.currency_code} />
-        ),
+        accessor: 'formatted_amount',
         width: 120,
         className: 'balance',
         clickable: true,
