@@ -7,6 +7,7 @@ import TrialBalanceSheet from './TrialBalanceSheet';
 import FinancialSheet from '../FinancialSheet';
 import InventoryService from 'services/Inventory/Inventory';
 import { parseBoolean } from 'utils';
+import { Tenant } from 'system/models';
 
 @Service()
 export default class TrialBalanceSheetService extends FinancialSheet {
@@ -89,12 +90,9 @@ export default class TrialBalanceSheetService extends FinancialSheet {
       transactionsRepository,
     } = this.tenancy.repositories(tenantId);
 
-    // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
 
     this.logger.info('[trial_balance_sheet] trying to calcualte the report.', {
       tenantId,
@@ -122,7 +120,7 @@ export default class TrialBalanceSheetService extends FinancialSheet {
       filter,
       accounts,
       transactionsJournal,
-      baseCurrency
+      tenant.metadata.baseCurrency,
     );
     // Trial balance sheet data.
     const trialBalanceSheetData = trialBalanceInstance.reportData();

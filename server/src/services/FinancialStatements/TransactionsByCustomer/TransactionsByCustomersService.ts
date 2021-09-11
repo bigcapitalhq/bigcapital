@@ -11,6 +11,7 @@ import {
 import TransactionsByCustomers from './TransactionsByCustomers';
 import Ledger from 'services/Accounting/Ledger';
 import TransactionsByCustomersRepository from './TransactionsByCustomersRepository';
+import { Tenant } from 'system/models';
 
 export default class TransactionsByCustomersService
   implements ITransactionsByCustomersService
@@ -112,15 +113,12 @@ export default class TransactionsByCustomersService
     query: ITransactionsByCustomersFilter
   ): Promise<ITransactionsByCustomersStatement> {
     const { accountRepository } = this.tenancy.repositories(tenantId);
-
-    // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
     const i18n = this.tenancy.i18n(tenantId);
 
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
+    // Retrieve tenant information.
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
 
     const filter = {
       ...this.defaultQuery,
@@ -162,7 +160,7 @@ export default class TransactionsByCustomersService
       accountsGraph,
       journal,
       filter,
-      baseCurrency,
+      tenant.metadata.baseCurrency,
       i18n
     );
 

@@ -11,6 +11,7 @@ import FinancialSheet from '../FinancialSheet';
 import InventoryDetailsRepository from './InventoryDetailsRepository';
 import InventoryService from 'services/Inventory/Inventory';
 import { parseBoolean } from 'utils';
+import { Tenant } from 'system/models';
 
 @Service()
 export default class InventoryDetailsService extends FinancialSheet {
@@ -80,14 +81,11 @@ export default class InventoryDetailsService extends FinancialSheet {
     tenantId: number,
     query: IInventoryDetailsQuery
   ): Promise<IInvetoryItemDetailDOO> {
-    // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
     const i18n = this.tenancy.i18n(tenantId);
 
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
 
     const filter = {
       ...this.defaultQuery,
@@ -112,7 +110,7 @@ export default class InventoryDetailsService extends FinancialSheet {
       openingBalanceTransactions,
       inventoryTransactions,
       filter,
-      baseCurrency,
+      tenant.metadata.baseCurrency,
       i18n
     );
 

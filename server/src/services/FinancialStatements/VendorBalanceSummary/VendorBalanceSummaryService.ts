@@ -13,6 +13,7 @@ import {
 import { VendorBalanceSummaryReport } from './VendorBalanceSummary';
 import Ledger from 'services/Accounting/Ledger';
 import VendorBalanceSummaryRepository from './VendorBalanceSummaryRepository';
+import { Tenant } from 'system/models';
 
 export default class VendorBalanceSummaryService
   implements IVendorBalanceSummaryService
@@ -77,12 +78,9 @@ export default class VendorBalanceSummaryService
     tenantId: number,
     query: IVendorBalanceSummaryQuery
   ): Promise<IVendorBalanceSummaryStatement> {
-    // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
 
     const filter = { ...this.defaultQuery, ...query };
     this.logger.info(
@@ -110,7 +108,7 @@ export default class VendorBalanceSummaryService
       vendorsLedger,
       vendors,
       filter,
-      baseCurrency
+      tenant.metadata.baseCurrency
     );
 
     return {

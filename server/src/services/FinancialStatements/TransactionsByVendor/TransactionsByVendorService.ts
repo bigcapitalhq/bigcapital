@@ -12,6 +12,7 @@ import {
 import TransactionsByVendor from './TransactionsByVendor';
 import Ledger from 'services/Accounting/Ledger';
 import TransactionsByVendorRepository from './TransactionsByVendorRepository';
+import { Tenant } from 'system/models';
 
 export default class TransactionsByVendorsService
   implements ITransactionsByVendorsService
@@ -135,14 +136,12 @@ export default class TransactionsByVendorsService
   ): Promise<ITransactionsByVendorsStatement> {
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
-    // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
     const i18n = this.tenancy.i18n(tenantId);
+ 
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
 
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
     const filter = { ...this.defaultQuery, ...query };
 
     // Retrieve the report vendors.
@@ -168,7 +167,7 @@ export default class TransactionsByVendorsService
       accountsGraph,
       journal,
       filter,
-      baseCurrency,
+      tenant.metadata.baseCurrency,
       i18n
     );
     return {

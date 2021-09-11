@@ -7,6 +7,7 @@ import {
 } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
 import PurchasesByItems from './PurchasesByItems';
+import { Tenant } from 'system/models';
 
 @Service()
 export default class InventoryValuationReportService {
@@ -77,12 +78,9 @@ export default class InventoryValuationReportService {
   }> {
     const { Item, InventoryTransaction } = this.tenancy.models(tenantId);
 
-    // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
 
     const filter = {
       ...this.defaultQuery,
@@ -119,7 +117,7 @@ export default class InventoryValuationReportService {
       filter,
       inventoryItems,
       inventoryTransactions,
-      baseCurrency
+      tenant.metadata.baseCurrency
     );
     const purchasesByItemsData = purchasesByItemsInstance.reportData();
 

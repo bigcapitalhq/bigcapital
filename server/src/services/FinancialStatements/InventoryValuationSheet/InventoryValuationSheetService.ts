@@ -7,6 +7,7 @@ import {
 import TenancyService from 'services/Tenancy/TenancyService';
 import InventoryValuationSheet from './InventoryValuationSheet';
 import InventoryService from 'services/Inventory/Inventory';
+import { Tenant } from 'system/models';
 
 @Service()
 export default class InventoryValuationSheetService {
@@ -76,12 +77,9 @@ export default class InventoryValuationSheetService {
   ) {
     const { Item, InventoryCostLotTracker } = this.tenancy.models(tenantId);
 
-    // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
 
     const filter = {
       ...this.defaultQuery,
@@ -119,7 +117,7 @@ export default class InventoryValuationSheetService {
       inventoryItems,
       INTransactions,
       OUTTransactions,
-      baseCurrency,
+      tenant.metadata.baseCurrency,
     );
     // Retrieve the inventory valuation report data.
     const inventoryValuationData = inventoryValuationInstance.reportData();

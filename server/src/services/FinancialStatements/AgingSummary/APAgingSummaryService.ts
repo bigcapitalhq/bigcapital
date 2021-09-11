@@ -3,6 +3,7 @@ import { Inject, Service } from 'typedi';
 import { IAPAgingSummaryQuery, IARAgingSummaryMeta } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
 import APAgingSummarySheet from './APAgingSummarySheet';
+import { Tenant } from 'system/models';
 
 @Service()
 export default class PayableAgingSummaryService {
@@ -74,11 +75,10 @@ export default class PayableAgingSummaryService {
       filter,
     });
     // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
+
     // Retrieve all vendors from the storage.
     const vendors =
       filter.vendorsIds.length > 0
@@ -98,7 +98,7 @@ export default class PayableAgingSummaryService {
       vendors,
       overdueBills,
       dueBills,
-      baseCurrency
+      tenant.metadata.baseCurrency
     );
     // A/P aging summary report data and columns.
     const data = APAgingSummaryReport.reportData();

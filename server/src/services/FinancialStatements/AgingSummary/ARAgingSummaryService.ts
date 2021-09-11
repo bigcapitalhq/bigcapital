@@ -3,6 +3,7 @@ import { Inject, Service } from 'typedi';
 import { IARAgingSummaryQuery, IARAgingSummaryMeta } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
 import ARAgingSummarySheet from './ARAgingSummarySheet';
+import { Tenant } from 'system/models';
 
 @Service()
 export default class ARAgingSummaryService {
@@ -74,13 +75,10 @@ export default class ARAgingSummaryService {
       tenantId,
       filter,
     });
-    // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
 
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
     // Retrieve all customers from the storage.
     const customers =
       (filter.customersIds.length > 0)
@@ -102,7 +100,7 @@ export default class ARAgingSummaryService {
       customers,
       overdueSaleInvoices,
       currentInvoices,
-      baseCurrency
+      tenant.metadata.baseCurrency
     );
     // AR aging summary report data and columns.
     const data = ARAgingSummaryReport.reportData();

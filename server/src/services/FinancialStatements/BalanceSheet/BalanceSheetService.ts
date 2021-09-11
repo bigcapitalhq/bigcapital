@@ -11,10 +11,12 @@ import Journal from 'services/Accounting/JournalPoster';
 import BalanceSheetStatement from './BalanceSheet';
 import InventoryService from 'services/Inventory/Inventory';
 import { parseBoolean } from 'utils';
+import { Tenant } from 'system/models';
 
 @Service()
 export default class BalanceSheetStatementService
-  implements IBalanceSheetStatementService {
+  implements IBalanceSheetStatementService
+{
   @Inject()
   tenancy: TenancyService;
 
@@ -50,14 +52,14 @@ export default class BalanceSheetStatementService
 
   /**
    * Retrieve the balance sheet meta.
-   * @param {number} tenantId - 
+   * @param {number} tenantId -
    * @returns {IBalanceSheetMeta}
    */
   private reportMetadata(tenantId: number): IBalanceSheetMeta {
     const settings = this.tenancy.settings(tenantId);
 
-    const isCostComputeRunning = this.inventoryService
-      .isItemsCostComputeRunning(tenantId);
+    const isCostComputeRunning =
+      this.inventoryService.isItemsCostComputeRunning(tenantId);
 
     const organizationName = settings.get({
       group: 'organization',
@@ -71,7 +73,7 @@ export default class BalanceSheetStatementService
     return {
       isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
       organizationName,
-      baseCurrency
+      baseCurrency,
     };
   }
 
@@ -87,18 +89,14 @@ export default class BalanceSheetStatementService
     tenantId: number,
     query: IBalanceSheetQuery
   ): Promise<IBalanceSheetStatement> {
-    const {
-      accountRepository,
-      transactionsRepository,
-    } = this.tenancy.repositories(tenantId);
+    const { accountRepository, transactionsRepository } =
+      this.tenancy.repositories(tenantId);
 
     const i18n = this.tenancy.i18n(tenantId);
 
-    // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({
-      group: 'organization', key: 'base_currency',
-    });
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
 
     const filter = {
       ...this.defaultQuery,
@@ -115,7 +113,7 @@ export default class BalanceSheetStatementService
     // Retrieve all journal transactions based on the given query.
     const transactions = await transactionsRepository.journal({
       fromDate: query.fromDate,
-    toDate: query.toDate,
+      toDate: query.toDate,
     });
     // Transform transactions to journal collection.
     const transactionsJournal = Journal.fromTransactions(
@@ -129,7 +127,7 @@ export default class BalanceSheetStatementService
       filter,
       accounts,
       transactionsJournal,
-      baseCurrency,
+      tenant.metadata.baseCurrency,
       i18n
     );
     // Balance sheet data.

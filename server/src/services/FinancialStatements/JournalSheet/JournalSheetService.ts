@@ -7,6 +7,7 @@ import TenancyService from 'services/Tenancy/TenancyService';
 import Journal from 'services/Accounting/JournalPoster';
 import InventoryService from 'services/Inventory/Inventory';
 import { parseBoolean, transformToMap } from 'utils';
+import { Tenant } from 'system/models';
 
 @Service()
 export default class JournalSheetService {
@@ -86,12 +87,11 @@ export default class JournalSheetService {
       tenantId,
       filter,
     });
-    // Settings service.
-    const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
+
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
+
     // Retrieve all accounts on the storage.
     const accountsGraph = await accountRepository.getDependencyGraph();
 
@@ -127,7 +127,7 @@ export default class JournalSheetService {
       transactionsJournal,
       accountsGraph,
       contactsByIdMap,
-      baseCurrency,
+      tenant.metadata.baseCurrency,
       i18n
     );
     // Retrieve journal report columns.

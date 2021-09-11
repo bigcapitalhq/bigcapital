@@ -7,6 +7,7 @@ import TenancyService from 'services/Tenancy/TenancyService';
 import AccountsService from 'services/Accounts/AccountsService';
 import InventoryService from 'services/Inventory/Inventory';
 import { parseBoolean } from 'utils';
+import { Tenant } from 'system/models';
 
 // Profit/Loss sheet service.
 @Service()
@@ -103,12 +104,10 @@ export default class ProfitLossSheetService {
         filter.accountsIds
       );
     }
-    // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
+
     // Retrieve all accounts on the storage.
     const accounts = await accountRepository.all();
     const accountsGraph = await accountRepository.getDependencyGraph();
@@ -130,7 +129,7 @@ export default class ProfitLossSheetService {
       filter,
       accounts,
       transactionsJournal,
-      baseCurrency
+      tenant.metadata.baseCurrency,
     );
     // Profit/loss report data and collumns.
     const profitLossData = profitLossInstance.reportData();

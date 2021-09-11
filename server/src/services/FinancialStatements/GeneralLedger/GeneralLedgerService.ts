@@ -8,6 +8,7 @@ import Journal from 'services/Accounting/JournalPoster';
 import GeneralLedgerSheet from 'services/FinancialStatements/GeneralLedger/GeneralLedger';
 import InventoryService from 'services/Inventory/Inventory';
 import { transformToMap, parseBoolean } from 'utils';
+import { Tenant } from 'system/models';
 
 const ERRORS = {
   ACCOUNTS_NOT_FOUND: 'ACCOUNTS_NOT_FOUND',
@@ -105,21 +106,17 @@ export default class GeneralLedgerService {
       transactionsRepository,
       contactRepository
     } = this.tenancy.repositories(tenantId);
-    const settings = this.tenancy.settings(tenantId);
+
     const i18n = this.tenancy.i18n(tenantId);
+
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
 
     const filter = {
       ...this.defaultQuery,
       ...query,
     };
-    this.logger.info('[general_ledger] trying to calculate the report.', {
-      tenantId,
-      filter,
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
     // Retrieve all accounts with associated type from the storage.
     const accounts = await accountRepository.all();
     const accountsGraph = await accountRepository.getDependencyGraph();
@@ -158,7 +155,7 @@ export default class GeneralLedgerService {
       contactsByIdMap,
       transactionsJournal,
       openingTransJournal,
-      baseCurrency,
+      tenant.metadata.baseCurrency,
       i18n
     );
     // Retrieve general ledger report data.

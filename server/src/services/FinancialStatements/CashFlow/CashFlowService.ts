@@ -15,6 +15,7 @@ import Ledger from 'services/Accounting/Ledger';
 import CashFlowRepository from './CashFlowRepository';
 import InventoryService from 'services/Inventory/Inventory';
 import { parseBoolean } from 'utils';
+import { Tenant } from 'system/models';
 
 @Service()
 export default class CashFlowStatementService
@@ -99,12 +100,9 @@ export default class CashFlowStatementService
     // Retrieve all accounts on the storage.
     const accounts = await this.cashFlowRepo.cashFlowAccounts(tenantId);
 
-    // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
 
     const filter = {
       ...this.defaultQuery,
@@ -137,7 +135,7 @@ export default class CashFlowStatementService
       cashLedger,
       netIncomeLedger,
       filter,
-      baseCurrency,
+      tenant.metadata.baseCurrency,
       i18n
     );
 

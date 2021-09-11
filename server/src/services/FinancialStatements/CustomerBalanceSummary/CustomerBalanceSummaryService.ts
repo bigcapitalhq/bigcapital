@@ -14,6 +14,7 @@ import { CustomerBalanceSummaryReport } from './CustomerBalanceSummary';
 
 import Ledger from 'services/Accounting/Ledger';
 import CustomerBalanceSummaryRepository from './CustomerBalanceSummaryRepository';
+import { Tenant } from 'system/models';
 
 export default class CustomerBalanceSummaryService
   implements ICustomerBalanceSummaryService
@@ -79,12 +80,10 @@ export default class CustomerBalanceSummaryService
     tenantId: number,
     query: ICustomerBalanceSummaryQuery
   ): Promise<ICustomerBalanceSummaryStatement> {
-    // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
+
     // Merges the default query and request query.
     const filter = { ...this.defaultQuery, ...query };
 
@@ -113,7 +112,7 @@ export default class CustomerBalanceSummaryService
       ledger,
       customers,
       filter,
-      baseCurrency
+      tenant.metadata.baseCurrency,
     );
 
     return {
