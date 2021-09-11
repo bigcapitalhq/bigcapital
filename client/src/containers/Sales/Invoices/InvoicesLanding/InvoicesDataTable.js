@@ -66,11 +66,6 @@ function InvoicesDataTable({
     history.push(`/invoices/${invoice.id}/edit`);
   };
 
-  // Handle drawer invoice.
-  const handleDrawerInvoice = ({ id }) => {
-    openDrawer('invoice-drawer', { invoiceId: id });
-  };
-
   // handle quick payment receive.
   const handleQuickPaymentReceive = ({ id }) => {
     openDialog('quick-payment-receive', { invoiceId: id });
@@ -134,7 +129,6 @@ function InvoicesDataTable({
           onDelete: handleDeleteInvoice,
           onDeliver: handleDeliverInvoice,
           onEdit: handleEditInvoice,
-          onDrawer: handleDrawerInvoice,
           onQuick: handleQuickPaymentReceive,
           onViewDetails: handleViewDetailInvoice,
           onPrint: handlePrintInvoice,

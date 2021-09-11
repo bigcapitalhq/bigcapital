@@ -70,11 +70,6 @@ function EstimatesDataTable({
     openAlert('estimate-reject', { estimateId: id });
   };
 
-  // Handle drawer estimate.
-  const handleDrawerEstimate = ({ id }) => {
-    openDrawer('estimate-drawer', { estimateId: id });
-  };
-
   // Handle convent to invoice.
   const handleConvertToInvoice = ({ id }) => {
     history.push(`/invoices/new?from_estimate_id=${id}`, { action: id });
@@ -137,7 +132,6 @@ function EstimatesDataTable({
           onReject: handleRejectEstimate,
           onDeliver: handleDeliverEstimate,
           onDelete: handleDeleteEstimate,
-          onDrawer: handleDrawerEstimate,
           onConvert: handleConvertToInvoice,
           onViewDetails: handleViewDetailEstimate,
           onPrint: handlePrintEstimate,

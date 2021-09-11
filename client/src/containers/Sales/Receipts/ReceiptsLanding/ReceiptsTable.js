@@ -60,11 +60,6 @@ function ReceiptsDataTable({
     openAlert('receipt-delete', { receiptId: receipt.id });
   };
 
-  // Handle drawer receipts.
-  const handleDrawerReceipt = ({ id }) => {
-    openDrawer('receipt-drawer', { receiptId: id });
-  };
-
   // Handles receipt close action.
   const handleCloseReceipt = (receipt) => {
     openAlert('receipt-close', { receiptId: receipt.id });
@@ -127,7 +122,6 @@ function ReceiptsDataTable({
           onEdit: handleEditReceipt,
           onDelete: handleDeleteReceipt,
           onClose: handleCloseReceipt,
-          onDrawer: handleDrawerReceipt,
           onViewDetails: handleViewDetailReceipt,
           onPrint: handlePrintInvoice,
         }}

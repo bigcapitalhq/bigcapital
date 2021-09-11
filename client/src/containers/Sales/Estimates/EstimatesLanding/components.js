@@ -116,11 +116,6 @@ export function ActionsMenu({
         </Choose.When>
       </Choose>
       <MenuItem
-        icon={<Icon icon={'receipt-24'} iconSize={16} />}
-        text={intl.get('estimate_paper')}
-        onClick={safeCallback(onDrawer, original)}
-      />
-      <MenuItem
         icon={<Icon icon={'print-16'} iconSize={16} />}
         text={intl.get('print')}
         onClick={safeCallback(onPrint, original)}
