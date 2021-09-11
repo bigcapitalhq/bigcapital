@@ -29,13 +29,13 @@ export default {
     payment_account: {
       name: 'bill_payment.field.payment_account',
       column: 'payment_account_id',
-
       fieldType: 'relation',
-      fieldRelation: 'paymentAccount',
 
-      fieldRelationType: 'enumeration',
-      relationLabelField: 'name',
-      relationKeyField: 'slug',
+      relationType: 'enumeration',
+      relationKey: 'paymentAccount',
+      
+      relationEntityLabel: 'name',
+      relationEntityKey: 'slug',
     },
     payment_number: {
       name: 'bill_payment.field.payment_number',

@@ -38,13 +38,13 @@ export default class PaymentReceive extends mixin(TenantModel, [
   static get relationMappings() {
     const PaymentReceiveEntry = require('models/PaymentReceiveEntry');
     const AccountTransaction = require('models/AccountTransaction');
-    const Contact = require('models/Contact');
+    const Customer = require('models/Customer');
     const Account = require('models/Account');
 
     return {
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Contact.default,
+        modelClass: Customer.default,
         join: {
           from: 'payment_receives.customerId',
           to: 'contacts.id',
