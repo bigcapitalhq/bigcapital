@@ -60,7 +60,7 @@ function CustomerDetailsActionsBar({
   };
 
   const handleDeleteCustomer = () => {
-    openAlert(`'customer-delete`, { customerId });
+    openAlert(`customer-delete`, { contactId: customerId });
     closeDrawer('customer-details-drawer');
   };
   const handleEditContact = () => {

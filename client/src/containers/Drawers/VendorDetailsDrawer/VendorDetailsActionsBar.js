@@ -45,7 +45,7 @@ function VendorDetailsActionsBar({
 
   // Handle delete vendor.
   const onDeleteContact = () => {
-    openAlert(`'vendor-delete`, { vendorId });
+    openAlert(`vendor-delete`, { contactId: vendorId });
     closeDrawer('vendor-details-drawer');
   };
 
