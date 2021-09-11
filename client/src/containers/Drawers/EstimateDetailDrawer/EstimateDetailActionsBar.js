@@ -67,14 +67,14 @@ function EstimateDetailActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" />}
           text={<T id={'print'} />}
-          onClick={handleDeleteEstimate}
+          onClick={handlePrintEstimate}
         />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'trash-16'} iconSize={16} />}
           text={<T id={'delete'} />}
           intent={Intent.DANGER}
-          onClick={handlePrintEstimate}
+          onClick={handleDeleteEstimate}
         />
       </NavbarGroup>
     </DashboardActionsBar>
