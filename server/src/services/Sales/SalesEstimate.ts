@@ -23,7 +23,7 @@ import CustomersService from 'services/Contacts/CustomersService';
 import moment from 'moment';
 import AutoIncrementOrdersService from './AutoIncrementOrdersService';
 import { ERRORS } from './constants';
-import SaleEstimateTransfromer from './Estimates/SaleEstimateTransformer';
+import SaleEstimateTransformer from './Estimates/SaleEstimateTransformer';
 
 /**
  * Sale estimate service.
@@ -51,9 +51,6 @@ export default class SaleEstimateService implements ISalesEstimatesService{
 
   @Inject()
   autoIncrementOrdersService: AutoIncrementOrdersService;
-
-  @Inject()
-  saleEstimateTransformer: SaleEstimateTransfromer;
 
   /**
    * Retrieve sale estimate or throw service error.
@@ -401,7 +398,7 @@ export default class SaleEstimateService implements ISalesEstimatesService{
     if (!estimate) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_NOT_FOUND);
     }
-    return this.saleEstimateTransformer.transform(estimate);
+    return new SaleEstimateTransformer().transform(estimate);
   }
 
   /**
@@ -447,8 +444,10 @@ export default class SaleEstimateService implements ISalesEstimatesService{
       })
       .pagination(filter.page - 1, filter.pageSize);
 
+    const transformedEstimates = new SaleEstimateTransformer().transform(results);
+
     return {
-      salesEstimates: this.saleEstimateTransformer.transform(results),
+      salesEstimates: transformedEstimates,
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };

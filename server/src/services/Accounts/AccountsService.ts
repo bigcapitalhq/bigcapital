@@ -24,6 +24,7 @@ import { ERRORS } from './constants';
 import { flatToNestedArray } from 'utils';
 import I18nService from 'services/I18n/I18nService';
 import AccountTransformer from './AccountTransform';
+import { Tenant } from 'system/models';
 
 @Service()
 export default class AccountsService {
@@ -331,9 +332,13 @@ export default class AccountsService {
   public async getAccount(tenantId: number, accountId: number) {
     const account = await this.getAccountOrThrowError(tenantId, accountId);
 
-    return this.accountTransformer.transform(
-      this.transformAccountResponse(tenantId, account)
-    );
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
+
+    return new AccountTransformer()
+      .setMeta({ baseCurrency: tenant.metadata.baseCurrency })
+      .transform(account);
   }
 
   /**
@@ -649,8 +654,12 @@ export default class AccountsService {
       builder.modify('inactiveMode', filter.inactiveMode);
     });
 
+    const transformedAccounts = await this.transformAccountsResponse(
+      tenantId,
+      accounts
+    );
     return {
-      accounts: this.transformAccountsResponse(tenantId, accounts),
+      accounts: transformedAccounts,
       filterMeta: dynamicList.getResponseMeta(),
     };
   }
@@ -733,21 +742,26 @@ export default class AccountsService {
   /**
    * Transformes the accounts models to accounts response.
    */
-  private transformAccountsResponse(tenantId: number, accounts: IAccount[]) {
-    const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
+  private async transformAccountsResponse(
+    tenantId: number,
+    accounts: IAccount[]
+  ) {
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
 
-    const _accounts = this.accountTransformer.transform(
-      accounts.map((account) => ({
-        ...account.toJSON(),
-        currencyCode: baseCurrency,
-      }))
-    );
+    const transformed = new AccountTransformer()
+      .setMeta({
+        baseCurrency: tenant.metadata?.baseCurrency,
+      })
+      .transform(accounts);
+
     return flatToNestedArray(
-      this.i18nService.i18nMapper(_accounts, ['account_type_label'], tenantId),
+      this.i18nService.i18nMapper(
+        transformed,
+        ['account_type_label'],
+        tenantId
+      ),
       {
         id: 'id',
         parentId: 'parent_account_id',

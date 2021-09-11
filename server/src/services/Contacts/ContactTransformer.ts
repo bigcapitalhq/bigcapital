@@ -4,7 +4,6 @@ import { Transformer } from 'lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 import { IContact } from 'interfaces';
 
-@Service()
 export default class ContactTransfromer extends Transformer {
   /**
    * Retrieve formatted expense amount.

@@ -52,9 +52,6 @@ export default class VendorsService {
   @Inject('BillPayments')
   billPaymentsService: IBillPaymentsService;
 
-  @Inject()
-  vendorTransformer: VendorTransfromer;
-
   /**
    * Converts vendor to contact DTO.
    * @param {IVendorNewDTO|IVendorEditDTO} vendorDTO
@@ -202,9 +199,13 @@ export default class VendorsService {
    * @param {number} vendorId
    */
   public async getVendor(tenantId: number, vendorId: number) {
-    const vendor = await this.contactService.getContact(tenantId, vendorId, 'vendor');
+    const vendor = await this.contactService.getContact(
+      tenantId,
+      vendorId,
+      'vendor'
+    );
 
-    return this.vendorTransformer.transform(vendor);
+    return new VendorTransfromer().transform(vendor);
   }
 
   /**
@@ -302,8 +303,11 @@ export default class VendorsService {
       })
       .pagination(filter.page - 1, filter.pageSize);
 
+    // Transform the vendors.
+    const transformedVendors = new VendorTransfromer().transform(results);
+
     return {
-      vendors: this.vendorTransformer.transform(results),
+      vendors: transformedVendors,
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };

@@ -33,8 +33,8 @@ import CustomersService from 'services/Contacts/CustomersService';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
 import JournalPosterService from './JournalPosterService';
 import AutoIncrementOrdersService from './AutoIncrementOrdersService';
-import SaleInvoiceTransfromer from './SaleInvoiceTransformer';
 import { ERRORS } from './constants';
+import SaleInvoiceTransformer from './SaleInvoiceTransformer';
 
 /**
  * Sales invoices service
@@ -74,9 +74,6 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
 
   @Inject()
   autoIncrementOrdersService: AutoIncrementOrdersService;
-
-  @Inject()
-  saleInvoiceTransformer: SaleInvoiceTransfromer;
 
   /**
    * Validate whether sale invoice number unqiue on the storage.
@@ -649,7 +646,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
     if (!saleInvoice) {
       throw new ServiceError(ERRORS.SALE_INVOICE_NOT_FOUND);
     }
-    return this.saleInvoiceTransformer.transform(saleInvoice);
+    return new SaleInvoiceTransformer().transform(saleInvoice);
   }
 
   /**
@@ -702,7 +699,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       .pagination(filter.page - 1, filter.pageSize);
 
     return {
-      salesInvoices: this.saleInvoiceTransformer.transform(results),
+      salesInvoices: new SaleInvoiceTransformer().transform(results),
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };

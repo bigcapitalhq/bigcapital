@@ -3,7 +3,6 @@ import { IPaymentReceive } from 'interfaces';
 import { Transformer } from 'lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 
-@Service()
 export default class PaymentReceiveTransfromer extends Transformer {
   /**
    * Include these attributes to payment receive object.

@@ -3,7 +3,6 @@ import { IAccount } from 'interfaces';
 import { Transformer } from 'lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 
-@Service()
 export default class AccountTransformer extends Transformer {
   /**
    * Include these attributes to sale invoice object.
@@ -12,6 +11,7 @@ export default class AccountTransformer extends Transformer {
   protected includeAttributes = (): string[] => {
     return [
       'formattedAmount',
+      'currencyCode'
     ];
   };
 
@@ -22,7 +22,15 @@ export default class AccountTransformer extends Transformer {
    */
   protected formattedAmount = (account: IAccount): string => {
     return formatNumber(account.amount, {
-      currencyCode: account.currencyCode,
+      currencyCode: this.meta.baseCurrency,
     });
+  };
+
+  /**
+   * Retrieve account currency code.
+   * @returns {string}
+   */
+   protected currencyCode = (): string => {
+    return this.meta.baseCurrency;
   };
 }

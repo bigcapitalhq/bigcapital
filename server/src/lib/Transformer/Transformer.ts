@@ -2,6 +2,14 @@ import moment from "moment";
 import { isEmpty, isObject, isUndefined } from 'lodash';
 
 export class Transformer {
+  meta: any;
+
+  setMeta(meta) {
+    this.meta = meta;
+
+    return this;
+  }
+
   /**
    * Includeded attributes.
    * @returns 
@@ -23,7 +31,7 @@ export class Transformer {
   };
 
   /**
-   * 
+   * Transformes the given item to desired output.
    * @param item 
    * @returns 
    */

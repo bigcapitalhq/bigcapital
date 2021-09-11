@@ -1,7 +1,6 @@
 import { Service } from 'typedi';
 import ContactTransfromer from '../ContactTransformer';
 
-@Service()
 export default class CustomerTransfromer extends ContactTransfromer {
   /**
    * Include these attributes to expense object.
@@ -11,7 +10,16 @@ export default class CustomerTransfromer extends ContactTransfromer {
     return [
       'formattedBalance',
       'formattedOpeningBalance',
-      'formattedOpeningBalanceAt'
+      'formattedOpeningBalanceAt',
+      'customerType'
     ];
+  };
+
+  /**
+   * Retrieve customer type.
+   * @returns {string}
+   */
+  protected customerType = (customer): string => {
+    return customer.contactType;
   };
 }

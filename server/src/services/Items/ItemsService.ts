@@ -23,7 +23,8 @@ import {
   ACCOUNT_TYPE,
 } from 'data/AccountTypes';
 import { ERRORS } from './constants';
-import { formatNumber } from 'utils';
+import ItemTransformer from './ItemTransformer';
+import { Tenant } from 'system/models';
 
 @Service()
 export default class ItemsService implements IItemsService {
@@ -506,11 +507,6 @@ export default class ItemsService implements IItemsService {
   public async getItem(tenantId: number, itemId: number): Promise<IItem> {
     const { Item } = this.tenancy.models(tenantId);
 
-    this.logger.info('[items] trying to get the specific item.', {
-      tenantId,
-      itemId,
-    });
-
     const item = await Item.query()
       .findById(itemId)
       .withGraphFetched('sellAccount')
@@ -518,10 +514,19 @@ export default class ItemsService implements IItemsService {
       .withGraphFetched('category')
       .withGraphFetched('costAccount');
 
+    // Can't continue if the item not found.
     if (!item) {
       throw new ServiceError(ERRORS.NOT_FOUND);
     }
-    return this.transformItemToResponse(tenantId, item);
+    // Retrieve tenant and tenant information.
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
+
+    const baseCurrency = tenant.metadata?.baseCurrency;
+
+    // Transformes the item model.
+    return new ItemTransformer().setMeta({ baseCurrency }).transform(item);
   }
 
   /**
@@ -529,9 +534,7 @@ export default class ItemsService implements IItemsService {
    * @param {} filterDTO - Filter DTO.
    */
   private parseItemsListFilterDTO(filterDTO) {
-    return R.compose(
-      this.dynamicListService.parseStringifiedFilter,
-    )(filterDTO);
+    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
   }
 
   /**
@@ -564,43 +567,22 @@ export default class ItemsService implements IItemsService {
       })
       .pagination(filter.page - 1, filter.pageSize);
 
-    const results = items.map((item) =>
-      this.transformItemToResponse(tenantId, item)
-    );
+    // Retrieve tenant and tenant information.
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
+
+    const transformedItems = new ItemTransformer()
+      .setMeta({
+        baseCurrency: tenant?.metadata.baseCurrency,
+      })
+      .transform(items);
 
     return {
-      items: results,
+      items: transformedItems,
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };
-  }
-
-  /**
-   * Retrieve auto-complete items list.
-   * @param {number} tenantId -
-   * @param {IItemsAutoCompleteFilter} itemsFilter -
-   */
-  public async autocompleteItems(
-    tenantId: number,
-    itemsFilter: IItemsAutoCompleteFilter
-  ) {
-    const { Item } = this.tenancy.models(tenantId);
-    const dynamicFilter = await this.dynamicListService.dynamicList(
-      tenantId,
-      Item,
-      itemsFilter
-    );
-    const items = await Item.query().onBuild((builder) => {
-      builder.withGraphFetched('category');
-
-      dynamicFilter.buildQuery()(builder);
-      builder.limit(itemsFilter.limit);
-
-      if (itemsFilter.keyword) {
-        builder.where('name', 'LIKE', `%${itemsFilter.keyword}%`);
-      }
-    });
-    return items.map((item) => this.transformItemToResponse(tenantId, item));
   }
 
   /**
@@ -646,25 +628,5 @@ export default class ItemsService implements IItemsService {
     if (inventoryAdjEntries.length > 0) {
       throw new ServiceError(ERRORS.ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT);
     }
-  }
-
-  /**
-   * Transformes the item object to response.
-   * @param {number} tenantId -
-   * @param {IItem} item -
-   * @returns
-   */
-  private transformItemToResponse(tenantId: number, item: IItem) {
-    // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
-    const currencyCode = settings.get({
-      group: 'organization', key: 'base_currency',
-    });
-
-    return {
-      ...item.toObject ? item.toObject() : item,
-      sellPriceFormatted: formatNumber(item.sellPrice, { currencyCode }),
-      costPriceFormatted: formatNumber(item.costPrice, { currencyCode }),
-    };
   }
 }

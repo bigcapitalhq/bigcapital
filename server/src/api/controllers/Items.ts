@@ -59,11 +59,6 @@ export default class ItemsController extends BaseController {
       this.handlerServiceErrors
     );
     router.get(
-      '/auto-complete',
-      this.autocompleteQuerySchema,
-      this.asyncMiddleware(this.autocompleteList.bind(this)),
-    );
-    router.get(
       '/:id',
       [...this.validateSpecificItemSchema],
       this.validationResult,
@@ -325,10 +320,10 @@ export default class ItemsController extends BaseController {
     const { tenantId } = req;
 
     try {
-      const storedItem = await this.itemsService.getItem(tenantId, itemId);
+      const item = await this.itemsService.getItem(tenantId, itemId);
 
       return res.status(200).send({
-        item: this.transfromToResponse(storedItem)
+        item: this.transfromToResponse(item)
       });
     } catch (error) {
       next(error);
@@ -363,38 +358,6 @@ export default class ItemsController extends BaseController {
         items: this.transfromToResponse(items),
         pagination: this.transfromToResponse(pagination),
         filter_meta: this.transfromToResponse(filterMeta),
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Auto-complete list.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  async autocompleteList(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
-    const filter = {
-      filterRoles: [],
-      sortOrder: 'asc',
-      columnSortBy: 'name',
-      limit: 10,
-      keyword: '',
-      ...this.matchedQueryData(req),
-    };
-    if (filter.stringifiedFilterRoles) {
-      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
-    }
-    try {
-      const items = await this.itemsService.autocompleteItems(
-        tenantId,
-        filter
-      );
-      return res.status(200).send({
-        items: this.transfromToResponse(items),
       });
     } catch (error) {
       next(error);

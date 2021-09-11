@@ -62,9 +62,6 @@ export default class CustomersService {
   @Inject('SalesEstimates')
   estimatesService: ISalesEstimatesService;
 
-  @Inject()
-  customerTransformer: CustomerTransfromer;
-
   /**
    * Converts customer to contact DTO.
    * @param {ICustomerNewDTO|ICustomerEditDTO} customerDTO
@@ -266,10 +263,7 @@ export default class CustomersService {
       customerId,
       'customer'
     );
-    return R.compose(
-      this.customerTransformer.transform,
-      this.transformContactToCustomer,
-    )(contact);
+    return new CustomerTransfromer().transform(contact);
   }
 
   /**
@@ -315,8 +309,10 @@ export default class CustomersService {
       })
       .pagination(filter.page - 1, filter.pageSize);
 
+    const transformedCustomers = new CustomerTransfromer().transform(results);
+
     return {
-      customers: results.map(this.transformContactToCustomer),
+      customers: transformedCustomers,
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };

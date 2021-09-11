@@ -25,6 +25,7 @@ import JournalPosterService from 'services/Sales/JournalPosterService';
 import AutoIncrementOrdersService from 'services/Sales/AutoIncrementOrdersService';
 import { ERRORS } from './constants';
 import ManualJournalTransfromer from './ManualJournalTransformer';
+import { Tenant } from 'system/models';
 
 @Service()
 export default class ManualJournalsService implements IManualJournalsService {
@@ -363,7 +364,8 @@ export default class ManualJournalsService implements IManualJournalsService {
   private transformNewDTOToModel(
     tenantId,
     manualJournalDTO: IManualJournalDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
+    tenantMetadata
   ) {
     const amount = sumBy(manualJournalDTO.entries, 'credit') || 0;
     const date = moment(manualJournalDTO.date).format('YYYY-MM-DD');
@@ -373,12 +375,6 @@ export default class ManualJournalsService implements IManualJournalsService {
 
     const journalNumber = manualJournalDTO.journalNumber || autoNextNumber;
 
-    // Settings tenant service.
-    const settings = this.tenancy.settings(tenantId);
-    const currencyCode = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
     // Validate manual journal number require.
     this.validateJournalNoRequire(journalNumber);
 
@@ -388,7 +384,7 @@ export default class ManualJournalsService implements IManualJournalsService {
         ? { publishedAt: moment().toMySqlDateTime() }
         : {}),
       amount,
-      currencyCode,
+      currencyCode: tenantMetadata.baseCurrency,
       date,
       journalNumber,
       userId: authorizedUser.id,
@@ -431,11 +427,17 @@ export default class ManualJournalsService implements IManualJournalsService {
   ): Promise<{ manualJournal: IManualJournal }> {
     const { ManualJournal } = this.tenancy.models(tenantId);
 
+    // 
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
+
     // Transformes the next DTO to model.
     const manualJournalObj = this.transformNewDTOToModel(
       tenantId,
       manualJournalDTO,
-      authorizedUser
+      authorizedUser,
+      tenant.metadata,
     );
     // Validate the total credit should equals debit.
     this.valdiateCreditDebitTotalEquals(manualJournalDTO);
@@ -657,13 +659,11 @@ export default class ManualJournalsService implements IManualJournalsService {
       manualJournalsIds
     );
     // Filters the not published journals.
-    const notPublishedJournals = this.getNonePublishedManualJournals(
-      oldManualJournals
-    );
+    const notPublishedJournals =
+      this.getNonePublishedManualJournals(oldManualJournals);
     // Filters the published journals.
-    const publishedJournals = this.getPublishedManualJournals(
-      oldManualJournals
-    );
+    const publishedJournals =
+      this.getPublishedManualJournals(oldManualJournals);
     // Mappes the not-published journals to get id.
     const notPublishedJournalsIds = map(notPublishedJournals, 'id');
 
@@ -775,18 +775,16 @@ export default class ManualJournalsService implements IManualJournalsService {
 
   /**
    * Parses filter DTO of the manual journals list.
-   * @param filterDTO 
+   * @param filterDTO
    */
-   private parseListFilterDTO(filterDTO) {
-    return R.compose(
-      this.dynamicListService.parseStringifiedFilter
-    )(filterDTO);
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
   }
 
   /**
    * Retrieve manual journals datatable list.
-   * @param {number} tenantId - 
-   * @param {IManualJournalsFilter} filter - 
+   * @param {number} tenantId -
+   * @param {IManualJournalsFilter} filter -
    */
   public async getManualJournals(
     tenantId: number,

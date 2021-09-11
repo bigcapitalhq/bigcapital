@@ -1,9 +1,7 @@
-import { Service } from 'typedi';
-import { ISaleInvoice } from 'interfaces';
+import { Service } from 'typedi';;
 import { Transformer } from 'lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 
-@Service()
 export default class SaleInvoiceTransformer extends Transformer {
   /**
    * Include these attributes to sale invoice object.

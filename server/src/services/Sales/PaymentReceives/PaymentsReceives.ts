@@ -69,9 +69,6 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
 
-  @Inject()
-  paymentReceiveTransformer: PaymentReceiveTransfromer;
-
   /**
    * Validates the payment receive number existance.
    * @param {number} tenantId -
@@ -587,8 +584,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
     if (!paymentReceive) {
       throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NOT_EXISTS);
     }
-
-    return this.paymentReceiveTransformer.transform(paymentReceive);
+    return new PaymentReceiveTransfromer().transform(paymentReceive);
   }
 
   /**
@@ -664,8 +660,10 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
         filter.pageSize
       );
 
+    const transformedPayments = new PaymentReceiveTransfromer().transform(results);
+
     return {
-      paymentReceives: this.paymentReceiveTransformer.transform(results),
+      paymentReceives: transformedPayments,
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };
