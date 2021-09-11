@@ -1311,6 +1311,7 @@
   "expenses.empty_status.title": "إضافة وإدارة مصاريف مؤسستك",
   "expenses.empty_status.description": "قم بإنشاء وإدارة المصروفات التي تُعد جزء من التكاليف التشغيلية لمؤسستك.",
   "manual_journals.empty_status.title": "قم بإدخال اول القيود اليدوية علي شجرة الحسابات.",
-  "manual_journals.empty_status.description": "يمكن القيود اليدوية لتسجيل المعاملات المالية ، ويستخدمها المحاسبون للعمل مع دفتر الأستاذ."
+  "manual_journals.empty_status.description": "يمكن القيود اليدوية لتسجيل المعاملات المالية ، ويستخدمها المحاسبون للعمل مع دفتر الأستاذ.",
+  "expense.column.multi_categories": "- متعدد التصنيفات -"
 }
 
