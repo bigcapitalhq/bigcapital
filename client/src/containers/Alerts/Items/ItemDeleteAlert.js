@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
+import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
@@ -10,6 +10,7 @@ import { useDeleteItem } from 'hooks/query';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 import withItemsActions from 'containers/Items/withItemsActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -28,9 +29,11 @@ function ItemDeleteAlert({
 
   // #withItemsActions
   setItemsTableState,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
   const { mutateAsync: deleteItem, isLoading } = useDeleteItem();
-  
 
   // Handle cancel delete item alert.
   const handleCancelItemDelete = () => {
@@ -47,6 +50,7 @@ function ItemDeleteAlert({
         });
         // Reset to page number one.
         setItemsTableState({ page: 1 });
+        closeDrawer('item-detail-drawer');
       })
       .catch(
         ({
@@ -86,4 +90,5 @@ export default compose(
   withAlertStoreConnect(),
   withAlertActions,
   withItemsActions,
+  withDrawerActions,
 )(ItemDeleteAlert);
