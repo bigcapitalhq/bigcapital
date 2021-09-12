@@ -113,8 +113,8 @@ function EstimateForm({
       AppToaster.show({
         message: intl.get(
           isNewMode
-            ? 'the_estimate_has_been_edited_successfully'
-            : 'the_estimate_has_been_created_successfully',
+            ? 'the_estimate_has_been_created_successfully'
+            : 'the_estimate_has_been_edited_successfully',
           { number: values.estimate_number },
         ),
         intent: Intent.SUCCESS,
