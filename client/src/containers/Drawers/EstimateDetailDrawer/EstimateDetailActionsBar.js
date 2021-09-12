@@ -45,7 +45,6 @@ function EstimateDetailActionsBar({
   // Handle delete sale estimate.
   const handleDeleteEstimate = () => {
     openAlert('estimate-delete', { estimateId });
-    closeDrawer('estimate-detail-drawer');
   };
 
   // Handle print estimate.
