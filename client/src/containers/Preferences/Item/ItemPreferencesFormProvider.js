@@ -2,7 +2,7 @@ import React, { useContext, createContext } from 'react';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
-import { useAccounts, useSaveSettings } from 'hooks/query';
+import { useSettingsItems, useAccounts, useSaveSettings } from 'hooks/query';
 import PreferencesPageLoader from '../PreferencesPageLoader';
 
 const ItemFormContext = createContext();
@@ -11,9 +11,14 @@ const ItemFormContext = createContext();
  * Item data provider.
  */
 
-function ItemFormProvider({ ...props }) {
+function ItemPreferencesFormProvider({ ...props }) {
   // Fetches the accounts list.
   const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
+
+  const {
+    isLoading: isItemsSettingsLoading,
+    isFetching: isItemsSettingsFetching,
+  } = useSettingsItems();
 
   // Save Organization Settings.
   const { mutateAsync: saveSettingMutate } = useSaveSettings();
@@ -24,7 +29,7 @@ function ItemFormProvider({ ...props }) {
     saveSettingMutate,
   };
 
-  const isLoading = isAccountsLoading;
+  const isLoading = isAccountsLoading || isItemsSettingsLoading;
 
   return (
     <div
@@ -44,6 +49,6 @@ function ItemFormProvider({ ...props }) {
   );
 }
 
-const useItemFormContext = () => useContext(ItemFormContext);
+const useItemPreferencesFormContext = () => useContext(ItemFormContext);
 
-export { useItemFormContext, ItemFormProvider };
+export { useItemPreferencesFormContext, ItemPreferencesFormProvider };

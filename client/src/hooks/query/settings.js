@@ -100,3 +100,15 @@ export function useSettingsManualJournals(props) {
     props,
   );
 }
+
+/**
+ * Retrieve sale receipts settings.
+ * @param {*} props 
+ */
+ export function useSettingsItems(props) {
+  return useSettingsQuery(
+    [t.SETTING, t.SETTING_ITEMS],
+    { group: 'items' },
+    props,
+  );
+}

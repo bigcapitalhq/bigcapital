@@ -1,10 +1,61 @@
+import { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
+import { defaultTo } from 'lodash';
 import { AppToaster } from 'components';
 import {
   transformTableStateToQuery,
   defaultFastFieldShouldUpdate,
 } from 'utils';
+import { transformToForm } from 'utils';
+import { useSettingsSelector } from '../../hooks/state';
+import { transformItemFormData } from './ItemForm.schema';
+
+const defaultInitialValues = {
+  active: 1,
+  name: '',
+  type: 'service',
+  code: '',
+  cost_price: '',
+  sell_price: '',
+  cost_account_id: '',
+  sell_account_id: '',
+  inventory_account_id: '',
+  category_id: '',
+  sellable: 1,
+  purchasable: true,
+  sell_description: '',
+  purchase_description: '',
+};
+
+/**
+ * Initial values in create and edit mode.
+ */
+export const useItemFormInitialValues = (item) => {
+  const { items: itemsSettings } = useSettingsSelector();
+
+  return useMemo(
+    () => ({
+      ...defaultInitialValues,
+      cost_account_id: defaultTo(itemsSettings.preferredCostAccount, ''),
+      sell_account_id: defaultTo(itemsSettings.preferredSellAccount, ''),
+      inventory_account_id: defaultTo(
+        itemsSettings.preferredInventoryAccount,
+        '',
+      ),
+      /**
+       * We only care about the fields in the form. Previously unfilled optional
+       * values such as `notes` come back from the API as null, so remove those
+       * as well.
+       */
+      ...transformToForm(
+        transformItemFormData(item, defaultInitialValues),
+        defaultInitialValues,
+      ),
+    }),
+    [item, itemsSettings],
+  );
+};
 
 export const transitionItemTypeKeyToLabel = (itemTypeKey) => {
   const table = {

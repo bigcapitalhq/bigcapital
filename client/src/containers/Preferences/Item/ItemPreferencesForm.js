@@ -1,21 +1,23 @@
 import React from 'react';
 import { Form, FastField, useFormikContext } from 'formik';
 import { FormGroup, Button, Intent } from '@blueprintjs/core';
-import { AccountsSelectList, FieldRequiredHint } from 'components';
-import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
+import {
+  AccountsSelectList,
+  FieldRequiredHint,
+  FormattedMessage as T,
+} from 'components';
 import { inputIntent } from 'utils';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from 'common/accountTypes';
 
-import { useItemFormContext } from './ItemFormProvider';
+import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
 
 /**
- * item form preferences.
+ * Item preferences form.
  */
 export default function ItemForm() {
   const history = useHistory();
-  const { accounts } = useItemFormContext();
+  const { accounts } = useItemPreferencesFormContext();
 
   const { isSubmitting } = useFormikContext();
 
@@ -26,7 +28,7 @@ export default function ItemForm() {
   return (
     <Form>
       {/* ----------- preferred sell account ----------- */}
-      <FastField name={'sell_account'}>
+      <FastField name={'preferred_sell_account'}>
         {({
           form: { values, setFieldValue },
           field: { value },
@@ -51,7 +53,7 @@ export default function ItemForm() {
             <AccountsSelectList
               accounts={accounts}
               onAccountSelected={({ id }) => {
-                setFieldValue('sell_account', id);
+                setFieldValue('preferred_sell_account', id);
               }}
               selectedAccountId={value}
               defaultSelectText={<T id={'select_payment_account'} />}
@@ -62,7 +64,7 @@ export default function ItemForm() {
       </FastField>
 
       {/* ----------- preferred cost account ----------- */}
-      <FastField name={'cost_account'}>
+      <FastField name={'preferred_cost_account'}>
         {({
           form: { values, setFieldValue },
           field: { value },
@@ -87,7 +89,7 @@ export default function ItemForm() {
             <AccountsSelectList
               accounts={accounts}
               onAccountSelected={({ id }) => {
-                setFieldValue('cost_account', id);
+                setFieldValue('preferred_cost_account', id);
               }}
               selectedAccountId={value}
               defaultSelectText={<T id={'select_payment_account'} />}
@@ -98,7 +100,7 @@ export default function ItemForm() {
       </FastField>
 
       {/* ----------- preferred inventory account ----------- */}
-      <FastField name={'inventory_account'}>
+      <FastField name={'preferred_inventory_account'}>
         {({
           form: { values, setFieldValue },
           field: { value },
@@ -123,7 +125,7 @@ export default function ItemForm() {
             <AccountsSelectList
               accounts={accounts}
               onAccountSelected={({ id }) => {
-                setFieldValue('inventory_account', id);
+                setFieldValue('preferred_inventory_account', id);
               }}
               selectedAccountId={value}
               defaultSelectText={<T id={'select_payment_account'} />}
