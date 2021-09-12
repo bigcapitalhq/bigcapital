@@ -102,6 +102,7 @@ export function useReceiptsTableColumns() {
         width: 140,
         className: 'receipt_date',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'customer',
@@ -110,6 +111,7 @@ export function useReceiptsTableColumns() {
         width: 140,
         className: 'customer_id',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'receipt_number',
@@ -118,6 +120,7 @@ export function useReceiptsTableColumns() {
         width: 140,
         className: 'receipt_number',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'deposit_account',
@@ -126,6 +129,7 @@ export function useReceiptsTableColumns() {
         width: 140,
         className: 'deposit_account',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'amount',
@@ -134,6 +138,7 @@ export function useReceiptsTableColumns() {
         width: 140,
         className: 'amount',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'status',
@@ -150,6 +155,7 @@ export function useReceiptsTableColumns() {
         width: 140,
         className: 'reference_no',
         clickable: true,
+        textOverview: true,
       },
     ],
     [],

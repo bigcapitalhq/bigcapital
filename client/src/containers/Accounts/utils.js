@@ -57,6 +57,7 @@ export const useAccountsTableColumns = () => {
         className: 'account_name',
         width: 200,
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'code',
@@ -73,6 +74,7 @@ export const useAccountsTableColumns = () => {
         className: 'type',
         width: 140,
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'normal',

@@ -156,6 +156,7 @@ export const useItemsTableColumns = () => {
         className: 'name',
         width: 180,
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'code',
@@ -180,6 +181,7 @@ export const useItemsTableColumns = () => {
         className: 'category',
         width: 150,
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'sell_price',

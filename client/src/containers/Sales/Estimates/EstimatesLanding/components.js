@@ -160,6 +160,7 @@ export function useEstiamtesTableColumns() {
         width: 140,
         className: 'estimate_date',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'customer',
@@ -168,6 +169,7 @@ export function useEstiamtesTableColumns() {
         width: 140,
         className: 'customer_id',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'expiration_date',
@@ -177,6 +179,7 @@ export function useEstiamtesTableColumns() {
         width: 140,
         className: 'expiration_date',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'estimate_number',
@@ -186,6 +189,7 @@ export function useEstiamtesTableColumns() {
         width: 140,
         className: 'estimate_number',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'amount',
@@ -210,6 +214,7 @@ export function useEstiamtesTableColumns() {
         width: 90,
         className: 'reference',
         clickable: true,
+        textOverview: true,
       },
     ],
     [],

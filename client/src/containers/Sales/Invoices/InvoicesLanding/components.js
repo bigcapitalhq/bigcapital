@@ -170,6 +170,7 @@ export function useInvoicesTableColumns() {
         width: 110,
         className: 'invoice_date',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'customer',
@@ -178,6 +179,7 @@ export function useInvoicesTableColumns() {
         width: 180,
         className: 'customer_id',
         clickable: true,
+        textOverview: true,
       },
 
       {
@@ -187,6 +189,7 @@ export function useInvoicesTableColumns() {
         width: 100,
         className: 'invoice_no',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'amount',
@@ -195,6 +198,7 @@ export function useInvoicesTableColumns() {
         width: 120,
         className: 'balance',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'status',
@@ -211,6 +215,7 @@ export function useInvoicesTableColumns() {
         width: 110,
         className: 'due_date',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'reference_no',
@@ -219,6 +224,7 @@ export function useInvoicesTableColumns() {
         width: 90,
         className: 'reference_no',
         clickable: true,
+        textOverview: true,
       },
     ],
     [],

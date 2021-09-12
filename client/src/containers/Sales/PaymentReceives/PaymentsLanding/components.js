@@ -8,7 +8,6 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
 import moment from 'moment';
 import { Money, Icon } from 'components';
@@ -90,6 +89,7 @@ export function usePaymentReceivesColumns() {
         width: 140,
         className: 'payment_date',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'customer',
@@ -98,6 +98,7 @@ export function usePaymentReceivesColumns() {
         width: 160,
         className: 'customer_id',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'amount',
@@ -106,6 +107,7 @@ export function usePaymentReceivesColumns() {
         width: 120,
         className: 'amount',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'payment_receive_no',
@@ -115,6 +117,7 @@ export function usePaymentReceivesColumns() {
         width: 140,
         className: 'payment_receive_no',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'deposit_account',
@@ -123,6 +126,7 @@ export function usePaymentReceivesColumns() {
         width: 140,
         className: 'deposit_account_id',
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'reference_no',
@@ -131,6 +135,7 @@ export function usePaymentReceivesColumns() {
         width: 140,
         className: 'reference_no',
         clickable: true,
+        textOverview: true,
       },
     ],
     [],
