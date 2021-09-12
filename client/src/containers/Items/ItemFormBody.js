@@ -100,7 +100,9 @@ function ItemFormBody({ organization: { base_currency } }) {
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'account'} />}
-                labelInfo={<Hint />}
+                labelInfo={
+                  <Hint content={<T id={'item.field.sell_account.hint'} />} />
+                }
                 inline={true}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="sell_account_id" />}
@@ -206,7 +208,9 @@ function ItemFormBody({ organization: { base_currency } }) {
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'account'} />}
-                labelInfo={<Hint />}
+                labelInfo={
+                  <Hint content={<T id={'item.field.cost_account.hint'} />} />
+                }
                 inline={true}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="cost_account_id" />}

@@ -1283,5 +1283,9 @@
   "manual_journals.empty_status.title": "Create your first journal entries on accounts chart.",
   "expenses.empty_status.description": "Create and manage expeses that are part of your organization's operating costs.",
   "expenses.empty_status.title": "Create and manage your organization's expenses",
-  "expense.column.multi_categories": "- Multi Categories -"
+  "expense.column.multi_categories": "- Multi Categories -",
+  "item.field.cost_account.hint": "Enter price at which you purchased this item.",
+  "item.field.sell_account.hint": "Enter price which you goint to sell this item.",
+  "item_entries.products_services.hint": "Enter products or services you sell or buy to keep tracking what your sold or purchased.",
+  "item_entries.landed.hint": "This options allows you to be able to add additional cost eg. freight then allocate cost to the items in your bills."
 }

@@ -1,8 +1,7 @@
 import React from 'react';
-import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
-import { Tooltip, Button, Checkbox, Intent, Position } from '@blueprintjs/core';
-import { Hint, Icon } from 'components';
+import { Tooltip, Button, Intent, Position } from '@blueprintjs/core';
+import { Hint, Icon, FormattedMessage as T } from 'components';
 import { formattedAmount, safeSumBy } from 'utils';
 import {
   InputGroupCell,
@@ -20,7 +19,10 @@ export function ItemHeaderCell() {
   return (
     <>
       <T id={'product_and_service'} />
-      <Hint />
+      <Hint
+        content={<T id={'item_entries.products_services.hint'} />}
+        tooltipProps={{ boundary: 'window', position: Position.RIGHT }}
+      />
     </>
   );
 }
@@ -98,11 +100,7 @@ const LandedCostHeaderCell = () => {
   return (
     <>
       <T id={'Landed'} />
-      <Hint
-        content={
-          'This options allows you to be able to add additional cost eg. freight then allocate cost to the items in your bills.'
-        }
-      />
+      <Hint content={<T id={'item_entries.landed.hint'} />} />
     </>
   );
 };

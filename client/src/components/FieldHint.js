@@ -10,11 +10,12 @@ import 'style/components/Hint.scss';
 export default function FieldHint({
   content,
   position,
-  iconSize = 12
+  iconSize = 12,
+  tooltipProps
 }) {
   return (
     <span class="hint">
-      <Tooltip content={content} position={position}>
+      <Tooltip content={content} position={position} { ...tooltipProps }>
         <Icon icon="info-circle" iconSize={iconSize} />
       </Tooltip>
     </span>

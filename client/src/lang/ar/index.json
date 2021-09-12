@@ -1312,6 +1312,10 @@
   "expenses.empty_status.description": "قم بإنشاء وإدارة المصروفات التي تُعد جزء من التكاليف التشغيلية لمؤسستك.",
   "manual_journals.empty_status.title": "قم بإدخال اول القيود اليدوية علي شجرة الحسابات.",
   "manual_journals.empty_status.description": "يمكن القيود اليدوية لتسجيل المعاملات المالية ، ويستخدمها المحاسبون للعمل مع دفتر الأستاذ.",
-  "expense.column.multi_categories": "- متعدد التصنيفات -"
+  "expense.column.multi_categories": "- متعدد التصنيفات -",
+  "item.field.cost_account.hint": "أدخل السعر الذي اشتريت به هذا العنصر.",
+  "item.field.sell_account.hint": "أدخل السعر الذي ستبيعه لهذا العنصر.",
+  "item_entries.products_services.hint": "أدخل المنتجات أو الخدمات التي تبيعها أو تشتريها لتتبع ما قمت ببيعه أو شرائه.",
+  "item_entries.landed.hint": "يتيح لك هذه الخيار إمكانية  إضافة تكلفة اضافية علي فاتورة الشراء متال علي ذلك تكاليف الشحن ، ثم تحديد هذه التكلفة لتحميلها علي فاتورة الشراء."
 }
 
