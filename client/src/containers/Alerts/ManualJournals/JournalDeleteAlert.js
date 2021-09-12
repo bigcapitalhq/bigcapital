@@ -8,6 +8,7 @@ import { AppToaster } from 'components';
 
 import withAlertActions from 'containers/Alert/withAlertActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -23,8 +24,10 @@ function JournalDeleteAlert({
 
   // #withAlertActions
   closeAlert,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
-  
   const { mutateAsync: deleteJournalMutate, isLoading } = useDeleteJournal();
 
   // Handle cancel delete manual journal.
@@ -37,13 +40,13 @@ function JournalDeleteAlert({
     deleteJournalMutate(manualJournalId)
       .then(() => {
         AppToaster.show({
-          message: intl.get(
-            'the_journal_has_been_deleted_successfully',
-            { number: journalNumber },
-          ),
+          message: intl.get('the_journal_has_been_deleted_successfully', {
+            number: journalNumber,
+          }),
           intent: Intent.SUCCESS,
         });
         closeAlert(name);
+        closeDrawer('journal-drawer');
       })
       .catch(() => {
         closeAlert(name);
@@ -71,4 +74,5 @@ function JournalDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions
 )(JournalDeleteAlert);
