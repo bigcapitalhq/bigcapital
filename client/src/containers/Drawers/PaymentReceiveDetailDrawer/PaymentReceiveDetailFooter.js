@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'classnames';
 
-import { TotalLine, TotalLines } from 'components';
+import { T, TotalLine, TotalLines } from 'components';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
 import PaymentDrawerCls from './PaymentReceiveDrawer.module.scss';
@@ -16,12 +16,12 @@ export default function PaymentReceiveDetailFooter() {
     <div className={clsx(PaymentDrawerCls.detail_panel_footer)}>
       <TotalLines>
         <TotalLine
-          title={'Subtotal'}
+          title={<T id={'payment_receive.details.subtotal'} />}
           value={paymentReceive.amount}
           className={PaymentDrawerCls.total_line_subtotal}
         />
         <TotalLine
-          title={'TOTAL'}
+          title={<T id={'payment_receive.details.total'} />}
           value={paymentReceive.amount}
           className={PaymentDrawerCls.total_line_total}
         />

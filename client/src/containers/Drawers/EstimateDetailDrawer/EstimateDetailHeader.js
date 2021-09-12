@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { defaultTo } from 'lodash';
 import clsx from 'classnames';
 
-import { DetailsMenu, DetailItem } from 'components';
+import { T, DetailsMenu, DetailItem } from 'components';
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 
 import EstimateDetailsCls from 'style/components/Drawers/EstimateDetails.module.scss';
@@ -43,7 +43,10 @@ export default function EstimateDetailHeader() {
           label={intl.get('reference')}
           children={defaultTo(estimate.reference, '-')}
         />
-        <DetailItem label={'Created at'} children={'2020 Ang 21'} />
+        <DetailItem
+          label={<T id={'estimate.details.created_at'} />}
+          children={'2020 Ang 21'}
+        />
       </DetailsMenu>
     </div>
   );

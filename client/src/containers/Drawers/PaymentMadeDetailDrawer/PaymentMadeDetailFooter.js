@@ -1,28 +1,24 @@
 import React from 'react';
 import clsx from 'classnames';
 
-import { TotalLines, TotalLine } from 'components';
-
-import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
-
+import { T, TotalLines, TotalLine } from 'components';
 import PaymentDrawerCls from './PaymentMadeDrawer.module.scss';
 
 /**
  * Payment made - Details panel - Footer.
  */
 export default function PaymentMadeDetailFooter() {
-  const { } = usePaymentMadeDetailContext();
 
   return (
     <div className={clsx(PaymentDrawerCls.detail_panel_footer)}>
       <TotalLines>
         <TotalLine
-          title={'Subtotal'}
+          title={<T id={'payment_made.details.subtotal'} />}
           value={1000}
           className={clsx(PaymentDrawerCls.total_line_subtotal)}
         />
         <TotalLine
-          title={'TOTAL'}
+          title={<T id={'payment_made.details.total'} />}
           value={1000}
           className={clsx(PaymentDrawerCls.total_line_total)}
         />
