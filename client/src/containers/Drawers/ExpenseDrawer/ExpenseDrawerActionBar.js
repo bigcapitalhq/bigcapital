@@ -39,7 +39,6 @@ function ExpenseDrawerActionBar({
   // Handle the expense delete action.
   const handleDeleteExpense = () => {
     openAlert('expense-delete', { expenseId: expense.id });
-    closeDrawer('expense-drawer');
   };
 
   return (
