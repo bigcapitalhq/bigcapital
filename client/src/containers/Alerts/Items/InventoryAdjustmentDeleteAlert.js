@@ -1,14 +1,13 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
+import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import {
-  useDeleteInventoryAdjustment
-} from 'hooks/query';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import { useDeleteInventoryAdjustment } from 'hooks/query';
 
 import { compose } from 'utils';
 
@@ -24,12 +23,12 @@ function InventoryAdjustmentDeleteAlert({
 
   // #withAlertActions
   closeAlert,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
-  
-  const {
-    mutateAsync: deleteInventoryAdjMutate,
-    isLoading
-  } = useDeleteInventoryAdjustment();
+  const { mutateAsync: deleteInventoryAdjMutate, isLoading } =
+    useDeleteInventoryAdjustment();
 
   // handle cancel delete alert.
   const handleCancelInventoryAdjustmentDelete = () => {
@@ -44,6 +43,7 @@ function InventoryAdjustmentDeleteAlert({
           message: intl.get('the_adjustment_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
+        closeDrawer('inventory-adjustment-drawer');
       })
       .catch((errors) => {})
       .finally(() => {
@@ -76,4 +76,5 @@ function InventoryAdjustmentDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions,
 )(InventoryAdjustmentDeleteAlert);
