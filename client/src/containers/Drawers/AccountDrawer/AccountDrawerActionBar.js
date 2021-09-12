@@ -12,7 +12,6 @@ import { FormattedMessage as T } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { safeCallback } from 'utils';
 
@@ -28,9 +27,6 @@ function AccountDrawerActionBar({
 
   // #withAlertsDialog
   openAlert,
-
-  // #withDrawerActions
-  closeDrawer,
 }) {
   // Account drawer context.
   const { account } = useAccountDrawerContext();
@@ -52,7 +48,6 @@ function AccountDrawerActionBar({
   // Handle delete action account.
   const onDeleteAccount = () => {
     openAlert('account-delete', { accountId: account.id });
-    closeDrawer('account-drawer');
   };
 
   return (
@@ -85,5 +80,4 @@ function AccountDrawerActionBar({
 export default compose(
   withDialogActions,
   withAlertsActions,
-  withDrawerActions,
 )(AccountDrawerActionBar);

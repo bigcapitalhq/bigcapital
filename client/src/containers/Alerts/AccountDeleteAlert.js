@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
+import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { AppToaster } from 'components';
@@ -9,6 +9,7 @@ import { handleDeleteErrors } from 'containers/Accounts/utils';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { useDeleteAccount } from 'hooks/query';
 import { compose } from 'utils';
@@ -25,6 +26,9 @@ function AccountDeleteAlert({
 
   // #withAlertActions
   closeAlert,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
   const { isLoading, mutateAsync: deleteAccount } = useDeleteAccount();
 
@@ -41,11 +45,18 @@ function AccountDeleteAlert({
           intent: Intent.SUCCESS,
         });
         closeAlert(name);
+        closeDrawer('account-drawer');
       })
-      .catch(({ response: { data: { errors } } }) => {
-        handleDeleteErrors(errors);
-        closeAlert(name);
-      });
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          handleDeleteErrors(errors);
+          closeAlert(name);
+        },
+      );
   };
 
   return (
@@ -71,4 +82,5 @@ function AccountDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions,
 )(AccountDeleteAlert);
