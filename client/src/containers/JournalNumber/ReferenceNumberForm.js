@@ -2,12 +2,11 @@ import React, { useMemo } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { FormattedMessage as T } from 'components';
-import { Button, Classes } from '@blueprintjs/core';
-import { Intent } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
+import { Intent, Button, Classes } from '@blueprintjs/core';
 
 import 'style/pages/ReferenceNumber/ReferenceNumber.scss';
 
+import { FormObserver } from 'components';
 import ReferenceNumberFormContent from './ReferenceNumberFormContent';
 import { transformValuesToForm } from './utils';
 import { saveInvoke } from 'utils';
@@ -19,6 +18,8 @@ export default function ReferenceNumberForm({
   onSubmit,
   onClose,
   initialValues,
+  description,
+  onChange,
 }) {
   // Validation schema.
   const validationSchema = Yup.object().shape({
@@ -51,14 +52,10 @@ export default function ReferenceNumberForm({
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, values }) => (
         <Form className={'reference-number-form'}>
           <div className={Classes.DIALOG_BODY}>
-            <p className="paragraph">
-              {intl.get(
-                'your_invoice_numbers_are_set_on_auto_increment_mod_are_you_sure_changing_this_setting',
-              )}
-            </p>
+            <p className="paragraph">{description}</p>
             <ReferenceNumberFormContent />
           </div>
 
@@ -70,12 +67,14 @@ export default function ReferenceNumberForm({
               <Button
                 intent={Intent.PRIMARY}
                 type="submit"
-                disabled={isSubmitting}
+                loading={isSubmitting}
               >
                 <T id={'submit'} />
               </Button>
             </div>
           </div>
+
+          <FormObserver values={values} onChange={onChange} />
         </Form>
       )}
     </Formik>

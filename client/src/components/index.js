@@ -76,6 +76,7 @@ export * from './Alert';
 export * from './Subscriptions';
 export * from './Dashboard';
 export * from './Drawer';
+export * from './Forms';
 
 const Hint = FieldHint;
 

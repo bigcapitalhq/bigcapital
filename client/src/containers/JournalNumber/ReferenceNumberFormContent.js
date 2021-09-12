@@ -17,7 +17,7 @@ export default function ReferenceNumberFormContent() {
       <FastField name={'incrementMode'}>
         {({ form, field, meta: { error, touched } }) => (
           <Radio
-            label={<T id={'auto_incrementing_number'} />}
+            label={<T id={'auto_increment.field.auto'} />}
             value="auto-increment"
             onChange={() => {
               form.setFieldValue('incrementMode', 'auto');
@@ -73,7 +73,7 @@ export default function ReferenceNumberFormContent() {
       <FastField name={'incrementMode'}>
         {({ form, field, meta: { error, touched } }) => (
           <Radio
-            label={<T id={'i_will_enter_them_manually_each_time'} />}
+            label={<T id={'auto_increment.field.manual_this_transaction'} />}
             value="manual"
             onChange={() => {
               form.setFieldValue('incrementMode', 'manual');
@@ -88,7 +88,7 @@ export default function ReferenceNumberFormContent() {
         <FastField name={'incrementMode'}>
           {({ form, field, meta: { error, touched } }) => (
             <Radio
-              label={<T id={'manual_entering_for_this_transaction'} />}
+              label={<T id={'auto_increment.field.manually'} />}
               value="manual"
               onChange={() => {
                 form.setFieldValue('incrementMode', 'manual-transaction');

@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { useSaveSettings } from 'hooks/query';
 
 import { InvoiceNumberDialogProvider } from './InvoiceNumberDialogProvider';
@@ -30,6 +31,7 @@ function InvoiceNumberDialogContent({
   closeDialog,
 }) {
   const { mutateAsync: saveSettings } = useSaveSettings();
+  const [referenceFormValues, setReferenceFormValues] = React.useState(null);
 
   // Handle the submit form.
   const handleSubmitForm = (values, { setSubmitting }) => {
@@ -50,7 +52,7 @@ function InvoiceNumberDialogContent({
     // Transformes the form values to settings to save it.
     const options = transformFormToSettings(values, 'sales_invoices');
 
-    // Save the goddamn settings.
+    // Save the settings.
     saveSettings({ options }).then(handleSuccess).catch(handleErrors);
   };
 
@@ -58,6 +60,15 @@ function InvoiceNumberDialogContent({
   const handleClose = () => {
     closeDialog('invoice-number-form');
   };
+  // Handle form change.
+  const handleChange = (values) => {
+    setReferenceFormValues(values);
+  };
+  // Description.
+  const description =
+    referenceFormValues?.incrementMode === 'auto'
+      ? intl.get('invoice.auto_increment.auto')
+      : intl.get('invoice.auto_increment.manually');
 
   return (
     <InvoiceNumberDialogProvider>
@@ -70,8 +81,10 @@ function InvoiceNumberDialogContent({
           }),
           ...initialValues,
         }}
+        description={description}
         onSubmit={handleSubmitForm}
         onClose={handleClose}
+        onChange={handleChange}
       />
     </InvoiceNumberDialogProvider>
   );

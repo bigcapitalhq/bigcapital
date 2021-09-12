@@ -1,4 +1,6 @@
 import React, { useCallback } from 'react';
+import intl from 'react-intl-universal';
+
 import { DialogContent } from 'components';
 
 import { useSettingsReceipts, useSaveSettings } from 'hooks/query';
@@ -30,6 +32,8 @@ function ReceiptNumberDialogContent({
   // #withDialogActions
   closeDialog,
 }) {
+  const [referenceFormValues, setReferenceFormValues] = React.useState(null);
+
   const { isLoading: isSettingsLoading } = useSettingsReceipts();
   const { mutateAsync: saveSettingsMutate } = useSaveSettings();
 
@@ -57,6 +61,17 @@ function ReceiptNumberDialogContent({
     closeDialog('receipt-number-form');
   }, [closeDialog]);
 
+  // Handle form change.
+  const handleChange = (values) => {
+    setReferenceFormValues(values);
+  };
+
+  // Description.
+  const description =
+    referenceFormValues?.incrementMode === 'auto'
+      ? intl.get('receipt.auto_increment.auto')
+      : intl.get('receipt.auto_increment.manually');
+
   return (
     <DialogContent isLoading={isSettingsLoading}>
       <ReferenceNumberForm
@@ -70,6 +85,8 @@ function ReceiptNumberDialogContent({
         }}
         onSubmit={handleSubmitForm}
         onClose={handleClose}
+        onChange={handleChange}
+        description={description}
       />
     </DialogContent>
   );

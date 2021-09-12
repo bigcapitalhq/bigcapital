@@ -1,4 +1,6 @@
 import React, { useCallback } from 'react';
+import intl from 'react-intl-universal';
+
 import { DialogContent } from 'components';
 import { useSaveSettings, useSettingsPaymentReceives } from 'hooks/query';
 
@@ -28,10 +30,21 @@ function PaymentNumberDialogContent({
 
   // #ownProps
   onConfirm,
-  initialValues
+  initialValues,
 }) {
+  const [referenceFormValues, setReferenceFormValues] = React.useState(null);
+
   const { isLoading: isSettingsLoading } = useSettingsPaymentReceives();
   const { mutateAsync: saveSettingsMutate } = useSaveSettings();
+
+  const initialFormValues = {
+    ...transformSettingsToForm({
+      nextNumber,
+      numberPrefix,
+      autoIncrement,
+    }),
+    ...initialValues,
+  };
 
   // Handle submit form.
   const handleSubmitForm = (values, { setSubmitting }) => {
@@ -58,19 +71,25 @@ function PaymentNumberDialogContent({
     closeDialog('payment-receive-number-form');
   }, [closeDialog]);
 
+  // Handle form change.
+  const handleChange = (values) => {
+    setReferenceFormValues(values);
+  };
+
+  // Description.
+  const description =
+    referenceFormValues?.incrementMode === 'auto'
+      ? intl.get('payment_receive.auto_increment.auto')
+      : intl.get('payment_receive.auto_increment.manually');
+
   return (
     <DialogContent isLoading={isSettingsLoading}>
       <ReferenceNumberForm
-        initialValues={{
-          ...transformSettingsToForm({
-            nextNumber,
-            numberPrefix,
-            autoIncrement,
-          }),
-          ...initialValues,
-        }}
+        initialValues={initialFormValues}
         onSubmit={handleSubmitForm}
         onClose={handleClose}
+        onChange={handleChange}
+        description={description}
       />
     </DialogContent>
   );

@@ -916,8 +916,6 @@
   "attachments_maximum": "المرفقات: الحجم الأقصى: 20MB",
   "drag_drop_files_here_or_click_here": "قم بسحب/إسقاط الملفات هنا أو انقر هنا.",
   "enter_an_item": "أدخل منتج ...",
-  "i_will_enter_them_manually_each_time": "سأدخلها يدويًا في كل مرة",
-  "manual_entering_for_this_transaction": "إدخال يدوي لهذه العملية فقط.",
   "due_amount": "القيمة المستحقة",
   "invoice_details": "تفاصيل الفاتورة",
   "setting_your_auto_generated_estimate_number": "عيين رقم العرض الذي تم إنشاؤه تلقائيًا",
@@ -1190,8 +1188,6 @@
   "if_the_problem_stuck_please_contact_us_as_soon_as_possible": "إذا تكررت المشكلة اكتر من مرة ، الرجاء الاتصال بنا في أقرب وقت ممكن.",
   "non-inventory":"غير مخزون",
   "terms_conditions":"الشروط والأحكام",
-  "your_invoice_numbers_are_set_on_auto_increment_mod_are_you_sure_changing_this_setting":"Your invoice numbers are set on auto-increment mod. Are you sure changing this setting?",
-  "auto_incrementing_number":"Auto-incrementing number",
   "the_inventory_adjustment_has_been_published": "تم نشر تسوية المخزون",
   "are_sure_to_publish_this_inventory_adjustment": "هل أنت متأكد أنك تريد نشر هذا المخزون ؟",
   "the_contact_has_been_activated_successfully": "تم تفعيل جهة اتصال بنجاح.",
@@ -1343,6 +1339,17 @@
   "item.field.cost_account.hint": "أدخل السعر الذي اشتريت به هذا العنصر.",
   "item.field.sell_account.hint": "أدخل السعر الذي ستبيعه لهذا العنصر.",
   "item_entries.products_services.hint": "أدخل المنتجات أو الخدمات التي تبيعها أو تشتريها لتتبع ما قمت ببيعه أو شرائه.",
-  "item_entries.landed.hint": "يتيح لك هذه الخيار إمكانية  إضافة تكلفة اضافية علي فاتورة الشراء متال علي ذلك تكاليف الشحن ، ثم تحديد هذه التكلفة لتحميلها علي فاتورة الشراء."
+  "item_entries.landed.hint": "يتيح لك هذه الخيار إمكانية  إضافة تكلفة اضافية علي فاتورة الشراء متال علي ذلك تكاليف الشحن ، ثم تحديد هذه التكلفة لتحميلها علي فاتورة الشراء.",
+  "invoice.auto_increment.auto": "يتم تعيين أرقام الفواتير على وضع الزيادة التلقائي. هل أنت متأكد من تغيير هذا الإعداد؟",
+  "invoice.auto_increment.manually": "يتم تعيين أرقام فواتيرك يدوياً. هل أنت متأكد من تغيير هذه الإعدادات؟",
+  "estimate.auto_increment.auto": "يتم تعيين أرقام العروض على وضع الزيادة التلقائي. هل أنت متأكد من تغيير هذا الإعداد؟",
+  "estimate.auto_increment.manually": "يتم تعيين أرقام عروض الاسعار يدوياً. هل أنت متأكد من تغيير هذه الإعدادات؟",
+  "receipt.auto_increment.auto": "يتم تعيين أرقام إيصالات على وضع الزيادة التلقائي. هل أنت متأكد من تغيير هذا الإعداد؟",
+  "receipt.auto_increment.manually": "يتم تعيين أرقام إيصالات يدوياً. هل أنت متأكد من تغيير هذه الإعدادات؟",
+  "payment_receive.auto_increment.auto": "يتم تعيين أرقام سندات الدفع على وضع الزيادة التلقائي. هل أنت متأكد من تغيير هذا الإعداد؟",
+  "payment_receive.auto_increment.manually": "يتم تعيين سندات الدفع يدوياً. هل أنت متأكد من تغيير هذه الإعدادات؟",
+  "auto_increment.field.manually": "سأدخلها يدويًا في كل مرة",
+  "auto_increment.field.manual_this_transaction": "إدخال يدوي لهذه العملية فقط.",
+  "auto_increment.field.auto": "زيادة الرقم العملية تلقائيًا."
 }
 

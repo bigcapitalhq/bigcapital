@@ -1,4 +1,6 @@
 import React, { useCallback } from 'react';
+import intl from 'react-intl-universal';
+
 import { DialogContent } from 'components';
 import { useSaveSettings, useSettingsEstimates } from 'hooks/query';
 
@@ -28,6 +30,8 @@ function EstimateNumberDialogContent({
   initialValues,
   onConfirm,
 }) {
+  const [referenceFormValues, setReferenceFormValues] = React.useState(null);
+
   // Fetches the estimates settings.
   const { isLoading: isSettingsLoading } = useSettingsEstimates();
 
@@ -58,6 +62,17 @@ function EstimateNumberDialogContent({
     closeDialog('estimate-number-form');
   }, [closeDialog]);
 
+  // Handle form change.
+  const handleChange = (values) => {
+    setReferenceFormValues(values);
+  };
+
+  // Description.
+  const description =
+    referenceFormValues?.incrementMode === 'auto'
+      ? intl.get('estimate.auto_increment.auto')
+      : intl.get('estimate.auto_increment.manually');
+
   return (
     <DialogContent isLoading={isSettingsLoading}>
       <ReferenceNumberForm
@@ -71,6 +86,8 @@ function EstimateNumberDialogContent({
         }}
         onSubmit={handleSubmitForm}
         onClose={handleClose}
+        onChange={handleChange}
+        description={description}
       />
     </DialogContent>
   );
