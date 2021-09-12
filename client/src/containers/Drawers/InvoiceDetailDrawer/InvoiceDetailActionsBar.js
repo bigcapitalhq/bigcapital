@@ -47,7 +47,6 @@ function InvoiceDetailActionsBar({
   // Handle delete sale invoice.
   const handleDeleteInvoice = () => {
     openAlert('invoice-delete', { invoiceId });
-    closeDrawer('invoice-detail-drawer');
   };
 
   // Handle print invoices.

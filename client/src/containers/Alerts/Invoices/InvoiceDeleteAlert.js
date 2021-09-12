@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
+import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 import { useDeleteInvoice } from 'hooks/query';
@@ -9,6 +9,7 @@ import { handleDeleteErrors } from 'containers/Sales/Invoices/InvoicesLanding/co
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -24,8 +25,10 @@ function InvoiceDeleteAlert({
 
   // #withAlertActions
   closeAlert,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
-  
   const { mutateAsync: deleteInvoiceMutate, isLoading } = useDeleteInvoice();
 
   // handle cancel delete invoice alert.
@@ -41,10 +44,17 @@ function InvoiceDeleteAlert({
           message: intl.get('the_invoice_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
+        closeDrawer('invoice-detail-drawer');
       })
-      .catch(({ response: { data: { errors } } }) => {
-        handleDeleteErrors(errors);
-      })
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          handleDeleteErrors(errors);
+        },
+      )
       .finally(() => {
         closeAlert(name);
       });
@@ -73,4 +83,5 @@ function InvoiceDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions,
 )(InvoiceDeleteAlert);

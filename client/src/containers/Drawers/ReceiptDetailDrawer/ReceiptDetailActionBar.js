@@ -34,18 +34,13 @@ function ReceiptDetailActionBar({
 
   // Handle edit sale receipt.
   const onEditReceipt = () => {
-    return receiptId
-      ? (history.push(`/receipts/${receiptId}/edit`),
-        closeDrawer('receipt-detail-drawer'))
-      : null;
+    history.push(`/receipts/${receiptId}/edit`);
+    closeDrawer('receipt-detail-drawer');
   };
 
   // Handle delete sale receipt.
   const onDeleteReceipt = () => {
-    return receiptId
-      ? (openAlert('receipt-delete', { receiptId }),
-        closeDrawer('receipt-detail-drawer'))
-      : null;
+    openAlert('receipt-delete', { receiptId });
   };
   // Handle print receipt.
   const onPrintReceipt = () => {

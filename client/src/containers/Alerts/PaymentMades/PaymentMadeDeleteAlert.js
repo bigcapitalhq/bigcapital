@@ -6,6 +6,7 @@ import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { useDeletePaymentMade } from 'hooks/query';
 
@@ -23,12 +24,12 @@ function PaymentMadeDeleteAlert({
 
   // #withAlertActions
   closeAlert,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
-  
-  const {
-    mutateAsync: deletePaymentMadeMutate,
-    isLoading,
-  } = useDeletePaymentMade();
+  const { mutateAsync: deletePaymentMadeMutate, isLoading } =
+    useDeletePaymentMade();
 
   // Handle cancel payment made.
   const handleCancelPaymentMadeDelete = () => {};
@@ -41,6 +42,7 @@ function PaymentMadeDeleteAlert({
           message: intl.get('the_payment_made_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
+        closeDrawer('payment-made-detail-drawer');
       })
       .finally(() => {
         closeAlert(name);
@@ -68,4 +70,5 @@ function PaymentMadeDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions,
 )(PaymentMadeDeleteAlert);

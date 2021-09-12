@@ -6,7 +6,6 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawerProvider';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { Icon, FormattedMessage as T } from 'components';
 
@@ -18,16 +17,12 @@ import { compose } from 'utils';
 function InventoryAdjustmentDetailActionsBar({
   // #withAlertsActions
   openAlert,
-
-  // #withDrawerActions
-  closeDrawer,
 }) {
   const { inventoryId } = useInventoryAdjustmentDrawerContext();
 
   // Handle delete inventory adjustment.
   const handleDeleteInventoryAdjustment = () => {
     openAlert('inventory-adjustment-delete', { inventoryId });
-    closeDrawer('inventory-adjustment-drawer');
   };
 
   return (
@@ -45,7 +40,4 @@ function InventoryAdjustmentDetailActionsBar({
   );
 }
 
-export default compose(
-  withDrawerActions,
-  withAlertsActions,
-)(InventoryAdjustmentDetailActionsBar);
+export default compose(withAlertsActions)(InventoryAdjustmentDetailActionsBar);

@@ -6,6 +6,7 @@ import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { useDeleteExpense } from 'hooks/query';
 import { compose } from 'utils';
@@ -20,6 +21,9 @@ function ExpenseDeleteAlert({
   // #withAlertStoreConnect
   isOpen,
   payload: { expenseId },
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
   const { mutateAsync: deleteExpenseMutate, isLoading } = useDeleteExpense();
 
@@ -38,7 +42,7 @@ function ExpenseDeleteAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        closeAlert('expense-delete');
+        closeDrawer('expense-drawer');
       })
       .catch(
         ({
@@ -57,7 +61,10 @@ function ExpenseDeleteAlert({
             });
           }
         },
-      );
+      )
+      .finally(() => {
+        closeAlert('expense-delete');
+      });
   };
 
   return (
@@ -81,4 +88,5 @@ function ExpenseDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions,
 )(ExpenseDeleteAlert);

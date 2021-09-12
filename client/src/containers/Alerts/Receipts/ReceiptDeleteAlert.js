@@ -1,14 +1,14 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
+import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 
 import { useDeleteReceipt } from 'hooks/query';
 import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -24,12 +24,11 @@ function NameDeleteAlert({
 
   // #withAlertActions
   closeAlert,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
-  
-  const {
-    mutateAsync: deleteReceiptMutate,
-    isLoading
-  } = useDeleteReceipt();
+  const { mutateAsync: deleteReceiptMutate, isLoading } = useDeleteReceipt();
 
   // Handle cancel delete  alert.
   const handleCancelDeleteAlert = () => {
@@ -44,6 +43,7 @@ function NameDeleteAlert({
           message: intl.get('the_receipt_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
+        closeDrawer('receipt-detail-drawer');
       })
       .catch(() => {})
       .finally(() => {
@@ -74,4 +74,5 @@ function NameDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions
 )(NameDeleteAlert);

@@ -92,7 +92,7 @@ function CustomersTable({
 
   // Handle view detail contact.
   const handleViewDetailCustomer = ({ id }) => {
-    openDrawer('contact-detail-drawer', { customerId: id });
+    openDrawer('customer-details-drawer', { customerId: id });
   };
 
   // Handle cell click.

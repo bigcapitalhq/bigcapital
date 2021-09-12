@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
-import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
+import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { useDeleteEstimate } from 'hooks/query';
@@ -9,6 +9,7 @@ import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -24,8 +25,10 @@ function EstimateDeleteAlert({
 
   // #withAlertActions
   closeAlert,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
-  
   const { mutateAsync: deleteEstimateMutate, isLoading } = useDeleteEstimate();
 
   // handle cancel delete  alert.
@@ -41,6 +44,7 @@ function EstimateDeleteAlert({
           message: intl.get('the_estimate_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
+        closeDrawer('estimate-detail-drawer');
       })
       .catch(({ errors }) => {})
       .finally(() => {
@@ -71,4 +75,5 @@ function EstimateDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions,
 )(EstimateDeleteAlert);

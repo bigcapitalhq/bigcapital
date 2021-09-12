@@ -25,10 +25,7 @@ export default function InvoiceFloatingActions() {
   const history = useHistory();
 
   // Formik context.
-  const { isSubmitting } = useFormikContext();
-
-  // Formik context.
-  const { resetForm, submitForm } = useFormikContext();
+  const { resetForm, submitForm, isSubmitting } = useFormikContext();
 
   // Invoice form context.
   const { setSubmitPayload, invoice } = useInvoiceFormContext();

@@ -177,7 +177,7 @@ export default compose(
   withSettings(({ invoiceSettings }) => ({
     invoiceNextNumber: invoiceSettings?.nextNumber,
     invoiceNumberPrefix: invoiceSettings?.numberPrefix,
-    invoiceIncrementMode: invoiceSettings?.incrementMode,
+    invoiceIncrementMode: invoiceSettings?.autoIncrement,
   })),
   withCurrentOrganization(),
 )(InvoiceForm);
