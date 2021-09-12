@@ -52,8 +52,40 @@ export default class ManualJournal extends mixin(TenantModel, [
    */
   static get modifiers() {
     return {
+      /**
+       * Sort by status query.
+       */
       sortByStatus(query, order) {
         query.orderByRaw(`PUBLISHED_AT IS NULL ${order}`);
+      },
+
+      /**
+       * Filter by draft status.
+       */
+      filterByDraft(query) {
+        query.whereNull('publishedAt');
+      },
+
+      /**
+       * Filter by published status.
+       */
+      filterByPublished(query) {
+        query.whereNotNull('publishedAt');
+      },
+
+      /**
+       * Filter by the given status.
+       */
+      filterByStatus(query, filterType) {
+        switch (filterType) {
+          case 'draft':
+            query.modify('filterByDraft');
+            break;
+          case 'published':
+          default:
+            query.modify('filterByPublished');
+            break;
+        }
       },
     };
   }

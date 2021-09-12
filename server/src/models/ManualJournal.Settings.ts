@@ -43,6 +43,7 @@ export default {
         { key: 'draft', label: 'Draft' },
         { key: 'published', label: 'published' }
       ],
+      filterCustomQuery: StatusFieldFilterQuery,
       sortCustomQuery: StatusFieldSortQuery,
     },
     'created_at': {
@@ -53,6 +54,16 @@ export default {
   },
 };
 
+/**
+ * Status field sorting custom query.
+ */
 function StatusFieldSortQuery(query, role) {
   return query.modify('sortByStatus', role.order);
+}
+
+/**
+ * Status field filter custom query.
+ */
+ function StatusFieldFilterQuery(query, role) {
+  query.modify('filterByStatus', role.value);
 }

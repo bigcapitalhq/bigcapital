@@ -187,6 +187,11 @@ body.hide-scrollbar .Pane2 {
 
 .bp3-drawer {
   box-shadow: 0 0 0;
+  background-color: #fbfbfb;
+
+  .dashboard__loading-indicator{
+    margin: auto;
+  }
 }
 
 // RTL Icons.
