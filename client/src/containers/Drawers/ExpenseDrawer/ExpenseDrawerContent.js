@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { DrawerBody } from 'components';
+
 import 'style/components/Drawers/ExpenseDrawer.scss';
 
 import { ExpenseDrawerProvider } from './ExpenseDrawerProvider';
@@ -14,7 +16,9 @@ export default function ExpenseDrawerContent({
 }) {
   return (
     <ExpenseDrawerProvider expenseId={expenseId}>
-      <ExpenseDrawerDetails />
+      <DrawerBody>
+        <ExpenseDrawerDetails />
+      </DrawerBody>
     </ExpenseDrawerProvider>
   );
 }

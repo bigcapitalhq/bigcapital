@@ -26,9 +26,7 @@ function InventoryAdjustmentDetailActionsBar({
 
   // Handle delete inventory adjustment.
   const handleDeleteInventoryAdjustment = () => {
-    openAlert('inventory-adjustment-delete', {
-      inventoryId,
-    });
+    openAlert('inventory-adjustment-delete', { inventoryId });
     closeDrawer('inventory-adjustment-drawer');
   };
 

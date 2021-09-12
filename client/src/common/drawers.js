@@ -7,5 +7,6 @@ export const DRAWERS = {
   ACCOUNT_DRAWER: 'account-drawer',
   JOURNAL_DRAWER: 'journal-drawer',
   EXPENSE_DRAWER: 'expense-drawer',
+  BILL_DRAWER: 'bill-drawer',
   INVENTORY_ADJUSTMENT_DRAWER: 'inventory-adjustment-drawer',
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { DrawerHeaderContent, DashboardInsider } from 'components';
+import { DrawerHeaderContent, DrawerLoading } from 'components';
 import { useTransactionsByReference, useInvoice } from 'hooks/query';
 
 const InvoiceDetailDrawerContext = React.createContext();
@@ -32,13 +32,13 @@ function InvoiceDetailDrawerProvider({ invoiceId, ...props }) {
     invoice,
   };
   return (
-    <DashboardInsider loading={isTransactionLoading || isInvoiceLoading}>
+    <DrawerLoading loading={isTransactionLoading || isInvoiceLoading}>
       <DrawerHeaderContent
         name="invoice-detail-drawer"
         title={intl.get('invoice_details')}
       />
       <InvoiceDetailDrawerContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </DrawerLoading>
   );
 }
 

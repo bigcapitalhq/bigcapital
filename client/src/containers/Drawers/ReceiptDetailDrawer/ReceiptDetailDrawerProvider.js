@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { DrawerHeaderContent, DashboardInsider } from 'components';
+import { DrawerHeaderContent, DrawerLoading } from 'components';
 import { useTransactionsByReference, useReceipt } from 'hooks/query';
 
 // useTransactionsByReference
@@ -30,21 +30,23 @@ function ReceiptDetailDrawerProvider({ receiptId, ...props }) {
     { enabled: !!receiptId },
   );
 
-  //provider.
+  // Provider.
   const provider = {
     transactions,
     receiptId,
     receipt,
   };
 
+  const loading = isTransactionLoading || isReceiptLoading;
+
   return (
-    <DashboardInsider loading={isTransactionLoading || isReceiptLoading}>
+    <DrawerLoading loading={loading}>
       <DrawerHeaderContent
         name="receipt-detail-drawer"
         title={intl.get('receipt_details')}
       />
       <ReceiptDetailDrawerContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </DrawerLoading>
   );
 }
 const useReceiptDetailDrawerContext = () =>

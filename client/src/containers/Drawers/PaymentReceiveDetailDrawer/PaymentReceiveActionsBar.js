@@ -20,6 +20,9 @@ import { Icon, FormattedMessage as T } from 'components';
 
 import { compose } from 'utils';
 
+/**
+ * Payment receive actions bar.
+ */
 function PaymentReceiveActionsBar({
   // #withAlertsActions
   openAlert,

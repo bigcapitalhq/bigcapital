@@ -11,11 +11,13 @@ import AccountDrawerTable from './AccountDrawerTable';
  */
 export default function AccountDrawerDetails() {
   return (
-  <div className={'account-drawer'}>
+    <div className={'account-drawer'}>
       <AccountDrawerActionBar />
+
       <Card className={'card-header'}>
         <AccountDrawerHeader />
       </Card>
+
       <AccountDrawerTable />
     </div>
   );

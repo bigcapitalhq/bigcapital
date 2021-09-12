@@ -2,6 +2,7 @@ import React from 'react';
 
 import 'style/components/Drawers/ItemDrawer.scss';
 
+import { DrawerBody } from 'components';
 import ItemContentDetails from './ItemContentDetails';
 import { ItemDetailDrawerProvider } from './ItemDetailDrawerProvider';
 
@@ -14,7 +15,9 @@ export default function ItemDetailDrawerContent({
 }) {
   return (
     <ItemDetailDrawerProvider itemId={itemId}>
-      <ItemContentDetails />
+      <DrawerBody>
+        <ItemContentDetails />
+      </DrawerBody>
     </ItemDetailDrawerProvider>
   );
 }

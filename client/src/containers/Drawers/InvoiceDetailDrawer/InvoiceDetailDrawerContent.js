@@ -1,4 +1,5 @@
 import React from 'react';
+import { DrawerBody } from 'components';
 
 import 'style/components/Drawers/ViewDetail/ViewDetail.scss';
 
@@ -14,7 +15,9 @@ export default function InvoiceDetailDrawerContent({
 }) {
   return (
     <InvoiceDetailDrawerProvider invoiceId={invoiceId}>
-      <InvoiceDetail />
+      <DrawerBody>
+        <InvoiceDetail />
+      </DrawerBody>
     </InvoiceDetailDrawerProvider>
   );
 }

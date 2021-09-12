@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { DrawerHeaderContent, DashboardInsider } from 'components';
+import { DrawerHeaderContent, DrawerLoading } from 'components';
 import {
   useBill,
   useTransactionsByReference,
@@ -41,16 +41,16 @@ function BillDrawerProvider({ billId, ...props }) {
     bill,
   };
 
+  const loading = isLandedCostLoading || isTransactionLoading || isBillLoading;
+
   return (
-    <DashboardInsider
-      loading={isLandedCostLoading || isTransactionLoading || isBillLoading}
-    >
+    <DrawerLoading loading={loading}>
       <DrawerHeaderContent
         name="bill-drawer"
         title={intl.get('bill_details')}
       />
       <BillDrawerContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </DrawerLoading>
   );
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DrawerHeaderContent, DashboardInsider } from 'components';
+import { DrawerHeaderContent, DrawerLoading } from 'components';
 import { useCustomer } from 'hooks/query';
 
 const ContactDetailDrawerContext = React.createContext();
@@ -23,13 +23,13 @@ function CustomerDetailsDrawerProvider({ customerId, ...props }) {
   };
 
   return (
-    <DashboardInsider loading={isCustomerLoading}>
+    <DrawerLoading loading={isCustomerLoading}>
       <DrawerHeaderContent
         name="customer-details-drawer"
         title={customer?.display_name}
       />
       <ContactDetailDrawerContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </DrawerLoading>
   );
 }
 

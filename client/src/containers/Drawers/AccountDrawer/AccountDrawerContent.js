@@ -1,4 +1,5 @@
 import React from 'react';
+import { DrawerBody } from 'components';
 
 import 'style/components/Drawers/AccountDrawer.scss';
 
@@ -11,11 +12,13 @@ import AccountDrawerDetails from './AccountDrawerDetails';
 export default function AccountDrawerContent({
   // #ownProp
   accountId,
-  name
+  name,
 }) {
   return (
     <AccountDrawerProvider name={name} accountId={accountId}>
-      <AccountDrawerDetails />
+      <DrawerBody>
+        <AccountDrawerDetails />
+      </DrawerBody>
     </AccountDrawerProvider>
   );
 }

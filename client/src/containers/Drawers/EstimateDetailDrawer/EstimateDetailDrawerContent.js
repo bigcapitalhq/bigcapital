@@ -1,4 +1,5 @@
 import React from 'react';
+import { DrawerBody } from 'components';
 
 import EstimateDetail from './EstimateDetail';
 import { EstimateDetailDrawerProvider } from './EstimateDetailDrawerProvider';
@@ -12,7 +13,9 @@ export default function EstimateDetailDrawerContent({
 }) {
   return (
     <EstimateDetailDrawerProvider estimateId={estimateId}>
-      <EstimateDetail />
+      <DrawerBody>
+        <EstimateDetail />
+      </DrawerBody>
     </EstimateDetailDrawerProvider>
   );
 }

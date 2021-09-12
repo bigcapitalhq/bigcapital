@@ -25,7 +25,7 @@ export default function DrawersContainer() {
       <AccountDrawer name={DRAWERS.ACCOUNT_DRAWER} />
       <ManualJournalDrawer name={DRAWERS.JOURNAL_DRAWER} />
       <ExpenseDrawer name={DRAWERS.EXPENSE_DRAWER} />
-      <BillDrawer name={'bill-drawer'} />
+      <BillDrawer name={DRAWERS.BILL_DRAWER} />
       <InvoiceDetailDrawer name={'invoice-detail-drawer'} />
       <EstimateDetailDrawer name={'estimate-detail-drawer'} />
       <ReceiptDetailDrawer name={'receipt-detail-drawer'} />

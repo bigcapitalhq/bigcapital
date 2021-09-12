@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { DrawerBody } from 'components';
 import PaymentReceiveDetail from './PaymentReceiveDetail';
 import { PaymentReceiveDetailProvider } from './PaymentReceiveDetailProvider';
 
@@ -12,7 +13,9 @@ export default function PaymentReceiveDetailContent({
 }) {
   return (
     <PaymentReceiveDetailProvider paymentReceiveId={paymentReceiveId}>
-      <PaymentReceiveDetail />
+      <DrawerBody>
+        <PaymentReceiveDetail />
+      </DrawerBody>
     </PaymentReceiveDetailProvider>
   );
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { DrawerBody } from 'components';
 
 import 'style/components/Drawers/ViewDetail/ViewDetail.scss';
 
@@ -15,8 +16,9 @@ export default function BillDrawerContent({
 }) {
   return (
     <BillDrawerProvider billId={billId}>
-      <BillDrawerDetails />
-      {/* <BillDrawerAlerts /> */}
+      <DrawerBody>
+        <BillDrawerDetails />
+      </DrawerBody>
     </BillDrawerProvider>
   );
 }

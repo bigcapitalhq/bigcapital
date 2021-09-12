@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { DrawerHeaderContent, DashboardInsider } from 'components';
+import { DrawerHeaderContent, DrawerLoading } from 'components';
 import { useInventoryAdjustment } from 'hooks/query';
 
 const InventoryAdjustmentDrawerContext = React.createContext();
@@ -22,14 +22,13 @@ function InventoryAdjustmentDrawerProvider({ inventoryId, ...props }) {
   };
 
   return (
-    <DashboardInsider loading={isAdjustmentsLoading}>
+    <DrawerLoading loading={isAdjustmentsLoading}>
       <DrawerHeaderContent
         name="inventory-adjustment-drawer"
         title={intl.get('inventory_adjustment.details_drawer.title')}
       />
-
       <InventoryAdjustmentDrawerContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </DrawerLoading>
   );
 }
 

@@ -1,7 +1,8 @@
 import React, { lazy } from 'react';
+import intl from 'react-intl-universal';
+
 import { Drawer, DrawerSuspense } from 'components';
 import withDrawers from 'containers/Drawer/withDrawers';
-import intl from 'react-intl-universal';
 
 import { compose } from 'utils';
 
@@ -13,7 +14,7 @@ const ExpenseDrawerContent = lazy(() => import('./ExpenseDrawerContent'));
 function ExpenseDrawer({
   name,
 
-  //#withDrawer
+  // #withDrawer
   isOpen,
   payload: { expenseId },
 }) {
@@ -23,10 +24,7 @@ function ExpenseDrawer({
       name={name}
       title={intl.get('expense')}
       size={'65%'}
-      style={{
-        minWidth: '700px',
-        maxWidth: '900px',
-      }}
+      style={{ minWidth: '700px', maxWidth: '900px' }}
     >
       <DrawerSuspense>
         <ExpenseDrawerContent expenseId={expenseId} />

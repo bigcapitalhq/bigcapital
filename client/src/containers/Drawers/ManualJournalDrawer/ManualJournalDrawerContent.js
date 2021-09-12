@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { DrawerBody } from 'components';
+
 import 'style/components/Drawers/ViewDetails.scss';
 
 import { ManualJournalDrawerProvider } from './ManualJournalDrawerProvider';
@@ -14,7 +16,9 @@ export default function ManualJournalDrawerContent({
 }) {
   return (
     <ManualJournalDrawerProvider manualJournalId={manualJournalId}>
-      <ManualJournalDrawerDetails />
+      <DrawerBody>
+        <ManualJournalDrawerDetails />
+      </DrawerBody>
     </ManualJournalDrawerProvider>
   );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { DrawerHeaderContent, DashboardInsider } from 'components';
+import { DrawerHeaderContent, DrawerLoading } from 'components';
 import {
   useTransactionsByReference,
   usePaymentMade,
@@ -46,16 +46,18 @@ function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
     paymentMade,
     paymentEntries,
   };
+
+  const loading =
+    isTransactionLoading || isPaymentMadeLoading || isPaymentLoading;
+
   return (
-    <DashboardInsider
-      loading={isTransactionLoading || isPaymentMadeLoading || isPaymentLoading}
-    >
+    <DrawerLoading loading={loading}>
       <DrawerHeaderContent
         name="payment-made-detail-drawer"
         title={intl.get('payment_made_details')}
       />
       <PaymentMadeDetailContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </DrawerLoading>
   );
 }
 

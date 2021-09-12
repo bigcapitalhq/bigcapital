@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useEstimate } from 'hooks/query';
-import { DrawerHeaderContent, DrawerInsider } from 'components';
+import { DrawerHeaderContent, DrawerLoading } from 'components';
 
 const EstimateDetailDrawerContext = React.createContext();
 
@@ -21,13 +21,13 @@ function EstimateDetailDrawerProvider({ estimateId, ...props }) {
   };
 
   return (
-    <DrawerInsider loading={isEstimateLoading}>
+    <DrawerLoading loading={isEstimateLoading}>
       <DrawerHeaderContent
         name="estimate-detail-drawer"
         title={intl.get('estimate_details')}
       />
       <EstimateDetailDrawerContext.Provider value={provider} {...props} />
-    </DrawerInsider>
+    </DrawerLoading>
   );
 }
 

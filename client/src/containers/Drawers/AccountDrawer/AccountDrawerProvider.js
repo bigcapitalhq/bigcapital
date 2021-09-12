@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAccount, useAccountTransactions } from 'hooks/query';
-import { DrawerHeaderContent, DashboardInsider } from 'components';
+import { DrawerHeaderContent, DrawerLoading } from 'components';
 
 const AccountDrawerContext = React.createContext();
 
@@ -22,7 +22,7 @@ function AccountDrawerProvider({ accountId, name, ...props }) {
   // Drawer title.
   const drawerTitle = `${account.name} ${account.code}`;
 
-  // provider.
+  // Provider.
   const provider = {
     accountId,
     account,
@@ -31,10 +31,10 @@ function AccountDrawerProvider({ accountId, name, ...props }) {
   };
 
   return (
-    <DashboardInsider loading={isAccountLoading || isAccountsLoading}>
+    <DrawerLoading loading={isAccountLoading || isAccountsLoading}>
       <DrawerHeaderContent name={'account-drawer'} title={drawerTitle} />
       <AccountDrawerContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </DrawerLoading>
   );
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useJournal } from 'hooks/query';
-import { DashboardInsider, DrawerHeaderContent } from 'components';
+import { DrawerLoading, DrawerHeaderContent } from 'components';
 
 const ManualJournalDrawerContext = React.createContext();
 
@@ -28,7 +28,7 @@ function ManualJournalDrawerProvider({ manualJournalId, ...props }) {
   };
 
   return (
-    <DashboardInsider loading={isJournalLoading}>
+    <DrawerLoading loading={isJournalLoading}>
       <DrawerHeaderContent
         name={'journal-drawer'}
         title={intl.get('manual_journal_number', {
@@ -36,7 +36,7 @@ function ManualJournalDrawerProvider({ manualJournalId, ...props }) {
         })}
       />
       <ManualJournalDrawerContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </DrawerLoading>
   );
 }
 

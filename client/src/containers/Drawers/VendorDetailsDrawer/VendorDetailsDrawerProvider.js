@@ -1,5 +1,5 @@
 import React from 'react';
-import { DrawerHeaderContent, DashboardInsider } from 'components';
+import { DrawerHeaderContent, DrawerLoading } from 'components';
 import { useVendor } from 'hooks/query';
 
 const VendorDetailDrawerContext = React.createContext();
@@ -9,12 +9,9 @@ const VendorDetailDrawerContext = React.createContext();
  */
 function VendorDetailsDrawerProvider({ vendorId, ...props }) {
   // Handle fetch vendor details.
-  const { data: vendor, isLoading: isVendorLoading } = useVendor(
-    vendorId,
-    {
-      enabled: !!vendorId,
-    },
-  );
+  const { data: vendor, isLoading: isVendorLoading } = useVendor(vendorId, {
+    enabled: !!vendorId,
+  });
   // Provider.
   const provider = {
     vendor,
@@ -23,13 +20,13 @@ function VendorDetailsDrawerProvider({ vendorId, ...props }) {
   };
 
   return (
-    <DashboardInsider loading={isVendorLoading}>
+    <DrawerLoading loading={isVendorLoading}>
       <DrawerHeaderContent
         name="vendor-details-drawer"
         title={vendor?.display_name}
       />
       <VendorDetailDrawerContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </DrawerLoading>
   );
 }
 

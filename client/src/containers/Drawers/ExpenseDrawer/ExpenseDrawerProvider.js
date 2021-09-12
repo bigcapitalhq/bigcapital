@@ -1,6 +1,6 @@
 import React from 'react';
 import { useExpense } from 'hooks/query';
-import { DashboardInsider } from 'components';
+import { DrawerLoading } from 'components';
 
 const ExpenseDrawerDrawerContext = React.createContext();
 
@@ -25,10 +25,11 @@ function ExpenseDrawerProvider({ expenseId, ...props }) {
     isExpenseFetching,
     isExpenseLoading,
   };
+
   return (
-    <DashboardInsider loading={isExpenseLoading}>
+    <DrawerLoading loading={isExpenseLoading}>
       <ExpenseDrawerDrawerContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </DrawerLoading>
   );
 }
 const useExpenseDrawerContext = () =>

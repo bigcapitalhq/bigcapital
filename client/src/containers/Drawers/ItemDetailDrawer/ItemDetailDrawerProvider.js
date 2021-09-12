@@ -1,5 +1,5 @@
 import React from 'react';
-import { DrawerHeaderContent, DashboardInsider } from 'components';
+import { DrawerHeaderContent, DrawerLoading } from 'components';
 import { useItem } from 'hooks/query';
 
 const ItemDetailDrawerContext = React.createContext();
@@ -21,10 +21,10 @@ function ItemDetailDrawerProvider({ itemId, ...props }) {
   };
 
   return (
-    <DashboardInsider loading={isItemLoading}>
+    <DrawerLoading loading={isItemLoading}>
       <DrawerHeaderContent name="item-detail-drawer" title={item?.name} />
       <ItemDetailDrawerContext.Provider value={provider} {...props} />
-    </DashboardInsider>
+    </DrawerLoading>
   );
 }
 const useItemDetailDrawerContext = () =>

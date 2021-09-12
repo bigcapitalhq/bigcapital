@@ -1,12 +1,11 @@
 import React, { Suspense } from 'react';
-import { Spinner, Classes } from '@blueprintjs/core';
+import { DrawerLoading } from 'components';
 
+/**
+ * Loading content.
+ */
 function LoadingContent() {
-  return (
-    <div className={Classes.DRAWER_BODY}>
-      <Spinner size={30} />
-    </div>
-  );
+  return <DrawerLoading loading={true} />;
 }
 
 export default function DrawerSuspense({ children }) {

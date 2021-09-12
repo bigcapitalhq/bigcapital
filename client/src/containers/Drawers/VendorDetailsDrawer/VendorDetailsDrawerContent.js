@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { DrawerBody } from 'components';
 import VendorDetails from './VendorDetails';
 import { VendorDetailsDrawerProvider } from './VendorDetailsDrawerProvider';
 
@@ -12,7 +13,9 @@ export default function VendorDetailsDrawerContent({
 }) {
   return (
     <VendorDetailsDrawerProvider vendorId={vendorId}>
-      <VendorDetails />
+      <DrawerBody>
+        <VendorDetails />
+      </DrawerBody>
     </VendorDetailsDrawerProvider>
   );
 }

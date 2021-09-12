@@ -19,10 +19,7 @@ function AccountDrawer({
     <Drawer
       isOpen={isOpen}
       name={name}
-      style={{
-        minWidth: '700px',
-        maxWidth: '900px',
-      }}
+      style={{ minWidth: '700px', maxWidth: '900px' }}
       size={'65%'}
     >
       <DrawerSuspense>

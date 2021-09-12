@@ -16,6 +16,7 @@ export default function InventoryAdjustmentDetail() {
   return (
     <div className={clsx(InventoryAdjustmentDrawerCls.detail_panel)}>
       <InventoryAdjustmentDetailActionsBar />
+
       <Card>
         <InventoryAdjustmentDetailHeader />
         <InventoryAdjustmentDetailTable />
