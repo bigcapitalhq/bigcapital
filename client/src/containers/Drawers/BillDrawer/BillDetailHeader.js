@@ -48,7 +48,10 @@ export default function BillDetailHeader() {
           label={intl.get('reference')}
           children={defaultTo(bill.reference_no, '--')}
         />
-        <DetailItem label={'Created at'} children={'2020 Ang 21'} />
+        <DetailItem
+          label={intl.get('bill.details.created_at')}
+          children={'2020 Ang 21'}
+        />
       </DetailsMenu>
     </div>
   );

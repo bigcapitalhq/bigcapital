@@ -93,21 +93,21 @@ export default {
     auto_increment: {
       type: 'boolean',
     },
-    deposit_account: {
+    preferred_deposit_account: {
       type: 'number',
     },
-    advance_deposit: {
+    preferred_advance_deposit: {
       type: 'number',
     },
   },
   items: {
-    sell_account: {
+    preferred_sell_account: {
       type: 'number',
     },
-    cost_account: {
+    preferred_cost_account: {
       type: 'number',
     },
-    inventory_account: {
+    preferred_inventory_account: {
       type: 'number',
     },
   },

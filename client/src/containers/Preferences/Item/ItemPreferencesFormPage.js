@@ -3,10 +3,10 @@ import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 import intl from 'react-intl-universal';
-import { ItemPreferencesSchema } from './Item.schema';
-import ItemForm from './ItemForm';
+import { ItemPreferencesSchema } from './ItemPreferences.schema';
+import ItemPreferencesForm from './ItemPreferencesForm';
 
-import { useItemFormContext } from './ItemFormProvider';
+import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
 import { compose, optionsMapToArray, transformGeneralSettings } from 'utils';
@@ -14,20 +14,20 @@ import { compose, optionsMapToArray, transformGeneralSettings } from 'utils';
 import 'style/pages/Preferences/Accounting.scss';
 
 // item form page preferences.
-function ItemFormPage({
+function ItemPreferencesFormPage({
   // #withSettings
   itemsSettings,
 
   // #withDashboardActions
   changePreferencesPageTitle,
 }) {
-  
-  const { saveSettingMutate } = useItemFormContext();
+  const { saveSettingMutate } = useItemPreferencesFormContext();
 
+  // Initial values.
   const initialValues = {
-    sell_account: '',
-    cost_account: '',
-    inventory_account: '',
+    preferred_sell_account: '',
+    preferred_cost_account: '',
+    preferred_inventory_account: '',
     ...transformGeneralSettings(itemsSettings),
   };
 
@@ -59,7 +59,7 @@ function ItemFormPage({
       initialValues={initialValues}
       validationSchema={ItemPreferencesSchema}
       onSubmit={handleFormSubmit}
-      component={ItemForm}
+      component={ItemPreferencesForm}
     />
   );
 }
@@ -67,4 +67,4 @@ function ItemFormPage({
 export default compose(
   withSettings(({ itemsSettings }) => ({ itemsSettings })),
   withDashboardActions,
-)(ItemFormPage);
+)(ItemPreferencesFormPage);

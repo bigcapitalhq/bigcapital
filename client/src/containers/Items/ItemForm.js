@@ -1,10 +1,9 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
-import { defaultTo } from 'lodash';
 
 import 'style/pages/Items/PageForm.scss';
 
@@ -15,43 +14,15 @@ import ItemFormBody from './ItemFormBody';
 import ItemFormFloatingActions from './ItemFormFloatingActions';
 import ItemFormInventorySection from './ItemFormInventorySection';
 
-import withSettings from 'containers/Settings/withSettings';
-
-import { compose, transformToForm } from 'utils';
-import {
-  EditItemFormSchema,
-  CreateItemFormSchema,
-  transformItemFormData,
-} from './ItemForm.schema';
+import { useItemFormInitialValues } from './utils';
+import { EditItemFormSchema, CreateItemFormSchema } from './ItemForm.schema';
 
 import { useItemFormContext } from './ItemFormProvider';
-
-const defaultInitialValues = {
-  active: 1,
-  name: '',
-  type: 'service',
-  code: '',
-  cost_price: '',
-  sell_price: '',
-  cost_account_id: '',
-  sell_account_id: '',
-  inventory_account_id: '',
-  category_id: '',
-  sellable: 1,
-  purchasable: true,
-  sell_description: '',
-  purchase_description: '',
-};
 
 /**
  * Item form.
  */
-function ItemForm({
-  // #withSettings
-  preferredCostAccount,
-  preferredSellAccount,
-  preferredInventoryAccount,
-}) {
+export default function ItemForm() {
   // Item form context.
   const {
     itemId,
@@ -66,32 +37,8 @@ function ItemForm({
   // History context.
   const history = useHistory();
 
-  /**
-   * Initial values in create and edit mode.
-   */
-  const initialValues = useMemo(
-    () => ({
-      ...defaultInitialValues,
-      cost_account_id: defaultTo(preferredCostAccount, ''),
-      sell_account_id: defaultTo(preferredSellAccount, ''),
-      inventory_account_id: defaultTo(preferredInventoryAccount, ''),
-      /**
-       * We only care about the fields in the form. Previously unfilled optional
-       * values such as `notes` come back from the API as null, so remove those
-       * as well.
-       */
-      ...transformToForm(
-        transformItemFormData(item, defaultInitialValues),
-        defaultInitialValues,
-      ),
-    }),
-    [
-      item,
-      preferredCostAccount,
-      preferredSellAccount,
-      preferredInventoryAccount,
-    ],
-  );
+  // Initial values in create and edit mode.
+  const initialValues = useItemFormInitialValues(item);
 
   // Transform API errors.
   const transformApiErrors = (error) => {
@@ -179,11 +126,3 @@ function ItemForm({
     </div>
   );
 }
-
-export default compose(
-  withSettings(({ itemsSettings }) => ({
-    preferredCostAccount: parseInt(itemsSettings?.costAccount),
-    preferredSellAccount: parseInt(itemsSettings?.sellAccount),
-    preferredInventoryAccount: parseInt(itemsSettings?.inventoryAccount),
-  })),
-)(ItemForm);

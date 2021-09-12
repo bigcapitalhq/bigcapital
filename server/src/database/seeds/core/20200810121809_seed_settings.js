@@ -16,10 +16,6 @@ exports.up = (knex) => {
     { group: 'sales_invoices', key: 'number_prefix', value: 'INV-' },
     { group: 'sales_invoices', key: 'auto_increment', value: true },
 
-    { group: 'sales_invoices', key: 'next_number', value: '00001' },
-    { group: 'sales_invoices', key: 'number_prefix', value: 'INV-' },
-    { group: 'sales_invoices', key: 'auto_increment', value: true },
-
     // Sale receipts settings.
     { group: 'sales_receipts', key: 'next_number', value: '00001' },
     { group: 'sales_receipts', key: 'number_prefix', value: 'REC-' },

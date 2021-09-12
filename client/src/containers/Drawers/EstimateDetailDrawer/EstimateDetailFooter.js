@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'classnames';
 
-import { TotalLines, TotalLine, If } from 'components';
+import { T, TotalLines, TotalLine, If } from 'components';
 
 import EstimateDetailsCls from 'style/components/Drawers/EstimateDetails.module.scss';
 
@@ -13,22 +13,22 @@ export default function EstimateDetailFooter() {
     <div className={clsx(EstimateDetailsCls.detail_panel_footer)}>
       <TotalLines className={clsx(EstimateDetailsCls.total_lines)}>
         <TotalLine
-          title={'Subtotal'}
+          title={<T id={'estimate.details.subtotal'} />}
           value={'1000'}
           className={EstimateDetailsCls.total_line_subtotal}
         />
         <TotalLine
-          title={'TOTAL'}
+          title={<T id={'estimate.details.total'} />}
           value={'1000'}
           className={EstimateDetailsCls.total_line_total}
         />
         <TotalLine
-          title={'Payment made'}
+          title={<T id={'estimate.details.payment_made'} />}
           value={'1000'}
           className={EstimateDetailsCls.total_line_payment}
         />
         <TotalLine
-          title={'Due amount'}
+          title={<T id={'estimate.details.due_amount'} />}
           value={'1000'}
           className={EstimateDetailsCls.total_line_dueAmount}
         />
@@ -37,7 +37,7 @@ export default function EstimateDetailFooter() {
       <If condition={false}>
         <div className={clsx(EstimateDetailsCls.detail_panel_note)}>
           <p>
-            <b>Note:</b> --
+            <b><T id={'estimate.details.note'} />:</b> --
           </p>
         </div>
       </If>
