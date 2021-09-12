@@ -6,6 +6,7 @@ import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { handleDeleteErrors } from 'containers/Purchases/Bills/BillForm/utils';
 import { useDeleteBill } from 'hooks/query';
@@ -23,8 +24,10 @@ function BillDeleteAlert({
 
   // #withAlertActions
   closeAlert,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
-  
   const { isLoading, mutateAsync: deleteBillMutate } = useDeleteBill();
 
   // Handle cancel Bill
@@ -40,6 +43,8 @@ function BillDeleteAlert({
           message: intl.get('the_bill_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
+
+        closeDrawer('bill-drawer');
       })
       .catch(
         ({
@@ -76,4 +81,5 @@ function BillDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions,
 )(BillDeleteAlert);

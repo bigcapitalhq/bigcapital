@@ -36,16 +36,13 @@ function BillDetailActionsBar({
 
   // Handle edit bill.
   const onEditBill = () => {
-    return billId
-      ? (history.push(`/bills/${billId}/edit`), closeDrawer('bill-drawer'))
-      : null;
+    history.push(`/bills/${billId}/edit`);
+    closeDrawer('bill-drawer');
   };
 
   // Handle delete bill.
   const onDeleteBill = () => {
-    return billId
-      ? (openAlert('bill-delete', { billId }), closeDrawer('bill-drawer'))
-      : null;
+    openAlert('bill-delete', { billId });
   };
 
   return (
