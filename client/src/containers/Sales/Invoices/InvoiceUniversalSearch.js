@@ -21,7 +21,7 @@ function InvoiceUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.INVOICE) {
-    openDrawer('invoice-drawer', { invoiceId: resourceId });
+    openDrawer('invoice-detail-drawer', { invoiceId: resourceId });
   }
   return null;
 }
