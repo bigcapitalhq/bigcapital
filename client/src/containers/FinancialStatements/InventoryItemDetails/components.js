@@ -25,9 +25,10 @@ export const useInventoryItemDetailsColumns = () => {
  * inventory item details  loading bar.
  */
 export function InventoryItemDetailsLoadingBar() {
-  const { isInventoryItemDetailsLoading } = useInventoryItemDetailsContext();
+  const { isInventoryItemDetailsFetching } = useInventoryItemDetailsContext();
+
   return (
-    <If condition={isInventoryItemDetailsLoading}>
+    <If condition={isInventoryItemDetailsFetching}>
       <FinancialLoadingBar />
     </If>
   );

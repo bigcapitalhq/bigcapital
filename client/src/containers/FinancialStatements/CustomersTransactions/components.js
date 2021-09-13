@@ -3,8 +3,7 @@ import intl from 'react-intl-universal';
 import { If } from 'components';
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-import { getForceWidth, defaultExpanderReducer, getColumnWidth } from 'utils';
-import { CellTextSpan } from 'components/Datatable/Cells';
+import { getForceWidth, getColumnWidth } from 'utils';
 
 /**
  * Retrieve customers transactions columns.
@@ -90,10 +89,10 @@ export const useCustomersTransactionsColumns = () => {
  * customers transactions loading bar.
  */
 export function CustomersTransactionsLoadingBar() {
-  const { isCustomersTransactionsLoading } = useCustomersTransactionsContext();
+  const { isCustomersTransactionsFetching } = useCustomersTransactionsContext();
 
   return (
-    <If condition={isCustomersTransactionsLoading}>
+    <If condition={isCustomersTransactionsFetching}>
       <FinancialLoadingBar />
     </If>
   );
