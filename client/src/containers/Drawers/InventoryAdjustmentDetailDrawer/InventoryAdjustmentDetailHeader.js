@@ -49,9 +49,6 @@ export default function InventoryAdjustmentDetailHeader() {
         <DetailItem label={intl.get('reason')}>
           {defaultTo(reason, '—')}
         </DetailItem>
-        <DetailItem label={intl.get('description')}>
-          {defaultTo(description, '—')}
-        </DetailItem>
         <DetailItem label={intl.get('created_at')}>
           {moment(created_at).format('YYYY MMM DD')}
         </DetailItem>

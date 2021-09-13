@@ -178,15 +178,6 @@ export const useInventoryAdjustmentsColumns = () => {
         clickable: true,
       },
       {
-        id: 'description',
-        Header: intl.get('description'),
-        accessor: 'description',
-        disableSorting: true,
-        width: 85,
-        className: 'description',
-        clickable: true,
-      },
-      {
         id: 'created_at',
         Header: intl.get('created_at'),
         accessor: (r) => moment(r.created_at).format('YYYY MMM DD'),
