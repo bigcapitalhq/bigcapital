@@ -135,6 +135,9 @@ export const parseDateRangeQuery = (keyword) => {
     this_week: {
       range: 'week',
     },
+    this_quarter: {
+      range: 'quarter',
+    }
   };
 
   if (typeof queries[keyword] === 'undefined') {
