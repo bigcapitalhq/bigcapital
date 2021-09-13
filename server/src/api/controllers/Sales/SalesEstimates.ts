@@ -415,11 +415,6 @@ export default class SalesEstimatesController extends BaseController {
       }
       if (error.errorType === 'SALE_ESTIMATE_ALREADY_APPROVED') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 900 }],
-        });
-      }
-      if (error.errorType === 'SALE_ESTIMATE_ALREADY_APPROVED') {
-        return res.boom.badRequest(null, {
           errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 1000 }],
         });
       }
@@ -441,6 +436,16 @@ export default class SalesEstimatesController extends BaseController {
       if (error.errorType === 'SALE_ESTIMATE_NO_IS_REQUIRED') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'SALE_ESTIMATE_NO_IS_REQUIRED', code: 1400 }],
+        });
+      }
+      if (error.errorType === 'SALE_ESTIMATE_CONVERTED_TO_INVOICE') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SALE_ESTIMATE_CONVERTED_TO_INVOICE', code: 1500 }],
+        });
+      }
+      if (error.errorType === 'SALE_ESTIMATE_ALREADY_DELIVERED') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SALE_ESTIMATE_ALREADY_DELIVERED', code: 1600 }],
         });
       }
     }

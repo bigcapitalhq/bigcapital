@@ -22,8 +22,8 @@ import { ServiceError } from 'exceptions';
 import CustomersService from 'services/Contacts/CustomersService';
 import moment from 'moment';
 import AutoIncrementOrdersService from './AutoIncrementOrdersService';
-import { ERRORS } from './constants';
 import SaleEstimateTransformer from './Estimates/SaleEstimateTransformer';
+import { ERRORS } from './Estimates/constants';
 
 /**
  * Sale estimate service.
@@ -355,26 +355,20 @@ export default class SaleEstimateService implements ISalesEstimatesService{
       tenantId,
       estimateId
     );
-
     // Throw error if the sale estimate converted to sale invoice.
     if (oldSaleEstimate.convertedToInvoiceId) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_CONVERTED_TO_INVOICE);
     }
-
-    this.logger.info(
-      '[sale_estimate] delete sale estimate and associated entries from the storage.'
-    );
+    // Delete sale estimate entries.
     await ItemEntry.query()
       .where('reference_id', estimateId)
       .where('reference_type', 'SaleEstimate')
       .delete();
 
+    // Delete sale estimate transaction.
     await SaleEstimate.query().where('id', estimateId).delete();
-    this.logger.info('[sale_estimate] deleted successfully.', {
-      tenantId,
-      estimateId,
-    });
 
+    // Triggers `onSaleEstimatedDeleted` event.
     await this.eventDispatcher.dispatch(events.saleEstimate.onDeleted, {
       tenantId,
       saleEstimateId: estimateId,
