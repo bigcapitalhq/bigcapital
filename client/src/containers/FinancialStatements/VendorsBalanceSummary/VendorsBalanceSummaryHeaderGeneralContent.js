@@ -4,7 +4,13 @@ import { DateInput } from '@blueprintjs/datetime';
 import classNames from 'classnames';
 import { FormGroup, Position, Classes, Checkbox } from '@blueprintjs/core';
 
-import { Row, Col, FieldHint, FormattedMessage as T } from 'components';
+import {
+  ContactsMultiSelect,
+  Row,
+  Col,
+  FieldHint,
+  FormattedMessage as T,
+} from '../../../components';
 import {
   momentFormatter,
   tansformDateValue,
@@ -68,15 +74,19 @@ export default function VendorsBalanceSummaryHeaderGeneralContent() {
       <Row>
         <Col xs={4}>
           <Field name={'vendorsIds'}>
-            {({
-              form: { setFieldValue },
-              field: { value },
-              meta: { error, touched },
-            }) => (
+            {({ form: { setFieldValue } }) => (
               <FormGroup
                 label={<T id={'specific_vendors'} />}
                 className={classNames('form-group--select-list', Classes.FILL)}
-              ></FormGroup>
+              >
+                <ContactsMultiSelect
+                  items={vendors}
+                  onItemSelect={(contacts) => {
+                    const vendorsIds = contacts.map((contact) => contact.id);
+                    setFieldValue('vendorsIds', vendorsIds);
+                  }}
+                />
+              </FormGroup>
             )}
           </Field>
         </Col>

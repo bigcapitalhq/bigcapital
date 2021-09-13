@@ -1,18 +1,22 @@
 import React from 'react';
 import { FormGroup, Classes } from '@blueprintjs/core';
 import { Field } from 'formik';
-import { Row, Col, FormattedMessage as T } from 'components';
+import {
+  Row,
+  Col,
+  FormattedMessage as T,
+  ItemsMultiSelect,
+} from '../../../components';
 import classNames from 'classnames';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 
-import { ItemsMultiSelect } from 'components';
 import {
   PurchasesByItemsGeneralPanelProvider,
   usePurchaseByItemsGeneralPanelContext,
 } from './PurchasesByItemsGeneralPanelProvider';
 
 /**
- * 
+ *
  */
 export default function PurchasesByItemsGeneralPanel() {
   return (
@@ -35,16 +39,18 @@ function PurchasesByItemsGeneralPanelContent() {
       <Row>
         <Col xs={4}>
           <Field name={'itemsIds'}>
-            {({
-              form: { setFieldValue },
-              field: { value },
-              meta: { error, touched },
-            }) => (
+            {({ form: { setFieldValue } }) => (
               <FormGroup
                 label={<T id={'Specific items'} />}
                 className={classNames('form-group--select-list', Classes.FILL)}
               >
-
+                <ItemsMultiSelect
+                  items={items}
+                  onItemSelect={(items) => {
+                    const itemsIds = items.map((item) => item.id);
+                    setFieldValue('itemsIds', itemsIds);
+                  }}
+                />
               </FormGroup>
             )}
           </Field>

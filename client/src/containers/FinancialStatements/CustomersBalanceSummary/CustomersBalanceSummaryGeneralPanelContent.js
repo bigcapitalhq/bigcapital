@@ -74,15 +74,15 @@ export default function CustomersBalanceSummaryGeneralPanelContent() {
               meta: { error, touched },
             }) => (
               <FormGroup
-                label={<T id={'Specific customers'} />}
+                label={<T id={'specific_customers'} />}
                 className={classNames('form-group--select-list', Classes.FILL)}
               >
                 <ContactsMultiSelect
-                  onContactSelect={(contactsIds) => {
-                    setFieldValue('customersIds', contactsIds);
+                  items={customers}
+                  onItemSelect={(contacts) => {
+                    const customersIds = contacts.map(contact => contact.id);
+                    setFieldValue('customersIds', customersIds);
                   }}
-                  contacts={customers}
-                  contactsSelected={value}
                 />
               </FormGroup>
             )}

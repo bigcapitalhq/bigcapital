@@ -1,59 +1,11 @@
-import React, { useCallback, useState } from 'react';
-import { MenuItem, Button } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
-import MultiSelect from 'components/MultiSelect';
-import { FormattedMessage as T } from 'components';
-import { safeInvoke } from 'utils';
+import React, { useCallback } from 'react';
+import { MenuItem } from '@blueprintjs/core';
+import { MultiSelect } from '../components/MultiSelectTaggable';
 
 /**
  * Contacts multi-select component.
  */
-export default function ContactsMultiSelect({
-  contacts,
-  defaultText = <T id={'all_customers'} />,
-  buttonProps,
-
-  onContactSelect,
-  contactsSelected = [],
-  ...multiSelectProps
-}) {
-  const [localSelected, setLocalSelected] = useState([...contactsSelected]);
-
-  // Detarmines the given id is selected.
-  const isItemSelected = useCallback(
-    (id) => localSelected.some((s) => s === id),
-    [localSelected],
-  );
-
-  // Contact item renderer.
-  const contactRenderer = useCallback(
-    (contact, { handleClick }) => (
-      <MenuItem
-        icon={isItemSelected(contact.id) ? 'tick' : 'blank'}
-        text={contact.display_name}
-        key={contact.id}
-        onClick={handleClick}
-      />
-    ),
-    [isItemSelected],
-  );
-
-  // Count selected items.
-  const countSelected = localSelected.length;
-
-  // Handle item selected.
-  const handleItemSelect = useCallback(
-    ({ id }) => {
-      const selected = isItemSelected(id)
-        ? localSelected.filter((s) => s !== id)
-        : [...localSelected, id];
-
-      setLocalSelected([...selected]);
-      safeInvoke(onContactSelect, selected);
-    },
-    [setLocalSelected, localSelected, isItemSelected, onContactSelect],
-  );
-
+export default function ContactsMultiSelect({ ...multiSelectProps }) {
   // Filters accounts items.
   const filterContactsPredicater = useCallback(
     (query, contact, _index, exactMatch) => {
@@ -71,23 +23,20 @@ export default function ContactsMultiSelect({
 
   return (
     <MultiSelect
-      items={contacts}
-      noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
-      itemRenderer={contactRenderer}
+      itemRenderer={(contact, { selected, active, handleClick }) => (
+        <MenuItem
+          active={active}
+          icon={selected ? 'tick' : 'blank'}
+          text={contact.display_name}
+          key={contact.id}
+          onClick={handleClick}
+        />
+      )}
       popoverProps={{ minimal: true }}
-      filterable={true}
-      onItemSelect={handleItemSelect}
+      fill={true}
       itemPredicate={filterContactsPredicater}
+      tagRenderer={(item) => item.display_name}
       {...multiSelectProps}
-    >
-      <Button
-        text={
-          countSelected === 0
-            ? defaultText
-            : intl.get('selected_customers', { count: countSelected })
-        }
-        {...buttonProps}
-      />
-    </MultiSelect>
+    />
   );
 }

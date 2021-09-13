@@ -105,10 +105,12 @@ export default function ARAgingSummaryHeaderGeneralContent() {
                 className={classNames('form-group--select-list', Classes.FILL)}
               >
                 <ContactsMultiSelect
-                  contacts={customers}
-                  contactsSelected={value}
-                  onContactSelect={(contactsIds) => {
-                    setFieldValue('customersIds', contactsIds);
+                  items={customers}
+                  onItemSelect={(customers) => {
+                    const customersIds = customers.map(
+                      (customer) => customer.id,
+                    );
+                    setFieldValue('customersIds', customersIds);
                   }}
                 />
               </FormGroup>

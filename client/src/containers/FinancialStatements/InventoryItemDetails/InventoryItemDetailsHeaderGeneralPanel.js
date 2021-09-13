@@ -2,10 +2,18 @@ import React from 'react';
 import classNames from 'classnames';
 import { FormGroup, Classes } from '@blueprintjs/core';
 import { Field } from 'formik';
-import { Row, Col, FormattedMessage as T } from 'components';
+import {
+  ItemsMultiSelect,
+  Row,
+  Col,
+  FormattedMessage as T,
+} from '../../../components';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
-import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
-import { InventoryItemDetailsHeaderGeneralProvider } from './InventoryItemDetailsHeaderGeneralProvider';
+
+import {
+  InventoryItemDetailsHeaderGeneralProvider,
+  useInventoryItemDetailsHeaderGeneralContext,
+} from './InventoryItemDetailsHeaderGeneralProvider';
 
 /**
  * Inventory item details header - General panel.
@@ -22,7 +30,7 @@ export default function InventoryItemDetailsHeaderGeneralPanel() {
  * Inventory item details header - General panel - Content.
  */
 function InventoryItemDetailsHeaderGeneralPanelContent() {
-  const { items } = useInventoryItemDetailsContext();
+  const { items } = useInventoryItemDetailsHeaderGeneralContext();
 
   return (
     <div>
@@ -39,7 +47,15 @@ function InventoryItemDetailsHeaderGeneralPanelContent() {
               <FormGroup
                 label={<T id={'Specific items'} />}
                 className={classNames('form-group--select-list', Classes.FILL)}
-              ></FormGroup>
+              >
+                <ItemsMultiSelect
+                  items={items}
+                  onItemSelect={(items) => {
+                    const itemsIds = items.map((item) => item.id);
+                    setFieldValue('itemsIds', itemsIds);
+                  }}
+                />
+              </FormGroup>
             )}
           </Field>
         </Col>

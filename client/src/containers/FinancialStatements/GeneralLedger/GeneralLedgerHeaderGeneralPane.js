@@ -43,7 +43,7 @@ function GLHeaderGeneralPaneContent() {
             label={<T id={'specific_accounts'} />}
             className={classNames('form-group--select-list', Classes.FILL)}
           >
-            <AccountsMultiSelect accounts={accounts} />
+            <AccountsMultiSelect items={accounts} />
           </FormGroup>
         </Col>
       </Row>

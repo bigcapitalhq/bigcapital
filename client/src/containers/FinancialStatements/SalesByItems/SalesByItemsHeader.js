@@ -28,13 +28,9 @@ function SalesByItemsHeader({
   // #withSalesByItemsActions
   toggleSalesByItemsFilterDrawer,
 }) {
-  
-
   // Form validation schema.
   const validationSchema = Yup.object().shape({
-    fromDate: Yup.date()
-      .required()
-      .label(intl.get('from_date')),
+    fromDate: Yup.date().required().label(intl.get('from_date')),
     toDate: Yup.date()
       .min(Yup.ref('fromDate'))
       .required()

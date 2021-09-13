@@ -77,7 +77,7 @@ export * from './Subscriptions';
 export * from './Dashboard';
 export * from './Drawer';
 export * from './Forms';
-
+export * from './MultiSelectTaggable'
 const Hint = FieldHint;
 
 const T = FormattedMessage;

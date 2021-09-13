@@ -9,7 +9,7 @@ import {
   Col,
   ContactsMultiSelect,
   FormattedMessage as T,
-} from 'components';
+} from '../../../components';
 import {
   VendorsTransactionsGeneralPanelProvider,
   useVendorsTransactionsGeneralPanelContext,
@@ -45,11 +45,11 @@ function VendorsTransactionsHeaderGeneralPanelContent() {
                 className={classNames('form-group--select-list', Classes.FILL)}
               >
                 <ContactsMultiSelect
-                  onContactSelect={(contactsIds) => {
-                    setFieldValue('vendorsIds', contactsIds);
+                  items={vendors}
+                  onItemSelect={(vendors) => {
+                    const vendorsIds = vendors.map((customer) => customer.id);
+                    setFieldValue('vendorsIds', vendorsIds);
                   }}
-                  contacts={vendors}
-                  contactsSelected={value}
                 />
               </FormGroup>
             )}

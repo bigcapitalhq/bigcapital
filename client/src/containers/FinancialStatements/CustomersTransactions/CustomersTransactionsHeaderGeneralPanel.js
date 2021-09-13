@@ -3,8 +3,12 @@ import classNames from 'classnames';
 import { Field } from 'formik';
 import { Classes, FormGroup } from '@blueprintjs/core';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
-import { Row, Col } from 'components';
-import { ContactsMultiSelect, FormattedMessage as T } from 'components';
+import {
+  Row,
+  Col,
+  ContactsMultiSelect,
+  FormattedMessage as T,
+} from '../../../components';
 import {
   CustomersTransactionsGeneralPanelProvider,
   useCustomersTransactionsGeneralPanelContext,
@@ -40,11 +44,13 @@ function CustomersTransactionsHeaderGeneralPanelContent() {
                 className={classNames('form-group--select-list', Classes.FILL)}
               >
                 <ContactsMultiSelect
-                  onContactSelect={(contactsIds) => {
-                    setFieldValue('customersIds', contactsIds);
+                  items={customers}
+                  onItemSelect={(customers) => {
+                    const customersIds = customers.map(
+                      (customer) => customer.id,
+                    );
+                    setFieldValue('customersIds', customersIds);
                   }}
-                  contacts={customers}
-                  contactsSelected={value}
                 />
               </FormGroup>
             )}

@@ -2,6 +2,7 @@ import React from 'react';
 import { FormGroup, Classes } from '@blueprintjs/core';
 import { Field } from 'formik';
 import classNames from 'classnames';
+import { get } from 'lodash';
 
 import { Row, Col, ItemsMultiSelect, FormattedMessage as T } from 'components';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
@@ -34,22 +35,17 @@ function SalesByItemsHeaderGeneralPanelContent() {
       <Row>
         <Col xs={4}>
           <Field name={'itemsIds'}>
-            {({
-              form: { setFieldValue },
-              field: { value },
-              meta: { error, touched },
-            }) => (
+            {({ form: { setFieldValue }, field: { value } }) => (
               <FormGroup
                 label={<T id={'Specific items'} />}
                 className={classNames('form-group--select-list', Classes.FILL)}
               >
                 <ItemsMultiSelect
                   items={items}
-                  selectedItems={value}
-                  onItemSelect={(itemsIds) => {
+                  onItemSelect={(items) => {
+                    const itemsIds = items.map((item) => item.id);
                     setFieldValue('itemsIds', itemsIds);
                   }}
-                  onTagRenderer={(value) => value}
                 />
               </FormGroup>
             )}

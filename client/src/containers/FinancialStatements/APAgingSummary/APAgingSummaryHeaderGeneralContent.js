@@ -99,11 +99,10 @@ export default function APAgingSummaryHeaderGeneralContent() {
                 className={classNames('form-group--select-list', Classes.FILL)}
               >
                 <ContactsMultiSelect
-                  defaultText={<T id={'all_vendors'} />}
-                  contacts={vendors}
-                  contactsSelected={value}
-                  onContactSelect={(contactsIds) => {
-                    setFieldValue('vendorsIds', contactsIds);
+                  items={vendors}
+                  onItemSelect={(vendors) => {
+                    const vendorsIds = vendors.map((customer) => customer.id);
+                    setFieldValue('vendorsIds', vendorsIds);
                   }}
                 />
               </FormGroup>
