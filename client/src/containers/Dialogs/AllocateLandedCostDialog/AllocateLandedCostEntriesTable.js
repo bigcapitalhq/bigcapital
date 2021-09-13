@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MoneyFieldCell, DataTableEditable } from 'components';
-import { compose, updateTableRow } from 'utils';
+import { compose, updateTableCell } from 'utils';
 
 /**
  * Allocate landed cost entries table.
@@ -51,7 +51,7 @@ export default function AllocateLandedCostEntriesTable({
   // Handle update data.
   const handleUpdateData = React.useCallback(
     (rowIndex, columnId, value) => {
-      const newRows = compose(updateTableRow(rowIndex, columnId, value))(
+      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
         entries,
       );
       onUpdateData(newRows);

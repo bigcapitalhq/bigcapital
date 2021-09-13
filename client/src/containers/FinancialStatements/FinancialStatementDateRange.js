@@ -12,8 +12,6 @@ import { dateRangeOptions } from 'containers/FinancialStatements/common';
  * Financial statement - Date range select.
  */
 export default function FinancialStatementDateRange() {
-  
-
   return (
     <>
       <Row>

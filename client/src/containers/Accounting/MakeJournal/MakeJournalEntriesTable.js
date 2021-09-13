@@ -6,7 +6,7 @@ import {
   updateMinEntriesLines,
   updateRemoveLineByIndex,
   updateAutoAddNewLine,
-  updateTableRow,
+  updateTableCell,
 } from 'utils';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { useJournalTableEntriesColumns } from './components';
@@ -38,7 +38,7 @@ export default function MakeJournalEntriesTable({
       // Update items entries total.
       updateAdjustEntries(rowIndex, columnId, value),
       // Update entry of the given row index and column id.
-      updateTableRow(rowIndex, columnId, value),
+      updateTableCell(rowIndex, columnId, value),
     )(entries);
 
     saveInvoke(onChange, newRows);

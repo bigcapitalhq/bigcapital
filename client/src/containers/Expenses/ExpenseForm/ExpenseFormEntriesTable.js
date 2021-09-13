@@ -6,7 +6,7 @@ import { useExpenseFormTableColumns } from './components';
 import {
   saveInvoke,
   compose,
-  updateTableRow,
+  updateTableCell,
   updateMinEntriesLines,
   updateAutoAddNewLine,
   updateRemoveLineByIndex,
@@ -38,7 +38,7 @@ export default function ExpenseFormEntriesTable({
         // Update auto-adding new line.
         updateAutoAddNewLine(defaultEntry, ['expense_account_id']),
         // Update the row value of the given row index and column id.
-        updateTableRow(rowIndex, columnId, value),
+        updateTableCell(rowIndex, columnId, value),
       )(entries);
 
       saveInvoke(onChange, newRows);

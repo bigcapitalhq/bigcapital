@@ -179,6 +179,7 @@ export function useEditableItemsEntriesColumns({ landedCost }) {
               accessor: 'landed_cost',
               Cell: CheckBoxFieldCell,
               width: 100,
+              disabledAccessor: 'landed_cost_disabled',
               disableSortBy: true,
               disableResizing: true,
               className: 'landed-cost',

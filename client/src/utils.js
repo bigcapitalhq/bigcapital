@@ -643,12 +643,24 @@ export const updateRemoveLineByIndex = (rowIndex) => (entries) => {
   return entries.filter((row, index) => index !== removeIndex);
 };
 
-export const updateTableRow = (rowIndex, columnId, value) => (old) => {
+export const updateTableCell = (rowIndex, columnId, value) => (old) => {
   return old.map((row, index) => {
     if (index === rowIndex) {
       return {
         ...old[rowIndex],
         [columnId]: value,
+      };
+    }
+    return row;
+  });
+};
+
+export const updateTableRow = (rowIndex, value) => (old) => {
+  return old.map((row, index) => {
+    if (index === rowIndex) {
+      return {
+        ...old[rowIndex],
+        ...value,
       };
     }
     return row;

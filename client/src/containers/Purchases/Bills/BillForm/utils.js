@@ -7,14 +7,17 @@ import {
   defaultFastFieldShouldUpdate,
   transformToForm,
   repeatValue,
+  orderingLinesIndexes,
 } from 'utils';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
 } from 'containers/Entries/utils';
+import { isLandedCostDisabled } from '../../../Entries/utils';
 
 export const MIN_LINES_NUMBER = 4;
 
+// Default bill entry.
 export const defaultBillEntry = {
   index: 0,
   item_id: '',
@@ -26,6 +29,7 @@ export const defaultBillEntry = {
   landed_cost: false,
 };
 
+// Default bill.
 export const defaultBill = {
   vendor_id: '',
   bill_number: '',
@@ -37,10 +41,14 @@ export const defaultBill = {
   entries: [...repeatValue(defaultBillEntry, MIN_LINES_NUMBER)],
 };
 
+/**
+ * Transformes the bill to initial values of edit form.
+ */
 export const transformToEditForm = (bill) => {
   const initialEntries = [
     ...bill.entries.map((entry) => ({
       ...transformToForm(entry, defaultBillEntry),
+      landed_cost_disabled: isLandedCostDisabled(entry.item),
     })),
     ...repeatValue(
       defaultBillEntry,
@@ -58,7 +66,18 @@ export const transformToEditForm = (bill) => {
   };
 };
 
-// handle delete errors.
+/**
+ * Transformes bill entries to submit request.
+ */
+export const transformEntriesToSubmit = (entries) => {
+  const transformBillEntry = R.curry(transformToForm)(R.__, defaultBillEntry);
+
+  return R.compose(orderingLinesIndexes, R.map(transformBillEntry))(entries);
+};
+
+/**
+ * Handle delete errors.
+ */
 export const handleDeleteErrors = (errors) => {
   if (
     errors.find((error) => error.type === 'BILL_HAS_ASSOCIATED_PAYMENT_ENTRIES')

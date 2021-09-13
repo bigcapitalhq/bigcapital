@@ -8,7 +8,7 @@ import { DataTableEditable } from 'components';
 import { usePaymentMadeEntriesTableColumns } from './components';
 
 import { usePaymentMadeInnerContext } from './PaymentMadeInnerProvider';
-import { compose, updateTableRow } from 'utils';
+import { compose, updateTableCell } from 'utils';
 import { useFormikContext } from 'formik';
 
 /**
@@ -33,7 +33,7 @@ export default function PaymentMadeEntriesTable({
   // Handle update data.
   const handleUpdateData = useCallback(
     (rowIndex, columnId, value) => {
-      const newRows = compose(updateTableRow(rowIndex, columnId, value))(
+      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
         entries,
       );
       onUpdateData(newRows);

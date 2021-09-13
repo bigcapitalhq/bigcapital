@@ -1,26 +1,31 @@
 import React from 'react';
 import classNames from 'classnames';
+import { get } from 'lodash';
 import { Classes, Checkbox, FormGroup, Intent } from '@blueprintjs/core';
 
 const CheckboxEditableCell = ({
-  row: { index },
-  column: { id },
+  row: { index, original },
+  column: { id, disabledAccessor, checkboxProps },
   cell: { value: initialValue },
   payload,
 }) => {
   const [value, setValue] = React.useState(initialValue);
 
   const onChange = (e) => {
-    setValue(e.target.checked);
+    const newValue = e.target.checked;
+
+    setValue(newValue);
+    payload.updateData(index, id, newValue);
   };
-  const onBlur = () => {
-    payload.updateData(index, id, value);
-  };
+
   React.useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
 
   const error = payload.errors?.[index]?.[id];
+
+  // Detarmines whether the checkbox is disabled.
+  const disabled = disabledAccessor ? get(original, disabledAccessor) : false;
 
   return (
     <FormGroup
@@ -31,9 +36,10 @@ const CheckboxEditableCell = ({
         value={value}
         onChange={onChange}
         checked={initialValue}
-        onBlur={onBlur}
+        disabled={disabled}
         minimal={true}
         className="ml2"
+        {...checkboxProps}
       />
     </FormGroup>
   );

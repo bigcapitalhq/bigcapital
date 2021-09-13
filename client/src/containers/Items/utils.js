@@ -37,10 +37,10 @@ export const useItemFormInitialValues = (item) => {
   return useMemo(
     () => ({
       ...defaultInitialValues,
-      cost_account_id: defaultTo(itemsSettings.preferredCostAccount, ''),
-      sell_account_id: defaultTo(itemsSettings.preferredSellAccount, ''),
+      cost_account_id: defaultTo(itemsSettings?.preferredCostAccount, ''),
+      sell_account_id: defaultTo(itemsSettings?.preferredSellAccount, ''),
       inventory_account_id: defaultTo(
-        itemsSettings.preferredInventoryAccount,
+        itemsSettings?.preferredInventoryAccount,
         '',
       ),
       /**

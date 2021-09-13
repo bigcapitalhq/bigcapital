@@ -12,6 +12,12 @@ import {
 
 const BillFormContext = createContext();
 
+// Filter all purchasable items only.
+const stringifiedFilterRoles = JSON.stringify([
+  { index: 1, fieldKey: 'purchasable', value: true, condition: '&&', comparator: 'equals' },
+  { index: 2, fieldKey: 'active', value: true, condition: '&&', comparator: 'equals' },
+]);
+
 /**
  * Bill form provider.
  */
@@ -24,16 +30,6 @@ function BillFormProvider({ billId, ...props }) {
     data: { vendors },
     isLoading: isVendorsLoading,
   } = useVendors({ page_size: 10000 });
-
-  // Filter all purchasable items only.
-  const stringifiedFilterRoles = React.useMemo(
-    () =>
-      JSON.stringify([
-        { index: 1, fieldKey: 'purchasable', value: true, condition: '&&', comparator: 'equals' },
-        { index: 2, fieldKey: 'active', value: true, condition: '&&', comparator: 'equals' },
-      ]),
-    [],
-  );
 
   // Handle fetch Items data table or list
   const {
