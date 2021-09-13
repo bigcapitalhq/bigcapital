@@ -255,6 +255,17 @@ export default abstract class DynamicFilterAbstructor
         return (builder) => {
           builder.whereNot(comparatorColumn, 'LIKE', `%${role.value}%`);
         };
+      case COMPARATOR_TYPE.STARTS_WITH:
+      case COMPARATOR_TYPE.START_WITH:
+        return (builder) => {
+          builder.where(comparatorColumn, 'LIKE', `${role.value}%`);
+        };
+      case COMPARATOR_TYPE.ENDS_WITH:
+      case COMPARATOR_TYPE.END_WITH:
+        return (builder) => {
+          builder.where(comparatorColumn, 'LIKE', `%${role.value}`);
+        };
+
     }
   };
 

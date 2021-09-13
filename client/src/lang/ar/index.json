@@ -209,6 +209,8 @@
   "not_equal": "ليس متساوي",
   "contain": "يحتوي",
   "not_contain": "لا يحتوي",
+  "starts_with": "يبدأ بـ",
+  "ends_with": "ينتهي بـ",
   "cash": "النقدية",
   "accrual": "الاستحقاق",
   "from": "من",

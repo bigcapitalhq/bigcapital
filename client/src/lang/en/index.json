@@ -202,6 +202,8 @@
   "not_equal": "Not Equal",
   "contain": "Contain",
   "not_contain": "Not Contain",
+  "starts_with": "Starts with",
+  "ends_with": "Ends with",
   "cash": "Cash",
   "accrual": "Accrual",
   "from": "From",

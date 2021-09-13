@@ -24,6 +24,12 @@ export const COMPARATOR_TYPE = {
   AFTER: 'after',
   BEFORE: 'before',
   IN: 'in',
+
+  STARTS_WITH: 'starts_with',
+  START_WITH: 'start_with',
+
+  ENDS_WITH: 'ends_with',
+  END_WITH: 'end_with'
 };
 
 export const FIELD_TYPE = {

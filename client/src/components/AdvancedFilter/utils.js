@@ -29,6 +29,8 @@ export const getTextCompatators = () => [
   { value: 'not_contain', label: intl.get('not_contain') },
   { value: 'equal', label: intl.get('equals') },
   { value: 'not_equal', label: intl.get('not_equals') },
+  { value: 'starts_with', label: intl.get('starts_with') },
+  { value: 'ends_with', label: intl.get('ends_with') },
 ];
 
 export const getDateCompatators = () => [
