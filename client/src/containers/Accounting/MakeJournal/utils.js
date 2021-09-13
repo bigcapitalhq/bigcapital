@@ -5,7 +5,7 @@ import moment from 'moment';
 import * as R from 'ramda';
 import {
   transactionNumber,
-  updateTableRow,
+  updateTableCell,
   repeatValue,
   transformToForm,
   defaultFastFieldShouldUpdate,
@@ -100,10 +100,10 @@ export const updateAdjustEntries = (rowIndex, columnId, value) => (rows) => {
     const adjustment = adjustmentEntries(rows);
 
     if (adjustment.credit) {
-      newRows = updateTableRow(rowIndex, 'credit', adjustment.credit)(newRows);
+      newRows = updateTableCell(rowIndex, 'credit', adjustment.credit)(newRows);
     }
     if (adjustment.debit) {
-      newRows = updateTableRow(rowIndex, 'debit', adjustment.debit)(newRows);
+      newRows = updateTableCell(rowIndex, 'debit', adjustment.debit)(newRows);
     }
   }
   return newRows;

@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import * as R from 'ramda';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
-import { isEmpty, omit } from 'lodash';
+import { isEmpty } from 'lodash';
 import { CLASSES } from 'common/classes';
 
 import { EditBillFormSchema, CreateBillFormSchema } from './BillForm.schema';
@@ -18,8 +18,12 @@ import { AppToaster } from 'components';
 
 import { ERROR } from 'common/errors';
 import { useBillFormContext } from './BillFormProvider';
-import { compose, orderingLinesIndexes, safeSumBy } from 'utils';
-import { defaultBill, transformToEditForm } from './utils';
+import { compose, safeSumBy } from 'utils';
+import {
+  defaultBill,
+  transformToEditForm,
+  transformEntriesToSubmit,
+} from './utils';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 /**
@@ -81,7 +85,7 @@ function BillForm({
     const form = {
       ...values,
       open: submitPayload.status,
-      entries: R.compose(orderingLinesIndexes)(entries),
+      entries: transformEntriesToSubmit(entries),
     };
     // Handle the request success.
     const onSuccess = (response) => {

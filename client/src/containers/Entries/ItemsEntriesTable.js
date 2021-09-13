@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
 import classNames from 'classnames';
-import { useItem } from 'hooks/query';
 
 import { CLASSES } from 'common/classes';
 import { DataTableEditable } from 'components';
@@ -9,12 +8,13 @@ import { useEditableItemsEntriesColumns } from './components';
 import {
   saveInvoke,
   compose,
-  updateTableRow,
+  updateTableCell,
   updateMinEntriesLines,
   updateAutoAddNewLine,
   updateRemoveLineByIndex,
 } from 'utils';
-import { updateItemsEntriesTotal, ITEM_TYPE } from './utils';
+import { updateItemsEntriesTotal, useFetchItemRow } from './utils';
+import { updateTableRow } from '../../utils';
 
 /**
  * Items entries table.
@@ -30,62 +30,9 @@ function ItemsEntriesTable({
   linesNumber,
   currencyCode,
   itemType, // sellable or purchasable
-  landedCost = false
+  landedCost = false,
 }) {
   const [rows, setRows] = React.useState(initialEntries);
-  const [rowItem, setRowItem] = React.useState(null);
-  const [cellsLoading, setCellsLoading] = React.useState(null);
-
-  // Fetches the item details.
-  const {
-    data: item,
-    isFetching: isItemFetching,
-    isSuccess: isItemSuccess,
-  } = useItem(rowItem && rowItem.itemId, {
-    enabled: !!(rowItem && rowItem.itemId),
-  });
-  
-  // Once the item start loading give the table cells loading state.
-  useEffect(() => {
-    if (rowItem && isItemFetching) {
-      setCellsLoading([
-        [rowItem.rowIndex, 'rate'],
-        [rowItem.rowIndex, 'description'],
-        [rowItem.rowIndex, 'quantity'],
-        [rowItem.rowIndex, 'discount'],
-      ]);
-    } else {
-      setCellsLoading(null);
-    }
-  }, [isItemFetching, setCellsLoading, rowItem]);
-
-  // Once the item selected and fetched set the initial details to the table.
-  useEffect(() => {
-    if (isItemSuccess && item && rowItem) {
-      const { rowIndex } = rowItem;
-      const price =
-        itemType === ITEM_TYPE.PURCHASABLE
-          ? item.cost_price
-          : item.sell_price;
-
-      const description =
-        itemType === ITEM_TYPE.PURCHASABLE
-          ? item.cost_description
-          : item.sell_description;
-
-      // Update the rate, description and quantity data of the row.
-      const newRows = compose(
-        updateItemsEntriesTotal,
-        updateTableRow(rowIndex, 'rate', price),
-        updateTableRow(rowIndex, 'description', description),
-        updateTableRow(rowIndex, 'quantity', 1),
-      )(rows);
-
-      setRows(newRows);
-      setRowItem(null);
-      saveInvoke(onUpdateData, newRows);
-    }
-  }, [item, rowItem, rows, itemType, onUpdateData, isItemSuccess]);
 
   // Allows to observes `entries` to make table rows outside controlled.
   useEffect(() => {
@@ -97,22 +44,38 @@ function ItemsEntriesTable({
   // Editiable items entries columns.
   const columns = useEditableItemsEntriesColumns({ landedCost });
 
-  // Handles the editor data update.
-  const handleUpdateData = useCallback(
-    (rowIndex, columnId, value) => {
-      if (columnId === 'item_id') {
-        setRowItem({ rowIndex, columnId, itemId: value });
-      }
+  // Handle the fetch item row details.
+  const { setItemRow, cellsLoading, isItemFetching } = useFetchItemRow({
+    landedCost,
+    itemType,
+    notifyNewRow: (newRow, rowIndex) => {
+      // Update the rate, description and quantity data of the row.
       const newRows = compose(
-        updateAutoAddNewLine(defaultEntry, ['item_id']),
         updateItemsEntriesTotal,
-        updateTableRow(rowIndex, columnId, value),
+        updateTableRow(rowIndex, newRow),
       )(rows);
 
       setRows(newRows);
       onUpdateData(newRows);
     },
-    [rows, defaultEntry, onUpdateData],
+  });
+
+  // Handles the editor data update.
+  const handleUpdateData = useCallback(
+    (rowIndex, columnId, value) => {
+      if (columnId === 'item_id') {
+        setItemRow({ rowIndex, columnId, itemId: value });
+      }
+      const newRows = compose(
+        updateAutoAddNewLine(defaultEntry, ['item_id']),
+        updateItemsEntriesTotal,
+        updateTableCell(rowIndex, columnId, value),
+      )(rows);
+
+      setRows(newRows);
+      onUpdateData(newRows);
+    },
+    [rows, defaultEntry, onUpdateData, setItemRow],
   );
 
   // Handle table rows removing by index.

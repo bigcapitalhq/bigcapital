@@ -8,7 +8,7 @@ import { CLASSES } from 'common/classes';
 import { usePaymentReceiveInnerContext } from './PaymentReceiveInnerProvider';
 import { DataTableEditable } from 'components';
 import { usePaymentReceiveEntriesColumns } from './components';
-import { compose, updateTableRow } from 'utils';
+import { compose, updateTableCell } from 'utils';
 
 /**
  * Payment receive items table.
@@ -39,7 +39,7 @@ export default function PaymentReceiveItemsTable({
   // Handle update data.
   const handleUpdateData = useCallback(
     (rowIndex, columnId, value) => {
-      const newRows = compose(updateTableRow(rowIndex, columnId, value))(
+      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
         entries,
       );
 
