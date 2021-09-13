@@ -201,14 +201,14 @@ function ReceiptFormHeader({
       </FastField>
 
       {/* ----------- Reference ----------- */}
-      <FastField name={'reference'}>
+      <FastField name={'reference_no'}>
         {({ field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'reference'} />}
             inline={true}
             className={classNames('form-group--reference', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reference" />}
+            helperText={<ErrorMessage name="reference_no" />}
           >
             <InputGroup minimal={true} {...field} />
           </FormGroup>

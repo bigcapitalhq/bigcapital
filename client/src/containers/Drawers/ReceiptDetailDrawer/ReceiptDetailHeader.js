@@ -23,7 +23,7 @@ export default function ReceiptDetailHeader() {
         </DetailItem>
         <DetailItem
           label={intl.get('receipt.details.receipt_number')}
-          children={defaultTo(receipt.receipt_no, '-')}
+          children={defaultTo(receipt.receipt_number, '-')}
         />
         <DetailItem
           label={intl.get('customer_name')}
