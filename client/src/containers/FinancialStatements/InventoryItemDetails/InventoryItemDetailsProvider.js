@@ -1,6 +1,6 @@
 import React from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { useItems, useInventoryItemDetailsReport } from 'hooks/query';
+import { useInventoryItemDetailsReport } from 'hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const InventoryItemDetailsContext = React.createContext();
@@ -22,27 +22,11 @@ function InventoryItemDetailsProvider({ filter, ...props }) {
     refetch: inventoryItemDetailsRefetch,
   } = useInventoryItemDetailsReport(query, { keepPreviousData: true });
 
-  // Handle fetching the items based on the given query.
-  const {
-    data: { items },
-    isLoading: isItemsLoading,
-    isFetching: isItemsFetching,
-  } = useItems({
-    stringified_filter_roles: JSON.stringify([
-      { fieldKey: 'type', comparator: 'is', value: 'inventory', index: 1 },
-    ]),
-    page_size: 10000,
-  });
-
   const provider = {
     inventoryItemDetails,
     isInventoryItemDetailsFetching,
     isInventoryItemDetailsLoading,
     inventoryItemDetailsRefetch,
-
-    isItemsFetching,
-    isItemsLoading,
-    items,
 
     query,
     filter,

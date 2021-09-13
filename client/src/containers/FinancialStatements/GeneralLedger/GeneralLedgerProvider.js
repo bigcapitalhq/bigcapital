@@ -13,20 +13,13 @@ function GeneralLedgerProvider({ query, ...props }) {
     isFetching,
     isLoading,
     refetch,
-  } = useGeneralLedgerSheet(query, {
-    keepPreviousData: true,
-  });
-
-  // Accounts list.
-  const { data: accounts, isFetching: isAccountsLoading } = useAccounts();
+  } = useGeneralLedgerSheet(query, { keepPreviousData: true });
 
   const provider = {
     generalLedger,
-    accounts,
     sheetRefresh: refetch,
     isFetching,
     isLoading,
-    isAccountsLoading,
   };
   return (
     <FinancialReportPage name={'general-ledger-sheet'}>

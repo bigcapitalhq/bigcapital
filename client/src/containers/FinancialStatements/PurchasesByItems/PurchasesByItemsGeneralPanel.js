@@ -6,13 +6,27 @@ import classNames from 'classnames';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 
 import { ItemsMultiSelect } from 'components';
-import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
+import {
+  PurchasesByItemsGeneralPanelProvider,
+  usePurchaseByItemsGeneralPanelContext,
+} from './PurchasesByItemsGeneralPanelProvider';
+
+/**
+ * 
+ */
+export default function PurchasesByItemsGeneralPanel() {
+  return (
+    <PurchasesByItemsGeneralPanelProvider>
+      <PurchasesByItemsGeneralPanelContent />
+    </PurchasesByItemsGeneralPanelProvider>
+  );
+}
 
 /**
  * Purchases by items - Drawer header - General panel.
  */
-export default function PurchasesByItemsGeneralPanel() {
-  const { items } = usePurchaseByItemsContext();
+function PurchasesByItemsGeneralPanelContent() {
+  const { items } = usePurchaseByItemsGeneralPanelContext();
 
   return (
     <div>
@@ -30,13 +44,7 @@ export default function PurchasesByItemsGeneralPanel() {
                 label={<T id={'Specific items'} />}
                 className={classNames('form-group--select-list', Classes.FILL)}
               >
-                <ItemsMultiSelect
-                  items={items}
-                  selectedItems={value}
-                  onItemSelect={(itemsIds) => {
-                    setFieldValue('itemsIds', itemsIds);
-                  }}
-                />
+
               </FormGroup>
             )}
           </Field>

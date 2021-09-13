@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { useCustomersTransactionsReport, useCustomers } from 'hooks/query';
+import { useCustomersTransactionsReport } from '../../../hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const CustomersTransactionsContext = createContext();
@@ -21,22 +21,11 @@ function CustomersTransactionsProvider({ filter, ...props }) {
     refetch: CustomersTransactionsRefetch,
   } = useCustomersTransactionsReport(query, { keepPreviousData: true });
 
-  // Fetches the customers list.
-  const {
-    data: { customers },
-    isFetching: isCustomersFetching,
-    isLoading: isCustomersLoading,
-  } = useCustomers();
-
   const provider = {
     customersTransactions,
     isCustomersTransactionsFetching,
     isCustomersTransactionsLoading,
     CustomersTransactionsRefetch,
-
-    customers,
-    isCustomersLoading,
-    isCustomersFetching,
 
     filter,
     query

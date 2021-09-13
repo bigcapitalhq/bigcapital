@@ -65,6 +65,7 @@ function PurchasesByItems({
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <PurchasesByItemsLoadingBar />
+
       <DashboardPageContent>
         <div className="financial-statement financial-statement--purchases-by-items">
           <PurchasesByItemsHeader

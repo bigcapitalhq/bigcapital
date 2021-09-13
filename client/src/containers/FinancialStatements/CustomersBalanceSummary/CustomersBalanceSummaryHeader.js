@@ -20,10 +20,10 @@ function CustomersBalanceSummaryHeader({
   onSubmitFilter,
   pageFilter,
 
-  //#withCustomersBalanceSummary
+  // #withCustomersBalanceSummary
   customersBalanceDrawerFilter,
 
-  //#withCustomersBalanceSummaryActions
+  // #withCustomersBalanceSummaryActions
   toggleCustomerBalanceFilterDrawer,
 }) {
 

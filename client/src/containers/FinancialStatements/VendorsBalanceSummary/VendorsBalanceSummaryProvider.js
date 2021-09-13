@@ -1,6 +1,6 @@
 import React from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { useVendorsBalanceSummaryReport, useVendors } from 'hooks/query';
+import { useVendorsBalanceSummaryReport } from 'hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const VendorsBalanceSummaryContext = React.createContext();
@@ -23,22 +23,11 @@ function VendorsBalanceSummaryProvider({ filter, ...props }) {
     keepPreviousData: true,
   });
 
-  // Fetch vendors list with pagination meta.
-  const {
-    data: { vendors },
-    isLoading: isVendorsLoading,
-    isFetching: isVendorsFetching,
-  } = useVendors({ page_size: 1000000 });
-
   // Provider.
   const provider = {
     VendorBalanceSummary,
     isVendorsBalanceLoading,
     isVendorsBalanceFetching,
-
-    vendors,
-    isVendorsFetching,
-    isVendorsLoading,
 
     refetch,
   };

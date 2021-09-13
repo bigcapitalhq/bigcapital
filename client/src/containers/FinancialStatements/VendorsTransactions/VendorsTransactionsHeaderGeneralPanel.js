@@ -2,16 +2,35 @@ import React from 'react';
 import { Field } from 'formik';
 import classNames from 'classnames';
 import { Classes, FormGroup } from '@blueprintjs/core';
-import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
-import { Row, Col } from 'components';
-import { ContactsMultiSelect, FormattedMessage as T } from 'components';
-import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
+
+import FinancialStatementDateRange from '../FinancialStatementDateRange';
+import {
+  Row,
+  Col,
+  ContactsMultiSelect,
+  FormattedMessage as T,
+} from 'components';
+import {
+  VendorsTransactionsGeneralPanelProvider,
+  useVendorsTransactionsGeneralPanelContext,
+} from './VendorsTransactionsHeaderGeneralPanelProvider';
 
 /**
- * Vendors transactions header - General panel.
+ * Vendors transactions header - General panel
  */
 export default function VendorsTransactionsHeaderGeneralPanel() {
-  const { vendors } = useVendorsTransactionsContext();
+  return (
+    <VendorsTransactionsGeneralPanelProvider>
+      <VendorsTransactionsHeaderGeneralPanelContent />
+    </VendorsTransactionsGeneralPanelProvider>
+  );
+}
+
+/**
+ * Vendors transactions header - General panel - Content.
+ */
+function VendorsTransactionsHeaderGeneralPanelContent() {
+  const { vendors } = useVendorsTransactionsGeneralPanelContext();
 
   return (
     <div>

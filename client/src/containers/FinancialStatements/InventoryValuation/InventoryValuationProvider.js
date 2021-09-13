@@ -1,6 +1,6 @@
 import React from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { useInventoryValuation, useItems } from 'hooks/query';
+import { useInventoryValuation } from 'hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const InventoryValuationContext = React.createContext();
@@ -20,17 +20,6 @@ function InventoryValuationProvider({ query, ...props }) {
     },
   );
 
-  // Handle fetching the items based on the given query.
-  const {
-    data: { items },
-    isLoading: isItemsLoading,
-    isFetching: isItemsFetching,
-  } = useItems({
-    stringified_filter_roles: JSON.stringify([
-      { fieldKey: 'type', comparator: 'is', value: 'inventory', index: 1 },
-    ]),
-    page_size: 10000,
-  });
 
   // Provider data.
   const provider = {
@@ -38,10 +27,6 @@ function InventoryValuationProvider({ query, ...props }) {
     isLoading,
     isFetching,
     refetchSheet: refetch,
-
-    items,
-    isItemsFetching,
-    isItemsLoading,
   };
 
   return (

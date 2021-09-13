@@ -2,15 +2,30 @@ import React from 'react';
 import { FormGroup, Classes } from '@blueprintjs/core';
 import { Field } from 'formik';
 import classNames from 'classnames';
+
 import { Row, Col, ItemsMultiSelect, FormattedMessage as T } from 'components';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
-import { useSalesByItemsContext } from './SalesByItemProvider';
+import {
+  SalesByItemGeneralPanelProvider,
+  useSalesByItemsGeneralPanelContext,
+} from './SalesByItemsHeaderGeneralPanelProvider';
 
 /**
- * sells by items - Drawer header - General panel.
+ * Sales by items - Drawer header - General panel.
  */
 export default function SalesByItemsHeaderGeneralPanel() {
-  const { items } = useSalesByItemsContext();
+  return (
+    <SalesByItemGeneralPanelProvider>
+      <SalesByItemsHeaderGeneralPanelContent />
+    </SalesByItemGeneralPanelProvider>
+  );
+}
+
+/**
+ * Sales by items - Drawer header - General panel - Content.
+ */
+function SalesByItemsHeaderGeneralPanelContent() {
+  const { items } = useSalesByItemsGeneralPanelContext();
 
   return (
     <div>

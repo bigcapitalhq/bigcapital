@@ -2,16 +2,17 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import 'style/pages/FinancialStatements/BalanceSheet.scss';
 
+import { BalanceSheetAlerts, BalanceSheetLoadingBar } from './components';
+import { FinancialStatement } from 'components';
+
 import BalanceSheetHeader from './BalanceSheetHeader';
 import BalanceSheetTable from './BalanceSheetTable';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import BalanceSheetActionsBar from './BalanceSheetActionsBar';
-import { BalanceSheetAlerts, BalanceSheetLoadingBar } from './components';
-import { FinancialStatement } from 'components';
+import { BalanceSheetProvider } from './BalanceSheetProvider';
 
 import withBalanceSheetActions from './withBalanceSheetActions';
 import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
-import { BalanceSheetProvider } from './BalanceSheetProvider';
 
 import { compose } from 'utils';
 
@@ -19,7 +20,7 @@ import { compose } from 'utils';
  * Balance sheet.
  */
 function BalanceSheet({
-  // #withPreferences
+  // #withCurrentOrganization
   organizationName,
 
   // #withBalanceSheetActions
@@ -30,7 +31,7 @@ function BalanceSheet({
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'cash',
     displayColumnsType: 'total',
-    accountsFilter: 'all-accounts',
+    accountsFilter: 'without-zero-balance',
   });
 
   // Handle re-fetch balance sheet after filter change.
@@ -66,7 +67,6 @@ function BalanceSheet({
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <BalanceSheetLoadingBar />
-      <BalanceSheetAlerts />
 
       <DashboardPageContent>
         <FinancialStatement>
@@ -79,6 +79,8 @@ function BalanceSheet({
           </div>
         </FinancialStatement>
       </DashboardPageContent>
+
+      <BalanceSheetAlerts />
     </BalanceSheetProvider>
   );
 }

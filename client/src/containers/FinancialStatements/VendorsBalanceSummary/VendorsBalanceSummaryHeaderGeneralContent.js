@@ -1,37 +1,23 @@
 import React from 'react';
-import { FastField, Field } from 'formik';
+import { Field, FastField } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormGroup, Position, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'components';
-import { ItemsMultiSelect, Row, Col, FieldHint } from 'components';
+import { FormGroup, Position, Classes, Checkbox } from '@blueprintjs/core';
+
+import { Row, Col, FieldHint, FormattedMessage as T } from 'components';
 import {
   momentFormatter,
   tansformDateValue,
   inputIntent,
   handleDateChange,
 } from 'utils';
-import {
-  InventoryValuationGeneralPanelProvider,
-  useInventoryValuationGeneralPanelContext,
-} from './InventoryValuationHeaderGeneralPanelProvider';
+import { useVendorsBalanceSummaryGeneralPanelContext } from './VendorsBalanceSummaryHeaderGeneralProvider';
 
 /**
- * Inventory valuation - Drawer Header - General panel.
+ * Vendors balance header - General panel - Content.
  */
-export default function InventoryValuationHeaderGeneralPanel() {
-  return (
-    <InventoryValuationGeneralPanelProvider>
-      <InventoryValuationHeaderGeneralPanelContent />
-    </InventoryValuationGeneralPanelProvider>
-  );
-}
-
-/**
- * Inventory valuation - Drawer Header - General panel - Content.
- */
-function InventoryValuationHeaderGeneralPanelContent() {
-  const { items } = useInventoryValuationGeneralPanelContext();
+export default function VendorsBalanceSummaryHeaderGeneralContent() {
+  const { vendors } = useVendorsBalanceSummaryGeneralPanelContext();
 
   return (
     <div>
@@ -63,18 +49,34 @@ function InventoryValuationHeaderGeneralPanelContent() {
 
       <Row>
         <Col xs={5}>
-          <Field name={'itemsIds'}>
+          <FastField name={'percentage'} type={'checkbox'}>
+            {({ field }) => (
+              <FormGroup labelInfo={<FieldHint />}>
+                <Checkbox
+                  inline={true}
+                  small={true}
+                  label={<T id={'percentage_of_column'} />}
+                  name={'percentage'}
+                  {...field}
+                />
+              </FormGroup>
+            )}
+          </FastField>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col xs={4}>
+          <Field name={'vendorsIds'}>
             {({
               form: { setFieldValue },
               field: { value },
               meta: { error, touched },
             }) => (
               <FormGroup
-                label={<T id={'Specific items'} />}
+                label={<T id={'specific_vendors'} />}
                 className={classNames('form-group--select-list', Classes.FILL)}
-              >
-               
-              </FormGroup>
+              ></FormGroup>
             )}
           </Field>
         </Col>

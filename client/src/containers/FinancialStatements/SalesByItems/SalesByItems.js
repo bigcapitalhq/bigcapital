@@ -67,6 +67,7 @@ function SalesByItems({
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <SalesByItemsLoadingBar />
+
       <DashboardPageContent>
         <div class="financial-statement financial-statement--sales-by-items">
           <SalesByItemsHeader

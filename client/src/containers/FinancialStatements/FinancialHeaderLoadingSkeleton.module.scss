@@ -1,0 +1,22 @@
+.lines {
+    padding-top: 20px;
+
+    .line+.line {
+        margin-top: 30px;
+    }
+}
+
+.line {
+    display: flex;
+    width: 600px;
+    flex-direction: row;
+
+    &_label {
+        width: 30%;
+        margin-right: 20px;
+    }
+
+    &_field {
+        width: 70%;
+    }
+}

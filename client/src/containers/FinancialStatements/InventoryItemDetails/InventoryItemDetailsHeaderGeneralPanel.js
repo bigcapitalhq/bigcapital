@@ -3,14 +3,25 @@ import classNames from 'classnames';
 import { FormGroup, Classes } from '@blueprintjs/core';
 import { Field } from 'formik';
 import { Row, Col, FormattedMessage as T } from 'components';
-import { ItemsMultiSelect } from 'components';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
+import { InventoryItemDetailsHeaderGeneralProvider } from './InventoryItemDetailsHeaderGeneralProvider';
 
 /**
  * Inventory item details header - General panel.
  */
 export default function InventoryItemDetailsHeaderGeneralPanel() {
+  return (
+    <InventoryItemDetailsHeaderGeneralProvider>
+      <InventoryItemDetailsHeaderGeneralPanelContent />
+    </InventoryItemDetailsHeaderGeneralProvider>
+  );
+}
+
+/**
+ * Inventory item details header - General panel - Content.
+ */
+function InventoryItemDetailsHeaderGeneralPanelContent() {
   const { items } = useInventoryItemDetailsContext();
 
   return (
@@ -28,15 +39,7 @@ export default function InventoryItemDetailsHeaderGeneralPanel() {
               <FormGroup
                 label={<T id={'Specific items'} />}
                 className={classNames('form-group--select-list', Classes.FILL)}
-              >
-                <ItemsMultiSelect
-                  items={items}
-                  selectedItems={value}
-                  onItemSelect={(itemsIds) => {
-                    setFieldValue('itemsIds', itemsIds);
-                  }}
-                />
-              </FormGroup>
+              ></FormGroup>
             )}
           </Field>
         </Col>

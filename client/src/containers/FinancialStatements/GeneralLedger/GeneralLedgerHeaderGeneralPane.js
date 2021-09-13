@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  FormGroup,
-  Classes,
-} from '@blueprintjs/core';
+import { FormGroup, Classes } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 
@@ -11,18 +8,30 @@ import { AccountsMultiSelect, Row, Col } from 'components';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
 import FinancialAccountsFilter from '../FinancialAccountsFilter';
+import { GLHeaderGeneralPanelProvider } from './GLHeaderGeneralPaneProvider';
 
 import { filterAccountsOptions } from './common';
-import { useGeneralLedgerContext } from './GeneralLedgerProvider'
+import { useGLGeneralPanelContext } from './GLHeaderGeneralPaneProvider';
 
 /**
  * General ledger (GL) - Header - General panel.
  */
-export default function GeneralLedgerHeaderGeneralPane() {
-  const { accounts } = useGeneralLedgerContext();
+export default function GLHeaderGeneralPane() {
+  return (
+    <GLHeaderGeneralPanelProvider>
+      <GLHeaderGeneralPaneContent />
+    </GLHeaderGeneralPanelProvider>
+  );
+}
+
+/**
+ * General ledger (GL) - Header - General panel - content.
+ */
+function GLHeaderGeneralPaneContent() {
+  const { accounts } = useGLGeneralPanelContext();
 
   return (
-    <div>
+    <React.Fragment>
       <FinancialStatementDateRange />
       <FinancialAccountsFilter
         items={filterAccountsOptions}
@@ -40,6 +49,6 @@ export default function GeneralLedgerHeaderGeneralPane() {
       </Row>
 
       <RadiosAccountingBasis key={'basis'} />
-    </div>
+    </React.Fragment>
   );
 }

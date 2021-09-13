@@ -19,19 +19,11 @@ function APAgingSummaryProvider({ filter, ...props }) {
     refetch,
   } = useAPAgingSummaryReport(query, { keepPreviousData: true });
 
-  // Retrieve the vendors list.
-  const {
-    data: { vendors },
-    isFetching: isVendorsLoading,
-  } = useVendors();
-
   const provider = {
     APAgingSummary,
-    vendors,
 
     isAPAgingLoading,
     isAPAgingFetching,
-    isVendorsLoading,
     refetch,
   };
 

@@ -20,19 +20,11 @@ function ARAgingSummaryProvider({ filter, ...props }) {
     refetch,
   } = useARAgingSummaryReport(query, { keepPreviousData: true });
 
-  // Retrieve the customers list.
-  const {
-    data: { customers },
-    isFetching: isCustomersFetching,
-  } = useCustomers();
-
   const provider = {
     ARAgingSummary,
-    customers,
 
     isARAgingLoading,
     isARAgingFetching,
-    isCustomersFetching,
     refetch,
   };
 
