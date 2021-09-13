@@ -9,7 +9,7 @@ import withUniversalSearchActions from './withUniversalSearchActions';
 function DashboardUniversalSearchHotkey({
   openGlobalSearch,
 }) {
-  useHotkeys('ctrl+o', (event, handle) => {
+  useHotkeys('shift+p', (event, handle) => {
     openGlobalSearch();
   });
 
