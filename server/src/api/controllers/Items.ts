@@ -136,7 +136,7 @@ export default class ItemsController extends BaseController {
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.TEXT }),
-      check('cost_description')
+      check('purchase_description')
         .optional({ nullable: true })
         .isString()
         .trim()
