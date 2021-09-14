@@ -29,7 +29,7 @@ export const useManualJournalsColumns = () => {
       {
         id: 'journal_number',
         Header: intl.get('journal_no'),
-        accessor: (row) => `#${row.journal_number}`,
+        accessor: (row) => `${row.journal_number}`,
         className: 'journal_number',
         width: 100,
         clickable: true,

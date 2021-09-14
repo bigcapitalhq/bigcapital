@@ -185,7 +185,7 @@ export function useEstiamtesTableColumns() {
         id: 'estimate_number',
         Header: intl.get('estimate_number'),
         accessor: (row) =>
-          row.estimate_number ? `#${row.estimate_number}` : null,
+          row.estimate_number ? `${row.estimate_number}` : null,
         width: 140,
         className: 'estimate_number',
         clickable: true,

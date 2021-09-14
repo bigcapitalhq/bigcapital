@@ -93,7 +93,7 @@ export function usePaymentMadesTableColumns() {
         id: 'payment_number',
         Header: intl.get('payment_number'),
         accessor: (row) =>
-          row.payment_number ? `#${row.payment_number}` : null,
+          row.payment_number ? `${row.payment_number}` : null,
         width: 140,
         className: 'payment_number',
         clickable: true,
