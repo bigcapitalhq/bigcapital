@@ -82,7 +82,7 @@ function EstimateForm({
       errors.some((error) => error.type === ERROR.SALE_ESTIMATE_NO_IS_REQUIRED)
     ) {
       setErrors({
-        estimate_number: intl.get('estimate.field.error.estimate_number'),
+        estimate_number: intl.get('estimate.field.error.estimate_number_required'),
       });
     }
   };
