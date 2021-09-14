@@ -6,9 +6,6 @@ import {
   MenuItem,
   MenuDivider,
   ProgressBar,
-  Popover,
-  Position,
-  Button,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import moment from 'moment';
