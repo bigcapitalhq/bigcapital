@@ -10,9 +10,9 @@ import {
   Popover,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T } from 'components';
 import { isNumber } from 'lodash';
-import { Icon, Money, If } from 'components';
+
+import { FormattedMessage as T, Icon, Money, If } from 'components';
 import { isBlank, safeCallback } from 'utils';
 
 /**
@@ -187,7 +187,7 @@ export const useItemsTableColumns = () => {
         id: 'sell_price',
         Header: intl.get('sell_price'),
         accessor: 'sell_price_formatted',
-        className: 'sell-price',
+        align: 'right',
         width: 150,
         clickable: true,
       },
@@ -195,7 +195,7 @@ export const useItemsTableColumns = () => {
         id: 'cost_price',
         Header: intl.get('cost_price'),
         accessor: 'cost_price_formatted',
-        className: 'cost-price',
+        align: 'right',
         width: 150,
         clickable: true,
       },
@@ -204,6 +204,7 @@ export const useItemsTableColumns = () => {
         Header: intl.get('quantity_on_hand'),
         accessor: 'quantity_on_hand',
         Cell: QuantityOnHandCell,
+        align: 'right',
         width: 140,
         clickable: true,
       },

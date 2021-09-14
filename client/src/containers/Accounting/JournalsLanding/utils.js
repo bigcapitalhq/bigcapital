@@ -1,12 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
-import {
-  NoteAccessor,
-  StatusAccessor,
-  DateAccessor,
-  AmountAccessor,
-} from './components';
+import { NoteAccessor, StatusAccessor, DateAccessor } from './components';
 
 /**
  * Retrieve the manual journals columns.
@@ -29,6 +24,7 @@ export const useManualJournalsColumns = () => {
         className: 'amount',
         width: 115,
         clickable: true,
+        align: 'right',
       },
       {
         id: 'journal_number',

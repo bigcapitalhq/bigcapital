@@ -9,6 +9,7 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+
 import { Icon, Money, If } from 'components';
 import { safeCallback, firstLettersArgs } from 'utils';
 
@@ -147,7 +148,7 @@ export function useVendorsTableColumns() {
         id: 'balance',
         Header: intl.get('receivable_balance'),
         accessor: BalanceAccessor,
-        className: 'receivable_balance',
+        align: 'right',
         width: 100,
         clickable: true,
       },

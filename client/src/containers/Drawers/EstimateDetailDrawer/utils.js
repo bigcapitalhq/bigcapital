@@ -1,5 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import { FormatNumberCell } from '../../../components';
 
 /**
  * Retrieve table columns of estimate readonly entries details.
@@ -22,22 +23,25 @@ export const useEstimateReadonlyEntriesColumns = () =>
     {
       Header: intl.get('quantity'),
       accessor: 'quantity',
+      Cell: FormatNumberCell,
       width: 100,
-      className: 'quantity',
+      align: 'right',
       disableSortBy: true,
     },
     {
       Header: intl.get('rate'),
       accessor: 'rate',
+      Cell: FormatNumberCell,
       width: 100,
-      className: 'rate',
+      align: 'right',
       disableSortBy: true,
     },
     {
       Header: intl.get('amount'),
       accessor: 'amount',
+      Cell: FormatNumberCell,
       width: 100,
-      className: 'amount',
+      align: 'right',
       disableSortBy: true,
     },
   ], []);

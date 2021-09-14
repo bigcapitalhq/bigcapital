@@ -1,17 +1,17 @@
 import React, { useMemo } from 'react';
 import {
-  Button,
-  Popover,
   Menu,
   MenuItem,
   MenuDivider,
-  Position,
   Intent,
 } from '@blueprintjs/core';
-import { Icon, Money, If } from 'components';
-import { safeCallback } from 'utils';
-import { firstLettersArgs } from 'utils';
+import clsx from 'classnames';
 import intl from 'react-intl-universal';
+
+import { CLASSES } from '../../../common/classes';
+import { Icon, Money, If } from 'components';
+import {  } from 'utils';
+import { safeCallback, firstLettersArgs } from 'utils';
 
 /**
  * Actions menu.
@@ -134,7 +134,7 @@ export function useCustomersTableColumns() {
         id: 'balance',
         Header: intl.get('receivable_balance'),
         accessor: BalanceAccessor,
-        className: 'receivable_balance',
+        align: 'right',
         width: 100,
         clickable: true,
       },

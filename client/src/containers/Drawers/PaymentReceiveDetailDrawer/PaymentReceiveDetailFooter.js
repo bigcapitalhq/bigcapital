@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'classnames';
 
-import { T, TotalLine, TotalLines } from 'components';
+import { FormatNumber, T, TotalLine, TotalLines } from 'components';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
 import PaymentDrawerCls from './PaymentReceiveDrawer.module.scss';
@@ -17,12 +17,12 @@ export default function PaymentReceiveDetailFooter() {
       <TotalLines>
         <TotalLine
           title={<T id={'payment_receive.details.subtotal'} />}
-          value={paymentReceive.amount}
+          value={<FormatNumber value={paymentReceive.amount} />}
           className={PaymentDrawerCls.total_line_subtotal}
         />
         <TotalLine
           title={<T id={'payment_receive.details.total'} />}
-          value={paymentReceive.amount}
+          value={paymentReceive.formatted_amount}
           className={PaymentDrawerCls.total_line_total}
         />
       </TotalLines>

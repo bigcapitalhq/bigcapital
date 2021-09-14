@@ -6,6 +6,11 @@ import { T, TotalLines, TotalLine } from 'components';
 import ReceiptDrawerCls from 'style/components/Drawers/ReceiptDrawer.module.scss';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 
+import { FormatNumber } from '../../../components';
+
+/**
+ * Receipts read-only details footer.
+ */
 export function ReceiptDetailFooter() {
   const { receipt } = useReceiptDetailDrawerContext();
 
@@ -14,17 +19,17 @@ export function ReceiptDetailFooter() {
       <TotalLines>
         <TotalLine
           title={<T id={'receipt.details.subtotal'} />}
-          value={receipt.amount}
+          value={<FormatNumber value={receipt.amount} />}
           className={ReceiptDrawerCls.total_line_subtotal}
         />
         <TotalLine
           title={<T id={'receipt.details.total'} />}
-          value={receipt.amount}
+          value={receipt.formatted_amount}
           className={ReceiptDrawerCls.total_line_total}
         />
         <TotalLine
           title={<T id={'receipt.details.payment_amount'} />}
-          value={receipt.amount}
+          value={receipt.formatted_amount}
           className={ReceiptDrawerCls.total_line_payment}
         />
         <TotalLine

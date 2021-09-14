@@ -10,6 +10,7 @@ import {
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import moment from 'moment';
+
 import { Money, Icon } from 'components';
 import { safeCallback } from 'utils';
 
@@ -105,7 +106,7 @@ export function usePaymentReceivesColumns() {
         Header: intl.get('amount'),
         accessor: AmountAccessor,
         width: 120,
-        className: 'amount',
+        align: 'right',
         clickable: true,
         textOverview: true,
       },

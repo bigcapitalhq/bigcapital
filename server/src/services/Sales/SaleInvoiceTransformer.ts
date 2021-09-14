@@ -1,4 +1,4 @@
-import { Service } from 'typedi';;
+import { Service } from 'typedi';
 import { Transformer } from 'lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 
@@ -13,6 +13,7 @@ export default class SaleInvoiceTransformer extends Transformer {
       'formattedDueDate',
       'formattedAmount',
       'formattedDueAmount',
+      'formattedPaymentAmount',
     ];
   };
 
@@ -50,9 +51,20 @@ export default class SaleInvoiceTransformer extends Transformer {
    * @param {ISaleInvoice} invoice
    * @returns {string}
    */
-  protected formattedDueAmount(invoice) {
+  protected formattedDueAmount = (invoice): string => {
     return formatNumber(invoice.dueAmount, {
       currencyCode: invoice.currencyCode,
     });
-  }
+  };
+
+  /**
+   * Retrieve formatted payment amount.
+   * @param {ISaleInvoice} invoice
+   * @returns {string}
+   */
+  protected formattedPaymentAmount = (invoice): string => {
+    return formatNumber(invoice.paymentAmount, {
+      currencyCode: invoice.currencyCode,
+    });
+  };
 }

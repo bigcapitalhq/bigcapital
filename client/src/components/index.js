@@ -78,6 +78,8 @@ export * from './Dashboard';
 export * from './Drawer';
 export * from './Forms';
 export * from './MultiSelectTaggable'
+export * from './Utils/FormatNumber';
+
 const Hint = FieldHint;
 
 const T = FormattedMessage;

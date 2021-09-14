@@ -11,9 +11,10 @@ import {
   Tag,
   Button,
 } from '@blueprintjs/core';
+import moment from 'moment';
+
 import { safeCallback } from 'utils';
 import { Choose, Money, Icon, If } from 'components';
-import moment from 'moment';
 
 export function ActionsMenu({
   payload: { onEdit, onDelete, onClose, onDrawer, onViewDetails, onPrint },
@@ -136,7 +137,7 @@ export function useReceiptsTableColumns() {
         Header: intl.get('amount'),
         accessor: (r) => <Money amount={r.amount} currency={r.currency_code} />,
         width: 140,
-        className: 'amount',
+        align: 'right',
         clickable: true,
         textOverview: true,
       },

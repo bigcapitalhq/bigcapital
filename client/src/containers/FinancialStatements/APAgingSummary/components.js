@@ -37,23 +37,17 @@ export const useAPAgingSummaryColumns = () => {
         Header: <T id={'current'} />,
         accessor: 'current',
         className: 'current',
-        width: getColumnWidth(tableRows, `current`, {
-          minWidth: 120,
-        }),
+        width: getColumnWidth(tableRows, `current`, { minWidth: 120 }),
       },
       ...agingColumns.map((agingColumn, index) => ({
         Header: agingColumn,
         accessor: `aging-${index}`,
-        width: getColumnWidth(tableRows, `aging-${index}`, {
-          minWidth: 120,
-        }),
+        width: getColumnWidth(tableRows, `aging-${index}`, { minWidth: 120 }),
       })),
       {
         Header: <T id={'total'} />,
         accessor: 'total',
-        width: getColumnWidth(tableRows, 'total', {
-          minWidth: 120,
-        }),
+        width: getColumnWidth(tableRows, 'total', { minWidth: 120 }),
       },
     ],
     [tableRows, agingColumns],

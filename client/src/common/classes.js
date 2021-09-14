@@ -88,6 +88,7 @@ const CLASSES = {
 
   ...Classes,
   CARD: 'card',
+  ALIGN_RIGHT: 'align-right',
 };
 
 export {

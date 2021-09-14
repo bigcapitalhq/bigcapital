@@ -2,6 +2,8 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
 
+import { FormatNumberCell } from '../../../components';
+
 export const usePaymentMadeEntriesColumns = () =>
   React.useMemo(() => [
     {
@@ -21,20 +23,23 @@ export const usePaymentMadeEntriesColumns = () =>
     {
       Header: intl.get('bill_amount'),
       accessor: 'amount',
-      className: 'amount',
+      Cell: FormatNumberCell,
+      align: 'right',
     },
     {
       Header: intl.get('due_amount'),
       accessor: 'due_amount',
+      Cell: FormatNumberCell,
       width: 100,
       disableSortBy: true,
-      className: 'due_amount',
+      align: 'right',
     },
     {
       Header: intl.get('payment_amount'),
       accessor: 'payment_amount',
+      Cell: FormatNumberCell,
       width: 100,
       disableSortBy: true,
-      className: 'payment_amount',
+      align: 'right',
     },
   ], []);

@@ -12,9 +12,9 @@ import {
   MenuDivider,
 } from '@blueprintjs/core';
 import moment from 'moment';
-import { FormattedMessage as T } from 'components';
-import { Money, Icon, If } from 'components';
 import intl from 'react-intl-universal';
+
+import { FormattedMessage as T, Money, Icon, If } from 'components';
 import { safeCallback } from 'utils';
 
 /**
@@ -138,6 +138,7 @@ export function useExpensesTableColumns() {
         Header: intl.get('full_amount'),
         accessor: TotalAmountAccessor,
         className: 'amount',
+        align: 'right',
         width: 150,
         clickable: true,
       },

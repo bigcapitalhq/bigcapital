@@ -11,10 +11,10 @@ import {
   ProgressBar,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T } from 'components';
-import { Icon, If, Choose, Money } from 'components';
-import { formattedAmount, safeCallback, isBlank, calculateStatus } from 'utils';
 import moment from 'moment';
+
+import { FormattedMessage as T, Icon, If, Choose, Money } from 'components';
+import { formattedAmount, safeCallback, isBlank, calculateStatus } from 'utils';
 
 /**
  * Actions menu.
@@ -183,6 +183,7 @@ export function useBillsTableColumns() {
         accessor: AmountAccessor,
         width: 120,
         className: 'amount',
+        align: 'right',
         clickable: true,
       },
       {

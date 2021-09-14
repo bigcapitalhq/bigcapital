@@ -12,8 +12,6 @@ import FinancialLoadingBar from '../FinancialLoadingBar';
  * Retrieve the general ledger table columns.
  */
 export function useGeneralLedgerTableColumns() {
-  
-
   // General ledger context.
   const {
     generalLedger: { tableRows },
@@ -37,6 +35,7 @@ export function useGeneralLedgerTableColumns() {
           return row.date;
         },
         className: 'date',
+        textOverview: true,
         width: 120,
       },
       {
@@ -44,7 +43,6 @@ export function useGeneralLedgerTableColumns() {
         accessor: 'name',
         className: 'name',
         textOverview: true,
-        // width: 200,
       },
       {
         Header: intl.get('transaction_type'),
@@ -58,12 +56,13 @@ export function useGeneralLedgerTableColumns() {
         accessor: 'reference_id',
         className: 'transaction_number',
         width: 100,
+        textOverview: true,
       },
       {
         Header: intl.get('description'),
         accessor: 'note',
         className: 'description',
-        // width: 145,
+        textOverview: true,
       },
       {
         Header: intl.get('credit'),
@@ -73,6 +72,7 @@ export function useGeneralLedgerTableColumns() {
           minWidth: 100,
           magicSpacing: 10,
         }),
+        textOverview: true,
       },
       {
         Header: intl.get('debit'),
@@ -82,6 +82,7 @@ export function useGeneralLedgerTableColumns() {
           minWidth: 100,
           magicSpacing: 10,
         }),
+        textOverview: true,
       },
       {
         Header: intl.get('amount'),
@@ -91,6 +92,7 @@ export function useGeneralLedgerTableColumns() {
           minWidth: 100,
           magicSpacing: 10,
         }),
+        textOverview: true,
       },
       {
         Header: intl.get('running_balance'),
@@ -100,6 +102,7 @@ export function useGeneralLedgerTableColumns() {
           minWidth: 100,
           magicSpacing: 10,
         }),
+        textOverview: true,
       },
     ],
     [tableRows],

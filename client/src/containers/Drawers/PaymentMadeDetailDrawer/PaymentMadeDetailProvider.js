@@ -14,7 +14,7 @@ const PaymentMadeDetailContext = React.createContext();
  */
 function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
   // Handle fetch specific payment made details.
-  const { data: paymentMade, isFetching: isPaymentMadeLoading } =
+  const { data: paymentMade, isLoading: isPaymentMadeLoading } =
     usePaymentMade(paymentMadeId, {
       enabled: !!paymentMadeId,
     });

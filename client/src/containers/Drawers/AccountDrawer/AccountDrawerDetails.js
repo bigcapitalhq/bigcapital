@@ -17,7 +17,6 @@ export default function AccountDrawerDetails() {
       <Card className={'card-header'}>
         <AccountDrawerHeader />
       </Card>
-
       <AccountDrawerTable />
     </div>
   );

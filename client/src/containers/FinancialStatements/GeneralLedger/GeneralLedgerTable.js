@@ -15,8 +15,6 @@ import { useGeneralLedgerTableColumns } from './components';
  * General ledger table.
  */
 export default function GeneralLedgerTable({ companyName }) {
-  
-
   // General ledger context.
   const {
     generalLedger: { tableRows, query },

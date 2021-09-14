@@ -9,11 +9,11 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import { Money, Choose, Icon, If } from 'components';
-import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
-import { safeCallback } from 'utils';
 import moment from 'moment';
+
+import { FormattedMessage as T, Money, Choose, Icon, If } from 'components';
+import { safeCallback } from 'utils';
 
 /**
  * Status accessor.
@@ -196,7 +196,7 @@ export function useEstiamtesTableColumns() {
         Header: intl.get('amount'),
         accessor: AmountAccessor,
         width: 140,
-        className: 'amount',
+        align: 'right',
         clickable: true,
       },
       {

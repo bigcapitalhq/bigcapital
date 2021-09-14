@@ -14,7 +14,9 @@ function TableHeaderCell({ column, index }) {
   return (
     <div
       {...column.getHeaderProps({
-        className: classNames(column.className || '', 'th'),
+        className: classNames(column.className || '', 'th', {
+          'align-right': column.align === 'right',
+        }),
       })}
     >
       <If condition={expandable && index + 1 === expandToggleColumn}>
@@ -32,7 +34,7 @@ function TableHeaderCell({ column, index }) {
         {...column.getSortByToggleProps({
           className: classNames('cell-inner', {
             'text-overview': column.textOverview,
-          })
+          }),
         })}
       >
         {column.render('Header')}

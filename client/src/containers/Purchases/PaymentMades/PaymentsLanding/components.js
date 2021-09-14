@@ -10,6 +10,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+
 import { Icon, Money } from 'components';
 import { safeCallback } from 'utils';
 
@@ -111,6 +112,7 @@ export function usePaymentMadesTableColumns() {
         accessor: AmountAccessor,
         width: 140,
         className: 'amount',
+        align: 'right',
         clickable: true,
       },
       {

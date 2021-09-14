@@ -59,6 +59,7 @@ export default function TableCell({ cell, row, index }) {
         className: classNames(cell.column.className, 'td', {
           'is-text-overview': cell.column.textOverview,
           'clickable': cell.column.clickable,
+          'align-right': cell.column.align === 'right',
         }),
         onClick: handleCellClick,
       })}

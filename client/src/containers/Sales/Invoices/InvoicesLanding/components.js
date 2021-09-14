@@ -11,11 +11,9 @@ import {
   Button,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-
-import { FormattedMessage as T } from 'components';
 import moment from 'moment';
-import { Choose, If, Icon } from 'components';
-import { Money, AppToaster } from 'components';
+
+import { FormattedMessage as T, AppToaster, Choose, If, Icon } from 'components';
 import { formattedAmount, safeCallback, calculateStatus } from 'utils';
 
 export const statusAccessor = (row) => {
@@ -146,17 +144,6 @@ export function ActionsMenu({
   );
 }
 
-function ActionsCell(props) {
-  return (
-    <Popover
-      content={<ActionsMenu {...props} />}
-      position={Position.RIGHT_BOTTOM}
-    >
-      <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
-    </Popover>
-  );
-}
-
 /**
  * Retrieve invoices table columns.
  */
@@ -196,7 +183,7 @@ export function useInvoicesTableColumns() {
         Header: intl.get('balance'),
         accessor: 'formatted_amount',
         width: 120,
-        className: 'balance',
+        align: 'right',
         clickable: true,
         textOverview: true,
       },

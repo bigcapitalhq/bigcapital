@@ -1,6 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
+import { FormatNumberCell } from '../../../components';
 
 /**
  * Retrieve payment entries table columns.
@@ -25,19 +26,22 @@ export const usePaymentReceiveEntriesColumns = () =>
       {
         Header: intl.get('invoice_amount'),
         accessor: 'invoice.balance',
-        className: 'invoice_amount',
+        Cell: FormatNumberCell,
+        align: 'right',
       },
       {
         Header: intl.get('amount_due'),
         accessor: 'invoice.amount_due',
-        className: 'amount_due',
+        Cell: FormatNumberCell,
+        align: 'right',
         width: 100,
         disableSortBy: true,
       },
       {
         Header: intl.get('payment_amount'),
         accessor: 'invoice.payment_amount',
-        className: 'payment_amount',
+        Cell: FormatNumberCell,
+        align: 'right',
         width: 100,
         disableSortBy: true,
       },

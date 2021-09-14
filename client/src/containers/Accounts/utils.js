@@ -1,7 +1,10 @@
 import React from 'react';
 import { Intent, Tag } from '@blueprintjs/core';
-import { If, AppToaster } from 'components';
 import intl from 'react-intl-universal';
+import clsx from 'classnames';
+
+import { CLASSES } from '../../common/classes';
+import { If, AppToaster } from 'components';
 import { NormalCell, BalanceCell } from './components';
 import { transformTableStateToQuery, isBlank } from 'utils';
 
@@ -99,6 +102,7 @@ export const useAccountsTableColumns = () => {
         Cell: BalanceCell,
         width: 150,
         clickable: true,
+        align: 'right',
       },
     ],
     [],

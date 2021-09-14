@@ -13,16 +13,16 @@ import { isEqual } from 'lodash';
 
 import jsCookie from 'js-cookie';
 
-export const getCookie = (name, defaultValue) => _.defaultTo(jsCookie.get(name), defaultValue);
+export const getCookie = (name, defaultValue) =>
+  _.defaultTo(jsCookie.get(name), defaultValue);
 
 export const setCookie = (name, value, expiry = 365, secure = false) => {
   jsCookie.set(name, value, { expires: expiry, path: '/', secure });
 };
 
 export const removeCookie = (name) => {
-  return jsCookie.remove(name, {  path: '/' });
-}
-
+  return jsCookie.remove(name, { path: '/' });
+};
 
 export function removeEmptyFromObject(obj) {
   obj = Object.assign({}, obj);
@@ -137,7 +137,7 @@ export const parseDateRangeQuery = (keyword) => {
     },
     this_quarter: {
       range: 'quarter',
-    }
+    },
   };
 
   if (typeof queries[keyword] === 'undefined') {
@@ -168,16 +168,21 @@ export const defaultExpanderReducer = (tableRows, level) => {
   return expended;
 };
 
-export function formattedAmount(cents, currency, props) {
-  const { symbol, decimal_digits: precision } = Currency[currency];
+export function formattedAmount(cents, currencyCode = '', props) {
+  const currency = Currency[currencyCode];
 
+  const parsedCurrency = {
+    symbol: '',
+    decimal_digits: 0,
+    ...currency
+  };
   const parsedProps = {
     noZero: false,
     ...props,
   };
   const formatOptions = {
-    symbol,
-    precision: 0,
+    symbol: parsedCurrency.symbol,
+    precision: parsedCurrency.decimal_digits,
     format: {
       pos: '%s%v',
       neg: '%s-%v',
@@ -186,6 +191,24 @@ export function formattedAmount(cents, currency, props) {
   };
 
   return accounting.formatMoney(cents, formatOptions);
+}
+
+export function formattedNumber(amount, props) {
+  const parsedProps = {
+    noZero: false,
+    ...props,
+  };
+  const formatOptions = {
+    symbol: '',
+    precision: 0,
+    format: {
+      pos: '%s%v',
+      neg: '%s-%v',
+      zero: parsedProps.noZero ? '' : '%s%v',
+    },
+    ...props,
+  };
+  return accounting.formatMoney(amount, formatOptions);
 }
 
 export function formattedExchangeRate(amount, currency) {
@@ -242,7 +265,6 @@ export const firstLettersArgs = (...args) => {
   });
   return letters.join('').toUpperCase();
 };
-
 
 export const uniqueMultiProps = (items, props) => {
   return _.uniqBy(items, (item) => {
@@ -780,8 +802,7 @@ export function getFilterableFieldsFromFields(fields) {
 export const RESORUCE_TYPE = {
   ACCOUNTS: 'account',
   ITEMS: 'items',
-
-}
+};
 
 function escapeRegExpChars(text) {
   return text.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
