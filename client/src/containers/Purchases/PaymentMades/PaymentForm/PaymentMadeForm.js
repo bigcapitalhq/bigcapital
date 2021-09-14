@@ -84,7 +84,7 @@ function PaymentMadeForm({
     if (totalPaymentAmount <= 0) {
       AppToaster.show({
         message: intl.get('you_cannot_make_payment_with_zero_total_amount'),
-        intent: Intent.WARNING,
+        intent: Intent.DANGER,
       });
       return;
     }
