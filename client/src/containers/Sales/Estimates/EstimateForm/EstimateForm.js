@@ -78,6 +78,13 @@ function EstimateForm({
         estimate_number: intl.get('estimate_number_is_not_unqiue'),
       });
     }
+    if (
+      errors.some((error) => error.type === ERROR.SALE_ESTIMATE_NO_IS_REQUIRED)
+    ) {
+      setErrors({
+        estimate_number: intl.get('estimate.field.error.estimate_number'),
+      });
+    }
   };
 
   // Handles form submit.

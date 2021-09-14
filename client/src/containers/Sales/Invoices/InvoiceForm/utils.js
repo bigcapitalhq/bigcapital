@@ -93,8 +93,7 @@ export const transformErrors = (errors, { setErrors }) => {
     errors.some((error) => error.type === ERROR.SALE_INVOICE_NO_IS_REQUIRED)
   ) {
     setErrors({
-      invoice_no:
-        'Invoice number is required, use auto-increment mode or enter manually.',
+      invoice_no: intl.get('invoice.field.error.invoice_no'),
     });
   }
 };
