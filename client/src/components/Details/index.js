@@ -41,7 +41,7 @@ export function DetailsMenu({
 /**
  * Detail item.
  */
-export function DetailItem({ label, children, name, className }) {
+export function DetailItem({ label, children, name, align, className }) {
   const { minLabelSize } = useDetailsMenuContext();
 
   return (
@@ -50,6 +50,7 @@ export function DetailItem({ label, children, name, className }) {
         'detail-item',
         {
           [`detail-item--${name}`]: name,
+          [`align-${align}`]: align,
         },
         className,
       )}

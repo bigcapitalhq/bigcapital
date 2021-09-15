@@ -360,6 +360,15 @@ export default class SalesReceiptsController extends BaseController {
           errors: [{ type: 'SALE_RECEIPT_IS_ALREADY_CLOSED', code: 1000 }],
         });
       }
+      if (error.errorType === 'SALE_RECEIPT_NO_IS_REQUIRED') {
+        return res.boom.badRequest(null, {
+          errors: [{
+            type: 'SALE_RECEIPT_NO_IS_REQUIRED',
+            message: 'The sale receipt number is required.',
+            code: 1100,
+          }],
+        });
+      }
     }
     next(error);
   }
