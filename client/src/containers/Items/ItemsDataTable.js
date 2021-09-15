@@ -8,6 +8,8 @@ import ItemsEmptyStatus from './ItemsEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
+import { TABLES } from 'common/tables';
+
 import withItems from 'containers/Items/withItems';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
@@ -16,6 +18,7 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { useItemsListContext } from './ItemsListProvider';
 import { useItemsTableColumns, ItemsActionMenuList } from './components';
+import { useMemorizedColumnsWidths } from 'hooks';
 import { compose } from 'utils';
 
 /**
@@ -54,6 +57,10 @@ function ItemsDataTable({
   const rowClassNames = (row) => ({
     inactive: !row.original.active,
   });
+
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.ITEMS);
 
   // Handle fetch data once the page index, size or sort by of the table change.
   const handleFetchData = React.useCallback(
@@ -117,7 +124,6 @@ function ItemsDataTable({
       <DataTable
         columns={columns}
         data={items}
-        initialState={itemsTableState}
         loading={isItemsLoading}
         headerLoading={isItemsLoading}
         progressBarLoading={isItemsFetching}
@@ -138,6 +144,8 @@ function ItemsDataTable({
         ContextMenu={ItemsActionMenuList}
         onFetchData={handleFetchData}
         onCellClick={handleCellClick}
+        initialColumnsWidths={initialColumnsWidths}
+        onColumnResizing={handleColumnResizing}
         payload={{
           onDeleteItem: handleDeleteItem,
           onEditItem: handleEditItem,

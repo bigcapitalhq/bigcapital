@@ -24,18 +24,14 @@ function ExpensesList({
   expensesTableStateChanged,
 
   // #withExpensesActions
-  setExpensesTableState,
+  resetExpensesTableState,
 }) {
   // Resets the accounts table state once the page unmount.
   useEffect(
     () => () => {
-      setExpensesTableState({
-        filterRoles: [],
-        viewSlug: '',
-        pageIndex: 0,
-      });
+      resetExpensesTableState();
     },
-    [setExpensesTableState],
+    [resetExpensesTableState],
   );
 
   return (

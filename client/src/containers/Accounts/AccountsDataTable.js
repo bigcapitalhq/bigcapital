@@ -5,17 +5,18 @@ import { compose } from 'utils';
 
 import { useAccountsTableColumns, rowClassNames } from './utils';
 import { ActionsMenu } from './components';
+import { TABLES } from 'common/tables';
 
 import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
+
 import { useAccountsChartContext } from './AccountsChartProvider';
+import { useMemorizedColumnsWidths } from '../../hooks';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
-
-import { useMemorizedColumnsWidths } from '../../hooks';
 
 /**
  * Accounts data-table.
@@ -51,12 +52,6 @@ function AccountsDataTable({
     openAlert('account-inactivate', { accountId: account.id });
   };
 
-  // Handle select accounts datatable rows.
-  //   const handleSelectedRowsChange = (selectedRows) => {
-  //     const selectedRowsIds = selectedRows.map((r) => r.id);
-  //     setSelectedRowsAccounts(selectedRowsIds);
-  //   };
-
   // Handle edit account action.
   const handleEditAccount = (account) => {
     openDialog('account-form', { action: 'edit', id: account.id });
@@ -81,7 +76,7 @@ function AccountsDataTable({
   };
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths('accounts');
+    useMemorizedColumnsWidths(TABLES.ACCOUNTS);
 
   return (
     <DataTable

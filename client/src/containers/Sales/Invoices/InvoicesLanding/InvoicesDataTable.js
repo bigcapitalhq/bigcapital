@@ -3,8 +3,10 @@ import { useHistory } from 'react-router-dom';
 
 import InvoicesEmptyStatus from './InvoicesEmptyStatus';
 
-import { compose } from 'utils';
 import { DataTable, DashboardContentTable } from 'components';
+import { TABLES } from 'common/tables';
+import { useMemorizedColumnsWidths } from 'hooks';
+
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
@@ -17,6 +19,8 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { useInvoicesTableColumns, ActionsMenu } from './components';
 import { useInvoicesListContext } from './InvoicesListProvider';
+
+import { compose } from 'utils';
 
 /**
  * Invoices datatable.
@@ -85,6 +89,11 @@ function InvoicesDataTable({
   const handleCellClick = (cell, event) => {
     openDrawer('invoice-detail-drawer', { invoiceId: cell.row.original.id });
   };
+
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.INVOICES);
+
   // Handles fetch data once the table state change.
   const handleDataTableFetchData = useCallback(
     ({ pageSize, pageIndex, sortBy }) => {
@@ -107,7 +116,6 @@ function InvoicesDataTable({
       <DataTable
         columns={columns}
         data={invoices}
-        initialState={invoicesTableState}
         loading={isInvoicesLoading}
         headerLoading={isInvoicesLoading}
         progressBarLoading={isInvoicesFetching}
@@ -125,6 +133,8 @@ function InvoicesDataTable({
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
         onCellClick={handleCellClick}
+        initialColumnsWidths={initialColumnsWidths}
+        onColumnResizing={handleColumnResizing}
         payload={{
           onDelete: handleDeleteInvoice,
           onDeliver: handleDeliverInvoice,

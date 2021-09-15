@@ -24,18 +24,14 @@ function CustomersList({
   customersTableStateChanged,
 
   // #withCustomersActions
-  setCustomersTableState,
+  resetCustomersTableState,
 }) {
   // Resets the accounts table state once the page unmount.
   useEffect(
     () => () => {
-      setCustomersTableState({
-        filterRoles: [],
-        viewSlug: '',
-        pageIndex: 0,
-      });
+      resetCustomersTableState();
     },
-    [setCustomersTableState],
+    [resetCustomersTableState],
   );
 
   return (
