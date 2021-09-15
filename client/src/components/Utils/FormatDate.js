@@ -6,7 +6,7 @@ import intl from 'react-intl-universal';
  * Format the given date.
  */
 export function FormatDate({ value, format = 'YYYY MMM DD' }) {
-  const localizedFormat = intl.get(`date_format.${format}`);
+  const localizedFormat = intl.get(`date_formats.${format}`);
 
   return moment().format(localizedFormat);
 }
