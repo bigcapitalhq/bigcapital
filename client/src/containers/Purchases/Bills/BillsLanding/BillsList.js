@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { DashboardContentTable, DashboardPageContent } from 'components';
+import { DashboardPageContent } from 'components';
 
 import 'style/pages/Bills/List.scss';
 
@@ -24,18 +24,14 @@ function BillsList({
   billsTableStateChanged,
 
   // #withBillsActions
-  setBillsTableState,
+  resetBillsTableState,
 }) {
   // Resets the accounts table state once the page unmount.
   useEffect(
     () => () => {
-      setBillsTableState({
-        filterRoles: [],
-        viewSlug: '',
-        pageIndex: 0,
-      });
+      resetBillsTableState();
     },
-    [setBillsTableState],
+    [resetBillsTableState],
   );
 
   return (

@@ -10,3 +10,8 @@ export const setCustomersTableState = (queries) => {
   };
 };
 
+export const resetCustomersTableState = () => {
+  return {
+    type: t.CUSTOMERS_TABLE_STATE_RESET,
+  };
+}

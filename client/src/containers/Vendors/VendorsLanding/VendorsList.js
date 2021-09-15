@@ -24,18 +24,14 @@ function VendorsList({
   vendorsTableStateChanged,
 
   // #withVendorsActions
-  setVendorsTableState,
+  resetVendorsTableState,
 }) {
   // Resets the vendors table state once the page unmount.
   useEffect(
     () => () => {
-      setVendorsTableState({
-        filterRoles: [],
-        viewSlug: '',
-        pageIndex: 0,
-      });
+      resetVendorsTableState();
     },
-    [setVendorsTableState],
+    [resetVendorsTableState],
   );
 
   return (

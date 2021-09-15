@@ -6,3 +6,9 @@ export const setVendorsTableState = (queries) => {
     payload: { queries },
   };
 }
+
+export const resetVendorsTableState = () => {
+  return {
+    type: t.VENDORS_TABLE_STATE_RESET,
+  }
+}
