@@ -1,27 +1,21 @@
 import intl from 'react-intl-universal';
 import React from 'react';
-import moment from 'moment';
 
+import { FormatDateCell } from '../../../components';
 import { isBlank } from 'utils';
 
 /**
  * Debit/credit table cell.
  */
 function DebitCreditTableCell({ value, payload: { account } }) {
-  return !isBlank(value) && value !== 0
-    ? // <Money amount={value} currency={account.currency_code} />
-      account.formatted_amount
-    : null;
+  return !isBlank(value) && value !== 0 ? account.formatted_amount : null;
 }
 
 /**
  * Running balance table cell.
  */
 function RunningBalanceTableCell({ value, payload: { account } }) {
-  return (
-    // <Money amount={value} currency={account.currency_code} />
-    account.formatted_amount
-  );
+  return account.formatted_amount;
 }
 
 /**
@@ -32,7 +26,8 @@ export const useAccountReadEntriesColumns = () =>
     () => [
       {
         Header: intl.get('transaction_date'),
-        accessor: ({ date }) => moment(date).format('YYYY MMM DD'),
+        accessor: 'date',
+        Cell: FormatDateCell,
         width: 110,
         textOverview: true,
       },

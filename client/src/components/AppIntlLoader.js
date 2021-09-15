@@ -5,7 +5,9 @@ import intl from 'react-intl-universal';
 import { find } from 'lodash';
 import rtlDetect from 'rtl-detect';
 import * as R from 'ramda';
+
 import { AppIntlProvider } from './AppIntlProvider';
+
 import withDashboardActions from '../containers/Dashboard/withDashboardActions';
 import withDashboard from '../containers/Dashboard/withDashboard';
 
@@ -56,6 +58,10 @@ function useDocumentDirectionModifier(locale, isRTL) {
   }, [isRTL, locale]);
 }
 
+function transformMomentLocale(currentLocale) {
+  return currentLocale === 'ar' ? 'ar-ly' : currentLocale;
+}
+
 /**
  * Application Intl loader.
  */
@@ -84,7 +90,7 @@ function AppIntlLoader({ appIntlIsLoading, setAppIntlIsLoading, children }) {
         });
       })
       .then(() => {
-        moment.locale(currentLocale);
+        moment.locale(transformMomentLocale(currentLocale));
         setIsLocalsLoading(false);
       });
   }, [currentLocale, setIsLocalsLoading]);

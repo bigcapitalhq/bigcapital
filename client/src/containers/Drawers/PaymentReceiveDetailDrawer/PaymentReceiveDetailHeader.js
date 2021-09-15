@@ -1,12 +1,9 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import moment from 'moment';
 import clsx from 'classnames';
-
 import { defaultTo } from 'lodash';
 
-import { DetailsMenu, DetailItem } from 'components';
-
+import { FormatDate, DetailsMenu, DetailItem } from 'components';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
 import PaymentDrawerCls from './PaymentReceiveDrawer.module.scss';
@@ -40,7 +37,7 @@ export default function PaymentReceiveDetailHeader() {
         />
         <DetailItem
           label={intl.get('payment_date')}
-          children={paymentReceive.formatted_payment_date}
+          children={<FormatDate value={paymentReceive.payment_date} />}
         />
       </DetailsMenu>
 
@@ -51,7 +48,7 @@ export default function PaymentReceiveDetailHeader() {
         />
         <DetailItem
           label={intl.get('created_at')}
-          children={moment(paymentReceive.created_at).format('YYYY MMM DD')}
+          children={<FormatDate value={paymentReceive.created_at} />}
         />
       </DetailsMenu>
     </div>

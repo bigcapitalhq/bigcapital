@@ -8,9 +8,17 @@ import {
   ProgressBar,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import moment from 'moment';
+import clsx from 'classnames';
 
-import { FormattedMessage as T, AppToaster, Choose, If, Icon } from 'components';
+import { CLASSES } from '../../../../common/classes';
+import {
+  FormatDateCell,
+  FormattedMessage as T,
+  AppToaster,
+  Choose,
+  If,
+  Icon,
+} from 'components';
 import { formattedAmount, safeCallback, calculateStatus } from 'utils';
 
 export const statusAccessor = (row) => {
@@ -150,7 +158,8 @@ export function useInvoicesTableColumns() {
       {
         id: 'invoice_date',
         Header: intl.get('invoice_date'),
-        accessor: (r) => moment(r.invoice_date).format('YYYY MMM DD'),
+        accessor: 'invoice_date',
+        Cell: FormatDateCell,
         width: 110,
         className: 'invoice_date',
         clickable: true,
@@ -183,6 +192,7 @@ export function useInvoicesTableColumns() {
         align: 'right',
         clickable: true,
         textOverview: true,
+        className: clsx(CLASSES.FONT_BOLD),
       },
       {
         id: 'status',
@@ -195,7 +205,8 @@ export function useInvoicesTableColumns() {
       {
         id: 'due_date',
         Header: intl.get('due_date'),
-        accessor: (r) => moment(r.due_date).format('YYYY MMM DD'),
+        accessor: 'due_date',
+        Cell: FormatDateCell,
         width: 110,
         className: 'due_date',
         clickable: true,

@@ -11,11 +11,10 @@ import {
   MenuDivider,
   Popover,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
-import moment from 'moment';
-import { Choose, Money, If, Icon } from 'components';
-import { safeCallback } from 'utils';
 import intl from 'react-intl-universal';
+
+import { FormattedMessage as T, Choose, Money, If, Icon } from 'components';
+import { safeCallback } from 'utils';
 
 /**
  * Amount accessor.
@@ -103,13 +102,6 @@ export const StatusAccessor = (row) => {
       </Choose.Otherwise>
     </Choose>
   );
-};
-
-/**
- * Date accessor.
- */
-export const DateAccessor = (row) => {
-  return moment(row.date).format('YYYY MMM DD');
 };
 
 /**

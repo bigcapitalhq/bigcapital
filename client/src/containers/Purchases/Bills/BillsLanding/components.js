@@ -4,16 +4,19 @@ import {
   Menu,
   MenuItem,
   MenuDivider,
-  Popover,
-  Button,
-  Position,
   Tag,
   ProgressBar,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import moment from 'moment';
 
-import { FormattedMessage as T, Icon, If, Choose, Money } from 'components';
+import {
+  FormatDateCell,
+  FormattedMessage as T,
+  Icon,
+  If,
+  Choose,
+  Money,
+} from 'components';
 import { formattedAmount, safeCallback, isBlank, calculateStatus } from 'utils';
 
 /**
@@ -136,17 +139,6 @@ export function StatusAccessor(bill) {
   );
 }
 
-export function ActionsCell(props) {
-  return (
-    <Popover
-      content={<ActionsMenu {...props} />}
-      position={Position.RIGHT_BOTTOM}
-    >
-      <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
-    </Popover>
-  );
-}
-
 /**
  * Retrieve bills table columns.
  */
@@ -156,7 +148,8 @@ export function useBillsTableColumns() {
       {
         id: 'bill_date',
         Header: intl.get('bill_date'),
-        accessor: (r) => moment(r.bill_date).format('YYYY MMM DD'),
+        accessor: 'bill_date',
+        Cell: FormatDateCell,
         width: 110,
         className: 'bill_date',
         clickable: true,
@@ -197,7 +190,8 @@ export function useBillsTableColumns() {
       {
         id: 'due_date',
         Header: intl.get('due_date'),
-        accessor: (r) => moment(r.due_date).format('YYYY MMM DD'),
+        accessor: 'due_date',
+        Cell: FormatDateCell,
         width: 110,
         className: 'due_date',
         clickable: true,

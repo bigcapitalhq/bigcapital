@@ -79,6 +79,7 @@ export * from './Drawer';
 export * from './Forms';
 export * from './MultiSelectTaggable'
 export * from './Utils/FormatNumber';
+export * from './Utils/FormatDate';
 
 const Hint = FieldHint;
 

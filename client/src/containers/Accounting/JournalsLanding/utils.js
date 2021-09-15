@@ -1,7 +1,10 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import moment from 'moment';
-import { NoteAccessor, StatusAccessor, DateAccessor } from './components';
+import clsx from 'classnames';
+
+import { CLASSES } from '../../../common/classes';
+import { FormatDateCell } from '../../../components';
+import { NoteAccessor, StatusAccessor } from './components';
 
 /**
  * Retrieve the manual journals columns.
@@ -12,7 +15,8 @@ export const useManualJournalsColumns = () => {
       {
         id: 'date',
         Header: intl.get('date'),
-        accessor: DateAccessor,
+        accessor: 'date',
+        Cell: FormatDateCell,
         width: 115,
         className: 'date',
         clickable: true,
@@ -21,10 +25,10 @@ export const useManualJournalsColumns = () => {
         id: 'amount',
         Header: intl.get('amount'),
         accessor: 'formatted_amount',
-        className: 'amount',
         width: 115,
         clickable: true,
         align: 'right',
+        className: clsx(CLASSES.FONT_BOLD),
       },
       {
         id: 'journal_number',
@@ -39,7 +43,6 @@ export const useManualJournalsColumns = () => {
         Header: intl.get('journal_type'),
         accessor: 'journal_type',
         width: 110,
-        className: 'journal_type',
         clickable: true,
       },
       {
@@ -47,7 +50,6 @@ export const useManualJournalsColumns = () => {
         Header: intl.get('publish'),
         accessor: (row) => StatusAccessor(row),
         width: 95,
-        className: 'status',
         clickable: true,
       },
       {
@@ -56,15 +58,14 @@ export const useManualJournalsColumns = () => {
         accessor: NoteAccessor,
         disableSortBy: true,
         width: 85,
-        className: 'note',
         clickable: true,
       },
       {
         id: 'created_at',
         Header: intl.get('created_at'),
-        accessor: (r) => moment(r.created_at).format('YYYY MMM DD'),
+        accessor: 'created_at',
+        Cell: FormatDateCell,
         width: 125,
-        className: 'created_at',
         clickable: true,
       },
     ],

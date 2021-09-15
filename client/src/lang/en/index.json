@@ -1323,5 +1323,8 @@
   "payment_receive.auto_increment.manually": "Yor payment numbers are set on manual mode. Are you sure chaning this settings?",
   "auto_increment.field.manually": "I will enter them manually each time",
   "auto_increment.field.manual_this_transaction": "Manual entering for this transaction.",
-  "auto_increment.field.auto": "Auto-incrementing number."
+  "auto_increment.field.auto": "Auto-incrementing number.",
+  "date_format": {
+    "YYYY MMM DD": "YYYY MMM DD"
+  }
 }

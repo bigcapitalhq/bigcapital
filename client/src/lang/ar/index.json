@@ -1352,6 +1352,9 @@
   "payment_receive.auto_increment.manually": "يتم تعيين سندات الدفع يدوياً. هل أنت متأكد من تغيير هذه الإعدادات؟",
   "auto_increment.field.manually": "سأدخلها يدويًا في كل مرة",
   "auto_increment.field.manual_this_transaction": "إدخال يدوي لهذه العملية فقط.",
-  "auto_increment.field.auto": "زيادة الرقم العملية تلقائيًا."
+  "auto_increment.field.auto": "زيادة الرقم العملية تلقائيًا.",
+  "date_format": {
+    "YYYY MMM DD": "DD MMM YYYY"
+  }
 }
 

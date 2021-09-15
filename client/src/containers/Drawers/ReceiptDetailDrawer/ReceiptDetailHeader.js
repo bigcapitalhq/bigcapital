@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { defaultTo } from 'lodash';
 import clsx from 'classnames';
 
-import { DetailsMenu, DetailItem } from 'components';
+import { FormatDate, DetailsMenu, DetailItem } from 'components';
 
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 
@@ -31,11 +31,11 @@ export default function ReceiptDetailHeader() {
         />
         <DetailItem
           label={intl.get('receipt_date')}
-          children={receipt.formatted_receipt_date}
+          children={<FormatDate value={receipt.receipt_date} />}
         />
         <DetailItem
           label={intl.get('closed_date')}
-          children={defaultTo(receipt.formatted_closed_at_date, '-')}
+          children={<FormatDate value={receipt.closed_at_date} />}
         />
       </DetailsMenu>
 
@@ -50,7 +50,7 @@ export default function ReceiptDetailHeader() {
         />
         <DetailItem
           label={intl.get('receipt.details.created_at')}
-          children={'2020 Ang 21'}
+          children={<FormatDate value={receipt.created_at} />}
         />
       </DetailsMenu>
     </div>

@@ -11,10 +11,15 @@ import {
   Menu,
   MenuDivider,
 } from '@blueprintjs/core';
-import moment from 'moment';
 import intl from 'react-intl-universal';
 
-import { FormattedMessage as T, Money, Icon, If } from 'components';
+import {
+  FormatDateCell,
+  FormattedMessage as T,
+  Money,
+  Icon,
+  If,
+} from 'components';
 import { safeCallback } from 'utils';
 
 /**
@@ -128,7 +133,8 @@ export function useExpensesTableColumns() {
       {
         id: 'payment_date',
         Header: intl.get('payment_date'),
-        accessor: (r) => moment(r.payment_date).format('YYYY MMM DD'),
+        accessor: 'payment_date',
+        Cell: FormatDateCell,
         width: 140,
         className: 'payment_date',
         clickable: true,

@@ -9,10 +9,11 @@ import {
   Position,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import moment from 'moment';
+import clsx from 'classnames';
 
-import { Money, Icon } from 'components';
+import { FormatDateCell, Money, Icon } from 'components';
 import { safeCallback } from 'utils';
+import { CLASSES } from '../../../../common/classes';
 
 /**
  * Table actions menu.
@@ -57,13 +58,6 @@ export function AmountAccessor(row) {
 }
 
 /**
- * Payment date accessor.
- */
-export function PaymentDateAccessor(row) {
-  return moment(row.payment_date).format('YYYY MMM DD');
-}
-
-/**
  * Actions cell.
  */
 export function ActionsCell(props) {
@@ -86,7 +80,8 @@ export function usePaymentReceivesColumns() {
       {
         id: 'payment_date',
         Header: intl.get('payment_date'),
-        accessor: PaymentDateAccessor,
+        accessor: 'payment_date',
+        Cell: FormatDateCell,
         width: 140,
         className: 'payment_date',
         clickable: true,
@@ -109,6 +104,7 @@ export function usePaymentReceivesColumns() {
         align: 'right',
         clickable: true,
         textOverview: true,
+        className: clsx(CLASSES.FONT_BOLD),
       },
       {
         id: 'payment_receive_no',

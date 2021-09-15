@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { defaultTo } from 'lodash';
 import clsx from 'classnames';
 
-import { DetailsMenu, DetailItem } from 'components';
+import { FormatDate, DetailsMenu, DetailItem } from 'components';
 
 import { useBillDrawerContext } from './BillDrawerProvider';
 import BillDrawerCls from 'style/components/Drawers/BillDrawer.module.scss';
@@ -27,7 +27,7 @@ export default function BillDetailHeader() {
         />
         <DetailItem
           label={intl.get('bill_date')}
-          children={bill.formatted_bill_date}
+          children={<FormatDate value={bill.bill_date} />}
         />
         <DetailItem
           label={intl.get('vendor_name')}
@@ -35,7 +35,7 @@ export default function BillDetailHeader() {
         />
         <DetailItem
           label={intl.get('due_date')}
-          children={bill.formatted_due_date}
+          children={<FormatDate value={bill.due_date} />}
         />
       </DetailsMenu>
 
@@ -50,7 +50,7 @@ export default function BillDetailHeader() {
         />
         <DetailItem
           label={intl.get('bill.details.created_at')}
-          children={'2020 Ang 21'}
+          children={<FormatDate value={bill.created_at} />}
         />
       </DetailsMenu>
     </div>

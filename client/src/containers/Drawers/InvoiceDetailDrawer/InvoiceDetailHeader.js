@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { defaultTo } from 'lodash';
 import clsx from 'classnames';
 
-import { DetailsMenu, DetailItem } from 'components';
+import { DetailsMenu, DetailItem, FormatDate } from 'components';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 import InvoiceDrawerCls from 'style/components/Drawers/InvoiceDrawer.module.scss';
@@ -30,11 +30,11 @@ export default function InvoiceDetailHeader() {
         />
         <DetailItem
           label={intl.get('invoice_date')}
-          children={invoice.formatted_invoice_date}
+          children={<FormatDate value={invoice.invoice_date} />}
         />
         <DetailItem
           label={intl.get('due_date')}
-          children={invoice.formatted_due_date}
+          children={<FormatDate value={invoice.due_date} />}
         />
       </DetailsMenu>
 
@@ -49,7 +49,7 @@ export default function InvoiceDetailHeader() {
         />
         <DetailItem
           label={intl.get('invoice.details.created_at')}
-          children={'2020 Ang 21'}
+          children={<FormatDate value={invoice.created_at} />}
         />
       </DetailsMenu>
     </div>

@@ -89,6 +89,7 @@ const CLASSES = {
   ...Classes,
   CARD: 'card',
   ALIGN_RIGHT: 'align-right',
+  FONT_BOLD: 'font-bold',
 };
 
 export {

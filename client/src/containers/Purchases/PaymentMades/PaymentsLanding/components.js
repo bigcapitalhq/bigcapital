@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 import {
   Intent,
   Button,
@@ -11,12 +10,8 @@ import {
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { Icon, Money } from 'components';
+import { Icon, Money, FormatDateCell } from 'components';
 import { safeCallback } from 'utils';
-
-export function DateCell({ value }) {
-  return moment(value).format('YYYY MMM DD');
-}
 
 export function AmountAccessor(row) {
   return <Money amount={row.amount} currency={row.currency_code} />;
@@ -75,7 +70,7 @@ export function usePaymentMadesTableColumns() {
       {
         id: 'payment_date',
         Header: intl.get('payment_date'),
-        Cell: DateCell,
+        Cell: FormatDateCell,
         accessor: 'payment_date',
         width: 140,
         className: 'payment_date',

@@ -11,10 +11,11 @@ import {
   Tag,
   Button,
 } from '@blueprintjs/core';
-import moment from 'moment';
+import clsx from 'classnames';
 
+import { CLASSES } from '../../../../common/classes';
 import { safeCallback } from 'utils';
-import { Choose, Money, Icon, If } from 'components';
+import { FormatDateCell, Choose, Money, Icon, If } from 'components';
 
 export function ActionsMenu({
   payload: { onEdit, onDelete, onClose, onDrawer, onViewDetails, onPrint },
@@ -99,7 +100,8 @@ export function useReceiptsTableColumns() {
       {
         id: 'receipt_date',
         Header: intl.get('receipt_date'),
-        accessor: (r) => moment(r.receipt_date).format('YYYY MMM DD'),
+        accessor: 'receipt_date',
+        Cell: FormatDateCell,
         width: 140,
         className: 'receipt_date',
         clickable: true,
@@ -140,6 +142,7 @@ export function useReceiptsTableColumns() {
         align: 'right',
         clickable: true,
         textOverview: true,
+        className: clsx(CLASSES.FONT_BOLD),
       },
       {
         id: 'status',

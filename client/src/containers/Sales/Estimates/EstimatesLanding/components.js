@@ -1,18 +1,17 @@
 import React from 'react';
-import {
-  Intent,
-  Tag,
-  Button,
-  Popover,
-  Menu,
-  MenuItem,
-  MenuDivider,
-  Position,
-} from '@blueprintjs/core';
+import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import moment from 'moment';
+import clsx from 'classnames';
 
-import { FormattedMessage as T, Money, Choose, Icon, If } from 'components';
+import { CLASSES } from '../../../../common/classes';
+import {
+  FormatDateCell,
+  FormattedMessage as T,
+  Money,
+  Choose,
+  Icon,
+  If,
+} from 'components';
 import { safeCallback } from 'utils';
 
 /**
@@ -130,23 +129,8 @@ export function ActionsMenu({
   );
 }
 
-function DateCell({ value }) {
-  return moment(value).format('YYYY MMM DD');
-}
-
 function AmountAccessor({ amount, currency_code }) {
   return <Money amount={amount} currency={currency_code} />;
-}
-
-function ActionsCell(props) {
-  return (
-    <Popover
-      content={<ActionsMenu {...props} />}
-      position={Position.RIGHT_BOTTOM}
-    >
-      <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
-    </Popover>
-  );
 }
 
 export function useEstiamtesTableColumns() {
@@ -156,7 +140,7 @@ export function useEstiamtesTableColumns() {
         id: 'estimate_date',
         Header: intl.get('estimate_date'),
         accessor: 'estimate_date',
-        Cell: DateCell,
+        Cell: FormatDateCell,
         width: 140,
         className: 'estimate_date',
         clickable: true,
@@ -175,7 +159,7 @@ export function useEstiamtesTableColumns() {
         id: 'expiration_date',
         Header: intl.get('expiration_date'),
         accessor: 'expiration_date',
-        Cell: DateCell,
+        Cell: FormatDateCell,
         width: 140,
         className: 'expiration_date',
         clickable: true,
@@ -198,6 +182,7 @@ export function useEstiamtesTableColumns() {
         width: 140,
         align: 'right',
         clickable: true,
+        className: clsx(CLASSES.FONT_BOLD),
       },
       {
         id: 'status',
