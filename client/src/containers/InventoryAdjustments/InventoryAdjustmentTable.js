@@ -1,14 +1,18 @@
 import React, { useCallback } from 'react';
-import { DataTable } from 'components';
-import { useInventoryAdjustmentsColumns, ActionsMenu } from './components';
 import intl from 'react-intl-universal';
+
+import { DataTable } from 'components';
+import { TABLES } from 'common/tables';
+
+import { useInventoryAdjustmentsColumns, ActionsMenu } from './components';
+import { useMemorizedColumnsWidths } from 'hooks';
+import { useInventoryAdjustmentsContext } from './InventoryAdjustmentsProvider';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withInventoryAdjustmentActions from './withInventoryAdjustmentActions';
-
-import { useInventoryAdjustmentsContext } from './InventoryAdjustmentsProvider';
 import withInventoryAdjustments from './withInventoryAdjustments';
+
 import { compose } from 'utils';
 
 /**
@@ -55,6 +59,9 @@ function InventoryAdjustmentDataTable({
   // Inventory adjustments columns.
   const columns = useInventoryAdjustmentsColumns();
 
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.INVENTORY_ADJUSTMENTS);
+
   // Handle the table fetch data once states changing.
   const handleDataTableFetchData = useCallback(
     ({ pageSize, pageIndex, sortBy }) => {
@@ -79,7 +86,6 @@ function InventoryAdjustmentDataTable({
       loading={isAdjustmentsLoading}
       headerLoading={isAdjustmentsLoading}
       progressBarLoading={isAdjustmentsFetching}
-      initialState={inventoryAdjustmentTableState}
       noInitialFetch={true}
       onFetchData={handleDataTableFetchData}
       manualSortBy={true}
@@ -89,6 +95,8 @@ function InventoryAdjustmentDataTable({
       autoResetSortBy={false}
       autoResetPage={false}
       onCellClick={handleCellClick}
+      initialColumnsWidths={initialColumnsWidths}
+      onColumnResizing={handleColumnResizing}
       payload={{
         onDelete: handleDeleteAdjustment,
         onPublish: handlePublishInventoryAdjustment,

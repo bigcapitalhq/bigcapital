@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { compose } from 'utils';
-
 import DataTable from 'components/DataTable';
+
+import { TABLES } from 'common/tables';
 import { DashboardContentTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
@@ -15,8 +15,12 @@ import withBillActions from './withBillsActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+
 import { useBillsTableColumns, ActionsMenu } from './components';
 import { useBillsListContext } from './BillsListProvider';
+import { useMemorizedColumnsWidths } from 'hooks';
+
+import { compose } from 'utils';
 
 /**
  * Bills transactions datatable.
@@ -92,39 +96,44 @@ function BillsDataTable({
     openDrawer('bill-drawer', { billId: cell.row.original.id });
   };
 
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.BILLS);
+
   if (isEmptyStatus) {
     return <BillsEmptyStatus />;
   }
 
   return (
     <DashboardContentTable>
-    <DataTable
-      columns={columns}
-      data={bills}
-      initialState={billsTableState}
-      loading={isBillsLoading}
-      headerLoading={isBillsLoading}
-      progressBarLoading={isBillsFetching}
-      onFetchData={handleFetchData}
-      manualSortBy={true}
-      selectionColumn={true}
-      noInitialFetch={true}
-      sticky={true}
-      pagination={true}
-      pagesCount={pagination.pagesCount}
-      TableLoadingRenderer={TableSkeletonRows}
-      TableHeaderSkeletonRenderer={TableSkeletonHeader}
-      ContextMenu={ActionsMenu}
-      onCellClick={handleCellClick}
-      payload={{
-        onDelete: handleDeleteBill,
-        onEdit: handleEditBill,
-        onOpen: handleOpenBill,
-        onQuick: handleQuickPaymentMade,
-        onAllocateLandedCost: handleAllocateLandedCost,
-        onViewDetails: handleViewDetailBill,
-      }}
-    />
+      <DataTable
+        columns={columns}
+        data={bills}
+        loading={isBillsLoading}
+        headerLoading={isBillsLoading}
+        progressBarLoading={isBillsFetching}
+        onFetchData={handleFetchData}
+        manualSortBy={true}
+        selectionColumn={true}
+        noInitialFetch={true}
+        sticky={true}
+        pagination={true}
+        pagesCount={pagination.pagesCount}
+        TableLoadingRenderer={TableSkeletonRows}
+        TableHeaderSkeletonRenderer={TableSkeletonHeader}
+        ContextMenu={ActionsMenu}
+        onCellClick={handleCellClick}
+        initialColumnsWidths={initialColumnsWidths}
+        onColumnResizing={handleColumnResizing}
+        payload={{
+          onDelete: handleDeleteBill,
+          onEdit: handleEditBill,
+          onOpen: handleOpenBill,
+          onQuick: handleQuickPaymentMade,
+          onAllocateLandedCost: handleAllocateLandedCost,
+          onViewDetails: handleViewDetailBill,
+        }}
+      />
     </DashboardContentTable>
   );
 }

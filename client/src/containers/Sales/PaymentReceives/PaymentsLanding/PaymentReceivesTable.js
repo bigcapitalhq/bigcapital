@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { compose } from 'utils';
+import { TABLES } from 'common/tables';
 
 import { DataTable, DashboardContentTable } from 'components';
 import PaymentReceivesEmptyStatus from './PaymentReceivesEmptyStatus';
@@ -12,8 +13,10 @@ import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+
 import { usePaymentReceivesColumns, ActionsMenu } from './components';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
+import { useMemorizedColumnsWidths } from 'hooks';
 
 /**
  * Payment receives datatable.
@@ -73,6 +76,10 @@ function PaymentReceivesDataTable({
     });
   };
 
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.PAYMENT_RECEIVES);
+
   // Handle datatable fetch once the table's state changing.
   const handleDataTableFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
@@ -95,7 +102,6 @@ function PaymentReceivesDataTable({
       <DataTable
         columns={columns}
         data={paymentReceives}
-        initialState={paymentReceivesTableState}
         loading={isPaymentReceivesLoading}
         headerLoading={isPaymentReceivesLoading}
         progressBarLoading={isPaymentReceivesFetching}
@@ -112,6 +118,8 @@ function PaymentReceivesDataTable({
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
         onCellClick={handleCellClick}
+        initialColumnsWidths={initialColumnsWidths}
+        onColumnResizing={handleColumnResizing}
         payload={{
           onDelete: handleDeletePaymentReceive,
           onEdit: handleEditPaymentReceive,

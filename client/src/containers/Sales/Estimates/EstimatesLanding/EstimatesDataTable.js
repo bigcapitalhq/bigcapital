@@ -1,8 +1,6 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { compose } from 'utils';
-
 import { DataTable, DashboardContentTable } from 'components';
 import EstimatesEmptyStatus from './EstimatesEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
@@ -14,7 +12,11 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
+import { useMemorizedColumnsWidths } from 'hooks';
 import { ActionsMenu, useEstiamtesTableColumns } from './components';
+import { TABLES } from 'common/tables';
+
+import { compose } from 'utils';
 
 /**
  * Estimates datatable.
@@ -89,6 +91,11 @@ function EstimatesDataTable({
   const handleCellClick = (cell, event) => {
     openDrawer('estimate-detail-drawer', { estimateId: cell.row.original.id });
   };
+
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.ESTIMATES);
+
   // Handles fetch data.
   const handleFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
@@ -126,6 +133,8 @@ function EstimatesDataTable({
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
         onCellClick={handleCellClick}
+        initialColumnsWidths={initialColumnsWidths}
+        onColumnResizing={handleColumnResizing}
         payload={{
           onApprove: handleApproveEstimate,
           onEdit: handleEditEstimate,
