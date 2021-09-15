@@ -106,7 +106,6 @@ function PaymentReceiveForm({
         message: intl.get('you_cannot_make_payment_with_zero_total_amount'),
         intent: Intent.DANGER,
       });
-      setSubmitting(false);
       return;
     }
     const form = {

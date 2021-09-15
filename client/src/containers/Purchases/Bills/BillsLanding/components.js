@@ -165,7 +165,7 @@ export function useBillsTableColumns() {
       {
         id: 'bill_number',
         Header: intl.get('bill_number'),
-        accessor: (row) => (row.bill_number ? `#${row.bill_number}` : null),
+        accessor: (row) => (row.bill_number ? `${row.bill_number}` : null),
         width: 100,
         className: 'bill_number',
         clickable: true,

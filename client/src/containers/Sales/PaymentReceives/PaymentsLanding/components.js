@@ -110,7 +110,7 @@ export function usePaymentReceivesColumns() {
         id: 'payment_receive_no',
         Header: intl.get('payment_receive_no'),
         accessor: (row) =>
-          row.payment_receive_no ? `#${row.payment_receive_no}` : null,
+          row.payment_receive_no ? `${row.payment_receive_no}` : null,
         width: 140,
         className: 'payment_receive_no',
         clickable: true,

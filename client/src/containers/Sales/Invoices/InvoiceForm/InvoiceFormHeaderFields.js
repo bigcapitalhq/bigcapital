@@ -153,6 +153,7 @@ function InvoiceFormHeaderFields({
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'invoice_no'} />}
+            labelInfo={<FieldRequiredHint />}
             inline={true}
             className={classNames('form-group--invoice-no', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}

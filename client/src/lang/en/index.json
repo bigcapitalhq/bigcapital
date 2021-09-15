@@ -1324,7 +1324,9 @@
   "auto_increment.field.manually": "I will enter them manually each time",
   "auto_increment.field.manual_this_transaction": "Manual entering for this transaction.",
   "auto_increment.field.auto": "Auto-incrementing number.",
-  "date_format": {
+  "date_formats": {
     "YYYY MMM DD": "YYYY MMM DD"
-  }
+  },
+  "estimate.field.error.estimate_number_required": "Estimate number is required, use auto-increment mode or enter manually.",
+  "invoice.field.error.invoice_no_required": "Invoice number is required, use auto-increment mode or enter manually"
 }
