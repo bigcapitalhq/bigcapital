@@ -40,7 +40,7 @@ export default {
     payment_number: {
       name: 'bill_payment.field.payment_number',
       column: 'payment_number',
-      fieldType: 'number',
+      fieldType: 'text',
     },
     payment_date: {
       name: 'bill_payment.field.payment_date',

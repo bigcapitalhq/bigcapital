@@ -1,8 +1,9 @@
 import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import { isEmpty } from 'lodash';
 
-import { Icon } from 'components';
+import { Icon, If } from 'components';
 
 import { RESOURCES_TYPES } from 'common/resourcesTypes';
 import withDrawerActions from '../../Drawer/withDrawerActions';
@@ -33,8 +34,8 @@ export const PaymentMadeUniversalSearchSelect = withDrawerActions(
 /**
  * Payment made universal search item.
  */
- export function PaymentMadeUniversalSearchItem(
-  item,
+export function PaymentMadeUniversalSearchItem(
+  { text, label, reference },
   { handleClick, modifiers, query },
 ) {
   return (
@@ -42,16 +43,20 @@ export const PaymentMadeUniversalSearchSelect = withDrawerActions(
       active={modifiers.active}
       text={
         <div>
-          <div>{highlightText(item.text, query)}</div>
+          <div>{highlightText(text, query)}</div>
 
           <span class="bp3-text-muted">
-            {highlightText(item.reference.payment_number, query)}{' '}
-            <Icon icon={'caret-right-16'} iconSize={16} />
-            {highlightText(item.reference.formatted_payment_date, query)}
+            {reference.payment_number && (
+              <>
+                {highlightText(reference.payment_number, query)}
+                <Icon icon={'caret-right-16'} iconSize={16} />
+              </>
+            )}
+            {highlightText(reference.formatted_payment_date, query)}
           </span>
         </div>
       }
-      label={<div class="amount">{item.reference.formatted_amount}</div>}
+      label={<div class="amount">{label}</div>}
       onClick={handleClick}
       className={'universal-search__item--payment-made'}
     />
@@ -64,7 +69,6 @@ export const PaymentMadeUniversalSearchSelect = withDrawerActions(
 const paymentMadeToSearch = (payment) => ({
   id: payment.id,
   text: payment.vendor.display_name,
-  subText: payment.formatted_payment_date,
   label: payment.formatted_amount,
   reference: payment,
 });
@@ -72,7 +76,7 @@ const paymentMadeToSearch = (payment) => ({
 /**
  * Binds universal search payment made configure.
  */
- export const universalSearchPaymentMadeBind = () => ({
+export const universalSearchPaymentMadeBind = () => ({
   resourceType: RESOURCES_TYPES.PAYMENT_MADE,
   optionItemLabel: intl.get('payment_mades'),
   selectItemAction: PaymentMadeUniversalSearchSelect,

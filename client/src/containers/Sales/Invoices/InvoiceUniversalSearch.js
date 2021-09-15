@@ -81,7 +81,7 @@ export function InvoiceUniversalSearchItem(
           <span class="bp3-text-muted">
             {highlightText(item.reference.invoice_no, query)}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
-            {highlightText(item.reference.formatted_invoice_date, query)}
+            {item.reference.formatted_invoice_date}
           </span>
         </div>
       }
@@ -102,7 +102,7 @@ export function InvoiceUniversalSearchItem(
  * @param {*} invoice
  * @returns
  */
- const transformInvoicesToSearch = (invoice) => ({
+const transformInvoicesToSearch = (invoice) => ({
   id: invoice.id,
   text: invoice.customer.display_name,
   label: invoice.formatted_balance,

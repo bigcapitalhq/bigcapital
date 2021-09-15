@@ -23,10 +23,12 @@ export default function ItemDetailHeader() {
         <DetailItem
           label={intl.get('sell_price')}
           children={item.sell_price_formatted}
+          align={'right'}
         />
         <DetailItem
           label={intl.get('cost_price')}
           children={item.cost_price_formatted}
+          align={'right'}
         />
       </DetailsMenu>
 
