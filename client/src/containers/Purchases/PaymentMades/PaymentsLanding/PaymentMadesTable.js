@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import { compose } from 'utils';
 
+import { TABLES } from 'common/tables';
 import { DataTable, DashboardContentTable } from 'components';
 
 import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
@@ -17,6 +18,7 @@ import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { usePaymentMadesTableColumns, ActionsMenu } from './components';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
+import { useMemorizedColumnsWidths } from 'hooks';
 
 /**
  * Payment made datatable transactions.
@@ -71,6 +73,10 @@ function PaymentMadesTable({
     });
   };
 
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.PAYMENT_MADES);
+
   // Handle datatable fetch data once the table state change.
   const handleDataTableFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
@@ -89,7 +95,6 @@ function PaymentMadesTable({
       <DataTable
         columns={columns}
         data={paymentMades}
-        initialState={paymentMadesTableState}
         onFetchData={handleDataTableFetchData}
         loading={isPaymentsLoading}
         headerLoading={isPaymentsLoading}
@@ -106,6 +111,8 @@ function PaymentMadesTable({
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
         onCellClick={handleCellClick}
+        initialColumnsWidths={initialColumnsWidths}
+        onColumnResizing={handleColumnResizing}
         payload={{
           onEdit: handleEditPaymentMade,
           onDelete: handleDeletePaymentMade,

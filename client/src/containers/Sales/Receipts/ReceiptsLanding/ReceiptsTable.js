@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import { compose } from 'utils';
 import { DataTable, DashboardContentTable } from 'components';
+import { TABLES } from 'common/tables';
 
 import ReceiptsEmptyStatus from './ReceiptsEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
@@ -16,6 +17,7 @@ import withReceiptsActions from './withReceiptsActions';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useReceiptsTableColumns, ActionsMenu } from './components';
+import { useMemorizedColumnsWidths } from 'hooks';
 
 /**
  * Sale receipts datatable.
@@ -75,6 +77,10 @@ function ReceiptsDataTable({
     openDialog('receipt-pdf-preview', { receiptId: id });
   };
 
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.RECEIPTS);
+
   // Handles the datable fetch data once the state changing.
   const handleDataTableFetchData = useCallback(
     ({ sortBy, pageIndex, pageSize }) => {
@@ -100,7 +106,6 @@ function ReceiptsDataTable({
       <DataTable
         columns={columns}
         data={receipts}
-        initialState={receiptTableState}
         loading={isReceiptsLoading}
         headerLoading={isReceiptsLoading}
         progressBarLoading={isReceiptsFetching}
@@ -118,6 +123,8 @@ function ReceiptsDataTable({
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
         onCellClick={handleCellClick}
+        initialColumnsWidths={initialColumnsWidths}
+        onColumnResizing={handleColumnResizing}
         payload={{
           onEdit: handleEditReceipt,
           onDelete: handleDeleteReceipt,

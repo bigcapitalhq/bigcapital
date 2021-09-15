@@ -5,6 +5,7 @@ import CustomersEmptyStatus from './CustomersEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
+import { TABLES } from 'common/tables';
 import { DataTable, DashboardContentTable } from 'components';
 
 import withCustomers from './withCustomers';
@@ -15,6 +16,7 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { useCustomersListContext } from './CustomersListProvider';
 import { ActionsMenu, useCustomersTableColumns } from './components';
+import { useMemorizedColumnsWidths } from 'hooks';
 
 import { compose } from 'utils';
 
@@ -50,6 +52,10 @@ function CustomersTable({
     isCustomersLoading,
     isCustomersFetching,
   } = useCustomersListContext();
+
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.CUSTOMERS);
 
   // Handle fetch data once the page index, size or sort by of the table change.
   const handleFetchData = React.useCallback(
@@ -110,7 +116,6 @@ function CustomersTable({
         noInitialFetch={true}
         columns={columns}
         data={customers}
-        initialState={customersTableState}
         loading={isCustomersLoading}
         headerLoading={isCustomersLoading}
         progressBarLoading={isCustomersFetching}
@@ -128,6 +133,8 @@ function CustomersTable({
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         onCellClick={handleCellClick}
+        initialColumnsWidths={initialColumnsWidths}
+        onColumnResizing={handleColumnResizing}
         payload={{
           onDelete: handleCustomerDelete,
           onEdit: handleCustomerEdit,

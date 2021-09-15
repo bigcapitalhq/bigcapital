@@ -15,6 +15,8 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { ActionsMenu, useEstiamtesTableColumns } from './components';
+import { TABLES } from 'common/tables';
+import { useMemorizedColumnsWidths } from 'hooks';
 
 /**
  * Estimates datatable.
@@ -89,6 +91,11 @@ function EstimatesDataTable({
   const handleCellClick = (cell, event) => {
     openDrawer('estimate-detail-drawer', { estimateId: cell.row.original.id });
   };
+
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.ESTIMATES);
+
   // Handles fetch data.
   const handleFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
@@ -126,6 +133,8 @@ function EstimatesDataTable({
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
         onCellClick={handleCellClick}
+        initialColumnsWidths={initialColumnsWidths}
+        onColumnResizing={handleColumnResizing}
         payload={{
           onApprove: handleApproveEstimate,
           onEdit: handleEditEstimate,

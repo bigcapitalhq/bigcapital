@@ -1,6 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router';
 
+import { TABLES } from 'common/tables';
+
 import { DataTable, DashboardContentTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
@@ -16,6 +18,7 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 import { ActionsMenu, useVendorsTableColumns } from './components';
+import { useMemorizedColumnsWidths } from 'hooks';
 
 /**
  * Vendors table.
@@ -91,6 +94,10 @@ function VendorsTable({
     openDrawer('vendor-details-drawer', { vendorId: cell.row.original.id });
   };
 
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.VENDORS);
+
   // Handle fetch data once the page index, size or sort by of the table change.
   const handleFetchData = React.useCallback(
     ({ pageSize, pageIndex, sortBy }) => {
@@ -114,7 +121,6 @@ function VendorsTable({
         noInitialFetch={true}
         columns={columns}
         data={vendors}
-        initialState={vendorsTableState}
         loading={isVendorsLoading}
         headerLoading={isVendorsLoading}
         progressBarLoading={isVendorsFetching}
@@ -131,6 +137,8 @@ function VendorsTable({
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
         onCellClick={handleCellClick}
+        initialColumnsWidths={initialColumnsWidths}
+        onColumnResizing={handleColumnResizing}
         payload={{
           onEdit: handleEditVendor,
           onDelete: handleDeleteVendor,

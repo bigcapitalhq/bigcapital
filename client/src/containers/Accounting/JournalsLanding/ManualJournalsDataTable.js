@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DataTable, DashboardContentTable } from 'components';
+import { TABLES } from 'common/tables';
 
 import ManualJournalsEmptyStatus from './ManualJournalsEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
@@ -15,6 +16,7 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { useManualJournalsContext } from './ManualJournalsListProvider';
 import { useManualJournalsColumns } from './utils';
 import { ActionsMenu } from './components';
+import { useMemorizedColumnsWidths } from 'hooks';
 
 import { compose } from 'utils';
 
@@ -78,6 +80,10 @@ function ManualJournalsDataTable({
     openDrawer('journal-drawer', { manualJournalId: cell.row.original.id });
   };
 
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.MANUAL_JOURNALS);
+
   // Handle fetch data once the page index, size or sort by of the table change.
   const handleFetchData = React.useCallback(
     ({ pageSize, pageIndex, sortBy }) => {
@@ -101,7 +107,6 @@ function ManualJournalsDataTable({
         noInitialFetch={true}
         columns={columns}
         data={manualJournals}
-        initialState={manualJournalsTableState}
         manualSortBy={true}
         selectionColumn={true}
         expandable={true}
@@ -118,6 +123,8 @@ function ManualJournalsDataTable({
         ContextMenu={ActionsMenu}
         onFetchData={handleFetchData}
         onCellClick={handleCellClick}
+        initialColumnsWidths={initialColumnsWidths}
+        onColumnResizing={handleColumnResizing}
         payload={{
           onDelete: handleDeleteJournal,
           onPublish: handlePublishJournal,

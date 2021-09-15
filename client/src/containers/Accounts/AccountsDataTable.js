@@ -5,6 +5,7 @@ import { compose } from 'utils';
 
 import { useAccountsTableColumns, rowClassNames } from './utils';
 import { ActionsMenu } from './components';
+import { TABLES } from 'common/tables';
 
 import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
@@ -81,7 +82,7 @@ function AccountsDataTable({
   };
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths('accounts');
+    useMemorizedColumnsWidths(TABLES.ACCOUNTS);
 
   return (
     <DataTable
