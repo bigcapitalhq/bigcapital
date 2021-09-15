@@ -20,6 +20,9 @@ import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 
+/**
+ * Balance sheet - actions bar.
+ */
 function BalanceSheetActionsBar({
   // #withBalanceSheet
   balanceSheetDrawerFilter,

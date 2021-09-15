@@ -1,6 +1,6 @@
-import { omit } from 'lodash';
-import { transfromToSnakeCase, flatObject } from 'utils';
+import * as R from 'ramda';
 import intl from 'react-intl-universal';
+import { transfromToSnakeCase, flatten } from 'utils';
 
 export const displayColumnsByOptions = [
   { key: 'total', name: intl.get('total'), type: 'total', by: '' },
@@ -65,22 +65,46 @@ export const filterAccountsOptions = [
   },
 ];
 
+/**
+ * Associate display columns by and type properties to query object. 
+ */
 export const transformDisplayColumnsType = (form) => {
   const columnType = displayColumnsByOptions.find(
     (o) => o.key === form.displayColumnsType,
   );
   return {
+    ...form,
     displayColumnsBy: columnType ? columnType.by : '',
     displayColumnsType: columnType ? columnType.type : 'total',
   };
 };
 
-export const transformFilterFormToQuery = (form) => {
-  const transformed = transfromToSnakeCase({
-    ...omit(form, ['accountsFilter']),
-    ...transformDisplayColumnsType(form),
+/**
+ * Associate none zero and none transaction property to query.
+ */
+const setNoneZeroTransactions = (form) => {
+  return {
+    ...form,
     noneZero: form.accountsFilter === 'without-zero-balance',
     noneTransactions: form.accountsFilter === 'with-transactions',
-  });
-  return transformed;
+  };
+}
+
+export const transformAccountsFilter = (form) => {
+  return R.compose(
+    R.omit(['accountsFilter']),
+    setNoneZeroTransactions,
+  )(form)
+}
+
+/**
+ * Transform filter form to http query.
+ */
+export const transformFilterFormToQuery = (form) => {
+  return R.compose(
+    flatten,
+    transfromToSnakeCase,
+    transformAccountsFilter,
+    transformDisplayColumnsType,
+  )(form);
 };
