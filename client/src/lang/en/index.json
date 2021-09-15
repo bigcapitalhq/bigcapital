@@ -1328,5 +1328,6 @@
     "YYYY MMM DD": "YYYY MMM DD"
   },
   "estimate.field.error.estimate_number_required": "Estimate number is required, use auto-increment mode or enter manually.",
-  "invoice.field.error.invoice_no_required": "Invoice number is required, use auto-increment mode or enter manually"
+  "invoice.field.error.invoice_no_required": "Invoice number is required, use auto-increment mode or enter manually",
+  "payment_receive.field.error.payment_receive_no_required": "Payment receive number is required, use auto-increment mode or enter manually"
 }

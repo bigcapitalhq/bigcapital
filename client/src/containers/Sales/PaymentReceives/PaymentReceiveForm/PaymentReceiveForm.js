@@ -152,7 +152,7 @@ function PaymentReceiveForm({
       if (getError('PAYMENT_RECEIVE_NO_REQUIRED')) {
         setFieldError(
           'payment_receive_no',
-          intl.get('payment_receive_number_required'),
+          intl.get('payment_receive.field.error.payment_receive_no_requireda'),
         );
       }
       setSubmitting(false);
