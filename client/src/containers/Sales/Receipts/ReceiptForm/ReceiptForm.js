@@ -83,6 +83,11 @@ function ReceiptForm({
         receipt_number: intl.get('sale_receipt_number_not_unique'),
       });
     }
+    if (errors.some((e) => e.type === ERROR.SALE_RECEIPT_NO_IS_REQUIRED)) {
+      setErrors({
+        receipt_number: intl.get('receipt.field.error.receipt_number_required'),
+      });
+    }
   };
 
   // Handle the form submit.
