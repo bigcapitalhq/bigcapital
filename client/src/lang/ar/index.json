@@ -1109,10 +1109,10 @@
   "filter_": "البحث...",
   "all_rights_reserved": "© {pre}-{current} كل الحقوق محفوظة.",
   "congrats_your_account_has_been_created_and_invited": "مبروك! تم إنشاء حسابك ودعوتك إلى <strong>{organization_name} </strong> بنجاح.",
-  
+
   "while_we_set_up_your_account_please_remember_to_verify_your_account": "أثناء قيامنا بإعداد حسابك ، يرجى تذكر التحقق من حسابك بالنقر فوق الارتباط الذي أرسلناه إلى عنوان بريدك الإلكتروني المسجل",
-  
-  
+
+
   "blog": "المدونة",
   "support": "الدعم النفي",
   "service_status": "حالة الخدمة",
@@ -1173,12 +1173,12 @@
   "Landed": "Landed",
   "This options allows you to be able to add additional cost eg. freight then allocate cost to the items in your bills.": "يتيح لك هذا الخيار إمكانية إضافة تكلفة إضافية على سبيل المثال اضافة تكلفة الشحن ومن ثم تخصيص التكلفة لفواتير الشراء.",
   "Once your delete this located landed cost, you won't be able to restore it later, Are your sure you want to delete this transaction?": "بمجرد حذف معاملة تحميل التكلفة ، لن تتمكن من استعادتها لاحقًا ، هل أنت متأكد من أنك تريد حذف هذه المعاملة؟",
-  "journal_entries":"القيود",
-  "contact":"جهة الاتصال",
-  "invoice_details":"تفاصيل الفاتورة",
-  "receipt_details":"تفاصيل الإيصال",
-  "payment_receive_details":"تفاصيل سند الزبون",
-  "payment_made_details":"تفاصيل سند المورد",
+  "journal_entries": "القيود",
+  "contact": "جهة الاتصال",
+  "invoice_details": "تفاصيل الفاتورة",
+  "receipt_details": "تفاصيل الإيصال",
+  "payment_receive_details": "تفاصيل سند الزبون",
+  "payment_made_details": "تفاصيل سند المورد",
   "New item category": "اضافة تصنيف صنف جديد",
   "New service": "اضافة خدمة جديدة",
   "New inventory item": "اضافة صنف مخزون جديد",
@@ -1188,8 +1188,8 @@
   "New tasks": "مهام جديدة",
   "sorry_about_that_something_went_wrong": "نتأسف بشأن ذلك! هناك خطأ ما",
   "if_the_problem_stuck_please_contact_us_as_soon_as_possible": "إذا تكررت المشكلة اكتر من مرة ، الرجاء الاتصال بنا في أقرب وقت ممكن.",
-  "non-inventory":"غير مخزون",
-  "terms_conditions":"الشروط والأحكام",
+  "non-inventory": "غير مخزون",
+  "terms_conditions": "الشروط والأحكام",
   "the_inventory_adjustment_has_been_published": "تم نشر تسوية المخزون",
   "are_sure_to_publish_this_inventory_adjustment": "هل أنت متأكد أنك تريد نشر هذا المخزون ؟",
   "the_contact_has_been_activated_successfully": "تم تفعيل جهة اتصال بنجاح.",
@@ -1211,7 +1211,7 @@
   "pdf_preview.preview.button": "معاينة",
   "invoice_preview.dialog.title": "معاينة فاتورة PDF",
   "estimate_preview.dialog.title": "معاينة عرض PDF",
-  "receipt_preview.dialog.title":"معاينة إيصال PDF",
+  "receipt_preview.dialog.title": "معاينة إيصال PDF",
   "edit_contact": "Edit {name}",
   "item.sell_description": "وصف البيع",
   "item.purchase_description": "وصف الشراء",
@@ -1353,8 +1353,9 @@
   "auto_increment.field.manually": "سأدخلها يدويًا في كل مرة",
   "auto_increment.field.manual_this_transaction": "إدخال يدوي لهذه العملية فقط.",
   "auto_increment.field.auto": "زيادة الرقم العملية تلقائيًا.",
-  "date_format": {
+  "date_formats": {
     "YYYY MMM DD": "DD MMM YYYY"
-  }
+  },
+  "estimate.field.error.estimate_number_required": "رقم العرض حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا.",
+  "invoice.field.error.invoice_no_required": "رقم الفاتورة حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا."
 }
-
