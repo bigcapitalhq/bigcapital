@@ -1357,5 +1357,11 @@
     "YYYY MMM DD": "DD MMM YYYY"
   },
   "estimate.field.error.estimate_number_required": "رقم العرض حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا.",
-  "invoice.field.error.invoice_no_required": "رقم الفاتورة حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا."
+  "invoice.field.error.invoice_no_required": "رقم الفاتورة حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا.",
+  "payment_receive.field.error.payment_receive_no_required": "رقم سند الدفع حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا.",
+  "receipt.field.error.receipt_number_required": "رقم الإيصال حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا."
 }
+
+
+
+
