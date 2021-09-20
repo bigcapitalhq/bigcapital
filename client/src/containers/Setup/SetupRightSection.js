@@ -44,13 +44,13 @@ export default compose(
   withOrganization(
     ({
       organization,
-      isOrganizationInitialized,
+      isOrganizationReady,
       isOrganizationSeeded,
       isOrganizationSetupCompleted,
       isOrganizationBuildRunning,
     }) => ({
       organization,
-      isOrganizationInitialized,
+      isOrganizationReady,
       isOrganizationSeeded,
       isOrganizationSetupCompleted,
       isOrganizationBuildRunning,

@@ -4,7 +4,7 @@ export default (mapState) => {
   const mapStateToProps = (state, props) => {
     const {
       isOrganizationSetupCompleted,
-      isOrganizationInitialized,
+      isOrganizationReady,
       isSubscriptionActive,
       isOrganizationBuildRunning
     } = props;
@@ -13,7 +13,7 @@ export default (mapState) => {
       isCongratsStep: isOrganizationSetupCompleted,
       isSubscriptionStep: !isSubscriptionActive,
       isInitializingStep: isOrganizationBuildRunning,
-      isOrganizationStep: !isOrganizationInitialized && !isOrganizationBuildRunning,
+      isOrganizationStep: !isOrganizationReady && !isOrganizationBuildRunning,
     };
     const scenarios = [
       { condition: condits.isSubscriptionStep, step: 'subscription' },
