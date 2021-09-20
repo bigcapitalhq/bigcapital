@@ -123,5 +123,25 @@
     "typescript": "^3.9.7",
     "webpack-cli": "^4.6.0"
   },
+  "_moduleAliases": {
+    "api": "src/api",
+    "collection": "src/collection",
+    "config": "src/config",
+    "data": "src/data",
+    "database": "src/database",
+    "decorators": "src/decorators",
+    "exceptions": "src/exceptions",
+    "interfaces": "src/interfaces",
+    "jobs": "src/jobs",
+    "lib": "src/lib",
+    "loaders": "src/loaders",
+    "locales": "src/locales",
+    "models": "src/models",
+    "repositories": "src/repositories",
+    "services": "src/services",
+    "subscribers": "src/subscribers",
+    "system": "src/system",
+    "utils": "src/utils"
+  },
   "_moduleAliases": {}
 }
