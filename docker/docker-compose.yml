@@ -65,3 +65,11 @@ services:
         ports:
             - "4080:3000"
         
+    mongo:
+        build: ./mongo
+        expose:
+            - "27017"
+        volumes:
+            - ./data/mongo/:/var/lib/mongodb
+        ports:
+            - "27017:27017"
