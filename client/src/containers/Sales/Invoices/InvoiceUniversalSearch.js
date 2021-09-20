@@ -33,7 +33,7 @@ export const InvoiceUniversalSearchSelect = withDrawerActions(
 /**
  * Invoice status.
  */
-function InvoiceStatus(customer) {
+function InvoiceStatus({ customer }) {
   return (
     <Choose>
       <Choose.When condition={customer.is_fully_paid && customer.is_delivered}>

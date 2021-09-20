@@ -7,4 +7,11 @@ export const setAccountsTableState = (queries) => {
   };
 };
 
-export const setSelectedRowsItems = () => {};
+/**
+ * Resets the accounts table state.
+ */
+export const resetAccountsTableState = () => {
+  return {
+    type: t.ACCOUNTS_TABLE_STATE_RESET,
+  };
+};
