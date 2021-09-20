@@ -25,18 +25,14 @@ function AccountsChart({
   accountsTableStateChanged,
 
   // #withAccountsActions
-  setAccountsTableState,
+  resetAccountsTableState,
 }) {
   // Resets the accounts table state once the page unmount.
   useEffect(
     () => () => {
-      setAccountsTableState({
-        filterRoles: [],
-        viewSlug: '',
-        pageIndex: 0,
-      });
+      resetAccountsTableState();
     },
-    [setAccountsTableState],
+    [resetAccountsTableState],
   );
 
   return (
