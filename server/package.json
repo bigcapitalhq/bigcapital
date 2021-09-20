@@ -6,11 +6,11 @@
   "scripts": {
     "start": "cross-env NODE_PATH=./src nodemon",
     "inspect": "cross-env NODE_PATH=./src nodemon src/server.ts",
-    "copy-18n": "cpy --cwd=src/locales --parents '**/*.json' ../../build/locales",
+    "copy-i18n": "cpy --cwd=src/locales --parents '**/*.json' ../../build/locales",
     "clear": "rimraf build",
     "build:ts": "tsc -p tsconfig.json",
     "build:resources": "gulp --gulpfile=scripts/gulpfile.js styles styles-rtl",
-    "build": "npm-run-all clear build:ts copy-18n"
+    "build": "npm-run-all clear build:ts copy-i18n"
   },
   "author": "Ahmed Bouhuolia, <a.bouhuolia@gmail.com>",
   "license": "ISC",
