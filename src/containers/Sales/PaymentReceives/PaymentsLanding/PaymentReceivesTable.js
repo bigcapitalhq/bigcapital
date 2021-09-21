@@ -59,11 +59,6 @@ function PaymentReceivesDataTable({
     openAlert('payment-receive-delete', { paymentReceiveId: id });
   };
 
-  // Handle drawer payment receive.
-  const handleDrawerPaymentReceive = ({ id }) => {
-    openDrawer('payment-receive-drawer', { paymentReceiveId: id });
-  };
-
   // Handle view detail  payment receive..
   const handleViewDetailPaymentReceive = ({ id }) => {
     openDrawer('payment-receive-detail-drawer', { paymentReceiveId: id });
@@ -123,7 +118,6 @@ function PaymentReceivesDataTable({
         payload={{
           onDelete: handleDeletePaymentReceive,
           onEdit: handleEditPaymentReceive,
-          onDrawer: handleDrawerPaymentReceive,
           onViewDetails: handleViewDetailPaymentReceive,
         }}
       />

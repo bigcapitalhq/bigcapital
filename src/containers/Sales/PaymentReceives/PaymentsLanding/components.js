@@ -20,7 +20,7 @@ import { CLASSES } from '../../../../common/classes';
  */
 export function ActionsMenu({
   row: { original: paymentReceive },
-  payload: { onEdit, onDelete, onDrawer, onViewDetails },
+  payload: { onEdit, onDelete, onViewDetails },
 }) {
   return (
     <Menu>
@@ -34,11 +34,6 @@ export function ActionsMenu({
         icon={<Icon icon="pen-18" />}
         text={intl.get('edit_payment_receive')}
         onClick={safeCallback(onEdit, paymentReceive)}
-      />
-      <MenuItem
-        icon={<Icon icon={'receipt-24'} iconSize={16} />}
-        text={intl.get('payment_receive_paper')}
-        onClick={safeCallback(onDrawer, paymentReceive)}
       />
       <MenuItem
         text={intl.get('delete_payment_receive')}
