@@ -24,8 +24,11 @@ export default class OrganizationSetupJob {
       await licenseService.build(tenantId);
       done();
     } catch (e) {
+      console.error(e);
+
       // Unlock build status of the tenant.
       await licenseService.revertBuildRunJob(tenantId, _id);
+
       done(e);
     }
   }
