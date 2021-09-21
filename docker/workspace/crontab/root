@@ -1,2 +1,0 @@
-# This is the root crontab file
-# * * * * * echo "Every Minute" >> /var/log/cron.log
