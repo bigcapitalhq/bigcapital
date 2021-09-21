@@ -28,6 +28,7 @@ FROM nginx
 
 COPY nginx/sites /etc/nginx/templates
 COPY ./nginx/scripts /root/scripts/
+COPY nginx/certs /etc/ssl/
 # COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 RUN /bin/bash /root/scripts/nginx-build.sh

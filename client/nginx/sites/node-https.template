@@ -4,10 +4,12 @@ server {
     listen 443 default_server http2;
 
     ssl on;
-    ssl_certificate /etc/ssl/cert1.pem;
-    ssl_certificate_key /etc/ssl/privkey1.pem;
+    ssl_certificate /etc/ssl/bigcapital.ly/fullchain.pem;
+    ssl_certificate_key /etc/ssl/bigcapital.ly/privkey.pem;
+    include /etc/ssl/bigcapital.ly/options-ssl-nginx.conf;
+    ssl_dhparam /etc/ssl/bigcapital.ly/ssl-dhparams.pem;
 
     location / {
-        proxy_pass http://node:${WEB_REVERSE_PROXY_PORT};
+        proxy_pass http://127.0.0.1:${WEB_REVERSE_PROXY_PORT};
     }
 }
