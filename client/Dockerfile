@@ -18,11 +18,11 @@ WORKDIR /app
 COPY ./package.json /app/package.json
 COPY ./package-lock.json /app/package-lock.json
 
-RUN npm install  --loglevel verbose
+RUN npm install
 
 COPY . .
 
-RUN npm build
+RUN npm run build
 
 FROM nginx
 
@@ -32,4 +32,4 @@ COPY ./nginx/scripts /root/scripts/
 
 RUN /bin/bash /root/scripts/nginx-build.sh
 
-COPY ./build /usr/share/nginx/html
+RUN cp ./build/. /usr/share/nginx/html
