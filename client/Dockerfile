@@ -1,13 +1,17 @@
 FROM node:14.15.0 as build
 
-RUN apt-get update && \
-      apt-get -y install sudo
+USER root
 
-RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
-
-USER docker
-
+ARG WEB_REVERSE_PROXY_PORT=8000
+ARG WEB_SSL=false
+ARG SELF_SIGNED=false
+ARG NO_DEFAULT=false
 ARG REACT_APP_SERVICES_HOST=/services/m
+
+ENV WEB_REVERSE_PROXY_PORT=$WEB_REVERSE_PROXY_PORT
+ENV WEB_SSL=$WEB_SSL
+ENV SELF_SIGNED=$SELF_SIGNED
+ENV NO_DEFAULT=$NO_DEFAULT
 
 WORKDIR /app
 
@@ -22,6 +26,10 @@ RUN npm build
 
 FROM nginx
 
-COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx/sites /etc/nginx/templates
+COPY ./nginx/scripts /root/scripts/
+# COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY --from=build /app/build /usr/share/nginx/html
+RUN /bin/bash /root/scripts/build-nginx.sh
+
+COPY ./build /usr/share/nginx/html
