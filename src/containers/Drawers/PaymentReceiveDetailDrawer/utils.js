@@ -31,7 +31,7 @@ export const usePaymentReceiveEntriesColumns = () =>
       },
       {
         Header: intl.get('amount_due'),
-        accessor: 'invoice.amount_due',
+        accessor: 'invoice.due_amount',
         Cell: FormatNumberCell,
         align: 'right',
         width: 100,

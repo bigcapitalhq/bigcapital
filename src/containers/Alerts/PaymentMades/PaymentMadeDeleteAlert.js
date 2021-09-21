@@ -32,7 +32,9 @@ function PaymentMadeDeleteAlert({
     useDeletePaymentMade();
 
   // Handle cancel payment made.
-  const handleCancelPaymentMadeDelete = () => {};
+  const handleCancelPaymentMadeDelete = () => {
+    closeAlert(name);
+  };
 
   // Handle confirm delete payment made
   const handleConfirmPaymentMadeDelete = () => {
