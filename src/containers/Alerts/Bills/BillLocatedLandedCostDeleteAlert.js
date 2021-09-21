@@ -35,7 +35,7 @@ function BillTransactionDeleteAlert({
     deleteLandedCostMutate(BillId)
       .then(() => {
         AppToaster.show({
-          message: intl.get('the_landed_cost_has_been_deleted_successfully'),
+          message: intl.get('bill.action.delete_successfully.landed_cost'),
           intent: Intent.SUCCESS,
         });
         closeAlert(name);
