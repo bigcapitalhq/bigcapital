@@ -33,4 +33,4 @@ COPY nginx/certs /etc/ssl/
 
 RUN /bin/bash /root/scripts/nginx-build.sh
 
-RUN cp ./build/. /usr/share/nginx/html
+COPY ./build /usr/share/nginx/html
