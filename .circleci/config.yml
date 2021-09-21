@@ -35,6 +35,11 @@ jobs:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
             - /caches/app.tar            
+  deploy:
+    working_directory: ~/app
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps: 
       - run: 
           name: Publish Docker Image to Docker Hub
           command: |
@@ -44,7 +49,10 @@ jobs:
 workflows:
   build_and_publish: # name of your workflow
     jobs:
-      - build:
-        filters:
-          branches:
-            only: master
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
