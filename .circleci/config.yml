@@ -4,7 +4,7 @@ orbs:
   slack: circleci/slack@4.4.4
 jobs:
   build:
-    working_directory: ~/app/client
+    working_directory: ~/app
     docker:
       - image: docker:17.05.0-ce-git
 
