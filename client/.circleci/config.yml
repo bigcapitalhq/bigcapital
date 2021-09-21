@@ -1,0 +1,42 @@
+# This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
+version: 2.1
+
+jobs:
+  build:
+    working_directory: ~/app/client
+    docker:
+      - image: docker:17.05.0-ce-git
+
+    steps:
+      - checkout:
+          path: ~/app
+      - setup_remote_docker:
+          version: 19.03.13
+      - restore_cache:
+          keys:
+            - v1-{{ .Branch }}
+          paths:
+            - /caches/app.tar
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /caches/app.tar | true
+      - run:
+          name: Build application Docker image
+          command: |
+            docker build -t abouhuolia/bigcapital-client:latest .
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            mkdir -p /caches
+            docker save -o /caches/app.tar abouhuolia/bigcapital-client
+      - save_cache:
+          key: v1-{{ .Branch }}-{{ epoch }}
+          paths:
+            - /caches/app.tar            
+      - run: 
+          name: Publish Docker Image to Docker Hub
+          command: |
+            docker login -u abouhuolia -p 1532015325_ASdfqwer
+            docker push abouhuolia/bigcapital-client:latest
