@@ -17,8 +17,9 @@
     display: block;
 
     .thead {
-      overflow-y: auto;
-      overflow-x: hidden;
+      overflow: hidden;
+      // overflow-y: auto;
+      // overflow-x: hidden;
 
       .th {
         padding: 0.7rem 0.5rem;
@@ -28,7 +29,7 @@
         font-weight: 600;
         border-bottom: 1px solid rgb(224, 224, 224);
 
-        > div{
+        > div {
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
@@ -65,16 +66,16 @@
         }
       }
 
-      .bp3-context-menu-popover-target{
+      .bp3-context-menu-popover-target {
         z-index: 100;
       }
 
-      .tr-context{
+      .tr-context {
         display: flex;
         flex: 1 0 auto;
       }
 
-      &:hover .td.clickable{
+      &:hover .td.clickable {
         cursor: pointer;
       }
     }
@@ -89,7 +90,7 @@
       margin: 0;
       padding: 0.5rem;
 
-      .cell-inner{
+      .cell-inner {
         flex: 1 0 0;
       }
 
@@ -115,7 +116,7 @@
         .inner-resizer {
           height: 100%;
           width: 1px;
-          border-left: 1px solid #E6E6E6;
+          border-left: 1px solid #e6e6e6;
           margin: 0 auto;
         }
 
@@ -141,11 +142,11 @@
         }
       }
 
-      .skeleton{
-        animation: skeleton-fade-in .3s linear forwards,
+      .skeleton {
+        animation: skeleton-fade-in 0.3s linear forwards,
           skeleton-glow 1s linear infinite alternate;
 
-        animation-delay: 0s,.3s;
+        animation-delay: 0s, 0.3s;
         height: 8px;
         opacity: 1;
         width: 65%;
@@ -153,8 +154,8 @@
       }
     }
 
-    .th{
-      .skeleton{
+    .th {
+      .skeleton {
         margin: 5px 0;
       }
     }
@@ -177,7 +178,7 @@
         .placeholder {
           color: #a0a0a0;
         }
-        .text-overview{
+        .text-overview {
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
@@ -188,7 +189,7 @@
         }
 
         &.is-text-overview {
-          .expend-padding{
+          .expend-padding {
             display: flex;
             width: 100%;
           }
@@ -219,7 +220,6 @@
         }
       }
       .tr.no-results {
-        
         .td {
           flex-direction: column;
           padding: 18px 20px;
@@ -228,7 +228,7 @@
           font-size: 14px;
           border-bottom: 0;
 
-          &:hover{
+          &:hover {
             background: transparent;
           }
         }
@@ -269,7 +269,7 @@
       }
     }
 
-    .tr-inner{
+    .tr-inner {
       display: flex;
       width: 100%;
     }
@@ -332,13 +332,10 @@
     }
   }
 
-
-  .ReactVirtualized__Grid{
+  .ReactVirtualized__Grid {
     will-change: auto !important;
   }
 }
-
-
 
 .table-constrant {
   .table {
