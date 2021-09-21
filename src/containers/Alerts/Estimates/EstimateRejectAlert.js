@@ -24,11 +24,7 @@ function EstimateRejectAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  
-  const {
-    mutateAsync: rejectEstimateMutate,
-    isLoading
-  } = useRejectEstimate();
+  const { mutateAsync: rejectEstimateMutate, isLoading } = useRejectEstimate();
 
   // Handle cancel reject estimate alert.
   const handleCancelRejectEstimate = () => {
@@ -61,7 +57,7 @@ function EstimateRejectAlert({
       loading={isLoading}
     >
       <p>
-        <T id={'are_sure_to_approve_this_estimate'} />
+        <T id={'are_sure_to_reject_this_estimate'} />
       </p>
     </Alert>
   );
