@@ -24,6 +24,4 @@ FROM nginx
 
 COPY ./nginx/sites/default.conf /etc/nginx/conf.d/default.conf
 
-RUN /bin/bash /root/scripts/nginx-build.sh
-
 COPY --from=build /app/build /usr/share/nginx/html
