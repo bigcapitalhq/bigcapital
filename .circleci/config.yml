@@ -7,9 +7,6 @@ jobs:
     working_directory: ~/app
     docker:
       - image: docker:17.05.0-ce-git
-    branches:
-      only:
-        - master
     steps:
       - checkout:
           path: ~/app
