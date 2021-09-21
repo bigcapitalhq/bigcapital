@@ -22,8 +22,7 @@ RUN npm run build
 
 FROM nginx
 
-COPY nginx/sites /etc/nginx/templates
-COPY ./nginx/scripts /root/scripts/
+COPY ./nginx/sites/default.conf /etc/nginx/conf.d/default.conf
 
 RUN /bin/bash /root/scripts/nginx-build.sh
 
