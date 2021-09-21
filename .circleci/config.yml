@@ -1,6 +1,7 @@
 # This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
-
+orbs:
+  slack: circleci/slack@4.4.4
 jobs:
   build:
     working_directory: ~/app/client
@@ -40,3 +41,16 @@ jobs:
           command: |
             docker login -u abouhuolia -p 1532015325_ASdfqwer
             docker push abouhuolia/bigcapital-client:latest
+  slack-notify:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - slack/notify:
+          branch_pattern: master 
+          channel: development 
+
+workflows:
+  example-workflow:
+    jobs:
+      - slack-notify
