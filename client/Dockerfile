@@ -30,6 +30,6 @@ COPY nginx/sites /etc/nginx/templates
 COPY ./nginx/scripts /root/scripts/
 # COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
-RUN /bin/bash /root/scripts/build-nginx.sh
+RUN /bin/bash /root/scripts/nginx-build.sh
 
 COPY ./build /usr/share/nginx/html
