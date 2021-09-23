@@ -1109,10 +1109,7 @@
   "filter_": "البحث...",
   "all_rights_reserved": "© {pre}-{current} كل الحقوق محفوظة.",
   "congrats_your_account_has_been_created_and_invited": "مبروك! تم إنشاء حسابك ودعوتك إلى <strong>{organization_name} </strong> بنجاح.",
-
   "while_we_set_up_your_account_please_remember_to_verify_your_account": "أثناء قيامنا بإعداد حسابك ، يرجى تذكر التحقق من حسابك بالنقر فوق الارتباط الذي أرسلناه إلى عنوان بريدك الإلكتروني المسجل",
-
-
   "blog": "المدونة",
   "support": "الدعم النفي",
   "service_status": "حالة الخدمة",
@@ -1371,7 +1368,8 @@
   "filter.select_option": "اختر خيار",
   "filter.enter_date": "أدخل تاريخ",
   "filter.value": "قيمة",
-  "payment_made.empty_status.title": "المنشأة لم تدفع اي اموال إلي الموردين ، إلي حد الأن!."
+  "payment_made.empty_status.title": "المنشأة لم تدفع اي اموال إلي الموردين ، إلي حد الأن!.",
+  "estimate.delete.error.estimate_converted_to_invoice":"لا يمكن حذف عملية عرض اسعار الذي تم تحويلها إلي فاتورة بيع."
 }
 
 
