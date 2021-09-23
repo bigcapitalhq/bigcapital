@@ -1219,6 +1219,8 @@
   "bill.details.due_amount": "Due amount",
   "expense.details.subtotal": "Subtotal",
   "expense.details.total": "Total",
+  "manual_journal.details.subtotal": "Subtotal",
+  "manual_journal.details.total": "Total",
   "setup.left_side.title": "Register a New Organization now!.",
   "setup.left_side.description": "You have a Bigcapital account",
   "setup.left_side.footer_help": "We’re Here to Help!",
@@ -1279,6 +1281,7 @@
   "customer.drawer.action.new_payment": "New payment",
   "customer.drawer.action.new_receipt": "New receipt",
   "customer.drawer.action.new_transaction": "New transaction",
+  "customer.drawer.action.edit": "Edit",
   "customer.drawer.label.outstanding_receivable": "Outstanding receivable",
   "customer.drawer.label.customer_name": "Customer name",
   "customer.drawer.label.customer_type": "Customer type",
@@ -1304,6 +1307,7 @@
   "vendor.drawer.action.new_transaction": "New transaction",
   "vendor.drawer.action.new_payment": "New payment",
   "vendor.drawer.action.new_invoice": "New purchase invoice",
+  "vendor.drawer.action.edit": "Edit",
   "manual_journals.empty_status.description": "Manual journals can be used to record financial transactions manually, used by accountants to work with the ledger.",
   "manual_journals.empty_status.title": "Create your first journal entries on accounts chart.",
   "expenses.empty_status.description": "Create and manage expeses that are part of your organization's operating costs.",
@@ -1330,5 +1334,12 @@
   "estimate.field.error.estimate_number_required": "Estimate number is required, use auto-increment mode or enter manually.",
   "invoice.field.error.invoice_no_required": "Invoice number is required, use auto-increment mode or enter manually",
   "payment_receive.field.error.payment_receive_no_required": "Payment receive number is required, use auto-increment mode or enter manually",
-  "receipt.field.error.receipt_number_required": "Receipt number is required, use auto-increment mode or enter manually"
+  "receipt.field.error.receipt_number_required": "Receipt number is required, use auto-increment mode or enter manually",
+  "dashboard.rows_height": "Rows height",
+  "dashboard.row_small": "Small",
+  "dashboard.row_medium": "Medium",
+  "filter.select_option": "Select an option",
+  "filter.enter_date": "Enter date",
+  "filter.value": "Value",
+  "payment_made.empty_status.title": "The organization doesn't pay to vendors, yet!"
 }

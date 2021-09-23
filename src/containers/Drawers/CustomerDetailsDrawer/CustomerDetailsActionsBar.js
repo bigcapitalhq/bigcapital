@@ -108,7 +108,7 @@ function CustomerDetailsActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="pen-18" />}
-          text={intl.get('edit_contact', { name: contact?.contact_service })}
+          text={intl.get('customer.drawer.action.edit')}
           onClick={handleEditContact}
         />
         <NavbarDivider />

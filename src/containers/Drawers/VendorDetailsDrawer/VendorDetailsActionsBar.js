@@ -91,7 +91,7 @@ function VendorDetailsActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="pen-18" />}
-          text={<T id={'vendor.drawer.action.edit_vendor'} />}
+          text={<T id={'vendor.drawer.action.edit'} />}
           onClick={safeCallback(onEditContact)}
         />
         <NavbarDivider />

@@ -1100,7 +1100,7 @@
   "receiving_customer_payments_is_one_pleasant_accounting_tasks": "استلام المدفوعات أحد مهام المحاسبية الأكثر متعة. ستظهر معاملات المدفوعات بمجرد استلام المدفوعات للفواتير.",
   "estimate_is_used_to_create_bid_proposal_or_quote": "تستخدم العروض لإنشاء عطاء أو اقتراح أو عرض أسعار منتجات. يمكن تحويل العرض إلى أمر مبيعات أو فاتورة.",
   "payment_made_empty_status_description": "ستظهر معاملات المدفوعات بمجرد سداد فواتير المشتريات.",
-  "bill_empty_status_description": "",
+  "bill_empty_status_description": "تسجل المشتريات من الموردين الذين تم او لم يتم الدفع لهم ، لتتبع حساب الذمم الدائنة مع الموردين. ",
   "invoices_empty_status_description": "فواتير المبيعات للعملاء الذين لا يسددون أي مدفوعات جزئية أو يسددونها ، مع مساعدتك في تتبع الحسابات المستحقة مع الزبائن.",
   "receipt_empty_status_description": "إيصالات المبيعات للمبيعات التي يدفع فيها الزبون فورًا مقابل المنتجات أو الخدمات في وقت البيع.",
   "there_were_no_purchases_during_the_selected_date_range": "لا توجد مشتريات خلال النطاق الزمني المحدد.",
@@ -1248,6 +1248,9 @@
   "invoice.details.payment_amount": "مبلغ المدفوع",
   "expense.details.subtotal": "المجموع",
   "expense.details.total": "إجمالي",
+  "manual_journal.details.subtotal": "المجموع",
+  "manual_journal.details.total": "إجمالي",
+  "manual_journal.details.description": "الوصف", 
   "setup.left_side.title": "سجل منشأة جديدة الأن.",
   "setup.left_side.description": "حسابك علي Bigcapital",
   "setup.left_side.footer_help": "نحن هنا للمساعدة!",
@@ -1308,6 +1311,7 @@
   "customer.drawer.action.new_payment": "سند زبون جديد",
   "customer.drawer.action.new_receipt": "إيصال جديد",
   "customer.drawer.action.new_transaction": "معاملة جديدة",
+  "customer.drawer.action.edit": "تعديل",
   "customer.drawer.label.outstanding_receivable": "مستحق القبض",
   "customer.drawer.label.customer_name": "اسم الزبون",
   "customer.drawer.label.customer_type": "نوع الزبون",
@@ -1333,6 +1337,7 @@
   "vendor.drawer.action.new_transaction": "معاملة جديدة",
   "vendor.drawer.action.new_payment": "سند مورد جديد",
   "vendor.drawer.action.new_invoice": "فاتورة شراء جديدة",
+  "vendor.drawer.action.edit": "تعديل",
   "expenses.empty_status.title": "إضافة وإدارة مصاريف مؤسستك",
   "expenses.empty_status.description": "قم بإنشاء وإدارة المصروفات التي تُعد جزء من التكاليف التشغيلية لمؤسستك.",
   "manual_journals.empty_status.title": "قم بإدخال اول القيود اليدوية علي شجرة الحسابات.",
@@ -1359,7 +1364,14 @@
   "estimate.field.error.estimate_number_required": "رقم العرض حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا.",
   "invoice.field.error.invoice_no_required": "رقم الفاتورة حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا.",
   "payment_receive.field.error.payment_receive_no_required": "رقم سند الدفع حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا.",
-  "receipt.field.error.receipt_number_required": "رقم الإيصال حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا."
+  "receipt.field.error.receipt_number_required": "رقم الإيصال حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا.",
+  "dashboard.rows_height": "ارتفاع الصفوف",
+  "dashboard.row_small": "صغير",
+  "dashboard.row_medium": "متوسط",
+  "filter.select_option": "اختر خيار",
+  "filter.enter_date": "أدخل تاريخ",
+  "filter.value": "قيمة",
+  "payment_made.empty_status.title": "المنشأة لم تدفع اي اموال إلي الموردين ، إلي حد الأن!."
 }
 
 
