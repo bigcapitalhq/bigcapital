@@ -1341,5 +1341,6 @@
   "filter.select_option": "Select an option",
   "filter.enter_date": "Enter date",
   "filter.value": "Value",
-  "payment_made.empty_status.title": "The organization doesn't pay to vendors, yet!"
+  "payment_made.empty_status.title": "The organization doesn't pay to vendors, yet!",
+  "estimate.delete.error.estimate_converted_to_invoice":"Could not delete sale estimate that converted to invoice"
 }
