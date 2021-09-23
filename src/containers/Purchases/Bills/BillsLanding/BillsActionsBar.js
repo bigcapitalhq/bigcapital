@@ -10,18 +10,22 @@ import {
 } from '@blueprintjs/core';
 
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import {
   If,
+  FormattedMessage as T,
   DashboardActionViewsList,
   DashboardFilterButton,
   AdvancedFilterPopover,
+  DashboardRowsHeightButton,
 } from 'components';
 
 import withBillsActions from './withBillsActions';
 import withBills from './withBills';
+import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withSettings from 'containers/Settings/withSettings';
+
 import { useBillsListContext } from './BillsListProvider';
 import { useRefreshBills } from 'hooks/query/bills';
 import { compose } from 'utils';
@@ -35,6 +39,12 @@ function BillActionsBar({
 
   // #withBills
   billsConditionsRoles,
+
+  // #withSettings
+  billsTableSize,
+
+  // #withSettingsActions
+  addSetting,
 }) {
   const history = useHistory();
 
@@ -58,6 +68,11 @@ function BillActionsBar({
   // Handle click a refresh bills
   const handleRefreshBtnClick = () => {
     refresh();
+  };
+
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size) => {
+    addSetting('bill', 'tableSize', size);
   };
 
   return (
@@ -116,6 +131,13 @@ function BillActionsBar({
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
         />
+
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={billsTableSize}
+          onChange={handleTableRowSizeChange}
+        />
+        <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
         <Button
@@ -130,7 +152,11 @@ function BillActionsBar({
 
 export default compose(
   withBillsActions,
+  withSettingsActions,
   withBills(({ billsTableState }) => ({
     billsConditionsRoles: billsTableState.filterRoles,
+  })),
+  withSettings(({ billPaymentSettings }) => ({
+    billsTableSize: billPaymentSettings?.tableSize, // fix to bill
   })),
 )(BillActionsBar);

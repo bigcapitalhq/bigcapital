@@ -13,6 +13,7 @@ import {
   FormattedMessage as T,
   AdvancedFilterPopover,
   DashboardFilterButton,
+  DashboardRowsHeightButton,
 } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -22,6 +23,8 @@ import { If, DashboardActionViewsList } from 'components';
 import { useRefreshInvoices } from 'hooks/query/invoices';
 import { useInvoicesListContext } from './InvoicesListProvider';
 
+import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withSettings from 'containers/Settings/withSettings';
 import withInvoiceActions from './withInvoiceActions';
 import withInvoices from './withInvoices';
 
@@ -36,6 +39,12 @@ function InvoiceActionsBar({
 
   // #withInvoices
   invoicesFilterRoles,
+
+  // #withSettings
+  invoicesTableSize,
+
+  // #withSettingsActions
+  addSetting,
 }) {
   const history = useHistory();
 
@@ -58,6 +67,11 @@ function InvoiceActionsBar({
   // Handle click a refresh sale invoices
   const handleRefreshBtnClick = () => {
     refresh();
+  };
+
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size) => {
+    addSetting('invoice', 'tableSize', size);
   };
 
   return (
@@ -114,6 +128,12 @@ function InvoiceActionsBar({
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
         />
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={invoicesTableSize}
+          onChange={handleTableRowSizeChange}
+        />
+        <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
         <Button
@@ -128,7 +148,11 @@ function InvoiceActionsBar({
 
 export default compose(
   withInvoiceActions,
+  withSettingsActions,
   withInvoices(({ invoicesTableState }) => ({
     invoicesFilterRoles: invoicesTableState.filterRoles,
+  })),
+  withSettings(({ invoiceSettings }) => ({
+    invoicesTableSize: invoiceSettings?.tableSize,
   })),
 )(InvoiceActionsBar);

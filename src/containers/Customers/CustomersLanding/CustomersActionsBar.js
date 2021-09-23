@@ -8,16 +8,17 @@ import {
   Switch,
   Alignment,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
 import { useHistory } from 'react-router-dom';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import {
   If,
   Icon,
+  FormattedMessage as T,
   DashboardActionViewsList,
   AdvancedFilterPopover,
   DashboardFilterButton,
+  DashboardRowsHeightButton,
 } from 'components';
 
 import { useCustomersListContext } from './CustomersListProvider';
@@ -26,6 +27,8 @@ import { useRefreshCustomers } from 'hooks/query/customers';
 import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withSettingsActions from '../../Settings/withSettingsActions';
+import withSettings from '../../Settings/withSettings';
 
 import { compose } from 'utils';
 
@@ -43,6 +46,12 @@ function CustomerActionsBar({
 
   // #withAlertActions
   openAlert,
+
+  // #withSettings
+  customersTableSize,
+
+  // #withSettingsActions
+  addSetting,
 }) {
   // History context.
   const history = useHistory();
@@ -74,7 +83,14 @@ function CustomerActionsBar({
   };
 
   // Handle click a refresh customers
-  const handleRefreshBtnClick = () => { refresh(); };
+  const handleRefreshBtnClick = () => {
+    refresh();
+  };
+  
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size) => {
+    addSetting('customer', 'tableSize', size);
+  };
 
   return (
     <DashboardActionsBar>
@@ -130,6 +146,12 @@ function CustomerActionsBar({
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
         />
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={customersTableSize}
+          onChange={handleTableRowSizeChange}
+        />
+        <NavbarDivider />
         <Switch
           labelElement={<T id={'inactive'} />}
           defaultChecked={accountsInactiveMode}
@@ -149,10 +171,14 @@ function CustomerActionsBar({
 
 export default compose(
   withCustomersActions,
+  withSettingsActions,
   withCustomers(({ customersSelectedRows, customersTableState }) => ({
     customersSelectedRows,
     accountsInactiveMode: customersTableState.inactiveMode,
     customersFilterConditions: customersTableState.filterRoles,
   })),
+  // withSettings(({  }) => ({
+  //   customersTableSize:
+  // })),
   withAlertActions,
 )(CustomerActionsBar);
