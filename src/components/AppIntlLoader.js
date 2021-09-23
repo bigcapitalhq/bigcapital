@@ -7,9 +7,10 @@ import rtlDetect from 'rtl-detect';
 import * as R from 'ramda';
 
 import { AppIntlProvider } from './AppIntlProvider';
+import { useSplashLoading } from '../hooks/state';
 
+import { useWatch } from '../hooks';
 import withDashboardActions from '../containers/Dashboard/withDashboardActions';
-import withDashboard from '../containers/Dashboard/withDashboard';
 
 const SUPPORTED_LOCALES = [
   { name: 'English', value: 'en' },
@@ -63,20 +64,13 @@ function transformMomentLocale(currentLocale) {
 }
 
 /**
- * Application Intl loader.
+ * Loads application locales of the given current locale.
+ * @param {string} currentLocale
+ * @returns {{ isLoading: boolean }}
  */
-function AppIntlLoader({ appIntlIsLoading, setAppIntlIsLoading, children }) {
-  const [isLocalsLoading, setIsLocalsLoading] = React.useState(true);
-  const [isYupLoading, setIsYupLoading] = React.useState(true);
-
-  // Retrieve the current locale.
-  const currentLocale = getCurrentLocal();
-
-  // Detarmines the document direction based on the given locale.
-  const isRTL = rtlDetect.isRtlLang(currentLocale);
-
-  // Modifies the html document direction
-  useDocumentDirectionModifier(currentLocale, isRTL);
+function useAppLoadLocales(currentLocale) {
+  const [startLoading, stopLoading] = useSplashLoading();
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     // Lodas the locales data file.
@@ -91,33 +85,72 @@ function AppIntlLoader({ appIntlIsLoading, setAppIntlIsLoading, children }) {
       })
       .then(() => {
         moment.locale(transformMomentLocale(currentLocale));
-        setIsLocalsLoading(false);
+        setIsLoading(false);
       });
-  }, [currentLocale, setIsLocalsLoading]);
+  }, [currentLocale, stopLoading]);
+
+  // Watches the value to start/stop splash screen.
+  useWatch(isLoading, (value) => (value ? startLoading() : stopLoading()), {
+    immediate: true,
+  });
+
+  return { isLoading };
+}
+
+/**
+ * Loads application yup locales based on the given current locale.
+ * @param {string} currentLocale
+ * @returns {{ isLoading: boolean }}
+ */
+function useAppYupLoadLocales(currentLocale) {
+  const [startLoading, stopLoading] = useSplashLoading();
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     loadYupLocales(currentLocale)
       .then(({ locale }) => {
         setLocale(locale);
-        setIsYupLoading(false);
+        setIsLoading(false);
       })
       .then(() => {});
-  }, [currentLocale]);
+  }, [currentLocale, stopLoading]);
 
-  React.useEffect(() => {
-    if (!isLocalsLoading && !isYupLoading) {
-      setAppIntlIsLoading(false);
-    }
+  // Watches the valiue to start/stop splash screen.
+  useWatch(isLoading, (value) => (value ? startLoading() : stopLoading()), {
+    immediate: true,
   });
+
+  return { isLoading };
+}
+
+/**
+ * Application Intl loader.
+ */
+function AppIntlLoader({ children }) {
+  // Retrieve the current locale.
+  const currentLocale = getCurrentLocal();
+
+  // Detarmines the document direction based on the given locale.
+  const isRTL = rtlDetect.isRtlLang(currentLocale);
+
+  // Modifies the html document direction
+  useDocumentDirectionModifier(currentLocale, isRTL);
+
+  // Loads yup localization of the given locale.
+  const { isLoading: isAppYupLocalesLoading } =
+    useAppYupLoadLocales(currentLocale);
+
+  // Loads application locales of the given locale.
+  const { isLoading: isAppLocalesLoading } = useAppLoadLocales(currentLocale);
+
+  // Detarmines whether the app locales loading.
+  const isLoading = isAppYupLocalesLoading && isAppLocalesLoading;
 
   return (
     <AppIntlProvider currentLocale={currentLocale} isRTL={isRTL}>
-      {appIntlIsLoading ? null : children}
+      {isLoading ? null : children}
     </AppIntlProvider>
   );
 }
 
-export default R.compose(
-  withDashboardActions,
-  withDashboard(({ appIntlIsLoading }) => ({ appIntlIsLoading })),
-)(AppIntlLoader);
+export default R.compose(withDashboardActions)(AppIntlLoader);

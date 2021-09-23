@@ -1,23 +1,30 @@
 import React from 'react';
 import * as R from 'ramda';
 
-import { useUser, useCurrentOrganization } from 'hooks/query';
+import { useUser, useCurrentOrganization } from '../../hooks/query';
+import { useSplashLoading } from '../../hooks/state';
+import { useWatch, useWhen } from '../../hooks';
+
 import withAuthentication from '../../containers/Authentication/withAuthentication';
-import withDashboardActions from '../../containers/Dashboard/withDashboardActions';
 
 import { setCookie, getCookie } from '../../utils';
 
 /**
  * Dashboard async booting.
  */
-function DashboardBootJSX({ setAppIsLoading, authenticatedUserId }) {
+function DashboardBootJSX({ authenticatedUserId }) {
   // Fetches the current user's organization.
-  const { isSuccess: isCurrentOrganizationSuccess, data: organization } =
-    useCurrentOrganization();
+  const {
+    isSuccess: isCurrentOrganizationSuccess,
+    isLoading: isOrgLoading,
+    data: organization,
+  } = useCurrentOrganization();
 
   // Authenticated user.
-  const { isSuccess: isAuthUserSuccess, data: authUser } =
-    useUser(authenticatedUserId);
+  const {
+    isSuccess: isAuthUserSuccess,
+    isLoading: isAuthUserLoading,
+  } = useUser(authenticatedUserId);
 
   // Initial locale cookie value.
   const localeCookie = getCookie('locale');
@@ -48,23 +55,39 @@ function DashboardBootJSX({ setAppIsLoading, authenticatedUserId }) {
     }
   }, [localeCookie, organization]);
 
-  React.useEffect(() => {
-    // Once the all requests complete change the app loading state.
-    if (
-      isAuthUserSuccess &&
+  const [startLoading, stopLoading] = useSplashLoading();
+
+  // Splash loading when organization request loading and
+  // applicaiton still not booted.
+  useWatch(isOrgLoading, (value) => {
+    value && !isBooted.current && startLoading();
+  });
+
+  // Splash loading when request authenticated user loading and 
+  // application still not booted yet.
+  useWatch(isAuthUserLoading, (value) => {
+    value && !isBooted.current && startLoading();
+  });  
+
+  // Stop splash loading once organization request success.
+  useWatch(isCurrentOrganizationSuccess, (value) => {
+    value && stopLoading();
+  });
+
+  // Stop splash loading once authenticated user request success.
+  useWatch(isAuthUserSuccess, (value) => {
+    value && stopLoading();
+  });
+
+  // Once the all requests complete change the app loading state.
+  useWhen(
+    isAuthUserSuccess &&
       isCurrentOrganizationSuccess &&
-      localeCookie === organization?.metadata?.language
-    ) {
-      setAppIsLoading(false);
+      localeCookie === organization?.metadata?.language,
+    () => {
       isBooted.current = true;
-    }
-  }, [
-    isAuthUserSuccess,
-    isCurrentOrganizationSuccess,
-    organization,
-    setAppIsLoading,
-    localeCookie,
-  ]);
+    },
+  );
   return null;
 }
 
@@ -72,5 +95,4 @@ export const DashboardBoot = R.compose(
   withAuthentication(({ authenticatedUserId }) => ({
     authenticatedUserId,
   })),
-  withDashboardActions,
 )(DashboardBootJSX);

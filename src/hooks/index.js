@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash';
 import React, { useRef, useEffect, useMemo } from 'react';
 import useAsync from './async';
 import useAutofocus from './useAutofocus';
@@ -97,7 +98,6 @@ export function useLocalStorage(key, initialValue) {
   return [storedValue, setValue];
 }
 
-
 export function useMemorizedColumnsWidths(tableName) {
   const [get, save] = useLocalStorage(`${tableName}.columns_widths`, {});
 
@@ -105,4 +105,43 @@ export function useMemorizedColumnsWidths(tableName) {
     save(columnsResizing.columnWidths);
   };
   return [get, save, handleColumnResizing];
+}
+
+// Hook
+function usePrevious(value) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  const ref = useRef();
+  // Store current value in ref
+  useEffect(() => {
+    ref.current = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+  return ref.current;
+}
+
+export function useWhen(condition, callback) {
+  React.useEffect(() => {
+    if (condition) {
+      callback();
+    }
+  }, [condition, callback]);
+}
+
+export function useWhenNot(condition, callback) {
+  return useWhen(!condition, callback);
+}
+
+export function useWatch(state, callback, props) {
+  const config = { immediate: false, ...props };
+
+  const previosuState = usePrevious(state);
+  const flag = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!isEqual(previosuState, state) || (config.immediate && !flag.current)) {
+      flag.current = true;
+      callback(state);
+    }
+  }, [previosuState, state, config.immediate, callback]);
 }

@@ -6,7 +6,6 @@ import { compose } from 'utils';
 import withAuthentication from 'containers/Authentication/withAuthentication';
 import withOrganization from 'containers/Organization/withOrganization';
 
-
 function EnsureOrganizationIsReady({
   // #ownProps
   children,
@@ -15,10 +14,10 @@ function EnsureOrganizationIsReady({
   // #withOrganizationByOrgId
   isOrganizationReady,
 }) {
-  return (isOrganizationReady) ? children : (
-    <Redirect
-      to={{ pathname: redirectTo }}
-    />
+  return isOrganizationReady ? (
+    children
+  ) : (
+    <Redirect to={{ pathname: redirectTo }} />
   );
 }
 

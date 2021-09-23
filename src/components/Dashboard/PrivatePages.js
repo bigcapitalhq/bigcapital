@@ -4,10 +4,9 @@ import { Switch, Route } from 'react-router';
 import Dashboard from 'components/Dashboard/Dashboard';
 import SetupWizardPage from 'containers/Setup/WizardSetupPage';
 
-import EnsureOrganizationIsReady from 'components/Guards/EnsureOrganizationIsReady';
-import EnsureOrganizationIsNotReady from 'components/Guards/EnsureOrganizationIsNotReady';
+import EnsureOrganizationIsReady from '../../components/Guards/EnsureOrganizationIsReady';
+import EnsureOrganizationIsNotReady from '../../components/Guards/EnsureOrganizationIsNotReady';
 import { PrivatePagesProvider } from './PrivatePagesProvider';
-import { DashboardBoot } from '../../components';
 
 import 'style/pages/Dashboard/Dashboard.scss';
 
@@ -17,8 +16,6 @@ import 'style/pages/Dashboard/Dashboard.scss';
 export default function DashboardPrivatePages() {
   return (
     <PrivatePagesProvider>
-      <DashboardBoot />
-
       <Switch>
         <Route path={'/setup'}>
           <EnsureOrganizationIsNotReady>

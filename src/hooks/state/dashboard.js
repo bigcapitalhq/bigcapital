@@ -1,6 +1,10 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { dashboardPageTitle } from 'store/dashboard/dashboard.actions';
+import {
+  splashStopLoading,
+  splashStartLoading,
+  dashboardPageTitle,
+} from '../../store/dashboard/dashboard.actions';
 
 export const useDispatchAction = (action) => {
   const dispatch = useDispatch();
@@ -17,11 +21,12 @@ export const useDashboardPageTitle = () => {
   return useDispatchAction(dashboardPageTitle);
 };
 
-export const useSetAccountsTableQuery = () => {
-
+/**
+ * Splash loading screen actions.
+ */
+export const useSplashLoading = () => {
+  return [
+    useDispatchAction(splashStartLoading),
+    useDispatchAction(splashStopLoading),
+  ];
 };
-
-export const useAccountsTableQuery = () => {
-  
-}
-
