@@ -7,9 +7,6 @@ jobs:
     working_directory: ~/app
     docker:
       - image: docker:17.05.0-ce-git
-    branches:
-      only:
-        - master
     steps:
       - checkout:
           path: ~/app
@@ -43,3 +40,11 @@ jobs:
           command: |
             docker login -u abouhuolia -p 1532015325_ASdfqwer
             docker push abouhuolia/bigcapital-client:latest
+
+workflows:
+  build_and_publish: # name of your workflow
+    jobs:
+      - build:
+        filters:
+          branches:
+            only: master

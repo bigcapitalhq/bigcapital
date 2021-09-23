@@ -19,12 +19,7 @@ function InventoryAdjustmentDetailDrawer({
   payload: { inventoryId },
 }) {
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      style={{ minWidth: '700px', maxWidth: '900px' }}
-      size={'65%'}
-    >
+    <Drawer isOpen={isOpen} name={name} size={'750px'}>
       <DrawerSuspense>
         <InventoryAdjustmentDrawerContent inventoryId={inventoryId} />
       </DrawerSuspense>
