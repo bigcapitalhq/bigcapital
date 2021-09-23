@@ -1,5 +1,8 @@
 import { camelCase } from 'lodash';
 import { createReducer } from '@reduxjs/toolkit';
+import storage from 'redux-persist/lib/storage';
+import { persistReducer, purgeStoredState } from 'redux-persist';
+
 import t from 'store/types';
 
 const initialState = {
@@ -11,10 +14,21 @@ const initialState = {
     bills: {},
     billPayments: {},
     salesEstimates: {},
+    items: {
+      tableSize: 'medium',
+    },
   },
 };
 
-export default createReducer(initialState, {
+const STORAGE_KEY = 'bigcapital:settings';
+
+const PRESIST_CONFIG = {
+  key: STORAGE_KEY,
+  whitelist: ['data'],
+  storage,
+};
+
+const reducerInstance = createReducer(initialState, {
   [t.SETTING_SET]: (state, action) => {
     const { options } = action;
     const _data = {
@@ -32,4 +46,19 @@ export default createReducer(initialState, {
     });
     state.data = _data;
   },
+
+  [t.SETTING_ADD]: (state, action) => {
+    const { group, key, value } = action.payload;
+
+    const newData = {
+      ...state.data,
+      [group]: {
+        ...state.data[group],
+        [key]: value,
+      },
+    };
+    state.data = newData;
+  },
 });
+
+export default persistReducer(PRESIST_CONFIG, reducerInstance);

@@ -9,7 +9,15 @@ import TableContext from './TableContext';
 export default function TableWrapper({ children }) {
   const {
     table: { getTableProps },
-    props: { sticky, pagination, loading, expandable, virtualizedRows, className },
+    props: {
+      sticky,
+      pagination,
+      loading,
+      expandable,
+      virtualizedRows,
+      className,
+      size,
+    },
   } = useContext(TableContext);
 
   return (
@@ -20,6 +28,7 @@ export default function TableWrapper({ children }) {
         'is-expandable': expandable,
         'is-loading': loading,
         'has-virtualized-rows': virtualizedRows,
+        [`table-size--${size}`]: size,
       })}
     >
       <ScrollSync>

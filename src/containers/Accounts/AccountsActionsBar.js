@@ -17,6 +17,7 @@ import {
   If,
   DashboardActionViewsList,
   DashboardFilterButton,
+  DashboardRowsHeightButton
 } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -165,6 +166,9 @@ function AccountsActionsBar({
           icon={<Icon icon="file-import-16" iconSize={16} />}
           text={<T id={'import'} />}
         />
+        <NavbarDivider />
+        <DashboardRowsHeightButton />
+        <NavbarDivider />
         <Switch
           labelElement={<T id={'inactive'} />}
           defaultChecked={accountsInactiveMode}

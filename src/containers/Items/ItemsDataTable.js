@@ -10,11 +10,11 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import { TABLES } from 'common/tables';
 
-import withItems from 'containers/Items/withItems';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withSettings from '../Settings/withSettings';
 
 import { useItemsListContext } from './ItemsListProvider';
 import { useItemsTableColumns, ItemsActionMenuList } from './components';
@@ -37,8 +37,8 @@ function ItemsDataTable({
   // #withDrawerActions
   openDrawer,
 
-  // #withItems
-  itemsTableState,
+  // #withSettings
+  itemsTableSize,
 
   // #ownProps
   tableProps,
@@ -146,6 +146,7 @@ function ItemsDataTable({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
+        size={itemsTableSize}
         payload={{
           onDeleteItem: handleDeleteItem,
           onEditItem: handleEditItem,
@@ -167,5 +168,7 @@ export default compose(
   withAlertsActions,
   withDrawerActions,
   withDialogActions,
-  withItems(({ itemsTableState }) => ({ itemsTableState })),
+  withSettings(({ itemsSettings }) => ({
+    itemsTableSize: itemsSettings.tableSize,
+  })),
 )(ItemsDataTable);

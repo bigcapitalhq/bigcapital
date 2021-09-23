@@ -9,7 +9,7 @@ import {
   Switch,
   Alignment,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { DashboardRowsHeightButton, FormattedMessage as T } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
 import {
@@ -25,8 +25,10 @@ import { useRefreshItems } from 'hooks/query/items';
 import withItems from 'containers/Items/withItems';
 import withItemsActions from './withItemsActions';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withSettings from '../Settings/withSettings';
 
 import { compose } from 'utils';
+import withSettingsActions from '../Settings/withSettingsActions';
 
 /**
  * Items actions bar.
@@ -42,6 +44,12 @@ function ItemsActionsBar({
 
   // #withAlertActions
   openAlert,
+
+  // #withSettings
+  itemsTableSize,
+
+  // #withSettingsActions
+  addSetting,
 }) {
   // Items list context.
   const { itemsViews, fields } = useItemsListContext();
@@ -72,9 +80,13 @@ function ItemsActionsBar({
     const checked = event.target.checked;
     setItemsTableState({ inactiveMode: checked });
   };
-
+  // Handle refresh button click.
   const handleRefreshBtnClick = () => {
     refresh();
+  };
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size) => {
+    addSetting('items', 'tableSize', size);
   };
 
   return (
@@ -131,6 +143,12 @@ function ItemsActionsBar({
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
         />
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={itemsTableSize}
+          onChange={handleTableRowSizeChange}
+        />
+        <NavbarDivider />
         <Switch
           labelElement={<T id={'inactive'} />}
           defaultChecked={itemsInactiveMode}
@@ -150,10 +168,14 @@ function ItemsActionsBar({
 }
 
 export default compose(
+  withSettingsActions,
   withItems(({ itemsSelectedRows, itemsTableState }) => ({
     itemsSelectedRows,
     itemsInactiveMode: itemsTableState.inactiveMode,
     itemsFilterRoles: itemsTableState.filterRoles,
+  })),
+  withSettings(({ itemsSettings }) => ({
+    itemsTableSize: itemsSettings.tableSize,
   })),
   withItemsActions,
   withAlertActions,

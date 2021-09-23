@@ -196,6 +196,7 @@ export default function DataTable(props) {
 
 DataTable.defaultProps = {
   pagination: false,
+  size: 'medium',
   spinnerProps: { size: 30 },
 
   expandToggleColumn: 1,
