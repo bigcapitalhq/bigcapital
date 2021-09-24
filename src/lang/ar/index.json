@@ -1369,7 +1369,34 @@
   "filter.enter_date": "أدخل تاريخ",
   "filter.value": "قيمة",
   "payment_made.empty_status.title": "المنشأة لم تدفع اي اموال إلي الموردين ، إلي حد الأن!.",
-  "estimate.delete.error.estimate_converted_to_invoice":"لا يمكن حذف عملية عرض اسعار الذي تم تحويلها إلي فاتورة بيع."
+  "estimate.delete.error.estimate_converted_to_invoice":"لا يمكن حذف عملية عرض اسعار الذي تم تحويلها إلي فاتورة بيع.",
+  
+  "items.option.only_active": "Only active",
+  "items.option_all_items.hint": "جميع الاصناف ، بما في ذلك تلك الاصناف لديها رصيد صفر.",
+  "items.option_with_transactions": "الاصناف مع معاملات",
+  "items.option_with_transactions.hint": "قم بتضمين الاصناف التي لها معاملات في فترة التاريخ المحددة فقط.",
+  "items.option_without_zero_balance":  "الاصناف ذات رصيد صفر",
+  "items.option_without_zero_balance.hint": "قم بتضمين الاصناف واستبعاد تلك التي لديها رصيد صفري.",
+  "items.label_filter_items": "تصفية الاصناف",
+
+  "customers.option_all_customers.hint":"All customers, including that ones have zero-balance.",
+  "customers.option_without_zero_balance": "Customers without zero-balance",
+  "customers.option_without_zero_balance.hint":"Include customers and exclude that ones have zero-balance.",
+  "customers.option_with_transactions": "Customers with transactions",
+  "customers.option_with_transactions.hint": "Include customers that onces have transactions on the given date period only.",
+  "customers.label_filter_customers": "Filter customers",
+ 
+ 
+  "vendors.option_all_vendors.hint":"All vendors, including that ones have zero-balance.",
+  "vendors.label_filter_vendors": "Filter Vendors",
+  "vendors.option_without_zero_balance": "Vendors without zero-balance",
+  "vendors.option_without_zero_balance.hint":"Include vendors and exclude that ones have zero-balance.",
+  "vendors.option_with_transactions": "Vendors with transactions",
+  "vendors.option_with_transactions.hint": "Include vendors that onces have transactions on the given date period only."
+
+
+
+
 }
 
 

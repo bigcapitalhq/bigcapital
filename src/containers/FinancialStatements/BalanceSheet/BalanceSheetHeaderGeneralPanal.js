@@ -2,7 +2,7 @@ import React from 'react';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import SelectDisplayColumnsBy from '../SelectDisplayColumnsBy';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
-import FinancialAccountsFilter from '../FinancialAccountsFilter';
+import FinancialStatementsFilter from '../FinancialStatementsFilter';
 
 /**
  * Balance sheet header - General panal.
@@ -12,7 +12,7 @@ export default function BalanceSheetHeaderGeneralTab({}) {
     <div>
       <FinancialStatementDateRange />
       <SelectDisplayColumnsBy />
-      <FinancialAccountsFilter
+      <FinancialStatementsFilter
         initialSelectedItem={'all-accounts'}
       />
       <RadiosAccountingBasis key={'basis'} />

@@ -47,6 +47,7 @@ function PurchasesByItemsHeader({
   // Initial form values.
   const initialValues = transformToForm(
     {
+      ...defaultValues,
       ...pageFilter,
       fromDate: moment(pageFilter.fromDate).toDate(),
       toDate: moment(pageFilter.toDate).toDate(),

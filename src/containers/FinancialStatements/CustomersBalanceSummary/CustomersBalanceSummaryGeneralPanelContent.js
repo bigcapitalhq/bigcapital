@@ -5,6 +5,8 @@ import { Classes, FormGroup, Position, Checkbox } from '@blueprintjs/core';
 import { ContactsMultiSelect, FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 import { Row, Col, FieldHint } from 'components';
+import { filterCustomersOptions } from '../common';
+
 import {
   momentFormatter,
   tansformDateValue,
@@ -12,6 +14,7 @@ import {
   handleDateChange,
 } from 'utils';
 import { useCustomersBalanceSummaryGeneralContext } from './CustomersBalanceSummaryGeneralProvider';
+import FinancialStatementsFilter from '../FinancialStatementsFilter';
 
 /**
  * Customers balance header - General panel - Content
@@ -65,6 +68,12 @@ export default function CustomersBalanceSummaryGeneralPanelContent() {
         </Col>
       </Row>
 
+      <FinancialStatementsFilter
+        items={filterCustomersOptions}
+        label={<T id={'customers.label_filter_customers'} />}
+        initialSelectedItem={'all-customers'}
+      />
+
       <Row>
         <Col xs={5}>
           <Field name={'customersIds'}>
@@ -80,7 +89,7 @@ export default function CustomersBalanceSummaryGeneralPanelContent() {
                 <ContactsMultiSelect
                   items={customers}
                   onItemSelect={(contacts) => {
-                    const customersIds = contacts.map(contact => contact.id);
+                    const customersIds = contacts.map((contact) => contact.id);
                     setFieldValue('customersIds', customersIds);
                   }}
                 />

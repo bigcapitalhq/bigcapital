@@ -65,8 +65,83 @@ export const filterAccountsOptions = [
   },
 ];
 
+export const filterItemsOptions = [
+  {
+    key: 'all-items',
+    name: intl.get('all_items'),
+    hint: intl.get('items.option_all_items.hint'),
+  },
+  {
+    key: 'with-transactions',
+    name: intl.get('items.option_with_transactions'),
+    hint: intl.get('items.option_with_transactions.hint'),
+  },
+  {
+    key: 'with-only-active',
+    name: intl.get('items.option.only_active'),
+  },
+];
+
+export const filterCustomersOptions = [
+  {
+    key: 'all-customers',
+    name: intl.get('all_customers'),
+    hint: intl.get('customers.option_all_customers.hint'),
+  },
+  {
+    key: 'without-zero-balance',
+    name: intl.get('customers.option_without_zero_balance'),
+    hint: intl.get('customers.option_without_zero_balance.hint'),
+  },
+  {
+    key: 'with-transactions',
+    name: intl.get('customers.option_with_transactions'),
+    hint: intl.get('customers.option_with_transactions.hint'),
+  },
+];
+
+export const filterVendorsOptions = [
+  {
+    key: 'all-vendors',
+    name: intl.get('all_vendors'),
+    hint: intl.get('vendors.option_all_vendors.hint'),
+  },
+  {
+    key: 'without-zero-balance',
+    name: intl.get('vendors.option_without_zero_balance'),
+    hint: intl.get('vendors.option_without_zero_balance.hint'),
+  },
+  {
+    key: 'with-transactions',
+    name: intl.get('vendors.option_with_transactions'),
+    hint: intl.get('vendors.option_with_transactions.hint'),
+  },
+];
+
+export const filterInventoryValuationOptions = [
+  {
+    key: 'all-items',
+    name: intl.get('all_items'),
+    hint: intl.get('items.option_all_items.hint'),
+  },
+  {
+    key: 'with-transactions',
+    name: intl.get('items.option_with_transactions'),
+    hint: intl.get('items.option_with_transactions.hint'),
+  },
+  {
+    key: 'without-zero-balance',
+    name: intl.get('items.option_without_zero_balance'),
+    hint: intl.get('items.option_without_zero_balance.hint'),
+  },
+  {
+    key: 'with-only-active',
+    name: intl.get('items.option.only_active'),
+  },
+]
+
 /**
- * Associate display columns by and type properties to query object. 
+ * Associate display columns by and type properties to query object.
  */
 export const transformDisplayColumnsType = (form) => {
   const columnType = displayColumnsByOptions.find(
@@ -87,15 +162,13 @@ const setNoneZeroTransactions = (form) => {
     ...form,
     noneZero: form.accountsFilter === 'without-zero-balance',
     noneTransactions: form.accountsFilter === 'with-transactions',
+    onlyActive: form.accountsFilter === 'with-only-active',
   };
-}
+};
 
 export const transformAccountsFilter = (form) => {
-  return R.compose(
-    R.omit(['accountsFilter']),
-    setNoneZeroTransactions,
-  )(form)
-}
+  return R.compose(R.omit(['accountsFilter']), setNoneZeroTransactions)(form);
+};
 
 /**
  * Transform filter form to http query.

@@ -11,6 +11,8 @@ import {
   FieldHint,
   FormattedMessage as T,
 } from '../../../components';
+import { filterVendorsOptions } from '../common';
+
 import {
   momentFormatter,
   tansformDateValue,
@@ -18,6 +20,7 @@ import {
   handleDateChange,
 } from 'utils';
 import { useVendorsBalanceSummaryGeneralPanelContext } from './VendorsBalanceSummaryHeaderGeneralProvider';
+import FinancialStatementsFilter from '../FinancialStatementsFilter';
 
 /**
  * Vendors balance header - General panel - Content.
@@ -70,6 +73,12 @@ export default function VendorsBalanceSummaryHeaderGeneralContent() {
           </FastField>
         </Col>
       </Row>
+
+      <FinancialStatementsFilter
+        items={filterVendorsOptions}
+        label={<T id={'vendors.label_filter_vendors'} />}
+        initialSelectedItem={'all-vendors'}
+      />
 
       <Row>
         <Col xs={4}>

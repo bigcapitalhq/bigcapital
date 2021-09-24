@@ -15,14 +15,18 @@ import { Col, Row, ListSelect, MODIFIER } from 'components';
 import { filterAccountsOptions } from './common';
 
 
-export default function FinancialAccountsFilter({ ...restProps }) {
+export default function FinancialStatementsFilter({
+  items = filterAccountsOptions,
+  label = <T id={'filter_accounts'} />,
+  ...restProps
+}) {
   const SUBMENU_POPOVER_MODIFIERS = {
     flip: { boundariesElement: 'viewport', padding: 20 },
     offset: { offset: '0, 10' },
     preventOverflow: { boundariesElement: 'viewport', padding: 40 },
   };
 
-  const filterAccountRenderer = (item, { handleClick, modifiers, query }) => {
+  const filterRenderer = (item, { handleClick, modifiers, query }) => {
     return (
       <Tooltip
         interactionKind={PopoverInteractionKind.HOVER}
@@ -44,13 +48,13 @@ export default function FinancialAccountsFilter({ ...restProps }) {
         <FastField name={'accountsFilter'}>
           {({ form: { setFieldValue }, field: { value } }) => (
             <FormGroup
-              label={<T id={'filter_accounts'} />}
+              label={label}
               className="form-group--select-list bp3-fill"
               inline={false}
             >
               <ListSelect
-                items={filterAccountsOptions}
-                itemRenderer={filterAccountRenderer}
+                items={items}
+                itemRenderer={filterRenderer}
                 popoverProps={{ minimal: true }}
                 filterable={false}
                 selectedItem={value}

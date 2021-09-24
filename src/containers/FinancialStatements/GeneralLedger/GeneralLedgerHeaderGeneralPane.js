@@ -7,7 +7,7 @@ import { AccountsMultiSelect, Row, Col } from 'components';
 
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
-import FinancialAccountsFilter from '../FinancialAccountsFilter';
+import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import { GLHeaderGeneralPanelProvider } from './GLHeaderGeneralPaneProvider';
 
 import { filterAccountsOptions } from './common';
@@ -33,7 +33,7 @@ function GLHeaderGeneralPaneContent() {
   return (
     <React.Fragment>
       <FinancialStatementDateRange />
-      <FinancialAccountsFilter
+      <FinancialStatementsFilter
         items={filterAccountsOptions}
         initialSelectedItem={'all-accounts'}
       />

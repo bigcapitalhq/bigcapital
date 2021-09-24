@@ -3,12 +3,15 @@ import classNames from 'classnames';
 import { Field } from 'formik';
 import { Classes, FormGroup } from '@blueprintjs/core';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
+import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import {
   Row,
   Col,
   ContactsMultiSelect,
   FormattedMessage as T,
 } from '../../../components';
+import { filterCustomersOptions } from '../common';
+
 import {
   CustomersTransactionsGeneralPanelProvider,
   useCustomersTransactionsGeneralPanelContext,
@@ -34,7 +37,11 @@ function CustomersTransactionsHeaderGeneralPanelContent() {
   return (
     <div>
       <FinancialStatementDateRange />
-
+      <FinancialStatementsFilter
+        items={filterCustomersOptions}
+        label={<T id={'customers.label_filter_customers'} />}
+        initialSelectedItem={'all-customers'}
+      />
       <Row>
         <Col xs={5}>
           <Field name={'customersIds'}>
