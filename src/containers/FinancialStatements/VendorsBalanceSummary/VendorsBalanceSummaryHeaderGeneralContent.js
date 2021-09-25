@@ -11,7 +11,7 @@ import {
   FieldHint,
   FormattedMessage as T,
 } from '../../../components';
-import { filterVendorsOptions } from '../common';
+import { filterVendorsOptions } from '../constants';
 
 import {
   momentFormatter,
@@ -77,7 +77,7 @@ export default function VendorsBalanceSummaryHeaderGeneralContent() {
       <FinancialStatementsFilter
         items={filterVendorsOptions}
         label={<T id={'vendors.label_filter_vendors'} />}
-        initialSelectedItem={'all-vendors'}
+        initialSelectedItem={'with-transactions'}
       />
 
       <Row>

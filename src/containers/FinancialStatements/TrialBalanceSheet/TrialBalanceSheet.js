@@ -33,7 +33,7 @@ function TrialBalanceSheet({
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'accural',
-    accountsFilter: 'all-accounts',
+    filterByOption: 'with-transactions',
   });
 
   // Handle filter form submit.

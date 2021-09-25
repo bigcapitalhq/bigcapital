@@ -25,18 +25,14 @@ function ProfitLossHeader({
   // #withProfitLossActions
   toggleProfitLossFilterDrawer: toggleFilterDrawer,
 }) {
-  
-
   // Validation schema.
   const validationSchema = Yup.object().shape({
-    fromDate: Yup.date()
-      .required()
-      .label(intl.get('from_date')),
+    fromDate: Yup.date().required().label(intl.get('from_date')),
     toDate: Yup.date()
       .min(Yup.ref('fromDate'))
       .required()
       .label(intl.get('to_date')),
-    accountsFilter: Yup.string(),
+    filterByOption: Yup.string(),
     displayColumnsType: Yup.string(),
   });
 

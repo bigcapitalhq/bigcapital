@@ -5,7 +5,7 @@ import { Classes, FormGroup, Position, Checkbox } from '@blueprintjs/core';
 import { ContactsMultiSelect, FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 import { Row, Col, FieldHint } from 'components';
-import { filterCustomersOptions } from '../common';
+import { filterCustomersOptions } from '../constants';
 
 import {
   momentFormatter,
@@ -71,7 +71,7 @@ export default function CustomersBalanceSummaryGeneralPanelContent() {
       <FinancialStatementsFilter
         items={filterCustomersOptions}
         label={<T id={'customers.label_filter_customers'} />}
-        initialSelectedItem={'all-customers'}
+        initialSelectedItem={'with-transactions'}
       />
 
       <Row>

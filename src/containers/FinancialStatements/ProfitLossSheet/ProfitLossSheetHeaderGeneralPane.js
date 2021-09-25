@@ -13,7 +13,7 @@ export default function ProfitLossSheetHeaderGeneralPane({}) {
     <div>
       <FinancialStatementDateRange />
       <SelectDisplayColumnsBy />
-      <FinancialStatementsFilter initialSelectedItem={'all-accounts'} />
+      <FinancialStatementsFilter initialSelectedItem={'with-transactions'} />
       <RadiosAccountingBasis key={'basis'} />
     </div>
   );

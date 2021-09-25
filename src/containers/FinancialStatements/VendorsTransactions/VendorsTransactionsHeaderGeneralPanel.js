@@ -12,7 +12,7 @@ import {
   ContactsMultiSelect,
   FormattedMessage as T,
 } from '../../../components';
-import { filterVendorsOptions } from '../common';
+import { filterVendorsOptions } from '../constants';
 
 import {
   VendorsTransactionsGeneralPanelProvider,

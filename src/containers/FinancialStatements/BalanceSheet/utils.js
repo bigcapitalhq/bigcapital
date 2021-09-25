@@ -5,7 +5,7 @@ import moment from 'moment';
 export const getBalanceSheetHeaderDefaultValues = () => {
   return {
     basic: 'cash',
-    accountsFilter: 'without-zero-balance',
+    filterByOption: 'without-zero-balance',
     displayColumnsType: 'total',
     fromDate: moment().toDate(),
     toDate: moment().toDate(),
@@ -20,6 +20,6 @@ export const getBalanceSheetHeaderValidationSchema = () =>
       .min(Yup.ref('fromDate'))
       .required()
       .label(intl.get('toDate')),
-    accountsFilter: Yup.string(),
+    filterByOption: Yup.string(),
     displayColumnsType: Yup.string(),
   });

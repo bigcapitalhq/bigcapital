@@ -12,7 +12,7 @@ import { FastField } from 'formik';
 
 import { CLASSES } from 'common/classes';
 import { Col, Row, ListSelect, MODIFIER } from 'components';
-import { filterAccountsOptions } from './common';
+import { filterAccountsOptions } from './constants';
 
 
 export default function FinancialStatementsFilter({
@@ -45,7 +45,7 @@ export default function FinancialStatementsFilter({
   return (
     <Row>
       <Col xs={4}>
-        <FastField name={'accountsFilter'}>
+        <FastField name={'filterByOption'}>
           {({ form: { setFieldValue }, field: { value } }) => (
             <FormGroup
               label={label}
@@ -61,7 +61,7 @@ export default function FinancialStatementsFilter({
                 selectedItemProp={'key'}
                 textProp={'name'}
                 onItemSelect={(item) => {
-                  setFieldValue('accountsFilter', item.key);
+                  setFieldValue('filterByOption', item.key);
                 }}
                 className={classNames(CLASSES.SELECT_LIST_FILL_POPOVER)}
                 {...restProps}

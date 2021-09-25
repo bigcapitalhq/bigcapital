@@ -29,6 +29,7 @@ function CustomersBalanceSummary({
 }) {
   const [filter, setFilter] = useState({
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
+    filterByOption: 'with-transactions',
   });
 
   // Handle re-fetch customers balance summary after filter change.

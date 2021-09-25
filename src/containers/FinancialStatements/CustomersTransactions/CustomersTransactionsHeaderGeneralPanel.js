@@ -10,7 +10,7 @@ import {
   ContactsMultiSelect,
   FormattedMessage as T,
 } from '../../../components';
-import { filterCustomersOptions } from '../common';
+import { filterCustomersOptions } from '../constants';
 
 import {
   CustomersTransactionsGeneralPanelProvider,
@@ -40,7 +40,7 @@ function CustomersTransactionsHeaderGeneralPanelContent() {
       <FinancialStatementsFilter
         items={filterCustomersOptions}
         label={<T id={'customers.label_filter_customers'} />}
-        initialSelectedItem={'all-customers'}
+        initialSelectedItem={'with-transactions'}
       />
       <Row>
         <Col xs={5}>

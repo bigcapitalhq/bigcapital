@@ -34,6 +34,7 @@ function CashFlowStatement({
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'cash',
     displayColumnsType: 'total',
+    filterByOption: 'with-transactions',
   });
 
   // Handle refetch cash flow after filter change.

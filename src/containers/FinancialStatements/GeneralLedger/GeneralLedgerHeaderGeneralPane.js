@@ -35,7 +35,7 @@ function GLHeaderGeneralPaneContent() {
       <FinancialStatementDateRange />
       <FinancialStatementsFilter
         items={filterAccountsOptions}
-        initialSelectedItem={'all-accounts'}
+        initialSelectedItem={'with-transactions'}
       />
       <Row>
         <Col xs={4}>

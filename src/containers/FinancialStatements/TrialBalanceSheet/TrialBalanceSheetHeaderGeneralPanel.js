@@ -12,7 +12,7 @@ export default function TrialBalanceSheetHeaderGeneralPanel({
   return (
     <div>
       <FinancialStatementDateRange />
-      <FinancialStatementsFilter initialSelectedItem={'all-accounts'} />
+      <FinancialStatementsFilter initialSelectedItem={'with-transactions'} />
       <RadiosAccountingBasis />
     </div>
   );

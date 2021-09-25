@@ -2,7 +2,7 @@ import React from 'react';
 import { FormGroup, Classes } from '@blueprintjs/core';
 import { Field } from 'formik';
 import classNames from 'classnames';
-import { filterItemsOptions } from '../common';
+import { filterItemsOptions } from '../constants';
 
 import { Row, Col, ItemsMultiSelect, FormattedMessage as T } from 'components';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
@@ -36,7 +36,7 @@ function SalesByItemsHeaderGeneralPanelContent() {
       <FinancialStatementsFilter
         items={filterItemsOptions}
         label={<T id={'items.label_filter_items'} />}
-        initialSelectedItem={'all-items'}
+        initialSelectedItem={'with-transactions'}
       />
 
       <Row>

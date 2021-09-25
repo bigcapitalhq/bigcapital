@@ -6,7 +6,8 @@ import { Row, Col, Hint } from 'components';
 import { momentFormatter, parseDateRangeQuery } from 'utils';
 import { DateInput } from '@blueprintjs/datetime';
 import intl from 'react-intl-universal';
-import { dateRangeOptions } from 'containers/FinancialStatements/common';
+import { dateRangeOptions } from './constants';
+
 
 /**
  * Financial statement - Date range select.

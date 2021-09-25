@@ -11,7 +11,7 @@ import {
   Col,
   FieldHint,
 } from '../../../components';
-import { filterInventoryValuationOptions } from '../common';
+import { filterInventoryValuationOptions } from '../constants';
 
 import {
   momentFormatter,
@@ -45,7 +45,7 @@ function InventoryValuationHeaderGeneralPanelContent() {
   return (
     <div>
       <Row>
-        <Col xs={5}>
+        <Col xs={4}>
           <FastField name={'asDate'}>
             {({ form, field: { value }, meta: { error } }) => (
               <FormGroup
@@ -76,7 +76,7 @@ function InventoryValuationHeaderGeneralPanelContent() {
       />
 
       <Row>
-        <Col xs={5}>
+        <Col xs={4}>
           <Field name={'itemsIds'}>
             {({ form: { setFieldValue } }) => (
               <FormGroup
