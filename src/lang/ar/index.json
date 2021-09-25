@@ -1370,6 +1370,7 @@
   "filter.value": "قيمة",
   "payment_made.empty_status.title": "المنشأة لم تدفع اي اموال إلي الموردين ، إلي حد الأن!.",
   "estimate.delete.error.estimate_converted_to_invoice":"لا يمكن حذف عملية عرض اسعار الذي تم تحويلها إلي فاتورة بيع.",
+  "landed_cost.action.delete.success_message": "The landed cost has been deleted successfully.",
   
   "items.option.only_active": "Only active",
   "items.option_all_items.hint": "جميع الاصناف ، بما في ذلك تلك الاصناف لديها رصيد صفر.",

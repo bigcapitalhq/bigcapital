@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
-import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
+import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { AppToaster } from 'components';
@@ -9,6 +9,7 @@ import { useDeleteVendor } from 'hooks/query';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -24,8 +25,10 @@ function VendorDeleteAlert({
 
   // #withAlertActions
   closeAlert,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
-  
   const { mutateAsync: deleteVendorMutate, isLoading } = useDeleteVendor();
 
   // Handle cancel delete the vendor.
@@ -41,6 +44,7 @@ function VendorDeleteAlert({
           message: intl.get('the_vendor_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
+        closeDrawer('vendor-details-drawer');
       })
       .catch(
         ({
@@ -79,4 +83,5 @@ function VendorDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions,
 )(VendorDeleteAlert);

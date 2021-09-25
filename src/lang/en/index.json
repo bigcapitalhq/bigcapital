@@ -1347,18 +1347,17 @@
   "items.option_without_zero_balance.hint": "Include items and exclude that ones have zero-balance.",
   "items.option_with_transactions.hint": "Include items that onces have transactions on the given date period only.",
   "items.label_filter_items": "Filter items",
-  "customers.option_all_customers.hint":"All customers, including that ones have zero-balance.",
+  "customers.option_all_customers.hint": "All customers, including that ones have zero-balance.",
   "customers.label_filter_customers": "Filter customers",
   "customers.option_without_zero_balance": "Customers without zero-balance",
-  "customers.option_without_zero_balance.hint":"Include customers and exclude that ones have zero-balance.",
+  "customers.option_without_zero_balance.hint": "Include customers and exclude that ones have zero-balance.",
   "customers.option_with_transactions": "Customers with transactions",
   "customers.option_with_transactions.hint": "Include customers that onces have transactions on the given date period only.",
-  "vendors.option_all_vendors.hint":"All vendors, including that ones have zero-balance.",
+  "vendors.option_all_vendors.hint": "All vendors, including that ones have zero-balance.",
   "vendors.label_filter_vendors": "Filter Vendors",
   "vendors.option_without_zero_balance": "Vendors without zero-balance",
-  "vendors.option_without_zero_balance.hint":"Include vendors and exclude that ones have zero-balance.",
+  "vendors.option_without_zero_balance.hint": "Include vendors and exclude that ones have zero-balance.",
   "vendors.option_with_transactions": "Vendors with transactions",
-  "vendors.option_with_transactions.hint": "Include vendors that onces have transactions on the given date period only."
-
-
+  "vendors.option_with_transactions.hint": "Include vendors that onces have transactions on the given date period only.",
+  "landed_cost.action.delete.success_message": "The landed cost has been deleted successfully."
 }

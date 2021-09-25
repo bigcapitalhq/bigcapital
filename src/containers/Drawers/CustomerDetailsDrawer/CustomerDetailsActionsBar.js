@@ -61,8 +61,8 @@ function CustomerDetailsActionsBar({
 
   const handleDeleteCustomer = () => {
     openAlert(`customer-delete`, { contactId: customerId });
-    closeDrawer('customer-details-drawer');
   };
+  
   const handleEditContact = () => {
     history.push(`/customers/${customerId}/edit`);
     closeDrawer('customer-details-drawer');
