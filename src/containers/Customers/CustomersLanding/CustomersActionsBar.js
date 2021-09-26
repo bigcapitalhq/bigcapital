@@ -86,10 +86,10 @@ function CustomerActionsBar({
   const handleRefreshBtnClick = () => {
     refresh();
   };
-  
+
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('customer', 'tableSize', size);
+    addSetting('custoemrs', 'tableSize', size);
   };
 
   return (
@@ -177,8 +177,8 @@ export default compose(
     accountsInactiveMode: customersTableState.inactiveMode,
     customersFilterConditions: customersTableState.filterRoles,
   })),
-  // withSettings(({  }) => ({
-  //   customersTableSize:
-  // })),
+  withSettings(({ customersSettings }) => ({
+    customersTableSize: customersSettings?.tableSize,
+  })),
   withAlertActions,
 )(CustomerActionsBar);

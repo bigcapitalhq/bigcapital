@@ -72,7 +72,7 @@ function BillActionsBar({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('bill', 'tableSize', size);
+    addSetting('bills', 'tableSize', size);
   };
 
   return (
@@ -156,7 +156,7 @@ export default compose(
   withBills(({ billsTableState }) => ({
     billsConditionsRoles: billsTableState.filterRoles,
   })),
-  withSettings(({ billPaymentSettings }) => ({
-    billsTableSize: billPaymentSettings?.tableSize, // fix to bill
+  withSettings(({ billsettings }) => ({
+    billsTableSize: billsettings?.tableSize,
   })),
 )(BillActionsBar);

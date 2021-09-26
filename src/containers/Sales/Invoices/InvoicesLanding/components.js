@@ -55,6 +55,7 @@ export const statusAccessor = (row) => {
               })}
             </span>
             <ProgressBar
+          
               animate={false}
               stripes={false}
               intent={Intent.PRIMARY}

@@ -58,6 +58,7 @@ import AccountsSuggestField from './AccountsSuggestField';
 import MaterialProgressBar from './MaterialProgressBar';
 import { MoneyFieldCell } from './DataTableCells';
 import Card from './Card';
+import AvaterCell from './AvaterCell';
 
 import { ItemsMultiSelect } from './Items';
 
@@ -71,13 +72,13 @@ export * from './PdfPreview';
 export * from './Details';
 export * from './Drawer/DrawerInsider';
 export * from './Drawer/DrawerMainTabs';
-export * from './TotalLines/index'
+export * from './TotalLines/index';
 export * from './Alert';
 export * from './Subscriptions';
 export * from './Dashboard';
 export * from './Drawer';
 export * from './Forms';
-export * from './MultiSelectTaggable'
+export * from './MultiSelectTaggable';
 export * from './Utils/FormatNumber';
 export * from './Utils/FormatDate';
 
@@ -150,4 +151,5 @@ export {
   MoneyFieldCell,
   ItemsMultiSelect,
   Card,
+  AvaterCell,
 };

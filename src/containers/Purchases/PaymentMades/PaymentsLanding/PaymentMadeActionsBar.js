@@ -73,7 +73,7 @@ function PaymentMadeActionsBar({
   
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('payment_made', 'tableSize', size);
+    addSetting('billPayments', 'tableSize', size);
   };
 
   return (

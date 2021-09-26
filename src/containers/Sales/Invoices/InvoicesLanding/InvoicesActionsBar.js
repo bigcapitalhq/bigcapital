@@ -71,7 +71,7 @@ function InvoiceActionsBar({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('invoice', 'tableSize', size);
+    addSetting('salesInvoices', 'tableSize', size);
   };
 
   return (

@@ -79,7 +79,7 @@ function VendorActionsBar({
   };
 
   const handleTableRowSizeChange = (size) => {
-    addSetting('vendor', 'tableSize', size);
+    addSetting('vendors', 'tableSize', size);
   };
   return (
     <DashboardActionsBar>
@@ -160,7 +160,7 @@ export default compose(
     vendorsInactiveMode: vendorsTableState.inactiveMode,
     vendorsFilterConditions: vendorsTableState.filterRoles,
   })),
-  // withSettings(({  }) => ({
-  //   vendorsTableSize:
-  // })),
+  withSettings(({ vendorsSettings }) => ({
+    vendorsTableSize: vendorsSettings?.tableSize,
+  })),
 )(VendorActionsBar);

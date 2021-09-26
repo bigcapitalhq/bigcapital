@@ -72,7 +72,7 @@ function ReceiptActionsBar({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('receipt', 'tableSize', size);
+    addSetting('salesReceipts', 'tableSize', size);
   };
 
   return (

@@ -1,17 +1,9 @@
-
-.dashboard__insider--sales_receipts{
-
-  .bigcapital-datatable{
-
-    .tbody{
-      .tr{
-        min-height: 46px;
-      }
-
+.dashboard__insider--sales_receipts {
+  .bigcapital-datatable {
+    .tbody {
       .td.amount {
-
-        .cell-inner{
-          > span{
+        .cell-inner {
+          > span {
             font-weight: 600;
           }
         }

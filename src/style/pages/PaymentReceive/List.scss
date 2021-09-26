@@ -1,17 +1,9 @@
-
-.dashboard__insider--payment-receives-list{
-
-  .bigcapital-datatable{
-
-    .tbody{
-      .tr .td{
-        min-height: 46px;
-      }
-
+.dashboard__insider--payment-receives-list {
+  .bigcapital-datatable {
+    .tbody {
       .td.amount {
-
-        .cell-inner{
-          > span{
+        .cell-inner {
+          > span {
             font-weight: 600;
           }
         }

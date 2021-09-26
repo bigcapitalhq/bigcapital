@@ -1,4 +1,5 @@
 import { AppToaster } from 'components';
+import { Intent } from '@blueprintjs/core';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
@@ -6,11 +7,13 @@ import {
   defaultFastFieldShouldUpdate,
   transformToForm,
   repeatValue,
-  ensureEntriesHasEmptyLine
+  ensureEntriesHasEmptyLine,
 } from 'utils';
 
 const ERROR = {
   EXPENSE_ALREADY_PUBLISHED: 'EXPENSE.ALREADY.PUBLISHED',
+  ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED:
+    'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
 };
 
 // Transform API errors in toasts messages.
@@ -21,6 +24,14 @@ export const transformErrors = (errors, { setErrors }) => {
     setErrors(
       AppToaster.show({
         message: intl.get('the_expense_is_already_published'),
+      }),
+    );
+  }
+  if (hasError(ERROR.ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED)) {
+    setErrors(
+      AppToaster.show({
+        intent: Intent.DANGER,
+        message: 'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
       }),
     );
   }

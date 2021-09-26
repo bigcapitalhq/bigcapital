@@ -80,7 +80,7 @@ function ExpensesActionsBar({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('expense', 'tableSize', size);
+    addSetting('expenses', 'tableSize', size);
   };
   return (
     <DashboardActionsBar>
