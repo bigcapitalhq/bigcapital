@@ -13,3 +13,9 @@ export const TABLES = {
   MANUAL_JOURNALS: 'manual_journal',
   EXPENSES: 'expenses',
 };
+
+export const TABLE_SIZE = {
+  COMPACT: 'compact',
+  SMALL: 'small',
+  MEDIUM: 'medium',
+}

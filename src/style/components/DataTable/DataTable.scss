@@ -273,6 +273,21 @@
       display: flex;
       width: 100%;
     }
+
+    &-size{
+
+      &--medium{
+        .tbody .tr{
+          background-size: red;
+          min-height: 46px;
+        }
+      }
+      &--small{
+        .tbody .tr{
+          min-height: 40px;
+        }
+      }
+    }
   }
 
   .no-results {
@@ -335,6 +350,9 @@
   .ReactVirtualized__Grid {
     will-change: auto !important;
   }
+
+
+  
 }
 
 .table-constrant {
