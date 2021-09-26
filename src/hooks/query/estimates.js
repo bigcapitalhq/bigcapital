@@ -86,7 +86,7 @@ export function useEstimates(query, props) {
         estimates: [],
         pagination: {
           page: 1,
-          pageSize: 12,
+          pageSize: 20,
           total: 0,
         },
         filterMeta: {},

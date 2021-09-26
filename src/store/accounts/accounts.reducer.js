@@ -4,9 +4,8 @@ import storage from 'redux-persist/lib/storage';
 import { createTableStateReducers } from 'store/tableState.reducer';
 import t from 'store/types';
 
-
-export const defaultTableQuery = { 
-  pageSize: 12,
+export const defaultTableQuery = {
+  pageSize: 20,
   pageIndex: 0,
   filterRoles: [],
 };
@@ -28,7 +27,7 @@ const reducerInstance = createReducer(initialState, {
 
   [t.RESET]: () => {
     purgeStoredState(CONFIG);
-  }
+  },
 });
 
 export default persistReducer(CONFIG, reducerInstance);

@@ -5,7 +5,7 @@ import useApiRequest from '../useRequest';
 import t from './types';
 
 const DEFAULT_PAGINATION = {
-  pageSize: 12,
+  pageSize: 20,
   page: 0,
   pagesCount: 0,
 };
@@ -75,7 +75,7 @@ export function useDeleteItem(props) {
 /**
  * Activate the given item.
  */
- export function useActivateItem(props) {
+export function useActivateItem(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
@@ -114,7 +114,9 @@ export function useInactivateItem(props) {
 const transformItemsResponse = (response) => {
   return {
     items: response.data.items,
-    pagination: transformPagination(transformResponse(response.data.pagination)),
+    pagination: transformPagination(
+      transformResponse(response.data.pagination),
+    ),
     filterMeta: transformResponse(response.data.filter_meta),
   };
 };
@@ -137,8 +139,8 @@ export function useItems(query, props) {
         pagination: DEFAULT_PAGINATION,
         filterMeta: {},
       },
-      ...props
-    }
+      ...props,
+    },
   );
 }
 
@@ -149,7 +151,7 @@ export function useRefreshItems() {
     refresh: () => {
       queryClient.invalidateQueries(t.ITEMS);
     },
-  }
+  };
 }
 
 /**
@@ -166,7 +168,7 @@ export function useItem(id, props) {
     {
       select: (response) => response.data.item,
       defaultData: {},
-      ...props
+      ...props,
     },
   );
 }

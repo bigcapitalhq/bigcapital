@@ -3,7 +3,7 @@ import { createTableStateReducers } from 'store/tableState.reducer';
 
 const initialState = {
   tableState: {
-    pageSize: 12,
+    pageSize: 20,
     pageIndex: 0,
   },
 };

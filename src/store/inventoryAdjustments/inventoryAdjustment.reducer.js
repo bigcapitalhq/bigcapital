@@ -6,7 +6,7 @@ import t from 'store/types';
 
 const initialState = {
   tableState: {
-    pageSize: 12,
+    pageSize: 20,
     pageIndex: 0,
     sortBy: [],
   },
