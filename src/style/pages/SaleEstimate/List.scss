@@ -1,22 +1,9 @@
-
-.dashboard__insider--sale_estimate{
-
-  .bigcapital-datatable{
-
-    .tbody{
-      .tr{
-        min-height: 46px;
-      }
-
-      .tr .td{
-        padding-top: 0.88rem;
-        padding-bottom: 0.88rem;
-      }
-
+.dashboard__insider--sale_estimate {
+  .bigcapital-datatable {
+    .tbody {
       .td.amount {
-
-        .cell-inner{
-          > span{
+        .cell-inner {
+          > span {
             font-weight: 600;
           }
         }

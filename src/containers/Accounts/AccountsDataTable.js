@@ -10,6 +10,7 @@ import { TABLES } from 'common/tables';
 import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
+import withSettings from '../Settings/withSettings';
 
 import { useAccountsChartContext } from './AccountsChartProvider';
 import { useMemorizedColumnsWidths } from '../../hooks';
@@ -30,6 +31,9 @@ function AccountsDataTable({
 
   // #withDrawerActions
   openDrawer,
+
+  // #withSettings
+  accountsTableSize,
 }) {
   const { isAccountsLoading, isAccountsFetching, accounts } =
     useAccountsChartContext();
@@ -102,11 +106,12 @@ function AccountsDataTable({
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       ContextMenu={ActionsMenu}
       // #TableVirtualizedListRows props.
-      vListrowHeight={42}
+      vListrowHeight={accountsTableSize == 'small' ? 40 : 42}
       vListOverscanRowCount={0}
       onCellClick={handleCellClick}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
+      size={accountsTableSize}
       payload={{
         onEdit: handleEditAccount,
         onDelete: handleDeleteAccount,
@@ -123,4 +128,7 @@ export default compose(
   withAlertsActions,
   withDrawerActions,
   withDialogActions,
+  withSettings(({ accountsSettings }) => ({
+    accountsTableSize: accountsSettings.tableSize,
+  })),
 )(AccountsDataTable);

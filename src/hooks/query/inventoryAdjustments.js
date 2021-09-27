@@ -76,7 +76,7 @@ export function useInventoryAdjustments(query, props) {
         transactions: [],
         pagination: {
           page: 1,
-          pageSize: 12,
+          pageSize: 20,
           total: 0,
           pagesCount: 0,
         },

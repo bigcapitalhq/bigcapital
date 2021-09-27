@@ -5,7 +5,7 @@ import useApiRequest from '../useRequest';
 import t from './types';
 
 const defaultPagination = {
-  pageSize: 12,
+  pageSize: 20,
   page: 0,
   pagesCount: 0,
 };

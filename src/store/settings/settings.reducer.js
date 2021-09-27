@@ -10,11 +10,37 @@ const initialState = {
     organization: {
       name: 'Bigcapital, LLC',
     },
-    manualJournals: {},
-    bills: {},
-    billPayments: {},
-    salesEstimates: {},
+    manualJournals: {
+      tableSize: 'medium',
+    },
+    bills: {
+      tableSize: 'medium',
+    },
+    billPayments: {
+      tableSize: 'medium',
+    },
+    paymentReceives: {
+      tableSize: 'medium',
+    },
+    salesEstimates: {
+      tableSize: 'medium',
+    },
     items: {
+      tableSize: 'medium',
+    },
+    salesInvoices: {
+      tableSize: 'medium',
+    },
+    salesReceipts: {
+      tableSize: 'medium',
+    },
+    expenses: {
+      tableSize: 'medium',
+    },
+    customers: {
+      tableSize: 'medium',
+    },
+    vendors: {
       tableSize: 'medium',
     },
   },

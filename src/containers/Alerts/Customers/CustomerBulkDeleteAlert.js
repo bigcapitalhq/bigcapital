@@ -31,7 +31,7 @@ function CustomerBulkDeleteAlert({
     closeAlert(name);
   };
 
-  console.log(customersIds, 'EE');
+
 
   // Handle confirm customers bulk delete.
   const handleConfirmBulkDelete = useCallback(() => {

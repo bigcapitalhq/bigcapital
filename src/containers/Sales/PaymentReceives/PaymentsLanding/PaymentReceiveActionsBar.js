@@ -73,7 +73,7 @@ function PaymentReceiveActionsBar({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('payment_receive', 'tableSize', size);
+    addSetting('paymentReceives', 'tableSize', size);
   };
 
   return (

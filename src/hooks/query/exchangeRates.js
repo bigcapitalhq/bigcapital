@@ -5,7 +5,7 @@ import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
 
 const defaultPagination = {
-  pageSize: 12,
+  pageSize: 20,
   page: 0,
   pagesCount: 0,
 };
@@ -82,7 +82,7 @@ export function useExchangeRates(query, props) {
       exchangesRates: [],
       pagination: {
         page: 1,
-        pageSize: 12,
+        pageSize: 20,
         total: 0,
       },
       filterMeta: {},

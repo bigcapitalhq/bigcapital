@@ -86,7 +86,7 @@ function Pagination({
   currentPage,
   total,
   size,
-  pageSizesOptions = [5, 12, 20, 30, 50, 75, 100, 150],
+  pageSizesOptions = [20, 30, 50, 75, 100, 150],
   onPageChange,
   onPageSizeChange,
 }) {

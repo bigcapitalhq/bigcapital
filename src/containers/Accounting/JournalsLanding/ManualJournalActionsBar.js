@@ -73,7 +73,7 @@ function ManualJournalActionsBar({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('manual_journal', 'tableSize', size);
+    addSetting('manualJournals', 'tableSize', size);
   };
 
   return (

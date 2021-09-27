@@ -62,6 +62,18 @@ function BillForm({
         bill_number: intl.get('bill_number_exists'),
       });
     }
+    if (
+      errors.some(
+        (e) => e.type === ERROR.ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED,
+      )
+    ) {
+      setErrors(
+        AppToaster.show({
+          intent: Intent.DANGER,
+          message: 'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
+        }),
+      );
+    }
   };
 
   // Handles form submit.

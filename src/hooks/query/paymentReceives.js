@@ -44,7 +44,7 @@ export function usePaymentReceives(query, props) {
       select: transformPaymentReceives,
       defaultData: {
         paymentReceives: [],
-        pagination: { page: 1, pageSize: 12, total: 0 },
+        pagination: { page: 1, pageSize: 20, total: 0 },
         filterMeta: {},
       },
       ...props,

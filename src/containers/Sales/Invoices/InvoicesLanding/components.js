@@ -55,6 +55,7 @@ export const statusAccessor = (row) => {
               })}
             </span>
             <ProgressBar
+          
               animate={false}
               stripes={false}
               intent={Intent.PRIMARY}
@@ -130,7 +131,7 @@ export function ActionsMenu({
       <If condition={original.is_delivered && !original.is_fully_paid}>
         <MenuItem
           icon={<Icon icon="quick-payment-16" iconSize={16} />}
-          text={intl.get('add_payment')}
+          text={intl.get('payment_divider')}
           onClick={safeCallback(onQuick, original)}
         />
       </If>

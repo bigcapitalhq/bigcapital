@@ -16,6 +16,7 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withExpensesActions from './withExpensesActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withSettings from '../../Settings/withSettings';
 
 import { ActionsMenu, useExpensesTableColumns } from './components';
 
@@ -31,6 +32,9 @@ function ExpensesDataTable({
 
   // #withAlertsActions
   openAlert,
+
+  // #withSettings
+  expensesTableSize,
 }) {
   // Expenses list context.
   const {
@@ -119,6 +123,7 @@ function ExpensesDataTable({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
+        size={expensesTableSize}
         payload={{
           onPublish: handlePublishExpense,
           onDelete: handleDeleteExpense,
@@ -135,4 +140,7 @@ export default compose(
   withAlertsActions,
   withDrawerActions,
   withExpensesActions,
+  withSettings(({ expenseSettings }) => ({
+    expensesTableSize: expenseSettings?.tableSize,
+  })),
 )(ExpensesDataTable);
