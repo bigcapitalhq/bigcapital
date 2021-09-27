@@ -10,6 +10,7 @@ function AppIntlProvider({ currentLocale, isRTL, children }) {
     currentLocale,
     isRTL,
     isLTR: !isRTL,
+    direction: isRTL ? 'rtl' : 'ltr',
   };
 
   return (
