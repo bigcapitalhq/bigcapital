@@ -68,11 +68,12 @@ function InvoiceDetailActionsBar({
           text={<T id={'edit_invoice'} />}
           onClick={handleEditInvoice}
         />
+        <NavbarDivider />
         <If condition={invoice.is_delivered && !invoice.is_fully_paid}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="quick-payment-16" iconSize={16} />}
-            text={<T id={'payment_divider'} />}
+            text={<T id={'add_payment'} />}
             onClick={handleQuickPaymentInvoice}
           />
         </If>

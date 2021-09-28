@@ -820,7 +820,7 @@
   "invoice_date": "Invoice date",
   "invoice_amount": "Invoice amount",
   "make_payment": "Make Payment",
-  "payment_divider": "Payment divider",
+"add_payment": "Add Payment",
   "quick_receive_payment": "Quick Receive Payment",
   "amount_received": "Amount Received",
   "payment_no": "Payment No.",
