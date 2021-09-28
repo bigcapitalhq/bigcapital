@@ -833,7 +833,7 @@
   "the_payment_amount_that_received": "مبلغ الدفع الذي تم استلامه من الزبون أكبر من المبلغ المستحق لهذه الفاتورة.",
   "invoice_number": "رقم الفاتورة",
   "make_payment": "قم بالدفع",
-  "payment_divider": "إضافة دفع",
+  "add_payment": "إضافة دفع",
   "quick_receive_payment": "سند قبض سريع",
   "amount_received": "تم استلام المبلغ",
   "payment_receive_number_required": "مطلوب رقم استلام الدفعة",

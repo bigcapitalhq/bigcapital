@@ -131,7 +131,7 @@ export function ActionsMenu({
       <If condition={original.is_delivered && !original.is_fully_paid}>
         <MenuItem
           icon={<Icon icon="quick-payment-16" iconSize={16} />}
-          text={intl.get('payment_divider')}
+          text={intl.get('add_payment')}
           onClick={safeCallback(onQuick, original)}
         />
       </If>

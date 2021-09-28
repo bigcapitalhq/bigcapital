@@ -59,11 +59,12 @@ function BillDetailActionsBar({
           text={<T id={'edit_bill'} />}
           onClick={safeCallback(onEditBill)}
         />
+        <NavbarDivider />
         <If condition={bill.is_open && !bill.is_fully_paid}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="quick-payment-16" iconSize={16} />}
-            text={<T id={'payment_divider'} />}
+            text={<T id={'add_payment'} />}
             onClick={handleQuickBillPayment}
           />
         </If>

@@ -4,10 +4,8 @@
   opacity: 1;
   background-color: #fff;
   border-radius: 3px;
-  box-shadow:
-    0 0 0 1px rgba(16, 22, 26, .1),
-    0 4px 8px rgba(16, 22, 26, .2),
-    0 18px 46px 6px rgba(16, 22, 26, .2);
+  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 4px 8px rgba(16, 22, 26, 0.2),
+    0 18px 46px 6px rgba(16, 22, 26, 0.2);
   left: calc(50% - 250px);
   top: 20vh;
   width: 500px;
@@ -16,7 +14,7 @@
   &.bp3-overlay-appear,
   &.bp3-overlay-enter {
     filter: blur(20px);
-    opacity: .2
+    opacity: 0.2;
   }
 
   &.bp3-overlay-appear-active,
@@ -24,31 +22,28 @@
     filter: blur(0);
     opacity: 1;
     transition-delay: 0;
-    transition-duration: .2s;
+    transition-duration: 0.2s;
     transition-property: filter, opacity;
-    transition-timing-function: cubic-bezier(.4, 1, .75, .9)
+    transition-timing-function: cubic-bezier(0.4, 1, 0.75, 0.9);
   }
 
   &.bp3-overlay-exit {
     filter: blur(0);
-    opacity: 1
+    opacity: 1;
   }
 
   &.bp3-overlay-exit-active {
     filter: blur(20px);
-    opacity: .2;
+    opacity: 0.2;
     transition-delay: 0;
-    transition-duration: .2s;
+    transition-duration: 0.2s;
     transition-property: filter, opacity;
-    transition-timing-function: cubic-bezier(.4, 1, .75, .9)
+    transition-timing-function: cubic-bezier(0.4, 1, 0.75, 0.9);
   }
 
   &__omnibar {
-
     .bp3-input-group {
-
       .bp3-icon {
-
         svg {
           stroke: currentColor;
           fill: none;
@@ -59,7 +54,6 @@
       }
     }
 
-
     .bp3-input-group .bp3-input {
       border: 0;
       box-shadow: 0 0 0 0;
@@ -69,13 +63,13 @@
     }
 
     .bp3-input-group.bp3-large .bp3-input:not(:first-child) {
-      padding-left: 50px;
+      padding-left: 50px !important;
+    }
+    .bp3-input-group.bp3-large .bp3-input:not(:last-child) {
+      padding-right: 130px !important;
     }
 
-    .bp3-input {}
-
     .bp3-input-group {
-
       .bp3-icon {
         margin: 16px;
         color: #5c707f;
@@ -100,13 +94,12 @@
             color: #8499a7;
           }
         }
-        &.bp3-intent-primary{
-
-          &.bp3-active{
-            background-color: rgb(235, 241,  246);
+        &.bp3-intent-primary {
+          &.bp3-active {
+            background-color: rgb(235, 241, 246);
             color: #252b30;
 
-            .bp3-menu-item-label{
+            .bp3-menu-item-label {
               color: #5c7080;
             }
           }
@@ -125,11 +118,9 @@
       flex-direction: row;
       align-items: center;
     }
-
   }
 
   &__type-select-overlay {
-
     .bp3-button {
       margin: 0 !important;
     }
@@ -145,7 +136,6 @@
   }
 
   &__action {
-
     &:not(:first-of-type) {
       margin-left: 14px;
     }
@@ -155,7 +145,6 @@
     }
 
     &--arrows {
-
       .bp3-tag {
         padding: 0;
         text-align: center;
@@ -177,8 +166,8 @@
     }
   }
 
-  &__footer {}
-
+  &__footer {
+  }
 
   &-input-right-elements {
     display: flex;
@@ -194,7 +183,6 @@
     &--estimate,
     &--bill,
     &--receipt {
-
       .amount {
         color: #252b30;
       }
