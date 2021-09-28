@@ -10,6 +10,7 @@
       }
     }
   }
+
   .table {
     text-align: left;
     border-spacing: 0;
@@ -29,12 +30,13 @@
         font-weight: 600;
         border-bottom: 1px solid rgb(224, 224, 224);
 
-        > div {
+        >div {
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
         }
       }
+
       .sort-icon {
         width: 0;
         height: 0;
@@ -48,6 +50,7 @@
           border-right: 4px solid transparent;
           border-bottom: 6px solid #666;
         }
+
         &--asc {
           border-left: 4px solid transparent;
           border-right: 4px solid transparent;
@@ -101,6 +104,7 @@
       .bp3-control {
         margin-bottom: 0;
       }
+
       .resizer {
         display: inline-block;
         background: transparent;
@@ -127,6 +131,7 @@
 
       .bp3-control.bp3-checkbox .bp3-control-indicator {
         border: 1px solid #c2c2c2;
+        cursor: auto;
 
         &,
         &:hover {
@@ -136,8 +141,9 @@
       }
 
       .bp3-control.bp3-checkbox {
-        input:checked ~ .bp3-control-indicator,
-        input:indeterminate ~ .bp3-control-indicator {
+
+        input:checked~.bp3-control-indicator,
+        input:indeterminate~.bp3-control-indicator {
           border-color: #0052ff;
         }
       }
@@ -165,7 +171,7 @@
       overflow: auto;
 
       .tbody-inner {
-        > .loading {
+        >.loading {
           padding-top: 40px;
         }
       }
@@ -178,6 +184,7 @@
         .placeholder {
           color: #a0a0a0;
         }
+
         .text-overview {
           overflow: hidden;
           white-space: nowrap;
@@ -195,12 +202,15 @@
           }
         }
       }
+
       .tr:hover .td {
         background: #f3f7fc;
       }
+
       .tr.is-context-menu-active .td {
         background: #f3fafc;
       }
+
       .td.actions .#{$ns}-button {
         background: #e6effb;
         border: 0;
@@ -212,13 +222,16 @@
         &:focus {
           background-color: #cfdcee;
         }
+
         svg {
           color: #425361;
         }
+
         .bp3-icon-more-h-16 {
           margin-top: 2px;
         }
       }
+
       .tr.no-results {
         .td {
           flex-direction: column;
@@ -234,7 +247,7 @@
         }
       }
 
-      > .loading {
+      >.loading {
         padding-top: 50px;
       }
     }
@@ -242,29 +255,32 @@
     .tr .th,
     .tr .td {
       .expand-toggle {
-        cursor: pointer;
+        cursor: auto;
         display: inline-block;
-        padding: 0 8px 0 0;
+        padding: 4px 8px;
         padding-left: 0;
         margin: auto 0;
         margin-left: 4px;
+        vertical-align: top;
 
-        .arrow-right {
+        .expand-arrow {
           width: 0;
           height: 0;
           border-top: 5px solid transparent;
           border-bottom: 5px solid transparent;
           border-left: 8px solid #acacac;
           display: block;
+          transition: all 0.1s cubic-bezier(.4, 1, .75, .9);
+
+          &.is-expanded {
+            transform: rotate(90deg);
+          }
         }
 
-        .arrow-down {
-          width: 0;
-          height: 0;
-          border-left: 5px solid transparent;
-          border-right: 5px solid transparent;
-          border-top: 8px solid #acacac;
-          display: block;
+        &:hover {
+          .expand-arrow {
+            border-left-color: #7d8593;
+          }
         }
       }
     }
@@ -274,16 +290,17 @@
       width: 100%;
     }
 
-    &-size{
+    &-size {
 
-      &--medium{
-        .tbody .tr{
+      &--medium {
+        .tbody .tr {
           background-size: red;
           min-height: 46px;
         }
       }
-      &--small{
-        .tbody .tr{
+
+      &--small {
+        .tbody .tr {
           min-height: 40px;
         }
       }
@@ -309,6 +326,7 @@
   }
 
   &.has-sticky {
+
     .thead,
     .tfoot {
       position: sticky;
@@ -322,6 +340,7 @@
     .tfoot {
       bottom: 0;
     }
+
     .tbody {
       position: relative;
       z-index: 0;
@@ -352,7 +371,7 @@
   }
 
 
-  
+
 }
 
 .table-constrant {

@@ -113,7 +113,6 @@ function ManualJournalsDataTable({
         data={manualJournals}
         manualSortBy={true}
         selectionColumn={true}
-        expandable={true}
         sticky={true}
         loading={isManualJournalsLoading}
         headerLoading={isManualJournalsLoading}

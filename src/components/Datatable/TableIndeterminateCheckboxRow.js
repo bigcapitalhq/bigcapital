@@ -3,7 +3,7 @@ import { Checkbox } from '@blueprintjs/core';
 
 export default function TableIndeterminateCheckboxRow({ row }) {
   return (
-    <div>
+    <div class="selection-checkbox">
       <Checkbox {...row.getToggleRowSelectedProps()} />
     </div>
   );
