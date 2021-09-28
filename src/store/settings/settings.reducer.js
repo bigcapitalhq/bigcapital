@@ -43,6 +43,9 @@ const initialState = {
     vendors: {
       tableSize: 'medium',
     },
+    accounts: {
+      tableSize: 'medium'
+    }
   },
 };
 

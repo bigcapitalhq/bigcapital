@@ -89,7 +89,7 @@ function CustomerActionsBar({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('custoemrs', 'tableSize', size);
+    addSetting('customers', 'tableSize', size);
   };
 
   return (
