@@ -8,6 +8,7 @@ import {
   transformToForm,
   repeatValue,
   ensureEntriesHasEmptyLine,
+  orderingLinesIndexes
 } from 'utils';
 
 const ERROR = {
@@ -103,4 +104,26 @@ export const accountsFieldShouldUpdate = (newProps, oldProps) => {
     newProps.accounts !== oldProps.accounts ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
+};
+
+
+/**
+ * Filter expense entries that has no amount or expense account.
+ */
+export const filterNonZeroEntries = (categories) => { 
+  return categories.filter(
+    (category) => category.amount && category.expense_account_id,
+  );
+}
+
+/**
+ * Transformes the form values to request body.
+ */
+export const transformFormValuesToRequest = (values) => {
+  const categories = filterNonZeroEntries(values.categories);
+
+  return {
+    ...values,
+    categories: R.compose(orderingLinesIndexes)(categories),
+  };
 };

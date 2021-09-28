@@ -2,6 +2,8 @@ import React from 'react';
 import { useFormikContext } from 'formik';
 import moment from 'moment';
 import * as R from 'ramda';
+import { omit } from 'lodash';
+import intl from 'react-intl-universal';
 import {
   defaultFastFieldShouldUpdate,
   transactionNumber,
@@ -37,6 +39,11 @@ export const defaultEstimate = {
   entries: [...repeatValue(defaultEstimateEntry, MIN_LINES_NUMBER)],
 };
 
+const ERRORS = {
+  ESTIMATE_NUMBER_IS_NOT_UNQIUE: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE',
+  SALE_ESTIMATE_NO_IS_REQUIRED: 'SALE_ESTIMATE_NO_IS_REQUIRED',
+};
+
 export const transformToEditForm = (estimate) => {
   const initialEntries = [
     ...estimate.entries.map((estimate) => ({
@@ -54,8 +61,8 @@ export const transformToEditForm = (estimate) => {
 
   return {
     ...transformToForm(estimate, defaultEstimate),
-    entries
-  }
+    entries,
+  };
 };
 
 /**
@@ -106,3 +113,41 @@ export const ITEMS_FILTER_ROLES = JSON.stringify([
     comparator: 'equals',
   },
 ]);
+
+/**
+ * Transform response errors to fields.
+ * @param {*} errors 
+ * @param {*} param1 
+ */
+export const handleErrors = (errors, { setErrors }) => {
+  if (errors.some((e) => e.type === ERRORS.ESTIMATE_NUMBER_IS_NOT_UNQIUE)) {
+    setErrors({
+      estimate_number: intl.get('estimate_number_is_not_unqiue'),
+    });
+  }
+  if (
+    errors.some((error) => error.type === ERRORS.SALE_ESTIMATE_NO_IS_REQUIRED)
+  ) {
+    setErrors({
+      estimate_number: intl.get(
+        'estimate.field.error.estimate_number_required',
+      ),
+    });
+  }
+};
+
+/**
+ * Transform the form values to request body.
+ */
+export const transfromsFormValuesToRequest = (values) => {
+  const entries = values.entries.filter(
+    (item) => item.item_id && item.quantity,
+  );
+  return {
+    ...omit(values, ['estimate_number_manually', 'estimate_number']),
+    ...(values.estimate_number_manually && {
+      estimate_number: values.estimate_number,
+    }),
+    entries: entries.map((entry) => ({ ...omit(entry, ['amount']) })),
+  };
+};

@@ -2,12 +2,11 @@ import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { omit, sumBy, isEmpty } from 'lodash';
+import { sumBy, isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from 'common/classes';
-import { ERROR } from 'common/errors';
 import {
   EditReceiptFormSchema,
   CreateReceiptFormSchema,
@@ -27,7 +26,12 @@ import withCurrentOrganization from 'containers/Organization/withCurrentOrganiza
 
 import { AppToaster } from 'components';
 import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
-import { transformToEditForm, defaultReceipt } from './utils';
+import {
+  transformToEditForm,
+  defaultReceipt,
+  handleErrors,
+  transformFormValuesToRequest,
+} from './utils';
 
 /**
  * Receipt form.
@@ -76,20 +80,6 @@ function ReceiptForm({
     [receipt, preferredDepositAccount, nextReceiptNumber, receiptAutoIncrement],
   );
 
-  // Transform response error to fields.
-  const handleErrors = (errors, { setErrors }) => {
-    if (errors.some((e) => e.type === ERROR.SALE_RECEIPT_NUMBER_NOT_UNIQUE)) {
-      setErrors({
-        receipt_number: intl.get('sale_receipt_number_not_unique'),
-      });
-    }
-    if (errors.some((e) => e.type === ERROR.SALE_RECEIPT_NO_IS_REQUIRED)) {
-      setErrors({
-        receipt_number: intl.get('receipt.field.error.receipt_number_required'),
-      });
-    }
-  };
-
   // Handle the form submit.
   const handleFormSubmit = (
     values,
@@ -109,13 +99,8 @@ function ReceiptForm({
       return;
     }
     const form = {
-      ...omit(values, ['receipt_number_manually', 'receipt_number']),
-      ...(values.receipt_number_manually && {
-        receipt_number: values.receipt_number,
-        currency_code: base_currency,
-      }),
+      ...transformFormValuesToRequest(values),
       closed: submitPayload.status,
-      entries: entries.map((entry) => ({ ...omit(entry, ['total']) })),
     };
     // Handle the request success.
     const onSuccess = (response) => {

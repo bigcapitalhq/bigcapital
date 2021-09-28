@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as R from 'ramda';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { isEmpty } from 'lodash';
@@ -16,13 +15,14 @@ import BillItemsEntriesEditor from './BillItemsEntriesEditor';
 
 import { AppToaster } from 'components';
 
-import { ERROR } from 'common/errors';
 import { useBillFormContext } from './BillFormProvider';
 import { compose, safeSumBy } from 'utils';
 import {
   defaultBill,
+  filterNonZeroEntries,
   transformToEditForm,
-  transformEntriesToSubmit,
+  transformFormValuesToRequest,
+  handleErrors,
 } from './utils';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
@@ -55,35 +55,12 @@ function BillForm({
     [bill, base_currency],
   );
 
-  // Transform response error to fields.
-  const handleErrors = (errors, { setErrors }) => {
-    if (errors.some((e) => e.type === ERROR.BILL_NUMBER_EXISTS)) {
-      setErrors({
-        bill_number: intl.get('bill_number_exists'),
-      });
-    }
-    if (
-      errors.some(
-        (e) => e.type === ERROR.ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED,
-      )
-    ) {
-      setErrors(
-        AppToaster.show({
-          intent: Intent.DANGER,
-          message: 'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
-        }),
-      );
-    }
-  };
-
   // Handles form submit.
   const handleFormSubmit = (
     values,
     { setSubmitting, setErrors, resetForm },
   ) => {
-    const entries = values.entries.filter(
-      (item) => item.item_id && item.quantity,
-    );
+    const entries = filterNonZeroEntries(values.entries);
     const totalQuantity = safeSumBy(entries, 'quantity');
 
     if (totalQuantity === 0) {
@@ -95,9 +72,8 @@ function BillForm({
       return;
     }
     const form = {
-      ...values,
+      ...transformFormValuesToRequest(values),
       open: submitPayload.status,
-      entries: transformEntriesToSubmit(entries),
     };
     // Handle the request success.
     const onSuccess = (response) => {
