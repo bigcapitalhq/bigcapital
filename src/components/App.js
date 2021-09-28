@@ -3,7 +3,6 @@ import { Router, Switch, Route } from 'react-router';
 import { createBrowserHistory } from 'history';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { ConfigProvider } from '@blueprintjs/core';
 
 import 'style/App.scss';
 import 'moment/locale/ar-ly';
@@ -18,28 +17,22 @@ import Authentication from 'components/Authentication';
 import { SplashScreen } from '../components';
 import { queryConfig } from '../hooks/query/base';
 
-import { useAppIntlContext } from './AppIntlProvider';
-
 /**
  * App inner.
  */
 function AppInsider({ history }) {
-  const { direction } = useAppIntlContext();
-
   return (
     <div className="App">
-      <ConfigProvider direction={direction}>
-        <Router history={history}>
-          <Switch>
-            <Route path={'/auth'} component={Authentication} />
-            <Route path={'/'}>
-              <PrivateRoute component={DashboardPrivatePages} />
-            </Route>
-          </Switch>
-        </Router>
+      <Router history={history}>
+        <Switch>
+          <Route path={'/auth'} component={Authentication} />
+          <Route path={'/'}>
+            <PrivateRoute component={DashboardPrivatePages} />
+          </Route>
+        </Switch>
+      </Router>
 
-        <GlobalErrors />
-      </ConfigProvider>
+      <GlobalErrors />
     </div>
   );
 }
