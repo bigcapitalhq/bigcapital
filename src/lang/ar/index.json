@@ -682,7 +682,7 @@
   "select_display_name_as": "حدد اسم العرض",
   "opening_date": "تاريخ الافتتاح",
   "item_code": "رمز المنتج",
-  "quantity_on_hand": "كمية في اليد",
+  "quantity_on_hand": "كمية الحالية",
   "average_rate": "المعدل المتوسط",
   "the_name_used_before": "الاسم مستخدم بالفعل.",
   "the_item_has_associated_transactions": "المنتج له معاملات مرتبطة.",
