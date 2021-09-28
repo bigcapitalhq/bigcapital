@@ -36,9 +36,9 @@ jobs:
           paths:
             - /caches/app.tar
       - persist_to_workspace:
-          root: ~/
+          root: /caches
           paths:
-            - /caches/app.tar
+            - ./app.tar
   deploy:
     working_directory: ~/app
     docker:
