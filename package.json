@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@babel/core": "7.8.4",
-    "@blueprintjs/core": "^3.50.2",
-    "@blueprintjs/datetime": "^3.23.12",
+    "@bigcapitalhq/blueprintjs": "^3.50.2",
+    "@bigcapitalhq/blueprintjs-datetime": "^3.23.12",
     "@blueprintjs/popover2": "^0.11.1",
     "@blueprintjs/select": "^3.11.2",
     "@blueprintjs/table": "^3.8.3",
