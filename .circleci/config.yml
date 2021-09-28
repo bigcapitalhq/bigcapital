@@ -25,7 +25,7 @@ jobs:
       - run:
           name: Build application Docker image
           command: |
-            docker build -t abouhuolia/bigcapital-client:latest .
+            docker build --build-arg GITHUB_USERNAME=$GITHUB_USERNAME GITHUB_PASS=$GITHUB_PASS GITHUB_EMAIL=$GITHUB_EMAIL -t abouhuolia/bigcapital-client:latest .
       - run:
           name: Save Docker image layer cache
           command: |
@@ -34,8 +34,8 @@ jobs:
       - save_cache:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
-            - /caches/app.tar            
-      - run: 
+            - /caches/app.tar
+      - run:
           name: Publish Docker Image to Docker Hub
           command: |
             docker login -u abouhuolia -p 1532015325_ASdfqwer
