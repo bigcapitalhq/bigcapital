@@ -65,8 +65,8 @@
     .bp3-input-group.bp3-large .bp3-input:not(:first-child) {
       padding-left: 50px !important;
     }
-
-    .bp3-input {
+    .bp3-input-group.bp3-large .bp3-input:not(:last-child) {
+      padding-right: 130px !important;
     }
 
     .bp3-input-group {
