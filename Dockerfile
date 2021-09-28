@@ -8,11 +8,13 @@ COPY ./package.json /app/package.json
 COPY ./package-lock.json /app/package-lock.json
 COPY ./.npmrc /app/.npmrc
 
-ARG GITHUB_USERNAME=
-ARG GITHUB_PASS=
-ARG GITHUB_EMAIL=
+ARG GITHUB_USERNAME
+ARG GITHUB_PASS
+ARG GITHUB_EMAIL
 
-RUN "${GITHUB_USERNAME}\n${GITHUB_PASS}\n${GITHUB_EMAIL}" | npm login --registry=https://npm.pkg.github.com
+RUN npm install -g npm-cli-login
+
+RUN npm-cli-login -r=https://npm.pkg.github.com -u=${GITHUB_USERNAME} -p=${GITHUB_PASS} -e=${GITHUB_EMAIL}
 
 RUN npm install
 
