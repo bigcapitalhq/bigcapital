@@ -14,7 +14,7 @@ ARG GITHUB_EMAIL
 
 RUN npm install -g npm-cli-login
 
-RUN npm-cli-login -r=https://npm.pkg.github.com -u=$GITHUB_USERNAME -p=$GITHUB_PASS -e=$GITHUB_EMAIL
+RUN npm-cli-login -s @bigcapitalhq -r https://npm.pkg.github.com -u $GITHUB_USERNAME -p $GITHUB_PASS -e $GITHUB_EMAIL
 
 RUN npm install
 
