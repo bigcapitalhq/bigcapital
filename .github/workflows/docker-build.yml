@@ -18,11 +18,8 @@ on:
   workflow_dispatch:
 
 env:
-  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-  GKE_CLUSTER: cluster-1    # TODO: update to cluster name
-  GKE_ZONE: us-central1-c   # TODO: update to cluster zone
-  DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
-  IMAGE: static-site
+  REGISTRY: ghcr.io
+  IMAGE_NAME: abouhuolia/bigcapital-client
 
 jobs:
   setup-build-publish-deploy:
@@ -34,12 +31,28 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    # Build the Docker image
-    - name: Build
-      run: |-
-        docker build -t abouhuolia/bigcapital-client:latest .
+    # Login to Container registry.
+    - name: Log in to the Container registry
+      uses: docker/login-action@v1
+      with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    # Push the Docker image to Google Container Registry
-    - name: Publish
-      run: |-
-        docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+    # Builds and push the Docker image.
+    - name: Build and push Docker image
+      uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+      with:
+          context: .
+          push: true
+          tags: bigcapitalhq/server:latest
+          labels: ${{ steps.meta.outputs.labels }}
+        
+        
+
