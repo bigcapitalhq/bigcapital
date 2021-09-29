@@ -20,7 +20,7 @@
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",
     "accounting": "^0.4.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.2",
     "babel-eslint": "10.0.3",
     "babel-jest": "^24.9.0",
     "babel-loader": "8.0.6",
