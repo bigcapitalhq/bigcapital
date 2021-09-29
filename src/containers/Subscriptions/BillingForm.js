@@ -49,7 +49,10 @@ function BillingForm({
 
   // Handle form submitting.
   const handleSubmit = (values, { setSubmitting }) => {
-    requestSubmitBilling(values)
+    requestSubmitBilling({
+      ...values,
+      plan_slug: 'essentials-monthly',
+    })
       .then((response) => {
         setSubmitting(false);
       })
