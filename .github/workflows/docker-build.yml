@@ -53,6 +53,11 @@ jobs:
           push: true
           tags: ghcr.io/bigcapitalhq/client:latest
           labels: ${{ steps.meta.outputs.labels }}
+    # Send notification to Slack channel.
+    - name: Slack Notification built and published successfully.
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         
         
 
