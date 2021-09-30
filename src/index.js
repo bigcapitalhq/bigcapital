@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
+import * as Sentry from '@sentry/react';
+import { Integrations } from '@sentry/tracing';
+
 import 'services/yup';
 import App from 'components/App';
 import * as serviceWorker from 'serviceWorker';
@@ -13,6 +16,17 @@ if (process.env.NODE_ENV === 'development') {
 
   whyDidYouRender(React, {
     trackAllPureComponents: false,
+  });
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  Sentry.init({
+    dsn: 'https://021bef720bbb4ce2b98f679f72984843@o1021356.ingest.sentry.io/5987236',
+    integrations: [new Integrations.BrowserTracing()],
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
   });
 }
 
