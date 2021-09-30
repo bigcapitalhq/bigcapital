@@ -11,6 +11,8 @@
     "@blueprintjs/table": "^3.8.3",
     "@blueprintjs/timezone": "^3.6.2",
     "@reduxjs/toolkit": "^1.2.5",
+    "@sentry/react": "^6.13.2",
+    "@sentry/tracing": "^6.13.2",
     "@svgr/webpack": "4.3.3",
     "@tanem/react-nprogress": "^3.0.24",
     "@testing-library/jest-dom": "^4.2.4",
