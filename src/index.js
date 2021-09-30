@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'development') {
   Sentry.init({
     dsn: 'https://021bef720bbb4ce2b98f679f72984843@o1021356.ingest.sentry.io/5987236',
     integrations: [new Integrations.BrowserTracing()],
