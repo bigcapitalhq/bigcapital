@@ -6,15 +6,36 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 
 import 'style/App.scss';
 import 'moment/locale/ar-ly';
-import 'moment/locale/es-us'
+import 'moment/locale/es-us';
 
 import AppIntlLoader from './AppIntlLoader';
 import PrivateRoute from 'components/Guards/PrivateRoute';
 import GlobalErrors from 'containers/GlobalErrors/GlobalErrors';
 import DashboardPrivatePages from 'components/Dashboard/PrivatePages';
 import Authentication from 'components/Authentication';
+
 import { SplashScreen } from '../components';
-import { queryConfig } from '../hooks/query/base'
+import { queryConfig } from '../hooks/query/base';
+
+/**
+ * App inner.
+ */
+function AppInsider({ history }) {
+  return (
+    <div className="App">
+      <Router history={history}>
+        <Switch>
+          <Route path={'/auth'} component={Authentication} />
+          <Route path={'/'}>
+            <PrivateRoute component={DashboardPrivatePages} />
+          </Route>
+        </Switch>
+      </Router>
+
+      <GlobalErrors />
+    </div>
+  );
+}
 
 /**
  * Core application.
@@ -31,18 +52,7 @@ export default function App() {
       <SplashScreen />
 
       <AppIntlLoader>
-        <div className="App">
-          <Router history={history}>
-            <Switch>
-              <Route path={'/auth'} component={Authentication} />
-              <Route path={'/'}>
-                <PrivateRoute component={DashboardPrivatePages} />
-              </Route>
-            </Switch>
-          </Router>
-
-          <GlobalErrors />
-        </div>
+        <AppInsider history={history} />
       </AppIntlLoader>
 
       <ReactQueryDevtools initialIsOpen />

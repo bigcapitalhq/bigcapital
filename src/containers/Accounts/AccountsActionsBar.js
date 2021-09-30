@@ -17,6 +17,7 @@ import {
   If,
   DashboardActionViewsList,
   DashboardFilterButton,
+  DashboardRowsHeightButton,
 } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -27,7 +28,8 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withAlertActions from 'containers/Alert/withAlertActions';
 import withAccountsTableActions from './withAccountsTableActions';
-
+import withSettings from '../Settings/withSettings';
+import withSettingsActions from '../Settings/withSettingsActions';
 import { compose } from 'utils';
 
 /**
@@ -50,6 +52,12 @@ function AccountsActionsBar({
 
   // #ownProps
   onFilterChanged,
+
+  // #withSettings
+  accountsTableSize,
+
+  // #withSettingsActions
+  addSetting,
 }) {
   const { resourceViews, fields } = useAccountsChartContext();
 
@@ -93,6 +101,10 @@ function AccountsActionsBar({
     refresh();
   };
 
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size) => {
+    addSetting('accounts', 'tableSize', size);
+  };
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -165,6 +177,12 @@ function AccountsActionsBar({
           icon={<Icon icon="file-import-16" iconSize={16} />}
           text={<T id={'import'} />}
         />
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={accountsTableSize}
+          onChange={handleTableRowSizeChange}
+        />
+        <NavbarDivider />
         <Switch
           labelElement={<T id={'inactive'} />}
           defaultChecked={accountsInactiveMode}
@@ -185,10 +203,14 @@ function AccountsActionsBar({
 export default compose(
   withDialogActions,
   withAlertActions,
+  withSettingsActions,
   withAccounts(({ accountsSelectedRows, accountsTableState }) => ({
     accountsSelectedRows,
     accountsInactiveMode: accountsTableState.inactiveMode,
     accountsFilterConditions: accountsTableState.filterRoles,
+  })),
+  withSettings(({ accountsSettings }) => ({
+    accountsTableSize: accountsSettings.tableSize,
   })),
   withAccountsTableActions,
 )(AccountsActionsBar);

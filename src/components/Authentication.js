@@ -6,7 +6,6 @@ import authenticationRoutes from 'routes/authentication';
 import { FormattedMessage as T } from 'components';
 import Icon from 'components/Icon';
 import { useIsAuthenticated } from 'hooks/state';
-import {AuthenticationBoot} from '../containers/Authentication/AuthenticationBoot';
 import 'style/pages/Authentication/Auth.scss';
 
 function PageFade(props) {
@@ -26,7 +25,6 @@ export default function AuthenticationWrapper({ ...rest }) {
       ) : (
         <BodyClassName className={'authentication'}>
           <div class="authentication-page">
-          <AuthenticationBoot />
             <a
               href={'http://bigcapital.ly'}
               className={'authentication-page__goto-bigcapital'}

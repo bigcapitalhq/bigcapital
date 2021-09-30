@@ -1,5 +1,7 @@
 import React from 'react';
 import moment from 'moment';
+import { Intent } from '@blueprintjs/core';
+import { omit } from 'lodash';
 import {
   compose,
   transformToForm,
@@ -7,7 +9,6 @@ import {
   transactionNumber,
 } from 'utils';
 import { useFormikContext } from 'formik';
-import { Intent } from '@blueprintjs/core';
 
 import { defaultFastFieldShouldUpdate } from 'utils';
 import intl from 'react-intl-universal';
@@ -146,3 +147,20 @@ export const ITEMS_FILTER_ROLES_QUERY = JSON.stringify([
     comparator: 'equals',
   },
 ]);
+
+/**
+ * Transformes the form values to request body values.
+ */
+export function transformValueToRequest(values) {
+  const entries = values.entries.filter(
+    (item) => item.item_id && item.quantity,
+  );
+  return {
+    ...omit(values, ['invoice_no', 'invoice_no_manually']),
+    ...(values.invoice_no_manually && {
+      invoice_no: values.invoice_no,
+    }),
+    entries: entries.map((entry) => ({ ...omit(entry, ['amount']) })),
+    delivered: false,
+  };
+}

@@ -85,3 +85,21 @@ export function appIntlIsLoading(toggle) {
     payload: { isLoading: toggle },
   }; 
 }
+
+/**
+ * Splash start loading.
+ */
+export function splashStartLoading() {
+  return {
+    type: t.SPLASH_START_LOADING,
+  };
+}
+
+/**
+ * Splash stop loading.
+ */
+export function splashStopLoading() {
+  return {
+    type: t.SPLASH_STOP_LOADING,
+  }  
+}

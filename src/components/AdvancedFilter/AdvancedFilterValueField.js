@@ -4,8 +4,9 @@ import { DateInput } from '@blueprintjs/datetime';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 import { isUndefined } from 'lodash';
+
 import { useAutofocus } from 'hooks';
-import { Choose, ListSelect } from 'components';
+import { T, Choose, ListSelect } from 'components';
 import { momentFormatter } from 'utils';
 
 function AdvancedFilterEnumerationField({ options, value, ...rest }) {
@@ -19,7 +20,7 @@ function AdvancedFilterEnumerationField({ options, value, ...rest }) {
         minimal: true,
         captureDismiss: true,
       }}
-      defaultText={`Select an option`}
+      defaultText={<T id={'filter.select_option'} />}
       textProp={'label'}
       selectedItemProp={'key'}
       {...rest}
@@ -32,8 +33,7 @@ const IFieldType = {
   BOOLEAN: 'boolean',
   NUMBER: 'number',
   DATE: 'date',
-}
-
+};
 
 function tansformDateValue(date, defaultValue = null) {
   return date ? moment(date).toDate() : defaultValue;
@@ -46,13 +46,13 @@ export default function AdvancedFilterValueField2({
   fieldType,
   options,
   onChange,
-  isFocus
+  isFocus,
 }) {
   const [localValue, setLocalValue] = React.useState(value);
 
   React.useEffect(() => {
     if (localValue !== value && !isUndefined(value)) {
-      setLocalValue(value)
+      setLocalValue(value);
     }
   }, [localValue, value]);
 
@@ -106,10 +106,10 @@ export default function AdvancedFilterValueField2({
             position: Position.BOTTOM,
           }}
           shortcuts={true}
-          placeholder={'Enter date'}
+          placeholder={intl.get('filter.enter_date')}
           fill={true}
           inputProps={{
-            fill: true
+            fill: true,
           }}
         />
       </Choose.When>
@@ -120,7 +120,7 @@ export default function AdvancedFilterValueField2({
 
       <Choose.Otherwise>
         <InputGroup
-          placeholder={intl.get('value')}
+          placeholder={intl.get('filter.value')}
           onChange={handleInputChange}
           value={localValue}
           inputRef={valueRef}

@@ -37,6 +37,7 @@ export const useManualJournalsColumns = () => {
         className: 'journal_number',
         width: 100,
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'journal_type',
@@ -44,6 +45,7 @@ export const useManualJournalsColumns = () => {
         accessor: 'journal_type',
         width: 110,
         clickable: true,
+        textOverview: true,
       },
       {
         id: 'status',

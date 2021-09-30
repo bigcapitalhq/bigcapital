@@ -46,7 +46,6 @@ function VendorDetailsActionsBar({
   // Handle delete vendor.
   const onDeleteContact = () => {
     openAlert(`vendor-delete`, { contactId: vendorId });
-    closeDrawer('vendor-details-drawer');
   };
 
   const handleNewInvoiceClick = () => {
@@ -91,7 +90,7 @@ function VendorDetailsActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="pen-18" />}
-          text={<T id={'vendor.drawer.action.edit_vendor'} />}
+          text={<T id={'vendor.drawer.action.edit'} />}
           onClick={safeCallback(onEditContact)}
         />
         <NavbarDivider />

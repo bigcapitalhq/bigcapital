@@ -30,6 +30,7 @@ function VendorsBalanceSummary({
 }) {
   const [filter, setFilter] = useState({
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
+    filterByOption: 'with-transactions',
   });
 
   // Handle refetch vendors balance summary.

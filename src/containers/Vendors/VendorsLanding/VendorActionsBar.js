@@ -8,14 +8,15 @@ import {
   Switch,
   Alignment,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
 import {
   If,
+  FormattedMessage as T,
   DashboardActionViewsList,
   DashboardFilterButton,
+  DashboardRowsHeightButton,
   AdvancedFilterPopover,
 } from 'components';
 
@@ -25,6 +26,9 @@ import { useHistory } from 'react-router-dom';
 
 import withVendorsActions from './withVendorsActions';
 import withVendors from './withVendors';
+
+import withSettingsActions from '../../Settings/withSettingsActions';
+import withSettings from '../../Settings/withSettings';
 
 import { compose } from 'utils';
 
@@ -38,6 +42,12 @@ function VendorActionsBar({
   // #withVendorActions
   setVendorsTableState,
   vendorsInactiveMode,
+
+  // #withSettings
+  vendorsTableSize,
+
+  // #withSettingsActions
+  addSetting,
 }) {
   const history = useHistory();
 
@@ -68,6 +78,9 @@ function VendorActionsBar({
     refresh();
   };
 
+  const handleTableRowSizeChange = (size) => {
+    addSetting('vendors', 'tableSize', size);
+  };
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -117,6 +130,12 @@ function VendorActionsBar({
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
         />
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={vendorsTableSize}
+          onChange={handleTableRowSizeChange}
+        />
+        <NavbarDivider />
         <Switch
           labelElement={<T id={'inactive'} />}
           defaultChecked={vendorsInactiveMode}
@@ -136,8 +155,12 @@ function VendorActionsBar({
 
 export default compose(
   withVendorsActions,
+  withSettingsActions,
   withVendors(({ vendorsTableState }) => ({
     vendorsInactiveMode: vendorsTableState.inactiveMode,
     vendorsFilterConditions: vendorsTableState.filterRoles,
+  })),
+  withSettings(({ vendorsSettings }) => ({
+    vendorsTableSize: vendorsSettings?.tableSize,
   })),
 )(VendorActionsBar);

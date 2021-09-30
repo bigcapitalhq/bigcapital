@@ -1,16 +1,16 @@
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
-import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
+import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 import { transformErrors } from 'containers/Customers/utils';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { useDeleteCustomer } from 'hooks/query';
 import { compose } from 'utils';
-
 
 /**
  * Customer delete alert.
@@ -24,12 +24,11 @@ function CustomerDeleteAlert({
 
   // #withAlertActions
   closeAlert,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
-  
-  const {
-    mutateAsync: deleteCustomerMutate,
-    isLoading
-  } = useDeleteCustomer();
+  const { mutateAsync: deleteCustomerMutate, isLoading } = useDeleteCustomer();
 
   // handle cancel delete  alert.
   const handleCancelDeleteAlert = () => {
@@ -44,10 +43,17 @@ function CustomerDeleteAlert({
           message: intl.get('the_customer_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
+        closeDrawer('customer-details-drawer');
       })
-      .catch(({ response: { data: { errors } } }) => {
-        transformErrors(errors);
-      })
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          transformErrors(errors);
+        },
+      )
       .finally(() => {
         closeAlert(name);
       });
@@ -76,4 +82,5 @@ function CustomerDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions,
 )(CustomerDeleteAlert);

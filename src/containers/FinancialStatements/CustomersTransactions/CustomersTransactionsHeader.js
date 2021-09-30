@@ -30,22 +30,25 @@ function CustomersTransactionsHeader({
 }) {
   // Default form values.
   const defaultValues = {
+    ...pageFilter,
     fromDate: moment().toDate(),
     toDate: moment().toDate(),
     customersIds: [],
   };
   // Initial form values.
-  const initialValues = transformToForm({
-    ...pageFilter,
-    fromDate: moment(pageFilter.fromDate).toDate(),
-    toDate: moment(pageFilter.toDate).toDate(),
-  }, defaultValues);
+  const initialValues = transformToForm(
+    {
+      ...defaultValues,
+      ...pageFilter,
+      fromDate: moment(pageFilter.fromDate).toDate(),
+      toDate: moment(pageFilter.toDate).toDate(),
+    },
+    defaultValues,
+  );
 
   // Validation schema.
   const validationSchema = Yup.object().shape({
-    fromDate: Yup.date()
-      .required()
-      .label(intl.get('fromDate')),
+    fromDate: Yup.date().required().label(intl.get('fromDate')),
     toDate: Yup.date()
       .min(Yup.ref('fromDate'))
       .required()
@@ -59,7 +62,9 @@ function CustomersTransactionsHeader({
     setSubmitting(false);
   };
   // Handle drawer close action.
-  const handleDrawerClose = () => { toggleFilterDrawer(false); };
+  const handleDrawerClose = () => {
+    toggleFilterDrawer(false);
+  };
 
   return (
     <FinancialStatementHeader

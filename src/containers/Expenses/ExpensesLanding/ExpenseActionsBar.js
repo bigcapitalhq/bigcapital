@@ -9,16 +9,17 @@ import {
   Alignment,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import {
   If,
+  DashboardRowsHeightButton,
   DashboardActionViewsList,
   DashboardFilterButton,
   AdvancedFilterPopover,
+  FormattedMessage as T,
 } from 'components';
 
 import { useRefreshExpenses } from 'hooks/query/expenses';
@@ -26,6 +27,9 @@ import { useExpensesListContext } from './ExpensesListProvider';
 
 import withExpensesActions from './withExpensesActions';
 import withExpenses from './withExpenses';
+
+import withSettingsActions from '../../Settings/withSettingsActions';
+import withSettings from '../../Settings/withSettings';
 
 import { compose } from 'utils';
 
@@ -38,6 +42,12 @@ function ExpensesActionsBar({
 
   // #withExpenses
   expensesFilterConditions,
+
+  // #withSettings
+  expensesTableSize,
+
+  // #withSettingsActions
+  addSetting,
 }) {
   // History context.
   const history = useHistory();
@@ -66,6 +76,11 @@ function ExpensesActionsBar({
   // Handle click a refresh
   const handleRefreshBtnClick = () => {
     refresh();
+  };
+
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size) => {
+    addSetting('expenses', 'tableSize', size);
   };
   return (
     <DashboardActionsBar>
@@ -124,6 +139,12 @@ function ExpensesActionsBar({
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
         />
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={expensesTableSize}
+          onChange={handleTableRowSizeChange}
+        />
+        <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
         <Button
@@ -139,7 +160,11 @@ function ExpensesActionsBar({
 export default compose(
   withDialogActions,
   withExpensesActions,
+  withSettingsActions,
   withExpenses(({ expensesTableState }) => ({
     expensesFilterConditions: expensesTableState.filterRoles,
+  })),
+  withSettings(({ expenseSettings }) => ({
+    expensesTableSize: expenseSettings?.tableSize,
   })),
 )(ExpensesActionsBar);

@@ -31,6 +31,7 @@ function VendorsTransactions({
   const [filter, setFilter] = useState({
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
+    filterByOption: 'with-transactions',
   });
 
   const handleFilterSubmit = (filter) => {

@@ -43,7 +43,10 @@ export default function ManualJournalDrawerHeader() {
       </DetailsMenu>
 
       <div class="journal-drawer__content-description">
-        <b class="title">Description</b>: {defaultTo(description, '—')}
+        <b class="title">
+          <T id={'manual_journal.details.description'} />
+        </b>
+        : {defaultTo(description, '—')}
       </div>
     </div>
   );

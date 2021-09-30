@@ -33,12 +33,14 @@ function InventoryValuationHeader({
 
   // Default values.
   const defaultValues = {
+    ...pageFilter,
     asDate: moment().toDate(),
     itemsIds: [],
   };
   // Initial values.
   const initialValues = transformToForm({
     ...pageFilter,
+    ...defaultValues,
     asDate: moment(pageFilter.asDate).toDate(),
   }, defaultValues);
 

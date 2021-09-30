@@ -14,10 +14,7 @@ import withCurrentOrganization from '../../Organization/withCurrentOrganization'
 
 import 'style/pages/FinancialStatements/ProfitLossSheet.scss';
 import { ProfitLossSheetProvider } from './ProfitLossProvider';
-import {
-  ProfitLossSheetLoadingBar,
-  ProfitLossSheetAlerts
-} from './components';
+import { ProfitLossSheetLoadingBar, ProfitLossSheetAlerts } from './components';
 
 /**
  * Profit/Loss financial statement sheet.
@@ -34,7 +31,7 @@ function ProfitLossSheet({
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
     displayColumnsType: 'total',
-    accountsFilter: 'all-accounts',
+    filterByOption: 'with-transactions',
   });
 
   // Handle submit filter.

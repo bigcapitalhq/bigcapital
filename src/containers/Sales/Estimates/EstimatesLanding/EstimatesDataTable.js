@@ -10,6 +10,7 @@ import withEstimatesActions from './withEstimatesActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withSettings from '../../../Settings/withSettings';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useMemorizedColumnsWidths } from 'hooks';
@@ -33,6 +34,9 @@ function EstimatesDataTable({
 
   // #withDialogAction
   openDialog,
+
+  // #withSettings
+  estimatesTableSize,
 }) {
   const history = useHistory();
 
@@ -135,6 +139,7 @@ function EstimatesDataTable({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
+        size={estimatesTableSize}
         payload={{
           onApprove: handleApproveEstimate,
           onEdit: handleEditEstimate,
@@ -155,4 +160,7 @@ export default compose(
   withAlertsActions,
   withDrawerActions,
   withDialogActions,
+  withSettings(({ estimatesSettings }) => ({
+    estimatesTableSize: estimatesSettings?.tableSize,
+  })),
 )(EstimatesDataTable);

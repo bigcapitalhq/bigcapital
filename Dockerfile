@@ -6,6 +6,15 @@ WORKDIR /app
 
 COPY ./package.json /app/package.json
 COPY ./package-lock.json /app/package-lock.json
+COPY ./.npmrc /app/.npmrc
+
+ARG GITHUB_USERNAME
+ARG GITHUB_PASS
+ARG GITHUB_EMAIL
+
+RUN npm install -g npm-cli-login
+
+RUN npm-cli-login -s @bigcapitalhq -r https://npm.pkg.github.com -u $GITHUB_USERNAME -p $GITHUB_PASS -e $GITHUB_EMAIL
 
 RUN npm install
 

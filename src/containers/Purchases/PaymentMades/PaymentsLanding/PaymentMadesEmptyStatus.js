@@ -9,7 +9,7 @@ export default function PaymentMadesEmptyStatus() {
 
   return (
     <EmptyStatus
-      title={<T id={'the_organization_doesn_t_receive_money_yet'} />}
+      title={<T id={'payment_made.empty_status.title'} />}
       description={
         <p>
           <T id="payment_made_empty_status_description" />

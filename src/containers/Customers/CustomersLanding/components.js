@@ -1,17 +1,12 @@
 import React, { useMemo } from 'react';
-import {
-  Menu,
-  MenuItem,
-  MenuDivider,
-  Intent,
-} from '@blueprintjs/core';
+import { Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
 import clsx from 'classnames';
+
 import intl from 'react-intl-universal';
 
-import { CLASSES } from '../../../common/classes';
-import { Icon, Money, If } from 'components';
-import {  } from 'utils';
-import { safeCallback, firstLettersArgs } from 'utils';
+import { Icon, Money, If, AvaterCell } from 'components';
+
+import { safeCallback } from 'utils';
 
 /**
  * Actions menu.
@@ -70,13 +65,6 @@ export function ActionsMenu({
 }
 
 /**
- * Avatar cell.
- */
-export function AvatarCell(row) {
-  return <span className="avatar">{firstLettersArgs(row.display_name)}</span>;
-}
-
-/**
  * Phone number accessor.
  */
 export function PhoneNumberAccessor(row) {
@@ -99,7 +87,7 @@ export function useCustomersTableColumns() {
       {
         id: 'avatar',
         Header: '',
-        accessor: AvatarCell,
+        Cell: AvaterCell,
         className: 'avatar',
         width: 45,
         disableResizing: true,

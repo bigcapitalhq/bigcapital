@@ -27,6 +27,7 @@ function InventoryValuation({
 }) {
   const [filter, setFilter] = useState({
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
+    filterByOption: 'with-transactions',
   });
 
   // Handle filter form submit.
@@ -54,7 +55,6 @@ function InventoryValuation({
     [toggleInventoryValuationFilterDrawer],
   );
 
- 
   return (
     <InventoryValuationProvider query={filter}>
       <InventoryValuationActionsBar

@@ -26,7 +26,6 @@ function CustomersBalanceSummaryHeader({
   // #withCustomersBalanceSummaryActions
   toggleCustomerBalanceFilterDrawer,
 }) {
-
   // validation schema.
   const validationSchema = Yup.object().shape({
     asDate: Yup.date().required().label('asDate'),
@@ -34,15 +33,20 @@ function CustomersBalanceSummaryHeader({
 
   // Default form values.
   const defaultValues = {
+    ...pageFilter,
     asDate: moment().toDate(),
     customersIds: [],
   };
 
   // Filter form initial values.
-  const initialValues = transformToForm({
-    ...pageFilter,
-    asDate: moment(pageFilter.asDate).toDate(),
-  }, defaultValues);
+  const initialValues = transformToForm(
+    {
+      ...defaultValues,
+      ...pageFilter,
+      asDate: moment(pageFilter.asDate).toDate(),
+    },
+    defaultValues,
+  );
 
   // handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {

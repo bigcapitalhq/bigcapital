@@ -11,6 +11,8 @@ import {
   Col,
   FieldHint,
 } from '../../../components';
+import { filterInventoryValuationOptions } from '../constants';
+
 import {
   momentFormatter,
   tansformDateValue,
@@ -21,6 +23,7 @@ import {
   InventoryValuationGeneralPanelProvider,
   useInventoryValuationGeneralPanelContext,
 } from './InventoryValuationHeaderGeneralPanelProvider';
+import FinancialStatementsFilter from '../FinancialStatementsFilter';
 
 /**
  * Inventory valuation - Drawer Header - General panel.
@@ -42,7 +45,7 @@ function InventoryValuationHeaderGeneralPanelContent() {
   return (
     <div>
       <Row>
-        <Col xs={5}>
+        <Col xs={4}>
           <FastField name={'asDate'}>
             {({ form, field: { value }, meta: { error } }) => (
               <FormGroup
@@ -66,9 +69,14 @@ function InventoryValuationHeaderGeneralPanelContent() {
           </FastField>
         </Col>
       </Row>
+      <FinancialStatementsFilter
+        items={filterInventoryValuationOptions}
+        label={<T id={'items.label_filter_items'} />}
+        initialSelectedItem={'all-items'}
+      />
 
       <Row>
-        <Col xs={5}>
+        <Col xs={4}>
           <Field name={'itemsIds'}>
             {({ form: { setFieldValue } }) => (
               <FormGroup

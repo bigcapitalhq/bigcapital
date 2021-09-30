@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
-import { omit, sumBy, isEmpty } from 'lodash';
+import { sumBy, isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
@@ -23,10 +22,14 @@ import withSettings from 'containers/Settings/withSettings';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 import { AppToaster } from 'components';
-import { ERROR } from 'common/errors';
 import { compose, transactionNumber, orderingLinesIndexes } from 'utils';
 import { useEstimateFormContext } from './EstimateFormProvider';
-import { transformToEditForm, defaultEstimate } from './utils';
+import {
+  transformToEditForm,
+  defaultEstimate,
+  transfromsFormValuesToRequest,
+  handleErrors
+} from './utils';
 
 /**
  * Estimate form.
@@ -68,24 +71,8 @@ function EstimateForm({
             currency_code: base_currency,
           }),
     }),
-    [estimate, estimateNumber, estimateIncrementMode],
+    [estimate, estimateNumber, estimateIncrementMode, base_currency],
   );
-
-  // Transform response errors to fields.
-  const handleErrors = (errors, { setErrors }) => {
-    if (errors.some((e) => e.type === ERROR.ESTIMATE_NUMBER_IS_NOT_UNQIUE)) {
-      setErrors({
-        estimate_number: intl.get('estimate_number_is_not_unqiue'),
-      });
-    }
-    if (
-      errors.some((error) => error.type === ERROR.SALE_ESTIMATE_NO_IS_REQUIRED)
-    ) {
-      setErrors({
-        estimate_number: intl.get('estimate.field.error.estimate_number_required'),
-      });
-    }
-  };
 
   // Handles form submit.
   const handleFormSubmit = (
@@ -109,13 +96,10 @@ function EstimateForm({
       return;
     }
     const form = {
-      ...omit(values, ['estimate_number_manually', 'estimate_number']),
-      ...(values.estimate_number_manually && {
-        estimate_number: values.estimate_number,
-      }),
+      ...transfromsFormValuesToRequest(values),
       delivered: submitPayload.deliver,
-      entries: entries.map((entry) => ({ ...omit(entry, ['total']) })),
     };
+    // Handle the request success.
     const onSuccess = (response) => {
       AppToaster.show({
         message: intl.get(
@@ -135,7 +119,7 @@ function EstimateForm({
         resetForm();
       }
     };
-
+    // Handle the request error.
     const onError = ({
       response: {
         data: { errors },

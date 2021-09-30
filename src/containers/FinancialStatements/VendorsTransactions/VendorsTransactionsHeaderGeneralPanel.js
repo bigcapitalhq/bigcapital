@@ -4,12 +4,16 @@ import classNames from 'classnames';
 import { Classes, FormGroup } from '@blueprintjs/core';
 
 import FinancialStatementDateRange from '../FinancialStatementDateRange';
+import FinancialStatementsFilter from '../FinancialStatementsFilter';
+
 import {
   Row,
   Col,
   ContactsMultiSelect,
   FormattedMessage as T,
 } from '../../../components';
+import { filterVendorsOptions } from '../constants';
+
 import {
   VendorsTransactionsGeneralPanelProvider,
   useVendorsTransactionsGeneralPanelContext,
@@ -35,7 +39,11 @@ function VendorsTransactionsHeaderGeneralPanelContent() {
   return (
     <div>
       <FinancialStatementDateRange />
-
+      <FinancialStatementsFilter
+        items={filterVendorsOptions}
+        label={<T id={'vendors.label_filter_vendors'} />}
+        initialSelectedItem={'all-vendors'}
+      />
       <Row>
         <Col xs={5}>
           <Field name={'vendorsIds'}>

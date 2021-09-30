@@ -16,6 +16,7 @@ import withInvoiceActions from './withInvoiceActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withSettings from '../../../Settings/withSettings';
 
 import { useInvoicesTableColumns, ActionsMenu } from './components';
 import { useInvoicesListContext } from './InvoicesListProvider';
@@ -40,6 +41,9 @@ function InvoicesDataTable({
 
   // #withDialogAction
   openDialog,
+
+  // #withSettings
+  invoicesTableSize,
 }) {
   const history = useHistory();
 
@@ -135,6 +139,7 @@ function InvoicesDataTable({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
+        size={invoicesTableSize}
         payload={{
           onDelete: handleDeleteInvoice,
           onDeliver: handleDeliverInvoice,
@@ -155,4 +160,7 @@ export default compose(
   withDrawerActions,
   withDialogActions,
   withInvoices(({ invoicesTableState }) => ({ invoicesTableState })),
+  withSettings(({ invoiceSettings }) => ({
+    invoicesTableSize: invoiceSettings?.tableSize,
+  })),
 )(InvoicesDataTable);

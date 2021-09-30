@@ -34,7 +34,7 @@
             border-radius: 8px;
           }
         }
-        .account-desc{
+        .account-desc {
           font-size: 11px;
           color: hsl(0, 0%, 50%);
           margin-top: 2px;
@@ -54,6 +54,16 @@
         .actions {
           padding-right: 18px;
           justify-content: right;
+        }
+      }
+    }
+    .table-size--small {
+      .tbody .tr {
+        .normal {
+          svg {
+            width: 14px;
+            height: 14px;
+          }
         }
       }
     }

@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { isUndefined } from 'lodash';
+import { isUndefined, isNumber } from 'lodash';
 import t from 'store/types';
 import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -16,6 +16,7 @@ const initialState = {
   topbarEditViewId: null,
   requestsLoading: 0,
   backLink: false,
+  splashScreenLoading: null,
   appIsLoading: true,
   appIntlIsLoading: true,
 };
@@ -102,14 +103,17 @@ const reducerInstance = createReducer(initialState, {
     state.backLink = backLink;
   },
 
-  [t.APP_IS_LOADING]: (state, action) => {
-    const { isLoading } = action.payload;
-    state.appIsLoading = isLoading;
+  [t.SPLASH_START_LOADING]: (state) => {
+    if (isNumber(state.splashScreenLoading)) {
+      state.splashScreenLoading += 1;
+    } else {
+      state.splashScreenLoading = 1;
+    }
   },
 
-  [t.APP_INTL_IS_LOADING]: (state, action) => {
-    const { isLoading } = action.payload;
-    state.appIntlIsLoading = isLoading;
+  [t.SPLASH_STOP_LOADING]: (state) => {
+    state.splashScreenLoading -= 1;
+    state.splashScreenLoading = Math.max(state.splashScreenLoading, 0);
   },
 
   [t.RESET]: () => {

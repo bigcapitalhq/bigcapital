@@ -3,13 +3,12 @@ import * as R from 'ramda';
 import BigcapitalLoading from './BigcapitalLoading';
 import withDashboard from '../../containers/Dashboard/withDashboard';
 
-function SplashScreenComponent({ appIsLoading, appIntlIsLoading }) {
-  return appIsLoading || appIntlIsLoading ? <BigcapitalLoading /> : null;
+function SplashScreenComponent({ splashScreenLoading }) {
+  return splashScreenLoading ? <BigcapitalLoading /> : null;
 }
 
 export const SplashScreen = R.compose(
-  withDashboard(({ appIsLoading, appIntlIsLoading }) => ({
-    appIsLoading,
-    appIntlIsLoading,
+  withDashboard(({ splashScreenLoading }) => ({
+    splashScreenLoading,
   })),
 )(SplashScreenComponent);

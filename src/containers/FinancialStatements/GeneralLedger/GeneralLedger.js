@@ -34,7 +34,7 @@ function GeneralLedger({
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'accural',
-    accountsFilter: 'with-transactions',
+    filterByOption: 'with-transactions',
   });
 
   // Handle financial statement filter change.

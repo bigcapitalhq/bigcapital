@@ -891,3 +891,12 @@ export function flatten(target, opts) {
 
   return output;
 }
+
+/**
+ * Ingores the given selectors from event callback.
+ */
+export function ignoreEventFromSelectors(event, selectors) {
+  return selectors
+    .map((selector) => event.target.closest(selector))
+    .some((element) => !!element);
+}

@@ -37,3 +37,10 @@ export const setSettings = (settings) => {
     options: settings,
   };
 }
+
+export const addSettings = (group, key, value) => {
+  return  {
+    type: t.SETTING_ADD,
+    payload: { group, key, value }
+  };
+}

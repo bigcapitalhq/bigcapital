@@ -25,7 +25,12 @@ import withCurrentOrganization from 'containers/Organization/withCurrentOrganiza
 import { AppToaster } from 'components';
 import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
-import { transformToEditForm, defaultInvoice, transformErrors } from './utils';
+import {
+  transformToEditForm,
+  defaultInvoice,
+  transformErrors,
+  transformValueToRequest,
+} from './utils';
 
 /**
  * Invoice form.
@@ -72,7 +77,7 @@ function InvoiceForm({
             currency_code: base_currency,
           }),
     }),
-    [invoice, newInvoice, invoiceNumber, invoiceIncrementMode],
+    [invoice, newInvoice, invoiceNumber, invoiceIncrementMode, base_currency],
   );
 
   // Handles form submit.
@@ -93,15 +98,13 @@ function InvoiceForm({
       setSubmitting(false);
       return;
     }
+    // Transformes the values of the form to request.
     const form = {
-      ...omit(values, ['invoice_no', 'invoice_no_manually']),
-      ...(values.invoice_no_manually && {
-        invoice_no: values.invoice_no,
-      }),
+      ...transformValueToRequest(values),
       delivered: submitPayload.deliver,
       from_estimate_id: estimateId,
-      entries: entries.map((entry) => ({ ...omit(entry, ['total']) })),
     };
+
     // Handle the request success.
     const onSuccess = () => {
       AppToaster.show({

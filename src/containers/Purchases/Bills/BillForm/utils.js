@@ -41,6 +41,12 @@ export const defaultBill = {
   entries: [...repeatValue(defaultBillEntry, MIN_LINES_NUMBER)],
 };
 
+export const ERRORS = {
+  // Bills
+  BILL_NUMBER_EXISTS: 'BILL.NUMBER.EXISTS',
+  ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED:
+    'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
+};
 /**
  * Transformes the bill to initial values of edit form.
  */
@@ -70,9 +76,31 @@ export const transformToEditForm = (bill) => {
  * Transformes bill entries to submit request.
  */
 export const transformEntriesToSubmit = (entries) => {
-  const transformBillEntry = R.curry(transformToForm)(R.__, defaultBillEntry);
-
+  const transformBillEntry = R.compose(
+    R.omit(['amount']),
+    R.curry(transformToForm)(R.__, defaultBillEntry),
+  );
   return R.compose(orderingLinesIndexes, R.map(transformBillEntry))(entries);
+};
+
+/**
+ * Filters the givne non-zero entries.
+ */
+export const filterNonZeroEntries = (entries) => {
+  return entries.filter((item) => item.item_id && item.quantity);
+};
+
+/**
+ * Transformes form values to request body.
+ */
+export const transformFormValuesToRequest = (values) => {
+  const entries = filterNonZeroEntries(values.entries);
+
+  return {
+    ...values,
+    entries: transformEntriesToSubmit(entries),
+    open: false,
+  };
 };
 
 /**
@@ -117,4 +145,25 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
     newProps.items !== oldProps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
+};
+
+// Transform response error to fields.
+export const handleErrors = (errors, { setErrors }) => {
+  if (errors.some((e) => e.type === ERRORS.BILL_NUMBER_EXISTS)) {
+    setErrors({
+      bill_number: intl.get('bill_number_exists'),
+    });
+  }
+  if (
+    errors.some(
+      (e) => e.type === ERRORS.ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED,
+    )
+  ) {
+    setErrors(
+      AppToaster.show({
+        intent: Intent.DANGER,
+        message: 'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
+      }),
+    );
+  }
 };

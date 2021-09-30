@@ -2,9 +2,8 @@ import { connect } from 'react-redux';
 import t from 'store/types';
 import {
   toggleExpendSidebar,
-  appIsLoading,
-  appIntlIsLoading
 } from 'store/dashboard/dashboard.actions';
+import { splashStartLoading, splashStopLoading } from '../../store/dashboard/dashboard.actions';
 
 const mapActionsToProps = (dispatch) => ({
   changePageTitle: (pageTitle) =>
@@ -50,15 +49,17 @@ const mapActionsToProps = (dispatch) => ({
     dispatch({
       type: 'CHANGE_PREFERENCES_PAGE_TITLE',
       pageTitle,
-    }),  
+    }),
 
   setDashboardBackLink: (backLink) =>
     dispatch({
       type: t.SET_DASHBOARD_BACK_LINK,
       payload: { backLink },
     }),
-  setAppIsLoading: (isLoading) => dispatch(appIsLoading(isLoading)),
-  setAppIntlIsLoading: (isLoading) => dispatch(appIntlIsLoading(isLoading)),
+
+  // Splash screen start/stop loading.
+  splashStartLoading: () => splashStartLoading(),
+  splashStopLoading: () => splashStopLoading(),
 });
 
 export default connect(null, mapActionsToProps);

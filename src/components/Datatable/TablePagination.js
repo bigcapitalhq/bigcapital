@@ -14,12 +14,15 @@ export default function TablePagination() {
       pageCount,
       state: { pageIndex, pageSize },
     },
-    props: { pagination, loading, onPaginationChange },
+    props: { pagination, loading, onPaginationChange, hidePaginationNoPages },
   } = useContext(TableContext);
 
-  const triggerOnPaginationChange = useCallback((payload) => {
-    saveInvoke(onPaginationChange, payload)
-  }, [onPaginationChange]);
+  const triggerOnPaginationChange = useCallback(
+    (payload) => {
+      saveInvoke(onPaginationChange, payload);
+    },
+    [onPaginationChange],
+  );
 
   // Handles the page changing.
   const handlePageChange = useCallback(
@@ -45,8 +48,14 @@ export default function TablePagination() {
     [gotoPage, setPageSize, triggerOnPaginationChange],
   );
 
+  // Detarmines when display the pagination.
+  const showPagination =
+    pagination &&
+    ((hidePaginationNoPages && pageCount > 1) || !hidePaginationNoPages) &&
+    !loading;
+
   return (
-    <If condition={pagination && !loading}>
+    showPagination && (
       <Pagination
         currentPage={pageIndex + 1}
         total={pageSize * pageCount}
@@ -54,6 +63,6 @@ export default function TablePagination() {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
       />
-    </If>
+    )
   );
 }

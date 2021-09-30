@@ -14,6 +14,7 @@ import withCustomersActions from './withCustomersActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withSettings from '../../Settings/withSettings';
 
 import { useCustomersListContext } from './CustomersListProvider';
 import { useMemorizedColumnsWidths } from 'hooks';
@@ -38,6 +39,9 @@ function CustomersTable({
 
   // #withDialogActions
   openDialog,
+
+  // #withSettings
+  customersTableSize,
 }) {
   const history = useHistory();
 
@@ -135,6 +139,7 @@ function CustomersTable({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
+        size={customersTableSize}
         payload={{
           onDelete: handleCustomerDelete,
           onEdit: handleCustomerEdit,
@@ -155,4 +160,7 @@ export default compose(
   withCustomersActions,
   withDrawerActions,
   withCustomers(({ customersTableState }) => ({ customersTableState })),
+  withSettings(({ customersSettings }) => ({
+    customersTableSize: customersSettings?.tableSize,
+  })),
 )(CustomersTable);

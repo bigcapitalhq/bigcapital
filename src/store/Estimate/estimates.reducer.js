@@ -1,13 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import {
-  createTableStateReducers,
-} from 'store/tableState.reducer';
+import { createTableStateReducers } from 'store/tableState.reducer';
 import t from 'store/types';
 
 export const defaultTableQuery = {
-  pageSize: 12,
+  pageSize: 20,
   pageIndex: 0,
   filterRoles: [],
   viewSlug: null,
@@ -33,7 +31,4 @@ const reducerInstance = createReducer(initialState, {
   },
 });
 
-export default persistReducer(
-  CONFIG,
-  reducerInstance,
-);
+export default persistReducer(CONFIG, reducerInstance);

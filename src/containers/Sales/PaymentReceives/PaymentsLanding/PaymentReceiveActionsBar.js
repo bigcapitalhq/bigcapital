@@ -14,6 +14,7 @@ import {
   DashboardFilterButton,
   AdvancedFilterPopover,
   FormattedMessage as T,
+  DashboardRowsHeightButton,
 } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -22,6 +23,9 @@ import { If, DashboardActionViewsList } from 'components';
 
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withPaymentReceives from './withPaymentReceives';
+
+import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withSettings from 'containers/Settings/withSettings';
 
 import { compose } from 'utils';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
@@ -35,7 +39,13 @@ function PaymentReceiveActionsBar({
   setPaymentReceivesTableState,
 
   // #withPaymentReceives
-  paymentFilterConditions
+  paymentFilterConditions,
+
+  // #withSettings
+  paymentReceivesTableSize,
+
+  // #withSettingsActions
+  addSetting,
 }) {
   // History context.
   const history = useHistory();
@@ -59,6 +69,11 @@ function PaymentReceiveActionsBar({
   // Handle click a refresh payment receives
   const handleRefreshBtnClick = () => {
     refresh();
+  };
+
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size) => {
+    addSetting('paymentReceives', 'tableSize', size);
   };
 
   return (
@@ -115,6 +130,13 @@ function PaymentReceiveActionsBar({
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
         />
+
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={paymentReceivesTableSize}
+          onChange={handleTableRowSizeChange}
+        />
+        <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
         <Button
@@ -129,8 +151,12 @@ function PaymentReceiveActionsBar({
 
 export default compose(
   withPaymentReceivesActions,
+  withSettingsActions,
   withPaymentReceives(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
     paymentFilterConditions: paymentReceivesTableState.filterRoles,
+  })),
+  withSettings(({ paymentReceiveSettings }) => ({
+    paymentReceivesTableSize: paymentReceiveSettings?.tableSize,
   })),
 )(PaymentReceiveActionsBar);

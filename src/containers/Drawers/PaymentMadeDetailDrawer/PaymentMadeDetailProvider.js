@@ -34,7 +34,7 @@ function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
   } = useTransactionsByReference(
     {
       reference_id: paymentMadeId,
-      reference_type: 'paymentMade',
+      reference_type: 'BillPayment',
     },
     { enabled: !!paymentMadeId },
   );

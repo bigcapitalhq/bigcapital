@@ -10,7 +10,7 @@ import {
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { Icon, Money, If } from 'components';
+import { Icon, Money, If, AvaterCell } from 'components';
 import { safeCallback, firstLettersArgs } from 'utils';
 
 /**
@@ -113,7 +113,7 @@ export function useVendorsTableColumns() {
       {
         id: 'avatar',
         Header: '',
-        accessor: AvatarAccessor,
+        Cell: AvaterCell,
         className: 'avatar',
         width: 45,
         disableResizing: true,

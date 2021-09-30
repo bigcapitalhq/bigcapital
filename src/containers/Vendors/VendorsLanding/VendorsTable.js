@@ -17,6 +17,7 @@ import withVendors from './withVendors';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withSettings from '../../Settings/withSettings';
 
 import { ActionsMenu, useVendorsTableColumns } from './components';
 
@@ -40,6 +41,9 @@ function VendorsTable({
 
   // #withDialogActions
   openDialog,
+
+  // #withSettings
+  vendorsTableSize,
 }) {
   // Vendors list context.
   const {
@@ -141,6 +145,7 @@ function VendorsTable({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
+        size={vendorsTableSize}
         payload={{
           onEdit: handleEditVendor,
           onDelete: handleDeleteVendor,
@@ -161,4 +166,7 @@ export default compose(
   withDrawerActions,
 
   withVendors(({ vendorsTableState }) => ({ vendorsTableState })),
+  withSettings(({ vendorsSettings }) => ({
+    vendorsTableSize: vendorsSettings?.tableSize,
+  })),
 )(VendorsTable);

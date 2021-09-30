@@ -16,7 +16,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Icon, FormattedMessage as T } from 'components';
+import { If, Icon, FormattedMessage as T } from 'components';
 
 import { safeCallback, compose } from 'utils';
 
@@ -32,7 +32,7 @@ function BillDetailActionsBar({
 }) {
   const history = useHistory();
 
-  const { billId } = useBillDrawerContext();
+  const { billId, bill } = useBillDrawerContext();
 
   // Handle edit bill.
   const onEditBill = () => {
@@ -45,6 +45,11 @@ function BillDetailActionsBar({
     openAlert('bill-delete', { billId });
   };
 
+  // Handle quick bill payment .
+  const handleQuickBillPayment = () => {
+    openDialog('quick-payment-made', { billId });
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -54,6 +59,15 @@ function BillDetailActionsBar({
           text={<T id={'edit_bill'} />}
           onClick={safeCallback(onEditBill)}
         />
+        <NavbarDivider />
+        <If condition={bill.is_open && !bill.is_fully_paid}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="quick-payment-16" iconSize={16} />}
+            text={<T id={'add_payment'} />}
+            onClick={handleQuickBillPayment}
+          />
+        </If>
         <NavbarDivider />
         <Button
           className={Classes.MINIMAL}

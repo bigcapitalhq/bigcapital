@@ -1,6 +1,7 @@
 .detail_panel {
   :global .card {
     padding: 22px 15px;
+    margin: 15px;
   }
 
   &_header {
@@ -9,6 +10,7 @@
 
   &_table {
     :global .bigcapital-datatable {
+      margin-top: 30px;
       .thead,
       .tbody {
         .quantity,

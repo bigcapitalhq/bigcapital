@@ -16,6 +16,7 @@ import withCurrentOrganization from 'containers/Organization/withCurrentOrganiza
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withSettings from '../../../Settings/withSettings';
 
 import { usePaymentMadesTableColumns, ActionsMenu } from './components';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
@@ -36,6 +37,9 @@ function PaymentMadesTable({
 
   // #withDrawerActions
   openDrawer,
+
+  // #withSettings
+  paymentMadesTableSize,
 }) {
   // Payment mades table columns.
   const columns = usePaymentMadesTableColumns();
@@ -114,6 +118,7 @@ function PaymentMadesTable({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
+        size={paymentMadesTableSize}
         payload={{
           onEdit: handleEditPaymentMade,
           onDelete: handleDeletePaymentMade,
@@ -130,4 +135,7 @@ export default compose(
   withAlertsActions,
   withDrawerActions,
   withCurrentOrganization(),
+  withSettings(({ billPaymentSettings }) => ({
+    paymentMadesTableSize: billPaymentSettings?.tableSize,
+  })),
 )(PaymentMadesTable);

@@ -3,11 +3,13 @@ import { useCallback } from 'react';
 import { isAuthenticated } from 'store/authentication/authentication.reducer';
 import {
   setLogin,
-  setStoreReset,
 } from 'store/authentication/authentication.actions';
 import { useQueryClient } from 'react-query';
 import { removeCookie } from '../../utils';
 
+/**
+ * Removes the authentication cookies.
+ */
 function removeAuthenticationCookies() {
   removeCookie('token');
   removeCookie('organization_id');

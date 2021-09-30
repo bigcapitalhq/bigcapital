@@ -5,7 +5,7 @@ import { createTableStateReducers } from 'store/tableState.reducer';
 import t from 'store/types';
 
 export const defaultTableQueryState = {
-  pageSize: 12,
+  pageSize: 20,
   pageIndex: 0,
   inactiveMode: false,
   filterRoles: [],

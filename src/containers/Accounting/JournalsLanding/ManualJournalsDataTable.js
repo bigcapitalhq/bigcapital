@@ -13,6 +13,7 @@ import withManualJournals from './withManualJournals';
 import withManualJournalsActions from './withManualJournalsActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withSettings from '../../Settings/withSettings';
 
 import { useManualJournalsContext } from './ManualJournalsListProvider';
 import { useMemorizedColumnsWidths } from 'hooks';
@@ -38,6 +39,9 @@ function ManualJournalsDataTable({
 
   // #ownProps
   onSelectedRowsChange,
+
+  // #withSettings
+  manualJournalsTableSize,
 }) {
   // Manual journals context.
   const {
@@ -109,7 +113,6 @@ function ManualJournalsDataTable({
         data={manualJournals}
         manualSortBy={true}
         selectionColumn={true}
-        expandable={true}
         sticky={true}
         loading={isManualJournalsLoading}
         headerLoading={isManualJournalsLoading}
@@ -125,6 +128,7 @@ function ManualJournalsDataTable({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
+        size={manualJournalsTableSize}
         payload={{
           onDelete: handleDeleteJournal,
           onPublish: handlePublishJournal,
@@ -143,4 +147,7 @@ export default compose(
   })),
   withAlertsActions,
   withDrawerActions,
+  withSettings(({ manualJournalsSettings }) => ({
+    manualJournalsTableSize: manualJournalsSettings?.tableSize,
+  })),
 )(ManualJournalsDataTable);

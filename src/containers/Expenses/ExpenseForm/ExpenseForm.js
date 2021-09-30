@@ -6,7 +6,6 @@ import { Formik, Form } from 'formik';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from 'common/classes';
-import * as R from 'ramda';
 
 import ExpenseFormHeader from './ExpenseFormHeader';
 import ExpenseFormBody from './ExpenseFormBody';
@@ -25,8 +24,13 @@ import {
   CreateExpenseFormSchema,
   EditExpenseFormSchema,
 } from './ExpenseForm.schema';
-import { transformErrors, defaultExpense, transformToEditForm } from './utils';
-import { compose, orderingLinesIndexes } from 'utils';
+import {
+  transformErrors,
+  defaultExpense,
+  transformToEditForm,
+  transformFormValuesToRequest,
+} from './utils';
+import { compose } from 'utils';
 
 /**
  * Expense form.
@@ -79,15 +83,10 @@ function ExpenseForm({
       });
       return;
     }
-    // Filter expense entries that has no amount or expense account.
-    const categories = values.categories.filter(
-      (category) => category.amount && category.expense_account_id,
-    );
 
     const form = {
-      ...values,
+      ...transformFormValuesToRequest(values),
       publish: submitPayload.publish,
-      categories: R.compose(orderingLinesIndexes)(categories),
     };
     // Handle request success.
     const handleSuccess = (response) => {

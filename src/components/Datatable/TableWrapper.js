@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import classNames from 'classnames';
+import clsx from 'classnames';
 import { ScrollSync } from 'react-scroll-sync';
 import TableContext from './TableContext';
 
@@ -9,12 +9,20 @@ import TableContext from './TableContext';
 export default function TableWrapper({ children }) {
   const {
     table: { getTableProps },
-    props: { sticky, pagination, loading, expandable, virtualizedRows, className },
+    props: {
+      sticky,
+      pagination,
+      loading,
+      expandable,
+      virtualizedRows,
+      className,
+      size,
+    },
   } = useContext(TableContext);
 
   return (
     <div
-      className={classNames('bigcapital-datatable', className, {
+      className={clsx('bigcapital-datatable', className, {
         'has-sticky': sticky,
         'has-pagination': pagination,
         'is-expandable': expandable,
@@ -25,7 +33,9 @@ export default function TableWrapper({ children }) {
       <ScrollSync>
         <div
           {...getTableProps({ style: { minWidth: 'none' } })}
-          className="table"
+          className={clsx('table', {
+            [`table-size--${size}`]: size,
+          })}
         >
           {children}
         </div>

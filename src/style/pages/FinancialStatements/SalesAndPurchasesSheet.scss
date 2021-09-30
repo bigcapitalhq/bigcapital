@@ -19,7 +19,7 @@
           padding-bottom: 0.4rem;
         }
         .tr.row_type--total .td {
-          border-top: 1px solid #BBB;
+          border-top: 1px solid #bbb;
           font-weight: 500;
           border-bottom: 3px double #000;
         }
@@ -29,20 +29,18 @@
 }
 
 .financial-statement--sales-by-items,
-.financial-statement--purchases-by-items{
-
-  .financial-header-drawer{
-    .bp3-drawer{
-      max-height: 400px;
+.financial-statement--purchases-by-items {
+  .financial-header-drawer {
+    .bp3-drawer {
+      // max-height: 400px;
+      max-height: 415px;
     }
   }
 }
 
-
-.financial-statement--inventory-valuation{
-
-  .financial-header-drawer{
-    .bp3-drawer{
+.financial-statement--inventory-valuation {
+  .financial-header-drawer {
+    .bp3-drawer {
       max-height: 350px;
     }
   }

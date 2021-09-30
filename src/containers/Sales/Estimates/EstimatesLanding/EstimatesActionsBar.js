@@ -9,18 +9,22 @@ import {
   Alignment,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'components';
 
 import {
+  FormattedMessage as T,
   AdvancedFilterPopover,
   If,
   DashboardActionViewsList,
   DashboardFilterButton,
+  DashboardRowsHeightButton,
 } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withEstimatesActions from './withEstimatesActions';
 import withEstimates from './withEstimates';
+
+import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withSettings from 'containers/Settings/withSettings';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useRefreshEstimates } from 'hooks/query/estimates';
@@ -36,6 +40,12 @@ function EstimateActionsBar({
 
   // #withEstimates
   estimatesFilterRoles,
+
+  // #withSettings
+  estimatesTableSize,
+
+  // #withSettingsActions
+  addSetting,
 }) {
   const history = useHistory();
 
@@ -59,6 +69,11 @@ function EstimateActionsBar({
   // Handle click a refresh sale estimates
   const handleRefreshBtnClick = () => {
     refresh();
+  };
+
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size) => {
+    addSetting('salesEstimates', 'tableSize', size);
   };
 
   return (
@@ -118,7 +133,14 @@ function EstimateActionsBar({
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
         />
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={estimatesTableSize}
+          onChange={handleTableRowSizeChange}
+        />
+        <NavbarDivider />
       </NavbarGroup>
+
       <NavbarGroup align={Alignment.RIGHT}>
         <Button
           className={Classes.MINIMAL}
@@ -132,7 +154,11 @@ function EstimateActionsBar({
 
 export default compose(
   withEstimatesActions,
+  withSettingsActions,
   withEstimates(({ estimatesTableState }) => ({
     estimatesFilterRoles: estimatesTableState.filterRoles,
+  })),
+  withSettings(({ estimatesSettings }) => ({
+    estimatesTableSize: estimatesSettings?.tableSize,
   })),
 )(EstimateActionsBar);

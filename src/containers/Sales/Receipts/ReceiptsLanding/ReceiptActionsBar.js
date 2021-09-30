@@ -14,6 +14,7 @@ import {
   AdvancedFilterPopover,
   DashboardFilterButton,
   FormattedMessage as T,
+  DashboardRowsHeightButton,
 } from 'components';
 
 import { If, DashboardActionViewsList } from 'components';
@@ -21,6 +22,9 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withReceiptsActions from './withReceiptsActions';
 import withReceipts from './withReceipts';
+
+import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withSettings from 'containers/Settings/withSettings';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useRefreshReceipts } from 'hooks/query/receipts';
@@ -35,6 +39,12 @@ function ReceiptActionsBar({
 
   // #withReceipts
   receiptsFilterConditions,
+
+  // #withSettings
+  receiptsTableSize,
+
+  // #withSettingsActions
+  addSetting,
 }) {
   const history = useHistory();
 
@@ -58,6 +68,11 @@ function ReceiptActionsBar({
   // Handle click a refresh sale estimates
   const handleRefreshBtnClick = () => {
     refresh();
+  };
+
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size) => {
+    addSetting('salesReceipts', 'tableSize', size);
   };
 
   return (
@@ -117,6 +132,13 @@ function ReceiptActionsBar({
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
         />
+
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={receiptsTableSize}
+          onChange={handleTableRowSizeChange}
+        />
+        <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
         <Button
@@ -131,7 +153,11 @@ function ReceiptActionsBar({
 
 export default compose(
   withReceiptsActions,
+  withSettingsActions,
   withReceipts(({ receiptTableState }) => ({
     receiptsFilterConditions: receiptTableState.filterRoles,
+  })),
+  withSettings(({ receiptSettings }) => ({
+    receiptsTableSize: receiptSettings?.tableSize,
   })),
 )(ReceiptActionsBar);

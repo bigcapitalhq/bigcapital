@@ -443,7 +443,7 @@
   "financial_accounting": " محاسبة مالية",
   "after": "بعد",
   "before": "قبل",
-  "count_filters_applied": "تم تطبيق {عدد} من الفلاتر",
+  "count_filters_applied": "تم تطبيق {count} من الفلاتر",
   "is": "هو",
   "is_not": "ليس",
   "create_a_new_view": "قم بإنشاء طريقة عرض جديدة",
@@ -682,7 +682,7 @@
   "select_display_name_as": "حدد اسم العرض",
   "opening_date": "تاريخ الافتتاح",
   "item_code": "رمز المنتج",
-  "quantity_on_hand": "كمية في اليد",
+  "quantity_on_hand": "كمية الحالية",
   "average_rate": "المعدل المتوسط",
   "the_name_used_before": "الاسم مستخدم بالفعل.",
   "the_item_has_associated_transactions": "المنتج له معاملات مرتبطة.",
@@ -833,7 +833,7 @@
   "the_payment_amount_that_received": "مبلغ الدفع الذي تم استلامه من الزبون أكبر من المبلغ المستحق لهذه الفاتورة.",
   "invoice_number": "رقم الفاتورة",
   "make_payment": "قم بالدفع",
-  "add_payment": "إضافة الدفع",
+  "add_payment": "إضافة دفع",
   "quick_receive_payment": "سند قبض سريع",
   "amount_received": "تم استلام المبلغ",
   "payment_receive_number_required": "مطلوب رقم استلام الدفعة",
@@ -1100,7 +1100,7 @@
   "receiving_customer_payments_is_one_pleasant_accounting_tasks": "استلام المدفوعات أحد مهام المحاسبية الأكثر متعة. ستظهر معاملات المدفوعات بمجرد استلام المدفوعات للفواتير.",
   "estimate_is_used_to_create_bid_proposal_or_quote": "تستخدم العروض لإنشاء عطاء أو اقتراح أو عرض أسعار منتجات. يمكن تحويل العرض إلى أمر مبيعات أو فاتورة.",
   "payment_made_empty_status_description": "ستظهر معاملات المدفوعات بمجرد سداد فواتير المشتريات.",
-  "bill_empty_status_description": "",
+  "bill_empty_status_description": "تسجل المشتريات من الموردين الذين تم او لم يتم الدفع لهم ، لتتبع حساب الذمم الدائنة مع الموردين. ",
   "invoices_empty_status_description": "فواتير المبيعات للعملاء الذين لا يسددون أي مدفوعات جزئية أو يسددونها ، مع مساعدتك في تتبع الحسابات المستحقة مع الزبائن.",
   "receipt_empty_status_description": "إيصالات المبيعات للمبيعات التي يدفع فيها الزبون فورًا مقابل المنتجات أو الخدمات في وقت البيع.",
   "there_were_no_purchases_during_the_selected_date_range": "لا توجد مشتريات خلال النطاق الزمني المحدد.",
@@ -1109,10 +1109,7 @@
   "filter_": "البحث...",
   "all_rights_reserved": "© {pre}-{current} كل الحقوق محفوظة.",
   "congrats_your_account_has_been_created_and_invited": "مبروك! تم إنشاء حسابك ودعوتك إلى <strong>{organization_name} </strong> بنجاح.",
-
   "while_we_set_up_your_account_please_remember_to_verify_your_account": "أثناء قيامنا بإعداد حسابك ، يرجى تذكر التحقق من حسابك بالنقر فوق الارتباط الذي أرسلناه إلى عنوان بريدك الإلكتروني المسجل",
-
-
   "blog": "المدونة",
   "support": "الدعم النفي",
   "service_status": "حالة الخدمة",
@@ -1248,6 +1245,9 @@
   "invoice.details.payment_amount": "مبلغ المدفوع",
   "expense.details.subtotal": "المجموع",
   "expense.details.total": "إجمالي",
+  "manual_journal.details.subtotal": "المجموع",
+  "manual_journal.details.total": "إجمالي",
+  "manual_journal.details.description": "الوصف", 
   "setup.left_side.title": "سجل منشأة جديدة الأن.",
   "setup.left_side.description": "حسابك علي Bigcapital",
   "setup.left_side.footer_help": "نحن هنا للمساعدة!",
@@ -1308,6 +1308,7 @@
   "customer.drawer.action.new_payment": "سند زبون جديد",
   "customer.drawer.action.new_receipt": "إيصال جديد",
   "customer.drawer.action.new_transaction": "معاملة جديدة",
+  "customer.drawer.action.edit": "تعديل",
   "customer.drawer.label.outstanding_receivable": "مستحق القبض",
   "customer.drawer.label.customer_name": "اسم الزبون",
   "customer.drawer.label.customer_type": "نوع الزبون",
@@ -1333,6 +1334,7 @@
   "vendor.drawer.action.new_transaction": "معاملة جديدة",
   "vendor.drawer.action.new_payment": "سند مورد جديد",
   "vendor.drawer.action.new_invoice": "فاتورة شراء جديدة",
+  "vendor.drawer.action.edit": "تعديل",
   "expenses.empty_status.title": "إضافة وإدارة مصاريف مؤسستك",
   "expenses.empty_status.description": "قم بإنشاء وإدارة المصروفات التي تُعد جزء من التكاليف التشغيلية لمؤسستك.",
   "manual_journals.empty_status.title": "قم بإدخال اول القيود اليدوية علي شجرة الحسابات.",
@@ -1359,7 +1361,43 @@
   "estimate.field.error.estimate_number_required": "رقم العرض حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا.",
   "invoice.field.error.invoice_no_required": "رقم الفاتورة حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا.",
   "payment_receive.field.error.payment_receive_no_required": "رقم سند الدفع حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا.",
-  "receipt.field.error.receipt_number_required": "رقم الإيصال حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا."
+  "receipt.field.error.receipt_number_required": "رقم الإيصال حقل مطلوب ، استخدم وضع الزيادة التلقائي أو أدخل يدويًا.",
+  "dashboard.rows_height": "ارتفاع الصفوف",
+  "dashboard.row_small": "صغير",
+  "dashboard.row_medium": "متوسط",
+  "filter.select_option": "اختر خيار",
+  "filter.enter_date": "أدخل تاريخ",
+  "filter.value": "قيمة",
+  "payment_made.empty_status.title": "المنشأة لم تدفع اي اموال إلي الموردين ، إلي حد الأن!.",
+  "estimate.delete.error.estimate_converted_to_invoice":"لا يمكن حذف عملية عرض اسعار الذي تم تحويلها إلي فاتورة بيع.",
+  "landed_cost.action.delete.success_message": "The landed cost has been deleted successfully.",
+  
+  "items.option.only_active": "Only active",
+  "items.option_all_items.hint": "جميع الاصناف ، بما في ذلك تلك الاصناف لديها رصيد صفر.",
+  "items.option_with_transactions": "الاصناف مع معاملات",
+  "items.option_with_transactions.hint": "قم بتضمين الاصناف التي لها معاملات في فترة التاريخ المحددة فقط.",
+  "items.option_without_zero_balance":  "الاصناف ذات رصيد صفر",
+  "items.option_without_zero_balance.hint": "قم بتضمين الاصناف واستبعاد تلك التي لديها رصيد صفري.",
+  "items.label_filter_items": "تصفية الاصناف",
+
+  "customers.option_all_customers.hint":"All customers, including that ones have zero-balance.",
+  "customers.option_without_zero_balance": "Customers without zero-balance",
+  "customers.option_without_zero_balance.hint":"Include customers and exclude that ones have zero-balance.",
+  "customers.option_with_transactions": "Customers with transactions",
+  "customers.option_with_transactions.hint": "Include customers that onces have transactions on the given date period only.",
+  "customers.label_filter_customers": "Filter customers",
+ 
+ 
+  "vendors.option_all_vendors.hint":"All vendors, including that ones have zero-balance.",
+  "vendors.label_filter_vendors": "Filter Vendors",
+  "vendors.option_without_zero_balance": "Vendors without zero-balance",
+  "vendors.option_without_zero_balance.hint":"Include vendors and exclude that ones have zero-balance.",
+  "vendors.option_with_transactions": "Vendors with transactions",
+  "vendors.option_with_transactions.hint": "Include vendors that onces have transactions on the given date period only."
+
+
+
+
 }
 
 

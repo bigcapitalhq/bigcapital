@@ -21,7 +21,7 @@ export const transformErrors = (errors, { setFieldError }) => {
       intl.get('payment_number_is_not_unique'),
     );
   }
-  if (getError('INVALID_PAYMENT_AMOUNT')) {
+  if (getError('INVALID_BILL_PAYMENT_AMOUNT')) {
     setFieldError(
       'payment_amount',
       intl.get('the_payment_amount_bigger_than_invoice_due_amount'),

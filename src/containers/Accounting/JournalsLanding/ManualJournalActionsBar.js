@@ -12,6 +12,7 @@ import { useHistory } from 'react-router-dom';
 import {
   AdvancedFilterPopover,
   DashboardFilterButton,
+  DashboardRowsHeightButton,
   FormattedMessage as T,
 } from 'components';
 
@@ -22,6 +23,8 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withManualJournalsActions from './withManualJournalsActions';
 import withManualJournals from './withManualJournals';
+import withSettingsActions from '../../Settings/withSettingsActions';
+import withSettings from '../../Settings/withSettings';
 
 import { If, DashboardActionViewsList } from 'components';
 
@@ -36,6 +39,12 @@ function ManualJournalActionsBar({
 
   // #withManualJournals
   manualJournalsFilterConditions,
+
+  // #withSettings
+  manualJournalsTableSize,
+
+  // #withSettingsActions
+  addSetting,
 }) {
   // History context.
   const history = useHistory();
@@ -60,6 +69,11 @@ function ManualJournalActionsBar({
   // Handle click a refresh Journals
   const handleRefreshBtnClick = () => {
     refresh();
+  };
+
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size) => {
+    addSetting('manualJournals', 'tableSize', size);
   };
 
   return (
@@ -119,6 +133,12 @@ function ManualJournalActionsBar({
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
         />
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={manualJournalsTableSize}
+          onChange={handleTableRowSizeChange}
+        />
+        <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
         <Button
@@ -134,7 +154,11 @@ function ManualJournalActionsBar({
 export default compose(
   withDialogActions,
   withManualJournalsActions,
+  withSettingsActions,
   withManualJournals(({ manualJournalsTableState }) => ({
     manualJournalsFilterConditions: manualJournalsTableState.filterRoles,
+  })),
+  withSettings(({ manualJournalsSettings }) => ({
+    manualJournalsTableSize: manualJournalsSettings?.tableSize,
   })),
 )(ManualJournalActionsBar);

@@ -16,7 +16,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Icon, FormattedMessage as T } from 'components';
+import { If, Icon, FormattedMessage as T } from 'components';
 
 import { compose } from 'utils';
 
@@ -36,7 +36,7 @@ function InvoiceDetailActionsBar({
   const history = useHistory();
 
   // Invoice detail drawer context.
-  const { invoiceId } = useInvoiceDetailDrawerContext();
+  const { invoiceId, invoice } = useInvoiceDetailDrawerContext();
 
   // Handle edit sale invoice.
   const handleEditInvoice = () => {
@@ -54,6 +54,11 @@ function InvoiceDetailActionsBar({
     openDialog('invoice-pdf-preview', { invoiceId });
   };
 
+  // Handle quick payment invoice.
+  const handleQuickPaymentInvoice = () => {
+    openDialog('quick-payment-receive', { invoiceId });
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -63,6 +68,15 @@ function InvoiceDetailActionsBar({
           text={<T id={'edit_invoice'} />}
           onClick={handleEditInvoice}
         />
+        <NavbarDivider />
+        <If condition={invoice.is_delivered && !invoice.is_fully_paid}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="quick-payment-16" iconSize={16} />}
+            text={<T id={'add_payment'} />}
+            onClick={handleQuickPaymentInvoice}
+          />
+        </If>
         <NavbarDivider />
         <Button
           className={Classes.MINIMAL}

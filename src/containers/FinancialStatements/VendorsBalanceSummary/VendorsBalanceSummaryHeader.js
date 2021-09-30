@@ -33,14 +33,20 @@ function VendorsBalanceSummaryHeader({
 
   // filter form initial values.
   const defaultValues = {
+    ...pageFilter,
     asDate: moment().toDate(),
     vendorsIds: [],
   };
   // Initial form values.
-  const initialValues = transformToForm({
-    ...pageFilter,
-    asDate: moment(pageFilter.asDate).toDate(),
-  }, defaultValues);
+  const initialValues = transformToForm(
+    {
+      ...defaultValues,
+
+      ...pageFilter,
+      asDate: moment(pageFilter.asDate).toDate(),
+    },
+    defaultValues,
+  );
 
   // handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {

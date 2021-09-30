@@ -31,7 +31,7 @@ function BalanceSheet({
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'cash',
     displayColumnsType: 'total',
-    accountsFilter: 'without-zero-balance',
+    filterByOption: 'without-zero-balance',
   });
 
   // Handle re-fetch balance sheet after filter change.

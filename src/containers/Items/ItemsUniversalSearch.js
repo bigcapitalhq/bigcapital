@@ -34,7 +34,7 @@ const transfromItemsToSearch = (item) => ({
   id: item.id,
   text: item.name,
   subText: item.code,
-  label: item.type,
+  label: item.type_formatted,
   reference: item,
 });
 

@@ -6,7 +6,7 @@ import t from 'store/types';
 
 // Default table query.
 export const defaultTableQuery = {
-  pageSize: 12,
+  pageSize: 20,
   pageIndex: 0,
   filterRoles: [],
   viewSlug: null,
@@ -30,7 +30,7 @@ const reducerInstance = createReducer(initialState, {
 
   [t.RESET]: () => {
     purgeStoredState(CONFIG);
-  }
+  },
 });
 
 export default persistReducer(CONFIG, reducerInstance);

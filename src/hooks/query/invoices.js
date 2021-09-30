@@ -110,7 +110,7 @@ export function useInvoices(query, props) {
         invoices: [],
         pagination: {
           page: 1,
-          pageSize: 12,
+          pageSize: 20,
           total: 0,
         },
         filterMeta: {},

@@ -10,18 +10,22 @@ import {
 } from '@blueprintjs/core';
 
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import {
   If,
+  FormattedMessage as T,
   DashboardActionViewsList,
   DashboardFilterButton,
   AdvancedFilterPopover,
+  DashboardRowsHeightButton,
 } from 'components';
 
 import withPaymentMade from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
+
+import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withSettings from 'containers/Settings/withSettings';
 
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { useRefreshPaymentMades } from 'hooks/query/paymentMades';
@@ -36,7 +40,13 @@ function PaymentMadeActionsBar({
   setPaymentMadesTableState,
 
   // #withPaymentMades
-  paymentMadesFilterConditions
+  paymentMadesFilterConditions,
+
+  // #withSettings
+  paymentMadesTableSize,
+
+  // #withSettingsActions
+  addSetting,
 }) {
   const history = useHistory();
 
@@ -60,6 +70,12 @@ function PaymentMadeActionsBar({
   const handleRefreshBtnClick = () => {
     refresh();
   };
+  
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size) => {
+    addSetting('billPayments', 'tableSize', size);
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -114,6 +130,13 @@ function PaymentMadeActionsBar({
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
         />
+
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={paymentMadesTableSize}
+          onChange={handleTableRowSizeChange}
+        />
+        <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
         <Button
@@ -128,7 +151,11 @@ function PaymentMadeActionsBar({
 
 export default compose(
   withPaymentMadeActions,
+  withSettingsActions,
   withPaymentMade(({ paymentMadesTableState }) => ({
     paymentMadesFilterConditions: paymentMadesTableState.filterRoles,
+  })),
+  withSettings(({ billPaymentSettings }) => ({
+    paymentMadesTableSize: billPaymentSettings?.tableSize,
   })),
 )(PaymentMadeActionsBar);

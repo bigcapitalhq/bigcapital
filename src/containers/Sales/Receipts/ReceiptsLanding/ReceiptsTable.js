@@ -14,6 +14,7 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withReceipts from './withReceipts';
 import withReceiptsActions from './withReceiptsActions';
+import withSettings from '../../../Settings/withSettings';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useReceiptsTableColumns, ActionsMenu } from './components';
@@ -37,6 +38,9 @@ function ReceiptsDataTable({
 
   // #withDialogAction
   openDialog,
+
+  // #withSettings
+  receiptsTableSize,
 }) {
   const history = useHistory();
 
@@ -125,6 +129,7 @@ function ReceiptsDataTable({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
+        size={receiptsTableSize}
         payload={{
           onEdit: handleEditReceipt,
           onDelete: handleDeleteReceipt,
@@ -144,5 +149,8 @@ export default compose(
   withDialogActions,
   withReceipts(({ receiptTableState }) => ({
     receiptTableState,
+  })),
+  withSettings(({ receiptSettings }) => ({
+    receiptsTableSize: receiptSettings?.tableSize,
   })),
 )(ReceiptsDataTable);

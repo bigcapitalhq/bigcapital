@@ -1,6 +1,6 @@
 import React from 'react';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
-import FinancialAccountsFilter from '../FinancialAccountsFilter';
+import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
 import SelectDisplayColumnsBy from '../SelectDisplayColumnsBy';
 
@@ -13,7 +13,7 @@ export default function CashFlowStatementHeaderGeneralPanel() {
     <div>
       <FinancialStatementDateRange />
       <SelectDisplayColumnsBy />
-      <FinancialAccountsFilter initialSelectedItem={'all-accounts'} />
+      <FinancialStatementsFilter initialSelectedItem={'with-transactions'} />
       <RadiosAccountingBasis key={'basis'} />
     </div>
   );

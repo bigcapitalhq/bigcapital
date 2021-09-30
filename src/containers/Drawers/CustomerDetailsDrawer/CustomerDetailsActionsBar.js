@@ -61,8 +61,8 @@ function CustomerDetailsActionsBar({
 
   const handleDeleteCustomer = () => {
     openAlert(`customer-delete`, { contactId: customerId });
-    closeDrawer('customer-details-drawer');
   };
+  
   const handleEditContact = () => {
     history.push(`/customers/${customerId}/edit`);
     closeDrawer('customer-details-drawer');
@@ -108,7 +108,7 @@ function CustomerDetailsActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="pen-18" />}
-          text={intl.get('edit_contact', { name: contact?.contact_service })}
+          text={intl.get('customer.drawer.action.edit')}
           onClick={handleEditContact}
         />
         <NavbarDivider />

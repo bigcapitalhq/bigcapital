@@ -3,7 +3,7 @@ import { FormGroup } from '@blueprintjs/core';
 import { FastField  } from 'formik';
 import { FormattedMessage as T } from 'components';
 import { Row, Col, ListSelect } from 'components';
-import { displayColumnsByOptions } from 'containers/FinancialStatements/common';
+import { displayColumnsByOptions } from './constants';
 
 /**
  * Financial statement - Display columns by and type select.

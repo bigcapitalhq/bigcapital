@@ -1,46 +1,38 @@
-
-
-.dashboard__insider--sales-invoices-list{
-
-  .bigcapital-datatable{
-    .tbody{
-      .tr{
-        min-height: 46px;
-      }
-      .balance.td{
-
-        .cell-inner{
-          > span{
+.dashboard__insider--sales-invoices-list {
+  .bigcapital-datatable {
+    .tbody {
+      .balance.td {
+        .cell-inner {
+          > span {
             font-weight: 600;
           }
         }
       }
-      .status.td{
-
+      .status.td {
         .overdue-status,
-        .due-status{
+        .due-status {
           display: block;
           font-size: 13.5px;
           line-height: 1.4;
 
-          + .partial-paid{
+          + .partial-paid {
             margin-top: 2px;
           }
         }
-        .overdue-status{
+        .overdue-status {
           color: #ec5b0a;
         }
-        .due-status{
+        .due-status {
           color: #1652c8;
         }
-        .partial-paid{
+        .partial-paid {
           font-size: 12px;
           line-height: 1;
           display: block;
           margin-bottom: 6px;
           opacity: 0.7;
         }
-        .fully-paid-icon{
+        .fully-paid-icon {
           width: 18px;
           height: 18px;
           margin-right: 8px;
@@ -49,17 +41,24 @@
             fill: #2ba01d;
           }
         }
-        .fully-paid-text{
+        .fully-paid-text {
           font-size: 13.5px;
         }
-        .bp3-progress-bar{
+        .bp3-progress-bar {
           height: 4px;
           max-width: 180px;
-          
+
           &,
-          .bp3-progress-meter{
+          .bp3-progress-meter {
             border-radius: 0;
           }
+        }
+      }
+    }
+    .table-size--small {
+      .status.td {
+        .bp3-progress-bar {
+          height: 3px;
         }
       }
     }

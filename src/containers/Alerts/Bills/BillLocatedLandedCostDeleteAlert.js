@@ -35,7 +35,7 @@ function BillTransactionDeleteAlert({
     deleteLandedCostMutate(BillId)
       .then(() => {
         AppToaster.show({
-          message: intl.get('bill.action.delete_successfully.landed_cost'),
+          message: intl.get('landed_cost.action.delete.success_message'),
           intent: Intent.SUCCESS,
         });
         closeAlert(name);
@@ -56,7 +56,11 @@ function BillTransactionDeleteAlert({
       onConfirm={handleConfirmLandedCostDelete}
       loading={isLoading}
     >
-      <p><T id={`Once your delete this located landed cost, you won't be able to restore it later, Are your sure you want to delete this transaction?`}/></p>
+      <p>
+        <T
+          id={`Once your delete this located landed cost, you won't be able to restore it later, Are your sure you want to delete this transaction?`}
+        />
+      </p>
     </Alert>
   );
 }

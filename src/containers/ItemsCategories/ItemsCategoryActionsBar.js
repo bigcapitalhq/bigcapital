@@ -50,7 +50,7 @@ function ItemsCategoryActionsBar({
     });
   };
 
-  console.log(fields, categoriesFilterConditions, 'XXXX');
+
 
   return (
     <DashboardActionsBar>

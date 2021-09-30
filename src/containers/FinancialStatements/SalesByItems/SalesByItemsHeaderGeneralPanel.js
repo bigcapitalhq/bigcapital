@@ -2,10 +2,11 @@ import React from 'react';
 import { FormGroup, Classes } from '@blueprintjs/core';
 import { Field } from 'formik';
 import classNames from 'classnames';
-import { get } from 'lodash';
+import { filterItemsOptions } from '../constants';
 
 import { Row, Col, ItemsMultiSelect, FormattedMessage as T } from 'components';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
+import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import {
   SalesByItemGeneralPanelProvider,
   useSalesByItemsGeneralPanelContext,
@@ -31,6 +32,12 @@ function SalesByItemsHeaderGeneralPanelContent() {
   return (
     <div>
       <FinancialStatementDateRange />
+
+      <FinancialStatementsFilter
+        items={filterItemsOptions}
+        label={<T id={'items.label_filter_items'} />}
+        initialSelectedItem={'with-transactions'}
+      />
 
       <Row>
         <Col xs={4}>
