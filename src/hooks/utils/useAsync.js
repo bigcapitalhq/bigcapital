@@ -1,6 +1,6 @@
-import {useState, useCallback, useEffect} from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
-const useAsync = (asyncFunction, immediate = true) => {
+export const useAsync = (asyncFunction, immediate = true) => {
   const [pending, setPending] = useState(false);
   const [value, setValue] = useState(null);
   const [error, setError] = useState(null);
@@ -9,16 +9,19 @@ const useAsync = (asyncFunction, immediate = true) => {
   // handles setting state for pending, value, and error.
   // useCallback ensures the below useEffect is not called
   // on every render, but only if asyncFunction changes.
-  const execute = useCallback((...args) => {
-    setPending(true);
-    setValue(null);
-    setError(null);
+  const execute = useCallback(
+    (...args) => {
+      setPending(true);
+      setValue(null);
+      setError(null);
 
-    return asyncFunction(...args)
-      .then(response => setValue(response))
-      .catch(error => setError(error))
-      .finally(() => setPending(false));
-  }, [asyncFunction]);
+      return asyncFunction(...args)
+        .then((response) => setValue(response))
+        .catch((error) => setError(error))
+        .finally(() => setPending(false));
+    },
+    [asyncFunction],
+  );
 
   // Call execute if we want to fire it right away.
   // Otherwise execute can be called later, such as
@@ -31,5 +34,3 @@ const useAsync = (asyncFunction, immediate = true) => {
 
   return { execute, pending, value, error };
 };
-
-export default useAsync;

@@ -3,7 +3,7 @@ import * as R from 'ramda';
 
 import { useUser, useCurrentOrganization } from '../../hooks/query';
 import { useSplashLoading } from '../../hooks/state';
-import { useWatch, useWhen } from '../../hooks';
+import { useWatch, useWatchImmediate, useWhen } from '../../hooks';
 
 import withAuthentication from '../../containers/Authentication/withAuthentication';
 
@@ -21,10 +21,8 @@ function DashboardBootJSX({ authenticatedUserId }) {
   } = useCurrentOrganization();
 
   // Authenticated user.
-  const {
-    isSuccess: isAuthUserSuccess,
-    isLoading: isAuthUserLoading,
-  } = useUser(authenticatedUserId);
+  const { isSuccess: isAuthUserSuccess, isLoading: isAuthUserLoading } =
+    useUser(authenticatedUserId);
 
   // Initial locale cookie value.
   const localeCookie = getCookie('locale');
@@ -59,25 +57,25 @@ function DashboardBootJSX({ authenticatedUserId }) {
 
   // Splash loading when organization request loading and
   // applicaiton still not booted.
-  useWatch(isOrgLoading, (value) => {
+  useWatchImmediate((value) => {
     value && !isBooted.current && startLoading();
-  });
+  }, isOrgLoading);
 
-  // Splash loading when request authenticated user loading and 
+  // Splash loading when request authenticated user loading and
   // application still not booted yet.
-  useWatch(isAuthUserLoading, (value) => {
+  useWatchImmediate((value) => {
     value && !isBooted.current && startLoading();
-  });  
+  }, isAuthUserLoading);
 
   // Stop splash loading once organization request success.
-  useWatch(isCurrentOrganizationSuccess, (value) => {
+  useWatch((value) => {
     value && stopLoading();
-  });
+  }, isCurrentOrganizationSuccess);
 
   // Stop splash loading once authenticated user request success.
-  useWatch(isAuthUserSuccess, (value) => {
+  useWatch((value) => {
     value && stopLoading();
-  });
+  }, isAuthUserSuccess);
 
   // Once the all requests complete change the app loading state.
   useWhen(

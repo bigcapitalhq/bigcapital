@@ -1,7 +1,7 @@
 import { useQueryClient, useMutation } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
-import { useRequestPdf } from '../useRequestPdf';
+import { useRequestPdf } from '../utils';
 
 import { transformPagination } from 'utils';
 import t from './types';

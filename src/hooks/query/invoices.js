@@ -2,7 +2,7 @@ import { useQueryClient, useMutation } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination } from 'utils';
 import useApiRequest from '../useRequest';
-import { useRequestPdf } from '../useRequestPdf';
+import { useRequestPdf } from '../utils';
 import t from './types';
 
 // Common invalidate queries.

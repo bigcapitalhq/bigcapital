@@ -9,7 +9,7 @@ import * as R from 'ramda';
 import { AppIntlProvider } from './AppIntlProvider';
 import { useSplashLoading } from '../hooks/state';
 
-import { useWatch } from '../hooks';
+import { useWatchImmediate } from '../hooks';
 import withDashboardActions from '../containers/Dashboard/withDashboardActions';
 
 const SUPPORTED_LOCALES = [
@@ -90,10 +90,10 @@ function useAppLoadLocales(currentLocale) {
   }, [currentLocale, stopLoading]);
 
   // Watches the value to start/stop splash screen.
-  useWatch(isLoading, (value) => (value ? startLoading() : stopLoading()), {
-    immediate: true,
-  });
-
+  useWatchImmediate(
+    (value) => (value ? startLoading() : stopLoading()),
+    isLoading,
+  );
   return { isLoading };
 }
 
@@ -116,10 +116,10 @@ function useAppYupLoadLocales(currentLocale) {
   }, [currentLocale, stopLoading]);
 
   // Watches the valiue to start/stop splash screen.
-  useWatch(isLoading, (value) => (value ? startLoading() : stopLoading()), {
-    immediate: true,
-  });
-
+  useWatchImmediate(
+    (value) => (value ? startLoading() : stopLoading()),
+    isLoading,
+  );
   return { isLoading };
 }
 
@@ -144,7 +144,7 @@ function AppIntlLoader({ children }) {
   const { isLoading: isAppLocalesLoading } = useAppLoadLocales(currentLocale);
 
   // Detarmines whether the app locales loading.
-  const isLoading = isAppYupLocalesLoading && isAppLocalesLoading;
+  const isLoading = isAppYupLocalesLoading || isAppLocalesLoading;
 
   return (
     <AppIntlProvider currentLocale={currentLocale} isRTL={isRTL}>
