@@ -1,12 +1,10 @@
-
 import { lazy } from 'react';
 import intl from 'react-intl-universal';
 import { RESOURCES_TYPES } from '../common/resourcesTypes';
 
-
 const SUBSCRIPTION_TYPE = {
   MAIN: 'main',
-}
+};
 // const BASE_URL = '/dashboard';
 
 export const getDashboardRoutes = () => [
@@ -84,7 +82,7 @@ export const getDashboardRoutes = () => [
       loader: () => import('containers/Items/ItemFormPage'),
     }),
     breadcrumb: intl.get('duplicate_item'),
-    defaultSearchResource: RESOURCES_TYPES.ITEM,  
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
@@ -291,7 +289,9 @@ export const getDashboardRoutes = () => [
       ),
     ),
     breadcrumb: intl.get('customers_transactions'),
-    hint: intl.get('reports_every_transaction_going_in_and_out_of_each_customer'),
+    hint: intl.get(
+      'reports_every_transaction_going_in_and_out_of_each_customer',
+    ),
     pageTitle: intl.get('customers_transactions'),
     backLink: true,
     sidebarExpand: false,
@@ -305,7 +305,9 @@ export const getDashboardRoutes = () => [
       ),
     ),
     breadcrumb: intl.get('vendors_transactions'),
-    hint: intl.get('reports_every_transaction_going_in_and_out_of_each_vendor_supplier'),
+    hint: intl.get(
+      'reports_every_transaction_going_in_and_out_of_each_vendor_supplier',
+    ),
     pageTitle: intl.get('vendors_transactions'),
     backLink: true,
     sidebarExpand: false,
@@ -717,7 +719,7 @@ export const getDashboardRoutes = () => [
     path: `/billing`,
     component: lazy(() => import('containers/Subscriptions/BillingForm')),
     breadcrumb: intl.get('new_billing'),
-    subscriptionInactive: [SUBSCRIPTION_TYPE.MAIN]
+    subscriptionInactive: [SUBSCRIPTION_TYPE.MAIN],
   },
   // Payment modes.
   {
@@ -762,6 +764,28 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
+  // Cash flow
+  {
+    path: `/account/:id/transactions`,
+    component: lazy(() =>
+      import('containers/CashFlow/AccountTransactions/AccountTransactionsList'),
+    ),
+    sidebarExpand: false,
+    backLink: true,
+    pageTitle: intl.get('cash_flow.label_account_transcations'),
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/cashflow-accounts`,
+    component: lazy(() =>
+      import('containers/CashFlow/CashFlowAccounts/CashFlowAccountsList'),
+    ),
+    backLink: true,
+    // breadcrumb: intl.get('homepage'),
+    pageTitle: intl.get('siebar.cashflow.label_cash_and_bank_accounts'),
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
   // Homepage
   {
     path: `/`,

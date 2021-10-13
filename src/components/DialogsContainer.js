@@ -17,6 +17,8 @@ import AllocateLandedCostDialog from 'containers/Dialogs/AllocateLandedCostDialo
 import InvoicePdfPreviewDialog from 'containers/Dialogs/InvoicePdfPreviewDialog';
 import EstimatePdfPreviewDialog from 'containers/Dialogs/EstimatePdfPreviewDialog';
 import ReceiptPdfPreviewDialog from '../containers/Dialogs/ReceiptPdfPreviewDialog';
+import MoneyInDialog from '../containers/Dialogs/MoneyInDialog';
+import MoneyOutDialog from '../containers/Dialogs/MoneyOutDialog';
 
 /**
  * Dialogs container.
@@ -40,6 +42,8 @@ export default function DialogsContainer() {
       <InvoicePdfPreviewDialog dialogName={'invoice-pdf-preview'} />
       <EstimatePdfPreviewDialog dialogName={'estimate-pdf-preview'} />
       <ReceiptPdfPreviewDialog dialogName={'receipt-pdf-preview'} />
+      <MoneyInDialog dialogName={'money-in'} />
+      <MoneyOutDialog dialogName={'money-out'} />
     </div>
   );
 }

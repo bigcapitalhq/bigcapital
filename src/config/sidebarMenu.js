@@ -194,6 +194,38 @@ export default [
     children: [],
   },
   {
+    text: <T id={'cash_flow'} />,
+    children: [
+      {
+        text: <T id={'siebar.cashflow.label_cash_and_bank_accounts'} />,
+        href: '/cashflow-accounts',
+      },
+      {
+        text: <T id={'New tasks'} />,
+        label: true,
+      },
+      {
+        divider: true,
+      },
+      {
+        text: <T id={'cash_flow.label.add_money_in'} />,
+        href: '/',
+      },
+      {
+        text: <T id={'cash_flow.label.add_money_out'} />,
+        href: '/',
+      },
+      {
+        text: <T id={'cash_flow.label.add_cash_account'} />,
+        href: '/',
+      },
+      {
+        text: <T id={'cash_flow.label.add_bank_account'} />,
+        href: '/',
+      },
+    ],
+  },
+  {
     text: <T id={'expenses'} />,
     children: [
       {
