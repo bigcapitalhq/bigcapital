@@ -16,6 +16,9 @@ export default (mapState) => {
       accountsSettings: state.settings.data.accounts,
       customersSettings: state.settings.data.customers,
       vendorsSettings: state.settings.data.vendors,
+      cashflowSettings: state.settings.data.cashflowAccounts,
+      cashflowTransactionsSettings: state.settings.data.cashflowTransactions,
+
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

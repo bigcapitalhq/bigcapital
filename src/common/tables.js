@@ -12,10 +12,12 @@ export const TABLES = {
   ACCOUNTS: 'accounts',
   MANUAL_JOURNALS: 'manual_journal',
   EXPENSES: 'expenses',
+  CASHFLOW_ACCOUNTS: 'cashflow_accounts',
+  CASHFLOW_Transactions: 'cashflow_transactions',
 };
 
 export const TABLE_SIZE = {
   COMPACT: 'compact',
   SMALL: 'small',
   MEDIUM: 'medium',
-}
+};

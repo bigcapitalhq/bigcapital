@@ -1,0 +1,33 @@
+.dashboard__insider--cashflow-accounts {
+  .bigcapital-datatable {
+    .table {
+      .tbody {
+        .td.balance {
+          .cell-inner {
+            > span {
+              font-weight: 600;
+            }
+          }
+        }
+        .account_name {
+          .bp3-popover-wrapper--inactive-semafro {
+            margin-left: 8px;
+            margin-right: 6px;
+            float: right;
+            border: 0;
+          }
+          .bp3-popover-wrapper--account-desc {
+            border-bottom-color: #bbb;
+          }
+          .inactive-semafro {
+            height: 7px;
+            width: 7px;
+            background: #bbb;
+            display: inline-block;
+            border-radius: 8px;
+          }
+        }
+      }
+    }
+  }
+}

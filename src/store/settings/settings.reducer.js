@@ -44,8 +44,14 @@ const initialState = {
       tableSize: 'medium',
     },
     accounts: {
-      tableSize: 'medium'
-    }
+      tableSize: 'medium',
+    },
+    cashflowAccounts: {
+      tableSize: 'medium',
+    },
+    cashflowTransactions: {
+      tableSize: 'medium',
+    },
   },
 };
 
