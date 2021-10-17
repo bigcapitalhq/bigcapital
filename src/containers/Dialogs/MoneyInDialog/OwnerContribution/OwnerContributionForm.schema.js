@@ -6,12 +6,12 @@ const Schema = Yup.object().shape({
   date: Yup.date().required().label(intl.get('date')),
   amount: Yup.number().required().label(intl.get('amount')),
   transaction_number: Yup.string(),
-  transaction_type: Yup.string().required().label(intl.get('transaction_type')),
+  transaction_type: Yup.string().required(),
   reference_no: Yup.string(),
-  credit_account_id: Yup.number().required(),
-  cashflow_account_id: Yup.string()
+  credit_account_id: Yup.number()
     .required()
     .label(intl.get('cash_flow_transaction.label_equity_account')),
+  cashflow_account_id: Yup.string().required(),
   description: Yup.string()
     .min(3)
     .max(DATATYPES_LENGTH.TEXT)

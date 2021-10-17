@@ -1,20 +1,24 @@
 import React from 'react';
 import OwnerContributionForm from './OwnerContribution/OwnerContributionForm';
 import OtherIncomeForm from './OtherIncome/OtherIncomeForm';
+import TransferFromAccountForm from './TransferFromAccount/TransferFromAccountForm';
 
 export default function MoneyInDialogForm({ accountType }) {
   // Handle from transaction.
   const handleFromTransaction = () => {
     switch (accountType) {
-      case 'OWNERS':
+      case 'OWNER_CONTRIBUTION':
         return <OwnerContributionForm />;
 
-      case 'EQUITY':
+      case 'OTHER_INCOME':
         return <OtherIncomeForm />;
+
+      case 'TRANSFER_FROM_ACCOUNT':
+        return <TransferFromAccountForm />;
       default:
         break;
     }
   };
 
-  return <div>{handleFromTransaction()}</div>;
+  return <React.Fragment>{handleFromTransaction()}</React.Fragment>;
 }

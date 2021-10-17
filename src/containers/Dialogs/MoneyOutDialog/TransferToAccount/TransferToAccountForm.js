@@ -8,8 +8,8 @@ import intl from 'react-intl-universal';
 import 'style/pages/CashFlow/CashflowTransactionForm.scss';
 
 import { AppToaster } from 'components';
-import { CreateOwnerDrawingsFormSchema } from './OwnerDrawingsForm.schema';
-import OwnerDrawingsFormContent from './OwnerDrawingsFormContent';
+import { CreateTransferToAccountFormSchema } from './TransferToAccountForm.schema';
+import TransferToAccountFromContent from './TransferToAccountFromContent';
 
 import { useMoneyOutDialogContext } from '../MoneyOutProvider';
 
@@ -22,7 +22,7 @@ const defaultInitialValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
   amount: '',
   transaction_number: '',
-  transaction_type: 'onwers_drawing',
+  transaction_type: 'transfer_from_account',
   reference_no: '',
   cashflow_account_id: '',
   credit_account_id: '',
@@ -31,9 +31,9 @@ const defaultInitialValues = {
 };
 
 /**
- * Owner drawings form.
+ * Transfer to account form.
  */
-function OwnerDrawingsForm({
+function TransferToAccountForm({
   // #withDialogActions
   closeDialog,
 
@@ -43,8 +43,8 @@ function OwnerDrawingsForm({
   const {
     dialogName,
     accountId,
-    submitPayload,
     createCashflowTransactionMutate,
+    submitPayload,
   } = useMoneyOutDialogContext();
 
   // Initial form values.
@@ -53,6 +53,7 @@ function OwnerDrawingsForm({
     currency_code: base_currency,
     cashflow_account_id: accountId,
   };
+
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
     const form = {
@@ -76,11 +77,11 @@ function OwnerDrawingsForm({
 
   return (
     <Formik
-      validationSchema={CreateOwnerDrawingsFormSchema}
+      validationSchema={CreateTransferToAccountFormSchema}
       initialValues={initialValues}
       onSubmit={handleFormSubmit}
     >
-      <OwnerDrawingsFormContent />
+      <TransferToAccountFromContent />
     </Formik>
   );
 }
@@ -88,4 +89,4 @@ function OwnerDrawingsForm({
 export default compose(
   withDialogActions,
   withCurrentOrganization(),
-)(OwnerDrawingsForm);
+)(TransferToAccountForm);

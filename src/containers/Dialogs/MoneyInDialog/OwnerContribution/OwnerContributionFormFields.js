@@ -14,10 +14,13 @@ import {
   AccountsSuggestField,
   InputPrependText,
   MoneyInputGroup,
+  FieldRequiredHint,
+  Col,
+  Row,
 } from 'components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from 'hooks';
-import { FieldRequiredHint, Col, Row } from 'components';
+import { ACCOUNT_TYPE } from 'common/accountTypes';
 import {
   inputIntent,
   momentFormatter,
@@ -118,21 +121,22 @@ function OwnerContributionFormFields() {
 
       <Row>
         <Col xs={5}>
-          {/*------------ cash flow account -----------*/}
-          <FastField name={'cashflow_account_id'}>
+          {/*------------ equity account -----------*/}
+          <FastField name={'credit_account_id'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'cash_flow_transaction.label_equity_account'} />}
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="cashflow_account_id" />}
-                className={'form-group--cashflow_account_id'}
+                helperText={<ErrorMessage name="credit_account_id" />}
+                className={'form-group--credit_account_id'}
               >
                 <AccountsSuggestField
                   accounts={accounts}
                   onAccountSelected={({ id }) =>
-                    form.setFieldValue('cashflow_account_id', id)
+                    form.setFieldValue('credit_account_id', id)
                   }
+                  filterByTypes={ACCOUNT_TYPE.EQUITY}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
                   }}

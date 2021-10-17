@@ -29,14 +29,14 @@ import {
   handleDateChange,
 } from 'utils';
 import { CLASSES } from 'common/classes';
-import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
+import { useMoneyOutDialogContext } from '../MoneyOutProvider';
 
 /**
- * Other income form fields.
+ * Other expense form fields.
  */
-function OtherIncomeFormFields() {
+function OtherExpnseFormFields() {
   // Money in dialog context.
-  const { accounts } = useMoneyInDailogContext();
+  const { accounts } = useMoneyOutDialogContext();
 
   const amountFieldRef = useAutofocus();
 
@@ -123,11 +123,11 @@ function OtherIncomeFormFields() {
 
       <Row>
         <Col xs={5}>
-          {/*------------ other income account -----------*/}
+          {/*------------ other expense account -----------*/}
           <FastField name={'credit_account_id'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
-                label={<T id={'cash_flow_transaction.other_income_account'} />}
+                label={<T id={'cash_flow_transaction.label_expense_account'} />}
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="credit_account_id" />}
@@ -139,8 +139,8 @@ function OtherIncomeFormFields() {
                     form.setFieldValue('credit_account_id', id)
                   }
                   filterByTypes={[
-                    ACCOUNT_TYPE.INCOME,
-                    ACCOUNT_TYPE.OTHER_INCOME,
+                    ACCOUNT_TYPE.EXPENSE,
+                    ACCOUNT_TYPE.OTHER_EXPENSE,
                   ]}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
@@ -169,6 +169,7 @@ function OtherIncomeFormFields() {
           </FastField>
         </Col>
       </Row>
+
       {/*------------ description -----------*/}
       <FastField name={'description'}>
         {({ field, meta: { error, touched } }) => (
@@ -191,4 +192,4 @@ function OtherIncomeFormFields() {
   );
 }
 
-export default OtherIncomeFormFields;
+export default OtherExpnseFormFields;

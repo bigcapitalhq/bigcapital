@@ -9,9 +9,9 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
 /**
- * Owner drawings floating actions.
+ * Other expense floating actions.
  */
-function OwnerDrawingsFloatingActions({
+function OtherExpenseFloatingActions({
   // #withDialogActions
   closeDialog,
 }) {
@@ -73,4 +73,4 @@ function OwnerDrawingsFloatingActions({
   );
 }
 
-export default compose(withDialogActions)(OwnerDrawingsFloatingActions);
+export default compose(withDialogActions)(OtherExpenseFloatingActions);

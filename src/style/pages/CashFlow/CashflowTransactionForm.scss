@@ -1,4 +1,5 @@
-.dialog--money-in {
+.dialog--money-in,
+.dialog--money-out {
   .bp3-form-group {
     margin-bottom: 15px;
 
@@ -19,8 +20,8 @@
     }
     &--reference-no,
     &--amount,
-    &--cashflow_account_id {
-      max-width: 270px;
+    &--credit_account_id {
+      max-width: 380px;
     }
   }
 

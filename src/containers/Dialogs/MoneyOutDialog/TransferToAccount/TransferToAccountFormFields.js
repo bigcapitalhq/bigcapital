@@ -29,16 +29,16 @@ import {
   handleDateChange,
 } from 'utils';
 import { CLASSES } from 'common/classes';
-import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
+import { useMoneyOutDialogContext } from '../MoneyOutProvider';
 
 /**
- * Other income form fields.
+ * Transfer to account form fields.
  */
-function OtherIncomeFormFields() {
+function TransferToAccountFormFields() {
   // Money in dialog context.
-  const { accounts } = useMoneyInDailogContext();
+  const { accounts } = useMoneyOutDialogContext();
 
-  const amountFieldRef = useAutofocus();
+  const accountRef = useAutofocus();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -113,7 +113,7 @@ function OtherIncomeFormFields() {
                 onChange={(amount) => {
                   setFieldValue('amount', amount);
                 }}
-                inputRef={(ref) => (amountFieldRef.current = ref)}
+                inputRef={accountRef}
                 intent={inputIntent({ error, touched })}
               />
             </ControlGroup>
@@ -123,11 +123,14 @@ function OtherIncomeFormFields() {
 
       <Row>
         <Col xs={5}>
-          {/*------------ other income account -----------*/}
+          {/*------------ transfer from account -----------*/}
           <FastField name={'credit_account_id'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
-                label={<T id={'cash_flow_transaction.other_income_account'} />}
+                label={
+                  'Transfer account'
+                  // <T id={'cash_flow_transaction.label_transfer_from_account'} />
+                }
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="credit_account_id" />}
@@ -139,8 +142,9 @@ function OtherIncomeFormFields() {
                     form.setFieldValue('credit_account_id', id)
                   }
                   filterByTypes={[
-                    ACCOUNT_TYPE.INCOME,
-                    ACCOUNT_TYPE.OTHER_INCOME,
+                    ACCOUNT_TYPE.CASH,
+                    ACCOUNT_TYPE.BANK,
+                    ACCOUNT_TYPE.CREDIT_CARD,
                   ]}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
@@ -191,4 +195,4 @@ function OtherIncomeFormFields() {
   );
 }
 
-export default OtherIncomeFormFields;
+export default TransferToAccountFormFields;

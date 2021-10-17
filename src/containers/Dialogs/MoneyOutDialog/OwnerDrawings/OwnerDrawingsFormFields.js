@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
+import { FastField, Field, ErrorMessage } from 'formik';
 import {
   Classes,
   FormGroup,
@@ -14,11 +14,13 @@ import {
   AccountsSuggestField,
   InputPrependText,
   MoneyInputGroup,
+  FieldRequiredHint,
+  Col,
+  Row,
 } from 'components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from 'hooks';
-import { FieldRequiredHint, Col, Row } from 'components';
-
+import { ACCOUNT_TYPE } from 'common/accountTypes';
 import {
   inputIntent,
   momentFormatter,
@@ -88,7 +90,7 @@ function OwnerDrawingsFormFields() {
         </Col>
       </Row>
       {/*------------ amount -----------*/}
-      <FastField name={'amount'}>
+      <Field name={'amount'}>
         {({
           form: { values, setFieldValue },
           field: { value },
@@ -110,31 +112,33 @@ function OwnerDrawingsFormFields() {
                 onChange={(amount) => {
                   setFieldValue('amount', amount);
                 }}
+                
                 inputRef={(ref) => (amountFieldRef.current = ref)}
                 intent={inputIntent({ error, touched })}
               />
             </ControlGroup>
           </FormGroup>
         )}
-      </FastField>
+      </Field>
 
       <Row>
         <Col xs={5}>
           {/*------------ equitty account -----------*/}
-          <FastField name={'equity_account_id'}>
+          <FastField name={'credit_account_id'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'cash_flow_transaction.label_equity_account'} />}
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="equity_account_id" />}
-                className={'form-group--equity_account_id'}
+                helperText={<ErrorMessage name="credit_account_id" />}
+                className={'form-group--credit_account_id'}
               >
                 <AccountsSuggestField
                   accounts={accounts}
                   onAccountSelected={({ id }) =>
-                    form.setFieldValue('equity_account_id', id)
+                    form.setFieldValue('credit_account_id', id)
                   }
+                  filterByTypes={ACCOUNT_TYPE.EQUITY}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
                   }}

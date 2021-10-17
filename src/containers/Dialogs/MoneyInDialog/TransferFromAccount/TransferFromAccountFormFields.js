@@ -32,9 +32,9 @@ import { CLASSES } from 'common/classes';
 import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
 
 /**
- * Other income form fields.
+ * Transfer from account form fields.
  */
-function OtherIncomeFormFields() {
+function TransferFromAccountFormFields() {
   // Money in dialog context.
   const { accounts } = useMoneyInDailogContext();
 
@@ -123,11 +123,14 @@ function OtherIncomeFormFields() {
 
       <Row>
         <Col xs={5}>
-          {/*------------ other income account -----------*/}
+          {/*------------ transfer from account -----------*/}
           <FastField name={'credit_account_id'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
-                label={<T id={'cash_flow_transaction.other_income_account'} />}
+                label={
+                  'Transfer account'
+                  // <T id={'cash_flow_transaction.label_transfer_from_account'} />
+                }
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="credit_account_id" />}
@@ -139,8 +142,9 @@ function OtherIncomeFormFields() {
                     form.setFieldValue('credit_account_id', id)
                   }
                   filterByTypes={[
-                    ACCOUNT_TYPE.INCOME,
-                    ACCOUNT_TYPE.OTHER_INCOME,
+                    ACCOUNT_TYPE.CASH,
+                    ACCOUNT_TYPE.BANK,
+                    ACCOUNT_TYPE.CREDIT_CARD,
                   ]}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
@@ -191,4 +195,4 @@ function OtherIncomeFormFields() {
   );
 }
 
-export default OtherIncomeFormFields;
+export default TransferFromAccountFormFields;

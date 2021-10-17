@@ -10,7 +10,8 @@ const AccountTransactionsContext = React.createContext();
  * Account transctions provider.
  */
 function AccountTransactionsProvider({ query, ...props }) {
-  const accountId = useParams();
+  const { id } = useParams();
+  const accountId = parseInt(id, 10);
 
   // Fetch cashflow account transactions list
   const {
@@ -20,7 +21,6 @@ function AccountTransactionsProvider({ query, ...props }) {
   } = useCashflowTransactions(accountId, {
     enabled: !!accountId,
   });
-
 
   // Provider payload.
   const provider = {

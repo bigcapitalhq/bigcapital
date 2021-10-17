@@ -1377,11 +1377,16 @@
   "cash_flow.option_owner_drawings":"Owner drawings",
   "cash_flow.option_expenses":"Expenes",
   "cash_flow.option_vendor_payment":"Vendor payment",
+  "cash_flow.option_transfer_form_account":"Transfer from account",
+  "cash_flow.option_transfer_to_account":"Transfer to account",
   "cash_flow_transaction.label_equity_account":"Equity account",
+  "cash_flow_transaction.label_expense_account":"Expense account",
+  "cash_flow_transaction.label_transfer_account":"Transfer account",
   "cash_flow_transaction_success_message":" The cashflow transaction has been created successfully.",
   "cash_flow_transaction.money_in":"Money In",
   "cash_flow_transaction.money_out":"Money Out",
-  "cash_flow_transaction.outher_income_account":"Other income account",
+  "cash_flow_transaction.other_income_account":"Other income account",
+  "cash_flow_transaction.other_expense_account":"Other expense account",
   "save_and_publish": "Save & Publish"
  
 }

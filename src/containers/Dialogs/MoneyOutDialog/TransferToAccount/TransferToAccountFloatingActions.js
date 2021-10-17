@@ -8,10 +8,7 @@ import { useMoneyOutDialogContext } from '../MoneyOutProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
-/**
- * Owner drawings floating actions.
- */
-function OwnerDrawingsFloatingActions({
+function TransferToAccountFloatingActions({
   // #withDialogActions
   closeDialog,
 }) {
@@ -73,4 +70,4 @@ function OwnerDrawingsFloatingActions({
   );
 }
 
-export default compose(withDialogActions)(OwnerDrawingsFloatingActions);
+export default compose(withDialogActions)(TransferToAccountFloatingActions);

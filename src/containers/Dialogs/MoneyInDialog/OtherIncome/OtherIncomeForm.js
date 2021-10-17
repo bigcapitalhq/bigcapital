@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
+import { omit } from 'lodash';
 import intl from 'react-intl-universal';
 
 import 'style/pages/CashFlow/CashflowTransactionForm.scss';
@@ -50,13 +51,13 @@ function OtherIncomeForm({
   const initialValues = {
     ...defaultInitialValues,
     currency_code: base_currency,
-    credit_account_id: accountId,
+    cashflow_account_id: accountId,
   };
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
     const form = {
-      ...values,
+      ...omit(values, ['currency_code']),
       published: submitPayload.publish,
     };
     setSubmitting(true);

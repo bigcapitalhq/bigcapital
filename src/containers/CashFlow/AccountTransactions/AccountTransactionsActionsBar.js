@@ -36,7 +36,7 @@ function AccountTransactionsActionsBar({
   const handleMoneyInFormTransaction = (value) => {
     openDialog('money-in', {
       account_type: value.type,
-      account_id: accountId.id,
+      account_id: accountId,
     });
   };
 
@@ -44,7 +44,7 @@ function AccountTransactionsActionsBar({
   const handlMoneyOutFormTransaction = (value) => {
     openDialog('money-out', {
       account_type: value.type,
-      account_id: accountId.id,
+      account_id: accountId,
     });
   };
   return (

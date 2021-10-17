@@ -10,7 +10,7 @@ const Schema = Yup.object().shape({
   reference_no: Yup.string(),
   credit_account_id: Yup.number()
     .required()
-    .label(intl.get('other_income_account')),
+    .label(intl.get('other_expense_account')),
   cashflow_account_id: Yup.string().required(),
   description: Yup.string()
     .min(3)
@@ -19,4 +19,4 @@ const Schema = Yup.object().shape({
   published: Yup.boolean(),
 });
 
-export const CreateOtherIncomeFormSchema = Schema;
+export const CreateOtherExpenseFormSchema = Schema;

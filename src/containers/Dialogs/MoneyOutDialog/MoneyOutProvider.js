@@ -1,6 +1,6 @@
 import React from 'react';
 import { DialogContent } from 'components';
-import { useAccounts } from 'hooks/query';
+import { useAccounts, useCreateCashflowTransaction } from 'hooks/query';
 
 const MoneyInDialogContent = React.createContext();
 
@@ -9,7 +9,14 @@ const MoneyInDialogContent = React.createContext();
  */
 function MoneyOutProvider({ accountId, dialogName, ...props }) {
   // Fetches accounts list.
-  const { isFetching: isAccountsLoading, data: accounts } = useAccounts();
+  const {
+    isFetching: isAccountFetching,
+    isLoading: isAccountsLoading,
+    data: accounts,
+  } = useAccounts();
+
+  const { mutateAsync: createCashflowTransactionMutate } =
+    useCreateCashflowTransaction();
 
   // Submit payload.
   const [submitPayload, setSubmitPayload] = React.useState({});
@@ -23,6 +30,7 @@ function MoneyOutProvider({ accountId, dialogName, ...props }) {
     submitPayload,
     dialogName,
 
+    createCashflowTransactionMutate,
     setSubmitPayload,
   };
 
