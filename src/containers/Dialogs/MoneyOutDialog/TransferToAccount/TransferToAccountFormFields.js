@@ -128,8 +128,7 @@ function TransferToAccountFormFields() {
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
                 label={
-                  'Transfer account'
-                  // <T id={'cash_flow_transaction.label_transfer_from_account'} />
+                  <T id={'cash_flow_transaction.label_transfer_to_account'} />
                 }
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
