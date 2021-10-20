@@ -1362,7 +1362,7 @@
   "vendors.option_with_transactions": "Vendors with transactions",
   "vendors.option_with_transactions.hint": "Include vendors that onces have transactions on the given date period only.",
   "landed_cost.action.delete.success_message": "The landed cost has been deleted successfully.",
-  "siebar.cashflow.label_cash_and_bank_accounts": "Cash & Bank accounts",
+  "siebar.cashflow.label_cash_and_bank_accounts": "Cash & Bank Accounts",
  
   "cash_flow.label_account_transcations": "Account Transcations",
   "cash_flow.label.deposit":"Deposit",

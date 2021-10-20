@@ -5,7 +5,6 @@ import { Intent, Tag } from '@blueprintjs/core';
 import { isBlank } from 'utils';
 import { Link } from 'react-router-dom';
 
-
 /**
  * Account code accessor.
  */
@@ -34,7 +33,12 @@ export const BalanceCell = ({ cell }) => {
  */
 const AccountCell = ({ row }) => {
   const account = row.original;
-  return <Link to={`/account/${account.id}/transactions`}>{account.name}</Link>;
+  return (
+    <>
+      <div>X</div>
+      <Link to={`/account/${account.id}/transactions`}>{account.name}</Link>
+    </>
+  );
 };
 
 /**
@@ -48,7 +52,6 @@ export function useCashFlowAccountsTableColumns() {
         Header: intl.get('account_name'),
         accessor: 'name',
         Cell: AccountCell,
-
         className: 'account_name',
         width: 200,
         textOverview: true,

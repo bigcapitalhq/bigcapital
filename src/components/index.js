@@ -81,6 +81,7 @@ export * from './Forms';
 export * from './MultiSelectTaggable';
 export * from './Utils/FormatNumber';
 export * from './Utils/FormatDate';
+export * from './BankAccounts';
 
 const Hint = FieldHint;
 

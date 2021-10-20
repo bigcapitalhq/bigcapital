@@ -780,8 +780,6 @@ export const getDashboardRoutes = () => [
     component: lazy(() =>
       import('containers/CashFlow/CashFlowAccounts/CashFlowAccountsList'),
     ),
-    backLink: true,
-    // breadcrumb: intl.get('homepage'),
     pageTitle: intl.get('siebar.cashflow.label_cash_and_bank_accounts'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
