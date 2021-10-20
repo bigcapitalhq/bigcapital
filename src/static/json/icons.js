@@ -481,7 +481,7 @@ export default {
   },
   'account-balance': {
     path: [
-      'M6.5 10h-2v7h2v-7zm6 0h-2v7h2v-7zm8.5 9H2v2h19v-2zm-2.5-9h-2v7h2v-7zm-7-6.74L16.71 6H6.29l5.21-2.74m0-2.26L2 6v2h19V6l-9.5-5z'
+      'M6.5 10h-2v7h2v-7zm6 0h-2v7h2v-7zm8.5 9H2v2h19v-2zm-2.5-9h-2v7h2v-7zm-7-6.74L16.71 6H6.29l5.21-2.74m0-2.26L2 6v2h19V6l-9.5-5z',
     ],
     viewBox: '0 0 24 24',
   },
@@ -489,6 +489,18 @@ export default {
     path: [
       'M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z',
     ],
+    viewBox: '0 0 24 24',
+  },
+  'arrow-drop-down': {
+    path: ['M7 10l5 5 5-5H7z'],
+    viewBox: '0 0 24 24',
+  },
+  'arrow-downward': {
+    path: ['M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z'],
+    viewBox: '0 0 24 24',
+  },
+  'arrow-upward': {
+    path: ['M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z'],
     viewBox: '0 0 24 24',
   }
 };

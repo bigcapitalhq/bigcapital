@@ -1,5 +1,11 @@
 import React from 'react';
-import { Button, NavbarGroup, Classes, NavbarDivider } from '@blueprintjs/core';
+import {
+  Button,
+  NavbarGroup,
+  Classes,
+  NavbarDivider,
+  Alignment,
+} from '@blueprintjs/core';
 import {
   Icon,
   DashboardRowsHeightButton,
@@ -23,6 +29,7 @@ function AccountTransactionsActionsBar({
 
   // #withSettings
   cashflowTansactionsTableSize,
+
   // #withSettingsActions
   addSetting,
 }) {
@@ -32,7 +39,7 @@ function AccountTransactionsActionsBar({
   };
   const { accountId } = useAccountTransactionsContext();
 
-  //Handle money in form
+  // Handle money in form
   const handleMoneyInFormTransaction = (value) => {
     openDialog('money-in', {
       account_type: value.type,
@@ -40,13 +47,16 @@ function AccountTransactionsActionsBar({
     });
   };
 
-  //Handle money out form
+  // Handle money out form
   const handlMoneyOutFormTransaction = (value) => {
     openDialog('money-out', {
       account_type: value.type,
       account_id: accountId,
     });
   };
+
+  const handleRefreshBtnClick = () => {};
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -54,13 +64,18 @@ function AccountTransactionsActionsBar({
           items={addMoneyIn}
           onItemSelect={handleMoneyInFormTransaction}
           text={<T id={'cash_flow.label.add_money_in'} />}
+          buttonProps={{
+            icon: <Icon icon={'arrow-downward'} iconSize={20} />,
+          }}
         />
         <CashFlowMenuItems
           items={addMoneyOut}
           onItemSelect={handlMoneyOutFormTransaction}
           text={<T id={'cash_flow.label.add_money_out'} />}
+          buttonProps={{
+            icon: <Icon icon={'arrow-upward'} iconSize={20} />,
+          }}
         />
-
         <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
@@ -83,6 +98,14 @@ function AccountTransactionsActionsBar({
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
+      </NavbarGroup>
+
+      <NavbarGroup align={Alignment.RIGHT}>
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="refresh-16" iconSize={14} />}
+          onClick={handleRefreshBtnClick}
+        />
       </NavbarGroup>
     </DashboardActionsBar>
   );

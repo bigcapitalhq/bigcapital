@@ -1,7 +1,8 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-
+import { MaterialProgressBar } from 'components';
 import { FormatDateCell } from 'components';
+import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 
 /**
  * Retrieve account transctions table columns.
@@ -59,4 +60,13 @@ export function useAccountTransactionsColumns() {
     ],
     [],
   );
+}
+
+/**
+ * Account transactions progress bar.
+ */
+export function AccountTransactionsProgressBar() {
+  const { isCashFlowTransactionsLoading } = useAccountTransactionsContext();
+
+  return isCashFlowTransactionsLoading ? <MaterialProgressBar /> : null;
 }

@@ -1,6 +1,8 @@
 .dashboard__insider--account-transactions {
   .bigcapital-datatable {
-    .tbody {
-    }
+    position: relative;
+    top: -1px;
+
+    .tbody {}
   }
 }

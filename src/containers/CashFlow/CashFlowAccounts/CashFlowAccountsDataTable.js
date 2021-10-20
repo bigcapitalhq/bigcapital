@@ -33,12 +33,13 @@ function CashFlowAccountsDataTable({
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.CASHFLOW_ACCOUNTS);
+
   return (
     <DataTable
       noInitialFetch={true}
       columns={columns}
       data={cashflowAccounts}
-      selectionColumn={true}
+      selectionColumn={false}
       sticky={true}
       loading={isCashFlowAccountsLoading}
       headerLoading={isCashFlowAccountsLoading}
@@ -47,11 +48,8 @@ function CashFlowAccountsDataTable({
       expandToggleColumn={2}
       selectionColumnWidth={45}
       TableCellRenderer={TableFastCell}
-      TableRowsRenderer={TableVirtualizedListRows}
+      
       TableLoadingRenderer={TableSkeletonRows}
-      // #TableVirtualizedListRows props.
-      vListrowHeight={cashflowTableSize == 'small' ? 40 : 42}
-      vListOverscanRowCount={0}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}

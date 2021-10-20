@@ -190,10 +190,6 @@ export default [
     ],
   },
   {
-    text: <T id={'banking'} />,
-    children: [],
-  },
-  {
     text: <T id={'cash_flow'} />,
     children: [
       {

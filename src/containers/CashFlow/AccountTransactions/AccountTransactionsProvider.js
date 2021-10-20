@@ -1,8 +1,11 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-
-import { useCashflowTransactions } from 'hooks/query';
+import {
+  useCashflowTransactions,
+  useCashflowAccounts,
+  useAccount,
+} from 'hooks/query';
 
 const AccountTransactionsContext = React.createContext();
 
@@ -22,12 +25,31 @@ function AccountTransactionsProvider({ query, ...props }) {
     enabled: !!accountId,
   });
 
+  // Fetch cashflow accounts .
+  const {
+    data: cashflowAccounts,
+    isFetching: isCashFlowAccountsFetching,
+    isLoading: isCashFlowAccountsLoading,
+  } = useCashflowAccounts(query, { keepPreviousData: true });
+
+  const {
+    data: currentAccount,
+    isFetching: isCurrentAccountFetching,
+    isLoading: isCurrentAccountLoading,
+  } = useAccount(accountId, { keepPreviousData: true });
+
   // Provider payload.
   const provider = {
     accountId,
     cashflowTransactions,
+    cashflowAccounts,
+    currentAccount,
     isCashFlowTransactionsFetching,
     isCashFlowTransactionsLoading,
+    isCashFlowAccountsFetching,
+    isCashFlowAccountsLoading,
+    isCurrentAccountFetching,
+    isCurrentAccountLoading,
   };
 
   return (

@@ -187,6 +187,7 @@ export function BankAccount({
   type,
   balance,
   loading = false,
+  to
 }) {
   return (
     <BankAccountWrap>

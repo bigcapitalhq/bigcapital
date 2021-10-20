@@ -40,7 +40,6 @@ function AccountTransactionsDataTable({
       noInitialFetch={true}
       columns={columns}
       data={cashflowTransactions}
-      selectionColumn={true}
       sticky={true}
       loading={isCashFlowTransactionsLoading}
       headerLoading={isCashFlowTransactionsLoading}
@@ -59,6 +58,9 @@ function AccountTransactionsDataTable({
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
       size={cashflowTansactionsTableSize}
+      noResults={'There is deposit/withdrawal transactions on the current account.'}
+
+      className="table-constrant"
     />
   );
 }

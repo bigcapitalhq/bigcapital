@@ -1,18 +1,20 @@
 import React from 'react';
-import classNames from 'classnames';
-
 import {
   Button,
   PopoverInteractionKind,
   MenuItem,
-  Classes,
   Position,
 } from '@blueprintjs/core';
 
 import { Select } from '@blueprintjs/select';
 import { Icon } from 'components';
 
-export const CashFlowMenuItems = ({ text, items, onItemSelect }) => {
+export const CashFlowMenuItems = ({
+  text,
+  items,
+  onItemSelect,
+  buttonProps,
+}) => {
   // Menu items renderer.
   const itemsRenderer = (item, { handleClick, modifiers, query }) => (
     <MenuItem text={item.name} label={item.label} onClick={handleClick} />
@@ -40,9 +42,8 @@ export const CashFlowMenuItems = ({ text, items, onItemSelect }) => {
       <Button
         text={text}
         icon={<Icon icon={'plus-24'} iconSize={20} />}
-        // rightIcon={'caret-down'}
-        // className={classNames(Classes.MINIMAL, 'button--table-views')}
         minimal={true}
+        {...buttonProps}
       />
     </Select>
   );

@@ -766,7 +766,7 @@ export const getDashboardRoutes = () => [
   },
   // Cash flow
   {
-    path: `/account/:id/transactions`,
+    path: `/cashflow-accounts/:id/transactions`,
     component: lazy(() =>
       import('containers/CashFlow/AccountTransactions/AccountTransactionsList'),
     ),

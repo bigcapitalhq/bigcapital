@@ -1,6 +1,7 @@
 import React from 'react';
 import { isNull } from 'lodash';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import { BankAccountsList, BankAccount } from '../../../components';
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
 
@@ -23,12 +24,14 @@ function CashflowAccountsSkeleton() {
 
 function CashflowAccountsGridItems({ accounts }) {
   return accounts.map((account) => (
-    <BankAccount
-      title={account.name}
-      code={account.code}
-      balance={!isNull(account.amount) ? account.formattedAmount : '-'}
-      type={'cash'}
-    />
+    <Link to={`/cashflow-accounts/${account.id}/transactions`}>
+      <BankAccount
+        title={account.name}
+        code={account.code}
+        balance={!isNull(account.amount) ? account.formattedAmount : '-'}
+        type={'cash'}
+      />
+    </Link>
   ));
 }
 
