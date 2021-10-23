@@ -52,14 +52,13 @@ function AccountTransactionsDataTable({
       TableRowsRenderer={TableVirtualizedListRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       // #TableVirtualizedListRows props.
-      vListrowHeight={cashflowTansactionsTableSize == 'small' ? 40 : 42}
+      vListrowHeight={cashflowTansactionsTableSize == 'small' ? 32 : 40}
       vListOverscanRowCount={0}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
       size={cashflowTansactionsTableSize}
       noResults={'There is deposit/withdrawal transactions on the current account.'}
-
       className="table-constrant"
     />
   );

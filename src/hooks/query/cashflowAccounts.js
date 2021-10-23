@@ -1,10 +1,12 @@
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient, useInfiniteQuery } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import t from './types';
 
 const commonInvalidateQueries = (queryClient) => {
-  // queryClient.invalidateQueries(t.CASH_FLOW_TRANSACTIONS);
+  // Invalidate accounts.
+  queryClient.invalidateQueries(t.ACCOUNTS);
+  queryClient.invalidateQueries(t.ACCOUNT);
   queryClient.invalidateQueries(t.CASH_FLOW_TRANSACTION);
 };
 
@@ -22,13 +24,14 @@ export function useCashflowAccounts(query, props) {
     },
   );
 }
+
 /**
  * Retrieve account transactions list.
  */
 export function useCashflowTransactions(id, props) {
   return useRequestQuery(
     [t.CASH_FLOW_TRANSACTIONS, id],
-    { method: 'get', url: `cashflow/account/${1000}/transactions` },
+    { method: 'get', url: `cashflow/account/${id}/transactions` },
     {
       select: (res) => res.data.cashflow_transactions,
       defaultData: [],
@@ -72,4 +75,43 @@ export function useDeleteCashflowTransaction(props) {
     },
     ...props,
   });
+}
+
+/**
+ * Retrieve account transactions infinity scrolling.
+ * @param {number} accountId
+ * @param {*} axios
+ * @returns
+ */
+export function useAccountTransactionsInfinity(
+  accountId,
+  query,
+  axios,
+  infinityProps,
+) {
+  const apiRequest = useApiRequest();
+
+  return useInfiniteQuery(
+    ['CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY', accountId],
+    async ({ pageParam = 1 }) => {
+      const response = await apiRequest.http({
+        ...axios,
+        method: 'get',
+        url: `/api/cashflow/account/${accountId}/transactions`,
+        params: { page: pageParam, ...query },
+      });
+      return response.data;
+    },
+    {
+      getPreviousPageParam: (firstPage) => firstPage.pagination.page - 1,
+      getNextPageParam: (lastPage) => {
+        const { pagination } = lastPage;
+
+        return pagination.total > pagination.page_size * pagination.page
+          ? lastPage.pagination.page + 1
+          : undefined;
+      },
+      ...infinityProps,
+    },
+  );
 }

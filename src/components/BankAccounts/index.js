@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { Classes } from '@blueprintjs/core';
 import clsx from 'classnames';
+import useContextMenu from 'react-use-context-menu';
+import ContextMenu from '../ContextMenu';
 import Icon from '../Icon';
 
 const BankAccountWrap = styled.div`
@@ -17,21 +19,6 @@ const BankAccountWrap = styled.div`
 
   &:hover {
     border-color: #0153cc;
-  }
-`;
-
-const BankAccountAnchor = styled.a`
-  text-decoration: none;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  color: inherit;
-
-  &:hover,
-  &:focus,
-  &:active {
-    color: inherit;
-    text-decoration: none;
   }
 `;
 
@@ -179,43 +166,65 @@ function BankAccountTypeIcon({ type }) {
   );
 }
 
-
-
 export function BankAccount({
   title,
   code,
   type,
   balance,
   loading = false,
-  to
+  updatedBeforeText,
+  to,
+  contextMenuContent,
 }) {
+  const [
+    bindMenu,
+    bindMenuItem,
+    useContextTrigger,
+    { coords, setVisible, isVisible },
+  ] = useContextMenu();
+
+  const [bindTrigger] = useContextTrigger({
+    collect: () => 'Title',
+  });
+
+  const handleClose = React.useCallback(() => {
+    setVisible(false);
+  }, [setVisible]);
+
   return (
-    <BankAccountWrap>
-      <BankAccountAnchor href="#">
-        <BankAccountHeader>
-          <BankAccountTitle className={clsx({ [Classes.SKELETON]: loading })}>
-            {title}
-          </BankAccountTitle>
-          <BnakAccountCode className={clsx({ [Classes.SKELETON]: loading })}>
-            {code}
-          </BnakAccountCode>
-          {!loading && <BankAccountTypeIcon type={type} />}
-        </BankAccountHeader>
+    <BankAccountWrap {...bindTrigger}>
+      <BankAccountHeader>
+        <BankAccountTitle className={clsx({ [Classes.SKELETON]: loading })}>
+          {title}
+        </BankAccountTitle>
+        <BnakAccountCode className={clsx({ [Classes.SKELETON]: loading })}>
+          {code}
+        </BnakAccountCode>
+        {!loading && <BankAccountTypeIcon type={type} />}
+      </BankAccountHeader>
 
-        <BankAccountMeta>
-          <BankAccountMetaLine
-            title={'Account transactions'}
-            value={2}
-            className={clsx({ [Classes.SKELETON]: loading })}
-          />
-          <BankAccountMetaLine
-            title={'Updated 2 days ago'}
-            className={clsx({ [Classes.SKELETON]: loading })}
-          />
-        </BankAccountMeta>
+      <BankAccountMeta>
+        <BankAccountMetaLine
+          title={'Account transactions'}
+          value={2}
+          className={clsx({ [Classes.SKELETON]: loading })}
+        />
+        <BankAccountMetaLine
+          title={updatedBeforeText}
+          className={clsx({ [Classes.SKELETON]: loading })}
+        />
+      </BankAccountMeta>
 
-        <BankAccountBalance amount={balance} loading={loading} />
-      </BankAccountAnchor>
+      <BankAccountBalance amount={balance} loading={loading} />
+
+      <ContextMenu
+        bindMenu={bindMenu}
+        isOpen={isVisible}
+        coords={coords}
+        onClosed={handleClose}
+      >
+        <contextMenuContent />
+      </ContextMenu>
     </BankAccountWrap>
   );
 }

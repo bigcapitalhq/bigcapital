@@ -82,6 +82,7 @@ export * from './MultiSelectTaggable';
 export * from './Utils/FormatNumber';
 export * from './Utils/FormatDate';
 export * from './BankAccounts';
+export * from './IntersectionObserver'
 
 const Hint = FieldHint;
 

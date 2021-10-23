@@ -29,7 +29,7 @@ function AccountSwitchButton() {
 
 function AccountSwitchItem() {
   const { push } = useHistory();
-  const { cashflowAccounts } = useAccountTransactionsContext();
+  const { cashflowAccounts, accountId } = useAccountTransactionsContext();
 
   // Handle item click.
   const handleItemClick = curry((account, event) => {
@@ -39,7 +39,9 @@ function AccountSwitchItem() {
   const items = cashflowAccounts.map((account) => (
     <AccountSwitchMenuItem
       name={account.name}
+      balance={account.formatted_amount}
       onClick={handleItemClick(account)}
+      active={account.id === accountId}
     />
   ));
 
@@ -111,7 +113,7 @@ function AccountSwitchMenuItem({
 }) {
   return (
     <MenuItem
-      label={'LYD100,000'}
+      label={balance}
       text={
         <React.Fragment>
           <AccountSwitchItemName>{name}</AccountSwitchItemName>
