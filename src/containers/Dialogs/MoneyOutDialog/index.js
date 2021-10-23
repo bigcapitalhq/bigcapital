@@ -20,7 +20,7 @@ function MoneyOutDialog({
     <Dialog
       name={dialogName}
       title={intl.get('cash_flow_transaction.money_out', {
-        value: payload.account_type,
+        value: payload.account_type?.name,
       })}
       isOpen={isOpen}
       canEscapeJeyClose={true}
@@ -31,7 +31,7 @@ function MoneyOutDialog({
         <MoneyOutDialogContent
           dialogName={dialogName}
           accountId={payload.account_id}
-          accountType={payload.account_type}
+          accountType={payload.account_type?.value}
         />
       </DialogSuspense>
     </Dialog>

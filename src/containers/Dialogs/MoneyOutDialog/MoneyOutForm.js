@@ -8,10 +8,11 @@ import intl from 'react-intl-universal';
 import 'style/pages/CashFlow/CashflowTransactionForm.scss';
 
 import { AppToaster } from 'components';
-import { CreateOtherExpenseFormSchema } from './OtherExpenseForm.schema';
-import OtherExpenseFormContent from './OtherExpenseFormContent';
 
-import { useMoneyOutDialogContext } from '../MoneyOutProvider';
+import MoneyOutFormContent from './MoneyOutFormContent';
+import { CreateMoneyOutSchema } from './MoneyOutForm.schema';
+
+import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
@@ -22,7 +23,7 @@ const defaultInitialValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
   amount: '',
   transaction_number: '',
-  transaction_type: 'other_expense',
+  transaction_type: '',
   reference_no: '',
   cashflow_account_id: '',
   credit_account_id: '',
@@ -30,10 +31,7 @@ const defaultInitialValues = {
   published: '',
 };
 
-/**
- * Other expense form.
- */
-function OtherExpenseForm({
+function MoneyOutForm({
   // #withDialogActions
   closeDialog,
 
@@ -43,6 +41,7 @@ function OtherExpenseForm({
   const {
     dialogName,
     accountId,
+    accountType,
     createCashflowTransactionMutate,
     submitPayload,
   } = useMoneyOutDialogContext();
@@ -51,6 +50,7 @@ function OtherExpenseForm({
   const initialValues = {
     ...defaultInitialValues,
     currency_code: base_currency,
+    transaction_type: accountType,
     cashflow_account_id: accountId,
   };
 
@@ -74,19 +74,20 @@ function OtherExpenseForm({
         setSubmitting(true);
       });
   };
-
   return (
-    <Formik
-      validationSchema={CreateOtherExpenseFormSchema}
-      initialValues={initialValues}
-      onSubmit={handleFormSubmit}
-    >
-      <OtherExpenseFormContent />
-    </Formik>
+    <div>
+      <Formik
+        validationSchema={CreateMoneyOutSchema}
+        initialValues={initialValues}
+        onSubmit={handleFormSubmit}
+      >
+        <MoneyOutFormContent />
+      </Formik>
+    </div>
   );
 }
 
 export default compose(
   withDialogActions,
   withCurrentOrganization(),
-)(OtherExpenseForm);
+)(MoneyOutForm);

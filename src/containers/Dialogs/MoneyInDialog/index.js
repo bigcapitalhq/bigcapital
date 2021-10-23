@@ -11,7 +11,7 @@ const MoneyInDialogContent = React.lazy(() => import('./MoneyInDialogContent'));
  */
 function MoneyInDialog({
   dialogName,
-  payload = { account_type: '', account_id: null },
+  payload = { account_type: null, account_id: null },
   isOpen,
 }) {
   return (

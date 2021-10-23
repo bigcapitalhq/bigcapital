@@ -29,7 +29,7 @@ import {
   handleDateChange,
 } from 'utils';
 import { CLASSES } from 'common/classes';
-import { useMoneyOutDialogContext } from '../MoneyOutProvider';
+import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
 
 /**
  * Transfer to account form fields.
@@ -41,7 +41,7 @@ function TransferToAccountFormFields() {
   const accountRef = useAutofocus();
 
   return (
-    <div className={Classes.DIALOG_BODY}>
+    <React.Fragment>
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -190,7 +190,7 @@ function TransferToAccountFormFields() {
           </FormGroup>
         )}
       </FastField>
-    </div>
+    </React.Fragment>
   );
 }
 

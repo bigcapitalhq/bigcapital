@@ -1,19 +1,23 @@
 import React from 'react';
 import { DialogContent } from 'components';
-import { useAccounts, useCreateCashflowTransaction } from 'hooks/query';
+import {
+  useAccounts,
+  useCreateCashflowTransaction,
+  useCashflowAccounts,
+} from 'hooks/query';
 
 const MoneyInDialogContent = React.createContext();
 
 /**
  * Money out dialog provider.
  */
-function MoneyOutProvider({ accountId, dialogName, ...props }) {
+function MoneyOutProvider({ accountId, accountType, dialogName, ...props }) {
   // Fetches accounts list.
-  const {
-    isFetching: isAccountFetching,
-    isLoading: isAccountsLoading,
-    data: accounts,
-  } = useAccounts();
+  const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
+
+  // Fetch cash flow list .
+  const { data: cashflowAccounts, isLoading: isCashFlowAccountsLoading } =
+    useCashflowAccounts({}, { keepPreviousData: true });
 
   const { mutateAsync: createCashflowTransactionMutate } =
     useCreateCashflowTransaction();
@@ -25,7 +29,10 @@ function MoneyOutProvider({ accountId, dialogName, ...props }) {
   const provider = {
     accounts,
     accountId,
+    accountType,
     isAccountsLoading,
+
+    cashflowAccounts,
 
     submitPayload,
     dialogName,
@@ -35,7 +42,7 @@ function MoneyOutProvider({ accountId, dialogName, ...props }) {
   };
 
   return (
-    <DialogContent isLoading={isAccountsLoading}>
+    <DialogContent isLoading={isAccountsLoading || isCashFlowAccountsLoading}>
       <MoneyInDialogContent.Provider value={provider} {...props} />
     </DialogContent>
   );

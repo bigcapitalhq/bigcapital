@@ -1,6 +1,6 @@
 import React from 'react';
-import { MoneyOutProvider } from './MoneyOutProvider';
-import MoneyOutDialogForm from './MoneyOutDialogForm';
+import { MoneyOutProvider } from './MoneyOutDialogProvider';
+import MoneyOutForm from './MoneyOutForm';
 
 /**
  * Money out dailog content.
@@ -12,8 +12,12 @@ export default function MoneyOutDialogContent({
   accountType,
 }) {
   return (
-    <MoneyOutProvider accountId={accountId} dialogName={dialogName}>
-      <MoneyOutDialogForm accountType={accountType} />
+    <MoneyOutProvider
+      accountId={accountId}
+      accountType={accountType}
+      dialogName={dialogName}
+    >
+      <MoneyOutForm />
     </MoneyOutProvider>
   );
 }

@@ -28,7 +28,7 @@ import {
   handleDateChange,
 } from 'utils';
 import { CLASSES } from 'common/classes';
-import { useMoneyOutDialogContext } from '../MoneyOutProvider';
+import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
 
 /**
  * Owner drawings form fields.
@@ -40,7 +40,7 @@ function OwnerDrawingsFormFields() {
   const amountFieldRef = useAutofocus();
 
   return (
-    <div className={Classes.DIALOG_BODY}>
+    <React.Fragment>
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -112,7 +112,6 @@ function OwnerDrawingsFormFields() {
                 onChange={(amount) => {
                   setFieldValue('amount', amount);
                 }}
-                
                 inputRef={(ref) => (amountFieldRef.current = ref)}
                 intent={inputIntent({ error, touched })}
               />
@@ -185,7 +184,7 @@ function OwnerDrawingsFormFields() {
           </FormGroup>
         )}
       </FastField>
-    </div>
+    </React.Fragment>
   );
 }
 
