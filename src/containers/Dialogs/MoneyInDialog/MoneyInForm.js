@@ -8,10 +8,11 @@ import intl from 'react-intl-universal';
 import 'style/pages/CashFlow/CashflowTransactionForm.scss';
 
 import { AppToaster } from 'components';
-import { CreateTransferFromAccountFormSchema } from './TransferFromAccountForm.schema';
-import TransferFromAccountFormContent from './TransferFromAccountFormContent';
 
-import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
+import MoneyInFormContent from './MoneyInFormContent';
+import { CreateMoneyInFormSchema } from './MoneyInForm.schema';
+
+import { useMoneyInDailogContext } from './MoneyInDialogProvider';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
@@ -22,7 +23,7 @@ const defaultInitialValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
   amount: '',
   transaction_number: '',
-  transaction_type: 'transfer_from_account',
+  transaction_type: '',
   reference_no: '',
   cashflow_account_id: '',
   credit_account_id: '',
@@ -30,10 +31,7 @@ const defaultInitialValues = {
   published: '',
 };
 
-/**
- * Transfer from account form.
- */
-function TransferFromAccountForm({
+function MoneyInForm({
   // #withDialogActions
   closeDialog,
 
@@ -43,6 +41,7 @@ function TransferFromAccountForm({
   const {
     dialogName,
     accountId,
+    accountType,
     createCashflowTransactionMutate,
     submitPayload,
   } = useMoneyInDailogContext();
@@ -51,6 +50,7 @@ function TransferFromAccountForm({
   const initialValues = {
     ...defaultInitialValues,
     currency_code: base_currency,
+    transaction_type: accountType,
     cashflow_account_id: accountId,
   };
 
@@ -76,17 +76,19 @@ function TransferFromAccountForm({
   };
 
   return (
-    <Formik
-      validationSchema={CreateTransferFromAccountFormSchema}
-      initialValues={initialValues}
-      onSubmit={handleFormSubmit}
-    >
-      <TransferFromAccountFormContent />
-    </Formik>
+    <div>
+      <Formik
+        validationSchema={CreateMoneyInFormSchema}
+        initialValues={initialValues}
+        onSubmit={handleFormSubmit}
+      >
+        <MoneyInFormContent />
+      </Formik>
+    </div>
   );
 }
 
 export default compose(
   withDialogActions,
   withCurrentOrganization(),
-)(TransferFromAccountForm);
+)(MoneyInForm);

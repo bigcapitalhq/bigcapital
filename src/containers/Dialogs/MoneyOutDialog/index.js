@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage as T } from 'components';
+import intl from 'react-intl-universal';
 import { Dialog, DialogSuspense } from 'components';
 import withDialogRedux from 'components/DialogReduxConnect';
 import { compose } from 'redux';
@@ -13,13 +13,15 @@ const MoneyOutDialogContent = React.lazy(() =>
  */
 function MoneyOutDialog({
   dialogName,
-  payload = { action: '', account_type: null, account_id: null },
+  payload = { account_type: null, account_id: null },
   isOpen,
 }) {
   return (
     <Dialog
       name={dialogName}
-      title={<T id={'cash_flow_transaction.money_out'} />}
+      title={intl.get('cash_flow_transaction.money_out', {
+        value: payload.account_type,
+      })}
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}

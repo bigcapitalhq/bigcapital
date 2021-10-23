@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { MoneyInDialogProvider } from './MoneyInDialogProvider';
-import MoneyInDialogForm from './MoneyInDialogForm';
+import MoneyInForm from './MoneyInForm';
 
 /**
  * Money in dialog content.
@@ -13,8 +13,12 @@ export default function MoneyInDialogContent({
   accountType,
 }) {
   return (
-    <MoneyInDialogProvider accountId={accountId} dialogName={dialogName}>
-      <MoneyInDialogForm accountType={accountType} />
+    <MoneyInDialogProvider
+      accountId={accountId}
+      accountType={accountType}
+      dialogName={dialogName}
+    >
+      <MoneyInForm />
     </MoneyInDialogProvider>
   );
 }
