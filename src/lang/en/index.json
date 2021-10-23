@@ -1388,7 +1388,8 @@
   "cash_flow_transaction.other_expense_account":"Other expense account",
   "save_and_publish": "Save & Publish",
   "cash_flow_transaction.label_transfer_from_account":"Transfer from account",
-  "cash_flow_transaction.label_transfer_to_account":"Transfer to account"
+  "cash_flow_transaction.label_transfer_to_account":"Transfer to account",
+  "cash_flow_transaction.label_current_account":"Current account"
  
 }
 

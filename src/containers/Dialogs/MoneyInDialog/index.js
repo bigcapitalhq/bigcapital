@@ -2,6 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Dialog, DialogSuspense } from 'components';
 import withDialogRedux from 'components/DialogReduxConnect';
+
 import { compose } from 'redux';
 
 const MoneyInDialogContent = React.lazy(() => import('./MoneyInDialogContent'));
@@ -14,6 +15,7 @@ function MoneyInDialog({
   payload = { account_type: null, account_id: null },
   isOpen,
 }) {
+
   return (
     <Dialog
       name={dialogName}

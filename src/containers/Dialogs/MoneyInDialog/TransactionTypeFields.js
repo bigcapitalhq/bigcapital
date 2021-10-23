@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
+import { FastField, Field, ErrorMessage } from 'formik';
 import { Classes, FormGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import {
@@ -32,7 +32,7 @@ export default function TransactionTypeFields() {
           <FastField name={'cashflow_account_id'}>
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
-                label={'Current account'}
+                label={<T id={'cash_flow_transaction.label_current_account'} />}
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="cashflow_account_id" />}
@@ -57,7 +57,7 @@ export default function TransactionTypeFields() {
           {/*------------ Transaction type -----------*/}
         </Col>
         <Col xs={5}>
-          <FastField name={'transaction_type'}>
+          <Field name={'transaction_type'}>
             {({
               form: { values, setFieldValue },
               field: { value },
@@ -86,7 +86,7 @@ export default function TransactionTypeFields() {
                 />
               </FormGroup>
             )}
-          </FastField>
+          </Field>
         </Col>
       </Row>
     </div>

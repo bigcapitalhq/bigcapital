@@ -1,4 +1,5 @@
 import React from 'react';
+import { useFormikContext } from 'formik';
 import { Classes } from '@blueprintjs/core';
 
 import { If } from 'components';
@@ -12,14 +13,15 @@ import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
  */
 function MoneyOutFormFields() {
   // Money in dialog context.
-  const { accountId, accountType } = useMoneyOutDialogContext();
+  const { accountId } = useMoneyOutDialogContext();
 
+  const { values } = useFormikContext();
   return (
     <div className={Classes.DIALOG_BODY}>
       <If condition={!accountId}>
         <TransactionTypeFields />
       </If>
-      <MoneyOutContentFields accountType={accountType} />
+      <MoneyOutContentFields accountType={values.transaction_type} />
     </div>
   );
 }
