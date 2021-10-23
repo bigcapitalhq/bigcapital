@@ -29,7 +29,7 @@ import {
   handleDateChange,
 } from 'utils';
 import { CLASSES } from 'common/classes';
-import { useMoneyOutDialogContext } from '../MoneyOutProvider';
+import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
 
 /**
  * Other expense form fields.
@@ -41,7 +41,7 @@ function OtherExpnseFormFields() {
   const amountFieldRef = useAutofocus();
 
   return (
-    <div className={Classes.DIALOG_BODY}>
+    <React.Fragment>
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -188,7 +188,7 @@ function OtherExpnseFormFields() {
           </FormGroup>
         )}
       </FastField>
-    </div>
+    </React.Fragment>
   );
 }
 

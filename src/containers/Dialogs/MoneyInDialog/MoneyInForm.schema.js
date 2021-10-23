@@ -8,9 +8,7 @@ const Schema = Yup.object().shape({
   transaction_number: Yup.string(),
   transaction_type: Yup.string().required(),
   reference_no: Yup.string(),
-  credit_account_id: Yup.number()
-    .required()
-    .label(intl.get('account')),
+  credit_account_id: Yup.number().required(),
   cashflow_account_id: Yup.string().required(),
   description: Yup.string()
     .min(3)
@@ -19,4 +17,4 @@ const Schema = Yup.object().shape({
   published: Yup.boolean(),
 });
 
-export const CreateTransferToAccountFormSchema = Schema;
+export const CreateMoneyInFormSchema = Schema;

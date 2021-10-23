@@ -3,15 +3,17 @@ import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from 'components';
 
-import { useMoneyOutDialogContext } from '../MoneyOutProvider';
+import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+
 import { compose } from 'utils';
 
 /**
- * Other expense floating actions.
+ * Money out floating actions.
  */
-function OtherExpenseFloatingActions({
+function MoneyOutFloatingActions({
   // #withDialogActions
   closeDialog,
 }) {
@@ -73,4 +75,4 @@ function OtherExpenseFloatingActions({
   );
 }
 
-export default compose(withDialogActions)(OtherExpenseFloatingActions);
+export default compose(withDialogActions)(MoneyOutFloatingActions);

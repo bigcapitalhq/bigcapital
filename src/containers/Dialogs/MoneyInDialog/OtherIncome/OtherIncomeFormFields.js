@@ -41,7 +41,7 @@ function OtherIncomeFormFields() {
   const amountFieldRef = useAutofocus();
 
   return (
-    <div className={Classes.DIALOG_BODY}>
+    <React.Fragment>
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -187,7 +187,7 @@ function OtherIncomeFormFields() {
           </FormGroup>
         )}
       </FastField>
-    </div>
+    </React.Fragment>
   );
 }
 
