@@ -8,7 +8,7 @@ import { AccountTransactionsProvider } from './AccountTransactionsProvider';
 import AccountTransactionsActionsBar from './AccountTransactionsActionsBar';
 import AccountTransactionsDataTable from './AccountTransactionsDataTable';
 import { AccountTransactionsDetailsBar } from './AccountTransactionsDetailsBar';
-
+import AccountTransactionsAlerts from './AccountTransactionsAlerts';
 import { AccountTransactionsProgressBar } from './components';
 
 /**
@@ -26,6 +26,7 @@ function AccountTransactionsList() {
           <AccountTransactionsDataTable />
         </DashboardContentTable>
       </DashboardPageContent>
+      <AccountTransactionsAlerts />
     </AccountTransactionsProvider>
   );
 }

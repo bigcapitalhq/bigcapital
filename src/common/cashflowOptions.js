@@ -30,3 +30,12 @@ export const addMoneyOut = [
     value: 'transfer_to_account',
   },
 ];
+
+export const TRANSACRIONS_TYPE = [
+  'OwnerContribution',
+  'OtherIncome',
+  'TransferFromAccount',
+  'OnwersDrawing',
+  'OtherExpense',
+  'TransferToAccount',
+];

@@ -8,9 +8,10 @@ import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import withSettings from '../../Settings/withSettings';
+import withAlertsActions from 'containers/Alert/withAlertActions';
 
 import { useMemorizedColumnsWidths } from '../../../hooks';
-import { useAccountTransactionsColumns } from './components';
+import { useAccountTransactionsColumns, ActionsMenu } from './components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { compose } from 'utils';
 
@@ -20,6 +21,9 @@ import { compose } from 'utils';
 function AccountTransactionsDataTable({
   // #withSettings
   cashflowTansactionsTableSize,
+
+  // #withAlertsActions
+  openAlert,
 }) {
   // Retrieve table columns.
   const columns = useAccountTransactionsColumns();
@@ -34,6 +38,11 @@ function AccountTransactionsDataTable({
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.CASHFLOW_Transactions);
+
+  // handle delete transaction
+  const handleDeleteTransaction = ({ reference_id }) => {
+    openAlert('account-transaction-delete', { referenceId: reference_id });
+  };
 
   return (
     <DataTable
@@ -51,6 +60,7 @@ function AccountTransactionsDataTable({
       TableLoadingRenderer={TableSkeletonRows}
       TableRowsRenderer={TableVirtualizedListRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      ContextMenu={ActionsMenu}
       // #TableVirtualizedListRows props.
       vListrowHeight={cashflowTansactionsTableSize == 'small' ? 32 : 40}
       vListOverscanRowCount={0}
@@ -58,8 +68,13 @@ function AccountTransactionsDataTable({
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
       size={cashflowTansactionsTableSize}
-      noResults={'There is deposit/withdrawal transactions on the current account.'}
+      noResults={
+        'There is deposit/withdrawal transactions on the current account.'
+      }
       className="table-constrant"
+      payload={{
+        onDelete: handleDeleteTransaction,
+      }}
     />
   );
 }
@@ -68,4 +83,5 @@ export default compose(
   withSettings(({ cashflowTransactionsSettings }) => ({
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
+  withAlertsActions,
 )(AccountTransactionsDataTable);

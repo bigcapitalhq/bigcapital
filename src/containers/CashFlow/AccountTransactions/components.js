@@ -1,9 +1,28 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MaterialProgressBar } from 'components';
-import { FormatDateCell } from 'components';
-import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 
+import { Intent, Menu, MenuItem } from '@blueprintjs/core';
+
+import { MaterialProgressBar } from 'components';
+import { FormatDateCell, If, Icon } from 'components';
+import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import { TRANSACRIONS_TYPE } from 'common/cashflowOptions';
+import { safeCallback } from 'utils';
+
+export function ActionsMenu({ payload: { onDelete }, row: { original } }) {
+  return (
+    <If condition={TRANSACRIONS_TYPE.includes(original.reference_type)}>
+      <Menu>
+        <MenuItem
+          text={intl.get('delete_transaction')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
+        />
+      </Menu>
+    </If>
+  );
+}
 /**
  * Retrieve account transctions table columns.
  */
@@ -47,7 +66,7 @@ export function useAccountTransactionsColumns() {
         width: 110,
         className: 'deposit',
         textOverview: true,
-        align: 'right'
+        align: 'right',
       },
       {
         id: 'withdrawal',
@@ -65,7 +84,7 @@ export function useAccountTransactionsColumns() {
         className: 'running_balance',
         width: 150,
         textOverview: true,
-        align: 'right'
+        align: 'right',
       },
     ],
     [],
