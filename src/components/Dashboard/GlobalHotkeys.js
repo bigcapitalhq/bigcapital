@@ -37,8 +37,8 @@ function GlobalHotkeys({
     [history],
   );
   useHotkeys('ctrl+/', (event, handle) => handleSidebarToggleBtn());
-  useHotkeys('shift+q', (event, handle) => openDialog('money-in', {}));
-  useHotkeys('shift+d', (event, handle) => openDialog('money-out', {}));
+  useHotkeys('shift+d', (event, handle) => openDialog('money-in', {}));
+  useHotkeys('shift+q', (event, handle) => openDialog('money-out', {}));
   return <div></div>;
 }
 
