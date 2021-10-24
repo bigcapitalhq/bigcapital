@@ -2,8 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Classes } from '@blueprintjs/core';
 import clsx from 'classnames';
-import useContextMenu from 'react-use-context-menu';
-import ContextMenu from '../ContextMenu';
 import Icon from '../Icon';
 
 const BankAccountWrap = styled.div`
@@ -173,26 +171,10 @@ export function BankAccount({
   balance,
   loading = false,
   updatedBeforeText,
-  to,
-  contextMenuContent,
+  ...restProps
 }) {
-  const [
-    bindMenu,
-    bindMenuItem,
-    useContextTrigger,
-    { coords, setVisible, isVisible },
-  ] = useContextMenu();
-
-  const [bindTrigger] = useContextTrigger({
-    collect: () => 'Title',
-  });
-
-  const handleClose = React.useCallback(() => {
-    setVisible(false);
-  }, [setVisible]);
-
   return (
-    <BankAccountWrap {...bindTrigger}>
+    <BankAccountWrap {...restProps}>
       <BankAccountHeader>
         <BankAccountTitle className={clsx({ [Classes.SKELETON]: loading })}>
           {title}
@@ -216,15 +198,6 @@ export function BankAccount({
       </BankAccountMeta>
 
       <BankAccountBalance amount={balance} loading={loading} />
-
-      <ContextMenu
-        bindMenu={bindMenu}
-        isOpen={isVisible}
-        coords={coords}
-        onClosed={handleClose}
-      >
-        <contextMenuContent />
-      </ContextMenu>
     </BankAccountWrap>
   );
 }
