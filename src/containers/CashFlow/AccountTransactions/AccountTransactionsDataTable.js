@@ -30,11 +30,8 @@ function AccountTransactionsDataTable({
   const columns = useAccountTransactionsColumns();
 
   // Retrieve list context.
-  const {
-    cashflowTransactions,
-    isCashFlowTransactionsFetching,
-    isCashFlowTransactionsLoading,
-  } = useAccountTransactionsContext();
+  const { cashflowTransactions, isCashFlowTransactionsLoading } =
+    useAccountTransactionsContext();
 
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
@@ -85,25 +82,36 @@ export default compose(
 )(AccountTransactionsDataTable);
 
 const DashboardConstrantTable = styled(DataTable)`
-  .table .thead {
-    .th {
-      border-bottom-color: #666;
-      border-top-color: #666;
-      background: #fff;
+  .table {
+    .thead {
+      .th {
+        background: #fff;
+      }
+    }
+
+    .tbody {
+      .tr:last-child .td {
+        border-bottom: 0;
+      }
     }
   }
 `;
 
 const CashflowTransactionsTable = styled(DashboardConstrantTable)`
   .table .tbody {
-    
     .tbody-inner .tr.no-results {
       .td {
-        padding: 3rem 0;
-        font-size: 16px;
+        padding: 2rem 0;
+        font-size: 14px;
         color: #888;
         font-weight: 400;
         border-bottom: 0;
+      }
+    }
+
+    .tbody-inner {
+      .tr .td:not(:first-child) {
+        border-left: 1px solid #e6e6e6;
       }
     }
   }
