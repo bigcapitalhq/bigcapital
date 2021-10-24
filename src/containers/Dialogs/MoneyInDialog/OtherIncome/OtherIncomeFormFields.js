@@ -15,8 +15,10 @@ import {
   InputPrependText,
   MoneyInputGroup,
   FieldRequiredHint,
+  Icon,
   Col,
   Row,
+  InputPrependButton,
 } from 'components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from 'hooks';
@@ -27,18 +29,55 @@ import {
   momentFormatter,
   tansformDateValue,
   handleDateChange,
+  compose,
 } from 'utils';
 import { CLASSES } from 'common/classes';
 import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
+import { useObserveTransactionNoSettings } from '../utils';
+import withSettings from 'containers/Settings/withSettings';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 /**
  * Other income form fields.
  */
-function OtherIncomeFormFields() {
+function OtherIncomeFormFields({
+  // #withDialogActions
+  openDialog,
+
+  // #withSettings
+  transactionAutoIncrement,
+  transactionNumberPrefix,
+  transactionNextNumber,
+}) {
   // Money in dialog context.
   const { accounts } = useMoneyInDailogContext();
 
   const amountFieldRef = useAutofocus();
+
+  // Handle tranaction number changing.
+  const handleTransactionNumberChange = () => {
+    openDialog('transaction-number-form');
+  };
+
+  // Handle transaction no. field blur.
+  const handleTransactionNoBlur = (form, field) => (event) => {
+    const newValue = event.target.value;
+
+    if (field.value !== newValue && transactionAutoIncrement) {
+      openDialog('transaction-number-form', {
+        initialFormValues: {
+          manualTransactionNo: newValue,
+          incrementMode: 'manual-transaction',
+        },
+      });
+    }
+  };
+
+  // Syncs transaction number settings with form.
+  useObserveTransactionNoSettings(
+    transactionNumberPrefix,
+    transactionNextNumber,
+  );
 
   return (
     <React.Fragment>
@@ -81,10 +120,31 @@ function OtherIncomeFormFields() {
                 helperText={<ErrorMessage name="transaction_number" />}
                 className={'form-group--transaction_number'}
               >
-                <InputGroup
-                  intent={inputIntent({ error, touched })}
-                  {...field}
-                />
+                <ControlGroup fill={true}>
+                  <InputGroup
+                    minimal={true}
+                    value={field.value}
+                    asyncControl={true}
+                    onBlur={handleTransactionNoBlur(form, field)}
+                  />
+                  <InputPrependButton
+                    buttonProps={{
+                      onClick: handleTransactionNumberChange,
+                      icon: <Icon icon={'settings-18'} />,
+                    }}
+                    tooltip={true}
+                    tooltipProps={{
+                      content: (
+                        <T
+                          id={
+                            'cash_flow.setting_your_auto_generated_transaction_number'
+                          }
+                        />
+                      ),
+                      position: Position.BOTTOM_LEFT,
+                    }}
+                  />
+                </ControlGroup>
               </FormGroup>
             )}
           </FastField>
@@ -191,4 +251,11 @@ function OtherIncomeFormFields() {
   );
 }
 
-export default OtherIncomeFormFields;
+export default compose(
+  withDialogActions,
+  withSettings(({ cashflowSetting }) => ({
+    transactionAutoIncrement: cashflowSetting?.autoIncrement,
+    transactionNextNumber: cashflowSetting?.nextNumber,
+    transactionNumberPrefix: cashflowSetting?.numberPrefix,
+  })),
+)(OtherIncomeFormFields);
