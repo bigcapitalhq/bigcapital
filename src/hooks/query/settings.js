@@ -79,7 +79,7 @@ export function useSettingsPaymentReceives(props) {
 
 /**
  * Retrieve sale receipts settings.
- * @param {*} props 
+ * @param {*} props
  */
 export function useSettingsReceipts(props) {
   return useSettingsQuery(
@@ -91,7 +91,7 @@ export function useSettingsReceipts(props) {
 
 /**
  * Retrieve sale receipts settings.
- * @param {*} props 
+ * @param {*} props
  */
 export function useSettingsManualJournals(props) {
   return useSettingsQuery(
@@ -103,12 +103,23 @@ export function useSettingsManualJournals(props) {
 
 /**
  * Retrieve sale receipts settings.
- * @param {*} props 
+ * @param {*} props
  */
- export function useSettingsItems(props) {
+export function useSettingsItems(props) {
   return useSettingsQuery(
     [t.SETTING, t.SETTING_ITEMS],
     { group: 'items' },
+    props,
+  );
+}
+
+/**
+ * Retrieve cashflow settings.
+ */
+export function useSettingCashFlow(props) {
+  return useSettingsQuery(
+    [t.SETTING, t.SETTING_CASHFLOW],
+    { group: 'cashflow' },
     props,
   );
 }

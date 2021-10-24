@@ -641,6 +641,7 @@
   "Estimate_number_settings": "Estimate Number Settings",
   "receipt_number_settings": "Receipt Number Settings",
   "invoice_number_settings": "Invoice Number Settings",
+  "transaction_number_settings": "Transaction Number Settings",
   "receipt_number": "Receipt Number",
   "estimate_number_is_not_unqiue": "Estimate number is not unqiue",
   "invoice_number_is_not_unqiue": "Invoice number is not unqiue",
@@ -1393,7 +1394,11 @@
   "cash_flow_transaction.label_transfer_to_account":"Transfer to account",
   "cash_flow_transaction.label_current_account":"Current account",
   "cash_flow_transaction.delete.alert_message":"The cashflow transaction has been deleted successfully",
-  "cash_flow_transaction_once_delete_this_transaction_you_will_able_to_restore_it": "Once you delete this transaction, you won't be able to restore it later. Are you sure you want to delete this transaction?"
+  "cash_flow_transaction_once_delete_this_transaction_you_will_able_to_restore_it": "Once you delete this transaction, you won't be able to restore it later. Are you sure you want to delete this transaction?",
+  "cash_flow.auto_increment.auto":"Your transaction numbers are set on auto-increment mode. Are you sure changing this setting?",
+  "cash_flow.auto_increment.manually":"Yor transaction numbers are set on manual mode. Are you sure chaning this settings?",
+  "cash_flow.setting_your_auto_generated_transaction_number": "Setting your auto-generated transaction number"
+
 }
 
 

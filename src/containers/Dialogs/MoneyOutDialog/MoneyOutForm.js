@@ -14,10 +14,11 @@ import { CreateMoneyOutSchema } from './MoneyOutForm.schema';
 
 import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
 
+import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
-import { compose } from 'utils';
+import { compose, transactionNumber } from 'utils';
 
 const defaultInitialValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
@@ -37,6 +38,11 @@ function MoneyOutForm({
 
   // #withCurrentOrganization
   organization: { base_currency },
+
+  // #withSettings
+  transactionNextNumber,
+  transactionNumberPrefix,
+  transactionIncrementMode,
 }) {
   const {
     dialogName,
@@ -46,11 +52,20 @@ function MoneyOutForm({
     submitPayload,
   } = useMoneyOutDialogContext();
 
+  // transaction number.
+  const transactionNo = transactionNumber(
+    transactionNumberPrefix,
+    transactionNextNumber,
+  );
+
   // Initial form values.
   const initialValues = {
     ...defaultInitialValues,
     currency_code: base_currency,
     transaction_type: accountType,
+    ...(transactionIncrementMode && {
+      transaction_number: transactionNo,
+    }),
     cashflow_account_id: accountId,
   };
 
@@ -90,4 +105,9 @@ function MoneyOutForm({
 export default compose(
   withDialogActions,
   withCurrentOrganization(),
+  withSettings(({ cashflowSetting }) => ({
+    transactionNextNumber: cashflowSetting?.nextNumber,
+    transactionNumberPrefix: cashflowSetting?.numberPrefix,
+    transactionIncrementMode: cashflowSetting?.autoIncrement,
+  })),
 )(MoneyOutForm);
