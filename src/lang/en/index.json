@@ -1003,6 +1003,8 @@
   "jump_to_the_bills": "Jump to the bills.",
   "jump_to_the_manual_journals": "Jump to the Manual Journals.",
   "jump_to_the_items": "Jump to the items.",
+  "jump_to_the_add_money_in": "Jump to the cash flow add money in.",
+  "jump_to_the_add_money_out": "Jump to the cash flow add money out.",
   "jump_to_the_balance_sheet": "Jump to the Balance Sheet.",
   "jump_to_the_profit_loss_sheet": "Jump to the Profit Loss Sheet.",
   "jump_to_the_journal_sheet": "Jump to the Journal Sheet.",
@@ -1012,7 +1014,7 @@
   "create_a_new_estimate": "Create a new estimate.",
   "create_a_new_receipt": "Create a new receipt.",
   "create_a_new_expense": "Create a new expense.",
-  "create_a_new_customer": "create_a_new_customer",
+  "create_a_new_customer": "Create a new customer",
   "create_a_new_vendor": "Create a new vendor.",
   "create_a_new_bill": "Create a new bill.",
   "create_a_new_journal": "Create a new journal.",
@@ -1389,8 +1391,9 @@
   "save_and_publish": "Save & Publish",
   "cash_flow_transaction.label_transfer_from_account":"Transfer from account",
   "cash_flow_transaction.label_transfer_to_account":"Transfer to account",
-  "cash_flow_transaction.label_current_account":"Current account"
- 
+  "cash_flow_transaction.label_current_account":"Current account",
+  "cash_flow_transaction.delete.alert_message":"The cashflow transaction has been deleted successfully",
+  "cash_flow_transaction_once_delete_this_transaction_you_will_able_to_restore_it": "Once you delete this transaction, you won't be able to restore it later. Are you sure you want to delete this transaction?"
 }
 
 

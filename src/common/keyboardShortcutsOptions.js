@@ -43,6 +43,14 @@ export default [
     description: intl.get('jump_to_the_items'),
   },
   {
+    shortcut_key: 'Shift + D',
+    description: intl.get('jump_to_the_add_money_in'),
+  },
+  {
+    shortcut_key: 'Shift + Q',
+    description: intl.get('jump_to_the_add_money_out'),
+  },
+  {
     shortcut_key: 'Shift + 1',
     description: intl.get('jump_to_the_balance_sheet'),
   },
