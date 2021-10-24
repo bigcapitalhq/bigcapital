@@ -1,6 +1,6 @@
 import React from 'react';
-import { isNull } from 'lodash';
-import { compose } from 'lodash/fp';
+import { isNull, isEmpty } from 'lodash';
+import { compose, curry } from 'lodash/fp';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
@@ -23,6 +23,7 @@ import withAlertsActions from '../../Alert/withAlertActions';
 import withDialogActions from '../../Dialog/withDialogActions';
 
 import { safeCallback } from 'utils';
+import { addMoneyIn, addMoneyOut } from 'common/cashflowOptions';
 
 const CASHFLOW_SKELETON_N = 4;
 
@@ -91,6 +92,20 @@ function CashflowBankAccount({
   const handleEditAccount = () => {
     openDialog('account-form', { action: 'edit', id: account.id });
   };
+  // Handle money in menu item actions.
+  const handleMoneyInClick = (transactionType) => {
+    openDialog('money-in', {
+      account_type: transactionType,
+      account_id: account.id,
+    });
+  };
+  // Handle money out menu item actions.
+  const handleMoneyOutClick = (transactionType) => {
+    openDialog('money-out', {
+      account_type: transactionType,
+      account_id: account.id,
+    });
+  };
 
   return (
     <CashflowBankAccountWrap>
@@ -102,7 +117,7 @@ function CashflowBankAccount({
           title={account.name}
           code={account.code}
           balance={!isNull(account.amount) ? account.formatted_amount : '-'}
-          type={'cash'}
+          type={account.account_type}
           updatedBeforeText={getUpdatedBeforeText(account.createdAt)}
         />
       </CashflowAccountAnchor>
@@ -119,6 +134,8 @@ function CashflowBankAccount({
           onActivateClick={handleActivateClick}
           onInactivateClick={handleInactivateClick}
           onEditClick={handleEditAccount}
+          onMoneyInClick={handleMoneyInClick}
+          onMoneyOutClick={handleMoneyOutClick}
         />
       </ContextMenu>
     </CashflowBankAccountWrap>
@@ -145,6 +162,19 @@ function CashflowAccountsGridItems({ accounts }) {
 }
 
 /**
+ * Cashflow accounts empty state.
+ */
+function CashflowAccountsEmptyState() {
+  return (
+    <AccountsEmptyStateBase>
+      <AccountsEmptyStateTitle>
+        There is no cashflow accounts with current filter criteria.
+      </AccountsEmptyStateTitle>
+    </AccountsEmptyStateBase>
+  );
+}
+
+/**
  * Cashflow accounts grid.
  */
 export default function CashflowAccountsGrid() {
@@ -157,6 +187,8 @@ export default function CashflowAccountsGrid() {
       <BankAccountsList>
         {isCashFlowAccountsLoading ? (
           <CashflowAccountsSkeleton />
+        ) : isEmpty(cashflowAccounts) ? (
+          <CashflowAccountsEmptyState />
         ) : (
           <CashflowAccountsGridItems accounts={cashflowAccounts} />
         )}
@@ -168,6 +200,32 @@ export default function CashflowAccountsGrid() {
 }
 
 /**
+ * Cashflow account money out context menu.
+ */
+function CashflowAccountMoneyInContextMenu({ onClick }) {
+  const handleItemClick = curry((transactionType, event) => {
+    onClick && onClick(transactionType, event);
+  });
+
+  return addMoneyIn.map((option) => (
+    <MenuItem text={option.name} onClick={handleItemClick(option.value)} />
+  ));
+}
+
+/**
+ * Cashflow account money in context menu.
+ */
+function CashflowAccountMoneyOutContextMenu({ onClick }) {
+  const handleItemClick = curry((transactionType, event) => {
+    onClick && onClick(transactionType, event);
+  });
+
+  return addMoneyOut.map((option) => (
+    <MenuItem text={option.name} onClick={handleItemClick(option.value)} />
+  ));
+}
+
+/**
  * Cashflow account context menu.
  */
 function CashflowAccountContextMenu({
@@ -176,6 +234,8 @@ function CashflowAccountContextMenu({
   onInactivateClick,
   onActivateClick,
   onDeleteClick,
+  onMoneyInClick,
+  onMoneyOutClick,
 }) {
   return (
     <Menu>
@@ -185,6 +245,21 @@ function CashflowAccountContextMenu({
         onClick={safeCallback(onViewClick)}
       />
       <MenuDivider />
+      <MenuItem
+        text={'Money In'}
+        icon={<Icon icon={'arrow-downward'} iconSize={16} />}
+      >
+        <CashflowAccountMoneyInContextMenu onClick={onMoneyInClick} />
+      </MenuItem>
+
+      <MenuItem
+        text={'Money Out'}
+        icon={<Icon icon={'arrow-upward'} iconSize={16} />}
+      >
+        <CashflowAccountMoneyOutContextMenu onClick={onMoneyOutClick} />
+      </MenuItem>
+      <MenuDivider />
+
       <MenuItem
         icon={<Icon icon="pen-18" />}
         text={intl.get('edit_account')}
@@ -230,3 +305,16 @@ const CashflowAccountsGridWrap = styled.div`
 `;
 
 const CashflowBankAccountWrap = styled.div``;
+
+const AccountsEmptyStateBase = styled.div`
+  flex: 1;
+  text-align: center;
+  margin: 2rem 0;
+`;
+const AccountsEmptyStateTitle = styled.h1`
+  font-size: 16px;
+  color: #626b76;
+  opacity: 0.8;
+  line-height: 1.6;
+  font-weight: 500;
+`;

@@ -16,7 +16,10 @@ export function IntersectionObserver({ onIntersect }) {
   });
 
   return (
-    <div ref={loadMoreButtonRef} style={{ opacity: 0 }}>
+    <div
+      ref={loadMoreButtonRef}
+      style={{ opacity: 0, height: 0, width: 0, padding: 0, margin: 0 }}
+    >
       Load Newer
     </div>
   );

@@ -3,14 +3,6 @@
 .bigcapital-datatable {
   display: block;
 
-  .dashboard__page-content & {
-    .table .thead {
-      .th {
-        border-bottom-color: #d2dde2;
-      }
-    }
-  }
-
   .table {
     text-align: left;
     border-spacing: 0;
@@ -19,8 +11,6 @@
 
     .thead {
       overflow: hidden;
-      // overflow-y: auto;
-      // overflow-x: hidden;
 
       .th {
         padding: 0.7rem 0.5rem;
@@ -28,7 +18,7 @@
         font-size: 14px;
         color: #3b495d;
         font-weight: 600;
-        border-bottom: 1px solid rgb(224, 224, 224);
+        border-bottom: 1px solid #d2dde2;
 
         >div {
           overflow: hidden;

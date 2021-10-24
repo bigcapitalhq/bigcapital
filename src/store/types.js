@@ -1,5 +1,6 @@
 import authentication from './authentication/authentication.types';
 import accounts from './accounts/accounts.types';
+import cashflowAccounts from './CashflowAccounts/CashflowAccounts.types';
 import accounting from './manualJournals/manualJournals.types';
 import currencies from './currencies/currencies.types';
 import customFields from './customFields/customFields.types';
@@ -32,6 +33,7 @@ import plans from './plans/plans.types';
 export default {
   ...authentication,
   ...accounts,
+  ...cashflowAccounts,
   ...currencies,
   ...customFields,
   ...customViews,

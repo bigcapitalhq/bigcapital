@@ -141,14 +141,14 @@ function BankAccountBalance({ amount, loading }) {
 
 const ACCOUNT_TYPE = {
   CASH: 'cash',
+  BANK: 'bank',
   CREDIT_CARD: 'credit-card',
-  BANK_ACCOUNT: 'bank-account',
 };
 
 const ACCOUNT_TYPE_PAIR_ICON = {
   [ACCOUNT_TYPE.CASH]: 'payments',
   [ACCOUNT_TYPE.CREDIT_CARD]: 'credit-card',
-  [ACCOUNT_TYPE.BANK_ACCOUNT]: 'account-balance',
+  [ACCOUNT_TYPE.BANK]: 'account-balance',
 };
 
 function BankAccountTypeIcon({ type }) {
@@ -159,7 +159,7 @@ function BankAccountTypeIcon({ type }) {
   }
   return (
     <AccountIconWrap>
-      <Icon icon={'credit-card'} iconSize={18} />
+      <Icon icon={icon} iconSize={18} />
     </AccountIconWrap>
   );
 }

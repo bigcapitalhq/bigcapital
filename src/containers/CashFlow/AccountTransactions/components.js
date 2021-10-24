@@ -47,7 +47,7 @@ export function useAccountTransactionsColumns() {
         width: 110,
         className: 'deposit',
         textOverview: true,
-        align: 'right'
+        align: 'right',
       },
       {
         id: 'withdrawal',
@@ -65,7 +65,7 @@ export function useAccountTransactionsColumns() {
         className: 'running_balance',
         width: 150,
         textOverview: true,
-        align: 'right'
+        align: 'right',
       },
     ],
     [],
@@ -76,7 +76,7 @@ export function useAccountTransactionsColumns() {
  * Account transactions progress bar.
  */
 export function AccountTransactionsProgressBar() {
-  const { isCashFlowTransactionsLoading } = useAccountTransactionsContext();
+  const { isCashFlowTransactionsFetching } = useAccountTransactionsContext();
 
-  return isCashFlowTransactionsLoading ? <MaterialProgressBar /> : null;
+  return isCashFlowTransactionsFetching ? <MaterialProgressBar /> : null;
 }

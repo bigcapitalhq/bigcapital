@@ -3,12 +3,16 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
 import { useCashflowAccounts } from 'hooks/query';
 
+import { transformAccountsStateToQuery } from './utils';
+
 const CashFlowAccountsContext = React.createContext();
 
 /**
  * Cash Flow data provider.
  */
-function CashFlowAccountsProvider({ query, tableStateChanged, ...props }) {
+function CashFlowAccountsProvider({ tableState, ...props }) {
+  const query = transformAccountsStateToQuery(tableState);
+
   // Fetch cash flow list .
   const {
     data: cashflowAccounts,
@@ -32,4 +36,5 @@ function CashFlowAccountsProvider({ query, tableStateChanged, ...props }) {
 
 const useCashFlowAccountsContext = () =>
   React.useContext(CashFlowAccountsContext);
+
 export { CashFlowAccountsProvider, useCashFlowAccountsContext };

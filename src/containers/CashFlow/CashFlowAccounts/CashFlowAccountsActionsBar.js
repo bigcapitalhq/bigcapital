@@ -1,26 +1,22 @@
 import React from 'react';
-import classNames from 'classnames';
-
-import { isEmpty } from 'lodash';
 import {
   Button,
   NavbarGroup,
   Classes,
   NavbarDivider,
   Alignment,
+  Switch,
 } from '@blueprintjs/core';
-
 import {
   Icon,
-  DashboardRowsHeightButton,
   FormattedMessage as T,
 } from 'components';
-
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
+
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from '../../Settings/withSettings';
 import withSettingsActions from '../../Settings/withSettingsActions';
+import withCashflowAccountsTableActions from '../AccountTransactions/withCashflowAccountsTableActions';
 
 import { compose } from 'utils';
 
@@ -36,12 +32,14 @@ function CashFlowAccountsActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #
+  setCashflowAccountsTableState
 }) {
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
     addSetting('cashflowAccounts', 'tableSize', size);
   };
-
   // Handle click a refresh
   const handleRefreshBtnClick = () => {};
 
@@ -49,10 +47,14 @@ function CashFlowAccountsActionsBar({
   const handleAddBankAccount = () => {
     openDialog('account-form', {});
   };
-
   // Handle add cash account.
   const handleAddCashAccount = () => {
     openDialog('account-form', {});
+  };
+  // Handle inactive switch changing.
+  const handleInactiveSwitchChange = (event) => {
+    const checked = event.target.checked;
+    setCashflowAccountsTableState({ inactiveMode: checked });
   };
 
   return (
@@ -60,7 +62,6 @@ function CashFlowAccountsActionsBar({
       <NavbarGroup>
         <Button
           className={Classes.MINIMAL}
-          // className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon={'plus-24'} iconSize={20} />}
           text={<T id={'cash_flow.label.add_cash_account'} />}
           onClick={handleAddBankAccount}
@@ -88,11 +89,12 @@ function CashFlowAccountsActionsBar({
           text={<T id={'import'} />}
         />
         <NavbarDivider />
-        <DashboardRowsHeightButton
-          initialValue={cashflowTableSize}
-          onChange={handleTableRowSizeChange}
+        
+        <Switch
+          labelElement={<T id={'inactive'} />}
+          defaultChecked={false}
+          onChange={handleInactiveSwitchChange}
         />
-        <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
         <Button
@@ -110,4 +112,5 @@ export default compose(
   withSettings(({ cashflowSettings }) => ({
     cashflowTableSize: cashflowSettings?.tableSize,
   })),
+  withCashflowAccountsTableActions,
 )(CashFlowAccountsActionsBar);

@@ -1,20 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { compose } from 'lodash/fp';
 
 import 'style/pages/CashFlow/CashFlowAccounts/List.scss';
 
 import { DashboardPageContent } from 'components';
-
 import { CashFlowAccountsProvider } from './CashFlowAccountsProvider';
 
 import CashFlowAccountsActionsBar from './CashFlowAccountsActionsBar';
 import CashflowAccountsGrid from './CashflowAccountsGrid';
 
+import withCashflowAccounts from '../AccountTransactions/withCashflowAccounts';
+import withCashflowAccountsTableActions from '../AccountTransactions/withCashflowAccountsTableActions';
+
 /**
- * Cash flow accounts list.
+ * Cashflow accounts list.
  */
-function CashFlowAccountsList({}) {
+function CashFlowAccountsList({
+  // #withCashflowAccounts
+  cashflowAccountsTableState,
+
+  // #withCashflowAccountsTableActions
+  resetCashflowAccountsTableState,
+}) {
+  // Resets the cashflow accounts table state.
+  useEffect(
+    () => () => {
+      resetCashflowAccountsTableState();
+    },
+    [resetCashflowAccountsTableState],
+  );
+
   return (
-    <CashFlowAccountsProvider>
+    <CashFlowAccountsProvider tableState={cashflowAccountsTableState}>
       <CashFlowAccountsActionsBar />
 
       <DashboardPageContent>
@@ -24,4 +41,9 @@ function CashFlowAccountsList({}) {
   );
 }
 
-export default CashFlowAccountsList;
+export default compose(
+  withCashflowAccounts(({ cashflowAccountsTableState }) => ({
+    cashflowAccountsTableState,
+  })),
+  withCashflowAccountsTableActions,
+)(CashFlowAccountsList);

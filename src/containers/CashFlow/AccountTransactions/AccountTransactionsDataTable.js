@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 
 import { DataTable, TableFastCell } from 'components';
 import { TABLES } from 'common/tables';
@@ -36,14 +37,13 @@ function AccountTransactionsDataTable({
     useMemorizedColumnsWidths(TABLES.CASHFLOW_Transactions);
 
   return (
-    <DataTable
+    <CashflowTransactionsTable
       noInitialFetch={true}
       columns={columns}
       data={cashflowTransactions}
       sticky={true}
       loading={isCashFlowTransactionsLoading}
       headerLoading={isCashFlowTransactionsLoading}
-      progressBarLoading={isCashFlowTransactionsFetching}
       expandColumnSpace={1}
       expandToggleColumn={2}
       selectionColumnWidth={45}
@@ -54,11 +54,11 @@ function AccountTransactionsDataTable({
       // #TableVirtualizedListRows props.
       vListrowHeight={cashflowTansactionsTableSize == 'small' ? 32 : 40}
       vListOverscanRowCount={0}
-      TableHeaderSkeletonRenderer={TableSkeletonHeader}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
-      size={cashflowTansactionsTableSize}
-      noResults={'There is deposit/withdrawal transactions on the current account.'}
+      noResults={
+        'There is deposit/withdrawal transactions on the current account.'
+      }
       className="table-constrant"
     />
   );
@@ -69,3 +69,30 @@ export default compose(
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
 )(AccountTransactionsDataTable);
+
+const DashboardConstrantTable = styled(DataTable)`
+  .table .thead {
+    .th {
+      border-bottom-color: #666;
+      border-top-color: #666;
+      background: #fff;
+    }
+  }
+`;
+
+const CashflowTransactionsTable = styled(DashboardConstrantTable)`
+  .table .tbody {
+    
+    .tbody-inner .tr.no-results {
+      .td {
+        padding: 3rem 0;
+        font-size: 16px;
+        color: #888;
+        font-weight: 400;
+        border-bottom: 0;
+      }
+    }
+  }
+`;
+
+const DashboardRegularTable = styled(DataTable)``;
