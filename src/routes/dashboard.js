@@ -774,6 +774,7 @@ export const getDashboardRoutes = () => [
     backLink: true,
     pageTitle: intl.get('cash_flow.label_account_transcations'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },
   {
     path: `/cashflow-accounts`,
@@ -782,8 +783,8 @@ export const getDashboardRoutes = () => [
     ),
     pageTitle: intl.get('siebar.cashflow.label_cash_and_bank_accounts'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },
-
   // Homepage
   {
     path: `/`,
