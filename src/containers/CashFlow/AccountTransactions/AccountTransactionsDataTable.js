@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { DataTable, TableFastCell } from 'components';
+import { DataTable, TableFastCell, FormattedMessage as T } from 'components';
 import { TABLES } from 'common/tables';
 
 import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
@@ -10,6 +10,7 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import withSettings from '../../Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { useMemorizedColumnsWidths } from '../../../hooks';
 import { useAccountTransactionsColumns, ActionsMenu } from './components';
@@ -25,6 +26,9 @@ function AccountTransactionsDataTable({
 
   // #withAlertsActions
   openAlert,
+
+  // #withDrawerActions
+  openDrawer,
 }) {
   // Retrieve table columns.
   const columns = useAccountTransactionsColumns();
@@ -40,6 +44,39 @@ function AccountTransactionsDataTable({
   // handle delete transaction
   const handleDeleteTransaction = ({ reference_id }) => {
     openAlert('account-transaction-delete', { referenceId: reference_id });
+  };
+
+  const handleViewDetailCashflowTransaction = ({
+    reference_id,
+    reference_type,
+  }) => {
+    switch (reference_type) {
+      case 'SaleReceipt':
+        return openDrawer('receipt-detail-drawer', {
+          receiptId: reference_id,
+        });
+      case 'Journal':
+        return openDrawer('journal-drawer', {
+          manualJournalId: reference_id,
+        });
+      case 'Expense':
+        return openDrawer('expense-drawer', {
+          expenseId: reference_id,
+        });
+      case 'PaymentReceive':
+        return openDrawer('payment-receive-detail-drawer', {
+          paymentReceiveId: reference_id,
+        });
+      case 'BillPayment':
+        return openDrawer('payment-made-detail-drawer', {
+          paymentMadeId: reference_id,
+        });
+
+      default:
+        return openDrawer('cashflow-transaction-drawer', {
+          referenceId: reference_id,
+        });
+    }
   };
 
   return (
@@ -64,10 +101,15 @@ function AccountTransactionsDataTable({
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
       noResults={
-        'There is deposit/withdrawal transactions on the current account.'
+        <T
+          id={
+            'cash_flow_there_is_deposit_withdrawal_transactions_on_the_current_account'
+          }
+        />
       }
       className="table-constrant"
       payload={{
+        onViewDetails: handleViewDetailCashflowTransaction,
         onDelete: handleDeleteTransaction,
       }}
     />
@@ -79,6 +121,7 @@ export default compose(
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
   withAlertsActions,
+  withDrawerActions,
 )(AccountTransactionsDataTable);
 
 const DashboardConstrantTable = styled(DataTable)`

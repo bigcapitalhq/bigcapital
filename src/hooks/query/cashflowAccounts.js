@@ -20,6 +20,7 @@ const commonInvalidateQueries = (queryClient) => {
 
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
+  queryClient.invalidateQueries(t.CASH_FLOW_TRANSACTION);
 };
 
 /**
@@ -66,6 +67,21 @@ export function useCreateCashflowTransaction(props) {
         // Invalidate queries.
         commonInvalidateQueries(queryClient);
       },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve account transactions list.
+ */
+export function useCashflowTransaction(id, props) {
+  return useRequestQuery(
+    [t.CASH_FLOW_TRANSACTIONS, id],
+    { method: 'get', url: `cashflow/transactions/${id}` },
+    {
+      select: (res) => res.data.cashflow_transaction,
+      defaultData: [],
       ...props,
     },
   );

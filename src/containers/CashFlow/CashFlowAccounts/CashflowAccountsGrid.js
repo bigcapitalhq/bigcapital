@@ -13,6 +13,7 @@ import {
   BankAccount,
   If,
   Icon,
+  T,
 } from '../../../components';
 import AccountsAlerts from './../../Accounts/AccountsAlerts';
 
@@ -169,7 +170,11 @@ function CashflowAccountsEmptyState() {
   return (
     <AccountsEmptyStateBase>
       <AccountsEmptyStateTitle>
-        There is no cashflow accounts with current filter criteria.
+        <T
+          id={
+            'cash_flow_there_is_no_cashflow_accounts_with_current_filter_criteria'
+          }
+        />
       </AccountsEmptyStateTitle>
     </AccountsEmptyStateBase>
   );
@@ -248,14 +253,14 @@ function CashflowAccountContextMenu({
       />
       <MenuDivider />
       <MenuItem
-        text={'Money In'}
+        text={<T id={'cash_flow_money_in'} />}
         icon={<Icon icon={'arrow-downward'} iconSize={16} />}
       >
         <CashflowAccountMoneyInContextMenu onClick={onMoneyInClick} />
       </MenuItem>
 
       <MenuItem
-        text={'Money Out'}
+    text={<T id={'cash_flow_money_out'} />}
         icon={<Icon icon={'arrow-upward'} iconSize={16} />}
       >
         <CashflowAccountMoneyOutContextMenu onClick={onMoneyOutClick} />

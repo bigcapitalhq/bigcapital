@@ -13,6 +13,7 @@ import ItemDetailDrawer from '../containers/Drawers/ItemDetailDrawer';
 import CustomerDetailsDrawer from '../containers/Drawers/CustomerDetailsDrawer';
 import VendorDetailsDrawer from '../containers/Drawers/VendorDetailsDrawer';
 import InventoryAdjustmentDetailDrawer from '../containers/Drawers/InventoryAdjustmentDetailDrawer';
+import CashflowTransactionDetailDrawer from '../containers/Drawers/CashflowTransactionDetailDrawer';
 
 import { DRAWERS } from 'common/drawers';
 
@@ -37,6 +38,7 @@ export default function DrawersContainer() {
       <InventoryAdjustmentDetailDrawer
         name={DRAWERS.INVENTORY_ADJUSTMENT_DRAWER}
       />
+      <CashflowTransactionDetailDrawer name={DRAWERS.CASHFLOW_TRNASACTION_DRAWER} />
     </div>
   );
 }

@@ -9,4 +9,5 @@ export const DRAWERS = {
   EXPENSE_DRAWER: 'expense-drawer',
   BILL_DRAWER: 'bill-drawer',
   INVENTORY_ADJUSTMENT_DRAWER: 'inventory-adjustment-drawer',
+  CASHFLOW_TRNASACTION_DRAWER: 'cashflow-transaction-drawer',
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import {
   Popover,
@@ -61,7 +62,7 @@ function AccountBalanceItem() {
 
   return (
     <AccountBalanceItemWrap>
-      Balance in Bigcapital{' '}
+      {intl.get('cash_flow_balance_in', { name: 'Bigcapital' })}
       <AccountBalanceAmount>
         {currentAccount.formatted_amount}
       </AccountBalanceAmount>

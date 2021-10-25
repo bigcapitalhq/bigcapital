@@ -1,0 +1,99 @@
+.cashflow-drawer {
+  .card {
+    margin: 15px;
+    padding: 25px 15px 35px;
+  }
+
+  .card {
+    .amount {
+      font-size: 28px;
+      color: #c06361;
+      margin: 6px 0;
+      font-weight: 600;
+    }
+  }
+
+  .table {
+    .thead .th {
+      background: transparent;
+      color: #222222;
+      border-bottom: 1px solid #000000;
+      border-top: 1px solid #000000;
+      padding: 0.5rem;
+    }
+
+    .tbody .tr .td {
+      background: transparent;
+      padding: 0.5rem 0.5rem;
+      border-bottom: 0;
+    }
+
+    .tbody .tr:last-child .td {
+      border-bottom: 1px solid #d2dce2;
+    }
+
+    .thead,
+    .tbody {
+      .tr .td,
+      .tr .th {
+        &.credit,
+        &.debit {
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  &__content {
+    &-header {
+      margin-bottom: 35px;
+
+      .detail-item {
+        flex-grow: 1;
+
+        &--amount {
+          width: 20%;
+        }
+      }
+    }
+
+    &-footer {
+      display: flex;
+
+      .total-lines {
+        margin-left: auto;
+      }
+    }
+  }
+  .total-lines {
+    &__line {
+      display: flex;
+
+      > div {
+        padding: 7px 8px;
+      }
+
+      .title {
+        width: 220px;
+        font-weight: 600;
+      }
+
+      .credit,
+      .debit {
+        font-weight: 600;
+        width: 155px;
+      }
+
+      &--subtotal {
+        border-bottom: 1px solid #000;
+      }
+      &--total {
+        border-bottom: 3px double #000;
+      }
+      &--subtotal,
+      &--total {
+        text-align: right;
+      }
+    }
+  }
+}

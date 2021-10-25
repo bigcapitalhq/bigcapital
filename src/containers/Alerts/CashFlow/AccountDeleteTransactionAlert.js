@@ -7,6 +7,7 @@ import { useDeleteCashflowTransaction } from 'hooks/query';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -22,6 +23,9 @@ function AccountDeleteTransactionAlert({
 
   // #withAlertActions
   closeAlert,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
   const { mutateAsync: deleteTransactionMutate, isLoading } =
     useDeleteCashflowTransaction();
@@ -39,6 +43,7 @@ function AccountDeleteTransactionAlert({
           message: intl.get('cash_flow_transaction.delete.alert_message'),
           intent: Intent.SUCCESS,
         });
+        closeDrawer('cashflow-transaction-drawer');
       })
       .catch(
         ({
@@ -77,4 +82,5 @@ function AccountDeleteTransactionAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions,
 )(AccountDeleteTransactionAlert);
