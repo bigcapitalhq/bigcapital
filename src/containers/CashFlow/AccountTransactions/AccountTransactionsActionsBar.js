@@ -11,6 +11,7 @@ import {
   DashboardRowsHeightButton,
   FormattedMessage as T,
 } from 'components';
+import { useRefreshCashflowTransactionsInfinity } from 'hooks/query';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import { CashFlowMenuItems } from './utils';
@@ -46,7 +47,6 @@ function AccountTransactionsActionsBar({
       account_id: accountId,
     });
   };
-
   // Handle money out form
   const handlMoneyOutFormTransaction = (account) => {
     openDialog('money-out', {
@@ -54,8 +54,13 @@ function AccountTransactionsActionsBar({
       account_id: accountId,
     });
   };
+  // Refresh cashflow infinity transactions hook.
+  const { refresh } = useRefreshCashflowTransactionsInfinity();
 
-  const handleRefreshBtnClick = () => {};
+  // Handle the refresh button click.
+  const handleRefreshBtnClick = () => {
+    refresh();
+  };
 
   return (
     <DashboardActionsBar>

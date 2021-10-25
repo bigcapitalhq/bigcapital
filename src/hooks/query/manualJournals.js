@@ -22,6 +22,10 @@ const commonInvalidateQueries = (client) => {
 
   // Invalidate financial reports.
   client.invalidateQueries(t.FINANCIAL_REPORT);
+
+  // Invalidate the cashflow transactions.
+  client.invalidateQueries(t.CASH_FLOW_TRANSACTIONS);
+  client.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
 };
 
 /**

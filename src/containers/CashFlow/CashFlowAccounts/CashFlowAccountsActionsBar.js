@@ -7,15 +7,12 @@ import {
   Alignment,
   Switch,
 } from '@blueprintjs/core';
-import {
-  Icon,
-  FormattedMessage as T,
-} from 'components';
+import { Icon, FormattedMessage as T } from 'components';
+import { useRefreshCashflowAccounts } from 'hooks/query';
+
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import withSettings from '../../Settings/withSettings';
-import withSettingsActions from '../../Settings/withSettingsActions';
 import withCashflowAccountsTableActions from '../AccountTransactions/withCashflowAccountsTableActions';
 
 import { compose } from 'utils';
@@ -27,22 +24,15 @@ function CashFlowAccountsActionsBar({
   // #withDialogActions
   openDialog,
 
-  // #withSettings
-  cashflowTableSize,
-
-  // #withSettingsActions
-  addSetting,
-
-  // #
-  setCashflowAccountsTableState
+  // #withCashflowAccountsTableActions
+  setCashflowAccountsTableState,
 }) {
-  // Handle table row size change.
-  const handleTableRowSizeChange = (size) => {
-    addSetting('cashflowAccounts', 'tableSize', size);
-  };
-  // Handle click a refresh
-  const handleRefreshBtnClick = () => {};
+  const { refresh } = useRefreshCashflowAccounts();
 
+  // Handle refresh button click.
+  const handleRefreshBtnClick = () => {
+    refresh();
+  };
   // Handle add bank account.
   const handleAddBankAccount = () => {
     openDialog('account-form', {});
@@ -89,7 +79,7 @@ function CashFlowAccountsActionsBar({
           text={<T id={'import'} />}
         />
         <NavbarDivider />
-        
+
         <Switch
           labelElement={<T id={'inactive'} />}
           defaultChecked={false}
@@ -108,9 +98,5 @@ function CashFlowAccountsActionsBar({
 }
 export default compose(
   withDialogActions,
-  withSettingsActions,
-  withSettings(({ cashflowSettings }) => ({
-    cashflowTableSize: cashflowSettings?.tableSize,
-  })),
   withCashflowAccountsTableActions,
 )(CashFlowAccountsActionsBar);

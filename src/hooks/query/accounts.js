@@ -13,6 +13,9 @@ const commonInvalidateQueries = (query) => {
   query.invalidateQueries(t.ACCOUNTS);
   query.invalidateQueries(t.ACCOUNT);
 
+  // Invalidate cashflow accounts.
+  query.invalidateQueries(t.CASH_FLOW_ACCOUNTS);
+
   // Invalidate financial reports.
   query.invalidateQueries(t.FINANCIAL_REPORT);
 };

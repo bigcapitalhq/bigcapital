@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import 'style/pages/CashFlow/AccountTransactions/List.scss';
 
-import { DashboardPageContent, DashboardContentTable } from 'components';
+import { DashboardPageContent } from 'components';
 
 import { AccountTransactionsProvider } from './AccountTransactionsProvider';
 import AccountTransactionsActionsBar from './AccountTransactionsActionsBar';

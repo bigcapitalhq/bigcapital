@@ -7,7 +7,19 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate accounts.
   queryClient.invalidateQueries(t.ACCOUNTS);
   queryClient.invalidateQueries(t.ACCOUNT);
-  queryClient.invalidateQueries(t.CASH_FLOW_TRANSACTION);
+  
+  // Invalidate account transactions.
+  queryClient.invalidateQueries(t.ACCOUNT_TRANSACTION);
+
+  // Invalidate cashflow accounts.
+  queryClient.invalidateQueries(t.CASH_FLOW_ACCOUNTS);
+
+  // Invalidate the cashflow transactions.
+  queryClient.invalidateQueries(t.CASH_FLOW_TRANSACTIONS);
+  queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
+
+  // Invalidate financial reports.
+  queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 };
 
 /**
@@ -28,10 +40,10 @@ export function useCashflowAccounts(query, props) {
 /**
  * Retrieve account transactions list.
  */
-export function useCashflowTransactions(id, props) {
+export function useCashflowTransactions(accountId, props) {
   return useRequestQuery(
-    [t.CASH_FLOW_TRANSACTIONS, id],
-    { method: 'get', url: `cashflow/account/${id}/transactions` },
+    [t.CASH_FLOW_TRANSACTIONS, accountId],
+    { method: 'get', url: `cashflow/account/${accountId}/transactions` },
     {
       select: (res) => res.data.cashflow_transactions,
       defaultData: [],
@@ -68,8 +80,6 @@ export function useDeleteCashflowTransaction(props) {
 
   return useMutation((id) => apiRequest.delete(`cashflow/transactions/${id}`), {
     onSuccess: (res, id) => {
-      queryClient.invalidateQueries([t.CASH_FLOW_TRANSACTION, id]);
-
       // Invalidate queries.
       commonInvalidateQueries(queryClient);
     },
@@ -92,7 +102,7 @@ export function useAccountTransactionsInfinity(
   const apiRequest = useApiRequest();
 
   return useInfiniteQuery(
-    ['CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY', accountId],
+    [t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY, accountId],
     async ({ pageParam = 1 }) => {
       const response = await apiRequest.http({
         ...axios,
@@ -114,4 +124,43 @@ export function useAccountTransactionsInfinity(
       ...infinityProps,
     },
   );
+}
+
+/**
+ * Refresh cashflow transactions infinity.
+ */
+export function useRefreshCashflowTransactionsInfinity() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
+    },
+  };
+}
+
+/**
+ * Refresh cashflow accounts.
+ */
+export function useRefreshCashflowAccounts() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.CASH_FLOW_ACCOUNTS);
+    },
+  };
+}
+
+/**
+ * Refresh the cshflow account transactions.
+ */
+export function useRefreshCashflowTransactions() {
+  const query = useQueryClient();
+
+  return {
+    refresh: () => {
+      query.invalidateQueries(t.CASH_FLOW_TRANSACTIONS);
+    },
+  };
 }

@@ -30,10 +30,12 @@ function AccountTransactionsProvider({ query, ...props }) {
     isSuccess: isCashflowTransactionsSuccess,
     fetchNextPage: fetchNextTransactionsPage,
     isFetchingNextPage,
+    hasNextPage
   } = useAccountTransactionsInfinity(accountId, {
     page_size: 50,
   });
 
+  // Memorized the cashflow account transactions.
   const cashflowTransactions = React.useMemo(
     () =>
       isCashflowTransactionsSuccess
@@ -56,11 +58,12 @@ function AccountTransactionsProvider({ query, ...props }) {
     isLoading: isCurrentAccountLoading,
   } = useAccount(accountId, { keepPreviousData: true });
 
+  // Handle the observer ineraction.
   const handleObserverInteract = React.useCallback(() => {
-    if (!isFetchingNextPage) {
+    if (!isFetchingNextPage && hasNextPage) {
       fetchNextTransactionsPage();
     }
-  }, [isFetchingNextPage, fetchNextTransactionsPage]);
+  }, [isFetchingNextPage, hasNextPage, fetchNextTransactionsPage]);
 
   // Provider payload.
   const provider = {
@@ -81,7 +84,7 @@ function AccountTransactionsProvider({ query, ...props }) {
       <AccountTransactionsContext.Provider value={provider} {...props} />
       <IntersectionObserver
         onIntersect={handleObserverInteract}
-        // enabled={!isFetchingNextPage}
+        enabled={!isFetchingNextPage}
       />
     </DashboardInsider>
   );
