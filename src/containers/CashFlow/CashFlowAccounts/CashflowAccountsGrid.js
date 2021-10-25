@@ -129,6 +129,7 @@ function CashflowBankAccount({
         onClosed={handleClose}
       >
         <CashflowAccountContextMenu
+          account={account}
           onViewClick={handleViewClick}
           onDeleteClick={handleDeleteClick}
           onActivateClick={handleActivateClick}
@@ -229,6 +230,7 @@ function CashflowAccountMoneyOutContextMenu({ onClick }) {
  * Cashflow account context menu.
  */
 function CashflowAccountContextMenu({
+  account,
   onViewClick,
   onEditClick,
   onInactivateClick,
@@ -266,14 +268,14 @@ function CashflowAccountContextMenu({
         onClick={safeCallback(onEditClick)}
       />
       <MenuDivider />
-      <If condition={false}>
+      <If condition={account.active}>
         <MenuItem
           text={intl.get('inactivate_account')}
           icon={<Icon icon="pause-16" iconSize={16} />}
           onClick={safeCallback(onInactivateClick)}
         />
       </If>
-      <If condition={!false}>
+      <If condition={!account.active}>
         <MenuItem
           text={intl.get('activate_account')}
           icon={<Icon icon="play-16" iconSize={16} />}
