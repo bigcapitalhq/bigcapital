@@ -111,7 +111,7 @@ function OwnerDrawingsFormFields({
         </Col>
         <Col xs={5}>
           {/*------------ Transaction number -----------*/}
-          <FastField name={'transaction_number'}>
+          <Field name={'transaction_number'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'transaction_number'} />}
@@ -146,7 +146,7 @@ function OwnerDrawingsFormFields({
                 </ControlGroup>
               </FormGroup>
             )}
-          </FastField>
+          </Field>
         </Col>
       </Row>
       {/*------------ amount -----------*/}

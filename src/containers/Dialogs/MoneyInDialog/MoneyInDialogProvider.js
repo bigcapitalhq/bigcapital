@@ -4,6 +4,7 @@ import {
   useCreateCashflowTransaction,
   useAccounts,
   useCashflowAccounts,
+  useSettingCashFlow,
 } from 'hooks/query';
 
 const MoneyInDialogContent = React.createContext();
@@ -27,6 +28,9 @@ function MoneyInDialogProvider({
   const { mutateAsync: createCashflowTransactionMutate } =
     useCreateCashflowTransaction();
 
+  // Handle fetching settings.
+  const { isLoading: isSettingsLoading } = useSettingCashFlow();
+
   // Submit payload.
   const [submitPayload, setSubmitPayload] = React.useState({});
 
@@ -47,7 +51,11 @@ function MoneyInDialogProvider({
   };
 
   return (
-    <DialogContent isLoading={isAccountsLoading || isCashFlowAccountsLoading}>
+    <DialogContent
+      isLoading={
+        isAccountsLoading || isCashFlowAccountsLoading || isSettingsLoading
+      }
+    >
       <MoneyInDialogContent.Provider value={provider} {...props} />
     </DialogContent>
   );

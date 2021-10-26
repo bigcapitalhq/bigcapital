@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
+import { FastField, Field, ErrorMessage } from 'formik';
 import {
   Classes,
   FormGroup,
@@ -28,7 +28,7 @@ import {
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-  compose
+  compose,
 } from 'utils';
 import { CLASSES } from 'common/classes';
 import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
@@ -112,7 +112,7 @@ function OwnerContributionFormFields({
         </Col>
         <Col xs={5}>
           {/*------------ Transaction number -----------*/}
-          <FastField name={'transaction_number'}>
+          <Field name={'transaction_number'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'transaction_number'} />}
@@ -147,7 +147,7 @@ function OwnerContributionFormFields({
                 </ControlGroup>
               </FormGroup>
             )}
-          </FastField>
+          </Field>
         </Col>
       </Row>
       {/*------------ amount -----------*/}
