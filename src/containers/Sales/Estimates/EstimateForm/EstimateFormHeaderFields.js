@@ -7,7 +7,7 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'components';
-import { FastField, ErrorMessage } from 'formik';
+import { FastField, Field, ErrorMessage } from 'formik';
 import {
   momentFormatter,
   compose,
@@ -152,7 +152,7 @@ function EstimateFormHeader({
       </FastField>
 
       {/* ----------- Estimate number ----------- */}
-      <FastField name={'estimate_number'}>
+      <Field name={'estimate_number'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'estimate'} />}
@@ -185,7 +185,7 @@ function EstimateFormHeader({
             </ControlGroup>
           </FormGroup>
         )}
-      </FastField>
+      </Field>
 
       {/* ----------- Reference ----------- */}
       <FastField name={'reference'}>

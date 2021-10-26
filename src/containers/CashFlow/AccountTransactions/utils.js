@@ -48,3 +48,33 @@ export const CashFlowMenuItems = ({
     </Select>
   );
 };
+
+export const handleCashFlowTransactionType = (reference, openDrawer) => {
+  switch (reference.reference_type) {
+    case 'SaleReceipt':
+      return openDrawer('receipt-detail-drawer', {
+        receiptId: reference.reference_id,
+      });
+    case 'Journal':
+      return openDrawer('journal-drawer', {
+        manualJournalId: reference.reference_id,
+      });
+    case 'Expense':
+      return openDrawer('expense-drawer', {
+        expenseId: reference.reference_id,
+      });
+    case 'PaymentReceive':
+      return openDrawer('payment-receive-detail-drawer', {
+        paymentReceiveId: reference.reference_id,
+      });
+    case 'BillPayment':
+      return openDrawer('payment-made-detail-drawer', {
+        paymentMadeId: reference.reference_id,
+      });
+
+    default:
+      return openDrawer('cashflow-transaction-drawer', {
+        referenceId: reference.reference_id,
+      });
+  }
+};

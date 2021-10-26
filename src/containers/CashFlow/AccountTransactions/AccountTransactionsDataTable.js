@@ -15,6 +15,7 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '../../../hooks';
 import { useAccountTransactionsColumns, ActionsMenu } from './components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import { handleCashFlowTransactionType } from './utils';
 import { compose } from 'utils';
 
 /**
@@ -46,37 +47,14 @@ function AccountTransactionsDataTable({
     openAlert('account-transaction-delete', { referenceId: reference_id });
   };
 
-  const handleViewDetailCashflowTransaction = ({
-    reference_id,
-    reference_type,
-  }) => {
-    switch (reference_type) {
-      case 'SaleReceipt':
-        return openDrawer('receipt-detail-drawer', {
-          receiptId: reference_id,
-        });
-      case 'Journal':
-        return openDrawer('journal-drawer', {
-          manualJournalId: reference_id,
-        });
-      case 'Expense':
-        return openDrawer('expense-drawer', {
-          expenseId: reference_id,
-        });
-      case 'PaymentReceive':
-        return openDrawer('payment-receive-detail-drawer', {
-          paymentReceiveId: reference_id,
-        });
-      case 'BillPayment':
-        return openDrawer('payment-made-detail-drawer', {
-          paymentMadeId: reference_id,
-        });
+  const handleViewDetailCashflowTransaction = (referenceType) => {
+    handleCashFlowTransactionType(referenceType, openDrawer);
+  };
 
-      default:
-        return openDrawer('cashflow-transaction-drawer', {
-          referenceId: reference_id,
-        });
-    }
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    const referenceType = cell.row.original;
+    handleCashFlowTransactionType(referenceType, openDrawer);
   };
 
   return (
@@ -95,6 +73,7 @@ function AccountTransactionsDataTable({
       TableRowsRenderer={TableVirtualizedListRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       ContextMenu={ActionsMenu}
+      onCellClick={handleCellClick}
       // #TableVirtualizedListRows props.
       vListrowHeight={cashflowTansactionsTableSize == 'small' ? 32 : 40}
       vListOverscanRowCount={0}
