@@ -4,7 +4,7 @@ import { T, FormatNumber } from '../../../components';
 
 export default function CashflowTransactionDrawerFooter() {
   const {
-    cashflowTransaction: { amount },
+    cashflowTransaction: { formatted_amount },
   } = useCashflowTransactionDrawerContext();
 
   return (
@@ -15,18 +15,18 @@ export default function CashflowTransactionDrawerFooter() {
             <T id={'manual_journal.details.subtotal'} />
           </div>
           <div class="debit">
-            <FormatNumber value={amount} />
+            <FormatNumber value={formatted_amount} />
           </div>
           <div class="credit">
-            <FormatNumber value={amount} />
+            <FormatNumber value={formatted_amount} />
           </div>
         </div>
         <div class="total-lines__line total-lines__line--total">
           <div class="title">
             <T id={'manual_journal.details.total'} />
           </div>
-          <div class="debit">{amount}</div>
-          <div class="credit">{amount}</div>
+          <div class="debit">{formatted_amount}</div>
+          <div class="credit">{formatted_amount}</div>
         </div>
       </div>
     </div>

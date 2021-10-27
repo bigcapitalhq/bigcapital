@@ -5,24 +5,6 @@ import { Classes, Tooltip, Position } from '@blueprintjs/core';
 import { FormatNumberCell, If, Icon } from '../../../components';
 
 /**
- * Note column accessor.
- */
-export function NoteAccessor(row) {
-  return (
-    <If condition={row.note}>
-      <Tooltip
-        className={Classes.TOOLTIP_INDICATOR}
-        content={row.note}
-        position={Position.LEFT_TOP}
-        hoverOpenDelay={50}
-      >
-        <Icon icon={'file-alt'} iconSize={16} />
-      </Tooltip>
-    </If>
-  );
-}
-
-/**
  * Retrieve cashflow transaction entries columns.
  */
 export const useCashflowTransactionColumns = () =>
@@ -41,13 +23,6 @@ export const useCashflowTransactionColumns = () =>
         width: 130,
         disableSortBy: true,
         className: 'contact',
-      },
-      {
-        Header: intl.get('note'),
-        accessor: NoteAccessor,
-        width: 80,
-        disableSortBy: true,
-        className: 'note',
       },
       {
         Header: intl.get('credit'),

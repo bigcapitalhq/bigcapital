@@ -14,7 +14,7 @@ import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawer
 export default function CashflowTransactionDrawerHeader() {
   const {
     cashflowTransaction: {
-      amount,
+      formatted_amount,
       transaction_type,
       transaction_number,
       reference_no,
@@ -27,7 +27,7 @@ export default function CashflowTransactionDrawerHeader() {
     <div className={'cashflow-drawer__content-header'}>
       <DetailsMenu>
         <DetailItem name={'total'} label={<T id={'total'} />}>
-          <h3 class="amount">{amount}</h3>
+          <h3 class="amount">{formatted_amount}</h3>
         </DetailItem>
 
         <DetailItem
