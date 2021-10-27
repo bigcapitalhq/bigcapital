@@ -151,7 +151,7 @@ const CashflowBankAccountEnhanced = compose(
 )(CashflowBankAccount);
 
 function getUpdatedBeforeText(createdAt) {
-  return ''
+  return '';
 }
 
 /**
@@ -170,11 +170,7 @@ function CashflowAccountsEmptyState() {
   return (
     <AccountsEmptyStateBase>
       <AccountsEmptyStateTitle>
-        <T
-          id={
-            'cash_flow_there_is_no_cashflow_accounts_with_current_filter_criteria'
-          }
-        />
+        <T id={'cash_flow.accounts.no_results'} />
       </AccountsEmptyStateTitle>
     </AccountsEmptyStateBase>
   );
@@ -260,7 +256,7 @@ function CashflowAccountContextMenu({
       </MenuItem>
 
       <MenuItem
-    text={<T id={'cash_flow_money_out'} />}
+        text={<T id={'cash_flow_money_out'} />}
         icon={<Icon icon={'arrow-upward'} iconSize={16} />}
       >
         <CashflowAccountMoneyOutContextMenu onClick={onMoneyOutClick} />

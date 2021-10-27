@@ -4,6 +4,94 @@ import styled from 'styled-components';
 import { Classes } from '@blueprintjs/core';
 import clsx from 'classnames';
 import Icon from '../Icon';
+import { whenRtl, whenLtr } from 'utils/styled-components';
+
+const ACCOUNT_TYPE = {
+  CASH: 'cash',
+  BANK: 'bank',
+  CREDIT_CARD: 'credit-card',
+};
+
+const ACCOUNT_TYPE_PAIR_ICON = {
+  [ACCOUNT_TYPE.CASH]: 'payments',
+  [ACCOUNT_TYPE.CREDIT_CARD]: 'credit-card',
+  [ACCOUNT_TYPE.BANK]: 'account-balance',
+};
+
+function BankAccountMetaLine({ title, value, className }) {
+  return (
+    <MetaLineWrap className={className}>
+      <MetaLineTitle>{title}</MetaLineTitle>
+      {value && <MetaLineValue>{value}</MetaLineValue>}
+    </MetaLineWrap>
+  );
+}
+
+function BankAccountBalance({ amount, loading }) {
+  return (
+    <BankAccountBalanceWrap>
+      <BankAccountBalanceAmount
+        className={clsx({
+          [Classes.SKELETON]: loading,
+        })}
+      >
+        {amount}
+      </BankAccountBalanceAmount>
+      <BankAccountBalanceLabel>{intl.get('balance')}</BankAccountBalanceLabel>
+    </BankAccountBalanceWrap>
+  );
+}
+
+function BankAccountTypeIcon({ type }) {
+  const icon = ACCOUNT_TYPE_PAIR_ICON[type];
+
+  if (!icon) {
+    return;
+  }
+  return (
+    <AccountIconWrap>
+      <Icon icon={icon} iconSize={18} />
+    </AccountIconWrap>
+  );
+}
+
+export function BankAccount({
+  title,
+  code,
+  type,
+  balance,
+  loading = false,
+  updatedBeforeText,
+  ...restProps
+}) {
+  return (
+    <BankAccountWrap {...restProps}>
+      <BankAccountHeader>
+        <BankAccountTitle className={clsx({ [Classes.SKELETON]: loading })}>
+          {title}
+        </BankAccountTitle>
+        <BnakAccountCode className={clsx({ [Classes.SKELETON]: loading })}>
+          {code}
+        </BnakAccountCode>
+        {!loading && <BankAccountTypeIcon type={type} />}
+      </BankAccountHeader>
+
+      <BankAccountMeta>
+        <BankAccountMetaLine
+          title={intl.get('cash_flow.label_account_transcations')}
+          value={2}
+          className={clsx({ [Classes.SKELETON]: loading })}
+        />
+        <BankAccountMetaLine
+          title={updatedBeforeText}
+          className={clsx({ [Classes.SKELETON]: loading })}
+        />
+      </BankAccountMeta>
+
+      <BankAccountBalance amount={balance} loading={loading} />
+    </BankAccountWrap>
+  );
+}
 
 const BankAccountWrap = styled.div`
   width: 225px;
@@ -91,13 +179,15 @@ const MetaLineValue = styled.div`
   border-radius: 9.6px;
   font-weight: normal;
   text-transform: none;
-  margin-left: auto;
   width: 30px;
   min-width: 30px;
   height: 16px;
   text-align: center;
   color: rgb(23, 43, 77);
   font-size: 11px;
+
+  ${whenLtr(`margin-left: auto;`)}
+  ${whenRtl(`margin-right: auto;`)}
 `;
 
 const BankAccountMeta = styled.div`
@@ -107,98 +197,14 @@ const BankAccountMeta = styled.div`
 export const BankAccountsList = styled.div`
   display: flex;
   margin: -8px;
+  flex-wrap: wrap;
 `;
 
 const AccountIconWrap = styled.div`
   position: absolute;
   top: 14px;
-  right: 12px;
   color: #abb3bb;
+
+  ${whenLtr(`right: 12px;`)}
+  ${whenRtl(`left: 12px;`)}
 `;
-
-function BankAccountMetaLine({ title, value, className }) {
-  return (
-    <MetaLineWrap className={className}>
-      <MetaLineTitle>{title}</MetaLineTitle>
-      {value && <MetaLineValue>{value}</MetaLineValue>}
-    </MetaLineWrap>
-  );
-}
-
-function BankAccountBalance({ amount, loading }) {
-  return (
-    <BankAccountBalanceWrap>
-      <BankAccountBalanceAmount
-        className={clsx({
-          [Classes.SKELETON]: loading,
-        })}
-      >
-        {amount}
-      </BankAccountBalanceAmount>
-      <BankAccountBalanceLabel>{intl.get('balance')}</BankAccountBalanceLabel>
-    </BankAccountBalanceWrap>
-  );
-}
-
-const ACCOUNT_TYPE = {
-  CASH: 'cash',
-  BANK: 'bank',
-  CREDIT_CARD: 'credit-card',
-};
-
-const ACCOUNT_TYPE_PAIR_ICON = {
-  [ACCOUNT_TYPE.CASH]: 'payments',
-  [ACCOUNT_TYPE.CREDIT_CARD]: 'credit-card',
-  [ACCOUNT_TYPE.BANK]: 'account-balance',
-};
-
-function BankAccountTypeIcon({ type }) {
-  const icon = ACCOUNT_TYPE_PAIR_ICON[type];
-
-  if (!icon) {
-    return;
-  }
-  return (
-    <AccountIconWrap>
-      <Icon icon={icon} iconSize={18} />
-    </AccountIconWrap>
-  );
-}
-
-export function BankAccount({
-  title,
-  code,
-  type,
-  balance,
-  loading = false,
-  updatedBeforeText,
-  ...restProps
-}) {
-  return (
-    <BankAccountWrap {...restProps}>
-      <BankAccountHeader>
-        <BankAccountTitle className={clsx({ [Classes.SKELETON]: loading })}>
-          {title}
-        </BankAccountTitle>
-        <BnakAccountCode className={clsx({ [Classes.SKELETON]: loading })}>
-          {code}
-        </BnakAccountCode>
-        {!loading && <BankAccountTypeIcon type={type} />}
-      </BankAccountHeader>
-
-      <BankAccountMeta>
-        <BankAccountMetaLine
-          title={intl.get('cash_flow.label_account_transcations')}
-          value={2}
-          className={clsx({ [Classes.SKELETON]: loading })}
-        />
-        <BankAccountMetaLine
-          title={updatedBeforeText}
-          className={clsx({ [Classes.SKELETON]: loading })}
-        />
-      </BankAccountMeta>
-
-      <BankAccountBalance amount={balance} loading={loading} />
-    </BankAccountWrap>
-  );
-}

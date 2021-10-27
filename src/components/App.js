@@ -14,7 +14,7 @@ import GlobalErrors from 'containers/GlobalErrors/GlobalErrors';
 import DashboardPrivatePages from 'components/Dashboard/PrivatePages';
 import Authentication from 'components/Authentication';
 
-import { SplashScreen } from '../components';
+import { SplashScreen, DashboardThemeProvider } from '../components';
 import { queryConfig } from '../hooks/query/base';
 
 /**
@@ -23,16 +23,18 @@ import { queryConfig } from '../hooks/query/base';
 function AppInsider({ history }) {
   return (
     <div className="App">
-      <Router history={history}>
-        <Switch>
-          <Route path={'/auth'} component={Authentication} />
-          <Route path={'/'}>
-            <PrivateRoute component={DashboardPrivatePages} />
-          </Route>
-        </Switch>
-      </Router>
+      <DashboardThemeProvider>
+        <Router history={history}>
+          <Switch>
+            <Route path={'/auth'} component={Authentication} />
+            <Route path={'/'}>
+              <PrivateRoute component={DashboardPrivatePages} />
+            </Route>
+          </Switch>
+        </Router>
 
-      <GlobalErrors />
+        <GlobalErrors />
+      </DashboardThemeProvider>
     </div>
   );
 }

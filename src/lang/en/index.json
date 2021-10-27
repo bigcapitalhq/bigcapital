@@ -1365,7 +1365,7 @@
   "vendors.option_with_transactions": "Vendors with transactions",
   "vendors.option_with_transactions.hint": "Include vendors that onces have transactions on the given date period only.",
   "landed_cost.action.delete.success_message": "The landed cost has been deleted successfully.",
-  "siebar.cashflow":"Cash flow",
+  "siebar.cashflow": "Cash flow",
   "siebar.cashflow.label_cash_and_bank_accounts": "Cash & Bank Accounts",
   "cash_flow.label_account_transcations": "Account Transcations",
   "cash_flow.label.deposit": "Deposit",
@@ -1400,12 +1400,11 @@
   "cash_flow_drawer.label_transaction_type": "Transaction type",
   "cash_flow.drawer.label_transaction_no": "Transaction number",
   "cash_flow.drawer.label_transaction": "Cash flow Transaction {number}",
-  "cash_flow_there_is_deposit_withdrawal_transactions_on_the_current_account": "There are no deposit/withdrawal transactions on the current account.",
-  "cash_flow_balance_in":"Balance in {name}",
-  "cash_flow_there_is_no_cashflow_accounts_with_current_filter_criteria:":"There are no cashflow accounts with current filter criteria.",
-  "cash_flow_money_in":"Money In",
-  "cash_flow_money_out":"Money Out",
-  "cash_flow_transaction.switch_item":"Transactions {value}"
-
-
+  "cash_flow.transactions.no_results": "There are no deposit/withdrawal transactions on the current account.",
+  "cash_flow_balance_in": "Balance in {name}",
+  "cash_flow.accounts.no_results": "There are no cashflow accounts with current filter criteria.",
+  "cash_flow_money_in": "Money In",
+  "cash_flow_money_out": "Money Out",
+  "cash_flow_transaction.switch_item": "Transactions {value}",
+  "cash_flow_transaction.balance_in_bigcapital": "Balance in Bigcapital"
 }

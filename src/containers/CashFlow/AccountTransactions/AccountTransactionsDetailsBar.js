@@ -14,6 +14,7 @@ import { curry } from 'lodash/fp';
 
 import { Icon } from '../../../components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import { whenRtl, whenLtr } from 'utils/styled-components';
 
 function AccountSwitchButton() {
   const { currentAccount } = useAccountTransactionsContext();
@@ -62,7 +63,7 @@ function AccountBalanceItem() {
 
   return (
     <AccountBalanceItemWrap>
-      Balance in Bigcapital {''}
+      {intl.get('cash_flow_transaction.balance_in_bigcapital')} {''}
       <AccountBalanceAmount>
         {currentAccount.formatted_amount}
       </AccountBalanceAmount>
@@ -159,8 +160,9 @@ const AccountSwitchText = styled.div`
 const AccountBalanceAmount = styled.span`
   font-weight: 600;
   display: inline-block;
-  margin-left: 10px;
   color: rgb(31, 50, 85);
+  ${whenLtr(`margin-left: 10px;`)}
+  ${whenRtl(`margin-right: 10px;`)}
 `;
 
 const AccountSwitchItemName = styled.div`
@@ -178,6 +180,7 @@ const AccountSwitchItemUpdatedAt = styled.div`
 
 const AccountSwitchButtonBase = styled(Button)`
   .bp3-button-text {
-    margin-right: 5px;
+    ${whenLtr(`margin-right: 5px;`)}
+    ${whenRtl(`margin-left: 5px;`)}
   }
 `;

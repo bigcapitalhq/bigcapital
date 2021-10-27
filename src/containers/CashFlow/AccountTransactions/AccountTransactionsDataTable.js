@@ -16,7 +16,9 @@ import { useMemorizedColumnsWidths } from '../../../hooks';
 import { useAccountTransactionsColumns, ActionsMenu } from './components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { handleCashFlowTransactionType } from './utils';
+
 import { compose } from 'utils';
+import { whenRtl, whenLtr } from 'utils/styled-components';
 
 /**
  * Account transactions data table.
@@ -79,13 +81,7 @@ function AccountTransactionsDataTable({
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
-      noResults={
-        <T
-          id={
-            'cash_flow_there_is_deposit_withdrawal_transactions_on_the_current_account'
-          }
-        />
-      }
+      noResults={<T id={'cash_flow.account_transactions.no_results'} />}
       className="table-constrant"
       payload={{
         onViewDetails: handleViewDetailCashflowTransaction,
@@ -133,10 +129,9 @@ const CashflowTransactionsTable = styled(DashboardConstrantTable)`
 
     .tbody-inner {
       .tr .td:not(:first-child) {
-        border-left: 1px solid #e6e6e6;
+        ${whenLtr(`border-left: 1px solid #e6e6e6;`)}
+        ${whenRtl(`border-right: 1px solid #e6e6e6;`)}
       }
     }
   }
 `;
-
-const DashboardRegularTable = styled(DataTable)``;
