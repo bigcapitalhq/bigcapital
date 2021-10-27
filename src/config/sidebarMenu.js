@@ -190,7 +190,7 @@ export default [
     ],
   },
   {
-    text: <T id={'cash_flow'} />,
+    text: <T id={'siebar.cashflow'} />,
     children: [
       {
         text: <T id={'siebar.cashflow.label_cash_and_bank_accounts'} />,

@@ -151,7 +151,7 @@ const CashflowBankAccountEnhanced = compose(
 )(CashflowBankAccount);
 
 function getUpdatedBeforeText(createdAt) {
-  return 'Updated before 2 years.';
+  return ''
 }
 
 /**

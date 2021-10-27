@@ -62,7 +62,7 @@ function AccountBalanceItem() {
 
   return (
     <AccountBalanceItemWrap>
-      {intl.get('cash_flow_balance_in', { name: 'Bigcapital' })}
+      Balance in Bigcapital {''}
       <AccountBalanceAmount>
         {currentAccount.formatted_amount}
       </AccountBalanceAmount>
@@ -119,12 +119,10 @@ function AccountSwitchMenuItem({
         <React.Fragment>
           <AccountSwitchItemName>{name}</AccountSwitchItemName>
           <AccountSwitchItemTranscations>
-            25 Transactions
+            {intl.get('cash_flow_transaction.switch_item', { value: '25' })}
           </AccountSwitchItemTranscations>
 
-          <AccountSwitchItemUpdatedAt>
-            Updated before 2 days
-          </AccountSwitchItemUpdatedAt>
+          <AccountSwitchItemUpdatedAt></AccountSwitchItemUpdatedAt>
         </React.Fragment>
       }
       {...restProps}

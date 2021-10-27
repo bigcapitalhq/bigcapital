@@ -1393,13 +1393,48 @@
   "vendors.option_without_zero_balance": "Vendors without zero-balance",
   "vendors.option_without_zero_balance.hint":"Include vendors and exclude that ones have zero-balance.",
   "vendors.option_with_transactions": "Vendors with transactions",
-  "vendors.option_with_transactions.hint": "Include vendors that onces have transactions on the given date period only."
+  "vendors.option_with_transactions.hint": "Include vendors that onces have transactions on the given date period only.",
 
+  "siebar.cashflow":"التدفق النقدي",
+  "siebar.cashflow.label_cash_and_bank_accounts": "حسابات نقدية ومصرفية ",
+  "cash_flow.label_account_transcations": "حساب المعاملات",
+  "cash_flow.label.deposit": "الإيداع",
+  "cash_flow.label.withdrawal": "السحب",
+  "cash_flow.label.running_balance": "الرصيد التحليلي",
+  "cash_flow.label.add_cash_account": "اضافة حساب نقدي",
+  "cash_flow.label.add_bank_account": "اضافة حساب مصرفي",
+  "cash_flow.label.add_money_in": "إيداع إلي حساب",
+  "cash_flow.label.add_money_out": "سحب من حساب",
 
-
-
+  "cash_flow.owner_contribution": "زيادة رأس المال",
+  "cash_flow.other_income": "الإيرادات الأخرى",
+  "cash_flow.owner_drawings": "نقصان رأس المال",
+  "cash_flow.expenses": "المصاريف",
+  "cash_flow.transfer_form_account": "تحويل من الحساب ",
+  "cash_flow.transfer_to_account": "تحويل إلى الحساب ",
+  "cash_flow_transaction.label_equity_account": "حساب الملكية",
+  "cash_flow_transaction.label_expense_account": " حساب المصاريف",
+  "cash_flow_transaction_success_message": "تم إنشاء معاملة التدفق النقدي بنجاح.",
+  "cash_flow_transaction.money_in": "إيداع الي حساب {value}",
+  "cash_flow_transaction.money_out": "سحب  من حساب  {value}",
+  "cash_flow_transaction.other_income_account": " حساب الإيرادات الأخرى ",
+  "cash_flow_transaction.other_expense_account": "حساب مصاريف اخري",
+  "save_and_publish": "احفظ وانشر",
+  "cash_flow_transaction.label_transfer_from_account": "تحويل من الحساب ",
+  "cash_flow_transaction.label_transfer_to_account": "تحويل إلى الحساب ",
+  "cash_flow_transaction.label_current_account": "حساب الحالي",
+  "cash_flow_transaction.delete.alert_message":  "تم حذف معاملة التدفق النقدي بنجاح",
+  "cash_flow_transaction_once_delete_this_transaction_you_will_able_to_restore_it": "بمجرد حذف هذه معاملة ، لن تتمكن من استعادتها لاحقًا. هل أنت متأكد أنك تريد حذف ؟",
+  "cash_flow.auto_increment.auto": "يتم تعيين أرقام المعاملات على وضع الزيادة التلقائي. هل أنت متأكد من تغيير هذا الإعداد؟",
+  "cash_flow.auto_increment.manually": "يتم تعيين أرقام معاملاتك يدوياً. هل أنت متأكد من تغيير هذه الإعدادات؟",
+  "cash_flow.setting_your_auto_generated_transaction_number": "تعيين رقم المعاملة الذي تم إنشاؤه تلقائيًا",
+  "cash_flow_drawer.label_transaction_type": " نوع المعاملة",
+  "cash_flow.drawer.label_transaction_no": " رقم المعاملة",
+  "cash_flow.drawer.label_transaction": "معاملة التدفق النقدي {number}",
+  "cash_flow_there_is_deposit_withdrawal_transactions_on_the_current_account": "لا توجد معاملات إيداع / سحب على الحساب الحالي.  ",
+  "cash_flow_there_is_no_cashflow_accounts_with_current_filter_criteria:":"لا توجد حسابات تدفق نقدي بمعايير التصفية الحالية. ",
+  "cash_flow_money_in":"إيداع مال الي حساب",
+  "cash_flow_money_out":"سحب مال من حساب",
+  "cash_flow_transaction.switch_item":" {value} من معاملات "
 }
-
-
-
 

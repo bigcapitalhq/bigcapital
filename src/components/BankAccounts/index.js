@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { Classes } from '@blueprintjs/core';
 import clsx from 'classnames';
@@ -134,7 +135,7 @@ function BankAccountBalance({ amount, loading }) {
       >
         {amount}
       </BankAccountBalanceAmount>
-      <BankAccountBalanceLabel>Balance</BankAccountBalanceLabel>
+      <BankAccountBalanceLabel>{intl.get('balance')}</BankAccountBalanceLabel>
     </BankAccountBalanceWrap>
   );
 }
@@ -187,7 +188,7 @@ export function BankAccount({
 
       <BankAccountMeta>
         <BankAccountMetaLine
-          title={'Account transactions'}
+          title={intl.get('cash_flow.label_account_transcations')}
           value={2}
           className={clsx({ [Classes.SKELETON]: loading })}
         />
