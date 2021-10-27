@@ -49,7 +49,7 @@ export function useAccountTransactionsColumns() {
       {
         id: 'type',
         Header: intl.get('type'),
-        accessor: 'reference_type_formatted',
+        accessor: 'formatted_transaction_type',
         className: 'type',
         width: 140,
         textOverview: true,
@@ -89,8 +89,17 @@ export function useAccountTransactionsColumns() {
       {
         id: 'running_balance',
         Header: intl.get('cash_flow.label.running_balance'),
-        accessor: 'running_balance',
+        accessor: 'formatted_running_balance',
         className: 'running_balance',
+        width: 150,
+        textOverview: true,
+        align: 'right',
+      },
+      {
+        id: 'balance',
+        Header: intl.get('balance'),
+        accessor: 'formatted_balance',
+        className: 'balance',
         width: 150,
         textOverview: true,
         align: 'right',

@@ -7,7 +7,7 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate accounts.
   queryClient.invalidateQueries(t.ACCOUNTS);
   queryClient.invalidateQueries(t.ACCOUNT);
-  
+
   // Invalidate account transactions.
   queryClient.invalidateQueries(t.ACCOUNT_TRANSACTION);
 
@@ -32,21 +32,6 @@ export function useCashflowAccounts(query, props) {
     { method: 'get', url: 'cashflow/accounts', params: query },
     {
       select: (res) => res.data.cashflow_accounts,
-      defaultData: [],
-      ...props,
-    },
-  );
-}
-
-/**
- * Retrieve account transactions list.
- */
-export function useCashflowTransactions(accountId, props) {
-  return useRequestQuery(
-    [t.CASH_FLOW_TRANSACTIONS, accountId],
-    { method: 'get', url: `cashflow/account/${accountId}/transactions` },
-    {
-      select: (res) => res.data.cashflow_transactions,
       defaultData: [],
       ...props,
     },
@@ -123,7 +108,7 @@ export function useAccountTransactionsInfinity(
       const response = await apiRequest.http({
         ...axios,
         method: 'get',
-        url: `/api/cashflow/account/${accountId}/transactions`,
+        url: `/api/financial_statements/cashflow-account-transactions`,
         params: { page: pageParam, ...query },
       });
       return response.data;

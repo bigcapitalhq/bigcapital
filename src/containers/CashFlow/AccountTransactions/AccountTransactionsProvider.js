@@ -12,7 +12,7 @@ import {
 const AccountTransactionsContext = React.createContext();
 
 function flattenInfinityPages(data) {
-  return flatten(map(data.pages, (page) => page.cashflow_transactions));
+  return flatten(map(data.pages, (page) => page.transactions));
 }
 
 /**
@@ -30,9 +30,10 @@ function AccountTransactionsProvider({ query, ...props }) {
     isSuccess: isCashflowTransactionsSuccess,
     fetchNextPage: fetchNextTransactionsPage,
     isFetchingNextPage,
-    hasNextPage
+    hasNextPage,
   } = useAccountTransactionsInfinity(accountId, {
     page_size: 50,
+    account_id: accountId,
   });
 
   // Memorized the cashflow account transactions.
