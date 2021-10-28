@@ -45,6 +45,8 @@ export function useAccountTransactionsColumns() {
         Cell: FormatDateCell,
         width: 110,
         className: 'date',
+        clickable: true,
+        textOverview: true,
       },
       {
         id: 'type',
@@ -53,6 +55,7 @@ export function useAccountTransactionsColumns() {
         className: 'type',
         width: 140,
         textOverview: true,
+        clickable: true,
       },
       {
         id: 'transaction_number',
@@ -60,6 +63,8 @@ export function useAccountTransactionsColumns() {
         accessor: 'transaction_number',
         width: 160,
         className: 'transaction_number',
+        clickable: true,
+        textOverview: true,
       },
       {
         id: 'reference_number',
@@ -67,6 +72,8 @@ export function useAccountTransactionsColumns() {
         accessor: 'reference_number',
         width: 160,
         className: 'reference_number',
+        clickable: true,
+        textOverview: true,
       },
       {
         id: 'deposit',
@@ -76,6 +83,7 @@ export function useAccountTransactionsColumns() {
         className: 'deposit',
         textOverview: true,
         align: 'right',
+        clickable: true
       },
       {
         id: 'withdrawal',
@@ -85,6 +93,7 @@ export function useAccountTransactionsColumns() {
         width: 150,
         textOverview: true,
         align: 'right',
+        clickable: true
       },
       {
         id: 'running_balance',
@@ -94,6 +103,7 @@ export function useAccountTransactionsColumns() {
         width: 150,
         textOverview: true,
         align: 'right',
+        clickable: true
       },
       {
         id: 'balance',
@@ -102,6 +112,7 @@ export function useAccountTransactionsColumns() {
         className: 'balance',
         width: 150,
         textOverview: true,
+        clickable: true,
         align: 'right',
       },
     ],
