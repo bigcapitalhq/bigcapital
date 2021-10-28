@@ -43,15 +43,17 @@ function AccountTransactionsActionsBar({
   // Handle money in form
   const handleMoneyInFormTransaction = (account) => {
     openDialog('money-in', {
-      account_type: account,
       account_id: accountId,
+      account_type: account.value,
+      account_name: account.name,
     });
   };
   // Handle money out form
   const handlMoneyOutFormTransaction = (account) => {
     openDialog('money-out', {
-      account_type: account,
       account_id: accountId,
+      account_type: account.value,
+      account_name: account.name,
     });
   };
   // Refresh cashflow infinity transactions hook.
