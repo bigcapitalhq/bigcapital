@@ -7,7 +7,7 @@ import TransferToAccountFormFields from './TransferToAccount/TransferToAccountFo
 function MoneyOutContentFields({ accountType }) {
   const handleTransactionType = () => {
     switch (accountType) {
-      case 'onwers_drawing':
+      case 'OwnerDrawing':
         return <OwnerDrawingsFormFields />;
 
       case 'other_expense':

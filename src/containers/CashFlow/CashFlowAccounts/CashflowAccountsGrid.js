@@ -57,21 +57,6 @@ function CashflowBankAccount({
 
   account,
 }) {
-  // const [
-  //   bindMenu,
-  //   bindMenuItem,
-  //   useContextTrigger,
-  //   { coords, setVisible, isVisible },
-  // ] = useContextMenu();
-
-  // const [bindTrigger] = useContextTrigger({
-  //   collect: () => 'Title',
-  // });
-
-  // const handleClose = React.useCallback(() => {
-  //   setVisible(false);
-  // }, [setVisible]);
-
   // Handle view detail account.
   const handleViewClick = () => {
     openDrawer('account-drawer', { accountId: account.id });
@@ -126,7 +111,6 @@ function CashflowBankAccount({
         to={`/cashflow-accounts/${account.id}/transactions`}
       >
         <BankAccount
-          // {...bindTrigger}
           title={account.name}
           code={account.code}
           balance={!isNull(account.amount) ? account.formatted_amount : '-'}

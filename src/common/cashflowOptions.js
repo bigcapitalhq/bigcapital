@@ -18,7 +18,7 @@ export const addMoneyIn = [
 export const addMoneyOut = [
   {
     name: intl.get('cash_flow.owner_drawings'),
-    value: 'onwers_drawing',
+    value: 'OwnerDrawing',
   },
   {
     name: intl.get('cash_flow.expenses'),
