@@ -13,14 +13,15 @@ const MoneyOutDialogContent = React.lazy(() =>
  */
 function MoneyOutDialog({
   dialogName,
-  payload = { account_type: null, account_id: null },
+  payload = { account_type: null, account_id: null, account_name: '' },
+
   isOpen,
 }) {
   return (
     <Dialog
       name={dialogName}
       title={intl.get('cash_flow_transaction.money_out', {
-        value: payload.account_type?.name,
+        value: payload.account_name,
       })}
       isOpen={isOpen}
       canEscapeJeyClose={true}
@@ -31,7 +32,7 @@ function MoneyOutDialog({
         <MoneyOutDialogContent
           dialogName={dialogName}
           accountId={payload.account_id}
-          accountType={payload.account_type?.value}
+          accountType={payload.account_type}
         />
       </DialogSuspense>
     </Dialog>

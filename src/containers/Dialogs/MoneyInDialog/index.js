@@ -12,15 +12,15 @@ const MoneyInDialogContent = React.lazy(() => import('./MoneyInDialogContent'));
  */
 function MoneyInDialog({
   dialogName,
-  payload = { account_type: null, account_id: null },
+  payload = { account_type: null, account_id: null, account_name: '' },
   isOpen,
 }) {
-
+  console.log(payload, 'EE');
   return (
     <Dialog
       name={dialogName}
       title={intl.get('cash_flow_transaction.money_in', {
-        value: payload.account_type?.name,
+        value: payload.account_name,
       })}
       isOpen={isOpen}
       canEscapeJeyClose={true}
@@ -31,7 +31,7 @@ function MoneyInDialog({
         <MoneyInDialogContent
           dialogName={dialogName}
           accountId={payload.account_id}
-          accountType={payload.account_type?.value}
+          accountType={payload.account_type}
         />
       </DialogSuspense>
     </Dialog>

@@ -20,6 +20,10 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 
+  // Invalidate the cashflow transactions.
+  queryClient.invalidateQueries(t.CASH_FLOW_TRANSACTIONS);
+  queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
+  
   // Invalidate the settings.
   queryClient.invalidateQueries([t.SETTING, t.SETTING_RECEIPTS]);
 };

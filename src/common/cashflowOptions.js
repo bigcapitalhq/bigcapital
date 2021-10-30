@@ -7,7 +7,6 @@ export const addMoneyIn = [
   },
   {
     name: intl.get('cash_flow.other_income'),
-    type: 'OTHER_INCOME',
     value: 'other_income',
   },
   {
