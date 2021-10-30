@@ -12,6 +12,7 @@ import DashboardSplitPane from 'components/Dashboard/DashboardSplitePane';
 import GlobalHotkeys from './GlobalHotkeys';
 import DashboardProvider from './DashboardProvider';
 import DrawersContainer from 'components/DrawersContainer';
+import AlertsContainer from 'containers/AlertsContainer';
 import EnsureSubscriptionIsActive from '../Guards/EnsureSubscriptionIsActive';
 
 /**
@@ -55,6 +56,7 @@ export default function Dashboard() {
       <DialogsContainer />
       <GlobalHotkeys />
       <DrawersContainer />
+      <AlertsContainer />
     </DashboardProvider>
   );
 }

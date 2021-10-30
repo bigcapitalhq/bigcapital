@@ -7,7 +7,6 @@ import { AccountsChartProvider } from './AccountsChartProvider';
 
 import AccountsViewsTabs from 'containers/Accounts/AccountsViewsTabs';
 import AccountsActionsBar from 'containers/Accounts/AccountsActionsBar';
-import AccountsAlerts from './AccountsAlerts';
 import AccountsDataTable from './AccountsDataTable';
 
 import withAccounts from 'containers/Accounts/withAccounts';
@@ -49,8 +48,6 @@ function AccountsChart({
           <AccountsDataTable />
         </DashboardContentTable>
       </DashboardPageContent>
-
-      <AccountsAlerts />
     </AccountsChartProvider>
   );
 }

@@ -14,7 +14,6 @@ import {
   Icon,
   T,
 } from '../../../components';
-import AccountsAlerts from './../../Accounts/AccountsAlerts';
 
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
 
@@ -173,8 +172,6 @@ export default function CashflowAccountsGrid() {
           <CashflowAccountsGridItems accounts={cashflowAccounts} />
         )}
       </BankAccountsList>
-
-      <AccountsAlerts />
     </CashflowAccountsGridWrap>
   );
 }
