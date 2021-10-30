@@ -59,7 +59,11 @@ function AccountFormDialogFields({
                 onTypeSelected={(accountType) => {
                   form.setFieldValue('account_type', accountType.key);
                 }}
-                disabled={action === 'edit' || action === 'new_child'}
+                disabled={
+                  action === 'edit' ||
+                  action === 'new_child' ||
+                  action === 'NEW_ACCOUNT_DEFINED_TYPE'
+                }
                 popoverProps={{ minimal: true }}
                 popoverFill={true}
               />
@@ -172,7 +176,11 @@ function AccountFormDialogFields({
 
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button disabled={isSubmitting} onClick={onClose} style={{ minWidth: '75px' }}>
+          <Button
+            disabled={isSubmitting}
+            onClick={onClose}
+            style={{ minWidth: '75px' }}
+          >
             <T id={'close'} />
           </Button>
 

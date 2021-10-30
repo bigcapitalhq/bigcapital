@@ -35,11 +35,17 @@ function CashFlowAccountsActionsBar({
   };
   // Handle add bank account.
   const handleAddBankAccount = () => {
-    openDialog('account-form', {});
+    openDialog('account-form', {
+      action: 'NEW_ACCOUNT_DEFINED_TYPE',
+      accountType: 'cash',
+    });
   };
   // Handle add cash account.
   const handleAddCashAccount = () => {
-    openDialog('account-form', {});
+    openDialog('account-form', {
+      action: 'NEW_ACCOUNT_DEFINED_TYPE',
+      accountType: 'bank',
+    });
   };
   // Handle inactive switch changing.
   const handleInactiveSwitchChange = (event) => {

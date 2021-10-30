@@ -12,7 +12,6 @@ export default function AccountDialogContent({
   parentAccountId,
   accountType,
 }) {
-
   return (
     <AccountDialogProvider
       dialogName={dialogName}
