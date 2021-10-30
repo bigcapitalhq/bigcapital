@@ -1,11 +1,11 @@
 import React from 'react';
 
 import AccountDeleteTransactionAlert from '../../Alerts/CashFlow/AccountDeleteTransactionAlert';
-import ReceiptsAlerts from '../../Sales/Receipts/ReceiptsAlerts';
-import ManualJournalsAlerts from '../../Accounting/JournalsLanding/ManualJournalsAlerts';
-import ExpensesAlerts from '../../Expenses/ExpensesAlerts';
-import PaymentReceiveAlerts from '../../Sales/PaymentReceives/PaymentReceiveAlerts';
-import PaymentMadesAlerts from '../../Purchases/PaymentMades/PaymentMadesAlerts';
+import ReceiptDeleteAlert from '../../Alerts/Receipts/ReceiptDeleteAlert';
+import JournalDeleteAlert from '../../Alerts/ManualJournals/JournalDeleteAlert';
+import ExpenseDeleteAlert from '../../Alerts/Expenses/ExpenseDeleteAlert';
+import PaymentMadeDeleteAlert from '../../Alerts/PaymentMades/PaymentMadeDeleteAlert';
+import PaymentReceiveDeleteAlert from '../../Alerts/PaymentReceives/PaymentReceiveDeleteAlert';
 
 /**
  * Account transaction alert.
@@ -14,11 +14,11 @@ export default function AccountTransactionsAlerts() {
   return (
     <div>
       <AccountDeleteTransactionAlert name={'account-transaction-delete'} />
-      <ReceiptsAlerts />
-      <ExpensesAlerts />
-      <ManualJournalsAlerts />
-      <PaymentReceiveAlerts />
-      <PaymentMadesAlerts />
+      <ReceiptDeleteAlert name={'receipt-delete'} />
+      <JournalDeleteAlert name={'journal-delete'} />
+      <ExpenseDeleteAlert name={"expense-delete"} />
+      <PaymentMadeDeleteAlert name={'payment-made-delete'} />
+      <PaymentReceiveDeleteAlert name={'payment-receive-delete'} />
     </div>
   );
 }
