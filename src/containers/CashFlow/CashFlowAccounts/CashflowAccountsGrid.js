@@ -3,12 +3,11 @@ import { isNull, isEmpty } from 'lodash';
 import { compose, curry } from 'lodash/fp';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { ContextMenu2 } from '@blueprintjs/popover2';
 import { Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import useContextMenu from 'react-use-context-menu';
 
 import {
-  ContextMenu,
   BankAccountsList,
   BankAccount,
   If,
@@ -58,20 +57,20 @@ function CashflowBankAccount({
 
   account,
 }) {
-  const [
-    bindMenu,
-    bindMenuItem,
-    useContextTrigger,
-    { coords, setVisible, isVisible },
-  ] = useContextMenu();
+  // const [
+  //   bindMenu,
+  //   bindMenuItem,
+  //   useContextTrigger,
+  //   { coords, setVisible, isVisible },
+  // ] = useContextMenu();
 
-  const [bindTrigger] = useContextTrigger({
-    collect: () => 'Title',
-  });
+  // const [bindTrigger] = useContextTrigger({
+  //   collect: () => 'Title',
+  // });
 
-  const handleClose = React.useCallback(() => {
-    setVisible(false);
-  }, [setVisible]);
+  // const handleClose = React.useCallback(() => {
+  //   setVisible(false);
+  // }, [setVisible]);
 
   // Handle view detail account.
   const handleViewClick = () => {
@@ -109,26 +108,8 @@ function CashflowBankAccount({
   };
 
   return (
-    <CashflowBankAccountWrap>
-      <CashflowAccountAnchor
-        to={`/cashflow-accounts/${account.id}/transactions`}
-      >
-        <BankAccount
-          {...bindTrigger}
-          title={account.name}
-          code={account.code}
-          balance={!isNull(account.amount) ? account.formatted_amount : '-'}
-          type={account.account_type}
-          updatedBeforeText={getUpdatedBeforeText(account.createdAt)}
-        />
-      </CashflowAccountAnchor>
-
-      <ContextMenu
-        bindMenu={bindMenu}
-        isOpen={isVisible}
-        coords={coords}
-        onClosed={handleClose}
-      >
+    <ContextMenu2
+      content={
         <CashflowAccountContextMenu
           account={account}
           onViewClick={handleViewClick}
@@ -139,8 +120,21 @@ function CashflowBankAccount({
           onMoneyInClick={handleMoneyInClick}
           onMoneyOutClick={handleMoneyOutClick}
         />
-      </ContextMenu>
-    </CashflowBankAccountWrap>
+      }
+    >
+      <CashflowAccountAnchor
+        to={`/cashflow-accounts/${account.id}/transactions`}
+      >
+        <BankAccount
+          // {...bindTrigger}
+          title={account.name}
+          code={account.code}
+          balance={!isNull(account.amount) ? account.formatted_amount : '-'}
+          type={account.account_type}
+          updatedBeforeText={getUpdatedBeforeText(account.createdAt)}
+        />
+      </CashflowAccountAnchor>
+    </ContextMenu2>
   );
 }
 

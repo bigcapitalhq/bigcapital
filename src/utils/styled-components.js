@@ -5,5 +5,5 @@ export const whenRtl = (restCss) => css`
 `;
 
 export const whenLtr = (restCss) => css`
-  ${({ theme }) => !theme.dir === 'ltr' && restCss}
+  ${({ theme }) => theme.dir === 'ltr' && restCss}
 `;
