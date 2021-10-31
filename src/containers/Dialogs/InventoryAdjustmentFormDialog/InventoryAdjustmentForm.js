@@ -63,7 +63,7 @@ function InventoryAdjustmentForm({
         closeDialog(dialogName);
 
         AppToaster.show({
-          message: intl.get('the_make_adjustment_has_been_created_successfully'),
+          message: intl.get('the_adjustment_transaction_has_been_created_successfully'),
           intent: Intent.SUCCESS,
         });
       })

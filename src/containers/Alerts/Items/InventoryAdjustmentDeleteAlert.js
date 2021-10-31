@@ -40,7 +40,7 @@ function InventoryAdjustmentDeleteAlert({
     deleteInventoryAdjMutate(inventoryId)
       .then(() => {
         AppToaster.show({
-          message: intl.get('the_adjustment_has_been_deleted_successfully'),
+          message: intl.get('the_adjustment_transaction_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
         closeDrawer('inventory-adjustment-drawer');
