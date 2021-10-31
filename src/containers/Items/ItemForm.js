@@ -14,7 +14,10 @@ import ItemFormBody from './ItemFormBody';
 import ItemFormFloatingActions from './ItemFormFloatingActions';
 import ItemFormInventorySection from './ItemFormInventorySection';
 
-import { useItemFormInitialValues } from './utils';
+import {
+  transformSubmitRequestErrors,
+  useItemFormInitialValues,
+} from './utils';
 import { EditItemFormSchema, CreateItemFormSchema } from './ItemForm.schema';
 
 import { useItemFormContext } from './ItemFormProvider';
@@ -39,27 +42,6 @@ export default function ItemForm() {
 
   // Initial values in create and edit mode.
   const initialValues = useItemFormInitialValues(item);
-
-  // Transform API errors.
-  const transformApiErrors = (error) => {
-    const {
-      response: {
-        data: { errors },
-      },
-    } = error;
-    const fields = {};
-
-    if (errors.find((e) => e.type === 'ITEM.NAME.ALREADY.EXISTS')) {
-      fields.name = intl.get('the_name_used_before');
-    }
-    if (errors.find((e) => e.type === 'INVENTORY_ACCOUNT_CANNOT_MODIFIED')) {
-      AppToaster.show({
-        message: intl.get('cannot_change_item_inventory_account'),
-        intent: Intent.DANGER,
-      });
-    }
-    return fields;
-  };
 
   // Handles the form submit.
   const handleFormSubmit = (
@@ -94,7 +76,7 @@ export default function ItemForm() {
     const onError = (errors) => {
       setSubmitting(false);
       if (errors) {
-        const _errors = transformApiErrors(errors);
+        const _errors = transformSubmitRequestErrors(errors);
         setErrors({ ..._errors });
       }
     };

@@ -1,8 +1,10 @@
 import moment from 'moment';
+import { pick } from 'lodash';
 import {
   defaultFastFieldShouldUpdate,
   safeSumBy,
   transformToForm,
+  orderingLinesIndexes,
 } from 'utils';
 
 export const ERRORS = {
@@ -57,7 +59,7 @@ export const transformToNewPageEntries = (entries) => {
 };
 
 /**
- * Detarmines vendors fast field when update. 
+ * Detarmines vendors fast field when update.
  */
 export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -74,4 +76,18 @@ export const accountsFieldShouldUpdate = (newProps, oldProps) => {
     newProps.accounts !== oldProps.accounts ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
+};
+
+/**
+ * Transformes the form values to request body.
+ */
+export const transformFormToRequest = (form) => {
+  // Filters entries that have no `bill_id` or `payment_amount`.
+  const entries = form.entries
+    .filter((item) => item.bill_id && item.payment_amount)
+    .map((entry) => ({
+      ...pick(entry, ['payment_amount', 'bill_id']),
+    }));
+
+  return { ...form, entries: orderingLinesIndexes(entries) };
 };

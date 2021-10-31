@@ -852,7 +852,7 @@ function keyIdentity(key) {
   return key;
 }
 
-export function flatten(target, opts) {
+export function flatten(opts, target) {
   opts = opts || {};
 
   const delimiter = opts.delimiter || '.';

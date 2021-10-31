@@ -12,18 +12,17 @@ import PaymentDrawerCls from './PaymentMadeDrawer.module.scss';
  * Payment made read-only details table.
  */
 export default function PaymentMadeDetailTable() {
-
   // Retrieve payment made entries columns.
   const columns = usePaymentMadeEntriesColumns();
 
   // Payment made details context.
-  const { paymentEntries } = usePaymentMadeDetailContext();
+  const { paymentMade } = usePaymentMadeDetailContext();
 
   return (
     <div className={clsx(PaymentDrawerCls.detail_panel_table)}>
       <DataTable
         columns={columns}
-        data={paymentEntries}
+        data={paymentMade.entries}
         className={'table-constrant'}
       />
     </div>

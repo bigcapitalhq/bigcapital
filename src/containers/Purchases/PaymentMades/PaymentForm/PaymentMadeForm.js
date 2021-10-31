@@ -23,7 +23,12 @@ import {
 } from './PaymentMadeForm.schema';
 import { compose, orderingLinesIndexes } from 'utils';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
-import { defaultPaymentMade, transformToEditForm, ERRORS } from './utils';
+import {
+  defaultPaymentMade,
+  transformToEditForm,
+  ERRORS,
+  transformFormToRequest,
+} from './utils';
 
 /**
  * Payment made form component.
@@ -71,15 +76,8 @@ function PaymentMadeForm({
     { setSubmitting, resetForm, setFieldError },
   ) => {
     setSubmitting(true);
-
-    // Filters entries that have no `bill_id` or `payment_amount`.
-    const entries = values.entries
-      .filter((item) => item.bill_id && item.payment_amount)
-      .map((entry) => ({
-        ...pick(entry, ['payment_amount', 'bill_id']),
-      }));
     // Total payment amount of entries.
-    const totalPaymentAmount = sumBy(entries, 'payment_amount');
+    const totalPaymentAmount = sumBy(values.entries, 'payment_amount');
 
     if (totalPaymentAmount <= 0) {
       AppToaster.show({
@@ -88,7 +86,8 @@ function PaymentMadeForm({
       });
       return;
     }
-    const form = { ...values, entries };
+    // Transformes the form values to request body.
+    const form = transformFormToRequest(values);
 
     // Triggers once the save request success.
     const onSaved = (response) => {

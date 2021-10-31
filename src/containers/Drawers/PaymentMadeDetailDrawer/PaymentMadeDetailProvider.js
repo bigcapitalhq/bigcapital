@@ -14,19 +14,12 @@ const PaymentMadeDetailContext = React.createContext();
  */
 function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
   // Handle fetch specific payment made details.
-  const { data: paymentMade, isLoading: isPaymentMadeLoading } =
-    usePaymentMade(paymentMadeId, {
+  const { data: paymentMade, isLoading: isPaymentMadeLoading } = usePaymentMade(
+    paymentMadeId,
+    {
       enabled: !!paymentMadeId,
-    });
-
-  // Handle fetch specific payment made details.
-  const {
-    data: { entries: paymentEntries },
-    isLoading: isPaymentLoading,
-  } = usePaymentMadeEditPage(paymentMadeId, {
-    enabled: !!paymentMadeId,
-  });
-
+    },
+  );
   // Handle fetch transaction by reference.
   const {
     data: { transactions },
@@ -44,11 +37,9 @@ function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
     transactions,
     paymentMadeId,
     paymentMade,
-    paymentEntries,
   };
 
-  const loading =
-    isTransactionLoading || isPaymentMadeLoading || isPaymentLoading;
+  const loading = isTransactionLoading || isPaymentMadeLoading;
 
   return (
     <DrawerLoading loading={loading}>

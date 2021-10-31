@@ -3,7 +3,15 @@ import * as R from 'ramda';
 import { sumBy, isEmpty, last } from 'lodash';
 
 import { useItem } from 'hooks/query';
-import { toSafeNumber, saveInvoke } from 'utils';
+import {
+  toSafeNumber,
+  saveInvoke,
+  compose,
+  updateTableCell,
+  updateAutoAddNewLine,
+  orderingLinesIndexes,
+  updateTableRow,
+} from 'utils';
 
 /**
  * Retrieve item entry total from the given rate, quantity and discount.
@@ -131,3 +139,28 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
     cellsLoading,
   };
 }
+
+/**
+ * Compose table rows when edit specific row index of table rows.
+ */
+export const composeRowsOnEditCell = R.curry(
+  (rowIndex, columnId, value, defaultEntry, rows) => {
+    return compose(
+      orderingLinesIndexes,
+      updateAutoAddNewLine(defaultEntry, ['item_id']),
+      updateItemsEntriesTotal,
+      updateTableCell(rowIndex, columnId, value),
+    )(rows);
+  },
+);
+
+/**
+ * Compose table rows when insert a new row to table rows.
+ */
+export const composeRowsOnNewRow = R.curry((rowIndex, newRow, rows) => {
+  return compose(
+    orderingLinesIndexes,
+    updateItemsEntriesTotal,
+    updateTableRow(rowIndex, newRow),
+  )(rows);
+});

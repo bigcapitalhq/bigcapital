@@ -1,15 +1,18 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import moment from 'moment';
+import { omit, pick } from 'lodash';
 import {
   defaultFastFieldShouldUpdate,
   transactionNumber,
   transformToForm,
   safeSumBy,
+  orderingLinesIndexes
 } from 'utils';
 
 // Default payment receive entry.
 export const defaultPaymentReceiveEntry = {
+  index: '',
   payment_amount: '',
   invoice_id: '',
   invoice_no: '',
@@ -32,8 +35,23 @@ export const defaultPaymentReceive = {
   entries: [],
 };
 
+export const defaultRequestPaymentEntry = {
+  index: '',
+  payment_amount: '',
+  invoice_id: '',
+};
+
+export const defaultRequestPayment = {
+  customer_id: '',
+  deposit_account_id: '',
+  payment_date: '',
+  payment_receive_no: '',
+  statement: '',
+  entries: []
+};
+
 /**
- *
+ * Transformes the edit payment receive to initial values of the form.
  */
 export const transformToEditForm = (paymentReceive, paymentReceiveEntries) => ({
   ...transformToForm(paymentReceive, defaultPaymentReceive),
@@ -123,4 +141,24 @@ export const accountsFieldShouldUpdate = (newProps, oldProps) => {
     newProps.accounts !== oldProps.accounts ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
+};
+
+/**
+ * Tranformes form values to request.
+ */
+export const transformFormToRequest = (form) => {
+  // Filters entries that have no `invoice_id` and `payment_amount`.
+  const entries = form.entries
+    .filter((entry) => entry.invoice_id && entry.payment_amount)
+    .map((entry) => ({
+      ...pick(entry, Object.keys(defaultRequestPaymentEntry)),
+    }));
+
+  return {
+    ...omit(form, ['payment_receive_no_manually', 'payment_receive_no']),
+    ...(form.payment_receive_no_manually && {
+      payment_receive_no: form.payment_receive_no,
+    }),
+    entries: orderingLinesIndexes(entries),
+  };
 };

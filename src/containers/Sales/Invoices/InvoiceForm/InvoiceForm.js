@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { sumBy, omit, isEmpty } from 'lodash';
+import { sumBy, isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from 'common/classes';
@@ -144,7 +144,10 @@ function InvoiceForm({
     }
   };
 
+  // Create invoice form schema.
   const CreateInvoiceFormSchema = getCreateInvoiceFormSchema();
+
+  // Edit invoice form schema.
   const EditInvoiceFormSchema = getEditInvoiceFormSchema();
 
   return (

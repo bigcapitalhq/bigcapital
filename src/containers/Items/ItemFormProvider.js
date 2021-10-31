@@ -1,6 +1,7 @@
 import React, { useEffect, createContext, useState } from 'react';
 import intl from 'react-intl-universal';
 import { useLocation } from 'react-router-dom';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useItem,
@@ -11,6 +12,7 @@ import {
   useAccounts,
 } from 'hooks/query';
 import { useDashboardPageTitle } from 'hooks/state';
+import { useWatchItemError } from './utils';
 
 const ItemFormContext = createContext();
 
@@ -32,12 +34,14 @@ function ItemFormProvider({ itemId, ...props }) {
   } = useItemsCategories();
 
   // Fetches the given item details.
-  const { isLoading: isItemLoading, data: item } = useItem(
-    itemId || duplicateId,
-    {
-      enabled: !!itemId || !!duplicateId,
-    },
-  );
+  const itemQuery = useItem(itemId || duplicateId, {
+    enabled: !!itemId || !!duplicateId,
+  });
+
+  const { isLoading: isItemLoading, data: item } = itemQuery;
+
+  // Watches and handles item not found response error.
+  useWatchItemError(itemQuery);
 
   // Fetches item settings.
   const {

@@ -35,6 +35,7 @@ export function useGeneralLedgerTableColumns() {
           return row.date;
         },
         className: 'date',
+        textOverview: true,
         width: 120,
       },
       {

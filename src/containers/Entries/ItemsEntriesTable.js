@@ -8,13 +8,14 @@ import { useEditableItemsEntriesColumns } from './components';
 import {
   saveInvoke,
   compose,
-  updateTableCell,
   updateMinEntriesLines,
-  updateAutoAddNewLine,
   updateRemoveLineByIndex,
 } from 'utils';
-import { updateItemsEntriesTotal, useFetchItemRow } from './utils';
-import { updateTableRow } from '../../utils';
+import {
+  useFetchItemRow,
+  composeRowsOnNewRow,
+  composeRowsOnEditCell,
+} from './utils';
 
 /**
  * Items entries table.
@@ -50,10 +51,7 @@ function ItemsEntriesTable({
     itemType,
     notifyNewRow: (newRow, rowIndex) => {
       // Update the rate, description and quantity data of the row.
-      const newRows = compose(
-        updateItemsEntriesTotal,
-        updateTableRow(rowIndex, newRow),
-      )(rows);
+      const newRows = composeRowsOnNewRow(rowIndex, newRow, rows);
 
       setRows(newRows);
       onUpdateData(newRows);
@@ -66,11 +64,8 @@ function ItemsEntriesTable({
       if (columnId === 'item_id') {
         setItemRow({ rowIndex, columnId, itemId: value });
       }
-      const newRows = compose(
-        updateAutoAddNewLine(defaultEntry, ['item_id']),
-        updateItemsEntriesTotal,
-        updateTableCell(rowIndex, columnId, value),
-      )(rows);
+      const composeEditCell = composeRowsOnEditCell(rowIndex, columnId);
+      const newRows = composeEditCell(value, defaultEntry, rows);
 
       setRows(newRows);
       onUpdateData(newRows);

@@ -73,6 +73,7 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     customers,
     newInvoice,
     estimateId,
+    invoiceId,
     submitPayload,
 
     isInvoiceLoading,

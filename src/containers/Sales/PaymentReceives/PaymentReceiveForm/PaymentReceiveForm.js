@@ -28,7 +28,7 @@ import { AppToaster } from 'components';
 import { transactionNumber, compose } from 'utils';
 
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
-import { defaultPaymentReceive, transformToEditForm } from './utils';
+import { defaultPaymentReceive, transformToEditForm, transformFormToRequest } from './utils';
 
 /**
  * Payment Receive form.
@@ -91,15 +91,8 @@ function PaymentReceiveForm({
   ) => {
     setSubmitting(true);
 
-    // Filters entries that have no `invoice_id` and `payment_amount`.
-    const entries = values.entries
-      .filter((entry) => entry.invoice_id && entry.payment_amount)
-      .map((entry) => ({
-        ...pick(entry, ['invoice_id', 'payment_amount']),
-      }));
-
     // Calculates the total payment amount of entries.
-    const totalPaymentAmount = sumBy(entries, 'payment_amount');
+    const totalPaymentAmount = sumBy(values.entries, 'payment_amount');
 
     if (totalPaymentAmount <= 0) {
       AppToaster.show({
@@ -108,13 +101,8 @@ function PaymentReceiveForm({
       });
       return;
     }
-    const form = {
-      ...omit(values, ['payment_receive_no_manually', 'payment_receive_no']),
-      ...(values.payment_receive_no_manually && {
-        payment_receive_no: values.payment_receive_no,
-      }),
-      entries,
-    };
+    // Transformes the form values to request body.
+    const form = transformFormToRequest(values);
 
     // Handle request response success.
     const onSaved = (response) => {

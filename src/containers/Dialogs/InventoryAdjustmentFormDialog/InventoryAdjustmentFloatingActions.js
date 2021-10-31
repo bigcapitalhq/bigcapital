@@ -50,7 +50,6 @@ function InventoryAdjustmentFloatingActions({
         </Button>
 
         <Button
-          disabled={isSubmitting}
           loading={isSubmitting && !submitPayload.publish}
           style={{ minWidth: '75px' }}
           type="submit"
@@ -61,7 +60,6 @@ function InventoryAdjustmentFloatingActions({
 
         <Button
           intent={Intent.PRIMARY}
-          disabled={isSubmitting}
           loading={isSubmitting && submitPayload.publish}
           style={{ minWidth: '75px' }}
           type="submit"

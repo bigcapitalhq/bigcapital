@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
-import { defaultTo } from 'lodash';
+import { defaultTo, includes } from 'lodash';
+import { useHistory } from 'react-router-dom';
 import { AppToaster } from 'components';
 import {
   transformTableStateToQuery,
@@ -10,6 +11,7 @@ import {
 import { transformToForm } from 'utils';
 import { useSettingsSelector } from '../../hooks/state';
 import { transformItemFormData } from './ItemForm.schema';
+import { useWatch } from 'hooks/utils';
 
 const defaultInitialValues = {
   active: 1,
@@ -181,4 +183,60 @@ export function transformItemsTableState(tableState) {
     ...transformTableStateToQuery(tableState),
     inactive_mode: tableState.inactiveMode,
   };
+}
+
+/**
+ * Transform API errors.
+ */
+export const transformSubmitRequestErrors = (error) => {
+  const {
+    response: {
+      data: { errors },
+    },
+  } = error;
+  const fields = {};
+
+  if (errors.find((e) => e.type === 'ITEM.NAME.ALREADY.EXISTS')) {
+    fields.name = intl.get('the_name_used_before');
+  }
+  if (errors.find((e) => e.type === 'INVENTORY_ACCOUNT_CANNOT_MODIFIED')) {
+    AppToaster.show({
+      message: intl.get('cannot_change_item_inventory_account'),
+      intent: Intent.DANGER,
+    });
+  }
+  if (
+    errors.find(
+      (e) => e.type === 'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS',
+    )
+  ) {
+    AppToaster.show({
+      message: intl.get(
+        'item.error.type_cannot_change_with_item_has_transactions',
+      ),
+      intent: Intent.DANGER,
+    });
+  }
+  return fields;
+};
+
+/**
+ * Watches and handles item response not found error.
+ * @param {*} itemQuery
+ */
+export function useWatchItemError(itemQuery) {
+  const { error, isError } = itemQuery;
+
+  // History context.
+  const history = useHistory();
+
+  useWatch(() => {
+    if (isError && includes([400, 404], error.response.status)) {
+      AppToaster.show({
+        message: 'The given item not found.',
+        intent: Intent.DANGER,
+      });
+      history.push('/items');
+    }
+  }, isError);
 }
