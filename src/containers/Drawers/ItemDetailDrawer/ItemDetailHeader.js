@@ -55,6 +55,10 @@ export default function ItemDetailHeader() {
           children={defaultTo(item.category?.name, '-')}
         />
         <DetailItem
+          label={intl.get('sell_account_id')}
+          children={defaultTo(item?.sell_account?.name, '-')}
+        />
+        <DetailItem
           label={intl.get('cost_account_id')}
           children={defaultTo(item.cost_account?.name, '-')}
         />
@@ -64,10 +68,6 @@ export default function ItemDetailHeader() {
             children={defaultTo(item?.inventory_account?.name, '-')}
           />
         </If>
-        <DetailItem
-          label={intl.get('sell_account_id')}
-          children={defaultTo(item?.sell_account?.name, '-')}
-        />
         <DetailItem
           label={intl.get('item.sell_description')}
           children={defaultTo(item.sell_description, '-')}
