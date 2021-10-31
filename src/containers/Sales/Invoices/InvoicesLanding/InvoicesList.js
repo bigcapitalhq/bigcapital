@@ -8,7 +8,6 @@ import { InvoicesListProvider } from './InvoicesListProvider';
 
 import InvoiceViewTabs from './InvoiceViewTabs';
 import InvoicesDataTable from './InvoicesDataTable';
-import InvoicesAlerts from '../InvoicesAlerts';
 
 import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
@@ -46,8 +45,6 @@ function InvoicesList({
         <InvoiceViewTabs />
         <InvoicesDataTable />
       </DashboardPageContent>
-
-      <InvoicesAlerts />
     </InvoicesListProvider>
   );
 }

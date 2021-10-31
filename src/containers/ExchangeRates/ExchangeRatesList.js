@@ -7,7 +7,6 @@ import ExchangeRateTable from './ExchangeRateTable';
 import ExchangeRateActionsBar from './ExchangeRateActionsBar';
 
 import { ExchangeRatesProvider } from './ExchangeRatesProvider';
-import ExchangeRatesAlerts from './ExchangeRatesAlerts';
 import withExchangeRates from './withExchangeRates';
 import { transformTableStateToQuery } from 'utils';
 
@@ -29,7 +28,6 @@ function ExchangeRatesList({
           <ExchangeRateTable />
         </DashboardContentTable>
       </DashboardPageContent>
-      <ExchangeRatesAlerts />
     </ExchangeRatesProvider>
   );
 }

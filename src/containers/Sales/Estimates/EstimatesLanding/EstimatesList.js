@@ -4,7 +4,6 @@ import { DashboardContentTable, DashboardPageContent } from 'components';
 import 'style/pages/SaleEstimate/List.scss';
 
 import EstimatesActionsBar from './EstimatesActionsBar';
-import EstimatesAlerts from '../EstimatesAlerts';
 import EstimatesViewTabs from './EstimatesViewTabs';
 import EstimatesDataTable from './EstimatesDataTable';
 
@@ -45,7 +44,6 @@ function EstimatesList({
         <EstimatesDataTable />
       </DashboardPageContent>
 
-      <EstimatesAlerts />
     </EstimatesListProvider>
   );
 }

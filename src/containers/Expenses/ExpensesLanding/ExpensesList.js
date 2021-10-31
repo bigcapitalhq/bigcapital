@@ -7,7 +7,6 @@ import { DashboardContentTable, DashboardPageContent } from 'components';
 import ExpenseActionsBar from './ExpenseActionsBar';
 import ExpenseViewTabs from './ExpenseViewTabs';
 import ExpenseDataTable from './ExpenseDataTable';
-import ExpensesAlerts from '../ExpensesAlerts';
 
 import withExpenses from './withExpenses';
 import withExpensesActions from './withExpensesActions';
@@ -45,8 +44,6 @@ function ExpensesList({
         <ExpenseViewTabs />
         <ExpenseDataTable />
       </DashboardPageContent>
-
-      <ExpensesAlerts />
     </ExpensesListProvider>
   );
 }

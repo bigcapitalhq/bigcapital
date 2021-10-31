@@ -7,7 +7,6 @@ import { DashboardPageContent } from 'components';
 import CustomersActionsBar from './CustomersActionsBar';
 import CustomersViewsTabs from './CustomersViewsTabs';
 import CustomersTable from './CustomersTable';
-import CustomersAlerts from 'containers/Customers/CustomersAlerts';
 import { CustomersListProvider } from './CustomersListProvider';
 
 import withCustomers from './withCustomers';
@@ -45,7 +44,6 @@ function CustomersList({
         <CustomersViewsTabs />
         <CustomersTable />
       </DashboardPageContent>
-      <CustomersAlerts />
     </CustomersListProvider>
   );
 }
