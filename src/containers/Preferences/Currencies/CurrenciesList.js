@@ -5,7 +5,6 @@ import intl from 'react-intl-universal';
 
 import { CurrenciesProvider } from './CurrenciesProvider';
 import CurrenciesDataTable from './CurrenciesDataTable';
-import CurrenciesAlerts from './CurrenciesAlerts';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
@@ -22,7 +21,6 @@ function CurrenciesList({
   return (
     <CurrenciesProvider>
       <CurrenciesDataTable />
-      <CurrenciesAlerts />
     </CurrenciesProvider>
   );
 }

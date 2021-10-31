@@ -6,7 +6,6 @@ import 'style/pages/Items/List.scss';
 import { DashboardPageContent } from 'components';
 
 import ItemsActionsBar from './ItemsActionsBar';
-import ItemsAlerts from './ItemsAlerts';
 import ItemsViewsTabs from './ItemsViewsTabs';
 import ItemsDataTable from './ItemsDataTable';
 
@@ -46,7 +45,6 @@ function ItemsList({
         <ItemsDataTable />
       </DashboardPageContent>
 
-      <ItemsAlerts />
     </ItemsListProvider>
   );
 }

@@ -1,17 +1,20 @@
 import React from 'react';
-import CustomerDeleteAlert from 'containers/Alerts/Customers/CustomerDeleteAlert';
-import ContactActivateAlert from '../../containers/Alerts/Contacts/ContactActivateAlert';
-import ContactInactivateAlert from '../../containers/Alerts/Contacts/ContactInactivateAlert';
+
+const CustomerDeleteAlert = React.lazy(() =>
+  import('../Alerts/Customers/CustomerDeleteAlert'),
+);
+const ContactActivateAlert = React.lazy(() =>
+  import('../Alerts/Contacts/ContactActivateAlert'),
+);
+const ContactInactivateAlert = React.lazy(() =>
+  import('../Alerts/Contacts/ContactInactivateAlert'),
+);
 
 /**
  * Customers alert.
  */
-export default function ItemsAlerts() {
-  return (
-    <div>
-      <CustomerDeleteAlert name={'customer-delete'} />
-      <ContactActivateAlert name={'contact-activate'} />
-      <ContactInactivateAlert name={'contact-inactivate'} />
-    </div>
-  );
-}
+export default [
+  { name: 'customer-delete', component: CustomerDeleteAlert },
+  { name: 'contact-activate', component: ContactActivateAlert },
+  { name: 'contact-inactivate', component: ContactInactivateAlert },
+];

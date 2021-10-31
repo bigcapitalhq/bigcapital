@@ -3,7 +3,6 @@ import React from 'react';
 import 'style/pages/InventoryAdjustments/List.scss';
 
 import { DashboardContentTable, DashboardPageContent } from 'components';
-import InventoryAdjustmentsAlerts from './InventoryAdjustmentsAlerts';
 
 import { InventoryAdjustmentsProvider } from './InventoryAdjustmentsProvider';
 import InventoryAdjustmentTable from './InventoryAdjustmentTable';
@@ -28,7 +27,7 @@ function InventoryAdjustmentList({
           <InventoryAdjustmentTable />
         </DashboardContentTable>
 
-        <InventoryAdjustmentsAlerts />
+
       </DashboardPageContent>
     </InventoryAdjustmentsProvider>
   );

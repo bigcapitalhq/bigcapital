@@ -5,7 +5,6 @@ import 'style/pages/ManualJournal/List.scss';
 import { DashboardContentTable, DashboardPageContent } from 'components';
 
 import { ManualJournalsListProvider } from './ManualJournalsListProvider';
-import ManualJournalsAlerts from './ManualJournalsAlerts';
 import ManualJournalsViewTabs from './ManualJournalsViewTabs';
 import ManualJournalsDataTable from './ManualJournalsDataTable';
 import ManualJournalsActionsBar from './ManualJournalActionsBar';
@@ -33,7 +32,6 @@ function ManualJournalsTable({
         <ManualJournalsDataTable />
       </DashboardPageContent>
 
-      <ManualJournalsAlerts />
     </ManualJournalsListProvider>
   );
 }

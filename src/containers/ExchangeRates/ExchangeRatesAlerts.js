@@ -1,12 +1,9 @@
 import React from 'react';
 
-import ExchangeRateDeleteAlert from 'containers/Alerts/ExchangeRates/ExchangeRateDeleteAlert';
-// import ExchangeRateBulkDeleteAlert from 'containers/Alerts/ExchangeRates/ExchangeRateBulkDeleteAlert';
+const ExchangeRateDeleteAlert = React.lazy(() =>
+  import('../Alerts/ExchangeRates/ExchangeRateDeleteAlert'),
+);
 
-export default function ExchangeRatesAlerts() {
-  return (
-    <div>
-      <ExchangeRateDeleteAlert name={'exchange-rate-delete'} />
-    </div>
-  );
-}
+export default [
+  { name: 'exchange-rate-delete', component: ExchangeRateDeleteAlert },
+];

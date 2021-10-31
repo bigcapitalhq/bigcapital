@@ -1,14 +1,17 @@
 import React from 'react';
-import UserDeleteAlert from 'containers/Alerts/Users/UserDeleteAlert';
-import UserInactivateAlert from 'containers/Alerts/Users/UserInactivateAlert';
-import UserActivateAlert from 'containers/Alerts/Users/UserActivateAlert';
 
-export default function UsersAlerts() {
-  return (
-    <>
-      <UserDeleteAlert name={'user-delete'} />
-      <UserInactivateAlert name={'user-inactivate'} />
-      <UserActivateAlert name={'user-activate'} />
-    </>
-  );
-}
+const UserDeleteAlert = React.lazy(() =>
+  import('../../Alerts/Users/UserDeleteAlert'),
+);
+const UserActivateAlert = React.lazy(() =>
+  import('../../Alerts/Users/UserActivateAlert'),
+);
+const UserInactivateAlert = React.lazy(() =>
+  import('../../Alerts/Users/UserInactivateAlert'),
+);
+
+export default [
+  { name: 'user-delete', component: UserDeleteAlert },
+  { name: 'user-activate', component: UserActivateAlert },
+  { name: 'user-inactivate', component: UserInactivateAlert },
+];

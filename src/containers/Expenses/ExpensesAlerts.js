@@ -1,15 +1,16 @@
 import React from 'react';
-import ExpenseDeleteAlert from 'containers/Alerts/Expenses/ExpenseDeleteAlert';
-import ExpensePublishAlert from 'containers/Alerts/Expenses/ExpensePublishAlert';
+
+const ExpenseDeleteAlert = React.lazy(() =>
+  import('../Alerts/Expenses/ExpenseDeleteAlert'),
+);
+const ExpensePublishAlert = React.lazy(() =>
+  import('../Alerts/Expenses/ExpensePublishAlert'),
+);
 
 /**
  * Accounts alert.
  */
-export default function ExpensesAlerts({}) {
-  return (
-    <div class="expenses-alerts">
-      <ExpenseDeleteAlert name={'expense-delete'} />
-      <ExpensePublishAlert name={'expense-publish'} />
-    </div>
-  );
-}
+export default [
+  { name: 'expense-delete', component: ExpenseDeleteAlert },
+  { name: 'expense-publish', component: ExpensePublishAlert },
+];

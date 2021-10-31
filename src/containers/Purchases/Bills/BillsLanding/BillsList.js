@@ -6,7 +6,6 @@ import 'style/pages/Bills/List.scss';
 import { BillsListProvider } from './BillsListProvider';
 
 import BillsActionsBar from './BillsActionsBar';
-import BillsAlerts from './BillsAlerts';
 import BillsViewsTabs from './BillsViewsTabs';
 import BillsTable from './BillsTable';
 
@@ -45,8 +44,6 @@ function BillsList({
         <BillsViewsTabs />
         <BillsTable />
       </DashboardPageContent>
-
-      <BillsAlerts />
     </BillsListProvider>
   );
 }
