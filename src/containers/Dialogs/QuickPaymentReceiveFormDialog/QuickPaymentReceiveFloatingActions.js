@@ -29,7 +29,7 @@ function QuickPaymentReceiveFloatingActions({
         </Button>
         <Button
           intent={Intent.PRIMARY}
-          disabled={isSubmitting}
+          loading={isSubmitting}
           style={{ minWidth: '75px' }}
           type="submit"
         >
