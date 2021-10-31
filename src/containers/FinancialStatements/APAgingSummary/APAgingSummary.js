@@ -17,7 +17,7 @@ import withAPAgingSummaryActions from './withAPAgingSummaryActions';
 import { compose } from 'utils';
 
 /**
- * AP aging summary report.
+ * A/P aging summary report.
  */
 function APAgingSummary({
   // #withSettings
@@ -28,9 +28,10 @@ function APAgingSummary({
 }) {
   const [filter, setFilter] = useState({
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
-    agingBeforeDays: 30,
+    agingDaysBefore: 30,
     agingPeriods: 3,
     vendorsIds: [],
+    filterByOption: 'without-zero-balance',
   });
 
   // Handle filter submit.

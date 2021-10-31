@@ -39,13 +39,19 @@ function VendorsTransactionsHeaderGeneralPanelContent() {
   return (
     <div>
       <FinancialStatementDateRange />
-      <FinancialStatementsFilter
-        items={filterVendorsOptions}
-        label={<T id={'vendors.label_filter_vendors'} />}
-        initialSelectedItem={'all-vendors'}
-      />
+
       <Row>
-        <Col xs={5}>
+        <Col xs={4}>
+          <FinancialStatementsFilter
+            items={filterVendorsOptions}
+            label={<T id={'vendors.label_filter_vendors'} />}
+            initialSelectedItem={'all-vendors'}
+          />
+        </Col>
+      </Row>
+
+      <Row>
+        <Col xs={4}>
           <Field name={'vendorsIds'}>
             {({ form: { setFieldValue }, field: { value } }) => (
               <FormGroup

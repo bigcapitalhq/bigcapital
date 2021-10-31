@@ -68,11 +68,15 @@ export default function CustomersBalanceSummaryGeneralPanelContent() {
         </Col>
       </Row>
 
-      <FinancialStatementsFilter
-        items={filterCustomersOptions}
-        label={<T id={'customers.label_filter_customers'} />}
-        initialSelectedItem={'with-transactions'}
-      />
+      <Row>
+        <Col xs={5}>
+          <FinancialStatementsFilter
+            items={filterCustomersOptions}
+            label={<T id={'customers.label_filter_customers'} />}
+            initialSelectedItem={'with-transactions'}
+          />
+        </Col>
+      </Row>
 
       <Row>
         <Col xs={5}>

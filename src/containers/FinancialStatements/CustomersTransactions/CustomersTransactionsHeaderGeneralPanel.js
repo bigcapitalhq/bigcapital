@@ -37,13 +37,19 @@ function CustomersTransactionsHeaderGeneralPanelContent() {
   return (
     <div>
       <FinancialStatementDateRange />
-      <FinancialStatementsFilter
-        items={filterCustomersOptions}
-        label={<T id={'customers.label_filter_customers'} />}
-        initialSelectedItem={'with-transactions'}
-      />
+
       <Row>
-        <Col xs={5}>
+        <Col xs={4}>
+          <FinancialStatementsFilter
+            items={filterCustomersOptions}
+            label={<T id={'customers.label_filter_customers'} />}
+            initialSelectedItem={'with-transactions'}
+          />
+        </Col>
+      </Row>
+
+      <Row>
+        <Col xs={4}>
           <Field name={'customersIds'}>
             {({ form: { setFieldValue }, field: { value } }) => (
               <FormGroup

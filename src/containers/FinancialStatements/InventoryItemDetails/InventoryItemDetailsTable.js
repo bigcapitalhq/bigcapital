@@ -1,7 +1,5 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-
-import classNames from 'classnames';
 
 import FinancialSheet from 'components/FinancialSheet';
 import { DataTable } from 'components';

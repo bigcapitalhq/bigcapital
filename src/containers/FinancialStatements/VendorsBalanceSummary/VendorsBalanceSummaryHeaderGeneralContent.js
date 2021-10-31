@@ -74,14 +74,18 @@ export default function VendorsBalanceSummaryHeaderGeneralContent() {
         </Col>
       </Row>
 
-      <FinancialStatementsFilter
-        items={filterVendorsOptions}
-        label={<T id={'vendors.label_filter_vendors'} />}
-        initialSelectedItem={'with-transactions'}
-      />
+      <Row>
+        <Col xs={5}>
+          <FinancialStatementsFilter
+            items={filterVendorsOptions}
+            label={<T id={'vendors.label_filter_vendors'} />}
+            initialSelectedItem={'with-transactions'}
+          />
+        </Col>
+      </Row>
 
       <Row>
-        <Col xs={4}>
+        <Col xs={5}>
           <Field name={'vendorsIds'}>
             {({ form: { setFieldValue } }) => (
               <FormGroup

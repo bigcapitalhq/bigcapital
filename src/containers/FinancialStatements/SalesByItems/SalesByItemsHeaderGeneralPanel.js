@@ -33,11 +33,15 @@ function SalesByItemsHeaderGeneralPanelContent() {
     <div>
       <FinancialStatementDateRange />
 
-      <FinancialStatementsFilter
-        items={filterItemsOptions}
-        label={<T id={'items.label_filter_items'} />}
-        initialSelectedItem={'with-transactions'}
-      />
+      <Row>
+        <Col xs={4}>
+          <FinancialStatementsFilter
+            items={filterItemsOptions}
+            label={<T id={'items.label_filter_items'} />}
+            initialSelectedItem={'with-transactions'}
+          />
+        </Col>
+      </Row>
 
       <Row>
         <Col xs={4}>

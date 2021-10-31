@@ -1,4 +1,7 @@
 import React from 'react';
+
+import { Row, Col } from '../../../components';
+
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import SelectDisplayColumnsBy from '../SelectDisplayColumnsBy';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
@@ -12,9 +15,12 @@ export default function BalanceSheetHeaderGeneralTab({}) {
     <div>
       <FinancialStatementDateRange />
       <SelectDisplayColumnsBy />
-      <FinancialStatementsFilter
-        initialSelectedItem={'all-accounts'}
-      />
+
+      <Row>
+        <Col xs={4}>
+          <FinancialStatementsFilter initialSelectedItem={'all-accounts'} />
+        </Col>
+      </Row>
       <RadiosAccountingBasis key={'basis'} />
     </div>
   );

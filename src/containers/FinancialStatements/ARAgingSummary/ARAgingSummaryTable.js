@@ -13,8 +13,6 @@ export default function ReceivableAgingSummaryTable({
   // #ownProps
   organizationName,
 }) {
-  
-
   // AR aging summary report context.
   const { ARAgingSummary, isARAgingLoading } = useARAgingSummaryContext();
 
@@ -22,10 +20,6 @@ export default function ReceivableAgingSummaryTable({
   const columns = useARAgingSummaryColumns();
 
   const rowClassNames = (row) => [`row-type--${row.original.rowType}`];
-
-  const handleFetchData = useCallback((...args) => {
-    // onFetchData && onFetchData(...args);
-  }, []);
 
   return (
     <FinancialSheet
@@ -40,7 +34,6 @@ export default function ReceivableAgingSummaryTable({
         columns={columns}
         data={ARAgingSummary.tableRows}
         rowClassNames={rowClassNames}
-        onFetchData={handleFetchData}
         noInitialFetch={true}
         sticky={true}
       />

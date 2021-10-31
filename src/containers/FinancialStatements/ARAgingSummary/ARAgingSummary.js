@@ -32,6 +32,7 @@ function ReceivableAgingSummarySheet({
     agingDaysBefore: 30,
     agingPeriods: 3,
     customersIds: [],
+    filterByOption: 'without-zero-balance',
   });
 
   // Handle filter submit.

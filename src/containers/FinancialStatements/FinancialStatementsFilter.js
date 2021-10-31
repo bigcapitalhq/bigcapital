@@ -11,9 +11,8 @@ import classNames from 'classnames';
 import { FastField } from 'formik';
 
 import { CLASSES } from 'common/classes';
-import { Col, Row, ListSelect, MODIFIER } from 'components';
+import { ListSelect, MODIFIER } from 'components';
 import { filterAccountsOptions } from './constants';
-
 
 export default function FinancialStatementsFilter({
   items = filterAccountsOptions,
@@ -43,33 +42,29 @@ export default function FinancialStatementsFilter({
   };
 
   return (
-    <Row>
-      <Col xs={4}>
-        <FastField name={'filterByOption'}>
-          {({ form: { setFieldValue }, field: { value } }) => (
-            <FormGroup
-              label={label}
-              className="form-group--select-list bp3-fill"
-              inline={false}
-            >
-              <ListSelect
-                items={items}
-                itemRenderer={filterRenderer}
-                popoverProps={{ minimal: true }}
-                filterable={false}
-                selectedItem={value}
-                selectedItemProp={'key'}
-                textProp={'name'}
-                onItemSelect={(item) => {
-                  setFieldValue('filterByOption', item.key);
-                }}
-                className={classNames(CLASSES.SELECT_LIST_FILL_POPOVER)}
-                {...restProps}
-              />
-            </FormGroup>
-          )}
-        </FastField>
-      </Col>
-    </Row>
+    <FastField name={'filterByOption'}>
+      {({ form: { setFieldValue }, field: { value } }) => (
+        <FormGroup
+          label={label}
+          className="form-group--select-list bp3-fill"
+          inline={false}
+        >
+          <ListSelect
+            items={items}
+            itemRenderer={filterRenderer}
+            popoverProps={{ minimal: true }}
+            filterable={false}
+            selectedItem={value}
+            selectedItemProp={'key'}
+            textProp={'name'}
+            onItemSelect={(item) => {
+              setFieldValue('filterByOption', item.key);
+            }}
+            className={classNames(CLASSES.SELECT_LIST_FILL_POPOVER)}
+            {...restProps}
+          />
+        </FormGroup>
+      )}
+    </FastField>
   );
 }

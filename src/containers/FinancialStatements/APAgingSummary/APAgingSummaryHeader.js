@@ -49,6 +49,7 @@ function APAgingSummaryHeader({
     agingDaysBefore: 30,
     agingPeriods: 3,
     vendorsIds: [],
+    filterByOption: 'without-zero-balance',
   };
   // Formik initial values.
   const initialValues = transformToForm(pageFilter, defaultValues);
@@ -61,10 +62,14 @@ function APAgingSummaryHeader({
   };
 
   // Handle cancel button click.
-  const handleCancelClick = () => { toggleFilterDrawerDisplay(false); };
+  const handleCancelClick = () => {
+    toggleFilterDrawerDisplay(false);
+  };
 
   // Handle the drawer closing.
-  const handleDrawerClose = () => { toggleFilterDrawerDisplay(false); };
+  const handleDrawerClose = () => {
+    toggleFilterDrawerDisplay(false);
+  };
 
   return (
     <FinancialStatementHeader

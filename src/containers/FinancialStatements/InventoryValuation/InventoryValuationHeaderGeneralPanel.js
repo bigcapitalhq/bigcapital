@@ -69,11 +69,16 @@ function InventoryValuationHeaderGeneralPanelContent() {
           </FastField>
         </Col>
       </Row>
-      <FinancialStatementsFilter
-        items={filterInventoryValuationOptions}
-        label={<T id={'items.label_filter_items'} />}
-        initialSelectedItem={'all-items'}
-      />
+
+      <Row>
+        <Col xs={4}>
+          <FinancialStatementsFilter
+            items={filterInventoryValuationOptions}
+            label={<T id={'items.label_filter_items'} />}
+            initialSelectedItem={'all-items'}
+          />
+        </Col>
+      </Row>
 
       <Row>
         <Col xs={4}>

@@ -1345,7 +1345,7 @@
   "filter.value": "Value",
   "payment_made.empty_status.title": "The organization doesn't pay to vendors, yet!",
   "estimate.delete.error.estimate_converted_to_invoice": "Could not delete sale estimate that converted to invoice",
-  "items.option.only_active": "Only active",
+  "items.option.only_active": "Items only active",
   "items.option_all_items.hint": "All items, including that ones have zero-balance.",
   "items.option_with_transactions": "Items with transactions",
   "items.option_without_zero_balance": "Items without zero-balance",
@@ -1406,5 +1406,19 @@
   "cash_flow_money_in": "Money In",
   "cash_flow_money_out": "Money Out",
   "cash_flow_transaction.switch_item": "Transactions {value}",
-  "cash_flow_transaction.balance_in_bigcapital": "Balance in Bigcapital"
+  "cash_flow_transaction.balance_in_bigcapital": "Balance in Bigcapital",
+
+  "AR_aging_summary.filter_customers.all_customers": "All customers",
+  "AR_aging_summary.filter_customers.all_customers.hint": "All customers, include that ones have zero-balance.",
+  "AR_aging_summary.filter_customers.without_zero_balance": "Customers without zero balance",
+  "AR_aging_summary.filter_customers.without_zero_balance.hint": "Include customers that onces have transactions on the given date period only.",
+  "AR_aging_summary.filter_options.label": "Filter customers",
+  "AP_aging_summary.filter_vendors.all_vendors": "All vendors",
+  "AP_aging_summary.filter_vendors.all_vendors.hint": "All vendors, include that onces have zero-balance.",
+  "AP_aging_summary.filter_vendors.without_zero_balance": "Vendors without zero balance",
+  "AP_aging_summary.filter_vendors.without_zero_balance.hint": "Include vendors that onces have transactions on the given date period only.",
+  "AP_aging_summary.filter_options.label": "Filter vendors",
+  "item.error.type_cannot_change_with_item_has_transactions": "Cannot change item type to inventory with item has associated transactions.",
+  "item.error.cannot_change_inventory_account": "Cannot change item inventory account while the item has transactions.",
+  "customer.link.customer_details": "Customer details ({amount})"
 }

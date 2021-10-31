@@ -27,6 +27,7 @@ function ARAgingSummaryHeader({
   // #withARAgingSummary
   isFilterDrawerOpen,
 }) {
+  // Validation schema.
   const validationSchema = Yup.object().shape({
     asDate: Yup.date().required().label('asDate'),
     agingDaysBefore: Yup.number()
@@ -46,6 +47,7 @@ function ARAgingSummaryHeader({
     agingDaysBefore: 30,
     agingPeriods: 3,
     customersIds: [],
+    filterByOption: 'without-zero-balance',
   };
   // Initial values.
   const initialValues = transformToForm(
@@ -67,7 +69,6 @@ function ARAgingSummaryHeader({
   const handleCancelClick = () => {
     toggleFilterDrawerDisplay(false);
   };
-
   // Handle the drawer close.
   const handleDrawerClose = () => {
     toggleFilterDrawerDisplay(false);

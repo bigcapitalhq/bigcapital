@@ -1,6 +1,6 @@
-import React from 'react';
 import * as R from 'ramda';
-import { getColumnWidth, getForceWidth } from 'utils';
+import { getColumnWidth } from 'utils';
+import { CellForceWidth } from '../../../components';
 
 /**
  *  columns mapper.
@@ -9,25 +9,15 @@ const columnsMapper = (data, index, column) => ({
   id: column.key,
   key: column.key,
   Header: column.label,
-  accessor: ({ cells }) => {
-    return (
-      <span
-        className={'force-width'}
-        style={{
-          minWidth: getForceWidth(cells[0].value),
-        }}
-      >
-        {cells[index]?.value}
-      </span>
-    );
-  },
+  Cell: CellForceWidth,
+  accessor: `cells[${index}].value`,
+  forceWidthAccess: `cells[0].value`,
   className: column.key,
   width: getColumnWidth(data, `cells.${index}.key`, {
     minWidth: 130,
     magicSpacing: 10,
   }),
   disableSortBy: true,
-  // textOverview: true,
 });
 
 /**

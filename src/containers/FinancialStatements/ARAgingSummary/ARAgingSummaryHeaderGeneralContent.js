@@ -10,6 +10,7 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 
+import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import {
   FormattedMessage as T,
   ContactsMultiSelect,
@@ -19,6 +20,7 @@ import {
 } from 'components';
 import { momentFormatter } from 'utils';
 import { useARAgingSummaryGeneralContext } from './ARAgingSummaryGeneralProvider';
+import { filterCustomersOptions } from './constants';
 
 /**
  * AR Aging Summary - Drawer Header - General Fields.
@@ -96,6 +98,16 @@ export default function ARAgingSummaryHeaderGeneralContent() {
           </FastField>
         </Col>
       </Row>
+
+      <Row>
+        <Col xs={5}>
+          <FinancialStatementsFilter
+            items={filterCustomersOptions}
+            label={<T id={'AR_aging_summary.filter_options.label'} />}
+          />
+        </Col>
+      </Row>
+
       <Row>
         <Col xs={5}>
           <Field name="customersIds">

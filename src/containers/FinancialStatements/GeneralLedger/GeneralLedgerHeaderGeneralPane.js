@@ -33,10 +33,15 @@ function GLHeaderGeneralPaneContent() {
   return (
     <React.Fragment>
       <FinancialStatementDateRange />
-      <FinancialStatementsFilter
-        items={filterAccountsOptions}
-        initialSelectedItem={'with-transactions'}
-      />
+
+      <Row>
+        <Col xs={4}>
+          <FinancialStatementsFilter
+            items={filterAccountsOptions}
+            initialSelectedItem={'with-transactions'}
+          />
+        </Col>
+      </Row>
       <Row>
         <Col xs={4}>
           <FormGroup

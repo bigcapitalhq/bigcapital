@@ -17,6 +17,8 @@ import {
   FieldHint,
 } from 'components';
 import { useAPAgingSummaryGeneralContext } from './APAgingSummaryGeneralProvider';
+import FinancialStatementsFilter from '../FinancialStatementsFilter';
+import { filterVendorsOptions } from './constants';
 import {
   momentFormatter,
   tansformDateValue,
@@ -87,6 +89,15 @@ export default function APAgingSummaryHeaderGeneralContent() {
               </FormGroup>
             )}
           </FastField>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col xs={5}>
+          <FinancialStatementsFilter
+            items={filterVendorsOptions}
+            label={<T id={'AP_aging_summary.filter_options.label'} />}
+          />
         </Col>
       </Row>
 
