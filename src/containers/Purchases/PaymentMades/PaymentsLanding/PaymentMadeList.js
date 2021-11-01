@@ -4,7 +4,6 @@ import 'style/pages/PaymentMade/List.scss';
 
 import { DashboardPageContent } from 'components';
 import PaymentMadeActionsBar from './PaymentMadeActionsBar';
-import PaymentMadesAlerts from '../PaymentMadesAlerts';
 import PaymentMadesTable from './PaymentMadesTable';
 import { PaymentMadesListProvider } from './PaymentMadesListProvider';
 import PaymentMadeViewTabs from './PaymentMadeViewTabs';
@@ -44,8 +43,6 @@ function PaymentMadeList({
         <PaymentMadeViewTabs />
         <PaymentMadesTable />
       </DashboardPageContent>
-
-      <PaymentMadesAlerts />
     </PaymentMadesListProvider>
   );
 }
