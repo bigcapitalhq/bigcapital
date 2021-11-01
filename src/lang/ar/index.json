@@ -1435,5 +1435,11 @@
   "cash_flow_transaction.balance_in_bigcapital": "الرصيد في Bigcapital",
   "badDebt.label_written_off_amount": "المبلغ المشطوب",
   "badDebt.label": "الديون المعدومة",
-  "badDebt_the_seller_can_charge_the_amount_of_an_invoice": "يمكن للبائع تحميل مبلغ الفاتورة على حساب مصروفات الديون المعدومة عندما يكون من المؤكد أن الفاتورة لن يتم دفعها."
+  "badDebt.label_cancel_bad_debt": "إلغاء الديون المعدومة",
+  "badDebt_the_seller_can_charge_the_amount_of_an_invoice": "يمكن للبائع تحميل مبلغ الفاتورة على حساب مصروفات الديون المعدومة عندما يكون من المؤكد أن الفاتورة لن يتم دفعها.",
+  "badDebt_writte_off_success_message":"تم شطب فاتورة البيع المقدمة بنجاح.",
+  "badDebt_canceled_write_off_success_message":"تم إلغاء شطب فاتورة البيع المقدمة بنجاح.",
+  "badDebt_are_sure_to_write_off_this_invoice": "هل أنت متأكد أنك تريد شطب هذه الفاتورة؟ "
+  
+
 }

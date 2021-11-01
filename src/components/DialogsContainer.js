@@ -45,7 +45,7 @@ export default function DialogsContainer() {
       <ReceiptPdfPreviewDialog dialogName={'receipt-pdf-preview'} />
       <MoneyInDialog dialogName={'money-in'} />
       <MoneyOutDialog dialogName={'money-out'} />
-      <BadDebtDialog dialogName={'invoice-bad-debt'} />
+      <BadDebtDialog dialogName={'write-off-bad-debt'} />
     </div>
   );
 }

@@ -50,7 +50,7 @@ function BadDebtForm({
     // Handle request response success.
     const onSuccess = (response) => {
       AppToaster.show({
-        message: intl.get('badDebt_success_message'),
+        message: intl.get('badDebt_writte_off_success_message'),
         intent: Intent.SUCCESS,
       });
       closeDialog(dialogName);

@@ -1425,10 +1425,8 @@
   "badDebt.label": "Bad debt",
   "badDebt.label_cancel_bad_debt": "Cancel bad debt",
   "badDebt_the_seller_can_charge_the_amount_of_an_invoice": "The seller can charge the amount of an invoice to the bad debt expense account when it is certain that the invoice will not be paid.",
-  "badDebt_success_message":"The given sale invoice has been writte-off successfully.",
-  "are_sure_to_cancel_this_invoice": "Are you sure you want to cancel this invoice?",
-  
-  "payment_transactions": "Payment transactions"
-
-
+  "badDebt_writte_off_success_message":"The given sale invoice has been writte-off successfully.",
+  "badDebt_canceled_write_off_success_message":"The given sale invoice has been canceled write-off successfully.",
+  "badDebt_are_sure_to_write_off_this_invoice": "Are you sure you want to write off this invoice?"
+ 
 }

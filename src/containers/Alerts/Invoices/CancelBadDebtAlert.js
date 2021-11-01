@@ -11,9 +11,9 @@ import withAlertActions from 'containers/Alert/withAlertActions';
 import { compose } from 'utils';
 
 /**
- * bad debt alert.
+ * Cancel bad debt alert.
  */
-function BadDebtAlert({
+function CancelBadDebtAlert({
   name,
 
   // #withAlertStoreConnect
@@ -23,7 +23,7 @@ function BadDebtAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  // handle cancel alert.
+  // handle cancel  alert.
   const handleCancel = () => {
     closeAlert(name);
   };
@@ -35,7 +35,7 @@ function BadDebtAlert({
     cancelBadDebtMutate(invoiceId)
       .then(() => {
         AppToaster.show({
-          message: intl.get('the_invoice_has_been_deleted_successfully'),
+          message: intl.get('badDebt_canceled_write_off_success_message'),
           intent: Intent.SUCCESS,
         });
       })
@@ -48,7 +48,7 @@ function BadDebtAlert({
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'badDebt.label_cancel_bad_debt'} />}
+      confirmButtonText={<T id={'save'} />}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancel}
@@ -56,10 +56,13 @@ function BadDebtAlert({
       loading={isLoading}
     >
       <p>
-        <T id={'are_sure_to_cancel_this_invoice'} />
+        <T id={'badDebt_are_sure_to_write_off_this_invoice'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(withAlertStoreConnect(), withAlertActions)(BadDebtAlert);
+export default compose(
+  withAlertStoreConnect(),
+  withAlertActions,
+)(CancelBadDebtAlert);

@@ -9,6 +9,7 @@ import t from './types';
 const commonInvalidateQueries = (queryClient) => {
   // Invalidate invoices.
   queryClient.invalidateQueries(t.SALE_INVOICES);
+  queryClient.invalidateQueries(t.SALE_INVOICE);
 
   // Invalidate customers.
   queryClient.invalidateQueries(t.CUSTOMERS);

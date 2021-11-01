@@ -7,8 +7,8 @@ const InvoiceDeliverAlert = React.lazy(() =>
   import('../../Alerts/Invoices/InvoiceDeliverAlert'),
 );
 
-const BadDebtAlert = React.lazy(() =>
-  import('../../Alerts/Invoices/BadDebtAlert'),
+const CancelBadDebtAlert = React.lazy(() =>
+  import('../../Alerts/Invoices/CancelBadDebtAlert'),
 );
 
 /**
@@ -17,5 +17,5 @@ const BadDebtAlert = React.lazy(() =>
 export default [
   { name: 'invoice-delete', component: InvoiceDeleteAlert },
   { name: 'invoice-deliver', component: InvoiceDeliverAlert },
-  { name: 'bad-debt', component: BadDebtAlert },
+  { name: 'cancel-bad-debt', component: CancelBadDebtAlert },
 ];

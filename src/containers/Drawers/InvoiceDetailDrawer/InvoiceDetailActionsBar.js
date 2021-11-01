@@ -31,7 +31,7 @@ import {
 
 import { compose } from 'utils';
 
-import BadDebtMenuItem from './BadDebtMenuItem';
+import { BadDebtMenuItem } from './utils';
 
 /**
  * Invoice details action bar.
@@ -71,12 +71,15 @@ function InvoiceDetailActionsBar({
   const handleQuickPaymentInvoice = () => {
     openDialog('quick-payment-receive', { invoiceId });
   };
-  const handleBadDebtInvoiceDialog = () => () => {
-    openDialog('invoice-bad-debt', { invoiceId });
+
+  // Handle write-off invoice.
+  const handleBadDebtInvoice = () => {
+    openDialog('write-off-bad-debt', { invoiceId });
   };
 
-  const handleBadDebtInvoiceAlert = () => {
-    openAlert('bad-debt', { invoiceId });
+  // Handle cancele write-off invoice.
+  const handleCancelBadDebtInvoice = () => {
+    openAlert('cancel-bad-debt', { invoiceId });
   };
 
   return (
@@ -112,7 +115,11 @@ function InvoiceDetailActionsBar({
           onClick={handleDeleteInvoice}
         />
         <NavbarDivider />
-        <BadDebtMenuItem />
+        <BadDebtMenuItem
+          invoice={invoice}
+          onAlert={handleCancelBadDebtInvoice}
+          onDialog={handleBadDebtInvoice}
+        />
       </NavbarGroup>
     </DashboardActionsBar>
   );
