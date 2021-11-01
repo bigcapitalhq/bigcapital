@@ -22,13 +22,13 @@ export const usePaymentMadeEntriesColumns = () =>
     },
     {
       Header: intl.get('bill_amount'),
-      accessor: 'amount',
+      accessor: 'bill.amount',
       Cell: FormatNumberCell,
       align: 'right',
     },
     {
       Header: intl.get('due_amount'),
-      accessor: 'due_amount',
+      accessor: 'bill.due_amount',
       Cell: FormatNumberCell,
       width: 100,
       disableSortBy: true,

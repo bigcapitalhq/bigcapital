@@ -1,7 +1,7 @@
 import intl from 'react-intl-universal';
 
-export function FormattedMessage({ id }) {
-  return intl.get(id);
+export function FormattedMessage({ id, values }) {
+  return intl.get(id, values);
 }
 
 export function FormattedHTMLMessage({ ...args }) {
