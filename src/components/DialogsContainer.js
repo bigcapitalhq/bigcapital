@@ -19,6 +19,7 @@ import EstimatePdfPreviewDialog from 'containers/Dialogs/EstimatePdfPreviewDialo
 import ReceiptPdfPreviewDialog from '../containers/Dialogs/ReceiptPdfPreviewDialog';
 import MoneyInDialog from '../containers/Dialogs/MoneyInDialog';
 import MoneyOutDialog from '../containers/Dialogs/MoneyOutDialog';
+import BadDebtDialog from '../containers/Dialogs/BadDebtDialog';
 
 /**
  * Dialogs container.
@@ -44,6 +45,7 @@ export default function DialogsContainer() {
       <ReceiptPdfPreviewDialog dialogName={'receipt-pdf-preview'} />
       <MoneyInDialog dialogName={'money-in'} />
       <MoneyOutDialog dialogName={'money-out'} />
+      <BadDebtDialog dialogName={'invoice-bad-debt'} />
     </div>
   );
 }

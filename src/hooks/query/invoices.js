@@ -194,3 +194,38 @@ export function useRefreshInvoices() {
     },
   };
 }
+
+export function useCreateBadDebt(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) => apiRequest.post(`sales/invoices/${id}/writeoff`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Invalidate
+        queryClient.invalidateQueries([t.BAD_DEBT, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useCancelBadDebt(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation((id) => apiRequest.post(`sales/invoices/${id}/writeoff/cancel`), {
+    onSuccess: (res, id) => {
+      // Invalidate
+      queryClient.invalidateQueries([t.CANCEL_BAD_DEBT, id]);
+
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
+}

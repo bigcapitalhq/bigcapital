@@ -6,19 +6,32 @@ import {
   NavbarGroup,
   Classes,
   NavbarDivider,
+  Popover,
+  PopoverInteractionKind,
+  Position,
   Intent,
+  MenuItem,
+  Menu,
 } from '@blueprintjs/core';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
+import { moreVertOptions } from '../../../common/moreVertOptions';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { If, Icon, FormattedMessage as T } from 'components';
+import {
+  If,
+  Icon,
+  FormattedMessage as T,
+  // MoreVertMenutItems,
+} from 'components';
 
 import { compose } from 'utils';
+
+import BadDebtMenuItem from './BadDebtMenuItem';
 
 /**
  * Invoice details action bar.
@@ -58,6 +71,13 @@ function InvoiceDetailActionsBar({
   const handleQuickPaymentInvoice = () => {
     openDialog('quick-payment-receive', { invoiceId });
   };
+  const handleBadDebtInvoiceDialog = () => () => {
+    openDialog('invoice-bad-debt', { invoiceId });
+  };
+
+  const handleBadDebtInvoiceAlert = () => {
+    openAlert('bad-debt', { invoiceId });
+  };
 
   return (
     <DashboardActionsBar>
@@ -91,6 +111,8 @@ function InvoiceDetailActionsBar({
           intent={Intent.DANGER}
           onClick={handleDeleteInvoice}
         />
+        <NavbarDivider />
+        <BadDebtMenuItem />
       </NavbarGroup>
     </DashboardActionsBar>
   );
