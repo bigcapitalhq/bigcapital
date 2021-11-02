@@ -23,7 +23,7 @@ function AccountSwitchButton() {
     <AccountSwitchButtonBase
       minimal={true}
       rightIcon={<Icon icon={'arrow-drop-down'} iconSize={24} />}
-    >
+    > 
       <AccountSwitchText>{currentAccount.name}</AccountSwitchText>
     </AccountSwitchButtonBase>
   );

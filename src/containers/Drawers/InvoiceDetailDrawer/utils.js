@@ -1,6 +1,5 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-
 import {
   Button,
   Popover,
@@ -9,7 +8,7 @@ import {
   MenuItem,
   Menu,
 } from '@blueprintjs/core';
-import { If, Icon, FormattedMessage as T, Choose } from 'components';
+import { Icon, FormattedMessage as T, Choose } from 'components';
 import { FormatNumberCell } from '../../../components';
 
 /**
@@ -86,7 +85,6 @@ export const BadDebtMenuItem = ({ invoice, onDialog, onAlert }) => {
           </Choose>
         </Menu>
       }
-      position={Position.BOTTOM}
     >
       <Button icon={<Icon icon="more-vert" iconSize={16} />} minimal={true} />
     </Popover>
