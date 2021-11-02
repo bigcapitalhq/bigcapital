@@ -205,19 +205,19 @@ export default [
       },
       {
         text: <T id={'cash_flow.label.add_money_in'} />,
-        href: '/',
+        href: '/cashflow-accounts',
       },
       {
         text: <T id={'cash_flow.label.add_money_out'} />,
-        href: '/',
+        href: '/cashflow-accounts',
       },
       {
         text: <T id={'cash_flow.label.add_cash_account'} />,
-        href: '/',
+        href: '/cashflow-accounts',
       },
       {
         text: <T id={'cash_flow.label.add_bank_account'} />,
-        href: '/',
+        href: '/cashflow-accounts',
       },
     ],
   },
