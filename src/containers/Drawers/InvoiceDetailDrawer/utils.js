@@ -1,5 +1,15 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+
+import {
+  Button,
+  Popover,
+  PopoverInteractionKind,
+  Position,
+  MenuItem,
+  Menu,
+} from '@blueprintjs/core';
+import { If, Icon, FormattedMessage as T, Choose } from 'components';
 import { FormatNumberCell } from '../../../components';
 
 /**
@@ -48,3 +58,37 @@ export const useInvoiceReadonlyEntriesColumns = () =>
     ],
     [],
   );
+
+export const BadDebtMenuItem = ({ invoice, onDialog, onAlert }) => {
+  return (
+    <Popover
+      minimal={true}
+      interactionKind={PopoverInteractionKind.CLICK}
+      position={Position.BOTTOM_LEFT}
+      modifiers={{
+        offset: { offset: '0, 4' },
+      }}
+      content={
+        <Menu>
+          <Choose>
+            <Choose.When condition={!invoice.is_writtenoff}>
+              <MenuItem
+                text={<T id={'bad_debt.dialog.bad_debt'} />}
+                onClick={onDialog}
+              />
+            </Choose.When>
+            <Choose.When condition={invoice.is_writtenoff}>
+              <MenuItem
+                onClick={onAlert}
+                text={<T id={'bad_debt.dialog.cancel_bad_debt'} />}
+              />
+            </Choose.When>
+          </Choose>
+        </Menu>
+      }
+      position={Position.BOTTOM}
+    >
+      <Button icon={<Icon icon="more-vert" iconSize={16} />} minimal={true} />
+    </Popover>
+  );
+};

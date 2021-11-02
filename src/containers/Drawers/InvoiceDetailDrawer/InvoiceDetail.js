@@ -30,6 +30,11 @@ export default function InvoiceDetail() {
           id={'journal_entries'}
           panel={<JournalEntriesTable transactions={transactions} />}
         />
+        {/* <Tab
+          title={intl.get('payment_transactions')}
+          id={'payment_transactions'}
+          // panel={}
+        /> */}
       </DrawerMainTabs>
     </div>
   );

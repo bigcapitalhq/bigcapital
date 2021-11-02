@@ -38,6 +38,11 @@ export default function BillDrawerDetails() {
           id={'landed_cost'}
           panel={<LocatedLandedCostTable />}
         />
+        {/* <Tab
+          title={intl.get('payment_transactions')}
+          id={'payment_transactions'}
+          // panel={}
+        /> */}
       </DrawerMainTabs>
     </div>
   );

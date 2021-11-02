@@ -61,6 +61,7 @@ import Card from './Card';
 import AvaterCell from './AvaterCell';
 
 import { ItemsMultiSelect } from './Items';
+import MoreVertMenutItems from './MoreVertMenutItems';
 
 export * from './Menu';
 export * from './AdvancedFilter/AdvancedFilterDropdown';
@@ -85,6 +86,7 @@ export * from './BankAccounts';
 export * from './IntersectionObserver'
 export * from './Datatable/CellForceWidth';
 export * from './Button';
+export * from './IntersectionObserver';
 
 const Hint = FieldHint;
 
@@ -156,4 +158,5 @@ export {
   ItemsMultiSelect,
   Card,
   AvaterCell,
+  MoreVertMenutItems,
 };

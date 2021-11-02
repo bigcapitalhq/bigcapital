@@ -1012,6 +1012,8 @@
   "jump_to_the_bills": "انتقل إلي فواتير الشراء.",
   "jump_to_the_manual_journals": "انتقل إلي القيود اليدوية.",
   "jump_to_the_items": "انتقل إلي المنتجات.",
+  "jump_to_the_add_money_in": "انتقل إلي إيداع إلي الحساب.",
+  "jump_to_the_add_money_out": "انتقل إلي سحب  من  الحساب.",
   "jump_to_the_balance_sheet": "انتقل إلي تقرير الميزانية العمومية.",
   "jump_to_the_profit_loss_sheet": "انتقل إلي تقرير قائمة الدخل.",
   "jump_to_the_journal_sheet": "انتقل إلي دفتر اليومية العامة.",
@@ -1371,7 +1373,6 @@
   "payment_made.empty_status.title": "المنشأة لم تدفع اي اموال إلي الموردين ، إلي حد الأن!.",
   "estimate.delete.error.estimate_converted_to_invoice": "لا يمكن حذف عملية عرض اسعار الذي تم تحويلها إلي فاتورة بيع.",
   "landed_cost.action.delete.success_message": "The landed cost has been deleted successfully.",
-
   "items.option.only_active": "Only active",
   "items.option_all_items.hint": "جميع الاصناف ، بما في ذلك تلك الاصناف لديها رصيد صفر.",
   "items.option_with_transactions": "الاصناف مع معاملات",
@@ -1379,22 +1380,18 @@
   "items.option_without_zero_balance": "الاصناف ذات رصيد صفر",
   "items.option_without_zero_balance.hint": "قم بتضمين الاصناف واستبعاد تلك التي لديها رصيد صفري.",
   "items.label_filter_items": "تصفية الاصناف",
-
   "customers.option_all_customers.hint": "All customers, including that ones have zero-balance.",
   "customers.option_without_zero_balance": "Customers without zero-balance",
   "customers.option_without_zero_balance.hint": "Include customers and exclude that ones have zero-balance.",
   "customers.option_with_transactions": "Customers with transactions",
   "customers.option_with_transactions.hint": "Include customers that onces have transactions on the given date period only.",
   "customers.label_filter_customers": "Filter customers",
-
-
   "vendors.option_all_vendors.hint": "All vendors, including that ones have zero-balance.",
   "vendors.label_filter_vendors": "Filter Vendors",
   "vendors.option_without_zero_balance": "Vendors without zero-balance",
   "vendors.option_without_zero_balance.hint": "Include vendors and exclude that ones have zero-balance.",
   "vendors.option_with_transactions": "Vendors with transactions",
   "vendors.option_with_transactions.hint": "Include vendors that onces have transactions on the given date period only.",
-
   "siebar.cashflow": "التدفق النقدي",
   "siebar.cashflow.label_cash_and_bank_accounts": "حسابات نقدية والمصارف ",
   "cash_flow.label_account_transcations": "معاملات الحساب",
@@ -1405,7 +1402,6 @@
   "cash_flow.label.add_bank_account": "اضافة حساب مصرف",
   "cash_flow.label.add_money_in": "إيداع إلي الحساب",
   "cash_flow.label.add_money_out": "سحب من الحساب",
-
   "cash_flow.owner_contribution": "زيادة رأس المال",
   "cash_flow.other_income": "إيراد أخر",
   "cash_flow.owner_drawings": "سحب رأس المال",
@@ -1436,5 +1432,14 @@
   "cash_flow_money_in": "إيداع",
   "cash_flow_money_out": "سحب",
   "cash_flow_transaction.switch_item": " {value} معاملة علي حساب",
-  "cash_flow_transaction.balance_in_bigcapital": "الرصيد في Bigcapital"
+  "cash_flow_transaction.balance_in_bigcapital": "الرصيد في Bigcapital",
+  "bad_debt.dialog.written_off_amount": "المبلغ المشطوب",
+  "bad_debt.dialog.bad_debt": "الديون المعدومة",
+  "bad_debt.dialog.cancel_bad_debt": "إلغاء الديون المعدومة",
+  "bad_debt.dialog.header_note": "يمكن للبائع تحميل مبلغ الفاتورة على حساب مصروفات الديون المعدومة عندما يكون من المؤكد أن الفاتورة لن يتم دفعها.",
+  "bad_debt.dialog.success_message":"تم شطب فاتورة البيع المقدمة بنجاح.",
+  "bad_debt.cancel_alert.success_message":"تم إلغاء شطب فاتورة البيع المقدمة بنجاح.",
+  "bad_debt.cancel_alert.message": "هل أنت متأكد أنك تريد شطب هذه الفاتورة؟ "
+  
+
 }

@@ -9,6 +9,7 @@ import t from './types';
 const commonInvalidateQueries = (queryClient) => {
   // Invalidate invoices.
   queryClient.invalidateQueries(t.SALE_INVOICES);
+  queryClient.invalidateQueries(t.SALE_INVOICE);
 
   // Invalidate customers.
   queryClient.invalidateQueries(t.CUSTOMERS);
@@ -193,4 +194,39 @@ export function useRefreshInvoices() {
       queryClient.invalidateQueries(t.SALE_INVOICES);
     },
   };
+}
+
+export function useCreateBadDebt(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) => apiRequest.post(`sales/invoices/${id}/writeoff`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Invalidate
+        queryClient.invalidateQueries([t.BAD_DEBT, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useCancelBadDebt(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation((id) => apiRequest.post(`sales/invoices/${id}/writeoff/cancel`), {
+    onSuccess: (res, id) => {
+      // Invalidate
+      queryClient.invalidateQueries([t.CANCEL_BAD_DEBT, id]);
+
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
 }

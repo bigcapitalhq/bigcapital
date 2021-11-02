@@ -9,7 +9,7 @@ const columnsMapper = (data, index, column) => ({
   id: column.key,
   key: column.key,
   Header: column.label,
-  Cell: CellForceWidth,
+  // Cell: CellForceWidth,
   accessor: `cells[${index}].value`,
   forceWidthAccess: `cells[0].value`,
   className: column.key,
