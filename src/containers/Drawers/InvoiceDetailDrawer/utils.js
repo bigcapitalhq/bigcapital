@@ -72,12 +72,15 @@ export const BadDebtMenuItem = ({ invoice, onDialog, onAlert }) => {
         <Menu>
           <Choose>
             <Choose.When condition={!invoice.is_writtenoff}>
-              <MenuItem text={<T id={'badDebt.label'} />} onClick={onDialog} />
+              <MenuItem
+                text={<T id={'bad_debt.dialog.bad_debt'} />}
+                onClick={onDialog}
+              />
             </Choose.When>
             <Choose.When condition={invoice.is_writtenoff}>
               <MenuItem
                 onClick={onAlert}
-                text={<T id={'badDebt.label_cancel_bad_debt'} />}
+                text={<T id={'bad_debt.dialog.cancel_bad_debt'} />}
               />
             </Choose.When>
           </Choose>

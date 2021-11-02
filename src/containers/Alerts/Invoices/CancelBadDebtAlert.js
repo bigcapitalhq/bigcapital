@@ -35,7 +35,7 @@ function CancelBadDebtAlert({
     cancelBadDebtMutate(invoiceId)
       .then(() => {
         AppToaster.show({
-          message: intl.get('badDebt_canceled_write_off_success_message'),
+          message: intl.get('bad_debt.cancel_alert.success_message'),
           intent: Intent.SUCCESS,
         });
       })
@@ -56,7 +56,7 @@ function CancelBadDebtAlert({
       loading={isLoading}
     >
       <p>
-        <T id={'badDebt_are_sure_to_write_off_this_invoice'} />
+        <T id={'bad_debt.cancel_alert.message'} />
       </p>
     </Alert>
   );

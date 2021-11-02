@@ -36,7 +36,7 @@ function BadDebtFormFields() {
     <div className={Classes.DIALOG_BODY}>
       <Callout intent={Intent.PRIMARY}>
         <p>
-          <T id={'badDebt_the_seller_can_charge_the_amount_of_an_invoice'} />
+          <T id={' bad_debt.dialog.header_note'} />
         </p>
       </Callout>
 
@@ -48,7 +48,7 @@ function BadDebtFormFields() {
           meta: { error, touched },
         }) => (
           <FormGroup
-            label={<T id={'badDebt.label_written_off_amount'} />}
+            label={<T id={'bad_debt.dialog.written_off_amount'} />}
             labelInfo={<FieldRequiredHint />}
             className={classNames('form-group--amount', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}

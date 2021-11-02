@@ -14,7 +14,7 @@ function BadDebtDialog({ dialogName, payload: { invoiceId = null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
-      title={<T id={'badDebt.label'} />}
+      title={<T id={'bad_debt.dialog.bad_debt'} />}
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}

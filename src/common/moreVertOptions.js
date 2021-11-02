@@ -2,11 +2,11 @@ import intl from 'react-intl-universal';
 
 export const moreVertOptions = [
   {
-    name: intl.get('badDebt.label'),
+    name: intl.get('bad_debt.dialog.bad_debt'),
     value: 'bad debt',
   },
   {
-    name: intl.get('badDebt.label_cancel_bad_debt'),
+    name: intl.get('bad_debt.dialog.cancel_bad_debt'),
     value: 'cancel bad debt',
   },
 ];
