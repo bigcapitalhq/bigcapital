@@ -20,8 +20,6 @@ function UserForm({
   // #withDialogActions
   closeDialog,
 }) {
-  
-
   const {
     dialogName,
     user,
@@ -29,7 +27,7 @@ function UserForm({
     isEditMode,
     EditUserMutate,
   } = useUserFormContext();
-  console.log(user, 'EE');
+
   const initialValues = {
     ...(isEditMode &&
       pick(

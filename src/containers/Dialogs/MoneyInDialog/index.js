@@ -15,7 +15,6 @@ function MoneyInDialog({
   payload = { account_type: null, account_id: null, account_name: '' },
   isOpen,
 }) {
-  console.log(payload, 'EE');
   return (
     <Dialog
       name={dialogName}
