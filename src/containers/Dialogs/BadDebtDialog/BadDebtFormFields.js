@@ -36,7 +36,7 @@ function BadDebtFormFields() {
     <div className={Classes.DIALOG_BODY}>
       <Callout intent={Intent.PRIMARY}>
         <p>
-          <T id={' bad_debt.dialog.header_note'} />
+          <T id={'bad_debt.dialog.header_note'} />
         </p>
       </Callout>
 
