@@ -1407,7 +1407,6 @@
   "cash_flow_money_out": "Money Out",
   "cash_flow_transaction.switch_item": "Transactions {value}",
   "cash_flow_transaction.balance_in_bigcapital": "Balance in Bigcapital",
-
   "AR_aging_summary.filter_customers.all_customers": "All customers",
   "AR_aging_summary.filter_customers.all_customers.hint": "All customers, include that ones have zero-balance.",
   "AR_aging_summary.filter_customers.without_zero_balance": "Customers without zero balance",
@@ -1425,8 +1424,15 @@
   "bad_debt.dialog.bad_debt": "Bad debt",
   "bad_debt.dialog.cancel_bad_debt": "Cancel bad debt",
   "bad_debt.dialog.header_note": "The seller can charge the amount of an invoice to the bad debt expense account when it is certain that the invoice will not be paid.",
-  "bad_debt.dialog.success_message":"The given sale invoice has been writte-off successfully.",
-  "bad_debt.cancel_alert.success_message":"The given sale invoice has been canceled write-off successfully.",
-  "bad_debt.cancel_alert.message": "Are you sure you want to write off this invoice?"
- 
+  "bad_debt.dialog.success_message": "The given sale invoice has been writte-off successfully.",
+  "bad_debt.cancel_alert.success_message": "The given sale invoice has been canceled write-off successfully.",
+  "bad_debt.cancel_alert.message": "Are you sure you want to write off this invoice?",
+  "notify_via_sms.dialog.send_notification_to":"Send notification to",
+  "notify_via_sms.dialog.message_text":"Message Text",
+  "notify_via_sms.dialog.notify_via_sms":"Notify vis SMS",
+  "send": "Send",
+  "sms_message_template.label_mesage":"Message",
+  "sms_message_template.label_Notification":"Notification",
+  "sms_message_template.label_auto":"Auto",
+  "sms_message":"SMS message"
 }
