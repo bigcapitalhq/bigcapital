@@ -20,6 +20,7 @@ import ReceiptPdfPreviewDialog from '../containers/Dialogs/ReceiptPdfPreviewDial
 import MoneyInDialog from '../containers/Dialogs/MoneyInDialog';
 import MoneyOutDialog from '../containers/Dialogs/MoneyOutDialog';
 import BadDebtDialog from '../containers/Dialogs/BadDebtDialog';
+import NotifyContactViaSMSDialog from '../containers/Dialogs/NotifyContactViaSMSDialog';
 
 /**
  * Dialogs container.
@@ -45,6 +46,7 @@ export default function DialogsContainer() {
       <ReceiptPdfPreviewDialog dialogName={'receipt-pdf-preview'} />
       <MoneyInDialog dialogName={'money-in'} />
       <MoneyOutDialog dialogName={'money-out'} />
+      <NotifyContactViaSMSDialog dialogName={'notify-via-sms'} />
       <BadDebtDialog dialogName={'write-off-bad-debt'} />
     </div>
   );

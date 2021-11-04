@@ -1,0 +1,32 @@
+.dialog--notify-vis-sms {
+  max-width: 350px;
+  max-height: 450px;
+
+  .bp3-dialog-body {
+    .bp3-form-group {
+      margin-bottom: 15px;
+      margin-top: 15px;
+
+      label.bp3-label {
+        margin-bottom: 3px;
+        font-size: 13px;
+      }
+    }
+
+    .form-group {
+      &--note {
+        .bp3-form-content {
+          textarea {
+            width: 100%;
+            min-width: 100%;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+
+  .bp3-dialog-footer {
+    padding-top: 10px;
+  }
+}

@@ -58,7 +58,10 @@ export const useInvoiceReadonlyEntriesColumns = () =>
     [],
   );
 
-export const BadDebtMenuItem = ({ invoice, onDialog, onAlert }) => {
+export const BadDebtMenuItem = ({
+  invoice,
+  payload: { onCancelBadDebt, onBadDebt, onNotifyViaSMS },
+}) => {
   return (
     <Popover
       minimal={true}
@@ -73,16 +76,20 @@ export const BadDebtMenuItem = ({ invoice, onDialog, onAlert }) => {
             <Choose.When condition={!invoice.is_writtenoff}>
               <MenuItem
                 text={<T id={'bad_debt.dialog.bad_debt'} />}
-                onClick={onDialog}
+                onClick={onBadDebt}
               />
             </Choose.When>
             <Choose.When condition={invoice.is_writtenoff}>
               <MenuItem
-                onClick={onAlert}
+                onClick={onCancelBadDebt}
                 text={<T id={'bad_debt.dialog.cancel_bad_debt'} />}
               />
             </Choose.When>
           </Choose>
+          <MenuItem
+            onClick={onNotifyViaSMS}
+            text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
+          />
         </Menu>
       }
     >
