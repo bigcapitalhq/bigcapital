@@ -3,12 +3,13 @@ import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
-import { useHistory } from 'react-router-dom';
 import { CLASSES } from 'common/classes';
 
 import { CreateSMSMessageTemplateSchema } from './SMSMessageTemplateForm.schema';
-
 import SMSMessageTemplateFormContent from './SMSMessageTemplateFormContent';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+
+import { compose } from 'utils';
 
 export const defaultInitialValues = {
   entries: [
@@ -22,11 +23,20 @@ export const defaultInitialValues = {
   ],
 };
 
-export default function SMSMessageTemplateForm({}) {
+function SMSMessageTemplateForm({
+  // #withDashboardActions
+  changePreferencesPageTitle,
+}) {
   // Form initial values.
   const initialValues = {
     ...defaultInitialValues,
   };
+
+  React.useEffect(() => {
+    changePreferencesPageTitle(
+      intl.get('sms_message_template.label.sms_messages_template'),
+    );
+  }, [changePreferencesPageTitle]);
 
   // Handles form submit.
   const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {};
@@ -44,3 +54,4 @@ export default function SMSMessageTemplateForm({}) {
     </div>
   );
 }
+export default compose(withDashboardActions)(SMSMessageTemplateForm);

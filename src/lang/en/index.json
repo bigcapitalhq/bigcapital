@@ -1431,6 +1431,7 @@
   "notify_via_sms.dialog.message_text":"Message Text",
   "notify_via_sms.dialog.notify_via_sms":"Notify vis SMS",
   "send": "Send",
+  "sms_message_template.label.sms_messages_template":"SMS Messages template",
   "sms_message_template.label_mesage":"Message",
   "sms_message_template.label_Notification":"Notification",
   "sms_message_template.label_auto":"Auto",
