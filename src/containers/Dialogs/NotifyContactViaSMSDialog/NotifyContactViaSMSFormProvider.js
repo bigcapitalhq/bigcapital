@@ -1,27 +1,41 @@
 import React from 'react';
 import { DialogContent } from 'components';
-import { useCustomers } from 'hooks/query';
+import {
+  useInvoice,
+  useCreateNotifyInvoiceBySMS,
+  useInvocieSMSDetails,
+} from 'hooks/query';
 
 const NotifyContactViaSMSContext = React.createContext();
 
 /**
  * Notify contact via SMS provider.
  */
-function NotifyContactViaSMSFormProvider({ dialogName, ...props }) {
-  // Fetches customers list.
-  const {
-    data: { customers },
-    isLoading: isCustomersLoading,
-  } = useCustomers();
+function NotifyContactViaSMSFormProvider({ invoiceId, dialogName, ...props }) {
+  // Handle fetch invoice data.
+  const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
+    enabled: !!invoiceId,
+  });
+
+  const { data: invoiceSMSDetail, isLoading: isInvoiceSMSDetailLoading } =
+    useInvocieSMSDetails(invoiceId, {
+      enabled: !!invoiceId,
+    });
+
+  // Create notfiy invoice by sms mutations.
+  const { mutateAsync: createNotifyInvoiceBySMSMutate } =
+    useCreateNotifyInvoiceBySMS();
 
   // State provider.
   const provider = {
+    invoiceId,
+    invoiceSMSDetail,
     dialogName,
-    customers,
+    createNotifyInvoiceBySMSMutate,
   };
 
   return (
-    <DialogContent isLoading={isCustomersLoading}>
+    <DialogContent isLoading={isInvoiceLoading || isInvoiceSMSDetailLoading}>
       <NotifyContactViaSMSContext.Provider value={provider} {...props} />
     </DialogContent>
   );

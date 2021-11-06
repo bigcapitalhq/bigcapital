@@ -24,48 +24,60 @@ function NotifyContactViaSMSFormFields() {
   return (
     <div className={Classes.DIALOG_BODY}>
       {/* ----------- Send Notification to ----------- */}
-      <FastField name={'customer_id'}>
+      <FastField name={'customer_name'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'notify_via_sms.dialog.send_notification_to'} />}
             className={classNames('form-group--customer-name', CLASSES.FILL)}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'customer_id'} />}
+            helperText={<ErrorMessage name={'customer_name'} />}
           >
-            <InputGroup intent={inputIntent({ error, touched })} {...field} />
+            <InputGroup
+              intent={inputIntent({ error, touched })}
+              disabled={true}
+              {...field}
+            />
           </FormGroup>
         )}
       </FastField>
 
       {/* ----------- Phone number ----------- */}
-      <FastField name={'phone'}>
+      <FastField name={'customer_personal_phone'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'phone_number'} />}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="phone" />}
-            className={classNames('form-group--phone', CLASSES.FILL)}
+            helperText={<ErrorMessage name="customer_personal_phone" />}
+            className={classNames(
+              'form-group--customer_personal_phone',
+              CLASSES.FILL,
+            )}
           >
-            <InputGroup intent={inputIntent({ error, touched })} {...field} />
+            <InputGroup
+              intent={inputIntent({ error, touched })}
+              disabled={true}
+              {...field}
+            />
           </FormGroup>
         )}
       </FastField>
 
       {/* ----------- Message Text ----------- */}
-      <FastField name={'note'}>
+      <FastField name={'sms_message'}>
         {({ field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'notify_via_sms.dialog.message_text'} />}
             labelInfo={<FieldRequiredHint />}
-            className={'form-group--note'}
+            className={'form-group--sms_message'}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'note'} />}
+            helperText={<ErrorMessage name={'sms_message'} />}
           >
             <TextArea
               growVertically={true}
               large={true}
+              disabled={true}
               intent={inputIntent({ error, touched })}
               {...field}
             />

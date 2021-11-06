@@ -123,3 +123,18 @@ export function useSettingCashFlow(props) {
     props,
   );
 }
+
+/**
+ * Retrieve SMS settings.
+ */
+export function useSettingSMSNotifications(props) {
+  return useRequestQuery(
+    [t.SETTING_SMS_NOTIFICATIONS],
+    { method: 'get', url: `settings/sms-notifications` },
+    {
+      select: (res) => res.data.notifications,
+      defaultData: [],
+      ...props,
+    },
+  );
+}

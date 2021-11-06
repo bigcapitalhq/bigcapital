@@ -174,3 +174,34 @@ export function useRefreshPaymentReceive() {
     },
   };
 }
+
+export function useCreateNotifyPaymentReceiveBySMS(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (id) => apiRequest.post(`sales/payment_receives/${id}/notify-by-sms`),
+    {
+      onSuccess: (res, id) => {
+        // Invalidate
+        queryClient.invalidateQueries([t.NOTIFY_PAYMENT_RECEIVE_BY_SMS, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function usePaymentReceiveSMS(id, props, requestProps) {
+  return useRequestQuery(
+    [t.PAYMENT_RECEIVE_SMS, id],
+    { method: 'get', url: `sales/payment_receives/${id}/sms-details`, ...requestProps },
+    {
+      select: (res) => res.data,
+      defaultData: {},
+      ...props,
+    },
+  );
+}

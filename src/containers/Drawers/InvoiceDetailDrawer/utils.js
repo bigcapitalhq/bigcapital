@@ -10,6 +10,7 @@ import {
 } from '@blueprintjs/core';
 import { Icon, FormattedMessage as T, Choose } from 'components';
 import { FormatNumberCell } from '../../../components';
+import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 /**
  * Retrieve invoice readonly details table columns.
@@ -59,9 +60,10 @@ export const useInvoiceReadonlyEntriesColumns = () =>
   );
 
 export const BadDebtMenuItem = ({
-  invoice,
   payload: { onCancelBadDebt, onBadDebt, onNotifyViaSMS },
 }) => {
+  const { invoice } = useInvoiceDetailDrawerContext();
+
   return (
     <Popover
       minimal={true}

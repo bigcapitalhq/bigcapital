@@ -1,6 +1,6 @@
 import React from 'react';
 
-import '../../../style/pages/NotifyConactViaSMS/NotifyConactViaSMSDialog.scss';
+import 'style/pages/NotifyConactViaSMS/NotifyConactViaSMSDialog.scss';
 import { NotifyContactViaSMSFormProvider } from './NotifyContactViaSMSFormProvider';
 import NotifyContactViaSMSForm from './NotifyContactViaSMSForm';
 
@@ -10,9 +10,13 @@ import NotifyContactViaSMSForm from './NotifyContactViaSMSForm';
 export default function NotifyContactViaSMSContent({
   // #ownProps
   dialogName,
+  invoice,
 }) {
   return (
-    <NotifyContactViaSMSFormProvider dialogName={dialogName}>
+    <NotifyContactViaSMSFormProvider
+      invoiceId={invoice}
+      dialogName={dialogName}
+    >
       <NotifyContactViaSMSForm />
     </NotifyContactViaSMSFormProvider>
   );

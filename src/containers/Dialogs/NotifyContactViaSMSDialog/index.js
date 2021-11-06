@@ -12,18 +12,25 @@ const NotifyContactViaSMSDialogContent = React.lazy(() =>
 /**
  * Notify contact via SMS.
  */
-function NotifyContactViaSMSDialog({ dialogName, payload, isOpen }) {
+function NotifyContactViaSMSDialog({
+  dialogName,
+  payload: { invoiceId },
+  isOpen,
+}) {
   return (
     <Dialog
       name={dialogName}
-      title={'Notify via SMS'}
+      title={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}
       className={'dialog--notify-vis-sms'}
     >
       <DialogSuspense>
-        <NotifyContactViaSMSDialogContent dialogName={dialogName} />
+        <NotifyContactViaSMSDialogContent
+          dialogName={dialogName}
+          invoice={invoiceId}
+        />
       </DialogSuspense>
     </Dialog>
   );

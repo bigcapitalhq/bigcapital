@@ -23,7 +23,7 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate the cashflow transactions.
   queryClient.invalidateQueries(t.CASH_FLOW_TRANSACTIONS);
   queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
-  
+
   // Invalidate the settings.
   queryClient.invalidateQueries([t.SETTING, t.SETTING_RECEIPTS]);
 };
@@ -162,4 +162,33 @@ export function useRefreshReceipts() {
       queryClient.invalidateQueries(t.SALE_RECEIPTS);
     },
   };
+}
+
+export function useCreateNotifyReceiptBySMS(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+  return useMutation(
+    (id) => apiRequest.post(`sales/receipts/${id}/notify-by-sms`),
+    {
+      onSuccess: (res, id) => {
+        queryClient.invalidateQueries([t.NOTIFY_SALE_RECEIPT_BY_SMS, id]);
+
+        // Invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useReceiptSMS(receiptId, props, requestProps) {
+  return useRequestQuery(
+    [t.SALE_RECEIPT_SMS, receiptId],
+    { method: 'get', url: `sales/receipts/${receiptId}/sms-details`, ...requestProps },
+    {
+      select: (res) => res.data,
+      defaultData: {},
+      ...props,
+    },
+  );
 }
