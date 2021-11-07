@@ -27,7 +27,7 @@ export default [
     href: '/preferences/items',
   },
   {
-    text: <T id={'sms_message'} />,
+    text: <T id={'sms_integration.label'} />,
     disabled: false,
     href: '/preferences/sms-message',
   },
