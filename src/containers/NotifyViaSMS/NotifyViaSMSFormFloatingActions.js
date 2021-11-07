@@ -1,20 +1,19 @@
 import React from 'react';
-import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import { Intent, Button, Classes } from '@blueprintjs/core';
+
 import { FormattedMessage as T } from 'components';
 
-import { useNotifyContactViaSMSContext } from './NotifyContactViaSMSFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
-function NotifyContactViaSMSFormFloatingActions({
+function NotifyViaSMSFormFloatingActions({
   // #withDialogActions
   closeDialog,
+  dialogName,
 }) {
   // Formik context.
   const { isSubmitting } = useFormikContext();
-
-  const { dialogName } = useNotifyContactViaSMSContext();
 
   // Handle close button click.
   const handleCancelBtnClick = () => {
@@ -39,7 +38,4 @@ function NotifyContactViaSMSFormFloatingActions({
     </div>
   );
 }
-
-export default compose(withDialogActions)(
-  NotifyContactViaSMSFormFloatingActions,
-);
+export default compose(withDialogActions)(NotifyViaSMSFormFloatingActions);

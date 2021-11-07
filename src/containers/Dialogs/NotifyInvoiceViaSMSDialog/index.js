@@ -3,16 +3,13 @@ import React from 'react';
 import { FormattedMessage as T } from 'components';
 import { Dialog, DialogSuspense } from 'components';
 import withDialogRedux from 'components/DialogReduxConnect';
-import { compose } from 'redux';
+import { compose } from 'utils';
 
-const NotifyContactViaSMSDialogContent = React.lazy(() =>
-  import('./NotifyContactViaSMSContent'),
+const NotifyInvoiceViaSMSDialogContent = React.lazy(() =>
+  import('./NotifyInvoiceViaSMSDialogContent'),
 );
 
-/**
- * Notify contact via SMS.
- */
-function NotifyContactViaSMSDialog({
+function NotifyInvoiceViaSMSDialog({
   dialogName,
   payload: { invoiceId },
   isOpen,
@@ -27,7 +24,7 @@ function NotifyContactViaSMSDialog({
       className={'dialog--notify-vis-sms'}
     >
       <DialogSuspense>
-        <NotifyContactViaSMSDialogContent
+        <NotifyInvoiceViaSMSDialogContent
           dialogName={dialogName}
           invoice={invoiceId}
         />
@@ -35,5 +32,4 @@ function NotifyContactViaSMSDialog({
     </Dialog>
   );
 }
-
-export default compose(withDialogRedux())(NotifyContactViaSMSDialog);
+export default compose(withDialogRedux())(NotifyInvoiceViaSMSDialog);

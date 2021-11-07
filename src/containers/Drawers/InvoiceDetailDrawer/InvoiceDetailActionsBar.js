@@ -67,7 +67,7 @@ function InvoiceDetailActionsBar({
   };
   // Handle notify via SMS.
   const handleNotifyViaSMS = () => {
-    openDialog('notify-via-sms', { invoiceId });
+    openDialog('notify-invoice-via-sms', { invoiceId });
   };
 
   // Handle cancele write-off invoice.

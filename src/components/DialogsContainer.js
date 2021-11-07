@@ -20,7 +20,10 @@ import ReceiptPdfPreviewDialog from '../containers/Dialogs/ReceiptPdfPreviewDial
 import MoneyInDialog from '../containers/Dialogs/MoneyInDialog';
 import MoneyOutDialog from '../containers/Dialogs/MoneyOutDialog';
 import BadDebtDialog from '../containers/Dialogs/BadDebtDialog';
-import NotifyContactViaSMSDialog from '../containers/Dialogs/NotifyContactViaSMSDialog';
+import NotifyInvoiceViaSMSDialog from '../containers/Dialogs/NotifyInvoiceViaSMSDialog';
+import NotifyReceiptViaSMSDialog from '../containers/Dialogs/NotifyReceiptViaSMSDialog';
+import NotifyEstimateViaSMSDialog from '../containers/Dialogs/NotifyEstimateViaSMSDialog';
+import NotifyPaymentReceiveViaSMSDialog from '../containers/Dialogs/NotifyPaymentReceiveViaSMSDialog'
 import SMSMessageDialog from '../containers/Dialogs/SMSMessageDialog';
 
 /**
@@ -47,7 +50,10 @@ export default function DialogsContainer() {
       <ReceiptPdfPreviewDialog dialogName={'receipt-pdf-preview'} />
       <MoneyInDialog dialogName={'money-in'} />
       <MoneyOutDialog dialogName={'money-out'} />
-      <NotifyContactViaSMSDialog dialogName={'notify-via-sms'} />
+      <NotifyInvoiceViaSMSDialog dialogName={'notify-invoice-via-sms'} />
+      <NotifyReceiptViaSMSDialog dialogName={'notify-receipt-via-sms'} />
+      <NotifyEstimateViaSMSDialog dialogName={'notify-estimate-via-sms'} />
+      <NotifyPaymentReceiveViaSMSDialog dialogName={'notify-payment-via-sms'} />
       <BadDebtDialog dialogName={'write-off-bad-debt'} />
       <SMSMessageDialog dialogName={'sms-message-form'} />
     </div>

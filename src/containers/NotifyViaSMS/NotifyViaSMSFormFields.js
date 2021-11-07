@@ -2,25 +2,13 @@ import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from 'components';
 
-import { useAutofocus } from 'hooks';
-import {
-  Classes,
-  FormGroup,
-  TextArea,
-  Intent,
-  InputGroup,
-} from '@blueprintjs/core';
+import { Classes, FormGroup, TextArea, InputGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { inputIntent } from 'utils';
 import { FieldRequiredHint } from 'components';
 
-import { useNotifyContactViaSMSContext } from './NotifyContactViaSMSFormProvider';
-
-/**
- * Notify contact via SMS fields.
- */
-function NotifyContactViaSMSFormFields() {
+function NotifyViaSMSFormFields() {
   return (
     <div className={Classes.DIALOG_BODY}>
       {/* ----------- Send Notification to ----------- */}
@@ -88,4 +76,4 @@ function NotifyContactViaSMSFormFields() {
   );
 }
 
-export default NotifyContactViaSMSFormFields;
+export default NotifyViaSMSFormFields;

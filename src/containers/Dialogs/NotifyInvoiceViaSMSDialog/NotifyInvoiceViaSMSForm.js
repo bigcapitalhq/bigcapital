@@ -1,42 +1,28 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 
-import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-
 import { AppToaster } from 'components';
-import { CreateNotifyContactViaSMSFormSchema } from './NotifyContactViaSMSForm.schema';
 
-import NotifyContactViaSMSFormContent from './NotifyContactViaSMSFormContent';
+import NotifyViaSMSForm from '../../NotifyViaSMS/NotifyViaSMSForm';
+import { useNotifyInvoiceViaSMSContext } from './NotifyInvoiceViaSMSFormProvider';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import { compose } from 'utils';
 
-import { useNotifyContactViaSMSContext } from './NotifyContactViaSMSFormProvider';
-
-import { transformToForm, compose } from 'utils';
-
-const defaultInitialValues = {
-  customer_name: '',
-  customer_personal_phone: '',
-  sms_message: '',
-};
-
-function NotifyContactViaSMSForm({
+/**
+ * Notify Invoice Via SMS Form.
+ */
+function NotifyInvoiceViaSMSForm({
   // #withDialogActions
   closeDialog,
 }) {
   const {
+    createNotifyInvoiceBySMSMutate,
     invoiceId,
     invoiceSMSDetail,
     dialogName,
-    createNotifyInvoiceBySMSMutate,
-  } = useNotifyContactViaSMSContext();
-
-  // Initial form values
-  const initialValues = {
-    ...defaultInitialValues,
-    ...transformToForm(invoiceSMSDetail, defaultInitialValues),
-  };
+  } = useNotifyInvoiceViaSMSContext();
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
@@ -63,12 +49,12 @@ function NotifyContactViaSMSForm({
   };
 
   return (
-    <Formik
-      validationSchema={CreateNotifyContactViaSMSFormSchema}
-      initialValues={initialValues}
+    <NotifyViaSMSForm
+      NotificationDetail={invoiceSMSDetail}
+      NotificationName={dialogName}
       onSubmit={handleFormSubmit}
-      component={NotifyContactViaSMSFormContent}
     />
   );
 }
-export default compose(withDialogActions)(NotifyContactViaSMSForm);
+
+export default compose(withDialogActions)(NotifyInvoiceViaSMSForm);

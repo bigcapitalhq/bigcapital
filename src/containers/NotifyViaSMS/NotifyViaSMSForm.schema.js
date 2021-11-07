@@ -8,4 +8,4 @@ const Schema = Yup.object().shape({
   sms_message: Yup.string().required().trim().max(DATATYPES_LENGTH.TEXT),
 });
 
-export const CreateNotifyContactViaSMSFormSchema = Schema;
+export const CreateNotifyViaSMSFormSchema = Schema;
