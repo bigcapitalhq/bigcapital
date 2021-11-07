@@ -31,7 +31,7 @@ const SwitchEditableCell = ({
     >
       <Switch
         value={value}
-        onChange={onChange}
+        // onChange={onChange}
         checked={initialValue}
         minimal={true}
         className="ml2"

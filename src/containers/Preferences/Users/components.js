@@ -78,7 +78,7 @@ export function ActionsMenu({
  */
 function StatusAccessor(user) {
   return !user.is_invite_accepted ? (
-    <Tag minimal={true}>
+    <Tag minimal={true} >
       <T id={'inviting'} />
     </Tag>
   ) : user.active ? (

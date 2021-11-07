@@ -21,6 +21,7 @@ import MoneyInDialog from '../containers/Dialogs/MoneyInDialog';
 import MoneyOutDialog from '../containers/Dialogs/MoneyOutDialog';
 import BadDebtDialog from '../containers/Dialogs/BadDebtDialog';
 import NotifyContactViaSMSDialog from '../containers/Dialogs/NotifyContactViaSMSDialog';
+import SMSMessageDialog from '../containers/Dialogs/SMSMessageDialog';
 
 /**
  * Dialogs container.
@@ -48,6 +49,7 @@ export default function DialogsContainer() {
       <MoneyOutDialog dialogName={'money-out'} />
       <NotifyContactViaSMSDialog dialogName={'notify-via-sms'} />
       <BadDebtDialog dialogName={'write-off-bad-debt'} />
+      <SMSMessageDialog dialogName={'sms-message-form'} />
     </div>
   );
 }

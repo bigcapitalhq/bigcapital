@@ -125,7 +125,7 @@ export function useSettingCashFlow(props) {
 }
 
 /**
- * Retrieve SMS settings.
+ * Retrieve SMS Notifications settings.
  */
 export function useSettingSMSNotifications(props) {
   return useRequestQuery(
@@ -134,6 +134,45 @@ export function useSettingSMSNotifications(props) {
     {
       select: (res) => res.data.notifications,
       defaultData: [],
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve Specific SMS Notification settings.
+ */
+export function useSettingSMSNotification(key, props) {
+  return useRequestQuery(
+    [t.SETTING_SMS_NOTIFICATIONS, key],
+    {
+      method: 'get',
+      url: `settings/sms-notification/${key}`,
+    },
+    {
+      select: (res) => res.data.notification,
+      defaultData: {
+        smsNotification: [],
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve Edit SMS Notification settings.
+ */
+export function useSettingEditSMSNotification(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (values) => apiRequest.post(`settings/sms-notification`, values),
+    {
+      onSuccess: () => {
+        // Invalidate
+        queryClient.invalidateQueries([t.SETTING_SMS_NOTIFICATIONS]);
+      },
       ...props,
     },
   );
