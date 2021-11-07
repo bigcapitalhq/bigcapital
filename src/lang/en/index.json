@@ -1430,7 +1430,10 @@
   "notify_via_sms.dialog.send_notification_to":"Send notification to",
   "notify_via_sms.dialog.message_text":"Message Text",
   "notify_via_sms.dialog.notify_via_sms":"Notify vis SMS",
-  "notify_via_sms.dialog.success_message":"To notify have been successfully",
+  "notify_invoice_via_sms.dialog.success_message":"The sale invoice sms notification has been sent successfully",
+  "notify_estimate_via_sms.dialog.success_message":"The sale estimate sms notification has been sent successfully",
+  "notify_receipt_via_sms.dialog.success_message":"The sale receipt sms notification has been sent successfully",
+  "notify_payment_receive_via_sms.dialog.success_message":"The payment notification has been sent successfully.",
   "send": "Send",
   "sms_integration.label":"SMS Integration",
   "sms_integration.label.overview":"Overview",
@@ -1442,3 +1445,4 @@
   "sms_message":"SMS message",
   "sms_message.dialog.success_message":"Sms notification settings has been updated successfully."
 }
+

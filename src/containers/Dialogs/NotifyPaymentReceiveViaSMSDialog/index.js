@@ -25,7 +25,7 @@ function NotifyPaymentReciveViaSMSDialog({
       <DialogSuspense>
         <NotifyPaymentReceiveViaSMSDialogContent
           dialogName={dialogName}
-          paymnetReceive={paymentReceiveId}
+          paymentReceive={paymentReceiveId}
         />
       </DialogSuspense>
     </Dialog>

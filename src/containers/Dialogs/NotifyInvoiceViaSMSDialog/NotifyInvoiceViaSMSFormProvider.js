@@ -1,12 +1,12 @@
 import React from 'react';
 import { DialogContent } from 'components';
-import { useCreateNotifyInvoiceBySMS, useInvocieSMSDetails } from 'hooks/query';
+import { useCreateNotifyInvoiceBySMS, useInvoiceSMSDetail } from 'hooks/query';
 
 const NotifyInvoiceViaSMSContext = React.createContext();
 
 function NotifyInvoiceViaSMSFormProvider({ invoiceId, dialogName, ...props }) {
   const { data: invoiceSMSDetail, isLoading: isInvoiceSMSDetailLoading } =
-    useInvocieSMSDetails(invoiceId, {
+    useInvoiceSMSDetail(invoiceId, {
       enabled: !!invoiceId,
     });
 

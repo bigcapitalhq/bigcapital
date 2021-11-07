@@ -239,9 +239,10 @@ export function useCreateNotifyInvoiceBySMS(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.post(`sales/invoices/${id}/notify-by-sms`),
+    ([id, values]) =>
+      apiRequest.post(`sales/invoices/${id}/notify-by-sms`, values),
     {
-      onSuccess: (res, id) => {
+      onSuccess: (res, [id, values]) => {
         // Invalidate
         queryClient.invalidateQueries([t.NOTIFY_SALE_INVOICE_BY_SMS, id]);
 
@@ -253,9 +254,9 @@ export function useCreateNotifyInvoiceBySMS(props) {
   );
 }
 
-export function useInvocieSMSDetails(invoiceId, props, requestProps) {
+export function useInvoiceSMSDetail(invoiceId, props, requestProps) {
   return useRequestQuery(
-    [t.SALE_INVOICE_SMS, invoiceId],
+    [t.SALE_INVOICE_SMS_DETAIL, invoiceId],
     {
       method: 'get',
       url: `sales/invoices/${invoiceId}/sms-details`,

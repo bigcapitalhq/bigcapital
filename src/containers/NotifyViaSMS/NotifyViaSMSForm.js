@@ -11,7 +11,7 @@ import { transformToForm, saveInvoke } from 'utils';
 
 const defaultInitialValues = {
   customer_name: '',
-  customer_personal_phone: '',
+  customer_phone_number: '',
   sms_message: '',
 };
 

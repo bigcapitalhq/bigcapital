@@ -168,9 +168,10 @@ export function useCreateNotifyReceiptBySMS(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
   return useMutation(
-    (id) => apiRequest.post(`sales/receipts/${id}/notify-by-sms`),
+    ([id, values]) =>
+      apiRequest.post(`sales/receipts/${id}/notify-by-sms`, values),
     {
-      onSuccess: (res, id) => {
+      onSuccess: (res, [id, values]) => {
         queryClient.invalidateQueries([t.NOTIFY_SALE_RECEIPT_BY_SMS, id]);
 
         // Invalidate queries.
@@ -181,12 +182,16 @@ export function useCreateNotifyReceiptBySMS(props) {
   );
 }
 
-export function useReceiptSMS(receiptId, props, requestProps) {
+export function useReceiptSMSDetail(receiptId, props, requestProps) {
   return useRequestQuery(
-    [t.SALE_RECEIPT_SMS, receiptId],
-    { method: 'get', url: `sales/receipts/${receiptId}/sms-details`, ...requestProps },
+    [t.SALE_RECEIPT_SMS_DETAIL, receiptId],
     {
-      select: (res) => res.data,
+      method: 'get',
+      url: `sales/receipts/${receiptId}/sms-details`,
+      ...requestProps,
+    },
+    {
+      select: (res) => res.data.data,
       defaultData: {},
       ...props,
     },

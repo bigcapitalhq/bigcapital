@@ -180,9 +180,10 @@ export function useCreateNotifyPaymentReceiveBySMS(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.post(`sales/payment_receives/${id}/notify-by-sms`),
+    ([id, values]) =>
+      apiRequest.post(`sales/payment_receives/${id}/notify-by-sms`, values),
     {
-      onSuccess: (res, id) => {
+      onSuccess: (res, [id, values]) => {
         // Invalidate
         queryClient.invalidateQueries([t.NOTIFY_PAYMENT_RECEIVE_BY_SMS, id]);
 
@@ -194,12 +195,20 @@ export function useCreateNotifyPaymentReceiveBySMS(props) {
   );
 }
 
-export function usePaymentReceiveSMS(id, props, requestProps) {
+export function usePaymentReceiveSMSDetail(
+  paymentReceiveId,
+  props,
+  requestProps,
+) {
   return useRequestQuery(
-    [t.PAYMENT_RECEIVE_SMS, id],
-    { method: 'get', url: `sales/payment_receives/${id}/sms-details`, ...requestProps },
+    [t.PAYMENT_RECEIVE_SMS_DETAIL, paymentReceiveId],
     {
-      select: (res) => res.data,
+      method: 'get',
+      url: `sales/payment_receives/${paymentReceiveId}/sms-details`,
+      ...requestProps,
+    },
+    {
+      select: (res) => res.data.data,
       defaultData: {},
       ...props,
     },

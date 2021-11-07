@@ -17,32 +17,36 @@ function NotifyReceiptViaSMSForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, receiptId } = useNotifyReceiptViaSMSContext();
+  const {
+    dialogName,
+    receiptId,
+    receiptSMSDetail,
+    createNotifyReceiptBySMSMutate,
+  } = useNotifyReceiptViaSMSContext();
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
     // Handle request response success.
     const onSuccess = (response) => {
       AppToaster.show({
-        message: intl.get('notify_via_sms.dialog.success_message'),
+        message: intl.get('notify_receipt_via_sms.dialog.success_message'),
         intent: Intent.SUCCESS,
       });
       closeDialog(dialogName);
     };
 
     // Handle request response errors.
-    const onError = ({
-      response: {
-        data: { errors },
-      },
-    }) => {
+    const onError = ({}) => {
       setSubmitting(false);
     };
+    createNotifyReceiptBySMSMutate([receiptId, values])
+      .then(onSuccess)
+      .catch(onError);
   };
 
   return (
     <NotifyViaSMSForm
-      NotificationDetail={{}}
+      NotificationDetail={receiptSMSDetail}
       NotificationName={dialogName}
       onSubmit={handleFormSubmit}
     />

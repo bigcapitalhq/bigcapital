@@ -31,15 +31,15 @@ function NotifyViaSMSFormFields() {
       </FastField>
 
       {/* ----------- Phone number ----------- */}
-      <FastField name={'customer_personal_phone'}>
+      <FastField name={'customer_phone_number'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'phone_number'} />}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="customer_personal_phone" />}
+            helperText={<ErrorMessage name="customer_phone_number" />}
             className={classNames(
-              'form-group--customer_personal_phone',
+              'form-group--customer_phone_number',
               CLASSES.FILL,
             )}
           >

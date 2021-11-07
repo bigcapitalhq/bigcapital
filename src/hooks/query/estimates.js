@@ -195,30 +195,31 @@ export function useCreateNotifyEstimateBySMS(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.post(`sales/estimates/${id}/notify-by-sms`),
+    ([id, values]) =>
+      apiRequest.post(`sales/estimates/${id}/notify-by-sms`, values),
     {
-      onSuccess: (res, id) => {
+      onSuccess: (res, [id, values]) => {
+        // Invalidate
+        queryClient.invalidateQueries([t.NOTIFY_SALE_ESTIMATE_BY_SMS, id]);
+
         // Common invalidate queries.
         commonInvalidateQueries(queryClient);
-
-        // Invalidate  sale estimate.
-        queryClient.invalidateQueries([t.NOTIFY_SALE_ESTIMATE_BY_SMS, id]);
       },
       ...props,
     },
   );
 }
 
-export function useEstimateSMS(estimateId, props, requestProps) {
+export function useEstimateSMSDetail(estimateId, props, requestProps) {
   return useRequestQuery(
-    [t.SALE_ESTIMATE_SMS, estimateId],
+    [t.SALE_ESTIMATE_SMS_DETAIL, estimateId],
     {
       method: 'get',
       url: `sales/estimates/${estimateId}/sms-details`,
       ...requestProps,
     },
     {
-      select: (res) => res.data,
+      select: (res) => res.data.data,
       defaultData: {},
       ...props,
     },

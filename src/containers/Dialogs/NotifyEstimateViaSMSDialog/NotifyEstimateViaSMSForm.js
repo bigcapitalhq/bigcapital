@@ -14,32 +14,36 @@ function NotifyEstimateViaSMSForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, estimateId } = useEstimateViaSMSContext();
+  const {
+    estimateId,
+    dialogName,
+    estimateSMSDetail,
+    createNotifyEstimateBySMSMutate,
+  } = useEstimateViaSMSContext();
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
     // Handle request response success.
     const onSuccess = (response) => {
       AppToaster.show({
-        message: intl.get('notify_via_sms.dialog.success_message'),
+        message: intl.get('notify_estimate_via_sms.dialog.success_message'),
         intent: Intent.SUCCESS,
       });
       closeDialog(dialogName);
     };
 
     // Handle request response errors.
-    const onError = ({
-      response: {
-        data: { errors },
-      },
-    }) => {
+    const onError = () => {
       setSubmitting(false);
     };
+    createNotifyEstimateBySMSMutate([estimateId, values])
+      .then(onSuccess)
+      .then(onError);
   };
 
   return (
     <NotifyViaSMSForm
-      NotificationDetail={{}}
+      NotificationDetail={estimateSMSDetail}
       NotificationName={dialogName}
       onSubmit={handleFormSubmit}
     />
