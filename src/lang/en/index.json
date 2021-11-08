@@ -1440,12 +1440,13 @@
   "sms_integration.label":"SMS Integration",
   "sms_integration.label.overview":"Overview",
   "sms_integration.label.sms_messages":"SMS Messages",
-  "sms_message.label.sms_messages_template":"SMS Notifications ",
-  "sms_message.label_mesage":"Message",
-  "sms_message.label_Notification":"Notification",
-  "sms_message.label_auto":"Auto",
-  "sms_message":"SMS message",
+  "sms_messages.label_notification":"Notification",
+  "sms_messages.label_mesage":"Message",
+  "sms_messages.label_auto":"Auto",
+  "sms_message.dialog.label":"SMS message",
   "sms_message.dialog.success_message":"Sms notification settings has been updated successfully.",
-  "sms_message.dialog.unsupported_variables_error_message":"Unsupported variables"
+  "sms_message.dialog.unsupported_variables_error_message":"Unsupported variables",
+  "edit_message_text":"Edit message text",
+  "enable_notification":"Enable notification"
 }
 

@@ -1455,9 +1455,11 @@
   "sms_integration.label.overview":"نظرة عامة",
   "sms_integration.label.sms_messages":"رسائل SMS ",
   "sms_message.label.sms_messages_template":" إشعارات رسائل  قصيرة ",
-  "sms_message.label_mesage":"رسالة ",
-  "sms_message.label_Notification":"إشعار",
-  "sms_message.label_auto":"Auto",
+  "sms_messages.label_mesage":"رسالة ",
+  "sms_messages.label_notification":"إشعار",
+  "sms_messages.label_auto":"Auto",
   "sms_message":"رسالة SMS"  ,
-  "sms_message.dialog.success_message":"Sms notification settings has been updated successfully."
+  "sms_message.dialog.success_message":"Sms notification settings has been updated successfully.",
+  "edit_message_text":"تعديل نص رسالة",
+  "enable_notification":"تفعيل الإشعارات"
 }
