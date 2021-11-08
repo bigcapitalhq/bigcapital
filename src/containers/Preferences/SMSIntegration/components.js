@@ -39,12 +39,14 @@ export function useSMSIntegrationTableColumns() {
       accessor: NotificationAccessor,
       className: 'notification',
       width: '180',
+      disableSortBy: true,
     },
     {
       Header: intl.get('service'),
       accessor: 'module_formatted',
       className: 'service',
       width: '80',
+      disableSortBy: true,
     },
     {
       Header: intl.get('sms_message.label_mesage'),
@@ -53,6 +55,7 @@ export function useSMSIntegrationTableColumns() {
       className: 'sms_message',
       clickable: true,
       width: '180',
+      disableSortBy: true,
     },
     {
       Header: intl.get('sms_message.label_auto'),
