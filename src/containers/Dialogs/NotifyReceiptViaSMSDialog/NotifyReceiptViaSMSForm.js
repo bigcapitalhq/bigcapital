@@ -42,7 +42,10 @@ function NotifyReceiptViaSMSForm({
         data: { errors },
       },
     }) => {
-      transformErrors(errors);
+      if (errors) {
+        transformErrors(errors, { setErrors });
+      }
+      setSubmitting(false);
     };
     createNotifyReceiptBySMSMutate([receiptId, values])
       .then(onSuccess)

@@ -42,7 +42,10 @@ function NotifyInvoiceViaSMSForm({
         data: { errors },
       },
     }) => {
-      transformErrors(errors);
+      if (errors) {
+        transformErrors(errors, { setErrors });
+      }
+      setSubmitting(false);
     };
     createNotifyInvoiceBySMSMutate([invoiceId, values])
       .then(onSuccess)

@@ -44,7 +44,10 @@ function NotifyPaymentReceiveViaSMSForm({
         data: { errors },
       },
     }) => {
-      transformErrors(errors);
+      if (errors) {
+        transformErrors(errors, { setErrors });
+      }
+      setSubmitting(false);
     };
     createNotifyPaymentReceivetBySMSMutate([paymentReceiveId, values])
       .then(onSuccess)
