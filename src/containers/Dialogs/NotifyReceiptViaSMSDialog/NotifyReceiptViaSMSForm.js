@@ -6,6 +6,7 @@ import { AppToaster } from 'components';
 
 import NotifyViaSMSForm from '../../NotifyViaSMS/NotifyViaSMSForm';
 import { useNotifyReceiptViaSMSContext } from './NotifyReceiptViaSMSFormProvider';
+import { transformErrors } from '../../../containers/NotifyViaSMS/utils';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
@@ -36,8 +37,12 @@ function NotifyReceiptViaSMSForm({
     };
 
     // Handle request response errors.
-    const onError = ({}) => {
-      setSubmitting(false);
+    const onError = ({
+      response: {
+        data: { errors },
+      },
+    }) => {
+      transformErrors(errors);
     };
     createNotifyReceiptBySMSMutate([receiptId, values])
       .then(onSuccess)

@@ -1430,6 +1430,7 @@
   "notify_via_sms.dialog.send_notification_to":"Send notification to",
   "notify_via_sms.dialog.message_text":"Message Text",
   "notify_via_sms.dialog.notify_via_sms":"Notify vis SMS",
+  "notify_via_sms.dialog.error_message":"Sms notification cannot be sent, customer personal phone number is invalid, please enter a valid one and try again.",
   "notify_invoice_via_sms.dialog.success_message":"The sale invoice sms notification has been sent successfully",
   "notify_estimate_via_sms.dialog.success_message":"The sale estimate sms notification has been sent successfully",
   "notify_receipt_via_sms.dialog.success_message":"The sale receipt sms notification has been sent successfully",

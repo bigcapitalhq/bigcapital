@@ -6,6 +6,7 @@ import { AppToaster } from 'components';
 
 import NotifyViaSMSForm from '../../NotifyViaSMS/NotifyViaSMSForm';
 import { useNotifyPaymentReceiveViaSMSContext } from './NotifyPaymentReceiveViaFormProvider';
+import { transformErrors } from '../../../containers/NotifyViaSMS/utils';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
@@ -38,8 +39,12 @@ function NotifyPaymentReceiveViaSMSForm({
     };
 
     // Handle request response errors.
-    const onError = ({}) => {
-      setSubmitting(false);
+    const onError = ({
+      response: {
+        data: { errors },
+      },
+    }) => {
+      transformErrors(errors);
     };
     createNotifyPaymentReceivetBySMSMutate([paymentReceiveId, values])
       .then(onSuccess)

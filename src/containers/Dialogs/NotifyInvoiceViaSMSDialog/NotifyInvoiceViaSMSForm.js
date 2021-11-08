@@ -6,6 +6,7 @@ import { AppToaster } from 'components';
 
 import NotifyViaSMSForm from '../../NotifyViaSMS/NotifyViaSMSForm';
 import { useNotifyInvoiceViaSMSContext } from './NotifyInvoiceViaSMSFormProvider';
+import { transformErrors } from '../../../containers/NotifyViaSMS/utils';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
@@ -41,7 +42,7 @@ function NotifyInvoiceViaSMSForm({
         data: { errors },
       },
     }) => {
-      setSubmitting(false);
+      transformErrors(errors);
     };
     createNotifyInvoiceBySMSMutate([invoiceId, values])
       .then(onSuccess)

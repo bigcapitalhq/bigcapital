@@ -6,6 +6,7 @@ import { AppToaster } from 'components';
 
 import NotifyViaSMSForm from '../../NotifyViaSMS/NotifyViaSMSForm';
 import { useEstimateViaSMSContext } from './NotifyEstimateViaSMSFormProvider';
+import { transformErrors } from '../../../containers/NotifyViaSMS/utils';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
@@ -33,8 +34,12 @@ function NotifyEstimateViaSMSForm({
     };
 
     // Handle request response errors.
-    const onError = () => {
-      setSubmitting(false);
+    const onError = ({
+      response: {
+        data: { errors },
+      },
+    }) => {
+      transformErrors(errors);
     };
     createNotifyEstimateBySMSMutate([estimateId, values])
       .then(onSuccess)
