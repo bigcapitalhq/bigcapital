@@ -18,7 +18,7 @@ export default function NotifyViaSMSFormFields({ notificationTypes }) {
       <FastField name={'notification_key'}>
         {({ form, meta: { error, touched } }) => (
           <FormGroup
-            label={'Notification type'}
+            label={<T id={'notify_via_sms.dialog.notification_type'} />}
             className={classNames(CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_name'} />}

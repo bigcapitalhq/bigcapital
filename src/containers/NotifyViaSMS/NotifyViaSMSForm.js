@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { castArray } from 'lodash';
 import { Formik, Form, useFormikContext } from 'formik';
 import styled from 'styled-components';
@@ -36,9 +37,12 @@ function SMSMessagePreviewSection() {
     <SMSPreviewSectionRoot>
       <SMSMessagePreview message={sms_message} />
       <SMSPreviewSectionNote>
-        <strong>Note</strong>: Note: One SMS unit can contain a maximum of 160
-        characters. <strong>{messagesUnits}</strong> SMS units will be used to
-        send this SMS notification.
+        {intl.formatHTMLMessage(
+          { id: 'notiify_via_sms.dialog.sms_note' },
+          {
+            value: messagesUnits,
+          },
+        )}
       </SMSPreviewSectionNote>
     </SMSPreviewSectionRoot>
   );

@@ -30,16 +30,16 @@ function SMSMessageFormFloatingActions({
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <DialogFooterActions alignment={'left'}>
-        <Button onClick={handleCancelBtnClick} style={{ minWidth: '75px' }}>
-          <T id={'cancel'} />
-        </Button>
         <Button
           intent={Intent.PRIMARY}
           loading={isSubmitting}
           style={{ minWidth: '75px' }}
           type="submit"
         >
-          Save SMS Message
+          <T id={'save_sms_message'} />
+        </Button>
+        <Button onClick={handleCancelBtnClick} style={{ minWidth: '75px' }}>
+          <T id={'cancel'} />
         </Button>
       </DialogFooterActions>
     </div>

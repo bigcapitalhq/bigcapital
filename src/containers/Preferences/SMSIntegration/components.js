@@ -33,7 +33,7 @@ export const SMSMessageCell = ({
     <MessageBox>{original.sms_message}</MessageBox>
     <MessageBoxActions>
       <ButtonLink onClick={() => safeInvoke(onEditMessageText, original)}>
-        Edit message
+        {intl.get('sms_messages.label_edit_message')}
       </ButtonLink>
     </MessageBoxActions>
   </div>
@@ -87,7 +87,7 @@ export function useSMSIntegrationTableColumns({ onSwitchChange }) {
         accessor: 'sms_message',
         Cell: SMSMessageCell,
         className: 'sms_message',
-        clickable: true,
+        // clickable: true,
         width: '180',
         disableSortBy: true,
       },

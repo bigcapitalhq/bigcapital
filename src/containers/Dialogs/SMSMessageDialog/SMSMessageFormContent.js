@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { Form, useFormikContext } from 'formik';
 import styled from 'styled-components';
 import { Classes } from '@blueprintjs/core';
@@ -8,6 +9,9 @@ import SMSMessageFormFloatingActions from './SMSMessageFormFloatingActions';
 
 import { SMSMessagePreview } from 'components';
 import { getSMSUnits } from '../../NotifyViaSMS/utils';
+
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import { compose } from 'utils';
 
 const messageVariables = [
   {
@@ -19,7 +23,10 @@ const messageVariables = [
 /**
  * SMS message form content.
  */
-export default function SMSMessageFormContent() {
+function SMSMessageFormContent({
+  // #withCurrentOrganization
+  organization: { name },
+}) {
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
@@ -28,11 +35,19 @@ export default function SMSMessageFormContent() {
             <SMSMessageFormFields />
 
             <SMSMessageVariables>
-              {messageVariables.map(({ variable, description }) => (
+              <MessageVariable>
+                {intl.formatHTMLMessage(
+                  { id: 'sms_message.dialog.message_variable_description' },
+                  {
+                    value: name,
+                  },
+                )}
+              </MessageVariable>
+              {/* {messageVariables.map(({ variable, description }) => (
                 <MessageVariable>
-                  <strong>{variable}</strong> {description}
+                  <strong>{variable}</strong> {description} 
                 </MessageVariable>
-              ))}
+              ))} */}
             </SMSMessageVariables>
           </FormFields>
 
@@ -45,6 +60,8 @@ export default function SMSMessageFormContent() {
     </Form>
   );
 }
+
+export default compose(withCurrentOrganization())(SMSMessageFormContent);
 
 /**
  * SMS Message preview section.
@@ -61,9 +78,12 @@ function SMSMessagePreviewSection() {
     <SMSPreviewSectionRoot>
       <SMSMessagePreview message={message} />
       <SMSPreviewSectionNote>
-        <strong>Note</strong>: Note: One SMS unit can contain a maximum of 160
-        characters. <strong>{messagesUnits}</strong> SMS units will be used to
-        send this SMS notification.
+        {intl.formatHTMLMessage(
+          { id: 'sms_message.dialog.sms_note' },
+          {
+            value: messagesUnits,
+          },
+        )}
       </SMSPreviewSectionNote>
     </SMSPreviewSectionRoot>
   );
