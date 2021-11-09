@@ -2,24 +2,28 @@ import React from 'react';
 import { Form, useFormikContext } from 'formik';
 import styled from 'styled-components';
 import { Classes } from '@blueprintjs/core';
+import { castArray } from 'lodash';
 
 import SMSMessageFormFields from './SMSMessageFormFields';
 import SMSMessageFormFloatingActions from './SMSMessageFormFloatingActions';
 
+import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
 import { SMSMessagePreview } from 'components';
 import { getSMSUnits } from '../../NotifyViaSMS/utils';
-
-const messageVariables = [
-  {
-    variable: '{CompanyName}',
-    description: 'References to the current company name.',
-  },
-];
 
 /**
  * SMS message form content.
  */
 export default function SMSMessageFormContent() {
+  // SMS message dialog context.
+  const { smsNotification } = useSMSMessageDialogContext();
+
+  // Ensure always returns array.
+  const messageVariables = React.useMemo(
+    () => castArray(smsNotification.allowed_variables),
+    [smsNotification.allowed_variables],
+  );
+
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
@@ -30,7 +34,7 @@ export default function SMSMessageFormContent() {
             <SMSMessageVariables>
               {messageVariables.map(({ variable, description }) => (
                 <MessageVariable>
-                  <strong>{variable}</strong> {description}
+                  <strong>{`{${variable}}`}</strong> {description}
                 </MessageVariable>
               ))}
             </SMSMessageVariables>

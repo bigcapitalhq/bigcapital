@@ -15,6 +15,7 @@ function SMSMessageDialogProvider({ notificationkey, dialogName, ...props }) {
   const { mutateAsync: editSMSNotificationMutate } =
     useSettingEditSMSNotification();
 
+  // SMS notificiation details
   const { data: smsNotification, isLoading: isSMSNotificationLoading } =
     useSettingSMSNotification(notificationkey);
 
