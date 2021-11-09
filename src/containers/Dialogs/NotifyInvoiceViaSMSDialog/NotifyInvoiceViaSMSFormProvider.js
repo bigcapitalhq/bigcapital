@@ -4,6 +4,9 @@ import { useCreateNotifyInvoiceBySMS, useInvoiceSMSDetail } from 'hooks/query';
 
 const NotifyInvoiceViaSMSContext = React.createContext();
 
+/**
+ * Invoice SMS notification provider.
+ */
 function NotifyInvoiceViaSMSFormProvider({ invoiceId, dialogName, ...props }) {
   const [notificationType, setNotificationType] = React.useState('details');
 
@@ -16,6 +19,7 @@ function NotifyInvoiceViaSMSFormProvider({ invoiceId, dialogName, ...props }) {
       },
       {
         enabled: !!invoiceId,
+        keepPreviousData: true,
       },
     );
   // Create notfiy invoice by sms mutations.

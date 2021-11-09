@@ -33,6 +33,8 @@ function NotifyInvoiceViaSMSForm({
     setNotificationType,
   } = useNotifyInvoiceViaSMSContext();
 
+  const [calloutCode, setCalloutCode] = React.useState([]);
+
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
     setSubmitting(true);
@@ -46,7 +48,6 @@ function NotifyInvoiceViaSMSForm({
       setSubmitting(false);
       closeDialog(dialogName);
     };
-
     // Handle request response errors.
     const onError = ({
       response: {
@@ -54,13 +55,14 @@ function NotifyInvoiceViaSMSForm({
       },
     }) => {
       if (errors) {
-        transformErrors(errors, { setErrors });
+        transformErrors(errors, { setErrors, setCalloutCode });
       }
       setSubmitting(false);
     };
     // Transformes the form values to request.
     const requestValues = transformFormValuesToRequest(values);
 
+    // Submits invoice SMS notification.
     createNotifyInvoiceBySMSMutate([invoiceId, requestValues])
       .then(onSuccess)
       .catch(onError);
@@ -74,7 +76,7 @@ function NotifyInvoiceViaSMSForm({
     notification_key: notificationType,
     ...invoiceSMSDetail,
   };
-
+  // Handle form values change.
   const handleValuesChange = (values) => {
     if (values.notification_key !== notificationType) {
       setNotificationType(values.notification_key);
@@ -88,7 +90,6 @@ function NotifyInvoiceViaSMSForm({
     ],
     [],
   );
-
   return (
     <NotifyViaSMSForm
       initialValues={initialValues}
@@ -96,6 +97,7 @@ function NotifyInvoiceViaSMSForm({
       onSubmit={handleFormSubmit}
       onCancel={handleFormCancel}
       onValuesChange={handleValuesChange}
+      calloutCodes={calloutCode}
     />
   );
 }
