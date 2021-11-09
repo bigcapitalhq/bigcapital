@@ -27,13 +27,13 @@ export function SMSMessagePreview({
 
 const SMSMessageText = styled.div`
   position: absolute;
-  top: 61px;
+  top: 60px;
   padding: 12px;
   color: #fff;
   border-radius: 12px;
   margin-left: 12px;
   margin-right: 12px;
-  overflow-wrap: break-word;
+  word-break: break-word;
   background: #2fa2e4;
   font-size: 13px;
   line-height: 1.6;
