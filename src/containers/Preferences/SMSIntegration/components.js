@@ -1,6 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { Menu, MenuItem } from '@blueprintjs/core';
 
 import { ButtonLink } from 'components';
 import { SwitchFieldCell } from 'components/DataTableCells';
@@ -24,18 +25,39 @@ export const NotificationAccessor = (row) => {
  * SMS notification message cell.
  */
 export const SMSMessageCell = ({
-  payload: { onEditSMSMessage },
+  payload: { onEditMessageText },
   row: { original },
 }) => (
   <div>
     <MessageBox>{original.sms_message}</MessageBox>
     <MessageBoxActions>
-      <ButtonLink onClick={() => safeInvoke(onEditSMSMessage, original)}>
+      <ButtonLink onClick={() => safeInvoke(onEditMessageText, original)}>
         Edit message
       </ButtonLink>
     </MessageBoxActions>
   </div>
 );
+
+/**
+ * Context menu of SMS notification messages.
+ */
+export function ActionsMenu({
+  payload: { onEditMessageText, onEnableNotification },
+  row: { original },
+}) {
+  return (
+    <Menu>
+      <MenuItem
+        text={intl.get('edit_message_text')}
+        onClick={safeInvoke(onEditMessageText, original)}
+      />
+      <MenuItem
+        text={intl.get('enable_notification')}
+        onClick={safeInvoke(onEnableNotification, original)}
+      />
+    </Menu>
+  );
+}
 
 /**
  * Retrieve SMS notifications messages table columns
@@ -49,12 +71,14 @@ export function useSMSIntegrationTableColumns() {
         accessor: NotificationAccessor,
         className: 'notification',
         width: '180',
+        disableSortBy: true,
       },
       {
         Header: intl.get('service'),
         accessor: 'module_formatted',
         className: 'service',
         width: '80',
+        disableSortBy: true,
       },
       {
         Header: intl.get('sms_message.label_mesage'),
@@ -63,14 +87,15 @@ export function useSMSIntegrationTableColumns() {
         className: 'sms_message',
         clickable: true,
         width: '180',
+        disableSortBy: true,
       },
       {
         Header: intl.get('sms_message.label_auto'),
         accessor: 'is_notification_enabled',
         Cell: SwitchFieldCell,
         className: 'is_notification_enabled',
-        disableSortBy: true,
         disableResizing: true,
+        disableSortBy: true,
         width: '80',
       },
     ],

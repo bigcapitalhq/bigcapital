@@ -41,12 +41,14 @@ function NotifyEstimateViaSMSForm({
         data: { errors },
       },
     }) => {
-      transformErrors(errors);
+      if (errors) {
+        transformErrors(errors, { setErrors });
+      }
       setSubmitting(false);
     };
     createNotifyEstimateBySMSMutate([estimateId, values])
       .then(onSuccess)
-      .then(onError);
+      .catch(onError);
   };
 
   return (

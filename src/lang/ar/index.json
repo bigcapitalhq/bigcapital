@@ -1444,6 +1444,8 @@
   "notify_via_sms.dialog.message_text":"نص رسالة ",
   "notify_via_sms.dialog.notify_via_sms":"Notify vis SMS",
   "notify_via_sms.dialog.error_message":"Notify vis SMS",
+    "notify_via_sms.dialog.phone_invalid_error_message":"Sms notification cannot be sent, customer personal phone number is invalid, please enter a valid one and try again.",
+  "notify_via_sms.dialog.customer_no_phone_error_message":"الزبون ليس لديه رقم هاتف.",
   "notify_invoice_via_sms.dialog.success_message":"The sale invoice sms notification has been sent successfully",
   "notify_estimate_via_sms.dialog.success_message":"تم إرسال إشعار  الرسائل القصيرة الخاصة بتقدير المبيعات بنجاح. ",
   "notify_receipt_via_sms.dialog.success_message":"The sale receipt sms notification has been sent successfully",
@@ -1453,9 +1455,11 @@
   "sms_integration.label.overview":"نظرة عامة",
   "sms_integration.label.sms_messages":"رسائل SMS ",
   "sms_message.label.sms_messages_template":" إشعارات رسائل  قصيرة ",
-  "sms_message.label_mesage":"رسالة ",
-  "sms_message.label_Notification":"إشعار",
-  "sms_message.label_auto":"Auto",
+  "sms_messages.label_mesage":"رسالة ",
+  "sms_messages.label_notification":"إشعار",
+  "sms_messages.label_auto":"Auto",
   "sms_message":"رسالة SMS"  ,
-  "sms_message.dialog.success_message":"Sms notification settings has been updated successfully."
+  "sms_message.dialog.success_message":"Sms notification settings has been updated successfully.",
+  "edit_message_text":"تعديل نص رسالة",
+  "enable_notification":"تفعيل الإشعارات"
 }

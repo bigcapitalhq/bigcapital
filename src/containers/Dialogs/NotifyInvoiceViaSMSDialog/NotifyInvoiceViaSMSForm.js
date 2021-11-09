@@ -53,7 +53,9 @@ function NotifyInvoiceViaSMSForm({
         data: { errors },
       },
     }) => {
-      transformErrors(errors);
+      if (errors) {
+        transformErrors(errors, { setErrors });
+      }
       setSubmitting(false);
     };
     // Transformes the form values to request.

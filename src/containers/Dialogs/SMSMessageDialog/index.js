@@ -20,7 +20,7 @@ function SMSMessageDialog({
   return (
     <Dialog
       name={dialogName}
-      title={intl.get('sms_message')}
+      title={intl.get('sms_message.dialog.label')}
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}

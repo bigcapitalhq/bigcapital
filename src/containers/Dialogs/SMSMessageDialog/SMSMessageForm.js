@@ -9,6 +9,7 @@ import { AppToaster } from 'components';
 import SMSMessageFormContent from './SMSMessageFormContent';
 import { CreateSMSMessageFormSchema } from './SMSMessageForm.schema';
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
+import { transformErrors } from './utils';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
@@ -58,6 +59,9 @@ function SMSMessageForm({
         data: { errors },
       },
     }) => {
+      if (errors) {
+        transformErrors(errors, { setErrors });
+      }
       setSubmitting(false);
     };
     debugger;

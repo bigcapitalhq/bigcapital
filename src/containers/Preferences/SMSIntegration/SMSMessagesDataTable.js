@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { DataTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 
-import { useSMSIntegrationTableColumns } from './components';
+import { useSMSIntegrationTableColumns, ActionsMenu } from './components';
 import { useSMSIntegrationContext } from './SMSIntegrationProvider';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -20,9 +20,11 @@ function SMSMessagesDataTable({
   const { notifications, isSMSNotificationsLoading } =
     useSMSIntegrationContext();
 
-  const handleEditSMSMessage = ({ key }) => {
+  const handleEditMessageText = ({ key }) => {
     openDialog('sms-message-form', { notificationkey: key });
   };
+
+  const handleEnableNotification = () => {};
 
   return (
     <SMSNotificationsTable
@@ -32,8 +34,10 @@ function SMSMessagesDataTable({
       progressBarLoading={isSMSNotificationsLoading}
       TableLoadingRenderer={TableSkeletonRows}
       noInitialFetch={true}
+      ContextMenu={ActionsMenu}
       payload={{
-        onEditSMSMessage: handleEditSMSMessage,
+        onEditMessageText: handleEditMessageText,
+        onEnableNotification: handleEnableNotification,
       }}
     />
   );
