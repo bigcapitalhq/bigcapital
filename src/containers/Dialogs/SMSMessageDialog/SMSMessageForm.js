@@ -44,7 +44,6 @@ function SMSMessageForm({
       ...omit(values, ['is_notification_enabled', 'sms_message']),
       notification_key: smsNotification.key,
     };
-
     // Handle request response success.
     const onSuccess = (response) => {
       AppToaster.show({
@@ -53,7 +52,6 @@ function SMSMessageForm({
       });
       closeDialog(dialogName);
     };
-
     // Handle request response errors.
     const onError = ({
       response: {
@@ -62,7 +60,7 @@ function SMSMessageForm({
     }) => {
       setSubmitting(false);
     };
-
+    debugger;
     editSMSNotificationMutate(form).then(onSuccess).catch(onError);
   };
 

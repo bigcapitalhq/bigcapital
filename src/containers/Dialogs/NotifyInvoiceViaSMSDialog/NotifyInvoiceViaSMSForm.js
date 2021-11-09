@@ -11,6 +11,12 @@ import { transformErrors } from '../../../containers/NotifyViaSMS/utils';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
+const transformFormValuesToRequest = (values) => {
+  return {
+    notification_type: values.notification_key,
+  };
+};
+
 /**
  * Notify Invoice Via SMS Form.
  */
@@ -23,16 +29,21 @@ function NotifyInvoiceViaSMSForm({
     invoiceId,
     invoiceSMSDetail,
     dialogName,
+    notificationType,
+    setNotificationType,
   } = useNotifyInvoiceViaSMSContext();
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+    setSubmitting(true);
+
     // Handle request response success.
     const onSuccess = (response) => {
       AppToaster.show({
         message: intl.get('notify_via_sms.dialog.success_message'),
         intent: Intent.SUCCESS,
       });
+      setSubmitting(false);
       closeDialog(dialogName);
     };
 
@@ -43,17 +54,37 @@ function NotifyInvoiceViaSMSForm({
       },
     }) => {
       transformErrors(errors);
+      setSubmitting(false);
     };
-    createNotifyInvoiceBySMSMutate([invoiceId, values])
+    // Transformes the form values to request.
+    const requestValues = transformFormValuesToRequest(values);
+
+    createNotifyInvoiceBySMSMutate([invoiceId, requestValues])
       .then(onSuccess)
       .catch(onError);
+  };
+  // Handle the form cancel.
+  const handleFormCancel = React.useCallback(() => {
+    closeDialog(dialogName);
+  }, [closeDialog, dialogName]);
+
+  const initialValues = {
+    notification_key: notificationType,
+    ...invoiceSMSDetail,
+  };
+
+  const handleValuesChange = (values) => {
+    if (values.notification_key !== notificationType) {
+      setNotificationType(values.notification_key);
+    }
   };
 
   return (
     <NotifyViaSMSForm
-      NotificationDetail={invoiceSMSDetail}
-      NotificationName={dialogName}
+      initialValues={initialValues}
       onSubmit={handleFormSubmit}
+      onCancel={handleFormCancel}
+      onValuesChange={handleValuesChange}
     />
   );
 }

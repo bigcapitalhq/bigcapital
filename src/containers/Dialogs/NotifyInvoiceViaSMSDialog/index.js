@@ -32,4 +32,5 @@ function NotifyInvoiceViaSMSDialog({
     </Dialog>
   );
 }
+
 export default compose(withDialogRedux())(NotifyInvoiceViaSMSDialog);

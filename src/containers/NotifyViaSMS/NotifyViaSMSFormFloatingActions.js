@@ -1,41 +1,47 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import { Intent, Button, Classes } from '@blueprintjs/core';
+import styled from 'styled-components';
 
 import { FormattedMessage as T } from 'components';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
+import { safeCallback } from 'utils';
 
-function NotifyViaSMSFormFloatingActions({
-  // #withDialogActions
-  closeDialog,
-  dialogName,
-}) {
+/**
+ *
+ */
+export default function NotifyViaSMSFormFloatingActions({ onCancel }) {
   // Formik context.
   const { isSubmitting } = useFormikContext();
 
   // Handle close button click.
-  const handleCancelBtnClick = () => {
-    closeDialog(dialogName);
+  const handleCancelBtnClick = (event) => {
+    onCancel && onCancel(event);
   };
 
   return (
     <div className={Classes.DIALOG_FOOTER}>
-      <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-        <Button onClick={handleCancelBtnClick} style={{ minWidth: '75px' }}>
-          <T id={'cancel'} />
-        </Button>
+      <FooterActions className={Classes.DIALOG_FOOTER_ACTIONS}>
         <Button
           intent={Intent.PRIMARY}
           loading={isSubmitting}
-          style={{ minWidth: '75px' }}
+          style={{ minWidth: '110px' }}
           type="submit"
         >
-          {<T id={'send'} />}
+          Send SMS
         </Button>
-      </div>
+        <Button
+          disabled={isSubmitting}
+          onClick={handleCancelBtnClick}
+          style={{ minWidth: '75px' }}
+        >
+          <T id={'cancel'} />
+        </Button>
+      </FooterActions>
     </div>
   );
 }
-export default compose(withDialogActions)(NotifyViaSMSFormFloatingActions);
+
+const FooterActions = styled.div`
+  justify-content: flex-start;
+`;

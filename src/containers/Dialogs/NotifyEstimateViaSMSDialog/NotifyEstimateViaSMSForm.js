@@ -24,6 +24,8 @@ function NotifyEstimateViaSMSForm({
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+    setSubmitting(true);
+
     // Handle request response success.
     const onSuccess = (response) => {
       AppToaster.show({
@@ -31,8 +33,8 @@ function NotifyEstimateViaSMSForm({
         intent: Intent.SUCCESS,
       });
       closeDialog(dialogName);
+      setSubmitting(false);
     };
-
     // Handle request response errors.
     const onError = ({
       response: {
@@ -40,6 +42,7 @@ function NotifyEstimateViaSMSForm({
       },
     }) => {
       transformErrors(errors);
+      setSubmitting(false);
     };
     createNotifyEstimateBySMSMutate([estimateId, values])
       .then(onSuccess)

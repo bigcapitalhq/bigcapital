@@ -254,13 +254,13 @@ export function useCreateNotifyInvoiceBySMS(props) {
   );
 }
 
-export function useInvoiceSMSDetail(invoiceId, props, requestProps) {
+export function useInvoiceSMSDetail(invoiceId, query, props) {
   return useRequestQuery(
-    [t.SALE_INVOICE_SMS_DETAIL, invoiceId],
+    [t.SALE_INVOICE_SMS_DETAIL, invoiceId, query],
     {
       method: 'get',
       url: `sales/invoices/${invoiceId}/sms-details`,
-      ...requestProps,
+      params: query,
     },
     {
       select: (res) => res.data.data,

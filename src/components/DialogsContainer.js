@@ -50,10 +50,12 @@ export default function DialogsContainer() {
       <ReceiptPdfPreviewDialog dialogName={'receipt-pdf-preview'} />
       <MoneyInDialog dialogName={'money-in'} />
       <MoneyOutDialog dialogName={'money-out'} />
+
       <NotifyInvoiceViaSMSDialog dialogName={'notify-invoice-via-sms'} />
       <NotifyReceiptViaSMSDialog dialogName={'notify-receipt-via-sms'} />
       <NotifyEstimateViaSMSDialog dialogName={'notify-estimate-via-sms'} />
       <NotifyPaymentReceiveViaSMSDialog dialogName={'notify-payment-via-sms'} />
+
       <BadDebtDialog dialogName={'write-off-bad-debt'} />
       <SMSMessageDialog dialogName={'sms-message-form'} />
     </div>

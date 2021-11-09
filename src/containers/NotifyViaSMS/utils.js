@@ -10,3 +10,8 @@ export const transformErrors = (errors) => {
     });
   }
 };
+
+
+export const getSMSUnits = (message, threshold = 140) => {
+  return Math.ceil(message.length / threshold);
+};

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import styled from 'styled-components';
+
 import { FormattedMessage as T } from 'components';
 
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
@@ -27,7 +29,7 @@ function SMSMessageFormFloatingActions({
 
   return (
     <div className={Classes.DIALOG_FOOTER}>
-      <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+      <FooterActions className={Classes.DIALOG_FOOTER_ACTIONS}>
         <Button onClick={handleCancelBtnClick} style={{ minWidth: '75px' }}>
           <T id={'cancel'} />
         </Button>
@@ -37,11 +39,15 @@ function SMSMessageFormFloatingActions({
           style={{ minWidth: '75px' }}
           type="submit"
         >
-          {<T id={'save'} />}
+          Save SMS Message
         </Button>
-      </div>
+      </FooterActions>
     </div>
   );
 }
 
 export default compose(withDialogActions)(SMSMessageFormFloatingActions);
+
+const FooterActions = styled.div`
+  justify-content: flex-start;
+`;

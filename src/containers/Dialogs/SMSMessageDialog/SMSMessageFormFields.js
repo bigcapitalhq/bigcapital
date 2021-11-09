@@ -7,7 +7,7 @@ import { inputIntent } from 'utils';
 
 export default function SMSMessageFormFields() {
   return (
-    <div className={Classes.DIALOG_BODY}>
+    <div>
       {/* ----------- Message Text ----------- */}
       <FastField name={'message_text'}>
         {({ field, meta: { error, touched } }) => (

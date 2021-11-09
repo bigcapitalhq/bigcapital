@@ -1,5 +1,7 @@
 import React from 'react';
-import { DataTableEditable, DataTable } from 'components';
+import styled from 'styled-components';
+
+import { DataTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 
 import { useSMSIntegrationTableColumns } from './components';
@@ -23,7 +25,7 @@ function SMSMessagesDataTable({
   };
 
   return (
-    <DataTable
+    <SMSNotificationsTable
       columns={columns}
       data={notifications}
       loading={isSMSNotificationsLoading}
@@ -38,3 +40,12 @@ function SMSMessagesDataTable({
 }
 
 export default compose(withDialogActions)(SMSMessagesDataTable);
+
+const SMSNotificationsTable = styled(DataTable)`
+  .table .tbody .tr .td {
+    align-items: flex-start;
+  }
+  .table .tbody .td {
+    padding: 0.8rem;
+  }
+`;
