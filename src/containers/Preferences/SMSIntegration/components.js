@@ -67,6 +67,7 @@ export function useSMSIntegrationTableColumns() {
   return React.useMemo(
     () => [
       {
+        id: 'notification',
         Header: intl.get('sms_message.label_Notification'),
         accessor: NotificationAccessor,
         className: 'notification',
