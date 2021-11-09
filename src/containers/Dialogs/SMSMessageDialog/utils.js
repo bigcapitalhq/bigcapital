@@ -1,15 +1,19 @@
 import { Intent } from '@blueprintjs/core';
-import { AppToaster } from 'components';
-import intl from 'react-intl-universal';
+import { castArray } from 'lodash';
 
 export const transformErrors = (errors, { setErrors }) => {
-  if (
-    errors.find((error) => error.type === 'UNSUPPORTED_SMS_MESSAGE_VARIABLES')
-  ) {
+  let unsupportedVariablesError = errors.find(
+    (error) => error.type === 'UNSUPPORTED_SMS_MESSAGE_VARIABLES',
+  );
+  if (unsupportedVariablesError) {
+    const variables = castArray(
+      unsupportedVariablesError.data.unsupported_args,
+    );
+    const stringifiedVariables = variables.join(', ');
+
     setErrors({
-      message_text: intl.get(
-        'sms_message.dialog.unsupported_variables_error_message',
-      ),
+      message_text: `The SMS message has unsupported variables - ${stringifiedVariables}`,
+      intent: Intent.DANGER,
     });
   }
 };
