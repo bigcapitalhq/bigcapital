@@ -26,7 +26,7 @@ function NotifyInvoiceViaSMSDialog({
       <DialogSuspense>
         <NotifyInvoiceViaSMSDialogContent
           dialogName={dialogName}
-          invoice={invoiceId}
+          invoiceId={invoiceId}
         />
       </DialogSuspense>
     </Dialog>

@@ -1,8 +1,8 @@
 import React from 'react';
-import { castArray } from 'lodash';
+import { castArray, includes } from 'lodash';
 import { Formik, Form, useFormikContext } from 'formik';
 import styled from 'styled-components';
-import { Classes } from '@blueprintjs/core';
+import { Callout, Classes, Intent } from '@blueprintjs/core';
 
 import 'style/pages/NotifyConactViaSMS/NotifyConactViaSMSDialog.scss';
 
@@ -53,6 +53,8 @@ function NotifyViaSMSForm({
   onSubmit,
   onCancel,
   onValuesChange,
+  calloutCodes,
+  formikProps,
 }) {
   // Initial form values
   const initialValues = {
@@ -67,6 +69,7 @@ function NotifyViaSMSForm({
 
   return (
     <Formik
+      enableReinitialize={true}
       validationSchema={CreateNotifyViaSMSFormSchema}
       initialValues={initialValues}
       onSubmit={onSubmit}
@@ -75,6 +78,7 @@ function NotifyViaSMSForm({
         <div className={Classes.DIALOG_BODY}>
           <NotifyContent>
             <NotifyFieldsSection>
+              <NotifyViaSMSAlerts calloutCodes={calloutCodes} />
               <NotifyViaSMSFormFields
                 notificationTypes={formattedNotificationTypes}
               />
@@ -102,6 +106,26 @@ function NotifyObserveValuesChange({ onChange }) {
     safeInvoke(onChange, values);
   };
   return <FormObserver values={values} onChange={handleChange} />;
+}
+
+/**
+ * Notify via SMS form alerts.
+ */
+function NotifyViaSMSAlerts({ calloutCodes }) {
+  return [
+    includes(calloutCodes, 100) && (
+      <Callout icon={null} intent={Intent.DANGER}>
+        The customer phone number does not eixst, please enter a personal phone
+        number to the customer.
+      </Callout>
+    ),
+    includes(calloutCodes, 200) && (
+      <Callout icon={null} intent={Intent.DANGER}>
+        The customer phone number is invalid, please enter a valid personal
+        phone number to the customer.
+      </Callout>
+    ),
+  ];
 }
 
 export default NotifyViaSMSForm;

@@ -6,11 +6,11 @@ import NotifyInvoiceViaSMSForm from './NotifyInvoiceViaSMSForm';
 export default function NotifyInvoiceViaSMSDialogContent({
   // #ownProps
   dialogName,
-  invoice,
+  invoiceId,
 }) {
   return (
     <NotifyInvoiceViaSMSFormProvider
-      invoiceId={invoice}
+      invoiceId={invoiceId}
       dialogName={dialogName}
     >
       <NotifyInvoiceViaSMSForm />
