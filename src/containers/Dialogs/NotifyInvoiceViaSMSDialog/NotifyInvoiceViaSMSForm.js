@@ -42,7 +42,7 @@ function NotifyInvoiceViaSMSForm({
     // Handle request response success.
     const onSuccess = (response) => {
       AppToaster.show({
-        message: intl.get('notify_via_sms.dialog.success_message'),
+        message: intl.get('notify_invoice_via_sms.dialog.success_message'),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);

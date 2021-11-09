@@ -25,7 +25,7 @@ export default function NotifyViaSMSFormFloatingActions({ onCancel }) {
           style={{ minWidth: '110px' }}
           type="submit"
         >
-          Send SMS
+          <T id={'send_sms'} />
         </Button>
         <Button
           disabled={isSubmitting}

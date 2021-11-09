@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { Form, useFormikContext } from 'formik';
 import styled from 'styled-components';
 import { Classes } from '@blueprintjs/core';
@@ -30,7 +31,6 @@ export default function SMSMessageFormContent() {
         <FormContent>
           <FormFields>
             <SMSMessageFormFields />
-
             <SMSMessageVariables>
               {messageVariables.map(({ variable, description }) => (
                 <MessageVariable>
@@ -65,9 +65,12 @@ function SMSMessagePreviewSection() {
     <SMSPreviewSectionRoot>
       <SMSMessagePreview message={message} />
       <SMSPreviewSectionNote>
-        <strong>Note</strong>: Note: One SMS unit can contain a maximum of 160
-        characters. <strong>{messagesUnits}</strong> SMS units will be used to
-        send this SMS notification.
+        {intl.formatHTMLMessage(
+          { id: 'sms_message.dialog.sms_note' },
+          {
+            value: messagesUnits,
+          },
+        )}
       </SMSPreviewSectionNote>
     </SMSPreviewSectionRoot>
   );

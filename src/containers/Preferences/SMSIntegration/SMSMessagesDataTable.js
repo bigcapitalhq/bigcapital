@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { Intent } from '@blueprintjs/core';
 
@@ -31,7 +32,9 @@ function SMSMessagesDataTable({
         is_notification_enabled: value,
       }).then(() => {
         AppToaster.show({
-          message: 'SMS notification hs been enabled successfully.',
+          message: intl.get(
+            'sms_messages.notification_switch_change_success_message',
+          ),
           intent: Intent.SUCCESS,
         });
       });

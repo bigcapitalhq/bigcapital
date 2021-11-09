@@ -36,7 +36,7 @@ function SMSMessageFormFloatingActions({
           style={{ minWidth: '75px' }}
           type="submit"
         >
-          Save SMS Message
+          <T id={'save_sms_message'} />
         </Button>
         <Button onClick={handleCancelBtnClick} style={{ minWidth: '75px' }}>
           <T id={'cancel'} />
