@@ -2,7 +2,7 @@ import React from 'react';
 import { Spinner, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-export default function DialogContent(props) {
+export function DialogContent(props) {
   const { isLoading, children } = props;
 
   const loadingContent = (

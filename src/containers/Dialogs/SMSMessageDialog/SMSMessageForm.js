@@ -64,7 +64,6 @@ function SMSMessageForm({
       }
       setSubmitting(false);
     };
-    debugger;
     editSMSNotificationMutate(form).then(onSuccess).catch(onError);
   };
 

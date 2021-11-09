@@ -23,9 +23,6 @@ import AccountsSelectList from './AccountsSelectList';
 import AccountsTypesSelect from './AccountsTypesSelect';
 import LoadingIndicator from './LoadingIndicator';
 import DashboardActionViewsList from './Dashboard/DashboardActionViewsList';
-import Dialog from './Dialog/Dialog';
-import DialogContent from './Dialog/DialogContent';
-import DialogSuspense from './Dialog/DialogSuspense';
 import InputPrependButton from './Forms/InputPrependButton';
 import CategoriesSelectList from './CategoriesSelectList';
 import Row from './Grid/Row';
@@ -63,6 +60,7 @@ import AvaterCell from './AvaterCell';
 import { ItemsMultiSelect } from './Items';
 import MoreMenuItems from './MoreMenutItems';
 
+export * from './Dialog';
 export * from './Menu';
 export * from './AdvancedFilter/AdvancedFilterDropdown';
 export * from './AdvancedFilter/AdvancedFilterPopover';
@@ -121,9 +119,6 @@ export {
   LoadingIndicator,
   DashboardActionViewsList,
   AppToaster,
-  Dialog,
-  DialogContent,
-  DialogSuspense,
   InputPrependButton,
   CategoriesSelectList,
   Col,
@@ -159,5 +154,5 @@ export {
   ItemsMultiSelect,
   Card,
   AvaterCell,
-  MoreMenuItems
+  MoreMenuItems,
 };

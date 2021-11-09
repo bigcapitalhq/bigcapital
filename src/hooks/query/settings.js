@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';

@@ -1,21 +1,28 @@
 import React from 'react';
 import classNames from 'classnames';
-import { get } from 'lodash';
 import { Classes, Switch, FormGroup, Intent } from '@blueprintjs/core';
 
+import { safeInvoke } from 'utils';
+
+/**
+ * Switch editable cell.
+ */
 const SwitchEditableCell = ({
   row: { index, original },
-  column: { id, switchProps },
+  column: { id, switchProps, onSwitchChange },
   cell: { value: initialValue },
   payload,
 }) => {
   const [value, setValue] = React.useState(initialValue);
 
+  // Handle the switch change.
   const onChange = (e) => {
     const newValue = e.target.checked;
 
     setValue(newValue);
-    payload.updateData(index, id, newValue);
+
+    safeInvoke(payload.updateData, index, id, newValue);
+    safeInvoke(onSwitchChange, e, newValue, original);
   };
 
   React.useEffect(() => {
@@ -31,7 +38,7 @@ const SwitchEditableCell = ({
     >
       <Switch
         value={value}
-        // onChange={onChange}
+        onChange={onChange}
         checked={initialValue}
         minimal={true}
         className="ml2"
@@ -40,4 +47,5 @@ const SwitchEditableCell = ({
     </FormGroup>
   );
 };
+
 export default SwitchEditableCell;

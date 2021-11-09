@@ -5,7 +5,7 @@ function LoadingContent() {
   return (<div className={Classes.DIALOG_BODY}><Spinner size={30} /></div>);
 }
 
-export default function DialogSuspense({
+export function DialogSuspense({
   children
 }) {
   return (

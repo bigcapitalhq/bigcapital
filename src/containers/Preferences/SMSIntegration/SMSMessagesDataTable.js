@@ -1,25 +1,53 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Intent } from '@blueprintjs/core';
 
-import { DataTable } from 'components';
+import { DataTable, AppToaster } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 
 import { useSMSIntegrationTableColumns, ActionsMenu } from './components';
 import { useSMSIntegrationContext } from './SMSIntegrationProvider';
+import { useSettingEditSMSNotification } from 'hooks/query';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
+/**
+ * SMS Message data table.
+ */
 function SMSMessagesDataTable({
   // #withDialogAction
   openDialog,
 }) {
+  // Edit SMS message notification mutations.
+  const { mutateAsync: editSMSNotificationMutate } =
+    useSettingEditSMSNotification();
+
+  // Handle notification switch change.
+  const handleNotificationSwitchChange = React.useCallback(
+    (event, value, notification) => {
+      editSMSNotificationMutate({
+        notification_key: notification.key,
+        is_notification_enabled: value,
+      }).then(() => {
+        AppToaster.show({
+          message: 'SMS notification hs been enabled successfully.',
+          intent: Intent.SUCCESS,
+        });
+      });
+    },
+    [editSMSNotificationMutate],
+  );
+
   // Table columns.
-  const columns = useSMSIntegrationTableColumns();
+  const columns = useSMSIntegrationTableColumns({
+    onSwitchChange: handleNotificationSwitchChange,
+  });
 
   const { notifications, isSMSNotificationsLoading } =
     useSMSIntegrationContext();
 
+  // handle edit message link click
   const handleEditMessageText = ({ key }) => {
     openDialog('sms-message-form', { notificationkey: key });
   };

@@ -1,11 +1,8 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import { Intent, Button, Classes } from '@blueprintjs/core';
-import styled from 'styled-components';
 
-import { FormattedMessage as T } from 'components';
-
-import { safeCallback } from 'utils';
+import { DialogFooterActions, FormattedMessage as T } from 'components';
 
 /**
  *
@@ -21,7 +18,7 @@ export default function NotifyViaSMSFormFloatingActions({ onCancel }) {
 
   return (
     <div className={Classes.DIALOG_FOOTER}>
-      <FooterActions className={Classes.DIALOG_FOOTER_ACTIONS}>
+      <DialogFooterActions alignment={'left'}>
         <Button
           intent={Intent.PRIMARY}
           loading={isSubmitting}
@@ -37,11 +34,7 @@ export default function NotifyViaSMSFormFloatingActions({ onCancel }) {
         >
           <T id={'cancel'} />
         </Button>
-      </FooterActions>
+      </DialogFooterActions>
     </div>
   );
 }
-
-const FooterActions = styled.div`
-  justify-content: flex-start;
-`;

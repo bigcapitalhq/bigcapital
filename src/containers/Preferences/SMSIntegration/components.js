@@ -5,6 +5,7 @@ import { Menu, MenuItem } from '@blueprintjs/core';
 
 import { ButtonLink } from 'components';
 import { SwitchFieldCell } from 'components/DataTableCells';
+
 import { safeInvoke } from 'utils';
 
 /**
@@ -63,7 +64,7 @@ export function ActionsMenu({
  * Retrieve SMS notifications messages table columns
  * @returns
  */
-export function useSMSIntegrationTableColumns() {
+export function useSMSIntegrationTableColumns({ onSwitchChange }) {
   return React.useMemo(
     () => [
       {
@@ -98,9 +99,10 @@ export function useSMSIntegrationTableColumns() {
         disableResizing: true,
         disableSortBy: true,
         width: '80',
+        onSwitchChange,
       },
     ],
-    [],
+    [onSwitchChange],
   );
 }
 

@@ -60,7 +60,6 @@ function SMSMessagePreviewSection() {
   return (
     <SMSPreviewSectionRoot>
       <SMSMessagePreview message={message} />
-
       <SMSPreviewSectionNote>
         <strong>Note</strong>: Note: One SMS unit can contain a maximum of 160
         characters. <strong>{messagesUnits}</strong> SMS units will be used to
