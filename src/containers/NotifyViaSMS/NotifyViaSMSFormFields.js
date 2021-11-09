@@ -2,6 +2,7 @@ import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { FormGroup, InputGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
+import styled from 'styled-components';
 
 import {
   ListSelect,
@@ -11,14 +12,9 @@ import {
 import { CLASSES } from 'common/classes';
 import { inputIntent } from 'utils';
 
-const notificationTypes = [
-  { key: 'details', label: 'Invoice details' },
-  { key: 'reminder', label: 'Invoice reminder' },
-];
-
-export default function NotifyViaSMSFormFields() {
+export default function NotifyViaSMSFormFields({ notificationTypes }) {
   return (
-    <div>
+    <NotifyViaSMSFormFieldsRoot>
       <FastField name={'notification_key'}>
         {({ form, meta: { error, touched } }) => (
           <FormGroup
@@ -37,6 +33,7 @@ export default function NotifyViaSMSFormFields() {
               onItemSelect={(notification) => {
                 form.setFieldValue('notification_key', notification.key);
               }}
+              disabled={notificationTypes.length < 2}
             />
           </FormGroup>
         )}
@@ -82,6 +79,8 @@ export default function NotifyViaSMSFormFields() {
           </FormGroup>
         )}
       </FastField>
-    </div>
+    </NotifyViaSMSFormFieldsRoot>
   );
 }
+
+const NotifyViaSMSFormFieldsRoot = styled.div``;

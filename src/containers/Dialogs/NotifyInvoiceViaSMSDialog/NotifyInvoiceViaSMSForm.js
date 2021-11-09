@@ -80,10 +80,19 @@ function NotifyInvoiceViaSMSForm({
       setNotificationType(values.notification_key);
     }
   };
+  // Momerize the notification types.
+  const notificationTypes = React.useMemo(
+    () => [
+      { key: 'details', label: 'Invoice details' },
+      { key: 'reminder', label: 'Invoice reminder' },
+    ],
+    [],
+  );
 
   return (
     <NotifyViaSMSForm
       initialValues={initialValues}
+      notificationTypes={notificationTypes}
       onSubmit={handleFormSubmit}
       onCancel={handleFormCancel}
       onValuesChange={handleValuesChange}

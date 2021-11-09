@@ -11,6 +11,11 @@ import { transformErrors } from '../../../containers/NotifyViaSMS/utils';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
+const notificationType = {
+  key: 'sale-receipt-details',
+  label: 'Sale receipt details',
+};
+
 /**
  * Notify Receipt Via SMS Form.
  */
@@ -51,12 +56,24 @@ function NotifyReceiptViaSMSForm({
       .then(onSuccess)
       .catch(onError);
   };
+  // Handle the form cancel.
+  const handleFormCancel = () => {
+    closeDialog(dialogName);
+  };
+  // Initial values.
+  const initialValues = React.useMemo(
+    () => ({
+      ...receiptSMSDetail,
+    }),
+    [receiptSMSDetail],
+  );
 
   return (
     <NotifyViaSMSForm
-      NotificationDetail={receiptSMSDetail}
-      NotificationName={dialogName}
+      initialValues={initialValues}
+      notificationTypes={notificationType}
       onSubmit={handleFormSubmit}
+      onCancel={handleFormCancel}
     />
   );
 }

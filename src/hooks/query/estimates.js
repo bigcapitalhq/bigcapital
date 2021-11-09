@@ -190,6 +190,9 @@ export function useRefreshEstimates() {
   };
 }
 
+/**
+ *  
+ */
 export function useCreateNotifyEstimateBySMS(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
@@ -210,6 +213,13 @@ export function useCreateNotifyEstimateBySMS(props) {
   );
 }
 
+/**
+ * 
+ * @param {*} estimateId 
+ * @param {*} props 
+ * @param {*} requestProps 
+ * @returns 
+ */
 export function useEstimateSMSDetail(estimateId, props, requestProps) {
   return useRequestQuery(
     [t.SALE_ESTIMATE_SMS_DETAIL, estimateId],

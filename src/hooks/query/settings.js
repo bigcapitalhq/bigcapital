@@ -170,8 +170,12 @@ export function useSettingEditSMSNotification(props) {
     (values) => apiRequest.post(`settings/sms-notification`, values),
     {
       onSuccess: () => {
-        // Invalidate
         queryClient.invalidateQueries([t.SETTING_SMS_NOTIFICATIONS]);
+
+        queryClient.invalidateQueries(t.SALE_INVOICE_SMS_DETAIL);
+        queryClient.invalidateQueries(t.SALE_RECEIPT_SMS_DETAIL);
+        queryClient.invalidateQueries(t.PAYMENT_RECEIVE_SMS_DETAIL);
+        queryClient.invalidateQueries(t.SALE_ESTIMATE_SMS_DETAIL);
       },
       ...props,
     },

@@ -1,4 +1,5 @@
 import React from 'react';
+import { castArray } from 'lodash';
 import { Formik, Form, useFormikContext } from 'formik';
 import styled from 'styled-components';
 import { Classes } from '@blueprintjs/core';
@@ -34,7 +35,6 @@ function SMSMessagePreviewSection() {
   return (
     <SMSPreviewSectionRoot>
       <SMSMessagePreview message={sms_message} />
-
       <SMSPreviewSectionNote>
         <strong>Note</strong>: Note: One SMS unit can contain a maximum of 160
         characters. <strong>{messagesUnits}</strong> SMS units will be used to
@@ -49,6 +49,7 @@ function SMSMessagePreviewSection() {
  */
 function NotifyViaSMSForm({
   initialValues: initialValuesComponent,
+  notificationTypes,
   onSubmit,
   onCancel,
   onValuesChange,
@@ -58,6 +59,11 @@ function NotifyViaSMSForm({
     ...defaultInitialValues,
     ...transformToForm(initialValuesComponent, defaultInitialValues),
   };
+  // Ensure always returns array.
+  const formattedNotificationTypes = React.useMemo(
+    () => castArray(notificationTypes),
+    [notificationTypes],
+  );
 
   return (
     <Formik
@@ -69,8 +75,11 @@ function NotifyViaSMSForm({
         <div className={Classes.DIALOG_BODY}>
           <NotifyContent>
             <NotifyFieldsSection>
-              <NotifyViaSMSFormFields />
+              <NotifyViaSMSFormFields
+                notificationTypes={formattedNotificationTypes}
+              />
             </NotifyFieldsSection>
+
             <SMSMessagePreviewSection />
           </NotifyContent>
         </div>

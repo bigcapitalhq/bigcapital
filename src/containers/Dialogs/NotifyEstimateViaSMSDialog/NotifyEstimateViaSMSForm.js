@@ -11,6 +11,11 @@ import { transformErrors } from '../../../containers/NotifyViaSMS/utils';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
+const notificationType = {
+  key: 'sale-estimate-details',
+  label: 'Sale estimate details',
+};
+
 function NotifyEstimateViaSMSForm({
   // #withDialogActions
   closeDialog,
@@ -51,10 +56,19 @@ function NotifyEstimateViaSMSForm({
       .catch(onError);
   };
 
+  const initialValues = {
+    ...estimateSMSDetail,
+  };
+  // Handle the form cancel.
+  const handleFormCancel = () => {
+    closeDialog(dialogName);
+  };
+
   return (
     <NotifyViaSMSForm
-      NotificationDetail={estimateSMSDetail}
-      NotificationName={dialogName}
+      initialValues={initialValues}
+      notificationTypes={notificationType}
+      onCancel={handleFormCancel}
       onSubmit={handleFormSubmit}
     />
   );

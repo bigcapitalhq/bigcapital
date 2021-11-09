@@ -11,6 +11,11 @@ import { transformErrors } from '../../../containers/NotifyViaSMS/utils';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
+const notificationType = {
+  key: 'payment-receive-details',
+  label: 'Payment receive thank you.',
+};
+
 /**
  * Notify Payment Recive Via SMS Form.
  */
@@ -53,12 +58,23 @@ function NotifyPaymentReceiveViaSMSForm({
       .then(onSuccess)
       .catch(onError);
   };
+  // Handle the form cancel.
+  const handleFormCancel = () => {
+    closeDialog(dialogName);
+  };
+
+  // Form initial values.
+  const initialValues = React.useMemo(
+    () => ({ ...paymentReceiveMSDetail }),
+    [paymentReceiveMSDetail],
+  );
 
   return (
     <NotifyViaSMSForm
-      NotificationDetail={paymentReceiveMSDetail}
-      NotificationName={dialogName}
+      initialValues={initialValues}
+      notificationTypes={notificationType}
       onSubmit={handleFormSubmit}
+      onCancel={handleFormCancel}
     />
   );
 }

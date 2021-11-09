@@ -4,11 +4,15 @@ import { useCreateNotifyReceiptBySMS, useReceiptSMSDetail } from 'hooks/query';
 
 const NotifyReceiptViaSMSContext = React.createContext();
 
+/**
+ * 
+ */
 function NotifyReceiptViaSMSFormProvider({ receiptId, dialogName, ...props }) {
-  // Create notfiy receipt via sms mutations.
+  // Create notfiy receipt via SMS mutations.
   const { mutateAsync: createNotifyReceiptBySMSMutate } =
     useCreateNotifyReceiptBySMS();
 
+  // Retrieve the receipt SMS notification details.
   const { data: receiptSMSDetail, isLoading: isReceiptSMSDetailLoading } =
     useReceiptSMSDetail(receiptId, {
       enabled: !!receiptId,
