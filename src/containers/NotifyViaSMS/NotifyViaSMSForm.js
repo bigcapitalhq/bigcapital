@@ -119,14 +119,12 @@ function NotifyViaSMSAlerts({ calloutCodes }) {
   return [
     includes(calloutCodes, 100) && (
       <Callout icon={null} intent={Intent.DANGER}>
-        The customer phone number does not eixst, please enter a personal phone
-        number to the customer.
+        {intl.get('notify_Via_sms.dialog.customer_phone_number_does_not_eixst')}
       </Callout>
     ),
     includes(calloutCodes, 200) && (
       <Callout icon={null} intent={Intent.DANGER}>
-        The customer phone number is invalid, please enter a valid personal
-        phone number to the customer.
+        {intl.get('notify_Via_sms.dialog.customer_phone_number_invalid')}
       </Callout>
     ),
   ];
