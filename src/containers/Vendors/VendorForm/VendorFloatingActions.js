@@ -9,42 +9,43 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import styled from 'styled-components';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
 import { useFormikContext } from 'formik';
-import { useHistory } from 'react-router-dom';
+
+import { FormattedMessage as T } from 'components';
+
+import { CLASSES } from 'common/classes';
 import { Icon } from 'components';
 import { useVendorFormContext } from './VendorFormProvider';
+
+import { safeInvoke } from 'utils';
 
 /**
  * Vendor floating actions bar.
  */
-export default function VendorFloatingActions() {
+export default function VendorFloatingActions({ onCancel }) {
   // Formik context.
   const { resetForm, isSubmitting, submitForm } = useFormikContext();
 
   // Vendor form context.
   const { isNewMode, setSubmitPayload } = useVendorFormContext();
 
-  // History.
-  const history = useHistory();
-
   // Handle the submit button.
   const handleSubmitBtnClick = (event) => {
-    setSubmitPayload({ noRedirect: false, });
+    setSubmitPayload({ noRedirect: false });
     submitForm();
   };
 
   // Handle the submit & new button click.
   const handleSubmitAndNewClick = (event) => {
     submitForm();
-    setSubmitPayload({ noRedirect: true, });
+    setSubmitPayload({ noRedirect: true });
   };
 
   // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
-    history.goBack();
+    safeInvoke(onCancel, event);
   };
 
   // Handle clear button click.
@@ -56,7 +57,7 @@ export default function VendorFloatingActions() {
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       <ButtonGroup>
         {/* ----------- Save and New ----------- */}
-        <Button
+        <SaveButton
           disabled={isSubmitting}
           loading={isSubmitting}
           intent={Intent.PRIMARY}
@@ -101,3 +102,7 @@ export default function VendorFloatingActions() {
     </div>
   );
 }
+
+const SaveButton = styled(Button)`
+  min-width: 100px;
+`;

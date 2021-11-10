@@ -7,11 +7,12 @@ import { Select } from '@blueprintjs/select';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
-export default function ContactSelecetList({
-  contactsList,
+import { itemPredicate, handleContactRenderer } from './utils';
+
+export default function ContactSelectField({
+  contacts,
   initialContactId,
   selectedContactId,
-  createNewItemFrom,
   defaultSelectText = <T id={'select_contact'} />,
   onContactSelected,
   popoverFill = false,
@@ -20,13 +21,13 @@ export default function ContactSelecetList({
 
   ...restProps
 }) {
-  const contacts = useMemo(
+  const localContacts = useMemo(
     () =>
-      contactsList.map((contact) => ({
+      contacts.map((contact) => ({
         ...contact,
         _id: `${contact.id}_${contact.contact_type}`,
       })),
-    [contactsList],
+    [contacts],
   );
 
   const initialContact = useMemo(
@@ -47,18 +48,7 @@ export default function ContactSelecetList({
     }
   }, [selectedContactId, contacts, setSelectedContact]);
 
-  const handleContactRenderer = useCallback(
-    (contact, { handleClick }) => (
-      <MenuItem
-        key={contact.id}
-        text={contact.display_name}
-        onClick={handleClick}
-      />
-    ),
-    [],
-  );
-
-  const onContactSelect = useCallback(
+  const handleContactSelect = useCallback(
     (contact) => {
       setSelectedContact({ ...contact });
       onContactSelected && onContactSelected(contact);
@@ -66,29 +56,15 @@ export default function ContactSelecetList({
     [setSelectedContact, onContactSelected],
   );
 
-  // Filter Contact List
-  const itemPredicate = (query, contact, index, exactMatch) => {
-    const normalizedTitle = contact.display_name.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
-    if (exactMatch) {
-      return normalizedTitle === normalizedQuery;
-    } else {
-      return (
-        `${contact.display_name} ${normalizedTitle}`.indexOf(normalizedQuery) >=
-        0
-      );
-    }
-  };
-
   return (
     <Select
-      items={contacts}
+      items={localContacts}
       noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
       itemRenderer={handleContactRenderer}
       itemPredicate={itemPredicate}
       filterable={true}
       disabled={disabled}
-      onItemSelect={onContactSelect}
+      onItemSelect={handleContactSelect}
       popoverProps={{ minimal: true, usePortal: !popoverFill }}
       className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, {
         [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,

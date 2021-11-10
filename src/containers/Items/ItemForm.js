@@ -1,110 +1,95 @@
 import React from 'react';
-import { Formik, Form } from 'formik';
-import { Intent } from '@blueprintjs/core';
-import { useHistory } from 'react-router-dom';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 
-import 'style/pages/Items/PageForm.scss';
+import { useDashboardPageTitle } from 'hooks/state';
+import { useItemFormContext, ItemFormProvider } from './ItemFormProvider';
 
-import { CLASSES } from 'common/classes';
-import AppToaster from 'components/AppToaster';
-import ItemFormPrimarySection from './ItemFormPrimarySection';
-import ItemFormBody from './ItemFormBody';
-import ItemFormFloatingActions from './ItemFormFloatingActions';
-import ItemFormInventorySection from './ItemFormInventorySection';
+import ItemFormFormik from './ItemFormFormik';
 
-import {
-  transformSubmitRequestErrors,
-  useItemFormInitialValues,
-} from './utils';
-import { EditItemFormSchema, CreateItemFormSchema } from './ItemForm.schema';
-
-import { useItemFormContext } from './ItemFormProvider';
+import DashboardCard from 'components/Dashboard/DashboardCard';
+import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
 /**
- * Item form.
+ * Item form dashboard title.
+ * @returns {null}
  */
-export default function ItemForm() {
-  // Item form context.
-  const {
-    itemId,
-    item,
-    accounts,
-    createItemMutate,
-    editItemMutate,
-    submitPayload,
-    isNewMode,
-  } = useItemFormContext();
+function ItemFormDashboardTitle() {
+  // Change page title dispatcher.
+  const changePageTitle = useDashboardPageTitle();
 
+  // Item form context.
+  const { isNewMode } = useItemFormContext();
+
+  // Changes the page title in new and edit mode.
+  React.useEffect(() => {
+    isNewMode
+      ? changePageTitle(intl.get('new_item'))
+      : changePageTitle(intl.get('edit_item_details'));
+  }, [changePageTitle, isNewMode]);
+
+  return null;
+}
+
+/**
+ * Item form page loading state indicator.
+ * @returns {JSX}
+ */
+function ItemFormPageLoading({ children }) {
+  const { isFormLoading } = useItemFormContext();
+
+  return (
+    <DashboardItemFormPageInsider loading={isFormLoading} name={'item-form'}>
+      {children}
+    </DashboardItemFormPageInsider>
+  );
+}
+
+/**
+ * Item form of the page.
+ * @returns {JSX}
+ */
+export default function ItemForm({ itemId }) {
   // History context.
   const history = useHistory();
 
-  // Initial values in create and edit mode.
-  const initialValues = useItemFormInitialValues(item);
-
-  // Handles the form submit.
-  const handleFormSubmit = (
-    values,
-    { setSubmitting, resetForm, setErrors },
-  ) => {
-    setSubmitting(true);
-    const form = { ...values };
-
-    const onSuccess = (response) => {
-      AppToaster.show({
-        message: intl.get(
-          isNewMode
-            ? 'the_item_has_been_created_successfully'
-            : 'the_item_has_been_edited_successfully',
-          {
-            number: itemId,
-          },
-        ),
-        intent: Intent.SUCCESS,
-      });
-      resetForm();
-      setSubmitting(false);
-
-      // Submit payload.
-      if (submitPayload.redirect) {
-        history.push('/items');
-      }
-    };
-
-    // Handle response error.
-    const onError = (errors) => {
-      setSubmitting(false);
-      if (errors) {
-        const _errors = transformSubmitRequestErrors(errors);
-        setErrors({ ..._errors });
-      }
-    };
-    if (isNewMode) {
-      createItemMutate(form).then(onSuccess).catch(onError);
-    } else {
-      editItemMutate([itemId, form]).then(onSuccess).catch(onError);
+  // Handle the form submit success.
+  const handleSubmitSuccess = (values, form, submitPayload) => {
+    if (submitPayload.redirect) {
+      history.push('/items');
     }
+  };
+  // Handle cancel button click.
+  const handleFormCancel = () => {
+    history.goBack();
   };
 
   return (
-    <div class={classNames(CLASSES.PAGE_FORM_ITEM)}>
-      <Formik
-        enableReinitialize={true}
-        validationSchema={isNewMode ? CreateItemFormSchema : EditItemFormSchema}
-        initialValues={initialValues}
-        onSubmit={handleFormSubmit}
-      >
-        <Form>
-          <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
-            <ItemFormPrimarySection />
-            <ItemFormBody accounts={accounts} />
-            <ItemFormInventorySection accounts={accounts} />
-          </div>
+    <ItemFormProvider itemId={itemId}>
+      <ItemFormDashboardTitle />
 
-          <ItemFormFloatingActions />
-        </Form>
-      </Formik>
-    </div>
+      <ItemFormPageLoading>
+        <DashboardCard page>
+          <ItemFormPageFormik
+            onSubmitSuccess={handleSubmitSuccess}
+            onCancel={handleFormCancel}
+          />
+        </DashboardCard>
+      </ItemFormPageLoading>
+    </ItemFormProvider>
   );
 }
+
+const DashboardItemFormPageInsider = styled(DashboardInsider)`
+  padding-bottom: 64px;
+`;
+
+const ItemFormPageFormik = styled(ItemFormFormik)`
+  .page-form {
+    &__floating-actions {
+      margin-left: -40px;
+      margin-right: -40px;
+    }
+  }
+`;

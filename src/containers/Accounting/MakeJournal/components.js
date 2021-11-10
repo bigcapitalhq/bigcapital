@@ -128,6 +128,7 @@ export const useJournalTableEntriesColumns = () => {
         className: 'account',
         disableSortBy: true,
         width: 160,
+        fieldProps: { allowCreate: true }
       },
       {
         Header: CreditHeaderCell,

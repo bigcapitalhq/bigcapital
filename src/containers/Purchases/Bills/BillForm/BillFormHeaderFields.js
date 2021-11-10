@@ -6,7 +6,7 @@ import { FastField, ErrorMessage } from 'formik';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
-import { ContactSelecetList, FieldRequiredHint, Icon } from 'components';
+import { VendorSelectField, FieldRequiredHint, Icon } from 'components';
 import { vendorsFieldShouldUpdate } from './utils';
 
 import { useBillFormContext } from './BillFormProvider';
@@ -43,14 +43,15 @@ function BillFormHeader() {
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'vendor_id'} />}
           >
-            <ContactSelecetList
-              contactsList={vendors}
+            <VendorSelectField
+              contacts={vendors}
               selectedContactId={value}
               defaultSelectText={<T id={'select_vender_account'} />}
               onContactSelected={(contact) => {
                 form.setFieldValue('vendor_id', contact.id);
               }}
               popoverFill={true}
+              allowCreate={true}
             />
           </FormGroup>
         )}

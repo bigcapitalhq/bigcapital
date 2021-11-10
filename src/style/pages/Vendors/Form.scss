@@ -1,19 +1,6 @@
 @import '../../Base.scss';
 
-
-body.page-customer-new,
-body.page-customer-edit{
-
-  .dashboard__footer{
-    display: none;
-  }
-}
-
-.dashboard__insider--customer-form{
-  padding-bottom: 64px;
-}
-
-.page-form--customer {
+.page-form--vendor {
   $self: '.page-form';
   padding: 20px;
 
@@ -169,7 +156,7 @@ body.page-customer-edit{
   }
 
   #{$self}__floating-actions {
-    margin-left: -40px;
-    margin-right: -40px;
+    // margin-left: -40px;
+    // margin-right: -40px;
   }
 }

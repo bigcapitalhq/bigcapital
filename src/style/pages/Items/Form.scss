@@ -1,16 +1,4 @@
 
-body.page-item-new,
-body.page-item-edit{
-
-  .dashboard__footer{
-    display: none;
-  }
-}
-
-.dashboard__insider--item-form{
-  padding-bottom: 64px;
-}
-
 .page-form--item {
   $self: '.page-form';
   padding: 20px;
@@ -85,17 +73,13 @@ body.page-item-edit{
   }
 
   #{$self}__floating-actions {
-    margin-left: -40px;
-    margin-right: -40px;
+    // margin-left: -40px;
+    // margin-right: -40px;
 
     .form-group--active {
       display: inline-block;
       margin: 0;
       margin-left: 40px;
-    }
-
-    .btn--submit{
-      min-width: 65px;
     }
   }
 

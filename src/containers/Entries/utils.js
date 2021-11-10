@@ -164,3 +164,12 @@ export const composeRowsOnNewRow = R.curry((rowIndex, newRow, rows) => {
     updateTableRow(rowIndex, newRow),
   )(rows);
 });
+
+/**
+ *
+ * @param {*} entries
+ * @returns
+ */
+export const composeControlledEntries = (entries) => {
+  return R.compose(orderingLinesIndexes, updateItemsEntriesTotal)(entries);
+};

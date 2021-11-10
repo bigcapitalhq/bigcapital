@@ -10,4 +10,8 @@ export const DRAWERS = {
   BILL_DRAWER: 'bill-drawer',
   INVENTORY_ADJUSTMENT_DRAWER: 'inventory-adjustment-drawer',
   CASHFLOW_TRNASACTION_DRAWER: 'cashflow-transaction-drawer',
+
+  QUICK_WRITE_VENDOR: 'quick-write-vendor',
+  QUICK_CREATE_CUSTOMER: 'quick-create-customer',
+  QUICK_CREATE_ITEM: 'quick-create-item',
 };

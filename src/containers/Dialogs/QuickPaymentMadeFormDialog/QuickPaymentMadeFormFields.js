@@ -37,7 +37,7 @@ export default function QuickPaymentMadeFormFields() {
   const { accounts } = useQuickPaymentMadeContext();
 
   // Intl context.
-  
+
   const paymentMadeFieldRef = useAutofocus();
 
   return (
