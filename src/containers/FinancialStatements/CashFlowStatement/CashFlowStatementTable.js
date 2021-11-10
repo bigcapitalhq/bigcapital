@@ -32,7 +32,7 @@ export default function CashFlowStatementTable({
 
   const rowClassNames = (row) => {
     return [
-      `row-type--${row.original.rowTypes}`,
+      `row-type--${row.original.row_types}`,
       `row-type--${row.original.id}`,
     ];
   };
