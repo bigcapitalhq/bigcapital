@@ -15,7 +15,7 @@ function NotifyInvoiceViaSMSFormProvider({ invoiceId, dialogName, ...props }) {
     useInvoiceSMSDetail(
       invoiceId,
       {
-        notification_type: notificationType,
+        notification_key: notificationType,
       },
       {
         enabled: !!invoiceId,

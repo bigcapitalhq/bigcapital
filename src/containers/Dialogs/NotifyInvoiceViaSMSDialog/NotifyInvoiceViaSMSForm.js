@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-
+import { pick } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
@@ -12,9 +12,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
 const transformFormValuesToRequest = (values) => {
-  return {
-    notification_type: values.notification_key,
-  };
+  return pick(values, ['notification_key']);
 };
 
 /**
