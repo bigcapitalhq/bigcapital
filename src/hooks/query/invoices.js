@@ -219,14 +219,53 @@ export function useCancelBadDebt(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`sales/invoices/${id}/writeoff/cancel`), {
-    onSuccess: (res, id) => {
-      // Invalidate
-      queryClient.invalidateQueries([t.CANCEL_BAD_DEBT, id]);
+  return useMutation(
+    (id) => apiRequest.post(`sales/invoices/${id}/writeoff/cancel`),
+    {
+      onSuccess: (res, id) => {
+        // Invalidate
+        queryClient.invalidateQueries([t.CANCEL_BAD_DEBT, id]);
 
-      // Common invalidate queries.
-      commonInvalidateQueries(queryClient);
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
     },
-    ...props,
-  });
+  );
+}
+
+export function useCreateNotifyInvoiceBySMS(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) =>
+      apiRequest.post(`sales/invoices/${id}/notify-by-sms`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Invalidate
+        queryClient.invalidateQueries([t.NOTIFY_SALE_INVOICE_BY_SMS, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useInvoiceSMSDetail(invoiceId, query, props) {
+  return useRequestQuery(
+    [t.SALE_INVOICE_SMS_DETAIL, invoiceId, query],
+    {
+      method: 'get',
+      url: `sales/invoices/${invoiceId}/sms-details`,
+      params: query,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: {},
+      ...props,
+    },
+  );
 }

@@ -14,7 +14,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Icon, FormattedMessage as T } from 'components';
+import { Icon, FormattedMessage as T, MoreMenuItems } from 'components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 
 import { safeCallback, compose } from 'utils';
@@ -46,6 +46,11 @@ function ReceiptDetailActionBar({
   const onPrintReceipt = () => {
     openDialog('receipt-pdf-preview', { receiptId });
   };
+
+  // Handle notify via SMS.
+  const handleNotifyViaSMS = () => {
+    openDialog('notify-receipt-via-sms', { receiptId });
+  };
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -68,6 +73,12 @@ function ReceiptDetailActionBar({
           text={<T id={'delete'} />}
           intent={Intent.DANGER}
           onClick={safeCallback(onDeleteReceipt)}
+        />
+        <NavbarDivider />
+        <MoreMenuItems
+          payload={{
+            onNotifyViaSMS: handleNotifyViaSMS,
+          }}
         />
       </NavbarGroup>
     </DashboardActionsBar>

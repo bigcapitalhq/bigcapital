@@ -1,0 +1,38 @@
+// SMS Integration.
+// ---------------------------------
+
+.preferences-page__inside-content--sms-integration {
+  .bigcapital-datatable {
+    .table {
+      .tbody {
+        .notification {
+          &__label {
+            font-weight: 500;
+          }
+
+          &__desc {
+            font-size: 13px;
+            margin-top: 3px;
+            line-height: 1.25;
+            display: block;
+          }
+        }
+
+        .sms_message.td {
+          .edit-text {
+            display: inline-block;
+            font-size: 11.5px;
+            color: #1652c8;
+            margin-left: 2px;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+  .bp3-tabs {
+    .bp3-tab-panel {
+      margin-top: 0;
+    }
+  }
+}

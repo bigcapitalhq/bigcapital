@@ -16,7 +16,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Icon, FormattedMessage as T } from 'components';
+import { Icon, FormattedMessage as T, MoreMenuItems } from 'components';
 
 import { compose } from 'utils';
 
@@ -29,6 +29,9 @@ function PaymentReceiveActionsBar({
 
   // #withDrawerActions
   closeDrawer,
+
+  // #withDialogActions
+  openDialog,
 }) {
   const history = useHistory();
 
@@ -44,6 +47,11 @@ function PaymentReceiveActionsBar({
   // Handle delete payment receive.
   const handleDeletePaymentReceive = () => {
     openAlert('payment-receive-delete', { paymentReceiveId });
+  };
+
+  // Handle notify via SMS.
+  const handleNotifyViaSMS = () => {
+    openDialog('notify-payment-via-sms', { paymentReceiveId });
   };
 
   return (
@@ -62,6 +70,12 @@ function PaymentReceiveActionsBar({
           text={<T id={'delete'} />}
           intent={Intent.DANGER}
           onClick={handleDeletePaymentReceive}
+        />
+        <NavbarDivider />
+        <MoreMenuItems
+          payload={{
+            onNotifyViaSMS: handleNotifyViaSMS,
+          }}
         />
       </NavbarGroup>
     </DashboardActionsBar>

@@ -15,7 +15,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Icon, FormattedMessage as T } from 'components';
+import { Icon, FormattedMessage as T, MoreMenuItems } from 'components';
 
 import { compose } from 'utils';
 
@@ -51,6 +51,10 @@ function EstimateDetailActionsBar({
   const handlePrintEstimate = () => {
     openDialog('estimate-pdf-preview', { estimateId });
   };
+  // Handle notify via SMS.
+  const handleNotifyViaSMS = () => {
+    openDialog('notify-estimate-via-sms', { estimateId });
+  };
 
   return (
     <DashboardActionsBar>
@@ -74,6 +78,12 @@ function EstimateDetailActionsBar({
           text={<T id={'delete'} />}
           intent={Intent.DANGER}
           onClick={handleDeleteEstimate}
+        />
+        <NavbarDivider />
+        <MoreMenuItems
+          payload={{
+            onNotifyViaSMS: handleNotifyViaSMS,
+          }}
         />
       </NavbarGroup>
     </DashboardActionsBar>

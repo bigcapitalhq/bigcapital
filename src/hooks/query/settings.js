@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
@@ -121,5 +120,63 @@ export function useSettingCashFlow(props) {
     [t.SETTING, t.SETTING_CASHFLOW],
     { group: 'cashflow' },
     props,
+  );
+}
+
+/**
+ * Retrieve SMS Notifications settings.
+ */
+export function useSettingSMSNotifications(props) {
+  return useRequestQuery(
+    [t.SETTING_SMS_NOTIFICATIONS],
+    { method: 'get', url: `settings/sms-notifications` },
+    {
+      select: (res) => res.data.notifications,
+      defaultData: [],
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve Specific SMS Notification settings.
+ */
+export function useSettingSMSNotification(key, props) {
+  return useRequestQuery(
+    [t.SETTING_SMS_NOTIFICATIONS, key],
+    {
+      method: 'get',
+      url: `settings/sms-notification/${key}`,
+    },
+    {
+      select: (res) => res.data.notification,
+      defaultData: {
+        smsNotification: [],
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve Edit SMS Notification settings.
+ */
+export function useSettingEditSMSNotification(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (values) => apiRequest.post(`settings/sms-notification`, values),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([t.SETTING_SMS_NOTIFICATIONS]);
+
+        queryClient.invalidateQueries(t.SALE_INVOICE_SMS_DETAIL);
+        queryClient.invalidateQueries(t.SALE_RECEIPT_SMS_DETAIL);
+        queryClient.invalidateQueries(t.PAYMENT_RECEIVE_SMS_DETAIL);
+        queryClient.invalidateQueries(t.SALE_ESTIMATE_SMS_DETAIL);
+      },
+      ...props,
+    },
   );
 }

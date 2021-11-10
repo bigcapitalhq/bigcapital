@@ -341,7 +341,7 @@ export const saveInvoke = (func, ...rest) => {
 };
 
 export const safeInvoke = (func, ...rest) => {
-  return func && func(...rest);
+  func && func(...rest);
 };
 
 export const transformToForm = (obj, emptyInitialValues) => {

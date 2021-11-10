@@ -1,0 +1,29 @@
+.dialog--sms-message {
+  width: 800px;
+
+  .bp3-form-group {
+    margin-bottom: 15px;
+
+    label.bp3-label {
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+  }
+
+  .form-group {
+    &--message_text {
+      .bp3-form-content {
+        textarea {
+          width: 100%;
+          min-width: 100%;
+          min-height: 90px;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .bp3-dialog-footer {
+    padding-top: 10px;
+  }
+}
