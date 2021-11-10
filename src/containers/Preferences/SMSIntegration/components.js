@@ -69,7 +69,7 @@ export function useSMSIntegrationTableColumns({ onSwitchChange }) {
     () => [
       {
         id: 'notification',
-        Header: intl.get('sms_message.label_Notification'),
+        Header: intl.get('sms_messages.label_notification'),
         accessor: NotificationAccessor,
         className: 'notification',
         width: '180',
@@ -83,7 +83,7 @@ export function useSMSIntegrationTableColumns({ onSwitchChange }) {
         disableSortBy: true,
       },
       {
-        Header: intl.get('sms_message.label_mesage'),
+        Header: intl.get('sms_messages.label_mesage'),
         accessor: 'sms_message',
         Cell: SMSMessageCell,
         className: 'sms_message',
@@ -92,7 +92,7 @@ export function useSMSIntegrationTableColumns({ onSwitchChange }) {
         disableSortBy: true,
       },
       {
-        Header: intl.get('sms_message.label_auto'),
+        Header: intl.get('sms_messages.label_auto'),
         accessor: 'is_notification_enabled',
         Cell: SwitchFieldCell,
         className: 'is_notification_enabled',
