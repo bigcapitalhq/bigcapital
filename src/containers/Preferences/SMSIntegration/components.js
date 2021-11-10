@@ -1,9 +1,8 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Menu, MenuItem } from '@blueprintjs/core';
+import { Intent, Button, Menu, MenuItem } from '@blueprintjs/core';
 
-import { ButtonLink } from 'components';
 import { SwitchFieldCell } from 'components/DataTableCells';
 
 import { safeInvoke } from 'utils';
@@ -32,9 +31,14 @@ export const SMSMessageCell = ({
   <div>
     <MessageBox>{original.sms_message}</MessageBox>
     <MessageBoxActions>
-      <ButtonLink onClick={() => safeInvoke(onEditMessageText, original)}>
+      <Button
+        minimal={true}
+        small={true}
+        intent={Intent.NONE}
+        onClick={() => safeInvoke(onEditMessageText, original)}
+      >
         {intl.get('sms_messages.label_edit_message')}
-      </ButtonLink>
+      </Button>
     </MessageBoxActions>
   </div>
 );
@@ -87,7 +91,6 @@ export function useSMSIntegrationTableColumns({ onSwitchChange }) {
         accessor: 'sms_message',
         Cell: SMSMessageCell,
         className: 'sms_message',
-        // clickable: true,
         width: '180',
         disableSortBy: true,
       },
