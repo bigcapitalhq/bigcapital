@@ -6,7 +6,6 @@ import {
   useVendor,
   useContact,
   useCurrencies,
-  useCustomer,
   useCreateVendor,
   useEditVendor,
 } from 'hooks/query';
@@ -30,11 +29,10 @@ function VendorFormProvider({ vendorId, ...props }) {
   });
 
   // Handle fetch contact duplicate details.
-  const {
-    data: contactDuplicate,
-    isLoading: isContactLoading,
-  } = useContact(contactId, { enabled: !!contactId });
-
+  const { data: contactDuplicate, isLoading: isContactLoading } = useContact(
+    contactId,
+    { enabled: !!contactId },
+  );
   // Create and edit vendor mutations.
   const { mutateAsync: createVendorMutate } = useCreateVendor();
   const { mutateAsync: editVendorMutate } = useEditVendor();
@@ -45,27 +43,25 @@ function VendorFormProvider({ vendorId, ...props }) {
   // determines whether the form new or duplicate mode.
   const isNewMode = contactId || !vendorId;
 
+  const isFormLoading =
+    isVendorLoading || isContactLoading || isCurrenciesLoading;
+
   const provider = {
     vendorId,
     currencies,
     vendor,
     contactDuplicate: { ...omit(contactDuplicate, ['opening_balance_at']) },
     submitPayload,
+
     isNewMode,
+    isFormLoading,
 
     createVendorMutate,
     editVendorMutate,
     setSubmitPayload,
   };
 
-  return (
-    <DashboardInsider
-      loading={isVendorLoading || isContactLoading || isCurrenciesLoading}
-      name={'vendor-form'}
-    >
-      <VendorFormContext.Provider value={provider} {...props} />
-    </DashboardInsider>
-  );
+  return <VendorFormContext.Provider value={provider} {...props} />;
 }
 
 const useVendorFormContext = () => React.useContext(VendorFormContext);

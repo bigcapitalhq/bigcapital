@@ -33,7 +33,7 @@ const defaultInitialValues = {
 /**
  * Initial values in create and edit mode.
  */
-export const useItemFormInitialValues = (item) => {
+export const useItemFormInitialValues = (item, initialValues) => {
   const { items: itemsSettings } = useSettingsSelector();
 
   return useMemo(
@@ -54,8 +54,9 @@ export const useItemFormInitialValues = (item) => {
         transformItemFormData(item, defaultInitialValues),
         defaultInitialValues,
       ),
+      ...initialValues,
     }),
-    [item, itemsSettings],
+    [item, itemsSettings, initialValues],
   );
 };
 

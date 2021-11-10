@@ -1,20 +1,19 @@
 import React from 'react';
 import { Button, Intent, FormGroup, Checkbox } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
-import { useHistory } from 'react-router-dom';
-import classNames from 'classnames';
+import styled from 'styled-components';
 import { FastField, useFormikContext } from 'formik';
+import classNames from 'classnames';
+
+import { FormattedMessage as T } from 'components';
 
 import { CLASSES } from 'common/classes';
 import { useItemFormContext } from './ItemFormProvider';
+import { saveInvoke } from '../../utils';
 
 /**
  * Item form floating actions.
  */
-export default function ItemFormFloatingActions() {
-  // History context.
-  const history = useHistory();
-
+export default function ItemFormFloatingActions({ onCancel }) {
   // Item form context.
   const { setSubmitPayload, isNewMode } = useItemFormContext();
 
@@ -23,7 +22,7 @@ export default function ItemFormFloatingActions() {
 
   // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
-    history.goBack();
+    saveInvoke(onCancel, event);
   };
 
   // Handle submit button click.
@@ -38,7 +37,7 @@ export default function ItemFormFloatingActions() {
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
-      <Button
+      <SaveButton
         intent={Intent.PRIMARY}
         disabled={isSubmitting}
         loading={isSubmitting}
@@ -47,7 +46,7 @@ export default function ItemFormFloatingActions() {
         className={'btn--submit'}
       >
         {isNewMode ? <T id={'save'} /> : <T id={'edit'} />}
-      </Button>
+      </SaveButton>
 
       <Button
         className={classNames('ml1', 'btn--submit-new')}
@@ -82,3 +81,7 @@ export default function ItemFormFloatingActions() {
     </div>
   );
 }
+
+const SaveButton = styled(Button)`
+  min-width: 100px;
+`;

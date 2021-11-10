@@ -1,13 +1,11 @@
-
 body.page-invoice-new,
-body.page-invoice-edit{
-
-  .dashboard__footer{
+body.page-invoice-edit {
+  .dashboard__footer {
     display: none;
   }
 }
 
-.dashboard__insider--invoice-form{
+.dashboard__insider--invoice-form {
   padding-bottom: 64px;
 }
 
@@ -29,7 +27,6 @@ body.page-invoice-edit{
     }
 
     .bp3-form-group {
-    
       &.bp3-inline {
         max-width: 450px;
       }

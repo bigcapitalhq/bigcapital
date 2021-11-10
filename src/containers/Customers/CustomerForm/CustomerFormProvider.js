@@ -1,6 +1,5 @@
 import React, { useState, createContext } from 'react';
 import { useLocation } from 'react-router-dom';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useCustomer,
   useCurrencies,
@@ -24,7 +23,7 @@ function CustomerFormProvider({ customerId, ...props }) {
   // Handle fetch contact duplicate details.
   const { data: contactDuplicate, isLoading: isContactLoading } = useContact(
     contactId,
-    { enabled: !!contactId, },
+    { enabled: !!contactId },
   );
   // Handle fetch Currencies data table
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
@@ -38,6 +37,9 @@ function CustomerFormProvider({ customerId, ...props }) {
   // determines whether the form new or duplicate mode.
   const isNewMode = contactId || !customerId;
 
+  const isFormLoading =
+    isCustomerLoading || isCurrenciesLoading || isContactLoading;
+
   const provider = {
     customerId,
     customer,
@@ -48,24 +50,14 @@ function CustomerFormProvider({ customerId, ...props }) {
 
     isCustomerLoading,
     isCurrenciesLoading,
+    isFormLoading,
 
     setSubmitPayload,
     editCustomerMutate,
     createCustomerMutate,
   };
 
-  return (
-    <DashboardInsider
-      loading={
-        isCustomerLoading ||
-        isCurrenciesLoading ||
-        isContactLoading
-      }
-      name={'customer-form'}
-    >
-      <CustomerFormContext.Provider value={provider} {...props} />
-    </DashboardInsider>
-  );
+  return <CustomerFormContext.Provider value={provider} {...props} />;
 }
 
 const useCustomerFormContext = () => React.useContext(CustomerFormContext);

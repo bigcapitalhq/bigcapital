@@ -12,7 +12,7 @@ import { FastField, ErrorMessage } from 'formik';
 import { CLASSES } from 'common/classes';
 import {
   AccountsSelectList,
-  ContactSelecetList,
+  CustomerSelectField,
   FieldRequiredHint,
   Icon,
   InputPrependButton,
@@ -88,14 +88,15 @@ function ReceiptFormHeader({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_id'} />}
           >
-            <ContactSelecetList
-              contactsList={customers}
+            <CustomerSelectField
+              contacts={customers}
               selectedContactId={value}
               defaultSelectText={<T id={'select_customer_account'} />}
               onContactSelected={(contact) => {
                 form.setFieldValue('customer_id', contact.id);
               }}
               popoverFill={true}
+              allowCreate={true}
             />
           </FormGroup>
         )}
@@ -129,6 +130,7 @@ function ReceiptFormHeader({
                 ACCOUNT_TYPE.BANK,
                 ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
               ]}
+              allowCreate={true}
             />
           </FormGroup>
         )}

@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import intl from 'react-intl-universal';
+import * as R from 'ramda';
 
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
@@ -10,10 +11,55 @@ import { MenuItemNestedText, FormattedMessage as T } from 'components';
 import { filterAccountsByQuery } from './utils';
 import { nestedArrayToflatten } from 'utils';
 
+import withDialogActions from 'containers/Dialog/withDialogActions';
+
+// Create new account renderer.
+const createNewItemRenderer = (query, active, handleClick) => {
+  return (
+    <MenuItem
+      icon="add"
+      text={`Create "${query}"`}
+      active={active}
+      onClick={handleClick}
+    />
+  );
+};
+
+// Create new item from the given query string.
+const createNewItemFromQuery = (name) => {
+  return {
+    name,
+  };
+};
+
+// Handle input value renderer.
+const handleInputValueRenderer = (inputValue) => {
+  if (inputValue) {
+    return inputValue.name.toString();
+  }
+  return '';
+};
+
+// Filters accounts items.
+const filterAccountsPredicater = (query, account, _index, exactMatch) => {
+  const normalizedTitle = account.name.toLowerCase();
+  const normalizedQuery = query.toLowerCase();
+
+  if (exactMatch) {
+    return normalizedTitle === normalizedQuery;
+  } else {
+    return `${account.code} ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
+  }
+};
+
 /**
  * Accounts suggest field.
  */
-export default function AccountsSuggestField({
+function AccountsSuggestField({
+  // #withDialogActions
+  openDialog,
+
+  // #ownProps
   accounts,
   initialAccountId,
   selectedAccountId,
@@ -25,6 +71,8 @@ export default function AccountsSuggestField({
   filterByTypes = [],
   filterByNormal,
   filterByRootTypes = [],
+
+  allowCreate,
 
   ...suggestProps
 }) {
@@ -69,23 +117,6 @@ export default function AccountsSuggestField({
     }
   }, [selectedAccountId, filteredAccounts, setSelectedAccount]);
 
-  // Filters accounts items.
-  const filterAccountsPredicater = useCallback(
-    (query, account, _index, exactMatch) => {
-      const normalizedTitle = account.name.toLowerCase();
-      const normalizedQuery = query.toLowerCase();
-
-      if (exactMatch) {
-        return normalizedTitle === normalizedQuery;
-      } else {
-        return (
-          `${account.code} ${normalizedTitle}`.indexOf(normalizedQuery) >= 0
-        );
-      }
-    },
-    [],
-  );
-
   // Account item of select accounts field.
   const accountItem = useCallback((item, { handleClick, modifiers, query }) => {
     return (
@@ -98,20 +129,23 @@ export default function AccountsSuggestField({
     );
   }, []);
 
-  const handleInputValueRenderer = (inputValue) => {
-    if (inputValue) {
-      return inputValue.name.toString();
-    }
-    return '';
-  };
-
-  const onAccountSelect = useCallback(
+  const handleAccountSelect = useCallback(
     (account) => {
-      setSelectedAccount({ ...account });
-      onAccountSelected && onAccountSelected(account);
+      if (account.id) {
+        setSelectedAccount({ ...account });
+        onAccountSelected && onAccountSelected(account);
+      } else {
+        openDialog('account-form');
+      }
     },
-    [setSelectedAccount, onAccountSelected],
+    [setSelectedAccount, onAccountSelected, openDialog],
   );
+
+  // Maybe inject new item props to select component.
+  const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
+  const maybeCreateNewItemFromQuery = allowCreate
+    ? createNewItemFromQuery
+    : null;
 
   return (
     <Suggest
@@ -119,7 +153,7 @@ export default function AccountsSuggestField({
       noResults={<MenuItem disabled={true} text={<T id={'no_accounts'} />} />}
       itemRenderer={accountItem}
       itemPredicate={filterAccountsPredicater}
-      onItemSelect={onAccountSelect}
+      onItemSelect={handleAccountSelect}
       selectedItem={selectedAccount}
       inputProps={{ placeholder: defaultSelectText }}
       resetOnClose={true}
@@ -129,7 +163,11 @@ export default function AccountsSuggestField({
       className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, {
         [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
       })}
+      createNewItemRenderer={maybeCreateNewItemRenderer}
+      createNewItemFromQuery={maybeCreateNewItemFromQuery}
       {...suggestProps}
     />
   );
 }
+
+export default R.compose(withDialogActions)(AccountsSuggestField);

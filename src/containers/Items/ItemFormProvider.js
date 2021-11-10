@@ -1,8 +1,5 @@
-import React, { useEffect, createContext, useState } from 'react';
-import intl from 'react-intl-universal';
+import React, { createContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useItem,
   useSettingsItems,
@@ -11,7 +8,6 @@ import {
   useEditItem,
   useAccounts,
 } from 'hooks/query';
-import { useDashboardPageTitle } from 'hooks/state';
 import { useWatchItemError } from './utils';
 
 const ItemFormContext = createContext();
@@ -59,6 +55,13 @@ function ItemFormProvider({ itemId, ...props }) {
   // Detarmines whether the form new mode.
   const isNewMode = duplicateId || !itemId;
 
+  // Detarmines the form loading state.
+  const isFormLoading =
+    isItemsSettingsLoading ||
+    isAccountsLoading ||
+    isItemsCategoriesLoading ||
+    isItemLoading;
+
   // Provider state.
   const provider = {
     itemId,
@@ -68,6 +71,7 @@ function ItemFormProvider({ itemId, ...props }) {
     submitPayload,
     isNewMode,
 
+    isFormLoading,
     isAccountsLoading,
     isItemsCategoriesLoading,
     isItemLoading,
@@ -77,27 +81,7 @@ function ItemFormProvider({ itemId, ...props }) {
     setSubmitPayload,
   };
 
-  // Change page title dispatcher.
-  const changePageTitle = useDashboardPageTitle();
-
-  // Changes the page title in new and edit mode.
-  useEffect(() => {
-    isNewMode
-      ? changePageTitle(intl.get('new_item'))
-      : changePageTitle(intl.get('edit_item_details'));
-  }, [changePageTitle, isNewMode]);
-
-  const loading =
-    isItemsSettingsLoading ||
-    isAccountsLoading ||
-    isItemsCategoriesLoading ||
-    isItemLoading;
-
-  return (
-    <DashboardInsider loading={loading} name={'item-form'}>
-      <ItemFormContext.Provider value={provider} {...props} />
-    </DashboardInsider>
-  );
+  return <ItemFormContext.Provider value={provider} {...props} />;
 }
 
 const useItemFormContext = () => React.useContext(ItemFormContext);

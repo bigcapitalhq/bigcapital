@@ -108,7 +108,9 @@ const LandedCostHeaderCell = () => {
 /**
  * Retrieve editable items entries columns.
  */
-export function useEditableItemsEntriesColumns({ landedCost }) {
+export function useEditableItemsEntriesColumns({
+  landedCost,
+}) {
   return React.useMemo(
     () => [
       {
@@ -129,6 +131,7 @@ export function useEditableItemsEntriesColumns({ landedCost }) {
         disableSortBy: true,
         width: 130,
         className: 'item',
+        fieldProps: { allowCreate: true },
       },
       {
         Header: intl.get('description'),

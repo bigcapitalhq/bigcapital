@@ -1,13 +1,68 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { MenuItem } from '@blueprintjs/core';
-import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
-
 import { Suggest } from '@blueprintjs/select';
+import classNames from 'classnames';
+import * as R from 'ramda';
+
+import { CLASSES } from 'common/classes';
 
 import { FormattedMessage as T } from 'components';
 
-export default function ItemsSuggestField({
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
+
+import { DRAWERS } from 'common/drawers';
+
+// Creates a new item from query.
+const createNewItemFromQuery = (name) => {
+  return {
+    name,
+  };
+};
+
+// Handle quick create new customer.
+const createNewItemRenderer = (query, active, handleClick) => {
+  return (
+    <MenuItem
+      icon="add"
+      text={`Create "${query}"`}
+      active={active}
+      shouldDismissPopover={false}
+      onClick={handleClick}
+    />
+  );
+};
+
+// Item renderer.
+const itemRenderer = (item, { modifiers, handleClick }) => (
+  <MenuItem
+    key={item.id}
+    text={item.name}
+    label={item.code}
+    onClick={handleClick}
+  />
+);
+
+// Filters items.
+const filterItemsPredicater = (query, item, _index, exactMatch) => {
+  const normalizedTitle = item.name.toLowerCase();
+  const normalizedQuery = query.toLowerCase();
+
+  if (exactMatch) {
+    return normalizedTitle === normalizedQuery;
+  } else {
+    return `${normalizedTitle} ${item.code}`.indexOf(normalizedQuery) >= 0;
+  }
+};
+
+// Handle input value renderer.
+const handleInputValueRenderer = (inputValue) => {
+  if (inputValue) {
+    return inputValue.name.toString();
+  }
+  return '';
+};
+
+function ItemsSuggestField({
   items,
   initialItemId,
   selectedItemId,
@@ -18,6 +73,10 @@ export default function ItemsSuggestField({
   sellable = false,
   purchasable = false,
   popoverFill = false,
+
+  allowCreate = true,
+
+  openDrawer,
   ...suggestProps
 }) {
   // Filters items based on filter props.
@@ -36,27 +95,22 @@ export default function ItemsSuggestField({
   // Find initial item object.
   const initialItem = useMemo(
     () => filteredItems.some((a) => a.id === initialItemId),
-    [initialItemId],
+    [initialItemId, filteredItems],
   );
 
   const [selectedItem, setSelectedItem] = useState(initialItem || null);
 
   const onItemSelect = useCallback(
     (item) => {
-      setSelectedItem({ ...item });
-      onItemSelected && onItemSelected(item);
+      if (item.id) {
+        setSelectedItem({ ...item });
+        onItemSelected && onItemSelected(item);
+      } else {
+        openDrawer(DRAWERS.QUICK_CREATE_ITEM);
+      }
     },
-    [setSelectedItem, onItemSelected],
+    [setSelectedItem, onItemSelected, openDrawer],
   );
-
-  const itemRenderer = useCallback((item, { modifiers, handleClick }) => (
-    <MenuItem
-      key={item.id}
-      text={item.name}
-      label={item.code}
-      onClick={handleClick}
-    />
-  ));
 
   useEffect(() => {
     if (typeof selectedItemId !== 'undefined') {
@@ -67,27 +121,12 @@ export default function ItemsSuggestField({
     }
   }, [selectedItemId, filteredItems, setSelectedItem]);
 
-  const handleInputValueRenderer = (inputValue) => {
-    if (inputValue) {
-      return inputValue.name.toString();
-    }
-    return '';
-  };
+  // Maybe inject create new item props to suggest component.
+  const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
+  const maybeCreateNewItemFromQuery = allowCreate
+    ? createNewItemFromQuery
+    : null;
 
-  // Filters items.
-  const filterItemsPredicater = useCallback(
-    (query, item, _index, exactMatch) => {
-      const normalizedTitle = item.name.toLowerCase();
-      const normalizedQuery = query.toLowerCase();
-
-      if (exactMatch) {
-        return normalizedTitle === normalizedQuery;
-      } else {
-        return `${normalizedTitle} ${item.code}`.indexOf(normalizedQuery) >= 0;
-      }
-    },
-    [],
-  );
   return (
     <Suggest
       items={filteredItems}
@@ -104,7 +143,12 @@ export default function ItemsSuggestField({
       className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, {
         [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
       })}
+      createNewItemRenderer={maybeCreateNewItemRenderer}
+      createNewItemFromQuery={maybeCreateNewItemFromQuery}
+      createNewItemPosition={'top'}
       {...suggestProps}
     />
   );
 }
+
+export default R.compose(withDrawerActions)(ItemsSuggestField);

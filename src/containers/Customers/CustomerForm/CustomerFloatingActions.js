@@ -9,23 +9,24 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
-import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
+import styled from 'styled-components';
+
+import { FormattedMessage as T } from 'components';
 
 import { CLASSES } from 'common/classes';
 import { Icon } from 'components';
 import { useCustomerFormContext } from './CustomerFormProvider';
 
+import { safeInvoke } from 'utils';
+
 /**
  * Customer floating actions bar.
  */
-export default function CustomerFloatingActions() {
-  const history = useHistory();
-
+export default function CustomerFloatingActions({ onCancel }) {
   // Customer form context.
-  const { isNewMode,setSubmitPayload } = useCustomerFormContext();
+  const { isNewMode, setSubmitPayload } = useCustomerFormContext();
 
   // Formik context.
   const { resetForm, submitForm, isSubmitting } = useFormikContext();
@@ -37,7 +38,7 @@ export default function CustomerFloatingActions() {
 
   // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
-    history.goBack();
+    safeInvoke(onCancel, event);
   };
 
   // handle clear button clicl.
@@ -55,7 +56,7 @@ export default function CustomerFloatingActions() {
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       <ButtonGroup>
         {/* ----------- Save and New ----------- */}
-        <Button
+        <SaveButton
           disabled={isSubmitting}
           loading={isSubmitting}
           intent={Intent.PRIMARY}
@@ -83,6 +84,7 @@ export default function CustomerFloatingActions() {
           />
         </Popover>
       </ButtonGroup>
+
       {/* ----------- Clear & Reset----------- */}
       <Button
         className={'ml1'}
@@ -99,3 +101,7 @@ export default function CustomerFloatingActions() {
     </div>
   );
 }
+
+const SaveButton = styled(Button)`
+  min-width: 100px;
+`;

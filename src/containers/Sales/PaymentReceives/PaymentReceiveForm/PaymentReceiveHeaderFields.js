@@ -23,7 +23,7 @@ import {
 } from 'utils';
 import {
   AccountsSelectList,
-  ContactSelecetList,
+  CustomerSelectField,
   FieldRequiredHint,
   Icon,
   InputPrependButton,
@@ -134,8 +134,8 @@ function PaymentReceiveHeaderFields({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_id'} />}
           >
-            <ContactSelecetList
-              contactsList={customers}
+            <CustomerSelectField
+              contacts={customers}
               selectedContactId={value}
               defaultSelectText={<T id={'select_customer_account'} />}
               onContactSelected={(customer) => {
@@ -147,6 +147,7 @@ function PaymentReceiveHeaderFields({
               buttonProps={{
                 elementRef: (ref) => (customerFieldRef.current = ref),
               }}
+              allowCreate={true}
             />
           </FormGroup>
         )}

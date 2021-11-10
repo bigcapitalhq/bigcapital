@@ -87,6 +87,7 @@ export * from './IntersectionObserver'
 export * from './Datatable/CellForceWidth';
 export * from './Button';
 export * from './IntersectionObserver';
+export * from './Contacts';
 
 const Hint = FieldHint;
 

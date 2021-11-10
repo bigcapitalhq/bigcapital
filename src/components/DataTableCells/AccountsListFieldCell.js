@@ -17,6 +17,8 @@ export default function AccountCellRenderer({
     accountsDataProp,
     filterAccountsByRootTypes,
     filterAccountsByTypes,
+    fieldProps,
+    formGroupProps,
   },
   row: { index, original },
   cell: { value: initialValue },
@@ -53,6 +55,7 @@ export default function AccountCellRenderer({
         'form-group--account',
         Classes.FILL,
       )}
+      {...formGroupProps}
     >
       <AccountsSuggestField
         accounts={accounts}
@@ -66,6 +69,7 @@ export default function AccountCellRenderer({
         }}
         openOnKeyDown={true}
         blurOnSelectClose={false}
+        {...fieldProps}
       />
     </FormGroup>
   );

@@ -1,13 +1,55 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { MenuItem, Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import { MenuItemNestedText, FormattedMessage as T } from 'components';
+import * as R from 'ramda';
 import classNames from 'classnames';
+
+import { MenuItemNestedText, FormattedMessage as T } from 'components';
 import { filterAccountsByQuery } from './utils';
 import { nestedArrayToflatten } from 'utils';
 import { CLASSES } from 'common/classes';
 
-export default function AccountsSelectList({
+import withDialogActions from 'containers/Dialog/withDialogActions';
+
+// Create new account renderer.
+const createNewItemRenderer = (query, active, handleClick) => {
+  return (
+    <MenuItem
+      icon="add"
+      text={`Create "${query}"`}
+      active={active}
+      onClick={handleClick}
+    />
+  );
+};
+
+// Create new item from the given query string.
+const createNewItemFromQuery = (name) => {
+  return {
+    name,
+  };
+};
+
+// Filters accounts items.
+const filterAccountsPredicater = (query, account, _index, exactMatch) => {
+  const normalizedTitle = account.name.toLowerCase();
+  const normalizedQuery = query.toLowerCase();
+
+  if (exactMatch) {
+    return normalizedTitle === normalizedQuery;
+  } else {
+    return `${account.code} ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
+  }
+};
+
+/**
+ * Accounts select list.
+ */
+function AccountsSelectList({
+  // #withDialogActions
+  openDialog,
+
+  // #ownProps
   accounts,
   initialAccountId,
   selectedAccountId,
@@ -20,6 +62,8 @@ export default function AccountsSelectList({
   filterByTypes,
   filterByNormal,
   filterByRootTypes,
+
+  allowCreate,
 
   buttonProps = {},
 }) {
@@ -51,6 +95,7 @@ export default function AccountsSelectList({
     [initialAccountId, filteredAccounts],
   );
 
+  // Select account item.
   const [selectedAccount, setSelectedAccount] = useState(
     initialAccount || null,
   );
@@ -76,30 +121,24 @@ export default function AccountsSelectList({
     );
   }, []);
 
-  const onAccountSelect = useCallback(
+  // Handle the account item select.
+  const handleAccountSelect = useCallback(
     (account) => {
-      setSelectedAccount({ ...account });
-      onAccountSelected && onAccountSelected(account);
-    },
-    [setSelectedAccount, onAccountSelected],
-  );
-
-  // Filters accounts items.
-  const filterAccountsPredicater = useCallback(
-    (query, account, _index, exactMatch) => {
-      const normalizedTitle = account.name.toLowerCase();
-      const normalizedQuery = query.toLowerCase();
-
-      if (exactMatch) {
-        return normalizedTitle === normalizedQuery;
+      if (account.id) {
+        setSelectedAccount({ ...account });
+        onAccountSelected && onAccountSelected(account);
       } else {
-        return (
-          `${account.code} ${normalizedTitle}`.indexOf(normalizedQuery) >= 0
-        );
+        openDialog('account-form');
       }
     },
-    [],
+    [setSelectedAccount, onAccountSelected, openDialog],
   );
+
+  // Maybe inject new item props to select component.
+  const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
+  const maybeCreateNewItemFromQuery = allowCreate
+    ? createNewItemFromQuery
+    : null;
 
   return (
     <Select
@@ -113,11 +152,13 @@ export default function AccountsSelectList({
         inline: popoverFill,
       }}
       filterable={true}
-      onItemSelect={onAccountSelect}
+      onItemSelect={handleAccountSelect}
       disabled={disabled}
       className={classNames('form-group--select-list', {
         [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
       })}
+      createNewItemRenderer={maybeCreateNewItemRenderer}
+      createNewItemFromQuery={maybeCreateNewItemFromQuery}
     >
       <Button
         disabled={disabled}
@@ -127,3 +168,5 @@ export default function AccountsSelectList({
     </Select>
   );
 }
+
+export default R.compose(withDialogActions)(AccountsSelectList);

@@ -113,6 +113,7 @@ export function useExpenseFormTableColumns({ landedCost }) {
         disableSortBy: true,
         width: 40,
         filterAccountsByRootTypes: ['expense'],
+        fieldProps: { allowCreate: true },
       },
       {
         Header: ExpenseAmountHeaderCell,
