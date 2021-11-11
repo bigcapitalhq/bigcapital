@@ -11,6 +11,10 @@
       }
       .tbody {
         .tr:not(.no-results) {
+          &.row-type--CUSTOMER,
+          &.row-type--VENDOR {
+            border-top: 1px solid #BBB
+          }
           .td {
             border-bottom: 0;
             padding-top: 0.4rem;

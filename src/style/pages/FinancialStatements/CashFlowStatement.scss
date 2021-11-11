@@ -10,7 +10,11 @@
       }
       .tbody {
         .tr:not(.no-results) {
-          &.row-type--CASH_END_PERIOD{
+          // &.row-type--AGGREGATE, 
+          &.row-type--ACCOUNTS {
+            border-top: 1px solid #bbb;
+          }
+          &.row-type--CASH_END_PERIOD {
             border-bottom: 3px double #333;
           }
           .td {
@@ -30,7 +34,7 @@
 
         .tr.is-expanded {
           .td.total,
-          .td.date-period{
+          .td.date-period {
             .cell-inner {
               display: none;
             }
