@@ -2,7 +2,6 @@ import React from 'react';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { useSettings, useSettingSMSNotifications } from 'hooks/query';
-import PreferencesPageLoader from '../PreferencesPageLoader';
 
 const SMSIntegrationContext = React.createContext();
 
@@ -13,13 +12,17 @@ function SMSIntegrationProvider({ ...props }) {
   //Fetches Organization Settings.
   const { isLoading: isSettingsLoading } = useSettings();
 
-  const { data: notifications, isLoading: isSMSNotificationsLoading } =
-    useSettingSMSNotifications();
+  const {
+    data: notifications,
+    isLoading: isSMSNotificationsLoading,
+    isFetching: isSMSNotificationsFetching,
+  } = useSettingSMSNotifications();
 
   // Provider state.
   const provider = {
     notifications,
     isSMSNotificationsLoading,
+    isSMSNotificationsFetching,
   };
 
   return (
