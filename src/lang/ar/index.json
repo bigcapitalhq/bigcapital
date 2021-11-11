@@ -1445,8 +1445,8 @@
   "notify_via_sms.dialog.notification_type": "نوع الإشعار",
   "notify_via_sms.dialog.notify_via_sms": "إشعار عبر رسائل قصيرة",
   "notiify_via_sms.dialog.sms_note": "<strong>ملاحظة :</strong> يمكن أن تحتوي رسالة قصيرة الواحدة على 160 حرفًا كحد أقصى <strong>{value}</strong>. سيتم استخدام وحدات الرسائل القصيرة لإرسال هذا  إشعار عبر الرسائل القصيرة. ",
-  "notify_Via_sms.dialog.customer_phone_number_does_not_eixst": "رقم هاتف العميل غير موجود ، يرجى  إدخال رقم هاتف للعميل. ",
-  "notify_Via_sms.dialog.customer_phone_number_invalid": "رقم هاتف العميل غير صالح ، يرجى  إدخال رقم هاتف صحيح للعميل. ",
+  "notify_Via_sms.dialog.customer_phone_number_does_not_eixst": "رقم هاتف الزبون غير موجود ، يرجى  إدخال رقم هاتف للعميل. ",
+  "notify_Via_sms.dialog.customer_phone_number_invalid": "رقم هاتف الزبون غير صالح ، يرجى  إدخال رقم هاتف صحيح للعميل. ",
   "notify_via_sms.dialog.phone_invalid_error_message": "لا يمكن إرسال إشعار الرسائل القصيرة ، رقم الهاتف للعميل غير صالح ، يرجى إدخال رقم صالح والمحاولة مرة أخرى.",
   "notify_via_sms.dialog.customer_no_phone_error_message": "الزبون ليس لديه رقم هاتف.",
   "notify_invoice_via_sms.dialog.success_message": "تم إرسال إشعار فاتورة البيع عبر الرسائل القصيرة بنجاح ",
@@ -1467,9 +1467,11 @@
   "sms_message.dialog.success_message": "تم تحديث إعدادات إشعار الرسائل القصيرة بنجاح. ",
   "sms_message.dialog.unsupported_variables_error_message": "متغيرات غير مدعومة",
   "sms_message.dialog.message_variable_description": "<strong>{value}</strong> إشارة لاسم الشركة الحالي.",
-  "edit_message_text": "تعديل نص رسالة",
-  "enable_notification": "تفعيل الإشعارات",
+  "sms_notifications.edit_message_text": "تعديل نص رسالة",
+  "sms_notifications.enable_notification": "تفعيل الإشعارات",
+  "sms_notifications.disable_notification": "تعطيل الإشعارات",
   "send_sms": "إرسال رسالة قصيرة",
   "save_sms_message": "حفظ رسالة قصيرة",
-  "sms_message.edit_form.reset_to_default_message": "إعادة التعيين إلى الرسالة الافتراضية."
+  "sms_message.edit_form.reset_to_default_message": "إعادة التعيين إلى الرسالة الافتراضية.",
+  "report.compute_running.refresh": "تحديث"
 }

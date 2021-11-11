@@ -27,7 +27,7 @@ export function BalanceSheetAlerts() {
         <Icon icon="info-block" iconSize={12} />{' '}
         <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
         <Button onClick={handleRecalcReport} minimal={true} small={true}>
-          <T id={'refresh'} />
+          <T id={'report.compute_running.refresh'} />
         </Button>
       </div>
     </If>

@@ -1454,9 +1454,11 @@
   "sms_message.dialog.success_message": "Sms notification settings has been updated successfully.",
   "sms_message.dialog.unsupported_variables_error_message": "Unsupported variables",
   "sms_message.dialog.message_variable_description": "<strong>{value}</strong> References to the current company name.",
-  "edit_message_text": "Edit message text",
-  "enable_notification": "Enable notification",
+  "sms_notifications.edit_message_text": "Edit message text",
+  "sms_notifications.enable_notification": "Enable notification",
+  "sms_notifications.disable_notification": "Disable notification",
   "send_sms": "Send SMS",
   "save_sms_message": "Save SMS Message",
-  "sms_message.edit_form.reset_to_default_message": "Reset to default message."
+  "sms_message.edit_form.reset_to_default_message": "Reset to default message.",
+  "report.compute_running.refresh": "Refresh"
 }

@@ -24,20 +24,24 @@ function SMSMessagesDataTable({
   const { mutateAsync: editSMSNotificationMutate } =
     useSettingEditSMSNotification();
 
+  const toggleSmsNotification = (notificationKey, value) => {
+    editSMSNotificationMutate({
+      notification_key: notificationKey,
+      is_notification_enabled: value,
+    }).then(() => {
+      AppToaster.show({
+        message: intl.get(
+          'sms_messages.notification_switch_change_success_message',
+        ),
+        intent: Intent.SUCCESS,
+      });
+    });
+  };
+
   // Handle notification switch change.
   const handleNotificationSwitchChange = React.useCallback(
     (event, value, notification) => {
-      editSMSNotificationMutate({
-        notification_key: notification.key,
-        is_notification_enabled: value,
-      }).then(() => {
-        AppToaster.show({
-          message: intl.get(
-            'sms_messages.notification_switch_change_success_message',
-          ),
-          intent: Intent.SUCCESS,
-        });
-      });
+      toggleSmsNotification(notification.key, value);
     },
     [editSMSNotificationMutate],
   );
@@ -47,28 +51,37 @@ function SMSMessagesDataTable({
     onSwitchChange: handleNotificationSwitchChange,
   });
 
-  const { notifications, isSMSNotificationsLoading } =
-    useSMSIntegrationContext();
+  const {
+    notifications,
+    isSMSNotificationsLoading,
+    isSMSNotificationsFetching,
+  } = useSMSIntegrationContext();
 
   // handle edit message link click
   const handleEditMessageText = ({ key }) => {
     openDialog('sms-message-form', { notificationkey: key });
   };
 
-  const handleEnableNotification = () => {};
+  const handleEnableNotification = (notification) => {
+    toggleSmsNotification(notification.key, true);
+  };
+
+  const handleDisableNotification = (notification) => {
+    toggleSmsNotification(notification.key, false);
+  };
 
   return (
     <SMSNotificationsTable
       columns={columns}
       data={notifications}
       loading={isSMSNotificationsLoading}
-      progressBarLoading={isSMSNotificationsLoading}
+      progressBarLoading={isSMSNotificationsFetching}
       TableLoadingRenderer={TableSkeletonRows}
-      noInitialFetch={true}
       ContextMenu={ActionsMenu}
       payload={{
         onEditMessageText: handleEditMessageText,
         onEnableNotification: handleEnableNotification,
+        onDisableNotification: handleDisableNotification,
       }}
     />
   );

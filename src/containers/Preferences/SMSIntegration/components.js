@@ -1,10 +1,9 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Intent, Button, Menu, MenuItem } from '@blueprintjs/core';
+import { Intent, Button, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 
 import { SwitchFieldCell } from 'components/DataTableCells';
-
 import { safeInvoke } from 'utils';
 
 /**
@@ -47,19 +46,27 @@ export const SMSMessageCell = ({
  * Context menu of SMS notification messages.
  */
 export function ActionsMenu({
-  payload: { onEditMessageText, onEnableNotification },
+  payload: { onEditMessageText, onEnableNotification, onDisableNotification },
   row: { original },
 }) {
   return (
     <Menu>
       <MenuItem
-        text={intl.get('edit_message_text')}
-        onClick={safeInvoke(onEditMessageText, original)}
+        text={intl.get('sms_notifications.edit_message_text')}
+        onClick={() => safeInvoke(onEditMessageText, original)}
       />
-      <MenuItem
-        text={intl.get('enable_notification')}
-        onClick={safeInvoke(onEnableNotification, original)}
-      />
+      <MenuDivider />
+      {!original.is_notification_enabled ? (
+        <MenuItem
+          text={intl.get('sms_notifications.enable_notification')}
+          onClick={() => safeInvoke(onEnableNotification, original)}
+        />
+      ) : (
+        <MenuItem
+          text={intl.get('sms_notifications.disable_notification')}
+          onClick={() => safeInvoke(onDisableNotification, original)}
+        />
+      )}
     </Menu>
   );
 }
