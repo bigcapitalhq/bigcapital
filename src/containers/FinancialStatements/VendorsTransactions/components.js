@@ -21,14 +21,14 @@ export const useVendorsTransactionsColumns = () => {
           return (
             <span
               className={'force-width'}
-              style={{ minWidth: getForceWidth(cells[0].key) }}
+              style={{ minWidth: getForceWidth(cells[0].value) }}
             >
               {cells[0].value}
             </span>
           );
         },
         className: 'vendor_name',
-        textOverview: true,
+        // textOverview: true,
         // width: 240,
       },
       {
