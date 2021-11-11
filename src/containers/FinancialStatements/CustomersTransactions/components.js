@@ -22,14 +22,14 @@ export const useCustomersTransactionsColumns = () => {
           return (
             <span
               className={'force-width'}
-              style={{ minWidth: getForceWidth(cells[0].key) }}
+              style={{ minWidth: getForceWidth(cells[0].value) }}
             >
               {cells[0].value}
             </span>
           );
         },
         className: 'customer_name',
-        textOverview: true,
+        // textOverview: true,
       },
       {
         Header: intl.get('account_name'),
