@@ -42,7 +42,7 @@ export default function SMSMessageFormFields() {
                   intent={Intent.PRIMARY}
                   onClick={handleBtnClick}
                 >
-                  Reset to default message.
+                  <T id={'sms_message.edit_form.reset_to_default_message'} />
                 </ResetButton>
               </>
             }

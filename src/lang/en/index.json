@@ -1456,5 +1456,6 @@
   "edit_message_text": "Edit message text",
   "enable_notification": "Enable notification",
   "send_sms": "Send SMS",
-  "save_sms_message": "Save SMS Message"
+  "save_sms_message": "Save SMS Message",
+  "sms_message.edit_form.reset_to_default_message": "Reset to default message."
 }
