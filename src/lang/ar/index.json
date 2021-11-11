@@ -1478,5 +1478,6 @@
   "sms_notification.invoice_reminder.type": "تذكير بالفاتورة",
   "sms_notification.estimate_details.type": "تفاصيل فاتورة عرض الاسعار",
   "sms_notification.payment_details.type": "شكر علي عملية الدفع",
-  "sms_notification.receipt_details.type": "تفاصيل إيصال البيع"
+  "sms_notification.receipt_details.type": "تفاصيل إيصال البيع",
+  "personal": "المحمول"
 }

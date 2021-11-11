@@ -6,7 +6,6 @@ import intl from 'react-intl-universal';
 import { inputIntent } from 'utils';
 
 export default function CustomerFormAfterPrimarySection({}) {
-  
   return (
     <div class="customer-form__after-primary-section-content">
       {/*------------ Customer email -----------*/}
@@ -31,21 +30,21 @@ export default function CustomerFormAfterPrimarySection({}) {
         inline={true}
       >
         <ControlGroup>
-          <FastField name={'work_phone'}>
+          <FastField name={'personal_phone'}>
             {({ field, meta: { error, touched } }) => (
               <InputGroup
                 intent={inputIntent({ error, touched })}
-                placeholder={intl.get('work')}
+                placeholder={intl.get('personal')}
                 {...field}
               />
             )}
           </FastField>
 
-          <FastField name={'personal_phone'}>
+          <FastField name={'work_phone'}>
             {({ field, meta: { error, touched } }) => (
               <InputGroup
                 intent={inputIntent({ error, touched })}
-                placeholder={intl.get('Mobile')}
+                placeholder={intl.get('work')}
                 {...field}
               />
             )}

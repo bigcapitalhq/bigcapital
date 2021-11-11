@@ -1465,5 +1465,6 @@
   "sms_notification.invoice_reminder.type": "Invoice reminder",
   "sms_notification.estimate_details.type": "Sale estimate details",
   "sms_notification.payment_details.type": "Payment receive thank you.",
-  "sms_notification.receipt_details.type": "Sale receipt details"
+  "sms_notification.receipt_details.type": "Sale receipt details",
+  "personal": "Personal"
 }
