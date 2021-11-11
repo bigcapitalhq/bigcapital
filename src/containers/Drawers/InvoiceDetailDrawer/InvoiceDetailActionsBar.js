@@ -6,28 +6,17 @@ import {
   NavbarGroup,
   Classes,
   NavbarDivider,
-  Popover,
-  PopoverInteractionKind,
-  Position,
   Intent,
-  MenuItem,
-  Menu,
 } from '@blueprintjs/core';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
-import { moreVertOptions } from '../../../common/moreVertOptions';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import {
-  If,
-  Icon,
-  FormattedMessage as T,
-  // MoreVertMenutItems,
-} from 'components';
+import { If, Icon, FormattedMessage as T } from 'components';
 
 import { compose } from 'utils';
 
@@ -76,6 +65,10 @@ function InvoiceDetailActionsBar({
   const handleBadDebtInvoice = () => {
     openDialog('write-off-bad-debt', { invoiceId });
   };
+  // Handle notify via SMS.
+  const handleNotifyViaSMS = () => {
+    openDialog('notify-invoice-via-sms', { invoiceId });
+  };
 
   // Handle cancele write-off invoice.
   const handleCancelBadDebtInvoice = () => {
@@ -116,9 +109,11 @@ function InvoiceDetailActionsBar({
         />
         <NavbarDivider />
         <BadDebtMenuItem
-          invoice={invoice}
-          onAlert={handleCancelBadDebtInvoice}
-          onDialog={handleBadDebtInvoice}
+          payload={{
+            onBadDebt: handleBadDebtInvoice,
+            onCancelBadDebt: handleCancelBadDebtInvoice,
+            onNotifyViaSMS: handleNotifyViaSMS,
+          }}
         />
       </NavbarGroup>
     </DashboardActionsBar>

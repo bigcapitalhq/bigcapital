@@ -9,16 +9,16 @@ function DialogComponent(props) {
   const { name, children, closeDialog, onClose } = props;
 
   const handleClose = (event) => {
-    closeDialog(name)
+    closeDialog(name);
     onClose && onClose(event);
   };
   return (
     <Dialog {...props} onClose={handleClose}>
-      { children }
+      {children}
     </Dialog>
   );
 }
 
-export default compose(
-  withDialogActions,
-)(DialogComponent);
+const DialogRoot = compose(withDialogActions)(DialogComponent);
+
+export { DialogRoot as Dialog };

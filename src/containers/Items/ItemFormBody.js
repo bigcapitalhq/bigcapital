@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFormikContext, FastField, Field, ErrorMessage } from 'formik';
+import { useFormikContext, FastField, ErrorMessage } from 'formik';
 import {
   FormGroup,
   Classes,
@@ -122,6 +122,7 @@ function ItemFormBody({ organization: { base_currency } }) {
                   disabled={!form.values.sellable}
                   filterByParentTypes={[ACCOUNT_PARENT_TYPE.INCOME]}
                   popoverFill={true}
+                  allowCreate={true}
                 />
               </FormGroup>
             )}
@@ -230,6 +231,7 @@ function ItemFormBody({ organization: { base_currency } }) {
                   disabled={!form.values.purchasable}
                   filterByParentTypes={[ACCOUNT_PARENT_TYPE.EXPENSE]}
                   popoverFill={true}
+                  allowCreate={true}
                 />
               </FormGroup>
             )}

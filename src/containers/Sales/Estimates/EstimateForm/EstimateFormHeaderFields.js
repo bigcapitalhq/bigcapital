@@ -19,7 +19,7 @@ import { customersFieldShouldUpdate } from './utils';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
-  ContactSelecetList,
+  CustomerSelectField,
   FieldRequiredHint,
   Icon,
   InputPrependButton,
@@ -82,8 +82,8 @@ function EstimateFormHeader({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_id'} />}
           >
-            <ContactSelecetList
-              contactsList={customers}
+            <CustomerSelectField
+              contacts={customers}
               selectedContactId={value}
               defaultSelectText={<T id={'select_customer_account'} />}
               onContactSelected={(customer) => {
@@ -91,6 +91,7 @@ function EstimateFormHeader({
               }}
               popoverFill={true}
               intent={inputIntent({ error, touched })}
+              allowCreate={true}
             />
           </FormGroup>
         )}

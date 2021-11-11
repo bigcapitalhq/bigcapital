@@ -66,6 +66,7 @@ const CLASSES = {
   PREFERENCES_PAGE_INSIDE_CONTENT_USERS: 'preferences-page__inside-content--users',
   PREFERENCES_PAGE_INSIDE_CONTENT_CURRENCIES: 'preferences-page__inside-content--currencies',
   PREFERENCES_PAGE_INSIDE_CONTENT_ACCOUNTANT: 'preferences-page__inside-content--accountant',
+  PREFERENCES_PAGE_INSIDE_CONTENT_SMS_INTEGRATION: 'preferences-page__inside-content--sms-integration',
 
   FINANCIAL_REPORT_INSIDER: 'dashboard__insider--financial-report',
 

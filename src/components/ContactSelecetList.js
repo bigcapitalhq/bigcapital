@@ -11,12 +11,14 @@ export default function ContactSelecetList({
   contactsList,
   initialContactId,
   selectedContactId,
-  selectedContactType,
+  createNewItemFrom,
   defaultSelectText = <T id={'select_contact'} />,
   onContactSelected,
   popoverFill = false,
   disabled = false,
   buttonProps,
+
+  ...restProps
 }) {
   const contacts = useMemo(
     () =>
@@ -65,7 +67,7 @@ export default function ContactSelecetList({
   );
 
   // Filter Contact List
-  const filterContacts = (query, contact, index, exactMatch) => {
+  const itemPredicate = (query, contact, index, exactMatch) => {
     const normalizedTitle = contact.display_name.toLowerCase();
     const normalizedQuery = query.toLowerCase();
     if (exactMatch) {
@@ -83,7 +85,7 @@ export default function ContactSelecetList({
       items={contacts}
       noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
       itemRenderer={handleContactRenderer}
-      itemPredicate={filterContacts}
+      itemPredicate={itemPredicate}
       filterable={true}
       disabled={disabled}
       onItemSelect={onContactSelect}
@@ -92,8 +94,9 @@ export default function ContactSelecetList({
         [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
       })}
       inputProps={{
-        placeholder: intl.get('filter_')
+        placeholder: intl.get('filter_'),
       }}
+      {...restProps}
     >
       <Button
         disabled={disabled}

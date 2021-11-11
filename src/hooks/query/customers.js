@@ -20,6 +20,12 @@ const commonInvalidateQueries = (queryClient) => {
 
   // Invalidate the financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
+
+  // Invalidate SMS details.
+  queryClient.invalidateQueries(t.SALE_ESTIMATE_SMS_DETAIL);
+  queryClient.invalidateQueries(t.SALE_INVOICE_SMS_DETAIL);
+  queryClient.invalidateQueries(t.SALE_RECEIPT_SMS_DETAIL);
+  queryClient.invalidateQueries(t.PAYMENT_RECEIVE_SMS_DETAIL);
 };
 
 // Customers response selector.

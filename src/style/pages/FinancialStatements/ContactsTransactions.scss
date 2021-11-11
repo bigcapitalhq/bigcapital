@@ -64,12 +64,11 @@
                 display: none;
               }
             }
-          }
-          &--CUSTOMER:last-child {
-            .td {
-              border-bottom: 1px solid #ddd;
+            &:not(:first-child).is-expanded .td {
+              border-top: 1px solid #ddd;
             }
           }
+          &--CUSTOMER:last-child,
           &--VENDOR:last-child {
             .td {
               border-bottom: 1px solid #ddd;

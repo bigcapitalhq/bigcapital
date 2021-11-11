@@ -29,7 +29,7 @@ export default function InventoryItemDetailsTable({
   );
 
   const rowClassNames = (row) => {
-    return [`row-type--${row.original.rowTypes}`];
+    return [`row-type--${row.original.row_types}`];
   };
 
   return (

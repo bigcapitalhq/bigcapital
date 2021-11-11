@@ -15,7 +15,7 @@ import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
   AccountsSelectList,
-  ContactSelecetList,
+  VendorSelectField,
   FieldRequiredHint,
   InputPrependText,
   Money,
@@ -90,8 +90,8 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'vendor_id'} />}
           >
-            <ContactSelecetList
-              contactsList={vendors}
+            <VendorSelectField
+              contacts={vendors}
               selectedContactId={value}
               defaultSelectText={<T id={'select_vender_account'} />}
               onContactSelected={(contact) => {
@@ -100,6 +100,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
               }}
               disabled={!isNewMode}
               popoverFill={true}
+              allowCreate={true}
             />
           </FormGroup>
         )}

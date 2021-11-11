@@ -1,13 +1,10 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
-import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
-import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from 'common/classes';
-import { FormattedMessage as T } from 'components';
 import AppToaster from 'components/AppToaster';
 import {
   CreateVendorFormSchema,
@@ -19,56 +16,27 @@ import VendorFormAfterPrimarySection from './VendorFormAfterPrimarySection';
 import VendorTabs from './VendorsTabs';
 import VendorFloatingActions from './VendorFloatingActions';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 import { useVendorFormContext } from './VendorFormProvider';
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm, safeInvoke } from 'utils';
 
-const defaultInitialValues = {
-  salutation: '',
-  first_name: '',
-  last_name: '',
-  company_name: '',
-  display_name: '',
+import { defaultInitialValues } from './utils';
 
-  email: '',
-  work_phone: '',
-  personal_phone: '',
-  website: '',
-  note: '',
-  active: true,
-
-  billing_address_country: '',
-  billing_address_1: '',
-  billing_address_2: '',
-  billing_address_city: '',
-  billing_address_state: '',
-  billing_address_postcode: '',
-  billing_address_phone: '',
-
-  shipping_address_country: '',
-  shipping_address_1: '',
-  shipping_address_2: '',
-  shipping_address_city: '',
-  shipping_address_state: '',
-  shipping_address_postcode: '',
-  shipping_address_phone: '',
-
-  opening_balance: '',
-  currency_code: '',
-  opening_balance_at: moment(new Date()).format('YYYY-MM-DD'),
-};
+import 'style/pages/Vendors/Form.scss';
 
 /**
  * Vendor form.
  */
-function VendorForm({
-  // #withDashboardActions
-  changePageTitle,
-
+function VendorFormFormik({
   // #withCurrentOrganization
   organization: { base_currency },
+
+  // #ownProps
+  onSubmitSuccess,
+  onSubmitError,
+  onCancel,
+  className,
 }) {
   // Vendor form context.
   const {
@@ -81,11 +49,6 @@ function VendorForm({
     submitPayload,
     isNewMode,
   } = useVendorFormContext();
-
-  // const isNewMode = !vendorId;
-
-  // History context.
-  const history = useHistory();
 
   /**
    * Initial values in create and edit mode.
@@ -101,14 +64,13 @@ function VendorForm({
   );
 
   // Handles the form submit.
-  const handleFormSubmit = (
-    values,
-    { setSubmitting, resetForm, setErrors },
-  ) => {
+  const handleFormSubmit = (values, form) => {
+    const { setSubmitting, resetForm } = form;
     const requestForm = { ...values };
+
     setSubmitting(true);
 
-    const onSuccess = () => {
+    const onSuccess = (response) => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -121,16 +83,15 @@ function VendorForm({
       setSubmitting(false);
       resetForm();
 
-      if (!submitPayload.noRedirect) {
-        history.push('/vendors');
-      }
+      safeInvoke(onSubmitSuccess, values, form, submitPayload, response);
     };
 
     const onError = () => {
       setSubmitPayload(false);
       setSubmitting(false);
-    };
 
+      safeInvoke(onSubmitError, values, form, submitPayload);
+    };
     if (isNewMode) {
       createVendorMutate(requestForm).then(onSuccess).catch(onError);
     } else {
@@ -139,7 +100,13 @@ function VendorForm({
   };
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_VENDOR)}>
+    <div
+      className={classNames(
+        CLASSES.PAGE_FORM,
+        CLASSES.PAGE_FORM_VENDOR,
+        className,
+      )}
+    >
       <Formik
         validationSchema={
           isNewMode ? CreateVendorFormSchema : EditVendorFormSchema
@@ -160,14 +127,11 @@ function VendorForm({
             <VendorTabs vendor={vendorId} />
           </div>
 
-          <VendorFloatingActions />
+          <VendorFloatingActions onCancel={onCancel} />
         </Form>
       </Formik>
     </div>
   );
 }
 
-export default compose(
-  withDashboardActions,
-  withCurrentOrganization(),
-)(VendorForm);
+export default compose(withCurrentOrganization())(VendorFormFormik);

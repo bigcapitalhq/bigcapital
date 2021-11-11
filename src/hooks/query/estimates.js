@@ -189,3 +189,49 @@ export function useRefreshEstimates() {
     },
   };
 }
+
+/**
+ *  
+ */
+export function useCreateNotifyEstimateBySMS(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) =>
+      apiRequest.post(`sales/estimates/${id}/notify-by-sms`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Invalidate
+        queryClient.invalidateQueries([t.NOTIFY_SALE_ESTIMATE_BY_SMS, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * 
+ * @param {*} estimateId 
+ * @param {*} props 
+ * @param {*} requestProps 
+ * @returns 
+ */
+export function useEstimateSMSDetail(estimateId, props, requestProps) {
+  return useRequestQuery(
+    [t.SALE_ESTIMATE_SMS_DETAIL, estimateId],
+    {
+      method: 'get',
+      url: `sales/estimates/${estimateId}/sms-details`,
+      ...requestProps,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: {},
+      ...props,
+    },
+  );
+}

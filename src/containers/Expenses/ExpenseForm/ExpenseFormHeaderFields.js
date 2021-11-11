@@ -14,7 +14,7 @@ import {
 import { customersFieldShouldUpdate, accountsFieldShouldUpdate } from './utils';
 import {
   CurrencySelectList,
-  ContactSelecetList,
+  CustomerSelectField,
   AccountsSelectList,
   FieldRequiredHint,
   Hint,
@@ -78,6 +78,7 @@ export default function ExpenseFormHeader() {
               defaultSelectText={<T id={'select_payment_account'} />}
               selectedAccountId={value}
               filterByParentTypes={[ACCOUNT_PARENT_TYPE.CURRENT_ASSET]}
+              allowCreate={true}
             />
           </FormGroup>
         )}
@@ -137,13 +138,14 @@ export default function ExpenseFormHeader() {
             helperText={<ErrorMessage name={'assign_to_customer'} />}
             inline={true}
           >
-            <ContactSelecetList
-              contactsList={customers}
+            <CustomerSelectField
+              contacts={customers}
               selectedContactId={value}
               defaultSelectText={<T id={'select_customer_account'} />}
               onContactSelected={(customer) => {
                 form.setFieldValue('customer_id', customer.id);
               }}
+              allowCreate={true}
             />
           </FormGroup>
         )}

@@ -23,9 +23,6 @@ import AccountsSelectList from './AccountsSelectList';
 import AccountsTypesSelect from './AccountsTypesSelect';
 import LoadingIndicator from './LoadingIndicator';
 import DashboardActionViewsList from './Dashboard/DashboardActionViewsList';
-import Dialog from './Dialog/Dialog';
-import DialogContent from './Dialog/DialogContent';
-import DialogSuspense from './Dialog/DialogSuspense';
 import InputPrependButton from './Forms/InputPrependButton';
 import CategoriesSelectList from './CategoriesSelectList';
 import Row from './Grid/Row';
@@ -61,8 +58,9 @@ import Card from './Card';
 import AvaterCell from './AvaterCell';
 
 import { ItemsMultiSelect } from './Items';
-import MoreVertMenutItems from './MoreVertMenutItems';
+import MoreMenuItems from './MoreMenutItems';
 
+export * from './Dialog';
 export * from './Menu';
 export * from './AdvancedFilter/AdvancedFilterDropdown';
 export * from './AdvancedFilter/AdvancedFilterPopover';
@@ -83,10 +81,12 @@ export * from './MultiSelectTaggable';
 export * from './Utils/FormatNumber';
 export * from './Utils/FormatDate';
 export * from './BankAccounts';
-export * from './IntersectionObserver'
+export * from './IntersectionObserver';
 export * from './Datatable/CellForceWidth';
 export * from './Button';
 export * from './IntersectionObserver';
+export * from './SMSPreview';
+export * from './Contacts';
 
 const Hint = FieldHint;
 
@@ -120,9 +120,6 @@ export {
   LoadingIndicator,
   DashboardActionViewsList,
   AppToaster,
-  Dialog,
-  DialogContent,
-  DialogSuspense,
   InputPrependButton,
   CategoriesSelectList,
   Col,
@@ -158,5 +155,5 @@ export {
   ItemsMultiSelect,
   Card,
   AvaterCell,
-  MoreVertMenutItems,
+  MoreMenuItems,
 };

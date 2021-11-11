@@ -14,6 +14,9 @@ import CustomerDetailsDrawer from '../containers/Drawers/CustomerDetailsDrawer';
 import VendorDetailsDrawer from '../containers/Drawers/VendorDetailsDrawer';
 import InventoryAdjustmentDetailDrawer from '../containers/Drawers/InventoryAdjustmentDetailDrawer';
 import CashflowTransactionDetailDrawer from '../containers/Drawers/CashflowTransactionDetailDrawer';
+import QuickCreateCustomerDrawer from '../containers/Drawers/QuickCreateCustomerDrawer';
+import QuickCreateItemDrawer from '../containers/Drawers/QuickCreateItemDrawer';
+import QuickWriteVendorDrawer from '../containers/Drawers/QuickWriteVendorDrawer';
 
 import { DRAWERS } from 'common/drawers';
 
@@ -38,7 +41,12 @@ export default function DrawersContainer() {
       <InventoryAdjustmentDetailDrawer
         name={DRAWERS.INVENTORY_ADJUSTMENT_DRAWER}
       />
-      <CashflowTransactionDetailDrawer name={DRAWERS.CASHFLOW_TRNASACTION_DRAWER} />
+      <CashflowTransactionDetailDrawer
+        name={DRAWERS.CASHFLOW_TRNASACTION_DRAWER}
+      />
+      <QuickCreateCustomerDrawer name={DRAWERS.QUICK_CREATE_CUSTOMER} />
+      <QuickCreateItemDrawer name={DRAWERS.QUICK_CREATE_ITEM} />
+      <QuickWriteVendorDrawer name={DRAWERS.QUICK_WRITE_VENDOR} />
     </div>
   );
 }

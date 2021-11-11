@@ -10,20 +10,23 @@ import { FastField, Field, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from 'components';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
+
 import {
   useObserveInvoiceNoSettings,
   customerNameFieldShouldUpdate,
 } from './utils';
 import { CLASSES } from 'common/classes';
 import {
-  ContactSelecetList,
+  CustomerSelectField,
   FieldRequiredHint,
   Icon,
   InputPrependButton,
 } from 'components';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
+
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
+
 import { inputIntent, handleDateChange } from 'utils';
 
 /**
@@ -84,14 +87,15 @@ function InvoiceFormHeaderFields({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_id'} />}
           >
-            <ContactSelecetList
-              contactsList={customers}
+            <CustomerSelectField
+              contacts={customers}
               selectedContactId={value}
               defaultSelectText={<T id={'select_customer_account'} />}
               onContactSelected={(customer) => {
                 form.setFieldValue('customer_id', customer.id);
               }}
               popoverFill={true}
+              allowCreate={true}
             />
           </FormGroup>
         )}
