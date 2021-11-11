@@ -27,6 +27,8 @@ function NotifyEstimateViaSMSForm({
     createNotifyEstimateBySMSMutate,
   } = useEstimateViaSMSContext();
 
+  const [calloutCode, setCalloutCode] = React.useState([]);
+
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
     setSubmitting(true);
@@ -47,7 +49,7 @@ function NotifyEstimateViaSMSForm({
       },
     }) => {
       if (errors) {
-        transformErrors(errors, { setErrors });
+        transformErrors(errors, { setErrors, setCalloutCode });
       }
       setSubmitting(false);
     };
@@ -70,6 +72,7 @@ function NotifyEstimateViaSMSForm({
       notificationTypes={notificationType}
       onCancel={handleFormCancel}
       onSubmit={handleFormSubmit}
+      calloutCodes={calloutCode}
     />
   );
 }

@@ -30,6 +30,8 @@ function NotifyReceiptViaSMSForm({
     createNotifyReceiptBySMSMutate,
   } = useNotifyReceiptViaSMSContext();
 
+  const [calloutCode, setCalloutCode] = React.useState([]);
+  
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
     // Handle request response success.
@@ -48,7 +50,7 @@ function NotifyReceiptViaSMSForm({
       },
     }) => {
       if (errors) {
-        transformErrors(errors, { setErrors });
+        transformErrors(errors, { setErrors, setCalloutCode });
       }
       setSubmitting(false);
     };
@@ -74,6 +76,7 @@ function NotifyReceiptViaSMSForm({
       notificationTypes={notificationType}
       onSubmit={handleFormSubmit}
       onCancel={handleFormCancel}
+      calloutCodes={calloutCode}
     />
   );
 }

@@ -30,6 +30,8 @@ function NotifyPaymentReceiveViaSMSForm({
     createNotifyPaymentReceivetBySMSMutate,
   } = useNotifyPaymentReceiveViaSMSContext();
 
+  const [calloutCode, setCalloutCode] = React.useState([]);
+
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
     // Handle request response success.
@@ -50,7 +52,7 @@ function NotifyPaymentReceiveViaSMSForm({
       },
     }) => {
       if (errors) {
-        transformErrors(errors, { setErrors });
+        transformErrors(errors, { setErrors, setCalloutCode });
       }
       setSubmitting(false);
     };
@@ -75,6 +77,7 @@ function NotifyPaymentReceiveViaSMSForm({
       notificationTypes={notificationType}
       onSubmit={handleFormSubmit}
       onCancel={handleFormCancel}
+      calloutCodes={calloutCode}
     />
   );
 }
