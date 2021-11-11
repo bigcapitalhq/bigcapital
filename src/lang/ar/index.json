@@ -1473,5 +1473,10 @@
   "send_sms": "إرسال رسالة قصيرة",
   "save_sms_message": "حفظ رسالة قصيرة",
   "sms_message.edit_form.reset_to_default_message": "إعادة التعيين إلى الرسالة الافتراضية.",
-  "report.compute_running.refresh": "تحديث"
+  "report.compute_running.refresh": "تحديث",
+  "sms_notification.invoice_details.type": "تفاصيل الفاتورة",
+  "sms_notification.invoice_reminder.type": "تذكير بالفاتورة",
+  "sms_notification.estimate_details.type": "تفاصيل فاتورة عرض الاسعار",
+  "sms_notification.payment_details.type": "شكر علي عملية الدفع",
+  "sms_notification.receipt_details.type": "تفاصيل إيصال البيع"
 }

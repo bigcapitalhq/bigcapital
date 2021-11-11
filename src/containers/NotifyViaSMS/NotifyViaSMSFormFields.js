@@ -16,7 +16,7 @@ export default function NotifyViaSMSFormFields({ notificationTypes }) {
   return (
     <NotifyViaSMSFormFieldsRoot>
       <FastField name={'notification_key'}>
-        {({ form, meta: { error, touched } }) => (
+        {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'notify_via_sms.dialog.notification_type'} />}
             className={classNames(CLASSES.FILL)}
@@ -26,7 +26,7 @@ export default function NotifyViaSMSFormFields({ notificationTypes }) {
             <ListSelect
               items={notificationTypes}
               selectedItemProp={'key'}
-              selectedItem={'details'}
+              selectedItem={value}
               textProp={'label'}
               popoverProps={{ minimal: true }}
               filterable={false}

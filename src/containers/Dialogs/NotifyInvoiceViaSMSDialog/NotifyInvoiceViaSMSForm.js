@@ -15,6 +15,18 @@ const transformFormValuesToRequest = (values) => {
   return pick(values, ['notification_key']);
 };
 
+// Momerize the notification types.
+const notificationTypes = [
+  {
+    key: 'details',
+    label: intl.get('sms_notification.invoice_details.type'),
+  },
+  {
+    key: 'reminder',
+    label: intl.get('sms_notification.invoice_reminder.type'),
+  },
+];
+
 /**
  * Notify Invoice Via SMS Form.
  */
@@ -80,14 +92,7 @@ function NotifyInvoiceViaSMSForm({
       setNotificationType(values.notification_key);
     }
   };
-  // Momerize the notification types.
-  const notificationTypes = React.useMemo(
-    () => [
-      { key: 'details', label: 'Invoice details' },
-      { key: 'reminder', label: 'Invoice reminder' },
-    ],
-    [],
-  );
+
   return (
     <NotifyViaSMSForm
       initialValues={initialValues}

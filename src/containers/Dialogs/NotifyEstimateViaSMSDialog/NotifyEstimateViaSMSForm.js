@@ -13,7 +13,7 @@ import { compose } from 'utils';
 
 const notificationType = {
   key: 'sale-estimate-details',
-  label: 'Sale estimate details',
+  label: intl.get('sms_notification.estimate_details.type'),
 };
 
 function NotifyEstimateViaSMSForm({
@@ -60,6 +60,7 @@ function NotifyEstimateViaSMSForm({
 
   const initialValues = {
     ...estimateSMSDetail,
+    notification_key: notificationType.key,
   };
   // Handle the form cancel.
   const handleFormCancel = () => {
@@ -69,7 +70,7 @@ function NotifyEstimateViaSMSForm({
   return (
     <NotifyViaSMSForm
       initialValues={initialValues}
-      notificationTypes={notificationType}
+      notificationTypes={[notificationType]}
       onCancel={handleFormCancel}
       onSubmit={handleFormSubmit}
       calloutCodes={calloutCode}

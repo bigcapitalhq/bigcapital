@@ -13,7 +13,7 @@ import { compose } from 'utils';
 
 const notificationType = {
   key: 'payment-receive-details',
-  label: 'Payment receive thank you.',
+  label: intl.get('sms_notification.payment_details.type'),
 };
 
 /**
@@ -67,7 +67,10 @@ function NotifyPaymentReceiveViaSMSForm({
 
   // Form initial values.
   const initialValues = React.useMemo(
-    () => ({ ...paymentReceiveMSDetail }),
+    () => ({
+      ...paymentReceiveMSDetail,
+      notification_key: notificationType.key,
+    }),
     [paymentReceiveMSDetail],
   );
 

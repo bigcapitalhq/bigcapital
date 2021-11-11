@@ -13,7 +13,7 @@ import { compose } from 'utils';
 
 const notificationType = {
   key: 'sale-receipt-details',
-  label: 'Sale receipt details',
+  label: intl.get('sms_notification.receipt_details.type'),
 };
 
 /**
@@ -66,6 +66,7 @@ function NotifyReceiptViaSMSForm({
   const initialValues = React.useMemo(
     () => ({
       ...receiptSMSDetail,
+      notification_key: notificationType.key,
     }),
     [receiptSMSDetail],
   );

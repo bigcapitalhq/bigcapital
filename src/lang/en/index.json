@@ -1460,5 +1460,10 @@
   "send_sms": "Send SMS",
   "save_sms_message": "Save SMS Message",
   "sms_message.edit_form.reset_to_default_message": "Reset to default message.",
-  "report.compute_running.refresh": "Refresh"
+  "report.compute_running.refresh": "Refresh",
+  "sms_notification.invoice_details.type": "Invoice details",
+  "sms_notification.invoice_reminder.type": "Invoice reminder",
+  "sms_notification.estimate_details.type": "Sale estimate details",
+  "sms_notification.payment_details.type": "Payment receive thank you.",
+  "sms_notification.receipt_details.type": "Sale receipt details"
 }
