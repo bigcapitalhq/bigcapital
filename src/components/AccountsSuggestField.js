@@ -18,7 +18,7 @@ const createNewItemRenderer = (query, active, handleClick) => {
   return (
     <MenuItem
       icon="add"
-      text={`Create "${query}"`}
+      text={intl.get('list.create', { value: `"${query}"` })}
       active={active}
       onClick={handleClick}
     />

@@ -3,6 +3,7 @@ import { MenuItem, Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import * as R from 'ramda';
 import classNames from 'classnames';
+import intl from 'react-intl-universal'
 
 import { MenuItemNestedText, FormattedMessage as T } from 'components';
 import { filterAccountsByQuery } from './utils';
@@ -16,7 +17,7 @@ const createNewItemRenderer = (query, active, handleClick) => {
   return (
     <MenuItem
       icon="add"
-      text={`Create "${query}"`}
+      text={intl.get('list.create', { value: `"${query}"` })}
       active={active}
       onClick={handleClick}
     />

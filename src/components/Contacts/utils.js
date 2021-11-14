@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
 
 // Filter Contact List
@@ -34,7 +35,7 @@ export const createNewItemRenderer = (query, active, handleClick) => {
   return (
     <MenuItem
       icon="add"
-      text={`Create "${query}"`}
+      text={intl.get('list.create', { value: `"${query}"` })}
       active={active}
       shouldDismissPopover={false}
       onClick={handleClick}

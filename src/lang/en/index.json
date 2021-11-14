@@ -1400,7 +1400,7 @@
   "cash_flow_drawer.label_transaction_type": "Transaction type",
   "cash_flow.drawer.label_transaction_no": "Transaction number",
   "cash_flow.drawer.label_transaction": "Cash flow Transaction {number}",
-  "cash_flow.transactions.no_results": "There are no deposit/withdrawal transactions on the current account.",
+  "cash_flow.account_transactions.no_results": "There are no deposit/withdrawal transactions on the current account.",
   "cash_flow_balance_in": "Balance in {name}",
   "cash_flow.accounts.no_results": "There are no cashflow accounts with current filter criteria.",
   "cash_flow_money_in": "Money In",
@@ -1466,5 +1466,6 @@
   "sms_notification.estimate_details.type": "Sale estimate details",
   "sms_notification.payment_details.type": "Payment receive thank you.",
   "sms_notification.receipt_details.type": "Sale receipt details",
-  "personal": "Personal"
+  "personal": "Personal",
+  "list.create":"Create {value}"
 }
