@@ -1,12 +1,10 @@
 .item-drawer {
-
   .card {
     margin: 15px;
     padding: 22px 15px;
   }
 
   &__content {
-
     .detail-item--name {
       width: 30%;
 
@@ -16,7 +14,6 @@
     }
 
     .detail-item--quantity {
-
       .detail-item__content {
         font-weight: 600;
 
@@ -32,7 +29,6 @@
     }
 
     .details-menu--horizantal {
-
       .detail-item:not(:first-of-type) {
         margin-top: 16px;
       }
@@ -40,6 +36,11 @@
       .detail-item__label {
         min-width: 180px;
       }
+    }
+  }
+  .payment-transactions {
+    .card {
+      padding: 0 !important;
     }
   }
 }
