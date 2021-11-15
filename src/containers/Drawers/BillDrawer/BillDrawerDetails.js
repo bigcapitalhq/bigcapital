@@ -8,6 +8,7 @@ import { DrawerMainTabs } from 'components';
 import BillDetailTab from './BillDetailTab';
 import LocatedLandedCostTable from './LocatedLandedCostTable';
 import JournalEntriesTable from '../../JournalEntriesTable/JournalEntriesTable';
+import BillPaymentTransactionTable from './BillPaymentTransactionTable';
 import { useBillDrawerContext } from './BillDrawerProvider';
 
 import BillDrawerCls from 'style/components/Drawers/BillDrawer.module.scss';
@@ -34,15 +35,15 @@ export default function BillDrawerDetails() {
           panel={<JournalEntriesTable transactions={transactions} />}
         />
         <Tab
+          title={intl.get('payment_transactions')}
+          id={'payment_transactions'}
+          panel={<BillPaymentTransactionTable />}
+        />
+        <Tab
           title={intl.get('located_landed_cost')}
           id={'landed_cost'}
           panel={<LocatedLandedCostTable />}
         />
-        {/* <Tab
-          title={intl.get('payment_transactions')}
-          id={'payment_transactions'}
-          // panel={}
-        /> */}
       </DrawerMainTabs>
     </div>
   );

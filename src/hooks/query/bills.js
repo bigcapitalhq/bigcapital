@@ -178,3 +178,18 @@ export function useRefreshBills() {
     },
   };
 }
+
+export function useBillPaymentTransactions(id, props) {
+  return useRequestQuery(
+    [t.BILLS_PAYMENT_TRANSACTIONS, id],
+    {
+      method: 'get',
+      url: `purchases/bills/${id}/payment-transactions`,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: [],
+      ...props,
+    },
+  );
+}

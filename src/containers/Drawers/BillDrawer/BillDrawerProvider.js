@@ -5,6 +5,7 @@ import {
   useBill,
   useTransactionsByReference,
   useBillLocatedLandedCost,
+  useBillPaymentTransactions,
 } from 'hooks/query';
 
 const BillDrawerContext = React.createContext();
@@ -33,15 +34,31 @@ function BillDrawerProvider({ billId, ...props }) {
       enabled: !!billId,
     });
 
+  // Handle fetch bill payment transaction.
+  const {
+    isLoading: isPaymentTransactionsLoading,
+    isFetching: isPaymentTransactionFetching,
+    data: paymentTransactions,
+  } = useBillPaymentTransactions(billId, {
+    enabled: !!billId,
+  });
+
   //provider.
   const provider = {
     transactions,
     billId,
     data,
     bill,
+    paymentTransactions,
+    isPaymentTransactionsLoading,
+    isPaymentTransactionFetching,
   };
 
-  const loading = isLandedCostLoading || isTransactionLoading || isBillLoading;
+  const loading =
+    isLandedCostLoading ||
+    isTransactionLoading ||
+    isPaymentTransactionsLoading ||
+    isBillLoading;
 
   return (
     <DrawerLoading loading={loading}>
