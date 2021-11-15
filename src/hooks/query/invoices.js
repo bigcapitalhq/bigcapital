@@ -269,3 +269,18 @@ export function useInvoiceSMSDetail(invoiceId, query, props) {
     },
   );
 }
+
+export function useInvoicePaymentTransactions(invoiceId, props) {
+  return useRequestQuery(
+    [t.SALE_INVOICE_PAYMENT_TRANSACTIONS, invoiceId],
+    {
+      method: 'get',
+      url: `sales/invoices/${invoiceId}/payment-transactions`,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: [],
+      ...props,
+    },
+  );
+}

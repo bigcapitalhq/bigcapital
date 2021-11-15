@@ -1467,5 +1467,6 @@
   "sms_notification.payment_details.type": "Payment receive thank you.",
   "sms_notification.receipt_details.type": "Sale receipt details",
   "personal": "Personal",
-  "list.create":"Create {value}"
+  "list.create":"Create {value}",
+  "payment_transactions":"Payment transactions"
 }

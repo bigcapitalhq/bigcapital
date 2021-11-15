@@ -28,6 +28,9 @@ const commonInvalidateQueries = (client) => {
   // Invalidate the cashflow transactions.
   client.invalidateQueries(t.CASH_FLOW_TRANSACTIONS);
   client.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
+
+  // Invalidate invoices payment transactions.
+  client.invalidateQueries(t.SALE_INVOICE_PAYMENT_TRANSACTIONS);
 };
 
 // Transform payment receives.

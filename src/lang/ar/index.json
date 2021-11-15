@@ -1480,5 +1480,6 @@
   "sms_notification.payment_details.type": "شكر علي عملية الدفع",
   "sms_notification.receipt_details.type": "تفاصيل إيصال البيع",
   "personal": "المحمول",
-  "list.create":"إضافة {value}"
+  "list.create":"إضافة {value}",
+  "payment_transactions":"معاملات الدفع"
 }
