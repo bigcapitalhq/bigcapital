@@ -1467,5 +1467,12 @@
   "sms_notification.payment_details.type": "Payment receive thank you.",
   "sms_notification.receipt_details.type": "Sale receipt details",
   "personal": "Personal",
-  "list.create":"Create {value}"
+  "list.create":"Create {value}",
+  "roles.label":"Roles",
+  "roles.column.name":"Name",
+  "roles.column.description":"description",
+  "roles.edit_roles":"Edit Roles",
+  "roles.delete_roles":"Delete Roles",
+  "sidebar.transactions_locaking":"Transactions Locaking",
+  "transactions_locking.dialog.label":"Transactions locking"
 }

@@ -23,8 +23,9 @@ import BadDebtDialog from '../containers/Dialogs/BadDebtDialog';
 import NotifyInvoiceViaSMSDialog from '../containers/Dialogs/NotifyInvoiceViaSMSDialog';
 import NotifyReceiptViaSMSDialog from '../containers/Dialogs/NotifyReceiptViaSMSDialog';
 import NotifyEstimateViaSMSDialog from '../containers/Dialogs/NotifyEstimateViaSMSDialog';
-import NotifyPaymentReceiveViaSMSDialog from '../containers/Dialogs/NotifyPaymentReceiveViaSMSDialog'
+import NotifyPaymentReceiveViaSMSDialog from '../containers/Dialogs/NotifyPaymentReceiveViaSMSDialog';
 import SMSMessageDialog from '../containers/Dialogs/SMSMessageDialog';
+import TransactionsLockingDialog from '../containers/Dialogs/TransactionsLockingDialog';
 
 /**
  * Dialogs container.
@@ -58,6 +59,7 @@ export default function DialogsContainer() {
 
       <BadDebtDialog dialogName={'write-off-bad-debt'} />
       <SMSMessageDialog dialogName={'sms-message-form'} />
+      <TransactionsLockingDialog dialogName={'transactions-locking'} />
     </div>
   );
 }

@@ -173,6 +173,10 @@ export default [
         href: '/manual-journals',
       },
       {
+        text: <T id={'sidebar.transactions_locaking'} />,
+        href: '/transactions-locking',
+      },
+      {
         text: <T id={'exchange_rate'} />,
         href: '/exchange-rates',
       },

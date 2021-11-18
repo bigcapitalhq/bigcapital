@@ -1,0 +1,27 @@
+.dialog--transaction--locking {
+  max-width: 400px;
+  .bp3-form-group {
+    margin-bottom: 15px;
+    margin-top: 15px;
+
+    label.bp3-label {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+  }
+
+  .form-group {
+    &--reason {
+      .bp3-form-content {
+        textarea {
+          width: 100%;
+          min-width: 100%;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  .bp3-dialog-footer {
+    padding-top: 10px;
+  }
+}
