@@ -1,5 +1,6 @@
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
+import { isEmpty } from 'lodash';
 
 export const transformApiErrors = (errors) => {
   const fields = {};
@@ -43,11 +44,17 @@ const mergeWithAccount = R.curry((transformed, account) => {
 });
 
 /**
+ * Default account payload transformer.
+ */
+const defaultPayloadTransform = () => ({});
+
+/**
  * Defined payload transformers.
  */
 function getConditions() {
   return [
-    ['edit', transformEditMode],
+    ['edit'],
+    ['new_child', transformEditMode],
     ['NEW_ACCOUNT_DEFINED_TYPE', transformNewAccountDefinedType],
   ];
 }
@@ -59,9 +66,13 @@ export const transformAccountToForm = (account, payload) => {
   const conditions = getConditions();
 
   const results = conditions.map((condition) => {
+    const transformer = !isEmpty(condition[1])
+      ? condition[1]
+      : defaultPayloadTransform;
+
     return [
       condition[0] === payload.action ? R.T : R.F,
-      mergeWithAccount(condition[1](payload)),
+      mergeWithAccount(transformer(payload)),
     ];
   });
   return R.cond(results)(account);
