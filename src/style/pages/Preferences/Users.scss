@@ -1,12 +1,9 @@
-
 // Users/Roles List.
 // ---------------------------------
-.preferences-page__inside-content--users{
-
-.bigcapital-datatable {
-
-    .td{
-      .avatar{
+.preferences-page__inside-content--users {
+  .bigcapital-datatable {
+    .td {
+      .avatar {
         display: block;
         height: 28px;
         width: 28px;
@@ -23,8 +20,13 @@
       text-transform: uppercase;
     }
 
-    .tr:last-child .td{
+    .tr:last-child .td {
       border-bottom: 0;
+    }
+  }
+  .bp3-tabs {
+    .bp3-tab-panel {
+      margin-top: 0;
     }
   }
 }
