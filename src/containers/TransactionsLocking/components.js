@@ -7,7 +7,7 @@ export const TransactionLockingContent = ({ name, description, onSwitch }) => (
   <TransactionLockingWrapp>
     <TransactionsLockingcontent>
       <TransLockingIcon>
-        <Icon icon="info-circle" iconSize={22} />
+        <Icon icon="lock" iconSize={22} />
       </TransLockingIcon>
 
       <div className="block">
