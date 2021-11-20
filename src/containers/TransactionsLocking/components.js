@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Switch, FormGroup } from '@blueprintjs/core';
-import { Icon, FormattedMessage as T } from 'components';
-
-
+import { Switch, FormGroup, Position } from '@blueprintjs/core';
+import { Hint, Icon, FormattedMessage as T } from 'components';
 
 export const TransactionLockingContent = ({ name, description, onSwitch }) => (
   <TransactionLockingWrapp>
@@ -14,7 +12,13 @@ export const TransactionLockingContent = ({ name, description, onSwitch }) => (
 
       <div className="block">
         <TransLockingItemTitle>
-          <T id={name} />
+          <T id={name} />{' '}
+          <Hint
+            content={
+              'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do'
+            }
+            position={Position.BOTTOM_LEFT}
+          />
         </TransLockingItemTitle>
         <TransLockingItemDesc>{description}</TransLockingItemDesc>
       </div>
