@@ -1,6 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
+import { mapKeys } from 'lodash';
 
 import 'style/pages/Preferences/Roles/Form.scss';
 
@@ -18,7 +19,7 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import { compose } from 'utils';
 
 const defaultValues = {
-  role_name: 'Default',
+  role_name: '',
   role_description: '',
   permissions: {},
 };
@@ -40,8 +41,8 @@ function RolesForm({
 
   const MapperPermissionSchema = (data) => {
     return data.map(({ role_name, role_description, permissions }) => {
-      const permission = _.mapKeys(permissions, (value, key) => {
-        return value;
+      const permission = mapKeys(permissions, (value, key) => {
+        // return value;
       });
       return {
         role_name: role_name,
