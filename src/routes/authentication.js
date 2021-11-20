@@ -21,12 +21,12 @@ export default [
       loader: () => import('containers/Authentication/ResetPassword'),
     }),
   },
-  // {
-  //   path: `${BASE_URL}/invite/:token/accept`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Authentication/InviteAccept'),
-  //   }),
-  // },
+  {
+    path: `${BASE_URL}/invite/:token/accept`,
+    component: LazyLoader({
+      loader: () => import('containers/Authentication/InviteAccept'),
+    }),
+  },
   {
     path: `${BASE_URL}/register`,
     component: LazyLoader({
