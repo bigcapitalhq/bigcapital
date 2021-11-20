@@ -1,19 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
-import {  Switch, FormGroup, Intent } from '@blueprintjs/core';
-import { Icon,  FormattedMessage as T } from 'components';
+import { Switch, FormGroup } from '@blueprintjs/core';
+import { Icon, FormattedMessage as T } from 'components';
+
+
 
 export const TransactionLockingContent = ({ name, description, onSwitch }) => (
   <TransactionLockingWrapp>
     <TransactionsLockingcontent>
-      <Icon icon="info-circle" iconSize={22} />
+      <TransLockingIcon>
+        <Icon icon="info-circle" iconSize={22} />
+      </TransLockingIcon>
 
       <div className="block">
-        <h3>
+        <TransLockingItemTitle>
           <T id={name} />
-        </h3>
-
-        <p>{description}</p>
+        </TransLockingItemTitle>
+        <TransLockingItemDesc>{description}</TransLockingItemDesc>
       </div>
       <FormGroup>
         <Switch
@@ -32,10 +35,10 @@ const TransactionLockingWrapp = styled.div`
   display: flex;
   align-items: center;
   border-radius: 6px;
-  border: 1px solid #d2dce2;
-  max-width: 610px;
-  padding: 22px 15px;
-  margin-top: 25px;
+  border: 1px solid #d1dee2;
+  padding: 14px 18px;
+  margin-bottom: 25px;
+  background: #fff;
 
   div.block {
     flex: 1 1 0;
@@ -48,4 +51,25 @@ const TransactionsLockingcontent = styled.div`
   display: flex;
   align-items: center;
   flex: 1 1 0;
+`;
+
+const TransLockingItemTitle = styled.h1`
+  font-size: 18px;
+  margin: 0 0 8px;
+  line-height: 1;
+  font-weight: 600;
+`;
+const TransLockingItemDesc = styled.p`
+  margin-bottom: 0;
+  opacity: 0.8;
+`;
+
+const TransLockingIcon = styled.div`
+  border: 1px solid #d2dde2;
+  height: 50px;
+  width: 50px;
+  text-align: center;
+  line-height: 50px;
+  border-radius: 5px;
+  color: #8190ac;
 `;

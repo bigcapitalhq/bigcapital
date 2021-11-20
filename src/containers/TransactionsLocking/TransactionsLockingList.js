@@ -1,12 +1,34 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-
+import clsx from 'classnames';
 import { TransactionsLockingProvider } from './TransactionsLockingProvider';
 import { TransactionLockingContent } from './components';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { compose } from 'utils';
+
+const DataTest = [
+  {
+    name: 'sales',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
+  },
+  {
+    name: 'purchases',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
+  },
+  {
+    name: 'financial',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
+  },
+];
+
+function Paragraph({ className, children }) {
+  return <p className={clsx('paragraph', className)}>{children}</p>;
+}
 
 /**
  * Transactions locking list.
@@ -20,35 +42,17 @@ function TransactionsLockingList({
     openDialog('transactions-locking', {});
   };
 
-  const DataTest = [
-    {
-      name: 'sales',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
-    },
-    {
-      name: 'purchases',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
-    },
-    {
-      name: 'financial',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
-    },
-  ];
-
   return (
     <TransactionsLockingProvider>
       <TransactionsLocking>
         <TransactionsLockingParagraph>
-          <h2>Transaction Locking</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, <br />
-            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </p>
-          Lock All Transactions At Once.
-          <Link to={'/'}> {''}Lock All Transactions At Once. </Link>
+          <TransLockingDesc>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </TransLockingDesc>
+          Lock All Transactions At Once. {' '}
+          <Link to={'/'}> {''}Lock All Transactions At Once →</Link>
         </TransactionsLockingParagraph>
 
         {DataTest.map(({ name, description }) => (
@@ -67,13 +71,16 @@ export default compose(withDialogActions)(TransactionsLockingList);
 const TransactionsLocking = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 22px 32px;
+  padding: 32px;
+  max-width: 700px;
 `;
 
-const TransactionsLockingParagraph = styled.div`
-  line-height: 1.5rem;
-  font-size: 16px;
-  h2 {
-    margin-bottom: 12px;
-  }
+const TransactionsLockingParagraph = styled(Paragraph)`
+  margin-bottom: 30px;
 `;
+
+const TransLockingTitle = styled.h2`
+  margin-bottom: 12px;
+`;
+
+const TransLockingDesc = styled.p``;
