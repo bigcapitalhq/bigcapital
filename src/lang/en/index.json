@@ -1476,5 +1476,5 @@
   "roles.label.role_name":"Role name",
   "sidebar.transactions_locaking":"Transactions Locaking",
   "transactions_locking.dialog.label":"Transactions locking",
-  "roles.permisssion_schema.success_message":"The given role hsa been created successfully"
+  "roles.permisssion_schema.success_message":"The role has been created successfully."
 }

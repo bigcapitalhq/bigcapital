@@ -25,7 +25,7 @@ export default function RolesFormContent() {
   const handleCloseClick = () => {
     history.go(-1);
   };
-
+  console.log(values, 'XX');
   return (
     <Form>
       {/* ----------  name ----------  */}
