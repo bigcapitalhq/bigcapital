@@ -1473,6 +1473,8 @@
   "roles.column.description":"description",
   "roles.edit_roles":"Edit Roles",
   "roles.delete_roles":"Delete Roles",
+  "roles.label.role_name":"Role name",
   "sidebar.transactions_locaking":"Transactions Locaking",
-  "transactions_locking.dialog.label":"Transactions locking"
+  "transactions_locking.dialog.label":"Transactions locking",
+  "roles.permisssion_schema.success_message":"The given role hsa been created successfully"
 }

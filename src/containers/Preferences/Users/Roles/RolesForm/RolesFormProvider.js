@@ -5,8 +5,9 @@ import { CLASSES } from 'common/classes';
 
 import {
   useCreateRolePermissionSchema,
-  useEditRole,
+  useEditRolePermissionSchema,
   usePermissionsSchema,
+  useSaveSettings
 } from 'hooks/query';
 import PreferencesPageLoader from '../../../PreferencesPageLoader';
 
@@ -28,6 +29,9 @@ function RolesFormProvider({ ...props }) {
     isFetching: isPermissionsSchemaFetching,
   } = usePermissionsSchema();
 
+  // Save Organization Settings.
+  const { mutateAsync: saveSettingMutate } = useSaveSettings();
+
   // Provider state.
   const provider = {
     permissionsSchema,
@@ -35,6 +39,7 @@ function RolesFormProvider({ ...props }) {
     isPermissionsSchemaFetching,
     createRolePermissionMutate,
     editRolePermissionMutate,
+    saveSettingMutate
   };
 
   return (

@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
 
 const Schema = Yup.object().shape({
-  role_name: Yup.string().label(intl.get('name')).required(),
+  role_name: Yup.string().required().label(intl.get('roles.label.role_name')),
   role_description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
 
   permissions: Yup.object().shape({

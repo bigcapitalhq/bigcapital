@@ -10,7 +10,7 @@ import {
 } from '@blueprintjs/core';
 import { inputIntent } from 'utils';
 import { FormattedMessage as T, FieldRequiredHint } from 'components';
-
+import { useAutofocus } from 'hooks';
 import { RolesPermissionList } from './components';
 
 /**
@@ -19,7 +19,8 @@ import { RolesPermissionList } from './components';
 export default function RolesFormContent() {
   const history = useHistory();
 
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting, values } = useFormikContext();
+  const roleNameFieldRef = useAutofocus();
 
   const handleCloseClick = () => {
     history.go(-1);
@@ -35,10 +36,14 @@ export default function RolesFormContent() {
             labelInfo={<FieldRequiredHint />}
             className={'form-group--name'}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'role_name'} />}
+            helperText={<ErrorMessage name="role_name" />}
             inline={true}
           >
-            <InputGroup medium={true} {...field} />
+            <InputGroup
+              medium={true}
+              inputRef={(ref) => (roleNameFieldRef.current = ref)}
+              {...field}
+            />
           </FormGroup>
         )}
       </FastField>

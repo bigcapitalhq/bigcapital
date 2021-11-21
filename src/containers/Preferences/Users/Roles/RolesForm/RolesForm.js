@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
-import { mapKeys } from 'lodash';
+import { mapKeys, omit, pick } from 'lodash';
 
 import 'style/pages/Preferences/Roles/Form.scss';
 
@@ -12,6 +12,7 @@ import { AppToaster, FormattedMessage as T } from 'components';
 import { CreateRolesFormSchema, EditRolesFormSchema } from './RolesForm.schema';
 
 import { useRolesFormContext } from './RolesFormProvider';
+import { mapperPermissionSchema } from './utils';
 
 import RolesFormContent from './RolesFormContent';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -31,7 +32,7 @@ function RolesForm({
   // #withDashboardActions
   changePreferencesPageTitle,
 }) {
-  const { createRoleMutate, editRoleMutate, permissions } =
+  const { createRolePermissionMutate, editRolePermissionMutate, permissions } =
     useRolesFormContext();
 
   // Initial values.
@@ -39,47 +40,29 @@ function RolesForm({
     ...defaultValues,
   };
 
-  const MapperPermissionSchema = (data) => {
-    return data.map(({ role_name, role_description, permissions }) => {
-      const permission = mapKeys(permissions, (value, key) => {
-        // return value;
-      });
-      return {
-        role_name: role_name,
-        role_description: role_description,
-        permissions: [permission],
-      };
-    });
-  };
-
   React.useEffect(() => {
     changePreferencesPageTitle(<T id={'roles.label'} />);
   }, [changePreferencesPageTitle]);
 
-  const handleFormSubmit = (values, { setSubmitting, resetForm }) => {
+  const handleFormSubmit = (values, { setSubmitting }) => {
+    const permission = mapperPermissionSchema(values);
     const form = {
       ...values,
+      permissions: permission,
     };
-
-    // Handle the request success.
+    setSubmitting(true);
     const onSuccess = () => {
       AppToaster.show({
-        message: '',
+        message: intl.get('roles.permisssion_schema.success_message'),
         intent: Intent.SUCCESS,
       });
-    };
-    // Handle the request error.
-    const onError = (
-      {
-        // response: {
-        //   data: { errors },
-        // },
-      },
-    ) => {
       setSubmitting(false);
     };
 
-    createRoleMutate(form).then(onSuccess).catch(onError);
+    const onError = (errors) => {
+      setSubmitting(false);
+    };
+    createRolePermissionMutate(form).then(onSuccess).catch(onError);
   };
 
   return (
@@ -87,8 +70,9 @@ function RolesForm({
       initialValues={initialValues}
       validationSchema={CreateRolesFormSchema}
       onSubmit={handleFormSubmit}
-      component={RolesFormContent}
-    />
+    >
+      <RolesFormContent />
+    </Formik>
   );
 }
 
