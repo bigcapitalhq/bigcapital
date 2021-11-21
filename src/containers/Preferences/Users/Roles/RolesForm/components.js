@@ -33,7 +33,7 @@ const AbilitiesList = ({ subject, abilities }) => {
       {abilities?.map(({ key, label }) => (
         <FastField name={`permissions.${subject}/${key}`} type="checkbox">
           {({ form: { setFieldValue, values }, field }) => (
-            <Checkbox inline={true} label={label} name={subject} {...field} />
+            <Checkbox inline={true} label={label} {...field} />
           )}
         </FastField>
       ))}
@@ -46,7 +46,7 @@ const ExtraAbilitiesList = ({ subject, extraAbilities }) => {
     <AbilitieList>
       <FastField name={`permissions.${subject}/${key}`} type="checkbox">
         {({ form: { setFieldValue, values }, field }) => (
-          <Checkbox inline={true} label={label} name={subject} {...field} />
+          <Checkbox inline={true} label={label} {...field} />
         )}
       </FastField>
     </AbilitieList>

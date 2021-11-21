@@ -1476,5 +1476,8 @@
   "roles.label.role_name":"Role name",
   "sidebar.transactions_locaking":"Transactions Locaking",
   "transactions_locking.dialog.label":"Transactions locking",
-  "roles.permisssion_schema.success_message":"The role has been created successfully."
+  "roles.permissions_schema.success_message":"The role has been created successfully.",
+  "roles.permission_schema.upload_message":"The given role hsa been updated successfully.",
+  "roles.permission_schema.delete.alert_message":"The given role has been deleted successfully.",
+  "roles.permission_schema.once_delete_this_role_you_will_able_to_restore_it":""
 }

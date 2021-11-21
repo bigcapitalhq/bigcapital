@@ -27,6 +27,11 @@ export default [
     exact: true,
   },
   {
+    path: `${BASE_URL}/roles/:id`,
+    component: Roles,
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/currencies`,
     component: Currencies,
     exact: true,

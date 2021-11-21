@@ -75,3 +75,19 @@ export function usePermissionsSchema(query, props) {
     },
   );
 }
+
+/**
+ * Retrieve the role permisstion schema.
+ * @param {number} role_id - role id.
+ */
+export function useRolePermission(role_id, props, requestProps) {
+  return useRequestQuery(
+    [t.ROLE, role_id],
+    { method: 'get', url: `roles/${role_id}`, ...requestProps },
+    {
+      select: (res) => res.data.role,
+      defaultData: [],
+      ...props,
+    },
+  );
+}

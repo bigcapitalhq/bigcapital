@@ -17,7 +17,7 @@ import { mapperPermissionSchema } from './utils';
 import RolesFormContent from './RolesFormContent';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
 
 const defaultValues = {
   role_name: '',
@@ -32,12 +32,18 @@ function RolesForm({
   // #withDashboardActions
   changePreferencesPageTitle,
 }) {
-  const { createRolePermissionMutate, editRolePermissionMutate, permissions } =
-    useRolesFormContext();
+  const {
+    isNewMode,
+    createRolePermissionMutate,
+    editRolePermissionMutate,
+    permissionSchema,
+    roleId,
+  } = useRolesFormContext();
 
   // Initial values.
   const initialValues = {
     ...defaultValues,
+    // ...transformToForm(permissionSchema, defaultValues),
   };
 
   React.useEffect(() => {
@@ -53,7 +59,11 @@ function RolesForm({
     setSubmitting(true);
     const onSuccess = () => {
       AppToaster.show({
-        message: intl.get('roles.permisssion_schema.success_message'),
+        message: intl.get(
+          isNewMode
+            ? 'roles.permission_schema.success_message'
+            : 'roles.permission_schema.upload_message',
+        ),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
@@ -62,13 +72,17 @@ function RolesForm({
     const onError = (errors) => {
       setSubmitting(false);
     };
-    createRolePermissionMutate(form).then(onSuccess).catch(onError);
+    if (isNewMode) {
+      createRolePermissionMutate(form).then(onSuccess).catch(onError);
+    } else {
+      editRolePermissionMutate([roleId, form]).then(onSuccess).catch(onError);
+    }
   };
 
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={CreateRolesFormSchema}
+      validationSchema={isNewMode ? CreateRolesFormSchema : EditRolesFormSchema}
       onSubmit={handleFormSubmit}
     >
       <RolesFormContent />

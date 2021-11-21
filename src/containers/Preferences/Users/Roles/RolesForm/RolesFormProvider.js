@@ -1,15 +1,16 @@
 import React from 'react';
-import { flatMap, map } from 'lodash';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
+import _ from 'lodash';
 
 import {
   useCreateRolePermissionSchema,
   useEditRolePermissionSchema,
   usePermissionsSchema,
-  useSaveSettings
+  useRolePermission,
 } from 'hooks/query';
 import PreferencesPageLoader from '../../../PreferencesPageLoader';
+import { mapperPermissionSchema } from './utils';
 
 const RolesFormContext = React.createContext();
 
@@ -20,6 +21,7 @@ function RolesFormProvider({ ...props }) {
   // Create and edit roles mutations.
   const { mutateAsync: createRolePermissionMutate } =
     useCreateRolePermissionSchema();
+
   const { mutateAsync: editRolePermissionMutate } =
     useEditRolePermissionSchema();
 
@@ -29,17 +31,25 @@ function RolesFormProvider({ ...props }) {
     isFetching: isPermissionsSchemaFetching,
   } = usePermissionsSchema();
 
-  // Save Organization Settings.
-  const { mutateAsync: saveSettingMutate } = useSaveSettings();
+  const roleId = 6;
+
+  const { data: permissionSchema, isLoading: isPermissionLoading } =
+    useRolePermission(roleId, {
+      enabled: !!roleId,
+    });
+
+  const isNewMode = !roleId;
 
   // Provider state.
   const provider = {
+    isNewMode,
+    roleId,
     permissionsSchema,
+    permissionSchema,
     isPermissionsSchemaLoading,
     isPermissionsSchemaFetching,
     createRolePermissionMutate,
     editRolePermissionMutate,
-    saveSettingMutate
   };
 
   return (
@@ -50,7 +60,7 @@ function RolesFormProvider({ ...props }) {
       )}
     >
       <div className={classNames(CLASSES.CARD)}>
-        {isPermissionsSchemaLoading ? (
+        {isPermissionsSchemaLoading || isPermissionLoading ? (
           <PreferencesPageLoader />
         ) : (
           <RolesFormContext.Provider value={provider} {...props} />
