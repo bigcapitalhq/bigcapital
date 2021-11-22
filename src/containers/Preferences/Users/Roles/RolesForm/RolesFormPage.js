@@ -7,7 +7,7 @@ import { RolesFormProvider } from './RolesFormProvider';
  */
 export default function RolesFormPage() {
   return (
-    <RolesFormProvider>
+    <RolesFormProvider roleId={undefined}>
       <RolesForm />
     </RolesFormProvider>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
-import _ from 'lodash';
+import _, { isArray } from 'lodash';
 
 import {
   useCreateRolePermissionSchema,
@@ -10,14 +10,14 @@ import {
   useRolePermission,
 } from 'hooks/query';
 import PreferencesPageLoader from '../../../PreferencesPageLoader';
-import { mapperPermissionSchema } from './utils';
+import { transformToObject } from './utils';
 
 const RolesFormContext = React.createContext();
 
 /**
  * Roles Form page provider.
  */
-function RolesFormProvider({ ...props }) {
+function RolesFormProvider({ roleId, ...props }) {
   // Create and edit roles mutations.
   const { mutateAsync: createRolePermissionMutate } =
     useCreateRolePermissionSchema();
@@ -31,14 +31,16 @@ function RolesFormProvider({ ...props }) {
     isFetching: isPermissionsSchemaFetching,
   } = usePermissionsSchema();
 
-  const roleId = 6;
+  // const roleId = 6;
 
-  const { data: permissionSchema, isLoading: isPermissionLoading } =
+  const { data: permission, isLoading: isPermissionLoading } =
     useRolePermission(roleId, {
       enabled: !!roleId,
     });
 
   const isNewMode = !roleId;
+
+  const permissionSchema = transformToObject(permission);
 
   // Provider state.
   const provider = {

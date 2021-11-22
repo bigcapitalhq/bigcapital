@@ -1,5 +1,10 @@
 import React from 'react';
 
-import RoleDeleteAlert from '../../../Alerts/Roles/RoleDeleteAlert';
+const RoleDeleteAlert = React.lazy(() =>
+  import('../../../Alerts/Roles/RoleDeleteAlert'),
+);
 
+/**
+ * Roles alerts
+ */
 export default [{ name: 'role-delete', component: RoleDeleteAlert }];

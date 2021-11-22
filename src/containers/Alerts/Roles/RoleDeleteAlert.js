@@ -20,6 +20,9 @@ function RoleDeleteAlert({
   // #withAlertStoreConnect
   isOpen,
   payload: { roleId },
+
+  // #withAlertActions
+  closeAlert,
 }) {
   const { mutateAsync: deleteRole, isLoading } = useDeleteRole();
 

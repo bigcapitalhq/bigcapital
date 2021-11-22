@@ -2,13 +2,13 @@ import React from 'react';
 import intl from 'react-intl-universal';
 
 import { Intent, Button, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import { safeInvoke } from 'utils';
+import { safeCallback } from 'utils';
 import { Icon, If } from 'components';
 
 /**
  * Context menu of roles.
  */
-export function ActionsMenu({ payload: {}, row: { original } }) {
+export function ActionsMenu({ payload: { onDeleteRole }, row: { original } }) {
   return (
     <Menu>
       <MenuItem
@@ -19,6 +19,7 @@ export function ActionsMenu({ payload: {}, row: { original } }) {
       <MenuItem
         icon={<Icon icon="trash-16" iconSize={16} />}
         text={intl.get('roles.delete_roles')}
+        onClick={safeCallback(onDeleteRole, original)}
         intent={Intent.DANGER}
       />
     </Menu>
@@ -35,7 +36,7 @@ export function useRolesTableColumns() {
       {
         id: 'name',
         Header: intl.get('roles.column.name'),
-        // accessor: ,
+        accessor: 'name',
         className: 'name',
         width: '100',
         disableSortBy: true,
@@ -43,7 +44,7 @@ export function useRolesTableColumns() {
       {
         id: 'description',
         Header: intl.get('roles.column.description'),
-        // accessor: ,
+        accessor: 'description',
         className: 'description',
         width: '120',
         disableSortBy: true,

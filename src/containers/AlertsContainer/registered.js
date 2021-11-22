@@ -16,6 +16,7 @@ import ExpensesAlerts from '../Expenses/ExpensesAlerts';
 import AccountTransactionsAlerts from '../CashFlow/AccountTransactions/AccountTransactionsAlerts';
 import UsersAlerts from '../Preferences/Users/UsersAlerts';
 import CurrenciesAlerts from '../Preferences/Currencies/CurrenciesAlerts';
+import RolesAlerts from '../Preferences/Users/Roles/RolesAlerts';
 
 export default [
   ...AccountsAlerts,
@@ -36,4 +37,5 @@ export default [
   ...AccountTransactionsAlerts,
   ...UsersAlerts,
   ...CurrenciesAlerts,
+  ...RolesAlerts,
 ];

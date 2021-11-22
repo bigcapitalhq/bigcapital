@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
-import { mapKeys, omit, pick } from 'lodash';
+import { defaultTo, sumBy, isEmpty } from 'lodash';
 
 import 'style/pages/Preferences/Roles/Form.scss';
 
@@ -12,7 +12,7 @@ import { AppToaster, FormattedMessage as T } from 'components';
 import { CreateRolesFormSchema, EditRolesFormSchema } from './RolesForm.schema';
 
 import { useRolesFormContext } from './RolesFormProvider';
-import { mapperPermissionSchema } from './utils';
+import { transformToArray } from './utils';
 
 import RolesFormContent from './RolesFormContent';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -43,7 +43,7 @@ function RolesForm({
   // Initial values.
   const initialValues = {
     ...defaultValues,
-    // ...transformToForm(permissionSchema, defaultValues),
+    ...transformToForm(permissionSchema, defaultValues),
   };
 
   React.useEffect(() => {
@@ -51,7 +51,7 @@ function RolesForm({
   }, [changePreferencesPageTitle]);
 
   const handleFormSubmit = (values, { setSubmitting }) => {
-    const permission = mapperPermissionSchema(values);
+    const permission = transformToArray(values);
     const form = {
       ...values,
       permissions: permission,
