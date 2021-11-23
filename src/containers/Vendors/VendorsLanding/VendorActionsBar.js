@@ -13,6 +13,7 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
 import {
   If,
+  Can,
   FormattedMessage as T,
   DashboardActionViewsList,
   DashboardFilterButton,
@@ -29,7 +30,10 @@ import withVendors from './withVendors';
 
 import withSettingsActions from '../../Settings/withSettingsActions';
 import withSettings from '../../Settings/withSettings';
-
+import {
+  Vendor_Abilities,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 import { compose } from 'utils';
 
 /**
@@ -90,13 +94,15 @@ function VendorActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'plus'} />}
-          text={<T id={'new_vendor'} />}
-          onClick={onClickNewVendor}
-        />
-        <NavbarDivider />
+        <Can I={VendorActionsBar.Create} a={AbilitySubject.Vendor}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'plus'} />}
+            text={<T id={'new_vendor'} />}
+            onClick={onClickNewVendor}
+          />
+          <NavbarDivider />
+        </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: vendorsFilterConditions,

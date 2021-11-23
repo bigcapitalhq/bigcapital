@@ -14,6 +14,7 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import {
   If,
   Icon,
+  Can,
   FormattedMessage as T,
   DashboardActionViewsList,
   AdvancedFilterPopover,
@@ -29,6 +30,10 @@ import withCustomersActions from './withCustomersActions';
 import withAlertActions from 'containers/Alert/withAlertActions';
 import withSettingsActions from '../../Settings/withSettingsActions';
 import withSettings from '../../Settings/withSettings';
+import {
+  Customer_Abilities,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 
 import { compose } from 'utils';
 
@@ -103,15 +108,15 @@ function CustomerActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'plus'} />}
-          text={<T id={'new_customer'} />}
-          onClick={onClickNewCustomer}
-        />
-        <NavbarDivider />
-
+        <Can I={Customer_Abilities.Create} a={AbilitySubject.Item}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'plus'} />}
+            text={<T id={'new_customer'} />}
+            onClick={onClickNewCustomer}
+          />
+          <NavbarDivider />
+        </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: customersFilterConditions,
@@ -152,11 +157,13 @@ function CustomerActionsBar({
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
-        <Switch
-          labelElement={<T id={'inactive'} />}
-          defaultChecked={accountsInactiveMode}
-          onChange={handleInactiveSwitchChange}
-        />
+        <Can I={Customer_Abilities.Edit} a={AbilitySubject.Customer}>
+          <Switch
+            labelElement={<T id={'inactive'} />}
+            defaultChecked={accountsInactiveMode}
+            onChange={handleInactiveSwitchChange}
+          />
+        </Can>
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
         <Button

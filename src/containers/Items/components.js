@@ -110,7 +110,7 @@ export function ItemsActionMenuList({
           onClick={safeCallback(onDuplicate, original)}
         />
       </Can>
-      <Can I={Item_Abilities.View} a={AbilitySubject.Item}>
+      <Can I={Item_Abilities.Edit} a={AbilitySubject.Item}>
         <If condition={original.active}>
           <MenuItem
             text={intl.get('inactivate_item')}
@@ -118,8 +118,7 @@ export function ItemsActionMenuList({
             onClick={safeCallback(onInactivateItem, original)}
           />
         </If>
-      </Can>
-      <Can I={Item_Abilities.Edit} a={AbilitySubject.Item}>
+
         <If condition={!original.active}>
           <MenuItem
             text={intl.get('activate_item')}
