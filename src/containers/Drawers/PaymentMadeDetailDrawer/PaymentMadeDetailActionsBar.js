@@ -16,8 +16,11 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Icon, FormattedMessage as T } from 'components';
-
+import { Can, Icon, FormattedMessage as T } from 'components';
+import {
+  Payment_Made_Abilities,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 import { compose } from 'utils';
 
 /**
@@ -48,20 +51,24 @@ function PaymentMadeDetailActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="pen-18" />}
-          text={<T id={'edit_payment_made'} />}
-          onClick={handleEditPaymentMade}
-        />
-        <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'trash-16'} iconSize={16} />}
-          text={<T id={'delete'} />}
-          intent={Intent.DANGER}
-          onClick={handleDeletePaymentMade}
-        />
+        <Can I={Payment_Made_Abilities.Edit} a={AbilitySubject.PaymentMade}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="pen-18" />}
+            text={<T id={'edit_payment_made'} />}
+            onClick={handleEditPaymentMade}
+          />
+          <NavbarDivider />
+        </Can>
+        <Can I={Payment_Made_Abilities.Delete} a={AbilitySubject.PaymentMade}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'trash-16'} iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleDeletePaymentMade}
+          />
+        </Can>
       </NavbarGroup>
     </DashboardActionsBar>
   );

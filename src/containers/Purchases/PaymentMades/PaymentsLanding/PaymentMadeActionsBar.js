@@ -14,6 +14,7 @@ import { useHistory } from 'react-router-dom';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import {
   If,
+  Can,
   FormattedMessage as T,
   DashboardActionViewsList,
   DashboardFilterButton,
@@ -29,6 +30,10 @@ import withSettings from 'containers/Settings/withSettings';
 
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { useRefreshPaymentMades } from 'hooks/query/paymentMades';
+import {
+  Payment_Made_Abilities,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 import { compose } from 'utils';
 
@@ -70,7 +75,7 @@ function PaymentMadeActionsBar({
   const handleRefreshBtnClick = () => {
     refresh();
   };
-  
+
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
     addSetting('billPayments', 'tableSize', size);
@@ -85,12 +90,14 @@ function PaymentMadeActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'plus'} />}
-          text={<T id={'new_payment_made'} />}
-          onClick={handleClickNewPaymentMade}
-        />
+        <Can I={Payment_Made_Abilities.Create} a={AbilitySubject.PaymentMade}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'plus'} />}
+            text={<T id={'new_payment_made'} />}
+            onClick={handleClickNewPaymentMade}
+          />
+        </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: paymentMadesFilterConditions,
