@@ -68,6 +68,11 @@ export default function VendorDetailsHeader() {
           label={<T id={'vendor.drawer.label.currency'} />}
           children={vendor?.currency_code}
         />
+        <DetailItem
+          label={<T id={'vendor.drawer.label.note'} />}
+          children={defaultTo(vendor?.note, '--')}
+
+        />
       </DetailsMenu>
     </div>
   );
