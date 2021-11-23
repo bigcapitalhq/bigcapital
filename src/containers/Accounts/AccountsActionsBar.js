@@ -15,6 +15,7 @@ import { FormattedMessage as T } from 'components';
 import {
   AdvancedFilterPopover,
   If,
+  Can,
   DashboardActionViewsList,
   DashboardFilterButton,
   DashboardRowsHeightButton,
@@ -30,6 +31,8 @@ import withAlertActions from 'containers/Alert/withAlertActions';
 import withAccountsTableActions from './withAccountsTableActions';
 import withSettings from '../Settings/withSettings';
 import withSettingsActions from '../Settings/withSettingsActions';
+import { Account_Abilities, AbilitySubject } from '../../common/abilityOption';
+
 import { compose } from 'utils';
 
 /**
@@ -116,13 +119,14 @@ function AccountsActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="plus" />}
-          text={<T id={'new_account'} />}
-          onClick={onClickNewAccount}
-        />
+        <Can I={Account_Abilities.Create} a={AbilitySubject.Account}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="plus" />}
+            text={<T id={'new_account'} />}
+            onClick={onClickNewAccount}
+          />
+        </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: accountsFilterConditions,
@@ -183,11 +187,13 @@ function AccountsActionsBar({
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
-        <Switch
-          labelElement={<T id={'inactive'} />}
-          defaultChecked={accountsInactiveMode}
-          onChange={handleInactiveSwitchChange}
-        />
+        <Can I={Account_Abilities.Edit} a={AbilitySubject.Account}>
+          <Switch
+            labelElement={<T id={'inactive'} />}
+            defaultChecked={accountsInactiveMode}
+            onChange={handleInactiveSwitchChange}
+          />
+        </Can>
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
         <Button
