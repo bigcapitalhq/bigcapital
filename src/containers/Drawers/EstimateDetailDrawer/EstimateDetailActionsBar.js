@@ -14,8 +14,12 @@ import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import {
+  Estimate_Abilities,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 
-import { Icon, FormattedMessage as T, MoreMenuItems } from 'components';
+import { Icon, FormattedMessage as T, MoreMenuItems, Can } from 'components';
 
 import { compose } from 'utils';
 
@@ -59,27 +63,33 @@ function EstimateDetailActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="pen-18" />}
-          text={<T id={'edit_estimate'} />}
-          onClick={handleEditEstimate}
-        />
-        <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="print-16" />}
-          text={<T id={'print'} />}
-          onClick={handlePrintEstimate}
-        />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'trash-16'} iconSize={16} />}
-          text={<T id={'delete'} />}
-          intent={Intent.DANGER}
-          onClick={handleDeleteEstimate}
-        />
-        <NavbarDivider />
+        <Can I={Estimate_Abilities.Edit} a={AbilitySubject.Estimate}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="pen-18" />}
+            text={<T id={'edit_estimate'} />}
+            onClick={handleEditEstimate}
+          />
+          <NavbarDivider />
+        </Can>
+        <Can I={Estimate_Abilities.View} a={AbilitySubject.Estimate}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="print-16" />}
+            text={<T id={'print'} />}
+            onClick={handlePrintEstimate}
+          />
+        </Can>
+        <Can I={Estimate_Abilities.Delete} a={AbilitySubject.Estimate}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'trash-16'} iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleDeleteEstimate}
+          />
+          <NavbarDivider />
+        </Can>
         <MoreMenuItems
           payload={{
             onNotifyViaSMS: handleNotifyViaSMS,
