@@ -23,7 +23,7 @@ import {
 import { formattedAmount, safeCallback, calculateStatus } from 'utils';
 import {
   Invoice_Abilities,
-  PaymentReceive,
+  Payment_Receive_Abilities,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -136,7 +136,7 @@ export function ActionsMenu({
           />
         </If>
       </Can>
-      <Can I={PaymentReceive.Create} a={AbilitySubject.PaymentReceive}>
+      <Can I={Payment_Receive_Abilities.Create} a={AbilitySubject.PaymentReceive}>
         <If condition={original.is_delivered && !original.is_fully_paid}>
           <MenuItem
             icon={<Icon icon="quick-payment-16" iconSize={16} />}

@@ -19,7 +19,7 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { If, Can, Icon, FormattedMessage as T } from 'components';
 import {
   Invoice_Abilities,
-  PaymentReceive,
+  Payment_Receive_Abilities,
   AbilitySubject,
 } from '../../../common/abilityOption';
 
@@ -93,7 +93,7 @@ function InvoiceDetailActionsBar({
 
           <NavbarDivider />
         </Can>
-        <Can I={PaymentReceive.Create} a={AbilitySubject.PaymentReceive}>
+        <Can I={Payment_Receive_Abilities.Create} a={AbilitySubject.PaymentReceive}>
           <If condition={invoice.is_delivered && !invoice.is_fully_paid}>
             <Button
               className={Classes.MINIMAL}
