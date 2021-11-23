@@ -15,7 +15,11 @@ import clsx from 'classnames';
 
 import { CLASSES } from '../../../../common/classes';
 import { safeCallback } from 'utils';
-import { FormatDateCell, Choose, Money, Icon, If } from 'components';
+import { FormatDateCell, Choose, Money, Icon, If, Can } from 'components';
+import {
+  Receipt_Abilities,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 export function ActionsMenu({
   payload: { onEdit, onDelete, onClose, onDrawer, onViewDetails, onPrint },
@@ -28,30 +32,37 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, receipt)}
       />
-      <MenuDivider />
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('edit_receipt')}
-        onClick={safeCallback(onEdit, receipt)}
-      />
-      <If condition={!receipt.is_closed}>
+      <Can I={Receipt_Abilities.Edit} a={AbilitySubject.Receipt}>
+        <MenuDivider />
         <MenuItem
-          icon={<Icon icon={'check'} iconSize={18} />}
-          text={intl.get('mark_as_closed')}
-          onClick={safeCallback(onClose, receipt)}
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('edit_receipt')}
+          onClick={safeCallback(onEdit, receipt)}
         />
-      </If>
-      <MenuItem
-        icon={<Icon icon={'print-16'} iconSize={16} />}
-        text={intl.get('print')}
-        onClick={safeCallback(onPrint, receipt)}
-      />
-      <MenuItem
-        text={intl.get('delete_receipt')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, receipt)}
-        icon={<Icon icon="trash-16" iconSize={16} />}
-      />
+
+        <If condition={!receipt.is_closed}>
+          <MenuItem
+            icon={<Icon icon={'check'} iconSize={18} />}
+            text={intl.get('mark_as_closed')}
+            onClick={safeCallback(onClose, receipt)}
+          />
+        </If>
+      </Can>
+      <Can I={Receipt_Abilities.View} a={AbilitySubject.Receipt}>
+        <MenuItem
+          icon={<Icon icon={'print-16'} iconSize={16} />}
+          text={intl.get('print')}
+          onClick={safeCallback(onPrint, receipt)}
+        />
+      </Can>
+      <Can I={Receipt_Abilities.Delete} a={AbilitySubject.Receipt}>
+        <MenuItem
+          text={intl.get('delete_receipt')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, receipt)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
+        />
+      </Can>
     </Menu>
   );
 }
