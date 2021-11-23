@@ -8,14 +8,19 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { Can, FormattedMessage as T } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { compose } from 'utils';
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
+import {
+  Manual_Journal_Abilities,
+  AbilitySubject,
+} from '../../../common/abilityOption';
+
+import { compose } from 'utils';
 
 /**
  * Manual journal action bar.
@@ -44,20 +49,27 @@ function ManualJournalDrawerActionBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="pen-18" />}
-          text={<T id={'edit_journal'} />}
-          onClick={handleEditManualJournal}
-        />
-        <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="trash-16" iconSize={16} />}
-          text={<T id={'delete'} />}
-          intent={Intent.DANGER}
-          onClick={handleDeleteManualJournal}
-        />
+        <Can I={Manual_Journal_Abilities.Edit} a={AbilitySubject.ManualJournal}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="pen-18" />}
+            text={<T id={'edit_journal'} />}
+            onClick={handleEditManualJournal}
+          />
+          <NavbarDivider />
+        </Can>
+        <Can
+          I={Manual_Journal_Abilities.Delete}
+          a={AbilitySubject.ManualJournal}
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleDeleteManualJournal}
+          />
+        </Can>
       </NavbarGroup>
     </DashboardActionsBar>
   );
