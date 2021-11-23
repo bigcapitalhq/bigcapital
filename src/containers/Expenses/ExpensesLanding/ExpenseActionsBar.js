@@ -15,6 +15,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import {
   If,
+  Can,
   DashboardRowsHeightButton,
   DashboardActionViewsList,
   DashboardFilterButton,
@@ -22,6 +23,10 @@ import {
   FormattedMessage as T,
 } from 'components';
 
+import {
+  Expense_Abilities,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 import { useRefreshExpenses } from 'hooks/query/expenses';
 import { useExpensesListContext } from './ExpensesListProvider';
 
@@ -92,13 +97,14 @@ function ExpensesActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="plus" />}
-          text={<T id={'new_expense'} />}
-          onClick={onClickNewExpense}
-        />
+        <Can I={Expense_Abilities.Create} a={AbilitySubject.Expense}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="plus" />}
+            text={<T id={'new_expense'} />}
+            onClick={onClickNewExpense}
+          />
+        </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: expensesFilterConditions,

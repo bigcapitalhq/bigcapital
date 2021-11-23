@@ -1,14 +1,19 @@
 export const AbilitySubject = {
   Item: 'Item',
-  Inventory_Adjustment: 'Inventory_Adjustment',
-  Estimate: 'Estimate',
-  Invoice: 'Invoice',
-  Receipt: 'Receipt',
+  Inventory_Adjustment: 'InventoryAdjustment',
+  Estimate: 'SaleEstimate',
+  Invoice: 'SaleInvoice',
+  Receipt: 'SaleReceipt',
   PaymentReceive: 'PaymentReceive',
   Bill: 'Bill',
   PaymentMade: 'PaymentMade',
   Customer: 'Customer',
   Vendor: 'Vendor',
+  Account: 'Account',
+  ManualJournal: 'ManualJournal',
+  Expense: 'Expense',
+  Cashflow: 'Cashflow',
+  Report: 'Report',
 };
 
 export const Item_Abilities = {
@@ -24,14 +29,14 @@ export const Inventory_Adjustment_Abilities = {
   Delete: 'delete',
 };
 
-export const SaleEstimate = {
+export const Estimate_Abilities = {
   View: 'view',
   Create: 'create',
   Edit: 'edit',
   Delete: 'delete',
 };
 
-export const SaleInvoice = {
+export const Invoice_Abilities = {
   View: 'view',
   Create: 'create',
   Edit: 'edit',
@@ -39,42 +44,72 @@ export const SaleInvoice = {
   BadDebt: 'bad-debt',
 };
 
-export const SaleReceipt = {
+export const Receipt_Abilities = {
   View: 'view',
   Create: 'create',
   Edit: 'edit',
   Delete: 'delete',
 };
 
-export const PaymentReceive = {
+export const Payment_Receive_Abilities = {
   View: 'view',
   Create: 'create',
   Edit: 'edit',
   Delete: 'delete',
 };
 
-export const Bill = {
+export const Bill_Abilities = {
   View: 'view',
   Create: 'create',
   Edit: 'edit',
   Delete: 'delete',
 };
 
-export const PaymentMade = {
+export const Payment_Made_Abilities = {
   View: 'view',
   Create: 'create',
   Edit: 'edit',
   Delete: 'delete',
 };
-export const CustomerAbilities = {
+
+export const Customer_Abilities = {
   View: 'view',
   Create: 'create',
   Edit: 'edit',
   Delete: 'delete',
 };
-export const VendorAbilities = {
+
+export const Vendor_Abilities = {
   View: 'view',
   Create: 'create',
   Edit: 'edit',
+  Delete: 'delete',
+};
+
+export const Account_Abilities = {
+  View: 'view',
+  Create: 'create',
+  Edit: 'edit',
+  Delete: 'delete',
+  TransactionsLocking: 'TransactionsLocking',
+};
+
+export const Manual_Journal_Abilities = {
+  View: 'view',
+  Create: 'create',
+  Edit: 'edit',
+  Delete: 'delete',
+};
+
+export const Expense_Abilities = {
+  View: 'view',
+  Create: 'create',
+  Edit: 'edit',
+  Delete: 'delete',
+};
+
+export const Cashflow__Abilities = {
+  View: 'view',
+  Create: 'create',
   Delete: 'delete',
 };

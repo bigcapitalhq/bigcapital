@@ -12,13 +12,17 @@ import {
   MenuDivider,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-
+import {
+  Expense_Abilities,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 import {
   FormatDateCell,
   FormattedMessage as T,
   Money,
   Icon,
   If,
+  Can,
 } from 'components';
 import { safeCallback } from 'utils';
 
@@ -54,25 +58,31 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <MenuDivider />
-      <If condition={!original.is_published}>
+      <Can I={Expense_Abilities.Edit} a={AbilitySubject.Expense}>
+        <MenuDivider />
+        <If condition={!original.is_published}>
+          <MenuItem
+            icon={<Icon icon={'arrow-to-top'} size={16} />}
+            text={intl.get('publish_expense')}
+            onClick={safeCallback(onPublish, original)}
+          />
+        </If>
+      </Can>
+      <Can I={Expense_Abilities.Edit} a={AbilitySubject.Expense}>
         <MenuItem
-          icon={<Icon icon={'arrow-to-top'} size={16} />}
-          text={intl.get('publish_expense')}
-          onClick={safeCallback(onPublish, original)}
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('edit_expense')}
+          onClick={safeCallback(onEdit, original)}
         />
-      </If>
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('edit_expense')}
-        onClick={safeCallback(onEdit, original)}
-      />
-      <MenuItem
-        icon={<Icon icon="trash-16" iconSize={16} />}
-        text={intl.get('delete_expense')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-      />
+      </Can>
+      <Can I={Expense_Abilities.Delete} a={AbilitySubject.Expense}>
+        <MenuItem
+          icon={<Icon icon="trash-16" iconSize={16} />}
+          text={intl.get('delete_expense')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+        />
+      </Can>
     </Menu>
   );
 }
