@@ -16,7 +16,12 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { If, Icon, FormattedMessage as T } from 'components';
+import { If, Can, Icon, FormattedMessage as T } from 'components';
+import {
+  Invoice_Abilities,
+  PaymentReceive,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 
 import { compose } from 'utils';
 
@@ -78,43 +83,54 @@ function InvoiceDetailActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="pen-18" />}
-          text={<T id={'edit_invoice'} />}
-          onClick={handleEditInvoice}
-        />
-        <NavbarDivider />
-        <If condition={invoice.is_delivered && !invoice.is_fully_paid}>
+        <Can I={Invoice_Abilities.Edit} a={AbilitySubject.Invoice}>
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon="quick-payment-16" iconSize={16} />}
-            text={<T id={'add_payment'} />}
-            onClick={handleQuickPaymentInvoice}
+            icon={<Icon icon="pen-18" />}
+            text={<T id={'edit_invoice'} />}
+            onClick={handleEditInvoice}
           />
-        </If>
-        <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="print-16" />}
-          text={<T id={'print'} />}
-          onClick={handlePrintInvoice}
-        />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'trash-16'} iconSize={16} />}
-          text={<T id={'delete'} />}
-          intent={Intent.DANGER}
-          onClick={handleDeleteInvoice}
-        />
-        <NavbarDivider />
-        <BadDebtMenuItem
-          payload={{
-            onBadDebt: handleBadDebtInvoice,
-            onCancelBadDebt: handleCancelBadDebtInvoice,
-            onNotifyViaSMS: handleNotifyViaSMS,
-          }}
-        />
+
+          <NavbarDivider />
+        </Can>
+        <Can I={PaymentReceive.Create} a={AbilitySubject.PaymentReceive}>
+          <If condition={invoice.is_delivered && !invoice.is_fully_paid}>
+            <Button
+              className={Classes.MINIMAL}
+              icon={<Icon icon="quick-payment-16" iconSize={16} />}
+              text={<T id={'add_payment'} />}
+              onClick={handleQuickPaymentInvoice}
+            />
+          </If>
+          <NavbarDivider />
+        </Can>
+        <Can I={Invoice_Abilities.View} a={AbilitySubject.Invoice}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="print-16" />}
+            text={<T id={'print'} />}
+            onClick={handlePrintInvoice}
+          />
+        </Can>
+        <Can I={Invoice_Abilities.Delete} a={AbilitySubject.Invoice}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'trash-16'} iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleDeleteInvoice}
+          />
+          <NavbarDivider />
+        </Can>
+        <Can I={Invoice_Abilities.BadDebt} a={AbilitySubject.Invoice}>
+          <BadDebtMenuItem
+            payload={{
+              onBadDebt: handleBadDebtInvoice,
+              onCancelBadDebt: handleCancelBadDebtInvoice,
+              onNotifyViaSMS: handleNotifyViaSMS,
+            }}
+          />
+        </Can>
       </NavbarGroup>
     </DashboardActionsBar>
   );
