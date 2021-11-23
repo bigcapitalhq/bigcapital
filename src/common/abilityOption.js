@@ -91,7 +91,7 @@ export const Account_Abilities = {
   Create: 'create',
   Edit: 'edit',
   Delete: 'delete',
-  TransactionsLocking: 'TransactionsLocking',
+  Transactions_Locking: 'TransactionsLocking',
 };
 
 export const Manual_Journal_Abilities = {
@@ -108,8 +108,28 @@ export const Expense_Abilities = {
   Delete: 'delete',
 };
 
-export const Cashflow__Abilities = {
+export const Cashflow_Abilities = {
   View: 'view',
   Create: 'create',
   Delete: 'delete',
+};
+
+export const Report_Abilities = {
+  READ_BALANCE_SHEET = 'read-balance-sheet',
+  READ_TRIAL_BALANCE_SHEET = 'read-trial-balance-sheet',
+  READ_PROFIT_LOSS = 'read-profit-loss',
+  READ_JOURNAL = 'read-journal',
+  READ_GENERAL_LEDGET = 'read-general-ledger',
+  READ_CASHFLOW = 'read-cashflow',
+  READ_AR_AGING_SUMMARY = 'read-ar-aging-summary',
+  READ_AP_AGING_SUMMARY = 'read-ap-aging-summary',
+  READ_PURCHASES_BY_ITEMS = 'read-purchases-by-items',
+  READ_SALES_BY_ITEMS = 'read-sales-by-items',
+  READ_CUSTOMERS_TRANSACTIONS = 'read-customers-transactions',
+  READ_VENDORS_TRANSACTIONS = 'read-vendors-transactions',
+  READ_CUSTOMERS_SUMMARY_BALANCE = 'read-customers-summary-balance',
+  READ_VENDORS_SUMMARY_BALANCE = 'read-vendors-summary-balance',
+  READ_INVENTORY_VALUATION_SUMMARY = 'read-inventory-valuation-summary',
+  READ_INVENTORY_ITEM_DETAILS = 'read-inventory-item-details',
+  READ_CASHFLOW_ACCOUNT_TRANSACTION = 'read-cashflow-account-transactions'
 };
