@@ -15,9 +15,9 @@ import { isNumber } from 'lodash';
 import { FormattedMessage as T, Icon, Money, If, Can } from 'components';
 import { isBlank, safeCallback } from 'utils';
 import {
-  ItemAbility,
-  InventoryAdjustment,
   AbilitySubject,
+  Item_Abilities,
+  Inventory_Adjustment_Abilities,
 } from '../../common/abilityOption';
 
 /**
@@ -95,52 +95,52 @@ export function ItemsActionMenuList({
         text={<T id={'view_details'} />}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <MenuDivider />
-      <Can I={ItemAbility.Edit} a={AbilitySubject.Item}>
+      <Can I={Item_Abilities.Edit} a={AbilitySubject.Item}>
+        <MenuDivider />
         <MenuItem
           icon={<Icon icon="pen-18" />}
           text={intl.get('edit_item')}
           onClick={safeCallback(onEditItem, original)}
         />
       </Can>
-      <Can I={ItemAbility.Create} a={AbilitySubject.Item}>
+      <Can I={Item_Abilities.Create} a={AbilitySubject.Item}>
         <MenuItem
           icon={<Icon icon="duplicate-16" />}
           text={intl.get('duplicate')}
           onClick={safeCallback(onDuplicate, original)}
         />
       </Can>
-      <If condition={original.active}>
-        <Can I={ItemAbility.View} a={AbilitySubject.Item}>
+      <Can I={Item_Abilities.View} a={AbilitySubject.Item}>
+        <If condition={original.active}>
           <MenuItem
             text={intl.get('inactivate_item')}
             icon={<Icon icon="pause-16" iconSize={16} />}
             onClick={safeCallback(onInactivateItem, original)}
           />
-        </Can>
-      </If>
-      <If condition={!original.active}>
-        <Can I={ItemAbility.View} a={AbilitySubject.Item}>
+        </If>
+      </Can>
+      <Can I={Item_Abilities.Edit} a={AbilitySubject.Item}>
+        <If condition={!original.active}>
           <MenuItem
             text={intl.get('activate_item')}
             icon={<Icon icon="play-16" iconSize={16} />}
             onClick={safeCallback(onActivateItem, original)}
           />
-        </Can>
-      </If>
-      <If condition={original.type === 'inventory'}>
-        <Can
-          I={InventoryAdjustment.Create}
-          a={AbilitySubject.InventoryAdjustment}
-        >
+        </If>
+      </Can>
+      <Can
+        I={Inventory_Adjustment_Abilities.Edit}
+        a={AbilitySubject.Inventory_Adjustment}
+      >
+        <If condition={original.type === 'inventory'}>
           <MenuItem
             text={intl.get('make_adjustment')}
             icon={<Icon icon={'swap-vert'} iconSize={16} />}
             onClick={safeCallback(onMakeAdjustment, original)}
           />
-        </Can>
-      </If>
-      <Can I={ItemAbility.Delete} a={AbilitySubject.Item}>
+        </If>
+      </Can>
+      <Can I={Item_Abilities.Delete} a={AbilitySubject.Item}>
         <MenuItem
           text={intl.get('delete_item')}
           icon={<Icon icon="trash-16" iconSize={16} />}

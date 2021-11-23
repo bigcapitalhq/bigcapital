@@ -9,7 +9,7 @@ import withAlertsActions from 'containers/Alert/withAlertActions';
 
 import { Icon, FormattedMessage as T, Can } from 'components';
 import {
-  InventoryAdjustment,
+  Inventory_Adjustment_Abilities,
   AbilitySubject,
 } from '../../../common/abilityOption';
 
@@ -30,7 +30,10 @@ function InventoryAdjustmentDetailActionsBar({
   };
 
   return (
-    <Can I={InventoryAdjustment.Delete} a={AbilitySubject.InventoryAdjustment}>
+    <Can
+      I={Inventory_Adjustment_Abilities.Delete}
+      a={AbilitySubject.Inventory_Adjustment}
+    >
       <DashboardActionsBar>
         <NavbarGroup>
           <Button

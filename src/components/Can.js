@@ -3,9 +3,15 @@ import { Ability } from '@casl/ability';
 import { createContextualCan } from '@casl/react';
 
 import {
-  ItemAbility,
+  Item_Abilities,
   AbilitySubject,
-  InventoryAdjustment,
+  Inventory_Adjustment_Abilities,
+  SaleEstimate,
+  SaleInvoice,
+  SaleReceipt,
+  PaymentReceive,
+  Bill,
+  PaymentMade,
 } from '../common/abilityOption';
 
 export const AbilityContext = React.createContext();
@@ -14,8 +20,12 @@ export const Can = createContextualCan(AbilityContext.Consumer);
 const AbilityContextProvider = (props) => {
   const ability = new Ability([
     {
-      subject: [AbilitySubject.Item],
-      action: [ItemAbility.Create, ItemAbility.Edit],
+      subject: [AbilitySubject.PaymentMade],
+      action: [PaymentMade.Edit],
+    },
+    {
+      subject: [AbilitySubject.Bill],
+      action: [Bill.Create],
     },
   ]);
 

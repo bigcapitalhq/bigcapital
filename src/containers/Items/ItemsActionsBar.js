@@ -31,7 +31,7 @@ import withSettings from '../Settings/withSettings';
 import { compose } from 'utils';
 import withSettingsActions from '../Settings/withSettingsActions';
 
-import { ItemAbility, AbilitySubject } from '../../common/abilityOption';
+import { Item_Abilities, AbilitySubject } from '../../common/abilityOption';
 
 /**
  * Items actions bar.
@@ -104,7 +104,7 @@ function ItemsActionsBar({
         />
         <NavbarDivider />
 
-        <Can I={ItemAbility.Create} a={AbilitySubject.Item}>
+        <Can I={Item_Abilities.Create} a={AbilitySubject.Item}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="plus" />}
@@ -153,7 +153,7 @@ function ItemsActionsBar({
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
-        <Can I={ItemAbility.View} a={AbilitySubject.Item}>
+        <Can I={Item_Abilities.Edit} a={AbilitySubject.Item}>
           <Switch
             labelElement={<T id={'inactive'} />}
             defaultChecked={itemsInactiveMode}

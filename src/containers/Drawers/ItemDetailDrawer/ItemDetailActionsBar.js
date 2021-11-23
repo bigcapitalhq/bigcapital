@@ -10,7 +10,7 @@ import {
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
-import { ItemAbility, AbilitySubject } from '../../../common/abilityOption';
+import { Item_Abilities, AbilitySubject } from '../../../common/abilityOption';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
@@ -48,7 +48,7 @@ function ItemDetailActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Can I={ItemAbility.Edit} a={AbilitySubject.Item}>
+        <Can I={Item_Abilities.Edit} a={AbilitySubject.Item}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
@@ -58,7 +58,7 @@ function ItemDetailActionsBar({
 
           <NavbarDivider />
         </Can>
-        <Can I={ItemAbility.Delete} a={AbilitySubject.Item}>
+        <Can I={Item_Abilities.Delete} a={AbilitySubject.Item}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}
