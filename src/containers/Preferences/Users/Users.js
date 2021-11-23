@@ -26,11 +26,18 @@ function UsersPreferences({ openDialog }) {
       <div className={classNames(CLASSES.CARD)}>
         <div className={classNames(CLASSES.PREFERENCES_PAGE_TABS)}>
           <Tabs animate={true} onChange={onChangeTabs}>
-            <Tab id="users" title={intl.get('users')} />
-            <Tab id="roles" title={intl.get('roles')} />
+            <Tab
+              id="users"
+              title={intl.get('users')}
+              panel={<PreferencesSubContent preferenceTab="users" />}
+            />
+            <Tab
+              id="roles"
+              title={intl.get('roles')}
+              panel={<PreferencesSubContent preferenceTab="roles" />}
+            />
           </Tabs>
         </div>
-        <PreferencesSubContent preferenceTab="users" />
       </div>
     </div>
   );

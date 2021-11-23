@@ -1,5 +1,6 @@
 import General from 'containers/Preferences/General/General';
-import Users from 'containers/Preferences/Users/Users';
+import Users from '../containers/Preferences/Users/Users';
+import Roles from '../containers/Preferences/Users/Roles/RolesForm/RolesFormPage';
 import Accountant from 'containers/Preferences/Accountant/Accountant';
 // import Accounts from 'containers/Preferences/Accounts/Accounts';
 import Currencies from 'containers/Preferences/Currencies/Currencies';
@@ -18,6 +19,16 @@ export default [
   {
     path: `${BASE_URL}/users`,
     component: Users,
+    exact: true,
+  },
+  {
+    path: `${BASE_URL}/roles`,
+    component: Roles,
+    exact: true,
+  },
+  {
+    path: `${BASE_URL}/roles/:id`,
+    component: Roles,
     exact: true,
   },
   {

@@ -30,6 +30,9 @@ import withSettings from '../Settings/withSettings';
 import { compose } from 'utils';
 import withSettingsActions from '../Settings/withSettingsActions';
 
+
+import { Can, AbilityContext } from '../../components/Abilities';
+
 /**
  * Items actions bar.
  */
@@ -56,6 +59,8 @@ function ItemsActionsBar({
 
   // Items refresh action.
   const { refresh } = useRefreshItems();
+
+  const { ability } = React.useContext(AbilityContext);
 
   // History context.
   const history = useHistory();
@@ -101,13 +106,14 @@ function ItemsActionsBar({
         />
         <NavbarDivider />
 
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="plus" />}
-          text={<T id={'new_item'} />}
-          onClick={onClickNewItem}
-        />
-
+        {/* <Can I="create" a="Item" ability={ability}> */}
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="plus" />}
+            text={<T id={'new_item'} />}
+            onClick={onClickNewItem}
+          />
+        {/* </Can> */}
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: itemsFilterRoles,
