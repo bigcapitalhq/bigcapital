@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { For } from 'components';
 
 import 'style/pages/FinancialStatements/FinancialSheets.scss';
+import { useFilterShortcutBoxesSection } from './components';
 
 function ShortcutBox({ title, link, description }) {
   return (
@@ -27,5 +28,6 @@ function ShortcutBoxes({ sectionTitle, shortcuts }) {
 }
 
 export default function ShortcutBoxesSection({ section }) {
-  return <For render={ShortcutBoxes} of={section} />;
+  const BoxSection = useFilterShortcutBoxesSection(section);
+  return <For render={ShortcutBoxes} of={BoxSection} />;
 }
