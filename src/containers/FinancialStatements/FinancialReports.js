@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { For } from 'components';
-
+import useFilterFinancialReports from './FilterFinancialReports';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   financialReportMenus,
@@ -37,13 +37,18 @@ function FinancialReportsSection({ sectionTitle, reports }) {
  * Financial reports.
  */
 export default function FinancialReports() {
+  const financialReportMenu = useFilterFinancialReports(financialReportMenus);
+  const SalesAndPurchasesReportMenu = useFilterFinancialReports(
+    SalesAndPurchasesReportMenus,
+  );
+
   return (
     <DashboardInsider name={'financial-reports'}>
       <div class="financial-reports">
-        <For render={FinancialReportsSection} of={financialReportMenus} />
+        <For render={FinancialReportsSection} of={financialReportMenu} />
         <For
           render={FinancialReportsSection}
-          of={SalesAndPurchasesReportMenus}
+          of={SalesAndPurchasesReportMenu}
         />
       </div>
     </DashboardInsider>
