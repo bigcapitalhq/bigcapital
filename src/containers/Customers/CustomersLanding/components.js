@@ -4,7 +4,11 @@ import clsx from 'classnames';
 
 import intl from 'react-intl-universal';
 
-import { Icon, Money, If, AvaterCell } from 'components';
+import { Can, Icon, Money, If, AvaterCell } from 'components';
+import {
+  Customer_Abilities,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 
 import { safeCallback } from 'utils';
 
@@ -29,37 +33,46 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <MenuDivider />
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('edit_customer')}
-        onClick={safeCallback(onEdit, original)}
-      />
-      <MenuItem
-        icon={<Icon icon="duplicate-16" />}
-        text={intl.get('duplicate')}
-        onClick={safeCallback(onDuplicate, original)}
-      />
-      <If condition={original.active}>
+      <Can I={Customer_Abilities.Edit} a={AbilitySubject.Customer}>
+        <MenuDivider />
+
         <MenuItem
-          text={intl.get('inactivate_customer')}
-          icon={<Icon icon="pause-16" iconSize={16} />}
-          onClick={safeCallback(onInactivate, original)}
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('edit_customer')}
+          onClick={safeCallback(onEdit, original)}
         />
-      </If>
-      <If condition={!original.active}>
+      </Can>
+      <Can I={Customer_Abilities.Create} a={AbilitySubject.Customer}>
         <MenuItem
-          text={intl.get('activate_customer')}
-          icon={<Icon icon="play-16" iconSize={16} />}
-          onClick={safeCallback(onActivate, original)}
+          icon={<Icon icon="duplicate-16" />}
+          text={intl.get('duplicate')}
+          onClick={safeCallback(onDuplicate, original)}
         />
-      </If>
-      <MenuItem
-        icon={<Icon icon="trash-16" iconSize={16} />}
-        text={intl.get('delete_customer')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-      />
+      </Can>
+      <Can I={Customer_Abilities.Edit} a={AbilitySubject.Customer}>
+        <If condition={original.active}>
+          <MenuItem
+            text={intl.get('inactivate_customer')}
+            icon={<Icon icon="pause-16" iconSize={16} />}
+            onClick={safeCallback(onInactivate, original)}
+          />
+        </If>
+        <If condition={!original.active}>
+          <MenuItem
+            text={intl.get('activate_customer')}
+            icon={<Icon icon="play-16" iconSize={16} />}
+            onClick={safeCallback(onActivate, original)}
+          />
+        </If>
+      </Can>
+      <Can I={Customer_Abilities.Delete} a={AbilitySubject.Customer}>
+        <MenuItem
+          icon={<Icon icon="trash-16" iconSize={16} />}
+          text={intl.get('delete_customer')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+        />
+      </Can>
     </Menu>
   );
 }

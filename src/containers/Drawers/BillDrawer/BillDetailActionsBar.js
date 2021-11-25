@@ -16,7 +16,12 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { If, Icon, FormattedMessage as T } from 'components';
+import { Can, If, Icon, FormattedMessage as T } from 'components';
+import {
+  Bill_Abilities,
+  Payment_Made_Abilities,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 
 import { safeCallback, compose } from 'utils';
 
@@ -53,29 +58,38 @@ function BillDetailActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="pen-18" />}
-          text={<T id={'edit_bill'} />}
-          onClick={safeCallback(onEditBill)}
-        />
-        <NavbarDivider />
-        <If condition={bill.is_open && !bill.is_fully_paid}>
+        <Can I={Bill_Abilities.Edit} a={AbilitySubject.Bill}>
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon="quick-payment-16" iconSize={16} />}
-            text={<T id={'add_payment'} />}
-            onClick={handleQuickBillPayment}
+            icon={<Icon icon="pen-18" />}
+            text={<T id={'edit_bill'} />}
+            onClick={safeCallback(onEditBill)}
           />
-        </If>
-        <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'trash-16'} iconSize={16} />}
-          text={<T id={'delete'} />}
-          intent={Intent.DANGER}
-          onClick={safeCallback(onDeleteBill)}
-        />
+          <NavbarDivider />
+        </Can>
+        <Can
+          I={Payment_Made_Abilities.Create}
+          a={AbilitySubject.PaymentMade}
+        >
+          <If condition={bill.is_open && !bill.is_fully_paid}>
+            <Button
+              className={Classes.MINIMAL}
+              icon={<Icon icon="quick-payment-16" iconSize={16} />}
+              text={<T id={'add_payment'} />}
+              onClick={handleQuickBillPayment}
+            />
+          </If>
+          <NavbarDivider />
+        </Can>
+        <Can I={Bill_Abilities.Delete} a={AbilitySubject.Bill}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'trash-16'} iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={safeCallback(onDeleteBill)}
+          />
+        </Can>
       </NavbarGroup>
     </DashboardActionsBar>
   );

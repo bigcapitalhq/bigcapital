@@ -59,6 +59,7 @@ import AvaterCell from './AvaterCell';
 
 import { ItemsMultiSelect } from './Items';
 import MoreMenuItems from './MoreMenutItems';
+import { Can } from './Can';
 
 export * from './Dialog';
 export * from './Menu';
@@ -156,4 +157,5 @@ export {
   Card,
   AvaterCell,
   MoreMenuItems,
+  Can,
 };

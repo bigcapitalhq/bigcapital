@@ -17,7 +17,7 @@ import {
   DashboardRowsHeightButton,
 } from 'components';
 
-import { If, DashboardActionViewsList } from 'components';
+import { Can, If, DashboardActionViewsList } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withReceiptsActions from './withReceiptsActions';
@@ -28,6 +28,11 @@ import withSettings from 'containers/Settings/withSettings';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useRefreshReceipts } from 'hooks/query/receipts';
+import {
+  Receipt_Abilities,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
+
 import { compose } from 'utils';
 
 /**
@@ -87,12 +92,14 @@ function ReceiptActionsBar({
         />
 
         <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'plus'} />}
-          text={<T id={'new_receipt'} />}
-          onClick={onClickNewReceipt}
-        />
+        <Can I={Receipt_Abilities.Create} a={AbilitySubject.Receipt}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'plus'} />}
+            text={<T id={'new_receipt'} />}
+            onClick={onClickNewReceipt}
+          />
+        </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: receiptsFilterConditions,

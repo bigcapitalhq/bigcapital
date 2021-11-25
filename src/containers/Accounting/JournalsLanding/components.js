@@ -13,7 +13,18 @@ import {
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { FormattedMessage as T, Choose, Money, If, Icon } from 'components';
+import {
+  Can,
+  FormattedMessage as T,
+  Choose,
+  Money,
+  If,
+  Icon,
+} from 'components';
+import {
+  Manual_Journal_Abilities,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 import { safeCallback } from 'utils';
 
 /**
@@ -150,25 +161,31 @@ export const ActionsMenu = ({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <MenuDivider />
-      <If condition={!original.is_published}>
+      <Can I={Manual_Journal_Abilities.Edit} a={AbilitySubject.ManualJournal}>
+        <MenuDivider />
+        <If condition={!original.is_published}>
+          <MenuItem
+            icon={<Icon icon="arrow-to-top" />}
+            text={intl.get('publish_journal')}
+            onClick={safeCallback(onPublish, original)}
+          />
+        </If>
+      </Can>
+      <Can I={Manual_Journal_Abilities.Edit} a={AbilitySubject.ManualJournal}>
         <MenuItem
-          icon={<Icon icon="arrow-to-top" />}
-          text={intl.get('publish_journal')}
-          onClick={safeCallback(onPublish, original)}
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('edit_journal')}
+          onClick={safeCallback(onEdit, original)}
         />
-      </If>
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('edit_journal')}
-        onClick={safeCallback(onEdit, original)}
-      />
-      <MenuItem
-        text={intl.get('delete_journal')}
-        icon={<Icon icon="trash-16" iconSize={16} />}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-      />
+      </Can>
+      <Can I={Manual_Journal_Abilities.Delete} a={AbilitySubject.ManualJournal}>
+        <MenuItem
+          text={intl.get('delete_journal')}
+          icon={<Icon icon="trash-16" iconSize={16} />}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+        />
+      </Can>
     </Menu>
   );
 };

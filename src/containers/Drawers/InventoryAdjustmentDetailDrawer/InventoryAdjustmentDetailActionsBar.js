@@ -7,7 +7,11 @@ import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawer
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
 
-import { Icon, FormattedMessage as T } from 'components';
+import { Icon, FormattedMessage as T, Can } from 'components';
+import {
+  Inventory_Adjustment_Abilities,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 
 import { compose } from 'utils';
 
@@ -26,17 +30,22 @@ function InventoryAdjustmentDetailActionsBar({
   };
 
   return (
-    <DashboardActionsBar>
-      <NavbarGroup>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'trash-16'} iconSize={16} />}
-          text={<T id={'delete'} />}
-          intent={Intent.DANGER}
-          onClick={handleDeleteInventoryAdjustment}
-        />
-      </NavbarGroup>
-    </DashboardActionsBar>
+    <Can
+      I={Inventory_Adjustment_Abilities.Delete}
+      a={AbilitySubject.Inventory_Adjustment}
+    >
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'trash-16'} iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleDeleteInventoryAdjustment}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    </Can>
   );
 }
 

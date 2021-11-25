@@ -20,8 +20,13 @@ import { useVendorDetailsDrawerContext } from './VendorDetailsDrawerProvider';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Icon, FormattedMessage as T } from 'components';
-
+import { Can, Icon, FormattedMessage as T } from 'components';
+import {
+  AbilitySubject,
+  Invoice_Abilities,
+  Payment_Made_Abilities,
+  Vendor_Abilities,
+} from '../../../common/abilityOption';
 import { safeCallback, compose } from 'utils';
 
 /**
@@ -64,14 +69,21 @@ function VendorDetailsActionsBar({
         <Popover
           content={
             <Menu>
-              <MenuItem
-                text={<T id={'vendor.drawer.action.new_invoice'} />}
-                onClick={handleNewInvoiceClick}
-              />
-              <MenuItem
-                text={<T id={'vendor.drawer.action.new_payment'} />}
-                onClick={handleNewPaymentClick}
-              />
+              <Can I={Invoice_Abilities.Create} a={AbilitySubject.Invoice}>
+                <MenuItem
+                  text={<T id={'vendor.drawer.action.new_invoice'} />}
+                  onClick={handleNewInvoiceClick}
+                />
+              </Can>
+              <Can
+                I={Payment_Made_Abilities.Create}
+                a={AbilitySubject.PaymentMade}
+              >
+                <MenuItem
+                  text={<T id={'vendor.drawer.action.new_payment'} />}
+                  onClick={handleNewPaymentClick}
+                />
+              </Can>
             </Menu>
           }
           minimal={true}
@@ -84,23 +96,25 @@ function VendorDetailsActionsBar({
             icon={<Icon icon={'plus'} />}
           />
         </Popover>
-
         <NavbarDivider />
-
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="pen-18" />}
-          text={<T id={'vendor.drawer.action.edit'} />}
-          onClick={safeCallback(onEditContact)}
-        />
-        <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'trash-16'} iconSize={16} />}
-          text={<T id={'vendor.drawer.action.delete'} />}
-          intent={Intent.DANGER}
-          onClick={safeCallback(onDeleteContact)}
-        />
+        <Can I={Vendor_Abilities.Edit} a={AbilitySubject.Vendor}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="pen-18" />}
+            text={<T id={'vendor.drawer.action.edit'} />}
+            onClick={safeCallback(onEditContact)}
+          />
+          <NavbarDivider />
+        </Can>
+        <Can I={Vendor_Abilities.Delete} a={AbilitySubject.Vendor}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'trash-16'} iconSize={16} />}
+            text={<T id={'vendor.drawer.action.delete'} />}
+            intent={Intent.DANGER}
+            onClick={safeCallback(onDeleteContact)}
+          />
+        </Can>
       </NavbarGroup>
     </DashboardActionsBar>
   );

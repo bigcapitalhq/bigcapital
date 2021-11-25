@@ -11,6 +11,7 @@ import {
 import { useHistory } from 'react-router-dom';
 
 import {
+  Can,
   FormattedMessage as T,
   AdvancedFilterPopover,
   If,
@@ -28,6 +29,10 @@ import withSettings from 'containers/Settings/withSettings';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useRefreshEstimates } from 'hooks/query/estimates';
+import {
+  Estimate_Abilities,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 import { compose } from 'utils';
 
@@ -87,12 +92,14 @@ function EstimateActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'plus'} />}
-          text={<T id={'new_estimate'} />}
-          onClick={onClickNewEstimate}
-        />
+        <Can I={Estimate_Abilities.Create} a={AbilitySubject.Estimate}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'plus'} />}
+            text={<T id={'new_estimate'} />}
+            onClick={onClickNewEstimate}
+          />
+        </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: estimatesFilterRoles,

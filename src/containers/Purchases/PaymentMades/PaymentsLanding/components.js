@@ -10,7 +10,12 @@ import {
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { Icon, Money, FormatDateCell } from 'components';
+import { Icon, Money, FormatDateCell, Can } from 'components';
+import {
+  Payment_Made_Abilities,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
+
 import { safeCallback } from 'utils';
 
 export function AmountAccessor(row) {
@@ -31,18 +36,23 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <MenuDivider />
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('edit_payment_made')}
-        onClick={safeCallback(onEdit, original)}
-      />
-      <MenuItem
-        text={intl.get('delete_payment_made')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-        icon={<Icon icon="trash-16" iconSize={16} />}
-      />
+
+      <Can I={Payment_Made_Abilities.Edit} a={AbilitySubject.PaymentMade}>
+        <MenuDivider />
+        <MenuItem
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('edit_payment_made')}
+          onClick={safeCallback(onEdit, original)}
+        />
+      </Can>
+      <Can I={Payment_Made_Abilities.Delete} a={AbilitySubject.PaymentMade}>
+        <MenuItem
+          text={intl.get('delete_payment_made')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
+        />
+      </Can>
     </Menu>
   );
 }

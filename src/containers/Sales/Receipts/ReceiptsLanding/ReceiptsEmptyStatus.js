@@ -2,7 +2,11 @@ import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
-import { FormattedMessage as T } from 'components';
+import { Can, FormattedMessage as T } from 'components';
+import {
+  Receipt_Abilities,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 export default function ReceiptsEmptyStatus() {
   const history = useHistory();
@@ -17,19 +21,21 @@ export default function ReceiptsEmptyStatus() {
       }
       action={
         <>
-          <Button
-            intent={Intent.PRIMARY}
-            large={true}
-            onClick={() => {
-              history.push('/receipts/new');
-            }}
-          >
-            <T id={'new_receipt'} />
-          </Button>
+          <Can I={Receipt_Abilities.Create} a={AbilitySubject.Receipt}>
+            <Button
+              intent={Intent.PRIMARY}
+              large={true}
+              onClick={() => {
+                history.push('/receipts/new');
+              }}
+            >
+              <T id={'new_receipt'} />
+            </Button>
 
-          <Button intent={Intent.NONE} large={true}>
-         <T id={'learn_more'}/>
-          </Button>
+            <Button intent={Intent.NONE} large={true}>
+              <T id={'learn_more'} />
+            </Button>
+          </Can>
         </>
       }
     />

@@ -2,6 +2,10 @@ import React from 'react';
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
+import {
+  Estimate_Abilities,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 import { CLASSES } from '../../../../common/classes';
 import {
@@ -11,6 +15,7 @@ import {
   Choose,
   Icon,
   If,
+  Can,
 } from 'components';
 import { safeCallback } from 'utils';
 
@@ -68,63 +73,74 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <MenuDivider />
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('edit_estimate')}
-        onClick={safeCallback(onEdit, original)}
-      />
-      <MenuItem
-        icon={<Icon icon="convert_to" />}
-        text={intl.get('convert_to_invoice')}
-        onClick={safeCallback(onConvert, original)}
-      />
-      <If condition={!original.is_delivered}>
+      <Can I={Estimate_Abilities.Edit} a={AbilitySubject.Estimate}>
+        <MenuDivider />
         <MenuItem
-          icon={<Icon icon={'check'} iconSize={18} />}
-          text={intl.get('mark_as_delivered')}
-          onClick={safeCallback(onDeliver, original)}
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('edit_estimate')}
+          onClick={safeCallback(onEdit, original)}
         />
-      </If>
-      <Choose>
-        <Choose.When condition={original.is_delivered && original.is_approved}>
-          <MenuItem
-            icon={<Icon icon={'close-black'} />}
-            text={intl.get('mark_as_rejected')}
-            onClick={safeCallback(onReject, original)}
-          />
-        </Choose.When>
-        <Choose.When condition={original.is_delivered && original.is_rejected}>
+        <MenuItem
+          icon={<Icon icon="convert_to" />}
+          text={intl.get('convert_to_invoice')}
+          onClick={safeCallback(onConvert, original)}
+        />
+
+        <If condition={!original.is_delivered}>
           <MenuItem
             icon={<Icon icon={'check'} iconSize={18} />}
-            text={intl.get('mark_as_approved')}
-            onClick={safeCallback(onApprove, original)}
+            text={intl.get('mark_as_delivered')}
+            onClick={safeCallback(onDeliver, original)}
           />
-        </Choose.When>
-        <Choose.When condition={original.is_delivered}>
-          <MenuItem
-            icon={<Icon icon={'check'} iconSize={18} />}
-            text={intl.get('mark_as_approved')}
-            onClick={safeCallback(onApprove, original)}
-          />
-          <MenuItem
-            icon={<Icon icon={'close-black'} />}
-            text={intl.get('mark_as_rejected')}
-            onClick={safeCallback(onReject, original)}
-          />
-        </Choose.When>
-      </Choose>
-      <MenuItem
-        icon={<Icon icon={'print-16'} iconSize={16} />}
-        text={intl.get('print')}
-        onClick={safeCallback(onPrint, original)}
-      />
-      <MenuItem
-        text={intl.get('delete_estimate')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-        icon={<Icon icon="trash-16" iconSize={16} />}
-      />
+        </If>
+        <Choose>
+          <Choose.When
+            condition={original.is_delivered && original.is_approved}
+          >
+            <MenuItem
+              icon={<Icon icon={'close-black'} />}
+              text={intl.get('mark_as_rejected')}
+              onClick={safeCallback(onReject, original)}
+            />
+          </Choose.When>
+          <Choose.When
+            condition={original.is_delivered && original.is_rejected}
+          >
+            <MenuItem
+              icon={<Icon icon={'check'} iconSize={18} />}
+              text={intl.get('mark_as_approved')}
+              onClick={safeCallback(onApprove, original)}
+            />
+          </Choose.When>
+          <Choose.When condition={original.is_delivered}>
+            <MenuItem
+              icon={<Icon icon={'check'} iconSize={18} />}
+              text={intl.get('mark_as_approved')}
+              onClick={safeCallback(onApprove, original)}
+            />
+            <MenuItem
+              icon={<Icon icon={'close-black'} />}
+              text={intl.get('mark_as_rejected')}
+              onClick={safeCallback(onReject, original)}
+            />
+          </Choose.When>
+        </Choose>
+      </Can>
+      <Can I={Estimate_Abilities.View} a={AbilitySubject.Estimate}>
+        <MenuItem
+          icon={<Icon icon={'print-16'} iconSize={16} />}
+          text={intl.get('print')}
+          onClick={safeCallback(onPrint, original)}
+        />
+      </Can>
+      <Can I={Estimate_Abilities.Delete} a={AbilitySubject.Estimate}>
+        <MenuItem
+          text={intl.get('delete_estimate')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
+        />
+      </Can>
     </Menu>
   );
 }

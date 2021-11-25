@@ -2,7 +2,11 @@ import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
-import { FormattedMessage as T } from 'components';
+import { Can, FormattedMessage as T } from 'components';
+import {
+  Payment_Made_Abilities,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 export default function PaymentMadesEmptyStatus() {
   const history = useHistory();
@@ -17,19 +21,21 @@ export default function PaymentMadesEmptyStatus() {
       }
       action={
         <>
-          <Button
-            intent={Intent.PRIMARY}
-            large={true}
-            onClick={() => {
-              history.push('/payment-mades/new');
-            }}
-          >
-            <T id={'new_bill_payment'} />
-          </Button>
+          <Can I={Payment_Made_Abilities.Create} a={AbilitySubject.PaymentMade}>
+            <Button
+              intent={Intent.PRIMARY}
+              large={true}
+              onClick={() => {
+                history.push('/payment-mades/new');
+              }}
+            >
+              <T id={'new_bill_payment'} />
+            </Button>
 
-          <Button intent={Intent.NONE} large={true}>
-            <T id={'learn_more'} />
-          </Button>
+            <Button intent={Intent.NONE} large={true}>
+              <T id={'learn_more'} />
+            </Button>
+          </Can>
         </>
       }
     />

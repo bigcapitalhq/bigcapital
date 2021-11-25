@@ -18,8 +18,14 @@ import {
   Choose,
   If,
   Icon,
+  Can,
 } from 'components';
 import { formattedAmount, safeCallback, calculateStatus } from 'utils';
+import {
+  Invoice_Abilities,
+  Payment_Receive_Abilities,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 export const statusAccessor = (row) => {
   return (
@@ -55,7 +61,6 @@ export const statusAccessor = (row) => {
               })}
             </span>
             <ProgressBar
-          
               animate={false}
               stripes={false}
               intent={Intent.PRIMARY}
@@ -115,37 +120,46 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <MenuDivider />
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('edit_invoice')}
-        onClick={safeCallback(onEdit, original)}
-      />
-      <If condition={!original.is_delivered}>
+      <Can I={Invoice_Abilities.Edit} a={AbilitySubject.Invoice}>
+        <MenuDivider />
         <MenuItem
-          icon={<Icon icon="send" iconSize={16} />}
-          text={intl.get('mark_as_delivered')}
-          onClick={safeCallback(onDeliver, original)}
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('edit_invoice')}
+          onClick={safeCallback(onEdit, original)}
         />
-      </If>
-      <If condition={original.is_delivered && !original.is_fully_paid}>
+
+        <If condition={!original.is_delivered}>
+          <MenuItem
+            icon={<Icon icon="send" iconSize={16} />}
+            text={intl.get('mark_as_delivered')}
+            onClick={safeCallback(onDeliver, original)}
+          />
+        </If>
+      </Can>
+      <Can I={Payment_Receive_Abilities.Create} a={AbilitySubject.PaymentReceive}>
+        <If condition={original.is_delivered && !original.is_fully_paid}>
+          <MenuItem
+            icon={<Icon icon="quick-payment-16" iconSize={16} />}
+            text={intl.get('add_payment')}
+            onClick={safeCallback(onQuick, original)}
+          />
+        </If>
+      </Can>
+      <Can I={Invoice_Abilities.View} a={AbilitySubject.Invoice}>
         <MenuItem
-          icon={<Icon icon="quick-payment-16" iconSize={16} />}
-          text={intl.get('add_payment')}
-          onClick={safeCallback(onQuick, original)}
+          icon={<Icon icon={'print-16'} iconSize={16} />}
+          text={intl.get('print')}
+          onClick={safeCallback(onPrint, original)}
         />
-      </If>
-      <MenuItem
-        icon={<Icon icon={'print-16'} iconSize={16} />}
-        text={intl.get('print')}
-        onClick={safeCallback(onPrint, original)}
-      />
-      <MenuItem
-        text={intl.get('delete_invoice')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-        icon={<Icon icon="trash-16" iconSize={16} />}
-      />
+      </Can>
+      <Can I={Invoice_Abilities.Delete} a={AbilitySubject.Invoice}>
+        <MenuItem
+          text={intl.get('delete_invoice')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
+        />
+      </Can>
     </Menu>
   );
 }

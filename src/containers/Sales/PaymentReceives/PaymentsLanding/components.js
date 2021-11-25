@@ -11,10 +11,13 @@ import {
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
 
-import { FormatDateCell, Money, Icon } from 'components';
+import { FormatDateCell, Money, Icon, Can } from 'components';
 import { safeCallback } from 'utils';
 import { CLASSES } from '../../../../common/classes';
-
+import {
+  Payment_Receive_Abilities,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 /**
  * Table actions menu.
  */
@@ -29,18 +32,22 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, paymentReceive)}
       />
-      <MenuDivider />
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('edit_payment_receive')}
-        onClick={safeCallback(onEdit, paymentReceive)}
-      />
-      <MenuItem
-        text={intl.get('delete_payment_receive')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, paymentReceive)}
-        icon={<Icon icon="trash-16" iconSize={16} />}
-      />
+      <Can I={Payment_Receive_Abilities.Edit} a={AbilitySubject.PaymentReceive}>
+        <MenuDivider />
+        <MenuItem
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('edit_payment_receive')}
+          onClick={safeCallback(onEdit, paymentReceive)}
+        />
+      </Can>
+      <Can I={Payment_Receive_Abilities.Delete} a={AbilitySubject.PaymentReceive}>
+        <MenuItem
+          text={intl.get('delete_payment_receive')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, paymentReceive)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
+        />
+      </Can>
     </Menu>
   );
 }
