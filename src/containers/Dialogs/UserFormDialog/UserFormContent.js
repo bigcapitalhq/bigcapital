@@ -11,7 +11,7 @@ import { FormattedMessage as T } from 'components';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
 import { inputIntent } from 'utils';
-import { FieldRequiredHint } from 'components';
+import { ListSelect, FieldRequiredHint } from 'components';
 import { useUserFormContext } from './UserFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
@@ -85,6 +85,29 @@ function UserFormContent({
               helperText={<ErrorMessage name={'phone_number'} />}
             >
               <InputGroup intent={inputIntent({ error, touched })} {...field} />
+            </FormGroup>
+          )}
+        </FastField>
+        {/* ----------- Role name ----------- */}
+        <FastField name={'role_name'}>
+          {({ form, field: { value }, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'roles.label.role_name'} />}
+              labelInfo={<FieldRequiredHint />}
+              className={classNames('form-group--role_name', CLASSES.FILL)}
+              intent={inputIntent({ error, touched })}
+            >
+              <ListSelect
+                items={[]}
+                // onItemSelect={(item) => {
+                //   form.setFieldValue('role_name', item.role_id);
+                // }}
+                selectedItem={value}
+                selectedItemProp={'role_id '}
+                // textProp={'role_name'}
+                // labelProp={'role_id '}
+                popoverProps={{ minimal: true }}
+              />
             </FormGroup>
           )}
         </FastField>
