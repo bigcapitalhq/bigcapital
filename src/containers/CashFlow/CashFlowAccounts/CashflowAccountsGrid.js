@@ -13,7 +13,13 @@ import {
   If,
   Icon,
   T,
+  Can,
 } from '../../../components';
+import {
+  Account_Abilities,
+  Cashflow_Abilities,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
 
@@ -222,48 +228,56 @@ function CashflowAccountContextMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewClick)}
       />
-      <MenuDivider />
-      <MenuItem
-        text={<T id={'cash_flow_money_in'} />}
-        icon={<Icon icon={'arrow-downward'} iconSize={16} />}
-      >
-        <CashflowAccountMoneyInContextMenu onClick={onMoneyInClick} />
-      </MenuItem>
-
-      <MenuItem
-        text={<T id={'cash_flow_money_out'} />}
-        icon={<Icon icon={'arrow-upward'} iconSize={16} />}
-      >
-        <CashflowAccountMoneyOutContextMenu onClick={onMoneyOutClick} />
-      </MenuItem>
-      <MenuDivider />
-
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('edit_account')}
-        onClick={safeCallback(onEditClick)}
-      />
-      <MenuDivider />
-      <If condition={account.active}>
+      <Can I={Cashflow_Abilities.Create} a={AbilitySubject.Cashflow}>
+        <MenuDivider />
         <MenuItem
-          text={intl.get('inactivate_account')}
-          icon={<Icon icon="pause-16" iconSize={16} />}
-          onClick={safeCallback(onInactivateClick)}
-        />
-      </If>
-      <If condition={!account.active}>
+          text={<T id={'cash_flow_money_in'} />}
+          icon={<Icon icon={'arrow-downward'} iconSize={16} />}
+        >
+          <CashflowAccountMoneyInContextMenu onClick={onMoneyInClick} />
+        </MenuItem>
+
         <MenuItem
-          text={intl.get('activate_account')}
-          icon={<Icon icon="play-16" iconSize={16} />}
-          onClick={safeCallback(onActivateClick)}
+          text={<T id={'cash_flow_money_out'} />}
+          icon={<Icon icon={'arrow-upward'} iconSize={16} />}
+        >
+          <CashflowAccountMoneyOutContextMenu onClick={onMoneyOutClick} />
+        </MenuItem>
+      </Can>
+      <Can I={Cashflow_Abilities.Edit} a={AbilitySubject.Cashflow}>
+        <MenuDivider />
+
+        <MenuItem
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('edit_account')}
+          onClick={safeCallback(onEditClick)}
         />
-      </If>
-      <MenuItem
-        text={intl.get('delete_account')}
-        icon={<Icon icon="trash-16" iconSize={16} />}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDeleteClick)}
-      />
+      </Can>
+      <Can I={Account_Abilities.Edit} a={AbilitySubject.Account}>
+        <MenuDivider />
+        <If condition={account.active}>
+          <MenuItem
+            text={intl.get('inactivate_account')}
+            icon={<Icon icon="pause-16" iconSize={16} />}
+            onClick={safeCallback(onInactivateClick)}
+          />
+        </If>
+        <If condition={!account.active}>
+          <MenuItem
+            text={intl.get('activate_account')}
+            icon={<Icon icon="play-16" iconSize={16} />}
+            onClick={safeCallback(onActivateClick)}
+          />
+        </If>
+      </Can>
+      <Can I={Cashflow_Abilities.Delete} a={AbilitySubject.Cashflow}>
+        <MenuItem
+          text={intl.get('delete_account')}
+          icon={<Icon icon="trash-16" iconSize={16} />}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDeleteClick)}
+        />
+      </Can>
     </Menu>
   );
 }

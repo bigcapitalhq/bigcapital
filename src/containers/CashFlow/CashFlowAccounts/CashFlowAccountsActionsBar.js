@@ -7,8 +7,12 @@ import {
   Alignment,
   Switch,
 } from '@blueprintjs/core';
-import { Icon, FormattedMessage as T } from 'components';
+import { Can, Icon, FormattedMessage as T } from 'components';
 import { useRefreshCashflowAccounts } from 'hooks/query';
+import {
+  Cashflow_Abilities,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
@@ -56,19 +60,22 @@ function CashFlowAccountsActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'plus-24'} iconSize={20} />}
-          text={<T id={'cash_flow.label.add_cash_account'} />}
-          onClick={handleAddBankAccount}
-        />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'plus-24'} iconSize={20} />}
-          text={<T id={'cash_flow.label.add_bank_account'} />}
-          onClick={handleAddCashAccount}
-        />
-        <NavbarDivider />
+        <Can I={Cashflow_Abilities.Create} a={AbilitySubject.Cashflow}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'plus-24'} iconSize={20} />}
+            text={<T id={'cash_flow.label.add_cash_account'} />}
+            onClick={handleAddBankAccount}
+          />
+
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'plus-24'} iconSize={20} />}
+            text={<T id={'cash_flow.label.add_bank_account'} />}
+            onClick={handleAddCashAccount}
+          />
+          <NavbarDivider />
+        </Can>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
@@ -85,13 +92,15 @@ function CashFlowAccountsActionsBar({
           text={<T id={'import'} />}
         />
         <NavbarDivider />
-
-        <Switch
-          labelElement={<T id={'inactive'} />}
-          defaultChecked={false}
-          onChange={handleInactiveSwitchChange}
-        />
+        <Can I={Cashflow_Abilities.Edit} a={AbilitySubject.Cashflow}>
+          <Switch
+            labelElement={<T id={'inactive'} />}
+            defaultChecked={false}
+            onChange={handleInactiveSwitchChange}
+          />
+        </Can>
       </NavbarGroup>
+
       <NavbarGroup align={Alignment.RIGHT}>
         <Button
           className={Classes.MINIMAL}

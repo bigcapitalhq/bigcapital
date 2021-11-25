@@ -142,12 +142,15 @@ function VendorActionsBar({
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
-        <Switch
-          labelElement={<T id={'inactive'} />}
-          defaultChecked={vendorsInactiveMode}
-          onChange={handleInactiveSwitchChange}
-        />
+        <Can I={Vendor_Abilities.Edit} a={AbilitySubject.Vendor}>
+          <Switch
+            labelElement={<T id={'inactive'} />}
+            defaultChecked={vendorsInactiveMode}
+            onChange={handleInactiveSwitchChange}
+          />
+        </Can>
       </NavbarGroup>
+
       <NavbarGroup align={Alignment.RIGHT}>
         <Button
           className={Classes.MINIMAL}
