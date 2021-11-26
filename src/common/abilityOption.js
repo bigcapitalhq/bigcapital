@@ -14,6 +14,9 @@ export const AbilitySubject = {
   Expense: 'Expense',
   Cashflow: 'Cashflow',
   Report: 'Report',
+  Preferences: 'Preferences',
+  ExchangeRate: 'ExchangeRate',
+  SubscriptionBilling: 'SubscriptionBilling'
 };
 
 export const Item_Abilities = {
@@ -99,6 +102,7 @@ export const Manual_Journal_Abilities = {
   Create: 'create',
   Edit: 'edit',
   Delete: 'delete',
+  TransactionLocking: 'TransactionLocking'
 };
 
 export const Expense_Abilities = {
@@ -134,3 +138,18 @@ export const Report_Abilities = {
   READ_INVENTORY_ITEM_DETAILS: 'read-inventory-item-details',
   READ_CASHFLOW_ACCOUNT_TRANSACTION: 'read-cashflow-account-transactions',
 };
+
+export const PreferencesAbility = {
+  Mutate: 'Mutate'
+}
+
+export const ExchangeRateAbility ={ 
+  View: 'view',
+  Create: 'create',
+  Delete: 'delete', 
+}
+
+export const SubscriptionBillingAbility = {
+  View: 'view',
+  Payment: 'payment'
+}
