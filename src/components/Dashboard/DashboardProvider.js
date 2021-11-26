@@ -1,9 +1,9 @@
 import React from 'react';
-import AbilityContextProvider from '../../components/Can';
+import { DashboardAbilityProvider } from '../../components';
 
 /**
  * Dashboard provider.
  */
 export default function DashboardProvider({ children }) {
-  return <AbilityContextProvider>{children}</AbilityContextProvider>;
+  return <DashboardAbilityProvider>{children}</DashboardAbilityProvider>;
 }
