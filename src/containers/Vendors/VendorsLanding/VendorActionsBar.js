@@ -30,10 +30,7 @@ import withVendors from './withVendors';
 
 import withSettingsActions from '../../Settings/withSettingsActions';
 import withSettings from '../../Settings/withSettings';
-import {
-  Vendor_Abilities,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { VendorAction, AbilitySubject } from '../../../common/abilityOption';
 import { compose } from 'utils';
 
 /**
@@ -142,7 +139,7 @@ function VendorActionsBar({
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
-        <Can I={Vendor_Abilities.Edit} a={AbilitySubject.Vendor}>
+        <Can I={VendorAction.Edit} a={AbilitySubject.Vendor}>
           <Switch
             labelElement={<T id={'inactive'} />}
             defaultChecked={vendorsInactiveMode}

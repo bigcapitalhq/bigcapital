@@ -5,7 +5,7 @@ import { EmptyStatus } from 'components';
 import { Can, FormattedMessage as T } from 'components';
 import {
   AbilitySubject,
-  Manual_Journal_Abilities,
+  ManualJournalAction,
 } from '../../../common/abilityOption';
 
 export default function ManualJournalsEmptyStatus() {
@@ -21,10 +21,7 @@ export default function ManualJournalsEmptyStatus() {
       }
       action={
         <>
-          <Can
-            I={Manual_Journal_Abilities.Create}
-            a={AbilitySubject.ManualJournal}
-          >
+          <Can I={ManualJournalAction.Create} a={AbilitySubject.ManualJournal}>
             <Button
               intent={Intent.PRIMARY}
               large={true}

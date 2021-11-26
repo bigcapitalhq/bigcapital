@@ -28,7 +28,7 @@ import withSettings from '../../Settings/withSettings';
 
 import { Can, If, DashboardActionViewsList } from 'components';
 import {
-  Manual_Journal_Abilities,
+  ManualJournalAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
 import { compose } from 'utils';
@@ -89,10 +89,7 @@ function ManualJournalActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Can
-          I={Manual_Journal_Abilities.Create}
-          a={AbilitySubject.ManualJournal}
-        >
+        <Can I={ManualJournalAction.Create} a={AbilitySubject.ManualJournal}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="plus" />}

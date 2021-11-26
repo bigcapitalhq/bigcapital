@@ -17,7 +17,7 @@ import { isNumber } from 'lodash';
 import { Icon, Money, If } from 'components';
 import { isBlank, safeCallback } from 'utils';
 import {
-  Inventory_Adjustment_Abilities,
+  InventoryAdjustmentAction,
   AbilitySubject,
 } from '../../common/abilityOption';
 
@@ -108,8 +108,8 @@ export const ActionsMenu = ({
       />
 
       <Can
-        I={Inventory_Adjustment_Abilities.Create}
-        a={AbilitySubject.Inventory_Adjustment}
+        I={InventoryAdjustmentAction.Create}
+        a={AbilitySubject.InventoryAdjustment}
       >
         <MenuDivider />
         <If condition={!original.is_published}>
@@ -121,8 +121,8 @@ export const ActionsMenu = ({
         </If>
       </Can>
       <Can
-        I={Inventory_Adjustment_Abilities.Delete}
-        a={AbilitySubject.Inventory_Adjustment}
+        I={InventoryAdjustmentAction.Delete}
+        a={AbilitySubject.InventoryAdjustment}
       >
         <MenuItem
           text={intl.get('delete_adjustment')}

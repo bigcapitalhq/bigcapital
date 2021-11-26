@@ -31,7 +31,7 @@ import withSettings from 'containers/Settings/withSettings';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { useRefreshPaymentMades } from 'hooks/query/paymentMades';
 import {
-  Payment_Made_Abilities,
+  PaymentMadeAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -90,7 +90,7 @@ function PaymentMadeActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Can I={Payment_Made_Abilities.Create} a={AbilitySubject.PaymentMade}>
+        <Can I={PaymentMadeAction.Create} a={AbilitySubject.PaymentMade}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus'} />}

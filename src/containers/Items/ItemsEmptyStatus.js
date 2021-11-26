@@ -3,7 +3,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
 import { Can, FormattedMessage as T } from 'components';
-import { Item_Abilities, AbilitySubject } from '../../common/abilityOption';
+import { ItemAction, AbilitySubject } from '../../common/abilityOption';
 
 export default function ItemsEmptyStatus() {
   const history = useHistory();
@@ -18,7 +18,7 @@ export default function ItemsEmptyStatus() {
       }
       action={
         <>
-          <Can I={Item_Abilities.Create} a={AbilitySubject.Item}>
+          <Can I={ItemAction.Create} a={AbilitySubject.Item}>
             <Button
               intent={Intent.PRIMARY}
               large={true}

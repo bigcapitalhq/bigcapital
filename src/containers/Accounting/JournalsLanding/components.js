@@ -22,7 +22,7 @@ import {
   Icon,
 } from 'components';
 import {
-  Manual_Journal_Abilities,
+  ManualJournalAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
 import { safeCallback } from 'utils';
@@ -161,7 +161,7 @@ export const ActionsMenu = ({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <Can I={Manual_Journal_Abilities.Edit} a={AbilitySubject.ManualJournal}>
+      <Can I={ManualJournalAction.Edit} a={AbilitySubject.ManualJournal}>
         <MenuDivider />
         <If condition={!original.is_published}>
           <MenuItem
@@ -171,14 +171,14 @@ export const ActionsMenu = ({
           />
         </If>
       </Can>
-      <Can I={Manual_Journal_Abilities.Edit} a={AbilitySubject.ManualJournal}>
+      <Can I={ManualJournalAction.Edit} a={AbilitySubject.ManualJournal}>
         <MenuItem
           icon={<Icon icon="pen-18" />}
           text={intl.get('edit_journal')}
           onClick={safeCallback(onEdit, original)}
         />
       </Can>
-      <Can I={Manual_Journal_Abilities.Delete} a={AbilitySubject.ManualJournal}>
+      <Can I={ManualJournalAction.Delete} a={AbilitySubject.ManualJournal}>
         <MenuItem
           text={intl.get('delete_journal')}
           icon={<Icon icon="trash-16" iconSize={16} />}

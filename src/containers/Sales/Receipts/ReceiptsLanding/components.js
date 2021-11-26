@@ -17,7 +17,7 @@ import { CLASSES } from '../../../../common/classes';
 import { safeCallback } from 'utils';
 import { FormatDateCell, Choose, Money, Icon, If, Can } from 'components';
 import {
-  Receipt_Abilities,
+  SaleReceiptAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -32,7 +32,7 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, receipt)}
       />
-      <Can I={Receipt_Abilities.Edit} a={AbilitySubject.Receipt}>
+      <Can I={SaleReceiptAction.Edit} a={AbilitySubject.Receipt}>
         <MenuDivider />
         <MenuItem
           icon={<Icon icon="pen-18" />}
@@ -48,14 +48,14 @@ export function ActionsMenu({
           />
         </If>
       </Can>
-      <Can I={Receipt_Abilities.View} a={AbilitySubject.Receipt}>
+      <Can I={SaleReceiptAction.View} a={AbilitySubject.Receipt}>
         <MenuItem
           icon={<Icon icon={'print-16'} iconSize={16} />}
           text={intl.get('print')}
           onClick={safeCallback(onPrint, receipt)}
         />
       </Can>
-      <Can I={Receipt_Abilities.Delete} a={AbilitySubject.Receipt}>
+      <Can I={SaleReceiptAction.Delete} a={AbilitySubject.Receipt}>
         <MenuItem
           text={intl.get('delete_receipt')}
           intent={Intent.DANGER}

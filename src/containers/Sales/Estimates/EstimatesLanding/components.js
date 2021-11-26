@@ -3,7 +3,7 @@ import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
 import {
-  Estimate_Abilities,
+  SaleEstimateAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -73,7 +73,7 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <Can I={Estimate_Abilities.Edit} a={AbilitySubject.Estimate}>
+      <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
         <MenuDivider />
         <MenuItem
           icon={<Icon icon="pen-18" />}
@@ -126,14 +126,14 @@ export function ActionsMenu({
           </Choose.When>
         </Choose>
       </Can>
-      <Can I={Estimate_Abilities.View} a={AbilitySubject.Estimate}>
+      <Can I={SaleEstimateAction.View} a={AbilitySubject.Estimate}>
         <MenuItem
           icon={<Icon icon={'print-16'} iconSize={16} />}
           text={intl.get('print')}
           onClick={safeCallback(onPrint, original)}
         />
       </Can>
-      <Can I={Estimate_Abilities.Delete} a={AbilitySubject.Estimate}>
+      <Can I={SaleEstimateAction.Delete} a={AbilitySubject.Estimate}>
         <MenuItem
           text={intl.get('delete_estimate')}
           intent={Intent.DANGER}

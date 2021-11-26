@@ -23,10 +23,7 @@ import {
   FormattedMessage as T,
 } from 'components';
 
-import {
-  Expense_Abilities,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { ExpenseAction, AbilitySubject } from '../../../common/abilityOption';
 import { useRefreshExpenses } from 'hooks/query/expenses';
 import { useExpensesListContext } from './ExpensesListProvider';
 
@@ -97,7 +94,7 @@ function ExpensesActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Can I={Expense_Abilities.Create} a={AbilitySubject.Expense}>
+        <Can I={ExpenseAction.Create} a={AbilitySubject.Expense}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="plus" />}

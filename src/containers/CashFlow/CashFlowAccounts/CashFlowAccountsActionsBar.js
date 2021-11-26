@@ -9,10 +9,7 @@ import {
 } from '@blueprintjs/core';
 import { Can, Icon, FormattedMessage as T } from 'components';
 import { useRefreshCashflowAccounts } from 'hooks/query';
-import {
-  Cashflow_Abilities,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { CashflowAction, AbilitySubject } from '../../../common/abilityOption';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
@@ -60,7 +57,7 @@ function CashFlowAccountsActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Can I={Cashflow_Abilities.Create} a={AbilitySubject.Cashflow}>
+        <Can I={CashflowAction.Create} a={AbilitySubject.Cashflow}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus-24'} iconSize={20} />}
@@ -92,7 +89,7 @@ function CashFlowAccountsActionsBar({
           text={<T id={'import'} />}
         />
         <NavbarDivider />
-        <Can I={Cashflow_Abilities.Edit} a={AbilitySubject.Cashflow}>
+        <Can I={CashflowAction.Edit} a={AbilitySubject.Cashflow}>
           <Switch
             labelElement={<T id={'inactive'} />}
             defaultChecked={false}

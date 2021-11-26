@@ -3,10 +3,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
 import { Can, FormattedMessage as T } from 'components';
-import {
-  Vendor_Abilities,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { VendorAction, AbilitySubject } from '../../../common/abilityOption';
 
 export default function VendorsEmptyStatus() {
   const history = useHistory();
@@ -21,7 +18,7 @@ export default function VendorsEmptyStatus() {
       }
       action={
         <>
-          <Can I={Vendor_Abilities.Create} a={AbilitySubject.Vendor}>
+          <Can I={VendorAction.Create} a={AbilitySubject.Vendor}>
             <Button
               intent={Intent.PRIMARY}
               large={true}

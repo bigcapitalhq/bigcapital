@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
 import { Can, FormattedMessage as T } from 'components';
 import {
-  Receipt_Abilities,
+  SaleReceiptAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -21,7 +21,7 @@ export default function ReceiptsEmptyStatus() {
       }
       action={
         <>
-          <Can I={Receipt_Abilities.Create} a={AbilitySubject.Receipt}>
+          <Can I={SaleReceiptAction.Create} a={AbilitySubject.Receipt}>
             <Button
               intent={Intent.PRIMARY}
               large={true}

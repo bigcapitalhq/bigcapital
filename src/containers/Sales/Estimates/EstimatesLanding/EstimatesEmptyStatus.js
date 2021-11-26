@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
 import { Can, FormattedMessage as T } from 'components';
 import {
-  Estimate_Abilities,
+  SaleEstimateAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -20,7 +20,7 @@ export default function EstimatesEmptyStatus() {
       }
       action={
         <>
-          <Can I={Estimate_Abilities.Create} a={AbilitySubject.Estimate}>
+          <Can I={SaleEstimateAction.Create} a={AbilitySubject.Estimate}>
             <Button
               intent={Intent.PRIMARY}
               large={true}

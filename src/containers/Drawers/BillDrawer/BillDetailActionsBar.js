@@ -18,8 +18,8 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { Can, If, Icon, FormattedMessage as T } from 'components';
 import {
-  Bill_Abilities,
-  Payment_Made_Abilities,
+  BillAction,
+  PaymentMadeAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
 
@@ -58,7 +58,7 @@ function BillDetailActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Can I={Bill_Abilities.Edit} a={AbilitySubject.Bill}>
+        <Can I={BillAction.Edit} a={AbilitySubject.Bill}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
@@ -67,10 +67,7 @@ function BillDetailActionsBar({
           />
           <NavbarDivider />
         </Can>
-        <Can
-          I={Payment_Made_Abilities.Create}
-          a={AbilitySubject.PaymentMade}
-        >
+        <Can I={PaymentMadeAction.Create} a={AbilitySubject.PaymentMade}>
           <If condition={bill.is_open && !bill.is_fully_paid}>
             <Button
               className={Classes.MINIMAL}
@@ -81,7 +78,7 @@ function BillDetailActionsBar({
           </If>
           <NavbarDivider />
         </Can>
-        <Can I={Bill_Abilities.Delete} a={AbilitySubject.Bill}>
+        <Can I={BillAction.Delete} a={AbilitySubject.Bill}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}

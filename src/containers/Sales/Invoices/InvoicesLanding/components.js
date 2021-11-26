@@ -22,8 +22,8 @@ import {
 } from 'components';
 import { formattedAmount, safeCallback, calculateStatus } from 'utils';
 import {
-  Invoice_Abilities,
-  Payment_Receive_Abilities,
+  SaleInvoiceAction,
+  PaymentReceiveAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -120,7 +120,7 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <Can I={Invoice_Abilities.Edit} a={AbilitySubject.Invoice}>
+      <Can I={SaleInvoiceAction.Edit} a={AbilitySubject.Invoice}>
         <MenuDivider />
         <MenuItem
           icon={<Icon icon="pen-18" />}
@@ -136,7 +136,7 @@ export function ActionsMenu({
           />
         </If>
       </Can>
-      <Can I={Payment_Receive_Abilities.Create} a={AbilitySubject.PaymentReceive}>
+      <Can I={PaymentReceiveAction.Create} a={AbilitySubject.PaymentReceive}>
         <If condition={original.is_delivered && !original.is_fully_paid}>
           <MenuItem
             icon={<Icon icon="quick-payment-16" iconSize={16} />}
@@ -145,14 +145,14 @@ export function ActionsMenu({
           />
         </If>
       </Can>
-      <Can I={Invoice_Abilities.View} a={AbilitySubject.Invoice}>
+      <Can I={SaleInvoiceAction.View} a={AbilitySubject.Invoice}>
         <MenuItem
           icon={<Icon icon={'print-16'} iconSize={16} />}
           text={intl.get('print')}
           onClick={safeCallback(onPrint, original)}
         />
       </Can>
-      <Can I={Invoice_Abilities.Delete} a={AbilitySubject.Invoice}>
+      <Can I={SaleInvoiceAction.Delete} a={AbilitySubject.Invoice}>
         <MenuItem
           text={intl.get('delete_invoice')}
           intent={Intent.DANGER}

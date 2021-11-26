@@ -29,7 +29,7 @@ import withSettings from 'containers/Settings/withSettings';
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useRefreshReceipts } from 'hooks/query/receipts';
 import {
-  Receipt_Abilities,
+  SaleReceiptAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -92,7 +92,7 @@ function ReceiptActionsBar({
         />
 
         <NavbarDivider />
-        <Can I={Receipt_Abilities.Create} a={AbilitySubject.Receipt}>
+        <Can I={SaleReceiptAction.Create} a={AbilitySubject.Receipt}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus'} />}

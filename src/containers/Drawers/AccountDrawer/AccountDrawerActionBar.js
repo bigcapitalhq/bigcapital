@@ -14,10 +14,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 
 import { safeCallback } from 'utils';
-import {
-  Account_Abilities,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { AccountAction, AbilitySubject } from '../../../common/abilityOption';
 
 import { compose } from 'utils';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
@@ -57,7 +54,7 @@ function AccountDrawerActionBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Can I={Account_Abilities.Edit} a={AbilitySubject.Account}>
+        <Can I={AccountAction.Edit} a={AbilitySubject.Account}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
@@ -73,7 +70,7 @@ function AccountDrawerActionBar({
           />
           <NavbarDivider />
         </Can>
-        <Can I={Account_Abilities.Delete} a={AbilitySubject.Account}>
+        <Can I={AccountAction.Delete} a={AbilitySubject.Account}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}

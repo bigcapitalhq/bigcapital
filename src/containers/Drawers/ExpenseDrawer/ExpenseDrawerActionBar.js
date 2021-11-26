@@ -9,10 +9,7 @@ import {
   NavbarDivider,
 } from '@blueprintjs/core';
 import { Can, FormattedMessage as T } from 'components';
-import {
-  Expense_Abilities,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { ExpenseAction, AbilitySubject } from '../../../common/abilityOption';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
@@ -47,7 +44,7 @@ function ExpenseDrawerActionBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Can I={Expense_Abilities.Edit} a={AbilitySubject.Expense}>
+        <Can I={ExpenseAction.Edit} a={AbilitySubject.Expense}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
@@ -56,7 +53,7 @@ function ExpenseDrawerActionBar({
           />
           <NavbarDivider />
         </Can>
-        <Can I={Expense_Abilities.Delete} a={AbilitySubject.Expense}>
+        <Can I={ExpenseAction.Delete} a={AbilitySubject.Expense}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="trash-16" iconSize={16} />}

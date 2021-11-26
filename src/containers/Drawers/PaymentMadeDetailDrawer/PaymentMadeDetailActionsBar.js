@@ -18,7 +18,7 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { Can, Icon, FormattedMessage as T } from 'components';
 import {
-  Payment_Made_Abilities,
+  PaymentMadeAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
 import { compose } from 'utils';
@@ -51,7 +51,7 @@ function PaymentMadeDetailActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Can I={Payment_Made_Abilities.Edit} a={AbilitySubject.PaymentMade}>
+        <Can I={PaymentMadeAction.Edit} a={AbilitySubject.PaymentMade}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
@@ -60,7 +60,7 @@ function PaymentMadeDetailActionsBar({
           />
           <NavbarDivider />
         </Can>
-        <Can I={Payment_Made_Abilities.Delete} a={AbilitySubject.PaymentMade}>
+        <Can I={PaymentMadeAction.Delete} a={AbilitySubject.PaymentMade}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}

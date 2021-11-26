@@ -3,10 +3,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
 import { Can, FormattedMessage as T } from 'components';
-import {
-  AbilitySubject,
-  Expense_Abilities,
-} from '../../../common/abilityOption';
+import { AbilitySubject, ExpenseAction } from '../../../common/abilityOption';
 
 export default function InvoicesEmptyStatus() {
   const history = useHistory();
@@ -21,7 +18,7 @@ export default function InvoicesEmptyStatus() {
       }
       action={
         <>
-          <Can I={Expense_Abilities.Create} a={AbilitySubject.Expense}>
+          <Can I={ExpenseAction.Create} a={AbilitySubject.Expense}>
             <Button
               intent={Intent.PRIMARY}
               large={true}

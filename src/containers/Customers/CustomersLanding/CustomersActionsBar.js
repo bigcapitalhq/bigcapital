@@ -30,10 +30,7 @@ import withCustomersActions from './withCustomersActions';
 import withAlertActions from 'containers/Alert/withAlertActions';
 import withSettingsActions from '../../Settings/withSettingsActions';
 import withSettings from '../../Settings/withSettings';
-import {
-  Customer_Abilities,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { CustomerAction, AbilitySubject } from '../../../common/abilityOption';
 
 import { compose } from 'utils';
 
@@ -108,7 +105,7 @@ function CustomerActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Can I={Customer_Abilities.Create} a={AbilitySubject.Item}>
+        <Can I={CustomerAction.Create} a={AbilitySubject.Item}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus'} />}
@@ -157,7 +154,7 @@ function CustomerActionsBar({
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
-        <Can I={Customer_Abilities.Edit} a={AbilitySubject.Customer}>
+        <Can I={CustomerAction.Edit} a={AbilitySubject.Customer}>
           <Switch
             labelElement={<T id={'inactive'} />}
             defaultChecked={accountsInactiveMode}

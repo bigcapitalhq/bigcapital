@@ -20,8 +20,8 @@ import {
 } from 'components';
 import { formattedAmount, safeCallback, isBlank, calculateStatus } from 'utils';
 import {
-  Bill_Abilities,
-  Payment_Made_Abilities,
+  BillAction,
+  PaymentMadeAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -46,7 +46,7 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <Can I={Bill_Abilities.Edit} a={AbilitySubject.Bill}>
+      <Can I={BillAction.Edit} a={AbilitySubject.Bill}>
         <MenuDivider />
         <MenuItem
           icon={<Icon icon="pen-18" />}
@@ -62,7 +62,7 @@ export function ActionsMenu({
           />
         </If>
       </Can>
-      <Can I={Payment_Made_Abilities.Create} a={AbilitySubject.PaymentMade}>
+      <Can I={PaymentMadeAction.Create} a={AbilitySubject.PaymentMade}>
         <If condition={original.is_open && !original.is_fully_paid}>
           <MenuItem
             icon={<Icon icon="quick-payment-16" iconSize={16} />}
@@ -76,7 +76,7 @@ export function ActionsMenu({
         text={intl.get('allocate_landed_coast')}
         onClick={safeCallback(onAllocateLandedCost, original)}
       />
-      <Can I={Bill_Abilities.Delete} a={AbilitySubject.Bill}>
+      <Can I={BillAction.Delete} a={AbilitySubject.Bill}>
         <MenuItem
           text={intl.get('delete_bill')}
           intent={Intent.DANGER}
