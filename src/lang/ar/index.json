@@ -1479,5 +1479,6 @@
   "sms_notification.estimate_details.type": "تفاصيل فاتورة عرض الاسعار",
   "sms_notification.payment_details.type": "شكر علي عملية الدفع",
   "sms_notification.receipt_details.type": "تفاصيل إيصال البيع",
-  "personal": "المحمول"
+  "personal": "المحمول",
+  "list.create":"إضافة {value}"
 }

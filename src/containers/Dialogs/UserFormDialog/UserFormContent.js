@@ -11,20 +11,22 @@ import { FormattedMessage as T } from 'components';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
 import { inputIntent } from 'utils';
-import { FieldRequiredHint } from 'components';
+import { ListSelect, FieldRequiredHint } from 'components';
 import { useUserFormContext } from './UserFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
+import { UserFormCalloutAlerts } from './components';
 
 /**
  * User form content.
  */
 function UserFormContent({
+  calloutCode,
   // #withDialogActions
   closeDialog,
 }) {
   const { isSubmitting } = useFormikContext();
-  const { dialogName } = useUserFormContext();
+  const { dialogName, roles, isAuth } = useUserFormContext();
 
   const handleClose = () => {
     closeDialog(dialogName);
@@ -33,6 +35,8 @@ function UserFormContent({
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
+        <UserFormCalloutAlerts calloutCodes={calloutCode} />
+
         {/* ----------- Email ----------- */}
         <FastField name={'email'}>
           {({ field, meta: { error, touched } }) => (
@@ -85,6 +89,32 @@ function UserFormContent({
               helperText={<ErrorMessage name={'phone_number'} />}
             >
               <InputGroup intent={inputIntent({ error, touched })} {...field} />
+            </FormGroup>
+          )}
+        </FastField>
+        {/* ----------- Role name ----------- */}
+        <FastField name={'role_id'}>
+          {({ form, field: { value }, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'roles.label.role_name'} />}
+              labelInfo={<FieldRequiredHint />}
+              helperText={<ErrorMessage name="role_id" />}
+              className={classNames(CLASSES.FILL, 'form-group--role_name')}
+              intent={inputIntent({ error, touched })}
+            >
+              <ListSelect
+                items={roles}
+                onItemSelect={({ id }) => {
+                  form.setFieldValue('role_id', id);
+                }}
+                selectedItem={value}
+                selectedItemProp={'id'}
+                textProp={'name'}
+                // labelProp={'id '}
+                popoverProps={{ minimal: true }}
+                intent={inputIntent({ error, touched })}
+                disabled={isAuth}
+              />
             </FormGroup>
           )}
         </FastField>

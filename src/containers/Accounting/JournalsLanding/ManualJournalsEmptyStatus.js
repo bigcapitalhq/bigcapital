@@ -2,7 +2,11 @@ import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
-import { FormattedMessage as T } from 'components';
+import { Can, FormattedMessage as T } from 'components';
+import {
+  AbilitySubject,
+  ManualJournalAction,
+} from '../../../common/abilityOption';
 
 export default function ManualJournalsEmptyStatus() {
   const history = useHistory();
@@ -17,19 +21,21 @@ export default function ManualJournalsEmptyStatus() {
       }
       action={
         <>
-          <Button
-            intent={Intent.PRIMARY}
-            large={true}
-            onClick={() => {
-              history.push('/make-journal-entry');
-            }}
-          >
-            <T id={'make_journal'} />
-          </Button>
+          <Can I={ManualJournalAction.Create} a={AbilitySubject.ManualJournal}>
+            <Button
+              intent={Intent.PRIMARY}
+              large={true}
+              onClick={() => {
+                history.push('/make-journal-entry');
+              }}
+            >
+              <T id={'make_journal'} />
+            </Button>
 
-          <Button intent={Intent.NONE} large={true}>
-            <T id={'learn_more'} />
-          </Button>
+            <Button intent={Intent.NONE} large={true}>
+              <T id={'learn_more'} />
+            </Button>
+          </Can>
         </>
       }
     />

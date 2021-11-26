@@ -15,7 +15,8 @@ export default function QuickWriteVendorDrawerContent({ displayName }) {
     <React.Fragment>
       <DrawerHeaderContent
         name="quick-create-customer"
-        title={"Create a new vendor"}
+        title={<T id={'create_a_new_vendor'} />}
+
       />
       <DrawerBody>
         <QuickVendorFormDrawer displayName={displayName} />

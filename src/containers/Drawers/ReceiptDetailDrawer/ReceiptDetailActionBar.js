@@ -14,8 +14,12 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Icon, FormattedMessage as T, MoreMenuItems } from 'components';
+import { Can, Icon, FormattedMessage as T, MoreMenuItems } from 'components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
+import {
+  SaleReceiptAction,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 
 import { safeCallback, compose } from 'utils';
 
@@ -54,27 +58,33 @@ function ReceiptDetailActionBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="pen-18" />}
-          text={<T id={'edit_receipt'} />}
-          onClick={safeCallback(onEditReceipt)}
-        />
-        <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="print-16" />}
-          text={<T id={'print'} />}
-          onClick={safeCallback(onPrintReceipt)}
-        />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'trash-16'} iconSize={16} />}
-          text={<T id={'delete'} />}
-          intent={Intent.DANGER}
-          onClick={safeCallback(onDeleteReceipt)}
-        />
-        <NavbarDivider />
+        <Can I={SaleReceiptAction.Edit} a={AbilitySubject.Receipt}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="pen-18" />}
+            text={<T id={'edit_receipt'} />}
+            onClick={safeCallback(onEditReceipt)}
+          />
+          <NavbarDivider />
+        </Can>
+        <Can I={SaleReceiptAction.View} a={AbilitySubject.Receipt}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="print-16" />}
+            text={<T id={'print'} />}
+            onClick={safeCallback(onPrintReceipt)}
+          />
+        </Can>
+        <Can I={SaleReceiptAction.Delete} a={AbilitySubject.Receipt}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'trash-16'} iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={safeCallback(onDeleteReceipt)}
+          />
+          <NavbarDivider />
+        </Can>
         <MoreMenuItems
           payload={{
             onNotifyViaSMS: handleNotifyViaSMS,

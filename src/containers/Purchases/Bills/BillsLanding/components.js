@@ -16,8 +16,14 @@ import {
   If,
   Choose,
   Money,
+  Can,
 } from 'components';
 import { formattedAmount, safeCallback, isBlank, calculateStatus } from 'utils';
+import {
+  BillAction,
+  PaymentMadeAction,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 /**
  * Actions menu.
@@ -40,38 +46,44 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <MenuDivider />
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('edit_bill')}
-        onClick={safeCallback(onEdit, original)}
-      />
+      <Can I={BillAction.Edit} a={AbilitySubject.Bill}>
+        <MenuDivider />
+        <MenuItem
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('edit_bill')}
+          onClick={safeCallback(onEdit, original)}
+        />
 
-      <If condition={!original.is_open}>
-        <MenuItem
-          icon={<Icon icon={'check'} iconSize={18} />}
-          text={intl.get('mark_as_opened')}
-          onClick={safeCallback(onOpen, original)}
-        />
-      </If>
-      <If condition={original.is_open && !original.is_fully_paid}>
-        <MenuItem
-          icon={<Icon icon="quick-payment-16" iconSize={16} />}
-          text={intl.get('add_payment')}
-          onClick={safeCallback(onQuick, original)}
-        />
-      </If>
+        <If condition={!original.is_open}>
+          <MenuItem
+            icon={<Icon icon={'check'} iconSize={18} />}
+            text={intl.get('mark_as_opened')}
+            onClick={safeCallback(onOpen, original)}
+          />
+        </If>
+      </Can>
+      <Can I={PaymentMadeAction.Create} a={AbilitySubject.PaymentMade}>
+        <If condition={original.is_open && !original.is_fully_paid}>
+          <MenuItem
+            icon={<Icon icon="quick-payment-16" iconSize={16} />}
+            text={intl.get('add_payment')}
+            onClick={safeCallback(onQuick, original)}
+          />
+        </If>
+      </Can>
       <MenuItem
         icon={<Icon icon="receipt-24" iconSize={16} />}
         text={intl.get('allocate_landed_coast')}
         onClick={safeCallback(onAllocateLandedCost, original)}
       />
-      <MenuItem
-        text={intl.get('delete_bill')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-        icon={<Icon icon="trash-16" iconSize={16} />}
-      />
+      <Can I={BillAction.Delete} a={AbilitySubject.Bill}>
+        <MenuItem
+          text={intl.get('delete_bill')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
+        />
+      </Can>
     </Menu>
   );
 }

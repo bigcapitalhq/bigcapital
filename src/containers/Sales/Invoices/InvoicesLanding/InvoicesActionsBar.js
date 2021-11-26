@@ -18,7 +18,11 @@ import {
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
-import { If, DashboardActionViewsList } from 'components';
+import { Can, If, DashboardActionViewsList } from 'components';
+import {
+  SaleInvoiceAction,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 import { useRefreshInvoices } from 'hooks/query/invoices';
 import { useInvoicesListContext } from './InvoicesListProvider';
@@ -84,12 +88,14 @@ function InvoiceActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'plus'} />}
-          text={<T id={'new_invoice'} />}
-          onClick={handleClickNewInvoice}
-        />
+        <Can I={SaleInvoiceAction.Create} a={AbilitySubject.Invoice}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'plus'} />}
+            text={<T id={'new_invoice'} />}
+            onClick={handleClickNewInvoice}
+          />
+        </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: invoicesFilterRoles,

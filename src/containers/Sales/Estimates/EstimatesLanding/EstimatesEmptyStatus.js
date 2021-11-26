@@ -2,7 +2,11 @@ import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
-import { FormattedMessage as T } from 'components';
+import { Can, FormattedMessage as T } from 'components';
+import {
+  SaleEstimateAction,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 export default function EstimatesEmptyStatus() {
   const history = useHistory();
@@ -16,18 +20,20 @@ export default function EstimatesEmptyStatus() {
       }
       action={
         <>
-          <Button
-            intent={Intent.PRIMARY}
-            large={true}
-            onClick={() => {
-              history.push('/estimates/new');
-            }}
-          >
-            <T id={'new_sale_estimate'} />
-          </Button>
-          <Button intent={Intent.NONE} large={true}>
-            <T id={'learn_more'} />
-          </Button>
+          <Can I={SaleEstimateAction.Create} a={AbilitySubject.Estimate}>
+            <Button
+              intent={Intent.PRIMARY}
+              large={true}
+              onClick={() => {
+                history.push('/estimates/new');
+              }}
+            >
+              <T id={'new_sale_estimate'} />
+            </Button>
+            <Button intent={Intent.NONE} large={true}>
+              <T id={'learn_more'} />
+            </Button>
+          </Can>
         </>
       }
     />

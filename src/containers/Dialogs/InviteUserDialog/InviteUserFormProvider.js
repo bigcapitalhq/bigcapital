@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import { useCreateInviteUser, useUsers } from 'hooks/query';
+import { useCreateInviteUser, useUsers, useRoles } from 'hooks/query';
 import { DialogContent } from 'components';
 
 const InviteUserFormContext = createContext();
@@ -14,6 +14,9 @@ function InviteUserFormProvider({ userId, isEditMode, dialogName, ...props }) {
   // fetch users list.
   const { isLoading: isUsersLoading } = useUsers();
 
+  // fetch roles list.
+  const { data: roles, isLoading: isRolesLoading } = useRoles();
+
   // Provider state.
   const provider = {
     inviteUserMutate,
@@ -21,10 +24,14 @@ function InviteUserFormProvider({ userId, isEditMode, dialogName, ...props }) {
     userId,
     isUsersLoading,
     isEditMode,
+    roles,
   };
 
   return (
-    <DialogContent isLoading={isUsersLoading} name={'invite-form'}>
+    <DialogContent
+      isLoading={isUsersLoading || isRolesLoading}
+      name={'invite-form'}
+    >
       <InviteUserFormContext.Provider value={provider} {...props} />
     </DialogContent>
   );

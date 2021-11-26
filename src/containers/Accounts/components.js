@@ -8,9 +8,10 @@ import {
   MenuDivider,
   Intent,
 } from '@blueprintjs/core';
-import { Icon, Money, If } from 'components';
+import { Can, Icon, Money, If } from 'components';
 import intl from 'react-intl-universal';
 import { safeCallback } from 'utils';
+import { AbilitySubject, AccountAction } from '../../common/abilityOption';
 
 /**
  * Accounts table actions menu.
@@ -34,38 +35,45 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <MenuDivider />
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('edit_account')}
-        onClick={safeCallback(onEdit, original)}
-      />
-      <MenuItem
-        icon={<Icon icon="plus" />}
-        text={intl.get('new_child_account')}
-        onClick={safeCallback(onNewChild, original)}
-      />
-      <MenuDivider />
-      <If condition={original.active}>
+      <Can I={AccountAction.Edit} a={AbilitySubject.Account}>
+        <MenuDivider />
         <MenuItem
-          text={intl.get('inactivate_account')}
-          icon={<Icon icon="pause-16" iconSize={16} />}
-          onClick={safeCallback(onInactivate, original)}
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('edit_account')}
+          onClick={safeCallback(onEdit, original)}
         />
-      </If>
-      <If condition={!original.active}>
+
         <MenuItem
-          text={intl.get('activate_account')}
-          icon={<Icon icon="play-16" iconSize={16} />}
-          onClick={safeCallback(onActivate, original)}
+          icon={<Icon icon="plus" />}
+          text={intl.get('new_child_account')}
+          onClick={safeCallback(onNewChild, original)}
         />
-      </If>
-      <MenuItem
-        text={intl.get('delete_account')}
-        icon={<Icon icon="trash-16" iconSize={16} />}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-      />
+        <MenuDivider />
+      </Can>
+      <Can I={AccountAction.Edit} a={AbilitySubject.Account}>
+        <If condition={original.active}>
+          <MenuItem
+            text={intl.get('inactivate_account')}
+            icon={<Icon icon="pause-16" iconSize={16} />}
+            onClick={safeCallback(onInactivate, original)}
+          />
+        </If>
+        <If condition={!original.active}>
+          <MenuItem
+            text={intl.get('activate_account')}
+            icon={<Icon icon="play-16" iconSize={16} />}
+            onClick={safeCallback(onActivate, original)}
+          />
+        </If>
+      </Can>
+      <Can I={AccountAction.Edit} a={AbilitySubject.Account}>
+        <MenuItem
+          text={intl.get('delete_account')}
+          icon={<Icon icon="trash-16" iconSize={16} />}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+        />
+      </Can>
     </Menu>
   );
 }

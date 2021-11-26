@@ -1,0 +1,58 @@
+//  Roles Form page
+//---------------------------------
+.preferences-page__inside-content--roles-form {
+  .card {
+    padding: 25px;
+
+    .card__footer {
+      padding-top: 16px;
+      border-top: 1px solid #e0e7ea;
+      margin-top: 30px;
+
+      .bp3-button {
+        min-width: 65px;
+
+        + .bp3-button {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+
+  .bp3-form-group {
+    max-width: 500px;
+    margin-bottom: 14px;
+
+    &.bp3-inline {
+      .bp3-label {
+        min-width: 100px;
+      }
+    }
+    .bp3-form-content {
+      width: 100%;
+    }
+  }
+  .form-group--description {
+    textarea {
+      width: 100%;
+      min-width: 100%;
+      font-size: 14px;
+    }
+  }
+  .bp3-control.bp3-checkbox {
+    .bp3-control-indicator {
+      border: 1px solid #c2c2c2;
+      cursor: auto;
+
+      &,
+      &:hover {
+        height: 15px;
+        width: 15px;
+      }
+      &:before {
+        width: 15px;
+        height: 15px;
+      }
+    }
+  }
+}

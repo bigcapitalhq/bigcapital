@@ -14,10 +14,14 @@ import { firstLettersArgs } from 'utils';
 import { useAuthActions } from 'hooks/state';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
 import withSubscriptions from '../../containers/Subscriptions/withSubscriptions';
-import { useAuthenticatedUser } from './AuthenticatedUser';
 
+import { useAuthenticatedAccount } from 'hooks/query'
+import { compose } from 'utils';
+
+/**
+ * Dashboard topbar user.
+ */
 function DashboardTopbarUser({
   openDialog,
 
@@ -28,7 +32,7 @@ function DashboardTopbarUser({
   const { setLogout } = useAuthActions();
 
   // Retrieve authenticated user information.
-  const { user } = useAuthenticatedUser();
+  const { data: user } = useAuthenticatedAccount();
 
   const onClickLogout = () => {
     setLogout();

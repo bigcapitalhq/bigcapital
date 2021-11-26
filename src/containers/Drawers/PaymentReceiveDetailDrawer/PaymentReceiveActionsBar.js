@@ -16,7 +16,11 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Icon, FormattedMessage as T, MoreMenuItems } from 'components';
+import { Can, Icon, FormattedMessage as T, MoreMenuItems } from 'components';
+import {
+  PaymentReceiveAction,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 
 import { compose } from 'utils';
 
@@ -57,21 +61,25 @@ function PaymentReceiveActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="pen-18" />}
-          text={<T id={'edit_payment_receive'} />}
-          onClick={handleEditPaymentReceive}
-        />
-        <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'trash-16'} iconSize={16} />}
-          text={<T id={'delete'} />}
-          intent={Intent.DANGER}
-          onClick={handleDeletePaymentReceive}
-        />
-        <NavbarDivider />
+        <Can I={PaymentReceiveAction.Edit} a={AbilitySubject.PaymentReceive}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="pen-18" />}
+            text={<T id={'edit_payment_receive'} />}
+            onClick={handleEditPaymentReceive}
+          />
+          <NavbarDivider />
+        </Can>
+        <Can I={PaymentReceiveAction.Delete} a={AbilitySubject.PaymentReceive}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'trash-16'} iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleDeletePaymentReceive}
+          />
+          <NavbarDivider />
+        </Can>
         <MoreMenuItems
           payload={{
             onNotifyViaSMS: handleNotifyViaSMS,

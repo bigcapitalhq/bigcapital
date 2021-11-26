@@ -4,16 +4,21 @@ import { FormattedMessage as T } from 'components';
 import { useHistory } from 'react-router-dom';
 import { Icon } from 'components';
 import { Position } from '@blueprintjs/core';
-import { getQuickNewActions } from 'common/quickNewOptions';
 import { Select } from '@blueprintjs/select';
+
+import { useGetQuickNewMenu } from 'common/quickNewOptions';
 
 /**
  * Quick New Dropdown.
  */
 export default function QuickNewDropdown() {
   const history = useHistory();
-  const quickNewOptions = getQuickNewActions();
+  const quickNewOptions = useGetQuickNewMenu();
 
+  // Can't continue if there is no any quick new menu items to display.
+  if (quickNewOptions.length === 0) {
+    return null;
+  }
   // Handle click quick new button.
   const handleClickQuickNew = ({ path }) => {
     history.push(`/${path}`);

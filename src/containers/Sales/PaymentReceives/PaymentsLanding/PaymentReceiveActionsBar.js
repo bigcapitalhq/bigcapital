@@ -19,14 +19,17 @@ import {
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
-import { If, DashboardActionViewsList } from 'components';
+import { Can, If, DashboardActionViewsList } from 'components';
 
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withPaymentReceives from './withPaymentReceives';
 
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withSettings from 'containers/Settings/withSettings';
-
+import {
+  PaymentReceiveAction,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 import { compose } from 'utils';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
 import { useRefreshPaymentReceive } from 'hooks/query/paymentReceives';
@@ -85,12 +88,14 @@ function PaymentReceiveActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'plus'} />}
-          text={<T id={'new_payment_receive'} />}
-          onClick={handleClickNewPaymentReceive}
-        />
+        <Can I={PaymentReceiveAction.Create} a={AbilitySubject.PaymentReceive}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'plus'} />}
+            text={<T id={'new_payment_receive'} />}
+            onClick={handleClickNewPaymentReceive}
+          />
+        </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: paymentFilterConditions,

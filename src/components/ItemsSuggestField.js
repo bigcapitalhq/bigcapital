@@ -3,7 +3,7 @@ import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import classNames from 'classnames';
 import * as R from 'ramda';
-
+import intl from 'react-intl-universal';
 import { CLASSES } from 'common/classes';
 
 import { FormattedMessage as T } from 'components';
@@ -24,7 +24,7 @@ const createNewItemRenderer = (query, active, handleClick) => {
   return (
     <MenuItem
       icon="add"
-      text={`Create "${query}"`}
+      text={intl.get('list.create', { value: `"${query}"` })}
       active={active}
       shouldDismissPopover={false}
       onClick={handleClick}

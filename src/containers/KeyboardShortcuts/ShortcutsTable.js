@@ -1,14 +1,13 @@
 import React, { useMemo } from 'react';
 import { DataTable } from 'components';
-import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
-import keyboardShortcuts from 'common/keyboardShortcutsOptions';
+import { useKeywordShortcuts } from '../../hooks/dashboard';
 
 /**
  *  keyboard shortcuts table.
  */
-function ShortcutsTable() {
-  
+export default function ShortcutsTable() {
+  const keywordShortcuts = useKeywordShortcuts();
 
   const columns = useMemo(
     () => [
@@ -30,8 +29,5 @@ function ShortcutsTable() {
     ],
     [],
   );
-
-  return <DataTable columns={columns} data={keyboardShortcuts} />;
+  return <DataTable columns={columns} data={keywordShortcuts} />;
 }
-
-export default ShortcutsTable;

@@ -7,13 +7,14 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { Can, FormattedMessage as T } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 
 import { safeCallback } from 'utils';
+import { AccountAction, AbilitySubject } from '../../../common/abilityOption';
 
 import { compose } from 'utils';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
@@ -53,26 +54,31 @@ function AccountDrawerActionBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="pen-18" />}
-          text={<T id={'edit_account'} />}
-          onClick={safeCallback(onEditAccount)}
-        />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="plus" />}
-          text={<T id={'new_child_account'} />}
-          onClick={safeCallback(onNewChildAccount)}
-        />
-        <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'trash-16'} iconSize={16} />}
-          text={<T id={'delete'} />}
-          intent={Intent.DANGER}
-          onClick={safeCallback(onDeleteAccount)}
-        />
+        <Can I={AccountAction.Edit} a={AbilitySubject.Account}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="pen-18" />}
+            text={<T id={'edit_account'} />}
+            onClick={safeCallback(onEditAccount)}
+          />
+
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="plus" />}
+            text={<T id={'new_child_account'} />}
+            onClick={safeCallback(onNewChildAccount)}
+          />
+          <NavbarDivider />
+        </Can>
+        <Can I={AccountAction.Delete} a={AbilitySubject.Account}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'trash-16'} iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={safeCallback(onDeleteAccount)}
+          />
+        </Can>
       </NavbarGroup>
     </DashboardActionsBar>
   );
