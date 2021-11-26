@@ -15,16 +15,18 @@ import { ListSelect, FieldRequiredHint } from 'components';
 import { useUserFormContext } from './UserFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
+import { UserFormCalloutAlerts } from './components';
 
 /**
  * User form content.
  */
 function UserFormContent({
+  calloutCode,
   // #withDialogActions
   closeDialog,
 }) {
   const { isSubmitting } = useFormikContext();
-  const { dialogName, roles } = useUserFormContext();
+  const { dialogName, roles, isAuth } = useUserFormContext();
 
   const handleClose = () => {
     closeDialog(dialogName);
@@ -33,6 +35,8 @@ function UserFormContent({
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
+        <UserFormCalloutAlerts calloutCodes={calloutCode} />
+
         {/* ----------- Email ----------- */}
         <FastField name={'email'}>
           {({ field, meta: { error, touched } }) => (
@@ -109,6 +113,7 @@ function UserFormContent({
                 // labelProp={'id '}
                 popoverProps={{ minimal: true }}
                 intent={inputIntent({ error, touched })}
+                disabled={isAuth}
               />
             </FormGroup>
           )}

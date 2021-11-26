@@ -1,5 +1,10 @@
 import React, { createContext, useContext } from 'react';
-import { useEditUser, useUser, useRoles } from 'hooks/query';
+import {
+  useEditUser,
+  useUser,
+  useRoles,
+  useAuthenticatedAccount,
+} from 'hooks/query';
 
 import { DialogContent } from 'components';
 
@@ -20,10 +25,18 @@ function UserFormProvider({ userId, dialogName, ...props }) {
   // fetch roles list.
   const { data: roles, isLoading: isRolesLoading } = useRoles();
 
+  // Retrieve authenticated user information.
+  const {
+    data: { id },
+  } = useAuthenticatedAccount();
+
   const isEditMode = userId;
+
+  const isAuth = user.system_user_id == id
 
   // Provider state.
   const provider = {
+    isAuth,
     userId,
     dialogName,
 
