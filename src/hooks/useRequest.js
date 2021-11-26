@@ -56,6 +56,9 @@ export default function useApiRequest() {
           setGlobalErrors({ session_expired: true });
           setLogout();
         }
+        if (status === 403) {
+          setGlobalErrors({ access_denied: true })
+        }
         return Promise.reject(error);
       },
     );

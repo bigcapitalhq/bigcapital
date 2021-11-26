@@ -125,3 +125,37 @@ export function useUser(id, props) {
     },
   );
 }
+
+
+export function useAuthenticatedAccount(props){
+  return useRequestQuery(
+    ['AuthenticatedAccount'],
+    {
+      method: 'get',
+      url: `account`,
+    },
+    {
+      select: (response) => response.data.data,
+      defaultData: {},
+      ...props,
+    },
+  );
+}
+
+/**
+ * Fetches the dashboard meta.
+ */
+export function useDashboardMeta(props) {
+  return useRequestQuery(
+    ['DashboardMeta'],
+    {
+      method: 'get',
+      url: 'dashboard/boot',
+    },
+    {
+      select: (res) => res.data.meta,
+      defaultData: {},
+      ...props
+    }
+  )
+}
