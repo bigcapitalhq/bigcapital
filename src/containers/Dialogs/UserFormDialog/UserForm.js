@@ -10,6 +10,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import { UserFormSchema } from './UserForm.schema';
 import UserFormContent from './UserFormContent';
 import { useUserFormContext } from './UserFormProvider';
+import { transformErrors } from './utils';
 
 import { compose, objectKeysTransform } from 'utils';
 
@@ -20,13 +21,10 @@ function UserForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    dialogName,
-    user,
-    userId,
-    isEditMode,
-    EditUserMutate,
-  } = useUserFormContext();
+  const [calloutCode, setCalloutCode] = React.useState([]);
+
+  const { dialogName, user, userId, isEditMode, EditUserMutate } =
+    useUserFormContext();
 
   const initialValues = {
     ...(isEditMode &&
@@ -59,7 +57,7 @@ function UserForm({
           data: { errors },
         },
       } = error;
-
+      transformErrors(errors, { setErrors, setCalloutCode });
       setSubmitting(false);
     };
 
@@ -72,7 +70,7 @@ function UserForm({
       initialValues={initialValues}
       onSubmit={handleSubmit}
     >
-      <UserFormContent />
+      <UserFormContent calloutCode={calloutCode} />
     </Formik>
   );
 }
