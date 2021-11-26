@@ -1,7 +1,6 @@
 import React from 'react';
 import * as R from 'ramda';
 
-import { AuthenticatedUser } from './AuthenticatedUser';
 import { DashboardBoot } from '../../components';
 
 import withDashboard from '../../containers/Dashboard/withDashboard';
@@ -16,11 +15,10 @@ function PrivatePagesProviderComponent({
   children,
 }) {
   return (
-    <AuthenticatedUser>
+    <React.Fragment>
       <DashboardBoot />
-
       {splashScreenCompleted ? children : null}
-    </AuthenticatedUser>
+    </React.Fragment>
   );
 }
 

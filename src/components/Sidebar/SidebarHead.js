@@ -3,7 +3,7 @@ import { Button, Popover, Menu, Position } from '@blueprintjs/core';
 import Icon from 'components/Icon';
 import { compose, firstLettersArgs } from 'utils';
 import withCurrentOrganization from '../../containers/Organization/withCurrentOrganization';
-import { useAuthenticatedUser } from '../Dashboard/AuthenticatedUser';
+import { useAuthenticatedAccount } from '../../hooks/query';
 
 // Popover modifiers.
 const POPOVER_MODIFIERS = {
@@ -18,7 +18,7 @@ function SidebarHead({
   organization,
 }) {
   // Retrieve authenticated user information.
-  const { user } = useAuthenticatedUser();
+  const { data: user } = useAuthenticatedAccount();
 
   return (
     <div className="sidebar__head">
