@@ -5,8 +5,9 @@ import t from './types';
 
 // Common invalidate queries.
 const commonInvalidateQueries = (queryClient) => {
-  queryClient.invalidateQueries(t.ROLES_PERMISSIONS_SCHEMA);
   queryClient.invalidateQueries(t.ROLE);
+  queryClient.invalidateQueries(t.ROLES);
+  queryClient.invalidateQueries(t.ROLES_PERMISSIONS_SCHEMA);
 };
 
 /**
@@ -89,6 +90,21 @@ export function useRolePermission(role_id, props, requestProps) {
       defaultData: {
         permission: [],
       },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve the roles.
+ */
+export function useRoles(props, query) {
+  return useRequestQuery(
+    [t.ROLES, query],
+    { method: 'get', url: `roles`, params: query },
+    {
+      select: (res) => res.data.roles,
+      defaultData: [],
       ...props,
     },
   );

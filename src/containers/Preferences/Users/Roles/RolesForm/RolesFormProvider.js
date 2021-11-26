@@ -31,8 +31,6 @@ function RolesFormProvider({ roleId, ...props }) {
     isFetching: isPermissionsSchemaFetching,
   } = usePermissionsSchema();
 
-  // const roleId = 6;
-
   const { data: permission, isLoading: isPermissionLoading } =
     useRolePermission(roleId, {
       enabled: !!roleId,

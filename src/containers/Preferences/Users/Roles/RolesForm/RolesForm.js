@@ -1,7 +1,7 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
-import { defaultTo, sumBy, isEmpty } from 'lodash';
 
 import 'style/pages/Preferences/Roles/Form.scss';
 
@@ -32,6 +32,9 @@ function RolesForm({
   // #withDashboardActions
   changePreferencesPageTitle,
 }) {
+  // History context.
+  const history = useHistory();
+
   const {
     isNewMode,
     createRolePermissionMutate,
@@ -67,6 +70,7 @@ function RolesForm({
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
+      history.push('/preferences/users');
     };
 
     const onError = (errors) => {
