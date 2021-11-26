@@ -14,6 +14,7 @@ import {
   Manual_Journal_Abilities,
   Expense_Abilities,
   Item_Abilities,
+  Report_Abilities,
 } from '../common/abilityOption';
 
 export const accountsReceivable = [
@@ -135,6 +136,8 @@ export const financialAccounting = [
           <T id={'show_financial_reports_about_your_organization'} />
         ),
         link: '/financial-reports',
+        subject: AbilitySubject.Report,
+        ability: Report_Abilities.ALL,
       },
     ],
   },

@@ -115,6 +115,7 @@ export const Cashflow_Abilities = {
 };
 
 export const Report_Abilities = {
+  ALL:'all',
   READ_BALANCE_SHEET: 'read-balance-sheet',
   READ_TRIAL_BALANCE_SHEET: 'read-trial-balance-sheet',
   READ_PROFIT_LOSS: 'read-profit-loss',

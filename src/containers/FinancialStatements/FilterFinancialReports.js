@@ -1,23 +1,23 @@
 import { isEmpty } from 'lodash';
 import { useAbilityContext } from '../../hooks';
 
-function useFilterFinancialReports(financial) {
+function useFilterFinancialReports(financialSection) {
   const ability = useAbilityContext();
 
-  const seaction = financial
-    .map((seaction) => {
-      const reports = seaction.reports.filter((report) => {
+  const section = financialSection
+    .map((section) => {
+      const reports = section.reports.filter((report) => {
         return ability.can(report.ability, report.subject);
       });
 
       return {
-        sectionTitle: seaction.sectionTitle,
+        sectionTitle: section.sectionTitle,
         reports,
       };
     })
     .filter(({ reports }) => !isEmpty(reports));
 
-  return seaction;
+  return section;
 }
 
 export default useFilterFinancialReports;
