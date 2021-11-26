@@ -12,11 +12,12 @@ export const useAbilitiesFilter = () => {
 
   return React.useCallback(
     (items) => {
-      return items.filter((item) =>
-        ability.can(item.permission.ability, item.permission.subject),
+      return items.filter(
+        (item) =>
+          !item.permission ||
+          ability.can(item.permission.ability, item.permission.subject),
       );
     },
     [ability],
   );
 };
- 
