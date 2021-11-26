@@ -16,8 +16,8 @@ import {
   Can,
 } from '../../../components';
 import {
-  Account_Abilities,
-  Cashflow_Abilities,
+  AccountAction,
+  CashflowAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
 
@@ -228,7 +228,7 @@ function CashflowAccountContextMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewClick)}
       />
-      <Can I={Cashflow_Abilities.Create} a={AbilitySubject.Cashflow}>
+      <Can I={CashflowAction.Create} a={AbilitySubject.Cashflow}>
         <MenuDivider />
         <MenuItem
           text={<T id={'cash_flow_money_in'} />}
@@ -244,7 +244,7 @@ function CashflowAccountContextMenu({
           <CashflowAccountMoneyOutContextMenu onClick={onMoneyOutClick} />
         </MenuItem>
       </Can>
-      <Can I={Cashflow_Abilities.Edit} a={AbilitySubject.Cashflow}>
+      <Can I={CashflowAction.Edit} a={AbilitySubject.Cashflow}>
         <MenuDivider />
 
         <MenuItem
@@ -253,7 +253,7 @@ function CashflowAccountContextMenu({
           onClick={safeCallback(onEditClick)}
         />
       </Can>
-      <Can I={Account_Abilities.Edit} a={AbilitySubject.Account}>
+      <Can I={AccountAction.Edit} a={AbilitySubject.Account}>
         <MenuDivider />
         <If condition={account.active}>
           <MenuItem
@@ -270,7 +270,7 @@ function CashflowAccountContextMenu({
           />
         </If>
       </Can>
-      <Can I={Cashflow_Abilities.Delete} a={AbilitySubject.Cashflow}>
+      <Can I={CashflowAction.Delete} a={AbilitySubject.Cashflow}>
         <MenuItem
           text={intl.get('delete_account')}
           icon={<Icon icon="trash-16" iconSize={16} />}

@@ -15,7 +15,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import {
-  Estimate_Abilities,
+  SaleEstimateAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
 
@@ -63,7 +63,7 @@ function EstimateDetailActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Can I={Estimate_Abilities.Edit} a={AbilitySubject.Estimate}>
+        <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
@@ -72,7 +72,7 @@ function EstimateDetailActionsBar({
           />
           <NavbarDivider />
         </Can>
-        <Can I={Estimate_Abilities.View} a={AbilitySubject.Estimate}>
+        <Can I={SaleEstimateAction.View} a={AbilitySubject.Estimate}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="print-16" />}
@@ -80,7 +80,7 @@ function EstimateDetailActionsBar({
             onClick={handlePrintEstimate}
           />
         </Can>
-        <Can I={Estimate_Abilities.Delete} a={AbilitySubject.Estimate}>
+        <Can I={SaleEstimateAction.Delete} a={AbilitySubject.Estimate}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}

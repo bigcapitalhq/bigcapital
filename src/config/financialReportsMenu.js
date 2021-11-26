@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage as T } from 'components';
-import { Report_Abilities, AbilitySubject } from '../common/abilityOption';
+import { ReportsAction, AbilitySubject } from '../common/abilityOption';
 
 export const financialReportMenus = [
   {
@@ -13,7 +13,7 @@ export const financialReportMenus = [
         ),
         link: '/financial-reports/balance-sheet',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_BALANCE_SHEET,
+        ability: ReportsAction.READ_BALANCE_SHEET,
       },
       {
         title: <T id={'trial_balance_sheet'} />,
@@ -22,14 +22,14 @@ export const financialReportMenus = [
         ),
         link: '/financial-reports/trial-balance-sheet',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_TRIAL_BALANCE_SHEET,
+        ability: ReportsAction.READ_TRIAL_BALANCE_SHEET,
       },
       {
         title: <T id={'profit_loss_report'} />,
         desc: <T id={'reports_the_revenues_costs_and_expenses'} />,
         link: '/financial-reports/profit-loss-sheet',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_PROFIT_LOSS,
+        ability: ReportsAction.READ_PROFIT_LOSS,
       },
       {
         title: <T id={'cash_flow_statement'} />,
@@ -38,21 +38,21 @@ export const financialReportMenus = [
         ),
         link: '/financial-reports/cash-flow',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_CASHFLOW,
+        ability: ReportsAction.READ_CASHFLOW,
       },
       {
         title: <T id={'journal_report'} />,
         desc: <T id={'the_debit_and_credit_entries_of_system_transactions'} />,
         link: '/financial-reports/journal-sheet',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_JOURNAL,
+        ability: ReportsAction.READ_JOURNAL,
       },
       {
         title: <T id={'general_ledger_report'} />,
         desc: <T id={'reports_every_transaction_going_in_and_out_of_your'} />,
         link: '/financial-reports/general-ledger',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_GENERAL_LEDGET,
+        ability: ReportsAction.READ_GENERAL_LEDGET,
       },
       {
         title: <T id={'receivable_aging_summary'} />,
@@ -61,14 +61,14 @@ export const financialReportMenus = [
         ),
         link: '/financial-reports/receivable-aging-summary',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_AR_AGING_SUMMARY,
+        ability: ReportsAction.READ_AR_AGING_SUMMARY,
       },
       {
         title: <T id={'payable_aging_summary'} />,
         desc: <T id={'summarize_total_unpaid_balances_of_vendors_purchase'} />,
         link: '/financial-reports/payable-aging-summary',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_AP_AGING_SUMMARY,
+        ability: ReportsAction.READ_AP_AGING_SUMMARY,
       },
     ],
   },
@@ -89,7 +89,7 @@ export const SalesAndPurchasesReportMenus = [
         ),
         link: '/financial-reports/purchases-by-items',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_PURCHASES_BY_ITEMS,
+        ability: ReportsAction.READ_PURCHASES_BY_ITEMS,
       },
       {
         title: <T id={'sales_by_items'} />,
@@ -102,7 +102,7 @@ export const SalesAndPurchasesReportMenus = [
         ),
         link: '/financial-reports/sales-by-items',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_SALES_BY_ITEMS,
+        ability: ReportsAction.READ_SALES_BY_ITEMS,
       },
       {
         title: <T id={'inventory_valuation'} />,
@@ -115,7 +115,7 @@ export const SalesAndPurchasesReportMenus = [
         ),
         link: '/financial-reports/inventory-valuation',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_INVENTORY_VALUATION_SUMMARY,
+        ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
       },
       {
         title: <T id={'customers_balance_summary'} />,
@@ -128,7 +128,7 @@ export const SalesAndPurchasesReportMenus = [
         ),
         link: '/financial-reports/customers-balance-summary',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_CUSTOMERS_SUMMARY_BALANCE,
+        ability: ReportsAction.READ_CUSTOMERS_SUMMARY_BALANCE,
       },
       {
         title: <T id={'vendors_balance_summary'} />,
@@ -137,7 +137,7 @@ export const SalesAndPurchasesReportMenus = [
         ),
         link: '/financial-reports/vendors-balance-summary',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_VENDORS_SUMMARY_BALANCE,
+        ability: ReportsAction.READ_VENDORS_SUMMARY_BALANCE,
       },
       {
         title: <T id={'customers_transactions'} />,
@@ -148,7 +148,7 @@ export const SalesAndPurchasesReportMenus = [
         ),
         link: '/financial-reports/transactions-by-customers',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_CUSTOMERS_TRANSACTIONS,
+        ability: ReportsAction.READ_CUSTOMERS_TRANSACTIONS,
       },
       {
         title: <T id={'vendors_transactions'} />,
@@ -161,7 +161,7 @@ export const SalesAndPurchasesReportMenus = [
         ),
         link: '/financial-reports/transactions-by-vendors',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_VENDORS_TRANSACTIONS,
+        ability: ReportsAction.READ_VENDORS_TRANSACTIONS,
       },
       {
         title: <T id={'inventory_item_details'} />,
@@ -170,7 +170,7 @@ export const SalesAndPurchasesReportMenus = [
         ),
         link: '/financial-reports/inventory-item-details',
         subject: AbilitySubject.Report,
-        ability: Report_Abilities.READ_INVENTORY_ITEM_DETAILS,
+        ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
       },
     ],
   },

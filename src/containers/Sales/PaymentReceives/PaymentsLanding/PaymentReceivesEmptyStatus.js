@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
 import { Can, FormattedMessage as T } from 'components';
 import {
-  Payment_Receive_Abilities,
+  PaymentReceiveAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -24,7 +24,7 @@ export default function PaymentReceivesEmptyStatus() {
       action={
         <>
           <Can
-            I={Payment_Receive_Abilities.Create}
+            I={PaymentReceiveAction.Create}
             a={AbilitySubject.PaymentReceive}
           >
             <Button

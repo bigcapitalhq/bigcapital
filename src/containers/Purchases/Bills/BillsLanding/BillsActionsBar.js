@@ -21,7 +21,7 @@ import {
   AdvancedFilterPopover,
   DashboardRowsHeightButton,
 } from 'components';
-import { Bill_Abilities, AbilitySubject } from '../../../../common/abilityOption';
+import { BillAction, AbilitySubject } from '../../../../common/abilityOption';
 
 import withBillsActions from './withBillsActions';
 import withBills from './withBills';
@@ -88,7 +88,7 @@ function BillActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Can I={Bill_Abilities.Create} a={AbilitySubject.Bill}>
+        <Can I={BillAction.Create} a={AbilitySubject.Bill}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus'} />}

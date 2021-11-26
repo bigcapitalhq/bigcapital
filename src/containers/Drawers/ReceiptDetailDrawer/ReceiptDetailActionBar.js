@@ -17,7 +17,7 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { Can, Icon, FormattedMessage as T, MoreMenuItems } from 'components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import {
-  Receipt_Abilities,
+  SaleReceiptAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
 
@@ -58,7 +58,7 @@ function ReceiptDetailActionBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Can I={Receipt_Abilities.Edit} a={AbilitySubject.Receipt}>
+        <Can I={SaleReceiptAction.Edit} a={AbilitySubject.Receipt}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
@@ -67,7 +67,7 @@ function ReceiptDetailActionBar({
           />
           <NavbarDivider />
         </Can>
-        <Can I={Receipt_Abilities.View} a={AbilitySubject.Receipt}>
+        <Can I={SaleReceiptAction.View} a={AbilitySubject.Receipt}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="print-16" />}
@@ -75,7 +75,7 @@ function ReceiptDetailActionBar({
             onClick={safeCallback(onPrintReceipt)}
           />
         </Can>
-        <Can I={Receipt_Abilities.Delete} a={AbilitySubject.Receipt}>
+        <Can I={SaleReceiptAction.Delete} a={AbilitySubject.Receipt}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}

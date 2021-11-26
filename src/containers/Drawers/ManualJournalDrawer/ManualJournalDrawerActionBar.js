@@ -16,7 +16,7 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 import {
-  Manual_Journal_Abilities,
+  ManualJournalAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
 
@@ -49,7 +49,7 @@ function ManualJournalDrawerActionBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Can I={Manual_Journal_Abilities.Edit} a={AbilitySubject.ManualJournal}>
+        <Can I={ManualJournalAction.Edit} a={AbilitySubject.ManualJournal}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
@@ -58,10 +58,7 @@ function ManualJournalDrawerActionBar({
           />
           <NavbarDivider />
         </Can>
-        <Can
-          I={Manual_Journal_Abilities.Delete}
-          a={AbilitySubject.ManualJournal}
-        >
+        <Can I={ManualJournalAction.Delete} a={AbilitySubject.ManualJournal}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="trash-16" iconSize={16} />}

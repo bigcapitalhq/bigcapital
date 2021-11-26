@@ -12,7 +12,7 @@ import intl from 'react-intl-universal';
 
 import { Icon, Money, FormatDateCell, Can } from 'components';
 import {
-  Payment_Made_Abilities,
+  PaymentMadeAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -37,7 +37,7 @@ export function ActionsMenu({
         onClick={safeCallback(onViewDetails, original)}
       />
 
-      <Can I={Payment_Made_Abilities.Edit} a={AbilitySubject.PaymentMade}>
+      <Can I={PaymentMadeAction.Edit} a={AbilitySubject.PaymentMade}>
         <MenuDivider />
         <MenuItem
           icon={<Icon icon="pen-18" />}
@@ -45,7 +45,7 @@ export function ActionsMenu({
           onClick={safeCallback(onEdit, original)}
         />
       </Can>
-      <Can I={Payment_Made_Abilities.Delete} a={AbilitySubject.PaymentMade}>
+      <Can I={PaymentMadeAction.Delete} a={AbilitySubject.PaymentMade}>
         <MenuItem
           text={intl.get('delete_payment_made')}
           intent={Intent.DANGER}

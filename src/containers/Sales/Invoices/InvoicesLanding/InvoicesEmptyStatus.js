@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
 import { Can, FormattedMessage as T } from 'components';
 import {
-  Invoice_Abilities,
+  SaleInvoiceAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -21,7 +21,7 @@ export default function EstimatesEmptyStatus() {
       }
       action={
         <>
-          <Can I={Invoice_Abilities.Create} a={AbilitySubject.Invoice}>
+          <Can I={SaleInvoiceAction.Create} a={AbilitySubject.Invoice}>
             <Button
               intent={Intent.PRIMARY}
               large={true}

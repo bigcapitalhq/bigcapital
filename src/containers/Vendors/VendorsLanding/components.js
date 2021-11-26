@@ -11,10 +11,7 @@ import {
 import intl from 'react-intl-universal';
 
 import { Can, Icon, Money, If, AvaterCell } from 'components';
-import {
-  Vendor_Abilities,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { VendorAction, AbilitySubject } from '../../../common/abilityOption';
 import { safeCallback, firstLettersArgs } from 'utils';
 
 /**
@@ -38,7 +35,7 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <Can I={Vendor_Abilities.Edit} a={AbilitySubject.Vendor}>
+      <Can I={VendorAction.Edit} a={AbilitySubject.Vendor}>
         <MenuDivider />
         <MenuItem
           icon={<Icon icon="pen-18" />}
@@ -46,14 +43,14 @@ export function ActionsMenu({
           onClick={safeCallback(onEdit, original)}
         />
       </Can>
-      <Can I={Vendor_Abilities.Create} a={AbilitySubject.Customer}>
+      <Can I={VendorAction.Create} a={AbilitySubject.Customer}>
         <MenuItem
           icon={<Icon icon="duplicate-16" />}
           text={intl.get('duplicate')}
           onClick={safeCallback(onDuplicate, original)}
         />
       </Can>
-      <Can I={Vendor_Abilities.Edit} a={AbilitySubject.Vendor}>
+      <Can I={VendorAction.Edit} a={AbilitySubject.Vendor}>
         <If condition={original.active}>
           <MenuItem
             text={intl.get('inactivate_item')}
@@ -69,7 +66,7 @@ export function ActionsMenu({
           />
         </If>
       </Can>
-      <Can I={Vendor_Abilities.Delete} a={AbilitySubject.Vendor}>
+      <Can I={VendorAction.Delete} a={AbilitySubject.Vendor}>
         <MenuItem
           icon={<Icon icon="trash-16" iconSize={16} />}
           text={intl.get('delete_vendor')}

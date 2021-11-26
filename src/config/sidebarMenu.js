@@ -1,22 +1,22 @@
 import React from 'react';
 import { FormattedMessage as T } from 'components';
 import {
-  Report_Abilities,
+  ReportsAction,
   AbilitySubject,
-  Item_Abilities,
-  Inventory_Adjustment_Abilities,
-  Estimate_Abilities,
-  Invoice_Abilities,
-  Receipt_Abilities,
-  Payment_Receive_Abilities,
-  Bill_Abilities,
-  Payment_Made_Abilities,
-  Customer_Abilities,
-  Vendor_Abilities,
-  Account_Abilities,
-  Manual_Journal_Abilities,
-  Expense_Abilities,
-  Cashflow_Abilities,
+  ItemAction,
+  InventoryAdjustmentAction,
+  SaleEstimateAction,
+  SaleInvoiceAction,
+  SaleReceiptAction,
+  PaymentReceiveAction,
+  BillAction,
+  PaymentMadeAction,
+  CustomerAction,
+  VendorAction,
+  AccountAction,
+  ManualJournalAction,
+  ExpenseAction,
+  CashflowAction,
   PreferencesAbility,
   ExchangeRateAbility,
   SubscriptionBillingAbility,
@@ -35,28 +35,28 @@ export default [
     permission: [
       {
         subject: AbilitySubject.Item,
-        ability: Item_Abilities.View,
+        ability: ItemAction.View,
       },
       {
-        subject: AbilitySubject.Inventory_Adjustment,
-        ability: Inventory_Adjustment_Abilities.View,
+        subject: AbilitySubject.InventoryAdjustment,
+        ability: InventoryAdjustmentAction.View,
       },
       {
         subject: AbilitySubject.Estimate,
-        ability: Estimate_Abilities.View,
+        ability: SaleEstimateAction.View,
       },
       {
         subject: AbilitySubject.Invoice,
-        ability: Invoice_Abilities.View,
+        ability: SaleInvoiceAction.View,
       },
       {
         subject: AbilitySubject.Receipt,
-        ability: Receipt_Abilities.View,
+        ability: SaleReceiptAction.View,
       },
       {
         subject: AbilitySubject.PaymentReceive,
-        ability: Payment_Receive_Abilities.View,
-      }
+        ability: PaymentReceiveAction.View,
+      },
     ],
   },
   {
@@ -67,15 +67,15 @@ export default [
         href: '/items',
         permission: {
           subject: AbilitySubject.Item,
-          ability: Item_Abilities.View,
+          ability: ItemAction.View,
         },
       },
       {
         text: <T id={'inventory_adjustments'} />,
         href: '/inventory-adjustments',
         permission: {
-          subject: AbilitySubject.Inventory_Adjustment,
-          ability: Inventory_Adjustment_Abilities.View,
+          subject: AbilitySubject.InventoryAdjustment,
+          ability: InventoryAdjustmentAction.View,
         },
       },
       {
@@ -83,7 +83,7 @@ export default [
         href: '/items/categories',
         permission: {
           subject: AbilitySubject.Item,
-          ability: Item_Abilities.View,
+          ability: ItemAction.View,
         },
       },
       {
@@ -92,7 +92,7 @@ export default [
         permission: [
           {
             subject: AbilitySubject.Item,
-            ability: Item_Abilities.Create,
+            ability: ItemAction.Create,
           },
         ],
       },
@@ -101,7 +101,7 @@ export default [
         permission: [
           {
             subject: AbilitySubject.Item,
-            ability: Item_Abilities.Create,
+            ability: ItemAction.Create,
           },
         ],
       },
@@ -110,7 +110,7 @@ export default [
         href: '/items/new',
         permission: {
           subject: AbilitySubject.Item,
-          ability: Item_Abilities.Create,
+          ability: ItemAction.Create,
         },
       },
       {
@@ -118,7 +118,7 @@ export default [
         href: '/items/new',
         permission: {
           subject: AbilitySubject.Item,
-          ability: Item_Abilities.Create,
+          ability: ItemAction.Create,
         },
       },
       {
@@ -126,7 +126,7 @@ export default [
         href: '/items/categories/new',
         permission: {
           subject: AbilitySubject.Item,
-          ability: Item_Abilities.Create,
+          ability: ItemAction.Create,
         },
       },
     ],
@@ -139,7 +139,7 @@ export default [
         href: '/estimates',
         permission: {
           subject: AbilitySubject.Estimate,
-          ability: Estimate_Abilities.View,
+          ability: SaleEstimateAction.View,
         },
       },
       {
@@ -147,7 +147,7 @@ export default [
         href: '/invoices',
         permission: {
           subject: AbilitySubject.Invoice,
-          ability: Invoice_Abilities.View,
+          ability: SaleInvoiceAction.View,
         },
       },
       {
@@ -155,7 +155,7 @@ export default [
         href: '/receipts',
         permission: {
           subject: AbilitySubject.Receipt,
-          ability: Receipt_Abilities.View,
+          ability: SaleReceiptAction.View,
         },
       },
       {
@@ -163,7 +163,7 @@ export default [
         href: '/payment-receives',
         permission: {
           subject: AbilitySubject.PaymentReceive,
-          ability: Payment_Receive_Abilities.View,
+          ability: PaymentReceiveAction.View,
         },
       },
       {
@@ -172,19 +172,19 @@ export default [
         permission: [
           {
             subject: AbilitySubject.Estimate,
-            ability: Estimate_Abilities.Create,
+            ability: SaleEstimateAction.Create,
           },
           {
             subject: AbilitySubject.Invoice,
-            ability: Invoice_Abilities.Create,
+            ability: SaleInvoiceAction.Create,
           },
           {
             subject: AbilitySubject.Receipt,
-            ability: Receipt_Abilities.Create,
+            ability: SaleReceiptAction.Create,
           },
           {
             subject: AbilitySubject.PaymentReceive,
-            ability: Payment_Receive_Abilities.Create,
+            ability: PaymentReceiveAction.Create,
           },
         ],
       },
@@ -193,19 +193,19 @@ export default [
         permission: [
           {
             subject: AbilitySubject.Estimate,
-            ability: Estimate_Abilities.Create,
+            ability: SaleEstimateAction.Create,
           },
           {
             subject: AbilitySubject.Invoice,
-            ability: Invoice_Abilities.Create,
+            ability: SaleInvoiceAction.Create,
           },
           {
             subject: AbilitySubject.Receipt,
-            ability: Receipt_Abilities.Create,
+            ability: SaleReceiptAction.Create,
           },
           {
             subject: AbilitySubject.PaymentReceive,
-            ability: Payment_Receive_Abilities.Create,
+            ability: PaymentReceiveAction.Create,
           },
         ],
       },
@@ -214,7 +214,7 @@ export default [
         href: '/estimates/new',
         permission: {
           subject: AbilitySubject.Estimate,
-          ability: Estimate_Abilities.Create,
+          ability: SaleEstimateAction.Create,
         },
       },
       {
@@ -222,7 +222,7 @@ export default [
         href: '/invoices/new',
         permission: {
           subject: AbilitySubject.Invoice,
-          ability: Invoice_Abilities.Create,
+          ability: SaleInvoiceAction.Create,
         },
       },
       {
@@ -230,7 +230,7 @@ export default [
         href: '/receipts/new',
         permission: {
           subject: AbilitySubject.Receipt,
-          ability: Receipt_Abilities.Create,
+          ability: SaleReceiptAction.Create,
         },
       },
       {
@@ -238,7 +238,7 @@ export default [
         href: '/payment-receives/new',
         permission: {
           subject: AbilitySubject.PaymentReceive,
-          ability: Payment_Receive_Abilities.Create,
+          ability: PaymentReceiveAction.Create,
         },
       },
     ],
@@ -251,7 +251,7 @@ export default [
         href: '/bills',
         permission: {
           subject: AbilitySubject.Bill,
-          ability: Bill_Abilities.View,
+          ability: BillAction.View,
         },
       },
       {
@@ -260,7 +260,7 @@ export default [
         newTabHref: '/payment-mades/new',
         permission: {
           subject: AbilitySubject.PaymentMade,
-          ability: Payment_Made_Abilities.View,
+          ability: PaymentMadeAction.View,
         },
       },
       {
@@ -269,11 +269,11 @@ export default [
         permission: [
           {
             subject: AbilitySubject.Bill,
-            ability: Bill_Abilities.Create,
+            ability: BillAction.Create,
           },
           {
             subject: AbilitySubject.PaymentMade,
-            ability: Payment_Made_Abilities.Create,
+            ability: PaymentMadeAction.Create,
           },
         ],
       },
@@ -282,11 +282,11 @@ export default [
         permission: [
           {
             subject: AbilitySubject.Bill,
-            ability: Bill_Abilities.Create,
+            ability: BillAction.Create,
           },
           {
             subject: AbilitySubject.PaymentMade,
-            ability: Payment_Made_Abilities.Create,
+            ability: PaymentMadeAction.Create,
           },
         ],
       },
@@ -295,7 +295,7 @@ export default [
         href: '/bills/new',
         permission: {
           subject: AbilitySubject.Bill,
-          ability: Bill_Abilities.Create,
+          ability: BillAction.Create,
         },
       },
       {
@@ -303,7 +303,7 @@ export default [
         href: '/payment-mades/new',
         permission: {
           subject: AbilitySubject.PaymentMade,
-          ability: Payment_Made_Abilities.Create,
+          ability: PaymentMadeAction.Create,
         },
       },
     ],
@@ -316,7 +316,7 @@ export default [
         href: '/customers',
         permission: {
           subject: AbilitySubject.Customer,
-          ability: Customer_Abilities.View,
+          ability: CustomerAction.View,
         },
       },
       {
@@ -324,7 +324,7 @@ export default [
         href: '/vendors',
         permission: {
           subject: AbilitySubject.Vendor,
-          ability: Vendor_Abilities.Create,
+          ability: VendorAction.Create,
         },
       },
       {
@@ -333,11 +333,11 @@ export default [
         permission: [
           {
             subject: AbilitySubject.Customer,
-            ability: Customer_Abilities.View,
+            ability: CustomerAction.View,
           },
           {
             subject: AbilitySubject.Vendor,
-            ability: Vendor_Abilities.View,
+            ability: VendorAction.View,
           },
         ],
       },
@@ -346,11 +346,11 @@ export default [
         permission: [
           {
             subject: AbilitySubject.Customer,
-            ability: Customer_Abilities.View,
+            ability: CustomerAction.View,
           },
           {
             subject: AbilitySubject.Vendor,
-            ability: Vendor_Abilities.View,
+            ability: VendorAction.View,
           },
         ],
       },
@@ -359,7 +359,7 @@ export default [
         href: '/customers/new',
         permission: {
           subject: AbilitySubject.Customer,
-          ability: Customer_Abilities.View,
+          ability: CustomerAction.View,
         },
       },
       {
@@ -367,7 +367,7 @@ export default [
         href: '/vendors/new',
         permission: {
           subject: AbilitySubject.Vendor,
-          ability: Vendor_Abilities.View,
+          ability: VendorAction.View,
         },
       },
     ],
@@ -378,11 +378,11 @@ export default [
     permission: [
       {
         subject: AbilitySubject.Account,
-        ability: Account_Abilities.View,
+        ability: AccountAction.View,
       },
       {
         subject: AbilitySubject.ManualJournal,
-        ability: Manual_Journal_Abilities.View,
+        ability: ManualJournalAction.View,
       },
     ],
   },
@@ -394,7 +394,7 @@ export default [
         href: '/accounts',
         permission: {
           subject: AbilitySubject.Account,
-          ability: Account_Abilities.View,
+          ability: AccountAction.View,
         },
       },
       {
@@ -402,7 +402,7 @@ export default [
         href: '/manual-journals',
         permission: {
           subject: AbilitySubject.ManualJournal,
-          ability: Manual_Journal_Abilities.View,
+          ability: ManualJournalAction.View,
         },
       },
       {
@@ -410,7 +410,7 @@ export default [
         href: '/transactions-locking',
         permission: {
           subject: AbilitySubject.ManualJournal,
-          ability: Manual_Journal_Abilities.TransactionLocking,
+          ability: ManualJournalAction.TransactionLocking,
         },
       },
       {
@@ -426,14 +426,14 @@ export default [
         label: true,
         permission: {
           subject: AbilitySubject.ManualJournal,
-          ability: Manual_Journal_Abilities.Create,
+          ability: ManualJournalAction.Create,
         },
       },
       {
         divider: true,
         permission: {
           subject: AbilitySubject.ManualJournal,
-          ability: Manual_Journal_Abilities.Create,
+          ability: ManualJournalAction.Create,
         },
       },
       {
@@ -441,7 +441,7 @@ export default [
         href: '/make-journal-entry',
         permission: {
           subject: AbilitySubject.ManualJournal,
-          ability: Manual_Journal_Abilities.Create,
+          ability: ManualJournalAction.Create,
         },
       },
     ],
@@ -454,7 +454,7 @@ export default [
         href: '/cashflow-accounts',
         permission: {
           subject: AbilitySubject.Cashflow,
-          ability: Cashflow_Abilities.View,
+          ability: CashflowAction.View,
         },
       },
       {
@@ -463,7 +463,7 @@ export default [
         permission: [
           {
             subject: AbilitySubject.Cashflow,
-            ability: Cashflow_Abilities.Create,
+            ability: CashflowAction.Create,
           },
         ],
       },
@@ -472,7 +472,7 @@ export default [
         permission: [
           {
             subject: AbilitySubject.Cashflow,
-            ability: Cashflow_Abilities.Create,
+            ability: CashflowAction.Create,
           },
         ],
       },
@@ -481,7 +481,7 @@ export default [
         href: '/cashflow-accounts',
         permission: {
           subject: AbilitySubject.Cashflow,
-          ability: Cashflow_Abilities.Create,
+          ability: CashflowAction.Create,
         },
       },
       {
@@ -489,7 +489,7 @@ export default [
         href: '/cashflow-accounts',
         permission: {
           subject: AbilitySubject.Cashflow,
-          ability: Cashflow_Abilities.Create,
+          ability: CashflowAction.Create,
         },
       },
       {
@@ -497,7 +497,7 @@ export default [
         href: '/cashflow-accounts',
         permission: {
           subject: AbilitySubject.Cashflow,
-          ability: Cashflow_Abilities.Create,
+          ability: CashflowAction.Create,
         },
       },
       {
@@ -505,7 +505,7 @@ export default [
         href: '/cashflow-accounts',
         permission: {
           subject: AbilitySubject.Cashflow,
-          ability: Cashflow_Abilities.Create,
+          ability: CashflowAction.Create,
         },
       },
     ],
@@ -518,7 +518,7 @@ export default [
         href: '/expenses',
         permission: {
           subject: AbilitySubject.Expense,
-          ability: Expense_Abilities.View,
+          ability: ExpenseAction.View,
         },
       },
       {
@@ -526,14 +526,14 @@ export default [
         label: true,
         permission: {
           subject: AbilitySubject.Expense,
-          ability: Expense_Abilities.Create,
+          ability: ExpenseAction.Create,
         },
       },
       {
         divider: true,
         permission: {
           subject: AbilitySubject.Expense,
-          ability: Expense_Abilities.Create,
+          ability: ExpenseAction.Create,
         },
       },
       {
@@ -541,7 +541,7 @@ export default [
         href: '/expenses/new',
         permission: {
           subject: AbilitySubject.Expense,
-          ability: Expense_Abilities.Create,
+          ability: ExpenseAction.Create,
         },
       },
     ],
@@ -554,7 +554,7 @@ export default [
         href: '/financial-reports/balance-sheet',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_BALANCE_SHEET,
+          ability: ReportsAction.READ_BALANCE_SHEET,
         },
       },
       {
@@ -562,7 +562,7 @@ export default [
         href: '/financial-reports/trial-balance-sheet',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_TRIAL_BALANCE_SHEET,
+          ability: ReportsAction.READ_TRIAL_BALANCE_SHEET,
         },
       },
       {
@@ -570,7 +570,7 @@ export default [
         href: '/financial-reports/journal-sheet',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_JOURNAL,
+          ability: ReportsAction.READ_JOURNAL,
         },
       },
       {
@@ -578,7 +578,7 @@ export default [
         href: '/financial-reports/general-ledger',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_GENERAL_LEDGET,
+          ability: ReportsAction.READ_GENERAL_LEDGET,
         },
       },
       {
@@ -586,7 +586,7 @@ export default [
         href: '/financial-reports/profit-loss-sheet',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_PROFIT_LOSS,
+          ability: ReportsAction.READ_PROFIT_LOSS,
         },
       },
       {
@@ -594,7 +594,7 @@ export default [
         href: '/financial-reports/cash-flow',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_CASHFLOW_ACCOUNT_TRANSACTION,
+          ability: ReportsAction.READ_CASHFLOW_ACCOUNT_TRANSACTION,
         },
       },
       {
@@ -602,7 +602,7 @@ export default [
         href: '/financial-reports/receivable-aging-summary',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_AR_AGING_SUMMARY,
+          ability: ReportsAction.READ_AR_AGING_SUMMARY,
         },
       },
       {
@@ -610,7 +610,7 @@ export default [
         href: '/financial-reports/payable-aging-summary',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_AP_AGING_SUMMARY,
+          ability: ReportsAction.READ_AP_AGING_SUMMARY,
         },
       },
       {
@@ -619,27 +619,27 @@ export default [
         permission: [
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_PURCHASES_BY_ITEMS,
+            ability: ReportsAction.READ_PURCHASES_BY_ITEMS,
           },
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_SALES_BY_ITEMS,
+            ability: ReportsAction.READ_SALES_BY_ITEMS,
           },
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_CUSTOMERS_TRANSACTIONS,
+            ability: ReportsAction.READ_CUSTOMERS_TRANSACTIONS,
           },
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_VENDORS_TRANSACTIONS,
+            ability: ReportsAction.READ_VENDORS_TRANSACTIONS,
           },
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_CUSTOMERS_SUMMARY_BALANCE,
+            ability: ReportsAction.READ_CUSTOMERS_SUMMARY_BALANCE,
           },
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_VENDORS_SUMMARY_BALANCE,
+            ability: ReportsAction.READ_VENDORS_SUMMARY_BALANCE,
           },
         ],
       },
@@ -648,27 +648,27 @@ export default [
         permission: [
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_PURCHASES_BY_ITEMS,
+            ability: ReportsAction.READ_PURCHASES_BY_ITEMS,
           },
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_SALES_BY_ITEMS,
+            ability: ReportsAction.READ_SALES_BY_ITEMS,
           },
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_CUSTOMERS_TRANSACTIONS,
+            ability: ReportsAction.READ_CUSTOMERS_TRANSACTIONS,
           },
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_VENDORS_TRANSACTIONS,
+            ability: ReportsAction.READ_VENDORS_TRANSACTIONS,
           },
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_CUSTOMERS_SUMMARY_BALANCE,
+            ability: ReportsAction.READ_CUSTOMERS_SUMMARY_BALANCE,
           },
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_VENDORS_SUMMARY_BALANCE,
+            ability: ReportsAction.READ_VENDORS_SUMMARY_BALANCE,
           },
         ],
       },
@@ -677,7 +677,7 @@ export default [
         href: '/financial-reports/purchases-by-items',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_PURCHASES_BY_ITEMS,
+          ability: ReportsAction.READ_PURCHASES_BY_ITEMS,
         },
       },
       {
@@ -685,7 +685,7 @@ export default [
         href: '/financial-reports/sales-by-items',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_SALES_BY_ITEMS,
+          ability: ReportsAction.READ_SALES_BY_ITEMS,
         },
       },
       {
@@ -693,7 +693,7 @@ export default [
         href: '/financial-reports/transactions-by-customers',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_CUSTOMERS_TRANSACTIONS,
+          ability: ReportsAction.READ_CUSTOMERS_TRANSACTIONS,
         },
       },
       {
@@ -701,7 +701,7 @@ export default [
         href: '/financial-reports/transactions-by-vendors',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_VENDORS_TRANSACTIONS,
+          ability: ReportsAction.READ_VENDORS_TRANSACTIONS,
         },
       },
       {
@@ -709,7 +709,7 @@ export default [
         href: '/financial-reports/customers-balance-summary',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_CUSTOMERS_SUMMARY_BALANCE,
+          ability: ReportsAction.READ_CUSTOMERS_SUMMARY_BALANCE,
         },
       },
       {
@@ -717,7 +717,7 @@ export default [
         href: '/financial-reports/vendors-balance-summary',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_VENDORS_SUMMARY_BALANCE,
+          ability: ReportsAction.READ_VENDORS_SUMMARY_BALANCE,
         },
       },
       {
@@ -726,11 +726,11 @@ export default [
         permission: [
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_INVENTORY_ITEM_DETAILS,
+            ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
           },
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_INVENTORY_VALUATION_SUMMARY,
+            ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
           },
         ],
       },
@@ -739,11 +739,11 @@ export default [
         permission: [
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_INVENTORY_ITEM_DETAILS,
+            ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
           },
           {
             subject: AbilitySubject.Report,
-            ability: Report_Abilities.READ_INVENTORY_VALUATION_SUMMARY,
+            ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
           },
         ],
       },
@@ -752,7 +752,7 @@ export default [
         href: '/financial-reports/inventory-item-details',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_INVENTORY_ITEM_DETAILS,
+          ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
         },
       },
       {
@@ -760,7 +760,7 @@ export default [
         href: '/financial-reports/inventory-valuation',
         permission: {
           subject: AbilitySubject.Report,
-          ability: Report_Abilities.READ_INVENTORY_VALUATION_SUMMARY,
+          ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
         },
       },
     ],

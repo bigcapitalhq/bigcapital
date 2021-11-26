@@ -12,10 +12,7 @@ import {
   MenuDivider,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import {
-  Expense_Abilities,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { ExpenseAction, AbilitySubject } from '../../../common/abilityOption';
 import {
   FormatDateCell,
   FormattedMessage as T,
@@ -58,7 +55,7 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <Can I={Expense_Abilities.Edit} a={AbilitySubject.Expense}>
+      <Can I={ExpenseAction.Edit} a={AbilitySubject.Expense}>
         <MenuDivider />
         <If condition={!original.is_published}>
           <MenuItem
@@ -68,14 +65,14 @@ export function ActionsMenu({
           />
         </If>
       </Can>
-      <Can I={Expense_Abilities.Edit} a={AbilitySubject.Expense}>
+      <Can I={ExpenseAction.Edit} a={AbilitySubject.Expense}>
         <MenuItem
           icon={<Icon icon="pen-18" />}
           text={intl.get('edit_expense')}
           onClick={safeCallback(onEdit, original)}
         />
       </Can>
-      <Can I={Expense_Abilities.Delete} a={AbilitySubject.Expense}>
+      <Can I={ExpenseAction.Delete} a={AbilitySubject.Expense}>
         <MenuItem
           icon={<Icon icon="trash-16" iconSize={16} />}
           text={intl.get('delete_expense')}

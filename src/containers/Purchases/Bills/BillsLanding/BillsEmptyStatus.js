@@ -3,10 +3,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
 import { Can, FormattedMessage as T } from 'components';
-import {
-  Bill_Abilities,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { BillAction, AbilitySubject } from '../../../../common/abilityOption';
 
 export default function BillsEmptyStatus() {
   const history = useHistory();
@@ -21,7 +18,7 @@ export default function BillsEmptyStatus() {
       }
       action={
         <>
-          <Can I={Bill_Abilities.Create} a={AbilitySubject.Bill}>
+          <Can I={BillAction.Create} a={AbilitySubject.Bill}>
             <Button
               intent={Intent.PRIMARY}
               large={true}

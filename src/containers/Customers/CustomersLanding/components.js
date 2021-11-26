@@ -5,10 +5,7 @@ import clsx from 'classnames';
 import intl from 'react-intl-universal';
 
 import { Can, Icon, Money, If, AvaterCell } from 'components';
-import {
-  Customer_Abilities,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { CustomerAction, AbilitySubject } from '../../../common/abilityOption';
 
 import { safeCallback } from 'utils';
 
@@ -33,7 +30,7 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <Can I={Customer_Abilities.Edit} a={AbilitySubject.Customer}>
+      <Can I={CustomerAction.Edit} a={AbilitySubject.Customer}>
         <MenuDivider />
 
         <MenuItem
@@ -42,14 +39,14 @@ export function ActionsMenu({
           onClick={safeCallback(onEdit, original)}
         />
       </Can>
-      <Can I={Customer_Abilities.Create} a={AbilitySubject.Customer}>
+      <Can I={CustomerAction.Create} a={AbilitySubject.Customer}>
         <MenuItem
           icon={<Icon icon="duplicate-16" />}
           text={intl.get('duplicate')}
           onClick={safeCallback(onDuplicate, original)}
         />
       </Can>
-      <Can I={Customer_Abilities.Edit} a={AbilitySubject.Customer}>
+      <Can I={CustomerAction.Edit} a={AbilitySubject.Customer}>
         <If condition={original.active}>
           <MenuItem
             text={intl.get('inactivate_customer')}
@@ -65,7 +62,7 @@ export function ActionsMenu({
           />
         </If>
       </Can>
-      <Can I={Customer_Abilities.Delete} a={AbilitySubject.Customer}>
+      <Can I={CustomerAction.Delete} a={AbilitySubject.Customer}>
         <MenuItem
           icon={<Icon icon="trash-16" iconSize={16} />}
           text={intl.get('delete_customer')}

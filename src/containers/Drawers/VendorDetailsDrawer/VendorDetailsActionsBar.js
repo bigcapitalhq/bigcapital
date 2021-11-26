@@ -23,9 +23,9 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { Can, Icon, FormattedMessage as T } from 'components';
 import {
   AbilitySubject,
-  Invoice_Abilities,
-  Payment_Made_Abilities,
-  Vendor_Abilities,
+  SaleInvoiceAction,
+  PaymentMadeAction,
+  VendorAction,
 } from '../../../common/abilityOption';
 import { safeCallback, compose } from 'utils';
 
@@ -69,16 +69,13 @@ function VendorDetailsActionsBar({
         <Popover
           content={
             <Menu>
-              <Can I={Invoice_Abilities.Create} a={AbilitySubject.Invoice}>
+              <Can I={SaleInvoiceAction.Create} a={AbilitySubject.Invoice}>
                 <MenuItem
                   text={<T id={'vendor.drawer.action.new_invoice'} />}
                   onClick={handleNewInvoiceClick}
                 />
               </Can>
-              <Can
-                I={Payment_Made_Abilities.Create}
-                a={AbilitySubject.PaymentMade}
-              >
+              <Can I={PaymentMadeAction.Create} a={AbilitySubject.PaymentMade}>
                 <MenuItem
                   text={<T id={'vendor.drawer.action.new_payment'} />}
                   onClick={handleNewPaymentClick}
@@ -97,7 +94,7 @@ function VendorDetailsActionsBar({
           />
         </Popover>
         <NavbarDivider />
-        <Can I={Vendor_Abilities.Edit} a={AbilitySubject.Vendor}>
+        <Can I={VendorAction.Edit} a={AbilitySubject.Vendor}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
@@ -106,7 +103,7 @@ function VendorDetailsActionsBar({
           />
           <NavbarDivider />
         </Can>
-        <Can I={Vendor_Abilities.Delete} a={AbilitySubject.Vendor}>
+        <Can I={VendorAction.Delete} a={AbilitySubject.Vendor}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}

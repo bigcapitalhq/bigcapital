@@ -3,10 +3,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
 import { Can, FormattedMessage as T } from 'components';
-import {
-  AbilitySubject,
-  Customer_Abilities,
-} from '../../../common/abilityOption';
+import { AbilitySubject, CustomerAction } from '../../../common/abilityOption';
 
 export default function CustomersEmptyStatus() {
   const history = useHistory();
@@ -21,7 +18,7 @@ export default function CustomersEmptyStatus() {
       }
       action={
         <>
-          <Can I={Customer_Abilities.Create} a={AbilitySubject.Customer}>
+          <Can I={CustomerAction.Create} a={AbilitySubject.Customer}>
             <Button
               intent={Intent.PRIMARY}
               large={true}

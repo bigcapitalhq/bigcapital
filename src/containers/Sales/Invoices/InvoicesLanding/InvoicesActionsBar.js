@@ -20,7 +20,7 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import { Can, If, DashboardActionViewsList } from 'components';
 import {
-  Invoice_Abilities,
+  SaleInvoiceAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -88,7 +88,7 @@ function InvoiceActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Can I={Invoice_Abilities.Create} a={AbilitySubject.Invoice}>
+        <Can I={SaleInvoiceAction.Create} a={AbilitySubject.Invoice}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus'} />}

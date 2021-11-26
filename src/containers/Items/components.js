@@ -16,8 +16,8 @@ import { FormattedMessage as T, Icon, Money, If, Can } from 'components';
 import { isBlank, safeCallback } from 'utils';
 import {
   AbilitySubject,
-  Item_Abilities,
-  Inventory_Adjustment_Abilities,
+  ItemAction,
+  InventoryAdjustmentAction,
 } from '../../common/abilityOption';
 
 /**
@@ -95,7 +95,7 @@ export function ItemsActionMenuList({
         text={<T id={'view_details'} />}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <Can I={Item_Abilities.Edit} a={AbilitySubject.Item}>
+      <Can I={ItemAction.Edit} a={AbilitySubject.Item}>
         <MenuDivider />
         <MenuItem
           icon={<Icon icon="pen-18" />}
@@ -103,14 +103,14 @@ export function ItemsActionMenuList({
           onClick={safeCallback(onEditItem, original)}
         />
       </Can>
-      <Can I={Item_Abilities.Create} a={AbilitySubject.Item}>
+      <Can I={ItemAction.Create} a={AbilitySubject.Item}>
         <MenuItem
           icon={<Icon icon="duplicate-16" />}
           text={intl.get('duplicate')}
           onClick={safeCallback(onDuplicate, original)}
         />
       </Can>
-      <Can I={Item_Abilities.Edit} a={AbilitySubject.Item}>
+      <Can I={ItemAction.Edit} a={AbilitySubject.Item}>
         <If condition={original.active}>
           <MenuItem
             text={intl.get('inactivate_item')}
@@ -128,8 +128,8 @@ export function ItemsActionMenuList({
         </If>
       </Can>
       <Can
-        I={Inventory_Adjustment_Abilities.Edit}
-        a={AbilitySubject.Inventory_Adjustment}
+        I={InventoryAdjustmentAction.Edit}
+        a={AbilitySubject.InventoryAdjustment}
       >
         <If condition={original.type === 'inventory'}>
           <MenuItem
@@ -139,7 +139,7 @@ export function ItemsActionMenuList({
           />
         </If>
       </Can>
-      <Can I={Item_Abilities.Delete} a={AbilitySubject.Item}>
+      <Can I={ItemAction.Delete} a={AbilitySubject.Item}>
         <MenuItem
           text={intl.get('delete_item')}
           icon={<Icon icon="trash-16" iconSize={16} />}

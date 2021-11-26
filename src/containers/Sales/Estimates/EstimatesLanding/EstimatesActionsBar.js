@@ -30,7 +30,7 @@ import withSettings from 'containers/Settings/withSettings';
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useRefreshEstimates } from 'hooks/query/estimates';
 import {
-  Estimate_Abilities,
+  SaleEstimateAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -92,7 +92,7 @@ function EstimateActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Can I={Estimate_Abilities.Create} a={AbilitySubject.Estimate}>
+        <Can I={SaleEstimateAction.Create} a={AbilitySubject.Estimate}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus'} />}

@@ -1,11 +1,11 @@
 import intl from 'react-intl-universal';
 import {
   AbilitySubject,
-  Invoice_Abilities,
-  Customer_Abilities,
-  Vendor_Abilities,
-  Manual_Journal_Abilities,
-  Expense_Abilities,
+  SaleInvoiceAction,
+  CustomerAction,
+  VendorAction,
+  ManualJournalAction,
+  ExpenseAction,
 } from '../common/abilityOption';
 import { useAbilitiesFilter } from '../hooks';
 
@@ -15,7 +15,7 @@ export const getQuickNewActions = () => [
     name: intl.get('sale_invoice'),
     permission: {
       subject: AbilitySubject.Invoice,
-      ability: Invoice_Abilities.Create,
+      ability: SaleInvoiceAction.Create,
     },
   },
   {
@@ -23,7 +23,7 @@ export const getQuickNewActions = () => [
     name: intl.get('purchase_invoice'),
     permission: {
       subject: AbilitySubject.Invoice,
-      ability: Invoice_Abilities.Create,
+      ability: SaleInvoiceAction.Create,
     },
   },
   {
@@ -31,7 +31,7 @@ export const getQuickNewActions = () => [
     name: intl.get('manual_journal'),
     permission: {
       subject: AbilitySubject.ManualJournal,
-      ability: Manual_Journal_Abilities.Create,
+      ability: ManualJournalAction.Create,
     },
   },
   {
@@ -39,7 +39,7 @@ export const getQuickNewActions = () => [
     name: intl.get('expense'),
     permission: {
       subject: AbilitySubject.Expense,
-      ability: Expense_Abilities.Create,
+      ability: ExpenseAction.Create,
     },
   },
   {
@@ -47,7 +47,7 @@ export const getQuickNewActions = () => [
     name: intl.get('customer'),
     permission: {
       subject: AbilitySubject.Customer,
-      ability: Customer_Abilities.Create,
+      ability: CustomerAction.Create,
     },
   },
   {
@@ -55,7 +55,7 @@ export const getQuickNewActions = () => [
     name: intl.get('vendor'),
     permission: {
       subject: AbilitySubject.Vendor,
-      ability: Vendor_Abilities.Vendor,
+      ability: VendorAction.Vendor,
     },
   },
 ];

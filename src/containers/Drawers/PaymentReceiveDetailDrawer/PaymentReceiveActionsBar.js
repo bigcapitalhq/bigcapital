@@ -17,7 +17,10 @@ import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { Can, Icon, FormattedMessage as T, MoreMenuItems } from 'components';
-import { Payment_Receive_Abilities, AbilitySubject } from '../../../common/abilityOption';
+import {
+  PaymentReceiveAction,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 
 import { compose } from 'utils';
 
@@ -58,7 +61,7 @@ function PaymentReceiveActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Can I={Payment_Receive_Abilities.Edit} a={AbilitySubject.PaymentReceive}>
+        <Can I={PaymentReceiveAction.Edit} a={AbilitySubject.PaymentReceive}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
@@ -67,7 +70,7 @@ function PaymentReceiveActionsBar({
           />
           <NavbarDivider />
         </Can>
-        <Can I={Payment_Receive_Abilities.Delete} a={AbilitySubject.PaymentReceive}>
+        <Can I={PaymentReceiveAction.Delete} a={AbilitySubject.PaymentReceive}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}

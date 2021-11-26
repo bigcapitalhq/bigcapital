@@ -15,7 +15,7 @@ import { FormatDateCell, Money, Icon, Can } from 'components';
 import { safeCallback } from 'utils';
 import { CLASSES } from '../../../../common/classes';
 import {
-  Payment_Receive_Abilities,
+  PaymentReceiveAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 /**
@@ -32,7 +32,7 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, paymentReceive)}
       />
-      <Can I={Payment_Receive_Abilities.Edit} a={AbilitySubject.PaymentReceive}>
+      <Can I={PaymentReceiveAction.Edit} a={AbilitySubject.PaymentReceive}>
         <MenuDivider />
         <MenuItem
           icon={<Icon icon="pen-18" />}
@@ -40,7 +40,7 @@ export function ActionsMenu({
           onClick={safeCallback(onEdit, paymentReceive)}
         />
       </Can>
-      <Can I={Payment_Receive_Abilities.Delete} a={AbilitySubject.PaymentReceive}>
+      <Can I={PaymentReceiveAction.Delete} a={AbilitySubject.PaymentReceive}>
         <MenuItem
           text={intl.get('delete_payment_receive')}
           intent={Intent.DANGER}

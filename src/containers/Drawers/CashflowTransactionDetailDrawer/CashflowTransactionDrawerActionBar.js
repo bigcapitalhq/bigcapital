@@ -6,10 +6,7 @@ import { Can, FormattedMessage as T } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 import withAlertsActions from 'containers/Alert/withAlertActions';
-import {
-  AbilitySubject,
-  Cashflow_Abilities,
-} from '../../../common/abilityOption';
+import { AbilitySubject, CashflowAction } from '../../../common/abilityOption';
 import { compose } from 'utils';
 
 /**
@@ -27,7 +24,7 @@ function CashflowTransactionDrawerActionBar({
   };
 
   return (
-    <Can I={Cashflow_Abilities.Delete} a={AbilitySubject.Cashflow}>
+    <Can I={CashflowAction.Delete} a={AbilitySubject.Cashflow}>
       <DashboardActionsBar>
         <NavbarGroup>
           <Button

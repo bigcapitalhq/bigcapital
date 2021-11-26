@@ -24,11 +24,11 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { Can, Icon, FormattedMessage as T } from 'components';
 import {
   AbilitySubject,
-  Invoice_Abilities,
-  Estimate_Abilities,
-  Receipt_Abilities,
-  Payment_Receive_Abilities,
-  Customer_Abilities,
+  SaleInvoiceAction,
+  SaleEstimateAction,
+  SaleReceiptAction,
+  PaymentReceiveAction,
+  CustomerAction,
 } from '../../../common/abilityOption';
 import { compose } from 'utils';
 
@@ -81,19 +81,19 @@ function CustomerDetailsActionsBar({
         <Popover
           content={
             <Menu>
-              <Can I={Invoice_Abilities.Create} a={AbilitySubject.Invoice}>
+              <Can I={SaleInvoiceAction.Create} a={AbilitySubject.Invoice}>
                 <MenuItem
                   text={<T id={'customer.drawer.action.new_invoice'} />}
                   onClick={handleNewInvoiceClick}
                 />
               </Can>
-              <Can I={Estimate_Abilities.Create} a={AbilitySubject.Estimate}>
+              <Can I={SaleEstimateAction.Create} a={AbilitySubject.Estimate}>
                 <MenuItem
                   text={<T id={'customer.drawer.action.new_estimate'} />}
                   onClick={handleNewEstimateClick}
                 />
               </Can>
-              <Can I={Receipt_Abilities.Create} a={AbilitySubject.Receipt}>
+              <Can I={SaleReceiptAction.Create} a={AbilitySubject.Receipt}>
                 <MenuItem
                   text={<T id={'customer.drawer.action.new_receipt'} />}
                   onClick={handleNewReceiptClick}
@@ -101,7 +101,7 @@ function CustomerDetailsActionsBar({
               </Can>
 
               <Can
-                I={Payment_Receive_Abilities.Create}
+                I={PaymentReceiveAction.Create}
                 a={AbilitySubject.PaymentReceive}
               >
                 <MenuItem
@@ -123,7 +123,7 @@ function CustomerDetailsActionsBar({
         </Popover>
 
         <NavbarDivider />
-        <Can I={Customer_Abilities.Edit} a={AbilitySubject.Customer}>
+        <Can I={CustomerAction.Edit} a={AbilitySubject.Customer}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
@@ -132,7 +132,7 @@ function CustomerDetailsActionsBar({
           />
           <NavbarDivider />
         </Can>
-        <Can I={Customer_Abilities.Delete} a={AbilitySubject.Customer}>
+        <Can I={CustomerAction.Delete} a={AbilitySubject.Customer}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}

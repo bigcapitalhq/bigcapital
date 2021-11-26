@@ -11,7 +11,7 @@ import {
 import { Can, Icon, Money, If } from 'components';
 import intl from 'react-intl-universal';
 import { safeCallback } from 'utils';
-import { AbilitySubject, Account_Abilities } from '../../common/abilityOption';
+import { AbilitySubject, AccountAction } from '../../common/abilityOption';
 
 /**
  * Accounts table actions menu.
@@ -35,7 +35,7 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <Can I={Account_Abilities.Edit} a={AbilitySubject.Account}>
+      <Can I={AccountAction.Edit} a={AbilitySubject.Account}>
         <MenuDivider />
         <MenuItem
           icon={<Icon icon="pen-18" />}
@@ -50,7 +50,7 @@ export function ActionsMenu({
         />
         <MenuDivider />
       </Can>
-      <Can I={Account_Abilities.Edit} a={AbilitySubject.Account}>
+      <Can I={AccountAction.Edit} a={AbilitySubject.Account}>
         <If condition={original.active}>
           <MenuItem
             text={intl.get('inactivate_account')}
@@ -66,7 +66,7 @@ export function ActionsMenu({
           />
         </If>
       </Can>
-      <Can I={Account_Abilities.Edit} a={AbilitySubject.Account}>
+      <Can I={AccountAction.Edit} a={AbilitySubject.Account}>
         <MenuItem
           text={intl.get('delete_account')}
           icon={<Icon icon="trash-16" iconSize={16} />}

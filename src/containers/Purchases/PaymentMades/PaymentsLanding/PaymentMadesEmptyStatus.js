@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from 'components';
 import { Can, FormattedMessage as T } from 'components';
 import {
-  Payment_Made_Abilities,
+  PaymentMadeAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
@@ -21,7 +21,7 @@ export default function PaymentMadesEmptyStatus() {
       }
       action={
         <>
-          <Can I={Payment_Made_Abilities.Create} a={AbilitySubject.PaymentMade}>
+          <Can I={PaymentMadeAction.Create} a={AbilitySubject.PaymentMade}>
             <Button
               intent={Intent.PRIMARY}
               large={true}

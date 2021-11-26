@@ -31,7 +31,7 @@ import withAlertActions from 'containers/Alert/withAlertActions';
 import withAccountsTableActions from './withAccountsTableActions';
 import withSettings from '../Settings/withSettings';
 import withSettingsActions from '../Settings/withSettingsActions';
-import { Account_Abilities, AbilitySubject } from '../../common/abilityOption';
+import { AccountAction, AbilitySubject } from '../../common/abilityOption';
 
 import { compose } from 'utils';
 
@@ -119,7 +119,7 @@ function AccountsActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Can I={Account_Abilities.Create} a={AbilitySubject.Account}>
+        <Can I={AccountAction.Create} a={AbilitySubject.Account}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="plus" />}
@@ -187,7 +187,7 @@ function AccountsActionsBar({
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
-        <Can I={Account_Abilities.Edit} a={AbilitySubject.Account}>
+        <Can I={AccountAction.Edit} a={AbilitySubject.Account}>
           <Switch
             labelElement={<T id={'inactive'} />}
             defaultChecked={accountsInactiveMode}

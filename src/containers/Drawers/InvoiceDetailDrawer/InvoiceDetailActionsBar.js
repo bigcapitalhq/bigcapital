@@ -18,8 +18,8 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { If, Can, Icon, FormattedMessage as T } from 'components';
 import {
-  Invoice_Abilities,
-  Payment_Receive_Abilities,
+  SaleInvoiceAction,
+  PaymentReceiveAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
 
@@ -83,7 +83,7 @@ function InvoiceDetailActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Can I={Invoice_Abilities.Edit} a={AbilitySubject.Invoice}>
+        <Can I={SaleInvoiceAction.Edit} a={AbilitySubject.Invoice}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
@@ -93,7 +93,7 @@ function InvoiceDetailActionsBar({
 
           <NavbarDivider />
         </Can>
-        <Can I={Payment_Receive_Abilities.Create} a={AbilitySubject.PaymentReceive}>
+        <Can I={PaymentReceiveAction.Create} a={AbilitySubject.PaymentReceive}>
           <If condition={invoice.is_delivered && !invoice.is_fully_paid}>
             <Button
               className={Classes.MINIMAL}
@@ -104,7 +104,7 @@ function InvoiceDetailActionsBar({
           </If>
           <NavbarDivider />
         </Can>
-        <Can I={Invoice_Abilities.View} a={AbilitySubject.Invoice}>
+        <Can I={SaleInvoiceAction.View} a={AbilitySubject.Invoice}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="print-16" />}
@@ -112,7 +112,7 @@ function InvoiceDetailActionsBar({
             onClick={handlePrintInvoice}
           />
         </Can>
-        <Can I={Invoice_Abilities.Delete} a={AbilitySubject.Invoice}>
+        <Can I={SaleInvoiceAction.Delete} a={AbilitySubject.Invoice}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}
@@ -122,7 +122,7 @@ function InvoiceDetailActionsBar({
           />
           <NavbarDivider />
         </Can>
-        <Can I={Invoice_Abilities.BadDebt} a={AbilitySubject.Invoice}>
+        <Can I={SaleInvoiceAction.Writeoff} a={AbilitySubject.Invoice}>
           <BadDebtMenuItem
             payload={{
               onBadDebt: handleBadDebtInvoice,

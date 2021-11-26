@@ -27,7 +27,7 @@ import withPaymentReceives from './withPaymentReceives';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withSettings from 'containers/Settings/withSettings';
 import {
-  Payment_Receive_Abilities,
+  PaymentReceiveAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 import { compose } from 'utils';
@@ -88,7 +88,7 @@ function PaymentReceiveActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Can I={Payment_Receive_Abilities.Create} a={AbilitySubject.PaymentReceive}>
+        <Can I={PaymentReceiveAction.Create} a={AbilitySubject.PaymentReceive}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus'} />}
