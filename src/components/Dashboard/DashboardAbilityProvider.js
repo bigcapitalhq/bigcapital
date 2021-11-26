@@ -15,7 +15,7 @@ export function DashboardAbilityProvider({ children }) {
   } = useDashboardMeta();
 
   // Ability instance.
-  const ability = new Ability([]);
+  const ability = new Ability(abilities);
 
   return (
     <AbilityContext.Provider value={ability}>

@@ -7,7 +7,6 @@ import {
 } from '../../hooks/query';
 import { useSplashLoading } from '../../hooks/state';
 import { useWatch, useWatchImmediate, useWhen } from '../../hooks';
-
 import { setCookie, getCookie } from '../../utils';
 
 /**
