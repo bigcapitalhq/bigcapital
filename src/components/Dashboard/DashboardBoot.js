@@ -1,5 +1,4 @@
 import React from 'react';
-import * as R from 'ramda';
 import {
   useAuthenticatedAccount,
   useCurrentOrganization,
@@ -10,9 +9,9 @@ import { useWatch, useWatchImmediate, useWhen } from '../../hooks';
 import { setCookie, getCookie } from '../../utils';
 
 /**
- * Boots dashboard meta.
+ * Dashboard meta async booting.
  */
-function useDashboardMetaBoot() {
+export function useDashboardMetaBoot() {
   const {
     data: dashboardMeta,
     isLoading: isDashboardMetaLoading,
@@ -20,7 +19,7 @@ function useDashboardMetaBoot() {
   } = useDashboardMeta();
 
   const [startLoading, stopLoading] = useSplashLoading();
- 
+
   useWatchImmediate((value) => {
     value && startLoading();
   }, isDashboardMetaLoading);
@@ -28,12 +27,26 @@ function useDashboardMetaBoot() {
   useWatchImmediate(() => {
     isDashboardMetaSuccess && stopLoading();
   }, isDashboardMetaSuccess);
+
+  return {
+    isLoading: isDashboardMetaLoading,
+  };
 }
 
 /**
  * Dashboard async booting.
+ * @returns {{ isLoading: boolean }}
  */
-export function DashboardBoot({ authenticatedUserId }) {
+export function useDashboardBoot() {
+  const { isLoading } = useDashboardMetaBoot();
+
+  return { isLoading };
+}
+
+/**
+ * Application async booting.
+ */
+export function useApplicationBoot() {
   // Fetches the current user's organization.
   const {
     isSuccess: isCurrentOrganizationSuccess,
@@ -44,8 +57,6 @@ export function DashboardBoot({ authenticatedUserId }) {
   // Authenticated user.
   const { isSuccess: isAuthUserSuccess, isLoading: isAuthUserLoading } =
     useAuthenticatedAccount();
-
-  useDashboardMetaBoot();
 
   // Initial locale cookie value.
   const localeCookie = getCookie('locale');
@@ -109,5 +120,8 @@ export function DashboardBoot({ authenticatedUserId }) {
       isBooted.current = true;
     },
   );
-  return null;
+
+  return {
+    isLoading: isOrgLoading || isAuthUserLoading,
+  };
 }
