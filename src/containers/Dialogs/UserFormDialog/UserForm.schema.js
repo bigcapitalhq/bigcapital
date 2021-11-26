@@ -9,7 +9,7 @@ const Schema = Yup.object().shape({
     .matches()
     .required()
     .label(intl.get('phone_number_')),
-  role_name: Yup.string().required().label(intl.get('roles.label.role_name_')),
+  role_id: Yup.string().required().label(intl.get('roles.label.role_name_')),
 });
 
 export const UserFormSchema = Schema;

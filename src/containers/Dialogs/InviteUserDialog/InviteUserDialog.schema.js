@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 
 const Schema = Yup.object().shape({
   email: Yup.string().email().required().label(intl.get('email')),
-  role_name: Yup.string().required().label(intl.get('roles.label.role_name_')),
+  role_id: Yup.string().required().label(intl.get('roles.label.role_name_')),
 });
 
 export const InviteUserFormSchema = Schema;

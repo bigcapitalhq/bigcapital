@@ -28,8 +28,6 @@ export function ActionsMenu({
   row: { original },
   payload: { onEdit, onInactivate, onActivate, onDelete, onResendInvitation },
 }) {
-  
-
   return (
     <Menu>
       <If condition={original.invite_accepted_at}>
@@ -78,7 +76,7 @@ export function ActionsMenu({
  */
 function StatusAccessor(user) {
   return !user.is_invite_accepted ? (
-    <Tag minimal={true} >
+    <Tag minimal={true}>
       <T id={'inviting'} />
     </Tag>
   ) : user.active ? (
@@ -111,8 +109,6 @@ function FullNameAccessor(user) {
 }
 
 export const useUsersListColumns = () => {
-  
-
   return React.useMemo(
     () => [
       {
@@ -134,11 +130,17 @@ export const useUsersListColumns = () => {
         width: 150,
       },
       {
-        id: 'phone_number',
-        Header: intl.get('phone_number'),
-        accessor: 'phone_number',
+        id: 'role_name',
+        Header: intl.get('roles.column.role_name'),
+        accessor: 'role.name',
         width: 120,
       },
+      // {
+      //   id: 'phone_number',
+      //   Header: intl.get('phone_number'),
+      //   accessor: 'phone_number',
+      //   width: 120,
+      // },
       {
         id: 'status',
         Header: 'Status',

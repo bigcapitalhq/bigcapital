@@ -24,7 +24,7 @@ function UserFormContent({
   closeDialog,
 }) {
   const { isSubmitting } = useFormikContext();
-  const { dialogName } = useUserFormContext();
+  const { dialogName, roles } = useUserFormContext();
 
   const handleClose = () => {
     closeDialog(dialogName);
@@ -89,24 +89,26 @@ function UserFormContent({
           )}
         </FastField>
         {/* ----------- Role name ----------- */}
-        <FastField name={'role_name'}>
+        <FastField name={'role_id'}>
           {({ form, field: { value }, meta: { error, touched } }) => (
             <FormGroup
               label={<T id={'roles.label.role_name'} />}
               labelInfo={<FieldRequiredHint />}
-              className={classNames('form-group--role_name', CLASSES.FILL)}
+              helperText={<ErrorMessage name="role_id" />}
+              className={classNames(CLASSES.FILL, 'form-group--role_name')}
               intent={inputIntent({ error, touched })}
             >
               <ListSelect
-                items={[]}
-                // onItemSelect={(item) => {
-                //   form.setFieldValue('role_name', item.role_id);
-                // }}
+                items={roles}
+                onItemSelect={({ id }) => {
+                  form.setFieldValue('role_id', id);
+                }}
                 selectedItem={value}
-                selectedItemProp={'role_id '}
-                // textProp={'role_name'}
-                // labelProp={'role_id '}
+                selectedItemProp={'id'}
+                textProp={'name'}
+                // labelProp={'id '}
                 popoverProps={{ minimal: true }}
+                intent={inputIntent({ error, touched })}
               />
             </FormGroup>
           )}

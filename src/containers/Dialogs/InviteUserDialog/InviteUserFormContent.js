@@ -19,12 +19,12 @@ function InviteUserFormContent({
   closeDialog,
 }) {
   const { isSubmitting } = useFormikContext();
-  const { isEditMode, dialogName } = useInviteUserFormContext();
+  const { isEditMode, dialogName, roles } = useInviteUserFormContext();
 
   const handleClose = () => {
     closeDialog(dialogName);
   };
-
+  console.log(roles, 'XX');
   return (
     <Form>
       <div className={CLASSES.DIALOG_BODY}>
@@ -46,27 +46,26 @@ function InviteUserFormContent({
           )}
         </FastField>
         {/* ----------- Role name ----------- */}
-        <FastField name={'role_name'}>
+        <FastField name={'role_id'}>
           {({ form, field: { value }, meta: { error, touched } }) => (
             <FormGroup
               label={<T id={'roles.label.role_name'} />}
               labelInfo={<FieldRequiredHint />}
-              helperText={<ErrorMessage name="role_name" />}
+              helperText={<ErrorMessage name="role_id" />}
               className={classNames(CLASSES.FILL, 'form-group--role_name')}
               intent={inputIntent({ error, touched })}
             >
               <ListSelect
-                items={[]}
-                // onItemSelect={(item) => {
-                //   form.setFieldValue('role_name', item.role_id);
-                // }}
+                items={roles}
+                onItemSelect={({ id }) => {
+                  form.setFieldValue('role_id', id);
+                }}
                 selectedItem={value}
-                selectedItemProp={'role_id '}
-                // textProp={'role_name'}
-                // labelProp={'role_id '}
+                selectedItemProp={'id'}
+                textProp={'name'}
+                // labelProp={'id '}
                 popoverProps={{ minimal: true }}
                 intent={inputIntent({ error, touched })}
-                // filterable={false}
               />
             </FormGroup>
           )}
