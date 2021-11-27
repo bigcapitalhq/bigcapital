@@ -8,9 +8,9 @@ import { useDashboardBoot } from './DashboardBoot';
 export default function DashboardProvider({ children }) {
   const { isLoading } = useDashboardBoot();
 
-  return (
-    <DashboardAbilityProvider>
-      {isLoading ? null : children}
-    </DashboardAbilityProvider>
-  );
+  // Avoid display any dashboard component before complete booting.
+  if (isLoading) {
+    return null;
+  }
+  return <DashboardAbilityProvider>{children}</DashboardAbilityProvider>;
 }

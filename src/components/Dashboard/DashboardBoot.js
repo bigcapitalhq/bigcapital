@@ -16,8 +16,9 @@ export function useDashboardMetaBoot() {
     data: dashboardMeta,
     isLoading: isDashboardMetaLoading,
     isSuccess: isDashboardMetaSuccess,
-  } = useDashboardMeta();
-
+  } = useDashboardMeta({
+    keepPreviousData: true,
+  });
   const [startLoading, stopLoading] = useSplashLoading();
 
   useWatchImmediate((value) => {
