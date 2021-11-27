@@ -80,11 +80,13 @@ function PaymentReceiveActionsBar({
           />
           <NavbarDivider />
         </Can>
-        <MoreMenuItems
-          payload={{
-            onNotifyViaSMS: handleNotifyViaSMS,
-          }}
-        />
+        <Can I={PaymentReceiveAction.NotifyBySms} a={AbilitySubject.PaymentReceive}>
+          <MoreMenuItems
+            payload={{
+              onNotifyViaSMS: handleNotifyViaSMS,
+            }}
+          />
+        </Can>
       </NavbarGroup>
     </DashboardActionsBar>
   );

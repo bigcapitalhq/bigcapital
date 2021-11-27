@@ -46,7 +46,7 @@ export const SaleInvoiceAction = {
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
-  Writeoff: 'Writeoff',
+  Writeoff: 'bad-debt',
   NotifyBySms: 'NotifyBySms',
 };
 

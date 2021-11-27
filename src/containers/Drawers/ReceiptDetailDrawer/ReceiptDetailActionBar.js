@@ -85,11 +85,13 @@ function ReceiptDetailActionBar({
           />
           <NavbarDivider />
         </Can>
-        <MoreMenuItems
-          payload={{
-            onNotifyViaSMS: handleNotifyViaSMS,
-          }}
-        />
+        <Can I={SaleReceiptAction.NotifyBySms} a={AbilitySubject.Receipt}>
+          <MoreMenuItems
+            payload={{
+              onNotifyViaSMS: handleNotifyViaSMS,
+            }}
+          />
+        </Can>
       </NavbarGroup>
     </DashboardActionsBar>
   );
