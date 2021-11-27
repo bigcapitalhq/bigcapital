@@ -1,14 +1,14 @@
 import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { isEmpty } from 'lodash';
 
-import { Icon, If } from 'components';
+import { Icon } from 'components';
 
 import { RESOURCES_TYPES } from 'common/resourcesTypes';
 import withDrawerActions from '../../Drawer/withDrawerActions';
 
 import { highlightText } from 'utils';
+import { AbilitySubject, PaymentMadeAction } from '../../../common/abilityOption';
 
 /**
  * Universal search bill item select action.
@@ -82,4 +82,8 @@ export const universalSearchPaymentMadeBind = () => ({
   selectItemAction: PaymentMadeUniversalSearchSelect,
   itemRenderer: PaymentMadeUniversalSearchItem,
   itemSelect: paymentMadeToSearch,
+  permission: {
+    ability: PaymentMadeAction.View,
+    subject: AbilitySubject.PaymentMade,
+  },
 });

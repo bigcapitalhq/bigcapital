@@ -1,6 +1,10 @@
 import intl from 'react-intl-universal';
 import { RESOURCES_TYPES } from 'common/resourcesTypes';
 import withDrawerActions from '../Drawer/withDrawerActions';
+import {
+  AbilitySubject,
+  ManualJournalAction,
+} from '../../common/abilityOption';
 
 /**
  * Universal search manual journal item select action.
@@ -44,4 +48,8 @@ export const universalSearchJournalBind = () => ({
   optionItemLabel: intl.get('manual_journals'),
   selectItemAction: JournalUniversalSearchSelectAction,
   itemSelect: manualJournalsToSearch,
+  permission: {
+    ability: ManualJournalAction.View,
+    subject: AbilitySubject.ManualJournal,
+  },
 });

@@ -1,4 +1,5 @@
 import intl from 'react-intl-universal';
+import { AbilitySubject, CustomerAction } from '../../common/abilityOption';
 
 import { RESOURCES_TYPES } from '../../common/resourcesTypes';
 import withDrawerActions from '../Drawer/withDrawerActions';
@@ -42,4 +43,8 @@ export const universalSearchCustomerBind = () => ({
   optionItemLabel: intl.get('customers'),
   selectItemAction: CustomerUniversalSearchSelectAction,
   itemSelect: customersToSearch,
+  permission: {
+    ability: CustomerAction.View,
+    subject: AbilitySubject.Customer,
+  },
 });

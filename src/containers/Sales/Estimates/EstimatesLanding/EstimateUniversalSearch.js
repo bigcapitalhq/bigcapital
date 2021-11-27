@@ -5,6 +5,8 @@ import intl from 'react-intl-universal';
 import { Choose, T, Icon } from 'components';
 
 import { RESOURCES_TYPES } from "common/resourcesTypes";
+import { AbilitySubject, SaleEstimateAction } from '../../../../common/abilityOption';
+
 import withDrawerActions from "../../../Drawer/withDrawerActions";
 
 /**
@@ -110,5 +112,9 @@ export const universalSearchEstimateBind = () => ({
   optionItemLabel: intl.get('estimates'),
   selectItemAction: EstimateUniversalSearchSelect,
   itemRenderer: EstimateUniversalSearchItem,
-  itemSelect: transformEstimatesToSearch
+  itemSelect: transformEstimatesToSearch,
+  permission: {
+    ability: SaleEstimateAction.View,
+    subject: AbilitySubject.Estimate,
+  },
 });

@@ -1,6 +1,9 @@
 import intl from 'react-intl-universal';
-import { RESOURCES_TYPES } from '../../common/resourcesTypes';
+
 import withDrawerActions from '../Drawer/withDrawerActions';
+
+import { RESOURCES_TYPES } from '../../common/resourcesTypes';
+import { AbilitySubject, ItemAction } from '../../common/abilityOption';
 
 /**
  * Item univrsal search item select action.
@@ -46,4 +49,8 @@ export const universalSearchItemBind = () => ({
   optionItemLabel: intl.get('items'),
   selectItemAction: ItemUniversalSearchSelectAction,
   itemSelect: transfromItemsToSearch,
+  permission: {
+    ability: ItemAction.View,
+    subject: AbilitySubject.Item,
+  },
 });

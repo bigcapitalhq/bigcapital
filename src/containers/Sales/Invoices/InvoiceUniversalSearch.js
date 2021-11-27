@@ -3,10 +3,13 @@ import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
 
 import { T, Choose, Icon } from 'components';
-
 import { highlightText } from 'utils';
 
 import { RESOURCES_TYPES } from 'common/resourcesTypes';
+import {
+  AbilitySubject,
+  SaleInvoiceAction,
+} from '../../../common/abilityOption';
 import withDrawerActions from '../../Drawer/withDrawerActions';
 
 /**
@@ -118,4 +121,8 @@ export const universalSearchInvoiceBind = () => ({
   selectItemAction: InvoiceUniversalSearchSelect,
   itemRenderer: InvoiceUniversalSearchItem,
   itemSelect: transformInvoicesToSearch,
+  permission: {
+    ability: SaleInvoiceAction.View,
+    subject: AbilitySubject.Invoice,
+  },
 });

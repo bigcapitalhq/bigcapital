@@ -2,13 +2,17 @@ import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { RESOURCES_TYPES } from "../../../common/resourcesTypes";
-import withDrawerActions from "../../Drawer/withDrawerActions";
+import { RESOURCES_TYPES } from '../../../common/resourcesTypes';
+import withDrawerActions from '../../Drawer/withDrawerActions';
 import { highlightText } from 'utils';
 import { Icon } from 'components';
+import {
+  AbilitySubject,
+  PaymentReceiveAction,
+} from '../../../common/abilityOption';
 
 /**
- * Payment receive universal search item select action. 
+ * Payment receive universal search item select action.
  */
 function PaymentReceiveUniversalSearchSelectComponent({
   // #ownProps
@@ -19,7 +23,9 @@ function PaymentReceiveUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.PAYMENT_RECEIVE) {
-    openDrawer('payment-receive-detail-drawer', { paymentReceiveId: resourceId });
+    openDrawer('payment-receive-detail-drawer', {
+      paymentReceiveId: resourceId,
+    });
   }
   return null;
 }
@@ -59,7 +65,7 @@ export function PaymentReceiveUniversalSearchItem(
 /**
  * Transformes payment receives to search.
  */
- const paymentReceivesToSearch = (payment) => ({
+const paymentReceivesToSearch = (payment) => ({
   id: payment.id,
   text: payment.customer.display_name,
   subText: payment.formatted_payment_date,
@@ -70,10 +76,14 @@ export function PaymentReceiveUniversalSearchItem(
 /**
  * Binds universal search payment receive configure.
  */
- export const universalSearchPaymentReceiveBind = () => ({
+export const universalSearchPaymentReceiveBind = () => ({
   resourceType: RESOURCES_TYPES.PAYMENT_RECEIVE,
   optionItemLabel: intl.get('payment_receives'),
   selectItemAction: PaymentReceiveUniversalSearchSelect,
   itemRenderer: PaymentReceiveUniversalSearchItem,
   itemSelect: paymentReceivesToSearch,
+  permission: {
+    ability: PaymentReceiveAction.View,
+    subject: AbilitySubject.PaymentReceive,
+  },
 });
