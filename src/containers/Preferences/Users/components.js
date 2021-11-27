@@ -131,7 +131,7 @@ export const useUsersListColumns = () => {
       },
       {
         id: 'role_name',
-        Header: intl.get('roles.column.role_name'),
+        Header: intl.get('users.column.role_name'),
         accessor: 'role.name',
         width: 120,
       },
@@ -143,7 +143,7 @@ export const useUsersListColumns = () => {
       // },
       {
         id: 'status',
-        Header: 'Status',
+        Header: intl.get('status'),
         accessor: StatusAccessor,
         width: 80,
         className: 'status',

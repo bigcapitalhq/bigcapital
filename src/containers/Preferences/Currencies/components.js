@@ -67,7 +67,7 @@ export function useCurrenciesTableColumns() {
         width: 120,
       },
       {
-        Header: 'Currency sign',
+        Header: intl.get('currency_sign'),
         width: 120,
         accessor: 'currency_sign'
       },
