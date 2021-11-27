@@ -1494,5 +1494,7 @@
   "roles.permission_schema.upload_message":"تم تحديث دور المستخدم بنجاح.",
   "roles.permission_schema.delete.alert_message":"تم حذف دور المستخدم بنجاح. ",
   "roles.permission_schema.once_delete_this_role_you_will_able_to_restore_it":"بمجرد حذف دور المستخدم ، لن تتمكن من استعادتها لاحقًا. هل أنت متأكد أنك تريد حذف هذا الدور؟",
-  "users.column.role_name":"دور المستخدم"
+  "users.column.role_name":"دور المستخدم",
+  "roles.error.you_cannot_edit_predefined_roles":"لا يمكنك تعديل أدوار المستخدم المحددة مسبقا.",
+  "roles.error.you_cannot_delete_predefined_roles":"لا يمكنك حذف أدوار المستخدم المحددة مسبقا"
 }

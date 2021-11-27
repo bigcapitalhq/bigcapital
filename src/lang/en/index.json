@@ -1483,5 +1483,7 @@
   "roles.permission_schema.upload_message":"The given role has been updated successfully.",
   "roles.permission_schema.delete.alert_message":"The given role has been deleted successfully.",
   "roles.permission_schema.once_delete_this_role_you_will_able_to_restore_it":"Once you delete this role, you won't be able to restore it later. Are you sure you want to delete this role?",
-  "users.column.role_name":"Role Name"
+  "users.column.role_name":"Role Name",
+  "roles.error.you_cannot_edit_predefined_roles":"You cannot edit predefined roles.",
+  "roles.error.you_cannot_delete_predefined_roles":"You cannot delete predefined roles."
 }

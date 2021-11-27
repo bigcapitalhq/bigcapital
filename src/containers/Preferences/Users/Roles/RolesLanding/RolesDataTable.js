@@ -1,9 +1,10 @@
 import React from 'react';
+import { Intent, Tag } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 
 import intl from 'react-intl-universal';
 
-import { DataTable } from 'components';
+import { DataTable, Choose, AppToaster } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 
 import { useRolesTableColumns, ActionsMenu } from './components';
@@ -26,12 +27,30 @@ function RolesDataTable({
 
   const { roles, isRolesFetching, isRolesLoading } = useRolesContext();
 
-  const handleDeleteRole = ({ id }) => {
-    openAlert('role-delete', { roleId: id });
+  const handleDeleteRole = ({ id, predefined }) => {
+    if (predefined) {
+      AppToaster.show({
+        message: intl.get('roles.error.you_cannot_delete_predefined_roles'),
+        intent: Intent.DANGER,
+      });
+    } else {
+      openAlert('role-delete', { roleId: id });
+    }
   };
 
-  const handleEditRole = ({ id }) => {
-    history.push(`/preferences/roles/${id}`);
+  const handleEditRole = ({ id, predefined }) => {
+    if (predefined) {
+      {
+        AppToaster.show({
+          message: intl.get('roles.error.you_cannot_edit_predefined_roles'),
+          intent: Intent.DANGER,
+        });
+      }
+    } else {
+      {
+        history.push(`/preferences/roles/${id}`);
+      }
+    }
   };
 
   return (
