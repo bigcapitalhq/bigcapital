@@ -405,14 +405,14 @@ export default [
           ability: ManualJournalAction.View,
         },
       },
-      {
-        text: <T id={'sidebar.transactions_locaking'} />,
-        href: '/transactions-locking',
-        permission: {
-          subject: AbilitySubject.ManualJournal,
-          ability: ManualJournalAction.TransactionLocking,
-        },
-      },
+      // {
+      //   text: <T id={'sidebar.transactions_locaking'} />,
+      //   href: '/transactions-locking',
+      //   permission: {
+      //     subject: AbilitySubject.ManualJournal,
+      //     ability: ManualJournalAction.TransactionLocking,
+      //   },
+      // },
       {
         text: <T id={'exchange_rate'} />,
         href: '/exchange-rates',
