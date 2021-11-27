@@ -25,27 +25,27 @@ function RolesFormProvider({ roleId, ...props }) {
   const { mutateAsync: editRolePermissionMutate } =
     useEditRolePermissionSchema();
 
+  // Retrieve permissions schema.
   const {
     data: permissionsSchema,
     isLoading: isPermissionsSchemaLoading,
     isFetching: isPermissionsSchemaFetching,
   } = usePermissionsSchema();
 
-  const { data: permission, isLoading: isPermissionLoading } =
+  const { data: role, isLoading: isPermissionLoading } =
     useRolePermission(roleId, {
       enabled: !!roleId,
     });
 
+  // Detarmines whether the new or edit mode.
   const isNewMode = !roleId;
-
-  const permissionSchema = transformToObject(permission);
 
   // Provider state.
   const provider = {
     isNewMode,
     roleId,
+    role,
     permissionsSchema,
-    permissionSchema,
     isPermissionsSchemaLoading,
     isPermissionsSchemaFetching,
     createRolePermissionMutate,

@@ -87,9 +87,7 @@ export function useRolePermission(role_id, props, requestProps) {
     { method: 'get', url: `roles/${role_id}`, ...requestProps },
     {
       select: (res) => res.data.role,
-      defaultData: {
-        permission: [],
-      },
+      defaultData: {},
       ...props,
     },
   );

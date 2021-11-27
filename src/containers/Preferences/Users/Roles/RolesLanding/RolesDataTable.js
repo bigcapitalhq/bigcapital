@@ -1,10 +1,10 @@
 import React from 'react';
-import { Intent, Tag } from '@blueprintjs/core';
+import { Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
-import { DataTable, Choose, AppToaster } from 'components';
+import { DataTable, AppToaster } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 
 import { useRolesTableColumns, ActionsMenu } from './components';
@@ -23,10 +23,13 @@ function RolesDataTable({
   // History context.
   const history = useHistory();
 
+  // Retrieve roles table columns
   const columns = useRolesTableColumns();
 
+  // Roles table context.
   const { roles, isRolesFetching, isRolesLoading } = useRolesContext();
 
+  // handles delete the given role.
   const handleDeleteRole = ({ id, predefined }) => {
     if (predefined) {
       AppToaster.show({
@@ -37,24 +40,20 @@ function RolesDataTable({
       openAlert('role-delete', { roleId: id });
     }
   };
-
+  // Handles the edit of the given role.
   const handleEditRole = ({ id, predefined }) => {
     if (predefined) {
-      {
-        AppToaster.show({
-          message: intl.get('roles.error.you_cannot_edit_predefined_roles'),
-          intent: Intent.DANGER,
-        });
-      }
+      AppToaster.show({
+        message: intl.get('roles.error.you_cannot_edit_predefined_roles'),
+        intent: Intent.DANGER,
+      });
     } else {
-      {
-        history.push(`/preferences/roles/${id}`);
-      }
+      history.push(`/preferences/roles/${id}`);
     }
   };
 
   return (
-    <DataTable
+    <RolesTable
       columns={columns}
       data={roles}
       loading={isRolesLoading}
@@ -69,5 +68,11 @@ function RolesDataTable({
     />
   );
 }
+
+const RolesTable = styled(DataTable)`
+  .table .tr {
+    min-height: 42px;
+  }
+`;
 
 export default compose(withAlertsActions)(RolesDataTable);

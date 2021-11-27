@@ -9,8 +9,7 @@ const RolesListContext = React.createContext();
  * Roles list provider.
  */
 function RolesListProvider({ ...props }) {
-
-   // fetch roles list.
+  // Fetch roles list.
   const {
     data: roles,
     isFetching: isRolesFetching,
