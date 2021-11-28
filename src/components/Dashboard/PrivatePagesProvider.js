@@ -1,31 +1,15 @@
 import React from 'react';
-import * as R from 'ramda';
 
-import { AuthenticatedUser } from './AuthenticatedUser';
-import { DashboardBoot } from '../../components';
-
-import withDashboard from '../../containers/Dashboard/withDashboard';
+import { useApplicationBoot } from '../../components';
 
 /**
  * Private pages provider.
  */
-function PrivatePagesProviderComponent({
-  splashScreenCompleted,
-
+export function PrivatePagesProvider({
   // #ownProps
   children,
 }) {
-  return (
-    <AuthenticatedUser>
-      <DashboardBoot />
+  const { isLoading } = useApplicationBoot();
 
-      {splashScreenCompleted ? children : null}
-    </AuthenticatedUser>
-  );
+  return <React.Fragment>{!isLoading ? children : null}</React.Fragment>;
 }
-
-export const PrivatePagesProvider = R.compose(
-  withDashboard(({ splashScreenCompleted }) => ({
-    splashScreenCompleted,
-  })),
-)(PrivatePagesProviderComponent);

@@ -7,6 +7,7 @@ import { T, Icon, Choose, If } from 'components';
 
 import { RESOURCES_TYPES } from 'common/resourcesTypes';
 import withDrawerActions from '../../Drawer/withDrawerActions';
+import { AbilitySubject, BillAction } from '../../../common/abilityOption';
 
 /**
  * Universal search bill item select action.
@@ -116,4 +117,8 @@ export const universalSearchBillBind = () => ({
   selectItemAction: BillUniversalSearchSelect,
   itemRenderer: BillUniversalSearchItem,
   itemSelect: billsToSearch,
+  permission: {
+    ability: BillAction.View,
+    subject: AbilitySubject.Bill,
+  },
 });

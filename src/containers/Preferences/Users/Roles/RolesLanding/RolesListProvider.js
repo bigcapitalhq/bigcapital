@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
-// import {} from 'hooks/query';
+import { useRoles } from 'hooks/query';
 
 const RolesListContext = React.createContext();
 
@@ -9,8 +9,19 @@ const RolesListContext = React.createContext();
  * Roles list provider.
  */
 function RolesListProvider({ ...props }) {
+  // Fetch roles list.
+  const {
+    data: roles,
+    isFetching: isRolesFetching,
+    isLoading: isRolesLoading,
+  } = useRoles();
+
   // Provider state.
-  const provider = {};
+  const provider = {
+    roles,
+    isRolesFetching,
+    isRolesLoading,
+  };
   return (
     <div
       className={classNames(

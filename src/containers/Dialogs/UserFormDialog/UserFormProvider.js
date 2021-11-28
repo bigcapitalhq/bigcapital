@@ -1,5 +1,10 @@
 import React, { createContext, useContext } from 'react';
-import { useEditUser, useUser } from 'hooks/query';
+import {
+  useEditUser,
+  useUser,
+  useRoles,
+  useAuthenticatedAccount,
+} from 'hooks/query';
 
 import { DialogContent } from 'components';
 
@@ -17,10 +22,21 @@ function UserFormProvider({ userId, dialogName, ...props }) {
     enabled: !!userId,
   });
 
+  // fetch roles list.
+  const { data: roles, isLoading: isRolesLoading } = useRoles();
+
+  // Retrieve authenticated user information.
+  const {
+    data: { id },
+  } = useAuthenticatedAccount();
+
   const isEditMode = userId;
+
+  const isAuth = user.system_user_id == id
 
   // Provider state.
   const provider = {
+    isAuth,
     userId,
     dialogName,
 
@@ -28,10 +44,14 @@ function UserFormProvider({ userId, dialogName, ...props }) {
     EditUserMutate,
 
     isEditMode,
+    roles,
   };
 
   return (
-    <DialogContent isLoading={isUserLoading} name={'user-form'}>
+    <DialogContent
+      isLoading={isUserLoading || isRolesLoading}
+      name={'user-form'}
+    >
       <UserFormContext.Provider value={provider} {...props} />
     </DialogContent>
   );

@@ -26,8 +26,11 @@ import withManualJournals from './withManualJournals';
 import withSettingsActions from '../../Settings/withSettingsActions';
 import withSettings from '../../Settings/withSettings';
 
-import { If, DashboardActionViewsList } from 'components';
-
+import { Can, If, DashboardActionViewsList } from 'components';
+import {
+  ManualJournalAction,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 import { compose } from 'utils';
 
 /**
@@ -86,13 +89,14 @@ function ManualJournalActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="plus" />}
-          text={<T id={'journal_entry'} />}
-          onClick={onClickNewManualJournal}
-        />
+        <Can I={ManualJournalAction.Create} a={AbilitySubject.ManualJournal}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="plus" />}
+            text={<T id={'journal_entry'} />}
+            onClick={onClickNewManualJournal}
+          />
+        </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: manualJournalsFilterConditions,

@@ -8,8 +8,8 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
-
+import { Can, FormattedMessage as T } from 'components';
+import { ExpenseAction, AbilitySubject } from '../../../common/abilityOption';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
@@ -44,20 +44,24 @@ function ExpenseDrawerActionBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="pen-18" />}
-          text={<T id={'edit_expense'} />}
-          onClick={handleEditExpense}
-        />
-        <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="trash-16" iconSize={16} />}
-          text={<T id={'delete'} />}
-          intent={Intent.DANGER}
-          onClick={handleDeleteExpense}
-        />
+        <Can I={ExpenseAction.Edit} a={AbilitySubject.Expense}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="pen-18" />}
+            text={<T id={'edit_expense'} />}
+            onClick={handleEditExpense}
+          />
+          <NavbarDivider />
+        </Can>
+        <Can I={ExpenseAction.Delete} a={AbilitySubject.Expense}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleDeleteExpense}
+          />
+        </Can>
       </NavbarGroup>
     </DashboardActionsBar>
   );

@@ -14,6 +14,7 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
 import {
   If,
+  Can,
   DashboardActionViewsList,
   AdvancedFilterPopover,
   DashboardFilterButton,
@@ -30,8 +31,7 @@ import withSettings from '../Settings/withSettings';
 import { compose } from 'utils';
 import withSettingsActions from '../Settings/withSettingsActions';
 
-
-import { Can, AbilityContext } from '../../components/Abilities';
+import { ItemAction, AbilitySubject } from '../../common/abilityOption';
 
 /**
  * Items actions bar.
@@ -59,8 +59,6 @@ function ItemsActionsBar({
 
   // Items refresh action.
   const { refresh } = useRefreshItems();
-
-  const { ability } = React.useContext(AbilityContext);
 
   // History context.
   const history = useHistory();
@@ -106,14 +104,14 @@ function ItemsActionsBar({
         />
         <NavbarDivider />
 
-        {/* <Can I="create" a="Item" ability={ability}> */}
+        <Can I={ItemAction.Create} a={AbilitySubject.Item}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="plus" />}
             text={<T id={'new_item'} />}
             onClick={onClickNewItem}
           />
-        {/* </Can> */}
+        </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: itemsFilterRoles,
@@ -155,11 +153,13 @@ function ItemsActionsBar({
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
-        <Switch
-          labelElement={<T id={'inactive'} />}
-          defaultChecked={itemsInactiveMode}
-          onChange={handleInactiveSwitchChange}
-        />
+        <Can I={ItemAction.Edit} a={AbilitySubject.Item}>
+          <Switch
+            labelElement={<T id={'inactive'} />}
+            defaultChecked={itemsInactiveMode}
+            onChange={handleInactiveSwitchChange}
+          />
+        </Can>
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>

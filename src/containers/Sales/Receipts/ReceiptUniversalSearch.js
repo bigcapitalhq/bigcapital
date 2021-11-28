@@ -1,16 +1,18 @@
-
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
 
 import { Icon, Choose, T } from 'components';
 
-import { RESOURCES_TYPES } from "../../../common/resourcesTypes";
-import withDrawerActions from "../../Drawer/withDrawerActions";
-
+import { RESOURCES_TYPES } from '../../../common/resourcesTypes';
+import withDrawerActions from '../../Drawer/withDrawerActions';
+import {
+  AbilitySubject,
+  SaleReceiptAction,
+} from '../../../common/abilityOption';
 
 /**
- * Receipt universal search item select action. 
+ * Receipt universal search item select action.
  */
 function ReceiptUniversalSearchSelectComponent({
   // #ownProps
@@ -39,11 +41,15 @@ function ReceiptStatus({ receipt }) {
   return (
     <Choose>
       <Choose.When condition={receipt.is_closed}>
-        <span class="closed"><T id={'closed'} /></span>
+        <span class="closed">
+          <T id={'closed'} />
+        </span>
       </Choose.When>
 
       <Choose.Otherwise>
-        <span class="draft"><T id={'draft'} /></span>
+        <span class="draft">
+          <T id={'draft'} />
+        </span>
       </Choose.Otherwise>
     </Choose>
   );
@@ -100,4 +106,8 @@ export const universalSearchReceiptBind = () => ({
   selectItemAction: ReceiptUniversalSearchSelect,
   itemRenderer: ReceiptUniversalSearchItem,
   itemSelect: transformReceiptsToSearch,
+  permission: {
+    ability: SaleReceiptAction.View,
+    subject: AbilitySubject.Receipt,
+  },
 });

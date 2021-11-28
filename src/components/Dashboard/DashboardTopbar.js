@@ -23,6 +23,7 @@ import withDashboard from 'containers/Dashboard/withDashboard';
 import QuickNewDropdown from 'containers/QuickNewDropdown/QuickNewDropdown';
 import { compose } from 'utils';
 import withSubscriptions from '../../containers/Subscriptions/withSubscriptions';
+import { useGetUniversalSearchTypeOptions } from '../../containers/UniversalSearch/utils';
 
 function DashboardTopbarSubscriptionMessage() {
   return (
@@ -142,11 +143,8 @@ function DashboardTopbar({
         <Navbar class="dashboard__topbar-navbar">
           <NavbarGroup>
             <If condition={isSubscriptionActive}>
-              <Button
+              <DashboardQuickSearchButton
                 onClick={() => openGlobalSearch(true)}
-                className={Classes.MINIMAL}
-                icon={<Icon icon={'search-24'} iconSize={20} />}
-                text={<T id={'quick_find'} />}
               />
               <QuickNewDropdown />
 
@@ -195,3 +193,23 @@ export default compose(
     'main',
   ),
 )(DashboardTopbar);
+
+/**
+ * Dashboard quick search button.
+ */
+function DashboardQuickSearchButton({ ...rest }) {
+  const searchTypeOptions = useGetUniversalSearchTypeOptions();
+
+  // Can't continue if there is no any search type option.
+  if (searchTypeOptions.length <= 0) {
+    return null;
+  }
+  return (
+    <Button
+      className={Classes.MINIMAL}
+      icon={<Icon icon={'search-24'} iconSize={20} />}
+      text={<T id={'quick_find'} />}
+      {...rest}
+    />
+  );
+}

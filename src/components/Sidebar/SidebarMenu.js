@@ -1,7 +1,7 @@
 import React from 'react';
 import { Menu, MenuDivider } from '@blueprintjs/core';
 import { useHistory, useLocation } from 'react-router-dom';
-import sidebarMenuList from 'config/sidebarMenu';
+
 import { Choose } from 'components';
 import Icon from 'components/Icon';
 import MenuItem from 'components/MenuItem';
@@ -24,7 +24,7 @@ function SidebarMenuItemSpace({ space }) {
   return <div class="bp3-menu-spacer" style={{ height: `${space}px` }} />;
 }
 
-function SidebarMenu({ isSubscriptionActive }) {
+function SidebarMenu({ menu, isSubscriptionActive }) {
   const history = useHistory();
   const location = useLocation();
 
@@ -93,7 +93,7 @@ function SidebarMenu({ isSubscriptionActive }) {
     });
   };
 
-  const filterItems = sidebarMenuList.filter(
+  const filterItems = menu.filter(
     (item) => isSubscriptionActive || item.enableBilling,
   );
   const items = menuItemsMapper(filterItems);

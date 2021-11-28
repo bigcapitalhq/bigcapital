@@ -14,7 +14,7 @@ import DashboardUniversalSearchItemActions from './DashboardUniversalSearchItemA
 import { DashboardUniversalSearchItem } from './components';
 
 import DashboardUniversalSearchHotkeys from './DashboardUniversalSearchHotkeys';
-import { getUniversalSearchTypeOptions } from './utils';
+import { useGetUniversalSearchTypeOptions } from './utils';
 
 /**
  * Dashboard universal search.
@@ -28,6 +28,8 @@ function DashboardUniversalSearch({
   closeGlobalSearch,
   defaultUniversalResourceType,
 }) {
+  const searchTypeOptions = useGetUniversalSearchTypeOptions();
+
   // Search keyword.
   const [searchKeyword, setSearchKeyword] = React.useState('');
 
@@ -97,10 +99,9 @@ function DashboardUniversalSearch({
     setSearchKeyword('');
   };
 
-  const searchTypeOptions = React.useMemo(
-    () => getUniversalSearchTypeOptions(),
-    [],
-  );
+  if (searchTypeOptions.length === 0) {
+    return null;
+  }
 
   return (
     <div class="dashboard__universal-search">

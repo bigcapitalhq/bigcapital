@@ -10,6 +10,8 @@
     "@blueprintjs/select": "^3.11.2",
     "@blueprintjs/table": "^3.8.3",
     "@blueprintjs/timezone": "^3.6.2",
+    "@casl/ability": "^5.4.3",
+    "@casl/react": "^2.3.0",
     "@reduxjs/toolkit": "^1.2.5",
     "@sentry/react": "^6.13.2",
     "@sentry/tracing": "^6.13.2",

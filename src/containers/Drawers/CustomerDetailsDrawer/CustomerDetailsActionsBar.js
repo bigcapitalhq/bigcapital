@@ -21,8 +21,15 @@ import { useCustomerDetailsDrawerContext } from './CustomerDetailsDrawerProvider
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Icon, FormattedMessage as T } from 'components';
-
+import { Can, Icon, FormattedMessage as T } from 'components';
+import {
+  AbilitySubject,
+  SaleInvoiceAction,
+  SaleEstimateAction,
+  SaleReceiptAction,
+  PaymentReceiveAction,
+  CustomerAction,
+} from '../../../common/abilityOption';
 import { compose } from 'utils';
 
 /**
@@ -62,7 +69,7 @@ function CustomerDetailsActionsBar({
   const handleDeleteCustomer = () => {
     openAlert(`customer-delete`, { contactId: customerId });
   };
-  
+
   const handleEditContact = () => {
     history.push(`/customers/${customerId}/edit`);
     closeDrawer('customer-details-drawer');
@@ -74,22 +81,34 @@ function CustomerDetailsActionsBar({
         <Popover
           content={
             <Menu>
-              <MenuItem
-                text={<T id={'customer.drawer.action.new_invoice'} />}
-                onClick={handleNewInvoiceClick}
-              />
-              <MenuItem
-                text={<T id={'customer.drawer.action.new_estimate'} />}
-                onClick={handleNewEstimateClick}
-              />
-              <MenuItem
-                text={<T id={'customer.drawer.action.new_receipt'} />}
-                onClick={handleNewReceiptClick}
-              />
-              <MenuItem
-                text={<T id={'customer.drawer.action.new_payment'} />}
-                onClick={handleNewPaymentClick}
-              />
+              <Can I={SaleInvoiceAction.Create} a={AbilitySubject.Invoice}>
+                <MenuItem
+                  text={<T id={'customer.drawer.action.new_invoice'} />}
+                  onClick={handleNewInvoiceClick}
+                />
+              </Can>
+              <Can I={SaleEstimateAction.Create} a={AbilitySubject.Estimate}>
+                <MenuItem
+                  text={<T id={'customer.drawer.action.new_estimate'} />}
+                  onClick={handleNewEstimateClick}
+                />
+              </Can>
+              <Can I={SaleReceiptAction.Create} a={AbilitySubject.Receipt}>
+                <MenuItem
+                  text={<T id={'customer.drawer.action.new_receipt'} />}
+                  onClick={handleNewReceiptClick}
+                />
+              </Can>
+
+              <Can
+                I={PaymentReceiveAction.Create}
+                a={AbilitySubject.PaymentReceive}
+              >
+                <MenuItem
+                  text={<T id={'customer.drawer.action.new_payment'} />}
+                  onClick={handleNewPaymentClick}
+                />
+              </Can>
             </Menu>
           }
           minimal={true}
@@ -104,21 +123,24 @@ function CustomerDetailsActionsBar({
         </Popover>
 
         <NavbarDivider />
-
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="pen-18" />}
-          text={intl.get('customer.drawer.action.edit')}
-          onClick={handleEditContact}
-        />
-        <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'trash-16'} iconSize={16} />}
-          text={<T id={'delete'} />}
-          intent={Intent.DANGER}
-          onClick={handleDeleteCustomer}
-        />
+        <Can I={CustomerAction.Edit} a={AbilitySubject.Customer}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="pen-18" />}
+            text={intl.get('customer.drawer.action.edit')}
+            onClick={handleEditContact}
+          />
+          <NavbarDivider />
+        </Can>
+        <Can I={CustomerAction.Delete} a={AbilitySubject.Customer}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'trash-16'} iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleDeleteCustomer}
+          />
+        </Can>
       </NavbarGroup>
     </DashboardActionsBar>
   );

@@ -1,6 +1,9 @@
 import intl from 'react-intl-universal';
-import { RESOURCES_TYPES } from '../../common/resourcesTypes';
+
 import withDrawerActions from '../Drawer/withDrawerActions';
+
+import { AbilitySubject, AccountAction } from '../../common/abilityOption';
+import { RESOURCES_TYPES } from '../../common/resourcesTypes';
 
 function AccountUniversalSearchItemSelectComponent({
   // #ownProps
@@ -42,4 +45,8 @@ export const universalSearchAccountBind = () => ({
   optionItemLabel: intl.get('accounts'),
   selectItemAction: AccountUniversalSearchItemSelect,
   itemSelect: accountToSearch,
+  permission: {
+    ability: AccountAction.View,
+    subject: AbilitySubject.Account,
+  },
 });

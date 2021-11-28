@@ -1,7 +1,8 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
-import { defaultTo, sumBy, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 
 import 'style/pages/Preferences/Roles/Form.scss';
 
@@ -12,7 +13,11 @@ import { AppToaster, FormattedMessage as T } from 'components';
 import { CreateRolesFormSchema, EditRolesFormSchema } from './RolesForm.schema';
 
 import { useRolesFormContext } from './RolesFormProvider';
-import { transformToArray } from './utils';
+import {
+  getNewRoleInitialValues,
+  transformToArray,
+  transformToObject,
+} from './utils';
 
 import RolesFormContent from './RolesFormContent';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -32,24 +37,31 @@ function RolesForm({
   // #withDashboardActions
   changePreferencesPageTitle,
 }) {
+  // History context.
+  const history = useHistory();
+
+  // Role form context.
   const {
     isNewMode,
     createRolePermissionMutate,
     editRolePermissionMutate,
-    permissionSchema,
+    permissionsSchema,
+    role,
     roleId,
   } = useRolesFormContext();
 
   // Initial values.
   const initialValues = {
     ...defaultValues,
-    ...transformToForm(permissionSchema, defaultValues),
+    ...(!isEmpty(role)
+      ? transformToForm(transformToObject(role), defaultValues)
+      : getNewRoleInitialValues(permissionsSchema)),
   };
-
   React.useEffect(() => {
     changePreferencesPageTitle(<T id={'roles.label'} />);
   }, [changePreferencesPageTitle]);
 
+  // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
     const permission = transformToArray(values);
     const form = {
@@ -67,6 +79,7 @@ function RolesForm({
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
+      history.push('/preferences/users');
     };
 
     const onError = (errors) => {

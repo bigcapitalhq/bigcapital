@@ -4,9 +4,10 @@ import intl from 'react-intl-universal';
 import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 
 import { MaterialProgressBar } from 'components';
-import { FormatDateCell, If, Icon } from 'components';
+import { Can, FormatDateCell, If, Icon } from 'components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { TRANSACRIONS_TYPE } from 'common/cashflowOptions';
+import { AbilitySubject, CashflowAction } from '../../../common/abilityOption';
 import { safeCallback } from 'utils';
 
 export function ActionsMenu({
@@ -20,15 +21,17 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <If condition={TRANSACRIONS_TYPE.includes(original.reference_type)}>
-        <MenuDivider />
-        <MenuItem
-          text={intl.get('delete_transaction')}
-          intent={Intent.DANGER}
-          onClick={safeCallback(onDelete, original)}
-          icon={<Icon icon="trash-16" iconSize={16} />}
-        />
-      </If>
+      <Can I={CashflowAction.Delete} a={AbilitySubject.Cashflow}>
+        <If condition={TRANSACRIONS_TYPE.includes(original.reference_type)}>
+          <MenuDivider />
+          <MenuItem
+            text={intl.get('delete_transaction')}
+            intent={Intent.DANGER}
+            onClick={safeCallback(onDelete, original)}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+          />
+        </If>
+      </Can>
     </Menu>
   );
 }
@@ -83,7 +86,7 @@ export function useAccountTransactionsColumns() {
         className: 'deposit',
         textOverview: true,
         align: 'right',
-        clickable: true
+        clickable: true,
       },
       {
         id: 'withdrawal',
@@ -93,7 +96,7 @@ export function useAccountTransactionsColumns() {
         width: 150,
         textOverview: true,
         align: 'right',
-        clickable: true
+        clickable: true,
       },
       {
         id: 'running_balance',
@@ -103,7 +106,7 @@ export function useAccountTransactionsColumns() {
         width: 150,
         textOverview: true,
         align: 'right',
-        clickable: true
+        clickable: true,
       },
       {
         id: 'balance',

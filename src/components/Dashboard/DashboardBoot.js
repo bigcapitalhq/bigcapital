@@ -1,18 +1,53 @@
 import React from 'react';
-import * as R from 'ramda';
-
-import { useUser, useCurrentOrganization } from '../../hooks/query';
+import {
+  useAuthenticatedAccount,
+  useCurrentOrganization,
+  useDashboardMeta,
+} from '../../hooks/query';
 import { useSplashLoading } from '../../hooks/state';
 import { useWatch, useWatchImmediate, useWhen } from '../../hooks';
-
-import withAuthentication from '../../containers/Authentication/withAuthentication';
-
 import { setCookie, getCookie } from '../../utils';
 
 /**
- * Dashboard async booting.
+ * Dashboard meta async booting.
  */
-function DashboardBootJSX({ authenticatedUserId }) {
+export function useDashboardMetaBoot() {
+  const {
+    data: dashboardMeta,
+    isLoading: isDashboardMetaLoading,
+    isSuccess: isDashboardMetaSuccess,
+  } = useDashboardMeta({
+    keepPreviousData: true,
+  });
+  const [startLoading, stopLoading] = useSplashLoading();
+
+  useWatchImmediate((value) => {
+    value && startLoading();
+  }, isDashboardMetaLoading);
+
+  useWatchImmediate(() => {
+    isDashboardMetaSuccess && stopLoading();
+  }, isDashboardMetaSuccess);
+
+  return {
+    isLoading: isDashboardMetaLoading,
+  };
+}
+
+/**
+ * Dashboard async booting.
+ * @returns {{ isLoading: boolean }}
+ */
+export function useDashboardBoot() {
+  const { isLoading } = useDashboardMetaBoot();
+
+  return { isLoading };
+}
+
+/**
+ * Application async booting.
+ */
+export function useApplicationBoot() {
   // Fetches the current user's organization.
   const {
     isSuccess: isCurrentOrganizationSuccess,
@@ -22,7 +57,7 @@ function DashboardBootJSX({ authenticatedUserId }) {
 
   // Authenticated user.
   const { isSuccess: isAuthUserSuccess, isLoading: isAuthUserLoading } =
-    useUser(authenticatedUserId);
+    useAuthenticatedAccount();
 
   // Initial locale cookie value.
   const localeCookie = getCookie('locale');
@@ -86,11 +121,8 @@ function DashboardBootJSX({ authenticatedUserId }) {
       isBooted.current = true;
     },
   );
-  return null;
-}
 
-export const DashboardBoot = R.compose(
-  withAuthentication(({ authenticatedUserId }) => ({
-    authenticatedUserId,
-  })),
-)(DashboardBootJSX);
+  return {
+    isLoading: isOrgLoading || isAuthUserLoading,
+  };
+}

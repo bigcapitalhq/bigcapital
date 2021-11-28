@@ -10,7 +10,8 @@ import {
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { Icon, Money, If, AvaterCell } from 'components';
+import { Can, Icon, Money, If, AvaterCell } from 'components';
+import { VendorAction, AbilitySubject } from '../../../common/abilityOption';
 import { safeCallback, firstLettersArgs } from 'utils';
 
 /**
@@ -34,37 +35,45 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <MenuDivider />
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('edit_vendor')}
-        onClick={safeCallback(onEdit, original)}
-      />
-      <MenuItem
-        icon={<Icon icon="duplicate-16" />}
-        text={intl.get('duplicate')}
-        onClick={safeCallback(onDuplicate, original)}
-      />
-      <If condition={original.active}>
+      <Can I={VendorAction.Edit} a={AbilitySubject.Vendor}>
+        <MenuDivider />
         <MenuItem
-          text={intl.get('inactivate_item')}
-          icon={<Icon icon="pause-16" iconSize={16} />}
-          onClick={safeCallback(onInactivate, original)}
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('edit_vendor')}
+          onClick={safeCallback(onEdit, original)}
         />
-      </If>
-      <If condition={!original.active}>
+      </Can>
+      <Can I={VendorAction.Create} a={AbilitySubject.Customer}>
         <MenuItem
-          text={intl.get('activate_item')}
-          icon={<Icon icon="play-16" iconSize={16} />}
-          onClick={safeCallback(onActivate, original)}
+          icon={<Icon icon="duplicate-16" />}
+          text={intl.get('duplicate')}
+          onClick={safeCallback(onDuplicate, original)}
         />
-      </If>
-      <MenuItem
-        icon={<Icon icon="trash-16" iconSize={16} />}
-        text={intl.get('delete_vendor')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-      />
+      </Can>
+      <Can I={VendorAction.Edit} a={AbilitySubject.Vendor}>
+        <If condition={original.active}>
+          <MenuItem
+            text={intl.get('inactivate_item')}
+            icon={<Icon icon="pause-16" iconSize={16} />}
+            onClick={safeCallback(onInactivate, original)}
+          />
+        </If>
+        <If condition={!original.active}>
+          <MenuItem
+            text={intl.get('activate_item')}
+            icon={<Icon icon="play-16" iconSize={16} />}
+            onClick={safeCallback(onActivate, original)}
+          />
+        </If>
+      </Can>
+      <Can I={VendorAction.Delete} a={AbilitySubject.Vendor}>
+        <MenuItem
+          icon={<Icon icon="trash-16" iconSize={16} />}
+          text={intl.get('delete_vendor')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+        />
+      </Can>
     </Menu>
   );
 }

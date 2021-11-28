@@ -1,5 +1,3 @@
-import { isEmpty } from 'lodash';
-
 export const transformToArray = ({ permissions }) => {
   return Object.keys(permissions).map((index) => {
     const [value, key] = index.split('/');
@@ -12,16 +10,44 @@ export const transformToArray = ({ permissions }) => {
   });
 };
 
-export const transformToObject = ({ name, description, permissions }) => {
-  if (!isEmpty(permissions)) {
-    const output = {};
-    permissions.forEach((item) => {
-      output[`${item.subject}/${item.ability}`] = !!item.value;
-    });
-    return {
-      role_name: name,
-      role_description: description,
-      permissions: { ...output },
-    };
-  }
+export const transformPermissionsToObject = (permissions) => {
+  const output = {};
+  permissions.forEach((item) => {
+    output[`${item.subject}/${item.ability}`] = !!item.value;
+  });
+  return output;
+};
+
+export const transformToObject = (role) => {
+  return {
+    role_name: role.name,
+    role_description: role.description,
+    permissions: transformPermissionsToObject(role.permissions),
+  };
+};
+
+export const getDefaultValuesFromSchema = (schema) => {
+  return schema
+    .map((item) => {
+      const abilities = [
+        ...(item.abilities || []),
+        ...(item.extra_abilities || []),
+      ];
+      return abilities
+        .filter((ability) => ability.default)
+        .map((ability) => ({
+          subject: item.subject,
+          ability: ability.key,
+          value: ability.default,
+        }));
+    })
+    .flat();
+};
+
+export const getNewRoleInitialValues = (schema) => {
+  return {
+    permissions: transformPermissionsToObject(
+      getDefaultValuesFromSchema(schema),
+    ),
+  };
 };

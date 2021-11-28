@@ -12,10 +12,14 @@ import {
 import intl from 'react-intl-universal';
 import moment from 'moment';
 
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T, Can } from 'components';
 import { isNumber } from 'lodash';
 import { Icon, Money, If } from 'components';
 import { isBlank, safeCallback } from 'utils';
+import {
+  InventoryAdjustmentAction,
+  AbilitySubject,
+} from '../../common/abilityOption';
 
 /**
  * Publish accessor
@@ -102,20 +106,31 @@ export const ActionsMenu = ({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <MenuDivider />
-      <If condition={!original.is_published}>
+
+      <Can
+        I={InventoryAdjustmentAction.Create}
+        a={AbilitySubject.InventoryAdjustment}
+      >
+        <MenuDivider />
+        <If condition={!original.is_published}>
+          <MenuItem
+            icon={<Icon icon={'arrow-to-top'} size={16} />}
+            text={intl.get('publish_adjustment')}
+            onClick={safeCallback(onPublish, original)}
+          />
+        </If>
+      </Can>
+      <Can
+        I={InventoryAdjustmentAction.Delete}
+        a={AbilitySubject.InventoryAdjustment}
+      >
         <MenuItem
-          icon={<Icon icon={'arrow-to-top'} size={16} />}
-          text={intl.get('publish_adjustment')}
-          onClick={safeCallback(onPublish, original)}
+          text={intl.get('delete_adjustment')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
         />
-      </If>
-      <MenuItem
-        text={intl.get('delete_adjustment')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-        icon={<Icon icon="trash-16" iconSize={16} />}
-      />
+      </Can>
     </Menu>
   );
 };

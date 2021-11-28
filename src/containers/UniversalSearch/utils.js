@@ -1,5 +1,9 @@
 import { get } from 'lodash';
+import * as R from 'ramda';
+import React from 'react';
+
 import { universalSearchBinds } from './DashboardUniversalSearchBinds';
+import { useAbilitiesFilter } from '../../hooks/utils';
 
 /**
  *
@@ -23,22 +27,28 @@ export const getUniversalSearchBind = (resourceType, key) => {
 };
 
 /**
- * 
- * @returns 
+ * Retrieve universal search type options.
  */
-export const getUniversalSearchTypeOptions = () => {
-  return getUniversalSearchBinds().map((bind) => ({
-    key: bind.resourceType,
-    label: bind.optionItemLabel,
-  }))
-}
+export const useGetUniversalSearchTypeOptions = () => {
+  const abilityFilter = useAbilitiesFilter();
+
+  const momerizedBinds = React.useMemo(() => {
+    const filteredBinds = R.compose(abilityFilter, getUniversalSearchBinds)();
+
+    return filteredBinds.map((bind) => ({
+      key: bind.resourceType,
+      label: bind.optionItemLabel,
+    }));
+  }, [abilityFilter]);
+
+  return momerizedBinds;
+};
 
 /**
- * 
- * @returns 
+ * Retrieve universal search types actions.
  */
 export const getUniversalSearchItemsActions = () => {
   return getUniversalSearchBinds()
     .filter((bind) => bind.selectItemAction)
     .map((bind) => bind.selectItemAction);
-}
+};

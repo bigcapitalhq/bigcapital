@@ -1,6 +1,7 @@
 import intl from 'react-intl-universal';
 
 import { RESOURCES_TYPES } from '../../common/resourcesTypes';
+import { AbilitySubject, VendorAction } from '../../common/abilityOption';
 import withDrawerActions from '../Drawer/withDrawerActions';
 
 /**
@@ -43,4 +44,8 @@ export const universalSearchVendorBind = () => ({
   optionItemLabel: intl.get('vendors'),
   selectItemAction: VendorUniversalSearchSelectAction,
   itemSelect: vendorToSearch,
+  permission: {
+    ability: VendorAction.View,
+    subject: AbilitySubject.Vendor,
+  },
 });

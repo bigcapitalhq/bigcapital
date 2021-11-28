@@ -14,12 +14,14 @@ import { useHistory } from 'react-router-dom';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import {
   If,
+  Can,
   FormattedMessage as T,
   DashboardActionViewsList,
   DashboardFilterButton,
   AdvancedFilterPopover,
   DashboardRowsHeightButton,
 } from 'components';
+import { BillAction, AbilitySubject } from '../../../../common/abilityOption';
 
 import withBillsActions from './withBillsActions';
 import withBills from './withBills';
@@ -86,12 +88,14 @@ function BillActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'plus'} />}
-          text={<T id={'new_bill'} />}
-          onClick={handleClickNewBill}
-        />
+        <Can I={BillAction.Create} a={AbilitySubject.Bill}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'plus'} />}
+            text={<T id={'new_bill'} />}
+            onClick={handleClickNewBill}
+          />
+        </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: billsConditionsRoles,
