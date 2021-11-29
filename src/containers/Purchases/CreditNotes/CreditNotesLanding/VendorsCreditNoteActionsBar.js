@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Button,
   Classes,
@@ -7,7 +8,6 @@ import {
   Intent,
   Alignment,
 } from '@blueprintjs/core';
-import { useHistory } from 'react-router-dom';
 import {
   Icon,
   FormattedMessage as T,
@@ -16,25 +16,23 @@ import {
   DashboardFilterButton,
   DashboardRowsHeightButton,
 } from 'components';
-
 import DashboardActionsBar from '../../../../components/Dashboard/DashboardActionsBar';
 
-import withCreditNotes from './withCreditNotes';
-import withCreditNotesActions from './withCreditNotesActions';
+import withVendorsCreditNotes from './withVendorsCreditNotes';
+import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
 import withSettings from '../../../Settings/withSettings';
 import withSettingsActions from '../../../Settings/withSettingsActions';
 
 import { compose } from 'utils';
 
 /**
- * Credit note table actions bar.
+ * Vendors Credit note  table actions bar.
  */
-function CreditNotesActionsBar({
-  // #withCreditNotes
-  creditNoteFilterRoles,
+function VendorsCreditNoteActionsBar({
+  // #withVendorsCreditNotes
 
-  // #withCreditNotesActions
-  setCreditNotesTableState,
+  // #withVendorsCreditNotesActions
+  setVendorsCreditNoteTableState,
 
   // #withSettings
   creditNoteTableSize,
@@ -50,7 +48,7 @@ function CreditNotesActionsBar({
 
   // Handle view tab change.
   const handleTabChange = (view) => {
-    setCreditNotesTableState({ viewSlug: view ? view.slug : null });
+    setVendorsCreditNoteTableState({ viewSlug: view ? view.slug : null });
   };
 
   // Handle click a refresh credit note.
@@ -58,7 +56,7 @@ function CreditNotesActionsBar({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('creditNote', 'tableSize', size);
+    addSetting('vendorsCreditNote', 'tableSize', size);
   };
 
   return (
@@ -71,7 +69,6 @@ function CreditNotesActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
@@ -106,12 +103,12 @@ function CreditNotesActionsBar({
 }
 
 export default compose(
-  withCreditNotesActions,
+  withVendorsCreditNotesActions,
   withSettingsActions,
-  withCreditNotes(({ creditNoteTableState }) => ({
-    creditNoteFilterRoles: creditNoteTableState.filterRoles,
+  withVendorsCreditNotes(({ vendorsCreditNoteTableState }) => ({
+    creditNoteFilterRoles: vendorsCreditNoteTableState.filterRoles,
   })),
-  withSettings(({ creditNoteSettings }) => ({
-    creditNoteTableSize: creditNoteSettings?.tableSize,
+  withSettings(({ vendorsCreditNoteSetting }) => ({
+    creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
   })),
-)(CreditNotesActionsBar);
+)(VendorsCreditNoteActionsBar);

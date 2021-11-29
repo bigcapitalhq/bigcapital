@@ -28,7 +28,8 @@ import paymentMades from './PaymentMades/paymentMades.type';
 import organizations from './organizations/organizations.types';
 import subscription from './subscription/subscription.types';
 import inventoryAdjustments from './inventoryAdjustments/inventoryAdjustment.type';
-import creditNotes from './CreditNotes/creditNotes.type'
+import creditNotes from './CreditNotes/creditNotes.type';
+import vendorsCreditNotes from './vendorsCreditNotes/vendorsCreditNotes.type';
 import plans from './plans/plans.types';
 
 export default {
@@ -63,5 +64,6 @@ export default {
   ...subscription,
   ...inventoryAdjustments,
   ...creditNotes,
+  ...vendorsCreditNotes,
   ...plans,
 };

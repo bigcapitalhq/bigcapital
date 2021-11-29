@@ -260,7 +260,7 @@ export default [
       },
       {
         text: <T id={'sidebar_credit_note'} />,
-        href: '/credit-notes',
+        href: '/vendors-credit-notes',
       },
       {
         text: <T id={'payment_mades'} />,

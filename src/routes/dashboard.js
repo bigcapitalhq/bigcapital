@@ -757,6 +757,49 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.BILL,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
+  //  Purchases Credit note.
+  {
+    path: `/vendors-credit-notes/:id/edit`,
+    component: lazy(() =>
+      import(
+        'containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
+      ),
+    ),
+    name: 'vendor-credit-note-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('credit_note.edit_credit_note'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/vendors-credit-notes/new',
+    component: lazy(() =>
+      import(
+        'containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
+      ),
+    ),
+    name: 'vendor-credit-note-new',
+    backLink: true,
+    sidebarExpand: false,
+    breadcrumb: intl.get('credit_note.new_credit_note'),
+    pageTitle: intl.get('credit_note.new_credit_note'),
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/vendors-credit-notes',
+    component: lazy(() =>
+      import(
+        '../containers/Purchases/CreditNotes/CreditNotesLanding/VendorsCreditNotesList'
+      ),
+    ),
+    breadcrumb: intl.get('credit_note.label_list'),
+    pageTitle: intl.get('credit_note.label_list'),
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
 
   // Subscription billing.
   {

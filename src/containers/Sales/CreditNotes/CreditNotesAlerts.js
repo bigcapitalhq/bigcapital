@@ -5,7 +5,7 @@ const CreditNoteDeleteAlert = React.lazy(() =>
 );
 
 /**
- * Sales Credit notes alerts.
+ * Credit notes alerts.
  */
 export default [
   {

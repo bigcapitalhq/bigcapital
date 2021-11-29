@@ -22,12 +22,12 @@ function CreditNotesList({
   resetCreditNotesTableState,
 }) {
   // Resets the credit note table state once the page unmount.
-  React.useEffect(
-    () => () => {
-      resetCreditNotesTableState();
-    },
-    [resetCreditNotesTableState],
-  );
+  // React.useEffect(
+  //   () => () => {
+  //     resetCreditNotesTableState();
+  //   },
+  //   [resetCreditNotesTableState],
+  // );
   return (
     <CreditNotesListProvider
       query={transformTableStateToQuery(creditNoteTableState)}

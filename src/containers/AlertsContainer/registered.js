@@ -18,6 +18,7 @@ import UsersAlerts from '../Preferences/Users/UsersAlerts';
 import CurrenciesAlerts from '../Preferences/Currencies/CurrenciesAlerts';
 import RolesAlerts from '../Preferences/Users/Roles/RolesAlerts';
 import CreditNotesAlerts from '../Sales/CreditNotes/CreditNotesAlerts';
+import VendorCreditNotesAlerts from '../Purchases/CreditNotes/VendorCreditNotesAlerts';
 
 export default [
   ...AccountsAlerts,
@@ -40,4 +41,5 @@ export default [
   ...CurrenciesAlerts,
   ...RolesAlerts,
   ...CreditNotesAlerts,
+  ...VendorCreditNotesAlerts,
 ];
