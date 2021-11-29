@@ -5,6 +5,7 @@ import { Tabs, Tab } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import SMSMessagesDataTable from './SMSMessagesDataTable';
+import EasySMSIntegration from '../EasySMSIntegration';
 
 import '../../../style/pages/Preferences/SMSIntegration.scss';
 
@@ -27,6 +28,7 @@ function SMSIntegrationTabs({
           <Tab
             id="overview"
             title={intl.get('sms_integration.label.overview')}
+            panel={<EasySMSIntegration />}
           />
           <Tab
             id="sms_messages"

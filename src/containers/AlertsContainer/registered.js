@@ -17,6 +17,7 @@ import AccountTransactionsAlerts from '../CashFlow/AccountTransactions/AccountTr
 import UsersAlerts from '../Preferences/Users/UsersAlerts';
 import CurrenciesAlerts from '../Preferences/Currencies/CurrenciesAlerts';
 import RolesAlerts from '../Preferences/Users/Roles/RolesAlerts';
+import EasySMSIntegrationAlerts from '../Preferences/EasySMSIntegration/EasySMSIntegrationAlerts';
 
 export default [
   ...AccountsAlerts,
@@ -38,4 +39,5 @@ export default [
   ...UsersAlerts,
   ...CurrenciesAlerts,
   ...RolesAlerts,
+  ...EasySMSIntegrationAlerts,
 ];

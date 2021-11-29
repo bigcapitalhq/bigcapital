@@ -180,3 +180,57 @@ export function useSettingEditSMSNotification(props) {
     },
   );
 }
+
+
+/**
+ * Retrieve EasySMS Integration settings.
+ */
+export function useSettingEasySMSIntegrate(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (values) => apiRequest.post(`settings/easysms/integrate`, values),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([t.SETTING_EASY_SMS]);
+        queryClient.invalidateQueries([t.SETTING_SMS_NOTIFICATIONS]);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve EasySMS Disconnect settings.
+ */
+export function useSettingEasySMSDisconnect(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (values) => apiRequest.post(`settings/easysms/disconnect`, values),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([t.SETTING_EASY_SMS]);
+        queryClient.invalidateQueries([t.SETTING_SMS_NOTIFICATIONS]);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve EasySMS settings.
+ */
+export function useSettingEasySMS(props) {
+  return useRequestQuery(
+    [t.SETTING_EASY_SMS],
+    { method: 'get', url: `settings/easysms` },
+    {
+      select: (res) => res.data,
+      defaultData: [],
+      ...props,
+    },
+  );
+}

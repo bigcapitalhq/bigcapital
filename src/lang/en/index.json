@@ -1487,5 +1487,11 @@
   "roles.error.you_cannot_edit_predefined_roles":"You cannot edit predefined roles.",
   "roles.error.you_cannot_delete_predefined_roles":"You cannot delete predefined roles.",
   "roles.error.the_submit_role_has_invalid_permissions":"The submit role has invalid permissions.",
-  "roles.error.you_cannot_delete_role_that_associated_to_users":"You cannot delete role that associated to users"
+  "roles.error.you_cannot_delete_role_that_associated_to_users":"You cannot delete role that associated to users",
+  "easysms.label.token":"Token",
+  "easysms.label.disconnect":"Disconnect",
+  "esaysms.label.connect":"Connect",
+  "easysms.label.edit_integration_settings":"Edit integration settings"
+
+
 }
