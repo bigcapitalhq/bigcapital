@@ -630,6 +630,50 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
+  // Sales Credit notes.
+  {
+    path: `/credit-notes/:id/edit`,
+    component: lazy(() =>
+      import(
+        '../containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
+      ),
+    ),
+    name: 'credit-note-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('credit_note.edit_credit_note'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/credit-notes/new',
+    component: lazy(() =>
+      import(
+        '../containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
+      ),
+    ),
+    name: 'credit-note-new',
+    breadcrumb: intl.get('credit_note.new_credit_note'),
+    backLink: true,
+    sidebarExpand: false,
+    pageTitle: intl.get('credit_note.new_credit_note'),
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/credit-notes',
+    component: lazy(() =>
+      import(
+        '../containers/Sales/CreditNotes/CreditNotesLanding/CreditNotesList'
+      ),
+    ),
+    breadcrumb: intl.get('credit_note.label_list'),
+    pageTitle: intl.get('credit_note.label_list'),
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
   // Payment receives
   {
     path: `/payment-receives/:id/edit`,

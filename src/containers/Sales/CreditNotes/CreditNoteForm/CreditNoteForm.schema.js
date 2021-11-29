@@ -1,0 +1,51 @@
+import * as Yup from 'yup';
+import intl from 'react-intl-universal';
+import { DATATYPES_LENGTH } from 'common/dataTypes';
+import { isBlank } from 'utils';
+
+const getSchema = () => Yup.object().shape({
+  customer_id: Yup.string()
+    .label(intl.get('customer_name_'))
+    .required(),
+  invoice_date: Yup.date()
+    .required()
+    .label(intl.get('invoice_date_')),
+  invoice_no: Yup.string()
+    .max(DATATYPES_LENGTH.STRING)
+    .label(intl.get('invoice_no_')),
+  reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
+  delivered: Yup.boolean(),
+  invoice_message: Yup.string()
+    .trim()
+    .min(1)
+    .max(DATATYPES_LENGTH.TEXT)
+    .label(intl.get('note')),
+  terms_conditions: Yup.string()
+    .trim()
+    .min(1)
+    .max(DATATYPES_LENGTH.TEXT)
+    .label(intl.get('note')),
+  entries: Yup.array().of(
+    Yup.object().shape({
+      quantity: Yup.number()
+        .nullable()
+        .max(DATATYPES_LENGTH.INT_10)
+        .when(['rate'], {
+          is: (rate) => rate,
+          then: Yup.number().required(),
+        }),
+      rate: Yup.number().nullable().max(DATATYPES_LENGTH.INT_10),
+      item_id: Yup.number()
+        .nullable()
+        .when(['quantity', 'rate'], {
+          is: (quantity, rate) => !isBlank(quantity) && !isBlank(rate),
+          then: Yup.number().required(),
+        }),
+      discount: Yup.number().nullable().min(0).max(100),
+      description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
+    }),
+  ),
+});
+
+export const getCreateCreditNoteFormSchema = getSchema;
+export const getEditCreditNoteFormSchema = getSchema;

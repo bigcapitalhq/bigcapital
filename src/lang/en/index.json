@@ -1487,5 +1487,18 @@
   "roles.error.you_cannot_edit_predefined_roles":"You cannot edit predefined roles.",
   "roles.error.you_cannot_delete_predefined_roles":"You cannot delete predefined roles.",
   "roles.error.the_submit_role_has_invalid_permissions":"The submit role has invalid permissions.",
-  "roles.error.you_cannot_delete_role_that_associated_to_users":"You cannot delete role that associated to users"
+  "roles.error.you_cannot_delete_role_that_associated_to_users":"You cannot delete role that associated to users",
+  "sidebar_credit_note": "Credit Notes",
+  "credit_note.label_list": "Credit Note List",
+  "credit_note.new_credit_note": "New Credit Note",
+  "credit_note.edit_credit_note": "Edit Credit Note",
+  "credit_note.label_credit_note_no": "Credit Note #",
+  "credit_note.empty_status_description": "Record sales transactions from customers who make no or partial payment and help you keep track of accounts receivable with a customer.",
+  "credit_note.label_credit_note_date": "Credit Note date",
+  "credit_note.label_credit_note": "Credit Note #",
+  "credit_note.label_credit_note_details": "Credit Note details",
+  "credit_note.label_customer_note": "Customer notes",
+  "credit_note.label_edit_credit_note": "Edit Credit note",
+  "credit_note.label_delete_credit_note": "Delete Credit note",
+  "credit_note.once_delete_this_credit_note": "Once you delete this credit note, you won't be able to restore it later. Are you sure you want to delete this credit note?"
 }

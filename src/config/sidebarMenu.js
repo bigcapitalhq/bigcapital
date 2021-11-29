@@ -159,6 +159,10 @@ export default [
         },
       },
       {
+        text: <T id={'sidebar_credit_note'} />,
+        href: '/credit-notes',
+      },
+      {
         text: <T id={'payment_receives'} />,
         href: '/payment-receives',
         permission: {
@@ -253,6 +257,10 @@ export default [
           subject: AbilitySubject.Bill,
           ability: BillAction.View,
         },
+      },
+      {
+        text: <T id={'sidebar_credit_note'} />,
+        href: '/credit-notes',
       },
       {
         text: <T id={'payment_mades'} />,

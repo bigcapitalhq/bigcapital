@@ -31,6 +31,7 @@ import paymentMades from './PaymentMades/paymentMades.reducer';
 import organizations from './organizations/organizations.reducers';
 import subscriptions from './subscription/subscription.reducer';
 import inventoryAdjustments from './inventoryAdjustments/inventoryAdjustment.reducer';
+import creditNotes from './CreditNotes/creditNotes.reducer'
 import plans from './plans/plans.reducer';
 
 const appReducer = combineReducers({
@@ -63,6 +64,7 @@ const appReducer = combineReducers({
   paymentReceives,
   paymentMades,
   inventoryAdjustments,
+  creditNotes,
   plans
 });
 
