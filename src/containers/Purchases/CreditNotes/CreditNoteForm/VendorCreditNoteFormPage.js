@@ -14,7 +14,7 @@ export default function VendorCreditNoteFormPage() {
   const idAsInteger = parseInt(id, 10);
 
   return (
-    <VendorCreditNoteFormProvider creditNoteId={idAsInteger}>
+    <VendorCreditNoteFormProvider vendorCreditId={idAsInteger}>
       <VendorCreditNoteForm />
     </VendorCreditNoteFormProvider>
   );

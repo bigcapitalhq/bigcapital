@@ -8,17 +8,18 @@ import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
+import { useDeleteVendorCredit } from 'hooks/query';
 import { compose } from 'utils';
 
 /**
- * Vendor Credit note delete alert.
+ * Vendor Credit delete alert.
  */
-function VendorCreditNoteDeleteAlert({
+function VendorCreditDeleteAlert({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { vendorCrditNoteId },
+  payload: { vendorCreditId },
 
   // #withAlertActions
   closeAlert,
@@ -26,11 +27,32 @@ function VendorCreditNoteDeleteAlert({
   // #withDrawerActions
   closeDrawer,
 }) {
+  const { isLoading, mutateAsync: deleteVendorCreditMutate } =
+    useDeleteVendorCredit();
+
   // handle cancel delete credit note alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
-  const handleConfirmCreditNoteDelete = () => {};
+  const handleConfirmCreditDelete = () => {
+    deleteVendorCreditMutate(vendorCreditId)
+      .then(() => {
+        AppToaster.show({
+          message: intl.get('vendor_credits.alert.success_message'),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {},
+      )
+      .finally(() => {
+        closeAlert(name);
+      });
+  };
 
   return (
     <Alert
@@ -40,11 +62,13 @@ function VendorCreditNoteDeleteAlert({
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancelDeleteAlert}
-      onConfirm={handleConfirmCreditNoteDelete}
-      // loading={isLoading}
+      onConfirm={handleConfirmCreditDelete}
+      loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage id={'credit_note.once_delete_this_credit_note'} />
+        <FormattedHTMLMessage
+          id={'vendor_credits.note.once_delete_this_vendor_credit_note'}
+        />
       </p>
     </Alert>
   );
@@ -54,4 +78,4 @@ export default compose(
   withAlertStoreConnect(),
   withAlertActions,
   withDrawerActions,
-)(VendorCreditNoteDeleteAlert);
+)(VendorCreditDeleteAlert);

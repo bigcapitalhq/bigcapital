@@ -19,8 +19,8 @@ export default (mapState) => {
       cashflowSettings: state.settings.data.cashflowAccounts,
       cashflowTransactionsSettings: state.settings.data.cashflowTransactions,
       cashflowSetting: state.settings.data.cashflow,
-      creditNoteSettings: state.settings.data.salesCreditNotes,
-      vendorsCreditNoteSetting:state.settings.data.vendorsCreditNotes
+      creditNoteSettings: state.settings.data.creditNotes,
+      vendorsCreditNoteSetting: state.settings.data.vendorCredits,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

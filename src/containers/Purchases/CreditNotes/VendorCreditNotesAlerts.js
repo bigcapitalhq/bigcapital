@@ -1,7 +1,7 @@
 import React from 'react';
 
-const VendorCreditNoteDeleteAlert = React.lazy(() =>
-  import('../../Alerts/VendorCeditNotes/VendorCreditNoteDeleteAlert'),
+const VendorCreditDeleteAlert = React.lazy(() =>
+  import('../../Alerts/VendorCeditNotes/VendorCreditDeleteAlert'),
 );
 
 /**
@@ -9,7 +9,7 @@ const VendorCreditNoteDeleteAlert = React.lazy(() =>
  */
 export default [
   {
-    name: 'vendor-credit-note-delete',
-    component: VendorCreditNoteDeleteAlert,
+    name: 'vendor-credit-delete',
+    component: VendorCreditDeleteAlert,
   },
 ];

@@ -14,26 +14,30 @@ import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider
  */
 function VendorsCreditNoteViewTabs({
   // #withVendorsCreditNotes
-  creditNoteCurrentView,
+  vendorCreditCurrentView,
 
   // #withVendorsCreditNotesActions
   setVendorsCreditNoteTableState,
 }) {
-  // Credit note list context.
-
-  // Handle click a new view tab.
-  const handleClickNewView = () => {};
-
-  // const tabs = transfromViewsToTabs(creditNoteCurrentView);
+  // vendor credit list context.
+  const { VendorCreditsViews } = useVendorsCreditNoteListContext();
 
   // Handle tab change.
   const handleTabsChange = (viewSlug) => {
-    setVendorsCreditNoteTableState({ viewSlug });
+    setVendorsCreditNoteTableState({ viewSlug: viewSlug || null });
   };
 
+  const tabs = transfromViewsToTabs(VendorCreditsViews);
   return (
     <Navbar className={'navbar--dashboard-views'}>
-      <NavbarGroup align={Alignment.LEFT}></NavbarGroup>
+      <NavbarGroup align={Alignment.LEFT}>
+        <DashboardViewsTabs
+          currentViewSlug={vendorCreditCurrentView}
+          resourceName={'vendor_credits'}
+          tabs={tabs}
+          onChange={handleTabsChange}
+        />
+      </NavbarGroup>
     </Navbar>
   );
 }
@@ -41,6 +45,6 @@ function VendorsCreditNoteViewTabs({
 export default compose(
   withVendorsCreditNotesActions,
   withVendorsCreditNotes(({ vendorsCreditNoteTableState }) => ({
-    creditNoteCurrentView: vendorsCreditNoteTableState.viewSlug,
+    vendorCreditCurrentView: vendorsCreditNoteTableState.viewSlug,
   })),
 )(VendorsCreditNoteViewTabs);

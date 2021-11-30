@@ -1,9 +1,7 @@
 import React from 'react';
 import * as R from 'ramda';
 import moment from 'moment';
-import intl from 'react-intl-universal';
-import { Intent } from '@blueprintjs/core';
-import { AppToaster } from 'components';
+
 import {
   defaultFastFieldShouldUpdate,
   transformToForm,
@@ -14,7 +12,6 @@ import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
 } from 'containers/Entries/utils';
-import { isLandedCostDisabled } from '../../../Entries/utils';
 
 export const MIN_LINES_NUMBER = 4;
 
@@ -32,11 +29,10 @@ export const defaultCreditNoteEntry = {
 // Default Vendors Credit Note.
 export const defaultVendorsCreditNote = {
   vendor_id: '',
-  bill_number: '',
-  bill_date: moment(new Date()).format('YYYY-MM-DD'),
-  reference_no: '',
+  vendor_credit_number: '',
+  vendor_credit_date: moment(new Date()).format('YYYY-MM-DD'),
+  // reference_no: '',
   note: '',
-  open: '',
   entries: [...repeatValue(defaultCreditNoteEntry, MIN_LINES_NUMBER)],
 };
 
@@ -64,16 +60,18 @@ export const transformToEditForm = (creditNote) => {
   };
 };
 
-
 /**
  * Transformes credit note entries to submit request.
  */
- export const transformEntriesToSubmit = (entries) => {
+export const transformEntriesToSubmit = (entries) => {
   const transformCreditNoteEntry = R.compose(
     R.omit(['amount']),
     R.curry(transformToForm)(R.__, defaultCreditNoteEntry),
   );
-  return R.compose(orderingLinesIndexes, R.map(transformCreditNoteEntry))(entries);
+  return R.compose(
+    orderingLinesIndexes,
+    R.map(transformCreditNoteEntry),
+  )(entries);
 };
 
 /**
@@ -86,21 +84,19 @@ export const filterNonZeroEntries = (entries) => {
 /**
  * Transformes form values to request body.
  */
- export const transformFormValuesToRequest = (values) => {
+export const transformFormValuesToRequest = (values) => {
   const entries = filterNonZeroEntries(values.entries);
 
   return {
     ...values,
     entries: transformEntriesToSubmit(entries),
-    open: false,
   };
 };
-
 
 /**
  * Detarmines vendors fast field should update
  */
- export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
+export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
   return (
     newProps.vendors !== oldProps.vendors ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
@@ -110,7 +106,7 @@ export const filterNonZeroEntries = (entries) => {
 /**
  * Detarmines entries fast field should update.
  */
- export const entriesFieldShouldUpdate = (newProps, oldProps) => {
+export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
     newProps.items !== oldProps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)

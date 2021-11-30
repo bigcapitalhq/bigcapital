@@ -18,6 +18,8 @@ import {
 } from 'components';
 import DashboardActionsBar from '../../../../components/Dashboard/DashboardActionsBar';
 
+import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
+
 import withVendorsCreditNotes from './withVendorsCreditNotes';
 import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
 import withSettings from '../../../Settings/withSettings';
@@ -30,6 +32,7 @@ import { compose } from 'utils';
  */
 function VendorsCreditNoteActionsBar({
   // #withVendorsCreditNotes
+  vendorCreditFilterRoles,
 
   // #withVendorsCreditNotesActions
   setVendorsCreditNoteTableState,
@@ -42,9 +45,14 @@ function VendorsCreditNoteActionsBar({
 }) {
   const history = useHistory();
 
-  // credit note list context.
+  // vendor credit list context.
+  const { VendorCreditsViews, fields, refresh } =
+    useVendorsCreditNoteListContext();
 
-  // credit note refresh action.
+  // Handle click a new Vendor.
+  const handleClickNewVendorCredit = () => {
+    history.push('/vendor-credits/new');
+  };
 
   // Handle view tab change.
   const handleTabChange = (view) => {
@@ -52,11 +60,13 @@ function VendorsCreditNoteActionsBar({
   };
 
   // Handle click a refresh credit note.
-  const handleRefreshBtnClick = () => {};
+  const handleRefreshBtnClick = () => {
+    refresh();
+  };
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('vendorsCreditNote', 'tableSize', size);
+    addSetting('vendorCredits', 'tableSize', size);
   };
 
   return (
@@ -64,11 +74,33 @@ function VendorsCreditNoteActionsBar({
       <NavbarGroup>
         <DashboardActionViewsList
           allMenuItem={true}
-          resourceName={'credit_note'}
-          views={[]}
+          resourceName={'vendor_credit'}
+          views={VendorCreditsViews}
+          allMenuItem={true}
+          allMenuItemText={<T id={'all'} />}
           onChange={handleTabChange}
         />
         <NavbarDivider />
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon={'plus'} />}
+          text={<T id={'vendor_credits.action.new_vendor_credit'} />}
+          onClick={handleClickNewVendorCredit}
+        />
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: vendorCreditFilterRoles,
+            defaultFieldKey: 'created_at',
+            fields: fields,
+            onFilterChange: (filterConditions) => {
+              setVendorsCreditNoteTableState({ filterRoles: filterConditions });
+            },
+          }}
+        >
+          <DashboardFilterButton
+            conditionsCount={vendorCreditFilterRoles.length}
+          />
+        </AdvancedFilterPopover>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
@@ -106,7 +138,7 @@ export default compose(
   withVendorsCreditNotesActions,
   withSettingsActions,
   withVendorsCreditNotes(({ vendorsCreditNoteTableState }) => ({
-    creditNoteFilterRoles: vendorsCreditNoteTableState.filterRoles,
+    vendorCreditFilterRoles: vendorsCreditNoteTableState.filterRoles,
   })),
   withSettings(({ vendorsCreditNoteSetting }) => ({
     creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,

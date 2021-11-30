@@ -5,9 +5,8 @@ import { isBlank } from 'utils';
 
 const getSchema = Yup.object().shape({
   vendor_id: Yup.number().required().label(intl.get('vendor_name_')),
-  bill_date: Yup.date().required().label(intl.get('bill_date_')),
-  due_date: Yup.date().required().label(intl.get('due_date_')),
-  bill_number: Yup.string()
+  vendor_credit_date: Yup.date().required().label(intl.get('bill_date_')),
+  vendor_credit_number: Yup.string()
     .max(DATATYPES_LENGTH.STRING)
     .label(intl.get('bill_number_')),
   reference_no: Yup.string().nullable().min(1).max(DATATYPES_LENGTH.STRING),
@@ -16,7 +15,6 @@ const getSchema = Yup.object().shape({
     .min(1)
     .max(DATATYPES_LENGTH.TEXT)
     .label(intl.get('note')),
-  open: Yup.boolean(),
   entries: Yup.array().of(
     Yup.object().shape({
       quantity: Yup.number()
@@ -33,7 +31,6 @@ const getSchema = Yup.object().shape({
           is: (quantity, rate) => !isBlank(quantity) && !isBlank(rate),
           then: Yup.number().required(),
         }),
-      total: Yup.number().nullable(),
       discount: Yup.number().nullable().min(0).max(DATATYPES_LENGTH.INT_10),
       description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
     }),

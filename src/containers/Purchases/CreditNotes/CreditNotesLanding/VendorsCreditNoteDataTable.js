@@ -14,7 +14,7 @@ import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
 import withSettings from '../../../Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 
-import { useVendorsCreditNoteTableColumns } from './components';
+import { useVendorsCreditNoteTableColumns, ActionsMenu } from './components';
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
 
 import { compose } from 'utils';
@@ -34,7 +34,14 @@ function VendorsCreditNoteDataTable({
 }) {
   const history = useHistory();
 
-  // Credit note list context.
+  // Vendor credits context.
+  const {
+    vendorCredits,
+    pagination,
+    isEmptyStatus,
+    isVendorCreditsFetching,
+    isVendorCreditsLoading,
+  } = useVendorsCreditNoteListContext();
 
   // Credit note table columns.
   const columns = useVendorsCreditNoteTableColumns();
@@ -56,40 +63,39 @@ function VendorsCreditNoteDataTable({
   );
 
   // Display create note empty status instead of the table.
-  // if (isEmptyStatus) {
-  //   return <VendorsCreditNoteEmptyStatus />;
-  // }
+  if (isEmptyStatus) {
+    return <VendorsCreditNoteEmptyStatus />;
+  }
 
   // Handle delete credit note.
   const handleDeleteVendorCreditNote = ({ id }) => {
-    openAlert('vendor-credit-note-delete', { creditNoteId: id });
+    openAlert('vendor-credit-delete', { vendorCreditId: id });
   };
 
   // Handle edit credit note.
-  const hanldeEditVendorCreditNote = (creditNote) => {
-    history.push(`/vendor-credit-notes/${creditNote.id}/edit`);
+  const hanldeEditVendorCreditNote = (vendorCredit) => {
+    history.push(`/vendor-credits/${vendorCredit.id}/edit`);
   };
 
   return (
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={[]}
-        // loading={}
-        // headerLoading={}
-        // progressBarLoading={}
-        onFetchData={handleDataTableFetchData}
+        data={vendorCredits}
+        loading={isVendorCreditsLoading}
+        headerLoading={isVendorCreditsLoading}
+        progressBarLoading={isVendorCreditsFetching}
+        // onFetchData={handleDataTableFetchData}
         manualSortBy={true}
         selectionColumn={true}
         noInitialFetch={true}
         sticky={true}
         pagination={true}
-        manualPagination={true}
-        // pagesCount={}
-        autoResetSortBy={false}
-        autoResetPage={false}
+        pagesCount={pagination.pagesCount}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
+        ContextMenu={ActionsMenu}
+        // onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
         size={creditNoteTableSize}

@@ -1,25 +1,20 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
-import { isEmpty, pick } from 'lodash';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import { transformToEditForm } from './utils';
 
-import { useBill, useItems, useVendors } from 'hooks/query';
+import {
+  useCreateVendorCredit,
+  useEditVendorCredit,
+  useVendorCredit,
+  useItems,
+  useVendors,
+} from 'hooks/query';
 
 const VendorCreditNoteFormContext = React.createContext();
 
 /**
  * Vendor Credit note data provider.
  */
-function VendorCreditNoteFormProvider({ creditNoteId, ...props }) {
-  const { state } = useLocation();
-  const billId = state?.action;
-
-  // Fetches the bill by the given id.
-  const { data: bill, isLoading: isBillLoading } = useBill(billId, {
-    enabled: !!billId,
-  });
-
+function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
   // Handle fetching the items table based on the given query.
   const {
     data: { items },
@@ -34,28 +29,41 @@ function VendorCreditNoteFormProvider({ creditNoteId, ...props }) {
     isLoading: isVendorsLoading,
   } = useVendors({ page_size: 10000 });
 
+  // Handle fetch vendor credit details.
+  const { data: vendorCredit, isLoading: isVendorCreditLoading } =
+    useVendorCredit(vendorCreditId, {
+      enabled: !!vendorCreditId,
+    });
+
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = React.useState();
 
+  // Create and edit vendor credit mutations.
+  const { mutateAsync: createVendorCreditMutate } = useCreateVendorCredit();
+  const { mutateAsync: editVendorCreditMutate } = useEditVendorCredit();
+
   // Determines whether the form in new mode.
-  const isNewMode = !creditNoteId;
+  const isNewMode = !vendorCreditId;
 
   // Provider payload.
   const provider = {
-    bill,
     items,
     vendors,
-    billId,
+    vendorCredit,
     submitPayload,
-
-    setSubmitPayload,
     isNewMode,
+
+    isVendorCreditLoading,
+
+    createVendorCreditMutate,
+    editVendorCreditMutate,
+    setSubmitPayload,
   };
 
   return (
     <DashboardInsider
-      loading={isBillLoading || isItemsLoading || isVendorsLoading}
-      name={'vendor-credit-note-form'}
+      loading={isItemsLoading || isVendorsLoading || isVendorCreditLoading}
+      name={'vendor-credits-form'}
     >
       <VendorCreditNoteFormContext.Provider value={provider} {...props} />
     </DashboardInsider>
@@ -65,4 +73,4 @@ function VendorCreditNoteFormProvider({ creditNoteId, ...props }) {
 const useVendorCreditNoteFormContext = () =>
   React.useContext(VendorCreditNoteFormContext);
 
-export { VendorCreditNoteFormProvider , useVendorCreditNoteFormContext };
+export { VendorCreditNoteFormProvider, useVendorCreditNoteFormContext };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
-import { Intent } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import { sumBy, omit, isEmpty } from 'lodash';
 import classNames from 'classnames';
@@ -36,27 +36,35 @@ function VendorCreditNoteForm({
   organization: { base_currency },
 }) {
   const history = useHistory();
+
   // Vendor Credit note form context.
-  const { bill } = useVendorCreditNoteFormContext();
+  const {
+    isNewMode,
+    submitPayload,
+    vendorCredit,
+    createVendorCreditMutate,
+    editVendorCreditMutate,
+  } = useVendorCreditNoteFormContext();
 
   // Initial values.
   const initialValues = React.useMemo(
     () => ({
-      ...(!isEmpty(bill)
+      ...(!isEmpty(vendorCredit)
         ? {
-            ...transformToEditForm(bill),
-            currency_code: base_currency,
+            ...transformToEditForm(vendorCredit),
           }
         : {
             ...defaultVendorsCreditNote,
-            currency_code: base_currency,
           }),
     }),
-    [],
+    [vendorCredit, base_currency],
   );
 
-  // Handle form submit.
-  const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
+  // Handles form submit.
+  const handleFormSubmit = (
+    values,
+    { setSubmitting, setErrors, resetForm },
+  ) => {
     const entries = filterNonZeroEntries(values.entries);
     const totalQuantity = safeSumBy(entries, 'quantity');
 
@@ -68,18 +76,43 @@ function VendorCreditNoteForm({
       setSubmitting(false);
       return;
     }
-
-    const form = {};
-
+    const form = {
+      ...transformFormValuesToRequest(values),
+    };
     // Handle the request success.
-    const onSuccess = (response) => {};
+    const onSuccess = (response) => {
+      AppToaster.show({
+        message: intl.get(
+          isNewMode
+            ? 'vendor_credits.success_message'
+            : 'vendor_credits.edit_success_message',
+        ),
+        intent: Intent.SUCCESS,
+      });
+      setSubmitting(false);
 
+      if (submitPayload.redirect) {
+        history.push('/vendor-credits');
+      }
+      if (submitPayload.resetForm) {
+        resetForm();
+      }
+    };
     // Handle the request error.
     const onError = ({
       response: {
         data: { errors },
       },
-    }) => {};
+    }) => {
+      setSubmitting(false);
+    };
+    if (isNewMode) {
+      createVendorCreditMutate(form).then(onSuccess).catch(onError);
+    } else {
+      editVendorCreditMutate([vendorCredit.id, form])
+        .then(onSuccess)
+        .catch(onError);
+    }
   };
 
   return (
@@ -92,15 +125,16 @@ function VendorCreditNoteForm({
     >
       <Formik
         validationSchema={
-          true ? CreateCreditNoteFormSchema : EditCreditNoteFormSchema
+          isNewMode ? CreateCreditNoteFormSchema : EditCreditNoteFormSchema
         }
         initialValues={initialValues}
-        onSubmit={handleSubmit}
+        onSubmit={handleFormSubmit}
       >
         <Form>
           <VendorCreditNoteFormHeader />
           <VendorCreditNoteItemsEntriesEditor />
           <VendorCreditNoteFormFooter />
+
           <VendorCreditNoteFloatingActions />
         </Form>
       </Formik>

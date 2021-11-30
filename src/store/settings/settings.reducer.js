@@ -52,6 +52,12 @@ const initialState = {
     cashflowTransactions: {
       tableSize: 'medium',
     },
+    creditNotes: {
+      tableSize: 'medium',
+    },
+    vendorCredits: {
+      tableSize: 'medium',
+    },
   },
 };
 

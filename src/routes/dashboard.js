@@ -759,45 +759,45 @@ export const getDashboardRoutes = () => [
   },
   //  Purchases Credit note.
   {
-    path: `/vendors-credit-notes/:id/edit`,
+    path: `/vendor-credits/:id/edit`,
     component: lazy(() =>
       import(
         'containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
       ),
     ),
-    name: 'vendor-credit-note-edit',
+    name: 'vendor-credits-edit',
     breadcrumb: intl.get('edit'),
-    pageTitle: intl.get('credit_note.edit_credit_note'),
+    pageTitle: intl.get('vendor_credits.label.edit_vendor_credit'),
     backLink: true,
     sidebarExpand: false,
-    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT_NOTE,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: '/vendors-credit-notes/new',
+    path: '/vendor-credits/new',
     component: lazy(() =>
       import(
         'containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
       ),
     ),
-    name: 'vendor-credit-note-new',
+    name: 'vendor-credits-new',
     backLink: true,
     sidebarExpand: false,
-    breadcrumb: intl.get('credit_note.new_credit_note'),
-    pageTitle: intl.get('credit_note.new_credit_note'),
-    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT_NOTE,
+    breadcrumb: intl.get('vendor_credits.label.new_vendor_credit'),
+    pageTitle: intl.get('vendor_credits.label.new_vendor_credit'),
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: '/vendors-credit-notes',
+    path: '/vendor-credits',
     component: lazy(() =>
       import(
         '../containers/Purchases/CreditNotes/CreditNotesLanding/VendorsCreditNotesList'
       ),
     ),
-    breadcrumb: intl.get('credit_note.label_list'),
-    pageTitle: intl.get('credit_note.label_list'),
-    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT_NOTE,
+    breadcrumb: intl.get('vendor_credits.lable_vendor_credit_list'),
+    pageTitle: intl.get('vendor_credits.lable_vendor_credit_list'),
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 

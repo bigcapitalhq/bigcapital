@@ -12,5 +12,5 @@ export const RESOURCES_TYPES = {
   MANUAL_JOURNAL: 'manual_journal',
   ACCOUNT: 'account',
   CREDIT_NOTE: 'credit_note',
-  VENDOR_CREDIT_NOTE:'vendor_credit_note'
+  VENDOR_CREDIT:'vendor_credit'
 };

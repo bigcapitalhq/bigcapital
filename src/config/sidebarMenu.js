@@ -259,8 +259,8 @@ export default [
         },
       },
       {
-        text: <T id={'sidebar_credit_note'} />,
-        href: '/vendors-credit-notes',
+        text: <T id={'sidebar_vendor_credits'} />,
+        href: '/vendor-credits',
       },
       {
         text: <T id={'payment_mades'} />,
@@ -301,6 +301,14 @@ export default [
       {
         text: <T id={'New purchase invoice'} />,
         href: '/bills/new',
+        permission: {
+          subject: AbilitySubject.Bill,
+          ability: BillAction.Create,
+        },
+      },
+      {
+        text: <T id={'vendor_credits.label.new_vendor_credit'} />,
+        href: '/vendor-credits/new',
         permission: {
           subject: AbilitySubject.Bill,
           ability: BillAction.Create,

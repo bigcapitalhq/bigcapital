@@ -30,3 +30,4 @@ export * from './jobs';
 export * from './misc';
 export * from './cashflowAccounts'
 export * from './roles'
+export * from './vendorCredit'

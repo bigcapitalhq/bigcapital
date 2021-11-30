@@ -26,11 +26,46 @@ export default function VendorCreditNoteFloatingActions() {
   const { resetForm, submitForm, isSubmitting } = useFormikContext();
 
   // Credit note form context.
-  const { setSubmitPayload } = useVendorCreditNoteFormContext();
+  const { setSubmitPayload, isNewMode } = useVendorCreditNoteFormContext();
+
+  // Handle submit, save and anothe new button click.
+  const handleSubmitAndNewBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, status: true, resetForm: true });
+    submitForm();
+  };
+
+  // Handle submit as save & continue editing button click.
+  const handleSubmitSaveContinueEditingBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, status: true });
+    submitForm();
+  };
+
+  // Handle submit as draft button click.
+  const handleSubmitDraftBtnClick = (event) => {
+    setSubmitPayload({ redirect: true, status: false });
+    submitForm();
+  };
+
+  // handle submit as draft & new button click.
+  const handleSubmitDraftAndNewBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, status: false, resetForm: true });
+    submitForm();
+  };
+
+  // Handle submit as draft & continue editing button click.
+  const handleSubmitDraftContinueEditingBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, status: false });
+    submitForm();
+  };
 
   // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
     history.goBack();
+  };
+
+  // Handle submit button click.
+  const handleSubmitBtnClick = (event) => {
+    setSubmitPayload({ redirect: true });
   };
 
   const handleClearBtnClick = (event) => {
@@ -39,19 +74,26 @@ export default function VendorCreditNoteFloatingActions() {
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
-      {/* ----------- Save And Open ----------- */}
+      {/* ----------- Save  ----------- */}
       <ButtonGroup>
         <Button
           disabled={isSubmitting}
           loading={isSubmitting}
           intent={Intent.PRIMARY}
-          text={<T id={'save_open'} />}
+          text={<T id={'save'} />}
         />
+
         <Popover
           content={
             <Menu>
-              <MenuItem text={<T id={'open_and_new'} />} />
-              <MenuItem text={<T id={'open_continue_editing'} />} />
+              <MenuItem
+                text={<T id={'save_and_new'} />}
+                onClick={handleSubmitAndNewBtnClick}
+              />
+              <MenuItem
+                text={<T id={'save_continue_editing'} />}
+                onClick={handleSubmitSaveContinueEditingBtnClick}
+              />
             </Menu>
           }
           minimal={true}
@@ -70,13 +112,20 @@ export default function VendorCreditNoteFloatingActions() {
         <Button
           disabled={isSubmitting}
           className={'ml1'}
+          onClick={handleSubmitDraftBtnClick}
           text={<T id={'save_as_draft'} />}
         />
         <Popover
           content={
             <Menu>
-              <MenuItem text={<T id={'save_and_new'} />} />
-              <MenuItem text={<T id={'save_continue_editing'} />} />
+              <MenuItem
+                text={<T id={'save_and_new'} />}
+                onClick={handleSubmitDraftAndNewBtnClick}
+              />
+              <MenuItem
+                text={<T id={'save_continue_editing'} />}
+                onClick={handleSubmitDraftContinueEditingBtnClick}
+              />
             </Menu>
           }
           minimal={true}
@@ -89,14 +138,12 @@ export default function VendorCreditNoteFloatingActions() {
           />
         </Popover>
       </ButtonGroup>
-      {/* ----------- Save and New ----------- */}
-
       {/* ----------- Clear & Reset----------- */}
       <Button
         className={'ml1'}
         disabled={isSubmitting}
         onClick={handleClearBtnClick}
-        // text={ ? <T id={'reset'} /> : <T id={'clear'} />}
+        text={isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel ----------- */}
       <Button

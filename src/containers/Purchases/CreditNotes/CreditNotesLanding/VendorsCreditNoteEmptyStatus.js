@@ -5,6 +5,7 @@ import { EmptyStatus } from 'components';
 import { FormattedMessage as T } from 'components';
 
 export default function VendorsCreditNoteEmptyStatus() {
+  const history = useHistory();
   return (
     <EmptyStatus
       title={<T id={'the_organization_doesn_t_receive_money_yet'} />}
@@ -15,8 +16,12 @@ export default function VendorsCreditNoteEmptyStatus() {
       }
       action={
         <>
-          <Button intent={Intent.PRIMARY} large={true}>
-            'Vendors Credit Note'
+          <Button
+            intent={Intent.PRIMARY}
+            large={true}
+            onClick={() => history.push('/vendor-credits/new')}
+          >
+            <T id={'vendor_credits.action.new_vendor_credit'} />
           </Button>
 
           <Button intent={Intent.NONE} large={true}>

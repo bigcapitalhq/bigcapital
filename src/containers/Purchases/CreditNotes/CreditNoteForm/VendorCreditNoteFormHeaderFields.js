@@ -63,22 +63,25 @@ function VendorCreditNoteFormHeaderFields() {
         )}
       </FastField>
 
-      {/* ------- Credit note date ------- */}
-      <FastField name={'bill_date'}>
+      {/* ------- Vendor Credit date ------- */}
+      <FastField name={'vendor_credit_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'credit_note.label_credit_note_date'} />}
             inline={true}
             labelInfo={<FieldRequiredHint />}
-            className={classNames('form-group--credit_note_date', CLASSES.FILL)}
+            className={classNames(
+              'form-group--vendor_credit_date',
+              CLASSES.FILL,
+            )}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="bill_date" />}
+            helperText={<ErrorMessage name="vendor_credit_date" />}
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
               value={tansformDateValue(value)}
               onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('bill_date', formattedDate);
+                form.setFieldValue('vendor_credit_date', formattedDate);
               })}
               popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
               inputProps={{
@@ -89,22 +92,22 @@ function VendorCreditNoteFormHeaderFields() {
         )}
       </FastField>
 
-      {/* ----------- Credit note # ----------- */}
-      <FastField name={'bill_number'}>
+      {/* ----------- Vendor Credit No # ----------- */}
+      <FastField name={'vendor_credit_number'}>
         {({ field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'credit_note.label_credit_note'} />}
             inline={true}
-            className={('form-group--bill_number', CLASSES.FILL)}
+            className={('form-group--vendor_credit_number', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="bill_number" />}
+            helperText={<ErrorMessage name="vendor_credit_number" />}
           >
             <InputGroup minimal={true} {...field} />
           </FormGroup>
         )}
       </FastField>
       {/* ----------- Reference ----------- */}
-      <FastField name={'reference_no'}>
+      {/* <FastField name={'reference_no'}>
         {({ field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'reference_no'} />}
@@ -116,7 +119,7 @@ function VendorCreditNoteFormHeaderFields() {
             <InputGroup minimal={true} {...field} />
           </FormGroup>
         )}
-      </FastField>
+      </FastField> */}
     </div>
   );
 }
