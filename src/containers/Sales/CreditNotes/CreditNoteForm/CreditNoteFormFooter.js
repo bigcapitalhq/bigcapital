@@ -20,11 +20,11 @@ export default function CreditNoteFormFooter() {
         <Row>
           <Col md={8}>
             {/* --------- Customer notes --------- */}
-            <FastField name={'invoice_message'}>
+            <FastField name={'note'}>
               {({ field, meta: { error, touched } }) => (
                 <FormGroup
                   label={<T id={'credit_note.label_customer_note'} />}
-                  className={'form-group--customer_notes'}
+                  className={'form-group--note'}
                   intent={inputIntent({ error, touched })}
                 >
                   <TextArea growVertically={true} {...field} />

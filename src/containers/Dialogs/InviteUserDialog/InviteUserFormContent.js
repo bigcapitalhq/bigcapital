@@ -24,7 +24,7 @@ function InviteUserFormContent({
   const handleClose = () => {
     closeDialog(dialogName);
   };
-  console.log(roles, 'XX');
+
   return (
     <Form>
       <div className={CLASSES.DIALOG_BODY}>

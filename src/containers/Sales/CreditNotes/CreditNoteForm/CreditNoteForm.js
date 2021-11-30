@@ -7,8 +7,8 @@ import { sumBy, omit, isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
-  getCreateCreditNoteFormSchema,
-  getEditCreditNoteFormSchema,
+  CreateCreditNoteFormSchema,
+  EditCreditNoteFormSchema,
 } from './CreditNoteForm.schema';
 
 import CreditNoteFormHeader from './CreditNoteFormHeader';
@@ -17,9 +17,21 @@ import CreditNoteFormFooter from './CreditNoteFormFooter';
 import CreditNoteFloatingActions from './CreditNoteFloatingActions';
 
 import { AppToaster } from 'components';
-import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
+
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
-import { transformToEditForm, defaultCreditNote } from './utils';
+import {
+  filterNonZeroEntries,
+  transformToEditForm,
+  transformFormValuesToRequest,
+  defaultCreditNote,
+} from './utils';
+
+import {
+  compose,
+  orderingLinesIndexes,
+  transactionNumber,
+  safeSumBy,
+} from 'utils';
 
 import withSettings from 'containers/Settings/withSettings';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
@@ -36,33 +48,35 @@ function CreditNoteForm({
   const history = useHistory();
 
   // Credit note form context.
-  const { invoice } = useCreditNoteFormContext();
+  const {
+    isNewMode,
+    submitPayload,
+    creditNote,
+    createCreditNoteMutate,
+    editCreditNoteMutate,
+  } = useCreditNoteFormContext();
 
   // Initial values.
   const initialValues = React.useMemo(
     () => ({
-      ...(!isEmpty(invoice)
-        ? { ...transformToEditForm(invoice), currency_code: base_currency }
+      ...(!isEmpty(creditNote)
+        ? { ...transformToEditForm(creditNote), currency_code: base_currency }
         : {
             ...defaultCreditNote,
             entries: orderingLinesIndexes(defaultCreditNote.entries),
-            currency_code: base_currency,
           }),
     }),
     [],
   );
 
-  // Handle form submit.
-  const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
-    setSubmitting(true);
+  // Handles form submit.
+  const handleFormSubmit = (
+    values,
+    { setSubmitting, setErrors, resetForm },
+  ) => {
+    const entries = filterNonZeroEntries(values.entries);
+    const totalQuantity = safeSumBy(entries, 'quantity');
 
-    const entries = values.entries.filter(
-      (item) => item.item_id && item.quantity,
-    );
-
-    const totalQuantity = sumBy(entries, (entry) => parseInt(entry.quantity));
-
-    // Throw danger toaster in case total quantity equals zero.
     if (totalQuantity === 0) {
       AppToaster.show({
         message: intl.get('quantity_cannot_be_zero_or_empty'),
@@ -71,23 +85,44 @@ function CreditNoteForm({
       setSubmitting(false);
       return;
     }
-    // Transformes the values of the form to request.
     const form = {
-      // ...transformValueToRequest(values),
+      ...transformFormValuesToRequest(values),
     };
-
     // Handle the request success.
-    const onSuccess = () => {};
+    const onSuccess = (response) => {
+      AppToaster.show({
+        message: intl.get(
+          isNewMode
+            ? 'credit_note.success_message'
+            : 'credit_note.edit_success_message',
+        ),
+        intent: Intent.SUCCESS,
+      });
+      setSubmitting(false);
+
+      if (submitPayload.redirect) {
+        history.push('/credit-notes');
+      }
+      if (submitPayload.resetForm) {
+        resetForm();
+      }
+    };
     // Handle the request error.
     const onError = ({
       response: {
         data: { errors },
       },
-    }) => {};
+    }) => {
+      setSubmitting(false);
+    };
+    if (isNewMode) {
+      createCreditNoteMutate(form).then(onSuccess).catch(onError);
+    } else {
+      editCreditNoteMutate([creditNote.id, form])
+        .then(onSuccess)
+        .catch(onError);
+    }
   };
-
-  const CreateCreditNoteFormSchema = getCreateCreditNoteFormSchema();
-  const EditCreditNoteFormSchema = getEditCreditNoteFormSchema();
 
   return (
     <div
@@ -99,10 +134,10 @@ function CreditNoteForm({
     >
       <Formik
         validationSchema={
-          true ? CreateCreditNoteFormSchema : EditCreditNoteFormSchema
+          isNewMode ? CreateCreditNoteFormSchema : EditCreditNoteFormSchema
         }
         initialValues={initialValues}
-        onSubmit={handleSubmit}
+        onSubmit={handleFormSubmit}
       >
         <Form>
           <CreditNoteFormHeader />

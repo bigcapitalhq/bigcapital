@@ -65,7 +65,7 @@ function CreditNoteFormHeaderFields() {
         )}
       </FastField>
       {/* ----------- Credit note date ----------- */}
-      <FastField name={'invoice_date'}>
+      <FastField name={'credit_note_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'credit_note.label_credit_note_date'} />}
@@ -73,13 +73,13 @@ function CreditNoteFormHeaderFields() {
             labelInfo={<FieldRequiredHint />}
             className={classNames('form-group--credit_note_date', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="invoice_date" />}
+            helperText={<ErrorMessage name="credit_note_date" />}
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
               value={tansformDateValue(value)}
               onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('invoice_date', formattedDate);
+                form.setFieldValue('credit_note_date', formattedDate);
               })}
               popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
               inputProps={{
@@ -90,15 +90,15 @@ function CreditNoteFormHeaderFields() {
         )}
       </FastField>
       {/* ----------- Credit note # ----------- */}
-      <Field name={'invoice_no'}>
+      <Field name={'credit_note_number'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'credit_note.label_credit_note'} />}
             labelInfo={<FieldRequiredHint />}
             inline={true}
-            className={classNames('form-group--invoice-no', CLASSES.FILL)}
+            className={classNames('form-group--credit_note_number', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="invoice_no" />}
+            helperText={<ErrorMessage name="credit_note_number" />}
           >
             <InputGroup minimal={true} {...field} />
           </FormGroup>

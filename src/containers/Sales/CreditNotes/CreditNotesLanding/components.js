@@ -22,15 +22,7 @@ import {
 import { formattedAmount, safeCallback, calculateStatus } from 'utils';
 
 export function ActionsMenu({
-  payload: {
-    onEdit,
-    onDeliver,
-    onDelete,
-    onDrawer,
-    onQuick,
-    onViewDetails,
-    onPrint,
-  },
+  payload: { onEdit, onDelete, onViewDetails },
   row: { original },
 }) {
   return (
@@ -38,15 +30,16 @@ export function ActionsMenu({
       <MenuItem
         icon={<Icon icon="reader-18" />}
         text={intl.get('view_details')}
+        onClick={safeCallback(onViewDetails, original)}
       />
       <MenuDivider />
       <MenuItem
         icon={<Icon icon="pen-18" />}
-        text={intl.get('credit_note.label_edit_credit_note')}
+        text={intl.get('credit_note.action.edit_credit_note')}
         onClick={safeCallback(onEdit, original)}
       />
       <MenuItem
-        text={intl.get('credit_note.label_delete_credit_note')}
+        text={intl.get('credit_note.action.delete_credit_note')}
         intent={Intent.DANGER}
         onClick={safeCallback(onDelete, original)}
         icon={<Icon icon="trash-16" iconSize={16} />}
@@ -62,12 +55,12 @@ export function useCreditNoteTableColumns() {
   return React.useMemo(
     () => [
       {
-        id: 'date',
-        Header: intl.get('date'),
-        accessor: 'date',
+        id: 'credit_note_date',
+        Header: intl.get('credit_note.column.credit_date'),
+        accessor: 'credit_note_date',
         Cell: FormatDateCell,
         width: 110,
-        className: 'date',
+        className: 'credit_note_date',
         clickable: true,
         textOverview: true,
       },
@@ -81,17 +74,18 @@ export function useCreditNoteTableColumns() {
         textOverview: true,
       },
       {
-        id: 'credit_note',
-        Header: intl.get('credit_note.label_credit_note_no'),
-        accessor: 'credit_note',
+        id: 'credit_note_number',
+        Header: intl.get('credit_note.column.credit_note_no'),
+        accessor: 'credit_note_number',
         width: 100,
-        className: 'credit_note',
+        className: 'credit_note_number',
         clickable: true,
         textOverview: true,
       },
       {
         id: 'amount',
         Header: intl.get('amount'),
+        accessor: 'amount',
         // accessor: 'formatted_amount',
         width: 120,
         align: 'right',

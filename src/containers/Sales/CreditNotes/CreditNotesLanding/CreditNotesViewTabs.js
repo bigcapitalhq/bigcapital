@@ -20,11 +20,9 @@ function CreditNotesViewTabs({
   setCreditNotesTableState,
 }) {
   // Credit note list context.
+  const { CreditNotesView } = useCreditNoteListContext();
 
-  // Handle click a new view tab.
-  const handleClickNewView = () => {};
-
-  // const tabs = transfromViewsToTabs(creditNoteCurrentView);
+  const tabs = transfromViewsToTabs(CreditNotesView);
 
   // Handle tab change.
   const handleTabsChange = (viewSlug) => {
@@ -33,7 +31,14 @@ function CreditNotesViewTabs({
 
   return (
     <Navbar className={'navbar--dashboard-views'}>
-      <NavbarGroup align={Alignment.LEFT}></NavbarGroup>
+      <NavbarGroup align={Alignment.LEFT}>
+        <DashboardViewsTabs
+          currentViewSlug={creditNoteCurrentView}
+          resourceName={'credit_notes'}
+          tabs={tabs}
+          onChange={handleTabsChange}
+        />
+      </NavbarGroup>
     </Navbar>
   );
 }

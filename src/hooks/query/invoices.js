@@ -102,6 +102,7 @@ const transformInvoices = (res) => ({
  * Retrieve sale invoices list with pagination meta.
  */
 export function useInvoices(query, props) {
+
   return useRequestQuery(
     [t.SALE_INVOICES, query],
     { method: 'get', url: 'sales/invoices', params: query },

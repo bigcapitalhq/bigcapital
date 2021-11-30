@@ -14,7 +14,7 @@ import withCreditNotesActions from './withCreditNotesActions';
 import withSettings from '../../../Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 
-import { useCreditNoteTableColumns } from './components';
+import { useCreditNoteTableColumns, ActionsMenu } from './components';
 import { useCreditNoteListContext } from './CreditNotesListProvider';
 
 import { compose } from 'utils';
@@ -35,13 +35,20 @@ function CreditNotesDataTable({
   const history = useHistory();
 
   // Credit note list context.
+  const {
+    creditNotes,
+    pagination,
+    isEmptyStatus,
+    isCreditNotesFetching,
+    isCreditNotesLoading,
+  } = useCreditNoteListContext();
 
   // Credit note table columns.
   const columns = useCreditNoteTableColumns();
 
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.CREDIT_NOTE);
+    useMemorizedColumnsWidths(TABLES.CREDIT_NOTES);
 
   // Handles fetch data once the table state change.
   const handleDataTableFetchData = React.useCallback(
@@ -55,9 +62,14 @@ function CreditNotesDataTable({
     [setCreditNotesTableState],
   );
 
+  // Display create note empty status instead of the table.
+  if (isEmptyStatus) {
+    return <CreditNoteEmptyStatus />;
+  }
+
   // Handle delete credit note.
   const handleDeleteCreditNote = ({ id }) => {
-    openAlert('sale-credit-note-delete', { creditNoteId: id });
+    openAlert('credit-note-delete', { creditNoteId: id });
   };
 
   // Handle edit credit note.
@@ -69,19 +81,19 @@ function CreditNotesDataTable({
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={[]}
-        // loading={}
-        // headerLoading={}
-        // progressBarLoading={}
+        data={creditNotes}
+        loading={isCreditNotesLoading}
+        headerLoading={isCreditNotesLoading}
+        progressBarLoading={isCreditNotesFetching}
         onFetchData={handleDataTableFetchData}
-        manualSortBy={true}
         selectionColumn={true}
         noInitialFetch={true}
         sticky={true}
-        autoResetSortBy={false}
-        autoResetPage={false}
+        pagination={true}
+        pagesCount={pagination.pagesCount}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
+        ContextMenu={ActionsMenu}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
         size={creditNoteTableSize}

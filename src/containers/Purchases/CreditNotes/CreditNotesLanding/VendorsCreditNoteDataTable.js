@@ -48,7 +48,7 @@ function VendorsCreditNoteDataTable({
 
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.CREDIT_NOTE);
+    useMemorizedColumnsWidths(TABLES.VENDOR_CREDITS);
 
   // Handles fetch data once the table state change.
   const handleDataTableFetchData = React.useCallback(

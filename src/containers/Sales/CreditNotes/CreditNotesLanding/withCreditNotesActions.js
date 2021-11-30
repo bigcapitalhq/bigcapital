@@ -4,9 +4,10 @@ import {
   resetCreditNotesTableState,
 } from '../../../../store/CreditNotes/creditNotes.actions';
 
-const mapDispatchToProps = (dispatch) => ({
-  setCreditNoteTableState: (state) => dispatch(setCreditNotesTableState(state)),
-  resetCreditNoteTableState: () => dispatch(resetCreditNotesTableState()),
+const mapDipatchToProps = (dispatch) => ({
+  setCreditNotesTableState: (queries) =>
+    dispatch(setCreditNotesTableState(queries)),
+  resetCreditNotesTableState: () => dispatch(resetCreditNotesTableState()),
 });
 
-export default connect(null, mapDispatchToProps);
+export default connect(null, mapDipatchToProps);

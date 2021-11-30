@@ -15,7 +15,7 @@ const initialState = {
   tableState: defaultTableQuery,
 };
 
-const STORAGE_KEY = 'bigcapital:CreditNotes';
+const STORAGE_KEY = 'bigcapital:creditNotes';
 
 const CONFIG = {
   key: STORAGE_KEY,

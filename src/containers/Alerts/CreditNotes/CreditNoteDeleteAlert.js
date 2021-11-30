@@ -8,6 +8,7 @@ import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
+import { useDeleteCreditNote } from 'hooks/query';
 import { compose } from 'utils';
 
 /**
@@ -26,11 +27,32 @@ function CreditNoteDeleteAlert({
   // #withDrawerActions
   closeDrawer,
 }) {
+  const { isLoading, mutateAsync: deleteCreditNoteMutate } =
+    useDeleteCreditNote();
+
   // handle cancel delete credit note alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
-  const handleConfirmCreditNoteDelete = () => {};
+  const handleConfirmCreditNoteDelete = () => {
+    deleteCreditNoteMutate(creditNoteId)
+      .then(() => {
+        AppToaster.show({
+          message: intl.get('credit_note.alert.success_message'),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {},
+      )
+      .finally(() => {
+        closeAlert(name);
+      });
+  };
 
   return (
     <Alert
@@ -41,7 +63,7 @@ function CreditNoteDeleteAlert({
       isOpen={isOpen}
       onCancel={handleCancelDeleteAlert}
       onConfirm={handleConfirmCreditNoteDelete}
-      // loading={isLoading}
+      loading={isLoading}
     >
       <p>
         <FormattedHTMLMessage id={'credit_note.once_delete_this_credit_note'} />

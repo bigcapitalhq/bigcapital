@@ -66,6 +66,7 @@ export default function VendorCreditNoteFloatingActions() {
   // Handle submit button click.
   const handleSubmitBtnClick = (event) => {
     setSubmitPayload({ redirect: true });
+    submitForm();
   };
 
   const handleClearBtnClick = (event) => {
@@ -80,6 +81,7 @@ export default function VendorCreditNoteFloatingActions() {
           disabled={isSubmitting}
           loading={isSubmitting}
           intent={Intent.PRIMARY}
+          onClick={handleSubmitBtnClick}
           text={<T id={'save'} />}
         />
 

@@ -1,18 +1,14 @@
 import React from 'react';
+import * as R from 'ramda';
 import moment from 'moment';
-import intl from 'react-intl-universal';
-import { useFormikContext } from 'formik';
-import { Intent } from '@blueprintjs/core';
-import { omit } from 'lodash';
 
 import {
-  compose,
+  defaultFastFieldShouldUpdate,
   transformToForm,
   repeatValue,
-  transactionNumber,
-  defaultFastFieldShouldUpdate,
+  orderingLinesIndexes,
 } from 'utils';
-import { AppToaster } from 'components';
+
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
@@ -34,11 +30,11 @@ export const defaultCreditNoteEntry = {
 // Default credit note object.
 export const defaultCreditNote = {
   customer_id: '',
-  invoice_date: moment(new Date()).format('YYYY-MM-DD'),
-  invoice_no: '',
-  invoice_no_manually: false,
-  reference_no: '',
-  invoice_message: '',
+  credit_note_date: moment(new Date()).format('YYYY-MM-DD'),
+  credit_note_number: '',
+  credit_note_no_manually: false,
+  // reference_no: '',
+  note: '',
   terms_conditions: '',
   entries: [...repeatValue(defaultCreditNoteEntry, MIN_LINES_NUMBER)],
 };
@@ -56,7 +52,7 @@ export function transformToEditForm(creditNote) {
       Math.max(MIN_LINES_NUMBER - creditNote.entries.length, 0),
     ),
   ];
-  const entries = compose(
+  const entries = R.compose(
     ensureEntriesHaveEmptyLine(defaultCreditNoteEntry),
     updateItemsEntriesTotal,
   )(initialEntries);
@@ -66,6 +62,39 @@ export function transformToEditForm(creditNote) {
     entries,
   };
 }
+
+/**
+ * Transformes credit note entries to submit request.
+ */
+export const transformEntriesToSubmit = (entries) => {
+  const transformCreditNoteEntry = R.compose(
+    R.omit(['amount']),
+    R.curry(transformToForm)(R.__, defaultCreditNoteEntry),
+  );
+  return R.compose(
+    orderingLinesIndexes,
+    R.map(transformCreditNoteEntry),
+  )(entries);
+};
+
+/**
+ * Filters the givne non-zero entries.
+ */
+ export const filterNonZeroEntries = (entries) => {
+  return entries.filter((item) => item.item_id && item.quantity);
+};
+
+/**
+ * Transformes form values to request body.
+ */
+ export const transformFormValuesToRequest = (values) => {
+  const entries = filterNonZeroEntries(values.entries);
+
+  return {
+    ...values,
+    entries: transformEntriesToSubmit(entries),
+  };
+};
 
 /**
  * Determines customer name field when should update.
