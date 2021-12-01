@@ -1516,5 +1516,13 @@
   "vendor_credits.success_message": "The vendor credit has been created successfully",
   "vendor_credits.edit_success_message": "The vendor credit has been edited successfully.",
   "vendor_credits.alert.success_message": "The given vendor credit has been deleted successfully.",
-  "vendor_credits.note.once_delete_this_vendor_credit_note": "Once you delete this vendor credit , you won't be able to restore it later. Are you sure you want to delete this vendor credit ?"
+  "vendor_credits.note.once_delete_this_vendor_credit_note": "Once you delete this vendor credit , you won't be able to restore it later. Are you sure you want to delete this vendor credit ?",
+  "credit_note_number_settings": "Credit Note Number Settings",
+  "credit_note.auto_increment.auto": "Your credit note numbers are set on auto-increment mode. Are you sure changing this setting?",
+  "credit_note.auto_increment.manually": "Your credit note numbers are set on manual mode. Are you sure chaning this settings?",
+  "setting_your_auto_generated_credit_note_number": "Setting your auto-generated credit note number",
+  "vendor_credit_number_settings": "Vendor Credit Number Settings",
+  "vendor_credit.auto_increment.auto": "Your vendor credit  numbers are set on auto-increment mode. Are you sure changing this setting?",
+  "vendor_credit.auto_increment.manually": "Your vendor credit  numbers are set on manual mode. Are you sure chaning this settings?",
+  "setting_your_auto_generated_vendor_credit_number": "Setting your auto-generated vendor credit number"
 }

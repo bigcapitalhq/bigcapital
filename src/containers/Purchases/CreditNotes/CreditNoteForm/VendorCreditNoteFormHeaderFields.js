@@ -1,5 +1,10 @@
 import React from 'react';
-import { FormGroup, InputGroup, Position } from '@blueprintjs/core';
+import {
+  FormGroup,
+  InputGroup,
+  Position,
+  ControlGroup,
+} from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
 import { CLASSES } from 'common/classes';
@@ -7,10 +12,14 @@ import classNames from 'classnames';
 import {
   ContactSelecetList,
   FieldRequiredHint,
+  InputPrependButton,
   Icon,
   FormattedMessage as T,
 } from 'components';
-import { vendorsFieldShouldUpdate } from './utils';
+import {
+  vendorsFieldShouldUpdate,
+  useObserveVendorCreditNoSettings,
+} from './utils';
 
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 
@@ -22,13 +31,48 @@ import {
   handleDateChange,
 } from 'utils';
 
+import withSettings from 'containers/Settings/withSettings';
+import withDialogActions from 'containers/Dialog/withDialogActions';
+
 /**
  * Vendor Credit note form header fields.
  */
+function VendorCreditNoteFormHeaderFields({
+  // #withDialogActions
+  openDialog,
 
-function VendorCreditNoteFormHeaderFields() {
-  // Credit note form context.
+  // #withSettings
+  vendorcreditAutoIncrement,
+  vendorcreditNumberPrefix,
+  vendorcreditNextNumber,
+}) {
+  // Vendor Credit form context.
   const { vendors } = useVendorCreditNoteFormContext();
+
+  // Handle vendor credit number changing.
+  const handleVendorCreditNumberChange = () => {
+    openDialog('vendor-credit-form');
+  };
+
+  // Handle vendor credit no. field blur.
+  const handleVendorCreditNoBlur = (form, field) => (event) => {
+    const newValue = event.target.value;
+
+    if (field.value !== newValue && vendorcreditAutoIncrement) {
+      openDialog('vendor-credit-form', {
+        initialFormValues: {
+          manualTransactionNo: newValue,
+          incrementMode: 'manual-transaction',
+        },
+      });
+    }
+  };
+  // Syncs vendor credit number settings with form.
+  useObserveVendorCreditNoSettings(
+    vendorcreditNumberPrefix,
+    vendorcreditNextNumber,
+  );
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ----------- Vendor name ----------- */}
@@ -94,7 +138,7 @@ function VendorCreditNoteFormHeaderFields() {
 
       {/* ----------- Vendor Credit No # ----------- */}
       <FastField name={'vendor_credit_number'}>
-        {({ field, meta: { error, touched } }) => (
+        {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'credit_note.label_credit_note'} />}
             inline={true}
@@ -102,12 +146,34 @@ function VendorCreditNoteFormHeaderFields() {
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="vendor_credit_number" />}
           >
-            <InputGroup minimal={true} {...field} />
+            <ControlGroup fill={true}>
+              <InputGroup
+                minimal={true}
+                value={field.value}
+                asyncControl={true}
+                onBlur={handleVendorCreditNoBlur(form, field)}
+              />
+              <InputPrependButton
+                buttonProps={{
+                  onClick: handleVendorCreditNumberChange,
+                  icon: <Icon icon={'settings-18'} />,
+                }}
+                tooltip={true}
+                tooltipProps={{
+                  content: (
+                    <T
+                      id={'setting_your_auto_generated_vendor_credit_number'}
+                    />
+                  ),
+                  position: Position.BOTTOM_LEFT,
+                }}
+              />
+            </ControlGroup>
           </FormGroup>
         )}
       </FastField>
       {/* ----------- Reference ----------- */}
-      {/* <FastField name={'reference_no'}>
+      <FastField name={'reference_no'}>
         {({ field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'reference_no'} />}
@@ -119,9 +185,16 @@ function VendorCreditNoteFormHeaderFields() {
             <InputGroup minimal={true} {...field} />
           </FormGroup>
         )}
-      </FastField> */}
+      </FastField>
     </div>
   );
 }
 
-export default VendorCreditNoteFormHeaderFields;
+export default compose(
+  withDialogActions,
+  withSettings(({ vendorsCreditNoteSetting }) => ({
+    vendorcreditAutoIncrement: vendorsCreditNoteSetting?.autoIncrement,
+    vendorcreditNextNumber: vendorsCreditNoteSetting?.nextNumber,
+    vendorcreditNumberPrefix: vendorsCreditNoteSetting?.numberPrefix,
+  })),
+)(VendorCreditNoteFormHeaderFields);

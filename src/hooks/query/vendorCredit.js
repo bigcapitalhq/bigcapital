@@ -21,6 +21,9 @@ const commonInvalidateQueries = (queryClient) => {
   queryClient.invalidateQueries(t.ACCOUNTS);
   queryClient.invalidateQueries(t.ACCOUNT);
 
+  // Invalidate settings.
+  queryClient.invalidateQueries([t.SETTING, t.SETTING_VENDOR_CREDITS]);
+
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 };

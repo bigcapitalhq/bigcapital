@@ -6,12 +6,14 @@ import {
   defaultFastFieldShouldUpdate,
   transformToForm,
   repeatValue,
+  transactionNumber,
   orderingLinesIndexes,
 } from 'utils';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
 } from 'containers/Entries/utils';
+import { useFormikContext } from 'formik';
 
 export const MIN_LINES_NUMBER = 4;
 
@@ -30,6 +32,7 @@ export const defaultCreditNoteEntry = {
 export const defaultVendorsCreditNote = {
   vendor_id: '',
   vendor_credit_number: '',
+  vendor_credit_no_manually: false,
   vendor_credit_date: moment(new Date()).format('YYYY-MM-DD'),
   // reference_no: '',
   note: '',
@@ -111,4 +114,16 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
     newProps.items !== oldProps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
+};
+
+/**
+ * Syncs invoice no. settings with form.
+ */
+ export const useObserveVendorCreditNoSettings = (prefix, nextNumber) => {
+  const { setFieldValue } = useFormikContext();
+
+  React.useEffect(() => {
+    const creditNo = transactionNumber(prefix, nextNumber);
+    setFieldValue('vendor_credit_number', creditNo);
+  }, [setFieldValue, prefix, nextNumber]);
 };

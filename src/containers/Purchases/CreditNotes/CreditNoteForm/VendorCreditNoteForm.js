@@ -15,23 +15,31 @@ import VendorCreditNoteFormHeader from './VendorCreditNoteFormHeader';
 import VendorCreditNoteItemsEntriesEditor from './VendorCreditNoteItemsEntriesEditor';
 import VendorCreditNoteFormFooter from './VendorCreditNoteFormFooter';
 import VendorCreditNoteFloatingActions from './VendorCreditNoteFloatingActions';
+import VendorCreditNoteFormDialogs from './VendorCreditNoteFormDialogs';
+
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 
 import { AppToaster } from 'components';
-
-import { compose, safeSumBy } from 'utils';
+import { compose, safeSumBy, transactionNumber } from 'utils';
 import {
   defaultVendorsCreditNote,
   filterNonZeroEntries,
   transformToEditForm,
   transformFormValuesToRequest,
 } from './utils';
+
+import withSettings from 'containers/Settings/withSettings';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 /**
  * Vendor Credit note form.
  */
 function VendorCreditNoteForm({
+  // #withSettings
+  vendorcreditAutoIncrement,
+  vendorcreditNumberPrefix,
+  vendorcreditNextNumber,
+
   // #withCurrentOrganization
   organization: { base_currency },
 }) {
@@ -46,6 +54,12 @@ function VendorCreditNoteForm({
     editVendorCreditMutate,
   } = useVendorCreditNoteFormContext();
 
+  // Credit number.
+  const vendorCreditNumber = transactionNumber(
+    vendorcreditNumberPrefix,
+    vendorcreditNextNumber,
+  );
+
   // Initial values.
   const initialValues = React.useMemo(
     () => ({
@@ -55,6 +69,9 @@ function VendorCreditNoteForm({
           }
         : {
             ...defaultVendorsCreditNote,
+            ...(vendorcreditAutoIncrement && {
+              vendor_credit_number: vendorCreditNumber,
+            }),
           }),
     }),
     [vendorCredit, base_currency],
@@ -134,12 +151,19 @@ function VendorCreditNoteForm({
           <VendorCreditNoteFormHeader />
           <VendorCreditNoteItemsEntriesEditor />
           <VendorCreditNoteFormFooter />
-
           <VendorCreditNoteFloatingActions />
+          <VendorCreditNoteFormDialogs />
         </Form>
       </Formik>
     </div>
   );
 }
 
-export default compose(withCurrentOrganization())(VendorCreditNoteForm);
+export default compose(
+  withSettings(({ vendorsCreditNoteSetting }) => ({
+    vendorcreditAutoIncrement: vendorsCreditNoteSetting?.autoIncrement,
+    vendorcreditNextNumber: vendorsCreditNoteSetting?.nextNumber,
+    vendorcreditNumberPrefix: vendorsCreditNoteSetting?.numberPrefix,
+  })),
+  withCurrentOrganization(),
+)(VendorCreditNoteForm);

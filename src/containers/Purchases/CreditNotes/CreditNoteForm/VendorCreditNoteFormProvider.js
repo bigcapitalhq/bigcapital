@@ -7,6 +7,7 @@ import {
   useVendorCredit,
   useItems,
   useVendors,
+  useSettingsVendorCredits,
 } from 'hooks/query';
 
 const VendorCreditNoteFormContext = React.createContext();
@@ -22,6 +23,9 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
   } = useItems({
     page_size: 10000,
   });
+
+  // Handle fetching settings.
+  useSettingsVendorCredits();
 
   // Handle fetch vendors data table or list
   const {
