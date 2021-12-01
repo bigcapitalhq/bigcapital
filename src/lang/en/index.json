@@ -1524,5 +1524,17 @@
   "vendor_credit_number_settings": "Vendor Credit Number Settings",
   "vendor_credit.auto_increment.auto": "Your vendor credit  numbers are set on auto-increment mode. Are you sure changing this setting?",
   "vendor_credit.auto_increment.manually": "Your vendor credit  numbers are set on manual mode. Are you sure chaning this settings?",
-  "setting_your_auto_generated_vendor_credit_number": "Setting your auto-generated vendor credit number"
+  "setting_your_auto_generated_vendor_credit_number": "Setting your auto-generated vendor credit number",
+  "credit_note.drawer_credit_note_detail":"Credit Note details",
+  "credit_note.drawer.label_credit_note_no":"Credit Note #",
+  "credit_note.drawer.label_credit_note_date":"Credit Date",
+  "credit_note.drawer.label_create_at":"Create at",
+  "credit_note.drawer.label_total": "TOTAL",
+  "credit_note.drawer.label_subtotal": "Subtotal",
+  "vendor_credit.drawer_vendor_credit_detail":"Vendor Credit details",
+  "vendor_credit.drawer.label_vendor_credit_no":"Vendor Credit #",
+  "vendor_credit.drawer.label_vendor_credit_date":"Vendor Credit Date",
+  "vendor_credit.drawer.label_create_at":"Create at",
+  "vendor_credit.drawer.label_total": "TOTAL",
+  "vendor_credit.drawer.label_subtotal": "Subtotal"
 }

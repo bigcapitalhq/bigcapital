@@ -29,8 +29,7 @@ function CreditNotesList({
     [resetCreditNotesTableState],
   );
 
-  console.log(creditNoteTableState, 'XX');
-  console.log(creditNoteTableStateChanged, 'XX');
+
   return (
     <CreditNotesListProvider
       query={transformTableStateToQuery(creditNoteTableState)}

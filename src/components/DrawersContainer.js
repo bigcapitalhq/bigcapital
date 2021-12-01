@@ -17,6 +17,8 @@ import CashflowTransactionDetailDrawer from '../containers/Drawers/CashflowTrans
 import QuickCreateCustomerDrawer from '../containers/Drawers/QuickCreateCustomerDrawer';
 import QuickCreateItemDrawer from '../containers/Drawers/QuickCreateItemDrawer';
 import QuickWriteVendorDrawer from '../containers/Drawers/QuickWriteVendorDrawer';
+import CreditNoteDetailDrawer from '../containers/Drawers/CreditNoteDetailDrawer';
+import VendorCreditDetailDrawer from '../containers/Drawers/VendorCreditDetailDrawer';
 
 import { DRAWERS } from 'common/drawers';
 
@@ -47,6 +49,8 @@ export default function DrawersContainer() {
       <QuickCreateCustomerDrawer name={DRAWERS.QUICK_CREATE_CUSTOMER} />
       <QuickCreateItemDrawer name={DRAWERS.QUICK_CREATE_ITEM} />
       <QuickWriteVendorDrawer name={DRAWERS.QUICK_WRITE_VENDOR} />
+      <CreditNoteDetailDrawer name={DRAWERS.CREDIT_NOTE_DETAIL_DRAWER} />
+      <VendorCreditDetailDrawer name={DRAWERS.VENDOR_CREDIT_DETAIL_DRAWER} />
     </div>
   );
 }

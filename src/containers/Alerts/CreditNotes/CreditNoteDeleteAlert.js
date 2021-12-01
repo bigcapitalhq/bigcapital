@@ -41,6 +41,7 @@ function CreditNoteDeleteAlert({
           message: intl.get('credit_note.alert.success_message'),
           intent: Intent.SUCCESS,
         });
+        closeDrawer('credit-note-detail-drawer');
       })
       .catch(
         ({

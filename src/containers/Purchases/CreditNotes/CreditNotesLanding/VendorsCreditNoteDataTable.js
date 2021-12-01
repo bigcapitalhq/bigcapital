@@ -11,8 +11,9 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
-import withSettings from '../../../Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withSettings from '../../../Settings/withSettings';
 
 import { useVendorsCreditNoteTableColumns, ActionsMenu } from './components';
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
@@ -28,6 +29,9 @@ function VendorsCreditNoteDataTable({
 
   // #withAlertsActions
   openAlert,
+
+  // #withDrawerActions
+  openDrawer,
 
   // #withSettings
   creditNoteTableSize,
@@ -67,6 +71,10 @@ function VendorsCreditNoteDataTable({
     return <VendorsCreditNoteEmptyStatus />;
   }
 
+  const handleViewDetailVendorCredit = ({ id }) => {
+    openDrawer('vendor-credit-detail-drawer', { vendorCreditId: id });
+  };
+
   // Handle delete credit note.
   const handleDeleteVendorCreditNote = ({ id }) => {
     openAlert('vendor-credit-delete', { vendorCreditId: id });
@@ -77,6 +85,13 @@ function VendorsCreditNoteDataTable({
     history.push(`/vendor-credits/${vendorCredit.id}/edit`);
   };
 
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('vendor-credit-detail-drawer', {
+      vendorCreditId: cell.row.original.id,
+    });
+  };
+
   return (
     <DashboardContentTable>
       <DataTable
@@ -85,7 +100,7 @@ function VendorsCreditNoteDataTable({
         loading={isVendorCreditsLoading}
         headerLoading={isVendorCreditsLoading}
         progressBarLoading={isVendorCreditsFetching}
-        // onFetchData={handleDataTableFetchData}
+        onFetchData={handleDataTableFetchData}
         manualSortBy={true}
         selectionColumn={true}
         noInitialFetch={true}
@@ -95,11 +110,12 @@ function VendorsCreditNoteDataTable({
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
-        // onCellClick={handleCellClick}
+        onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
         size={creditNoteTableSize}
         payload={{
+          onViewDetails: handleViewDetailVendorCredit,
           onDelete: handleDeleteVendorCreditNote,
           onEdit: hanldeEditVendorCreditNote,
         }}
@@ -112,6 +128,7 @@ export default compose(
   withDashboardActions,
   withVendorsCreditNotesActions,
   withAlertsActions,
+  withDrawerActions,
   withSettings(({ vendorsCreditNoteSetting }) => ({
     creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
   })),

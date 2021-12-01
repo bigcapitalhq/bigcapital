@@ -14,4 +14,6 @@ export const DRAWERS = {
   QUICK_WRITE_VENDOR: 'quick-write-vendor',
   QUICK_CREATE_CUSTOMER: 'quick-create-customer',
   QUICK_CREATE_ITEM: 'quick-create-item',
+  CREDIT_NOTE_DETAIL_DRAWER: 'credit-note-detail-drawer',
+  VENDOR_CREDIT_DETAIL_DRAWER: 'vendor-credit-detail-drawer',
 };

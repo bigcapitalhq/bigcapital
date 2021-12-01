@@ -11,8 +11,9 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withCreditNotesActions from './withCreditNotesActions';
-import withSettings from '../../../Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withSettings from '../../../Settings/withSettings';
 
 import { useCreditNoteTableColumns, ActionsMenu } from './components';
 import { useCreditNoteListContext } from './CreditNotesListProvider';
@@ -28,6 +29,9 @@ function CreditNotesDataTable({
 
   // #withAlertsActions
   openAlert,
+
+  // #withDrawerActions
+  openDrawer,
 
   // #withSettings
   creditNoteTableSize,
@@ -67,6 +71,10 @@ function CreditNotesDataTable({
     return <CreditNoteEmptyStatus />;
   }
 
+  const handleViewDetailCreditNote = ({ id }) => {
+    openDrawer('credit-note-detail-drawer', { creditNoteId: id });
+  };
+
   // Handle delete credit note.
   const handleDeleteCreditNote = ({ id }) => {
     openAlert('credit-note-delete', { creditNoteId: id });
@@ -75,6 +83,13 @@ function CreditNotesDataTable({
   // Handle edit credit note.
   const hanldeEditCreditNote = (creditNote) => {
     history.push(`/credit-notes/${creditNote.id}/edit`);
+  };
+
+  // Handle cell click.
+  const handleCellClick = (cell, event) => {
+    openDrawer('credit-note-detail-drawer', {
+      creditNoteId: cell.row.original.id,
+    });
   };
 
   return (
@@ -94,10 +109,12 @@ function CreditNotesDataTable({
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
+        onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
         size={creditNoteTableSize}
         payload={{
+          onViewDetails: handleViewDetailCreditNote,
           onDelete: handleDeleteCreditNote,
           onEdit: hanldeEditCreditNote,
         }}
@@ -109,6 +126,7 @@ function CreditNotesDataTable({
 export default compose(
   withDashboardActions,
   withCreditNotesActions,
+  withDrawerActions,
   withAlertsActions,
   withSettings(({ creditNoteSettings }) => ({
     creditNoteTableSize: creditNoteSettings?.tableSize,

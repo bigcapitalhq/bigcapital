@@ -41,6 +41,7 @@ function VendorCreditDeleteAlert({
           message: intl.get('vendor_credits.alert.success_message'),
           intent: Intent.SUCCESS,
         });
+        closeDrawer('vendor-credit-detail-drawer');
       })
       .catch(
         ({
