@@ -15,6 +15,7 @@ import CreditNoteFormHeader from './CreditNoteFormHeader';
 import CreditNoteItemsEntriesEditorField from './CreditNoteItemsEntriesEditorField';
 import CreditNoteFormFooter from './CreditNoteFormFooter';
 import CreditNoteFloatingActions from './CreditNoteFloatingActions';
+import CreditNoteFormDialogs from './CreditNoteFormDialogs';
 
 import { AppToaster } from 'components';
 
@@ -41,6 +42,9 @@ import withCurrentOrganization from 'containers/Organization/withCurrentOrganiza
  */
 function CreditNoteForm({
   // #withSettings
+  creditAutoIncrement,
+  creditNumberPrefix,
+  creditNextNumber,
 
   // #withCurrentOrganization
   organization: { base_currency },
@@ -56,6 +60,9 @@ function CreditNoteForm({
     editCreditNoteMutate,
   } = useCreditNoteFormContext();
 
+  // Credit number.
+  const creditNumber = transactionNumber(creditNumberPrefix, creditNextNumber);
+
   // Initial values.
   const initialValues = React.useMemo(
     () => ({
@@ -63,6 +70,9 @@ function CreditNoteForm({
         ? { ...transformToEditForm(creditNote), currency_code: base_currency }
         : {
             ...defaultCreditNote,
+            ...(creditAutoIncrement && {
+              credit_note_number: creditNumber,
+            }),
             entries: orderingLinesIndexes(defaultCreditNote.entries),
           }),
     }),
@@ -144,10 +154,17 @@ function CreditNoteForm({
           <CreditNoteItemsEntriesEditorField />
           <CreditNoteFormFooter />
           <CreditNoteFloatingActions />
+          <CreditNoteFormDialogs />
         </Form>
       </Formik>
     </div>
   );
 }
-
-export default compose(withCurrentOrganization())(CreditNoteForm);
+export default compose(
+  withSettings(({ creditNoteSettings }) => ({
+    creditAutoIncrement: creditNoteSettings?.autoIncrement,
+    creditNextNumber: creditNoteSettings?.nextNumber,
+    creditNumberPrefix: creditNoteSettings?.numberPrefix,
+  })),
+  withCurrentOrganization(),
+)(CreditNoteForm);

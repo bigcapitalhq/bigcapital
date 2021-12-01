@@ -10,6 +10,7 @@ import {
   useEditCreditNote,
   useItems,
   useCustomers,
+  useSettingsCreditNotes,
 } from 'hooks/query';
 
 const CreditNoteFormContext = React.createContext();
@@ -39,6 +40,9 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
       enabled: !!creditNoteId,
     },
   );
+
+  // Handle fetching settings.
+  useSettingsCreditNotes();
 
   // Create and edit credit note mutations.
   const { mutateAsync: createCreditNoteMutate } = useCreateCreditNote();

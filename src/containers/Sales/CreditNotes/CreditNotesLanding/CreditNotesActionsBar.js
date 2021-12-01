@@ -65,7 +65,7 @@ function CreditNotesActionsBar({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('creditNotes', 'tableSize', size);
+    addSetting('creditNote', 'tableSize', size);
   };
 
   return (

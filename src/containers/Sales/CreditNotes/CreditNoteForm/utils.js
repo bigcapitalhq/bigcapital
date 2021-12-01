@@ -6,8 +6,10 @@ import {
   defaultFastFieldShouldUpdate,
   transformToForm,
   repeatValue,
+  transactionNumber,
   orderingLinesIndexes,
 } from 'utils';
+import { useFormikContext } from 'formik';
 
 import {
   updateItemsEntriesTotal,
@@ -114,4 +116,16 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
     newProps.items !== oldProps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
+};
+
+/**
+ * Syncs invoice no. settings with form.
+ */
+ export const useObserveCreditNoSettings = (prefix, nextNumber) => {
+  const { setFieldValue } = useFormikContext();
+
+  React.useEffect(() => {
+    const creditNo = transactionNumber(prefix, nextNumber);
+    setFieldValue('credit_note_number', creditNo);
+  }, [setFieldValue, prefix, nextNumber]);
 };

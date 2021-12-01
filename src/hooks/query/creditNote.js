@@ -21,6 +21,9 @@ const commonInvalidateQueries = (queryClient) => {
   queryClient.invalidateQueries(t.ACCOUNTS);
   queryClient.invalidateQueries(t.ACCOUNT);
 
+  // Invalidate settings.
+  queryClient.invalidateQueries([t.SETTING, t.SETTING_CREDIT_NOTES]);
+
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 };
@@ -95,8 +98,6 @@ const transformInvoices = (res) => ({
  * Retrieve credit notes list with pagination meta.
  */
 export function useCreditNotes(query, props) {
-
-
   return useRequestQuery(
     [t.CREDIT_NOTES, query],
     { method: 'get', url: 'sales/credit_notes', params: query },
