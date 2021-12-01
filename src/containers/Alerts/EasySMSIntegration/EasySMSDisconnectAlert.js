@@ -4,6 +4,8 @@ import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
+import { useSettingEasySMSDisconnect } from 'hooks/query';
+
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
@@ -22,13 +24,28 @@ function EasySMSDisconnectAlert({
   // #withAlertActions
   closeAlert,
 }) {
+  const { mutateAsync: disconnectEasySMS, isLoading } =
+    useSettingEasySMSDisconnect();
+
   // Handle cancel Disconnect alert.
   const handleCancelDisconnect = () => {
     closeAlert(name);
   };
 
   // Handle confirm Disconnect alert.
-  const handleConfirmDisconnect = () => {};
+  const handleConfirmDisconnect = () => {
+    disconnectEasySMS()
+      .then(() => {
+        AppToaster.show({
+          message: intl.get('easysms.disconnect.alert.success_message'),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(() => {})
+      .finally(() => {
+        closeAlert(name);
+      });
+  };
 
   return (
     <Alert
@@ -38,6 +55,7 @@ function EasySMSDisconnectAlert({
       isOpen={isOpen}
       onCancel={handleCancelDisconnect}
       onConfirm={handleConfirmDisconnect}
+      loading={isLoading}
     >
       <p>Ea aliqua elit reprehenderit pariatur consequat voluptate quis.</p>
     </Alert>

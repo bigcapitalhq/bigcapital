@@ -31,7 +31,7 @@ function EasySMSIntegrationFormContent({
         <FastField name={'token'}>
           {({ form, field, meta: { error, touched } }) => (
             <FormGroup
-              label={<T id={'easysms.label.token'} />}
+              label={<T id={'easysms.integrate.dialog.label.token'} />}
               labelInfo={<FieldRequiredHint />}
               intent={inputIntent({ error, touched })}
               helperText={<ErrorMessage name="token" />}

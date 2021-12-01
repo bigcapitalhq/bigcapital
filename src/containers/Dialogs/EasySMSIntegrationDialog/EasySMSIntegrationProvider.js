@@ -7,9 +7,13 @@ const EasySMSIntegrationDialogContext = React.createContext();
  * Easy SMS integration dialog provider.
  */
 function EasySMSIntegrationProvider({ dialogName, ...props }) {
+  // easysms integrate mutations.
+  const { mutateAsync: easySMSIntegrateMutate } = useSettingEasySMSIntegrate();
+
   // State provider.
   const provider = {
     dialogName,
+    easySMSIntegrateMutate,
   };
 
   return (
