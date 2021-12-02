@@ -18,7 +18,7 @@ export default function CreditNoteDetailHeader() {
     <div className={clsx(CreditNoteDetailCls.detail_panel_header)}>
       <DetailsMenu>
         <DetailItem label={intl.get('amount')}>
-          <span class="big-number">{creditNote.amount}</span>
+          <span class="big-number">{creditNote.formatted_amount}</span>
         </DetailItem>
         <DetailItem
           label={intl.get('credit_note.drawer.label_credit_note_no')}
@@ -30,7 +30,9 @@ export default function CreditNoteDetailHeader() {
         />
         <DetailItem
           label={intl.get('credit_note.drawer.label_credit_note_date')}
-          children={<FormatDate value={creditNote.credit_note_date} />}
+          children={
+            <FormatDate value={creditNote.formatted_credit_note_date} />
+          }
         />
       </DetailsMenu>
 

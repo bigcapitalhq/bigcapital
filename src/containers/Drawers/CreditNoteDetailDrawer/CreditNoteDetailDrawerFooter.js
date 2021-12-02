@@ -18,12 +18,12 @@ export default function CreditNoteDetailDrawerFooter() {
       <TotalLines className={clsx(CreditNoteDetailCls.total_lines)}>
         <TotalLine
           title={<T id={'credit_note.drawer.label_subtotal'} />}
-          value={<FormatNumber value={creditNote.amount} />}
+          value={<FormatNumber value={creditNote.formatted_amount} />}
           className={CreditNoteDetailCls.total_line_subtotal}
         />
         <TotalLine
           title={<T id={'credit_note.drawer.label_total'} />}
-          value={creditNote.amount}
+          value={creditNote.formatted_amount}
           className={CreditNoteDetailCls.total_line_total}
         />
       </TotalLines>

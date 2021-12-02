@@ -17,7 +17,7 @@ export default function VendorCreditDetailHeader() {
     <div className={clsx(VendorCreditDetailCls.detail_panel_header)}>
       <DetailsMenu>
         <DetailItem label={intl.get('amount')}>
-          <span class="big-number">{vendorCredit.amount}</span>
+          <span class="big-number">{vendorCredit.formatted_amount}</span>
         </DetailItem>
         <DetailItem
           label={intl.get('vendor_credit.drawer.label_vendor_credit_no')}
@@ -29,7 +29,9 @@ export default function VendorCreditDetailHeader() {
         />
         <DetailItem
           label={intl.get('vendor_credit.drawer.label_vendor_credit_date')}
-          children={<FormatDate value={vendorCredit.vendor_credit_date} />}
+          children={
+            <FormatDate value={vendorCredit.formatted_vendor_credit_date} />
+          }
         />
       </DetailsMenu>
 

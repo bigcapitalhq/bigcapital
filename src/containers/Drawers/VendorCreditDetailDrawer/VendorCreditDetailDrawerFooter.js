@@ -11,7 +11,6 @@ import VendorCreditDetailCls from '../../../style/components/Drawers/VendorCredi
  * Vendor Credit detail panel footer.
  */
 export default function VendorCreditDetailDrawerFooter() {
-
   const { vendorCredit } = useVendorCreditDetailDrawerContext();
 
   return (
@@ -19,16 +18,15 @@ export default function VendorCreditDetailDrawerFooter() {
       <TotalLines className={clsx(VendorCreditDetailCls.total_lines)}>
         <TotalLine
           title={<T id={'vendor_credit.drawer.label_subtotal'} />}
-          value={<FormatNumber value={vendorCredit.amount} />}
+          value={<FormatNumber value={vendorCredit.formatted_amount} />}
           className={VendorCreditDetailCls.total_line_subtotal}
         />
         <TotalLine
           title={<T id={'vendor_credit.drawer.label_total'} />}
-          value={vendorCredit.amount}
+          value={vendorCredit.formatted_amount}
           className={VendorCreditDetailCls.total_line_total}
         />
       </TotalLines>
-      
     </div>
-  )
+  );
 }
