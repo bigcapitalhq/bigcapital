@@ -1536,5 +1536,7 @@
   "vendor_credit.drawer.label_vendor_credit_date":"Vendor Credit Date",
   "vendor_credit.drawer.label_create_at":"Create at",
   "vendor_credit.drawer.label_total": "TOTAL",
-  "vendor_credit.drawer.label_subtotal": "Subtotal"
+  "vendor_credit.drawer.label_subtotal": "Subtotal",
+  "landed_cost.dialog.label_select_transaction":"Select transaction",
+  "landed_cost.dialog.label_select_transaction_entry":"Select transaction entry"
 }
