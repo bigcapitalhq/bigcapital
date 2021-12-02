@@ -60,7 +60,7 @@ export function useVendorsCreditNoteTableColumns() {
       {
         id: 'vendor_credit_date',
         Header: intl.get('date'),
-        accessor: 'vendor_credit_date',
+        accessor: 'formatted_vendor_credit_date',
         Cell: FormatDateCell,
         width: 110,
         className: 'vendor_credit_date',
@@ -88,8 +88,7 @@ export function useVendorsCreditNoteTableColumns() {
       {
         id: 'amount',
         Header: intl.get('amount'),
-        // accessor: 'formatted_amount',
-        accessor: 'amount',
+        accessor: 'formatted_amount',
         width: 120,
         align: 'right',
         clickable: true,

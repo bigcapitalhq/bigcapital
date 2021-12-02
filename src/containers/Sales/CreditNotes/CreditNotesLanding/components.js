@@ -57,7 +57,7 @@ export function useCreditNoteTableColumns() {
       {
         id: 'credit_note_date',
         Header: intl.get('credit_note.column.credit_date'),
-        accessor: 'credit_note_date',
+        accessor: 'formatted_credit_note_date',
         Cell: FormatDateCell,
         width: 110,
         className: 'credit_note_date',
@@ -85,8 +85,7 @@ export function useCreditNoteTableColumns() {
       {
         id: 'amount',
         Header: intl.get('amount'),
-        accessor: 'amount',
-        // accessor: 'formatted_amount',
+        accessor: 'formatted_amount',
         width: 120,
         align: 'right',
         clickable: true,
