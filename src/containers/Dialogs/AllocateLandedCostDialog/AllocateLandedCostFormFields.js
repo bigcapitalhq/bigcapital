@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
+import { FastField, Field, ErrorMessage } from 'formik';
 import {
   Classes,
   FormGroup,
@@ -14,31 +14,31 @@ import { inputIntent, handleStringChange } from 'utils';
 import { FieldRequiredHint, ListSelect } from 'components';
 import { CLASSES } from 'common/classes';
 import allocateLandedCostType from 'common/allocateLandedCostType';
-import { useLandedCostTransaction } from 'hooks/query';
 
 import AllocateLandedCostFormBody from './AllocateLandedCostFormBody';
-import { getEntriesByTransactionId, allocateCostToEntries } from './utils';
+import {
+  transactionsSelectShouldUpdate,
+  allocateCostToEntries,
+  resetAllocatedCostEntries,
+} from './utils';
+import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogProvider';
 
 /**
  * Allocate landed cost form fields.
  */
 export default function AllocateLandedCostFormFields() {
-  const { values } = useFormikContext();
-
-  const {
-    data: { transactions },
-  } = useLandedCostTransaction(values.transaction_type);
-
-  // Retrieve entries of the given transaction id.
-  const transactionEntries = React.useMemo(
-    () => getEntriesByTransactionId(transactions, values.transaction_id),
-    [transactions, values.transaction_id],
-  );
+  // Allocated landed cost dialog.
+  const { costTransactionEntries, landedCostTransactions } =
+    useAllocateLandedConstDialogContext();
 
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------Transaction type -----------*/}
-      <FastField name={'transaction_type'}>
+      <FastField
+        name={'transaction_type'}
+        transactions={allocateLandedCostType}
+        shouldUpdate={transactionsSelectShouldUpdate}
+      >
         {({
           form: { values, setFieldValue },
           field: { value },
@@ -55,9 +55,14 @@ export default function AllocateLandedCostFormFields() {
             <ListSelect
               items={allocateLandedCostType}
               onItemSelect={(type) => {
+                const { items } = values;
+
                 setFieldValue('transaction_type', type.value);
                 setFieldValue('transaction_id', '');
                 setFieldValue('transaction_entry_id', '');
+
+                setFieldValue('amount', '');
+                setFieldValue('items', resetAllocatedCostEntries(items));
               }}
               filterable={false}
               selectedItem={value}
@@ -70,7 +75,11 @@ export default function AllocateLandedCostFormFields() {
       </FastField>
 
       {/*------------ Transaction  -----------*/}
-      <Field name={'transaction_id'}>
+      <Field
+        name={'transaction_id'}
+        transactions={landedCostTransactions}
+        shouldUpdate={transactionsSelectShouldUpdate}
+      >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'transaction_id'} />}
@@ -81,10 +90,14 @@ export default function AllocateLandedCostFormFields() {
             inline={true}
           >
             <ListSelect
-              items={transactions}
+              items={landedCostTransactions}
               onItemSelect={({ id }) => {
+                const { items } = form.values;
                 form.setFieldValue('transaction_id', id);
                 form.setFieldValue('transaction_entry_id', '');
+
+                form.setFieldValue('amount', '');
+                form.setFieldValue('items', resetAllocatedCostEntries(items));
               }}
               filterable={false}
               selectedItem={value}
@@ -99,8 +112,12 @@ export default function AllocateLandedCostFormFields() {
       </Field>
 
       {/*------------ Transaction line  -----------*/}
-      <If condition={transactionEntries.length > 0}>
-        <Field name={'transaction_entry_id'}>
+      <If condition={costTransactionEntries.length > 0}>
+        <Field
+          name={'transaction_entry_id'}
+          transactions={costTransactionEntries}
+          shouldUpdate={transactionsSelectShouldUpdate}
+        >
           {({ form, field: { value }, meta: { error, touched } }) => (
             <FormGroup
               label={<T id={'transaction_line'} />}
@@ -113,16 +130,20 @@ export default function AllocateLandedCostFormFields() {
               inline={true}
             >
               <ListSelect
-                items={transactionEntries}
-                onItemSelect={({ id, amount }) => {
+                items={costTransactionEntries}
+                onItemSelect={({ id, unallocated_cost_amount }) => {
                   const { items, allocation_method } = form.values;
 
-                  form.setFieldValue('amount', amount);
                   form.setFieldValue('transaction_entry_id', id);
+                  form.setFieldValue('amount', unallocated_cost_amount);
 
                   form.setFieldValue(
                     'items',
-                    allocateCostToEntries(amount, allocation_method, items),
+                    allocateCostToEntries(
+                      unallocated_cost_amount,
+                      allocation_method,
+                      items,
+                    ),
                   );
                 }}
                 filterable={false}
@@ -177,12 +198,12 @@ export default function AllocateLandedCostFormFields() {
           >
             <RadioGroup
               onChange={handleStringChange((_value) => {
-                const { amount, items, allocation_method } = form.values;
+                const { amount, items } = form.values;
 
                 form.setFieldValue('allocation_method', _value);
                 form.setFieldValue(
                   'items',
-                  allocateCostToEntries(amount, allocation_method, items),
+                  allocateCostToEntries(amount, _value, items),
                 );
               })}
               selectedValue={value}

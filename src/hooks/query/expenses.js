@@ -25,6 +25,10 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate the cashflow transactions.
   queryClient.invalidateQueries(t.CASH_FLOW_TRANSACTIONS);
   queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
+
+  // Invalidate landed cost.
+  queryClient.invalidateQueries(t.LANDED_COST);
+  queryClient.invalidateQueries(t.LANDED_COST_TRANSACTION);
 };
 
 const transformExpenses = (response) => ({

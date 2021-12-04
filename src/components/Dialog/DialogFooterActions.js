@@ -14,13 +14,11 @@ export function DialogFooterActions({ alignment = 'right', children }) {
 }
 
 const DialogFooterActionsRoot = styled.div`
-  margin-left: -10px;
-  margin-right: -10px;
-  justify-content: ${(props) =>
-    props.alignment === 'right' ? 'flex-end' : 'flex-start'};
+  ${(props) =>
+    props.alignment === 'right' ? 'margin-left: auto;' : 'margin-right: auto;'};
 
   .bp3-button {
-    margin-left: 10px;
-    margin-left: 10px;
+    margin-left: 5px;
+    margin-left: 5px;
   }
 `;

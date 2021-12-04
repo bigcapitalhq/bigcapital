@@ -39,6 +39,7 @@ export function useCreateLandedCost(props) {
 export function useDeleteLandedCost(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
+
   return useMutation(
     (landedCostId) =>
       apiRequest.delete(`purchases/landed-cost/${landedCostId}`),
@@ -65,7 +66,6 @@ export function useLandedCostTransaction(query, props) {
     },
     {
       select: (res) => res.data,
-
       defaultData: {
         transactions: [],
       },

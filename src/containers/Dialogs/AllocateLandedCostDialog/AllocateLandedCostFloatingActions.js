@@ -1,8 +1,13 @@
 import React from 'react';
-import { Intent, Button, Classes } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
-
+import { Intent, Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import styled from 'styled-components';
+import {
+  DialogFooter,
+  DialogFooterActions,
+  FormattedMessage as T,
+} from 'components';
+
 import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
@@ -13,7 +18,8 @@ function AllocateLandedCostFloatingActions({
 }) {
   // Formik context.
   const { isSubmitting } = useFormikContext();
-  const { dialogName } = useAllocateLandedConstDialogContext();
+  const { dialogName, costTransactionEntry, formattedUnallocatedCostAmount } =
+    useAllocateLandedConstDialogContext();
 
   // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
@@ -21,22 +27,41 @@ function AllocateLandedCostFloatingActions({
   };
 
   return (
-    <div className={Classes.DIALOG_FOOTER}>
-      <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+    <DialogFooter>
+      <DialogFooterActions alignment={'left'}>
+        {costTransactionEntry && (
+          <UnallocatedAmount>
+            Unallocated cost Amount:{' '}
+            <strong>{formattedUnallocatedCostAmount}</strong>
+          </UnallocatedAmount>
+        )}
+      </DialogFooterActions>
+
+      <DialogFooterActions alignment={'right'}>
         <Button onClick={handleCancelBtnClick} style={{ minWidth: '85px' }}>
           <T id={'cancel'} />
         </Button>
         <Button
           intent={Intent.PRIMARY}
-          style={{ minWidth: '85px' }}
+          style={{ minWidth: '100px' }}
           type="submit"
           loading={isSubmitting}
         >
           {<T id={'save'} />}
         </Button>
-      </div>
-    </div>
+      </DialogFooterActions>
+    </DialogFooter>
   );
 }
 
 export default compose(withDialogActions)(AllocateLandedCostFloatingActions);
+
+const UnallocatedAmount = styled.div`
+  color: #3f5278;
+  align-self: center;
+
+  strong {
+    color: #353535;
+    padding-left: 4px;
+  }
+`;

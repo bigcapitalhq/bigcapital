@@ -1,11 +1,24 @@
 import { sumBy, round } from 'lodash';
 import * as R from 'ramda';
+import { defaultFastFieldShouldUpdate } from 'utils';
+
+/**
+ * Retrieve the landed cost transaction by the given id.
+ */
+export function getCostTransactionById(id, transactions) {
+  return transactions.find((trans) => trans.id === id);
+}
+
 /**
  * Retrieve transaction entries of the given transaction id.
  */
 export function getEntriesByTransactionId(transactions, id) {
   const transaction = transactions.find((trans) => trans.id === id);
   return transaction ? transaction.entries : [];
+}
+
+export function getTransactionEntryById(transaction, transactionEntryId) {
+  return transaction.entries.find((entry) => entry.id === transactionEntryId);
 }
 
 export function allocateCostToEntries(total, allocateType, entries) {
@@ -59,4 +72,19 @@ export function allocateCostByQuantity(total, entries) {
     ...entry,
     cost: round(entry.percentageOfQuantity * total, 2),
   }));
+}
+
+/**
+ * Detarmines the transactions selet field when should update.
+ */
+export function transactionsSelectShouldUpdate(newProps, oldProps) {
+  return (
+    newProps.transactions !== oldProps.transactions ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
+}
+
+
+export function resetAllocatedCostEntries(entries) {
+  return entries.map((entry) => ({ ...entry, cost: 0 }));
 }

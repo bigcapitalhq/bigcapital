@@ -1,9 +1,12 @@
 import React from 'react';
-import { Intent, Button, Classes } from '@blueprintjs/core';
+import { Intent, Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 
-import { DialogFooterActions, FormattedMessage as T } from 'components';
-
+import {
+  DialogFooter,
+  DialogFooterActions,
+  FormattedMessage as T,
+} from 'components';
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
@@ -28,7 +31,7 @@ function SMSMessageFormFloatingActions({
   };
 
   return (
-    <div className={Classes.DIALOG_FOOTER}>
+    <DialogFooter>
       <DialogFooterActions alignment={'left'}>
         <Button
           intent={Intent.PRIMARY}
@@ -42,7 +45,7 @@ function SMSMessageFormFloatingActions({
           <T id={'cancel'} />
         </Button>
       </DialogFooterActions>
-    </div>
+    </DialogFooter>
   );
 }
 

@@ -2,8 +2,6 @@ import React from 'react';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import moment from 'moment';
-import { sumBy } from 'lodash';
 
 import 'style/pages/AllocateLandedCost/AllocateLandedCostForm.scss';
 
@@ -14,20 +12,19 @@ import AllocateLandedCostFormContent from './AllocateLandedCostFormContent';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose, transformToForm } from 'utils';
 
+const defaultInitialItem = {
+  entry_id: '',
+  cost: '',
+};
+
 // Default form initial values.
 const defaultInitialValues = {
   transaction_type: 'Bill',
-  transaction_date: moment(new Date()).format('YYYY-MM-DD'),
   transaction_id: '',
   transaction_entry_id: '',
   amount: '',
   allocation_method: 'quantity',
-  items: [
-    {
-      entry_id: '',
-      cost: '',
-    },
-  ],
+  items: [defaultInitialItem],
 };
 
 /**
@@ -37,8 +34,13 @@ function AllocateLandedCostForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, bill, billId, createLandedCostMutate } =
-    useAllocateLandedConstDialogContext();
+  const {
+    dialogName,
+    bill,
+    billId,
+    createLandedCostMutate,
+    unallocatedCostAmount,
+  } = useAllocateLandedConstDialogContext();
 
   // Initial form values.
   const initialValues = {
@@ -49,11 +51,10 @@ function AllocateLandedCostForm({
       cost: '',
     })),
   };
-  const amount = sumBy(initialValues.items, 'amount');
 
   // Handle form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
-    setSubmitting(false);
+    setSubmitting(true);
 
     // Filters the entries has no cost.
     const entries = values.items
@@ -81,13 +82,16 @@ function AllocateLandedCostForm({
     // Handle the request error.
     const onError = () => {
       setSubmitting(false);
-      AppToaster.show({ message: 'Something went wrong!', intent: Intent.DANGER });
+      AppToaster.show({
+        message: 'Something went wrong!',
+        intent: Intent.DANGER,
+      });
     };
     createLandedCostMutate([billId, form]).then(onSuccess).catch(onError);
   };
 
   // Computed validation schema.
-  const validationSchema =  AllocateLandedCostFormSchema(amount);
+  const validationSchema = AllocateLandedCostFormSchema(unallocatedCostAmount);
 
   return (
     <Formik
