@@ -1506,7 +1506,7 @@
   "credit_note.success_message": "The credit note has been created successfully.",
   "credit_note.edit_success_message": "The credit note has been edited successfully.",
   "sidebar_vendor_credits": "Vendor Credits",
-  "vendor_credits.lable_vendor_credit_list": "Vendor Credit List",
+  "vendor_credits.lable_vendor_credit_list": "Vendor Credits List",
   "vendor_credits.label.new_vendor_credit": "New Vendor Credit",
   "vendor_credits.label.edit_vendor_credit": "Edit Vendor Credit",
   "vendor_credits.column.vendor_credit_no": "Vendor Credit #",

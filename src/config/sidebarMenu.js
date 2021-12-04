@@ -238,6 +238,10 @@ export default [
         },
       },
       {
+        text: <T id={'credit_note.label.new_credit_note'} />,
+        href: '/credit-notes/new',
+      },
+      {
         text: <T id={'new_payment_receive'} />,
         href: '/payment-receives/new',
         permission: {
