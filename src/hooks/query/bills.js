@@ -20,6 +20,10 @@ const commonInvalidateQueries = (queryClient) => {
   queryClient.invalidateQueries(t.ACCOUNTS);
   queryClient.invalidateQueries(t.ACCOUNT);
 
+  // Invalidate landed cost.
+  queryClient.invalidateQueries(t.LANDED_COST);
+  queryClient.invalidateQueries(t.LANDED_COST_TRANSACTION);
+
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 };
