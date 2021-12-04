@@ -23,7 +23,7 @@ export default function InvoicePaymentTransactionsTable() {
         id: 'invoice_no',
         Header: intl.get('invoice_no__'),
         accessor: 'invoice_no',
-        width: 100,
+        width: 240,
         className: 'invoice_no',
         textOverview: true,
       },
@@ -31,7 +31,7 @@ export default function InvoicePaymentTransactionsTable() {
         id: 'customer',
         Header: intl.get('customer_name'),
         accessor: 'customer.display_name',
-        width: 180,
+        width: 140,
         className: 'customer_id',
         clickable: true,
         textOverview: true,
@@ -40,7 +40,7 @@ export default function InvoicePaymentTransactionsTable() {
         id: 'reference_no',
         Header: intl.get('reference_no'),
         accessor: 'reference_no',
-        width: 90,
+        width: 140,
         className: 'reference_no',
         textOverview: true,
       },
@@ -68,7 +68,7 @@ export default function InvoicePaymentTransactionsTable() {
   );
 
   return (
-    <div className="payment-transactions">
+    <div className="item-drawer__table">
       <Card>
         <DataTable
           columns={columns}

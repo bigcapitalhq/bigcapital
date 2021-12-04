@@ -58,7 +58,7 @@ export default function EstimatePaymentTransactions() {
   );
 
   return (
-    <div className="payment-transactions">
+    <div className="item-drawer__table">
       <Card>
         <DataTable
           columns={columns}

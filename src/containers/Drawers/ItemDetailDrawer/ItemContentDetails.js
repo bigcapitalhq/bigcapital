@@ -14,7 +14,7 @@ export default function ItemDetail() {
   return (
     <div className="item-drawer">
       <ItemDetailActionsBar />
-      <ItemPaymentTransactions />
+      <ItemPaymentTransactions /> 
       <Card>
         <ItemDetailHeader />
       </Card>

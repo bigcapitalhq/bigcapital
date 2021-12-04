@@ -1,8 +1,10 @@
 import React from 'react';
 import { DataTable, Card } from 'components';
 
-import { useInvoicePaymentTransactionsColumns } from './utils';
-import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
+import 'style/pages/PaymentTransactions/List.scss';
+
+import { useInvoicePaymentTransactionsColumns } from './components';
+import { useInvoiceDetailDrawerContext } from '../InvoiceDetailDrawerProvider';
 
 /**
  * Invoice payment transactions datatable.
@@ -23,6 +25,7 @@ export default function InvoicePaymentTransactionsTable() {
         loading={isPaymentTransactionLoading}
         headerLoading={isPaymentTransactionLoading}
         progressBarLoading={isPaymentTransactionFetching}
+        className={'payment-transactions'}
       />
     </Card>
   );

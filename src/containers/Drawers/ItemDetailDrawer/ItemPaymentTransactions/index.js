@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tab } from '@blueprintjs/core';
-import { DrawerMainTabs } from 'components';
+import { DrawerMainTabs, FormattedMessage as T } from 'components';
 import InvoicePaymentTransactionsTable from './InvoicePaymentTransactionsDataTable';
 import EstimatePaymentTransactionsTable from './EstimatePaymentTransactionsDataTable';
 import ReceiptPaymentTransactionsTable from './ReceiptPaymentTransactionsDataTable';
@@ -13,17 +13,18 @@ export const ItemPaymentTransactions = () => {
     <DrawerMainTabs>
       <Tab
         id={'invoice'}
-        title={'Invoice'}
+        title={<T id={'invoice'} />}
         panel={<InvoicePaymentTransactionsTable />}
       />
       <Tab
         id={'estiamte'}
         title={'Estimate'}
+        title={<T id={'estimate_'} />}
         panel={<EstimatePaymentTransactionsTable />}
       />
       <Tab
         id={'receipt'}
-        title={'Receipt'}
+        title={<T id={'receipt_'} />}
         panel={<ReceiptPaymentTransactionsTable />}
       />
       <Tab
@@ -34,7 +35,3 @@ export const ItemPaymentTransactions = () => {
     </DrawerMainTabs>
   );
 };
-
-{
-  /* <ItemSwitchMenuItem onChange={handleSwitch} /> */
-}

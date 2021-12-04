@@ -6,7 +6,7 @@ import clsx from 'classnames';
 import { DrawerMainTabs } from 'components';
 
 import JournalEntriesTable from '../../JournalEntriesTable/JournalEntriesTable';
-import InvoicePaymentTransactionsTable from './InvoicePaymentTransactionsTable';
+import InvoicePaymentTransactionsTable from './InvoicePaymentTransactions/InvoicePaymentTransactionsTable';
 import InvoiceDetailTab from './InvoiceDetailTab';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 

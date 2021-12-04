@@ -8,7 +8,7 @@ import { DrawerMainTabs } from 'components';
 import BillDetailTab from './BillDetailTab';
 import LocatedLandedCostTable from './LocatedLandedCostTable';
 import JournalEntriesTable from '../../JournalEntriesTable/JournalEntriesTable';
-import BillPaymentTransactionTable from './BillPaymentTransactionTable';
+import BillPaymentTransactionTable from './BillPaymentTransactions/BillPaymentTransactionTable';
 import { useBillDrawerContext } from './BillDrawerProvider';
 
 import BillDrawerCls from 'style/components/Drawers/BillDrawer.module.scss';

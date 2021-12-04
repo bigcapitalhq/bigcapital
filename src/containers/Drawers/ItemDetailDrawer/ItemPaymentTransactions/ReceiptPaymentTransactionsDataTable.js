@@ -68,7 +68,7 @@ export default function ReceiptPaymentTransactions() {
   );
 
   return (
-    <div className="payment-transactions">
+    <div className="item-drawer__table">
       <Card>
         <DataTable
           columns={columns}

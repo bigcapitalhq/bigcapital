@@ -1,8 +1,10 @@
 import React from 'react';
 import { DataTable, Card } from 'components';
 
-import { useBillPaymentTransactionsColumns } from './utils';
-import { useBillDrawerContext } from './BillDrawerProvider';
+import 'style/pages/PaymentTransactions/List.scss';
+
+import { useBillPaymentTransactionsColumns } from './components';
+import { useBillDrawerContext } from '../BillDrawerProvider';
 
 /**
  * Bill payment transactions datatable.
@@ -24,6 +26,7 @@ export default function BillPaymentTransactionTable() {
         loading={isPaymentTransactionsLoading}
         headerLoading={isPaymentTransactionsLoading}
         progressBarLoading={isPaymentTransactionFetching}
+        className={'payment-transactions'}
       />
     </Card>
   );
