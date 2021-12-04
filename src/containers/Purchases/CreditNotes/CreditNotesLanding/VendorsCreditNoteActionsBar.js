@@ -25,12 +25,16 @@ import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
 import withSettings from '../../../Settings/withSettings';
 import withSettingsActions from '../../../Settings/withSettingsActions';
 
+import withVendorActions from './withVendorActions';
+
 import { compose } from 'utils';
 
 /**
  * Vendors Credit note  table actions bar.
  */
 function VendorsCreditNoteActionsBar({
+  setVendorCreditsTableState,
+
   // #withVendorsCreditNotes
   vendorCreditFilterRoles,
 
@@ -56,7 +60,7 @@ function VendorsCreditNoteActionsBar({
 
   // Handle view tab change.
   const handleTabChange = (view) => {
-    setVendorsCreditNoteTableState({ viewSlug: view ? view.slug : null });
+    setVendorCreditsTableState({ viewSlug: view ? view.slug : null });
   };
 
   // Handle click a refresh credit note.
@@ -136,6 +140,7 @@ function VendorsCreditNoteActionsBar({
 
 export default compose(
   withVendorsCreditNotesActions,
+  withVendorActions,
   withSettingsActions,
   withVendorsCreditNotes(({ vendorsCreditNoteTableState }) => ({
     vendorCreditFilterRoles: vendorsCreditNoteTableState.filterRoles,

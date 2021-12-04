@@ -1,13 +1,13 @@
 import { connect } from 'react-redux';
 import {
-  setCreditNotesTableState,
-  resetCreditNotesTableState,
-} from '../../../../store/CreditNotes/creditNotes.actions';
+  setCreditNoteTableState,
+  resetCreditNoteTableState,
+} from '../../../../store/CreditNote/creditNote.actions';
 
 const mapDipatchToProps = (dispatch) => ({
   setCreditNotesTableState: (queries) =>
-    dispatch(setCreditNotesTableState(queries)),
-  resetCreditNotesTableState: () => dispatch(resetCreditNotesTableState()),
+    dispatch(setCreditNoteTableState(queries)),
+  resetCreditNotesTableState: () => dispatch(resetCreditNoteTableState()),
 });
 
 export default connect(null, mapDipatchToProps);

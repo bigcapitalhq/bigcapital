@@ -88,7 +88,7 @@ export function useDeleteCreditNote(props) {
   });
 }
 
-const transformInvoices = (res) => ({
+const transformCreditNotes = (res) => ({
   creditNotes: res.data.credit_notes,
   pagination: transformPagination(res.data.pagination),
   filterMeta: res.data.filter_meta,
@@ -102,7 +102,7 @@ export function useCreditNotes(query, props) {
     [t.CREDIT_NOTES, query],
     { method: 'get', url: 'sales/credit_notes', params: query },
     {
-      select: transformInvoices,
+      select: transformCreditNotes,
       defaultData: {
         creditNotes: [],
         pagination: {
@@ -116,30 +116,6 @@ export function useCreditNotes(query, props) {
     },
   );
 }
-
-// export function useCreditNotes(query, props) {
-//   return useRequestQuery(
-//     [t.CREDIT_NOTES],
-//     {
-//       method: 'get',
-//       url: 'sales/credit_notes',
-//       params: query,
-//     },
-//     {
-//       select: transformVendorCreditsResponse,
-//       defaultData: {
-//         credit_notes: {},
-//         pagination: {
-//           page: 1,
-//           page_size: 12,
-//           total: 0,
-//         },
-//         filterMeta: {},
-//       },
-//       ...props,
-//     },
-//   );
-// }
 
 /**
  * Retrieve credit note detail of the given id.

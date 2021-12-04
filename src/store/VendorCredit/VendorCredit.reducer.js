@@ -15,7 +15,7 @@ const initialState = {
   tableState: defaultTableQuery,
 };
 
-const STORAGE_KEY = 'bigcapital:vendorsCreditNotes';
+const STORAGE_KEY = 'bigcapital:vendor_credits';
 
 const CONFIG = {
   key: STORAGE_KEY,
@@ -24,7 +24,7 @@ const CONFIG = {
 };
 
 const reducerInstance = createReducer(initialState, {
-  ...createTableStateReducers('VENDORS_CREDIT_NOTES', defaultTableQuery),
+  ...createTableStateReducers('VENDOR_CREDITS', defaultTableQuery),
 
   [t.RESET]: () => {
     purgeStoredState(CONFIG);

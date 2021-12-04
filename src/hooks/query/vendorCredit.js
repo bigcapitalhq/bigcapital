@@ -102,7 +102,7 @@ const transformVendorCreditsResponse = (response) => ({
  */
 export function useVendorCredits(query, props) {
   return useRequestQuery(
-    [t.VENDOR_CREDITS],
+    [t.VENDOR_CREDITS, query],
     {
       method: 'get',
       url: 'purchases/vendor-credit',

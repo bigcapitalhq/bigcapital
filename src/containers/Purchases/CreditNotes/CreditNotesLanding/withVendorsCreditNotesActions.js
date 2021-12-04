@@ -1,14 +1,14 @@
 import { connect } from 'react-redux';
 import {
-  setVendorsCreditNoteTableState,
-  resetVendorsCreditNoteTableState,
-} from '../../../../store/vendorsCreditNotes/vendorsCreditNotes.actions';
+  setVendorCreditTableState,
+  resetVendorCreditTableState,
+} from '../../../../store/VendorCredit/vendorCredit.actions';
 
 const mapDispatchToProps = (dispatch) => ({
-  setVendorsCreditNoteTableState: (state) =>
-    dispatch(setVendorsCreditNoteTableState(state)),
+  setVendorsCreditNoteTableState: (queries) =>
+    dispatch(setVendorCreditTableState(queries)),
   resetVendorsCreditNoteTableState: () =>
-    dispatch(resetVendorsCreditNoteTableState()),
+    dispatch(resetVendorCreditTableState()),
 });
 
 export default connect(null, mapDispatchToProps);

@@ -31,9 +31,9 @@ import paymentMades from './PaymentMades/paymentMades.reducer';
 import organizations from './organizations/organizations.reducers';
 import subscriptions from './subscription/subscription.reducer';
 import inventoryAdjustments from './inventoryAdjustments/inventoryAdjustment.reducer';
-import creditNotes from './CreditNotes/creditNotes.reducer'
-import vendorsCreditNotes from './vendorsCreditNotes/vendorsCreditNotes.reducer'
 import plans from './plans/plans.reducer';
+import creditNotes from './CreditNote/creditNote.reducer';
+import vendorCredit from './VendorCredit/VendorCredit.reducer';
 
 const appReducer = combineReducers({
   authentication,
@@ -65,9 +65,9 @@ const appReducer = combineReducers({
   paymentReceives,
   paymentMades,
   inventoryAdjustments,
+  plans,
   creditNotes,
-  vendorsCreditNotes,
-  plans
+  vendorCredit,
 });
 
 // Reset the state of a redux store
@@ -75,7 +75,7 @@ const rootReducer = (state, action) => {
   if (action.type === types.RESET) {
     state = undefined;
   }
-  return appReducer(state, action)
-}
+  return appReducer(state, action);
+};
 
 export default rootReducer;
