@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import { DrawerMainTabs } from 'components';
 
 import CreditNoteDetailPanel from './CreditNoteDetailPanel';
+import RefundCreditNoteTransactionsTable from './RefundCreditNoteTransactions/RefundCreditNoteTransactionsTable';
 import clsx from 'classnames';
 
 import CreditNoteDetailCls from '../../../style/components/Drawers/CreditNoteDetails.module.scss';
@@ -19,6 +20,11 @@ export default function CreditNoteDetail() {
           title={intl.get('details')}
           id={'details'}
           panel={<CreditNoteDetailPanel />}
+        />
+        <Tab
+          title={intl.get('credit_note.drawer.label_refund_transactions')}
+          id={'refund_transactions'}
+          panel={<RefundCreditNoteTransactionsTable />}
         />
       </DrawerMainTabs>
     </div>

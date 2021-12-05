@@ -13,6 +13,7 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from '../../../Settings/withSettings';
 
 import { useVendorsCreditNoteTableColumns, ActionsMenu } from './components';
@@ -32,6 +33,9 @@ function VendorsCreditNoteDataTable({
 
   // #withDrawerActions
   openDrawer,
+
+  // #withDialogAction
+  openDialog,
 
   // #withSettings
   creditNoteTableSize,
@@ -92,6 +96,10 @@ function VendorsCreditNoteDataTable({
     });
   };
 
+  const handleRefundCreditVendor = ({ id }) => {
+    openDialog('refund-vendor-credit', { vendorCreditId: id });
+  };
+
   return (
     <DashboardContentTable>
       <DataTable
@@ -118,6 +126,7 @@ function VendorsCreditNoteDataTable({
           onViewDetails: handleViewDetailVendorCredit,
           onDelete: handleDeleteVendorCreditNote,
           onEdit: hanldeEditVendorCreditNote,
+          onRefund: handleRefundCreditVendor,
         }}
       />
     </DashboardContentTable>
@@ -129,6 +138,7 @@ export default compose(
   withVendorsCreditNotesActions,
   withAlertsActions,
   withDrawerActions,
+  withDialogActions,
   withSettings(({ vendorsCreditNoteSetting }) => ({
     creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
   })),

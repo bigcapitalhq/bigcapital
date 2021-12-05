@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useCreditNote } from 'hooks/query';
+import { useCreditNote, useRefundCreditNote } from 'hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from 'components';
 
 const CreditNoteDetailDrawerContext = React.createContext();
@@ -17,13 +17,25 @@ function CreditNoteDetailDrawerProvider({ creditNoteId, ...props }) {
     },
   );
 
+  // Handle fetch refund credit note.
+  const {
+    data: refundCreditNote,
+    isFetching: isRefundCreditNoteFetching,
+    isLoading: isRefundCreditNoteLoading,
+  } = useRefundCreditNote(creditNoteId, {
+    enabled: !!creditNoteId,
+  });
+
   const provider = {
     creditNote,
+    refundCreditNote,
+    isRefundCreditNoteLoading,
+    isRefundCreditNoteFetching,
     creditNoteId,
   };
 
   return (
-    <DrawerLoading loading={isCreditNoteLoading}>
+    <DrawerLoading loading={isCreditNoteLoading || isRefundCreditNoteLoading}>
       <DrawerHeaderContent
         name="credit-note-detail-drawer"
         title={intl.get('credit_note.drawer_credit_note_detail')}

@@ -24,6 +24,9 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate settings.
   queryClient.invalidateQueries([t.SETTING, t.SETTING_VENDOR_CREDITS]);
 
+  // Invalidate refund vendor credit
+  queryClient.invalidateQueries(t.REFUND_VENDOR_CREDIT);
+
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 };
@@ -149,4 +152,70 @@ export function useRefreshVendorCredits() {
       queryClient.invalidateQueries(t.VENDOR_CREDITS);
     },
   };
+}
+
+/**
+ * Create Round vendor creidt
+ */
+export function useCreateRefundVendorCredit(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) =>
+      apiRequest.post(`purchases/vendor-credit/${id}/refund`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+
+        // Invalidate credit note query.
+        queryClient.invalidateQueries([t.VENDOR_CREDIT, id]);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Delete the given refund vendor credit.
+ */
+export function useDeleteRefundVendorCredit(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (id) => apiRequest.delete(`purchases/vendor-credit/refunds/${id}`),
+    {
+      onSuccess: (res, id) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+
+        // Invalidate vendor credit query.
+        queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve refund credit note detail of the given id.
+ * @param {number} id
+ *
+ */
+export function useRefundVendorCredit(id, props, requestProps) {
+  return useRequestQuery(
+    [t.REFUND_VENDOR_CREDIT, id],
+    {
+      method: 'get',
+      url: `purchases/vendor-credit/${id}/refund`,
+      ...requestProps,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: {},
+      ...props,
+    },
+  );
 }

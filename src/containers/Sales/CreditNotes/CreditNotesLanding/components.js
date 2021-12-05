@@ -22,7 +22,7 @@ import {
 import { formattedAmount, safeCallback, calculateStatus } from 'utils';
 
 export function ActionsMenu({
-  payload: { onEdit, onDelete, onViewDetails },
+  payload: { onEdit, onDelete, onRefund, onViewDetails },
   row: { original },
 }) {
   return (
@@ -37,6 +37,11 @@ export function ActionsMenu({
         icon={<Icon icon="pen-18" />}
         text={intl.get('credit_note.action.edit_credit_note')}
         onClick={safeCallback(onEdit, original)}
+      />
+      <MenuItem
+        icon={<Icon icon="quick-payment-16" />}
+        text={intl.get('credit_note.action.refund_credit_note')}
+        onClick={safeCallback(onRefund, original)}
       />
       <MenuItem
         text={intl.get('credit_note.action.delete_credit_note')}

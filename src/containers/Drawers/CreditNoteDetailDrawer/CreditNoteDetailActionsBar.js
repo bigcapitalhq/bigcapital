@@ -42,6 +42,10 @@ function CreditNoteDetailActionsBar({
     closeDrawer('credit-note-detail-drawer');
   };
 
+  const handleRefundCreditNote = () => {
+    openDialog('refund-credit-note', { creditNoteId });
+  };
+
   // Handle delete credit note.
   const handleDeleteCreditNote = () => {
     openAlert('credit-note-delete', { creditNoteId });
@@ -57,6 +61,15 @@ function CreditNoteDetailActionsBar({
           onClick={handleEditCreditNote}
         />
         <NavbarDivider />
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="quick-payment-16" iconSize={16} />}
+          text={'Refund'}
+          // text={<T id={'add_payment'} />}
+          onClick={handleRefundCreditNote}
+        />
+        <NavbarDivider />
+
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'trash-16'} iconSize={16} />}

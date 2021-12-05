@@ -1,0 +1,27 @@
+.datatable--refund-transactions {
+  padding: 12px;
+  .table {
+    .tbody,
+    .thead {
+      .tr .th {
+        padding: 8px 8px;
+        background-color: #fff;
+        font-size: 14px;
+        border-bottom: 1px solid #000;
+        border-top: 1px solid #000;
+      }
+    }
+    .tbody {
+      .tr .td {
+        border-bottom: 0;
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+
+        &.credit,
+        &.debit {
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}

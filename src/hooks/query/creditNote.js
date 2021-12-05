@@ -24,6 +24,9 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate settings.
   queryClient.invalidateQueries([t.SETTING, t.SETTING_CREDIT_NOTES]);
 
+  // Invalidate refund credit
+  queryClient.invalidateQueries(t.REFUND_CREDIT_NOTE);
+
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 };
@@ -142,4 +145,66 @@ export function useRefreshCreditNotes() {
       queryClient.invalidateQueries(t.CREDIT_NOTES);
     },
   };
+}
+
+/**
+ * Create Round creidt note
+ */
+export function useCreateRefundCreditNote(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) =>
+      apiRequest.post(`sales/credit_notes/${id}/refund`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+
+        // Invalidate credit note query.
+        queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Delete the given refund credit note.
+ */
+export function useDeleteRefundCreditNote(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (id) => apiRequest.delete(`sales/credit_notes/refunds/${id}`),
+    {
+      onSuccess: (res, id) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+
+        // Invalidate vendor credit query.
+        queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve refund credit note detail of the given id.
+ * @param {number} id
+ *
+ */
+export function useRefundCreditNote(id, props, requestProps) {
+  return useRequestQuery(
+    [t.REFUND_CREDIT_NOTE, id],
+    { method: 'get', url: `sales/credit_notes/${id}/refund`, ...requestProps },
+    {
+      select: (res) => res.data.data,
+      defaultData: {},
+      ...props,
+    },
+  );
 }

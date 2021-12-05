@@ -42,6 +42,9 @@ function VendorCreditDetailActionsBar({
     closeDrawer('vendor-credit-detail-drawer');
   };
 
+  const handleRefundVendorCredit = () => {
+    openDialog('refund-vendor-credit', { vendorCreditId });
+  };
   // Handle delete credit note.
   const handleDeleteVendorCredit = () => {
     openAlert('vendor-credit-delete', { vendorCreditId });
@@ -55,6 +58,14 @@ function VendorCreditDetailActionsBar({
           icon={<Icon icon="pen-18" />}
           text={<T id={'vendor_credits.label.edit_vendor_credit'} />}
           onClick={handleEditVendorCredit}
+        />
+        <NavbarDivider />
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="quick-payment-16" iconSize={16} />}
+          text={'Refund'}
+          // text={<T id={'add_payment'} />}
+          onClick={handleRefundVendorCredit}
         />
         <NavbarDivider />
         <Button
