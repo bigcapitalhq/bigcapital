@@ -26,6 +26,8 @@ import NotifyEstimateViaSMSDialog from '../containers/Dialogs/NotifyEstimateViaS
 import NotifyPaymentReceiveViaSMSDialog from '../containers/Dialogs/NotifyPaymentReceiveViaSMSDialog';
 import SMSMessageDialog from '../containers/Dialogs/SMSMessageDialog';
 import TransactionsLockingDialog from '../containers/Dialogs/TransactionsLockingDialog';
+import RefundCreditNoteDialog from '../containers/Dialogs/RefundCreditNoteDialog';
+import RefundVendorCreditDialog from '../containers/Dialogs/RefundVendorCreditDialog';
 
 /**
  * Dialogs container.
@@ -60,6 +62,8 @@ export default function DialogsContainer() {
       <BadDebtDialog dialogName={'write-off-bad-debt'} />
       <SMSMessageDialog dialogName={'sms-message-form'} />
       <TransactionsLockingDialog dialogName={'transactions-locking'} />
+      <RefundCreditNoteDialog dialogName={'refund-credit-note'} />
+      <RefundVendorCreditDialog dialogName={'refund-vendor-credit'} />
     </div>
   );
 }
