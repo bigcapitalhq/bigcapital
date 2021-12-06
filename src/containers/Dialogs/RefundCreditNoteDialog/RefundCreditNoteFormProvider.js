@@ -31,8 +31,8 @@ function RefundCreditNoteFormProvider({ creditNoteId, dialogName, ...props }) {
   // State provider.
   const provider = {
     creditNote: {
-      ...pick(creditNote, ['id', 'formatted_amount', 'currency_code']),
-      amount: creditNote.formatted_amount,
+      ...pick(creditNote, ['id', 'credits_remaining', 'currency_code']),
+      amount: creditNote.credits_remaining,
     },
     accounts,
     dialogName,

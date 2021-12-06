@@ -33,6 +33,7 @@ export const defaultVendorsCreditNote = {
   vendor_id: '',
   vendor_credit_number: '',
   vendor_credit_no_manually: false,
+  open: '',
   vendor_credit_date: moment(new Date()).format('YYYY-MM-DD'),
   // reference_no: '',
   note: '',
@@ -93,6 +94,7 @@ export const transformFormValuesToRequest = (values) => {
   return {
     ...values,
     entries: transformEntriesToSubmit(entries),
+    open: false,
   };
 };
 
@@ -119,7 +121,7 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Syncs invoice no. settings with form.
  */
- export const useObserveVendorCreditNoSettings = (prefix, nextNumber) => {
+export const useObserveVendorCreditNoSettings = (prefix, nextNumber) => {
   const { setFieldValue } = useFormikContext();
 
   React.useEffect(() => {

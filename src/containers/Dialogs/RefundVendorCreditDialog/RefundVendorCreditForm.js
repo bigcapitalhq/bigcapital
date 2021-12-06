@@ -41,7 +41,7 @@ function RefundVendorCreditForm({
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setFieldError }) => {
     const form = {
-      ...omit(values, ['currency_code', 'formatted_amount']),
+      ...omit(values, ['currency_code', 'credits_remaining']),
     };
 
     // Handle request response success.

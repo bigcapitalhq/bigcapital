@@ -35,6 +35,7 @@ export const defaultCreditNote = {
   credit_note_date: moment(new Date()).format('YYYY-MM-DD'),
   credit_note_number: '',
   credit_note_no_manually: false,
+  open: '',
   // reference_no: '',
   note: '',
   terms_conditions: '',
@@ -82,19 +83,20 @@ export const transformEntriesToSubmit = (entries) => {
 /**
  * Filters the givne non-zero entries.
  */
- export const filterNonZeroEntries = (entries) => {
+export const filterNonZeroEntries = (entries) => {
   return entries.filter((item) => item.item_id && item.quantity);
 };
 
 /**
  * Transformes form values to request body.
  */
- export const transformFormValuesToRequest = (values) => {
+export const transformFormValuesToRequest = (values) => {
   const entries = filterNonZeroEntries(values.entries);
 
   return {
     ...values,
     entries: transformEntriesToSubmit(entries),
+    open: false,
   };
 };
 
@@ -121,7 +123,7 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Syncs invoice no. settings with form.
  */
- export const useObserveCreditNoSettings = (prefix, nextNumber) => {
+export const useObserveCreditNoSettings = (prefix, nextNumber) => {
   const { setFieldValue } = useFormikContext();
 
   React.useEffect(() => {

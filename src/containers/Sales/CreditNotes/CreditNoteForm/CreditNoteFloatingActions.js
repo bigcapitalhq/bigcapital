@@ -26,35 +26,40 @@ export default function CreditNoteFloatingActions() {
   const { resetForm, submitForm, isSubmitting } = useFormikContext();
 
   // Credit note form context.
-  const { setSubmitPayload, isNewMode } = useCreditNoteFormContext();
+  const { setSubmitPayload, creditNote } = useCreditNoteFormContext();
 
-  // Handle submit, save and anothe new button click.
-  const handleSubmitAndNewBtnClick = (event) => {
-    setSubmitPayload({ redirect: false, status: true, resetForm: true });
+  // Handle submit as open button click.
+  const handleSubmitOpenBtnClick = (event) => {
+    setSubmitPayload({ redirect: true, open: true });
     submitForm();
   };
 
-  // Handle submit as save & continue editing button click.
-  const handleSubmitSaveContinueEditingBtnClick = (event) => {
-    setSubmitPayload({ redirect: false, status: true });
+  // Handle submit, open and anothe new button click.
+  const handleSubmitOpenAndNewBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, open: true, resetForm: true });
     submitForm();
   };
 
+  // Handle submit as open & continue editing button click.
+  const handleSubmitOpenContinueEditingBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, open: true });
+    submitForm();
+  };
   // Handle submit as draft button click.
   const handleSubmitDraftBtnClick = (event) => {
-    setSubmitPayload({ redirect: true, status: false });
+    setSubmitPayload({ redirect: true, open: false   });
     submitForm();
   };
 
   // handle submit as draft & new button click.
   const handleSubmitDraftAndNewBtnClick = (event) => {
-    setSubmitPayload({ redirect: false, status: false, resetForm: true });
+    setSubmitPayload({ redirect: false, open: false, resetForm: true });
     submitForm();
   };
 
   // Handle submit as draft & continue editing button click.
   const handleSubmitDraftContinueEditingBtnClick = (event) => {
-    setSubmitPayload({ redirect: false, status: false });
+    setSubmitPayload({ redirect: false, open: false });
     submitForm();
   };
 
@@ -63,89 +68,114 @@ export default function CreditNoteFloatingActions() {
     history.goBack();
   };
 
-  // Handle submit button click.
-  const handleSubmitBtnClick = (event) => {
-    setSubmitPayload({ redirect: true });
-    submitForm();
-  };
-
   const handleClearBtnClick = (event) => {
     resetForm();
   };
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
-      {/* ----------- Save  ----------- */}
-      <ButtonGroup>
-        <Button
-          disabled={isSubmitting}
-          loading={isSubmitting}
-          intent={Intent.PRIMARY}
-          onClick={handleSubmitBtnClick}
-          text={<T id={'save'} />}
-        />
-
-        <Popover
-          content={
-            <Menu>
-              <MenuItem
-                text={<T id={'save_and_new'} />}
-                onClick={handleSubmitAndNewBtnClick}
-              />
-              <MenuItem
-                text={<T id={'save_continue_editing'} />}
-                onClick={handleSubmitSaveContinueEditingBtnClick}
-              />
-            </Menu>
-          }
-          minimal={true}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
-        >
+      {/* ----------- Save And Open  ----------- */}
+      <If condition={!creditNote || !creditNote?.is_open}>
+        <ButtonGroup>
           <Button
             disabled={isSubmitting}
+            loading={isSubmitting}
             intent={Intent.PRIMARY}
-            rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+            onClick={handleSubmitOpenBtnClick}
+            text={<T id={'save_open'} />}
           />
-        </Popover>
-      </ButtonGroup>
-      {/* ----------- Save As Draft ----------- */}
-      <ButtonGroup>
-        <Button
-          disabled={isSubmitting}
-          className={'ml1'}
-          onClick={handleSubmitDraftBtnClick}
-          text={<T id={'save_as_draft'} />}
-        />
-        <Popover
-          content={
-            <Menu>
-              <MenuItem
-                text={<T id={'save_and_new'} />}
-                onClick={handleSubmitDraftAndNewBtnClick}
-              />
-              <MenuItem
-                text={<T id={'save_continue_editing'} />}
-                onClick={handleSubmitDraftContinueEditingBtnClick}
-              />
-            </Menu>
-          }
-          minimal={true}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
-        >
+          <Popover
+            content={
+              <Menu>
+                <MenuItem
+                  text={<T id={'open_and_new'} />}
+                  onClick={handleSubmitOpenAndNewBtnClick}
+                />
+                <MenuItem
+                  text={<T id={'open_continue_editing'} />}
+                  onClick={handleSubmitOpenContinueEditingBtnClick}
+                />
+              </Menu>
+            }
+            minimal={true}
+            interactionKind={PopoverInteractionKind.CLICK}
+            position={Position.BOTTOM_LEFT}
+          >
+            <Button
+              disabled={isSubmitting}
+              intent={Intent.PRIMARY}
+              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+            />
+          </Popover>
+        </ButtonGroup>
+        {/* ----------- Save As Draft ----------- */}
+        <ButtonGroup>
           <Button
             disabled={isSubmitting}
-            rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+            className={'ml1'}
+            onClick={handleSubmitDraftBtnClick}
+            text={<T id={'save_as_draft'} />}
           />
-        </Popover>
-      </ButtonGroup>
+          <Popover
+            content={
+              <Menu>
+                <MenuItem
+                  text={<T id={'save_and_new'} />}
+                  onClick={handleSubmitDraftAndNewBtnClick}
+                />
+                <MenuItem
+                  text={<T id={'save_continue_editing'} />}
+                  onClick={handleSubmitDraftContinueEditingBtnClick}
+                />
+              </Menu>
+            }
+            minimal={true}
+            interactionKind={PopoverInteractionKind.CLICK}
+            position={Position.BOTTOM_LEFT}
+          >
+            <Button
+              disabled={isSubmitting}
+              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+            />
+          </Popover>
+        </ButtonGroup>
+      </If>
+      {/* ----------- Save and New ----------- */}
+      <If condition={creditNote && creditNote?.is_open}>
+        <ButtonGroup>
+          <Button
+            loading={isSubmitting}
+            intent={Intent.PRIMARY}
+            onClick={handleSubmitOpenBtnClick}
+            text={<T id={'save'} />}
+          />
+          <Popover
+            content={
+              <Menu>
+                <MenuItem
+                  text={<T id={'save_and_new'} />}
+                  onClick={handleSubmitOpenAndNewBtnClick}
+                />
+              </Menu>
+            }
+            minimal={true}
+            interactionKind={PopoverInteractionKind.CLICK}
+            position={Position.BOTTOM_LEFT}
+          >
+            <Button
+              disabled={isSubmitting}
+              intent={Intent.PRIMARY}
+              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+            />
+          </Popover>
+        </ButtonGroup>
+      </If>
       {/* ----------- Clear & Reset----------- */}
       <Button
         className={'ml1'}
         disabled={isSubmitting}
         onClick={handleClearBtnClick}
-        text={isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
+        text={creditNote ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel ----------- */}
       <Button

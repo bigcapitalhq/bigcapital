@@ -219,3 +219,25 @@ export function useRefundVendorCredit(id, props, requestProps) {
     },
   );
 }
+
+/**
+ * Mark the given vendor credit  as opened.
+ */
+export function useOpenVendorCredit(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (id) => apiRequest.post(`purchases/vendor-credit/${id}/open`),
+    {
+      onSuccess: (res, id) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+
+        // Invalidate specific.
+        queryClient.invalidateQueries([t.VENDOR_CREDIT, id]);
+      },
+      ...props,
+    },
+  );
+}

@@ -95,6 +95,7 @@ function VendorCreditNoteForm({
     }
     const form = {
       ...transformFormValuesToRequest(values),
+      open: submitPayload.open,
     };
     // Handle the request success.
     const onSuccess = (response) => {

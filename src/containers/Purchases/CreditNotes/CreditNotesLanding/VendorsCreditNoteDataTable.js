@@ -100,6 +100,10 @@ function VendorsCreditNoteDataTable({
     openDialog('refund-vendor-credit', { vendorCreditId: id });
   };
 
+  // Handle cancel/confirm vendor credit open.
+  const handleOpenCreditNote = ({ id }) => {
+    openAlert('vendor-credit-open', { vendorCreditId: id });
+  };
   return (
     <DashboardContentTable>
       <DataTable
@@ -127,6 +131,7 @@ function VendorsCreditNoteDataTable({
           onDelete: handleDeleteVendorCreditNote,
           onEdit: hanldeEditVendorCreditNote,
           onRefund: handleRefundCreditVendor,
+          onOpen: handleOpenCreditNote,
         }}
       />
     </DashboardContentTable>

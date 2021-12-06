@@ -31,8 +31,8 @@ function RefundVendorCreditFormProvider({
   // State provider.
   const provider = {
     vendorCredit: {
-      ...pick(vendorCredit, ['id', 'formatted_amount', 'currency_code']),
-      amount: vendorCredit.formatted_amount,
+      ...pick(vendorCredit, ['id', 'credits_remaining', 'currency_code']),
+      amount: vendorCredit.credits_remaining,
     },
     accounts,
     dialogName,

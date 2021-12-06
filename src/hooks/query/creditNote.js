@@ -208,3 +208,22 @@ export function useRefundCreditNote(id, props, requestProps) {
     },
   );
 }
+
+/**
+ * Mark the given credit note as opened.
+ */
+export function useOpenCreditNote(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation((id) => apiRequest.post(`sales/credit_notes/${id}/open`), {
+    onSuccess: (res, id) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
+
+      // Invalidate specific
+      queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
+    },
+    ...props,
+  });
+}

@@ -15,7 +15,13 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Icon, FormattedMessage as T, MoreMenuItems, Can } from 'components';
+import {
+  Icon,
+  FormattedMessage as T,
+  If,
+  MoreMenuItems,
+  Can,
+} from 'components';
 
 import { compose } from 'utils';
 
@@ -32,7 +38,7 @@ function CreditNoteDetailActionsBar({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { creditNoteId } = useCreditNoteDetailDrawerContext();
+  const { creditNoteId, creditNote } = useCreditNoteDetailDrawerContext();
 
   const history = useHistory();
 
@@ -61,15 +67,15 @@ function CreditNoteDetailActionsBar({
           onClick={handleEditCreditNote}
         />
         <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="quick-payment-16" iconSize={16} />}
-          text={'Refund'}
-          // text={<T id={'add_payment'} />}
-          onClick={handleRefundCreditNote}
-        />
-        <NavbarDivider />
-
+        <If condition={!creditNote.is_closed && !creditNote.is_draft}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="quick-payment-16" iconSize={16} />}
+            text={<T id={'refund'} />}
+            onClick={handleRefundCreditNote}
+          />
+          <NavbarDivider />
+        </If>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'trash-16'} iconSize={16} />}
