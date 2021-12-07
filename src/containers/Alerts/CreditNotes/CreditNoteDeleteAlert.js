@@ -9,6 +9,7 @@ import withAlertActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { useDeleteCreditNote } from 'hooks/query';
+import { handleDeleteErrors } from '../../Sales/CreditNotes/CreditNotesLanding/utils';
 import { compose } from 'utils';
 
 /**
@@ -48,7 +49,9 @@ function CreditNoteDeleteAlert({
           response: {
             data: { errors },
           },
-        }) => {},
+        }) => {
+          handleDeleteErrors(errors);
+        },
       )
       .finally(() => {
         closeAlert(name);
