@@ -11,10 +11,13 @@
 
         &_line {
           border-bottom: none;
+          .title {
+            font-weight: 600;
+          }
           .amount,
           .title {
             padding: 8px 0px;
-            width: 145px;
+            width: 165px;
           }
           .amount {
             text-align: right;
