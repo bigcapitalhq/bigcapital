@@ -33,7 +33,7 @@ function RefundVendorCreditFloatingActions({
         <Button
           intent={Intent.PRIMARY}
           loading={isSubmitting}
-          style={{ minWidth: '75px' }}
+          style={{ minWidth: '85px' }}
           type="submit"
           text="Refund"
         />

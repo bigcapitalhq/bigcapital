@@ -28,6 +28,7 @@ import {
   compose,
 } from 'utils';
 import { useAutofocus } from 'hooks';
+import { ACCOUNT_TYPE } from 'common/accountTypes';
 import { useRefundCreditNoteContext } from './RefundCreditNoteFormProvider';
 import withSettings from 'containers/Settings/withSettings';
 
@@ -137,6 +138,11 @@ function RefundCreditNoteFormFields() {
               inputProps={{
                 placeholder: intl.get('select_account'),
               }}
+              filterByTypes={[
+                ACCOUNT_TYPE.BANK,
+                ACCOUNT_TYPE.CASH,
+                ACCOUNT_TYPE.FIXED_ASSET,
+              ]}
             />
           </FormGroup>
         )}

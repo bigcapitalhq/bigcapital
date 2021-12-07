@@ -28,6 +28,7 @@ import {
   compose,
 } from 'utils';
 import { useAutofocus } from 'hooks';
+import { ACCOUNT_TYPE } from 'common/accountTypes';
 import { useRefundVendorCreditContext } from './RefundVendorCreditFormProvider';
 import withSettings from 'containers/Settings/withSettings';
 
@@ -138,6 +139,11 @@ function RefundVendorCreditFormFields() {
               inputProps={{
                 placeholder: intl.get('select_account'),
               }}
+              filterByTypes={[
+                ACCOUNT_TYPE.BANK,
+                ACCOUNT_TYPE.CASH,
+                ACCOUNT_TYPE.FIXED_ASSET,
+              ]}
             />
           </FormGroup>
         )}
