@@ -5,6 +5,7 @@ import { DrawerMainTabs } from 'components';
 
 import CreditNoteDetailPanel from './CreditNoteDetailPanel';
 import RefundCreditNoteTransactionsTable from './RefundCreditNoteTransactions/RefundCreditNoteTransactionsTable';
+import ReconcileCreditNoteTransactionsTable from './ReconcileCreditNoteTransactions/ReconcileCreditNoteTransactionsTable';
 import clsx from 'classnames';
 
 import CreditNoteDetailCls from '../../../style/components/Drawers/CreditNoteDetails.module.scss';
@@ -25,6 +26,11 @@ export default function CreditNoteDetail() {
           title={intl.get('credit_note.drawer.label_refund_transactions')}
           id={'refund_transactions'}
           panel={<RefundCreditNoteTransactionsTable />}
+        />
+        <Tab
+          title={intl.get('credit_note.drawer.label_reconcile_transactions')}
+          id={'reconcile_transactions'}
+          panel={<ReconcileCreditNoteTransactionsTable />}
         />
       </DrawerMainTabs>
     </div>

@@ -12,6 +12,10 @@ const OpenCreditNoteAlert = React.lazy(() =>
   import('../../Alerts/CreditNotes/CreditNoteOpenedAlert'),
 );
 
+const ReconcileCreditDeleteAlert = React.lazy(() =>
+  import('../../Alerts/CreditNotes/ReconcileCreditNoteDeleteAlert'),
+);
+
 /**
  * Credit notes alerts.
  */
@@ -27,5 +31,9 @@ export default [
   {
     name: 'refund-credit-delete',
     component: RefundCreditNoteDeleteAlert,
+  },
+  {
+    name: 'reconcile-credit-delete',
+    component: ReconcileCreditDeleteAlert,
   },
 ];
