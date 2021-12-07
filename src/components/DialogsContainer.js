@@ -28,6 +28,7 @@ import SMSMessageDialog from '../containers/Dialogs/SMSMessageDialog';
 import TransactionsLockingDialog from '../containers/Dialogs/TransactionsLockingDialog';
 import RefundCreditNoteDialog from '../containers/Dialogs/RefundCreditNoteDialog';
 import RefundVendorCreditDialog from '../containers/Dialogs/RefundVendorCreditDialog';
+import ReconcileCreditNoteDialog from '../containers/Dialogs/ReconcileCreditNoteDialog';
 
 /**
  * Dialogs container.
@@ -64,6 +65,7 @@ export default function DialogsContainer() {
       <TransactionsLockingDialog dialogName={'transactions-locking'} />
       <RefundCreditNoteDialog dialogName={'refund-credit-note'} />
       <RefundVendorCreditDialog dialogName={'refund-vendor-credit'} />
+      <ReconcileCreditNoteDialog dialogName={'reconcile-credit-note'} />
     </div>
   );
 }

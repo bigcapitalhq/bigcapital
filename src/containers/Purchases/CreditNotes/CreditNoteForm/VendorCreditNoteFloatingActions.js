@@ -27,6 +27,7 @@ export default function VendorCreditNoteFloatingActions() {
 
   // Credit note form context.
   const { setSubmitPayload, vendorCredit } = useVendorCreditNoteFormContext();
+
   // Handle submit as open button click.
   const handleSubmitOpenBtnClick = (event) => {
     setSubmitPayload({ redirect: true, open: true });
@@ -70,7 +71,6 @@ export default function VendorCreditNoteFloatingActions() {
   const handleClearBtnClick = (event) => {
     resetForm();
   };
-
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Open  ----------- */}

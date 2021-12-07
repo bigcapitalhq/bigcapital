@@ -14,7 +14,7 @@ import {
 import { safeCallback } from 'utils';
 
 export function ActionsMenu({
-  payload: { onEdit, onDelete, onRefund, onOpen, onViewDetails },
+  payload: { onEdit, onDelete, onRefund, onOpen, onReconcile, onViewDetails },
   row: { original },
 }) {
   return (
@@ -44,7 +44,12 @@ export function ActionsMenu({
           onClick={safeCallback(onOpen, original)}
         />
       </If>
-
+      <MenuItem
+        text={'Reconcile Credit Note With Invoice'}
+        // icon={<Icon icon="quick-payment-16" />}
+        // text={intl.get('credit_note.action.refund_credit_note')}
+        onClick={safeCallback(onReconcile, original)}
+      />
       <MenuItem
         text={intl.get('credit_note.action.delete_credit_note')}
         intent={Intent.DANGER}

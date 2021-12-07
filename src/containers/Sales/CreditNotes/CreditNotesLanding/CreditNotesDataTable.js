@@ -105,6 +105,11 @@ function CreditNotesDataTable({
     openAlert('credit-note-open', { creditNoteId: id });
   };
 
+  // Handle reconcile credit note.
+  const handleReconcileCreditNote = ({ id }) => {
+    openDialog('reconcile-credit-note', { creditNoteId: id });
+  };
+
   return (
     <DashboardContentTable>
       <DataTable
@@ -132,6 +137,7 @@ function CreditNotesDataTable({
           onEdit: hanldeEditCreditNote,
           onRefund: handleRefundCreditNote,
           onOpen: handleOpenCreditNote,
+          onReconcile: handleReconcileCreditNote,
         }}
       />
     </DashboardContentTable>

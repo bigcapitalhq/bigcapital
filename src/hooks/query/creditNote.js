@@ -27,6 +27,9 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate refund credit
   queryClient.invalidateQueries(t.REFUND_CREDIT_NOTE);
 
+  // Invalidate reconcile.
+  queryClient.invalidateQueries(t.RECONCILE_CREDIT_NOTES);
+
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 };
@@ -226,4 +229,89 @@ export function useOpenCreditNote(props) {
     },
     ...props,
   });
+}
+
+/**
+ * Retrieve reconcile credit note of the given id.
+ * @param {number} id
+ *
+ */
+export function useReconcileCreditNote(id, props, requestProps) {
+  return useRequestQuery(
+    [t.RECONCILE_CREDIT_NOTE, id],
+    {
+      method: 'get',
+      url: `sales/credit_notes/${id}/apply-to-invoices`,
+      ...requestProps,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: [],
+      ...props,
+    },
+  );
+}
+
+/**
+ * Create Reconcile credit note.
+ */
+export function useCreateReconcileCreditNote(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) =>
+      apiRequest.post(`sales/credit_notes/${id}/apply-to-invoices`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+
+        // Invalidate credit note query.
+        queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve reconcile credit notes.
+ */
+export function useReconcileCreditNotes(id, props, requestProps) {
+  return useRequestQuery(
+    [t.RECONCILE_CREDIT_NOTES, id],
+    {
+      method: 'get',
+      url: `sales/credit_notes/${id}/applied-invoices`,
+      ...requestProps,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: {},
+      ...props,
+    },
+  );
+}
+
+/**
+ * Delete the given reconcile credit note.
+ */
+export function useDeleteReconcileCredit(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (id) => apiRequest.delete(`sales/credit_notes/applied-to-invoices/${id}`),
+    {
+      onSuccess: (res, id) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+
+        // Invalidate vendor credit query.
+        queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
+      },
+      ...props,
+    },
+  );
 }
