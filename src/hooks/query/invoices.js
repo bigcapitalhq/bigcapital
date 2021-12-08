@@ -27,6 +27,10 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate accounts.
   queryClient.invalidateQueries(t.ACCOUNTS);
   queryClient.invalidateQueries(t.ACCOUNT);
+
+  // Invalidate reconcile.
+  queryClient.invalidateQueries(t.RECONCILE_CREDIT_NOTE);
+  queryClient.invalidateQueries(t.RECONCILE_CREDIT_NOTES);
 };
 
 /**
@@ -102,7 +106,6 @@ const transformInvoices = (res) => ({
  * Retrieve sale invoices list with pagination meta.
  */
 export function useInvoices(query, props) {
-
   return useRequestQuery(
     [t.SALE_INVOICES, query],
     { method: 'get', url: 'sales/invoices', params: query },
