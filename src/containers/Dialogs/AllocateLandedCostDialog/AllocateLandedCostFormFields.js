@@ -90,8 +90,10 @@ export default function AllocateLandedCostFormFields() {
               selectedItem={value}
               selectedItemProp={'id'}
               textProp={'name'}
-              labelProp={'id'}
-              defaultText={intl.get('Select transaction')}
+              labelProp={'formatted_unallocated_cost_amount'}
+              defaultText={intl.get(
+                'landed_cost.dialog.label_select_transaction',
+              )}
               popoverProps={{ minimal: true }}
             />
           </FormGroup>
@@ -129,7 +131,10 @@ export default function AllocateLandedCostFormFields() {
                 selectedItem={value}
                 selectedItemProp={'id'}
                 textProp={'name'}
-                defaultText={intl.get('Select transaction entry')}
+                labelProp={'formatted_unallocated_cost_amount'}
+                defaultText={intl.get(
+                  'landed_cost.dialog.label_select_transaction_entry',
+                )}
                 popoverProps={{ minimal: true }}
               />
             </FormGroup>

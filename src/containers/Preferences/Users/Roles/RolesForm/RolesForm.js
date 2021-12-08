@@ -21,6 +21,7 @@ import {
 
 import RolesFormContent from './RolesFormContent';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import { handleDeleteErrors } from '../utils';
 
 import { compose, transformToForm } from 'utils';
 
@@ -82,8 +83,14 @@ function RolesForm({
       history.push('/preferences/users');
     };
 
-    const onError = (errors) => {
+    const onError = ({
+      response: {
+        data: { errors },
+      },
+    }) => {
       setSubmitting(false);
+
+      handleDeleteErrors(errors);
     };
     if (isNewMode) {
       createRolePermissionMutate(form).then(onSuccess).catch(onError);

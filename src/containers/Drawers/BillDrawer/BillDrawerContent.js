@@ -1,7 +1,6 @@
 import React from 'react';
 import { DrawerBody } from 'components';
 
-import 'style/components/Drawers/ViewDetail/ViewDetail.scss';
 
 import { BillDrawerProvider } from './BillDrawerProvider';
 import BillDrawerDetails from './BillDrawerDetails';

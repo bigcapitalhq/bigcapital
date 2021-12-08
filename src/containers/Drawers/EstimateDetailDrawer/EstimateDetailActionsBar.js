@@ -90,11 +90,13 @@ function EstimateDetailActionsBar({
           />
           <NavbarDivider />
         </Can>
-        <MoreMenuItems
-          payload={{
-            onNotifyViaSMS: handleNotifyViaSMS,
-          }}
-        />
+        <Can I={SaleEstimateAction.NotifyBySms} a={AbilitySubject.Estimate}>
+          <MoreMenuItems
+            payload={{
+              onNotifyViaSMS: handleNotifyViaSMS,
+            }}
+          />
+        </Can>
       </NavbarGroup>
     </DashboardActionsBar>
   );

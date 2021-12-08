@@ -1,5 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 import { Intent, MenuItem, Menu } from '@blueprintjs/core';
 import { safeCallback } from 'utils';
 import { Icon } from 'components';
@@ -24,7 +25,7 @@ export function ActionsMenu({ row: { original }, payload: { onDelete } }) {
  */
 export function FromTransactionCell({
   row: { original },
-  payload: { onFromTranscationClick }
+  payload: { onFromTranscationClick },
 }) {
   // Handle the link click
   const handleAnchorClick = () => {
@@ -39,6 +40,18 @@ export function FromTransactionCell({
 }
 
 /**
+ * Name accessor.
+ */
+export const NameAccessor = (row) => {
+  return (
+    <span className="name">
+      <LabelName>{row.name}</LabelName>
+      <LabelDescription>{row.description}</LabelDescription>
+    </span>
+  );
+};
+
+/**
  * Retrieve bill located landed cost table columns.
  */
 export function useLocatedLandedCostColumns() {
@@ -46,7 +59,7 @@ export function useLocatedLandedCostColumns() {
     () => [
       {
         Header: intl.get('name'),
-        accessor: 'description',
+        accessor: NameAccessor,
         width: 150,
         className: 'name',
       },
@@ -65,7 +78,7 @@ export function useLocatedLandedCostColumns() {
       },
       {
         Header: intl.get('allocation_method'),
-        accessor: 'allocation_method_formatted',
+        accessor: 'allocation_method',
         width: 100,
         className: 'allocation-method',
       },
@@ -73,3 +86,12 @@ export function useLocatedLandedCostColumns() {
     [],
   );
 }
+
+const LabelName = styled.div``;
+
+const LabelDescription = styled.div`
+  font-size: 12px;
+  margin-top: 6px;
+  display: block;
+  opacity: 0.75;
+`;

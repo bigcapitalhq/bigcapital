@@ -124,6 +124,27 @@ export function useSettingCashFlow(props) {
 }
 
 /**
+ * Retrieve credit notes settings.
+ */
+export function useSettingsCreditNotes(props) {
+  return useSettingsQuery(
+    [t.SETTING, t.SETTING_CREDIT_NOTES],
+    { group: 'credit_note' },
+    props,
+  );
+}
+/**
+ * Retrieve vendor credit settings.
+ */
+export function useSettingsVendorCredits(props) {
+  return useSettingsQuery(
+    [t.SETTING, t.SETTING_VENDOR_CREDITS],
+    { group: 'vendor_credit' },
+    props,
+  );
+}
+
+/**
  * Retrieve SMS Notifications settings.
  */
 export function useSettingSMSNotifications(props) {

@@ -1,0 +1,68 @@
+.root {
+}
+
+.detail_panel {
+  :global .card {
+    padding: 22px 15px;
+    margin: 15px;
+  }
+
+  &_table {
+    :global .bigcapital-datatable {
+      margin-top: 30px;
+
+      .thead,
+      .tbody {
+        .quantity,
+        .rate,
+        .amount {
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  &_footer {
+    :global .total_lines {
+      margin-left: auto;
+
+      &_line {
+        .title {
+          padding-left: 0;
+        }
+        .amount,
+        .title {
+          width: 180px;
+        }
+        .amount {
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  &_footer {
+    display: flex;
+    margin-bottom: 20px;
+  }
+
+  .total_line {
+    &_subtotal {
+      border-bottom: 1px solid #000;
+    }
+
+    &_total {
+      border-bottom: 3px double #000;
+      font-weight: 600;
+    }
+    &_dueAmount {
+      font-weight: 600;
+    }
+  }
+
+  &_note {
+    b {
+      color: #727983;
+    }
+  }
+}

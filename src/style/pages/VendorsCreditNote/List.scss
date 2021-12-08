@@ -1,0 +1,20 @@
+.dashboard__insider--vendors-credit-note-list {
+  .bigcapital-datatable {
+    .tbody {
+      .amount.td {
+        .cell-inner {
+          > span {
+            font-weight: 600;
+          }
+        }
+      }
+    }
+    .table-size--small {
+      .status.td {
+        .bp3-progress-bar {
+          height: 3px;
+        }
+      }
+    }
+  }
+}

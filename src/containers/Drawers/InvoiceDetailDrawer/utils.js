@@ -8,7 +8,11 @@ import {
   MenuItem,
   Menu,
 } from '@blueprintjs/core';
-import { Icon, FormattedMessage as T, Choose } from 'components';
+import { Icon, FormattedMessage as T, Choose, Can } from 'components';
+import {
+  SaleInvoiceAction,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 import { FormatNumberCell } from '../../../components';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
@@ -88,10 +92,12 @@ export const BadDebtMenuItem = ({
               />
             </Choose.When>
           </Choose>
-          <MenuItem
-            onClick={onNotifyViaSMS}
-            text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
-          />
+          <Can I={SaleInvoiceAction.NotifyBySms} a={AbilitySubject.Invoice}>
+            <MenuItem
+              onClick={onNotifyViaSMS}
+              text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
+            />
+          </Can>
         </Menu>
       }
     >

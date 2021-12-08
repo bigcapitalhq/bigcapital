@@ -120,9 +120,9 @@ function InvoiceDetailActionsBar({
             intent={Intent.DANGER}
             onClick={handleDeleteInvoice}
           />
-          <NavbarDivider />
         </Can>
         <Can I={SaleInvoiceAction.Writeoff} a={AbilitySubject.Invoice}>
+          <NavbarDivider />
           <BadDebtMenuItem
             payload={{
               onBadDebt: handleBadDebtInvoice,

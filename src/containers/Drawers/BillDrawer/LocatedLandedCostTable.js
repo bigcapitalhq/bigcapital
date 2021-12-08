@@ -5,6 +5,8 @@ import { Button, Classes, NavbarGroup } from '@blueprintjs/core';
 import { useLocatedLandedCostColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from './BillDrawerProvider';
 
+import '../../../style/pages/AllocateLandedCost/List.scss';
+
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
