@@ -125,6 +125,16 @@ export const handleDeleteErrors = (errors) => {
       intent: Intent.DANGER,
     });
   }
+  if (
+    errors.find((error) => error.type === 'BILL_HAS_APPLIED_TO_VENDOR_CREDIT')
+  ) {
+    AppToaster.show({
+      message: intl.get(
+        'bills.error.you_couldn_t_delete_bill_has_reconciled_with_vendor_credit',
+      ),
+      intent: Intent.DANGER,
+    });
+  }
 };
 
 /**
