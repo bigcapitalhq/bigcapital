@@ -30,7 +30,7 @@ export function ActionsMenu({
         text={intl.get('credit_note.action.edit_credit_note')}
         onClick={safeCallback(onEdit, original)}
       />
-      <If condition={!original.is_closed && !original.is_draft}>
+      <If condition={!original.is_closed && original.is_published}>
         <MenuItem
           icon={<Icon icon="quick-payment-16" />}
           text={intl.get('credit_note.action.refund_credit_note')}
@@ -40,16 +40,17 @@ export function ActionsMenu({
       <If condition={original.is_draft}>
         <MenuItem
           icon={<Icon icon={'check'} iconSize={18} />}
-          text={intl.get('mark_as_opened')}
+          text={intl.get('credit_note.action.make_as_open')}
           onClick={safeCallback(onOpen, original)}
         />
       </If>
-      <MenuItem
-        text={'Reconcile Credit Note With Invoice'}
-        // icon={<Icon icon="quick-payment-16" />}
-        // text={intl.get('credit_note.action.refund_credit_note')}
-        onClick={safeCallback(onReconcile, original)}
-      />
+      <If condition={!original.is_draft && original.is_published}>
+        <MenuItem
+          text={intl.get('credit_note.action.reconcile_with_invoices')}
+          // icon={<Icon icon="quick-payment-16" />}
+          onClick={safeCallback(onReconcile, original)}
+        />
+      </If>
       <MenuItem
         text={intl.get('credit_note.action.delete_credit_note')}
         intent={Intent.DANGER}
@@ -134,6 +135,16 @@ export function useCreditNoteTableColumns() {
         className: clsx(CLASSES.FONT_BOLD),
       },
       {
+        id: 'balance',
+        Header: intl.get('balance'),
+        accessor: 'formatted_credits_remaining',
+        width: 120,
+        align: 'right',
+        clickable: true,
+        textOverview: true,
+        className: clsx(CLASSES.FONT_BOLD),
+      },
+      {
         id: 'status',
         Header: intl.get('status'),
         accessor: StatusAccessor,
@@ -144,7 +155,7 @@ export function useCreditNoteTableColumns() {
       {
         id: 'reference_no',
         Header: intl.get('reference_no'),
-        accessor: 'reference_no',
+        accessor: 'reference_no', // or note
         width: 90,
         className: 'reference_no',
         clickable: true,

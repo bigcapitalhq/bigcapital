@@ -33,7 +33,7 @@ export function ActionsMenu({
         text={intl.get('vendor_credits.action.edit_vendor_credit')}
         onClick={safeCallback(onEdit, original)}
       />
-      <If condition={!original.is_closed && !original.is_draft}>
+      <If condition={!original.is_closed && original.is_published}>
         <MenuItem
           icon={<Icon icon="quick-payment-16" />}
           text={intl.get('vendor_credits.action.refund_vendor_credit')}
@@ -43,16 +43,17 @@ export function ActionsMenu({
       <If condition={original.is_draft}>
         <MenuItem
           icon={<Icon icon={'check'} iconSize={18} />}
-          text={intl.get('mark_as_opened')}
+          text={intl.get('vendor_credits.action.mark_as_open')}
           onClick={safeCallback(onOpen, original)}
         />
       </If>
-      <MenuItem
-        text={'Reconcile Credit Note With bills'}
-        // icon={<Icon icon="quick-payment-16" />}
-        // text={intl.get('credit_note.action.refund_credit_note')}
-        onClick={safeCallback(onReconcile, original)}
-      />
+      <If condition={!original.is_draft && original.is_published}>
+        <MenuItem
+          // icon={<Icon icon="quick-payment-16" />}
+          text={intl.get('vendor_credits.action.reconcile_with_bills')}
+          onClick={safeCallback(onReconcile, original)}
+        />
+      </If>
       <MenuItem
         text={intl.get('vendor_credits.action.delete_vendor_credit')}
         intent={Intent.DANGER}
@@ -130,6 +131,16 @@ export function useVendorsCreditNoteTableColumns() {
         id: 'amount',
         Header: intl.get('amount'),
         accessor: 'formatted_amount',
+        width: 120,
+        align: 'right',
+        clickable: true,
+        textOverview: true,
+        className: clsx(CLASSES.FONT_BOLD),
+      },
+      {
+        id: 'balance',
+        Header: intl.get('balance'),
+        accessor: 'credits_remaining',
         width: 120,
         align: 'right',
         clickable: true,

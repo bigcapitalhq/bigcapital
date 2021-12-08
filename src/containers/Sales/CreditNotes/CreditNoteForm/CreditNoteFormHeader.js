@@ -31,7 +31,7 @@ function CreditNoteFormHeader({
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <CreditNoteFormHeaderFields />
       <PageFormBigNumber
-        label={intl.get('due_amount')}
+        label={intl.get('credit_note.label_amount_to_credit')}
         amount={totalAmount}
         currencyCode={base_currency}
       />

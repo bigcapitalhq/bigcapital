@@ -1,6 +1,10 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useVendorCredit, useRefundVendorCredit } from 'hooks/query';
+import {
+  useVendorCredit,
+  useRefundVendorCredit,
+  useReconcileVendorCredits,
+} from 'hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from 'components';
 
 const VendorCreditDetailDrawerContext = React.createContext();
@@ -24,9 +28,19 @@ function VendorCreditDetailDrawerProvider({ vendorCreditId, ...props }) {
     enabled: !!vendorCreditId,
   });
 
+  // Handle fetch refund credit note.
+  const {
+    data: reconcileVendorCredits,
+    isFetching: isReconcileVendorCreditFetching,
+    isLoading: isReconcileVendorCreditLoading,
+  } = useReconcileVendorCredits(vendorCreditId, {
+    enabled: !!vendorCreditId,
+  });
+
   const provider = {
     vendorCredit,
     refundVendorCredit,
+    reconcileVendorCredits,
     isRefundVendorCreditLoading,
     isRefundVendorCreditFetching,
     vendorCreditId,
@@ -34,7 +48,11 @@ function VendorCreditDetailDrawerProvider({ vendorCreditId, ...props }) {
 
   return (
     <DrawerLoading
-      loading={isVendorCreditLoading || isRefundVendorCreditLoading}
+      loading={
+        isVendorCreditLoading ||
+        isRefundVendorCreditLoading ||
+        isReconcileVendorCreditLoading
+      }
     >
       <DrawerHeaderContent
         name="vendor-credit-detail-drawer"

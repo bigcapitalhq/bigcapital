@@ -12,6 +12,10 @@ const OpenVendorCreditAlert = React.lazy(() =>
   import('../../Alerts/VendorCeditNotes/VendorCreditOpenedAlert'),
 );
 
+const ReconcileVendorCreditDeleteAlert = React.lazy(() =>
+  import('../../Alerts/VendorCeditNotes/ReconcileVendorCreditDeleteAlert'),
+);
+
 /**
  * Vendor Credit notes alerts.
  */
@@ -27,5 +31,9 @@ export default [
   {
     name: 'refund-vendor-delete',
     component: RefundVendorCreditDeleteAlert,
+  },
+  {
+    name: 'reconcile-vendor-delete',
+    component: ReconcileVendorCreditDeleteAlert,
   },
 ];

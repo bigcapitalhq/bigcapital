@@ -5,6 +5,7 @@ import { DrawerMainTabs } from 'components';
 
 import VendorCreditDetailPanel from './VendorCreditDetailPanel';
 import RefundVendorCreditTransactionsTable from './RefundVendorCreditTransactions/RefundVendorCreditTransactionsTable';
+import ReconcileVendorCreditTransactionsTable from './ReconcileVendorCreditTransactions/ReconcileVendorCreditTransactionsTable';
 import clsx from 'classnames';
 
 import VendorCreditDetailCls from '../../../style/components/Drawers/VendorCreditDetail.module.scss';
@@ -22,9 +23,14 @@ export default function VendorCreditDetail() {
           panel={<VendorCreditDetailPanel />}
         />
         <Tab
-          title={intl.get('credit_note.drawer.label_refund_transactions')}
+          title={intl.get('vendor_credit.drawer.label_refund_transactions')}
           id={'refund_transactions'}
           panel={<RefundVendorCreditTransactionsTable />}
+        />
+        <Tab
+          title={intl.get('vendor_credit.drawer.label_bills_reconciled')}
+          id={'reconcile_transactions'}
+          panel={<ReconcileVendorCreditTransactionsTable />}
         />
       </DrawerMainTabs>
     </div>

@@ -1,5 +1,5 @@
 .dialog--reconcile-vendor-credit-form {
-  width: 800px;
+  width: 850px;
 
   .bp3-dialog-body {
     .footer {
@@ -67,6 +67,8 @@
     font-size: 14px;
   }
   .bp3-dialog-footer {
+    display: flex;
+    justify-content: flex-start;
     padding-top: 10px;
   }
 }

@@ -31,7 +31,7 @@ function VendorCreditNoteFormHeader({
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <VendorCreditNoteFormHeaderFields />
       <PageFormBigNumber
-        label={intl.get('due_amount')}
+        label={intl.get('vendor_credits.label.amount_to_credit')}
         amount={totalAmount}
         currencyCode={base_currency}
       />
@@ -39,6 +39,4 @@ function VendorCreditNoteFormHeader({
   );
 }
 
-export default compose(withCurrentOrganization())(
-  VendorCreditNoteFormHeader,
-);
+export default compose(withCurrentOrganization())(VendorCreditNoteFormHeader);

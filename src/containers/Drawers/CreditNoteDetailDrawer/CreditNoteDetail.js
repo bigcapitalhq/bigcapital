@@ -28,7 +28,7 @@ export default function CreditNoteDetail() {
           panel={<RefundCreditNoteTransactionsTable />}
         />
         <Tab
-          title={intl.get('credit_note.drawer.label_reconcile_transactions')}
+          title={intl.get('credit_note.drawer.label_invoices_reconciled')}
           id={'reconcile_transactions'}
           panel={<ReconcileCreditNoteTransactionsTable />}
         />

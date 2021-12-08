@@ -37,12 +37,18 @@ export default function VendorCreditDetailHeader() {
 
       <DetailsMenu direction={'horizantal'} minLabelSize={'140px'}>
         <DetailItem
+          label={intl.get('vendor_credit.drawer.label_credits_remaining')}
+          children={vendorCredit.credits_remaining}
+          // children={vendorCredit.formatted_credits_remaining}
+        />
+
+        <DetailItem
           label={intl.get('note')}
           children={defaultTo(vendorCredit.note, '-')}
         />
 
         <DetailItem
-          label={<T id={'vendor_credit.drawer.label_create_at'} />}
+          label={<T id={'vendor_credit.drawer.label_created_at'} />}
           children={<FormatDate value={vendorCredit.created_at} />}
         />
       </DetailsMenu>
