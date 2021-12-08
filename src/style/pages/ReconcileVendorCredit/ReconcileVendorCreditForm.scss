@@ -66,6 +66,20 @@
   .bp3-callout {
     font-size: 14px;
   }
+
+  .credit-remaining {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 5px;
+    padding-bottom: 15px;
+    &__label {
+    }
+    &__balance {
+      font-weight: 500;
+      color: #343463;
+      margin-left: 5px;
+    }
+  }
   .bp3-dialog-footer {
     display: flex;
     justify-content: flex-start;

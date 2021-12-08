@@ -13,7 +13,7 @@ import CreditNoteDetailCls from '../../../style/components/Drawers/CreditNoteDet
  */
 export default function CreditNoteDetailHeader() {
   const { creditNote } = useCreditNoteDetailDrawerContext();
-  
+
   return (
     <div className={clsx(CreditNoteDetailCls.detail_panel_header)}>
       <DetailsMenu>
@@ -34,12 +34,16 @@ export default function CreditNoteDetailHeader() {
             <FormatDate value={creditNote.formatted_credit_note_date} />
           }
         />
+        <DetailItem
+          label={intl.get('credit_note.drawer.label_credits_remaining')}
+          children={creditNote.formatted_credits_remaining}
+        />
       </DetailsMenu>
 
       <DetailsMenu direction={'horizantal'} minLabelSize={'140px'}>
         <DetailItem
-          label={intl.get('credit_note.drawer.label_credits_remaining')}
-          children={creditNote.formatted_credits_remaining}
+          label={intl.get('reference')}
+          children={creditNote.reference_no}
         />
         <DetailItem
           label={intl.get('note')}

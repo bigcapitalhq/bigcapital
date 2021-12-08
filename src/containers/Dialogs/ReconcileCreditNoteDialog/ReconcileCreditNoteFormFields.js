@@ -2,7 +2,7 @@ import React from 'react';
 import { FastField, useFormikContext } from 'formik';
 import { Classes } from '@blueprintjs/core';
 import { T, TotalLines, TotalLine } from 'components';
-import { getEntriesTotal } from 'containers/Entries/utils';
+import { sumBy, subtract } from 'lodash';
 import ReconcileCreditNoteEntriesTable from './ReconcileCreditNoteEntriesTable';
 import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
 import { formattedAmount } from 'utils';
@@ -12,19 +12,32 @@ import { formattedAmount } from 'utils';
  */
 export default function ReconcileCreditNoteFormFields() {
   const {
-    creditNote: { formatted_credits_remaining, currency_code },
+    creditNote: {
+      formatted_credits_remaining,
+      credits_remaining,
+      currency_code,
+    },
   } = useReconcileCreditNoteContext();
 
   const { values } = useFormikContext();
 
   // Calculate the total amount.
-  const totalAmount = React.useMemo(
-    () => getEntriesTotal(values.entries),
-    [values.entries],
-  );
+  const totalAmount = React.useMemo(() => {
+    const total = sumBy(values.entries, 'amount');
+    return subtract(credits_remaining, total);
+  }, [values.entries]);
 
   return (
     <div className={Classes.DIALOG_BODY}>
+      <div className="credit-remaining">
+        <div className="credit-remaining__label">
+          <T id={'reconcile_credit_note.dialog.credits_balance'} />
+        </div>
+        <div className="credit-remaining__balance">
+          {formatted_credits_remaining}
+        </div>
+      </div>
+
       {/*------------ Reconcile credit entries table -----------*/}
       <FastField name={'entries'}>
         {({
@@ -50,7 +63,7 @@ export default function ReconcileCreditNoteFormFields() {
             value={formattedAmount(totalAmount, currency_code)}
           />
           <TotalLine
-            title={<T id={'reconcile_credit_note.dialog.remaining_credits'}/>}
+            title={<T id={'reconcile_credit_note.dialog.remaining_credits'} />}
             value={formatted_credits_remaining}
           />
         </TotalLines>

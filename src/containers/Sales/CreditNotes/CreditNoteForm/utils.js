@@ -36,7 +36,7 @@ export const defaultCreditNote = {
   credit_note_number: '',
   credit_note_no_manually: false,
   open: '',
-  // reference_no: '',
+  reference_no: '',
   note: '',
   terms_conditions: '',
   entries: [...repeatValue(defaultCreditNoteEntry, MIN_LINES_NUMBER)],

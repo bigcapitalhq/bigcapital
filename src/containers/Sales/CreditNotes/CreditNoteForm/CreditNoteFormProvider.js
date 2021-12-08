@@ -73,7 +73,7 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
   return (
     <DashboardInsider
       loading={isItemsLoading || isCustomersLoading || isCreditNoteLoading}
-      name={'credit-notes-form'}
+      name={'credit-note-form'}
     >
       <CreditNoteFormContext.Provider value={provider} {...props} />
     </DashboardInsider>

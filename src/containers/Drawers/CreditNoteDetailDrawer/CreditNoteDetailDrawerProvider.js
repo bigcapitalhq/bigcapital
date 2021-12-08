@@ -3,6 +3,7 @@ import intl from 'react-intl-universal';
 import {
   useCreditNote,
   useRefundCreditNote,
+  useReconcileCreditNote,
   useReconcileCreditNotes,
 } from 'hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from 'components';
@@ -33,15 +34,21 @@ function CreditNoteDetailDrawerProvider({ creditNoteId, ...props }) {
   // Handle fetch refund credit note.
   const {
     data: reconcileCreditNotes,
-    isFetching: isReconcileCreditNoteFetching,
     isLoading: isReconcileCreditNoteLoading,
   } = useReconcileCreditNotes(creditNoteId, {
     enabled: !!creditNoteId,
   });
 
+  // Handle fetch reconcile credit note details.
+  const { isLoading: isReconcileCreditLoading, data: reconcileCreditNote } =
+    useReconcileCreditNote(creditNoteId, {
+      enabled: !!creditNoteId,
+    });
+
   const provider = {
     creditNote,
     refundCreditNote,
+    reconcileCreditNote,
     reconcileCreditNotes,
 
     isRefundCreditNoteLoading,
@@ -54,7 +61,8 @@ function CreditNoteDetailDrawerProvider({ creditNoteId, ...props }) {
       loading={
         isCreditNoteLoading ||
         isRefundCreditNoteLoading ||
-        isReconcileCreditNoteLoading
+        isReconcileCreditNoteLoading ||
+        isReconcileCreditLoading
       }
     >
       <DrawerHeaderContent

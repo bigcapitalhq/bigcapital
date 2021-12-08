@@ -33,13 +33,16 @@ export default function VendorCreditDetailHeader() {
             <FormatDate value={vendorCredit.formatted_vendor_credit_date} />
           }
         />
+        <DetailItem
+          label={intl.get('vendor_credit.drawer.label_credits_remaining')}
+          children={vendorCredit.formatted_credits_remaining}
+        />
       </DetailsMenu>
 
       <DetailsMenu direction={'horizantal'} minLabelSize={'140px'}>
         <DetailItem
-          label={intl.get('vendor_credit.drawer.label_credits_remaining')}
-          children={vendorCredit.credits_remaining}
-          // children={vendorCredit.formatted_credits_remaining}
+          label={intl.get('reference')}
+          children={vendorCredit.reference_no}
         />
 
         <DetailItem

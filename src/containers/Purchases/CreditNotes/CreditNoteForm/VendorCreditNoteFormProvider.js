@@ -67,7 +67,7 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
   return (
     <DashboardInsider
       loading={isItemsLoading || isVendorsLoading || isVendorCreditLoading}
-      name={'vendor-credits-form'}
+      name={'vendor-credit-form'}
     >
       <VendorCreditNoteFormContext.Provider value={provider} {...props} />
     </DashboardInsider>

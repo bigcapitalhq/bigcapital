@@ -35,7 +35,7 @@ export const defaultVendorsCreditNote = {
   vendor_credit_no_manually: false,
   open: '',
   vendor_credit_date: moment(new Date()).format('YYYY-MM-DD'),
-  // reference_no: '',
+  reference_no: '',
   note: '',
   entries: [...repeatValue(defaultCreditNoteEntry, MIN_LINES_NUMBER)],
 };

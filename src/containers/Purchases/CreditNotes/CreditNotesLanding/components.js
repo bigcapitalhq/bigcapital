@@ -140,7 +140,7 @@ export function useVendorsCreditNoteTableColumns() {
       {
         id: 'balance',
         Header: intl.get('balance'),
-        accessor: 'credits_remaining',
+        accessor: 'formatted_credits_remaining',
         width: 120,
         align: 'right',
         clickable: true,
