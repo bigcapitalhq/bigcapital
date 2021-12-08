@@ -47,8 +47,7 @@ function ReconcileVendorCreditForm({
 
   // Handle form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    setSubmitting(false);
-
+    setSubmitting(true);
     // Filters the entries.
     const entries = values.entries
       .filter((entry) => entry.bill_id && entry.amount)

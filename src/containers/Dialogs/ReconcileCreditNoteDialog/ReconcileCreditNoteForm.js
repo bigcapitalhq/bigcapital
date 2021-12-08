@@ -47,7 +47,7 @@ function ReconcileCreditNoteForm({
 
   // Handle form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    setSubmitting(false);
+    setSubmitting(true);
 
     // Filters the entries.
     const entries = values.entries
