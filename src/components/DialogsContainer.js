@@ -29,6 +29,7 @@ import TransactionsLockingDialog from '../containers/Dialogs/TransactionsLocking
 import RefundCreditNoteDialog from '../containers/Dialogs/RefundCreditNoteDialog';
 import RefundVendorCreditDialog from '../containers/Dialogs/RefundVendorCreditDialog';
 import ReconcileCreditNoteDialog from '../containers/Dialogs/ReconcileCreditNoteDialog';
+import ReconcileVendorCreditDialog from '../containers/Dialogs/ReconcileVendorCreditDialog';
 
 /**
  * Dialogs container.
@@ -66,6 +67,7 @@ export default function DialogsContainer() {
       <RefundCreditNoteDialog dialogName={'refund-credit-note'} />
       <RefundVendorCreditDialog dialogName={'refund-vendor-credit'} />
       <ReconcileCreditNoteDialog dialogName={'reconcile-credit-note'} />
+      <ReconcileVendorCreditDialog dialogName={'reconcile-vendor-credit'} />
     </div>
   );
 }

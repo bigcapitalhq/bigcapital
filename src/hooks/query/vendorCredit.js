@@ -27,6 +27,10 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate refund vendor credit
   queryClient.invalidateQueries(t.REFUND_VENDOR_CREDIT);
 
+  // Invalidate reconcile vendor credit.
+  queryClient.invalidateQueries(t.RECONCILE_VENDOR_CREDIT);
+  queryClient.invalidateQueries(t.RECONCILE_VENDOR_CREDITS);
+
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 };
@@ -235,6 +239,90 @@ export function useOpenVendorCredit(props) {
         commonInvalidateQueries(queryClient);
 
         // Invalidate specific.
+        queryClient.invalidateQueries([t.VENDOR_CREDIT, id]);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Create Reconcile vendor credit.
+ */
+export function useCreateReconcileVendorCredit(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) =>
+      apiRequest.post(`purchases/vendor-credit/${id}/apply-to-bills`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+
+        // Invalidate credit note query.
+        queryClient.invalidateQueries([t.VENDOR_CREDIT, id]);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve reconcile vendor credit of the given id.
+ * @param {number} id
+ *
+ */
+export function useReconcileVendorCredit(id, props, requestProps) {
+  return useRequestQuery(
+    [t.RECONCILE_VENDOR_CREDIT, id],
+    {
+      method: 'get',
+      url: `purchases/vendor-credit/${id}/apply-to-bills`,
+      ...requestProps,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: [],
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve reconcile credit notes.
+ */
+export function useReconcileVendorCredits(id, props, requestProps) {
+  return useRequestQuery(
+    [t.RECONCILE_VENDOR_CREDITS, id],
+    {
+      method: 'get',
+      url: `purchases/vendor-credit/${id}/applied-bills`,
+      ...requestProps,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: {},
+      ...props,
+    },
+  );
+}
+/**
+ * Delete the given reconcile vendor credit.
+ */
+export function useDeleteReconcileVendorCredit(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (id) => apiRequest.delete(`purchases/vendor-credit/applied-to-bills/${id}`),
+    {
+      onSuccess: (res, id) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+
+        // Invalidate vendor credit query.
         queryClient.invalidateQueries([t.VENDOR_CREDIT, id]);
       },
       ...props,

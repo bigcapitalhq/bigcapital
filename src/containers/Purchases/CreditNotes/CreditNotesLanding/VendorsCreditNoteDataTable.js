@@ -104,6 +104,12 @@ function VendorsCreditNoteDataTable({
   const handleOpenCreditNote = ({ id }) => {
     openAlert('vendor-credit-open', { vendorCreditId: id });
   };
+
+  // Handle reconcile credit note.
+  const handleReconcileVendorCredit = ({ id }) => {
+    openDialog('reconcile-vendor-credit', { vendorCreditId: id });
+  };
+
   return (
     <DashboardContentTable>
       <DataTable
@@ -132,6 +138,7 @@ function VendorsCreditNoteDataTable({
           onEdit: hanldeEditVendorCreditNote,
           onRefund: handleRefundCreditVendor,
           onOpen: handleOpenCreditNote,
+          onReconcile: handleReconcileVendorCredit,
         }}
       />
     </DashboardContentTable>

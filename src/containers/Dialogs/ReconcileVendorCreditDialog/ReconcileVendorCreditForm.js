@@ -3,44 +3,44 @@ import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import '../../../style/pages/ReconcileCreditNote/ReconcileCreditNoteForm.scss';
+import '../../../style/pages/ReconcileVendorCredit/ReconcileVendorCreditForm.scss';
+
 import { AppToaster } from 'components';
-import { CreateReconcileCreditNoteFormSchema } from './ReconcileCreditNoteForm.schema';
-import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
-import ReconcileCreditNoteFormContent from './ReconcileCreditNoteFormContent';
+import { CreateReconcileVendorCreditFormSchema } from './ReconcileVendorCreditForm.schema';
+import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
+import ReconcileVendorCreditFormContent from './ReconcileVendorCreditFormContent';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose, transformToForm } from 'utils';
-import { transformErrors } from './utils';
 
 // Default form initial values.
 const defaultInitialValues = {
   entries: [
     {
-      invoice_id: '',
+      bill_id: '',
       amount: '',
     },
   ],
 };
 
 /**
- * Reconcile credit note form.
+ * Reconcile vendor credit form.
  */
-function ReconcileCreditNoteForm({
+function ReconcileVendorCreditForm({
   // #withDialogActions
   closeDialog,
 }) {
   const {
     dialogName,
-    creditNoteId,
-    reconcileCreditNotes,
-    createReconcileCreditNoteMutate,
-  } = useReconcileCreditNoteContext();
+    reconcileVendorCredits,
+    createReconcileVendorCreditMutate,
+    vendorCredit,
+  } = useReconcileVendorCreditContext();
 
   // Initial form values.
   const initialValues = {
-    entries: reconcileCreditNotes.map((entry) => ({
+    entries: reconcileVendorCredits.map((entry) => ({
       ...entry,
-      invoice_id: entry.id,
+      bill_id: entry.id,
       amount: '',
     })),
   };
@@ -51,7 +51,7 @@ function ReconcileCreditNoteForm({
 
     // Filters the entries.
     const entries = values.entries
-      .filter((entry) => entry.invoice_id && entry.amount)
+      .filter((entry) => entry.bill_id && entry.amount)
       .map((entry) => transformToForm(entry, defaultInitialValues.entries[0]));
 
     const form = {
@@ -62,7 +62,7 @@ function ReconcileCreditNoteForm({
     // Handle the request success.
     const onSuccess = (response) => {
       AppToaster.show({
-        message: intl.get('reconcile_credit_note.success_message'),
+        message: intl.get('reconcile_vendor_credit.dialog.success_message'),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
@@ -75,25 +75,24 @@ function ReconcileCreditNoteForm({
         data: { errors },
       },
     }) => {
-      if (errors) {
-        transformErrors(errors, { setErrors });
-      }
+      // if (errors) {
+      //   transformErrors(errors, { setErrors });
+      // }
       setSubmitting(false);
     };
 
-    createReconcileCreditNoteMutate([creditNoteId, form])
+    createReconcileVendorCreditMutate([vendorCredit.id, form])
       .then(onSuccess)
       .catch(onError);
   };
 
   return (
     <Formik
-      validationSchema={CreateReconcileCreditNoteFormSchema}
+      validationSchema={CreateReconcileVendorCreditFormSchema}
       initialValues={initialValues}
       onSubmit={handleFormSubmit}
-      component={ReconcileCreditNoteFormContent}
+      component={ReconcileVendorCreditFormContent}
     />
   );
 }
-
-export default compose(withDialogActions)(ReconcileCreditNoteForm);
+export default compose(withDialogActions)(ReconcileVendorCreditForm);

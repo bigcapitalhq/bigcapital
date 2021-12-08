@@ -28,6 +28,7 @@ const commonInvalidateQueries = (queryClient) => {
   queryClient.invalidateQueries(t.REFUND_CREDIT_NOTE);
 
   // Invalidate reconcile.
+  queryClient.invalidateQueries(t.RECONCILE_CREDIT_NOTE);
   queryClient.invalidateQueries(t.RECONCILE_CREDIT_NOTES);
 
   // Invalidate financial reports.
