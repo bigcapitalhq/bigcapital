@@ -16,6 +16,7 @@ const getSchema = () =>
       .min(1)
       .max(DATATYPES_LENGTH.TEXT)
       .label(intl.get('note')),
+    open: Yup.boolean(),
     terms_conditions: Yup.string()
       .trim()
       .min(1)

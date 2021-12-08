@@ -13,6 +13,7 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withCreditNotesActions from './withCreditNotesActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from '../../../Settings/withSettings';
 
 import { useCreditNoteTableColumns, ActionsMenu } from './components';
@@ -32,6 +33,9 @@ function CreditNotesDataTable({
 
   // #withDrawerActions
   openDrawer,
+
+  // #withDialogAction
+  openDialog,
 
   // #withSettings
   creditNoteTableSize,
@@ -92,6 +96,20 @@ function CreditNotesDataTable({
     });
   };
 
+  const handleRefundCreditNote = ({ id }) => {
+    openDialog('refund-credit-note', { creditNoteId: id });
+  };
+
+  // Handle cancel/confirm crdit note open.
+  const handleOpenCreditNote = ({ id }) => {
+    openAlert('credit-note-open', { creditNoteId: id });
+  };
+
+  // Handle reconcile credit note.
+  const handleReconcileCreditNote = ({ id }) => {
+    openDialog('reconcile-credit-note', { creditNoteId: id });
+  };
+
   return (
     <DashboardContentTable>
       <DataTable
@@ -117,6 +135,9 @@ function CreditNotesDataTable({
           onViewDetails: handleViewDetailCreditNote,
           onDelete: handleDeleteCreditNote,
           onEdit: hanldeEditCreditNote,
+          onRefund: handleRefundCreditNote,
+          onOpen: handleOpenCreditNote,
+          onReconcile: handleReconcileCreditNote,
         }}
       />
     </DashboardContentTable>
@@ -128,6 +149,7 @@ export default compose(
   withCreditNotesActions,
   withDrawerActions,
   withAlertsActions,
+  withDialogActions,
   withSettings(({ creditNoteSettings }) => ({
     creditNoteTableSize: creditNoteSettings?.tableSize,
   })),

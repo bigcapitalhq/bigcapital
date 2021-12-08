@@ -99,6 +99,18 @@ export const handleDeleteErrors = (errors) => {
       intent: Intent.DANGER,
     });
   }
+  if (
+    errors.find(
+      (error) => error.type === 'SALE_INVOICE_HAS_APPLIED_TO_CREDIT_NOTES',
+    )
+  ) {
+    AppToaster.show({
+      message: intl.get(
+        'invoices.error.you_couldn_t_delete_sale_invoice_that_has_reconciled',
+      ),
+      intent: Intent.DANGER,
+    });
+  }
 };
 
 export function ActionsMenu({

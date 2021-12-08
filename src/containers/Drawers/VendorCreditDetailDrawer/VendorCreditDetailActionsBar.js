@@ -15,7 +15,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Icon, FormattedMessage as T, Can } from 'components';
+import { If, Icon, FormattedMessage as T, Can } from 'components';
 
 import { compose } from 'utils';
 
@@ -32,7 +32,7 @@ function VendorCreditDetailActionsBar({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { vendorCreditId } = useVendorCreditDetailDrawerContext();
+  const { vendorCreditId, vendorCredit } = useVendorCreditDetailDrawerContext();
 
   const history = useHistory();
 
@@ -47,6 +47,10 @@ function VendorCreditDetailActionsBar({
     openAlert('vendor-credit-delete', { vendorCreditId });
   };
 
+  const handleRefundVendorCredit = () => {
+    openDialog('refund-vendor-credit', { vendorCreditId });
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -57,6 +61,15 @@ function VendorCreditDetailActionsBar({
           onClick={handleEditVendorCredit}
         />
         <NavbarDivider />
+        <If condition={!vendorCredit.is_closed && !vendorCredit.is_draft}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="quick-payment-16" iconSize={16} />}
+            text={<T id={'refund'} />}
+            onClick={handleRefundVendorCredit}
+          />
+          <NavbarDivider />
+        </If>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'trash-16'} iconSize={16} />}

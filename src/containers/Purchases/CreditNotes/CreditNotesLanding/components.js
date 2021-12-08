@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Intent,
-  Tag,
-  Menu,
-  MenuItem,
-  MenuDivider,
-  ProgressBar,
-} from '@blueprintjs/core';
+import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
 
@@ -14,18 +7,17 @@ import { CLASSES } from '../../../../common/classes';
 import {
   FormatDateCell,
   FormattedMessage as T,
-  AppToaster,
   Choose,
   If,
   Icon,
 } from 'components';
-import { formattedAmount, safeCallback, calculateStatus } from 'utils';
+import { safeCallback } from 'utils';
 
 /**
  * Actions menu.
  */
 export function ActionsMenu({
-  payload: { onEdit, onDelete, onViewDetails },
+  payload: { onEdit, onDelete, onOpen, onRefund, onReconcile, onViewDetails },
   row: { original },
 }) {
   return (
@@ -41,6 +33,26 @@ export function ActionsMenu({
         text={intl.get('vendor_credits.action.edit_vendor_credit')}
         onClick={safeCallback(onEdit, original)}
       />
+      <If condition={!original.is_closed && !original.is_draft}>
+        <MenuItem
+          icon={<Icon icon="quick-payment-16" />}
+          text={intl.get('vendor_credits.action.refund_vendor_credit')}
+          onClick={safeCallback(onRefund, original)}
+        />
+      </If>
+      <If condition={original.is_draft}>
+        <MenuItem
+          icon={<Icon icon={'check'} iconSize={18} />}
+          text={intl.get('mark_as_opened')}
+          onClick={safeCallback(onOpen, original)}
+        />
+      </If>
+      <MenuItem
+        text={'Reconcile Credit Note With bills'}
+        // icon={<Icon icon="quick-payment-16" />}
+        // text={intl.get('credit_note.action.refund_credit_note')}
+        onClick={safeCallback(onReconcile, original)}
+      />
       <MenuItem
         text={intl.get('vendor_credits.action.delete_vendor_credit')}
         intent={Intent.DANGER}
@@ -48,6 +60,35 @@ export function ActionsMenu({
         icon={<Icon icon="trash-16" iconSize={16} />}
       />
     </Menu>
+  );
+}
+
+/**
+ * Status accessor.
+ */
+export function StatusAccessor(creditNote) {
+  return (
+    <div>
+      <Choose>
+        <Choose.When condition={creditNote.is_open}>
+          <Tag minimal={true} intent={Intent.WARNING}>
+            <T id={'open'} />
+          </Tag>
+        </Choose.When>
+
+        <Choose.When condition={creditNote.is_closed}>
+          <Tag minimal={true} intent={Intent.SUCCESS}>
+            <T id={'closed'} />
+          </Tag>
+        </Choose.When>
+
+        <Choose.When condition={creditNote.is_draft}>
+          <Tag minimal={true}>
+            <T id={'draft'} />
+          </Tag>
+        </Choose.When>
+      </Choose>
+    </div>
   );
 }
 
@@ -98,8 +139,8 @@ export function useVendorsCreditNoteTableColumns() {
       {
         id: 'status',
         Header: intl.get('status'),
-        // accessor:
-        width: 120, // 160
+        accessor: StatusAccessor,
+        width: 160,
         className: 'status',
         clickable: true,
       },

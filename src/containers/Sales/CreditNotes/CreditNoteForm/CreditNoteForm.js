@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { sumBy, omit, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
@@ -97,6 +97,7 @@ function CreditNoteForm({
     }
     const form = {
       ...transformFormValuesToRequest(values),
+      open: submitPayload.open,
     };
     // Handle the request success.
     const onSuccess = (response) => {

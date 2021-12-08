@@ -1,0 +1,28 @@
+.dialog--refund-credit-note {
+  .bp3-dialog-body {
+    .bp3-form-group {
+      label.bp3-label {
+        min-width: 140px;
+        font-size: 13px;
+      }
+      .bp3-form-content {
+        width: 250px;
+      }
+    }
+
+    .form-group {
+      &--description {
+        .bp3-form-content {
+          textarea {
+            width: 100%;
+            min-width: 100%;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+  .bp3-dialog-footer {
+    padding-top: 10px;
+  }
+}
