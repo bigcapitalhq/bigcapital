@@ -119,6 +119,7 @@ function CreditNotesDataTable({
         headerLoading={isCreditNotesLoading}
         progressBarLoading={isCreditNotesFetching}
         onFetchData={handleDataTableFetchData}
+        manualSortBy={true}
         selectionColumn={true}
         noInitialFetch={true}
         sticky={true}

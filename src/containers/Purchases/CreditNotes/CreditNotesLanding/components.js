@@ -100,12 +100,12 @@ export function useVendorsCreditNoteTableColumns() {
   return React.useMemo(
     () => [
       {
-        id: 'vendor_credit_date',
+        id: 'credit_date',
         Header: intl.get('date'),
         accessor: 'formatted_vendor_credit_date',
         Cell: FormatDateCell,
         width: 110,
-        className: 'vendor_credit_date',
+        className: 'credit_date',
         clickable: true,
         textOverview: true,
       },
@@ -119,11 +119,11 @@ export function useVendorsCreditNoteTableColumns() {
         textOverview: true,
       },
       {
-        id: 'vendor_credit_number',
+        id: 'credit_number',
         Header: intl.get('vendor_credits.column.vendor_credit_no'),
         accessor: 'vendor_credit_number',
         width: 100,
-        className: 'vendor_credit_number',
+        className: 'credit_number',
         clickable: true,
         textOverview: true,
       },
@@ -145,6 +145,7 @@ export function useVendorsCreditNoteTableColumns() {
         align: 'right',
         clickable: true,
         textOverview: true,
+        disableSortBy: true,
         className: clsx(CLASSES.FONT_BOLD),
       },
       {

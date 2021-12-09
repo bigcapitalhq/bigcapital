@@ -66,7 +66,12 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
 
   return (
     <DashboardInsider
-      loading={isItemsLoading || isVendorsLoading || isVendorCreditLoading}
+      loading={
+        isVendorCreditLoading ||
+        isItemsLoading ||
+        isVendorsLoading ||
+        isVendorCreditLoading
+      }
       name={'vendor-credit-form'}
     >
       <VendorCreditNoteFormContext.Provider value={provider} {...props} />

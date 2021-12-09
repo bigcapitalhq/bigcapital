@@ -10,6 +10,7 @@ import {
 } from '@blueprintjs/core';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
+import { VendorCreditMenuItem } from './utils';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
@@ -51,6 +52,10 @@ function VendorCreditDetailActionsBar({
     openDialog('refund-vendor-credit', { vendorCreditId });
   };
 
+  const handleReconcileVendorCredit = () => {
+    openDialog('reconcile-vendor-credit', { vendorCreditId });
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -77,6 +82,20 @@ function VendorCreditDetailActionsBar({
           intent={Intent.DANGER}
           onClick={handleDeleteVendorCredit}
         />
+        <If
+          condition={
+            !vendorCredit.is_closed &&
+            !vendorCredit.is_draft
+            // vendorCredit.is_published
+          }
+        >
+          <NavbarDivider />
+          <VendorCreditMenuItem
+            payload={{
+              onReconcile: handleReconcileVendorCredit,
+            }}
+          />
+        </If>
       </NavbarGroup>
     </DashboardActionsBar>
   );

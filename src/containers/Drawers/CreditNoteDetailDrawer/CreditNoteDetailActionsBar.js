@@ -10,18 +10,13 @@ import {
 } from '@blueprintjs/core';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
+import { CreditNoteMenuItem } from './utils';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import {
-  Icon,
-  FormattedMessage as T,
-  If,
-  MoreMenuItems,
-  Can,
-} from 'components';
+import { Icon, FormattedMessage as T, If, Can } from 'components';
 
 import { compose } from 'utils';
 
@@ -50,6 +45,10 @@ function CreditNoteDetailActionsBar({
 
   const handleRefundCreditNote = () => {
     openDialog('refund-credit-note', { creditNoteId });
+  };
+
+  const handleReconcileCreditNote = () => {
+    openDialog('reconcile-credit-note', { creditNoteId });
   };
 
   // Handle delete credit note.
@@ -83,6 +82,20 @@ function CreditNoteDetailActionsBar({
           intent={Intent.DANGER}
           onClick={handleDeleteCreditNote}
         />
+        <If
+          condition={
+            !creditNote.is_draft &&
+            !creditNote.is_closed
+            // creditNote.is_published
+          }
+        >
+          <NavbarDivider />
+          <CreditNoteMenuItem
+            payload={{
+              onReconcile: handleReconcileCreditNote,
+            }}
+          />
+        </If>
       </NavbarGroup>
     </DashboardActionsBar>
   );

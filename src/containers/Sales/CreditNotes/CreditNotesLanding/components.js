@@ -44,7 +44,11 @@ export function ActionsMenu({
           onClick={safeCallback(onOpen, original)}
         />
       </If>
-      <If condition={!original.is_draft && original.is_published}>
+      <If
+        condition={
+          !original.is_draft && !original.is_closed && original.is_published
+        }
+      >
         <MenuItem
           text={intl.get('credit_note.action.reconcile_with_invoices')}
           // icon={<Icon icon="quick-payment-16" />}
@@ -97,12 +101,12 @@ export function useCreditNoteTableColumns() {
   return React.useMemo(
     () => [
       {
-        id: 'credit_note_date',
+        id: 'credit_date',
         Header: intl.get('credit_note.column.credit_date'),
         accessor: 'formatted_credit_note_date',
         Cell: FormatDateCell,
         width: 110,
-        className: 'credit_note_date',
+        className: 'credit_date',
         clickable: true,
         textOverview: true,
       },
@@ -111,16 +115,16 @@ export function useCreditNoteTableColumns() {
         Header: intl.get('customer_name'),
         accessor: 'customer.display_name',
         width: 180,
-        className: 'customer_id',
+        className: 'customer',
         clickable: true,
         textOverview: true,
       },
       {
-        id: 'credit_note_number',
+        id: 'credit_number',
         Header: intl.get('credit_note.column.credit_note_no'),
         accessor: 'credit_note_number',
         width: 100,
-        className: 'credit_note_number',
+        className: 'credit_number',
         clickable: true,
         textOverview: true,
       },
@@ -142,6 +146,7 @@ export function useCreditNoteTableColumns() {
         align: 'right',
         clickable: true,
         textOverview: true,
+        disableSortBy: true,
         className: clsx(CLASSES.FONT_BOLD),
       },
       {

@@ -10,7 +10,7 @@ import { FastField, Field, ErrorMessage } from 'formik';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
 import {
-  ContactSelecetList,
+  VendorSelectField,
   FieldRequiredHint,
   InputPrependButton,
   Icon,
@@ -78,30 +78,27 @@ function VendorCreditNoteFormHeaderFields({
       {/* ----------- Vendor name ----------- */}
       <FastField
         name={'vendor_id'}
-        customers={vendors}
+        vendors={vendors}
         shouldUpdate={vendorsFieldShouldUpdate}
       >
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'vendor_name'} />}
             inline={true}
-            className={classNames(
-              'form-group--vendor-name',
-              'form-group--select-list',
-              CLASSES.FILL,
-            )}
+            className={classNames(CLASSES.FILL, 'form-group--vendor')}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'vendor_id'} />}
           >
-            <ContactSelecetList
-              contactsList={vendors}
+            <VendorSelectField
+              contacts={vendors}
               selectedContactId={value}
               defaultSelectText={<T id={'select_vender_account'} />}
-              onContactSelected={(vendor) => {
-                form.setFieldValue('vendor_id', vendor.id);
+              onContactSelected={(contact) => {
+                form.setFieldValue('vendor_id', contact.id);
               }}
               popoverFill={true}
+              allowCreate={true}
             />
           </FormGroup>
         )}

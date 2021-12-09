@@ -28,6 +28,13 @@ const commonInvalidateQueries = (client) => {
   // Invalidate the cashflow transactions.
   client.invalidateQueries(t.CASH_FLOW_TRANSACTIONS);
   client.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
+
+  client.invalidateQueries(t.CREDIT_NOTE);
+  client.invalidateQueries(t.CREDIT_NOTES);
+  
+  // Invalidate reconcile.
+  client.invalidateQueries(t.RECONCILE_CREDIT_NOTE);
+  client.invalidateQueries(t.RECONCILE_CREDIT_NOTES);
 };
 
 // Transform payment receives.

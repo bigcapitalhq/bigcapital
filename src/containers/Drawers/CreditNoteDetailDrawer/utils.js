@@ -1,6 +1,18 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormatNumberCell } from '../../../components';
+import {
+  Button,
+  Popover,
+  PopoverInteractionKind,
+  Position,
+  MenuItem,
+  Menu,
+} from '@blueprintjs/core';
+import {
+  Icon,
+  FormattedMessage as T,
+  FormatNumberCell,
+} from '../../../components';
 
 export const useCreditNoteReadOnlyEntriesColumns = () =>
   React.useMemo(
@@ -45,3 +57,26 @@ export const useCreditNoteReadOnlyEntriesColumns = () =>
     ],
     [],
   );
+
+export const CreditNoteMenuItem = ({ payload: { onReconcile } }) => {
+  return (
+    <Popover
+      minimal={true}
+      interactionKind={PopoverInteractionKind.CLICK}
+      position={Position.BOTTOM_LEFT}
+      modifiers={{
+        offset: { offset: '0, 4' },
+      }}
+      content={
+        <Menu>
+          <MenuItem
+            onClick={onReconcile}
+            text={<T id={'credit_note.action.reconcile_with_invoices'} />}
+          />
+        </Menu>
+      }
+    >
+      <Button icon={<Icon icon="more-vert" iconSize={16} />} minimal={true} />
+    </Popover>
+  );
+};

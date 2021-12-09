@@ -10,7 +10,7 @@ import { FastField, Field, ErrorMessage } from 'formik';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
 import {
-  ContactSelecetList,
+  CustomerSelectField,
   FieldRequiredHint,
   InputPrependButton,
   Icon,
@@ -91,14 +91,15 @@ function CreditNoteFormHeaderFields({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_id'} />}
           >
-            <ContactSelecetList
-              contactsList={customers}
+            <CustomerSelectField
+              contacts={customers}
               selectedContactId={value}
               defaultSelectText={<T id={'select_customer_account'} />}
               onContactSelected={(customer) => {
                 form.setFieldValue('customer_id', customer.id);
               }}
               popoverFill={true}
+              allowCreate={true}
             />
           </FormGroup>
         )}
