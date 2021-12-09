@@ -2,7 +2,8 @@ import React from 'react';
 import { FastField, useFormikContext } from 'formik';
 import { Classes } from '@blueprintjs/core';
 import { T, TotalLines, TotalLine } from 'components';
-import { sumBy, subtract } from 'lodash';
+import { subtract } from 'lodash';
+import { getEntriesTotal } from 'containers/Entries/utils';
 import ReconcileCreditNoteEntriesTable from './ReconcileCreditNoteEntriesTable';
 import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
 import { formattedAmount } from 'utils';
@@ -21,11 +22,14 @@ export default function ReconcileCreditNoteFormFields() {
 
   const { values } = useFormikContext();
 
-  // Calculate the total amount.
-  const totalAmount = React.useMemo(() => {
-    const total = sumBy(values.entries, 'amount');
-    return subtract(credits_remaining, total);
-  }, [values.entries]);
+  // Calculate the total amount of credit entries.
+  const totalAmount = React.useMemo(
+    () => getEntriesTotal(values.entries),
+    [values.entries],
+  );
+
+  // Calculate the total amount of credit remaining.
+  const creditsRemaining = subtract(credits_remaining, totalAmount);
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -64,7 +68,7 @@ export default function ReconcileCreditNoteFormFields() {
           />
           <TotalLine
             title={<T id={'reconcile_credit_note.dialog.remaining_credits'} />}
-            value={formatted_credits_remaining}
+            value={formattedAmount(creditsRemaining, currency_code)}
           />
         </TotalLines>
       </div>

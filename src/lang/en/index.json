@@ -1579,7 +1579,7 @@
   "credit_note_opened.are_sure_to_open_this_credit": "Are you sure you want to open this credit note?",
   "vendor_credit_opened.alert.success_message": "The  vendor credit has been opened successfully",
   "vendor_credit_opened.are_sure_to_open_this_credit": "Are you sure you want to open this vendor credit?",
-  "reconcile_credit_note.label": "Reconcile credit note with invoices.",
+  "reconcile_credit_note.label": "Reconcile credit note with invoices",
   "reconcile_credit_note.dialog.total_amount_to_credit": "Total amount to credit",
   "reconcile_credit_note.dialog.credits_balance": "Credits balance:",
   "reconcile_credit_note.dialog.remaining_credits": "Remaining credits",
