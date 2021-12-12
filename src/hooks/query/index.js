@@ -32,3 +32,4 @@ export * from './cashflowAccounts';
 export * from './roles';
 export * from './creditNote';
 export * from './vendorCredit';
+export * from './transactionsLocking';

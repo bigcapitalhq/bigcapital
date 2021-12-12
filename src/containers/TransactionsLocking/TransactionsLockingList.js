@@ -39,7 +39,7 @@ function TransactionsLockingList({
 }) {
   // Handle switch transactions locking.
   const handleSwitchTransactionsLocking = () => {
-    openDialog('transactions-locking', {});
+    openDialog('locking-transactions', {});
   };
 
   return (
@@ -48,10 +48,11 @@ function TransactionsLockingList({
         <TransactionsLockingParagraph>
           <TransLockingDesc>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
+            ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua.
           </TransLockingDesc>
-          Lock All Transactions At Once. {' '}
+          Lock All Transactions At Once.{' '}
           <Link to={'/'}> {''}Lock All Transactions At Once →</Link>
         </TransactionsLockingParagraph>
 
