@@ -3,28 +3,28 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from 'components';
 import withDialogRedux from 'components/DialogReduxConnect';
 import { compose } from 'utils';
 
-const TransactionsLockingContent = React.lazy(() =>
-  import('./TransactionsLockingDialogContent'),
+const LockingTransactionsDialogContent = React.lazy(() =>
+  import('./LockingTransactionsDialogContent'),
 );
 
 /**
- * Transaction Locking dialog
+ * Locking Transactions dialog
  */
-function TransactionsLockingDialog({ dialogName, payload = {}, isOpen }) {
+function LockingTransactionsDialog({ dialogName, payload = {}, isOpen }) {
   return (
     <Dialog
       name={dialogName}
       autoFocus={true}
-      title={<T id={'transactions_locking.dialog.label'} />}
+      title={<T id={'locking_transactions.dialog.label'} />}
       canEscapeKeyClose={true}
       isOpen={isOpen}
       className={'dialog--transaction--locking'}
     >
       <DialogSuspense>
-        <TransactionsLockingContent dialogName={dialogName} />
+        <LockingTransactionsDialogContent dialogName={dialogName} />
       </DialogSuspense>
     </Dialog>
   );
 }
 
-export default compose(withDialogRedux())(TransactionsLockingDialog);
+export default compose(withDialogRedux())(LockingTransactionsDialog);

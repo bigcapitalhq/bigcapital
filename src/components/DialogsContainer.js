@@ -25,11 +25,13 @@ import NotifyReceiptViaSMSDialog from '../containers/Dialogs/NotifyReceiptViaSMS
 import NotifyEstimateViaSMSDialog from '../containers/Dialogs/NotifyEstimateViaSMSDialog';
 import NotifyPaymentReceiveViaSMSDialog from '../containers/Dialogs/NotifyPaymentReceiveViaSMSDialog';
 import SMSMessageDialog from '../containers/Dialogs/SMSMessageDialog';
-import TransactionsLockingDialog from '../containers/Dialogs/TransactionsLockingDialog';
 import RefundCreditNoteDialog from '../containers/Dialogs/RefundCreditNoteDialog';
 import RefundVendorCreditDialog from '../containers/Dialogs/RefundVendorCreditDialog';
 import ReconcileCreditNoteDialog from '../containers/Dialogs/ReconcileCreditNoteDialog';
 import ReconcileVendorCreditDialog from '../containers/Dialogs/ReconcileVendorCreditDialog';
+import LockingTransactionsDialog from '../containers/Dialogs/LockingTransactionsDialog';
+import UnlockingTransactionsDialog from '../containers/Dialogs/UnlockingTransactionsDialog';
+import UnlockingPartialTransactionsDialog from '../containers/Dialogs/UnlockingPartialTransactionsDialog';
 
 /**
  * Dialogs container.
@@ -63,11 +65,15 @@ export default function DialogsContainer() {
 
       <BadDebtDialog dialogName={'write-off-bad-debt'} />
       <SMSMessageDialog dialogName={'sms-message-form'} />
-      <TransactionsLockingDialog dialogName={'transactions-locking'} />
       <RefundCreditNoteDialog dialogName={'refund-credit-note'} />
       <RefundVendorCreditDialog dialogName={'refund-vendor-credit'} />
       <ReconcileCreditNoteDialog dialogName={'reconcile-credit-note'} />
       <ReconcileVendorCreditDialog dialogName={'reconcile-vendor-credit'} />
+      <LockingTransactionsDialog dialogName={'locking-transactions'} />
+      <UnlockingTransactionsDialog dialogName={'unlocking-transactions'} />
+      <UnlockingPartialTransactionsDialog
+        dialogName={'unlocking-partial-transactions'}
+      />
     </div>
   );
 }

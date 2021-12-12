@@ -14,28 +14,28 @@ import {
 } from 'utils';
 
 /**
- * Transactions locking form fields.
+ *  locking Transactions form fields.
  */
-export default function TransactionsLockingFormFields() {
+export default function LockingTransactionsFormFields() {
   const dateFieldRef = useAutofocus();
 
   return (
     <div className={Classes.DIALOG_BODY}>
-      {/*------------ Date -----------*/}
-      <FastField name={'date'}>
+      {/*------------  Locking Date -----------*/}
+      <FastField name={'lock_to_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
-            label={<T id={'date'} />}
+            label={<T id={'locking_transactions.dialog.locking_date'} />}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="date" />}
+            helperText={<ErrorMessage name="lock_to_date" />}
             minimal={true}
             className={classNames(CLASSES.FILL, 'form-group--date')}
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
               onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('date', formattedDate);
+                form.setFieldValue('lock_to_date', formattedDate);
               })}
               value={tansformDateValue(value)}
               popoverProps={{
@@ -48,11 +48,12 @@ export default function TransactionsLockingFormFields() {
           </FormGroup>
         )}
       </FastField>
-      {/*------------  reasons -----------*/}
+
+      {/*------------ Locking  Reason -----------*/}
       <FastField name={'reason'}>
         {({ field, meta: { error, touched } }) => (
           <FormGroup
-            label={<T id={'reason'} />}
+            label={<T id={'locking_transactions.dialog.reason'} />}
             labelInfo={<FieldRequiredHint />}
             className={'form-group--reason'}
             intent={inputIntent({ error, touched })}
