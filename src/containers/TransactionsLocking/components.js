@@ -35,6 +35,7 @@ export const TransactionLockingContent = ({
   const handleUnlockFull = (event) => {
     safeInvoke(onUnlockFull, module, event);
   };
+  
   return (
     <TransactionLockingWrapp>
       <TransLockingInner>
@@ -44,15 +45,10 @@ export const TransactionLockingContent = ({
 
         <TransLockingContent>
           <TransLockingItemTitle>
-            <T id={name} />{' '}
-            <Hint
-              content={
-                'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do'
-              }
-              position={Position.BOTTOM_LEFT}
-            />
+            {name}
+            <Hint content={description} position={Position.BOTTOM_LEFT} />
           </TransLockingItemTitle>
-          <TransLockingItemDesc>{description}</TransLockingItemDesc>
+          <TransLockingItemDesc>{''}</TransLockingItemDesc>
         </TransLockingContent>
 
         <TransLockingActions>

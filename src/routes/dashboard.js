@@ -875,7 +875,7 @@ export const getDashboardRoutes = () => [
   {
     path: `/transactions-locking`,
     component: lazy(() =>
-      import('../containers/TransactionsLocking/TransactionsLockingList'),
+      import('../containers/TransactionsLocking/TransactionsLockingPage'),
     ),
     pageTitle: intl.get('sidebar.transactions_locaking'),
   },

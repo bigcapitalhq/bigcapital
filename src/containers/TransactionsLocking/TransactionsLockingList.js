@@ -2,45 +2,24 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import clsx from 'classnames';
-import { TransactionsLockingProvider } from './TransactionsLockingProvider';
 import { TransactionLockingContent } from './components';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-
+import { useTransactionsLockingContext } from './TransactionsLockingProvider';
 import { compose } from 'utils';
-
-const DataTest = [
-  {
-    isEnabled: true,
-    name: 'sales',
-    module: 'sales',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
-  },
-  {
-    isEnabled: false,
-    name: 'purchases',
-    module: 'purchases',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
-  },
-  {
-    isEnabled: false,
-    name: 'financial',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
-  },
-];
 
 function Paragraph({ className, children }) {
   return <p className={clsx('paragraph', className)}>{children}</p>;
 }
 
-function TransactionsLockingList({ items }) {
-  return items.map(({ isEnabled, name, description }) => (
+function TransactionsLockingList({ items, onlock, onUnlock, onUnlockPartial }) {
+  return items.map(({ is_enabled, formatted_module, description }) => (
     <TransactionLockingContent
-      name={name}
+      name={formatted_module}
       description={description}
-      isEnabled={isEnabled}
+      isEnabled={is_enabled}
+      onLock={onlock}
+      onUnlockPartial={onUnlockPartial}
+      onEditLock={onUnlock}
     />
   ));
 }
@@ -52,28 +31,44 @@ function TransactionsLockingListPage({
   // #withDialogActions
   openDialog,
 }) {
-  // Handle switch transactions locking.
-  const handleSwitchTransactionsLocking = () => {
+  // Handle locking transactions.
+  const handleLockingTransactions = () => {
     openDialog('locking-transactions', {});
   };
 
-  return (
-    <TransactionsLockingProvider>
-      <TransactionsLocking>
-        <TransactionsLockingParagraph>
-          <TransLockingDesc>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
-            ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua.
-          </TransLockingDesc>
-          Lock All Transactions At Once.{' '}
-          <Link to={'/'}> {''}Lock All Transactions At Once →</Link>
-        </TransactionsLockingParagraph>
+  // Handle unlocking transactions
+  const handleUnlockTransactions = () => {
+    openDialog('unlocking-transactions', {});
+  };
+  // Handle unlocking transactions
+  const handleUnlockingPartial = () => {
+    openDialog('unlocking-partial-transactions', {});
+  };
 
-        <TransactionsLockingList items={DataTest} />
-      </TransactionsLocking>
-    </TransactionsLockingProvider>
+  const {
+    transactionsLocking: { modules },
+  } = useTransactionsLockingContext();
+
+  return (
+    <TransactionsLocking>
+      <TransactionsLockingParagraph>
+        <TransLockingDesc>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
+          ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua.
+        </TransLockingDesc>
+        Lock All Transactions At Once.{' '}
+        <Link to={'/'}> {''}Lock All Transactions At Once →</Link>
+      </TransactionsLockingParagraph>
+
+      <TransactionsLockingList
+        items={modules}
+        onlock={handleLockingTransactions}
+        onUnlock={handleUnlockTransactions}
+        onUnlockPartial={handleUnlockingPartial}
+      />
+    </TransactionsLocking>
   );
 }
 export default compose(withDialogActions)(TransactionsLockingListPage);
