@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
+import { FormattedMessage as T } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
@@ -61,9 +61,8 @@ function CancelUnlockingPartialTarnsactions({
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'save'} />}
-      icon="trash"
-      intent={Intent.WARNING}
+      confirmButtonText={<T id={'yes'} />}
+      intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancel}
       onConfirm={handleConfirm}

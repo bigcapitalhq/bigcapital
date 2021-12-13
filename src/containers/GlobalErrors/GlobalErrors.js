@@ -52,6 +52,16 @@ function GlobalErrors({
       toastKeySomethingWrong,
     );
   }
+  if (globalErrors.transactionsLocked) {
+    AppToaster.show({
+      message:
+        'Transactions before 13 Dec 2021 has been locked. Hence action cannot be performed.',
+      intent: Intent.DANGER,
+      onDismiss: () => {
+        globalErrorsSet({ transactionsLocked: false });
+      },
+    });
+  }
   return null;
 }
 

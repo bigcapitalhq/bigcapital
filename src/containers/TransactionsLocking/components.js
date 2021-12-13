@@ -40,8 +40,17 @@ export const TransactionLockingContent = ({
   name,
   description,
   module,
+
   isEnabled,
+  lockToDate,
+  lockReason,
+
+  // Unlock props.
   isPartialUnlock,
+  unlockToDate,
+  unlockFromDate,
+  unlockReason,
+
   onLock,
   onEditLock,
   onUnlockFull,
@@ -76,16 +85,43 @@ export const TransactionLockingContent = ({
           <TransLockingItemTitle>
             {name}
             <Hint content={description} position={Position.BOTTOM_LEFT} />
-
-            {isPartialUnlock && (
-              <Tag small={true} minimal={true} intent={Intent.PRIMARY}>
-                Partial unlocked
-              </Tag>
-            )}
           </TransLockingItemTitle>
-          <TransLockingItemDesc>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-          </TransLockingItemDesc>
+
+          <If condition={!isEnabled}>
+            <TransLockingItemDesc>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            </TransLockingItemDesc>
+          </If>
+
+          <If condition={isEnabled}>
+            <TransLockWrap>
+              <TransLockingItemDesc>
+                Transactions of the module locked to{' '}
+                <strong>{lockToDate}</strong>.
+              </TransLockingItemDesc>
+
+              <If condition={lockReason}>
+                <TransLockingReason>
+                  <strong>Lock Reason:</strong> {lockReason}
+                </TransLockingReason>
+              </If>
+            </TransLockWrap>
+          </If>
+
+          <If condition={isPartialUnlock}>
+            <TransUnlockWrap>
+              <TransLockingItemDesc>
+                Partial unlocked from <strong>{unlockFromDate}</strong> to{' '}
+                <strong>{unlockToDate}</strong>.
+              </TransLockingItemDesc>
+
+              <If condition={unlockReason}>
+                <TransLockingReason>
+                  <strong>Unlock Reason:</strong> {unlockReason}
+                </TransLockingReason>
+              </If>
+            </TransUnlockWrap>
+          </If>
         </TransLockingContent>
 
         <TransLockingActions>
@@ -208,4 +244,31 @@ export const TransLockingContent = styled.div`
   flex: 1 1 0;
   margin-left: 20px;
   width: 100%;
+  padding-right: 10px;
+`;
+
+export const TransLockingReason = styled.div`
+  font-size: 13px;
+
+  strong {
+    color: #777;
+  }
+`;
+
+const TransUnlockWrap = styled.div`
+  padding-top: 12px;
+  border-top: 1px solid #ddd;
+  margin-top: 12px;
+
+  ${TransLockingReason} {
+    margin-top: 8px;
+  }
+  ${TransLockingItemDesc} {
+    font-size: 13px;
+  }
+`;
+const TransLockWrap = styled.div`
+  ${TransLockingReason} {
+    margin-top: 10px;
+  }
 `;

@@ -1,10 +1,9 @@
 import React from 'react';
-import clsx from 'classnames';
 import { Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 import * as R from 'ramda';
 
-import { Alert, ButtonLink, AppToaster, Join } from 'components';
+import { Alert, ButtonLink, AppToaster, Join, Paragraph } from 'components';
 import { TransactionsLockingProvider } from './TransactionsLockingProvider';
 import {
   TransactionLockingContent,
@@ -18,10 +17,6 @@ import {
   validateMoveToFullLocking,
   validateMoveToPartialLocking,
 } from './utils';
-
-function Paragraph({ className, children }) {
-  return <p className={clsx('paragraph', className)}>{children}</p>;
-}
 
 function TransactionsLockingList({
   items,
@@ -37,6 +32,7 @@ function TransactionsLockingList({
       module,
       formatted_module,
       description,
+      ...item
     }) => (
       <TransactionLockingContent
         name={formatted_module}
@@ -49,6 +45,11 @@ function TransactionsLockingList({
         onUnlockPartial={onUnlockPartial}
         onEditLock={onLock}
         onCancle={onCancel}
+        lockToDate={item.formatted_lock_to_date}
+        lockReason={item.lock_reason}
+        unlockReason={item.unlock_reason}
+        unlockFromDate={item.formatted_unlock_from_date}
+        unlockToDate={item.formatted_unlock_to_date}
       />
     ),
   );
