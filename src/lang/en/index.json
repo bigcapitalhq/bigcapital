@@ -1608,7 +1608,7 @@
   "locking_transactions.dialog.locking_date": "Locking date",
   "locking_transactions.dialog.reason": "Locking reason",
   "locking_transactions.dialog.success_message": "All transactions locking has been submit successfully.",
-  "unlocking_transactions.dialog.label": "transactions locking",
+  "unlocking_transactions.dialog.label": "Transactions unlocking",
   "unlocking_transactions.dialog.reason": "Unlocking reason",
   "unlocking_transactions.dialog.success_message": "Transactions locking has been canceled successfully.",
   "unlocking_partial_transactions.dialog.label": "Partial unlocking transactions",
@@ -1620,5 +1620,18 @@
   "unlocking_full_transactions.dialog.reason": "Unlocking reason",
   "unlocking_partial_transactions.alert.success_message": "Partial transaction unlocking has been canceled successfully.",
   "unlocking_partial_transactions.alert.message": "Are you sure you want to cancel partial unlock of this module?",
-  "yes": "Yes"
+  "yes": "Yes",
+  "transactions_locking.lock_all_transactions_at_once": "Lock All Transactions At Once →",
+  "transactions_locking.lock_modules_individually": "Lock Modules Individually →",
+  "transactions_locking_lock_all_transactions_at_once": "Lock All Transactions At Once.",
+  "transactions_locking.lock": "Lock", 
+  "transactions_locking.unlock": "Unlock", 
+  "transactions_locking.full_unlock": "Full Unlock", 
+  "transactions_locking.paetial_unlock": "Partial Unlock", 
+  "transactions_locking.cancel_partial_unlock": "Cancel Partial Unlock", 
+  "transactions_locking.of_the_module_locked_to": "Transactions of the module locked to <strong>{value}</strong>.",
+  "transactions_locking.lock_reason": "Lock Reason: <strong>{value}</strong>.",
+  "transactions_locking.partial_unlocked_from": "Partial unlocked from <strong>{fromDate}</strong> to <strong>{toDate}</strong>.",
+  "transactions_locking.unlock_reason":"<strong>Unlock Reason:</strong> {value}."
+
 }

@@ -11,11 +11,14 @@ import {
   tansformDateValue,
   handleDateChange,
 } from 'utils';
+import { useAutofocus } from 'hooks';
 
 /**
  * Parial Unlocking transactions form fields.
  */
 export default function UnlockingPartialTransactionsFormFields() {
+  const reasonFieldRef = useAutofocus();
+
   return (
     <div className={Classes.DIALOG_BODY}>
       <Row>
@@ -96,6 +99,7 @@ export default function UnlockingPartialTransactionsFormFields() {
               growVertically={true}
               large={true}
               intent={inputIntent({ error, touched })}
+              inputRef={(ref) => (reasonFieldRef.current = ref)}
               {...field}
             />
           </FormGroup>

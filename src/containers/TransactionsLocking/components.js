@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import intl from 'react-intl-universal';
 import {
   Button,
   Position,
@@ -96,13 +97,20 @@ export const TransactionLockingContent = ({
           <If condition={isEnabled}>
             <TransLockWrap>
               <TransLockingItemDesc>
-                Transactions of the module locked to{' '}
-                <strong>{lockToDate}</strong>.
+                {intl.formatHTMLMessage(
+                  { id: 'transactions_locking.of_the_module_locked_to' },
+                  {
+                    value: lockToDate,
+                  },
+                )}
               </TransLockingItemDesc>
 
               <If condition={lockReason}>
                 <TransLockingReason>
-                  <strong>Lock Reason:</strong> {lockReason}
+                  {intl.formatHTMLMessage(
+                    { id: 'transactions_locking.lock_reason' },
+                    { value: lockReason },
+                  )}
                 </TransLockingReason>
               </If>
             </TransLockWrap>
@@ -111,13 +119,21 @@ export const TransactionLockingContent = ({
           <If condition={isPartialUnlock}>
             <TransUnlockWrap>
               <TransLockingItemDesc>
-                Partial unlocked from <strong>{unlockFromDate}</strong> to{' '}
-                <strong>{unlockToDate}</strong>.
+                {intl.formatHTMLMessage(
+                  { id: 'transactions_locking.partial_unlocked_from' },
+                  {
+                    fromDate: unlockFromDate,
+                    toDate: unlockToDate,
+                  },
+                )}
               </TransLockingItemDesc>
 
               <If condition={unlockReason}>
                 <TransLockingReason>
-                  <strong>Unlock Reason:</strong> {unlockReason}
+                  {intl.formatHTMLMessage(
+                    { id: 'transactions_locking.unlock_reason' },
+                    { value: unlockReason },
+                  )}
                 </TransLockingReason>
               </If>
             </TransUnlockWrap>
@@ -132,7 +148,7 @@ export const TransactionLockingContent = ({
               intent={Intent.PRIMARY}
               onClick={handleLockClick}
             >
-              Lock
+              <T id={'transactions_locking.lock'} />
             </Button>
           </If>
 
@@ -143,23 +159,28 @@ export const TransactionLockingContent = ({
               intent={Intent.PRIMARY}
               onClick={handleEditBtn}
             >
-              Edit
+              <T id={'edit'} />
             </Button>
             <Divider />
             <Popover2
               content={
                 <Menu>
-                  <MenuItem text="Full unlock" onClick={handleUnlockFull} />
+                  <MenuItem
+                    text={<T id={'transactions_locking.full_unlock'} />}
+                    onClick={handleUnlockFull}
+                  />
 
                   <If condition={!isPartialUnlock}>
                     <MenuItem
-                      text="Partial unlock"
+                      text={<T id={'transactions_locking.paetial_unlock'} />}
                       onClick={handleUnlockPartial}
                     />
                   </If>
                   <If condition={isPartialUnlock}>
                     <MenuItem
-                      text="Cancel partial unlock"
+                      text={
+                        <T id={'transactions_locking.cancel_partial_unlock'} />
+                      }
                       onClick={handleCanclel}
                     />
                   </If>
@@ -169,7 +190,7 @@ export const TransactionLockingContent = ({
               minimal={true}
             >
               <Button small={true} minimal={true} intent={Intent.PRIMARY}>
-                Unlock
+                <T id={'transactions_locking.unlock'} />
               </Button>
             </Popover2>
           </If>

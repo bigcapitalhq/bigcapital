@@ -1,9 +1,17 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 import * as R from 'ramda';
 
-import { Alert, ButtonLink, AppToaster, Join, Paragraph } from 'components';
+import {
+  Alert,
+  ButtonLink,
+  AppToaster,
+  Join,
+  Paragraph,
+  FormattedMessage as T,
+} from 'components';
 import { TransactionsLockingProvider } from './TransactionsLockingProvider';
 import {
   TransactionLockingContent,
@@ -130,7 +138,7 @@ function TransactionsLockingAlert() {
 
   return transactionLockingType !== 'all' ? (
     <LockAllAlert
-      title={'Lock All Transactions At Once.'}
+      title={<T id={'transactions_locking_lock_all_transactions_at_once'} />}
       intent={Intent.PRIMARY}
     >
       <p>
@@ -138,7 +146,7 @@ function TransactionsLockingAlert() {
         tempor incididunt ut labore et dolore magna aliqua.
       </p>
       <ButtonLink onClick={handleAllLockClick}>
-        Lock All Transactions At Once →
+        <T id={'transactions_locking.lock_all_transactions_at_once'} />
       </ButtonLink>
     </LockAllAlert>
   ) : (
@@ -148,7 +156,7 @@ function TransactionsLockingAlert() {
         tempor incididunt ut labore et dolore magna aliqua.
       </p>
       <ButtonLink onClick={handleUndividualLockClick}>
-        Lock Modules Individually →
+        <T id={'transactions_locking.lock_modules_individually'} />
       </ButtonLink>
     </LockAllAlert>
   );

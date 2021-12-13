@@ -17,7 +17,7 @@ import {
  *  locking Transactions form fields.
  */
 export default function LockingTransactionsFormFields() {
-  const dateFieldRef = useAutofocus();
+  const reasonFieldRef = useAutofocus();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -43,7 +43,6 @@ export default function LockingTransactionsFormFields() {
                 minimal: true,
               }}
               intent={inputIntent({ error, touched })}
-              inputRef={(ref) => (dateFieldRef.current = ref)}
             />
           </FormGroup>
         )}
@@ -63,6 +62,7 @@ export default function LockingTransactionsFormFields() {
               growVertically={true}
               large={true}
               intent={inputIntent({ error, touched })}
+              inputRef={(ref) => (reasonFieldRef.current = ref)}
               {...field}
             />
           </FormGroup>

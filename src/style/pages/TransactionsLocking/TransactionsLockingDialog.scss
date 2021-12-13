@@ -16,6 +16,7 @@
       .bp3-form-content {
         textarea {
           width: 100%;
+          min-height: 85px;
           min-width: 100%;
           font-size: 14px;
         }
@@ -25,7 +26,7 @@
   .bp3-dialog-footer {
     display: flex;
     justify-content: flex-start;
-    padding-top: 10px;
+    // padding-top: 10px;
     margin-left: 10px;
   }
 }
