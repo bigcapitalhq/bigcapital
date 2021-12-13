@@ -1,49 +1,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import clsx from 'classnames';
 import { Intent } from '@blueprintjs/core';
+import styled from 'styled-components';
+import * as R from 'ramda';
 
 import { Alert } from 'components';
 import { TransactionsLockingProvider } from './TransactionsLockingProvider';
 import { TransactionLockingContent } from './components';
+import { useTransactionsLockingContext } from './TransactionsLockingProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-
-import { compose } from 'utils';
-
-const DataTest = [
-  {
-    isEnabled: true,
-    name: 'sales',
-    module: 'sales',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
-  },
-  {
-    isEnabled: false,
-    name: 'purchases',
-    module: 'purchases',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
-  },
-  {
-    isEnabled: false,
-    name: 'financial',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
-  },
-];
 
 function Paragraph({ className, children }) {
   return <p className={clsx('paragraph', className)}>{children}</p>;
 }
 
-function TransactionsLockingList({ items }) {
-  return items.map(({ isEnabled, name, description }) => (
+function TransactionsLockingList({ items, onlock, onUnlock, onUnlockPartial }) {
+  return items.map(({ is_enabled, formatted_module, description }) => (
     <TransactionLockingContent
-      name={name}
+      name={formatted_module}
       description={description}
-      isEnabled={isEnabled}
+      isEnabled={is_enabled}
+      onLock={onlock}
+      onUnlockPartial={onUnlockPartial}
+      onEditLock={onUnlock}
     />
   ));
 }
@@ -55,10 +35,23 @@ function TransactionsLockingListPage({
   // #withDialogActions
   openDialog,
 }) {
-  // Handle switch transactions locking.
-  const handleSwitchTransactionsLocking = () => {
+  // Handle locking transactions.
+  const handleLockingTransactions = () => {
     openDialog('locking-transactions', {});
   };
+
+  // Handle unlocking transactions
+  const handleUnlockTransactions = () => {
+    openDialog('unlocking-transactions', {});
+  };
+  // Handle unlocking transactions
+  const handleUnlockingPartial = () => {
+    openDialog('unlocking-partial-transactions', {});
+  };
+
+  const {
+    transactionsLocking: { modules },
+  } = useTransactionsLockingContext();
 
   return (
     <TransactionsLockingProvider>
@@ -83,12 +76,17 @@ function TransactionsLockingListPage({
           </LockAllAlert>
         </TransactionsLockingParagraph>
 
-        <TransactionsLockingList items={DataTest} />
+        <TransactionsLockingList
+          items={modules}
+          onlock={handleLockingTransactions}
+          onUnlock={handleUnlockTransactions}
+          onUnlockPartial={handleUnlockingPartial}
+        />
       </TransactionsLocking>
     </TransactionsLockingProvider>
   );
 }
-export default compose(withDialogActions)(TransactionsLockingListPage);
+export default R.compose(withDialogActions)(TransactionsLockingListPage);
 
 const TransactionsLocking = styled.div`
   display: flex;

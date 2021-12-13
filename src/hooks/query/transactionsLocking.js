@@ -85,3 +85,18 @@ export function useCancelUnlockingPartialTransactions(props) {
     },
   );
 }
+
+/**
+ * Retrive the transactions locking.
+ */
+export function useTransactionsLocking(query, props) {
+  return useRequestQuery(
+    [t.TRANSACTIONS_LOCKING, query],
+    { method: 'get', url: 'transactions-locking', params: query },
+    {
+      select: (res) => res.data.data,
+      defaultData: [],
+      ...props,
+    },
+  );
+}
