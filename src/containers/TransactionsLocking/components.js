@@ -62,7 +62,7 @@ export const TransactionLockingContent = ({
   };
 
   return (
-    <TransactionLockingWrapp>
+    <TransactionLockingWrapp isEnabled={isEnabled}>
       <TransLockingInner>
         <TransLockingIcon>
           <Icon icon="lock" iconSize={24} />
@@ -116,7 +116,8 @@ export const TransactionLockingContent = ({
                   />
                 </Menu>
               }
-              placement="bottom"
+              placement={'bottom-start'}
+              minimal={true}
             >
               <Button small={true} minimal={true} intent={Intent.PRIMARY}>
                 Unlock
@@ -138,6 +139,16 @@ const TransactionLockingWrapp = styled.div`
   margin-bottom: 22px;
   background: #fff;
   box-shadow: 0 4px 20px -5px rgb(0 8 36 / 5%);
+
+  ${(props) =>
+    props.isEnabled &&
+    `
+    border-color: #fe9f9e; 
+
+    ${TransLockingIcon} {
+      color: #ff8282;
+    }
+  `}
 `;
 
 const TransLockingInner = styled.div`
