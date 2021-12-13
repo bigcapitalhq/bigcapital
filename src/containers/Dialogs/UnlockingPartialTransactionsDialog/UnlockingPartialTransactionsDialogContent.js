@@ -8,10 +8,14 @@ import UnlockingPartialTransactionsForm from './UnlockingPartialTransactionsForm
  */
 export default function UnlockingPartialTransactionsDialogContent({
   // #ownProps
+  moduleName,
   dialogName,
 }) {
   return (
-    <UnlockingPartialTransactionsFormProvider dialogName={dialogName}>
+    <UnlockingPartialTransactionsFormProvider
+      moduleName={moduleName}
+      dialogName={dialogName}
+    >
       <UnlockingPartialTransactionsForm />
     </UnlockingPartialTransactionsFormProvider>
   );

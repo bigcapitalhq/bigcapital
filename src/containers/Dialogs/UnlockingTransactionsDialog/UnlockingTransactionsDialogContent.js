@@ -5,10 +5,11 @@ import { UnlockingTransactionsFormProvider } from './UnlockingTransactionsFormPr
 
 export default function UnlockingTransactionsDialogContent({
   // #ownProps
+  moduleName,
   dialogName,
 }) {
   return (
-    <UnlockingTransactionsFormProvider dialogName={dialogName}>
+    <UnlockingTransactionsFormProvider moduleName={moduleName} dialogName={dialogName}>
       <UnlockingTransactionsForm />
     </UnlockingTransactionsFormProvider>
   );

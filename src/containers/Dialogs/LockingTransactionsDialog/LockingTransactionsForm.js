@@ -16,7 +16,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
 const defaultInitialValues = {
-  module: 'all',
+  module: '',
   lock_to_date: moment(new Date()).format('YYYY-MM-DD'),
   reason: '',
 };
@@ -28,12 +28,13 @@ function LockingTransactionsForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, createLockingTransactionMutate } =
+  const { dialogName, moduleName, createLockingTransactionMutate } =
     useLockingTransactionsContext();
 
   // Initial form values.
   const initialValues = {
     ...defaultInitialValues,
+    module: moduleName,
   };
 
   // Handles the form submit.

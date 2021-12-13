@@ -16,14 +16,15 @@ function Paragraph({ className, children }) {
 }
 
 function TransactionsLockingList({ items, onlock, onUnlock, onUnlockPartial }) {
-  return items.map(({ is_enabled, formatted_module, description }) => (
+  return items.map(({ is_enabled, module, formatted_module, description }) => (
     <TransactionLockingContent
       name={formatted_module}
+      module={module}
       description={description}
       isEnabled={is_enabled}
       onLock={onlock}
       onUnlockPartial={onUnlockPartial}
-      onEditLock={onUnlock}
+      onEditLock={onlock}
     />
   ));
 }
@@ -36,17 +37,17 @@ function TransactionsLockingListPage({
   openDialog,
 }) {
   // Handle locking transactions.
-  const handleLockingTransactions = () => {
-    openDialog('locking-transactions', {});
+  const handleLockingTransactions = (module) => {
+    openDialog('locking-transactions', { module: module });
   };
 
   // Handle unlocking transactions
-  const handleUnlockTransactions = () => {
-    openDialog('unlocking-transactions', {});
+  const handleUnlockTransactions = (module) => {
+    openDialog('unlocking-transactions', { module: module });
   };
   // Handle unlocking transactions
-  const handleUnlockingPartial = () => {
-    openDialog('unlocking-partial-transactions', {});
+  const handleUnlockingPartial = (module) => {
+    openDialog('unlocking-partial-transactions', { module: module });
   };
 
   const {

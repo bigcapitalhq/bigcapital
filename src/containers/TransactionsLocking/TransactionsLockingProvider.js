@@ -15,8 +15,6 @@ function TransactionsLockingProvider({ ...props }) {
     isLoading: isTransactionLockingLoading,
   } = useTransactionsLocking();
 
-  console.log(transactionsLocking, 'XX');
-
   // Provider
   const provider = {
     transactionsLocking,
