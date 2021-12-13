@@ -46,6 +46,7 @@ export const TransactionLockingContent = ({
   onEditLock,
   onUnlockFull,
   onUnlockPartial,
+  onCancle,
 }) => {
   const handleLockClick = (event) => {
     safeInvoke(onLock, module, event);
@@ -59,6 +60,9 @@ export const TransactionLockingContent = ({
 
   const handleUnlockFull = (event) => {
     safeInvoke(onUnlockFull, module, event);
+  };
+  const handleCanclel = (event) => {
+    safeInvoke(onCancle, module, event);
   };
 
   return (
@@ -85,7 +89,7 @@ export const TransactionLockingContent = ({
         </TransLockingContent>
 
         <TransLockingActions>
-          <If condition={!isEnabled}>
+          <If condition={!isEnabled && !isPartialUnlock}>
             <Button
               small={true}
               minimal={true}
@@ -96,7 +100,7 @@ export const TransactionLockingContent = ({
             </Button>
           </If>
 
-          <If condition={isEnabled}>
+          <If condition={isEnabled && !isPartialUnlock}>
             <Button
               small={true}
               minimal={true}
@@ -110,6 +114,7 @@ export const TransactionLockingContent = ({
               content={
                 <Menu>
                   <MenuItem text="Full unlock" onClick={handleUnlockFull} />
+
                   <MenuItem
                     text="Partial unlock"
                     onClick={handleUnlockPartial}
@@ -123,6 +128,17 @@ export const TransactionLockingContent = ({
                 Unlock
               </Button>
             </Popover2>
+          </If>
+
+          <If condition={isPartialUnlock}>
+            <Button
+              small={true}
+              minimal={true}
+              intent={Intent.PRIMARY}
+              onClick={handleCanclel}
+            >
+              Cancel
+            </Button>
           </If>
         </TransLockingActions>
       </TransLockingInner>

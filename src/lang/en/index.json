@@ -1618,5 +1618,8 @@
   "unlocking_partial_transactions.dialog.success_message": "Transactions locking haas been unlocked partially successfully.",
   "unlocking_full_transactions.dialog.label": "Full unlocking transactions",
   "unlocking_full_transactions.dialog.reason": "Unlocking reason",
-  "unlocking_full_transactions.dialog.success_message": "Partial transaction unlocking has been canceled successfully."
+  "unlocking_partial_transactions.alert.success_message": "Partial transaction unlocking has been canceled successfully.",
+  "unlocking_partial_transactions.alert.message": "Are you sure you want to cancel this ?"
+
+
 }
