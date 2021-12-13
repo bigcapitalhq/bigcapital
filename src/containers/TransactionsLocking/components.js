@@ -89,7 +89,7 @@ export const TransactionLockingContent = ({
         </TransLockingContent>
 
         <TransLockingActions>
-          <If condition={!isEnabled && !isPartialUnlock}>
+          <If condition={!isEnabled}>
             <Button
               small={true}
               minimal={true}
@@ -100,7 +100,7 @@ export const TransactionLockingContent = ({
             </Button>
           </If>
 
-          <If condition={isEnabled && !isPartialUnlock}>
+          <If condition={isEnabled}>
             <Button
               small={true}
               minimal={true}
@@ -115,10 +115,18 @@ export const TransactionLockingContent = ({
                 <Menu>
                   <MenuItem text="Full unlock" onClick={handleUnlockFull} />
 
-                  <MenuItem
-                    text="Partial unlock"
-                    onClick={handleUnlockPartial}
-                  />
+                  <If condition={!isPartialUnlock}>
+                    <MenuItem
+                      text="Partial unlock"
+                      onClick={handleUnlockPartial}
+                    />
+                  </If>
+                  <If condition={isPartialUnlock}>
+                    <MenuItem
+                      text="Cancel partial unlock"
+                      onClick={handleCanclel}
+                    />
+                  </If>
                 </Menu>
               }
               placement={'bottom-start'}
@@ -128,17 +136,6 @@ export const TransactionLockingContent = ({
                 Unlock
               </Button>
             </Popover2>
-          </If>
-
-          <If condition={isPartialUnlock}>
-            <Button
-              small={true}
-              minimal={true}
-              intent={Intent.PRIMARY}
-              onClick={handleCanclel}
-            >
-              Cancel
-            </Button>
           </If>
         </TransLockingActions>
       </TransLockingInner>
