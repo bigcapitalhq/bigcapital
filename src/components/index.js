@@ -87,6 +87,7 @@ export * from './Button';
 export * from './IntersectionObserver';
 export * from './SMSPreview';
 export * from './Contacts';
+export * from './Utils/Join';
 
 const Hint = FieldHint;
 

@@ -4,7 +4,7 @@ import { Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 import * as R from 'ramda';
 
-import { Alert, ButtonLink } from 'components';
+import { Alert, ButtonLink, AppToaster, Join } from 'components';
 import { TransactionsLockingProvider } from './TransactionsLockingProvider';
 import {
   TransactionLockingContent,
@@ -12,6 +12,10 @@ import {
 } from './components';
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import {
+  validateMoveToFullLocking,
+  validateMoveToPartialLocking,
+} from './utils';
 
 function Paragraph({ className, children }) {
   return <p className={clsx('paragraph', className)}>{children}</p>;
@@ -59,16 +63,49 @@ function TransactionLockingSkeletonList() {
 }
 
 function TransactionsLockingAlert() {
-  const { transactionLockingType, setTransactionLockingType } =
-    useTransactionsLockingContext();
+  const {
+    transactionsLocking,
+    transactionLockingType,
+    setTransactionLockingType,
+  } = useTransactionsLockingContext();
 
   // Handle all lock link click.
   const handleAllLockClick = () => {
-    setTransactionLockingType('all');
+    const activeModules = validateMoveToFullLocking(
+      transactionsLocking.modules,
+    );
+    const modulesStrong = activeModules.map((module) => (
+      <strong>{module.formatted_module}</strong>
+    ));
+    if (activeModules.length > 0) {
+      AppToaster.show({
+        message: (
+          <span>
+            You should unlock <Join items={modulesStrong} sep={', '} /> modules
+            first, than you can lock all transactions at once.
+          </span>
+        ),
+        intent: Intent.DANGER,
+      });
+    } else {
+      setTransactionLockingType('all');
+    }
   };
 
   const handleUndividualLockClick = () => {
-    setTransactionLockingType('partial');
+    const isAllLockingActive = validateMoveToPartialLocking(
+      transactionsLocking.all,
+    );
+
+    if (isAllLockingActive) {
+      AppToaster.show({
+        message:
+          'You should unlock all transactions at once before, than lock transactions partially on each module.',
+        intent: Intent.DANGER,
+      });
+    } else {
+      setTransactionLockingType('partial');
+    }
   };
 
   return transactionLockingType !== 'all' ? (

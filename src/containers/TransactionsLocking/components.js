@@ -8,6 +8,7 @@ import {
   Intent,
   Divider,
   Classes,
+  Tag,
 } from '@blueprintjs/core';
 import { Hint, Icon, If, FormattedMessage as T } from 'components';
 import { Popover2 } from '@blueprintjs/popover2';
@@ -40,6 +41,7 @@ export const TransactionLockingContent = ({
   description,
   module,
   isEnabled,
+  isPartialUnlock,
   onLock,
   onEditLock,
   onUnlockFull,
@@ -70,6 +72,12 @@ export const TransactionLockingContent = ({
           <TransLockingItemTitle>
             {name}
             <Hint content={description} position={Position.BOTTOM_LEFT} />
+
+            {isPartialUnlock && (
+              <Tag small={true} minimal={true} intent={Intent.PRIMARY}>
+                Partial unlocked
+              </Tag>
+            )}
           </TransLockingItemTitle>
           <TransLockingItemDesc>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit.
