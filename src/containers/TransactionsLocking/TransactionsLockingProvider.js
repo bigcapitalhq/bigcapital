@@ -8,22 +8,28 @@ const TransactionsLockingContext = React.createContext();
  * Transactions locking data provider.
  */
 function TransactionsLockingProvider({ ...props }) {
-  // Fetch
+  // Fetch transaction locking modules list.
   const {
     data: transactionsLocking,
     isFetching: isTransactionLockingFetching,
     isLoading: isTransactionLockingLoading,
   } = useTransactionsLocking();
 
-  console.log(transactionsLocking, 'XX');
+  const [transactionLockingType, setTransactionLockingType] =
+    React.useState('partial');
 
   // Provider
   const provider = {
     transactionsLocking,
+    isTransactionLockingFetching,
+    isTransactionLockingLoading,
+
+    transactionLockingType,
+    setTransactionLockingType,
   };
 
   return (
-    <DashboardInsider loading={isTransactionLockingLoading}>
+    <DashboardInsider>
       <TransactionsLockingContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

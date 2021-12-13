@@ -1,13 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import clsx from 'classnames';
 import { Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 import * as R from 'ramda';
 
-import { Alert } from 'components';
+import { Alert, ButtonLink } from 'components';
 import { TransactionsLockingProvider } from './TransactionsLockingProvider';
-import { TransactionLockingContent } from './components';
+import {
+  TransactionLockingContent,
+  TransactionLockingItemLoading,
+} from './components';
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
@@ -28,13 +30,83 @@ function TransactionsLockingList({ items, onlock, onUnlock, onUnlockPartial }) {
   ));
 }
 
-/**
- * Transactions locking list.
- */
-function TransactionsLockingListPage({
+function TransactionsLockingFull({ onLock, onUnlock, onUnlockPartial }) {
+  const {
+    transactionsLocking: { all },
+  } = useTransactionsLockingContext();
+
+  return (
+    <TransactionLockingContent
+      name={all.formatted_module}
+      description={all.description}
+      isEnabled={all.is_enabled}
+      onLock={onLock}
+      onUnlockPartial={onUnlockPartial}
+      onEditLock={onUnlock}
+    />
+  );
+}
+
+function TransactionLockingSkeletonList() {
+  return (
+    <>
+      <TransactionLockingItemLoading />
+      <TransactionLockingItemLoading />
+      <TransactionLockingItemLoading />
+    </>
+  );
+}
+
+function TransactionsLockingAlert() {
+  const { transactionLockingType, setTransactionLockingType } =
+    useTransactionsLockingContext();
+
+  // Handle all lock link click.
+  const handleAllLockClick = () => {
+    setTransactionLockingType('all');
+  };
+
+  const handleUndividualLockClick = () => {
+    setTransactionLockingType('partial');
+  };
+
+  return transactionLockingType !== 'all' ? (
+    <LockAllAlert
+      title={'Lock All Transactions At Once.'}
+      intent={Intent.PRIMARY}
+    >
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+      <ButtonLink onClick={handleAllLockClick}>
+        Lock All Transactions At Once →
+      </ButtonLink>
+    </LockAllAlert>
+  ) : (
+    <LockAllAlert title={'Lock Individual Modules'} intent={Intent.PRIMARY}>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+      <ButtonLink onClick={handleUndividualLockClick}>
+        Lock Modules Individually →
+      </ButtonLink>
+    </LockAllAlert>
+  );
+}
+
+function TransactionsLockingBodyJsx({
   // #withDialogActions
   openDialog,
 }) {
+  const {
+    transactionsLocking: { modules },
+    isTransactionLockingLoading,
+
+    transactionLockingType,
+  } = useTransactionsLockingContext();
+
   // Handle locking transactions.
   const handleLockingTransactions = () => {
     openDialog('locking-transactions', {});
@@ -49,10 +121,30 @@ function TransactionsLockingListPage({
     openDialog('unlocking-partial-transactions', {});
   };
 
-  const {
-    transactionsLocking: { modules },
-  } = useTransactionsLockingContext();
+  return !isTransactionLockingLoading ? (
+    transactionLockingType === 'partial' ? (
+      <TransactionsLockingList
+        items={modules}
+        onlock={handleLockingTransactions}
+        onUnlock={handleUnlockTransactions}
+        onUnlockPartial={handleUnlockingPartial}
+      />
+    ) : (
+      <TransactionsLockingFull />
+    )
+  ) : (
+    <TransactionLockingSkeletonList />
+  );
+}
 
+const TransactionsLockingBody = R.compose(withDialogActions)(
+  TransactionsLockingBodyJsx,
+);
+
+/**
+ * Transactions locking list.
+ */
+export default function TransactionsLockingListPage() {
   return (
     <TransactionsLockingProvider>
       <TransactionsLocking>
@@ -63,31 +155,14 @@ function TransactionsLockingListPage({
             ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
             tempor incididunt ut labore et dolore magna aliqua.
           </TransLockingDesc>
-
-          <LockAllAlert
-            title={'Lock All Transactions At Once.'}
-            intent={Intent.PRIMARY}
-          >
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-            <Link to={'/'}>Lock All Transactions At Once →</Link>
-          </LockAllAlert>
+          <TransactionsLockingAlert />
         </TransactionsLockingParagraph>
 
-        <TransactionsLockingList
-          items={modules}
-          onlock={handleLockingTransactions}
-          onUnlock={handleUnlockTransactions}
-          onUnlockPartial={handleUnlockingPartial}
-        />
+        <TransactionsLockingBody />
       </TransactionsLocking>
     </TransactionsLockingProvider>
   );
 }
-export default R.compose(withDialogActions)(TransactionsLockingListPage);
-
 const TransactionsLocking = styled.div`
   display: flex;
   flex-direction: column;
@@ -97,10 +172,6 @@ const TransactionsLocking = styled.div`
 
 const TransactionsLockingParagraph = styled(Paragraph)`
   margin-bottom: 25px;
-`;
-
-const TransLockingTitle = styled.h2`
-  margin-bottom: 12px;
 `;
 
 const TransLockingDesc = styled.p``;

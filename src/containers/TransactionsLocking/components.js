@@ -7,10 +7,33 @@ import {
   Menu,
   Intent,
   Divider,
+  Classes,
 } from '@blueprintjs/core';
 import { Hint, Icon, If, FormattedMessage as T } from 'components';
 import { Popover2 } from '@blueprintjs/popover2';
 import { safeInvoke } from 'utils';
+
+export const TransactionLockingItemLoading = ({}) => {
+  return (
+    <TransactionLockingWrapp>
+      <TransLockingInner>
+        <TransLockingIcon>
+          <Icon icon="lock" iconSize={24} />
+        </TransLockingIcon>
+
+        <TransLockingContent>
+          <TransLockingItemTitle className={Classes.SKELETON}>
+            XXXX
+          </TransLockingItemTitle>
+
+          <TransLockingItemDesc className={Classes.SKELETON}>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+          </TransLockingItemDesc>
+        </TransLockingContent>
+      </TransLockingInner>
+    </TransactionLockingWrapp>
+  );
+};
 
 export const TransactionLockingContent = ({
   name,
