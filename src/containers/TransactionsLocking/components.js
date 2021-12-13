@@ -1,57 +1,117 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Switch, FormGroup, Position } from '@blueprintjs/core';
-import { Hint, Icon, FormattedMessage as T } from 'components';
+import {
+  Button,
+  Position,
+  MenuItem,
+  Menu,
+  Intent,
+  Divider,
+} from '@blueprintjs/core';
+import { Hint, Icon, If, FormattedMessage as T } from 'components';
+import { Popover2 } from '@blueprintjs/popover2';
+import { safeInvoke } from 'utils';
 
-export const TransactionLockingContent = ({ name, description, onSwitch }) => (
-  <TransactionLockingWrapp>
-    <TransactionsLockingcontent>
-      <TransLockingIcon>
-        <Icon icon="lock" iconSize={22} />
-      </TransLockingIcon>
+export const TransactionLockingContent = ({
+  name,
+  description,
+  module,
+  isEnabled,
+  onLock,
+  onEditLock,
+  onUnlockFull,
+  onUnlockPartial,
+}) => {
+  const handleLockClick = (event) => {
+    safeInvoke(onLock, module, event);
+  };
+  const handleEditBtn = (event) => {
+    safeInvoke(onEditLock, module, event);
+  };
+  const handleUnlockPartial = (event) => {
+    safeInvoke(onUnlockPartial, module, event);
+  };
 
-      <div className="block">
-        <TransLockingItemTitle>
-          <T id={name} />{' '}
-          <Hint
-            content={
-              'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do'
-            }
-            position={Position.BOTTOM_LEFT}
-          />
-        </TransLockingItemTitle>
-        <TransLockingItemDesc>{description}</TransLockingItemDesc>
-      </div>
-      <FormGroup>
-        <Switch
-          large={true}
-          defaultChecked={false}
-          minimal={true}
-          className="ml2"
-          onChange={onSwitch}
-        />
-      </FormGroup>
-    </TransactionsLockingcontent>
-  </TransactionLockingWrapp>
-);
+  const handleUnlockFull = (event) => {
+    safeInvoke(onUnlockFull, module, event);
+  };
+  return (
+    <TransactionLockingWrapp>
+      <TransLockingInner>
+        <TransLockingIcon>
+          <Icon icon="lock" iconSize={24} />
+        </TransLockingIcon>
+
+        <TransLockingContent>
+          <TransLockingItemTitle>
+            <T id={name} />{' '}
+            <Hint
+              content={
+                'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do'
+              }
+              position={Position.BOTTOM_LEFT}
+            />
+          </TransLockingItemTitle>
+          <TransLockingItemDesc>{description}</TransLockingItemDesc>
+        </TransLockingContent>
+
+        <TransLockingActions>
+          <If condition={!isEnabled}>
+            <Button
+              small={true}
+              minimal={true}
+              intent={Intent.PRIMARY}
+              onClick={handleLockClick}
+            >
+              Lock
+            </Button>
+          </If>
+
+          <If condition={isEnabled}>
+            <Button
+              small={true}
+              minimal={true}
+              intent={Intent.PRIMARY}
+              onClick={handleEditBtn}
+            >
+              Edit
+            </Button>
+            <Divider />
+            <Popover2
+              content={
+                <Menu>
+                  <MenuItem text="Full unlock" onClick={handleUnlockFull} />
+                  <MenuItem
+                    text="Partial unlock"
+                    onClick={handleUnlockPartial}
+                  />
+                </Menu>
+              }
+              placement="bottom"
+            >
+              <Button small={true} minimal={true} intent={Intent.PRIMARY}>
+                Unlock
+              </Button>
+            </Popover2>
+          </If>
+        </TransLockingActions>
+      </TransLockingInner>
+    </TransactionLockingWrapp>
+  );
+};
 
 const TransactionLockingWrapp = styled.div`
   display: flex;
   align-items: center;
   border-radius: 6px;
   border: 1px solid #d1dee2;
-  padding: 14px 18px;
-  margin-bottom: 25px;
+  padding: 16px 18px;
+  margin-bottom: 22px;
   background: #fff;
-
-  div.block {
-    flex: 1 1 0;
-    margin-left: 20px;
-    width: 100%;
-  }
+  box-shadow: 0 4px 20px -5px rgb(0 8 36 / 5%);
 `;
 
-const TransactionsLockingcontent = styled.div`
+const TransLockingInner = styled.div`
   display: flex;
   align-items: center;
   flex: 1 1 0;
@@ -65,15 +125,34 @@ const TransLockingItemTitle = styled.h1`
 `;
 const TransLockingItemDesc = styled.p`
   margin-bottom: 0;
-  opacity: 0.8;
+  opacity: 0.9;
 `;
 
 const TransLockingIcon = styled.div`
   border: 1px solid #d2dde2;
-  height: 50px;
-  width: 50px;
+  height: 45px;
+  width: 45px;
   text-align: center;
-  line-height: 50px;
-  border-radius: 5px;
-  color: #8190ac;
+  line-height: 45px;
+  border-radius: 8px;
+  color: #93a1ba;
+
+  .bp3-icon {
+    position: relative;
+    top: 1px;
+  }
+`;
+
+export const TransLockingActions = styled.div`
+  display: flex;
+
+  .bp3-divider {
+    margin: 2px;
+  }
+`;
+
+export const TransLockingContent = styled.div`
+  flex: 1 1 0;
+  margin-left: 20px;
+  width: 100%;
 `;

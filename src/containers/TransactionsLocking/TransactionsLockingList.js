@@ -10,16 +10,21 @@ import { compose } from 'utils';
 
 const DataTest = [
   {
+    isEnabled: true,
     name: 'sales',
+    module: 'sales',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
   },
   {
+    isEnabled: false,
     name: 'purchases',
+    module: 'purchases',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
   },
   {
+    isEnabled: false,
     name: 'financial',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do',
@@ -30,10 +35,20 @@ function Paragraph({ className, children }) {
   return <p className={clsx('paragraph', className)}>{children}</p>;
 }
 
+function TransactionsLockingList({ items }) {
+  return items.map(({ isEnabled, name, description }) => (
+    <TransactionLockingContent
+      name={name}
+      description={description}
+      isEnabled={isEnabled}
+    />
+  ));
+}
+
 /**
  * Transactions locking list.
  */
-function TransactionsLockingList({
+function TransactionsLockingListPage({
   // #withDialogActions
   openDialog,
 }) {
@@ -56,28 +71,22 @@ function TransactionsLockingList({
           <Link to={'/'}> {''}Lock All Transactions At Once →</Link>
         </TransactionsLockingParagraph>
 
-        {DataTest.map(({ name, description }) => (
-          <TransactionLockingContent
-            name={name}
-            description={description}
-            onSwitch={handleSwitchTransactionsLocking}
-          />
-        ))}
+        <TransactionsLockingList items={DataTest} />
       </TransactionsLocking>
     </TransactionsLockingProvider>
   );
 }
-export default compose(withDialogActions)(TransactionsLockingList);
+export default compose(withDialogActions)(TransactionsLockingListPage);
 
 const TransactionsLocking = styled.div`
   display: flex;
   flex-direction: column;
   padding: 32px;
-  max-width: 700px;
+  max-width: 800px;
 `;
 
 const TransactionsLockingParagraph = styled(Paragraph)`
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 `;
 
 const TransLockingTitle = styled.h2`
