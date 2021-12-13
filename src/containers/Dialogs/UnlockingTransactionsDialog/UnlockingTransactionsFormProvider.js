@@ -10,7 +10,7 @@ const UnlockingTransactionsContext = React.createContext();
 /**
  * Unlocking transactions form provider.
  */
-function UnlockingTransactionsFormProvider({ dialogName, ...props }) {
+function UnlockingTransactionsFormProvider({ moduleName, dialogName, ...props }) {
   // Cancle locking transactions mutations.
   const { mutateAsync: cancelLockingTransactionMutate } =
     useCancelLockingTransaction();
@@ -22,6 +22,7 @@ function UnlockingTransactionsFormProvider({ dialogName, ...props }) {
   // State provider.
   const provider = {
     dialogName,
+    moduleName,
     cancelLockingTransactionMutate,
     cancelUnLockingPartialTransactionMutate,
   };

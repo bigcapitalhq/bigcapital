@@ -15,7 +15,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
 const defaultInitialValues = {
-  module: 'all',
+  module: '',
   reason: '',
 };
 
@@ -28,6 +28,7 @@ function UnlockingTransactionsForm({
 }) {
   const {
     dialogName,
+    moduleName,
     cancelLockingTransactionMutate,
     cancelUnLockingPartialTransactionMutate,
   } = useUnlockingTransactionsContext();
@@ -35,6 +36,7 @@ function UnlockingTransactionsForm({
   // Initial form values.
   const initialValues = {
     ...defaultInitialValues,
+    module: moduleName,
   };
 
   // Handles the form submit.

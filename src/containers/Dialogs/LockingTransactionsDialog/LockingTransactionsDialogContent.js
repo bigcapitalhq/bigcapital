@@ -8,9 +8,10 @@ import LockingTransactionsForm from './LockingTransactionsForm';
 export default function LockingTransactionsDialogContent({
   // #ownProps
   dialogName,
+  moduleName,
 }) {
   return (
-    <LockingTransactionsFormProvider dialogName={dialogName}>
+    <LockingTransactionsFormProvider moduleName={moduleName} dialogName={dialogName}>
       <LockingTransactionsForm />
     </LockingTransactionsFormProvider>
   );

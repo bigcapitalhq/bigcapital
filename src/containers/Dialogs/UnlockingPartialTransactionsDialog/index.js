@@ -13,7 +13,7 @@ const UnlockingPartialTransactionsDialogContent = React.lazy(() =>
 function UnLockingPartialTransactionsDilaog({
   isOpen,
   dialogName,
-  payload = {},
+  payload: { module },
 }) {
   return (
     <Dialog
@@ -25,7 +25,10 @@ function UnLockingPartialTransactionsDilaog({
       className={'dialog--transaction--locking'}
     >
       <DialogSuspense>
-        <UnlockingPartialTransactionsDialogContent dialogName={dialogName} />
+        <UnlockingPartialTransactionsDialogContent
+          moduleName={module}
+          dialogName={dialogName}
+        />
       </DialogSuspense>
     </Dialog>
   );

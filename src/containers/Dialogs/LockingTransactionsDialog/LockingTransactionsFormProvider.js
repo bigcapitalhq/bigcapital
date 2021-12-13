@@ -7,15 +7,15 @@ const LockingTransactionsContext = React.createContext();
 /**
  * Locking transactions form provider.
  */
-function LockingTransactionsFormProvider({ dialogName, ...props }) {
-  
+function LockingTransactionsFormProvider({ moduleName, dialogName, ...props }) {
   // Create locking transactions mutations.
   const { mutateAsync: createLockingTransactionMutate } =
-  useCreateLockingTransactoin();
+    useCreateLockingTransactoin();
 
   // State provider.
   const provider = {
     dialogName,
+    moduleName,
     createLockingTransactionMutate,
   };
   return (

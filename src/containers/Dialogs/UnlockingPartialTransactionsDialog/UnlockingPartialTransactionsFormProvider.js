@@ -7,7 +7,11 @@ const UnlockingPartialTransactionsContext = React.createContext();
 /**
  * Unlocking partial transactions form provider.
  */
-function UnlockingPartialTransactionsFormProvider({ dialogName, ...props }) {
+function UnlockingPartialTransactionsFormProvider({
+  moduleName,
+  dialogName,
+  ...props
+}) {
   // Create unlocking partial transactions mutations.
   const { mutateAsync: createUnlockingPartialTransactionsMutate } =
     useCreateUnlockingPartialTransactions();
@@ -15,6 +19,7 @@ function UnlockingPartialTransactionsFormProvider({ dialogName, ...props }) {
   // State provider.
   const provider = {
     dialogName,
+    moduleName,
     createUnlockingPartialTransactionsMutate,
   };
 

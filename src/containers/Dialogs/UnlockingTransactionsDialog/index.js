@@ -10,7 +10,11 @@ const UnlockingTransactionsDialogContent = React.lazy(() =>
 /**
  * Unlocking transactions dialog.
  */
-function UnlockingTransactionsDialog({ dialogName, payload = {}, isOpen }) {
+function UnlockingTransactionsDialog({
+  dialogName,
+  payload: { module },
+  isOpen,
+}) {
   return (
     <Dialog
       name={dialogName}
@@ -21,7 +25,10 @@ function UnlockingTransactionsDialog({ dialogName, payload = {}, isOpen }) {
       className={'dialog--transaction--locking'}
     >
       <DialogSuspense>
-        <UnlockingTransactionsDialogContent dialogName={dialogName} />
+        <UnlockingTransactionsDialogContent
+          moduleName={module}
+          dialogName={dialogName}
+        />
       </DialogSuspense>
     </Dialog>
   );
