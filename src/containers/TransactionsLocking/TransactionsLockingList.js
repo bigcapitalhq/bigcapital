@@ -12,6 +12,8 @@ import {
 } from './components';
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withAlertsActions from 'containers/Alert/withAlertActions';
+
 import {
   validateMoveToFullLocking,
   validateMoveToPartialLocking,
@@ -21,18 +23,35 @@ function Paragraph({ className, children }) {
   return <p className={clsx('paragraph', className)}>{children}</p>;
 }
 
-function TransactionsLockingList({ items, onlock, onUnlock, onUnlockPartial }) {
-  return items.map(({ is_enabled, module, formatted_module, description }) => (
-    <TransactionLockingContent
-      name={formatted_module}
-      module={module}
-      description={description}
-      isEnabled={is_enabled}
-      onLock={onlock}
-      onUnlockPartial={onUnlockPartial}
-      onEditLock={onlock}
-    />
-  ));
+function TransactionsLockingList({
+  items,
+  onLock,
+  onUnlock,
+  onUnlockPartial,
+  onCancel,
+}) {
+  return items.map(
+    ({
+      is_enabled,
+      is_partial_unlock,
+      module,
+      formatted_module,
+      description,
+    }) => (
+      <TransactionLockingContent
+        name={formatted_module}
+        module={module}
+        description={description}
+        isEnabled={is_enabled}
+        isPartialUnlock={is_partial_unlock}
+        onLock={onLock}
+        onUnlockFull={onUnlock}
+        onUnlockPartial={onUnlockPartial}
+        onEditLock={onLock}
+        onCancle={onCancel}
+      />
+    ),
+  );
 }
 
 function TransactionsLockingFull({ onLock, onUnlock, onUnlockPartial }) {
@@ -137,11 +156,13 @@ function TransactionsLockingAlert() {
 function TransactionsLockingBodyJsx({
   // #withDialogActions
   openDialog,
+
+  // #withAlertsActions
+  openAlert,
 }) {
   const {
     transactionsLocking: { modules },
     isTransactionLockingLoading,
-
     transactionLockingType,
   } = useTransactionsLockingContext();
 
@@ -159,25 +180,35 @@ function TransactionsLockingBodyJsx({
     openDialog('unlocking-partial-transactions', { module: module });
   };
 
+  // Handle cancel.
+  const handleCancelUnlockingPartail = (module) => {
+    openAlert('cancel-unlocking-partail', { module: module });
+  };
+
   return !isTransactionLockingLoading ? (
     transactionLockingType === 'partial' ? (
       <TransactionsLockingList
         items={modules}
-        onlock={handleLockingTransactions}
+        onLock={handleLockingTransactions}
         onUnlock={handleUnlockTransactions}
         onUnlockPartial={handleUnlockingPartial}
+        onCancel={handleCancelUnlockingPartail}
       />
     ) : (
-      <TransactionsLockingFull />
+      <TransactionsLockingFull
+        onLock={handleLockingTransactions}
+        onUnlockPartial={handleUnlockingPartial}
+      />
     )
   ) : (
     <TransactionLockingSkeletonList />
   );
 }
 
-const TransactionsLockingBody = R.compose(withDialogActions)(
-  TransactionsLockingBodyJsx,
-);
+const TransactionsLockingBody = R.compose(
+  withAlertsActions,
+  withDialogActions,
+)(TransactionsLockingBodyJsx);
 
 /**
  * Transactions locking list.
