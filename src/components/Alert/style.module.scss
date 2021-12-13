@@ -1,32 +1,26 @@
 .root {
-  border: 1px solid rgb(223, 227, 230);
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 20px;
+  
 
   &_danger {
-    border-color: rgb(249, 198, 198);
-    background: rgb(255, 248, 248);
+    
 
-    .description {
-      color: #d95759;
-    }
+    
+  }
 
-    .title {
-      color: rgb(205, 43, 49);
+  &__primary{
+    
+
+    .title{
+      color: #1a3bd4;
     }
   }
 }
 
 
 .title {
-  color: rgb(17, 24, 28);
-  margin-bottom: 4px;
-  font-size: 14px;
-  font-weight: 600;
+
 }
 
 .description {
-  color: rgb(104, 112, 118);
-  margin: 0;
+
 }
