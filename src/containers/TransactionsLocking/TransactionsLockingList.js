@@ -10,7 +10,7 @@ import {
   Join,
   Paragraph,
   FormattedMessage as T,
-  AlertDesc
+  AlertDesc,
 } from 'components';
 import { TransactionsLockingProvider } from './TransactionsLockingProvider';
 import {
@@ -245,7 +245,9 @@ const TransactionsLocking = styled.div`
   display: flex;
   flex-direction: column;
   padding: 32px 40px;
-  max-width: 800px;
+  min-width: 800px;
+  max-width: 900px;
+  width: 75%;
 `;
 
 const TransactionsLockingParagraph = styled(Paragraph)`
