@@ -1,76 +1,35 @@
 import React from 'react';
-import intl from 'react-intl-universal';
-import clsx from 'classnames';
-import { CLASSES } from '../../../../common/classes';
-import { DataTable, Card, FormatDateCell } from '../../../../components';
+import { DataTable, Card } from '../../../../components';
+import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
+import { useItemAssociatedBillTransactions } from 'hooks/query';
+import { useBillTransactionsColumns } from './components';
 
 /**
  * Bill payment transactions data table.
  */
 export default function BillPaymentTransactions() {
-  const columns = React.useMemo(
-    () => [
-      {
-        id: 'bill_date',
-        Header: intl.get('date'),
-        accessor: 'bill_date',
-        Cell: FormatDateCell,
-        width: 110,
-        className: 'bill_date',
-      },
-      {
-        id: 'bill_number',
-        Header: intl.get('bill_number'),
-        accessor: (row) => (row.bill_number ? `${row.bill_number}` : null),
-        width: 100,
-        className: 'bill_number',
-      },
-      {
-        id: 'vendor',
-        Header: intl.get('vendor_name'),
-        accessor: 'vendor.display_name',
-        width: 180,
-        className: 'vendor',
-      },
-      {
-        id: 'reference_no',
-        Header: intl.get('reference_no'),
-        accessor: 'reference_no',
-        width: 90,
-        className: 'reference_no',
-      },
-      {
-        id: 'qunatity',
-        Header: 'Quantity Purchase',
-      },
-      {
-        id: 'rate',
-        Header: 'Rate',
-      },
-      {
-        id: 'total',
-        Header: intl.get('total'),
-      },
-      {
-        id: 'status',
-        Header: intl.get('status'),
-        // accessor: (row) => statusAccessor(row),
-        width: 160,
-        className: 'status',
-      },
-    ],
-    [],
-  );
+  const columns = useBillTransactionsColumns();
+
+  const { itemId } = useItemDetailDrawerContext();
+
+  // Handle fetch Estimate associated transactions.
+  const {
+    isLoading: isBillTransactionsLoading,
+    isFetching: isBillTransactionFetching,
+    data: paymentTransactions,
+  } = useItemAssociatedBillTransactions(itemId, {
+    enabled: !!itemId,
+  });
 
   return (
     <div className="item-drawer__table">
       <Card>
         <DataTable
           columns={columns}
-          data={[]}
-          // loading={}
-          // headerLoading={}
-          // progressBarLoading={}
+          data={paymentTransactions}
+          loading={isBillTransactionsLoading}
+          headerLoading={isBillTransactionsLoading}
+          progressBarLoading={isBillTransactionFetching}
         />
       </Card>
     </div>

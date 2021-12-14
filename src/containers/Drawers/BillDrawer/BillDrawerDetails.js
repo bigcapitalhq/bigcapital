@@ -19,11 +19,12 @@ import BillDrawerCls from 'style/components/Drawers/BillDrawer.module.scss';
 export default function BillDrawerDetails() {
   const {
     data: { transactions },
+    billId,
   } = useBillDrawerContext();
 
   return (
     <div className={clsx(BillDrawerCls.root)}>
-      <DrawerMainTabs defaultSelectedTabId="details">
+      <DrawerMainTabs renderActiveTabPanelOnly={true} defaultSelectedTabId="details">
         <Tab
           title={intl.get('details')}
           id={'details'}
@@ -37,7 +38,7 @@ export default function BillDrawerDetails() {
         <Tab
           title={intl.get('payment_transactions')}
           id={'payment_transactions'}
-          panel={<BillPaymentTransactionTable />}
+          panel={<BillPaymentTransactionTable billId={billId} />}
         />
         <Tab
           title={intl.get('located_landed_cost')}

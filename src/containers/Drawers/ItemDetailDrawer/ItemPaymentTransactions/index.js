@@ -6,11 +6,9 @@ import EstimatePaymentTransactionsTable from './EstimatePaymentTransactionsDataT
 import ReceiptPaymentTransactionsTable from './ReceiptPaymentTransactionsDataTable';
 import BillPaymentTransactionsTable from './BillPaymentTransactionsDataTable';
 
-import ItemSwitchMenuItem from './utils';
-
 export const ItemPaymentTransactions = () => {
   return (
-    <DrawerMainTabs>
+    <DrawerMainTabs renderActiveTabPanelOnly={true}>
       <Tab
         id={'invoice'}
         title={<T id={'invoice'} />}
@@ -18,7 +16,6 @@ export const ItemPaymentTransactions = () => {
       />
       <Tab
         id={'estiamte'}
-        title={'Estimate'}
         title={<T id={'estimate_'} />}
         panel={<EstimatePaymentTransactionsTable />}
       />

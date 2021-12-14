@@ -3,7 +3,6 @@ import React from 'react';
 import ItemDetailActionsBar from './ItemDetailActionsBar';
 import ItemDetailHeader from './ItemDetailHeader';
 import { ItemPaymentTransactions } from './ItemPaymentTransactions';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import { Card } from 'components';
 

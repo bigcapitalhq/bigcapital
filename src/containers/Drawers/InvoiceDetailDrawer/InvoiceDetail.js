@@ -20,7 +20,10 @@ export default function InvoiceDetail() {
 
   return (
     <div className={clsx(InvoiceDrawerCls.invoice_details)}>
-      <DrawerMainTabs defaultSelectedTabId="details">
+      <DrawerMainTabs
+        renderActiveTabPanelOnly={true}
+        defaultSelectedTabId="details"
+      >
         <Tab
           title={intl.get('details')}
           id={'details'}
