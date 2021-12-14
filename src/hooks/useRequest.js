@@ -12,7 +12,7 @@ export default function useApiRequest() {
   const setGlobalErrors = useSetGlobalErrors();
   const { setLogout } = useAuthActions();
   const currentLocale = getCookie('locale');
-  
+
   // Authentication token.
   const token = useAuthToken();
 
@@ -47,7 +47,7 @@ export default function useApiRequest() {
     instance.interceptors.response.use(
       (response) => response,
       (error) => {
-        const { status } = error.response;
+        const { status, data } = error.response;
 
         if (status >= 500) {
           setGlobalErrors({ something_wrong: true });
@@ -57,7 +57,15 @@ export default function useApiRequest() {
           setLogout();
         }
         if (status === 403) {
-          setGlobalErrors({ access_denied: true })
+          setGlobalErrors({ access_denied: true });
+        }
+        if (status === 400) {
+          const lockedError = data.errors.find(
+            (error) => error.type === 'TRANSACTIONS_DATE_LOCKED',
+          );
+          if (lockedError) {
+            setGlobalErrors({ transactionsLocked: { ...lockedError.data } });
+          }
         }
         return Promise.reject(error);
       },
@@ -65,27 +73,30 @@ export default function useApiRequest() {
     return instance;
   }, [token, organizationId, setGlobalErrors, setLogout]);
 
-  return React.useMemo(() => ({
-    http,
+  return React.useMemo(
+    () => ({
+      http,
 
-    get(resource, params) {
-      return http.get(`/api/${resource}`, params);
-    },
+      get(resource, params) {
+        return http.get(`/api/${resource}`, params);
+      },
 
-    post(resource, params, config) {
-      return http.post(`/api/${resource}`, params, config);
-    },
+      post(resource, params, config) {
+        return http.post(`/api/${resource}`, params, config);
+      },
 
-    update(resource, slug, params) {
-      return http.put(`/api/${resource}/${slug}`, params);
-    },
+      update(resource, slug, params) {
+        return http.put(`/api/${resource}/${slug}`, params);
+      },
 
-    put(resource, params) {
-      return http.put(`/api/${resource}`, params);
-    },
+      put(resource, params) {
+        return http.put(`/api/${resource}`, params);
+      },
 
-    delete(resource, params) {
-      return http.delete(`/api/${resource}`, params);
-    },
-  }), [http]);
+      delete(resource, params) {
+        return http.delete(`/api/${resource}`, params);
+      },
+    }),
+    [http],
+  );
 }

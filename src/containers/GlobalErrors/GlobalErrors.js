@@ -53,9 +53,11 @@ function GlobalErrors({
     );
   }
   if (globalErrors.transactionsLocked) {
+    const lockedToDate =
+      globalErrors.transactionsLocked.formatted_locked_to_date;
+
     AppToaster.show({
-      message:
-        'Transactions before 13 Dec 2021 has been locked. Hence action cannot be performed.',
+      message: `Transactions before ${lockedToDate} has been locked. Hence action cannot be performed.`,
       intent: Intent.DANGER,
       onDismiss: () => {
         globalErrorsSet({ transactionsLocked: false });

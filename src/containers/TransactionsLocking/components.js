@@ -213,7 +213,7 @@ const TransactionLockingWrapp = styled.div`
   ${(props) =>
     props.isEnabled &&
     `
-    border-color: #fe9f9e; 
+    border-color: #fc8483; 
 
     ${TransLockingIcon} {
       color: #ff8282;

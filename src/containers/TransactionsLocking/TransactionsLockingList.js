@@ -1,5 +1,4 @@
 import React from 'react';
-import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 import * as R from 'ramda';
@@ -11,6 +10,7 @@ import {
   Join,
   Paragraph,
   FormattedMessage as T,
+  AlertDesc
 } from 'components';
 import { TransactionsLockingProvider } from './TransactionsLockingProvider';
 import {
@@ -258,4 +258,8 @@ const LockAllAlert = styled(Alert)`
   margin-bottom: 0;
   margin-top: 20px;
   background: transparent;
+
+  ${AlertDesc} {
+    color: #1f3255;
+  }
 `;

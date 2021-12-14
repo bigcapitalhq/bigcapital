@@ -86,7 +86,7 @@ function MoneyInForm({
         });
       })
       .finally(() => {
-        setSubmitting(true);
+        setSubmitting(false);
       });
   };
 

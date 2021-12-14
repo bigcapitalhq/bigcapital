@@ -47,14 +47,14 @@ const AlertRoot = styled.div`
   `}
 `;
 
-const AlertTitle = styled.h3`
+export const AlertTitle = styled.h3`
   color: rgb(17, 24, 28);
   margin-bottom: 4px;
   font-size: 14px;
   font-weight: 600;
 `;
 
-const AlertDesc = styled.p`
+export const AlertDesc = styled.p`
   color: rgb(104, 112, 118);
   margin: 0;
 `;
