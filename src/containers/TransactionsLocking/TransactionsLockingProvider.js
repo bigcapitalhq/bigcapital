@@ -1,6 +1,7 @@
 import React from 'react';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { useTransactionsLocking } from 'hooks/query';
+import { useWatchImmediate } from '../../hooks/utils/useWatch';
 
 const TransactionsLockingContext = React.createContext();
 
@@ -15,8 +16,16 @@ function TransactionsLockingProvider({ ...props }) {
     isLoading: isTransactionLockingLoading,
   } = useTransactionsLocking();
 
+  // Transactions locking type.
   const [transactionLockingType, setTransactionLockingType] =
     React.useState('partial');
+
+  // Locking type controlled from response.
+  useWatchImmediate(() => {
+    if (transactionsLocking.locking_type) {
+      setTransactionLockingType(transactionsLocking.locking_type);
+    }
+  }, transactionsLocking.locking_type);
 
   // Provider
   const provider = {
