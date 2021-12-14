@@ -1497,5 +1497,6 @@
   "users.column.role_name":"دور المستخدم",
   "roles.error.you_cannot_edit_predefined_roles":"لا يمكنك تعديل أدوار المستخدم المحددة مسبقا.",
   "roles.error.you_cannot_delete_predefined_roles":"لا يمكنك حذف أدوار المستخدم المحددة مسبقا",
-  "roles.error.you_cannot_delete_role_that_associated_to_users":"لا يمكن حذف دور المستخدم لأنه لديه مستخدمين مرتبطة به."
+  "roles.error.you_cannot_delete_role_that_associated_to_users":"لا يمكن حذف دور المستخدم لأنه لديه مستخدمين مرتبطة به.",
+  "payment_transactions":"معاملات الدفع"
 }

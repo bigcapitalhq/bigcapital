@@ -6,6 +6,7 @@ import clsx from 'classnames';
 import { DrawerMainTabs } from 'components';
 
 import JournalEntriesTable from '../../JournalEntriesTable/JournalEntriesTable';
+import InvoicePaymentTransactionsTable from './InvoicePaymentTransactions/InvoicePaymentTransactionsTable';
 import InvoiceDetailTab from './InvoiceDetailTab';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
@@ -30,11 +31,11 @@ export default function InvoiceDetail() {
           id={'journal_entries'}
           panel={<JournalEntriesTable transactions={transactions} />}
         />
-        {/* <Tab
+        <Tab
           title={intl.get('payment_transactions')}
           id={'payment_transactions'}
-          // panel={}
-        /> */}
+          panel={<InvoicePaymentTransactionsTable />}
+        />
       </DrawerMainTabs>
     </div>
   );

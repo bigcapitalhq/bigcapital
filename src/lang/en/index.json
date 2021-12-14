@@ -1632,6 +1632,6 @@
   "transactions_locking.of_the_module_locked_to": "Transactions of the module locked to <strong>{value}</strong>.",
   "transactions_locking.lock_reason": "Lock Reason: <strong>{value}</strong>.",
   "transactions_locking.partial_unlocked_from": "Partial unlocked from <strong>{fromDate}</strong> to <strong>{toDate}</strong>.",
-  "transactions_locking.unlock_reason":"<strong>Unlock Reason:</strong> {value}."
-
+  "transactions_locking.unlock_reason":"<strong>Unlock Reason:</strong> {value}.",
+  "payment_transactions":"Payment transactions"
 }

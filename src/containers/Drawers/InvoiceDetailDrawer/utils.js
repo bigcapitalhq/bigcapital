@@ -105,3 +105,4 @@ export const BadDebtMenuItem = ({
     </Popover>
   );
 };
+

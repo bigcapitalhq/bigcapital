@@ -1,12 +1,10 @@
 .item-drawer {
-
   .card {
     margin: 15px;
     padding: 22px 15px;
   }
 
   &__content {
-
     .detail-item--name {
       width: 30%;
 
@@ -16,7 +14,6 @@
     }
 
     .detail-item--quantity {
-
       .detail-item__content {
         font-weight: 600;
 
@@ -32,13 +29,37 @@
     }
 
     .details-menu--horizantal {
-
       .detail-item:not(:first-of-type) {
         margin-top: 16px;
       }
 
       .detail-item__label {
         min-width: 180px;
+      }
+    }
+  }
+  &__table {
+    .card {
+      padding: 12px 15px !important;
+    }
+
+    .table {
+      .tbody,
+      .thead {
+        .tr .th {
+          padding: 8px 8px;
+          background-color: #fff;
+          font-size: 14px;
+          border-bottom: 1px solid #000;
+          border-top: 1px solid #000;
+        }
+      }
+      .tbody {
+        .tr .td {
+          border-bottom: 0;
+          padding-top: 0.4rem;
+          padding-bottom: 0.4rem;
+        }
       }
     }
   }

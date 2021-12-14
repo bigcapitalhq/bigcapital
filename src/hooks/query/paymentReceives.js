@@ -35,6 +35,9 @@ const commonInvalidateQueries = (client) => {
   // Invalidate reconcile.
   client.invalidateQueries(t.RECONCILE_CREDIT_NOTE);
   client.invalidateQueries(t.RECONCILE_CREDIT_NOTES);
+  
+  // Invalidate invoices payment transactions.
+  client.invalidateQueries(t.SALE_INVOICE_PAYMENT_TRANSACTIONS);
 };
 
 // Transform payment receives.
