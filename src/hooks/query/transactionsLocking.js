@@ -7,7 +7,8 @@ import t from './types';
 
 // Common invalidate queries.
 const commonInvalidateQueries = (queryClient) => {
-  // Invalidate customers.
+  // Invalidate.
+  queryClient.invalidateQueries(t.TRANSACTION_LOCKING);
   queryClient.invalidateQueries(t.TRANSACTIONS_LOCKING);
 };
 
@@ -93,6 +94,18 @@ export function useTransactionsLocking(query, props) {
   return useRequestQuery(
     [t.TRANSACTIONS_LOCKING, query],
     { method: 'get', url: 'transactions-locking', params: query },
+    {
+      select: (res) => res.data.data,
+      defaultData: [],
+      ...props,
+    },
+  );
+}
+
+export function useEditTransactionsLocking(query, props) {
+  return useRequestQuery(
+    [t.TRANSACTION_LOCKING, query],
+    { method: 'get', url: `transactions-locking/${query}` },
     {
       select: (res) => res.data.data,
       defaultData: [],

@@ -64,7 +64,7 @@ export const statusAccessor = (row) => {
               animate={false}
               stripes={false}
               intent={Intent.PRIMARY}
-              value={calculateStatus(row.credited_amount, row.balance)}
+              value={calculateStatus(row.balance_amount, row.balance)}
             />
           </If>
         </Choose.When>

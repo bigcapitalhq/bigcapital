@@ -137,8 +137,7 @@ export function StatusAccessor(bill) {
               animate={false}
               stripes={false}
               intent={Intent.PRIMARY}
-              value={calculateStatus(bill.credited_amount, bill.amount)}
-              // value={calculateStatus(bill.payment_amount, bill.amount)}
+              value={calculateStatus(bill.balance, bill.amount)}
             />
           </If>
         </Choose.When>
