@@ -5,6 +5,7 @@ import 'style/pages/PaymentTransactions/List.scss';
 
 import { useBillPaymentTransactionsColumns } from './components';
 import { useBillDrawerContext } from '../BillDrawerProvider';
+import { useBillPaymentTransactions } from 'hooks/query';
 
 /**
  * Bill payment transactions datatable.
@@ -12,11 +13,16 @@ import { useBillDrawerContext } from '../BillDrawerProvider';
 export default function BillPaymentTransactionTable() {
   const columns = useBillPaymentTransactionsColumns();
 
+  const { billId } = useBillDrawerContext();
+
+  // Handle fetch bill payment transaction.
   const {
-    paymentTransactions,
-    isPaymentTransactionsLoading,
-    isPaymentTransactionFetching,
-  } = useBillDrawerContext();
+    isLoading: isPaymentTransactionsLoading,
+    isFetching: isPaymentTransactionFetching,
+    data: paymentTransactions,
+  } = useBillPaymentTransactions(billId, {
+    enabled: !!billId,
+  });
 
   return (
     <Card>

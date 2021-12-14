@@ -5,18 +5,24 @@ import 'style/pages/PaymentTransactions/List.scss';
 
 import { useInvoicePaymentTransactionsColumns } from './components';
 import { useInvoiceDetailDrawerContext } from '../InvoiceDetailDrawerProvider';
+import { useInvoicePaymentTransactions } from 'hooks/query';
 
 /**
  * Invoice payment transactions datatable.
  */
 export default function InvoicePaymentTransactionsTable() {
   const columns = useInvoicePaymentTransactionsColumns();
-  const {
-    paymentTransactions,
-    isPaymentTransactionLoading,
-    isPaymentTransactionFetching,
-  } = useInvoiceDetailDrawerContext();
 
+  const { invoiceId } = useInvoiceDetailDrawerContext();
+
+  // Fetch invoice payment transactions.
+  const {
+    data: paymentTransactions,
+    isFetching: isPaymentTransactionFetching,
+    isLoading: isPaymentTransactionLoading,
+  } = useInvoicePaymentTransactions(invoiceId, {
+    enabled: !!invoiceId,
+  });
   return (
     <Card>
       <DataTable

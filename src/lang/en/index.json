@@ -1624,14 +1624,17 @@
   "transactions_locking.lock_all_transactions_at_once": "Lock All Transactions At Once →",
   "transactions_locking.lock_modules_individually": "Lock Modules Individually →",
   "transactions_locking_lock_all_transactions_at_once": "Lock All Transactions At Once.",
-  "transactions_locking.lock": "Lock", 
-  "transactions_locking.unlock": "Unlock", 
-  "transactions_locking.full_unlock": "Full Unlock", 
-  "transactions_locking.paetial_unlock": "Partial Unlock", 
-  "transactions_locking.cancel_partial_unlock": "Cancel Partial Unlock", 
+  "transactions_locking.lock": "Lock",
+  "transactions_locking.unlock": "Unlock",
+  "transactions_locking.full_unlock": "Full Unlock",
+  "transactions_locking.paetial_unlock": "Partial Unlock",
+  "transactions_locking.cancel_partial_unlock": "Cancel Partial Unlock",
   "transactions_locking.of_the_module_locked_to": "Transactions of the module locked to <strong>{value}</strong>.",
   "transactions_locking.lock_reason": "Lock Reason: <strong>{value}</strong>.",
   "transactions_locking.partial_unlocked_from": "Partial unlocked from <strong>{fromDate}</strong> to <strong>{toDate}</strong>.",
-  "transactions_locking.unlock_reason":"<strong>Unlock Reason:</strong> {value}.",
-  "payment_transactions":"Payment transactions"
+  "transactions_locking.unlock_reason": "<strong>Unlock Reason:</strong> {value}.",
+  "payment_transactions": "Payment transactions",
+  "invoice_transactions.column.withdrawal_account": "Deposit account",
+  "bill_transactions.column.deposit_account": "Withdrawal account"
 }
+
