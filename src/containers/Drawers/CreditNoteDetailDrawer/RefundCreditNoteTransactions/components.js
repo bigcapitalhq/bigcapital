@@ -25,14 +25,14 @@ export function useRefundCreditTransactionsTableColumns() {
     () => [
       {
         Header: intl.get('date'),
-        accessor: 'date',
+        accessor: 'formatted_date',
         Cell: FormatDateCell,
         width: 100,
         className: 'date',
       },
       {
         Header: intl.get('refund_credit_transactions.column.amount_refunded'),
-        accessor: 'amount',
+        accessor: 'formtted_amount',
         width: 100,
         className: 'amount',
         align: 'right',
