@@ -23,14 +23,15 @@ function TransactionsLockingBodyJsx({
   // #withAlertsActions
   openAlert,
 }) {
-  const {
-    isTransactionLockingLoading,
-    transactionLockingType,
-  } = useTransactionsLockingContext();
+  const { isTransactionLockingLoading, transactionLockingType } =
+    useTransactionsLockingContext();
 
   // Handle locking transactions.
-  const handleLockingTransactions = (module) => {
-    openDialog('locking-transactions', { module: module });
+  const handleLockingTransactions = (module, {}, isEnabled) => {
+    openDialog('locking-transactions', {
+      isEnabled: isEnabled,
+      module: module,
+    });
   };
   // Handle unlocking transactions
   const handleUnlockTransactions = (module) => {
@@ -49,6 +50,7 @@ function TransactionsLockingBodyJsx({
     transactionLockingType === 'partial' ? (
       <TransactionsLockingList
         onLock={handleLockingTransactions}
+        onEditLock={handleLockingTransactions}
         onCancelLock={handleUnlockTransactions}
         onUnlockPartial={handleUnlockingPartial}
         onCancelUnlockPartial={handleCancelUnlockingPartail}

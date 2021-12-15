@@ -251,10 +251,10 @@ function TransactionsLockingItemActions() {
   } = useTransactionsLockingItemContext();
 
   const handleLockClick = (event) => {
-    safeInvoke(onLock, module, isEnabled, event);
+    safeInvoke(onLock, module, event);
   };
   const handleEditBtn = (event) => {
-    safeInvoke(onEditLock, module, event);
+    safeInvoke(onEditLock, module, isEnabled, event);
   };
   const handleUnlockPartial = (event) => {
     safeInvoke(onUnlockPartial, module, event);
@@ -401,7 +401,7 @@ export const TransLockingReason = styled.div`
 `;
 
 const TransUnlockWrap = styled.div`
-  padding-top: 10px; 
+  padding-top: 10px;
   border-top: 1px solid #ddd;
   margin-top: 10px;
 

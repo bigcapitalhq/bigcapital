@@ -25,8 +25,6 @@ function LockingTransactionsFormProvider({
       enabled: !!isEnabled,
     });
 
-  // const isEnabled = transactionLocking?.is_enabled;
-
   // State provider.
   const provider = {
     dialogName,

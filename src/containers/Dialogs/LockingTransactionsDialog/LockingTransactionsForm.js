@@ -39,13 +39,13 @@ function LockingTransactionsForm({
   // Initial form values.
   const initialValues = React.useMemo(
     () => ({
-      ...(!isEnabled
+      ...(isEnabled
         ? {
-            ...defaultInitialValues,
+            ...transformToForm(transactionLocking, defaultInitialValues),
             module: moduleName,
           }
         : {
-            ...transformToForm(transactionLocking, defaultInitialValues),
+            ...defaultInitialValues,
             module: moduleName,
           }),
     }),
