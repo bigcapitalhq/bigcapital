@@ -15,7 +15,7 @@ function RefundCreditNoteFloatingActions({
   closeDialog,
 }) {
   // Formik context.
-  const { isSubmitting, values, errors } = useFormikContext();
+  const { isSubmitting } = useFormikContext();
 
   // refund credit note dialog context.
   const { dialogName } = useRefundCreditNoteContext();
@@ -34,7 +34,7 @@ function RefundCreditNoteFloatingActions({
         <Button
           intent={Intent.PRIMARY}
           loading={isSubmitting}
-          style={{ minWidth: '85px' }}
+          style={{ minWidth: '120px' }}
           type="submit"
           text={<T id={'refund'} />}
         />

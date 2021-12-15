@@ -30,13 +30,6 @@ export function ActionsMenu({
         text={intl.get('credit_note.action.edit_credit_note')}
         onClick={safeCallback(onEdit, original)}
       />
-      <If condition={!original.is_closed && original.is_published}>
-        <MenuItem
-          icon={<Icon icon="quick-payment-16" />}
-          text={intl.get('credit_note.action.refund_credit_note')}
-          onClick={safeCallback(onRefund, original)}
-        />
-      </If>
       <If condition={original.is_draft}>
         <MenuItem
           icon={<Icon icon={'check'} iconSize={18} />}
@@ -44,14 +37,15 @@ export function ActionsMenu({
           onClick={safeCallback(onOpen, original)}
         />
       </If>
-      <If
-        condition={
-          !original.is_draft && !original.is_closed && original.is_published
-        }
-      >
+      <If condition={!original.is_closed && original.is_published}>
+        <MenuItem
+          icon={<Icon icon="quick-payment-16" />}
+          text={intl.get('credit_note.action.refund_credit_note')}
+          onClick={safeCallback(onRefund, original)}
+        />
         <MenuItem
           text={intl.get('credit_note.action.reconcile_with_invoices')}
-          // icon={<Icon icon="quick-payment-16" />}
+          icon={<Icon icon="receipt-24" iconSize={16} />}
           onClick={safeCallback(onReconcile, original)}
         />
       </If>
@@ -73,19 +67,19 @@ export function StatusAccessor(creditNote) {
     <div>
       <Choose>
         <Choose.When condition={creditNote.is_open}>
-          <Tag minimal={true} intent={Intent.WARNING}>
+          <Tag intent={Intent.WARNING} minimal={true} round={true}>
             <T id={'open'} />
           </Tag>
         </Choose.When>
 
         <Choose.When condition={creditNote.is_closed}>
-          <Tag minimal={true} intent={Intent.SUCCESS}>
+          <Tag intent={Intent.SUCCESS} minimal={true} round={true}>
             <T id={'closed'} />
           </Tag>
         </Choose.When>
 
         <Choose.When condition={creditNote.is_draft}>
-          <Tag minimal={true}>
+          <Tag intent={Intent.NONE} minimal={true} round={true}>
             <T id={'draft'} />
           </Tag>
         </Choose.When>

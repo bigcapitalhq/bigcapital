@@ -25,12 +25,10 @@ import {
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-  compose,
 } from 'utils';
 import { useAutofocus } from 'hooks';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
 import { useRefundCreditNoteContext } from './RefundCreditNoteFormProvider';
-import withSettings from 'containers/Settings/withSettings';
 
 /**
  * Refund credit note form fields.
@@ -49,7 +47,7 @@ function RefundCreditNoteFormFields() {
             className={classNames('form-group--select-list', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="date" />}
-            inline={true}
+            // inline={true}
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
@@ -78,7 +76,7 @@ function RefundCreditNoteFormFields() {
             className={classNames('form-group--amount', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="amount" />}
-            inline={true}
+            // inline={true}
           >
             <ControlGroup>
               <InputPrependText text={values.currency_code} />
@@ -103,7 +101,7 @@ function RefundCreditNoteFormFields() {
             className={classNames('form-group--reference', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="reference" />}
-            inline={true}
+            // inline={true}
           >
             <InputGroup
               intent={inputIntent({ error, touched })}
@@ -127,7 +125,7 @@ function RefundCreditNoteFormFields() {
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'from_account_id'} />}
-            inline={true}
+            // inline={true}
           >
             <AccountsSuggestField
               selectedAccountId={value}
@@ -153,7 +151,7 @@ function RefundCreditNoteFormFields() {
           <FormGroup
             label={<T id={'refund_credit_note.dialog.description'} />}
             className={'form-group--description'}
-            inline={true}
+            // inline={true}
           >
             <TextArea growVertically={true} {...field} />
           </FormGroup>

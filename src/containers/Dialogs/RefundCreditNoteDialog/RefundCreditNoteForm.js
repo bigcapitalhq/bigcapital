@@ -3,16 +3,15 @@ import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import moment from 'moment';
-import { omit, defaultTo } from 'lodash';
+import { omit } from 'lodash';
 
 import { AppToaster } from 'components';
 import { useRefundCreditNoteContext } from './RefundCreditNoteFormProvider';
 import { CreateRefundCreditNoteFormSchema } from './RefundCreditNoteForm.schema';
 import RefundCreditNoteFormContent from './RefundCreditNoteFormContent';
 
-import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose, transactionNumber } from 'utils';
+import { compose } from 'utils';
 
 const defaultInitialValues = {
   from_account_id: '',
@@ -39,7 +38,7 @@ function RefundCreditNoteForm({
   };
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setFieldError }) => {
+  const handleFormSubmit = (values, { setSubmitting }) => {
     const form = {
       ...omit(values, ['currency_code', 'credits_remaining']),
     };
