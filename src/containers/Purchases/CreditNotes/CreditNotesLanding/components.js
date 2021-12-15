@@ -47,7 +47,7 @@ export function ActionsMenu({
           onClick={safeCallback(onOpen, original)}
         />
       </If>
-      <If condition={!original.is_draft && original.is_published}>
+      <If condition={!original.is_draft && !original.is_closed && original.is_published}>
         <MenuItem
           // icon={<Icon icon="quick-payment-16" />}
           text={intl.get('vendor_credits.action.reconcile_with_bills')}
