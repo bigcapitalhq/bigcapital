@@ -2,13 +2,40 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [1.5.0] - 20-12-2021
+### Added
+- Add credit note on sales module.
+- Add vendor credit on purchases module.
+- Optimize landed costs on purchase invoices.
+- Display associated payment transactions on sale invoice drawer.
+- Display associated pamyment transactions on purchase invoice drawer.
+- Transactions locking on all transactions or individual modules.
+- Roles and permissions access control module.
+
+### Changed 
+- Dashboard meta boot and authenticated user request query.
+
+## [1.4.0] - 11-09-2021
+
+### Added
+- Add SMS notification on sale invoice, receipt, customers payments modules.
+- Customer quick create in customers list.
+- Item quick create in items list.
+
+### Changes
+ change: BIG-171 alerts in global scope and lazy loading.
+### Fixed
+ fix: BIG-140 - Reordering sell, cost and inventory account on item details.
+ fix: BIG-144 - Typo adjustment dialog success message.
+ fix: BIG-148 - Items entries ordered by index.
+ fix: BIG-132 AR/AP aging summary report filter by none transactions/zero contacts.
+
 ## [1.2.0-RC] - 03-09-2021
 
 Here we write upgrading notes for brands. It's a team effort to make them as
 straightforward as possible.
 
 ### Added
-
 - Add slidable sub-sidebar to improve user experience instead of sub-menu.
 - Add Subscription guard to ensure the organization's subscription is active or
   redirect all routes to subscription billing page.
@@ -35,13 +62,11 @@ straightforward as possible.
 - Add clickable datatable rows to display each row details. 
 
 ### Changed
-
 - Optimize style of datatable selection checkbox.
 - Disable animation in dashboard views tabs.
 - Optimize Arabic localization.
 
 ### Fixed
-
 - fix: disable submit buttons in pereferences pages.
 - fix: inventory adjustment cost field max/min range to avoid out of range error.
 - fix: transactions by customers/vendors report localization.
