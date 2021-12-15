@@ -24,6 +24,7 @@ function RefundCreditNoteDialog({
       canEscapeJeyClose={true}
       autoFocus={true}
       className={'dialog--refund-credit-note'}
+      style={{ width: '450px' }}
     >
       <DialogSuspense>
         <RefundCreditNoteDialogContent
