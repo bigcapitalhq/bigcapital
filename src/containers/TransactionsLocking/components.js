@@ -251,7 +251,7 @@ function TransactionsLockingItemActions() {
   } = useTransactionsLockingItemContext();
 
   const handleLockClick = (event) => {
-    safeInvoke(onLock, module, event);
+    safeInvoke(onLock, module, isEnabled, event);
   };
   const handleEditBtn = (event) => {
     safeInvoke(onEditLock, module, event);

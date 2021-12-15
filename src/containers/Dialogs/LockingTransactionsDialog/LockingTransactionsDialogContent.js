@@ -9,9 +9,14 @@ export default function LockingTransactionsDialogContent({
   // #ownProps
   dialogName,
   moduleName,
+  isEnabled,
 }) {
   return (
-    <LockingTransactionsFormProvider moduleName={moduleName} dialogName={dialogName}>
+    <LockingTransactionsFormProvider
+      isEnabled={isEnabled}
+      moduleName={moduleName}
+      dialogName={dialogName}
+    >
       <LockingTransactionsForm />
     </LockingTransactionsFormProvider>
   );

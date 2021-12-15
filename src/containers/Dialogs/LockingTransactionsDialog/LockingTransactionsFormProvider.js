@@ -1,25 +1,42 @@
 import React from 'react';
 import { DialogContent } from 'components';
-import { useCreateLockingTransactoin } from 'hooks/query';
+import {
+  useCreateLockingTransactoin,
+  useEditTransactionsLocking,
+} from 'hooks/query';
 
 const LockingTransactionsContext = React.createContext();
 
 /**
  * Locking transactions form provider.
  */
-function LockingTransactionsFormProvider({ moduleName, dialogName, ...props }) {
+function LockingTransactionsFormProvider({
+  moduleName,
+  isEnabled,
+  dialogName,
+  ...props
+}) {
   // Create locking transactions mutations.
   const { mutateAsync: createLockingTransactionMutate } =
     useCreateLockingTransactoin();
+
+  const { data: transactionLocking, isLoading: isTransactionsLockingLoading } =
+    useEditTransactionsLocking(moduleName, {
+      enabled: !!isEnabled,
+    });
+
+  // const isEnabled = transactionLocking?.is_enabled;
 
   // State provider.
   const provider = {
     dialogName,
     moduleName,
     createLockingTransactionMutate,
+    transactionLocking,
+    isEnabled,
   };
   return (
-    <DialogContent>
+    <DialogContent isLoading={isTransactionsLockingLoading}>
       <LockingTransactionsContext.Provider value={provider} {...props} />
     </DialogContent>
   );

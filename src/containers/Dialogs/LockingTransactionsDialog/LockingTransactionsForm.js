@@ -13,7 +13,7 @@ import { useLockingTransactionsContext } from './LockingTransactionsFormProvider
 import LockingTransactionsFormContent from './LockingTransactionsFormContent';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
 
 const defaultInitialValues = {
   module: '',
@@ -28,14 +28,29 @@ function LockingTransactionsForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, moduleName, createLockingTransactionMutate } =
-    useLockingTransactionsContext();
+  const {
+    dialogName,
+    moduleName,
+    transactionLocking,
+    isEnabled,
+    createLockingTransactionMutate,
+  } = useLockingTransactionsContext();
 
   // Initial form values.
-  const initialValues = {
-    ...defaultInitialValues,
-    module: moduleName,
-  };
+  const initialValues = React.useMemo(
+    () => ({
+      ...(!isEnabled
+        ? {
+            ...defaultInitialValues,
+            module: moduleName,
+          }
+        : {
+            ...transformToForm(transactionLocking, defaultInitialValues),
+            module: moduleName,
+          }),
+    }),
+    [isEnabled],
+  );
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
