@@ -9,13 +9,80 @@ import {
   Intent,
   Divider,
   Classes,
-  Tag,
 } from '@blueprintjs/core';
-import { Hint, Icon, If, FormattedMessage as T } from 'components';
 import { Popover2 } from '@blueprintjs/popover2';
+
+import { Hint, Icon, If, FormattedMessage as T } from 'components';
+import { useTransactionsLockingContext } from './TransactionsLockingProvider';
 import { safeInvoke } from 'utils';
 
-export const TransactionLockingItemLoading = ({}) => {
+/**
+ * Transaction locking module item.
+ * @returns {React.JSX}
+ */
+export function TransactionsLockingItemModule({ module, ...rest }) {
+  return (
+    <TransactionLockingContent
+      name={module.formatted_module}
+      module={module.module}
+      description={module.description}
+      isEnabled={module.is_enabled}
+      isPartialUnlock={module.is_partial_unlock}
+      lockToDate={module.formatted_lock_to_date}
+      lockReason={module.lock_reason}
+      unlockReason={module.unlock_reason}
+      unlockFromDate={module.formatted_unlock_from_date}
+      unlockToDate={module.formatted_unlock_to_date}
+      {...rest}
+    />
+  );
+}
+
+/**
+ * Transactions locking items modules list.
+ * @returns {React.JSX}
+ */
+export function TransactionsLockingList({ ...rest }) {
+  const {
+    transactionsLocking: { modules },
+  } = useTransactionsLockingContext();
+
+  return modules.map((module) => (
+    <TransactionsLockingItemModule module={module} {...rest} />
+  ));
+}
+
+/**
+ * Transactions locking full module item.
+ * @returns {React.JSX}
+ */
+export function TransactionsLockingFull({ ...rest }) {
+  const {
+    transactionsLocking: { all },
+  } = useTransactionsLockingContext();
+
+  return <TransactionsLockingItemModule module={all} {...rest} />;
+}
+
+/**
+ * Transactions locking skeleton list.
+ * @returns {React.JSX}
+ */
+export function TransactionLockingSkeletonList() {
+  return (
+    <>
+      <TransactionLockingItemSkeleton />
+      <TransactionLockingItemSkeleton />
+      <TransactionLockingItemSkeleton />
+    </>
+  );
+}
+
+/**
+ * Transactions locking skeleton item.
+ * @returns {React.JSX}
+ */
+export const TransactionLockingItemSkeleton = ({}) => {
   return (
     <TransactionLockingWrapp>
       <TransLockingInner>
@@ -37,27 +104,152 @@ export const TransactionLockingItemLoading = ({}) => {
   );
 };
 
-export const TransactionLockingContent = ({
-  name,
-  description,
-  module,
+const TransactionsLockingItemContext = React.createContext();
 
-  isEnabled,
-  lockToDate,
-  lockReason,
+const useTransactionsLockingItemContext = () =>
+  React.useContext(TransactionsLockingItemContext);
 
-  // Unlock props.
-  isPartialUnlock,
-  unlockToDate,
-  unlockFromDate,
-  unlockReason,
+/**
+ * Transactions locking item.
+ * @returns {React.JSX}
+ */
+export const TransactionLockingContent = (props) => {
+  const {
+    name,
+    description,
+    module,
 
-  onLock,
-  onEditLock,
-  onUnlockFull,
-  onUnlockPartial,
-  onCancle,
-}) => {
+    isEnabled,
+    lockToDate,
+    lockReason,
+
+    // Unlock props.
+    isPartialUnlock,
+    unlockToDate,
+    unlockFromDate,
+    unlockReason,
+
+    onLock,
+    onCancelLock,
+    onEditLock,
+    onUnlockPartial,
+    onCancelUnlockPartial,
+  } = props;
+
+  return (
+    <TransactionsLockingItemContext.Provider value={props}>
+      <TransactionLockingWrapp isEnabled={isEnabled}>
+        <TransLockingInner>
+          <TransLockingIcon>
+            <Icon icon="lock" iconSize={24} />
+          </TransLockingIcon>
+
+          <TransactionsLockingItemContent />
+          <TransactionsLockingItemActions />
+        </TransLockingInner>
+      </TransactionLockingWrapp>
+    </TransactionsLockingItemContext.Provider>
+  );
+};
+
+/**
+ * Transactions locking item content.
+ */
+function TransactionsLockingItemContent() {
+  const {
+    name,
+    description,
+
+    isEnabled,
+    lockToDate,
+    lockReason,
+
+    // Unlock props.
+    isPartialUnlock,
+    unlockToDate,
+    unlockFromDate,
+    unlockReason,
+  } = useTransactionsLockingItemContext();
+
+  return (
+    <TransLockingContent>
+      <TransLockingItemTitle>
+        {name}
+        <Hint content={description} position={Position.BOTTOM_LEFT} />
+      </TransLockingItemTitle>
+
+      <If condition={!isEnabled}>
+        <TransLockingItemDesc>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+        </TransLockingItemDesc>
+      </If>
+
+      <If condition={isEnabled}>
+        <TransLockWrap>
+          <TransLockingItemDesc>
+            {intl.formatHTMLMessage(
+              { id: 'transactions_locking.of_the_module_locked_to' },
+              {
+                value: lockToDate,
+              },
+            )}
+          </TransLockingItemDesc>
+
+          <If condition={lockReason}>
+            <TransLockingReason>
+              {intl.formatHTMLMessage(
+                { id: 'transactions_locking.lock_reason' },
+                { value: lockReason },
+              )}
+            </TransLockingReason>
+          </If>
+        </TransLockWrap>
+      </If>
+
+      <If condition={isPartialUnlock}>
+        <TransUnlockWrap>
+          <TransLockingItemDesc>
+            {intl.formatHTMLMessage(
+              { id: 'transactions_locking.partial_unlocked_from' },
+              {
+                fromDate: unlockFromDate,
+                toDate: unlockToDate,
+              },
+            )}
+          </TransLockingItemDesc>
+
+          <If condition={unlockReason}>
+            <TransLockingReason>
+              {intl.formatHTMLMessage(
+                { id: 'transactions_locking.unlock_reason' },
+                { value: unlockReason },
+              )}
+            </TransLockingReason>
+          </If>
+        </TransUnlockWrap>
+      </If>
+    </TransLockingContent>
+  );
+}
+
+/**
+ * Transactions locking item actions.
+ */
+function TransactionsLockingItemActions() {
+  const {
+    module,
+    isEnabled,
+
+    // Unlock props.
+    isPartialUnlock,
+
+    onLock,
+    onCancelLock,
+    onEditLock,
+    onUnlockPartial,
+    onCancelUnlockPartial,
+  } = useTransactionsLockingItemContext();
+
   const handleLockClick = (event) => {
     safeInvoke(onLock, module, event);
   };
@@ -69,136 +261,68 @@ export const TransactionLockingContent = ({
   };
 
   const handleUnlockFull = (event) => {
-    safeInvoke(onUnlockFull, module, event);
+    safeInvoke(onCancelLock, module, event);
   };
-  const handleCanclel = (event) => {
-    safeInvoke(onCancle, module, event);
+  const handleCancelPartialUnlock = (event) => {
+    safeInvoke(onCancelUnlockPartial, module, event);
   };
 
   return (
-    <TransactionLockingWrapp isEnabled={isEnabled}>
-      <TransLockingInner>
-        <TransLockingIcon>
-          <Icon icon="lock" iconSize={24} />
-        </TransLockingIcon>
+    <TransLockingActions>
+      <If condition={!isEnabled}>
+        <Button
+          small={true}
+          minimal={true}
+          intent={Intent.PRIMARY}
+          onClick={handleLockClick}
+        >
+          <T id={'transactions_locking.lock'} />
+        </Button>
+      </If>
 
-        <TransLockingContent>
-          <TransLockingItemTitle>
-            {name}
-            <Hint content={description} position={Position.BOTTOM_LEFT} />
-          </TransLockingItemTitle>
+      <If condition={isEnabled}>
+        <Button
+          small={true}
+          minimal={true}
+          intent={Intent.PRIMARY}
+          onClick={handleEditBtn}
+        >
+          <T id={'edit'} />
+        </Button>
+        <Divider />
+        <Popover2
+          content={
+            <Menu>
+              <MenuItem
+                text={<T id={'transactions_locking.full_unlock'} />}
+                onClick={handleUnlockFull}
+              />
 
-          <If condition={!isEnabled}>
-            <TransLockingItemDesc>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </TransLockingItemDesc>
-          </If>
-
-          <If condition={isEnabled}>
-            <TransLockWrap>
-              <TransLockingItemDesc>
-                {intl.formatHTMLMessage(
-                  { id: 'transactions_locking.of_the_module_locked_to' },
-                  {
-                    value: lockToDate,
-                  },
-                )}
-              </TransLockingItemDesc>
-
-              <If condition={lockReason}>
-                <TransLockingReason>
-                  {intl.formatHTMLMessage(
-                    { id: 'transactions_locking.lock_reason' },
-                    { value: lockReason },
-                  )}
-                </TransLockingReason>
+              <If condition={!isPartialUnlock}>
+                <MenuItem
+                  text={<T id={'transactions_locking.paetial_unlock'} />}
+                  onClick={handleUnlockPartial}
+                />
               </If>
-            </TransLockWrap>
-          </If>
-
-          <If condition={isPartialUnlock}>
-            <TransUnlockWrap>
-              <TransLockingItemDesc>
-                {intl.formatHTMLMessage(
-                  { id: 'transactions_locking.partial_unlocked_from' },
-                  {
-                    fromDate: unlockFromDate,
-                    toDate: unlockToDate,
-                  },
-                )}
-              </TransLockingItemDesc>
-
-              <If condition={unlockReason}>
-                <TransLockingReason>
-                  {intl.formatHTMLMessage(
-                    { id: 'transactions_locking.unlock_reason' },
-                    { value: unlockReason },
-                  )}
-                </TransLockingReason>
+              <If condition={isPartialUnlock}>
+                <MenuItem
+                  text={<T id={'transactions_locking.cancel_partial_unlock'} />}
+                  onClick={handleCancelPartialUnlock}
+                />
               </If>
-            </TransUnlockWrap>
-          </If>
-        </TransLockingContent>
-
-        <TransLockingActions>
-          <If condition={!isEnabled}>
-            <Button
-              small={true}
-              minimal={true}
-              intent={Intent.PRIMARY}
-              onClick={handleLockClick}
-            >
-              <T id={'transactions_locking.lock'} />
-            </Button>
-          </If>
-
-          <If condition={isEnabled}>
-            <Button
-              small={true}
-              minimal={true}
-              intent={Intent.PRIMARY}
-              onClick={handleEditBtn}
-            >
-              <T id={'edit'} />
-            </Button>
-            <Divider />
-            <Popover2
-              content={
-                <Menu>
-                  <MenuItem
-                    text={<T id={'transactions_locking.full_unlock'} />}
-                    onClick={handleUnlockFull}
-                  />
-
-                  <If condition={!isPartialUnlock}>
-                    <MenuItem
-                      text={<T id={'transactions_locking.paetial_unlock'} />}
-                      onClick={handleUnlockPartial}
-                    />
-                  </If>
-                  <If condition={isPartialUnlock}>
-                    <MenuItem
-                      text={
-                        <T id={'transactions_locking.cancel_partial_unlock'} />
-                      }
-                      onClick={handleCanclel}
-                    />
-                  </If>
-                </Menu>
-              }
-              placement={'bottom-start'}
-              minimal={true}
-            >
-              <Button small={true} minimal={true} intent={Intent.PRIMARY}>
-                <T id={'transactions_locking.unlock'} />
-              </Button>
-            </Popover2>
-          </If>
-        </TransLockingActions>
-      </TransLockingInner>
-    </TransactionLockingWrapp>
+            </Menu>
+          }
+          placement={'bottom-start'}
+          minimal={true}
+        >
+          <Button small={true} minimal={true} intent={Intent.PRIMARY}>
+            <T id={'transactions_locking.unlock'} />
+          </Button>
+        </Popover2>
+      </If>
+    </TransLockingActions>
   );
-};
+}
 
 const TransactionLockingWrapp = styled.div`
   display: flex;
@@ -288,6 +412,7 @@ const TransUnlockWrap = styled.div`
     font-size: 13px;
   }
 `;
+
 const TransLockWrap = styled.div`
   ${TransLockingReason} {
     margin-top: 10px;
