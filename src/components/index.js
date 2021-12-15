@@ -89,6 +89,7 @@ export * from './SMSPreview';
 export * from './Contacts';
 export * from './Utils/Join';
 export * from './Typo';
+export * from './TextStatus';
 
 const Hint = FieldHint;
 
