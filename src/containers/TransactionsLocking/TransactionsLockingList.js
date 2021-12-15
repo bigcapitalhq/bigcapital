@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Paragraph } from 'components';
+import { Paragraph, FormattedMessage as T } from 'components';
 import { TransactionsLockingProvider } from './TransactionsLockingProvider';
 import { TransactionsLockingHeader } from './TransactionsLockingHeader';
 import { TransactionsLockingBody } from './TransactionsLockingBody';
@@ -15,10 +15,7 @@ export default function TransactionsLockingListPage() {
       <TransactionsLocking>
         <TransactionsLockingParagraph>
           <TransLockingDesc>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
-            ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua.
+            <T id={'transactions_locking.long_description'} />
           </TransLockingDesc>
           <TransactionsLockingHeader />
         </TransactionsLockingParagraph>

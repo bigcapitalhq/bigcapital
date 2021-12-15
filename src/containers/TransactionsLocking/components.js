@@ -180,7 +180,7 @@ function TransactionsLockingItemContent() {
 
       <If condition={!isEnabled}>
         <TransLockingItemDesc>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+          <T id={'transactions_locking.lock_item.no_lock'} />
         </TransLockingItemDesc>
       </If>
 
@@ -340,7 +340,7 @@ const TransactionLockingWrapp = styled.div`
     border-color: #fc8483; 
 
     ${TransLockingIcon} {
-      color: #ff8282;
+      color: #ef6d6d;
     }
   `}
 `;
@@ -401,9 +401,9 @@ export const TransLockingReason = styled.div`
 `;
 
 const TransUnlockWrap = styled.div`
-  padding-top: 12px;
+  padding-top: 10px; 
   border-top: 1px solid #ddd;
-  margin-top: 12px;
+  margin-top: 10px;
 
   ${TransLockingReason} {
     margin-top: 8px;

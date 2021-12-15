@@ -1633,8 +1633,12 @@
   "transactions_locking.lock_reason": "<strong>Lock Reason</strong>: {value}.",
   "transactions_locking.partial_unlocked_from": "Partial unlocked from <strong>{fromDate}</strong> to <strong>{toDate}</strong>.",
   "transactions_locking.unlock_reason": "<strong>Unlock Reason:</strong> {value}.",
+  "transactions_locking.callout.lock_individual.desc": "You have the ability to lock transactions of all modules at once instead of locking transactions each module​​ partially.",
+  "transactions_locking.callout.lock_all_at_once.desc": "You have the ability to lock or unlock transactions of each module individually instead of locking all transactions at once.",
+  "transactions_locking.long_description": "Transactions locking has the ability to lock all organization transactions so users can’t edit, delete or create new transactions during the past period, but still have the ability to create draft invoices or bills and that won’t affect financial reports. typically set a lock date when your financial records are being prepared for the year.",
   "payment_transactions": "Payment transactions",
   "invoice_transactions.column.withdrawal_account": "Deposit account",
-  "bill_transactions.column.deposit_account": "Withdrawal account"
+  "bill_transactions.column.deposit_account": "Withdrawal account",
+  "transactions_locking.lock_item.no_lock": "There are no locked transactions in this module."
 }
 

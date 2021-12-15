@@ -72,8 +72,7 @@ export function TransactionsLockingHeader() {
       intent={Intent.PRIMARY}
     >
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
+        <T id={'transactions_locking.callout.lock_all_at_once.desc'} />
       </p>
       <ButtonLink onClick={handleAllLockClick}>
         <T id={'transactions_locking.lock_all_transactions_at_once'} />
@@ -82,8 +81,7 @@ export function TransactionsLockingHeader() {
   ) : (
     <LockAllAlert title={'Lock Individual Modules'} intent={Intent.PRIMARY}>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
+        <T id={'transactions_locking.callout.lock_individual.desc'} />
       </p>
       <ButtonLink onClick={handleUndividualLockClick}>
         <T id={'transactions_locking.lock_modules_individually'} />
