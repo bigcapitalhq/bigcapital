@@ -142,7 +142,7 @@ export function StatusAccessor(bill) {
           </If>
         </Choose.When>
         <Choose.Otherwise>
-          <Tag minimal={true}>
+          <Tag minimal={true} round={true}>
             <T id={'draft'} />
           </Tag>
         </Choose.Otherwise>
