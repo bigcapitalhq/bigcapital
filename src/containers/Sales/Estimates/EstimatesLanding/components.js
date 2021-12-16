@@ -25,24 +25,24 @@ import { safeCallback } from 'utils';
 export const statusAccessor = (row) => (
   <Choose>
     <Choose.When condition={row.is_delivered && row.is_approved}>
-      <Tag minimal={true} intent={Intent.SUCCESS}>
+      <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
         <T id={'approved'} />
       </Tag>
     </Choose.When>
     <Choose.When condition={row.is_delivered && row.is_rejected}>
-      <Tag minimal={true} intent={Intent.DANGER}>
+      <Tag minimal={true} intent={Intent.DANGER} round={true}>
         <T id={'rejected'} />
       </Tag>
     </Choose.When>
     <Choose.When
       condition={row.is_delivered && !row.is_rejected && !row.is_approved}
     >
-      <Tag minimal={true} intent={Intent.SUCCESS}>
+      <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
         <T id={'delivered'} />
       </Tag>
     </Choose.When>
     <Choose.Otherwise>
-      <Tag minimal={true}>
+      <Tag minimal={true} round={true}>
         <T id={'draft'} />
       </Tag>
     </Choose.Otherwise>
