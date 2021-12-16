@@ -107,9 +107,7 @@ function PaymentMadeForm({
 
     const onError = ({
       response: {
-        error: {
-          data: { errors },
-        },
+        data: { errors },
       },
     }) => {
       const getError = (errorType) => errors.find((e) => e.type === errorType);

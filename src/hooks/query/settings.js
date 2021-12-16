@@ -95,7 +95,7 @@ export function useSettingsReceipts(props) {
 export function useSettingsManualJournals(props) {
   return useSettingsQuery(
     [t.SETTING, t.SETTING_MANUAL_JOURNALS],
-    { group: 'sale_receipts' },
+    { group: 'manual_journals' },
     props,
   );
 }
