@@ -25,6 +25,6 @@ const ItemManuTransactions = styled.div`
   color: #727983;
   .bp3-button {
     padding-left: 6px;
-    font-weight: 700;
+    font-weight: 500;
   }
 `;
