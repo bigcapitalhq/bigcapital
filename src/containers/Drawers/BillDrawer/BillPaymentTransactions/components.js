@@ -1,9 +1,34 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-
+import { Intent, Menu, MenuItem } from '@blueprintjs/core';
 import clsx from 'classnames';
 import { CLASSES } from '../../../../common/classes';
-import { FormatDateCell } from '../../../../components';
+import { FormatDateCell, Icon } from '../../../../components';
+import { safeCallback } from 'utils';
+
+/**
+ * Table actions menu.
+ */
+export function ActionsMenu({
+  row: { original },
+  payload: { onEdit, onDelete },
+}) {
+  return (
+    <Menu>
+      <MenuItem
+        icon={<Icon icon="pen-18" />}
+        text={intl.get('invoice_transactions.action.edit_transaction')}
+        onClick={safeCallback(onEdit, original)}
+      />
+      <MenuItem
+        text={intl.get('invoice_transactions.action.delete_transaction')}
+        intent={Intent.DANGER}
+        onClick={safeCallback(onDelete, original)}
+        icon={<Icon icon="trash-16" iconSize={16} />}
+      />
+    </Menu>
+  );
+}
 
 /**
  * Retrieve bill payment transactions table columns.
