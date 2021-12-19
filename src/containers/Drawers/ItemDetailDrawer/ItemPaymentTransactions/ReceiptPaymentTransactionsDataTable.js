@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataTable, Card } from '../../../../components';
+import { DataTable } from '../../../../components';
 import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
 import { useItemAssociatedReceiptTransactions } from 'hooks/query';
 import { useReceiptTransactionsColumns } from './components';
@@ -22,16 +22,12 @@ export default function ReceiptPaymentTransactions() {
   });
 
   return (
-    <div className="item-drawer__table">
-      <Card>
-        <DataTable
-          columns={columns}
-          data={paymentTransactions}
-          loading={isReceiptTransactionsLoading}
-          headerLoading={isReceiptTransactionsLoading}
-          progressBarLoading={isReceiptTransactionFetching}
-        />
-      </Card>
-    </div>
+    <DataTable
+      columns={columns}
+      data={paymentTransactions}
+      loading={isReceiptTransactionsLoading}
+      headerLoading={isReceiptTransactionsLoading}
+      progressBarLoading={isReceiptTransactionFetching}
+    />
   );
 }
