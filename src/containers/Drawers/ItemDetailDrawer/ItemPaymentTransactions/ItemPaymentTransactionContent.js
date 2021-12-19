@@ -1,20 +1,20 @@
 import React from 'react';
-import InvoicePaymentTransactionsTable from './InvoicePaymentTransactionsDataTable';
-import EstimatePaymentTransactionsTable from './EstimatePaymentTransactionsDataTable';
-import ReceiptPaymentTransactionsTable from './ReceiptPaymentTransactionsDataTable';
-import BillPaymentTransactionsTable from './BillPaymentTransactionsDataTable';
+import InvoicePaymentTransactions from './InvoicePaymentTransactions';
+import EstimatePaymentTransactions from './EstimatePaymentTransactions';
+import ReceiptPaymentTransactions from './ReceiptPaymentTransactions';
+import BillPaymentTransactions from './BillPaymentTransactions';
 
 export default function ItemPaymentTransactionsContent({ tansactionType }) {
   const handleType = () => {
     switch (tansactionType) {
       case 'invoices':
-        return <InvoicePaymentTransactionsTable />;
+        return <InvoicePaymentTransactions />;
       case 'estimates':
-        return <EstimatePaymentTransactionsTable />;
+        return <EstimatePaymentTransactions />;
       case 'receipts':
-        return <ReceiptPaymentTransactionsTable />;
+        return <ReceiptPaymentTransactions />;
       case 'bills':
-        return <BillPaymentTransactionsTable />;
+        return <BillPaymentTransactions />;
     }
   };
   return handleType();

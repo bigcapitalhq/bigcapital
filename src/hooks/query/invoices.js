@@ -31,6 +31,9 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate reconcile.
   queryClient.invalidateQueries(t.RECONCILE_CREDIT_NOTE);
   queryClient.invalidateQueries(t.RECONCILE_CREDIT_NOTES);
+
+  // Invalidate
+  queryClient.invalidateQueries(t.ITEM_ASSOCIATED_WITH_INVOICES);
 };
 
 /**

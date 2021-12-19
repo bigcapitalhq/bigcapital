@@ -1,8 +1,8 @@
 import React from 'react';
-import { DataTable } from '../../../../components';
-import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
+import { DataTable } from '../../../../../components';
+import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
 import { useItemAssociatedBillTransactions } from 'hooks/query';
-import { useBillTransactionsColumns } from './components';
+import { useBillTransactionsColumns, ActionsMenu } from './components';
 
 /**
  * Bill payment transactions data table.
@@ -28,6 +28,7 @@ export default function BillPaymentTransactions() {
       loading={isBillTransactionsLoading}
       headerLoading={isBillTransactionsLoading}
       progressBarLoading={isBillTransactionFetching}
+      ContextMenu={ActionsMenu}
     />
   );
 }

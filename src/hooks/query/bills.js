@@ -30,6 +30,9 @@ const commonInvalidateQueries = (queryClient) => {
 
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
+
+  // Invalidate
+  queryClient.invalidateQueries(t.ITEMS_ASSOCIATED_WITH_BILLS);
 };
 
 /**
