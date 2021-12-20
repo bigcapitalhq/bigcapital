@@ -910,7 +910,7 @@
   "drag_drop_files_here_or_click_here": "Drag/Drop files here or click here.",
   "enter_an_item": "Enter an item...",
   "due_amount": "Due Amount",
-  "invoice_details": "Invoice details",
+  "invoice_details.drawer.title": "Invoice details ({invoiceNumber})",
   "setting_your_auto_generated_estimate_number": "Setting your auto-generated estimate number",
   "setting_your_auto_generated_journal_number": "Setting your auto-generated journal number",
   "setting_your_auto_generated_invoice_number": "Setting your auto-generated invoice number",
@@ -1531,7 +1531,7 @@
   "vendor_credit.auto_increment.auto": "Your vendor credit  numbers are set on auto-increment mode. Are you sure changing this setting?",
   "vendor_credit.auto_increment.manually": "Your vendor credit  numbers are set on manual mode. Are you sure chaning this settings?",
   "setting_your_auto_generated_vendor_credit_number": "Setting your auto-generated vendor credit number",
-  "credit_note.drawer_credit_note_detail": "Credit Note details",
+  "credit_note.drawer_credit_note_detail": "Credit Note details ({creditNumber})",
   "credit_note.drawer.label_credit_note_no": "Credit Note #",
   "credit_note.drawer.label_credit_note_date": "Credit Date",
   "credit_note.drawer.label_credits_remaining": "Credits Remaining",
@@ -1641,4 +1641,3 @@
   "bill_transactions.column.deposit_account": "Withdrawal account",
   "transactions_locking.lock_item.no_lock": "There are no locked transactions in this module."
 }
-

@@ -13,3 +13,5 @@ export function DrawerLoading({ loading, mount = false, children }) {
 export function DrawerBody({ children }) {
   return <div className={Classes.DRAWER_BODY}>{children}</div>;
 }
+
+export * from './DrawerActionsBar';

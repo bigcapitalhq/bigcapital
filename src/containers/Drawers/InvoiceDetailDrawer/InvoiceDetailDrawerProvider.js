@@ -1,45 +1,30 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DrawerLoading } from 'components';
-import {
-  useTransactionsByReference,
-  useInvoice,
-  useInvoicePaymentTransactions,
-} from 'hooks/query';
+import { useInvoice } from 'hooks/query';
 
 const InvoiceDetailDrawerContext = React.createContext();
 /**
  * Invoice detail provider.
  */
 function InvoiceDetailDrawerProvider({ invoiceId, ...props }) {
-  // Handle fetch transaction by reference.
-  const {
-    data: { transactions },
-    isLoading: isTransactionLoading,
-  } = useTransactionsByReference(
-    {
-      reference_id: invoiceId,
-      reference_type: 'SaleInvoice',
-    },
-    { enabled: !!invoiceId },
-  );
-
   // Fetch sale invoice details.
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
     enabled: !!invoiceId,
   });
 
-  //provider.
+  // Provider.
   const provider = {
-    transactions,
     invoiceId,
     invoice,
   };
   return (
-    <DrawerLoading loading={isTransactionLoading || isInvoiceLoading}>
+    <DrawerLoading loading={isInvoiceLoading}>
       <DrawerHeaderContent
         name="invoice-detail-drawer"
-        title={intl.get('invoice_details')}
+        title={intl.get('invoice_details.drawer.title', {
+          invoiceNumber: invoice.invoice_no,
+        })}
       />
       <InvoiceDetailDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>

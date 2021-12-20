@@ -67,7 +67,9 @@ function CreditNoteDetailDrawerProvider({ creditNoteId, ...props }) {
     >
       <DrawerHeaderContent
         name="credit-note-detail-drawer"
-        title={intl.get('credit_note.drawer_credit_note_detail')}
+        title={intl.get('credit_note.drawer_credit_note_detail', {
+          creditNumber: creditNote.credit_note_number,
+        })}
       />
       <CreditNoteDetailDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>

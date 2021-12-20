@@ -1,58 +1,53 @@
 import React from 'react';
-import { DataTable, Card } from 'components';
-import intl from 'react-intl-universal';
-import moment from 'moment';
+import { DataTable } from 'components';
 
-import 'style/pages/JournalEntries/List.scss';
+import styled from 'styled-components';
+import * as R from 'ramda';
+
+import { CurrencyTag } from 'components';
+import { TableStyle } from '../../common';
+import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import { useGLEntriesTableColumns } from './utils';
 
 /**
  * Journal entries table.
  */
-export default function JournalEntriesTable({ transactions }) {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: intl.get('date'),
-        accessor: 'date',
-        accessor: ({ formatted_date }) =>
-          moment(formatted_date).format('YYYY MMM DD'),
-        width: 140,
-        className: 'date',
-      },
-      {
-        Header: intl.get('account_name'),
-        accessor: 'account_name',
-        width: 140,
-        className: 'account_name',
-      },
-      {
-        Header: intl.get('contact'),
-        accessor: 'contactTypeFormatted',
-        width: 140,
-      },
-      {
-        Header: intl.get('credit'),
-        accessor: ({ credit }) => credit.formatted_amount,
-        width: 100,
-        className: 'credit',
-      },
-      {
-        Header: intl.get('debit'),
-        accessor: ({ debit }) => debit.formatted_amount,
-        width: 100,
-        className: 'debit',
-      },
-    ],
-    [],
-  );
+export default function JournalEntriesTable({ transactions, ...restProps }) {
+  const columns = useGLEntriesTableColumns();
 
   return (
-    <Card>
-      <DataTable
-        columns={columns}
-        data={transactions}
-        className={'datatable--journal-entries'}
-      />
-    </Card>
+    <DataTable
+      columns={columns}
+      data={transactions}
+      styleName={TableStyle.Constrant}
+      TableLoadingRenderer={TableSkeletonRows}
+      {...restProps}
+    />
   );
 }
+
+/**
+ *
+ * @returns {React.JSX}
+ */
+export function AmountDisplayedBaseCurrencyMessageJSX({
+  organization: { base_currency: baseCurrency },
+}) {
+  return (
+    <Message>
+      Amount is displayed in your base currency{' '}
+      <CurrencyTag>{baseCurrency}</CurrencyTag>
+    </Message>
+  );
+}
+
+export const AmountDisplayedBaseCurrencyMessage = R.compose(
+  withCurrentOrganization(),
+)(AmountDisplayedBaseCurrencyMessageJSX);
+
+const Message = styled.div`
+  font-size: 10px;
+  margin-bottom: 12px;
+`;

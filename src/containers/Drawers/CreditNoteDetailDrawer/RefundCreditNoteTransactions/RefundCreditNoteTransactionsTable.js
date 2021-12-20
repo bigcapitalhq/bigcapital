@@ -1,8 +1,7 @@
 import React from 'react';
 import { DataTable, Card } from 'components';
 
-import '../../../../style/pages/RefundCreditNote/List.scss';
-
+import { TableStyle } from 'common';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 
 import { useCreditNoteDetailDrawerContext } from '../CreditNoteDetailDrawerProvider';
@@ -22,10 +21,10 @@ function RefundCreditNoteTransactionsTable({
 }) {
   const { refundCreditNote } = useCreditNoteDetailDrawerContext();
 
+  // Refund credit transactions table columns.
   const columns = useRefundCreditTransactionsTableColumns();
 
   // Handle delete refund credit.
-
   const handleDeleteRefundCreditNote = ({ id }) => {
     openAlert('refund-credit-delete', { creditNoteId: id });
   };
@@ -36,10 +35,10 @@ function RefundCreditNoteTransactionsTable({
         columns={columns}
         data={refundCreditNote}
         ContextMenu={ActionsMenu}
+        styleName={TableStyle.Constrant}
         payload={{
           onDelete: handleDeleteRefundCreditNote,
         }}
-        className={'datatable--refund-transactions'}
       />
     </Card>
   );

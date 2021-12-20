@@ -1,8 +1,7 @@
 import React from 'react';
-import clsx from 'classnames';
+import styled from 'styled-components';
 
 import { T, TotalLines, FormatNumber, TotalLine } from 'components';
-import InvoiceDrawerCls from 'style/components/Drawers/InvoiceDrawer.module.scss';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 /**
@@ -12,29 +11,55 @@ export function InvoiceDetailFooter() {
   const { invoice } = useInvoiceDetailDrawerContext();
 
   return (
-    <div className={clsx(InvoiceDrawerCls.detail_panel_footer)}>
+    <InvoiceDetailsFooterRoot>
       <TotalLines>
-        <TotalLine
+        <SubTotalLine
           title={<T id={'invoice.details.subtotal'} />}
           value={<FormatNumber value={invoice.balance} />}
-          className={InvoiceDrawerCls.total_line_subtotal}
         />
-        <TotalLine
+        <InvoiceTotalLine
           title={<T id={'invoice.details.total'} />}
           value={invoice.formatted_amount}
-          className={InvoiceDrawerCls.total_line_total}
         />
         <TotalLine
           title={<T id={'invoice.details.payment_amount'} />}
           value={invoice.formatted_payment_amount}
-          className={InvoiceDrawerCls.total_line_payment}
         />
-        <TotalLine
+        <DueAmountLine
           title={<T id={'invoice.details.due_amount'} />}
           value={invoice.formatted_due_amount}
-          className={InvoiceDrawerCls.total_line_dueAmount}
         />
       </TotalLines>
-    </div>
+    </InvoiceDetailsFooterRoot>
   );
 }
+
+const SubTotalLine = styled(TotalLine)`
+  border-bottom: 1px solid #000;
+`;
+
+const InvoiceTotalLine = styled(TotalLine)`
+  border-bottom: 3px double #000;
+  font-weight: 600;
+`;
+
+const DueAmountLine = styled(TotalLine)`
+  font-weight: 600;
+`;
+
+const InvoiceDetailsFooterRoot = styled.div`
+  display: flex;
+
+  .total_lines {
+    margin-left: auto;
+  }
+  .total_lines_line {
+    .amount,
+    .title {
+      width: 180px;
+    }
+    .amount {
+      text-align: right;
+    }
+  }
+`;

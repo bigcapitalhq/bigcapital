@@ -20,6 +20,9 @@ export function ActionsMenu({ payload: { onDelete }, row: { original } }) {
   );
 }
 
+/**
+ * Credit note reconcilation with invoices table columns.
+ */
 export function useReconcileCreditTransactionsTableColumns() {
   return React.useMemo(
     () => [

@@ -120,7 +120,6 @@
       }
 
       .bp3-control.bp3-checkbox .bp3-control-indicator {
-        border: 1px solid #c2c2c2;
         cursor: auto;
 
         &,
@@ -359,12 +358,10 @@
   .ReactVirtualized__Grid {
     will-change: auto !important;
   }
-
-
-
 }
 
-.table-constrant {
+.table-constrant,
+.table--constrant {
   .table {
     .thead .th {
       background: transparent;
@@ -378,10 +375,6 @@
       background: transparent;
       padding: 0.5rem 0.5rem;
       border-bottom: 0;
-    }
-
-    .tbody .tr:last-child .td {
-      border-bottom: 1px solid #d2dce2;
     }
   }
 }

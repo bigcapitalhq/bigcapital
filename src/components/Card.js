@@ -1,6 +1,11 @@
 import React from 'react';
-import classNames from 'classnames';
- 
+import clsx from 'classnames';
+import styled from 'styled-components';
+
 export default function Card({ className, children }) {
-  return <div className={classNames('card', className)}>{children}</div>;
+  return <CardRoot className={clsx('card', className)}>{children}</CardRoot>;
 }
+
+const CardRoot = styled.div`
+  padding: 15px;
+`;

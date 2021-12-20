@@ -1,5 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 import {
   Button,
   Popover,
@@ -7,13 +8,20 @@ import {
   Position,
   MenuItem,
   Menu,
+  Intent,
+  Tag,
 } from '@blueprintjs/core';
-import { Icon, FormattedMessage as T, Choose, Can } from 'components';
+import {
+  FormatNumberCell,
+  Icon,
+  FormattedMessage as T,
+  Choose,
+  Can,
+} from 'components';
 import {
   SaleInvoiceAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
-import { FormatNumberCell } from '../../../components';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 /**
@@ -63,6 +71,10 @@ export const useInvoiceReadonlyEntriesColumns = () =>
     [],
   );
 
+/**
+ * Invoice details more actions menu.
+ * @returns {React.JSX}
+ */
 export const BadDebtMenuItem = ({
   payload: { onCancelBadDebt, onBadDebt, onNotifyViaSMS },
 }) => {
@@ -106,3 +118,43 @@ export const BadDebtMenuItem = ({
   );
 };
 
+/**
+ * Invoice details status.
+ * @returns {React.JSX}
+ */
+export function InvoiceDetailsStatus({ invoice }) {
+  return (
+    <Choose>
+      <Choose.When condition={invoice.is_fully_paid && invoice.is_delivered}>
+        <StatusTag intent={Intent.SUCCESS} round={true}>
+          <T id={'paid'} />
+        </StatusTag>
+      </Choose.When>
+
+      <Choose.When condition={invoice.is_delivered}>
+        <Choose>
+          <Choose.When condition={invoice.is_overdue}>
+            <StatusTag intent={Intent.WARNING} round={true}>
+              Overdue
+            </StatusTag>
+          </Choose.When>
+          <Choose.Otherwise>
+            <StatusTag intent={Intent.PRIMARY} round={true}>
+              Delivered
+            </StatusTag>
+          </Choose.Otherwise>
+        </Choose>
+      </Choose.When>
+      <Choose.Otherwise>
+        <StatusTag round={true} minimal={true}>
+          <T id={'draft'} />
+        </StatusTag>
+      </Choose.Otherwise>
+    </Choose>
+  );
+}
+
+const StatusTag = styled(Tag)`
+  min-width: 65px;
+  text-align: center;
+`;

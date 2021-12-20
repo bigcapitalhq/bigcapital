@@ -90,6 +90,8 @@ export * from './Contacts';
 export * from './Utils/Join';
 export * from './Typo';
 export * from './TextStatus';
+export * from './Tags';
+export * from './CommercialDoc';
 
 const Hint = FieldHint;
 

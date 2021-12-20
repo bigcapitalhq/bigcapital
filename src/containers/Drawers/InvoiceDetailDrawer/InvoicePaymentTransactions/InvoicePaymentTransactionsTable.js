@@ -7,12 +7,17 @@ import { useInvoicePaymentTransactionsColumns } from './components';
 import { useInvoiceDetailDrawerContext } from '../InvoiceDetailDrawerProvider';
 import { useInvoicePaymentTransactions } from 'hooks/query';
 
+import { TableStyle } from '../../../../common';
+import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+
 /**
  * Invoice payment transactions datatable.
  */
 export default function InvoicePaymentTransactionsTable() {
+  // Retrieve invoice payment transactions columns.
   const columns = useInvoicePaymentTransactionsColumns();
 
+  // Invoice drawer context.
   const { invoiceId } = useInvoiceDetailDrawerContext();
 
   // Fetch invoice payment transactions.
@@ -23,6 +28,7 @@ export default function InvoicePaymentTransactionsTable() {
   } = useInvoicePaymentTransactions(invoiceId, {
     enabled: !!invoiceId,
   });
+
   return (
     <Card>
       <DataTable
@@ -31,7 +37,8 @@ export default function InvoicePaymentTransactionsTable() {
         loading={isPaymentTransactionLoading}
         headerLoading={isPaymentTransactionLoading}
         progressBarLoading={isPaymentTransactionFetching}
-        className={'payment-transactions'}
+        TableLoadingRenderer={TableSkeletonRows}
+        styleName={TableStyle.Constrant}
       />
     </Card>
   );

@@ -1,12 +1,10 @@
 import React from 'react';
 import { DataTable, Card } from 'components';
 
-import '../../../../style/pages/RefundCreditNote/List.scss';
-
+import { TableStyle } from 'common';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 
 import { useCreditNoteDetailDrawerContext } from '../CreditNoteDetailDrawerProvider';
-
 import {
   useReconcileCreditTransactionsTableColumns,
   ActionsMenu,
@@ -21,8 +19,10 @@ function RefundCreditNoteTransactionsTable({
   // #withAlertsActions
   openAlert,
 }) {
+  // Credit note drawer context.
   const { reconcileCreditNotes } = useCreditNoteDetailDrawerContext();
 
+  // Reconcile credit transactions table columns.
   const columns = useReconcileCreditTransactionsTableColumns();
 
   // Handle delete reconile credit.
@@ -39,6 +39,7 @@ function RefundCreditNoteTransactionsTable({
         payload={{
           onDelete: handleDeleteReconcileCreditNote,
         }}
+        styleName={TableStyle.Constrant}
         className={'datatable--refund-transactions'}
       />
     </Card>

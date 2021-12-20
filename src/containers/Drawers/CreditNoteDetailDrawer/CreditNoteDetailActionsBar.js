@@ -1,6 +1,5 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-
 import {
   Button,
   NavbarGroup,
@@ -8,17 +7,17 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
-import { CreditNoteMenuItem } from './utils';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Icon, FormattedMessage as T, If, Can } from 'components';
+import { DrawerActionsBar, Icon, FormattedMessage as T, If } from 'components';
 
 import { compose } from 'utils';
+import { CreditNoteMenuItem } from './utils';
 
 /**
  * Credit note detail actions bar.
@@ -57,7 +56,7 @@ function CreditNoteDetailActionsBar({
   };
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Button
           className={Classes.MINIMAL}
@@ -69,7 +68,7 @@ function CreditNoteDetailActionsBar({
         <If condition={!creditNote.is_closed && !creditNote.is_draft}>
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon="quick-payment-16" iconSize={16} />}
+            icon={<Icon icon="arrow-upward" iconSize={18} />}
             text={<T id={'refund'} />}
             onClick={handleRefundCreditNote}
           />
@@ -82,13 +81,7 @@ function CreditNoteDetailActionsBar({
           intent={Intent.DANGER}
           onClick={handleDeleteCreditNote}
         />
-        <If
-          condition={
-            !creditNote.is_draft &&
-            !creditNote.is_closed
-            // creditNote.is_published
-          }
-        >
+        <If condition={creditNote.is_published && !creditNote.is_closed}>
           <NavbarDivider />
           <CreditNoteMenuItem
             payload={{
@@ -97,7 +90,7 @@ function CreditNoteDetailActionsBar({
           />
         </If>
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 

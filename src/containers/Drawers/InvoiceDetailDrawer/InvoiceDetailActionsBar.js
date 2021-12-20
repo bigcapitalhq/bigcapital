@@ -1,6 +1,5 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-
 import {
   Button,
   NavbarGroup,
@@ -8,7 +7,6 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
@@ -16,7 +14,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { If, Can, Icon, FormattedMessage as T } from 'components';
+import { If, Can, Icon, DrawerActionsBar, FormattedMessage as T } from 'components';
 import {
   SaleInvoiceAction,
   PaymentReceiveAction,
@@ -24,7 +22,6 @@ import {
 } from '../../../common/abilityOption';
 
 import { compose } from 'utils';
-
 import { BadDebtMenuItem } from './utils';
 
 /**
@@ -81,7 +78,7 @@ function InvoiceDetailActionsBar({
   };
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Can I={SaleInvoiceAction.Edit} a={AbilitySubject.Invoice}>
           <Button
@@ -90,14 +87,13 @@ function InvoiceDetailActionsBar({
             text={<T id={'edit_invoice'} />}
             onClick={handleEditInvoice}
           />
-
           <NavbarDivider />
         </Can>
         <Can I={PaymentReceiveAction.Create} a={AbilitySubject.PaymentReceive}>
           <If condition={invoice.is_delivered && !invoice.is_fully_paid}>
             <Button
               className={Classes.MINIMAL}
-              icon={<Icon icon="quick-payment-16" iconSize={16} />}
+              icon={<Icon icon="arrow-downward" iconSize={18} />}
               text={<T id={'add_payment'} />}
               onClick={handleQuickPaymentInvoice}
             />
@@ -132,7 +128,7 @@ function InvoiceDetailActionsBar({
           />
         </Can>
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 

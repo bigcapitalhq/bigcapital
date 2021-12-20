@@ -1,15 +1,13 @@
 import React from 'react';
-import clsx from 'classnames';
 
-import { DataTable } from 'components';
+import { CommercialDocEntriesTable } from 'components';
+
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
-
 import { useCreditNoteReadOnlyEntriesColumns } from './utils';
-
-import CreditNoteDetailCls from '../../../style/components/Drawers/CreditNoteDetails.module.scss';
 
 /**
  * Credit note detail table.
+ * @returns {React.JSX}
  */
 export default function CreditNoteDetailTable() {
   const {
@@ -20,12 +18,10 @@ export default function CreditNoteDetailTable() {
   const columns = useCreditNoteReadOnlyEntriesColumns();
 
   return (
-    <div className={clsx(CreditNoteDetailCls.detail_panel_table)}>
-      <DataTable
-        columns={columns}
-        data={entries}
-        className={'table-constrant'}
-      />
-    </div>
+    <CommercialDocEntriesTable
+      columns={columns}
+      data={entries}
+      className={'table-constrant'}
+    />
   );
 }
