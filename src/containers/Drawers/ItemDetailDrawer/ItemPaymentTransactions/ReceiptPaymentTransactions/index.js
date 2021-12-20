@@ -35,7 +35,20 @@ function ReceiptPaymentTransactions({
   } = useItemAssociatedReceiptTransactions(itemId, {
     enabled: !!itemId,
   });
-
+  
+    // Handles delete payment transactions.
+    const handleDeletePaymentTransactons = ({ receipt_id }) => {
+      openAlert('receipt-delete', {
+        receiptId: receipt_id,
+      });
+    };
+  
+    // Handles edit payment transactions.
+    const handleEditPaymentTransactions = ({ receipt_id }) => {
+      history.push(`/receipts/${receipt_id}/edit`);
+      closeDrawer('item-detail-drawer');
+    };
+  
   return (
     <DataTable
       columns={columns}
@@ -44,6 +57,10 @@ function ReceiptPaymentTransactions({
       headerLoading={isReceiptTransactionsLoading}
       progressBarLoading={isReceiptTransactionFetching}
       ContextMenu={ActionsMenu}
+      payload={{
+        onEdit: handleEditPaymentTransactions,
+        onDelete: handleDeletePaymentTransactons,
+      }}
     />
   );
 }

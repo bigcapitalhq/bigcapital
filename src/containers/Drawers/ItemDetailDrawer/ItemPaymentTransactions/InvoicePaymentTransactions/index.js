@@ -38,6 +38,18 @@ function InvoicePaymentTransactions({
     enabled: !!itemId,
   });
 
+  // Handles delete payment transactions.
+  const handleDeletePaymentTransactons = ({ invoice_id }) => {
+    openAlert('invoice-delete', {
+      invoiceId: invoice_id,
+    });
+  };
+
+  // Handles edit payment transactions.
+  const handleEditPaymentTransactions = ({ invoice_id }) => {
+    history.push(`/invoices/${invoice_id}/edit`);
+    closeDrawer('item-detail-drawer');
+  };
   return (
     <DataTable
       columns={columns}
@@ -46,6 +58,10 @@ function InvoicePaymentTransactions({
       headerLoading={isInvoiceTransactionsLoading}
       progressBarLoading={isInvoiceTransactionFetching}
       ContextMenu={ActionsMenu}
+      payload={{
+        onEdit: handleEditPaymentTransactions,
+        onDelete: handleDeletePaymentTransactons,
+      }}
     />
   );
 }
