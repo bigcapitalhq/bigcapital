@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DrawerLoading } from 'components';
-import { useTransactionsByReference, useReceipt } from 'hooks/query';
+import { useReceipt } from 'hooks/query';
 
 // useTransactionsByReference
 const ReceiptDetailDrawerContext = React.createContext();
@@ -18,29 +18,14 @@ function ReceiptDetailDrawerProvider({ receiptId, ...props }) {
     },
   );
 
-  // Handle fetch transaction by reference.
-  const {
-    data: { transactions },
-    isLoading: isTransactionLoading,
-  } = useTransactionsByReference(
-    {
-      reference_id: receiptId,
-      reference_type: 'SaleReceipt',
-    },
-    { enabled: !!receiptId },
-  );
-
   // Provider.
   const provider = {
-    transactions,
     receiptId,
     receipt,
   };
 
-  const loading = isTransactionLoading || isReceiptLoading;
-
   return (
-    <DrawerLoading loading={loading}>
+    <DrawerLoading loading={isReceiptLoading}>
       <DrawerHeaderContent
         name="receipt-detail-drawer"
         title={intl.get('receipt_details')}
