@@ -2,11 +2,12 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { DataTable, Card } from 'components';
 
-import 'style/pages/PaymentTransactions/List.scss';
-
 import { useBillPaymentTransactionsColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from '../BillDrawerProvider';
 import { useBillPaymentTransactions } from 'hooks/query';
+
+import { TableStyle } from '../../../../common';
+import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
@@ -59,12 +60,13 @@ function BillPaymentTransactionTable({
         loading={isPaymentTransactionsLoading}
         headerLoading={isPaymentTransactionsLoading}
         progressBarLoading={isPaymentTransactionFetching}
+        TableLoadingRenderer={TableSkeletonRows}
+        styleName={TableStyle.Constrant}
         ContextMenu={ActionsMenu}
         payload={{
           onDelete: handleDeleteBillPaymentTransactons,
           onEdit: handleEditBillPaymentTransactions,
         }}
-        className={'payment-transactions'}
       />
     </Card>
   );

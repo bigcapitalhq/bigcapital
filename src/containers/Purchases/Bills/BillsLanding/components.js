@@ -57,7 +57,7 @@ export function ActionsMenu({
         <If condition={!original.is_open}>
           <MenuItem
             icon={<Icon icon={'check'} iconSize={18} />}
-            text={intl.get('mark_as_opened')}
+            text={intl.get('mark_as_open')}
             onClick={safeCallback(onOpen, original)}
           />
         </If>

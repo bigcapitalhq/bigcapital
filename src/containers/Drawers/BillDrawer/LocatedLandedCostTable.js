@@ -5,11 +5,12 @@ import { Button, Classes, NavbarGroup } from '@blueprintjs/core';
 import { useLocatedLandedCostColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from './BillDrawerProvider';
 
-import '../../../style/pages/AllocateLandedCost/List.scss';
-
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+
+import { TableStyle } from '../../../common';
+import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 
 import { compose } from 'utils';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -75,11 +76,12 @@ function LocatedLandedCostTable({
           columns={columns}
           data={transactions}
           ContextMenu={ActionsMenu}
+          TableLoadingRenderer={TableSkeletonRows}
+          styleName={TableStyle.Constrant}
           payload={{
             onDelete: handleDeleteTransaction,
             onFromTranscationClick: handleFromTransactionClick,
           }}
-          className={'datatable--landed-cost-transactions'}
         />
       </Card>
     </div>
