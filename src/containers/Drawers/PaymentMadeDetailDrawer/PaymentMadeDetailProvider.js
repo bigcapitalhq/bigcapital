@@ -20,26 +20,14 @@ function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
       enabled: !!paymentMadeId,
     },
   );
-  // Handle fetch transaction by reference.
-  const {
-    data: { transactions },
-    isLoading: isTransactionLoading,
-  } = useTransactionsByReference(
-    {
-      reference_id: paymentMadeId,
-      reference_type: 'BillPayment',
-    },
-    { enabled: !!paymentMadeId },
-  );
 
   //provider.
   const provider = {
-    transactions,
     paymentMadeId,
     paymentMade,
   };
 
-  const loading = isTransactionLoading || isPaymentMadeLoading;
+  const loading = isPaymentMadeLoading;
 
   return (
     <DrawerLoading loading={loading}>
