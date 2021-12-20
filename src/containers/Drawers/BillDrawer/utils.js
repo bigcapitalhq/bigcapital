@@ -1,7 +1,13 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { Intent, Tag } from '@blueprintjs/core';
 
-import { FormatNumberCell } from '../../../components';
+import {
+  FormatNumberCell,
+  FormattedMessage as T,
+  Choose,
+} from '../../../components';
 
 /**
  * Retrieve bill readonly details entries table columns.
@@ -49,3 +55,44 @@ export const useBillReadonlyEntriesTableColumns = () =>
     ],
     [],
   );
+
+/**
+ * Bill details status.
+ * @returns {React.JSX}
+ */
+export function BillDetailsStatus({ bill }) {
+  return (
+    <Choose>
+      <Choose.When condition={bill.is_fully_paid && bill.is_open}>
+        <StatusTag intent={Intent.SUCCESS} round={true}>
+          <T id={'paid'} />
+        </StatusTag>
+      </Choose.When>
+
+      <Choose.When condition={bill.is_open}>
+        <Choose>
+          <Choose.When condition={bill.is_overdue}>
+            <StatusTag intent={Intent.WARNING} round={true}>
+              Overdue
+            </StatusTag>
+          </Choose.When>
+          <Choose.Otherwise>
+            <StatusTag intent={Intent.PRIMARY} round={true}>
+              Due
+            </StatusTag>
+          </Choose.Otherwise>
+        </Choose>
+      </Choose.When>
+      <Choose.Otherwise>
+        <StatusTag round={true} minimal={true}>
+          <T id={'draft'} />
+        </StatusTag>
+      </Choose.Otherwise>
+    </Choose>
+  );
+}
+
+const StatusTag = styled(Tag)`
+  min-width: 65px;
+  text-align: center;
+`;

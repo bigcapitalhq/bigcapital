@@ -16,7 +16,13 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Can, If, Icon, FormattedMessage as T } from 'components';
+import {
+  Can,
+  If,
+  Icon,
+  DrawerActionsBar,
+  FormattedMessage as T,
+} from 'components';
 import {
   BillAction,
   PaymentMadeAction,
@@ -56,7 +62,7 @@ function BillDetailActionsBar({
   };
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Can I={BillAction.Edit} a={AbilitySubject.Bill}>
           <Button
@@ -71,7 +77,7 @@ function BillDetailActionsBar({
           <If condition={bill.is_open && !bill.is_fully_paid}>
             <Button
               className={Classes.MINIMAL}
-              icon={<Icon icon="quick-payment-16" iconSize={16} />}
+              icon={<Icon icon="arrow-upward" iconSize={16} />}
               text={<T id={'add_payment'} />}
               onClick={handleQuickBillPayment}
             />
@@ -88,7 +94,7 @@ function BillDetailActionsBar({
           />
         </Can>
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 
