@@ -1,17 +1,17 @@
 import React from 'react';
-import clsx from 'classnames';
 
-import { DataTable } from 'components';
+import { CommercialDocEntriesTable } from 'components';
 
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import { useReceiptReadonlyEntriesTableColumns } from './utils';
 
-import ReceiptDrawerCls from 'style/components/Drawers/ReceiptDrawer.module.scss';
+import { TableStyle } from '../../../common';
 
 /**
  * Receipt readonly details table columns.
  */
 export default function ReceiptDetailTable() {
+  // Receipt details drawer context.
   const {
     receipt: { entries },
   } = useReceiptDetailDrawerContext();
@@ -20,12 +20,10 @@ export default function ReceiptDetailTable() {
   const columns = useReceiptReadonlyEntriesTableColumns();
 
   return (
-    <div className={clsx(ReceiptDrawerCls.detail_panel_table)}>
-      <DataTable
-        columns={columns}
-        data={entries}
-        className={'table-constrant'}
-      />
-    </div>
+    <CommercialDocEntriesTable
+      columns={columns}
+      data={entries}
+      styleName={TableStyle.Constrant}
+    />
   );
 }

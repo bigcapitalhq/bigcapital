@@ -1,6 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { defaultTo } from 'lodash';
+import styled from 'styled-components';
 
 import {
   CommercialDocHeader,
@@ -11,8 +12,10 @@ import {
   DetailItem,
   Row,
   Col,
+  ButtonLink,
 } from 'components';
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
+import { EstimateDetailsStatus } from './components';
 
 /**
  * Estimate read-only details drawer header.
@@ -24,9 +27,13 @@ export default function EstimateDetailHeader() {
     <CommercialDocHeader>
       <CommercialDocTopHeader>
         <DetailsMenu>
-          <DetailItem label={intl.get('amount')}>
+          <AmountEstimateDetail label={intl.get('amount')}>
             <span class="big-number">{estimate.formatted_amount}</span>
-          </DetailItem>
+          </AmountEstimateDetail>
+
+          <EstimateStatusDetail>
+            <EstimateDetailsStatus estimate={estimate} />
+          </EstimateStatusDetail>
         </DetailsMenu>
       </CommercialDocTopHeader>
 
@@ -37,14 +44,16 @@ export default function EstimateDetailHeader() {
               label={intl.get('estimate.details.estimate_number')}
               children={defaultTo(estimate.estimate_number, '-')}
             />
-            <DetailItem
-              label={intl.get('customer_name')}
-              children={estimate.customer?.display_name}
-            />
+
+            <DetailItem label={intl.get('customer_name')}>
+              <ButtonLink>{estimate.customer?.display_name}</ButtonLink>
+            </DetailItem>
+
             <DetailItem
               label={intl.get('estimate_date')}
               children={estimate.formatted_estimate_date}
             />
+
             <DetailItem
               label={intl.get('expiration_date')}
               children={estimate.formatted_expiration_date}
@@ -72,3 +81,11 @@ export default function EstimateDetailHeader() {
     </CommercialDocHeader>
   );
 }
+
+const EstimateStatusDetail = styled(DetailItem)`
+  width: 50%;
+  text-align: right;
+`;
+const AmountEstimateDetail = styled(DetailItem)`
+  width: 50%;
+`;
