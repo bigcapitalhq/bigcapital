@@ -7,7 +7,8 @@ import {
   useJournal,
   useCreateJournal,
   useEditJournal,
-  useSettings
+  useSettings,
+  useSettingsManualJournals
 } from 'hooks/query';
 
 const MakeJournalFormContext = createContext();
@@ -40,7 +41,7 @@ function MakeJournalProvider({ journalId, ...props }) {
   const { mutateAsync: editJournalMutate } = useEditJournal();
 
   // Loading the journal settings.
-  const { isLoading: isSettingsLoading } = useSettings();
+  const { isLoading: isSettingsLoading } = useSettingsManualJournals();
 
   // Submit form payload.
   const [submitPayload, setSubmitPayload] = useState({});

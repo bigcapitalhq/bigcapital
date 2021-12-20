@@ -9,6 +9,9 @@ import t from './types';
 const commonInvalidateQueries = (queryClient) => {
   // Invalidate estimates.
   queryClient.invalidateQueries(t.SALE_ESTIMATES);
+
+  // Invalidate
+  queryClient.invalidateQueries(t.ITEM_ASSOCIATED_WITH_ESTIMATES);
 };
 
 /**
@@ -191,7 +194,7 @@ export function useRefreshEstimates() {
 }
 
 /**
- *  
+ *
  */
 export function useCreateNotifyEstimateBySMS(props) {
   const queryClient = useQueryClient();
@@ -214,11 +217,11 @@ export function useCreateNotifyEstimateBySMS(props) {
 }
 
 /**
- * 
- * @param {*} estimateId 
- * @param {*} props 
- * @param {*} requestProps 
- * @returns 
+ *
+ * @param {*} estimateId
+ * @param {*} props
+ * @param {*} requestProps
+ * @returns
  */
 export function useEstimateSMSDetail(estimateId, props, requestProps) {
   return useRequestQuery(

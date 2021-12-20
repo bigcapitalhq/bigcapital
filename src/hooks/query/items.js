@@ -219,7 +219,7 @@ export function useItemAssociatedReceiptTransactions(id, props) {
 }
 export function useItemAssociatedBillTransactions(id, props) {
   return useRequestQuery(
-    [t.ITEM_ASSOCIATED_WITH_BILLS, id],
+    [t.ITEMS_ASSOCIATED_WITH_BILLS, id],
     {
       method: 'get',
       url: `items/${id}/transactions/bills`,

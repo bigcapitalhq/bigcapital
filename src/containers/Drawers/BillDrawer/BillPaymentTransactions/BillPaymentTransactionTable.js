@@ -1,16 +1,30 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { DataTable, Card } from 'components';
 
 import 'style/pages/PaymentTransactions/List.scss';
 
-import { useBillPaymentTransactionsColumns } from './components';
+import { useBillPaymentTransactionsColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from '../BillDrawerProvider';
 import { useBillPaymentTransactions } from 'hooks/query';
+
+import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
+
+import { compose } from 'utils';
 
 /**
  * Bill payment transactions datatable.
  */
-export default function BillPaymentTransactionTable() {
+function BillPaymentTransactionTable({
+  // #withAlertsActions
+  openAlert,
+
+  // #withDrawerActions
+  closeDrawer,
+}) {
+  const history = useHistory();
+
   const columns = useBillPaymentTransactionsColumns();
 
   const { billId } = useBillDrawerContext();
@@ -24,6 +38,19 @@ export default function BillPaymentTransactionTable() {
     enabled: !!billId,
   });
 
+  // Handles delete bill payment transactions.
+  const handleDeleteBillPaymentTransactons = ({ bill_id }) => {
+    openAlert('bill-delete', {
+      billId: bill_id,
+    });
+  };
+
+  // Handles edit  bill payment transactions.
+  const handleEditBillPaymentTransactions = ({ bill_id }) => {
+    history.push(`/bills/${bill_id}/edit`);
+    closeDrawer('bill-drawer');
+  };
+
   return (
     <Card>
       <DataTable
@@ -32,8 +59,18 @@ export default function BillPaymentTransactionTable() {
         loading={isPaymentTransactionsLoading}
         headerLoading={isPaymentTransactionsLoading}
         progressBarLoading={isPaymentTransactionFetching}
+        ContextMenu={ActionsMenu}
+        payload={{
+          onDelete: handleDeleteBillPaymentTransactons,
+          onEdit: handleEditBillPaymentTransactions,
+        }}
         className={'payment-transactions'}
       />
     </Card>
   );
 }
+
+export default compose(
+  withAlertsActions,
+  withDrawerActions,
+)(BillPaymentTransactionTable);

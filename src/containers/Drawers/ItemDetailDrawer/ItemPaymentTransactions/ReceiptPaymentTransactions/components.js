@@ -1,9 +1,10 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Menu, MenuItem } from '@blueprintjs/core';
+
 import clsx from 'classnames';
-import { CLASSES } from '../../../../common/classes';
-import { FormatDateCell, Icon } from '../../../../components';
+import { CLASSES } from '../../../../../common/classes';
+import { FormatDateCell, Icon } from '../../../../../components';
 import { safeCallback } from 'utils';
 
 /**
@@ -31,50 +32,59 @@ export function ActionsMenu({
 }
 
 /**
- * Retrieve bill payment transactions table columns.
+ * Retrieve receipt transactions associated with item table columns.
  */
-export const useBillPaymentTransactionsColumns = () => {
+export const useReceiptTransactionsColumns = () => {
   return React.useMemo(
     () => [
       {
-        id: 'date',
-        Header: intl.get('payment_date'),
-        accessor: 'formatted_payment_date',
+        id: 'receipt_date',
+        Header: intl.get('date'),
+        accessor: 'formatted_receipt_date',
         Cell: FormatDateCell,
-        width: 110,
-        className: 'date',
-        textOverview: true,
-      },
-      {
-        id: 'payment_account_name',
-        Header: intl.get('bill_transactions.column.deposit_account'),
-        accessor: 'payment_account_name',
         width: 120,
+        className: 'receipt_date',
         textOverview: true,
       },
       {
-        id: 'amount',
-        Header: intl.get('amount'),
-        accessor: 'formatted_payment_amount',
+        id: 'customer',
+        Header: intl.get('customer'),
+        accessor: 'customer_display_name',
+        width: 140,
+        className: 'customer',
+        textOverview: true,
+      },
+      {
+        id: 'receipt_number',
+        Header: intl.get('receipt_no'),
+        accessor: 'receip_number',
+        width: 120,
+        className: 'receipt_number',
+        clickable: true,
+        textOverview: true,
+      },
+      {
+        id: 'qunatity',
+        Header: intl.get('item.drawer_quantity_sold'),
+        accessor: 'quantity',
+        width: 100,
+      },
+      {
+        id: 'rate',
+        Header: 'Rate',
+        accessor: 'formatted_rate',
         align: 'right',
         width: 100,
         className: clsx(CLASSES.FONT_BOLD),
         textOverview: true,
       },
       {
-        id: 'payment_number',
-        Header: intl.get('payment_no'),
-        accessor: 'payment_number',
+        id: 'amount',
+        Header: intl.get('total'),
+        accessor: 'formatted_amount',
+        align: 'right',
         width: 100,
-        className: 'payment_number',
-      },
-      {
-        id: 'reference',
-        Header: intl.get('reference_no'),
-        accessor: 'payment_reference_no',
-        width: 90,
-        className: 'payment_reference_no',
-        clickable: true,
+        className: clsx(CLASSES.FONT_BOLD),
         textOverview: true,
       },
     ],

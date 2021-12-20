@@ -24,6 +24,9 @@ const commonInvalidateQueries = (queryClient) => {
   queryClient.invalidateQueries(t.CASH_FLOW_TRANSACTIONS);
   queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
 
+  // Invalidate
+  queryClient.invalidateQueries(t.ITEM_ASSOCIATED_WITH_RECEIPTS);
+
   // Invalidate the settings.
   queryClient.invalidateQueries([t.SETTING, t.SETTING_RECEIPTS]);
 };

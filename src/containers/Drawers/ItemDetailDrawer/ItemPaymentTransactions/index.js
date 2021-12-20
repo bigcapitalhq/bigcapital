@@ -1,34 +1,30 @@
 import React from 'react';
-import { Tab } from '@blueprintjs/core';
-import { DrawerMainTabs, FormattedMessage as T } from 'components';
-import InvoicePaymentTransactionsTable from './InvoicePaymentTransactionsDataTable';
-import EstimatePaymentTransactionsTable from './EstimatePaymentTransactionsDataTable';
-import ReceiptPaymentTransactionsTable from './ReceiptPaymentTransactionsDataTable';
-import BillPaymentTransactionsTable from './BillPaymentTransactionsDataTable';
+import styled from 'styled-components';
+import { Card, FormattedMessage as T } from 'components';
+import { ItemManuTransaction } from './utils';
+import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
+import ItemPaymentTransactionContent from './ItemPaymentTransactionContent';
 
 export const ItemPaymentTransactions = () => {
+  const { value } = useItemDetailDrawerContext();
+
   return (
-    <DrawerMainTabs renderActiveTabPanelOnly={true}>
-      <Tab
-        id={'invoice'}
-        title={<T id={'invoice'} />}
-        panel={<InvoicePaymentTransactionsTable />}
-      />
-      <Tab
-        id={'estiamte'}
-        title={<T id={'estimate_'} />}
-        panel={<EstimatePaymentTransactionsTable />}
-      />
-      <Tab
-        id={'receipt'}
-        title={<T id={'receipt_'} />}
-        panel={<ReceiptPaymentTransactionsTable />}
-      />
-      <Tab
-        id={'bill'}
-        title={'Bill'}
-        panel={<BillPaymentTransactionsTable />}
-      />
-    </DrawerMainTabs>
+    <Card>
+      <ItemManuTransactions>
+        <T id={'item.drawer_transactions_by'} />
+        <ItemManuTransaction />
+      </ItemManuTransactions>
+      <ItemPaymentTransactionContent tansactionType={value} />
+    </Card>
   );
 };
+
+const ItemManuTransactions = styled.div`
+  display: flex;
+  align-items: center;
+  color: #727983;
+  .bp3-button {
+    padding-left: 6px;
+    font-weight: 500;
+  }
+`;

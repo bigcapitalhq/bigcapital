@@ -1,10 +1,12 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Menu, MenuItem } from '@blueprintjs/core';
+
 import clsx from 'classnames';
-import { CLASSES } from '../../../../common/classes';
-import { FormatDateCell, Icon } from '../../../../components';
+import { CLASSES } from '../../../../../common/classes';
+import { FormatDateCell ,Icon} from '../../../../../components';
 import { safeCallback } from 'utils';
+
 
 /**
  * Table actions menu.
@@ -31,50 +33,58 @@ export function ActionsMenu({
 }
 
 /**
- * Retrieve invoice payment transactions table columns.
+ * Retrieve invoice payment transactions associated with item table columns.
  */
 export const useInvoicePaymentTransactionsColumns = () => {
   return React.useMemo(
     () => [
       {
-        id: 'date',
-        Header: intl.get('payment_date'),
-        accessor: 'formatted_payment_date',
+        id: 'invoice_date',
+        Header: intl.get('date'),
+        accessor: 'formatted_invoice_date',
         Cell: FormatDateCell,
-        width: 110,
-        className: 'date',
-        textOverview: true,
-      },
-      {
-        id: 'deposit_account_name',
-        Header: intl.get('invoice_transactions.column.withdrawal_account'),
-        accessor: 'deposit_account_name',
         width: 120,
+        className: 'invoice_date',
         textOverview: true,
       },
       {
-        id: 'amount',
-        Header: intl.get('amount'),
-        accessor: 'formatted_payment_amount',
+        id: 'customer',
+        Header: intl.get('customer'),
+        accessor: 'customer_display_name',
+        width: 140,
+        className: 'customer',
+        textOverview: true,
+      },
+      {
+        id: 'invoice_no',
+        Header: intl.get('invoice_no__'),
+        accessor: 'invoice_number',
+        width: 120,
+        className: 'invoice_no',
+        textOverview: true,
+      },
+      {
+        id: 'qunatity',
+        Header: intl.get('item.drawer_quantity_sold'),
+        accessor: 'quantity',
+        width: 100,
+      },
+      {
+        id: 'rate',
+        Header: 'Rate',
+        accessor: 'formatted_rate',
         align: 'right',
-        width: 120,
+        width: 100,
         className: clsx(CLASSES.FONT_BOLD),
         textOverview: true,
       },
       {
-        id: 'payment_number.',
-        Header: intl.get('payment_no'),
-        accessor: 'payment_number',
+        id: 'amount',
+        Header: intl.get('total'),
+        accessor: 'formatted_amount',
+        align: 'right',
         width: 100,
-        className: 'payment_number',
-      },
-      {
-        id: 'payment_reference_no',
-        Header: intl.get('reference_no'),
-        accessor: 'payment_reference_no',
-        width: 90,
-        className: 'payment_reference_no',
-        clickable: true,
+        className: clsx(CLASSES.FONT_BOLD),
         textOverview: true,
       },
     ],

@@ -46,6 +46,4 @@ const InvoiceGLEntriesDatatable = styled(JournalEntriesTable)`
   }
 `;
 
-const InvoiceGLEntriesRoot = styled(Card)`
-  padding: 15px;
-`;
+const InvoiceGLEntriesRoot = styled(Card)``;
