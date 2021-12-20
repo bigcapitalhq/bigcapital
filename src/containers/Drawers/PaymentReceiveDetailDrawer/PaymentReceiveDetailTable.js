@@ -1,12 +1,11 @@
 import React from 'react';
-import clsx from 'classnames';
+
+import { CommercialDocEntriesTable } from 'components';
 
 import { usePaymentReceiveEntriesColumns } from './utils';
-import { DataTable } from 'components';
-
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
-import PaymentDrawerCls from './PaymentReceiveDrawer.module.scss';
+import { TableStyle } from 'common';
 
 /**
  * Payment receive readonly details table.
@@ -19,12 +18,10 @@ export default function PaymentReceiveDetailTable() {
   } = usePaymentReceiveDetailContext();
 
   return (
-    <div className={clsx(PaymentDrawerCls.detail_panel_table)}>
-      <DataTable
-        columns={columns}
-        data={entries}
-        className={'table-constrant'}
-      />
-    </div>
+    <CommercialDocEntriesTable
+      columns={columns}
+      data={entries}
+      styleName={TableStyle.Constrant}
+    />
   );
 }
