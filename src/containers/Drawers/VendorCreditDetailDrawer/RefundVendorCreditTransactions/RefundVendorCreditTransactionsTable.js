@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataTable, Card } from 'components';
 
-import 'style/pages/RefundVendorCredit/List.scss';
+import { TableStyle } from 'common';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerProvider';
@@ -34,10 +34,10 @@ function RefundVendorCreditTransactionsTable({
         columns={columns}
         data={refundVendorCredit}
         ContextMenu={ActionsMenu}
+        styleName={TableStyle.Constrant}
         payload={{
           onDelete: handleDeleteRefundVendorCredit,
         }}
-        className={'datatable--refund-transactions'}
       />
     </Card>
   );

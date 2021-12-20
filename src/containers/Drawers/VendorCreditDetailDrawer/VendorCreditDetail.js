@@ -1,44 +1,57 @@
 import React from 'react';
 import { Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { DrawerMainTabs } from 'components';
+import styled from 'styled-components';
 
+import { DrawerMainTabs } from 'components';
+import VendorCreditDetailActionsBar from './VendorCreditDetailActionsBar';
 import VendorCreditDetailPanel from './VendorCreditDetailPanel';
 import RefundVendorCreditTransactionsTable from './RefundVendorCreditTransactions/RefundVendorCreditTransactionsTable';
 import ReconcileVendorCreditTransactionsTable from './ReconcileVendorCreditTransactions/ReconcileVendorCreditTransactionsTable';
-import JournalEntriesTransactionsTable from './JournalEntriesTransactions/JournalEntriesTransactionsTable';
-import clsx from 'classnames';
-
-import VendorCreditDetailCls from '../../../style/components/Drawers/VendorCreditDetail.module.scss';
+import { VendorCreditGLEntriesTable } from './JournalEntriesTransactions/JournalEntriesTransactionsTable';
 
 /**
  * Vendor credit view detail.
+ *
  */
 export default function VendorCreditDetail() {
   return (
-    <div className={clsx(VendorCreditDetailCls.root)}>
-      <DrawerMainTabs renderActiveTabPanelOnly={true}>
-        <Tab
-          title={intl.get('details')}
-          id={'details'}
-          panel={<VendorCreditDetailPanel />}
-        />
-        <Tab
-          title={intl.get('journal_entries')}
-          id={'journal_entries'}
-          panel={<JournalEntriesTransactionsTable />}
-        />
-        <Tab
-          title={intl.get('vendor_credit.drawer.label_refund_transactions')}
-          id={'refund_transactions'}
-          panel={<RefundVendorCreditTransactionsTable />}
-        />
-        <Tab
-          title={intl.get('vendor_credit.drawer.label_bills_reconciled')}
-          id={'reconcile_transactions'}
-          panel={<ReconcileVendorCreditTransactionsTable />}
-        />
-      </DrawerMainTabs>
-    </div>
+    <VendorCreditRoot>
+      <VendorCreditDetailActionsBar />
+      <VendorCreditDetailsTabs />
+    </VendorCreditRoot>
   );
 }
+
+/**
+ * Vendor Credit details tabs.
+ * @returns {React.JSX}
+ */
+function VendorCreditDetailsTabs() {
+  return (
+    <DrawerMainTabs renderActiveTabPanelOnly={true}>
+      <Tab
+        title={intl.get('details')}
+        id={'details'}
+        panel={<VendorCreditDetailPanel />}
+      />
+      <Tab
+        title={intl.get('journal_entries')}
+        id={'journal_entries'}
+        panel={<VendorCreditGLEntriesTable />}
+      />
+      <Tab
+        title={intl.get('vendor_credit.drawer.label_refund_transactions')}
+        id={'refund_transactions'}
+        panel={<RefundVendorCreditTransactionsTable />}
+      />
+      <Tab
+        title={intl.get('vendor_credit.drawer.label_bills_reconciled')}
+        id={'reconcile_transactions'}
+        panel={<ReconcileVendorCreditTransactionsTable />}
+      />
+    </DrawerMainTabs>
+  );
+}
+
+const VendorCreditRoot = styled.div``;

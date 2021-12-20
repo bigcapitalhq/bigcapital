@@ -7,11 +7,14 @@ import {
   Position,
   MenuItem,
   Menu,
+  Tag,
+  Intent,
 } from '@blueprintjs/core';
 import {
-  FormatNumberCell,
   Icon,
   FormattedMessage as T,
+  FormatNumberCell,
+  Choose,
 } from '../../../components';
 
 /**
@@ -61,6 +64,10 @@ export const useVendorCreditReadonlyEntriesTableColumns = () =>
     [],
   );
 
+/**
+ * Vendor note more actions menu.
+ * @returns {React.JSX}
+ */
 export const VendorCreditMenuItem = ({ payload: { onReconcile } }) => {
   return (
     <Popover
@@ -83,3 +90,31 @@ export const VendorCreditMenuItem = ({ payload: { onReconcile } }) => {
     </Popover>
   );
 };
+
+/**
+ * Vendor Credit details status.
+ * @returns {React.JSX}
+ */
+export function VendorCreditDetailsStatus({ vendorCredit }) {
+  return (
+    <Choose>
+      <Choose.When condition={vendorCredit.is_open}>
+        <Tag intent={Intent.WARNING} round={true}>
+          <T id={'open'} />
+        </Tag>
+      </Choose.When>
+
+      <Choose.When condition={vendorCredit.is_closed}>
+        <Tag intent={Intent.SUCCESS} round={true}>
+          <T id={'closed'} />
+        </Tag>
+      </Choose.When>
+
+      <Choose.When condition={vendorCredit.is_draft}>
+        <Tag intent={Intent.NONE} round={true} minimal={true}>
+          <T id={'draft'} />
+        </Tag>
+      </Choose.When>
+    </Choose>
+  );
+}

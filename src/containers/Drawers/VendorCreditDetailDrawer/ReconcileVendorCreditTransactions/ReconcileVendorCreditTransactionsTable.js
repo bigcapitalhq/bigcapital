@@ -1,9 +1,9 @@
 import React from 'react';
 import { DataTable, Card } from 'components';
 
-import '../../../../style/pages/RefundCreditNote/List.scss';
-
+import { TableStyle } from 'common';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+
 import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerProvider';
 import {
   useReconcileVendorCreditTransactionsTableColumns,
@@ -33,10 +33,10 @@ function ReconcileVendorCreditTransactionsTable({
         columns={columns}
         data={reconcileVendorCredits}
         ContextMenu={ActionsMenu}
+        styleName={TableStyle.Constrant}
         payload={{
           onDelete: handleDeleteReconcileVendorCredit,
         }}
-        className={'datatable--refund-transactions'}
       />
     </Card>
   );

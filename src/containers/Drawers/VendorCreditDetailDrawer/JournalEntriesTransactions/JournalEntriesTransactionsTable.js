@@ -5,10 +5,14 @@ import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerP
 import { useTransactionsByReference } from 'hooks/query';
 import { useJournalEntriesTransactionsColumns } from './components';
 
+import JournalEntriesTable, {
+  AmountDisplayedBaseCurrencyMessage,
+} from '../../../JournalEntriesTable/JournalEntriesTable';
+
 /**
  * Journal entries vendor credit transactions table.
  */
-export default function JournalEntriesTransactionsTable() {
+export function VendorCreditGLEntriesTable() {
   const { vendorCreditId } = useVendorCreditDetailDrawerContext();
 
   const columns = useJournalEntriesTransactionsColumns();
@@ -27,11 +31,11 @@ export default function JournalEntriesTransactionsTable() {
 
   return (
     <Card>
-      <DataTable
+      <AmountDisplayedBaseCurrencyMessage />
+      <JournalEntriesTable
         columns={columns}
         data={transactions}
         loading={isTransactionLoading}
-        className={'datatable--journal-entries'}
       />
     </Card>
   );
