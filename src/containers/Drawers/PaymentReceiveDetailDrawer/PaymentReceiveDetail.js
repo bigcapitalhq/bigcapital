@@ -1,36 +1,46 @@
 import React from 'react';
 import { Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import clsx from 'classnames';
+import styled from 'styled-components';
 
 import { DrawerMainTabs } from 'components';
+
 import PaymentReceiveDetailTab from './PaymentReceiveDetailTab';
+import PaymentReceiveActionsBar from './PaymentReceiveActionsBar';
+import { PaymentReceiveGLEntriesPanel } from './PaymentReceiveGLEntriesPanel';
 
-import JournalEntriesTable from '../../JournalEntriesTable/JournalEntriesTable';
-import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
-
-import PaymentDrawerCls from './PaymentReceiveDrawer.module.scss';
+/**
+ * Payment receive details tabs.
+ * @returns {React.JSX}
+ */
+function PaymentReceiveDetailsTabs() {
+  return (
+    <DrawerMainTabs defaultSelectedTabId="details">
+      <Tab
+        id={'details'}
+        title={intl.get('details')}
+        panel={<PaymentReceiveDetailTab />}
+      />
+      <Tab
+        id={'journal_entries'}
+        title={intl.get('journal_entries')}
+        panel={<PaymentReceiveGLEntriesPanel />}
+      />
+    </DrawerMainTabs>
+  );
+}
 
 /**
  * Payment receive view detail.
+ * @returns {React.JSX}
  */
 export default function PaymentReceiveDetail() {
-  const { transactions } = usePaymentReceiveDetailContext();
-
   return (
-    <div className={clsx(PaymentDrawerCls.root)}>
-      <DrawerMainTabs defaultSelectedTabId="details">
-        <Tab
-          id={'details'}
-          title={intl.get('details')}
-          panel={<PaymentReceiveDetailTab />}
-        />
-        <Tab
-          id={'journal_entries'}
-          title={intl.get('journal_entries')}
-          panel={<JournalEntriesTable transactions={transactions} />}
-        />
-      </DrawerMainTabs>
-    </div>
+    <PaymentReceiveDetailsRoot>
+      <PaymentReceiveActionsBar />
+      <PaymentReceiveDetailsTabs />
+    </PaymentReceiveDetailsRoot>
   );
 }
+
+const PaymentReceiveDetailsRoot = styled.div``;

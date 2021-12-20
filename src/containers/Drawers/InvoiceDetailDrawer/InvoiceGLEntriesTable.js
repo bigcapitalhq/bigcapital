@@ -40,10 +40,6 @@ export default function InvoiceGLEntriesTable() {
   );
 }
 
-const InvoiceGLEntriesDatatable = styled(JournalEntriesTable)`
-  .table .tbody .tr:last-child .td {
-    border-bottom: 0;
-  }
-`;
+const InvoiceGLEntriesDatatable = styled(JournalEntriesTable)``;
 
 const InvoiceGLEntriesRoot = styled(Card)``;
