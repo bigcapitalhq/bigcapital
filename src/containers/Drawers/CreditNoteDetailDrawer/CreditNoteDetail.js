@@ -6,6 +6,7 @@ import { DrawerMainTabs } from 'components';
 import CreditNoteDetailPanel from './CreditNoteDetailPanel';
 import RefundCreditNoteTransactionsTable from './RefundCreditNoteTransactions/RefundCreditNoteTransactionsTable';
 import ReconcileCreditNoteTransactionsTable from './ReconcileCreditNoteTransactions/ReconcileCreditNoteTransactionsTable';
+import JournalEntriesTransactionsTable from './JournalEntriesTransactions/JournalEntriesTransactionsTable';
 import clsx from 'classnames';
 
 import CreditNoteDetailCls from '../../../style/components/Drawers/CreditNoteDetails.module.scss';
@@ -16,11 +17,16 @@ import CreditNoteDetailCls from '../../../style/components/Drawers/CreditNoteDet
 export default function CreditNoteDetail() {
   return (
     <div className={clsx(CreditNoteDetailCls.root)}>
-      <DrawerMainTabs>
+      <DrawerMainTabs renderActiveTabPanelOnly={true}>
         <Tab
           title={intl.get('details')}
           id={'details'}
           panel={<CreditNoteDetailPanel />}
+        />
+        <Tab
+          title={intl.get('journal_entries')}
+          id={'journal_entries'}
+          panel={<JournalEntriesTransactionsTable />}
         />
         <Tab
           title={intl.get('credit_note.drawer.label_refund_transactions')}

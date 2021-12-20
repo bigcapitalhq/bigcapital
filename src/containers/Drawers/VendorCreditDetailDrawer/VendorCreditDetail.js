@@ -6,6 +6,7 @@ import { DrawerMainTabs } from 'components';
 import VendorCreditDetailPanel from './VendorCreditDetailPanel';
 import RefundVendorCreditTransactionsTable from './RefundVendorCreditTransactions/RefundVendorCreditTransactionsTable';
 import ReconcileVendorCreditTransactionsTable from './ReconcileVendorCreditTransactions/ReconcileVendorCreditTransactionsTable';
+import JournalEntriesTransactionsTable from './JournalEntriesTransactions/JournalEntriesTransactionsTable';
 import clsx from 'classnames';
 
 import VendorCreditDetailCls from '../../../style/components/Drawers/VendorCreditDetail.module.scss';
@@ -16,11 +17,16 @@ import VendorCreditDetailCls from '../../../style/components/Drawers/VendorCredi
 export default function VendorCreditDetail() {
   return (
     <div className={clsx(VendorCreditDetailCls.root)}>
-      <DrawerMainTabs>
+      <DrawerMainTabs renderActiveTabPanelOnly={true}>
         <Tab
           title={intl.get('details')}
           id={'details'}
           panel={<VendorCreditDetailPanel />}
+        />
+        <Tab
+          title={intl.get('journal_entries')}
+          id={'journal_entries'}
+          panel={<JournalEntriesTransactionsTable />}
         />
         <Tab
           title={intl.get('vendor_credit.drawer.label_refund_transactions')}
