@@ -9,8 +9,11 @@ All notable changes to Bigcapital server-side will be in this file.
 - Optimize landed costs on purchase invoices.
 - Display associated payment transactions on sale invoice drawer.
 - Display associated pamyment transactions on purchase invoice drawer.
+- Display item associate invoice, bill, estimate and receipt transactions.
 - Transactions locking on all transactions or individual modules.
 - Roles and permissions access control module.
+- Optimize readonly details style of invoice, receipt, estimate, payment receive,
+  purchase invoice, expense, manual journal, inventory adjustment and cashflow transaction.
 
 ### Changed 
 - Dashboard meta boot and authenticated user request query.
