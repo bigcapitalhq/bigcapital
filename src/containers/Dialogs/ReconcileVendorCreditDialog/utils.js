@@ -1,6 +1,11 @@
 import React from 'react';
 import { Callout, Intent, Classes } from '@blueprintjs/core';
-import { AppToaster, T } from 'components';
+import intl from 'react-intl-universal';
+import clsx from 'classnames';
+
+import { CLASSES } from 'common/classes';
+import { T } from 'components';
+import { MoneyFieldCell, FormatDateCell } from 'components';
 
 export const transformErrors = (errors, { setErrors }) => {};
 
@@ -15,3 +20,49 @@ export function EmptyStatuCallout() {
     </div>
   );
 }
+
+/**
+ * Reconcile vendor credit table columns.
+ */
+export const useReconcileVendorCreditTableColumns = () => {
+  return React.useMemo(
+    () => [
+      {
+        Header: intl.get('bill_date'),
+        accessor: 'formatted_bill_date',
+        Cell: FormatDateCell,
+        disableSortBy: true,
+        width: '120',
+      },
+      {
+        Header: intl.get('reconcile_vendor_credit.column.bill_number'),
+        accessor: 'bill_number',
+        disableSortBy: true,
+        width: '100',
+      },
+      {
+        Header: intl.get('amount'),
+        accessor: 'formatted_amount',
+        disableSortBy: true,
+        align: 'right',
+        width: '100',
+      },
+      {
+        Header: intl.get('reconcile_vendor_credit.column.remaining_amount'),
+        accessor: 'formatted_due_amount',
+        disableSortBy: true,
+        align: 'right',
+        width: '150',
+        className: clsx(CLASSES.FONT_BOLD),
+      },
+      {
+        Header: intl.get('reconcile_vendor_credit.column.amount_to_credit'),
+        accessor: 'amount',
+        Cell: MoneyFieldCell,
+        disableSortBy: true,
+        width: '150',
+      },
+    ],
+    [],
+  );
+};

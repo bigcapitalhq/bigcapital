@@ -1,8 +1,10 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Callout, Intent, Classes } from '@blueprintjs/core';
+import clsx from 'classnames';
 
-import { AppToaster, T } from 'components';
+import { CLASSES } from 'common/classes';
+import { MoneyFieldCell, FormatDateCell,  AppToaster, T } from 'components';
 
 export const transformErrors = (errors, { setErrors }) => {
   if (errors.some((e) => e.type === 'INVOICES_HAS_NO_REMAINING_AMOUNT')) {
@@ -32,4 +34,51 @@ export function EmptyStatuCallout() {
       </Callout>
     </div>
   );
+}
+
+/**
+ * Retrieves reconcile credit note table columns.
+ * @returns 
+ */
+export const useReconcileCreditNoteTableColumns = () => {
+  return React.useMemo(
+    () => [
+      {
+        Header: intl.get('invoice_date'),
+        accessor: 'formatted_invoice_date',
+        Cell: FormatDateCell,
+        disableSortBy: true,
+        width: '120',
+      },
+      {
+        Header: intl.get('invoice_no'),
+        accessor: 'invoice_no',
+        disableSortBy: true,
+        width: '100',
+      },
+      {
+        Header: intl.get('amount'),
+        accessor: 'formatted_amount',
+        disableSortBy: true,
+        align: 'right',
+        width: '100',
+      },
+      {
+        Header: intl.get('reconcile_credit_note.column.remaining_amount'),
+        accessor: 'formatted_due_amount',
+        disableSortBy: true,
+        align: 'right',
+        width: '150',
+        className: clsx(CLASSES.FONT_BOLD),
+      },
+      {
+        Header: intl.get('reconcile_credit_note.column.amount_to_credit'),
+        accessor: 'amount',
+        Cell: MoneyFieldCell,
+        disableSortBy: true,
+        width: '150',
+      },
+    ],
+    [],
+  )
 }

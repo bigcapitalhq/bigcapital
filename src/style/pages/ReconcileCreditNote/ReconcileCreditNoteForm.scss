@@ -1,52 +1,10 @@
 .dialog--reconcile-credit-form {
   width: 850px;
 
-  .bp3-dialog-body {
-    .footer {
-      display: flex;
-      margin-top: 20px;
-
-      .total_lines {
-        margin-left: auto;
-
-        &_line {
-          border-bottom: none;
-          .title {
-            font-weight: 600;
-          }
-          .amount,
-          .title {
-            padding: 8px 0px;
-            width: 150px;
-          }
-          .amount {
-            text-align: right;
-          }
-        }
-      }
-    }
-  }
-  .bigcapital-datatable {
-    
-  }
-
-  .credit-remaining {
-    display: flex;
-    justify-content: flex-end;
-    padding-top: 5px;
-    padding-bottom: 15px;
-    &__label {
-    }
-    &__balance {
-      font-weight: 500;
-      color: #343463;
-      margin-left: 5px;
-    }
-  }
-
   .bp3-callout {
     font-size: 14px;
   }
+
   .bp3-dialog-footer {
     display: flex;
     justify-content: flex-start;

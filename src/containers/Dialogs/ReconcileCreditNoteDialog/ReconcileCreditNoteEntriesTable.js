@@ -1,7 +1,9 @@
 import React from 'react';
-import intl from 'react-intl-universal';
-import { MoneyFieldCell, DataTableEditable, FormatDateCell } from 'components';
+import styled from 'styled-components';
+
+import { DataTableEditable } from 'components';
 import { compose, updateTableCell } from 'utils';
+import { useReconcileCreditNoteTableColumns } from './utils';
 
 /**
  * Reconcile credit note entries table.
@@ -11,45 +13,8 @@ export default function ReconcileCreditNoteEntriesTable({
   entries,
   errors,
 }) {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: intl.get('invoice_date'),
-        accessor: 'formatted_invoice_date',
-        Cell: FormatDateCell,
-        disableSortBy: true,
-        width: '120',
-      },
-      {
-        Header: intl.get('invoice_no'),
-        accessor: 'invoice_no',
-        disableSortBy: true,
-        width: '100',
-      },
-      {
-        Header: intl.get('amount'),
-        accessor: 'formatted_amount',
-        disableSortBy: true,
-        align: 'right',
-        width: '100',
-      },
-      {
-        Header: intl.get('reconcile_credit_note.column.remaining_amount'),
-        accessor: 'formatted_due_amount',
-        disableSortBy: true,
-        align: 'right',
-        width: '150',
-      },
-      {
-        Header: intl.get('reconcile_credit_note.column.amount_to_credit'),
-        accessor: 'amount',
-        Cell: MoneyFieldCell,
-        disableSortBy: true,
-        width: '150',
-      },
-    ],
-    [],
-  );
+  // Retrieve the reconcile credit note table columns.
+  const columns = useReconcileCreditNoteTableColumns();
 
   // Handle update data.
   const handleUpdateData = React.useCallback(
@@ -63,7 +28,7 @@ export default function ReconcileCreditNoteEntriesTable({
   );
 
   return (
-    <DataTableEditable
+    <ReconcileCreditNoteEditableTable
       columns={columns}
       data={entries}
       payload={{
@@ -73,3 +38,22 @@ export default function ReconcileCreditNoteEntriesTable({
     />
   );
 }
+
+export const ReconcileCreditNoteEditableTable = styled(DataTableEditable)`
+  .table {
+    max-height: 400px;
+    overflow: auto;
+
+    .thead .tr .th {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    .tbody {
+      .tr .td {
+        padding: 2px 4px;
+        min-height: 38px;
+      }
+    }
+  }
+`;

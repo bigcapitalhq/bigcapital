@@ -1,52 +1,17 @@
 import React from 'react';
-import intl from 'react-intl-universal';
-import { MoneyFieldCell, DataTableEditable, FormatDateCell } from 'components';
+import styled from 'styled-components';
+
+import { DataTableEditable } from 'components';
 import { compose, updateTableCell } from 'utils';
+import { useReconcileVendorCreditTableColumns } from './utils';
 
 export default function ReconcileVendorCreditEntriesTable({
   onUpdateData,
   entries,
   errors,
 }) {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: intl.get('bill_date'),
-        accessor: 'formatted_bill_date',
-        Cell: FormatDateCell,
-        disableSortBy: true,
-        width: '120',
-      },
-      {
-        Header: intl.get('reconcile_vendor_credit.column.bill_number'),
-        accessor: 'bill_number',
-        disableSortBy: true,
-        width: '100',
-      },
-      {
-        Header: intl.get('amount'),
-        accessor: 'formatted_amount',
-        disableSortBy: true,
-        align: 'right',
-        width: '100',
-      },
-      {
-        Header: intl.get('reconcile_vendor_credit.column.remaining_amount'),
-        accessor: 'formatted_due_amount',
-        disableSortBy: true,
-        align: 'right',
-        width: '150',
-      },
-      {
-        Header: intl.get('reconcile_vendor_credit.column.amount_to_credit'),
-        accessor: 'amount',
-        Cell: MoneyFieldCell,
-        disableSortBy: true,
-        width: '150',
-      },
-    ],
-    [],
-  );
+  // Reconcile vendor credit table columns.
+  const columns = useReconcileVendorCreditTableColumns();
 
   // Handle update data.
   const handleUpdateData = React.useCallback(
@@ -60,7 +25,7 @@ export default function ReconcileVendorCreditEntriesTable({
   );
 
   return (
-    <DataTableEditable
+    <ReconcileVendorCreditEditableTable
       columns={columns}
       data={entries}
       payload={{
@@ -70,3 +35,22 @@ export default function ReconcileVendorCreditEntriesTable({
     />
   );
 }
+
+export const ReconcileVendorCreditEditableTable = styled(DataTableEditable)`
+  .table {
+    max-height: 400px;
+    overflow: auto;
+
+    .thead .tr .th {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    .tbody {
+      .tr .td {
+        padding: 2px 4px;
+        min-height: 38px;
+      }
+    }
+  }
+`;

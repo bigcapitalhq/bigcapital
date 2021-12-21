@@ -1,32 +1,6 @@
 .dialog--reconcile-vendor-credit-form {
   width: 850px;
 
-  .bp3-dialog-body {
-    .footer {
-      display: flex;
-      margin-top: 40px;
-
-      .total_lines {
-        margin-left: auto;
-
-        &_line {
-          border-bottom: none;
-          .title {
-            font-weight: 600;
-          }
-          .amount,
-          .title {
-            padding: 8px 0px;
-            width: 165px;
-          }
-          .amount {
-            text-align: right;
-          }
-        }
-      }
-    }
-  }
-
   .bigcapital-datatable {
     .table {
       border: 1px solid #d1dee2;
@@ -36,17 +10,13 @@
       .tbody-inner {
         height: auto;
         scrollbar-width: none;
+
         &::-webkit-scrollbar {
           display: none;
         }
       }
-      .tbody {
-        .tr .td {
-          padding: 0.4rem;
-          margin-left: -1px;
-          border-left: 1px solid #ececec;
-        }
 
+      .tbody {
         .bp3-form-group {
           margin-bottom: 0;
 
@@ -67,19 +37,6 @@
     font-size: 14px;
   }
 
-  .credit-remaining {
-    display: flex;
-    justify-content: flex-end;
-    padding-top: 5px;
-    padding-bottom: 15px;
-    &__label {
-    }
-    &__balance {
-      font-weight: 500;
-      color: #343463;
-      margin-left: 5px;
-    }
-  }
   .bp3-dialog-footer {
     display: flex;
     justify-content: flex-start;
