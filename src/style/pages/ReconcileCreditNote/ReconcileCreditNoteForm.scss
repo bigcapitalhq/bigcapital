@@ -27,39 +27,7 @@
     }
   }
   .bigcapital-datatable {
-    .table {
-      border: 1px solid #d1dee2;
-      min-width: auto;
-
-      .tbody,
-      .tbody-inner {
-        height: auto;
-        scrollbar-width: none;
-        &::-webkit-scrollbar {
-          display: none;
-        }
-      }
-      .tbody {
-        .tr .td {
-          padding: 0.4rem;
-          margin-left: -1px;
-          border-left: 1px solid #ececec;
-        }
-
-        .bp3-form-group {
-          margin-bottom: 0;
-
-          &:not(.bp3-intent-danger) .bp3-input {
-            border: 1px solid #d0dfe2;
-
-            &:focus {
-              box-shadow: 0 0 0 1px #116cd0;
-              border-color: #116cd0;
-            }
-          }
-        }
-      }
-    }
+    
   }
 
   .credit-remaining {

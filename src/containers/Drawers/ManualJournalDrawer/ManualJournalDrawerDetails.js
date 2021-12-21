@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 
 import { Card } from 'components';
 
@@ -7,17 +8,13 @@ import ManualJournalDrawerHeader from './ManualJournalDrawerHeader';
 import ManualJournalDrawerTable from './ManualJournalDrawerTable';
 import ManualJournalDrawerFooter from './ManualJournalDrawerFooter';
 
-import { useManualJournalDrawerContext } from 'containers/Drawers/ManualJournalDrawer/ManualJournalDrawerProvider';
-
 /**
  * Manual journal view details.
  */
 export default function ManualJournalDrawerDetails() {
-  const { manualJournal } = useManualJournalDrawerContext();
-
   return (
-    <div className={'journal-drawer'}>
-      <ManualJournalDrawerActionBar manualJournal={manualJournal} />
+    <ManualJournalDetailsRoot>
+      <ManualJournalDrawerActionBar />
 
       <div className="journal-drawer__content">
         <Card>
@@ -26,6 +23,9 @@ export default function ManualJournalDrawerDetails() {
           <ManualJournalDrawerFooter />
         </Card>
       </div>
-    </div>
+    </ManualJournalDetailsRoot>
   );
 }
+
+
+const ManualJournalDetailsRoot = styled.div``;

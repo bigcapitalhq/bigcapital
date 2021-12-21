@@ -1,9 +1,8 @@
 import React from 'react';
 import Icon from 'components/Icon';
 import { Button, Classes, NavbarGroup, Intent } from '@blueprintjs/core';
-import { Can, FormattedMessage as T } from 'components';
 
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import { Can, FormattedMessage as T, DrawerActionsBar } from 'components';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import { AbilitySubject, CashflowAction } from '../../../common/abilityOption';
@@ -25,7 +24,7 @@ function CashflowTransactionDrawerActionBar({
 
   return (
     <Can I={CashflowAction.Delete} a={AbilitySubject.Cashflow}>
-      <DashboardActionsBar>
+      <DrawerActionsBar>
         <NavbarGroup>
           <Button
             className={Classes.MINIMAL}
@@ -35,8 +34,9 @@ function CashflowTransactionDrawerActionBar({
             onClick={handleDeleteCashflowTransaction}
           />
         </NavbarGroup>
-      </DashboardActionsBar>
+      </DrawerActionsBar>
     </Can>
   );
 }
+
 export default compose(withAlertsActions)(CashflowTransactionDrawerActionBar);

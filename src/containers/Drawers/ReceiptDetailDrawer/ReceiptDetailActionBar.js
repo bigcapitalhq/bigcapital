@@ -59,11 +59,11 @@ function ReceiptDetailActionBar({
   const onPrintReceipt = () => {
     openDialog('receipt-pdf-preview', { receiptId });
   };
-
   // Handle notify via SMS.
   const handleNotifyViaSMS = () => {
     openDialog('notify-receipt-via-sms', { receiptId });
   };
+
   return (
     <DrawerActionsBar>
       <NavbarGroup>

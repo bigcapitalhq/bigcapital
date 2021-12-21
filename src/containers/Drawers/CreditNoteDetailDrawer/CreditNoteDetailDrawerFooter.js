@@ -1,11 +1,15 @@
 import React from 'react';
-import clsx from 'classnames';
+import styled from 'styled-components';
 
-import { T, TotalLines, TotalLine, If } from 'components';
+import {
+  T,
+  TotalLines,
+  TotalLine,
+  FormatNumber,
+  TotalLineBorderStyle,
+  TotalLineTextStyle,
+} from 'components';
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
-import { FormatNumber } from '../../../components';
-
-import CreditNoteDetailCls from '../../../style/components/Drawers/CreditNoteDetails.module.scss';
 
 /**
  * Credit note details panel footer.
@@ -14,19 +18,25 @@ export default function CreditNoteDetailDrawerFooter() {
   const { creditNote } = useCreditNoteDetailDrawerContext();
 
   return (
-    <div className={clsx(CreditNoteDetailCls.detail_panel_footer)}>
-      <TotalLines className={clsx(CreditNoteDetailCls.total_lines)}>
+    <CreditNoteDetailsFooterRoot>
+      <CreditNoteTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'credit_note.drawer.label_subtotal'} />}
           value={<FormatNumber value={creditNote.formatted_amount} />}
-          className={CreditNoteDetailCls.total_line_subtotal}
         />
         <TotalLine
           title={<T id={'credit_note.drawer.label_total'} />}
           value={creditNote.formatted_amount}
-          className={CreditNoteDetailCls.total_line_total}
+          borderStyle={TotalLineBorderStyle.DoubleDark}
+          textStyle={TotalLineTextStyle.Bold}
         />
-      </TotalLines>
-    </div>
+      </CreditNoteTotalLines>
+    </CreditNoteDetailsFooterRoot>
   );
 }
+
+export const CreditNoteDetailsFooterRoot = styled.div``;
+
+export const CreditNoteTotalLines = styled(TotalLines)`
+  margin-left: auto;
+`;

@@ -1,31 +1,46 @@
 import React from 'react';
-import clsx from 'classnames';
+import styled from 'styled-components';
 
-import { FormatNumber, T, TotalLine, TotalLines } from 'components';
+import {
+  FormatNumber,
+  TotalLineTextStyle,
+  TotalLineBorderStyle,
+  T,
+  TotalLine,
+  TotalLines,
+} from 'components';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
-
-import PaymentDrawerCls from './PaymentReceiveDrawer.module.scss';
 
 /**
  * Payment receive detail footer.
+ * @returns {React.JSX}
  */
 export default function PaymentReceiveDetailFooter() {
   const { paymentReceive } = usePaymentReceiveDetailContext();
 
   return (
-    <div className={clsx(PaymentDrawerCls.detail_panel_footer)}>
-      <TotalLines>
+    <PaymentReceiveDetailsFooterRoot>
+      <PaymentReceiveTotalLines
+        labelColWidth={'180px'}
+        amountColWidth={'180px'}
+      >
         <TotalLine
           title={<T id={'payment_receive.details.subtotal'} />}
           value={<FormatNumber value={paymentReceive.amount} />}
-          className={PaymentDrawerCls.total_line_subtotal}
         />
         <TotalLine
           title={<T id={'payment_receive.details.total'} />}
           value={paymentReceive.formatted_amount}
-          className={PaymentDrawerCls.total_line_total}
+          borderStyle={TotalLineBorderStyle.DoubleDark}
+          textStyle={TotalLineTextStyle.Bold}
         />
-      </TotalLines>
-    </div>
+      </PaymentReceiveTotalLines>
+    </PaymentReceiveDetailsFooterRoot>
   );
 }
+
+export const PaymentReceiveDetailsFooterRoot = styled.div``;
+
+export const PaymentReceiveTotalLines = styled(TotalLines)`
+  margin-left: auto;
+`;

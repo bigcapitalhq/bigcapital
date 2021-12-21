@@ -1,5 +1,5 @@
 import React from 'react';
-import clsx from 'classnames';
+import styled from 'styled-components';
 
 import { Card } from 'components';
 
@@ -7,20 +7,20 @@ import InventoryAdjustmentDetailActionsBar from './InventoryAdjustmentDetailActi
 import InventoryAdjustmentDetailHeader from './InventoryAdjustmentDetailHeader';
 import InventoryAdjustmentDetailTable from './InventoryAdjustmentDetailTable';
 
-import InventoryAdjustmentDrawerCls from 'style/components/Drawers/InventoryAdjustmentDrawer.module.scss';
-
 /**
  * Inventory adjustment detail
  */
 export default function InventoryAdjustmentDetail() {
   return (
-    <div className={clsx(InventoryAdjustmentDrawerCls.detail_panel)}>
+    <InventoryAdjustmentDetailsRoot>
       <InventoryAdjustmentDetailActionsBar />
 
       <Card>
         <InventoryAdjustmentDetailHeader />
         <InventoryAdjustmentDetailTable />
       </Card>
-    </div>
+    </InventoryAdjustmentDetailsRoot>
   );
 }
+
+const InventoryAdjustmentDetailsRoot = styled.div``;

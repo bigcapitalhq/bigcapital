@@ -11,6 +11,7 @@ import { TableStyle } from '../../../common';
  * Invoice readonly details entries table columns.
  */
 export default function InvoiceDetailTable() {
+  // Invoice readonly entries table columns.
   const columns = useInvoiceReadonlyEntriesColumns();
 
   // Invoice details drawer context.

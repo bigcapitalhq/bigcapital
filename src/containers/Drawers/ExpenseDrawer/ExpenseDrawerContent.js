@@ -2,8 +2,6 @@ import React from 'react';
 
 import { DrawerBody } from 'components';
 
-import 'style/components/Drawers/ExpenseDrawer.scss';
-
 import { ExpenseDrawerProvider } from './ExpenseDrawerProvider';
 import ExpenseDrawerDetails from './ExpenseDrawerDetails';
 

@@ -1,18 +1,27 @@
 import React from 'react';
-import { DataTable } from 'components';
+
+import { CommercialDocEntriesTable } from 'components';
+
 import { useExpenseReadEntriesColumns } from './utils';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
+
+import { TableStyle } from '../../../common';
 
 /**
  * Expense details table.
  */
 export default function ExpenseDrawerTable() {
+  // Expense readonly entries columns.
   const columns = useExpenseReadEntriesColumns();
+
+  // Expense drawer context.
   const { expense } = useExpenseDrawerContext();
 
   return (
-    <div className="expense-drawer__content--table">
-      <DataTable columns={columns} data={expense.categories} />
-    </div>
+    <CommercialDocEntriesTable
+      columns={columns}
+      data={expense.categories}
+      styleName={TableStyle.Constrant}
+    />
   );
 }

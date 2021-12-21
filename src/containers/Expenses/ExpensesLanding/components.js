@@ -110,11 +110,11 @@ export function TotalAmountAccessor(row) {
  */
 export function PublishAccessor(row) {
   return row.is_published ? (
-    <Tag minimal={true}>
+    <Tag round={true} minimal={true}>
       <T id={'published'} />
     </Tag>
   ) : (
-    <Tag minimal={true} intent={Intent.WARNING}>
+    <Tag round={true} minimal={true} intent={Intent.WARNING}>
       <T id={'draft'} />
     </Tag>
   );

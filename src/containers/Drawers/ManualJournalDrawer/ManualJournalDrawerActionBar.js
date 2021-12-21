@@ -8,9 +8,8 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
-import { Can, FormattedMessage as T } from 'components';
+import { DrawerActionsBar, Can, FormattedMessage as T } from 'components';
 
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
@@ -47,7 +46,7 @@ function ManualJournalDrawerActionBar({
   };
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Can I={ManualJournalAction.Edit} a={AbilitySubject.ManualJournal}>
           <Button
@@ -68,7 +67,7 @@ function ManualJournalDrawerActionBar({
           />
         </Can>
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 

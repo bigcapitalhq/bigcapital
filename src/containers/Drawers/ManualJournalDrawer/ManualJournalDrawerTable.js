@@ -1,27 +1,23 @@
 import React from 'react';
 
-import { DataTable, If } from 'components';
+import { CommercialDocEntriesTable  } from 'components';
 import { useManualJournalEntriesColumns } from './utils';
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
+
+import { TableStyle } from '../../../common';
 
 /**
  * Manual journal drawer table.
  */
 export default function ManualJournalDrawerTable() {
   const columns = useManualJournalEntriesColumns();
-  const {
-    manualJournal: { entries, description },
-  } = useManualJournalDrawerContext();
+  const { manualJournal } = useManualJournalDrawerContext();
 
   return (
-    <div className="journal-drawer__content-table">
-      <DataTable columns={columns} data={entries} />
-
-      <If condition={description}>
-        <p className={'desc'}>
-          <b>Description</b>: {description}
-        </p>
-      </If>
-    </div>
+    <CommercialDocEntriesTable
+      columns={columns}
+      data={manualJournal.entries}
+      styleName={TableStyle.Constrant}
+    />
   );
 }

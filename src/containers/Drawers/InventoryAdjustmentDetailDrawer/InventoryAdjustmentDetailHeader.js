@@ -14,43 +14,37 @@ import InventoryAdjustmentDrawerCls from 'style/components/Drawers/InventoryAdju
  * Inventory detail header.
  */
 export default function InventoryAdjustmentDetailHeader() {
-  const {
-    inventoryAdjustment: {
-      date,
-      type,
-      adjustment_account,
-      inventory_direction,
-      description,
-      reference_no,
-      reason,
-      published_at,
-      created_at,
-    },
-  } = useInventoryAdjustmentDrawerContext();
+  const { inventoryAdjustment } = useInventoryAdjustmentDrawerContext();
 
   return (
     <div className={clsx(InventoryAdjustmentDrawerCls.detail_panel_header)}>
-      <DetailsMenu>
+      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
         <DetailItem label={intl.get('date')}>
-          {moment(date).format('YYYY MMM DD')}
+          {moment(inventoryAdjustment.date).format('YYYY MMM DD')}
         </DetailItem>
-        <DetailItem label={intl.get('type')}>{type}</DetailItem>
+
+        <DetailItem label={intl.get('type')}>
+          {inventoryAdjustment.type}
+        </DetailItem>
+
         <DetailItem label={intl.get('adjustment_account')}>
-          {adjustment_account.name}
+          {inventoryAdjustment.adjustment_account.name}
         </DetailItem>
+
         <DetailItem name={'reference'} label={intl.get('reference_no')}>
-          {defaultTo(reference_no, '-')}
+          {defaultTo(inventoryAdjustment.reference_no, '-')}
         </DetailItem>
+
         <DetailItem label={intl.get('published_at')}>
-          {moment(published_at).format('YYYY MMM DD')}
+          {moment(inventoryAdjustment.published_at).format('YYYY MMM DD')}
         </DetailItem>
-      </DetailsMenu>
-      <DetailsMenu direction={'horizantal'}>
+
         <DetailItem label={intl.get('reason')}>
-          {defaultTo(reason, '—')}
+          {defaultTo(inventoryAdjustment.reason, '—')}
         </DetailItem>
+
         <DetailItem label={intl.get('created_at')}>
-          {moment(created_at).format('YYYY MMM DD')}
+          {moment(inventoryAdjustment.created_at).format('YYYY MMM DD')}
         </DetailItem>
       </DetailsMenu>
     </div>

@@ -328,7 +328,7 @@ const TransactionLockingWrapp = styled.div`
   display: flex;
   align-items: center;
   border-radius: 6px;
-  border: 1px solid #d1dee2;
+  border: 1px solid #c4d2d7;
   padding: 16px 18px;
   margin-bottom: 25px;
   background: #fff;

@@ -1,7 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { T, TotalLines, FormatNumber, TotalLine } from 'components';
+import {
+  T,
+  TotalLines,
+  FormatNumber,
+  TotalLine,
+  TotalLineBorderStyle,
+  TotalLineTextStyle,
+} from 'components';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 /**
@@ -12,54 +19,34 @@ export function InvoiceDetailFooter() {
 
   return (
     <InvoiceDetailsFooterRoot>
-      <TotalLines>
-        <SubTotalLine
+      <InvoiceTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
+        <TotalLine
           title={<T id={'invoice.details.subtotal'} />}
           value={<FormatNumber value={invoice.balance} />}
+          borderStyle={TotalLineBorderStyle.SingleDark}
         />
-        <InvoiceTotalLine
+        <TotalLine
           title={<T id={'invoice.details.total'} />}
           value={invoice.formatted_amount}
+          borderStyle={TotalLineBorderStyle.DoubleDark}
+          textStyle={TotalLineTextStyle.Bold}
         />
         <TotalLine
           title={<T id={'invoice.details.payment_amount'} />}
           value={invoice.formatted_payment_amount}
         />
-        <DueAmountLine
+        <TotalLine
           title={<T id={'invoice.details.due_amount'} />}
           value={invoice.formatted_due_amount}
+          textStyle={TotalLineTextStyle.Bold}
         />
-      </TotalLines>
+      </InvoiceTotalLines>
     </InvoiceDetailsFooterRoot>
   );
 }
 
-const SubTotalLine = styled(TotalLine)`
-  border-bottom: 1px solid #000;
-`;
+const InvoiceDetailsFooterRoot = styled.div``;
 
-const InvoiceTotalLine = styled(TotalLine)`
-  border-bottom: 3px double #000;
-  font-weight: 600;
-`;
-
-const DueAmountLine = styled(TotalLine)`
-  font-weight: 600;
-`;
-
-const InvoiceDetailsFooterRoot = styled.div`
-  display: flex;
-
-  .total_lines {
-    margin-left: auto;
-  }
-  .total_lines_line {
-    .amount,
-    .title {
-      width: 180px;
-    }
-    .amount {
-      text-align: right;
-    }
-  }
+const InvoiceTotalLines = styled(TotalLines)`
+  margin-left: auto;
 `;

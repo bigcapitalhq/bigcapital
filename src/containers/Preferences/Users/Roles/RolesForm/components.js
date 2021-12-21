@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import { castArray } from 'lodash';
 
 import { FastField, useFormikContext } from 'formik';
-import { whenRtl, whenLtr } from 'utils/styled-components';
-import { Icon, Hint, If, Choose } from 'components';
 import { useRolesFormContext } from './RolesFormProvider';
 
 const RoleLabelCheckbox = ({ subject, label, description }) => (

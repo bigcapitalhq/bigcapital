@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 
 import { Card } from 'components';
 
@@ -12,7 +13,7 @@ import ExpenseDrawerFooter from './ExpenseDrawerFooter';
  */
 export default function ExpenseDrawerDetails() {
   return (
-    <div className={'expense-drawer'}>
+    <ExpenseDetailsRoot>
       <ExpenseDrawerActionBar />
 
       <div className="expense-drawer__content">
@@ -22,6 +23,8 @@ export default function ExpenseDrawerDetails() {
           <ExpenseDrawerFooter />
         </Card>
       </div>
-    </div>
+    </ExpenseDetailsRoot>
   );
 }
+
+const ExpenseDetailsRoot = styled.div``;

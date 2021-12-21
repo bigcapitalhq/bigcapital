@@ -1,13 +1,11 @@
 import React from 'react';
-
 import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawerProvider';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
 
-import { Icon, FormattedMessage as T, Can } from 'components';
+import { Icon, DrawerActionsBar, FormattedMessage as T, Can } from 'components';
 import {
   InventoryAdjustmentAction,
   AbilitySubject,
@@ -34,7 +32,7 @@ function InventoryAdjustmentDetailActionsBar({
       I={InventoryAdjustmentAction.Delete}
       a={AbilitySubject.InventoryAdjustment}
     >
-      <DashboardActionsBar>
+      <DrawerActionsBar>
         <NavbarGroup>
           <Button
             className={Classes.MINIMAL}
@@ -44,7 +42,7 @@ function InventoryAdjustmentDetailActionsBar({
             onClick={handleDeleteInventoryAdjustment}
           />
         </NavbarGroup>
-      </DashboardActionsBar>
+      </DrawerActionsBar>
     </Can>
   );
 }

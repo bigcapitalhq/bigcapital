@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { DataTable, If, FormattedMessage as T } from 'components';
+import { CommercialDocEntriesTable } from 'components';
 
 import { useCashflowTransactionColumns } from './utils';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
@@ -14,9 +14,5 @@ export default function CashflowTransactionDrawerTable() {
     cashflowTransaction: { transactions },
   } = useCashflowTransactionDrawerContext();
 
-  return (
-    <div className="cashflow-drawer__content-table">
-      <DataTable columns={columns} data={transactions} />
-    </div>
-  );
+  return <CommercialDocEntriesTable columns={columns} data={transactions} />;
 }
