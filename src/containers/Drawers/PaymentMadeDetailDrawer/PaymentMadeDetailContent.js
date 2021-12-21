@@ -1,8 +1,6 @@
 import React from 'react';
+
 import { DrawerBody } from 'components';
-
-import 'style/components/Drawers/ViewDetail/ViewDetail.scss';
-
 import PaymentMadeDetails from './PaymentMadeDetails';
 import { PaymentMadeDetailProvider } from './PaymentMadeDetailProvider';
 

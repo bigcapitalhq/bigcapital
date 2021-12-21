@@ -7,19 +7,20 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
+import styled from 'styled-components';
 import { FormattedMessage as T } from 'components';
 import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
 import transactions from '../../../../common/itemPaymentTranactionsOption';
 
-export const ItemManuTransaction = () => {
+export const ItemManuTransaction = ({ onChange }) => {
   const { value, setValue } = useItemDetailDrawerContext();
 
-  // const handleClickItem = (item) => {
-  //   onChange && onChange(item);
-  // };
+  const handleClickItem = (item) => {
+    onChange && onChange(item);
+  };
 
   const content = transactions.map(({ name, label }) => (
-    <MenuItem onClick={() => setValue(name)} text={label} />
+    <MenuItem onClick={() => handleClickItem(name)} text={label} />
   ));
 
   return (
@@ -32,7 +33,28 @@ export const ItemManuTransaction = () => {
       }}
       content={<Menu>{content}</Menu>}
     >
-      <Button minimal={true} text={<T id={value} />} rightIcon={'caret-down'} />
+      <ItemSwitchButton
+        minimal={true}
+        text={<T id={'item.drawer_transactions_by'} />}
+        rightIcon={'caret-down'}
+      >
+        <ItemSwitchText>
+          <T id={value} />
+        </ItemSwitchText>
+      </ItemSwitchButton>
     </Popover>
   );
 };
+
+const ItemSwitchButton = styled(Button)`
+  .bp3-button-text {
+    display: flex;
+    color: #727983;
+  }
+`;
+
+const ItemSwitchText = styled.span`
+  font-weight: 600;
+  color: #33304a;
+  padding-left: 3px;
+`;

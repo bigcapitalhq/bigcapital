@@ -28,15 +28,13 @@ function AccountantFormPage({
   accountsSettings,
   billPaymentSettings,
 }) {
-  
-
   const { saveSettingMutate } = useAccountantFormContext();
 
   const accountantSettings = {
     ...billPaymentSettings,
     ...accountsSettings,
     ...pick(organizationSettings, ['accountingBasis']),
-    ...pick(paymentReceiveSettings, ['depositAccount', 'advanceDeposit']),
+    ...pick(paymentReceiveSettings, ['preferredDepositAccount', 'preferredAdvanceDeposit']),
   };
 
   const initialValues = {

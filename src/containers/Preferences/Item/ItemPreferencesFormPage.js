@@ -3,6 +3,7 @@ import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 import intl from 'react-intl-universal';
+import { pick, omit } from 'lodash';
 import { ItemPreferencesSchema } from './ItemPreferences.schema';
 import ItemPreferencesForm from './ItemPreferencesForm';
 
@@ -23,12 +24,16 @@ function ItemPreferencesFormPage({
 }) {
   const { saveSettingMutate } = useItemPreferencesFormContext();
 
+  const itemPerferencesSettings = {
+    ...omit(itemsSettings, ['tableSize']),
+  };
+  
   // Initial values.
   const initialValues = {
     preferred_sell_account: '',
     preferred_cost_account: '',
     preferred_inventory_account: '',
-    ...transformGeneralSettings(itemsSettings),
+    ...transformGeneralSettings(itemPerferencesSettings),
   };
 
   useEffect(() => {
@@ -37,8 +42,10 @@ function ItemPreferencesFormPage({
 
   // Handle form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    const options = optionsMapToArray(values)
-      .map((option) => ({ ...option, group: 'items' }));
+    const options = optionsMapToArray(values).map((option) => ({
+      ...option,
+      group: 'items',
+    }));
 
     const onSuccess = () => {
       AppToaster.show({
