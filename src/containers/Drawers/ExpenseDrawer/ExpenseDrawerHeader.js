@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { defaultTo } from 'lodash';
+import styled from 'styled-components';
 
 import {
   CommercialDocHeader,
@@ -13,6 +14,7 @@ import {
   FormattedMessage as T,
 } from 'components';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
+import { ExpenseDetailsStatus } from './components';
 
 /**
  * Expense drawer content.
@@ -32,6 +34,10 @@ export default function ExpenseDrawerHeader() {
               />
             </h3>
           </DetailItem>
+
+          <StatusDetailItem>
+            <ExpenseDetailsStatus expense={expense} />
+          </StatusDetailItem>
         </DetailsMenu>
       </CommercialDocTopHeader>
 
@@ -68,3 +74,10 @@ export default function ExpenseDrawerHeader() {
     </CommercialDocHeader>
   );
 }
+
+const StatusDetailItem = styled(DetailItem)`
+  width: 50%;
+  text-align: right;
+  position: relative;
+  top: -5px;
+`;

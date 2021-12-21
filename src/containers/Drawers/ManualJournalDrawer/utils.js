@@ -1,8 +1,8 @@
 import intl from 'react-intl-universal';
 import React from 'react';
-import { Classes, Tooltip, Position } from '@blueprintjs/core';
+import { Tag, Intent, Classes, Tooltip, Position } from '@blueprintjs/core';
 
-import { FormatNumberCell, If, Icon } from '../../../components';
+import { T, Choose, FormatNumberCell, If, Icon } from '../../../components';
 
 /**
  * Note column accessor.
@@ -19,6 +19,27 @@ export function NoteAccessor(row) {
         <Icon icon={'file-alt'} iconSize={16} />
       </Tooltip>
     </If>
+  );
+}
+
+/**
+ * Publish column accessor.
+ */
+export function ManualJournalDetailsStatus({ manualJournal }) {
+  return (
+    <Choose>
+      <Choose.When condition={!!manualJournal.is_published}>
+        <Tag minimal={true} round={true}>
+          <T id={'published'} />
+        </Tag>
+      </Choose.When>
+
+      <Choose.Otherwise>
+        <Tag intent={Intent.WARNING} round={true}>
+          <T id={'draft'} />
+        </Tag>
+      </Choose.Otherwise>
+    </Choose>
   );
 }
 
