@@ -2,6 +2,9 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DataTable } from '../../../../../components';
+import { TableStyle } from 'common';
+import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+
 import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
 import { useItemAssociatedEstimateTransactions } from 'hooks/query';
 import { useEstimateTransactionsColumns, ActionsMenu } from './components';
@@ -61,6 +64,8 @@ function EstimatePaymentTransactions({
         onEdit: handleEditPaymentTransactions,
         onDelete: handleDeletePaymentTransactons,
       }}
+      styleName={TableStyle.Constrant}
+      TableLoadingRenderer={TableSkeletonRows}
     />
   );
 }

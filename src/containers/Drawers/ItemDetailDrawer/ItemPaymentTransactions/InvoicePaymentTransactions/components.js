@@ -67,6 +67,7 @@ export const useInvoicePaymentTransactionsColumns = () => {
         id: 'qunatity',
         Header: intl.get('item.drawer_quantity_sold'),
         accessor: 'quantity',
+        align: 'right',
         width: 100,
       },
       {

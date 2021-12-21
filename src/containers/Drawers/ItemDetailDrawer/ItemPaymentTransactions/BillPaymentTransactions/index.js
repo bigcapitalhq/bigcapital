@@ -2,10 +2,12 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DataTable } from '../../../../../components';
+import { TableStyle } from 'common';
+import TableSkeletonRows from 'components/Datatable/TableSkeletonRows'
+
 import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
 import { useItemAssociatedBillTransactions } from 'hooks/query';
 import { useBillTransactionsColumns, ActionsMenu } from './components';
-
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
@@ -60,6 +62,8 @@ function BillPaymentTransactions({
         onEdit: handleEditPaymentTransactions,
         onDelete: handleDeletePaymentTransactons,
       }}
+      styleName={TableStyle.Constrant}
+      TableLoadingRenderer={TableSkeletonRows}
     />
   );
 }
@@ -67,3 +71,7 @@ export default compose(
   withAlertsActions,
   withDrawerActions,
 )(BillPaymentTransactions);
+
+
+
+

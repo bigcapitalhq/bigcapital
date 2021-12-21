@@ -2,6 +2,9 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DataTable } from '../../../../../components';
+import TableSkeletonRows from 'components/Datatable/TableSkeletonRows'
+import { TableStyle } from 'common';
+
 import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
 import { useItemAssociatedReceiptTransactions } from 'hooks/query';
 import { useReceiptTransactionsColumns, ActionsMenu } from './components';
@@ -61,6 +64,8 @@ function ReceiptPaymentTransactions({
         onEdit: handleEditPaymentTransactions,
         onDelete: handleDeletePaymentTransactons,
       }}
+      styleName={TableStyle.Constrant}
+      TableLoadingRenderer={TableSkeletonRows}
     />
   );
 }

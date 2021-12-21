@@ -1,11 +1,29 @@
 import React from 'react';
+import styled from 'styled-components';
+
 import { Card } from 'components';
 import { ItemManuTransaction } from './utils';
-import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
 import ItemPaymentTransactionContent from './ItemPaymentTransactionContent';
 
-export const ItemPaymentTransactions = () => {
-  const { value, setValue } = useItemDetailDrawerContext();
+import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
+
+export function ItemPaymentTransactions() {
+  const { value } = useItemDetailDrawerContext();
+
+  return (
+    <Card>
+      <ItemTransactionsHeader />
+      <ItemPaymentTransactionContent tansactionType={value} />
+    </Card>
+  );
+}
+
+/**
+ * Item transactions header.
+ * @returns {React.JSX}
+ */
+export function ItemTransactionsHeader() {
+  const { setValue } = useItemDetailDrawerContext();
 
   // handle item change.
   const handleItemChange = (item) => {
@@ -13,10 +31,12 @@ export const ItemPaymentTransactions = () => {
   };
 
   return (
-    <Card>
+    <ItemTransactionsHeaderRoot>
       <ItemManuTransaction onChange={handleItemChange} />
-      <ItemPaymentTransactionContent tansactionType={value} />
-    </Card>
+    </ItemTransactionsHeaderRoot>
   );
-};
+}
 
+export const ItemTransactionsHeaderRoot = styled.div`
+  margin-bottom: 10px;
+`;

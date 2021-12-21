@@ -8,6 +8,7 @@ export default function ItemPaymentTransactionsContent({ tansactionType }) {
   const handleType = () => {
     switch (tansactionType) {
       case 'invoices':
+      default:
         return <InvoicePaymentTransactions />;
       case 'estimates':
         return <EstimatePaymentTransactions />;
