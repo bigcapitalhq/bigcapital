@@ -1,5 +1,10 @@
+import React from 'react';
 import { sumBy, round } from 'lodash';
 import * as R from 'ramda';
+import intl from 'react-intl-universal';
+
+import { MoneyFieldCell } from 'components';
+
 /**
  * Retrieve transaction entries of the given transaction id.
  */
@@ -60,3 +65,45 @@ export function allocateCostByQuantity(total, entries) {
     cost: round(entry.percentageOfQuantity * total, 2),
   }));
 }
+
+/**
+ * Retrieves allocate landed cost entries table columns.
+ */
+export const useAllocateLandedCostEntriesTableColumns = () => {
+  return React.useMemo(
+    () => [
+      {
+        Header: intl.get('item'),
+        accessor: 'item.name',
+        disableSortBy: true,
+        width: '150',
+      },
+      {
+        Header: intl.get('quantity'),
+        accessor: 'quantity',
+        disableSortBy: true,
+        width: '100',
+      },
+      {
+        Header: intl.get('rate'),
+        accessor: 'rate',
+        disableSortBy: true,
+        width: '100',
+      },
+      {
+        Header: intl.get('amount'),
+        accessor: 'amount',
+        disableSortBy: true,
+        width: '100',
+      },
+      {
+        Header: intl.get('cost'),
+        accessor: 'cost',
+        width: '150',
+        Cell: MoneyFieldCell,
+        disableSortBy: true,
+      },
+    ],
+    [],
+  );
+};

@@ -1,7 +1,10 @@
 import React from 'react';
-import intl from 'react-intl-universal';
-import { MoneyFieldCell, DataTableEditable } from 'components';
+import styled from 'styled-components';
+
+import { DataTableEditable } from 'components';
+
 import { compose, updateTableCell } from 'utils';
+import { useAllocateLandedCostEntriesTableColumns } from './utils';
 
 /**
  * Allocate landed cost entries table.
@@ -11,42 +14,7 @@ export default function AllocateLandedCostEntriesTable({
   entries,
 }) {
   // Allocate landed cost entries table columns.
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: intl.get('item'),
-        accessor: 'item.name',
-        disableSortBy: true,
-        width: '150',
-      },
-      {
-        Header: intl.get('quantity'),
-        accessor: 'quantity',
-        disableSortBy: true,
-        width: '100',
-      },
-      {
-        Header: intl.get('rate'),
-        accessor: 'rate',
-        disableSortBy: true,
-        width: '100',
-      },
-      {
-        Header: intl.get('amount'),
-        accessor: 'amount',
-        disableSortBy: true,
-        width: '100',
-      },
-      {
-        Header: intl.get('cost'),
-        accessor: 'cost',
-        width: '150',
-        Cell: MoneyFieldCell,
-        disableSortBy: true,
-      },
-    ],
-    [],
-  );
+  const columns = useAllocateLandedCostEntriesTableColumns();
 
   // Handle update data.
   const handleUpdateData = React.useCallback(
@@ -60,7 +28,7 @@ export default function AllocateLandedCostEntriesTable({
   );
 
   return (
-    <DataTableEditable
+    <AllocateLandeedCostEntriesEditableTable
       columns={columns}
       data={entries}
       payload={{
@@ -70,3 +38,18 @@ export default function AllocateLandedCostEntriesTable({
     />
   );
 }
+
+export const AllocateLandeedCostEntriesEditableTable = styled(
+  DataTableEditable,
+)`
+  .table {
+    .thead .tr .th {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    .tbody .tr .td {
+      padding: 0.25rem;
+    }
+  }
+`;
