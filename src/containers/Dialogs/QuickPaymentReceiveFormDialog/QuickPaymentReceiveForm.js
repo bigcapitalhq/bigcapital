@@ -106,6 +106,6 @@ export default compose(
     paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
     paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
     paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
-    preferredDepositAccount: paymentReceiveSettings?.depositAccount,
+    preferredDepositAccount: paymentReceiveSettings?.preferredDepositAccount,
   })),
 )(QuickPaymentReceiveForm);

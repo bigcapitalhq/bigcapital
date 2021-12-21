@@ -11,13 +11,13 @@ export const transformToOptions = (option) => {
       group: 'bill_payments',
     },
     {
-      key: 'deposit_account',
-      value: option.deposit_account,
+      key: 'preferred_deposit_account',
+      value: option.preferred_deposit_account,
       group: 'payment_receives',
     },
     {
-      key: 'advance_deposit',
-      value: option.advance_deposit,
+      key: 'preferred_advance_deposit',
+      value: option.preferred_advance_deposit,
       group: 'payment_receives',
     },
     {

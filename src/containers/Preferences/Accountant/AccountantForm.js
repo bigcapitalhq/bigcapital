@@ -17,6 +17,7 @@ import {
   FieldRequiredHint,
 } from 'components';
 import { handleStringChange, inputIntent } from 'utils';
+import { ACCOUNT_TYPE } from 'common/accountTypes';
 
 import { useAccountantFormContext } from './AccountantFormProvider';
 
@@ -113,7 +114,7 @@ export default function AccountantForm() {
       </FastField>
 
       {/* ----------- Deposit customer account ----------- */}
-      <FastField name={'deposit_account'}>
+      <FastField name={'preferred_deposit_account'}>
         {({
           form: { values, setFieldValue },
           field: { value },
@@ -138,11 +139,15 @@ export default function AccountantForm() {
             <AccountsSelectList
               accounts={accounts}
               onAccountSelected={({ id }) => {
-                setFieldValue('deposit_account', id);
+                setFieldValue('preferred_deposit_account', id);
               }}
               selectedAccountId={value}
               defaultSelectText={<T id={'select_payment_account'} />}
-              // filterByParentTypes={[ACCOUNT_PARENT_TYPE.CURRENT_ASSET]}
+              filterByTypes={[
+                ACCOUNT_TYPE.CASH,
+                ACCOUNT_TYPE.BANK,
+                ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+              ]}
             />
           </FormGroup>
         )}
@@ -178,13 +183,18 @@ export default function AccountantForm() {
               }}
               selectedAccountId={value}
               defaultSelectText={<T id={'select_payment_account'} />}
+              filterByTypes={[
+                ACCOUNT_TYPE.CASH,
+                ACCOUNT_TYPE.BANK,
+                ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+              ]}
             />
           </FormGroup>
         )}
       </FastField>
 
       {/* ----------- Withdrawal customer account ----------- */}
-      <FastField name={'advance_deposit'}>
+      <FastField name={'preferred_advance_deposit'}>
         {({
           form: { values, setFieldValue },
           field: { value },
@@ -209,7 +219,7 @@ export default function AccountantForm() {
             <AccountsSelectList
               accounts={accounts}
               onAccountSelected={({ id }) => {
-                setFieldValue('advance_deposit', id);
+                setFieldValue('preferred_advance_deposit', id);
               }}
               selectedAccountId={value}
               defaultSelectText={<T id={'select_payment_account'} />}
