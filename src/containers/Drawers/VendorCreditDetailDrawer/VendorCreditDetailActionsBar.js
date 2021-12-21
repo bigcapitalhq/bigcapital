@@ -69,7 +69,7 @@ function VendorCreditDetailActionsBar({
         <If condition={!vendorCredit.is_closed && !vendorCredit.is_draft}>
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon="quick-payment-16" iconSize={16} />}
+            icon={<Icon icon="arrow-downward" iconSize={18} />}
             text={<T id={'refund'} />}
             onClick={handleRefundVendorCredit}
           />

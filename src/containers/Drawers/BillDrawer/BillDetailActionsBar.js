@@ -8,7 +8,6 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import { useBillDrawerContext } from './BillDrawerProvider';
 

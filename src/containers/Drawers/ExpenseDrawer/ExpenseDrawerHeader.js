@@ -27,12 +27,7 @@ export default function ExpenseDrawerHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <DetailItem name={'amount'} label={<T id={'full_amount'} />}>
-            <h3 class="big-number">
-              <Money
-                amount={expense.total_amount}
-                currency={expense.currency_code}
-              />
-            </h3>
+            <h3 class="big-number">{expense.formatted_amount}</h3>
           </DetailItem>
 
           <StatusDetailItem>
@@ -52,8 +47,8 @@ export default function ExpenseDrawerHeader() {
               {defaultTo(expense.reference_no, '-')}
             </DetailItem>
 
-            <DetailItem label={<T id={'published_at'} />}>
-              {moment(expense.published_at).format('YYYY MMM DD')}
+            <DetailItem label={<T id={'description'} />}>
+              {defaultTo(expense.description, '—')}
             </DetailItem>
           </DetailsMenu>
         </Col>
@@ -64,9 +59,10 @@ export default function ExpenseDrawerHeader() {
             direction={'horizantal'}
             minLabelSize={'180px'}
           >
-            <DetailItem label={<T id={'description'} />}>
-              {defaultTo(expense.description, '—')}
+            <DetailItem label={<T id={'published_at'} />}>
+              {moment(expense.published_at).format('YYYY MMM DD')}
             </DetailItem>
+
             <DetailItem label={<T id={'created_at'} />}>2021 Aug 24</DetailItem>
           </DetailsMenu>
         </Col>
