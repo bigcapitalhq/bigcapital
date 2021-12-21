@@ -6,6 +6,8 @@ import {
   DetailsMenu,
   DetailItem,
   FormattedMessage as T,
+  CommercialDocHeader,
+  CommercialDocTopHeader,
 } from 'components';
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 
@@ -25,12 +27,14 @@ export default function ManualJournalDrawerHeader() {
   } = useManualJournalDrawerContext();
 
   return (
-    <div className={'journal-drawer__content-header'}>
-      <DetailsMenu>
-        <DetailItem name={'total'} label={<T id={'total'} />}>
-          <h3 class="big-number">{formatted_amount}</h3>
-        </DetailItem>
-      </DetailsMenu>
+    <CommercialDocHeader>
+      <CommercialDocTopHeader>
+        <DetailsMenu>
+          <DetailItem name={'total'} label={<T id={'total'} />}>
+            <h3 class="big-number">{formatted_amount}</h3>
+          </DetailItem>
+        </DetailsMenu>
+      </CommercialDocTopHeader>
 
       <Row>
         <Col xs={6}>
@@ -50,16 +54,13 @@ export default function ManualJournalDrawerHeader() {
             <DetailItem name={'currency'} label={<T id={'currency'} />}>
               {currency_code}
             </DetailItem>
+
+            <DetailItem label={<T id={'description'} />}>
+              {defaultTo(description, '—')}
+            </DetailItem>
           </DetailsMenu>
         </Col>
       </Row>
-
-      <div class="journal-drawer__content-description">
-        <b class="title">
-          <T id={'manual_journal.details.description'} />
-        </b>
-        : {defaultTo(description, '—')}
-      </div>
-    </div>
+    </CommercialDocHeader>
   );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Card } from 'components';
+import { CommercialDocBox } from '../../../components';
 
 import ExpenseDrawerActionBar from './ExpenseDrawerActionBar';
 import ExpenseDrawerHeader from './ExpenseDrawerHeader';
@@ -16,13 +16,11 @@ export default function ExpenseDrawerDetails() {
     <ExpenseDetailsRoot>
       <ExpenseDrawerActionBar />
 
-      <div className="expense-drawer__content">
-        <Card>
-          <ExpenseDrawerHeader />
-          <ExpenseDrawerTable />
-          <ExpenseDrawerFooter />
-        </Card>
-      </div>
+      <CommercialDocBox>
+        <ExpenseDrawerHeader />
+        <ExpenseDrawerTable />
+        <ExpenseDrawerFooter />
+      </CommercialDocBox>
     </ExpenseDetailsRoot>
   );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Card } from 'components';
+import { CommercialDocBox } from '../../../components';
 
 import ManualJournalDrawerActionBar from './ManualJournalDrawerActionBar';
 import ManualJournalDrawerHeader from './ManualJournalDrawerHeader';
@@ -16,16 +16,13 @@ export default function ManualJournalDrawerDetails() {
     <ManualJournalDetailsRoot>
       <ManualJournalDrawerActionBar />
 
-      <div className="journal-drawer__content">
-        <Card>
-          <ManualJournalDrawerHeader />
-          <ManualJournalDrawerTable />
-          <ManualJournalDrawerFooter />
-        </Card>
-      </div>
+      <CommercialDocBox>
+        <ManualJournalDrawerHeader />
+        <ManualJournalDrawerTable />
+        <ManualJournalDrawerFooter />
+      </CommercialDocBox>
     </ManualJournalDetailsRoot>
   );
 }
-
 
 const ManualJournalDetailsRoot = styled.div``;
