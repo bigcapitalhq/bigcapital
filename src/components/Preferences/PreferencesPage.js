@@ -1,6 +1,8 @@
 import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import classNames from 'classnames';
+import * as R from 'ramda';
+
 import { CLASSES } from 'common/classes';
 
 import PreferencesTopbar from 'components/Preferences/PreferencesTopbar';
@@ -8,18 +10,28 @@ import PreferencesContentRoute from 'components/Preferences/PreferencesContentRo
 import DashboardErrorBoundary from 'components/Dashboard/DashboardErrorBoundary';
 import PreferencesSidebar from 'components/Preferences/PreferencesSidebar';
 
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+
 import 'style/pages/Preferences/Page.scss';
 
 /**
  * Preferences page.
  */
-export default function PreferencesPage() {
+function PreferencesPage({ toggleSidebarExpand }) {
+  // Shrink the dashboard sidebar once open application preferences page.
+  React.useEffect(() => {
+    toggleSidebarExpand(false);
+  }, [toggleSidebarExpand]);
+
   return (
     <ErrorBoundary FallbackComponent={DashboardErrorBoundary}>
-      <div id={'dashboard'} className={classNames(
-        CLASSES.DASHBOARD_CONTENT,
-        CLASSES.DASHBOARD_CONTENT_PREFERENCES,
-      )}>
+      <div
+        id={'dashboard'}
+        className={classNames(
+          CLASSES.DASHBOARD_CONTENT,
+          CLASSES.DASHBOARD_CONTENT_PREFERENCES,
+        )}
+      >
         <div className={classNames(CLASSES.PREFERENCES_PAGE)}>
           <PreferencesSidebar />
 
@@ -32,3 +44,5 @@ export default function PreferencesPage() {
     </ErrorBoundary>
   );
 }
+
+export default R.compose(withDashboardActions)(PreferencesPage);

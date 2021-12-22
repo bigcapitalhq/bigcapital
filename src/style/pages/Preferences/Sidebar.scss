@@ -3,7 +3,7 @@
 // Preferences sidebar.
 // -----------------------------
 .preferences-sidebar {
-  background: #e5eaee;
+  background: #eaeef6;
   border-right: 1px solid #c6d0d9;
   min-width: 220px;
   max-width: 220px;
@@ -13,13 +13,17 @@
   &__wrapper {
     height: 100%;
   }
+
   .ScrollbarsCustom-Track {
+
     &.ScrollbarsCustom-TrackY,
     &.ScrollbarsCustom-TrackX {
       background: rgba(0, 0, 0, 0);
     }
   }
+
   .ScrollbarsCustom-Thumb {
+
     &.ScrollbarsCustom-ThumbX,
     &.ScrollbarsCustom-ThumbY {
       background: rgba(0, 0, 0, 0);
@@ -28,6 +32,7 @@
 
   &:hover {
     .ScrollbarsCustom-Thumb {
+
       &.ScrollbarsCustom-ThumbX,
       &.ScrollbarsCustom-ThumbY {
         background: rgba(0, 0, 0, 0.15);
