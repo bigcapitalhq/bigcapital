@@ -39,7 +39,7 @@ function CreditNoteDeleteAlert({
     deleteCreditNoteMutate(creditNoteId)
       .then(() => {
         AppToaster.show({
-          message: intl.get('credit_note.alert.success_message'),
+          message: intl.get('credit_note.alert.delete_message'),
           intent: Intent.SUCCESS,
         });
         closeDrawer('credit-note-detail-drawer');

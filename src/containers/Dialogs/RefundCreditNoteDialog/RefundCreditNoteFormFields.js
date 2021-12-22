@@ -116,7 +116,7 @@ function RefundCreditNoteFormFields() {
       <FastField name={'from_account_id'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
-            label={<T id={'refund_credit_note.dialog.form_account'} />}
+            label={<T id={'refund_credit_note.dialog.from_account'} />}
             className={classNames(
               'form-group--from_account_id',
               'form-group--select-list',

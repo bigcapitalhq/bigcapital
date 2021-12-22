@@ -56,7 +56,9 @@ function VendorCreditDetailDrawerProvider({ vendorCreditId, ...props }) {
     >
       <DrawerHeaderContent
         name="vendor-credit-detail-drawer"
-        title={intl.get('vendor_credit.drawer_vendor_credit_detail')}
+        title={intl.get('vendor_credit.drawer_vendor_credit_detail', {
+          vendorNumber: vendorCredit.vendor_credit_number,
+        })}
       />
       <VendorCreditDetailDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>

@@ -38,7 +38,7 @@ function VendorCreditDeleteAlert({
     deleteVendorCreditMutate(vendorCreditId)
       .then(() => {
         AppToaster.show({
-          message: intl.get('vendor_credits.alert.success_message'),
+          message: intl.get('vendor_credits.alert.delete_message'),
           intent: Intent.SUCCESS,
         });
         closeDrawer('vendor-credit-detail-drawer');

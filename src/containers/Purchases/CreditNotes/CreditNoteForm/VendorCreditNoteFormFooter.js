@@ -14,7 +14,7 @@ export default function VendorCreditNoteFormFooter() {
   return (
     <div class={classNames(CLASSES.PAGE_FORM_FOOTER)}>
       <Postbox
-        title={<T id={'credit_note.label_credit_note_details'} />}
+        title={<T id={'vendor_credits_note.label_credit_note_details'} />}
         defaultOpen={false}
       >
         <Row>
