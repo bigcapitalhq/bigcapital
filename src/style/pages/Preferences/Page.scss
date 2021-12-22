@@ -33,6 +33,8 @@
     }
   }
   &__inside-content {
+    overflow: auto;
+
     .#{$ns}-tab-list {
       border-bottom: 1px solid #e5e5e5;
       padding-left: 15px;

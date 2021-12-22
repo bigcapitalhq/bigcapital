@@ -51,3 +51,15 @@ export const getNewRoleInitialValues = (schema) => {
     ),
   };
 };
+
+export function getSerivceColumnPermission(service, columnKey) {
+  return service.permissions.find((permission) => {
+    return permission.relatedColumn === columnKey;
+  });
+}
+
+export function getServiceExtraPermissions(service) {
+  return service.permissions.filter((permission) => {
+    return !permission.relatedColumn;
+  });
+}

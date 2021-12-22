@@ -17,6 +17,8 @@ export const AbilitySubject = {
   Preferences: 'Preferences',
   ExchangeRate: 'ExchangeRate',
   SubscriptionBilling: 'SubscriptionBilling',
+  CreditNote: 'CreditNote',
+  VendorCredit: 'VendorCredit',
 };
 
 export const ItemAction = {
@@ -66,6 +68,21 @@ export const PaymentReceiveAction = {
   NotifyBySms: 'NotifyBySms',
 };
 
+export const CreditNoteAction = {
+  View: 'View',
+  Create: 'Create',
+  Edit: 'Edit',
+  Delete: 'Delete',
+  Refund: 'Refund'
+};
+
+export const VendorCreditAction = {
+  View: 'View',
+  Create: 'Create',
+  Edit: 'Edit',
+  Delete: 'Delete',
+  Refund: 'Refund'
+};
 export const BillAction = {
   View: 'View',
   Create: 'Create',

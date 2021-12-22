@@ -1,37 +1,27 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { ErrorMessage, FastField, Form, useFormikContext } from 'formik';
-import {
-  Button,
-  FormGroup,
-  InputGroup,
-  Intent,
-  TextArea,
-} from '@blueprintjs/core';
+import { ErrorMessage, FastField, Form } from 'formik';
+import { FormGroup, InputGroup, TextArea } from '@blueprintjs/core';
+
 import { inputIntent } from 'utils';
-import { FormattedMessage as T, FieldRequiredHint } from 'components';
+import { FormattedMessage as T, FieldRequiredHint, Card } from 'components';
 import { useAutofocus } from 'hooks';
 import { RolesPermissionList } from './components';
+import { RoleFormFloatingActions } from './RoleFormFloatingActions';
 
 /**
- * Preferences - Roles Form content.
+ * Role form header.
+ * @returns {React.JSX}
  */
-export default function RolesFormContent() {
-  const history = useHistory();
-
-  const { isSubmitting, values } = useFormikContext();
+function RoleFormHeader() {
   const roleNameFieldRef = useAutofocus();
 
-  const handleCloseClick = () => {
-    history.go(-1);
-  };
   return (
-    <Form>
+    <Card>
       {/* ----------  name ----------  */}
       <FastField name={'role_name'}>
         {({ field, meta: { error, touched } }) => (
           <FormGroup
-            label={<T id={'name'} />}
+            label={<strong><T id={'role_name'} /></strong>}
             labelInfo={<FieldRequiredHint />}
             className={'form-group--name'}
             intent={inputIntent({ error, touched })}
@@ -57,20 +47,28 @@ export default function RolesFormContent() {
             helperText={<ErrorMessage name={'role_description'} />}
             inline={true}
           >
-            <TextArea growVertically={true} height={280} {...field} />
+            <TextArea
+              growVertically={true}
+              height={280}
+              {...field}
+              placeholder="Max. 500 characters"
+            />
           </FormGroup>
         )}
       </FastField>
-      <RolesPermissionList />
+    </Card>
+  );
+}
 
-      <div className={'card__footer'}>
-        <Button intent={Intent.PRIMARY} loading={isSubmitting} type="submit">
-          <T id={'save'} />
-        </Button>
-        <Button onClick={handleCloseClick} disabled={isSubmitting}>
-          <T id={'cancel'} />
-        </Button>
-      </div>
+/**
+ * Preferences - Roles Form content.
+ */
+export default function RolesFormContent() {
+  return (
+    <Form>
+      <RoleFormHeader />
+      <RolesPermissionList />
+      <RoleFormFloatingActions />
     </Form>
   );
 }
