@@ -41,7 +41,7 @@ function CancelUnlockingPartialTarnsactions({
       .then(() => {
         AppToaster.show({
           message: intl.get(
-            'unlocking_partial_transactions.alert.success_message',
+            'unlocking_partial_transactions.alert.cancel_message',
           ),
           intent: Intent.SUCCESS,
         });
