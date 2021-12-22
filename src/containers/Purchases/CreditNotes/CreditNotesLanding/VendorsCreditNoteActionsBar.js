@@ -80,7 +80,6 @@ function VendorsCreditNoteActionsBar({
           allMenuItem={true}
           resourceName={'vendor_credit'}
           views={VendorCreditsViews}
-          allMenuItem={true}
           allMenuItemText={<T id={'all'} />}
           onChange={handleTabChange}
         />
@@ -88,7 +87,7 @@ function VendorsCreditNoteActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'plus'} />}
-          text={<T id={'vendor_credits.action.new_vendor_credit'} />}
+          text={<T id={'vendor_credits.label.new_vendor_credit'} />}
           onClick={handleClickNewVendorCredit}
         />
         <AdvancedFilterPopover

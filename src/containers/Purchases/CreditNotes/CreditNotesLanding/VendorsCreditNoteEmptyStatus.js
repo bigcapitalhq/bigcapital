@@ -11,7 +11,7 @@ export default function VendorsCreditNoteEmptyStatus() {
       title={<T id={'the_organization_doesn_t_receive_money_yet'} />}
       description={
         <p>
-          <T id={'credit_note.empty_status_description'} />
+          <T id={'vendor_credits.empty_status_description'} />
         </p>
       }
       action={

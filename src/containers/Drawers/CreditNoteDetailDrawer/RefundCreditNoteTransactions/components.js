@@ -38,9 +38,8 @@ export function useRefundCreditTransactionsTableColumns() {
         align: 'right',
       },
       {
-        Header: intl.get(
-          'refund_credit_transactions.column.withdrawal_account',
-        ),
+        id: 'from_account',
+        Header: intl.get('refund_credit_transactions.column.withdrawal_account'),
         accessor: ({ from_account }) => from_account.name,
         width: 100,
         className: 'from_account',
