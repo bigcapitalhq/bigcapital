@@ -3,8 +3,12 @@ import intl from 'react-intl-universal';
 import { Intent, Menu, MenuItem } from '@blueprintjs/core';
 import clsx from 'classnames';
 import { CLASSES } from '../../../../common/classes';
-import { FormatDateCell, Icon } from '../../../../components';
+import { FormatDateCell, Icon, Can } from '../../../../components';
 import { safeCallback } from 'utils';
+import {
+  PaymentReceiveAction,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 /**
  * Table actions menu.
@@ -15,17 +19,21 @@ export function ActionsMenu({
 }) {
   return (
     <Menu>
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('invoice_transactions.action.edit_transaction')}
-        onClick={safeCallback(onEdit, original)}
-      />
-      <MenuItem
-        text={intl.get('invoice_transactions.action.delete_transaction')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-        icon={<Icon icon="trash-16" iconSize={16} />}
-      />
+      <Can I={PaymentReceiveAction.Edit} a={AbilitySubject.PaymentReceive}>
+        <MenuItem
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('invoice_transactions.action.edit_transaction')}
+          onClick={safeCallback(onEdit, original)}
+        />
+      </Can>
+      <Can I={PaymentReceiveAction.Delete} a={AbilitySubject.PaymentReceive}>
+        <MenuItem
+          text={intl.get('invoice_transactions.action.delete_transaction')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
+        />
+      </Can>
     </Menu>
   );
 }

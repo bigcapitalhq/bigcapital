@@ -14,7 +14,17 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { DrawerActionsBar, Icon, FormattedMessage as T, If } from 'components';
+import {
+  DrawerActionsBar,
+  Can,
+  Icon,
+  FormattedMessage as T,
+  If,
+} from 'components';
+import {
+  CreditNoteAction,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 
 import { compose } from 'utils';
 import { CreditNoteMenuItem } from './utils';
@@ -58,37 +68,45 @@ function CreditNoteDetailActionsBar({
   return (
     <DrawerActionsBar>
       <NavbarGroup>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="pen-18" />}
-          text={<T id={'credit_note.action.edit_credit_note'} />}
-          onClick={handleEditCreditNote}
-        />
-        <NavbarDivider />
-        <If condition={!creditNote.is_closed && !creditNote.is_draft}>
+        <Can I={CreditNoteAction.Edit} a={AbilitySubject.CreditNote}>
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon="arrow-upward" iconSize={18} />}
-            text={<T id={'refund'} />}
-            onClick={handleRefundCreditNote}
+            icon={<Icon icon="pen-18" />}
+            text={<T id={'credit_note.action.edit_credit_note'} />}
+            onClick={handleEditCreditNote}
           />
           <NavbarDivider />
-        </If>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'trash-16'} iconSize={16} />}
-          text={<T id={'delete'} />}
-          intent={Intent.DANGER}
-          onClick={handleDeleteCreditNote}
-        />
-        <If condition={creditNote.is_published && !creditNote.is_closed}>
-          <NavbarDivider />
-          <CreditNoteMenuItem
-            payload={{
-              onReconcile: handleReconcileCreditNote,
-            }}
+        </Can>
+        <Can I={CreditNoteAction.Refund} a={AbilitySubject.CreditNote}>
+          <If condition={!creditNote.is_closed && !creditNote.is_draft}>
+            <Button
+              className={Classes.MINIMAL}
+              icon={<Icon icon="arrow-upward" iconSize={18} />}
+              text={<T id={'refund'} />}
+              onClick={handleRefundCreditNote}
+            />
+            <NavbarDivider />
+          </If>
+        </Can>
+        <Can I={CreditNoteAction.Delete} a={AbilitySubject.CreditNote}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'trash-16'} iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleDeleteCreditNote}
           />
-        </If>
+        </Can>
+        <Can I={CreditNoteAction.Edit} a={AbilitySubject.CreditNote}>
+          <If condition={creditNote.is_published && !creditNote.is_closed}>
+            <NavbarDivider />
+            <CreditNoteMenuItem
+              payload={{
+                onReconcile: handleReconcileCreditNote,
+              }}
+            />
+          </If>
+        </Can>
       </NavbarGroup>
     </DrawerActionsBar>
   );

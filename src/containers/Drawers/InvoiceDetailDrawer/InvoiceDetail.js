@@ -1,9 +1,13 @@
 import React from 'react';
 import { Tab } from '@blueprintjs/core';
 import styled from 'styled-components';
+import intl from 'react-intl-universal';
 
-import { DrawerMainTabs } from 'components';
-
+import { Can, DrawerMainTabs } from 'components';
+import {
+  PaymentReceiveAction,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 import InvoiceDetailActionsBar from './InvoiceDetailActionsBar';
 import InvoiceGLEntriesTable from './InvoiceGLEntriesTable';
 import InvoicePaymentTransactionsTable from './InvoicePaymentTransactions/InvoicePaymentTransactionsTable';
@@ -19,17 +23,23 @@ function InvoiceDetailsTabs() {
       renderActiveTabPanelOnly={true}
       defaultSelectedTabId="details"
     >
-      <Tab title={'Overview'} id={'details'} panel={<InvoiceDetailTab />} />
       <Tab
-        title={'Journal Entries'}
+        title={intl.get('overview')}
+        id={'details'}
+        panel={<InvoiceDetailTab />}
+      />
+      <Tab
+        title={intl.get('journal_entries')}
         id={'journal_entries'}
         panel={<InvoiceGLEntriesTable />}
       />
+      {/* <Can I={PaymentReceiveAction.View} a={AbilitySubject.PaymentReceive}> */}
       <Tab
-        title={'Payment Transactions'}
+        title={intl.get('payment_transactions')}
         id={'payment_transactions'}
         panel={<InvoicePaymentTransactionsTable />}
       />
+      {/* </Can> */}
     </DrawerMainTabs>
   );
 }

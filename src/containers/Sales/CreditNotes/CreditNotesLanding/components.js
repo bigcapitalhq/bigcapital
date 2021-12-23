@@ -10,8 +10,13 @@ import {
   Choose,
   If,
   Icon,
+  Can,
 } from 'components';
 import { safeCallback } from 'utils';
+import {
+  CreditNoteAction,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 export function ActionsMenu({
   payload: { onEdit, onDelete, onRefund, onOpen, onReconcile, onViewDetails },
@@ -24,37 +29,48 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <MenuDivider />
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('credit_note.action.edit_credit_note')}
-        onClick={safeCallback(onEdit, original)}
-      />
-      <If condition={original.is_draft}>
+      <Can I={CreditNoteAction.Edit} a={AbilitySubject.CreditNote}>
+        <MenuDivider />
         <MenuItem
-          icon={<Icon icon={'check'} iconSize={18} />}
-          text={intl.get('credit_note.action.make_as_open')}
-          onClick={safeCallback(onOpen, original)}
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('credit_note.action.edit_credit_note')}
+          onClick={safeCallback(onEdit, original)}
         />
-      </If>
-      <If condition={!original.is_closed && original.is_published}>
+        <If condition={original.is_draft}>
+          <MenuItem
+            icon={<Icon icon={'check'} iconSize={18} />}
+            text={intl.get('credit_note.action.make_as_open')}
+            onClick={safeCallback(onOpen, original)}
+          />
+        </If>
+      </Can>
+
+      <Can I={CreditNoteAction.Refund} a={AbilitySubject.CreditNote}>
+        <If condition={!original.is_closed && original.is_published}>
+          <MenuItem
+            icon={<Icon icon="quick-payment-16" />}
+            text={intl.get('credit_note.action.refund_credit_note')}
+            onClick={safeCallback(onRefund, original)}
+          />
+        </If>
+      </Can>
+      <Can I={CreditNoteAction.Edit} a={AbilitySubject.CreditNote}>
+        <If condition={!original.is_closed && original.is_published}>
+          <MenuItem
+            text={intl.get('credit_note.action.reconcile_with_invoices')}
+            icon={<Icon icon="receipt-24" iconSize={16} />}
+            onClick={safeCallback(onReconcile, original)}
+          />
+        </If>
+      </Can>
+      <Can I={CreditNoteAction.Delete} a={AbilitySubject.CreditNote}>
         <MenuItem
-          icon={<Icon icon="quick-payment-16" />}
-          text={intl.get('credit_note.action.refund_credit_note')}
-          onClick={safeCallback(onRefund, original)}
+          text={intl.get('credit_note.action.delete_credit_note')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
         />
-        <MenuItem
-          text={intl.get('credit_note.action.reconcile_with_invoices')}
-          icon={<Icon icon="receipt-24" iconSize={16} />}
-          onClick={safeCallback(onReconcile, original)}
-        />
-      </If>
-      <MenuItem
-        text={intl.get('credit_note.action.delete_credit_note')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-        icon={<Icon icon="trash-16" iconSize={16} />}
-      />
+      </Can>
     </Menu>
   );
 }

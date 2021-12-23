@@ -11,7 +11,10 @@ import {
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 import { VendorCreditMenuItem } from './utils';
-
+import {
+  VendorCreditAction,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
@@ -59,43 +62,45 @@ function VendorCreditDetailActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="pen-18" />}
-          text={<T id={'vendor_credits.label.edit_vendor_credit'} />}
-          onClick={handleEditVendorCredit}
-        />
-        <NavbarDivider />
-        <If condition={!vendorCredit.is_closed && !vendorCredit.is_draft}>
+        <Can I={VendorCreditAction.Edit} a={AbilitySubject.VendorCredit}>
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon="arrow-downward" iconSize={18} />}
-            text={<T id={'refund'} />}
-            onClick={handleRefundVendorCredit}
+            icon={<Icon icon="pen-18" />}
+            text={<T id={'vendor_credits.label.edit_vendor_credit'} />}
+            onClick={handleEditVendorCredit}
           />
           <NavbarDivider />
-        </If>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'trash-16'} iconSize={16} />}
-          text={<T id={'delete'} />}
-          intent={Intent.DANGER}
-          onClick={handleDeleteVendorCredit}
-        />
-        <If
-          condition={
-            !vendorCredit.is_closed &&
-            !vendorCredit.is_draft
-            // vendorCredit.is_published
-          }
-        >
-          <NavbarDivider />
-          <VendorCreditMenuItem
-            payload={{
-              onReconcile: handleReconcileVendorCredit,
-            }}
+        </Can>
+        <Can I={VendorCreditAction.Refund} a={AbilitySubject.VendorCredit}>
+          <If condition={!vendorCredit.is_closed && !vendorCredit.is_draft}>
+            <Button
+              className={Classes.MINIMAL}
+              icon={<Icon icon="arrow-downward" iconSize={18} />}
+              text={<T id={'refund'} />}
+              onClick={handleRefundVendorCredit}
+            />
+            <NavbarDivider />
+          </If>
+        </Can>
+        <Can I={VendorCreditAction.Delete} a={AbilitySubject.VendorCredit}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'trash-16'} iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleDeleteVendorCredit}
           />
-        </If>
+        </Can>
+        <Can I={VendorCreditAction.Edit} a={AbilitySubject.VendorCredit}>
+          <If condition={!vendorCredit.is_closed && !vendorCredit.is_draft}>
+            <NavbarDivider />
+            <VendorCreditMenuItem
+              payload={{
+                onReconcile: handleReconcileVendorCredit,
+              }}
+            />
+          </If>
+        </Can>
       </NavbarGroup>
     </DashboardActionsBar>
   );

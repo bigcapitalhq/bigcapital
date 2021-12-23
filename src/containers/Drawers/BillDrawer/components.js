@@ -3,7 +3,9 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { Intent, MenuItem, Menu } from '@blueprintjs/core';
 import { safeCallback } from 'utils';
-import { Icon } from 'components';
+import { Can, Icon } from 'components';
+import { BillAction, AbilitySubject } from '../../../common/abilityOption';
+
 /**
  * Actions menu.
  */

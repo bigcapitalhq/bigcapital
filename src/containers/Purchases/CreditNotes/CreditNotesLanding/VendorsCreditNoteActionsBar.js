@@ -10,6 +10,7 @@ import {
 } from '@blueprintjs/core';
 import {
   Icon,
+  Can,
   FormattedMessage as T,
   DashboardActionViewsList,
   AdvancedFilterPopover,
@@ -19,7 +20,10 @@ import {
 import DashboardActionsBar from '../../../../components/Dashboard/DashboardActionsBar';
 
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
-
+import {
+  VendorCreditAction,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 import withVendorsCreditNotes from './withVendorsCreditNotes';
 import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
 import withSettings from '../../../Settings/withSettings';
@@ -84,12 +88,14 @@ function VendorsCreditNoteActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'plus'} />}
-          text={<T id={'vendor_credits.label.new_vendor_credit'} />}
-          onClick={handleClickNewVendorCredit}
-        />
+        <Can I={VendorCreditAction.Create} a={AbilitySubject.VendorCredit}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'plus'} />}
+            text={<T id={'vendor_credits.label.new_vendor_credit'} />}
+            onClick={handleClickNewVendorCredit}
+          />
+        </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: vendorCreditFilterRoles,

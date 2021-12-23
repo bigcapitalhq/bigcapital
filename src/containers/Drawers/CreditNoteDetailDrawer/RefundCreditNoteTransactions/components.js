@@ -1,8 +1,12 @@
 import React from 'react';
 import { Intent, MenuItem, Menu } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { FormatDateCell, Icon } from 'components';
+import { Can, FormatDateCell, Icon } from 'components';
 import { safeCallback } from 'utils';
+import {
+  CreditNoteAction,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 /**
  * Actions menu.
@@ -10,12 +14,14 @@ import { safeCallback } from 'utils';
 export function ActionsMenu({ payload: { onDelete }, row: { original } }) {
   return (
     <Menu>
-      <MenuItem
-        icon={<Icon icon="trash-16" iconSize={16} />}
-        text={intl.get('delete_transaction')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-      />
+      <Can I={CreditNoteAction.Delete} a={AbilitySubject.CreditNote}>
+        <MenuItem
+          icon={<Icon icon="trash-16" iconSize={16} />}
+          text={intl.get('delete_transaction')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+        />
+      </Can>
     </Menu>
   );
 }
@@ -39,7 +45,9 @@ export function useRefundCreditTransactionsTableColumns() {
       },
       {
         id: 'from_account',
-        Header: intl.get('refund_credit_transactions.column.withdrawal_account'),
+        Header: intl.get(
+          'refund_credit_transactions.column.withdrawal_account',
+        ),
         accessor: ({ from_account }) => from_account.name,
         width: 100,
         className: 'from_account',

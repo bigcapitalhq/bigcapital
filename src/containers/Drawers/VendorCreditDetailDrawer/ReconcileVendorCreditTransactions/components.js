@@ -1,8 +1,12 @@
 import React from 'react';
 import { Intent, MenuItem, Menu } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { FormatDateCell, Icon } from 'components';
+import { Can, FormatDateCell, Icon } from 'components';
 import { safeCallback } from 'utils';
+import {
+  VendorCreditAction,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 /**
  * Actions menu.
@@ -10,12 +14,14 @@ import { safeCallback } from 'utils';
 export function ActionsMenu({ payload: { onDelete }, row: { original } }) {
   return (
     <Menu>
-      <MenuItem
-        icon={<Icon icon="trash-16" iconSize={16} />}
-        text={intl.get('delete_transaction')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-      />
+      <Can I={VendorCreditAction.Delete} a={AbilitySubject.VendorCredit}>
+        <MenuItem
+          icon={<Icon icon="trash-16" iconSize={16} />}
+          text={intl.get('delete_transaction')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+        />
+      </Can>
     </Menu>
   );
 }

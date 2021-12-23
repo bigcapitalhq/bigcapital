@@ -3,12 +3,16 @@ import { Tab } from '@blueprintjs/core';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
 
-import { DrawerMainTabs } from 'components';
+import { Can, DrawerMainTabs } from 'components';
 import CreditNoteDetailActionsBar from './CreditNoteDetailActionsBar';
 import CreditNoteDetailPanel from './CreditNoteDetailPanel';
 import RefundCreditNoteTransactionsTable from './RefundCreditNoteTransactions/RefundCreditNoteTransactionsTable';
 import ReconcileCreditNoteTransactionsTable from './ReconcileCreditNoteTransactions/ReconcileCreditNoteTransactionsTable';
 import { CreditNoteGLEntriesTable } from './JournalEntriesTransactions/JournalEntriesTransactionsTable';
+import {
+  CreditNoteAction,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 
 /**
  * Credit Note view detail.
@@ -40,6 +44,7 @@ function CreditNoteDetailsTabs() {
         id={'journal_entries'}
         panel={<CreditNoteGLEntriesTable />}
       />
+      {/* <Can I={CreditNoteAction.View} a={AbilitySubject.CreditNote}> */}
       <Tab
         title={intl.get('credit_note.drawer.label_refund_transactions')}
         id={'refund_transactions'}
@@ -50,6 +55,7 @@ function CreditNoteDetailsTabs() {
         id={'reconcile_transactions'}
         panel={<ReconcileCreditNoteTransactionsTable />}
       />
+      {/* </Can> */}
     </DrawerMainTabs>
   );
 }

@@ -10,16 +10,21 @@ import {
 import styled from 'styled-components';
 import { FormattedMessage as T } from 'components';
 import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
-import transactions from '../../../../common/itemPaymentTranactionsOption';
+import { useGetItemPaymentTransactionsMenu } from '../../../../common/itemPaymentTranactionsOption';
 
 export const ItemManuTransaction = ({ onChange }) => {
   const { value, setValue } = useItemDetailDrawerContext();
+  const itemTransactionMenu = useGetItemPaymentTransactionsMenu();
+
+  if (itemTransactionMenu.length === 0) {
+    return null;
+  }
 
   const handleClickItem = (item) => {
     onChange && onChange(item);
   };
 
-  const content = transactions.map(({ name, label }) => (
+  const content = itemTransactionMenu.map(({ name, label }) => (
     <MenuItem onClick={() => handleClickItem(name)} text={label} />
   ));
 

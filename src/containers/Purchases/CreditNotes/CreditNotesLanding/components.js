@@ -10,8 +10,13 @@ import {
   Choose,
   If,
   Icon,
+  Can,
 } from 'components';
 import { safeCallback } from 'utils';
+import {
+  VendorCreditAction,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 
 /**
  * Actions menu.
@@ -27,39 +32,51 @@ export function ActionsMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
-      <MenuDivider />
-      <MenuItem
-        icon={<Icon icon="pen-18" />}
-        text={intl.get('vendor_credits.action.edit_vendor_credit')}
-        onClick={safeCallback(onEdit, original)}
-      />
-      <If condition={!original.is_closed && original.is_published}>
+      <Can I={VendorCreditAction.Edit} a={AbilitySubject.VendorCredit}>
+        <MenuDivider />
         <MenuItem
-          icon={<Icon icon="quick-payment-16" />}
-          text={intl.get('vendor_credits.action.refund_vendor_credit')}
-          onClick={safeCallback(onRefund, original)}
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('vendor_credits.action.edit_vendor_credit')}
+          onClick={safeCallback(onEdit, original)}
         />
-      </If>
-      <If condition={original.is_draft}>
+        <If condition={original.is_draft}>
+          <MenuItem
+            icon={<Icon icon={'check'} iconSize={18} />}
+            text={intl.get('vendor_credits.action.mark_as_open')}
+            onClick={safeCallback(onOpen, original)}
+          />
+        </If>
+      </Can>
+      <Can I={VendorCreditAction.Refund} a={AbilitySubject.VendorCredit}>
+        <If condition={!original.is_closed && original.is_published}>
+          <MenuItem
+            icon={<Icon icon="quick-payment-16" />}
+            text={intl.get('vendor_credits.action.refund_vendor_credit')}
+            onClick={safeCallback(onRefund, original)}
+          />
+        </If>
+      </Can>
+      <Can I={VendorCreditAction.Edit} a={AbilitySubject.VendorCredit}>
+        <If
+          condition={
+            !original.is_draft && !original.is_closed && original.is_published
+          }
+        >
+          <MenuItem
+            // icon={<Icon icon="quick-payment-16" />}
+            text={intl.get('vendor_credits.action.reconcile_with_bills')}
+            onClick={safeCallback(onReconcile, original)}
+          />
+        </If>
+      </Can>
+      <Can I={VendorCreditAction.Delete} a={AbilitySubject.VendorCredit}>
         <MenuItem
-          icon={<Icon icon={'check'} iconSize={18} />}
-          text={intl.get('vendor_credits.action.mark_as_open')}
-          onClick={safeCallback(onOpen, original)}
+          text={intl.get('vendor_credits.action.delete_vendor_credit')}
+          intent={Intent.DANGER}
+          onClick={safeCallback(onDelete, original)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
         />
-      </If>
-      <If condition={!original.is_draft && !original.is_closed && original.is_published}>
-        <MenuItem
-          // icon={<Icon icon="quick-payment-16" />}
-          text={intl.get('vendor_credits.action.reconcile_with_bills')}
-          onClick={safeCallback(onReconcile, original)}
-        />
-      </If>
-      <MenuItem
-        text={intl.get('vendor_credits.action.delete_vendor_credit')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-        icon={<Icon icon="trash-16" iconSize={16} />}
-      />
+      </Can>
     </Menu>
   );
 }
@@ -83,8 +100,8 @@ export function StatusAccessor(creditNote) {
           </Tag>
         </Choose.When>
 
-        <Choose.When condition={creditNote.is_draft} round={true}>
-          <Tag minimal={true}>
+        <Choose.When condition={creditNote.is_draft}>
+          <Tag minimal={true} round={true}>
             <T id={'draft'} />
           </Tag>
         </Choose.When>

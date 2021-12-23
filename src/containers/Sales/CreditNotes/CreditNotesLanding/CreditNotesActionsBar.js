@@ -10,6 +10,7 @@ import {
 import { useHistory } from 'react-router-dom';
 import {
   Icon,
+  Can,
   FormattedMessage as T,
   DashboardActionViewsList,
   AdvancedFilterPopover,
@@ -19,7 +20,10 @@ import {
 import DashboardActionsBar from '../../../../components/Dashboard/DashboardActionsBar';
 
 import { useCreditNoteListContext } from './CreditNotesListProvider';
-
+import {
+  CreditNoteAction,
+  AbilitySubject,
+} from '../../../../common/abilityOption';
 import withCreditNotes from './withCreditNotes';
 import withCreditNotesActions from './withCreditNotesActions';
 import withSettings from '../../../Settings/withSettings';
@@ -78,12 +82,14 @@ function CreditNotesActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'plus'} />}
-          text={<T id={'credit_note.label.new_credit_note'} />}
-          onClick={handleClickNewCreateNote}
-        />
+        <Can I={CreditNoteAction.Create} a={AbilitySubject.CreditNote}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'plus'} />}
+            text={<T id={'credit_note.label.new_credit_note'} />}
+            onClick={handleClickNewCreateNote}
+          />
+        </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: creditNoteFilterRoles,

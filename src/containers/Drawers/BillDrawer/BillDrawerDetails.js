@@ -3,8 +3,11 @@ import { Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { DrawerMainTabs } from 'components';
-
+import { Can, DrawerMainTabs } from 'components';
+import {
+  PaymentMadeAction,
+  AbilitySubject,
+} from '../../../common/abilityOption';
 import BillDetailTab from './BillDetailTab';
 import LocatedLandedCostTable from './LocatedLandedCostTable';
 import BillGLEntriesTable from './BillGLEntriesTable';
@@ -30,12 +33,13 @@ function BillDetailsTabs() {
         id={'journal_entries'}
         panel={<BillGLEntriesTable />}
       />
-
-      <Tab
-        title={intl.get('payment_transactions')}
-        id={'payment_transactions'}
-        panel={<BillPaymentTransactionTable />}
-      />
+      {/* <Can I={PaymentMadeAction.View} a={AbilitySubject.PaymentMade}> */}
+        <Tab
+          title={intl.get('payment_transactions')}
+          id={'payment_transactions'}
+          panel={<BillPaymentTransactionTable />}
+        />
+      {/* </Can> */}
       <Tab
         title={intl.get('located_landed_cost')}
         id={'landed_cost'}
