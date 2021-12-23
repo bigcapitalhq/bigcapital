@@ -1654,5 +1654,6 @@
   "transactions": "Transactions",
   "item.drawer_transactions_by": "Transactions by:",
   "item.drawer_quantity_sold": "Quantity Sold",
-  "role_name": "Role name"
+  "role_name": "Role name",
+  "journal_entries.amount_displayed_base_currency":"Amount is displayed in your base currency"
 }

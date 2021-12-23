@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { DataTable } from 'components';
 
 import styled from 'styled-components';
@@ -37,7 +38,7 @@ export function AmountDisplayedBaseCurrencyMessageJSX({
 }) {
   return (
     <Message>
-      Amount is displayed in your base currency{' '}
+      {intl.get('journal_entries.amount_displayed_base_currency')}
       <CurrencyTag>{baseCurrency}</CurrencyTag>
     </Message>
   );
