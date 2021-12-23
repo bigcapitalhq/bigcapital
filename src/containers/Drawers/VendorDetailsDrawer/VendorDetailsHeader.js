@@ -28,17 +28,19 @@ export default function VendorDetailsHeader() {
           <h3 class="big-number">{vendor.formatted_balance}</h3>
         </DetailItem>
 
-        <DetailItem
-          label={<T id={'vendor.drawer.label.vendor'} />}
-          name={'name'}
-          children={vendor?.display_name}
-        />
         <DetailItem label={<T id={'vendor.drawer.label.unused_credits'} />}>
           0
         </DetailItem>
       </DetailsMenu>
 
       <DetailsMenu direction={'horizantal'} minLabelSize={'175px'}>
+        <DetailItem
+          label={<T id={'vendor.drawer.label.vendor'} />}
+          name={'name'}
+        >
+          <strong>{vendor?.display_name}</strong>
+        </DetailItem>
+
         <DetailItem
           label={<T id={'vendor.drawer.label.company_name'} />}
           children={defaultTo(vendor?.company_name, '--')}

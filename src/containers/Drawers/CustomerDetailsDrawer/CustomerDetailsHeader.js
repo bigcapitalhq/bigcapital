@@ -29,11 +29,6 @@ export default function CustomerDetailsHeader() {
         </DetailItem>
 
         <DetailItem
-          label={<T id={'customer.drawer.label.customer_name'} />}
-          name={'name'}
-          children={customer?.display_name}
-        />
-        <DetailItem
           label={<T id={'customer.drawer.label.customer_type'} />}
           name={'type'}
           children={customer?.customer_type}
@@ -44,6 +39,13 @@ export default function CustomerDetailsHeader() {
       </DetailsMenu>
 
       <DetailsMenu direction={'horizantal'} minLabelSize={'175px'}>
+        <DetailItem
+          label={<T id={'customer.drawer.label.customer_name'} />}
+          name={'name'}
+        >
+          <strong>{customer?.display_name}</strong>
+        </DetailItem>
+
         <DetailItem
           label={<T id={'customer.drawer.label.company_name'} />}
           children={defaultTo(customer?.company_name, '--')}
