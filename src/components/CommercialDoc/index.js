@@ -19,3 +19,7 @@ export const CommercialDocEntriesTable = styled(DataTable)`
     border-bottom: 1px solid #d2dce2;
   }
 `;
+
+export const CommercialDocFooter = styled.div`
+  margin-top: 25px;
+`

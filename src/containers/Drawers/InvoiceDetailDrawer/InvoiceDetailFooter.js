@@ -1,52 +1,33 @@
 import React from 'react';
-import styled from 'styled-components';
 
-import {
-  T,
-  TotalLines,
-  FormatNumber,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-} from 'components';
+import { CommercialDocFooter, If, DetailsMenu, DetailItem } from 'components';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 /**
  * Invoice details footer.
+ * @returns {React.JSX}
  */
 export function InvoiceDetailFooter() {
   const { invoice } = useInvoiceDetailDrawerContext();
 
+  if (!invoice.terms_conditions && !invoice.invoice_message) {
+    return null;
+  }
   return (
-    <InvoiceDetailsFooterRoot>
-      <InvoiceTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
-        <TotalLine
-          title={<T id={'invoice.details.subtotal'} />}
-          value={<FormatNumber value={invoice.balance} />}
-          borderStyle={TotalLineBorderStyle.SingleDark}
-        />
-        <TotalLine
-          title={<T id={'invoice.details.total'} />}
-          value={invoice.formatted_amount}
-          borderStyle={TotalLineBorderStyle.DoubleDark}
-          textStyle={TotalLineTextStyle.Bold}
-        />
-        <TotalLine
-          title={<T id={'invoice.details.payment_amount'} />}
-          value={invoice.formatted_payment_amount}
-        />
-        <TotalLine
-          title={<T id={'invoice.details.due_amount'} />}
-          value={invoice.formatted_due_amount}
-          textStyle={TotalLineTextStyle.Bold}
-        />
-      </InvoiceTotalLines>
-    </InvoiceDetailsFooterRoot>
+    <CommercialDocFooter>
+      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+        <If condition={invoice.terms_conditions}>
+          <DetailItem label={'Terms & Conditions'}>
+            {invoice.terms_conditions}
+          </DetailItem>
+        </If>
+
+        <If condition={invoice.invoice_message}>
+          <DetailItem label={'Invoice Message'}>
+            {invoice.invoice_message}
+          </DetailItem>
+        </If>
+      </DetailsMenu>
+    </CommercialDocFooter>
   );
 }
-
-const InvoiceDetailsFooterRoot = styled.div``;
-
-const InvoiceTotalLines = styled(TotalLines)`
-  margin-left: auto;
-`;

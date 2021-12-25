@@ -4,6 +4,7 @@ import { CommercialDocBox } from 'components';
 
 import InvoiceDetailHeader from './InvoiceDetailHeader';
 import InvoiceDetailTable from './InvoiceDetailTable';
+import { InvoiceDetailTableFooter } from './InvoiceDetailTableFooter';
 import { InvoiceDetailFooter } from './InvoiceDetailFooter';
 
 /**
@@ -14,6 +15,7 @@ export default function InvoiceDetailTab() {
     <CommercialDocBox>
       <InvoiceDetailHeader />
       <InvoiceDetailTable />
+      <InvoiceDetailTableFooter />
       <InvoiceDetailFooter />
     </CommercialDocBox>
   );
