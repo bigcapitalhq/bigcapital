@@ -1,7 +1,9 @@
 import React, { useContext, createContext } from 'react';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import styled from 'styled-components';
 
+import { CLASSES } from 'common/classes';
+import { Card } from 'components';
 import { useSettingsItems, useAccounts, useSaveSettings } from 'hooks/query';
 import PreferencesPageLoader from '../PreferencesPageLoader';
 
@@ -38,13 +40,13 @@ function ItemPreferencesFormProvider({ ...props }) {
         CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_ACCOUNTANT,
       )}
     >
-      <div className={classNames(CLASSES.CARD)}>
+      <ItemsPreferencesCard>
         {isLoading ? (
           <PreferencesPageLoader />
         ) : (
           <ItemFormContext.Provider value={provider} {...props} />
         )}
-      </div>
+      </ItemsPreferencesCard>
     </div>
   );
 }
@@ -52,3 +54,7 @@ function ItemPreferencesFormProvider({ ...props }) {
 const useItemPreferencesFormContext = () => useContext(ItemFormContext);
 
 export { useItemPreferencesFormContext, ItemPreferencesFormProvider };
+
+const ItemsPreferencesCard = styled(Card)`
+  padding: 25px;
+`;

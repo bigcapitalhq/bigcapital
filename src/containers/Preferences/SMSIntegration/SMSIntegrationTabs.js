@@ -1,10 +1,12 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-
 import { Tabs, Tab } from '@blueprintjs/core';
 import classNames from 'classnames';
+import styled from 'styled-components';
+
 import { CLASSES } from 'common/classes';
 import SMSMessagesDataTable from './SMSMessagesDataTable';
+import { Card } from 'components';
 
 import '../../../style/pages/Preferences/SMSIntegration.scss';
 
@@ -12,6 +14,10 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
+/**
+ * SMS Integration Tabs.
+ * @returns {React.JSX}
+ */
 function SMSIntegrationTabs({
   // #withDashboardActions
   changePreferencesPageTitle,
@@ -21,7 +27,7 @@ function SMSIntegrationTabs({
   }, [changePreferencesPageTitle]);
 
   return (
-    <div className={classNames(CLASSES.CARD)}>
+    <SMSIntegrationCard>
       <div className={classNames(CLASSES.PREFERENCES_PAGE_TABS)}>
         <Tabs animate={true} defaultSelectedTabId={'sms_messages'}>
           <Tab
@@ -35,8 +41,12 @@ function SMSIntegrationTabs({
           />
         </Tabs>
       </div>
-    </div>
+    </SMSIntegrationCard>
   );
 }
 
 export default compose(withDashboardActions)(SMSIntegrationTabs);
+
+const SMSIntegrationCard = styled(Card)`
+  padding: 0;
+`;

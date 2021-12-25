@@ -2,9 +2,11 @@ import React from 'react';
 import { Tabs, Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
+import styled from 'styled-components';
 
 import 'style/pages/Preferences/Users.scss';
 
+import { Card } from 'components';
 import { CLASSES } from 'common/classes';
 import PreferencesSubContent from 'components/Preferences/PreferencesSubContent';
 
@@ -23,7 +25,7 @@ function UsersPreferences({ openDialog }) {
         CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_USERS,
       )}
     >
-      <div className={classNames(CLASSES.CARD)}>
+      <UsersPereferencesCard>
         <div className={classNames(CLASSES.PREFERENCES_PAGE_TABS)}>
           <Tabs animate={true} onChange={onChangeTabs}>
             <Tab
@@ -38,9 +40,13 @@ function UsersPreferences({ openDialog }) {
             />
           </Tabs>
         </div>
-      </div>
+      </UsersPereferencesCard>
     </div>
   );
 }
 
 export default withUserPreferences(UsersPreferences);
+
+const UsersPereferencesCard = styled(Card)`
+  padding: 0;
+`;

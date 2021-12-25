@@ -1,5 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
+import styled from 'styled-components';
+
+import { Card } from 'components';
 import { CLASSES } from 'common/classes';
 import { useAccounts, useSaveSettings, useSettings } from 'hooks/query';
 import PreferencesPageLoader from '../PreferencesPageLoader';
@@ -35,16 +38,21 @@ function AccountantFormProvider({ ...props }) {
         CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_ACCOUNTANT,
       )}
     >
-      <div className={classNames(CLASSES.CARD)}>
+      <AccountantFormCard>
         {isLoading ? (
           <PreferencesPageLoader />
         ) : (
           <AccountantFormContext.Provider value={provider} {...props} />
         )}
-      </div>
+      </AccountantFormCard>
     </div>
   );
 }
 
 const useAccountantFormContext = () => React.useContext(AccountantFormContext);
+
 export { AccountantFormProvider, useAccountantFormContext };
+
+const AccountantFormCard = styled(Card)`
+  padding: 25px;
+`;

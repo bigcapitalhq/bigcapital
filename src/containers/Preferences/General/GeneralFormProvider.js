@@ -1,5 +1,8 @@
 import React, { createContext } from 'react';
 import classNames from 'classnames';
+import styled from 'styled-components';
+
+import { Card } from 'components';
 import { CLASSES } from 'common/classes';
 import {
   useCurrentOrganization,
@@ -45,13 +48,13 @@ function GeneralFormProvider({ ...props }) {
         CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_GENERAL,
       )}
     >
-      <div className={classNames(CLASSES.CARD)}>
+      <GeneralFormCard>
         {isOrganizationLoading || isDateFormatsLoading ? (
           <PreferencesPageLoader />
         ) : (
           <GeneralFormContext.Provider value={provider} {...props} />
         )}
-      </div>
+      </GeneralFormCard>
     </div>
   );
 }
@@ -59,3 +62,7 @@ function GeneralFormProvider({ ...props }) {
 const useGeneralFormContext = () => React.useContext(GeneralFormContext);
 
 export { GeneralFormProvider, useGeneralFormContext };
+
+const GeneralFormCard = styled(Card)`
+  padding: 25px;
+`;
