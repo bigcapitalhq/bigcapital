@@ -75,7 +75,7 @@ export default function ItemDetailHeader() {
           />
           <DetailItem
             label={intl.get('item.purchase_description')}
-            children={defaultTo(item.cost_description, '-')}
+            children={defaultTo(item.purchase_description, '-')}
           />
         </DetailsMenu>
       </div>
