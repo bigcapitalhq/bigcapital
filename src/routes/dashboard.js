@@ -369,7 +369,6 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('new_expense'),
     sidebarExpand: false,
     backLink: true,
-    defaultSearchResource: RESOURCES_TYPES.EXPENSE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
@@ -381,7 +380,6 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('edit_expense'),
     sidebarExpand: false,
     backLink: true,
-    defaultSearchResource: RESOURCES_TYPES.EXPENSE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
@@ -392,7 +390,6 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('expenses_list'),
     pageTitle: intl.get('expenses_list'),
     hotkey: 'shift+x',
-    defaultSearchResource: RESOURCES_TYPES.EXPENSE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
