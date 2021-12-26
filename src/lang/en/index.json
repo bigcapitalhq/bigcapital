@@ -1663,5 +1663,7 @@
   "journal_entries.amount_displayed_base_currency":"Amount is displayed in your base currency",
   "inventory_adjustment.column.product":"Product",
   "convert_to_credit_note":"Convert to Credit Note",
-  "convert_to_vendor_credit":"Convert to Vendor Credit"
+  "convert_to_vendor_credit":"Convert to Vendor Credit",
+  "overdue":"Overdue"
+  
 }

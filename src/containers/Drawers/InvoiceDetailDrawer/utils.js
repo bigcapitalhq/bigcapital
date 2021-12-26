@@ -141,12 +141,12 @@ export function InvoiceDetailsStatus({ invoice }) {
         <Choose>
           <Choose.When condition={invoice.is_overdue}>
             <StatusTag intent={Intent.WARNING} round={true}>
-              Overdue
+              <T id={'overdue'} />
             </StatusTag>
           </Choose.When>
           <Choose.Otherwise>
             <StatusTag intent={Intent.PRIMARY} round={true}>
-              Delivered
+              <T id={'delivered'} />
             </StatusTag>
           </Choose.Otherwise>
         </Choose>

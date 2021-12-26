@@ -1660,8 +1660,10 @@
   "item.drawer_transactions_by": "معاملات حسب :",
   "item.drawer_quantity_sold": "الكمية المباعة",
   "journal_entries.amount_displayed_base_currency":"يتم عرض المبلغ بالعملة الأساسية الخاصة بك ",
-  "inventory_adjustment.column.product":"المنتج"
-
+  "inventory_adjustment.column.product":"المنتج",
+  "convert_to_credit_note":"تحويل إلى إشعار الدائن",
+  "convert_to_vendor_credit":"تحويل إلى إشعار المدين",
+  "overdue":"Overdue"
 }
 
 

@@ -27,6 +27,7 @@ import {
   PaymentMadeAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
+import { BillMenuItem } from './utils';
 
 import { safeCallback, compose } from 'utils';
 
@@ -47,6 +48,14 @@ function BillDetailActionsBar({
   // Handle edit bill.
   const onEditBill = () => {
     history.push(`/bills/${billId}/edit`);
+    closeDrawer('bill-drawer');
+  };
+
+  // Handle convert to vendor credit.
+  const handleConvertToVendorCredit = () => {
+    history.push(`/vendor-credits/new?from_bill_id=${billId}`, {
+      billId: billId,
+    });
     closeDrawer('bill-drawer');
   };
 
@@ -90,6 +99,14 @@ function BillDetailActionsBar({
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
             onClick={safeCallback(onDeleteBill)}
+          />
+        </Can>
+        <Can I={BillAction.Edit} a={AbilitySubject.Bill}>
+          <NavbarDivider />
+          <BillMenuItem
+            payload={{
+              onConvert: handleConvertToVendorCredit,
+            }}
           />
         </Can>
       </NavbarGroup>

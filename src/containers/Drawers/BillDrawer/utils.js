@@ -1,12 +1,21 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Intent, Tag } from '@blueprintjs/core';
-
+import {
+  Button,
+  Popover,
+  PopoverInteractionKind,
+  Position,
+  MenuItem,
+  Menu,
+  Intent,
+  Tag,
+} from '@blueprintjs/core';
 import {
   FormatNumberCell,
   FormattedMessage as T,
   Choose,
+  Icon,
 } from '../../../components';
 
 /**
@@ -73,7 +82,7 @@ export function BillDetailsStatus({ bill }) {
         <Choose>
           <Choose.When condition={bill.is_overdue}>
             <StatusTag intent={Intent.WARNING} round={true}>
-              Overdue
+              <T id={'overdue'} />
             </StatusTag>
           </Choose.When>
           <Choose.Otherwise>
@@ -91,6 +100,29 @@ export function BillDetailsStatus({ bill }) {
     </Choose>
   );
 }
+
+export const BillMenuItem = ({ payload: { onConvert } }) => {
+  return (
+    <Popover
+      minimal={true}
+      interactionKind={PopoverInteractionKind.CLICK}
+      position={Position.BOTTOM_LEFT}
+      modifiers={{
+        offset: { offset: '0, 4' },
+      }}
+      content={
+        <Menu>
+          <MenuItem
+            onClick={onConvert}
+            text={<T id={'convert_to_vendor_credit'} />}
+          />
+        </Menu>
+      }
+    >
+      <Button icon={<Icon icon="more-vert" iconSize={16} />} minimal={true} />
+    </Popover>
+  );
+};
 
 const StatusTag = styled(Tag)`
   min-width: 65px;
