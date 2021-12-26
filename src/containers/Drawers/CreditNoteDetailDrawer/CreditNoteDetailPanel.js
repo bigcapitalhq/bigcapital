@@ -4,7 +4,8 @@ import { CommercialDocBox } from 'components';
 
 import CreditNoteDetailHeader from './CreditNoteDetailHeader';
 import CreditNoteDetailTable from './CreditNoteDetailTable';
-import CreditNoteDetailDrawerFooter from './CreditNoteDetailDrawerFooter';
+import CreditNoteDetailTableFooter from './CreditNoteDetailTableFooter';
+import CreditNoteDetailFooter from './CreditNoteDetailFooter';
 
 /**
  * Credit note details panel.
@@ -14,7 +15,8 @@ export default function CreditNoteDetailPanel() {
     <CommercialDocBox>
       <CreditNoteDetailHeader />
       <CreditNoteDetailTable />
-      <CreditNoteDetailDrawerFooter />
+      <CreditNoteDetailTableFooter />
+      <CreditNoteDetailFooter />
     </CommercialDocBox>
   );
 }

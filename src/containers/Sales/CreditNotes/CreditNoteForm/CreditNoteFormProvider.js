@@ -11,6 +11,7 @@ import {
   useItems,
   useCustomers,
   useSettingsCreditNotes,
+  useInvoice,
 } from 'hooks/query';
 
 const CreditNoteFormContext = React.createContext();
@@ -19,6 +20,9 @@ const CreditNoteFormContext = React.createContext();
  * Credit note data provider.
  */
 function CreditNoteFormProvider({ creditNoteId, ...props }) {
+  const { state } = useLocation();
+  const invoiceId = state?.invoiceId;
+
   // Handle fetch customers data table or list
   const {
     data: { customers },
@@ -33,13 +37,17 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     page_size: 10000,
   });
 
-  // Handle fetch vendor credit details.
+  // Handle fetch  credit details.
   const { data: creditNote, isLoading: isCreditNoteLoading } = useCreditNote(
     creditNoteId,
     {
       enabled: !!creditNoteId,
     },
   );
+  // Handle fetch invoice detail.
+  const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
+    enabled: !!invoiceId,
+  });
 
   // Handle fetching settings.
   useSettingsCreditNotes();
@@ -54,6 +62,12 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
   // Determines whether the form in new mode.
   const isNewMode = !creditNoteId;
 
+  const newCreditNote = !isEmpty(invoice)
+    ? transformToEditForm({
+        ...pick(invoice, ['customer_id', 'entries']),
+      })
+    : [];
+
   // Provider payload.
   const provider = {
     items,
@@ -61,6 +75,7 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     creditNote,
     submitPayload,
     isNewMode,
+    newCreditNote,
 
     isItemsLoading,
     isCustomersLoading,
@@ -70,11 +85,14 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     setSubmitPayload,
   };
 
+  const isLoading =
+    isItemsLoading ||
+    isCustomersLoading ||
+    isCreditNoteLoading ||
+    isInvoiceLoading;
+
   return (
-    <DashboardInsider
-      loading={isItemsLoading || isCustomersLoading || isCreditNoteLoading}
-      name={'credit-note-form'}
-    >
+    <DashboardInsider loading={isLoading} name={'credit-note-form'}>
       <CreditNoteFormContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

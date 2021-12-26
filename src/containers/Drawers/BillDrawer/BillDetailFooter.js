@@ -1,51 +1,27 @@
 import React from 'react';
-import styled from 'styled-components';
-
 import {
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-  FormatNumber,
+  CommercialDocFooter,
   T,
-  TotalLines,
-  TotalLine,
-} from '../../../components';
+  If,
+  DetailsMenu,
+  DetailItem,
+} from 'components';
+
 import { useBillDrawerContext } from './BillDrawerProvider';
 
 /**
- * Bill read-only details footer.
+ * Bill detail footer.
+ * @returns {React.JSX}
  */
-export function BillDetailFooter() {
+export default function BillDetailFooter() {
   const { bill } = useBillDrawerContext();
-
   return (
-    <BillDetailsFooterRoot>
-      <BillTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
-        <TotalLine
-          title={<T id={'bill.details.subtotal'} />}
-          value={<FormatNumber value={bill.amont} />}
-          borderStyle={TotalLineBorderStyle.SingleDark}
-        />
-        <TotalLine
-          title={<T id={'bill.details.total'} />}
-          value={bill.formatted_amount}
-          borderStyle={TotalLineBorderStyle.DoubleDark}
-          textStyle={TotalLineTextStyle.Bold}
-        />
-        <TotalLine
-          title={<T id={'bill.details.payment_amount'} />}
-          value={bill.formatted_payment_amount}
-        />
-        <TotalLine
-          title={<T id={'bill.details.due_amount'} />}
-          value={bill.formatted_due_amount}
-        />
-      </BillTotalLines>
-    </BillDetailsFooterRoot>
+    <CommercialDocFooter>
+      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+        <If condition={bill.note}>
+          <DetailItem label={<T id={'note'} />}>{bill.note}</DetailItem>
+        </If>
+      </DetailsMenu>
+    </CommercialDocFooter>
   );
 }
-
-export const BillDetailsFooterRoot = styled.div``;
-
-export const BillTotalLines = styled(TotalLines)`
-  margin-left: auto;
-`;

@@ -5,7 +5,8 @@ import { CommercialDocBox } from 'components';
 
 import ReceiptDetailHeader from './ReceiptDetailHeader';
 import ReceiptDetailTable from './ReceiptDetailTable';
-import { ReceiptDetailFooter } from './ReceiptDetailFooter';
+import ReceiptDetailTableFooter from './ReceiptDetailTableFooter';
+import ReceiptDetailFooter from './ReceiptDetailFooter';
 
 export default function ReceiptDetailTab() {
   return (
@@ -13,6 +14,7 @@ export default function ReceiptDetailTab() {
       <CommercialDocBox>
         <ReceiptDetailHeader />
         <ReceiptDetailTable />
+        <ReceiptDetailTableFooter />
         <ReceiptDetailFooter />
       </CommercialDocBox>
     </ReceiptDetailsOverviewRoot>

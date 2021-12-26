@@ -56,6 +56,7 @@ function CreditNoteForm({
     isNewMode,
     submitPayload,
     creditNote,
+    newCreditNote,
     createCreditNoteMutate,
     editCreditNoteMutate,
   } = useCreditNoteFormContext();
@@ -74,6 +75,7 @@ function CreditNoteForm({
               credit_note_number: creditNumber,
             }),
             entries: orderingLinesIndexes(defaultCreditNote.entries),
+            ...newCreditNote,
           }),
     }),
     [],

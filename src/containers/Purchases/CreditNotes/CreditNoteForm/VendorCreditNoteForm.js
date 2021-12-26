@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { isEmpty } from 'lodash';
+import { isEmpty, pick } from 'lodash';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
@@ -50,6 +50,7 @@ function VendorCreditNoteForm({
     isNewMode,
     submitPayload,
     vendorCredit,
+    bill,
     createVendorCreditMutate,
     editVendorCreditMutate,
   } = useVendorCreditNoteFormContext();
@@ -71,6 +72,9 @@ function VendorCreditNoteForm({
             ...defaultVendorsCreditNote,
             ...(vendorcreditAutoIncrement && {
               vendor_credit_number: vendorCreditNumber,
+            }),
+            ...transformToEditForm({
+              ...pick(bill, ['vendor_id', 'entries']),
             }),
           }),
     }),

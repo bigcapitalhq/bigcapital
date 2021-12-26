@@ -1195,6 +1195,7 @@
   "payment_receive.details.payment_number": "Payment #",
   "payment_receive.details.total": "TOTAL",
   "payment_receive.details.subtotal": "Subtotal",
+  "payment_receive.details.statement": "Statement",
   "estimate.details.estimate_number": "Estimate #",
   "estimate.details.subtotal": "Subtotal",
   "estimate.details.total": "TOTAL",
@@ -1202,12 +1203,15 @@
   "estimate.details.due_amount": "Due amount",
   "estimate.details.note": "Note",
   "estimate.details.created_at": "Created at",
+  "estimate.details.terms_conditions": "Terms & Conditions",
   "receipt.details.receipt_number": "Receipt #",
   "receipt.details.subtotal": "Subtotal",
   "receipt.details.total": "TOTAL",
   "receipt.details.payment_amount": "Payment amount",
   "receipt.details.due_amount": "Due amount",
   "receipt.details.created_at": "Created at",
+  "receipt.details.receipt_message": "Receipt Message",
+  "receipt.details.statement": "Statement",
   "invoice.details.created_at": "Created at",
   "invoice.details.total": "TOTAL",
   "invoice.details.subtotal": "Subtotal",
@@ -1523,6 +1527,7 @@
   "credit_note.drawer.label_subtotal": "Subtotal",
   "credit_note.drawer.label_refund_transactions": "Refund Transactions",
   "credit_note.drawer.label_invoices_reconciled": "Invoices Reconciled",
+  "credit_note.drawer.terms_conditions": "Terms Conditions",
  
   "sidebar_vendor_credits": "Vendor Credits",
   "vendor_credits.lable_vendor_credit_list": "Vendor Credits List",
@@ -1655,5 +1660,10 @@
   "item.drawer_transactions_by": "Transactions by:",
   "item.drawer_quantity_sold": "Quantity Sold",
   "role_name": "Role name",
-  "journal_entries.amount_displayed_base_currency":"Amount is displayed in your base currency"
+  "journal_entries.amount_displayed_base_currency":"Amount is displayed in your base currency",
+  "inventory_adjustment.column.product":"Product",
+  "convert_to_credit_note":"Convert to Credit Note",
+  "convert_to_vendor_credit":"Convert to Vendor Credit",
+  "overdue":"Overdue"
+  
 }

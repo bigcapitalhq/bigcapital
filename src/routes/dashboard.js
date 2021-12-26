@@ -647,6 +647,21 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
+    path: `/credit-notes/new/?from_invoice_id=/:id`,
+    component: lazy(() =>
+      import(
+        '../containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
+      ),
+    ),
+    name: 'credit-note-new',
+    breadcrumb: intl.get('credit_note.label.new_credit_note'),
+    backLink: true,
+    sidebarExpand: false,
+    pageTitle: intl.get('credit_note.label.new_credit_note'),
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: '/credit-notes/new',
     component: lazy(() =>
       import(
@@ -770,6 +785,21 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('vendor_credits.label.edit_vendor_credit'),
     backLink: true,
     sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/vendor-credits/new/?from_bill_id=/:id',
+    component: lazy(() =>
+      import(
+        'containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
+      ),
+    ),
+    name: 'vendor-credits-new',
+    backLink: true,
+    sidebarExpand: false,
+    breadcrumb: intl.get('vendor_credits.label.new_vendor_credit'),
+    pageTitle: intl.get('vendor_credits.label.new_vendor_credit'),
     defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
