@@ -1,6 +1,8 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
+import { isEmpty, pick } from 'lodash';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-
+import { transformToEditForm } from './utils';
 import {
   useCreateVendorCredit,
   useEditVendorCredit,
@@ -8,6 +10,7 @@ import {
   useItems,
   useVendors,
   useSettingsVendorCredits,
+  useBill,
 } from 'hooks/query';
 
 const VendorCreditNoteFormContext = React.createContext();
@@ -16,6 +19,10 @@ const VendorCreditNoteFormContext = React.createContext();
  * Vendor Credit note data provider.
  */
 function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
+  const { state } = useLocation();
+  
+  const billId = state?.billId;
+
   // Handle fetching the items table based on the given query.
   const {
     data: { items },
@@ -39,6 +46,11 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
       enabled: !!vendorCreditId,
     });
 
+  // Handle fetch bill details.
+  const { isLoading: isBillLoading, data: bill } = useBill(billId, {
+    enabled: !!billId,
+  });
+
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = React.useState();
 
@@ -56,6 +68,7 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
     vendorCredit,
     submitPayload,
     isNewMode,
+    bill,
 
     isVendorCreditLoading,
 
@@ -70,7 +83,8 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
         isVendorCreditLoading ||
         isItemsLoading ||
         isVendorsLoading ||
-        isVendorCreditLoading
+        isVendorCreditLoading ||
+        isBillLoading
       }
       name={'vendor-credit-form'}
     >

@@ -70,6 +70,11 @@ function BillsDataTable({
     history.push(`/bills/${bill.id}/edit`);
   };
 
+  // Handle convert to vendor credit.
+  const handleConvertToVendorCredit = ({ id }) => {
+    history.push(`/vendor-credits/new?from_bill_id=${id}`, { billId: id });
+  };
+
   // Handle bill delete action.
   const handleDeleteBill = (bill) => {
     openAlert('bill-delete', { billId: bill.id });
@@ -137,6 +142,7 @@ function BillsDataTable({
           onQuick: handleQuickPaymentMade,
           onAllocateLandedCost: handleAllocateLandedCost,
           onViewDetails: handleViewDetailBill,
+          onConvert: handleConvertToVendorCredit,
         }}
       />
     </DashboardContentTable>

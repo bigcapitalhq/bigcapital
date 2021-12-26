@@ -34,6 +34,7 @@ export function ActionsMenu({
     onOpen,
     onDelete,
     onQuick,
+    onConvert,
     onViewDetails,
     onAllocateLandedCost,
   },
@@ -52,6 +53,11 @@ export function ActionsMenu({
           icon={<Icon icon="pen-18" />}
           text={intl.get('edit_bill')}
           onClick={safeCallback(onEdit, original)}
+        />
+        <MenuItem
+          icon={<Icon icon="convert_to" />}
+          text={intl.get('convert_to_vendor_credit')}
+          onClick={safeCallback(onConvert, original)}
         />
 
         <If condition={!original.is_open}>
