@@ -1,13 +1,16 @@
 import React from 'react';
-import { Checkbox, Switch, Popover } from '@blueprintjs/core';
+import { Checkbox, Popover } from '@blueprintjs/core';
 import styled from 'styled-components';
-import { FastField } from 'formik';
+import { Field } from 'formik';
 
 import { permissions, ModulePermissionsStyle } from 'common/permissionsSchema';
 import { Card, If, ButtonLink, Choose } from 'components';
 import {
   getSerivceColumnPermission,
   getServiceExtraPermissions,
+  FULL_ACCESS_CHECKBOX_STATE,
+  handleCheckboxFullAccessChange,
+  handleCheckboxPermissionChange,
 } from './utils';
 
 // Module permissions context.
@@ -66,15 +69,20 @@ function PermissionBodyColumn({ column }) {
   if (!permission) {
     return <td class={'permission-checkbox'}></td>;
   }
-
   return (
     <td class={'permission-checkbox'}>
-      <FastField
+      <Field
         name={`permissions.${service.subject}/${permission.key}`}
         type="checkbox"
       >
-        {({ field }) => <PermissionCheckbox inline={true} {...field} />}
-      </FastField>
+        {({ field, form }) => (
+          <PermissionCheckbox
+            inline={true}
+            {...field}
+            onChange={handleCheckboxPermissionChange(form, permission, service)}
+          />
+        )}
+      </Field>
     </td>
   );
 }
@@ -103,18 +111,23 @@ function ModuleExtraPermissionsPopover() {
 
       <ExtraPermissionsRoot>
         {extraPermissions.map((permission) => (
-          <FastField
+          <Field
             name={`permissions.${service.subject}/${permission.key}`}
             type="checkbox"
           >
-            {({ form: { setFieldValue, values }, field }) => (
+            {({ form, field }) => (
               <PermissionCheckbox
                 inline={true}
                 label={permission.label}
                 {...field}
+                onChange={handleCheckboxPermissionChange(
+                  form,
+                  permission,
+                  service,
+                )}
               />
             )}
-          </FastField>
+          </Field>
         ))}
       </ExtraPermissionsRoot>
     </Popover>
@@ -179,14 +192,18 @@ function ModulePermissionsServiceFullAccess() {
   return (
     <If condition={module.serviceFullAccess}>
       <td class="full-access-permission">
-        <FastField
-          name={`serviceFullAccess.${service.subject}`}
-          type="checkbox"
-        >
-          {({ form: { setFieldValue, values }, field }) => (
-            <PermissionCheckbox inline={true} />
+        <Field name={`serviceFullAccess.${service.subject}`} type="checkbox">
+          {({ form, field }) => (
+            <PermissionCheckbox
+              inline={true}
+              {...field}
+              indeterminate={
+                field.value === FULL_ACCESS_CHECKBOX_STATE.INDETARMINE
+              }
+              onChange={handleCheckboxFullAccessChange(service, form)}
+            />
           )}
-        </FastField>
+        </Field>
       </td>
     </If>
   );
@@ -242,18 +259,23 @@ function ModuleVerticalTableCells() {
     <td class={'permissions'}>
       {service.permissions.map((permission) => (
         <div>
-          <FastField
+          <Field
             name={`permissions.${service.subject}/${permission.key}`}
             type="checkbox"
           >
-            {({ form: { setFieldValue, values }, field }) => (
+            {({ form, field }) => (
               <PermissionCheckbox
                 inline={true}
                 label={permission.label}
                 {...field}
+                onChange={handleCheckboxPermissionChange(
+                  form,
+                  permission,
+                  service,
+                )}
               />
             )}
-          </FastField>
+          </Field>
         </div>
       ))}
     </td>
@@ -319,12 +341,6 @@ function ModulePermissions({ module }) {
       <ModulePermissionsProvider module={module}>
         <ModulePermissionHead>
           <ModulePermissionTitle>{module.label} </ModulePermissionTitle>
-
-          <If condition={module.moduleFullAccess}>
-            <ModulePermissionFullControlRoot>
-              <Switch />
-            </ModulePermissionFullControlRoot>
-          </If>
         </ModulePermissionHead>
 
         <ModulePermissionsBody />
@@ -378,15 +394,6 @@ const ModulePermissionTitle = styled.div`
   font-size: 16px;
   line-height: 38px;
   color: #878787;
-`;
-
-const ModulePermissionFullControlRoot = styled.div`
-  margin-left: auto;
-  display: flex;
-
-  .bp3-switch {
-    margin: auto;
-  }
 `;
 
 const ModulePermissionBodyRoot = styled.div``;

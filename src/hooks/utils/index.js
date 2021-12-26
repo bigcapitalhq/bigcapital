@@ -7,3 +7,5 @@ export * from './useRequestPdf';
 export * from './useAsync';
 export * from './useIntersectionObserver';
 export * from './useAbilityContext';
+export * from './useCustomCompareEffect';
+export * from './useDeepCompareEffect';

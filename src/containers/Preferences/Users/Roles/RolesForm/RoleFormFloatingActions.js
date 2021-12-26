@@ -11,9 +11,13 @@ import { FormattedMessage as T } from 'components';
  * @returns {React.JSX}
  */
 export function RoleFormFloatingActions() {
+  // Formik form context.
   const { isSubmitting } = useFormikContext();
+
+  // History context.
   const history = useHistory();
 
+  // Handle close click.
   const handleCloseClick = () => {
     history.go(-1);
   };
