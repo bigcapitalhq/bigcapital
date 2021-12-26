@@ -14,7 +14,7 @@ import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvid
 /**
  * Credit note details panel footer.
  */
-export default function CreditNoteDetailDrawerFooter() {
+export default function CreditNoteDetailTableFooter() {
   const { creditNote } = useCreditNoteDetailDrawerContext();
 
   return (
