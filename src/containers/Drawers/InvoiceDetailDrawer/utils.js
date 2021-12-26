@@ -76,7 +76,7 @@ export const useInvoiceReadonlyEntriesColumns = () =>
  * @returns {React.JSX}
  */
 export const BadDebtMenuItem = ({
-  payload: { onCancelBadDebt, onBadDebt, onNotifyViaSMS },
+  payload: { onCancelBadDebt, onBadDebt, onNotifyViaSMS, onConvert },
 }) => {
   const { invoice } = useInvoiceDetailDrawerContext();
 
@@ -104,6 +104,12 @@ export const BadDebtMenuItem = ({
               />
             </Choose.When>
           </Choose>
+          <Can I={SaleInvoiceAction.Edit} a={AbilitySubject.Invoice}>
+            <MenuItem
+              onClick={onConvert}
+              text={<T id={'convert_to_credit_note'} />}
+            />
+          </Can>
           <Can I={SaleInvoiceAction.NotifyBySms} a={AbilitySubject.Invoice}>
             <MenuItem
               onClick={onNotifyViaSMS}

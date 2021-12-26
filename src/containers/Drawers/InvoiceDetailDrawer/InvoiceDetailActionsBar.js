@@ -14,7 +14,13 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { If, Can, Icon, DrawerActionsBar, FormattedMessage as T } from 'components';
+import {
+  If,
+  Can,
+  Icon,
+  DrawerActionsBar,
+  FormattedMessage as T,
+} from 'components';
 import {
   SaleInvoiceAction,
   PaymentReceiveAction,
@@ -45,6 +51,14 @@ function InvoiceDetailActionsBar({
   // Handle edit sale invoice.
   const handleEditInvoice = () => {
     history.push(`/invoices/${invoiceId}/edit`);
+    closeDrawer('invoice-detail-drawer');
+  };
+
+  // Handle convert to invoice.
+  const handleConvertToCreitNote = () => {
+    history.push(`/credit-notes/new?from_invoice_id=${invoiceId}`, {
+      invoiceId: invoiceId,
+    });
     closeDrawer('invoice-detail-drawer');
   };
 
@@ -124,6 +138,7 @@ function InvoiceDetailActionsBar({
               onBadDebt: handleBadDebtInvoice,
               onCancelBadDebt: handleCancelBadDebtInvoice,
               onNotifyViaSMS: handleNotifyViaSMS,
+              onConvert: handleConvertToCreitNote,
             }}
           />
         </Can>
