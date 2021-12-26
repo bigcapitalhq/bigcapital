@@ -1,43 +1,35 @@
 import React from 'react';
-import styled from 'styled-components';
 
 import {
+  CommercialDocFooter,
   T,
-  TotalLines,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-  FormatNumber,
+  If,
+  DetailsMenu,
+  DetailItem,
 } from 'components';
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 
 /**
- * Estimate details panel footer content.
+ * Estimate details footer.
+ * @returns {React.JSX}
  */
 export default function EstimateDetailFooter() {
   const { estimate } = useEstimateDetailDrawerContext();
-
+  
   return (
-    <EstimateDetailsFooterRoot>
-      <EstimateTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
-        <TotalLine
-          title={<T id={'estimate.details.subtotal'} />}
-          value={<FormatNumber value={estimate.amount} />}
-          borderStyle={TotalLineBorderStyle.SingleDark}
-        />
-        <TotalLine
-          title={<T id={'estimate.details.total'} />}
-          value={estimate.formatted_amount}
-          borderStyle={TotalLineBorderStyle.DoubleDark}
-          textStyle={TotalLineTextStyle.Bold}
-        />
-      </EstimateTotalLines>
-    </EstimateDetailsFooterRoot>
+    <CommercialDocFooter>
+      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+        <If condition={estimate.terms_conditions}>
+          <DetailItem label={<T id={'estimate.details.terms_conditions'} />}>
+            {estimate.terms_conditions}
+          </DetailItem>
+        </If>
+        <If condition={estimate.note}>
+          <DetailItem label={<T id={'estimate.details.note'} />}>
+            {estimate.note}
+          </DetailItem>
+        </If>
+      </DetailsMenu>
+    </CommercialDocFooter>
   );
 }
-
-export const EstimateDetailsFooterRoot = styled.div``;
-
-export const EstimateTotalLines = styled(TotalLines)`
-  margin-left: auto;
-`;
