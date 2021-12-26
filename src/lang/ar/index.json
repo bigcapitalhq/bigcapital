@@ -1512,7 +1512,8 @@
   "credit_note.action.edit_credit_note": "تعديل إشعار دائن",
   "credit_note.column.credit_note_no": "إشعار الدائن #",
   "credit_note.column.credit_date": "تاريخ دائن",
-  "credit_note.empty_status_description": "",
+  "credit_note.empty_status.title": "خفض أرصدة الزبائن عن طريقة إنشاء إشعار دائن",
+  "credit_note.empty_status.description": "إشعار دائن وهو مستند تجاري يعطى للزبون عند إرجاع البضائع ، مع امكانية اضافة عملية استرجاع اموال او إضافته إلي فواتير البيع التي لم تدفع.",
   "credit_note.label_credit_note_date": "تاريخ إشعار الدائن",
   "credit_note.label_amount_to_credit": "قيمة الدائنة",
   "credit_note.label_credit_note_details": "تفاصيل إشعار الدائن",
@@ -1550,6 +1551,8 @@
   "vendor_credits.edit_success_message": "تم تعديل إشعار المدين  بنجاح.",
   "vendor_credits.alert.delete_message": "تم حذف إشعار المدين بنجاح",
   "vendor_credits.note.once_delete_this_vendor_credit_note": " بمجرد حذف إشعار المدين ، لن تتمكن من استعادته لاحقًا. هل أنت متأكد أنك تريد حذف هذا إشعار ",
+  "vendor_credits.empty_status.title": "فض أرصدة الموردين عن طريق إنشاء إشعار مدين" ,
+  "vendor_credits.empty_status.description": "إشعار المدين هو المستند الذي يرسل إلى المورد و يجعله مديناً للمنشأة ، فهو إثبات من قبل المنشأة أن لها حق يجب أخذه من المورد." ,
   "vendor_credit_number_settings": "إعدادات رقم إشعار المدين",
   "vendor_credit.auto_increment.auto": "يتم تعيين أرقام إشعارات المدين على وضع الزيادة التلقائي. هل أنت متأكد من تغيير هذا الإعداد؟",
   "vendor_credit.auto_increment.manually": "يتم تعيين أرقام إشعارات المدين على وضع الزيادة التلقائي. هل أنت متأكد من تغيير هذا الإعداد؟",
@@ -1661,8 +1664,8 @@
   "item.drawer_quantity_sold": "الكمية المباعة",
   "journal_entries.amount_displayed_base_currency":"يتم عرض المبلغ بالعملة الأساسية الخاصة بك ",
   "inventory_adjustment.column.product":"المنتج",
-  "convert_to_credit_note":"تحويل إلى إشعار الدائن",
-  "convert_to_vendor_credit":"تحويل إلى إشعار المدين",
+  "convert_to_credit_note":"تحويل إلى إشعار دائن",
+  "convert_to_vendor_credit":"تحويل إلى إشعار مدين",
   "overdue":"Overdue"
 }
 

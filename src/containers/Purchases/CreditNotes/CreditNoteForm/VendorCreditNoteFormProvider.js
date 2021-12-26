@@ -20,7 +20,7 @@ const VendorCreditNoteFormContext = React.createContext();
  */
 function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
   const { state } = useLocation();
-  
+
   const billId = state?.billId;
 
   // Handle fetching the items table based on the given query.
@@ -61,6 +61,12 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
   // Determines whether the form in new mode.
   const isNewMode = !vendorCreditId;
 
+  const newVendorCredit = !isEmpty(bill)
+    ? transformToEditForm({
+        ...pick(bill, ['vendor_id', 'entries']),
+      })
+    : [];
+
   // Provider payload.
   const provider = {
     items,
@@ -68,7 +74,7 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
     vendorCredit,
     submitPayload,
     isNewMode,
-    bill,
+    newVendorCredit,
 
     isVendorCreditLoading,
 

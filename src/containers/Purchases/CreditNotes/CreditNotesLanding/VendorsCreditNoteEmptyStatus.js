@@ -12,10 +12,10 @@ export default function VendorsCreditNoteEmptyStatus() {
   const history = useHistory();
   return (
     <EmptyStatus
-      title={<T id={'the_organization_doesn_t_receive_money_yet'} />}
+      title={<T id={'vendor_credits.empty_status.title'} />}
       description={
         <p>
-          <T id={'vendor_credits.empty_status_description'} />
+          <T id={'vendor_credits.empty_status.description'} />
         </p>
       }
       action={
@@ -26,7 +26,7 @@ export default function VendorsCreditNoteEmptyStatus() {
               large={true}
               onClick={() => history.push('/vendor-credits/new')}
             >
-              <T id={'vendor_credits.action.new_vendor_credit'} />
+              <T id={'vendor_credits.label.new_vendor_credit'} />
             </Button>
 
             <Button intent={Intent.NONE} large={true}>

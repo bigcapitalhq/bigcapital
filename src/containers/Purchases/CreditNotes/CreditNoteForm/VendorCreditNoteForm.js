@@ -50,7 +50,7 @@ function VendorCreditNoteForm({
     isNewMode,
     submitPayload,
     vendorCredit,
-    bill,
+    newVendorCredit,
     createVendorCreditMutate,
     editVendorCreditMutate,
   } = useVendorCreditNoteFormContext();
@@ -73,9 +73,7 @@ function VendorCreditNoteForm({
             ...(vendorcreditAutoIncrement && {
               vendor_credit_number: vendorCreditNumber,
             }),
-            ...transformToEditForm({
-              ...pick(bill, ['vendor_id', 'entries']),
-            }),
+            ...newVendorCredit,
           }),
     }),
     [vendorCredit, base_currency],
