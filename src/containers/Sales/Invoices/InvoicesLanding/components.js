@@ -124,7 +124,7 @@ export function ActionsMenu({
     onEdit,
     onDeliver,
     onDelete,
-    onDrawer,
+    onConvert,
     onQuick,
     onViewDetails,
     onPrint,
@@ -144,6 +144,11 @@ export function ActionsMenu({
           icon={<Icon icon="pen-18" />}
           text={intl.get('edit_invoice')}
           onClick={safeCallback(onEdit, original)}
+        />
+        <MenuItem
+          icon={<Icon icon="convert_to" />}
+          text={intl.get('convert_to_credit_note')}
+          onClick={safeCallback(onConvert, original)}
         />
 
         <If condition={!original.is_delivered}>

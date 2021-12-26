@@ -74,6 +74,11 @@ function InvoicesDataTable({
     history.push(`/invoices/${invoice.id}/edit`);
   };
 
+  // Handle convert to credit note.
+  const handleConvertToCreitNote = ({ id }) => {
+    history.push(`/credit-notes/new?from_invoice_id=${id}`, { invoiceId: id });
+  };
+
   // handle quick payment receive.
   const handleQuickPaymentReceive = ({ id }) => {
     openDialog('quick-payment-receive', { invoiceId: id });
@@ -147,6 +152,7 @@ function InvoicesDataTable({
           onQuick: handleQuickPaymentReceive,
           onViewDetails: handleViewDetailInvoice,
           onPrint: handlePrintInvoice,
+          onConvert: handleConvertToCreitNote,
         }}
       />
     </DashboardContentTable>
