@@ -4,8 +4,8 @@ import { CommercialDocBox } from 'components';
 
 import BillDetailHeader from './BillDetailHeader';
 import BillDetailTable from './BillDetailTable';
-import { BillDetailFooter } from './BillDetailFooter';
-
+import { BillDetailTableFooter } from './BillDetailTableFooter';
+import BillDetailFooter from './BillDetailFooter';
 
 /**
  * Bill detail panel tab.
@@ -15,6 +15,7 @@ export default function BillDetailTab() {
     <CommercialDocBox>
       <BillDetailHeader />
       <BillDetailTable />
+      <BillDetailTableFooter />
       <BillDetailFooter />
     </CommercialDocBox>
   );

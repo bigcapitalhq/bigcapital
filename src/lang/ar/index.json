@@ -1659,7 +1659,8 @@
   "transactions": "معاملات ",
   "item.drawer_transactions_by": "معاملات حسب :",
   "item.drawer_quantity_sold": "الكمية المباعة",
-  "journal_entries.amount_displayed_base_currency":"يتم عرض المبلغ بالعملة الأساسية الخاصة بك "
+  "journal_entries.amount_displayed_base_currency":"يتم عرض المبلغ بالعملة الأساسية الخاصة بك ",
+  "inventory_adjustment.column.product":"المنتج"
 
 }
 

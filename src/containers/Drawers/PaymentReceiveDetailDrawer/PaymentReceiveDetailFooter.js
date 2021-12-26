@@ -1,13 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
 
 import {
-  FormatNumber,
-  TotalLineTextStyle,
-  TotalLineBorderStyle,
+  CommercialDocFooter,
   T,
-  TotalLine,
-  TotalLines,
+  If,
+  DetailsMenu,
+  DetailItem,
 } from 'components';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
@@ -17,30 +15,16 @@ import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
  */
 export default function PaymentReceiveDetailFooter() {
   const { paymentReceive } = usePaymentReceiveDetailContext();
-
+  
   return (
-    <PaymentReceiveDetailsFooterRoot>
-      <PaymentReceiveTotalLines
-        labelColWidth={'180px'}
-        amountColWidth={'180px'}
-      >
-        <TotalLine
-          title={<T id={'payment_receive.details.subtotal'} />}
-          value={<FormatNumber value={paymentReceive.amount} />}
-        />
-        <TotalLine
-          title={<T id={'payment_receive.details.total'} />}
-          value={paymentReceive.formatted_amount}
-          borderStyle={TotalLineBorderStyle.DoubleDark}
-          textStyle={TotalLineTextStyle.Bold}
-        />
-      </PaymentReceiveTotalLines>
-    </PaymentReceiveDetailsFooterRoot>
+    <CommercialDocFooter>
+      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+        <If condition={paymentReceive.statement}>
+          <DetailItem label={<T id={'payment_receive.details.statement'} />}>
+            {paymentReceive.statement}
+          </DetailItem>
+        </If>
+      </DetailsMenu>
+    </CommercialDocFooter>
   );
 }
-
-export const PaymentReceiveDetailsFooterRoot = styled.div``;
-
-export const PaymentReceiveTotalLines = styled(TotalLines)`
-  margin-left: auto;
-`;

@@ -5,6 +5,7 @@ import { CommercialDocBox } from 'components';
 
 import PaymentReceiveDetailHeader from './PaymentReceiveDetailHeader';
 import PaymentReceiveDetailTable from './PaymentReceiveDetailTable';
+import PaymentReceiveDetailTableFooter from './PaymentReceiveDetailTableFooter';
 import PaymentReceiveDetailFooter from './PaymentReceiveDetailFooter';
 
 /**
@@ -17,6 +18,7 @@ export default function PaymentReceiveDetailTab() {
       <CommercialDocBox>
         <PaymentReceiveDetailHeader />
         <PaymentReceiveDetailTable />
+        <PaymentReceiveDetailTableFooter />
         <PaymentReceiveDetailFooter />
       </CommercialDocBox>
     </PaymentReceiveDetailsTabPanelRoot>
