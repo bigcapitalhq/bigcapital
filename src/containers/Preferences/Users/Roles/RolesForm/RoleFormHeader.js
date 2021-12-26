@@ -15,7 +15,7 @@ export function RoleFormHeader() {
 
   return (
     <Card>
-      {/* ----------  name ----------  */}
+      {/* ---------- Name ----------  */}
       <FastField name={'role_name'}>
         {({ field, meta: { error, touched } }) => (
           <FormGroup
@@ -39,7 +39,7 @@ export function RoleFormHeader() {
         )}
       </FastField>
 
-      {/* ----------  description ----------  */}
+      {/* ---------- Description ----------  */}
       <FastField name={'role_description'}>
         {({ field, meta: { error, touched } }) => (
           <FormGroup

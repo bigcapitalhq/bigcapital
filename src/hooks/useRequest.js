@@ -66,6 +66,10 @@ export default function useApiRequest() {
           if (lockedError) {
             setGlobalErrors({ transactionsLocked: { ...lockedError.data } });
           }
+          if (data.errors.find(e => e.type === 'USER_INACTIVE')) {
+            setGlobalErrors({ userInactive: true });
+            setLogout();
+          }
         }
         return Promise.reject(error);
       },

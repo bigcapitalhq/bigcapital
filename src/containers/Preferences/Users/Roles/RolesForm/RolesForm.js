@@ -85,7 +85,6 @@ function RolesForm({
       },
     }) => {
       setSubmitting(false);
-
       handleDeleteErrors(errors);
     };
     if (isNewMode) {

@@ -55,10 +55,14 @@ export const transformPermissionsToObject = (permissions) => {
  * @returns
  */
 export const transformToObject = (role) => {
+  const permissions = transformPermissionsToObject(role.permissions);
+  const serviceFullAccess = getInitialServicesFullAccess(permissions);
+
   return {
     role_name: role.name,
     role_description: role.description,
-    permissions: transformPermissionsToObject(role.permissions),
+    permissions,
+    serviceFullAccess,
   };
 };
 

@@ -64,6 +64,15 @@ function GlobalErrors({
       },
     });
   }
+  if (globalErrors.userInactive) {
+    AppToaster.show({
+      message: 'The authorized user is inactive.',
+      intent: Intent.DANGER,
+      onDismiss: () => {
+        globalErrorsSet({ userInactive: false });
+      },
+    });
+  }
   return null;
 }
 
