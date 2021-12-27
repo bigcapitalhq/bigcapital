@@ -36,6 +36,7 @@
     "cross-env": "^7.0.2",
     "css-loader": "3.4.2",
     "deep-map-keys": "^2.0.1",
+    "dependency-graph": "^0.11.0",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "eslint": "^6.6.0",

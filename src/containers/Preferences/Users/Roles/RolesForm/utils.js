@@ -1,6 +1,8 @@
-import { chain } from 'lodash';
+import { chain, isEmpty, castArray, memoize } from 'lodash';
 import * as R from 'ramda';
+import { DepGraph } from 'dependency-graph';
 import {
+  permissions as PERMISSIONS_SCHEMA,
   getPermissionsSchemaService,
   getPermissionsSchemaServices,
 } from 'common/permissionsSchema';
@@ -176,11 +178,23 @@ export const handleCheckboxPermissionChange = R.curry(
   (form, permission, service, event) => {
     const { subject } = service;
     const isChecked = event.currentTarget.checked;
+
+    const permissionsGraph = memoizedPermissionsGraph();
+    const dependencies = isChecked
+      ? permissionsGraph.dependenciesOf(`${subject}/${permission.key}`)
+      : permissionsGraph.dependantsOf(`${subject}/${permission.key}`);
+
+    const newDependsPermiss = chain(dependencies)
+      .map((dep) => [dep, isChecked])
+      .fromPairs()
+      .value();
+
     const newValues = {
       ...form.values,
       permissions: {
         ...form.values.permissions,
         [`${subject}/${permission.key}`]: isChecked,
+        ...newDependsPermiss,
       },
     };
     const isFullChecked = isServiceFullChecked(subject, newValues.permissions);
@@ -193,6 +207,10 @@ export const handleCheckboxPermissionChange = R.curry(
       `serviceFullAccess.${subject}`,
       detarmineCheckboxState(isFullChecked, isFullUnchecked),
     );
+
+    dependencies.forEach((depKey) => {
+      form.setFieldValue(`permissions.${depKey}`, isChecked);
+    });
   },
 );
 
@@ -243,3 +261,50 @@ export const handleCheckboxFullAccessChange = R.curry(
     });
   },
 );
+
+/**
+ * Retrieves all flatten modules permissions.
+ */
+export function getAllFlattenPermissionsSchema() {
+  return chain(PERMISSIONS_SCHEMA)
+    .map((module) => module.services)
+    .flatten()
+    .map((module) =>
+      module.permissions.map((permission) => ({
+        subject: module.subject,
+        ...permission,
+      })),
+    )
+    .flatten()
+    .value();
+}
+
+/**
+ * Retrieve the permissions schema dependencies graph.
+ * @returns {DepGraph}
+ */
+export const getPermissionsSchemaGraph = () => {
+  const graph = new DepGraph();
+  const permissions = getAllFlattenPermissionsSchema();
+
+  permissions.forEach((permission) => {
+    graph.addNode(`${permission.subject}/${permission.key}`, permission);
+  });
+  const nodesOrder = graph.overallOrder();
+
+  nodesOrder.forEach((key) => {
+    const node = graph.getNodeData(key);
+
+    if (isEmpty(node.depend)) return;
+
+    const depends = castArray(node.depend);
+
+    depends.forEach((dependRelation) => {
+      const subject = dependRelation.subject || node.subject;
+      graph.addDependency(key, `${subject}/${dependRelation.key}`);
+    });
+  });
+  return graph;
+};
+
+const memoizedPermissionsGraph = memoize(getPermissionsSchemaGraph);

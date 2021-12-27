@@ -47,52 +47,20 @@ export const permissions = [
         label: 'Items',
         subject: AbilitySubject.Item,
         permissions: [
-          {
-            label: 'View',
-            key: ItemAction.View,
-            relatedColumn: PermissionColumn.View,
-          },
-          {
-            label: 'Create',
-            key: ItemAction.Create,
-            relatedColumn: PermissionColumn.Create,
-          },
-          {
-            label: 'Edit',
-            key: ItemAction.Edit,
-            relatedColumn: PermissionColumn.Edit,
-          },
-          {
-            label: 'Delete',
-            key: ItemAction.Delete,
-            relatedColumn: PermissionColumn.Delete,
-          },
+          { label: 'View',    key: ItemAction.View,   relatedColumn: PermissionColumn.View },
+          { label: 'Create',  key: ItemAction.Create, relatedColumn: PermissionColumn.Create,   depend: [{ key: ItemAction.View }] },
+          { label: 'Edit',    key: ItemAction.Edit,   relatedColumn: PermissionColumn.Edit,     depend: [{ key: ItemAction.Create }], },
+          { label: 'Delete',  key: ItemAction.Delete, relatedColumn: PermissionColumn.Delete,   depend: [{ key: ItemAction.Edit }] },
         ],
       },
       {
         label: 'Inventory adjustments',
         subject: AbilitySubject.InventoryAdjustment,
         permissions: [
-          {
-            label: 'View',
-            key: ItemAction.View,
-            relatedColumn: PermissionColumn.View,
-          },
-          {
-            label: 'Create',
-            key: ItemAction.Create,
-            relatedColumn: PermissionColumn.Create,
-          },
-          {
-            label: 'Edit',
-            key: ItemAction.Edit,
-            relatedColumn: PermissionColumn.Edit,
-          },
-          {
-            label: 'Delete',
-            key: ItemAction.Delete,
-            relatedColumn: PermissionColumn.Delete,
-          },
+          { label: 'View',    key: ItemAction.View,   relatedColumn: PermissionColumn.View },
+          { label: 'Create',  key: ItemAction.Create, relatedColumn: PermissionColumn.Create, depend: [{ key: ItemAction.View }] },
+          { label: 'Edit',    key: ItemAction.Edit,   relatedColumn: PermissionColumn.Edit,   depend: [{ key: ItemAction.Create }] },
+          { label: 'Delete',  key: ItemAction.Delete, relatedColumn: PermissionColumn.Delete, depend: [{ key: ItemAction.Edit }] },
         ],
       },
     ],
@@ -113,26 +81,10 @@ export const permissions = [
         label: 'Customers',
         subject: AbilitySubject.Customer,
         permissions: [
-          {
-            label: 'View',
-            key: CustomerAction.View,
-            relatedColumn: PermissionColumn.View,
-          },
-          {
-            label: 'Create',
-            key: CustomerAction.Create,
-            relatedColumn: PermissionColumn.Create,
-          },
-          {
-            label: 'Edit',
-            key: CustomerAction.Edit,
-            relatedColumn: PermissionColumn.Edit,
-          },
-          {
-            label: 'Delete',
-            key: CustomerAction.Delete,
-            relatedColumn: PermissionColumn.Delete,
-          },
+          { label: 'View',   key: CustomerAction.View,   relatedColumn: PermissionColumn.View, },
+          { label: 'Create', key: CustomerAction.Create, relatedColumn: PermissionColumn.Create, depend: [{ key: CustomerAction.View }] },
+          { label: 'Edit',   key: CustomerAction.Edit,   relatedColumn: PermissionColumn.Edit,   depend: [{ key: CustomerAction.Create }] },
+          { label: 'Delete', key: CustomerAction.Delete, relatedColumn: PermissionColumn.Delete, depend: [{ key: CustomerAction.Edit }] },
         ],
       },
       {
@@ -148,16 +100,19 @@ export const permissions = [
             label: 'Create',
             key: VendorAction.Create,
             relatedColumn: PermissionColumn.Create,
+            depend: [{ key: VendorAction.View }]
           },
           {
             label: 'Edit',
             key: VendorAction.Edit,
             relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: VendorAction.Create }]
           },
           {
             label: 'Delete',
             key: VendorAction.Delete,
             relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: VendorAction.Edit }]
           },
         ],
       },
@@ -188,44 +143,31 @@ export const permissions = [
             label: 'Create',
             key: SaleInvoiceAction.Create,
             relatedColumn: PermissionColumn.Create,
+            depend: [{ key: SaleInvoiceAction.View }]
           },
           {
             label: 'Edit',
             key: SaleInvoiceAction.Edit,
             relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: SaleInvoiceAction.Create }]
           },
           {
             label: 'Delete',
             key: SaleInvoiceAction.Delete,
             relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: SaleInvoiceAction.Edit }]
           },
-          { label: 'Written-off invoice', key: SaleInvoiceAction.Writeoff },
+          { label: 'Written-off invoice', key: SaleInvoiceAction.Writeoff, depend:[{ key: SaleInvoiceAction.Edit }] },
         ],
       },
       {
         label: 'Sale Estimate',
         subject: AbilitySubject.Estimate,
         permissions: [
-          {
-            label: 'View',
-            key: SaleEstimateAction.View,
-            relatedColumn: PermissionColumn.View,
-          },
-          {
-            label: 'Create',
-            key: SaleEstimateAction.Create,
-            relatedColumn: PermissionColumn.Create,
-          },
-          {
-            label: 'Edit',
-            key: SaleEstimateAction.Edit,
-            relatedColumn: PermissionColumn.Edit,
-          },
-          {
-            label: 'Delete',
-            key: SaleEstimateAction.Delete,
-            relatedColumn: PermissionColumn.Delete,
-          },
+          { label: 'View', key: SaleEstimateAction.View, relatedColumn: PermissionColumn.View, },
+          { label: 'Create', key: SaleEstimateAction.Create, relatedColumn: PermissionColumn.Create, depend:[{ key: SaleEstimateAction.View }] },
+          { label: 'Edit', key: SaleEstimateAction.Edit, relatedColumn: PermissionColumn.Edit, depend:[{ key: SaleEstimateAction.Create }] },
+          { label: 'Delete', key: SaleEstimateAction.Delete, relatedColumn: PermissionColumn.Delete, depend:[{ key: SaleEstimateAction.Edit }] },
         ],
       },
       {
@@ -241,16 +183,19 @@ export const permissions = [
             label: 'Create',
             key: SaleReceiptAction.Create,
             relatedColumn: PermissionColumn.Create,
+            depend:[{ key: SaleReceiptAction.View }]
           },
           {
             label: 'Edit',
             key: SaleReceiptAction.Edit,
             relatedColumn: PermissionColumn.Edit,
+            depend:[{ key: SaleReceiptAction.Create }]
           },
           {
             label: 'Delete',
             key: SaleReceiptAction.Delete,
             relatedColumn: PermissionColumn.Delete,
+            depend:[{ key: SaleReceiptAction.Edit }]
           },
         ],
       },
@@ -258,27 +203,11 @@ export const permissions = [
         label: 'Credit note',
         subject: AbilitySubject.CreditNote,
         permissions: [
-          {
-            label: 'View',
-            key: CreditNoteAction.View,
-            relatedColumn: PermissionColumn.View,
-          },
-          {
-            label: 'Create',
-            key: CreditNoteAction.Create,
-            relatedColumn: PermissionColumn.Create,
-          },
-          {
-            label: 'Edit',
-            key: CreditNoteAction.Edit,
-            relatedColumn: PermissionColumn.Edit,
-          },
-          {
-            label: 'Delete',
-            key: CreditNoteAction.Delete,
-            relatedColumn: PermissionColumn.Delete,
-          },
-          { label: 'Refund credit note', key: CreditNoteAction.Refund },
+          { label: 'View', key: CreditNoteAction.View, relatedColumn: PermissionColumn.View },
+          { label: 'Create', key: CreditNoteAction.Create, relatedColumn: PermissionColumn.Create, depend:[{ key: CreditNoteAction.View }] },
+          { label: 'Edit', key: CreditNoteAction.Edit, relatedColumn: PermissionColumn.Edit, depend:[{ key: CreditNoteAction.Create }] },
+          { label: 'Delete', key: CreditNoteAction.Delete, relatedColumn: PermissionColumn.Delete, depend:[{ key: CreditNoteAction.Edit }] },
+          { label: 'Refund credit note', key: CreditNoteAction.Refund, depend:[{ key: CreditNoteAction.View }] },
         ],
       },
       {
@@ -294,16 +223,19 @@ export const permissions = [
             label: 'Create',
             key: PaymentReceiveAction.Create,
             relatedColumn: PermissionColumn.Create,
+            depend:[{ key: PaymentReceiveAction.View }]
           },
           {
             label: 'Edit',
             key: PaymentReceiveAction.Edit,
             relatedColumn: PermissionColumn.Edit,
+            depend:[{ key: PaymentReceiveAction.Create }]
           },
           {
             label: 'Delete',
             key: PaymentReceiveAction.Delete,
             relatedColumn: PermissionColumn.Delete,
+            depend:[{ key: PaymentReceiveAction.Edit }]
           },
         ],
       },
@@ -334,16 +266,19 @@ export const permissions = [
             label: 'Create',
             key: BillAction.Create,
             relatedColumn: PermissionColumn.Create,
+            depend:[{ key: BillAction.View }]
           },
           {
             label: 'Edit',
             key: BillAction.Edit,
             relatedColumn: PermissionColumn.Edit,
+            depend:[{ key: BillAction.Create }]
           },
           {
             label: 'Delete',
             key: BillAction.Delete,
             relatedColumn: PermissionColumn.Delete,
+            depend:[{ key: BillAction.Edit }]
           },
         ],
       },
@@ -360,18 +295,21 @@ export const permissions = [
             label: 'Create',
             key: VendorCreditAction.Create,
             relatedColumn: PermissionColumn.Create,
+            depend: [{ key: VendorCreditAction.View }]
           },
           {
             label: 'Edit',
             key: VendorCreditAction.Edit,
             relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: VendorCreditAction.Create }]
           },
           {
             label: 'Delete',
             key: VendorCreditAction.Delete,
             relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: VendorCreditAction.Edit }]
           },
-          { label: 'Refund vendor credit', key: VendorCreditAction.Refund },
+          { label: 'Refund vendor credit', key: VendorCreditAction.Refund, depend: [{ key: VendorCreditAction.View }] },
         ],
       },
       {
@@ -387,16 +325,19 @@ export const permissions = [
             label: 'Create',
             key: PaymentMadeAction.Create,
             relatedColumn: PermissionColumn.Create,
+            depend: [{ key: PaymentMadeAction.View }]
           },
           {
             label: 'Edit',
             key: PaymentMadeAction.Edit,
             relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: PaymentMadeAction.Create }]
           },
           {
             label: 'Delete',
             key: PaymentMadeAction.Delete,
             relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: PaymentMadeAction.Edit }]
           },
         ],
       },
@@ -427,16 +368,19 @@ export const permissions = [
             label: 'Create',
             key: ManualJournalAction.Create,
             relatedColumn: PermissionColumn.Create,
+            depend: [{ key: ManualJournalAction.View }]
           },
           {
             label: 'Edit',
             key: ManualJournalAction.Edit,
             relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: ManualJournalAction.Create }]
           },
           {
             label: 'Delete',
             key: ManualJournalAction.Delete,
             relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: ManualJournalAction.Edit }]
           },
         ],
       },
@@ -453,16 +397,19 @@ export const permissions = [
             label: 'Create',
             key: AccountAction.Create,
             relatedColumn: PermissionColumn.Create,
+            depend: [{ key: AccountAction.View }]
           },
           {
             label: 'Edit',
             key: AccountAction.Edit,
             relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: AccountAction.Create }]
           },
           {
             label: 'Delete',
             key: AccountAction.Delete,
             relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: AccountAction.Edit }]
           },
           {
             label: 'Transactions locking',
@@ -483,16 +430,19 @@ export const permissions = [
             label: 'Create',
             key: ExpenseAction.Create,
             relatedColumn: PermissionColumn.Create,
+            depend: [{ key: ExpenseAction.View }]
           },
           {
             label: 'Edit',
             key: ExpenseAction.Edit,
             relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: ExpenseAction.Create }]
           },
           {
             label: 'Delete',
             key: ExpenseAction.Delete,
             relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: ExpenseAction.Edit }]
           },
         ],
       },
