@@ -12,10 +12,10 @@ export default function CreditNotesEmptyStatus() {
   const history = useHistory();
   return (
     <EmptyStatus
-      title={<T id={'the_organization_doesn_t_receive_money_yet'} />}
+      title={<T id={'credit_note.empty_status.title'} />}
       description={
         <p>
-          <T id={'credit_note.empty_status_description'} />
+          <T id={'credit_note.empty_status.description'} />
         </p>
       }
       action={
