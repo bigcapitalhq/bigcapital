@@ -37,9 +37,9 @@ export const getPermissionsSchema = () => [
     type: ModulePermissionsStyle.Columns,
     serviceFullAccess: true,
     columns: [
-      { label: intl.get('permissions.column.view'),   key: 'view' },
+      { label: intl.get('permissions.column.view'), key: 'view' },
       { label: intl.get('permissions.column.create'), key: 'create' },
-      { label: intl.get('permissions.column.edit'),   key: 'edit' },
+      { label: intl.get('permissions.column.edit'), key: 'edit' },
       { label: intl.get('permissions.column.delete'), key: 'delete' },
     ],
     services: [
@@ -47,461 +47,590 @@ export const getPermissionsSchema = () => [
         label: intl.get('permissions.items'),
         subject: AbilitySubject.Item,
         permissions: [
-          { label: 'View',    key: ItemAction.View,   relatedColumn: PermissionColumn.View },
-          { label: 'Create',  key: ItemAction.Create, relatedColumn: PermissionColumn.Create,   depend: [{ key: ItemAction.View }] },
-          { label: 'Edit',    key: ItemAction.Edit,   relatedColumn: PermissionColumn.Edit,     depend: [{ key: ItemAction.Create }], },
-          { label: 'Delete',  key: ItemAction.Delete, relatedColumn: PermissionColumn.Delete,   depend: [{ key: ItemAction.Edit }] },
+          {
+            label: intl.get('permissions.column.view'),
+            key: ItemAction.View,
+            relatedColumn: PermissionColumn.View,
+          },
+          {
+            label: intl.get('permissions.column.create'),
+            key: ItemAction.Create,
+            relatedColumn: PermissionColumn.Create,
+            depend: [{ key: ItemAction.View }],
+          },
+          {
+            label: intl.get('permissions.column.edit'),
+            key: ItemAction.Edit,
+            relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: ItemAction.Create }],
+          },
+          {
+            label: intl.get('permissions.column.delete'),
+            key: ItemAction.Delete,
+            relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: ItemAction.Edit }],
+          },
         ],
       },
       {
         label: intl.get('permissions.inventory_adjustment'),
         subject: AbilitySubject.InventoryAdjustment,
         permissions: [
-          { label: 'View',    key: ItemAction.View,   relatedColumn: PermissionColumn.View },
-          { label: 'Create',  key: ItemAction.Create, relatedColumn: PermissionColumn.Create, depend: [{ key: ItemAction.View }] },
-          { label: 'Edit',    key: ItemAction.Edit,   relatedColumn: PermissionColumn.Edit,   depend: [{ key: ItemAction.Create }] },
-          { label: 'Delete',  key: ItemAction.Delete, relatedColumn: PermissionColumn.Delete, depend: [{ key: ItemAction.Edit }] },
+          {
+            label: 'View',
+            key: ItemAction.View,
+            relatedColumn: PermissionColumn.View,
+          },
+          {
+            label: 'Create',
+            key: ItemAction.Create,
+            relatedColumn: PermissionColumn.Create,
+            depend: [{ key: ItemAction.View }],
+          },
+          {
+            label: 'Edit',
+            key: ItemAction.Edit,
+            relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: ItemAction.Create }],
+          },
+          {
+            label: 'Delete',
+            key: ItemAction.Delete,
+            relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: ItemAction.Edit }],
+          },
         ],
       },
     ],
   },
   {
-    label: 'Contacts',
+    label: intl.get('permissions.contacts'),
     type: ModulePermissionsStyle.Columns,
     serviceFullAccess: true,
     moduleFullAccess: true,
     columns: [
-      { label: 'View', key: 'view' },
-      { label: 'Create', key: 'create' },
-      { label: 'Edit', key: 'edit' },
-      { label: 'Delete', key: 'delete' },
+      { label: intl.get('permissions.column.view'), key: 'view' },
+      { label: intl.get('permissions.column.create'), key: 'create' },
+      { label: intl.get('permissions.column.edit'), key: 'edit' },
+      { label: intl.get('permissions.column.delete'), key: 'delete' },
     ],
     services: [
       {
-        label: 'Customers',
+        label: intl.get('permissions.customers'),
         subject: AbilitySubject.Customer,
         permissions: [
-          { label: 'View',   key: CustomerAction.View,   relatedColumn: PermissionColumn.View, },
-          { label: 'Create', key: CustomerAction.Create, relatedColumn: PermissionColumn.Create, depend: [{ key: CustomerAction.View }] },
-          { label: 'Edit',   key: CustomerAction.Edit,   relatedColumn: PermissionColumn.Edit,   depend: [{ key: CustomerAction.Create }] },
-          { label: 'Delete', key: CustomerAction.Delete, relatedColumn: PermissionColumn.Delete, depend: [{ key: CustomerAction.Edit }] },
+          {
+            label: intl.get('permissions.column.view'),
+            key: CustomerAction.View,
+            relatedColumn: PermissionColumn.View,
+          },
+          {
+            label: intl.get('permissions.column.create'),
+            key: CustomerAction.Create,
+            relatedColumn: PermissionColumn.Create,
+            depend: [{ key: CustomerAction.View }],
+          },
+          {
+            label: intl.get('permissions.column.edit'),
+            key: CustomerAction.Edit,
+            relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: CustomerAction.Create }],
+          },
+          {
+            label: intl.get('permissions.column.delete'),
+            key: CustomerAction.Delete,
+            relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: CustomerAction.Edit }],
+          },
         ],
       },
       {
-        label: 'Vendors',
+        label: intl.get('permissions.vendors'),
         subject: AbilitySubject.Vendor,
         permissions: [
           {
-            label: 'View',
+            label: intl.get('permissions.column.view'),
             key: VendorAction.View,
             relatedColumn: PermissionColumn.View,
           },
           {
-            label: 'Create',
+            label: intl.get('permissions.column.create'),
             key: VendorAction.Create,
             relatedColumn: PermissionColumn.Create,
-            depend: [{ key: VendorAction.View }]
+            depend: [{ key: VendorAction.View }],
           },
           {
-            label: 'Edit',
+            label: intl.get('permissions.column.edit'),
             key: VendorAction.Edit,
             relatedColumn: PermissionColumn.Edit,
-            depend: [{ key: VendorAction.Create }]
+            depend: [{ key: VendorAction.Create }],
           },
           {
-            label: 'Delete',
+            label: intl.get('permissions.column.delete'),
             key: VendorAction.Delete,
             relatedColumn: PermissionColumn.Delete,
-            depend: [{ key: VendorAction.Edit }]
+            depend: [{ key: VendorAction.Edit }],
           },
         ],
       },
     ],
   },
   {
-    label: 'Sales',
+    label: intl.get('permissions.sales'),
     type: ModulePermissionsStyle.Columns,
     serviceFullAccess: true,
     moduleFullAccess: true,
     columns: [
-      { label: 'View', key: 'view' },
-      { label: 'Create', key: 'create' },
-      { label: 'Edit', key: 'edit' },
-      { label: 'Delete', key: 'delete' },
+      { label: intl.get('permissions.column.view'), key: 'view' },
+      { label: intl.get('permissions.column.create'), key: 'create' },
+      { label: intl.get('permissions.column.edit'), key: 'edit' },
+      { label: intl.get('permissions.column.delete'), key: 'delete' },
     ],
     services: [
       {
-        label: 'Sale Invoice',
+        label: intl.get('permissions.sale_invoice'),
         subject: AbilitySubject.Invoice,
         permissions: [
           {
-            label: 'View',
+            label: intl.get('permissions.column.view'),
             key: SaleInvoiceAction.View,
             relatedColumn: PermissionColumn.View,
           },
           {
-            label: 'Create',
+            label: intl.get('permissions.column.create'),
             key: SaleInvoiceAction.Create,
             relatedColumn: PermissionColumn.Create,
-            depend: [{ key: SaleInvoiceAction.View }]
+            depend: [{ key: SaleInvoiceAction.View }],
           },
           {
-            label: 'Edit',
+            label: intl.get('permissions.column.edit'),
             key: SaleInvoiceAction.Edit,
             relatedColumn: PermissionColumn.Edit,
-            depend: [{ key: SaleInvoiceAction.Create }]
+            depend: [{ key: SaleInvoiceAction.Create }],
           },
           {
-            label: 'Delete',
+            label: intl.get('permissions.column.delete'),
             key: SaleInvoiceAction.Delete,
             relatedColumn: PermissionColumn.Delete,
-            depend: [{ key: SaleInvoiceAction.Edit }]
+            depend: [{ key: SaleInvoiceAction.Edit }],
           },
-          { label: 'Written-off invoice', key: SaleInvoiceAction.Writeoff, depend:[{ key: SaleInvoiceAction.Edit }] },
+          {
+            label: intl.get('permissions.column.written_off_invoice'),
+            key: SaleInvoiceAction.Writeoff,
+            depend: [{ key: SaleInvoiceAction.Edit }],
+          },
         ],
       },
       {
-        label: 'Sale Estimate',
+        label: intl.get('permissions.sale_estimate'),
         subject: AbilitySubject.Estimate,
         permissions: [
-          { label: 'View', key: SaleEstimateAction.View, relatedColumn: PermissionColumn.View, },
-          { label: 'Create', key: SaleEstimateAction.Create, relatedColumn: PermissionColumn.Create, depend:[{ key: SaleEstimateAction.View }] },
-          { label: 'Edit', key: SaleEstimateAction.Edit, relatedColumn: PermissionColumn.Edit, depend:[{ key: SaleEstimateAction.Create }] },
-          { label: 'Delete', key: SaleEstimateAction.Delete, relatedColumn: PermissionColumn.Delete, depend:[{ key: SaleEstimateAction.Edit }] },
+          {
+            label: intl.get('permissions.column.view'),
+            key: SaleEstimateAction.View,
+            relatedColumn: PermissionColumn.View,
+          },
+          {
+            label: intl.get('permissions.column.create'),
+            key: SaleEstimateAction.Create,
+            relatedColumn: PermissionColumn.Create,
+            depend: [{ key: SaleEstimateAction.View }],
+          },
+          {
+            label: intl.get('permissions.column.edit'),
+            key: SaleEstimateAction.Edit,
+            relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: SaleEstimateAction.Create }],
+          },
+          {
+            label: intl.get('permissions.column.delete'),
+            key: SaleEstimateAction.Delete,
+            relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: SaleEstimateAction.Edit }],
+          },
         ],
       },
       {
-        label: 'Sale Receipt',
+        label: intl.get('permissions.sale_receipt'),
         subject: AbilitySubject.Receipt,
         permissions: [
-          { label: 'View', key: SaleReceiptAction.View, relatedColumn: PermissionColumn.View, },
           {
-            label: 'Create',
+            label: intl.get('permissions.column.view'),
+            key: SaleReceiptAction.View,
+            relatedColumn: PermissionColumn.View,
+          },
+          {
+            label: intl.get('permissions.column.create'),
             key: SaleReceiptAction.Create,
             relatedColumn: PermissionColumn.Create,
-            depend:[{ key: SaleReceiptAction.View }]
+            depend: [{ key: SaleReceiptAction.View }],
           },
           {
-            label: 'Edit',
+            label: intl.get('permissions.column.edit'),
             key: SaleReceiptAction.Edit,
             relatedColumn: PermissionColumn.Edit,
-            depend:[{ key: SaleReceiptAction.Create }]
+            depend: [{ key: SaleReceiptAction.Create }],
           },
           {
-            label: 'Delete',
+            label: intl.get('permissions.column.delete'),
             key: SaleReceiptAction.Delete,
             relatedColumn: PermissionColumn.Delete,
-            depend:[{ key: SaleReceiptAction.Edit }]
+            depend: [{ key: SaleReceiptAction.Edit }],
           },
         ],
       },
       {
-        label: 'Credit note',
+        label: intl.get('permissions.credit_note'),
         subject: AbilitySubject.CreditNote,
         permissions: [
-          { label: 'View', key: CreditNoteAction.View, relatedColumn: PermissionColumn.View },
-          { label: 'Create', key: CreditNoteAction.Create, relatedColumn: PermissionColumn.Create, depend:[{ key: CreditNoteAction.View }] },
-          { label: 'Edit', key: CreditNoteAction.Edit, relatedColumn: PermissionColumn.Edit, depend:[{ key: CreditNoteAction.Create }] },
-          { label: 'Delete', key: CreditNoteAction.Delete, relatedColumn: PermissionColumn.Delete, depend:[{ key: CreditNoteAction.Edit }] },
-          { label: 'Refund credit note', key: CreditNoteAction.Refund, depend:[{ key: CreditNoteAction.View }] },
+          {
+            label: intl.get('permissions.column.view'),
+            key: CreditNoteAction.View,
+            relatedColumn: PermissionColumn.View,
+          },
+          {
+            label: intl.get('permissions.column.create'),
+            key: CreditNoteAction.Create,
+            relatedColumn: PermissionColumn.Create,
+            depend: [{ key: CreditNoteAction.View }],
+          },
+          {
+            label: intl.get('permissions.column.edit'),
+            key: CreditNoteAction.Edit,
+            relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: CreditNoteAction.Create }],
+          },
+          {
+            label: intl.get('permissions.column.delete'),
+            key: CreditNoteAction.Delete,
+            relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: CreditNoteAction.Edit }],
+          },
+          {
+            label: intl.get('permissions.column.refund_credit_note'),
+            key: CreditNoteAction.Refund,
+            depend: [{ key: CreditNoteAction.View }],
+          },
         ],
       },
       {
-        label: 'Payment Receive',
+        label: intl.get('permissions.payment_receive'),
         subject: AbilitySubject.PaymentReceive,
         permissions: [
           {
-            label: 'View',
+            label: intl.get('permissions.column.view'),
             key: PaymentReceiveAction.View,
             relatedColumn: PermissionColumn.View,
           },
           {
-            label: 'Create',
+            label: intl.get('permissions.column.create'),
             key: PaymentReceiveAction.Create,
             relatedColumn: PermissionColumn.Create,
-            depend:[{ key: PaymentReceiveAction.View }]
+            depend: [{ key: PaymentReceiveAction.View }],
           },
           {
-            label: 'Edit',
+            label: intl.get('permissions.column.edit'),
             key: PaymentReceiveAction.Edit,
             relatedColumn: PermissionColumn.Edit,
-            depend:[{ key: PaymentReceiveAction.Create }]
+            depend: [{ key: PaymentReceiveAction.Create }],
           },
           {
-            label: 'Delete',
+            label: intl.get('permissions.column.delete'),
             key: PaymentReceiveAction.Delete,
             relatedColumn: PermissionColumn.Delete,
-            depend:[{ key: PaymentReceiveAction.Edit }]
+            depend: [{ key: PaymentReceiveAction.Edit }],
           },
         ],
       },
     ],
   },
   {
-    label: 'Purchases',
+    label: intl.get('permissions.purchases'),
     type: ModulePermissionsStyle.Columns,
     serviceFullAccess: true,
     moduleFullAccess: true,
     columns: [
-      { label: 'View', key: 'view' },
-      { label: 'Create', key: 'create' },
-      { label: 'Edit', key: 'edit' },
-      { label: 'Delete', key: 'delete' },
+      { label: intl.get('permissions.column.view'), key: 'view' },
+      { label: intl.get('permissions.column.create'), key: 'create' },
+      { label: intl.get('permissions.column.edit'), key: 'edit' },
+      { label: intl.get('permissions.column.delete'), key: 'delete' },
     ],
     services: [
       {
-        label: 'Bills',
+        label: intl.get('permissions.bills'),
         subject: AbilitySubject.Bill,
         permissions: [
           {
-            label: 'View',
+            label: intl.get('permissions.column.view'),
             key: BillAction.View,
             relatedColumn: PermissionColumn.View,
           },
           {
-            label: 'Create',
+            label: intl.get('permissions.column.create'),
             key: BillAction.Create,
             relatedColumn: PermissionColumn.Create,
-            depend:[{ key: BillAction.View }]
+            depend: [{ key: BillAction.View }],
           },
           {
-            label: 'Edit',
+            label: intl.get('permissions.column.edit'),
             key: BillAction.Edit,
             relatedColumn: PermissionColumn.Edit,
-            depend:[{ key: BillAction.Create }]
+            depend: [{ key: BillAction.Create }],
           },
           {
-            label: 'Delete',
+            label: intl.get('permissions.column.delete'),
             key: BillAction.Delete,
             relatedColumn: PermissionColumn.Delete,
-            depend:[{ key: BillAction.Edit }]
+            depend: [{ key: BillAction.Edit }],
           },
         ],
       },
       {
-        label: 'Vendor Credits',
+        label: intl.get('permissions.vendor_credits'),
         subject: AbilitySubject.VendorCredit,
         permissions: [
           {
-            label: 'View',
+            label: intl.get('permissions.column.view'),
             key: VendorCreditAction.View,
             relatedColumn: PermissionColumn.View,
           },
           {
-            label: 'Create',
+            label: intl.get('permissions.column.create'),
             key: VendorCreditAction.Create,
             relatedColumn: PermissionColumn.Create,
-            depend: [{ key: VendorCreditAction.View }]
+            depend: [{ key: VendorCreditAction.View }],
           },
           {
-            label: 'Edit',
+            label: intl.get('permissions.column.edit'),
             key: VendorCreditAction.Edit,
             relatedColumn: PermissionColumn.Edit,
-            depend: [{ key: VendorCreditAction.Create }]
+            depend: [{ key: VendorCreditAction.Create }],
           },
           {
-            label: 'Delete',
+            label: intl.get('permissions.column.delete'),
             key: VendorCreditAction.Delete,
             relatedColumn: PermissionColumn.Delete,
-            depend: [{ key: VendorCreditAction.Edit }]
+            depend: [{ key: VendorCreditAction.Edit }],
           },
-          { label: 'Refund vendor credit', key: VendorCreditAction.Refund, depend: [{ key: VendorCreditAction.View }] },
+          {
+            label: intl.get('permissions.column.refund_vendor_credit'),
+            key: VendorCreditAction.Refund,
+            depend: [{ key: VendorCreditAction.View }],
+          },
         ],
       },
       {
-        label: 'Payment Made',
+        label: intl.get('permissions.payment_made'),
         subject: AbilitySubject.PaymentMade,
         permissions: [
           {
-            label: 'View',
+            label: intl.get('permissions.column.view'),
             key: PaymentMadeAction.View,
             relatedColumn: PermissionColumn.View,
           },
           {
-            label: 'Create',
+            label: intl.get('permissions.column.create'),
             key: PaymentMadeAction.Create,
             relatedColumn: PermissionColumn.Create,
-            depend: [{ key: PaymentMadeAction.View }]
+            depend: [{ key: PaymentMadeAction.View }],
           },
           {
-            label: 'Edit',
+            label: intl.get('permissions.column.edit'),
             key: PaymentMadeAction.Edit,
             relatedColumn: PermissionColumn.Edit,
-            depend: [{ key: PaymentMadeAction.Create }]
+            depend: [{ key: PaymentMadeAction.Create }],
           },
           {
-            label: 'Delete',
+            label: intl.get('permissions.column.delete'),
             key: PaymentMadeAction.Delete,
             relatedColumn: PermissionColumn.Delete,
-            depend: [{ key: PaymentMadeAction.Edit }]
+            depend: [{ key: PaymentMadeAction.Edit }],
           },
         ],
       },
     ],
   },
   {
-    label: 'Financial Accounting',
+    label: intl.get('permissions.financial_accounting'),
     type: ModulePermissionsStyle.Columns,
     serviceFullAccess: true,
     moduleFullAccess: true,
     columns: [
-      { label: 'View', key: 'view' },
-      { label: 'Create', key: 'create' },
-      { label: 'Edit', key: 'edit' },
-      { label: 'Delete', key: 'delete' },
+      { label: intl.get('permissions.column.view'), key: 'view' },
+      { label: intl.get('permissions.column.create'), key: 'create' },
+      { label: intl.get('permissions.column.edit'), key: 'edit' },
+      { label: intl.get('permissions.column.delete'), key: 'delete' },
     ],
     services: [
       {
-        label: 'Manual Journals',
+        label: intl.get('permissions.manual_journals'),
         subject: AbilitySubject.ManualJournal,
         permissions: [
           {
-            label: 'View',
+            label: intl.get('permissions.column.view'),
             key: ManualJournalAction.View,
             relatedColumn: PermissionColumn.View,
           },
           {
-            label: 'Create',
+            label: intl.get('permissions.column.create'),
             key: ManualJournalAction.Create,
             relatedColumn: PermissionColumn.Create,
-            depend: [{ key: ManualJournalAction.View }]
+            depend: [{ key: ManualJournalAction.View }],
           },
           {
-            label: 'Edit',
+            label: intl.get('permissions.column.edit'),
             key: ManualJournalAction.Edit,
             relatedColumn: PermissionColumn.Edit,
-            depend: [{ key: ManualJournalAction.Create }]
+            depend: [{ key: ManualJournalAction.Create }],
           },
           {
-            label: 'Delete',
+            label: intl.get('permissions.column.delete'),
             key: ManualJournalAction.Delete,
             relatedColumn: PermissionColumn.Delete,
-            depend: [{ key: ManualJournalAction.Edit }]
+            depend: [{ key: ManualJournalAction.Edit }],
           },
         ],
       },
       {
-        label: 'Chart of Accounts',
+        label: intl.get('permissions.chart_of_accounts'),
         subject: AbilitySubject.Account,
         permissions: [
           {
-            label: 'View',
+            label: intl.get('permissions.column.view'),
             key: AccountAction.View,
             relatedColumn: PermissionColumn.View,
           },
           {
-            label: 'Create',
+            label: intl.get('permissions.column.create'),
             key: AccountAction.Create,
             relatedColumn: PermissionColumn.Create,
-            depend: [{ key: AccountAction.View }]
+            depend: [{ key: AccountAction.View }],
           },
           {
-            label: 'Edit',
+            label: intl.get('permissions.column.edit'),
             key: AccountAction.Edit,
             relatedColumn: PermissionColumn.Edit,
-            depend: [{ key: AccountAction.Create }]
+            depend: [{ key: AccountAction.Create }],
           },
           {
-            label: 'Delete',
+            label: intl.get('permissions.column.delete'),
             key: AccountAction.Delete,
             relatedColumn: PermissionColumn.Delete,
-            depend: [{ key: AccountAction.Edit }]
+            depend: [{ key: AccountAction.Edit }],
           },
           {
-            label: 'Transactions locking',
+            label: intl.get('permissions.column.transactions_locking'),
             key: AccountAction.TransactionsLocking,
           },
         ],
       },
       {
-        label: 'Expenses',
+        label: intl.get('permissions.expenses'),
         subject: AbilitySubject.Expense,
         permissions: [
           {
-            label: 'View',
+            label: intl.get('permissions.column.view'),
             key: ExpenseAction.View,
             relatedColumn: PermissionColumn.View,
           },
           {
-            label: 'Create',
+            label: intl.get('permissions.column.create'),
             key: ExpenseAction.Create,
             relatedColumn: PermissionColumn.Create,
-            depend: [{ key: ExpenseAction.View }]
+            depend: [{ key: ExpenseAction.View }],
           },
           {
-            label: 'Edit',
+            label: intl.get('permissions.column.edit'),
             key: ExpenseAction.Edit,
             relatedColumn: PermissionColumn.Edit,
-            depend: [{ key: ExpenseAction.Create }]
+            depend: [{ key: ExpenseAction.Create }],
           },
           {
-            label: 'Delete',
+            label: intl.get('permissions.column.delete'),
             key: ExpenseAction.Delete,
             relatedColumn: PermissionColumn.Delete,
-            depend: [{ key: ExpenseAction.Edit }]
+            depend: [{ key: ExpenseAction.Edit }],
           },
         ],
       },
     ],
   },
   {
-    label: 'Financial Reports',
+    label: intl.get('permissions.reports'),
     type: ModulePermissionsStyle.Vertical,
     serviceFullAccess: true,
     moduleFullAccess: true,
     services: [
       {
-        label: 'Financial reprots',
+        label: intl.get('permissions.financial_reports'),
         subject: AbilitySubject.Report,
         permissions: [
-          { label: 'Balance sheet', key: ReportsAction.READ_BALANCE_SHEET },
           {
-            label: 'Trial Balance sheet',
+            label: intl.get('permissions.balance_sheet'),
+            key: ReportsAction.READ_BALANCE_SHEET,
+          },
+          {
+            label: intl.get('permissions.trial_balance_sheet'),
             key: ReportsAction.READ_TRIAL_BALANCE_SHEET,
           },
-          { label: 'Profit & Loss sheet', key: ReportsAction.READ_PROFIT_LOSS },
-          { label: 'Cash flow sheet', key: ReportsAction.READ_CASHFLOW },
-          { label: 'Journal sheet', key: ReportsAction.READ_JOURNAL },
-          { label: 'General ledger', key: ReportsAction.READ_GENERAL_LEDGET },
           {
-            label: 'A/R Aging Summary report',
+            label: intl.get('permissions.profit_loss_sheet'),
+            key: ReportsAction.READ_PROFIT_LOSS,
+          },
+          {
+            label: intl.get('permissions.cash_flow_sheet'),
+            key: ReportsAction.READ_CASHFLOW,
+          },
+          {
+            label: intl.get('permissions.journal_sheet'),
+            key: ReportsAction.READ_JOURNAL,
+          },
+          {
+            label: intl.get('permissions.general_ledger'),
+            key: ReportsAction.READ_GENERAL_LEDGET,
+          },
+          {
+            label: intl.get('permissions.a_r_aging_summary_report'),
             key: ReportsAction.READ_AR_AGING_SUMMARY,
           },
           {
-            label: 'A/P Aging Summary report',
+            label: intl.get('permissions.a_r_aging_summary_report'),
             key: ReportsAction.READ_AP_AGING_SUMMARY,
           },
           {
-            label: 'Purchases by items',
+            label: intl.get('permissions.purchases_by_items'),
             key: ReportsAction.READ_PURCHASES_BY_ITEMS,
           },
-          { label: 'Sales by items', key: ReportsAction.READ_SALES_BY_ITEMS },
           {
-            label: 'Customers transactions',
+            label: intl.get('permissions.sales_by_items'),
+            key: ReportsAction.READ_SALES_BY_ITEMS,
+          },
+          {
+            label: intl.get('permissions.customers_transactions'),
             key: ReportsAction.READ_CUSTOMERS_TRANSACTIONS,
           },
           {
-            label: 'Vendors transactions',
+            label: intl.get('permissions.vendors_transactions'),
             key: ReportsAction.READ_VENDORS_TRANSACTIONS,
           },
           {
-            label: 'Customers summary balance',
+            label: intl.get('permissions.customers_summary_balance'),
             key: ReportsAction.READ_CUSTOMERS_SUMMARY_BALANCE,
           },
           {
-            label: 'Vendors summary balance',
+            label: intl.get('permissions.vendors_summary_balance'),
             key: ReportsAction.READ_VENDORS_SUMMARY_BALANCE,
           },
           {
-            label: 'Inventory valuation summary',
+            label: intl.get('permissions.inventory_valuation_summary'),
             key: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
           },
           {
-            label: 'Inventory items details',
+            label: intl.get('permissions.inventory_items_details'),
             key: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
           },
           {
-            label: 'Cashflow account transactions',
+            label: intl.get('permissions.cashflow_account_transactions'),
             key: ReportsAction.READ_CASHFLOW_ACCOUNT_TRANSACTION,
           },
         ],
@@ -509,7 +638,6 @@ export const getPermissionsSchema = () => [
     ],
   },
 ];
-
 
 export function getPermissionsSchemaService(subject) {
   const permissions = getPermissionsSchema();

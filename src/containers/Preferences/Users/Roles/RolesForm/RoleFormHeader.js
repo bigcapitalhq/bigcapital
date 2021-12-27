@@ -21,7 +21,7 @@ export function RoleFormHeader() {
           <FormGroup
             label={
               <strong>
-                <T id={'role_name'} />
+                <T id={'roles.label.role_name'} />
               </strong>
             }
             labelInfo={<FieldRequiredHint />}

@@ -49,7 +49,7 @@ function InviteUserFormContent({
         <FastField name={'role_id'}>
           {({ form, field: { value }, meta: { error, touched } }) => (
             <FormGroup
-              label={<T id={'roles.label.role_name'} />}
+              label={<T id={'invite_user.label.role_name'} />}
               labelInfo={<FieldRequiredHint />}
               helperText={<ErrorMessage name="role_id" />}
               className={classNames(CLASSES.FILL, 'form-group--role_name')}
