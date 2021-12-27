@@ -107,7 +107,7 @@ export const BadDebtMenuItem = ({
           <Can I={SaleInvoiceAction.Edit} a={AbilitySubject.Invoice}>
             <MenuItem
               onClick={onConvert}
-              text={<T id={'convert_to_credit_note'} />}
+              text={<T id={'invoice.convert_to_credit_note'} />}
             />
           </Can>
           <Can I={SaleInvoiceAction.NotifyBySms} a={AbilitySubject.Invoice}>

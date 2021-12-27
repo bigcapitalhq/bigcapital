@@ -87,7 +87,7 @@ export function BillDetailsStatus({ bill }) {
           </Choose.When>
           <Choose.Otherwise>
             <StatusTag intent={Intent.PRIMARY} round={true}>
-              Due
+              <T id={'due'} />
             </StatusTag>
           </Choose.Otherwise>
         </Choose>
@@ -114,7 +114,7 @@ export const BillMenuItem = ({ payload: { onConvert } }) => {
         <Menu>
           <MenuItem
             onClick={onConvert}
-            text={<T id={'convert_to_vendor_credit'} />}
+            text={<T id={'bill.convert_to_credit_note'} />}
           />
         </Menu>
       }

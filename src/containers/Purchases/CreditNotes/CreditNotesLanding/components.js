@@ -63,7 +63,7 @@ export function ActionsMenu({
           }
         >
           <MenuItem
-            // icon={<Icon icon="quick-payment-16" />}
+            icon={<Icon icon="quick-payment-16" />}
             text={intl.get('vendor_credits.action.reconcile_with_bills')}
             onClick={safeCallback(onReconcile, original)}
           />

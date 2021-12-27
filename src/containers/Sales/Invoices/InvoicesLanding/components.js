@@ -147,7 +147,7 @@ export function ActionsMenu({
         />
         <MenuItem
           icon={<Icon icon="convert_to" />}
-          text={intl.get('convert_to_credit_note')}
+          text={intl.get('invoice.convert_to_credit_note')}
           onClick={safeCallback(onConvert, original)}
         />
 

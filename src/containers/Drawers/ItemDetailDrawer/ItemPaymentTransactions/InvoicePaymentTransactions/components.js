@@ -79,7 +79,7 @@ export const useInvoicePaymentTransactionsColumns = () => {
       },
       {
         id: 'rate',
-        Header: 'Rate',
+        Header: intl.get('rate'),
         accessor: 'formatted_rate',
         align: 'right',
         width: 100,

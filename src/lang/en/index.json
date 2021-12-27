@@ -519,6 +519,7 @@
   "delete_invoice": "Delete Invoice",
   "new_invoice": "New Invoice",
   "invoice_list": "Invoice List",
+  "invoice_reference_no":"Reference #",
   "the_invoice_has_been_edited_successfully": "The invoice #{number} has been edited successfully.",
   "the_invoice_has_been_created_successfully": "The invoice #{number} has been created successfully.",
   "the_invoice_has_been_deleted_successfully": "The invoice has been deleted successfully.",
@@ -708,6 +709,7 @@
   "day_partially_paid": "Partially paid, {due} due.",
   "overdue_by": "Overdue by {overdue} day.",
   "paid": "Paid",
+  "due":"Due",
   "your_account_has_been_locked": "Your account has been locked due to repeated failed login attempts. Please wait a few minutes before trying again.",
   "the_invoice_has_been_delivered_successfully": "The invoice has been delivered successfully.",
   "are_sure_to_deliver_this_invoice": "Are you sure you want to deliver this invoice?",
@@ -1217,6 +1219,9 @@
   "invoice.details.subtotal": "Subtotal",
   "invoice.details.due_amount": "Due amount",
   "invoice.details.payment_amount": "Payment amount",
+  "invoice.details.invoice_no": "Invoice #",
+  "bill.details.drawer.title":"Bill details",
+  "bill.details.reference": "Reference #",
   "bill.details.bill_number": "Bill #",
   "bill.details.created_at": "Created at",
   "bill.details.total": "TOTAL",
@@ -1529,7 +1534,6 @@
   "credit_note.drawer.label_refund_transactions": "Refund Transactions",
   "credit_note.drawer.label_invoices_reconciled": "Invoices Reconciled",
   "credit_note.drawer.terms_conditions": "Terms Conditions",
- 
   "sidebar_vendor_credits": "Vendor Credits",
   "vendor_credits.lable_vendor_credit_list": "Vendor Credits List",
   "vendor_credits.label.new_vendor_credit": "New Vendor Credit",
@@ -1540,8 +1544,9 @@
   "vendor_credits.action.edit_vendor_credit": "Edit Vendor Credit",
   "vendor_credits.action.refund_vendor_credit": "Refund Vendor Credit",
   "vendor_credits.action.delete_vendor_credit": "Delete Vendor Credit",
+  "vendor_credits.empty_status.title":"Reduce vendors balance by create vendor credit",
+  "vendor_credits.empty_status.description":"Vendor credit is the commercial document that is sent to the vendor and makes him owe to our organization. It is proof by the facility that it has a right to be taken from the vendor.",
   "vendor_credits.action.mark_as_open": "Make as Open",
-
   "vendor_credits.action.reconcile_with_bills": "Reconcile with Bills",
   "vendor_credits.success_message": "The vendor credit has been created successfully",
   "vendor_credits.edit_success_message": "The vendor credit has been edited successfully.",
@@ -1663,8 +1668,9 @@
   "role_name": "Role name",
   "journal_entries.amount_displayed_base_currency":"Amount is displayed in your base currency",
   "inventory_adjustment.column.product":"Product",
-  "convert_to_credit_note":"Convert to Credit Note",
-  "convert_to_vendor_credit":"Convert to Vendor Credit",
+  "invoice.convert_to_credit_note":"Convert to Credit Note",
+  "bill.convert_to_credit_note":"Convert to Vendor Credit",
   "overdue":"Overdue"
+
   
 }
