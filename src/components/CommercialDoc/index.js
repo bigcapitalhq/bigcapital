@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Card from '../Card';
+import { Card } from '../Card';
 import DataTable from '../DataTable';
 
 export const CommercialDocBox = styled(Card)`
@@ -22,4 +22,4 @@ export const CommercialDocEntriesTable = styled(DataTable)`
 
 export const CommercialDocFooter = styled.div`
   margin-top: 25px;
-`
+`;
