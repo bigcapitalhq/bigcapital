@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { MenuItem, Intent } from '@blueprintjs/core';
 
 import { Icon, Choose, T, TextStatus } from 'components';
@@ -108,7 +109,7 @@ const transformReceiptsToSearch = (creditNote) => ({
  */
 export const universalSearchCreditNoteBind = () => ({
   resourceType: RESOURCES_TYPES.CREDIT_NOTE,
-  optionItemLabel: 'Credit notes',
+  optionItemLabel: intl.get('credit_note.label'),
   selectItemAction: CreditNoteUniversalSearchSelect,
   itemRenderer: CreditNoteUniversalSearchItem,
   itemSelect: transformReceiptsToSearch,

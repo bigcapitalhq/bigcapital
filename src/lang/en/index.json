@@ -1496,7 +1496,6 @@
   "roles.error.you_cannot_delete_predefined_roles": "You cannot delete predefined roles.",
   "roles.error.the_submit_role_has_invalid_permissions": "The submit role has invalid permissions.",
   "roles.error.you_cannot_delete_role_that_associated_to_users": "You cannot delete role that associated to users",
-  
   "sidebar_credit_note": "Credit Notes",
   "credit_note.label_create_note_list": "Credit Notes List",
   "credit_note.label.new_credit_note": "New Credit Note",
@@ -1519,7 +1518,7 @@
   "credit_note.alert.delete_message": "The credit note has been deleted successfully",
   "credit_note.success_message": "The credit note has been created successfully.",
   "credit_note.edit_success_message": "The credit note has been edited successfully.",
-  
+  "credit_note.label":"Credit notes",
   "credit_note_number_settings": "Credit Note Number Settings",
   "credit_note.auto_increment.auto": "Your credit note numbers are set on auto-increment mode. Are you sure changing this setting?",
   "credit_note.auto_increment.manually": "Your credit note numbers are set on manual mode. Are you sure chaning this settings?",
@@ -1556,6 +1555,7 @@
   "vendor_credit.auto_increment.auto": "Your vendor credit  numbers are set on auto-increment mode. Are you sure changing this setting?",
   "vendor_credit.auto_increment.manually": "Your vendor credit  numbers are set on manual mode. Are you sure chaning this settings?",
   "setting_your_auto_generated_vendor_credit_number": "Setting your auto-generated vendor credit number",
+  "vendor_credit.label":"Vendor credits",
   "vendor_credit.drawer_vendor_credit_detail": "Vendor Credit details",
   "vendor_credit.drawer.label_vendor_credit_no": "Vendor Credit #",
   "vendor_credit.drawer.label_vendor_credit_date": "Vendor Credit Date",
@@ -1565,7 +1565,6 @@
   "vendor_credit.drawer.label_subtotal": "Subtotal",
   "vendor_credit.drawer.label_refund_transactions": "Refund Transactions",
   "vendor_credit.drawer.label_bills_reconciled": "Bills Reconciled",
-  
   "refund": "Refund",
   "landed_cost.dialog.label_select_transaction": "Select transaction",
   "landed_cost.dialog.label_select_transaction_entry": "Select transaction entry",

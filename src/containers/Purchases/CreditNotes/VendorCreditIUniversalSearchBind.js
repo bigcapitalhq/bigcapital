@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { MenuItem, Intent } from '@blueprintjs/core';
 
 import { TextStatus, Icon, Choose, T } from 'components';
@@ -110,7 +111,7 @@ const transformVendorCreditsToSearch = (vendorCredit) => ({
  */
 export const universalSearchVendorCreditBind = () => ({
   resourceType: RESOURCES_TYPES.VENDOR_CREDIT,
-  optionItemLabel: 'Vendor credits',
+  optionItemLabel: intl.get('vendor_credit.label'),
   selectItemAction: VendorCreditUniversalSearchSelect,
   itemRenderer: VendorCreditUniversalSearchItem,
   itemSelect: transformVendorCreditsToSearch,

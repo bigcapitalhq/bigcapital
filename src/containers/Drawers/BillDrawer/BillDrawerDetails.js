@@ -3,11 +3,12 @@ import { Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { Can, DrawerMainTabs } from 'components';
+import { DrawerMainTabs } from 'components';
 import {
   PaymentMadeAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
+import { useAbilityContext } from 'hooks/utils';
 import BillDetailTab from './BillDetailTab';
 import LocatedLandedCostTable from './LocatedLandedCostTable';
 import BillGLEntriesTable from './BillGLEntriesTable';
@@ -18,6 +19,8 @@ import BillDetailActionsBar from './BillDetailActionsBar';
  * Bill details tabs.
  */
 function BillDetailsTabs() {
+  const ability = useAbilityContext();
+
   return (
     <DrawerMainTabs
       renderActiveTabPanelOnly={true}
@@ -33,13 +36,13 @@ function BillDetailsTabs() {
         id={'journal_entries'}
         panel={<BillGLEntriesTable />}
       />
-      {/* <Can I={PaymentMadeAction.View} a={AbilitySubject.PaymentMade}> */}
+      {ability.can(PaymentMadeAction.View, AbilitySubject.PaymentMade) && (
         <Tab
           title={intl.get('payment_transactions')}
           id={'payment_transactions'}
           panel={<BillPaymentTransactionTable />}
         />
-      {/* </Can> */}
+      )}
       <Tab
         title={intl.get('located_landed_cost')}
         id={'landed_cost'}
