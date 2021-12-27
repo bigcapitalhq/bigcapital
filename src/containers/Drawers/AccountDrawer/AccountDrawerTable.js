@@ -12,6 +12,7 @@ import { useAccountReadEntriesColumns } from './utils';
 
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { TableStyle } from '../../../common';
+import { useAppIntlContext } from 'components/AppIntlProvider';
 
 /**
  * account drawer table.
@@ -26,6 +27,8 @@ function AccountDrawerTable({ closeDrawer }) {
   const handleLinkClick = () => {
     closeDrawer(drawerName);
   };
+  // Application intl context.
+  const { isRTL } = useAppIntlContext();
 
   return (
     <Card>
@@ -42,7 +45,7 @@ function AccountDrawerTable({ closeDrawer }) {
             to={`/financial-reports/general-ledger`}
             onClick={handleLinkClick}
           >
-            ← {intl.get('view_more_transactions')}
+            {isRTL ? '→' : '←'} {intl.get('view_more_transactions')}
           </Link>
         </TableFooter>
       </If>
