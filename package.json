@@ -107,6 +107,7 @@
     "semver": "6.3.0",
     "style-loader": "0.23.1",
     "styled-components": "^5.3.1",
+    "stylis-rtlcss": "^2.1.1",
     "terser-webpack-plugin": "2.3.4",
     "ts-pnp": "1.1.5",
     "url-loader": "2.3.0",

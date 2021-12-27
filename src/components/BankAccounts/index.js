@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Classes } from '@blueprintjs/core';
 import clsx from 'classnames';
 import Icon from '../Icon';
-import { whenRtl, whenLtr } from 'utils/styled-components';
 
 const ACCOUNT_TYPE = {
   CASH: 'cash',
@@ -185,9 +184,7 @@ const MetaLineValue = styled.div`
   text-align: center;
   color: rgb(23, 43, 77);
   font-size: 11px;
-
-  ${whenLtr(`margin-left: auto;`)}
-  ${whenRtl(`margin-right: auto;`)}
+  margin-left: auto;
 `;
 
 const BankAccountMeta = styled.div`
@@ -204,7 +201,5 @@ const AccountIconWrap = styled.div`
   position: absolute;
   top: 14px;
   color: #abb3bb;
-
-  ${whenLtr(`right: 12px;`)}
-  ${whenRtl(`left: 12px;`)}
+  right: 12px;
 `;

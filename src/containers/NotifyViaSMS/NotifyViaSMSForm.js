@@ -15,7 +15,6 @@ import { FormObserver, SMSMessagePreview } from 'components';
 import { transformToForm, safeInvoke } from 'utils';
 import { getSMSUnits } from './utils';
 
-import { whenRtl, whenLtr } from 'utils/styled-components';
 
 const defaultInitialValues = {
   notification_key: '',
@@ -147,17 +146,9 @@ const SMSPreviewSectionRoot = styled.div`
   display: flex;
   flex-direction: column;
   width: 45%;
-
-  ${whenLtr(`
-    padding-left: 25px;
-    margin-left: 25px;
-    border-left: 1px solid #dcdcdd;
-  `)}
-  ${whenRtl(`
-    padding-right: 25px;
-    margin-right: 25px;
-    border-right: 1px solid #dcdcdd;
-  `)}
+  padding-left: 25px;
+  margin-left: 25px;
+  border-left: 1px solid #dcdcdd;
 `;
 
 const SMSPreviewSectionNote = styled.div`
