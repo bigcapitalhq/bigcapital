@@ -55,7 +55,7 @@ export default function InvoiceDetailHeader() {
               </ButtonLink>
             </DetailItem>
 
-            <DetailItem label={intl.get('invoice_no')}>
+            <DetailItem label={intl.get('invoice.details.invoice_no')}>
               {invoice.invoice_no}
             </DetailItem>
           </DetailsMenu>
@@ -71,7 +71,7 @@ export default function InvoiceDetailHeader() {
               <strong>{invoice.formatted_due_amount}</strong>
             </DetailItem>
 
-            <DetailItem label={intl.get('payment_amount')}>
+            <DetailItem label={intl.get('invoice.details.payment_amount')}>
               <strong>{invoice.formatted_payment_amount}</strong>
             </DetailItem>
 

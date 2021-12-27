@@ -35,8 +35,9 @@ function RefundVendorCreditFloatingActions({
           loading={isSubmitting}
           style={{ minWidth: '85px' }}
           type="submit"
-          text="Refund"
-        />
+        >
+          <T id={'refund'} />
+        </Button>
       </div>
     </div>
   );
