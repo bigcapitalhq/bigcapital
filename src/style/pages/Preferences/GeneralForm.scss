@@ -3,23 +3,6 @@
 //  General page
 //---------------------------------
 .preferences-page__inside-content--general {
-  .card {
-    padding: 25px;
-
-    .card__footer {
-      padding-top: 16px;
-      border-top: 1px solid #e0e7ea;
-      margin-top: 30px;
-
-      .bp3-button {
-        min-width: 70px;
-
-        + .bp3-button{
-          margin-left: 10px;
-        }
-      }
-    }
-  }
 
   .bp3-form-group {
     max-width: 650px;

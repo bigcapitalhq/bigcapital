@@ -42,7 +42,7 @@ function GeneralFormPage({
   const initialValues = {
     ...transformToForm(organization.metadata, defaultValues),
   };
-
+  // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting, resetForm }) => {
     // Handle request success.
     const onSuccess = (response) => {

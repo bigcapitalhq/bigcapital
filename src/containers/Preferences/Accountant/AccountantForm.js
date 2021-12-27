@@ -15,6 +15,7 @@ import {
   FormattedMessage as T,
   AccountsSelectList,
   FieldRequiredHint,
+  CardFooterActions,
 } from 'components';
 import { handleStringChange, inputIntent } from 'utils';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
@@ -229,14 +230,14 @@ export default function AccountantForm() {
         )}
       </FastField>
 
-      <div className={'card__footer'}>
+      <CardFooterActions>
         <Button intent={Intent.PRIMARY} loading={isSubmitting} type="submit">
           <T id={'save'} />
         </Button>
         <Button disabled={isSubmitting} onClick={handleCloseClick}>
           <T id={'close'} />
         </Button>
-      </div>
+      </CardFooterActions>
     </Form>
   );
 }

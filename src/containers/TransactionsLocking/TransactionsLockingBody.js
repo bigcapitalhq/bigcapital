@@ -41,7 +41,7 @@ function TransactionsLockingBodyJsx({
   const handleUnlockingPartial = (module) => {
     openDialog('unlocking-partial-transactions', { module: module });
   };
-  // Handle cancel.
+  // Handle cancel partial unlocking.
   const handleCancelUnlockingPartail = (module) => {
     openAlert('cancel-unlocking-partail', { module: module });
   };
