@@ -2,7 +2,7 @@ import { chain, isEmpty, castArray, memoize } from 'lodash';
 import * as R from 'ramda';
 import { DepGraph } from 'dependency-graph';
 import {
-  permissions as PERMISSIONS_SCHEMA,
+  getPermissionsSchema,
   getPermissionsSchemaService,
   getPermissionsSchemaServices,
 } from 'common/permissionsSchema';
@@ -266,7 +266,9 @@ export const handleCheckboxFullAccessChange = R.curry(
  * Retrieves all flatten modules permissions.
  */
 export function getAllFlattenPermissionsSchema() {
-  return chain(PERMISSIONS_SCHEMA)
+  const permissions = getPermissionsSchema();
+
+  return chain(permissions)
     .map((module) => module.services)
     .flatten()
     .map((module) =>

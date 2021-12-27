@@ -1,4 +1,5 @@
 import { chain } from 'lodash';
+import intl from 'react-intl-universal';
 import {
   AbilitySubject,
   AccountAction,
@@ -30,21 +31,20 @@ const PermissionColumn = {
   Edit: 'edit',
 };
 
-export const permissions = [
+export const getPermissionsSchema = () => [
   {
-    label: 'Items & Inventory',
+    label: intl.get('permissions.items_inventory'),
     type: ModulePermissionsStyle.Columns,
     serviceFullAccess: true,
-    moduleFullAccess: true,
     columns: [
-      { label: 'View', key: 'view' },
-      { label: 'Create', key: 'create' },
-      { label: 'Edit', key: 'edit' },
-      { label: 'Delete', key: 'delete' },
+      { label: intl.get('permissions.column.view'),   key: 'view' },
+      { label: intl.get('permissions.column.create'), key: 'create' },
+      { label: intl.get('permissions.column.edit'),   key: 'edit' },
+      { label: intl.get('permissions.column.delete'), key: 'delete' },
     ],
     services: [
       {
-        label: 'Items',
+        label: intl.get('permissions.items'),
         subject: AbilitySubject.Item,
         permissions: [
           { label: 'View',    key: ItemAction.View,   relatedColumn: PermissionColumn.View },
@@ -54,7 +54,7 @@ export const permissions = [
         ],
       },
       {
-        label: 'Inventory adjustments',
+        label: intl.get('permissions.inventory_adjustment'),
         subject: AbilitySubject.InventoryAdjustment,
         permissions: [
           { label: 'View',    key: ItemAction.View,   relatedColumn: PermissionColumn.View },
@@ -174,11 +174,7 @@ export const permissions = [
         label: 'Sale Receipt',
         subject: AbilitySubject.Receipt,
         permissions: [
-          {
-            label: 'View',
-            key: SaleReceiptAction.View,
-            relatedColumn: PermissionColumn.View,
-          },
+          { label: 'View', key: SaleReceiptAction.View, relatedColumn: PermissionColumn.View, },
           {
             label: 'Create',
             key: SaleReceiptAction.Create,
@@ -514,7 +510,10 @@ export const permissions = [
   },
 ];
 
+
 export function getPermissionsSchemaService(subject) {
+  const permissions = getPermissionsSchema();
+
   return chain(permissions)
     .map((perm) => perm.services)
     .flatten()
@@ -523,6 +522,8 @@ export function getPermissionsSchemaService(subject) {
 }
 
 export function getPermissionsSchemaServices() {
+  const permissions = getPermissionsSchema();
+
   return chain(permissions)
     .map((module) => module.services)
     .flatten()

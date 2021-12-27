@@ -1670,7 +1670,15 @@
   "inventory_adjustment.column.product":"Product",
   "invoice.convert_to_credit_note":"Convert to Credit Note",
   "bill.convert_to_credit_note":"Convert to Vendor Credit",
-  "overdue":"Overdue"
-
+  "overdue":"Overdue",
   
+  "permissions.column.view": "View",
+  "permissions.column.full_access": "Full Access",
+  "permissions.column.delete": "Delete",
+  "permissions.column.edit": "Edit",
+  "permissions.column.create": "Create",
+
+  "permissions.items_inventory": "Items & Inventory",
+  "permissions.inventory_adjustment": "Inventory Adjustment",
+  "permissions.items": "Items"
 }

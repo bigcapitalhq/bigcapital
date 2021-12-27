@@ -1674,7 +1674,17 @@
   "inventory_adjustment.column.product":"المنتج",
   "invoice.convert_to_credit_note":"تحويل إلى إشعار دائن",
   "bill.convert_to_credit_note":"تحويل إلى إشعار مدين",
-  "overdue":"متأخرّة"
+  "overdue":"متأخرّة",
+  
+  "permissions.column.view": "عرض",
+  "permissions.column.full_access": "تحكم كامل",
+  "permissions.column.delete": "حذف",
+  "permissions.column.edit": "تعديل",
+  "permissions.column.create": "اضافة",
+
+  "permissions.items_inventory": "منتجات والمخزون",
+  "permissions.inventory_adjustment": "تسويات المخزون",
+  "permissions.items": "المنتجات"
 }
 
 

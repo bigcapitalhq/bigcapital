@@ -3,8 +3,8 @@ import { Checkbox, Popover } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { Field } from 'formik';
 
-import { permissions, ModulePermissionsStyle } from 'common/permissionsSchema';
-import { Card, If, ButtonLink, Choose } from 'components';
+import { getPermissionsSchema, ModulePermissionsStyle } from 'common/permissionsSchema';
+import { Card, If, ButtonLink, Choose, T } from 'components';
 import {
   getSerivceColumnPermission,
   getServiceExtraPermissions,
@@ -167,7 +167,7 @@ function ModulePermissionsTableHead() {
       <tr>
         <th></th>
         <If condition={serviceFullAccess}>
-          <th class={'full'}>Full Access</th>
+          <th class={'full'}><T id={'permissions.column.full_access'} /></th>
         </If>
         {columns.map((column) => (
           <th class={'permission'}>{column.label}</th>
@@ -354,6 +354,8 @@ function ModulePermissions({ module }) {
  * @return {React.JSX}
  */
 export const RolesPermissionList = () => {
+  const permissions = getPermissionsSchema();
+
   return (
     <ModulesPermission>
       {permissions.map((module) => (
