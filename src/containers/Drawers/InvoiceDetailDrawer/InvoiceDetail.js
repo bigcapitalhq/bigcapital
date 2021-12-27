@@ -3,7 +3,8 @@ import { Tab } from '@blueprintjs/core';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
 
-import { Can, DrawerMainTabs } from 'components';
+import { useAbilityContext } from 'hooks/utils';
+import { DrawerMainTabs } from 'components';
 import {
   PaymentReceiveAction,
   AbilitySubject,
@@ -18,6 +19,8 @@ import InvoiceDetailTab from './InvoiceDetailTab';
  * @returns {React.JSX}
  */
 function InvoiceDetailsTabs() {
+  const ability = useAbilityContext();
+
   return (
     <DrawerMainTabs
       renderActiveTabPanelOnly={true}
@@ -33,13 +36,16 @@ function InvoiceDetailsTabs() {
         id={'journal_entries'}
         panel={<InvoiceGLEntriesTable />}
       />
-      {/* <Can I={PaymentReceiveAction.View} a={AbilitySubject.PaymentReceive}> */}
-      <Tab
-        title={intl.get('payment_transactions')}
-        id={'payment_transactions'}
-        panel={<InvoicePaymentTransactionsTable />}
-      />
-      {/* </Can> */}
+      {ability.can(
+        PaymentReceiveAction.View,
+        AbilitySubject.PaymentReceive,
+      ) && (
+        <Tab
+          title={intl.get('payment_transactions')}
+          id={'payment_transactions'}
+          panel={<InvoicePaymentTransactionsTable />}
+        />
+      )}
     </DrawerMainTabs>
   );
 }
