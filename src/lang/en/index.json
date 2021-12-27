@@ -1144,7 +1144,7 @@
   "Select transaction": "Select transaction",
   "Select transaction entry": "Select transaction entry",
   "From transaction": "From transaction",
-  "Landed": "Landed",
+  "landed": "Landed",
   "This options allows you to be able to add additional cost eg. freight then allocate cost to the items in your bills.": "This options allows you to be able to add additional cost eg. freight then allocate cost to the items in your bills.",
   "Once your delete this located landed cost, you won't be able to restore it later, Are your sure you want to delete this transaction?": "Once your delete this located landed cost, you won't be able to restore it later, Are your sure you want to delete this transaction?",
   "journal_entries": "Journal Entries",
@@ -1671,6 +1671,8 @@
   "invoice.convert_to_credit_note":"Convert to Credit Note",
   "bill.convert_to_credit_note":"Convert to Vendor Credit",
   "overdue":"Overdue",
+
+
   
   "permissions.column.view": "View",
   "permissions.column.full_access": "Full Access",

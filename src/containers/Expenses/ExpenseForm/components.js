@@ -56,12 +56,8 @@ const ActionsCellRenderer = ({
 const LandedCostHeaderCell = () => {
   return (
     <>
-      <T id={'Landed'} />
-      <Hint
-        content={
-          'This options allows you to be able to add additional cost eg. freight then allocate cost to the items in your bills.'
-        }
-      />
+      <T id={'landed'} />
+      <Hint content={<T id={'item_entries.landed.hint'} />} />
     </>
   );
 };
