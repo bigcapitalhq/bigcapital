@@ -19,7 +19,7 @@ export default function CreditNoteDetailFooter() {
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
         <If condition={creditNote.terms_conditions}>
-          <DetailItem label={<T id={'credit_note.drawer.terms_conditions'} />}>
+          <DetailItem label={<T id={'terms_conditions'} />}>
             {creditNote.terms_conditions}
           </DetailItem>
         </If>

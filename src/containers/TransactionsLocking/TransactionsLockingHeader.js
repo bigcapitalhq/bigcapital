@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 
@@ -57,8 +58,9 @@ export function TransactionsLockingHeader() {
 
     if (isAllLockingActive) {
       AppToaster.show({
-        message:
-          'You should unlock all transactions at once before, than lock transactions partially on each module.',
+        message: intl.get(
+          'transactions_locking.you_should_unlock_all_transactions_at_once_before',
+        ),
         intent: Intent.DANGER,
       });
     } else {
@@ -79,7 +81,10 @@ export function TransactionsLockingHeader() {
       </ButtonLink>
     </LockAllAlert>
   ) : (
-    <LockAllAlert title={'Lock Individual Modules'} intent={Intent.PRIMARY}>
+    <LockAllAlert
+      title={<T id={'transactions_locking.lock_individual_modules'} />}
+      intent={Intent.PRIMARY}
+    >
       <p>
         <T id={'transactions_locking.callout.lock_individual.desc'} />
       </p>
