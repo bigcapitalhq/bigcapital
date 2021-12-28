@@ -128,6 +128,7 @@ function EstimateFormHeader({
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'expiration_date'} />}
+            labelInfo={<FieldRequiredHint />}
             inline={true}
             className={classNames(
               CLASSES.FORM_GROUP_LIST_SELECT,

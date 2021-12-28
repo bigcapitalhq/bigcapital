@@ -19,7 +19,7 @@ export default function CashflowTransactionDrawerHeader() {
   const {
     cashflowTransaction: {
       formatted_amount,
-      transaction_type,
+      transaction_type_formatted,
       transaction_number,
       reference_no,
       date,
@@ -44,7 +44,7 @@ export default function CashflowTransactionDrawerHeader() {
               name={'transaction_type'}
               label={<T id={'cash_flow_drawer.label_transaction_type'} />}
             >
-              {transaction_type}
+              {transaction_type_formatted}
             </DetailItem>
 
             <DetailItem
