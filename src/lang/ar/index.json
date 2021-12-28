@@ -1732,7 +1732,8 @@
   "permissions.inventory_valuation_summary":"ملخص تقييم المخزون ",
   "permissions.inventory_items_details":"تفاصيل منتج المخزون",
   "permissions.cashflow_account_transactions":"معاملات حسابات التدفقات النقدية",
-  "permissions.more_permissions":"عرض المزيد "
+  "permissions.more_permissions":"عرض المزيد ",
 
+  "estimate.status.expired": "منتهية الصلاحية"
 }
 

@@ -1719,6 +1719,8 @@
   "permissions.inventory_valuation_summary":"Inventory valuation summary",
   "permissions.inventory_items_details":"Inventory valuation summary",
   "permissions.cashflow_account_transactions":"Cashflow account transactions",
-  "permissions.more_permissions":"More Permissions"
+  "permissions.more_permissions":"More Permissions",
+
+  "estimate.status.expired": "Expired"
 }
 

@@ -10,23 +10,22 @@ import { T, Choose } from 'components';
 export function EstimateDetailsStatus({ estimate }) {
   return (
     <Choose>
-      <Choose.When condition={estimate.is_delivered && estimate.is_approved}>
+      <Choose.When condition={estimate.is_approved}>
         <Tag intent={Intent.SUCCESS} round={true}>
           <T id={'approved'} />
         </Tag>
       </Choose.When>
-      <Choose.When condition={estimate.is_delivered && estimate.is_rejected}>
+      <Choose.When condition={estimate.is_rejected}>
         <Tag intent={Intent.DANGER} round={true}>
           <T id={'rejected'} />
         </Tag>
       </Choose.When>
-      <Choose.When
-        condition={
-          estimate.is_delivered &&
-          !estimate.is_rejected &&
-          !estimate.is_approved
-        }
-      >
+      <Choose.When condition={estimate.is_expired}>
+        <Tag intent={Intent.WARNING} round={true}>
+          <T id={'estimate.status.expired'} />
+        </Tag>
+      </Choose.When>
+      <Choose.When condition={estimate.is_delivered}>
         <Tag intent={Intent.SUCCESS} round={true}>
           <T id={'delivered'} />
         </Tag>
