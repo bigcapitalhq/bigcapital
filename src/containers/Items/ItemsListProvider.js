@@ -63,7 +63,7 @@ function ItemsListProvider({ tableState, tableStateChanged, ...props }) {
 
   return (
     <DashboardInsider
-      loading={isItemsLoading || isResourceLoading}
+      loading={isViewsLoading || isResourceLoading}
       name={'items-list'}
     >
       <ItemsContext.Provider value={state} {...props} />

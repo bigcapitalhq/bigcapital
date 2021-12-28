@@ -31,7 +31,7 @@ export default function CustomerDetailsHeader() {
         <DetailItem
           label={<T id={'customer.drawer.label.customer_type'} />}
           name={'type'}
-          children={customer?.customer_type}
+          children={customer?.formatted_customer_type }
         />
         <DetailItem label={<T id={'customer.drawer.label.unused_credits'} />}>
           0

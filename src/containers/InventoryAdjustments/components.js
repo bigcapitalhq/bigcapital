@@ -40,9 +40,9 @@ export const PublishAccessor = (r) => {
  * Type column accessor.
  */
 export const TypeAccessor = (row) => {
-  return row.type ? (
+  return row.type_formatted ? (
     <Tag minimal={true} round={true} intent={Intent.NONE}>
-      {intl.get(row.type)}
+      {row.type_formatted}
     </Tag>
   ) : (
     ''

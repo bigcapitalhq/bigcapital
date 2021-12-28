@@ -24,7 +24,7 @@ export default function InventoryAdjustmentDetailHeader() {
         </DetailItem>
 
         <DetailItem label={intl.get('type')}>
-          {inventoryAdjustment.type}
+          {inventoryAdjustment.type_formatted}
         </DetailItem>
 
         <DetailItem label={intl.get('adjustment_account')}>

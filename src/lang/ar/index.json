@@ -1426,7 +1426,7 @@
   "cash_flow_transaction.money_out": "سحب  من حساب  {value}",
   "cash_flow_transaction.other_income_account": " حساب الإيرادات الأخرى ",
   "cash_flow_transaction.other_expense_account": "حساب مصاريف اخري",
-  "save_and_publish": "احفظ وانشر",
+  "save_and_publish": "حفظ ونشر",
   "cash_flow_transaction.label_transfer_from_account": "تحويل من الحساب ",
   "cash_flow_transaction.label_transfer_to_account": "تحويل إلى الحساب ",
   "cash_flow_transaction.label_current_account": "حساب الحالي",
