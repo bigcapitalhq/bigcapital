@@ -46,8 +46,7 @@ function ManualJournalsListProvider({ query, tableStateChanged, ...props }) {
     isEmptyStatus,
   };
 
-  const isPageLoading =
-    isManualJournalsLoading || isViewsLoading || isResourceMetaLoading;
+  const isPageLoading = isViewsLoading || isResourceMetaLoading;
 
   return (
     <DashboardInsider loading={isPageLoading} name={'manual-journals'}>

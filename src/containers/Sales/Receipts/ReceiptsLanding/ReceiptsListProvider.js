@@ -49,7 +49,10 @@ function ReceiptsListProvider({ query, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider loading={isViewsLoading} name={'sales_receipts'}>
+    <DashboardInsider
+      loading={isViewsLoading || isResourceLoading}
+      name={'sales_receipts'}
+    >
       <ReceiptsListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
