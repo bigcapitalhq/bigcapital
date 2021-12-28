@@ -75,6 +75,7 @@ export const useInvoicePaymentTransactionsColumns = () => {
         accessor: 'payment_number',
         width: 100,
         className: 'payment_number',
+        textOverview: true,
       },
       {
         id: 'payment_reference_no',

@@ -8,22 +8,24 @@ export const useGLEntriesTableColumns = () => {
     () => [
       {
         Header: intl.get('date'),
-        accessor: 'date',
         accessor: ({ formatted_date }) =>
           moment(formatted_date).format('YYYY MMM DD'),
         width: 140,
         className: 'date',
+        textOverview: true,
       },
       {
         Header: intl.get('account_name'),
         accessor: 'account_name',
         width: 140,
         className: 'account_name',
+        textOverview: true,
       },
       {
         Header: intl.get('contact'),
         accessor: 'contactTypeFormatted',
         width: 140,
+        textOverview: true,
       },
       {
         Header: intl.get('credit'),
@@ -31,12 +33,14 @@ export const useGLEntriesTableColumns = () => {
         width: 100,
         className: 'credit',
         textAligment: 'right',
+        textOverview: true,
       },
       {
         Header: intl.get('debit'),
         accessor: ({ debit }) => debit.formatted_amount,
         width: 100,
         className: 'debit',
+        textOverview: true,
       },
     ],
     [],
