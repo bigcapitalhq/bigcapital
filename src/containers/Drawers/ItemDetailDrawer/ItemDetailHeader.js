@@ -34,7 +34,7 @@ export default function ItemDetailHeader() {
         </DetailsMenu>
 
         <DetailsMenu direction={'horizantal'}>
-          <DetailItem label={intl.get('item_type')} children={item.type} />
+          <DetailItem label={intl.get('item_type')} children={item.type_formatted} />
           <DetailItem
             label={intl.get('item_code')}
             children={defaultTo(item.code, '-')}
