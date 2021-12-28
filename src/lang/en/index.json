@@ -1116,7 +1116,7 @@
   "Initializing": "Initializing",
   "Getting started": "Getting started",
   "Congratulations": "Congratulations",
-  "manual_journal_number": "Manual journal {number}",
+  "manual_journal_number": "Manual journal ({number})",
   "conditions_and_terms": "Conditions and terms",
   "allocate_landed_coast": "Allocate landed cost",
   "transaction_date": "Transaction date",
