@@ -3,7 +3,8 @@ import { Tab } from '@blueprintjs/core';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
 
-import { Can, DrawerMainTabs } from 'components';
+import { useAbilityContext } from 'hooks/utils';
+import { DrawerMainTabs } from 'components';
 import CreditNoteDetailActionsBar from './CreditNoteDetailActionsBar';
 import CreditNoteDetailPanel from './CreditNoteDetailPanel';
 import RefundCreditNoteTransactionsTable from './RefundCreditNoteTransactions/RefundCreditNoteTransactionsTable';
@@ -32,6 +33,8 @@ export default function CreditNoteDetail() {
  * @returns {React.JSX}
  */
 function CreditNoteDetailsTabs() {
+  const ability = useAbilityContext();
+
   return (
     <DrawerMainTabs>
       <Tab
@@ -44,18 +47,21 @@ function CreditNoteDetailsTabs() {
         id={'journal_entries'}
         panel={<CreditNoteGLEntriesTable />}
       />
-      {/* <Can I={CreditNoteAction.View} a={AbilitySubject.CreditNote}> */}
-      <Tab
-        title={intl.get('credit_note.drawer.label_refund_transactions')}
-        id={'refund_transactions'}
-        panel={<RefundCreditNoteTransactionsTable />}
-      />
-      <Tab
-        title={intl.get('credit_note.drawer.label_invoices_reconciled')}
-        id={'reconcile_transactions'}
-        panel={<ReconcileCreditNoteTransactionsTable />}
-      />
-      {/* </Can> */}
+
+      {ability.can(CreditNoteAction.View, AbilitySubject.CreditNote) && (
+        <Tab
+          title={intl.get('credit_note.drawer.label_refund_transactions')}
+          id={'refund_transactions'}
+          panel={<RefundCreditNoteTransactionsTable />}
+        />
+      )}
+      {ability.can(CreditNoteAction.View, AbilitySubject.CreditNote) && (
+        <Tab
+          title={intl.get('credit_note.drawer.label_invoices_reconciled')}
+          id={'reconcile_transactions'}
+          panel={<ReconcileCreditNoteTransactionsTable />}
+        />
+      )}
     </DrawerMainTabs>
   );
 }

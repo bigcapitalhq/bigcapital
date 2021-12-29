@@ -56,13 +56,13 @@ function CreditNoteDetailActionsBar({
     openDialog('refund-credit-note', { creditNoteId });
   };
 
-  const handleReconcileCreditNote = () => {
-    openDialog('reconcile-credit-note', { creditNoteId });
-  };
-
   // Handle delete credit note.
   const handleDeleteCreditNote = () => {
     openAlert('credit-note-delete', { creditNoteId });
+  };
+
+  const handleReconcileCreditNote = () => {
+    openDialog('reconcile-credit-note', { creditNoteId });
   };
 
   return (

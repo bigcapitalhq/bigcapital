@@ -3,7 +3,8 @@ import { Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { Can, DrawerMainTabs } from 'components';
+import { useAbilityContext } from 'hooks/utils';
+import { DrawerMainTabs } from 'components';
 import VendorCreditDetailActionsBar from './VendorCreditDetailActionsBar';
 import VendorCreditDetailPanel from './VendorCreditDetailPanel';
 import RefundVendorCreditTransactionsTable from './RefundVendorCreditTransactions/RefundVendorCreditTransactionsTable';
@@ -32,6 +33,8 @@ export default function VendorCreditDetail() {
  * @returns {React.JSX}
  */
 function VendorCreditDetailsTabs() {
+  const ability = useAbilityContext();
+
   return (
     <DrawerMainTabs renderActiveTabPanelOnly={true}>
       <Tab
@@ -44,18 +47,20 @@ function VendorCreditDetailsTabs() {
         id={'journal_entries'}
         panel={<VendorCreditGLEntriesTable />}
       />
-      {/* <Can I={VendorCreditAction.View} a={AbilitySubject.VendorCredit}> */}
+      {ability.can(VendorCreditAction.View, AbilitySubject.VendorCredit) && (
         <Tab
           title={intl.get('vendor_credit.drawer.label_refund_transactions')}
           id={'refund_transactions'}
           panel={<RefundVendorCreditTransactionsTable />}
         />
+      )}
+      {ability.can(VendorCreditAction.View, AbilitySubject.VendorCredit) && (
         <Tab
           title={intl.get('vendor_credit.drawer.label_bills_reconciled')}
           id={'reconcile_transactions'}
           panel={<ReconcileVendorCreditTransactionsTable />}
         />
-      {/* </Can> */}
+      )}
     </DrawerMainTabs>
   );
 }
