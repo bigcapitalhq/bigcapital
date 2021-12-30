@@ -49,11 +49,9 @@ function AllocateLandedCostForm({
       cost: '',
     })),
   };
-  const amount = sumBy(initialValues.items, 'amount');
-
   // Handle form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
-    setSubmitting(false);
+    setSubmitting(true);
 
     // Filters the entries has no cost.
     const entries = values.items
@@ -77,17 +75,33 @@ function AllocateLandedCostForm({
       setSubmitting(false);
       closeDialog(dialogName);
     };
-
     // Handle the request error.
-    const onError = () => {
+    const onError = (res) => {
+      const { errors } = res.response.data;
       setSubmitting(false);
-      AppToaster.show({ message: 'Something went wrong!', intent: Intent.DANGER });
+
+      if (
+        errors.some(
+          (e) => e.type === 'COST_AMOUNT_BIGGER_THAN_UNALLOCATED_AMOUNT',
+        )
+      ) {
+        AppToaster.show({
+          message:
+            'The total located cost is bigger than the transaction line.',
+          intent: Intent.DANGER,
+        });
+      } else {
+        AppToaster.show({
+          message: 'Something went wrong!',
+          intent: Intent.DANGER,
+        });
+      }
     };
     createLandedCostMutate([billId, form]).then(onSuccess).catch(onError);
   };
 
   // Computed validation schema.
-  const validationSchema =  AllocateLandedCostFormSchema(amount);
+  const validationSchema = AllocateLandedCostFormSchema();
 
   return (
     <Formik
