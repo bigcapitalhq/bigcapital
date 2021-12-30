@@ -57,10 +57,12 @@ export default function ReconcileCreditNoteFormFields() {
  * @returns {React.JSX}
  */
 function ReconcileCreditNoteTotalLines() {
+  // Reconcile credit note context.
   const {
     creditNote: { credits_remaining, currency_code },
   } = useReconcileCreditNoteContext();
 
+  // Formik form context.
   const { values } = useFormikContext();
 
   // Calculate the total amount of credit entries.
@@ -68,7 +70,6 @@ function ReconcileCreditNoteTotalLines() {
     () => getEntriesTotal(values.entries),
     [values.entries],
   );
-
   // Calculate the total amount of credit remaining.
   const creditsRemaining = subtract(credits_remaining, totalAmount);
 

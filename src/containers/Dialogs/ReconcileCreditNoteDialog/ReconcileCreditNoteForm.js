@@ -58,7 +58,6 @@ function ReconcileCreditNoteForm({
       ...values,
       entries: entries,
     };
-
     // Handle the request success.
     const onSuccess = (response) => {
       AppToaster.show({
@@ -68,7 +67,6 @@ function ReconcileCreditNoteForm({
       setSubmitting(false);
       closeDialog(dialogName);
     };
-
     // Handle the request error.
     const onError = ({
       response: {

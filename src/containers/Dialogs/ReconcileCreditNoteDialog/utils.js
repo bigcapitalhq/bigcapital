@@ -1,35 +1,41 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Callout, Intent, Classes } from '@blueprintjs/core';
+import * as R from 'ramda';
 import clsx from 'classnames';
 
 import { CLASSES } from 'common/classes';
-import { MoneyFieldCell, FormatDateCell,  AppToaster, T } from 'components';
+import { MoneyFieldCell, FormatDateCell, AppToaster, T } from 'components';
 
 export const transformErrors = (errors, { setErrors }) => {
   if (errors.some((e) => e.type === 'INVOICES_HAS_NO_REMAINING_AMOUNT')) {
     AppToaster.show({
-      message: 'INVOICES_HAS_NO_REMAINING_AMOUNT',
+      message: 'The amount credit from the given invoice has no remaining amount.',
       intent: Intent.DANGER,
     });
   }
-
   if (
     errors.find((error) => error.type === 'CREDIT_NOTE_HAS_NO_REMAINING_AMOUNT')
   ) {
     AppToaster.show({
-      message: 'CREDIT_NOTE_HAS_NO_REMAINING_AMOUNT',
+      message: 'The total amount bigger than from remaining credit note amount',
       intent: Intent.DANGER,
     });
   }
 };
 
+/**
+ * Empty status callout.
+ * @returns {React.JSX}
+ */
 export function EmptyStatuCallout() {
   return (
     <div className={Classes.DIALOG_BODY}>
       <Callout intent={Intent.PRIMARY}>
         <p>
-          <T id={'reconcile_credit_note.alert.there_is_no_open_sale_invoices'} />
+          <T
+            id={'reconcile_credit_note.alert.there_is_no_open_sale_invoices'}
+          />
         </p>
       </Callout>
     </div>
@@ -38,7 +44,7 @@ export function EmptyStatuCallout() {
 
 /**
  * Retrieves reconcile credit note table columns.
- * @returns 
+ * @returns
  */
 export const useReconcileCreditNoteTableColumns = () => {
   return React.useMemo(
@@ -80,5 +86,34 @@ export const useReconcileCreditNoteTableColumns = () => {
       },
     ],
     [],
-  )
-}
+  );
+};
+
+/**
+ * Sets max credit amount from sale invoicue balance.
+ */
+export const maxAmountCreditFromRemaining = (entries) => {
+  return entries.map((entry) => ({
+    ...entry,
+    amount: entry.amount ? Math.min(entry.balance, entry.amount) : '',
+  }));
+};
+
+/**
+ * Adjusts entries amount based on the given total.
+ */
+export const maxCreditNoteAmountEntries = R.curry((total, entries) => {
+  let balance = total;
+
+  return entries.map((entry) => {
+    const oldBalance = balance;
+    balance -= entry.amount ? entry.amount : 0;
+
+    return {
+      ...entry,
+      amount: entry.amount
+        ? Math.max(Math.min(entry.amount, oldBalance), 0)
+        : '',
+    };
+  });
+});
