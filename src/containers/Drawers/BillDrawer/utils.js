@@ -101,7 +101,9 @@ export function BillDetailsStatus({ bill }) {
   );
 }
 
-export const BillMenuItem = ({ payload: { onConvert } }) => {
+export const BillMenuItem = ({
+  payload: { onConvert, onAllocateLandedCost },
+}) => {
   return (
     <Popover
       minimal={true}
@@ -112,6 +114,10 @@ export const BillMenuItem = ({ payload: { onConvert } }) => {
       }}
       content={
         <Menu>
+          <MenuItem
+            onClick={onAllocateLandedCost}
+            text={<T id={'bill.allocate_landed_coast'} />}
+          />
           <MenuItem
             onClick={onConvert}
             text={<T id={'bill.convert_to_credit_note'} />}

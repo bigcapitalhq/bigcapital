@@ -1682,6 +1682,7 @@
   "inventory_adjustment.column.product":"المنتج",
   "invoice.convert_to_credit_note":"تحويل إلى إشعار دائن",
   "bill.convert_to_credit_note":"تحويل إلى إشعار مدين",
+  "bill.allocate_landed_coast":"تحميل تكلفة اضافية",
   "overdue":"متأخرّة",
   "invite_user.label.role_name":"دور المستخدم",
   "permissions.column.view": "عرض",

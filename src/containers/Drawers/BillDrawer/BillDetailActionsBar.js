@@ -69,6 +69,11 @@ function BillDetailActionsBar({
     openDialog('quick-payment-made', { billId });
   };
 
+  // Handle allocate landed cost button click.
+  const handleAllocateCostClick = () => {
+    openDialog('allocate-landed-cost', { billId });
+  };
+
   return (
     <DrawerActionsBar>
       <NavbarGroup>
@@ -106,6 +111,7 @@ function BillDetailActionsBar({
           <BillMenuItem
             payload={{
               onConvert: handleConvertToVendorCredit,
+              onAllocateLandedCost: handleAllocateCostClick,
             }}
           />
         </Can>
