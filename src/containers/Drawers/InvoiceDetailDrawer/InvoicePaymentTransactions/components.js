@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Menu, MenuItem } from '@blueprintjs/core';
+import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import clsx from 'classnames';
 import { CLASSES } from '../../../../common/classes';
 import { FormatDateCell, Icon, Can } from '../../../../components';
@@ -27,6 +27,7 @@ export function ActionsMenu({
         />
       </Can>
       <Can I={PaymentReceiveAction.Delete} a={AbilitySubject.PaymentReceive}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('invoice_transactions.action.delete_transaction')}
           intent={Intent.DANGER}

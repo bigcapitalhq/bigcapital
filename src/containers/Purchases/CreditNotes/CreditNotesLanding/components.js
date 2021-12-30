@@ -70,6 +70,7 @@ export function ActionsMenu({
         </If>
       </Can>
       <Can I={VendorCreditAction.Delete} a={AbilitySubject.VendorCredit}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('vendor_credits.action.delete_vendor_credit')}
           intent={Intent.DANGER}

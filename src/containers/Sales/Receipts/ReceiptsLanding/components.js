@@ -60,6 +60,7 @@ export function ActionsMenu({
         />
       </Can>
       <Can I={SaleReceiptAction.Delete} a={AbilitySubject.Receipt}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('delete_receipt')}
           intent={Intent.DANGER}

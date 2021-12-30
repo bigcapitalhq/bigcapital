@@ -271,6 +271,7 @@ function CashflowAccountContextMenu({
         </If>
       </Can>
       <Can I={CashflowAction.Delete} a={AbilitySubject.Cashflow}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('delete_account')}
           icon={<Icon icon="trash-16" iconSize={16} />}

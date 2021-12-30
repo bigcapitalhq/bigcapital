@@ -5,6 +5,7 @@ import {
   Button,
   Position,
   MenuItem,
+  MenuDivider,
   Intent,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
@@ -18,7 +19,6 @@ export function ActionMenuList({
   row: { original },
   payload: { onEditCurrency, onDeleteCurrency },
 }) {
-  
   return (
     <Menu>
       <MenuItem
@@ -26,6 +26,7 @@ export function ActionMenuList({
         text={intl.get('edit_currency')}
         onClick={safeCallback(onEditCurrency, original)}
       />
+      <MenuDivider />
       <MenuItem
         icon={<Icon icon="trash-16" iconSize={16} />}
         text={intl.get('delete_currency')}
@@ -51,8 +52,6 @@ export const ActionsCell = (props) => {
 };
 
 export function useCurrenciesTableColumns() {
-  
-
   return useMemo(
     () => [
       {
@@ -69,7 +68,7 @@ export function useCurrenciesTableColumns() {
       {
         Header: intl.get('currency_sign'),
         width: 120,
-        accessor: 'currency_sign'
+        accessor: 'currency_sign',
       },
       {
         id: 'actions',

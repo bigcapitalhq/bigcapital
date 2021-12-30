@@ -65,7 +65,7 @@ function PaymentReceiveForm({
     paymentReceiveNumberPrefix,
     paymentReceiveNextNumber,
   );
-  console.log(preferredDepositAccount, 'XX');
+
   // Form initial values.
   const initialValues = useMemo(
     () => ({

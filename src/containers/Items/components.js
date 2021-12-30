@@ -140,6 +140,7 @@ export function ItemsActionMenuList({
         </If>
       </Can>
       <Can I={ItemAction.Delete} a={AbilitySubject.Item}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('delete_item')}
           icon={<Icon icon="trash-16" iconSize={16} />}

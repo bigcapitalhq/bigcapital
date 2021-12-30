@@ -46,6 +46,7 @@ export function ActionsMenu({
         />
       </Can>
       <Can I={PaymentMadeAction.Delete} a={AbilitySubject.PaymentMade}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('delete_payment_made')}
           intent={Intent.DANGER}
