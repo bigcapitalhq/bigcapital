@@ -1,10 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
+import * as R from 'ramda';
+import { defaultTo } from 'lodash';
+
+import { useDeepCompareEffect } from 'hooks/utils';
 
 import { DataTableEditable } from 'components';
 import { compose, updateTableCell } from 'utils';
-import { useReconcileVendorCreditTableColumns } from './utils';
+import {
+  useReconcileVendorCreditTableColumns,
+  maxAmountCreditFromRemaining,
+} from './utils';
+import { maxCreditNoteAmountEntries } from '../ReconcileCreditNoteDialog/utils';
+import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
 
+/**
+ * Reconcile vendor credit entries table.
+ */
 export default function ReconcileVendorCreditEntriesTable({
   onUpdateData,
   entries,
@@ -12,6 +24,11 @@ export default function ReconcileVendorCreditEntriesTable({
 }) {
   // Reconcile vendor credit table columns.
   const columns = useReconcileVendorCreditTableColumns();
+
+  // Reconcile vendor credit context.
+  const {
+    vendorCredit: { credits_remaining },
+  } = useReconcileVendorCreditContext();
 
   // Handle update data.
   const handleUpdateData = React.useCallback(
@@ -23,6 +40,16 @@ export default function ReconcileVendorCreditEntriesTable({
     },
     [onUpdateData, entries],
   );
+
+  // Watches deeply entries to compose a new entries.
+  useDeepCompareEffect(() => {
+    const newEntries = R.compose(
+      maxCreditNoteAmountEntries(defaultTo(credits_remaining, 0)),
+      maxAmountCreditFromRemaining,
+    )(entries);
+
+    onUpdateData(newEntries);
+  }, [entries]);
 
   return (
     <ReconcileVendorCreditEditableTable

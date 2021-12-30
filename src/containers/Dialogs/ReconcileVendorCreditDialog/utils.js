@@ -66,3 +66,13 @@ export const useReconcileVendorCreditTableColumns = () => {
     [],
   );
 };
+
+/**
+ * Sets max amount credit from purchase due amount.
+ */
+export const maxAmountCreditFromRemaining = (entries) => {
+  return entries.map((entry) => ({
+    ...entry,
+    amount: entry.amount ? Math.min(entry.due_amount, entry.amount) : '',
+  }));
+};
