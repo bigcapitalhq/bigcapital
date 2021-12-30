@@ -40,15 +40,15 @@ function BillPaymentTransactionTable({
   });
 
   // Handles delete bill payment transactions.
-  const handleDeleteBillPaymentTransactons = ({ bill_id }) => {
-    openAlert('bill-delete', {
-      billId: bill_id,
+  const handleDeleteBillPaymentTransactons = ({ bill_payment_id }) => {
+    openAlert('payment-made-delete', {
+      paymentMadeId: bill_payment_id,
     });
   };
 
   // Handles edit  bill payment transactions.
-  const handleEditBillPaymentTransactions = ({ bill_id }) => {
-    history.push(`/bills/${bill_id}/edit`);
+  const handleEditBillPaymentTransactions = ({ bill_payment_id }) => {
+    history.push(`/payment-mades/${bill_payment_id}/edit`);
     closeDrawer('bill-drawer');
   };
 
