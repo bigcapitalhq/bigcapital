@@ -89,11 +89,14 @@ export const useAllocateLandedCostEntriesTableColumns = () => {
         accessor: 'rate',
         disableSortBy: true,
         width: '100',
+        align: 'right',
+
       },
       {
         Header: intl.get('amount'),
         accessor: 'amount',
         disableSortBy: true,
+        align: 'right',
         width: '100',
       },
       {
