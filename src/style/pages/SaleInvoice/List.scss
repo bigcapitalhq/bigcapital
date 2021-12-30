@@ -45,20 +45,13 @@
           font-size: 13.5px;
         }
         .bp3-progress-bar {
-          height: 4px;
+          height: 3px;
           max-width: 180px;
 
           &,
           .bp3-progress-meter {
             border-radius: 0;
           }
-        }
-      }
-    }
-    .table-size--small {
-      .status.td {
-        .bp3-progress-bar {
-          height: 3px;
         }
       }
     }
