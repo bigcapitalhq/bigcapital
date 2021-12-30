@@ -92,6 +92,8 @@ export * from './TextStatus';
 export * from './Tags';
 export * from './CommercialDoc';
 export * from './Card';
+export * from './Customers'
+export * from './Vendors'
 
 const Hint = FieldHint;
 

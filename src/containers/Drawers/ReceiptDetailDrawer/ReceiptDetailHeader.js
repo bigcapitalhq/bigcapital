@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import {
   ButtonLink,
+  CustomerDrawerLink,
   CommercialDocHeader,
   CommercialDocTopHeader,
 } from 'components';
@@ -41,7 +42,9 @@ export default function ReceiptDetailHeader() {
               children={defaultTo(receipt.receipt_number, '-')}
             />
             <DetailItem label={intl.get('customer_name')}>
-              <ButtonLink>{receipt.customer?.display_name} </ButtonLink>
+              <CustomerDrawerLink customerId={receipt.customer_id}>
+                {receipt.customer?.display_name}
+              </CustomerDrawerLink>
             </DetailItem>
             <DetailItem
               label={intl.get('receipt_date')}

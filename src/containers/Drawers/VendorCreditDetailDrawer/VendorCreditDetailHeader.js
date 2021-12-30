@@ -13,6 +13,7 @@ import {
   ButtonLink,
   CommercialDocHeader,
   CommercialDocTopHeader,
+  VendorDrawerLink,
 } from 'components';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 import { VendorCreditDetailsStatus } from './utils';
@@ -44,7 +45,9 @@ export default function VendorCreditDetailHeader() {
             </DetailItem>
 
             <DetailItem label={intl.get('vendor_name')}>
-              <ButtonLink>{vendorCredit.vendor?.display_name}</ButtonLink>
+              <VendorDrawerLink vendorId={vendorCredit.vendor_id}>
+                {vendorCredit.vendor?.display_name}
+              </VendorDrawerLink>
             </DetailItem>
 
             <DetailItem
