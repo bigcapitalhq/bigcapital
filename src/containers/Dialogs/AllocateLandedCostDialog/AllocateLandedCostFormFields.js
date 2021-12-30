@@ -116,15 +116,16 @@ export default function AllocateLandedCostFormFields() {
             >
               <ListSelect
                 items={transactionEntries}
-                onItemSelect={({ id, amount }) => {
+                onItemSelect={(entry) => {
+                  const { id, unallocated_cost_amount: unallocatedAmount } = entry;
                   const { items, allocation_method } = form.values;
 
-                  form.setFieldValue('amount', amount);
+                  form.setFieldValue('amount', unallocatedAmount);
                   form.setFieldValue('transaction_entry_id', id);
 
                   form.setFieldValue(
                     'items',
-                    allocateCostToEntries(amount, allocation_method, items),
+                    allocateCostToEntries(unallocatedAmount, allocation_method, items),
                   );
                 }}
                 filterable={false}
