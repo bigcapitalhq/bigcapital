@@ -1670,6 +1670,7 @@
   "inventory_adjustment.column.product":"Product",
   "invoice.convert_to_credit_note":"Convert to Credit Note",
   "bill.convert_to_credit_note":"Convert to Vendor Credit",
+  "bill.allocate_landed_coast":"Allocate Landed Cost",
   "overdue":"Overdue",
   "permissions.column.view": "View",
   "permissions.column.full_access": "Full Access",

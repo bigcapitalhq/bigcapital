@@ -1,6 +1,5 @@
 import React from 'react';
 import { DataTable, Card, FormattedMessage as T } from 'components';
-import { Button, Classes, NavbarGroup } from '@blueprintjs/core';
 
 import { useLocatedLandedCostColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from './BillDrawerProvider';
@@ -13,8 +12,7 @@ import { TableStyle } from '../../../common';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 
 import { compose } from 'utils';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import Icon from 'components/Icon';
+
 
 /**
  * Located landed cost table.
@@ -32,10 +30,7 @@ function LocatedLandedCostTable({
   const columns = useLocatedLandedCostColumns();
   const { transactions, billId } = useBillDrawerContext();
 
-  // Handle allocate landed cost button click.
-  const handleAllocateCostClick = () => {
-    openDialog('allocate-landed-cost', { billId });
-  };
+
 
   // Handle the transaction delete action.
   const handleDeleteTransaction = ({ id }) => {
@@ -60,17 +55,6 @@ function LocatedLandedCostTable({
 
   return (
     <div>
-      <DashboardActionsBar>
-        <NavbarGroup>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="receipt-24" />}
-            text={<T id={'allocate_landed_coast'} />}
-            onClick={handleAllocateCostClick}
-          />
-        </NavbarGroup>
-      </DashboardActionsBar>
-
       <Card>
         <DataTable
           columns={columns}
