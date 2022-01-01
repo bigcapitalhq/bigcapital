@@ -146,6 +146,7 @@ export default function VendorCreditNoteFloatingActions() {
             loading={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitOpenBtnClick}
+            style={{ minWidth: '85px' }}
             text={<T id={'save'} />}
           />
           <Popover
