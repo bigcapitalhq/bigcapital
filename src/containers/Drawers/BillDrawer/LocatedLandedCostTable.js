@@ -27,10 +27,11 @@ function LocatedLandedCostTable({
   // #withDrawerActions
   openDrawer,
 }) {
+  // Located landed cost table columns.
   const columns = useLocatedLandedCostColumns();
+
+  // Bill drawer context.
   const { transactions, billId } = useBillDrawerContext();
-
-
 
   // Handle the transaction delete action.
   const handleDeleteTransaction = ({ id }) => {

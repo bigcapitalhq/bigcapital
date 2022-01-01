@@ -1,10 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import clsx from 'classnames';
 import { Intent, MenuItem, Menu } from '@blueprintjs/core';
 import { safeCallback } from 'utils';
-import { Can, Icon } from 'components';
-import { BillAction, AbilitySubject } from '../../../common/abilityOption';
+import { CLASSES } from 'common/classes';
+import {  Icon } from 'components';
 
 /**
  * Actions menu.
@@ -63,26 +64,28 @@ export function useLocatedLandedCostColumns() {
         Header: intl.get('name'),
         accessor: NameAccessor,
         width: 150,
-        className: 'name',
+        textOverview: true,
       },
       {
         Header: intl.get('amount'),
         accessor: 'formatted_amount',
         width: 100,
-        className: 'amount',
+        align: 'right',
+        textOverview: true,
+        className: clsx(CLASSES.FONT_BOLD),
       },
       {
         id: 'from_transaction',
         Header: intl.get('From transaction'),
         Cell: FromTransactionCell,
         width: 100,
-        className: 'from-transaction',
+        textOverview: true,
       },
       {
         Header: intl.get('allocation_method'),
-        accessor: 'allocation_method',
+        accessor: 'allocation_method_formatted',
         width: 100,
-        className: 'allocation-method',
+        textOverview: true,
       },
     ],
     [],
@@ -93,7 +96,7 @@ const LabelName = styled.div``;
 
 const LabelDescription = styled.div`
   font-size: 12px;
-  margin-top: 6px;
+  margin-top: 2px;
   display: block;
   opacity: 0.75;
 `;
