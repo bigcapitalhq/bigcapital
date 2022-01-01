@@ -26,6 +26,7 @@ const commonInvalidateQueries = (queryClient) => {
 
   // Invalidate refund vendor credit
   queryClient.invalidateQueries(t.REFUND_VENDOR_CREDIT);
+  queryClient.invalidateQueries(t.REFUND_VENDOR_CREDIT_TRANSACTION);
 
   // Invalidate reconcile vendor credit.
   queryClient.invalidateQueries(t.RECONCILE_VENDOR_CREDIT);
@@ -34,6 +35,9 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate bills.
   queryClient.invalidateQueries(t.BILL);
   queryClient.invalidateQueries(t.BILLS);
+
+  // Invalidate cashflow accounts.
+  queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
 
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
@@ -329,6 +333,27 @@ export function useDeleteReconcileVendorCredit(props) {
         // Invalidate vendor credit query.
         queryClient.invalidateQueries([t.VENDOR_CREDIT, id]);
       },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve refund vendor transaction detail.
+ * @param {number} id
+ *
+ */
+export function useRefundVendorCreditTransaction(id, props, requestProps) {
+  return useRequestQuery(
+    [t.REFUND_VENDOR_CREDIT_TRANSACTION, id],
+    {
+      method: 'get',
+      url: `purchases/vendor-credit/refunds/${id}`,
+      ...requestProps,
+    },
+    {
+      select: (res) => res.data.refund_credit,
+      defaultData: {},
       ...props,
     },
   );

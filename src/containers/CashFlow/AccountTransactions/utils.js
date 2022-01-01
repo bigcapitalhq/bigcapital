@@ -71,6 +71,14 @@ export const handleCashFlowTransactionType = (reference, openDrawer) => {
       return openDrawer('payment-made-detail-drawer', {
         paymentMadeId: reference.reference_id,
       });
+    case 'RefundCreditNote':
+      return openDrawer('refund-credit-detail-drawer', {
+        refundTransactionId: reference.reference_id,
+      });
+    case 'RefundVendorCredit':
+      return openDrawer('refund-vendor-detail-drawer', {
+        refundTransactionId: reference.reference_id,
+      });
 
     default:
       return openDrawer('cashflow-transaction-drawer', {

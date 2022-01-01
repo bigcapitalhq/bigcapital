@@ -1722,6 +1722,13 @@
   "permissions.cashflow_account_transactions":"Cashflow account transactions",
   "permissions.more_permissions":"More Permissions",
 
-  "estimate.status.expired": "Expired"
+  "estimate.status.expired": "Expired",
+  "refund_credit.drawer.title":"Refund credit note",
+  "refund_credit.drawer.label.amount":"Amount",
+  "refund_credit.drawer.label.credit_note_no":"Credit note number",
+  "refund_credit.drawer.label.withdrawal_account":"Withdrawal account",
+  "refund_credit.drawer.label.reference_no":"Reference number",
+  "refund_credit.drawer.label.description":"Description"
+
 }
 

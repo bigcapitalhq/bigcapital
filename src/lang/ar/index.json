@@ -1735,6 +1735,19 @@
   "permissions.cashflow_account_transactions":"معاملات حسابات التدفقات النقدية",
   "permissions.more_permissions":"عرض المزيد ",
 
-  "estimate.status.expired": "منتهية الصلاحية"
+  "estimate.status.expired": "منتهية الصلاحية",
+  "refund_credit.drawer.title":" تفاصيل استرجاع الأموال لإشعار الدائن ",
+  "refund_credit.drawer.label.amount":"القيمة",
+  "refund_credit.drawer.label.credit_note_no":"رقم الإشعار",
+  "refund_credit.drawer.label.withdrawal_account":"حساب السحب",
+  "refund_credit.drawer.label.reference_no":"رقم المرجع",
+  "refund_credit.drawer.label.description":"الوصف",
+  "refund_vendor_credit.drawer.title":" تفاصيل استرجاع الأموال لإشعار المدين ",
+  "refund_vendor_credit.drawer.label.amount":"القيمة",
+  "refund_vendor_credit.drawer.label.vendor_credit_no":"رقم الإشعار",
+  "refund_vendor_credit.drawer.label.deposit_account":"حساب إيداع",
+  "refund_vendor_credit.drawer.label.reference_no":"رقم المرجع",
+  "refund_vendor_credit.drawer.label.description":"الوصف"
 }
+
 

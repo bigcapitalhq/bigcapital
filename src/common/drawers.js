@@ -16,4 +16,6 @@ export const DRAWERS = {
   QUICK_CREATE_ITEM: 'quick-create-item',
   CREDIT_NOTE_DETAIL_DRAWER: 'credit-note-detail-drawer',
   VENDOR_CREDIT_DETAIL_DRAWER: 'vendor-credit-detail-drawer',
+  REFUND_CREDIT_NOTE_DETAIL_DRAWER:'refund-credit-detail-drawer',
+  REFUND_VENDOR_CREDIT_DETAIL_DRAWER:'refund-vendor-detail-drawer'
 };
