@@ -30,7 +30,6 @@ import {
 import { useAutofocus } from 'hooks';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
 import { useRefundVendorCreditContext } from './RefundVendorCreditFormProvider';
-import withSettings from 'containers/Settings/withSettings';
 
 /**
  * Refund Vendor credit form fields.
@@ -50,7 +49,6 @@ function RefundVendorCreditFormFields() {
             className={classNames('form-group--select-list', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="refund_date" />}
-            inline={true}
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
@@ -79,7 +77,6 @@ function RefundVendorCreditFormFields() {
             className={classNames('form-group--amount', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="amount" />}
-            inline={true}
           >
             <ControlGroup>
               <InputPrependText text={values.currency_code} />
@@ -104,7 +101,6 @@ function RefundVendorCreditFormFields() {
             className={classNames('form-group--reference', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="reference" />}
-            inline={true}
           >
             <InputGroup
               intent={inputIntent({ error, touched })}
@@ -128,7 +124,6 @@ function RefundVendorCreditFormFields() {
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'deposit_account_id'} />}
-            inline={true}
           >
             <AccountsSuggestField
               selectedAccountId={value}
@@ -154,7 +149,6 @@ function RefundVendorCreditFormFields() {
           <FormGroup
             label={<T id={'refund_vendor_credit.dialog.description'} />}
             className={'form-group--description'}
-            inline={true}
           >
             <TextArea growVertically={true} {...field} />
           </FormGroup>
