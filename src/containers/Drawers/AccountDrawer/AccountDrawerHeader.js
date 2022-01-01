@@ -25,7 +25,7 @@ export default function AccountDrawerHeader() {
         </DetailItem>
 
         <DetailItem name={'account-normal'} label={<T id={'account_normal'} />}>
-          {account.account_normal}
+          {account.account_normal_formatted}
           <Icon
             iconSize={14}
             icon={`arrow-${
