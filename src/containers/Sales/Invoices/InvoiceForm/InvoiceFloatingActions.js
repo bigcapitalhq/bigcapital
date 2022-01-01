@@ -151,6 +151,7 @@ export default function InvoiceFloatingActions() {
             loading={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitDeliverBtnClick}
+            style={{ minWidth: '85px' }}
             text={<T id={'save'} />}
           />
           <Popover

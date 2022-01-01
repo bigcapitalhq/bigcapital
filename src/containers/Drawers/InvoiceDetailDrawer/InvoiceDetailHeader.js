@@ -12,6 +12,7 @@ import {
   FormatDate,
   CommercialDocHeader,
   CommercialDocTopHeader,
+  CustomerDrawerLink,
 } from 'components';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 import { InvoiceDetailsStatus } from './utils';
@@ -50,9 +51,9 @@ export default function InvoiceDetailHeader() {
             </DetailItem>
 
             <DetailItem label={intl.get('customer_name')}>
-              <ButtonLink onClick={handleCustomerLinkClick}>
+              <CustomerDrawerLink customerId={invoice.customer_id}>
                 {invoice.customer?.display_name}
-              </ButtonLink>
+              </CustomerDrawerLink>
             </DetailItem>
 
             <DetailItem label={intl.get('invoice.details.invoice_no')}>

@@ -75,6 +75,7 @@ export function ActionsMenu({
         />
       </Can>
       <Can I={ExpenseAction.Delete} a={AbilitySubject.Expense}>
+        <MenuDivider />
         <MenuItem
           icon={<Icon icon="trash-16" iconSize={16} />}
           text={intl.get('delete_expense')}

@@ -12,6 +12,7 @@ import {
   Col,
   CommercialDocHeader,
   CommercialDocTopHeader,
+  VendorDrawerLink,
 } from 'components';
 
 import { useBillDrawerContext } from './BillDrawerProvider';
@@ -45,7 +46,9 @@ export default function BillDetailHeader() {
               <FormatDate value={bill.due_date} />
             </DetailItem>
             <DetailItem label={intl.get('vendor_name')}>
-              <ButtonLink>{bill.vendor?.display_name}</ButtonLink>
+              <VendorDrawerLink vendorId={bill.vendor_id}>
+                {bill.vendor?.display_name}
+              </VendorDrawerLink>
             </DetailItem>
             <DetailItem label={intl.get('bill.details.bill_number')}>
               {defaultTo(bill.bill_number, '-')}

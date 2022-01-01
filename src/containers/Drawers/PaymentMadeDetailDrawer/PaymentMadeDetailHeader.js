@@ -11,6 +11,7 @@ import {
   CommercialDocHeader,
   CommercialDocTopHeader,
   ButtonLink,
+  VendorDrawerLink,
 } from 'components';
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
 
@@ -38,7 +39,9 @@ export default function PaymentMadeDetailHeader() {
               children={defaultTo(paymentMade.payment_number, '-')}
             />
             <DetailItem label={intl.get('vendor_name')}>
-              <ButtonLink>{paymentMade.vendor?.display_name}</ButtonLink>
+              <VendorDrawerLink vendorId={paymentMade.vendor_id}>
+                {paymentMade.vendor?.display_name}
+              </VendorDrawerLink>
             </DetailItem>
             <DetailItem
               label={intl.get('payment_account')}

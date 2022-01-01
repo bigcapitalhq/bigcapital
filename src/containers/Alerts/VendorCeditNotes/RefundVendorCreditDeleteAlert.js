@@ -7,6 +7,7 @@ import { useDeleteRefundVendorCredit } from 'hooks/query';
 
 import withAlertActions from 'containers/Alert/withAlertActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -20,6 +21,9 @@ function RefundVendorCreditDeleteAlert({
   payload: { vendorCreditId },
   // #withAlertActions
   closeAlert,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
   const { mutateAsync: deleteRefundVendorCreditMutate, isLoading } =
     useDeleteRefundVendorCredit();
@@ -39,9 +43,12 @@ function RefundVendorCreditDeleteAlert({
           ),
           intent: Intent.SUCCESS,
         });
-        closeAlert(name);
+        closeDrawer('refund-vendor-detail-drawer');
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => {
+        closeAlert(name);
+      });
   };
 
   return (
@@ -67,4 +74,5 @@ function RefundVendorCreditDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions,
 )(RefundVendorCreditDeleteAlert);

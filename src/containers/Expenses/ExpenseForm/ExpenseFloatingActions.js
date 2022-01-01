@@ -32,7 +32,7 @@ export default function ExpenseFloatingFooter() {
 
   // Handle submit & publish button click.
   const handleSubmitPublishBtnClick = (event) => {
-    setSubmitPayload({ redirect: true, publish: true});
+    setSubmitPayload({ redirect: true, publish: true });
     submitForm();
   };
 
@@ -152,6 +152,7 @@ export default function ExpenseFloatingFooter() {
             loading={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitPublishBtnClick}
+            style={{ minWidth: '85px' }}
             text={<T id={'save'} />}
           />
           <Popover

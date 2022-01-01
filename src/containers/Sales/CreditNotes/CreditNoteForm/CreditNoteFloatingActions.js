@@ -47,7 +47,7 @@ export default function CreditNoteFloatingActions() {
   };
   // Handle submit as draft button click.
   const handleSubmitDraftBtnClick = (event) => {
-    setSubmitPayload({ redirect: true, open: false   });
+    setSubmitPayload({ redirect: true, open: false });
     submitForm();
   };
 
@@ -147,6 +147,7 @@ export default function CreditNoteFloatingActions() {
             loading={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitOpenBtnClick}
+            style={{ minWidth: '85px' }}
             text={<T id={'save'} />}
           />
           <Popover

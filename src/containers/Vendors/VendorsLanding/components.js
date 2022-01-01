@@ -67,6 +67,7 @@ export function ActionsMenu({
         </If>
       </Can>
       <Can I={VendorAction.Delete} a={AbilitySubject.Vendor}>
+        <MenuDivider />
         <MenuItem
           icon={<Icon icon="trash-16" iconSize={16} />}
           text={intl.get('delete_vendor')}

@@ -63,13 +63,14 @@ export function ActionsMenu({
           }
         >
           <MenuItem
-            icon={<Icon icon="quick-payment-16" />}
             text={intl.get('vendor_credits.action.reconcile_with_bills')}
+            icon={<Icon icon="receipt-24" iconSize={16} />}
             onClick={safeCallback(onReconcile, original)}
           />
         </If>
       </Can>
       <Can I={VendorCreditAction.Delete} a={AbilitySubject.VendorCredit}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('vendor_credits.action.delete_vendor_credit')}
           intent={Intent.DANGER}

@@ -83,6 +83,7 @@ export function ActionsMenu({
         onClick={safeCallback(onAllocateLandedCost, original)}
       />
       <Can I={BillAction.Delete} a={AbilitySubject.Bill}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('delete_bill')}
           intent={Intent.DANGER}

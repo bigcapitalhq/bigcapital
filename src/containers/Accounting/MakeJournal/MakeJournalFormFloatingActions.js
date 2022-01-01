@@ -151,6 +151,7 @@ export default function MakeJournalFloatingAction() {
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitPublishBtnClick}
+            style={{ minWidth: '85px' }}
             text={<T id={'save'} />}
           />
           <Popover

@@ -64,6 +64,7 @@ export default function PaymentMadeFloatingActions() {
           intent={Intent.PRIMARY}
           type="submit"
           onClick={handleSubmitBtnClick}
+          style={{ minWidth: '85px' }}
           text={paymentMadeId ? <T id={'edit'} /> : <T id={'save'} />}
         />
         <Popover

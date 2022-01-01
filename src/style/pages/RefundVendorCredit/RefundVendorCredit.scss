@@ -1,13 +1,9 @@
 .dialog--refund-vendor-credit {
+  max-width: 450px;
+
   .bp3-dialog-body {
     .bp3-form-group {
-      label.bp3-label {
-        min-width: 140px;
-        font-size: 13px;
-      }
-      .bp3-form-content {
-        width: 250px;
-      }
+      margin-bottom: 16px;
     }
 
     .form-group {

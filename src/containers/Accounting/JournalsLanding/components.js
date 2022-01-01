@@ -179,6 +179,7 @@ export const ActionsMenu = ({
         />
       </Can>
       <Can I={ManualJournalAction.Delete} a={AbilitySubject.ManualJournal}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('delete_journal')}
           icon={<Icon icon="trash-16" iconSize={16} />}

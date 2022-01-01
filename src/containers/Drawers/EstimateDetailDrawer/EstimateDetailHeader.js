@@ -13,6 +13,7 @@ import {
   Row,
   Col,
   ButtonLink,
+  CustomerDrawerLink,
 } from 'components';
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 import { EstimateDetailsStatus } from './components';
@@ -46,7 +47,9 @@ export default function EstimateDetailHeader() {
             />
 
             <DetailItem label={intl.get('customer_name')}>
-              <ButtonLink>{estimate.customer?.display_name}</ButtonLink>
+              <CustomerDrawerLink customerId={estimate.customer_id}>
+                {estimate.customer?.display_name}
+              </CustomerDrawerLink>
             </DetailItem>
 
             <DetailItem

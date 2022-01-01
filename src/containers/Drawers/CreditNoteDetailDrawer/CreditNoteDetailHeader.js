@@ -13,6 +13,7 @@ import {
   ButtonLink,
   CommercialDocHeader,
   CommercialDocTopHeader,
+  CustomerDrawerLink,
 } from 'components';
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
 
@@ -48,7 +49,9 @@ export default function CreditNoteDetailHeader() {
             </DetailItem>
 
             <DetailItem label={intl.get('customer_name')}>
-              <ButtonLink>{creditNote.customer?.display_name}</ButtonLink>
+              <CustomerDrawerLink customerId={creditNote.customer_id}>
+                {creditNote.customer?.display_name}
+              </CustomerDrawerLink>
             </DetailItem>
 
             <DetailItem

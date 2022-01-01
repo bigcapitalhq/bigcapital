@@ -65,7 +65,6 @@ export default function EstimateFloatingActions() {
 
   const handleCancelBtnClick = (event) => {
     history.goBack();
-    
   };
 
   const handleClearBtnClick = (event) => {
@@ -149,6 +148,7 @@ export default function EstimateFloatingActions() {
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitDeliverBtnClick}
+            style={{ minWidth: '85px' }}
             text={<T id={'save'} />}
           />
           <Popover

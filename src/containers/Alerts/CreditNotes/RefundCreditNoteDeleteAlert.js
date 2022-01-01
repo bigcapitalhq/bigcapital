@@ -7,6 +7,7 @@ import { useDeleteRefundCreditNote } from 'hooks/query';
 
 import withAlertActions from 'containers/Alert/withAlertActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -20,6 +21,9 @@ function RefundCreditNoteDeleteAlert({
   payload: { creditNoteId },
   // #withAlertActions
   closeAlert,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
   const { mutateAsync: deleteRefundCreditMutate, isLoading } =
     useDeleteRefundCreditNote();
@@ -37,9 +41,12 @@ function RefundCreditNoteDeleteAlert({
           message: intl.get('refund_credit_transactions.alert.delete_message'),
           intent: Intent.SUCCESS,
         });
-        closeAlert(name);
+        closeDrawer('refund-credit-detail-drawer');
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => {
+        closeAlert(name);
+      });
   };
 
   return (
@@ -65,4 +72,5 @@ function RefundCreditNoteDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions,
 )(RefundCreditNoteDeleteAlert);

@@ -11,6 +11,7 @@ import {
   CommercialDocHeader,
   CommercialDocTopHeader,
   ButtonLink,
+  CustomerDrawerLink,
 } from 'components';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
@@ -38,7 +39,9 @@ export default function PaymentReceiveDetailHeader() {
               children={defaultTo(paymentReceive.payment_receive_no, '-')}
             />
             <DetailItem label={intl.get('customer_name')}>
-              <ButtonLink>{paymentReceive.customer?.display_name}</ButtonLink>
+              <CustomerDrawerLink customerId={paymentReceive.customer_id}>
+                {paymentReceive.customer?.display_name}
+              </CustomerDrawerLink>
             </DetailItem>
 
             <DetailItem
