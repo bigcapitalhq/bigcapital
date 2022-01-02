@@ -24,7 +24,9 @@ function EstimateDetailDrawerProvider({ estimateId, ...props }) {
     <DrawerLoading loading={isEstimateLoading}>
       <DrawerHeaderContent
         name="estimate-detail-drawer"
-        title={intl.get('estimate_details')}
+        title={intl.get('estimate.drawer.title', {
+          number: estimate.estimate_number,
+        })}
       />
       <EstimateDetailDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>

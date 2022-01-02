@@ -139,6 +139,7 @@ function VendorCreditNoteFormHeaderFields({
           <FormGroup
             label={<T id={'credit_note.label_credit_note'} />}
             inline={true}
+            labelInfo={<FieldRequiredHint />}
             className={('form-group--vendor_credit_number', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="vendor_credit_number" />}

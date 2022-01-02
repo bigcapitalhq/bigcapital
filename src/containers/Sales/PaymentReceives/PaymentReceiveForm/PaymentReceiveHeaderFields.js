@@ -224,6 +224,7 @@ function PaymentReceiveHeaderFields({
           <FormGroup
             label={<T id={'payment_receive_no'} />}
             inline={true}
+            labelInfo={<FieldRequiredHint />}
             className={('form-group--payment_receive_no', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="payment_receive_no" />}

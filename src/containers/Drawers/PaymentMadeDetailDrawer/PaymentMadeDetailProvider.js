@@ -33,7 +33,11 @@ function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
     <DrawerLoading loading={loading}>
       <DrawerHeaderContent
         name="payment-made-detail-drawer"
-        title={intl.get('payment_made_details')}
+        title={intl.get('payment_made.drawer.title', {
+          number: paymentMade.payment_number
+            ? `(${paymentMade.payment_number})`
+            : '',
+        })}
       />
       <PaymentMadeDetailContext.Provider value={provider} {...props} />
     </DrawerLoading>

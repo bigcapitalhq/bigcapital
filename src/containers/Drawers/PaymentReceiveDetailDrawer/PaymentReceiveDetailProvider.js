@@ -29,7 +29,9 @@ function PaymentReceiveDetailProvider({ paymentReceiveId, ...props }) {
     <DrawerLoading loading={isPaymentLoading}>
       <DrawerHeaderContent
         name="payment-receive-detail-drawer"
-        title={intl.get('payment_receive_details')}
+        title={intl.get('payment_receive.drawer.title', {
+          number: paymentReceive.payment_receive_no,
+        })}
       />
       <PaymentReceiveDetailContext.Provider value={provider} {...props} />
     </DrawerLoading>
