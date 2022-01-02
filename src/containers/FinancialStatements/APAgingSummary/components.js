@@ -28,7 +28,7 @@ export const useAPAgingSummaryColumns = () => {
       {
         Header: <T id={'vendor_name'} />,
         accessor: 'name',
-        className: 'name',
+        className: 'vendor_name',
         width: 240,
         sticky: 'left',
         textOverview: true,
