@@ -1,25 +1,26 @@
 .financial-sheet {
+
   &--customers-balance-summary,
   &--vendors-balance-summary {
     .financial-sheet__table {
+
       .thead,
       .tbody {
-        .tr .td.customer_name ~ .td,
-        .tr .th.customer_name ~ .th {
+
+        .tr .td.customer_name~.td,
+        .tr .th.customer_name~.th {
           text-align: right;
         }
       }
+
       .tbody {
         .tr:not(.no-results) {
-          &.row-type--CUSTOMER,
-          &.row-type--VENDOR {
-            border-top: 1px solid #BBB
-          }
           .td {
             border-bottom: 0;
             padding-top: 0.4rem;
             padding-bottom: 0.4rem;
           }
+
           &.row-type--TOTAL {
             font-weight: 500;
 
@@ -33,6 +34,7 @@
     }
   }
 }
+
 .financial-statement--balance-summary {
   .financial-header-drawer {
     .bp3-drawer {

@@ -3,21 +3,25 @@
     width: 100%;
 
     .financial-sheet__table {
+
       .tbody,
       .thead {
-        .tr .td.transaction_id ~ .td,
-        .tr .th.transaction_id ~ .th {
+
+        .tr .td.transaction_id~.td,
+        .tr .th.transaction_id~.th {
           text-align: right;
         }
       }
+
       .tbody {
         .tr .td {
           padding-top: 0.2rem;
           padding-bottom: 0.2rem;
           border-top-color: transparent;
           border-bottom-color: transparent;
+
           &.date {
-            > div {
+            >div {
               display: flex;
             }
 
@@ -26,8 +30,13 @@
             }
           }
         }
+
         .tr:not(.no-results) .td {
           border-left: 1px solid #ececec;
+        }
+
+        .tr:last-child .td {
+          border-bottom: 1px solid #ddd;
         }
 
         .tr.row-type {
@@ -37,15 +46,18 @@
                 border-left-color: transparent;
               }
             }
+
             &:not(:first-child).is-expanded .td {
               border-top: 1px solid #ddd;
             }
           }
+
           &--ITEM,
           &--OPENING_ENTRY,
           &--CLOSING_ENTRY {
             font-weight: 500;
           }
+
           &--ITEM {
             &.is-expanded {
               .td.value .cell-inner {
@@ -58,16 +70,19 @@
     }
   }
 }
+
 .number-format-dropdown {
   .toggles-fields {
     .bp3-form-group:first-child {
       display: none;
     }
   }
+
   .form-group--money-format {
     display: none;
   }
 }
+
 .financial-statement--inventory-details {
   .financial-header-drawer {
     .bp3-drawer {
