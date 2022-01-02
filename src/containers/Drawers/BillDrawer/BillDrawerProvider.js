@@ -33,7 +33,9 @@ function BillDrawerProvider({ billId, ...props }) {
     <DrawerLoading loading={loading}>
       <DrawerHeaderContent
         name="bill-drawer"
-        title={intl.get('bill.details.drawer.title')}
+        title={intl.get('bill.drawer.title', {
+          number: bill.bill_number ? `(${bill.bill_number})` : null,
+        })}
       />
       <BillDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>

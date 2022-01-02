@@ -28,7 +28,9 @@ function ReceiptDetailDrawerProvider({ receiptId, ...props }) {
     <DrawerLoading loading={isReceiptLoading}>
       <DrawerHeaderContent
         name="receipt-detail-drawer"
-        title={intl.get('receipt_details')}
+        title={intl.get('receipt.drawer.title', {
+          number: receipt.receipt_number,
+        })}
       />
       <ReceiptDetailDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>
