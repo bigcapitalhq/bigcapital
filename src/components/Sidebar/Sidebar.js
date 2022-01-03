@@ -1,4 +1,5 @@
 import React from 'react';
+
 import SidebarContainer from 'components/Sidebar/SidebarContainer';
 import SidebarHead from 'components/Sidebar/SidebarHead';
 import SidebarMenu from 'components/Sidebar/SidebarMenu';
@@ -17,7 +18,20 @@ export default function Sidebar({ dashboardContentRef }) {
         <SidebarMenu menu={menu} />
       </div>
 
-      <div class="sidebar__version">0.0.1-beta version.</div>
+      <SidebarFooterVersion />
     </SidebarContainer>
   );
+}
+
+/**
+ * Sidebar footer version. 
+ * @returns {React.JSX}
+ */
+function SidebarFooterVersion() {
+  const { REACT_APP_VERSION: VERSION } = process.env;
+
+  if (!VERSION) {
+    return null;
+  }
+  return <div class="sidebar__version">v{VERSION}</div>;
 }
