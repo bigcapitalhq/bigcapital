@@ -26,8 +26,6 @@ function InventoryAdjustmentList({
         <DashboardContentTable>
           <InventoryAdjustmentTable />
         </DashboardContentTable>
-
-
       </DashboardPageContent>
     </InventoryAdjustmentsProvider>
   );

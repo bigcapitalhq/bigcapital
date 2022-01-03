@@ -5,6 +5,7 @@ export const ButtonLink = styled.button`
   border: 0;
   background: transparent;
   cursor: pointer;
+  text-align: inherit;
 
   &:hover,
   &:active {

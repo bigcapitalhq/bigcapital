@@ -103,8 +103,10 @@ export default function AllocateLandedCostFormFields() {
               selectedItem={value}
               selectedItemProp={'id'}
               textProp={'name'}
-              labelProp={'id'}
-              defaultText={intl.get('Select transaction')}
+              labelProp={'formatted_unallocated_cost_amount'}
+              defaultText={intl.get(
+                'landed_cost.dialog.label_select_transaction',
+              )}
               popoverProps={{ minimal: true }}
             />
           </FormGroup>
@@ -131,16 +133,17 @@ export default function AllocateLandedCostFormFields() {
             >
               <ListSelect
                 items={costTransactionEntries}
-                onItemSelect={({ id, unallocated_cost_amount }) => {
+                onItemSelect={(entry) => {
+                  const { id, unallocated_cost_amount: unallocatedAmount } =
+                    entry;
                   const { items, allocation_method } = form.values;
 
+                  form.setFieldValue('amount', unallocatedAmount);
                   form.setFieldValue('transaction_entry_id', id);
-                  form.setFieldValue('amount', unallocated_cost_amount);
-
                   form.setFieldValue(
                     'items',
                     allocateCostToEntries(
-                      unallocated_cost_amount,
+                      unallocatedAmount,
                       allocation_method,
                       items,
                     ),
@@ -150,7 +153,10 @@ export default function AllocateLandedCostFormFields() {
                 selectedItem={value}
                 selectedItemProp={'id'}
                 textProp={'name'}
-                defaultText={intl.get('Select transaction entry')}
+                labelProp={'formatted_unallocated_cost_amount'}
+                defaultText={intl.get(
+                  'landed_cost.dialog.label_select_transaction_entry',
+                )}
                 popoverProps={{ minimal: true }}
               />
             </FormGroup>

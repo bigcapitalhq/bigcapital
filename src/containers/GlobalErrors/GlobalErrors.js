@@ -52,6 +52,27 @@ function GlobalErrors({
       toastKeySomethingWrong,
     );
   }
+  if (globalErrors.transactionsLocked) {
+    const lockedToDate =
+      globalErrors.transactionsLocked.formatted_locked_to_date;
+
+    AppToaster.show({
+      message: `Transactions before ${lockedToDate} has been locked. Hence action cannot be performed.`,
+      intent: Intent.DANGER,
+      onDismiss: () => {
+        globalErrorsSet({ transactionsLocked: false });
+      },
+    });
+  }
+  if (globalErrors.userInactive) {
+    AppToaster.show({
+      message: 'The authorized user is inactive.',
+      intent: Intent.DANGER,
+      onDismiss: () => {
+        globalErrorsSet({ userInactive: false });
+      },
+    });
+  }
   return null;
 }
 

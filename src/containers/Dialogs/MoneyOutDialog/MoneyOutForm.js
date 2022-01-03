@@ -86,7 +86,7 @@ function MoneyOutForm({
         });
       })
       .finally(() => {
-        setSubmitting(true);
+        setSubmitting(false);
       });
   };
   return (

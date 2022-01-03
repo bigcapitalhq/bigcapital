@@ -69,9 +69,9 @@ export const SellPriceCell = ({ cell: { value } }) => {
 };
 
 export const ItemTypeAccessor = (row) => {
-  return row.type ? (
+  return row.type_formatted ? (
     <Tag minimal={true} round={true} intent={Intent.NONE}>
-      {intl.get(row.type)}
+      {row.type_formatted}
     </Tag>
   ) : null;
 };
@@ -140,6 +140,7 @@ export function ItemsActionMenuList({
         </If>
       </Can>
       <Can I={ItemAction.Delete} a={AbilitySubject.Item}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('delete_item')}
           icon={<Icon icon="trash-16" iconSize={16} />}

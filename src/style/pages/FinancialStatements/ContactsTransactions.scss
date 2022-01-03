@@ -1,13 +1,17 @@
 .financial-sheet {
+
   &--customer-transactions,
   &--vendor-transactions {
     width: 100%;
 
     .financial-sheet__table {
+
       .tbody,
       .thead {
+
         .tr .td,
         .tr .th {
+
           &.credit,
           &.debit,
           &.running_balance {
@@ -15,6 +19,7 @@
           }
         }
       }
+
       .tbody {
         .tr .td {
           padding-top: 0.2rem;
@@ -24,39 +29,51 @@
 
           &.customer_name,
           &.vendor_name {
-            > div {
+            >div {
               display: flex;
             }
+
             span.force-width {
               position: relative;
             }
           }
         }
+
         .tr:not(.no-results) .td {
           border-left: 1px solid #ececec;
         }
 
+        .tr:last-child .td {
+          border-bottom: 1px solid #e0e0e0;
+        }
+
         .tr.row-type {
+
           &--CUSTOMER,
           &--VENDOR {
             .td {
+
               &.customer_name,
               &.vendor_name {
                 font-weight: 500;
               }
+
               &.name {
                 // border-left-color: transparent;
               }
             }
+
             &:not(:first-child).is-expanded .td {
               border-top: 1px solid #ddd;
             }
           }
+
           &--OPENING_BALANCE,
           // &--TRANSACTION,
           &--CLOSING_BALANCE {
             font-weight: 500;
           }
+
           &--CUSTOMER,
           &--VENDOR {
             &.is-expanded {
@@ -64,10 +81,12 @@
                 display: none;
               }
             }
+
             &:not(:first-child).is-expanded .td {
               border-top: 1px solid #ddd;
             }
           }
+
           &--CUSTOMER:last-child,
           &--VENDOR:last-child {
             .td {

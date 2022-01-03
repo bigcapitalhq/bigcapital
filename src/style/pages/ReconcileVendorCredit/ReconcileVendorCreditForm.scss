@@ -1,0 +1,45 @@
+.dialog--reconcile-vendor-credit-form {
+  width: 850px;
+
+  .bigcapital-datatable {
+    .table {
+      border: 1px solid #d1dee2;
+      min-width: auto;
+
+      .tbody,
+      .tbody-inner {
+        height: auto;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+
+      .tbody {
+        .bp3-form-group {
+          margin-bottom: 0;
+
+          &:not(.bp3-intent-danger) .bp3-input {
+            border: 1px solid #d0dfe2;
+
+            &:focus {
+              box-shadow: 0 0 0 1px #116cd0;
+              border-color: #116cd0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .bp3-callout {
+    font-size: 14px;
+  }
+
+  .bp3-dialog-footer {
+    display: flex;
+    justify-content: flex-start;
+    padding-top: 10px;
+  }
+}

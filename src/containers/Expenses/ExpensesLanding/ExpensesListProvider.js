@@ -53,7 +53,7 @@ function ExpensesListProvider({ query, tableStateChanged, ...props }) {
 
   return (
     <DashboardInsider
-      loading={isViewsLoading || isExpensesLoading || isResourceMetaLoading}
+      loading={isViewsLoading || isResourceMetaLoading}
       name={'expenses'}
     >
       <ExpensesListContext.Provider value={provider} {...props} />

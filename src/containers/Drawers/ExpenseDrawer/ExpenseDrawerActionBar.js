@@ -8,14 +8,16 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
-import { Can, FormattedMessage as T } from 'components';
+import { DrawerActionsBar, Can, FormattedMessage as T } from 'components';
+
 import { ExpenseAction, AbilitySubject } from '../../../common/abilityOption';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { compose } from 'utils';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
+
+import { compose } from 'utils';
 
 /**
  * Expense drawer action bar.
@@ -28,6 +30,8 @@ function ExpenseDrawerActionBar({
   closeDrawer,
 }) {
   const history = useHistory();
+
+  // Expense drawer context.
   const { expense } = useExpenseDrawerContext();
 
   // Handle the expense edit action.
@@ -42,7 +46,7 @@ function ExpenseDrawerActionBar({
   };
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Can I={ExpenseAction.Edit} a={AbilitySubject.Expense}>
           <Button
@@ -63,7 +67,7 @@ function ExpenseDrawerActionBar({
           />
         </Can>
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 

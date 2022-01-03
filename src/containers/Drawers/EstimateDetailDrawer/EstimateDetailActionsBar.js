@@ -8,7 +8,7 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -19,7 +19,13 @@ import {
   AbilitySubject,
 } from '../../../common/abilityOption';
 
-import { Icon, FormattedMessage as T, MoreMenuItems, Can } from 'components';
+import {
+  DrawerActionsBar,
+  Icon,
+  FormattedMessage as T,
+  MoreMenuItems,
+  Can,
+} from 'components';
 
 import { compose } from 'utils';
 
@@ -36,8 +42,10 @@ function EstimateDetailActionsBar({
   // #withDrawerActions
   closeDrawer,
 }) {
+  // Estimate details drawer context.
   const { estimateId } = useEstimateDetailDrawerContext();
 
+  // History.
   const history = useHistory();
 
   // Handle edit sale estimate.
@@ -61,7 +69,7 @@ function EstimateDetailActionsBar({
   };
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
           <Button
@@ -90,13 +98,15 @@ function EstimateDetailActionsBar({
           />
           <NavbarDivider />
         </Can>
-        <MoreMenuItems
-          payload={{
-            onNotifyViaSMS: handleNotifyViaSMS,
-          }}
-        />
+        <Can I={SaleEstimateAction.NotifyBySms} a={AbilitySubject.Estimate}>
+          <MoreMenuItems
+            payload={{
+              onNotifyViaSMS: handleNotifyViaSMS,
+            }}
+          />
+        </Can>
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 

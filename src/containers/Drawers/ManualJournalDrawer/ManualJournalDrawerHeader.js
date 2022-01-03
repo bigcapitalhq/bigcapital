@@ -1,53 +1,71 @@
 import React from 'react';
 import { defaultTo } from 'lodash';
-import { DetailsMenu, DetailItem, FormattedMessage as T } from 'components';
+import styled from 'styled-components';
+
+import {
+  Row,
+  Col,
+  DetailsMenu,
+  DetailItem,
+  FormattedMessage as T,
+  CommercialDocHeader,
+  CommercialDocTopHeader,
+} from 'components';
+import { ManualJournalDetailsStatus } from './utils';
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 
 /**
  * Manual journal details header.
  */
 export default function ManualJournalDrawerHeader() {
-  const {
-    manualJournal: {
-      formatted_amount,
-      journal_type,
-      journal_number,
-      reference,
-      currency_code,
-      description,
-    },
-  } = useManualJournalDrawerContext();
+  const { manualJournal } = useManualJournalDrawerContext();
 
   return (
-    <div className={'journal-drawer__content-header'}>
-      <DetailsMenu>
-        <DetailItem name={'total'} label={<T id={'total'} />}>
-          <h3 class="amount">{formatted_amount}</h3>
-        </DetailItem>
+    <CommercialDocHeader>
+      <CommercialDocTopHeader>
+        <DetailsMenu>
+          <DetailItem name={'total'} label={<T id={'total'} />}>
+            <h3 class="big-number">{manualJournal.formatted_amount}</h3>
+          </DetailItem>
 
-        <DetailItem name={'journal-type'} label={<T id={'journal_type'} />}>
-          {journal_type}
-        </DetailItem>
+          <StatusDetailItem>
+            <ManualJournalDetailsStatus manualJournal={manualJournal} />
+          </StatusDetailItem>
+        </DetailsMenu>
+      </CommercialDocTopHeader>
 
-        <DetailItem name={'journal-number'} label={<T id={'journal_no'} />}>
-          {journal_number}
-        </DetailItem>
+      <Row>
+        <Col xs={6}>
+          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+            <DetailItem name={'journal-type'} label={<T id={'journal_type'} />}>
+              {manualJournal.journal_type}
+            </DetailItem>
 
-        <DetailItem name={'reference-no'} label={<T id={'reference_no'} />}>
-          {defaultTo(reference, '-')}
-        </DetailItem>
+            <DetailItem name={'journal-number'} label={<T id={'journal_no'} />}>
+              {manualJournal.journal_number}
+            </DetailItem>
 
-        <DetailItem name={'currency'} label={<T id={'currency'} />}>
-          {currency_code}
-        </DetailItem>
-      </DetailsMenu>
+            <DetailItem name={'reference-no'} label={<T id={'reference_no'} />}>
+              {defaultTo(manualJournal.reference, '-')}
+            </DetailItem>
 
-      <div class="journal-drawer__content-description">
-        <b class="title">
-          <T id={'manual_journal.details.description'} />
-        </b>
-        : {defaultTo(description, '—')}
-      </div>
-    </div>
+            <DetailItem name={'currency'} label={<T id={'currency'} />}>
+              {manualJournal.currency_code}
+            </DetailItem>
+
+            <DetailItem label={<T id={'description'} />}>
+              {defaultTo(manualJournal.description, '—')}
+            </DetailItem>
+          </DetailsMenu>
+        </Col>
+      </Row>
+    </CommercialDocHeader>
   );
 }
+
+const StatusDetailItem = styled(DetailItem)`
+  width: 50%;
+  text-align: right;
+  position: relative;
+  top: -5px;
+`;

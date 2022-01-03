@@ -101,13 +101,13 @@ export const StatusAccessor = (row) => {
   return (
     <Choose>
       <Choose.When condition={!!row.is_published}>
-        <Tag minimal={true}>
+        <Tag minimal={true} round={true}>
           <T id={'published'} />
         </Tag>
       </Choose.When>
 
       <Choose.Otherwise>
-        <Tag minimal={true} intent={Intent.WARNING}>
+        <Tag minimal={true} intent={Intent.WARNING} round={true}>
           <T id={'draft'} />
         </Tag>
       </Choose.Otherwise>
@@ -179,6 +179,7 @@ export const ActionsMenu = ({
         />
       </Can>
       <Can I={ManualJournalAction.Delete} a={AbilitySubject.ManualJournal}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('delete_journal')}
           icon={<Icon icon="trash-16" iconSize={16} />}

@@ -34,6 +34,7 @@ export function ActionsMenu({
     onOpen,
     onDelete,
     onQuick,
+    onConvert,
     onViewDetails,
     onAllocateLandedCost,
   },
@@ -53,11 +54,16 @@ export function ActionsMenu({
           text={intl.get('edit_bill')}
           onClick={safeCallback(onEdit, original)}
         />
+        <MenuItem
+          icon={<Icon icon="convert_to" />}
+          text={intl.get('bill.convert_to_credit_note')}
+          onClick={safeCallback(onConvert, original)}
+        />
 
         <If condition={!original.is_open}>
           <MenuItem
             icon={<Icon icon={'check'} iconSize={18} />}
-            text={intl.get('mark_as_opened')}
+            text={intl.get('mark_as_open')}
             onClick={safeCallback(onOpen, original)}
           />
         </If>
@@ -77,6 +83,7 @@ export function ActionsMenu({
         onClick={safeCallback(onAllocateLandedCost, original)}
       />
       <Can I={BillAction.Delete} a={AbilitySubject.Bill}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('delete_bill')}
           intent={Intent.DANGER}
@@ -137,12 +144,12 @@ export function StatusAccessor(bill) {
               animate={false}
               stripes={false}
               intent={Intent.PRIMARY}
-              value={calculateStatus(bill.payment_amount, bill.amount)}
+              value={calculateStatus(bill.balance, bill.amount)}
             />
           </If>
         </Choose.When>
         <Choose.Otherwise>
-          <Tag minimal={true}>
+          <Tag minimal={true} round={true}>
             <T id={'draft'} />
           </Tag>
         </Choose.Otherwise>

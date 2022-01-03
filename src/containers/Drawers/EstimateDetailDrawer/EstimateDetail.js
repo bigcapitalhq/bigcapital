@@ -1,26 +1,39 @@
 import React from 'react';
 import { Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
+
 import { DrawerMainTabs } from 'components';
 
+import EstimateDetailActionsBar from './EstimateDetailActionsBar';
 import EstimateDetailPanel from './EstimateDetailPanel';
-import clsx from 'classnames';
 
-import EstimateDetailsCls from 'style/components/Drawers/EstimateDetails.module.scss';
+/**
+ * Estimate details tabs.
+ * @returns {React.JSX}
+ */
+function EstimateDetailsTabs() {
+  return (
+    <DrawerMainTabs>
+      <Tab
+        title={intl.get('details')}
+        id={'details'}
+        panel={<EstimateDetailPanel />}
+      />
+    </DrawerMainTabs>
+  );
+}
 
 /**
  * Estimate view detail
  */
 export default function EstimateDetail() {
   return (
-    <div className={clsx(EstimateDetailsCls.root)}>
-      <DrawerMainTabs>
-        <Tab
-          title={intl.get('details')}
-          id={'details'}
-          panel={<EstimateDetailPanel />}
-        />
-      </DrawerMainTabs>
-    </div>
+    <EstimateDetailsRoot>
+      <EstimateDetailActionsBar />
+      <EstimateDetailsTabs />
+    </EstimateDetailsRoot>
   );
 }
+
+const EstimateDetailsRoot = styled.div``;

@@ -3,31 +3,28 @@ import { useHistory } from 'react-router-dom';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash';
+import { Intent } from '@blueprintjs/core';
 
 import 'style/pages/Preferences/Roles/Form.scss';
 
-import { Intent } from '@blueprintjs/core';
-
 import { AppToaster, FormattedMessage as T } from 'components';
-
 import { CreateRolesFormSchema, EditRolesFormSchema } from './RolesForm.schema';
-
 import { useRolesFormContext } from './RolesFormProvider';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import RolesFormContent from './RolesFormContent';
 import {
   getNewRoleInitialValues,
   transformToArray,
   transformToObject,
 } from './utils';
-
-import RolesFormContent from './RolesFormContent';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-
+import { handleDeleteErrors } from '../utils';
 import { compose, transformToForm } from 'utils';
 
 const defaultValues = {
   role_name: '',
   role_description: '',
   permissions: {},
+  serviceFullAccess: {},
 };
 
 /**
@@ -82,8 +79,13 @@ function RolesForm({
       history.push('/preferences/users');
     };
 
-    const onError = (errors) => {
+    const onError = ({
+      response: {
+        data: { errors },
+      },
+    }) => {
       setSubmitting(false);
+      handleDeleteErrors(errors);
     };
     if (isNewMode) {
       createRolePermissionMutate(form).then(onSuccess).catch(onError);

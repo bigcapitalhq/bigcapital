@@ -159,6 +159,10 @@ export default [
         },
       },
       {
+        text: <T id={'sidebar_credit_note'} />,
+        href: '/credit-notes',
+      },
+      {
         text: <T id={'payment_receives'} />,
         href: '/payment-receives',
         permission: {
@@ -234,6 +238,10 @@ export default [
         },
       },
       {
+        text: <T id={'credit_note.label.new_credit_note'} />,
+        href: '/credit-notes/new',
+      },
+      {
         text: <T id={'new_payment_receive'} />,
         href: '/payment-receives/new',
         permission: {
@@ -253,6 +261,10 @@ export default [
           subject: AbilitySubject.Bill,
           ability: BillAction.View,
         },
+      },
+      {
+        text: <T id={'sidebar_vendor_credits'} />,
+        href: '/vendor-credits',
       },
       {
         text: <T id={'payment_mades'} />,
@@ -293,6 +305,14 @@ export default [
       {
         text: <T id={'New purchase invoice'} />,
         href: '/bills/new',
+        permission: {
+          subject: AbilitySubject.Bill,
+          ability: BillAction.Create,
+        },
+      },
+      {
+        text: <T id={'vendor_credits.label.new_vendor_credit'} />,
+        href: '/vendor-credits/new',
         permission: {
           subject: AbilitySubject.Bill,
           ability: BillAction.Create,
@@ -408,10 +428,10 @@ export default [
       {
         text: <T id={'sidebar.transactions_locaking'} />,
         href: '/transactions-locking',
-        permission: {
-          subject: AbilitySubject.ManualJournal,
-          ability: ManualJournalAction.TransactionLocking,
-        },
+        // permission: {
+        //   subject: AbilitySubject.ManualJournal,
+        //   ability: ManualJournalAction.TransactionLocking,
+        // },
       },
       {
         text: <T id={'exchange_rate'} />,

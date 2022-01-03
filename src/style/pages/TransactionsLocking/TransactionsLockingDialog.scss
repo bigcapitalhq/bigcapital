@@ -1,8 +1,9 @@
 .dialog--transaction--locking {
-  max-width: 400px;
+  max-width: 450px;
+
   .bp3-form-group {
-    margin-bottom: 15px;
-    margin-top: 15px;
+    margin-bottom: 10px;
+    margin-top: 10px;
 
     label.bp3-label {
       font-size: 13px;
@@ -15,6 +16,7 @@
       .bp3-form-content {
         textarea {
           width: 100%;
+          min-height: 85px;
           min-width: 100%;
           font-size: 14px;
         }
@@ -22,6 +24,9 @@
     }
   }
   .bp3-dialog-footer {
-    padding-top: 10px;
+    display: flex;
+    justify-content: flex-start;
+    // padding-top: 10px;
+    margin-left: 10px;
   }
 }

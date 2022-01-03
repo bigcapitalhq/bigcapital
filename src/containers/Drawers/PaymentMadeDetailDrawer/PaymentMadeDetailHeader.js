@@ -1,12 +1,19 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import clsx from 'classnames';
 import { defaultTo } from 'lodash';
 
-import { DetailsMenu, DetailItem, FormatDate } from 'components';
+import {
+  Row,
+  Col,
+  FormatDate,
+  DetailsMenu,
+  DetailItem,
+  CommercialDocHeader,
+  CommercialDocTopHeader,
+  ButtonLink,
+  VendorDrawerLink,
+} from 'components';
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
-
-import PaymentDrawerCls from './PaymentMadeDrawer.module.scss';
 
 /**
  * Payment made - detail panel - header.
@@ -15,39 +22,55 @@ export default function PaymentMadeDetailHeader() {
   const { paymentMade } = usePaymentMadeDetailContext();
 
   return (
-    <div className={clsx(PaymentDrawerCls.detail_panel_header)}>
-      <DetailsMenu>
-        <DetailItem label={intl.get('amount')}>
-          <h3 class="big-number" children={paymentMade.formatted_amount} />
-        </DetailItem>
-        <DetailItem
-          label={intl.get('payment_made.details.payment_number')}
-          children={defaultTo(paymentMade.payment_number, '-')}
-        />
-        <DetailItem
-          label={intl.get('customer_name')}
-          children={paymentMade.vendor?.display_name}
-        />
-        <DetailItem
-          label={intl.get('payment_account')}
-          children={paymentMade.payment_account?.name}
-        />
-        <DetailItem
-          label={intl.get('payment_date')}
-          children={<FormatDate value={paymentMade.payment_date} />}
-        />
-      </DetailsMenu>
+    <CommercialDocHeader>
+      <CommercialDocTopHeader>
+        <DetailsMenu>
+          <DetailItem label={intl.get('amount')}>
+            <h3 class="big-number">{paymentMade.formatted_amount}</h3>
+          </DetailItem>
+        </DetailsMenu>
+      </CommercialDocTopHeader>
 
-      <DetailsMenu direction={'horizantal'} minLabelSize={'160px'}>
-        <DetailItem
-          label={intl.get('description')}
-          children={defaultTo(paymentMade.statement, '-')}
-        />
-        <DetailItem
-          label={intl.get('created_at')}
-          children={<FormatDate value={paymentMade.created_at} />}
-        />
-      </DetailsMenu>
-    </div>
+      <Row>
+        <Col xs={6}>
+          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+            <DetailItem
+              label={intl.get('payment_made.details.payment_number')}
+              children={defaultTo(paymentMade.payment_number, '-')}
+            />
+            <DetailItem label={intl.get('vendor_name')}>
+              <VendorDrawerLink vendorId={paymentMade.vendor_id}>
+                {paymentMade.vendor?.display_name}
+              </VendorDrawerLink>
+            </DetailItem>
+            <DetailItem
+              label={intl.get('payment_account')}
+              children={paymentMade.payment_account?.name}
+            />
+
+            <DetailItem
+              label={intl.get('payment_date')}
+              children={<FormatDate value={paymentMade.payment_date} />}
+            />
+          </DetailsMenu>
+        </Col>
+        <Col xs={6}>
+          <DetailsMenu
+            textAlign={'right'}
+            direction={'horizantal'}
+            minLabelSize={'180px'}
+          >
+            <DetailItem
+              label={intl.get('description')}
+              children={defaultTo(paymentMade.statement, '-')}
+            />
+            <DetailItem
+              label={intl.get('created_at')}
+              children={<FormatDate value={paymentMade.created_at} />}
+            />
+          </DetailsMenu>
+        </Col>
+      </Row>
+    </CommercialDocHeader>
   );
 }

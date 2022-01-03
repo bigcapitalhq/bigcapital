@@ -27,6 +27,13 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate accounts.
   queryClient.invalidateQueries(t.ACCOUNTS);
   queryClient.invalidateQueries(t.ACCOUNT);
+
+  // Invalidate reconcile.
+  queryClient.invalidateQueries(t.RECONCILE_CREDIT_NOTE);
+  queryClient.invalidateQueries(t.RECONCILE_CREDIT_NOTES);
+
+  // Invalidate
+  queryClient.invalidateQueries(t.ITEM_ASSOCIATED_WITH_INVOICES);
 };
 
 /**
@@ -265,6 +272,21 @@ export function useInvoiceSMSDetail(invoiceId, query, props) {
     {
       select: (res) => res.data.data,
       defaultData: {},
+      ...props,
+    },
+  );
+}
+
+export function useInvoicePaymentTransactions(invoiceId, props) {
+  return useRequestQuery(
+    [t.SALE_INVOICE_PAYMENT_TRANSACTIONS, invoiceId],
+    {
+      method: 'get',
+      url: `sales/invoices/${invoiceId}/payment-transactions`,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: [],
       ...props,
     },
   );

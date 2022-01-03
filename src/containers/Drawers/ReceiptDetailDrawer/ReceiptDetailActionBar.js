@@ -8,13 +8,18 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Can, Icon, FormattedMessage as T, MoreMenuItems } from 'components';
+import {
+  Can,
+  Icon,
+  FormattedMessage as T,
+  MoreMenuItems,
+  DrawerActionsBar,
+} from 'components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import {
   SaleReceiptAction,
@@ -23,6 +28,10 @@ import {
 
 import { safeCallback, compose } from 'utils';
 
+/**
+ * Receipt details actions bar.
+ * @returns {React.JSX}
+ */
 function ReceiptDetailActionBar({
   // #withDialogActions
   openDialog,
@@ -50,13 +59,13 @@ function ReceiptDetailActionBar({
   const onPrintReceipt = () => {
     openDialog('receipt-pdf-preview', { receiptId });
   };
-
   // Handle notify via SMS.
   const handleNotifyViaSMS = () => {
     openDialog('notify-receipt-via-sms', { receiptId });
   };
+
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Can I={SaleReceiptAction.Edit} a={AbilitySubject.Receipt}>
           <Button
@@ -85,13 +94,15 @@ function ReceiptDetailActionBar({
           />
           <NavbarDivider />
         </Can>
-        <MoreMenuItems
-          payload={{
-            onNotifyViaSMS: handleNotifyViaSMS,
-          }}
-        />
+        <Can I={SaleReceiptAction.NotifyBySms} a={AbilitySubject.Receipt}>
+          <MoreMenuItems
+            payload={{
+              onNotifyViaSMS: handleNotifyViaSMS,
+            }}
+          />
+        </Can>
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 

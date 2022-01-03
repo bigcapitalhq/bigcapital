@@ -8,7 +8,6 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import { useBillDrawerContext } from './BillDrawerProvider';
 
@@ -16,12 +15,19 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Can, If, Icon, FormattedMessage as T } from 'components';
+import {
+  Can,
+  If,
+  Icon,
+  DrawerActionsBar,
+  FormattedMessage as T,
+} from 'components';
 import {
   BillAction,
   PaymentMadeAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
+import { BillMenuItem } from './utils';
 
 import { safeCallback, compose } from 'utils';
 
@@ -45,6 +51,14 @@ function BillDetailActionsBar({
     closeDrawer('bill-drawer');
   };
 
+  // Handle convert to vendor credit.
+  const handleConvertToVendorCredit = () => {
+    history.push(`/vendor-credits/new?from_bill_id=${billId}`, {
+      billId: billId,
+    });
+    closeDrawer('bill-drawer');
+  };
+
   // Handle delete bill.
   const onDeleteBill = () => {
     openAlert('bill-delete', { billId });
@@ -55,8 +69,13 @@ function BillDetailActionsBar({
     openDialog('quick-payment-made', { billId });
   };
 
+  // Handle allocate landed cost button click.
+  const handleAllocateCostClick = () => {
+    openDialog('allocate-landed-cost', { billId });
+  };
+
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Can I={BillAction.Edit} a={AbilitySubject.Bill}>
           <Button
@@ -71,7 +90,7 @@ function BillDetailActionsBar({
           <If condition={bill.is_open && !bill.is_fully_paid}>
             <Button
               className={Classes.MINIMAL}
-              icon={<Icon icon="quick-payment-16" iconSize={16} />}
+              icon={<Icon icon="arrow-upward" iconSize={16} />}
               text={<T id={'add_payment'} />}
               onClick={handleQuickBillPayment}
             />
@@ -87,8 +106,17 @@ function BillDetailActionsBar({
             onClick={safeCallback(onDeleteBill)}
           />
         </Can>
+        <Can I={BillAction.Edit} a={AbilitySubject.Bill}>
+          <NavbarDivider />
+          <BillMenuItem
+            payload={{
+              onConvert: handleConvertToVendorCredit,
+              onAllocateLandedCost: handleAllocateCostClick,
+            }}
+          />
+        </Can>
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 

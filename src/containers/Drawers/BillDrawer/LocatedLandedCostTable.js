@@ -1,6 +1,5 @@
 import React from 'react';
-import { DataTable, Card } from 'components';
-import { Button, Classes, NavbarGroup } from '@blueprintjs/core';
+import { DataTable, Card, FormattedMessage as T } from 'components';
 
 import { useLocatedLandedCostColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from './BillDrawerProvider';
@@ -9,9 +8,11 @@ import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
+import { TableStyle } from '../../../common';
+import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+
 import { compose } from 'utils';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import Icon from 'components/Icon';
+
 
 /**
  * Located landed cost table.
@@ -26,17 +27,15 @@ function LocatedLandedCostTable({
   // #withDrawerActions
   openDrawer,
 }) {
+  // Located landed cost table columns.
   const columns = useLocatedLandedCostColumns();
+
+  // Bill drawer context.
   const { transactions, billId } = useBillDrawerContext();
 
   // Handle the transaction delete action.
   const handleDeleteTransaction = ({ id }) => {
     openAlert('bill-located-cost-delete', { BillId: id });
-  };
-
-  // Handle allocate landed cost button click.
-  const handleAllocateCostClick = () => {
-    openDialog('allocate-landed-cost', { billId });
   };
 
   // Handle from transaction link click.
@@ -57,27 +56,17 @@ function LocatedLandedCostTable({
 
   return (
     <div>
-      <DashboardActionsBar>
-        <NavbarGroup>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="receipt-24" />}
-            text={'Allocate landed cost'}
-            onClick={handleAllocateCostClick}
-          />
-        </NavbarGroup>
-      </DashboardActionsBar>
-
       <Card>
         <DataTable
           columns={columns}
           data={transactions}
           ContextMenu={ActionsMenu}
+          TableLoadingRenderer={TableSkeletonRows}
+          styleName={TableStyle.Constrant}
           payload={{
             onDelete: handleDeleteTransaction,
             onFromTranscationClick: handleFromTransactionClick,
           }}
-          className={'datatable--landed-cost-transactions'}
         />
       </Card>
     </div>

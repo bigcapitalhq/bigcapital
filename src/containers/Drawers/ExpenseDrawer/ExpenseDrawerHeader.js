@@ -1,58 +1,79 @@
 import React from 'react';
 import moment from 'moment';
 import { defaultTo } from 'lodash';
+import styled from 'styled-components';
 
-import { DetailItem, DetailsMenu, Money } from 'components';
-import { FormattedMessage as T } from 'components';
+import {
+  CommercialDocHeader,
+  CommercialDocTopHeader,
+  Row,
+  Col,
+  DetailItem,
+  DetailsMenu,
+  Money,
+  FormattedMessage as T,
+} from 'components';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
+import { ExpenseDetailsStatus } from './components';
 
 /**
  * Expense drawer content.
  */
 export default function ExpenseDrawerHeader() {
-  const {
-    expense: {
-      total_amount,
-      payment_date,
-      currency_code,
-      reference_no,
-      description,
-      published_at,
-    },
-  } = useExpenseDrawerContext();
+  const { expense } = useExpenseDrawerContext();
 
   return (
-    <div className={'expense-drawer__content-header'}>
-      <DetailsMenu>
-        <DetailItem name={'amount'} label={<T id={'full_amount'} />}>
-          <h3 class="big-number">
-            <Money amount={total_amount} currency={currency_code} />
-          </h3>
-        </DetailItem>
+    <CommercialDocHeader>
+      <CommercialDocTopHeader>
+        <DetailsMenu>
+          <DetailItem name={'amount'} label={<T id={'full_amount'} />}>
+            <h3 class="big-number">{expense.formatted_amount}</h3>
+          </DetailItem>
 
-        <DetailItem name={'date'} label={<T id={'date'} />}>
-          {moment(payment_date).format('YYYY MMM DD')}
-        </DetailItem>
+          <StatusDetailItem>
+            <ExpenseDetailsStatus expense={expense} />
+          </StatusDetailItem>
+        </DetailsMenu>
+      </CommercialDocTopHeader>
 
-        <DetailItem name={'currency'} label={<T id={'currency'} />}>
-          {currency_code}
-        </DetailItem>
+      <Row>
+        <Col xs={6}>
+          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+            <DetailItem name={'date'} label={<T id={'date'} />}>
+              {moment(expense.payment_date).format('YYYY MMM DD')}
+            </DetailItem>
 
-        <DetailItem name={'reference'} label={<T id={'reference_no'} />}>
-          {defaultTo(reference_no, '-')}
-        </DetailItem>
+            <DetailItem name={'reference'} label={<T id={'reference_no'} />}>
+              {defaultTo(expense.reference_no, '-')}
+            </DetailItem>
 
-        <DetailItem label={<T id={'published_at'} />}>
-          {moment(published_at).format('YYYY MMM DD')}
-        </DetailItem>
-      </DetailsMenu>
+            <DetailItem label={<T id={'description'} />}>
+              {defaultTo(expense.description, '—')}
+            </DetailItem>
+          </DetailsMenu>
+        </Col>
 
-      <DetailsMenu direction={'horizantal'}>
-        <DetailItem label={<T id={'description'} />}>
-          {defaultTo(description, '—')}
-        </DetailItem>
-        <DetailItem label={<T id={'created_at'} />}>2021 Aug 24</DetailItem>
-      </DetailsMenu>
-    </div>
+        <Col xs={6}>
+          <DetailsMenu
+            textAlign={'right'}
+            direction={'horizantal'}
+            minLabelSize={'180px'}
+          >
+            <DetailItem label={<T id={'published_at'} />}>
+              {moment(expense.published_at).format('YYYY MMM DD')}
+            </DetailItem>
+
+            <DetailItem label={<T id={'created_at'} />}>2021 Aug 24</DetailItem>
+          </DetailsMenu>
+        </Col>
+      </Row>
+    </CommercialDocHeader>
   );
 }
+
+const StatusDetailItem = styled(DetailItem)`
+  width: 50%;
+  text-align: right;
+  position: relative;
+  top: -5px;
+`;

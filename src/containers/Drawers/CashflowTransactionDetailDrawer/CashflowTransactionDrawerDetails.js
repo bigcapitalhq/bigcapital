@@ -13,6 +13,7 @@ export default function CashflowTransactionDrawerDetails() {
   return (
     <div className={'cashflow-drawer'}>
       <CashflowTransactionDrawerActionBar />
+
       <div className="cashflow-drawer__content">
         <Card>
           <CashflowTransactionDrawerHeader />

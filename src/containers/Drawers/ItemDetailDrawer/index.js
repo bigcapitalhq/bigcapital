@@ -19,7 +19,12 @@ function ItemDetailDrawer({
   payload: { itemId },
 }) {
   return (
-    <Drawer isOpen={isOpen} name={name} size={'750px'}>
+    <Drawer
+      isOpen={isOpen}
+      name={name}
+      style={{ minWidth: '700px', maxWidth: '900px' }}
+      size={'65%'}
+    >
       <DrawerSuspense>
         <ItemDetailDrawerContent itemId={itemId} />
       </DrawerSuspense>

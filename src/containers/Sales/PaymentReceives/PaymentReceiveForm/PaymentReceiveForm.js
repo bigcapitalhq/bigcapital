@@ -28,7 +28,11 @@ import { AppToaster } from 'components';
 import { transactionNumber, compose } from 'utils';
 
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
-import { defaultPaymentReceive, transformToEditForm, transformFormToRequest } from './utils';
+import {
+  defaultPaymentReceive,
+  transformToEditForm,
+  transformFormToRequest,
+} from './utils';
 
 /**
  * Payment Receive form.
@@ -61,6 +65,7 @@ function PaymentReceiveForm({
     paymentReceiveNumberPrefix,
     paymentReceiveNextNumber,
   );
+
   // Form initial values.
   const initialValues = useMemo(
     () => ({
@@ -194,7 +199,7 @@ export default compose(
     paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
     paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
     paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
-    preferredDepositAccount: paymentReceiveSettings?.depositAccount,
+    preferredDepositAccount: paymentReceiveSettings?.preferredDepositAccount,
   })),
   withCurrentOrganization(),
 )(PaymentReceiveForm);

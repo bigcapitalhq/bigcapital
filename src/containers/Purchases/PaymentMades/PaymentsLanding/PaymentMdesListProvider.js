@@ -39,7 +39,7 @@ function PaymentMadesProvider({ query, ...props }) {
 
   return (
     <DashboardInsider
-      loading={isViewsLoading || isFieldsLoading || isPaymentsLoading}
+      loading={isViewsLoading || isFieldsLoading }
       name={'payment_made'}
     >
       <PaymentMadesContext.Provider value={provider} {...props} />

@@ -172,3 +172,62 @@ export function useItem(id, props) {
     },
   );
 }
+
+export function useItemAssociatedInvoiceTransactions(id, props) {
+  return useRequestQuery(
+    [t.ITEM_ASSOCIATED_WITH_INVOICES, id],
+    {
+      method: 'get',
+      url: `items/${id}/transactions/invoices`,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: [],
+      ...props,
+    },
+  );
+}
+
+export function useItemAssociatedEstimateTransactions(id, props) {
+  return useRequestQuery(
+    [t.ITEM_ASSOCIATED_WITH_ESTIMATES, id],
+    {
+      method: 'get',
+      url: `items/${id}/transactions/estimates`,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: [],
+      ...props,
+    },
+  );
+}
+
+export function useItemAssociatedReceiptTransactions(id, props) {
+  return useRequestQuery(
+    [t.ITEM_ASSOCIATED_WITH_RECEIPTS, id],
+    {
+      method: 'get',
+      url: `items/${id}/transactions/receipts`,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: [],
+      ...props,
+    },
+  );
+}
+export function useItemAssociatedBillTransactions(id, props) {
+  return useRequestQuery(
+    [t.ITEMS_ASSOCIATED_WITH_BILLS, id],
+    {
+      method: 'get',
+      url: `items/${id}/transactions/bills`,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: [],
+      ...props,
+    },
+  );
+}

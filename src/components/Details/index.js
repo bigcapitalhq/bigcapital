@@ -17,6 +17,7 @@ const useDetailsMenuContext = () => React.useContext(DetailsMenuContext);
 export function DetailsMenu({
   children,
   direction = DIRECTION.VERTICAL,
+  textAlign,
   minLabelSize,
   className,
 }) {
@@ -27,6 +28,7 @@ export function DetailsMenu({
         {
           'details-menu--vertical': direction === DIRECTION.VERTICAL,
           'details-menu--horizantal': direction === DIRECTION.HORIZANTAL,
+          [`align-${textAlign}`]: textAlign,
         },
         className,
       )}

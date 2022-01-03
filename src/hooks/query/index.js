@@ -28,5 +28,8 @@ export * from './UniversalSearch/UniversalSearch';
 export * from './GenericResource';
 export * from './jobs';
 export * from './misc';
-export * from './cashflowAccounts'
-export * from './roles'
+export * from './cashflowAccounts';
+export * from './roles';
+export * from './creditNote';
+export * from './vendorCredit';
+export * from './transactionsLocking';

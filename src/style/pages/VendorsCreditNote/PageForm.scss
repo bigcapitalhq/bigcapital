@@ -1,0 +1,49 @@
+body.page-vendor-credit-note-new,
+body.page-vendor-credit-note-edit {
+  .dashboard__footer {
+    display: none;
+  }
+}
+
+.dashboard__insider--vendor-credit-form {
+  padding-bottom: 64px;
+}
+
+.page-form--vendor-credit-note {
+  $self: '.page-form';
+
+  #{$self}__header {
+    display: flex;
+
+    &-fields {
+      flex: 1 0 0;
+    }
+
+    .bp3-label {
+      min-width: 150px;
+    }
+    .bp3-form-content {
+      width: 100%;
+    }
+
+    .bp3-form-group {
+      &.bp3-inline {
+        max-width: 450px;
+      }
+    }
+    .col--invoice-date {
+      max-width: 435px;
+    }
+  }
+  #{$self}__footer {
+    .form-group--note {
+      max-width: 450px;
+      width: 100%;
+
+      textarea {
+        width: 100%;
+        min-height: 60px;
+      }
+    }
+  }
+}

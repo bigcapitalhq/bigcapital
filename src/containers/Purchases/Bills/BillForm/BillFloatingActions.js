@@ -61,7 +61,7 @@ export default function BillFloatingActions() {
 
   // Handle submit as draft & continue editing button click.
   const handleSubmitDraftContinueEditingBtnClick = (event) => {
-    setSubmitPayload({ redirect: false, status: false, });
+    setSubmitPayload({ redirect: false, status: false });
     submitForm();
   };
 
@@ -149,6 +149,7 @@ export default function BillFloatingActions() {
             loading={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitOpenBtnClick}
+            style={{ minWidth: '85px' }}
             text={<T id={'save'} />}
           />
           <Popover

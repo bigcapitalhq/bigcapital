@@ -10,7 +10,7 @@
       flex-grow: 1;
 
       &__content{
-        margin: 5px 0;
+        margin: 2px 0;
       }
     }
   }
@@ -23,11 +23,15 @@
       flex-direction: row;
 
       &:not(:first-of-type){
-        margin-top: 16px;
+        margin-top: 12px;
       }
 
       &__label{
         padding-right: 10px;
+      }
+
+      &__content{
+        width: 100%;
       }
     }
   }

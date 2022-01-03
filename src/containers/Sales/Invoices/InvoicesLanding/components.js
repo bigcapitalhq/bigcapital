@@ -27,53 +27,59 @@ import {
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
+export function InvoiceStatus({ invoice }) {
+  return (
+    <Choose>
+      <Choose.When condition={invoice.is_fully_paid && invoice.is_delivered}>
+        <span className={'fully-paid-icon'}>
+          <Icon icon="small-tick" iconSize={18} />
+        </span>
+        <span class="fully-paid-text">
+          <T id={'paid'} />
+        </span>
+      </Choose.When>
+
+      <Choose.When condition={invoice.is_delivered}>
+        <Choose>
+          <Choose.When condition={invoice.is_overdue}>
+            <span className={'overdue-status'}>
+              {intl.get('overdue_by', { overdue: invoice.overdue_days })}
+            </span>
+          </Choose.When>
+          <Choose.Otherwise>
+            <span className={'due-status'}>
+              {intl.get('due_in', { due: invoice.remaining_days })}
+            </span>
+          </Choose.Otherwise>
+        </Choose>
+
+        <If condition={invoice.is_partially_paid}>
+          <span class="partial-paid">
+            {intl.get('day_partially_paid', {
+              due: formattedAmount(invoice.due_amount, invoice.currency_code),
+            })}
+          </span>
+          <ProgressBar
+            animate={false}
+            stripes={false}
+            intent={Intent.PRIMARY}
+            value={calculateStatus(invoice.balance_amount, invoice.balance)}
+          />
+        </If>
+      </Choose.When>
+      <Choose.Otherwise>
+        <Tag minimal={true} round={true}>
+          <T id={'draft'} />
+        </Tag>
+      </Choose.Otherwise>
+    </Choose>
+  );
+}
+
 export const statusAccessor = (row) => {
   return (
     <div className={'status-accessor'}>
-      <Choose>
-        <Choose.When condition={row.is_fully_paid && row.is_delivered}>
-          <span className={'fully-paid-icon'}>
-            <Icon icon="small-tick" iconSize={18} />
-          </span>
-          <span class="fully-paid-text">
-            <T id={'paid'} />
-          </span>
-        </Choose.When>
-
-        <Choose.When condition={row.is_delivered}>
-          <Choose>
-            <Choose.When condition={row.is_overdue}>
-              <span className={'overdue-status'}>
-                {intl.get('overdue_by', { overdue: row.overdue_days })}
-              </span>
-            </Choose.When>
-            <Choose.Otherwise>
-              <span className={'due-status'}>
-                {intl.get('due_in', { due: row.remaining_days })}
-              </span>
-            </Choose.Otherwise>
-          </Choose>
-
-          <If condition={row.is_partially_paid}>
-            <span class="partial-paid">
-              {intl.get('day_partially_paid', {
-                due: formattedAmount(row.due_amount, row.currency_code),
-              })}
-            </span>
-            <ProgressBar
-              animate={false}
-              stripes={false}
-              intent={Intent.PRIMARY}
-              value={calculateStatus(row.payment_amount, row.balance)}
-            />
-          </If>
-        </Choose.When>
-        <Choose.Otherwise>
-          <Tag minimal={true}>
-            <T id={'draft'} />
-          </Tag>
-        </Choose.Otherwise>
-      </Choose>
+      <InvoiceStatus invoice={row} />
     </div>
   );
 };
@@ -99,6 +105,18 @@ export const handleDeleteErrors = (errors) => {
       intent: Intent.DANGER,
     });
   }
+  if (
+    errors.find(
+      (error) => error.type === 'SALE_INVOICE_HAS_APPLIED_TO_CREDIT_NOTES',
+    )
+  ) {
+    AppToaster.show({
+      message: intl.get(
+        'invoices.error.you_couldn_t_delete_sale_invoice_that_has_reconciled',
+      ),
+      intent: Intent.DANGER,
+    });
+  }
 };
 
 export function ActionsMenu({
@@ -106,7 +124,7 @@ export function ActionsMenu({
     onEdit,
     onDeliver,
     onDelete,
-    onDrawer,
+    onConvert,
     onQuick,
     onViewDetails,
     onPrint,
@@ -126,6 +144,11 @@ export function ActionsMenu({
           icon={<Icon icon="pen-18" />}
           text={intl.get('edit_invoice')}
           onClick={safeCallback(onEdit, original)}
+        />
+        <MenuItem
+          icon={<Icon icon="convert_to" />}
+          text={intl.get('invoice.convert_to_credit_note')}
+          onClick={safeCallback(onConvert, original)}
         />
 
         <If condition={!original.is_delivered}>
@@ -153,6 +176,7 @@ export function ActionsMenu({
         />
       </Can>
       <Can I={SaleInvoiceAction.Delete} a={AbilitySubject.Invoice}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('delete_invoice')}
           intent={Intent.DANGER}

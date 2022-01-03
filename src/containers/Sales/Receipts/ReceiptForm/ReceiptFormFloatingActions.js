@@ -149,6 +149,7 @@ export default function ReceiptFormFloatingActions() {
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitCloseBtnClick}
+            style={{ minWidth: '85px' }}
             text={<T id={'save'} />}
           />
           <Popover

@@ -14,6 +14,8 @@ export const TABLES = {
   EXPENSES: 'expenses',
   CASHFLOW_ACCOUNTS: 'cashflow_accounts',
   CASHFLOW_Transactions: 'cashflow_transactions',
+  CREDIT_NOTES: 'credit_notes',
+  VENDOR_CREDITS: 'vendor_credits',
 };
 
 export const TABLE_SIZE = {

@@ -26,11 +26,11 @@ import {
  */
 export const PublishAccessor = (r) => {
   return r.is_published ? (
-    <Tag minimal={true}>
+    <Tag minimal={true} round={true}>
       <T id={'published'} />
     </Tag>
   ) : (
-    <Tag minimal={true} intent={Intent.WARNING}>
+    <Tag minimal={true} intent={Intent.WARNING} round={true}>
       <T id={'draft'} />
     </Tag>
   );
@@ -40,9 +40,9 @@ export const PublishAccessor = (r) => {
  * Type column accessor.
  */
 export const TypeAccessor = (row) => {
-  return row.type ? (
+  return row.formatted_type ? (
     <Tag minimal={true} round={true} intent={Intent.NONE}>
-      {intl.get(row.type)}
+      {row.formatted_type}
     </Tag>
   ) : (
     ''

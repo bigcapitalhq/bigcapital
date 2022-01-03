@@ -9,6 +9,8 @@ import { universalSearchCustomerBind } from '../Customers/CustomersUniversalSear
 import { universalSearchJournalBind } from '../Accounting/ManualJournalUniversalSearch';
 import { universalSearchAccountBind } from '../Accounts/AccountUniversalSearch';
 import { universalSearchVendorBind } from '../Vendors/VendorsUniversalSearch';
+import { universalSearchCreditNoteBind } from '../Sales/CreditNotes/CreditNoteUniversalSearch';
+import { universalSearchVendorCreditBind } from '../Purchases/CreditNotes/VendorCreditIUniversalSearchBind';
 
 // Universal search binds.
 export const universalSearchBinds = [
@@ -23,4 +25,6 @@ export const universalSearchBinds = [
   universalSearchCustomerBind,
   universalSearchVendorBind,
   universalSearchJournalBind,
+  universalSearchCreditNoteBind,
+  universalSearchVendorCreditBind,
 ];

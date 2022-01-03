@@ -5,7 +5,7 @@ export const useInventoryAdjustmentEntriesColumns = () =>
   React.useMemo(
     () => [
       {
-        Header: intl.get('product_and_service'),
+        Header: intl.get('inventory_adjustment.column.product'),
         accessor: 'item.name',
         width: 150,
         className: 'name',

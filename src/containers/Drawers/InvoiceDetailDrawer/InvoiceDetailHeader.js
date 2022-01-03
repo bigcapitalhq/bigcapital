@@ -1,12 +1,21 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { defaultTo } from 'lodash';
-import clsx from 'classnames';
+import styled from 'styled-components';
 
-import { DetailsMenu, DetailItem, FormatDate } from 'components';
+import {
+  ButtonLink,
+  Row,
+  Col,
+  DetailsMenu,
+  DetailItem,
+  FormatDate,
+  CommercialDocHeader,
+  CommercialDocTopHeader,
+  CustomerDrawerLink,
+} from 'components';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
-
-import InvoiceDrawerCls from 'style/components/Drawers/InvoiceDrawer.module.scss';
+import { InvoiceDetailsStatus } from './utils';
 
 /**
  * Invoice detail header.
@@ -14,44 +23,81 @@ import InvoiceDrawerCls from 'style/components/Drawers/InvoiceDrawer.module.scss
 export default function InvoiceDetailHeader() {
   const { invoice } = useInvoiceDetailDrawerContext();
 
-  return (
-    <div className={clsx(InvoiceDrawerCls.detail_panel_header)}>
-      <DetailsMenu>
-        <DetailItem label={intl.get('amount')}>
-          <h3 class="big-number">{invoice.formatted_amount}</h3>
-        </DetailItem>
-        <DetailItem
-          label={intl.get('invoice_no')}
-          children={invoice.invoice_no}
-        />
-        <DetailItem
-          label={intl.get('customer_name')}
-          children={invoice.customer?.display_name}
-        />
-        <DetailItem
-          label={intl.get('invoice_date')}
-          children={<FormatDate value={invoice.invoice_date} />}
-        />
-        <DetailItem
-          label={intl.get('due_date')}
-          children={<FormatDate value={invoice.due_date} />}
-        />
-      </DetailsMenu>
+  const handleCustomerLinkClick = () => {};
 
-      <DetailsMenu direction={'horizantal'} minLabelSize={'140px'}>
-        <DetailItem
-          label={intl.get('due_amount')}
-          children={invoice.formatted_due_amount}
-        />
-        <DetailItem
-          label={intl.get('reference')}
-          children={defaultTo(invoice.reference_no, '--')}
-        />
-        <DetailItem
-          label={intl.get('invoice.details.created_at')}
-          children={<FormatDate value={invoice.created_at} />}
-        />
-      </DetailsMenu>
-    </div>
+  return (
+    <CommercialDocHeader>
+      <CommercialDocTopHeader>
+        <DetailsMenu>
+          <AmountDetailItem label={intl.get('amount')}>
+            <h3 class="big-number">{invoice.formatted_amount}</h3>
+          </AmountDetailItem>
+
+          <StatusDetailItem label={''}>
+            <InvoiceDetailsStatus invoice={invoice} />
+          </StatusDetailItem>
+        </DetailsMenu>
+      </CommercialDocTopHeader>
+
+      <Row>
+        <Col xs={6}>
+          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+            <DetailItem label={intl.get('invoice_date')}>
+              <FormatDate value={invoice.invoice_date} />
+            </DetailItem>
+
+            <DetailItem label={intl.get('due_date')}>
+              <FormatDate value={invoice.due_date} />
+            </DetailItem>
+
+            <DetailItem label={intl.get('customer_name')}>
+              <CustomerDrawerLink customerId={invoice.customer_id}>
+                {invoice.customer?.display_name}
+              </CustomerDrawerLink>
+            </DetailItem>
+
+            <DetailItem label={intl.get('invoice.details.invoice_no')}>
+              {invoice.invoice_no}
+            </DetailItem>
+          </DetailsMenu>
+        </Col>
+
+        <Col xs={6}>
+          <DetailsMenu
+            direction={'horizantal'}
+            minLabelSize={'180px'}
+            textAlign={'right'}
+          >
+            <DetailItem label={intl.get('due_amount')}>
+              <strong>{invoice.formatted_due_amount}</strong>
+            </DetailItem>
+
+            <DetailItem label={intl.get('invoice.details.payment_amount')}>
+              <strong>{invoice.formatted_payment_amount}</strong>
+            </DetailItem>
+
+            <DetailItem
+              label={intl.get('reference')}
+              children={defaultTo(invoice.reference_no, '--')}
+            />
+            <DetailItem
+              label={intl.get('invoice.details.created_at')}
+              children={<FormatDate value={invoice.created_at} />}
+            />
+          </DetailsMenu>
+        </Col>
+      </Row>
+    </CommercialDocHeader>
   );
 }
+
+const StatusDetailItem = styled(DetailItem)`
+  width: 50%;
+  text-align: right;
+  position: relative;
+  top: -5px;
+`;
+
+const AmountDetailItem = styled(DetailItem)`
+  width: 50%;
+`;

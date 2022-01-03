@@ -6,6 +6,7 @@ import {
   AccountsSelectList,
   FieldRequiredHint,
   FormattedMessage as T,
+  CardFooterActions
 } from 'components';
 import { inputIntent } from 'utils';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from 'common/accountTypes';
@@ -135,14 +136,14 @@ export default function ItemForm() {
         )}
       </FastField>
 
-      <div className={'card__footer'}>
+      <CardFooterActions>
         <Button intent={Intent.PRIMARY} loading={isSubmitting} type="submit">
           <T id={'save'} />
         </Button>
         <Button onClick={handleCloseClick} disabled={isSubmitting}>
           <T id={'close'} />
         </Button>
-      </div>
+      </CardFooterActions>
     </Form>
   );
 }

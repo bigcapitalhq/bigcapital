@@ -1,7 +1,15 @@
 import React from 'react';
-import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
+import styled from 'styled-components';
 
-import { T, FormatNumber } from '../../../components';
+import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
+import {
+  TRDarkSingleLine,
+  TRDarkDoubleLines,
+  T,
+  FormatNumber,
+  Table,
+  TD,
+} from '../../../components';
 
 /**
  * Manual journal readonly details footer.
@@ -13,26 +21,41 @@ export default function ManualJournalDrawerFooter() {
 
   return (
     <div className="journal-drawer__content-footer">
-      <div class="total-lines">
-        <div class="total-lines__line total-lines__line--subtotal">
-          <div class="title">
+      <JournalTotalTable>
+        <TRDarkSingleLine>
+          <TDLabel>
             <T id={'manual_journal.details.subtotal'} />
-          </div>
-          <div class="debit">
+          </TDLabel>
+          <TDAmount textAlign={'right'}>
             <FormatNumber value={amount} />
-          </div>
-          <div class="credit">
+          </TDAmount>
+          <TDAmount textAlign={'right'}>
             <FormatNumber value={amount} />
-          </div>
-        </div>
-        <div class="total-lines__line total-lines__line--total">
-          <div class="title">
+          </TDAmount>
+        </TRDarkSingleLine>
+
+        <TRDarkDoubleLines>
+          <TDLabel>
             <T id={'manual_journal.details.total'} />
-          </div>
-          <div class="debit">{formatted_amount}</div>
-          <div class="credit">{formatted_amount}</div>
-        </div>
-      </div>
+          </TDLabel>
+          <TDAmount textAlign={'right'}>{formatted_amount}</TDAmount>
+          <TDAmount textAlign={'right'}>{formatted_amount}</TDAmount>
+        </TRDarkDoubleLines>
+      </JournalTotalTable>
     </div>
   );
 }
+
+const JournalTotalTable = styled(Table)`
+  font-weight: 600;
+  width: auto;
+  margin-left: auto;
+`;
+
+const TDLabel = styled(TD)`
+  width: 220px;
+`;
+
+const TDAmount = styled(TD)`
+  width: 155px;
+`;

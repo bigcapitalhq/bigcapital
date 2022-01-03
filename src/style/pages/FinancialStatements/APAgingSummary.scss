@@ -7,8 +7,8 @@
       .bigcapital-datatable{
         .tbody,
         .thead{
-          .tr .td.customer_name ~ .td,
-          .tr .th.customer_name ~ .th{
+          .tr .td.vendor_name ~ .td,
+          .tr .th.vendor_name ~ .th{
             text-align: right;
           }
         }

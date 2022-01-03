@@ -1,13 +1,12 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import { useCustomersTransactionsColumns } from './components';
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 
-import { defaultExpanderReducer, getColumnWidth } from 'utils';
+import { defaultExpanderReducer } from 'utils';
 
 /**
  * Customers transactions table.
@@ -16,19 +15,20 @@ export default function CustomersTransactionsTable({
   // #ownProps
   companyName,
 }) {
-  
-
+  // Customers transactions context.
   const {
     customersTransactions: { tableRows },
     isCustomersTransactionsLoading,
     query,
   } = useCustomersTransactionsContext();
 
+  // Customers transactions table columns.
   const columns = useCustomersTransactionsColumns();
 
-  const expandedRows = useMemo(() => defaultExpanderReducer(tableRows, 4), [
-    tableRows,
-  ]);
+  const expandedRows = useMemo(
+    () => defaultExpanderReducer(tableRows, 4),
+    [tableRows],
+  );
 
   const rowClassNames = (row) => {
     return [`row-type--${row.original.row_types}`];

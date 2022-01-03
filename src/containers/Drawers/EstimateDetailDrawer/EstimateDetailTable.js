@@ -1,12 +1,11 @@
 import React from 'react';
-import clsx from 'classnames';
 
-import { DataTable } from 'components';
+import { CommercialDocEntriesTable } from 'components';
+
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
-
 import { useEstimateReadonlyEntriesColumns } from './utils';
 
-import EstimateDetailsCls from 'style/components/Drawers/EstimateDetails.module.scss';
+import { TableStyle } from '../../../common';
 
 /**
  * Estimate detail table.
@@ -20,12 +19,10 @@ export default function EstimateDetailTable() {
   const columns = useEstimateReadonlyEntriesColumns();
 
   return (
-    <div className={clsx(EstimateDetailsCls.detail_panel_table)}>
-      <DataTable
-        columns={columns}
-        data={entries}
-        className={'table-constrant'}
-      />
-    </div>
+    <CommercialDocEntriesTable
+      columns={columns}
+      data={entries}
+      styleName={TableStyle.Constrant}
+    />
   );
 }

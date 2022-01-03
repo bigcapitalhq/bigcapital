@@ -16,6 +16,7 @@ export default function TableWrapper({ children }) {
       expandable,
       virtualizedRows,
       className,
+      styleName,
       size,
     },
   } = useContext(TableContext);
@@ -28,6 +29,7 @@ export default function TableWrapper({ children }) {
         'is-expandable': expandable,
         'is-loading': loading,
         'has-virtualized-rows': virtualizedRows,
+        [`table--${styleName}`]: styleName,
       })}
     >
       <ScrollSync>

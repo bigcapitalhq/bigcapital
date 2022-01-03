@@ -1,25 +1,24 @@
 import React from 'react';
-import clsx from 'classnames';
+import styled from 'styled-components';
 
-import { Card } from 'components';
+import { CommercialDocBox } from 'components';
 
-import ReceiptDetailActionBar from './ReceiptDetailActionBar';
 import ReceiptDetailHeader from './ReceiptDetailHeader';
 import ReceiptDetailTable from './ReceiptDetailTable';
-import { ReceiptDetailFooter } from './ReceiptDetailFooter';
-
-import ReceiptDrawerCls from 'style/components/Drawers/ReceiptDrawer.module.scss';
+import ReceiptDetailTableFooter from './ReceiptDetailTableFooter';
+import ReceiptDetailFooter from './ReceiptDetailFooter';
 
 export default function ReceiptDetailTab() {
   return (
-    <div className={clsx(ReceiptDrawerCls.detail_panel)}>
-      <ReceiptDetailActionBar />
-
-      <Card>
+    <ReceiptDetailsOverviewRoot>
+      <CommercialDocBox>
         <ReceiptDetailHeader />
         <ReceiptDetailTable />
+        <ReceiptDetailTableFooter />
         <ReceiptDetailFooter />
-      </Card>
-    </div>
+      </CommercialDocBox>
+    </ReceiptDetailsOverviewRoot>
   );
 }
+
+const ReceiptDetailsOverviewRoot = styled.div``;

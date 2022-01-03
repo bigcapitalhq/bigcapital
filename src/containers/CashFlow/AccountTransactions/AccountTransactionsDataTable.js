@@ -18,7 +18,6 @@ import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { handleCashFlowTransactionType } from './utils';
 
 import { compose } from 'utils';
-import { whenRtl, whenLtr } from 'utils/styled-components';
 
 /**
  * Account transactions data table.
@@ -129,8 +128,7 @@ const CashflowTransactionsTable = styled(DashboardConstrantTable)`
 
     .tbody-inner {
       .tr .td:not(:first-child) {
-        ${whenLtr(`border-left: 1px solid #e6e6e6;`)}
-        ${whenRtl(`border-right: 1px solid #e6e6e6;`)}
+        border-left: 1px solid #e6e6e6;
       }
     }
   }

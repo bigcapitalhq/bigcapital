@@ -43,7 +43,6 @@ function EstimatesList({
         <EstimatesViewTabs />
         <EstimatesDataTable />
       </DashboardPageContent>
-
     </EstimatesListProvider>
   );
 }

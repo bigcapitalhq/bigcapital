@@ -21,6 +21,10 @@ import {
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
+/**
+ * Receipts table row actions menu.
+ * @returns {React.JSX}
+ */
 export function ActionsMenu({
   payload: { onEdit, onDelete, onClose, onDrawer, onViewDetails, onPrint },
   row: { original: receipt },
@@ -56,6 +60,7 @@ export function ActionsMenu({
         />
       </Can>
       <Can I={SaleReceiptAction.Delete} a={AbilitySubject.Receipt}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('delete_receipt')}
           intent={Intent.DANGER}
@@ -88,13 +93,13 @@ export function StatusAccessor(receipt) {
   return (
     <Choose>
       <Choose.When condition={receipt.is_closed}>
-        <Tag minimal={true} intent={Intent.SUCCESS}>
+        <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
           <T id={'closed'} />
         </Tag>
       </Choose.When>
 
       <Choose.Otherwise>
-        <Tag minimal={true} intent={Intent.WARNING}>
+        <Tag minimal={true} intent={Intent.WARNING} round={true}>
           <T id={'draft'} />
         </Tag>
       </Choose.Otherwise>

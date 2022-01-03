@@ -11,21 +11,7 @@ import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogP
 import AllocateLandedCostFormContent from './AllocateLandedCostFormContent';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose, transformToForm } from 'utils';
-
-const defaultInitialItem = {
-  entry_id: '',
-  cost: '',
-};
-
-// Default form initial values.
-const defaultInitialValues = {
-  transaction_type: 'Bill',
-  transaction_id: '',
-  transaction_entry_id: '',
-  amount: '',
-  allocation_method: 'quantity',
-  items: [defaultInitialItem],
-};
+import { defaultInitialValues } from './utils';
 
 /**
  * Allocate landed cost form.
@@ -34,13 +20,8 @@ function AllocateLandedCostForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    dialogName,
-    bill,
-    billId,
-    createLandedCostMutate,
-    unallocatedCostAmount,
-  } = useAllocateLandedConstDialogContext();
+  const { dialogName, bill, billId, createLandedCostMutate } =
+    useAllocateLandedConstDialogContext();
 
   // Initial form values.
   const initialValues = {
@@ -51,7 +32,6 @@ function AllocateLandedCostForm({
       cost: '',
     })),
   };
-
   // Handle form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
     setSubmitting(true);
@@ -78,20 +58,33 @@ function AllocateLandedCostForm({
       setSubmitting(false);
       closeDialog(dialogName);
     };
-
     // Handle the request error.
-    const onError = () => {
+    const onError = (res) => {
+      const { errors } = res.response.data;
       setSubmitting(false);
-      AppToaster.show({
-        message: 'Something went wrong!',
-        intent: Intent.DANGER,
-      });
+
+      if (
+        errors.some(
+          (e) => e.type === 'COST_AMOUNT_BIGGER_THAN_UNALLOCATED_AMOUNT',
+        )
+      ) {
+        AppToaster.show({
+          message:
+            'The total located cost is bigger than the transaction line.',
+          intent: Intent.DANGER,
+        });
+      } else {
+        AppToaster.show({
+          message: 'Something went wrong!',
+          intent: Intent.DANGER,
+        });
+      }
     };
     createLandedCostMutate([billId, form]).then(onSuccess).catch(onError);
   };
 
   // Computed validation schema.
-  const validationSchema = AllocateLandedCostFormSchema(unallocatedCostAmount);
+  const validationSchema = AllocateLandedCostFormSchema();
 
   return (
     <Formik

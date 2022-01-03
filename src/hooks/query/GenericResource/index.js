@@ -26,7 +26,7 @@ export function useResourceData(type, query, props) {
 
 /**
  * Retrieve the resource url by the given resource type.
- * @param {string} type 
+ * @param {string} type
  * @returns {string}
  */
 function getResourceUrlFromType(type) {
@@ -42,6 +42,8 @@ function getResourceUrlFromType(type) {
     [RESOURCES_TYPES.VENDOR]: '/vendors',
     [RESOURCES_TYPES.MANUAL_JOURNAL]: '/manual-journals',
     [RESOURCES_TYPES.ACCOUNT]: '/accounts',
+    [RESOURCES_TYPES.CREDIT_NOTE]: '/sales/credit_notes',
+    [RESOURCES_TYPES.VENDOR_CREDIT]: '/purchases/vendor-credit',
   };
   return config[type] || '';
 }
@@ -81,7 +83,6 @@ const transformVendors = (response) => ({
   items: response.data.vendors,
 });
 
-
 const transformPaymentMades = (response) => ({
   items: response.data.bill_payments,
 });
@@ -104,7 +105,15 @@ const transformsEstimates = (response) => ({
 
 const transformAccounts = (response) => ({
   items: response.data.accounts,
-})
+});
+
+const transformCreditNotes = (response) => ({
+  items: response.data.credit_notes,
+});
+
+const transformVendorCredits = (response) => ({
+  items: response.data.vendor_credits,
+});
 
 /**
  * Detarmines the transformer based on the given resource type.
@@ -122,7 +131,9 @@ const transformResourceData = (type) => (response) => {
     [RESOURCES_TYPES.VENDOR]: transformVendors,
     [RESOURCES_TYPES.BILL]: transformBills,
     [RESOURCES_TYPES.MANUAL_JOURNAL]: transformManualJournals,
-    [RESOURCES_TYPES.ACCOUNT]: transformAccounts
+    [RESOURCES_TYPES.ACCOUNT]: transformAccounts,
+    [RESOURCES_TYPES.CREDIT_NOTE]: transformCreditNotes,
+    [RESOURCES_TYPES.VENDOR_CREDIT]: transformVendorCredits,
   };
   return {
     ...pairs[type](response),

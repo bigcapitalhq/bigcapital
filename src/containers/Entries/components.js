@@ -99,7 +99,7 @@ export function IndexTableCell({ row: { index } }) {
 const LandedCostHeaderCell = () => {
   return (
     <>
-      <T id={'Landed'} />
+      <T id={'landed'} />
       <Hint content={<T id={'item_entries.landed.hint'} />} />
     </>
   );

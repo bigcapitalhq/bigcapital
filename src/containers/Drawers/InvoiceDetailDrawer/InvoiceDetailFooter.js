@@ -1,40 +1,39 @@
 import React from 'react';
-import clsx from 'classnames';
 
-import { T, TotalLines, FormatNumber, TotalLine } from 'components';
-import InvoiceDrawerCls from 'style/components/Drawers/InvoiceDrawer.module.scss';
+import {
+  CommercialDocFooter,
+  T,
+  If,
+  DetailsMenu,
+  DetailItem,
+} from 'components';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 /**
  * Invoice details footer.
+ * @returns {React.JSX}
  */
 export function InvoiceDetailFooter() {
   const { invoice } = useInvoiceDetailDrawerContext();
 
+  if (!invoice.terms_conditions && !invoice.invoice_message) {
+    return null;
+  }
   return (
-    <div className={clsx(InvoiceDrawerCls.detail_panel_footer)}>
-      <TotalLines>
-        <TotalLine
-          title={<T id={'invoice.details.subtotal'} />}
-          value={<FormatNumber value={invoice.balance} />}
-          className={InvoiceDrawerCls.total_line_subtotal}
-        />
-        <TotalLine
-          title={<T id={'invoice.details.total'} />}
-          value={invoice.formatted_amount}
-          className={InvoiceDrawerCls.total_line_total}
-        />
-        <TotalLine
-          title={<T id={'invoice.details.payment_amount'} />}
-          value={invoice.formatted_payment_amount}
-          className={InvoiceDrawerCls.total_line_payment}
-        />
-        <TotalLine
-          title={<T id={'invoice.details.due_amount'} />}
-          value={invoice.formatted_due_amount}
-          className={InvoiceDrawerCls.total_line_dueAmount}
-        />
-      </TotalLines>
-    </div>
+    <CommercialDocFooter>
+      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+        <If condition={invoice.terms_conditions}>
+          <DetailItem label={<T id={'terms_conditions'} />}>
+            {invoice.terms_conditions}
+          </DetailItem>
+        </If>
+
+        <If condition={invoice.invoice_message}>
+          <DetailItem label={<T id={'invoice.details.invoice_message'} />}>
+            {invoice.invoice_message}
+          </DetailItem>
+        </If>
+      </DetailsMenu>
+    </CommercialDocFooter>
   );
 }

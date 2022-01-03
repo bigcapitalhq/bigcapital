@@ -8,6 +8,9 @@ const ItemDetailDrawerContext = React.createContext();
  * Item detail provider
  */
 function ItemDetailDrawerProvider({ itemId, ...props }) {
+  // transaction type payload.
+  const [value, setValue] = React.useState('invoices');
+
   // Fetches the given item detail.
   const { isLoading: isItemLoading, data: item } = useItem(itemId, {
     enabled: !!itemId,
@@ -18,6 +21,8 @@ function ItemDetailDrawerProvider({ itemId, ...props }) {
     item,
     itemId,
     isItemLoading,
+    value,
+    setValue,
   };
 
   return (

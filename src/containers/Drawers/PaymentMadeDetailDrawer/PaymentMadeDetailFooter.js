@@ -1,8 +1,13 @@
 import React from 'react';
-import clsx from 'classnames';
+import styled from 'styled-components';
 
-import { T, TotalLines, TotalLine } from 'components';
-import PaymentDrawerCls from './PaymentMadeDrawer.module.scss';
+import {
+  T,
+  TotalLines,
+  TotalLine,
+  TotalLineBorderStyle,
+  TotalLineTextStyle,
+} from 'components';
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
 
 /**
@@ -12,19 +17,26 @@ export default function PaymentMadeDetailFooter() {
   const { paymentMade } = usePaymentMadeDetailContext();
 
   return (
-    <div className={clsx(PaymentDrawerCls.detail_panel_footer)}>
-      <TotalLines>
+    <PaymentMadeFooterRoot>
+      <PaymentMadeTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'payment_made.details.subtotal'} />}
           value={paymentMade.amount}
-          className={clsx(PaymentDrawerCls.total_line_subtotal)}
+          borderStyle={TotalLineBorderStyle.SingleDark}
         />
         <TotalLine
           title={<T id={'payment_made.details.total'} />}
           value={paymentMade.formatted_amount}
-          className={clsx(PaymentDrawerCls.total_line_total)}
+          borderStyle={TotalLineBorderStyle.DoubleDark}
+          textStyle={TotalLineTextStyle.Bold}
         />
-      </TotalLines>
-    </div>
+      </PaymentMadeTotalLines>
+    </PaymentMadeFooterRoot>
   );
 }
+
+export const PaymentMadeFooterRoot = styled.div``;
+
+export const PaymentMadeTotalLines = styled(TotalLines)`
+  margin-left: auto;
+`;

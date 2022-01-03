@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { ErrorMessage, FastField } from 'formik';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { FormattedMessage as T } from 'components';
 import { ListSelect, FieldRequiredHint } from 'components';
@@ -242,14 +243,28 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
         )}
       </FastField>
 
-      <div className={'card__footer'}>
+      <CardFooterActions>
         <Button loading={isSubmitting} intent={Intent.PRIMARY} type="submit">
           <T id={'save'} />
         </Button>
         <Button onClick={handleCloseClick}>
           <T id={'close'} />
         </Button>
-      </div>
+      </CardFooterActions>
     </Form>
   );
 }
+
+const CardFooterActions = styled.div`
+  padding-top: 16px;
+  border-top: 1px solid #e0e7ea;
+  margin-top: 30px;
+
+  .bp3-button {
+    min-width: 70px;
+
+    + .bp3-button{
+      margin-left: 10px;
+    }
+  }
+`;

@@ -39,6 +39,8 @@ const CLASSES = {
   PAGE_FORM_ITEM: 'page-form--item',
   PAGE_FORM_MAKE_JOURNAL: 'page-form--make-journal-entries',
   PAGE_FORM_EXPENSE: 'page-form--expense',
+  PAGE_FORM_CREDIT_NOTE:'page-form--credit-note',
+  PAGE_FORM_VENDOR_CREDIT_NOTE:'page-form--vendor-credit-note',
 
   FORM_GROUP_LIST_SELECT: 'form-group--select-list',
 

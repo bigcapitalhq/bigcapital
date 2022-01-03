@@ -1,25 +1,28 @@
 import React from 'react';
-import clsx from 'classnames';
+import styled from 'styled-components';
 
-import { Card } from 'components';
+import { CommercialDocBox } from 'components';
 
-import PaymentReceiveActionsBar from './PaymentReceiveActionsBar';
 import PaymentReceiveDetailHeader from './PaymentReceiveDetailHeader';
 import PaymentReceiveDetailTable from './PaymentReceiveDetailTable';
+import PaymentReceiveDetailTableFooter from './PaymentReceiveDetailTableFooter';
 import PaymentReceiveDetailFooter from './PaymentReceiveDetailFooter';
 
-import PaymentDrawerCls from './PaymentReceiveDrawer.module.scss';
-
+/**
+ * Payment receive - overview panel.
+ * @returns {React.JSX}
+ */
 export default function PaymentReceiveDetailTab() {
   return (
-    <div className={clsx(PaymentDrawerCls.detail_panel)}>
-      <PaymentReceiveActionsBar />
-
-      <Card>
+    <PaymentReceiveDetailsTabPanelRoot>
+      <CommercialDocBox>
         <PaymentReceiveDetailHeader />
         <PaymentReceiveDetailTable />
+        <PaymentReceiveDetailTableFooter />
         <PaymentReceiveDetailFooter />
-      </Card>
-    </div>
+      </CommercialDocBox>
+    </PaymentReceiveDetailsTabPanelRoot>
   );
 }
+
+const PaymentReceiveDetailsTabPanelRoot = styled.div``;

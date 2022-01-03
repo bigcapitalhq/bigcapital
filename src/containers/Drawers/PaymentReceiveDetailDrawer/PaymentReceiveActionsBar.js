@@ -1,6 +1,5 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-
 import {
   Button,
   NavbarGroup,
@@ -8,7 +7,6 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
@@ -16,7 +14,13 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
-import { Can, Icon, FormattedMessage as T, MoreMenuItems } from 'components';
+import {
+  Can,
+  Icon,
+  FormattedMessage as T,
+  MoreMenuItems,
+  DrawerActionsBar,
+} from 'components';
 import {
   PaymentReceiveAction,
   AbilitySubject,
@@ -59,7 +63,7 @@ function PaymentReceiveActionsBar({
   };
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Can I={PaymentReceiveAction.Edit} a={AbilitySubject.PaymentReceive}>
           <Button
@@ -80,13 +84,18 @@ function PaymentReceiveActionsBar({
           />
           <NavbarDivider />
         </Can>
-        <MoreMenuItems
-          payload={{
-            onNotifyViaSMS: handleNotifyViaSMS,
-          }}
-        />
+        <Can
+          I={PaymentReceiveAction.NotifyBySms}
+          a={AbilitySubject.PaymentReceive}
+        >
+          <MoreMenuItems
+            payload={{
+              onNotifyViaSMS: handleNotifyViaSMS,
+            }}
+          />
+        </Can>
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 

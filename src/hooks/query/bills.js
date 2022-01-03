@@ -20,12 +20,19 @@ const commonInvalidateQueries = (queryClient) => {
   queryClient.invalidateQueries(t.ACCOUNTS);
   queryClient.invalidateQueries(t.ACCOUNT);
 
-  // Invalidate financial reports.
-  queryClient.invalidateQueries(t.FINANCIAL_REPORT);
-
   // Invalidate landed cost.
   queryClient.invalidateQueries(t.LANDED_COST);
   queryClient.invalidateQueries(t.LANDED_COST_TRANSACTION);
+
+  // Invalidate reconcile.
+  queryClient.invalidateQueries(t.RECONCILE_VENDOR_CREDIT);
+  queryClient.invalidateQueries(t.RECONCILE_VENDOR_CREDITS);
+
+  // Invalidate financial reports.
+  queryClient.invalidateQueries(t.FINANCIAL_REPORT);
+
+  // Invalidate items associated bills transactions.
+  queryClient.invalidateQueries(t.ITEMS_ASSOCIATED_WITH_BILLS);
 };
 
 /**
@@ -181,4 +188,19 @@ export function useRefreshBills() {
       queryClient.invalidateQueries(t.BILLS);
     },
   };
+}
+
+export function useBillPaymentTransactions(id, props) {
+  return useRequestQuery(
+    [t.BILLS_PAYMENT_TRANSACTIONS, id],
+    {
+      method: 'get',
+      url: `purchases/bills/${id}/payment-transactions`,
+    },
+    {
+      select: (res) => res.data.data,
+      defaultData: [],
+      ...props,
+    },
+  );
 }

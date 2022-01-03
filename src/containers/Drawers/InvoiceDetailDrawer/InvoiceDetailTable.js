@@ -1,30 +1,29 @@
 import React from 'react';
-import clsx from 'classnames';
 
-import { DataTable } from 'components';
+import { CommercialDocEntriesTable } from 'components';
 
 import { useInvoiceReadonlyEntriesColumns } from './utils';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
-import InvoiceDrawerCls from 'style/components/Drawers/InvoiceDrawer.module.scss';
+import { TableStyle } from '../../../common';
 
 /**
  * Invoice readonly details entries table columns.
  */
 export default function InvoiceDetailTable() {
+  // Invoice readonly entries table columns.
   const columns = useInvoiceReadonlyEntriesColumns();
 
+  // Invoice details drawer context.
   const {
     invoice: { entries },
   } = useInvoiceDetailDrawerContext();
 
   return (
-    <div className={clsx(InvoiceDrawerCls.detail_panel_table)}>
-      <DataTable
-        columns={columns}
-        data={entries}
-        className={'table-constrant'}
-      />
-    </div>
+    <CommercialDocEntriesTable
+      columns={columns}
+      data={entries}
+      styleName={TableStyle.Constrant}
+    />
   );
 }

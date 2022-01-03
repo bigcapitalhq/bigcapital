@@ -53,7 +53,7 @@ function CustomersListProvider({ tableState, tableStateChanged, ...props }) {
 
   return (
     <DashboardInsider
-      loading={isViewsLoading || isResourceMetaLoading || isCustomersLoading}
+      loading={isViewsLoading || isResourceMetaLoading }
       name={'customers-list'}
     >
       <CustomersListContext.Provider value={state} {...props} />

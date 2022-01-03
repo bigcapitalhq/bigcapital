@@ -1,6 +1,7 @@
 import React from 'react';
+import styled from 'styled-components';
 
-import { Card } from 'components';
+import { CommercialDocBox } from '../../../components';
 
 import ExpenseDrawerActionBar from './ExpenseDrawerActionBar';
 import ExpenseDrawerHeader from './ExpenseDrawerHeader';
@@ -12,16 +13,16 @@ import ExpenseDrawerFooter from './ExpenseDrawerFooter';
  */
 export default function ExpenseDrawerDetails() {
   return (
-    <div className={'expense-drawer'}>
+    <ExpenseDetailsRoot>
       <ExpenseDrawerActionBar />
 
-      <div className="expense-drawer__content">
-        <Card>
-          <ExpenseDrawerHeader />
-          <ExpenseDrawerTable />
-          <ExpenseDrawerFooter />
-        </Card>
-      </div>
-    </div>
+      <CommercialDocBox>
+        <ExpenseDrawerHeader />
+        <ExpenseDrawerTable />
+        <ExpenseDrawerFooter />
+      </CommercialDocBox>
+    </ExpenseDetailsRoot>
   );
 }
+
+const ExpenseDetailsRoot = styled.div``;

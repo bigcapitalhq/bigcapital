@@ -69,6 +69,7 @@ export default function PaymentReceiveFormFloatingActions() {
           intent={Intent.PRIMARY}
           type="submit"
           onClick={handleSubmitBtnClick}
+          style={{ minWidth: '85px' }}
           text={!isNewMode ? <T id={'edit'} /> : <T id={'save'} />}
         />
         <Popover

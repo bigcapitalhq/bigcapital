@@ -1,13 +1,12 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import { useVendorsTransactionsColumns } from './components';
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 
-import { defaultExpanderReducer, getColumnWidth } from 'utils';
+import { defaultExpanderReducer } from 'utils';
 
 /**
  * Vendors transactions table.
@@ -17,19 +16,20 @@ export default function VendorsTransactionsTable({
   // #ownProps
   companyName,
 }) {
-  
-
+  // Vendor transactions context.
   const {
     vendorsTransactions: { tableRows },
     isVendorsTransactionsLoading,
     query,
   } = useVendorsTransactionsContext();
 
+  // Retireve vendor transactions table columns.
   const columns = useVendorsTransactionsColumns();
 
-  const expandedRows = useMemo(() => defaultExpanderReducer(tableRows, 5), [
-    tableRows,
-  ]);
+  const expandedRows = useMemo(
+    () => defaultExpanderReducer(tableRows, 5),
+    [tableRows],
+  );
 
   const rowClassNames = (row) => {
     return [`row-type--${row.original.row_types}`];

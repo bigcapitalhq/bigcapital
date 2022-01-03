@@ -1,7 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
-import _, { isArray } from 'lodash';
 
 import {
   useCreateRolePermissionSchema,
@@ -10,7 +9,6 @@ import {
   useRolePermission,
 } from 'hooks/query';
 import PreferencesPageLoader from '../../../PreferencesPageLoader';
-import { transformToObject } from './utils';
 
 const RolesFormContext = React.createContext();
 
@@ -32,10 +30,12 @@ function RolesFormProvider({ roleId, ...props }) {
     isFetching: isPermissionsSchemaFetching,
   } = usePermissionsSchema();
 
-  const { data: role, isLoading: isPermissionLoading } =
-    useRolePermission(roleId, {
+  const { data: role, isLoading: isPermissionLoading } = useRolePermission(
+    roleId,
+    {
       enabled: !!roleId,
-    });
+    },
+  );
 
   // Detarmines whether the new or edit mode.
   const isNewMode = !roleId;
@@ -59,13 +59,11 @@ function RolesFormProvider({ roleId, ...props }) {
         CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_ROLES_FORM,
       )}
     >
-      <div className={classNames(CLASSES.CARD)}>
-        {isPermissionsSchemaLoading || isPermissionLoading ? (
-          <PreferencesPageLoader />
-        ) : (
-          <RolesFormContext.Provider value={provider} {...props} />
-        )}
-      </div>
+      {isPermissionsSchemaLoading || isPermissionLoading ? (
+        <PreferencesPageLoader />
+      ) : (
+        <RolesFormContext.Provider value={provider} {...props} />
+      )}
     </div>
   );
 }

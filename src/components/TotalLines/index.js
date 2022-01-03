@@ -1,23 +1,93 @@
 import React from 'react';
-import clsx from 'classnames';
+import styled from 'styled-components';
 
-import TotalLinesCls from './TotalLines.module.scss';
+export const TotalLineBorderStyle = {
+  SingleDark: 'SingleDark',
+  DoubleDark: 'DoubleDark',
+};
 
-export function TotalLines({ children, className }) {
+export const TotalLineTextStyle = {
+  Regular: 'Regular',
+  Bold: 'Bold',
+};
+
+export function TotalLines({
+  children,
+  amountColWidth,
+  labelColWidth,
+  className,
+}) {
   return (
-    <div className={clsx('total_lines', TotalLinesCls.total_lines, className)}>
+    <TotalLinesRoot
+      className={className}
+      amountColWidth={amountColWidth}
+      labelColWidth={labelColWidth}
+    >
       {children}
-    </div>
+    </TotalLinesRoot>
   );
 }
 
-export function TotalLine({ title, value, className }) {
+export function TotalLine({ title, value, borderStyle, textStyle, className }) {
   return (
-    <div
-      className={clsx('total_lines_line', TotalLinesCls.total_line, className)}
+    <TotalLineRoot
+      borderStyle={borderStyle}
+      textStyle={textStyle}
+      className={className}
     >
       <div class="title">{title}</div>
       <div class="amount">{value}</div>
-    </div>
+    </TotalLineRoot>
   );
 }
+
+export const TotalLinesRoot = styled.div`
+  display: table;
+
+  ${(props) =>
+    props.amountColWidth &&
+    `
+    .amount{
+      width: ${props.amountColWidth}
+    }
+  `}
+
+  ${(props) =>
+    props.labelColWidth &&
+    `
+    .title{
+      width: ${props.labelColWidth}
+    }
+  `}
+`;
+
+export const TotalLineRoot = styled.div`
+  display: table-row;
+
+  .amount,
+  .title {
+    display: table-cell;
+    padding: 8px;
+    border-bottom: 1px solid #d2dde2;
+
+    ${(props) =>
+      props.borderStyle === TotalLineBorderStyle.DoubleDark &&
+      `
+      border-bottom: 3px double #000;
+    `}
+    ${(props) =>
+      props.borderStyle === TotalLineBorderStyle.SingleDark &&
+      `
+      border-bottom: 1px double #000;
+    `}
+    ${(props) =>
+      props.textStyle === TotalLineTextStyle.Bold &&
+      `
+      font-weight: 600;
+    `}
+  }
+
+  .amount {
+    text-align: right;
+  }
+`;

@@ -31,7 +31,7 @@ function ManualJournalDrawerProvider({ manualJournalId, ...props }) {
     <DrawerLoading loading={isJournalLoading}>
       <DrawerHeaderContent
         name={'journal-drawer'}
-        title={intl.get('manual_journal_number', {
+        title={intl.get('manual_journal.drawer.title', {
           number: manualJournal?.journal_number,
         })}
       />

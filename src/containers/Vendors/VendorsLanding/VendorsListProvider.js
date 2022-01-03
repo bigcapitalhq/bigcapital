@@ -53,7 +53,7 @@ function VendorsListProvider({ tableState, tableStateChanged, ...props }) {
 
   return (
     <DashboardInsider
-      loading={isResourceMetaLoading || isVendorsLoading}
+      loading={isVendorsViewsLoading || isResourceMetaLoading}
       name={'vendors-list'}
     >
       <VendorsListContext.Provider value={provider} {...props} />

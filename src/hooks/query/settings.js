@@ -95,7 +95,7 @@ export function useSettingsReceipts(props) {
 export function useSettingsManualJournals(props) {
   return useSettingsQuery(
     [t.SETTING, t.SETTING_MANUAL_JOURNALS],
-    { group: 'sale_receipts' },
+    { group: 'manual_journals' },
     props,
   );
 }
@@ -119,6 +119,27 @@ export function useSettingCashFlow(props) {
   return useSettingsQuery(
     [t.SETTING, t.SETTING_CASHFLOW],
     { group: 'cashflow' },
+    props,
+  );
+}
+
+/**
+ * Retrieve credit notes settings.
+ */
+export function useSettingsCreditNotes(props) {
+  return useSettingsQuery(
+    [t.SETTING, t.SETTING_CREDIT_NOTES],
+    { group: 'credit_note' },
+    props,
+  );
+}
+/**
+ * Retrieve vendor credit settings.
+ */
+export function useSettingsVendorCredits(props) {
+  return useSettingsQuery(
+    [t.SETTING, t.SETTING_VENDOR_CREDITS],
+    { group: 'vendor_credit' },
     props,
   );
 }

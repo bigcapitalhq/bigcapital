@@ -12,12 +12,18 @@ import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogP
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
+/**
+ * Allocate landed cost floating actions.
+ * @returns {React.JSX}
+ */
 function AllocateLandedCostFloatingActions({
   // #withDialogActions
   closeDialog,
 }) {
   // Formik context.
   const { isSubmitting } = useFormikContext();
+
+  // Allocate landed cost dialog context.
   const { dialogName, costTransactionEntry, formattedUnallocatedCostAmount } =
     useAllocateLandedConstDialogContext();
 
@@ -27,7 +33,7 @@ function AllocateLandedCostFloatingActions({
   };
 
   return (
-    <DialogFooter>
+    <AllocateDialogFooter>
       <DialogFooterActions alignment={'left'}>
         {costTransactionEntry && (
           <UnallocatedAmount>
@@ -43,18 +49,22 @@ function AllocateLandedCostFloatingActions({
         </Button>
         <Button
           intent={Intent.PRIMARY}
-          style={{ minWidth: '100px' }}
+          style={{ minWidth: '95px' }}
           type="submit"
           loading={isSubmitting}
         >
           {<T id={'save'} />}
         </Button>
       </DialogFooterActions>
-    </DialogFooter>
+    </AllocateDialogFooter>
   );
 }
 
 export default compose(withDialogActions)(AllocateLandedCostFloatingActions);
+
+const AllocateDialogFooter = styled(DialogFooter)`
+  display: flex;
+`;
 
 const UnallocatedAmount = styled.div`
   color: #3f5278;

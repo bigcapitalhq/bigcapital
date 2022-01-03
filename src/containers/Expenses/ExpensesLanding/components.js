@@ -12,11 +12,13 @@ import {
   MenuDivider,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import clsx from 'classnames';
+
+import { CLASSES } from 'common/classes';
 import { ExpenseAction, AbilitySubject } from '../../../common/abilityOption';
 import {
   FormatDateCell,
   FormattedMessage as T,
-  Money,
   Icon,
   If,
   Can,
@@ -73,6 +75,7 @@ export function ActionsMenu({
         />
       </Can>
       <Can I={ExpenseAction.Delete} a={AbilitySubject.Expense}>
+        <MenuDivider />
         <MenuItem
           icon={<Icon icon="trash-16" iconSize={16} />}
           text={intl.get('delete_expense')}
@@ -99,22 +102,15 @@ export function ActionsCell(props) {
 }
 
 /**
- * Total amount accessor.
- */
-export function TotalAmountAccessor(row) {
-  return <Money amount={row.total_amount} currency={row.currency_code} />;
-}
-
-/**
  * Publish accessor.
  */
 export function PublishAccessor(row) {
   return row.is_published ? (
-    <Tag minimal={true}>
+    <Tag round={true} minimal={true}>
       <T id={'published'} />
     </Tag>
   ) : (
-    <Tag minimal={true} intent={Intent.WARNING}>
+    <Tag round={true} minimal={true} intent={Intent.WARNING}>
       <T id={'draft'} />
     </Tag>
   );
@@ -149,11 +145,12 @@ export function useExpensesTableColumns() {
       {
         id: 'amount',
         Header: intl.get('full_amount'),
-        accessor: TotalAmountAccessor,
+        accessor: 'formatted_amount',
         className: 'amount',
         align: 'right',
         width: 150,
         clickable: true,
+        className: clsx(CLASSES.FONT_BOLD),
       },
       {
         id: 'payment_account',

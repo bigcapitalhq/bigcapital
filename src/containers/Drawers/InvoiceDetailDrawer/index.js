@@ -21,7 +21,7 @@ function InvoiceDetailDrawer({
     <Drawer
       isOpen={isOpen}
       name={name}
-      style={{ minWidth: '700px', maxWidth: '900px' }}
+      style={{ minWidth: '700px', maxWidth: '1000px' }}
       size={'65%'}
     >
       <DrawerSuspense>

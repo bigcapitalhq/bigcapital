@@ -22,7 +22,7 @@ function ExpenseDrawer({
     <Drawer
       isOpen={isOpen}
       name={name}
-      title={intl.get('expense')}
+      title={intl.get('expense.drawer.title')}
       size={'65%'}
       style={{ minWidth: '700px', maxWidth: '900px' }}
     >

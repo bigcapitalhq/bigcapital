@@ -1,6 +1,8 @@
 //  Roles Form page
 //---------------------------------
 .preferences-page__inside-content--roles-form {
+  padding-bottom: 60px;
+
   .card {
     padding: 25px;
 
@@ -20,16 +22,20 @@
   }
 
   .bp3-form-group {
-    max-width: 500px;
+    max-width: 600px;
     margin-bottom: 14px;
 
     &.bp3-inline {
       .bp3-label {
-        min-width: 100px;
+        min-width: 150px;
       }
     }
     .bp3-form-content {
       width: 100%;
+    }
+
+    &:last-of-type{
+      margin-bottom: 0;
     }
   }
   .form-group--description {
@@ -37,22 +43,6 @@
       width: 100%;
       min-width: 100%;
       font-size: 14px;
-    }
-  }
-  .bp3-control.bp3-checkbox {
-    .bp3-control-indicator {
-      border: 1px solid #c2c2c2;
-      cursor: auto;
-
-      &,
-      &:hover {
-        height: 15px;
-        width: 15px;
-      }
-      &:before {
-        width: 15px;
-        height: 15px;
-      }
     }
   }
 }

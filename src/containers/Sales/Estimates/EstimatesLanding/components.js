@@ -24,25 +24,28 @@ import { safeCallback } from 'utils';
  */
 export const statusAccessor = (row) => (
   <Choose>
-    <Choose.When condition={row.is_delivered && row.is_approved}>
-      <Tag minimal={true} intent={Intent.SUCCESS}>
+    <Choose.When condition={row.is_approved}>
+      <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
         <T id={'approved'} />
       </Tag>
     </Choose.When>
-    <Choose.When condition={row.is_delivered && row.is_rejected}>
-      <Tag minimal={true} intent={Intent.DANGER}>
+    <Choose.When condition={row.is_rejected}>
+      <Tag minimal={true} intent={Intent.DANGER} round={true}>
         <T id={'rejected'} />
       </Tag>
     </Choose.When>
-    <Choose.When
-      condition={row.is_delivered && !row.is_rejected && !row.is_approved}
-    >
-      <Tag minimal={true} intent={Intent.SUCCESS}>
+    <Choose.When condition={row.is_expired}>
+      <Tag minimal={true} intent={Intent.WARNING} round={true}>
+        <T id={'estimate.status.expired'} />
+      </Tag>
+    </Choose.When>
+    <Choose.When condition={row.is_delivered}>
+      <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
         <T id={'delivered'} />
       </Tag>
     </Choose.When>
     <Choose.Otherwise>
-      <Tag minimal={true}>
+      <Tag minimal={true} round={true}>
         <T id={'draft'} />
       </Tag>
     </Choose.Otherwise>
@@ -134,6 +137,7 @@ export function ActionsMenu({
         />
       </Can>
       <Can I={SaleEstimateAction.Delete} a={AbilitySubject.Estimate}>
+        <MenuDivider />
         <MenuItem
           text={intl.get('delete_estimate')}
           intent={Intent.DANGER}
