@@ -11,8 +11,6 @@ import FinancialLoadingBar from '../FinancialLoadingBar';
  * Retrieve trial balance sheet table columns.
  */
 export const useTrialBalanceTableColumns = () => {
-  
-
   // Trial balance sheet context.
   const {
     trialBalanceSheet: { tableRows },
@@ -24,7 +22,7 @@ export const useTrialBalanceTableColumns = () => {
         Header: intl.get('account_name'),
         accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'name',
-        width: 180,
+        width: 350,
         textOverview: true,
       },
       {
@@ -35,12 +33,14 @@ export const useTrialBalanceTableColumns = () => {
         width: getColumnWidth(tableRows, `credit`, {
           minWidth: 80,
         }),
+        textOverview: true,
       },
       {
         Header: intl.get('debit'),
         Cell: CellTextSpan,
         accessor: 'formatted_debit',
         width: getColumnWidth(tableRows, `debit`, { minWidth: 80 }),
+        textOverview: true,
       },
       {
         Header: intl.get('balance'),
@@ -50,6 +50,7 @@ export const useTrialBalanceTableColumns = () => {
         width: getColumnWidth(tableRows, `balance`, {
           minWidth: 80,
         }),
+        textOverview: true,
       },
     ],
     [tableRows],
