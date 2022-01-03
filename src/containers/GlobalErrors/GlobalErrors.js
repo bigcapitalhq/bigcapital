@@ -43,7 +43,7 @@ function GlobalErrors({
   if (globalErrors.access_denied) {
     toastKeySomethingWrong = AppToaster.show(
       {
-        message: 'You do not have permissions to access this page.',
+        message: intl.get('global_error.you_dont_have_permissions'),
         intent: Intent.DANGER,
         onDismiss: () => {
           globalErrorsSet({ access_denied: false });
@@ -53,11 +53,10 @@ function GlobalErrors({
     );
   }
   if (globalErrors.transactionsLocked) {
-    const lockedToDate =
-      globalErrors.transactionsLocked.formatted_locked_to_date;
-
     AppToaster.show({
-      message: `Transactions before ${lockedToDate} has been locked. Hence action cannot be performed.`,
+      message: intl.get('global_error.transactions_locked', {
+        lockedToDate: globalErrors.transactionsLocked.formatted_locked_to_date,
+      }),
       intent: Intent.DANGER,
       onDismiss: () => {
         globalErrorsSet({ transactionsLocked: false });
@@ -66,7 +65,7 @@ function GlobalErrors({
   }
   if (globalErrors.userInactive) {
     AppToaster.show({
-      message: 'The authorized user is inactive.',
+      message: intl.get('global_error.authorized_user_inactive'),
       intent: Intent.DANGER,
       onDismiss: () => {
         globalErrorsSet({ userInactive: false });
