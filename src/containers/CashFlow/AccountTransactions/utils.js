@@ -79,6 +79,10 @@ export const handleCashFlowTransactionType = (reference, openDrawer) => {
       return openDrawer('refund-vendor-detail-drawer', {
         refundTransactionId: reference.reference_id,
       });
+    case 'InventoryAdjustment':
+      return openDrawer('inventory-adjustment-drawer', {
+        inventoryId: reference.reference_id,
+      });
 
     default:
       return openDrawer('cashflow-transaction-drawer', {
