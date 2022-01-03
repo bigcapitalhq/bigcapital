@@ -17,6 +17,7 @@ All notable changes to Bigcapital server-side will be in this file.
 
 ### Changed 
 - Dashboard meta boot and authenticated user request query.
+- Optimize Arabic localization.
 
 ## [1.4.0] - 11-09-2021
 
