@@ -1753,5 +1753,9 @@
   "payment_receive.drawer.title": "تفاصيل سند الزبون ({number})",
   "payment_made.drawer.title": "تفاصيل سند المورد {number}",
   "manual_journal.drawer.title": "تفاصيل قيد يدوي ({number})",
-  "expense.drawer.title": " تفاصيل المصروف"
+  "expense.drawer.title": " تفاصيل المصروف",
+
+  "global_error.you_dont_have_permissions": "ليس لديك صلاحية الوصول إلى هذه الصفحة.",
+  "global_error.transactions_locked": "تم قفل المعاملات التي تمت قبل {lockedToDate}. ومن ثم لا يمكن القيام بأي عمل.",
+  "global_error.authorized_user_inactive": "المستخدم المصرح له تم تعطيلة."
 }
