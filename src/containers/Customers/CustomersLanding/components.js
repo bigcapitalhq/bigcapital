@@ -1,5 +1,13 @@
 import React, { useMemo } from 'react';
-import { Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
+import {
+  Menu,
+  MenuItem,
+  MenuDivider,
+  Intent,
+  Tooltip,
+  Position,
+  Classes,
+} from '@blueprintjs/core';
 import clsx from 'classnames';
 
 import intl from 'react-intl-universal';
@@ -79,7 +87,7 @@ export function ActionsMenu({
  * Phone number accessor.
  */
 export function PhoneNumberAccessor(row) {
-  return <div className={'work_phone'}>{row.work_phone}</div>;
+  return <div className={'work_phone'}>{row.personal_phone}</div>;
 }
 
 /**
@@ -87,6 +95,24 @@ export function PhoneNumberAccessor(row) {
  */
 export function BalanceAccessor(row) {
   return <Money amount={row.closing_balance} currency={row.currency_code} />;
+}
+
+/**
+ * Note column accessor.
+ */
+export function NoteAccessor(row) {
+  return (
+    <If condition={row.note}>
+      <Tooltip
+        className={Classes.TOOLTIP_INDICATOR}
+        content={row.note}
+        position={Position.LEFT_TOP}
+        hoverOpenDelay={50}
+      >
+        <Icon icon={'file-alt'} iconSize={16} />
+      </Tooltip>
+    </If>
+  );
 }
 
 /**
@@ -123,10 +149,18 @@ export function useCustomersTableColumns() {
       },
       {
         id: 'work_phone',
-        Header: intl.get('work_phone'),
+        Header: intl.get('phone_number'),
         accessor: PhoneNumberAccessor,
         className: 'phone_number',
         width: 100,
+        clickable: true,
+      },
+      {
+        id: 'note',
+        Header: intl.get('note'),
+        accessor: NoteAccessor,
+        disableSortBy: true,
+        width: 85,
         clickable: true,
       },
       {
