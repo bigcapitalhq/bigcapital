@@ -6,7 +6,9 @@ import {
   MenuItem,
   MenuDivider,
   Position,
+  Tooltip,
   Intent,
+  Classes,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
@@ -115,6 +117,24 @@ export function BalanceAccessor({ closing_balance, currency_code }) {
 }
 
 /**
+ * Note column accessor.
+ */
+export function NoteAccessor(row) {
+  return (
+    <If condition={row.note}>
+      <Tooltip
+        className={Classes.TOOLTIP_INDICATOR}
+        content={row.note}
+        position={Position.LEFT_TOP}
+        hoverOpenDelay={50}
+      >
+        <Icon icon={'file-alt'} iconSize={16} />
+      </Tooltip>
+    </If>
+  );
+}
+
+/**
  * Retrieve the vendors table columns.
  */
 export function useVendorsTableColumns() {
@@ -148,10 +168,18 @@ export function useVendorsTableColumns() {
       },
       {
         id: 'work_phone',
-        Header: intl.get('work_phone'),
+        Header: intl.get('phone_number'),
         accessor: PhoneNumberAccessor,
         className: 'work_phone',
         width: 100,
+        clickable: true,
+      },
+      {
+        id: 'note',
+        Header: intl.get('note'),
+        accessor: NoteAccessor,
+        disableSortBy: true,
+        width: 85,
         clickable: true,
       },
       {
