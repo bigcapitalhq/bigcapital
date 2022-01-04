@@ -39,7 +39,7 @@ function VendorFormAfterPrimarySection() {
             {({ field, meta: { error, touched } }) => (
               <InputGroup
                 intent={inputIntent({ error, touched })}
-                placeholder={intl.get('personal')}
+                placeholder={intl.get('work')}
                 {...field}
               />
             )}
@@ -48,7 +48,7 @@ function VendorFormAfterPrimarySection() {
             {({ field, meta: { error, touched } }) => (
               <InputGroup
                 intent={inputIntent({ error, touched })}
-                placeholder={intl.get('work')}
+                placeholder={intl.get('mobile')}
                 {...field}
               />
             )}
