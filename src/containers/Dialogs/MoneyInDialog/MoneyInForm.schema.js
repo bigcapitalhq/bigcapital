@@ -14,7 +14,7 @@ const Schema = Yup.object().shape({
     .min(3)
     .max(DATATYPES_LENGTH.TEXT)
     .label(intl.get('description')),
-  published: Yup.boolean(),
+    publish: Yup.boolean(),
 });
 
 export const CreateMoneyInFormSchema = Schema;
