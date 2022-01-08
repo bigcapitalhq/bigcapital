@@ -73,7 +73,7 @@ function MoneyOutForm({
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
     const form = {
       ...omit(values, ['currency_code']),
-      published: submitPayload.publish,
+      published: true,
     };
     setSubmitting(true);
     createCashflowTransactionMutate(form)
