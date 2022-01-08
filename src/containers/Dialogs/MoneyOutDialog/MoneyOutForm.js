@@ -29,7 +29,7 @@ const defaultInitialValues = {
   cashflow_account_id: '',
   credit_account_id: '',
   description: '',
-  published: '',
+  publish: '',
 };
 
 function MoneyOutForm({
@@ -73,7 +73,7 @@ function MoneyOutForm({
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
     const form = {
       ...omit(values, ['currency_code']),
-      published: submitPayload.publish,
+      publish: true,
     };
     setSubmitting(true);
     createCashflowTransactionMutate(form)
