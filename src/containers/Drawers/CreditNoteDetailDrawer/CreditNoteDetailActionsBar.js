@@ -65,6 +65,11 @@ function CreditNoteDetailActionsBar({
     openDialog('reconcile-credit-note', { creditNoteId });
   };
 
+  // Handle print credit note.
+  const handlePrintCreditNote = () => {
+    openDialog('credit-note-pdf-preview', { creditNoteId });
+  };
+
   return (
     <DrawerActionsBar>
       <NavbarGroup>
@@ -87,6 +92,14 @@ function CreditNoteDetailActionsBar({
             />
             <NavbarDivider />
           </If>
+        </Can>
+        <Can I={CreditNoteAction.View} a={AbilitySubject.CreditNote}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="print-16" />}
+            text={<T id={'print'} />}
+            onClick={handlePrintCreditNote}
+          />
         </Can>
         <Can I={CreditNoteAction.Delete} a={AbilitySubject.CreditNote}>
           <Button

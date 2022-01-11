@@ -62,6 +62,11 @@ function PaymentReceiveActionsBar({
     openDialog('notify-payment-via-sms', { paymentReceiveId });
   };
 
+  // Handle print payment receive.
+  const handlePrintPaymentReceive = () => {
+    openDialog('payment-pdf-preview', { paymentReceiveId });
+  };
+
   return (
     <DrawerActionsBar>
       <NavbarGroup>
@@ -73,6 +78,14 @@ function PaymentReceiveActionsBar({
             onClick={handleEditPaymentReceive}
           />
           <NavbarDivider />
+        </Can>
+        <Can I={PaymentReceiveAction.View} a={AbilitySubject.PaymentReceive}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="print-16" />}
+            text={<T id={'print'} />}
+            onClick={handlePrintPaymentReceive}
+          />
         </Can>
         <Can I={PaymentReceiveAction.Delete} a={AbilitySubject.PaymentReceive}>
           <Button
