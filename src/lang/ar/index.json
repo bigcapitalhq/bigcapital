@@ -1757,5 +1757,7 @@
 
   "global_error.you_dont_have_permissions": "ليس لديك صلاحية الوصول إلى هذه الصفحة.",
   "global_error.transactions_locked": "تم قفل المعاملات التي تمت قبل {lockedToDate}. ومن ثم لا يمكن القيام بأي عمل.",
-  "global_error.authorized_user_inactive": "المستخدم المصرح له تم تعطيلة."
+  "global_error.authorized_user_inactive": "المستخدم المصرح له تم تعطيلة.",
+  "credit_note_preview.dialog.title":"معاينة إشعار الدائن PDF",
+  "payment_receive_preview.dialog.title":"معاينة سند الزبون PDF"
 }
