@@ -67,15 +67,15 @@ function VendorsTable({
 
   // Handle cancel/confirm inactive.
   const handleInactiveVendor = ({ id, contact_service }) => {
-    openAlert('contact-inactivate', {
-      contactId: id,
+    openAlert('vendor-inactivate', {
+      vendorId: id,
       service: contact_service,
     });
   };
 
-  // Handle cancel/confirm  activate.
+  // Handle cancel/confirm activate.
   const handleActivateVendor = ({ id, contact_service }) => {
-    openAlert('contact-activate', { contactId: id, service: contact_service });
+    openAlert('vendor-activate', { vendorId: id, service: contact_service });
   };
 
   // Handle click delete vendor.

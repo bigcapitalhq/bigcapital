@@ -3,11 +3,11 @@ import React from 'react';
 const CustomerDeleteAlert = React.lazy(() =>
   import('../Alerts/Customers/CustomerDeleteAlert'),
 );
-const ContactActivateAlert = React.lazy(() =>
-  import('../Alerts/Contacts/ContactActivateAlert'),
+const CustomerActivateAlert = React.lazy(() =>
+  import('../Alerts/Customers/CustomerActivateAlert'),
 );
-const ContactInactivateAlert = React.lazy(() =>
-  import('../Alerts/Contacts/ContactInactivateAlert'),
+const CustomerInactivateAlert = React.lazy(() =>
+  import('../Alerts/Customers/CustomerInactivateAlert'),
 );
 
 /**
@@ -15,6 +15,6 @@ const ContactInactivateAlert = React.lazy(() =>
  */
 export default [
   { name: 'customer-delete', component: CustomerDeleteAlert },
-  { name: 'contact-activate', component: ContactActivateAlert },
-  { name: 'contact-inactivate', component: ContactInactivateAlert },
+  { name: 'customer-activate', component: CustomerActivateAlert },
+  { name: 'customer-inactivate', component: CustomerInactivateAlert },
 ];

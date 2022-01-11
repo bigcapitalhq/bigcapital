@@ -1734,10 +1734,22 @@
   "payment_made.drawer.title": "Payment made details {number}",
   "manual_journal.drawer.title": "Manual journal details ({number})",
   "expense.drawer.title": "Expense details",
-
   "global_error.you_dont_have_permissions": "You do not have permissions to access this page.",
   "global_error.transactions_locked": "Transactions before {lockedToDate} has been locked. Hence action cannot be performed.",
   "global_error.authorized_user_inactive": "The authorized user is inactive.",
+
+  "the_vendor_has_been_inactivated_successfully": "The contact has been inactivated successfully.",
+
+  "vendor.alert.activated_message": "The vendor has been activated successfully.",
+  "vendor.alert.are_you_sure_want_to_inactivate_this_vendor":"Are you sure want to inactivate this vendor? You will to able to activate it later.",
+  "vendor.alert.inactivated_message": "The vendor has been inactivated successfully.",
+  "vendor.alert.are_you_sure_want_to_activate_this_vendor": "Are you sure want to activate this vendor? You will to able to inactivate it later.",
+  
+  "customer.alert.activated_message":"The customer has been activated successfully.",
+  "customer.alert.are_you_sure_want_to_activate_this_customer": "Are you sure want to activate this customer? You will to able to inactivate it later.",
+  "customer.alert.inactivated_message": "The customer has been inactivated successfully.",
+  "customer.alert.are_you_sure_want_to_inactivate_this_customer":"Are you sure want to inactivate this customer? You will to able to activate it later.",
+
   "credit_note_preview.dialog.title":"Credit Note PDF Preview",
   "payment_receive_preview.dialog.title":"Payment Receive PDF Preview"
 }
