@@ -16,7 +16,7 @@ const PaymentReceivesListContext = createContext();
  */
 function PaymentReceivesListProvider({ query, tableStateChanged, ...props }) {
   // Fetch payment receives resource views and fields.
-  const { data: paymentReceivesViews, isFetching: isViewsLoading } =
+  const { data: paymentReceivesViews, isLoading: isViewsLoading } =
     useResourceViews('payment_receives');
 
   // Fetch the payment receives resource fields.
