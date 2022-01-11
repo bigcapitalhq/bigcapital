@@ -4,7 +4,8 @@ import { CommercialDocBox } from 'components';
 
 import PaymentMadeDetailHeader from './PaymentMadeDetailHeader';
 import PaymentMadeDetailTable from './PaymentMadeDetailTable';
-import PaymentMadeDetailFooter from './PaymentMadeDetailFooter';
+import PaymentMadeDetailTableFooter from './PaymentMadeDetailTableFooter';
+import { PaymentMadeDetailFooter } from './PaymentMadeDetailFooter';
 
 /**
  * Payment made detail tab.
@@ -15,6 +16,7 @@ export default function PaymentMadeDetailTab() {
     <CommercialDocBox>
       <PaymentMadeDetailHeader />
       <PaymentMadeDetailTable />
+      <PaymentMadeDetailTableFooter />
       <PaymentMadeDetailFooter />
     </CommercialDocBox>
   );

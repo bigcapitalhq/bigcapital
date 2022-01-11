@@ -89,15 +89,17 @@ function CustomersTable({
 
   // Handle cancel/confirm inactive.
   const handleInactiveCustomer = ({ id, contact_service }) => {
-    openAlert('contact-inactivate', {
-      contactId: id,
-      service: contact_service,
+    openAlert('customer-inactivate', {
+      customerId: id,
     });
   };
 
   // Handle cancel/confirm  activate.
   const handleActivateCustomer = ({ id, contact_service }) => {
-    openAlert('contact-activate', { contactId: id, service: contact_service });
+    openAlert('customer-activate', {
+      customerId: id,
+      service: contact_service,
+    });
   };
 
   // Handle view detail contact.

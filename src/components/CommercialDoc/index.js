@@ -21,5 +21,5 @@ export const CommercialDocEntriesTable = styled(DataTable)`
 `;
 
 export const CommercialDocFooter = styled.div`
-  margin-top: 25px;
+  margin-top: 28px;
 `;
