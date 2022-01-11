@@ -43,6 +43,12 @@ export default function CreditNoteDetailHeader() {
         <Col xs={6}>
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem
+              label={intl.get('credit_note.drawer.label_credit_note_date')}
+            >
+              <FormatDate value={creditNote.formatted_credit_note_date} />
+            </DetailItem>
+
+            <DetailItem
               label={intl.get('credit_note.drawer.label_credit_note_no')}
             >
               {defaultTo(creditNote.credit_note_number, '-')}
@@ -52,12 +58,6 @@ export default function CreditNoteDetailHeader() {
               <CustomerDrawerLink customerId={creditNote.customer_id}>
                 {creditNote.customer?.display_name}
               </CustomerDrawerLink>
-            </DetailItem>
-
-            <DetailItem
-              label={intl.get('credit_note.drawer.label_credit_note_date')}
-            >
-              <FormatDate value={creditNote.formatted_credit_note_date} />
             </DetailItem>
           </DetailsMenu>
         </Col>
@@ -77,11 +77,6 @@ export default function CreditNoteDetailHeader() {
               label={intl.get('reference')}
               children={defaultTo(creditNote.reference_no, '-')}
             />
-            <DetailItem
-              label={intl.get('note')}
-              children={defaultTo(creditNote.note, '-')}
-            />
-
             <DetailItem
               label={<T id={'credit_note.drawer.label_created_at'} />}
               children={<FormatDate value={creditNote.created_at} />}

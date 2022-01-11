@@ -5,6 +5,7 @@ import { CommercialDocBox } from 'components';
 import VendorCreditDetailHeader from './VendorCreditDetailHeader';
 import VendorCreditDetailTable from './VendorCreditDetailTable';
 import VendorCreditDetailDrawerFooter from './VendorCreditDetailDrawerFooter';
+import { VendorCreditDetailFooter } from './VendorCreditDetailFooter';
 
 /**
  * Vendor credit details panel.
@@ -16,6 +17,7 @@ export default function VendorCreditDetailPanel() {
       <VendorCreditDetailHeader />
       <VendorCreditDetailTable />
       <VendorCreditDetailDrawerFooter />
+      <VendorCreditDetailFooter />
     </CommercialDocBox>
   );
 }

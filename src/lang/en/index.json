@@ -1193,6 +1193,7 @@
   "payment_made.details.payment_number": "Payment #",
   "payment_made.details.subtotal": "Subtotal",
   "payment_made.details.total": "TOTAL",
+  "payment_made.details.statement": "Statement",
   "payment_receive.details.payment_number": "Payment #",
   "payment_receive.details.total": "TOTAL",
   "payment_receive.details.subtotal": "Subtotal",

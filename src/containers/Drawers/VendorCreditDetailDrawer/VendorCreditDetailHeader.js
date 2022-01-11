@@ -39,6 +39,11 @@ export default function VendorCreditDetailHeader() {
         <Col xs={6}>
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem
+              label={intl.get('vendor_credit.drawer.label_vendor_credit_date')}
+            >
+              <FormatDate value={vendorCredit.formatted_vendor_credit_date} />
+            </DetailItem>
+            <DetailItem
               label={intl.get('vendor_credit.drawer.label_vendor_credit_no')}
             >
               {defaultTo(vendorCredit.vendor_credit_number, '-')}
@@ -48,12 +53,6 @@ export default function VendorCreditDetailHeader() {
               <VendorDrawerLink vendorId={vendorCredit.vendor_id}>
                 {vendorCredit.vendor?.display_name}
               </VendorDrawerLink>
-            </DetailItem>
-
-            <DetailItem
-              label={intl.get('vendor_credit.drawer.label_vendor_credit_date')}
-            >
-              <FormatDate value={vendorCredit.formatted_vendor_credit_date} />
             </DetailItem>
           </DetailsMenu>
         </Col>
@@ -71,10 +70,6 @@ export default function VendorCreditDetailHeader() {
             <DetailItem
               label={intl.get('reference')}
               children={defaultTo(vendorCredit.reference_no, '-')}
-            />
-            <DetailItem
-              label={intl.get('note')}
-              children={defaultTo(vendorCredit.note, '-')}
             />
             <DetailItem
               label={<T id={'vendor_credit.drawer.label_created_at'} />}
