@@ -52,7 +52,7 @@ export default function CustomersBalanceSummaryGeneralPanelContent() {
 
       <Row>
         <Col xs={5}>
-          <FastField name={'percentage'} type={'checkbox'}>
+          <FastField name={'percentage_column'} type={'checkbox'}>
             {({ field }) => (
               <FormGroup labelInfo={<FieldHint />}>
                 <Checkbox

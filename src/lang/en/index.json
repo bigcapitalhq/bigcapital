@@ -866,7 +866,7 @@
   "published_at": "Published at",
   "customers_balance_summary": "Customers Balance Summary",
   "vendors_balance_summary": "Vendors Balance Summary",
-  "percentage_of_column": "Percentage",
+  "percentage_of_column": "% of column",
   "customers_transactions": "Customers Transactions",
   "vendors_transactions": "Vendors Transactions",
   "reference_type": "Reference type",
