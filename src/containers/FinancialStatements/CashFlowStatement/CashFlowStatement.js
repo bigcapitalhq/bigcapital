@@ -70,6 +70,7 @@ function CashFlowStatement({
       />
       <CashFlowStatementLoadingBar />
       <CashFlowStatementAlerts />
+
       <DashboardPageContent>
         <FinancialStatement>
           <CashFlowStatementHeader

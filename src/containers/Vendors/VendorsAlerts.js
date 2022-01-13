@@ -3,15 +3,15 @@ import React from 'react';
 const VendorDeleteAlert = React.lazy(() =>
   import('../Alerts/Vendors/VendorDeleteAlert'),
 );
-const ContactActivateAlert = React.lazy(() =>
-  import('../Alerts/Contacts/ContactActivateAlert'),
+const VendorActivateAlert = React.lazy(() =>
+  import('../Alerts/Vendors/VendorActivateAlert'),
 );
-const ContactInactivateAlert = React.lazy(() =>
-  import('../Alerts/Contacts/ContactInactivateAlert'),
+const VendorInactivateAlert = React.lazy(() =>
+  import('../Alerts/Vendors/VendorInactivateAlert'),
 );
 
 export default [
   { name: 'vendor-delete', component: VendorDeleteAlert },
-  { name: 'contact-activate', component: ContactActivateAlert },
-  { name: 'contact-inactivate', component: ContactInactivateAlert },
+  { name: 'vendor-activate', component: VendorActivateAlert },
+  { name: 'vendor-inactivate', component: VendorInactivateAlert },
 ];

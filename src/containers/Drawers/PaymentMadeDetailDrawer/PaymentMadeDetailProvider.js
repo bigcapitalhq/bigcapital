@@ -20,8 +20,7 @@ function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
       enabled: !!paymentMadeId,
     },
   );
-
-  //provider.
+  // Provider state.
   const provider = {
     paymentMadeId,
     paymentMade,

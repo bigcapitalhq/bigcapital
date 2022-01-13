@@ -32,6 +32,8 @@ import ReconcileVendorCreditDialog from '../containers/Dialogs/ReconcileVendorCr
 import LockingTransactionsDialog from '../containers/Dialogs/LockingTransactionsDialog';
 import UnlockingTransactionsDialog from '../containers/Dialogs/UnlockingTransactionsDialog';
 import UnlockingPartialTransactionsDialog from '../containers/Dialogs/UnlockingPartialTransactionsDialog';
+import CreditNotePdfPreviewDialog from '../containers/Dialogs/CreditNotePdfPreviewDialog';
+import PaymentReceivePdfPreviewDialog from '../containers/Dialogs/PaymentReceivePdfPreviewDialog';
 
 /**
  * Dialogs container.
@@ -74,6 +76,8 @@ export default function DialogsContainer() {
       <UnlockingPartialTransactionsDialog
         dialogName={'unlocking-partial-transactions'}
       />
+      <CreditNotePdfPreviewDialog dialogName={'credit-note-pdf-preview'} />
+      <PaymentReceivePdfPreviewDialog dialogName={'payment-pdf-preview'} />
     </div>
   );
 }

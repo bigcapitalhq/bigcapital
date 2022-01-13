@@ -2,6 +2,20 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [1.5.8] - 13-01-2022
+
+### Added
+- Add payment receive PDF print.
+- Add credit note PDF print.
+
+### Fixed
+- fix: Payment receive initial loading state depends on request loading state instead fetching.
+- fix: Balance sheet report alert positioning.
+- fix: Separate customer and vendor inactivate and activate alerts.
+- fix: Hide convert to invoice button if the invoice is already converted.
+- fix: Customer and vendor balance summary percentage of column option.
+- fix: Remove duplicated details in sales and purchases details drawers.
+
 ## [1.5.3] - 03-01-2020
 
 ### Fixed

@@ -67,6 +67,7 @@ function BalanceSheet({
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <BalanceSheetLoadingBar />
+      <BalanceSheetAlerts />
 
       <DashboardPageContent>
         <FinancialStatement>
@@ -80,7 +81,6 @@ function BalanceSheet({
         </FinancialStatement>
       </DashboardPageContent>
 
-      <BalanceSheetAlerts />
     </BalanceSheetProvider>
   );
 }
