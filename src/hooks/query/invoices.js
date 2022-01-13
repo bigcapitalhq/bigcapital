@@ -48,6 +48,10 @@ export function useCreateInvoice(props) {
       // Invalidate invoice customer.
       queryClient.invalidateQueries([t.CUSTOMER, values.customer_id]);
 
+      // Invalidate estimates.
+      queryClient.invalidateQueries(t.SALE_ESTIMATES);
+      queryClient.invalidateQueries(t.SALE_ESTIMATE);
+
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
     },
@@ -91,6 +95,10 @@ export function useDeleteInvoice(props) {
     onSuccess: (res, id) => {
       // Invalidate specific invoice.
       queryClient.invalidateQueries([t.SALE_INVOICE, id]);
+
+      // Invalidate estimates.
+      queryClient.invalidateQueries(t.SALE_ESTIMATES);
+      queryClient.invalidateQueries(t.SALE_ESTIMATE);
 
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
