@@ -76,11 +76,11 @@ function BalanceSheetHeader({
       >
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            {/* <Tab
+            <Tab
               id="general"
               title={<T id={'general'} />}
               panel={<BalanceSheetHeaderGeneralPanal />}
-            /> */}
+            />
             <Tab
               id="comparison"
               title={<T id={'balance_sheet.comparisons'} />}
