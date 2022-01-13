@@ -6,8 +6,8 @@
 
       .thead,
       .tbody{
-        .tr .td.account_name ~ .td,
-        .tr .th.account_name ~ .th{
+        .tr .td.name ~ .td,
+        .tr .th.name ~ .th{
           text-align: right;
         }
       }

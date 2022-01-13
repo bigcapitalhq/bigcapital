@@ -12,7 +12,7 @@ import { Row, Col, FieldHint } from '../../../components';
  */
 export default function BalanceSheetHeaderComparisonPanal() {
   return (
-    <div>
+    <BalanceSheetComparisonWrap>
       {/*------------ Percentage -----------*/}
       <Row>
         <Col xs={3}>
@@ -137,6 +137,24 @@ export default function BalanceSheetHeaderComparisonPanal() {
           </FastField>
         </Col>
       </Row>
-    </div>
+    </BalanceSheetComparisonWrap>
   );
 }
+
+const BalanceSheetComparisonWrap = styled.div`
+  .row {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-left: -0.3rem;
+    margin-right: -0.3rem;
+
+    .col {
+      padding-left: 0.3rem;
+      padding-right: 0.3rem;
+
+      .bp3-form-group {
+        margin-bottom: 0;
+      }
+    }
+  }
+`;
