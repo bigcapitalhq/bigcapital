@@ -4,6 +4,7 @@ import { Icon, If } from 'components';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 import { FormattedMessage as T } from 'components';
 import FinancialLoadingBar from '../FinancialLoadingBar';
+import { dynamicColumns } from './utils';
 
 /**
  * Balance sheet alerts.
@@ -46,3 +47,17 @@ export function BalanceSheetLoadingBar() {
     </If>
   );
 }
+
+/**
+ * Retrieve balance sheet columns.
+ */
+export const useBalanceSheetColumns = () => {
+  const {
+    balanceSheet: { columns, tableRows },
+  } = useBalanceSheetContext();
+
+  return React.useMemo(
+    () => dynamicColumns(columns, tableRows),
+    [columns, tableRows],
+  );
+};

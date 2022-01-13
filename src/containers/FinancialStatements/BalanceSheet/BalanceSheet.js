@@ -80,7 +80,7 @@ function BalanceSheet({
         </FinancialStatement>
       </DashboardPageContent>
 
-      <BalanceSheetAlerts />
+      {/* <BalanceSheetAlerts /> */}
     </BalanceSheetProvider>
   );
 }

@@ -1734,8 +1734,14 @@
   "payment_made.drawer.title": "Payment made details {number}",
   "manual_journal.drawer.title": "Manual journal details ({number})",
   "expense.drawer.title": "Expense details",
-
   "global_error.you_dont_have_permissions": "You do not have permissions to access this page.",
   "global_error.transactions_locked": "Transactions before {lockedToDate} has been locked. Hence action cannot be performed.",
-  "global_error.authorized_user_inactive": "The authorized user is inactive."
+  "global_error.authorized_user_inactive": "The authorized user is inactive.",
+  "balance_sheet.comparisons": "Comparisons",
+  "balance_sheet.percentage_of_column": "% of Columns",
+  "balance_sheet.percentage_of_row": "% of Rows",
+  "balance_sheet.previous_year": "Previous Year (PY)",
+  "balance_sheet.total_change": "Total Change",
+  "balance_sheet.change": "% Change",
+  "balance_sheet.previous_period": "Previous Period (PP)"
 }

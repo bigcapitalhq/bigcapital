@@ -23,20 +23,38 @@ export function useBalanceSheet(query, props) {
       method: 'get',
       url: '/financial_statements/balance_sheet',
       params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
     },
     {
       select: (res) => ({
-        tableRows: balanceSheetRowsReducer(res.data.data),
-        ...res.data,
+        columns: res.data.table.columns,
+        tableRows: res.data.table.rows,
+        // query: res.data.query,
+        // meta: res.data.meta,
       }),
       defaultData: {
-        data: [],
-        columns: [],
-        query: {},
         tableRows: [],
+        columns: [],
+        // query: {},
+        // meta: {},
       },
       ...props,
     },
+    // {
+    //   select: (res) => ({
+    //     tableRows: balanceSheetRowsReducer(res.data.data),
+    //     ...res.data,
+    //   }),
+    //   defaultData: {
+    //     data: [],
+    //     columns: [],
+    //     query: {},
+    //     tableRows: [],
+    //   },
+    //   ...props,
+    // },
   );
 }
 

@@ -8,6 +8,7 @@ import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';
 
 import BalanceSheetHeaderGeneralPanal from './BalanceSheetHeaderGeneralPanal';
+import BalanceSheetHeaderComparisonPanal from './BalanceSheetHeaderComparisonPanal';
 import FinancialStatementHeader from '../../FinancialStatements/FinancialStatementHeader';
 
 import { compose, transformToForm } from 'utils';
@@ -75,10 +76,15 @@ function BalanceSheetHeader({
       >
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
+            {/* <Tab
               id="general"
               title={<T id={'general'} />}
               panel={<BalanceSheetHeaderGeneralPanal />}
+            /> */}
+            <Tab
+              id="comparison"
+              title={<T id={'balance_sheet.comparisons'} />}
+              panel={<BalanceSheetHeaderComparisonPanal />}
             />
           </Tabs>
 
