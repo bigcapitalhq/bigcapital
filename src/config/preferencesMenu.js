@@ -17,6 +17,10 @@ export default [
     href: '/preferences/currencies',
   },
   {
+    text: <T id={'warehouses.label'} />,
+    href: '/preferences/warehouses',
+  },
+  {
     text: <T id={'accountant'} />,
     disabled: false,
     href: '/preferences/accountant',
