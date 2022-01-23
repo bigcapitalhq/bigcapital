@@ -6,7 +6,8 @@ import { CLASSES } from 'common/classes';
 import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
 import UsersActions from 'containers/Preferences/Users/UsersActions';
 import CurrenciesActions from 'containers/Preferences/Currencies/CurrenciesActions';
-import WarehousesActions from '../../containers/Preferences/Warehouses/WarehousesActions'
+import WarehousesActions from '../../containers/Preferences/Warehouses/WarehousesActions';
+import BranchesActions from '../../containers/Preferences/Branches/BranchesActions';
 import withDashboard from 'containers/Dashboard/withDashboard';
 
 import { compose } from 'utils';
@@ -41,6 +42,7 @@ function PreferencesTopbar({ preferencesPageTitle }) {
               path={'/preferences/warehouses'}
               component={WarehousesActions}
             />
+            <Route path={'/preferences/branches'} component={BranchesActions} />
           </Switch>
         </Route>
       </div>

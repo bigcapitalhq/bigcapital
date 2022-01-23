@@ -1768,9 +1768,6 @@
   "customer.alert.inactivated_message": "The customer has been inactivated successfully.",
   "customer.alert.are_you_sure_want_to_inactivate_this_customer": "Are you sure want to inactivate this customer? You will to able to activate it later.",
 
-  "credit_note_preview.dialog.title": "Credit Note PDF Preview",
-  "payment_receive_preview.dialog.title": "Payment Receive PDF Preview",
-
   "warehouses.label": "Warehouses",
   "warehouses.label.new_warehouse": "New Warehouse",
   "warehouse.dialog.label.new_warehouse": "New Warehouse",
@@ -1824,5 +1821,25 @@
   "select_warehouse_transfer":"Select Warehouse Transfer",
   "warehouse_transfer.alert.delete_message":"The warehouse transfer transaction has been deleted successfully",
   "warehouse_transfer.once_delete_this_warehouse_transfer":"Once you delete this warehouse transfer, you won't be able to restore it later. Are you sure you want to delete this warehouse transfer?",
-  "warehouse_transfer.error.could_not_transfer_item_from_source_to_destination":"Could not transfer item from source to destination on the same warehouse"
+  "warehouse_transfer.error.could_not_transfer_item_from_source_to_destination":"Could not transfer item from source to destination on the same warehouse",
+
+  "credit_note_preview.dialog.title": "Credit Note PDF Preview",
+  "payment_receive_preview.dialog.title": "Payment Receive PDF Preview",
+  "branches.label": "Branches",
+  "branches.label.new_branche": "New Branch",
+  "branches.action.edit_branch": "Edit Branch",
+  "branches.action.delete_branch": "Edit Branch",
+  "branches.column.branch_name": "Branch name",
+  "branches.column.address": "Address",
+  "branches.column.phone_number": "Phone number",
+  "branch.dialog.label": "New Branch",
+  "branch.dialog.label.branch_name": "Branch Name",
+  "branch.dialog.label.branch_address": "Branch Address",
+  "branch.dialog.label.address_1": "Address 1",
+  "branch.dialog.label.address_2": "Address 2",
+  "branch.dialog.label.city": "City",
+  "branch.dialog.label.country": "Country",
+  "branch.dialog.label.phone_number": "Phone Number",
+  "branch.dialog.label.email": "Email",
+  "branch.dialog.label.website": "Website"
 }

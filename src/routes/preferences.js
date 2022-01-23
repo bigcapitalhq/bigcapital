@@ -2,12 +2,12 @@ import General from 'containers/Preferences/General/General';
 import Users from '../containers/Preferences/Users/Users';
 import Roles from '../containers/Preferences/Users/Roles/RolesForm/RolesFormPage';
 import Accountant from 'containers/Preferences/Accountant/Accountant';
-// import Accounts from 'containers/Preferences/Accounts/Accounts';
 import Currencies from 'containers/Preferences/Currencies/Currencies';
 import Item from 'containers/Preferences/Item';
 import SMSIntegration from '../containers/Preferences/SMSIntegration';
 import DefaultRoute from '../containers/Preferences/DefaultRoute';
 import Warehouses from '../containers/Preferences/Warehouses';
+import Branches from '../containers/Preferences/Branches';
 
 const BASE_URL = '/preferences';
 
@@ -40,6 +40,10 @@ export default [
   {
     path: `${BASE_URL}/warehouses`,
     component: Warehouses,
+  },
+  {
+    path: `${BASE_URL}/branches`,
+    component: Branches,
     exact: true,
   },
   {
