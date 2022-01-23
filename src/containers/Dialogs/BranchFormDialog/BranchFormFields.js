@@ -43,7 +43,7 @@ function BranchFormFields() {
             intent={inputIntent({ error, touched })}
             inline={true}
             helperText={<ErrorMessage name="branch_address_1" />}
-            className={'form-group--branch_address_1'}
+            className={'form-group--branch_address'}
           >
             <InputGroup
               intent={inputIntent({ error, touched })}
@@ -61,7 +61,7 @@ function BranchFormFields() {
               intent={inputIntent({ error, touched })}
               inline={true}
               helperText={<ErrorMessage name="branch_address_2" />}
-              className={'form-group--branch_address_2'}
+              className={'form-group--branch_address'}
             >
               <InputGroup
                 intent={inputIntent({ error, touched })}
@@ -75,7 +75,7 @@ function BranchFormFields() {
         {/*------------ Branch Address City & Country-----------*/}
         <FormGroup
           inline={true}
-          className={'form-group--branch_address_city'}
+          className={'form-group--branch_address'}
           helperText={<ErrorMessage name="branch_address_2" />}
         >
           <ControlGroup>

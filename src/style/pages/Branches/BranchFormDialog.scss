@@ -1,5 +1,5 @@
 .dialog--branch-form {
-  width: 600px;
+  width: 650px;
 
   .bp3-dialog-body {
     .bp3-form-group {
@@ -12,27 +12,28 @@
         min-width: 150px;
       }
       .bp3-form-content {
-        width: 320px;
+        width: 278px;
       }
-    }
-    .form-group {
-      &--branch_address_city {
-        .bp3-control-group > * {
-          flex-shrink: unset;
-          padding-right: 5px;
-          padding-left: 5px;
+      .bp3-control-group > * {
+        flex-shrink: unset;
+        padding-right: 5px;
+        padding-left: 5px;
 
-          &:first-child {
-            padding-left: 0;
-          }
-          &:last-child {
-            padding-right: 0;
-          }
+        &:first-child {
+          padding-left: 0;
+        }
+        &:last-child {
+          padding-right: 0;
+        }
+      }
+
+      &.form-group--branch_address {
+        .bp3-form-content {
+          width: 388px;
         }
       }
     }
   }
-
   .bp3-dialog-footer {
     padding-top: 10px;
   }
