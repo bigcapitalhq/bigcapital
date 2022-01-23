@@ -145,6 +145,17 @@ export function useSettingsVendorCredits(props) {
 }
 
 /**
+ * Retrieve warehouse transfer settings.
+ */
+export function useSettingsWarehouseTransfers(props) {
+  return useSettingsQuery(
+    [t.SETTING, t.SETTING_WAREHOUSE_TRANSFER],
+    { group: 'warehouse_transfer' },
+    props,
+  );
+}
+
+/**
  * Retrieve SMS Notifications settings.
  */
 export function useSettingSMSNotifications(props) {

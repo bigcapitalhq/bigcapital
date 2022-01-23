@@ -79,6 +79,10 @@ export default [
         },
       },
       {
+        text: <T id={'sidebar_warehouse_transfer'} />,
+        href: '/warehouse-transfers',
+      },
+      {
         text: <T id={'category_list'} />,
         href: '/items/categories',
         permission: {
@@ -112,6 +116,10 @@ export default [
           subject: AbilitySubject.Item,
           ability: ItemAction.Create,
         },
+      },
+      {
+        text: <T id={'warehouse_transfer.label.new_warehouse_transfer'} />,
+        href: '/warehouse-transfers/new',
       },
       {
         text: <T id={'New service'} />,
