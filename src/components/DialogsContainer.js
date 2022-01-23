@@ -34,6 +34,7 @@ import UnlockingTransactionsDialog from '../containers/Dialogs/UnlockingTransact
 import UnlockingPartialTransactionsDialog from '../containers/Dialogs/UnlockingPartialTransactionsDialog';
 import CreditNotePdfPreviewDialog from '../containers/Dialogs/CreditNotePdfPreviewDialog';
 import PaymentReceivePdfPreviewDialog from '../containers/Dialogs/PaymentReceivePdfPreviewDialog';
+import BranchFormDialog from '../containers/Dialogs/BranchFormDialog';
 
 /**
  * Dialogs container.
@@ -78,6 +79,7 @@ export default function DialogsContainer() {
       />
       <CreditNotePdfPreviewDialog dialogName={'credit-note-pdf-preview'} />
       <PaymentReceivePdfPreviewDialog dialogName={'payment-pdf-preview'} />
+      <BranchFormDialog dialogName={'branch-form'} />
     </div>
   );
 }

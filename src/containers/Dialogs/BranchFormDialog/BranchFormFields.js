@@ -1,0 +1,157 @@
+import React from 'react';
+import intl from 'react-intl-universal';
+import { FastField, ErrorMessage, Field } from 'formik';
+import styled from 'styled-components';
+import {
+  Classes,
+  FormGroup,
+  InputGroup,
+  ControlGroup,
+  Position,
+} from '@blueprintjs/core';
+import { inputIntent } from 'utils';
+import { FieldRequiredHint, Col, Row, FormattedMessage as T } from 'components';
+import { useBranchFormContext } from './BranchFormProvider';
+
+/**
+ * Branch form dialog fields.
+ */
+function BranchFormFields() {
+  return (
+    <div className={Classes.DIALOG_BODY}>
+      {/*------------ Branch Name -----------*/}
+      <FastField name={'branch_name'}>
+        {({ form, field, meta: { error, touched } }) => (
+          <FormGroup
+            label={<T id={'branch.dialog.label.branch_name'} />}
+            labelInfo={<FieldRequiredHint />}
+            intent={inputIntent({ error, touched })}
+            inline={true}
+            helperText={<ErrorMessage name="branch_name" />}
+            className={'form-group--branch_name'}
+          >
+            <InputGroup intent={inputIntent({ error, touched })} {...field} />
+          </FormGroup>
+        )}
+      </FastField>
+
+      {/*------------ Branch Address 1 -----------*/}
+      <FastField name={'branch_address_1'}>
+        {({ form, field, meta: { error, touched } }) => (
+          <FormGroup
+            label={intl.get('branch.dialog.label.branch_address')}
+            intent={inputIntent({ error, touched })}
+            inline={true}
+            helperText={<ErrorMessage name="branch_address_1" />}
+            className={'form-group--branch_address_1'}
+          >
+            <InputGroup
+              intent={inputIntent({ error, touched })}
+              placeholder={intl.get('branch.dialog.label.address_1')}
+              {...field}
+            />
+          </FormGroup>
+        )}
+      </FastField>
+      <BranchAddressWrap>
+        {/*------------ Branch Address 2 -----------*/}
+        <FastField name={'branch_address_2'}>
+          {({ form, field, meta: { error, touched } }) => (
+            <FormGroup
+              intent={inputIntent({ error, touched })}
+              inline={true}
+              helperText={<ErrorMessage name="branch_address_2" />}
+              className={'form-group--branch_address_2'}
+            >
+              <InputGroup
+                intent={inputIntent({ error, touched })}
+                placeholder={intl.get('branch.dialog.label.address_2')}
+                {...field}
+              />
+            </FormGroup>
+          )}
+        </FastField>
+
+        {/*------------ Branch Address City & Country-----------*/}
+        <FormGroup
+          inline={true}
+          className={'form-group--branch_address_city'}
+          helperText={<ErrorMessage name="branch_address_2" />}
+        >
+          <ControlGroup>
+            <FastField name={'branch_address_city'}>
+              {({ field, meta: { error, touched } }) => (
+                <InputGroup
+                  intent={inputIntent({ error, touched })}
+                  placeholder={intl.get('branch.dialog.label.city')}
+                  {...field}
+                />
+              )}
+            </FastField>
+
+            <FastField name={'branch_address_country'}>
+              {({ field, meta: { error, touched } }) => (
+                <InputGroup
+                  intent={inputIntent({ error, touched })}
+                  placeholder={intl.get('branch.dialog.label.country')}
+                  {...field}
+                />
+              )}
+            </FastField>
+          </ControlGroup>
+        </FormGroup>
+      </BranchAddressWrap>
+
+      {/*------------ Phone Number -----------*/}
+      <FastField name={'phone_number'}>
+        {({ form, field, meta: { error, touched } }) => (
+          <FormGroup
+            label={intl.get('branch.dialog.label.phone_number')}
+            intent={inputIntent({ error, touched })}
+            inline={true}
+            helperText={<ErrorMessage name="phone_number" />}
+            className={'form-group--phone_number'}
+          >
+            <InputGroup intent={inputIntent({ error, touched })} {...field} />
+          </FormGroup>
+        )}
+      </FastField>
+
+      {/*------------ Email -----------*/}
+      <FastField name={'email'}>
+        {({ form, field, meta: { error, touched } }) => (
+          <FormGroup
+            label={intl.get('branch.dialog.label.email')}
+            intent={inputIntent({ error, touched })}
+            inline={true}
+            helperText={<ErrorMessage name="email" />}
+            className={'form-group--email'}
+          >
+            <InputGroup intent={inputIntent({ error, touched })} {...field} />
+          </FormGroup>
+        )}
+      </FastField>
+
+      {/*------------ Website -----------*/}
+      <FastField name={'website'}>
+        {({ form, field, meta: { error, touched } }) => (
+          <FormGroup
+            label={intl.get('branch.dialog.label.website')}
+            intent={inputIntent({ error, touched })}
+            inline={true}
+            helperText={<ErrorMessage name="email" />}
+            className={'form-group--website'}
+          >
+            <InputGroup intent={inputIntent({ error, touched })} {...field} />
+          </FormGroup>
+        )}
+      </FastField>
+    </div>
+  );
+}
+
+export default BranchFormFields;
+
+const BranchAddressWrap = styled.div`
+  margin-left: 160px;
+`;

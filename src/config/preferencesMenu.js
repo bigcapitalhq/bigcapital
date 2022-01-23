@@ -13,8 +13,11 @@ export default [
   },
   {
     text: <T id={'currencies'} />,
-
     href: '/preferences/currencies',
+  },
+  {
+    text: <T id={'branches.label'} />,
+    href: '/preferences/branches',
   },
   {
     text: <T id={'accountant'} />,
