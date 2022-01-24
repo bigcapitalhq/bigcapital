@@ -8,6 +8,7 @@ import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import ProfitLossSheetHeaderGeneralPane from './ProfitLossSheetHeaderGeneralPane';
+import ProfitLossSheetHeaderComparisonPanel from './ProfitLossSheetHeaderComparisonPanel';
 
 import withProfitLoss from './withProfitLoss';
 import withProfitLossActions from './withProfitLossActions';
@@ -74,6 +75,11 @@ function ProfitLossHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<ProfitLossSheetHeaderGeneralPane />}
+            />
+            <Tab
+              id="comparison"
+              title={<T id={'profit_loss_sheet.comparisons'} />}
+              panel={<ProfitLossSheetHeaderComparisonPanel />}
             />
           </Tabs>
 

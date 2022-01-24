@@ -1743,5 +1743,14 @@
   "balance_sheet.previous_year": "Previous Year (PY)",
   "balance_sheet.total_change": "Total Change",
   "balance_sheet.change": "% Change",
-  "balance_sheet.previous_period": "Previous Period (PP)"
+  "balance_sheet.previous_period": "Previous Period (PP)",
+  "profit_loss_sheet.comparisons":"Comparisons",
+  "profit_loss_sheet.previous_year":"Previous Year",
+  "profit_loss_sheet.total_change": "Total Change",
+  "profit_loss_sheet.perentage_change": "Perentage Change",
+  "profit_loss_sheet.previous_period":"Previous Period (PP)",
+  "profit_loss_sheet.percentage_of_column":"% of Column",
+  "profit_loss_sheet.percentage_of_row":"% of Row",
+  "profit_loss_sheet.percentage_of_expense":"% of Expense",
+  "profit_loss_sheet.percentage_of_income":"% of Income"
 }
