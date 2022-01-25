@@ -13,53 +13,20 @@ import { Row, Col, FieldHint } from '../../../components';
 export default function BalanceSheetHeaderComparisonPanal() {
   return (
     <BalanceSheetComparisonWrap>
-      {/*------------ Percentage -----------*/}
+      {/**----------- Previous Year -----------*/}
+      <FastField name={'previous_year'} type={'checkbox'}>
+        {({ field }) => (
+          <FormGroup labelInfo={<FieldHint />}>
+            <Checkbox
+              inline={true}
+              small={true}
+              label={<T id={'balance_sheet.previous_year'} />}
+              {...field}
+            />
+          </FormGroup>
+        )}
+      </FastField>
       <Row>
-        <Col xs={3}>
-          <FastField name={'percentage_of_column'} type={'checkbox'}>
-            {({ field }) => (
-              <FormGroup labelInfo={<FieldHint />}>
-                <Checkbox
-                  inline={true}
-                  small={true}
-                  label={<T id={'balance_sheet.percentage_of_column'} />}
-                  {...field}
-                />
-              </FormGroup>
-            )}
-          </FastField>
-        </Col>
-        <Col xs={3}>
-          <FastField name={'percentage_of_row'} type={'checkbox'}>
-            {({ field }) => (
-              <FormGroup labelInfo={<FieldHint />}>
-                <Checkbox
-                  inline={true}
-                  small={true}
-                  label={<T id={'balance_sheet.percentage_of_row'} />}
-                  {...field}
-                />
-              </FormGroup>
-            )}
-          </FastField>
-        </Col>
-      </Row>
-      {/*------------ Previous Year -----------*/}
-      <Row>
-        <Col xs={3}>
-          <FastField name={'previous_year'} type={'checkbox'}>
-            {({ field }) => (
-              <FormGroup labelInfo={<FieldHint />}>
-                <Checkbox
-                  inline={true}
-                  small={true}
-                  label={<T id={'balance_sheet.previous_year'} />}
-                  {...field}
-                />
-              </FormGroup>
-            )}
-          </FastField>
-        </Col>
         <Col xs={3}>
           <FastField name={'previous_year_amount_change'} type={'checkbox'}>
             {({ field }) => (
@@ -90,21 +57,19 @@ export default function BalanceSheetHeaderComparisonPanal() {
         </Col>
       </Row>
       {/*------------ Previous Period -----------*/}
+      <FastField name={'previous_period'} type={'checkbox'}>
+        {({ field }) => (
+          <FormGroup labelInfo={<FieldHint />}>
+            <Checkbox
+              inline={true}
+              small={true}
+              label={<T id={'balance_sheet.previous_period'} />}
+              {...field}
+            />
+          </FormGroup>
+        )}
+      </FastField>
       <Row>
-        <Col xs={3}>
-          <FastField name={'previous_period'} type={'checkbox'}>
-            {({ field }) => (
-              <FormGroup labelInfo={<FieldHint />}>
-                <Checkbox
-                  inline={true}
-                  small={true}
-                  label={<T id={'balance_sheet.previous_period'} />}
-                  {...field}
-                />
-              </FormGroup>
-            )}
-          </FastField>
-        </Col>
         <Col xs={3}>
           <FastField name={'previous_period_amount_change'} type={'checkbox'}>
             {({ field }) => (
@@ -137,24 +102,48 @@ export default function BalanceSheetHeaderComparisonPanal() {
           </FastField>
         </Col>
       </Row>
+      
+      {/**----------- % of Column -----------*/}
+      <FastField name={'previous_period_percentage_change'} type={'checkbox'}>
+        {({ field }) => (
+          <FormGroup labelInfo={<FieldHint />}>
+            <Checkbox
+              inline={true}
+              small={true}
+              label={<T id={'profit_loss_sheet.percentage_of_column'} />}
+              {...field}
+            />
+          </FormGroup>
+        )}
+      </FastField>
+
+      {/**----------- % of Row -----------*/}
+      <FastField name={'previous_period_percentage_change'} type={'checkbox'}>
+        {({ field }) => (
+          <FormGroup labelInfo={<FieldHint />}>
+            <Checkbox
+              inline={true}
+              small={true}
+              label={<T id={'profit_loss_sheet.percentage_of_row'} />}
+              {...field}
+            />
+          </FormGroup>
+        )}
+      </FastField>
     </BalanceSheetComparisonWrap>
   );
 }
 
 const BalanceSheetComparisonWrap = styled.div`
   .row {
-    display: flex;
-    flex-wrap: nowrap;
-    margin-left: -0.3rem;
-    margin-right: -0.3rem;
-
+    margin-left: 0.15rem;
     .col {
-      padding-left: 0.3rem;
-      padding-right: 0.3rem;
-
-      .bp3-form-group {
-        margin-bottom: 0;
-      }
+      min-width: 150px;
+      max-width: 190px;
     }
+  }
+  .bp3-form-group {
+    margin-bottom: 3px;
+    /* margin-bottom: 0; */
   }
 `;
