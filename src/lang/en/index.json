@@ -1782,5 +1782,9 @@
   "warehouse.dialog.label.warehouse_address_2":"Address 2",
   "warehouse.dialog.label.city":"City",
   "warehouse.dialog.label.country":"Country",
-  "warehouse.dialog.label.phone_number":"Phone Number"
+  "warehouse.dialog.label.phone_number":"Phone Number",
+  "warehouse_locations.label":"Warehouses Locations",
+  "warehouse_locations.column.warehouse_name":"Warehouse name",
+  "warehouse_locations.column.quantity":"Quantity",
+  "warehouse_locations.column.available_for_sale":"Available for sale"
 }
