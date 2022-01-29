@@ -10,6 +10,15 @@ const getTableCellValueAccessor = (index) => `cells[${index}].value`;
 
 const Align = { Left: 'left', Right: 'right', Center: 'center' };
 
+const getReportColWidth = (data, accessor, headerText) => {
+  return getColumnWidth(
+    data,
+    accessor,
+    { magicSpacing: 10, minWidth: 100 },
+    headerText,
+  );
+};
+
 /**
  *
  * @returns
@@ -45,6 +54,7 @@ export const getBalanceSheetHeaderValidationSchema = () =>
  */
 const accountNameMapper = R.curry((data, column) => {
   const accessor = getTableCellValueAccessor(column.cell_index);
+  const width = getReportColWidth(data, accessor, column.label);
 
   return {
     key: column.key,
@@ -52,7 +62,7 @@ const accountNameMapper = R.curry((data, column) => {
     accessor,
     className: column.key,
     textOverview: true,
-    width: getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 240 }),
+    width,
   };
 });
 
@@ -82,7 +92,7 @@ const dateRangeSoloColumnAttrs = (data, column) => {
 
   return {
     accessor,
-    width: getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }),
+    width: getReportColWidth(data, accessor),
   };
 };
 
@@ -117,6 +127,7 @@ const dateRangeMapper = R.curry((data, column) => {
 const totalMapper = R.curry((data, column) => {
   const hasChildren = !isEmpty(column.children);
   const accessor = getTableCellValueAccessor(column.cell_index);
+  const width = getReportColWidth(data, accessor, column.label);
 
   const columnAccessor = {
     key: column.key,
@@ -124,9 +135,9 @@ const totalMapper = R.curry((data, column) => {
     accessor,
     textOverview: true,
     Cell: CellTextSpan,
-    width: getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 200 }),
+    width,
     disableSortBy: true,
-    align: hasChildren ? 'center' : 'right',
+    align: hasChildren ? Align.Center : Align.Left,
   };
   return R.compose(
     R.when(R.always(hasChildren), assocColumnsToTotalColumn(data, column)),
@@ -138,12 +149,13 @@ const totalMapper = R.curry((data, column) => {
  */
 const percentageOfColumnAccessor = R.curry((data, column) => {
   const accessor = getTableCellValueAccessor(column.cell_index);
+  const width = getReportColWidth(data, accessor, column.label);
 
   return {
     Header: column.label,
     key: column.key,
     accessor,
-    width: getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }),
+    width,
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
@@ -155,12 +167,13 @@ const percentageOfColumnAccessor = R.curry((data, column) => {
  */
 const percentageOfRowAccessor = R.curry((data, column) => {
   const accessor = getTableCellValueAccessor(column.cell_index);
+  const width = getReportColWidth(data, accessor, column.label);
 
   return {
     Header: column.label,
     key: column.key,
     accessor,
-    width: getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }),
+    width,
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
@@ -172,12 +185,13 @@ const percentageOfRowAccessor = R.curry((data, column) => {
  */
 const previousYearAccessor = R.curry((data, column) => {
   const accessor = getTableCellValueAccessor(column.cell_index);
+  const width = getReportColWidth(data, accessor, column.label);
 
   return {
     Header: column.label,
     key: column.key,
     accessor,
-    width: getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }),
+    width,
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
@@ -189,12 +203,13 @@ const previousYearAccessor = R.curry((data, column) => {
  */
 const previousYearChangeAccessor = R.curry((data, column) => {
   const accessor = getTableCellValueAccessor(column.cell_index);
+  const width = getReportColWidth(data, accessor, column.label);
 
   return {
     Header: column.label,
     key: column.key,
     accessor,
-    width: getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }),
+    width,
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
@@ -206,12 +221,13 @@ const previousYearChangeAccessor = R.curry((data, column) => {
  */
 const previousYearPercentageAccessor = R.curry((data, column) => {
   const accessor = getTableCellValueAccessor(column.cell_index);
+  const width = getReportColWidth(data, accessor, column.label);
 
   return {
     Header: column.label,
     key: column.key,
     accessor,
-    width: getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }),
+    width,
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
@@ -223,12 +239,13 @@ const previousYearPercentageAccessor = R.curry((data, column) => {
  */
 const previousPeriodAccessor = R.curry((data, column) => {
   const accessor = getTableCellValueAccessor(column.cell_index);
+  const width = getReportColWidth(data, accessor, column.label);
 
   return {
     Header: column.label,
     key: column.key,
     accessor,
-    width: getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }),
+    width,
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
@@ -240,12 +257,13 @@ const previousPeriodAccessor = R.curry((data, column) => {
  */
 const previousPeriodChangeAccessor = R.curry((data, column) => {
   const accessor = getTableCellValueAccessor(column.cell_index);
+  const width = getReportColWidth(data, accessor, column.label);
 
   return {
     Header: column.label,
     key: column.key,
     accessor,
-    width: getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }),
+    width,
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
@@ -257,12 +275,13 @@ const previousPeriodChangeAccessor = R.curry((data, column) => {
  */
 const previousPeriodPercentageAccessor = R.curry((data, column) => {
   const accessor = getTableCellValueAccessor(column.cell_index);
+  const width = getReportColWidth(data, accessor, column.label);
 
   return {
     Header: column.label,
     key: column.key,
     accessor,
-    width: getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }),
+    width,
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,

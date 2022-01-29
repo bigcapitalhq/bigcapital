@@ -364,7 +364,7 @@
 .table--constrant {
   .table {
     .thead{
-      .tr:first-of-type{
+      .tr:first-of-type .th{
         border-top: 1px solid #000000;
       }
     }

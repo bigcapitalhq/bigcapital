@@ -439,9 +439,11 @@ export const getColumnWidth = (
   rows,
   accessor,
   { maxWidth, minWidth, magicSpacing = 14 },
+  headerText = ''
 ) => {
   const cellLength = Math.max(
     ...rows.map((row) => (`${_.get(row, accessor)}` || '').length),
+    headerText.length
   );
   let result = cellLength * magicSpacing;
 
