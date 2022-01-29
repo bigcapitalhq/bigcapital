@@ -28,7 +28,7 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
       </FastField>
       <Row>
         <Col xs={3}>
-          <FastField name={'previous_year'} type={'checkbox'}>
+          <FastField name={'previous_year_amount_change'} type={'checkbox'}>
             {({ field }) => (
               <FormGroup labelInfo={<FieldHint />}>
                 <Checkbox
@@ -42,7 +42,7 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
           </FastField>
         </Col>
         <Col xs={3}>
-          <FastField name={'previous_year'} type={'checkbox'}>
+          <FastField name={'previous_year_percentage_change'} type={'checkbox'}>
             {({ field }) => (
               <FormGroup labelInfo={<FieldHint />}>
                 <Checkbox
@@ -57,7 +57,7 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
         </Col>
       </Row>
       {/**----------- Previous Period (PP) -----------*/}
-      <FastField name={'previous_year'} type={'checkbox'}>
+      <FastField name={'previous_period'} type={'checkbox'}>
         {({ field }) => (
           <FormGroup labelInfo={<FieldHint />}>
             <Checkbox
@@ -71,7 +71,7 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
       </FastField>
       <Row>
         <Col xs={3}>
-          <FastField name={'previous_year'} type={'checkbox'}>
+          <FastField name={'previous_period_amount_change'} type={'checkbox'}>
             {({ field }) => (
               <FormGroup labelInfo={<FieldHint />}>
                 <Checkbox
@@ -85,7 +85,7 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
           </FastField>
         </Col>
         <Col xs={3}>
-          <FastField name={'previous_year'} type={'checkbox'}>
+          <FastField name={'previous_period_percentage_change'} type={'checkbox'}>
             {({ field }) => (
               <FormGroup labelInfo={<FieldHint />}>
                 <Checkbox
@@ -100,7 +100,7 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
         </Col>
       </Row>
       {/**----------- % of Column -----------*/}
-      <FastField name={'previous_period_percentage_change'} type={'checkbox'}>
+      <FastField name={'percentage_column'} type={'checkbox'}>
         {({ field }) => (
           <FormGroup labelInfo={<FieldHint />}>
             <Checkbox
@@ -113,7 +113,7 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
         )}
       </FastField>
       {/**----------- % of Row -----------*/}
-      <FastField name={'previous_period_percentage_change'} type={'checkbox'}>
+      <FastField name={'percentage_row'} type={'checkbox'}>
         {({ field }) => (
           <FormGroup labelInfo={<FieldHint />}>
             <Checkbox
@@ -126,7 +126,7 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
         )}
       </FastField>
       {/**----------- % of Expense -----------*/}
-      <FastField name={'previous_period_percentage_change'} type={'checkbox'}>
+      <FastField name={'percentage_expense'} type={'checkbox'}>
         {({ field }) => (
           <FormGroup labelInfo={<FieldHint />}>
             <Checkbox
@@ -139,7 +139,7 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
         )}
       </FastField>
       {/**----------- % of Income -----------*/}
-      <FastField name={'previous_period_percentage_change'} type={'checkbox'}>
+      <FastField name={'percentage_income'} type={'checkbox'}>
         {({ field }) => (
           <FormGroup labelInfo={<FieldHint />}>
             <Checkbox

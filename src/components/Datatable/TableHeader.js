@@ -15,7 +15,7 @@ function TableHeaderCell({ column, index }) {
     <div
       {...column.getHeaderProps({
         className: classNames(column.className || '', 'th', {
-          'align-right': column.align === 'right',
+          [`align-${column.align}`]: column.align,
         }),
       })}
     >

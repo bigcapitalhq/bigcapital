@@ -29,16 +29,10 @@ export function useBalanceSheet(query, props) {
     },
     {
       select: (res) => ({
-        columns: res.data.table.columns,
-        tableRows: res.data.table.rows,
-        // query: res.data.query,
-        // meta: res.data.meta,
+        table: res.data.table
       }),
       defaultData: {
-        tableRows: [],
-        columns: [],
-        // query: {},
-        // meta: {},
+        table: {},
       },
       ...props,
     },
@@ -68,6 +62,7 @@ export function useTrialBalanceSheet(query, props) {
       method: 'get',
       url: '/financial_statements/trial_balance_sheet',
       params: query,
+      
     },
     {
       select: (res) => ({
@@ -94,17 +89,16 @@ export function useProfitLossSheet(query, props) {
       method: 'get',
       url: '/financial_statements/profit_loss_sheet',
       params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
     },
     {
       select: (res) => ({
-        tableRows: profitLossSheetReducer(res.data.data),
-        ...res.data,
+        table: res.data.table
       }),
       defaultData: {
-        data: {},
-        tableRows: [],
-        columns: [],
-        query: {},
+        table: {},
       },
       ...props,
     },

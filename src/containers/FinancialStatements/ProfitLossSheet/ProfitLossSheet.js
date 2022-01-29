@@ -51,7 +51,6 @@ function ProfitLossSheet({
       numberFormat,
     });
   };
-
   // Hide the filter drawer once the page unmount.
   React.useEffect(
     () => () => {
@@ -66,8 +65,8 @@ function ProfitLossSheet({
         numberFormat={filter.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
-      <ProfitLossSheetLoadingBar />
-      <ProfitLossSheetAlerts />
+      {/* <ProfitLossSheetLoadingBar /> */}
+      {/* <ProfitLossSheetAlerts /> */}
 
       <DashboardPageContent>
         <div class="financial-statement">
@@ -75,7 +74,6 @@ function ProfitLossSheet({
             pageFilter={filter}
             onSubmitFilter={handleSubmitFilter}
           />
-
           <div class="financial-statement__body">
             <ProfitLossSheetTable companyName={organizationName} />
           </div>

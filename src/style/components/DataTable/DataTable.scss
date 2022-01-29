@@ -363,11 +363,15 @@
 .table-constrant,
 .table--constrant {
   .table {
+    .thead{
+      .tr:first-of-type{
+        border-top: 1px solid #000000;
+      }
+    }
     .thead .th {
       background: transparent;
       color: #222222;
       border-bottom: 1px solid #000000;
-      border-top: 1px solid #000000;
       padding: 0.5rem;
     }
 

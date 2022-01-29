@@ -18,15 +18,14 @@ export function BalanceSheetAlerts() {
     refetchBalanceSheet();
   };
   // Can't display any error if the report is loading.
-  if (isLoading) {
-    return null;
-  }
+  if (isLoading) return null;
 
   return (
     <If condition={balanceSheet.meta.is_cost_compute_running}>
       <div class="alert-compute-running">
         <Icon icon="info-block" iconSize={12} />{' '}
         <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
+
         <Button onClick={handleRecalcReport} minimal={true} small={true}>
           <T id={'report.compute_running.refresh'} />
         </Button>
@@ -52,12 +51,13 @@ export function BalanceSheetLoadingBar() {
  * Retrieve balance sheet columns.
  */
 export const useBalanceSheetColumns = () => {
+  // Balance sheet context.
   const {
-    balanceSheet: { columns, tableRows },
+    balanceSheet: { table },
   } = useBalanceSheetContext();
 
   return React.useMemo(
-    () => dynamicColumns(columns, tableRows),
-    [columns, tableRows],
+    () => dynamicColumns(table?.columns || [], table?.rows || []),
+    [table],
   );
 };

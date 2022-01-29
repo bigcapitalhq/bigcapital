@@ -1,14 +1,13 @@
-import React, { useMemo, useCallback } from 'react';
+import React from 'react';
+import styled from 'styled-components';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
-import { CellTextSpan } from 'components/Datatable/Cells';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 
-import { defaultExpanderReducer, getColumnWidth } from 'utils';
-
+import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
+import { TableStyle } from 'common';
 import { useBalanceSheetColumns } from './components';
 
 /**
@@ -20,54 +19,17 @@ export default function BalanceSheetTable({
 }) {
   // Balance sheet context.
   const {
-    balanceSheet: { tableRows, columns, query },
-    isLoading,
+    balanceSheet: { table, query },
   } = useBalanceSheetContext();
 
+  // Retrieve the database columns.
   const tableColumns = useBalanceSheetColumns();
 
-  // const tableColumns = useMemo(
-  //   () => [
-  //     {
-  //       Header: intl.get('account_name'),
-  //       accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
-  //       className: 'account_name',
-  //       textOverview: true,
-  //       width: 240,
-  //     },
-  //     ...(query.display_columns_type === 'total'
-  //       ? [
-  //           {
-  //             Header: intl.get('total'),
-  //             accessor: 'total.formatted_amount',
-  //             Cell: CellTextSpan,
-  //             className: 'total',
-  //             width: 140,
-  //           },
-  //         ]
-  //       : []),
-  //     ...(query.display_columns_type === 'date_periods'
-  //       ? columns.map((column, index) => ({
-  //           id: `date_period_${index}`,
-  //           Header: column,
-  //           Cell: CellTextSpan,
-  //           accessor: `total_periods[${index}].formatted_amount`,
-  //           className: classNames('total-period', `total-periods-${index}`),
-  //           width: getColumnWidth(
-  //             tableRows,
-  //             `total_periods.${index}.formatted_amount`,
-  //             { minWidth: 100 },
-  //           ),
-  //         }))
-  //       : []),
-  //   ],
-  //   [query, columns, tableRows],
-  // );
-
-  // Calculates the default expanded rows of balance sheet table.
-  // const expandedRows = useMemo(() => {
-  //   return defaultExpanderReducer(tableRows, 4);
-  // }, [tableRows]);
+  // Retrieve default expanded rows of balance sheet.
+  const expandedRows = React.useMemo(
+    () => defaultExpanderReducer(table?.rows || [], 3),
+    [table],
+  );
 
   return (
     <FinancialSheet
@@ -79,17 +41,44 @@ export default function BalanceSheetTable({
       // basis={query.basis}
       // loading={isLoading}
     >
-      <DataTable
-        className="bigcapital-datatable--financial-report"
+      <BalanceSheetDataTable
         columns={tableColumns}
-        data={[]}
-        // rowClassNames={rowClassNames}
+        data={table?.rows || []}
+        rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         expandable={true}
-        // expanded={expandedRows}
+        expanded={expandedRows}
         expandToggleColumn={1}
         expandColumnSpace={0.8}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );
 }
+
+const BalanceSheetDataTable = styled(DataTable)`
+  .table {
+    .tbody .tr {
+      .td {
+        border-bottom: 0;
+        padding-top: 0.36rem;
+        padding-bottom: 0.36rem;
+      }
+      &.is-expanded {
+        .td:not(.name) .cell-inner {
+          opacity: 0;
+        }
+      }
+      &.row_type--TOTAL {
+        .td {
+          font-weight: 500;
+          border-top: 1px solid #bbb;
+        }
+      }
+
+      &:last-of-type .td{
+        border-bottom: 1px solid #bbb;
+      }
+    }
+  }
+`;

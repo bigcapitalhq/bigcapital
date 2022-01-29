@@ -4,8 +4,6 @@ import classnames from 'classnames';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
 
-import 'style/pages/FinancialStatements/FinancialSheet.scss';
-
 import { If, LoadingIndicator, MODIFIER } from 'components';
 
 export default function FinancialSheet({

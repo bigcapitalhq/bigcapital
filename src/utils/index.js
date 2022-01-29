@@ -900,3 +900,15 @@ export function ignoreEventFromSelectors(event, selectors) {
     .map((selector) => event.target.closest(selector))
     .some((element) => !!element);
 }
+
+
+
+export const tableRowTypesToClassnames = ({ original }) => {
+  const rowTypes = _.castArray(original.row_types);
+
+  return rowTypes.reduce((acc, rowType) => {
+    acc[`row_type--${rowType}`] = rowType;
+
+    return acc;
+  }, {});
+};

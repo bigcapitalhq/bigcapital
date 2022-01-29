@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import 'style/pages/FinancialStatements/BalanceSheet.scss';
 
 import { BalanceSheetAlerts, BalanceSheetLoadingBar } from './components';
 import { FinancialStatement } from 'components';
