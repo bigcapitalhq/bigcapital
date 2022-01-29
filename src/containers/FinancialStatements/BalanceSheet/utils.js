@@ -14,7 +14,7 @@ const getReportColWidth = (data, accessor, headerText) => {
   return getColumnWidth(
     data,
     accessor,
-    { magicSpacing: 10, minWidth: 100 },
+    { magicSpacing: 9, minWidth: 100 },
     headerText,
   );
 };
@@ -137,7 +137,7 @@ const totalMapper = R.curry((data, column) => {
     Cell: CellTextSpan,
     width,
     disableSortBy: true,
-    align: hasChildren ? Align.Center : Align.Left,
+    align: hasChildren ? Align.Center : Align.Right,
   };
   return R.compose(
     R.when(R.always(hasChildren), assocColumnsToTotalColumn(data, column)),
