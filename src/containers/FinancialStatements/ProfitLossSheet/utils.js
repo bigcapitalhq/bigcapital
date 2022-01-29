@@ -10,7 +10,7 @@ const getReportColWidth = (data, accessor, labelText) => {
   return getColumnWidth(
     data,
     accessor,
-    { magicSpacing: 9, minWidth: 100 },
+    { magicSpacing: 10, minWidth: 100 },
     labelText,
   );
 };
@@ -260,7 +260,7 @@ const assocColumnsToTotalColumn = R.curry((data, column, columnAccessor) => {
 });
 
 /**
- *
+ * Retrieves the total column.
  */
 const totalColumn = R.curry((data, column) => {
   const hasChildren = isNodeHasChildren(column);
@@ -275,7 +275,7 @@ const totalColumn = R.curry((data, column) => {
     Cell: CellTextSpan,
     width,
     disableSortBy: true,
-    align: hasChildren ? 'center' : 'right',
+    align: hasChildren ? Align.Center : Align.Right,
   };
 });
 
@@ -323,6 +323,9 @@ const dateRangeSoloColumnAttrs = (data, column) => {
   };
 };
 
+/**
+ * Retrieves date range column.
+ */
 const dateRangeColumn = R.curry((data, column) => {
   const isDateColumnHasColumns = isNodeHasChildren(column);
 
@@ -331,7 +334,7 @@ const dateRangeColumn = R.curry((data, column) => {
     key: column.key,
     disableSortBy: true,
     textOverview: true,
-    align: Align.Center,
+    align: isDateColumnHasColumns ? Align.Center : Align.Center,
   };
   return R.compose(
     R.when(
@@ -374,5 +377,6 @@ const dynamicColumnMapper = R.curry((data, column) => {
  * @returns
  */
 export const dynamicColumns = (columns, data) => {
+  debugger;
   return R.map(dynamicColumnMapper(data), columns);
 };

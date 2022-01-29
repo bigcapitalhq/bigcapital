@@ -12,7 +12,6 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withProfitLossActions from './withProfitLossActions';
 import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 
-import 'style/pages/FinancialStatements/ProfitLossSheet.scss';
 import { ProfitLossSheetProvider } from './ProfitLossProvider';
 import { ProfitLossSheetLoadingBar, ProfitLossSheetAlerts } from './components';
 
