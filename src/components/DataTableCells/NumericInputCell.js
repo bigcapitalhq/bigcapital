@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FormGroup, NumericInput, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
+import WarehouseListPopover from '../../containers/WarehouseListPopover';
 
 /**
  * Numeric input table cell.
@@ -36,7 +37,8 @@ export default function NumericInputCell({
         onValueChange={handleValueChange}
         onBlur={onBlur}
         fill={true}
-        buttonPosition={"none"}
+        buttonPosition={'none'}
+        rightElement={<WarehouseListPopover />}
       />
     </FormGroup>
   );

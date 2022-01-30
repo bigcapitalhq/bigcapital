@@ -9,6 +9,7 @@ import NumericInputCell from './NumericInputCell';
 import CheckBoxFieldCell from './CheckBoxFieldCell';
 import SwitchFieldCell from './SwitchFieldCell';
 import TextAreaCell from './TextAreaCell';
+import RadioFieldCell from './RadioFieldCell';
 
 export {
   AccountsListFieldCell,
@@ -23,4 +24,5 @@ export {
   CheckBoxFieldCell,
   SwitchFieldCell,
   TextAreaCell,
+  RadioFieldCell,
 };
