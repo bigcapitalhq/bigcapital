@@ -1786,5 +1786,8 @@
   "warehouse_locations.label":"Warehouses Locations",
   "warehouse_locations.column.warehouse_name":"Warehouse name",
   "warehouse_locations.column.quantity":"Quantity",
-  "warehouse_locations.column.available_for_sale":"Available for sale"
+  "warehouse_locations.column.available_for_sale":"Available for sale",
+  "warehouses.action.edit_warehouse":"Edit Warehouse",
+  "warehouses.action.delete_warehouse":"Delete Warehouse",
+  "warehouses.action.make_as_parimary":"Mark as Primary"
 }
