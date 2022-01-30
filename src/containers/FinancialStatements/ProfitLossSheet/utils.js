@@ -377,6 +377,5 @@ const dynamicColumnMapper = R.curry((data, column) => {
  * @returns
  */
 export const dynamicColumns = (columns, data) => {
-  debugger;
   return R.map(dynamicColumnMapper(data), columns);
 };

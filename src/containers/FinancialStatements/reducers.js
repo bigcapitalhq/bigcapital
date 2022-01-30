@@ -1,8 +1,7 @@
-containers/FinancialStatements/reducersimport React from 'react';
+import React from 'react';
 import { chain } from 'lodash';
 import moment from 'moment';
 import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
 
 export const trialBalanceSheetReducer = (sheet) => {
   const results = [];
@@ -20,6 +19,7 @@ export const trialBalanceSheetReducer = (sheet) => {
   }
   return results;
 };
+
 
 
 export const journalTableRowsReducer = (journal) => {
