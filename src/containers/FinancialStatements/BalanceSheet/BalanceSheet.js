@@ -9,7 +9,6 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import BalanceSheetActionsBar from './BalanceSheetActionsBar';
 import { BalanceSheetProvider } from './BalanceSheetProvider';
 import { BalanceSheetBody } from './BalanceSheetBody';
-import { FinancialReportBody } from '../FinancialReportPage';
 
 import withBalanceSheetActions from './withBalanceSheetActions';
 
@@ -70,9 +69,7 @@ function BalanceSheet({
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
           />
-          <FinancialReportBody>
-            <BalanceSheetBody />
-          </FinancialReportBody>
+          <BalanceSheetBody />
         </FinancialStatement>
       </DashboardPageContent>
     </BalanceSheetProvider>

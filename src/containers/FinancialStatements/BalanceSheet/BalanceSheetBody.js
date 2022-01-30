@@ -1,7 +1,9 @@
 import React from 'react';
 
 import BalanceSheetTable from './BalanceSheetTable';
-import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
+import { FinancialReportBody } from '../FinancialReportPage';
+
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 
 import { compose } from 'utils';
@@ -16,10 +18,14 @@ function BalanceSheetBodyJSX({
 }) {
   const { isLoading } = useBalanceSheetContext();
 
-  return isLoading ? (
-    'loading'
-  ) : (
-    <BalanceSheetTable companyName={organizationName} />
+  return (
+    <FinancialReportBody>
+      {isLoading ? (
+        'loading'
+      ) : (
+        <BalanceSheetTable companyName={organizationName} />
+      )}
+    </FinancialReportBody>
   );
 }
 
