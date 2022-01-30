@@ -17,7 +17,7 @@ export default function ProfitLossSheetTable({
 }) {
   // Profit/Loss sheet context.
   const {
-    profitLossSheet: { table },
+    profitLossSheet: { table, query },
     isLoading,
   } = useProfitLossSheetContext();
 
@@ -34,11 +34,11 @@ export default function ProfitLossSheetTable({
     <FinancialSheet
       companyName={companyName}
       sheetType={<T id={'profit_loss_sheet'} />}
-      // fromDate={query.from_date}
-      // toDate={query.to_date}
+      fromDate={query.from_date}
+      toDate={query.to_date}
       name="profit-loss-sheet"
       loading={isLoading}
-      // basis={query.basis}
+      basis={query.basis}
     >
       <ProfitLossDataTable
         columns={tableColumns}

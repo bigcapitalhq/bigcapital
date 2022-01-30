@@ -3,25 +3,21 @@ import moment from 'moment';
 import { compose } from 'utils';
 
 import ProfitLossSheetHeader from './ProfitLossSheetHeader';
-import ProfitLossSheetTable from './ProfitLossSheetTable';
 import ProfitLossActionsBar from './ProfitLossActionsBar';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withProfitLossActions from './withProfitLossActions';
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 
 import { ProfitLossSheetProvider } from './ProfitLossProvider';
 import { ProfitLossSheetLoadingBar, ProfitLossSheetAlerts } from './components';
+import { ProfitLossBody } from './ProfitLossBody';
 
 /**
  * Profit/Loss financial statement sheet.
  */
 function ProfitLossSheet({
-  // #withPreferences
-  organizationName,
-
   // #withProfitLossActions
   toggleProfitLossFilterDrawer: toggleDisplayFilterDrawer,
 }) {
@@ -32,7 +28,6 @@ function ProfitLossSheet({
     displayColumnsType: 'total',
     filterByOption: 'with-transactions',
   });
-
   // Handle submit filter.
   const handleSubmitFilter = (filter) => {
     const _filter = {
@@ -42,7 +37,6 @@ function ProfitLossSheet({
     };
     setFilter(_filter);
   };
-
   // Handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
     setFilter({
@@ -64,19 +58,15 @@ function ProfitLossSheet({
         numberFormat={filter.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
-      {/* <ProfitLossSheetLoadingBar /> */}
+      <ProfitLossSheetLoadingBar />
       {/* <ProfitLossSheetAlerts /> */}
 
       <DashboardPageContent>
-        <div class="financial-statement">
-          <ProfitLossSheetHeader
-            pageFilter={filter}
-            onSubmitFilter={handleSubmitFilter}
-          />
-          <div class="financial-statement__body">
-            <ProfitLossSheetTable companyName={organizationName} />
-          </div>
-        </div>
+        <ProfitLossSheetHeader
+          pageFilter={filter}
+          onSubmitFilter={handleSubmitFilter}
+        />
+        <ProfitLossBody />
       </DashboardPageContent>
     </ProfitLossSheetProvider>
   );
@@ -85,7 +75,4 @@ function ProfitLossSheet({
 export default compose(
   withDashboardActions,
   withProfitLossActions,
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
 )(ProfitLossSheet);

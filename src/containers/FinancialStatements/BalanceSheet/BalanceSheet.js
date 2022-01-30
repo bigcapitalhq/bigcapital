@@ -5,23 +5,21 @@ import { BalanceSheetAlerts, BalanceSheetLoadingBar } from './components';
 import { FinancialStatement } from 'components';
 
 import BalanceSheetHeader from './BalanceSheetHeader';
-import BalanceSheetTable from './BalanceSheetTable';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import BalanceSheetActionsBar from './BalanceSheetActionsBar';
 import { BalanceSheetProvider } from './BalanceSheetProvider';
+import { BalanceSheetBody } from './BalanceSheetBody';
+import { FinancialReportBody } from '../FinancialReportPage';
 
 import withBalanceSheetActions from './withBalanceSheetActions';
-import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 
 import { compose } from 'utils';
 
 /**
  * Balance sheet.
+ * @returns {React.JSX}
  */
 function BalanceSheet({
-  // #withCurrentOrganization
-  organizationName,
-
   // #withBalanceSheetActions
   toggleBalanceSheetFilterDrawer,
 }) {
@@ -42,7 +40,6 @@ function BalanceSheet({
     };
     setFilter({ ..._filter });
   };
-
   // Handle number format submit.
   const handleNumberFormatSubmit = (values) => {
     setFilter({
@@ -50,7 +47,6 @@ function BalanceSheet({
       numberFormat: values,
     });
   };
-
   // Hides the balance sheet filter drawer once the page unmount.
   useEffect(
     () => () => {
@@ -66,6 +62,7 @@ function BalanceSheet({
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <BalanceSheetLoadingBar />
+      {/* <BalanceSheetAlerts /> */}
 
       <DashboardPageContent>
         <FinancialStatement>
@@ -73,20 +70,13 @@ function BalanceSheet({
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
           />
-          <div class="financial-statement__body">
-            <BalanceSheetTable companyName={organizationName} />
-          </div>
+          <FinancialReportBody>
+            <BalanceSheetBody />
+          </FinancialReportBody>
         </FinancialStatement>
       </DashboardPageContent>
-
-      {/* <BalanceSheetAlerts /> */}
     </BalanceSheetProvider>
   );
 }
 
-export default compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-  withBalanceSheetActions,
-)(BalanceSheet);
+export default compose(withBalanceSheetActions)(BalanceSheet);

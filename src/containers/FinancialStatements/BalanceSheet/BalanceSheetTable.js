@@ -36,14 +36,13 @@ export default function BalanceSheetTable({
       name="balance-sheet"
       companyName={companyName}
       sheetType={intl.get('balance_sheet')}
-      // fromDate={query.from_date}
-      // toDate={query.to_date}
-      // basis={query.basis}
-      // loading={isLoading}
+      fromDate={query.from_date}
+      toDate={query.to_date}
+      basis={query.basis}
     >
       <BalanceSheetDataTable
         columns={tableColumns}
-        data={table?.rows || []}
+        data={table.rows}
         rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         expandable={true}

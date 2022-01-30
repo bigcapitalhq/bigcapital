@@ -1,31 +1,8 @@
-import React from 'react';
+containers/FinancialStatements/reducersimport React from 'react';
 import { chain } from 'lodash';
 import moment from 'moment';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
-
-export const balanceSheetRowsReducer = (accounts) => {
-  return accounts.map((account) => {
-    return {
-      ...account,
-      children: balanceSheetRowsReducer([
-        ...(account.children ? account.children : []),
-        ...(account.total && account.children && account.children.length > 0
-          ? [
-              {
-                name: intl.get('total_name', { name: account.name }),
-                row_types: ['total-row', account.section_type],
-                total: { ...account.total },
-                ...(account.total_periods && {
-                  total_periods: account.total_periods,
-                }),
-              },
-            ]
-          : []),
-      ]),
-    };
-  });
-};
 
 export const trialBalanceSheetReducer = (sheet) => {
   const results = [];
@@ -44,124 +21,6 @@ export const trialBalanceSheetReducer = (sheet) => {
   return results;
 };
 
-export const profitLossSheetReducer = (profitLoss) => {
-  const results = [];
-
-  if (profitLoss.income) {
-    results.push({
-      name: <T id={'income'} />,
-      total: profitLoss.income.total,
-      children: [
-        ...profitLoss.income.accounts,
-        {
-          name: <T id={'total_income'} />,
-          total: profitLoss.income.total,
-          total_periods: profitLoss.income.total_periods,
-          rowTypes: ['income_total', 'section_total', 'total'],
-        },
-      ],
-      total_periods: profitLoss.income.total_periods,
-    });
-  }
-  if (profitLoss.cost_of_sales) {
-    results.push({
-      name: <T id={'cost_of_sales'} />,
-      total: profitLoss.cost_of_sales.total,
-      children: [
-        ...profitLoss.cost_of_sales.accounts,
-        {
-          name: <T id={'total_cost_of_sales'} />,
-          total: profitLoss.cost_of_sales.total,
-          total_periods: profitLoss.cost_of_sales.total_periods,
-          rowTypes: ['cogs_total', 'section_total', 'total'],
-        },
-      ],
-      total_periods: profitLoss.cost_of_sales.total_periods,
-    });
-  }
-  if (profitLoss.gross_profit) {
-    results.push({
-      name: <T id={'gross_profit'} />,
-      total: profitLoss.gross_profit.total,
-      total_periods: profitLoss.gross_profit.total_periods,
-      rowTypes: ['gross_total', 'section_total', 'total'],
-    });
-  }
-  if (profitLoss.expenses) {
-    results.push({
-      name: <T id={'expenses'} />,
-      total: profitLoss.expenses.total,
-      children: [
-        ...profitLoss.expenses.accounts,
-        {
-          name: <T id={'total_expenses'} />,
-          total: profitLoss.expenses.total,
-          total_periods: profitLoss.expenses.total_periods,
-          rowTypes: ['expenses_total', 'section_total', 'total'],
-        },
-      ],
-      total_periods: profitLoss.expenses.total_periods,
-    });
-  }
-  if (profitLoss.operating_profit) {
-    results.push({
-      name: <T id={'net_operating_income'} />,
-      total: profitLoss.operating_profit.total,
-      total_periods: profitLoss.income.total_periods,
-      rowTypes: ['net_operating_total', 'section_total', 'total'],
-    });
-  }
-  if (profitLoss.other_income) {
-    results.push({
-      
-      name:<T id={'other_income'}/>,
-      total: profitLoss.other_income.total,
-      total_periods: profitLoss.other_income.total_periods,
-      children: [
-        ...profitLoss.other_income.accounts,
-        {
-          name: <T id={'total_other_income'} />,
-          total: profitLoss.other_income.total,
-          total_periods: profitLoss.other_income.total_periods,
-          rowTypes: ['expenses_total', 'section_total', 'total'],
-        },
-      ],
-    });
-  }
-  if (profitLoss.other_expenses) {
-    results.push({
-      name: <T id={'other_expenses'} />,
-      total: profitLoss.other_expenses.total,
-      total_periods: profitLoss.other_expenses.total_periods,
-      children: [
-        ...profitLoss.other_expenses.accounts,
-        {
-          name: <T id={'total_other_expenses'} />,
-          total: profitLoss.other_expenses.total,
-          total_periods: profitLoss.other_expenses.total_periods,
-          rowTypes: ['expenses_total', 'section_total', 'total'],
-        },
-      ],
-    });
-  }
-  if (profitLoss.net_other_income) {
-    results.push({
-      name: <T id={'net_other_income'} />,
-      total: profitLoss.net_other_income.total,
-      total_periods: profitLoss.net_other_income.total_periods,
-      rowTypes: ['net_other_income', 'section_total', 'total'],
-    });
-  }
-  if (profitLoss.net_income) {
-    results.push({
-      name: <T id={'net_income'} />,
-      total: profitLoss.net_income.total,
-      total_periods: profitLoss.net_income.total_periods,
-      rowTypes: ['net_income_total', 'section_total', 'total'],
-    });
-  }
-  return results;
-};
 
 export const journalTableRowsReducer = (journal) => {
   const TYPES = {

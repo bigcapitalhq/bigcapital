@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import moment from 'moment';
 import { Formik, Form } from 'formik';
 import { FormattedMessage as T } from 'components';
