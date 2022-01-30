@@ -7,6 +7,7 @@ import Currencies from 'containers/Preferences/Currencies/Currencies';
 import Item from 'containers/Preferences/Item';
 import SMSIntegration from '../containers/Preferences/SMSIntegration';
 import DefaultRoute from '../containers/Preferences/DefaultRoute';
+import Warehouses from '../containers/Preferences/Warehouses';
 
 const BASE_URL = '/preferences';
 
@@ -34,6 +35,11 @@ export default [
   {
     path: `${BASE_URL}/currencies`,
     component: Currencies,
+    exact: true,
+  },
+  {
+    path: `${BASE_URL}/warehouses`,
+    component: Warehouses,
     exact: true,
   },
   {
