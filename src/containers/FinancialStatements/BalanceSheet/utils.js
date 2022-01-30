@@ -62,7 +62,7 @@ const accountNameMapper = R.curry((data, column) => {
     accessor,
     className: column.key,
     textOverview: true,
-    width,
+    width: Math.max(width, 300),
   };
 });
 
