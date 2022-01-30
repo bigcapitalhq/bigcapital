@@ -4,8 +4,10 @@ import styled from 'styled-components';
 function WarehousesGrid({ warehouse }) {
   return (
     <WarehouseGrid>
-      <WarehouseTitle>{warehouse.title}</WarehouseTitle>
-      <WarehouseCode>{warehouse.code}</WarehouseCode>
+      <WarehouseHeader>
+        <WarehouseTitle>{warehouse.title}</WarehouseTitle>
+        <WarehouseCode>{warehouse.code}</WarehouseCode>
+      </WarehouseHeader>
       <WarehouseInfoItem>{warehouse.city}</WarehouseInfoItem>
       <WarehouseInfoItem>{warehouse.country}</WarehouseInfoItem>
       <WarehouseInfoItem>{warehouse.email}</WarehouseInfoItem>
@@ -33,7 +35,7 @@ const WarehouseGrid = styled.div`
   height: 160px; //225px
   background: #fff;
   margin: 5px;
-  padding: 10px 12px;
+  padding: 16px 12px 10px;
   border: 1px solid #c8cad0; //#CFD1D6
   transition: all 0.1s ease-in-out;
 
@@ -51,11 +53,14 @@ const WarehouseTitle = styled.div`
   line-height: 1;
 `;
 
+const WarehouseHeader = styled.div`
+  margin: 4px 0px 15px;
+`;
+
 const WarehouseCode = styled.div`
   display: inline-block;
   font-size: 11px;
   color: #6b7176;
-  margin: 4px 0px 15px;
 `;
 
 const WarehouseInfoItem = styled.div`
