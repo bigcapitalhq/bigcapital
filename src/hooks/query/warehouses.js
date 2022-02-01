@@ -8,6 +8,10 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate warehouses.
   queryClient.invalidateQueries(t.WAREHOUSES);
   queryClient.invalidateQueries(t.WAREHOUSE);
+
+  // Invalidate warehouses transfers.
+  queryClient.invalidateQueries(t.WAREHOUSE_TRANSFERS);
+  queryClient.invalidateQueries(t.WAREHOUSE_TRANSFER);
 };
 
 /**
@@ -92,6 +96,97 @@ export function useWarehouse(id, props, requestProps) {
     { method: 'get', url: `warehouses/${id}`, ...requestProps },
     {
       select: (res) => res.data.warehouse,
+      defaultData: {},
+      ...props,
+    },
+  );
+}
+
+/**
+ * Create a new warehouse transfer.
+ */
+export function useCreateWarehouseTransfer(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (values) => apiRequest.post('warehouses/transfers', values),
+    {
+      onSuccess: (res, values) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Edits the given warehouse transfer.
+ */
+export function useEditWarehouseTransfer(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) => apiRequest.post(`warehouses/transfers${id}`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Invalidate specific sale invoice.
+        queryClient.invalidateQueries([t.WAREHOUSE_TRANSFER, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Deletes the given warehouse Transfer.
+ */
+export function useDeleteWarehouseTransfer(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation((id) => apiRequest.delete(`warehouses/transfers/${id}`), {
+    onSuccess: (res, id) => {
+      // Invalidate specific warehoue.
+      queryClient.invalidateQueries([t.WAREHOUSE_TRANSFER, id]);
+
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
+}
+
+/**
+ * Retrieve Warehoues list.
+ */
+export function useWarehousesTransfers(query, props) {
+  return useRequestQuery(
+    [t.WAREHOUSE_TRANSFERS, query],
+    { method: 'get', url: 'warehouses/transfers', params: query },
+    {
+      select: (res) => res.data,
+      defaultData: [],
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve the warehouse transfer details.
+ * @param {number}
+ */
+export function useWarehouseTransfer(id, props, requestProps) {
+  return useRequestQuery(
+    [t.WAREHOUSE_TRANSFER, id],
+    { method: 'get', url: `warehouses/transfers/${id}`, ...requestProps },
+    {
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

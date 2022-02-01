@@ -37,7 +37,7 @@ function WarehouseTransferFormHeaderFields({
   warehouseTransferNextNumber,
   warehouseTransferNumberPrefix,
 }) {
-  const { accounts } = useWarehouseTransferFormContext();
+  const { warehouses } = useWarehouseTransferFormContext();
 
   // Handle warehouse transfer number changing.
   const handleTransferNumberChange = () => {
@@ -92,11 +92,11 @@ function WarehouseTransferFormHeaderFields({
         )}
       </FastField>
       {/* ----------- Transfer number ----------- */}
-      <Field name={'transfer_number'}>
+      <Field name={'transaction_number'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'warehouse_transfer.label.transfer_no'} />}
-            labelInfo={<FieldRequiredHint />}
+            // labelInfo={<FieldRequiredHint />}
             inline={true}
             className={classNames('form-group--transfer-no', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
@@ -131,7 +131,7 @@ function WarehouseTransferFormHeaderFields({
         )}
       </Field>
       {/* ----------- Form Warehouse ----------- */}
-      <FastField name={'form_warehouse'} accounts={accounts}>
+      <FastField name={'from_warehouse_id'} accounts={warehouses}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'warehouse_transfer.label.form_warehouse'} />}
@@ -142,12 +142,12 @@ function WarehouseTransferFormHeaderFields({
             inline={true}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'form_warehouse'} />}
+            helperText={<ErrorMessage name={'from_warehouse_id'} />}
           >
             <AccountsSelectList
-              accounts={accounts}
+              accounts={warehouses}
               onAccountSelected={(account) => {
-                form.setFieldValue('form_warehouse', account.id);
+                form.setFieldValue('from_warehouse_id', account.id);
               }}
               defaultSelectText={'Select Warehouse Transfer'}
               selectedAccountId={value}
@@ -158,7 +158,7 @@ function WarehouseTransferFormHeaderFields({
         )}
       </FastField>
       {/* ----------- To Warehouse ----------- */}
-      <FastField name={'to_warehouse'} accounts={accounts}>
+      <FastField name={'to_warehouse_id'} accounts={warehouses}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'warehouse_transfer.label.to_warehouse'} />}
@@ -169,12 +169,12 @@ function WarehouseTransferFormHeaderFields({
             inline={true}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'to_warehouse'} />}
+            helperText={<ErrorMessage name={'to_warehouse_id'} />}
           >
             <AccountsSelectList
-              accounts={accounts}
+              accounts={warehouses}
               onAccountSelected={(account) => {
-                form.setFieldValue('to_warehouse', account.id);
+                form.setFieldValue('to_warehouse_id', account.id);
               }}
               defaultSelectText={'Select Warehouse Transfer'}
               selectedAccountId={value}

@@ -18,28 +18,15 @@ export const MIN_LINES_NUMBER = 4;
 
 export const defaultWarehouseTransfer = {
   date: moment(new Date()).format('YYYY-MM-DD'),
-  transfer_number: '',
-  from_warehouse: '',
-  to_warehouse: '',
+  transaction_number: '',
+  from_warehouse_id: '',
+  to_warehouse_id: '',
   reason: '',
   entries: [...repeatValue(defaultWareTransferEntry, MIN_LINES_NUMBER)],
 };
 
 export const ITEMS_FILTER_ROLES_QUERY = JSON.stringify([
-  {
-    index: 1,
-    fieldKey: 'sellable',
-    value: true,
-    condition: '&&',
-    comparator: 'equals',
-  },
-  {
-    index: 2,
-    fieldKey: 'active',
-    value: true,
-    condition: '&&',
-    comparator: 'equals',
-  },
+  { fieldKey: 'type', comparator: 'is', value: 'inventory', index: 1 },
 ]);
 
 /**
@@ -50,6 +37,6 @@ export const useObserveTransferNoSettings = (prefix, nextNumber) => {
 
   React.useEffect(() => {
     const transferNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('transfer_no', transferNo);
+    setFieldValue('transaction_number', transferNo);
   }, [setFieldValue, prefix, nextNumber]);
 };
