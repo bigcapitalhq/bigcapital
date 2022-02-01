@@ -10,9 +10,10 @@ import WarehouseForm from './WarehouseForm';
 export default function WarehouseFormDialogContent({
   // #ownProps
   dialogName,
+  warehouseId,
 }) {
   return (
-    <WarehouseFormProvider dialogName={dialogName}>
+    <WarehouseFormProvider warehouseId={warehouseId} dialogName={dialogName}>
       <WarehouseForm />
     </WarehouseFormProvider>
   );
