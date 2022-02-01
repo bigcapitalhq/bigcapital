@@ -4,11 +4,11 @@ import { DATATYPES_LENGTH } from 'common/dataTypes';
 
 const Schema = Yup.object().shape({
   date: Yup.date().required().label(intl.get('date')),
-  transfer_number: Yup.string()
+  transaction_number: Yup.string()
     .max(DATATYPES_LENGTH.STRING)
-    .label(intl.get('transfer_number')),
-  from_warehouse: Yup.number().required().label(intl.get('from_warehouse')),
-  to_warehouse: Yup.number().required().label(intl.get('from_warehouse')),
+    .label(intl.get('transaction_number')),
+  from_warehouse_id: Yup.number().required().label(intl.get('from_warehouse')),
+  to_warehouse_id: Yup.number().required().label(intl.get('from_warehouse')),
   reason: Yup.string()
     .trim()
     .min(1)
@@ -17,8 +17,9 @@ const Schema = Yup.object().shape({
   entries: Yup.array().of(
     Yup.object().shape({
       item_id: Yup.number().nullable(),
-      source_warehouse: Yup.number().nullable(),
-      destination_warehouse: Yup.number().nullable(),
+      // source_warehouse: Yup.number().nullable(),
+      // destination_warehouse: Yup.number().nullable(),
+      description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
       quantity: Yup.number().nullable().max(DATATYPES_LENGTH.INT_10),
     }),
   ),

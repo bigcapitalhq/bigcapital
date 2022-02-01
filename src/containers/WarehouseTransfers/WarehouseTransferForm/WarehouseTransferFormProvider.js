@@ -1,6 +1,6 @@
 import React from 'react';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import { useItems, useAccounts } from 'hooks/query';
+import { useItems, useWarehouses } from 'hooks/query';
 import { ITEMS_FILTER_ROLES_QUERY } from './utils.js';
 
 const WarehouseFormContext = React.createContext();
@@ -19,17 +19,23 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
     stringified_filter_roles: ITEMS_FILTER_ROLES_QUERY,
   });
 
-  // Fetch accounts list.
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+  // Fetch warehouses list.
+  const {
+    data: warehouses,
+    isFetching: isWarehouesFetching,
+    isLoading: isWarehouesLoading,
+  } = useWarehouses();
 
   // Provider payload.
   const provider = {
     items,
-    accounts,
+    warehouses,
+    isItemsFetching,
+    isWarehouesFetching,
   };
   return (
     <DashboardInsider
-      loading={isItemsLoading || isAccountsLoading}
+      loading={isItemsLoading || isWarehouesLoading}
       name={'warehouseTransfer-form'}
     >
       <WarehouseFormContext.Provider value={provider} {...props} />
