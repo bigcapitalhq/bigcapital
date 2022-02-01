@@ -379,3 +379,17 @@ const dynamicColumnMapper = R.curry((data, column) => {
 export const dynamicColumns = (columns, data) => {
   return R.map(dynamicColumnMapper(data), columns);
 };
+
+export const handlePreviousYearCheckBoxChange = R.curry((form, event) => {
+  const isChecked = event.currentTarget.checked;
+  form.setFieldValue('previous_year', isChecked);
+  form.setFieldValue('previous_year_amount_change', isChecked);
+  form.setFieldValue('previous_year_percentage_change', isChecked);
+});
+
+export const handlePreviousPeriodCheckBoxChange = R.curry((form, event) => {
+  const isChecked = event.currentTarget.checked;
+  form.setFieldValue('previous_period', isChecked);
+  form.setFieldValue('previous_period_amount_change', isChecked);
+  form.setFieldValue('previous_period_amount_change', isChecked);
+});

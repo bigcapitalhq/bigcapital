@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { FastField, Field } from 'formik';
 import { FormGroup, Checkbox } from '@blueprintjs/core';
 import styled from 'styled-components';
@@ -6,6 +7,10 @@ import styled from 'styled-components';
 import { FormattedMessage as T } from 'components';
 
 import { Row, Col, FieldHint } from '../../../components';
+import {
+  handlePreviousYearCheckBoxChange,
+  handlePreviousPeriodCheckBoxChange,
+} from './utils';
 
 /**
  * Balance sheet header - Comparison panal.
@@ -14,42 +19,55 @@ export default function BalanceSheetHeaderComparisonPanal() {
   return (
     <BalanceSheetComparisonWrap>
       {/**----------- Previous Year -----------*/}
-      <FastField name={'previous_year'} type={'checkbox'}>
-        {({ field }) => (
+      <Field name={'previous_year'} type={'checkbox'}>
+        {({ form, field }) => (
           <FormGroup labelInfo={<FieldHint />}>
             <Checkbox
               inline={true}
-              small={true}
               label={<T id={'balance_sheet.previous_year'} />}
               {...field}
+              onChange={handlePreviousYearCheckBoxChange(form)}
             />
           </FormGroup>
         )}
-      </FastField>
+      </Field>
       <Row>
         <Col xs={3}>
-          <FastField name={'previous_year_amount_change'} type={'checkbox'}>
-            {({ field }) => (
+          <Field name={'previous_year_amount_change'} type={'checkbox'}>
+            {({ form: { setFieldValue }, field }) => (
               <FormGroup labelInfo={<FieldHint />}>
                 <Checkbox
                   inline={true}
                   small={true}
                   label={<T id={'balance_sheet.total_change'} />}
                   {...field}
+                  onChange={({ currentTarget }) => {
+                    setFieldValue('previous_year', currentTarget.checked);
+                    setFieldValue(
+                      'previous_year_amount_change',
+                      currentTarget.checked,
+                    );
+                  }}
                 />
               </FormGroup>
             )}
-          </FastField>
+          </Field>
         </Col>
         <Col xs={3}>
           <FastField name={'previous_year_percentage_change'} type={'checkbox'}>
-            {({ field }) => (
+            {({ form: { setFieldValue }, field }) => (
               <FormGroup labelInfo={<FieldHint />}>
                 <Checkbox
                   inline={true}
-                  small={true}
                   label={<T id={'balance_sheet.change'} />}
                   {...field}
+                  onChange={({ currentTarget }) => {
+                    setFieldValue('previous_year', currentTarget.checked);
+                    setFieldValue(
+                      'previous_year_percentage_change',
+                      currentTarget.checked,
+                    );
+                  }}
                 />
               </FormGroup>
             )}
@@ -58,13 +76,14 @@ export default function BalanceSheetHeaderComparisonPanal() {
       </Row>
       {/*------------ Previous Period -----------*/}
       <FastField name={'previous_period'} type={'checkbox'}>
-        {({ field }) => (
+        {({ form, field }) => (
           <FormGroup labelInfo={<FieldHint />}>
             <Checkbox
               inline={true}
               small={true}
               label={<T id={'balance_sheet.previous_period'} />}
               {...field}
+              onChange={handlePreviousPeriodCheckBoxChange(form)}
             />
           </FormGroup>
         )}
@@ -72,13 +91,20 @@ export default function BalanceSheetHeaderComparisonPanal() {
       <Row>
         <Col xs={3}>
           <FastField name={'previous_period_amount_change'} type={'checkbox'}>
-            {({ field }) => (
+            {({ form: { setFieldValue }, field }) => (
               <FormGroup labelInfo={<FieldHint />}>
                 <Checkbox
                   inline={true}
                   small={true}
                   label={<T id={'balance_sheet.total_change'} />}
                   {...field}
+                  onChange={({ currentTarget }) => {
+                    setFieldValue('previous_period', currentTarget.checked);
+                    setFieldValue(
+                      'previous_period_amount_change',
+                      currentTarget.checked,
+                    );
+                  }}
                 />
               </FormGroup>
             )}
@@ -89,22 +115,28 @@ export default function BalanceSheetHeaderComparisonPanal() {
             name={'previous_period_percentage_change'}
             type={'checkbox'}
           >
-            {({ field }) => (
+            {({ form: { setFieldValue }, field }) => (
               <FormGroup labelInfo={<FieldHint />}>
                 <Checkbox
                   inline={true}
-                  small={true}
                   label={<T id={'balance_sheet.change'} />}
                   {...field}
+                  onChange={({ currentTarget }) => {
+                    setFieldValue('previous_period', currentTarget.checked);
+                    setFieldValue(
+                      'previous_period_percentage_change',
+                      currentTarget.checked,
+                    );
+                  }}
                 />
               </FormGroup>
             )}
           </FastField>
         </Col>
       </Row>
-      
+
       {/**----------- % of Column -----------*/}
-      <FastField name={'previous_period_percentage_change'} type={'checkbox'}>
+      <FastField name={'percentage_of_column'} type={'checkbox'}>
         {({ field }) => (
           <FormGroup labelInfo={<FieldHint />}>
             <Checkbox
@@ -118,7 +150,7 @@ export default function BalanceSheetHeaderComparisonPanal() {
       </FastField>
 
       {/**----------- % of Row -----------*/}
-      <FastField name={'previous_period_percentage_change'} type={'checkbox'}>
+      <FastField name={'percentage_of_row'} type={'checkbox'}>
         {({ field }) => (
           <FormGroup labelInfo={<FieldHint />}>
             <Checkbox
@@ -138,12 +170,11 @@ const BalanceSheetComparisonWrap = styled.div`
   .row {
     margin-left: 0.15rem;
     .col {
-      min-width: 150px;
-      max-width: 190px;
+      min-width: 150px !important;
+      max-width: 190px !important;
     }
   }
   .bp3-form-group {
     margin-bottom: 3px;
-    /* margin-bottom: 0; */
   }
 `;
