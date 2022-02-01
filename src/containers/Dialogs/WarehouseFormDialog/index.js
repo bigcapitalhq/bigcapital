@@ -12,18 +12,31 @@ const WarehouseFormDialogContent = React.lazy(() =>
 /**
  * Warehouse form form dialog.
  */
-function WarehouseFormDialog({ dialogName, isOpen }) {
+function WarehouseFormDialog({
+  dialogName,
+  payload: { warehouseId = null, action },
+  isOpen,
+}) {
   return (
     <Dialog
       name={dialogName}
-      title={<T id={'warehouse.dialog.label'} />}
+      title={
+        action == 'edit' ? (
+          <T id={'warehouse.dialog.label.edit_warehouse'} />
+        ) : (
+          <T id={'warehouse.dialog.label.new_warehouse'} />
+        )
+      }
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}
       className={'dialog--warehouse-form'}
     >
       <DialogSuspense>
-        <WarehouseFormDialogContent dialogName={dialogName} />
+        <WarehouseFormDialogContent
+          dialogName={dialogName}
+          warehouseId={warehouseId}
+        />
       </DialogSuspense>
     </Dialog>
   );

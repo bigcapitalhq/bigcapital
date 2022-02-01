@@ -1,22 +1,44 @@
 import React from 'react';
 import { DialogContent } from 'components';
-// import {} from 'hooks/query';
+import {
+  useCreateWarehouse,
+  useEditWarehouse,
+  useWarehouse,
+} from 'hooks/query';
+import { useLocation } from 'react-router-dom';
 
 const WarehouseFormContext = React.createContext();
 
 /**
  * Warehouse form provider.
  */
-function WarehouseFormProvider({ dialogName, ...props }) {
+function WarehouseFormProvider({ dialogName, warehouseId, ...props }) {
+  const { state } = useLocation();
+
+  console.log(state, 'XXX');
+  // Create and edit warehouse mutations.
+  const { mutateAsync: createWarehouseMutate } = useCreateWarehouse();
+  const { mutateAsync: editWarehouseMutate } = useEditWarehouse();
+
+  // Handle fetch invoice detail.
+  const { data: warehouse, isLoading: isWarehouseLoading } = useWarehouse(
+    warehouseId,
+    {
+      enabled: !!warehouseId,
+    },
+  );
+
   // State provider.
   const provider = {
     dialogName,
+    warehouse,
+    warehouseId,
+    createWarehouseMutate,
+    editWarehouseMutate,
   };
 
   return (
-    <DialogContent
-    // isLoading={}
-    >
+    <DialogContent isLoading={isWarehouseLoading}>
       <WarehouseFormContext.Provider value={provider} {...props} />
     </DialogContent>
   );

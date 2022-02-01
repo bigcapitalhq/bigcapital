@@ -1,6 +1,6 @@
 import React from 'react';
 import { WarehousesProvider } from './WarehousesProvider';
-import Warehouses from './WarehousesList';
+import Warehouses from './Warehouses';
 
 /**
  * Warehouses Preferences.

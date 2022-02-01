@@ -1,7 +1,9 @@
 import React from 'react';
+import styled from 'styled-components';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
-import styled from 'styled-components';
+import { useWarehouses } from 'hooks/query';
+import PreferencesPageLoader from '../PreferencesPageLoader';
 
 const WarehousesContext = React.createContext();
 
@@ -9,12 +11,24 @@ const WarehousesContext = React.createContext();
  * Warehouses data provider.
  */
 function WarehousesProvider({ ...props }) {
+  // Fetch warehouses list.
+  const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses();
+
   // Provider state.
-  const provider = {};
+  const provider = {
+    warehouses,
+    isWarehouesLoading,
+  };
 
   return (
     <div className={classNames(CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT)}>
-      <WarehousesContext.Provider value={provider} {...props} />
+      <WarehousePreference>
+        {isWarehouesLoading ? (
+          <PreferencesPageLoader />
+        ) : (
+          <WarehousesContext.Provider value={provider} {...props} />
+        )}
+      </WarehousePreference>
     </div>
   );
 }
@@ -22,3 +36,9 @@ function WarehousesProvider({ ...props }) {
 const useWarehousesContext = () => React.useContext(WarehousesContext);
 
 export { WarehousesProvider, useWarehousesContext };
+
+const WarehousePreference = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin: 15px;
+`;

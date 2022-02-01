@@ -1,63 +1,30 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { ContextMenu2 } from '@blueprintjs/popover2';
 
+import { useWarehousesContext } from './WarehousesProvider';
 import WarehousesGridItems from './WarehousesGridItems';
-import { WarehouseContextMenu } from './components';
-import withAlertsActions from '../../Alert/withAlertActions';
-import withDialogActions from '../../Dialog/withDialogActions';
-import { compose } from 'utils';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
-const WAREHOUSE = [
-  {
-    title: 'Warehouse #1',
-    code: '1001',
-    city: 'City',
-    country: 'Country',
-    email: 'email@emial.com',
-    phone: '09xxxxxxxx',
-  },
-  {
-    title: 'Warehouse #2',
-    code: '100',
-    city: 'City',
-    country: 'Country',
-    email: 'email@emial.com',
-    phone: '09xxxxxxxx',
-  },
-  {
-    title: 'Warehouse #2',
-    code: '100',
-    city: 'City',
-    country: 'Country',
-    email: 'email@emial.com',
-    phone: '09xxxxxxxx',
-  },
-];
+import { compose } from 'utils';
 
 /**
  * Warehouses.
  * @returns
  */
 function Warehouses({
-  // #withAlertsActions
-  openAlert,
-  // #withDialogActions
-  openDialog,
+  // #withDashboardActions
+  changePreferencesPageTitle,
 }) {
-  return (
-    <ContextMenu2 content={<WarehouseContextMenu />}>
-      <WarehouseGridWrap>
-        <WarehousesGridItems warehouses={WAREHOUSE} />
-      </WarehouseGridWrap>
-    </ContextMenu2>
-  );
+  const { warehouses } = useWarehousesContext();
+
+  React.useEffect(() => {
+    changePreferencesPageTitle(intl.get('warehouses.label'));
+  }, [changePreferencesPageTitle]);
+
+  return warehouses.map((warehouse) => (
+    <WarehousesGridItems warehouse={warehouse} />
+  ));
 }
 
-export default compose(withAlertsActions, withDialogActions)(Warehouses);
-
-const WarehouseGridWrap = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin: 15px;
-`;
+export default compose(withDashboardActions)(Warehouses);
