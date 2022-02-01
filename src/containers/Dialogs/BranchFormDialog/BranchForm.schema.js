@@ -1,12 +1,13 @@
 import * as Yup from 'yup';
 import intl from 'react-intl-universal';
+import { DATATYPES_LENGTH } from 'common/dataTypes';
 
 const Schema = Yup.object().shape({
-  branch_name: Yup.string().required().label(intl.get('branch_name')),
-  branch_address_1: Yup.string().trim(),
-  branch_address_2: Yup.string().trim(),
-  branch_address_city: Yup.string().trim(),
-  branch_address_country: Yup.string().trim(),
+  name: Yup.string().required().label(intl.get('branch_name')),
+  code: Yup.string().trim().min(0).max(DATATYPES_LENGTH.STRING),
+  address: Yup.string().trim(),
+  city: Yup.string().trim(),
+  country: Yup.string().trim(),
   website: Yup.string().url().nullable(),
   phone_number: Yup.number(),
   email: Yup.string().email().nullable(),

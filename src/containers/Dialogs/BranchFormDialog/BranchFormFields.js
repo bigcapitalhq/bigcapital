@@ -20,7 +20,7 @@ function BranchFormFields() {
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Branch Name -----------*/}
-      <FastField name={'branch_name'}>
+      <FastField name={'name'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'branch.dialog.label.branch_name'} />}
@@ -34,15 +34,29 @@ function BranchFormFields() {
           </FormGroup>
         )}
       </FastField>
+      {/*------------ Branch Code -----------*/}
+      <FastField name={'code'}>
+        {({ form, field, meta: { error, touched } }) => (
+          <FormGroup
+            label={<T id={'branch.dialog.label.branch_code'} />}
+            intent={inputIntent({ error, touched })}
+            inline={true}
+            helperText={<ErrorMessage name="code" />}
+            className={'form-group--branch_name'}
+          >
+            <InputGroup intent={inputIntent({ error, touched })} {...field} />
+          </FormGroup>
+        )}
+      </FastField>
 
-      {/*------------ Branch Address 1 -----------*/}
-      <FastField name={'branch_address_1'}>
+      {/*------------ Branch Address  -----------*/}
+      <FastField name={'address'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={intl.get('branch.dialog.label.branch_address')}
             intent={inputIntent({ error, touched })}
             inline={true}
-            helperText={<ErrorMessage name="branch_address_1" />}
+            helperText={<ErrorMessage name="address" />}
             className={'form-group--branch_address'}
           >
             <InputGroup
@@ -54,24 +68,6 @@ function BranchFormFields() {
         )}
       </FastField>
       <BranchAddressWrap>
-        {/*------------ Branch Address 2 -----------*/}
-        <FastField name={'branch_address_2'}>
-          {({ form, field, meta: { error, touched } }) => (
-            <FormGroup
-              intent={inputIntent({ error, touched })}
-              inline={true}
-              helperText={<ErrorMessage name="branch_address_2" />}
-              className={'form-group--branch_address'}
-            >
-              <InputGroup
-                intent={inputIntent({ error, touched })}
-                placeholder={intl.get('branch.dialog.label.address_2')}
-                {...field}
-              />
-            </FormGroup>
-          )}
-        </FastField>
-
         {/*------------ Branch Address City & Country-----------*/}
         <FormGroup
           inline={true}
@@ -79,7 +75,7 @@ function BranchFormFields() {
           helperText={<ErrorMessage name="branch_address_2" />}
         >
           <ControlGroup>
-            <FastField name={'branch_address_city'}>
+            <FastField name={'city'}>
               {({ field, meta: { error, touched } }) => (
                 <InputGroup
                   intent={inputIntent({ error, touched })}
@@ -89,7 +85,7 @@ function BranchFormFields() {
               )}
             </FastField>
 
-            <FastField name={'branch_address_country'}>
+            <FastField name={'country'}>
               {({ field, meta: { error, touched } }) => (
                 <InputGroup
                   intent={inputIntent({ error, touched })}
@@ -112,7 +108,7 @@ function BranchFormFields() {
             helperText={<ErrorMessage name="phone_number" />}
             className={'form-group--phone_number'}
           >
-            <InputGroup intent={inputIntent({ error, touched })} {...field} />
+            <InputGroup placeholder={'https://'} {...field} />
           </FormGroup>
         )}
       </FastField>

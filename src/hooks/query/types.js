@@ -202,6 +202,11 @@ const WAREHOUSE_TRANSFERS = {
   WAREHOUSE_TRANSFERS: 'WAREHOUSE_TRANSFERS',
 };
 
+const BRANCHES = {
+  BRANCHES: 'BRANCHES',
+  BRANCH: 'BRANCH',
+};
+
 export default {
   ...ACCOUNTS,
   ...BILLS,
@@ -231,4 +236,5 @@ export default {
   ...TARNSACTIONS_LOCKING,
   ...WAREHOUSES,
   ...WAREHOUSE_TRANSFERS,
+  ...BRANCHES,
 };

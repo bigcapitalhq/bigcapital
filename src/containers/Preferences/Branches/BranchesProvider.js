@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { Card } from 'components';
+import { useBranches } from 'hooks/query';
+import PreferencesPageLoader from '../PreferencesPageLoader';
 
 const BranchesContext = React.createContext();
 
@@ -10,8 +12,19 @@ const BranchesContext = React.createContext();
  * Branches data provider.
  */
 function BranchesProvider({ ...props }) {
+  // Fetches the branches list.
+  const {
+    isLoading: isBranchesLoading,
+    isFetching: isBranchesFetching,
+    data: branches,
+  } = useBranches();
+
   // Provider state.
-  const provider = {};
+  const provider = {
+    branches,
+    isBranchesLoading,
+    isBranchesFetching,
+  };
 
   return (
     <div

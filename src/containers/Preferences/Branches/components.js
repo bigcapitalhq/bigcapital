@@ -1,15 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  Intent,
-  Button,
-  Popover,
-  Menu,
-  MenuDivider,
-  Tag,
-  MenuItem,
-  Position,
-} from '@blueprintjs/core';
+import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 
 import { safeCallback } from 'utils';
 import { Icon } from 'components';
@@ -47,11 +38,20 @@ export function useBranchesTableColumns() {
   return React.useMemo(
     () => [
       {
-        id: 'branch_name',
+        id: 'name',
         Header: intl.get('branches.column.branch_name'),
-        accessor: 'branch_name',
-        className: 'branch_name',
+        accessor: 'name',
+        className: 'name',
         width: '120',
+        disableSortBy: true,
+        textOverview: true,
+      },
+      {
+        id: 'code',
+        Header: intl.get('branches.column.code'),
+        accessor: 'code',
+        className: 'code',
+        width: '100',
         disableSortBy: true,
         textOverview: true,
       },
