@@ -21,6 +21,7 @@ import CreditNoteDetailDrawer from '../containers/Drawers/CreditNoteDetailDrawer
 import VendorCreditDetailDrawer from '../containers/Drawers/VendorCreditDetailDrawer';
 import RefundCreditNoteDetailDrawer from '../containers/Drawers/RefundCreditNoteDetailDrawer';
 import RefundVendorCreditDetailDrawer from '../containers/Drawers/RefundVendorCreditDetailDrawer';
+import WarehouseTransferDetailDrawer from '../containers/Drawers/WarehouseTransferDetailDrawer'
 
 import { DRAWERS } from 'common/drawers';
 
@@ -59,6 +60,7 @@ export default function DrawersContainer() {
       <RefundVendorCreditDetailDrawer
         name={DRAWERS.REFUND_VENDOR_CREDIT_DETAIL_DRAWER}
       />
+      <WarehouseTransferDetailDrawer name={DRAWERS.WAREHOUSE_TRANSFER_DETAIL_DRAWER} />
     </div>
   );
 }

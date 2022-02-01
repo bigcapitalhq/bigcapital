@@ -117,6 +117,36 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.ITEM,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
+  // Warehouse Transfer.
+  {
+    path: `/warehouse-transfers/:id/edit`,
+    component: lazy(() => import('containers/Items/ItemFormPage')),
+    name: 'warehouse-transfer-edit',
+    pageTitle: intl.get('warehouse_transfer.label.edit_warehouse_transfer'),
+    backLink: true,
+  },
+  {
+    path: `/warehouse-transfers/new`,
+    component: lazy(() =>
+      import(
+        '../containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage'
+      ),
+    ),
+    name: 'warehouse-transfer-new',
+    pageTitle: intl.get('warehouse_transfer.label.new_warehouse_transfer'),
+    backLink: true,
+  },
+  {
+    path: `/warehouse-transfers`,
+    component: lazy(() =>
+      import(
+        '../containers/WarehouseTransfers/WarehouseTransfersLanding/WarehouseTransfersList'
+      ),
+    ),
+    pageTitle: intl.get('warehouse_transfer.label.warehouse_transfer_list'),
+    // defaultSearchResource: RESOURCES_TYPES.ITEM,
+    // subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
 
   // Financial Reports.
   {
