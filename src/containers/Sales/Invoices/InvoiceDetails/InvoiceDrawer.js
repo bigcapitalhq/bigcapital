@@ -11,12 +11,11 @@ const InvoicesDrawerContent = lazy(() => import('./InvoiceDrawerContent'));
  */
 function InvoiceDrawer({
   name,
+
   //#withDrawer
   isOpen,
   payload: { invoiceId },
-
 }) {
-  
   return (
     <Drawer isOpen={isOpen} name={name}>
       <DrawerSuspense>

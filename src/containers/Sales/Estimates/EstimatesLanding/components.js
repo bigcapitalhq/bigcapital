@@ -83,11 +83,13 @@ export function ActionsMenu({
           text={intl.get('edit_estimate')}
           onClick={safeCallback(onEdit, original)}
         />
-        <MenuItem
-          icon={<Icon icon="convert_to" />}
-          text={intl.get('convert_to_invoice')}
-          onClick={safeCallback(onConvert, original)}
-        />
+        <If condition={!original.is_converted_to_invoice}>
+          <MenuItem
+            icon={<Icon icon="convert_to" />}
+            text={intl.get('convert_to_invoice')}
+            onClick={safeCallback(onConvert, original)}
+          />
+        </If>
 
         <If condition={!original.is_delivered}>
           <MenuItem

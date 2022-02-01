@@ -1,6 +1,5 @@
-import React, { useMemo, useCallback } from 'react';
+import React from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
@@ -15,11 +14,9 @@ export default function CustomersBalanceSummaryTable({
   // #ownProps
   companyName,
 }) {
-  
-
   const {
     isCustomersBalanceLoading,
-    CustomerBalanceSummary: { tableRows },
+    CustomerBalanceSummary: { table },
   } = useCustomersBalanceSummaryContext();
 
   const columns = useCustomersSummaryColumns();
@@ -39,7 +36,7 @@ export default function CustomersBalanceSummaryTable({
       <DataTable
         className="bigcapital-datatable--financial-report"
         columns={columns}
-        data={tableRows}
+        data={table.data}
         rowClassNames={rowClassNames}
         noInitialFetch={true}
       />

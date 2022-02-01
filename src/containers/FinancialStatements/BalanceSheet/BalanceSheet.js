@@ -29,7 +29,6 @@ function BalanceSheet({
     displayColumnsType: 'total',
     filterByOption: 'without-zero-balance',
   });
-
   // Handle re-fetch balance sheet after filter change.
   const handleFilterSubmit = (filter) => {
     const _filter = {
@@ -61,7 +60,7 @@ function BalanceSheet({
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <BalanceSheetLoadingBar />
-      {/* <BalanceSheetAlerts /> */}
+      <BalanceSheetAlerts />
 
       <DashboardPageContent>
         <FinancialStatement>

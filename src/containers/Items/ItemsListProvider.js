@@ -3,7 +3,6 @@ import { isEmpty } from 'lodash';
 import {
   getFieldsFromResourceMeta,
   transformTableQueryToParams,
-  isTableEmptyStatus,
 } from 'utils';
 import { transformItemsTableState } from './utils';
 

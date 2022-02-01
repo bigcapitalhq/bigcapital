@@ -35,6 +35,10 @@ export default function PaymentMadeDetailHeader() {
         <Col xs={6}>
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem
+              label={intl.get('payment_date')}
+              children={<FormatDate value={paymentMade.payment_date} />}
+            />
+            <DetailItem
               label={intl.get('payment_made.details.payment_number')}
               children={defaultTo(paymentMade.payment_number, '-')}
             />
@@ -47,11 +51,6 @@ export default function PaymentMadeDetailHeader() {
               label={intl.get('payment_account')}
               children={paymentMade.payment_account?.name}
             />
-
-            <DetailItem
-              label={intl.get('payment_date')}
-              children={<FormatDate value={paymentMade.payment_date} />}
-            />
           </DetailsMenu>
         </Col>
         <Col xs={6}>
@@ -61,8 +60,8 @@ export default function PaymentMadeDetailHeader() {
             minLabelSize={'180px'}
           >
             <DetailItem
-              label={intl.get('description')}
-              children={defaultTo(paymentMade.statement, '-')}
+              label={intl.get('reference')}
+              children={defaultTo(paymentMade.reference, '-')}
             />
             <DetailItem
               label={intl.get('created_at')}

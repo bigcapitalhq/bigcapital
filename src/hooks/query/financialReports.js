@@ -290,12 +290,11 @@ export function useCustomerBalanceSummaryReport(query, props) {
     },
     {
       select: (res) => ({
-        columns: res.data.columns,
         query: res.data.query,
-        tableRows: res.data.table.rows,
+        table: res.data.table,
       }),
       defaultData: {
-        tableRows: [],
+        table: {},
         query: {},
       },
       ...props,
@@ -320,12 +319,11 @@ export function useVendorsBalanceSummaryReport(query, props) {
 
     {
       select: (res) => ({
-        columns: res.data.columns,
         query: res.data.query,
-        tableRows: res.data.table.data,
+        table: res.data.table,
       }),
       defaultData: {
-        tableRows: [],
+        table: {},
         query: {},
       },
       ...props,

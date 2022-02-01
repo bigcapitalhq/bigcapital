@@ -10,7 +10,6 @@ import {
   DetailItem,
   CommercialDocHeader,
   CommercialDocTopHeader,
-  ButtonLink,
   CustomerDrawerLink,
 } from 'components';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
@@ -35,6 +34,10 @@ export default function PaymentReceiveDetailHeader() {
         <Col xs={6}>
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem
+              label={intl.get('payment_date')}
+              children={<FormatDate value={paymentReceive.payment_date} />}
+            />
+            <DetailItem
               label={intl.get('payment_receive.details.payment_number')}
               children={defaultTo(paymentReceive.payment_receive_no, '-')}
             />
@@ -48,10 +51,6 @@ export default function PaymentReceiveDetailHeader() {
               label={intl.get('deposit_account')}
               children={paymentReceive.deposit_account?.name}
             />
-            <DetailItem
-              label={intl.get('payment_date')}
-              children={<FormatDate value={paymentReceive.payment_date} />}
-            />
           </DetailsMenu>
         </Col>
 
@@ -62,8 +61,8 @@ export default function PaymentReceiveDetailHeader() {
             minLabelSize={'180px'}
           >
             <DetailItem
-              label={intl.get('description')}
-              children={defaultTo(paymentReceive.statement, '—')}
+              label={intl.get('reference')}
+              children={defaultTo(paymentReceive.reference_no, '-')}
             />
             <DetailItem
               label={intl.get('created_at')}

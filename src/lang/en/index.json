@@ -866,7 +866,7 @@
   "published_at": "Published at",
   "customers_balance_summary": "Customers Balance Summary",
   "vendors_balance_summary": "Vendors Balance Summary",
-  "percentage_of_column": "Percentage",
+  "percentage_of_column": "% of column",
   "customers_transactions": "Customers Transactions",
   "vendors_transactions": "Vendors Transactions",
   "reference_type": "Reference type",
@@ -1193,6 +1193,7 @@
   "payment_made.details.payment_number": "Payment #",
   "payment_made.details.subtotal": "Subtotal",
   "payment_made.details.total": "TOTAL",
+  "payment_made.details.statement": "Statement",
   "payment_receive.details.payment_number": "Payment #",
   "payment_receive.details.total": "TOTAL",
   "payment_receive.details.subtotal": "Subtotal",
@@ -1737,6 +1738,7 @@
   "global_error.you_dont_have_permissions": "You do not have permissions to access this page.",
   "global_error.transactions_locked": "Transactions before {lockedToDate} has been locked. Hence action cannot be performed.",
   "global_error.authorized_user_inactive": "The authorized user is inactive.",
+
   "balance_sheet.comparisons": "Comparisons",
   "balance_sheet.percentage_of_column": "% of Columns",
   "balance_sheet.percentage_of_row": "% of Rows",
@@ -1744,13 +1746,28 @@
   "balance_sheet.total_change": "Total Change",
   "balance_sheet.change": "% Change",
   "balance_sheet.previous_period": "Previous Period (PP)",
-  "profit_loss_sheet.comparisons":"Comparisons",
-  "profit_loss_sheet.previous_year":"Previous Year",
+  "profit_loss_sheet.comparisons": "Comparisons",
+  "profit_loss_sheet.previous_year": "Previous Year",
   "profit_loss_sheet.total_change": "Total Change",
   "profit_loss_sheet.perentage_change": "Perentage Change",
-  "profit_loss_sheet.previous_period":"Previous Period (PP)",
-  "profit_loss_sheet.percentage_of_column":"% of Column",
-  "profit_loss_sheet.percentage_of_row":"% of Row",
-  "profit_loss_sheet.percentage_of_expense":"% of Expense",
-  "profit_loss_sheet.percentage_of_income":"% of Income"
+  "profit_loss_sheet.previous_period": "Previous Period (PP)",
+  "profit_loss_sheet.percentage_of_column": "% of Column",
+  "profit_loss_sheet.percentage_of_row": "% of Row",
+  "profit_loss_sheet.percentage_of_expense": "% of Expense",
+  "profit_loss_sheet.percentage_of_income": "% of Income",
+
+  "the_vendor_has_been_inactivated_successfully": "The contact has been inactivated successfully.",
+
+  "vendor.alert.activated_message": "The vendor has been activated successfully.",
+  "vendor.alert.are_you_sure_want_to_inactivate_this_vendor": "Are you sure want to inactivate this vendor? You will to able to activate it later.",
+  "vendor.alert.inactivated_message": "The vendor has been inactivated successfully.",
+  "vendor.alert.are_you_sure_want_to_activate_this_vendor": "Are you sure want to activate this vendor? You will to able to inactivate it later.",
+
+  "customer.alert.activated_message": "The customer has been activated successfully.",
+  "customer.alert.are_you_sure_want_to_activate_this_customer": "Are you sure want to activate this customer? You will to able to inactivate it later.",
+  "customer.alert.inactivated_message": "The customer has been inactivated successfully.",
+  "customer.alert.are_you_sure_want_to_inactivate_this_customer": "Are you sure want to inactivate this customer? You will to able to activate it later.",
+
+  "credit_note_preview.dialog.title": "Credit Note PDF Preview",
+  "payment_receive_preview.dialog.title": "Payment Receive PDF Preview"
 }

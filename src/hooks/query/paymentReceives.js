@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import { transformPagination, saveInvoke } from 'utils';
+import { useRequestPdf } from '../utils';
+
 import t from './types';
 
 // Common invalidate queries.
@@ -31,11 +33,11 @@ const commonInvalidateQueries = (client) => {
 
   client.invalidateQueries(t.CREDIT_NOTE);
   client.invalidateQueries(t.CREDIT_NOTES);
-  
+
   // Invalidate reconcile.
   client.invalidateQueries(t.RECONCILE_CREDIT_NOTE);
   client.invalidateQueries(t.RECONCILE_CREDIT_NOTES);
-  
+
   // Invalidate invoices payment transactions.
   client.invalidateQueries(t.SALE_INVOICE_PAYMENT_TRANSACTIONS);
 };
@@ -223,4 +225,11 @@ export function usePaymentReceiveSMSDetail(
       ...props,
     },
   );
+}
+
+/**
+ * Retrieve the payment receive pdf document data.
+ */
+export function usePdfPaymentReceive(paymentReceiveId) {
+  return useRequestPdf(`sales/payment_receives/${paymentReceiveId}`);
 }

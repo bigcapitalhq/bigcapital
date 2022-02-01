@@ -14,10 +14,8 @@ export default function VendorsBalanceSummaryTable({
   //#ownProps
   organizationName,
 }) {
-  
-
   const {
-    VendorBalanceSummary,
+    VendorBalanceSummary: { table },
     isVendorsBalanceLoading,
   } = useVendorsBalanceSummaryContext();
 
@@ -39,7 +37,7 @@ export default function VendorsBalanceSummaryTable({
       <DataTable
         className={'bigcapital-datatable--financial-report'}
         columns={columns}
-        data={VendorBalanceSummary?.tableRows}
+        data={table?.data}
         rowClassNames={rowClassNames}
         noInitialFetch={true}
       />

@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import intl from 'react-intl-universal';
+import * as R from 'ramda';
 
 import { If } from 'components';
-import { getColumnWidth } from 'utils';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 
@@ -10,28 +10,65 @@ import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider
  * Retrieve vendors balance summary columns.
  */
 export const useVendorsBalanceColumns = () => {
-  return useMemo(() => [
-    {
-      Header: intl.get('vendor_name'),
-      accessor: 'cells[0].value',
-      className: 'customer_name',
-      width: 240,
-      sticky: 'left',
-      textOverview: true,
-    },
-    {
-      Header: intl.get('total'),
-      accessor: 'cells[1].value',
-      className: 'total',
-      width: 140,
-    },
-    {
-      Header: intl.get('percentage_of_column'),
-      accessor: 'cells[2].value',
-      // className: 'total',
-      width: 140,
-    },
-  ]);
+  const {
+    VendorBalanceSummary: { table },
+  } = useVendorsBalanceSummaryContext();
+
+  return React.useMemo(() => {
+    return dynamicColumns(table.columns || []);
+  }, [table.columns]);
+};
+
+/**
+ * Vendor name accessor.
+ */
+const vendorColumnAccessor = () => ({
+  Header: intl.get('vendor_name'),
+  accessor: 'cells[0].value',
+  className: 'vendor_name',
+  width: 240,
+  align: 'left',
+  textOverview: true,
+});
+
+/**
+ * Percentage column accessor.
+ */
+const percentageColumnAccessor = () => ({
+  Header: intl.get('percentage_of_column'),
+  accessor: 'cells[2].value',
+  className: 'total',
+  width: 140,
+  align: 'right',
+  textOverview: true,
+});
+
+/**
+ * Total column accessor.
+ */
+const totalColumnAccessor = () => ({
+  Header: intl.get('total'),
+  accessor: 'cells[1].value',
+  className: 'total',
+  width: 140,
+  align: 'right',
+  textOverview: true,
+});
+
+/**
+ * Composes the response columns to table component columns.
+ */
+const dynamicColumns = (columns) => {
+  return R.map(
+    R.compose(
+      R.when(R.pathEq(['key'], 'name'), vendorColumnAccessor),
+      R.when(R.pathEq(['key'], 'total'), totalColumnAccessor),
+      R.when(
+        R.pathEq(['key'], 'percentage_of_column'),
+        percentageColumnAccessor,
+      ),
+    ),
+  )(columns);
 };
 
 /**
