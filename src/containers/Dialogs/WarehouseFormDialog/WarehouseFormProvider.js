@@ -13,9 +13,6 @@ const WarehouseFormContext = React.createContext();
  * Warehouse form provider.
  */
 function WarehouseFormProvider({ dialogName, warehouseId, ...props }) {
-  const { state } = useLocation();
-
-  console.log(state, 'XXX');
   // Create and edit warehouse mutations.
   const { mutateAsync: createWarehouseMutate } = useCreateWarehouse();
   const { mutateAsync: editWarehouseMutate } = useEditWarehouse();
