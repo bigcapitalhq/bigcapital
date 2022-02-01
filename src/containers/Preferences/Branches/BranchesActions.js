@@ -20,7 +20,7 @@ function BranchesActions({
         onClick={handleClickNewBranche}
         intent={Intent.PRIMARY}
       >
-        <T id={'branches.label.new_branche'} />
+        <T id={'branches.label.new_branch'} />
       </Button>
     </React.Fragment>
   );

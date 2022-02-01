@@ -11,9 +11,10 @@ import BranchForm from './BranchForm';
 export default function BranchFormDialogContent({
   // #ownProps
   dialogName,
+  branchId,
 }) {
   return (
-    <BranchFormProvider dialogName={dialogName}>
+    <BranchFormProvider branchId={branchId} dialogName={dialogName}>
       <BranchForm />
     </BranchFormProvider>
   );

@@ -191,6 +191,11 @@ const TARNSACTIONS_LOCKING = {
   TRANSACTIONS_LOCKING: 'TRANSACTIONS_LOCKING',
 };
 
+const BRANCHES = {
+  BRANCHES: 'BRANCHES',
+  BRANCH: 'BRANCH',
+};
+
 export default {
   ...ACCOUNTS,
   ...BILLS,
@@ -218,4 +223,5 @@ export default {
   ...CREDIT_NOTES,
   ...VENDOR_CREDIT_NOTES,
   ...TARNSACTIONS_LOCKING,
+  ...BRANCHES,
 };

@@ -19,7 +19,8 @@ import CurrenciesAlerts from '../Preferences/Currencies/CurrenciesAlerts';
 import RolesAlerts from '../Preferences/Users/Roles/RolesAlerts';
 import CreditNotesAlerts from '../Sales/CreditNotes/CreditNotesAlerts';
 import VendorCreditNotesAlerts from '../Purchases/CreditNotes/VendorCreditNotesAlerts';
-import TransactionsLockingAlerts from '../TransactionsLocking/TransactionsLockingAlerts'
+import TransactionsLockingAlerts from '../TransactionsLocking/TransactionsLockingAlerts';
+import BranchesAlerts from '../Preferences/Branches/BranchesAlerts';
 
 export default [
   ...AccountsAlerts,
@@ -43,5 +44,6 @@ export default [
   ...RolesAlerts,
   ...CreditNotesAlerts,
   ...VendorCreditNotesAlerts,
-  ...TransactionsLockingAlerts
+  ...TransactionsLockingAlerts,
+  ...BranchesAlerts,
 ];
