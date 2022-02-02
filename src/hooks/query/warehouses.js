@@ -1,4 +1,5 @@
 import { useQueryClient, useMutation } from 'react-query';
+import { transformPagination } from 'utils';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import t from './types';
@@ -129,7 +130,7 @@ export function useEditWarehouseTransfer(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`warehouses/transfers${id}`, values),
+    ([id, values]) => apiRequest.post(`warehouses/transfers/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific sale invoice.
@@ -162,6 +163,12 @@ export function useDeleteWarehouseTransfer(props) {
   });
 }
 
+const transformWarehousesTransfer = (res) => ({
+  warehousesTransfers: res.data.data,
+  pagination: transformPagination(res.data.pagination),
+  filterMeta: res.data.filter,
+});
+
 /**
  * Retrieve Warehoues list.
  */
@@ -170,8 +177,16 @@ export function useWarehousesTransfers(query, props) {
     [t.WAREHOUSE_TRANSFERS, query],
     { method: 'get', url: 'warehouses/transfers', params: query },
     {
-      select: (res) => res.data,
-      defaultData: [],
+      select: transformWarehousesTransfer,
+      defaultData: {
+        warehousesTransfers: [],
+        pagination: {
+          page: 1,
+          pageSize: 20,
+          total: 0,
+        },
+        filterMeta: {},
+      },
       ...props,
     },
   );
@@ -186,9 +201,19 @@ export function useWarehouseTransfer(id, props, requestProps) {
     [t.WAREHOUSE_TRANSFER, id],
     { method: 'get', url: `warehouses/transfers/${id}`, ...requestProps },
     {
-      select: (res) => res.data.warehouse_transfer,
+      select: (res) => res.data.data,
       defaultData: {},
       ...props,
     },
   );
+}
+
+export function useRefreshWarehouseTransfers() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries(t.WAREHOUSE_TRANSFERS);
+    },
+  };
 }

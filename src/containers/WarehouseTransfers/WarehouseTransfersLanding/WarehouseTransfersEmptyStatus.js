@@ -17,7 +17,7 @@ export default function WarehouseTransfersEmptyStatus() {
             intent={Intent.PRIMARY}
             large={true}
             onClick={() => {
-              history.push('/warehouse-transfers/new');
+              history.push('/warehouses-transfers/new');
             }}
           >
             <T id={'warehouse_transfer.action.new_warehouse_transfer'} />

@@ -9,10 +9,10 @@ const WarehouseTransferDetailDrawerContext = React.createContext();
  * Warehouse transfer detail drawer provider.
  */
 function WarehouseTransferDetailDrawerProvider({
-  warehouseTransferId = 5,
+  warehouseTransferId,
   ...props
 }) {
-  // Handle fetch invoice detail.
+  // Handle fetch warehouse transfer detail.
   const { data: warehouseTransfer, isLoading: isWarehouseTransferLoading } =
     useWarehouseTransfer(warehouseTransferId, {
       enabled: !!warehouseTransferId,
