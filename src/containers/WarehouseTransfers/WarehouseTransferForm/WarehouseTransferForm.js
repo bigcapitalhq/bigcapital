@@ -25,6 +25,7 @@ import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
 import {
   defaultWarehouseTransfer,
   transformValueToRequest,
+  transformErrors,
   transformToEditForm,
 } from './utils';
 
@@ -97,6 +98,9 @@ function WarehouseTransferForm({
         data: { errors },
       },
     }) => {
+      if (errors) {
+        transformErrors(errors, { setErrors });
+      }
       setSubmitting(false);
     };
 
