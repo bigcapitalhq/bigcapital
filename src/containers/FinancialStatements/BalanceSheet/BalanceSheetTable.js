@@ -76,8 +76,14 @@ const BalanceSheetDataTable = styled(DataTable)`
         }
       }
 
-      &:last-of-type .td{
+      &:last-of-type .td {
         border-bottom: 1px solid #bbb;
+      }
+      &.row_type--TOTAL.row-id--ASSETS,
+      &.row_type--TOTAL.row-id--LIABILITY_EQUITY {
+        .td{
+          border-bottom: 3px double #000;
+        }
       }
     }
   }

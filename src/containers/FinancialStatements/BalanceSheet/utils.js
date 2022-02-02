@@ -14,7 +14,7 @@ const getReportColWidth = (data, accessor, headerText) => {
   return getColumnWidth(
     data,
     accessor,
-    { magicSpacing: 9, minWidth: 100 },
+    { magicSpacing: 10, minWidth: 100 },
     headerText,
   );
 };
