@@ -7,6 +7,7 @@ import { useDeleteWarehouseTransfer } from 'hooks/query';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -23,9 +24,12 @@ function WarehouseTransferDeleteAlert({
 
   // #withAlertActions
   closeAlert,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
   const { mutateAsync: deleteWarehouseTransferMutate, isLoading } =
-  useDeleteWarehouseTransfer();
+    useDeleteWarehouseTransfer();
 
   // handle cancel delete warehouse alert.
   const handleCancelDeleteAlert = () => {
@@ -40,6 +44,7 @@ function WarehouseTransferDeleteAlert({
           message: intl.get('warehouse_transfer.alert.delete_message'),
           intent: Intent.SUCCESS,
         });
+        closeDrawer('warehouse-transfer-detail-drawer');
       })
       .catch(
         ({
@@ -76,4 +81,5 @@ function WarehouseTransferDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withDrawerActions,
 )(WarehouseTransferDeleteAlert);

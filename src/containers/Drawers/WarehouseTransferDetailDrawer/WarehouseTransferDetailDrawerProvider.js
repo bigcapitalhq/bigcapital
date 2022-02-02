@@ -28,7 +28,9 @@ function WarehouseTransferDetailDrawerProvider({
       <DrawerHeaderContent
         name="warehouse-transfer-detail-drawer"
         title={intl.get('warehouse_transfer.drawer.title', {
-          number: 'W-10',
+          number: warehouseTransfer.transaction_number
+            ? `(${warehouseTransfer.transaction_number})`
+            : null,
         })}
       />
       <WarehouseTransferDetailDrawerContext.Provider
