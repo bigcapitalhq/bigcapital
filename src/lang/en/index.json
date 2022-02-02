@@ -1790,7 +1790,7 @@
   "warehouse_transfer.auto_increment.auto": "Your transfer numbers are set on auto-increment mode. Are you sure changing this setting?",
   "warehouse_transfer.auto_increment.manually": "Your transfer numbers are set on manual mode. Are you sure chaning this settings?",
   "warehouse_transfer.setting_your_auto_generated_transfer_no": "Setting your auto-generated transfer number",
-  "warehouse_transfer.drawer.title": "Warehouse Transfer details ({number})",
+  "warehouse_transfer.drawer.title": "Warehouse Transfer details {number}",
   "warehouse_transfer.drawer.label.transfer_number": "Transfer Number",
   "warehouse_transfer.drawer.label.from_warehouse": "From Warehouse",
   "warehouse_transfer.drawer.label.to_warehouse": "To Warehouse",
@@ -1801,5 +1801,6 @@
   "warehouse_transfer.edit_success_message":"The warehouse transfer transaction has been created successfully.",
   "select_warehouse_transfer":"Select Warehouse Transfer",
   "warehouse_transfer.alert.delete_message":"The warehouse transfer transaction has been deleted successfully",
-  "warehouse_transfer.once_delete_this_warehouse_transfer":"Once you delete this warehouse transfer, you won't be able to restore it later. Are you sure you want to delete this warehouse transfer?"
+  "warehouse_transfer.once_delete_this_warehouse_transfer":"Once you delete this warehouse transfer, you won't be able to restore it later. Are you sure you want to delete this warehouse transfer?",
+  "warehouse_transfer.error.could_not_transfer_item_from_source_to_destination":"Could not transfer item from source to destination on the same warehouse"
 }

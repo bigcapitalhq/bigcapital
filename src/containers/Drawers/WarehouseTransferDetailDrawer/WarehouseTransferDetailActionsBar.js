@@ -34,15 +34,18 @@ function WarehouseTransferDetailActionsBar({
 }) {
   const history = useHistory();
 
+  const { warehouseTransferId, warehouseTransfer } =
+    useWarehouseDetailDrawerContext();
+
   // Handle edit warehosue transfer.
   const handleEditWarehosueTransfer = () => {
-    // history.push(`/warehouse-transfers/${warehouseTransferId}/edit`);
+    history.push(`/warehouses-transfers/${warehouseTransferId}/edit`);
     closeDrawer('warehouse-transfer-detail-drawer');
   };
 
   // Handle delete warehouse transfer.
   const handleDeletetWarehosueTransfer = () => {
-    // openAlert('warehouse-transfer-delete', { warehouseTransferId });
+    openAlert('warehouse-transfer-delete', { warehouseTransferId });
   };
 
   return (
