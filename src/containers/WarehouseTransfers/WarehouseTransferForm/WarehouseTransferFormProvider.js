@@ -61,7 +61,7 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
   return (
     <DashboardInsider
       loading={isItemsLoading || isWarehouesLoading}
-      name={'warehouseTransfer-form'}
+      name={'warehouse-transfer-form'}
     >
       <WarehouseFormContext.Provider value={provider} {...props} />
     </DashboardInsider>
