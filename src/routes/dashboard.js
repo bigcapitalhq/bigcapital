@@ -117,10 +117,15 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.ITEM,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
+
   // Warehouse Transfer.
   {
     path: `/warehouses-transfers/:id/edit`,
-    component: lazy(() => import('containers/Items/ItemFormPage')),
+    component: lazy(() =>
+      import(
+        '../containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage'
+      ),
+    ),
     name: 'warehouse-transfer-edit',
     pageTitle: intl.get('warehouse_transfer.label.edit_warehouse_transfer'),
     backLink: true,

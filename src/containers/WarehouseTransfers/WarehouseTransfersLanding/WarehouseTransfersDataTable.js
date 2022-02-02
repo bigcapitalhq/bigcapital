@@ -11,6 +11,7 @@ import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withWarehouseTransfersActions from './withWarehouseTransfersActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
@@ -25,6 +26,9 @@ import { compose } from 'utils';
  * Warehouse transfers datatable.
  */
 function WarehouseTransfersDataTable({
+  // #withWarehouseTransfersActions
+  setWarehouseTransferTableState,
+
   // #withAlertsActions
   openAlert,
 
@@ -33,14 +37,44 @@ function WarehouseTransfersDataTable({
 
   // #withDialogAction
   openDialog,
+
+  // #withSettings
+  warehouseTransferTableSize,
 }) {
   const history = useHistory();
 
   // Warehouse transfers list context.
-  const { isEmptyStatus } = useWarehouseTranfersListContext();
+  const {
+    warehousesTransfers,
+    pagination,
+    isEmptyStatus,
+    isWarehouseTransfersLoading,
+    isWarehouseTransfersFetching,
+  } = useWarehouseTranfersListContext();
 
   // Invoices table columns.
   const columns = useWarehouseTransfersTableColumns();
+
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.WAREHOUSE_TRANSFERS);
+
+  // Handles fetch data once the table state change.
+  const handleDataTableFetchData = React.useCallback(
+    ({ pageSize, pageIndex, sortBy }) => {
+      setWarehouseTransferTableState({
+        pageSize,
+        pageIndex,
+        sortBy,
+      });
+    },
+    [setWarehouseTransferTableState],
+  );
+
+  // Display invoice empty status instead of the table.
+  if (isEmptyStatus) {
+    return <WarehouseTransfersEmptyStatus />;
+  }
 
   // Handle view detail.
   const handleViewDetailWarehouseTransfer = ({ id }) => {
@@ -64,41 +98,31 @@ function WarehouseTransfersDataTable({
     });
   };
 
-  // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.WAREHOUSETRANSFERS);
-
-  // Handles fetch data once the table state change.
-  const handleDataTableFetchData = React.useCallback(
-    ({ pageSize, pageIndex, sortBy }) => {},
-    [],
-  );
-
-  // Display invoice empty status instead of the table.
-  if (isEmptyStatus) {
-    return <WarehouseTransfersEmptyStatus />;
-  }
-
   return (
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={[]}
-        // loading={}
-        // headerLoading={}
-        // progressBarLoading={}
+        data={warehousesTransfers}
+        loading={isWarehouseTransfersLoading}
+        headerLoading={isWarehouseTransfersLoading}
+        progressBarLoading={isWarehouseTransfersFetching}
         onFetchData={handleDataTableFetchData}
         manualSortBy={true}
         selectionColumn={true}
         noInitialFetch={true}
         sticky={true}
+        pagination={true}
+        manualPagination={true}
+        pagesCount={pagination.pagesCount}
+        autoResetSortBy={false}
+        autoResetPage={false}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
-        // size={invoicesTableSize}
+        size={warehouseTransferTableSize}
         payload={{
           onViewDetails: handleViewDetailWarehouseTransfer,
           onDelete: handleDeleteWarehouseTransfer,
@@ -110,7 +134,11 @@ function WarehouseTransfersDataTable({
 }
 export default compose(
   withDashboardActions,
+  withWarehouseTransfersActions,
   withAlertsActions,
   withDrawerActions,
   withDialogActions,
+  withSettings(({ warehouseTransferSettings }) => ({
+    warehouseTransferTableSize: warehouseTransferSettings?.tableSize,
+  })),
 )(WarehouseTransfersDataTable);

@@ -53,8 +53,8 @@ function WarehouseTransferForm({
   // Form initial values.
   const initialValues = React.useMemo(
     () => ({
-      ...(!isEmpty(null)
-        ? { ...transformToEditForm(null) }
+      ...(!isEmpty(warehouseTransfer)
+        ? { ...transformToEditForm(warehouseTransfer) }
         : {
             ...defaultWarehouseTransfer,
             entries: orderingLinesIndexes(defaultWarehouseTransfer.entries),

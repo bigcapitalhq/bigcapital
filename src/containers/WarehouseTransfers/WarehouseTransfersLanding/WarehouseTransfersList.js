@@ -3,16 +3,36 @@ import React from 'react';
 // style..
 import { DashboardPageContent } from 'components';
 import WarehouseTransfersActionsBar from './WarehouseTransfersActionsBar';
-
 import WarehouseTransfersViewTabs from './WarehouseTransfersViewTabs';
 import WarehouseTransfersDataTable from './WarehouseTransfersDataTable';
 
-import { WarehouseTransfersListProvider } from './WarehouseTransfersListProvider';
-import { compose } from 'utils';
+import withWarehouseTransfers from './withWarehouseTransfers';
+import withWarehouseTransfersActions from './withWarehouseTransfersActions';
 
-function WarehouseTransfersList({}) {
+import { WarehouseTransfersListProvider } from './WarehouseTransfersListProvider';
+import { transformTableStateToQuery, compose } from 'utils';
+
+function WarehouseTransfersList({
+  // #withWarehouseTransfers
+  warehouseTransferTableState,
+  warehouseTransferTableStateChanged,
+
+  // #withWarehouseTransfersActions
+  resetWarehouseTransferTableState,
+}) {
+  // Resets the warehouse transfer table state once the page unmount.
+  React.useEffect(
+    () => () => {
+      resetWarehouseTransferTableState();
+    },
+    [resetWarehouseTransferTableState],
+  );
+
   return (
-    <WarehouseTransfersListProvider>
+    <WarehouseTransfersListProvider
+      query={transformTableStateToQuery(warehouseTransferTableState)}
+      tableStateChanged={warehouseTransferTableStateChanged}
+    >
       <WarehouseTransfersActionsBar />
       <DashboardPageContent>
         <WarehouseTransfersViewTabs />
@@ -22,4 +42,12 @@ function WarehouseTransfersList({}) {
   );
 }
 
-export default WarehouseTransfersList;
+export default compose(
+  withWarehouseTransfersActions,
+  withWarehouseTransfers(
+    ({ warehouseTransferTableState, warehouseTransferTableStateChanged }) => ({
+      warehouseTransferTableState,
+      warehouseTransferTableStateChanged,
+    }),
+  ),
+)(WarehouseTransfersList);

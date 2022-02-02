@@ -1,23 +1,34 @@
 import React from 'react';
-import { useHistory } from 'react-router';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
 
 import { DashboardViewsTabs } from 'components';
 
-import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
+import withWarehouseTransfers from './withWarehouseTransfers';
+import withWarehouseTransfersActions from './withWarehouseTransfersActions';
 
-import { compose } from 'utils';
+import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
+import { compose, transfromViewsToTabs } from 'utils';
 
 /**
  * Warehouse transfer view tabs.
  */
-function WarehouseTransfersViewTabs() {
+function WarehouseTransfersViewTabs({
+  // #withWarehouseTransfers
+  warehouseTransferCurrentView,
+
+  // #withWarehouseTransfersActions
+  setWarehouseTransferTableState,
+}) {
+  const { WarehouseTransferView } = useWarehouseTranfersListContext();
+
   // Handles click a new view tab.
   const handleClickNewView = () => {};
 
   // Handles the active tab chaing.
-  const handleTabsChange = (customView) => {};
+  const handleTabsChange = (viewSlug) => {
+    setWarehouseTransferTableState({ viewSlug });
+  };
 
   return (
     <Navbar className={'navbar--dashboard-views'}>
@@ -34,4 +45,9 @@ function WarehouseTransfersViewTabs() {
   );
 }
 
-export default WarehouseTransfersViewTabs;
+export default compose(
+  withWarehouseTransfersActions,
+  withWarehouseTransfers(({ warehouseTransferTableState }) => ({
+    warehouseTransferCurrentView: warehouseTransferTableState?.viewSlug,
+  })),
+)(WarehouseTransfersViewTabs);

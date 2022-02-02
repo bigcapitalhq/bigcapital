@@ -18,6 +18,11 @@ import {
 } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
+import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
+
+import withWarehouseTransfers from './withWarehouseTransfers';
+import withWarehouseTransfersActions from './withWarehouseTransfersActions';
+import withSettings from '../../Settings/withSettings';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 
 import { compose } from 'utils';
@@ -26,10 +31,23 @@ import { compose } from 'utils';
  * Warehouse Transfers actions bar.
  */
 function WarehouseTransfersActionsBar({
+  // #withWarehouseTransfers
+  warehouseTransferFilterRoles,
+
+  // #withWarehouseTransfersActions
+  setWarehouseTransferTableState,
+
+  // #withSettings
+  warehouseTransferTableSize,
+
   // #withSettingsActions
   addSetting,
 }) {
   const history = useHistory();
+
+  // credit note list context.
+  const { WarehouseTransferView, fields, refresh } =
+    useWarehouseTranfersListContext();
 
   // Handle new warehouse transfer button click.
   const handleClickNewWarehouseTransfer = () => {
@@ -38,14 +56,19 @@ function WarehouseTransfersActionsBar({
 
   // Handle click a refresh warehouse transfers
   const handleRefreshBtnClick = () => {
-    // refresh();
+    refresh();
   };
 
   // Handle views tab change.
-  const handleTabChange = (view) => {};
+  const handleTabChange = (view) => {
+    setWarehouseTransferTableState({ viewSlug: view ? view.slug : null });
+  };
 
   // Handle table row size change.
-  const handleTableRowSizeChange = (size) => {};
+  const handleTableRowSizeChange = (size) => {
+    addSetting('warehouseTransfer', 'tableSize', size);
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -63,6 +86,22 @@ function WarehouseTransfersActionsBar({
           onClick={handleClickNewWarehouseTransfer}
         />
         <NavbarDivider />
+
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: warehouseTransferFilterRoles,
+            defaultFieldKey: 'created_at',
+            fields: fields,
+            onFilterChange: (filterConditions) => {
+              setWarehouseTransferTableState({ filterRoles: filterConditions });
+            },
+          }}
+        >
+          <DashboardFilterButton
+            conditionsCount={warehouseTransferFilterRoles.length}
+          />
+        </AdvancedFilterPopover>
+
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
@@ -80,8 +119,8 @@ function WarehouseTransfersActionsBar({
         />
         <NavbarDivider />
         <DashboardRowsHeightButton
-        // initialValue={warehouseTransfersTableSize}
-        // onChange={handleTableRowSizeChange}
+          initialValue={warehouseTransferTableSize}
+          onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
       </NavbarGroup>
@@ -89,11 +128,20 @@ function WarehouseTransfersActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="refresh-16" iconSize={14} />}
-          // onClick={handleRefreshBtnClick}
+          onClick={handleRefreshBtnClick}
         />
       </NavbarGroup>
     </DashboardActionsBar>
   );
 }
 
-export default compose(withSettingsActions)(WarehouseTransfersActionsBar);
+export default compose(
+  withSettingsActions,
+  withWarehouseTransfersActions,
+  withWarehouseTransfers(({ warehouseTransferTableState }) => ({
+    warehouseTransferFilterRoles: warehouseTransferTableState.filterRoles,
+  })),
+  withSettings(({ warehouseTransferSettings }) => ({
+    warehouseTransferTableSize: warehouseTransferSettings?.tableSize,
+  })),
+)(WarehouseTransfersActionsBar);

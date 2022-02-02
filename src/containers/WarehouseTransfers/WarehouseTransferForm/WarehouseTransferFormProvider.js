@@ -3,6 +3,7 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useItems,
   useWarehouses,
+  useWarehouseTransfer,
   useCreateWarehouseTransfer,
   useEditWarehouseTransfer,
 } from 'hooks/query';
@@ -23,6 +24,12 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
     page_size: 10000,
     stringified_filter_roles: ITEMS_FILTER_ROLES_QUERY,
   });
+
+  // Handle fetch warehouse transfer detail.
+  const { data: warehouseTransfer, isLoading: isWarehouseTransferLoading } =
+    useWarehouseTransfer(warehouseTransferId, {
+      enabled: !!warehouseTransferId,
+    });
 
   // Fetch warehouses list.
   const {
@@ -47,7 +54,7 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
   const provider = {
     items,
     warehouses,
-    warehouseTransfer: [],
+    warehouseTransfer,
 
     isItemsFetching,
     isWarehouesFetching,
@@ -58,9 +65,12 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
     createWarehouseTransferMutate,
     editWarehouseTransferMutate,
   };
+
   return (
     <DashboardInsider
-      loading={isItemsLoading || isWarehouesLoading}
+      loading={
+        isItemsLoading || isWarehouesLoading || isWarehouseTransferLoading
+      }
       name={'warehouse-transfer-form'}
     >
       <WarehouseFormContext.Provider value={provider} {...props} />
