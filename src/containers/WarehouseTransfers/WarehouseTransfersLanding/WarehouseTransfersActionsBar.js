@@ -33,7 +33,7 @@ function WarehouseTransfersActionsBar({
 
   // Handle new warehouse transfer button click.
   const handleClickNewWarehouseTransfer = () => {
-    history.push('/warehouse-transfers/new');
+    history.push('/warehouses-transfers/new');
   };
 
   // Handle click a refresh warehouse transfers

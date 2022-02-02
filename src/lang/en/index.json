@@ -1796,5 +1796,10 @@
   "warehouse_transfer.drawer.label.to_warehouse": "To Warehouse",
   "warehouse_transfer.label.edit_warehouse_transfer": "Edit Warehouse Transfer",
   "warehouse_transfer.label.new_warehouse_transfer": "New Warehouse Transfer",
-  "warehouse_transfer.label.warehouse_transfer_list": "Warehouse Transfers List"
+  "warehouse_transfer.label.warehouse_transfer_list": "Warehouse Transfers List",
+  "warehouse_transfer.success_message":"The warehouse transfer transaction has been created successfully.",
+  "warehouse_transfer.edit_success_message":"The warehouse transfer transaction has been created successfully.",
+  "select_warehouse_transfer":"Select Warehouse Transfer",
+  "warehouse_transfer.alert.delete_message":"The warehouse transfer transaction has been deleted successfully",
+  "warehouse_transfer.once_delete_this_warehouse_transfer":"Once you delete this warehouse transfer, you won't be able to restore it later. Are you sure you want to delete this warehouse transfer?"
 }

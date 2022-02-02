@@ -3,7 +3,10 @@ import { FastField } from 'formik';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
-import { entriesFieldShouldUpdate } from './utils';
+import {
+  entriesFieldShouldUpdate,
+  defaultWarehouseTransferEntry,
+} from './utils';
 import WarehouseTransferFormEntriesTable from './WarehouseTransferFormEntriesTable';
 
 /**
@@ -11,12 +14,13 @@ import WarehouseTransferFormEntriesTable from './WarehouseTransferFormEntriesTab
  */
 export default function WarehouseTransferEditorField() {
   const { items } = useWarehouseTransferFormContext();
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
       <FastField
         name={'entries'}
         items={items}
-        // shouldUpdate={entriesFieldShouldUpdate}
+        shouldUpdate={entriesFieldShouldUpdate}
       >
         {({
           form: { values, setFieldValue },
@@ -29,6 +33,7 @@ export default function WarehouseTransferEditorField() {
               setFieldValue('entries', entries);
             }}
             items={items}
+            defaultEntry={defaultWarehouseTransferEntry}
             errors={error}
           />
         )}

@@ -186,7 +186,7 @@ export function useWarehouseTransfer(id, props, requestProps) {
     [t.WAREHOUSE_TRANSFER, id],
     { method: 'get', url: `warehouses/transfers/${id}`, ...requestProps },
     {
-      select: (res) => res.data,
+      select: (res) => res.data.warehouse_transfer,
       defaultData: {},
       ...props,
     },

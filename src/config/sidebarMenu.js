@@ -80,7 +80,7 @@ export default [
       },
       {
         text: <T id={'sidebar_warehouse_transfer'} />,
-        href: '/warehouse-transfers',
+        href: '/warehouses-transfers',
       },
       {
         text: <T id={'category_list'} />,
@@ -119,7 +119,7 @@ export default [
       },
       {
         text: <T id={'warehouse_transfer.label.new_warehouse_transfer'} />,
-        href: '/warehouse-transfers/new',
+        href: '/warehouses-transfers/new',
       },
       {
         text: <T id={'New service'} />,
