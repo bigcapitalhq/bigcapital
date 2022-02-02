@@ -1,6 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
+import { isEmpty } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from 'common/classes';
@@ -14,11 +15,18 @@ import {
 import WarehouseTransferFormHeader from './WarehouseTransferFormHeader';
 import WarehouseTransferEditorField from './WarehouseTransferEditorField';
 import WarehouseTransferFormFooter from './WarehouseTransferFormFooter';
+import WarehouseTransferFloatingActions from './WarehouseTransferFloatingActions';
 import WarehouseTransferFormDialog from './WarehouseTransferFormDialog';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
+import { AppToaster } from 'components';
+import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
-import { defaultWareTransferEntry, defaultWarehouseTransfer } from './utils';
+import {
+  defaultWarehouseTransfer,
+  transformValueToRequest,
+  transformToEditForm,
+} from './utils';
 
 function WarehouseTransferForm({
   // #withSettings
@@ -27,6 +35,14 @@ function WarehouseTransferForm({
   warehouseTransferIncrementMode,
 }) {
   const history = useHistory();
+
+  const {
+    isNewMode,
+    warehouseTransfer,
+    createWarehouseTransferMutate,
+    editWarehouseTransferMutate,
+    submitPayload,
+  } = useWarehouseTransferFormContext();
 
   // WarehouseTransfer number.
   const warehouseTransferNumber = transactionNumber(
@@ -37,18 +53,43 @@ function WarehouseTransferForm({
   // Form initial values.
   const initialValues = React.useMemo(
     () => ({
-      ...defaultWarehouseTransfer,
+      ...(!isEmpty(null)
+        ? { ...transformToEditForm(null) }
+        : {
+            ...defaultWarehouseTransfer,
+            entries: orderingLinesIndexes(defaultWarehouseTransfer.entries),
+          }),
     }),
     [],
   );
 
   // Handles form submit.
   const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
+    setSubmitting(true);
     // Transformes the values of the form to request.
-    const form = {};
+    const form = {
+      ...transformValueToRequest(values),
+    };
 
     // Handle the request success.
-    const onSuccess = () => {};
+    const onSuccess = () => {
+      AppToaster.show({
+        message: intl.get(
+          isNewMode
+            ? 'warehouse_transfer.success_message'
+            : 'warehouse_transfer.edit_success_message',
+        ),
+        intent: Intent.SUCCESS,
+      });
+      setSubmitting(false);
+
+      if (submitPayload.redirect) {
+        history.push('/warehouses-transfers');
+      }
+      if (submitPayload.resetForm) {
+        resetForm();
+      }
+    };
 
     // Handle the request error.
     const onError = ({
@@ -58,6 +99,14 @@ function WarehouseTransferForm({
     }) => {
       setSubmitting(false);
     };
+
+    if (isNewMode) {
+      createWarehouseTransferMutate(form).then(onSuccess).catch(onError);
+    } else {
+      editWarehouseTransferMutate([warehouseTransfer.id, form])
+        .then(onSuccess)
+        .catch(onError);
+    }
   };
 
   return (
@@ -70,7 +119,7 @@ function WarehouseTransferForm({
     >
       <Formik
         validationSchema={
-          true ? CreateWarehouseFormSchema : EditWarehouseFormSchema
+          isNewMode ? CreateWarehouseFormSchema : EditWarehouseFormSchema
         }
         initialValues={initialValues}
         onSubmit={handleSubmit}
@@ -80,6 +129,7 @@ function WarehouseTransferForm({
           <WarehouseTransferEditorField />
           <WarehouseTransferFormFooter />
           <WarehouseTransferFormDialog />
+          <WarehouseTransferFloatingActions />
         </Form>
       </Formik>
     </div>

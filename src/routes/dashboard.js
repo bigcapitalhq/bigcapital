@@ -119,25 +119,25 @@ export const getDashboardRoutes = () => [
   },
   // Warehouse Transfer.
   {
-    path: `/warehouse-transfers/:id/edit`,
+    path: `/warehouses-transfers/:id/edit`,
     component: lazy(() => import('containers/Items/ItemFormPage')),
     name: 'warehouse-transfer-edit',
     pageTitle: intl.get('warehouse_transfer.label.edit_warehouse_transfer'),
     backLink: true,
   },
   {
-    path: `/warehouse-transfers/new`,
+    path: `/warehouses-transfers/new`,
     component: lazy(() =>
       import(
         '../containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage'
       ),
     ),
-    name: 'warehouse-transfer-new',
+    name: 'warehouses-transfer-new',
     pageTitle: intl.get('warehouse_transfer.label.new_warehouse_transfer'),
     backLink: true,
   },
   {
-    path: `/warehouse-transfers`,
+    path: `/warehouses-transfers`,
     component: lazy(() =>
       import(
         '../containers/WarehouseTransfers/WarehouseTransfersLanding/WarehouseTransfersList'

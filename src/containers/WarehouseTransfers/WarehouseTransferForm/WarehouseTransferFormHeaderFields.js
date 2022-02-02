@@ -2,7 +2,6 @@ import React from 'react';
 import {
   FormGroup,
   InputGroup,
-  TextArea,
   Position,
   ControlGroup,
 } from '@blueprintjs/core';
@@ -149,7 +148,7 @@ function WarehouseTransferFormHeaderFields({
               onAccountSelected={(account) => {
                 form.setFieldValue('from_warehouse_id', account.id);
               }}
-              defaultSelectText={'Select Warehouse Transfer'}
+              defaultSelectText={<T id={'select_warehouse_transfer'} />}
               selectedAccountId={value}
               popoverFill={true}
               allowCreate={true}
@@ -176,7 +175,7 @@ function WarehouseTransferFormHeaderFields({
               onAccountSelected={(account) => {
                 form.setFieldValue('to_warehouse_id', account.id);
               }}
-              defaultSelectText={'Select Warehouse Transfer'}
+              defaultSelectText={<T id={'select_warehouse_transfer'} />}
               selectedAccountId={value}
               popoverFill={true}
               allowCreate={true}

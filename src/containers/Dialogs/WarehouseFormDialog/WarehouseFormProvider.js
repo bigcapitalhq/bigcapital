@@ -5,7 +5,6 @@ import {
   useEditWarehouse,
   useWarehouse,
 } from 'hooks/query';
-import { useLocation } from 'react-router-dom';
 
 const WarehouseFormContext = React.createContext();
 

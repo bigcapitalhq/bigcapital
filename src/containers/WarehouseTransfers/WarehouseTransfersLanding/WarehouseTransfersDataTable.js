@@ -43,18 +43,26 @@ function WarehouseTransfersDataTable({
   const columns = useWarehouseTransfersTableColumns();
 
   // Handle view detail.
-  const handleViewDetailWarehouseTransfer = () => {
-    openDrawer('warehouse-transfer-detail-drawer', {});
+  const handleViewDetailWarehouseTransfer = ({ id }) => {
+    openDrawer('warehouse-transfer-detail-drawer', { warehouseTransferId: id });
   };
 
   // Handle edit warehouse transfer.
-  const handleEditWarehouseTransfer = () => {};
+  const handleEditWarehouseTransfer = ({ id }) => {
+    history.push(`/warehouses-transfers/${id}/edit`);
+  };
 
   // Handle delete warehouse transfer.
-  const handleDeleteWarehouseTransfer = () => {};
+  const handleDeleteWarehouseTransfer = ({ id }) => {
+    openAlert('warehouse-transfer-delete', { warehouseTransferId: id });
+  };
 
   // Handle cell click.
-  const handleCellClick = (cell, event) => {};
+  const handleCellClick = (cell, event) => {
+    openDrawer('warehouse-transfer-detail-drawer', {
+      warehouseTransferId: cell.row.original.id,
+    });
+  };
 
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =

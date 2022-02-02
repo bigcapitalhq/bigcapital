@@ -3,31 +3,71 @@ import intl from 'react-intl-universal';
 import clsx from 'classnames';
 import { useFormikContext } from 'formik';
 import moment from 'moment';
+import { omit } from 'lodash';
 
-import { transactionNumber, repeatValue } from 'utils';
+import {
+  compose,
+  transformToForm,
+  repeatValue,
+  transactionNumber,
+  defaultFastFieldShouldUpdate,
+} from 'utils';
 
-export const defaultWareTransferEntry = {
+// import { defaultFastFieldShouldUpdate } from 'utils';
+import {
+  updateItemsEntriesTotal,
+  ensureEntriesHaveEmptyLine,
+} from 'containers/Entries/utils';
+
+export const MIN_LINES_NUMBER = 4;
+
+// Default warehouse transfer entry.
+export const defaultWarehouseTransferEntry = {
   index: 0,
   item_id: '',
   source_warehouse: '100',
   destination_warehouse: '0',
+  description: '',
   quantity: '',
 };
 
-export const MIN_LINES_NUMBER = 4;
-
+// Default warehouse transfer entry.
 export const defaultWarehouseTransfer = {
   date: moment(new Date()).format('YYYY-MM-DD'),
   transaction_number: '',
   from_warehouse_id: '',
   to_warehouse_id: '',
   reason: '',
-  entries: [...repeatValue(defaultWareTransferEntry, MIN_LINES_NUMBER)],
+  entries: [...repeatValue(defaultWarehouseTransferEntry, MIN_LINES_NUMBER)],
 };
 
 export const ITEMS_FILTER_ROLES_QUERY = JSON.stringify([
   { fieldKey: 'type', comparator: 'is', value: 'inventory', index: 1 },
 ]);
+
+/**
+ * Transform warehouse transfer to initial values in edit mode.
+ */
+export function transformToEditForm(warehouse) {
+  const initialEntries = [
+    ...warehouse.entries.map((warehouse) => ({
+      ...transformToForm(warehouse, defaultWarehouseTransferEntry),
+    })),
+    ...repeatValue(
+      defaultWarehouseTransferEntry,
+      Math.max(MIN_LINES_NUMBER - warehouse.entries.length, 0),
+    ),
+  ];
+  const entries = compose(
+    ensureEntriesHaveEmptyLine(defaultWarehouseTransferEntry),
+    updateItemsEntriesTotal,
+  )(initialEntries);
+
+  return {
+    ...transformToForm(warehouse, defaultWarehouseTransfer),
+    entries,
+  };
+}
 
 /**
  * Syncs transfer no. settings with form.
@@ -40,3 +80,28 @@ export const useObserveTransferNoSettings = (prefix, nextNumber) => {
     setFieldValue('transaction_number', transferNo);
   }, [setFieldValue, prefix, nextNumber]);
 };
+
+/**
+ * Detarmines warehouse entries field when should update.
+ */
+export const entriesFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.items !== oldProps.items ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
+};
+
+/**
+ * Transformes the form values to request body values.
+ */
+export function transformValueToRequest(values) {
+  const entries = values.entries.filter(
+    (item) => item.item_id && item.quantity,
+  );
+  return {
+    ...values,
+    entries: entries.map((entry) => ({
+      ...omit(entry, ['destination_warehouse', 'source_warehouse']),
+    })),
+  };
+}

@@ -16,44 +16,31 @@ import {
 import { useWarehouseDetailDrawerContext } from './WarehouseTransferDetailDrawerProvider';
 
 /**
- * Warehouse transfer details drawer header
+ * Warehouse transfer details drawer header.
  */
 export default function WarehouseTransferDetailHeader() {
+  const { warehouseTransfer } = useWarehouseDetailDrawerContext();
+
   return (
     <CommercialDocHeader>
-      <CommercialDocTopHeader>
-        <DetailsMenu>
-          <AmountItem label={intl.get('amount')}>
-            <span class="big-number">'$10'</span>
-          </AmountItem>
-        </DetailsMenu>
-      </CommercialDocTopHeader>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
         <DetailItem label={intl.get('date')}>
-          {/* <FormatDate value={} /> */}
+          <FormatDate value={warehouseTransfer.date} />
         </DetailItem>
 
         <DetailItem
           label={intl.get('warehouse_transfer.drawer.label.transfer_number')}
-          // children={}
+          children={defaultTo(warehouseTransfer.transaction_number, '-')}
         />
         <DetailItem
           label={intl.get('warehouse_transfer.drawer.label.from_warehouse')}
-          // children={}
+          children={warehouseTransfer.from_warehouse.name}
         />
         <DetailItem
           label={intl.get('warehouse_transfer.drawer.label.to_warehouse')}
-          // children={}
-        />
-        <DetailItem
-          label={intl.get('reason')}
-          // children={defaultTo(, '-')}
+          children={warehouseTransfer.to_warehouse.name}
         />
       </DetailsMenu>
     </CommercialDocHeader>
   );
 }
-
-const AmountItem = styled(DetailItem)`
-  width: 50%;
-`;
