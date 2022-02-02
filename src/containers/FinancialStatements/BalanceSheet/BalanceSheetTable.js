@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
 
-import FinancialSheet from 'components/FinancialSheet';
-import DataTable from 'components/DataTable';
+import { DataTable, FinancialSheet } from 'components';
+
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 
 import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
@@ -36,8 +36,7 @@ export default function BalanceSheetTable({
       name="balance-sheet"
       companyName={companyName}
       sheetType={intl.get('balance_sheet')}
-      fromDate={query.from_date}
-      toDate={query.to_date}
+      asDate={query.to_date}
       basis={query.basis}
     >
       <BalanceSheetDataTable
@@ -49,6 +48,8 @@ export default function BalanceSheetTable({
         expanded={expandedRows}
         expandToggleColumn={1}
         expandColumnSpace={0.8}
+        headerLoading={true}
+        sticky={true}
         styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
@@ -60,8 +61,8 @@ const BalanceSheetDataTable = styled(DataTable)`
     .tbody .tr {
       .td {
         border-bottom: 0;
-        padding-top: 0.36rem;
-        padding-bottom: 0.36rem;
+        padding-top: 0.32rem;
+        padding-bottom: 0.32rem;
       }
       &.is-expanded {
         .td:not(.name) .cell-inner {

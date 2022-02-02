@@ -1,9 +1,10 @@
 import * as R from 'ramda';
 import { isEmpty } from 'lodash';
+
+import { Align } from 'common';
 import { CellTextSpan } from 'components/Datatable/Cells';
 import { getColumnWidth } from 'utils';
 
-const Align = { Left: 'left', Right: 'right', Center: 'center' };
 const getTableCellValueAccessor = (index) => `cells[${index}].value`;
 
 const getReportColWidth = (data, accessor, labelText) => {

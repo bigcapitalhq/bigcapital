@@ -3,12 +3,12 @@ import * as R from 'ramda';
 import { isEmpty } from 'lodash';
 import intl from 'react-intl-universal';
 import moment from 'moment';
+
+import { Align } from 'common';
 import { CellTextSpan } from 'components/Datatable/Cells';
 import { getColumnWidth } from 'utils';
 
 const getTableCellValueAccessor = (index) => `cells[${index}].value`;
-
-const Align = { Left: 'left', Right: 'right', Center: 'center' };
 
 const getReportColWidth = (data, accessor, headerText) => {
   return getColumnWidth(

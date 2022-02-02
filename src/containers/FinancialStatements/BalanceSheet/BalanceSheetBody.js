@@ -5,7 +5,7 @@ import { FinancialReportBody } from '../FinancialReportPage';
 
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
-
+import { FinancialSheetSkeleton } from '../../../components/FinancialSheet';
 import { compose } from 'utils';
 
 /**
@@ -21,7 +21,7 @@ function BalanceSheetBodyJSX({
   return (
     <FinancialReportBody>
       {isLoading ? (
-        'loading'
+        <FinancialSheetSkeleton />
       ) : (
         <BalanceSheetTable companyName={organizationName} />
       )}

@@ -6,10 +6,9 @@ const FinancialStatementBodyRoot = styled.div``;
 
 /**
  * 
- * @param {*} param0 
- * @returns 
+ * @returns {React.JSX}
  */
-export function FinancialStatement({ children, className }) {
+export function FinancialReport({ children, className }) {
   return <FinancialStatementRoot children={children} className={className} />;
 }
 
@@ -17,7 +16,7 @@ export function FinancialStatement({ children, className }) {
  *
  * @param {React.JSX}
  */
-export function FinancialStatementBody({ children, className }) {
+export function FinancialReportBody({ children, className }) {
   return (
     <FinancialStatementBodyRoot children={children} className={className} />
   );

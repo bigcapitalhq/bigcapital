@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { FinancialSheetSkeleton } from '../../../components/FinancialSheet';
 import ProfitLossSheetTable from './ProfitLossSheetTable';
 import { FinancialReportBody } from '../FinancialReportPage';
 
@@ -20,7 +21,7 @@ function ProfitLossBodyJSX({
   return (
     <FinancialReportBody>
       {isLoading ? (
-        'loading'
+        <FinancialSheetSkeleton />
       ) : (
         <ProfitLossSheetTable companyName={organizationName} />
       )}

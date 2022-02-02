@@ -2,13 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { TableStyle } from 'common';
-import { FormattedMessage as T } from 'components';
-
-import { useProfitLossSheetColumns } from './hooks';
-import FinancialSheet from 'components/FinancialSheet';
-import DataTable from 'components/DataTable';
+import { DataTable, FinancialSheet, FormattedMessage as T } from 'components';
 
 import { tableRowTypesToClassnames, defaultExpanderReducer } from 'utils';
+import { useProfitLossSheetColumns } from './hooks';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
 
 export default function ProfitLossSheetTable({
@@ -60,8 +57,8 @@ const ProfitLossDataTable = styled(DataTable)`
     .tbody .tr {
       .td {
         border-bottom: 0;
-        padding-top: 0.36rem;
-        padding-bottom: 0.36rem;
+        padding-top: 0.32rem;
+        padding-bottom: 0.32rem;
       }
       &.is-expanded {
         .td:not(.name) .cell-inner {
@@ -74,8 +71,8 @@ const ProfitLossDataTable = styled(DataTable)`
           border-top: 1px solid #bbb;
         }
       }
-      &:last-of-type .td{
-        border-bottom: 1px solid #bbb;
+      &:last-of-type .td {
+        border-bottom: 3px double #000;
       }
     }
   }

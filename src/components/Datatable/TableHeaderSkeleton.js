@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import clsx from 'classnames';
 import TableContext from './TableContext';
 import { Skeleton } from 'components';
 
@@ -8,7 +9,13 @@ function TableHeaderCell({ column }) {
   return (
     <div
       {...column.getHeaderProps({
-        className: 'th',
+        className: clsx(
+          'th',
+          {
+            [`align-${column.align}`]: column.align,
+          },
+          column.className,
+        ),
       })}
     >
       <Skeleton minWidth={skeletonWidthMin} maxWidth={skeletonWidthMax} />

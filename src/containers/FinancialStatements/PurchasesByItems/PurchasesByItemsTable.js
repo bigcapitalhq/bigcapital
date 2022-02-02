@@ -1,11 +1,9 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 
-import FinancialSheet from 'components/FinancialSheet';
-import { DataTable } from 'components';
+import { DataTable, FinancialSheet } from 'components';
 
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
-
 import { usePurchasesByItemsTableColumns } from './components';
 
 /**

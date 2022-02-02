@@ -147,6 +147,19 @@
         width: 65%;
         margin: 10px 0;
       }
+
+      &.align-right {
+        .skeleton {
+          margin-left: auto;
+        }
+      }
+
+      &.align-center {
+        .skeleton {
+          margin-left: auto;
+          margin-right: auto;
+        }
+      }
     }
 
     .th {
@@ -363,13 +376,14 @@
 .table-constrant,
 .table--constrant {
   .table {
-    .thead{
-      .tr:first-of-type .th{
+    .thead {
+      .tr:first-of-type .th {
         border-top: 1px solid #000000;
       }
     }
+
     .thead .th {
-      background: transparent;
+      background: #fff;
       color: #222222;
       border-bottom: 1px solid #000000;
       padding: 0.5rem;

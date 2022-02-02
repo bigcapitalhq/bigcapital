@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 
-import FinancialSheet from 'components/FinancialSheet';
-import { DataTable } from 'components';
+import { DataTable, FinancialSheet } from 'components';
 import { useInventoryItemDetailsColumns } from './components';
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
 
