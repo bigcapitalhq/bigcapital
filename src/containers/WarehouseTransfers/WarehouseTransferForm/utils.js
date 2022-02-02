@@ -1,8 +1,9 @@
 import React from 'react';
-import intl from 'react-intl-universal';
-import clsx from 'classnames';
-import { useFormikContext } from 'formik';
 import moment from 'moment';
+import intl from 'react-intl-universal';
+import { Intent } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import { AppToaster } from 'components';
 import { omit } from 'lodash';
 
 import {
@@ -105,3 +106,19 @@ export function transformValueToRequest(values) {
     })),
   };
 }
+
+/**
+ * Transformes the response errors types.
+ */
+export const transformErrors = (errors, { setErrors }) => {
+  if (
+    errors.some(({ type }) => type === 'WAREHOUSES_TRANSFER_SHOULD_NOT_BE_SAME')
+  ) {
+    AppToaster.show({
+      message: intl.get(
+        'warehouse_transfer.error.could_not_transfer_item_from_source_to_destination',
+      ),
+      intent: Intent.DANGER,
+    });
+  }
+};
