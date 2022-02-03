@@ -353,11 +353,11 @@
     }
 
     [data-sticky-last-left-td] {
-      // box-shadow: 2px 0px 3px #ccc;
+
     }
 
     [data-sticky-first-right-td] {
-      // box-shadow: -2px 0px 3px #ccc;
+
     }
   }
 
@@ -390,7 +390,7 @@
     }
 
     .tbody .tr .td {
-      background: transparent;
+      background: #fff;
       padding: 0.5rem 0.5rem;
       border-bottom: 0;
     }

@@ -306,6 +306,7 @@ const accountNameColumn = R.curry((data, column) => {
     className: column.key,
     textOverview: true,
     width: Math.max(width, 300),
+    sticky: Align.Left,
   };
 });
 
