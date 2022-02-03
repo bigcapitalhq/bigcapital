@@ -377,6 +377,20 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
+    path: `/financial-reports/realized-gain-loss`,
+    component: lazy(() =>
+      import(
+        '../containers/FinancialStatements/RealizedGainOrLoss/RealizedGainOrLoss'
+      ),
+    ),
+    
+    breadcrumb: intl.get('realized_gain_or_loss.label'),
+    pageTitle: intl.get('realized_gain_or_loss.label'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: '/financial-reports',
     component: lazy(() =>
       import('containers/FinancialStatements/FinancialReports'),

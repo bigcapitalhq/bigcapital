@@ -73,6 +73,10 @@ export const inventoryItemDetailsDrawerFilter = (state) => {
   return filterDrawerByTypeSelector('inventoryItemDetails')(state);
 };
 
+export const realizedGainOrLossFilterDrawerSelector = (state) => {
+  return filterDrawerByTypeSelector('realizedGainOrLoss')(state);
+};
+
 /**
  * Retrieve balance sheet filter drawer.
  */
@@ -235,6 +239,16 @@ export const getCashFlowStatementFilterDrawer = createSelector(
  */
 export const getInventoryItemDetailsFilterDrawer = createSelector(
   inventoryItemDetailsDrawerFilter,
+  (isOpen) => {
+    return isOpen;
+  },
+);
+
+/**
+ * Retrieve Realized Gain or Loss filter drawer.
+ */
+export const getRealizedGainOrLossFilterDrawer = createSelector(
+  realizedGainOrLossFilterDrawerSelector,
   (isOpen) => {
     return isOpen;
   },
