@@ -22,6 +22,7 @@ import VendorCreditNotesAlerts from '../Purchases/CreditNotes/VendorCreditNotesA
 import TransactionsLockingAlerts from '../TransactionsLocking/TransactionsLockingAlerts';
 import WarehousesAlerts from '../Preferences/Warehouses/WarehousesAlerts';
 import WarehousesTransfersAlerts from '../WarehouseTransfers/WarehousesTransfersAlerts'
+import BranchesAlerts from '../Preferences/Branches/BranchesAlerts';
 
 export default [
   ...AccountsAlerts,
@@ -47,5 +48,6 @@ export default [
   ...VendorCreditNotesAlerts,
   ...TransactionsLockingAlerts,
   ...WarehousesAlerts,
-  ...WarehousesTransfersAlerts
+  ...WarehousesTransfersAlerts,
+  ...BranchesAlerts,
 ];

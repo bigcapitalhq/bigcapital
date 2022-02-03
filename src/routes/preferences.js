@@ -8,6 +8,7 @@ import Item from 'containers/Preferences/Item';
 import SMSIntegration from '../containers/Preferences/SMSIntegration';
 import DefaultRoute from '../containers/Preferences/DefaultRoute';
 import Warehouses from '../containers/Preferences/Warehouses';
+import Branches from '../containers/Preferences/Branches';
 
 const BASE_URL = '/preferences';
 
@@ -40,6 +41,11 @@ export default [
   {
     path: `${BASE_URL}/warehouses`,
     component: Warehouses,
+    exact: true,
+  },
+  {
+    path: `${BASE_URL}/branches`,
+    component: Branches,
     exact: true,
   },
   {

@@ -7,6 +7,7 @@ import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
 import UsersActions from 'containers/Preferences/Users/UsersActions';
 import CurrenciesActions from 'containers/Preferences/Currencies/CurrenciesActions';
 import WarehousesActions from '../../containers/Preferences/Warehouses/WarehousesActions'
+import BranchesActions from '../../containers/Preferences/Branches/BranchesActions';
 import withDashboard from 'containers/Dashboard/withDashboard';
 
 import { compose } from 'utils';
@@ -40,6 +41,11 @@ function PreferencesTopbar({ preferencesPageTitle }) {
               exact
               path={'/preferences/warehouses'}
               component={WarehousesActions}
+            />
+            <Route
+              exact
+              path={'/preferences/branches'}
+              component={BranchesActions}
             />
           </Switch>
         </Route>
