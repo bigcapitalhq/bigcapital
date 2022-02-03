@@ -1824,5 +1824,7 @@
   "branch.dialog.label.website": "Website",
   "branch.dialog.success_message": "The branch has been created successfully.",
   "branch.alert.delete_message":"The branch has been deleted successfully",
-  "branch.once_delete_this_branch":"Once you delete this branch, you won't be able to restore it later. Are you sure you want to delete this branch?"
+  "branch.once_delete_this_branch":"Once you delete this branch, you won't be able to restore it later. Are you sure you want to delete this branch?",
+  "realized_gain_or_loss.label":"Realized Gain or Loss",
+  "unrealized_gain_or_loss.label":"Unrealized Gain or Loss"
 }

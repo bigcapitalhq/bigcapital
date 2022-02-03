@@ -383,9 +383,21 @@ export const getDashboardRoutes = () => [
         '../containers/FinancialStatements/RealizedGainOrLoss/RealizedGainOrLoss'
       ),
     ),
-    
     breadcrumb: intl.get('realized_gain_or_loss.label'),
     pageTitle: intl.get('realized_gain_or_loss.label'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/unrealized-gain-loss`,
+    component: lazy(() =>
+      import(
+        '../containers/FinancialStatements/UnrealizedGainOrLoss/UnrealizedGainOrLoss'
+      ),
+    ),
+    breadcrumb: intl.get('unrealized_gain_or_loss.label'),
+    pageTitle: intl.get('unrealized_gain_or_loss.label'),
     backLink: true,
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],

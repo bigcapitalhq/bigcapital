@@ -209,9 +209,22 @@ export function toggleInventoryItemDetailsFilterDrawer(toggle) {
  *  Toggle display of the Realized Gain or Loss filter drawer.
  * @param {boolean} toggle
  */
-export function toggleRealizedGainOrLossCilterDrawer(toggle) {
+export function toggleRealizedGainOrLossFilterDrawer(toggle) {
   return {
     type: `${t.REALIZED_GAIN_OR_LOSS}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle,
+    },
+  };
+}
+
+/**
+ *  Toggle display of the Unrealized Gain or Loss filter drawer.
+ * @param {boolean} toggle
+ */
+export function toggleUnrealizedGainOrLossFilterDrawer(toggle) {
+  return {
+    type: `${t.UNREALIZED_GAIN_OR_LOSS}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
     payload: {
       toggle,
     },
