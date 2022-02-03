@@ -107,7 +107,7 @@ const dateRangeMapper = R.curry((data, column) => {
     key: column.key,
     disableSortBy: true,
     textOverview: true,
-    align: Align.Center,
+    align: isDateColumnHasColumns ? Align.Center : Align.Right,
   };
   return R.compose(
     R.when(

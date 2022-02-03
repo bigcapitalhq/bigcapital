@@ -335,7 +335,7 @@ const dateRangeColumn = R.curry((data, column) => {
     key: column.key,
     disableSortBy: true,
     textOverview: true,
-    align: isDateColumnHasColumns ? Align.Center : Align.Center,
+    align: isDateColumnHasColumns ? Align.Center : Align.Right,
   };
   return R.compose(
     R.when(
