@@ -9,6 +9,11 @@
     min-width: 100%;
     display: block;
 
+    .thead .thead-inner,
+    .tbody .tbody-inner{
+      min-width: fit-content;
+    }
+
     .thead {
       overflow: hidden;
 
@@ -393,6 +398,7 @@
       background: #fff;
       padding: 0.5rem 0.5rem;
       border-bottom: 0;
+      color: #000;
     }
   }
 }

@@ -89,12 +89,14 @@ export default function TableHeader() {
   return (
     <ScrollSyncPane>
       <div className="thead">
-        {headerGroups.map((headerGroup, index) => (
-          <TableHeaderGroup key={index} headerGroup={headerGroup} />
-        ))}
-        <If condition={progressBarLoading}>
-          <MaterialProgressBar />
-        </If>
+        <div className={'thead-inner'}>
+          {headerGroups.map((headerGroup, index) => (
+            <TableHeaderGroup key={index} headerGroup={headerGroup} />
+          ))}
+          <If condition={progressBarLoading}>
+            <MaterialProgressBar />
+          </If>
+        </div>
       </div>
     </ScrollSyncPane>
   );
