@@ -17,30 +17,30 @@ export default function InvoiceFormTopBar() {
   return (
     <Navbar className={'navbar--dashboard-topbar'}>
       <NavbarGroup align={Alignment.LEFT}>
-        <FastField name={'branch'}>
+        <FastField name={'branch_id'}>
           {({ form, field: { value }, meta: { error, touched } }) => (
             <CustomSelectList
               items={branches}
               text={'Branch'}
-              onItemSelected={(item) => {
-                form.setFieldValue('name', item.id);
+              onItemSelected={({ id }) => {
+                form.setFieldValue('branch_id', id);
               }}
               selectedItemId={value}
               buttonProps={{
-                icon: <Icon icon={'domain-16'} iconSize={20} />,
+                icon: <Icon icon={'branch-16'} iconSize={20} />,
               }}
             />
           )}
         </FastField>
 
         <NavbarDivider />
-        <FastField name={'warehouse'}>
+        <FastField name={'warehouse_id'}>
           {({ form, field: { value }, meta: { error, touched } }) => (
             <CustomSelectList
               items={warehouses}
               text={'Warehosue'}
-              onItemSelected={(item) => {
-                form.setFieldValue('warehouse', item.id);
+              onItemSelected={({ id }) => {
+                form.setFieldValue('warehouse_id', id);
               }}
               selectedItemId={value}
               buttonProps={{
