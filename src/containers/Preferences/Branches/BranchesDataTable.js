@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { DataTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+import BranchesEmptyStatus from './BranchesEmptyStatus';
 import { useBranchesTableColumns, ActionsMenu } from './components';
 import { useBranchesContext } from './BranchesProvider';
 
@@ -24,6 +25,8 @@ function BranchesDataTable({
   // Table columns.
   const columns = useBranchesTableColumns();
 
+  const Time = true;
+
   const { branches, isBranchesLoading, isBranchesFetching } =
     useBranchesContext();
 
@@ -34,6 +37,10 @@ function BranchesDataTable({
   const handleDeleteBranch = ({ id }) => {
     openAlert('branch-delete', { branchId: id });
   };
+
+  if (Time) {
+    return <BranchesEmptyStatus />;
+  }
 
   return (
     <BranchesTable

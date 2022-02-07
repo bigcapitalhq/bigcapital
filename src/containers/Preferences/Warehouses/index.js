@@ -1,6 +1,6 @@
 import React from 'react';
 import { WarehousesProvider } from './WarehousesProvider';
-import Warehouses from './Warehouses';
+import WarehousesList from './WarehousesList';
 
 /**
  * Warehouses Preferences.
@@ -9,7 +9,7 @@ import Warehouses from './Warehouses';
 export default function WarehousesPerences() {
   return (
     <WarehousesProvider>
-      <Warehouses />
+      <WarehousesList />
     </WarehousesProvider>
   );
 }
