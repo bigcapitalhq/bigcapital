@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export default function FlagKit({ flage }) {
+export const FlagTag = ({ flage }) => {
   return (
     <React.Fragment>
       <Img
@@ -10,7 +10,7 @@ export default function FlagKit({ flage }) {
       />
     </React.Fragment>
   );
-}
+};
 
 const Img = styled.img`
   display: inline-block;

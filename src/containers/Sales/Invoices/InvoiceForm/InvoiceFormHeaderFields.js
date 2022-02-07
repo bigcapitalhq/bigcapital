@@ -4,12 +4,13 @@ import {
   InputGroup,
   Position,
   ControlGroup,
-  Classes,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
 import { FormattedMessage as T, Col, Row } from 'components';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
+import { upperCase } from 'lodash';
+
 import classNames from 'classnames';
 import styled from 'styled-components';
 
@@ -25,19 +26,22 @@ import {
   Icon,
   InputPrependButton,
   MoneyInputGroup,
+  FlagTag,
 } from 'components';
-import ItemsSuggestField from 'components/ItemsSuggestField';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { inputIntent, handleDateChange } from 'utils';
 import BaseCurrency from './BaseCurrency';
-import FlagKit from './FlagKit';
 
 const Data = [
   {
-    id: '10',
+    id: 10,
+    name: 'Due on Receipt',
+  },
+  {
+    id: 20,
     name: 'Due on Receipt',
   },
 ];
@@ -118,7 +122,7 @@ function InvoiceFormHeaderFields({
       </CustomerName>
       <ExchangeWrapp>
         <ExchangeLable>
-          <FlagKit flage={'US'} /> 1 USD =
+          <FlagTag flage={'US'} /> 1 USD =
         </ExchangeLable>
 
         {/* ----------- Exchange reate ----------- */}
@@ -138,14 +142,16 @@ function InvoiceFormHeaderFields({
                 value={field.value}
                 allowDecimals={false}
                 allowNegativeValue={true}
-                onChange={(value) => {}}
+                onChange={(value) => {
+                  setFieldValue('exchange_rate', value);
+                }}
                 intent={inputIntent({ error, touched })}
               />
             </FormGroup>
           )}
         </Field>
         <ExchangeLable>
-          <FlagKit flage={'LY'} /> LYD
+          <FlagTag flage={'LY'} /> LYD
         </ExchangeLable>
       </ExchangeWrapp>
       <Row>

@@ -43,6 +43,9 @@ export const defaultInvoice = {
   reference_no: '',
   invoice_message: '',
   terms_conditions: '',
+  exchange_rate: '',
+  branch_id: '',
+  warehouse_id: '',
   entries: [...repeatValue(defaultInvoiceEntry, MIN_LINES_NUMBER)],
 };
 
