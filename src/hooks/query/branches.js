@@ -97,3 +97,19 @@ export function useBranch(id, props, requestProps) {
     },
   );
 }
+
+/**
+ * Activate the given branches.
+ */
+export function useActivateBranches(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation((id) => apiRequest.post(`branches/activate`), {
+    onSuccess: (res, id) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
+}
