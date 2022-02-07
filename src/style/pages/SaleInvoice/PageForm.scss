@@ -31,6 +31,28 @@ body.page-invoice-edit {
         max-width: 450px;
       }
     }
+    .row {
+      display: flex;
+      flex-wrap: nowrap;
+      .col {
+        max-width: 470px;
+
+        &--terms,
+        &--due-date {
+          .bp3-form-group {
+            margin: 0px 15px 15px;
+            .bp3-label {
+              min-width: 70px;
+            }
+          }
+        }
+        &--due-date {
+          .bp3-input-group .bp3-input {
+            border: 1px dashed #ced4da;
+          }
+        }
+      }
+    }
     .col--invoice-date {
       max-width: 435px;
     }

@@ -7,6 +7,8 @@ import {
   useInvoice,
   useItems,
   useCustomers,
+  useWarehouses,
+  useBranches,
   useCreateInvoice,
   useEditInvoice,
   useSettingsInvoices,
@@ -53,6 +55,12 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
+  // Fetch warehouses list.
+  const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses();
+
+  // Fetches the branches list.
+  const { data: branches, isLoading: isBranchesLoading } = useBranches();
+
   // Handle fetching settings.
   const { isLoading: isSettingsLoading } = useSettingsInvoices();
 
@@ -75,6 +83,8 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     estimateId,
     invoiceId,
     submitPayload,
+    branches,
+    warehouses,
 
     isInvoiceLoading,
     isItemsLoading,
@@ -94,6 +104,8 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
         isItemsLoading ||
         isCustomersLoading ||
         isEstimateLoading ||
+        isWarehouesLoading ||
+        isBranchesLoading ||
         isSettingsLoading
       }
       name={'invoice-form'}

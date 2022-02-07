@@ -4,12 +4,14 @@ import {
   InputGroup,
   Position,
   ControlGroup,
+  Classes,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T, Col, Row } from 'components';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
+import styled from 'styled-components';
 
 import {
   useObserveInvoiceNoSettings,
@@ -19,15 +21,26 @@ import { CLASSES } from 'common/classes';
 import {
   CustomerSelectField,
   FieldRequiredHint,
+  ListSelect,
   Icon,
   InputPrependButton,
+  MoneyInputGroup,
 } from 'components';
+import ItemsSuggestField from 'components/ItemsSuggestField';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-
 import { inputIntent, handleDateChange } from 'utils';
+import BaseCurrency from './BaseCurrency';
+import FlagKit from './FlagKit';
+
+const Data = [
+  {
+    id: '10',
+    name: 'Due on Receipt',
+  },
+];
 
 /**
  * Invoice form header fields.
@@ -69,89 +82,158 @@ function InvoiceFormHeaderFields({
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ----------- Customer name ----------- */}
-      <FastField
-        name={'customer_id'}
-        customers={customers}
-        shouldUpdate={customerNameFieldShouldUpdate}
-      >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'customer_name'} />}
-            inline={true}
-            className={classNames(
-              'form-group--customer-name',
-              'form-group--select-list',
-              CLASSES.FILL,
+      <CustomerName>
+        <FastField
+          name={'customer_id'}
+          customers={customers}
+          shouldUpdate={customerNameFieldShouldUpdate}
+        >
+          {({ form, field: { value }, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'customer_name'} />}
+              inline={true}
+              className={classNames(
+                'form-group--customer-name',
+                'form-group--select-list',
+                CLASSES.FILL,
+              )}
+              labelInfo={<FieldRequiredHint />}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name={'customer_id'} />}
+            >
+              <CustomerSelectField
+                contacts={customers}
+                selectedContactId={value}
+                defaultSelectText={<T id={'select_customer_account'} />}
+                onContactSelected={(customer) => {
+                  form.setFieldValue('customer_id', customer.id);
+                }}
+                popoverFill={true}
+                allowCreate={true}
+              />
+            </FormGroup>
+          )}
+        </FastField>
+        <BaseCurrency />
+      </CustomerName>
+      <ExchangeWrapp>
+        <ExchangeLable>
+          <FlagKit flage={'US'} /> 1 USD =
+        </ExchangeLable>
+
+        {/* ----------- Exchange reate ----------- */}
+        <Field name={'exchange_rate'}>
+          {({
+            form: { values, setFieldValue },
+            field,
+            meta: { error, touched },
+          }) => (
+            <FormGroup
+              intent={inputIntent({ error, touched })}
+              inline={true}
+              className={'form-group--exchange_rate'}
+              helperText={<ErrorMessage name="exchange_rate" />}
+            >
+              <MoneyInputGroup
+                value={field.value}
+                allowDecimals={false}
+                allowNegativeValue={true}
+                onChange={(value) => {}}
+                intent={inputIntent({ error, touched })}
+              />
+            </FormGroup>
+          )}
+        </Field>
+        <ExchangeLable>
+          <FlagKit flage={'LY'} /> LYD
+        </ExchangeLable>
+      </ExchangeWrapp>
+      <Row>
+        <Col xs={6}>
+          {/* ----------- Invoice date ----------- */}
+          <FastField name={'invoice_date'}>
+            {({ form, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'invoice_date'} />}
+                inline={true}
+                labelInfo={<FieldRequiredHint />}
+                className={classNames('form-group--invoice-date', CLASSES.FILL)}
+                intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name="invoice_date" />}
+              >
+                <DateInput
+                  {...momentFormatter('YYYY/MM/DD')}
+                  value={tansformDateValue(value)}
+                  onChange={handleDateChange((formattedDate) => {
+                    form.setFieldValue('invoice_date', formattedDate);
+                  })}
+                  popoverProps={{
+                    position: Position.BOTTOM_LEFT,
+                    minimal: true,
+                  }}
+                  inputProps={{
+                    leftIcon: <Icon icon={'date-range'} />,
+                  }}
+                />
+              </FormGroup>
             )}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'customer_id'} />}
-          >
-            <CustomerSelectField
-              contacts={customers}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_customer_account'} />}
-              onContactSelected={(customer) => {
-                form.setFieldValue('customer_id', customer.id);
-              }}
-              popoverFill={true}
-              allowCreate={true}
-            />
-          </FormGroup>
-        )}
-      </FastField>
-
-      {/* ----------- Invoice date ----------- */}
-      <FastField name={'invoice_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'invoice_date'} />}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames('form-group--invoice-date', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="invoice_date" />}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('invoice_date', formattedDate);
-              })}
-              popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
-              inputProps={{
-                leftIcon: <Icon icon={'date-range'} />,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
-
-      {/* ----------- Due date ----------- */}
-      <FastField name={'due_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'due_date'} />}
-            inline={true}
-            className={classNames('form-group--due-date', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="due_date" />}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('due_date', formattedDate);
-              })}
-              popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
-              inputProps={{
-                leftIcon: <Icon icon={'date-range'} />,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
-
+          </FastField>
+        </Col>
+        <Col className={'col--terms'}>
+          {/* ----------- Terms ----------- */}
+          <FastField name={'terms'}>
+            {({ form, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={'Terms'}
+                inline={true}
+                intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name="terms" />}
+              >
+                <ListSelect
+                  items={Data}
+                  onItemSelect={({ id }) => {
+                    form.setFieldValue('terms', id);
+                  }}
+                  selectedItem={value}
+                  selectedItemProp={'value'}
+                  textProp={'name'}
+                  popoverProps={{ minimal: true }}
+                />
+              </FormGroup>
+            )}
+          </FastField>
+        </Col>
+        <Col className={'col--due-date'}>
+          {/* ----------- Due date ----------- */}
+          <FastField name={'due_date'}>
+            {({ form, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'due_date'} />}
+                labelInfo={<FieldRequiredHint />}
+                inline={true}
+                className={classNames('form-group--due-date', CLASSES.FILL)}
+                intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name="due_date" />}
+              >
+                <DateInput
+                  {...momentFormatter('YYYY/MM/DD')}
+                  value={tansformDateValue(value)}
+                  onChange={handleDateChange((formattedDate) => {
+                    form.setFieldValue('due_date', formattedDate);
+                  })}
+                  popoverProps={{
+                    position: Position.BOTTOM_LEFT,
+                    minimal: true,
+                  }}
+                  inputProps={{
+                    leftIcon: <Icon icon={'date-range'} />,
+                  }}
+                />
+              </FormGroup>
+            )}
+          </FastField>
+        </Col>
+      </Row>
       {/* ----------- Invoice number ----------- */}
       <Field name={'invoice_no'}>
         {({ form, field, meta: { error, touched } }) => (
@@ -214,3 +296,28 @@ export default compose(
     invoiceNumberPrefix: invoiceSettings?.numberPrefix,
   })),
 )(InvoiceFormHeaderFields);
+
+const CustomerName = styled.div`
+  display: flex;
+  align-items: baseline;
+`;
+
+const ExchangeWrapp = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  max-width: 370px;
+  .bp3-form-group.bp3-inline {
+    width: 88px;
+  }
+`;
+
+const ExchangeLable = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 5px;
+  font-size: 10px;
+  line-height: 1.6;
+  padding-bottom: calc(1rem + 1px);
+`;

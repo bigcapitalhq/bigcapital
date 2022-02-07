@@ -54,6 +54,7 @@ import AvaterCell from './AvaterCell';
 
 import { ItemsMultiSelect } from './Items';
 import MoreMenuItems from './MoreMenutItems';
+import CustomSelectList from './CustomSelectList'
 
 export * from './Dialog';
 export * from './Menu';
@@ -161,4 +162,5 @@ export {
   ItemsMultiSelect,
   AvaterCell,
   MoreMenuItems,
+  CustomSelectList
 };

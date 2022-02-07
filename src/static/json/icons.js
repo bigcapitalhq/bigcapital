@@ -522,4 +522,16 @@ export default {
     ],
     viewBox: '0 0 24 24',
   },
+  'warehouse-16': {
+    path: [
+      'M20,8.35V19h-2v-8H6v8H4V8.35l8-3.2L20,8.35z M22,21V7L12,3L2,7v14h6v-8h8v8H22z M11,19H9v2h2V19z M13,16h-2v2h2V16z M15,19h-2v2h2V19z',
+    ],
+    viewBox: '0 0 24 24',
+  },
+  'domain-16': {
+    path: [
+      'M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z',
+    ],
+    viewBox: '0 0 24 24',
+  },
 };
