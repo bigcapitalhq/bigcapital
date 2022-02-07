@@ -36,6 +36,8 @@ import CreditNotePdfPreviewDialog from '../containers/Dialogs/CreditNotePdfPrevi
 import PaymentReceivePdfPreviewDialog from '../containers/Dialogs/PaymentReceivePdfPreviewDialog';
 import WarehouseFormDialog from '../containers/Dialogs/WarehouseFormDialog';
 import BranchFormDialog from '../containers/Dialogs/BranchFormDialog';
+import BranchActivateDialog from '../containers/Dialogs/BranchActivateDialog';
+import WarehouseActivateDialog from '../containers/Dialogs/WarehouseActivateDialog';
 
 /**
  * Dialogs container.
@@ -82,6 +84,8 @@ export default function DialogsContainer() {
       <PaymentReceivePdfPreviewDialog dialogName={'payment-pdf-preview'} />
       <WarehouseFormDialog dialogName={'warehouse-form'} />
       <BranchFormDialog dialogName={'branch-form'} />
+      <BranchActivateDialog dialogName={'branch-activate'} />
+      <WarehouseActivateDialog dialogName={'warehouse-activate'} />
     </div>
   );
 }
