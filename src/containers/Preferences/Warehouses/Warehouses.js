@@ -4,27 +4,15 @@ import styled from 'styled-components';
 
 import { useWarehousesContext } from './WarehousesProvider';
 import WarehousesGridItems from './WarehousesGridItems';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-
-import { compose } from 'utils';
 
 /**
  * Warehouses.
  * @returns
  */
-function Warehouses({
-  // #withDashboardActions
-  changePreferencesPageTitle,
-}) {
+export default function Warehouses() {
   const { warehouses } = useWarehousesContext();
-
-  React.useEffect(() => {
-    changePreferencesPageTitle(intl.get('warehouses.label'));
-  }, [changePreferencesPageTitle]);
 
   return warehouses.map((warehouse) => (
     <WarehousesGridItems warehouse={warehouse} />
   ));
 }
-
-export default compose(withDashboardActions)(Warehouses);
