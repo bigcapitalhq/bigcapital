@@ -16,6 +16,7 @@ import InvoiceItemsEntriesEditorField from './InvoiceItemsEntriesEditorField';
 import InvoiceFloatingActions from './InvoiceFloatingActions';
 import InvoiceFormFooter from './InvoiceFormFooter';
 import InvoiceFormDialogs from './InvoiceFormDialogs';
+import InvoiceFormTopBar from './InvoiceFormTopBar';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
@@ -166,6 +167,7 @@ function InvoiceForm({
         onSubmit={handleSubmit}
       >
         <Form>
+          <InvoiceFormTopBar />
           <InvoiceFormHeader />
           <InvoiceItemsEntriesEditorField />
           <InvoiceFormFooter />
