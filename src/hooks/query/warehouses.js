@@ -217,3 +217,19 @@ export function useRefreshWarehouseTransfers() {
     },
   };
 }
+
+/**
+ * Activate the given warehouse.
+ */
+export function useActivateWarehouses(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation((id) => apiRequest.post(`warehouses/activate`), {
+    onSuccess: (res, id) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
+}
