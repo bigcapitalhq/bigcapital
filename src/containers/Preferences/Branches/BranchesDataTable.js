@@ -27,22 +27,27 @@ function BranchesDataTable({
   // Table columns.
   const columns = useBranchesTableColumns();
 
-  const Time = true;
-
   const { branches, isBranchesLoading, isBranchesFetching } =
     useBranchesContext();
 
+  // Handle edit branch.
   const handleEditBranch = ({ id }) => {
     openDialog('branch-form', { branchId: id, action: 'edit' });
   };
 
+  // Handle delete branch.
   const handleDeleteBranch = ({ id }) => {
     openAlert('branch-delete', { branchId: id });
   };
 
-  if (Time) {
-    return <BranchesEmptyStatus />;
-  }
+   // Handle mark primary branch.
+  const handleMarkPrimaryBranch = ({ id }) => {
+    openAlert('branch-mark-primary', { branchId: id });
+  };
+
+  // if (type) {
+  //   return <BranchesEmptyStatus />;
+  // }
 
   return (
     <BranchesTableCard>
@@ -58,6 +63,7 @@ function BranchesDataTable({
         payload={{
           onEdit: handleEditBranch,
           onDelete: handleDeleteBranch,
+          onMarkPrimary: handleMarkPrimaryBranch,
         }}
       />
     </BranchesTableCard>

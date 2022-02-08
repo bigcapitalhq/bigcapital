@@ -233,3 +233,21 @@ export function useActivateWarehouses(props) {
     ...props,
   });
 }
+
+/**
+ * Mark primary the given branch.
+ */
+export function useMarkPrimaryWarehouse(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation((id) => apiRequest.post(`warehouses/${id}/mark-primary`), {
+    onSuccess: (res, id) => {
+      // Invalidate specific inventory adjustment.
+      queryClient.invalidateQueries([t.WAREHOUSE, id]);
+
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
+}

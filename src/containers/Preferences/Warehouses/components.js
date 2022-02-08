@@ -22,7 +22,7 @@ export function WarehouseContextMenu({
         onClick={safeCallback(onEditClick)}
       />
       <MenuItem
-        icon={<Icon icon="pen-18" />}
+        icon={<Icon icon="check" />}
         text={intl.get('warehouses.action.make_as_parimary')}
         onClick={safeCallback(onPrimary)}
       />

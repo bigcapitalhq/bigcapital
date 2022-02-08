@@ -9,7 +9,7 @@ import { Icon } from 'components';
  * Context menu of Branches.
  */
 export function ActionsMenu({
-  payload: { onEdit, onDelete },
+  payload: { onEdit, onDelete, onMarkPrimary },
   row: { original },
 }) {
   return (
@@ -18,6 +18,11 @@ export function ActionsMenu({
         icon={<Icon icon="pen-18" />}
         text={intl.get('branches.action.edit_branch')}
         onClick={safeCallback(onEdit, original)}
+      />
+      <MenuItem
+        icon={<Icon icon="check" />}
+        text={intl.get('branches.action.mark_as_primary')}
+        onClick={safeCallback(onMarkPrimary, original)}
       />
       <MenuDivider />
       <MenuItem
