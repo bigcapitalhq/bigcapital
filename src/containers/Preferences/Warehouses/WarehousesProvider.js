@@ -21,14 +21,19 @@ function WarehousesProvider({ ...props }) {
   };
 
   return (
-    <div className={classNames(CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT)}>
-      <WarehousePreference>
+    <div
+      className={classNames(
+        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT,
+        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_WAREHOUSES,
+      )}
+    >
+      <React.Fragment>
         {isWarehouesLoading ? (
           <PreferencesPageLoader />
         ) : (
           <WarehousesContext.Provider value={provider} {...props} />
         )}
-      </WarehousePreference>
+      </React.Fragment>
     </div>
   );
 }
@@ -37,8 +42,4 @@ const useWarehousesContext = () => React.useContext(WarehousesContext);
 
 export { WarehousesProvider, useWarehousesContext };
 
-const WarehousePreference = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin: 15px;
-`;
+const WarehousePreference = styled.div``;

@@ -1,7 +1,5 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
 
 import BranchesDataTable from './BranchesDataTable';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
