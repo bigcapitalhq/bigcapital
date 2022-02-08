@@ -39,34 +39,45 @@ export function WarehouseContextMenu({
 
 export function WarehousesGrid({ warehouse }) {
   return (
-    <WarehouseGrid>
+    <WarehouseGridWrapper>
       <WarehouseHeader>
         <WarehouseTitle>{warehouse.name}</WarehouseTitle>
         <WarehouseCode>{warehouse.code}</WarehouseCode>
+        <WarehouseIcon>
+          <Icon icon="warehouse-16" iconSize={20} />
+        </WarehouseIcon>
       </WarehouseHeader>
-      <WarehouseInfoItem>{warehouse.city}</WarehouseInfoItem>
-      <WarehouseInfoItem>{warehouse.country}</WarehouseInfoItem>
-      <WarehouseInfoItem>{warehouse.email}</WarehouseInfoItem>
-      <WarehouseInfoItem>{warehouse.phone_number}</WarehouseInfoItem>
-    </WarehouseGrid>
+      <WarehouseContent>
+        <WarehouseItem>{warehouse.city}</WarehouseItem>
+        <WarehouseItem>{warehouse.country}</WarehouseItem>
+        <WarehouseItem>{warehouse.email}</WarehouseItem>
+        <WarehouseItem>{warehouse.phone_number}</WarehouseItem>
+      </WarehouseContent>
+    </WarehouseGridWrapper>
   );
 }
 
-const WarehouseGrid = styled.div`
+const WarehouseGridWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   border-radius: 3px;
-  width: 280px; // 453px
-  height: 160px; //225px
-  background: #fff;
-  margin: 5px;
-  padding: 16px 12px 10px;
   border: 1px solid #c8cad0; //#CFD1D6
+  background: #fff;
+  margin: 5px 5px 8px;
+  width: 300px; // 453px
+  height: 160px; //225px
   transition: all 0.1s ease-in-out;
+  position: relative;
 
   &:hover {
     border-color: #0153cc;
   }
+`;
+
+const WarehouseHeader = styled.div`
+  position: relative;
+  padding: 16px 12px 10px;
 `;
 
 const WarehouseTitle = styled.div`
@@ -78,22 +89,31 @@ const WarehouseTitle = styled.div`
   line-height: 1;
 `;
 
-const WarehouseHeader = styled.div`
-  margin: 4px 0px 15px;
-`;
-
 const WarehouseCode = styled.div`
   display: inline-block;
   font-size: 11px;
   color: #6b7176;
 `;
 
-const WarehouseInfoItem = styled.div`
+const WarehouseIcon = styled.div`
+  position: absolute;
+  top: 14px;
+  color: #abb3bb;
+  right: 12px;
+`;
+
+const WarehouseContent = styled.div`
   display: inline-block;
-  font-size: 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  padding: 0 12px 0px;
+`;
+
+const WarehouseItem = styled.div`
+  font-size: 11px;
   color: #000;
   line-height: 1.3rem;
-  overflow: hidden;
   text-overflow: ellipsis;
-  margin: 0;
+  overflow: hidden;
 `;
