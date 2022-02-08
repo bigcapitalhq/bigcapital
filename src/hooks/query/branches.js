@@ -113,3 +113,21 @@ export function useActivateBranches(props) {
     ...props,
   });
 }
+
+/**
+ * Mark primary the given branch.
+ */
+export function useMarkPrimaryBranches(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation((id) => apiRequest.post(`branches/${id}/mark-primary`), {
+    onSuccess: (res, id) => {
+      // Invalidate specific inventory adjustment.
+      queryClient.invalidateQueries([t.BRANCH, id]);
+
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
+}

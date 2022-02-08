@@ -28,11 +28,11 @@ function WarehousesProvider({ ...props }) {
       )}
     >
       <React.Fragment>
-        {isWarehouesLoading ? (
+        {/* {isWarehouesLoading ? (
           <PreferencesPageLoader />
-        ) : (
+        ) : ( */}
           <WarehousesContext.Provider value={provider} {...props} />
-        )}
+        {/* )} */}
       </React.Fragment>
     </div>
   );

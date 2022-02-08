@@ -30,12 +30,18 @@ function WarehousesGridItems({
     openAlert('warehouse-delete', { warehouseId: warehouse.id });
   };
 
+  // Handle mark primary warehouse.
+  const handleMarkPrimaryWarehouse = () => {
+    openAlert('warehouse-mark-primary', { warehouseId: warehouse.id });
+  };
+
   return (
     <ContextMenu2
       content={
         <WarehouseContextMenu
           onEditClick={handleEditWarehouse}
           onDeleteClick={handleDeleteWarehouse}
+          onMarkPrimary={handleMarkPrimaryWarehouse}
         />
       }
     >

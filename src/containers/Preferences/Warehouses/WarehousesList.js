@@ -17,7 +17,7 @@ function WarehousesList({
     changePreferencesPageTitle(intl.get('warehouses.label'));
   }, [changePreferencesPageTitle]);
 
-  // if () {
+  // if (type) {
   //   return <WarehousesEmptyStatus />;
   // }
 
