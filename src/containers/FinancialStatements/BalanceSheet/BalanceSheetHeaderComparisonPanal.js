@@ -142,7 +142,7 @@ export default function BalanceSheetHeaderComparisonPanal() {
             <Checkbox
               inline={true}
               small={true}
-              label={<T id={'profit_loss_sheet.percentage_of_column'} />}
+              label={<T id={'balance_sheet.percentage_of_column'} />}
               {...field}
             />
           </FormGroup>
@@ -156,7 +156,7 @@ export default function BalanceSheetHeaderComparisonPanal() {
             <Checkbox
               inline={true}
               small={true}
-              label={<T id={'profit_loss_sheet.percentage_of_row'} />}
+              label={<T id={'balance_sheet.percentage_of_row'} />}
               {...field}
             />
           </FormGroup>
