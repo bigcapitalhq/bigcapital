@@ -1834,5 +1834,5 @@
   "warehouse_activate.dialog_success_message": "Multi-branches feature has been activated successfully.",
   "warehouse.alert.mark_primary_message": "The given warehouse has been marked as primary.",
   "warehouse.alert.are_you_sure_you_want_to_make":"Are you sure you want to make a primary warehouse?",
-  "make_primary":"Make Primary"
+  "make_primary":"Make as Primary"
 }
