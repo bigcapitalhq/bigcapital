@@ -12,7 +12,7 @@ import { safeCallback } from 'utils';
 export function WarehouseContextMenu({
   onEditClick,
   onDeleteClick,
-  onPrimary,
+  onMarkPrimary,
 }) {
   return (
     <Menu>
@@ -24,7 +24,7 @@ export function WarehouseContextMenu({
       <MenuItem
         icon={<Icon icon="check" />}
         text={intl.get('warehouses.action.make_as_parimary')}
-        onClick={safeCallback(onPrimary)}
+        onClick={safeCallback(onMarkPrimary)}
       />
       <MenuDivider />
       <MenuItem
