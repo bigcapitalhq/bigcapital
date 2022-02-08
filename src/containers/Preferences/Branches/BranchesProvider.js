@@ -1,8 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
-import { Card } from 'components';
 import { useBranches } from 'hooks/query';
 import PreferencesPageLoader from '../PreferencesPageLoader';
 
@@ -33,16 +31,10 @@ function BranchesProvider({ ...props }) {
         CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_BRANCHES,
       )}
     >
-      <BrachesPreferencesCard>
-        <BranchesContext.Provider value={provider} {...props} />
-      </BrachesPreferencesCard>
+      <BranchesContext.Provider value={provider} {...props} />
     </div>
   );
 }
 
 const useBranchesContext = () => React.useContext(BranchesContext);
 export { BranchesProvider, useBranchesContext };
-
-const BrachesPreferencesCard = styled(Card)`
-  padding: 0;
-`;

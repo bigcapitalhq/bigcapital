@@ -72,6 +72,7 @@ const CLASSES = {
   PREFERENCES_PAGE_INSIDE_CONTENT_SMS_INTEGRATION: 'preferences-page__inside-content--sms-integration',
   PREFERENCES_PAGE_INSIDE_CONTENT_ROLES_FORM: 'preferences-page__inside-content--roles-form',
   PREFERENCES_PAGE_INSIDE_CONTENT_BRANCHES: 'preferences-page__inside-content--branches',
+  PREFERENCES_PAGE_INSIDE_CONTENT_WAREHOUSES: 'preferences-page__inside-content--warehouses',
 
   FINANCIAL_REPORT_INSIDER: 'dashboard__insider--financial-report',
 
