@@ -1,8 +1,6 @@
 import { useRequestQuery } from '../useQueryRequest';
 import {
   trialBalanceSheetReducer,
-  balanceSheetRowsReducer,
-  profitLossSheetReducer,
   generalLedgerTableRowsReducer,
   journalTableRowsReducer,
   ARAgingSummaryTableRowsMapper,
@@ -23,18 +21,12 @@ export function useBalanceSheet(query, props) {
       method: 'get',
       url: '/financial_statements/balance_sheet',
       params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
     },
     {
-      select: (res) => ({
-        tableRows: balanceSheetRowsReducer(res.data.data),
-        ...res.data,
-      }),
-      defaultData: {
-        data: [],
-        columns: [],
-        query: {},
-        tableRows: [],
-      },
+      select: (res) => res.data,
       ...props,
     },
   );
@@ -76,18 +68,12 @@ export function useProfitLossSheet(query, props) {
       method: 'get',
       url: '/financial_statements/profit_loss_sheet',
       params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
     },
     {
-      select: (res) => ({
-        tableRows: profitLossSheetReducer(res.data.data),
-        ...res.data,
-      }),
-      defaultData: {
-        data: {},
-        tableRows: [],
-        columns: [],
-        query: {},
-      },
+      select: (res) => res.data,
       ...props,
     },
   );

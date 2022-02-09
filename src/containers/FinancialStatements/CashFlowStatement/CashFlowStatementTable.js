@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 
-import { DataTable } from 'components';
-import FinancialSheet from 'components/FinancialSheet';
+import { DataTable, FinancialSheet } from 'components';
+
 import { useCashFlowStatementColumns } from './components';
 import { useCashFlowStatementContext } from './CashFlowStatementProvider';
 
@@ -15,8 +15,6 @@ export default function CashFlowStatementTable({
   // #ownProps
   companyName,
 }) {
-  
-
   const {
     cashFlowStatement: { tableRows },
     isCashFlowLoading,

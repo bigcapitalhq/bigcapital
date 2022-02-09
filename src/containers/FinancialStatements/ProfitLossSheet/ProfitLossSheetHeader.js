@@ -1,19 +1,23 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import moment from 'moment';
 import { Formik, Form } from 'formik';
-import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
-import * as Yup from 'yup';
+import * as R from 'ramda';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 
+import { FormattedMessage as T } from 'components';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import ProfitLossSheetHeaderGeneralPane from './ProfitLossSheetHeaderGeneralPane';
+import ProfitLossSheetHeaderComparisonPanel from './ProfitLossSheetHeaderComparisonPanel';
 
 import withProfitLoss from './withProfitLoss';
 import withProfitLossActions from './withProfitLossActions';
 
-import { compose } from 'utils';
+import { useProfitLossHeaderValidationSchema } from './utils';
 
+/**
+ * Profit/loss header.
+ * @returns {React.JSX}
+ */
 function ProfitLossHeader({
   // #ownProps
   pageFilter,
@@ -26,15 +30,7 @@ function ProfitLossHeader({
   toggleProfitLossFilterDrawer: toggleFilterDrawer,
 }) {
   // Validation schema.
-  const validationSchema = Yup.object().shape({
-    fromDate: Yup.date().required().label(intl.get('from_date')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('to_date')),
-    filterByOption: Yup.string(),
-    displayColumnsType: Yup.string(),
-  });
+  const validationSchema = useProfitLossHeaderValidationSchema();
 
   // Initial values.
   const initialValues = {
@@ -42,13 +38,11 @@ function ProfitLossHeader({
     fromDate: moment(pageFilter.fromDate).toDate(),
     toDate: moment(pageFilter.toDate).toDate(),
   };
-
   // Handle form submit.
   const handleSubmit = (values, actions) => {
     onSubmitFilter(values);
     toggleFilterDrawer(false);
   };
-
   // Handles the cancel button click.
   const handleCancelClick = () => {
     toggleFilterDrawer(false);
@@ -58,7 +52,7 @@ function ProfitLossHeader({
     toggleFilterDrawer(false);
   };
 
-  return (
+  return ( 
     <FinancialStatementHeader
       isOpen={profitLossDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
@@ -74,6 +68,11 @@ function ProfitLossHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<ProfitLossSheetHeaderGeneralPane />}
+            />
+            <Tab
+              id="comparison"
+              title={<T id={'profit_loss_sheet.comparisons'} />}
+              panel={<ProfitLossSheetHeaderComparisonPanel />}
             />
           </Tabs>
 
@@ -91,7 +90,7 @@ function ProfitLossHeader({
   );
 }
 
-export default compose(
+export default R.compose(
   withProfitLoss(({ profitLossDrawerFilter }) => ({
     profitLossDrawerFilter,
   })),

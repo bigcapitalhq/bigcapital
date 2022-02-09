@@ -6,14 +6,36 @@ import { randomNumber } from 'utils';
 /**
  * Skeleton component.
  */
-export default function Skeleton({
+export function Skeleton({
   Tag = 'span',
   minWidth = 40,
   maxWidth = 100,
+  children,
 }) {
-  const randomWidth = useMemo(() => randomNumber(minWidth, maxWidth), [
-    minWidth,
-    maxWidth,
-  ]);
-  return <Tag className={'skeleton'} style={{ width: `${randomWidth}%` }} />;
+  const randomWidth = useMemo(
+    () => randomNumber(minWidth, maxWidth),
+    [minWidth, maxWidth],
+  );
+  return (
+    <Tag
+      className={'skeleton'}
+      style={{ width: `${randomWidth}%` }}
+      children={children}
+    />
+  );
+}
+
+export function SkeletonText({
+  Tag = 'span',
+  charsLength,
+  minChars = 40,
+  maxChars = 100,
+}) {
+  const computedCharLength = useMemo(
+    () => (charsLength ? charsLength : randomNumber(minChars, maxChars)),
+    [charsLength, minChars, maxChars],
+  );
+  const randamText = 'X'.repeat(computedCharLength);
+
+  return <Tag className={'skeleton'}>{randamText}</Tag>;
 }

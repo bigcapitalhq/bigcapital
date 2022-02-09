@@ -8,12 +8,13 @@ import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';
 
 import BalanceSheetHeaderGeneralPanal from './BalanceSheetHeaderGeneralPanal';
+import BalanceSheetHeaderComparisonPanal from './BalanceSheetHeaderComparisonPanal';
 import FinancialStatementHeader from '../../FinancialStatements/FinancialStatementHeader';
 
 import { compose, transformToForm } from 'utils';
 import {
-  getBalanceSheetHeaderDefaultValues,
   getBalanceSheetHeaderValidationSchema,
+  getDefaultBalanceSheetQuery,
 } from './utils';
 
 /**
@@ -30,7 +31,7 @@ function BalanceSheetHeader({
   // #withBalanceSheetActions
   toggleBalanceSheetFilterDrawer: toggleFilterDrawer,
 }) {
-  const defaultValues = getBalanceSheetHeaderDefaultValues();
+  const defaultValues = getDefaultBalanceSheetQuery();
 
   // Filter form initial values.
   const initialValues = transformToForm(
@@ -42,7 +43,6 @@ function BalanceSheetHeader({
     },
     defaultValues,
   );
-
   // Validation schema.
   const validationSchema = getBalanceSheetHeaderValidationSchema();
 
@@ -79,6 +79,11 @@ function BalanceSheetHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<BalanceSheetHeaderGeneralPanal />}
+            />
+            <Tab
+              id="comparison"
+              title={<T id={'balance_sheet.comparisons'} />}
+              panel={<BalanceSheetHeaderComparisonPanal />}
             />
           </Tabs>
 

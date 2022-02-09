@@ -1,8 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 
-import FinancialSheet from 'components/FinancialSheet';
-import DataTable from 'components/DataTable';
+import { DataTable, FinancialSheet } from 'components';
 
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import { useCustomersSummaryColumns } from './components';

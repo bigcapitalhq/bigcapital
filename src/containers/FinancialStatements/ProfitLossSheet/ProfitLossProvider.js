@@ -5,6 +5,10 @@ import { transformFilterFormToQuery } from '../common';
 
 const ProfitLossSheetContext = createContext();
 
+/**
+ * Profit/loss sheet provider.
+ * @returns {React.JSX}
+ */
 function ProfitLossSheetProvider({ query, ...props }) {
   const {
     data: profitLossSheet,

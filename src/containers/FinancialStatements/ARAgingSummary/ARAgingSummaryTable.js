@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import intl from 'react-intl-universal';
-import DataTable from 'components/DataTable';
-import FinancialSheet from 'components/FinancialSheet';
+
+import { DataTable, FinancialSheet } from 'components';
 
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import { useARAgingSummaryColumns } from './components';

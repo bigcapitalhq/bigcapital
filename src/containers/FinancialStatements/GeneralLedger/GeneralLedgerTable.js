@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { defaultExpanderReducer } from 'utils';
 import intl from 'react-intl-universal';
 
-import FinancialSheet from 'components/FinancialSheet';
+import { FinancialSheet } from 'components';
 import DataTable from 'components/DataTable';
 import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
 import TableFastCell from 'components/Datatable/TableFastCell';
@@ -37,7 +37,6 @@ export default function GeneralLedgerTable({ companyName }) {
       sheetType={intl.get('general_ledger_sheet')}
       fromDate={query.from_date}
       toDate={query.to_date}
-      name="general-ledger"
       loading={isLoading}
       fullWidth={true}
     >

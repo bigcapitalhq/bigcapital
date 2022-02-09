@@ -1,4 +1,5 @@
 import React, { createContext, useContext } from 'react';
+
 import FinancialReportPage from '../FinancialReportPage';
 import { useBalanceSheet } from 'hooks/query';
 import { transformFilterFormToQuery } from '../common';
@@ -10,7 +11,6 @@ function BalanceSheetProvider({ filter, ...props }) {
   const query = React.useMemo(() => transformFilterFormToQuery(filter), [
     filter,
   ]);
-
   // Fetches the balance sheet report.
   const {
     data: balanceSheet,
