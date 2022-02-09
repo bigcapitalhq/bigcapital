@@ -295,7 +295,7 @@ const totalColumnCompose = R.curry((data, column) => {
 /**
  * Account name column mapper.
  */
-const accountNameColumn = R.curry((direction, data, column) => {
+const accountNameColumn = R.curry((data, column) => {
   const accessor = getTableCellValueAccessor(column.cell_index);
   const width = getReportColWidth(data, accessor, column.label);
 
@@ -306,7 +306,7 @@ const accountNameColumn = R.curry((direction, data, column) => {
     className: column.key,
     textOverview: true,
     width: Math.max(width, 300),
-    sticky: direction === 'rtl' ? Align.Right : Align.Left,
+    sticky: Align.Left,
   };
 });
 
@@ -360,9 +360,9 @@ const isMatchesDateRange = (r) => R.match(/^date-range/g, r).length > 0;
  * @param {} data
  * @param {} column
  */
-const dynamicColumnMapper = R.curry((direction, data, column) => {
+const dynamicColumnMapper = R.curry((data, column) => {
   const indexTotalColumn = totalColumnCompose(data);
-  const indexAccountNameColumn = accountNameColumn(direction, data);
+  const indexAccountNameColumn = accountNameColumn(data);
   const indexDatePeriodMapper = dateRangeColumn(data);
 
   return R.compose(
@@ -373,8 +373,11 @@ const dynamicColumnMapper = R.curry((direction, data, column) => {
 });
 
 /**
- * Retrieves the dynamic columns of profit/loss sheet.
+ *
+ * @param {*} columns
+ * @param {*} data
+ * @returns
  */
-export const dynamicColumns = (direction, columns, data) => {
-  return R.map(dynamicColumnMapper(direction, data), columns);
+export const dynamicColumns = (columns, data) => {
+  return R.map(dynamicColumnMapper(data), columns);
 };
