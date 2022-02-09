@@ -43,7 +43,6 @@ function BalanceSheetHeader({
     },
     defaultValues,
   );
-
   // Validation schema.
   const validationSchema = getBalanceSheetHeaderValidationSchema();
 

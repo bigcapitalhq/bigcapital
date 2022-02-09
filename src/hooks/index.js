@@ -1,4 +1,5 @@
 import { useRef, useEffect, useMemo } from 'react';
+import { useLocation, useHistory } from 'react-router';
 import useAutofocus from './useAutofocus';
 import { useLocalStorage } from './utils/useLocalStorage';
 
@@ -53,3 +54,29 @@ export function useMemorizedColumnsWidths(tableName) {
   };
   return [get, save, handleColumnResizing];
 }
+
+/**
+ * Retrieve the URL location search params.
+ */
+export const useLocationQuery = () => {
+  const { search } = useLocation();
+
+  return useMemo(() => {
+    return new URLSearchParams(search);
+  }, [search]);
+};
+
+/**
+ * Mutates the URL location params.
+ */
+export const useMutateLocationQuery = () => {
+  const location = useLocation();
+  const history = useHistory();
+
+  return {
+    mutate: (query) => {
+      const params = new URLSearchParams(query).toString();
+      history.push({ pathname: location.pathname, search: params.toString() });
+    },
+  };
+};

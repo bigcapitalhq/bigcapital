@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import moment from 'moment';
 
 import { BalanceSheetAlerts, BalanceSheetLoadingBar } from './components';
@@ -12,6 +12,7 @@ import { BalanceSheetBody } from './BalanceSheetBody';
 
 import withBalanceSheetActions from './withBalanceSheetActions';
 
+import { useBalanceSheetQuery } from './utils';
 import { compose } from 'utils';
 
 /**
@@ -22,26 +23,22 @@ function BalanceSheet({
   // #withBalanceSheetActions
   toggleBalanceSheetFilterDrawer,
 }) {
-  const [filter, setFilter] = useState({
-    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-    toDate: moment().endOf('year').format('YYYY-MM-DD'),
-    basis: 'cash',
-    displayColumnsType: 'total',
-    filterByOption: 'without-zero-balance',
-  });
+  // Balance sheet query.
+  const { query, setLocationQuery } = useBalanceSheetQuery();
+
   // Handle re-fetch balance sheet after filter change.
   const handleFilterSubmit = (filter) => {
-    const _filter = {
+    const newFilter = {
       ...filter,
       fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
       toDate: moment(filter.toDate).format('YYYY-MM-DD'),
     };
-    setFilter({ ..._filter });
+    setLocationQuery({ ...newFilter });
   };
   // Handle number format submit.
   const handleNumberFormatSubmit = (values) => {
-    setFilter({
-      ...filter,
+    setLocationQuery({
+      ...query,
       numberFormat: values,
     });
   };
@@ -54,9 +51,9 @@ function BalanceSheet({
   );
 
   return (
-    <BalanceSheetProvider filter={filter}>
+    <BalanceSheetProvider filter={query}>
       <BalanceSheetActionsBar
-        numberFormat={filter.numberFormat}
+        numberFormat={query.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <BalanceSheetLoadingBar />
@@ -65,7 +62,7 @@ function BalanceSheet({
       <DashboardPageContent>
         <FinancialStatement>
           <BalanceSheetHeader
-            pageFilter={filter}
+            pageFilter={query}
             onSubmitFilter={handleFilterSubmit}
           />
           <BalanceSheetBody />

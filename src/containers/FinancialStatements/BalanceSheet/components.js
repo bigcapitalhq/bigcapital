@@ -6,8 +6,7 @@ import { FormattedMessage as T, Icon, If } from 'components';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { FinancialComputeAlert } from '../FinancialReportPage';
-
-import { dynamicColumns } from './utils';
+import { dynamicColumns } from './dynamicColumns';
 
 /**
  * Balance sheet alerts.

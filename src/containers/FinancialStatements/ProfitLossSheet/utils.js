@@ -1,397 +1,159 @@
+import React from 'react';
 import * as R from 'ramda';
-import { isEmpty } from 'lodash';
+import moment from 'moment';
+import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 
-import { Align } from 'common';
-import { CellTextSpan } from 'components/Datatable/Cells';
-import { getColumnWidth } from 'utils';
-
-const getTableCellValueAccessor = (index) => `cells[${index}].value`;
-
-const getReportColWidth = (data, accessor, labelText) => {
-  return getColumnWidth(
-    data,
-    accessor,
-    { magicSpacing: 10, minWidth: 100 },
-    labelText,
-  );
-};
-
-const isNodeHasChildren = (node) => !isEmpty(node.children);
+import { useMutateLocationQuery, useLocationQuery } from 'hooks';
+import { transformToForm } from 'utils';
 
 /**
- * `Percentage of income` column accessor.
- */
-const percentageOfIncomeAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-  };
-});
-
-/**
- * `Percentage of expense` column accessor.
- */
-const percentageOfExpenseAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-  };
-});
-
-/**
- * `Percentage of column` column accessor.
- */
-const percentageOfColumnAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-  };
-});
-
-/**
- * `Percentage of row` column accessor.
- */
-const percentageOfRowAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-  };
-});
-
-/**
- * Previous year column accessor.
- */
-const previousYearAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-  };
-});
-
-/**
- * Pervious year change column accessor.
- */
-const previousYearChangeAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-  };
-});
-
-/**
- * Previous year percentage column accessor.
- */
-const previousYearPercentageAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-  };
-});
-
-/**
- * Previous period column accessor.
- */
-const previousPeriodAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-  };
-});
-
-/**
- * Previous period change column accessor.
- */
-const previousPeriodChangeAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-  };
-});
-
-/**
- * Previous period percentage column accessor.
- */
-const previousPeriodPercentageAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-  };
-});
-
-/**
- *
- * @param {*} column
- * @param {*} index
+ * Retrieves the default profit/loss sheet query.
  * @returns
  */
-const totalColumnsMapper = R.curry((data, column) => {
-  return R.compose(
-    R.when(R.pathEq(['key'], 'total'), totalColumn(data)),
-    // Percetage of column/row.
-    R.when(
-      R.pathEq(['key'], 'percentage_column'),
-      percentageOfColumnAccessor(data),
-    ),
-    R.when(R.pathEq(['key'], 'percentage_row'), percentageOfRowAccessor(data)),
-    R.when(
-      R.pathEq(['key'], 'percentage_income'),
-      percentageOfIncomeAccessor(data),
-    ),
-    R.when(
-      R.pathEq(['key'], 'percentage_expenses'),
-      percentageOfExpenseAccessor(data),
-    ),
-    // Previous year.
-    R.when(R.pathEq(['key'], 'previous_year'), previousYearAccessor(data)),
-    R.when(
-      R.pathEq(['key'], 'previous_year_change'),
-      previousYearChangeAccessor(data),
-    ),
-    R.when(
-      R.pathEq(['key'], 'previous_year_percentage'),
-      previousYearPercentageAccessor(data),
-    ),
-    // Pervious period.
-    R.when(R.pathEq(['key'], 'previous_period'), previousPeriodAccessor(data)),
-    R.when(
-      R.pathEq(['key'], 'previous_period_change'),
-      previousPeriodChangeAccessor(data),
-    ),
-    R.when(
-      R.pathEq(['key'], 'previous_period_percentage'),
-      previousPeriodPercentageAccessor(data),
-    ),
-  )(column);
+export const getDefaultProfitLossQuery = () => ({
+  basis: 'cash',
+  fromDate: moment().startOf('year').format('YYYY-MM-DD'),
+  toDate: moment().endOf('year').format('YYYY-MM-DD'),
+  displayColumnsType: 'total',
+  filterByOption: 'with-transactions',
+
+  previousYear: false,
+  previousYearAmountChange: false,
+  previousYearPercentageChange: false,
+
+  previousPeriod: false,
+  previousPeriodAmountChange: false,
+  previousPeriodPercentageChange: false,
+
+  // Percentage columns.
+  percentageColumn: false,
+  percentageRow: false,
+  percentageIncome: false,
+  percentageExpense: false,
 });
 
 /**
- * Total sub-columns composer.
+ * Retrieves the balance sheet query API.
  */
-const totalColumnsComposer = R.curry((data, column) => {
-  return R.map(totalColumnsMapper(data), column.children);
-});
+export const useProfitLossSheetQuery = () => {
+  // Retrieves location query.
+  const locationQuery = useLocationQuery();
 
-/**
- * Assoc columns to total column.
- */
-const assocColumnsToTotalColumn = R.curry((data, column, columnAccessor) => {
-  const columns = totalColumnsComposer(data, column);
+  // Mutate the location query.
+  const { mutate: setLocationQuery } = useMutateLocationQuery();
 
-  return R.assoc('columns', columns, columnAccessor);
-});
+  // Merges the default query with location query.
+  const query = React.useMemo(() => {
+    const defaultQuery = getDefaultProfitLossQuery();
 
-/**
- * Retrieves the total column.
- */
-const totalColumn = R.curry((data, column) => {
-  const hasChildren = isNodeHasChildren(column);
-  const accessor = getTableCellValueAccessor(column.cell_index);
-  const width = getReportColWidth(data, accessor, column.label);
+    return {
+      ...defaultQuery,
+      ...transformToForm(Object.fromEntries([...locationQuery]), defaultQuery),
+    };
+  }, [locationQuery]);
 
   return {
-    key: column.key,
-    Header: column.label,
-    accessor,
-    textOverview: true,
-    Cell: CellTextSpan,
-    width,
-    disableSortBy: true,
-    align: hasChildren ? Align.Center : Align.Right,
-  };
-});
-
-/**
- *
- */
-const totalColumnCompose = R.curry((data, column) => {
-  const hasChildren = isNodeHasChildren(column);
-
-  return R.compose(
-    R.when(R.always(hasChildren), assocColumnsToTotalColumn(data, column)),
-    totalColumn(data),
-  )(column);
-});
-
-/**
- * Account name column mapper.
- */
-const accountNameColumn = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    key: column.key,
-    Header: column.label,
-    accessor,
-    className: column.key,
-    textOverview: true,
-    width: Math.max(width, 300),
-    sticky: Align.Left,
-  };
-});
-
-/**
- *
- * @param {*} data
- * @param {*} column
- * @returns
- */
-const dateRangeSoloColumnAttrs = (data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
-
-  return {
-    accessor,
-    width: getReportColWidth(data, accessor),
+    query,
+    locationQuery,
+    setLocationQuery,
   };
 };
 
 /**
- * Retrieves date range column.
- */
-const dateRangeColumn = R.curry((data, column) => {
-  const isDateColumnHasColumns = isNodeHasChildren(column);
-
-  const columnAccessor = {
-    Header: column.label,
-    key: column.key,
-    disableSortBy: true,
-    textOverview: true,
-    align: isDateColumnHasColumns ? Align.Center : Align.Right,
-  };
-  return R.compose(
-    R.when(
-      R.always(isDateColumnHasColumns),
-      assocColumnsToTotalColumn(data, column),
-    ),
-    R.when(
-      R.always(!isDateColumnHasColumns),
-      R.mergeLeft(dateRangeSoloColumnAttrs(data, column)),
-    ),
-  )(columnAccessor);
-});
-
-/**
- * Detarmines the given string starts with `date-range` string.
- */
-const isMatchesDateRange = (r) => R.match(/^date-range/g, r).length > 0;
-
-/**
- *
- * @param {} data
- * @param {} column
- */
-const dynamicColumnMapper = R.curry((data, column) => {
-  const indexTotalColumn = totalColumnCompose(data);
-  const indexAccountNameColumn = accountNameColumn(data);
-  const indexDatePeriodMapper = dateRangeColumn(data);
-
-  return R.compose(
-    R.when(R.pathSatisfies(isMatchesDateRange, ['key']), indexDatePeriodMapper),
-    R.when(R.pathEq(['key'], 'name'), indexAccountNameColumn),
-    R.when(R.pathEq(['key'], 'total'), indexTotalColumn),
-  )(column);
-});
-
-/**
- *
- * @param {*} columns
- * @param {*} data
+ * Retrieves the profit/loss header validation schema.
  * @returns
  */
-export const dynamicColumns = (columns, data) => {
-  return R.map(dynamicColumnMapper(data), columns);
+export const useProfitLossHeaderValidationSchema = () => {
+  return Yup.object().shape({
+    fromDate: Yup.date().required().label(intl.get('from_date')),
+    toDate: Yup.date()
+      .min(Yup.ref('fromDate'))
+      .required()
+      .label(intl.get('to_date')),
+    filterByOption: Yup.string(),
+    displayColumnsType: Yup.string(),
+  });
 };
 
+/**
+ * Handles the previous year checkbox change.
+ */
 export const handlePreviousYearCheckBoxChange = R.curry((form, event) => {
   const isChecked = event.currentTarget.checked;
-  form.setFieldValue('previous_year', isChecked);
-  form.setFieldValue('previous_year_amount_change', isChecked);
-  form.setFieldValue('previous_year_percentage_change', isChecked);
+
+  form.setFieldValue('previousYear', isChecked);
+
+  if (!isChecked) {
+    form.setFieldValue('previousYearAmountChange', isChecked);
+    form.setFieldValue('previousYearPercentageChange', isChecked);
+  }
 });
 
+/**
+ * Handles the preivous period checkbox change.
+ */
 export const handlePreviousPeriodCheckBoxChange = R.curry((form, event) => {
   const isChecked = event.currentTarget.checked;
-  form.setFieldValue('previous_period', isChecked);
-  form.setFieldValue('previous_period_amount_change', isChecked);
-  form.setFieldValue('previous_period_amount_change', isChecked);
+
+  form.setFieldValue('previousPeriod', isChecked);
+
+  if (!isChecked) {
+    form.setFieldValue('previousPeriodAmountChange', isChecked);
+    form.setFieldValue('previousPeriodPercentageChange', isChecked);
+  }
 });
+
+/**
+ * Handles previous year change amount checkbox change.
+ */
+export const handlePreviousYearChangeCheckboxChange = R.curry((form, event) => {
+  const isChecked = event.currentTarget.checked;
+
+  if (isChecked) {
+    form.setFieldValue('previousYear', isChecked);
+  }
+  form.setFieldValue('previousYearAmountChange', isChecked);
+});
+
+/**
+ * Handle previous year percentage checkbox change.
+ */
+export const handlePreviousYearPercentageCheckboxChange = R.curry(
+  (form, event) => {
+    const isChecked = event.currentTarget.checked;
+
+    if (isChecked) {
+      form.setFieldValue('previousYear', isChecked);
+    }
+    form.setFieldValue('previousYearPercentageChange', isChecked);
+  },
+);
+
+/**
+ * Handles previous period change amout checkbox change.
+ */
+export const handlePreviousPeriodChangeCheckboxChange = R.curry(
+  (form, event) => {
+    const isChecked = event.currentTarget.checked;
+
+    if (isChecked) {
+      form.setFieldValue('previousPeriod', isChecked);
+    }
+    form.setFieldValue('previousPeriodAmountChange', isChecked);
+  },
+);
+
+/**
+ * Handles previous period percentage checkbox change.
+ */
+export const handlePreviousPeriodPercentageCheckboxChange = R.curry(
+  (form, event) => {
+    const isChecked = event.currentTarget.checked;
+
+    if (isChecked) {
+      form.setFieldValue('previousPeriod', isChecked);
+    }
+    form.setFieldValue('previousPeriodPercentageChange', isChecked);
+  },
+);
