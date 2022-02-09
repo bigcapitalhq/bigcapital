@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import intl from 'react-intl-universal';
 
 import { transformToForm } from 'utils';
-import { useLocationQuery, useMutateLocationQuery } from 'hooks';
+import { useAppQueryString } from 'hooks';
 
 /**
  * Retrieves the default balance sheet query.
@@ -27,8 +27,8 @@ export const getDefaultBalanceSheetQuery = () => ({
   previousPeriodPercentageChange: false,
 
   // Percentage columns.
-  percentageColumn: false,
-  percentageRow: false,
+  percentageOfColumn: false,
+  percentageOfRow: false,
 });
 
 /**
@@ -36,10 +36,7 @@ export const getDefaultBalanceSheetQuery = () => ({
  */
 export const useBalanceSheetQuery = () => {
   // Retrieves location query.
-  const locationQuery = useLocationQuery();
-
-  // Mutates the location query.
-  const { mutate: setLocationQuery } = useMutateLocationQuery();
+  const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default filter query with location URL query.
   const query = React.useMemo(() => {
@@ -47,7 +44,7 @@ export const useBalanceSheetQuery = () => {
 
     return {
       ...defaultQuery,
-      ...transformToForm(Object.fromEntries([...locationQuery]), defaultQuery),
+      ...transformToForm(locationQuery, defaultQuery),
     };
   }, [locationQuery]);
 

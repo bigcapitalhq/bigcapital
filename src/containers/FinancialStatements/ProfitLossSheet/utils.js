@@ -4,7 +4,7 @@ import moment from 'moment';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
 
-import { useMutateLocationQuery, useLocationQuery } from 'hooks';
+import { useAppQueryString } from 'hooks';
 import { transformToForm } from 'utils';
 
 /**
@@ -38,10 +38,7 @@ export const getDefaultProfitLossQuery = () => ({
  */
 export const useProfitLossSheetQuery = () => {
   // Retrieves location query.
-  const locationQuery = useLocationQuery();
-
-  // Mutate the location query.
-  const { mutate: setLocationQuery } = useMutateLocationQuery();
+  const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default query with location query.
   const query = React.useMemo(() => {
@@ -49,7 +46,7 @@ export const useProfitLossSheetQuery = () => {
 
     return {
       ...defaultQuery,
-      ...transformToForm(Object.fromEntries([...locationQuery]), defaultQuery),
+      ...transformToForm(locationQuery, defaultQuery),
     };
   }, [locationQuery]);
 

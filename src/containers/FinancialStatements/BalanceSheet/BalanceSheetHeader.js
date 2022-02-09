@@ -13,8 +13,8 @@ import FinancialStatementHeader from '../../FinancialStatements/FinancialStateme
 
 import { compose, transformToForm } from 'utils';
 import {
-  getBalanceSheetHeaderDefaultValues,
   getBalanceSheetHeaderValidationSchema,
+  getDefaultBalanceSheetQuery,
 } from './utils';
 
 /**
@@ -31,7 +31,7 @@ function BalanceSheetHeader({
   // #withBalanceSheetActions
   toggleBalanceSheetFilterDrawer: toggleFilterDrawer,
 }) {
-  const defaultValues = getBalanceSheetHeaderDefaultValues();
+  const defaultValues = getDefaultBalanceSheetQuery();
 
   // Filter form initial values.
   const initialValues = transformToForm(
