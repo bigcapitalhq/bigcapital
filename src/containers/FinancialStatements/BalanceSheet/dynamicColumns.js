@@ -16,11 +16,10 @@ const getReportColWidth = (data, accessor, headerText) => {
   );
 };
 
-
 /**
  * Account name column mapper.
  */
-const accountNameMapper = R.curry((data, column) => {
+const accountNameMapper = R.curry((direction, data, column) => {
   const accessor = getTableCellValueAccessor(column.cell_index);
   const width = getReportColWidth(data, accessor, column.label);
 
@@ -31,7 +30,7 @@ const accountNameMapper = R.curry((data, column) => {
     className: column.key,
     textOverview: true,
     width: Math.max(width, 300),
-    sticky: Align.Left,
+    sticky: direction === 'rtl' ? Align.Right : Align.Left,
   };
 });
 
@@ -313,9 +312,9 @@ const isMatchesDateRange = (r) => R.match(/^date-range/g, r).length > 0;
 /**
  * Dynamic column mapper.
  */
-const dynamicColumnMapper = R.curry((data, column) => {
+const dynamicColumnMapper = R.curry((direction, data, column) => {
   const indexTotalMapper = totalMapper(data);
-  const indexAccountNameMapper = accountNameMapper(data);
+  const indexAccountNameMapper = accountNameMapper(direction, data);
   const indexDatePeriodMapper = dateRangeMapper(data);
 
   return R.compose(
@@ -328,6 +327,6 @@ const dynamicColumnMapper = R.curry((data, column) => {
 /**
  * Cash flow dynamic columns.
  */
-export const dynamicColumns = (columns, data) => {
-  return R.map(dynamicColumnMapper(data), columns);
+export const dynamicColumns = (direction, columns, data) => {
+  return R.map(dynamicColumnMapper(direction, data), columns);
 };

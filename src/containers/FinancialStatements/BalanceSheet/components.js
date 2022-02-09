@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 
+import { useAppIntlContext } from 'components/AppIntlProvider';
 import { FormattedMessage as T, Icon, If } from 'components';
 
 import { useBalanceSheetContext } from './BalanceSheetProvider';
@@ -58,8 +59,10 @@ export const useBalanceSheetColumns = () => {
     balanceSheet: { table },
   } = useBalanceSheetContext();
 
+  const { direction } = useAppIntlContext()
+
   return React.useMemo(
-    () => dynamicColumns(table.columns, table.rows),
-    [table],
+    () => dynamicColumns(direction, table.columns, table.rows),
+    [direction, table],
   );
 };
