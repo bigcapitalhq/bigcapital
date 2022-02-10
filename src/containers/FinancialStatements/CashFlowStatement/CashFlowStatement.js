@@ -6,10 +6,9 @@ import { FinancialStatement } from 'components';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import CashFlowStatementHeader from './CashFlowStatementHeader';
-import CashFlowStatementTable from './CashFlowStatementTable';
 import CashFlowStatementActionsBar from './CashFlowStatementActionsBar';
+import { CashFlowStatementBody } from './CashFlowStatementBody';
 
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 import withCashFlowStatementActions from './withCashFlowStatementActions';
 import { CashFlowStatementProvider } from './CashFlowStatementProvider';
 import {
@@ -23,8 +22,6 @@ import { compose } from 'utils';
  * Cash flow statement.
  */
 function CashFlowStatement({
-  // #withPreferences
-  organizationName,
   //#withCashStatementActions
   toggleCashFlowStatementFilterDrawer,
 }) {
@@ -77,18 +74,11 @@ function CashFlowStatement({
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
           />
-          <div class="financial-statement__body">
-            <CashFlowStatementTable companyName={organizationName} />
-          </div>
+          <CashFlowStatementBody />
         </FinancialStatement>
       </DashboardPageContent>
     </CashFlowStatementProvider>
   );
 }
 
-export default compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-  withCashFlowStatementActions,
-)(CashFlowStatement);
+export default compose(withCashFlowStatementActions)(CashFlowStatement);

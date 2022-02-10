@@ -1,46 +1,7 @@
 .financial-sheet {
   &--cash-flow-statement {
     .financial-sheet__table {
-      .thead,
-      .tbody {
-        .tr .td.account_name ~ .td,
-        .tr .th.account_name ~ .th {
-          text-align: right;
-        }
-      }
-      .tbody {
-        .tr:not(.no-results) {
-          // &.row-type--AGGREGATE, 
-          &.row-type--ACCOUNTS {
-            border-top: 1px solid #bbb;
-          }
-          &.row-type--CASH_END_PERIOD {
-            border-bottom: 3px double #333;
-          }
-          .td {
-            border-bottom: 0;
-            padding-top: 0.4rem;
-            padding-bottom: 0.4rem;
-          }
-
-          &.row-type--TOTAL {
-            font-weight: 500;
-
-            &:not(:first-child) .td {
-              border-top: 1px solid #bbb;
-            }
-          }
-        }
-
-        .tr.is-expanded {
-          .td.total,
-          .td.date-period {
-            .cell-inner {
-              display: none;
-            }
-          }
-        }
-      }
+      
     }
   }
 }
