@@ -6,22 +6,20 @@ import { DataTable, FinancialSheet } from 'components';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { useTrialBalanceTableColumns } from './components';
 
+import { TableStyle } from 'common';
+
 /**
  * Trial Balance sheet data table.
  */
-export default function TrialBalanceSheetTable({
-  companyName,
-}) {
-  
-
+export default function TrialBalanceSheetTable({ companyName }) {
   // Trial balance sheet context.
   const {
     trialBalanceSheet: { tableRows, query },
-    isLoading
+    isLoading,
   } = useTrialBalanceSheetContext();
 
   // Trial balance sheet table columns.
-  const columns = useTrialBalanceTableColumns();;
+  const columns = useTrialBalanceTableColumns();
 
   const rowClassNames = (row) => {
     const { original } = row;
@@ -48,7 +46,6 @@ export default function TrialBalanceSheetTable({
       basis={'cash'}
     >
       <DataTable
-        className="bigcapital-datatable--financial-report"
         columns={columns}
         data={tableRows}
         expandable={true}
@@ -56,6 +53,7 @@ export default function TrialBalanceSheetTable({
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={rowClassNames}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );
