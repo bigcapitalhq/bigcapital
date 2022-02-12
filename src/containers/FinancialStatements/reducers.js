@@ -115,7 +115,7 @@ export const ARAgingSummaryTableRowsMapper = (sheet, total) => {
     const agingRow = mapAging(customer.aging);
 
     rows.push({
-      rowType: 'customer',
+      row_types: 'customer',
       name: customer.customer_name,
       ...agingRow,
       current: customer.current.formatted_amount,
@@ -129,7 +129,7 @@ export const ARAgingSummaryTableRowsMapper = (sheet, total) => {
     ...rows,
     {
       name: '',
-      rowType: 'total',
+      row_types: 'total',
       current: sheet.total.current.formatted_amount,
       ...mapAging(sheet.total.aging),
       total: sheet.total.total.formatted_amount,
@@ -150,7 +150,7 @@ export const APAgingSummaryTableRowsMapper = (sheet, total) => {
     const agingRow = mapAging(vendor.aging);
 
     rows.push({
-      rowType: 'vendor',
+      row_types: 'vendor',
       name: vendor.vendor_name,
       ...agingRow,
       current: vendor.current.formatted_amount,
@@ -164,7 +164,7 @@ export const APAgingSummaryTableRowsMapper = (sheet, total) => {
     ...rows,
     {
       name: '',
-      rowType: 'total',
+      row_types: 'total',
       current: sheet.total.current.formatted_amount,
       ...mapAging(sheet.total.aging),
       total: sheet.total.total.formatted_amount,
@@ -182,7 +182,7 @@ export const inventoryValuationReducer = (sheet) => {
   }
   if (sheet.total) {
     results.push({
-      rowType: 'total',
+      row_types: 'total',
       ...sheet.total,
     });
   }
@@ -199,7 +199,7 @@ export const purchasesByItemsReducer = (sheet) => {
   }
   if (sheet.total) {
     results.push({
-      rowType: 'total',
+      row_types: 'total',
       ...sheet.total,
     });
   }
@@ -215,7 +215,7 @@ export const salesByItemsReducer = (sheet) => {
   }
   if (sheet.total) {
     results.push({
-      rowType: 'total',
+      row_types: 'total',
       ...sheet.total,
     });
   }

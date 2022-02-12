@@ -8,6 +8,8 @@ import { TableStyle } from 'common';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import { useARAgingSummaryColumns } from './components';
 
+import { tableRowTypesToClassnames } from 'utils';
+
 /**
  * AR aging summary table sheet.
  */
@@ -21,8 +23,6 @@ export default function ReceivableAgingSummaryTable({
   // AR aging summary columns.
   const columns = useARAgingSummaryColumns();
 
-  const rowClassNames = (row) => [`row-type--${row.original.rowType}`];
-
   return (
     <FinancialSheet
       companyName={organizationName}
@@ -34,7 +34,7 @@ export default function ReceivableAgingSummaryTable({
       <ARAgingSummaryDataTable
         columns={columns}
         data={ARAgingSummary.tableRows}
-        rowClassNames={rowClassNames}
+        rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         sticky={true}
         styleName={TableStyle.Constrant}
@@ -50,6 +50,25 @@ const ARAgingSummaryDataTable = styled(DataTable)`
         border-bottom: 0;
         padding-top: 0.32rem;
         padding-bottom: 0.32rem;
+      }
+
+      &:not(.no-results) {
+        .td {
+          border-bottom: 0;
+          padding-top: 0.4rem;
+          padding-bottom: 0.4rem;
+        }
+        &:not(:first-child) .td {
+          border-top: 1px solid transparent;
+        }
+        &.row_type--total {
+          font-weight: 500;
+
+          .td {
+            border-top: 1px solid #bbb;
+            border-bottom: 3px double #333;
+          }
+        }
       }
     }
   }

@@ -34,7 +34,6 @@ export default function BalanceSheetTable({
 
   return (
     <FinancialSheet
-      name="balance-sheet"
       companyName={companyName}
       sheetType={intl.get('balance_sheet')}
       asDate={query.to_date}

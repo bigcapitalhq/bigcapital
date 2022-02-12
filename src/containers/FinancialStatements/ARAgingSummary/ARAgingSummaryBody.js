@@ -2,10 +2,8 @@ import React from 'react';
 import * as R from 'ramda';
 
 import ARAgingSummaryTable from './ARAgingSummaryTable';
-import {
-  FinancialReportBody,
-  FinancialSheetSkeleton,
-} from '../../../components';
+import { FinancialReportBody } from '../FinancialReportPage';
+import { FinancialSheetSkeleton } from '../../../components';
 
 import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';

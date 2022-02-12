@@ -17,20 +17,17 @@ export default function PurchasesByItemsTable({ companyName }) {
   // Purchases by items context.
   const {
     purchaseByItems: { tableRows, query },
-    isLoading,
   } = usePurchaseByItemsContext();
 
   // Purchases by items table columns.
   const columns = usePurchasesByItemsTableColumns();
 
   return (
-    <FinancialSheet
+    <PurchasesByItemsSheet
       companyName={companyName}
       sheetType={intl.get('purchases_by_items')}
       fromDate={query.from_date}
       toDate={query.to_date}
-      name="purchases-by-items"
-      loading={isLoading}
     >
       <PurchasesByItemsDataTable
         columns={columns}
@@ -45,9 +42,13 @@ export default function PurchasesByItemsTable({ companyName }) {
         )}
         styleName={TableStyle.Constrant}
       />
-    </FinancialSheet>
+    </PurchasesByItemsSheet>
   );
 }
+
+const PurchasesByItemsSheet = styled(FinancialSheet)`
+  min-width: 850px;
+`;
 
 const PurchasesByItemsDataTable = styled(DataTable)`
   .table {

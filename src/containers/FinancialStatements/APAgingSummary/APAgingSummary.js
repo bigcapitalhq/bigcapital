@@ -6,7 +6,8 @@ import { FinancialStatement } from 'components';
 
 import APAgingSummaryHeader from './APAgingSummaryHeader';
 import APAgingSummaryActionsBar from './APAgingSummaryActionsBar';
-import APAgingSummaryTable from './APAgingSummaryTable';
+import { APAgingSummaryBody } from './APAgingSummaryBody';
+
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import { APAgingSummaryProvider } from './APAgingSummaryProvider';
 import { APAgingSummarySheetLoadingBar } from './components';
@@ -67,7 +68,7 @@ function APAgingSummary({
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
           />
-          <APAgingSummaryTable organizationName={organizationName} />
+          <APAgingSummaryBody organizationName={organizationName} />
         </FinancialStatement>
       </DashboardPageContent>
     </APAgingSummaryProvider>

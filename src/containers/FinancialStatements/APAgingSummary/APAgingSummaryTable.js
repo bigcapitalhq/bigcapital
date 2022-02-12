@@ -8,6 +8,8 @@ import { TableStyle } from 'common';
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import { useAPAgingSummaryColumns } from './components';
 
+import { tableRowTypesToClassnames } from 'utils';
+
 /**
  * AP aging summary table sheet.
  */
@@ -24,8 +26,6 @@ export default function APAgingSummaryTable({
   // AP aging summary columns.
   const columns = useAPAgingSummaryColumns();
 
-  const rowClassNames = (row) => [`row-type--${row.original.rowType}`];
-
   return (
     <FinancialSheet
       companyName={organizationName}
@@ -37,7 +37,7 @@ export default function APAgingSummaryTable({
       <APAgingSummaryDataTable
         columns={columns}
         data={tableRows}
-        rowClassNames={rowClassNames}
+        rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         sticky={true}
         styleName={TableStyle.Constrant}

@@ -1,5 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
 import { DataTable, FinancialSheet } from 'components';
 
@@ -23,15 +24,14 @@ export default function SalesByItemsTable({ companyName }) {
   const columns = useSalesByItemsTableColumns();
 
   return (
-    <FinancialSheet
+    <SalesByItemsSheet
       companyName={companyName}
       sheetType={intl.get('sales_by_items')}
       fromDate={query.from_date}
       toDate={query.to_date}
-      name="sales-by-items"
       loading={isLoading}
     >
-      <DataTable
+      <SalesByItemsDataTable
         columns={columns}
         data={tableRows}
         expandable={true}
@@ -44,6 +44,27 @@ export default function SalesByItemsTable({ companyName }) {
         )}
         styleName={TableStyle.Constrant}
       />
-    </FinancialSheet>
+    </SalesByItemsSheet>
   );
 }
+
+const SalesByItemsSheet = styled(FinancialSheet)`
+  min-width: 850px;
+`;
+
+const SalesByItemsDataTable = styled(DataTable)`
+  .table {
+    .tbody {
+      .tr .td {
+        border-bottom: 0;
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+      }
+      .tr.row_type--total .td {
+        border-top: 1px solid #bbb;
+        font-weight: 500;
+        border-bottom: 3px double #000;
+      }
+    }
+  }
+`;

@@ -58,7 +58,7 @@ function ReceivableAgingSummarySheet({
       <ARAgingSummarySheetLoadingBar />
 
       <DashboardPageContent>
-        <FinancialStatement name={'AR-aging-summary'}>
+        <FinancialStatement>
           <ARAgingSummaryHeader
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}

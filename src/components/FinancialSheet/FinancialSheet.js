@@ -31,6 +31,7 @@ export function FinancialSheet({
   minimal = false,
   fullWidth = false,
   currentDate = true,
+  className,
 }) {
   const format = 'DD MMMM YYYY';
   const formattedFromDate = useMemo(
@@ -59,7 +60,11 @@ export function FinancialSheet({
   );
 
   return (
-    <FinancialSheetRoot minimal={minimal} fullWidth={fullWidth}>
+    <FinancialSheetRoot
+      minimal={minimal}
+      fullWidth={fullWidth}
+      className={className}
+    >
       {companyName && <FinancialSheetTitle>{companyName}</FinancialSheetTitle>}
       {sheetType && <FinancialSheetType>{sheetType}</FinancialSheetType>}
 
