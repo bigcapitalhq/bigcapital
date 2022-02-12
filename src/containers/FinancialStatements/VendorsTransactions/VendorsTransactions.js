@@ -7,10 +7,9 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import VendorsTransactionsHeader from './VendorsTransactionsHeader';
 import VendorsTransactionsActionsBar from './VendorsTransactionsActionsBar';
-import VendorsTransactionsTable from './VendorsTransactionsTable';
+import { VendorsTransactionsBody } from './VendorsTransactionsBody';
 
 import withVendorsTransactionsActions from './withVendorsTransactionsActions';
-import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 
 import { VendorsTransactionsProvider } from './VendorsTransactionsProvider';
 import { VendorsTransactionsLoadingBar } from './components';
@@ -21,9 +20,6 @@ import { compose } from 'utils';
  * Vendors transactions.
  */
 function VendorsTransactions({
-  // #withPreferences
-  organizationName,
-
   //#withVendorsTransactionsActions
   toggleVendorsTransactionsFilterDrawer,
 }) {
@@ -67,23 +63,14 @@ function VendorsTransactions({
       <VendorsTransactionsLoadingBar />
       <DashboardPageContent>
         <FinancialStatement>
-          <div className={'financial-statement--transactions'}>
-            <VendorsTransactionsHeader
-              pageFilter={filter}
-              onSubmitFilter={handleFilterSubmit}
-            />
-            <div class="financial-statement__body">
-              <VendorsTransactionsTable companyName={organizationName} />
-            </div>
-          </div>
+          <VendorsTransactionsHeader
+            pageFilter={filter}
+            onSubmitFilter={handleFilterSubmit}
+          />
+          <VendorsTransactionsBody />
         </FinancialStatement>
       </DashboardPageContent>
     </VendorsTransactionsProvider>
   );
 }
-export default compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-  withVendorsTransactionsActions,
-)(VendorsTransactions);
+export default compose(withVendorsTransactionsActions)(VendorsTransactions);

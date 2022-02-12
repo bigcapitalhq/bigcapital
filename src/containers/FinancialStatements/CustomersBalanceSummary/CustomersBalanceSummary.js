@@ -8,12 +8,11 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import CustomersBalanceSummaryActionsBar from './CustomersBalanceSummaryActionsBar';
 import CustomersBalanceSummaryHeader from './CustomersBalanceSummaryHeader';
-import CustomersBalanceSummaryTable from './CustomersBalanceSummaryTable';
 
+import { CustomerBalanceSummaryBody } from './CustomerBalanceSummaryBody';
 import { CustomersBalanceLoadingBar } from './components';
 import { CustomersBalanceSummaryProvider } from './CustomersBalanceSummaryProvider';
 import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryActions';
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 
 import { compose } from 'redux';
 
@@ -21,9 +20,6 @@ import { compose } from 'redux';
  * Customers Balance summary.
  */
 function CustomersBalanceSummary({
-  // #withPreferences
-  organizationName,
-
   // #withCustomersBalanceSummaryActions
   toggleCustomerBalanceFilterDrawer,
 }) {
@@ -66,23 +62,16 @@ function CustomersBalanceSummary({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <div className="financial-statement--balance-summary ">
-            <CustomersBalanceSummaryHeader
-              pageFilter={filter}
-              onSubmitFilter={handleFilterSubmit}
-            />
-            <div className="financial-statement__body">
-              <CustomersBalanceSummaryTable companyName={organizationName} />
-            </div>
-          </div>
+          <CustomersBalanceSummaryHeader
+            pageFilter={filter}
+            onSubmitFilter={handleFilterSubmit}
+          />
+          <CustomerBalanceSummaryBody />
         </FinancialStatement>
       </DashboardPageContent>
     </CustomersBalanceSummaryProvider>
   );
 }
-export default compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-  withCustomersBalanceSummaryActions,
-)(CustomersBalanceSummary);
+export default compose(withCustomersBalanceSummaryActions)(
+  CustomersBalanceSummary,
+);

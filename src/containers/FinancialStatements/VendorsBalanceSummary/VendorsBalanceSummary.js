@@ -8,23 +8,18 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import VendorsBalanceSummaryActionsBar from './VendorsBalanceSummaryActionsBar';
 import VendorsBalanceSummaryHeader from './VendorsBalanceSummaryHeader';
-import VendorsBalanceSummaryTable from './VendorsBalanceSummaryTable';
 
 import { VendorsBalanceSummaryProvider } from './VendorsBalanceSummaryProvider';
 import { VendorsSummarySheetLoadingBar } from './components';
 import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions';
 
-import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
-
 import { compose } from 'utils';
+import { VendorBalanceSummaryBody } from './VendorsBalanceSummaryBody';
 
 /**
  * Vendors Balance summary.
  */
 function VendorsBalanceSummary({
-  // #withPreferences
-  organizationName,
-
   // #withVendorsBalanceSummaryActions
   toggleVendorSummaryFilterDrawer,
 }) {
@@ -67,24 +62,15 @@ function VendorsBalanceSummary({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <div className="financial-statement--balance-summary ">
-            <VendorsBalanceSummaryHeader
-              pageFilter={filter}
-              onSubmitFilter={handleFilterSubmit}
-            />
-            <div className={'financial-statement__body'}>
-              <VendorsBalanceSummaryTable organizationName={organizationName} />
-            </div>
-          </div>
+          <VendorsBalanceSummaryHeader
+            pageFilter={filter}
+            onSubmitFilter={handleFilterSubmit}
+          />
+          <VendorBalanceSummaryBody />
         </FinancialStatement>
       </DashboardPageContent>
     </VendorsBalanceSummaryProvider>
   );
 }
 
-export default compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-  withVendorsBalanceSummaryActions,
-)(VendorsBalanceSummary);
+export default compose(withVendorsBalanceSummaryActions)(VendorsBalanceSummary);

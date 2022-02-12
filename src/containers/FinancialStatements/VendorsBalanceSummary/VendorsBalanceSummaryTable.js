@@ -6,6 +6,8 @@ import { DataTable, FinancialSheet } from 'components';
 import { useVendorsBalanceColumns } from './components';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 
+import { tableRowTypesToClassnames } from 'utils';
+
 /**
  * Vendors balance summary table.
  */
@@ -15,15 +17,10 @@ export default function VendorsBalanceSummaryTable({
 }) {
   const {
     VendorBalanceSummary: { table },
-    isVendorsBalanceLoading,
   } = useVendorsBalanceSummaryContext();
 
   // vendors balance summary columns.
   const columns = useVendorsBalanceColumns();
-
-  const rowClassNames = (row) => {
-    return [`row-type--${row.original.row_types}`];
-  };
 
   return (
     <FinancialSheet
@@ -31,13 +28,12 @@ export default function VendorsBalanceSummaryTable({
       name={'vendors-balance-summary'}
       sheetType={intl.get('vendors_balance_summary')}
       asDate={new Date()}
-      loading={isVendorsBalanceLoading}
     >
       <DataTable
         className={'bigcapital-datatable--financial-report'}
         columns={columns}
         data={table?.data}
-        rowClassNames={rowClassNames}
+        rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
       />
     </FinancialSheet>

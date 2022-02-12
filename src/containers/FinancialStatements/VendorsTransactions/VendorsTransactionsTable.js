@@ -6,7 +6,8 @@ import { DataTable, FinancialSheet } from 'components';
 import { useVendorsTransactionsColumns } from './components';
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 
-import { defaultExpanderReducer } from 'utils';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
+import { TableStyle } from 'common';
 
 /**
  * Vendors transactions table.
@@ -31,10 +32,6 @@ export default function VendorsTransactionsTable({
     [tableRows],
   );
 
-  const rowClassNames = (row) => {
-    return [`row-type--${row.original.row_types}`];
-  };
-
   return (
     <FinancialSheet
       name="vendor-transactions"
@@ -45,15 +42,15 @@ export default function VendorsTransactionsTable({
       toDate={query.to_date}
     >
       <DataTable
-        className="bigcapital-datatable--financial-report"
         columns={columns}
         data={tableRows}
-        rowClassNames={rowClassNames}
+        rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}
         expandToggleColumn={1}
         expandColumnSpace={0.8}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );

@@ -6,11 +6,10 @@ import { FinancialStatement } from 'components';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import CustomersTransactionsHeader from './CustomersTransactionsHeader';
-import CustomersTransactionsTable from './CustomersTransactionsTable';
 import CustomersTransactionsActionsBar from './CustomersTransactionsActionsBar';
+import { CustomersTransactionsBody } from './CustomersTransactionsBody';
 
 import withCustomersTransactionsActions from './withCustomersTransactionsActions';
-import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 import { CustomersTransactionsLoadingBar } from './components';
 import { CustomersTransactionsProvider } from './CustomersTransactionsProvider';
 
@@ -20,9 +19,6 @@ import { compose } from 'utils';
  * Customers transactions.
  */
 function CustomersTransactions({
-  // #withPreferences
-  organizationName,
-
   //#withCustomersTransactionsActions
   toggleCustomersTransactionsFilterDrawer,
 }) {
@@ -66,24 +62,14 @@ function CustomersTransactions({
       <CustomersTransactionsLoadingBar />
       <DashboardPageContent>
         <FinancialStatement>
-          <div className={'financial-statement--transactions'}>
-            <CustomersTransactionsHeader
-              pageFilter={filter}
-              onSubmitFilter={handleFilterSubmit}
-            />
-
-            <div class="financial-statement__body">
-              <CustomersTransactionsTable companyName={organizationName} />
-            </div>
-          </div>
+          <CustomersTransactionsHeader
+            pageFilter={filter}
+            onSubmitFilter={handleFilterSubmit}
+          />
+          <CustomersTransactionsBody />
         </FinancialStatement>
       </DashboardPageContent>
     </CustomersTransactionsProvider>
   );
 }
-export default compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-  withCustomersTransactionsActions,
-)(CustomersTransactions);
+export default compose(withCustomersTransactionsActions)(CustomersTransactions);
