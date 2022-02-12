@@ -6,6 +6,9 @@ import { DataTable, FinancialSheet } from 'components';
 import { useSalesByItemsContext } from './SalesByItemProvider';
 import { useSalesByItemsTableColumns } from './components';
 
+import { tableRowTypesToClassnames } from 'utils';
+import { TableStyle } from 'common';
+
 /**
  * Sales by items data table.
  */
@@ -19,20 +22,6 @@ export default function SalesByItemsTable({ companyName }) {
   // Sales by items table columns.
   const columns = useSalesByItemsTableColumns();
 
-  const rowClassNames = (row) => {
-    const { original } = row;
-    const rowTypes = Array.isArray(original.rowType)
-      ? original.rowType
-      : [original.rowType];
-
-    return {
-      ...rowTypes.reduce((acc, rowType) => {
-        acc[`row_type--${rowType}`] = rowType;
-        return acc;
-      }, {}),
-    };
-  };
-
   return (
     <FinancialSheet
       companyName={companyName}
@@ -43,17 +32,17 @@ export default function SalesByItemsTable({ companyName }) {
       loading={isLoading}
     >
       <DataTable
-        className="bigcapital-datatable--financial-report"
         columns={columns}
         data={tableRows}
         expandable={true}
         expandToggleColumn={1}
         expandColumnSpace={1}
         sticky={true}
-        rowClassNames={rowClassNames}
+        rowClassNames={tableRowTypesToClassnames}
         noResults={intl.get(
           'there_were_no_sales_during_the_selected_date_range',
         )}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );

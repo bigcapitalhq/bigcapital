@@ -7,6 +7,7 @@ import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
 import { getColumnWidth } from 'utils';
+import { Align } from 'common';
 
 /**
  * Retrieve purchases by items table columns.
@@ -35,6 +36,7 @@ export const usePurchasesByItemsTableColumns = () => {
           minWidth: 150,
         }),
         textOverview: true,
+        align: Align.Right,
       },
       {
         Header: intl.get('purchase_amount'),
@@ -45,6 +47,7 @@ export const usePurchasesByItemsTableColumns = () => {
           minWidth: 150,
         }),
         textOverview: true,
+        align: Align.Right,
       },
       {
         Header: intl.get('average_price'),
@@ -55,6 +58,7 @@ export const usePurchasesByItemsTableColumns = () => {
           minWidth: 180,
         }),
         textOverview: true,
+        align: Align.Right,
       },
     ],
     [tableRows],
