@@ -1,5 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
 import { DataTable, FinancialSheet } from 'components';
 
@@ -26,13 +27,13 @@ export default function InventoryValuationTable({
   const columns = useInventoryValuationTableColumns();
 
   return (
-    <FinancialSheet
+    <InventoryValuationSheet
       companyName={companyName}
       sheetType={intl.get('inventory_valuation')}
       asDate={new Date()}
       loading={isLoading}
     >
-      <DataTable
+      <InventoryValuationDataTable
         columns={columns}
         data={tableRows}
         expandable={true}
@@ -45,6 +46,27 @@ export default function InventoryValuationTable({
           'there_were_no_inventory_transactions_during_the_selected_date_range',
         )}
       />
-    </FinancialSheet>
+    </InventoryValuationSheet>
   );
 }
+
+const InventoryValuationSheet = styled(FinancialSheet)`
+  min-width: 850px;
+`;
+
+const InventoryValuationDataTable = styled(DataTable)`
+  .table {
+    .tbody {
+      .tr .td {
+        border-bottom: 0;
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+      }
+      .tr.row_type--total .td {
+        border-top: 1px solid #bbb;
+        font-weight: 500;
+        border-bottom: 3px double #000;
+      }
+    }
+  }
+`;

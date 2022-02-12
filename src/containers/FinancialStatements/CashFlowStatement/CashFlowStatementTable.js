@@ -19,7 +19,6 @@ export default function CashFlowStatementTable({
 }) {
   const {
     cashFlowStatement: { tableRows },
-    isCashFlowLoading,
     query,
   } = useCashFlowStatementContext();
 
@@ -31,10 +30,8 @@ export default function CashFlowStatementTable({
   );
   return (
     <FinancialSheet
-      name="cash-flow-statement"
       companyName={companyName}
       sheetType={intl.get('statement_of_cash_flow')}
-      loading={isCashFlowLoading}
       fromDate={query.from_date}
       toDate={query.to_date}
       basis={query.basis}
