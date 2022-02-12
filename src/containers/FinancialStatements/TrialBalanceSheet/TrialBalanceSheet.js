@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import moment from 'moment';
 
-import 'style/pages/FinancialStatements/TrialBalanceSheet.scss';
-
 import { FinancialStatement } from 'components';
 import { TrialBalanceSheetProvider } from './TrialBalanceProvider';
 import TrialBalanceActionsBar from './TrialBalanceActionsBar';

@@ -1,13 +1,17 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
 import { DataTable, FinancialSheet } from 'components';
 
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
 import { usePurchasesByItemsTableColumns } from './components';
 
+import { tableRowTypesToClassnames } from 'utils';
+import { TableStyle } from 'common';
+
 /**
- * purchases by items data table.
+ * Purchases by items data table.
  */
 export default function PurchasesByItemsTable({ companyName }) {
   // Purchases by items context.
@@ -19,20 +23,6 @@ export default function PurchasesByItemsTable({ companyName }) {
   // Purchases by items table columns.
   const columns = usePurchasesByItemsTableColumns();
 
-  const rowClassNames = (row) => {
-    const { original } = row;
-    const rowTypes = Array.isArray(original.rowType)
-      ? original.rowType
-      : [original.rowType];
-
-    return {
-      ...rowTypes.reduce((acc, rowType) => {
-        acc[`row_type--${rowType}`] = rowType;
-        return acc;
-      }, {}),
-    };
-  };
-
   return (
     <FinancialSheet
       companyName={companyName}
@@ -42,19 +32,36 @@ export default function PurchasesByItemsTable({ companyName }) {
       name="purchases-by-items"
       loading={isLoading}
     >
-      <DataTable
-        className="bigcapital-datatable--financial-report"
+      <PurchasesByItemsDataTable
         columns={columns}
         data={tableRows}
         expandable={true}
         expandToggleColumn={1}
         expandColumnSpace={1}
         sticky={true}
-        rowClassNames={rowClassNames}
+        rowClassNames={tableRowTypesToClassnames}
         noResults={intl.get(
           'there_were_no_purchases_during_the_selected_date_range',
         )}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );
 }
+
+const PurchasesByItemsDataTable = styled(DataTable)`
+  .table {
+    .tbody {
+      .tr .td {
+        border-bottom: 0;
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+      }
+      .tr.row_type--total .td {
+        border-top: 1px solid #bbb;
+        font-weight: 500;
+        border-bottom: 3px double #000;
+      }
+    }
+  }
+`;

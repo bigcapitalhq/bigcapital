@@ -1,18 +1,17 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Button } from '@blueprintjs/core';
-import { getColumnWidth } from 'utils';
-import { If, Icon } from 'components';
+
+import { If } from 'components';
 import { CellTextSpan } from 'components/Datatable/Cells';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
+
+import { getColumnWidth } from 'utils';
 
 /**
  * Retrieve purchases by items table columns.
  */
 export const usePurchasesByItemsTableColumns = () => {
-  
-
   // purchases by items context.
   const {
     purchaseByItems: { tableRows },
