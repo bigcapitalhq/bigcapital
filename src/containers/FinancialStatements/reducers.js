@@ -39,7 +39,7 @@ export const journalTableRowsReducer = (journal) => {
             reference_type_formatted: transaction.reference_type_formatted,
           }
         : {}),
-      rowType: TYPES.ENTRY,
+      row_types: TYPES.ENTRY,
       ...entry,
     }));
   };
@@ -51,7 +51,7 @@ export const journalTableRowsReducer = (journal) => {
       return [
         ...entries,
         {
-          rowType: TYPES.TOTAL_ENTRIES,
+          row_types: TYPES.TOTAL_ENTRIES,
           currency_code: transaction.currency_code,
           credit: transaction.credit,
           debit: transaction.debit,
@@ -59,7 +59,7 @@ export const journalTableRowsReducer = (journal) => {
           formatted_debit: transaction.formatted_debit,
         },
         {
-          rowType: TYPES.EMPTY_ROW,
+          row_types: TYPES.EMPTY_ROW,
         },
       ];
     })

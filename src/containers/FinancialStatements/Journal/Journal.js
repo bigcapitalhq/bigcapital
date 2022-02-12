@@ -25,7 +25,6 @@ function Journal({
   const [filter, setFilter] = useState({
     ...getDefaultJournalQuery(),
   });
-
   // Handle financial statement filter change.
   const handleFilterSubmit = useCallback(
     (filter) => {
@@ -38,7 +37,6 @@ function Journal({
     },
     [setFilter],
   );
-
   // Hide the journal sheet filter drawer once the page unmount.
   useEffect(
     () => () => {
