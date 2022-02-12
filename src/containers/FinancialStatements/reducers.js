@@ -13,7 +13,7 @@ export const trialBalanceSheetReducer = (sheet) => {
   }
   if (sheet.total) {
     results.push({
-      rowType: 'total',
+      row_types: 'total',
       ...sheet.total,
     });
   }

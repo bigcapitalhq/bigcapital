@@ -908,7 +908,7 @@ export const tableRowTypesToClassnames = ({ original }) => {
   const rowTypes = _.castArray(original.row_types);
   const rowId = original.id;
 
-  const rowTypesClsx = rowTypes.map((t) => `row_type--${t}`);
+  const rowTypesClsx = rowTypes.filter((t) => t).map((t) => `row_type--${t}`);
   const rowIdClsx = `row-id--${original.id}`;
 
   return clsx(rowTypesClsx, { [`${rowIdClsx}`]: rowId });
