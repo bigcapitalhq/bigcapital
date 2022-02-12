@@ -1,7 +1,9 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
 import { DataTable, FinancialSheet } from 'components';
+import { TableStyle } from 'common';
 
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import { useARAgingSummaryColumns } from './components';
@@ -29,14 +31,26 @@ export default function ReceivableAgingSummaryTable({
       asDate={new Date()}
       loading={isARAgingLoading}
     >
-      <DataTable
-        className="bigcapital-datatable--financial-report"
+      <ARAgingSummaryDataTable
         columns={columns}
         data={ARAgingSummary.tableRows}
         rowClassNames={rowClassNames}
         noInitialFetch={true}
         sticky={true}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );
 }
+
+const ARAgingSummaryDataTable = styled(DataTable)`
+  .table {
+    .tbody .tr {
+      .td {
+        border-bottom: 0;
+        padding-top: 0.32rem;
+        padding-bottom: 0.32rem;
+      }
+    }
+  }
+`;

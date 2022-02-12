@@ -10,11 +10,13 @@ import { useJournalSheetContext } from './JournalProvider';
 
 import { defaultExpanderReducer } from 'utils';
 
-export default function JournalSheetTable({
-  // #ownProps
-  onFetchData,
-  companyName,
-}) {
+import { TableStyle } from 'common';
+
+/**
+ * Journal sheet table.
+ * @returns {JSX.Element}
+ */
+export function JournalTable({ companyName }) {
   // Journal sheet context.
   const {
     journalSheet: { tableRows, query },
@@ -49,11 +51,9 @@ export default function JournalSheetTable({
       toDate={query.to_date}
       name="journal"
       loading={isLoading}
-      // minimal={true}
       fullWidth={true}
     >
       <DataTable
-        className="bigcapital-datatable--financial-report"
         columns={columns}
         data={tableRows}
         rowClassNames={rowClassNames}
@@ -68,6 +68,7 @@ export default function JournalSheetTable({
         vListOverscanRowCount={2}
         TableCellRenderer={TableFastCell}
         id={'journal'}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );

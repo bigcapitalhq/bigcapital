@@ -1,7 +1,9 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
 import { DataTable, FinancialSheet } from 'components';
+import { TableStyle } from 'common';
 
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import { useAPAgingSummaryColumns } from './components';
@@ -32,14 +34,26 @@ export default function APAgingSummaryTable({
       asDate={new Date()}
       loading={isAPAgingLoading}
     >
-      <DataTable
-        className={'bigcapital-datatable--financial-report'}
+      <APAgingSummaryDataTable
         columns={columns}
         data={tableRows}
         rowClassNames={rowClassNames}
         noInitialFetch={true}
         sticky={true}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );
 }
+
+const APAgingSummaryDataTable = styled(DataTable)`
+  .table {
+    .tbody .tr {
+      .td {
+        border-bottom: 0;
+        padding-top: 0.32rem;
+        padding-bottom: 0.32rem;
+      }
+    }
+  }
+`;

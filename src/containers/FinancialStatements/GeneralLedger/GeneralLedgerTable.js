@@ -11,6 +11,8 @@ import TableFastCell from 'components/Datatable/TableFastCell';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import { useGeneralLedgerTableColumns } from './components';
 
+import { TableStyle } from 'common';
+
 /**
  * General ledger table.
  */
@@ -41,7 +43,6 @@ export default function GeneralLedgerTable({ companyName }) {
       fullWidth={true}
     >
       <DataTable
-        className="bigcapital-datatable--financial-report"
         noResults={intl.get('this_report_does_not_contain_any_data_between_date_period')}
         columns={columns}
         data={tableRows}
@@ -54,10 +55,13 @@ export default function GeneralLedgerTable({ companyName }) {
         expandToggleColumn={1}
         sticky={true}
         TableRowsRenderer={TableVirtualizedListRows}
+
         // #TableVirtualizedListRows props.
         vListrowHeight={28}
         vListOverscanRowCount={0}
         TableCellRenderer={TableFastCell}
+
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );

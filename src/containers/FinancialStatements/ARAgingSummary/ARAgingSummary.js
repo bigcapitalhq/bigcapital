@@ -1,38 +1,31 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 
-import 'style/pages/FinancialStatements/ARAgingSummary.scss';
+// import 'style/pages/FinancialStatements/ARAgingSummary.scss';
 
 import { FinancialStatement } from 'components';
 
 import ARAgingSummaryHeader from './ARAgingSummaryHeader';
 import ARAgingSummaryActionsBar from './ARAgingSummaryActionsBar';
-import ARAgingSummaryTable from './ARAgingSummaryTable';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import { ARAgingSummaryProvider } from './ARAgingSummaryProvider';
 import { ARAgingSummarySheetLoadingBar } from './components';
+import { ARAgingSummaryBody } from './ARAgingSummaryBody';
 
-import withARAgingSummaryActions from './withARAgingSummaryActions'
-import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
+import withARAgingSummaryActions from './withARAgingSummaryActions';
 
+import { getDefaultARAgingSummaryQuery } from './common';
 import { compose } from 'utils';
 
 /**
  * A/R aging summary report.
  */
 function ReceivableAgingSummarySheet({
-  // #withSettings
-  organizationName,
-
   // #withARAgingSummaryActions
-  toggleARAgingSummaryFilterDrawer: toggleDisplayFilterDrawer
+  toggleARAgingSummaryFilterDrawer: toggleDisplayFilterDrawer,
 }) {
   const [filter, setFilter] = useState({
-    asDate: moment().endOf('day').format('YYYY-MM-DD'),
-    agingDaysBefore: 30,
-    agingPeriods: 3,
-    customersIds: [],
-    filterByOption: 'without-zero-balance',
+    ...getDefaultARAgingSummaryQuery(),
   });
 
   // Handle filter submit.
@@ -48,11 +41,13 @@ function ReceivableAgingSummarySheet({
   const handleNumberFormatSubmit = (numberFormat) => {
     setFilter({ ...filter, numberFormat });
   };
-
   // Hide the filter drawer once the page unmount.
-  useEffect(() => () => {
-    toggleDisplayFilterDrawer(false);
-  }, [toggleDisplayFilterDrawer]);
+  useEffect(
+    () => () => {
+      toggleDisplayFilterDrawer(false);
+    },
+    [toggleDisplayFilterDrawer],
+  );
 
   return (
     <ARAgingSummaryProvider filter={filter}>
@@ -68,18 +63,11 @@ function ReceivableAgingSummarySheet({
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
           />
-          <div class="financial-statement__body">
-            <ARAgingSummaryTable organizationName={organizationName} />
-          </div>
+          <ARAgingSummaryBody />
         </FinancialStatement>
       </DashboardPageContent>
     </ARAgingSummaryProvider>
   );
 }
 
-export default compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-  withARAgingSummaryActions
-)(ReceivableAgingSummarySheet);
+export default compose(withARAgingSummaryActions)(ReceivableAgingSummarySheet);
