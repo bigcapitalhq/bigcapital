@@ -1,8 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 
-// import 'style/pages/FinancialStatements/ARAgingSummary.scss';
-
 import { FinancialStatement } from 'components';
 
 import ARAgingSummaryHeader from './ARAgingSummaryHeader';

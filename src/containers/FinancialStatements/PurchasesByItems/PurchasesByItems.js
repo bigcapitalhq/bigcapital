@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import moment from 'moment';
 
-import 'style/pages/FinancialStatements/SalesAndPurchasesSheet.scss';
-
 import { FinancialStatement } from 'components';
 
 import { PurchasesByItemsProvider } from './PurchasesByItemsProvider';

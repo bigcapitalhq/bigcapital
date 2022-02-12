@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import 'style/pages/FinancialStatements/ContactsTransactions.scss';
 
 import { FinancialStatement } from 'components';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
