@@ -73,13 +73,13 @@ export const generalLedgerTableRowsReducer = (accounts) => {
       return {
         name: '',
         code: account.code,
-        rowType: 'ACCOUNT_ROW',
+        row_types: 'ACCOUNT_ROW',
         date: account.name,
         children: [
           {
             ...account.opening_balance,
             name: <T id={'opening_balance'} />,
-            rowType: 'OPENING_BALANCE',
+            row_types: 'OPENING_BALANCE',
             date: moment(account.opening_balance.date).format('DD MMM YYYY'),
           },
           ...account.transactions.map((transaction) => ({
@@ -91,7 +91,7 @@ export const generalLedgerTableRowsReducer = (accounts) => {
           {
             ...account.closing_balance,
             name: <T id={'closing_balance'} />,
-            rowType: 'CLOSING_BALANCE',
+            row_types: 'CLOSING_BALANCE',
             date: moment(account.closing_balance.date).format('DD MMM YYYY'),
           },
         ],

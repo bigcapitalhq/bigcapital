@@ -25,9 +25,6 @@ import { getDefaultGeneralLedgerQuery } from './common';
 function GeneralLedger({
   // #withGeneralLedgerActions
   toggleGeneralLedgerFilterDrawer,
-
-  // #withSettings
-  organizationName,
 }) {
   const [filter, setFilter] = useState({
     ...getDefaultGeneralLedgerQuery(),
