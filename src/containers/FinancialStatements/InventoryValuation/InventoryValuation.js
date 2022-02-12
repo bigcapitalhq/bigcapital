@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import moment from 'moment';
 
-import 'style/pages/FinancialStatements/SalesAndPurchasesSheet.scss';
-
 import { InventoryValuationProvider } from './InventoryValuationProvider';
 import InventoryValuationActionsBar from './InventoryValuationActionsBar';
 import InventoryValuationHeader from './InventoryValuationHeader';
-import InventoryValuationTable from './InventoryValuationTable';
+import { InventoryValuationBody } from './InventoryValuationBody';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import { InventoryValuationLoadingBar } from './components';
@@ -64,15 +62,11 @@ function InventoryValuation({
       <InventoryValuationLoadingBar />
 
       <DashboardPageContent>
-        <div class="financial-statement financial-statement--inventory-valuation">
-          <InventoryValuationHeader
-            pageFilter={filter}
-            onSubmitFilter={handleFilterSubmit}
-          />
-          <div class="financial-statement__body">
-            <InventoryValuationTable companyName={organizationName} />
-          </div>
-        </div>
+        <InventoryValuationHeader
+          pageFilter={filter}
+          onSubmitFilter={handleFilterSubmit}
+        />
+        <InventoryValuationBody />
       </DashboardPageContent>
     </InventoryValuationProvider>
   );

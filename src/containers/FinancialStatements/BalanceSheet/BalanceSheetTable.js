@@ -7,8 +7,9 @@ import { DataTable, FinancialSheet } from 'components';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 
 import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
-import { TableStyle } from 'common';
 import { useBalanceSheetColumns } from './components';
+
+import { TableStyle } from 'common';
 
 /**
  * Balance sheet table.
