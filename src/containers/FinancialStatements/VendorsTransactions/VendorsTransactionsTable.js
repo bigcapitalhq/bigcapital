@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
 import { DataTable, FinancialSheet } from 'components';
 
@@ -40,8 +41,9 @@ export default function VendorsTransactionsTable({
       loading={isVendorsTransactionsLoading}
       fromDate={query.from_date}
       toDate={query.to_date}
+      fullWidth={true}
     >
-      <DataTable
+      <VendorsTransactionsDataTable
         columns={columns}
         data={tableRows}
         rowClassNames={tableRowTypesToClassnames}
@@ -55,3 +57,52 @@ export default function VendorsTransactionsTable({
     </FinancialSheet>
   );
 }
+
+const VendorsTransactionsDataTable = styled(DataTable)`
+  .table {
+    .tbody {
+      .tr .td {
+        padding-top: 0.2rem;
+        padding-bottom: 0.2rem;
+      }
+      .tr:not(.no-results) .td {
+        border-left: 1px solid #ececec;
+      }
+      .tr:last-child .td {
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .tr.row_type {
+        &--VENDOR {
+          .td {
+            &.vendor_name {
+              font-weight: 500;
+            }
+          }
+          &:not(:first-child).is-expanded .td {
+            border-top: 1px solid #ddd;
+          }
+        }
+        &--OPENING_BALANCE,
+        &--CLOSING_BALANCE {
+          font-weight: 500;
+        }
+        &--VENDOR {
+          &.is-expanded {
+            .td.running_balance .cell-inner {
+              display: none;
+            }
+          }
+          &:not(:first-child).is-expanded .td {
+            border-top: 1px solid #ddd;
+          }
+        }
+        &--VENDOR:last-child {
+          .td {
+            border-bottom: 1px solid #ddd;
+          }
+        }
+      }
+    }
+  }
+`;

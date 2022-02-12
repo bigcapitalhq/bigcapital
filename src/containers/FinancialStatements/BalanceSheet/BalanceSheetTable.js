@@ -28,7 +28,7 @@ export default function BalanceSheetTable({
 
   // Retrieve default expanded rows of balance sheet.
   const expandedRows = React.useMemo(
-    () => defaultExpanderReducer(table?.rows || [], 3),
+    () => defaultExpanderReducer(table.rows, 3),
     [table],
   );
 

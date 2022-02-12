@@ -1,12 +1,14 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
 import { DataTable, FinancialSheet } from 'components';
 
 import { useCustomersTransactionsColumns } from './components';
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 
-import { defaultExpanderReducer } from 'utils';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
+import { TableStyle } from 'common';
 
 /**
  * Customers transactions table.
@@ -18,7 +20,6 @@ export default function CustomersTransactionsTable({
   // Customers transactions context.
   const {
     customersTransactions: { tableRows },
-    isCustomersTransactionsLoading,
     query,
   } = useCustomersTransactionsContext();
 
@@ -30,30 +31,74 @@ export default function CustomersTransactionsTable({
     [tableRows],
   );
 
-  const rowClassNames = (row) => {
-    return [`row-type--${row.original.row_types}`];
-  };
-
   return (
     <FinancialSheet
-      name="customer-transactions"
       companyName={companyName}
       sheetType={intl.get('customers_transactions')}
-      loading={isCustomersTransactionsLoading}
       fromDate={query.from_date}
       toDate={query.to_date}
+      fullWidth={true}
     >
-      <DataTable
-        className="bigcapital-datatable--financial-report"
+      <CustomersTransactionsDataTable
         columns={columns}
         data={tableRows}
-        rowClassNames={rowClassNames}
+        rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}
         expandToggleColumn={1}
         expandColumnSpace={0.8}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );
 }
+
+const CustomersTransactionsDataTable = styled(DataTable)`
+  .table {
+    .tbody {
+      .tr .td {
+        padding-top: 0.2rem;
+        padding-bottom: 0.2rem;
+      }
+      .tr:not(.no-results) .td {
+        border-left: 1px solid #ececec;
+      }
+      .tr:last-child .td {
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .tr.row_type {
+        &--CUSTOMER {
+          .td {
+            &.customer_name {
+              font-weight: 500;
+            }
+          }
+          &:not(:first-child).is-expanded .td {
+            border-top: 1px solid #ddd;
+          }
+        }
+        &--OPENING_BALANCE,
+        &--CLOSING_BALANCE {
+          font-weight: 500;
+        }
+        &--CUSTOMER {
+          &.is-expanded {
+            .td.running_balance .cell-inner {
+              display: none;
+            }
+          }
+          &:not(:first-child).is-expanded .td {
+            border-top: 1px solid #ddd;
+          }
+        }
+        &--CUSTOMER:last-child {
+          .td {
+            border-bottom: 1px solid #ddd;
+          }
+        }
+      }
+    }
+  }
+`;

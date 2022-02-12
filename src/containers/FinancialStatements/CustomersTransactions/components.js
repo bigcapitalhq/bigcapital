@@ -5,6 +5,8 @@ import { useCustomersTransactionsContext } from './CustomersTransactionsProvider
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { getForceWidth, getColumnWidth } from 'utils';
 
+import { Align } from 'common';
+
 /**
  * Retrieve customers transactions columns.
  */
@@ -29,7 +31,6 @@ export const useCustomersTransactionsColumns = () => {
           );
         },
         className: 'customer_name',
-        // textOverview: true,
       },
       {
         Header: intl.get('account_name'),
@@ -59,6 +60,7 @@ export const useCustomersTransactionsColumns = () => {
           minWidth: 100,
           magicSpacing: 10,
         }),
+        align: Align.Right,
       },
       {
         Header: intl.get('debit'),
@@ -69,6 +71,7 @@ export const useCustomersTransactionsColumns = () => {
           minWidth: 100,
           magicSpacing: 10,
         }),
+        align: Align.Right,
       },
       {
         Header: intl.get('running_balance'),
@@ -79,6 +82,7 @@ export const useCustomersTransactionsColumns = () => {
           minWidth: 120,
           magicSpacing: 10,
         }),
+        align: Align.Right,
       },
     ],
     [tableRows],
