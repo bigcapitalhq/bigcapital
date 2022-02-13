@@ -12,6 +12,7 @@ import CashFlowStatementGeneralPanel from './CashFlowStatementGeneralPanel';
 import withCashFlowStatement from './withCashFlowStatement';
 import withCashFlowStatementActions from './withCashFlowStatementActions';
 
+import { getDefaultCashFlowSheetQuery } from './utils';
 import { compose, transformToForm } from 'utils';
 
 /**
@@ -29,10 +30,7 @@ function CashFlowStatementHeader({
   toggleCashFlowStatementFilterDrawer,
 }) {
   // Filter form default values.
-  const defaultValues = {
-    fromDate: moment().toDate(),
-    toDate: moment().toDate(),
-  };
+  const defaultValues = getDefaultCashFlowSheetQuery();
 
   // Initial form values.
   const initialValues = transformToForm({

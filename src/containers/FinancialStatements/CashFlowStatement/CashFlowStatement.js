@@ -15,6 +15,7 @@ import {
   CashFlowStatementAlerts,
 } from './components';
 
+import { getDefaultCashFlowSheetQuery } from './utils';
 import { compose } from 'utils';
 
 /**
@@ -26,13 +27,8 @@ function CashFlowStatement({
 }) {
   // filter
   const [filter, setFilter] = useState({
-    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-    toDate: moment().endOf('year').format('YYYY-MM-DD'),
-    basis: 'cash',
-    displayColumnsType: 'total',
-    filterByOption: 'with-transactions',
+    ...getDefaultCashFlowSheetQuery(),
   });
-
   // Handle refetch cash flow after filter change.
   const handleFilterSubmit = (filter) => {
     const _filter = {
@@ -42,7 +38,6 @@ function CashFlowStatement({
     };
     setFilter({ ..._filter });
   };
-
   // Handle format number submit.
   const handleNumberFormatSubmit = (values) => {
     setFilter({

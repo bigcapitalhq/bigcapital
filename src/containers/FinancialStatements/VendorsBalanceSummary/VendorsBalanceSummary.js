@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 
-import 'style/pages/FinancialStatements/ContactsBalanceSummary.scss';
-
 import { FinancialStatement } from 'components';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
@@ -11,10 +9,12 @@ import VendorsBalanceSummaryHeader from './VendorsBalanceSummaryHeader';
 
 import { VendorsBalanceSummaryProvider } from './VendorsBalanceSummaryProvider';
 import { VendorsSummarySheetLoadingBar } from './components';
+import { VendorBalanceSummaryBody } from './VendorsBalanceSummaryBody';
+
 import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions';
 
+import { getDefaultVendorsBalanceQuery } from './utils';
 import { compose } from 'utils';
-import { VendorBalanceSummaryBody } from './VendorsBalanceSummaryBody';
 
 /**
  * Vendors Balance summary.
@@ -24,8 +24,7 @@ function VendorsBalanceSummary({
   toggleVendorSummaryFilterDrawer,
 }) {
   const [filter, setFilter] = useState({
-    asDate: moment().endOf('day').format('YYYY-MM-DD'),
-    filterByOption: 'with-transactions',
+    ...getDefaultVendorsBalanceQuery(),
   });
 
   // Handle refetch vendors balance summary.

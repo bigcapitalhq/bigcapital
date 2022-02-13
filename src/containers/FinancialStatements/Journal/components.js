@@ -2,15 +2,17 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
 import { Button } from '@blueprintjs/core';
+
 import { Icon, If, FormattedMessage as T } from 'components';
 import { useJournalSheetContext } from './JournalProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
+
+import { Align } from 'common';
 
 /**
  * Retrieve the journal table columns.
  */
 export const useJournalTableColumns = () => {
-
   return React.useMemo(
     () => [
       {
@@ -57,12 +59,12 @@ export const useJournalTableColumns = () => {
       {
         Header: intl.get('credit'),
         accessor: 'formatted_credit',
-        className: 'credit',
+        align: Align.Right,
       },
       {
         Header: intl.get('debit'),
         accessor: 'formatted_debit',
-        className: 'debit',
+        align: Align.Right,
       },
     ],
     [],

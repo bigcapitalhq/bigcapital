@@ -81,7 +81,7 @@ const InventoryItemDetailsDataTable = styled(DataTable)`
         border-bottom: 1px solid #ddd;
       }
 
-      .tr.row-type {
+      .tr.row_type {
         &--ITEM {
           .td {
             &.transaction_type {

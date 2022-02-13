@@ -54,9 +54,8 @@ const PurchasesByItemsDataTable = styled(DataTable)`
   .table {
     .tbody {
       .tr .td {
-        border-bottom: 0;
-        padding-top: 0.4rem;
-        padding-bottom: 0.4rem;
+        padding-top: 0.36rem;
+        padding-bottom: 0.36rem;
       }
       .tr.row_type--total .td {
         border-top: 1px solid #bbb;
