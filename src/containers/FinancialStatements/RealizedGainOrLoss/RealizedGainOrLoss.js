@@ -5,11 +5,11 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import RealizedGainOrLossHeader from './RealizedGainOrLossHeader';
 import RealizedGainOrLossActionsBar from './RealizedGainOrLossActionsBar';
+import { RealizedGainOrLossLoadingBar } from './components';
+import { RealizedGainOrLossProvider } from './RealizedGainOrLossProvider';
 
 import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 import withRealizedGainOrLossActions from './withRealizedGainOrLossActions';
-import { RealizedGainOrLossProvider } from './RealizedGainOrLossProvider';
-import { RealizedGainOrLossLoadingBar } from './components';
 
 import { compose } from 'utils';
 

@@ -42,7 +42,11 @@ function PreferencesTopbar({ preferencesPageTitle }) {
               path={'/preferences/warehouses'}
               component={WarehousesActions}
             />
-            <Route path={'/preferences/branches'} component={BranchesActions} />
+            <Route
+              exact
+              path={'/preferences/branches'}
+              component={BranchesActions}
+            />
           </Switch>
         </Route>
       </div>

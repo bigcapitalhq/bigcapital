@@ -40,6 +40,7 @@ export default [
   {
     path: `${BASE_URL}/warehouses`,
     component: Warehouses,
+    exact: true,
   },
   {
     path: `${BASE_URL}/branches`,
