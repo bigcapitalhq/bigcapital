@@ -96,6 +96,7 @@ export * from './Skeleton';
 export * from './FinancialStatement';
 export * from './FinancialReport';
 export * from './FinancialSheet';
+export * from './FeatureGuard';
 
 const Hint = FieldHint;
 
