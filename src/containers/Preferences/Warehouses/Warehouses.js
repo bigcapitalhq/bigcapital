@@ -1,18 +1,28 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import styled from 'styled-components';
 
-import { useWarehousesContext } from './WarehousesProvider';
-import WarehousesGridItems from './WarehousesGridItems';
+import '../../../style/pages/Preferences/warehousesList.scss';
+
+import WarehousesGrid from './WarehousesGrid';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import { compose } from 'utils';
 
 /**
  * Warehouses.
  * @returns
  */
-export default function Warehouses() {
-  const { warehouses } = useWarehousesContext();
+function Warehouses({
+  // #withDashboardActions
+  changePreferencesPageTitle,
+}) {
+  React.useEffect(() => {
+    changePreferencesPageTitle(intl.get('warehouses.label'));
+  }, [changePreferencesPageTitle]);
 
-  return warehouses.map((warehouse) => (
-    <WarehousesGridItems warehouse={warehouse} />
-  ));
+  return (
+    <React.Fragment>
+      <WarehousesGrid />
+    </React.Fragment>
+  );
 }
+export default compose(withDashboardActions)(Warehouses);

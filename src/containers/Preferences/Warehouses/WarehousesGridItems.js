@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import { ContextMenu2 } from '@blueprintjs/popover2';
 
 import { WarehouseContextMenu, WarehousesGrid } from './components';
@@ -10,10 +9,9 @@ import withDialogActions from '../../Dialog/withDialogActions';
 import { compose } from 'utils';
 
 /**
- * Warehouse grid items.
- * @returns
+ *  warehouse grid item.
  */
-function WarehousesGridItems({
+function WarehouseGridItem({
   // #withAlertsActions
   openAlert,
   // #withDialogActions
@@ -21,8 +19,6 @@ function WarehousesGridItems({
 
   warehouse,
 }) {
-  const { isWarehouesLoading } = useWarehousesContext();
-
   // Handle edit warehouse.
   const handleEditWarehouse = () => {
     openDialog('warehouse-form', { warehouseId: warehouse.id, action: 'edit' });
@@ -48,18 +44,28 @@ function WarehousesGridItems({
         />
       }
     >
-      <WarehousesGrid warehouse={warehouse} loading={isWarehouesLoading} />
+      <WarehousesGrid
+        title={warehouse.name}
+        code={warehouse.code}
+        city={warehouse.city}
+        country={warehouse.country}
+        email={warehouse.email}
+        phone={warehouse.phone_number}
+      />
     </ContextMenu2>
   );
 }
 
-export default compose(
+const WarehousesGridItem = compose(
   withAlertsActions,
   withDialogActions,
-)(WarehousesGridItems);
+)(WarehouseGridItem);
 
-const WarehouseGridWrap = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin: 15px;
-`;
+/**
+ * warehouses grid items,
+ */
+export default function WarehousesGridItems({ warehouses }) {
+  return warehouses.map((warehouse) => (
+    <WarehousesGridItem warehouse={warehouse} />
+  ));
+}

@@ -1,12 +1,18 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Classes } from '@blueprintjs/core';
+import {
+  Menu,
+  MenuItem,
+  MenuDivider,
+  Intent,
+  Classes,
+} from '@blueprintjs/core';
 import clsx from 'classnames';
-
-import { Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
 import { If, Icon, Can } from '../../../components';
 import { safeCallback } from 'utils';
+
+const WAREHOUSES_SKELETON_N = 9;
 
 /**
  * Warehouse context menu.
@@ -39,15 +45,23 @@ export function WarehouseContextMenu({
   );
 }
 
-export function WarehousesGrid({ warehouse, loading }) {
+export function WarehousesGrid({
+  title,
+  code,
+  city,
+  country,
+  email,
+  phone_number,
+  loading,
+}) {
   return (
     <WarehouseGridWrapper>
       <WarehouseHeader>
         <WarehouseTitle className={clsx({ [Classes.SKELETON]: loading })}>
-          {warehouse.name}
+          {title}
         </WarehouseTitle>
         <WarehouseCode className={clsx({ [Classes.SKELETON]: loading })}>
-          {warehouse.code}
+          {code}
         </WarehouseCode>
         <WarehouseIcon>
           {!loading && <Icon icon="warehouse-16" iconSize={20} />}
@@ -55,23 +69,44 @@ export function WarehousesGrid({ warehouse, loading }) {
       </WarehouseHeader>
       <WarehouseContent>
         <WarehouseItem className={clsx({ [Classes.SKELETON]: loading })}>
-          {warehouse.city}
+          {city}
         </WarehouseItem>
         <WarehouseItem className={clsx({ [Classes.SKELETON]: loading })}>
-          {warehouse.country}
+          {country}
         </WarehouseItem>
         <WarehouseItem className={clsx({ [Classes.SKELETON]: loading })}>
-          {warehouse.email}
+          {email}
         </WarehouseItem>
         <WarehouseItem className={clsx({ [Classes.SKELETON]: loading })}>
-          {warehouse.phone_number}
+          {phone_number}
         </WarehouseItem>
       </WarehouseContent>
     </WarehouseGridWrapper>
   );
 }
 
-const WarehouseGridWrapper = styled.div`
+export function WarehousesSkeleton() {
+  return [...Array(WAREHOUSES_SKELETON_N)].map((key, value) => (
+    <WarehousesGrid
+      title={'warehouse.name'}
+      code={'warehouse.code'}
+      city={'warehouse.city'}
+      country={'warehouse.country'}
+      email={'warehouse.email'}
+      phone={'warehouse.phone_number'}
+      loading={true}
+    />
+  ));
+}
+
+export const WarehousesList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin: 15px;
+  height: 100%;
+`;
+
+export const WarehouseGridWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -89,12 +124,12 @@ const WarehouseGridWrapper = styled.div`
   }
 `;
 
-const WarehouseHeader = styled.div`
+export const WarehouseHeader = styled.div`
   position: relative;
   padding: 16px 12px 10px;
 `;
 
-const WarehouseTitle = styled.div`
+export const WarehouseTitle = styled.div`
   font-size: 14px; //22px
   font-style: inherit;
   color: #000;

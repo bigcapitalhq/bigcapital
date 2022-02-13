@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
-import { useWarehouses } from 'hooks/query';
+import { useWarehouses, useCashflowAccounts } from 'hooks/query';
 import PreferencesPageLoader from '../PreferencesPageLoader';
 
 const WarehousesContext = React.createContext();
@@ -10,9 +10,12 @@ const WarehousesContext = React.createContext();
 /**
  * Warehouses data provider.
  */
-function WarehousesProvider({ ...props }) {
+function WarehousesProvider({ query, ...props }) {
   // Fetch warehouses list.
-  const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses();
+  const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses(
+    query,
+    { keepPreviousData: true },
+  );
 
   // Provider state.
   const provider = {
@@ -28,11 +31,7 @@ function WarehousesProvider({ ...props }) {
       )}
     >
       <React.Fragment>
-        {/* {isWarehouesLoading ? (
-          <PreferencesPageLoader />
-        ) : ( */}
-          <WarehousesContext.Provider value={provider} {...props} />
-        {/* )} */}
+        <WarehousesContext.Provider value={provider} {...props} />
       </React.Fragment>
     </div>
   );
