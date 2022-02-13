@@ -10,11 +10,13 @@ import withCurrentOrganization from 'containers/Organization/withCurrentOrganiza
  */
 function BaseCurrency({
   // #withCurrentOrganization
-  organization: { base_currency = '' },
+  organization: { base_currency },
+  isForeignCustomer,
 }) {
-  // if (base_currency.length <= 0) {
-  //   return null;
-  // }
+  console.log(isForeignCustomer, 'XXXX');
+  if (isForeignCustomer) {
+    return null;
+  }
 
   return (
     <BaseCurrencySign>
@@ -26,6 +28,8 @@ function BaseCurrency({
 export default R.compose(withCurrentOrganization())(BaseCurrency);
 
 const BaseCurrencySign = styled.div`
+  display: flex;
+  align-items: center;
   font-size: 10px;
   margin-left: 5px;
   span {

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ContextMenu2 } from '@blueprintjs/popover2';
 
 import { WarehouseContextMenu, WarehousesGrid } from './components';
+import { useWarehousesContext } from './WarehousesProvider';
 
 import withAlertsActions from '../../Alert/withAlertActions';
 import withDialogActions from '../../Dialog/withDialogActions';
@@ -20,6 +21,8 @@ function WarehousesGridItems({
 
   warehouse,
 }) {
+  const { isWarehouesLoading } = useWarehousesContext();
+
   // Handle edit warehouse.
   const handleEditWarehouse = () => {
     openDialog('warehouse-form', { warehouseId: warehouse.id, action: 'edit' });
@@ -45,7 +48,7 @@ function WarehousesGridItems({
         />
       }
     >
-      <WarehousesGrid warehouse={warehouse} />
+      <WarehousesGrid warehouse={warehouse} loading={isWarehouesLoading} />
     </ContextMenu2>
   );
 }

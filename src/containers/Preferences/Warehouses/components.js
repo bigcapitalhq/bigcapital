@@ -1,6 +1,8 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { Classes } from '@blueprintjs/core';
+import clsx from 'classnames';
 
 import { Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
 import { If, Icon, Can } from '../../../components';
@@ -37,21 +39,33 @@ export function WarehouseContextMenu({
   );
 }
 
-export function WarehousesGrid({ warehouse }) {
+export function WarehousesGrid({ warehouse, loading }) {
   return (
     <WarehouseGridWrapper>
       <WarehouseHeader>
-        <WarehouseTitle>{warehouse.name}</WarehouseTitle>
-        <WarehouseCode>{warehouse.code}</WarehouseCode>
+        <WarehouseTitle className={clsx({ [Classes.SKELETON]: loading })}>
+          {warehouse.name}
+        </WarehouseTitle>
+        <WarehouseCode className={clsx({ [Classes.SKELETON]: loading })}>
+          {warehouse.code}
+        </WarehouseCode>
         <WarehouseIcon>
-          <Icon icon="warehouse-16" iconSize={20} />
+          {!loading && <Icon icon="warehouse-16" iconSize={20} />}
         </WarehouseIcon>
       </WarehouseHeader>
       <WarehouseContent>
-        <WarehouseItem>{warehouse.city}</WarehouseItem>
-        <WarehouseItem>{warehouse.country}</WarehouseItem>
-        <WarehouseItem>{warehouse.email}</WarehouseItem>
-        <WarehouseItem>{warehouse.phone_number}</WarehouseItem>
+        <WarehouseItem className={clsx({ [Classes.SKELETON]: loading })}>
+          {warehouse.city}
+        </WarehouseItem>
+        <WarehouseItem className={clsx({ [Classes.SKELETON]: loading })}>
+          {warehouse.country}
+        </WarehouseItem>
+        <WarehouseItem className={clsx({ [Classes.SKELETON]: loading })}>
+          {warehouse.email}
+        </WarehouseItem>
+        <WarehouseItem className={clsx({ [Classes.SKELETON]: loading })}>
+          {warehouse.phone_number}
+        </WarehouseItem>
       </WarehouseContent>
     </WarehouseGridWrapper>
   );
@@ -113,7 +127,7 @@ const WarehouseContent = styled.div`
 const WarehouseItem = styled.div`
   font-size: 11px;
   color: #000;
-  line-height: 1.3rem;
+  margin-bottom: 5px;
   text-overflow: ellipsis;
   overflow: hidden;
 `;
