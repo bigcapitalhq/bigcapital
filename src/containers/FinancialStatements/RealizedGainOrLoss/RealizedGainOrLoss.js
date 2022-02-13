@@ -1,11 +1,9 @@
 import React from 'react';
 
 import { FinancialStatement } from 'components';
-
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import RealizedGainOrLossHeader from './RealizedGainOrLossHeader';
-import RealizedGainOrLossTable from './RealizedGainOrLossTable';
 import RealizedGainOrLossActionsBar from './RealizedGainOrLossActionsBar';
 
 import withCurrentOrganization from '../../Organization/withCurrentOrganization';
@@ -28,9 +26,6 @@ function RealizedGainOrLoss({
   // Handle refetch realized Gain or Loss after filter change.
   const handleFilterSubmit = (filter) => {};
 
-  // Handle format number submit.
-  const handleNumberFormatSubmit = (values) => {};
-
   React.useEffect(
     () => () => {
       toggleRealizedGainOrLossFilterDrawer(false);
@@ -49,10 +44,6 @@ function RealizedGainOrLoss({
             onSubmitFilter={handleFilterSubmit}
           />
           <RealizedGainOrLossLoadingBar />
-
-          <div className="financial-statement__body">
-            <RealizedGainOrLossTable companyName={organizationName} />
-          </div>
         </FinancialStatement>
       </DashboardPageContent>
     </RealizedGainOrLossProvider>
