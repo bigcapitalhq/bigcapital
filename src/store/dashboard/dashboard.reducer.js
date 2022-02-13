@@ -19,6 +19,10 @@ const initialState = {
   splashScreenLoading: null,
   appIsLoading: true,
   appIntlIsLoading: true,
+  features: {
+    branches: true,
+    warehouses: true,
+  },
 };
 
 const STORAGE_KEY = 'bigcapital:dashboard';

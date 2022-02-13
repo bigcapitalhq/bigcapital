@@ -1,62 +1,67 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
-import FinancialSheet from 'components/FinancialSheet';
-import { DataTable } from 'components';
+import { DataTable, FinancialSheet } from 'components';
 
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
-
 import { usePurchasesByItemsTableColumns } from './components';
 
+import { tableRowTypesToClassnames } from 'utils';
+import { TableStyle } from 'common';
+
 /**
- * purchases by items data table.
+ * Purchases by items data table.
  */
 export default function PurchasesByItemsTable({ companyName }) {
   // Purchases by items context.
   const {
     purchaseByItems: { tableRows, query },
-    isLoading,
   } = usePurchaseByItemsContext();
 
   // Purchases by items table columns.
   const columns = usePurchasesByItemsTableColumns();
 
-  const rowClassNames = (row) => {
-    const { original } = row;
-    const rowTypes = Array.isArray(original.rowType)
-      ? original.rowType
-      : [original.rowType];
-
-    return {
-      ...rowTypes.reduce((acc, rowType) => {
-        acc[`row_type--${rowType}`] = rowType;
-        return acc;
-      }, {}),
-    };
-  };
-
   return (
-    <FinancialSheet
+    <PurchasesByItemsSheet
       companyName={companyName}
       sheetType={intl.get('purchases_by_items')}
       fromDate={query.from_date}
       toDate={query.to_date}
-      name="purchases-by-items"
-      loading={isLoading}
     >
-      <DataTable
-        className="bigcapital-datatable--financial-report"
+      <PurchasesByItemsDataTable
         columns={columns}
         data={tableRows}
         expandable={true}
         expandToggleColumn={1}
         expandColumnSpace={1}
         sticky={true}
-        rowClassNames={rowClassNames}
+        rowClassNames={tableRowTypesToClassnames}
         noResults={intl.get(
           'there_were_no_purchases_during_the_selected_date_range',
         )}
+        styleName={TableStyle.Constrant}
       />
-    </FinancialSheet>
+    </PurchasesByItemsSheet>
   );
 }
+
+const PurchasesByItemsSheet = styled(FinancialSheet)`
+  min-width: 850px;
+`;
+
+const PurchasesByItemsDataTable = styled(DataTable)`
+  .table {
+    .tbody {
+      .tr .td {
+        padding-top: 0.36rem;
+        padding-bottom: 0.36rem;
+      }
+      .tr.row_type--total .td {
+        border-top: 1px solid #bbb;
+        font-weight: 500;
+        border-bottom: 3px double #000;
+      }
+    }
+  }
+`;

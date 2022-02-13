@@ -1,57 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import moment from 'moment';
-import 'style/pages/FinancialStatements/BalanceSheet.scss';
 
 import { BalanceSheetAlerts, BalanceSheetLoadingBar } from './components';
 import { FinancialStatement } from 'components';
 
 import BalanceSheetHeader from './BalanceSheetHeader';
-import BalanceSheetTable from './BalanceSheetTable';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import BalanceSheetActionsBar from './BalanceSheetActionsBar';
 import { BalanceSheetProvider } from './BalanceSheetProvider';
+import { BalanceSheetBody } from './BalanceSheetBody';
 
 import withBalanceSheetActions from './withBalanceSheetActions';
-import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 
+import { useBalanceSheetQuery } from './utils';
 import { compose } from 'utils';
 
 /**
  * Balance sheet.
+ * @returns {React.JSX}
  */
 function BalanceSheet({
-  // #withCurrentOrganization
-  organizationName,
-
   // #withBalanceSheetActions
   toggleBalanceSheetFilterDrawer,
 }) {
-  const [filter, setFilter] = useState({
-    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-    toDate: moment().endOf('year').format('YYYY-MM-DD'),
-    basis: 'cash',
-    displayColumnsType: 'total',
-    filterByOption: 'without-zero-balance',
-  });
+  // Balance sheet query.
+  const { query, setLocationQuery } = useBalanceSheetQuery();
 
   // Handle re-fetch balance sheet after filter change.
   const handleFilterSubmit = (filter) => {
-    const _filter = {
+    const newFilter = {
       ...filter,
       fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
       toDate: moment(filter.toDate).format('YYYY-MM-DD'),
     };
-    setFilter({ ..._filter });
+    setLocationQuery({ ...newFilter });
   };
-
   // Handle number format submit.
   const handleNumberFormatSubmit = (values) => {
-    setFilter({
-      ...filter,
+    setLocationQuery({
+      ...query,
       numberFormat: values,
     });
   };
-
   // Hides the balance sheet filter drawer once the page unmount.
   useEffect(
     () => () => {
@@ -61,9 +51,9 @@ function BalanceSheet({
   );
 
   return (
-    <BalanceSheetProvider filter={filter}>
+    <BalanceSheetProvider filter={query}>
       <BalanceSheetActionsBar
-        numberFormat={filter.numberFormat}
+        numberFormat={query.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <BalanceSheetLoadingBar />
@@ -72,22 +62,14 @@ function BalanceSheet({
       <DashboardPageContent>
         <FinancialStatement>
           <BalanceSheetHeader
-            pageFilter={filter}
+            pageFilter={query}
             onSubmitFilter={handleFilterSubmit}
           />
-          <div class="financial-statement__body">
-            <BalanceSheetTable companyName={organizationName} />
-          </div>
+          <BalanceSheetBody />
         </FinancialStatement>
       </DashboardPageContent>
-
     </BalanceSheetProvider>
   );
 }
 
-export default compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-  withBalanceSheetActions,
-)(BalanceSheet);
+export default compose(withBalanceSheetActions)(BalanceSheet);

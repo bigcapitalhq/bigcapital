@@ -1,22 +1,21 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import moment from 'moment';
 
-import 'style/pages/FinancialStatements/TrialBalanceSheet.scss';
-
+import { FinancialStatement } from 'components';
 import { TrialBalanceSheetProvider } from './TrialBalanceProvider';
 import TrialBalanceActionsBar from './TrialBalanceActionsBar';
 import TrialBalanceSheetHeader from './TrialBalanceSheetHeader';
-import TrialBalanceSheetTable from './TrialBalanceSheetTable';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import {
   TrialBalanceSheetAlerts,
   TrialBalanceSheetLoadingBar,
 } from './components';
+import { TrialBalanceSheetBody } from './TrialBalanceSheetBody';
 
 import withTrialBalanceActions from './withTrialBalanceActions';
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 
+import { getDefaultTrialBalanceQuery } from './utils';
 import { compose } from 'utils';
 
 /**
@@ -30,10 +29,7 @@ function TrialBalanceSheet({
   toggleTrialBalanceFilterDrawer: toggleFilterDrawer,
 }) {
   const [filter, setFilter] = useState({
-    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-    toDate: moment().endOf('year').format('YYYY-MM-DD'),
-    basis: 'accural',
-    filterByOption: 'with-transactions',
+    ...getDefaultTrialBalanceQuery(),
   });
 
   // Handle filter form submit.
@@ -56,7 +52,6 @@ function TrialBalanceSheet({
       numberFormat,
     });
   };
-
   // Hide the filter drawer once the page unmount.
   useEffect(
     () => () => {
@@ -75,23 +70,16 @@ function TrialBalanceSheet({
       <TrialBalanceSheetAlerts />
 
       <DashboardPageContent>
-        <div class="financial-statement">
+        <FinancialStatement>
           <TrialBalanceSheetHeader
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
           />
-          <div class="financial-statement__body">
-            <TrialBalanceSheetTable companyName={organizationName} />
-          </div>
-        </div>
+          <TrialBalanceSheetBody />
+        </FinancialStatement>
       </DashboardPageContent>
     </TrialBalanceSheetProvider>
   );
 }
 
-export default compose(
-  withTrialBalanceActions,
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(TrialBalanceSheet);
+export default compose(withTrialBalanceActions)(TrialBalanceSheet);

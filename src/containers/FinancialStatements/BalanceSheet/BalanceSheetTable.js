@@ -1,13 +1,15 @@
-import React, { useMemo, useCallback } from 'react';
+import React from 'react';
+import styled from 'styled-components';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 
-import FinancialSheet from 'components/FinancialSheet';
-import DataTable from 'components/DataTable';
-import { CellTextSpan } from 'components/Datatable/Cells';
+import { DataTable, FinancialSheet } from 'components';
+
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 
-import { defaultExpanderReducer, getColumnWidth } from 'utils';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
+import { useBalanceSheetColumns } from './components';
+
+import { TableStyle } from 'common';
 
 /**
  * Balance sheet table.
@@ -16,91 +18,73 @@ export default function BalanceSheetTable({
   // #ownProps
   companyName,
 }) {
-  
-
   // Balance sheet context.
   const {
-    balanceSheet: { tableRows, columns, query },
-    isLoading,
+    balanceSheet: { table, query },
   } = useBalanceSheetContext();
 
-  const tableColumns = useMemo(
-    () => [
-      {
-        Header: intl.get('account_name'),
-        accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
-        className: 'account_name',
-        textOverview: true,
-        width: 240,
-      },
-      ...(query.display_columns_type === 'total'
-        ? [
-            {
-              Header: intl.get('total'),
-              accessor: 'total.formatted_amount',
-              Cell: CellTextSpan,
-              className: 'total',
-              width: 140,
-            },
-          ]
-        : []),
-      ...(query.display_columns_type === 'date_periods'
-        ? columns.map((column, index) => ({
-            id: `date_period_${index}`,
-            Header: column,
-            Cell: CellTextSpan,
-            accessor: `total_periods[${index}].formatted_amount`,
-            className: classNames('total-period', `total-periods-${index}`),
-            width: getColumnWidth(
-              tableRows,
-              `total_periods.${index}.formatted_amount`,
-              { minWidth: 100 },
-            ),
-          }))
-        : []),
-    ],
-    [query, columns, tableRows],
+  // Retrieve the database columns.
+  const tableColumns = useBalanceSheetColumns();
+
+  // Retrieve default expanded rows of balance sheet.
+  const expandedRows = React.useMemo(
+    () => defaultExpanderReducer(table.rows, 3),
+    [table],
   );
-
-  // Calculates the default expanded rows of balance sheet table.
-  const expandedRows = useMemo(() => defaultExpanderReducer(tableRows, 4), [tableRows]);
-
-  const rowClassNames = useCallback((row) => {
-    const { original } = row;
-    const rowTypes = Array.isArray(original.row_types)
-      ? original.row_types
-      : [original.row_types];
-
-    return {
-      ...rowTypes.reduce((acc, rowType) => {
-        acc[`row_type--${rowType}`] = rowType;
-        return acc;
-      }, {}),
-    };
-  }, []);
 
   return (
     <FinancialSheet
-      name="balance-sheet"
       companyName={companyName}
       sheetType={intl.get('balance_sheet')}
-      fromDate={query.from_date}
-      toDate={query.to_date}
+      asDate={query.to_date}
       basis={query.basis}
-      loading={isLoading}
     >
-      <DataTable
-        className="bigcapital-datatable--financial-report"
+      <BalanceSheetDataTable
         columns={tableColumns}
-        data={tableRows}
-        rowClassNames={rowClassNames}
+        data={table.rows}
+        rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}
         expandToggleColumn={1}
         expandColumnSpace={0.8}
-        // sticky={true}
+        headerLoading={true}
+        sticky={true}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );
 }
+
+const BalanceSheetDataTable = styled(DataTable)`
+  .table {
+    .tbody .tr {
+      .td {
+        border-bottom: 0;
+        padding-top: 0.32rem;
+        padding-bottom: 0.32rem;
+      }
+      &.is-expanded {
+        .td:not(.name) .cell-inner {
+          opacity: 0;
+        }
+      }
+      &.row_type--TOTAL {
+        .td {
+          font-weight: 500;
+          border-top: 1px solid #bbb;
+        }
+      }
+
+      &:last-of-type .td {
+        border-bottom: 1px solid #bbb;
+      }
+      &.row_type--TOTAL.row-id--ASSETS,
+      &.row_type--TOTAL.row-id--LIABILITY_EQUITY {
+        .td{
+          border-bottom: 3px double #000;
+        }
+      }
+    }
+  }
+`;

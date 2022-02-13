@@ -2,7 +2,6 @@ import General from 'containers/Preferences/General/General';
 import Users from '../containers/Preferences/Users/Users';
 import Roles from '../containers/Preferences/Users/Roles/RolesForm/RolesFormPage';
 import Accountant from 'containers/Preferences/Accountant/Accountant';
-// import Accounts from 'containers/Preferences/Accounts/Accounts';
 import Currencies from 'containers/Preferences/Currencies/Currencies';
 import Item from 'containers/Preferences/Item';
 import SMSIntegration from '../containers/Preferences/SMSIntegration';

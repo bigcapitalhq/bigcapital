@@ -16,12 +16,12 @@ export default [
     href: '/preferences/currencies',
   },
   {
-    text: <T id={'warehouses.label'} />,
-    href: '/preferences/warehouses',
-  },
-  {
     text: <T id={'branches.label'} />,
     href: '/preferences/branches',
+  },
+  {
+    text: <T id={'warehouses.label'} />,
+    href: '/preferences/warehouses',
   },
   {
     text: <T id={'accountant'} />,

@@ -1,19 +1,19 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 
-import 'style/pages/FinancialStatements/APAgingSummary.scss';
-
+import { getDefaultAPAgingSummaryQuery } from './common';
 import { FinancialStatement } from 'components';
 
 import APAgingSummaryHeader from './APAgingSummaryHeader';
 import APAgingSummaryActionsBar from './APAgingSummaryActionsBar';
-import APAgingSummaryTable from './APAgingSummaryTable';
+import { APAgingSummaryBody } from './APAgingSummaryBody';
+
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import { APAgingSummaryProvider } from './APAgingSummaryProvider';
 import { APAgingSummarySheetLoadingBar } from './components';
 
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 import withAPAgingSummaryActions from './withAPAgingSummaryActions';
+
 import { compose } from 'utils';
 
 /**
@@ -27,11 +27,7 @@ function APAgingSummary({
   toggleAPAgingSummaryFilterDrawer: toggleDisplayFilterDrawer,
 }) {
   const [filter, setFilter] = useState({
-    asDate: moment().endOf('day').format('YYYY-MM-DD'),
-    agingDaysBefore: 30,
-    agingPeriods: 3,
-    vendorsIds: [],
-    filterByOption: 'without-zero-balance',
+    ...getDefaultAPAgingSummaryQuery(),
   });
 
   // Handle filter submit.
@@ -50,7 +46,6 @@ function APAgingSummary({
       numberFormat,
     });
   };
-
   // Hide the report filter drawer once the page unmount.
   useEffect(
     () => () => {
@@ -73,18 +68,11 @@ function APAgingSummary({
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
           />
-          <div className={'financial-statement__body'}>
-            <APAgingSummaryTable organizationName={organizationName} />
-          </div>
+          <APAgingSummaryBody organizationName={organizationName} />
         </FinancialStatement>
       </DashboardPageContent>
     </APAgingSummaryProvider>
   );
 }
 
-export default compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization?.name,
-  })),
-  withAPAgingSummaryActions,
-)(APAgingSummary);
+export default compose(withAPAgingSummaryActions)(APAgingSummary);

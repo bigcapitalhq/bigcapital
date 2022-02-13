@@ -21,7 +21,7 @@ import CreditNotesAlerts from '../Sales/CreditNotes/CreditNotesAlerts';
 import VendorCreditNotesAlerts from '../Purchases/CreditNotes/VendorCreditNotesAlerts';
 import TransactionsLockingAlerts from '../TransactionsLocking/TransactionsLockingAlerts';
 import WarehousesAlerts from '../Preferences/Warehouses/WarehousesAlerts';
-import WarehousesTransfersAlerts from '../WarehouseTransfers/WarehousesTransfersAlerts'
+import WarehousesTransfersAlerts from '../WarehouseTransfers/WarehousesTransfersAlerts';
 import BranchesAlerts from '../Preferences/Branches/BranchesAlerts';
 
 export default [

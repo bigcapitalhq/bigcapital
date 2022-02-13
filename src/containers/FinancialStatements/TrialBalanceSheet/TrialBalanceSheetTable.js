@@ -1,44 +1,27 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
-import FinancialSheet from 'components/FinancialSheet';
-import DataTable from 'components/DataTable';
+import { DataTable, FinancialSheet } from 'components';
 
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
-
-
 import { useTrialBalanceTableColumns } from './components';
+
+import { tableRowTypesToClassnames } from 'utils';
+import { TableStyle } from 'common';
 
 /**
  * Trial Balance sheet data table.
  */
-export default function TrialBalanceSheetTable({
-  companyName,
-}) {
-  
-
+export default function TrialBalanceSheetTable({ companyName }) {
   // Trial balance sheet context.
   const {
     trialBalanceSheet: { tableRows, query },
-    isLoading
+    isLoading,
   } = useTrialBalanceSheetContext();
 
   // Trial balance sheet table columns.
-  const columns = useTrialBalanceTableColumns();;
-
-  const rowClassNames = (row) => {
-    const { original } = row;
-    const rowTypes = Array.isArray(original.rowType)
-      ? original.rowType
-      : [original.rowType];
-
-    return {
-      ...rowTypes.reduce((acc, rowType) => {
-        acc[`row_type--${rowType}`] = rowType;
-        return acc;
-      }, {}),
-    };
-  };
+  const columns = useTrialBalanceTableColumns();
 
   return (
     <FinancialSheet
@@ -50,16 +33,36 @@ export default function TrialBalanceSheetTable({
       loading={isLoading}
       basis={'cash'}
     >
-      <DataTable
-        className="bigcapital-datatable--financial-report"
+      <TrialBalanceDataTable
         columns={columns}
         data={tableRows}
         expandable={true}
         expandToggleColumn={1}
         expandColumnSpace={1}
         sticky={true}
-        rowClassNames={rowClassNames}
+        rowClassNames={tableRowTypesToClassnames}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );
 }
+
+const TrialBalanceDataTable = styled(DataTable)`
+  .table {
+    .tbody {
+      .tr .td {
+        border-bottom: 0;
+        padding-top: 0.36rem;
+        padding-bottom: 0.36rem;
+      }
+      .balance.td {
+        border-top-color: #000;
+      }
+      .tr.row_type--total .td {
+        border-top: 1px solid #bbb;
+        font-weight: 500;
+        border-bottom: 3px double #000;
+      }
+    }
+  }
+`;

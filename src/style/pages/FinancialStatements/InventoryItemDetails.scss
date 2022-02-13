@@ -14,59 +14,7 @@
       }
 
       .tbody {
-        .tr .td {
-          padding-top: 0.2rem;
-          padding-bottom: 0.2rem;
-          border-top-color: transparent;
-          border-bottom-color: transparent;
-
-          &.date {
-            >div {
-              display: flex;
-            }
-
-            span.force-width {
-              position: relative;
-            }
-          }
-        }
-
-        .tr:not(.no-results) .td {
-          border-left: 1px solid #ececec;
-        }
-
-        .tr:last-child .td {
-          border-bottom: 1px solid #ddd;
-        }
-
-        .tr.row-type {
-          &--ITEM {
-            .td {
-              &.transaction_type {
-                border-left-color: transparent;
-              }
-            }
-
-            &:not(:first-child).is-expanded .td {
-              border-top: 1px solid #ddd;
-            }
-          }
-
-          &--ITEM,
-          &--OPENING_ENTRY,
-          &--CLOSING_ENTRY {
-            font-weight: 500;
-          }
-
-          &--ITEM {
-            &.is-expanded {
-              .td.value .cell-inner {
-                display: none;
-              }
-            }
-          }
-        }
-      }
+       
     }
   }
 }

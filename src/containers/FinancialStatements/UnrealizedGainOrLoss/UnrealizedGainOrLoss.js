@@ -4,7 +4,6 @@ import { FinancialStatement } from 'components';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import UnrealizedGainOrLossHeader from './UnrealizedGainOrLossHeader';
-import UnrealizedGainOrLossTable from './UnrealizedGainOrLossTable';
 import UnrealizedGainOrLossActionsBar from './UnrealizedGainOrLossActionsBar';
 
 import withCurrentOrganization from '../../Organization/withCurrentOrganization';
@@ -27,9 +26,6 @@ function UnrealizedGainOrLoss({
   // Handle refetch unrealized Gain or Loss after filter change.
   const handleFilterSubmit = (filter) => {};
 
-  // Handle format number submit.
-  const handleNumberFormatSubmit = (values) => {};
-
   React.useEffect(
     () => () => {
       toggleUnrealizedGainOrLossFilterDrawer(false);
@@ -48,9 +44,6 @@ function UnrealizedGainOrLoss({
           />
 
           <UnrealizedGainOrLossLoadingBar />
-          <div className="financial-statement__body">
-            <UnrealizedGainOrLossTable companyName={organizationName} />
-          </div>
         </FinancialStatement>
       </DashboardPageContent>
     </UnrealizedGainOrLossProvider>

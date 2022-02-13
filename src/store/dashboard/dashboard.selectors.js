@@ -38,3 +38,12 @@ export const getDrawerPayloadFactory = () =>
   createSelector(drawerByNameSelector, (drawer) => {
     return { ...drawer?.payload };
   });
+
+const featuresSelector = (state, props) => {
+  return state.dashboard.features;
+};
+
+export const getDashboardFeaturesSelector = () =>
+  createSelector(featuresSelector, (features) => {
+    return features;
+  });

@@ -1,11 +1,14 @@
 import React from 'react';
-import intl, { init } from 'react-intl-universal';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
-import FinancialSheet from 'components/FinancialSheet';
-import { DataTable } from 'components';
+import { DataTable, FinancialSheet } from 'components';
 
 import { useInventoryValuationContext } from './InventoryValuationProvider';
 import { useInventoryValuationTableColumns } from './components';
+
+import { tableRowTypesToClassnames } from 'utils';
+import { TableStyle } from 'common';
 
 /**
  * inventory valuation data table.
@@ -23,41 +26,47 @@ export default function InventoryValuationTable({
   // inventory valuation table columns.
   const columns = useInventoryValuationTableColumns();
 
-  const rowClassNames = (row) => {
-    const { original } = row;
-    const rowTypes = Array.isArray(original.rowType)
-      ? original.rowType
-      : [original.rowType];
-
-    return {
-      ...rowTypes.reduce((acc, rowType) => {
-        acc[`row_type--${rowType}`] = rowType;
-        return acc;
-      }, {}),
-    };
-  };
-
   return (
-    <FinancialSheet
+    <InventoryValuationSheet
       companyName={companyName}
-      name="inventory-valuation"
       sheetType={intl.get('inventory_valuation')}
       asDate={new Date()}
       loading={isLoading}
     >
-      <DataTable
-        className="bigcapital-datatable--financial-report"
+      <InventoryValuationDataTable
         columns={columns}
         data={tableRows}
         expandable={true}
         expandToggleColumn={1}
         expandColumnSpace={1}
         sticky={true}
-        rowClassNames={rowClassNames}
+        rowClassNames={tableRowTypesToClassnames}
+        styleName={TableStyle.Constrant}
         noResults={intl.get(
           'there_were_no_inventory_transactions_during_the_selected_date_range',
         )}
       />
-    </FinancialSheet>
+    </InventoryValuationSheet>
   );
 }
+
+const InventoryValuationSheet = styled(FinancialSheet)`
+  min-width: 850px;
+`;
+
+const InventoryValuationDataTable = styled(DataTable)`
+  .table {
+    .tbody {
+      .tr .td {
+        border-bottom: 0;
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+      }
+      .tr.row_type--total .td {
+        border-top: 1px solid #bbb;
+        font-weight: 500;
+        border-bottom: 3px double #000;
+      }
+    }
+  }
+`;

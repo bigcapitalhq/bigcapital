@@ -1,18 +1,18 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import { getColumnWidth } from 'utils';
+
 import { If } from 'components';
 import { CellTextSpan } from 'components/Datatable/Cells';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
+import { getColumnWidth } from 'utils';
+import { Align } from 'common';
+
 /**
  * Retrieve inventory valuation table columns.
  */
-
 export const useInventoryValuationTableColumns = () => {
-  
-
   // inventory valuation context
   const {
     inventoryValuation: { tableRows },
@@ -36,6 +36,7 @@ export const useInventoryValuationTableColumns = () => {
           minWidth: 120,
         }),
         textOverview: true,
+        align: Align.Right,
       },
       {
         Header: intl.get('asset_value'),
@@ -46,6 +47,7 @@ export const useInventoryValuationTableColumns = () => {
           minWidth: 120,
         }),
         textOverview: true,
+        align: Align.Right,
       },
       {
         Header: intl.get('average'),
@@ -56,6 +58,7 @@ export const useInventoryValuationTableColumns = () => {
           minWidth: 120,
         }),
         textOverview: true,
+        align: Align.Right,
       },
     ],
     [tableRows],

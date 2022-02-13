@@ -1,35 +1,29 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import moment from 'moment';
 
-import 'style/pages/FinancialStatements/SalesAndPurchasesSheet.scss';
-
 import { SalesByItemProvider } from './SalesByItemProvider';
 import SalesByItemsActionsBar from './SalesByItemsActionsBar';
 import SalesByItemsHeader from './SalesByItemsHeader';
-import SalesByItemsTable from './SalesByItemsTable';
+import { SalesByItemsBody } from './SalesByItemsBody';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import { SalesByItemsLoadingBar } from './components';
+import { FinancialStatement } from 'components';
 
 import withSalesByItemsActions from './withSalesByItemsActions';
-import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 
+import { getDefaultSalesByItemsQuery } from './utils';
 import { compose } from 'utils';
 
 /**
  * Sales by items.
  */
 function SalesByItems({
-  // #withPreferences
-  organizationName,
-
   // #withSellsByItemsActions
   toggleSalesByItemsFilterDrawer,
 }) {
   const [filter, setFilter] = useState({
-    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-    toDate: moment().endOf('year').format('YYYY-MM-DD'),
-    filterByOption: 'with-transactions',
+    ...getDefaultSalesByItemsQuery(),
   });
 
   // Handle filter form submit.
@@ -69,23 +63,16 @@ function SalesByItems({
       <SalesByItemsLoadingBar />
 
       <DashboardPageContent>
-        <div class="financial-statement financial-statement--sales-by-items">
+        <FinancialStatement>
           <SalesByItemsHeader
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
           />
-          <div class="financial-statement__body">
-            <SalesByItemsTable companyName={organizationName} />
-          </div>
-        </div>
+          <SalesByItemsBody />
+        </FinancialStatement>
       </DashboardPageContent>
     </SalesByItemProvider>
   );
 }
 
-export default compose(
-  withSalesByItemsActions,
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(SalesByItems);
+export default compose(withSalesByItemsActions)(SalesByItems);

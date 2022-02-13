@@ -1,11 +1,14 @@
-import React, { useCallback } from 'react';
-import { FormattedMessage as T } from 'components';
+import React from 'react';
 import intl from 'react-intl-universal';
-import { DataTable } from 'components';
-import FinancialSheet from 'components/FinancialSheet';
+import styled from 'styled-components';
+
+import { DataTable, FinancialSheet } from 'components';
+import { TableStyle } from 'common';
 
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import { useAPAgingSummaryColumns } from './components';
+
+import { tableRowTypesToClassnames } from 'utils';
 
 /**
  * AP aging summary table sheet.
@@ -14,8 +17,6 @@ export default function APAgingSummaryTable({
   //#ownProps
   organizationName,
 }) {
-  
-
   // AP aging summary report content.
   const {
     APAgingSummary: { tableRows },
@@ -25,8 +26,6 @@ export default function APAgingSummaryTable({
   // AP aging summary columns.
   const columns = useAPAgingSummaryColumns();
 
-  const rowClassNames = (row) => [`row-type--${row.original.rowType}`];
-
   return (
     <FinancialSheet
       companyName={organizationName}
@@ -35,14 +34,26 @@ export default function APAgingSummaryTable({
       asDate={new Date()}
       loading={isAPAgingLoading}
     >
-      <DataTable
-        className={'bigcapital-datatable--financial-report'}
+      <APAgingSummaryDataTable
         columns={columns}
         data={tableRows}
-        rowClassNames={rowClassNames}
+        rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         sticky={true}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );
 }
+
+const APAgingSummaryDataTable = styled(DataTable)`
+  .table {
+    .tbody .tr {
+      .td {
+        border-bottom: 0;
+        padding-top: 0.32rem;
+        padding-bottom: 0.32rem;
+      }
+    }
+  }
+`;

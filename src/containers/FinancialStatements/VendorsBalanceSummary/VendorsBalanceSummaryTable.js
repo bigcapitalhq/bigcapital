@@ -1,11 +1,13 @@
 import React from 'react';
-import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
-import { DataTable } from 'components';
-import FinancialSheet from 'components/FinancialSheet';
+import styled from 'styled-components';
+
+import { DataTable, FinancialSheet } from 'components';
 
 import { useVendorsBalanceColumns } from './components';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
+
+import { tableRowTypesToClassnames } from 'utils';
 
 /**
  * Vendors balance summary table.
@@ -16,31 +18,48 @@ export default function VendorsBalanceSummaryTable({
 }) {
   const {
     VendorBalanceSummary: { table },
-    isVendorsBalanceLoading,
   } = useVendorsBalanceSummaryContext();
 
   // vendors balance summary columns.
   const columns = useVendorsBalanceColumns();
 
-  const rowClassNames = (row) => {
-    return [`row-type--${row.original.row_types}`];
-  };
-
   return (
-    <FinancialSheet
+    <VendorBalanceFinancialSheet
       companyName={organizationName}
-      name={'vendors-balance-summary'}
       sheetType={intl.get('vendors_balance_summary')}
       asDate={new Date()}
-      loading={isVendorsBalanceLoading}
     >
-      <DataTable
-        className={'bigcapital-datatable--financial-report'}
+      <VendorBalanceDataTable
         columns={columns}
-        data={table?.data}
-        rowClassNames={rowClassNames}
+        data={table.data}
+        rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
       />
-    </FinancialSheet>
+    </VendorBalanceFinancialSheet>
   );
 }
+
+const VendorBalanceFinancialSheet = styled(FinancialSheet)``;
+
+const VendorBalanceDataTable = styled(DataTable)`
+  .table {
+    .tbody {
+      .tr:not(.no-results) {
+        .td {
+          border-bottom: 0;
+          padding-top: 0.4rem;
+          padding-bottom: 0.4rem;
+        }
+
+        &.row-type--TOTAL {
+          font-weight: 500;
+
+          .td {
+            border-top: 1px solid #bbb;
+            border-bottom: 3px double #333;
+          }
+        }
+      }
+    }
+  }
+`;

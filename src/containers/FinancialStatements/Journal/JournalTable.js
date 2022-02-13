@@ -1,25 +1,26 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
-import FinancialSheet from 'components/FinancialSheet';
-import DataTable from 'components/DataTable';
-import { useJournalSheetContext } from './JournalProvider';
+import { DataTable, FinancialSheet } from 'components';
 import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
 import TableFastCell from 'components/Datatable/TableFastCell';
-import { defaultExpanderReducer } from 'utils';
+
 import { useJournalTableColumns } from './components';
+import { useJournalSheetContext } from './JournalProvider';
 
-export default function JournalSheetTable({
-  // #ownProps
-  onFetchData,
-  companyName,
-}) {
-  
+import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
+import { TableStyle } from 'common';
 
+/**
+ * Journal sheet table.
+ * @returns {JSX.Element}
+ */
+export function JournalTable({ companyName }) {
   // Journal sheet context.
   const {
     journalSheet: { tableRows, query },
-    isLoading
+    isLoading,
   } = useJournalSheetContext();
 
   // Retreive the journal table columns.
@@ -28,22 +29,6 @@ export default function JournalSheetTable({
   // Default expanded rows of general journal table.
   const expandedRows = useMemo(() => defaultExpanderReducer([], 1), []);
 
-  const rowClassNames = useCallback((row) => {
-    const { original } = row;
-    const rowTypes = Array.isArray(original.rowType)
-      ? original.rowType
-      : [original.rowType];
-
-    return {
-      ...rowTypes.reduce((acc, rowType) => {
-        acc[`row_type--${rowType}`] = rowType;
-        return acc;
-      }, {}),
-    };
-  }, []);
-
-
-  
   return (
     <FinancialSheet
       companyName={companyName}
@@ -52,25 +37,55 @@ export default function JournalSheetTable({
       toDate={query.to_date}
       name="journal"
       loading={isLoading}
-      // minimal={true}
       fullWidth={true}
-      >
-      <DataTable
-        className="bigcapital-datatable--financial-report"
+    >
+      <JournalDataTable
         columns={columns}
         data={tableRows}
-        rowClassNames={rowClassNames}
-        noResults={intl.get('this_report_does_not_contain_any_data_between_date_period')}
+        rowClassNames={tableRowTypesToClassnames}
+        noResults={intl.get(
+          'this_report_does_not_contain_any_data_between_date_period',
+        )}
         expanded={expandedRows}
         sticky={true}
         TableRowsRenderer={TableVirtualizedListRows}
         // #TableVirtualizedListRows props.
         vListrowHeight={28}
         vListOverscanRowCount={2}
-
         TableCellRenderer={TableFastCell}
         id={'journal'}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );
 }
+
+const JournalDataTable = styled(DataTable)`
+  .table {
+    .tbody {
+      .tr:not(.no-results) .td {
+        padding: 0.3rem 0.4rem;
+        color: #000;
+        border-bottom-color: transparent;
+        min-height: 28px;
+        border-left: 1px solid #ececec;
+
+        &:first-of-type {
+          border-left: 0;
+        }
+      }
+      .tr:not(.no-results):last-child {
+        .td {
+          border-bottom: 1px solid #dbdbdb;
+        }
+      }
+      .tr.row_type--TOTAL_ENTRIES {
+        font-weight: 600;
+      }
+
+      .tr:not(.no-results) {
+        height: 28px;
+      }
+    }
+  }
+`;

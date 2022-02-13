@@ -1,18 +1,18 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import { Button } from '@blueprintjs/core';
+
 import { getColumnWidth } from 'utils';
-import { If, Icon } from 'components';
+import { If } from 'components';
 import { CellTextSpan } from 'components/Datatable/Cells';
 import { useSalesByItemsContext } from './SalesByItemProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
+
+import { Align } from 'common';
 
 /**
  * Retrieve sales by items table columns.
  */
 export const useSalesByItemsTableColumns = () => {
-  
-
   //sales by items context.
   const {
     salesByItems: { tableRows },
@@ -36,6 +36,7 @@ export const useSalesByItemsTableColumns = () => {
           minWidth: 150,
         }),
         textOverview: true,
+        align: Align.Right,
       },
       {
         Header: intl.get('sold_amount'),
@@ -46,6 +47,7 @@ export const useSalesByItemsTableColumns = () => {
           minWidth: 150,
         }),
         textOverview: true,
+        align: Align.Right,
       },
       {
         Header: intl.get('average_price'),
@@ -56,6 +58,7 @@ export const useSalesByItemsTableColumns = () => {
           minWidth: 150,
         }),
         textOverview: true,
+        align: Align.Right,
       },
     ],
     [tableRows],

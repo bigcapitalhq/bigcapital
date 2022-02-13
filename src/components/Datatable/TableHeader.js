@@ -15,7 +15,7 @@ function TableHeaderCell({ column, index }) {
     <div
       {...column.getHeaderProps({
         className: classNames(column.className || '', 'th', {
-          'align-right': column.align === 'right',
+          [`align-${column.align}`]: column.align,
         }),
       })}
     >
@@ -89,12 +89,14 @@ export default function TableHeader() {
   return (
     <ScrollSyncPane>
       <div className="thead">
-        {headerGroups.map((headerGroup, index) => (
-          <TableHeaderGroup key={index} headerGroup={headerGroup} />
-        ))}
-        <If condition={progressBarLoading}>
-          <MaterialProgressBar />
-        </If>
+        <div className={'thead-inner'}>
+          {headerGroups.map((headerGroup, index) => (
+            <TableHeaderGroup key={index} headerGroup={headerGroup} />
+          ))}
+          <If condition={progressBarLoading}>
+            <MaterialProgressBar />
+          </If>
+        </div>
       </div>
     </ScrollSyncPane>
   );

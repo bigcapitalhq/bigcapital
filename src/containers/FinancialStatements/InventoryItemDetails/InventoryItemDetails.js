@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import 'style/pages/FinancialStatements/InventoryItemDetails.scss';
 
 import { FinancialStatement } from 'components';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import InventoryItemDetailsActionsBar from './InventoryItemDetailsActionsBar';
 import InventoryItemDetailsHeader from './InventoryItemDetailsHeader';
-import InventoryItemDetailsTable from './InventoryItemDetailsTable';
 
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
 import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
@@ -18,6 +16,7 @@ import {
 } from './components';
 
 import { compose } from 'utils';
+import { InventoryItemDetailsBody } from './InventoryItemDetailsBody';
 
 /**
  * inventory item details.
@@ -64,19 +63,11 @@ function InventoryItemDetails({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <div
-            className={
-              'financial-statement financial-statement--inventory-details'
-            }
-          >
-            <InventoryItemDetailsHeader
-              pageFilter={filter}
-              onSubmitFilter={handleFilterSubmit}
-            />
-          </div>
-          <div class="financial-statement__body">
-            <InventoryItemDetailsTable companyName={organizationName} />
-          </div>
+          <InventoryItemDetailsHeader
+            pageFilter={filter}
+            onSubmitFilter={handleFilterSubmit}
+          />
+          <InventoryItemDetailsBody />
         </FinancialStatement>
       </DashboardPageContent>
     </InventoryItemDetailsProvider>
