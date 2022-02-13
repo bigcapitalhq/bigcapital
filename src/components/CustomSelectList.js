@@ -1,10 +1,13 @@
 import React from 'react';
+import styled from 'styled-components';
 import {
   Button,
   MenuItem,
   PopoverInteractionKind,
   Position,
+  Classes,
 } from '@blueprintjs/core';
+import clsx from 'classnames';
 import { defaultTo } from 'lodash';
 import { Select } from '@blueprintjs/select';
 import { FormattedMessage as T, Icon } from 'components';
@@ -18,7 +21,8 @@ export default function CustomSelectList({
   items,
   initialItemId,
   selectedItemId,
-  text,
+  loading = false,
+  defaultSelectText,
   onItemSelected,
   buttonProps,
 }) {
@@ -85,17 +89,19 @@ export default function CustomSelectList({
           offset: { offset: '0, 4' },
         },
       }}
+      className={clsx({ [Classes.SKELETON]: loading })}
     >
       <Button
         text={
           selecetedItem
-            ? `${text}:${selecetedItem.name} ${defaultTo(
+            ? `${defaultSelectText}:${selecetedItem.name} ${defaultTo(
                 selecetedItem.code,
                 '',
               )}`
-            : `${text}: Bigcapital`
+            : `${defaultSelectText}: Bigcapital`
         }
         minimal={true}
+        small={true}
         {...buttonProps}
       />
     </Select>

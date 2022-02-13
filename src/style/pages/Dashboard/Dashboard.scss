@@ -575,16 +575,18 @@ $dashboard-views-bar-height: 44px;
 .navbar--dashboard-topbar {
   box-shadow: 0 0 0;
   border-bottom: 1px solid #d2dce2;
-  /* height: 44px; */
-  height: 37px;
+  height: 35px;
   padding: 0 20px;
 
   .bp3-navbar-group {
-    height: 37px;
+    height: 35px;
   }
 
   .bp3-navbar-divider {
     border-left-color: #d2dce2;
+  }
+  .bp3-skeleton {
+    max-height: 10px;
   }
   .bp3-button {
     &:hover {

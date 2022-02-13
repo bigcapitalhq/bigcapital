@@ -13,7 +13,7 @@ function BaseCurrency({
   organization: { base_currency },
   isForeignCustomer,
 }) {
-  console.log(isForeignCustomer, 'XXXX');
+  
   if (isForeignCustomer) {
     return null;
   }
