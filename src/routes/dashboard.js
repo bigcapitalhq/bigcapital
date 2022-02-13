@@ -128,6 +128,7 @@ export const getDashboardRoutes = () => [
     ),
     name: 'warehouse-transfer-edit',
     pageTitle: intl.get('warehouse_transfer.label.edit_warehouse_transfer'),
+    sidebarExpand: false,
     backLink: true,
   },
   {
@@ -139,6 +140,7 @@ export const getDashboardRoutes = () => [
     ),
     name: 'warehouses-transfer-new',
     pageTitle: intl.get('warehouse_transfer.label.new_warehouse_transfer'),
+    sidebarExpand: false,
     backLink: true,
   },
   {
