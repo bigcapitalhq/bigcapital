@@ -6,6 +6,8 @@ import { If } from 'components';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 
+import { Align } from 'common';
+
 /**
  * Retrieve vendors balance summary columns.
  */
@@ -39,8 +41,8 @@ const percentageColumnAccessor = () => ({
   accessor: 'cells[2].value',
   className: 'total',
   width: 140,
-  align: 'right',
   textOverview: true,
+  align: Align.Right,
 });
 
 /**
@@ -51,8 +53,8 @@ const totalColumnAccessor = () => ({
   accessor: 'cells[1].value',
   className: 'total',
   width: 140,
-  align: 'right',
   textOverview: true,
+  align: Align.Right,
 });
 
 /**

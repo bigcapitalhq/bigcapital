@@ -6,6 +6,8 @@ import { If } from 'components';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 
+import { Align } from 'common';
+
 /**
  * Retrieve customers balance summary columns.
  */
@@ -37,6 +39,7 @@ const totalColumnAccessor = () => ({
   accessor: 'cells[1].value',
   className: 'total',
   width: 140,
+  align: Align.Right,
 });
 
 /**
@@ -47,6 +50,7 @@ const percentageColumnAccessor = () => ({
   accessor: 'cells[2].value',
   className: 'total',
   width: 140,
+  align: Align.Right,
 });
 
 const dynamicColumns = (columns) => {
@@ -54,7 +58,10 @@ const dynamicColumns = (columns) => {
     R.compose(
       R.when(R.pathEq(['key'], 'name'), accountNameColumnAccessor),
       R.when(R.pathEq(['key'], 'total'), totalColumnAccessor),
-      R.when(R.pathEq(['key'], 'percentage_of_column'), percentageColumnAccessor),
+      R.when(
+        R.pathEq(['key'], 'percentage_of_column'),
+        percentageColumnAccessor,
+      ),
     ),
   )(columns);
 };

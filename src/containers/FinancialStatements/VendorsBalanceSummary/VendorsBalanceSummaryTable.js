@@ -7,6 +7,7 @@ import { DataTable, FinancialSheet } from 'components';
 import { useVendorsBalanceColumns } from './components';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 
+import { TableStyle } from 'common';
 import { tableRowTypesToClassnames } from 'utils';
 
 /**
@@ -34,6 +35,7 @@ export default function VendorsBalanceSummaryTable({
         data={table.data}
         rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
+        styleName={TableStyle.Constrant}
       />
     </VendorBalanceFinancialSheet>
   );
@@ -51,7 +53,7 @@ const VendorBalanceDataTable = styled(DataTable)`
           padding-bottom: 0.4rem;
         }
 
-        &.row-type--TOTAL {
+        &.row_type--TOTAL {
           font-weight: 500;
 
           .td {
