@@ -7,7 +7,7 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
-import { FormattedMessage as T, Col, Row } from 'components';
+import { FormattedMessage as T, Col, Row, If } from 'components';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import { upperCase } from 'lodash';
 
@@ -59,7 +59,7 @@ function InvoiceFormHeaderFields({
   invoiceNextNumber,
 }) {
   // Invoice form context.
-  const { customers } = useInvoiceFormContext();
+  const { customers, isForeignCustomer } = useInvoiceFormContext();
 
   // Handle invoice number changing.
   const handleInvoiceNumberChange = () => {
@@ -86,25 +86,25 @@ function InvoiceFormHeaderFields({
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ----------- Customer name ----------- */}
-      <CustomerName>
-        <FastField
-          name={'customer_id'}
-          customers={customers}
-          shouldUpdate={customerNameFieldShouldUpdate}
-        >
-          {({ form, field: { value }, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'customer_name'} />}
-              inline={true}
-              className={classNames(
-                'form-group--customer-name',
-                'form-group--select-list',
-                CLASSES.FILL,
-              )}
-              labelInfo={<FieldRequiredHint />}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name={'customer_id'} />}
-            >
+      <FastField
+        name={'customer_id'}
+        customers={customers}
+        shouldUpdate={customerNameFieldShouldUpdate}
+      >
+        {({ form, field: { value }, meta: { error, touched } }) => (
+          <FormGroup
+            label={<T id={'customer_name'} />}
+            inline={true}
+            className={classNames(
+              'form-group--customer-name',
+              'form-group--select-list',
+              CLASSES.FILL,
+            )}
+            labelInfo={<FieldRequiredHint />}
+            intent={inputIntent({ error, touched })}
+            helperText={<ErrorMessage name={'customer_id'} />}
+          >
+            <ControlGroup>
               <CustomerSelectField
                 contacts={customers}
                 selectedContactId={value}
@@ -115,17 +115,14 @@ function InvoiceFormHeaderFields({
                 popoverFill={true}
                 allowCreate={true}
               />
-            </FormGroup>
-          )}
-        </FastField>
-        <BaseCurrency />
-      </CustomerName>
-      <ExchangeWrapp>
-        <ExchangeLable>
-          <FlagTag flage={'US'} /> 1 USD =
-        </ExchangeLable>
+              <BaseCurrency isForeignCustomer={isForeignCustomer} />
+            </ControlGroup>
+          </FormGroup>
+        )}
+      </FastField>
 
-        {/* ----------- Exchange reate ----------- */}
+      {/* ----------- Exchange reate ----------- */}
+      <ExchangeRateField>
         <Field name={'exchange_rate'}>
           {({
             form: { values, setFieldValue },
@@ -138,22 +135,28 @@ function InvoiceFormHeaderFields({
               className={'form-group--exchange_rate'}
               helperText={<ErrorMessage name="exchange_rate" />}
             >
-              <MoneyInputGroup
-                value={field.value}
-                allowDecimals={false}
-                allowNegativeValue={true}
-                onChange={(value) => {
-                  setFieldValue('exchange_rate', value);
-                }}
-                intent={inputIntent({ error, touched })}
-              />
+              <ControlGroup>
+                <ExchangeRateTag>
+                  <FlagTag flage={'US'} /> 1 USD =
+                </ExchangeRateTag>
+                <MoneyInputGroup
+                  value={field.value}
+                  allowDecimals={false}
+                  allowNegativeValue={true}
+                  onChange={(value) => {
+                    setFieldValue('exchange_rate', value);
+                  }}
+                  intent={inputIntent({ error, touched })}
+                />
+                <ExchangeRateTag>
+                  <FlagTag flage={'LY'} /> LYD
+                </ExchangeRateTag>
+              </ControlGroup>
             </FormGroup>
           )}
         </Field>
-        <ExchangeLable>
-          <FlagTag flage={'LY'} /> LYD
-        </ExchangeLable>
-      </ExchangeWrapp>
+      </ExchangeRateField>
+
       <Row>
         <Col xs={6}>
           {/* ----------- Invoice date ----------- */}
@@ -240,6 +243,7 @@ function InvoiceFormHeaderFields({
           </FastField>
         </Col>
       </Row>
+
       {/* ----------- Invoice number ----------- */}
       <Field name={'invoice_no'}>
         {({ form, field, meta: { error, touched } }) => (
@@ -303,27 +307,21 @@ export default compose(
   })),
 )(InvoiceFormHeaderFields);
 
-const CustomerName = styled.div`
-  display: flex;
-  align-items: baseline;
-`;
-
-const ExchangeWrapp = styled.div`
+const ExchangeRateField = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  max-width: 370px;
-  .bp3-form-group.bp3-inline {
+  max-width: 366px;
+  .bp3-input-group .bp3-input {
     width: 88px;
+    margin: 0 5px;
   }
 `;
 
-const ExchangeLable = styled.div`
+const ExchangeRateTag = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  margin-right: 5px;
   font-size: 10px;
   line-height: 1.6;
-  padding-bottom: calc(1rem + 1px);
 `;

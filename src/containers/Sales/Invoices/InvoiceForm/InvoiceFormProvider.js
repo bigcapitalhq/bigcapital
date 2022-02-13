@@ -74,6 +74,12 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
   // Detarmines whether the form in new mode.
   const isNewMode = !invoiceId;
 
+  // Determines whether the warehouse and branches are loading.
+  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+
+  // Determines whether the foreign customer.
+  const isForeignCustomer = true;
+
   // Provider payload.
   const provider = {
     invoice,
@@ -90,6 +96,10 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     isItemsLoading,
     isCustomersLoading,
     isSettingsLoading,
+    isWarehouesLoading,
+    isBranchesLoading,
+    isFeatureLoading,
+    isForeignCustomer,
 
     createInvoiceMutate,
     editInvoiceMutate,
@@ -104,8 +114,6 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
         isItemsLoading ||
         isCustomersLoading ||
         isEstimateLoading ||
-        isWarehouesLoading ||
-        isBranchesLoading ||
         isSettingsLoading
       }
       name={'invoice-form'}
