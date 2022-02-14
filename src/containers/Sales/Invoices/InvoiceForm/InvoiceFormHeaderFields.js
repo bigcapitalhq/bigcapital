@@ -9,7 +9,6 @@ import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
 import { FormattedMessage as T, Col, Row, If } from 'components';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
-import { upperCase } from 'lodash';
 
 import classNames from 'classnames';
 import styled from 'styled-components';
@@ -25,8 +24,7 @@ import {
   ListSelect,
   Icon,
   InputPrependButton,
-  MoneyInputGroup,
-  FlagTag,
+  ExchangeRateInputGroup,
 } from 'components';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 
@@ -121,42 +119,14 @@ function InvoiceFormHeaderFields({
         )}
       </FastField>
 
-      {/* ----------- Exchange reate ----------- */}
-      <If condition={isForeignCustomer}>
-        <ExchangeRateField>
-          <Field name={'exchange_rate'}>
-            {({
-              form: { values, setFieldValue },
-              field,
-              meta: { error, touched },
-            }) => (
-              <FormGroup
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                className={'form-group--exchange_rate'}
-                helperText={<ErrorMessage name="exchange_rate" />}
-              >
-                <ControlGroup>
-                  <ExchangeRateTag>
-                    <FlagTag flage={'US'} /> 1 USD =
-                  </ExchangeRateTag>
-                  <MoneyInputGroup
-                    value={field.value}
-                    allowDecimals={false}
-                    allowNegativeValue={true}
-                    onChange={(value) => {
-                      setFieldValue('exchange_rate', value);
-                    }}
-                    intent={inputIntent({ error, touched })}
-                  />
-                  <ExchangeRateTag>
-                    <FlagTag flage={'LY'} /> LYD
-                  </ExchangeRateTag>
-                </ControlGroup>
-              </FormGroup>
-            )}
-          </Field>
-        </ExchangeRateField>
+      {/* ----------- Exchange rate ----------- */}
+      <If condition={true}>
+        <ExchangeRateInputGroup
+          fromCurrency={'USD'}
+          toCurrency={'LYD'}
+          name={'exchange_rate'}
+          formGroupProps={{ label: ' ', inline: true }}
+        />
       </If>
 
       <Row>
@@ -308,25 +278,6 @@ export default compose(
     invoiceNumberPrefix: invoiceSettings?.numberPrefix,
   })),
 )(InvoiceFormHeaderFields);
-
-const ExchangeRateField = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  max-width: 366px;
-  .bp3-input-group .bp3-input {
-    width: 88px;
-    margin: 0 5px;
-  }
-`;
-
-const ExchangeRateTag = styled.div`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 10px;
-  line-height: 1.6;
-`;
 
 const ControlCustomerGroup = styled(ControlGroup)`
   display: flex;
