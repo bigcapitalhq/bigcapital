@@ -17,8 +17,6 @@ const Schema = Yup.object().shape({
   entries: Yup.array().of(
     Yup.object().shape({
       item_id: Yup.number().nullable(),
-      // source_warehouse: Yup.number().nullable(),
-      // destination_warehouse: Yup.number().nullable(),
       description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
       quantity: Yup.number().nullable().max(DATATYPES_LENGTH.INT_10),
     }),

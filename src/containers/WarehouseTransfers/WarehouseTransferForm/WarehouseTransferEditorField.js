@@ -3,11 +3,12 @@ import { FastField } from 'formik';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
+import WarehouseTransferFormEntriesTable from './WarehouseTransferFormEntriesTable';
 import {
   entriesFieldShouldUpdate,
   defaultWarehouseTransferEntry,
 } from './utils';
-import WarehouseTransferFormEntriesTable from './WarehouseTransferFormEntriesTable';
+
 
 /**
  * Warehouse transafer editor field.
@@ -35,6 +36,8 @@ export default function WarehouseTransferEditorField() {
             items={items}
             defaultEntry={defaultWarehouseTransferEntry}
             errors={error}
+            sourceWarehouseId={values.from_warehouse_id}
+            distentionWarehouseId={value.to_warehouse_id}
           />
         )}
       </FastField>

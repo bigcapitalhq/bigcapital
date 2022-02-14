@@ -2,16 +2,25 @@ import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
-import { useFormikContext } from 'formik';
-import { AppToaster } from 'components';
 import { omit } from 'lodash';
+import { useFormikContext } from 'formik';
+import * as R from 'ramda';
 
+import { AppToaster } from 'components';
+import {
+  orderingLinesIndexes,
+  updateAutoAddNewLine,
+  updateTableCell,
+} from 'utils';
 import {
   compose,
   transformToForm,
   repeatValue,
   transactionNumber,
   defaultFastFieldShouldUpdate,
+  updateTableRow,
+  updateMinEntriesLines,
+  updateRemoveLineByIndex,
 } from 'utils';
 
 // import { defaultFastFieldShouldUpdate } from 'utils';
@@ -88,6 +97,10 @@ export const useObserveTransferNoSettings = (prefix, nextNumber) => {
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
     newProps.items !== oldProps.items ||
+    newProps.formik.values.from_warehouse_id !==
+      oldProps.formik.values.from_warehouse_id ||
+    newProps.formik.values.to_warehouse_id !==
+      oldProps.formik.values.to_warehouse_id ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
@@ -102,7 +115,7 @@ export function transformValueToRequest(values) {
   return {
     ...values,
     entries: entries.map((entry) => ({
-      ...omit(entry, ['destination_warehouse', 'source_warehouse']),
+      ...omit(entry, ['warehouses']),
     })),
   };
 }
@@ -122,3 +135,42 @@ export const transformErrors = (errors, { setErrors }) => {
     });
   }
 };
+
+/**
+ * Mutates table cell.
+ * @param {*} rowIndex
+ * @param {*} columnId
+ * @param {*} defaultEntry
+ * @param {*} value
+ * @param {*} entries
+ * @returns
+ */
+export const mutateTableCell = R.curry(
+  (rowIndex, columnId, defaultEntry, value, entries) => {
+    return compose(
+      // Update auto-adding new line.
+      updateAutoAddNewLine(defaultEntry, ['item_id']),
+      // Update the row value of the given row index and column id.
+      updateTableCell(rowIndex, columnId, value),
+    )(entries);
+  },
+);
+
+/**
+ * Compose table rows when insert a new row to table rows.
+ */
+export const mutateTableRow = R.curry((rowIndex, newRow, rows) => {
+  return compose(orderingLinesIndexes, updateTableRow(rowIndex, newRow))(rows);
+});
+
+/**
+ * Deletes the table row from the given rows.
+ */
+export const deleteTableRow = R.curry((rowIndex, defaultEntry, rows) => {
+  return compose(
+    // Ensure minimum lines count.
+    updateMinEntriesLines(4, defaultEntry),
+    // Remove the line by the given index.
+    updateRemoveLineByIndex(rowIndex),
+  )(rows);
+});

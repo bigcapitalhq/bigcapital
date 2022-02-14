@@ -1,5 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import { find, get } from 'lodash';
 import { Tooltip, Button, Intent, Position } from '@blueprintjs/core';
 
 import {
@@ -43,6 +44,26 @@ export function ActionsCellRenderer({
   );
 }
 
+function SourceWarehouseAccessorCell({ value, row: { original }, payload }) {
+  const warehouse = find(
+    original.warehouses,
+    (w) => w.warehouseId === payload.sourceWarehouseId,
+  );
+  return get(warehouse, 'warehouseQuantityFormatted', '0');
+}
+
+function DistentionWarehouseAccessorCell({
+  value,
+  row: { original },
+  payload,
+}) {
+  const warehouse = find(
+    original.warehouses,
+    (w) => w.warehouseId === payload.distentionWarehouseId,
+  );
+  return get(warehouse, 'warehouseQuantityFormatted', '0');
+}
+
 /**
  * Retrieves warehouse transfer table columns.
  * @returns
@@ -82,6 +103,7 @@ export const useWarehouseTransferTableColumns = () => {
         Header: 'Source Warehouse',
         accessor: 'source_warehouse',
         disableSortBy: true,
+        Cell: SourceWarehouseAccessorCell,
         align: 'right',
         width: 120,
       },
@@ -89,6 +111,7 @@ export const useWarehouseTransferTableColumns = () => {
         id: 'destination_warehouse',
         Header: 'Destination Warehouse',
         accessor: 'destination_warehouse',
+        Cell: DistentionWarehouseAccessorCell,
         disableSortBy: true,
         align: 'right',
         width: 120,
