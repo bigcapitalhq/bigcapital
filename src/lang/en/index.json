@@ -1739,7 +1739,6 @@
   "global_error.you_dont_have_permissions": "You do not have permissions to access this page.",
   "global_error.transactions_locked": "Transactions before {lockedToDate} has been locked. Hence action cannot be performed.",
   "global_error.authorized_user_inactive": "The authorized user is inactive.",
-
   "balance_sheet.comparisons": "Comparisons",
   "balance_sheet.percentage_of_column": "% of Columns",
   "balance_sheet.percentage_of_row": "% of Rows",
@@ -1756,18 +1755,15 @@
   "profit_loss_sheet.percentage_of_row": "% of Row",
   "profit_loss_sheet.percentage_of_expense": "% of Expense",
   "profit_loss_sheet.percentage_of_income": "% of Income",
-
   "the_vendor_has_been_inactivated_successfully": "The contact has been inactivated successfully.",
   "vendor.alert.activated_message": "The vendor has been activated successfully.",
   "vendor.alert.are_you_sure_want_to_inactivate_this_vendor": "Are you sure want to inactivate this vendor? You will to able to activate it later.",
   "vendor.alert.inactivated_message": "The vendor has been inactivated successfully.",
   "vendor.alert.are_you_sure_want_to_activate_this_vendor": "Are you sure want to activate this vendor? You will to able to inactivate it later.",
-
   "customer.alert.activated_message": "The customer has been activated successfully.",
   "customer.alert.are_you_sure_want_to_activate_this_customer": "Are you sure want to activate this customer? You will to able to inactivate it later.",
   "customer.alert.inactivated_message": "The customer has been inactivated successfully.",
   "customer.alert.are_you_sure_want_to_inactivate_this_customer": "Are you sure want to inactivate this customer? You will to able to activate it later.",
-
   "credit_note_preview.dialog.title": "Credit Note PDF Preview",
   "payment_receive_preview.dialog.title": "Payment Receive PDF Preview",
   "warehouses.label": "Warehouses",
@@ -1789,12 +1785,12 @@
   "warehouse_locations.column.warehouse_name": "Warehouse name",
   "warehouse_locations.column.quantity": "Quantity",
   "warehouse_locations.column.available_for_sale": "Available for sale",
+  "warehouse_locations.column.warehouse_code": "Warehouse code",
   "warehouses.action.edit_warehouse": "Edit Warehouse",
   "warehouses.action.delete_warehouse": "Delete Warehouse",
   "warehouses.action.make_as_parimary": "Mark as Primary",
   "warehouse.alert.delete_message": "The warehouse has been deleted successfully",
   "warehouse.once_delete_this_warehouse": "Once you delete this warehouse, you won't be able to restore it later. Are you sure you want to delete this warehouse?",
-
   "sidebar_warehouse_transfer": "Warehouse Transfers",
   "warehouse_transfer.label.transfer_no": "Transfer No",
   "warehouse_transfer.label.form_warehouse": "Form Warehouse",
@@ -1824,7 +1820,6 @@
   "warehouse_transfer.alert.delete_message": "The warehouse transfer transaction has been deleted successfully",
   "warehouse_transfer.once_delete_this_warehouse_transfer": "Once you delete this warehouse transfer, you won't be able to restore it later. Are you sure you want to delete this warehouse transfer?",
   "warehouse_transfer.error.could_not_transfer_item_from_source_to_destination": "Could not transfer item from source to destination on the same warehouse",
-
   "branches.label": "Branches",
   "branches.label.new_branch": "New Branch",
   "branches.action.edit_branch": "Edit Branch",
@@ -1852,7 +1847,6 @@
   "unrealized_gain_or_loss.label": "Unrealized Gain or Loss",
   "branch_activate.dialog_success_message": "Multi-branches feature has been activated successfully.",
   "branch.alert.mark_primary_message": "The branch has been marked as primary.",
-
   "branch.alert.are_you_sure_you_want_to_make": "Are you sure you want to make a primary branch?",
   "warehouse_activate.dialog_success_message": "Multi-branches feature has been activated successfully.",
   "warehouse.alert.mark_primary_message": "The given warehouse has been marked as primary.",

@@ -231,3 +231,18 @@ export function useItemAssociatedBillTransactions(id, props) {
     },
   );
 }
+
+export function useItemWarehouseLocation(id, props) {
+  return useRequestQuery(
+    [t.ITEM_WAREHOUSES_LOCATION, id],
+    {
+      method: 'get',
+      url: `items/${id}/warehouses`,
+    },
+    {
+      select: (res) => res.data.item_warehouses,
+      defaultData: [],
+      ...props,
+    },
+  );
+}
