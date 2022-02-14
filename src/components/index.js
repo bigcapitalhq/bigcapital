@@ -54,7 +54,8 @@ import AvaterCell from './AvaterCell';
 
 import { ItemsMultiSelect } from './Items';
 import MoreMenuItems from './MoreMenutItems';
-import CustomSelectList from './CustomSelectList'
+import CustomSelectList from './CustomSelectList';
+import BaseCurrency from './BaseCurrency';
 
 export * from './Dialog';
 export * from './Menu';
@@ -89,8 +90,8 @@ export * from './TextStatus';
 export * from './Tags';
 export * from './CommercialDoc';
 export * from './Card';
-export * from './Customers'
-export * from './Vendors'
+export * from './Customers';
+export * from './Vendors';
 export * from './Table';
 export * from './Skeleton';
 export * from './FinancialStatement';
@@ -162,6 +163,8 @@ export {
   MoneyFieldCell,
   ItemsMultiSelect,
   AvaterCell,
+  BaseCurrency,
   MoreMenuItems,
-  CustomSelectList
+  CustomSelectList,
+ 
 };

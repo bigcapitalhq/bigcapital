@@ -78,7 +78,7 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
 
   // Determines whether the foreign customer.
-  const isForeignCustomer = true;
+  const isForeignCustomer = false;
 
   // Provider payload.
   const provider = {

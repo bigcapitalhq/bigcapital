@@ -33,7 +33,7 @@ import { useInvoiceFormContext } from './InvoiceFormProvider';
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { inputIntent, handleDateChange } from 'utils';
-import BaseCurrency from './BaseCurrency';
+import InvoiceCurrencyTag from './InvoiceFormCurrencyTag';
 
 const Data = [
   {
@@ -104,7 +104,7 @@ function InvoiceFormHeaderFields({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_id'} />}
           >
-            <ControlGroup>
+            <ControlCustomerGroup>
               <CustomerSelectField
                 contacts={customers}
                 selectedContactId={value}
@@ -115,47 +115,49 @@ function InvoiceFormHeaderFields({
                 popoverFill={true}
                 allowCreate={true}
               />
-              <BaseCurrency isForeignCustomer={isForeignCustomer} />
-            </ControlGroup>
+              <InvoiceCurrencyTag isForeignCustomer={isForeignCustomer} />
+            </ControlCustomerGroup>
           </FormGroup>
         )}
       </FastField>
 
       {/* ----------- Exchange reate ----------- */}
-      <ExchangeRateField>
-        <Field name={'exchange_rate'}>
-          {({
-            form: { values, setFieldValue },
-            field,
-            meta: { error, touched },
-          }) => (
-            <FormGroup
-              intent={inputIntent({ error, touched })}
-              inline={true}
-              className={'form-group--exchange_rate'}
-              helperText={<ErrorMessage name="exchange_rate" />}
-            >
-              <ControlGroup>
-                <ExchangeRateTag>
-                  <FlagTag flage={'US'} /> 1 USD =
-                </ExchangeRateTag>
-                <MoneyInputGroup
-                  value={field.value}
-                  allowDecimals={false}
-                  allowNegativeValue={true}
-                  onChange={(value) => {
-                    setFieldValue('exchange_rate', value);
-                  }}
-                  intent={inputIntent({ error, touched })}
-                />
-                <ExchangeRateTag>
-                  <FlagTag flage={'LY'} /> LYD
-                </ExchangeRateTag>
-              </ControlGroup>
-            </FormGroup>
-          )}
-        </Field>
-      </ExchangeRateField>
+      <If condition={isForeignCustomer}>
+        <ExchangeRateField>
+          <Field name={'exchange_rate'}>
+            {({
+              form: { values, setFieldValue },
+              field,
+              meta: { error, touched },
+            }) => (
+              <FormGroup
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                className={'form-group--exchange_rate'}
+                helperText={<ErrorMessage name="exchange_rate" />}
+              >
+                <ControlGroup>
+                  <ExchangeRateTag>
+                    <FlagTag flage={'US'} /> 1 USD =
+                  </ExchangeRateTag>
+                  <MoneyInputGroup
+                    value={field.value}
+                    allowDecimals={false}
+                    allowNegativeValue={true}
+                    onChange={(value) => {
+                      setFieldValue('exchange_rate', value);
+                    }}
+                    intent={inputIntent({ error, touched })}
+                  />
+                  <ExchangeRateTag>
+                    <FlagTag flage={'LY'} /> LYD
+                  </ExchangeRateTag>
+                </ControlGroup>
+              </FormGroup>
+            )}
+          </Field>
+        </ExchangeRateField>
+      </If>
 
       <Row>
         <Col xs={6}>
@@ -324,4 +326,10 @@ const ExchangeRateTag = styled.div`
   cursor: pointer;
   font-size: 10px;
   line-height: 1.6;
+`;
+
+const ControlCustomerGroup = styled(ControlGroup)`
+  display: flex;
+  align-items: center;
+  transform: none;
 `;
