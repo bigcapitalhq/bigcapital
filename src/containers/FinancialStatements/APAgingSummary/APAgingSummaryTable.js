@@ -29,7 +29,6 @@ export default function APAgingSummaryTable({
   return (
     <FinancialSheet
       companyName={organizationName}
-      name={'payable-aging-summary'}
       sheetType={intl.get('payable_aging_summary')}
       asDate={new Date()}
       loading={isAPAgingLoading}

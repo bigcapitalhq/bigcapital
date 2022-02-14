@@ -21,6 +21,7 @@ export default function CustomersBalanceSummaryTable({
     CustomerBalanceSummary: { table },
   } = useCustomersBalanceSummaryContext();
 
+  // Retrieves the customers summary columns.
   const columns = useCustomersSummaryColumns();
 
   return (

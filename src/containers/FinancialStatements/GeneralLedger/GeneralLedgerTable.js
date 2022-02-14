@@ -78,7 +78,7 @@ const GeneralLedgerDataTable = styled(DataTable)`
       }
     }
 
-    .tr:not(.no-results) .td {
+    .tr:not(.no-results) .td:not(:first-of-type) {
       border-left: 1px solid #ececec;
     }
     .tr:last-child .td {
@@ -90,10 +90,11 @@ const GeneralLedgerDataTable = styled(DataTable)`
         .td {
           &.date {
             font-weight: 500;
-          }
 
-          &.name {
-            border-left-color: transparent;
+            .cell-inner{
+              white-space: nowrap;
+              position: relative;
+            }
           }
         }
 

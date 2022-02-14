@@ -1,9 +1,10 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+
 import { If } from 'components';
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-import { getColumnWidth, getForceWidth } from 'utils';
+import { getColumnWidth } from 'utils';
 
 /**
  * Retrieve vendors transactions columns.
@@ -17,19 +18,8 @@ export const useVendorsTransactionsColumns = () => {
     () => [
       {
         Header: intl.get('vendor_name'),
-        accessor: ({ cells }) => {
-          return (
-            <span
-              className={'force-width'}
-              style={{ minWidth: getForceWidth(cells[0].value) }}
-            >
-              {cells[0].value}
-            </span>
-          );
-        },
+        accessor: 'cells[1].value',
         className: 'vendor_name',
-        // textOverview: true,
-        // width: 240,
       },
       {
         Header: intl.get('account_name'),

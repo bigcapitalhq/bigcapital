@@ -37,6 +37,7 @@ export function InventoryItemDetailsTable({
       loading={isInventoryItemDetailsLoading}
       fromDate={query.from_date}
       toDate={query.to_date}
+      fullWidth={true}
     >
       <InventoryItemDetailsDataTable
         columns={columns}
@@ -57,23 +58,11 @@ const InventoryItemDetailsDataTable = styled(DataTable)`
   .table {
     .tbody {
       .tr .td {
-        padding-top: 0.2rem;
-        padding-bottom: 0.2rem;
-        border-top-color: transparent;
-        border-bottom-color: transparent;
-
-        &.date {
-          > div {
-            display: flex;
-          }
-
-          span.force-width {
-            position: relative;
-          }
-        }
+        padding-top: 0.3rem;
+        padding-bottom: 0.3rem;
       }
 
-      .tr:not(.no-results) .td {
+      .tr:not(.no-results) .td:not(:first-of-type) {
         border-left: 1px solid #ececec;
       }
 
@@ -87,8 +76,14 @@ const InventoryItemDetailsDataTable = styled(DataTable)`
             &.transaction_type {
               border-left-color: transparent;
             }
-          }
 
+            &.date {
+              .cell-inner {
+                white-space: nowrap;
+                position: relative;
+              }
+            }
+          }
           &:not(:first-child).is-expanded .td {
             border-top: 1px solid #ddd;
           }
