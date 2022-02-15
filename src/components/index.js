@@ -98,7 +98,10 @@ export * from './FinancialStatement';
 export * from './FinancialReport';
 export * from './FinancialSheet';
 export * from './FeatureGuard';
-export * from './ExchangeRate'
+export * from './ExchangeRate';
+export * from './Branches';
+export * from './Warehouses';
+
 const Hint = FieldHint;
 
 const T = FormattedMessage;

@@ -1,26 +1,27 @@
 import React from 'react';
-import { FastField, Field } from 'formik';
 import {
   Alignment,
   Navbar,
   NavbarGroup,
   NavbarDivider,
+  Button,
 } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 
 import { useFeatureCan } from 'hooks/state';
-import {
-  Icon,
-  FormattedMessage as T,
-  CustomSelectList,
-  FeatureCan,
-} from 'components';
+import { Icon, BranchSelect, FeatureCan, WarehouseSelect } from 'components';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { Features } from 'common';
 
+/**
+ * Invoice form topbar .
+ * @returns {JSX.Element}
+ */
 export default function InvoiceFormTopBar() {
-  const { branches, warehouses, isWarehouesLoading, isBranchesLoading } =
-    useInvoiceFormContext();
+  // Invoice form context.
+  const { branches, warehouses } = useInvoiceFormContext();
 
+  // Features guard.
   const { featureCan } = useFeatureCan();
 
   // Can't display the navigation bar if warehouses or branches feature is not enabled.
@@ -31,46 +32,52 @@ export default function InvoiceFormTopBar() {
     <Navbar className={'navbar--dashboard-topbar'}>
       <NavbarGroup align={Alignment.LEFT}>
         <FeatureCan feature={Features.Warehouses}>
-          <Field name={'branch_id'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <CustomSelectList
-                items={branches}
-                loading={isBranchesLoading}
-                defaultSelectText={'Branch'}
-                onItemSelected={({ id }) => {
-                  form.setFieldValue('branch_id', id);
-                }}
-                selectedItemId={value}
-                buttonProps={{
-                  icon: <Icon icon={'branch-16'} iconSize={16} />,
-                }}
-              />
-            )}
-          </Field>
+          <BranchSelect
+            name={'branch_id'}
+            branches={branches}
+            input={InvoiceBranchSelectButton}
+            popoverProps={{
+              minimal: true,
+            }}
+          />
         </FeatureCan>
 
         {featureCan(Features.Warehouses) && featureCan(Features.Branches) && (
           <NavbarDivider />
         )}
         <FeatureCan feature={Features.Warehouses}>
-          <Field name={'warehouse_id'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <CustomSelectList
-                items={warehouses}
-                loading={isWarehouesLoading}
-                defaultSelectText={'Warehosue'}
-                onItemSelected={({ id }) => {
-                  form.setFieldValue('warehouse_id', id);
-                }}
-                selectedItemId={value}
-                buttonProps={{
-                  icon: <Icon icon={'warehouse-16'} iconSize={16} />,
-                }}
-              />
-            )}
-          </Field>
+          <WarehouseSelect
+            name={'warehouse_id'}
+            warehouses={warehouses}
+            input={InvoiceWarehouseSelectButton}
+            popoverProps={{
+              minimal: true,
+            }}
+          />
         </FeatureCan>
       </NavbarGroup>
     </Navbar>
+  );
+}
+
+function InvoiceWarehouseSelectButton({ label }) {
+  return (
+    <Button
+      text={intl.get('invoice.branch_button.label', { label })}
+      minimal={true}
+      small={true}
+      icon={<Icon icon={'warehouse-16'} iconSize={16} />}
+    />
+  );
+}
+
+function InvoiceBranchSelectButton({ label }) {
+  return (
+    <Button
+      text={intl.get('invoice.warehouse_button.label', { label })}
+      minimal={true}
+      small={true}
+      icon={<Icon icon={'branch-16'} iconSize={16} />}
+    />
   );
 }
