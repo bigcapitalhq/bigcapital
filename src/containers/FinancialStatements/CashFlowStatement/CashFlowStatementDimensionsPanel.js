@@ -2,16 +2,30 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { FormGroup, Classes } from '@blueprintjs/core';
 import { BranchMultiSelect, Row, Col } from 'components';
-import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
-import { useBranches } from 'hooks/query';
+import {
+  CashFlowStatementDimensionsPanelProvider,
+  useCashFlowStatementDimensionsPanelContext,
+} from './CashFlowStatementDimensionsPanelProvider';
 
 /**
  * Cash flow statement dismension panel.
  * @returns
  */
 export default function CashFlowStatementDimensionsPanel() {
+  return (
+    <CashFlowStatementDimensionsPanelProvider>
+      <CashFlowStatementDimensionsPanelContent />
+    </CashFlowStatementDimensionsPanelProvider>
+  );
+}
+
+/**
+ * Cash flow statement dismension panel content.
+ * @returns
+ */
+function CashFlowStatementDimensionsPanelContent() {
   // Fetches the branches list.
-  const { isLoading: isBranchesLoading, data: branches } = useBranches();
+  const { branches } = useCashFlowStatementDimensionsPanelContext();
 
   return (
     <Row>

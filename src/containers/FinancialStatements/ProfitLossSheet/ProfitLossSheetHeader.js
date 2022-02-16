@@ -8,6 +8,7 @@ import { FormattedMessage as T } from 'components';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import ProfitLossSheetHeaderGeneralPane from './ProfitLossSheetHeaderGeneralPane';
 import ProfitLossSheetHeaderComparisonPanel from './ProfitLossSheetHeaderComparisonPanel';
+import ProfitLossSheetHeaderDimensionsPanel from './ProfitLossSheetHeaderDimensionsPanel';
 
 import withProfitLoss from './withProfitLoss';
 import withProfitLossActions from './withProfitLossActions';
@@ -52,7 +53,7 @@ function ProfitLossHeader({
     toggleFilterDrawer(false);
   };
 
-  return ( 
+  return (
     <FinancialStatementHeader
       isOpen={profitLossDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
@@ -73,6 +74,11 @@ function ProfitLossHeader({
               id="comparison"
               title={<T id={'profit_loss_sheet.comparisons'} />}
               panel={<ProfitLossSheetHeaderComparisonPanel />}
+            />
+            <Tab
+              id="dimensions"
+              title={'Dimensions'}
+              panel={<ProfitLossSheetHeaderDimensionsPanel />}
             />
           </Tabs>
 

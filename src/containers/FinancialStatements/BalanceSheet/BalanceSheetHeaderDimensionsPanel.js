@@ -1,19 +1,31 @@
 import React from 'react';
-import styled from 'styled-components';
 import intl from 'react-intl-universal';
 import { FormGroup, Classes } from '@blueprintjs/core';
 import { BranchMultiSelect, Row, Col } from 'components';
-import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
-import { useBranches } from 'hooks/query';
+import {
+  BalanceSheetHeaderDimensionsProvider,
+  useBalanceSheetHeaderDimensionsPanelContext,
+} from './BalanceSheetHeaderDimensionsProvider';
 
 /**
  * Balance sheet header dismension panel.
  * @returns
  */
-function BalanceSheetHeaderDimensionsPanel() {
-  // Fetches the branches list.
-  const { isLoading: isBranchesLoading, data: branches } = useBranches();
+export default function BalanceSheetHeaderDimensionsPanel() {
+  return (
+    <BalanceSheetHeaderDimensionsProvider>
+      <BalanceSheetHeaderDimensionsPanelContent />
+    </BalanceSheetHeaderDimensionsProvider>
+  );
+}
 
+/**
+ * Balance sheet header dismension panel content.
+ * @returns
+ */
+function BalanceSheetHeaderDimensionsPanelContent() {
+  const { branches } = useBalanceSheetHeaderDimensionsPanelContext();
+  
   return (
     <Row>
       <Col xs={4}>
@@ -27,11 +39,3 @@ function BalanceSheetHeaderDimensionsPanel() {
     </Row>
   );
 }
-
-export default BalanceSheetHeaderDimensionsPanel;
-
-const BalanceMulitSelectRoot = styled.div`
-  .bp3-tag-input {
-    height: auto;
-  }
-`;

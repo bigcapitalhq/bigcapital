@@ -1,6 +1,5 @@
 import moment from 'moment';
 
-
 export function getDefaultTrialBalanceQuery() {
   return {
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),

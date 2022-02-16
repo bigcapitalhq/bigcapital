@@ -1,18 +1,30 @@
 import React from 'react';
-import styled from 'styled-components';
 import intl from 'react-intl-universal';
 import { FormGroup, Classes } from '@blueprintjs/core';
 import { BranchMultiSelect, Row, Col } from 'components';
-import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
-import { useBranches } from 'hooks/query';
+import {
+  JournalSheetHeaderDimensionsProvider,
+  useJournalSheetHeaderDimensionsPanelContext,
+} from './JournalSheetHeaderDimensionsProvider';
 
 /**
  * Journal sheet header dismension panel.
  * @returns
  */
 export default function JournalSheetHeaderDimensions() {
-  // Fetches the branches list.
-  const { isLoading: isBranchesLoading, data: branches } = useBranches();
+  return (
+    <JournalSheetHeaderDimensionsProvider>
+      <JournalSheetHeaderDimensionsContent />
+    </JournalSheetHeaderDimensionsProvider>
+  );
+}
+
+/**
+ * Journal sheet header dismension panel content.
+ * @returns
+ */
+function JournalSheetHeaderDimensionsContent() {
+  const { branches } = useJournalSheetHeaderDimensionsPanelContext();
 
   return (
     <Row>

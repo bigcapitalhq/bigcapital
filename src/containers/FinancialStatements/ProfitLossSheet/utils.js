@@ -31,6 +31,8 @@ export const getDefaultProfitLossQuery = () => ({
   percentageRow: false,
   percentageIncome: false,
   percentageExpense: false,
+
+  branchesIds: [],
 });
 
 /**

@@ -1,17 +1,30 @@
 import React from 'react';
-import styled from 'styled-components';
 import intl from 'react-intl-universal';
 import { FormGroup, Classes } from '@blueprintjs/core';
 import { BranchMultiSelect, Row, Col } from 'components';
-import { useBranches } from 'hooks/query';
+import {
+  TrialBLHeaderDimensionsPanelProvider,
+  useTrialBalanceSheetPanelContext,
+} from './TrialBalanceSheetHeaderDimensionsPanelProvider';
 
 /**
- * trial balance sheet header dismension panel.
+ * Trial balance sheet header dismension panel.
  * @returns
  */
 export default function TrialBalanceSheetHeaderDimensionsPanel() {
-  // Fetches the branches list.
-  const { isLoading: isBranchesLoading, data: branches } = useBranches();
+  return (
+    <TrialBLHeaderDimensionsPanelProvider>
+      <TrialBLSheetHeaderDimensionsPanelContent />
+    </TrialBLHeaderDimensionsPanelProvider>
+  );
+}
+
+/**
+ * trial balance sheet header dismension panel content.
+ * @returns
+ */
+function TrialBLSheetHeaderDimensionsPanelContent() {
+  const { branches } = useTrialBalanceSheetPanelContext();
 
   return (
     <Row>

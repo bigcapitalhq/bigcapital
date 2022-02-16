@@ -1853,5 +1853,8 @@
   "warehouse.alert.are_you_sure_you_want_to_make": "Are you sure you want to make a primary warehouse?",
   "make_primary": "Make as Primary",
   "invoice.branch_button.label": "Branch: {label}",
-  "invoice.warehouse_button.label": "Warehouse: {label}"
+  "invoice.warehouse_button.label": "Warehouse: {label}",
+  "branches_multi_select.label":"Branches",
+  "branches_multi_select.placeholder": "Filter by branches…",
+  "dimensions": "Dimensions"
 }
