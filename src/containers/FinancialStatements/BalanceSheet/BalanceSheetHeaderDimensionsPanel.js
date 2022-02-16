@@ -14,10 +14,8 @@ function BalanceSheetHeaderDimensionsPanel() {
   return (
     <div>
       <BranchesMultiSelect
-        name={'branches_id'}
+        name={'branchesIds'}
         branches={branches}
-        input={BranchMulitSelectButton}
-        // onItemSelect={}
         popoverProps={{ minimal: true }}
       />
     </div>
@@ -25,7 +23,3 @@ function BalanceSheetHeaderDimensionsPanel() {
 }
 
 export default BalanceSheetHeaderDimensionsPanel;
-
-function BranchMulitSelectButton() {
-  return <Button text={'Button'} minimal={true} />;
-}

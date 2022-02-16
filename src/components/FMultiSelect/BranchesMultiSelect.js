@@ -50,17 +50,11 @@ const branchItemRenderer = (
 const branchSelectProps = {
   itemPredicate: branchItemPredicate,
   itemRenderer: branchItemRenderer,
-  valueAccessor: 'id',
-  labelAccessor: 'name',
-  tagRenderer: 'name',
+  valueAccessor: (item) => item.id,
+  labelAccessor: (item) => item.label,
+  tagRenderer: (item) => item.name,
 };
 
 export function BranchesMultiSelect({ branches, ...rest }) {
-  return (
-    <FMultiSelect
-      items={branches}
-      {...branchSelectProps}
-      {...rest}
-    />
-  );
+  return <FMultiSelect items={branches} {...branchSelectProps} {...rest} />;
 }

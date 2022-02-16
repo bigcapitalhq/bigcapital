@@ -41,7 +41,6 @@ function BalanceSheetHeader({
       ...pageFilter,
       fromDate: moment(pageFilter.fromDate).toDate(),
       toDate: moment(pageFilter.toDate).toDate(),
-      branches_id: [],
     },
     defaultValues,
   );
@@ -89,7 +88,7 @@ function BalanceSheetHeader({
             />
             <Tab
               id="dimensions"
-              title={<T id={'dimensions'} />}
+              title={'dimensions'}
               panel={<BalanceSheetHeaderDimensionsPanel />}
             />
           </Tabs>

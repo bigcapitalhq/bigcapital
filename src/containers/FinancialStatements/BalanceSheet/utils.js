@@ -29,6 +29,8 @@ export const getDefaultBalanceSheetQuery = () => ({
   // Percentage columns.
   percentageOfColumn: false,
   percentageOfRow: false,
+
+  branchesIds: [],
 });
 
 /**
