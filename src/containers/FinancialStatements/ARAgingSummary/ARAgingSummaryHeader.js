@@ -12,6 +12,7 @@ import withARAgingSummary from './withARAgingSummary';
 import withARAgingSummaryActions from './withARAgingSummaryActions';
 
 import { compose, transformToForm } from 'utils';
+import ARAgingSummaryHeaderDimensions from './ARAgingSummaryHeaderDimensions';
 
 /**
  * AR Aging Summary Report - Drawer Header.
@@ -47,13 +48,16 @@ function ARAgingSummaryHeader({
     agingDaysBefore: 30,
     agingPeriods: 3,
     customersIds: [],
+    branchesIds: [],
     filterByOption: 'without-zero-balance',
   };
+  
   // Initial values.
   const initialValues = transformToForm(
     {
       ...pageFilter,
       asDate: moment(pageFilter.asDate).toDate(),
+      branchesIds: [],
     },
     defaultValues,
   );
@@ -90,6 +94,11 @@ function ARAgingSummaryHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<ARAgingSummaryHeaderGeneral />}
+            />
+            <Tab
+              id="dimensions"
+              title={'Dimensions'}
+              panel={<ARAgingSummaryHeaderDimensions />}
             />
           </Tabs>
 

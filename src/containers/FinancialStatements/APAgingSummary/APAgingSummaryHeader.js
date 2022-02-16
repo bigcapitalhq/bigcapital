@@ -7,6 +7,7 @@ import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import APAgingSummaryHeaderGeneral from './APAgingSummaryHeaderGeneral';
+import APAgingSummaryHeaderDimensions from './APAgingSummaryHeaderDimensions';
 
 import withAPAgingSummary from './withAPAgingSummary';
 import withAPAgingSummaryActions from './withAPAgingSummaryActions';
@@ -49,10 +50,14 @@ function APAgingSummaryHeader({
     agingDaysBefore: 30,
     agingPeriods: 3,
     vendorsIds: [],
+    branchesIds: [],
     filterByOption: 'without-zero-balance',
   };
   // Formik initial values.
-  const initialValues = transformToForm(pageFilter, defaultValues);
+  const initialValues = transformToForm(
+    { ...pageFilter, branchesIds: [] },
+    defaultValues,
+  );
 
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
@@ -87,6 +92,11 @@ function APAgingSummaryHeader({
               id={'general'}
               title={<T id={'general'} />}
               panel={<APAgingSummaryHeaderGeneral />}
+            />
+            <Tab
+              id="dimensions"
+              title={'Dimensions'}
+              panel={<APAgingSummaryHeaderDimensions />}
             />
           </Tabs>
           <div className={'financial-header-drawer__footer'}>
