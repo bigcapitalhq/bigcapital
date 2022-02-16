@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { DataTable, FinancialSheet } from 'components';
+import { ReportDataTable, FinancialSheet } from 'components';
 import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
 import TableFastCell from 'components/Datatable/TableFastCell';
 
@@ -60,7 +60,7 @@ export function JournalTable({ companyName }) {
   );
 }
 
-const JournalDataTable = styled(DataTable)`
+const JournalDataTable = styled(ReportDataTable)`
   .table {
     .tbody {
       .tr:not(.no-results) .td {

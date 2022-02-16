@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
 
-import { DataTable, FinancialSheet } from 'components';
+import { ReportDataTable, FinancialSheet } from 'components';
 
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 
@@ -56,7 +56,7 @@ export default function BalanceSheetTable({
   );
 }
 
-const BalanceSheetDataTable = styled(DataTable)`
+const BalanceSheetDataTable = styled(ReportDataTable)`
   .table {
     .tbody .tr {
       .td {
@@ -81,7 +81,7 @@ const BalanceSheetDataTable = styled(DataTable)`
       }
       &.row_type--TOTAL.row-id--ASSETS,
       &.row_type--TOTAL.row-id--LIABILITY_EQUITY {
-        .td{
+        .td {
           border-bottom: 3px double #000;
         }
       }

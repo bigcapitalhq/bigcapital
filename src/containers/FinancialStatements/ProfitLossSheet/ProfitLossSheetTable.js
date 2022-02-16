@@ -2,7 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { TableStyle } from 'common';
-import { DataTable, FinancialSheet, FormattedMessage as T } from 'components';
+import {
+  ReportDataTable,
+  FinancialSheet,
+  FormattedMessage as T,
+} from 'components';
 
 import { tableRowTypesToClassnames, defaultExpanderReducer } from 'utils';
 import { useProfitLossSheetColumns } from './hooks';
@@ -49,7 +53,7 @@ export default function ProfitLossSheetTable({
   );
 }
 
-const ProfitLossDataTable = styled(DataTable)`
+const ProfitLossDataTable = styled(ReportDataTable)`
   .table {
     .tbody .tr {
       .td {

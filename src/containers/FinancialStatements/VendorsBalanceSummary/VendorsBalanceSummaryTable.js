@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { DataTable, FinancialSheet } from 'components';
+import { ReportDataTable, FinancialSheet } from 'components';
 
 import { useVendorsBalanceColumns } from './components';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
@@ -43,7 +43,7 @@ export default function VendorsBalanceSummaryTable({
 
 const VendorBalanceFinancialSheet = styled(FinancialSheet)``;
 
-const VendorBalanceDataTable = styled(DataTable)`
+const VendorBalanceDataTable = styled(ReportDataTable)`
   .table {
     .tbody {
       .tr:not(.no-results) {

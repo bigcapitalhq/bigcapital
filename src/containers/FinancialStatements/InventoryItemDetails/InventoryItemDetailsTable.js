@@ -2,12 +2,11 @@ import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { DataTable, FinancialSheet } from 'components';
+import { ReportDataTable, FinancialSheet } from 'components';
 import { useInventoryItemDetailsColumns } from './components';
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
 
 import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
-
 import { TableStyle } from 'common';
 
 /**
@@ -54,7 +53,7 @@ export function InventoryItemDetailsTable({
   );
 }
 
-const InventoryItemDetailsDataTable = styled(DataTable)`
+const InventoryItemDetailsDataTable = styled(ReportDataTable)`
   .table {
     .tbody {
       .tr .td {

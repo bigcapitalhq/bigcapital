@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { DataTable, FinancialSheet } from 'components';
+import { ReportDataTable, FinancialSheet } from 'components';
 import { TableStyle } from 'common';
 
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
@@ -45,7 +45,7 @@ export default function APAgingSummaryTable({
   );
 }
 
-const APAgingSummaryDataTable = styled(DataTable)`
+const APAgingSummaryDataTable = styled(ReportDataTable)`
   .table {
     .tbody .tr {
       .td {

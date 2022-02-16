@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { DataTable, FinancialSheet } from 'components';
+import { ReportDataTable, FinancialSheet } from 'components';
 
 import { useSalesByItemsContext } from './SalesByItemProvider';
 import { useSalesByItemsTableColumns } from './components';
@@ -52,7 +52,7 @@ const SalesByItemsSheet = styled(FinancialSheet)`
   min-width: 850px;
 `;
 
-const SalesByItemsDataTable = styled(DataTable)`
+const SalesByItemsDataTable = styled(ReportDataTable)`
   .table {
     .tbody {
       .tr .td {

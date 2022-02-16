@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { DataTable, FinancialSheet } from 'components';
+import { ReportDataTable, FinancialSheet } from 'components';
 
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { useTrialBalanceTableColumns } from './components';
@@ -47,7 +47,7 @@ export default function TrialBalanceSheetTable({ companyName }) {
   );
 }
 
-const TrialBalanceDataTable = styled(DataTable)`
+const TrialBalanceDataTable = styled(ReportDataTable)`
   .table {
     .tbody {
       .tr .td {
