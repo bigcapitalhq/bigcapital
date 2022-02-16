@@ -8,6 +8,7 @@ import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import TrialBalanceSheetHeaderGeneralPanel from './TrialBalanceSheetHeaderGeneralPanel';
+import TrialBalanceSheetHeaderDimensionsPanel from './TrialBalanceSheetHeaderDimensionsPanel';
 
 import withTrialBalance from './withTrialBalance';
 import withTrialBalanceActions from './withTrialBalanceActions';
@@ -41,6 +42,7 @@ function TrialBalanceSheetHeader({
   const defaultValues = {
     fromDate: moment().toDate(),
     toDate: moment().toDate(),
+    branchesIds: [],
   };
 
   // Initial values.
@@ -49,6 +51,7 @@ function TrialBalanceSheetHeader({
       ...pageFilter,
       fromDate: moment(pageFilter.fromDate).toDate(),
       toDate: moment(pageFilter.toDate).toDate(),
+      branchesIds: [],
     },
     defaultValues,
   );
@@ -59,10 +62,14 @@ function TrialBalanceSheetHeader({
     toggleFilterDrawer(false);
   };
   // Handle drawer close action.
-  const handleDrawerClose = () => { toggleFilterDrawer(false); };
+  const handleDrawerClose = () => {
+    toggleFilterDrawer(false);
+  };
 
   // Handle cancel button click.
-  const handleCancelClick = () => { toggleFilterDrawer(false); };
+  const handleCancelClick = () => {
+    toggleFilterDrawer(false);
+  };
 
   return (
     <FinancialStatementHeader
@@ -80,6 +87,11 @@ function TrialBalanceSheetHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<TrialBalanceSheetHeaderGeneralPanel />}
+            />
+            <Tab
+              id="dimensions"
+              title={<T id={'dimensions'} />}
+              panel={<TrialBalanceSheetHeaderDimensionsPanel />}
             />
           </Tabs>
 
