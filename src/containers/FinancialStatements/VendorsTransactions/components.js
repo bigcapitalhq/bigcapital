@@ -18,7 +18,7 @@ export const useVendorsTransactionsColumns = () => {
     () => [
       {
         Header: intl.get('vendor_name'),
-        accessor: 'cells[1].value',
+        accessor: 'cells[0].value',
         className: 'vendor_name',
       },
       {
