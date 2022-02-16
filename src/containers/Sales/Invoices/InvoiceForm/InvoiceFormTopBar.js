@@ -36,9 +36,7 @@ export default function InvoiceFormTopBar() {
             name={'branch_id'}
             branches={branches}
             input={InvoiceBranchSelectButton}
-            popoverProps={{
-              minimal: true,
-            }}
+            popoverProps={{ minimal: true }}
           />
         </FeatureCan>
 
@@ -50,9 +48,7 @@ export default function InvoiceFormTopBar() {
             name={'warehouse_id'}
             warehouses={warehouses}
             input={InvoiceWarehouseSelectButton}
-            popoverProps={{
-              minimal: true,
-            }}
+            popoverProps={{ minimal: true }}
           />
         </FeatureCan>
       </NavbarGroup>
