@@ -1,6 +1,6 @@
 import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
-import { MultiSelect as FMultiSelect } from 'blueprint-formik';
+import { FMultiSelect } from '../Forms';
 
 /**
  *
@@ -17,7 +17,7 @@ const branchItemPredicate = (query, branch, _index, exactMatch) => {
   if (exactMatch) {
     return normalizedTitle === normalizedQuery;
   } else {
-    return `${branch.name}. ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
+    return `${branch.code}. ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
   }
 };
 
@@ -32,17 +32,17 @@ const branchItemRenderer = (
   { handleClick, modifiers, query },
   { isSelected },
 ) => {
-  const text = `${branch.name}.${isSelected ? 'selected' : 'not-selected'}`;
+  // const text = `${branch.name}.${isSelected ? 'selected' : 'not-selected'}`;
 
   return (
     <MenuItem
       active={modifiers.active}
       disabled={modifiers.disabled}
-      icon={modifiers.selected ? 'tick' : 'blank'}
+      icon={isSelected ? 'tick' : 'blank'}
+      text={branch.name.toString()}
       label={branch.name.toString()}
       key={branch.id}
       onClick={handleClick}
-      text={text}
     />
   );
 };
@@ -55,6 +55,11 @@ const branchSelectProps = {
   tagRenderer: (item) => item.name,
 };
 
-export function BranchesMultiSelect({ branches, ...rest }) {
+/**
+ * branches mulit select.
+ * @param {*} param0
+ * @returns
+ */
+export function BranchMultiSelect({ branches, ...rest }) {
   return <FMultiSelect items={branches} {...branchSelectProps} {...rest} />;
 }

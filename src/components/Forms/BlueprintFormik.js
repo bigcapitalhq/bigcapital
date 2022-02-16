@@ -5,6 +5,7 @@ import {
   Checkbox,
   RadioGroup,
   Select,
+  MultiSelect
 } from 'blueprint-formik';
 
 export {
@@ -14,4 +15,5 @@ export {
   Checkbox as FCheckbox,
   RadioGroup as FRadioGroup,
   Select as FSelect,
+  MultiSelect as FMultiSelect
 };

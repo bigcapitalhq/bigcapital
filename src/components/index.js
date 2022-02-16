@@ -101,7 +101,6 @@ export * from './FeatureGuard';
 export * from './ExchangeRate';
 export * from './Branches';
 export * from './Warehouses';
-export * from './FMultiSelect'
 
 const Hint = FieldHint;
 

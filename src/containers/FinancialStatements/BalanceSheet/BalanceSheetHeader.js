@@ -88,7 +88,7 @@ function BalanceSheetHeader({
             />
             <Tab
               id="dimensions"
-              title={'dimensions'}
+              title={'Dimensions'}
               panel={<BalanceSheetHeaderDimensionsPanel />}
             />
           </Tabs>
