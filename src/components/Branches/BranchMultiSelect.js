@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
 import { FMultiSelect } from '../Forms';
 
@@ -32,15 +33,13 @@ const branchItemRenderer = (
   { handleClick, modifiers, query },
   { isSelected },
 ) => {
-  // const text = `${branch.name}.${isSelected ? 'selected' : 'not-selected'}`;
-
   return (
     <MenuItem
       active={modifiers.active}
       disabled={modifiers.disabled}
       icon={isSelected ? 'tick' : 'blank'}
       text={branch.name.toString()}
-      label={branch.name.toString()}
+      label={branch.code.toString()}
       key={branch.id}
       onClick={handleClick}
     />
@@ -61,5 +60,13 @@ const branchSelectProps = {
  * @returns
  */
 export function BranchMultiSelect({ branches, ...rest }) {
-  return <FMultiSelect items={branches} {...branchSelectProps} {...rest} />;
+  return (
+    <FMultiSelect
+      items={branches}
+      placeholder={intl.get('branches_multi_select.placeholder')}
+      popoverProps={{ minimal: true }}
+      {...branchSelectProps}
+      {...rest}
+    />
+  );
 }

@@ -12,6 +12,7 @@ import withJournal from './withJournal';
 import withJournalActions from './withJournalActions';
 
 import { compose } from 'utils';
+import JournalSheetHeaderDimension from './JournalSheetHeaderDimensions';
 
 /**
  * Journal sheet header.
@@ -70,6 +71,11 @@ function JournalHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<JournalSheetHeaderGeneral />}
+            />
+            <Tab
+              id="dimensions"
+              title={<T id={'dimensions'} />}
+              panel={<JournalSheetHeaderDimension />}
             />
           </Tabs>
 

@@ -7,10 +7,10 @@ import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleto
 import { useBranches } from 'hooks/query';
 
 /**
- * Balance sheet header dismension panel.
+ * Journal sheet header dismension panel.
  * @returns
  */
-function BalanceSheetHeaderDimensionsPanel() {
+export default function JournalSheetHeaderDimensions() {
   // Fetches the branches list.
   const { isLoading: isBranchesLoading, data: branches } = useBranches();
 
@@ -27,11 +27,3 @@ function BalanceSheetHeaderDimensionsPanel() {
     </Row>
   );
 }
-
-export default BalanceSheetHeaderDimensionsPanel;
-
-const BalanceMulitSelectRoot = styled.div`
-  .bp3-tag-input {
-    height: auto;
-  }
-`;
