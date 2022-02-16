@@ -9,6 +9,7 @@ import withBalanceSheetActions from './withBalanceSheetActions';
 
 import BalanceSheetHeaderGeneralPanal from './BalanceSheetHeaderGeneralPanal';
 import BalanceSheetHeaderComparisonPanal from './BalanceSheetHeaderComparisonPanal';
+import BalanceSheetHeaderDimensionsPanel from './BalanceSheetHeaderDimensionsPanel';
 import FinancialStatementHeader from '../../FinancialStatements/FinancialStatementHeader';
 
 import { compose, transformToForm } from 'utils';
@@ -40,6 +41,7 @@ function BalanceSheetHeader({
       ...pageFilter,
       fromDate: moment(pageFilter.fromDate).toDate(),
       toDate: moment(pageFilter.toDate).toDate(),
+      branches_id: [],
     },
     defaultValues,
   );
@@ -84,6 +86,11 @@ function BalanceSheetHeader({
               id="comparison"
               title={<T id={'balance_sheet.comparisons'} />}
               panel={<BalanceSheetHeaderComparisonPanal />}
+            />
+            <Tab
+              id="dimensions"
+              title={<T id={'dimensions'} />}
+              panel={<BalanceSheetHeaderDimensionsPanel />}
             />
           </Tabs>
 
