@@ -1,10 +1,12 @@
 import React from 'react';
 import * as Yup from 'yup';
 import moment from 'moment';
-import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import styled from 'styled-components';
+
+import { FormattedMessage as T } from 'components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import SalesByItemsHeaderGeneralPanel from './SalesByItemsHeaderGeneralPanel';
@@ -61,7 +63,7 @@ function SalesByItemsHeader({
   };
 
   return (
-    <FinancialStatementHeader
+    <SalesByItemsDrawerHeader
       isOpen={salesByItemsDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
     >
@@ -88,7 +90,7 @@ function SalesByItemsHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </SalesByItemsDrawerHeader>
   );
 }
 
@@ -98,3 +100,9 @@ export default compose(
   })),
   withSalesByItemsActions,
 )(SalesByItemsHeader);
+
+const SalesByItemsDrawerHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 450px;
+  }
+`;

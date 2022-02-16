@@ -4,6 +4,7 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import moment from 'moment';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import styled from 'styled-components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import ARAgingSummaryHeaderGeneral from './ARAgingSummaryHeaderGeneral';
@@ -57,14 +58,12 @@ function ARAgingSummaryHeader({
     },
     defaultValues,
   );
-
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
     toggleFilterDrawerDisplay(false);
     setSubmitting(false);
   };
-
   // Handle cancel button click.
   const handleCancelClick = () => {
     toggleFilterDrawerDisplay(false);
@@ -75,7 +74,7 @@ function ARAgingSummaryHeader({
   };
 
   return (
-    <FinancialStatementHeader
+    <ARAgingDrawerHeader
       isOpen={isFilterDrawerOpen}
       drawerProps={{ onClose: handleDrawerClose }}
     >
@@ -103,7 +102,7 @@ function ARAgingSummaryHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </ARAgingDrawerHeader>
   );
 }
 
@@ -113,3 +112,9 @@ export default compose(
     isFilterDrawerOpen: ARAgingSummaryFilterDrawer,
   })),
 )(ARAgingSummaryHeader);
+
+const ARAgingDrawerHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 520px;
+  }
+`;

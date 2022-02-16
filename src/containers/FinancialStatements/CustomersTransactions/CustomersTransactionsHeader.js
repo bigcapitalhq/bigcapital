@@ -5,6 +5,7 @@ import intl from 'react-intl-universal';
 import moment from 'moment';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
+import styled from 'styled-components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import CustomersTransactionsHeaderGeneralPanel from './CustomersTransactionsHeaderGeneralPanel';
@@ -67,7 +68,7 @@ function CustomersTransactionsHeader({
   };
 
   return (
-    <FinancialStatementHeader
+    <CustomerTransactionsDrawerHeader
       isOpen={isFilterDrawerOpen}
       drawerProps={{ onClose: handleDrawerClose }}
     >
@@ -95,7 +96,7 @@ function CustomersTransactionsHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </CustomerTransactionsDrawerHeader>
   );
 }
 
@@ -105,3 +106,9 @@ export default compose(
   })),
   withCustomersTransactionsActions,
 )(CustomersTransactionsHeader);
+
+const CustomerTransactionsDrawerHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 450px;
+  }
+`;

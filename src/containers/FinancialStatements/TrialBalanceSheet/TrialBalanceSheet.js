@@ -22,9 +22,6 @@ import { compose } from 'utils';
  * Trial balance sheet.
  */
 function TrialBalanceSheet({
-  // #withPreferences
-  organizationName,
-
   // #withTrialBalanceSheetActions
   toggleTrialBalanceFilterDrawer: toggleFilterDrawer,
 }) {
@@ -44,7 +41,6 @@ function TrialBalanceSheet({
     },
     [setFilter],
   );
-
   // Handle numebr format form submit.
   const handleNumberFormatSubmit = (numberFormat) => {
     setFilter({

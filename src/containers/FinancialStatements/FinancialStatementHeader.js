@@ -3,10 +3,15 @@ import classNames from 'classnames';
 import { Position, Drawer } from '@blueprintjs/core';
 import 'style/containers/FinancialStatements/DrawerHeader.scss';
 
+/**
+ * Financial statement header.
+ * @returns {JSX.Element}
+ */
 export default function FinancialStatementHeader({
   children,
   isOpen,
   drawerProps,
+  className,
 }) {
   const timeoutRef = React.useRef();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -42,6 +47,7 @@ export default function FinancialStatementHeader({
         {
           'is-hidden': !isDrawerOpen,
         },
+        className,
       )}
     >
       <Drawer
