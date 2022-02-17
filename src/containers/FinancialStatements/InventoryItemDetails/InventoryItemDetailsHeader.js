@@ -8,6 +8,7 @@ import intl from 'react-intl-universal';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import InventoryItemDetailsHeaderGeneralPanel from './InventoryItemDetailsHeaderGeneralPanel';
+import InventoryItemDetailsHeaderDimensionsPanel from './InventoryItemDetailsHeaderDimensionsPanel';
 
 import withInventoryItemDetails from './withInventoryItemDetails';
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
@@ -32,27 +33,28 @@ function InventoryItemDetailsHeader({
     fromDate: moment().toDate(),
     toDate: moment().toDate(),
     itemsIds: [],
+    warehousesIds: [],
   };
 
   // Filter form initial values.
-  const initialValues = transformToForm({
-    ...pageFilter,
-    fromDate: moment(pageFilter.fromDate).toDate(),
-    toDate: moment(pageFilter.toDate).toDate(),
-  }, defaultValues);
+  const initialValues = transformToForm(
+    {
+      ...pageFilter,
+      fromDate: moment(pageFilter.fromDate).toDate(),
+      toDate: moment(pageFilter.toDate).toDate(),
+      warehousesIds: [],
+    },
+    defaultValues,
+  );
 
   // Validation schema.
   const validationSchema = Yup.object().shape({
-    fromDate: Yup.date()
-      .required()
-      .label(intl.get('fromDate')),
+    fromDate: Yup.date().required().label(intl.get('fromDate')),
     toDate: Yup.date()
       .min(Yup.ref('fromDate'))
       .required()
       .label(intl.get('toDate')),
   });
-;
-
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
@@ -61,8 +63,10 @@ function InventoryItemDetailsHeader({
   };
 
   // Handle drawer close action.
-  const handleDrawerClose = () => { toggleFilterDrawer(false); };
-  
+  const handleDrawerClose = () => {
+    toggleFilterDrawer(false);
+  };
+
   return (
     <FinancialStatementHeader
       isOpen={isFilterDrawerOpen}
@@ -79,6 +83,11 @@ function InventoryItemDetailsHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<InventoryItemDetailsHeaderGeneralPanel />}
+            />
+            <Tab
+              id="dimensions"
+              title={'Dimensions'}
+              panel={<InventoryItemDetailsHeaderDimensionsPanel />}
             />
           </Tabs>
           <div class="financial-header-drawer__footer">

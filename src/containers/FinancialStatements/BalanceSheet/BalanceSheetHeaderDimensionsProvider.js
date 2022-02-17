@@ -3,7 +3,7 @@ import React from 'react';
 import { useBranches } from 'hooks/query';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
-const BalanceSheetHeaderDimensionsPanelConext = React.createContext();
+const BalanceSheetHeaderDimensionsPanelContext = React.createContext();
 
 /**
  * BL sheet header provider.
@@ -22,11 +22,17 @@ function BalanceSheetHeaderDimensionsProvider({ ...props }) {
   return isBranchesLoading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <BalanceSheetHeaderDimensionsPanelConext.Provider value={provider} {...props} />
+    <BalanceSheetHeaderDimensionsPanelContext.Provider
+      value={provider}
+      {...props}
+    />
   );
 }
 
 const useBalanceSheetHeaderDimensionsPanelContext = () =>
-  React.useContext(BalanceSheetHeaderDimensionsPanelConext);
+  React.useContext(BalanceSheetHeaderDimensionsPanelContext);
 
-export { BalanceSheetHeaderDimensionsProvider, useBalanceSheetHeaderDimensionsPanelContext };
+export {
+  BalanceSheetHeaderDimensionsProvider,
+  useBalanceSheetHeaderDimensionsPanelContext,
+};

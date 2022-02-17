@@ -7,6 +7,7 @@ import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import InventoryValuationHeaderGeneralPanel from './InventoryValuationHeaderGeneralPanel';
+import InventoryValuationHeaderDimensionsPanel from './InventoryValuationHeaderDimensionsPanel';
 import withInventoryValuation from './withInventoryValuation';
 import withInventoryValuationActions from './withInventoryValuationActions';
 
@@ -36,13 +37,18 @@ function InventoryValuationHeader({
     ...pageFilter,
     asDate: moment().toDate(),
     itemsIds: [],
+    warehousesIds: [],
   };
   // Initial values.
-  const initialValues = transformToForm({
-    ...pageFilter,
-    ...defaultValues,
-    asDate: moment(pageFilter.asDate).toDate(),
-  }, defaultValues);
+  const initialValues = transformToForm(
+    {
+      ...pageFilter,
+      ...defaultValues,
+      asDate: moment(pageFilter.asDate).toDate(),
+      warehousesIds: [],
+    },
+    defaultValues,
+  );
 
   // Handle the form of header submit.
   const handleSubmit = (values, { setSubmitting }) => {
@@ -77,6 +83,11 @@ function InventoryValuationHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<InventoryValuationHeaderGeneralPanel />}
+            />
+            <Tab
+              id="dimensions"
+              title={'Dimensions'}
+              panel={<InventoryValuationHeaderDimensionsPanel />}
             />
           </Tabs>
           <div class="financial-header-drawer__footer">
