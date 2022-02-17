@@ -5,8 +5,10 @@ import {
   NavbarGroup,
   NavbarDivider,
   Button,
+  Classes,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
 import { useFeatureCan } from 'hooks/state';
 import { Icon, BranchSelect, FeatureCan, WarehouseSelect } from 'components';
@@ -18,9 +20,6 @@ import { Features } from 'common';
  * @returns {JSX.Element}
  */
 export default function InvoiceFormTopBar() {
-  // Invoice form context.
-  const { branches, warehouses } = useInvoiceFormContext();
-
   // Features guard.
   const { featureCan } = useFeatureCan();
 
@@ -31,28 +30,49 @@ export default function InvoiceFormTopBar() {
   return (
     <Navbar className={'navbar--dashboard-topbar'}>
       <NavbarGroup align={Alignment.LEFT}>
-        <FeatureCan feature={Features.Warehouses}>
-          <BranchSelect
-            name={'branch_id'}
-            branches={branches}
-            input={InvoiceBranchSelectButton}
-            popoverProps={{ minimal: true }}
-          />
+        <FeatureCan feature={Features.Branches}>
+          <InvoiceFormSelectBranch />
         </FeatureCan>
-
         {featureCan(Features.Warehouses) && featureCan(Features.Branches) && (
           <NavbarDivider />
         )}
         <FeatureCan feature={Features.Warehouses}>
-          <WarehouseSelect
-            name={'warehouse_id'}
-            warehouses={warehouses}
-            input={InvoiceWarehouseSelectButton}
-            popoverProps={{ minimal: true }}
-          />
+          <InvoiceFormSelectWarehouse />
         </FeatureCan>
       </NavbarGroup>
     </Navbar>
+  );
+}
+
+function InvoiceFormSelectBranch() {
+  // Invoice form context.
+  const { branches, isBranchesLoading } = useInvoiceFormContext();
+
+  return isBranchesLoading ? (
+    <DetailsBarSkeletonBase className={Classes.SKELETON} />
+  ) : (
+    <BranchSelect
+      name={'branch_id'}
+      branches={branches}
+      input={InvoiceBranchSelectButton}
+      popoverProps={{ minimal: true }}
+    />
+  );
+}
+
+function InvoiceFormSelectWarehouse() {
+  // Invoice form context.
+  const { warehouses, isWarehouesLoading } = useInvoiceFormContext();
+
+  return isWarehouesLoading ? (
+    <DetailsBarSkeletonBase className={Classes.SKELETON} />
+  ) : (
+    <WarehouseSelect
+      name={'warehouse_id'}
+      warehouses={warehouses}
+      input={InvoiceWarehouseSelectButton}
+      popoverProps={{ minimal: true }}
+    />
   );
 }
 
@@ -77,3 +97,12 @@ function InvoiceBranchSelectButton({ label }) {
     />
   );
 }
+
+const DetailsBarSkeletonBase = styled.div`
+  letter-spacing: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+  font-size: 8px;
+  width: 140px;
+  height: 10px;
+`;
