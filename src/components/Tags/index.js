@@ -1,4 +1,4 @@
 
 
 export * from './CurrencyTag';
-export * from './FlagTag'
+export * from './FlagIcon'

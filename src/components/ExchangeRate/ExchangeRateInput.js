@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { ControlGroup } from '@blueprintjs/core';
 
-import { FlagTag } from '../Tags';
+import { FlagIcon } from '../Tags';
 import { FMoneyInputGroup, FFormGroup } from '../Forms';
 
 export function ExchangeRateInputGroup({
@@ -12,11 +12,14 @@ export function ExchangeRateInputGroup({
   formGroupProps,
   name,
 }) {
+  const fromCountryCode = 'US';
+  const toCountryCode = 'LY';
+
   return (
     <FFormGroup inline={true} {...formGroupProps} name={name}>
       <ControlGroup>
         <ExchangeRatePrepend>
-          <FlagTag flage={'US'} /> 1 {fromCurrency} =
+          <ExchangeFlagIcon countryCode={fromCountryCode} /> 1 {fromCurrency} =
         </ExchangeRatePrepend>
         <ExchangeRateField
           allowDecimals={false}
@@ -25,7 +28,7 @@ export function ExchangeRateInputGroup({
           name={name}
         />
         <ExchangeRateAppend>
-          <FlagTag flage={'LY'} /> {toCurrency}
+          <ExchangeFlagIcon countryCode={toCountryCode} /> {toCurrency}
         </ExchangeRateAppend>
       </ControlGroup>
     </FFormGroup>
@@ -49,4 +52,10 @@ const ExchangeRatePrepend = styled(ExchangeRateSideIcon)`
 
 const ExchangeRateAppend = styled(ExchangeRateSideIcon)`
   padding-left: 8px;
+`;
+
+const ExchangeFlagIcon = styled(FlagIcon)`
+  margin-right: 5px;
+  margin-left: 5px;
+  display: inline-block;
 `;
