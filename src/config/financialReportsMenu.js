@@ -70,6 +70,20 @@ export const financialReportMenus = [
         subject: AbilitySubject.Report,
         ability: ReportsAction.READ_AP_AGING_SUMMARY,
       },
+      {
+        title: <T id={'report.balance_sheet_comparison.title'} />,
+        desc: <T id={'report.balance_sheet_comparison.desc'} />,
+        link: 'financial-reports/balance-sheet?previousYear=true&previousYearAmountChange=true&previousYearPercentageChange=true',
+        subject: AbilitySubject.Report,
+        ability: ReportsAction.READ_BALANCE_SHEET,
+      },
+      {
+        title: <T id={'report.profit_loss_sheet_comparison.title'} />,
+        desc: <T id={'report.profit_loss_sheet_comparison.desc'} />,
+        link: '/financial-reports/profit-loss-sheet?previousYear=true&previousYearAmountChange=true&previousYearPercentageChange=true',
+        subject: AbilitySubject.Report,
+        ability: ReportsAction.READ_PROFIT_LOSS,
+      },
     ],
   },
 ];
