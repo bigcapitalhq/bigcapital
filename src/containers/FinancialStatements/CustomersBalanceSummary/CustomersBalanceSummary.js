@@ -1,37 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-
-import 'style/pages/FinancialStatements/ContactsBalanceSummary.scss';
+import * as R from 'ramda';
 
 import { FinancialStatement } from 'components';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import CustomersBalanceSummaryActionsBar from './CustomersBalanceSummaryActionsBar';
 import CustomersBalanceSummaryHeader from './CustomersBalanceSummaryHeader';
-import CustomersBalanceSummaryTable from './CustomersBalanceSummaryTable';
 
+import { CustomerBalanceSummaryBody } from './CustomerBalanceSummaryBody';
 import { CustomersBalanceLoadingBar } from './components';
 import { CustomersBalanceSummaryProvider } from './CustomersBalanceSummaryProvider';
 import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryActions';
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 
-import { compose } from 'redux';
+import { getDefaultCustomersBalanceQuery } from './utils';
 
 /**
  * Customers Balance summary.
  */
 function CustomersBalanceSummary({
-  // #withPreferences
-  organizationName,
-
   // #withCustomersBalanceSummaryActions
   toggleCustomerBalanceFilterDrawer,
 }) {
   const [filter, setFilter] = useState({
-    asDate: moment().endOf('day').format('YYYY-MM-DD'),
-    filterByOption: 'with-transactions',
+    ...getDefaultCustomersBalanceQuery(),
   });
-
   // Handle re-fetch customers balance summary after filter change.
   const handleFilterSubmit = (filter) => {
     const _filter = {
@@ -40,7 +33,6 @@ function CustomersBalanceSummary({
     };
     setFilter({ ..._filter });
   };
-
   // Handle number format.
   const handleNumberFormat = (values) => {
     setFilter({
@@ -66,23 +58,16 @@ function CustomersBalanceSummary({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <div className="financial-statement--balance-summary ">
-            <CustomersBalanceSummaryHeader
-              pageFilter={filter}
-              onSubmitFilter={handleFilterSubmit}
-            />
-            <div className="financial-statement__body">
-              <CustomersBalanceSummaryTable companyName={organizationName} />
-            </div>
-          </div>
+          <CustomersBalanceSummaryHeader
+            pageFilter={filter}
+            onSubmitFilter={handleFilterSubmit}
+          />
+          <CustomerBalanceSummaryBody />
         </FinancialStatement>
       </DashboardPageContent>
     </CustomersBalanceSummaryProvider>
   );
 }
-export default compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-  withCustomersBalanceSummaryActions,
-)(CustomersBalanceSummary);
+export default R.compose(withCustomersBalanceSummaryActions)(
+  CustomersBalanceSummary,
+);

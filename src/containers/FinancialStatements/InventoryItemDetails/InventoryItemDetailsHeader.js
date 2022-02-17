@@ -3,8 +3,10 @@ import * as Yup from 'yup';
 import moment from 'moment';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
+
+import { FormattedMessage as T } from 'components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import InventoryItemDetailsHeaderGeneralPanel from './InventoryItemDetailsHeaderGeneralPanel';
@@ -35,24 +37,23 @@ function InventoryItemDetailsHeader({
   };
 
   // Filter form initial values.
-  const initialValues = transformToForm({
-    ...pageFilter,
-    fromDate: moment(pageFilter.fromDate).toDate(),
-    toDate: moment(pageFilter.toDate).toDate(),
-  }, defaultValues);
+  const initialValues = transformToForm(
+    {
+      ...pageFilter,
+      fromDate: moment(pageFilter.fromDate).toDate(),
+      toDate: moment(pageFilter.toDate).toDate(),
+    },
+    defaultValues,
+  );
 
   // Validation schema.
   const validationSchema = Yup.object().shape({
-    fromDate: Yup.date()
-      .required()
-      .label(intl.get('fromDate')),
+    fromDate: Yup.date().required().label(intl.get('fromDate')),
     toDate: Yup.date()
       .min(Yup.ref('fromDate'))
       .required()
       .label(intl.get('toDate')),
   });
-;
-
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
@@ -61,10 +62,12 @@ function InventoryItemDetailsHeader({
   };
 
   // Handle drawer close action.
-  const handleDrawerClose = () => { toggleFilterDrawer(false); };
-  
+  const handleDrawerClose = () => {
+    toggleFilterDrawer(false);
+  };
+
   return (
-    <FinancialStatementHeader
+    <InventoryItemDetailsDrawerHeader
       isOpen={isFilterDrawerOpen}
       drawerProps={{ onClose: handleDrawerClose }}
     >
@@ -91,7 +94,7 @@ function InventoryItemDetailsHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </InventoryItemDetailsDrawerHeader>
   );
 }
 
@@ -101,3 +104,9 @@ export default compose(
   })),
   withInventoryItemDetailsActions,
 )(InventoryItemDetailsHeader);
+
+const InventoryItemDetailsDrawerHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 400px;
+  }
+`;

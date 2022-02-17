@@ -1,36 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 
-import 'style/pages/FinancialStatements/ContactsBalanceSummary.scss';
-
 import { FinancialStatement } from 'components';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import VendorsBalanceSummaryActionsBar from './VendorsBalanceSummaryActionsBar';
 import VendorsBalanceSummaryHeader from './VendorsBalanceSummaryHeader';
-import VendorsBalanceSummaryTable from './VendorsBalanceSummaryTable';
 
 import { VendorsBalanceSummaryProvider } from './VendorsBalanceSummaryProvider';
 import { VendorsSummarySheetLoadingBar } from './components';
+import { VendorBalanceSummaryBody } from './VendorsBalanceSummaryBody';
+
 import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions';
 
-import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
-
+import { TableStyle } from 'common';
+import { getDefaultVendorsBalanceQuery } from './utils';
 import { compose } from 'utils';
 
 /**
  * Vendors Balance summary.
  */
 function VendorsBalanceSummary({
-  // #withPreferences
-  organizationName,
-
   // #withVendorsBalanceSummaryActions
   toggleVendorSummaryFilterDrawer,
 }) {
   const [filter, setFilter] = useState({
-    asDate: moment().endOf('day').format('YYYY-MM-DD'),
-    filterByOption: 'with-transactions',
+    ...getDefaultVendorsBalanceQuery(),
   });
 
   // Handle refetch vendors balance summary.
@@ -67,24 +62,15 @@ function VendorsBalanceSummary({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <div className="financial-statement--balance-summary ">
-            <VendorsBalanceSummaryHeader
-              pageFilter={filter}
-              onSubmitFilter={handleFilterSubmit}
-            />
-            <div className={'financial-statement__body'}>
-              <VendorsBalanceSummaryTable organizationName={organizationName} />
-            </div>
-          </div>
+          <VendorsBalanceSummaryHeader
+            pageFilter={filter}
+            onSubmitFilter={handleFilterSubmit}
+          />
+          <VendorBalanceSummaryBody />
         </FinancialStatement>
       </DashboardPageContent>
     </VendorsBalanceSummaryProvider>
   );
 }
 
-export default compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-  withVendorsBalanceSummaryActions,
-)(VendorsBalanceSummary);
+export default compose(withVendorsBalanceSummaryActions)(VendorsBalanceSummary);

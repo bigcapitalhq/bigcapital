@@ -1756,21 +1756,39 @@
   "payment_made.drawer.title": "تفاصيل سند المورد {number}",
   "manual_journal.drawer.title": "تفاصيل قيد يدوي ({number})",
   "expense.drawer.title": " تفاصيل المصروف",
-
   "global_error.you_dont_have_permissions": "ليس لديك صلاحية الوصول إلى هذه الصفحة.",
   "global_error.transactions_locked": "تم قفل المعاملات التي تمت قبل {lockedToDate}. ومن ثم لا يمكن القيام بأي عمل.",
   "global_error.authorized_user_inactive": "المستخدم المصرح له تم تعطيلة.",
-
   "vendor.alert.activated_message": "تم تفعيل المورد بنجاح.",
   "vendor.alert.are_you_sure_want_to_activate_this_vendor": "هل أنت متأكد أنك تريد تفعيل هذا المورد؟ ستتمكن من تعطيله لاحقًا",
   "vendor.alert.inactivated_message": "تم إلغاء تنشيط المورد بنجاح.",
-  "vendor.alert.are_you_sure_want_to_inactivate_this_vendor":"هل أنت متأكد أنك تريد إلغاء تنشيط هذا المورد؟ ستكون قادرًا على تنشيطه لاحقًا",
-
-  "customer.alert.activated_message":"تم تفعيل الزبون بنجاح.",
+  "vendor.alert.are_you_sure_want_to_inactivate_this_vendor": "هل أنت متأكد أنك تريد إلغاء تنشيط هذا المورد؟ ستكون قادرًا على تنشيطه لاحقًا",
+  "customer.alert.activated_message": "تم تفعيل الزبون بنجاح.",
   "customer.alert.are_you_sure_want_to_activate_this_customer": "هل أنت متأكد أنك تريد تفعيل هذا الزبون؟ ستتمكن من تعطيله لاحقًا",
   "customer.alert.inactivated_message": "تم إلغاء تنشيط الزبون بنجاح.",
-  "customer.alert.are_you_sure_want_to_inactivate_this_customer":"هل أنت متأكد أنك تريد إلغاء تنشيط هذا الزبون؟ ستكون قادرًا على تنشيطه لاحقًا",
+  "customer.alert.are_you_sure_want_to_inactivate_this_customer": "هل أنت متأكد أنك تريد إلغاء تنشيط هذا الزبون؟ ستكون قادرًا على تنشيطه لاحقًا",
+  "credit_note_preview.dialog.title": "معاينة إشعار الدائن PDF",
+  "payment_receive_preview.dialog.title": "معاينة سند الزبون PDF",
+  "balance_sheet.comparisons": "مقارنات",
+  "balance_sheet.percentage_of_column": "% التغير العمودي",
+  "balance_sheet.percentage_of_row": "% التغير الأفقي",
+  "balance_sheet.previous_year": "السنة السابقة (س.س)",
+  "balance_sheet.total_change": "إجمالي التغيرات",
+  "balance_sheet.change": "% التغيرات",
+  "balance_sheet.previous_period": "الفترة السابقة (ف.س) ",
+  "profit_loss_sheet.comparisons": "مقارنات",
+  "profit_loss_sheet.previous_year": "السنة السابقة (س.س)",
+  "profit_loss_sheet.total_change": "إجمالي التغيرات",
+  "profit_loss_sheet.perentage_change": "% التغيرات",
+  "profit_loss_sheet.previous_period": "الفترة السابقة (ف.س) ",
+  "profit_loss_sheet.percentage_of_column": "% التغير العمودي",
+  "profit_loss_sheet.percentage_of_row": "% التغير الأفقي",
+  "profit_loss_sheet.percentage_of_expense": "% التغير في المصاريف",
+  "profit_loss_sheet.percentage_of_income": "% التغير الإيرادات",
 
-  "credit_note_preview.dialog.title":"معاينة إشعار الدائن PDF",
-  "payment_receive_preview.dialog.title":"معاينة سند الزبون PDF"
+  "report.balance_sheet_comparison.title": "مقارنة الميزانية العمومية",
+  "report.balance_sheet_comparison.desc": "يعرض أصول الشركة والتزاماتها وحقوق المساهمين في نقطة زمنية محددة مقارنة بالسنة الماضية.",
+
+  "report.profit_loss_sheet_comparison.title": "مقارنة قائمة الدخل",
+  "report.profit_loss_sheet_comparison.desc": "يعرض الإيرادات والتكاليف والمصاريف المتكبدة في نقطة محددة ومقارنة بالعام السابق."
 }

@@ -4,9 +4,11 @@ import { Button } from '@blueprintjs/core';
 import { Icon, If } from 'components';
 import { FormattedMessage as T } from 'components';
 
-import { getForceWidth, getColumnWidth } from 'utils';
+import { getColumnWidth } from 'utils';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
+
+import { Align } from 'common';
 
 /**
  * Retrieve the general ledger table columns.
@@ -21,21 +23,8 @@ export function useGeneralLedgerTableColumns() {
     () => [
       {
         Header: intl.get('date'),
-        accessor: (row) => {
-          if (row.rowType === 'ACCOUNT_ROW') {
-            return (
-              <span
-                className={'force-width'}
-                style={{ minWidth: getForceWidth(row.date) }}
-              >
-                {row.date}
-              </span>
-            );
-          }
-          return row.date;
-        },
+        accessor: 'date',
         className: 'date',
-        // textOverview: true,
         width: 120,
       },
       {
@@ -73,6 +62,7 @@ export function useGeneralLedgerTableColumns() {
           magicSpacing: 10,
         }),
         textOverview: true,
+        align: Align.Right,
       },
       {
         Header: intl.get('debit'),
@@ -83,6 +73,7 @@ export function useGeneralLedgerTableColumns() {
           magicSpacing: 10,
         }),
         textOverview: true,
+        align: Align.Right,
       },
       {
         Header: intl.get('amount'),
@@ -93,6 +84,7 @@ export function useGeneralLedgerTableColumns() {
           magicSpacing: 10,
         }),
         textOverview: true,
+        align: Align.Right,
       },
       {
         Header: intl.get('running_balance'),
@@ -103,6 +95,7 @@ export function useGeneralLedgerTableColumns() {
           magicSpacing: 10,
         }),
         textOverview: true,
+        align: Align.Right,
       },
     ],
     [tableRows],

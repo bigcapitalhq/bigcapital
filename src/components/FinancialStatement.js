@@ -1,15 +1,24 @@
 import React from 'react';
-import className from 'classnames';
-import 'style/containers/FinancialStatements/FinancialSheet.scss';
+import styled from 'styled-components';
 
-export default function FinancialStatements({ name, children }) {
+const FinancialStatementRoot = styled.div``;
+const FinancialStatementBodyRoot = styled.div``;
+
+/**
+ * 
+ * @param {*} param0 
+ * @returns 
+ */
+export function FinancialStatement({ children, className }) {
+  return <FinancialStatementRoot children={children} className={className} />;
+}
+
+/**
+ *
+ * @param {React.JSX}
+ */
+export function FinancialStatementBody({ children, className }) {
   return (
-    <div
-      className={className('financial-statement', {
-        [`financial-statement--${name}`]: name,
-      })}
-    >
-      {children}
-    </div>
+    <FinancialStatementBodyRoot children={children} className={className} />
   );
 }

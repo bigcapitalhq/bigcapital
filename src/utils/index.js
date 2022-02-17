@@ -3,6 +3,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import * as R from 'ramda';
 import Currencies from 'js-money/lib/currency';
+import clsx from 'classnames';
 
 import { Intent } from '@blueprintjs/core';
 import Currency from 'js-money/lib/currency';
@@ -439,9 +440,11 @@ export const getColumnWidth = (
   rows,
   accessor,
   { maxWidth, minWidth, magicSpacing = 14 },
+  headerText = '',
 ) => {
   const cellLength = Math.max(
     ...rows.map((row) => (`${_.get(row, accessor)}` || '').length),
+    headerText.length,
   );
   let result = cellLength * magicSpacing;
 
@@ -900,3 +903,13 @@ export function ignoreEventFromSelectors(event, selectors) {
     .map((selector) => event.target.closest(selector))
     .some((element) => !!element);
 }
+
+export const tableRowTypesToClassnames = ({ original }) => {
+  const rowTypes = _.castArray(original.row_types);
+  const rowId = original.id;
+
+  const rowTypesClsx = rowTypes.filter((t) => t).map((t) => `row_type--${t}`);
+  const rowIdClsx = `row-id--${original.id}`;
+
+  return clsx(rowTypesClsx, { [`${rowIdClsx}`]: rowId });
+};

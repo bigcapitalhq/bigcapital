@@ -1,9 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
+import { If, FormattedMessage as T } from 'components';
+
 import { getColumnWidth } from 'utils';
-import { FormattedMessage as T } from 'components';
-import { If } from 'components';
+import { Align } from 'common';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
 /**
@@ -40,6 +42,7 @@ export const useARAgingSummaryColumns = () => {
         width: getColumnWidth(tableRows, `current`, {
           minWidth: 120,
         }),
+        align: Align.Right
       },
       ...agingColumns.map((agingColumn, index) => ({
         Header: agingColumn,
@@ -47,6 +50,7 @@ export const useARAgingSummaryColumns = () => {
         width: getColumnWidth(tableRows, `aging-${index}`, {
           minWidth: 120,
         }),
+        align: Align.Right
       })),
       {
         Header: <T id={'total'} />,
@@ -56,6 +60,7 @@ export const useARAgingSummaryColumns = () => {
         width: getColumnWidth(tableRows, 'total', {
           minWidth: 120,
         }),
+        align: Align.Right
       },
     ],
     [tableRows, agingColumns],

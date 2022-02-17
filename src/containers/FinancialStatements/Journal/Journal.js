@@ -1,38 +1,30 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 
-import 'style/pages/FinancialStatements/Journal.scss';
+import { FinancialStatement, DashboardPageContent } from 'components';
 
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
-
-import JournalTable from './JournalTable';
 import JournalHeader from './JournalHeader';
 import JournalActionsBar from './JournalActionsBar';
 import { JournalSheetProvider } from './JournalProvider';
 import { JournalSheetLoadingBar, JournalSheetAlerts } from './components';
+import { JournalBody } from './JournalBody';
 
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withJournalActions from './withJournalActions';
 
+import { getDefaultJournalQuery } from './utils';
 import { compose } from 'utils';
 
 /**
  * Journal sheet.
  */
 function Journal({
-  // #withPreferences
-  organizationName,
-
   // #withJournalActions
-  toggleJournalSheetFilter
+  toggleJournalSheetFilter,
 }) {
   const [filter, setFilter] = useState({
-    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-    toDate: moment().endOf('year').format('YYYY-MM-DD'),
-    basis: 'accural',
+    ...getDefaultJournalQuery(),
   });
-
   // Handle financial statement filter change.
   const handleFilterSubmit = useCallback(
     (filter) => {
@@ -45,41 +37,31 @@ function Journal({
     },
     [setFilter],
   );
-
   // Hide the journal sheet filter drawer once the page unmount.
-  useEffect(() => () => {
-    toggleJournalSheetFilter(false);
-  }, [toggleJournalSheetFilter]);
+  useEffect(
+    () => () => {
+      toggleJournalSheetFilter(false);
+    },
+    [toggleJournalSheetFilter],
+  );
 
   return (
     <JournalSheetProvider query={filter}>
       <JournalActionsBar />
 
       <DashboardPageContent>
-        <div class="financial-statement financial-statement--journal">
+        <FinancialStatement>
           <JournalHeader
             onSubmitFilter={handleFilterSubmit}
             pageFilter={filter}
           />
           <JournalSheetLoadingBar />
           <JournalSheetAlerts />
-
-          <div class="financial-statement__body">
-            <JournalTable
-              companyName={organizationName}
-              journalQuery={filter}
-            />
-          </div>
-        </div>
+          <JournalBody />
+        </FinancialStatement>
       </DashboardPageContent>
     </JournalSheetProvider>
   );
 }
 
-export default compose(
-  withDashboardActions,
-  withJournalActions,
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(Journal);
+export default compose(withDashboardActions, withJournalActions)(Journal);

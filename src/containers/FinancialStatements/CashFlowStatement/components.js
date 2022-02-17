@@ -1,11 +1,12 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
+
 import { Icon, If } from 'components';
 import { FormattedMessage as T } from 'components';
-
-import { dynamicColumns } from './utils';
-import { useCashFlowStatementContext } from './CashFlowStatementProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
+
+import { dynamicColumns } from './dynamicColumns';
+import { useCashFlowStatementContext } from './CashFlowStatementProvider';
 
 /**
  * Retrieve cash flow statement columns.
@@ -49,7 +50,6 @@ export function CashFlowStatementAlerts() {
   if (isCashFlowLoading) {
     return null;
   }
-
   return (
     <If condition={cashFlowStatement.meta.is_cost_compute_running}>
       <div className="alert-compute-running">

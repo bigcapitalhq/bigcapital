@@ -68,6 +68,7 @@ function InvoicePaymentTransactions({
       }}
       styleName={TableStyle.Constrant}
       TableLoadingRenderer={TableSkeletonRows}
+      sticky={true}
     />
   );
 }

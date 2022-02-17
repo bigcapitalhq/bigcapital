@@ -1,8 +1,10 @@
 import { useRef, useEffect, useMemo } from 'react';
+import { useLocation, useHistory } from 'react-router';
 import useAutofocus from './useAutofocus';
 import { useLocalStorage } from './utils/useLocalStorage';
 
 export * from './utils';
+export * from './useQueryString';
 
 export function useIsValuePassed(value, compatatorValue) {
   const cache = useRef([value]);

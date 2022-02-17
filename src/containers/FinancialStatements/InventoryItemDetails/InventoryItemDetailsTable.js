@@ -1,17 +1,18 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
-import FinancialSheet from 'components/FinancialSheet';
-import { DataTable } from 'components';
+import { ReportDataTable, FinancialSheet } from 'components';
 import { useInventoryItemDetailsColumns } from './components';
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
 
-import { defaultExpanderReducer } from 'utils';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
+import { TableStyle } from 'common';
 
 /**
  * Inventory item detail table.
  */
-export default function InventoryItemDetailsTable({
+export function InventoryItemDetailsTable({
   // #ownProps
   companyName,
 }) {
@@ -28,30 +29,79 @@ export default function InventoryItemDetailsTable({
     [tableRows],
   );
 
-  const rowClassNames = (row) => {
-    return [`row-type--${row.original.row_types}`];
-  };
-
   return (
     <FinancialSheet
-      name="inventory-item-details"
       companyName={companyName}
       sheetType={intl.get('inventory_item_details')}
       loading={isInventoryItemDetailsLoading}
       fromDate={query.from_date}
       toDate={query.to_date}
+      fullWidth={true}
     >
-      <DataTable
-        className="bigcapital-datatable--financial-report"
+      <InventoryItemDetailsDataTable
         columns={columns}
         data={tableRows}
-        rowClassNames={rowClassNames}
+        rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}
         expandToggleColumn={1}
         expandColumnSpace={0.8}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );
 }
+
+const InventoryItemDetailsDataTable = styled(ReportDataTable)`
+  .table {
+    .tbody {
+      .tr .td {
+        padding-top: 0.3rem;
+        padding-bottom: 0.3rem;
+      }
+
+      .tr:not(.no-results) .td:not(:first-of-type) {
+        border-left: 1px solid #ececec;
+      }
+
+      .tr:last-child .td {
+        border-bottom: 1px solid #ddd;
+      }
+
+      .tr.row_type {
+        &--ITEM {
+          .td {
+            &.transaction_type {
+              border-left-color: transparent;
+            }
+
+            &.date {
+              .cell-inner {
+                white-space: nowrap;
+                position: relative;
+              }
+            }
+          }
+          &:not(:first-child).is-expanded .td {
+            border-top: 1px solid #ddd;
+          }
+        }
+
+        &--ITEM,
+        &--OPENING_ENTRY,
+        &--CLOSING_ENTRY {
+          font-weight: 500;
+        }
+
+        &--ITEM {
+          &.is-expanded {
+            .td.value .cell-inner {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+`;

@@ -1,9 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import moment from 'moment';
 
-import 'style/pages/FinancialStatements/GeneralLedger.scss';
-
-import GeneralLedgerTable from './GeneralLedgerTable';
+import { FinancialStatement } from 'components';
 import GeneralLedgerHeader from './GeneralLedgerHeader';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
@@ -13,12 +11,13 @@ import {
   GeneralLedgerSheetAlerts,
   GeneralLedgerSheetLoadingBar,
 } from './components';
+import { GeneralLedgerBody } from './GeneralLedgerBody';
 
 import withGeneralLedgerActions from './withGeneralLedgerActions';
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 
 import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
 import { compose } from 'utils';
+import { getDefaultGeneralLedgerQuery } from './common';
 
 /**
  * General Ledger (GL) sheet.
@@ -26,15 +25,9 @@ import { compose } from 'utils';
 function GeneralLedger({
   // #withGeneralLedgerActions
   toggleGeneralLedgerFilterDrawer,
-
-  // #withSettings
-  organizationName,
 }) {
   const [filter, setFilter] = useState({
-    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-    toDate: moment().endOf('year').format('YYYY-MM-DD'),
-    basis: 'accural',
-    filterByOption: 'with-transactions',
+    ...getDefaultGeneralLedgerQuery(),
   });
 
   // Handle financial statement filter change.
@@ -63,29 +56,18 @@ function GeneralLedger({
       <GeneralLedgerActionsBar />
 
       <DashboardPageContent>
-        <div class="financial-statement financial-statement--general-ledger">
+        <FinancialStatement>
           <GeneralLedgerHeader
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
           />
           <GeneralLedgerSheetLoadingBar />
           <GeneralLedgerSheetAlerts />
-
-          <div class="financial-statement__body">
-            <GeneralLedgerTable
-              companyName={organizationName}
-              generalLedgerQuery={filter}
-            />
-          </div>
-        </div>
+          <GeneralLedgerBody />
+        </FinancialStatement>
       </DashboardPageContent>
     </GeneralLedgerProvider>
   );
 }
 
-export default compose(
-  withGeneralLedgerActions,
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(GeneralLedger);
+export default compose(withGeneralLedgerActions)(GeneralLedger);

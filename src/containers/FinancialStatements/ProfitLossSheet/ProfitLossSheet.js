@@ -1,57 +1,47 @@
-import React, { useState } from 'react';
+import React from 'react';
 import moment from 'moment';
-import { compose } from 'utils';
+import * as R from 'ramda';
 
 import ProfitLossSheetHeader from './ProfitLossSheetHeader';
-import ProfitLossSheetTable from './ProfitLossSheetTable';
 import ProfitLossActionsBar from './ProfitLossActionsBar';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withProfitLossActions from './withProfitLossActions';
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 
-import 'style/pages/FinancialStatements/ProfitLossSheet.scss';
+import { useProfitLossSheetQuery } from './utils';
 import { ProfitLossSheetProvider } from './ProfitLossProvider';
-import { ProfitLossSheetLoadingBar, ProfitLossSheetAlerts } from './components';
+import { ProfitLossSheetLoadingBar } from './components';
+import { ProfitLossBody } from './ProfitLossBody';
 
 /**
  * Profit/Loss financial statement sheet.
+ * @returns {React.JSX}
  */
 function ProfitLossSheet({
-  // #withPreferences
-  organizationName,
-
   // #withProfitLossActions
   toggleProfitLossFilterDrawer: toggleDisplayFilterDrawer,
 }) {
-  const [filter, setFilter] = useState({
-    basis: 'cash',
-    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-    toDate: moment().endOf('year').format('YYYY-MM-DD'),
-    displayColumnsType: 'total',
-    filterByOption: 'with-transactions',
-  });
+  // Profit/loss sheet query.
+  const { query, setLocationQuery } = useProfitLossSheetQuery();
 
   // Handle submit filter.
   const handleSubmitFilter = (filter) => {
-    const _filter = {
+    const newFilter = {
       ...filter,
       fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
       toDate: moment(filter.toDate).format('YYYY-MM-DD'),
     };
-    setFilter(_filter);
+    setLocationQuery(newFilter);
   };
-
   // Handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
-    setFilter({
-      ...filter,
+    setLocationQuery({
+      ...query,
       numberFormat,
     });
   };
-
   // Hide the filter drawer once the page unmount.
   React.useEffect(
     () => () => {
@@ -61,34 +51,26 @@ function ProfitLossSheet({
   );
 
   return (
-    <ProfitLossSheetProvider query={filter}>
+    <ProfitLossSheetProvider query={query}>
       <ProfitLossActionsBar
-        numberFormat={filter.numberFormat}
+        numberFormat={query.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <ProfitLossSheetLoadingBar />
-      <ProfitLossSheetAlerts />
+      {/* <ProfitLossSheetAlerts /> */}
 
       <DashboardPageContent>
-        <div class="financial-statement">
-          <ProfitLossSheetHeader
-            pageFilter={filter}
-            onSubmitFilter={handleSubmitFilter}
-          />
-
-          <div class="financial-statement__body">
-            <ProfitLossSheetTable companyName={organizationName} />
-          </div>
-        </div>
+        <ProfitLossSheetHeader
+          pageFilter={query}
+          onSubmitFilter={handleSubmitFilter}
+        />
+        <ProfitLossBody />
       </DashboardPageContent>
     </ProfitLossSheetProvider>
   );
 }
 
-export default compose(
+export default R.compose(
   withDashboardActions,
   withProfitLossActions,
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
 )(ProfitLossSheet);

@@ -8,10 +8,11 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
+import classNames from 'classnames';
+
 import { FormattedMessage as T } from 'components';
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import classNames from 'classnames';
 
 import withJournalActions from './withJournalActions';
 import withJournal from './withJournal';
@@ -56,7 +57,7 @@ function JournalActionsBar({
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
           text={
-            (isFilterDrawerOpen) ? (
+            isFilterDrawerOpen ? (
               <T id={'hide_customizer'} />
             ) : (
               <T id={'customize_report'} />
@@ -97,7 +98,7 @@ function JournalActionsBar({
 
 export default compose(
   withJournal(({ journalSheetDrawerFilter }) => ({
-    isFilterDrawerOpen: journalSheetDrawerFilter
+    isFilterDrawerOpen: journalSheetDrawerFilter,
   })),
   withJournalActions,
 )(JournalActionsBar);

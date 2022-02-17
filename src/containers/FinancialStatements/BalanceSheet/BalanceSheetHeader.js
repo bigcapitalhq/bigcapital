@@ -1,19 +1,22 @@
 import React from 'react';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
 import moment from 'moment';
 import { Formik, Form } from 'formik';
+import styled from 'styled-components';
+
+import { FormattedMessage as T } from 'components';
 
 import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';
 
 import BalanceSheetHeaderGeneralPanal from './BalanceSheetHeaderGeneralPanal';
+import BalanceSheetHeaderComparisonPanal from './BalanceSheetHeaderComparisonPanal';
 import FinancialStatementHeader from '../../FinancialStatements/FinancialStatementHeader';
 
 import { compose, transformToForm } from 'utils';
 import {
-  getBalanceSheetHeaderDefaultValues,
   getBalanceSheetHeaderValidationSchema,
+  getDefaultBalanceSheetQuery,
 } from './utils';
 
 /**
@@ -30,7 +33,7 @@ function BalanceSheetHeader({
   // #withBalanceSheetActions
   toggleBalanceSheetFilterDrawer: toggleFilterDrawer,
 }) {
-  const defaultValues = getBalanceSheetHeaderDefaultValues();
+  const defaultValues = getDefaultBalanceSheetQuery();
 
   // Filter form initial values.
   const initialValues = transformToForm(
@@ -42,7 +45,6 @@ function BalanceSheetHeader({
     },
     defaultValues,
   );
-
   // Validation schema.
   const validationSchema = getBalanceSheetHeaderValidationSchema();
 
@@ -64,9 +66,11 @@ function BalanceSheetHeader({
   };
 
   return (
-    <FinancialStatementHeader
+    <BalanceSheetFinancialHeader
       isOpen={balanceSheetDrawerFilter}
-      drawerProps={{ onClose: handleDrawerClose }}
+      drawerProps={{
+        onClose: handleDrawerClose,
+      }}
     >
       <Formik
         initialValues={initialValues}
@@ -80,6 +84,11 @@ function BalanceSheetHeader({
               title={<T id={'general'} />}
               panel={<BalanceSheetHeaderGeneralPanal />}
             />
+            <Tab
+              id="comparison"
+              title={<T id={'balance_sheet.comparisons'} />}
+              panel={<BalanceSheetHeaderComparisonPanal />}
+            />
           </Tabs>
 
           <div class="financial-header-drawer__footer">
@@ -92,7 +101,7 @@ function BalanceSheetHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </BalanceSheetFinancialHeader>
   );
 }
 
@@ -102,3 +111,9 @@ export default compose(
   })),
   withBalanceSheetActions,
 )(BalanceSheetHeader);
+
+const BalanceSheetFinancialHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 520px;
+  }
+`;

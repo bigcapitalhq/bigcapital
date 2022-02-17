@@ -1,9 +1,11 @@
 import React from 'react';
 import * as Yup from 'yup';
 import moment from 'moment';
-import { FormattedMessage as T } from 'components';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import styled from 'styled-components';
+
+import { FormattedMessage as T } from 'components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import InventoryValuationHeaderGeneralPanel from './InventoryValuationHeaderGeneralPanel';
@@ -38,11 +40,14 @@ function InventoryValuationHeader({
     itemsIds: [],
   };
   // Initial values.
-  const initialValues = transformToForm({
-    ...pageFilter,
-    ...defaultValues,
-    asDate: moment(pageFilter.asDate).toDate(),
-  }, defaultValues);
+  const initialValues = transformToForm(
+    {
+      ...pageFilter,
+      ...defaultValues,
+      asDate: moment(pageFilter.asDate).toDate(),
+    },
+    defaultValues,
+  );
 
   // Handle the form of header submit.
   const handleSubmit = (values, { setSubmitting }) => {
@@ -62,7 +67,7 @@ function InventoryValuationHeader({
   };
 
   return (
-    <FinancialStatementHeader
+    <InventoryValuationDrawerHeader
       isOpen={isFilterDrawerOpen}
       drawerProps={{ onClose: handleDrawerClose }}
     >
@@ -89,7 +94,7 @@ function InventoryValuationHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </InventoryValuationDrawerHeader>
   );
 }
 
@@ -99,3 +104,9 @@ export default compose(
   })),
   withInventoryValuationActions,
 )(InventoryValuationHeader);
+
+const InventoryValuationDrawerHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 450px;
+  }
+`;

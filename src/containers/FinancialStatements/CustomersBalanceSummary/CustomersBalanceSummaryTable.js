@@ -1,45 +1,65 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 
-import FinancialSheet from 'components/FinancialSheet';
-import DataTable from 'components/DataTable';
+import { ReportDataTable, FinancialSheet } from 'components';
 
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import { useCustomersSummaryColumns } from './components';
 
+import { TableStyle } from 'common';
+import { tableRowTypesToClassnames } from 'utils';
+
 /**
- * customers balance summary table.
+ * Customers balance summary table.
  */
 export default function CustomersBalanceSummaryTable({
   // #ownProps
   companyName,
 }) {
   const {
-    isCustomersBalanceLoading,
     CustomerBalanceSummary: { table },
   } = useCustomersBalanceSummaryContext();
 
+  // Retrieves the customers summary columns.
   const columns = useCustomersSummaryColumns();
-
-  const rowClassNames = (row) => {
-    return [`row-type--${row.original.row_types}`];
-  };
 
   return (
     <FinancialSheet
-      name={'customers-balance-summary'}
       companyName={companyName}
       sheetType={intl.get('customers_balance_summary')}
       asDate={new Date()}
-      loading={isCustomersBalanceLoading}
     >
-      <DataTable
-        className="bigcapital-datatable--financial-report"
+      <CustomerBalanceDataTable
         columns={columns}
         data={table.data}
-        rowClassNames={rowClassNames}
+        rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
+        styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
   );
 }
+
+const CustomerBalanceDataTable = styled(ReportDataTable)`
+  .table {
+    .tbody {
+      .tr:not(.no-results) {
+        .td {
+          border-bottom: 0;
+          padding-top: 0.4rem;
+          padding-bottom: 0.4rem;
+        }
+
+        &.row_type--TOTAL {
+          font-weight: 500;
+
+          .td {
+            border-top: 1px solid #bbb;
+            border-bottom: 3px double #333;
+          }
+        }
+      }
+    }
+  }
+`;
