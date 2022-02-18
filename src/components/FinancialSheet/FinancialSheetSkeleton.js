@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Align } from 'common';
-import { SkeletonText, DataTable } from 'components';
+import { SkeletonText } from 'components';
+import DataTable from '../../components/DataTable'
 
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
