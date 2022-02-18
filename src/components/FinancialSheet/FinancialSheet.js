@@ -2,7 +2,8 @@ import React, { useMemo, useCallback } from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 
-import { If, FormattedMessage as T } from 'components';
+import If from '../Utils/If';
+import { FormattedMessage as T } from '../FormattedMessage';
 import {
   FinancialSheetRoot,
   FinancialSheetFooterCurrentTime,

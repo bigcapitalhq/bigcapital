@@ -1,7 +1,7 @@
 import React from 'react';
 import * as R from 'ramda';
 
-import { ButtonLink } from 'components';
+import { ButtonLink } from '../Button';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 function CustomerDrawerLinkComponent({
