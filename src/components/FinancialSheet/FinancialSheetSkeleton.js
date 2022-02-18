@@ -42,7 +42,7 @@ export function FinancialSheetSkeleton({
       </FinancialSheetDate>
 
       <FinancialSheetTable>
-        <FinancialSkeletonTable
+        <DataTable
           columns={skeletonTableColumns}
           data={[]}
           noInitialFetch={true}
@@ -74,11 +74,3 @@ FinancialSheetSkeleton.defaultProps = {
     },
   ],
 };
-
-const FinancialSkeletonTable = styled(DataTable)`
-  .table .th .skeleton,
-  .table .td .skeleton {
-    margin-top: 4px;
-    margin-bottom: 4px;
-  }
-`;
