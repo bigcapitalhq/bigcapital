@@ -56,10 +56,18 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
   } = useCustomers({ page_size: 10000 });
 
   // Fetch warehouses list.
-  const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses();
+  const {
+    data: warehouses,
+    isLoading: isWarehouesLoading,
+    isSuccess: isWarehousesSuccess,
+  } = useWarehouses();
 
   // Fetches the branches list.
-  const { data: branches, isLoading: isBranchesLoading } = useBranches();
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches();
 
   // Handle fetching settings.
   const { isLoading: isSettingsLoading } = useSettingsInvoices();
@@ -100,6 +108,8 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     isBranchesLoading,
     isFeatureLoading,
     isForeignCustomer,
+    isBranchesSuccess,
+    isWarehousesSuccess,
 
     createInvoiceMutate,
     editInvoiceMutate,

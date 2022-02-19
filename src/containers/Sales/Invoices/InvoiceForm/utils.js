@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
-import { omit } from 'lodash';
+import { omit, first } from 'lodash';
 import {
   compose,
   transformToForm,
@@ -9,11 +9,12 @@ import {
   transactionNumber,
 } from 'utils';
 import { useFormikContext } from 'formik';
+import intl from 'react-intl-universal';
 
 import { defaultFastFieldShouldUpdate } from 'utils';
-import intl from 'react-intl-universal';
 import { ERROR } from 'common/errors';
 import { AppToaster } from 'components';
+import { useInvoiceFormContext } from './InvoiceFormProvider';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
@@ -167,3 +168,34 @@ export function transformValueToRequest(values) {
     delivered: false,
   };
 }
+
+export const useSetPrimaryWarehouseToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { warehouses, isWarehousesSuccess } = useInvoiceFormContext();
+
+  React.useEffect(() => {
+    if (isWarehousesSuccess) {
+      const primaryWarehouse =
+        warehouses.find((b) => b.primary) || first(warehouses);
+
+      if (primaryWarehouse) {
+        setFieldValue('warehouse_id', primaryWarehouse.id);
+      }
+    }
+  }, [isWarehousesSuccess, setFieldValue, warehouses]);
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = useInvoiceFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
+};

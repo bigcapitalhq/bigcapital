@@ -9,6 +9,10 @@ import {
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import {
+  useSetPrimaryWarehouseToForm,
+  useSetPrimaryBranchToForm,
+} from './utils';
 
 import { useFeatureCan } from 'hooks/state';
 import { Icon, BranchSelect, FeatureCan, WarehouseSelect } from 'components';
@@ -22,6 +26,12 @@ import { Features } from 'common';
 export default function InvoiceFormTopBar() {
   // Features guard.
   const { featureCan } = useFeatureCan();
+
+  // Sets the primary warehouse to form.
+  useSetPrimaryWarehouseToForm();
+
+  // Sets the primary branch to form.
+  useSetPrimaryBranchToForm();
 
   // Can't display the navigation bar if warehouses or branches feature is not enabled.
   if (!featureCan(Features.Warehouses) || !featureCan(Features.Branches)) {
@@ -79,7 +89,7 @@ function InvoiceFormSelectWarehouse() {
 function InvoiceWarehouseSelectButton({ label }) {
   return (
     <Button
-      text={intl.get('invoice.branch_button.label', { label })}
+      text={intl.get('invoice.warehouse_button.label', { label })}
       minimal={true}
       small={true}
       icon={<Icon icon={'warehouse-16'} iconSize={16} />}
@@ -90,7 +100,7 @@ function InvoiceWarehouseSelectButton({ label }) {
 function InvoiceBranchSelectButton({ label }) {
   return (
     <Button
-      text={intl.get('invoice.warehouse_button.label', { label })}
+      text={intl.get('invoice.branch_button.label', { label })}
       minimal={true}
       small={true}
       icon={<Icon icon={'branch-16'} iconSize={16} />}
