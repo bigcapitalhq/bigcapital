@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import { isEmpty, pick } from 'lodash';
+import { isEmpty, pick, isEqual, isUndefined } from 'lodash';
 import { useLocation } from 'react-router-dom';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { transformToEditForm, ITEMS_FILTER_ROLES_QUERY } from './utils';
@@ -20,7 +20,7 @@ const InvoiceFormContext = createContext();
 /**
  * Accounts chart data provider.
  */
-function InvoiceFormProvider({ invoiceId, ...props }) {
+function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   const { state } = useLocation();
   const estimateId = state?.action;
 
@@ -78,6 +78,7 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
 
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = useState();
+  const [selectCustomer, setSelectCustomer] = useState(null);
 
   // Detarmines whether the form in new mode.
   const isNewMode = !invoiceId;
@@ -86,9 +87,10 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
 
   // Determines whether the foreign customer.
-  const isForeignCustomer = false;
+  const isForeignCustomer =
+    !isEqual(selectCustomer?.currency_code, baseCurrency) &&
+    !isUndefined(selectCustomer?.currency_code);
 
-  // Provider payload.
   const provider = {
     invoice,
     items,
@@ -97,6 +99,7 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     estimateId,
     invoiceId,
     submitPayload,
+    selectCustomer,
     branches,
     warehouses,
 
@@ -114,6 +117,7 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     createInvoiceMutate,
     editInvoiceMutate,
     setSubmitPayload,
+    setSelectCustomer,
     isNewMode,
   };
 

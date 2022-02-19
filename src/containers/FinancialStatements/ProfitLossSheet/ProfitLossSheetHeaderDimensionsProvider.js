@@ -3,7 +3,7 @@ import React from 'react';
 import { useBranches } from 'hooks/query';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
-const ProfitLossSheetHeaderDimensionsPanelConext = React.createContext();
+const ProfitLossSheetHeaderDimensionsPanelContext = React.createContext();
 
 /**
  * profit loss sheet header provider.
@@ -22,7 +22,7 @@ function ProfitLossSheetHeaderDimensionsProvider({ ...props }) {
   return isBranchesLoading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <ProfitLossSheetHeaderDimensionsPanelConext.Provider
+    <ProfitLossSheetHeaderDimensionsPanelContext.Provider
       value={provider}
       {...props}
     />
@@ -30,7 +30,7 @@ function ProfitLossSheetHeaderDimensionsProvider({ ...props }) {
 }
 
 const useProfitLossSheetPanelContext = () =>
-  React.useContext(ProfitLossSheetHeaderDimensionsPanelConext);
+  React.useContext(ProfitLossSheetHeaderDimensionsPanelContext);
 
 export {
   ProfitLossSheetHeaderDimensionsProvider,

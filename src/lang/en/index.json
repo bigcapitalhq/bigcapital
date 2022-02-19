@@ -1854,7 +1854,9 @@
   "make_primary": "Make as Primary",
   "invoice.branch_button.label": "Branch: {label}",
   "invoice.warehouse_button.label": "Warehouse: {label}",
-  "branches_multi_select.label":"Branches",
+  "branches_multi_select.label": "Branches",
   "branches_multi_select.placeholder": "Filter by branches…",
+  "warehouses_multi_select.label": "Warehouses",
+  "warehouses_multi_select.placeholder": "Filter by warehouses…",
   "dimensions": "Dimensions"
 }

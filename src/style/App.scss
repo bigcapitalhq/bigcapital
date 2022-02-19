@@ -5,7 +5,7 @@
 // Blueprint framework.
 @import '@blueprintjs/core/src/blueprint.scss';
 @import '@blueprintjs/datetime/src/blueprint-datetime.scss';
-@import "@blueprintjs/popover2/src/blueprint-popover2.scss";
+@import '@blueprintjs/popover2/src/blueprint-popover2.scss';
 
 @import 'basscss';
 
@@ -52,7 +52,6 @@ body.hide-scrollbar .Pane2 {
 }
 
 .bp3-fill {
-
   .bp3-popover-wrapper,
   .bp3-popover-target {
     display: block;
@@ -104,22 +103,27 @@ body.hide-scrollbar .Pane2 {
   background-color: #0066ff;
 }
 
+.ReactVirtualized__Collection {
+}
 
-.ReactVirtualized__Collection {}
-
-.ReactVirtualized__Collection__innerScrollContainer {}
+.ReactVirtualized__Collection__innerScrollContainer {
+}
 
 /* Grid default theme */
 
-.ReactVirtualized__Grid {}
+.ReactVirtualized__Grid {
+}
 
-.ReactVirtualized__Grid__innerScrollContainer {}
+.ReactVirtualized__Grid__innerScrollContainer {
+}
 
 /* Table default theme */
 
-.ReactVirtualized__Table {}
+.ReactVirtualized__Table {
+}
 
-.ReactVirtualized__Table__Grid {}
+.ReactVirtualized__Table__Grid {
+}
 
 .ReactVirtualized__Table__headerRow {
   font-weight: 700;
@@ -182,8 +186,8 @@ body.hide-scrollbar .Pane2 {
 
 /* List default theme */
 
-.ReactVirtualized__List {}
-
+.ReactVirtualized__List {
+}
 
 .bp3-drawer {
   box-shadow: 0 0 0;
@@ -195,21 +199,20 @@ body.hide-scrollbar .Pane2 {
 }
 
 // RTL Icons.
-html[dir="rtl"] {
+html[dir='rtl'] {
   .bp3-icon-caret-right {
     transform: scaleX(-1);
   }
 }
 
-html[lang^="ar"] {
+html[lang^='ar'] {
   body {
     letter-spacing: -0.01rem;
   }
 }
 
 .bp3-popover2 {
-  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.02),
-    0 2px 4px rgba(16, 22, 26, 0.1),
+  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.02), 0 2px 4px rgba(16, 22, 26, 0.1),
     0 8px 24px rgba(16, 22, 26, 0.1);
 }
 
@@ -240,21 +243,19 @@ html[lang^="ar"] {
       padding-left: 14px;
       padding-right: 14px;
 
-      &+.bp3-button {
+      & + .bp3-button {
         margin-left: 8px;
       }
     }
   }
 
   .bp3-dialog {
-
     &-body {
-
       &:not(.loading) {
         margin: 0;
       }
 
-      >.bp3-spinner {
+      > .bp3-spinner {
         margin: 20px 0;
       }
     }
@@ -266,12 +267,10 @@ html[lang^="ar"] {
 }
 
 .drawer-portal {
-
   .bp3-overlay-backdrop {
     background: rgba(0, 10, 30, 0.05);
   }
 }
-
 
 .big-number {
   font-size: 28px;
@@ -281,18 +280,13 @@ html[lang^="ar"] {
   margin-bottom: 0;
 }
 
-
 .align-right {
   text-align: right;
 }
-.align-center{
+.align-center {
   text-align: center;
 }
 
 .font-bold {
   font-weight: 600;
-}
-
-.bp3-tag-input {
-  height: auto;
 }
