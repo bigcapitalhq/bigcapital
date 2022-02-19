@@ -4,9 +4,9 @@ import {
   NumericInput,
   Checkbox,
   RadioGroup,
-  Select,
-  MultiSelect
-} from 'blueprint-formik';
+  Switch,
+} from '@blueprintjs-formik/core';
+import { Select, MultiSelect } from '@blueprintjs-formik/select';
 
 export {
   FormGroup as FFormGroup,
@@ -14,6 +14,7 @@ export {
   NumericInput as FNumericInput,
   Checkbox as FCheckbox,
   RadioGroup as FRadioGroup,
+  Switch as FSwitch,
   Select as FSelect,
-  MultiSelect as FMultiSelect
+  MultiSelect as FMultiSelect,
 };

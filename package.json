@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@babel/core": "7.8.4",
+    "@blueprintjs-formik/core": "^0.1.5",
+    "@blueprintjs-formik/select": "^0.1.4",
     "@blueprintjs/core": "^3.50.2",
     "@blueprintjs/datetime": "^3.23.12",
     "@blueprintjs/popover2": "^0.11.1",
@@ -31,7 +33,6 @@
     "babel-plugin-named-asset-import": "^0.3.6",
     "babel-preset-react-app": "^9.1.1",
     "basscss": "^8.0.2",
-    "blueprint-formik": "^0.1.4",
     "camelcase": "^5.3.1",
     "case-sensitive-paths-webpack-plugin": "2.3.0",
     "cross-env": "^7.0.2",
