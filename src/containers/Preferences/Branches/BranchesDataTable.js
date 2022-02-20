@@ -62,7 +62,7 @@ function BranchesDataTable({
 
   return (
     <BranchesTableCard>
-      <DataTable
+      <BranchesTable
         columns={columns}
         data={branches}
         loading={isBranchesLoading}
@@ -85,4 +85,10 @@ export default compose(withDialogActions, withAlertActions)(BranchesDataTable);
 
 const BranchesTableCard = styled(Card)`
   padding: 0;
+`;
+
+const BranchesTable = styled(DataTable)`
+  .table .tr {
+    min-height: 38px;
+  }
 `;
