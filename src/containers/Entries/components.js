@@ -11,6 +11,7 @@ import {
   NumericInputCell,
   CheckBoxFieldCell,
 } from 'components/DataTableCells';
+import { IntegrateWarehouseTable } from 'components';
 
 /**
  * Item header cell.
@@ -105,12 +106,20 @@ const LandedCostHeaderCell = () => {
   );
 };
 
+function QuantityCell(props) {
+  return (
+    <>
+      <IntegrateWarehouseTable>
+        <NumericInputCell {...props} />
+      </IntegrateWarehouseTable>
+    </>
+  );
+}
+
 /**
  * Retrieve editable items entries columns.
  */
-export function useEditableItemsEntriesColumns({
-  landedCost,
-}) {
+export function useEditableItemsEntriesColumns({ landedCost }) {
   return React.useMemo(
     () => [
       {
@@ -144,7 +153,7 @@ export function useEditableItemsEntriesColumns({
       {
         Header: intl.get('quantity'),
         accessor: 'quantity',
-        Cell: NumericInputCell,
+        Cell: QuantityCell,
         Footer: QuantityTotalFooterCell,
         disableSortBy: true,
         width: 70,

@@ -52,6 +52,7 @@ body.hide-scrollbar .Pane2 {
 }
 
 .bp3-fill {
+
   .bp3-popover-wrapper,
   .bp3-popover-target {
     display: block;
@@ -103,27 +104,21 @@ body.hide-scrollbar .Pane2 {
   background-color: #0066ff;
 }
 
-.ReactVirtualized__Collection {
-}
+.ReactVirtualized__Collection {}
 
-.ReactVirtualized__Collection__innerScrollContainer {
-}
+.ReactVirtualized__Collection__innerScrollContainer {}
 
 /* Grid default theme */
 
-.ReactVirtualized__Grid {
-}
+.ReactVirtualized__Grid {}
 
-.ReactVirtualized__Grid__innerScrollContainer {
-}
+.ReactVirtualized__Grid__innerScrollContainer {}
 
 /* Table default theme */
 
-.ReactVirtualized__Table {
-}
+.ReactVirtualized__Table {}
 
-.ReactVirtualized__Table__Grid {
-}
+.ReactVirtualized__Table__Grid {}
 
 .ReactVirtualized__Table__headerRow {
   font-weight: 700;
@@ -186,8 +181,7 @@ body.hide-scrollbar .Pane2 {
 
 /* List default theme */
 
-.ReactVirtualized__List {
-}
+.ReactVirtualized__List {}
 
 .bp3-drawer {
   box-shadow: 0 0 0;
@@ -214,6 +208,10 @@ html[lang^='ar'] {
 .bp3-popover2 {
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.02), 0 2px 4px rgba(16, 22, 26, 0.1),
     0 8px 24px rgba(16, 22, 26, 0.1);
+}
+
+.bp3-popover2 .bp3-popover2-arrow::before {
+  box-shadow: 0 8px 24px rgba(16, 22, 26, 0.1) !important;
 }
 
 .bp3-tooltip2 .bp3-popover2-arrow:before {
@@ -243,7 +241,7 @@ html[lang^='ar'] {
       padding-left: 14px;
       padding-right: 14px;
 
-      & + .bp3-button {
+      &+.bp3-button {
         margin-left: 8px;
       }
     }
@@ -255,7 +253,7 @@ html[lang^='ar'] {
         margin: 0;
       }
 
-      > .bp3-spinner {
+      >.bp3-spinner {
         margin: 20px 0;
       }
     }
@@ -283,6 +281,7 @@ html[lang^='ar'] {
 .align-right {
   text-align: right;
 }
+
 .align-center {
   text-align: center;
 }
