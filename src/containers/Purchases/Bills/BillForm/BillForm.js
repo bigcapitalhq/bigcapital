@@ -12,6 +12,7 @@ import BillFormHeader from './BillFormHeader';
 import BillFloatingActions from './BillFloatingActions';
 import BillFormFooter from './BillFormFooter';
 import BillItemsEntriesEditor from './BillItemsEntriesEditor';
+import BillFormTopBar from './BillFormTopBar';
 
 import { AppToaster } from 'components';
 
@@ -125,6 +126,7 @@ function BillForm({
         onSubmit={handleFormSubmit}
       >
         <Form>
+          <BillFormTopBar />
           <BillFormHeader />
           <BillItemsEntriesEditor />
           <BillFormFooter />

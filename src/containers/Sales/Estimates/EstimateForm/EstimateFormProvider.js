@@ -3,6 +3,8 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useEstimate,
   useCustomers,
+  useWarehouses,
+  useBranches,
   useItems,
   useSettingsEstimates,
   useCreateEstimate,
@@ -39,6 +41,20 @@ function EstimateFormProvider({ estimateId, ...props }) {
     isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
+  // Fetch warehouses list.
+  const {
+    data: warehouses,
+    isLoading: isWarehouesLoading,
+    isSuccess: isWarehousesSuccess,
+  } = useWarehouses();
+
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches();
+
   // Handle fetch settings.
   useSettingsEstimates();
 
@@ -51,12 +67,17 @@ function EstimateFormProvider({ estimateId, ...props }) {
 
   const isNewMode = !estimateId;
 
+  // Determines whether the warehouse and branches are loading.
+  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+
   // Provider payload.
   const provider = {
     estimateId,
     estimate,
     items,
     customers,
+    branches,
+    warehouses,
     isNewMode,
 
     isItemsFetching,
@@ -65,7 +86,9 @@ function EstimateFormProvider({ estimateId, ...props }) {
     isCustomersLoading,
     isItemsLoading,
     isEstimateLoading,
-
+    isFeatureLoading,
+    isBranchesSuccess,
+    isWarehousesSuccess,
     submitPayload,
     setSubmitPayload,
 

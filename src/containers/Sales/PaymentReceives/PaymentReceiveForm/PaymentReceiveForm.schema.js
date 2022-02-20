@@ -19,6 +19,7 @@ const Schema = Yup.object().shape({
     .label(intl.get('payment_receive_no_')),
   reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
   // statement: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
+  branch_id: Yup.string(),
   entries: Yup.array().of(
     Yup.object().shape({
       id: Yup.number().nullable(),
