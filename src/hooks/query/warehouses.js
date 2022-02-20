@@ -237,7 +237,7 @@ export function useActivateWarehouses(props) {
 /**
  * Mark primary the given branch.
  */
-export function useMarkPrimaryWarehouse(props) {
+export function useMarkWarehouseAsPrimary(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 

@@ -117,7 +117,7 @@ export function useActivateBranches(props) {
 /**
  * Mark primary the given branch.
  */
-export function useMarkPrimaryBranches(props) {
+export function useMarkBranchAsPrimary(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 

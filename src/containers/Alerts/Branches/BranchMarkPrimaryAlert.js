@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
 
-import { useMarkPrimaryBranches } from 'hooks/query';
+import { useMarkBranchAsPrimary } from 'hooks/query';
 import { AppToaster } from 'components';
 
 import withAlertActions from 'containers/Alert/withAlertActions';
@@ -25,7 +25,7 @@ function BranchMarkPrimaryAlert({
   closeAlert,
 }) {
   const { mutateAsync: markPrimaryBranchMutate, isLoading } =
-    useMarkPrimaryBranches();
+  useMarkBranchAsPrimary();
 
   // Handle cancel mark primary alert.
   const handleCancelMarkPrimaryAlert = () => {
@@ -49,8 +49,8 @@ function BranchMarkPrimaryAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'make_primary'} />}
+      // cancelButtonText={<T id={'cancel'} />}
+      // confirmButtonText={<T id={'make_primary'} />}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelMarkPrimaryAlert}

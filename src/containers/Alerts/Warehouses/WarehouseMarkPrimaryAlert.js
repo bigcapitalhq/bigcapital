@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
 
-import { useMarkPrimaryWarehouse } from 'hooks/query';
+import { useMarkWarehouseAsPrimary } from 'hooks/query';
 import { AppToaster } from 'components';
 
 import withAlertActions from 'containers/Alert/withAlertActions';
@@ -24,14 +24,14 @@ function WarehouseMarkPrimaryAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: markPrimaryWarehouseMutate, isLoading } =
-    useMarkPrimaryWarehouse();
+  // const { mutateAsync: markPrimaryWarehouseMutate, isLoading } =
+  // useMarkWarehouseAsPrimary();
 
   // Handle cancel mark primary alert.
   const handleCancelMarkPrimaryAlert = () => {
     closeAlert(name);
   };
-  console.log(warehouseId, 'XX');
+
   // andle cancel mark primary confirm.
   const handleConfirmMarkPrimaryWarehouse = () => {
     markPrimaryWarehouseMutate(warehouseId)

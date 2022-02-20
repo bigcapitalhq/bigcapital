@@ -1,13 +1,16 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { Intent } from '@blueprintjs/core';
 
 import 'style/pages/Preferences/branchesList.scss';
 
-import { DataTable, Card } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import BranchesEmptyStatus from './BranchesEmptyStatus';
+import { DataTable, Card, AppToaster } from 'components';
 import { useBranchesTableColumns, ActionsMenu } from './components';
 import { useBranchesContext } from './BranchesProvider';
+import { useMarkBranchAsPrimary } from 'hooks/query';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertActions from 'containers/Alert/withAlertActions';
@@ -27,6 +30,9 @@ function BranchesDataTable({
   // Table columns.
   const columns = useBranchesTableColumns();
 
+  // MarkBranchAsPrimary
+  const { mutateAsync: markBranchAsPrimaryMutate } = useMarkBranchAsPrimary();
+
   const { branches, isBranchesLoading, isBranchesFetching } =
     useBranchesContext();
 
@@ -40,9 +46,14 @@ function BranchesDataTable({
     openAlert('branch-delete', { branchId: id });
   };
 
-   // Handle mark primary branch.
-  const handleMarkPrimaryBranch = ({ id }) => {
-    openAlert('branch-mark-primary', { branchId: id });
+  // Handle mark  branch as primary.
+  const handleMarkBranchAsPrimary = ({ id }) => {
+    markBranchAsPrimaryMutate(id).then(() => {
+      AppToaster.show({
+        message: intl.get('branch.alert.mark_primary_message'),
+        intent: Intent.SUCCESS,
+      });
+    });
   };
 
   // if (type) {
@@ -63,7 +74,7 @@ function BranchesDataTable({
         payload={{
           onEdit: handleEditBranch,
           onDelete: handleDeleteBranch,
-          onMarkPrimary: handleMarkPrimaryBranch,
+          onMarkPrimary: handleMarkBranchAsPrimary,
         }}
       />
     </BranchesTableCard>

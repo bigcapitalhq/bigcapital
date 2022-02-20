@@ -1,7 +1,11 @@
 import React from 'react';
+import intl from 'react-intl-universal';
+import { Intent } from '@blueprintjs/core';
 import { ContextMenu2 } from '@blueprintjs/popover2';
 
+import { AppToaster } from 'components';
 import { WarehouseContextMenu, WarehousesGridItemBox } from './components';
+import { useMarkWarehouseAsPrimary } from 'hooks/query';
 
 import withAlertsActions from '../../Alert/withAlertActions';
 import withDialogActions from '../../Dialog/withDialogActions';
@@ -19,6 +23,9 @@ function WarehouseGridItem({
 
   warehouse,
 }) {
+  const { mutateAsync: markWarehouseAsPrimaryMutate } =
+    useMarkWarehouseAsPrimary();
+
   // Handle edit warehouse.
   const handleEditWarehouse = () => {
     openDialog('warehouse-form', { warehouseId: warehouse.id, action: 'edit' });
@@ -28,8 +35,13 @@ function WarehouseGridItem({
     openAlert('warehouse-delete', { warehouseId: warehouse.id });
   };
   // Handle mark primary warehouse.
-  const handleMarkPrimaryWarehouse = () => {
-    openAlert('warehouse-mark-primary', { warehouseId: warehouse.id });
+  const handleMarkWarehouseAsPrimary = () => {
+    markWarehouseAsPrimaryMutate(warehouse.id).then(() => {
+      AppToaster.show({
+        message: intl.get('warehouse.alert.mark_primary_message'),
+        intent: Intent.SUCCESS,
+      });
+    });
   };
 
   return (
@@ -38,7 +50,7 @@ function WarehouseGridItem({
         <WarehouseContextMenu
           onEditClick={handleEditWarehouse}
           onDeleteClick={handleDeleteWarehouse}
-          onMarkPrimary={handleMarkPrimaryWarehouse}
+          onMarkPrimary={handleMarkWarehouseAsPrimary}
         />
       }
     >
