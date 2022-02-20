@@ -8,14 +8,15 @@ import {
   Intent,
   Classes,
 } from '@blueprintjs/core';
-import clsx from 'classnames';
-import { If, Icon, Can } from '../../../components';
+
+import { Icon } from '../../../components';
 import { safeCallback } from 'utils';
 
-const WAREHOUSES_SKELETON_N = 9;
+const WAREHOUSES_SKELETON_N = 4;
 
 /**
- * Warehouse context menu.
+ * Warehouse grid item box context menu.
+ * @returns {JSX.Element}
  */
 export function WarehouseContextMenu({
   onEditClick,
@@ -45,57 +46,60 @@ export function WarehouseContextMenu({
   );
 }
 
-export function WarehousesGrid({
+/**
+ * Warehouse grid item box skeleton.
+ * @returns {JSX.Element}
+ */
+function WarehouseGridItemSkeletonBox() {
+  return (
+    <WarehouseBoxRoot>
+      <WarehouseHeader>
+        <WarehouseTitle className={Classes.SKELETON}>X</WarehouseTitle>
+        <WarehouseCode className={Classes.SKELETON}>X</WarehouseCode>
+      </WarehouseHeader>
+
+      <WarehouseContent>
+        <WarehouseItem className={Classes.SKELETON}>X</WarehouseItem>
+        <WarehouseItem className={Classes.SKELETON}>X</WarehouseItem>
+      </WarehouseContent>
+    </WarehouseBoxRoot>
+  );
+}
+
+/**
+ * Warehouse grid item box.
+ * @returns {JSX.Element}
+ */
+export function WarehousesGridItemBox({
   title,
   code,
   city,
   country,
   email,
-  phone_number,
-  loading,
+  phoneNumber,
 }) {
   return (
-    <WarehouseGridWrapper>
+    <WarehouseBoxRoot>
       <WarehouseHeader>
-        <WarehouseTitle className={clsx({ [Classes.SKELETON]: loading })}>
-          {title}
-        </WarehouseTitle>
-        <WarehouseCode className={clsx({ [Classes.SKELETON]: loading })}>
-          {code}
-        </WarehouseCode>
+        <WarehouseTitle>{title}</WarehouseTitle>
+        <WarehouseCode>{code}</WarehouseCode>
         <WarehouseIcon>
-          {!loading && <Icon icon="warehouse-16" iconSize={20} />}
+          <Icon icon="warehouse-16" iconSize={20} />
         </WarehouseIcon>
       </WarehouseHeader>
       <WarehouseContent>
-        <WarehouseItem className={clsx({ [Classes.SKELETON]: loading })}>
-          {city}
-        </WarehouseItem>
-        <WarehouseItem className={clsx({ [Classes.SKELETON]: loading })}>
-          {country}
-        </WarehouseItem>
-        <WarehouseItem className={clsx({ [Classes.SKELETON]: loading })}>
-          {email}
-        </WarehouseItem>
-        <WarehouseItem className={clsx({ [Classes.SKELETON]: loading })}>
-          {phone_number}
-        </WarehouseItem>
+        {city && <WarehouseItem>{city}</WarehouseItem>}
+        {country && <WarehouseItem>{country}</WarehouseItem>}
+        {email && <WarehouseItem>{email}</WarehouseItem>}
+        {phoneNumber && <WarehouseItem>{phoneNumber}</WarehouseItem>}
       </WarehouseContent>
-    </WarehouseGridWrapper>
+    </WarehouseBoxRoot>
   );
 }
 
 export function WarehousesSkeleton() {
   return [...Array(WAREHOUSES_SKELETON_N)].map((key, value) => (
-    <WarehousesGrid
-      title={'warehouse.name'}
-      code={'warehouse.code'}
-      city={'warehouse.city'}
-      country={'warehouse.country'}
-      email={'warehouse.email'}
-      phone={'warehouse.phone_number'}
-      loading={true}
-    />
+    <WarehouseGridItemSkeletonBox />
   ));
 }
 
@@ -103,20 +107,20 @@ export const WarehousesList = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin: 15px;
-  height: 100%;
 `;
 
-export const WarehouseGridWrapper = styled.div`
+export const WarehouseBoxRoot = styled.div`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  border-radius: 3px;
-  border: 1px solid #c8cad0; //#CFD1D6
+  border-radius: 5px;
+  border: 1px solid #c8cad0;
   background: #fff;
   margin: 5px 5px 8px;
-  width: 300px; // 453px
-  height: 160px; //225px
+  width: 200px;
+  height: 160px;
   transition: all 0.1s ease-in-out;
+  padding: 12px;
   position: relative;
 
   &:hover {
@@ -126,11 +130,12 @@ export const WarehouseGridWrapper = styled.div`
 
 export const WarehouseHeader = styled.div`
   position: relative;
-  padding: 16px 12px 10px;
+  padding-right: 24px;
+  padding-top: 2px;
 `;
 
 export const WarehouseTitle = styled.div`
-  font-size: 14px; //22px
+  font-size: 14px
   font-style: inherit;
   color: #000;
   white-space: nowrap;
@@ -139,30 +144,31 @@ export const WarehouseTitle = styled.div`
 `;
 
 const WarehouseCode = styled.div`
-  display: inline-block;
+  display: block;
   font-size: 11px;
   color: #6b7176;
+  margin-top: 4px;
 `;
 
 const WarehouseIcon = styled.div`
   position: absolute;
-  top: 14px;
+  top: 0;
   color: #abb3bb;
-  right: 12px;
+  right: 0;
 `;
 
 const WarehouseContent = styled.div`
-  display: inline-block;
-  position: absolute;
-  bottom: 8px;
   width: 100%;
-  padding: 0 12px 0px;
+  margin-top: auto;
 `;
 
 const WarehouseItem = styled.div`
   font-size: 11px;
   color: #000;
-  margin-bottom: 5px;
   text-overflow: ellipsis;
   overflow: hidden;
+
+  &:not(:last-of-type) {
+    margin-bottom: 5px;
+  }
 `;

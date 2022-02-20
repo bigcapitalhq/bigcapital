@@ -1,8 +1,7 @@
 import React from 'react';
 import { ContextMenu2 } from '@blueprintjs/popover2';
 
-import { WarehouseContextMenu, WarehousesGrid } from './components';
-import { useWarehousesContext } from './WarehousesProvider';
+import { WarehouseContextMenu, WarehousesGridItemBox } from './components';
 
 import withAlertsActions from '../../Alert/withAlertActions';
 import withDialogActions from '../../Dialog/withDialogActions';
@@ -14,6 +13,7 @@ import { compose } from 'utils';
 function WarehouseGridItem({
   // #withAlertsActions
   openAlert,
+
   // #withDialogActions
   openDialog,
 
@@ -23,12 +23,10 @@ function WarehouseGridItem({
   const handleEditWarehouse = () => {
     openDialog('warehouse-form', { warehouseId: warehouse.id, action: 'edit' });
   };
-
   // Handle delete warehouse.
   const handleDeleteWarehouse = () => {
     openAlert('warehouse-delete', { warehouseId: warehouse.id });
   };
-
   // Handle mark primary warehouse.
   const handleMarkPrimaryWarehouse = () => {
     openAlert('warehouse-mark-primary', { warehouseId: warehouse.id });
@@ -44,13 +42,13 @@ function WarehouseGridItem({
         />
       }
     >
-      <WarehousesGrid
+      <WarehousesGridItemBox
         title={warehouse.name}
         code={warehouse.code}
         city={warehouse.city}
         country={warehouse.country}
         email={warehouse.email}
-        phone={warehouse.phone_number}
+        phoneNumber={warehouse.phone_number}
       />
     </ContextMenu2>
   );
