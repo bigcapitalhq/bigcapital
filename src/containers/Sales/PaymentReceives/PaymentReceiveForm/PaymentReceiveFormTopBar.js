@@ -1,16 +1,15 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  Alignment,
-  Navbar,
-  NavbarGroup,
-  Button,
-  Classes,
-} from '@blueprintjs/core';
-import styled from 'styled-components';
+import { Alignment, NavbarGroup, Button, Classes } from '@blueprintjs/core';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useFeatureCan } from 'hooks/state';
-import { Icon, BranchSelect, FeatureCan } from 'components';
+import {
+  Icon,
+  BranchSelect,
+  FeatureCan,
+  FormTopbar,
+  DetailsBarSkeletonBase,
+} from 'components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import { Features } from 'common';
 
@@ -31,13 +30,13 @@ export default function PaymentReceiveFormTopBar() {
   }
 
   return (
-    <Navbar className={'navbar--dashboard-topbar'}>
+    <FormTopbar>
       <NavbarGroup align={Alignment.LEFT}>
         <FeatureCan feature={Features.Branches}>
           <PaymentReceiveFormSelectBranch />
         </FeatureCan>
       </NavbarGroup>
-    </Navbar>
+    </FormTopbar>
   );
 }
 
@@ -67,12 +66,3 @@ function PaymentReceiveBranchSelectButton({ label }) {
     />
   );
 }
-
-const DetailsBarSkeletonBase = styled.div`
-  letter-spacing: 10px;
-  margin-right: 10px;
-  margin-left: 10px;
-  font-size: 8px;
-  width: 140px;
-  height: 10px;
-`;

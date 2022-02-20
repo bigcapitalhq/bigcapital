@@ -102,6 +102,7 @@ export * from './ExchangeRate';
 export * from './Branches';
 export * from './Warehouses';
 export * from './Currencies';
+export * from './FormTopbar'
 
 const Hint = FieldHint;
 

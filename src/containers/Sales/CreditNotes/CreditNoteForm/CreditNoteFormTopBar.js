@@ -2,19 +2,24 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import {
   Alignment,
-  Navbar,
   NavbarGroup,
   NavbarDivider,
   Button,
   Classes,
 } from '@blueprintjs/core';
-import styled from 'styled-components';
 import {
   useSetPrimaryBranchToForm,
   useSetPrimaryWarehouseToForm,
 } from './utils';
 import { useFeatureCan } from 'hooks/state';
-import { Icon, BranchSelect, FeatureCan, WarehouseSelect } from 'components';
+import {
+  Icon,
+  BranchSelect,
+  FeatureCan,
+  WarehouseSelect,
+  FormTopbar,
+  DetailsBarSkeletonBase,
+} from 'components';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 import { Features } from 'common';
 
@@ -38,7 +43,7 @@ export default function CreditNoteFormTopbar() {
   }
 
   return (
-    <Navbar className={'navbar--dashboard-topbar'}>
+    <FormTopbar>
       <NavbarGroup align={Alignment.LEFT}>
         <FeatureCan feature={Features.Branches}>
           <CreditNoteFormSelectBranch />
@@ -50,7 +55,7 @@ export default function CreditNoteFormTopbar() {
           <CreditFormSelectWarehouse />
         </FeatureCan>
       </NavbarGroup>
-    </Navbar>
+    </FormTopbar>
   );
 }
 
@@ -107,12 +112,3 @@ function CreditNoteBranchSelectButton({ label }) {
     />
   );
 }
-
-const DetailsBarSkeletonBase = styled.div`
-  letter-spacing: 10px;
-  margin-right: 10px;
-  margin-left: 10px;
-  font-size: 8px;
-  width: 140px;
-  height: 10px;
-`;

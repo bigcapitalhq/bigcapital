@@ -3,7 +3,6 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import {
   Alignment,
-  Navbar,
   NavbarGroup,
   NavbarDivider,
   Button,
@@ -15,7 +14,14 @@ import {
 } from './utils';
 
 import { useFeatureCan } from 'hooks/state';
-import { Icon, BranchSelect, FeatureCan, WarehouseSelect } from 'components';
+import {
+  Icon,
+  BranchSelect,
+  FeatureCan,
+  WarehouseSelect,
+  FormTopbar,
+  DetailsBarSkeletonBase,
+} from 'components';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import { Features } from 'common';
 
@@ -23,7 +29,7 @@ import { Features } from 'common';
  * Receipt form topbar .
  * @returns {JSX.Element}
  */
-export default function ReceiptFormTopbar() {
+export default function ReceiptFormTopBar() {
   // Features guard.
   const { featureCan } = useFeatureCan();
 
@@ -39,7 +45,7 @@ export default function ReceiptFormTopbar() {
   }
 
   return (
-    <Navbar className={'navbar--dashboard-topbar'}>
+    <FormTopbar>
       <NavbarGroup align={Alignment.LEFT}>
         <FeatureCan feature={Features.Branches}>
           <ReceiptFormSelectBranch />
@@ -51,7 +57,7 @@ export default function ReceiptFormTopbar() {
           <ReceiptFormSelectWarehouse />
         </FeatureCan>
       </NavbarGroup>
-    </Navbar>
+    </FormTopbar>
   );
 }
 
@@ -116,12 +122,3 @@ function ReceiptWarehouseSelectButton({ label }) {
     />
   );
 }
-
-const DetailsBarSkeletonBase = styled.div`
-  letter-spacing: 10px;
-  margin-right: 10px;
-  margin-left: 10px;
-  font-size: 8px;
-  width: 140px;
-  height: 10px;
-`;

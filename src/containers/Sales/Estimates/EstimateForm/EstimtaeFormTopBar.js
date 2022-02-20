@@ -2,7 +2,6 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import {
   Alignment,
-  Navbar,
   NavbarGroup,
   NavbarDivider,
   Button,
@@ -14,7 +13,14 @@ import {
   useSetPrimaryWarehouseToForm,
 } from './utils';
 import { useFeatureCan } from 'hooks/state';
-import { Icon, BranchSelect, FeatureCan, WarehouseSelect } from 'components';
+import {
+  Icon,
+  BranchSelect,
+  FeatureCan,
+  WarehouseSelect,
+  FormTopbar,
+  DetailsBarSkeletonBase,
+} from 'components';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import { Features } from 'common';
 
@@ -38,7 +44,7 @@ export default function EstimtaeFormTopBar() {
   }
 
   return (
-    <Navbar className={'navbar--dashboard-topbar'}>
+    <FormTopbar>
       <NavbarGroup align={Alignment.LEFT}>
         <FeatureCan feature={Features.Branches}>
           <EstimateFormSelectBranch />
@@ -50,7 +56,7 @@ export default function EstimtaeFormTopBar() {
           <EstimateFormSelectWarehouse />
         </FeatureCan>
       </NavbarGroup>
-    </Navbar>
+    </FormTopbar>
   );
 }
 
@@ -107,12 +113,3 @@ function EstimateBranchSelectButton({ label }) {
     />
   );
 }
-
-const DetailsBarSkeletonBase = styled.div`
-  letter-spacing: 10px;
-  margin-right: 10px;
-  margin-left: 10px;
-  font-size: 8px;
-  width: 140px;
-  height: 10px;
-`;

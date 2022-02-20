@@ -15,7 +15,13 @@ import {
 } from './utils';
 
 import { useFeatureCan } from 'hooks/state';
-import { Icon, BranchSelect, FeatureCan, WarehouseSelect } from 'components';
+import {
+  Icon,
+  BranchSelect,
+  FeatureCan,
+  WarehouseSelect,
+  FormTopbar,
+} from 'components';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { Features } from 'common';
 
@@ -38,7 +44,7 @@ export default function InvoiceFormTopBar() {
     return null;
   }
   return (
-    <Navbar className={'navbar--dashboard-topbar'}>
+    <FormTopbar>
       <NavbarGroup align={Alignment.LEFT}>
         <FeatureCan feature={Features.Branches}>
           <InvoiceFormSelectBranch />
@@ -50,7 +56,7 @@ export default function InvoiceFormTopBar() {
           <InvoiceFormSelectWarehouse />
         </FeatureCan>
       </NavbarGroup>
-    </Navbar>
+    </FormTopbar>
   );
 }
 

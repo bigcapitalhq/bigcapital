@@ -10,7 +10,13 @@ import {
 import styled from 'styled-components';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useFeatureCan } from 'hooks/state';
-import { Icon, BranchSelect, FeatureCan } from 'components';
+import {
+  Icon,
+  BranchSelect,
+  FeatureCan,
+  FormTopbar,
+  DetailsBarSkeletonBase,
+} from 'components';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { Features } from 'common';
 
@@ -30,13 +36,13 @@ export default function PaymentMadeFormTopBar() {
     return null;
   }
   return (
-    <Navbar className={'navbar--dashboard-topbar'}>
+    <FormTopbar>
       <NavbarGroup align={Alignment.LEFT}>
         <FeatureCan feature={Features.Branches}>
           <PaymentMadeFormSelectBranch />
         </FeatureCan>
       </NavbarGroup>
-    </Navbar>
+    </FormTopbar>
   );
 }
 
@@ -66,12 +72,3 @@ function PaymentMadeBranchSelectButton({ label }) {
     />
   );
 }
-
-const DetailsBarSkeletonBase = styled.div`
-  letter-spacing: 10px;
-  margin-right: 10px;
-  margin-left: 10px;
-  font-size: 8px;
-  width: 140px;
-  height: 10px;
-`;

@@ -19,7 +19,7 @@ import ReceiptItemsEntriesEditor from './ReceiptItemsEntriesEditor';
 import ReceiptFormFloatingActions from './ReceiptFormFloatingActions';
 import ReceiptFormFooter from './ReceiptFormFooter';
 import ReceiptFormDialogs from './ReceiptFormDialogs';
-import ReceiptFormTopbar from './ReceiptFormTopbar';
+import ReceiptFormTopBar from './ReceiptFormTopBar';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -158,7 +158,7 @@ function ReceiptForm({
         onSubmit={handleFormSubmit}
       >
         <Form>
-          <ReceiptFormTopbar />
+          <ReceiptFormTopBar />
           <ReceiptFromHeader />
           <ReceiptItemsEntriesEditor />
           <ReceiptFormFooter />
