@@ -115,7 +115,11 @@ export function transformValueToRequest(values) {
   return {
     ...values,
     entries: entries.map((entry) => ({
-      ...omit(entry, ['warehouses']),
+      ...omit(entry, [
+        'warehouses',
+        'destination_warehouse',
+        'source_warehouse',
+      ]),
     })),
   };
 }
