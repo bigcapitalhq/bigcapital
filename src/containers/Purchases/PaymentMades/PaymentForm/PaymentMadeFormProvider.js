@@ -3,6 +3,7 @@ import {
   useAccounts,
   useVendors,
   useItems,
+  useBranches,
   usePaymentMadeEditPage,
   useSettings,
   useCreatePaymentMade,
@@ -45,6 +46,13 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
     enabled: !!paymentMadeId,
   });
 
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches();
+
   // Fetch payment made settings.
   useSettings();
 
@@ -54,6 +62,8 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
 
   const isNewMode = !paymentMadeId;
 
+  const isFeatureLoading = isBranchesLoading;
+
   // Provider payload.
   const provider = {
     paymentMadeId,
@@ -62,6 +72,7 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
     paymentMadeEditPage,
     vendors,
     items,
+    branches,
     submitPayload,
     paymentVendorId,
 
@@ -72,6 +83,8 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
     isVendorsLoading,
     isPaymentFetching,
     isPaymentLoading,
+    isFeatureLoading,
+    isBranchesSuccess,
 
     createPaymentMadeMutate,
     editPaymentMadeMutate,

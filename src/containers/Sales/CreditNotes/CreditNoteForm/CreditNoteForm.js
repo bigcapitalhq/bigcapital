@@ -16,6 +16,7 @@ import CreditNoteItemsEntriesEditorField from './CreditNoteItemsEntriesEditorFie
 import CreditNoteFormFooter from './CreditNoteFormFooter';
 import CreditNoteFloatingActions from './CreditNoteFloatingActions';
 import CreditNoteFormDialogs from './CreditNoteFormDialogs';
+import CreditNoteFormTopBar from './CreditNoteFormTopBar';
 
 import { AppToaster } from 'components';
 
@@ -153,6 +154,7 @@ function CreditNoteForm({
         onSubmit={handleFormSubmit}
       >
         <Form>
+          <CreditNoteFormTopBar />
           <CreditNoteFormHeader />
           <CreditNoteItemsEntriesEditorField />
           <CreditNoteFormFooter />

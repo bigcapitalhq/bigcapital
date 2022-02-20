@@ -1,13 +1,14 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import moment from 'moment';
-import { omit, pick } from 'lodash';
+import { omit, pick, first } from 'lodash';
+import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import {
   defaultFastFieldShouldUpdate,
   transactionNumber,
   transformToForm,
   safeSumBy,
-  orderingLinesIndexes
+  orderingLinesIndexes,
 } from 'utils';
 
 // Default payment receive entry.
@@ -32,6 +33,7 @@ export const defaultPaymentReceive = {
   statement: '',
   full_amount: '',
   currency_code: '',
+  branch_id: '',
   entries: [],
 };
 
@@ -46,8 +48,9 @@ export const defaultRequestPayment = {
   deposit_account_id: '',
   payment_date: '',
   payment_receive_no: '',
+  branch_id: '',
   statement: '',
-  entries: []
+  entries: [],
 };
 
 /**
@@ -78,6 +81,7 @@ export const transformInvoicesNewPageEntries = (invoices) => [
     currency_code: invoice.currency_code,
     payment_amount: '',
     invoice_no: invoice.invoice_no,
+    branch_id: invoice.branch_id,
     total_payment_amount: invoice.payment_amount,
   })),
 ];
@@ -161,4 +165,19 @@ export const transformFormToRequest = (form) => {
     }),
     entries: orderingLinesIndexes(entries),
   };
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = usePaymentReceiveFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
 };

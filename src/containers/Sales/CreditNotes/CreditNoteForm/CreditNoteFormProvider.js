@@ -10,6 +10,8 @@ import {
   useEditCreditNote,
   useItems,
   useCustomers,
+  useWarehouses,
+  useBranches,
   useSettingsCreditNotes,
   useInvoice,
 } from 'hooks/query';
@@ -49,6 +51,20 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     enabled: !!invoiceId,
   });
 
+  // Fetch warehouses list.
+  const {
+    data: warehouses,
+    isLoading: isWarehouesLoading,
+    isSuccess: isWarehousesSuccess,
+  } = useWarehouses();
+
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches();
+
   // Handle fetching settings.
   useSettingsCreditNotes();
 
@@ -62,6 +78,9 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
   // Determines whether the form in new mode.
   const isNewMode = !creditNoteId;
 
+  // Determines whether the warehouse and branches are loading.
+  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+
   const newCreditNote = !isEmpty(invoice)
     ? transformToEditForm({
         ...pick(invoice, ['customer_id', 'entries']),
@@ -73,13 +92,18 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     items,
     customers,
     creditNote,
+    branches,
+    warehouses,
     submitPayload,
     isNewMode,
     newCreditNote,
 
     isItemsLoading,
     isCustomersLoading,
-
+    isFeatureLoading,
+    isBranchesSuccess,
+    isWarehousesSuccess,
+    
     createCreditNoteMutate,
     editCreditNoteMutate,
     setSubmitPayload,

@@ -17,6 +17,7 @@ import EstimateItemsEntriesField from './EstimateItemsEntriesField';
 import EstimateFloatingActions from './EstimateFloatingActions';
 import EstimateFormFooter from './EstimateFormFooter';
 import EstimateFormDialogs from './EstimateFormDialogs';
+import EstimtaeFormTopBar from './EstimtaeFormTopBar';
 
 import withSettings from 'containers/Settings/withSettings';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
@@ -28,7 +29,7 @@ import {
   transformToEditForm,
   defaultEstimate,
   transfromsFormValuesToRequest,
-  handleErrors
+  handleErrors,
 } from './utils';
 
 /**
@@ -153,6 +154,7 @@ function EstimateForm({
         onSubmit={handleFormSubmit}
       >
         <Form>
+          <EstimtaeFormTopBar />
           <EstimateFormHeader />
           <EstimateItemsEntriesField />
           <EstimateFormFooter />

@@ -3,13 +3,14 @@ import { useFormikContext } from 'formik';
 import moment from 'moment';
 import * as R from 'ramda';
 import intl from 'react-intl-universal';
-import { omit } from 'lodash';
+import { omit, first } from 'lodash';
 import {
   defaultFastFieldShouldUpdate,
   transactionNumber,
   repeatValue,
   transformToForm,
 } from 'utils';
+import { useReceiptFormContext } from './ReceiptFormProvider';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
@@ -36,6 +37,8 @@ export const defaultReceipt = {
   receipt_message: '',
   statement: '',
   closed: '',
+  branch_id: '',
+  warehouse_id: '',
   entries: [...repeatValue(defaultReceiptEntry, MIN_LINES_NUMBER)],
 };
 
@@ -141,4 +144,35 @@ export const transformFormValuesToRequest = (values) => {
     entries: entries.map((entry) => ({ ...omit(entry, ['amount']) })),
     closed: false,
   };
+};
+
+export const useSetPrimaryWarehouseToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { warehouses, isWarehousesSuccess } = useReceiptFormContext();
+
+  React.useEffect(() => {
+    if (isWarehousesSuccess) {
+      const primaryWarehouse =
+        warehouses.find((b) => b.primary) || first(warehouses);
+
+      if (primaryWarehouse) {
+        setFieldValue('warehouse_id', primaryWarehouse.id);
+      }
+    }
+  }, [isWarehousesSuccess, setFieldValue, warehouses]);
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = useReceiptFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
 };

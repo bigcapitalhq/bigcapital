@@ -5,6 +5,7 @@ import {
   usePaymentReceiveEditPage,
   useAccounts,
   useCustomers,
+  useBranches,
   useCreatePaymentReceive,
   useEditPaymentReceive,
 } from 'hooks/query';
@@ -42,8 +43,17 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
     isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches();
+
   // Detarmines whether the new mode.
   const isNewMode = !paymentReceiveId;
+
+  const isFeatureLoading = isBranchesLoading;
 
   // Create and edit payment receive mutations.
   const { mutateAsync: editPaymentReceiveMutate } = useEditPaymentReceive();
@@ -56,11 +66,14 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
     paymentEntriesEditPage,
     accounts,
     customers,
+    branches,
 
     isPaymentLoading,
     isAccountsLoading,
     isPaymentFetching,
     isCustomersLoading,
+    isFeatureLoading,
+    isBranchesSuccess,
     isNewMode,
 
     submitPayload,

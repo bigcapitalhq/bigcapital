@@ -4,12 +4,8 @@ import { DATATYPES_LENGTH } from 'common/dataTypes';
 import { isBlank } from 'utils';
 
 const Schema = Yup.object().shape({
-  customer_id: Yup.string()
-    .label(intl.get('customer_name_'))
-    .required(),
-  receipt_date: Yup.date()
-    .required()
-    .label(intl.get('receipt_date_')),
+  customer_id: Yup.string().label(intl.get('customer_name_')).required(),
+  receipt_date: Yup.date().required().label(intl.get('receipt_date_')),
   receipt_number: Yup.string()
     .nullable()
     .max(DATATYPES_LENGTH.STRING)
@@ -29,6 +25,8 @@ const Schema = Yup.object().shape({
     .max(DATATYPES_LENGTH.TEXT)
     .label(intl.get('note')),
   closed: Yup.boolean(),
+  branch_id: Yup.string(),
+  warehouse_id: Yup.string(),
   entries: Yup.array().of(
     Yup.object().shape({
       quantity: Yup.number()

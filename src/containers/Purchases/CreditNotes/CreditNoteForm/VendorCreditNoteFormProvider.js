@@ -7,6 +7,8 @@ import {
   useCreateVendorCredit,
   useEditVendorCredit,
   useVendorCredit,
+  useWarehouses,
+  useBranches,
   useItems,
   useVendors,
   useSettingsVendorCredits,
@@ -51,6 +53,20 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
     enabled: !!billId,
   });
 
+  // Fetch warehouses list.
+  const {
+    data: warehouses,
+    isLoading: isWarehouesLoading,
+    isSuccess: isWarehousesSuccess,
+  } = useWarehouses();
+
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches();
+
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = React.useState();
 
@@ -60,6 +76,9 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
 
   // Determines whether the form in new mode.
   const isNewMode = !vendorCreditId;
+
+  // Determines whether the warehouse and branches are loading.
+  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
 
   const newVendorCredit = !isEmpty(bill)
     ? transformToEditForm({
@@ -72,12 +91,17 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
     items,
     vendors,
     vendorCredit,
+    warehouses,
+    branches,
     submitPayload,
     isNewMode,
     newVendorCredit,
 
     isVendorCreditLoading,
-
+    isFeatureLoading,
+    isBranchesSuccess,
+    isWarehousesSuccess,
+    
     createVendorCreditMutate,
     editVendorCreditMutate,
     setSubmitPayload,

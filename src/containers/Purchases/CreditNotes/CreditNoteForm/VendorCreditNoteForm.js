@@ -16,6 +16,7 @@ import VendorCreditNoteItemsEntriesEditor from './VendorCreditNoteItemsEntriesEd
 import VendorCreditNoteFormFooter from './VendorCreditNoteFormFooter';
 import VendorCreditNoteFloatingActions from './VendorCreditNoteFloatingActions';
 import VendorCreditNoteFormDialogs from './VendorCreditNoteFormDialogs';
+import VendorCreditNoteFormTopBar from './VendorCreditNoteFormTopBar';
 
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 
@@ -151,6 +152,7 @@ function VendorCreditNoteForm({
         onSubmit={handleFormSubmit}
       >
         <Form>
+          <VendorCreditNoteFormTopBar />
           <VendorCreditNoteFormHeader />
           <VendorCreditNoteItemsEntriesEditor />
           <VendorCreditNoteFormFooter />

@@ -1,6 +1,7 @@
 import React from 'react';
 import * as R from 'ramda';
 import moment from 'moment';
+import { first } from 'lodash';
 
 import {
   defaultFastFieldShouldUpdate,
@@ -10,6 +11,7 @@ import {
   orderingLinesIndexes,
 } from 'utils';
 import { useFormikContext } from 'formik';
+import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 
 import {
   updateItemsEntriesTotal,
@@ -39,6 +41,8 @@ export const defaultCreditNote = {
   reference_no: '',
   note: '',
   terms_conditions: '',
+  branch_id: '',
+  warehouse_id: '',
   entries: [...repeatValue(defaultCreditNoteEntry, MIN_LINES_NUMBER)],
 };
 
@@ -130,4 +134,35 @@ export const useObserveCreditNoSettings = (prefix, nextNumber) => {
     const creditNo = transactionNumber(prefix, nextNumber);
     setFieldValue('credit_note_number', creditNo);
   }, [setFieldValue, prefix, nextNumber]);
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = useCreditNoteFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+export const useSetPrimaryWarehouseToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { warehouses, isWarehousesSuccess } = useCreditNoteFormContext();
+
+  React.useEffect(() => {
+    if (isWarehousesSuccess) {
+      const primaryWarehouse =
+        warehouses.find((b) => b.primary) || first(warehouses);
+
+      if (primaryWarehouse) {
+        setFieldValue('warehouse_id', primaryWarehouse.id);
+      }
+    }
+  }, [isWarehousesSuccess, setFieldValue, warehouses]);
 };

@@ -1,5 +1,8 @@
+import React from 'react';
 import moment from 'moment';
-import { pick } from 'lodash';
+import { pick, first } from 'lodash';
+import { useFormikContext } from 'formik';
+import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import {
   defaultFastFieldShouldUpdate,
   safeSumBy,
@@ -31,6 +34,7 @@ export const defaultPaymentMade = {
   payment_number: '',
   statement: '',
   currency_code: '',
+  branch_id: '',
   entries: [],
 };
 
@@ -90,4 +94,19 @@ export const transformFormToRequest = (form) => {
     }));
 
   return { ...form, entries: orderingLinesIndexes(entries) };
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = usePaymentMadeFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
 };

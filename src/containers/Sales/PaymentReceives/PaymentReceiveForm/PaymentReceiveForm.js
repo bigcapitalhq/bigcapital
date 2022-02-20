@@ -15,6 +15,7 @@ import PaymentReceiveFloatingActions from './PaymentReceiveFloatingActions';
 import PaymentReceiveFormFooter from './PaymentReceiveFormFooter';
 import PaymentReceiveFormAlerts from './PaymentReceiveFormAlerts';
 import PaymentReceiveFormDialogs from './PaymentReceiveFormDialogs';
+import PaymentReceiveFormTopBar from './PaymentReceiveFormTopBar';
 import { PaymentReceiveInnerProvider } from './PaymentReceiveInnerProvider';
 
 import withSettings from 'containers/Settings/withSettings';
@@ -178,6 +179,7 @@ function PaymentReceiveForm({
       >
         <Form>
           <PaymentReceiveInnerProvider>
+            <PaymentReceiveFormTopBar />
             <PaymentReceiveHeader />
             <PaymentReceiveFormBody />
             <PaymentReceiveFormFooter />

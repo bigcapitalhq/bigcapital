@@ -12,6 +12,7 @@ import PaymentMadeHeader from './PaymentMadeFormHeader';
 import PaymentMadeFloatingActions from './PaymentMadeFloatingActions';
 import PaymentMadeFooter from './PaymentMadeFooter';
 import PaymentMadeFormBody from './PaymentMadeFormBody';
+import PaymentMadeFormTopBar from './PaymentMadeFormTopBar';
 import { PaymentMadeInnerProvider } from './PaymentMadeInnerProvider';
 
 import withSettings from 'containers/Settings/withSettings';
@@ -145,6 +146,7 @@ function PaymentMadeForm({
       >
         <Form>
           <PaymentMadeInnerProvider>
+            <PaymentMadeFormTopBar />
             <PaymentMadeHeader />
             <PaymentMadeFormBody />
             <PaymentMadeFooter />
