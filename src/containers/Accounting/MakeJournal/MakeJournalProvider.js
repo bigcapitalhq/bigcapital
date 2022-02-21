@@ -1,4 +1,5 @@
 import React, { createContext, useState } from 'react';
+import { isEqual, isUndefined } from 'lodash';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useAccounts,
@@ -8,7 +9,7 @@ import {
   useCreateJournal,
   useEditJournal,
   useSettings,
-  useSettingsManualJournals
+  useSettingsManualJournals,
 } from 'hooks/query';
 
 const MakeJournalFormContext = createContext();
@@ -16,15 +17,13 @@ const MakeJournalFormContext = createContext();
 /**
  * Make journal form provider.
  */
-function MakeJournalProvider({ journalId, ...props }) {
+function MakeJournalProvider({ journalId, baseCurrency, ...props }) {
   // Load the accounts list.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
   // Load the customers list.
-  const {
-    data: contacts,
-    isLoading: isContactsLoading,
-  } = useAutoCompleteContacts();
+  const { data: contacts, isLoading: isContactsLoading } =
+    useAutoCompleteContacts();
 
   // Load the currencies list.
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
@@ -45,12 +44,18 @@ function MakeJournalProvider({ journalId, ...props }) {
 
   // Submit form payload.
   const [submitPayload, setSubmitPayload] = useState({});
+  const [selectJournalCurrency, setSelactJournalCurrency] = useState(null);
+
+  const isForeignJournal =
+    !isEqual(selectJournalCurrency?.currency_code, baseCurrency) &&
+    !isUndefined(selectJournalCurrency?.currency_code);
 
   const provider = {
     accounts,
     contacts,
     currencies,
     manualJournal,
+    baseCurrency,
 
     createJournalMutate,
     editJournalMutate,
@@ -60,11 +65,13 @@ function MakeJournalProvider({ journalId, ...props }) {
     isCurrenciesLoading,
     isJournalLoading,
     isSettingsLoading,
-
+    isForeignJournal,
     isNewMode: !journalId,
 
     submitPayload,
-    setSubmitPayload
+    setSubmitPayload,
+    selectJournalCurrency,
+    setSelactJournalCurrency,
   };
 
   return (
@@ -73,7 +80,7 @@ function MakeJournalProvider({ journalId, ...props }) {
         isJournalLoading ||
         isAccountsLoading ||
         isCurrenciesLoading ||
-        isContactsLoading || 
+        isContactsLoading ||
         isSettingsLoading
       }
       name={'make-journal-page'}

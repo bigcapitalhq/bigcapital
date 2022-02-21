@@ -9,6 +9,7 @@ import { FastField, ErrorMessage } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
+import { Features } from 'common';
 
 import { CLASSES } from 'common/classes';
 import {
@@ -23,8 +24,11 @@ import {
   FieldHint,
   FieldRequiredHint,
   Icon,
+  If,
+  FeatureCan,
   InputPrependButton,
   CurrencySelectList,
+  ExchangeRateInputGroup,
 } from 'components';
 import withSettings from 'containers/Settings/withSettings';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
@@ -48,7 +52,12 @@ function MakeJournalEntriesHeader({
   journalNextNumber,
   journalNumberPrefix,
 }) {
-  const { currencies } = useMakeJournalFormContext();
+  const {
+    currencies,
+    isForeignJournal,
+    baseCurrency,
+    setSelactJournalCurrency,
+  } = useMakeJournalFormContext();
 
   // Handle journal number change.
   const handleJournalNumberChange = () => {
@@ -185,29 +194,44 @@ function MakeJournalEntriesHeader({
       </FastField>
 
       {/*------------ Currency  -----------*/}
-      <FastField
-        name={'currency_code'}
-        currencies={currencies}
-        shouldUpdate={currenciesFieldShouldUpdate}
-      >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'currency'} />}
-            className={classNames('form-group--currency', CLASSES.FILL)}
-            inline={true}
-          >
-            <CurrencySelectList
-              currenciesList={currencies}
-              selectedCurrencyCode={value}
-              onCurrencySelected={(currencyItem) => {
-                form.setFieldValue('currency_code', currencyItem.currency_code);
-              }}
-              defaultSelectText={value}
-              disabled={true}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      {/* <FeatureCan feature={Features.ManualJournal}> */}
+        <FastField
+          name={'currency_code'}
+          currencies={currencies}
+          shouldUpdate={currenciesFieldShouldUpdate}
+        >
+          {({ form, field: { value }, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'currency'} />}
+              className={classNames('form-group--currency', CLASSES.FILL)}
+              inline={true}
+            >
+              <CurrencySelectList
+                currenciesList={currencies}
+                selectedCurrencyCode={value}
+                onCurrencySelected={(currencyItem) => {
+                  form.setFieldValue(
+                    'currency_code',
+                    currencyItem.currency_code,
+                  );
+                  setSelactJournalCurrency(currencyItem);
+                }}
+                defaultSelectText={value}
+              />
+            </FormGroup>
+          )}
+        </FastField>
+      {/* </FeatureCan> */}
+
+      {/* ----------- Exchange rate ----------- */}
+      <If condition={isForeignJournal}>
+        <ExchangeRateInputGroup
+          fromCurrency={'USD'}
+          toCurrency={'LYD'}
+          name={'exchange_rate'}
+          formGroupProps={{ label: ' ', inline: true }}
+        />
+      </If>
     </div>
   );
 }

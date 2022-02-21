@@ -6,15 +6,22 @@ import 'style/pages/ManualJournal/MakeJournal.scss';
 import MakeJournalEntriesForm from './MakeJournalEntriesForm';
 import { MakeJournalProvider } from './MakeJournalProvider';
 
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import { compose } from 'utils';
+
 /**
  * Make journal entries page.
  */
-export default function MakeJournalEntriesPage() {
+function MakeJournalEntriesPage({
+  // #withCurrentOrganization
+  organization: { base_currency },
+}) {
   const { id: journalId } = useParams();
-  
+
   return (
-    <MakeJournalProvider journalId={journalId}>
+    <MakeJournalProvider journalId={journalId} baseCurrency={base_currency}>
       <MakeJournalEntriesForm />
     </MakeJournalProvider>
   );
 }
+export default compose(withCurrentOrganization())(MakeJournalEntriesPage);
