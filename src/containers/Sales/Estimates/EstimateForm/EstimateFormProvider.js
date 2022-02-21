@@ -1,4 +1,6 @@
 import React, { createContext, useContext } from 'react';
+import { isEqual, isUndefined } from 'lodash';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useEstimate,
@@ -17,7 +19,7 @@ const EstimateFormContext = createContext();
 /**
  * Estimate form provider.
  */
-function EstimateFormProvider({ estimateId, ...props }) {
+function EstimateFormProvider({ estimateId, baseCurrency, ...props }) {
   const {
     data: estimate,
     isFetching: isEstimateFetching,
@@ -60,6 +62,7 @@ function EstimateFormProvider({ estimateId, ...props }) {
 
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = React.useState({});
+  const [selectCustomer, setSelectCustomer] = React.useState(null);
 
   // Create and edit estimate form.
   const { mutateAsync: createEstimateMutate } = useCreateEstimate();
@@ -69,6 +72,11 @@ function EstimateFormProvider({ estimateId, ...props }) {
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+
+  // Determines whether the foreign customer.
+  const isForeignCustomer =
+    !isEqual(selectCustomer?.currency_code, baseCurrency) &&
+    !isUndefined(selectCustomer?.currency_code);
 
   // Provider payload.
   const provider = {
@@ -89,9 +97,13 @@ function EstimateFormProvider({ estimateId, ...props }) {
     isFeatureLoading,
     isBranchesSuccess,
     isWarehousesSuccess,
+    isForeignCustomer,
     submitPayload,
     setSubmitPayload,
-
+    selectCustomer,
+    setSelectCustomer,
+    baseCurrency,
+    
     createEstimateMutate,
     editEstimateMutate,
   };

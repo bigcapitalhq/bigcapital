@@ -1,4 +1,6 @@
 import React, { createContext, useState } from 'react';
+import {isEqual, isUndefined } from 'lodash';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useAccounts,
@@ -35,7 +37,7 @@ const stringifiedFilterRoles = JSON.stringify([
 /**
  * Bill form provider.
  */
-function BillFormProvider({ billId, ...props }) {
+function BillFormProvider({ billId, baseCurrency, ...props }) {
   // Handle fetch accounts.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
@@ -78,6 +80,7 @@ function BillFormProvider({ billId, ...props }) {
 
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = useState({});
+  const [selectVendor, setSelectVendor] = React.useState(null);
 
   // Create and edit bills mutations.
   const { mutateAsync: createBillMutate } = useCreateBill();
@@ -88,6 +91,11 @@ function BillFormProvider({ billId, ...props }) {
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
 
+  // Determines whether the foreign vendor.
+  const isForeignVendor =
+    !isEqual(selectVendor?.currency_code, baseCurrency) &&
+    !isUndefined(selectVendor?.currency_code);
+
   const provider = {
     accounts,
     vendors,
@@ -95,6 +103,9 @@ function BillFormProvider({ billId, ...props }) {
     bill,
     warehouses,
     branches,
+    baseCurrency,
+    selectVendor,
+    setSelectVendor,
     submitPayload,
     isNewMode,
 
@@ -106,6 +117,7 @@ function BillFormProvider({ billId, ...props }) {
     isFeatureLoading,
     isBranchesSuccess,
     isWarehousesSuccess,
+    isForeignVendor,
 
     createBillMutate,
     editBillMutate,

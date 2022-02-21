@@ -98,7 +98,6 @@ export default function VendorFinanicalPanelTab() {
                   onCurrencySelected={(currency) => {
                     form.setFieldValue('currency_code', currency.currency_code);
                   }}
-                  disabled={true}
                 />
               </FormGroup>
             )}

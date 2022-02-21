@@ -1,4 +1,6 @@
 import React, { createContext, useState } from 'react';
+import { isEmpty, pick, isEqual, isUndefined } from 'lodash';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useReceipt,
@@ -17,7 +19,7 @@ const ReceiptFormContext = createContext();
 /**
  * Receipt form provider.
  */
-function ReceiptFormProvider({ receiptId, ...props }) {
+function ReceiptFormProvider({ receiptId, baseCurrency, ...props }) {
   // Fetch sale receipt details.
   const { data: receipt, isLoading: isReceiptLoading } = useReceipt(receiptId, {
     enabled: !!receiptId,
@@ -84,9 +86,16 @@ function ReceiptFormProvider({ receiptId, ...props }) {
 
   const [submitPayload, setSubmitPayload] = useState({});
 
+  const [selectCustomer, setSelectCustomer] = React.useState(null);
+
   const isNewMode = !receiptId;
 
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+
+  // Determines whether the foreign customer.
+  const isForeignCustomer =
+    !isEqual(selectCustomer?.currency_code, baseCurrency) &&
+    !isUndefined(selectCustomer?.currency_code);
 
   const provider = {
     receiptId,
@@ -97,6 +106,9 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     branches,
     warehouses,
     submitPayload,
+    baseCurrency,
+    selectCustomer,
+    setSelectCustomer,
 
     isNewMode,
     isReceiptLoading,
@@ -109,6 +121,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     isSettingLoading,
     isBranchesSuccess,
     isWarehousesSuccess,
+    isForeignCustomer,
 
     createReceiptMutate,
     editReceiptMutate,

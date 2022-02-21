@@ -1,4 +1,5 @@
 import React, { createContext, useContext } from 'react';
+import { isEqual, isUndefined } from 'lodash';
 import {
   useAccounts,
   useVendors,
@@ -17,9 +18,10 @@ const PaymentMadeFormContext = createContext();
 /**
  * Payment made form provider.
  */
-function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
+function PaymentMadeFormProvider({ paymentMadeId, baseCurrency, ...props }) {
   const [submitPayload, setSubmitPayload] = React.useState({});
   const [paymentVendorId, setPaymentVendorId] = React.useState(null);
+  const [selectVendor, setSelectVendor] = React.useState(null);
 
   // Handle fetch accounts data.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
@@ -64,6 +66,11 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
 
   const isFeatureLoading = isBranchesLoading;
 
+  // Determines whether the foreign vendor.
+  const isForeignVendor =
+    !isEqual(selectVendor?.currency_code, baseCurrency) &&
+    !isUndefined(selectVendor?.currency_code);
+
   // Provider payload.
   const provider = {
     paymentMadeId,
@@ -74,6 +81,9 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
     items,
     branches,
     submitPayload,
+    baseCurrency,
+    selectVendor,
+    setSelectVendor,
     paymentVendorId,
 
     isNewMode,
@@ -85,6 +95,7 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
     isPaymentLoading,
     isFeatureLoading,
     isBranchesSuccess,
+    isForeignVendor,
 
     createPaymentMadeMutate,
     editPaymentMadeMutate,

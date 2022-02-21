@@ -20,8 +20,10 @@ import {
   InputPrependText,
   Money,
   Hint,
+  If,
   Icon,
   MoneyInputGroup,
+  ExchangeRateInputGroup,
 } from 'components';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
@@ -49,8 +51,14 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
   } = useFormikContext();
 
   // Payment made form context.
-  const { vendors, accounts, isNewMode, setPaymentVendorId } =
-    usePaymentMadeFormContext();
+  const {
+    vendors,
+    accounts,
+    isNewMode,
+    setPaymentVendorId,
+    isForeignVendor,
+    setSelectVendor,
+  } = usePaymentMadeFormContext();
 
   // Sumation of payable full-amount.
   const payableFullAmount = useMemo(
@@ -97,6 +105,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
               onContactSelected={(contact) => {
                 form.setFieldValue('vendor_id', contact.id);
                 setPaymentVendorId(contact.id);
+                setSelectVendor(contact);
               }}
               disabled={!isNewMode}
               popoverFill={true}
@@ -105,6 +114,16 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
           </FormGroup>
         )}
       </FastField>
+
+      {/* ----------- Exchange rate ----------- */}
+      <If condition={isForeignVendor}>
+        <ExchangeRateInputGroup
+          fromCurrency={'USD'}
+          toCurrency={'LYD'}
+          name={'exchange_rate'}
+          formGroupProps={{ label: ' ', inline: true }}
+        />
+      </If>
 
       {/* ------------ Payment date ------------ */}
       <FastField name={'payment_date'}>

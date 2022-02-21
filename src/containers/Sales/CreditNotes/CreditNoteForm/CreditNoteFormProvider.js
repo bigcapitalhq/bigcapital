@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { isEmpty, pick } from 'lodash';
+import { isEmpty, pick, isEqual, isUndefined } from 'lodash';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { transformToEditForm } from './utils';
 
@@ -21,7 +21,7 @@ const CreditNoteFormContext = React.createContext();
 /**
  * Credit note data provider.
  */
-function CreditNoteFormProvider({ creditNoteId, ...props }) {
+function CreditNoteFormProvider({ creditNoteId, baseCurrency, ...props }) {
   const { state } = useLocation();
   const invoiceId = state?.invoiceId;
 
@@ -75,6 +75,8 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = React.useState();
 
+  const [selectCustomer, setSelectCustomer] = React.useState(null);
+
   // Determines whether the form in new mode.
   const isNewMode = !creditNoteId;
 
@@ -87,6 +89,11 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
       })
     : [];
 
+  // Determines whether the foreign customer.
+  const isForeignCustomer =
+    !isEqual(selectCustomer?.currency_code, baseCurrency) &&
+    !isUndefined(selectCustomer?.currency_code);
+
   // Provider payload.
   const provider = {
     items,
@@ -95,15 +102,19 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     branches,
     warehouses,
     submitPayload,
+    baseCurrency,
+    selectCustomer,
+    setSelectCustomer,
     isNewMode,
     newCreditNote,
+    isForeignCustomer,
 
     isItemsLoading,
     isCustomersLoading,
     isFeatureLoading,
     isBranchesSuccess,
     isWarehousesSuccess,
-    
+
     createCreditNoteMutate,
     editCreditNoteMutate,
     setSubmitPayload,

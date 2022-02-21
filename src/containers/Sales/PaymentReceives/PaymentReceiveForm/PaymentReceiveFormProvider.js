@@ -1,4 +1,6 @@
 import React, { createContext, useContext } from 'react';
+import { isEmpty, pick, isEqual, isUndefined } from 'lodash';
+
 import { DashboardInsider } from 'components';
 import {
   useSettingsPaymentReceives,
@@ -16,9 +18,15 @@ const PaymentReceiveFormContext = createContext();
 /**
  * Payment receive form provider.
  */
-function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
+function PaymentReceiveFormProvider({
+  paymentReceiveId,
+  baseCurrency,
+  ...props
+}) {
   // Form state.
   const [submitPayload, setSubmitPayload] = React.useState({});
+
+  const [selectCustomer, setSelectCustomer] = React.useState(null);
 
   // Fetches payment recevie details.
   const {
@@ -59,6 +67,11 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
   const { mutateAsync: editPaymentReceiveMutate } = useEditPaymentReceive();
   const { mutateAsync: createPaymentReceiveMutate } = useCreatePaymentReceive();
 
+  // Determines whether the foreign customer.
+  const isForeignCustomer =
+    !isEqual(selectCustomer?.currency_code, baseCurrency) &&
+    !isUndefined(selectCustomer?.currency_code);
+
   // Provider payload.
   const provider = {
     paymentReceiveId,
@@ -67,6 +80,7 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
     accounts,
     customers,
     branches,
+    baseCurrency,
 
     isPaymentLoading,
     isAccountsLoading,
@@ -74,10 +88,13 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
     isCustomersLoading,
     isFeatureLoading,
     isBranchesSuccess,
+    isForeignCustomer,
     isNewMode,
 
     submitPayload,
     setSubmitPayload,
+    selectCustomer,
+    setSelectCustomer,
 
     editPaymentReceiveMutate,
     createPaymentReceiveMutate,

@@ -13,7 +13,9 @@ import {
   VendorSelectField,
   FieldRequiredHint,
   InputPrependButton,
+  ExchangeRateInputGroup,
   Icon,
+  If,
   FormattedMessage as T,
 } from 'components';
 import {
@@ -47,7 +49,8 @@ function VendorCreditNoteFormHeaderFields({
   vendorcreditNextNumber,
 }) {
   // Vendor Credit form context.
-  const { vendors } = useVendorCreditNoteFormContext();
+  const { vendors, isForeignVendor, setSelectVendor } =
+    useVendorCreditNoteFormContext();
 
   // Handle vendor credit number changing.
   const handleVendorCreditNumberChange = () => {
@@ -96,6 +99,7 @@ function VendorCreditNoteFormHeaderFields({
               defaultSelectText={<T id={'select_vender_account'} />}
               onContactSelected={(contact) => {
                 form.setFieldValue('vendor_id', contact.id);
+                setSelectVendor(contact);
               }}
               popoverFill={true}
               allowCreate={true}
@@ -103,6 +107,16 @@ function VendorCreditNoteFormHeaderFields({
           </FormGroup>
         )}
       </FastField>
+
+      {/* ----------- Exchange rate ----------- */}
+      <If condition={isForeignVendor}>
+        <ExchangeRateInputGroup
+          fromCurrency={'USD'}
+          toCurrency={'LYD'}
+          name={'exchange_rate'}
+          formGroupProps={{ label: ' ', inline: true }}
+        />
+      </If>
 
       {/* ------- Vendor Credit date ------- */}
       <FastField name={'vendor_credit_date'}>

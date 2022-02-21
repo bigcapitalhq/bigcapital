@@ -21,8 +21,10 @@ import { CLASSES } from 'common/classes';
 import {
   CustomerSelectField,
   FieldRequiredHint,
+  If,
   Icon,
   InputPrependButton,
+  ExchangeRateInputGroup,
 } from 'components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -43,7 +45,8 @@ function EstimateFormHeader({
   estimateNumberPrefix,
   estimateNextNumber,
 }) {
-  const { customers } = useEstimateFormContext();
+  const { customers, isForeignCustomer, baseCurrency, setSelectCustomer } =
+    useEstimateFormContext();
 
   const handleEstimateNumberBtnClick = () => {
     openDialog('estimate-number-form', {});
@@ -88,6 +91,7 @@ function EstimateFormHeader({
               defaultSelectText={<T id={'select_customer_account'} />}
               onContactSelected={(customer) => {
                 form.setFieldValue('customer_id', customer.id);
+                setSelectCustomer(customer);
               }}
               popoverFill={true}
               intent={inputIntent({ error, touched })}
@@ -96,6 +100,16 @@ function EstimateFormHeader({
           </FormGroup>
         )}
       </FastField>
+
+      {/* ----------- Exchange rate ----------- */}
+      <If condition={isForeignCustomer}>
+        <ExchangeRateInputGroup
+          fromCurrency={'USD'}
+          toCurrency={'LYD'}
+          name={'exchange_rate'}
+          formGroupProps={{ label: ' ', inline: true }}
+        />
+      </If>
 
       {/* ----------- Estimate date ----------- */}
       <FastField name={'estimate_date'}>

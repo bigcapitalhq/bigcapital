@@ -14,7 +14,9 @@ import {
   FieldRequiredHint,
   InputPrependButton,
   Icon,
+  If,
   FormattedMessage as T,
+  ExchangeRateInputGroup,
 } from 'components';
 import {
   customerNameFieldShouldUpdate,
@@ -46,7 +48,8 @@ function CreditNoteFormHeaderFields({
   creditNextNumber,
 }) {
   // Credit note form context.
-  const { customers } = useCreditNoteFormContext();
+  const { customers, isForeignCustomer, baseCurrency, setSelectCustomer } =
+    useCreditNoteFormContext();
 
   // Handle credit number changing.
   const handleCreditNumberChange = () => {
@@ -97,6 +100,7 @@ function CreditNoteFormHeaderFields({
               defaultSelectText={<T id={'select_customer_account'} />}
               onContactSelected={(customer) => {
                 form.setFieldValue('customer_id', customer.id);
+                setSelectCustomer(customer);
               }}
               popoverFill={true}
               allowCreate={true}
@@ -104,6 +108,17 @@ function CreditNoteFormHeaderFields({
           </FormGroup>
         )}
       </FastField>
+
+      {/* ----------- Exchange rate ----------- */}
+      <If condition={isForeignCustomer}>
+        <ExchangeRateInputGroup
+          fromCurrency={'USD'}
+          toCurrency={'LYD'}
+          name={'exchange_rate'}
+          formGroupProps={{ label: ' ', inline: true }}
+        />
+      </If>
+
       {/* ----------- Credit note date ----------- */}
       <FastField name={'credit_note_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (

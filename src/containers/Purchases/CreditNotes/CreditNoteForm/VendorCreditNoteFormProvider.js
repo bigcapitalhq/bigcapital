@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { isEmpty, pick } from 'lodash';
+import { isEmpty, pick, isEqual, isUndefined } from 'lodash';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { transformToEditForm } from './utils';
 import {
@@ -20,7 +20,11 @@ const VendorCreditNoteFormContext = React.createContext();
 /**
  * Vendor Credit note data provider.
  */
-function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
+function VendorCreditNoteFormProvider({
+  vendorCreditId,
+  baseCurrency,
+  ...props
+}) {
   const { state } = useLocation();
 
   const billId = state?.billId;
@@ -69,6 +73,7 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
 
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = React.useState();
+  const [selectVendor, setSelectVendor] = React.useState(null);
 
   // Create and edit vendor credit mutations.
   const { mutateAsync: createVendorCreditMutate } = useCreateVendorCredit();
@@ -79,6 +84,11 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+
+  // Determines whether the foreign vendor.
+  const isForeignVendor =
+    !isEqual(selectVendor?.currency_code, baseCurrency) &&
+    !isUndefined(selectVendor?.currency_code);
 
   const newVendorCredit = !isEmpty(bill)
     ? transformToEditForm({
@@ -93,6 +103,9 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
     vendorCredit,
     warehouses,
     branches,
+    baseCurrency,
+    selectVendor,
+    setSelectVendor,
     submitPayload,
     isNewMode,
     newVendorCredit,
@@ -101,7 +114,8 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
     isFeatureLoading,
     isBranchesSuccess,
     isWarehousesSuccess,
-    
+    isForeignVendor,
+
     createVendorCreditMutate,
     editVendorCreditMutate,
     setSubmitPayload,

@@ -7,7 +7,7 @@ import {
   Button,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T, If } from 'components';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 
 import { useAutofocus } from 'hooks';
@@ -29,6 +29,7 @@ import {
   InputPrependButton,
   MoneyInputGroup,
   InputPrependText,
+  ExchangeRateInputGroup,
   Hint,
   Money,
 } from 'components';
@@ -64,7 +65,14 @@ function PaymentReceiveHeaderFields({
   paymentReceiveNextNumber,
 }) {
   // Payment receive form context.
-  const { customers, accounts, isNewMode } = usePaymentReceiveFormContext();
+  const {
+    customers,
+    accounts,
+    isNewMode,
+    isForeignCustomer,
+    baseCurrency,
+    setSelectCustomer,
+  } = usePaymentReceiveFormContext();
 
   // Formik form context.
   const {
@@ -141,6 +149,7 @@ function PaymentReceiveHeaderFields({
               onContactSelected={(customer) => {
                 form.setFieldValue('customer_id', customer.id);
                 form.setFieldValue('full_amount', '');
+                setSelectCustomer(customer);
               }}
               popoverFill={true}
               disabled={!isNewMode}
@@ -152,6 +161,16 @@ function PaymentReceiveHeaderFields({
           </FormGroup>
         )}
       </FastField>
+
+      {/* ----------- Exchange rate ----------- */}
+      <If condition={isForeignCustomer}>
+        <ExchangeRateInputGroup
+          fromCurrency={'USD'}
+          toCurrency={'LYD'}
+          name={'exchange_rate'}
+          formGroupProps={{ label: ' ', inline: true }}
+        />
+      </If>
 
       {/* ------------- Payment date ------------- */}
       <FastField name={'payment_date'}>

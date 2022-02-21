@@ -6,7 +6,13 @@ import { FastField, ErrorMessage } from 'formik';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
-import { VendorSelectField, FieldRequiredHint, Icon } from 'components';
+import {
+  VendorSelectField,
+  FieldRequiredHint,
+  Icon,
+  ExchangeRateInputGroup,
+  If,
+} from 'components';
 import { vendorsFieldShouldUpdate } from './utils';
 
 import { useBillFormContext } from './BillFormProvider';
@@ -24,7 +30,7 @@ import {
  */
 function BillFormHeader() {
   // Bill form context.
-  const { vendors } = useBillFormContext();
+  const { vendors, isForeignVendor, setSelectVendor } = useBillFormContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -49,6 +55,7 @@ function BillFormHeader() {
               defaultSelectText={<T id={'select_vender_account'} />}
               onContactSelected={(contact) => {
                 form.setFieldValue('vendor_id', contact.id);
+                setSelectVendor(contact);
               }}
               popoverFill={true}
               allowCreate={true}
@@ -56,6 +63,16 @@ function BillFormHeader() {
           </FormGroup>
         )}
       </FastField>
+
+      {/* ----------- Exchange rate ----------- */}
+      <If condition={isForeignVendor}>
+        <ExchangeRateInputGroup
+          fromCurrency={'USD'}
+          toCurrency={'LYD'}
+          name={'exchange_rate'}
+          formGroupProps={{ label: ' ', inline: true }}
+        />
+      </If>
 
       {/* ------- Bill date ------- */}
       <FastField name={'bill_date'}>
