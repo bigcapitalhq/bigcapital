@@ -8,6 +8,8 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'components';
 import { FastField, Field, ErrorMessage } from 'formik';
+import styled from 'styled-components';
+
 import {
   momentFormatter,
   compose,
@@ -29,7 +31,7 @@ import {
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
-
+import EstimateFormCurrencyTag from './EstimateFormCurrencyTag';
 import { useObserveEstimateNoSettings } from './utils';
 import { useEstimateFormContext } from './EstimateFormProvider';
 
@@ -85,18 +87,21 @@ function EstimateFormHeader({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_id'} />}
           >
-            <CustomerSelectField
-              contacts={customers}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_customer_account'} />}
-              onContactSelected={(customer) => {
-                form.setFieldValue('customer_id', customer.id);
-                setSelectCustomer(customer);
-              }}
-              popoverFill={true}
-              intent={inputIntent({ error, touched })}
-              allowCreate={true}
-            />
+            <ControlCustomerGroup>
+              <CustomerSelectField
+                contacts={customers}
+                selectedContactId={value}
+                defaultSelectText={<T id={'select_customer_account'} />}
+                onContactSelected={(customer) => {
+                  form.setFieldValue('customer_id', customer.id);
+                  setSelectCustomer(customer);
+                }}
+                popoverFill={true}
+                intent={inputIntent({ error, touched })}
+                allowCreate={true}
+              />
+              <EstimateFormCurrencyTag />
+            </ControlCustomerGroup>
           </FormGroup>
         )}
       </FastField>
@@ -229,3 +234,9 @@ export default compose(
     estimateAutoIncrement: estimatesSettings?.autoIncrement,
   })),
 )(EstimateFormHeader);
+
+const ControlCustomerGroup = styled(ControlGroup)`
+  display: flex;
+  align-items: center;
+  transform: none;
+`;

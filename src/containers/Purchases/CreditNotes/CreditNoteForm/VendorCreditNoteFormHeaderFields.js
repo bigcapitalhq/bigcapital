@@ -9,6 +9,8 @@ import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
+import styled from 'styled-components';
+
 import {
   VendorSelectField,
   FieldRequiredHint,
@@ -24,7 +26,7 @@ import {
 } from './utils';
 
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
-
+import VendorCreditNoteFormCurrencyTag from './VendorCreditNoteFormCurrencyTag';
 import {
   momentFormatter,
   compose,
@@ -93,17 +95,20 @@ function VendorCreditNoteFormHeaderFields({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'vendor_id'} />}
           >
-            <VendorSelectField
-              contacts={vendors}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_vender_account'} />}
-              onContactSelected={(contact) => {
-                form.setFieldValue('vendor_id', contact.id);
-                setSelectVendor(contact);
-              }}
-              popoverFill={true}
-              allowCreate={true}
-            />
+            <ControlVendorGroup>
+              <VendorSelectField
+                contacts={vendors}
+                selectedContactId={value}
+                defaultSelectText={<T id={'select_vender_account'} />}
+                onContactSelected={(contact) => {
+                  form.setFieldValue('vendor_id', contact.id);
+                  setSelectVendor(contact);
+                }}
+                popoverFill={true}
+                allowCreate={true}
+              />
+              <VendorCreditNoteFormCurrencyTag />
+            </ControlVendorGroup>
           </FormGroup>
         )}
       </FastField>
@@ -210,3 +215,9 @@ export default compose(
     vendorcreditNumberPrefix: vendorsCreditNoteSetting?.numberPrefix,
   })),
 )(VendorCreditNoteFormHeaderFields);
+
+const ControlVendorGroup = styled(ControlGroup)`
+  display: flex;
+  align-items: center;
+  transform: none;
+`;

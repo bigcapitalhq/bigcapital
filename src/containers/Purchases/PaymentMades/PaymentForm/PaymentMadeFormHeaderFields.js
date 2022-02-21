@@ -13,6 +13,8 @@ import { FormattedMessage as T } from 'components';
 import { toSafeInteger } from 'lodash';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
+import styled from 'styled-components';
+
 import {
   AccountsSelectList,
   VendorSelectField,
@@ -28,6 +30,7 @@ import {
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
+import PaymentMadeFormCurrencyTag from './PaymentMadeFormCurrencyTag';
 import {
   momentFormatter,
   tansformDateValue,
@@ -98,19 +101,22 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'vendor_id'} />}
           >
-            <VendorSelectField
-              contacts={vendors}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_vender_account'} />}
-              onContactSelected={(contact) => {
-                form.setFieldValue('vendor_id', contact.id);
-                setPaymentVendorId(contact.id);
-                setSelectVendor(contact);
-              }}
-              disabled={!isNewMode}
-              popoverFill={true}
-              allowCreate={true}
-            />
+            <ControlVendorGroup>
+              <VendorSelectField
+                contacts={vendors}
+                selectedContactId={value}
+                defaultSelectText={<T id={'select_vender_account'} />}
+                onContactSelected={(contact) => {
+                  form.setFieldValue('vendor_id', contact.id);
+                  setPaymentVendorId(contact.id);
+                  setSelectVendor(contact);
+                }}
+                disabled={!isNewMode}
+                popoverFill={true}
+                allowCreate={true}
+              />
+              <PaymentMadeFormCurrencyTag />
+            </ControlVendorGroup>
           </FormGroup>
         )}
       </FastField>
@@ -265,3 +271,9 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
 }
 
 export default compose(withCurrentOrganization())(PaymentMadeFormHeaderFields);
+
+const ControlVendorGroup = styled(ControlGroup)`
+  display: flex;
+  align-items: center;
+  transform: none;
+`;

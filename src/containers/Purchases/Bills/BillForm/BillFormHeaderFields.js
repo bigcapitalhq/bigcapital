@@ -1,9 +1,15 @@
 import React from 'react';
-import { FormGroup, InputGroup, Position } from '@blueprintjs/core';
+import {
+  FormGroup,
+  InputGroup,
+  Position,
+  ControlGroup,
+} from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'components';
 import { FastField, ErrorMessage } from 'formik';
 import classNames from 'classnames';
+import styled from 'styled-components';
 
 import { CLASSES } from 'common/classes';
 import {
@@ -16,6 +22,7 @@ import {
 import { vendorsFieldShouldUpdate } from './utils';
 
 import { useBillFormContext } from './BillFormProvider';
+import BillFormCurrencyTag from './BillFormCurrencyTag';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import {
   momentFormatter,
@@ -49,17 +56,20 @@ function BillFormHeader() {
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'vendor_id'} />}
           >
-            <VendorSelectField
-              contacts={vendors}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_vender_account'} />}
-              onContactSelected={(contact) => {
-                form.setFieldValue('vendor_id', contact.id);
-                setSelectVendor(contact);
-              }}
-              popoverFill={true}
-              allowCreate={true}
-            />
+            <ControlVendorGroup>
+              <VendorSelectField
+                contacts={vendors}
+                selectedContactId={value}
+                defaultSelectText={<T id={'select_vender_account'} />}
+                onContactSelected={(contact) => {
+                  form.setFieldValue('vendor_id', contact.id);
+                  setSelectVendor(contact);
+                }}
+                popoverFill={true}
+                allowCreate={true}
+              />
+              <BillFormCurrencyTag />
+            </ControlVendorGroup>
           </FormGroup>
         )}
       </FastField>
@@ -161,3 +171,9 @@ function BillFormHeader() {
 }
 
 export default compose(withDialogActions)(BillFormHeader);
+
+const ControlVendorGroup = styled(ControlGroup)`
+  display: flex;
+  align-items: center;
+  transform: none;
+`;

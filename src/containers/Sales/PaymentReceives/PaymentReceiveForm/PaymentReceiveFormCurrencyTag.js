@@ -1,12 +1,13 @@
 import React from 'react';
 import { BaseCurrency, BaseCurrencyRoot } from 'components';
-import { useInvoiceFormContext } from './InvoiceFormProvider';
+import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 
 /**
- * Invoice form currency tag.
+ * Payment reecevie form currnecy tag.
+ * @returns
  */
-export default function InvoiceFormCurrencyTag() {
-  const { isForeignCustomer, selectCustomer } = useInvoiceFormContext();
+export default function PaymentReceiveFormCurrencyTag() {
+  const { isForeignCustomer, selectCustomer } = usePaymentReceiveFormContext();
 
   if (!isForeignCustomer) {
     return null;

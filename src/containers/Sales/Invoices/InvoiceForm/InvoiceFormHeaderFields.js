@@ -57,7 +57,7 @@ function InvoiceFormHeaderFields({
   invoiceNextNumber,
 }) {
   // Invoice form context.
-  const { customers, isForeignCustomer, setSelectCustomer } =
+  const { customers, isForeignCustomer,selectCustomer ,setSelectCustomer } =
     useInvoiceFormContext();
 
   // Handle invoice number changing.
@@ -115,7 +115,7 @@ function InvoiceFormHeaderFields({
                 popoverFill={true}
                 allowCreate={true}
               />
-              <InvoiceCurrencyTag isForeignCustomer={isForeignCustomer} />
+              <InvoiceCurrencyTag />
             </ControlCustomerGroup>
           </FormGroup>
         )}

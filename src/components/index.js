@@ -55,7 +55,6 @@ import AvaterCell from './AvaterCell';
 import { ItemsMultiSelect } from './Items';
 import MoreMenuItems from './MoreMenutItems';
 import CustomSelectList from './CustomSelectList';
-import BaseCurrency from './BaseCurrency';
 
 export * from './Dialog';
 export * from './Menu';
@@ -168,7 +167,6 @@ export {
   MoneyFieldCell,
   ItemsMultiSelect,
   AvaterCell,
-  BaseCurrency,
   MoreMenuItems,
   CustomSelectList,
 };

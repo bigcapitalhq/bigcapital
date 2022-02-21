@@ -10,6 +10,8 @@ import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 import { FastField, ErrorMessage } from 'formik';
 import { CLASSES } from 'common/classes';
+import styled from 'styled-components';
+
 import {
   AccountsSelectList,
   CustomerSelectField,
@@ -29,6 +31,7 @@ import {
   handleDateChange,
   inputIntent,
 } from 'utils';
+import ReceiptFormCurrencyTag from './ReceiptFormCurrencyTag';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import {
   accountsFieldShouldUpdate,
@@ -91,17 +94,20 @@ function ReceiptFormHeader({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_id'} />}
           >
-            <CustomerSelectField
-              contacts={customers}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_customer_account'} />}
-              onContactSelected={(customer) => {
-                form.setFieldValue('customer_id', customer.id);
-                setSelectCustomer(customer);
-              }}
-              popoverFill={true}
-              allowCreate={true}
-            />
+            <ControlCustomerGroup>
+              <CustomerSelectField
+                contacts={customers}
+                selectedContactId={value}
+                defaultSelectText={<T id={'select_customer_account'} />}
+                onContactSelected={(customer) => {
+                  form.setFieldValue('customer_id', customer.id);
+                  setSelectCustomer(customer);
+                }}
+                popoverFill={true}
+                allowCreate={true}
+              />
+              <ReceiptFormCurrencyTag />
+            </ControlCustomerGroup>
           </FormGroup>
         )}
       </FastField>
@@ -242,3 +248,9 @@ export default compose(
     receiptNumberPrefix: receiptSettings?.numberPrefix,
   })),
 )(ReceiptFormHeader);
+
+const ControlCustomerGroup = styled(ControlGroup)`
+  display: flex;
+  align-items: center;
+  transform: none;
+`;

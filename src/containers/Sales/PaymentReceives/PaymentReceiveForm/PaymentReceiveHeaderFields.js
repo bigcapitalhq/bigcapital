@@ -13,6 +13,7 @@ import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 import { useAutofocus } from 'hooks';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
+import styled from 'styled-components';
 import {
   compose,
   safeSumBy,
@@ -35,6 +36,7 @@ import {
 } from 'components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
+import PaymentReceiveFormCurrencyTag from './PaymentReceiveFormCurrencyTag';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -142,22 +144,25 @@ function PaymentReceiveHeaderFields({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_id'} />}
           >
-            <CustomerSelectField
-              contacts={customers}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_customer_account'} />}
-              onContactSelected={(customer) => {
-                form.setFieldValue('customer_id', customer.id);
-                form.setFieldValue('full_amount', '');
-                setSelectCustomer(customer);
-              }}
-              popoverFill={true}
-              disabled={!isNewMode}
-              buttonProps={{
-                elementRef: (ref) => (customerFieldRef.current = ref),
-              }}
-              allowCreate={true}
-            />
+            <ControlCustomerGroup>
+              <CustomerSelectField
+                contacts={customers}
+                selectedContactId={value}
+                defaultSelectText={<T id={'select_customer_account'} />}
+                onContactSelected={(customer) => {
+                  form.setFieldValue('customer_id', customer.id);
+                  form.setFieldValue('full_amount', '');
+                  setSelectCustomer(customer);
+                }}
+                popoverFill={true}
+                disabled={!isNewMode}
+                buttonProps={{
+                  elementRef: (ref) => (customerFieldRef.current = ref),
+                }}
+                allowCreate={true}
+              />
+              <PaymentReceiveFormCurrencyTag />
+            </ControlCustomerGroup>
           </FormGroup>
         )}
       </FastField>
@@ -344,3 +349,9 @@ export default compose(
   withDialogActions,
   withCurrentOrganization(),
 )(PaymentReceiveHeaderFields);
+
+const ControlCustomerGroup = styled(ControlGroup)`
+  display: flex;
+  align-items: center;
+  transform: none;
+`;

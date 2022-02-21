@@ -9,6 +9,7 @@ import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
+import styled from 'styled-components';
 import {
   CustomerSelectField,
   FieldRequiredHint,
@@ -26,7 +27,7 @@ import {
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-
+import CreditNotetFormCurrencyTag from './CreditNotetFormCurrencyTag';
 import {
   momentFormatter,
   compose,
@@ -94,17 +95,20 @@ function CreditNoteFormHeaderFields({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_id'} />}
           >
-            <CustomerSelectField
-              contacts={customers}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_customer_account'} />}
-              onContactSelected={(customer) => {
-                form.setFieldValue('customer_id', customer.id);
-                setSelectCustomer(customer);
-              }}
-              popoverFill={true}
-              allowCreate={true}
-            />
+            <ControlCustomerGroup>
+              <CustomerSelectField
+                contacts={customers}
+                selectedContactId={value}
+                defaultSelectText={<T id={'select_customer_account'} />}
+                onContactSelected={(customer) => {
+                  form.setFieldValue('customer_id', customer.id);
+                  setSelectCustomer(customer);
+                }}
+                popoverFill={true}
+                allowCreate={true}
+              />
+              <CreditNotetFormCurrencyTag />
+            </ControlCustomerGroup>
           </FormGroup>
         )}
       </FastField>
@@ -207,3 +211,9 @@ export default compose(
     creditNumberPrefix: creditNoteSettings?.numberPrefix,
   })),
 )(CreditNoteFormHeaderFields);
+
+const ControlCustomerGroup = styled(ControlGroup)`
+  display: flex;
+  align-items: center;
+  transform: none;
+`;
