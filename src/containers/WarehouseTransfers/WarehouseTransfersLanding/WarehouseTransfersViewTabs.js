@@ -22,6 +22,8 @@ function WarehouseTransfersViewTabs({
 }) {
   const { WarehouseTransferView } = useWarehouseTranfersListContext();
 
+  const tabs = transfromViewsToTabs(WarehouseTransferView);
+
   // Handles click a new view tab.
   const handleClickNewView = () => {};
 
@@ -34,9 +36,9 @@ function WarehouseTransfersViewTabs({
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          customViewId={null}
-          tabs={[]}
-          defaultTabText={<T id={'all'} />}
+          currentViewSlug={warehouseTransferCurrentView}
+          resourceName={'warehouse_transfer'}
+          tabs={tabs}
           onNewViewTabClick={handleClickNewView}
           onChange={handleTabsChange}
         />

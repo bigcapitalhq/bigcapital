@@ -73,8 +73,9 @@ function WarehouseTransfersActionsBar({
     <DashboardActionsBar>
       <NavbarGroup>
         <DashboardActionViewsList
-          resourceName={''}
-          views={[]}
+          allMenuItem={true}
+          resourceName={'warehouse_transfer'}
+          views={WarehouseTransferView}
           onChange={handleTabChange}
         />
         <NavbarDivider />
