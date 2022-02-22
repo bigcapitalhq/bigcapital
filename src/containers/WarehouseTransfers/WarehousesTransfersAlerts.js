@@ -19,10 +19,6 @@ export default [
     component: WarehouseTransferDeleteAlert,
   },
   {
-    name: 'warehouse-transfer-delete',
-    component: WarehouseTransferDeleteAlert,
-  },
-  {
     name: 'warehouse-transfer-initate',
     component: WarehouseTransferInitiateAlert,
   },
