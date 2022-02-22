@@ -79,69 +79,82 @@ export default function WarehouseTransferFloatingActions() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save Intitate & transferred ----------- */}
-      <ButtonGroup>
+      <If condition={!warehouseTransfer || !warehouseTransfer?.is_transferred}>
+        <ButtonGroup>
+          <Button
+            disabled={isSubmitting}
+            loading={isSubmitting}
+            intent={Intent.PRIMARY}
+            type="submit"
+            onClick={handleSubmitInitiateBtnClick}
+            style={{ minWidth: '85px' }}
+            text={<T id={'warehouse_transfer.save_initiate_transfer'} />}
+          />
+          <Popover
+            content={
+              <Menu>
+                <MenuItem
+                  text={
+                    <T id={'warehouse_transfer.save_mark_as_transferred'} />
+                  }
+                  onClick={handleSubmitTransferredBtnClick}
+                />
+              </Menu>
+            }
+            minimal={true}
+            interactionKind={PopoverInteractionKind.CLICK}
+            position={Position.BOTTOM_LEFT}
+          >
+            <Button
+              disabled={isSubmitting}
+              intent={Intent.PRIMARY}
+              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+            />
+          </Popover>
+        </ButtonGroup>
+
+        {/* ----------- Save As Draft ----------- */}
+        <ButtonGroup>
+          <Button
+            disabled={isSubmitting}
+            className={'ml1'}
+            onClick={handleSubmitDraftBtnClick}
+            text={<T id={'save_as_draft'} />}
+          />
+          <Popover
+            content={
+              <Menu>
+                <MenuItem
+                  text={<T id={'save_and_new'} />}
+                  onClick={handleSubmitDraftAndNewBtnClick}
+                />
+                <MenuItem
+                  text={<T id={'save_continue_editing'} />}
+                  onClick={handleSubmitDraftContinueEditingBtnClick}
+                />
+              </Menu>
+            }
+            minimal={true}
+            interactionKind={PopoverInteractionKind.CLICK}
+            position={Position.BOTTOM_LEFT}
+          >
+            <Button
+              disabled={isSubmitting}
+              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+            />
+          </Popover>
+        </ButtonGroup>
+      </If>
+      <If condition={warehouseTransfer && warehouseTransfer?.is_transferred}>
         <Button
           disabled={isSubmitting}
           loading={isSubmitting}
           intent={Intent.PRIMARY}
-          type="submit"
-          onClick={handleSubmitInitiateBtnClick}
-          style={{ minWidth: '85px' }}
-          text={<T id={'warehouse_transfer.save_initiate_transfer'} />}
+          onClick={handleSubmitTransferredBtnClick}
+          style={{ minWidth: '100px' }}
+          text={<T id={'save'} />}
         />
-        <Popover
-          content={
-            <Menu>
-              <MenuItem
-                text={<T id={'warehouse_transfer.save_mark_as_transferred'} />}
-                onClick={handleSubmitTransferredBtnClick}
-              />
-            </Menu>
-          }
-          minimal={true}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
-        >
-          <Button
-            disabled={isSubmitting}
-            intent={Intent.PRIMARY}
-            rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
-          />
-        </Popover>
-      </ButtonGroup>
-
-      {/* ----------- Save As Draft ----------- */}
-      <ButtonGroup>
-        <Button
-          disabled={isSubmitting}
-          className={'ml1'}
-          onClick={handleSubmitDraftBtnClick}
-          text={<T id={'save_as_draft'} />}
-        />
-        <Popover
-          content={
-            <Menu>
-              <MenuItem
-                text={<T id={'save_and_new'} />}
-                onClick={handleSubmitDraftAndNewBtnClick}
-              />
-              <MenuItem
-                text={<T id={'save_continue_editing'} />}
-                onClick={handleSubmitDraftContinueEditingBtnClick}
-              />
-            </Menu>
-          }
-          minimal={true}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
-        >
-          <Button
-            disabled={isSubmitting}
-            rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
-          />
-        </Popover>
-      </ButtonGroup>
-
+      </If>
       {/* ----------- Clear & Reset----------- */}
       <Button
         className={'ml1'}
