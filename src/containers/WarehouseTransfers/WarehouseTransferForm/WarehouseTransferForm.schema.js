@@ -14,6 +14,8 @@ const Schema = Yup.object().shape({
     .min(1)
     .max(DATATYPES_LENGTH.STRING)
     .label(intl.get('reason')),
+  transfer_initiated: Yup.boolean(),
+  transfer_delivered: Yup.boolean(),
   entries: Yup.array().of(
     Yup.object().shape({
       item_id: Yup.number().nullable(),

@@ -91,6 +91,15 @@ function WarehouseTransfersDataTable({
     openAlert('warehouse-transfer-delete', { warehouseTransferId: id });
   };
 
+  // Handle initiate warehouse transfer.
+  const handleInitateWarehouseTransfer = ({ id }) => {
+    openAlert('warehouse-transfer-initate', { warehouseTransferId: id });
+  };
+  // Handle transferred warehouse transfer.
+  const handleTransferredWarehouseTransfer = ({ id }) => {
+    openAlert('transferred-warehouse-transfer', { warehouseTransferId: id });
+  };
+
   // Handle cell click.
   const handleCellClick = (cell, event) => {
     openDrawer('warehouse-transfer-detail-drawer', {
@@ -127,6 +136,8 @@ function WarehouseTransfersDataTable({
           onViewDetails: handleViewDetailWarehouseTransfer,
           onDelete: handleDeleteWarehouseTransfer,
           onEdit: handleEditWarehouseTransfer,
+          onInitate: handleInitateWarehouseTransfer,
+          onTransfer: handleTransferredWarehouseTransfer,
         }}
       />
     </DashboardContentTable>

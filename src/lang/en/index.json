@@ -1799,6 +1799,8 @@
   "warehouse_transfer.action.edit_warehouse_transfer": "Edit Warehouse Transfer",
   "warehouse_transfer.action.delete_warehouse_transfer": "Delete Warehouse Transfer",
   "warehouse_transfer.action.new_warehouse_transfer": "New Warehouse Transfer",
+  "warehouse_transfer.action.initiate_transfer": "Initiate Transfer",
+  "warehouse_transfer.action.mark_as_transferred": "Mark as Transferred",
   "warehouse_transfer.column.transfer_no": "Transfer #",
   "warehouse_transfer.column.from_warehouse": "From Warehouse",
   "warehouse_transfer.column.to_warehouse": "To Warehouse",
@@ -1858,5 +1860,14 @@
   "branches_multi_select.placeholder": "Filter by branches…",
   "warehouses_multi_select.label": "Warehouses",
   "warehouses_multi_select.placeholder": "Filter by warehouses…",
-  "dimensions": "Dimensions"
+  "dimensions": "Dimensions",
+  "warehouse_transfer.save_initiate_transfer": "Save & Initiate Transfer",
+  "warehouse_transfer.save_mark_as_transferred": "Save & Mark as Transferred",
+  "warehouse_transfer.label.transfer_initiated": "Transfer Initiated",
+  "warehouse_transfer.label.initiated": "Initiated",
+  "warehouse_transfer.label.initiate": "Initiate",
+  "warehouse_transfer.alert.initiate_warehouse": "The given warehouse transfer has been initialized.",
+  "warehouse_transfer.alert.are_you_sure_you_want_to_initate": "Are you sure you want to initiate this warehouse transfer?",
+  "warehouse_transfer.alert.transferred_warehouse": "The given warehouse transfer has been delivered",
+  "warehouse_transfer.alert.are_you_sure_you_want_to_deliver": "Are you sure you want to deliver this warehouse transfer?"
 }

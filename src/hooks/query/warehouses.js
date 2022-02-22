@@ -208,6 +208,53 @@ export function useWarehouseTransfer(id, props, requestProps) {
   );
 }
 
+/**
+ * 
+ * @param {*} props 
+ * @returns 
+ */
+export function useInitiateWarehouseTransfer(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (id) => apiRequest.put(`warehouses/transfers/${id}/initiate`),
+    {
+      onSuccess: (res, id) => {
+        queryClient.invalidateQueries([t.WAREHOUSE_TRANSFER, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * 
+ * @param {*} props 
+ * @returns 
+ */
+export function useTransferredWarehouseTransfer(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (id) => apiRequest.put(`warehouses/transfers/${id}/transferred`),
+    {
+      onSuccess: (res, id) => {
+        queryClient.invalidateQueries([t.WAREHOUSE_TRANSFER, id]);
+
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+
 export function useRefreshWarehouseTransfers() {
   const queryClient = useQueryClient();
 

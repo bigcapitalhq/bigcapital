@@ -22,7 +22,7 @@ import {
 } from 'components';
 
 export function ActionsMenu({
-  payload: { onEdit, onDelete, onViewDetails, onPrint },
+  payload: { onEdit, onDelete, onViewDetails, onInitate, onTransfer },
   row: { original },
 }) {
   return (
@@ -38,6 +38,22 @@ export function ActionsMenu({
         text={intl.get('warehouse_transfer.action.edit_warehouse_transfer')}
         onClick={safeCallback(onEdit, original)}
       />
+
+      <If condition={!original.is_transferred && !original.is_initiated}>
+        <MenuItem
+          icon={<Icon icon="check" iconSize={16} />}
+          text={intl.get('warehouse_transfer.action.initiate_transfer')}
+          onClick={safeCallback(onInitate, original)}
+        />
+      </If>
+      <If condition={original.is_initiated && !original.is_transferred}>
+        <MenuItem
+          icon={<Icon icon="send" iconSize={16} />}
+          text={intl.get('warehouse_transfer.action.mark_as_transferred')}
+          onClick={safeCallback(onTransfer, original)}
+        />
+      </If>
+
       <MenuDivider />
       <MenuItem
         text={intl.get('warehouse_transfer.action.delete_warehouse_transfer')}
@@ -46,6 +62,36 @@ export function ActionsMenu({
         icon={<Icon icon="trash-16" iconSize={16} />}
       />
     </Menu>
+  );
+}
+
+/**
+ * Status accessor.
+ */
+export function StatusAccessor(warehouse) {
+  return (
+    <Choose>
+      <Choose.When
+        condition={warehouse.is_initiated && !warehouse.is_transferred}
+      >
+        <Tag minimal={true} intent={Intent.WARNING} round={true}>
+          <T id={'warehouse_transfer.label.transfer_initiated'} />
+        </Tag>
+      </Choose.When>
+      <Choose.When
+        condition={warehouse.is_initiated && warehouse.is_transferred}
+      >
+        <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
+          <T id={'warehouse_transfer.label.initiated'} />
+        </Tag>
+      </Choose.When>
+
+      <Choose.Otherwise>
+        <Tag minimal={true} intent={Intent.NONE} round={true}>
+          <T id={'draft'} />
+        </Tag>
+      </Choose.Otherwise>
+    </Choose>
   );
 }
 
@@ -95,19 +141,19 @@ export function useWarehouseTransfersTableColumns() {
       {
         id: 'status',
         Header: intl.get('status'),
-        // accessor: (row) => statusAccessor(row),
+        accessor: StatusAccessor,
         width: 140,
         className: 'status',
         clickable: true,
       },
-      {
-        id: 'created_at',
-        Header: intl.get('created_at'),
-        accessor: 'created_at',
-        Cell: FormatDateCell,
-        width: 120,
-        clickable: true,
-      },
+      // {
+      //   id: 'created_at',
+      //   Header: intl.get('created_at'),
+      //   accessor: 'created_at',
+      //   Cell: FormatDateCell,
+      //   width: 120,
+      //   clickable: true,
+      // },
     ],
     [],
   );

@@ -48,6 +48,8 @@ export const defaultWarehouseTransfer = {
   from_warehouse_id: '',
   to_warehouse_id: '',
   reason: '',
+  transfer_initiated: '',
+  transfer_delivered: '',
   entries: [...repeatValue(defaultWarehouseTransferEntry, MIN_LINES_NUMBER)],
 };
 

@@ -10,7 +10,7 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { If, FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { CLASSES } from 'common/classes';
@@ -26,27 +26,49 @@ export default function WarehouseTransferFloatingActions() {
   const history = useHistory();
 
   // Formik form context.
-  const { isSubmitting, submitForm, resetForm, values, errors } =
-    useFormikContext();
+  const { isSubmitting, submitForm, resetForm } = useFormikContext();
 
   // Warehouse tansfer form context.
-  const { isNewMode, setSubmitPayload } = useWarehouseTransferFormContext();
+  const { warehouseTransfer, setSubmitPayload } =
+    useWarehouseTransferFormContext();
 
-  // Handle submit button click.
-  const handleSubmitBtnClick = (event) => {
-    setSubmitPayload({ redirect: true });
+  // Handle submit initiate button click.
+  const handleSubmitInitiateBtnClick = (event) => {
+    setSubmitPayload({ redirect: true, initiate: true, deliver: false });
+    submitForm();
+  };
+
+  // Handle submit transferred button click.
+  const handleSubmitTransferredBtnClick = (event) => {
+    setSubmitPayload({ redirect: true, initiate: true, deliver: true });
+    submitForm();
+  };
+
+  // Handle submit as draft button click.
+  const handleSubmitDraftBtnClick = (event) => {
+    setSubmitPayload({ redirect: true, initiate: false, deliver: false });
+    submitForm();
+  };
+  // Handle submit as draft & new button click.
+  const handleSubmitDraftAndNewBtnClick = (event) => {
+    setSubmitPayload({
+      redirect: false,
+      initiate: false,
+      deliver: false,
+      resetForm: true,
+    });
+    submitForm();
+  };
+
+  // Handle submit as draft & continue editing button click.
+  const handleSubmitDraftContinueEditingBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, deliver: false, initiate: false });
     submitForm();
   };
 
   // Handle clear button click.
   const handleClearBtnClick = (event) => {
     resetForm();
-  };
-
-  // Handle submit & new button click.
-  const handleSubmitAndNewClick = (event) => {
-    setSubmitPayload({ redirect: false, resetForm: true });
-    submitForm();
   };
 
   // Handle cancel button click.
@@ -56,27 +78,23 @@ export default function WarehouseTransferFloatingActions() {
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
-      {/* ----------- Save and New ----------- */}
+      {/* ----------- Save Intitate & transferred ----------- */}
       <ButtonGroup>
         <Button
           disabled={isSubmitting}
           loading={isSubmitting}
           intent={Intent.PRIMARY}
           type="submit"
-          onClick={handleSubmitBtnClick}
+          onClick={handleSubmitInitiateBtnClick}
           style={{ minWidth: '85px' }}
-          text={!isNewMode ? <T id={'edit'} /> : <T id={'save'} />}
+          text={<T id={'warehouse_transfer.save_initiate_transfer'} />}
         />
         <Popover
           content={
             <Menu>
               <MenuItem
-                text={<T id={'save_and_new'} />}
-                onClick={handleSubmitAndNewClick}
-              />
-              <MenuItem
-                text={<T id={'save_continue_editing'} />}
-                // onClick={handleSubmitContinueEditingBtnClick}
+                text={<T id={'warehouse_transfer.save_mark_as_transferred'} />}
+                onClick={handleSubmitTransferredBtnClick}
               />
             </Menu>
           }
@@ -92,12 +110,44 @@ export default function WarehouseTransferFloatingActions() {
         </Popover>
       </ButtonGroup>
 
+      {/* ----------- Save As Draft ----------- */}
+      <ButtonGroup>
+        <Button
+          disabled={isSubmitting}
+          className={'ml1'}
+          onClick={handleSubmitDraftBtnClick}
+          text={<T id={'save_as_draft'} />}
+        />
+        <Popover
+          content={
+            <Menu>
+              <MenuItem
+                text={<T id={'save_and_new'} />}
+                onClick={handleSubmitDraftAndNewBtnClick}
+              />
+              <MenuItem
+                text={<T id={'save_continue_editing'} />}
+                onClick={handleSubmitDraftContinueEditingBtnClick}
+              />
+            </Menu>
+          }
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_LEFT}
+        >
+          <Button
+            disabled={isSubmitting}
+            rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+          />
+        </Popover>
+      </ButtonGroup>
+
       {/* ----------- Clear & Reset----------- */}
       <Button
         className={'ml1'}
         disabled={isSubmitting}
         onClick={handleClearBtnClick}
-        text={!isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
+        text={warehouseTransfer ? <T id={'reset'} /> : <T id={'clear'} />}
       />
 
       {/* ----------- Cancel  ----------- */}
