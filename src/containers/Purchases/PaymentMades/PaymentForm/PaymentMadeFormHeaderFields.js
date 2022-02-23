@@ -60,6 +60,8 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
     isNewMode,
     setPaymentVendorId,
     isForeignVendor,
+    baseCurrency,
+    selectVendor,
     setSelectVendor,
   } = usePaymentMadeFormContext();
 
@@ -108,6 +110,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
                 defaultSelectText={<T id={'select_vender_account'} />}
                 onContactSelected={(contact) => {
                   form.setFieldValue('vendor_id', contact.id);
+                  form.setFieldValue('exchange_rate', '');
                   setPaymentVendorId(contact.id);
                   setSelectVendor(contact);
                 }}
@@ -124,8 +127,8 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
       {/* ----------- Exchange rate ----------- */}
       <If condition={isForeignVendor}>
         <ExchangeRateInputGroup
-          fromCurrency={'USD'}
-          toCurrency={'LYD'}
+          fromCurrency={baseCurrency}
+          toCurrency={selectVendor?.currency_code}
           name={'exchange_rate'}
           formGroupProps={{ label: ' ', inline: true }}
         />

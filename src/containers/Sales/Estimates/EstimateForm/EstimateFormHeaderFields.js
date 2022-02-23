@@ -47,8 +47,13 @@ function EstimateFormHeader({
   estimateNumberPrefix,
   estimateNextNumber,
 }) {
-  const { customers, isForeignCustomer, baseCurrency, setSelectCustomer } =
-    useEstimateFormContext();
+  const {
+    customers,
+    isForeignCustomer,
+    baseCurrency,
+    selectCustomer,
+    setSelectCustomer,
+  } = useEstimateFormContext();
 
   const handleEstimateNumberBtnClick = () => {
     openDialog('estimate-number-form', {});
@@ -94,6 +99,7 @@ function EstimateFormHeader({
                 defaultSelectText={<T id={'select_customer_account'} />}
                 onContactSelected={(customer) => {
                   form.setFieldValue('customer_id', customer.id);
+                  form.setFieldValue('exchange_rate', '');
                   setSelectCustomer(customer);
                 }}
                 popoverFill={true}
@@ -109,8 +115,8 @@ function EstimateFormHeader({
       {/* ----------- Exchange rate ----------- */}
       <If condition={isForeignCustomer}>
         <ExchangeRateInputGroup
-          fromCurrency={'USD'}
-          toCurrency={'LYD'}
+          fromCurrency={baseCurrency}
+          toCurrency={selectCustomer?.currency_code}
           name={'exchange_rate'}
           formGroupProps={{ label: ' ', inline: true }}
         />

@@ -3,12 +3,8 @@ import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
 
 const Schema = Yup.object().shape({
-  vendor_id: Yup.string()
-    .label(intl.get('vendor_name_'))
-    .required(),
-  payment_date: Yup.date()
-    .required()
-    .label(intl.get('payment_date_')),
+  vendor_id: Yup.string().label(intl.get('vendor_name_')).required(),
+  payment_date: Yup.date().required().label(intl.get('payment_date_')),
   payment_account_id: Yup.number()
     .required()
     .label(intl.get('payment_account_')),
@@ -20,6 +16,7 @@ const Schema = Yup.object().shape({
   reference: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
   description: Yup.string().max(DATATYPES_LENGTH.TEXT),
   branch_id: Yup.string(),
+  exchange_rate: Yup.number(),
   entries: Yup.array().of(
     Yup.object().shape({
       id: Yup.number().nullable(),

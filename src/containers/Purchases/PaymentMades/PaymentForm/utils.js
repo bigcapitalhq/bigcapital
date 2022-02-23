@@ -35,6 +35,7 @@ export const defaultPaymentMade = {
   statement: '',
   currency_code: '',
   branch_id: '',
+  exchange_rate: '',
   entries: [],
 };
 

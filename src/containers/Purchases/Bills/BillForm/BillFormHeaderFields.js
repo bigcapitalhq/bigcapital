@@ -37,7 +37,13 @@ import {
  */
 function BillFormHeader() {
   // Bill form context.
-  const { vendors, isForeignVendor, setSelectVendor } = useBillFormContext();
+  const {
+    vendors,
+    isForeignVendor,
+    baseCurrency,
+    selectVendor,
+    setSelectVendor,
+  } = useBillFormContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -63,6 +69,7 @@ function BillFormHeader() {
                 defaultSelectText={<T id={'select_vender_account'} />}
                 onContactSelected={(contact) => {
                   form.setFieldValue('vendor_id', contact.id);
+                  form.setFieldValue('exchange_rate', '');
                   setSelectVendor(contact);
                 }}
                 popoverFill={true}
@@ -77,8 +84,8 @@ function BillFormHeader() {
       {/* ----------- Exchange rate ----------- */}
       <If condition={isForeignVendor}>
         <ExchangeRateInputGroup
-          fromCurrency={'USD'}
-          toCurrency={'LYD'}
+          fromCurrency={baseCurrency}
+          toCurrency={selectVendor?.currency_code}
           name={'exchange_rate'}
           formGroupProps={{ label: ' ', inline: true }}
         />

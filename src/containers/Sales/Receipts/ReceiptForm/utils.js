@@ -39,6 +39,7 @@ export const defaultReceipt = {
   closed: '',
   branch_id: '',
   warehouse_id: '',
+  exchange_rate: '',
   entries: [...repeatValue(defaultReceiptEntry, MIN_LINES_NUMBER)],
 };
 

@@ -100,6 +100,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     invoiceId,
     submitPayload,
     selectCustomer,
+    baseCurrency,
     branches,
     warehouses,
 

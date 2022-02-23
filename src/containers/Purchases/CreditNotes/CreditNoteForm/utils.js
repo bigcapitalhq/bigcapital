@@ -41,6 +41,7 @@ export const defaultVendorsCreditNote = {
   note: '',
   branch_id: '',
   warehouse_id: '',
+  exchange_rate: '',
   entries: [...repeatValue(defaultCreditNoteEntry, MIN_LINES_NUMBER)],
 };
 

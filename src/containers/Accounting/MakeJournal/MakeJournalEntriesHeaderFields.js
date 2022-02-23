@@ -56,6 +56,7 @@ function MakeJournalEntriesHeader({
     currencies,
     isForeignJournal,
     baseCurrency,
+    selectJournalCurrency,
     setSelactJournalCurrency,
   } = useMakeJournalFormContext();
 
@@ -195,39 +196,37 @@ function MakeJournalEntriesHeader({
 
       {/*------------ Currency  -----------*/}
       {/* <FeatureCan feature={Features.ManualJournal}> */}
-        <FastField
-          name={'currency_code'}
-          currencies={currencies}
-          shouldUpdate={currenciesFieldShouldUpdate}
-        >
-          {({ form, field: { value }, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'currency'} />}
-              className={classNames('form-group--currency', CLASSES.FILL)}
-              inline={true}
-            >
-              <CurrencySelectList
-                currenciesList={currencies}
-                selectedCurrencyCode={value}
-                onCurrencySelected={(currencyItem) => {
-                  form.setFieldValue(
-                    'currency_code',
-                    currencyItem.currency_code,
-                  );
-                  setSelactJournalCurrency(currencyItem);
-                }}
-                defaultSelectText={value}
-              />
-            </FormGroup>
-          )}
-        </FastField>
+      <FastField
+        name={'currency_code'}
+        currencies={currencies}
+        shouldUpdate={currenciesFieldShouldUpdate}
+      >
+        {({ form, field: { value }, meta: { error, touched } }) => (
+          <FormGroup
+            label={<T id={'currency'} />}
+            className={classNames('form-group--currency', CLASSES.FILL)}
+            inline={true}
+          >
+            <CurrencySelectList
+              currenciesList={currencies}
+              selectedCurrencyCode={value}
+              onCurrencySelected={(currencyItem) => {
+                form.setFieldValue('currency_code', currencyItem.currency_code);
+                form.setFieldValue('exchange_rate', '');
+                setSelactJournalCurrency(currencyItem);
+              }}
+              defaultSelectText={value}
+            />
+          </FormGroup>
+        )}
+      </FastField>
       {/* </FeatureCan> */}
 
       {/* ----------- Exchange rate ----------- */}
       <If condition={isForeignJournal}>
         <ExchangeRateInputGroup
-          fromCurrency={'USD'}
-          toCurrency={'LYD'}
+          fromCurrency={baseCurrency}
+          toCurrency={selectJournalCurrency?.currency_code}
           name={'exchange_rate'}
           formGroupProps={{ label: ' ', inline: true }}
         />

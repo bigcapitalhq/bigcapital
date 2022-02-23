@@ -9,7 +9,7 @@ import {
   repeatValue,
   transformToForm,
   defaultFastFieldShouldUpdate,
-  ensureEntriesHasEmptyLine
+  ensureEntriesHasEmptyLine,
 } from 'utils';
 import { AppToaster } from 'components';
 import intl from 'react-intl-universal';
@@ -44,6 +44,7 @@ export const defaultManualJournal = {
   reference: '',
   currency_code: '',
   publish: '',
+  exchange_rate: '',
   entries: [...repeatValue(defaultEntry, 4)],
 };
 

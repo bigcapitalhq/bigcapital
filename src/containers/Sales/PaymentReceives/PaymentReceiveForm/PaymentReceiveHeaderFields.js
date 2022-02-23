@@ -73,6 +73,7 @@ function PaymentReceiveHeaderFields({
     isNewMode,
     isForeignCustomer,
     baseCurrency,
+    selectCustomer,
     setSelectCustomer,
   } = usePaymentReceiveFormContext();
 
@@ -170,8 +171,8 @@ function PaymentReceiveHeaderFields({
       {/* ----------- Exchange rate ----------- */}
       <If condition={isForeignCustomer}>
         <ExchangeRateInputGroup
-          fromCurrency={'USD'}
-          toCurrency={'LYD'}
+          fromCurrency={baseCurrency}
+          toCurrency={selectCustomer?.currency_code}
           name={'exchange_rate'}
           formGroupProps={{ label: ' ', inline: true }}
         />

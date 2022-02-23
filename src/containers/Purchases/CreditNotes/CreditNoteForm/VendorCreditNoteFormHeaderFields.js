@@ -51,8 +51,13 @@ function VendorCreditNoteFormHeaderFields({
   vendorcreditNextNumber,
 }) {
   // Vendor Credit form context.
-  const { vendors, isForeignVendor, setSelectVendor } =
-    useVendorCreditNoteFormContext();
+  const {
+    vendors,
+    isForeignVendor,
+    baseCurrency,
+    selectVendor,
+    setSelectVendor,
+  } = useVendorCreditNoteFormContext();
 
   // Handle vendor credit number changing.
   const handleVendorCreditNumberChange = () => {
@@ -102,6 +107,7 @@ function VendorCreditNoteFormHeaderFields({
                 defaultSelectText={<T id={'select_vender_account'} />}
                 onContactSelected={(contact) => {
                   form.setFieldValue('vendor_id', contact.id);
+                  form.setFieldValue('exchange_rate', '');
                   setSelectVendor(contact);
                 }}
                 popoverFill={true}
@@ -116,8 +122,8 @@ function VendorCreditNoteFormHeaderFields({
       {/* ----------- Exchange rate ----------- */}
       <If condition={isForeignVendor}>
         <ExchangeRateInputGroup
-          fromCurrency={'USD'}
-          toCurrency={'LYD'}
+          fromCurrency={baseCurrency}
+          toCurrency={selectVendor?.currency_code}
           name={'exchange_rate'}
           formGroupProps={{ label: ' ', inline: true }}
         />

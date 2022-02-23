@@ -54,8 +54,14 @@ function ReceiptFormHeader({
   receiptNextNumber,
   receiptNumberPrefix,
 }) {
-  const { accounts, customers, isForeignCustomer, setSelectCustomer } =
-    useReceiptFormContext();
+  const {
+    accounts,
+    customers,
+    isForeignCustomer,
+    baseCurrency,
+    selectCustomer,
+    setSelectCustomer,
+  } = useReceiptFormContext();
 
   const handleReceiptNumberChange = useCallback(() => {
     openDialog('receipt-number-form', {});
@@ -101,6 +107,7 @@ function ReceiptFormHeader({
                 defaultSelectText={<T id={'select_customer_account'} />}
                 onContactSelected={(customer) => {
                   form.setFieldValue('customer_id', customer.id);
+                  form.setFieldValue('exchange_rate', '');
                   setSelectCustomer(customer);
                 }}
                 popoverFill={true}
@@ -115,8 +122,8 @@ function ReceiptFormHeader({
       {/* ----------- Exchange rate ----------- */}
       <If condition={isForeignCustomer}>
         <ExchangeRateInputGroup
-          fromCurrency={'USD'}
-          toCurrency={'LYD'}
+          fromCurrency={baseCurrency}
+          toCurrency={selectCustomer?.currency_code}
           name={'exchange_rate'}
           formGroupProps={{ label: ' ', inline: true }}
         />

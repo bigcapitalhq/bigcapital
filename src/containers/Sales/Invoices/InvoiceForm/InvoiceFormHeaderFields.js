@@ -57,8 +57,13 @@ function InvoiceFormHeaderFields({
   invoiceNextNumber,
 }) {
   // Invoice form context.
-  const { customers, isForeignCustomer,selectCustomer ,setSelectCustomer } =
-    useInvoiceFormContext();
+  const {
+    customers,
+    isForeignCustomer,
+    baseCurrency,
+    selectCustomer,
+    setSelectCustomer,
+  } = useInvoiceFormContext();
 
   // Handle invoice number changing.
   const handleInvoiceNumberChange = () => {
@@ -110,6 +115,7 @@ function InvoiceFormHeaderFields({
                 defaultSelectText={<T id={'select_customer_account'} />}
                 onContactSelected={(customer) => {
                   form.setFieldValue('customer_id', customer.id);
+                  form.setFieldValue('exchange_rate', '');
                   setSelectCustomer(customer);
                 }}
                 popoverFill={true}
@@ -124,8 +130,8 @@ function InvoiceFormHeaderFields({
       {/* ----------- Exchange rate ----------- */}
       <If condition={isForeignCustomer}>
         <ExchangeRateInputGroup
-          fromCurrency={'USD'}
-          toCurrency={'LYD'}
+          fromCurrency={baseCurrency}
+          toCurrency={selectCustomer?.currency_code}
           name={'exchange_rate'}
           formGroupProps={{ label: ' ', inline: true }}
         />

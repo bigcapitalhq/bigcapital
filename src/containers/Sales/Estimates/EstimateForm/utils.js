@@ -39,6 +39,7 @@ export const defaultEstimate = {
   terms_conditions: '',
   branch_id: '',
   warehouse_id: '',
+  exchange_rate: '',
   entries: [...repeatValue(defaultEstimateEntry, MIN_LINES_NUMBER)],
 };
 

@@ -49,8 +49,13 @@ function CreditNoteFormHeaderFields({
   creditNextNumber,
 }) {
   // Credit note form context.
-  const { customers, isForeignCustomer, baseCurrency, setSelectCustomer } =
-    useCreditNoteFormContext();
+  const {
+    customers,
+    isForeignCustomer,
+    baseCurrency,
+    selectCustomer,
+    setSelectCustomer,
+  } = useCreditNoteFormContext();
 
   // Handle credit number changing.
   const handleCreditNumberChange = () => {
@@ -102,6 +107,7 @@ function CreditNoteFormHeaderFields({
                 defaultSelectText={<T id={'select_customer_account'} />}
                 onContactSelected={(customer) => {
                   form.setFieldValue('customer_id', customer.id);
+                  form.setFieldValue('exchange_rate', '');
                   setSelectCustomer(customer);
                 }}
                 popoverFill={true}
@@ -116,8 +122,8 @@ function CreditNoteFormHeaderFields({
       {/* ----------- Exchange rate ----------- */}
       <If condition={isForeignCustomer}>
         <ExchangeRateInputGroup
-          fromCurrency={'USD'}
-          toCurrency={'LYD'}
+          fromCurrency={baseCurrency}
+          toCurrency={selectCustomer?.currency_code}
           name={'exchange_rate'}
           formGroupProps={{ label: ' ', inline: true }}
         />
