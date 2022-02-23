@@ -7,24 +7,21 @@ import { FormattedMessage as T } from 'components';
 
 import { CLASSES } from 'common/classes';
 import PaymentReceiveHeaderFields from './PaymentReceiveHeaderFields';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
-import { compose } from 'utils';
 
 /**
  * Payment receive form header.
  */
-function PaymentReceiveFormHeader({
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
+function PaymentReceiveFormHeader() {
   // Formik form context.
-  const { values } = useFormikContext();
+  const {
+    values: { currency_code, entries },
+  } = useFormikContext();
 
   // Calculates the total payment amount from due amount.
   const paymentFullAmount = useMemo(
-    () => sumBy(values.entries, 'payment_amount'),
-    [values.entries],
+    () => sumBy(entries, 'payment_amount'),
+    [entries],
   );
 
   return (
@@ -38,7 +35,7 @@ function PaymentReceiveFormHeader({
               <T id={'amount_received'} />
             </span>
             <h1 class="big-amount__number">
-              <Money amount={paymentFullAmount} currency={base_currency} />
+              <Money amount={paymentFullAmount} currency={currency_code} />
             </h1>
           </div>
         </div>
@@ -47,4 +44,4 @@ function PaymentReceiveFormHeader({
   );
 }
 
-export default compose(withCurrentOrganization())(PaymentReceiveFormHeader);
+export default PaymentReceiveFormHeader;

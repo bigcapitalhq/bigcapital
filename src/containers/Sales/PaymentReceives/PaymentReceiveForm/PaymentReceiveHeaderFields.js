@@ -153,6 +153,8 @@ function PaymentReceiveHeaderFields({
                 onContactSelected={(customer) => {
                   form.setFieldValue('customer_id', customer.id);
                   form.setFieldValue('full_amount', '');
+                  form.setFieldValue('exchange_rate', '');
+                  form.setFieldValue('currency_code', customer?.currency_code);
                   setSelectCustomer(customer);
                 }}
                 popoverFill={true}
@@ -207,7 +209,10 @@ function PaymentReceiveHeaderFields({
       {/* ------------ Full amount ------------ */}
       <Field name={'full_amount'}>
         {({
-          form: { setFieldValue },
+          form: {
+            setFieldValue,
+            values: { currency_code },
+          },
           field: { value, onChange },
           meta: { error, touched },
         }) => (
@@ -220,7 +225,7 @@ function PaymentReceiveHeaderFields({
             helperText={<ErrorMessage name="full_amount" />}
           >
             <ControlGroup>
-              <InputPrependText text={base_currency} />
+              <InputPrependText text={currency_code} />
               <MoneyInputGroup
                 value={value}
                 onChange={(value) => {
@@ -237,7 +242,7 @@ function PaymentReceiveHeaderFields({
               minimal={true}
             >
               <T id={'receive_full_amount'} /> (
-              <Money amount={totalDueAmount} currency={base_currency} />)
+              <Money amount={totalDueAmount} currency={currency_code} />)
             </Button>
           </FormGroup>
         )}

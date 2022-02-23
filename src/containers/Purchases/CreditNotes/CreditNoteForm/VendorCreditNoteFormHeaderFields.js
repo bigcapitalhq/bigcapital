@@ -108,6 +108,7 @@ function VendorCreditNoteFormHeaderFields({
                 onContactSelected={(contact) => {
                   form.setFieldValue('vendor_id', contact.id);
                   form.setFieldValue('exchange_rate', '');
+                  form.setFieldValue('currency_code', contact?.currency_code);
                   setSelectVendor(contact);
                 }}
                 popoverFill={true}

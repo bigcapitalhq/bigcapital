@@ -111,6 +111,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
                 onContactSelected={(contact) => {
                   form.setFieldValue('vendor_id', contact.id);
                   form.setFieldValue('exchange_rate', '');
+                  form.setFieldValue('currency_code', contact?.currency_code);
                   setPaymentVendorId(contact.id);
                   setSelectVendor(contact);
                 }}
@@ -162,7 +163,13 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
 
       {/* ------------ Full amount ------------ */}
       <Field name={'full_amount'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
+        {({
+          form: {
+            values: { currency_code },
+          },
+          field: { value },
+          meta: { error, touched },
+        }) => (
           <FormGroup
             label={<T id={'full_amount'} />}
             inline={true}
@@ -172,7 +179,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
             helperText={<ErrorMessage name="full_amount" />}
           >
             <ControlGroup>
-              <InputPrependText text={base_currency} />
+              <InputPrependText text={currency_code} />
               <MoneyInputGroup
                 value={value}
                 onChange={(value) => {
@@ -189,7 +196,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
               minimal={true}
             >
               <T id={'receive_full_amount'} /> (
-              <Money amount={payableFullAmount} currency={base_currency} />)
+              <Money amount={payableFullAmount} currency={currency_code} />)
             </Button>
           </FormGroup>
         )}

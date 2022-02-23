@@ -6,23 +6,20 @@ import intl from 'react-intl-universal';
 import { CLASSES } from 'common/classes';
 import EstimateFormHeaderFields from './EstimateFormHeaderFields';
 
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
-
 import { getEntriesTotal } from 'containers/Entries/utils';
 import { PageFormBigNumber } from 'components';
-import { compose } from 'utils';
 
 // Estimate form top header.
-function EstimateFormHeader({
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
-  const { values } = useFormikContext();
+function EstimateFormHeader() {
+  const {
+    values: { entries, currency_code },
+  } = useFormikContext();
+
 
   // Calculate the total due amount of bill entries.
   const totalDueAmount = useMemo(
-    () => getEntriesTotal(values.entries),
-    [values.entries],
+    () => getEntriesTotal(entries),
+    [entries],
   );
 
   return (
@@ -32,10 +29,10 @@ function EstimateFormHeader({
       <PageFormBigNumber
         label={intl.get('amount')}
         amount={totalDueAmount}
-        currencyCode={base_currency}
+        currencyCode={currency_code}
       />
     </div>
   );
 }
 
-export default compose(withCurrentOrganization())(EstimateFormHeader);
+export default EstimateFormHeader;

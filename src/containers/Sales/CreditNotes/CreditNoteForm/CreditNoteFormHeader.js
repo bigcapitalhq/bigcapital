@@ -8,24 +8,16 @@ import CreditNoteFormHeaderFields from './CreditNoteFormHeaderFields';
 import { getEntriesTotal } from 'containers/Entries/utils';
 import { PageFormBigNumber } from 'components';
 
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
-
-import { compose } from 'utils';
-
 /**
  * Credit note header.
  */
-function CreditNoteFormHeader({
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
-  const { values } = useFormikContext();
+function CreditNoteFormHeader() {
+  const {
+    values: { entries, currency_code },
+  } = useFormikContext();
 
   // Calculate the total amount.
-  const totalAmount = React.useMemo(
-    () => getEntriesTotal(values.entries),
-    [values.entries],
-  );
+  const totalAmount = React.useMemo(() => getEntriesTotal(entries), [entries]);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
@@ -33,10 +25,10 @@ function CreditNoteFormHeader({
       <PageFormBigNumber
         label={intl.get('credit_note.label_amount_to_credit')}
         amount={totalAmount}
-        currencyCode={base_currency}
+        currencyCode={currency_code}
       />
     </div>
   );
 }
 
-export default compose(withCurrentOrganization())(CreditNoteFormHeader);
+export default CreditNoteFormHeader;
