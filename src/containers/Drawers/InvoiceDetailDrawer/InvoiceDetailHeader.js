@@ -13,6 +13,8 @@ import {
   CommercialDocHeader,
   CommercialDocTopHeader,
   CustomerDrawerLink,
+  // DetailExchangeRate,
+  ExchangeRateDetailItem,
 } from 'components';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 import { InvoiceDetailsStatus } from './utils';
@@ -59,6 +61,10 @@ export default function InvoiceDetailHeader() {
             <DetailItem label={intl.get('invoice.details.invoice_no')}>
               {invoice.invoice_no}
             </DetailItem>
+            <ExchangeRateDetailItem
+              exchangeRate={invoice?.exchange_rate}
+              toCurrency={invoice?.currency_code}
+            />
           </DetailsMenu>
         </Col>
 

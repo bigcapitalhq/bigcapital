@@ -1222,6 +1222,7 @@
   "invoice.details.payment_amount": "Payment amount",
   "invoice.details.invoice_message": "Invoice Message",
   "invoice.details.invoice_no": "Invoice #",
+  "invoice.details.exchange_rate": "Exchange rate",
   "bill.drawer.title": "Bill details {number}",
   "bill.details.reference": "Reference #",
   "bill.details.bill_number": "Bill #",
