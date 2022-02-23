@@ -1806,6 +1806,7 @@
   "warehouse_transfer.column.from_warehouse": "From Warehouse",
   "warehouse_transfer.column.to_warehouse": "To Warehouse",
   "warehouse_transfer.column.item_name": "Item Name",
+  "warehouse_transfer.column.description": "Description",
   "warehouse_transfer.column.transfer_quantity": "Transfer Quantity",
   "warehouse_transfer.auto_increment.auto": "Your transfer numbers are set on auto-increment mode. Are you sure changing this setting?",
   "warehouse_transfer.auto_increment.manually": "Your transfer numbers are set on manual mode. Are you sure chaning this settings?",
