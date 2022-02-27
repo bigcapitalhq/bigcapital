@@ -68,6 +68,7 @@ function MoneyInForm({
       transaction_number: transactionNo,
     }),
     cashflow_account_id: accountId,
+    exchange_rate: 1,
   };
 
   // Handles the form submit.

@@ -186,19 +186,19 @@ function OwnerContributionFormFields({
       </Field>
 
       {/*------------ exchange rate -----------*/}
-      <If
+      {/* <If
         condition={isForeignCurrency(
           account?.currency_code,
           values?.currency_code,
         )}
-      >
-        <ExchangeRateInputGroup
-          fromCurrency={values?.currency_code}
-          toCurrency={account?.currency_code}
-          name={'exchange_rate'}
-          formGroupProps={{ label: ' ', inline: false }}
-        />
-      </If>
+      > */}
+      <ExchangeRateInputGroup
+        fromCurrency={values?.currency_code}
+        toCurrency={account?.currency_code}
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: false }}
+      />
+      {/* </If> */}
 
       <Row>
         <Col xs={5}>
