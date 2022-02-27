@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField, Field, ErrorMessage } from 'formik';
+import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
 import {
   Classes,
   FormGroup,
@@ -18,7 +18,9 @@ import {
   Icon,
   Col,
   Row,
+  If,
   InputPrependButton,
+  ExchangeRateInputGroup,
 } from 'components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from 'hooks';
@@ -50,7 +52,9 @@ function OwnerContributionFormFields({
   transactionNextNumber,
 }) {
   // Money in dialog context.
-  const { accounts } = useMoneyInDailogContext();
+  const { accounts, account, isForeignCurrency } = useMoneyInDailogContext();
+
+  const { values } = useFormikContext();
 
   const amountFieldRef = useAutofocus();
 
@@ -151,7 +155,7 @@ function OwnerContributionFormFields({
         </Col>
       </Row>
       {/*------------ amount -----------*/}
-      <FastField name={'amount'}>
+      <Field name={'amount'}>
         {({
           form: { values, setFieldValue },
           field: { value },
@@ -165,7 +169,7 @@ function OwnerContributionFormFields({
             className={'form-group--amount'}
           >
             <ControlGroup>
-              <InputPrependText text={values.currency_code} />
+              <InputPrependText text={account?.currency_code} />
 
               <MoneyInputGroup
                 value={value}
@@ -179,7 +183,22 @@ function OwnerContributionFormFields({
             </ControlGroup>
           </FormGroup>
         )}
-      </FastField>
+      </Field>
+
+      {/*------------ exchange rate -----------*/}
+      <If
+        condition={isForeignCurrency(
+          account?.currency_code,
+          values?.currency_code,
+        )}
+      >
+        <ExchangeRateInputGroup
+          fromCurrency={values?.currency_code}
+          toCurrency={account?.currency_code}
+          name={'exchange_rate'}
+          formGroupProps={{ label: ' ', inline: false }}
+        />
+      </If>
 
       <Row>
         <Col xs={5}>
@@ -195,9 +214,10 @@ function OwnerContributionFormFields({
               >
                 <AccountsSuggestField
                   accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('credit_account_id', id)
-                  }
+                  onAccountSelected={(account) => {
+                    form.setFieldValue('credit_account_id', account.id);
+                    form.setFieldValue('currency_code', account.currency_code);
+                  }}
                   filterByTypes={ACCOUNT_TYPE.EQUITY}
                   inputProps={{
                     intent: inputIntent({ error, touched }),

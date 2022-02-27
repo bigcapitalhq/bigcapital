@@ -28,6 +28,7 @@ const defaultInitialValues = {
   reference_no: '',
   cashflow_account_id: '',
   credit_account_id: '',
+  currency_code: '',
   description: '',
   publish: '',
 };

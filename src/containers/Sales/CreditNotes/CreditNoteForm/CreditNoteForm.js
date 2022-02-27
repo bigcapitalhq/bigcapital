@@ -76,6 +76,7 @@ function CreditNoteForm({
               credit_note_number: creditNumber,
             }),
             entries: orderingLinesIndexes(defaultCreditNote.entries),
+            currency_code: base_currency,
             ...newCreditNote,
           }),
     }),

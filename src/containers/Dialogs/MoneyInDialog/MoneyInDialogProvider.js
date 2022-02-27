@@ -2,10 +2,12 @@ import React from 'react';
 import { DialogContent } from 'components';
 import {
   useCreateCashflowTransaction,
+  useAccount,
   useAccounts,
   useCashflowAccounts,
   useSettingCashFlow,
 } from 'hooks/query';
+import { isEqual, isUndefined } from 'lodash';
 
 const MoneyInDialogContent = React.createContext();
 
@@ -21,6 +23,11 @@ function MoneyInDialogProvider({
   // Fetches accounts list.
   const { isFetching: isAccountsLoading, data: accounts } = useAccounts();
 
+  // Fetches the specific account details.
+  const { data: account, isLoading: isAccountLoading } = useAccount(accountId, {
+    enabled: !!accountId,
+  });
+
   // Fetch cash flow list .
   const { data: cashflowAccounts, isLoading: isCashFlowAccountsLoading } =
     useCashflowAccounts({}, { keepPreviousData: true });
@@ -34,9 +41,14 @@ function MoneyInDialogProvider({
   // Submit payload.
   const [submitPayload, setSubmitPayload] = React.useState({});
 
+  // Determines whether the foreign currency.
+  const isForeignCurrency = (toCurrency, fromCurrency) =>
+    !isEqual(toCurrency, fromCurrency) && !isUndefined(toCurrency);
+
   //  provider.
   const provider = {
     accounts,
+    account,
     accountId,
     accountType,
     isAccountsLoading,
@@ -48,6 +60,7 @@ function MoneyInDialogProvider({
 
     createCashflowTransactionMutate,
     setSubmitPayload,
+    isForeignCurrency,
   };
 
   return (

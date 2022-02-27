@@ -24,7 +24,6 @@ export default function WarehouseLocationsTable() {
     isFetching: isItemWarehousesFetching,
     data: itemWarehouses,
   } = useItemWarehouseLocation(itemId, { enabled: !!itemId });
-  console.log(itemWarehouses, 'XXX');
   return (
     <WarehouseLocationsGLEntriesRoot>
       <DataTable
