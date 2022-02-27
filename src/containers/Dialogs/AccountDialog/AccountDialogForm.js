@@ -25,6 +25,7 @@ const defaultInitialValues = {
   name: '',
   code: '',
   description: '',
+  currency_code:'',
   subaccount: false,
 };
 
