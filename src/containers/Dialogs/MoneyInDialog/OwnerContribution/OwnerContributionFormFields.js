@@ -7,7 +7,9 @@ import {
   TextArea,
   Position,
   ControlGroup,
+  Button,
 } from '@blueprintjs/core';
+import styled from 'styled-components';
 import classNames from 'classnames';
 import {
   FormattedMessage as T,
@@ -21,6 +23,8 @@ import {
   If,
   InputPrependButton,
   ExchangeRateInputGroup,
+  BranchSelect,
+  FeatureCan,
 } from 'components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from 'hooks';
@@ -32,9 +36,13 @@ import {
   handleDateChange,
   compose,
 } from 'utils';
+import { Features } from 'common';
 import { CLASSES } from 'common/classes';
 import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
-import { useObserveTransactionNoSettings } from '../utils';
+import {
+  useObserveTransactionNoSettings,
+  useSetPrimaryBranchToForm,
+} from '../utils';
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
@@ -52,7 +60,8 @@ function OwnerContributionFormFields({
   transactionNextNumber,
 }) {
   // Money in dialog context.
-  const { accounts, account, isForeignCurrency } = useMoneyInDailogContext();
+  const { accounts, account, branches, isForeignCurrency } =
+    useMoneyInDailogContext();
 
   const { values } = useFormikContext();
 
@@ -83,8 +92,28 @@ function OwnerContributionFormFields({
     transactionNextNumber,
   );
 
+  // Sets the primary branch to form.
+  useSetPrimaryBranchToForm();
+
   return (
     <React.Fragment>
+      <FeatureCan feature={Features.Branches}>
+        <BranchFieldsRow>
+          <Col xs={5}>
+            <FormGroup
+              label={<T id={'branch'} />}
+              className={classNames('form-group--select-list', Classes.FILL)}
+            >
+              <BranchSelect
+                name={'branch_id'}
+                branches={branches}
+                input={BranchSelectButton}
+                popoverProps={{ minimal: true }}
+              />
+            </FormGroup>
+          </Col>
+        </BranchFieldsRow>
+      </FeatureCan>
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -184,7 +213,6 @@ function OwnerContributionFormFields({
           </FormGroup>
         )}
       </Field>
-
       {/*------------ exchange rate -----------*/}
       {/* <If
         condition={isForeignCurrency(
@@ -199,7 +227,6 @@ function OwnerContributionFormFields({
         formGroupProps={{ label: ' ', inline: false }}
       />
       {/* </If> */}
-
       <Row>
         <Col xs={5}>
           {/*------------ equity account -----------*/}
@@ -246,7 +273,6 @@ function OwnerContributionFormFields({
           </FastField>
         </Col>
       </Row>
-
       {/*------------ description -----------*/}
       <FastField name={'description'}>
         {({ field, meta: { error, touched } }) => (
@@ -277,3 +303,12 @@ export default compose(
     transactionNumberPrefix: cashflowSetting?.numberPrefix,
   })),
 )(OwnerContributionFormFields);
+
+function BranchSelectButton({ label }) {
+  return <Button text={label} minimal={false} />;
+}
+
+const BranchFieldsRow = styled(Row)`
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e9e9e9;
+`;

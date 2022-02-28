@@ -10,11 +10,12 @@ const Schema = Yup.object().shape({
   reference_no: Yup.string(),
   credit_account_id: Yup.number().required(),
   cashflow_account_id: Yup.string().required(),
+  branch_id: Yup.string(),
   description: Yup.string()
     .min(3)
     .max(DATATYPES_LENGTH.TEXT)
     .label(intl.get('description')),
-    publish: Yup.boolean(),
+  publish: Yup.boolean(),
 });
 
 export const CreateMoneyInFormSchema = Schema;

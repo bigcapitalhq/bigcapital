@@ -4,6 +4,7 @@ import {
   useCreateCashflowTransaction,
   useAccount,
   useAccounts,
+  useBranches,
   useCashflowAccounts,
   useSettingCashFlow,
 } from 'hooks/query';
@@ -28,6 +29,13 @@ function MoneyInDialogProvider({
     enabled: !!accountId,
   });
 
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches();
+
   // Fetch cash flow list .
   const { data: cashflowAccounts, isLoading: isCashFlowAccountsLoading } =
     useCashflowAccounts({}, { keepPreviousData: true });
@@ -49,9 +57,11 @@ function MoneyInDialogProvider({
   const provider = {
     accounts,
     account,
+    branches,
     accountId,
     accountType,
     isAccountsLoading,
+    isBranchesSuccess,
 
     cashflowAccounts,
 
@@ -66,7 +76,10 @@ function MoneyInDialogProvider({
   return (
     <DialogContent
       isLoading={
-        isAccountsLoading || isCashFlowAccountsLoading || isSettingsLoading
+        isAccountsLoading ||
+        isCashFlowAccountsLoading ||
+        isBranchesLoading ||
+        isSettingsLoading
       }
     >
       <MoneyInDialogContent.Provider value={provider} {...props} />

@@ -30,6 +30,7 @@ const defaultInitialValues = {
   credit_account_id: '',
   currency_code: '',
   description: '',
+  branch_id: '',
   publish: '',
 };
 
