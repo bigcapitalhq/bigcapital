@@ -17,6 +17,7 @@ import MakeJournalFormFloatingActions from './MakeJournalFormFloatingActions';
 import MakeJournalEntriesField from './MakeJournalEntriesField';
 import MakeJournalFormFooter from './MakeJournalFormFooter';
 import MakeJournalFormDialogs from './MakeJournalFormDialogs';
+import MakeJournalFormTopBar from './MakeJournalFormTopBar';
 
 import withSettings from 'containers/Settings/withSettings';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
@@ -169,6 +170,7 @@ function MakeJournalEntriesForm({
         onSubmit={handleSubmit}
       >
         <Form>
+          <MakeJournalFormTopBar />
           <MakeJournalEntriesHeader />
           <MakeJournalEntriesField />
           <MakeJournalFormFooter />

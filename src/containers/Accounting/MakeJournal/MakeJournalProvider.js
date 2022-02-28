@@ -9,6 +9,7 @@ import {
   useCreateJournal,
   useEditJournal,
   useSettings,
+  useBranches,
   useSettingsManualJournals,
 } from 'hooks/query';
 
@@ -42,9 +43,19 @@ function MakeJournalProvider({ journalId, baseCurrency, ...props }) {
   // Loading the journal settings.
   const { isLoading: isSettingsLoading } = useSettingsManualJournals();
 
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches();
+
   // Submit form payload.
   const [submitPayload, setSubmitPayload] = useState({});
   const [selectJournalCurrency, setSelactJournalCurrency] = useState(null);
+
+  // Determines whether the warehouse and branches are loading.
+  const isFeatureLoading = isBranchesLoading;
 
   const isForeignJournal =
     !isEqual(selectJournalCurrency?.currency_code, baseCurrency) &&
@@ -56,6 +67,7 @@ function MakeJournalProvider({ journalId, baseCurrency, ...props }) {
     currencies,
     manualJournal,
     baseCurrency,
+    branches,
 
     createJournalMutate,
     editJournalMutate,
@@ -64,8 +76,10 @@ function MakeJournalProvider({ journalId, baseCurrency, ...props }) {
     isContactsLoading,
     isCurrenciesLoading,
     isJournalLoading,
+    isFeatureLoading,
     isSettingsLoading,
     isForeignJournal,
+    isBranchesSuccess,
     isNewMode: !journalId,
 
     submitPayload,

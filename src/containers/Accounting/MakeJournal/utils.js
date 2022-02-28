@@ -1,6 +1,6 @@
 import React from 'react';
 import { Intent } from '@blueprintjs/core';
-import { sumBy, setWith, toSafeInteger, get } from 'lodash';
+import { sumBy, setWith, toSafeInteger, get, first } from 'lodash';
 import moment from 'moment';
 import * as R from 'ramda';
 import {
@@ -14,6 +14,7 @@ import {
 import { AppToaster } from 'components';
 import intl from 'react-intl-universal';
 import { useFormikContext } from 'formik';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
 
 const ERROR = {
   JOURNAL_NUMBER_ALREADY_EXISTS: 'JOURNAL.NUMBER.ALREADY.EXISTS',
@@ -44,6 +45,7 @@ export const defaultManualJournal = {
   reference: '',
   currency_code: '',
   publish: '',
+  branch_id: '',
   exchange_rate: '',
   entries: [...repeatValue(defaultEntry, 4)],
 };
@@ -180,6 +182,7 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
     newProps.accounts !== oldProps.accounts ||
     newProps.contacts !== oldProps.contacts ||
+    newProps.branches !== oldProps.branches ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
@@ -192,4 +195,19 @@ export const currenciesFieldShouldUpdate = (newProps, oldProps) => {
     newProps.currencies !== oldProps.currencies ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = useMakeJournalFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
 };

@@ -8,8 +8,11 @@ import {
   MoneyFieldCell,
   InputGroupCell,
   ContactsListFieldCell,
+  BranchesListFieldCell,
 } from 'components/DataTableCells';
 import { safeSumBy } from 'utils';
+import { useFeatureCan } from 'hooks/state';
+import { Features } from 'common';
 
 /**
  * Contact header cell.
@@ -44,11 +47,7 @@ export function DebitHeaderCell({ payload: { currencyCode } }) {
  * Account footer cell.
  */
 function AccountFooterCell({ payload: { currencyCode } }) {
-  return (
-    <span>
-      {intl.get('total_currency', { currency: currencyCode })}
-    </span>
-  );
+  return <span>{intl.get('total_currency', { currency: currencyCode })}</span>;
 }
 
 /**
@@ -107,6 +106,8 @@ export const ActionsCellRenderer = ({
  * Retrieve columns of make journal entries table.
  */
 export const useJournalTableEntriesColumns = () => {
+  const { featureCan } = useFeatureCan();
+
   return React.useMemo(
     () => [
       {
@@ -128,7 +129,7 @@ export const useJournalTableEntriesColumns = () => {
         className: 'account',
         disableSortBy: true,
         width: 160,
-        fieldProps: { allowCreate: true }
+        fieldProps: { allowCreate: true },
       },
       {
         Header: CreditHeaderCell,
@@ -157,6 +158,19 @@ export const useJournalTableEntriesColumns = () => {
         disableSortBy: true,
         width: 120,
       },
+      ...(featureCan(Features.Branches)
+        ? [
+            {
+              Header: intl.get('branch'),
+              id: 'branch_id',
+              accessor: 'branch_id',
+              Cell: BranchesListFieldCell,
+              className: 'branch',
+              disableSortBy: true,
+              width: 120,
+            },
+          ]
+        : []),
       {
         Header: intl.get('note'),
         accessor: 'note',

@@ -1833,6 +1833,8 @@
   "branches.column.address": "Address",
   "branches.column.phone_number": "Phone number",
   "branches.column.code": "Code",
+  "select_branch": "Select branch",
+  "branch": "Branch",
   "branch.dialog.label_new_branch": "New Branch",
   "branch.dialog.label_edit_branch": "New Branch",
   "branch.dialog.label.branch_name": "Branch Name",
