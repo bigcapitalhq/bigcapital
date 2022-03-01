@@ -11,6 +11,7 @@ import {
   CommercialDocHeader,
   CommercialDocTopHeader,
   CustomerDrawerLink,
+  ExchangeRateDetailItem,
 } from 'components';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
@@ -50,6 +51,10 @@ export default function PaymentReceiveDetailHeader() {
             <DetailItem
               label={intl.get('deposit_account')}
               children={paymentReceive.deposit_account?.name}
+            />
+            <ExchangeRateDetailItem
+              exchangeRate={paymentReceive?.exchange_rate}
+              toCurrency={paymentReceive?.currency_code}
             />
           </DetailsMenu>
         </Col>

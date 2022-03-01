@@ -13,7 +13,6 @@ import {
   CommercialDocHeader,
   CommercialDocTopHeader,
   CustomerDrawerLink,
-  // DetailExchangeRate,
   ExchangeRateDetailItem,
 } from 'components';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';

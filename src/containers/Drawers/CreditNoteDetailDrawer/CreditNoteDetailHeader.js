@@ -14,6 +14,7 @@ import {
   CommercialDocHeader,
   CommercialDocTopHeader,
   CustomerDrawerLink,
+  ExchangeRateDetailItem,
 } from 'components';
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
 
@@ -59,6 +60,10 @@ export default function CreditNoteDetailHeader() {
                 {creditNote.customer?.display_name}
               </CustomerDrawerLink>
             </DetailItem>
+            <ExchangeRateDetailItem
+              exchangeRate={creditNote?.exchange_rate}
+              toCurrency={creditNote?.currency_code}
+            />
           </DetailsMenu>
         </Col>
 

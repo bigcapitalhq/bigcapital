@@ -13,6 +13,7 @@ import {
   Row,
   Col,
   CustomerDrawerLink,
+  ExchangeRateDetailItem,
 } from 'components';
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 import { EstimateDetailsStatus } from './components';
@@ -59,6 +60,10 @@ export default function EstimateDetailHeader() {
             <DetailItem
               label={intl.get('expiration_date')}
               children={estimate.formatted_expiration_date}
+            />
+            <ExchangeRateDetailItem
+              exchangeRate={estimate?.exchange_rate}
+              toCurrency={estimate?.currency_code}
             />
           </DetailsMenu>
         </Col>
