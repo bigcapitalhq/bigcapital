@@ -107,7 +107,6 @@ function CreditNoteFormHeaderFields({
                 defaultSelectText={<T id={'select_customer_account'} />}
                 onContactSelected={(customer) => {
                   form.setFieldValue('customer_id', customer.id);
-                  form.setFieldValue('exchange_rate', '');
                   form.setFieldValue('currency_code', customer?.currency_code);
                   setSelectCustomer(customer);
                 }}

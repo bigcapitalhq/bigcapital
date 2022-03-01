@@ -75,6 +75,7 @@ function VendorCreditNoteForm({
               vendor_credit_number: vendorCreditNumber,
             }),
             ...newVendorCredit,
+            currency_code: base_currency,
           }),
     }),
     [vendorCredit, base_currency],

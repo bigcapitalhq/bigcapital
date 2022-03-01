@@ -69,7 +69,7 @@ function CreditNoteForm({
   const initialValues = React.useMemo(
     () => ({
       ...(!isEmpty(creditNote)
-        ? { ...transformToEditForm(creditNote), currency_code: base_currency }
+        ? { ...transformToEditForm(creditNote) }
         : {
             ...defaultCreditNote,
             ...(creditAutoIncrement && {

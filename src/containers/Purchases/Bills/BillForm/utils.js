@@ -44,7 +44,8 @@ export const defaultBill = {
   open: '',
   branch_id: '',
   warehouse_id: '',
-  exchange_rate: '',
+  exchange_rate: 1,
+  currency_code: '',
   entries: [...repeatValue(defaultBillEntry, MIN_LINES_NUMBER)],
 };
 
@@ -107,6 +108,7 @@ export const transformFormValuesToRequest = (values) => {
     ...values,
     entries: transformEntriesToSubmit(entries),
     open: false,
+    exchange_rate: 1,
   };
 };
 

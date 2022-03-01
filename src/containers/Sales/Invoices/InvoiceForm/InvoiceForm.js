@@ -67,7 +67,7 @@ function InvoiceForm({
   const initialValues = useMemo(
     () => ({
       ...(!isEmpty(invoice)
-        ? { ...transformToEditForm(invoice), currency_code: base_currency }
+        ? { ...transformToEditForm(invoice) }
         : {
             ...defaultInvoice,
             ...(invoiceIncrementMode && {

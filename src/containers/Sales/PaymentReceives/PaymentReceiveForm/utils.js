@@ -34,7 +34,7 @@ export const defaultPaymentReceive = {
   full_amount: '',
   currency_code: '',
   branch_id: '',
-  exchange_rate:'',
+  exchange_rate: 1,
   entries: [],
 };
 

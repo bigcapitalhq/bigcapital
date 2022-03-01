@@ -107,7 +107,6 @@ function VendorCreditNoteFormHeaderFields({
                 defaultSelectText={<T id={'select_vender_account'} />}
                 onContactSelected={(contact) => {
                   form.setFieldValue('vendor_id', contact.id);
-                  form.setFieldValue('exchange_rate', '');
                   form.setFieldValue('currency_code', contact?.currency_code);
                   setSelectVendor(contact);
                 }}

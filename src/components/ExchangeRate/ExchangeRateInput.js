@@ -22,7 +22,7 @@ export function ExchangeRateInputGroup({
           <ExchangeFlagIcon countryCode={fromCountryCode} /> 1 {fromCurrency} =
         </ExchangeRatePrepend>
         <ExchangeRateField
-          allowDecimals={false}
+          allowDecimals={true}
           allowNegativeValue={true}
           {...inputGroupProps}
           name={name}
