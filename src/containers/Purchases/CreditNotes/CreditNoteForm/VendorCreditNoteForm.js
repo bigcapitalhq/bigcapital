@@ -74,8 +74,8 @@ function VendorCreditNoteForm({
             ...(vendorcreditAutoIncrement && {
               vendor_credit_number: vendorCreditNumber,
             }),
-            ...newVendorCredit,
             currency_code: base_currency,
+            ...newVendorCredit,
           }),
     }),
     [vendorCredit, base_currency],

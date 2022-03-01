@@ -200,3 +200,14 @@ export const useSetPrimaryBranchToForm = () => {
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
 };
+
+export const useSetForeignCurrencyToEditForm = () => {
+  const { values } = useFormikContext();
+  const { isNewMode, setSelectCustomer } = useInvoiceFormContext();
+
+  React.useEffect(() => {
+    if (!isNewMode) {
+      setSelectCustomer({ currency_code: values.currency_code });
+    }
+  }, [isNewMode, setSelectCustomer, values]);
+};

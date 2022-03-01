@@ -92,7 +92,7 @@ function VendorCreditNoteFormProvider({
 
   const newVendorCredit = !isEmpty(bill)
     ? transformToEditForm({
-        ...pick(bill, ['vendor_id', 'entries']),
+        ...pick(bill, ['vendor_id', 'currency_code', 'entries']),
       })
     : [];
 

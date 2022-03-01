@@ -36,7 +36,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
 
   const newInvoice = !isEmpty(estimate)
     ? transformToEditForm({
-        ...pick(estimate, ['customer_id', 'customer', 'entries']),
+        ...pick(estimate, ['customer_id', 'currency_code', 'entries']),
       })
     : [];
 
@@ -91,10 +91,6 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     !isEqual(selectCustomer?.currency_code, baseCurrency) &&
     !isUndefined(selectCustomer?.currency_code);
 
-  const currencyCode = isForeignCustomer
-    ? selectCustomer?.currency_code
-    : baseCurrency;
-
   const provider = {
     invoice,
     items,
@@ -107,7 +103,6 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     baseCurrency,
     branches,
     warehouses,
-    currencyCode,
 
     isInvoiceLoading,
     isItemsLoading,

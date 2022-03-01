@@ -16,6 +16,7 @@ import styled from 'styled-components';
 import {
   useObserveInvoiceNoSettings,
   customerNameFieldShouldUpdate,
+  useSetForeignCurrencyToEditForm,
 } from './utils';
 import { CLASSES } from 'common/classes';
 import {
@@ -83,6 +84,8 @@ function InvoiceFormHeaderFields({
       });
     }
   };
+
+  useSetForeignCurrencyToEditForm();
 
   // Syncs invoice number settings with form.
   useObserveInvoiceNoSettings(invoiceNumberPrefix, invoiceNextNumber);

@@ -85,7 +85,7 @@ function CreditNoteFormProvider({ creditNoteId, baseCurrency, ...props }) {
 
   const newCreditNote = !isEmpty(invoice)
     ? transformToEditForm({
-        ...pick(invoice, ['customer_id', 'entries']),
+        ...pick(invoice, ['customer_id', 'currency_code', 'entries']),
       })
     : [];
 
