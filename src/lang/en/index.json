@@ -914,6 +914,8 @@
   "enter_an_item": "Enter an item...",
   "due_amount": "Due Amount",
   "invoice_details.drawer.title": "Invoice details ({invoiceNumber})",
+  "invoice_details.drawer.subtitle": "Branch: {value}",
+
   "setting_your_auto_generated_estimate_number": "Setting your auto-generated estimate number",
   "setting_your_auto_generated_journal_number": "Setting your auto-generated journal number",
   "setting_your_auto_generated_invoice_number": "Setting your auto-generated invoice number",

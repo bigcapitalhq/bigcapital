@@ -1,11 +1,10 @@
 import React from 'react';
-import { FeatureCan, FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from 'components';
 import { Classes, Icon, H4, Button } from '@blueprintjs/core';
 
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import styled from 'styled-components';
-import { Features } from 'common';
 import { compose } from 'utils';
 
 /**
@@ -35,9 +34,7 @@ function DrawerHeaderContent(props) {
       <Icon icon={icon} iconSize={Icon.SIZE_LARGE} />
       <H4>
         {title}
-        <FeatureCan feature={Features.Branches}>
-          <Subtitle>{subTitle}</Subtitle>
-        </FeatureCan>
+        <Subtitle>{subTitle}</Subtitle>
       </H4>
 
       <Button
