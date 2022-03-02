@@ -1,11 +1,9 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DrawerLoading } from 'components';
-import {
-  useTransactionsByReference,
-  usePaymentMade,
-  usePaymentMadeEditPage,
-} from 'hooks/query';
+import { usePaymentMade } from 'hooks/query';
+import { useFeatureCan } from 'hooks/state';
+import { Features } from 'common';
 
 const PaymentMadeDetailContext = React.createContext();
 
@@ -13,6 +11,9 @@ const PaymentMadeDetailContext = React.createContext();
  * Payment made detail provider.
  */
 function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+
   // Handle fetch specific payment made details.
   const { data: paymentMade, isLoading: isPaymentMadeLoading } = usePaymentMade(
     paymentMadeId,
@@ -37,6 +38,13 @@ function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
             ? `(${paymentMade.payment_number})`
             : '',
         })}
+        subTitle={
+          featureCan(Features.Branches)
+            ? intl.get('payment_made.drawer.subtitle', {
+                value: paymentMade.branch?.name,
+              })
+            : null
+        }
       />
       <PaymentMadeDetailContext.Provider value={provider} {...props} />
     </DrawerLoading>

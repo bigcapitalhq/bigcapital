@@ -34,7 +34,7 @@ function DrawerHeaderContent(props) {
       <Icon icon={icon} iconSize={Icon.SIZE_LARGE} />
       <H4>
         {title}
-        <Subtitle>{subTitle}</Subtitle>
+        <SubTitle>{subTitle}</SubTitle>
       </H4>
 
       <Button
@@ -50,7 +50,19 @@ function DrawerHeaderContent(props) {
 
 export default compose(withDrawerActions)(DrawerHeaderContent);
 
-const Subtitle = styled.div`
+/**
+ * SubTitle Drawer header.
+ * @returns {React.JSX}
+ */
+function SubTitle({ children }) {
+  if (children == null) {
+    return null;
+  }
+
+  return <SubTitleHead>{children}</SubTitleHead>;
+}
+
+const SubTitleHead = styled.div`
   color: #666;
   font-size: 12px;
   font-weight: 400;

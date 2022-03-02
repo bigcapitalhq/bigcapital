@@ -7,6 +7,8 @@ import {
   useReconcileCreditNotes,
 } from 'hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from 'components';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 
 const CreditNoteDetailDrawerContext = React.createContext();
 
@@ -14,6 +16,9 @@ const CreditNoteDetailDrawerContext = React.createContext();
  * Credit note detail drawer provider.
  */
 function CreditNoteDetailDrawerProvider({ creditNoteId, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  
   // Handle fetch vendor credit details.
   const { data: creditNote, isLoading: isCreditNoteLoading } = useCreditNote(
     creditNoteId,
@@ -70,6 +75,13 @@ function CreditNoteDetailDrawerProvider({ creditNoteId, ...props }) {
         title={intl.get('credit_note.drawer.title', {
           number: creditNote.credit_note_number,
         })}
+        subTitle={
+          featureCan(Features.Branches)
+            ? intl.get('credit_note.drawer.subtitle', {
+                value: creditNote.branch?.name,
+              })
+            : null
+        }
       />
       <CreditNoteDetailDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>

@@ -18,8 +18,6 @@ function InvoiceDetailDrawerProvider({ invoiceId, ...props }) {
     enabled: !!invoiceId,
   });
 
-  // const isFeatureCan = featureCan(Features.Branches);
-
   // Provider.
   const provider = {
     invoiceId,
