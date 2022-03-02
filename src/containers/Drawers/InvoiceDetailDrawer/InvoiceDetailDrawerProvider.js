@@ -25,6 +25,7 @@ function InvoiceDetailDrawerProvider({ invoiceId, ...props }) {
         title={intl.get('invoice_details.drawer.title', {
           invoiceNumber: invoice.invoice_no,
         })}
+        subTitle={`Branch: ${invoice.branch?.name}`}
       />
       <InvoiceDetailDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>

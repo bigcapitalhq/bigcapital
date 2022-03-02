@@ -1,9 +1,11 @@
 import React from 'react';
-import { FormattedMessage as T } from 'components';
+import { FeatureCan, FormattedMessage as T } from 'components';
 import { Classes, Icon, H4, Button } from '@blueprintjs/core';
 
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
+import styled from 'styled-components';
+import { Features } from 'common';
 import { compose } from 'utils';
 
 /**
@@ -13,6 +15,7 @@ function DrawerHeaderContent(props) {
   const {
     icon,
     title = <T id={'view_paper'} />,
+    subTitle,
     onClose,
     name,
     closeDrawer,
@@ -30,7 +33,12 @@ function DrawerHeaderContent(props) {
   return (
     <div className={Classes.DRAWER_HEADER}>
       <Icon icon={icon} iconSize={Icon.SIZE_LARGE} />
-      <H4>{title}</H4>
+      <H4>
+        {title}
+        <FeatureCan feature={Features.Branches}>
+          <Subtitle>{subTitle}</Subtitle>
+        </FeatureCan>
+      </H4>
 
       <Button
         aria-label="Close"
@@ -44,3 +52,12 @@ function DrawerHeaderContent(props) {
 }
 
 export default compose(withDrawerActions)(DrawerHeaderContent);
+
+const Subtitle = styled.div`
+  color: #666;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  padding: 2px 0px;
+  margin: 2px 0px;
+`;
