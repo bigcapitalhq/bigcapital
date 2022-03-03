@@ -108,7 +108,6 @@ export const transformFormValuesToRequest = (values) => {
     ...values,
     entries: transformEntriesToSubmit(entries),
     open: false,
-    exchange_rate: 1,
   };
 };
 
