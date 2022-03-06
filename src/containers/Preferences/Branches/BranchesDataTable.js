@@ -6,7 +6,6 @@ import { Intent } from '@blueprintjs/core';
 import 'style/pages/Preferences/branchesList.scss';
 
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
-import BranchesEmptyStatus from './BranchesEmptyStatus';
 import { DataTable, Card, AppToaster } from 'components';
 import { useBranchesTableColumns, ActionsMenu } from './components';
 import { useBranchesContext } from './BranchesProvider';
@@ -56,9 +55,6 @@ function BranchesDataTable({
     });
   };
 
-  // if (type) {
-  //   return <BranchesEmptyStatus />;
-  // }
 
   return (
     <BranchesTableCard>

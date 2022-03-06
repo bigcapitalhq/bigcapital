@@ -3,7 +3,10 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { useWarehouses, useCashflowAccounts } from 'hooks/query';
-import PreferencesPageLoader from '../PreferencesPageLoader';
+import { isEmpty } from 'lodash';
+
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 
 const WarehousesContext = React.createContext();
 
@@ -11,16 +14,24 @@ const WarehousesContext = React.createContext();
  * Warehouses data provider.
  */
 function WarehousesProvider({ query, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isWarehouseFeatureCan = featureCan(Features.Warehouses);
+
   // Fetch warehouses list.
   const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses(
     query,
-    { keepPreviousData: true },
+    { enabled: isWarehouseFeatureCan },
   );
+
+  // Detarmines the datatable empty status.
+  const isEmptyStatus = isEmpty(warehouses) || !isWarehouseFeatureCan;
 
   // Provider state.
   const provider = {
     warehouses,
     isWarehouesLoading,
+    isEmptyStatus,
   };
 
   return (

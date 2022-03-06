@@ -107,6 +107,7 @@ export const WarehousesList = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin: 15px;
+  height: 100%;
 `;
 
 export const WarehouseBoxRoot = styled.div`

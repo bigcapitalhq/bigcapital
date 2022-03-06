@@ -2,7 +2,9 @@ import React from 'react';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { useBranches } from 'hooks/query';
-import PreferencesPageLoader from '../PreferencesPageLoader';
+import { useFeatureCan } from 'hooks/state';
+import { Features } from 'common';
+import { isEmpty } from 'lodash';
 
 const BranchesContext = React.createContext();
 
@@ -10,18 +12,27 @@ const BranchesContext = React.createContext();
  * Branches data provider.
  */
 function BranchesProvider({ ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   // Fetches the branches list.
   const {
     isLoading: isBranchesLoading,
     isFetching: isBranchesFetching,
     data: branches,
-  } = useBranches();
+  } = useBranches({}, { enabled: isBranchFeatureCan });
+
+  // Detarmines the datatable empty status.
+  const isEmptyStatus = isEmpty(branches) || !isBranchFeatureCan;
 
   // Provider state.
   const provider = {
     branches,
     isBranchesLoading,
     isBranchesFetching,
+    isEmptyStatus,
   };
 
   return (

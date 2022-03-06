@@ -1,7 +1,8 @@
 import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 
-import { FormattedMessage as T, Icon } from 'components';
+import { Features } from 'common';
+import { FeatureCan, FormattedMessage as T, Icon } from 'components';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
@@ -18,13 +19,15 @@ function WarehousesActions({
 
   return (
     <React.Fragment>
-      <Button
-        icon={<Icon icon="plus" iconSize={12} />}
-        onClick={handleClickNewWarehouse}
-        intent={Intent.PRIMARY}
-      >
-        <T id={'warehouses.label.new_warehouse'} />
-      </Button>
+      <FeatureCan feature={Features.Warehouses}>
+        <Button
+          icon={<Icon icon="plus" iconSize={12} />}
+          onClick={handleClickNewWarehouse}
+          intent={Intent.PRIMARY}
+        >
+          <T id={'warehouses.label.new_warehouse'} />
+        </Button>
+      </FeatureCan>
     </React.Fragment>
   );
 }
