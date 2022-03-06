@@ -29,16 +29,15 @@ export function ExchangeRateMutedField({
   if (isEqual(toCurrency, fromCurrency) && !isUndefined(toCurrency)) {
     return null;
   }
-
   const content = (
-    <Menu>
+    <ExchangeRateFormGroupContent>
       <ExchangeRateInputGroup
         name={name}
         fromCurrency={fromCurrency}
         toCurrency={toCurrency}
         {...ExchangeRateprops}
       />
-    </Menu>
+    </ExchangeRateFormGroupContent>
   );
 
   return (
@@ -53,12 +52,16 @@ export function ExchangeRateMutedField({
           offset: { offset: '0, 4' },
         }}
         minimal={true}
+        usePortal={false}
+        target={<div />}
       >
-        <ExchangeRateButton
-          className={Classes.MINIMAL}
-          rightIcon={<Icon icon="pen-18" />}
-        >
+        <ExchangeRateButton>
           1 {fromCurrency} = {exchangeRate} {toCurrency}
+          <Button
+            className={Classes.MINIMAL}
+            rightIcon={<Icon icon="pen-18" />}
+            small={true}
+          />
         </ExchangeRateButton>
       </Popover>
     </ExchangeRateFormGroup>
@@ -69,16 +72,21 @@ const ExchangeRateFormGroup = styled(FormGroup)`
   .bp3-label {
     font-size: 12px !important;
     opacity: 0.7;
-    line-height: 0.1rem;
+    line-height: 0.5rem;
   }
 `;
 
-const ExchangeRateButton = styled(Button)`
-  .bp3-button-text {
-    display: flex;
-    font-size: 13px;
-    font-weight: 500;
-    color: #0d244a;
+const ExchangeRateButton = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #0d244a;
+`;
+
+const ExchangeRateFormGroupContent = styled.div`
+  .bp3-form-group {
+    padding: 2px;
+    margin: 2px 4px !important;
   }
-  padding: 0;
 `;

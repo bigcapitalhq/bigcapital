@@ -112,8 +112,8 @@ function OtherIncomeFormFields({
             </FormGroup>
           </Col>
         </Row>
-      </FeatureCan>
       <BranchRowDivider />
+      </FeatureCan>
 
       <Row>
         <Col xs={5}>

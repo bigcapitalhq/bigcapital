@@ -111,8 +111,8 @@ function OtherExpnseFormFields({
             </FormGroup>
           </Col>
         </Row>
+        <BranchRowDivider />
       </FeatureCan>
-      <BranchRowDivider />
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
