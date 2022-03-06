@@ -30,6 +30,7 @@ const defaultInitialValues = {
   credit_account_id: '',
   description: '',
   publish: '',
+  exchange_rate: 1,
 };
 
 function MoneyOutForm({

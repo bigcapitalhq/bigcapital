@@ -35,7 +35,7 @@ const branchItemRenderer = (branch, { handleClick, modifiers, query }) => {
     <MenuItem
       active={modifiers.active}
       disabled={modifiers.disabled}
-      label={branch.code.toString()}
+      label={branch.code}
       key={branch.id}
       onClick={handleClick}
       text={text}

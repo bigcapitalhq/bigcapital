@@ -11,6 +11,8 @@ const Schema = Yup.object().shape({
   credit_account_id: Yup.number().required(),
   cashflow_account_id: Yup.string().required(),
   branch_id: Yup.string(),
+  exchange_rate: Yup.number(),
+
   description: Yup.string()
     .min(3)
     .max(DATATYPES_LENGTH.TEXT)

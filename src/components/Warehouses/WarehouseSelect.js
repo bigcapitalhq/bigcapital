@@ -40,7 +40,7 @@ const warehouseItemRenderer = (
     <MenuItem
       active={modifiers.active}
       disabled={modifiers.disabled}
-      label={warehouse.name.toString()}
+      label={warehouse.code}
       key={warehouse.id}
       onClick={handleClick}
       text={text}

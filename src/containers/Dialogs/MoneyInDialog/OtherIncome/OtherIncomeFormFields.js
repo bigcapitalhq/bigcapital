@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField, Field, ErrorMessage } from 'formik';
+import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
 import {
   Classes,
   FormGroup,
@@ -7,6 +7,7 @@ import {
   TextArea,
   Position,
   ControlGroup,
+  Button,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import {
@@ -18,7 +19,11 @@ import {
   Icon,
   Col,
   Row,
+  FeatureCan,
+  BranchSelect,
+  BranchSelectButton,
   InputPrependButton,
+  ExchangeRateMutedField,
 } from 'components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from 'hooks';
@@ -32,8 +37,13 @@ import {
   compose,
 } from 'utils';
 import { CLASSES } from 'common/classes';
+import { Features } from 'common';
 import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
-import { useObserveTransactionNoSettings } from '../utils';
+import {
+  useObserveTransactionNoSettings,
+  useSetPrimaryBranchToForm,
+  BranchRowDivider,
+} from '../utils';
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
@@ -50,7 +60,9 @@ function OtherIncomeFormFields({
   transactionNextNumber,
 }) {
   // Money in dialog context.
-  const { accounts } = useMoneyInDailogContext();
+  const { accounts, account, branches } = useMoneyInDailogContext();
+
+  const { values } = useFormikContext();
 
   const amountFieldRef = useAutofocus();
 
@@ -79,8 +91,30 @@ function OtherIncomeFormFields({
     transactionNextNumber,
   );
 
+  // Sets the primary branch to form.
+  useSetPrimaryBranchToForm();
+
   return (
     <React.Fragment>
+      <FeatureCan feature={Features.Branches}>
+        <Row>
+          <Col xs={5}>
+            <FormGroup
+              label={<T id={'branch'} />}
+              className={classNames('form-group--select-list', Classes.FILL)}
+            >
+              <BranchSelect
+                name={'branch_id'}
+                branches={branches}
+                input={BranchSelectButton}
+                popoverProps={{ minimal: true }}
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+      </FeatureCan>
+      <BranchRowDivider />
+
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -181,6 +215,14 @@ function OtherIncomeFormFields({
         )}
       </FastField>
 
+      {/*------------ exchange rate -----------*/}
+      <ExchangeRateMutedField
+        name={'exchange_rate'}
+        fromCurrency={values?.currency_code}
+        toCurrency={account?.currency_code}
+        formGroupProps={{ label: '', inline: false }}
+        exchangeRate={values.exchange_rate}
+      />
       <Row>
         <Col xs={5}>
           {/*------------ other income account -----------*/}

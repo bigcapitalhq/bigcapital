@@ -7,10 +7,9 @@ import {
   TextArea,
   Position,
   ControlGroup,
-  Button,
 } from '@blueprintjs/core';
-import styled from 'styled-components';
 import classNames from 'classnames';
+
 import {
   FormattedMessage as T,
   AccountsSuggestField,
@@ -20,10 +19,10 @@ import {
   Icon,
   Col,
   Row,
-  If,
   InputPrependButton,
-  ExchangeRateInputGroup,
+  ExchangeRateMutedField,
   BranchSelect,
+  BranchSelectButton,
   FeatureCan,
 } from 'components';
 import { DateInput } from '@blueprintjs/datetime';
@@ -42,6 +41,7 @@ import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
 import {
   useObserveTransactionNoSettings,
   useSetPrimaryBranchToForm,
+  BranchRowDivider,
 } from '../utils';
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -60,8 +60,7 @@ function OwnerContributionFormFields({
   transactionNextNumber,
 }) {
   // Money in dialog context.
-  const { accounts, account, branches, isForeignCurrency } =
-    useMoneyInDailogContext();
+  const { accounts, account, branches } = useMoneyInDailogContext();
 
   const { values } = useFormikContext();
 
@@ -98,7 +97,7 @@ function OwnerContributionFormFields({
   return (
     <React.Fragment>
       <FeatureCan feature={Features.Branches}>
-        <BranchFieldsRow>
+        <Row>
           <Col xs={5}>
             <FormGroup
               label={<T id={'branch'} />}
@@ -112,8 +111,9 @@ function OwnerContributionFormFields({
               />
             </FormGroup>
           </Col>
-        </BranchFieldsRow>
+        </Row>
       </FeatureCan>
+      <BranchRowDivider />
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -213,20 +213,16 @@ function OwnerContributionFormFields({
           </FormGroup>
         )}
       </Field>
+
       {/*------------ exchange rate -----------*/}
-      {/* <If
-        condition={isForeignCurrency(
-          account?.currency_code,
-          values?.currency_code,
-        )}
-      > */}
-      <ExchangeRateInputGroup
+      <ExchangeRateMutedField
+        name={'exchange_rate'}
         fromCurrency={values?.currency_code}
         toCurrency={account?.currency_code}
-        name={'exchange_rate'}
-        formGroupProps={{ label: ' ', inline: false }}
+        formGroupProps={{ label: '', inline: false }}
+        exchangeRate={values.exchange_rate}
       />
-      {/* </If> */}
+
       <Row>
         <Col xs={5}>
           {/*------------ equity account -----------*/}
@@ -303,12 +299,3 @@ export default compose(
     transactionNumberPrefix: cashflowSetting?.numberPrefix,
   })),
 )(OwnerContributionFormFields);
-
-function BranchSelectButton({ label }) {
-  return <Button text={label} minimal={false} />;
-}
-
-const BranchFieldsRow = styled(Row)`
-  margin-bottom: 10px;
-  border-bottom: 1px solid #e9e9e9;
-`;

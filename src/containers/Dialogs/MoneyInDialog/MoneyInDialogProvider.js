@@ -8,7 +8,6 @@ import {
   useCashflowAccounts,
   useSettingCashFlow,
 } from 'hooks/query';
-import { isEqual, isUndefined } from 'lodash';
 
 const MoneyInDialogContent = React.createContext();
 
@@ -49,10 +48,6 @@ function MoneyInDialogProvider({
   // Submit payload.
   const [submitPayload, setSubmitPayload] = React.useState({});
 
-  // Determines whether the foreign currency.
-  const isForeignCurrency = (toCurrency, fromCurrency) =>
-    !isEqual(toCurrency, fromCurrency) && !isUndefined(toCurrency);
-
   //  provider.
   const provider = {
     accounts,
@@ -70,7 +65,6 @@ function MoneyInDialogProvider({
 
     createCashflowTransactionMutate,
     setSubmitPayload,
-    isForeignCurrency,
   };
 
   return (

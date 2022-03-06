@@ -50,7 +50,7 @@ function MoneyOutFloatingActions({
         >
           <T id={'close'} />
         </Button>
-        <Button
+        {/* <Button
           disabled={isSubmitting}
           loading={isSubmitting && !submitPayload.publish}
           style={{ minWidth: '75px' }}
@@ -58,7 +58,7 @@ function MoneyOutFloatingActions({
           onClick={handleSubmitDraftBtnClick}
         >
           {<T id={'save_as_draft'} />}
-        </Button>
+        </Button> */}
 
         <Button
           intent={Intent.PRIMARY}

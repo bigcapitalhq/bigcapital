@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import { useFormikContext } from 'formik';
 import { transactionNumber } from 'utils';
 import { sumBy, setWith, toSafeInteger, get, first } from 'lodash';
@@ -28,3 +29,9 @@ export const useSetPrimaryBranchToForm = () => {
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
 };
+
+export const BranchRowDivider = styled.div`
+  height: 1px;
+  background: #ebf1f6;
+  margin-bottom: 15px;
+`;
