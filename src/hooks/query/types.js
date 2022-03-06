@@ -209,6 +209,10 @@ const BRANCHES = {
   BRANCH: 'BRANCH',
 };
 
+const DASHBOARD = {
+  DASHBOARD_META: 'DASHBOARD_META',
+};
+
 export default {
   ...ACCOUNTS,
   ...BILLS,
@@ -239,4 +243,5 @@ export default {
   ...WAREHOUSES,
   ...WAREHOUSE_TRANSFERS,
   ...BRANCHES,
+  ...DASHBOARD,
 };
