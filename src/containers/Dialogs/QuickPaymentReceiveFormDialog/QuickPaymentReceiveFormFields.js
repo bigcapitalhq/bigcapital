@@ -4,6 +4,7 @@ import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
 import { useAutofocus } from 'hooks';
+import { isEqual } from 'lodash';
 import {
   Classes,
   FormGroup,
@@ -36,17 +37,22 @@ import {
   handleDateChange,
   compose,
 } from 'utils';
-import { useSetPrimaryBranchToForm, useForeignAccount } from './utils';
+import { useSetPrimaryBranchToForm } from './utils';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
+
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 import withSettings from 'containers/Settings/withSettings';
 
 /**
  * Quick payment receive form fields.
  */
-function QuickPaymentReceiveFormFields({ paymentReceiveAutoIncrement }) {
-  const { accounts, branches, baseCurrency } = useQuickPaymentReceiveContext();
+function QuickPaymentReceiveFormFields({
+  paymentReceiveAutoIncrement,
 
-  const isForeigAccount = useForeignAccount();
+  // #withCurrentOrganization
+  organization: { base_currency },
+}) {
+  const { accounts, branches, baseCurrency } = useQuickPaymentReceiveContext();
 
   // Intl context.
   const { values } = useFormikContext();
@@ -151,7 +157,7 @@ function QuickPaymentReceiveFormFields({ paymentReceiveAutoIncrement }) {
         )}
       </FastField>
 
-      <If condition={isForeigAccount}>
+      <If condition={!isEqual(base_currency, values.currency_code)}>
         {/*------------ exchange rate -----------*/}
         <ExchangeRateMutedField
           name={'exchange_rate'}
@@ -242,6 +248,7 @@ function QuickPaymentReceiveFormFields({ paymentReceiveAutoIncrement }) {
           </FormGroup>
         )}
       </FastField>
+
       {/* --------- Statement --------- */}
       <FastField name={'statement'}>
         {({ form, field, meta: { error, touched } }) => (
@@ -261,6 +268,7 @@ export default compose(
   withSettings(({ paymentReceiveSettings }) => ({
     paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
   })),
+  withCurrentOrganization(),
 )(QuickPaymentReceiveFormFields);
 
 export const BranchRowDivider = styled.div`

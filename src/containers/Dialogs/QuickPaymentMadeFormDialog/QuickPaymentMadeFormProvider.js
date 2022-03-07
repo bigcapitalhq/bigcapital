@@ -14,12 +14,7 @@ const QuickPaymentMadeContext = React.createContext();
 /**
  * Quick payment made dialog provider.
  */
-function QuickPaymentMadeFormProvider({
-  billId,
-  baseCurrency,
-  dialogName,
-  ...props
-}) {
+function QuickPaymentMadeFormProvider({ billId, dialogName, ...props }) {
   // Handle fetch bill details.
   const { isLoading: isBillLoading, data: bill } = useBill(billId, {
     enabled: !!billId,
@@ -48,7 +43,6 @@ function QuickPaymentMadeFormProvider({
     accounts,
     branches,
     dialogName,
-    baseCurrency,
     createPaymentMadeMutate,
     isBranchesSuccess,
   };

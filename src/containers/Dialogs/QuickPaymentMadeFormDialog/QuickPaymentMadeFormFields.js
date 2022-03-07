@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import { FormattedMessage as T } from 'components';
+import { isEqual } from 'lodash';
 import intl from 'react-intl-universal';
 import {
   Classes,
@@ -38,12 +39,17 @@ import {
 import { useSetPrimaryBranchToForm, useForeignAccount } from './utils';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import { compose } from 'utils';
+
 /**
  * Quick payment made form fields.
  */
-export default function QuickPaymentMadeFormFields() {
+function QuickPaymentMadeFormFields({
+  // #withCurrentOrganization
+  organization: { base_currency },
+}) {
   const { accounts, branches, baseCurrency } = useQuickPaymentMadeContext();
-  const isForeigAccount = useForeignAccount();
 
   // Intl context.
   const { values } = useFormikContext();
@@ -145,7 +151,8 @@ export default function QuickPaymentMadeFormFields() {
           </FormGroup>
         )}
       </FastField>
-      <If condition={isForeigAccount}>
+
+      <If condition={!isEqual(base_currency, values.currency_code)}>
         {/*------------ exchange rate -----------*/}
         <ExchangeRateMutedField
           name={'exchange_rate'}
@@ -248,6 +255,8 @@ export default function QuickPaymentMadeFormFields() {
     </div>
   );
 }
+
+export default compose(withCurrentOrganization())(QuickPaymentMadeFormFields);
 
 export const BranchRowDivider = styled.div`
   height: 1px;

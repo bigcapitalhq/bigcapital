@@ -47,10 +47,3 @@ export const useSetPrimaryBranchToForm = () => {
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
 };
-
-export const useForeignAccount = () => {
-  const { values } = useFormikContext();
-  const { baseCurrency } = useQuickPaymentMadeContext();
-
-  return !isEqual(baseCurrency, values.currency_code);
-};

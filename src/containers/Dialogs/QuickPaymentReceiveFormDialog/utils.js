@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
-import { first, isEqual } from 'lodash';
+import { first } from 'lodash';
 
 import { useFormikContext } from 'formik';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
@@ -54,11 +54,4 @@ export const useSetPrimaryBranchToForm = () => {
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
-};
-
-export const useForeignAccount = () => {
-  const { values } = useFormikContext();
-  const { baseCurrency } = useQuickPaymentReceiveContext();
-
-  return !isEqual(baseCurrency, values.currency_code);
 };
