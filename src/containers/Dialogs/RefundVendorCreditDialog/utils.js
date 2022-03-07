@@ -2,11 +2,11 @@ import React from 'react';
 import { useFormikContext } from 'formik';
 import { first } from 'lodash';
 
-import { useRefundCreditNoteContext } from './RefundCreditNoteFormProvider';
+import { useRefundVendorCreditContext } from './RefundVendorCreditFormProvider';
 
 export const useSetPrimaryBranchToForm = () => {
   const { setFieldValue } = useFormikContext();
-  const { branches, isBranchesSuccess } = useRefundCreditNoteContext();
+  const { branches, isBranchesSuccess } = useRefundVendorCreditContext();
 
   React.useEffect(() => {
     if (isBranchesSuccess) {

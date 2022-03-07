@@ -61,6 +61,7 @@ function RefundCreditNoteFormFields({
 
   return (
     <div className={Classes.DIALOG_BODY}>
+
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>

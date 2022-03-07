@@ -3,14 +3,13 @@ import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import moment from 'moment';
-import { omit, defaultTo } from 'lodash';
+import { omit } from 'lodash';
 
 import { AppToaster } from 'components';
 import { useRefundVendorCreditContext } from './RefundVendorCreditFormProvider';
 import { CreateVendorRefundCreditFormSchema } from './RefundVendorCreditForm.schema';
 import RefundVendorCreditFormContent from './RefundVendorCreditFormContent';
 
-import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose, transactionNumber } from 'utils';
 
@@ -20,6 +19,7 @@ const defaultInitialValues = {
   reference_no: '',
   description: '',
   amount: '',
+  exchange_rate: 1,
 };
 
 /**

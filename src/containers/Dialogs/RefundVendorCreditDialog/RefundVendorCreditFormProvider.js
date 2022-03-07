@@ -5,6 +5,7 @@ import { pick } from 'lodash';
 import {
   useAccounts,
   useVendorCredit,
+  useBranches,
   useCreateRefundVendorCredit,
 } from 'hooks/query';
 
@@ -17,6 +18,13 @@ function RefundVendorCreditFormProvider({
 }) {
   // Handle fetch accounts data.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches();
 
   // Handle fetch vendor credit details.
   const { data: vendorCredit, isLoading: isVendorCreditLoading } =
@@ -35,12 +43,18 @@ function RefundVendorCreditFormProvider({
       amount: vendorCredit.credits_remaining,
     },
     accounts,
+    branches,
     dialogName,
+    isBranchesSuccess,
     createRefundVendorCreditMutate,
   };
 
   return (
-    <DialogContent isLoading={isAccountsLoading || isVendorCreditLoading}>
+    <DialogContent
+      isLoading={
+        isAccountsLoading || isVendorCreditLoading || isBranchesLoading
+      }
+    >
       <RefundVendorCreditContext.Provider value={provider} {...props} />
     </DialogContent>
   );
