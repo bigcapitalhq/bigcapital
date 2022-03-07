@@ -5,6 +5,7 @@ import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
 import { useDeleteBranch } from 'hooks/query';
+import { handleDeleteErrors } from '../../Preferences/Branches/utils';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
@@ -24,7 +25,6 @@ function BranchDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-
   const { mutateAsync: deleteBranch, isLoading } = useDeleteBranch();
 
   // Handle cancel delete alert.
@@ -46,7 +46,9 @@ function BranchDeleteAlert({
           response: {
             data: { errors },
           },
-        }) => {},
+        }) => {
+          handleDeleteErrors(errors);
+        },
       )
       .finally(() => {
         closeAlert(name);

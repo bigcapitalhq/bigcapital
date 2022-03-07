@@ -4,6 +4,7 @@ import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 import { useDeleteWarehouse } from 'hooks/query';
+import { handleDeleteErrors } from '../../Preferences/Warehouses/utils';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
@@ -46,7 +47,9 @@ function WarehouseDeleteAlert({
           response: {
             data: { errors },
           },
-        }) => {},
+        }) => {
+          handleDeleteErrors(errors);
+        },
       )
       .finally(() => {
         closeAlert(name);
