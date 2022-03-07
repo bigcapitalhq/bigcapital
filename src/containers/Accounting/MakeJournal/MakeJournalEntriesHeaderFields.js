@@ -195,32 +195,35 @@ function MakeJournalEntriesHeader({
       </FastField>
 
       {/*------------ Currency  -----------*/}
-      {/* <FeatureCan feature={Features.ManualJournal}> */}
-      <FastField
-        name={'currency_code'}
-        currencies={currencies}
-        shouldUpdate={currenciesFieldShouldUpdate}
-      >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'currency'} />}
-            className={classNames('form-group--currency', CLASSES.FILL)}
-            inline={true}
-          >
-            <CurrencySelectList
-              currenciesList={currencies}
-              selectedCurrencyCode={value}
-              onCurrencySelected={(currencyItem) => {
-                form.setFieldValue('currency_code', currencyItem.currency_code);
-                form.setFieldValue('exchange_rate', '');
-                setSelactJournalCurrency(currencyItem);
-              }}
-              defaultSelectText={value}
-            />
-          </FormGroup>
-        )}
-      </FastField>
-      {/* </FeatureCan> */}
+      <FeatureCan feature={Features.ManualJournal}>
+        <FastField
+          name={'currency_code'}
+          currencies={currencies}
+          shouldUpdate={currenciesFieldShouldUpdate}
+        >
+          {({ form, field: { value }, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'currency'} />}
+              className={classNames('form-group--currency', CLASSES.FILL)}
+              inline={true}
+            >
+              <CurrencySelectList
+                currenciesList={currencies}
+                selectedCurrencyCode={value}
+                onCurrencySelected={(currencyItem) => {
+                  form.setFieldValue(
+                    'currency_code',
+                    currencyItem.currency_code,
+                  );
+                  form.setFieldValue('exchange_rate', '');
+                  setSelactJournalCurrency(currencyItem);
+                }}
+                defaultSelectText={value}
+              />
+            </FormGroup>
+          )}
+        </FastField>
+      </FeatureCan>
 
       {/* ----------- Exchange rate ----------- */}
       <If condition={isForeignJournal}>

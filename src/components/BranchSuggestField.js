@@ -39,10 +39,10 @@ export default function BranchSuggestField({
       <MenuItem
         // active={modifiers.active}
         disabled={modifiers.disabled}
-        label={branch.code.toString()}
+        label={branch.code}
         key={branch.id}
         onClick={handleClick}
-        text={branch.name.toString()}
+        text={branch.name}
       />
     );
   };

@@ -40,7 +40,7 @@ export default function ReceiptFormTopBar() {
   useSetPrimaryBranchToForm();
 
   // Can't display the navigation bar if warehouses or branches feature is not enabled.
-  if (!featureCan(Features.Warehouses) || !featureCan(Features.Branches)) {
+  if (!featureCan(Features.Warehouses) && !featureCan(Features.Branches)) {
     return null;
   }
 
