@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
 import {
@@ -8,42 +7,32 @@ import {
   PopoverInteractionKind,
   FormGroup,
   Position,
-  Menu,
   Classes,
 } from '@blueprintjs/core';
-import {
-  If,
-  ExchangeRateInputGroup,
-  Icon,
-  FormattedMessage as T,
-} from 'components';
-import { isEqual, isUndefined } from 'lodash';
+import { ExchangeRateInputGroup, Icon } from 'components';
 
 export function ExchangeRateMutedField({
   name,
   toCurrency,
   fromCurrency,
+  date,
   exchangeRate,
-  ...ExchangeRateprops
+  exchangeRateFieldProps,
+  popoverProps,
 }) {
-  if (isEqual(toCurrency, fromCurrency) && !isUndefined(toCurrency)) {
-    return null;
-  }
   const content = (
     <ExchangeRateFormGroupContent>
       <ExchangeRateInputGroup
         name={name}
         fromCurrency={fromCurrency}
         toCurrency={toCurrency}
-        {...ExchangeRateprops}
+        {...exchangeRateFieldProps}
       />
     </ExchangeRateFormGroupContent>
   );
 
   return (
-    <ExchangeRateFormGroup
-      label={`As on ${moment(new Date()).format('YYYY-MM-DD')},`}
-    >
+    <ExchangeRateFormGroup label={`As on ${date},`}>
       <Popover
         content={content}
         interactionKind={PopoverInteractionKind.CLICK}
@@ -51,6 +40,7 @@ export function ExchangeRateMutedField({
         modifiers={{
           offset: { offset: '0, 4' },
         }}
+        {...popoverProps}
         minimal={true}
         usePortal={false}
         target={<div />}

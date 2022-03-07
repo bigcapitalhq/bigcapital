@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
 import { transactionNumber } from 'utils';
-import { sumBy, setWith, toSafeInteger, get, first } from 'lodash';
+import { isEqual, isUndefined, isNull, first } from 'lodash';
 
 import { useMoneyInDailogContext } from './MoneyInDialogProvider';
 
@@ -28,6 +28,16 @@ export const useSetPrimaryBranchToForm = () => {
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+export const useForeignAccount = () => {
+  const { values } = useFormikContext();
+  const { account } = useMoneyInDailogContext();
+
+  return (
+    !isEqual(account.currency_code, values.currency_code) &&
+    !isNull(account.currency_code)
+  );
 };
 
 export const BranchRowDivider = styled.div`

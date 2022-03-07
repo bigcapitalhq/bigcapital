@@ -19,6 +19,7 @@ import {
   Icon,
   Col,
   Row,
+  If,
   InputPrependButton,
   ExchangeRateMutedField,
   BranchSelect,
@@ -41,6 +42,7 @@ import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
 import {
   useObserveTransactionNoSettings,
   useSetPrimaryBranchToForm,
+  useForeignAccount,
   BranchRowDivider,
 } from '../utils';
 import withSettings from 'containers/Settings/withSettings';
@@ -65,6 +67,8 @@ function OwnerContributionFormFields({
   const { values } = useFormikContext();
 
   const amountFieldRef = useAutofocus();
+
+  const isForeigAccount = useForeignAccount();
 
   // Handle tranaction number changing.
   const handleTransactionNumberChange = () => {
@@ -213,16 +217,17 @@ function OwnerContributionFormFields({
           </FormGroup>
         )}
       </Field>
-
-      {/*------------ exchange rate -----------*/}
-      <ExchangeRateMutedField
-        name={'exchange_rate'}
-        fromCurrency={values?.currency_code}
-        toCurrency={account?.currency_code}
-        formGroupProps={{ label: '', inline: false }}
-        exchangeRate={values.exchange_rate}
-      />
-
+      <If condition={isForeigAccount}>
+        {/*------------ exchange rate -----------*/}
+        <ExchangeRateMutedField
+          name={'exchange_rate'}
+          fromCurrency={values.currency_code}
+          toCurrency={account.currency_code}
+          formGroupProps={{ label: '', inline: false }}
+          date={values.date}
+          exchangeRate={values.exchange_rate}
+        />
+      </If>
       <Row>
         <Col xs={5}>
           {/*------------ equity account -----------*/}

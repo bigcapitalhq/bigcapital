@@ -18,6 +18,7 @@ import {
   Icon,
   Col,
   Row,
+  If,
   InputPrependButton,
   ExchangeRateMutedField,
   FeatureCan,
@@ -41,6 +42,7 @@ import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
 import {
   useObserveTransactionNoSettings,
   useSetPrimaryBranchToForm,
+  useForeignAccount,
   BranchRowDivider,
 } from '../utils';
 import withSettings from 'containers/Settings/withSettings';
@@ -61,6 +63,7 @@ function TransferFromAccountFormFields({
   // Money in dialog context.
   const { accounts, account, branches } = useMoneyInDailogContext();
 
+  const isForeigAccount = useForeignAccount();
   const amountFieldRef = useAutofocus();
 
   const { values } = useFormikContext();
@@ -196,7 +199,7 @@ function TransferFromAccountFormFields({
             className={'form-group--amount'}
           >
             <ControlGroup>
-              <InputPrependText text={values.currency_code} />
+              <InputPrependText text={account.currency_code} />
 
               <MoneyInputGroup
                 value={value}
@@ -211,16 +214,17 @@ function TransferFromAccountFormFields({
           </FormGroup>
         )}
       </FastField>
-
-      {/*------------ exchange rate -----------*/}
-      <ExchangeRateMutedField
-        name={'exchange_rate'}
-        fromCurrency={values?.currency_code}
-        toCurrency={account?.currency_code}
-        formGroupProps={{ label: '', inline: false }}
-        exchangeRate={values.exchange_rate}
-      />
-
+      <If condition={isForeigAccount}>
+        {/*------------ exchange rate -----------*/}
+        <ExchangeRateMutedField
+          name={'exchange_rate'}
+          fromCurrency={values.currency_code}
+          toCurrency={account.currency_code}
+          formGroupProps={{ label: '', inline: false }}
+          date={values.date}
+          exchangeRate={values.exchange_rate}
+        />
+      </If>
       <Row>
         <Col xs={5}>
           {/*------------ transfer from account -----------*/}
