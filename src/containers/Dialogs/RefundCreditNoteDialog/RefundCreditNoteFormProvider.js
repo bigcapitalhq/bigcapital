@@ -5,6 +5,7 @@ import { pick } from 'lodash';
 import {
   useAccounts,
   useCreditNote,
+  useBranches,
   useCreateRefundCreditNote,
 } from 'hooks/query';
 
@@ -24,6 +25,14 @@ function RefundCreditNoteFormProvider({ creditNoteId, dialogName, ...props }) {
       enabled: !!creditNoteId,
     },
   );
+
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches();
+
   // Create and edit credit note mutations.
   const { mutateAsync: createRefundCreditNoteMutate } =
     useCreateRefundCreditNote();
@@ -35,12 +44,17 @@ function RefundCreditNoteFormProvider({ creditNoteId, dialogName, ...props }) {
       amount: creditNote.credits_remaining,
     },
     accounts,
+    branches,
     dialogName,
+    isBranchesSuccess,
+
     createRefundCreditNoteMutate,
   };
 
   return (
-    <DialogContent isLoading={isAccountsLoading || isCreditNoteLoading}>
+    <DialogContent
+      isLoading={isAccountsLoading || isCreditNoteLoading || isBranchesLoading}
+    >
       <RefundCreditNoteContext.Provider value={provider} {...props} />
     </DialogContent>
   );
