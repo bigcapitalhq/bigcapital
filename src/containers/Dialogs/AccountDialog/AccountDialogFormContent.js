@@ -146,6 +146,7 @@ function AccountFormDialogFields({
                 )}
                 inline={true}
                 intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name="parent_account_id" />}
               >
                 <AccountsSelectList
                   accounts={accounts}

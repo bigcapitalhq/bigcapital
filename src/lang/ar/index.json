@@ -1787,5 +1787,7 @@
   "warehouse_locations.column.warehouse_name": "Warehouse name",
   "warehouse_locations.column.quantity": "Quantity",
   "warehouse_locations.column.available_for_sale": "Available for sale",
-  "warehouse_locations.column.warehouse_code": "Warehouse code"
+  "warehouse_locations.column.warehouse_code": "Warehouse code",
+  "accounts.error.account_currency_not_same_parent_account": "لا يمكنك إنشاء حساب بعملة مختلفة عن عملة الحساب الأصلي."
+
 }
