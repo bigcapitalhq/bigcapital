@@ -1,5 +1,10 @@
+import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
+import { first, isEqual } from 'lodash';
+
+import { useFormikContext } from 'formik';
+import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
 
 export const defaultInitialValues = {
   customer_id: '',
@@ -8,6 +13,8 @@ export const defaultInitialValues = {
   payment_date: moment(new Date()).format('YYYY-MM-DD'),
   reference_no: '',
   // statement: '',
+  exchange_rate: 1,
+  branch_id: '',
   entries: [{ invoice_id: '', payment_amount: '' }],
 };
 
@@ -32,4 +39,26 @@ export const transformErrors = (errors, { setFieldError }) => {
       intl.get('the_payment_amount_bigger_than_invoice_due_amount'),
     );
   }
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = useQuickPaymentReceiveContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+export const useForeignAccount = () => {
+  const { values } = useFormikContext();
+  const { baseCurrency } = useQuickPaymentReceiveContext();
+
+  return !isEqual(baseCurrency, values.currency_code);
 };

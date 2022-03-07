@@ -1,5 +1,6 @@
 import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
+import styled from 'styled-components';
+import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
 import {
@@ -16,11 +17,17 @@ import { CLASSES } from 'common/classes';
 import { DateInput } from '@blueprintjs/datetime';
 import { FieldRequiredHint, Col, Row } from 'components';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
+import { Features } from 'common';
 import {
   AccountsSuggestField,
   InputPrependText,
   MoneyInputGroup,
   Icon,
+  If,
+  FeatureCan,
+  ExchangeRateMutedField,
+  BranchSelect,
+  BranchSelectButton,
 } from 'components';
 import {
   inputIntent,
@@ -28,20 +35,44 @@ import {
   tansformDateValue,
   handleDateChange,
 } from 'utils';
+import { useSetPrimaryBranchToForm, useForeignAccount } from './utils';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 
 /**
  * Quick payment made form fields.
  */
 export default function QuickPaymentMadeFormFields() {
-  const { accounts } = useQuickPaymentMadeContext();
+  const { accounts, branches, baseCurrency } = useQuickPaymentMadeContext();
+  const isForeigAccount = useForeignAccount();
 
   // Intl context.
+  const { values } = useFormikContext();
 
   const paymentMadeFieldRef = useAutofocus();
 
+  // Sets the primary branch to form.
+  useSetPrimaryBranchToForm();
+
   return (
     <div className={Classes.DIALOG_BODY}>
+      <FeatureCan feature={Features.Branches}>
+        <Row>
+          <Col xs={5}>
+            <FormGroup
+              label={<T id={'branch'} />}
+              className={classNames('form-group--select-list', Classes.FILL)}
+            >
+              <BranchSelect
+                name={'branch_id'}
+                branches={branches}
+                input={BranchSelectButton}
+                popoverProps={{ minimal: true }}
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+        <BranchRowDivider />
+      </FeatureCan>
       <Row>
         <Col xs={5}>
           {/* ------------- Vendor name ------------- */}
@@ -114,6 +145,17 @@ export default function QuickPaymentMadeFormFields() {
           </FormGroup>
         )}
       </FastField>
+      <If condition={isForeigAccount}>
+        {/*------------ exchange rate -----------*/}
+        <ExchangeRateMutedField
+          name={'exchange_rate'}
+          fromCurrency={baseCurrency}
+          toCurrency={values.currency_code}
+          formGroupProps={{ label: '', inline: false }}
+          date={values.payment_date}
+          exchangeRate={values.exchange_rate}
+        />
+      </If>
       <Row>
         <Col xs={5}>
           {/* ------------- Payment date ------------- */}
@@ -206,3 +248,9 @@ export default function QuickPaymentMadeFormFields() {
     </div>
   );
 }
+
+export const BranchRowDivider = styled.div`
+  height: 1px;
+  background: #ebf1f6;
+  margin-bottom: 15px;
+`;

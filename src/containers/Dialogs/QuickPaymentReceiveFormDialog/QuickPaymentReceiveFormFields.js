@@ -1,5 +1,6 @@
 import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
+import styled from 'styled-components';
+import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
 import { useAutofocus } from 'hooks';
@@ -20,32 +21,61 @@ import {
   InputPrependText,
   MoneyInputGroup,
   Icon,
+  If,
+  FeatureCan,
+  ExchangeRateMutedField,
+  BranchSelect,
+  BranchSelectButton,
 } from 'components';
+import { Features } from 'common';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
 import {
   inputIntent,
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-  compose
+  compose,
 } from 'utils';
+import { useSetPrimaryBranchToForm, useForeignAccount } from './utils';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
 import withSettings from 'containers/Settings/withSettings';
 
 /**
  * Quick payment receive form fields.
  */
-function QuickPaymentReceiveFormFields({
-  paymentReceiveAutoIncrement
-}) {
-  const { accounts } = useQuickPaymentReceiveContext();
+function QuickPaymentReceiveFormFields({ paymentReceiveAutoIncrement }) {
+  const { accounts, branches, baseCurrency } = useQuickPaymentReceiveContext();
+
+  const isForeigAccount = useForeignAccount();
 
   // Intl context.
-  
+  const { values } = useFormikContext();
+
   const paymentReceiveFieldRef = useAutofocus();
+
+  // Sets the primary branch to form.
+  useSetPrimaryBranchToForm();
 
   return (
     <div className={Classes.DIALOG_BODY}>
+      <FeatureCan feature={Features.Branches}>
+        <Row>
+          <Col xs={5}>
+            <FormGroup
+              label={<T id={'branch'} />}
+              className={classNames('form-group--select-list', Classes.FILL)}
+            >
+              <BranchSelect
+                name={'branch_id'}
+                branches={branches}
+                input={BranchSelectButton}
+                popoverProps={{ minimal: true }}
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+        <BranchRowDivider />
+      </FeatureCan>
       <Row>
         <Col xs={5}>
           {/* ------------- Customer name ------------- */}
@@ -120,6 +150,19 @@ function QuickPaymentReceiveFormFields({
           </FormGroup>
         )}
       </FastField>
+
+      <If condition={isForeigAccount}>
+        {/*------------ exchange rate -----------*/}
+        <ExchangeRateMutedField
+          name={'exchange_rate'}
+          fromCurrency={baseCurrency}
+          toCurrency={values.currency_code}
+          formGroupProps={{ label: '', inline: false }}
+          date={values.payment_date}
+          exchangeRate={values.exchange_rate}
+        />
+      </If>
+
       <Row>
         <Col xs={5}>
           {/* ------------- Payment date ------------- */}
@@ -218,4 +261,10 @@ export default compose(
   withSettings(({ paymentReceiveSettings }) => ({
     paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
   })),
-)(QuickPaymentReceiveFormFields)
+)(QuickPaymentReceiveFormFields);
+
+export const BranchRowDivider = styled.div`
+  height: 1px;
+  background: #ebf1f6;
+  margin-bottom: 15px;
+`;
