@@ -161,7 +161,7 @@ function QuickPaymentReceiveFormFields({
         {/*------------ exchange rate -----------*/}
         <ExchangeRateMutedField
           name={'exchange_rate'}
-          fromCurrency={baseCurrency}
+          fromCurrency={base_currency}
           toCurrency={values.currency_code}
           formGroupProps={{ label: '', inline: false }}
           date={values.payment_date}

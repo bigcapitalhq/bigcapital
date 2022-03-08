@@ -1,7 +1,8 @@
 import React from 'react';
 import { isEmpty } from 'lodash';
-
+import { Features } from 'common';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import { useFeatureCan } from 'hooks/state';
 import {
   useResourceViews,
   useResourceMeta,
@@ -24,16 +25,26 @@ function WarehouseTransfersListProvider({
   // warehouse transfers refresh action.
   const { refresh } = useRefreshWarehouseTransfers();
 
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+
+  const isWarehouseFeatureCan = featureCan(Features.Warehouses);
+
   // Fetch warehouse transfers list according to the given custom view id.
   const {
     data: { warehousesTransfers, pagination, filterMeta },
     isFetching: isWarehouseTransfersFetching,
     isLoading: isWarehouseTransfersLoading,
-  } = useWarehousesTransfers(query, { keepPreviousData: true });
+  } = useWarehousesTransfers(
+    query,
+    // { keepPreviousData: true },
+    { enabled: isWarehouseFeatureCan },
+  );
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isEmpty(warehousesTransfers) && !isWarehouseTransfersLoading;
+    (isEmpty(warehousesTransfers) && !isWarehouseTransfersLoading) ||
+    !isWarehouseFeatureCan;
 
   // Fetch create notes resource views and fields.
   const { data: WarehouseTransferView, isLoading: isViewsLoading } =
