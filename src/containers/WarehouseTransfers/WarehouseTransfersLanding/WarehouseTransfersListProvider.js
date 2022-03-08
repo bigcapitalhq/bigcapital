@@ -43,7 +43,9 @@ function WarehouseTransfersListProvider({
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    (isEmpty(warehousesTransfers) && !isWarehouseTransfersLoading) ||
+    (isEmpty(warehousesTransfers) &&
+      !tableStateChanged &&
+      !isWarehouseTransfersLoading) ||
     !isWarehouseFeatureCan;
 
   // Fetch create notes resource views and fields.

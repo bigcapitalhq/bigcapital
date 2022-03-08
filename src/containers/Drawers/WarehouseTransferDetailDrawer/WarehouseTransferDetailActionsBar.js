@@ -34,8 +34,7 @@ function WarehouseTransferDetailActionsBar({
 }) {
   const history = useHistory();
 
-  const { warehouseTransferId, warehouseTransfer } =
-    useWarehouseDetailDrawerContext();
+  const { warehouseTransferId } = useWarehouseDetailDrawerContext();
 
   // Handle edit warehosue transfer.
   const handleEditWarehosueTransfer = () => {
