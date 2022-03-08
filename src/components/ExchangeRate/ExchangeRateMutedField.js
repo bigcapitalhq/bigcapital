@@ -49,7 +49,7 @@ export function ExchangeRateMutedField({
           1 {fromCurrency} = {exchangeRate} {toCurrency}
           <Button
             className={Classes.MINIMAL}
-            rightIcon={<Icon icon="pen-18" />}
+            rightIcon={<Icon icon="pen-18" iconSize={14} />}
             small={true}
           />
         </ExchangeRateButton>
@@ -70,7 +70,7 @@ const ExchangeRateButton = styled.div`
   display: flex;
   align-items: center;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 400;
   color: #0d244a;
 `;
 
