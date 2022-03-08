@@ -1,6 +1,7 @@
 import React, { createContext, useState } from 'react';
-import {isEqual, isUndefined } from 'lodash';
-
+import { isEqual, isUndefined } from 'lodash';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useAccounts,
@@ -38,6 +39,11 @@ const stringifiedFilterRoles = JSON.stringify([
  * Bill form provider.
  */
 function BillFormProvider({ billId, baseCurrency, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isWarehouseFeatureCan = featureCan(Features.Warehouses);
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   // Handle fetch accounts.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
@@ -66,14 +72,14 @@ function BillFormProvider({ billId, baseCurrency, ...props }) {
     data: warehouses,
     isLoading: isWarehouesLoading,
     isSuccess: isWarehousesSuccess,
-  } = useWarehouses();
+  } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
   // Fetches the branches list.
   const {
     data: branches,
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
-  } = useBranches();
+  } = useBranches({}, { enabled: isBranchFeatureCan });
 
   // Handle fetching bill settings.
   const { isFetching: isSettingLoading } = useSettings();

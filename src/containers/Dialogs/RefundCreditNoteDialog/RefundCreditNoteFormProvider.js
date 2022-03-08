@@ -1,7 +1,8 @@
 import React from 'react';
 import { DialogContent } from 'components';
 import { pick } from 'lodash';
-
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import {
   useAccounts,
   useCreditNote,
@@ -14,7 +15,16 @@ const RefundCreditNoteContext = React.createContext();
 /**
  * Refund credit note form provider.
  */
-function RefundCreditNoteFormProvider({ creditNoteId, dialogName, ...props }) {
+function RefundCreditNoteFormProvider({
+  creditNoteId,
+  dialogName,
+  query,
+  ...props
+}) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   // Handle fetch accounts data.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
@@ -31,7 +41,7 @@ function RefundCreditNoteFormProvider({ creditNoteId, dialogName, ...props }) {
     data: branches,
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
-  } = useBranches();
+  } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // Create and edit credit note mutations.
   const { mutateAsync: createRefundCreditNoteMutate } =

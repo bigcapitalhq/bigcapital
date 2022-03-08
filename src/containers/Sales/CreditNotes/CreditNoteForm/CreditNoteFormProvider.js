@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import { isEmpty, pick, isEqual, isUndefined } from 'lodash';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { transformToEditForm } from './utils';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 
 import {
   useCreditNote,
@@ -24,6 +26,11 @@ const CreditNoteFormContext = React.createContext();
 function CreditNoteFormProvider({ creditNoteId, baseCurrency, ...props }) {
   const { state } = useLocation();
   const invoiceId = state?.invoiceId;
+
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isWarehouseFeatureCan = featureCan(Features.Warehouses);
+  const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Handle fetch customers data table or list
   const {
@@ -56,14 +63,14 @@ function CreditNoteFormProvider({ creditNoteId, baseCurrency, ...props }) {
     data: warehouses,
     isLoading: isWarehouesLoading,
     isSuccess: isWarehousesSuccess,
-  } = useWarehouses();
+  } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
   // Fetches the branches list.
   const {
     data: branches,
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
-  } = useBranches();
+  } = useBranches({}, { enabled: isBranchFeatureCan });
 
   // Handle fetching settings.
   useSettingsCreditNotes();

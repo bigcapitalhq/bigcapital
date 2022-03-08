@@ -1,6 +1,8 @@
 import React from 'react';
 
+import { Features } from 'common';
 import { useBranches } from 'hooks/query';
+import { useFeatureCan } from 'hooks/state';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
 const ProfitLossSheetHeaderDimensionsPanelContext = React.createContext();
@@ -9,9 +11,15 @@ const ProfitLossSheetHeaderDimensionsPanelContext = React.createContext();
  * profit loss sheet header provider.
  * @returns
  */
-function ProfitLossSheetHeaderDimensionsProvider({ ...props }) {
+function ProfitLossSheetHeaderDimensionsProvider({ query, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   // Fetches the branches list.
-  const { isLoading: isBranchesLoading, data: branches } = useBranches();
+  const { isLoading: isBranchesLoading, data: branches } = useBranches(query, {
+    enabled: isBranchFeatureCan,
+  });
 
   // Provider
   const provider = {

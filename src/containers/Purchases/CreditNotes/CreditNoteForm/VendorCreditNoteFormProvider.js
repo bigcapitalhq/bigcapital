@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import { isEmpty, pick, isEqual, isUndefined } from 'lodash';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { transformToEditForm } from './utils';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import {
   useCreateVendorCredit,
   useEditVendorCredit,
@@ -26,8 +28,12 @@ function VendorCreditNoteFormProvider({
   ...props
 }) {
   const { state } = useLocation();
-
   const billId = state?.billId;
+
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+  const isWarehouseFeatureCan = featureCan(Features.Warehouses);
 
   // Handle fetching the items table based on the given query.
   const {
@@ -62,14 +68,14 @@ function VendorCreditNoteFormProvider({
     data: warehouses,
     isLoading: isWarehouesLoading,
     isSuccess: isWarehousesSuccess,
-  } = useWarehouses();
+  } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
   // Fetches the branches list.
   const {
     data: branches,
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
-  } = useBranches();
+  } = useBranches({}, { enabled: isBranchFeatureCan });
 
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = React.useState();

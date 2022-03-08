@@ -12,6 +12,8 @@ import {
   useCreateEstimate,
   useEditEstimate,
 } from 'hooks/query';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import { ITEMS_FILTER_ROLES } from './utils';
 
 const EstimateFormContext = createContext();
@@ -19,7 +21,12 @@ const EstimateFormContext = createContext();
 /**
  * Estimate form provider.
  */
-function EstimateFormProvider({ estimateId, baseCurrency, ...props }) {
+function EstimateFormProvider({ query, estimateId, baseCurrency, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isWarehouseFeatureCan = featureCan(Features.Warehouses);
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   const {
     data: estimate,
     isFetching: isEstimateFetching,
@@ -48,14 +55,14 @@ function EstimateFormProvider({ estimateId, baseCurrency, ...props }) {
     data: warehouses,
     isLoading: isWarehouesLoading,
     isSuccess: isWarehousesSuccess,
-  } = useWarehouses();
+  } = useWarehouses(query, { enabled: isWarehouseFeatureCan });
 
   // Fetches the branches list.
   const {
     data: branches,
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
-  } = useBranches();
+  } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // Handle fetch settings.
   useSettingsEstimates();
@@ -103,7 +110,7 @@ function EstimateFormProvider({ estimateId, baseCurrency, ...props }) {
     selectCustomer,
     setSelectCustomer,
     baseCurrency,
-    
+
     createEstimateMutate,
     editEstimateMutate,
   };

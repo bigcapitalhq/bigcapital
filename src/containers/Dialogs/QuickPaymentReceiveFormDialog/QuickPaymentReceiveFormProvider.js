@@ -1,6 +1,8 @@
 import React, { useContext, createContext } from 'react';
 import { pick } from 'lodash';
 import { DialogContent } from 'components';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import {
   useAccounts,
   useInvoice,
@@ -15,11 +17,15 @@ const QuickPaymentReceiveContext = createContext();
  * Quick payment receive dialog provider.
  */
 function QuickPaymentReceiveFormProvider({
+  query,
   invoiceId,
   dialogName,
   baseCurrency,
   ...props
 }) {
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   // Handle fetch accounts data.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
@@ -38,9 +44,7 @@ function QuickPaymentReceiveFormProvider({
     data: branches,
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
-  } = useBranches();
-
-  
+  } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // State provider.
   const provider = {

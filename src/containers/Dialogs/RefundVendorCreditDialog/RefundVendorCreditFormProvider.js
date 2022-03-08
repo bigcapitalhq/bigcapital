@@ -1,7 +1,8 @@
 import React from 'react';
 import { DialogContent } from 'components';
 import { pick } from 'lodash';
-
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import {
   useAccounts,
   useVendorCredit,
@@ -14,8 +15,13 @@ const RefundVendorCreditContext = React.createContext();
 function RefundVendorCreditFormProvider({
   vendorCreditId,
   dialogName,
+  query,
   ...props
 }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   // Handle fetch accounts data.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
@@ -24,7 +30,7 @@ function RefundVendorCreditFormProvider({
     data: branches,
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
-  } = useBranches();
+  } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // Handle fetch vendor credit details.
   const { data: vendorCredit, isLoading: isVendorCreditLoading } =

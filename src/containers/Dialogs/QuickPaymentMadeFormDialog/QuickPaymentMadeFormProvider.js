@@ -6,6 +6,8 @@ import {
   useBranches,
   useCreatePaymentMade,
 } from 'hooks/query';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 
 import { pick } from 'lodash';
 
@@ -14,7 +16,11 @@ const QuickPaymentMadeContext = React.createContext();
 /**
  * Quick payment made dialog provider.
  */
-function QuickPaymentMadeFormProvider({ billId, dialogName, ...props }) {
+function QuickPaymentMadeFormProvider({ query, billId, dialogName, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   // Handle fetch bill details.
   const { isLoading: isBillLoading, data: bill } = useBill(billId, {
     enabled: !!billId,
@@ -31,7 +37,7 @@ function QuickPaymentMadeFormProvider({ billId, dialogName, ...props }) {
     data: branches,
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
-  } = useBranches();
+  } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // State provider.
   const provider = {

@@ -1,6 +1,7 @@
 import React from 'react';
-
+import { Features } from 'common';
 import { useBranches } from 'hooks/query';
+import { useFeatureCan } from 'hooks/state';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
 const CashFlowStatementDimensionsPanelContext = React.createContext();
@@ -9,9 +10,16 @@ const CashFlowStatementDimensionsPanelContext = React.createContext();
  * cash flow statement dimensions panel provider.
  * @returns
  */
-function CashFlowStatementDimensionsPanelProvider({ ...props }) {
+function CashFlowStatementDimensionsPanelProvider({ query,...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   // Fetches the branches list.
-  const { isLoading: isBranchesLoading, data: branches } = useBranches();
+  const { isLoading: isBranchesLoading, data: branches } = useBranches(
+    query,
+    { enabled: isBranchFeatureCan },
+  );
 
   // Provider
   const provider = {

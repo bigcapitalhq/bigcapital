@@ -1,5 +1,7 @@
 import React from 'react';
+import { Features } from 'common';
 import { useBranches } from 'hooks/query';
+import { useFeatureCan } from 'hooks/state';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
 const TrialBLSheetHeaderDimensionsContext = React.createContext();
@@ -8,9 +10,15 @@ const TrialBLSheetHeaderDimensionsContext = React.createContext();
  *  Trial BL sheet header provider.
  * @returns
  */
-function TrialBLHeaderDimensionsPanelProvider({ ...props }) {
+function TrialBLHeaderDimensionsPanelProvider({ query, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   // Fetches the branches list.
-  const { isLoading: isBranchesLoading, data: branches } = useBranches();
+  const { isLoading: isBranchesLoading, data: branches } = useBranches(query, {
+    enabled: isBranchFeatureCan,
+  });
 
   // Provider
   const provider = {
@@ -28,4 +36,7 @@ function TrialBLHeaderDimensionsPanelProvider({ ...props }) {
 const useTrialBalanceSheetPanelContext = () =>
   React.useContext(TrialBLSheetHeaderDimensionsContext);
 
-export { TrialBLHeaderDimensionsPanelProvider, useTrialBalanceSheetPanelContext };
+export {
+  TrialBLHeaderDimensionsPanelProvider,
+  useTrialBalanceSheetPanelContext,
+};

@@ -46,7 +46,7 @@ export const defaultManualJournal = {
   currency_code: '',
   publish: '',
   branch_id: '',
-  exchange_rate: '',
+  exchange_rate: 1,
   entries: [...repeatValue(defaultEntry, 4)],
 };
 

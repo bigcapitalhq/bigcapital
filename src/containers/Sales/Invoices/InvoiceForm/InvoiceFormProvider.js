@@ -1,6 +1,8 @@
 import React, { createContext, useState } from 'react';
 import { isEmpty, pick, isEqual, isUndefined } from 'lodash';
 import { useLocation } from 'react-router-dom';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { transformToEditForm, ITEMS_FILTER_ROLES_QUERY } from './utils';
 import {
@@ -23,6 +25,11 @@ const InvoiceFormContext = createContext();
 function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   const { state } = useLocation();
   const estimateId = state?.action;
+
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isWarehouseFeatureCan = featureCan(Features.Warehouses);
+  const isBranchFeatureCan = featureCan(Features.Branches);
 
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
     enabled: !!invoiceId,
@@ -60,14 +67,14 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     data: warehouses,
     isLoading: isWarehouesLoading,
     isSuccess: isWarehousesSuccess,
-  } = useWarehouses();
+  } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
   // Fetches the branches list.
   const {
     data: branches,
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
-  } = useBranches();
+  } = useBranches({}, { enabled: isBranchFeatureCan });
 
   // Handle fetching settings.
   const { isLoading: isSettingsLoading } = useSettingsInvoices();

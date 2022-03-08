@@ -7,6 +7,8 @@ import {
   useCreateWarehouseTransfer,
   useEditWarehouseTransfer,
 } from 'hooks/query';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import { ITEMS_FILTER_ROLES_QUERY } from './utils.js';
 
 const WarehouseFormContext = React.createContext();
@@ -15,6 +17,10 @@ const WarehouseFormContext = React.createContext();
  * Warehouse transfer form provider.
  */
 function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isWarehouseFeatureCan = featureCan(Features.Warehouses);
+
   // Handle fetch Items data table or list
   const {
     data: { items },
@@ -36,7 +42,7 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
     data: warehouses,
     isFetching: isWarehouesFetching,
     isLoading: isWarehouesLoading,
-  } = useWarehouses();
+  } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
   // Create and edit warehouse mutations.
   const { mutateAsync: createWarehouseTransferMutate } =

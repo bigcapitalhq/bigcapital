@@ -1,5 +1,7 @@
 import React from 'react';
 import { DialogContent } from 'components';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import {
   useCreateCashflowTransaction,
   useAccount,
@@ -20,6 +22,9 @@ function MoneyInDialogProvider({
   dialogName,
   ...props
 }) {
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   // Fetches accounts list.
   const { isFetching: isAccountsLoading, data: accounts } = useAccounts();
 
@@ -33,7 +38,7 @@ function MoneyInDialogProvider({
     data: branches,
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
-  } = useBranches();
+  } = useBranches({}, { enabled: isBranchFeatureCan });
 
   // Fetch cash flow list .
   const { data: cashflowAccounts, isLoading: isCashFlowAccountsLoading } =

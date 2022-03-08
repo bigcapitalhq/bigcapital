@@ -1,5 +1,7 @@
 import React, { createContext, useState } from 'react';
 import { isEqual, isUndefined } from 'lodash';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useAccounts,
@@ -18,7 +20,11 @@ const MakeJournalFormContext = createContext();
 /**
  * Make journal form provider.
  */
-function MakeJournalProvider({ journalId, baseCurrency, ...props }) {
+function MakeJournalProvider({ journalId, query, baseCurrency, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   // Load the accounts list.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
@@ -48,7 +54,7 @@ function MakeJournalProvider({ journalId, baseCurrency, ...props }) {
     data: branches,
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
-  } = useBranches();
+  } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // Submit form payload.
   const [submitPayload, setSubmitPayload] = useState({});

@@ -108,7 +108,7 @@ function MakeJournalEntriesForm({
       return;
     }
     const form = {
-      ...omit(values, ['journal_number', 'journal_number_manually']),
+      ...omit(values, ['journal_number_manually']),
       ...(values.journal_number_manually && {
         journal_number: values.journal_number,
       }),
