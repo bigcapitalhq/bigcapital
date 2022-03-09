@@ -23,6 +23,8 @@ const Schema = Yup.object().shape({
   reference_no: Yup.string(),
   new_quantity: Yup.number().required(),
   publish: Yup.boolean(),
+  branch_id: Yup.string(),
+  warehouse_id: Yup.string(),
 });
 
 export const CreateInventoryAdjustmentFormSchema = Schema;

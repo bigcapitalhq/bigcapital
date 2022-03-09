@@ -1844,6 +1844,7 @@
   "branches.column.code": "Code",
   "select_branch": "Select branch",
   "branch": "Branch",
+  "warehouse":"Warehouse",
   "branch.dialog.label_new_branch": "New Branch",
   "branch.dialog.label_edit_branch": "New Branch",
   "branch.dialog.label.branch_name": "Branch Name",

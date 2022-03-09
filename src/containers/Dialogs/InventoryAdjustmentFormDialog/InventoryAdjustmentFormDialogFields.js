@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import { FastField, ErrorMessage, Field } from 'formik';
 import {
   Classes,
@@ -12,7 +13,17 @@ import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from 'hooks';
-import { ListSelect, FieldRequiredHint, Col, Row } from 'components';
+import {
+  ListSelect,
+  FieldRequiredHint,
+  Col,
+  Row,
+  FeatureCan,
+  BranchSelect,
+  WarehouseSelect,
+  BranchSelectButton,
+  WarehouseSelectButton,
+} from 'components';
 import {
   inputIntent,
   momentFormatter,
@@ -21,26 +32,76 @@ import {
   toSafeNumber,
 } from 'utils';
 import { CLASSES } from 'common/classes';
+import { Features } from 'common';
 import adjustmentType from 'common/adjustmentType';
 
 import AccountsSuggestField from 'components/AccountsSuggestField';
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
-import { diffQuantity } from './utils';
+import {
+  diffQuantity,
+  useSetPrimaryBranchToForm,
+  useSetPrimaryWarehouseToForm,
+} from './utils';
+import { useFeatureCan } from 'hooks/state';
 import InventoryAdjustmentQuantityFields from './InventoryAdjustmentQuantityFields';
 
 /**
  * Inventory adjustment form dialogs fields.
  */
 export default function InventoryAdjustmentFormDialogFields() {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+
   const dateFieldRef = useAutofocus();
 
   // Inventory adjustment dialog context.
-  const { accounts } = useInventoryAdjContext();
+  const { accounts, branches, warehouses } = useInventoryAdjContext();
 
-  // Intl context.
+  // Sets the primary warehouse to form.
+  useSetPrimaryWarehouseToForm();
+
+  // Sets the primary branch to form.
+  useSetPrimaryBranchToForm();
 
   return (
     <div className={Classes.DIALOG_BODY}>
+      <Row>
+        <FeatureCan feature={Features.Branches}>
+          <Col xs={5}>
+            <FormGroup
+              label={<T id={'branch'} />}
+              className={classNames('form-group--select-list', Classes.FILL)}
+            >
+              <BranchSelect
+                name={'branch_id'}
+                branches={branches}
+                input={BranchSelectButton}
+                popoverProps={{ minimal: true }}
+              />
+            </FormGroup>
+          </Col>
+        </FeatureCan>
+        <FeatureCan feature={Features.Warehouses}>
+          <Col xs={5}>
+            <FormGroup
+              label={<T id={'warehouse'} />}
+              className={classNames('form-group--select-list', Classes.FILL)}
+            >
+              <WarehouseSelect
+                name={'warehouse_id'}
+                warehouses={warehouses}
+                input={WarehouseSelectButton}
+                popoverProps={{ minimal: true }}
+              />
+            </FormGroup>
+          </Col>
+        </FeatureCan>
+      </Row>
+
+      {featureCan(Features.Warehouses) && featureCan(Features.Branches) && (
+        <FeatureRowDivider />
+      )}
+
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -173,3 +234,9 @@ export default function InventoryAdjustmentFormDialogFields() {
     </div>
   );
 }
+
+export const FeatureRowDivider = styled.div`
+  height: 2px;
+  background: #e9e9e9;
+  margin-bottom: 15px;
+`;
