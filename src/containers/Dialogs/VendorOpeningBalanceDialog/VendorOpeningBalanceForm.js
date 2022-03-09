@@ -6,10 +6,10 @@ import { Intent } from '@blueprintjs/core';
 import { defaultTo } from 'lodash';
 
 import { AppToaster } from 'components';
-import { CreateCustomerOpeningBalanceFormSchema } from './CustomerOpeningBalanceForm.schema';
-import { useCustomerOpeningBalanceContext } from './CustomerOpeningBalanceFormProvider';
+import { CreateVendorOpeningBalanceFormSchema } from './VendorOpeningBalanceForm.schema';
+import { useVendorOpeningBalanceContext } from './VendorOpeningBalanceFormProvider';
 
-import CustomerOpeningBalanceFormContent from './CustomerOpeningBalanceFormContent';
+import VendorOpeningBalanceFormContent from './VendorOpeningBalanceFormContent';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { compose } from 'utils';
@@ -22,21 +22,22 @@ const defaultInitialValues = {
 };
 
 /**
- * Customer Opening balance form.
+ * Vendor Opening balance form.
  * @returns
  */
-function CustomerOpeningBalanceForm({
+function VendorOpeningBalanceForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, customer, editCustomerOpeningBalanceMutate } =
-    useCustomerOpeningBalanceContext();
+  const { dialogName, vendor, editVendorOpeningBalanceMutate } =
+    useVendorOpeningBalanceContext();
 
   // Initial form values
   const initialValues = {
     ...defaultInitialValues,
-    ...customer,
-    opening_balance: defaultTo(customer.opening_balance, ''),
+    ...vendor,
+    opening_balance: defaultTo(vendor.opening_balance, ''),
+
   };
 
   // Handles the form submit.
@@ -48,7 +49,7 @@ function CustomerOpeningBalanceForm({
     // Handle request response success.
     const onSuccess = (response) => {
       AppToaster.show({
-        message: intl.get('customer_opening_balance.success_message'),
+        message: intl.get('vendor_opening_balance.success_message'),
         intent: Intent.SUCCESS,
       });
       closeDialog(dialogName);
@@ -65,19 +66,18 @@ function CustomerOpeningBalanceForm({
       setSubmitting(false);
     };
 
-    editCustomerOpeningBalanceMutate([customer.id, formValues])
+    editVendorOpeningBalanceMutate([vendor.id, formValues])
       .then(onSuccess)
       .catch(onError);
   };
 
   return (
     <Formik
-      validationSchema={CreateCustomerOpeningBalanceFormSchema}
+      validationSchema={CreateVendorOpeningBalanceFormSchema}
       initialValues={initialValues}
       onSubmit={handleFormSubmit}
-      component={CustomerOpeningBalanceFormContent}
+      component={VendorOpeningBalanceFormContent}
     />
   );
 }
-
-export default compose(withDialogActions)(CustomerOpeningBalanceForm);
+export default compose(withDialogActions)(VendorOpeningBalanceForm);

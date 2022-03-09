@@ -19,8 +19,10 @@ import { useVendorDetailsDrawerContext } from './VendorDetailsDrawerProvider';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { Can, Icon, FormattedMessage as T } from 'components';
+import { VendorMoreMenuItem } from './utils';
 import {
   AbilitySubject,
   SaleInvoiceAction,
@@ -33,13 +35,16 @@ import { safeCallback, compose } from 'utils';
  * Vendor details actions bar.
  */
 function VendorDetailsActionsBar({
+  // #withDialogActions
+  openDialog,
+
   // #withAlertsActions
   openAlert,
 
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { vendor, vendorId } = useVendorDetailsDrawerContext();
+  const { vendorId } = useVendorDetailsDrawerContext();
   const history = useHistory();
 
   // Handle edit vendor.
@@ -61,6 +66,10 @@ function VendorDetailsActionsBar({
   const handleNewPaymentClick = () => {
     history.push('payment-mades/new');
     closeDrawer('vendor-details-drawer');
+  };
+
+  const handleEditOpeningBalance = () => {
+    openDialog('vendor-opening-balance', { vendorId });
   };
 
   return (
@@ -112,6 +121,12 @@ function VendorDetailsActionsBar({
             onClick={safeCallback(onDeleteContact)}
           />
         </Can>
+        <NavbarDivider />
+        <VendorMoreMenuItem
+          payload={{
+            onEditOpeningBalance: handleEditOpeningBalance,
+          }}
+        />
       </NavbarGroup>
     </DashboardActionsBar>
   );
@@ -120,4 +135,5 @@ function VendorDetailsActionsBar({
 export default compose(
   withDrawerActions,
   withAlertsActions,
+  withDialogActions,
 )(VendorDetailsActionsBar);

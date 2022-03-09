@@ -38,6 +38,8 @@ import WarehouseFormDialog from '../containers/Dialogs/WarehouseFormDialog';
 import BranchFormDialog from '../containers/Dialogs/BranchFormDialog';
 import BranchActivateDialog from '../containers/Dialogs/BranchActivateDialog';
 import WarehouseActivateDialog from '../containers/Dialogs/WarehouseActivateDialog';
+import CustomerOpeningBalanceDialog from '../containers/Dialogs/CustomerOpeningBalanceDialog';
+import VendorOpeningBalanceDialog from '../containers/Dialogs/VendorOpeningBalanceDialog';
 
 /**
  * Dialogs container.
@@ -86,6 +88,8 @@ export default function DialogsContainer() {
       <BranchFormDialog dialogName={'branch-form'} />
       <BranchActivateDialog dialogName={'branch-activate'} />
       <WarehouseActivateDialog dialogName={'warehouse-activate'} />
+      <CustomerOpeningBalanceDialog dialogName={'customer-opening-balance'} />
+      <VendorOpeningBalanceDialog dialogName={'vendor-opening-balance'} />
     </div>
   );
 }
