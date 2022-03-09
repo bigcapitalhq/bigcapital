@@ -30,7 +30,7 @@ import { useBadDebtContext } from './BadDebtFormProvider';
 function BadDebtFormFields() {
   const amountfieldRef = useAutofocus();
 
-  const { accounts } = useBadDebtContext();
+  const { accounts ,invoice } = useBadDebtContext();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -55,7 +55,7 @@ function BadDebtFormFields() {
             helperText={<ErrorMessage name="amount" />}
           >
             <ControlGroup>
-              <InputPrependText text={values.currency_code} />
+              <InputPrependText text={invoice.currency_code} />
 
               <MoneyInputGroup
                 value={value}
