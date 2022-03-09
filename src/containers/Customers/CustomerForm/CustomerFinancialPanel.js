@@ -3,32 +3,33 @@ import classNames from 'classnames';
 import { FormGroup, Position, Classes, ControlGroup } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
+import { FFormGroup } from '../../../components/Forms';
 import moment from 'moment';
+import { Features } from 'common';
 import {
   MoneyInputGroup,
   InputPrependText,
   CurrencySelectList,
+  BranchSelect,
+  BranchSelectButton,
+  FeatureCan,
   Row,
   Col,
 } from 'components';
 import { FormattedMessage as T } from 'components';
 
 import { useCustomerFormContext } from './CustomerFormProvider';
-
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-} from 'utils';
+import { useSetPrimaryBranchToForm } from './utils';
+import { momentFormatter, tansformDateValue, inputIntent } from 'utils';
 
 /**
  * Customer financial panel.
  */
 export default function CustomerFinancialPanel() {
-  const {
-    currencies,
-    customerId
-  } = useCustomerFormContext();
+  const { currencies, customerId, branches } = useCustomerFormContext();
+
+  // Sets the primary branch to form.
+  useSetPrimaryBranchToForm();
 
   return (
     <div className={'tab-panel--financial'}>
@@ -62,12 +63,7 @@ export default function CustomerFinancialPanel() {
 
           {/*------------ Opening balance  -----------*/}
           <FastField name={'opening_balance'}>
-            {({
-              form,
-              field,
-              field: { value },
-              meta: { error, touched },
-            }) => (
+            {({ form, field, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'opening_balance'} />}
                 className={classNames(
@@ -91,6 +87,23 @@ export default function CustomerFinancialPanel() {
               </FormGroup>
             )}
           </FastField>
+
+          {/*------------ Opening branch  -----------*/}
+          <FeatureCan feature={Features.Branches}>
+            <FFormGroup
+              label={<T id={'customer.label.opening_branch'} />}
+              name={'opening_balance_branch_id'}
+              inline={true}
+              className={classNames('form-group--select-list', Classes.FILL)}
+            >
+              <BranchSelect
+                name={'opening_balance_branch_id'}
+                branches={branches}
+                input={BranchSelectButton}
+                popoverProps={{ minimal: true }}
+              />
+            </FFormGroup>
+          </FeatureCan>
 
           {/*------------ Currency  -----------*/}
           <FastField name={'currency_code'}>

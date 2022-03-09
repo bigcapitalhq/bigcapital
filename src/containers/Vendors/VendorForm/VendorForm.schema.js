@@ -6,10 +6,7 @@ const Schema = Yup.object().shape({
   first_name: Yup.string().trim(),
   last_name: Yup.string().trim(),
   company_name: Yup.string().trim(),
-  display_name: Yup.string()
-    .trim()
-    .required()
-    .label(intl.get('display_name_')),
+  display_name: Yup.string().trim().required().label(intl.get('display_name_')),
 
   email: Yup.string().email().nullable(),
   work_phone: Yup.number(),
@@ -38,6 +35,7 @@ const Schema = Yup.object().shape({
   opening_balance: Yup.number().nullable(),
   currency_code: Yup.string(),
   opening_balance_at: Yup.date(),
+  opening_balance_branch_id: Yup.string(),
 });
 
 export const CreateVendorFormSchema = Schema;
