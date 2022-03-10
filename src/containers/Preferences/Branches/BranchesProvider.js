@@ -11,7 +11,7 @@ const BranchesContext = React.createContext();
 /**
  * Branches data provider.
  */
-function BranchesProvider({ ...props }) {
+function BranchesProvider({ query, ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
 
@@ -22,10 +22,11 @@ function BranchesProvider({ ...props }) {
     isLoading: isBranchesLoading,
     isFetching: isBranchesFetching,
     data: branches,
-  } = useBranches({}, { enabled: isBranchFeatureCan });
+  } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus = isEmpty(branches) || !isBranchFeatureCan;
+  const isEmptyStatus =
+    (isEmpty(branches) && !isBranchesLoading) || !isBranchFeatureCan;
 
   // Provider state.
   const provider = {
