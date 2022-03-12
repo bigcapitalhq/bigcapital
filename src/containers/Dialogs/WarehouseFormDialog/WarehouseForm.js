@@ -8,6 +8,7 @@ import { AppToaster } from 'components';
 import { CreateWarehouseFormSchema } from './WarehouseForm.schema';
 import { useWarehouseFormContext } from './WarehouseFormProvider';
 import WarehouseFormContent from './WarehouseFormContent';
+import { transformErrors } from './utils';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose, transformToForm } from 'utils';
@@ -66,6 +67,8 @@ function WarehouseForm({
     }) => {
       if (errors) {
       }
+      transformErrors(errors, { setErrors });
+
       setSubmitting(false);
     };
 

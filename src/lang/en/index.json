@@ -1897,5 +1897,7 @@
   "vendor_opening_balance.label.opening_balance": "Opening balance",
   "vendor_opening_balance.label.opening_balance_at": "Opening balance at",
   "customer.label.opening_branch": "Opening Balance Branch",
-  "vendor.label.opening_branch": "Opening Balance Branch"
+  "vendor.label.opening_branch": "Opening Balance Branch",
+  "warehouse.error.warehouse_code_not_unique":"Warehouse code not unique",
+  "branche.error.warehouse_code_not_unique":"Branch code not unique"
 }

@@ -6,6 +6,7 @@ import { Intent } from '@blueprintjs/core';
 
 import { AppToaster } from 'components';
 import { CreateBranchFormSchema } from './BranchForm.schema';
+import { transformErrors } from './utils';
 
 import BranchFormContent from './BranchFormContent';
 import { useBranchFormContext } from './BranchFormProvider';
@@ -28,13 +29,8 @@ function BranchForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    dialogName,
-    branch,
-    branchId,
-    createBranchMutate,
-    editBranchMutate,
-  } = useBranchFormContext();
+  const { dialogName, branch, branchId, createBranchMutate, editBranchMutate } =
+    useBranchFormContext();
 
   // Initial form values.
   const initialValues = {
@@ -63,6 +59,7 @@ function BranchForm({
     }) => {
       if (errors) {
       }
+      transformErrors(errors, { setErrors });
       setSubmitting(false);
     };
 
