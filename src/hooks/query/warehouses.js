@@ -13,6 +13,8 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate warehouses transfers.
   queryClient.invalidateQueries(t.WAREHOUSE_TRANSFERS);
   queryClient.invalidateQueries(t.WAREHOUSE_TRANSFER);
+
+  queryClient.invalidateQueries(t.DASHBOARD_META);
 };
 
 /**
@@ -209,9 +211,9 @@ export function useWarehouseTransfer(id, props, requestProps) {
 }
 
 /**
- * 
- * @param {*} props 
- * @returns 
+ *
+ * @param {*} props
+ * @returns
  */
 export function useInitiateWarehouseTransfer(props) {
   const queryClient = useQueryClient();
@@ -232,9 +234,9 @@ export function useInitiateWarehouseTransfer(props) {
 }
 
 /**
- * 
- * @param {*} props 
- * @returns 
+ *
+ * @param {*} props
+ * @returns
  */
 export function useTransferredWarehouseTransfer(props) {
   const queryClient = useQueryClient();
@@ -253,7 +255,6 @@ export function useTransferredWarehouseTransfer(props) {
     },
   );
 }
-
 
 export function useRefreshWarehouseTransfers() {
   const queryClient = useQueryClient();

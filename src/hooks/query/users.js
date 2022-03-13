@@ -146,24 +146,23 @@ export function useAuthenticatedAccount(props) {
 /**
  * Fetches the dashboard meta.
  */
-export function useDashboardMeta(props) {
+export const useDashboardMeta = (props) => {
   const setFeatureDashboardMeta = useSetFeatureDashboardMeta();
+
   const state = useRequestQuery(
     [t.DASHBOARD_META],
-    {
-      method: 'get',
-      url: 'dashboard/boot',
-    },
+    { method: 'get', url: 'dashboard/boot' },
     {
       select: (res) => res.data.meta,
       defaultData: {},
       ...props,
     },
-    useEffect(() => {
-      if (state.isSuccess) {
-        setFeatureDashboardMeta(state.data);
-      }
-    }, [setFeatureDashboardMeta]),
   );
+  useEffect(() => {
+    if (state.isSuccess) {
+      setFeatureDashboardMeta(state.data);
+    }
+  }, [state.isSuccess, state.data, setFeatureDashboardMeta]);
   return state;
-}
+};
+

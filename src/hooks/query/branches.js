@@ -8,6 +8,9 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate warehouses.
   queryClient.invalidateQueries(t.BRANCHES);
   queryClient.invalidateQueries(t.BRANCH);
+
+  queryClient.invalidateQueries(t.DASHBOARD_META);
+
 };
 
 /**
