@@ -41,7 +41,7 @@ export function ActionsMenu({
 
       <If condition={!original.is_transferred && !original.is_initiated}>
         <MenuItem
-          icon={<Icon icon="check" iconSize={16} />}
+          icon={<Icon icon={'check'} iconSize={18} />}
           text={intl.get('warehouse_transfer.action.initiate_transfer')}
           onClick={safeCallback(onInitate, original)}
         />

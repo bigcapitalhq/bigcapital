@@ -9,7 +9,7 @@ import {
   Classes,
 } from '@blueprintjs/core';
 
-import { Icon } from '../../../components';
+import { Icon, If } from '../../../components';
 import { safeCallback } from 'utils';
 
 const WAREHOUSES_SKELETON_N = 4;
@@ -22,6 +22,7 @@ export function WarehouseContextMenu({
   onEditClick,
   onDeleteClick,
   onMarkPrimary,
+  warehouse,
 }) {
   return (
     <Menu>
@@ -30,11 +31,13 @@ export function WarehouseContextMenu({
         text={intl.get('warehouses.action.edit_warehouse')}
         onClick={safeCallback(onEditClick)}
       />
-      <MenuItem
-        icon={<Icon icon="check" />}
-        text={intl.get('warehouses.action.make_as_parimary')}
-        onClick={safeCallback(onMarkPrimary)}
-      />
+      <If condition={!warehouse.primary}>
+        <MenuItem
+          icon={<Icon icon={'check'} iconSize={18} />}
+          text={intl.get('warehouses.action.make_as_parimary')}
+          onClick={safeCallback(onMarkPrimary)}
+        />
+      </If>
       <MenuDivider />
       <MenuItem
         text={intl.get('warehouses.action.delete_warehouse')}

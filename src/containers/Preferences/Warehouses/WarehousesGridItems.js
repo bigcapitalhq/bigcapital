@@ -48,6 +48,7 @@ function WarehouseGridItem({
     <ContextMenu2
       content={
         <WarehouseContextMenu
+          warehouse={warehouse}
           onEditClick={handleEditWarehouse}
           onDeleteClick={handleDeleteWarehouse}
           onMarkPrimary={handleMarkWarehouseAsPrimary}

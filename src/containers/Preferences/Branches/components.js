@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 
 import { safeCallback } from 'utils';
-import { Icon } from 'components';
+import { Icon, If } from 'components';
 
 /**
  * Context menu of Branches.
@@ -19,11 +19,13 @@ export function ActionsMenu({
         text={intl.get('branches.action.edit_branch')}
         onClick={safeCallback(onEdit, original)}
       />
-      <MenuItem
-        icon={<Icon icon="check" />}
-        text={intl.get('branches.action.mark_as_primary')}
-        onClick={safeCallback(onMarkPrimary, original)}
-      />
+      <If condition={!original.primary}>
+        <MenuItem
+          icon={<Icon icon={'check'} iconSize={18} />}
+          text={intl.get('branches.action.mark_as_primary')}
+          onClick={safeCallback(onMarkPrimary, original)}
+        />
+      </If>
       <MenuDivider />
       <MenuItem
         icon={<Icon icon="trash-16" iconSize={16} />}
