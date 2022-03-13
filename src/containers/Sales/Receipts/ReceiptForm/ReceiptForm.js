@@ -19,7 +19,7 @@ import ReceiptItemsEntriesEditor from './ReceiptItemsEntriesEditor';
 import ReceiptFormFloatingActions from './ReceiptFormFloatingActions';
 import ReceiptFormFooter from './ReceiptFormFooter';
 import ReceiptFormDialogs from './ReceiptFormDialogs';
-import ReceiptFormTopBar from './ReceiptFormTopBar';
+import ReceiptFormTopBar from './ReceiptFormTopbar';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';

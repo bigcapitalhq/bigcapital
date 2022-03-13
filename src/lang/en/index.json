@@ -1898,6 +1898,8 @@
   "vendor_opening_balance.label.opening_balance_at": "Opening balance at",
   "customer.label.opening_branch": "Opening Balance Branch",
   "vendor.label.opening_branch": "Opening Balance Branch",
-  "warehouse.error.warehouse_code_not_unique":"Warehouse code not unique",
-  "branche.error.warehouse_code_not_unique":"Branch code not unique"
+  "warehouse.error.warehouse_code_not_unique": "Warehouse code not unique",
+  "warehouse.error.warehouse_has_associated_transactions": "You could not delete the warehouse that has associated transactions.",
+  "branche.error.warehouse_code_not_unique": "Branch code not unique",
+  "branche.error.branch_has_associated_transactions": "You could not delete the branch that has associated transactions."
 }

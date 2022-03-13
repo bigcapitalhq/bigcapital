@@ -14,4 +14,12 @@ export const handleDeleteErrors = (errors) => {
       intent: Intent.DANGER,
     });
   }
+  if (errors.some((e) => e.type === 'WAREHOUSE_HAS_ASSOCIATED_TRANSACTIONS')) {
+    AppToaster.show({
+      message: intl.get(
+        'warehouse.error.warehouse_has_associated_transactions',
+      ),
+      intent: Intent.DANGER,
+    });
+  }
 };
