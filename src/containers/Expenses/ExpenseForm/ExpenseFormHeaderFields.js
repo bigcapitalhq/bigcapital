@@ -1,5 +1,11 @@
 import React from 'react';
-import { InputGroup, FormGroup, Position, Classes } from '@blueprintjs/core';
+import {
+  InputGroup,
+  FormGroup,
+  ControlGroup,
+  Position,
+  Classes,
+} from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from 'components';
@@ -17,7 +23,9 @@ import {
   CustomerSelectField,
   AccountsSelectList,
   FieldRequiredHint,
+  ExchangeRateInputGroup,
   Hint,
+  If,
 } from 'components';
 import { ACCOUNT_PARENT_TYPE } from 'common/accountTypes';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
@@ -26,7 +34,15 @@ import { useExpenseFormContext } from './ExpenseFormPageProvider';
  * Expense form header.
  */
 export default function ExpenseFormHeader() {
-  const { currencies, accounts, customers } = useExpenseFormContext();
+  const {
+    currencies,
+    accounts,
+    customers,
+    isForeignCustomer,
+    baseCurrency,
+    selectCustomer,
+    setSelectCustomer,
+  } = useExpenseFormContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -102,13 +118,22 @@ export default function ExpenseFormHeader() {
               selectedCurrencyCode={value}
               onCurrencySelected={(currencyItem) => {
                 form.setFieldValue('currency_code', currencyItem.currency_code);
+                setSelectCustomer(currencyItem);
               }}
               defaultSelectText={value}
-              disabled={true}
             />
           </FormGroup>
         )}
       </FastField>
+
+      <If condition={isForeignCustomer}>
+        <ExchangeRateInputGroup
+          fromCurrency={baseCurrency}
+          toCurrency={selectCustomer?.currency_code}
+          name={'exchange_rate'}
+          formGroupProps={{ label: ' ', inline: true }}
+        />
+      </If>
 
       <FastField name={'reference_no'}>
         {({ form, field, meta: { error, touched } }) => (
@@ -146,6 +171,7 @@ export default function ExpenseFormHeader() {
                 form.setFieldValue('customer_id', customer.id);
               }}
               allowCreate={true}
+              popoverFill={true}
             />
           </FormGroup>
         )}

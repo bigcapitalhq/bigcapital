@@ -1,14 +1,19 @@
+import React from 'react';
 import { AppToaster } from 'components';
 import { Intent } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
+import { first } from 'lodash';
+import { useExpenseFormContext } from './ExpenseFormPageProvider';
+
 import {
   defaultFastFieldShouldUpdate,
   transformToForm,
   repeatValue,
   ensureEntriesHasEmptyLine,
-  orderingLinesIndexes
+  orderingLinesIndexes,
 } from 'utils';
 
 const ERROR = {
@@ -55,6 +60,8 @@ export const defaultExpense = {
   reference_no: '',
   currency_code: '',
   publish: '',
+  branch_id: '',
+  exchange_rate: 1,
   categories: [...repeatValue(defaultExpenseEntry, MIN_LINES_NUMBER)],
 };
 
@@ -106,15 +113,14 @@ export const accountsFieldShouldUpdate = (newProps, oldProps) => {
   );
 };
 
-
 /**
  * Filter expense entries that has no amount or expense account.
  */
-export const filterNonZeroEntries = (categories) => { 
+export const filterNonZeroEntries = (categories) => {
   return categories.filter(
     (category) => category.amount && category.expense_account_id,
   );
-}
+};
 
 /**
  * Transformes the form values to request body.
@@ -126,4 +132,19 @@ export const transformFormValuesToRequest = (values) => {
     ...values,
     categories: R.compose(orderingLinesIndexes)(categories),
   };
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = useExpenseFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
 };

@@ -11,20 +11,23 @@ import { PageFormBigNumber } from 'components';
 
 // Expense form header.
 export default function ExpenseFormHeader() {
-  const { values } = useFormikContext();
+  const {
+    values: { currency_code, categories },
+  } = useFormikContext();
 
   // Calculates the expense entries amount.
-  const totalExpenseAmount = useMemo(() => sumBy(values.categories, 'amount'), [
-    values.categories,
-  ]);
+  const totalExpenseAmount = useMemo(
+    () => sumBy(categories, 'amount'),
+    [categories],
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <ExpenseFormHeaderFields />
       <PageFormBigNumber
-        label={<T id={'expense_amount'}/>}
+        label={<T id={'expense_amount'} />}
         amount={totalExpenseAmount}
-        currencyCode={values?.currency_code}
+        currencyCode={currency_code}
       />
     </div>
   );

@@ -11,6 +11,7 @@ import ExpenseFormHeader from './ExpenseFormHeader';
 import ExpenseFormBody from './ExpenseFormBody';
 import ExpenseFloatingFooter from './ExpenseFloatingActions';
 import ExpenseFormFooter from './ExpenseFormFooter';
+import ExpenseFormTopBar from './ExpenseFormTopBar';
 
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 
@@ -143,6 +144,7 @@ function ExpenseForm({
         onSubmit={handleSubmit}
       >
         <Form>
+          <ExpenseFormTopBar />
           <ExpenseFormHeader />
           <ExpenseFormBody />
           <ExpenseFormFooter />
