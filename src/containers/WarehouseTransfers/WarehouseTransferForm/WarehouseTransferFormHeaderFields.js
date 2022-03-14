@@ -133,7 +133,7 @@ function WarehouseTransferFormHeaderFields({
       <FastField name={'from_warehouse_id'} accounts={warehouses}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
-            label={<T id={'warehouse_transfer.label.form_warehouse'} />}
+            label={<T id={'warehouse_transfer.label.from_warehouse'} />}
             className={classNames(
               'form-group--warehouse-transfer',
               CLASSES.FILL,

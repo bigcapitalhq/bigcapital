@@ -100,7 +100,7 @@ export const useWarehouseTransferTableColumns = () => {
       },
       {
         id: 'source_warehouse',
-        Header: 'Source Warehouse',
+        Header: intl.get('warehouse_transfer.column.source_warehouse'),
         accessor: 'source_warehouse',
         disableSortBy: true,
         Cell: SourceWarehouseAccessorCell,
@@ -109,7 +109,7 @@ export const useWarehouseTransferTableColumns = () => {
       },
       {
         id: 'destination_warehouse',
-        Header: 'Destination Warehouse',
+        Header: intl.get('warehouse_transfer.column.destination_warehouse'),
         accessor: 'destination_warehouse',
         Cell: DistentionWarehouseAccessorCell,
         disableSortBy: true,
