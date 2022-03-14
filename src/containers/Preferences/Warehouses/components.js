@@ -139,7 +139,7 @@ export const WarehouseHeader = styled.div`
 `;
 
 export const WarehouseTitle = styled.div`
-  font-size: 14px
+  font-size: 14px;
   font-style: inherit;
   color: #000;
   white-space: nowrap;
