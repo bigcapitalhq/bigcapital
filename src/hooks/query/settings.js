@@ -149,8 +149,8 @@ export function useSettingsVendorCredits(props) {
  */
 export function useSettingsWarehouseTransfers(props) {
   return useSettingsQuery(
-    [t.SETTING, t.SETTING_WAREHOUSE_TRANSFER],
-    { group: 'warehouse_transfer' },
+    [t.SETTING, t.SETTING_WAREHOUSE_TRANSFERS],
+    { group: 'warehouse_transfers' },
     props,
   );
 }

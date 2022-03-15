@@ -8,9 +8,10 @@ import { useFormikContext } from 'formik';
 export default function WarehouseTransferFormDialog() {
   // Update the form once the credit number form submit confirm.
   const handleWarehouseNumberFormConfirm = ({ incrementNumber, manually }) => {
-    setFieldValue('transfer_no', incrementNumber || '');
-    setFieldValue('transfer_no_manually', manually);
+    setFieldValue('transaction_number', incrementNumber || '');
+    setFieldValue('transaction_no_manually', manually);
   };
+
   const { setFieldValue } = useFormikContext();
   return (
     <React.Fragment>

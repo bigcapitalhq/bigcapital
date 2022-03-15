@@ -18,6 +18,7 @@ import WarehouseTransferFormFooter from './WarehouseTransferFormFooter';
 import WarehouseTransferFloatingActions from './WarehouseTransferFloatingActions';
 import WarehouseTransferFormDialog from './WarehouseTransferFormDialog';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
@@ -36,7 +37,7 @@ function WarehouseTransferForm({
   warehouseTransferIncrementMode,
 }) {
   const history = useHistory();
-
+  
   const {
     isNewMode,
     warehouseTransfer,
@@ -58,6 +59,9 @@ function WarehouseTransferForm({
         ? { ...transformToEditForm(warehouseTransfer) }
         : {
             ...defaultWarehouseTransfer,
+            ...(warehouseTransferIncrementMode && {
+              transaction_number: warehouseTransferNumber,
+            }),
             entries: orderingLinesIndexes(defaultWarehouseTransfer.entries),
           }),
     }),
@@ -142,4 +146,10 @@ function WarehouseTransferForm({
   );
 }
 
-export default compose(withDashboardActions)(WarehouseTransferForm);
+export default compose(withDashboardActions,
+  withSettings(({ warehouseTransferSettings }) => ({
+    warehouseTransferNextNumber: warehouseTransferSettings?.nextNumber,
+    warehouseTransferNumberPrefix: warehouseTransferSettings?.numberPrefix,
+    warehouseTransferIncrementMode: warehouseTransferSettings?.autoIncrement,
+  })),
+  )(WarehouseTransferForm);
