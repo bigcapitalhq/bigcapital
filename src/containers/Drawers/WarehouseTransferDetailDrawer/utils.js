@@ -49,7 +49,7 @@ export function WarehouseTransferDetailsStatus({ warehouseTransfer }) {
         }
       >
         <Tag minimal={false} intent={Intent.SUCCESS} round={true}>
-          <T id={'warehouse_transfer.label.initiated'} />
+          <T id={'warehouse_transfer.label.transferred'} />
         </Tag>
       </Choose.When>
       <Choose.When

@@ -82,7 +82,7 @@ export function StatusAccessor(warehouse) {
         condition={warehouse.is_initiated && warehouse.is_transferred}
       >
         <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
-          <T id={'warehouse_transfer.label.initiated'} />
+          <T id={'warehouse_transfer.label.transferred'} />
         </Tag>
       </Choose.When>
 

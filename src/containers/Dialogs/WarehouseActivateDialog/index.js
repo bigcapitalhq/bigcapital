@@ -16,7 +16,7 @@ function WarehouseActivateDialog({ dialogName, payload: {}, isOpen }) {
   return (
     <Dialog
       name={dialogName}
-      title={'Warehouses Activate'}
+      title={<T id={'warehouse_activate.dialog_success_message'} />}
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}

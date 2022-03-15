@@ -23,7 +23,7 @@ function DetailExchangeRate({
   }
 
   return (
-    <DetailItem label={intl.get('invoice.details.exchange_rate')}>
+    <DetailItem label={intl.get('exchange_rate')}>
       1 {base_currency} = {exchangeRate} {toCurrency}
     </DetailItem>
   );

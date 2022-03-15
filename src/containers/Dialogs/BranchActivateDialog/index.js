@@ -16,7 +16,7 @@ function BranchActivateDialog({ dialogName, payload: {}, isOpen }) {
   return (
     <Dialog
       name={dialogName}
-      title={'Branches Activate'}
+      title={<T id={'branch_activate.dialog.label'} />}
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}
