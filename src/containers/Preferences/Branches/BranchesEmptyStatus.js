@@ -18,7 +18,9 @@ function BranchesEmptyStatus({
     <EmptyStatus
       title={<T id={'branches.empty_status.title'} />}
       description={
-        'Commodo fugiat officia commodo proident officia excepteur proident anim. Eu sunt enim aute exercitation est. Dolore occaecat tempor elit commodo duis ipsum amet est quis. Est commodo laborum in nisi deserunt dolor ipsum.'
+        <p>
+          <T id={'branches.empty_status.description'} />
+        </p>
       }
       action={
         <React.Fragment>

@@ -18,7 +18,9 @@ function WarehousesEmptyStatus({
     <EmptyStatus
       title={<T id={'warehouses.empty_status.title'} />}
       description={
-        'Commodo fugiat officia commodo proident officia excepteur proident anim. Eu sunt enim aute exercitation est. Dolore occaecat tempor elit commodo duis ipsum amet est quis. Est commodo laborum in nisi deserunt dolor ipsum.'
+        <p>
+          <T id={'warehouses.empty_status.description'} />
+        </p>
       }
       action={
         <React.Fragment>
