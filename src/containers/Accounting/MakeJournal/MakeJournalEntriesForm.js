@@ -74,7 +74,7 @@ function MakeJournalEntriesForm({
             currency_code: base_currency,
           }),
     }),
-    [manualJournal, base_currency, journalNumber],
+    [manualJournal, base_currency, journalNumber, journalAutoIncrement],
   );
 
   // Handle the form submiting.

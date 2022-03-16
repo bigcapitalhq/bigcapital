@@ -34,6 +34,7 @@ export const defaultEntry = {
   credit: '',
   debit: '',
   contact_id: '',
+  branch_id: '',
   note: '',
 };
 

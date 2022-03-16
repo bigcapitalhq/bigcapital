@@ -641,14 +641,14 @@ export default [
           ability: ReportsAction.READ_AP_AGING_SUMMARY,
         },
       },
-      {
-        text: <T id={'realized_gain_or_loss.label'} />,
-        href: '/financial-reports/realized-gain-loss',
-      },
-      {
-        text: <T id={'unrealized_gain_or_loss.label'} />,
-        href: '/financial-reports/unrealized-gain-loss',
-      },
+      // {
+      //   text: <T id={'realized_gain_or_loss.label'} />,
+      //   href: '/financial-reports/realized-gain-loss',
+      // },
+      // {
+      //   text: <T id={'unrealized_gain_or_loss.label'} />,
+      //   href: '/financial-reports/unrealized-gain-loss',
+      // },
       {
         text: <T id={'Sales/Purchases'} />,
         label: true,
