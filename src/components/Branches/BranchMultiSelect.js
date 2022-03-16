@@ -38,8 +38,8 @@ const branchItemRenderer = (
       active={modifiers.active}
       disabled={modifiers.disabled}
       icon={isSelected ? 'tick' : 'blank'}
-      text={branch.name.toString()}
-      label={branch.code.toString()}
+      text={branch.name}
+      label={branch.code}
       key={branch.id}
       onClick={handleClick}
     />
@@ -50,7 +50,7 @@ const branchSelectProps = {
   itemPredicate: branchItemPredicate,
   itemRenderer: branchItemRenderer,
   valueAccessor: (item) => item.id,
-  labelAccessor: (item) => item.label,
+  labelAccessor: (item) => item.code,
   tagRenderer: (item) => item.name,
 };
 

@@ -6,5 +6,7 @@ export function getDefaultTrialBalanceQuery() {
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'accural',
     filterByOption: 'with-transactions',
+    branchesIds: [],
+
   };
 }

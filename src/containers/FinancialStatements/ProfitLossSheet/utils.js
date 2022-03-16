@@ -49,6 +49,7 @@ export const useProfitLossSheetQuery = () => {
     return {
       ...defaultQuery,
       ...transformToForm(locationQuery, defaultQuery),
+      branchesIds: [],
     };
   }, [locationQuery]);
 

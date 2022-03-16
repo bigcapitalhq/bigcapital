@@ -51,13 +51,12 @@ function ARAgingSummaryHeader({
     branchesIds: [],
     filterByOption: 'without-zero-balance',
   };
-  
+
   // Initial values.
   const initialValues = transformToForm(
     {
       ...pageFilter,
       asDate: moment(pageFilter.asDate).toDate(),
-      branchesIds: [],
     },
     defaultValues,
   );

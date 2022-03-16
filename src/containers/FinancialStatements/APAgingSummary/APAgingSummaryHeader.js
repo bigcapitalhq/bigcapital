@@ -54,10 +54,7 @@ function APAgingSummaryHeader({
     filterByOption: 'without-zero-balance',
   };
   // Formik initial values.
-  const initialValues = transformToForm(
-    { ...pageFilter, branchesIds: [] },
-    defaultValues,
-  );
+  const initialValues = transformToForm({ ...pageFilter }, defaultValues);
 
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {

@@ -47,6 +47,7 @@ export const useBalanceSheetQuery = () => {
     return {
       ...defaultQuery,
       ...transformToForm(locationQuery, defaultQuery),
+      branchesIds: [],
     };
   }, [locationQuery]);
 

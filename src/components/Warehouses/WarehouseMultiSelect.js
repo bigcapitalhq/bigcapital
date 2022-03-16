@@ -40,8 +40,8 @@ const warehouseItemRenderer = (
       active={modifiers.active}
       disabled={modifiers.disabled}
       icon={isSelected ? 'tick' : 'blank'}
-      text={warehouse.name.toString()}
-      label={warehouse.code.toString()}
+      text={warehouse.name}
+      label={warehouse.code}
       key={warehouse.id}
       onClick={handleClick}
     />
@@ -52,7 +52,7 @@ const warehouseSelectProps = {
   itemPredicate: warehouseItemPredicate,
   itemRenderer: warehouseItemRenderer,
   valueAccessor: (item) => item.id,
-  labelAccessor: (item) => item.label,
+  labelAccessor: (item) => item.code,
   tagRenderer: (item) => item.name,
 };
 
