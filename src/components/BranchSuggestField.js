@@ -21,13 +21,22 @@ export default function BranchSuggestField({
   ...suggestProps
 }) {
   const initialBranch = React.useMemo(
-    () => branches.some((b) => b.id === initialBranchId),
+    () => branches.find((b) => b.id === initialBranchId),
     [initialBranchId, branches],
   );
 
   const [selectedBranch, setSelectedBranch] = React.useState(
     initialBranch || null,
   );
+
+  React.useEffect(() => {
+    if (typeof selectedBranchId !== 'undefined') {
+      const branch = selectedBranchId
+        ? branches.find((a) => a.id === selectedBranchId)
+        : null;
+      setSelectedBranch(branch);
+    }
+  }, [selectedBranchId, branches, setSelectedBranch]);
 
   /**
    *

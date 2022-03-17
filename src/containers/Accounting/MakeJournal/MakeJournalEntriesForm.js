@@ -59,6 +59,7 @@ function MakeJournalEntriesForm({
     journalNumberPrefix,
     journalNextNumber,
   );
+
   // Form initial values.
   const initialValues = useMemo(
     () => ({
@@ -69,7 +70,7 @@ function MakeJournalEntriesForm({
         : {
             ...defaultManualJournal,
             ...(journalAutoIncrement && {
-              journal_number: defaultTo(journalNumber, ''),
+              journal_number: journalNumber,
             }),
             currency_code: base_currency,
           }),
@@ -187,7 +188,7 @@ function MakeJournalEntriesForm({
 export default compose(
   withMediaActions,
   withSettings(({ manualJournalsSettings }) => ({
-    journalNextNumber: parseInt(manualJournalsSettings?.nextNumber, 10),
+    journalNextNumber: manualJournalsSettings?.nextNumber,
     journalNumberPrefix: manualJournalsSettings?.numberPrefix,
     journalAutoIncrement: manualJournalsSettings?.autoIncrement,
   })),

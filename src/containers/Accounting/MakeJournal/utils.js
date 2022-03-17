@@ -40,6 +40,7 @@ export const defaultEntry = {
 
 export const defaultManualJournal = {
   journal_number: '',
+  journal_number_manually: false,
   journal_type: 'Journal',
   date: moment(new Date()).format('YYYY-MM-DD'),
   description: '',

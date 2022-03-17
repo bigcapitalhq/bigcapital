@@ -62,14 +62,14 @@ function MakeJournalEntriesHeader({
 
   // Handle journal number change.
   const handleJournalNumberChange = () => {
-    openDialog('journal-number-form', {});
+    openDialog('journal-number-form');
   };
 
   // Handle journal number blur.
   const handleJournalNoBlur = (form, field) => (event) => {
     const newValue = event.target.value;
 
-    if (field.value !== newValue) {
+    if (field.value !== newValue && journalAutoIncrement) {
       openDialog('journal-number-form', {
         initialFormValues: {
           manualTransactionNo: newValue,
