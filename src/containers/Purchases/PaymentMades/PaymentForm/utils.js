@@ -1,7 +1,10 @@
 import React from 'react';
 import moment from 'moment';
+import intl from 'react-intl-universal';
 import { pick, first } from 'lodash';
 import { useFormikContext } from 'formik';
+import { Intent } from '@blueprintjs/core';
+import { AppToaster } from 'components';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import {
   defaultFastFieldShouldUpdate,
@@ -110,4 +113,21 @@ export const useSetPrimaryBranchToForm = () => {
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+/**
+ * Transformes the response errors types.
+ */
+export const transformErrors = (errors, { setFieldError }) => {
+  const getError = (errorType) => errors.find((e) => e.type === errorType);
+
+  if (getError('PAYMENT_NUMBER_NOT_UNIQUE')) {
+    setFieldError('payment_number', intl.get('payment_number_is_not_unique'));
+  }
+  if (getError('WITHDRAWAL_ACCOUNT_CURRENCY_INVALID')) {
+    AppToaster.show({
+      message: intl.get('payment_made.error.withdrawal_account_currency_invalid'),
+      intent: Intent.DANGER,
+    });
+  }
 };

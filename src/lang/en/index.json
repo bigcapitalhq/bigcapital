@@ -1909,5 +1909,7 @@
   "warehouse.error.warehouse_code_not_unique": "Warehouse code not unique",
   "warehouse.error.warehouse_has_associated_transactions": "You could not delete the warehouse that has associated transactions.",
   "branche.error.warehouse_code_not_unique": "Branch code not unique",
-  "branche.error.branch_has_associated_transactions": "You could not delete the branch that has associated transactions."
+  "branche.error.branch_has_associated_transactions": "You could not delete the branch that has associated transactions.",
+  "payment_Receive.error.payment_account_currency_invalid":"The deposit account currency should be same customer currency or organization base currency.",
+  "payment_made.error.withdrawal_account_currency_invalid":"The withdrawal account currency should be same vendor currency or organization base currency."
 }

@@ -1,5 +1,7 @@
 import React, { createContext, useContext } from 'react';
 import { isEqual, isUndefined } from 'lodash';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import {
   useAccounts,
   useVendors,
@@ -18,10 +20,20 @@ const PaymentMadeFormContext = createContext();
 /**
  * Payment made form provider.
  */
-function PaymentMadeFormProvider({ paymentMadeId, baseCurrency, ...props }) {
+function PaymentMadeFormProvider({
+  query,
+  paymentMadeId,
+  baseCurrency,
+  ...props
+}) {
   const [submitPayload, setSubmitPayload] = React.useState({});
   const [paymentVendorId, setPaymentVendorId] = React.useState(null);
   const [selectVendor, setSelectVendor] = React.useState(null);
+
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
 
   // Handle fetch accounts data.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
@@ -53,7 +65,8 @@ function PaymentMadeFormProvider({ paymentMadeId, baseCurrency, ...props }) {
     data: branches,
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
-  } = useBranches();
+  } = useBranches(query, { enabled: isBranchFeatureCan });
+
 
   // Fetch payment made settings.
   useSettings();

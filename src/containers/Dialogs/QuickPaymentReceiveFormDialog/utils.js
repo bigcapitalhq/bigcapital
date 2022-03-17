@@ -2,6 +2,8 @@ import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 import { first } from 'lodash';
+import { Intent } from '@blueprintjs/core';
+import { AppToaster } from 'components';
 
 import { useFormikContext } from 'formik';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
@@ -38,6 +40,12 @@ export const transformErrors = (errors, { setFieldError }) => {
       'payment_amount',
       intl.get('the_payment_amount_bigger_than_invoice_due_amount'),
     );
+  }
+  if (getError('PAYMENT_ACCOUNT_CURRENCY_INVALID')) {
+    AppToaster.show({
+      message: intl.get('payment_Receive.error.payment_account_currency_invalid'),
+      intent: Intent.DANGER,
+    });
   }
 };
 

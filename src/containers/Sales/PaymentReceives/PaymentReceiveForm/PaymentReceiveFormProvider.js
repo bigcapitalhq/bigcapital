@@ -1,6 +1,7 @@
 import React, { createContext, useContext } from 'react';
-import { isEmpty, pick, isEqual, isUndefined } from 'lodash';
-
+import {isEqual, isUndefined } from 'lodash';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import { DashboardInsider } from 'components';
 import {
   useSettingsPaymentReceives,
@@ -19,6 +20,7 @@ const PaymentReceiveFormContext = createContext();
  * Payment receive form provider.
  */
 function PaymentReceiveFormProvider({
+  query,
   paymentReceiveId,
   baseCurrency,
   ...props
@@ -27,6 +29,10 @@ function PaymentReceiveFormProvider({
   const [submitPayload, setSubmitPayload] = React.useState({});
 
   const [selectCustomer, setSelectCustomer] = React.useState(null);
+
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Fetches payment recevie details.
   const {
@@ -56,7 +62,7 @@ function PaymentReceiveFormProvider({
     data: branches,
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
-  } = useBranches();
+  } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // Detarmines whether the new mode.
   const isNewMode = !paymentReceiveId;

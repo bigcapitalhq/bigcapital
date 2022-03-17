@@ -1,7 +1,10 @@
 import React from 'react';
-import { useFormikContext } from 'formik';
 import moment from 'moment';
+import intl from 'react-intl-universal';
 import { omit, pick, first } from 'lodash';
+import { useFormikContext } from 'formik';
+import { Intent } from '@blueprintjs/core';
+import { AppToaster } from 'components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import {
   defaultFastFieldShouldUpdate,
@@ -181,4 +184,32 @@ export const useSetPrimaryBranchToForm = () => {
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+/**
+ * Transformes the response errors types.
+ */
+export const transformErrors = (errors, { setFieldError }) => {
+  const getError = (errorType) => errors.find((e) => e.type === errorType);
+
+  if (getError('PAYMENT_RECEIVE_NO_EXISTS')) {
+    setFieldError(
+      'payment_receive_no',
+      intl.get('payment_number_is_not_unique'),
+    );
+  }
+  if (getError('PAYMENT_RECEIVE_NO_REQUIRED')) {
+    setFieldError(
+      'payment_receive_no',
+      intl.get('payment_receive.field.error.payment_receive_no_required'),
+    );
+  }
+  if (getError('PAYMENT_ACCOUNT_CURRENCY_INVALID')) {
+    AppToaster.show({
+      message: intl.get(
+        'payment_Receive.error.payment_account_currency_invalid',
+      ),
+      intent: Intent.DANGER,
+    });
+  }
 };
