@@ -6,6 +6,7 @@ import {
   RadioGroup,
   Switch,
   EditableText,
+  TextArea,
 } from '@blueprintjs-formik/core';
 import { Select, MultiSelect } from '@blueprintjs-formik/select';
 
@@ -19,4 +20,5 @@ export {
   Select as FSelect,
   MultiSelect as FMultiSelect,
   EditableText as FEditableText,
+  TextArea as FTextArea,
 };
