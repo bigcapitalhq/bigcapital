@@ -14,13 +14,14 @@ import intl from 'react-intl-universal';
 import { defaultFastFieldShouldUpdate } from 'utils';
 import { ERROR } from 'common/errors';
 import { AppToaster } from 'components';
+import { getEntriesTotal } from 'containers/Entries/utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
 } from 'containers/Entries/utils';
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
 
 // Default invoice entry object.
 export const defaultInvoiceEntry = {
@@ -201,13 +202,11 @@ export const useSetPrimaryBranchToForm = () => {
   }, [isBranchesSuccess, setFieldValue, branches]);
 };
 
-export const useSetForeignCurrencyToEditForm = () => {
-  const { values } = useFormikContext();
-  const { isNewMode, setSelectCustomer } = useInvoiceFormContext();
+export const useInvoiceTotal = () => {
+  const {
+    values: { entries },
+  } = useFormikContext();
 
-  React.useEffect(() => {
-    if (!isNewMode) {
-      setSelectCustomer({ currency_code: values.currency_code });
-    }
-  }, [isNewMode, setSelectCustomer, values]);
+  // Calculate the total due amount of invoice entries.
+  return React.useMemo(() => getEntriesTotal(entries), [entries]);
 };

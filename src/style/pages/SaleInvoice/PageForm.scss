@@ -22,6 +22,7 @@ body.page-invoice-edit {
     .bp3-label {
       min-width: 150px;
     }
+
     .bp3-form-content {
       width: 100%;
     }
@@ -31,34 +32,33 @@ body.page-invoice-edit {
         max-width: 450px;
       }
     }
+
     .row {
       display: flex;
       flex-wrap: nowrap;
+
       .col {
         max-width: 470px;
 
-        &--terms,
         &--due-date {
           .bp3-form-group {
             margin: 0px 15px 15px;
+
             .bp3-label {
-              min-width: 70px;
+              min-width: 100px;
             }
-          }
-        }
-        &--due-date {
-          .bp3-input-group .bp3-input {
-            border: 1px dashed #ced4da;
           }
         }
       }
     }
+
     .col--invoice-date {
       max-width: 435px;
     }
   }
 
   #{$self}__footer {
+
     .form-group--invoice_message,
     .form-group--terms_conditions {
       max-width: 450px;
@@ -71,12 +71,14 @@ body.page-invoice-edit {
     }
   }
 }
+
 .status-accessor {
   span {
     font-size: 13px;
     font-weight: 400;
     line-height: 1.5;
   }
+
   .fully-paid-status {
     height: 19px;
     width: 19px;
@@ -97,8 +99,8 @@ body.page-invoice-edit {
     margin-top: 5px;
     width: 80%;
   }
-  &.overdue-status {
-  }
-  &.remaining-status {
-  }
+
+  &.overdue-status {}
+
+  &.remaining-status {}
 }
