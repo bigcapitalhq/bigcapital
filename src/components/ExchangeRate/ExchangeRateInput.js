@@ -33,7 +33,7 @@ export function ExchangeRateInputGroup({
 }
 
 const ExchangeRateField = styled(FMoneyInputGroup)`
-  max-width: 88px;
+  max-width: 75px;
 `;
 
 const ExchangeRateSideIcon = styled.div`
