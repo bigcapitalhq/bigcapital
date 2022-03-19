@@ -7,22 +7,27 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
-import { FormattedMessage as T, Col, Row, If } from 'components';
-import { momentFormatter, compose, tansformDateValue } from 'utils';
-
-import classNames from 'classnames';
 import styled from 'styled-components';
+import classNames from 'classnames';
+
+import {
+  FFormGroup,
+  FormattedMessage as T,
+  Col,
+  Row,
+  If,
+  CustomerDrawerLink,
+} from 'components';
+import { momentFormatter, compose, tansformDateValue } from 'utils';
 
 import {
   useObserveInvoiceNoSettings,
   customerNameFieldShouldUpdate,
-  useSetForeignCurrencyToEditForm,
 } from './utils';
 import { CLASSES } from 'common/classes';
 import {
   CustomerSelectField,
   FieldRequiredHint,
-  ListSelect,
   Icon,
   InputPrependButton,
   ExchangeRateInputGroup,
@@ -33,17 +38,6 @@ import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { inputIntent, handleDateChange } from 'utils';
 import InvoiceCurrencyTag from './InvoiceFormCurrencyTag';
-
-const Data = [
-  {
-    id: 10,
-    name: 'Due on Receipt',
-  },
-  {
-    id: 20,
-    name: 'Due on Receipt',
-  },
-];
 
 /**
  * Invoice form header fields.
@@ -58,19 +52,13 @@ function InvoiceFormHeaderFields({
   invoiceNextNumber,
 }) {
   // Invoice form context.
-  const {
-    customers,
-    isForeignCustomer,
-    baseCurrency,
-    selectCustomer,
-    setSelectCustomer,
-  } = useInvoiceFormContext();
+  const { customers, isForeignCustomer, baseCurrency } =
+    useInvoiceFormContext();
 
   // Handle invoice number changing.
   const handleInvoiceNumberChange = () => {
     openDialog('invoice-number-form');
   };
-
   // Handle invoice no. field blur.
   const handleInvoiceNoBlur = (form, field) => (event) => {
     const newValue = event.target.value;
@@ -84,11 +72,10 @@ function InvoiceFormHeaderFields({
       });
     }
   };
-
-  useSetForeignCurrencyToEditForm();
-
   // Syncs invoice number settings with form.
   useObserveInvoiceNoSettings(invoiceNumberPrefix, invoiceNextNumber);
+
+  const handleCustomerLinkClick = (customerId) => (event) => {};
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -99,7 +86,8 @@ function InvoiceFormHeaderFields({
         shouldUpdate={customerNameFieldShouldUpdate}
       >
         {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
+          <FFormGroup
+            name={'customer_id'}
             label={<T id={'customer_name'} />}
             inline={true}
             className={classNames(
@@ -108,8 +96,6 @@ function InvoiceFormHeaderFields({
               CLASSES.FILL,
             )}
             labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'customer_id'} />}
           >
             <ControlCustomerGroup>
               <CustomerSelectField
@@ -119,14 +105,18 @@ function InvoiceFormHeaderFields({
                 onContactSelected={(customer) => {
                   form.setFieldValue('customer_id', customer.id);
                   form.setFieldValue('currency_code', customer?.currency_code);
-                  setSelectCustomer(customer);
                 }}
                 popoverFill={true}
                 allowCreate={true}
               />
-              <InvoiceCurrencyTag />
+              {/* <InvoiceCurrencyTag /> */}
             </ControlCustomerGroup>
-          </FormGroup>
+            {value && (
+              <CustomerButtonLink customerId={value}>
+                View Customer Details
+              </CustomerButtonLink>
+            )}
+          </FFormGroup>
         )}
       </FastField>
 
@@ -134,7 +124,7 @@ function InvoiceFormHeaderFields({
       <If condition={isForeignCustomer}>
         <ExchangeRateInputGroup
           fromCurrency={baseCurrency}
-          toCurrency={selectCustomer?.currency_code}
+          toCurrency={'LYD'}
           name={'exchange_rate'}
           formGroupProps={{ label: ' ', inline: true }}
         />
@@ -163,38 +153,12 @@ function InvoiceFormHeaderFields({
                     position: Position.BOTTOM_LEFT,
                     minimal: true,
                   }}
-                  inputProps={{
-                    leftIcon: <Icon icon={'date-range'} />,
-                  }}
                 />
               </FormGroup>
             )}
           </FastField>
         </Col>
-        <Col className={'col--terms'}>
-          {/* ----------- Terms ----------- */}
-          <FastField name={'terms'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={'Terms'}
-                inline={true}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="terms" />}
-              >
-                <ListSelect
-                  items={Data}
-                  onItemSelect={({ id }) => {
-                    form.setFieldValue('terms', id);
-                  }}
-                  selectedItem={value}
-                  selectedItemProp={'value'}
-                  textProp={'name'}
-                  popoverProps={{ minimal: true }}
-                />
-              </FormGroup>
-            )}
-          </FastField>
-        </Col>
+
         <Col className={'col--due-date'}>
           {/* ----------- Due date ----------- */}
           <FastField name={'due_date'}>
@@ -216,9 +180,6 @@ function InvoiceFormHeaderFields({
                   popoverProps={{
                     position: Position.BOTTOM_LEFT,
                     minimal: true,
-                  }}
-                  inputProps={{
-                    leftIcon: <Icon icon={'date-range'} />,
                   }}
                 />
               </FormGroup>
@@ -294,4 +255,9 @@ const ControlCustomerGroup = styled(ControlGroup)`
   display: flex;
   align-items: center;
   transform: none;
+`;
+
+const CustomerButtonLink = styled(CustomerDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
 `;
