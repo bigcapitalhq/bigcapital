@@ -1,4 +1,6 @@
 import React from 'react';
+import { useFormikContext } from 'formik';
+
 import { BaseCurrency, BaseCurrencyRoot } from 'components';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 
@@ -6,15 +8,17 @@ import { useInvoiceFormContext } from './InvoiceFormProvider';
  * Invoice form currency tag.
  */
 export default function InvoiceFormCurrencyTag() {
-  const { isForeignCustomer, selectCustomer } = useInvoiceFormContext();
+  const { isForeignCustomer } = useInvoiceFormContext();
+  const {
+    values: { currency_code },
+  } = useFormikContext();
 
   if (!isForeignCustomer) {
     return null;
   }
-
   return (
     <BaseCurrencyRoot>
-      <BaseCurrency currency={selectCustomer?.currency_code} />
+      <BaseCurrency currency={currency_code} />
     </BaseCurrencyRoot>
   );
 }

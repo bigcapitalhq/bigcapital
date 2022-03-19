@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import { isEmpty, pick, isEqual, isUndefined } from 'lodash';
+import { isEmpty, pick } from 'lodash';
 import { useLocation } from 'react-router-dom';
 import { Features } from 'common';
 import { useFeatureCan } from 'hooks/state';
@@ -94,9 +94,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
 
   // Determines whether the foreign customer.
-  const isForeignCustomer =
-    !isEqual(selectCustomer?.currency_code, baseCurrency) &&
-    !isUndefined(selectCustomer?.currency_code);
+  const isForeignCustomer = true;
 
   const provider = {
     invoice,
