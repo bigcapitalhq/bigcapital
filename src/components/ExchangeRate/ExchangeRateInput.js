@@ -12,14 +12,11 @@ export function ExchangeRateInputGroup({
   formGroupProps,
   name,
 }) {
-  const fromCountryCode = 'US';
-  const toCountryCode = 'LY';
-
   return (
     <FFormGroup inline={true} {...formGroupProps} name={name}>
       <ControlGroup>
         <ExchangeRatePrepend>
-          <ExchangeFlagIcon countryCode={fromCountryCode} /> 1 {fromCurrency} =
+          <ExchangeFlagIcon currencyCode={fromCurrency} /> 1 {fromCurrency} =
         </ExchangeRatePrepend>
         <ExchangeRateField
           allowDecimals={true}
@@ -28,7 +25,7 @@ export function ExchangeRateInputGroup({
           name={name}
         />
         <ExchangeRateAppend>
-          <ExchangeFlagIcon countryCode={toCountryCode} /> {toCurrency}
+          <ExchangeFlagIcon currencyCode={toCurrency} /> {toCurrency}
         </ExchangeRateAppend>
       </ControlGroup>
     </FFormGroup>

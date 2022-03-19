@@ -5,6 +5,7 @@ import {
   Checkbox,
   RadioGroup,
   Switch,
+  EditableText,
 } from '@blueprintjs-formik/core';
 import { Select, MultiSelect } from '@blueprintjs-formik/select';
 
@@ -17,4 +18,5 @@ export {
   Switch as FSwitch,
   Select as FSelect,
   MultiSelect as FMultiSelect,
+  EditableText as FEditableText,
 };

@@ -28,7 +28,6 @@ function ItemsEntriesTable({
   defaultEntry,
   errors,
   onUpdateData,
-  linesNumber,
   currencyCode,
   itemType, // sellable or purchasable
   landedCost = false,
@@ -95,7 +94,6 @@ function ItemsEntriesTable({
       progressBarLoading={isItemFetching}
       cellsLoading={isItemFetching}
       cellsLoadingCoords={cellsLoading}
-      footer={true}
       payload={{
         items,
         errors: errors || [],
@@ -118,7 +116,7 @@ ItemsEntriesTable.defaultProps = {
     discount: '',
   },
   initialEntries: [],
-  linesNumber: 4,
+  linesNumber: 1,
 };
 
 export default ItemsEntriesTable;
