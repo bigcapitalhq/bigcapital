@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import { Navbar } from '@blueprintjs/core';
 
 /**
- * @param {*} children
- * @returns
+ * Form the topbar.
+ * @param   {JSX.Element} children
+ * @returns {JSX.Element}
  */
 export function FormTopbar({ className, children }) {
   return <FormTopBarRoot className={className}>{children}</FormTopBarRoot>;
@@ -12,7 +13,7 @@ export function FormTopbar({ className, children }) {
 
 const FormTopBarRoot = styled(Navbar)`
   box-shadow: 0 0 0;
-  border-bottom: 2px solid #dce5ea;
+  border-bottom: 1px solid #c7d5db;
   height: 35px;
   padding: 0 20px;
 
@@ -22,11 +23,9 @@ const FormTopBarRoot = styled(Navbar)`
   .bp3-navbar-divider {
     border-left-color: #d2dce2;
   }
-
   .bp3-skeleton {
     max-height: 10px;
   }
-
   .bp3-button {
     &:hover {
       background: rgba(167, 182, 194, 0.12);
