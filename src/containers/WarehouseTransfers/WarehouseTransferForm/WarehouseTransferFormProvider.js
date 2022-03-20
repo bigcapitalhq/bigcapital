@@ -38,7 +38,6 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
     useWarehouseTransfer(warehouseTransferId, {
       enabled: !!warehouseTransferId,
     });
-
   // Fetch warehouses list.
   const {
     data: warehouses,
@@ -54,7 +53,12 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
     !isEmpty(itemCostQuery?.date) && !isEmpty(itemCostQuery?.itemsIds);
 
   // Retrieves the inventory item cost.
-  const { data: inventoryItemsCost } = useItemInventoryCost(
+  const {
+    data: inventoryItemsCost,
+    isLoading: isItemsCostLoading,
+    isFetching: isItemsCostFetching,
+    isSuccess: isItemsCostSuccess
+  } = useItemInventoryCost(
     {
       date: itemCostQuery?.date,
       items_ids: itemCostQuery?.itemsIds,
@@ -91,6 +95,9 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
     editWarehouseTransferMutate,
 
     inventoryItemsCost,
+    isItemsCostLoading,
+    isItemsCostFetching,
+    isItemsCostSuccess,
     itemCostQuery,
     setItemCostQuery,
   };

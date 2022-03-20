@@ -2,9 +2,12 @@ import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
-import { omit } from 'lodash';
+import { keyBy, omit } from 'lodash';
 import { useFormikContext } from 'formik';
 import * as R from 'ramda';
+
+import { useWatch } from 'hooks/utils';
+import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 
 import { AppToaster } from 'components';
 import {
@@ -119,6 +122,7 @@ export function transformValueToRequest(values) {
         'warehouses',
         'destination_warehouse',
         'source_warehouse',
+        'cost',
       ]),
     })),
   };
@@ -178,3 +182,39 @@ export const deleteTableRow = R.curry((rowIndex, defaultEntry, rows) => {
     updateRemoveLineByIndex(rowIndex),
   )(rows);
 });
+
+/**
+ * Watches the inventory items cost and sets the cost to form entries.
+ */
+export function useWatchItemsCostSetCostEntries() {
+  const { isItemsCostSuccess, inventoryItemsCost } =
+    useWarehouseTransferFormContext();
+
+  const {
+    setFieldValue,
+    values: { entries },
+  } = useFormikContext();
+
+  // Transformes items cost map by item id.
+  const itemsCostByItemId = React.useMemo(
+    () => keyBy(inventoryItemsCost, 'item_id'),
+    [inventoryItemsCost],
+  );
+
+  // Observes the inventory items cost and set form entries with cost.
+  useWatch(() => {
+    if (!isItemsCostSuccess) return;
+
+    const newEntries = entries.map((entry) => {
+      const costEntry = itemsCostByItemId[entry.item_id];
+
+      return entry.item_id
+        ? {
+            ...entry,
+            cost: costEntry?.average,
+          }
+        : entry;
+    });
+    setFieldValue('entries', newEntries);
+  }, inventoryItemsCost);
+}

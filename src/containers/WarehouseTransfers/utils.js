@@ -98,7 +98,7 @@ export const useWarehouseTransferTableColumns = () => {
         disableSortBy: true,
         Cell: SourceWarehouseAccessorCell,
         align: 'right',
-        width: 120,
+        width: 100,
       },
       {
         id: 'destination_warehouse',
@@ -107,7 +107,7 @@ export const useWarehouseTransferTableColumns = () => {
         Cell: DistentionWarehouseAccessorCell,
         disableSortBy: true,
         align: 'right',
-        width: 120,
+        width: 100,
       },
       {
         Header: intl.get('warehouse_transfer.column.transfer_quantity'),
@@ -120,10 +120,9 @@ export const useWarehouseTransferTableColumns = () => {
       {
         Header: intl.get('warehouse_transfer.column.cost_price'),
         accessor: 'cost',
-        Cell: MoneyFieldCell,
         disableSortBy: true,
         align: 'right',
-        width: 100,
+        width: 80,
       },
       {
         Header: '',

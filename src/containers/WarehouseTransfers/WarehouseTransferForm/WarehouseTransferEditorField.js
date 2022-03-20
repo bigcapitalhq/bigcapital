@@ -7,14 +7,17 @@ import WarehouseTransferFormEntriesTable from './WarehouseTransferFormEntriesTab
 import {
   entriesFieldShouldUpdate,
   defaultWarehouseTransferEntry,
+  useWatchItemsCostSetCostEntries
 } from './utils';
-
 
 /**
  * Warehouse transafer editor field.
  */
 export default function WarehouseTransferEditorField() {
   const { items } = useWarehouseTransferFormContext();
+
+  // Watches inventory items cost and sets cost to form entries.
+  useWatchItemsCostSetCostEntries();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
