@@ -6,7 +6,10 @@ export function WarehouseTransferFormFooterLeft() {
   return (
     <React.Fragment>
       {/* --------- Terms and conditions --------- */}
-      <TermsConditsFormGroup label={<T id={'reason'} />} name={'reason'}>
+      <TermsConditsFormGroup
+        label={<T id={'terms_conditions'} />}
+        name={'reason'}
+      >
         <FEditableText
           name={'reason'}
           placeholder={
