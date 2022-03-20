@@ -12,7 +12,10 @@ import {
   transformToForm,
   safeSumBy,
   orderingLinesIndexes,
+  formattedAmount,
 } from 'utils';
+import { useCurrentOrganization } from 'hooks/state';
+import { getEntriesTotal } from 'containers/Entries/utils';
 
 // Default payment receive entry.
 export const defaultPaymentReceiveEntry = {
@@ -212,4 +215,48 @@ export const transformErrors = (errors, { setFieldError }) => {
       intent: Intent.DANGER,
     });
   }
+};
+
+/**
+ * Retreives the payment receive totals.
+ */
+export const usePaymentReceiveTotals = () => {
+  const {
+    values: { entries, currency_code: currencyCode },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+
+  // Retrieves the formatted total money.
+  const formattedTotal = React.useMemo(
+    () => formattedAmount(total, currencyCode),
+    [total, currencyCode],
+  );
+  // Retrieves the formatted subtotal.
+  const formattedSubtotal = React.useMemo(
+    () => formattedAmount(total, currencyCode, { money: false }),
+    [total, currencyCode],
+  );
+
+  return {
+    total,
+    formattedTotal,
+    formattedSubtotal,
+  };
+};
+
+/**
+ * Detarmines whether the payment has foreign customer.
+ * @returns {boolean}
+ */
+export const useEstimateIsForeignCustomer = () => {
+  const { values } = useFormikContext();
+  const currentOrganization = useCurrentOrganization();
+
+  const isForeignCustomer = React.useMemo(
+    () => values.currency_code !== currentOrganization.base_currency,
+    [values.currency_code, currentOrganization.base_currency],
+  );
+  return isForeignCustomer;
 };

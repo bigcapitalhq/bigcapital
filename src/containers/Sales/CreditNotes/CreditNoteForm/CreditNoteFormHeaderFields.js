@@ -15,9 +15,8 @@ import {
   FieldRequiredHint,
   InputPrependButton,
   Icon,
-  If,
   FormattedMessage as T,
-  ExchangeRateInputGroup,
+  CustomerDrawerLink,
 } from 'components';
 import {
   customerNameFieldShouldUpdate,
@@ -27,7 +26,7 @@ import {
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import CreditNotetFormCurrencyTag from './CreditNotetFormCurrencyTag';
+import { CreditNoteExchangeRateInputField } from './components';
 import {
   momentFormatter,
   compose,
@@ -49,13 +48,7 @@ function CreditNoteFormHeaderFields({
   creditNextNumber,
 }) {
   // Credit note form context.
-  const {
-    customers,
-    isForeignCustomer,
-    baseCurrency,
-    selectCustomer,
-    setSelectCustomer,
-  } = useCreditNoteFormContext();
+  const { customers } = useCreditNoteFormContext();
 
   // Handle credit number changing.
   const handleCreditNumberChange = () => {
@@ -108,25 +101,25 @@ function CreditNoteFormHeaderFields({
                 onContactSelected={(customer) => {
                   form.setFieldValue('customer_id', customer.id);
                   form.setFieldValue('currency_code', customer?.currency_code);
-                  setSelectCustomer(customer);
                 }}
                 popoverFill={true}
                 allowCreate={true}
               />
             </ControlCustomerGroup>
+            {value && (
+              <CustomerButtonLink customerId={value}>
+                View Customer Details
+              </CustomerButtonLink>
+            )}
           </FormGroup>
         )}
       </FastField>
 
       {/* ----------- Exchange rate ----------- */}
-      <If condition={isForeignCustomer}>
-        <ExchangeRateInputGroup
-          fromCurrency={baseCurrency}
-          toCurrency={selectCustomer?.currency_code}
-          name={'exchange_rate'}
-          formGroupProps={{ label: ' ', inline: true }}
-        />
-      </If>
+      <CreditNoteExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
 
       {/* ----------- Credit note date ----------- */}
       <FastField name={'credit_note_date'}>
@@ -221,4 +214,8 @@ const ControlCustomerGroup = styled(ControlGroup)`
   display: flex;
   align-items: center;
   transform: none;
+`;
+const CustomerButtonLink = styled(CustomerDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
 `;

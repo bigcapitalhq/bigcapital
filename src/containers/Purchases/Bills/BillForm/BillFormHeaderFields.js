@@ -16,13 +16,13 @@ import {
   VendorSelectField,
   FieldRequiredHint,
   Icon,
-  ExchangeRateInputGroup,
-  If,
+  CustomerDrawerLink,
+  VendorDrawerLink,
 } from 'components';
 import { vendorsFieldShouldUpdate } from './utils';
 
 import { useBillFormContext } from './BillFormProvider';
-import BillFormCurrencyTag from './BillFormCurrencyTag';
+import { BillExchangeRateInputField } from './components';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import {
   momentFormatter,
@@ -37,13 +37,7 @@ import {
  */
 function BillFormHeader() {
   // Bill form context.
-  const {
-    vendors,
-    isForeignVendor,
-    baseCurrency,
-    selectVendor,
-    setSelectVendor,
-  } = useBillFormContext();
+  const { vendors } = useBillFormContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -57,7 +51,11 @@ function BillFormHeader() {
           <FormGroup
             label={<T id={'vendor_name'} />}
             inline={true}
-            className={classNames(CLASSES.FILL, 'form-group--vendor')}
+            className={classNames(
+              'form-group--customer-name',
+              'form-group--select-list',
+              CLASSES.FILL,
+            )}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'vendor_id'} />}
@@ -70,26 +68,25 @@ function BillFormHeader() {
                 onContactSelected={(contact) => {
                   form.setFieldValue('vendor_id', contact.id);
                   form.setFieldValue('currency_code', contact?.currency_code);
-                  setSelectVendor(contact);
                 }}
                 popoverFill={true}
                 allowCreate={true}
               />
-              <BillFormCurrencyTag />
             </ControlVendorGroup>
+            {value && (
+              <VendorButtonLink vendorId={value}>
+                View Vendor Details
+              </VendorButtonLink>
+            )}
           </FormGroup>
         )}
       </FastField>
 
       {/* ----------- Exchange rate ----------- */}
-      <If condition={isForeignVendor}>
-        <ExchangeRateInputGroup
-          fromCurrency={baseCurrency}
-          toCurrency={selectVendor?.currency_code}
-          name={'exchange_rate'}
-          formGroupProps={{ label: ' ', inline: true }}
-        />
-      </If>
+      <BillExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
 
       {/* ------- Bill date ------- */}
       <FastField name={'bill_date'}>
@@ -183,4 +180,9 @@ const ControlVendorGroup = styled(ControlGroup)`
   display: flex;
   align-items: center;
   transform: none;
+`;
+
+const VendorButtonLink = styled(VendorDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
 `;

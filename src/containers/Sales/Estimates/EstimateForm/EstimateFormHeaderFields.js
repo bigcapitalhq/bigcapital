@@ -23,16 +23,15 @@ import { CLASSES } from 'common/classes';
 import {
   CustomerSelectField,
   FieldRequiredHint,
-  If,
   Icon,
   InputPrependButton,
-  ExchangeRateInputGroup,
+  CustomerDrawerLink,
 } from 'components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
-import EstimateFormCurrencyTag from './EstimateFormCurrencyTag';
 import { useObserveEstimateNoSettings } from './utils';
+import { EstimateExchangeRateInputField } from './components';
 import { useEstimateFormContext } from './EstimateFormProvider';
 
 /**
@@ -47,13 +46,7 @@ function EstimateFormHeader({
   estimateNumberPrefix,
   estimateNextNumber,
 }) {
-  const {
-    customers,
-    isForeignCustomer,
-    baseCurrency,
-    selectCustomer,
-    setSelectCustomer,
-  } = useEstimateFormContext();
+  const { customers } = useEstimateFormContext();
 
   const handleEstimateNumberBtnClick = () => {
     openDialog('estimate-number-form', {});
@@ -100,27 +93,26 @@ function EstimateFormHeader({
                 onContactSelected={(customer) => {
                   form.setFieldValue('customer_id', customer.id);
                   form.setFieldValue('currency_code', customer?.currency_code);
-                  setSelectCustomer(customer);
                 }}
                 popoverFill={true}
                 intent={inputIntent({ error, touched })}
                 allowCreate={true}
               />
-
             </ControlCustomerGroup>
+            {value && (
+              <CustomerButtonLink customerId={value}>
+                View Customer Details
+              </CustomerButtonLink>
+            )}
           </FormGroup>
         )}
       </FastField>
 
       {/* ----------- Exchange rate ----------- */}
-      <If condition={isForeignCustomer}>
-        <ExchangeRateInputGroup
-          fromCurrency={baseCurrency}
-          toCurrency={selectCustomer?.currency_code}
-          name={'exchange_rate'}
-          formGroupProps={{ label: ' ', inline: true }}
-        />
-      </If>
+      <EstimateExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
 
       {/* ----------- Estimate date ----------- */}
       <FastField name={'estimate_date'}>
@@ -245,4 +237,9 @@ const ControlCustomerGroup = styled(ControlGroup)`
   display: flex;
   align-items: center;
   transform: none;
+`;
+
+const CustomerButtonLink = styled(CustomerDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
 `;

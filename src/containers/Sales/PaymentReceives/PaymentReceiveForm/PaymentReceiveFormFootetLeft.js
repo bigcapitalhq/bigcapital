@@ -6,7 +6,7 @@ export function PaymentReceiveFormFootetLeft() {
   return (
     <React.Fragment>
       {/* --------- Statement--------- */}
-      <StatementFormGroup
+      <TermsConditsFormGroup
         name={'statement'}
         label={<T id={'statement'} />}
         hintText={'Will be displayed on the Payment'}
@@ -15,15 +15,13 @@ export function PaymentReceiveFormFootetLeft() {
           name={'statement'}
           placeholder={'Thanks for your business and have a great day!'}
         />
-      </StatementFormGroup>
+      </TermsConditsFormGroup>
     </React.Fragment>
   );
 }
 
-const StatementFormGroup = styled(FFormGroup)`
+const TermsConditsFormGroup = styled(FFormGroup)`
   &.bp3-form-group {
-    margin-bottom: 40px;
-
     .bp3-label {
       font-size: 12px;
       margin-bottom: 12px;
@@ -33,3 +31,4 @@ const StatementFormGroup = styled(FFormGroup)`
     }
   }
 `;
+

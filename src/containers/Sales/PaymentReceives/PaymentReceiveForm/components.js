@@ -1,9 +1,13 @@
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
+import { useFormikContext } from 'formik';
 
-import { Money } from 'components';
+import { Money, ExchangeRateInputGroup } from 'components';
 import { MoneyFieldCell } from 'components/DataTableCells';
+
+import { useCurrentOrganization } from 'hooks/state';
+import { useEstimateIsForeignCustomer } from './utils';
 
 /**
  * Invoice date cell.
@@ -76,3 +80,26 @@ export const usePaymentReceiveEntriesColumns = () => {
     [],
   );
 };
+
+/**
+ * payment receive exchange rate input field.
+ * @returns {JSX.Element}
+ */
+export function PaymentReceiveExchangeRateInputField({ ...props }) {
+  const currentOrganization = useCurrentOrganization();
+  const { values } = useFormikContext();
+
+  const isForeignCustomer = useEstimateIsForeignCustomer();
+
+  // Can't continue if the customer is not foreign.
+  if (!isForeignCustomer) {
+    return null;
+  }
+  return (
+    <ExchangeRateInputGroup
+      fromCurrency={values.currency_code}
+      toCurrency={currentOrganization.base_currency}
+      {...props}
+    />
+  );
+}

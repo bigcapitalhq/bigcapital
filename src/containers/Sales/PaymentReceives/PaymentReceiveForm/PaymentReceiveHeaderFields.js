@@ -30,13 +30,13 @@ import {
   InputPrependButton,
   MoneyInputGroup,
   InputPrependText,
-  ExchangeRateInputGroup,
+  CustomerDrawerLink,
   Hint,
   Money,
 } from 'components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
-import PaymentReceiveFormCurrencyTag from './PaymentReceiveFormCurrencyTag';
+import { PaymentReceiveExchangeRateInputField } from './components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -49,6 +49,7 @@ import {
   customersFieldShouldUpdate,
   accountsFieldShouldUpdate,
 } from './utils';
+
 import { toSafeInteger } from 'lodash';
 
 /**
@@ -67,15 +68,7 @@ function PaymentReceiveHeaderFields({
   paymentReceiveNextNumber,
 }) {
   // Payment receive form context.
-  const {
-    customers,
-    accounts,
-    isNewMode,
-    isForeignCustomer,
-    baseCurrency,
-    selectCustomer,
-    setSelectCustomer,
-  } = usePaymentReceiveFormContext();
+  const { customers, accounts, isNewMode } = usePaymentReceiveFormContext();
 
   // Formik form context.
   const {
@@ -154,7 +147,6 @@ function PaymentReceiveHeaderFields({
                   form.setFieldValue('customer_id', customer.id);
                   form.setFieldValue('full_amount', '');
                   form.setFieldValue('currency_code', customer?.currency_code);
-                  setSelectCustomer(customer);
                 }}
                 popoverFill={true}
                 disabled={!isNewMode}
@@ -164,20 +156,20 @@ function PaymentReceiveHeaderFields({
                 allowCreate={true}
               />
             </ControlCustomerGroup>
+            {value && (
+              <CustomerButtonLink customerId={value}>
+                View Customer Details
+              </CustomerButtonLink>
+            )}
           </FormGroup>
         )}
       </FastField>
 
       {/* ----------- Exchange rate ----------- */}
-      <If condition={isForeignCustomer}>
-        <ExchangeRateInputGroup
-          fromCurrency={baseCurrency}
-          toCurrency={selectCustomer?.currency_code}
-          name={'exchange_rate'}
-          formGroupProps={{ label: ' ', inline: true }}
-        />
-      </If>
-
+      <PaymentReceiveExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
       {/* ------------- Payment date ------------- */}
       <FastField name={'payment_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
@@ -358,4 +350,9 @@ const ControlCustomerGroup = styled(ControlGroup)`
   display: flex;
   align-items: center;
   transform: none;
+`;
+
+const CustomerButtonLink = styled(CustomerDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
 `;
