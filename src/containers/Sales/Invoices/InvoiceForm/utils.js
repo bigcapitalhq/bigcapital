@@ -11,7 +11,7 @@ import {
 import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
 
-import { defaultFastFieldShouldUpdate } from 'utils';
+import { formattedAmount, defaultFastFieldShouldUpdate } from 'utils';
 import { ERROR } from 'common/errors';
 import { AppToaster } from 'components';
 import { useCurrentOrganization } from 'hooks/state';
@@ -210,6 +210,57 @@ export const useInvoiceTotal = () => {
 
   // Calculate the total due amount of invoice entries.
   return React.useMemo(() => getEntriesTotal(entries), [entries]);
+};
+
+/**
+ * Retreives the invoice totals.
+ */
+export const useInvoiceTotals = () => {
+  const {
+    values: { entries, currency_code: currencyCode },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+
+  // Retrieves the formatted total money.
+  const formattedTotal = React.useMemo(
+    () => formattedAmount(total, currencyCode),
+    [total, currencyCode],
+  );
+  // Retrieves the formatted subtotal.
+  const formattedSubtotal = React.useMemo(
+    () => formattedAmount(total, currencyCode, { money: false }),
+    [total, currencyCode],
+  );
+  // Retrieves the payment total.
+  const paymentTotal = React.useMemo(() => 0, []);
+
+  // Retireves the formatted payment total.
+  const formattedPaymentTotal = React.useMemo(
+    () => formattedAmount(paymentTotal, currencyCode),
+    [paymentTotal, currencyCode],
+  );
+  // Retrieves the formatted due total.
+  const dueTotal = React.useMemo(
+    () => total - paymentTotal,
+    [total, paymentTotal],
+  );
+  // Retrieves the formatted due total.
+  const formattedDueTotal = React.useMemo(
+    () => formattedAmount(dueTotal, currencyCode),
+    [dueTotal, currencyCode],
+  );
+
+  return {
+    total,
+    paymentTotal,
+    dueTotal,
+    formattedTotal,
+    formattedSubtotal,
+    formattedPaymentTotal,
+    formattedDueTotal,
+  };
 };
 
 /**

@@ -8,33 +8,38 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from 'components';
-import { useInvoiceTotal } from './utils';
+import { useInvoiceTotals } from './utils';
 
 export function InvoiceFormFooterRight() {
   // Calculate the total due amount of invoice entries.
-  const totalInvoice = useInvoiceTotal();
+  const {
+    formattedSubtotal,
+    formattedTotal,
+    formattedDueTotal,
+    formattedPaymentTotal,
+  } = useInvoiceTotals();
 
   return (
     <InvoiceTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
       <TotalLine
         title={<T id={'invoice.details.subtotal'} />}
-        value={'$5000.00'}
+        value={formattedSubtotal}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
         title={<T id={'invoice.details.total'} />}
-        value={'$5000.00'}
+        value={formattedTotal}
         borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />
       <TotalLine
         title={<T id={'invoice.details.payment_amount'} />}
-        value={'$0.00'}
+        value={formattedPaymentTotal}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
         title={<T id={'invoice.details.due_amount'} />}
-        value={'$5000.00'}
+        value={formattedDueTotal}
         textStyle={TotalLineTextStyle.Bold}
       />
     </InvoiceTotalLines>
