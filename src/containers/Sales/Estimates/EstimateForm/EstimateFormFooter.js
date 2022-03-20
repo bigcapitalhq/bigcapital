@@ -1,60 +1,33 @@
 import React from 'react';
-import { FormGroup, TextArea } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
-import { FastField } from 'formik';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
-import { Row, Col, Postbox } from 'components';
-import Dragzone from 'components/Dragzone';
+import styled from 'styled-components';
 
-import { inputIntent } from 'utils';
+import { CLASSES } from 'common/classes';
+import { Row, Col, Paper } from 'components';
+import { EstimateFormFooterLeft } from './EstimateFormFooterLeft';
+import { EstimateFormFooterRight } from './EstimateFormFooterRight';
 
 /**
  * Estimate form footer.
  */
-export default function EstiamteFormFooter({}) {
+export default function EstiamteFormFooter() {
   return (
-    <div class={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <Postbox title={<T id={'estimate_details'} />} defaultOpen={false}>
+    <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
+      <EstimateFooterPaper>
         <Row>
           <Col md={8}>
-            {/* --------- Customer Note --------- */}
-            <FastField name={'note'}>
-              {({ form, field, meta: { error, touched } }) => (
-                <FormGroup
-                  label={<T id={'customer_note'} />}
-                  className={'form-group--customer_note'}
-                  intent={inputIntent({ error, touched })}
-                >
-                  <TextArea growVertically={true} {...field} />
-                </FormGroup>
-              )}
-            </FastField>
-
-            {/* --------- Terms and conditions --------- */}
-            <FastField name={'terms_conditions'}>
-              {({ field, meta: { error, touched } }) => (
-                <FormGroup
-                  label={<T id={'terms_conditions'} />}
-                  className={'form-group--terms_conditions'}
-                  intent={inputIntent({ error, touched })}
-                >
-                  <TextArea growVertically={true} {...field} />
-                </FormGroup>
-              )}
-            </FastField>
+            <EstimateFormFooterLeft />
           </Col>
 
           <Col md={4}>
-            <Dragzone
-              initialFiles={[]}
-              // onDrop={handleDropFiles}
-              // onDeleteFile={handleDeleteFile}
-              hint={<T id={'attachments_maximum'} />}
-            />
+            <EstimateFormFooterRight />
           </Col>
         </Row>
-      </Postbox>
+      </EstimateFooterPaper>
     </div>
   );
 }
+
+const EstimateFooterPaper = styled(Paper)`
+  padding: 20px;
+`;

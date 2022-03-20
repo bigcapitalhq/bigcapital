@@ -1,34 +1,33 @@
 import React from 'react';
 import classNames from 'classnames';
-import { FormGroup, TextArea } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
-import { FastField } from 'formik';
-import { Row, Col, Postbox } from 'components';
+import styled from 'styled-components';
+
 import { CLASSES } from 'common/classes';
+import { Row, Col, Paper } from 'components';
+import { PaymentReceiveFormFootetLeft } from './PaymentReceiveFormFootetLeft';
+import { PaymentReceiveFormFootetRight } from './PaymentReceiveFormFootetRight';
 
 /**
  * Payment receive form footer.
  */
-export default function PaymentReceiveFormFooter({ getFieldProps }) {
+export default function PaymentReceiveFormFooter() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <Postbox title={<T id={'payment_receive_details'} />} defaultOpen={false}>
+      <PaymentReceiveFooterPaper>
         <Row>
           <Col md={8}>
-            {/* --------- Statement --------- */}
-            <FastField name={'statement'}>
-              {({ form, field, meta: { error, touched } }) => (
-                <FormGroup
-                  label={<T id={'statement'} />}
-                  className={'form-group--statement'}
-                >
-                  <TextArea growVertically={true} {...field} />
-                </FormGroup>
-              )}
-            </FastField>
+            <PaymentReceiveFormFootetLeft />
+          </Col>
+
+          <Col md={4}>
+            <PaymentReceiveFormFootetRight />
           </Col>
         </Row>
-      </Postbox>
+      </PaymentReceiveFooterPaper>
     </div>
   );
 }
+
+const PaymentReceiveFooterPaper = styled(Paper)`
+  padding: 20px;
+`;

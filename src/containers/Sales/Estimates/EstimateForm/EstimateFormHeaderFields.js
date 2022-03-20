@@ -106,7 +106,7 @@ function EstimateFormHeader({
                 intent={inputIntent({ error, touched })}
                 allowCreate={true}
               />
-              <EstimateFormCurrencyTag />
+
             </ControlCustomerGroup>
           </FormGroup>
         )}
