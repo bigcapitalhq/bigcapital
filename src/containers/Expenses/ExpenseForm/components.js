@@ -9,7 +9,10 @@ import {
   AccountsListFieldCell,
   CheckBoxFieldCell,
 } from 'components/DataTableCells';
-import { formattedAmount, safeSumBy } from 'utils';
+import { useFormikContext } from 'formik';
+import { ExchangeRateInputGroup } from 'components';
+import { useCurrentOrganization } from 'hooks/state';
+import { useExpensesIsForeign } from './utils';
 
 /**
  * Expense category header cell.
@@ -126,5 +129,29 @@ export function useExpenseFormTableColumns({ landedCost }) {
       },
     ],
     [],
+  );
+}
+;
+
+/**
+ * Expense exchange rate input field.
+ * @returns {JSX.Element}
+ */
+export function ExpensesExchangeRateInputField({ ...props }) {
+  const currentOrganization = useCurrentOrganization();
+  const { values } = useFormikContext();
+
+  const isForeignJouranl = useExpensesIsForeign();
+
+  // Can't continue if the customer is not foreign.
+  if (!isForeignJouranl) {
+    return null;
+  }
+  return (
+    <ExchangeRateInputGroup
+      fromCurrency={values.currency_code}
+      toCurrency={currentOrganization.base_currency}
+      {...props}
+    />
   );
 }

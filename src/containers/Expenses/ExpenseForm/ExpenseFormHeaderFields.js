@@ -23,10 +23,9 @@ import {
   CustomerSelectField,
   AccountsSelectList,
   FieldRequiredHint,
-  ExchangeRateInputGroup,
   Hint,
-  If,
 } from 'components';
+import { ExpensesExchangeRateInputField } from './components';
 import { ACCOUNT_PARENT_TYPE } from 'common/accountTypes';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 
@@ -34,15 +33,7 @@ import { useExpenseFormContext } from './ExpenseFormPageProvider';
  * Expense form header.
  */
 export default function ExpenseFormHeader() {
-  const {
-    currencies,
-    accounts,
-    customers,
-    isForeignCustomer,
-    baseCurrency,
-    selectCustomer,
-    setSelectCustomer,
-  } = useExpenseFormContext();
+  const { currencies, accounts, customers } = useExpenseFormContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -118,7 +109,6 @@ export default function ExpenseFormHeader() {
               selectedCurrencyCode={value}
               onCurrencySelected={(currencyItem) => {
                 form.setFieldValue('currency_code', currencyItem.currency_code);
-                setSelectCustomer(currencyItem);
               }}
               defaultSelectText={value}
             />
@@ -126,14 +116,11 @@ export default function ExpenseFormHeader() {
         )}
       </FastField>
 
-      <If condition={isForeignCustomer}>
-        <ExchangeRateInputGroup
-          fromCurrency={baseCurrency}
-          toCurrency={selectCustomer?.currency_code}
-          name={'exchange_rate'}
-          formGroupProps={{ label: ' ', inline: true }}
-        />
-      </If>
+      {/* ----------- Exchange rate ----------- */}
+      <ExpensesExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
 
       <FastField name={'reference_no'}>
         {({ form, field, meta: { error, touched } }) => (

@@ -10,6 +10,10 @@ import {
   BranchesListFieldCell,
 } from 'components/DataTableCells';
 import { useFeatureCan } from 'hooks/state';
+import { useFormikContext } from 'formik';
+import { ExchangeRateInputGroup } from 'components';
+import { useCurrentOrganization } from 'hooks/state';
+import { useJournalIsForeign } from './utils';
 import { Features } from 'common';
 
 /**
@@ -145,3 +149,26 @@ export const useJournalTableEntriesColumns = () => {
     [],
   );
 };
+
+/**
+ * Journal exchange rate input field.
+ * @returns {JSX.Element}
+ */
+ export function JournalExchangeRateInputField({ ...props }) {
+  const currentOrganization = useCurrentOrganization();
+  const { values } = useFormikContext();
+
+  const isForeignJouranl = useJournalIsForeign();
+
+  // Can't continue if the customer is not foreign.
+  if (!isForeignJouranl) {
+    return null;
+  }
+  return (
+    <ExchangeRateInputGroup
+      fromCurrency={values.currency_code}
+      toCurrency={currentOrganization.base_currency}
+      {...props}
+    />
+  );
+}

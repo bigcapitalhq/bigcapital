@@ -10,11 +10,14 @@ import {
   transformToForm,
   defaultFastFieldShouldUpdate,
   ensureEntriesHasEmptyLine,
+  formattedAmount,
+  safeSumBy,
 } from 'utils';
 import { AppToaster } from 'components';
 import intl from 'react-intl-universal';
 import { useFormikContext } from 'formik';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
+import { useCurrentOrganization } from 'hooks/state';
 
 const ERROR = {
   JOURNAL_NUMBER_ALREADY_EXISTS: 'JOURNAL.NUMBER.ALREADY.EXISTS',
@@ -213,4 +216,49 @@ export const useSetPrimaryBranchToForm = () => {
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+/**
+ * Retreives the Journal totals.
+ */
+export const useJournalTotals = () => {
+  const {
+    values: { entries, currency_code: currencyCode },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  const totalCredit = safeSumBy(entries, 'credit');
+  const totalDebit = safeSumBy(entries, 'debit');
+
+  const total = Math.max(totalCredit, totalDebit);
+  // Retrieves the formatted total money.
+  const formattedTotal = React.useMemo(
+    () => formattedAmount(total, currencyCode),
+    [total, currencyCode],
+  );
+  // Retrieves the formatted subtotal.
+  const formattedSubtotal = React.useMemo(
+    () => formattedAmount(total, currencyCode, { money: false }),
+    [total, currencyCode],
+  );
+
+  return {
+    formattedTotal,
+    formattedSubtotal,
+  };
+};
+
+/**
+ * Detarmines whether the expenses has foreign .
+ * @returns {boolean}
+ */
+export const useJournalIsForeign = () => {
+  const { values } = useFormikContext();
+  const currentOrganization = useCurrentOrganization();
+
+  const isForeignJournal = React.useMemo(
+    () => values.currency_code !== currentOrganization.base_currency,
+    [values.currency_code, currentOrganization.base_currency],
+  );
+  return isForeignJournal;
 };

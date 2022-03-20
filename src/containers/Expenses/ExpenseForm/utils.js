@@ -5,7 +5,7 @@ import { useFormikContext } from 'formik';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
-import { first } from 'lodash';
+import { first, sumBy } from 'lodash';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 
 import {
@@ -14,7 +14,9 @@ import {
   repeatValue,
   ensureEntriesHasEmptyLine,
   orderingLinesIndexes,
+  formattedAmount,
 } from 'utils';
+import { useCurrentOrganization } from 'hooks/state';
 
 const ERROR = {
   EXPENSE_ALREADY_PUBLISHED: 'EXPENSE.ALREADY.PUBLISHED',
@@ -149,4 +151,46 @@ export const useSetPrimaryBranchToForm = () => {
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+/**
+ * Retreives the Journal totals.
+ */
+export const useExpensesTotals = () => {
+  const {
+    values: { categories, currency_code: currencyCode },
+  } = useFormikContext();
+
+  const total = sumBy(categories, 'amount');
+
+  // Retrieves the formatted total money.
+  const formattedTotal = React.useMemo(
+    () => formattedAmount(total, currencyCode),
+    [total, currencyCode],
+  );
+  // Retrieves the formatted subtotal.
+  const formattedSubtotal = React.useMemo(
+    () => formattedAmount(total, currencyCode, { money: false }),
+    [total, currencyCode],
+  );
+
+  return {
+    formattedTotal,
+    formattedSubtotal,
+  };
+};
+
+/**
+ * Detarmines whether the expenses has foreign .
+ * @returns {boolean}
+ */
+export const useExpensesIsForeign = () => {
+  const { values } = useFormikContext();
+  const currentOrganization = useCurrentOrganization();
+
+  const isForeignExpenses = React.useMemo(
+    () => values.currency_code !== currentOrganization.base_currency,
+    [values.currency_code, currentOrganization.base_currency],
+  );
+  return isForeignExpenses;
 };
