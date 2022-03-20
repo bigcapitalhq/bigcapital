@@ -10,7 +10,6 @@ import {
   updateMinEntriesLines,
   updateAutoAddNewLine,
   updateRemoveLineByIndex,
-  orderingLinesIndexes,
 } from 'utils';
 
 /**
@@ -75,7 +74,6 @@ export default function ExpenseFormEntriesTable({
         autoFocus: ['expense_account_id', 0],
         currencyCode
       }}
-      footer={true}
     />
   );
 }

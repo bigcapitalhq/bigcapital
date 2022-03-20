@@ -22,28 +22,7 @@ const ERROR = {
     'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
 };
 
-// Transform API errors in toasts messages.
-export const transformErrors = (errors, { setErrors }) => {
-  const hasError = (errorType) => errors.some((e) => e.type === errorType);
-
-  if (hasError(ERROR.EXPENSE_ALREADY_PUBLISHED)) {
-    setErrors(
-      AppToaster.show({
-        message: intl.get('the_expense_is_already_published'),
-      }),
-    );
-  }
-  if (hasError(ERROR.ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED)) {
-    setErrors(
-      AppToaster.show({
-        intent: Intent.DANGER,
-        message: 'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
-      }),
-    );
-  }
-};
-
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
 
 export const defaultExpenseEntry = {
   amount: '',
@@ -63,6 +42,29 @@ export const defaultExpense = {
   branch_id: '',
   exchange_rate: 1,
   categories: [...repeatValue(defaultExpenseEntry, MIN_LINES_NUMBER)],
+};
+
+/**
+ * Transform API errors in toasts messages.
+ */
+export const transformErrors = (errors, { setErrors }) => {
+  const hasError = (errorType) => errors.some((e) => e.type === errorType);
+
+  if (hasError(ERROR.EXPENSE_ALREADY_PUBLISHED)) {
+    setErrors(
+      AppToaster.show({
+        message: intl.get('the_expense_is_already_published'),
+      }),
+    );
+  }
+  if (hasError(ERROR.ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED)) {
+    setErrors(
+      AppToaster.show({
+        intent: Intent.DANGER,
+        message: 'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
+      }),
+    );
+  }
 };
 
 /**

@@ -20,9 +20,10 @@ import WarehouseTransferFormDialog from './WarehouseTransferFormDialog';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
 
-import { AppToaster } from 'components';
+import { AppToaster, } from 'components';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
+import { WarehouseTransferObserveItemsCost } from './components';
 import {
   defaultWarehouseTransfer,
   transformValueToRequest,
@@ -37,13 +38,14 @@ function WarehouseTransferForm({
   warehouseTransferIncrementMode,
 }) {
   const history = useHistory();
-  
+
   const {
     isNewMode,
     warehouseTransfer,
     createWarehouseTransferMutate,
     editWarehouseTransferMutate,
     submitPayload,
+    setItemCostQuery,
   } = useWarehouseTransferFormContext();
 
   // WarehouseTransfer number.
@@ -118,7 +120,7 @@ function WarehouseTransferForm({
         .catch(onError);
     }
   };
-
+  
   return (
     <div
       className={classNames(
@@ -140,16 +142,18 @@ function WarehouseTransferForm({
           <WarehouseTransferFormFooter />
           <WarehouseTransferFormDialog />
           <WarehouseTransferFloatingActions />
+          <WarehouseTransferObserveItemsCost />          
         </Form>
       </Formik>
     </div>
   );
 }
 
-export default compose(withDashboardActions,
+export default compose(
+  withDashboardActions,
   withSettings(({ warehouseTransferSettings }) => ({
     warehouseTransferNextNumber: warehouseTransferSettings?.nextNumber,
     warehouseTransferNumberPrefix: warehouseTransferSettings?.numberPrefix,
     warehouseTransferIncrementMode: warehouseTransferSettings?.autoIncrement,
   })),
-  )(WarehouseTransferForm);
+)(WarehouseTransferForm);

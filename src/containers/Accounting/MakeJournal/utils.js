@@ -27,7 +27,8 @@ const ERROR = {
   ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
 };
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
+export const DEFAULT_LINES_NUMBER = 1;
 
 export const defaultEntry = {
   account_id: '',
@@ -49,7 +50,7 @@ export const defaultManualJournal = {
   publish: '',
   branch_id: '',
   exchange_rate: 1,
-  entries: [...repeatValue(defaultEntry, 4)],
+  entries: [...repeatValue(defaultEntry, DEFAULT_LINES_NUMBER)],
 };
 
 // Transform to edit form.

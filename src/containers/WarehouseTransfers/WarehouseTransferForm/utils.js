@@ -22,14 +22,12 @@ import {
   updateMinEntriesLines,
   updateRemoveLineByIndex,
 } from 'utils';
-
-// import { defaultFastFieldShouldUpdate } from 'utils';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
 } from 'containers/Entries/utils';
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
 
 // Default warehouse transfer entry.
 export const defaultWarehouseTransferEntry = {

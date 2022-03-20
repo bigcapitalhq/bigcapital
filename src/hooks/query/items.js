@@ -246,3 +246,26 @@ export function useItemWarehouseLocation(id, props) {
     },
   );
 }
+
+/**
+ * 
+ * @param {*} id 
+ * @param {*} query 
+ * @param {*} props 
+ * @returns 
+ */
+export function useItemInventoryCost(query, props) {
+  return useRequestQuery(
+    ['ITEM_INVENTORY_COST', query],
+    {
+      method: 'get',
+      url: `inventory/items-cost`,
+      params: { ...query },
+    },
+    {
+      select: (res) => res.data.costs,
+      defaultData: [],
+      ...props,
+    },
+  ); 
+}

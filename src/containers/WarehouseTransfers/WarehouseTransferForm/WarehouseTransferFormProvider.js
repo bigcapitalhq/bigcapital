@@ -6,10 +6,12 @@ import {
   useWarehouseTransfer,
   useCreateWarehouseTransfer,
   useEditWarehouseTransfer,
+  useItemInventoryCost,
 } from 'hooks/query';
 import { Features } from 'common';
 import { useFeatureCan } from 'hooks/state';
 import { ITEMS_FILTER_ROLES_QUERY } from './utils.js';
+import { isEmpty } from 'lodash';
 
 const WarehouseFormContext = React.createContext();
 
@@ -44,6 +46,23 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
     isLoading: isWarehouesLoading,
   } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
+  // Inventory items cost query.
+  const [itemCostQuery, setItemCostQuery] = React.useState(null);
+
+  // Detarmines whether the inventory items cost query is enabled.
+  const isItemsCostQueryEnabled =
+    !isEmpty(itemCostQuery?.date) && !isEmpty(itemCostQuery?.itemsIds);
+
+  // Retrieves the inventory item cost.
+  const { data: inventoryItemsCost } = useItemInventoryCost(
+    {
+      date: itemCostQuery?.date,
+      items_ids: itemCostQuery?.itemsIds,
+    },
+    {
+      enabled: isItemsCostQueryEnabled,
+    },
+  );
   // Create and edit warehouse mutations.
   const { mutateAsync: createWarehouseTransferMutate } =
     useCreateWarehouseTransfer();
@@ -70,6 +89,10 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
     setSubmitPayload,
     createWarehouseTransferMutate,
     editWarehouseTransferMutate,
+
+    inventoryItemsCost,
+    itemCostQuery,
+    setItemCostQuery,
   };
 
   return (

@@ -1,11 +1,11 @@
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
+import { useFormikContext } from 'formik';
 
 import { Money, ExchangeRateInputGroup } from 'components';
 import { MoneyFieldCell } from 'components/DataTableCells';
-import { safeSumBy, formattedAmount } from 'utils';
-import { useFormikContext } from 'formik';
+
 import { useCurrentOrganization } from 'hooks/state';
 import { useEstimateIsForeignCustomer } from './utils';
 
@@ -17,41 +17,10 @@ function InvoiceDateCell({ value }) {
 }
 
 /**
- * Index table cell.
- */
-function IndexCell({ row: { index } }) {
-  return <span>{index + 1}</span>;
-}
-
-/**
  * Invoice number table cell accessor.
  */
 function InvNumberCellAccessor(row) {
   return row?.invoice_no ? `#${row?.invoice_no || ''}` : '-';
-}
-
-/**
- * Balance footer cell.
- */
-function BalanceFooterCell({ payload: { currencyCode }, rows }) {
-  const total = safeSumBy(rows, 'original.amount');
-  return <span>{formattedAmount(total, currencyCode)}</span>;
-}
-
-/**
- * Due amount footer cell.
- */
-function DueAmountFooterCell({ payload: { currencyCode }, rows }) {
-  const totalDueAmount = safeSumBy(rows, 'original.due_amount');
-  return <span>{formattedAmount(totalDueAmount, currencyCode)}</span>;
-}
-
-/**
- * Payment amount footer cell.
- */
-function PaymentAmountFooterCell({ payload: { currencyCode }, rows }) {
-  const totalPaymentAmount = safeSumBy(rows, 'original.payment_amount');
-  return <span>{formattedAmount(totalPaymentAmount, currencyCode)}</span>;
 }
 
 /**
@@ -61,10 +30,6 @@ function MoneyTableCell({ row: { original }, value }) {
   return <Money amount={value} currency={original.currency_code} />;
 }
 
-function DateFooterCell() {
-  return intl.get('total');
-}
-
 /**
  * Retrieve payment receive form entries columns.
  */
@@ -72,20 +37,10 @@ export const usePaymentReceiveEntriesColumns = () => {
   return React.useMemo(
     () => [
       {
-        Header: '#',
-        accessor: 'index',
-        Cell: IndexCell,
-        width: 40,
-        disableResizing: true,
-        disableSortBy: true,
-        className: 'index',
-      },
-      {
-        Header: intl.get('Date'),
+        Header: 'Invoice date',
         id: 'invoice_date',
         accessor: 'invoice_date',
         Cell: InvoiceDateCell,
-        Footer: DateFooterCell,
         disableSortBy: true,
         disableResizing: true,
         width: 250,
@@ -100,7 +55,6 @@ export const usePaymentReceiveEntriesColumns = () => {
       {
         Header: intl.get('invoice_amount'),
         accessor: 'amount',
-        Footer: BalanceFooterCell,
         Cell: MoneyTableCell,
         disableSortBy: true,
         width: 100,
@@ -109,7 +63,6 @@ export const usePaymentReceiveEntriesColumns = () => {
       {
         Header: intl.get('amount_due'),
         accessor: 'due_amount',
-        Footer: DueAmountFooterCell,
         Cell: MoneyTableCell,
         disableSortBy: true,
         width: 150,
@@ -119,7 +72,6 @@ export const usePaymentReceiveEntriesColumns = () => {
         Header: intl.get('payment_amount'),
         accessor: 'payment_amount',
         Cell: MoneyFieldCell,
-        Footer: PaymentAmountFooterCell,
         disableSortBy: true,
         width: 150,
         className: 'payment_amount',
