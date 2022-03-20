@@ -1,43 +1,31 @@
 import React from 'react';
-import { FormGroup, TextArea } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
-import { FastField } from 'formik';
 import classNames from 'classnames';
-import { Postbox, Row, Col } from 'components';
+import styled from 'styled-components';
+
 import { CLASSES } from 'common/classes';
-import Dragzone from 'components/Dragzone';
-import { inputIntent } from 'utils';
+import { Paper, Row, Col } from 'components';
+import { BillFormFooterLeft } from './BillFormFooterLeft';
+import { BillFormFooterRight } from './BillFormFooterRight';
 
 // Bill form floating actions.
 export default function BillFormFooter() {
   return (
     <div class={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <Postbox title={<T id={'bill_details'} />} defaultOpen={false}>
+      <BillFooterPaper>
         <Row>
           <Col md={8}>
-            <FastField name={'note'}>
-              {({ field, meta: { error, touched } }) => (
-                <FormGroup
-                  label={<T id={'note'} />}
-                  className={'form-group--note'}
-                  intent={inputIntent({ error, touched })}
-                >
-                  <TextArea growVertically={true} {...field} />
-                </FormGroup>
-              )}
-            </FastField>
+            <BillFormFooterLeft />
           </Col>
 
           <Col md={4}>
-            <Dragzone
-              initialFiles={[]}
-              // onDrop={onDropFiles}
-              // onDeleteFile={onDropFiles}
-              hint={<T id={'attachments_maximum'} />}
-            />
+            <BillFormFooterRight />
           </Col>
         </Row>
-      </Postbox>
+      </BillFooterPaper>
     </div>
   );
 }
+
+const BillFooterPaper = styled(Paper)`
+  padding: 20px;
+`;

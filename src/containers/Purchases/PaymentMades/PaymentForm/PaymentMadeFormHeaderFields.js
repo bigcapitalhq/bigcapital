@@ -118,7 +118,6 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
                 popoverFill={true}
                 allowCreate={true}
               />
-              <PaymentMadeFormCurrencyTag />
             </ControlVendorGroup>
           </FormGroup>
         )}

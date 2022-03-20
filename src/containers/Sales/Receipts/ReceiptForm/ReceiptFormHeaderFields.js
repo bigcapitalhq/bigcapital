@@ -113,7 +113,7 @@ function ReceiptFormHeader({
                 popoverFill={true}
                 allowCreate={true}
               />
-              <ReceiptFormCurrencyTag />
+
             </ControlCustomerGroup>
           </FormGroup>
         )}

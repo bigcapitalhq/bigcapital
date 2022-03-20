@@ -163,7 +163,6 @@ function PaymentReceiveHeaderFields({
                 }}
                 allowCreate={true}
               />
-              <PaymentReceiveFormCurrencyTag />
             </ControlCustomerGroup>
           </FormGroup>
         )}

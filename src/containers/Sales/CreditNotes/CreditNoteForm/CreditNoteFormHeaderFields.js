@@ -113,7 +113,6 @@ function CreditNoteFormHeaderFields({
                 popoverFill={true}
                 allowCreate={true}
               />
-              <CreditNotetFormCurrencyTag />
             </ControlCustomerGroup>
           </FormGroup>
         )}

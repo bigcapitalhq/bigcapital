@@ -113,7 +113,6 @@ function VendorCreditNoteFormHeaderFields({
                 popoverFill={true}
                 allowCreate={true}
               />
-              <VendorCreditNoteFormCurrencyTag />
             </ControlVendorGroup>
           </FormGroup>
         )}

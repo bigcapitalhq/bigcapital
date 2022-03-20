@@ -1,56 +1,30 @@
 import React from 'react';
-import { FormGroup, TextArea } from '@blueprintjs/core';
-import { FastField } from 'formik';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'components';
-import { Dragzone, Postbox, Row, Col } from 'components';
+import styled from 'styled-components';
+
 import { CLASSES } from 'common/classes';
-import { inputIntent } from 'utils';
+import { Paper, Row, Col } from 'components';
+import { ReceiptFormFooterLeft } from './ReceiptFormFooterLeft';
+import { ReceiptFormFooterRight } from './ReceiptFormFooterRight';
 
 export default function ReceiptFormFooter({}) {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <Postbox title={<T id={'receipt_details'}/>} defaultOpen={false}>
+      <ReceiptFooterPaper>
         <Row>
           <Col md={8}>
-            {/* --------- Receipt message --------- */}
-            <FastField name={'receipt_message'}>
-              {({ field, meta: { error, touched } }) => (
-                <FormGroup
-                  label={<T id={'receipt_message'} />}
-                  className={'form-group--receipt_message'}
-                  intent={inputIntent({ error, touched })}
-                >
-                  <TextArea growVertically={true} {...field} />
-                </FormGroup>
-              )}
-            </FastField>
-
-            {/* --------- Statement--------- */}
-            <FastField name={'statement'}>
-              {({ field, meta: { error, touched } }) => (
-                <FormGroup
-                  label={<T id={'statement'} />}
-                  className={'form-group--statement'}
-                  intent={inputIntent({ error, touched })}
-                >
-                  <TextArea growVertically={true} {...field} />
-                </FormGroup>
-              )}
-            </FastField>
+            <ReceiptFormFooterLeft />
           </Col>
 
           <Col md={4}>
-            <Dragzone
-              initialFiles={[]}
-              // onDrop={handleDropFiles}
-              // onDeleteFile={handleDeleteFile}
-              hint={<T id={'attachments_maximum'} />}
-
-            />
+            <ReceiptFormFooterRight />
           </Col>
         </Row>
-      </Postbox>
+      </ReceiptFooterPaper>
     </div>
   );
 }
+
+const ReceiptFooterPaper = styled(Paper)`
+  padding: 20px;
+`;
