@@ -14,6 +14,7 @@ import intl from 'react-intl-universal';
 import { defaultFastFieldShouldUpdate } from 'utils';
 import { ERROR } from 'common/errors';
 import { AppToaster } from 'components';
+import { useCurrentOrganization } from 'hooks/state';
 import { getEntriesTotal } from 'containers/Entries/utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import {
@@ -209,4 +210,19 @@ export const useInvoiceTotal = () => {
 
   // Calculate the total due amount of invoice entries.
   return React.useMemo(() => getEntriesTotal(entries), [entries]);
+};
+
+/**
+ * Detarmines whether the invoice has foreign customer.
+ * @returns {boolean}
+ */
+export const useInvoiceIsForeignCustomer = () => {
+  const { values } = useFormikContext();
+  const currentOrganization = useCurrentOrganization();
+
+  const isForeignCustomer = React.useMemo(
+    () => values.currency_code !== currentOrganization.base_currency,
+    [values.currency_code, currentOrganization.base_currency],
+  );
+  return isForeignCustomer;
 };
