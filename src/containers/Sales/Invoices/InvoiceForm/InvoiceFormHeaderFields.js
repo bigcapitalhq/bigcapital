@@ -15,7 +15,6 @@ import {
   FormattedMessage as T,
   Col,
   Row,
-  If,
   CustomerDrawerLink,
 } from 'components';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
@@ -30,14 +29,13 @@ import {
   FieldRequiredHint,
   Icon,
   InputPrependButton,
-  ExchangeRateInputGroup,
 } from 'components';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
+import { InvoiceExchangeRateInputField } from './components';
 
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { inputIntent, handleDateChange } from 'utils';
-import InvoiceCurrencyTag from './InvoiceFormCurrencyTag';
 
 /**
  * Invoice form header fields.
@@ -52,8 +50,7 @@ function InvoiceFormHeaderFields({
   invoiceNextNumber,
 }) {
   // Invoice form context.
-  const { customers, isForeignCustomer, baseCurrency } =
-    useInvoiceFormContext();
+  const { customers } = useInvoiceFormContext();
 
   // Handle invoice number changing.
   const handleInvoiceNumberChange = () => {
@@ -74,8 +71,6 @@ function InvoiceFormHeaderFields({
   };
   // Syncs invoice number settings with form.
   useObserveInvoiceNoSettings(invoiceNumberPrefix, invoiceNextNumber);
-
-  const handleCustomerLinkClick = (customerId) => (event) => {};
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -121,15 +116,10 @@ function InvoiceFormHeaderFields({
       </FastField>
 
       {/* ----------- Exchange rate ----------- */}
-      <If condition={isForeignCustomer}>
-        <ExchangeRateInputGroup
-          fromCurrency={baseCurrency}
-          toCurrency={'LYD'}
-          name={'exchange_rate'}
-          formGroupProps={{ label: ' ', inline: true }}
-        />
-      </If>
-
+      <InvoiceExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
       <Row>
         <Col xs={6}>
           {/* ----------- Invoice date ----------- */}
