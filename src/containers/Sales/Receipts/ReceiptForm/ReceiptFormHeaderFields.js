@@ -19,7 +19,7 @@ import {
   Icon,
   If,
   InputPrependButton,
-  ExchangeRateInputGroup,
+  CustomerDrawerLink,
 } from 'components';
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -31,13 +31,13 @@ import {
   handleDateChange,
   inputIntent,
 } from 'utils';
-import ReceiptFormCurrencyTag from './ReceiptFormCurrencyTag';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import {
   accountsFieldShouldUpdate,
   customersFieldShouldUpdate,
   useObserveReceiptNoSettings,
 } from './utils';
+import { ReceiptExchangeRateInputField } from './components';
 
 /**
  * Receipt form header fields.
@@ -46,22 +46,12 @@ function ReceiptFormHeader({
   //#withDialogActions
   openDialog,
 
-  // #ownProps
-  onReceiptNumberChanged,
-
   // #withSettings
   receiptAutoIncrement,
   receiptNextNumber,
   receiptNumberPrefix,
 }) {
-  const {
-    accounts,
-    customers,
-    isForeignCustomer,
-    baseCurrency,
-    selectCustomer,
-    setSelectCustomer,
-  } = useReceiptFormContext();
+  const { accounts, customers } = useReceiptFormContext();
 
   const handleReceiptNumberChange = useCallback(() => {
     openDialog('receipt-number-form', {});
@@ -108,26 +98,25 @@ function ReceiptFormHeader({
                 onContactSelected={(customer) => {
                   form.setFieldValue('customer_id', customer.id);
                   form.setFieldValue('currency_code', customer?.currency_code);
-                  setSelectCustomer(customer);
                 }}
                 popoverFill={true}
                 allowCreate={true}
               />
-
             </ControlCustomerGroup>
+            {value && (
+              <CustomerButtonLink customerId={value}>
+                View Customer Details
+              </CustomerButtonLink>
+            )}
           </FormGroup>
         )}
       </FastField>
 
       {/* ----------- Exchange rate ----------- */}
-      <If condition={isForeignCustomer}>
-        <ExchangeRateInputGroup
-          fromCurrency={baseCurrency}
-          toCurrency={selectCustomer?.currency_code}
-          name={'exchange_rate'}
-          formGroupProps={{ label: ' ', inline: true }}
-        />
-      </If>
+      <ReceiptExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
 
       {/* ----------- Deposit account ----------- */}
       <FastField
@@ -260,4 +249,9 @@ const ControlCustomerGroup = styled(ControlGroup)`
   display: flex;
   align-items: center;
   transform: none;
+`;
+
+const CustomerButtonLink = styled(CustomerDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
 `;

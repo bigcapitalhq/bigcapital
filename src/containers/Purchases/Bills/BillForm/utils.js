@@ -11,12 +11,14 @@ import {
   transformToForm,
   repeatValue,
   orderingLinesIndexes,
+  formattedAmount,
 } from 'utils';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
 } from 'containers/Entries/utils';
-import { isLandedCostDisabled } from '../../../Entries/utils';
+import { useCurrentOrganization } from 'hooks/state';
+import { isLandedCostDisabled, getEntriesTotal } from '../../../Entries/utils';
 import { useBillFormContext } from './BillFormProvider';
 
 export const MIN_LINES_NUMBER = 1;
@@ -215,4 +217,70 @@ export const useSetPrimaryWarehouseToForm = () => {
       }
     }
   }, [isWarehousesSuccess, setFieldValue, warehouses]);
+};
+
+/**
+ * Retreives the bill totals.
+ */
+export const useBillTotals = () => {
+  const {
+    values: { entries, currency_code: currencyCode },
+  } = useFormikContext();
+
+  // Retrieves the bili entries total.
+  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+
+  // Retrieves the formatted total money.
+  const formattedTotal = React.useMemo(
+    () => formattedAmount(total, currencyCode),
+    [total, currencyCode],
+  );
+  // Retrieves the formatted subtotal.
+  const formattedSubtotal = React.useMemo(
+    () => formattedAmount(total, currencyCode, { money: false }),
+    [total, currencyCode],
+  );
+  // Retrieves the payment total.
+  const paymentTotal = React.useMemo(() => 0, []);
+
+  // Retireves the formatted payment total.
+  const formattedPaymentTotal = React.useMemo(
+    () => formattedAmount(paymentTotal, currencyCode),
+    [paymentTotal, currencyCode],
+  );
+  // Retrieves the formatted due total.
+  const dueTotal = React.useMemo(
+    () => total - paymentTotal,
+    [total, paymentTotal],
+  );
+  // Retrieves the formatted due total.
+  const formattedDueTotal = React.useMemo(
+    () => formattedAmount(dueTotal, currencyCode),
+    [dueTotal, currencyCode],
+  );
+
+  return {
+    total,
+    paymentTotal,
+    dueTotal,
+    formattedTotal,
+    formattedSubtotal,
+    formattedPaymentTotal,
+    formattedDueTotal,
+  };
+};
+
+/**
+ * Detarmines whether the bill has foreign customer.
+ * @returns {boolean}
+ */
+export const useBillIsForeignCustomer = () => {
+  const { values } = useFormikContext();
+  const currentOrganization = useCurrentOrganization();
+
+  const isForeignCustomer = React.useMemo(
+    () => values.currency_code !== currentOrganization.base_currency,
+    [values.currency_code, currentOrganization.base_currency],
+  );
+  return isForeignCustomer;
 };

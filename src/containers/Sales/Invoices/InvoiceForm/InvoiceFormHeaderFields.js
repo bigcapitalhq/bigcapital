@@ -104,7 +104,6 @@ function InvoiceFormHeaderFields({
                 popoverFill={true}
                 allowCreate={true}
               />
-              {/* <InvoiceCurrencyTag /> */}
             </ControlCustomerGroup>
             {value && (
               <CustomerButtonLink customerId={value}>

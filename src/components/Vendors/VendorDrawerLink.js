@@ -13,8 +13,9 @@ function VendorDrawerLinkComponent({
   openDrawer,
 }) {
   // Handle view customer drawer.
-  const handleVendorDrawer = () => {
+  const handleVendorDrawer = (event) => {
     openDrawer('vendor-details-drawer', { vendorId });
+    event.preventDefault();
   };
 
   return <ButtonLink onClick={handleVendorDrawer}>{children}</ButtonLink>;

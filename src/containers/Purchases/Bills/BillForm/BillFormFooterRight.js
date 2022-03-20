@@ -8,29 +8,37 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from 'components';
+import { useBillTotals } from './utils';
 
 export function BillFormFooterRight() {
+  const {
+    formattedSubtotal,
+    formattedTotal,
+    formattedDueTotal,
+    formattedPaymentTotal,
+  } = useBillTotals();
+
   return (
     <BillTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
       <TotalLine
         title={<T id={'bill.details.subtotal'} />}
-        value={'$5000.00'}
+        value={formattedSubtotal}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
         title={<T id={'bill.details.total'} />}
-        value={'$5000.00'}
+        value={formattedTotal}
         borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />
       <TotalLine
         title={<T id={'bill.details.payment_amount'} />}
-        value={'$0.00'}
+        value={formattedPaymentTotal}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
         title={<T id={'bill.details.due_amount'} />}
-        value={'$5000.00'}
+        value={formattedDueTotal}
         textStyle={TotalLineTextStyle.Bold}
       />
     </BillTotalLines>
