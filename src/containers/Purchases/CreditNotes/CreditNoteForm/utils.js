@@ -17,7 +17,7 @@ import {
 import { useFormikContext } from 'formik';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
 
 // Default Vendors Credit Note entry.
 export const defaultCreditNoteEntry = {

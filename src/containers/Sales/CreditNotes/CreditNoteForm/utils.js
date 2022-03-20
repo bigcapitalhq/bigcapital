@@ -18,7 +18,7 @@ import {
   ensureEntriesHaveEmptyLine,
 } from 'containers/Entries/utils';
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
 
 // Default entry object.
 export const defaultCreditNoteEntry = {

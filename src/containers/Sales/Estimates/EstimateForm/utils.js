@@ -16,7 +16,7 @@ import {
   ensureEntriesHaveEmptyLine,
 } from 'containers/Entries/utils';
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
 
 export const defaultEstimateEntry = {
   index: 0,

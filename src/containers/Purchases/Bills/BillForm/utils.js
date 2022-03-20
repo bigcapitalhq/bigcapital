@@ -19,7 +19,7 @@ import {
 import { isLandedCostDisabled } from '../../../Entries/utils';
 import { useBillFormContext } from './BillFormProvider';
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
 
 // Default bill entry.
 export const defaultBillEntry = {

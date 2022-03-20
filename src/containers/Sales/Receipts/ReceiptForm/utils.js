@@ -16,7 +16,7 @@ import {
   ensureEntriesHaveEmptyLine,
 } from 'containers/Entries/utils';
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
 
 export const defaultReceiptEntry = {
   index: 0,
