@@ -45,7 +45,6 @@ function WarehouseTransferForm({
     createWarehouseTransferMutate,
     editWarehouseTransferMutate,
     submitPayload,
-    setItemCostQuery,
   } = useWarehouseTransferFormContext();
 
   // WarehouseTransfer number.

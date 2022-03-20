@@ -2,6 +2,7 @@ import React from 'react';
 
 import { DataTableEditable } from 'components';
 
+import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import { useWarehouseTransferTableColumns } from '../utils';
 import { useFetchItemWarehouseQuantity } from './hooks';
 import { useDeepCompareEffect } from 'hooks/utils';
@@ -24,8 +25,15 @@ export default function WarehouseTransferFormEntriesTable({
   sourceWarehouseId,
 }) {
   // Fetch the table row.
-  const { newRowMeta, setTableRow, resetTableRow, cellsLoading } =
-    useFetchItemWarehouseQuantity();
+  const {
+    newRowMeta,
+    setTableRow,
+    resetTableRow,
+    cellsLoading,
+  } = useFetchItemWarehouseQuantity();
+
+  // Warehouse transfer provider context.
+  const { isItemsCostFetching } = useWarehouseTransferFormContext();
 
   // Retrieve the warehouse transfer table columns.
   const columns = useWarehouseTransferTableColumns();
@@ -87,6 +95,7 @@ export default function WarehouseTransferFormEntriesTable({
       data={entries}
       cellsLoading={!!cellsLoading}
       cellsLoadingCoords={cellsLoading}
+      progressBarLoading={isItemsCostFetching || cellsLoading}
       payload={{
         items,
         errors: errors || [],

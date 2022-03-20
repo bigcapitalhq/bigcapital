@@ -1,4 +1,5 @@
 import React from 'react';
+import { chain } from 'lodash';
 import { FormikObserver } from 'components';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 
@@ -7,14 +8,14 @@ export function WarehouseTransferObserveItemsCost() {
 
   // Handle the form change.
   const handleFormChange = (values) => {
-    const itemsIds = values.entries
+    const { date } = values;
+    const itemsIds = chain(values.entries)
       .filter((e) => e.item_id)
-      .map((e) => e.item_id);
+      .map((e) => e.item_id)
+      .uniq()
+      .value();
 
-    setItemCostQuery({
-      date: values.date,
-      itemsIds,
-    });
+    setItemCostQuery({ date, itemsIds });
   };
   return <FormikObserver onChange={handleFormChange} />;
 }
