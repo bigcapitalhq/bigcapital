@@ -8,6 +8,7 @@ function VendorDrawerLinkComponent({
   // #ownProps
   children,
   vendorId,
+  className,
 
   // #withDrawerActions
   openDrawer,
@@ -18,7 +19,7 @@ function VendorDrawerLinkComponent({
     event.preventDefault();
   };
 
-  return <ButtonLink onClick={handleVendorDrawer}>{children}</ButtonLink>;
+  return <ButtonLink className={className} onClick={handleVendorDrawer}>{children}</ButtonLink>;
 }
 
 export const VendorDrawerLink = R.compose(withDrawerActions)(VendorDrawerLinkComponent);

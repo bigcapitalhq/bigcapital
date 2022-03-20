@@ -6,19 +6,19 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FastField, Field, ErrorMessage } from 'formik';
+import { FastField, ErrorMessage } from 'formik';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
 import {
+  FFormGroup,
   VendorSelectField,
   FieldRequiredHint,
   InputPrependButton,
-  ExchangeRateInputGroup,
   Icon,
-  If,
   FormattedMessage as T,
+  VendorDrawerLink,
 } from 'components';
 import {
   vendorsFieldShouldUpdate,
@@ -26,7 +26,7 @@ import {
 } from './utils';
 
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
-import VendorCreditNoteFormCurrencyTag from './VendorCreditNoteFormCurrencyTag';
+import { VendorCreditNoteExchangeRateInputField } from './components';
 import {
   momentFormatter,
   compose,
@@ -51,13 +51,7 @@ function VendorCreditNoteFormHeaderFields({
   vendorcreditNextNumber,
 }) {
   // Vendor Credit form context.
-  const {
-    vendors,
-    isForeignVendor,
-    baseCurrency,
-    selectVendor,
-    setSelectVendor,
-  } = useVendorCreditNoteFormContext();
+  const { vendors } = useVendorCreditNoteFormContext();
 
   // Handle vendor credit number changing.
   const handleVendorCreditNumberChange = () => {
@@ -92,13 +86,12 @@ function VendorCreditNoteFormHeaderFields({
         shouldUpdate={vendorsFieldShouldUpdate}
       >
         {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
+          <FFormGroup
+            name={'vendor_id'}
             label={<T id={'vendor_name'} />}
             inline={true}
             className={classNames(CLASSES.FILL, 'form-group--vendor')}
             labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'vendor_id'} />}
           >
             <ControlVendorGroup>
               <VendorSelectField
@@ -108,25 +101,25 @@ function VendorCreditNoteFormHeaderFields({
                 onContactSelected={(contact) => {
                   form.setFieldValue('vendor_id', contact.id);
                   form.setFieldValue('currency_code', contact?.currency_code);
-                  setSelectVendor(contact);
                 }}
                 popoverFill={true}
                 allowCreate={true}
               />
             </ControlVendorGroup>
-          </FormGroup>
+            {value && (
+              <VendorButtonLink vendorId={value}>
+                <T id={'view_vendor_details'} />
+              </VendorButtonLink>
+            )}
+          </FFormGroup>
         )}
       </FastField>
 
       {/* ----------- Exchange rate ----------- */}
-      <If condition={isForeignVendor}>
-        <ExchangeRateInputGroup
-          fromCurrency={baseCurrency}
-          toCurrency={selectVendor?.currency_code}
-          name={'exchange_rate'}
-          formGroupProps={{ label: ' ', inline: true }}
-        />
-      </If>
+      <VendorCreditNoteExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
 
       {/* ------- Vendor Credit date ------- */}
       <FastField name={'vendor_credit_date'}>
@@ -225,4 +218,9 @@ const ControlVendorGroup = styled(ControlGroup)`
   display: flex;
   align-items: center;
   transform: none;
+`;
+
+const VendorButtonLink = styled(VendorDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
 `;

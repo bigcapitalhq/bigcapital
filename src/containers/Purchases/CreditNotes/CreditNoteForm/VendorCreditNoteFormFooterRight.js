@@ -7,8 +7,11 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from 'components';
+import { useVendorCrditNoteTotals } from './utils';
 
 export function VendorCreditNoteFormFooterRight() {
+  const { formattedSubtotal, formattedTotal } = useVendorCrditNoteTotals();
+
   return (
     <VendorCreditNoteTotalLines
       labelColWidth={'180px'}
@@ -16,12 +19,12 @@ export function VendorCreditNoteFormFooterRight() {
     >
       <TotalLine
         title={<T id={'credit_note.drawer.label_subtotal'} />}
-        value={'$5000.00'}
+        value={formattedSubtotal}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
         title={<T id={'credit_note.drawer.label_total'} />}
-        value={'$5000.00'}
+        value={formattedTotal}
         // borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />

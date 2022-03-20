@@ -13,10 +13,10 @@ import styled from 'styled-components';
 
 import { CLASSES } from 'common/classes';
 import {
+  FFormGroup,
   VendorSelectField,
   FieldRequiredHint,
   Icon,
-  CustomerDrawerLink,
   VendorDrawerLink,
 } from 'components';
 import { vendorsFieldShouldUpdate } from './utils';
@@ -48,17 +48,16 @@ function BillFormHeader() {
         shouldUpdate={vendorsFieldShouldUpdate}
       >
         {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
+          <FFormGroup
+            name={'vendor_id'}
             label={<T id={'vendor_name'} />}
             inline={true}
             className={classNames(
-              'form-group--customer-name',
+              'form-group--vendor-name',
               'form-group--select-list',
               CLASSES.FILL,
             )}
             labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'vendor_id'} />}
           >
             <ControlVendorGroup>
               <VendorSelectField
@@ -75,10 +74,10 @@ function BillFormHeader() {
             </ControlVendorGroup>
             {value && (
               <VendorButtonLink vendorId={value}>
-                View Vendor Details
+                <T id={'view_vendor_details'} />
               </VendorButtonLink>
             )}
-          </FormGroup>
+          </FFormGroup>
         )}
       </FastField>
 

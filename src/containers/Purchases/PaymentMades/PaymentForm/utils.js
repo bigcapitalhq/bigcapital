@@ -11,7 +11,10 @@ import {
   safeSumBy,
   transformToForm,
   orderingLinesIndexes,
+  formattedAmount,
 } from 'utils';
+import { getEntriesTotal } from '../../../Entries/utils';
+import { useCurrentOrganization } from 'hooks/state';
 
 export const ERRORS = {
   PAYMENT_NUMBER_NOT_UNIQUE: 'PAYMENT.NUMBER.NOT.UNIQUE',
@@ -126,8 +129,51 @@ export const transformErrors = (errors, { setFieldError }) => {
   }
   if (getError('WITHDRAWAL_ACCOUNT_CURRENCY_INVALID')) {
     AppToaster.show({
-      message: intl.get('payment_made.error.withdrawal_account_currency_invalid'),
+      message: intl.get(
+        'payment_made.error.withdrawal_account_currency_invalid',
+      ),
       intent: Intent.DANGER,
     });
   }
+};
+
+export const usePaymentMadeTotals = () => {
+  const {
+    values: { entries, currency_code: currencyCode },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+
+  // Retrieves the formatted total money.
+  const formattedTotal = React.useMemo(
+    () => formattedAmount(total, currencyCode),
+    [total, currencyCode],
+  );
+  // Retrieves the formatted subtotal.
+  const formattedSubtotal = React.useMemo(
+    () => formattedAmount(total, currencyCode, { money: false }),
+    [total, currencyCode],
+  );
+
+  return {
+    total,
+    formattedTotal,
+    formattedSubtotal,
+  };
+};
+
+/**
+ * Detarmines whether the bill has foreign customer.
+ * @returns {boolean}
+ */
+export const usePaymentMadeIsForeignCustomer = () => {
+  const { values } = useFormikContext();
+  const currentOrganization = useCurrentOrganization();
+
+  const isForeignCustomer = React.useMemo(
+    () => values.currency_code !== currentOrganization.base_currency,
+    [values.currency_code, currentOrganization.base_currency],
+  );
+  return isForeignCustomer;
 };

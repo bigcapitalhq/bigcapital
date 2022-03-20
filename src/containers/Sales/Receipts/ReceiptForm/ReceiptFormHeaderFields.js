@@ -105,7 +105,7 @@ function ReceiptFormHeader({
             </ControlCustomerGroup>
             {value && (
               <CustomerButtonLink customerId={value}>
-                View Customer Details
+                <T id={'view_customer_details'} />
               </CustomerButtonLink>
             )}
           </FormGroup>

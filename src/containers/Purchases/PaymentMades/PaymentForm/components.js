@@ -1,9 +1,12 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
-import { Money } from 'components';
+import { Money, ExchangeRateInputGroup } from 'components';
 import { safeSumBy, formattedAmount } from 'utils';
 import { MoneyFieldCell } from 'components/DataTableCells';
+import { useFormikContext } from 'formik';
+import { useCurrentOrganization } from 'hooks/state';
+import { usePaymentMadeIsForeignCustomer } from './utils';
 
 function BillNumberAccessor(row) {
   return row?.bill_no ? row?.bill_no : '-';
@@ -51,8 +54,6 @@ function MoneyTableCell({ row: { original }, value }) {
  * Payment made entries table columns
  */
 export function usePaymentMadeEntriesTableColumns() {
-  
-
   return React.useMemo(
     () => [
       {
@@ -105,5 +106,28 @@ export function usePaymentMadeEntriesTableColumns() {
       },
     ],
     [],
+  );
+}
+
+/**
+ * payment made exchange rate input field.
+ * @returns {JSX.Element}
+ */
+export function PaymentMadeExchangeRateInputField({ ...props }) {
+  const currentOrganization = useCurrentOrganization();
+  const { values } = useFormikContext();
+
+  const isForeignCustomer = usePaymentMadeIsForeignCustomer();
+
+  // Can't continue if the customer is not foreign.
+  if (!isForeignCustomer) {
+    return null;
+  }
+  return (
+    <ExchangeRateInputGroup
+      fromCurrency={values.currency_code}
+      toCurrency={currentOrganization.base_currency}
+      {...props}
+    />
   );
 }

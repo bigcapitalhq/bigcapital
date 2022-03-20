@@ -7,18 +7,20 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from 'components';
+import { usePaymentMadeTotals } from './utils';
 
 export function PaymentMadeFormFooterRight() {
+  const { formattedSubtotal, formattedTotal } = usePaymentMadeTotals();
   return (
     <PaymentMadeTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
       <TotalLine
         title={<T id={'estimate.details.subtotal'} />}
-        value={'$5000.00'}
+        value={formattedSubtotal}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
         title={<T id={'estimate.details.total'} />}
-        value={'$5000.00'}
+        value={formattedTotal}
         // borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />

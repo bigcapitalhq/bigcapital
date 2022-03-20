@@ -16,21 +16,21 @@ import { CLASSES } from 'common/classes';
 import styled from 'styled-components';
 
 import {
+  FFormGroup,
   AccountsSelectList,
   VendorSelectField,
   FieldRequiredHint,
   InputPrependText,
   Money,
   Hint,
-  If,
   Icon,
+  VendorDrawerLink,
   MoneyInputGroup,
-  ExchangeRateInputGroup,
 } from 'components';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
-import PaymentMadeFormCurrencyTag from './PaymentMadeFormCurrencyTag';
+import { PaymentMadeExchangeRateInputField } from './components';
 import {
   momentFormatter,
   tansformDateValue,
@@ -62,7 +62,6 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
     isForeignVendor,
     baseCurrency,
     selectVendor,
-    setSelectVendor,
   } = usePaymentMadeFormContext();
 
   // Sumation of payable full-amount.
@@ -95,13 +94,12 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
         shouldUpdate={vendorsFieldShouldUpdate}
       >
         {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
+          <FFormGroup
+            name={'vendor_id'}
             label={<T id={'vendor_name'} />}
             inline={true}
             className={classNames('form-group--select-list', Classes.FILL)}
             labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'vendor_id'} />}
           >
             <ControlVendorGroup>
               <VendorSelectField
@@ -112,26 +110,26 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
                   form.setFieldValue('vendor_id', contact.id);
                   form.setFieldValue('currency_code', contact?.currency_code);
                   setPaymentVendorId(contact.id);
-                  setSelectVendor(contact);
                 }}
                 disabled={!isNewMode}
                 popoverFill={true}
                 allowCreate={true}
               />
             </ControlVendorGroup>
-          </FormGroup>
+            {value && (
+              <VendorButtonLink vendorId={value}>
+                <T id={'view_vendor_details'} />
+              </VendorButtonLink>
+            )}
+          </FFormGroup>
         )}
       </FastField>
 
       {/* ----------- Exchange rate ----------- */}
-      <If condition={isForeignVendor}>
-        <ExchangeRateInputGroup
-          fromCurrency={baseCurrency}
-          toCurrency={selectVendor?.currency_code}
-          name={'exchange_rate'}
-          formGroupProps={{ label: ' ', inline: true }}
-        />
-      </If>
+      <PaymentMadeExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
 
       {/* ------------ Payment date ------------ */}
       <FastField name={'payment_date'}>
@@ -284,4 +282,9 @@ const ControlVendorGroup = styled(ControlGroup)`
   display: flex;
   align-items: center;
   transform: none;
+`;
+
+const VendorButtonLink = styled(VendorDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
 `;
