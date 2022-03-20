@@ -63,25 +63,10 @@ const LandedCostHeaderCell = () => {
 };
 
 /**
- * Amount footer cell.
- */
-function AmountFooterCell({ payload: { currencyCode }, rows }) {
-  const total = safeSumBy(rows, 'original.amount');
-  return <span>{formattedAmount(total, currencyCode)}</span>;
-}
-
-/**
  * Expense amount header cell.
  */
 export function ExpenseAmountHeaderCell({ payload: { currencyCode } }) {
   return intl.get('amount_currency', { currency: currencyCode });
-}
-
-/**
- * Expense account footer cell.
- */
-function ExpenseAccountFooterCell() {
-  return <T id={'total'} />;
 }
 
 /**
@@ -91,20 +76,10 @@ export function useExpenseFormTableColumns({ landedCost }) {
   return React.useMemo(
     () => [
       {
-        Header: '#',
-        accessor: 'index',
-        Cell: ({ row: { index } }) => <span>{index + 1}</span>,
-        className: 'index',
-        width: 40,
-        disableResizing: true,
-        disableSortBy: true,
-      },
-      {
         Header: ExpenseCategoryHeaderCell,
         id: 'expense_account_id',
         accessor: 'expense_account_id',
         Cell: AccountsListFieldCell,
-        Footer: ExpenseAccountFooterCell,
         className: 'expense_account_id',
         disableSortBy: true,
         width: 40,
@@ -115,7 +90,6 @@ export function useExpenseFormTableColumns({ landedCost }) {
         Header: ExpenseAmountHeaderCell,
         accessor: 'amount',
         Cell: MoneyFieldCell,
-        Footer: AmountFooterCell,
         disableSortBy: true,
         width: 40,
         className: 'amount',
