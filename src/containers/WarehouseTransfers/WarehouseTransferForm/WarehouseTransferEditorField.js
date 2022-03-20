@@ -37,7 +37,7 @@ export default function WarehouseTransferEditorField() {
             defaultEntry={defaultWarehouseTransferEntry}
             errors={error}
             sourceWarehouseId={values.from_warehouse_id}
-            distentionWarehouseId={value.to_warehouse_id}
+            destinationWarehouseId={values.to_warehouse_id}
           />
         )}
       </FastField>

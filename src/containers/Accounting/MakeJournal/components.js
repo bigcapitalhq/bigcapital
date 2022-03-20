@@ -1,8 +1,7 @@
 import React from 'react';
 import { Intent, Position, Button, Tooltip } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
-import { Icon, Money, Hint } from 'components';
 import intl from 'react-intl-universal';
+import { Icon, Hint, FormattedMessage as T } from 'components';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,
@@ -10,7 +9,6 @@ import {
   ContactsListFieldCell,
   BranchesListFieldCell,
 } from 'components/DataTableCells';
-import { safeSumBy } from 'utils';
 import { useFeatureCan } from 'hooks/state';
 import { Features } from 'common';
 
@@ -43,38 +41,6 @@ export function DebitHeaderCell({ payload: { currencyCode } }) {
   return intl.get('debit_currency', { currency: currencyCode });
 }
 
-/**
- * Account footer cell.
- */
-function AccountFooterCell({ payload: { currencyCode } }) {
-  return <span>{intl.get('total_currency', { currency: currencyCode })}</span>;
-}
-
-/**
- * Total credit table footer cell.
- */
-function TotalCreditFooterCell({ payload: { currencyCode }, rows }) {
-  const credit = safeSumBy(rows, 'original.credit');
-
-  return (
-    <span>
-      <Money amount={credit} currency={currencyCode} />
-    </span>
-  );
-}
-
-/**
- * Total debit table footer cell.
- */
-function TotalDebitFooterCell({ payload: { currencyCode }, rows }) {
-  const debit = safeSumBy(rows, 'original.debit');
-
-  return (
-    <span>
-      <Money amount={debit} currency={currencyCode} />
-    </span>
-  );
-}
 /**
  * Actions cell renderer.
  */
@@ -111,21 +77,10 @@ export const useJournalTableEntriesColumns = () => {
   return React.useMemo(
     () => [
       {
-        Header: '#',
-        accessor: 'index',
-        Cell: ({ row: { index } }) => <span>{index + 1}</span>,
-        className: 'index',
-        width: 40,
-        disableResizing: true,
-        disableSortBy: true,
-        sticky: 'left',
-      },
-      {
         Header: intl.get('account'),
         id: 'account_id',
         accessor: 'account_id',
         Cell: AccountsListFieldCell,
-        Footer: AccountFooterCell,
         className: 'account',
         disableSortBy: true,
         width: 160,
@@ -135,7 +90,6 @@ export const useJournalTableEntriesColumns = () => {
         Header: CreditHeaderCell,
         accessor: 'credit',
         Cell: MoneyFieldCell,
-        Footer: TotalCreditFooterCell,
         className: 'credit',
         disableSortBy: true,
         width: 100,
@@ -144,7 +98,6 @@ export const useJournalTableEntriesColumns = () => {
         Header: DebitHeaderCell,
         accessor: 'debit',
         Cell: MoneyFieldCell,
-        Footer: TotalDebitFooterCell,
         className: 'debit',
         disableSortBy: true,
         width: 100,

@@ -1,15 +1,10 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { find, get } from 'lodash';
-import { Tooltip, Button, Intent, Position } from '@blueprintjs/core';
+import { Button, Menu, MenuItem } from '@blueprintjs/core';
+import { Popover2 } from '@blueprintjs/popover2';
 
-import {
-  MoneyFieldCell,
-  FormatDateCell,
-  Icon,
-  AppToaster,
-  T,
-} from 'components';
+import { MoneyFieldCell, Icon, T } from 'components';
 import { InputGroupCell, ItemsListCell } from 'components/DataTableCells';
 
 // Index table cell.
@@ -31,37 +26,44 @@ export function ActionsCellRenderer({
     removeRow(index);
   };
 
+  const exampleMenu = (
+    <Menu>
+      <MenuItem onClick={onRemoveRole} text="Remove line" />
+    </Menu>
+  );
+
   return (
-    <Tooltip content={<T id={'remove_the_line'} />} position={Position.LEFT}>
+    <Popover2 content={exampleMenu} placement="left-start">
       <Button
-        icon={<Icon icon={'times-circle'} iconSize={14} />}
+        icon={<Icon icon={'more-13'} iconSize={13} />}
         iconSize={14}
         className="m12"
-        intent={Intent.DANGER}
-        onClick={onRemoveRole}
+        minimal={true}
       />
-    </Tooltip>
+    </Popover2>
   );
 }
 
-function SourceWarehouseAccessorCell({ value, row: { original }, payload }) {
+function SourceWarehouseAccessorCell({ row: { original }, payload }) {
+  // Ignore display zero if the item not selected yet.
+  if (!original.item_id) return '';
+
   const warehouse = find(
     original.warehouses,
     (w) => w.warehouseId === payload.sourceWarehouseId,
   );
-  return get(warehouse, 'warehouseQuantityFormatted', '0');
+  return get(warehouse, 'quantityOnHandFormatted', '0');
 }
 
-function DistentionWarehouseAccessorCell({
-  value,
-  row: { original },
-  payload,
-}) {
+function DistentionWarehouseAccessorCell({ row: { original }, payload }) {
+  // Ignore display zero if the item not selected yet.
+  if (!original.item_id) return '';
+
   const warehouse = find(
     original.warehouses,
-    (w) => w.warehouseId === payload.distentionWarehouseId,
+    (w) => w.warehouseId === payload.destinationWarehouseId,
   );
-  return get(warehouse, 'warehouseQuantityFormatted', '0');
+  return get(warehouse, 'quantityOnHandFormatted', '0');
 }
 
 /**
@@ -71,15 +73,6 @@ function DistentionWarehouseAccessorCell({
 export const useWarehouseTransferTableColumns = () => {
   return React.useMemo(
     () => [
-      {
-        Header: '#',
-        accessor: 'index',
-        Cell: IndexTableCell,
-        width: 40,
-        disableResizing: true,
-        disableSortBy: true,
-        className: 'index',
-      },
       {
         id: 'item_id',
         Header: intl.get('warehouse_transfer.column.item_name'),
@@ -125,10 +118,17 @@ export const useWarehouseTransferTableColumns = () => {
         width: 100,
       },
       {
+        Header: intl.get('warehouse_transfer.column.cost_price'),
+        accessor: 'cost',
+        Cell: MoneyFieldCell,
+        disableSortBy: true,
+        align: 'right',
+        width: 100,
+      },
+      {
         Header: '',
         accessor: 'action',
         Cell: ActionsCellRenderer,
-        className: 'actions',
         disableSortBy: true,
         disableResizing: true,
         width: 45,

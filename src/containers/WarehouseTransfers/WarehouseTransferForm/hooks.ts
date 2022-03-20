@@ -65,10 +65,10 @@ export const useFetchItemWarehouseQuantity = () => {
     return isItemSuccess
       ? {
           ...tableRow,
-          warehouses: [],
+          warehouses: transformWarehousesQuantity(item),
         }
       : null;
-  }, [isItemSuccess, tableRow]);
+  }, [isItemSuccess, item, tableRow]);
 
   // Reset the table row.
   const resetTableRow = React.useCallback(() => {
@@ -83,4 +83,12 @@ export const useFetchItemWarehouseQuantity = () => {
     cellsLoading,
     newRowMeta,
   };
+};
+
+const transformWarehousesQuantity = (item) => {
+  return item.item_warehouses.map((warehouse) => ({
+    warehouseId: warehouse.warehouse_id,
+    quantityOnHand: warehouse.quantity_on_hand,
+    quantityOnHandFormatted: warehouse.quantity_on_hand_formatted,
+  }));
 };

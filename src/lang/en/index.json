@@ -1825,6 +1825,7 @@
   "warehouse_transfer.column.transfer_quantity": "Transfer Quantity",
   "warehouse_transfer.column.source_warehouse": "Source Warehouse",
   "warehouse_transfer.column.destination_warehouse": "Destination Warehouse",
+  "warehouse_transfer.column.cost_price": "Cost price",
   "warehouse_transfer.auto_increment.auto": "Your transfer numbers are set on auto-increment mode. Are you sure changing this setting?",
   "warehouse_transfer.auto_increment.manually": "Your transfer numbers are set on manual mode. Are you sure chaning this settings?",
   "warehouse_transfer.setting_your_auto_generated_transfer_no": "Setting your auto-generated transfer number",

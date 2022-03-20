@@ -63,7 +63,6 @@ export default function MakeJournalEntriesTable({
       data={entries}
       sticky={true}
       totalRow={true}
-      footer={true}
       payload={{
         accounts,
         errors: error,

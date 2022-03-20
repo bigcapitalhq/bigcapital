@@ -62,7 +62,6 @@ export default function PaymentReceiveItemsTable({
           currencyCode,
         }}
         noResults={noResultsMessage}
-        footer={true}
       />
     </CloudLoadingIndicator>
   );
