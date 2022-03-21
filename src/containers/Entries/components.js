@@ -67,11 +67,6 @@ export function TotalCell({ payload: { currencyCode }, value }) {
   return <span>{formattedAmount(value, currencyCode, { noZero: true })}</span>;
 }
 
-// Index table cell.
-export function IndexTableCell({ row: { index } }) {
-  return <span>{index + 1}</span>;
-}
-
 /**
  * Landed cost header cell.
  */
@@ -161,6 +156,7 @@ export function useEditableItemsEntriesColumns({ landedCost }) {
         disableSortBy: true,
         disableResizing: true,
         width: 45,
+        align: Align.Center,
       },
     ],
     [],

@@ -4,6 +4,7 @@ import { find, get } from 'lodash';
 import { Button, Menu, MenuItem } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
+import { Align, CellType } from 'common';
 import { MoneyFieldCell, Icon, T } from 'components';
 import { InputGroupCell, ItemsListCell } from 'components/DataTableCells';
 
@@ -17,9 +18,6 @@ export function IndexTableCell({ row: { index } }) {
  */
 export function ActionsCellRenderer({
   row: { index },
-  column: { id },
-  cell: { value },
-  data,
   payload: { removeRow },
 }) {
   const onRemoveRole = () => {
@@ -43,6 +41,7 @@ export function ActionsCellRenderer({
     </Popover2>
   );
 }
+ActionsCellRenderer.cellType = CellType.Button;
 
 function SourceWarehouseAccessorCell({ row: { original }, payload }) {
   // Ignore display zero if the item not selected yet.
@@ -97,7 +96,7 @@ export const useWarehouseTransferTableColumns = () => {
         accessor: 'source_warehouse',
         disableSortBy: true,
         Cell: SourceWarehouseAccessorCell,
-        align: 'right',
+        align: Align.Right,
         width: 100,
       },
       {
@@ -106,7 +105,7 @@ export const useWarehouseTransferTableColumns = () => {
         accessor: 'destination_warehouse',
         Cell: DistentionWarehouseAccessorCell,
         disableSortBy: true,
-        align: 'right',
+        align: Align.Right,
         width: 100,
       },
       {
@@ -114,14 +113,14 @@ export const useWarehouseTransferTableColumns = () => {
         accessor: 'quantity',
         Cell: MoneyFieldCell,
         disableSortBy: true,
-        align: 'right',
+        align: Align.Right,
         width: 100,
       },
       {
         Header: intl.get('warehouse_transfer.column.cost_price'),
         accessor: 'cost',
         disableSortBy: true,
-        align: 'right',
+        align: Align.Right,
         width: 80,
       },
       {
@@ -131,6 +130,7 @@ export const useWarehouseTransferTableColumns = () => {
         disableSortBy: true,
         disableResizing: true,
         width: 45,
+        align: Align.Center,
       },
     ],
     [],

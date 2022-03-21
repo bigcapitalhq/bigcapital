@@ -16,7 +16,7 @@ import {
   AccountsListFieldCell,
   CheckBoxFieldCell,
 } from 'components/DataTableCells';
-import { CellType } from 'common';
+import { CellType, Align } from 'common';
 
 import { useCurrentOrganization } from 'hooks/state';
 import { useExpensesIsForeign } from './utils';
@@ -106,14 +106,13 @@ export function useExpenseFormTableColumns({ landedCost }) {
         Cell: MoneyFieldCell,
         disableSortBy: true,
         width: 40,
-        className: 'amount',
+        align: Align.Right,
       },
       {
         Header: intl.get('description'),
         accessor: 'description',
         Cell: InputGroupCell,
         disableSortBy: true,
-        className: 'description',
         width: 100,
       },
       ...(landedCost
@@ -125,7 +124,7 @@ export function useExpenseFormTableColumns({ landedCost }) {
               disableSortBy: true,
               disableResizing: true,
               width: 100,
-              className: 'landed-cost',
+              align: Align.Center,
             },
           ]
         : []),
@@ -136,6 +135,7 @@ export function useExpenseFormTableColumns({ landedCost }) {
         disableSortBy: true,
         disableResizing: true,
         width: 45,
+        align: Align.Center,
       },
     ],
     [],
@@ -163,3 +163,4 @@ export function ExpensesExchangeRateInputField({ ...props }) {
     />
   );
 }
+ExpensesExchangeRateInputField.cellType = CellType.Field;

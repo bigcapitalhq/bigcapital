@@ -67,6 +67,7 @@ export default function TableCell({ cell, row, index }) {
           'is-text-overview': cell.column.textOverview,
           clickable: cell.column.clickable,
           'align-right': cell.column.align === 'right',
+          'align-center': cell.column.align === 'center',
           [`td-${cell.column.id}`]: cell.column.id,
           [`td-${cellType}-type`]: !!cellType,
         }),
