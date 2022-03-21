@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import classNames from 'classnames';
-import { If } from 'components';
-import { Skeleton } from 'components';
+import { camelCase} from 'lodash';
+
+import { If, Skeleton } from 'components';
 import { useAppIntlContext } from 'components/AppIntlProvider';
 import TableContext from './TableContext';
 import { saveInvoke, ignoreEventFromSelectors } from 'utils';
@@ -56,7 +57,8 @@ export default function TableCell({ cell, row, index }) {
       return;
     }
     saveInvoke(onCellClick, cell, event);
-  };
+  };  
+  const cellType = camelCase(cell.column.Cell.cellType) || 'text';
 
   return (
     <div
@@ -65,6 +67,8 @@ export default function TableCell({ cell, row, index }) {
           'is-text-overview': cell.column.textOverview,
           clickable: cell.column.clickable,
           'align-right': cell.column.align === 'right',
+          [`td-${cell.column.id}`]: cell.column.id,
+          [`td-${cellType}-type`]: !!cellType,
         }),
         onClick: handleCellClick,
       })}

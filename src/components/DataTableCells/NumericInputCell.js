@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { FormGroup, NumericInput, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
+
+import { CellType } from 'common';
 import { CLASSES } from 'common/classes';
 
 /**
@@ -36,8 +38,10 @@ export default function NumericInputCell({
         onValueChange={handleValueChange}
         onBlur={onBlur}
         fill={true}
-        buttonPosition={"none"}
+        buttonPosition={'none'}
       />
     </FormGroup>
   );
 }
+
+NumericInputCell.cellType = CellType.Field;

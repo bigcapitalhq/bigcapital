@@ -54,10 +54,15 @@ const DatatableEditableRoot = styled.div`
     }
     .tbody {
       .tr .td {
-        padding: 2px;
         border-bottom: 0;
         border-bottom: 1px solid #d8d8d8;
         min-height: 38px;
+        padding: 4px 14px;
+
+        &.td-field-type,
+        &.td-button-type{
+          padding: 2px;
+        }
       }
       .tr:last-of-type .td {
         border-bottom: 0;

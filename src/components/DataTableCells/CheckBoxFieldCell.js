@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { get } from 'lodash';
 import { Classes, Checkbox, FormGroup, Intent } from '@blueprintjs/core';
+import { CellType } from 'common';
 
 const CheckboxEditableCell = ({
   row: { index, original },
@@ -44,5 +45,7 @@ const CheckboxEditableCell = ({
     </FormGroup>
   );
 };
+
+CheckboxEditableCell.cellType = CellType.Field;
 
 export default CheckboxEditableCell;

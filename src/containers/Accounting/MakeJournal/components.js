@@ -1,7 +1,10 @@
 import React from 'react';
-import { Intent, Position, Button, Tooltip } from '@blueprintjs/core';
+import { Menu, MenuItem, Position, Button } from '@blueprintjs/core';
+import { Popover2 } from '@blueprintjs/popover2';
+import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
-import { Icon, Hint, FormattedMessage as T } from 'components';
+
+import { ExchangeRateInputGroup, Icon, Hint, FormattedMessage as T } from 'components';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,
@@ -9,12 +12,12 @@ import {
   ContactsListFieldCell,
   BranchesListFieldCell,
 } from 'components/DataTableCells';
+
+import { CellType, Features } from 'common';
+
 import { useFeatureCan } from 'hooks/state';
-import { useFormikContext } from 'formik';
-import { ExchangeRateInputGroup } from 'components';
 import { useCurrentOrganization } from 'hooks/state';
 import { useJournalIsForeign } from './utils';
-import { Features } from 'common';
 
 /**
  * Contact header cell.
@@ -55,22 +58,26 @@ export const ActionsCellRenderer = ({
   data,
   payload,
 }) => {
-  const onClickRemoveRole = () => {
+  const handleClickRemoveRole = () => {
     payload.removeRow(index);
   };
+  const exampleMenu = (
+    <Menu>
+      <MenuItem onClick={handleClickRemoveRole} text="Remove line" />
+    </Menu>
+  );
   return (
-    <Tooltip content={<T id={'remove_the_line'} />} position={Position.LEFT}>
+    <Popover2 content={exampleMenu} placement="left-start">
       <Button
-        icon={<Icon icon="times-circle" iconSize={14} />}
+        icon={<Icon icon={'more-13'} iconSize={13} />}
         iconSize={14}
-        className="ml2"
+        className="m12"
         minimal={true}
-        intent={Intent.DANGER}
-        onClick={onClickRemoveRole}
       />
-    </Tooltip>
+    </Popover2>
   );
 };
+ActionsCellRenderer.cellType = CellType.Button;
 
 /**
  * Retrieve columns of make journal entries table.
@@ -140,7 +147,6 @@ export const useJournalTableEntriesColumns = () => {
         Header: '',
         accessor: 'action',
         Cell: ActionsCellRenderer,
-        className: 'actions',
         disableSortBy: true,
         disableResizing: true,
         width: 45,
@@ -154,7 +160,7 @@ export const useJournalTableEntriesColumns = () => {
  * Journal exchange rate input field.
  * @returns {JSX.Element}
  */
- export function JournalExchangeRateInputField({ ...props }) {
+export function JournalExchangeRateInputField({ ...props }) {
   const currentOrganization = useCurrentOrganization();
   const { values } = useFormikContext();
 
