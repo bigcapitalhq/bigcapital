@@ -177,7 +177,7 @@ export const mutateTableRow = R.curry((rowIndex, newRow, rows) => {
 export const deleteTableRow = R.curry((rowIndex, defaultEntry, rows) => {
   return compose(
     // Ensure minimum lines count.
-    updateMinEntriesLines(4, defaultEntry),
+    updateMinEntriesLines(MIN_LINES_NUMBER, defaultEntry),
     // Remove the line by the given index.
     updateRemoveLineByIndex(rowIndex),
   )(rows);

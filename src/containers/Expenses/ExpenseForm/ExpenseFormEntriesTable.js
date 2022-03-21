@@ -23,6 +23,7 @@ export default function ExpenseFormEntriesTable({
   onChange,
   currencyCode,
   landedCost = true,
+  minLines,
 }) {
   // Expense form context.
   const { accounts } = useExpenseFormContext();
@@ -50,14 +51,14 @@ export default function ExpenseFormEntriesTable({
     (rowIndex) => {
       const newRows = compose(
         // Ensure minimum lines count.
-        updateMinEntriesLines(4, defaultEntry),
+        updateMinEntriesLines(minLines, defaultEntry),
         // Remove the line by the given index.
         updateRemoveLineByIndex(rowIndex),
       )(entries);
 
       saveInvoke(onChange, newRows);
     },
-    [entries, defaultEntry, onChange],
+    [minLines, entries, defaultEntry, onChange],
   );
 
   return (
@@ -76,4 +77,8 @@ export default function ExpenseFormEntriesTable({
       }}
     />
   );
+}
+
+ExpenseFormEntriesTable.defaultProps = {
+  minLines: 1,
 }

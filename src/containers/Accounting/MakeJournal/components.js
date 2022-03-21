@@ -13,7 +13,7 @@ import {
   BranchesListFieldCell,
 } from 'components/DataTableCells';
 
-import { CellType, Features } from 'common';
+import { CellType, Features, Align } from 'common';
 
 import { useFeatureCan } from 'hooks/state';
 import { useCurrentOrganization } from 'hooks/state';
@@ -92,7 +92,6 @@ export const useJournalTableEntriesColumns = () => {
         id: 'account_id',
         accessor: 'account_id',
         Cell: AccountsListFieldCell,
-        className: 'account',
         disableSortBy: true,
         width: 160,
         fieldProps: { allowCreate: true },
@@ -101,24 +100,23 @@ export const useJournalTableEntriesColumns = () => {
         Header: CreditHeaderCell,
         accessor: 'credit',
         Cell: MoneyFieldCell,
-        className: 'credit',
         disableSortBy: true,
         width: 100,
+        align: Align.Right,
       },
       {
         Header: DebitHeaderCell,
         accessor: 'debit',
         Cell: MoneyFieldCell,
-        className: 'debit',
         disableSortBy: true,
         width: 100,
+        align: Align.Right,
       },
       {
         Header: ContactHeaderCell,
         id: 'contact_id',
         accessor: 'contact_id',
         Cell: ContactsListFieldCell,
-        className: 'contact',
         disableSortBy: true,
         width: 120,
       },
@@ -129,7 +127,6 @@ export const useJournalTableEntriesColumns = () => {
               id: 'branch_id',
               accessor: 'branch_id',
               Cell: BranchesListFieldCell,
-              className: 'branch',
               disableSortBy: true,
               width: 120,
             },
@@ -140,7 +137,6 @@ export const useJournalTableEntriesColumns = () => {
         accessor: 'note',
         Cell: InputGroupCell,
         disableSortBy: true,
-        className: 'note',
         width: 200,
       },
       {
@@ -150,6 +146,7 @@ export const useJournalTableEntriesColumns = () => {
         disableSortBy: true,
         disableResizing: true,
         width: 45,
+        align: Align.Center,
       },
     ],
     [],

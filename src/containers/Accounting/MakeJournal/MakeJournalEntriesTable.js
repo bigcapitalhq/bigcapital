@@ -21,8 +21,8 @@ export default function MakeJournalEntriesTable({
   entries,
   defaultEntry,
   error,
-  initialLinesNumber = 4,
-  minLinesNumber = 4,
+  initialLinesNumber = 1,
+  minLinesNumber = 1,
   currencyCode,
 }) {
   const { accounts, contacts, branches } = useMakeJournalFormContext();
