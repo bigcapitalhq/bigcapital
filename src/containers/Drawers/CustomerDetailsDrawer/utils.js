@@ -25,7 +25,7 @@ export function CustomerMoreMenuItem({ payload: { onEditOpeningBalance } }) {
       content={
         <Menu>
           <MenuItem
-            text={<T id={'customer.drawer.action.edit_opending_balance'} />}
+            text={<T id={'customer.drawer.action.edit_opening_balance'} />}
             onClick={onEditOpeningBalance}
           />
         </Menu>
