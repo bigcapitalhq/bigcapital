@@ -37,7 +37,8 @@ function BranchActivateFormFloatingActions({
           style={{ minWidth: '95px' }}
           type="submit"
         >
-          {<T id={'activate'} />}
+          {<T id={'branches.activate_button'} />}
+          
         </Button>
       </div>
     </div>

@@ -29,11 +29,7 @@ function WarehousesEmptyStatus({
             large={true}
             onClick={handleActivateWarehouse}
           >
-            <T id={'activate'} />
-          </Button>
-
-          <Button intent={Intent.NONE} large={true}>
-            <T id={'learn_more'} />
+            <T id={'warehouses.activate_button'} />
           </Button>
         </React.Fragment>
       }

@@ -1,20 +1,29 @@
 import React from 'react';
 import { Form } from 'formik';
-import { Intent, Callout, Classes } from '@blueprintjs/core';
+import { Classes } from '@blueprintjs/core';
 
 import WarehouseActivateFormFloatingActions from './WarehouseActivateFormFloatingActions';
 
 /**
- * warehouse activate form content.
+ * Warehouse activate form content.
  */
 export default function WarehouseActivateFormContent() {
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
-        <Callout icon={null} intent={Intent.PRIMARY}>
-          Aute esse eiusmod dolore ipsum dolor sint qui proident pariatur
-          proident fugiat ea ad aliquip.
-        </Callout>
+        <p class="paragraph">
+          Once you enable <strong>Multiply Warehouses</strong>, you will not be able to disable it.
+          However, you can delete the warehouse or mark it inactive.
+        </p>
+
+        <ul class="paragraph list">
+          <li>
+            The current organization will be considered as the Primary Warehouse.
+          </li>
+          <li>
+            All inventory transactions will be considered as the Primary Warehouse.
+          </li>
+        </ul>
       </div>
       <WarehouseActivateFormFloatingActions />
     </Form>

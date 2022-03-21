@@ -37,7 +37,7 @@ function WarehouseActivateFormFloatingActions({
           style={{ minWidth: '95px' }}
           type="submit"
         >
-          {<T id={'activate'} />}
+          {<T id={'warehouses.activate_button'} />}
         </Button>
       </div>
     </div>

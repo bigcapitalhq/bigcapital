@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form } from 'formik';
-import { Intent, Callout, Classes } from '@blueprintjs/core';
+import { Classes } from '@blueprintjs/core';
 import BranchActivateFormFloatingActions from './BranchActivateFormFloatingActions';
 
 /**
@@ -10,10 +10,20 @@ export default function BranchActivateFormContent() {
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
-        <Callout icon={null} intent={Intent.PRIMARY}>
-          Aute esse eiusmod dolore ipsum dolor sint qui proident pariatur
-          proident fugiat ea ad aliquip.
-        </Callout>
+        <p class="paragraph">
+          Once you enable <strong>Multiply Branches</strong>, you will not be able to disable it.
+          However, you can delete the branch or mark it inactive.
+        </p>
+
+        <ul class="paragraph list">
+          <li>
+            The current organization will be considered as the Head Office or
+            Primary Branch.
+          </li>
+          <li>
+            All accounts transactions will be considered as the primary office.
+          </li>
+        </ul>
       </div>
       <BranchActivateFormFloatingActions />
     </Form>
