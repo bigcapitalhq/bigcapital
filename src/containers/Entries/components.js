@@ -145,7 +145,7 @@ export function useEditableItemsEntriesColumns({ landedCost }) {
               disabledAccessor: 'landed_cost_disabled',
               disableSortBy: true,
               disableResizing: true,
-              className: 'landed-cost',
+              align: Align.Center,
             },
           ]
         : []),

@@ -10,7 +10,6 @@ export default function DatatableEditable({
   totalRow = false,
   actions,
   name,
-  className,
   ...tableProps
 }) {
   return (

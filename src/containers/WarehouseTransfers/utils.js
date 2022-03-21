@@ -8,11 +8,6 @@ import { Align, CellType } from 'common';
 import { MoneyFieldCell, Icon, T } from 'components';
 import { InputGroupCell, ItemsListCell } from 'components/DataTableCells';
 
-// Index table cell.
-export function IndexTableCell({ row: { index } }) {
-  return <span>{index + 1}</span>;
-}
-
 /**
  * Actions cell renderer component.
  */
@@ -119,6 +114,7 @@ export const useWarehouseTransferTableColumns = () => {
       {
         Header: intl.get('warehouse_transfer.column.cost_price'),
         accessor: 'cost',
+        Cell: MoneyFieldCell,
         disableSortBy: true,
         align: Align.Right,
         width: 80,
