@@ -59,10 +59,13 @@ export function ExchangeRateMutedField({
 }
 
 const ExchangeRateFormGroup = styled(FormGroup)`
-  .bp3-label {
-    font-size: 12px !important;
-    opacity: 0.7;
-    line-height: 0.5rem;
+  &.bp3-form-group {
+    label.bp3-label {
+      font-size: 12px;
+      opacity: 0.7;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
   }
 `;
 
@@ -72,9 +75,18 @@ const ExchangeRateButton = styled.div`
   font-size: 13px;
   font-weight: 400;
   color: #0d244a;
+  position: relative;
+  padding-right: 28px;
+
+  .bp3-button {
+    position: absolute;
+    right: 0;
+  }
 `;
 
 const ExchangeRateFormGroupContent = styled.div`
+  padding: 5px 0;
+
   .bp3-form-group {
     padding: 2px;
     margin: 2px 4px !important;
