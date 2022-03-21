@@ -1918,5 +1918,12 @@
   "branche.error.warehouse_code_not_unique": "رمز الفرع ليس فريدًا ",
   "branche.error.branch_has_associated_transactions": "لا يمكنك حذف هذا الفرع لأنه لديه معاملات مرتبطة به.",
   "payment_Receive.error.payment_account_currency_invalid":"يجب أن تكون عملة حساب الإيداع هي نفس عملة العميل أو العملة الأساسية للمنشأة.",
-  "payment_made.error.withdrawal_account_currency_invalid":"يجب أن تكون عملة حساب السحب هي نفس عملة المورد أو العملة الأساسية للمنشأة."
+  "payment_made.error.withdrawal_account_currency_invalid":"يجب أن تكون عملة حساب السحب هي نفس عملة المورد أو العملة الأساسية للمنشأة.",
+  "view_customer_details": "عرض تفاصيل العميل ",
+  "view_vendor_details": "عرض تفاصيل المورد ",
+  "thanks_for_your_business_and_have_a_great_day": "Thanks for your business and have a great day!",
+  "terms_and_conditions.placeholder": "Enter the terms and conditions of your business to be displayed in your transaction",
+  "expenses.decscrption.placeholder": "Enter the description of your business to be displayed in your transaction",
+  "make_jorunal.decscrption.placeholder": "Enter the description of your business to be displayed in your transaction"
+
 }

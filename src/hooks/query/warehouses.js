@@ -12,7 +12,7 @@ const commonInvalidateQueries = (queryClient) => {
 
   // Invalidate warehouses transfers.
   queryClient.invalidateQueries(t.WAREHOUSE_TRANSFERS);
-  queryClient.invalidateQueries(t.WAREHOUSE_TRANSFER);
+  // queryClient.invalidateQueries(t.WAREHOUSE_TRANSFER);
 
   queryClient.invalidateQueries(t.DASHBOARD_META);
 };
@@ -155,9 +155,6 @@ export function useDeleteWarehouseTransfer(props) {
 
   return useMutation((id) => apiRequest.delete(`warehouses/transfers/${id}`), {
     onSuccess: (res, id) => {
-      // Invalidate specific warehoue.
-      queryClient.invalidateQueries([t.WAREHOUSE_TRANSFER, id]);
-
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
     },

@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
-import { pick, first } from 'lodash';
+import { pick, first, sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from 'components';
@@ -143,7 +143,10 @@ export const usePaymentMadeTotals = () => {
   } = useFormikContext();
 
   // Retrieves the invoice entries total.
-  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+  const total = React.useMemo(
+    () => sumBy(entries, 'payment_amount'),
+    [entries],
+  );
 
   // Retrieves the formatted total money.
   const formattedTotal = React.useMemo(

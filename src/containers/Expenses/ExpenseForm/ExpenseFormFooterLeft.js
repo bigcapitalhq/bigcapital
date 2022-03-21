@@ -12,9 +12,7 @@ export function ExpenseFormFooterLeft() {
       >
         <FEditableText
           name={'description'}
-          placeholder={
-            'Enter the description of your business to be displayed in your transaction'
-          }
+          placeholder={<T id={'expenses.decscrption.placeholder'} />}
         />
       </DescriptionFormGroup>
     </React.Fragment>

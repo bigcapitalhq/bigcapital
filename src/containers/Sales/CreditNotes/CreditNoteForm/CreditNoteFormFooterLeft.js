@@ -13,7 +13,9 @@ export function CreditNoteFormFooterLeft() {
       >
         <FEditableText
           name={'note'}
-          placeholder={'Thanks for your business and have a great day!'}
+          placeholder={
+            <T id={'thanks_for_your_business_and_have_a_great_day'} />
+          }
         />
       </CreditNoteMsgFormGroup>
       {/* --------- Terms and conditions --------- */}
@@ -23,9 +25,7 @@ export function CreditNoteFormFooterLeft() {
       >
         <FEditableText
           name={'terms_conditions'}
-          placeholder={
-            'Enter the terms and conditions of your business to be displayed in your transaction'
-          }
+          placeholder={<T id={'terms_and_conditions.placeholder'} />}
         />
       </TermsConditsFormGroup>
     </React.Fragment>
