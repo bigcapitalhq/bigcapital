@@ -55,7 +55,6 @@ function BranchesDataTable({
     });
   };
 
-
   return (
     <BranchesTableCard>
       <BranchesTable
@@ -86,5 +85,14 @@ const BranchesTableCard = styled(Card)`
 const BranchesTable = styled(DataTable)`
   .table .tr {
     min-height: 38px;
+
+    .td.td-name {
+      .bp3-icon {
+        margin: 0;
+        margin-left: 2px;
+        vertical-align: top;
+        color: #e1b31d;
+      }
+    }
   }
 `;

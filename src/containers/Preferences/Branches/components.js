@@ -38,6 +38,17 @@ export function ActionsMenu({
 }
 
 /**
+ * Branch name cell.
+ */
+function BranchNameCell({ value, row: { original } }) {
+  return (
+    <span>
+      {value} {original.primary && <Icon icon={'star-18dp'} iconSize={16} />}
+    </span>
+  );
+}
+
+/**
  * Retrieve branches table columns
  * @returns
  */
@@ -48,7 +59,7 @@ export function useBranchesTableColumns() {
         id: 'name',
         Header: intl.get('branches.column.branch_name'),
         accessor: 'name',
-        className: 'name',
+        Cell: BranchNameCell,
         width: '120',
         disableSortBy: true,
         textOverview: true,
@@ -57,7 +68,6 @@ export function useBranchesTableColumns() {
         id: 'code',
         Header: intl.get('branches.column.code'),
         accessor: 'code',
-        className: 'code',
         width: '100',
         disableSortBy: true,
         textOverview: true,
@@ -65,7 +75,6 @@ export function useBranchesTableColumns() {
       {
         Header: intl.get('branches.column.address'),
         accessor: 'address',
-        className: 'address',
         width: '180',
         disableSortBy: true,
         textOverview: true,
@@ -73,7 +82,6 @@ export function useBranchesTableColumns() {
       {
         Header: intl.get('branches.column.phone_number'),
         accessor: 'phone_number',
-        className: 'phone_number',
         width: '120',
         disableSortBy: true,
       },
