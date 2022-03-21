@@ -1,5 +1,4 @@
 import React from 'react';
-import { isEmpty } from 'lodash';
 import WarehousesEmptyStatus from './WarehousesEmptyStatus';
 import { useWarehousesContext } from './WarehousesProvider';
 import { WarehousesList, WarehousesSkeleton } from './components';

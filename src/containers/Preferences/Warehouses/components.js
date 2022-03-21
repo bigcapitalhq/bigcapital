@@ -80,11 +80,14 @@ export function WarehousesGridItemBox({
   country,
   email,
   phoneNumber,
+  primary,
 }) {
   return (
     <WarehouseBoxRoot>
       <WarehouseHeader>
-        <WarehouseTitle>{title}</WarehouseTitle>
+        <WarehouseTitle>
+          {title} {primary && <Icon icon={'star-18dp'} iconSize={16} />}
+        </WarehouseTitle>
         <WarehouseCode>{code}</WarehouseCode>
         <WarehouseIcon>
           <Icon icon="warehouse-16" iconSize={20} />
@@ -145,6 +148,13 @@ export const WarehouseTitle = styled.div`
   white-space: nowrap;
   font-weight: 500;
   line-height: 1;
+
+  .bp3-icon {
+    margin: 0;
+    margin-left: 2px;
+    vertical-align: top;
+    color: #e1b31d;
+  }
 `;
 
 const WarehouseCode = styled.div`

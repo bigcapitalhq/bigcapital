@@ -62,6 +62,7 @@ function WarehouseGridItem({
         country={warehouse.country}
         email={warehouse.email}
         phoneNumber={warehouse.phone_number}
+        primary={warehouse.primary}
       />
     </ContextMenu2>
   );
