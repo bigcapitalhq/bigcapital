@@ -12,9 +12,7 @@ export function MakeJournalFormFooterLeft() {
       >
         <FEditableText
           name={'description'}
-          placeholder={
-            'Enter the description of your business to be displayed in your transaction'
-          }
+          placeholder={<T id={'make_jorunal.decscrption.placeholder'} />}
         />
       </DescriptionFormGroup>
     </React.Fragment>

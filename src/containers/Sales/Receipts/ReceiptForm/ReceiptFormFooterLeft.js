@@ -13,7 +13,9 @@ export function ReceiptFormFooterLeft() {
       >
         <FEditableText
           name={'receipt_message'}
-          placeholder={'Thanks for your business and have a great day!'}
+          placeholder={
+            <T id={'thanks_for_your_business_and_have_a_great_day'} />
+          }
         />
       </ReceiptMsgFormGroup>
 

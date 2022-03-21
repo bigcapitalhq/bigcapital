@@ -66,7 +66,7 @@ function WarehouseTransfersActionsBar({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('warehouseTransfer', 'tableSize', size);
+    addSetting('warehouseTransfers', 'tableSize', size);
   };
 
   return (
