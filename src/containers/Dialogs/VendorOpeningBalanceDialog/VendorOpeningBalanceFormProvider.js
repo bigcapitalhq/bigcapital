@@ -7,7 +7,7 @@ import {
 } from 'hooks/query';
 import { useFeatureCan } from 'hooks/state';
 import { Features } from 'common';
-import { pick, defaultTo } from 'lodash';
+import { transfromVendorToForm } from './utils';
 
 const VendorOpeningBalanceContext = React.createContext();
 
@@ -43,15 +43,7 @@ function VendorOpeningBalanceFormProvider({
   // State provider.
   const provider = {
     branches,
-    vendor: {
-      ...pick(vendor, [
-        'id',
-        'opening_balance',
-        'opening_balance_exchange_rate',
-        'currency_code',
-      ]),
-    },
-
+    vendor: transfromVendorToForm(vendor),
     isBranchesSuccess,
     isBranchesLoading,
     dialogName,

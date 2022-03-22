@@ -7,7 +7,7 @@ import {
 } from 'hooks/query';
 import { useFeatureCan } from 'hooks/state';
 import { Features } from 'common';
-import { pick } from 'lodash';
+import { transfromCustomertoForm } from './utils';
 
 const CustomerOpeningBalanceContext = React.createContext();
 
@@ -44,15 +44,7 @@ function CustomerOpeningBalanceFormProvider({
   // State provider.
   const provider = {
     branches,
-    customer: {
-      ...pick(customer, [
-        'id',
-        'opening_balance',
-        'opening_balance_exchange_rate',
-        'currency_code',
-      ]),
-      // opening_balance_at: customer.formatted_opening_balance_at,
-    },
+    customer: transfromCustomertoForm(customer),
 
     isBranchesSuccess,
     isBranchesLoading,

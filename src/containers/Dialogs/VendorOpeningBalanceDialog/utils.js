@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
-import { first } from 'lodash';
+import { first, pick } from 'lodash';
 
 import { useVendorOpeningBalanceContext } from './VendorOpeningBalanceFormProvider';
 
@@ -18,3 +18,14 @@ export const useSetPrimaryBranchToForm = () => {
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
 };
+
+export function transfromVendorToForm(values) {
+  return {
+    ...pick(values, [
+      'id',
+      'opening_balance',
+      'opening_balance_exchange_rate',
+      'currency_code',
+    ]),
+  };
+}
