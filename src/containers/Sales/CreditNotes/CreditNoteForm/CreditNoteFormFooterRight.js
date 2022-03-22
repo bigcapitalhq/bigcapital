@@ -15,14 +15,13 @@ export function CreditNoteFormFooterRight() {
   return (
     <CreditNoteTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
       <TotalLine
-        title={<T id={'credit_note.drawer.label_subtotal'} />}
+        title={<T id={'credit_note.label_subtotal'} />}
         value={formattedSubtotal}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
-        title={<T id={'credit_note.drawer.label_total'} />}
+        title={<T id={'credit_note.label_total'} />}
         value={formattedTotal}
-        // borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />
     </CreditNoteTotalLines>

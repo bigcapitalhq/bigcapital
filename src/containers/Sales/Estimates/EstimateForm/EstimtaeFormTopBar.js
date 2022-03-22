@@ -95,7 +95,7 @@ function EstimateFormSelectWarehouse() {
 function EstimateWarehouseSelectButton({ label }) {
   return (
     <Button
-      text={intl.get('invoice.warehouse_button.label', { label })}
+      text={intl.get('estimate.warehouse_button.label', { label })}
       minimal={true}
       small={true}
       icon={<Icon icon={'warehouse-16'} iconSize={16} />}
@@ -106,7 +106,7 @@ function EstimateWarehouseSelectButton({ label }) {
 function EstimateBranchSelectButton({ label }) {
   return (
     <Button
-      text={intl.get('invoice.branch_button.label', { label })}
+      text={intl.get('estimate.branch_button.label', { label })}
       minimal={true}
       small={true}
       icon={<Icon icon={'branch-16'} iconSize={16} />}

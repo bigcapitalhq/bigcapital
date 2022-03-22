@@ -15,14 +15,13 @@ export function PaymentReceiveFormFootetRight() {
   return (
     <PaymentReceiveTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
       <TotalLine
-        title={<T id={'estimate.details.subtotal'} />}
+        title={<T id={'payment_receive_form.label.subtotal'} />}
         value={formattedSubtotal}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
-        title={<T id={'estimate.details.total'} />}
+        title={<T id={'payment_receive_form.label.total'} />}
         value={formattedTotal}
-        // borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />
     </PaymentReceiveTotalLines>

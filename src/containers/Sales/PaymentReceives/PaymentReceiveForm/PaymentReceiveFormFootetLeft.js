@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FFormGroup, FEditableText, FormattedMessage as T } from 'components';
 
@@ -8,14 +9,12 @@ export function PaymentReceiveFormFootetLeft() {
       {/* --------- Statement--------- */}
       <TermsConditsFormGroup
         name={'statement'}
-        label={<T id={'statement'} />}
+        label={<T id={'payment_receive_form.label.statement'} />}
         hintText={'Will be displayed on the Payment'}
       >
         <FEditableText
           name={'statement'}
-          placeholder={
-            <T id={'thanks_for_your_business_and_have_a_great_day'} />
-          }
+          placeholder={intl.get('payment_receive_form.statement.placeholder')}
         />
       </TermsConditsFormGroup>
     </React.Fragment>

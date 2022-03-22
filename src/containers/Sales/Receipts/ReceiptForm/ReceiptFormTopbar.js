@@ -104,7 +104,7 @@ function ReceiptFormSelectWarehouse() {
 function ReceiptBranchSelectButton({ label }) {
   return (
     <Button
-      text={intl.get('invoice.branch_button.label', { label })}
+      text={intl.get('receipt.branch_button.label', { label })}
       minimal={true}
       small={true}
       icon={<Icon icon={'branch-16'} iconSize={16} />}
@@ -115,7 +115,7 @@ function ReceiptBranchSelectButton({ label }) {
 function ReceiptWarehouseSelectButton({ label }) {
   return (
     <Button
-      text={intl.get('invoice.warehouse_button.label', { label })}
+      text={intl.get('receipt.warehouse_button.label', { label })}
       minimal={true}
       small={true}
       icon={<Icon icon={'warehouse-16'} iconSize={16} />}

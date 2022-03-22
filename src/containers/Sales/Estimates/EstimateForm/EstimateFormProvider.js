@@ -21,7 +21,7 @@ const EstimateFormContext = createContext();
 /**
  * Estimate form provider.
  */
-function EstimateFormProvider({ query, estimateId, baseCurrency, ...props }) {
+function EstimateFormProvider({ query, estimateId, ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
@@ -69,7 +69,6 @@ function EstimateFormProvider({ query, estimateId, baseCurrency, ...props }) {
 
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = React.useState({});
-  const [selectCustomer, setSelectCustomer] = React.useState(null);
 
   // Create and edit estimate form.
   const { mutateAsync: createEstimateMutate } = useCreateEstimate();
@@ -79,11 +78,6 @@ function EstimateFormProvider({ query, estimateId, baseCurrency, ...props }) {
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
-
-  // Determines whether the foreign customer.
-  const isForeignCustomer =
-    !isEqual(selectCustomer?.currency_code, baseCurrency) &&
-    !isUndefined(selectCustomer?.currency_code);
 
   // Provider payload.
   const provider = {
@@ -104,12 +98,8 @@ function EstimateFormProvider({ query, estimateId, baseCurrency, ...props }) {
     isFeatureLoading,
     isBranchesSuccess,
     isWarehousesSuccess,
-    isForeignCustomer,
     submitPayload,
     setSubmitPayload,
-    selectCustomer,
-    setSelectCustomer,
-    baseCurrency,
 
     createEstimateMutate,
     editEstimateMutate,

@@ -59,7 +59,7 @@ function PaymentReceiveFormSelectBranch() {
 function PaymentReceiveBranchSelectButton({ label }) {
   return (
     <Button
-      text={intl.get('invoice.branch_button.label', { label })}
+      text={intl.get('payment_receive.branch_button.label', { label })}
       minimal={true}
       small={true}
       icon={<Icon icon={'branch-16'} iconSize={16} />}

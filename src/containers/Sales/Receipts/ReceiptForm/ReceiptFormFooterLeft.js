@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FFormGroup, FEditableText, FormattedMessage as T } from 'components';
 
@@ -8,24 +9,23 @@ export function ReceiptFormFooterLeft() {
       {/* --------- Receipt message --------- */}
       <ReceiptMsgFormGroup
         name={'receipt_message'}
-        label={<T id={'receipt_message'} />}
+        label={<T id={'receipt_form.label.receipt_message'} />}
         hintText={'Will be displayed on the Receipt'}
       >
         <FEditableText
           name={'receipt_message'}
-          placeholder={
-            <T id={'thanks_for_your_business_and_have_a_great_day'} />
-          }
+          placeholder={intl.get('receipt_form.receipt_message.placeholder')}
         />
       </ReceiptMsgFormGroup>
 
       {/* --------- Statement--------- */}
-      <StatementFormGroup label={<T id={'statement'} />} name={'statement'}>
+      <StatementFormGroup
+        label={<T id={'receipt_form.label.statement'} />}
+        name={'statement'}
+      >
         <FEditableText
           name={'statement'}
-          placeholder={
-            'Enter the terms and conditions of your business to be displayed in your transaction'
-          }
+          placeholder={intl.get('receipt_form.statement.placeholder')}
         />
       </StatementFormGroup>
     </React.Fragment>

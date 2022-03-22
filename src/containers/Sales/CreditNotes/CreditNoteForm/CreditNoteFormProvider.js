@@ -23,7 +23,7 @@ const CreditNoteFormContext = React.createContext();
 /**
  * Credit note data provider.
  */
-function CreditNoteFormProvider({ creditNoteId, baseCurrency, ...props }) {
+function CreditNoteFormProvider({ creditNoteId, ...props }) {
   const { state } = useLocation();
   const invoiceId = state?.invoiceId;
 
@@ -82,8 +82,6 @@ function CreditNoteFormProvider({ creditNoteId, baseCurrency, ...props }) {
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = React.useState();
 
-  const [selectCustomer, setSelectCustomer] = React.useState(null);
-
   // Determines whether the form in new mode.
   const isNewMode = !creditNoteId;
 
@@ -96,10 +94,6 @@ function CreditNoteFormProvider({ creditNoteId, baseCurrency, ...props }) {
       })
     : [];
 
-  // Determines whether the foreign customer.
-  const isForeignCustomer =
-    !isEqual(selectCustomer?.currency_code, baseCurrency) &&
-    !isUndefined(selectCustomer?.currency_code);
 
   // Provider payload.
   const provider = {
@@ -108,13 +102,9 @@ function CreditNoteFormProvider({ creditNoteId, baseCurrency, ...props }) {
     creditNote,
     branches,
     warehouses,
-    submitPayload,
-    baseCurrency,
-    selectCustomer,
-    setSelectCustomer,
+    submitPayload, 
     isNewMode,
     newCreditNote,
-    isForeignCustomer,
 
     isItemsLoading,
     isCustomersLoading,

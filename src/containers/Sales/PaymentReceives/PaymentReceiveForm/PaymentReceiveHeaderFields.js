@@ -138,24 +138,23 @@ function PaymentReceiveHeaderFields({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_id'} />}
           >
-            <ControlCustomerGroup>
-              <CustomerSelectField
-                contacts={customers}
-                selectedContactId={value}
-                defaultSelectText={<T id={'select_customer_account'} />}
-                onContactSelected={(customer) => {
-                  form.setFieldValue('customer_id', customer.id);
-                  form.setFieldValue('full_amount', '');
-                  form.setFieldValue('currency_code', customer?.currency_code);
-                }}
-                popoverFill={true}
-                disabled={!isNewMode}
-                buttonProps={{
-                  elementRef: (ref) => (customerFieldRef.current = ref),
-                }}
-                allowCreate={true}
-              />
-            </ControlCustomerGroup>
+            <CustomerSelectField
+              contacts={customers}
+              selectedContactId={value}
+              defaultSelectText={<T id={'select_customer_account'} />}
+              onContactSelected={(customer) => {
+                form.setFieldValue('customer_id', customer.id);
+                form.setFieldValue('full_amount', '');
+                form.setFieldValue('currency_code', customer?.currency_code);
+              }}
+              popoverFill={true}
+              disabled={!isNewMode}
+              buttonProps={{
+                elementRef: (ref) => (customerFieldRef.current = ref),
+              }}
+              allowCreate={true}
+            />
+
             {value && (
               <CustomerButtonLink customerId={value}>
                 <T id={'view_customer_details'} />
@@ -345,12 +344,6 @@ export default compose(
   withDialogActions,
   withCurrentOrganization(),
 )(PaymentReceiveHeaderFields);
-
-const ControlCustomerGroup = styled(ControlGroup)`
-  display: flex;
-  align-items: center;
-  transform: none;
-`;
 
 const CustomerButtonLink = styled(CustomerDrawerLink)`
   font-size: 11px;

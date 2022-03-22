@@ -5,23 +5,17 @@ import 'style/pages/SaleInvoice/PageForm.scss';
 
 import InvoiceForm from './InvoiceForm';
 import { InvoiceFormProvider } from './InvoiceFormProvider';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
-import { compose } from 'utils';
 
 /**
  * Invoice form page.
  */
-function InvoiceFormPage({
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
+export default function InvoiceFormPage() {
   const { id } = useParams();
   const idAsInteger = parseInt(id, 10);
 
   return (
-    <InvoiceFormProvider invoiceId={idAsInteger} baseCurrency={base_currency}>
+    <InvoiceFormProvider invoiceId={idAsInteger}>
       <InvoiceForm />
     </InvoiceFormProvider>
   );
 }
-export default compose(withCurrentOrganization())(InvoiceFormPage);

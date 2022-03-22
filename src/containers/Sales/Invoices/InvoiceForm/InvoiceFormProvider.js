@@ -85,16 +85,12 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
 
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = useState();
-  const [selectCustomer, setSelectCustomer] = useState(null);
 
   // Detarmines whether the form in new mode.
   const isNewMode = !invoiceId;
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
-
-  // Determines whether the foreign customer.
-  const isForeignCustomer = true;
 
   const provider = {
     invoice,
@@ -104,8 +100,6 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     estimateId,
     invoiceId,
     submitPayload,
-    selectCustomer,
-    baseCurrency,
     branches,
     warehouses,
 
@@ -116,14 +110,12 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     isWarehouesLoading,
     isBranchesLoading,
     isFeatureLoading,
-    isForeignCustomer,
     isBranchesSuccess,
     isWarehousesSuccess,
 
     createInvoiceMutate,
     editInvoiceMutate,
     setSubmitPayload,
-    setSelectCustomer,
     isNewMode,
   };
 

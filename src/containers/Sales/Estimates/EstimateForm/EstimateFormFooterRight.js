@@ -10,20 +10,18 @@ import {
 import { useEstimateTotals } from './utils';
 
 export function EstimateFormFooterRight() {
-  
   const { formattedSubtotal, formattedTotal } = useEstimateTotals();
 
   return (
     <EstimateTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
       <TotalLine
-        title={<T id={'estimate.details.subtotal'} />}
+        title={<T id={'estimate_form.label.subtotal'} />}
         value={formattedSubtotal}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
-        title={<T id={'estimate.details.total'} />}
+        title={<T id={'estimate_form.label.total'} />}
         value={formattedTotal}
-        // borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />
     </EstimateTotalLines>

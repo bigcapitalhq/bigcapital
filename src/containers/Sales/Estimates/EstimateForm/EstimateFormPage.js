@@ -5,23 +5,17 @@ import 'style/pages/SaleEstimate/PageForm.scss';
 
 import EstimateForm from './EstimateForm';
 import { EstimateFormProvider } from './EstimateFormProvider';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
-import { compose } from 'utils';
 
 /**
  * Estimate form page.
  */
-function EstimateFormPage({
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
+export default function EstimateFormPage() {
   const { id } = useParams();
   const idInteger = parseInt(id, 10);
 
   return (
-    <EstimateFormProvider estimateId={idInteger} baseCurrency={base_currency}>
+    <EstimateFormProvider estimateId={idInteger}>
       <EstimateForm />
     </EstimateFormProvider>
   );
 }
-export default compose(withCurrentOrganization())(EstimateFormPage);
