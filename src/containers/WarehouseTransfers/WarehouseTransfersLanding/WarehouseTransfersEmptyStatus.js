@@ -2,15 +2,19 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Intent } from '@blueprintjs/core';
 import { EmptyStatus } from 'components';
-import { Can, FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from 'components';
 
 export default function WarehouseTransfersEmptyStatus() {
   const history = useHistory();
 
   return (
     <EmptyStatus
-      title={<T id={'the_organization_doesn_t_receive_money_yet'} />}
-      description={<p></p>}
+      title={<T id={'warehouse_transfer.empty_status.title'} />}
+      description={
+        <p>
+          <T id={'warehouse_transfer.empty_status.description'} />
+        </p>
+      }
       action={
         <>
           <Button

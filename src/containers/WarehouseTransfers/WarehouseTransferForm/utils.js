@@ -36,8 +36,8 @@ export const MIN_LINES_NUMBER = 1;
 export const defaultWarehouseTransferEntry = {
   index: 0,
   item_id: '',
-  source_warehouse: '100',
-  destination_warehouse: '0',
+  source_warehouse: '',
+  destination_warehouse: '',
   description: '',
   quantity: '',
 };

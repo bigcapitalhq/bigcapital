@@ -1,24 +1,14 @@
 import React from 'react';
-import {
-  Intent,
-  Tag,
-  Menu,
-  MenuItem,
-  MenuDivider,
-  ProgressBar,
-} from '@blueprintjs/core';
+import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import clsx from 'classnames';
-import { CLASSES } from '../../../common/classes';
+
 import { safeCallback } from 'utils';
 import {
   FormatDateCell,
   FormattedMessage as T,
-  AppToaster,
   Choose,
   If,
   Icon,
-  Can,
 } from 'components';
 
 export function ActionsMenu({
@@ -146,14 +136,6 @@ export function useWarehouseTransfersTableColumns() {
         className: 'status',
         clickable: true,
       },
-      // {
-      //   id: 'created_at',
-      //   Header: intl.get('created_at'),
-      //   accessor: 'created_at',
-      //   Cell: FormatDateCell,
-      //   width: 120,
-      //   clickable: true,
-      // },
     ],
     [],
   );

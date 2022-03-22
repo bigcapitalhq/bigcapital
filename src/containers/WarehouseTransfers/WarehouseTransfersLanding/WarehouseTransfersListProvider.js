@@ -25,28 +25,18 @@ function WarehouseTransfersListProvider({
   // warehouse transfers refresh action.
   const { refresh } = useRefreshWarehouseTransfers();
 
-  // Features guard.
-  const { featureCan } = useFeatureCan();
-
-  const isWarehouseFeatureCan = featureCan(Features.Warehouses);
-
   // Fetch warehouse transfers list according to the given custom view id.
   const {
     data: { warehousesTransfers, pagination, filterMeta },
     isFetching: isWarehouseTransfersFetching,
     isLoading: isWarehouseTransfersLoading,
-  } = useWarehousesTransfers(
-    query,
-    // { keepPreviousData: true },
-    { enabled: isWarehouseFeatureCan },
-  );
+  } = useWarehousesTransfers(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    (isEmpty(warehousesTransfers) &&
-      !tableStateChanged &&
-      !isWarehouseTransfersLoading) ||
-    !isWarehouseFeatureCan;
+    isEmpty(warehousesTransfers) &&
+    !tableStateChanged &&
+    !isWarehouseTransfersLoading;
 
   // Fetch create notes resource views and fields.
   const { data: WarehouseTransferView, isLoading: isViewsLoading } =
