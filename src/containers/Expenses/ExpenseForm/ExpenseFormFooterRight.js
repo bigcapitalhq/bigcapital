@@ -15,14 +15,13 @@ export function ExpenseFormFooterRight() {
   return (
     <ExpensesTotalLines>
       <TotalLine
-        title={<T id={'manual_journal.details.subtotal'} />}
+        title={<T id={'expense.label.subtotal'} />}
         value={formattedSubtotal}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
-        title={<T id={'manual_journal.details.total'} />}
+        title={<T id={'expense.label.total'} />}
         value={formattedTotal}
-        // borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />
     </ExpensesTotalLines>

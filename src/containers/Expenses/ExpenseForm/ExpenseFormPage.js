@@ -5,22 +5,17 @@ import 'style/pages/Expense/PageForm.scss';
 
 import ExpenseForm from './ExpenseForm';
 import { ExpenseFormPageProvider } from './ExpenseFormPageProvider';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
-import { compose } from 'utils';
+
 /**
  * Expense page form.
  */
-function ExpenseFormPage({
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
+export default function ExpenseFormPage() {
   const { id } = useParams();
   const expenseId = parseInt(id, 10);
 
   return (
-    <ExpenseFormPageProvider expenseId={expenseId} baseCurrency={base_currency}>
+    <ExpenseFormPageProvider expenseId={expenseId}>
       <ExpenseForm />
     </ExpenseFormPageProvider>
   );
 }
-export default compose(withCurrentOrganization())(ExpenseFormPage);

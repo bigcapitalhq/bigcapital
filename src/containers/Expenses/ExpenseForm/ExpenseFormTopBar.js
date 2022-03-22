@@ -59,7 +59,7 @@ function ExpenseFormSelectBranch() {
 function ExpenseBranchSelectButton({ label }) {
   return (
     <Button
-      text={intl.get('invoice.branch_button.label', { label })}
+      text={intl.get('expense.branch_button.label', { label })}
       minimal={true}
       small={true}
       icon={<Icon icon={'branch-16'} iconSize={16} />}

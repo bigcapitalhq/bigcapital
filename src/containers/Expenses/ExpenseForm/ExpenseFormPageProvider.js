@@ -1,5 +1,4 @@
 import React, { createContext } from 'react';
-import { isEqual, isUndefined } from 'lodash';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { Features } from 'common';
 import { useFeatureCan } from 'hooks/state';
@@ -18,7 +17,7 @@ const ExpenseFormPageContext = createContext();
 /**
  * Accounts chart data provider.
  */
-function ExpenseFormPageProvider({ query, expenseId, baseCurrency, ...props }) {
+function ExpenseFormPageProvider({ query, expenseId, ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
@@ -52,23 +51,15 @@ function ExpenseFormPageProvider({ query, expenseId, baseCurrency, ...props }) {
 
   // Submit form payload.
   const [submitPayload, setSubmitPayload] = React.useState({});
-  const [selectCustomer, setSelectCustomer] = React.useState(null);
 
   // Detarmines whether the form in new mode.
   const isNewMode = !expenseId;
 
-  // Determines whether the foreign customer.
-  const isForeignCustomer =
-    !isEqual(selectCustomer?.currency_code, baseCurrency) &&
-    !isUndefined(selectCustomer?.currency_code);
-
   // Provider payload.
   const provider = {
     isNewMode,
-    isForeignCustomer,
     expenseId,
     submitPayload,
-    selectCustomer,
 
     currencies,
     customers,
@@ -85,7 +76,6 @@ function ExpenseFormPageProvider({ query, expenseId, baseCurrency, ...props }) {
     createExpenseMutate,
     editExpenseMutate,
     setSubmitPayload,
-    setSelectCustomer,
   };
 
   return (
