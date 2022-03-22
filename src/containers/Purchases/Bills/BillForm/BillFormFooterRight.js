@@ -21,23 +21,23 @@ export function BillFormFooterRight() {
   return (
     <BillTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
       <TotalLine
-        title={<T id={'bill.details.subtotal'} />}
+        title={<T id={'bill_form.label.subtotal'} />}
         value={formattedSubtotal}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
-        title={<T id={'bill.details.total'} />}
+        title={<T id={'bill_form.label.total'} />}
         value={formattedTotal}
         borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />
       <TotalLine
-        title={<T id={'bill.details.payment_amount'} />}
+        title={<T id={'bill_form.label.total'} />}
         value={formattedPaymentTotal}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
-        title={<T id={'bill.details.due_amount'} />}
+        title={<T id={'bill_form.label.total'} />}
         value={formattedDueTotal}
         textStyle={TotalLineTextStyle.Bold}
       />

@@ -38,7 +38,7 @@ const stringifiedFilterRoles = JSON.stringify([
 /**
  * Bill form provider.
  */
-function BillFormProvider({ billId, baseCurrency, ...props }) {
+function BillFormProvider({ billId, ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
@@ -86,7 +86,6 @@ function BillFormProvider({ billId, baseCurrency, ...props }) {
 
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = useState({});
-  const [selectVendor, setSelectVendor] = React.useState(null);
 
   // Create and edit bills mutations.
   const { mutateAsync: createBillMutate } = useCreateBill();
@@ -97,11 +96,6 @@ function BillFormProvider({ billId, baseCurrency, ...props }) {
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
 
-  // Determines whether the foreign vendor.
-  const isForeignVendor =
-    !isEqual(selectVendor?.currency_code, baseCurrency) &&
-    !isUndefined(selectVendor?.currency_code);
-
   const provider = {
     accounts,
     vendors,
@@ -109,9 +103,6 @@ function BillFormProvider({ billId, baseCurrency, ...props }) {
     bill,
     warehouses,
     branches,
-    baseCurrency,
-    selectVendor,
-    setSelectVendor,
     submitPayload,
     isNewMode,
 
@@ -123,7 +114,6 @@ function BillFormProvider({ billId, baseCurrency, ...props }) {
     isFeatureLoading,
     isBranchesSuccess,
     isWarehousesSuccess,
-    isForeignVendor,
 
     createBillMutate,
     editBillMutate,

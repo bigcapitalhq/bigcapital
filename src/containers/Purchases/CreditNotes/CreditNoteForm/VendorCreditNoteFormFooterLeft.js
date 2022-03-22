@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FFormGroup, FEditableText, FormattedMessage as T } from 'components';
 
@@ -6,12 +7,13 @@ export function VendorCreditNoteFormFooterLeft() {
   return (
     <React.Fragment>
       {/* --------- Terms and conditions --------- */}
-      <TermsConditsFormGroup label={<T id={'note'} />} name={'note'}>
+      <TermsConditsFormGroup
+        label={<T id={'vendor_credit_form.label.note'} />}
+        name={'note'}
+      >
         <FEditableText
           name={'note'}
-          placeholder={
-            'Enter the terms and conditions of your business to be displayed in your transaction'
-          }
+          placeholder={intl.get('vendor_credit_form.note.placeholder')}
         />
       </TermsConditsFormGroup>
     </React.Fragment>

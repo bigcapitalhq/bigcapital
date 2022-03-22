@@ -54,15 +54,8 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
   } = useFormikContext();
 
   // Payment made form context.
-  const {
-    vendors,
-    accounts,
-    isNewMode,
-    setPaymentVendorId,
-    isForeignVendor,
-    baseCurrency,
-    selectVendor,
-  } = usePaymentMadeFormContext();
+  const { vendors, accounts, isNewMode, setPaymentVendorId } =
+    usePaymentMadeFormContext();
 
   // Sumation of payable full-amount.
   const payableFullAmount = useMemo(
@@ -101,21 +94,20 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
             className={classNames('form-group--select-list', Classes.FILL)}
             labelInfo={<FieldRequiredHint />}
           >
-            <ControlVendorGroup>
-              <VendorSelectField
-                contacts={vendors}
-                selectedContactId={value}
-                defaultSelectText={<T id={'select_vender_account'} />}
-                onContactSelected={(contact) => {
-                  form.setFieldValue('vendor_id', contact.id);
-                  form.setFieldValue('currency_code', contact?.currency_code);
-                  setPaymentVendorId(contact.id);
-                }}
-                disabled={!isNewMode}
-                popoverFill={true}
-                allowCreate={true}
-              />
-            </ControlVendorGroup>
+            <VendorSelectField
+              contacts={vendors}
+              selectedContactId={value}
+              defaultSelectText={<T id={'select_vender_account'} />}
+              onContactSelected={(contact) => {
+                form.setFieldValue('vendor_id', contact.id);
+                form.setFieldValue('currency_code', contact?.currency_code);
+                setPaymentVendorId(contact.id);
+              }}
+              disabled={!isNewMode}
+              popoverFill={true}
+              allowCreate={true}
+            />
+
             {value && (
               <VendorButtonLink vendorId={value}>
                 <T id={'view_vendor_details'} />
@@ -277,12 +269,6 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
 }
 
 export default compose(withCurrentOrganization())(PaymentMadeFormHeaderFields);
-
-const ControlVendorGroup = styled(ControlGroup)`
-  display: flex;
-  align-items: center;
-  transform: none;
-`;
 
 const VendorButtonLink = styled(VendorDrawerLink)`
   font-size: 11px;

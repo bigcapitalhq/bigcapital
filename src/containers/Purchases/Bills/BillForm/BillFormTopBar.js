@@ -94,7 +94,7 @@ function BillFormSelectWarehouse() {
 function BillWarehouseSelectButton({ label }) {
   return (
     <Button
-      text={intl.get('invoice.warehouse_button.label', { label })}
+      text={intl.get('bill.warehouse_button.label', { label })}
       minimal={true}
       small={true}
       icon={<Icon icon={'warehouse-16'} iconSize={16} />}
@@ -105,7 +105,7 @@ function BillWarehouseSelectButton({ label }) {
 function BillBranchSelectButton({ label }) {
   return (
     <Button
-      text={intl.get('invoice.branch_button.label', { label })}
+      text={intl.get('bill.branch_button.label', { label })}
       minimal={true}
       small={true}
       icon={<Icon icon={'branch-16'} iconSize={16} />}

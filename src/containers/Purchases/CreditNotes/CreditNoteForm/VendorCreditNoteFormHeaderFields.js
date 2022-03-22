@@ -93,19 +93,18 @@ function VendorCreditNoteFormHeaderFields({
             className={classNames(CLASSES.FILL, 'form-group--vendor')}
             labelInfo={<FieldRequiredHint />}
           >
-            <ControlVendorGroup>
-              <VendorSelectField
-                contacts={vendors}
-                selectedContactId={value}
-                defaultSelectText={<T id={'select_vender_account'} />}
-                onContactSelected={(contact) => {
-                  form.setFieldValue('vendor_id', contact.id);
-                  form.setFieldValue('currency_code', contact?.currency_code);
-                }}
-                popoverFill={true}
-                allowCreate={true}
-              />
-            </ControlVendorGroup>
+            <VendorSelectField
+              contacts={vendors}
+              selectedContactId={value}
+              defaultSelectText={<T id={'select_vender_account'} />}
+              onContactSelected={(contact) => {
+                form.setFieldValue('vendor_id', contact.id);
+                form.setFieldValue('currency_code', contact?.currency_code);
+              }}
+              popoverFill={true}
+              allowCreate={true}
+            />
+
             {value && (
               <VendorButtonLink vendorId={value}>
                 <T id={'view_vendor_details'} />
@@ -213,12 +212,6 @@ export default compose(
     vendorcreditNumberPrefix: vendorsCreditNoteSetting?.numberPrefix,
   })),
 )(VendorCreditNoteFormHeaderFields);
-
-const ControlVendorGroup = styled(ControlGroup)`
-  display: flex;
-  align-items: center;
-  transform: none;
-`;
 
 const VendorButtonLink = styled(VendorDrawerLink)`
   font-size: 11px;
