@@ -25,7 +25,7 @@ function CustomerOpeningBalanceDialog({
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}
-      className={'dialog--customer-opening-balance'}
+      style={{ maxWidth: '400px' }}
     >
       <DialogSuspense>
         <CustomerOpeningBalanceDialogContent

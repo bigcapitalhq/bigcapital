@@ -25,7 +25,7 @@ function VendorOpeningBalanceDialog({
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}
-      className={'dialog--vendor-opening-balance'}
+      style={{ maxWidth: '400px' }}
     >
       <DialogSuspense>
         <VendorOpeningBalanceDialogContent

@@ -1,7 +1,5 @@
 import React from 'react';
 
-import 'style/pages/VendorOpeningBalance/VendorOpeningBalance.scss';
-
 import VendorOpeningBalanceForm from './VendorOpeningBalanceForm';
 import { VendorOpeningBalanceFormProvider } from './VendorOpeningBalanceFormProvider';
 
