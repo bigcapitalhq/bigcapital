@@ -20,7 +20,7 @@ const MakeJournalFormContext = createContext();
 /**
  * Make journal form provider.
  */
-function MakeJournalProvider({ journalId, query, baseCurrency, ...props }) {
+function MakeJournalProvider({ journalId, query, ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
@@ -58,21 +58,16 @@ function MakeJournalProvider({ journalId, query, baseCurrency, ...props }) {
 
   // Submit form payload.
   const [submitPayload, setSubmitPayload] = useState({});
-  const [selectJournalCurrency, setSelactJournalCurrency] = useState(null);
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading = isBranchesLoading;
-
-  const isForeignJournal =
-    !isEqual(selectJournalCurrency?.currency_code, baseCurrency) &&
-    !isUndefined(selectJournalCurrency?.currency_code);
 
   const provider = {
     accounts,
     contacts,
     currencies,
     manualJournal,
-    baseCurrency,
+
     branches,
 
     createJournalMutate,
@@ -84,14 +79,11 @@ function MakeJournalProvider({ journalId, query, baseCurrency, ...props }) {
     isJournalLoading,
     isFeatureLoading,
     isSettingsLoading,
-    isForeignJournal,
     isBranchesSuccess,
     isNewMode: !journalId,
 
     submitPayload,
     setSubmitPayload,
-    selectJournalCurrency,
-    setSelactJournalCurrency,
   };
 
   return (

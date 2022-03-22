@@ -15,14 +15,13 @@ export function MakeJournalFormFooterRight() {
   return (
     <MakeJouranlTotalLines>
       <TotalLine
-        title={<T id={'manual_journal.details.subtotal'} />}
+        title={<T id={'make_journal.label.subtotal'} />}
         value={formattedSubtotal}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
-        title={<T id={'manual_journal.details.total'} />}
+        title={<T id={'make_journal.label.total'} />}
         value={formattedTotal}
-        // borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />
     </MakeJouranlTotalLines>
