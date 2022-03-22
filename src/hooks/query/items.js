@@ -256,7 +256,7 @@ export function useItemWarehouseLocation(id, props) {
  */
 export function useItemInventoryCost(query, props) {
   return useRequestQuery(
-    ['ITEM_INVENTORY_COST', query],
+    [t.ITEM_INVENTORY_COST, query],
     {
       method: 'get',
       url: `inventory/items-cost`,
