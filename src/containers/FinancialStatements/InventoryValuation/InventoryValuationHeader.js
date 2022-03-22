@@ -86,7 +86,7 @@ function InventoryValuationHeader({
             />
             <Tab
               id="dimensions"
-              title={'Dimensions'}
+              title={<T id={'dimensions'} />}
               panel={<InventoryValuationHeaderDimensionsPanel />}
             />
           </Tabs>

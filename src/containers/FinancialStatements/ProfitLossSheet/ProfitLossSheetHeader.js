@@ -77,7 +77,7 @@ function ProfitLossHeader({
             />
             <Tab
               id="dimensions"
-              title={'Dimensions'}
+              title={<T id={'profit_loss_sheet.dimensions'} />}
               panel={<ProfitLossSheetHeaderDimensionsPanel />}
             />
           </Tabs>

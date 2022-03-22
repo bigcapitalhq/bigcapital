@@ -86,7 +86,7 @@ function InventoryItemDetailsHeader({
             />
             <Tab
               id="dimensions"
-              title={'Dimensions'}
+              title={<T id={'dimensions'} />}
               panel={<InventoryItemDetailsHeaderDimensionsPanel />}
             />
           </Tabs>

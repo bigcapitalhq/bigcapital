@@ -96,7 +96,7 @@ function ARAgingSummaryHeader({
             />
             <Tab
               id="dimensions"
-              title={'Dimensions'}
+              title={<T id={'dimensions'} />}
               panel={<ARAgingSummaryHeaderDimensions />}
             />
           </Tabs>
