@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import moment from 'moment';
 
 import { FinancialStatement, DashboardPageContent } from 'components';
@@ -12,7 +12,7 @@ import { JournalBody } from './JournalBody';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withJournalActions from './withJournalActions';
 
-import { getDefaultJournalQuery } from './utils';
+import { useJournalQuery } from './utils';
 import { compose } from 'utils';
 
 /**
@@ -22,9 +22,8 @@ function Journal({
   // #withJournalActions
   toggleJournalSheetFilter,
 }) {
-  const [filter, setFilter] = useState({
-    ...getDefaultJournalQuery(),
-  });
+  const {query, setLocationQuery} = useJournalQuery();
+
   // Handle financial statement filter change.
   const handleFilterSubmit = useCallback(
     (filter) => {
@@ -33,9 +32,9 @@ function Journal({
         fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
         toDate: moment(filter.toDate).format('YYYY-MM-DD'),
       };
-      setFilter(_filter);
+      setLocationQuery(_filter);
     },
-    [setFilter],
+    [setLocationQuery],
   );
   // Hide the journal sheet filter drawer once the page unmount.
   useEffect(
@@ -46,14 +45,14 @@ function Journal({
   );
 
   return (
-    <JournalSheetProvider query={filter}>
+    <JournalSheetProvider query={query}>
       <JournalActionsBar />
 
       <DashboardPageContent>
         <FinancialStatement>
           <JournalHeader
             onSubmitFilter={handleFilterSubmit}
-            pageFilter={filter}
+            pageFilter={query}
           />
           <JournalSheetLoadingBar />
           <JournalSheetAlerts />

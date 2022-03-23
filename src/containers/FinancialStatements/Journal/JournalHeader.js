@@ -14,7 +14,6 @@ import withJournal from './withJournal';
 import withJournalActions from './withJournalActions';
 
 import { compose } from 'utils';
-import JournalSheetHeaderDimension from './JournalSheetHeaderDimensions';
 
 /**
  * Journal sheet header.
@@ -45,16 +44,16 @@ function JournalHeader({
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
     setSubmitting(false);
-    toggleJournalSheetFilter();
+    toggleJournalSheetFilter(false);
   };
 
   // Handle cancel journal drawer header.
   const handleCancelClick = () => {
-    toggleJournalSheetFilter();
+    toggleJournalSheetFilter(false);
   };
 
   const handleDrawerClose = () => {
-    toggleJournalSheetFilter();
+    toggleJournalSheetFilter(false);
   };
 
   return (
@@ -73,11 +72,6 @@ function JournalHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<JournalSheetHeaderGeneral />}
-            />
-            <Tab
-              id="dimensions"
-              title={<T id={'dimensions'} />}
-              panel={<JournalSheetHeaderDimension />}
             />
           </Tabs>
 
