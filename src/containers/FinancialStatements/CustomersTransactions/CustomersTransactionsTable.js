@@ -58,10 +58,10 @@ const CustomersTransactionsDataTable = styled(DataTable)`
   .table {
     .tbody {
       .tr .td {
-        padding-top: 0.2rem;
-        padding-bottom: 0.2rem;
+        padding-top: 0.36rem;
+        padding-bottom: 0.36rem;
       }
-      .tr:not(.no-results) .td {
+      .tr:not(.no-results) .td:not(:first-of-type) {
         border-left: 1px solid #ececec;
       }
       .tr:last-child .td {
@@ -73,6 +73,11 @@ const CustomersTransactionsDataTable = styled(DataTable)`
           .td {
             &.customer_name {
               font-weight: 500;
+
+              .cell-inner {
+                white-space: nowrap;
+                position: relative;
+              }
             }
           }
           &:not(:first-child).is-expanded .td {

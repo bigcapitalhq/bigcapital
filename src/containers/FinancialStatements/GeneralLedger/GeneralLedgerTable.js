@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
 
-import { FinancialSheet, DataTable } from 'components';
+import { FinancialSheet, ReportDataTable } from 'components';
 import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
 import TableFastCell from 'components/Datatable/TableFastCell';
 
@@ -66,7 +66,7 @@ export default function GeneralLedgerTable({ companyName }) {
   );
 }
 
-const GeneralLedgerDataTable = styled(DataTable)`
+const GeneralLedgerDataTable = styled(ReportDataTable)`
   .tbody {
     .tr .td {
       padding-top: 0.2rem;
@@ -78,7 +78,7 @@ const GeneralLedgerDataTable = styled(DataTable)`
       }
     }
 
-    .tr:not(.no-results) .td {
+    .tr:not(.no-results) .td:not(:first-of-type) {
       border-left: 1px solid #ececec;
     }
     .tr:last-child .td {
@@ -90,13 +90,13 @@ const GeneralLedgerDataTable = styled(DataTable)`
         .td {
           &.date {
             font-weight: 500;
-          }
 
-          &.name {
-            border-left-color: transparent;
+            .cell-inner {
+              white-space: nowrap;
+              position: relative;
+            }
           }
         }
-
         &:not(:first-child).is-expanded .td {
           border-top: 1px solid #ddd;
         }
@@ -108,7 +108,6 @@ const GeneralLedgerDataTable = styled(DataTable)`
           font-weight: 500;
         }
       }
-
       &--CLOSING_BALANCE {
         .name {
           font-weight: 500;

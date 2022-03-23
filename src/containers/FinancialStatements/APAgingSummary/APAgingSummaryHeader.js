@@ -4,6 +4,7 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import moment from 'moment';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import styled from 'styled-components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import APAgingSummaryHeaderGeneral from './APAgingSummaryHeaderGeneral';
@@ -12,8 +13,8 @@ import APAgingSummaryHeaderDimensions from './APAgingSummaryHeaderDimensions';
 import withAPAgingSummary from './withAPAgingSummary';
 import withAPAgingSummaryActions from './withAPAgingSummaryActions';
 
-import { compose } from 'utils';
 import { transformToForm } from '../../../utils';
+import { compose } from 'utils';
 
 /**
  * AP Aging Summary Report - Drawer Header.
@@ -74,7 +75,7 @@ function APAgingSummaryHeader({
   };
 
   return (
-    <FinancialStatementHeader
+    <APAgingDrawerHeader
       isOpen={isFilterDrawerOpen}
       drawerProps={{ onClose: handleDrawerClose }}
     >
@@ -106,7 +107,7 @@ function APAgingSummaryHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </APAgingDrawerHeader>
   );
 }
 
@@ -116,3 +117,9 @@ export default compose(
     isFilterDrawerOpen: APAgingSummaryFilterDrawer,
   })),
 )(APAgingSummaryHeader);
+
+const APAgingDrawerHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 520px;
+  }
+`;

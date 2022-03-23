@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { DataTable, FinancialSheet } from 'components';
+import { ReportDataTable, FinancialSheet } from 'components';
 import { TableStyle } from 'common';
 
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
@@ -29,7 +29,6 @@ export default function APAgingSummaryTable({
   return (
     <FinancialSheet
       companyName={organizationName}
-      name={'payable-aging-summary'}
       sheetType={intl.get('payable_aging_summary')}
       asDate={new Date()}
       loading={isAPAgingLoading}
@@ -46,7 +45,7 @@ export default function APAgingSummaryTable({
   );
 }
 
-const APAgingSummaryDataTable = styled(DataTable)`
+const APAgingSummaryDataTable = styled(ReportDataTable)`
   .table {
     .tbody .tr {
       .td {

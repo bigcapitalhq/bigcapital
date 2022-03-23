@@ -1,9 +1,11 @@
 import React from 'react';
 import * as Yup from 'yup';
 import moment from 'moment';
-import { FormattedMessage as T } from 'components';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import styled from 'styled-components';
+
+import { FormattedMessage as T } from 'components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import InventoryValuationHeaderGeneralPanel from './InventoryValuationHeaderGeneralPanel';
@@ -68,7 +70,7 @@ function InventoryValuationHeader({
   };
 
   return (
-    <FinancialStatementHeader
+    <InventoryValuationDrawerHeader
       isOpen={isFilterDrawerOpen}
       drawerProps={{ onClose: handleDrawerClose }}
     >
@@ -100,7 +102,7 @@ function InventoryValuationHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </InventoryValuationDrawerHeader>
   );
 }
 
@@ -110,3 +112,9 @@ export default compose(
   })),
   withInventoryValuationActions,
 )(InventoryValuationHeader);
+
+const InventoryValuationDrawerHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 450px;
+  }
+`;

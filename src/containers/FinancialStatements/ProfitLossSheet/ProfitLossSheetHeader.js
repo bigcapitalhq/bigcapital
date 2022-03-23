@@ -3,6 +3,7 @@ import moment from 'moment';
 import { Formik, Form } from 'formik';
 import * as R from 'ramda';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import styled from 'styled-components';
 
 import { FormattedMessage as T } from 'components';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
@@ -54,7 +55,7 @@ function ProfitLossHeader({
   };
 
   return (
-    <FinancialStatementHeader
+    <ProfitLossSheetHeader
       isOpen={profitLossDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
     >
@@ -92,7 +93,7 @@ function ProfitLossHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </ProfitLossSheetHeader>
   );
 }
 
@@ -102,3 +103,9 @@ export default R.compose(
   })),
   withProfitLossActions,
 )(ProfitLossHeader);
+
+const ProfitLossSheetHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 520px;
+  }
+`;

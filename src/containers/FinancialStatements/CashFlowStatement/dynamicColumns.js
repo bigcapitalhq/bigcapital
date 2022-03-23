@@ -17,6 +17,7 @@ const accountNameMapper = (column) => ({
   textOverview: true,
   width: 400,
   disableSortBy: true,
+  sticky: Align.Left,
 });
 
 /**

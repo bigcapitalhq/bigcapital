@@ -1,10 +1,12 @@
 import React from 'react';
 import * as Yup from 'yup';
 import moment from 'moment';
-import { FormattedMessage as T } from 'components';
 import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import styled from 'styled-components';
+
+import { FormattedMessage as T } from 'components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import PurchasesByItemsGeneralPanel from './PurchasesByItemsGeneralPanel';
@@ -36,7 +38,6 @@ function PurchasesByItemsHeader({
       .required()
       .label(intl.get('to_date')),
   });
-
   // Default form values.
   const defaultValues = {
     ...pageFilter,
@@ -68,7 +69,7 @@ function PurchasesByItemsHeader({
   };
 
   return (
-    <FinancialStatementHeader
+    <PurchasesByItemsDrawerHeader
       isOpen={purchasesByItemsDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
     >
@@ -95,7 +96,7 @@ function PurchasesByItemsHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </PurchasesByItemsDrawerHeader>
   );
 }
 
@@ -105,3 +106,9 @@ export default compose(
   })),
   withPurchasesByItemsActions,
 )(PurchasesByItemsHeader);
+
+const PurchasesByItemsDrawerHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 450px;
+  }
+`;

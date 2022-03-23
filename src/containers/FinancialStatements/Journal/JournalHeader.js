@@ -3,6 +3,8 @@ import moment from 'moment';
 import { Formik, Form } from 'formik';
 import { Tab, Tabs, Button, Intent } from '@blueprintjs/core';
 import * as Yup from 'yup';
+import styled from 'styled-components';
+
 import { FormattedMessage as T } from 'components';
 
 import JournalSheetHeaderGeneral from './JournalSheetHeaderGeneral';
@@ -56,7 +58,7 @@ function JournalHeader({
   };
 
   return (
-    <FinancialStatementHeader
+    <JournalDrawerHeader
       isOpen={journalSheetDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
     >
@@ -89,7 +91,7 @@ function JournalHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </JournalDrawerHeader>
   );
 }
 
@@ -99,3 +101,9 @@ export default compose(
   })),
   withJournalActions,
 )(JournalHeader);
+
+const JournalDrawerHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 350px;
+  }
+`;

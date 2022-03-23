@@ -1,8 +1,10 @@
 import React from 'react';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
 import moment from 'moment';
 import { Formik, Form } from 'formik';
+import styled from 'styled-components';
+
+import { FormattedMessage as T } from 'components';
 
 import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';
@@ -65,9 +67,11 @@ function BalanceSheetHeader({
   };
 
   return (
-    <FinancialStatementHeader
+    <BalanceSheetFinancialHeader
       isOpen={balanceSheetDrawerFilter}
-      drawerProps={{ onClose: handleDrawerClose }}
+      drawerProps={{
+        onClose: handleDrawerClose,
+      }}
     >
       <Formik
         initialValues={initialValues}
@@ -103,7 +107,7 @@ function BalanceSheetHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </BalanceSheetFinancialHeader>
   );
 }
 
@@ -113,3 +117,9 @@ export default compose(
   })),
   withBalanceSheetActions,
 )(BalanceSheetHeader);
+
+const BalanceSheetFinancialHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 520px;
+  }
+`;

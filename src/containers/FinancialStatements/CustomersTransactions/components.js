@@ -3,14 +3,13 @@ import intl from 'react-intl-universal';
 import { If } from 'components';
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-import { getForceWidth, getColumnWidth } from 'utils';
+import { getColumnWidth } from 'utils';
 
 import { Align } from 'common';
 
 /**
  * Retrieve customers transactions columns.
  */
-
 export const useCustomersTransactionsColumns = () => {
   const {
     customersTransactions: { tableRows },
@@ -20,16 +19,7 @@ export const useCustomersTransactionsColumns = () => {
     () => [
       {
         Header: intl.get('customer_name'),
-        accessor: ({ cells }) => {
-          return (
-            <span
-              className={'force-width'}
-              style={{ minWidth: getForceWidth(cells[0].value) }}
-            >
-              {cells[0].value}
-            </span>
-          );
-        },
+        accessor: 'cells[0].value',
         className: 'customer_name',
       },
       {

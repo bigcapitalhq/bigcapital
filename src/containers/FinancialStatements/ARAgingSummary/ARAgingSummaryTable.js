@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { DataTable, FinancialSheet } from 'components';
+import { ReportDataTable, FinancialSheet } from 'components';
 import { TableStyle } from 'common';
 
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
@@ -26,7 +26,6 @@ export default function ReceivableAgingSummaryTable({
   return (
     <FinancialSheet
       companyName={organizationName}
-      name={'receivable-aging-summary'}
       sheetType={intl.get('receivable_aging_summary')}
       asDate={new Date()}
       loading={isARAgingLoading}
@@ -43,7 +42,7 @@ export default function ReceivableAgingSummaryTable({
   );
 }
 
-const ARAgingSummaryDataTable = styled(DataTable)`
+const ARAgingSummaryDataTable = styled(ReportDataTable)`
   .table {
     .tbody .tr {
       .td {

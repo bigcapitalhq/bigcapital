@@ -3,6 +3,8 @@ import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import styled from 'styled-components';
+
 import { FormattedMessage as T } from 'components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
@@ -61,7 +63,7 @@ function VendorsBalanceSummaryHeader({
   };
 
   return (
-    <FinancialStatementHeader
+    <VendorBalanceDrawerHeader
       isOpen={VendorsSummaryFilterDrawer}
       drawerProps={{ onClose: handleCancelClick }}
     >
@@ -88,7 +90,7 @@ function VendorsBalanceSummaryHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </VendorBalanceDrawerHeader>
   );
 }
 
@@ -98,3 +100,9 @@ export default compose(
   })),
   withVendorsBalanceSummaryActions,
 )(VendorsBalanceSummaryHeader);
+
+const VendorBalanceDrawerHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 450px;
+  }
+`;

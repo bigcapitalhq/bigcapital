@@ -2,6 +2,26 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [1.6.3] - 21-02-2022
+
+### Fixed
+ - `BIG-337` Display billing page once the organization subscription is inactive.
+
+## [1.6.2] - 19-02-2022
+
+### Fixed
+ - fix syled components dependency with imported as default components.
+
+## [1.6.0] - 18-02-2022
+
+### Added
+- Balance sheet comparison of previous period (PP).
+- Balance sheet comparison of previous year (PY).
+- Balance sheet percentage analysis columns and rows basis.
+- Profit & loss sheet comparison of preivous period (PP).
+- Profit & loss sheet comparison of previous year (PY).
+- Profit & loss sheet percentage analysis columns, rows, income and expenses basis.
+
 ## [1.5.8] - 13-01-2022
 
 ### Added

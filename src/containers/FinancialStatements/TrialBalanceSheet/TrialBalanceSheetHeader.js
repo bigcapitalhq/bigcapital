@@ -1,10 +1,12 @@
 import React from 'react';
 import * as Yup from 'yup';
 import moment from 'moment';
-import { FormattedMessage as T } from 'components';
-import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
+import intl from 'react-intl-universal';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import styled from 'styled-components';
+
+import { FormattedMessage as T } from 'components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import TrialBalanceSheetHeaderGeneralPanel from './TrialBalanceSheetHeaderGeneralPanel';
@@ -72,7 +74,7 @@ function TrialBalanceSheetHeader({
   };
 
   return (
-    <FinancialStatementHeader
+    <TrialBalanceSheetDrawerHeader
       isOpen={trialBalanceDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
     >
@@ -105,7 +107,7 @@ function TrialBalanceSheetHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </TrialBalanceSheetDrawerHeader>
   );
 }
 
@@ -115,3 +117,9 @@ export default compose(
   })),
   withTrialBalanceActions,
 )(TrialBalanceSheetHeader);
+
+const TrialBalanceSheetDrawerHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 450px;
+  }
+`;

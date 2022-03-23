@@ -2,11 +2,12 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { DataTable, FinancialSheet } from 'components';
+import { ReportDataTable, FinancialSheet } from 'components';
 
 import { useVendorsBalanceColumns } from './components';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 
+import { TableStyle } from 'common';
 import { tableRowTypesToClassnames } from 'utils';
 
 /**
@@ -34,6 +35,7 @@ export default function VendorsBalanceSummaryTable({
         data={table.data}
         rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
+        styleName={TableStyle.Constrant}
       />
     </VendorBalanceFinancialSheet>
   );
@@ -41,7 +43,7 @@ export default function VendorsBalanceSummaryTable({
 
 const VendorBalanceFinancialSheet = styled(FinancialSheet)``;
 
-const VendorBalanceDataTable = styled(DataTable)`
+const VendorBalanceDataTable = styled(ReportDataTable)`
   .table {
     .tbody {
       .tr:not(.no-results) {
@@ -51,7 +53,7 @@ const VendorBalanceDataTable = styled(DataTable)`
           padding-bottom: 0.4rem;
         }
 
-        &.row-type--TOTAL {
+        &.row_type--TOTAL {
           font-weight: 500;
 
           .td {

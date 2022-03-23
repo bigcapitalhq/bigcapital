@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
 import { Icon, If } from 'components';
-import { ForceWidth, FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from 'components';
 
 import { getColumnWidth } from 'utils';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
@@ -23,12 +23,7 @@ export function useGeneralLedgerTableColumns() {
     () => [
       {
         Header: intl.get('date'),
-        accessor: (row) => {
-          if (row.rowType === 'ACCOUNT_ROW') {
-            return <ForceWidth children={row.date} />;
-          }
-          return row.date;
-        },
+        accessor: 'date',
         className: 'date',
         width: 120,
       },

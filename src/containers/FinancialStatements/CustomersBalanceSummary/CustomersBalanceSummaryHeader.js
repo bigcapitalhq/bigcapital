@@ -3,6 +3,8 @@ import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import styled from 'styled-components';
+
 import { FormattedMessage as T } from 'components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
@@ -30,7 +32,6 @@ function CustomersBalanceSummaryHeader({
   const validationSchema = Yup.object().shape({
     asDate: Yup.date().required().label('asDate'),
   });
-
   // Default form values.
   const defaultValues = {
     ...pageFilter,
@@ -47,21 +48,19 @@ function CustomersBalanceSummaryHeader({
     },
     defaultValues,
   );
-
   // handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
     toggleCustomerBalanceFilterDrawer(false);
     setSubmitting(false);
   };
-
   // handle close drawer.
   const handleDrawerClose = () => {
     toggleCustomerBalanceFilterDrawer(false);
   };
 
   return (
-    <FinancialStatementHeader
+    <CustomerBalanceDrawerHeader
       isOpen={customersBalanceDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
     >
@@ -89,7 +88,7 @@ function CustomersBalanceSummaryHeader({
           </div>
         </Form>
       </Formik>
-    </FinancialStatementHeader>
+    </CustomerBalanceDrawerHeader>
   );
 }
 
@@ -99,3 +98,9 @@ export default compose(
   })),
   withCustomersBalanceSummaryActions,
 )(CustomersBalanceSummaryHeader);
+
+const CustomerBalanceDrawerHeader = styled(FinancialStatementHeader)`
+  .bp3-drawer {
+    max-height: 450px;
+  }
+`;

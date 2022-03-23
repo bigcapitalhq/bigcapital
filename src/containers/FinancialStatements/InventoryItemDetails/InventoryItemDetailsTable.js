@@ -2,12 +2,11 @@ import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { DataTable, FinancialSheet } from 'components';
+import { ReportDataTable, FinancialSheet } from 'components';
 import { useInventoryItemDetailsColumns } from './components';
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
 
 import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
-
 import { TableStyle } from 'common';
 
 /**
@@ -37,6 +36,7 @@ export function InventoryItemDetailsTable({
       loading={isInventoryItemDetailsLoading}
       fromDate={query.from_date}
       toDate={query.to_date}
+      fullWidth={true}
     >
       <InventoryItemDetailsDataTable
         columns={columns}
@@ -53,27 +53,15 @@ export function InventoryItemDetailsTable({
   );
 }
 
-const InventoryItemDetailsDataTable = styled(DataTable)`
+const InventoryItemDetailsDataTable = styled(ReportDataTable)`
   .table {
     .tbody {
       .tr .td {
-        padding-top: 0.2rem;
-        padding-bottom: 0.2rem;
-        border-top-color: transparent;
-        border-bottom-color: transparent;
-
-        &.date {
-          > div {
-            display: flex;
-          }
-
-          span.force-width {
-            position: relative;
-          }
-        }
+        padding-top: 0.3rem;
+        padding-bottom: 0.3rem;
       }
 
-      .tr:not(.no-results) .td {
+      .tr:not(.no-results) .td:not(:first-of-type) {
         border-left: 1px solid #ececec;
       }
 
@@ -87,8 +75,14 @@ const InventoryItemDetailsDataTable = styled(DataTable)`
             &.transaction_type {
               border-left-color: transparent;
             }
-          }
 
+            &.date {
+              .cell-inner {
+                white-space: nowrap;
+                position: relative;
+              }
+            }
+          }
           &:not(:first-child).is-expanded .td {
             border-top: 1px solid #ddd;
           }
