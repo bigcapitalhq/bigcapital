@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useWarehouses } from 'hooks/query';
+import { useWarehouses, useBranches } from 'hooks/query';
 import { Features } from 'common';
 import { useFeatureCan } from 'hooks/state';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
@@ -11,25 +11,36 @@ const InventoryValuationHeaderDimensionsPanelContext = React.createContext();
  * Inventory valuation header provider.
  * @returns
  */
-function InventoryValuationHeaderDimensionsProvider({ query, ...props }) {
+function InventoryValuationHeaderDimensionsProvider({ ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
 
+  // Detarmines whether the warehouses feature is accessiable.
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
 
-  // Fetch warehouses list.
+  // Detarmines whether the branches feature is accessiable.
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
+  // Fetches the warehouses list.
   const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses(
-    query,
+    null,
     { enabled: isWarehouseFeatureCan },
   );
+
+  // Fetches the branches list.
+  const { data: branches, isLoading: isBranchLoading } = useBranches(null, {
+    enabled: isBranchFeatureCan,
+  });
 
   // Provider
   const provider = {
     warehouses,
+    branches,
     isWarehouesLoading,
+    isBranchLoading,
   };
 
-  return isWarehouesLoading ? (
+  return isWarehouesLoading || isBranchLoading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
     <InventoryValuationHeaderDimensionsPanelContext.Provider

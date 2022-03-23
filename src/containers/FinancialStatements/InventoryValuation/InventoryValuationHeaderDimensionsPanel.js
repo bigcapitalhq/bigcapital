@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FormGroup, Classes } from '@blueprintjs/core';
-import { WarehouseMultiSelect, Row, Col } from 'components';
+import { BranchMultiSelect, WarehouseMultiSelect, Row, Col } from 'components';
 import {
   InventoryValuationHeaderDimensionsProvider,
   useInventoryValuationHeaderDimensionsPanelContext,
@@ -9,7 +9,7 @@ import {
 
 /**
  * Inventory Valuation header dismension panel.
- * @returns
+ * @returns {JSX.Element}
  */
 export default function InventoryValuationHeaderDimensionsPanel() {
   return (
@@ -21,14 +21,22 @@ export default function InventoryValuationHeaderDimensionsPanel() {
 
 /**
  * Inventory Valuation header dismension panel content.
- * @returns
+ * @returns {JSX.Element}
  */
 function InventoryValuationHeaderDimensionsPanelContent() {
-  const { warehouses } = useInventoryValuationHeaderDimensionsPanelContext();
+  const { warehouses, branches } =
+    useInventoryValuationHeaderDimensionsPanelContext();
 
   return (
     <Row>
       <Col xs={4}>
+        <FormGroup
+          label={intl.get('branches_multi_select.label')}
+          className={Classes.FILL}
+        >
+          <BranchMultiSelect name={'branchesIds'} branches={branches} />
+        </FormGroup>
+
         <FormGroup
           label={intl.get('warehouses_multi_select.label')}
           className={Classes.FILL}

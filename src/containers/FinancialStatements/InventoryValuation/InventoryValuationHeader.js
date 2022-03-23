@@ -44,10 +44,9 @@ function InventoryValuationHeader({
   // Initial values.
   const initialValues = transformToForm(
     {
-      ...pageFilter,
       ...defaultValues,
+      ...pageFilter,
       asDate: moment(pageFilter.asDate).toDate(),
-      warehousesIds: [],
     },
     defaultValues,
   );

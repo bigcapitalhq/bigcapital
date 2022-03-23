@@ -11,40 +11,36 @@ import { InventoryValuationLoadingBar } from './components';
 import withInventoryValuationActions from './withInventoryValuationActions';
 import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 
+import { useInventoryValuationQuery } from './utils';
 import { compose } from 'utils';
 
 /**
  * Inventory valuation.
  */
 function InventoryValuation({
-  // #withPreferences
-  organizationName,
-
   // #withInventoryValuationActions
   toggleInventoryValuationFilterDrawer,
 }) {
-  const [filter, setFilter] = useState({
-    asDate: moment().endOf('day').format('YYYY-MM-DD'),
-    filterByOption: 'with-transactions',
-  });
+  const { query, setLocationQuery } = useInventoryValuationQuery();
 
   // Handle filter form submit.
-  const handleFilterSubmit = useCallback((filter) => {
-    const _filter = {
-      ...filter,
-      asDate: moment(filter.asDate).format('YYYY-MM-DD'),
-    };
-    setFilter(_filter);
-  }, []);
-
+  const handleFilterSubmit = useCallback(
+    (filter) => {
+      const newFilter = {
+        ...filter,
+        asDate: moment(filter.asDate).format('YYYY-MM-DD'),
+      };
+      setLocationQuery(newFilter);
+    },
+    [setLocationQuery],
+  );
   // Handle number format form submit.
   const handleNumberFormatSubmit = (numberFormat) => {
-    setFilter({
-      ...filter,
+    setLocationQuery({
+      ...query,
       numberFormat,
     });
   };
-
   // Hide the filter drawer once the page unmount.
   useEffect(
     () => () => {
@@ -54,16 +50,16 @@ function InventoryValuation({
   );
 
   return (
-    <InventoryValuationProvider query={filter}>
+    <InventoryValuationProvider query={query}>
       <InventoryValuationActionsBar
-        numberFormat={filter.numberFormat}
+        numberFormat={query.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <InventoryValuationLoadingBar />
 
       <DashboardPageContent>
         <InventoryValuationHeader
-          pageFilter={filter}
+          pageFilter={query}
           onSubmitFilter={handleFilterSubmit}
         />
         <InventoryValuationBody />
