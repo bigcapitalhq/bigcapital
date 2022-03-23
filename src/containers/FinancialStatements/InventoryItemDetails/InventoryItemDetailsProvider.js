@@ -8,10 +8,10 @@ const InventoryItemDetailsContext = React.createContext();
 /**
  * Inventory item details provider.
  */
-function InventoryItemDetailsProvider({ filter, ...props }) {
-  const query = React.useMemo(
-    () => transformFilterFormToQuery(filter),
-    [filter],
+function InventoryItemDetailsProvider({ query, ...props }) {
+  const requestQuery = React.useMemo(
+    () => transformFilterFormToQuery(query),
+    [query],
   );
 
   // Fetching inventory item details report based on the givne query.
@@ -20,7 +20,7 @@ function InventoryItemDetailsProvider({ filter, ...props }) {
     isFetching: isInventoryItemDetailsFetching,
     isLoading: isInventoryItemDetailsLoading,
     refetch: inventoryItemDetailsRefetch,
-  } = useInventoryItemDetailsReport(query, { keepPreviousData: true });
+  } = useInventoryItemDetailsReport(requestQuery, { keepPreviousData: true });
 
   const provider = {
     inventoryItemDetails,
@@ -29,7 +29,6 @@ function InventoryItemDetailsProvider({ filter, ...props }) {
     inventoryItemDetailsRefetch,
 
     query,
-    filter,
   };
 
   return (

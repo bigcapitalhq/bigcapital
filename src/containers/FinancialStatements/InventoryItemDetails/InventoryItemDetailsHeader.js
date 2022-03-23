@@ -15,6 +15,7 @@ import InventoryItemDetailsHeaderDimensionsPanel from './InventoryItemDetailsHea
 import withInventoryItemDetails from './withInventoryItemDetails';
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
 
+import { getInventoryItemDetailsDefaultQuery } from './utils2';
 import { compose, transformToForm } from 'utils';
 
 /**
@@ -31,12 +32,7 @@ function InventoryItemDetailsHeader({
   toggleInventoryItemDetailsFilterDrawer: toggleFilterDrawer,
 }) {
   // Default form values.
-  const defaultValues = {
-    fromDate: moment().toDate(),
-    toDate: moment().toDate(),
-    itemsIds: [],
-    warehousesIds: [],
-  };
+  const defaultValues = getInventoryItemDetailsDefaultQuery();
 
   // Filter form initial values.
   const initialValues = transformToForm(
@@ -44,11 +40,9 @@ function InventoryItemDetailsHeader({
       ...pageFilter,
       fromDate: moment(pageFilter.fromDate).toDate(),
       toDate: moment(pageFilter.toDate).toDate(),
-      warehousesIds: [],
     },
     defaultValues,
   );
-
   // Validation schema.
   const validationSchema = Yup.object().shape({
     fromDate: Yup.date().required().label(intl.get('fromDate')),
