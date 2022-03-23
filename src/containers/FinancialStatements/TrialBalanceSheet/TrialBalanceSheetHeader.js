@@ -53,7 +53,6 @@ function TrialBalanceSheetHeader({
       ...pageFilter,
       fromDate: moment(pageFilter.fromDate).toDate(),
       toDate: moment(pageFilter.toDate).toDate(),
-      branchesIds: [],
     },
     defaultValues,
   );
