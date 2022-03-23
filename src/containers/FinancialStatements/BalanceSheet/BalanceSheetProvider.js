@@ -11,6 +11,7 @@ function BalanceSheetProvider({ filter, ...props }) {
   const query = React.useMemo(() => transformFilterFormToQuery(filter), [
     filter,
   ]);
+
   // Fetches the balance sheet report.
   const {
     data: balanceSheet,

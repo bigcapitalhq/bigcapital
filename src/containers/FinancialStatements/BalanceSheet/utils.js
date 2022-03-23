@@ -2,6 +2,7 @@ import React from 'react';
 import * as R from 'ramda';
 import moment from 'moment';
 import * as Yup from 'yup';
+import { castArray } from 'lodash';
 import intl from 'react-intl-universal';
 
 import { transformToForm } from 'utils';
@@ -34,6 +35,24 @@ export const getDefaultBalanceSheetQuery = () => ({
 });
 
 /**
+ * Parses balance sheet query.
+ */
+const parseBalanceSheetQuery = (locationQuery) => {
+  const defaultQuery = getDefaultBalanceSheetQuery();
+
+  const transformed = {
+    ...defaultQuery,
+    ...transformToForm(locationQuery, defaultQuery),
+  };
+  return {
+    ...transformed,
+
+    // Ensures the branches ids is always array.
+    branchesIds: castArray(transformed.branchesIds),
+  };
+};
+
+/**
  * Retrieves the balance sheet query.
  */
 export const useBalanceSheetQuery = () => {
@@ -41,15 +60,10 @@ export const useBalanceSheetQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default filter query with location URL query.
-  const query = React.useMemo(() => {
-    const defaultQuery = getDefaultBalanceSheetQuery();
-
-    return {
-      ...defaultQuery,
-      ...transformToForm(locationQuery, defaultQuery),
-      branchesIds: [],
-    };
-  }, [locationQuery]);
+  const query = React.useMemo(
+    () => parseBalanceSheetQuery(locationQuery),
+    [locationQuery],
+  );
 
   return {
     query,
