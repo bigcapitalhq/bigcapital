@@ -3,19 +3,23 @@ import { useFormikContext } from 'formik';
 import moment from 'moment';
 import * as R from 'ramda';
 import intl from 'react-intl-universal';
-import { omit } from 'lodash';
+import { omit, first } from 'lodash';
 import {
   defaultFastFieldShouldUpdate,
   transactionNumber,
   repeatValue,
   transformToForm,
+  formattedAmount,
 } from 'utils';
+import { useReceiptFormContext } from './ReceiptFormProvider';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
 } from 'containers/Entries/utils';
+import { useCurrentOrganization } from 'hooks/state';
+import { getEntriesTotal } from 'containers/Entries/utils';
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
 
 export const defaultReceiptEntry = {
   index: 0,
@@ -36,6 +40,10 @@ export const defaultReceipt = {
   receipt_message: '',
   statement: '',
   closed: '',
+  branch_id: '',
+  warehouse_id: '',
+  exchange_rate: 1,
+  currency_code: '',
   entries: [...repeatValue(defaultReceiptEntry, MIN_LINES_NUMBER)],
 };
 
@@ -141,4 +149,101 @@ export const transformFormValuesToRequest = (values) => {
     entries: entries.map((entry) => ({ ...omit(entry, ['amount']) })),
     closed: false,
   };
+};
+
+export const useSetPrimaryWarehouseToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { warehouses, isWarehousesSuccess } = useReceiptFormContext();
+
+  React.useEffect(() => {
+    if (isWarehousesSuccess) {
+      const primaryWarehouse =
+        warehouses.find((b) => b.primary) || first(warehouses);
+
+      if (primaryWarehouse) {
+        setFieldValue('warehouse_id', primaryWarehouse.id);
+      }
+    }
+  }, [isWarehousesSuccess, setFieldValue, warehouses]);
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = useReceiptFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+/**
+ * Retreives the Receipt totals.
+ */
+export const useReceiptTotals = () => {
+  const {
+    values: { entries, currency_code: currencyCode },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+
+  // Retrieves the formatted total money.
+  const formattedTotal = React.useMemo(
+    () => formattedAmount(total, currencyCode),
+    [total, currencyCode],
+  );
+  // Retrieves the formatted subtotal.
+  const formattedSubtotal = React.useMemo(
+    () => formattedAmount(total, currencyCode, { money: false }),
+    [total, currencyCode],
+  );
+  // Retrieves the payment total.
+  const paymentTotal = React.useMemo(() => 0, []);
+
+  // Retireves the formatted payment total.
+  const formattedPaymentTotal = React.useMemo(
+    () => formattedAmount(paymentTotal, currencyCode),
+    [paymentTotal, currencyCode],
+  );
+  // Retrieves the formatted due total.
+  const dueTotal = React.useMemo(
+    () => total - paymentTotal,
+    [total, paymentTotal],
+  );
+  // Retrieves the formatted due total.
+  const formattedDueTotal = React.useMemo(
+    () => formattedAmount(dueTotal, currencyCode),
+    [dueTotal, currencyCode],
+  );
+
+  return {
+    total,
+    paymentTotal,
+    dueTotal,
+    formattedTotal,
+    formattedSubtotal,
+    formattedPaymentTotal,
+    formattedDueTotal,
+  };
+};
+
+/**
+ * Detarmines whether the receipt has foreign customer.
+ * @returns {boolean}
+ */
+export const useReceiptIsForeignCustomer = () => {
+  const { values } = useFormikContext();
+  const currentOrganization = useCurrentOrganization();
+
+  const isForeignCustomer = React.useMemo(
+    () => values.currency_code !== currentOrganization.base_currency,
+    [values.currency_code, currentOrganization.base_currency],
+  );
+  return isForeignCustomer;
 };

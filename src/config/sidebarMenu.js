@@ -79,6 +79,10 @@ export default [
         },
       },
       {
+        text: <T id={'sidebar_warehouse_transfer'} />,
+        href: '/warehouses-transfers',
+      },
+      {
         text: <T id={'category_list'} />,
         href: '/items/categories',
         permission: {
@@ -112,6 +116,10 @@ export default [
           subject: AbilitySubject.Item,
           ability: ItemAction.Create,
         },
+      },
+      {
+        text: <T id={'warehouse_transfer.label.new_warehouse_transfer'} />,
+        href: '/warehouses-transfers/new',
       },
       {
         text: <T id={'New service'} />,
@@ -633,6 +641,14 @@ export default [
           ability: ReportsAction.READ_AP_AGING_SUMMARY,
         },
       },
+      // {
+      //   text: <T id={'realized_gain_or_loss.label'} />,
+      //   href: '/financial-reports/realized-gain-loss',
+      // },
+      // {
+      //   text: <T id={'unrealized_gain_or_loss.label'} />,
+      //   href: '/financial-reports/unrealized-gain-loss',
+      // },
       {
         text: <T id={'Sales/Purchases'} />,
         label: true,

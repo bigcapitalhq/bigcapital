@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField, Field, ErrorMessage } from 'formik';
+import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
 import {
   Classes,
   FormGroup,
@@ -9,6 +9,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+
 import {
   FormattedMessage as T,
   AccountsSuggestField,
@@ -18,7 +19,12 @@ import {
   Icon,
   Col,
   Row,
+  If,
   InputPrependButton,
+  ExchangeRateMutedField,
+  BranchSelect,
+  BranchSelectButton,
+  FeatureCan,
 } from 'components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from 'hooks';
@@ -30,9 +36,15 @@ import {
   handleDateChange,
   compose,
 } from 'utils';
+import { Features } from 'common';
 import { CLASSES } from 'common/classes';
 import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
-import { useObserveTransactionNoSettings } from '../utils';
+import {
+  useObserveTransactionNoSettings,
+  useSetPrimaryBranchToForm,
+  useForeignAccount,
+  BranchRowDivider,
+} from '../utils';
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
@@ -50,9 +62,13 @@ function OwnerContributionFormFields({
   transactionNextNumber,
 }) {
   // Money in dialog context.
-  const { accounts } = useMoneyInDailogContext();
+  const { accounts, account, branches } = useMoneyInDailogContext();
+
+  const { values } = useFormikContext();
 
   const amountFieldRef = useAutofocus();
+
+  const isForeigAccount = useForeignAccount();
 
   // Handle tranaction number changing.
   const handleTransactionNumberChange = () => {
@@ -79,8 +95,29 @@ function OwnerContributionFormFields({
     transactionNextNumber,
   );
 
+  // Sets the primary branch to form.
+  useSetPrimaryBranchToForm();
+
   return (
     <React.Fragment>
+      <FeatureCan feature={Features.Branches}>
+        <Row>
+          <Col xs={5}>
+            <FormGroup
+              label={<T id={'branch'} />}
+              className={classNames('form-group--select-list', Classes.FILL)}
+            >
+              <BranchSelect
+                name={'branch_id'}
+                branches={branches}
+                input={BranchSelectButton}
+                popoverProps={{ minimal: true }}
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+        <BranchRowDivider />
+      </FeatureCan>
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -151,7 +188,7 @@ function OwnerContributionFormFields({
         </Col>
       </Row>
       {/*------------ amount -----------*/}
-      <FastField name={'amount'}>
+      <Field name={'amount'}>
         {({
           form: { values, setFieldValue },
           field: { value },
@@ -165,7 +202,7 @@ function OwnerContributionFormFields({
             className={'form-group--amount'}
           >
             <ControlGroup>
-              <InputPrependText text={values.currency_code} />
+              <InputPrependText text={account?.currency_code} />
 
               <MoneyInputGroup
                 value={value}
@@ -179,8 +216,18 @@ function OwnerContributionFormFields({
             </ControlGroup>
           </FormGroup>
         )}
-      </FastField>
-
+      </Field>
+      <If condition={isForeigAccount}>
+        {/*------------ exchange rate -----------*/}
+        <ExchangeRateMutedField
+          name={'exchange_rate'}
+          fromCurrency={values.currency_code}
+          toCurrency={account.currency_code}
+          formGroupProps={{ label: '', inline: false }}
+          date={values.date}
+          exchangeRate={values.exchange_rate}
+        />
+      </If>
       <Row>
         <Col xs={5}>
           {/*------------ equity account -----------*/}
@@ -195,9 +242,10 @@ function OwnerContributionFormFields({
               >
                 <AccountsSuggestField
                   accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('credit_account_id', id)
-                  }
+                  onAccountSelected={(account) => {
+                    form.setFieldValue('credit_account_id', account.id);
+                    form.setFieldValue('currency_code', account.currency_code);
+                  }}
                   filterByTypes={ACCOUNT_TYPE.EQUITY}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
@@ -226,7 +274,6 @@ function OwnerContributionFormFields({
           </FastField>
         </Col>
       </Row>
-
       {/*------------ description -----------*/}
       <FastField name={'description'}>
         {({ field, meta: { error, touched } }) => (

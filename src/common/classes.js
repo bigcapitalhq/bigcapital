@@ -41,6 +41,7 @@ const CLASSES = {
   PAGE_FORM_EXPENSE: 'page-form--expense',
   PAGE_FORM_CREDIT_NOTE:'page-form--credit-note',
   PAGE_FORM_VENDOR_CREDIT_NOTE:'page-form--vendor-credit-note',
+  PAGE_FORM_WAREHOUSE_TRANSFER:'page-form--warehouse-transfer',
 
   FORM_GROUP_LIST_SELECT: 'form-group--select-list',
 
@@ -70,6 +71,8 @@ const CLASSES = {
   PREFERENCES_PAGE_INSIDE_CONTENT_ACCOUNTANT: 'preferences-page__inside-content--accountant',
   PREFERENCES_PAGE_INSIDE_CONTENT_SMS_INTEGRATION: 'preferences-page__inside-content--sms-integration',
   PREFERENCES_PAGE_INSIDE_CONTENT_ROLES_FORM: 'preferences-page__inside-content--roles-form',
+  PREFERENCES_PAGE_INSIDE_CONTENT_BRANCHES: 'preferences-page__inside-content--branches',
+  PREFERENCES_PAGE_INSIDE_CONTENT_WAREHOUSES: 'preferences-page__inside-content--warehouses',
 
   FINANCIAL_REPORT_INSIDER: 'dashboard__insider--financial-report',
 

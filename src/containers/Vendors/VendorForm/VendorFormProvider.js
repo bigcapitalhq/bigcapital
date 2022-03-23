@@ -8,17 +8,23 @@ import {
   useCurrencies,
   useCreateVendor,
   useEditVendor,
+  useBranches,
 } from 'hooks/query';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 
 const VendorFormContext = createContext();
 
 /**
  * Vendor form provider.
  */
-function VendorFormProvider({ vendorId, ...props }) {
+function VendorFormProvider({ query, vendorId, ...props }) {
   const { state } = useLocation();
-
   const contactId = state?.action;
+
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Handle fetch Currencies data table
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
@@ -33,6 +39,14 @@ function VendorFormProvider({ vendorId, ...props }) {
     contactId,
     { enabled: !!contactId },
   );
+
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches(query, { enabled: isBranchFeatureCan });
+
   // Create and edit vendor mutations.
   const { mutateAsync: createVendorMutate } = useCreateVendor();
   const { mutateAsync: editVendorMutate } = useEditVendor();
@@ -44,17 +58,22 @@ function VendorFormProvider({ vendorId, ...props }) {
   const isNewMode = contactId || !vendorId;
 
   const isFormLoading =
-    isVendorLoading || isContactLoading || isCurrenciesLoading;
+    isVendorLoading ||
+    isContactLoading ||
+    isCurrenciesLoading ||
+    isBranchesLoading;
 
   const provider = {
     vendorId,
     currencies,
     vendor,
+    branches,
     contactDuplicate: { ...omit(contactDuplicate, ['opening_balance_at']) },
     submitPayload,
 
     isNewMode,
     isFormLoading,
+    isBranchesSuccess,
 
     createVendorMutate,
     editVendorMutate,

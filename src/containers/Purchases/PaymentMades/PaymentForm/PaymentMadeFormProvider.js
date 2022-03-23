@@ -1,8 +1,11 @@
 import React, { createContext, useContext } from 'react';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import {
   useAccounts,
   useVendors,
   useItems,
+  useBranches,
   usePaymentMadeEditPage,
   useSettings,
   useCreatePaymentMade,
@@ -16,9 +19,13 @@ const PaymentMadeFormContext = createContext();
 /**
  * Payment made form provider.
  */
-function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
+function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
   const [submitPayload, setSubmitPayload] = React.useState({});
   const [paymentVendorId, setPaymentVendorId] = React.useState(null);
+
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Handle fetch accounts data.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
@@ -45,6 +52,13 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
     enabled: !!paymentMadeId,
   });
 
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches(query, { enabled: isBranchFeatureCan });
+
   // Fetch payment made settings.
   useSettings();
 
@@ -54,6 +68,8 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
 
   const isNewMode = !paymentMadeId;
 
+  const isFeatureLoading = isBranchesLoading;
+
   // Provider payload.
   const provider = {
     paymentMadeId,
@@ -62,6 +78,7 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
     paymentMadeEditPage,
     vendors,
     items,
+    branches,
     submitPayload,
     paymentVendorId,
 
@@ -72,6 +89,8 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
     isVendorsLoading,
     isPaymentFetching,
     isPaymentLoading,
+    isFeatureLoading,
+    isBranchesSuccess,
 
     createPaymentMadeMutate,
     editPaymentMadeMutate,

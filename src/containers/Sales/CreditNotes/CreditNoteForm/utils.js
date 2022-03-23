@@ -1,22 +1,27 @@
 import React from 'react';
 import * as R from 'ramda';
 import moment from 'moment';
+import { first } from 'lodash';
 
 import {
   defaultFastFieldShouldUpdate,
   transformToForm,
   repeatValue,
   transactionNumber,
+  formattedAmount,
   orderingLinesIndexes,
 } from 'utils';
 import { useFormikContext } from 'formik';
+import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
 } from 'containers/Entries/utils';
+import { useCurrentOrganization } from 'hooks/state';
+import { getEntriesTotal } from 'containers/Entries/utils';
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
 
 // Default entry object.
 export const defaultCreditNoteEntry = {
@@ -39,6 +44,10 @@ export const defaultCreditNote = {
   reference_no: '',
   note: '',
   terms_conditions: '',
+  branch_id: '',
+  warehouse_id: '',
+  exchange_rate: 1,
+  currency_code: '',
   entries: [...repeatValue(defaultCreditNoteEntry, MIN_LINES_NUMBER)],
 };
 
@@ -130,4 +139,79 @@ export const useObserveCreditNoSettings = (prefix, nextNumber) => {
     const creditNo = transactionNumber(prefix, nextNumber);
     setFieldValue('credit_note_number', creditNo);
   }, [setFieldValue, prefix, nextNumber]);
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = useCreditNoteFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+export const useSetPrimaryWarehouseToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { warehouses, isWarehousesSuccess } = useCreditNoteFormContext();
+
+  React.useEffect(() => {
+    if (isWarehousesSuccess) {
+      const primaryWarehouse =
+        warehouses.find((b) => b.primary) || first(warehouses);
+
+      if (primaryWarehouse) {
+        setFieldValue('warehouse_id', primaryWarehouse.id);
+      }
+    }
+  }, [isWarehousesSuccess, setFieldValue, warehouses]);
+};
+
+/**
+ * Retreives the credit note totals.
+ */
+export const useCreditNoteTotals = () => {
+  const {
+    values: { entries, currency_code: currencyCode },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+
+  // Retrieves the formatted total money.
+  const formattedTotal = React.useMemo(
+    () => formattedAmount(total, currencyCode),
+    [total, currencyCode],
+  );
+  // Retrieves the formatted subtotal.
+  const formattedSubtotal = React.useMemo(
+    () => formattedAmount(total, currencyCode, { money: false }),
+    [total, currencyCode],
+  );
+
+  return {
+    total,
+    formattedTotal,
+    formattedSubtotal,
+  };
+};
+
+/**
+ * Detarmines whether the receipt has foreign customer.
+ * @returns {boolean}
+ */
+export const useCreditNoteIsForeignCustomer = () => {
+  const { values } = useFormikContext();
+  const currentOrganization = useCurrentOrganization();
+
+  const isForeignCustomer = React.useMemo(
+    () => values.currency_code !== currentOrganization.base_currency,
+    [values.currency_code, currentOrganization.base_currency],
+  );
+  return isForeignCustomer;
 };

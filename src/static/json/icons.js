@@ -522,4 +522,28 @@ export default {
     ],
     viewBox: '0 0 24 24',
   },
+  'warehouse-16': {
+    path: [
+      'M20,8.35V19h-2v-8H6v8H4V8.35l8-3.2L20,8.35z M22,21V7L12,3L2,7v14h6v-8h8v8H22z M11,19H9v2h2V19z M13,16h-2v2h2V16z M15,19h-2v2h2V19z',
+    ],
+    viewBox: '0 0 24 24',
+  },
+  'branch-16': {
+    path: [
+      'M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z',
+    ],
+    viewBox: '0 0 24 24',
+  },
+  'more-13': {
+    path: [
+      'M1.5 3a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 10a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0-5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z',
+    ],
+    viewBox: '0 0 3 13',
+  },
+  'star-18dp': {
+    path: [
+      'M12,17.27L18.18,21l-1.64-7.03L22,9.24l-7.19-0.61L12,2L9.19,8.63L2,9.24l5.46,4.73L5.82,21L12,17.27z',
+    ],
+    viewBox: '0 0 24 24',
+  }
 };

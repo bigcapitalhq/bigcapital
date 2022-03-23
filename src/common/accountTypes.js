@@ -221,3 +221,5 @@ export const ACCOUNT_TYPES = [
     incomeSheet: true,
   },
 ];
+
+export const FOREIGN_CURRENCY_ACCOUNTS = ['cash', 'bank'];

@@ -3,6 +3,7 @@ import { DialogContent } from 'components';
 import {
   useCreateAccount,
   useAccountsTypes,
+  useCurrencies,
   useAccount,
   useAccounts,
   useEditAccount,
@@ -30,15 +31,16 @@ function AccountDialogProvider({
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
   // Fetches accounts types.
-  const {
-    data: accountsTypes,
-    isLoading: isAccountsTypesLoading,
-  } = useAccountsTypes();
+  const { data: accountsTypes, isLoading: isAccountsTypesLoading } =
+    useAccountsTypes();
 
   // Fetches the specific account details.
   const { data: account, isLoading: isAccountLoading } = useAccount(accountId, {
     enabled: !!accountId,
   });
+
+  // Handle fetch Currencies data table
+  const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 
   const isNewMode = !accountId;
 
@@ -49,6 +51,7 @@ function AccountDialogProvider({
     parentAccountId,
     action,
     accountType,
+    currencies,
 
     createAccountMutate,
     editAccountMutate,
@@ -57,11 +60,15 @@ function AccountDialogProvider({
     account,
 
     isAccountsLoading,
-    isNewMode
+    isCurrenciesLoading,
+    isNewMode,
   };
 
   const isLoading =
-    isAccountsLoading || isAccountsTypesLoading || isAccountLoading;
+    isAccountsLoading ||
+    isAccountsTypesLoading ||
+    isAccountLoading ||
+    isCurrenciesLoading;
 
   return (
     <DialogContent isLoading={isLoading}>

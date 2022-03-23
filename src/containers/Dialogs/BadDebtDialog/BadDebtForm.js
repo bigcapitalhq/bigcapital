@@ -37,7 +37,6 @@ function BadDebtForm({
   // Initial form values
   const initialValues = {
     ...defaultInitialValues,
-    currency_code: base_currency,
     amount: invoice.due_amount,
   };
 

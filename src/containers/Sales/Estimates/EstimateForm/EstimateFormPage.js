@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
- 
+
 import 'style/pages/SaleEstimate/PageForm.scss';
 
 import EstimateForm from './EstimateForm';

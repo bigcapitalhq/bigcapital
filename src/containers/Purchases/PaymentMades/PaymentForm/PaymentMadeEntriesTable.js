@@ -40,7 +40,6 @@ export default function PaymentMadeEntriesTable({
     },
     [onUpdateData, entries],
   );
-
   // Detarmines the right no results message before selecting vendor and aftering
   // selecting vendor id.
   const noResultsMessage = vendor_id ? (
@@ -67,7 +66,6 @@ export default function PaymentMadeEntriesTable({
           currencyCode,
         }}
         noResults={noResultsMessage}
-        footer={true}
       />
     </CloudLoadingIndicator>
   );

@@ -16,6 +16,7 @@ import VendorCreditNoteItemsEntriesEditor from './VendorCreditNoteItemsEntriesEd
 import VendorCreditNoteFormFooter from './VendorCreditNoteFormFooter';
 import VendorCreditNoteFloatingActions from './VendorCreditNoteFloatingActions';
 import VendorCreditNoteFormDialogs from './VendorCreditNoteFormDialogs';
+import VendorCreditNoteFormTopBar from './VendorCreditNoteFormTopBar';
 
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 
@@ -73,6 +74,7 @@ function VendorCreditNoteForm({
             ...(vendorcreditAutoIncrement && {
               vendor_credit_number: vendorCreditNumber,
             }),
+            currency_code: base_currency,
             ...newVendorCredit,
           }),
     }),
@@ -151,6 +153,7 @@ function VendorCreditNoteForm({
         onSubmit={handleFormSubmit}
       >
         <Form>
+          <VendorCreditNoteFormTopBar />
           <VendorCreditNoteFormHeader />
           <VendorCreditNoteItemsEntriesEditor />
           <VendorCreditNoteFormFooter />

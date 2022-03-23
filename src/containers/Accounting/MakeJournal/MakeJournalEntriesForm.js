@@ -17,6 +17,7 @@ import MakeJournalFormFloatingActions from './MakeJournalFormFloatingActions';
 import MakeJournalEntriesField from './MakeJournalEntriesField';
 import MakeJournalFormFooter from './MakeJournalFormFooter';
 import MakeJournalFormDialogs from './MakeJournalFormDialogs';
+import MakeJournalFormTopBar from './MakeJournalFormTopBar';
 
 import withSettings from 'containers/Settings/withSettings';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
@@ -58,6 +59,7 @@ function MakeJournalEntriesForm({
     journalNumberPrefix,
     journalNextNumber,
   );
+
   // Form initial values.
   const initialValues = useMemo(
     () => ({
@@ -68,12 +70,12 @@ function MakeJournalEntriesForm({
         : {
             ...defaultManualJournal,
             ...(journalAutoIncrement && {
-              journal_number: defaultTo(journalNumber, ''),
+              journal_number: journalNumber,
             }),
             currency_code: base_currency,
           }),
     }),
-    [manualJournal, base_currency, journalNumber],
+    [manualJournal, base_currency, journalNumber, journalAutoIncrement],
   );
 
   // Handle the form submiting.
@@ -107,7 +109,7 @@ function MakeJournalEntriesForm({
       return;
     }
     const form = {
-      ...omit(values, ['journal_number', 'journal_number_manually']),
+      ...omit(values, ['journal_number_manually']),
       ...(values.journal_number_manually && {
         journal_number: values.journal_number,
       }),
@@ -169,6 +171,7 @@ function MakeJournalEntriesForm({
         onSubmit={handleSubmit}
       >
         <Form>
+          <MakeJournalFormTopBar />
           <MakeJournalEntriesHeader />
           <MakeJournalEntriesField />
           <MakeJournalFormFooter />
@@ -185,7 +188,7 @@ function MakeJournalEntriesForm({
 export default compose(
   withMediaActions,
   withSettings(({ manualJournalsSettings }) => ({
-    journalNextNumber: parseInt(manualJournalsSettings?.nextNumber, 10),
+    journalNextNumber: manualJournalsSettings?.nextNumber,
     journalNumberPrefix: manualJournalsSettings?.numberPrefix,
     journalAutoIncrement: manualJournalsSettings?.autoIncrement,
   })),

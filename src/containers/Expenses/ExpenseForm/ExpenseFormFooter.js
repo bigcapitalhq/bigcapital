@@ -1,41 +1,30 @@
 import React from 'react';
-import { FastField } from 'formik';
-import { FormGroup, TextArea } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
-import { inputIntent } from 'utils';
-import { Row, Dragzone, Col, Postbox } from 'components';
+import styled from 'styled-components';
+
 import { CLASSES } from 'common/classes';
+import { Row, Col, Paper } from 'components';
+import { ExpenseFormFooterLeft } from './ExpenseFormFooterLeft';
+import { ExpenseFormFooterRight } from './ExpenseFormFooterRight';
 
 export default function ExpenseFormFooter() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <Postbox title={<T id={'expense_details'} />} defaultOpen={false}>
+      <ExpensesFooterPaper>
         <Row>
           <Col md={8}>
-            <FastField name={'description'}>
-              {({ field, meta: { error, touched } }) => (
-                <FormGroup
-                  label={<T id={'description'} />}
-                  className={'form-group--description'}
-                  intent={inputIntent({ error, touched })}
-                >
-                  <TextArea growVertically={true} {...field} />
-                </FormGroup>
-              )}
-            </FastField>
+            <ExpenseFormFooterLeft />
           </Col>
 
           <Col md={4}>
-            <Dragzone
-              initialFiles={[]}
-              // onDrop={handleDropFiles}
-              // onDeleteFile={handleDeleteFile}
-              hint={<T id={'attachments_maximum'} />}
-            />
+            <ExpenseFormFooterRight />
           </Col>
         </Row>
-      </Postbox>
+      </ExpensesFooterPaper>
     </div>
   );
 }
+
+const ExpensesFooterPaper = styled(Paper)`
+  padding: 20px;
+`;

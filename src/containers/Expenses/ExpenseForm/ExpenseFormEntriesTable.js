@@ -10,7 +10,6 @@ import {
   updateMinEntriesLines,
   updateAutoAddNewLine,
   updateRemoveLineByIndex,
-  orderingLinesIndexes,
 } from 'utils';
 
 /**
@@ -24,6 +23,7 @@ export default function ExpenseFormEntriesTable({
   onChange,
   currencyCode,
   landedCost = true,
+  minLines,
 }) {
   // Expense form context.
   const { accounts } = useExpenseFormContext();
@@ -51,14 +51,14 @@ export default function ExpenseFormEntriesTable({
     (rowIndex) => {
       const newRows = compose(
         // Ensure minimum lines count.
-        updateMinEntriesLines(4, defaultEntry),
+        updateMinEntriesLines(minLines, defaultEntry),
         // Remove the line by the given index.
         updateRemoveLineByIndex(rowIndex),
       )(entries);
 
       saveInvoke(onChange, newRows);
     },
-    [entries, defaultEntry, onChange],
+    [minLines, entries, defaultEntry, onChange],
   );
 
   return (
@@ -75,7 +75,10 @@ export default function ExpenseFormEntriesTable({
         autoFocus: ['expense_account_id', 0],
         currencyCode
       }}
-      footer={true}
     />
   );
+}
+
+ExpenseFormEntriesTable.defaultProps = {
+  minLines: 1,
 }

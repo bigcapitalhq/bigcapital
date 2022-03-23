@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField, Field, ErrorMessage } from 'formik';
+import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
 import {
   Classes,
   FormGroup,
@@ -18,11 +18,17 @@ import {
   Icon,
   Col,
   Row,
+  If,
   InputPrependButton,
+  FeatureCan,
+  BranchSelect,
+  BranchSelectButton,
+  ExchangeRateMutedField,
 } from 'components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from 'hooks';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
+import { Features } from 'common';
 
 import {
   inputIntent,
@@ -33,7 +39,12 @@ import {
 } from 'utils';
 import { CLASSES } from 'common/classes';
 import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
-import { useObserveTransactionNoSettings } from '../utils';
+import {
+  useObserveTransactionNoSettings,
+  useSetPrimaryBranchToForm,
+  useForeignAccount,
+  BranchRowDivider,
+} from '../utils';
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
@@ -50,7 +61,10 @@ function OtherExpnseFormFields({
   transactionNextNumber,
 }) {
   // Money in dialog context.
-  const { accounts } = useMoneyOutDialogContext();
+  const { accounts, account, branches } = useMoneyOutDialogContext();
+
+  const isForeigAccount = useForeignAccount();
+  const { values } = useFormikContext();
 
   const amountFieldRef = useAutofocus();
 
@@ -79,8 +93,29 @@ function OtherExpnseFormFields({
     transactionNextNumber,
   );
 
+  // Sets the primary branch to form.
+  useSetPrimaryBranchToForm();
+
   return (
     <React.Fragment>
+      <FeatureCan feature={Features.Branches}>
+        <Row>
+          <Col xs={5}>
+            <FormGroup
+              label={<T id={'branch'} />}
+              className={classNames('form-group--select-list', Classes.FILL)}
+            >
+              <BranchSelect
+                name={'branch_id'}
+                branches={branches}
+                input={BranchSelectButton}
+                popoverProps={{ minimal: true }}
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+        <BranchRowDivider />
+      </FeatureCan>
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -165,7 +200,7 @@ function OtherExpnseFormFields({
             className={'form-group--amount'}
           >
             <ControlGroup>
-              <InputPrependText text={values.currency_code} />
+              <InputPrependText text={account.currency_code} />
 
               <MoneyInputGroup
                 value={value}
@@ -180,7 +215,17 @@ function OtherExpnseFormFields({
           </FormGroup>
         )}
       </FastField>
-
+      <If condition={isForeigAccount}>
+        {/*------------ exchange rate -----------*/}
+        <ExchangeRateMutedField
+          name={'exchange_rate'}
+          fromCurrency={values.currency_code}
+          toCurrency={account.currency_code}
+          formGroupProps={{ label: '', inline: false }}
+          date={values.date}
+          exchangeRate={values.exchange_rate}
+        />
+      </If>
       <Row>
         <Col xs={5}>
           {/*------------ other expense account -----------*/}

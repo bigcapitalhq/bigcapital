@@ -18,6 +18,8 @@ const Schema = Yup.object().shape({
     .label(intl.get('payment_account_')),
   reference: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
   // statement: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
+  branch_id: Yup.string(),
+  exchange_rate: Yup.number(),
   entries: Yup.array().of(
     Yup.object().shape({
       payment_amount: Yup.number().nullable(),

@@ -118,6 +118,43 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
+  // Warehouse Transfer.
+  {
+    path: `/warehouses-transfers/:id/edit`,
+    component: lazy(() =>
+      import(
+        '../containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage'
+      ),
+    ),
+    name: 'warehouse-transfer-edit',
+    pageTitle: intl.get('warehouse_transfer.label.edit_warehouse_transfer'),
+    sidebarExpand: false,
+    backLink: true,
+  },
+  {
+    path: `/warehouses-transfers/new`,
+    component: lazy(() =>
+      import(
+        '../containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage'
+      ),
+    ),
+    name: 'warehouses-transfer-new',
+    pageTitle: intl.get('warehouse_transfer.label.new_warehouse_transfer'),
+    sidebarExpand: false,
+    backLink: true,
+  },
+  {
+    path: `/warehouses-transfers`,
+    component: lazy(() =>
+      import(
+        '../containers/WarehouseTransfers/WarehouseTransfersLanding/WarehouseTransfersList'
+      ),
+    ),
+    pageTitle: intl.get('warehouse_transfer.label.warehouse_transfer_list'),
+    // defaultSearchResource: RESOURCES_TYPES.ITEM,
+    // subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
   // Financial Reports.
   {
     path: `/financial-reports/general-ledger`,
@@ -337,6 +374,32 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('inventory_item_details'),
     hint: intl.get('reports_every_transaction_going_in_and_out_of_your_items'),
     pageTitle: intl.get('inventory_item_details'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/realized-gain-loss`,
+    component: lazy(() =>
+      import(
+        '../containers/FinancialStatements/RealizedGainOrLoss/RealizedGainOrLoss'
+      ),
+    ),
+    breadcrumb: intl.get('realized_gain_or_loss.label'),
+    pageTitle: intl.get('realized_gain_or_loss.label'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/unrealized-gain-loss`,
+    component: lazy(() =>
+      import(
+        '../containers/FinancialStatements/UnrealizedGainOrLoss/UnrealizedGainOrLoss'
+      ),
+    ),
+    breadcrumb: intl.get('unrealized_gain_or_loss.label'),
+    pageTitle: intl.get('unrealized_gain_or_loss.label'),
     backLink: true,
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],

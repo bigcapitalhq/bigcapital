@@ -13,13 +13,13 @@ const Schema = Yup.object().shape({
     .min(1)
     .max(DATATYPES_LENGTH.STRING)
     .label(intl.get('journal_type')),
-  date: Yup.date()
-    .required()
-    .label(intl.get('date')),
+  date: Yup.date().required().label(intl.get('date')),
   currency_code: Yup.string().max(3),
   publish: Yup.boolean(),
+  branch_id: Yup.string(),
   reference: Yup.string().nullable().min(1).max(DATATYPES_LENGTH.STRING),
   description: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
+  exchange_rate: Yup.number(),
   entries: Yup.array().of(
     Yup.object().shape({
       credit: Yup.number().nullable(),

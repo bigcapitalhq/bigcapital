@@ -9,6 +9,7 @@ import { FormattedMessage as T } from 'components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import GeneralLedgerHeaderGeneralPane from './GeneralLedgerHeaderGeneralPane';
+import GeneralLedgerHeaderDimensionsPanel from './GeneralLedgerHeaderDimensionsPanel';
 
 import withGeneralLedger from './withGeneralLedger';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
@@ -33,6 +34,7 @@ function GeneralLedgerHeader({
   const defaultValues = {
     fromDate: moment().toDate(),
     toDate: moment().toDate(),
+    branchesIds: [],
   };
 
   // Initial values.
@@ -41,6 +43,7 @@ function GeneralLedgerHeader({
       ...pageFilter,
       fromDate: moment(pageFilter.fromDate).toDate(),
       toDate: moment(pageFilter.toDate).toDate(),
+      branchesIds: [],
     },
     defaultValues,
   );
@@ -85,6 +88,11 @@ function GeneralLedgerHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<GeneralLedgerHeaderGeneralPane />}
+            />
+            <Tab
+              id="dimensions"
+              title={<T id={'dimensions'} />}
+              panel={<GeneralLedgerHeaderDimensionsPanel />}
             />
           </Tabs>
 

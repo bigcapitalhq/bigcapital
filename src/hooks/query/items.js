@@ -231,3 +231,41 @@ export function useItemAssociatedBillTransactions(id, props) {
     },
   );
 }
+
+export function useItemWarehouseLocation(id, props) {
+  return useRequestQuery(
+    [t.ITEM_WAREHOUSES_LOCATION, id],
+    {
+      method: 'get',
+      url: `items/${id}/warehouses`,
+    },
+    {
+      select: (res) => res.data.item_warehouses,
+      defaultData: [],
+      ...props,
+    },
+  );
+}
+
+/**
+ * 
+ * @param {*} id 
+ * @param {*} query 
+ * @param {*} props 
+ * @returns 
+ */
+export function useItemInventoryCost(query, props) {
+  return useRequestQuery(
+    [t.ITEM_INVENTORY_COST, query],
+    {
+      method: 'get',
+      url: `inventory/items-cost`,
+      params: { ...query },
+    },
+    {
+      select: (res) => res.data.costs,
+      defaultData: [],
+      ...props,
+    },
+  ); 
+}

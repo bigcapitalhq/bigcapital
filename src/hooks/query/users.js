@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useQueryTenant, useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
+import { useSetFeatureDashboardMeta } from '../state/feature';
 import t from './types';
 
 // Common invalidate queries.
@@ -126,8 +128,7 @@ export function useUser(id, props) {
   );
 }
 
-
-export function useAuthenticatedAccount(props){
+export function useAuthenticatedAccount(props) {
   return useRequestQuery(
     ['AuthenticatedAccount'],
     {
@@ -145,17 +146,23 @@ export function useAuthenticatedAccount(props){
 /**
  * Fetches the dashboard meta.
  */
-export function useDashboardMeta(props) {
-  return useRequestQuery(
-    ['DashboardMeta'],
-    {
-      method: 'get',
-      url: 'dashboard/boot',
-    },
+export const useDashboardMeta = (props) => {
+  const setFeatureDashboardMeta = useSetFeatureDashboardMeta();
+
+  const state = useRequestQuery(
+    [t.DASHBOARD_META],
+    { method: 'get', url: 'dashboard/boot' },
     {
       select: (res) => res.data.meta,
       defaultData: {},
-      ...props
+      ...props,
+    },
+  );
+  useEffect(() => {
+    if (state.isSuccess) {
+      setFeatureDashboardMeta(state.data);
     }
-  )
-}
+  }, [state.isSuccess, state.data, setFeatureDashboardMeta]);
+  return state;
+};
+

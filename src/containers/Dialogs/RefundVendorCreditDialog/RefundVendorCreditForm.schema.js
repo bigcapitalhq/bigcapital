@@ -10,5 +10,6 @@ const Schema = Yup.object().shape({
     .required()
     .label(intl.get('deposit_account_')),
   description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
+  exchange_rate: Yup.number(),
 });
 export const CreateVendorRefundCreditFormSchema = Schema;

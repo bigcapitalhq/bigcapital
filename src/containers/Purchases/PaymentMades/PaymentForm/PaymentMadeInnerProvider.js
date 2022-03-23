@@ -25,6 +25,7 @@ function PaymentMadeInnerProvider({ ...props }) {
     isFetching: isNewEntriesFetching,
   } = usePaymentMadeNewPageEntries(vendorId, {
     enabled: !!vendorId && isNewMode,
+    keepPreviousData: true,
   });
 
   useEffect(() => {

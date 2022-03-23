@@ -1,13 +1,19 @@
 import React, { createContext, useContext } from 'react';
+import { isEqual, isUndefined } from 'lodash';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useEstimate,
   useCustomers,
+  useWarehouses,
+  useBranches,
   useItems,
   useSettingsEstimates,
   useCreateEstimate,
   useEditEstimate,
 } from 'hooks/query';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import { ITEMS_FILTER_ROLES } from './utils';
 
 const EstimateFormContext = createContext();
@@ -15,7 +21,12 @@ const EstimateFormContext = createContext();
 /**
  * Estimate form provider.
  */
-function EstimateFormProvider({ estimateId, ...props }) {
+function EstimateFormProvider({ query, estimateId, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isWarehouseFeatureCan = featureCan(Features.Warehouses);
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   const {
     data: estimate,
     isFetching: isEstimateFetching,
@@ -39,6 +50,20 @@ function EstimateFormProvider({ estimateId, ...props }) {
     isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
+  // Fetch warehouses list.
+  const {
+    data: warehouses,
+    isLoading: isWarehouesLoading,
+    isSuccess: isWarehousesSuccess,
+  } = useWarehouses(query, { enabled: isWarehouseFeatureCan });
+
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches(query, { enabled: isBranchFeatureCan });
+
   // Handle fetch settings.
   useSettingsEstimates();
 
@@ -51,12 +76,17 @@ function EstimateFormProvider({ estimateId, ...props }) {
 
   const isNewMode = !estimateId;
 
+  // Determines whether the warehouse and branches are loading.
+  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+
   // Provider payload.
   const provider = {
     estimateId,
     estimate,
     items,
     customers,
+    branches,
+    warehouses,
     isNewMode,
 
     isItemsFetching,
@@ -65,7 +95,9 @@ function EstimateFormProvider({ estimateId, ...props }) {
     isCustomersLoading,
     isItemsLoading,
     isEstimateLoading,
-
+    isFeatureLoading,
+    isBranchesSuccess,
+    isWarehousesSuccess,
     submitPayload,
     setSubmitPayload,
 

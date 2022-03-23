@@ -10,6 +10,7 @@ import { FormattedMessage as T } from 'components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import InventoryItemDetailsHeaderGeneralPanel from './InventoryItemDetailsHeaderGeneralPanel';
+import InventoryItemDetailsHeaderDimensionsPanel from './InventoryItemDetailsHeaderDimensionsPanel';
 
 import withInventoryItemDetails from './withInventoryItemDetails';
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
@@ -34,6 +35,7 @@ function InventoryItemDetailsHeader({
     fromDate: moment().toDate(),
     toDate: moment().toDate(),
     itemsIds: [],
+    warehousesIds: [],
   };
 
   // Filter form initial values.
@@ -42,6 +44,7 @@ function InventoryItemDetailsHeader({
       ...pageFilter,
       fromDate: moment(pageFilter.fromDate).toDate(),
       toDate: moment(pageFilter.toDate).toDate(),
+      warehousesIds: [],
     },
     defaultValues,
   );
@@ -82,6 +85,11 @@ function InventoryItemDetailsHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<InventoryItemDetailsHeaderGeneralPanel />}
+            />
+            <Tab
+              id="dimensions"
+              title={<T id={'dimensions'} />}
+              panel={<InventoryItemDetailsHeaderDimensionsPanel />}
             />
           </Tabs>
           <div class="financial-header-drawer__footer">

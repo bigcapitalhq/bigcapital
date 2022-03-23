@@ -1,10 +1,14 @@
 import React, { createContext, useContext } from 'react';
+import { isEqual, isUndefined } from 'lodash';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import { DashboardInsider } from 'components';
 import {
   useSettingsPaymentReceives,
   usePaymentReceiveEditPage,
   useAccounts,
   useCustomers,
+  useBranches,
   useCreatePaymentReceive,
   useEditPaymentReceive,
 } from 'hooks/query';
@@ -15,9 +19,13 @@ const PaymentReceiveFormContext = createContext();
 /**
  * Payment receive form provider.
  */
-function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
+function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
   // Form state.
   const [submitPayload, setSubmitPayload] = React.useState({});
+
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Fetches payment recevie details.
   const {
@@ -42,8 +50,17 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
     isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches(query, { enabled: isBranchFeatureCan });
+
   // Detarmines whether the new mode.
   const isNewMode = !paymentReceiveId;
+
+  const isFeatureLoading = isBranchesLoading;
 
   // Create and edit payment receive mutations.
   const { mutateAsync: editPaymentReceiveMutate } = useEditPaymentReceive();
@@ -56,11 +73,14 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
     paymentEntriesEditPage,
     accounts,
     customers,
+    branches,
 
     isPaymentLoading,
     isAccountsLoading,
     isPaymentFetching,
     isCustomersLoading,
+    isFeatureLoading,
+    isBranchesSuccess,
     isNewMode,
 
     submitPayload,

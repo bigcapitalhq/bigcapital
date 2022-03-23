@@ -1,12 +1,16 @@
 import React, { createContext, useState } from 'react';
 import { isEmpty, pick } from 'lodash';
 import { useLocation } from 'react-router-dom';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { transformToEditForm, ITEMS_FILTER_ROLES_QUERY } from './utils';
 import {
   useInvoice,
   useItems,
   useCustomers,
+  useWarehouses,
+  useBranches,
   useCreateInvoice,
   useEditInvoice,
   useSettingsInvoices,
@@ -18,9 +22,14 @@ const InvoiceFormContext = createContext();
 /**
  * Accounts chart data provider.
  */
-function InvoiceFormProvider({ invoiceId, ...props }) {
+function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   const { state } = useLocation();
   const estimateId = state?.action;
+
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isWarehouseFeatureCan = featureCan(Features.Warehouses);
+  const isBranchFeatureCan = featureCan(Features.Branches);
 
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
     enabled: !!invoiceId,
@@ -34,7 +43,7 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
 
   const newInvoice = !isEmpty(estimate)
     ? transformToEditForm({
-        ...pick(estimate, ['customer_id', 'customer', 'entries']),
+        ...pick(estimate, ['customer_id', 'currency_code', 'entries']),
       })
     : [];
 
@@ -53,6 +62,20 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
+  // Fetch warehouses list.
+  const {
+    data: warehouses,
+    isLoading: isWarehouesLoading,
+    isSuccess: isWarehousesSuccess,
+  } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
+
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches({}, { enabled: isBranchFeatureCan });
+
   // Handle fetching settings.
   const { isLoading: isSettingsLoading } = useSettingsInvoices();
 
@@ -66,7 +89,9 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
   // Detarmines whether the form in new mode.
   const isNewMode = !invoiceId;
 
-  // Provider payload.
+  // Determines whether the warehouse and branches are loading.
+  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+
   const provider = {
     invoice,
     items,
@@ -75,11 +100,18 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     estimateId,
     invoiceId,
     submitPayload,
+    branches,
+    warehouses,
 
     isInvoiceLoading,
     isItemsLoading,
     isCustomersLoading,
     isSettingsLoading,
+    isWarehouesLoading,
+    isBranchesLoading,
+    isFeatureLoading,
+    isBranchesSuccess,
+    isWarehousesSuccess,
 
     createInvoiceMutate,
     editInvoiceMutate,

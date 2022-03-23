@@ -31,6 +31,8 @@ export const getDefaultProfitLossQuery = () => ({
   percentageRow: false,
   percentageIncome: false,
   percentageExpense: false,
+
+  branchesIds: [],
 });
 
 /**
@@ -47,6 +49,7 @@ export const useProfitLossSheetQuery = () => {
     return {
       ...defaultQuery,
       ...transformToForm(locationQuery, defaultQuery),
+      branchesIds: [],
     };
   }, [locationQuery]);
 

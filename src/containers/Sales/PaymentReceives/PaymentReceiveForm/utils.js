@@ -1,14 +1,21 @@
 import React from 'react';
-import { useFormikContext } from 'formik';
 import moment from 'moment';
-import { omit, pick } from 'lodash';
+import intl from 'react-intl-universal';
+import { omit, pick, first, sumBy } from 'lodash';
+import { useFormikContext } from 'formik';
+import { Intent } from '@blueprintjs/core';
+import { AppToaster } from 'components';
+import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import {
   defaultFastFieldShouldUpdate,
   transactionNumber,
   transformToForm,
   safeSumBy,
-  orderingLinesIndexes
+  orderingLinesIndexes,
+  formattedAmount,
 } from 'utils';
+import { useCurrentOrganization } from 'hooks/state';
+import { getEntriesTotal } from 'containers/Entries/utils';
 
 // Default payment receive entry.
 export const defaultPaymentReceiveEntry = {
@@ -32,6 +39,8 @@ export const defaultPaymentReceive = {
   statement: '',
   full_amount: '',
   currency_code: '',
+  branch_id: '',
+  exchange_rate: 1,
   entries: [],
 };
 
@@ -46,8 +55,9 @@ export const defaultRequestPayment = {
   deposit_account_id: '',
   payment_date: '',
   payment_receive_no: '',
+  branch_id: '',
   statement: '',
-  entries: []
+  entries: [],
 };
 
 /**
@@ -78,6 +88,7 @@ export const transformInvoicesNewPageEntries = (invoices) => [
     currency_code: invoice.currency_code,
     payment_amount: '',
     invoice_no: invoice.invoice_no,
+    branch_id: invoice.branch_id,
     total_payment_amount: invoice.payment_amount,
   })),
 ];
@@ -161,4 +172,94 @@ export const transformFormToRequest = (form) => {
     }),
     entries: orderingLinesIndexes(entries),
   };
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = usePaymentReceiveFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+/**
+ * Transformes the response errors types.
+ */
+export const transformErrors = (errors, { setFieldError }) => {
+  const getError = (errorType) => errors.find((e) => e.type === errorType);
+
+  if (getError('PAYMENT_RECEIVE_NO_EXISTS')) {
+    setFieldError(
+      'payment_receive_no',
+      intl.get('payment_number_is_not_unique'),
+    );
+  }
+  if (getError('PAYMENT_RECEIVE_NO_REQUIRED')) {
+    setFieldError(
+      'payment_receive_no',
+      intl.get('payment_receive.field.error.payment_receive_no_required'),
+    );
+  }
+  if (getError('PAYMENT_ACCOUNT_CURRENCY_INVALID')) {
+    AppToaster.show({
+      message: intl.get(
+        'payment_Receive.error.payment_account_currency_invalid',
+      ),
+      intent: Intent.DANGER,
+    });
+  }
+};
+
+/**
+ * Retreives the payment receive totals.
+ */
+export const usePaymentReceiveTotals = () => {
+  const {
+    values: { entries, currency_code: currencyCode },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  const total = React.useMemo(
+    () => sumBy(entries, 'payment_amount'),
+    [entries],
+  );
+
+  // Retrieves the formatted total money.
+  const formattedTotal = React.useMemo(
+    () => formattedAmount(total, currencyCode),
+    [total, currencyCode],
+  );
+  // Retrieves the formatted subtotal.
+  const formattedSubtotal = React.useMemo(
+    () => formattedAmount(total, currencyCode, { money: false }),
+    [total, currencyCode],
+  );
+
+  return {
+    total,
+    formattedTotal,
+    formattedSubtotal,
+  };
+};
+
+/**
+ * Detarmines whether the payment has foreign customer.
+ * @returns {boolean}
+ */
+export const useEstimateIsForeignCustomer = () => {
+  const { values } = useFormikContext();
+  const currentOrganization = useCurrentOrganization();
+
+  const isForeignCustomer = React.useMemo(
+    () => values.currency_code !== currentOrganization.base_currency,
+    [values.currency_code, currentOrganization.base_currency],
+  );
+  return isForeignCustomer;
 };

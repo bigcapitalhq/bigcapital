@@ -33,3 +33,5 @@ export * from './roles';
 export * from './creditNote';
 export * from './vendorCredit';
 export * from './transactionsLocking';
+export * from './warehouses'
+export * from './branches';

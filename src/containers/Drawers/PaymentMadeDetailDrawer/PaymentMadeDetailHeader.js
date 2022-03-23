@@ -10,7 +10,7 @@ import {
   DetailItem,
   CommercialDocHeader,
   CommercialDocTopHeader,
-  ButtonLink,
+  ExchangeRateDetailItem,
   VendorDrawerLink,
 } from 'components';
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
@@ -50,6 +50,10 @@ export default function PaymentMadeDetailHeader() {
             <DetailItem
               label={intl.get('payment_account')}
               children={paymentMade.payment_account?.name}
+            />
+            <ExchangeRateDetailItem
+              exchangeRate={paymentMade?.exchange_rate}
+              toCurrency={paymentMade?.currency_code}
             />
           </DetailsMenu>
         </Col>

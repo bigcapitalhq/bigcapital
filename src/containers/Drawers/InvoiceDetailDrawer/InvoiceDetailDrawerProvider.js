@@ -1,13 +1,18 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DrawerLoading } from 'components';
+import { Features } from 'common';
 import { useInvoice } from 'hooks/query';
+import { useFeatureCan } from 'hooks/state';
 
 const InvoiceDetailDrawerContext = React.createContext();
 /**
  * Invoice detail provider.
  */
 function InvoiceDetailDrawerProvider({ invoiceId, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+
   // Fetch sale invoice details.
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
     enabled: !!invoiceId,
@@ -18,6 +23,7 @@ function InvoiceDetailDrawerProvider({ invoiceId, ...props }) {
     invoiceId,
     invoice,
   };
+
   return (
     <DrawerLoading loading={isInvoiceLoading}>
       <DrawerHeaderContent
@@ -25,6 +31,13 @@ function InvoiceDetailDrawerProvider({ invoiceId, ...props }) {
         title={intl.get('invoice_details.drawer.title', {
           invoiceNumber: invoice.invoice_no,
         })}
+        subTitle={
+          featureCan(Features.Branches)
+            ? intl.get('invoice_details.drawer.subtitle', {
+                value: invoice.branch?.name,
+              })
+            : null
+        }
       />
       <InvoiceDetailDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>

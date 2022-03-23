@@ -51,6 +51,12 @@ const initialState = {
   inventoryItemDetails: {
     displayFilterDrawer: false,
   },
+  realizedGainOrLoss: {
+    displayFilterDrawer: false,
+  },
+  unrealizedGainOrLoss: {
+    displayFilterDrawer: false,
+  },
 };
 
 /**
@@ -102,4 +108,7 @@ export default createReducer(initialState, {
     t.INVENTORY_ITEM_DETAILS,
     'inventoryItemDetails',
   ),
+  ...financialStatementFilterToggle(t.REALIZED_GAIN_OR_LOSS, 'realizedGainOrLoss'),
+  ...financialStatementFilterToggle(t.UNREALIZED_GAIN_OR_LOSS, 'unrealizedGainOrLoss'),
+
 });

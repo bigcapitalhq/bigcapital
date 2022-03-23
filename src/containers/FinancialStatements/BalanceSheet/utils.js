@@ -29,6 +29,8 @@ export const getDefaultBalanceSheetQuery = () => ({
   // Percentage columns.
   percentageOfColumn: false,
   percentageOfRow: false,
+
+  branchesIds: [],
 });
 
 /**
@@ -45,6 +47,7 @@ export const useBalanceSheetQuery = () => {
     return {
       ...defaultQuery,
       ...transformToForm(locationQuery, defaultQuery),
+      branchesIds: [],
     };
   }, [locationQuery]);
 

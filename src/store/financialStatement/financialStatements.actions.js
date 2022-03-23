@@ -196,9 +196,35 @@ export function toggleCashFlowStatementFilterDrawer(toggle) {
  * Toggles display of the inventory item details filter drawer.
  * @param {boolean} toggle
  */
- export function toggleInventoryItemDetailsFilterDrawer(toggle) {
+export function toggleInventoryItemDetailsFilterDrawer(toggle) {
   return {
     type: `${t.INVENTORY_ITEM_DETAILS}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle,
+    },
+  };
+}
+
+/**
+ *  Toggle display of the Realized Gain or Loss filter drawer.
+ * @param {boolean} toggle
+ */
+export function toggleRealizedGainOrLossFilterDrawer(toggle) {
+  return {
+    type: `${t.REALIZED_GAIN_OR_LOSS}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle,
+    },
+  };
+}
+
+/**
+ *  Toggle display of the Unrealized Gain or Loss filter drawer.
+ * @param {boolean} toggle
+ */
+export function toggleUnrealizedGainOrLossFilterDrawer(toggle) {
+  return {
+    type: `${t.UNREALIZED_GAIN_OR_LOSS}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
     payload: {
       toggle,
     },

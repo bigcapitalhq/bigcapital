@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField, Field, ErrorMessage } from 'formik';
+import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
 import {
   Classes,
   FormGroup,
@@ -18,7 +18,12 @@ import {
   Icon,
   Col,
   Row,
+  If,
   InputPrependButton,
+  FeatureCan,
+  BranchSelect,
+  BranchSelectButton,
+  ExchangeRateMutedField,
 } from 'components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from 'hooks';
@@ -31,9 +36,15 @@ import {
   handleDateChange,
   compose,
 } from 'utils';
+import { Features } from 'common';
 import { CLASSES } from 'common/classes';
 import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
-import { useObserveTransactionNoSettings } from '../utils';
+import {
+  useObserveTransactionNoSettings,
+  useSetPrimaryBranchToForm,
+  useForeignAccount,
+  BranchRowDivider,
+} from '../utils';
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
@@ -50,7 +61,9 @@ function TransferToAccountFormFields({
   transactionNextNumber,
 }) {
   // Money in dialog context.
-  const { accounts } = useMoneyOutDialogContext();
+  const { accounts, account, branches } = useMoneyOutDialogContext();
+  const { values } = useFormikContext();
+  const isForeigAccount = useForeignAccount();
 
   const accountRef = useAutofocus();
 
@@ -79,8 +92,29 @@ function TransferToAccountFormFields({
     transactionNextNumber,
   );
 
+  // Sets the primary branch to form.
+  useSetPrimaryBranchToForm();
+
   return (
     <React.Fragment>
+      <FeatureCan feature={Features.Branches}>
+        <Row>
+          <Col xs={5}>
+            <FormGroup
+              label={<T id={'branch'} />}
+              className={classNames('form-group--select-list', Classes.FILL)}
+            >
+              <BranchSelect
+                name={'branch_id'}
+                branches={branches}
+                input={BranchSelectButton}
+                popoverProps={{ minimal: true }}
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+        <BranchRowDivider />
+      </FeatureCan>
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -165,7 +199,7 @@ function TransferToAccountFormFields({
             className={'form-group--amount'}
           >
             <ControlGroup>
-              <InputPrependText text={values.currency_code} />
+              <InputPrependText text={account.currency_code} />
 
               <MoneyInputGroup
                 value={value}
@@ -180,7 +214,17 @@ function TransferToAccountFormFields({
           </FormGroup>
         )}
       </FastField>
-
+      <If condition={isForeigAccount}>
+        {/*------------ exchange rate -----------*/}
+        <ExchangeRateMutedField
+          name={'exchange_rate'}
+          fromCurrency={values?.currency_code}
+          toCurrency={account?.currency_code}
+          formGroupProps={{ label: '', inline: false }}
+          date={values.date}
+          exchangeRate={values.exchange_rate}
+        />
+      </If>
       <Row>
         <Col xs={5}>
           {/*------------ transfer from account -----------*/}

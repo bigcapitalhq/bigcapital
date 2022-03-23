@@ -10,7 +10,7 @@ import {
   Col,
   DetailItem,
   DetailsMenu,
-  Money,
+  ExchangeRateDetailItem,
   FormattedMessage as T,
 } from 'components';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
@@ -50,6 +50,10 @@ export default function ExpenseDrawerHeader() {
             <DetailItem label={<T id={'description'} />}>
               {defaultTo(expense.description, '—')}
             </DetailItem>
+            <ExchangeRateDetailItem
+              exchangeRate={expense?.exchange_rate}
+              toCurrency={expense?.currency_code}
+            />
           </DetailsMenu>
         </Col>
 

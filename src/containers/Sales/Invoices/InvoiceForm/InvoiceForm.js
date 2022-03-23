@@ -16,6 +16,7 @@ import InvoiceItemsEntriesEditorField from './InvoiceItemsEntriesEditorField';
 import InvoiceFloatingActions from './InvoiceFloatingActions';
 import InvoiceFormFooter from './InvoiceFormFooter';
 import InvoiceFormDialogs from './InvoiceFormDialogs';
+import InvoiceFormTopBar from './InvoiceFormTopBar';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
@@ -66,15 +67,15 @@ function InvoiceForm({
   const initialValues = useMemo(
     () => ({
       ...(!isEmpty(invoice)
-        ? { ...transformToEditForm(invoice), currency_code: base_currency }
+        ? { ...transformToEditForm(invoice) }
         : {
             ...defaultInvoice,
             ...(invoiceIncrementMode && {
               invoice_no: invoiceNumber,
             }),
             entries: orderingLinesIndexes(defaultInvoice.entries),
-            ...newInvoice,
             currency_code: base_currency,
+            ...newInvoice,
           }),
     }),
     [invoice, newInvoice, invoiceNumber, invoiceIncrementMode, base_currency],
@@ -166,6 +167,7 @@ function InvoiceForm({
         onSubmit={handleSubmit}
       >
         <Form>
+          <InvoiceFormTopBar />
           <InvoiceFormHeader />
           <InvoiceItemsEntriesEditorField />
           <InvoiceFormFooter />

@@ -10,5 +10,6 @@ export const getDefaultCashFlowSheetQuery = () => {
     basis: 'cash',
     displayColumnsType: 'total',
     filterByOption: 'with-transactions',
+    branchesIds: [],
   };
 };

@@ -3,23 +3,18 @@ import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { sumBy } from 'lodash';
 import { CLASSES } from 'common/classes';
-import { compose } from 'utils';
 import { Money } from 'components';
 import { FormattedMessage as T } from 'components';
 
 import PaymentMadeFormHeaderFields from './PaymentMadeFormHeaderFields';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
 /**
  * Payment made header form.
  */
-function PaymentMadeFormHeader({
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
+function PaymentMadeFormHeader() {
   // Formik form context.
   const {
-    values: { entries },
+    values: { entries, currency_code },
   } = useFormikContext();
 
   // Calculate the payment amount of the entries.
@@ -36,7 +31,7 @@ function PaymentMadeFormHeader({
               <T id={'amount_received'} />
             </span>
             <h1 class="big-amount__number">
-              <Money amount={amountPaid} currency={base_currency} />
+              <Money amount={amountPaid} currency={currency_code} />
             </h1>
           </div>
         </div>
@@ -45,4 +40,4 @@ function PaymentMadeFormHeader({
   );
 }
 
-export default compose(withCurrentOrganization())(PaymentMadeFormHeader);
+export default PaymentMadeFormHeader;
