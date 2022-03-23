@@ -14,6 +14,7 @@ import GeneralLedgerHeaderDimensionsPanel from './GeneralLedgerHeaderDimensionsP
 import withGeneralLedger from './withGeneralLedger';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
 
+import { getDefaultGeneralLedgerQuery } from './common';
 import { compose, transformToForm, saveInvoke } from 'utils';
 
 /**
@@ -31,11 +32,7 @@ function GeneralLedgerHeader({
   isFilterDrawerOpen,
 }) {
   // Default values.
-  const defaultValues = {
-    fromDate: moment().toDate(),
-    toDate: moment().toDate(),
-    branchesIds: [],
-  };
+  const defaultValues = getDefaultGeneralLedgerQuery();
 
   // Initial values.
   const initialValues = transformToForm(
@@ -43,30 +40,25 @@ function GeneralLedgerHeader({
       ...pageFilter,
       fromDate: moment(pageFilter.fromDate).toDate(),
       toDate: moment(pageFilter.toDate).toDate(),
-      branchesIds: [],
     },
     defaultValues,
   );
-
   // Validation schema.
   const validationSchema = Yup.object().shape({
     dateRange: Yup.string().optional(),
     fromDate: Yup.date().required(),
     toDate: Yup.date().min(Yup.ref('fromDate')).required(),
   });
-
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     saveInvoke(onSubmitFilter, values);
-    toggleDisplayFilterDrawer();
+    toggleDisplayFilterDrawer(false);
     setSubmitting(false);
   };
-
   // Handle cancel button click.
   const handleCancelClick = () => {
     toggleDisplayFilterDrawer(false);
   };
-
   // Handle drawer close action.
   const handleDrawerClose = () => {
     toggleDisplayFilterDrawer(false);

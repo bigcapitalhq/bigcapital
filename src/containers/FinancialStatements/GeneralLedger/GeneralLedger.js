@@ -15,9 +15,8 @@ import { GeneralLedgerBody } from './GeneralLedgerBody';
 
 import withGeneralLedgerActions from './withGeneralLedgerActions';
 
-import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
+import { useGeneralLedgerQuery } from './common';
 import { compose } from 'utils';
-import { getDefaultGeneralLedgerQuery } from './common';
 
 /**
  * General Ledger (GL) sheet.
@@ -26,9 +25,8 @@ function GeneralLedger({
   // #withGeneralLedgerActions
   toggleGeneralLedgerFilterDrawer,
 }) {
-  const [filter, setFilter] = useState({
-    ...getDefaultGeneralLedgerQuery(),
-  });
+  // General ledger query.
+  const { query, setLocationQuery } = useGeneralLedgerQuery();
 
   // Handle financial statement filter change.
   const handleFilterSubmit = useCallback(
@@ -38,9 +36,9 @@ function GeneralLedger({
         fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
         toDate: moment(filter.toDate).format('YYYY-MM-DD'),
       };
-      setFilter(parsedFilter);
+      setLocationQuery(parsedFilter);
     },
-    [setFilter],
+    [setLocationQuery],
   );
 
   // Hide the filter drawer once the page unmount.
@@ -52,13 +50,13 @@ function GeneralLedger({
   );
 
   return (
-    <GeneralLedgerProvider query={transformFilterFormToQuery(filter)}>
+    <GeneralLedgerProvider query={query}>
       <GeneralLedgerActionsBar />
 
       <DashboardPageContent>
         <FinancialStatement>
           <GeneralLedgerHeader
-            pageFilter={filter}
+            pageFilter={query}
             onSubmitFilter={handleFilterSubmit}
           />
           <GeneralLedgerSheetLoadingBar />

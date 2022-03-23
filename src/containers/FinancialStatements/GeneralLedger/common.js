@@ -1,6 +1,12 @@
+import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
+import { castArray } from 'lodash';
 
+import { useAppQueryString } from 'hooks';
+import { transformToForm } from 'utils';
+
+// Filters accounts options.
 export const filterAccountsOptions = [
   {
     key: 'all-accounts',
@@ -25,5 +31,39 @@ export const getDefaultGeneralLedgerQuery = () => {
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'accural',
     filterByOption: 'with-transactions',
+    branchesIds: [],
   };
+};
+
+/**
+ * Parses general ledger query of browser location.
+ */
+const parseGeneralLedgerQuery = (locationQuery) => {
+  const defaultQuery = getDefaultGeneralLedgerQuery();
+
+  const transformed = {
+    ...defaultQuery,
+    ...transformToForm(locationQuery, defaultQuery),
+  };
+  return {
+    ...transformed,
+
+    // Ensures the branches ids is always array.
+    branchesIds: castArray(transformed.branchesIds),
+  };
+};
+
+/**
+ * Retrieves the general ledger location query.
+ */
+export const useGeneralLedgerQuery = () => {
+  // Retrieves location query.
+  const [locationQuery, setLocationQuery] = useAppQueryString();
+
+  // Merges the default filter query with location URL query.
+  const query = React.useMemo(
+    () => parseGeneralLedgerQuery(locationQuery),
+    [locationQuery],
+  );
+  return { query, locationQuery, setLocationQuery };
 };
