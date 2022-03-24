@@ -30,6 +30,7 @@ import subscription from './subscription/subscription.types';
 import inventoryAdjustments from './inventoryAdjustments/inventoryAdjustment.type';
 import creditNote from './CreditNote/creditNote.type';
 import vendorCredit from './VendorCredit/vendorCredit.type';
+import WarehouseTransfer from './WarehouseTransfer/warehouseTransfer.type';
 import plans from './plans/plans.types';
 
 export default {
@@ -65,5 +66,6 @@ export default {
   ...inventoryAdjustments,
   ...plans,
   ...creditNote,
-  ...vendorCredit
+  ...vendorCredit,
+  ...WarehouseTransfer,
 };

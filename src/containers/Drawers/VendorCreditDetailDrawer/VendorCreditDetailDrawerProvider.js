@@ -6,6 +6,8 @@ import {
   useReconcileVendorCredits,
 } from 'hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from 'components';
+import { useFeatureCan } from 'hooks/state';
+import { Features } from 'common';
 
 const VendorCreditDetailDrawerContext = React.createContext();
 
@@ -13,6 +15,9 @@ const VendorCreditDetailDrawerContext = React.createContext();
  * Vendor credit drawer provider.
  */
 function VendorCreditDetailDrawerProvider({ vendorCreditId, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+
   // Handle fetch vendor credit details.
   const { data: vendorCredit, isLoading: isVendorCreditLoading } =
     useVendorCredit(vendorCreditId, {
@@ -59,6 +64,13 @@ function VendorCreditDetailDrawerProvider({ vendorCreditId, ...props }) {
         title={intl.get('vendor_credit.drawer_vendor_credit_detail', {
           vendorNumber: vendorCredit.vendor_credit_number,
         })}
+        subTitle={
+          featureCan(Features.Branches)
+            ? intl.get('vendor_credit.drawer.subtitle', {
+                value: vendorCredit.branch?.name,
+              })
+            : null
+        }
       />
       <VendorCreditDetailDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>

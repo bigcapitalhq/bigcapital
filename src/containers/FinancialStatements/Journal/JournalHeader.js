@@ -44,16 +44,16 @@ function JournalHeader({
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
     setSubmitting(false);
-    toggleJournalSheetFilter();
+    toggleJournalSheetFilter(false);
   };
 
   // Handle cancel journal drawer header.
   const handleCancelClick = () => {
-    toggleJournalSheetFilter();
+    toggleJournalSheetFilter(false);
   };
 
   const handleDrawerClose = () => {
-    toggleJournalSheetFilter();
+    toggleJournalSheetFilter(false);
   };
 
   return (

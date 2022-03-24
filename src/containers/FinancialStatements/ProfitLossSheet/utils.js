@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 
 import { useAppQueryString } from 'hooks';
 import { transformToForm } from 'utils';
+import { castArray } from 'lodash';
 
 /**
  * Retrieves the default profit/loss sheet query.
@@ -31,7 +32,28 @@ export const getDefaultProfitLossQuery = () => ({
   percentageRow: false,
   percentageIncome: false,
   percentageExpense: false,
+
+  branchesIds: [],
 });
+
+/**
+ * Parses the profit/loss sheet query.
+ */
+const parseProfitLossQuery = (locationQuery) => {
+  const defaultQuery = getDefaultProfitLossQuery();
+
+  const transformed = {
+    ...defaultQuery,
+    ...transformToForm(locationQuery, defaultQuery),
+  };
+
+  return {
+    ...transformed,
+
+    // Ensures the branches ids is always array.
+    branchesIds: castArray(transformed.branchesIds),
+  };
+};
 
 /**
  * Retrieves the balance sheet query API.
@@ -41,15 +63,10 @@ export const useProfitLossSheetQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default query with location query.
-  const query = React.useMemo(() => {
-    const defaultQuery = getDefaultProfitLossQuery();
-
-    return {
-      ...defaultQuery,
-      ...transformToForm(locationQuery, defaultQuery),
-    };
-  }, [locationQuery]);
-
+  const query = React.useMemo(
+    () => parseProfitLossQuery(locationQuery),
+    [locationQuery],
+  );
   return {
     query,
     locationQuery,

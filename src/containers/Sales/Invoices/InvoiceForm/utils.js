@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
-import { omit } from 'lodash';
+import { omit, first } from 'lodash';
 import {
   compose,
   transformToForm,
@@ -9,17 +9,20 @@ import {
   transactionNumber,
 } from 'utils';
 import { useFormikContext } from 'formik';
-
-import { defaultFastFieldShouldUpdate } from 'utils';
 import intl from 'react-intl-universal';
+
+import { formattedAmount, defaultFastFieldShouldUpdate } from 'utils';
 import { ERROR } from 'common/errors';
 import { AppToaster } from 'components';
+import { useCurrentOrganization } from 'hooks/state';
+import { getEntriesTotal } from 'containers/Entries/utils';
+import { useInvoiceFormContext } from './InvoiceFormProvider';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
 } from 'containers/Entries/utils';
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
 
 // Default invoice entry object.
 export const defaultInvoiceEntry = {
@@ -43,6 +46,10 @@ export const defaultInvoice = {
   reference_no: '',
   invoice_message: '',
   terms_conditions: '',
+  exchange_rate: 1,
+  currency_code: '',
+  branch_id: '',
+  warehouse_id: '',
   entries: [...repeatValue(defaultInvoiceEntry, MIN_LINES_NUMBER)],
 };
 
@@ -164,3 +171,109 @@ export function transformValueToRequest(values) {
     delivered: false,
   };
 }
+
+export const useSetPrimaryWarehouseToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { warehouses, isWarehousesSuccess } = useInvoiceFormContext();
+
+  React.useEffect(() => {
+    if (isWarehousesSuccess) {
+      const primaryWarehouse =
+        warehouses.find((b) => b.primary) || first(warehouses);
+
+      if (primaryWarehouse) {
+        setFieldValue('warehouse_id', primaryWarehouse.id);
+      }
+    }
+  }, [isWarehousesSuccess, setFieldValue, warehouses]);
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = useInvoiceFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+export const useInvoiceTotal = () => {
+  const {
+    values: { entries },
+  } = useFormikContext();
+
+  // Calculate the total due amount of invoice entries.
+  return React.useMemo(() => getEntriesTotal(entries), [entries]);
+};
+
+/**
+ * Retreives the invoice totals.
+ */
+export const useInvoiceTotals = () => {
+  const {
+    values: { entries, currency_code: currencyCode },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+
+  // Retrieves the formatted total money.
+  const formattedTotal = React.useMemo(
+    () => formattedAmount(total, currencyCode),
+    [total, currencyCode],
+  );
+  // Retrieves the formatted subtotal.
+  const formattedSubtotal = React.useMemo(
+    () => formattedAmount(total, currencyCode, { money: false }),
+    [total, currencyCode],
+  );
+  // Retrieves the payment total.
+  const paymentTotal = React.useMemo(() => 0, []);
+
+  // Retireves the formatted payment total.
+  const formattedPaymentTotal = React.useMemo(
+    () => formattedAmount(paymentTotal, currencyCode),
+    [paymentTotal, currencyCode],
+  );
+  // Retrieves the formatted due total.
+  const dueTotal = React.useMemo(
+    () => total - paymentTotal,
+    [total, paymentTotal],
+  );
+  // Retrieves the formatted due total.
+  const formattedDueTotal = React.useMemo(
+    () => formattedAmount(dueTotal, currencyCode),
+    [dueTotal, currencyCode],
+  );
+
+  return {
+    total,
+    paymentTotal,
+    dueTotal,
+    formattedTotal,
+    formattedSubtotal,
+    formattedPaymentTotal,
+    formattedDueTotal,
+  };
+};
+
+/**
+ * Detarmines whether the invoice has foreign customer.
+ * @returns {boolean}
+ */
+export const useInvoiceIsForeignCustomer = () => {
+  const { values } = useFormikContext();
+  const currentOrganization = useCurrentOrganization();
+
+  const isForeignCustomer = React.useMemo(
+    () => values.currency_code !== currentOrganization.base_currency,
+    [values.currency_code, currentOrganization.base_currency],
+  );
+  return isForeignCustomer;
+};

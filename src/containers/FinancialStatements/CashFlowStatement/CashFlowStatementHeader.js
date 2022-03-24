@@ -14,6 +14,7 @@ import withCashFlowStatementActions from './withCashFlowStatementActions';
 
 import { getDefaultCashFlowSheetQuery } from './utils';
 import { compose, transformToForm } from 'utils';
+import CashFlowStatementDimensionsPanel from './CashFlowStatementDimensionsPanel';
 
 /**
  * Cash flow statement header.
@@ -33,18 +34,19 @@ function CashFlowStatementHeader({
   const defaultValues = getDefaultCashFlowSheetQuery();
 
   // Initial form values.
-  const initialValues = transformToForm({
-    ...pageFilter,
-    fromDate: moment(pageFilter.fromDate).toDate(),
-    toDate: moment(pageFilter.toDate).toDate(),
-  }, defaultValues);
+  const initialValues = transformToForm(
+    {
+      ...pageFilter,
+      fromDate: moment(pageFilter.fromDate).toDate(),
+      toDate: moment(pageFilter.toDate).toDate(),
+    },
+    defaultValues,
+  );
 
   // Validation schema.
   const validationSchema = Yup.object().shape({
     dateRange: Yup.string().optional(),
-    fromDate: Yup.date()
-      .required()
-      .label(intl.get('fromDate')),
+    fromDate: Yup.date().required().label(intl.get('fromDate')),
     toDate: Yup.date()
       .min(Yup.ref('fromDate'))
       .required()
@@ -80,6 +82,11 @@ function CashFlowStatementHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<CashFlowStatementGeneralPanel />}
+            />
+            <Tab
+              id="dimensions"
+              title={<T id={'dimensions'} />}
+              panel={<CashFlowStatementDimensionsPanel />}
             />
           </Tabs>
 

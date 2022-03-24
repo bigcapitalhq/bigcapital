@@ -9,15 +9,18 @@ const JournalSheetContext = createContext();
  * Journal sheet provider.
  */
 function JournalSheetProvider({ query, ...props }) {
+  // Transforms the sheet query to request query.
+  const requestQuery = React.useMemo(
+    () => transformFilterFormToQuery(query),
+    [query],
+  );
+
   const {
     data: journalSheet,
     isFetching,
     isLoading,
     refetch,
-  } = useJournalSheet(
-    { ...transformFilterFormToQuery(query) },
-    { keepPreviousData: true },
-  );
+  } = useJournalSheet(requestQuery, { keepPreviousData: true });
 
   const provider = {
     journalSheet,

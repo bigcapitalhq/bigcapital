@@ -3,6 +3,7 @@ import { isUndefined, isNumber } from 'lodash';
 import t from 'store/types';
 import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { useDashboardMeta } from '../../hooks/query';
 
 const initialState = {
   pageTitle: '',
@@ -19,6 +20,10 @@ const initialState = {
   splashScreenLoading: null,
   appIsLoading: true,
   appIntlIsLoading: true,
+  features: {
+    // branches: true,
+    // warehouses: true,
+  },
 };
 
 const STORAGE_KEY = 'bigcapital:dashboard';
@@ -109,6 +114,16 @@ const reducerInstance = createReducer(initialState, {
     } else {
       state.splashScreenLoading = 1;
     }
+  },
+
+  [t.SET_FEATURE_DASHBOARD_META]: (state, action) => {
+    const { features } = action.payload;
+    const _data = {};
+
+    features.forEach((feature) => {
+      _data[feature.name] = feature.is_accessible;
+    });
+    state.features = _data;
   },
 
   [t.SPLASH_STOP_LOADING]: (state) => {

@@ -21,14 +21,15 @@ export default function MakeJournalEntriesTable({
   entries,
   defaultEntry,
   error,
-  initialLinesNumber = 4,
-  minLinesNumber = 4,
+  initialLinesNumber = 1,
+  minLinesNumber = 1,
   currencyCode,
 }) {
-  const { accounts, contacts } = useMakeJournalFormContext();
+  const { accounts, contacts, branches } = useMakeJournalFormContext();
 
   // Memorized data table columns.
   const columns = useJournalTableEntriesColumns();
+
 
   // Handles update datatable data.
   const handleUpdateData = (rowIndex, columnId, value) => {
@@ -62,13 +63,13 @@ export default function MakeJournalEntriesTable({
       data={entries}
       sticky={true}
       totalRow={true}
-      footer={true}
       payload={{
         accounts,
         errors: error,
         updateData: handleUpdateData,
         removeRow: handleRemoveRow,
         contacts,
+        branches,
         autoFocus: ['account_id', 0],
         currencyCode,
       }}

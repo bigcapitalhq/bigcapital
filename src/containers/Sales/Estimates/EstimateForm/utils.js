@@ -2,20 +2,24 @@ import React from 'react';
 import { useFormikContext } from 'formik';
 import moment from 'moment';
 import * as R from 'ramda';
-import { omit } from 'lodash';
+import { omit, first } from 'lodash';
 import intl from 'react-intl-universal';
 import {
   defaultFastFieldShouldUpdate,
   transactionNumber,
   repeatValue,
   transformToForm,
+  formattedAmount,
 } from 'utils';
+import { useEstimateFormContext } from './EstimateFormProvider';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
 } from 'containers/Entries/utils';
+import { useCurrentOrganization } from 'hooks/state';
+import { getEntriesTotal } from 'containers/Entries/utils';
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
 
 export const defaultEstimateEntry = {
   index: 0,
@@ -36,6 +40,10 @@ export const defaultEstimate = {
   reference: '',
   note: '',
   terms_conditions: '',
+  branch_id: '',
+  warehouse_id: '',
+  exchange_rate: 1,
+  currency_code: '',
   entries: [...repeatValue(defaultEstimateEntry, MIN_LINES_NUMBER)],
 };
 
@@ -116,8 +124,8 @@ export const ITEMS_FILTER_ROLES = JSON.stringify([
 
 /**
  * Transform response errors to fields.
- * @param {*} errors 
- * @param {*} param1 
+ * @param {*} errors
+ * @param {*} param1
  */
 export const handleErrors = (errors, { setErrors }) => {
   if (errors.some((e) => e.type === ERRORS.ESTIMATE_NUMBER_IS_NOT_UNQIUE)) {
@@ -150,4 +158,79 @@ export const transfromsFormValuesToRequest = (values) => {
     }),
     entries: entries.map((entry) => ({ ...omit(entry, ['amount']) })),
   };
+};
+
+export const useSetPrimaryWarehouseToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { warehouses, isWarehousesSuccess } = useEstimateFormContext();
+
+  React.useEffect(() => {
+    if (isWarehousesSuccess) {
+      const primaryWarehouse =
+        warehouses.find((b) => b.primary) || first(warehouses);
+
+      if (primaryWarehouse) {
+        setFieldValue('warehouse_id', primaryWarehouse.id);
+      }
+    }
+  }, [isWarehousesSuccess, setFieldValue, warehouses]);
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = useEstimateFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+/**
+ * Retreives the estimate totals.
+ */
+export const useEstimateTotals = () => {
+  const {
+    values: { entries, currency_code: currencyCode },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+
+  // Retrieves the formatted total money.
+  const formattedTotal = React.useMemo(
+    () => formattedAmount(total, currencyCode),
+    [total, currencyCode],
+  );
+  // Retrieves the formatted subtotal.
+  const formattedSubtotal = React.useMemo(
+    () => formattedAmount(total, currencyCode, { money: false }),
+    [total, currencyCode],
+  );
+
+  return {
+    total,
+    formattedTotal,
+    formattedSubtotal,
+  };
+};
+
+/**
+ * Detarmines whether the estimate has foreign customer.
+ * @returns {boolean}
+ */
+export const useEstimateIsForeignCustomer = () => {
+  const { values } = useFormikContext();
+  const currentOrganization = useCurrentOrganization();
+
+  const isForeignCustomer = React.useMemo(
+    () => values.currency_code !== currentOrganization.base_currency,
+    [values.currency_code, currentOrganization.base_currency],
+  );
+  return isForeignCustomer;
 };

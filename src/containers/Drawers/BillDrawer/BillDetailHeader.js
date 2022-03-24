@@ -7,12 +7,12 @@ import {
   FormatDate,
   DetailsMenu,
   DetailItem,
-  ButtonLink,
   Row,
   Col,
   CommercialDocHeader,
   CommercialDocTopHeader,
   VendorDrawerLink,
+  ExchangeRateDetailItem,
 } from 'components';
 
 import { useBillDrawerContext } from './BillDrawerProvider';
@@ -53,6 +53,10 @@ export default function BillDetailHeader() {
             <DetailItem label={intl.get('bill.details.bill_number')}>
               {defaultTo(bill.bill_number, '-')}
             </DetailItem>
+            <ExchangeRateDetailItem
+              exchangeRate={bill?.exchange_rate}
+              toCurrency={bill?.currency_code}
+            />
           </DetailsMenu>
         </Col>
         <Col xs={6}>

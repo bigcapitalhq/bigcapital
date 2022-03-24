@@ -10,7 +10,7 @@ import { useMakeJournalFormContext } from './MakeJournalProvider';
  * Make journal entries field.
  */
 export default function MakeJournalEntriesField() {
-  const { accounts, contacts } = useMakeJournalFormContext();
+  const { accounts, contacts ,branches } = useMakeJournalFormContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
@@ -18,6 +18,7 @@ export default function MakeJournalEntriesField() {
         name={'entries'}
         contacts={contacts}
         accounts={accounts}
+        branches={branches}
         shouldUpdate={entriesFieldShouldUpdate}
       >
         {({

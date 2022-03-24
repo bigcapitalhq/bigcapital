@@ -3,10 +3,14 @@ import { useLocation } from 'react-router-dom';
 import { isEmpty, pick } from 'lodash';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { transformToEditForm } from './utils';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import {
   useCreateVendorCredit,
   useEditVendorCredit,
   useVendorCredit,
+  useWarehouses,
+  useBranches,
   useItems,
   useVendors,
   useSettingsVendorCredits,
@@ -20,8 +24,12 @@ const VendorCreditNoteFormContext = React.createContext();
  */
 function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
   const { state } = useLocation();
-
   const billId = state?.billId;
+
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+  const isWarehouseFeatureCan = featureCan(Features.Warehouses);
 
   // Handle fetching the items table based on the given query.
   const {
@@ -51,6 +59,20 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
     enabled: !!billId,
   });
 
+  // Fetch warehouses list.
+  const {
+    data: warehouses,
+    isLoading: isWarehouesLoading,
+    isSuccess: isWarehousesSuccess,
+  } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
+
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches({}, { enabled: isBranchFeatureCan });
+
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = React.useState();
 
@@ -61,9 +83,12 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
   // Determines whether the form in new mode.
   const isNewMode = !vendorCreditId;
 
+  // Determines whether the warehouse and branches are loading.
+  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+
   const newVendorCredit = !isEmpty(bill)
     ? transformToEditForm({
-        ...pick(bill, ['vendor_id', 'entries']),
+        ...pick(bill, ['vendor_id', 'currency_code', 'entries']),
       })
     : [];
 
@@ -72,11 +97,16 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
     items,
     vendors,
     vendorCredit,
+    warehouses,
+    branches,
     submitPayload,
     isNewMode,
     newVendorCredit,
 
     isVendorCreditLoading,
+    isFeatureLoading,
+    isBranchesSuccess,
+    isWarehousesSuccess,
 
     createVendorCreditMutate,
     editVendorCreditMutate,

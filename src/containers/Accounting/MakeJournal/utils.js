@@ -1,6 +1,6 @@
 import React from 'react';
 import { Intent } from '@blueprintjs/core';
-import { sumBy, setWith, toSafeInteger, get } from 'lodash';
+import { sumBy, setWith, toSafeInteger, get, first } from 'lodash';
 import moment from 'moment';
 import * as R from 'ramda';
 import {
@@ -9,11 +9,15 @@ import {
   repeatValue,
   transformToForm,
   defaultFastFieldShouldUpdate,
-  ensureEntriesHasEmptyLine
+  ensureEntriesHasEmptyLine,
+  formattedAmount,
+  safeSumBy,
 } from 'utils';
 import { AppToaster } from 'components';
 import intl from 'react-intl-universal';
 import { useFormikContext } from 'formik';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
+import { useCurrentOrganization } from 'hooks/state';
 
 const ERROR = {
   JOURNAL_NUMBER_ALREADY_EXISTS: 'JOURNAL.NUMBER.ALREADY.EXISTS',
@@ -26,25 +30,30 @@ const ERROR = {
   ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
 };
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
+export const DEFAULT_LINES_NUMBER = 1;
 
 export const defaultEntry = {
   account_id: '',
   credit: '',
   debit: '',
   contact_id: '',
+  branch_id: '',
   note: '',
 };
 
 export const defaultManualJournal = {
   journal_number: '',
+  journal_number_manually: false,
   journal_type: 'Journal',
   date: moment(new Date()).format('YYYY-MM-DD'),
   description: '',
   reference: '',
   currency_code: '',
   publish: '',
-  entries: [...repeatValue(defaultEntry, 4)],
+  branch_id: '',
+  exchange_rate: 1,
+  entries: [...repeatValue(defaultEntry, DEFAULT_LINES_NUMBER)],
 };
 
 // Transform to edit form.
@@ -179,6 +188,7 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
     newProps.accounts !== oldProps.accounts ||
     newProps.contacts !== oldProps.contacts ||
+    newProps.branches !== oldProps.branches ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
@@ -191,4 +201,64 @@ export const currenciesFieldShouldUpdate = (newProps, oldProps) => {
     newProps.currencies !== oldProps.currencies ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = useMakeJournalFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+/**
+ * Retreives the Journal totals.
+ */
+export const useJournalTotals = () => {
+  const {
+    values: { entries, currency_code: currencyCode },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  const totalCredit = safeSumBy(entries, 'credit');
+  const totalDebit = safeSumBy(entries, 'debit');
+
+  const total = Math.max(totalCredit, totalDebit);
+  // Retrieves the formatted total money.
+  const formattedTotal = React.useMemo(
+    () => formattedAmount(total, currencyCode),
+    [total, currencyCode],
+  );
+  // Retrieves the formatted subtotal.
+  const formattedSubtotal = React.useMemo(
+    () => formattedAmount(total, currencyCode, { money: false }),
+    [total, currencyCode],
+  );
+
+  return {
+    formattedTotal,
+    formattedSubtotal,
+  };
+};
+
+/**
+ * Detarmines whether the expenses has foreign .
+ * @returns {boolean}
+ */
+export const useJournalIsForeign = () => {
+  const { values } = useFormikContext();
+  const currentOrganization = useCurrentOrganization();
+
+  const isForeignJournal = React.useMemo(
+    () => values.currency_code !== currentOrganization.base_currency,
+    [values.currency_code, currentOrganization.base_currency],
+  );
+  return isForeignJournal;
 };

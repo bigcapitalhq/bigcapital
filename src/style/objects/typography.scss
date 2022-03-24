@@ -21,3 +21,16 @@ body{
   line-height: 1.5;
   font-size: 14px;
 }
+
+ul.list{
+  margin-bottom: 10px;
+  padding-left: 25px;
+
+  li{
+    margin-bottom: 10px;
+
+    &::marker{
+      color: #666;
+    }
+  }
+}

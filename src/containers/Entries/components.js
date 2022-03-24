@@ -1,8 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Tooltip, Button, Intent, Position } from '@blueprintjs/core';
+import { MenuItem, Menu, Button, Position } from '@blueprintjs/core';
+import { Popover2 } from '@blueprintjs/popover2';
+
+import { Align, CellType } from 'common';
 import { Hint, Icon, FormattedMessage as T } from 'components';
-import { formattedAmount, safeSumBy } from 'utils';
+import { formattedAmount } from 'utils';
 import {
   InputGroupCell,
   MoneyFieldCell,
@@ -28,69 +31,40 @@ export function ItemHeaderCell() {
 }
 
 /**
- * Item column footer cell.
- */
-export function ItemFooterCell() {
-  return (
-    <span>
-      <T id={'total'} />
-    </span>
-  );
-}
-
-/**
  * Actions cell renderer component.
  */
 export function ActionsCellRenderer({
   row: { index },
-  column: { id },
-  cell: { value },
-  data,
   payload: { removeRow },
 }) {
   const onRemoveRole = () => {
     removeRow(index);
   };
 
+  const exampleMenu = (
+    <Menu>
+      <MenuItem onClick={onRemoveRole} text="Remove line" />
+    </Menu>
+  );
+
   return (
-    <Tooltip content={<T id={'remove_the_line'} />} position={Position.LEFT}>
+    <Popover2 content={exampleMenu} placement="left-start">
       <Button
-        icon={<Icon icon={'times-circle'} iconSize={14} />}
+        icon={<Icon icon={'more-13'} iconSize={13} />}
         iconSize={14}
         className="m12"
-        intent={Intent.DANGER}
-        onClick={onRemoveRole}
+        minimal={true}
       />
-    </Tooltip>
+    </Popover2>
   );
 }
-
-/**
- * Quantity total footer cell.
- */
-export function QuantityTotalFooterCell({ rows }) {
-  const quantity = safeSumBy(rows, 'original.quantity');
-  return <span>{quantity}</span>;
-}
-
-/**
- * Total footer cell.
- */
-export function TotalFooterCell({ payload: { currencyCode }, rows }) {
-  const total = safeSumBy(rows, 'original.amount');
-  return <span>{formattedAmount(total, currencyCode)}</span>;
-}
+ActionsCellRenderer.cellType = CellType.Button;
 
 /**
  * Total accessor.
  */
 export function TotalCell({ payload: { currencyCode }, value }) {
   return <span>{formattedAmount(value, currencyCode, { noZero: true })}</span>;
-}
-
-// Index table cell.
-export function IndexTableCell({ row: { index } }) {
-  return <span>{index + 1}</span>;
 }
 
 /**
@@ -108,26 +82,14 @@ const LandedCostHeaderCell = () => {
 /**
  * Retrieve editable items entries columns.
  */
-export function useEditableItemsEntriesColumns({
-  landedCost,
-}) {
+export function useEditableItemsEntriesColumns({ landedCost }) {
   return React.useMemo(
     () => [
-      {
-        Header: '#',
-        accessor: 'index',
-        Cell: IndexTableCell,
-        width: 40,
-        disableResizing: true,
-        disableSortBy: true,
-        className: 'index',
-      },
       {
         Header: ItemHeaderCell,
         id: 'item_id',
         accessor: 'item_id',
         Cell: ItemsListCell,
-        Footer: ItemFooterCell,
         disableSortBy: true,
         width: 130,
         className: 'item',
@@ -145,10 +107,9 @@ export function useEditableItemsEntriesColumns({
         Header: intl.get('quantity'),
         accessor: 'quantity',
         Cell: NumericInputCell,
-        Footer: QuantityTotalFooterCell,
         disableSortBy: true,
         width: 70,
-        className: 'quantity',
+        align: Align.Right,
       },
       {
         Header: intl.get('rate'),
@@ -156,7 +117,7 @@ export function useEditableItemsEntriesColumns({
         Cell: MoneyFieldCell,
         disableSortBy: true,
         width: 70,
-        className: 'rate',
+        align: Align.Right,
       },
       {
         Header: intl.get('discount'),
@@ -164,16 +125,15 @@ export function useEditableItemsEntriesColumns({
         Cell: PercentFieldCell,
         disableSortBy: true,
         width: 60,
-        className: 'discount',
+        align: Align.Right,
       },
       {
         Header: intl.get('total'),
-        Footer: TotalFooterCell,
         accessor: 'amount',
         Cell: TotalCell,
         disableSortBy: true,
         width: 100,
-        className: 'total',
+        align: Align.Right,
       },
       ...(landedCost
         ? [
@@ -185,7 +145,7 @@ export function useEditableItemsEntriesColumns({
               disabledAccessor: 'landed_cost_disabled',
               disableSortBy: true,
               disableResizing: true,
-              className: 'landed-cost',
+              align: Align.Center,
             },
           ]
         : []),
@@ -193,10 +153,10 @@ export function useEditableItemsEntriesColumns({
         Header: '',
         accessor: 'action',
         Cell: ActionsCellRenderer,
-        className: 'actions',
         disableSortBy: true,
         disableResizing: true,
         width: 45,
+        align: Align.Center,
       },
     ],
     [],

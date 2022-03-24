@@ -42,11 +42,6 @@
         margin-bottom: 0;
       }
     }
-    #{$self}__body,
-    #{$self}__footer {
-      max-width: 1400px;
-    }
-
     #{$self}__header {
       background-color: #FFF;
       padding: 25px 32px;

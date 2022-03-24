@@ -7,12 +7,13 @@ import {
   Button,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T, If } from 'components';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 
 import { useAutofocus } from 'hooks';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
+import styled from 'styled-components';
 import {
   compose,
   safeSumBy,
@@ -29,11 +30,13 @@ import {
   InputPrependButton,
   MoneyInputGroup,
   InputPrependText,
+  CustomerDrawerLink,
   Hint,
   Money,
 } from 'components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
+import { PaymentReceiveExchangeRateInputField } from './components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -46,6 +49,7 @@ import {
   customersFieldShouldUpdate,
   accountsFieldShouldUpdate,
 } from './utils';
+
 import { toSafeInteger } from 'lodash';
 
 /**
@@ -141,6 +145,7 @@ function PaymentReceiveHeaderFields({
               onContactSelected={(customer) => {
                 form.setFieldValue('customer_id', customer.id);
                 form.setFieldValue('full_amount', '');
+                form.setFieldValue('currency_code', customer?.currency_code);
               }}
               popoverFill={true}
               disabled={!isNewMode}
@@ -149,10 +154,21 @@ function PaymentReceiveHeaderFields({
               }}
               allowCreate={true}
             />
+
+            {value && (
+              <CustomerButtonLink customerId={value}>
+                <T id={'view_customer_details'} />
+              </CustomerButtonLink>
+            )}
           </FormGroup>
         )}
       </FastField>
 
+      {/* ----------- Exchange rate ----------- */}
+      <PaymentReceiveExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
       {/* ------------- Payment date ------------- */}
       <FastField name={'payment_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
@@ -182,7 +198,10 @@ function PaymentReceiveHeaderFields({
       {/* ------------ Full amount ------------ */}
       <Field name={'full_amount'}>
         {({
-          form: { setFieldValue },
+          form: {
+            setFieldValue,
+            values: { currency_code },
+          },
           field: { value, onChange },
           meta: { error, touched },
         }) => (
@@ -195,7 +214,7 @@ function PaymentReceiveHeaderFields({
             helperText={<ErrorMessage name="full_amount" />}
           >
             <ControlGroup>
-              <InputPrependText text={base_currency} />
+              <InputPrependText text={currency_code} />
               <MoneyInputGroup
                 value={value}
                 onChange={(value) => {
@@ -212,7 +231,7 @@ function PaymentReceiveHeaderFields({
               minimal={true}
             >
               <T id={'receive_full_amount'} /> (
-              <Money amount={totalDueAmount} currency={base_currency} />)
+              <Money amount={totalDueAmount} currency={currency_code} />)
             </Button>
           </FormGroup>
         )}
@@ -325,3 +344,8 @@ export default compose(
   withDialogActions,
   withCurrentOrganization(),
 )(PaymentReceiveHeaderFields);
+
+const CustomerButtonLink = styled(CustomerDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
+`;

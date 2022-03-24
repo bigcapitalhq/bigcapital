@@ -12,6 +12,7 @@ import PaymentMadeHeader from './PaymentMadeFormHeader';
 import PaymentMadeFloatingActions from './PaymentMadeFloatingActions';
 import PaymentMadeFooter from './PaymentMadeFooter';
 import PaymentMadeFormBody from './PaymentMadeFormBody';
+import PaymentMadeFormTopBar from './PaymentMadeFormTopBar';
 import { PaymentMadeInnerProvider } from './PaymentMadeInnerProvider';
 
 import withSettings from 'containers/Settings/withSettings';
@@ -26,7 +27,7 @@ import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import {
   defaultPaymentMade,
   transformToEditForm,
-  ERRORS,
+  transformErrors,
   transformFormToRequest,
 } from './utils';
 
@@ -110,14 +111,10 @@ function PaymentMadeForm({
         data: { errors },
       },
     }) => {
-      const getError = (errorType) => errors.find((e) => e.type === errorType);
-
-      if (getError(ERRORS.PAYMENT_NUMBER_NOT_UNIQUE)) {
-        setFieldError(
-          'payment_number',
-          intl.get('payment_number_is_not_unique'),
-        );
+      if (errors) {
+        transformErrors(errors, { setFieldError });
       }
+
       setSubmitting(false);
     };
 
@@ -145,6 +142,7 @@ function PaymentMadeForm({
       >
         <Form>
           <PaymentMadeInnerProvider>
+            <PaymentMadeFormTopBar />
             <PaymentMadeHeader />
             <PaymentMadeFormBody />
             <PaymentMadeFooter />

@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
-import PaymentReceiveListField from 'components/PaymentReceiveListField';
 import classNames from 'classnames';
 import { FormGroup, Classes, Intent } from '@blueprintjs/core';
 
+import PaymentReceiveListField from 'components/PaymentReceiveListField';
+import { CellType } from 'common';
 function PaymentReceiveListFieldCell({
   column: { id },
   row: { index },
@@ -31,5 +32,7 @@ function PaymentReceiveListFieldCell({
     </FormGroup>
   );
 }
+
+PaymentReceiveListFieldCell.cellType = CellType.Field;
 
 export default PaymentReceiveListFieldCell;

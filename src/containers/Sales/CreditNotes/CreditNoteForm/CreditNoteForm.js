@@ -16,6 +16,7 @@ import CreditNoteItemsEntriesEditorField from './CreditNoteItemsEntriesEditorFie
 import CreditNoteFormFooter from './CreditNoteFormFooter';
 import CreditNoteFloatingActions from './CreditNoteFloatingActions';
 import CreditNoteFormDialogs from './CreditNoteFormDialogs';
+import CreditNoteFormTopBar from './CreditNoteFormTopBar';
 
 import { AppToaster } from 'components';
 
@@ -68,13 +69,14 @@ function CreditNoteForm({
   const initialValues = React.useMemo(
     () => ({
       ...(!isEmpty(creditNote)
-        ? { ...transformToEditForm(creditNote), currency_code: base_currency }
+        ? { ...transformToEditForm(creditNote) }
         : {
             ...defaultCreditNote,
             ...(creditAutoIncrement && {
               credit_note_number: creditNumber,
             }),
             entries: orderingLinesIndexes(defaultCreditNote.entries),
+            currency_code: base_currency,
             ...newCreditNote,
           }),
     }),
@@ -153,6 +155,7 @@ function CreditNoteForm({
         onSubmit={handleFormSubmit}
       >
         <Form>
+          <CreditNoteFormTopBar />
           <CreditNoteFormHeader />
           <CreditNoteItemsEntriesEditorField />
           <CreditNoteFormFooter />

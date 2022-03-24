@@ -15,5 +15,6 @@ export const getDefaultARAgingSummaryQuery = () => {
     agingPeriods: 3,
     customersIds: [],
     filterByOption: 'without-zero-balance',
+    branchesIds: [],
   };
 };

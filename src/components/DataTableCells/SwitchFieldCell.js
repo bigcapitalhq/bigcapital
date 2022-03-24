@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Classes, Switch, FormGroup, Intent } from '@blueprintjs/core';
 
+import { CellType } from 'common';
 import { safeInvoke } from 'utils';
 
 /**
@@ -47,5 +48,7 @@ const SwitchEditableCell = ({
     </FormGroup>
   );
 };
+
+SwitchEditableCell.cellType = CellType.Field;
 
 export default SwitchEditableCell;

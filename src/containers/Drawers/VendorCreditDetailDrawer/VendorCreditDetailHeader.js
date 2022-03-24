@@ -10,10 +10,10 @@ import {
   Col,
   DetailsMenu,
   DetailItem,
-  ButtonLink,
   CommercialDocHeader,
   CommercialDocTopHeader,
   VendorDrawerLink,
+  ExchangeRateDetailItem,
 } from 'components';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 import { VendorCreditDetailsStatus } from './utils';
@@ -54,6 +54,10 @@ export default function VendorCreditDetailHeader() {
                 {vendorCredit.vendor?.display_name}
               </VendorDrawerLink>
             </DetailItem>
+            <ExchangeRateDetailItem
+              exchangeRate={vendorCredit?.exchange_rate}
+              toCurrency={vendorCredit?.currency_code}
+            />
           </DetailsMenu>
         </Col>
         <Col xs={6}>

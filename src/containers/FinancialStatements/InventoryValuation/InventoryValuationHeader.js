@@ -9,6 +9,7 @@ import { FormattedMessage as T } from 'components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import InventoryValuationHeaderGeneralPanel from './InventoryValuationHeaderGeneralPanel';
+import InventoryValuationHeaderDimensionsPanel from './InventoryValuationHeaderDimensionsPanel';
 import withInventoryValuation from './withInventoryValuation';
 import withInventoryValuationActions from './withInventoryValuationActions';
 
@@ -38,12 +39,13 @@ function InventoryValuationHeader({
     ...pageFilter,
     asDate: moment().toDate(),
     itemsIds: [],
+    warehousesIds: [],
   };
   // Initial values.
   const initialValues = transformToForm(
     {
-      ...pageFilter,
       ...defaultValues,
+      ...pageFilter,
       asDate: moment(pageFilter.asDate).toDate(),
     },
     defaultValues,
@@ -82,6 +84,11 @@ function InventoryValuationHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<InventoryValuationHeaderGeneralPanel />}
+            />
+            <Tab
+              id="dimensions"
+              title={<T id={'dimensions'} />}
+              panel={<InventoryValuationHeaderDimensionsPanel />}
             />
           </Tabs>
           <div class="financial-header-drawer__footer">

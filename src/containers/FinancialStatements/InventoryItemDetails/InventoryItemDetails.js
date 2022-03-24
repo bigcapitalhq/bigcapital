@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import moment from 'moment';
 
 import { FinancialStatement } from 'components';
@@ -8,30 +8,25 @@ import InventoryItemDetailsActionsBar from './InventoryItemDetailsActionsBar';
 import InventoryItemDetailsHeader from './InventoryItemDetailsHeader';
 
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
-import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 import { InventoryItemDetailsProvider } from './InventoryItemDetailsProvider';
 import {
   InventoryItemDetailsLoadingBar,
   InventoryItemDetailsAlerts,
 } from './components';
 
-import { compose } from 'utils';
 import { InventoryItemDetailsBody } from './InventoryItemDetailsBody';
+import { useInventoryValuationQuery } from './utils2';
+import { compose } from 'utils';
 
 /**
  * inventory item details.
  */
 function InventoryItemDetails({
-  // #withSettings
-  organizationName,
-
   //#withInventoryItemDetailsActions
   toggleInventoryItemDetailsFilterDrawer: toggleFilterDrawer,
 }) {
-  const [filter, setFilter] = useState({
-    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-    toDate: moment().endOf('year').format('YYYY-MM-DD'),
-  });
+  const { query, setLocationQuery } = useInventoryValuationQuery();
+
   // Handle filter submit.
   const handleFilterSubmit = (filter) => {
     const _filter = {
@@ -39,23 +34,22 @@ function InventoryItemDetails({
       fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
       toDate: moment(filter.toDate).format('YYYY-MM-DD'),
     };
-    setFilter({ ..._filter });
+    setLocationQuery({ ..._filter });
   };
-
   // Handle number format submit.
   const handleNumberFormatSubmit = (values) => {
-    setFilter({
-      ...filter,
+    setLocationQuery({
+      ...query,
       numberFormat: values,
     });
   };
-
+  // Close the report header once the browser leave the page.
   useEffect(() => () => toggleFilterDrawer(false), [toggleFilterDrawer]);
 
   return (
-    <InventoryItemDetailsProvider filter={filter}>
+    <InventoryItemDetailsProvider query={query}>
       <InventoryItemDetailsActionsBar
-        numberFormat={filter.numberFormat}
+        numberFormat={query.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <InventoryItemDetailsLoadingBar />
@@ -64,7 +58,7 @@ function InventoryItemDetails({
       <DashboardPageContent>
         <FinancialStatement>
           <InventoryItemDetailsHeader
-            pageFilter={filter}
+            pageFilter={query}
             onSubmitFilter={handleFilterSubmit}
           />
           <InventoryItemDetailsBody />
@@ -74,9 +68,4 @@ function InventoryItemDetails({
   );
 }
 
-export default compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-  withInventoryItemDetailsActions,
-)(InventoryItemDetails);
+export default compose(withInventoryItemDetailsActions)(InventoryItemDetails);

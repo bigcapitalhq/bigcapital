@@ -28,10 +28,10 @@ function ItemsEntriesTable({
   defaultEntry,
   errors,
   onUpdateData,
-  linesNumber,
   currencyCode,
   itemType, // sellable or purchasable
   landedCost = false,
+  minLinesNumber
 }) {
   const [rows, setRows] = React.useState(initialEntries);
 
@@ -77,7 +77,7 @@ function ItemsEntriesTable({
   const handleRemoveRow = (rowIndex) => {
     const newRows = compose(
       // Ensure minimum lines count.
-      updateMinEntriesLines(4, defaultEntry),
+      updateMinEntriesLines(minLinesNumber, defaultEntry),
       // Remove the line by the given index.
       updateRemoveLineByIndex(rowIndex),
     )(rows);
@@ -95,7 +95,6 @@ function ItemsEntriesTable({
       progressBarLoading={isItemFetching}
       cellsLoading={isItemFetching}
       cellsLoadingCoords={cellsLoading}
-      footer={true}
       payload={{
         items,
         errors: errors || [],
@@ -118,7 +117,8 @@ ItemsEntriesTable.defaultProps = {
     discount: '',
   },
   initialEntries: [],
-  linesNumber: 4,
+  linesNumber: 1,
+  minLinesNumber: 1,
 };
 
 export default ItemsEntriesTable;

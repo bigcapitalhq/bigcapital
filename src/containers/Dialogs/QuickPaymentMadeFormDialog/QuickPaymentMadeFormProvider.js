@@ -1,6 +1,13 @@
 import React from 'react';
 import { DialogContent } from 'components';
-import { useBill, useAccounts, useCreatePaymentMade } from 'hooks/query';
+import {
+  useBill,
+  useAccounts,
+  useBranches,
+  useCreatePaymentMade,
+} from 'hooks/query';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 
 import { pick } from 'lodash';
 
@@ -9,7 +16,11 @@ const QuickPaymentMadeContext = React.createContext();
 /**
  * Quick payment made dialog provider.
  */
-function QuickPaymentMadeFormProvider({ billId, dialogName, ...props }) {
+function QuickPaymentMadeFormProvider({ query, billId, dialogName, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   // Handle fetch bill details.
   const { isLoading: isBillLoading, data: bill } = useBill(billId, {
     enabled: !!billId,
@@ -21,6 +32,13 @@ function QuickPaymentMadeFormProvider({ billId, dialogName, ...props }) {
   // Create payment made mutations.
   const { mutateAsync: createPaymentMadeMutate } = useCreatePaymentMade();
 
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches(query, { enabled: isBranchFeatureCan });
+
   // State provider.
   const provider = {
     bill: {
@@ -29,12 +47,16 @@ function QuickPaymentMadeFormProvider({ billId, dialogName, ...props }) {
       payment_amount: bill?.due_amount,
     },
     accounts,
+    branches,
     dialogName,
     createPaymentMadeMutate,
+    isBranchesSuccess,
   };
 
   return (
-    <DialogContent isLoading={isAccountsLoading || isBillLoading}>
+    <DialogContent
+      isLoading={isAccountsLoading || isBillLoading || isBranchesLoading}
+    >
       <QuickPaymentMadeContext.Provider value={provider} {...props} />
     </DialogContent>
   );

@@ -12,6 +12,7 @@ import BillFormHeader from './BillFormHeader';
 import BillFloatingActions from './BillFloatingActions';
 import BillFormFooter from './BillFormFooter';
 import BillItemsEntriesEditor from './BillItemsEntriesEditor';
+import BillFormTopBar from './BillFormTopBar';
 
 import { AppToaster } from 'components';
 
@@ -45,7 +46,6 @@ function BillForm({
       ...(!isEmpty(bill)
         ? {
             ...transformToEditForm(bill),
-            currency_code: base_currency,
           }
         : {
             ...defaultBill,
@@ -125,6 +125,7 @@ function BillForm({
         onSubmit={handleFormSubmit}
       >
         <Form>
+          <BillFormTopBar />
           <BillFormHeader />
           <BillItemsEntriesEditor />
           <BillFormFooter />

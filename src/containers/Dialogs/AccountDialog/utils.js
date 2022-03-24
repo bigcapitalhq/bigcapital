@@ -10,6 +10,13 @@ export const transformApiErrors = (errors) => {
   if (errors.find((e) => e.type === 'ACCOUNT.NAME.NOT.UNIQUE')) {
     fields.name = intl.get('account_name_is_already_used');
   }
+  if (
+    errors.find((e) => e.type === 'ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT')
+  ) {
+    fields.parent_account_id = intl.get(
+      'accounts.error.account_currency_not_same_parent_account',
+    );
+  }
   return fields;
 };
 

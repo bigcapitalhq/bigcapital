@@ -1,44 +1,29 @@
 import React from 'react';
-import { FastField } from 'formik';
 import classNames from 'classnames';
+import styled from 'styled-components';
+
 import { CLASSES } from 'common/classes';
-import { FormGroup, TextArea } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
-import { Postbox, ErrorMessage, Row, Col } from 'components';
-import Dragzone from 'components/Dragzone';
-import { inputIntent } from 'utils';
+import { Row, Col, Paper } from 'components';
+import { MakeJournalFormFooterLeft } from './MakeJournalFormFooterLeft';
+import { MakeJournalFormFooterRight } from './MakeJournalFormFooterRight';
 
 export default function MakeJournalFormFooter() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <Postbox title={<T id={'journal_details'} />} defaultOpen={false}>
+      <MakeJournalFooterPaper>
         <Row>
           <Col md={8}>
-            <FastField name={'description'}>
-              {({ field, meta: { error, touched } }) => (
-                <FormGroup
-                  label={<T id={'description'} />}
-                  className={'form-group--description'}
-                  intent={inputIntent({ error, touched })}
-                  helperText={<ErrorMessage name="description" />}
-                  fill={true}
-                >
-                  <TextArea fill={true} {...field} />
-                </FormGroup>
-              )}
-            </FastField>
+            <MakeJournalFormFooterLeft />
           </Col>
 
           <Col md={4}>
-            <Dragzone
-              initialFiles={[]}
-              // onDrop={handleDropFiles}
-              // onDeleteFile={handleDeleteFile}
-              hint={<T id={'attachments_maximum'} />}
-            />
+            <MakeJournalFormFooterRight />
           </Col>
         </Row>
-      </Postbox>
+      </MakeJournalFooterPaper>
     </div>
   );
 }
+const MakeJournalFooterPaper = styled(Paper)`
+  padding: 20px;
+`;

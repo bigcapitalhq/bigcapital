@@ -1,4 +1,9 @@
+import React from 'react';
 import moment from 'moment';
+import { useFormikContext } from 'formik';
+import { first } from 'lodash';
+
+import { useVendorFormContext } from './VendorFormProvider';
 
 export const defaultInitialValues = {
   salutation: '',
@@ -33,4 +38,20 @@ export const defaultInitialValues = {
   opening_balance: '',
   currency_code: '',
   opening_balance_at: moment(new Date()).format('YYYY-MM-DD'),
+  opening_balance_branch_id: '',
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = useVendorFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('opening_balance_branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
 };

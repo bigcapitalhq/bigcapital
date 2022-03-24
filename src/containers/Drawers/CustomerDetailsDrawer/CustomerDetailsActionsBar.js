@@ -19,9 +19,11 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import { useCustomerDetailsDrawerContext } from './CustomerDetailsDrawerProvider';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { Can, Icon, FormattedMessage as T } from 'components';
+import { CustomerMoreMenuItem } from './utils';
 import {
   AbilitySubject,
   SaleInvoiceAction,
@@ -36,6 +38,9 @@ import { compose } from 'utils';
  * Customer details actions bar.
  */
 function CustomerDetailsActionsBar({
+  // #withDialogActions
+  openDialog,
+
   // #withAlertsActions
   openAlert,
 
@@ -73,6 +78,10 @@ function CustomerDetailsActionsBar({
   const handleEditContact = () => {
     history.push(`/customers/${customerId}/edit`);
     closeDrawer('customer-details-drawer');
+  };
+
+  const handleEditOpeningBalance = () => {
+    openDialog('customer-opening-balance', { customerId });
   };
 
   return (
@@ -141,6 +150,12 @@ function CustomerDetailsActionsBar({
             onClick={handleDeleteCustomer}
           />
         </Can>
+        <NavbarDivider />
+        <CustomerMoreMenuItem
+          payload={{
+            onEditOpeningBalance: handleEditOpeningBalance,
+          }}
+        />
       </NavbarGroup>
     </DashboardActionsBar>
   );
@@ -149,4 +164,5 @@ function CustomerDetailsActionsBar({
 export default compose(
   withDrawerActions,
   withAlertsActions,
+  withDialogActions,
 )(CustomerDetailsActionsBar);

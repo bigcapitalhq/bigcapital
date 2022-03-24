@@ -8,6 +8,8 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'components';
 import { FastField, Field, ErrorMessage } from 'formik';
+import styled from 'styled-components';
+
 import {
   momentFormatter,
   compose,
@@ -23,12 +25,13 @@ import {
   FieldRequiredHint,
   Icon,
   InputPrependButton,
+  CustomerDrawerLink,
 } from 'components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
-
 import { useObserveEstimateNoSettings } from './utils';
+import { EstimateExchangeRateInputField } from './components';
 import { useEstimateFormContext } from './EstimateFormProvider';
 
 /**
@@ -88,14 +91,27 @@ function EstimateFormHeader({
               defaultSelectText={<T id={'select_customer_account'} />}
               onContactSelected={(customer) => {
                 form.setFieldValue('customer_id', customer.id);
+                form.setFieldValue('currency_code', customer?.currency_code);
               }}
               popoverFill={true}
               intent={inputIntent({ error, touched })}
               allowCreate={true}
             />
+
+            {value && (
+              <CustomerButtonLink customerId={value}>
+                <T id={'view_customer_details'} />
+              </CustomerButtonLink>
+            )}
           </FormGroup>
         )}
       </FastField>
+
+      {/* ----------- Exchange rate ----------- */}
+      <EstimateExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
 
       {/* ----------- Estimate date ----------- */}
       <FastField name={'estimate_date'}>
@@ -215,3 +231,8 @@ export default compose(
     estimateAutoIncrement: estimatesSettings?.autoIncrement,
   })),
 )(EstimateFormHeader);
+
+const CustomerButtonLink = styled(CustomerDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
+`;

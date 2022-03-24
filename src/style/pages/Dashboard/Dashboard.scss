@@ -17,8 +17,9 @@ $dashboard-views-bar-height: 44px;
     &-left {
       display: flex;
     }
-    &-actions {
-    }
+
+    &-actions {}
+
     &-sidebar-toggle {
       display: flex;
       align-items: center;
@@ -52,6 +53,7 @@ $dashboard-views-bar-height: 44px;
         &:focus {
           background-color: rgba(178, 220, 253, 0.15);
         }
+
         .#{$ns}-icon {
           color: #1552c8;
         }
@@ -60,10 +62,12 @@ $dashboard-views-bar-height: 44px;
       .bp3-navbar-divider {
         margin: 0 8px;
       }
+
       .form-group-quick-new-downDrop {
         .bp3-popover-target .bp3-button {
           color: #1552c8;
         }
+
         .bp3-button::after {
           content: none;
         }
@@ -86,6 +90,7 @@ $dashboard-views-bar-height: 44px;
           font-size: 12px;
           color: #fff;
         }
+
         &,
         &:hover,
         &:focus {
@@ -96,13 +101,13 @@ $dashboard-views-bar-height: 44px;
       }
     }
 
-    &-subscription-msg{
+    &-subscription-msg {
       display: flex;
       flex-direction: row;
       padding-right: 6px;
       font-size: 12px;
 
-      span{
+      span {
         margin: auto;
       }
     }
@@ -120,6 +125,7 @@ $dashboard-views-bar-height: 44px;
       &:hover {
         background: $light-gray2;
       }
+
       &::before {
         background: escape-svg($breadcrumbs-collapsed-icon) center center;
         width: 15px;
@@ -164,10 +170,12 @@ $dashboard-views-bar-height: 44px;
       &-group {
         height: 40px;
       }
+
       .#{$ns}-navbar-divider {
         margin-left: 0;
         margin-right: 0;
       }
+
       .#{$ns}-button {
         color: #32304a;
         padding: 8px 12px;
@@ -176,6 +184,7 @@ $dashboard-views-bar-height: 44px;
           background: rgba(167, 182, 194, 0.12);
           color: #32304a;
         }
+
         &.bp3-minimal:active,
         &.bp3-minimal.bp3-active {
           background: #a7b6c21f;
@@ -183,15 +192,18 @@ $dashboard-views-bar-height: 44px;
         }
 
         &.has-active-filters {
+
           &,
           &.bp3-active,
           &:active {
             background: #eafbe4;
           }
         }
+
         .#{$ns}-icon {
           color: #32304a;
         }
+
         &.#{$ns}-minimal.#{$ns}-intent-danger {
           color: #c23030;
 
@@ -219,9 +231,11 @@ $dashboard-views-bar-height: 44px;
         .#{$ns}-icon {
           color: #1183da;
         }
+
         .#{$ns}-button-text {
           margin-right: 2px;
         }
+
         .#{$ns}-icon-caret-down {
           margin-right: 0;
         }
@@ -240,10 +254,12 @@ $dashboard-views-bar-height: 44px;
         .bp3-control-indicator::before {
           box-shadow: 0 0 0;
         }
-        input ~ .bp3-control-indicator {
+
+        input~.bp3-control-indicator {
           background: rgba(167, 182, 194, 0.55);
         }
-        input:checked ~ .bp3-control-indicator {
+
+        input:checked~.bp3-control-indicator {
           background: #0069ff;
         }
       }
@@ -267,13 +283,14 @@ $dashboard-views-bar-height: 44px;
       font-weight: 500;
       margin: 0;
     }
-    h3 {
-    }
+
+    h3 {}
 
     .button--view-edit {
       svg {
         color: #929699;
       }
+
       &:hover,
       &:focus {
         svg {
@@ -289,10 +306,9 @@ $dashboard-views-bar-height: 44px;
     margin-left: 4px;
   }
 
-  &__subtitle {
-  }
-  &__insider {
-  }
+  &__subtitle {}
+
+  &__insider {}
 
   &__offline-badge {
     display: flex;
@@ -308,13 +324,14 @@ $dashboard-views-bar-height: 44px;
     margin: auto;
     margin-left: 12px;
   }
+
   &-content {
     display: flex;
     flex-direction: column;
     height: 100%;
     min-width: 850px;
 
-    .sidebar--mini-sidebar + & {
+    .sidebar--mini-sidebar+& {
       margin-left: 50px;
       width: calc(100% - 50px);
     }
@@ -326,7 +343,7 @@ $dashboard-views-bar-height: 44px;
     flex: 1 0 0;
     background-color: #fbfbfb;
 
-    > .dashboard__loading-indicator {
+    >.dashboard__loading-indicator {
       margin-top: auto;
       margin-bottom: auto;
     }
@@ -356,8 +373,10 @@ $dashboard-views-bar-height: 44px;
 
     .bigcapital-datatable {
       .table {
+
         .thead,
         .tbody {
+
           .th.selection,
           .td.selection {
             padding-left: 16px;
@@ -371,13 +390,13 @@ $dashboard-views-bar-height: 44px;
     }
   }
 
-  &__centered-empty-status{
+  &__centered-empty-status {
     display: flex;
     flex: 1 0 0;
     flex-direction: column;
     margin: auto;
 
-    .datatable-empty-status{
+    .datatable-empty-status {
       margin: auto;
       padding-bottom: 40px;
     }
@@ -412,8 +431,7 @@ $dashboard-views-bar-height: 44px;
     }
   }
 
-  &__preferences-topbar {
-  }
+  &__preferences-topbar {}
 
   &__footer {
     margin-top: auto;
@@ -423,7 +441,7 @@ $dashboard-views-bar-height: 44px;
     .footer-links {
       text-align: center;
 
-      > div {
+      >div {
         font-size: 12px;
         margin-right: 20px;
         display: inline;
@@ -502,6 +520,7 @@ $dashboard-views-bar-height: 44px;
       height: 2px;
     }
   }
+
   .button--new-view {
     margin: 0;
     height: $dashboard-views-bar-height;
@@ -536,6 +555,13 @@ $dashboard-views-bar-height: 44px;
 
   .bp3-tab[aria-selected='true'] {
     box-shadow: inset 0 -2px 0 #0052cc;
+  }
+
+  .bp3-button {
+    &:hover {
+      background: rgba(167, 182, 194, 0.12);
+      color: #32304a;
+    }
   }
 }
 

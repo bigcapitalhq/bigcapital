@@ -1,15 +1,28 @@
 import React from 'react';
-import { FormGroup, InputGroup, Position } from '@blueprintjs/core';
+import {
+  FormGroup,
+  InputGroup,
+  Position,
+  ControlGroup,
+} from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'components';
 import { FastField, ErrorMessage } from 'formik';
 import classNames from 'classnames';
+import styled from 'styled-components';
 
 import { CLASSES } from 'common/classes';
-import { VendorSelectField, FieldRequiredHint, Icon } from 'components';
+import {
+  FFormGroup,
+  VendorSelectField,
+  FieldRequiredHint,
+  Icon,
+  VendorDrawerLink,
+} from 'components';
 import { vendorsFieldShouldUpdate } from './utils';
 
 import { useBillFormContext } from './BillFormProvider';
+import { BillExchangeRateInputField } from './components';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import {
   momentFormatter,
@@ -35,13 +48,16 @@ function BillFormHeader() {
         shouldUpdate={vendorsFieldShouldUpdate}
       >
         {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
+          <FFormGroup
+            name={'vendor_id'}
             label={<T id={'vendor_name'} />}
             inline={true}
-            className={classNames(CLASSES.FILL, 'form-group--vendor')}
+            className={classNames(
+              'form-group--vendor-name',
+              'form-group--select-list',
+              CLASSES.FILL,
+            )}
             labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'vendor_id'} />}
           >
             <VendorSelectField
               contacts={vendors}
@@ -49,13 +65,26 @@ function BillFormHeader() {
               defaultSelectText={<T id={'select_vender_account'} />}
               onContactSelected={(contact) => {
                 form.setFieldValue('vendor_id', contact.id);
+                form.setFieldValue('currency_code', contact?.currency_code);
               }}
               popoverFill={true}
               allowCreate={true}
             />
-          </FormGroup>
+
+            {value && (
+              <VendorButtonLink vendorId={value}>
+                <T id={'view_vendor_details'} />
+              </VendorButtonLink>
+            )}
+          </FFormGroup>
         )}
       </FastField>
+
+      {/* ----------- Exchange rate ----------- */}
+      <BillExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
 
       {/* ------- Bill date ------- */}
       <FastField name={'bill_date'}>
@@ -144,3 +173,8 @@ function BillFormHeader() {
 }
 
 export default compose(withDialogActions)(BillFormHeader);
+
+const VendorButtonLink = styled(VendorDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
+`;

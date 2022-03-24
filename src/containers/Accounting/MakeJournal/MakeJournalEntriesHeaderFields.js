@@ -28,6 +28,7 @@ import {
 } from 'components';
 import withSettings from 'containers/Settings/withSettings';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
+import { JournalExchangeRateInputField } from './components';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import {
   currenciesFieldShouldUpdate,
@@ -52,14 +53,14 @@ function MakeJournalEntriesHeader({
 
   // Handle journal number change.
   const handleJournalNumberChange = () => {
-    openDialog('journal-number-form', {});
+    openDialog('journal-number-form');
   };
 
   // Handle journal number blur.
   const handleJournalNoBlur = (form, field) => (event) => {
     const newValue = event.target.value;
 
-    if (field.value !== newValue) {
+    if (field.value !== newValue && journalAutoIncrement) {
       openDialog('journal-number-form', {
         initialFormValues: {
           manualTransactionNo: newValue,
@@ -201,13 +202,19 @@ function MakeJournalEntriesHeader({
               selectedCurrencyCode={value}
               onCurrencySelected={(currencyItem) => {
                 form.setFieldValue('currency_code', currencyItem.currency_code);
+                form.setFieldValue('exchange_rate', '');
               }}
               defaultSelectText={value}
-              disabled={true}
             />
           </FormGroup>
         )}
       </FastField>
+
+      {/* ----------- Exchange rate ----------- */}
+      <JournalExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
     </div>
   );
 }

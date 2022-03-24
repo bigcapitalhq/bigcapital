@@ -7,10 +7,7 @@ import { CLASSES } from 'common/classes';
 import { PageFormBigNumber } from 'components';
 import ReceiptFormHeaderFields from './ReceiptFormHeaderFields';
 
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
-
 import { getEntriesTotal } from 'containers/Entries/utils';
-import { compose } from 'redux';
 
 /**
  * Receipt form header section.
@@ -18,16 +15,13 @@ import { compose } from 'redux';
 function ReceiptFormHeader({
   // #ownProps
   onReceiptNumberChanged,
-  // #withCurrentOrganization
-  organization: { base_currency },
 }) {
-  const { values } = useFormikContext();
+  const {
+    values: { currency_code, entries },
+  } = useFormikContext();
 
   // Calculate the total due amount of bill entries.
-  const totalDueAmount = useMemo(
-    () => getEntriesTotal(values.entries),
-    [values.entries],
-  );
+  const totalDueAmount = useMemo(() => getEntriesTotal(entries), [entries]);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
@@ -37,10 +31,10 @@ function ReceiptFormHeader({
       <PageFormBigNumber
         label={intl.get('due_amount')}
         amount={totalDueAmount}
-        currencyCode={base_currency}
+        currencyCode={currency_code}
       />
     </div>
   );
 }
 
-export default compose(withCurrentOrganization())(ReceiptFormHeader);
+export default ReceiptFormHeader;

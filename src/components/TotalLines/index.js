@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 export const TotalLineBorderStyle = {
+  None: 'None',
   SingleDark: 'SingleDark',
   DoubleDark: 'DoubleDark',
 };
@@ -79,6 +80,11 @@ export const TotalLineRoot = styled.div`
       props.borderStyle === TotalLineBorderStyle.SingleDark &&
       `
       border-bottom: 1px double #000;
+    `}
+    ${(props) =>
+      props.borderStyle === TotalLineBorderStyle.None &&
+      `
+      border-bottom-color: transparent;
     `}
     ${(props) =>
       props.textStyle === TotalLineTextStyle.Bold &&

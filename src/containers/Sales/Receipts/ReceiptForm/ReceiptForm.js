@@ -19,6 +19,7 @@ import ReceiptItemsEntriesEditor from './ReceiptItemsEntriesEditor';
 import ReceiptFormFloatingActions from './ReceiptFormFloatingActions';
 import ReceiptFormFooter from './ReceiptFormFooter';
 import ReceiptFormDialogs from './ReceiptFormDialogs';
+import ReceiptFormTopBar from './ReceiptFormTopbar';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -66,7 +67,7 @@ function ReceiptForm({
   const initialValues = useMemo(
     () => ({
       ...(!isEmpty(receipt)
-        ? { ...transformToEditForm(receipt), currency_code: base_currency }
+        ? { ...transformToEditForm(receipt) }
         : {
             ...defaultReceipt,
             ...(receiptAutoIncrement && {
@@ -157,6 +158,7 @@ function ReceiptForm({
         onSubmit={handleFormSubmit}
       >
         <Form>
+          <ReceiptFormTopBar />
           <ReceiptFromHeader />
           <ReceiptItemsEntriesEditor />
           <ReceiptFormFooter />

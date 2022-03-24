@@ -9,3 +9,13 @@ export const CurrencyTag = styled.span`
   line-height: 1;
   margin-left: 4px;
 `;
+
+export const BaseCurrencyRoot = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  margin-left: 4px;
+  > span {
+    background: #5c7080;
+  }
+`;

@@ -10,12 +10,16 @@ import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 import { FastField, ErrorMessage } from 'formik';
 import { CLASSES } from 'common/classes';
+import styled from 'styled-components';
+
 import {
   AccountsSelectList,
   CustomerSelectField,
   FieldRequiredHint,
   Icon,
+  If,
   InputPrependButton,
+  CustomerDrawerLink,
 } from 'components';
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -33,6 +37,7 @@ import {
   customersFieldShouldUpdate,
   useObserveReceiptNoSettings,
 } from './utils';
+import { ReceiptExchangeRateInputField } from './components';
 
 /**
  * Receipt form header fields.
@@ -40,9 +45,6 @@ import {
 function ReceiptFormHeader({
   //#withDialogActions
   openDialog,
-
-  // #ownProps
-  onReceiptNumberChanged,
 
   // #withSettings
   receiptAutoIncrement,
@@ -92,15 +94,27 @@ function ReceiptFormHeader({
               contacts={customers}
               selectedContactId={value}
               defaultSelectText={<T id={'select_customer_account'} />}
-              onContactSelected={(contact) => {
-                form.setFieldValue('customer_id', contact.id);
+              onContactSelected={(customer) => {
+                form.setFieldValue('customer_id', customer.id);
+                form.setFieldValue('currency_code', customer?.currency_code);
               }}
               popoverFill={true}
               allowCreate={true}
             />
+            {value && (
+              <CustomerButtonLink customerId={value}>
+                <T id={'view_customer_details'} />
+              </CustomerButtonLink>
+            )}
           </FormGroup>
         )}
       </FastField>
+
+      {/* ----------- Exchange rate ----------- */}
+      <ReceiptExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
 
       {/* ----------- Deposit account ----------- */}
       <FastField
@@ -228,3 +242,8 @@ export default compose(
     receiptNumberPrefix: receiptSettings?.numberPrefix,
   })),
 )(ReceiptFormHeader);
+
+const CustomerButtonLink = styled(CustomerDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
+`;

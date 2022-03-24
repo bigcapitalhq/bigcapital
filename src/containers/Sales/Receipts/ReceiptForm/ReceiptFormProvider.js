@@ -1,10 +1,15 @@
 import React, { createContext, useState } from 'react';
+import { isEqual, isUndefined } from 'lodash';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useReceipt,
   useAccounts,
   useSettingsReceipts,
   useCustomers,
+  useWarehouses,
+  useBranches,
   useItems,
   useCreateReceipt,
   useEditReceipt,
@@ -16,13 +21,15 @@ const ReceiptFormContext = createContext();
  * Receipt form provider.
  */
 function ReceiptFormProvider({ receiptId, ...props }) {
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isWarehouseFeatureCan = featureCan(Features.Warehouses);
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   // Fetch sale receipt details.
-  const { data: receipt, isLoading: isReceiptLoading } = useReceipt(
-    receiptId,
-    {
-      enabled: !!receiptId,
-    },
-  );
+  const { data: receipt, isLoading: isReceiptLoading } = useReceipt(receiptId, {
+    enabled: !!receiptId,
+  });
   // Fetch accounts list.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
@@ -32,12 +39,38 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
+  // Fetch warehouses list.
+  const {
+    data: warehouses,
+    isLoading: isWarehouesLoading,
+    isSuccess: isWarehousesSuccess,
+  } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
+
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches({}, { enabled: isBranchFeatureCan });
+
   // Filter all sellable items only.
   const stringifiedFilterRoles = React.useMemo(
     () =>
       JSON.stringify([
-        { index: 1, fieldKey: 'sellable', value: true, condition: '&&', comparator: 'equals', },
-        { index: 2, fieldKey: 'active', value: true, condition: '&&', comparator: 'equals' },
+        {
+          index: 1,
+          fieldKey: 'sellable',
+          value: true,
+          condition: '&&',
+          comparator: 'equals',
+        },
+        {
+          index: 2,
+          fieldKey: 'active',
+          value: true,
+          condition: '&&',
+          comparator: 'equals',
+        },
       ]),
     [],
   );
@@ -61,12 +94,16 @@ function ReceiptFormProvider({ receiptId, ...props }) {
 
   const isNewMode = !receiptId;
 
+  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+
   const provider = {
     receiptId,
     receipt,
     accounts,
     customers,
     items,
+    branches,
+    warehouses,
     submitPayload,
 
     isNewMode,
@@ -74,7 +111,12 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     isAccountsLoading,
     isCustomersLoading,
     isItemsLoading,
+    isWarehouesLoading,
+    isBranchesLoading,
+    isFeatureLoading,
     isSettingLoading,
+    isBranchesSuccess,
+    isWarehousesSuccess,
 
     createReceiptMutate,
     editReceiptMutate,

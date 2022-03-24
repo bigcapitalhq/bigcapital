@@ -13,7 +13,10 @@ import { FormattedMessage as T } from 'components';
 import { toSafeInteger } from 'lodash';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
+import styled from 'styled-components';
+
 import {
+  FFormGroup,
   AccountsSelectList,
   VendorSelectField,
   FieldRequiredHint,
@@ -21,11 +24,13 @@ import {
   Money,
   Hint,
   Icon,
+  VendorDrawerLink,
   MoneyInputGroup,
 } from 'components';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
+import { PaymentMadeExchangeRateInputField } from './components';
 import {
   momentFormatter,
   tansformDateValue,
@@ -82,13 +87,12 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
         shouldUpdate={vendorsFieldShouldUpdate}
       >
         {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
+          <FFormGroup
+            name={'vendor_id'}
             label={<T id={'vendor_name'} />}
             inline={true}
             className={classNames('form-group--select-list', Classes.FILL)}
             labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'vendor_id'} />}
           >
             <VendorSelectField
               contacts={vendors}
@@ -96,15 +100,28 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
               defaultSelectText={<T id={'select_vender_account'} />}
               onContactSelected={(contact) => {
                 form.setFieldValue('vendor_id', contact.id);
+                form.setFieldValue('currency_code', contact?.currency_code);
                 setPaymentVendorId(contact.id);
               }}
               disabled={!isNewMode}
               popoverFill={true}
               allowCreate={true}
             />
-          </FormGroup>
+
+            {value && (
+              <VendorButtonLink vendorId={value}>
+                <T id={'view_vendor_details'} />
+              </VendorButtonLink>
+            )}
+          </FFormGroup>
         )}
       </FastField>
+
+      {/* ----------- Exchange rate ----------- */}
+      <PaymentMadeExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
 
       {/* ------------ Payment date ------------ */}
       <FastField name={'payment_date'}>
@@ -134,7 +151,13 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
 
       {/* ------------ Full amount ------------ */}
       <Field name={'full_amount'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
+        {({
+          form: {
+            values: { currency_code },
+          },
+          field: { value },
+          meta: { error, touched },
+        }) => (
           <FormGroup
             label={<T id={'full_amount'} />}
             inline={true}
@@ -144,7 +167,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
             helperText={<ErrorMessage name="full_amount" />}
           >
             <ControlGroup>
-              <InputPrependText text={base_currency} />
+              <InputPrependText text={currency_code} />
               <MoneyInputGroup
                 value={value}
                 onChange={(value) => {
@@ -161,7 +184,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
               minimal={true}
             >
               <T id={'receive_full_amount'} /> (
-              <Money amount={payableFullAmount} currency={base_currency} />)
+              <Money amount={payableFullAmount} currency={currency_code} />)
             </Button>
           </FormGroup>
         )}
@@ -246,3 +269,8 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
 }
 
 export default compose(withCurrentOrganization())(PaymentMadeFormHeaderFields);
+
+const VendorButtonLink = styled(VendorDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
+`;

@@ -67,10 +67,9 @@ export function closeDrawer(name, payload) {
 export function toggleExpendSidebar(toggle) {
   return {
     type: t.SIDEBAR_EXPEND_TOGGLE,
-    payload: { toggle }
+    payload: { toggle },
   };
 }
-
 
 export function appIsLoading(toggle) {
   return {
@@ -83,7 +82,7 @@ export function appIntlIsLoading(toggle) {
   return {
     type: t.APP_INTL_IS_LOADING,
     payload: { isLoading: toggle },
-  }; 
+  };
 }
 
 /**
@@ -101,5 +100,14 @@ export function splashStartLoading() {
 export function splashStopLoading() {
   return {
     type: t.SPLASH_STOP_LOADING,
-  }  
+  };
 }
+
+export const setFeatureDashboardMeta = ({ features }) => {
+  return {
+    type: t.SET_FEATURE_DASHBOARD_META,
+    payload: {
+      features,
+    },
+  };
+};

@@ -15,6 +15,7 @@ import PaymentReceiveFloatingActions from './PaymentReceiveFloatingActions';
 import PaymentReceiveFormFooter from './PaymentReceiveFormFooter';
 import PaymentReceiveFormAlerts from './PaymentReceiveFormAlerts';
 import PaymentReceiveFormDialogs from './PaymentReceiveFormDialogs';
+import PaymentReceiveFormTopBar from './PaymentReceiveFormTopBar';
 import { PaymentReceiveInnerProvider } from './PaymentReceiveInnerProvider';
 
 import withSettings from 'containers/Settings/withSettings';
@@ -32,6 +33,7 @@ import {
   defaultPaymentReceive,
   transformToEditForm,
   transformFormToRequest,
+  transformErrors,
 } from './utils';
 
 /**
@@ -134,19 +136,8 @@ function PaymentReceiveForm({
         data: { errors },
       },
     }) => {
-      const getError = (errorType) => errors.find((e) => e.type === errorType);
-
-      if (getError('PAYMENT_RECEIVE_NO_EXISTS')) {
-        setFieldError(
-          'payment_receive_no',
-          intl.get('payment_number_is_not_unique'),
-        );
-      }
-      if (getError('PAYMENT_RECEIVE_NO_REQUIRED')) {
-        setFieldError(
-          'payment_receive_no',
-          intl.get('payment_receive.field.error.payment_receive_no_required'),
-        );
+      if (errors) {
+        transformErrors(errors, { setFieldError });
       }
       setSubmitting(false);
     };
@@ -178,6 +169,7 @@ function PaymentReceiveForm({
       >
         <Form>
           <PaymentReceiveInnerProvider>
+            <PaymentReceiveFormTopBar />
             <PaymentReceiveHeader />
             <PaymentReceiveFormBody />
             <PaymentReceiveFormFooter />

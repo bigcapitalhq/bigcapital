@@ -8,5 +8,6 @@ const Schema = Yup.object().shape({
   reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
   from_account_id: Yup.number().required().label(intl.get('deposit_account_')),
   description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
+  exchange_rate: Yup.number(),
 });
 export const CreateRefundCreditNoteFormSchema = Schema;

@@ -11,7 +11,7 @@ import { MakeJournalProvider } from './MakeJournalProvider';
  */
 export default function MakeJournalEntriesPage() {
   const { id: journalId } = useParams();
-  
+
   return (
     <MakeJournalProvider journalId={journalId}>
       <MakeJournalEntriesForm />

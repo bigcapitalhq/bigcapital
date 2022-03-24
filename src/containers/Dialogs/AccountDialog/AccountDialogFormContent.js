@@ -17,12 +17,14 @@ import {
   Hint,
   AccountsSelectList,
   AccountsTypesSelect,
+  CurrencySelect,
 } from 'components';
 import withAccounts from 'containers/Accounts/withAccounts';
 
 import { inputIntent } from 'utils';
 import { compose } from 'redux';
 import { useAutofocus } from 'hooks';
+import { FOREIGN_CURRENCY_ACCOUNTS } from '../../../common/accountTypes';
 import { useAccountDialogContext } from './AccountDialogProvider';
 
 /**
@@ -37,7 +39,7 @@ function AccountFormDialogFields({
   const accountNameFieldRef = useAutofocus();
 
   // Account form context.
-  const { accounts, accountsTypes } = useAccountDialogContext();
+  const { accounts, accountsTypes, currencies } = useAccountDialogContext();
 
   return (
     <Form>
@@ -58,6 +60,7 @@ function AccountFormDialogFields({
                 defaultSelectText={<T id={'select_account_type'} />}
                 onTypeSelected={(accountType) => {
                   form.setFieldValue('account_type', accountType.key);
+                  form.setFieldValue('currency_code', '');
                 }}
                 disabled={
                   action === 'edit' ||
@@ -143,6 +146,7 @@ function AccountFormDialogFields({
                 )}
                 inline={true}
                 intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name="parent_account_id" />}
               >
                 <AccountsSelectList
                   accounts={accounts}
@@ -159,6 +163,24 @@ function AccountFormDialogFields({
           </FastField>
         </If>
 
+        <If condition={FOREIGN_CURRENCY_ACCOUNTS.includes(values.account_type)}>
+          {/*------------ Currency  -----------*/}
+          <FastField name={'currency_code'}>
+            {({ form, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'currency'} />}
+                className={classNames('form-group--select-list', Classes.FILL)}
+                inline={true}
+              >
+                <CurrencySelect
+                  name={'currency_code'}
+                  currencies={currencies}
+                  popoverProps={{ minimal: true }}
+                />
+              </FormGroup>
+            )}
+          </FastField>
+        </If>
         <FastField name={'description'}>
           {({ field, meta: { error, touched } }) => (
             <FormGroup

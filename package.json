@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@babel/core": "7.8.4",
+    "@blueprintjs-formik/core": "^0.2.1",
+    "@blueprintjs-formik/select": "^0.1.4",
     "@blueprintjs/core": "^3.50.2",
     "@blueprintjs/datetime": "^3.23.12",
     "@blueprintjs/popover2": "^0.11.1",

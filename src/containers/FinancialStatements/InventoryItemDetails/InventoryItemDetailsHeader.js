@@ -10,10 +10,12 @@ import { FormattedMessage as T } from 'components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import InventoryItemDetailsHeaderGeneralPanel from './InventoryItemDetailsHeaderGeneralPanel';
+import InventoryItemDetailsHeaderDimensionsPanel from './InventoryItemDetailsHeaderDimensionsPanel';
 
 import withInventoryItemDetails from './withInventoryItemDetails';
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
 
+import { getInventoryItemDetailsDefaultQuery } from './utils2';
 import { compose, transformToForm } from 'utils';
 
 /**
@@ -30,11 +32,7 @@ function InventoryItemDetailsHeader({
   toggleInventoryItemDetailsFilterDrawer: toggleFilterDrawer,
 }) {
   // Default form values.
-  const defaultValues = {
-    fromDate: moment().toDate(),
-    toDate: moment().toDate(),
-    itemsIds: [],
-  };
+  const defaultValues = getInventoryItemDetailsDefaultQuery();
 
   // Filter form initial values.
   const initialValues = transformToForm(
@@ -45,7 +43,6 @@ function InventoryItemDetailsHeader({
     },
     defaultValues,
   );
-
   // Validation schema.
   const validationSchema = Yup.object().shape({
     fromDate: Yup.date().required().label(intl.get('fromDate')),
@@ -82,6 +79,11 @@ function InventoryItemDetailsHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<InventoryItemDetailsHeaderGeneralPanel />}
+            />
+            <Tab
+              id="dimensions"
+              title={<T id={'dimensions'} />}
+              panel={<InventoryItemDetailsHeaderDimensionsPanel />}
             />
           </Tabs>
           <div class="financial-header-drawer__footer">

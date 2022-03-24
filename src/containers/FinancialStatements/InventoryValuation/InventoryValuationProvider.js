@@ -5,21 +5,24 @@ import { transformFilterFormToQuery } from '../common';
 
 const InventoryValuationContext = React.createContext();
 
+/**
+ * Inventory valuation sheet provider.
+ */
 function InventoryValuationProvider({ query, ...props }) {
+  // Transformes the filter form query to request query.
+  const requestQuery = React.useMemo(
+    () => transformFilterFormToQuery(query),
+    [query],
+  );
+
   const {
     data: inventoryValuation,
     isFetching,
     isLoading,
     refetch,
-  } = useInventoryValuation(
-    {
-      ...transformFilterFormToQuery(query),
-    },
-    {
-      keepPreviousData: true,
-    },
-  );
-
+  } = useInventoryValuation(requestQuery, {
+    keepPreviousData: true,
+  });
 
   // Provider data.
   const provider = {

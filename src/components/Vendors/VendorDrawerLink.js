@@ -8,16 +8,18 @@ function VendorDrawerLinkComponent({
   // #ownProps
   children,
   vendorId,
+  className,
 
   // #withDrawerActions
   openDrawer,
 }) {
   // Handle view customer drawer.
-  const handleVendorDrawer = () => {
+  const handleVendorDrawer = (event) => {
     openDrawer('vendor-details-drawer', { vendorId });
+    event.preventDefault();
   };
 
-  return <ButtonLink onClick={handleVendorDrawer}>{children}</ButtonLink>;
+  return <ButtonLink className={className} onClick={handleVendorDrawer}>{children}</ButtonLink>;
 }
 
 export const VendorDrawerLink = R.compose(withDrawerActions)(VendorDrawerLinkComponent);

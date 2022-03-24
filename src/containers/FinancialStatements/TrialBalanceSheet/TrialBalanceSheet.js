@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import moment from 'moment';
 
 import { FinancialStatement } from 'components';
@@ -15,7 +15,7 @@ import { TrialBalanceSheetBody } from './TrialBalanceSheetBody';
 
 import withTrialBalanceActions from './withTrialBalanceActions';
 
-import { getDefaultTrialBalanceQuery } from './utils';
+import { useTrialBalanceSheetQuery } from './utils';
 import { compose } from 'utils';
 
 /**
@@ -25,9 +25,7 @@ function TrialBalanceSheet({
   // #withTrialBalanceSheetActions
   toggleTrialBalanceFilterDrawer: toggleFilterDrawer,
 }) {
-  const [filter, setFilter] = useState({
-    ...getDefaultTrialBalanceQuery(),
-  });
+  const { query, setLocationQuery } = useTrialBalanceSheetQuery();
 
   // Handle filter form submit.
   const handleFilterSubmit = useCallback(
@@ -37,14 +35,14 @@ function TrialBalanceSheet({
         fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
         toDate: moment(filter.toDate).format('YYYY-MM-DD'),
       };
-      setFilter(parsedFilter);
+      setLocationQuery(parsedFilter);
     },
-    [setFilter],
+    [setLocationQuery],
   );
   // Handle numebr format form submit.
   const handleNumberFormatSubmit = (numberFormat) => {
-    setFilter({
-      ...filter,
+    setLocationQuery({
+      ...query,
       numberFormat,
     });
   };
@@ -57,9 +55,9 @@ function TrialBalanceSheet({
   );
 
   return (
-    <TrialBalanceSheetProvider query={filter}>
+    <TrialBalanceSheetProvider query={query}>
       <TrialBalanceActionsBar
-        numberFormat={filter.numberFormat}
+        numberFormat={query.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <TrialBalanceSheetLoadingBar />
@@ -68,7 +66,7 @@ function TrialBalanceSheet({
       <DashboardPageContent>
         <FinancialStatement>
           <TrialBalanceSheetHeader
-            pageFilter={filter}
+            pageFilter={query}
             onSubmitFilter={handleFilterSubmit}
           />
           <TrialBalanceSheetBody />

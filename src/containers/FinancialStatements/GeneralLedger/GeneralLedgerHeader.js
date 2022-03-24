@@ -9,10 +9,12 @@ import { FormattedMessage as T } from 'components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import GeneralLedgerHeaderGeneralPane from './GeneralLedgerHeaderGeneralPane';
+import GeneralLedgerHeaderDimensionsPanel from './GeneralLedgerHeaderDimensionsPanel';
 
 import withGeneralLedger from './withGeneralLedger';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
 
+import { getDefaultGeneralLedgerQuery } from './common';
 import { compose, transformToForm, saveInvoke } from 'utils';
 
 /**
@@ -30,10 +32,7 @@ function GeneralLedgerHeader({
   isFilterDrawerOpen,
 }) {
   // Default values.
-  const defaultValues = {
-    fromDate: moment().toDate(),
-    toDate: moment().toDate(),
-  };
+  const defaultValues = getDefaultGeneralLedgerQuery();
 
   // Initial values.
   const initialValues = transformToForm(
@@ -44,26 +43,22 @@ function GeneralLedgerHeader({
     },
     defaultValues,
   );
-
   // Validation schema.
   const validationSchema = Yup.object().shape({
     dateRange: Yup.string().optional(),
     fromDate: Yup.date().required(),
     toDate: Yup.date().min(Yup.ref('fromDate')).required(),
   });
-
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     saveInvoke(onSubmitFilter, values);
-    toggleDisplayFilterDrawer();
+    toggleDisplayFilterDrawer(false);
     setSubmitting(false);
   };
-
   // Handle cancel button click.
   const handleCancelClick = () => {
     toggleDisplayFilterDrawer(false);
   };
-
   // Handle drawer close action.
   const handleDrawerClose = () => {
     toggleDisplayFilterDrawer(false);
@@ -85,6 +80,11 @@ function GeneralLedgerHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<GeneralLedgerHeaderGeneralPane />}
+            />
+            <Tab
+              id="dimensions"
+              title={<T id={'dimensions'} />}
+              panel={<GeneralLedgerHeaderDimensionsPanel />}
             />
           </Tabs>
 

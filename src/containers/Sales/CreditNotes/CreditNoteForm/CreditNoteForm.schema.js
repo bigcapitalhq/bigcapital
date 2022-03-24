@@ -22,6 +22,9 @@ const getSchema = () =>
       .min(1)
       .max(DATATYPES_LENGTH.TEXT)
       .label(intl.get('note')),
+    branch_id: Yup.string(),
+    warehouse_id: Yup.string(),
+    exchange_rate:Yup.number(),
     entries: Yup.array().of(
       Yup.object().shape({
         quantity: Yup.number()

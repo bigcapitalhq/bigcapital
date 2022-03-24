@@ -10,6 +10,7 @@ import { FormattedMessage as T } from 'components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import TrialBalanceSheetHeaderGeneralPanel from './TrialBalanceSheetHeaderGeneralPanel';
+import TrialBalanceSheetHeaderDimensionsPanel from './TrialBalanceSheetHeaderDimensionsPanel';
 
 import withTrialBalance from './withTrialBalance';
 import withTrialBalanceActions from './withTrialBalanceActions';
@@ -43,6 +44,7 @@ function TrialBalanceSheetHeader({
   const defaultValues = {
     fromDate: moment().toDate(),
     toDate: moment().toDate(),
+    branchesIds: [],
   };
 
   // Initial values.
@@ -86,6 +88,11 @@ function TrialBalanceSheetHeader({
               id="general"
               title={<T id={'general'} />}
               panel={<TrialBalanceSheetHeaderGeneralPanel />}
+            />
+            <Tab
+              id="dimensions"
+              title={<T id={'dimensions'} />}
+              panel={<TrialBalanceSheetHeaderDimensionsPanel />}
             />
           </Tabs>
 

@@ -8,6 +8,7 @@ import {
   CustomerDrawerLink,
   CommercialDocHeader,
   CommercialDocTopHeader,
+  ExchangeRateDetailItem,
 } from 'components';
 import { Row, Col, FormatDate, DetailsMenu, DetailItem } from 'components';
 
@@ -53,6 +54,10 @@ export default function ReceiptDetailHeader() {
             <DetailItem
               label={intl.get('closed_date')}
               children={<FormatDate value={receipt.closed_at_date} />}
+            />
+            <ExchangeRateDetailItem
+              exchangeRate={receipt?.exchange_rate}
+              toCurrency={receipt?.currency_code}
             />
           </DetailsMenu>
         </Col>

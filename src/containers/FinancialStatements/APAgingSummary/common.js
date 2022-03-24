@@ -11,6 +11,7 @@ export const getDefaultAPAgingSummaryQuery = () => {
     agingDaysBefore: 30,
     agingPeriods: 3,
     vendorsIds: [],
+    branchesIds: [],
     filterByOption: 'without-zero-balance',
   }
 }

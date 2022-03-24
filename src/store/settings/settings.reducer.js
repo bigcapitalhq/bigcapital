@@ -58,6 +58,9 @@ const initialState = {
     vendorCredit: {
       tableSize: 'medium',
     },
+    warehouseTransfer: {
+      tableSize: 'medium',
+    },
   },
 };
 

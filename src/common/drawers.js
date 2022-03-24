@@ -17,5 +17,6 @@ export const DRAWERS = {
   CREDIT_NOTE_DETAIL_DRAWER: 'credit-note-detail-drawer',
   VENDOR_CREDIT_DETAIL_DRAWER: 'vendor-credit-detail-drawer',
   REFUND_CREDIT_NOTE_DETAIL_DRAWER:'refund-credit-detail-drawer',
-  REFUND_VENDOR_CREDIT_DETAIL_DRAWER:'refund-vendor-detail-drawer'
+  REFUND_VENDOR_CREDIT_DETAIL_DRAWER:'refund-vendor-detail-drawer',
+  WAREHOUSE_TRANSFER_DETAIL_DRAWER:'warehouse-transfer-detail-drawer'
 };

@@ -1,17 +1,23 @@
 import React from 'react';
+import moment from 'moment';
 import classNames from 'classnames';
 import { FormGroup, ControlGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
-import moment from 'moment';
+import { FFormGroup } from '../../../components/Forms';
+import { Features } from 'common';
 import {
   MoneyInputGroup,
   InputPrependText,
   CurrencySelectList,
+  BranchSelect,
+  BranchSelectButton,
+  FeatureCan,
   Row,
   Col,
 } from 'components';
 import { FormattedMessage as T } from 'components';
+import { useSetPrimaryBranchToForm } from './utils';
 import { momentFormatter, tansformDateValue, inputIntent } from 'utils';
 import { useVendorFormContext } from './VendorFormProvider';
 
@@ -19,7 +25,10 @@ import { useVendorFormContext } from './VendorFormProvider';
  * Vendor Finaniceal Panel Tab.
  */
 export default function VendorFinanicalPanelTab() {
-  const { vendorId, currencies } = useVendorFormContext();
+  const { vendorId, currencies, branches } = useVendorFormContext();
+
+  // Sets the primary branch to form.
+  useSetPrimaryBranchToForm();
 
   return (
     <div className={'tab-panel--financial'}>
@@ -80,6 +89,23 @@ export default function VendorFinanicalPanelTab() {
             )}
           </FastField>
 
+          {/*------------ Opening branch  -----------*/}
+          <FeatureCan feature={Features.Branches}>
+            <FFormGroup
+              label={<T id={'vendor.label.opening_branch'} />}
+              name={'opening_balance_branch_id'}
+              inline={true}
+              className={classNames('form-group--select-list', Classes.FILL)}
+            >
+              <BranchSelect
+                name={'opening_balance_branch_id'}
+                branches={branches}
+                input={BranchSelectButton}
+                popoverProps={{ minimal: true }}
+              />
+            </FFormGroup>
+          </FeatureCan>
+
           {/*------------ Currency  -----------*/}
           <FastField name={'currency_code'}>
             {({ form, field: { value }, meta: { error, touched } }) => (
@@ -98,7 +124,6 @@ export default function VendorFinanicalPanelTab() {
                   onCurrencySelected={(currency) => {
                     form.setFieldValue('currency_code', currency.currency_code);
                   }}
-                  disabled={true}
                 />
               </FormGroup>
             )}

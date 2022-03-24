@@ -19,6 +19,7 @@ const defaultInitialValues = {
   reference_no: '',
   description: '',
   amount: '',
+  exchange_rate: 1,
 };
 
 /**

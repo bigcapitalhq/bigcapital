@@ -1,8 +1,12 @@
 import React from 'react';
 import { DialogContent } from 'components';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 import {
   useCreateCashflowTransaction,
+  useAccount,
   useAccounts,
+  useBranches,
   useCashflowAccounts,
   useSettingCashFlow,
 } from 'hooks/query';
@@ -18,8 +22,23 @@ function MoneyInDialogProvider({
   dialogName,
   ...props
 }) {
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   // Fetches accounts list.
   const { isFetching: isAccountsLoading, data: accounts } = useAccounts();
+
+  // Fetches the specific account details.
+  const { data: account, isLoading: isAccountLoading } = useAccount(accountId, {
+    enabled: !!accountId,
+  });
+
+  // Fetches the branches list.
+  const {
+    data: branches,
+    isLoading: isBranchesLoading,
+    isSuccess: isBranchesSuccess,
+  } = useBranches({}, { enabled: isBranchFeatureCan });
 
   // Fetch cash flow list .
   const { data: cashflowAccounts, isLoading: isCashFlowAccountsLoading } =
@@ -37,9 +56,12 @@ function MoneyInDialogProvider({
   //  provider.
   const provider = {
     accounts,
+    account,
+    branches,
     accountId,
     accountType,
     isAccountsLoading,
+    isBranchesSuccess,
 
     cashflowAccounts,
 
@@ -53,7 +75,10 @@ function MoneyInDialogProvider({
   return (
     <DialogContent
       isLoading={
-        isAccountsLoading || isCashFlowAccountsLoading || isSettingsLoading
+        isAccountsLoading ||
+        isCashFlowAccountsLoading ||
+        isBranchesLoading ||
+        isSettingsLoading
       }
     >
       <MoneyInDialogContent.Provider value={provider} {...props} />

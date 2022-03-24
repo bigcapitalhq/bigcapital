@@ -9,12 +9,14 @@ import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
+import styled from 'styled-components';
 import {
   CustomerSelectField,
   FieldRequiredHint,
   InputPrependButton,
   Icon,
   FormattedMessage as T,
+  CustomerDrawerLink,
 } from 'components';
 import {
   customerNameFieldShouldUpdate,
@@ -24,7 +26,7 @@ import {
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-
+import { CreditNoteExchangeRateInputField } from './components';
 import {
   momentFormatter,
   compose,
@@ -97,13 +99,26 @@ function CreditNoteFormHeaderFields({
               defaultSelectText={<T id={'select_customer_account'} />}
               onContactSelected={(customer) => {
                 form.setFieldValue('customer_id', customer.id);
+                form.setFieldValue('currency_code', customer?.currency_code);
               }}
               popoverFill={true}
               allowCreate={true}
             />
+            {value && (
+              <CustomerButtonLink customerId={value}>
+                <T id={'view_customer_details'} />
+              </CustomerButtonLink>
+            )}
           </FormGroup>
         )}
       </FastField>
+
+      {/* ----------- Exchange rate ----------- */}
+      <CreditNoteExchangeRateInputField
+        name={'exchange_rate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
+
       {/* ----------- Credit note date ----------- */}
       <FastField name={'credit_note_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
@@ -192,3 +207,8 @@ export default compose(
     creditNumberPrefix: creditNoteSettings?.numberPrefix,
   })),
 )(CreditNoteFormHeaderFields);
+
+const CustomerButtonLink = styled(CustomerDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
+`;

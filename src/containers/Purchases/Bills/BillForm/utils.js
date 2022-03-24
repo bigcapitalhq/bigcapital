@@ -1,21 +1,27 @@
+import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
+import { first } from 'lodash';
 import { Intent } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
 import { AppToaster } from 'components';
 import {
   defaultFastFieldShouldUpdate,
   transformToForm,
   repeatValue,
   orderingLinesIndexes,
+  formattedAmount,
 } from 'utils';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
 } from 'containers/Entries/utils';
-import { isLandedCostDisabled } from '../../../Entries/utils';
+import { useCurrentOrganization } from 'hooks/state';
+import { isLandedCostDisabled, getEntriesTotal } from '../../../Entries/utils';
+import { useBillFormContext } from './BillFormProvider';
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
 
 // Default bill entry.
 export const defaultBillEntry = {
@@ -38,6 +44,10 @@ export const defaultBill = {
   reference_no: '',
   note: '',
   open: '',
+  branch_id: '',
+  warehouse_id: '',
+  exchange_rate: 1,
+  currency_code: '',
   entries: [...repeatValue(defaultBillEntry, MIN_LINES_NUMBER)],
 };
 
@@ -176,4 +186,101 @@ export const handleErrors = (errors, { setErrors }) => {
       }),
     );
   }
+};
+
+export const useSetPrimaryBranchToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { branches, isBranchesSuccess } = useBillFormContext();
+
+  React.useEffect(() => {
+    if (isBranchesSuccess) {
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+
+      if (primaryBranch) {
+        setFieldValue('branch_id', primaryBranch.id);
+      }
+    }
+  }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+export const useSetPrimaryWarehouseToForm = () => {
+  const { setFieldValue } = useFormikContext();
+  const { warehouses, isWarehousesSuccess } = useBillFormContext();
+
+  React.useEffect(() => {
+    if (isWarehousesSuccess) {
+      const primaryWarehouse =
+        warehouses.find((b) => b.primary) || first(warehouses);
+
+      if (primaryWarehouse) {
+        setFieldValue('warehouse_id', primaryWarehouse.id);
+      }
+    }
+  }, [isWarehousesSuccess, setFieldValue, warehouses]);
+};
+
+/**
+ * Retreives the bill totals.
+ */
+export const useBillTotals = () => {
+  const {
+    values: { entries, currency_code: currencyCode },
+  } = useFormikContext();
+
+  // Retrieves the bili entries total.
+  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+
+  // Retrieves the formatted total money.
+  const formattedTotal = React.useMemo(
+    () => formattedAmount(total, currencyCode),
+    [total, currencyCode],
+  );
+  // Retrieves the formatted subtotal.
+  const formattedSubtotal = React.useMemo(
+    () => formattedAmount(total, currencyCode, { money: false }),
+    [total, currencyCode],
+  );
+  // Retrieves the payment total.
+  const paymentTotal = React.useMemo(() => 0, []);
+
+  // Retireves the formatted payment total.
+  const formattedPaymentTotal = React.useMemo(
+    () => formattedAmount(paymentTotal, currencyCode),
+    [paymentTotal, currencyCode],
+  );
+  // Retrieves the formatted due total.
+  const dueTotal = React.useMemo(
+    () => total - paymentTotal,
+    [total, paymentTotal],
+  );
+  // Retrieves the formatted due total.
+  const formattedDueTotal = React.useMemo(
+    () => formattedAmount(dueTotal, currencyCode),
+    [dueTotal, currencyCode],
+  );
+
+  return {
+    total,
+    paymentTotal,
+    dueTotal,
+    formattedTotal,
+    formattedSubtotal,
+    formattedPaymentTotal,
+    formattedDueTotal,
+  };
+};
+
+/**
+ * Detarmines whether the bill has foreign customer.
+ * @returns {boolean}
+ */
+export const useBillIsForeignCustomer = () => {
+  const { values } = useFormikContext();
+  const currentOrganization = useCurrentOrganization();
+
+  const isForeignCustomer = React.useMemo(
+    () => values.currency_code !== currentOrganization.base_currency,
+    [values.currency_code, currentOrganization.base_currency],
+  );
+  return isForeignCustomer;
 };

@@ -42,6 +42,7 @@ const Schema = Yup.object().shape({
   opening_balance: Yup.number().nullable(),
   currency_code: Yup.string(),
   opening_balance_at: Yup.date(),
+  opening_balance_branch_id: Yup.string(),
 });
 
 export const CreateCustomerForm = Schema;

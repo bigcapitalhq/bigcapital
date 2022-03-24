@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import moment from 'moment';
 
 import { FinancialStatement } from 'components';
@@ -15,33 +15,33 @@ import {
   CashFlowStatementAlerts,
 } from './components';
 
-import { getDefaultCashFlowSheetQuery } from './utils';
+import { useCashflowStatementQuery } from './utils';
 import { compose } from 'utils';
 
 /**
  * Cash flow statement.
+ * @returns {JSX.Element}
  */
 function CashFlowStatement({
-  //#withCashStatementActions
+  // # withCashStatementActions
   toggleCashFlowStatementFilterDrawer,
 }) {
-  // filter
-  const [filter, setFilter] = useState({
-    ...getDefaultCashFlowSheetQuery(),
-  });
+  // Cashflow statement query.
+  const { query, setLocationQuery } = useCashflowStatementQuery();
+
   // Handle refetch cash flow after filter change.
   const handleFilterSubmit = (filter) => {
-    const _filter = {
+    const newFilter = {
       ...filter,
       fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
       toDate: moment(filter.toDate).format('YYYY-MM-DD'),
     };
-    setFilter({ ..._filter });
+    setLocationQuery({ ...newFilter });
   };
   // Handle format number submit.
   const handleNumberFormatSubmit = (values) => {
-    setFilter({
-      ...filter,
+    setLocationQuery({
+      ...query,
       numberFormat: values,
     });
   };
@@ -54,9 +54,9 @@ function CashFlowStatement({
   );
 
   return (
-    <CashFlowStatementProvider filter={filter}>
+    <CashFlowStatementProvider filter={query}>
       <CashFlowStatementActionsBar
-        numberFormat={filter.numberFormat}
+        numberFormat={query.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <CashFlowStatementLoadingBar />
@@ -65,7 +65,7 @@ function CashFlowStatement({
       <DashboardPageContent>
         <FinancialStatement>
           <CashFlowStatementHeader
-            pageFilter={filter}
+            pageFilter={query}
             onSubmitFilter={handleFilterSubmit}
           />
           <CashFlowStatementBody />
