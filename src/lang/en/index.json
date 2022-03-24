@@ -1440,6 +1440,7 @@
   "AP_aging_summary.filter_options.label": "Filter vendors",
   "item.error.type_cannot_change_with_item_has_transactions": "Cannot change item type to inventory with item has associated transactions.",
   "item.error.cannot_change_inventory_account": "Cannot change item inventory account while the item has transactions.",
+  "item.error.you_could_not_delete_item_has_associated":"You could not delete item that has associated transactions",
   "customer.link.customer_details": "Customer details ({amount})",
   "bad_debt.dialog.written_off_amount": "Written-off amount",
   "bad_debt.dialog.bad_debt": "Bad debt",
