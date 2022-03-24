@@ -12,7 +12,6 @@ const commonInvalidateQueries = (queryClient) => {
 
   // Invalidate warehouses transfers.
   queryClient.invalidateQueries(t.WAREHOUSE_TRANSFERS);
-  // queryClient.invalidateQueries(t.WAREHOUSE_TRANSFER);
 
   queryClient.invalidateQueries(t.DASHBOARD_META);
 };

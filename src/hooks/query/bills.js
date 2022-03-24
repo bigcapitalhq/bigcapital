@@ -33,6 +33,9 @@ const commonInvalidateQueries = (queryClient) => {
 
   // Invalidate items associated bills transactions.
   queryClient.invalidateQueries(t.ITEMS_ASSOCIATED_WITH_BILLS);
+
+  // Invalidate item warehouses.
+  queryClient.invalidateQueries(t.ITEM_WAREHOUSES_LOCATION);
 };
 
 /**
