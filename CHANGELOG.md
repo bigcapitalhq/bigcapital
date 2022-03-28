@@ -2,6 +2,26 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [1.7.0-rc.1] - 24-03-2022
+
+## Added 
+ - Multiply currencies with foreign currencies.
+ - Multiply warehouses to track inventory items.
+ - Multiply branches to track organization transactions.
+ - Transfer orders between warehouses.
+ - Integrate financial reports with multiply branches.
+ - Integrate inventory reports with multiply warehouses.
+
+## Changes
+ - Optimize style of sale invoice form.
+ - Optimize style of sale receipt form.
+ - Optimize style of credit note form.
+ - Optimize style of payment receive form.
+ - Optimize style of bill form.
+ - Optimize style of payment made form.
+ - Optimize style of manual journal form.
+ - Optimize style of expense form.
+
 ## [1.6.3] - 21-02-2022
 
 ### Fixed

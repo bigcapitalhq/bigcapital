@@ -104,6 +104,14 @@ export const handleDeleteErrors = (errors) => {
       intent: Intent.DANGER,
     });
   }
+  if (
+    errors.find((error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTIONS')
+  ) {
+    AppToaster.show({
+      message: intl.get('item.error.you_could_not_delete_item_has_associated'),
+      intent: Intent.DANGER,
+    });
+  }
 };
 
 /**

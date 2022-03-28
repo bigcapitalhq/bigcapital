@@ -1795,13 +1795,10 @@
   "profit_loss_sheet.percentage_of_row": "% التغير الأفقي",
   "profit_loss_sheet.percentage_of_expense": "% التغير في المصاريف",
   "profit_loss_sheet.percentage_of_income": "% التغير الإيرادات",
-  
   "report.balance_sheet_comparison.title": "مقارنة الميزانية العمومية",
   "report.balance_sheet_comparison.desc": "يعرض أصول الشركة والتزاماتها وحقوق المساهمين في نقطة زمنية محددة مقارنة بالسنة الماضية.",
-
   "report.profit_loss_sheet_comparison.title": "مقارنة قائمة الدخل",
   "report.profit_loss_sheet_comparison.desc": "يعرض الإيرادات والتكاليف والمصاريف المتكبدة في نقطة محددة ومقارنة بالعام السابق.",
-
   "warehouse_locations.label": "المخازن",
   "warehouse_locations.column.warehouse_name": "اسم المخزن",
   "warehouse_locations.column.quantity": "الكمية",
@@ -2007,5 +2004,6 @@
   "receipt.branch_button.label": "الفرع: {label}",
   "receipt.warehouse_button.label": "المخزن: {label}",
   "warehouse_transfer.empty_status.title": "",
-  "warehouse_transfer.empty_status.description": ""
+  "warehouse_transfer.empty_status.description": "",
+  "item.error.you_could_not_delete_item_has_associated": "لا يمكنك حذف العنصر لديه معاملات مرتبطة به "
 }
