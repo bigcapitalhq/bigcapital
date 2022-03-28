@@ -3,7 +3,8 @@ import { FormGroup, Classes } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 
-import { AccountsMultiSelect, Row, Col } from 'components';
+import { AccountMultiSelect, Row, Col } from 'components';
+import { FFormGroup } from '../../../components/Forms';
 
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
@@ -44,12 +45,13 @@ function GLHeaderGeneralPaneContent() {
       </Row>
       <Row>
         <Col xs={4}>
-          <FormGroup
+          <FFormGroup
             label={<T id={'specific_accounts'} />}
-            className={classNames('form-group--select-list', Classes.FILL)}
+            name={'accounts'}
+            className={Classes.FILL}
           >
-            <AccountsMultiSelect items={accounts} />
-          </FormGroup>
+            <AccountMultiSelect name="accounts" accounts={accounts} />
+          </FFormGroup>
         </Col>
       </Row>
 

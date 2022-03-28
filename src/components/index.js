@@ -104,6 +104,7 @@ export * from './Warehouses';
 export * from './Currencies';
 export * from './FormTopbar'
 export * from './Paper';
+export * from './Accounts'
 
 const Hint = FieldHint;
 
