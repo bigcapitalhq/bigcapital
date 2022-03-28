@@ -9,15 +9,15 @@ import {
 } from '@blueprintjs/core';
 import { Can, FormattedMessage as T } from 'components';
 
+import { AccountAction, AbilitySubject } from '../../../common/abilityOption';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 
-import { safeCallback } from 'utils';
-import { AccountAction, AbilitySubject } from '../../../common/abilityOption';
-
-import { compose } from 'utils';
+import { AccountDialogAction } from 'containers/Dialogs/AccountDialog/utils';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
+import { compose, safeCallback } from 'utils';
 
 /**
  * Account drawer action bar.
@@ -35,17 +35,18 @@ function AccountDrawerActionBar({
   // Handle new child button click.
   const onNewChildAccount = () => {
     openDialog('account-form', {
-      action: 'new_child',
+      action: AccountDialogAction.NewChild,
       parentAccountId: account.id,
       accountType: account.account_type,
     });
   };
-
   // Handle edit account action.
   const onEditAccount = () => {
-    openDialog('account-form', { action: 'edit', id: account.id });
+    openDialog('account-form', {
+      action: AccountDialogAction.Edit,
+      id: account.id,
+    });
   };
-
   // Handle delete action account.
   const onDeleteAccount = () => {
     openAlert('account-delete', { accountId: account.id });

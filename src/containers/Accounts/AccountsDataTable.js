@@ -15,6 +15,8 @@ import withSettings from '../Settings/withSettings';
 import { useAccountsChartContext } from './AccountsChartProvider';
 import { useMemorizedColumnsWidths } from '../../hooks';
 
+import { AccountDialogAction } from '../Dialogs/AccountDialog/utils';
+
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
@@ -58,7 +60,10 @@ function AccountsDataTable({
 
   // Handle edit account action.
   const handleEditAccount = (account) => {
-    openDialog('account-form', { action: 'edit', id: account.id });
+    openDialog('account-form', {
+      action: AccountDialogAction.Edit,
+      id: account.id,
+    });
   };
 
   // Handle view detail account.
@@ -69,7 +74,7 @@ function AccountsDataTable({
   // Handle new child button click.
   const handleNewChildAccount = (account) => {
     openDialog('account-form', {
-      action: 'new_child',
+      action: AccountDialogAction.NewChild,
       parentAccountId: account.id,
       accountType: account.account_type,
     });

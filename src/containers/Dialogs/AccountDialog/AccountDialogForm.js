@@ -43,9 +43,7 @@ function AccountFormDialogContent({
     account,
 
     accountId,
-    action,
-    parentAccountId,
-    accountType,
+    payload,
     isNewMode,
     dialogName,
   } = useAccountDialogContext();
@@ -101,7 +99,6 @@ function AccountFormDialogContent({
         .catch(handleError);
     }
   };
-
   // Form initial values in create and edit mode.
   const initialValues = {
     ...defaultInitialValues,
@@ -111,11 +108,7 @@ function AccountFormDialogContent({
      * as well.
      */
     ...transformToForm(
-      transformAccountToForm(account, {
-        action,
-        parentAccountId,
-        accountType,
-      }),
+      transformAccountToForm(account, payload),
       defaultInitialValues,
     ),
   };
@@ -133,7 +126,7 @@ function AccountFormDialogContent({
     >
       <AccountDialogFormContent
         dialogName={dialogName}
-        action={action}
+        action={payload?.action}
         onClose={handleClose}
       />
     </Formik>

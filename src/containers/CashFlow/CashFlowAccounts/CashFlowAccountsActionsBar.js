@@ -16,6 +16,9 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withCashflowAccountsTableActions from '../AccountTransactions/withCashflowAccountsTableActions';
 
+import { AccountDialogAction } from '../../Dialogs/AccountDialog/utils';
+import { ACCOUNT_TYPE } from '../../../common';
+
 import { compose } from 'utils';
 
 /**
@@ -37,15 +40,15 @@ function CashFlowAccountsActionsBar({
   // Handle add bank account.
   const handleAddBankAccount = () => {
     openDialog('account-form', {
-      action: 'NEW_ACCOUNT_DEFINED_TYPE',
-      accountType: 'cash',
+      action: AccountDialogAction.NewDefinedType,
+      accountType: ACCOUNT_TYPE.CASH,
     });
   };
   // Handle add cash account.
   const handleAddCashAccount = () => {
     openDialog('account-form', {
-      action: 'NEW_ACCOUNT_DEFINED_TYPE',
-      accountType: 'bank',
+      action: AccountDialogAction.NewDefinedType,
+      accountType: ACCOUNT_TYPE.BANK,
     });
   };
   // Handle inactive switch changing.

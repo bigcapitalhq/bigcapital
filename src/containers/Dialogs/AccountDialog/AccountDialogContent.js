@@ -5,21 +5,9 @@ import AccountDialogForm from './AccountDialogForm';
 /**
  * Account dialog content.
  */
-export default function AccountDialogContent({
-  dialogName,
-  accountId,
-  action,
-  parentAccountId,
-  accountType,
-}) {
+export default function AccountDialogContent({ dialogName, payload }) {
   return (
-    <AccountDialogProvider
-      dialogName={dialogName}
-      accountId={accountId}
-      action={action}
-      parentAccountId={parentAccountId}
-      accountType={accountType}
-    >
+    <AccountDialogProvider dialogName={dialogName} payload={payload}>
       <AccountDialogForm />
     </AccountDialogProvider>
   );

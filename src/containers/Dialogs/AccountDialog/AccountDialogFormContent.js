@@ -39,7 +39,8 @@ function AccountFormDialogFields({
   const accountNameFieldRef = useAutofocus();
 
   // Account form context.
-  const { accounts, accountsTypes, currencies } = useAccountDialogContext();
+  const { fieldsDisabled, accounts, accountsTypes, currencies } =
+    useAccountDialogContext();
 
   return (
     <Form>
@@ -62,11 +63,7 @@ function AccountFormDialogFields({
                   form.setFieldValue('account_type', accountType.key);
                   form.setFieldValue('currency_code', '');
                 }}
-                disabled={
-                  action === 'edit' ||
-                  action === 'new_child' ||
-                  action === 'NEW_ACCOUNT_DEFINED_TYPE'
-                }
+                disabled={fieldsDisabled.accountType}
                 popoverProps={{ minimal: true }}
                 popoverFill={true}
               />
@@ -209,7 +206,7 @@ function AccountFormDialogFields({
           <Button
             intent={Intent.PRIMARY}
             loading={isSubmitting}
-            style={{ minWidth: '75px' }}
+            style={{ minWidth: '95px' }}
             type="submit"
           >
             {action === 'edit' ? <T id={'edit'} /> : <T id={'submit'} />}
