@@ -10,16 +10,16 @@ const CashFlowStatementDimensionsPanelContext = React.createContext();
  * cash flow statement dimensions panel provider.
  * @returns
  */
-function CashFlowStatementDimensionsPanelProvider({ query,...props }) {
+function CashFlowStatementDimensionsPanelProvider({ query, ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Fetches the branches list.
-  const { isLoading: isBranchesLoading, data: branches } = useBranches(
-    query,
-    { enabled: isBranchFeatureCan },
-  );
+  const { isLoading: isBranchesLoading, data: branches } = useBranches(query, {
+    enabled: isBranchFeatureCan,
+    keepPreviousData: true,
+  });
 
   // Provider
   const provider = {

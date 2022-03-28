@@ -15,9 +15,12 @@ function ProfitLossSheetProvider({ query, ...props }) {
     isFetching,
     isLoading,
     refetch,
-  } = useProfitLossSheet({
-    ...transformFilterFormToQuery(query),
-  });
+  } = useProfitLossSheet(
+    {
+      ...transformFilterFormToQuery(query),
+    },
+    { keepPreviousData: true },
+  );
 
   const provider = {
     profitLossSheet,
