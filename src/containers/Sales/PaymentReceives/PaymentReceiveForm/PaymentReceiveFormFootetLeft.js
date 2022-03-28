@@ -20,7 +20,7 @@ export function PaymentReceiveFormFootetLeft() {
       {/* --------- Internal Note--------- */}
       <TermsConditsFormGroup
         name={'internal_note'}
-        label={<T id={'payment_receive_form.label.internal_note'} />}
+        label={<T id={'payment_receive_form.label.note'} />}
       >
         <FEditableText
           name={'internal_note'}

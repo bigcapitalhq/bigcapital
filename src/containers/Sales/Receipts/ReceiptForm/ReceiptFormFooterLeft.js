@@ -18,16 +18,18 @@ export function ReceiptFormFooterLeft() {
         />
       </ReceiptMsgFormGroup>
 
-      {/* --------- Statement--------- */}
-      <StatementFormGroup
-        label={<T id={'receipt_form.label.statement'} />}
-        name={'statement'}
+      {/* --------- Terms and conditions --------- */}
+      <TermsConditsFormGroup
+        label={<T id={'receipt_form.label.terms_conditions'} />}
+        name={'terms_conditions'}
       >
         <FEditableText
-          name={'statement'}
-          placeholder={intl.get('receipt_form.statement.placeholder')}
+          name={'terms_conditions'}
+          placeholder={intl.get(
+            'receipt_form.terms_and_conditions.placeholder',
+          )}
         />
-      </StatementFormGroup>
+      </TermsConditsFormGroup>
     </React.Fragment>
   );
 }
@@ -46,7 +48,7 @@ const ReceiptMsgFormGroup = styled(FFormGroup)`
   }
 `;
 
-const StatementFormGroup = styled(FFormGroup)`
+const TermsConditsFormGroup = styled(FFormGroup)`
   &.bp3-form-group {
     .bp3-label {
       font-size: 12px;
