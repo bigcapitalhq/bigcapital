@@ -26,9 +26,9 @@ export const useCashFlowStatementColumns = () => {
  * Cash flow statement loading bar.
  */
 export function CashFlowStatementLoadingBar() {
-  const { isCashFlowLoading } = useCashFlowStatementContext();
+  const { isCashFlowFetching } = useCashFlowStatementContext();
   return (
-    <If condition={isCashFlowLoading}>
+    <If condition={isCashFlowFetching}>
       <FinancialLoadingBar />
     </If>
   );
