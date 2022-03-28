@@ -19,6 +19,7 @@ function GeneralLedgerHeaderDimensionsPanelProvider({ query, ...props }) {
   // Fetches the branches list.
   const { isLoading: isBranchesLoading, data: branches } = useBranches(query, {
     enabled: isBranchFeatureCan,
+    keepPreviousData: true,
   });
 
   // Provider
