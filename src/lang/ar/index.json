@@ -2003,7 +2003,7 @@
   "estimate.warehouse_button.label": "المخزن: {label}",
   "receipt.branch_button.label": "الفرع: {label}",
   "receipt.warehouse_button.label": "المخزن: {label}",
-  "warehouse_transfer.empty_status.title": "",
-  "warehouse_transfer.empty_status.description": "",
+  "warehouse_transfer.empty_status.title": "إدارة عمليات النقل بين المستودعات",
+  "warehouse_transfer.empty_status.description": "غالبًا ماتحتاج الاعمال ذات مستودعات متعددة لطلبات نقل البضائع من مستودع إلى آخر عندما تكون في حاجة ماسة إلى البائعين.",
   "item.error.you_could_not_delete_item_has_associated": "لا يمكنك حذف العنصر لديه معاملات مرتبطة به "
 }

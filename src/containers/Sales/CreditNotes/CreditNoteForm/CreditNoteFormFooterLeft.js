@@ -10,7 +10,6 @@ export function CreditNoteFormFooterLeft() {
       <CreditNoteMsgFormGroup
         name={'note'}
         label={<T id={'credit_note.label_customer_note'} />}
-        hintText={'Will be displayed on the invoice'}
       >
         <FEditableText
           name={'note'}
@@ -24,9 +23,9 @@ export function CreditNoteFormFooterLeft() {
       >
         <FEditableText
           name={'terms_conditions'}
-          placeholder={
-            <T id={'credit_note.label_terms_and_conditions.placeholder'} />
-          }
+          placeholder={intl.get(
+            'credit_note.label_terms_and_conditions.placeholder',
+          )}
         />
       </TermsConditsFormGroup>
     </React.Fragment>
