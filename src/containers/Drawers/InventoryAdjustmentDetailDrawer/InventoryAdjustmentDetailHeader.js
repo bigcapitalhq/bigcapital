@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 import { defaultTo } from 'lodash';
 import clsx from 'classnames';
 
-import { DetailsMenu, DetailItem } from 'components';
+import { DetailsMenu, DetailItem, FormatDate } from 'components';
 import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawerProvider';
 
 import InventoryAdjustmentDrawerCls from 'style/components/Drawers/InventoryAdjustmentDrawer.module.scss';
@@ -20,7 +20,7 @@ export default function InventoryAdjustmentDetailHeader() {
     <div className={clsx(InventoryAdjustmentDrawerCls.detail_panel_header)}>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
         <DetailItem label={intl.get('date')}>
-          {moment(inventoryAdjustment.date).format('YYYY MMM DD')}
+          <FormatDate value={inventoryAdjustment.date} />
         </DetailItem>
 
         <DetailItem label={intl.get('type')}>
@@ -36,7 +36,7 @@ export default function InventoryAdjustmentDetailHeader() {
         </DetailItem>
 
         <DetailItem label={intl.get('published_at')}>
-          {moment(inventoryAdjustment.published_at).format('YYYY MMM DD')}
+          <FormatDate value={inventoryAdjustment.published_at} />
         </DetailItem>
 
         <DetailItem label={intl.get('reason')}>
@@ -44,7 +44,7 @@ export default function InventoryAdjustmentDetailHeader() {
         </DetailItem>
 
         <DetailItem label={intl.get('created_at')}>
-          {moment(inventoryAdjustment.created_at).format('YYYY MMM DD')}
+          <FormatDate value={inventoryAdjustment.created_at} />
         </DetailItem>
       </DetailsMenu>
     </div>

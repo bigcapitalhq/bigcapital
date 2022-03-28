@@ -24,12 +24,13 @@ function InventoryValuationHeaderDimensionsProvider({ ...props }) {
   // Fetches the warehouses list.
   const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses(
     null,
-    { enabled: isWarehouseFeatureCan },
+    { enabled: isWarehouseFeatureCan, keepPreviousData: true },
   );
 
   // Fetches the branches list.
   const { data: branches, isLoading: isBranchLoading } = useBranches(null, {
     enabled: isBranchFeatureCan,
+    keepPreviousData: true,
   });
 
   // Provider

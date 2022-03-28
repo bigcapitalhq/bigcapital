@@ -79,10 +79,10 @@ function VendorCreditDetailActionsBar({
               text={<T id={'refund'} />}
               onClick={handleRefundVendorCredit}
             />
-            <NavbarDivider />
           </If>
         </Can>
         <Can I={VendorCreditAction.Delete} a={AbilitySubject.VendorCredit}>
+          <NavbarDivider />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}

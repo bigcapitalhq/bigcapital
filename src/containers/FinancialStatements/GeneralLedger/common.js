@@ -32,6 +32,7 @@ export const getDefaultGeneralLedgerQuery = () => {
     basis: 'accural',
     filterByOption: 'with-transactions',
     branchesIds: [],
+    accounts: [],
   };
 };
 

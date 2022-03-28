@@ -95,9 +95,9 @@ function BillDetailActionsBar({
               onClick={handleQuickBillPayment}
             />
           </If>
-          <NavbarDivider />
         </Can>
         <Can I={BillAction.Delete} a={AbilitySubject.Bill}>
+          <NavbarDivider />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}
