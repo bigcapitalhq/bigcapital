@@ -64,7 +64,6 @@ export const transitionItemTypeKeyToLabel = (itemTypeKey) => {
   const table = {
     service: intl.get('service'),
     inventory: intl.get('inventory'),
-    'non-inventory': intl.get('non_inventory'),
   };
   return typeof table[itemTypeKey] === 'string' ? table[itemTypeKey] : '';
 };

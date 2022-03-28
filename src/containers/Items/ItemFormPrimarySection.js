@@ -47,11 +47,6 @@ export default function ItemFormPrimarySection() {
       <div class="mb1">
         <FormattedHTMLMessage id={'products_you_buy_and_or_sell'} />
       </div>
-      <div class="mb1">
-        <FormattedHTMLMessage
-          id={'products_you_buy_and_or_sell_but_don_t_need'}
-        />
-      </div>
     </>
   );
 
@@ -86,7 +81,6 @@ export default function ItemFormPrimarySection() {
               disabled={!isNewMode && item.type === 'inventory'}
             >
               <Radio label={<T id={'service'} />} value="service" />
-              <Radio label={<T id={'non_inventory'} />} value="non-inventory" />
               <Radio label={<T id={'inventory'} />} value="inventory" />
             </RadioGroup>
           </FormGroup>
@@ -126,7 +120,11 @@ export default function ItemFormPrimarySection() {
                 helperText={<ErrorMessage name={'code'} />}
                 inline={true}
               >
-                <InputGroup medium={true} intent={inputIntent({ error, touched })} {...field} />
+                <InputGroup
+                  medium={true}
+                  intent={inputIntent({ error, touched })}
+                  {...field}
+                />
               </FormGroup>
             )}
           </FastField>
