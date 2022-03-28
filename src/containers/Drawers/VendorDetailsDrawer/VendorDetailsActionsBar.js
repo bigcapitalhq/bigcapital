@@ -102,17 +102,17 @@ function VendorDetailsActionsBar({
             icon={<Icon icon={'plus'} />}
           />
         </Popover>
-        <NavbarDivider />
         <Can I={VendorAction.Edit} a={AbilitySubject.Vendor}>
+          <NavbarDivider />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
             text={<T id={'vendor.drawer.action.edit'} />}
             onClick={safeCallback(onEditContact)}
           />
-          <NavbarDivider />
         </Can>
         <Can I={VendorAction.Delete} a={AbilitySubject.Vendor}>
+          <NavbarDivider />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}

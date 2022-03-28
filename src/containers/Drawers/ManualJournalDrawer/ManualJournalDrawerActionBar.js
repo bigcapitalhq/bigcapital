@@ -55,9 +55,9 @@ function ManualJournalDrawerActionBar({
             text={<T id={'edit_journal'} />}
             onClick={handleEditManualJournal}
           />
-          <NavbarDivider />
         </Can>
         <Can I={ManualJournalAction.Delete} a={AbilitySubject.ManualJournal}>
+          <NavbarDivider />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="trash-16" iconSize={16} />}

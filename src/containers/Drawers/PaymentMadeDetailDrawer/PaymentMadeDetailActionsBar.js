@@ -58,9 +58,9 @@ function PaymentMadeDetailActionsBar({
             text={<T id={'edit_payment_made'} />}
             onClick={handleEditPaymentMade}
           />
-          <NavbarDivider />
         </Can>
         <Can I={PaymentMadeAction.Delete} a={AbilitySubject.PaymentMade}>
+          <NavbarDivider />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}

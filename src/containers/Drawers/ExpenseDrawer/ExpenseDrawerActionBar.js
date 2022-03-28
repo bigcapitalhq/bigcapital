@@ -55,9 +55,9 @@ function ExpenseDrawerActionBar({
             text={<T id={'edit_expense'} />}
             onClick={handleEditExpense}
           />
-          <NavbarDivider />
         </Can>
         <Can I={ExpenseAction.Delete} a={AbilitySubject.Expense}>
+          <NavbarDivider />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="trash-16" iconSize={16} />}
