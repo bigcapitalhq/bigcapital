@@ -1,3 +1,4 @@
+export * from './accountTypes';
 export * from './TableStyle';
 export * from './features';
 export * from './cellTypes';

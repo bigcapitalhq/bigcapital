@@ -8,21 +8,14 @@ import {
   useAccounts,
   useEditAccount,
 } from 'hooks/query';
+import { AccountDialogAction, getDisabledFormFields } from './utils';
 
 const AccountDialogContext = createContext();
 
 /**
  * Account form provider.
  */
-function AccountDialogProvider({
-  accountId,
-  parentAccountId,
-  action,
-  accountType,
-
-  dialogName,
-  ...props
-}) {
+function AccountDialogProvider({ dialogName, payload, ...props }) {
   // Create and edit account mutations.
   const { mutateAsync: createAccountMutate } = useCreateAccount();
   const { mutateAsync: editAccountMutate } = useEditAccount();
@@ -35,22 +28,31 @@ function AccountDialogProvider({
     useAccountsTypes();
 
   // Fetches the specific account details.
-  const { data: account, isLoading: isAccountLoading } = useAccount(accountId, {
-    enabled: !!accountId,
-  });
+  const { data: account, isLoading: isAccountLoading } = useAccount(
+    payload.accountId,
+    {
+      enabled:
+        !!payload.accountId && payload.action === AccountDialogAction.Edit,
+    },
+  );
 
   // Handle fetch Currencies data table
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 
-  const isNewMode = !accountId;
+  const isNewMode = !payload?.action;
+
+  // Retrieves the disabled fields of the form.
+  const fieldsDisabled = React.useMemo(
+    () => getDisabledFormFields(account, payload),
+    [account, payload],
+  );
 
   // Provider payload.
   const provider = {
     dialogName,
-    accountId,
-    parentAccountId,
-    action,
-    accountType,
+    payload,
+    fieldsDisabled,
+
     currencies,
 
     createAccountMutate,

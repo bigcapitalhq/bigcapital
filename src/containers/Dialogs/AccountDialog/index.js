@@ -18,9 +18,11 @@ function AccountFormDialog({
     <Dialog
       name={dialogName}
       title={
-        (payload.action === 'edit') ?
-          (<T id={'edit_account'} />) :
-          (<T id={'new_account'} />)
+        payload.action === 'edit' ? (
+          <T id={'edit_account'} />
+        ) : (
+          <T id={'new_account'} />
+        )
       }
       className={'dialog--account-form'}
       autoFocus={true}
@@ -28,18 +30,10 @@ function AccountFormDialog({
       isOpen={isOpen}
     >
       <DialogSuspense>
-        <AccountDialogContent
-          dialogName={dialogName}
-          accountId={payload.id}
-          action={payload.action}
-          parentAccountId={payload.parentAccountId}
-          accountType={payload.accountType}
-        />
+        <AccountDialogContent dialogName={dialogName} payload={payload} />
       </DialogSuspense>
     </Dialog>
   );
 }
 
-export default compose(
-  withDialogRedux(),
-)(AccountFormDialog);
+export default compose(withDialogRedux())(AccountFormDialog);

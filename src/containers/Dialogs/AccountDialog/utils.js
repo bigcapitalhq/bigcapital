@@ -1,7 +1,17 @@
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
-import { isEmpty } from 'lodash';
+import { isUndefined } from 'lodash';
 
+//
+export const AccountDialogAction = {
+  Edit: 'edit',
+  NewChild: 'NewChild',
+  NewDefinedType: 'NewDefinedType',
+};
+
+/**
+ * Transformes the response API errors.
+ */
 export const transformApiErrors = (errors) => {
   const fields = {};
   if (errors.find((e) => e.type === 'NOT_UNIQUE_CODE')) {
@@ -23,7 +33,7 @@ export const transformApiErrors = (errors) => {
 /**
  * Payload transformer in account edit mode.
  */
-function transformEditMode(payload) {
+function tranformNewChildAccountPayload(payload) {
   return {
     parent_account_id: payload.parentAccountId || '',
     account_type: payload.accountType || '',
@@ -34,7 +44,7 @@ function transformEditMode(payload) {
 /**
  * Payload transformer in new account with defined type.
  */
-function transformNewAccountDefinedType(payload) {
+function transformNewDefinedTypePayload(payload) {
   return {
     account_type: payload.accountType || '',
   };
@@ -60,9 +70,9 @@ const defaultPayloadTransform = () => ({});
  */
 function getConditions() {
   return [
-    ['edit'],
-    ['new_child', transformEditMode],
-    ['NEW_ACCOUNT_DEFINED_TYPE', transformNewAccountDefinedType],
+    [AccountDialogAction.Edit],
+    [AccountDialogAction.NewChild, tranformNewChildAccountPayload],
+    [AccountDialogAction.NewDefinedType, transformNewDefinedTypePayload],
   ];
 }
 
@@ -73,7 +83,7 @@ export const transformAccountToForm = (account, payload) => {
   const conditions = getConditions();
 
   const results = conditions.map((condition) => {
-    const transformer = !isEmpty(condition[1])
+    const transformer = !isUndefined(condition[1])
       ? condition[1]
       : defaultPayloadTransform;
 
@@ -83,4 +93,16 @@ export const transformAccountToForm = (account, payload) => {
     ];
   });
   return R.cond(results)(account);
+};
+
+/**
+ * Detarmines whether the for fields are disabled.
+ */
+export const getDisabledFormFields = (account, payload) => {
+  return {
+    accountType:
+      payload.action === AccountDialogAction.Edit ||
+      payload.action === AccountDialogAction.NewChild ||
+      payload.action === AccountDialogAction.NewDefinedType,
+  };
 };
