@@ -95,12 +95,12 @@ function PaymentReceiveActionsBar({
             intent={Intent.DANGER}
             onClick={handleDeletePaymentReceive}
           />
-          <NavbarDivider />
         </Can>
         <Can
           I={PaymentReceiveAction.NotifyBySms}
           a={AbilitySubject.PaymentReceive}
         >
+          <NavbarDivider />
           <MoreMenuItems
             payload={{
               onNotifyViaSMS: handleNotifyViaSMS,
