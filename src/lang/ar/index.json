@@ -1361,6 +1361,7 @@
   "item.field.sell_account.hint": "أدخل السعر الذي ستبيعه لهذا العنصر.",
   "item_entries.products_services.hint": "أدخل المنتجات أو الخدمات التي تبيعها أو تشتريها لتتبع ما قمت ببيعه أو شرائه.",
   "item_entries.landed.hint": "يتيح لك هذه الخيار إمكانية  إضافة تكلفة اضافية علي فاتورة الشراء متال علي ذلك تكاليف الشحن ، ثم تحديد هذه التكلفة لتحميلها علي فاتورة الشراء.",
+  "item_entries.remove_row": "حذف الصف",
   "invoice.auto_increment.auto": "يتم تعيين أرقام الفواتير على وضع الزيادة التلقائي. هل أنت متأكد من تغيير هذا الإعداد؟",
   "invoice.auto_increment.manually": "يتم تعيين أرقام فواتيرك يدوياً. هل أنت متأكد من تغيير هذه الإعدادات؟",
   "manual_journals.auto_increment.auto": "يتم تعيين أرقام القيود على وضع الزيادة التلقائي. هل أنت متأكد من تغيير هذا الإعداد؟",
@@ -1847,6 +1848,7 @@
   "warehouse_transfer.column.transfer_quantity": "الكمية ",
   "warehouse_transfer.column.source_warehouse": "المصدر",
   "warehouse_transfer.column.destination_warehouse": "الوجهة",
+  "warehouse_transfer.column.cost_price": "سعر التكلفة",
   "warehouse_transfer.auto_increment.auto": "يتم تعيين أرقام النقل على وضع الزيادة التلقائي. هل أنت متأكد من تغيير هذا الإعداد؟",
   "warehouse_transfer.auto_increment.manually": "يتم تعيين أرقام النقل يدوياً. هل أنت متأكد من تغيير هذه الإعدادات؟",
   "warehouse_transfer.setting_your_auto_generated_transfer_no": "تعيين رقم النقل الذي تم إنشاؤه تلقائيًا",
@@ -2006,6 +2008,6 @@
   "warehouse_transfer.empty_status.title": "إدارة عمليات النقل بين المستودعات",
   "warehouse_transfer.empty_status.description": "غالبًا ماتحتاج الاعمال ذات مستودعات متعددة لطلبات نقل البضائع من مستودع إلى آخر عندما تكون في حاجة ماسة إلى البائعين.",
   "item.error.you_could_not_delete_item_has_associated": "لا يمكنك حذف العنصر لديه معاملات مرتبطة به ",
-  "warehouse_transfer.quantity_cannot_be_zero_or_empty": "لا يمكن أن تكون الكمية صفراً أو فارغة."
-
+  "warehouse_transfer.quantity_cannot_be_zero_or_empty": "لا يمكن أن تكون الكمية صفراً أو فارغة.",
+  "invoice.validation.due_date": "يجب أن يكون حقل {path} في وقت لاحق من {min}"
 }
