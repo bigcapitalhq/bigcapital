@@ -50,7 +50,7 @@ function ItemsCategoryTable({
       loading={isCategoriesLoading}
       headerLoading={isCategoriesLoading}
       progressBarLoading={isCategoriesFetching}
-      expandable={true}
+      // expandable={false}
       sticky={true}
       selectionColumn={true}
       TableLoadingRenderer={TableSkeletonRows}
