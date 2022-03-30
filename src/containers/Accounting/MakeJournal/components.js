@@ -4,7 +4,12 @@ import { Popover2 } from '@blueprintjs/popover2';
 import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
 
-import { ExchangeRateInputGroup, Icon, Hint, FormattedMessage as T } from 'components';
+import {
+  ExchangeRateInputGroup,
+  Icon,
+  Hint,
+  FormattedMessage as T,
+} from 'components';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,
@@ -63,7 +68,10 @@ export const ActionsCellRenderer = ({
   };
   const exampleMenu = (
     <Menu>
-      <MenuItem onClick={handleClickRemoveRole} text="Remove line" />
+      <MenuItem
+        onClick={handleClickRemoveRole}
+        text={intl.get('make_journal.entries.remove_row')}
+      />
     </Menu>
   );
   return (

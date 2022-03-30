@@ -2010,5 +2010,8 @@
   "warehouse_transfer.form.reason.placeholder": "Enter the reason behind the transfer order.",
   "warehouse_transfer.quantity_cannot_be_zero_or_empty": "Quantity cannot be zero or empty.",
   "invoice.validation.due_date": "{path} field must be later than {min}",
-  "estimate.validation.expiration_date": "{path} field must be later than {min}"
+  "estimate.validation.expiration_date": "{path} field must be later than {min}",
+  "make_journal.entries.remove_row": "Remove line",
+  "expense.entries.remove_row": "Remove line",
+  "warehouse_transfer.entries.remove_row": "Remove line"
 }

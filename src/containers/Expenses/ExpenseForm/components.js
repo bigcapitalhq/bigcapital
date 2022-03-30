@@ -48,7 +48,10 @@ const ActionsCellRenderer = ({
   };
   const exampleMenu = (
     <Menu>
-      <MenuItem onClick={handleClickRemoveRole} text="Remove line" />
+      <MenuItem
+        onClick={handleClickRemoveRole}
+        text={intl.get('expense.entries.remove_row')}
+      />
     </Menu>
   );
   return (
