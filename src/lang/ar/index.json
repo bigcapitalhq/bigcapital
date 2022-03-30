@@ -2011,5 +2011,8 @@
   "warehouse_transfer.quantity_cannot_be_zero_or_empty": "لا يمكن أن تكون الكمية صفراً أو فارغة.",
   "invoice.validation.due_date": "يجب أن يكون حقل {path} في وقت لاحق من {min}",
   "estimate.validation.expiration_date": "يجب أن يكون حقل {path} في وقت لاحق من {min}",
+  "make_journal.entries.remove_row": "حذف الصف",
+  "expense.entries.remove_row": "حذف الصف",
+  "warehouse_transfer.entries.remove_row": "حذف الصف",
   "bill.validation.due_date": "يجب أن يكون حقل {path} في وقت لاحق من {min}" 
 }
