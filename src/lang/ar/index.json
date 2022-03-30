@@ -2014,5 +2014,6 @@
   "make_journal.entries.remove_row": "حذف الصف",
   "expense.entries.remove_row": "حذف الصف",
   "warehouse_transfer.entries.remove_row": "حذف الصف",
-  "item.details.inactive": "غير نشط"
+  "item.details.inactive": "غير نشط",
+  "bill.validation.due_date": "يجب أن يكون حقل {path} في وقت لاحق من {min}"
 }
