@@ -1338,6 +1338,7 @@
   "item.field.sell_account.hint": "Enter price which you goint to sell this item.",
   "item_entries.products_services.hint": "Enter products or services you sell or buy to keep tracking what your sold or purchased.",
   "item_entries.landed.hint": "This options allows you to be able to add additional cost eg. freight then allocate cost to the items in your bills.",
+  "item_entries.remove_row": "Remove line",
   "invoice.auto_increment.auto": "Your invoice numbers are set on auto-increment mode. Are you sure changing this setting?",
   "invoice.auto_increment.manually": "Your invoice numbers are set on manual mode. Are you sure chaning this settings?",
   "manual_journals.auto_increment.auto": "Your Jouranl numbers are set on auto-increment mode. Are you sure changing this setting?",
@@ -2007,5 +2008,8 @@
   "warehouse_transfer.empty_status.description": "Business with multiply warehouses often transfers items from on warehouse to another when they are in immediate need of vendors.",
   "warehouse_transfer.form.reason.label": "Reason",
   "warehouse_transfer.form.reason.placeholder": "Enter the reason behind the transfer order.",
-  "warehouse_transfer.quantity_cannot_be_zero_or_empty": "Quantity cannot be zero or empty."
+  "warehouse_transfer.quantity_cannot_be_zero_or_empty": "Quantity cannot be zero or empty.",
+  "invoice.validation.due_date": "{path} field must be later than {min}",
+  "estimate.validation.expiration_date": "{path} field must be later than {min}",
+  "bill.validation.due_date": "{path} field must be later than {min}"
 }
