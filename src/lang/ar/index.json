@@ -2009,5 +2009,6 @@
   "warehouse_transfer.empty_status.description": "غالبًا ماتحتاج الاعمال ذات مستودعات متعددة لطلبات نقل البضائع من مستودع إلى آخر عندما تكون في حاجة ماسة إلى البائعين.",
   "item.error.you_could_not_delete_item_has_associated": "لا يمكنك حذف العنصر لديه معاملات مرتبطة به ",
   "warehouse_transfer.quantity_cannot_be_zero_or_empty": "لا يمكن أن تكون الكمية صفراً أو فارغة.",
-  "invoice.validation.due_date": "يجب أن يكون حقل {path} في وقت لاحق من {min}"
+  "invoice.validation.due_date": "يجب أن يكون حقل {path} في وقت لاحق من {min}",
+  "estimate.validation.expiration_date": "يجب أن يكون حقل {path} في وقت لاحق من {min}"
 }

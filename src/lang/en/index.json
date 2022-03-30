@@ -2009,5 +2009,6 @@
   "warehouse_transfer.form.reason.label": "Reason",
   "warehouse_transfer.form.reason.placeholder": "Enter the reason behind the transfer order.",
   "warehouse_transfer.quantity_cannot_be_zero_or_empty": "Quantity cannot be zero or empty.",
-  "invoice.validation.due_date": "{path} field must be later than {min}"
+  "invoice.validation.due_date": "{path} field must be later than {min}",
+  "estimate.validation.expiration_date": "{path} field must be later than {min}"
 }
