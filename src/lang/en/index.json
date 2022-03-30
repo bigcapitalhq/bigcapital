@@ -2014,5 +2014,6 @@
   "make_journal.entries.remove_row": "Remove line",
   "expense.entries.remove_row": "Remove line",
   "warehouse_transfer.entries.remove_row": "Remove line",
+  "item.details.inactive": "Inactive",
   "bill.validation.due_date": "{path} field must be later than {min}"
 }
