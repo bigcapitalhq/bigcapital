@@ -1,6 +1,4 @@
 import React, { lazy } from 'react';
-import intl from 'react-intl-universal';
-
 import { Drawer, DrawerSuspense } from 'components';
 import withDrawers from 'containers/Drawer/withDrawers';
 
@@ -22,7 +20,6 @@ function ExpenseDrawer({
     <Drawer
       isOpen={isOpen}
       name={name}
-      title={intl.get('expense.drawer.title')}
       size={'65%'}
       style={{ minWidth: '700px', maxWidth: '900px' }}
     >

@@ -1,16 +1,19 @@
 import * as Yup from 'yup';
+import moment from 'moment';
 import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
 import { isBlank } from 'utils';
 
 const BillFormSchema = Yup.object().shape({
-  vendor_id: Yup.number()
-    .required()
-    .label(intl.get('vendor_name_')),
-  bill_date: Yup.date()
-    .required()
-    .label(intl.get('bill_date_')),
+  vendor_id: Yup.number().required().label(intl.get('vendor_name_')),
+  bill_date: Yup.date().required().label(intl.get('bill_date_')),
   due_date: Yup.date()
+    .min(Yup.ref('bill_date'), ({ path, min }) =>
+      intl.get('bill.validation.due_date', {
+        path,
+        min: moment(min).format('YYYY/MM/DD'),
+      }),
+    )
     .required()
     .label(intl.get('due_date_')),
   bill_number: Yup.string()
@@ -25,7 +28,7 @@ const BillFormSchema = Yup.object().shape({
   open: Yup.boolean(),
   branch_id: Yup.string(),
   warehouse_id: Yup.string(),
-  exchange_rate:Yup.number(),
+  exchange_rate: Yup.number(),
   entries: Yup.array().of(
     Yup.object().shape({
       quantity: Yup.number()

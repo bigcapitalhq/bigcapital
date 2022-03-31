@@ -2,16 +2,19 @@ import * as Yup from 'yup';
 import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
 import { isBlank } from 'utils';
+import moment from 'moment';
 
 const Schema = Yup.object().shape({
-  customer_id: Yup.number()
-    .label(intl.get('customer_name_'))
-    .required(),
-  estimate_date: Yup.date()
-    .required()
-    .label(intl.get('estimate_date_')),
+  customer_id: Yup.number().label(intl.get('customer_name_')).required(),
+  estimate_date: Yup.date().required().label(intl.get('estimate_date_')),
   expiration_date: Yup.date()
     .required()
+    .min(Yup.ref('estimate_date'), ({ path, min }) =>
+      intl.get('estimate.validation.expiration_date', {
+        path,
+        min: moment(min).format('YYYY/MM/DD'),
+      }),
+    )
     .label(intl.get('expiration_date_')),
   estimate_number: Yup.string()
     .max(DATATYPES_LENGTH.STRING)

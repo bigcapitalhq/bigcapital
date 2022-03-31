@@ -10,6 +10,7 @@ import {
   Col,
   DetailItem,
   DetailsMenu,
+  FormatDate,
   ExchangeRateDetailItem,
   FormattedMessage as T,
 } from 'components';
@@ -64,10 +65,12 @@ export default function ExpenseDrawerHeader() {
             minLabelSize={'180px'}
           >
             <DetailItem label={<T id={'published_at'} />}>
-              {moment(expense.published_at).format('YYYY MMM DD')}
+              <FormatDate value={expense.published_at} />
             </DetailItem>
 
-            <DetailItem label={<T id={'created_at'} />}>2021 Aug 24</DetailItem>
+            <DetailItem label={<T id={'created_at'} />}>
+              <FormatDate value={expense.created_at} />
+            </DetailItem>
           </DetailsMenu>
         </Col>
       </Row>
