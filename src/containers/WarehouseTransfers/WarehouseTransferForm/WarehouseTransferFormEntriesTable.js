@@ -45,7 +45,7 @@ export default function WarehouseTransferFormEntriesTable({
         item_id: newRowMeta.itemId,
         warehouses: newRowMeta.warehouses,
         description: '',
-        quantity: 0,
+        quantity: '',
       };
       const newRows = mutateTableRow(newRowMeta.rowIndex, newRow, entries);
 

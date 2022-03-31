@@ -72,18 +72,6 @@ function WarehouseTransferForm({
   // Handles form submit.
   const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
     setSubmitting(true);
-    const totalQuantity = sumBy(values.entries, 'quantity');
-
-    if (totalQuantity <= 0) {
-      AppToaster.show({
-        message: intl.get(
-          'warehouse_transfer.quantity_cannot_be_zero_or_empty',
-        ),
-        intent: Intent.DANGER,
-      });
-      return;
-    }
-
     // Transformes the values of the form to request.
     const form = {
       ...transformValueToRequest(values),
