@@ -27,6 +27,9 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate
   queryClient.invalidateQueries(t.ITEM_ASSOCIATED_WITH_RECEIPTS);
 
+  // Invalidate item warehouses.
+  queryClient.invalidateQueries(t.ITEM_WAREHOUSES_LOCATION);
+
   // Invalidate the settings.
   queryClient.invalidateQueries([t.SETTING, t.SETTING_RECEIPTS]);
 };

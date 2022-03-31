@@ -103,7 +103,7 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
     <DashboardInsider
       loading={
         isVendorsLoading ||
-        isItemsFetching ||
+        isItemsLoading ||
         isAccountsLoading ||
         isPaymentLoading
       }

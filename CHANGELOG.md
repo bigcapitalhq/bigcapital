@@ -2,6 +2,47 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [1.7.1-rc.2] - 30-03-2022
+
+## Added
+  - `BIG-141` Add inactive status to item drawer details.
+  - `BIG-278` Add created at date on expense details.
+  - `BIG-350` Add empty status content of warehouse transfers service.
+  - `BIG-344` Add branch details to manual journal and expense details.
+## Fixed
+  - `BIG-221` Remove Non-inventory radio choice on item form.
+  - `BIG-236` Validate estimate expiration date should be equal or bigger than estimate date.
+  - `BIG-237` Validate invoice due date should be equal or bigger than invoice date.
+  - `BIG-238` Validate bill due date should be equal or bigger than bill date.
+  - `BIG-280` Optimize style of multi-select accounts menu.
+  - `BIG-284` Cashflow statement loading bar.
+  - `BIG-296` Creating a new child account from accounts list.
+  - `BIG-301` Navigation bar divider on actions bar hide with permissions control.
+  - `BIG-304` Adding cash or bank account from cash flow service.
+  - `BIG-351` Invalid date in the inventory adjustment detail.
+  - `BIG-352` Fix terms and notes fields on footer of all services.
+  - `BIG-354` Validate the warehouse transfer quantity should be above zero.
+
+## [1.7.0-rc.1] - 24-03-2022
+
+## Added 
+ - Multiply currencies with foreign currencies.
+ - Multiply warehouses to track inventory items.
+ - Multiply branches to track organization transactions.
+ - Transfer orders between warehouses.
+ - Integrate financial reports with multiply branches.
+ - Integrate inventory reports with multiply warehouses.
+
+## Changes
+ - Optimize style of sale invoice form.
+ - Optimize style of sale receipt form.
+ - Optimize style of credit note form.
+ - Optimize style of payment receive form.
+ - Optimize style of bill form.
+ - Optimize style of payment made form.
+ - Optimize style of manual journal form.
+ - Optimize style of expense form.
+
 ## [1.6.3] - 21-02-2022
 
 ### Fixed

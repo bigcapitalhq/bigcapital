@@ -3,6 +3,8 @@ import React from 'react';
 import { Tag, Intent, Classes, Tooltip, Position } from '@blueprintjs/core';
 
 import { T, Choose, FormatNumberCell, If, Icon } from '../../../components';
+import { Features } from 'common';
+import { useFeatureCan } from 'hooks/state';
 
 /**
  * Note column accessor.
@@ -46,8 +48,9 @@ export function ManualJournalDetailsStatus({ manualJournal }) {
 /**
  * Retrieve read-only manual journal entries columns.
  */
-export const useManualJournalEntriesColumns = () =>
-  React.useMemo(
+export const useManualJournalEntriesColumns = () => {
+  const { featureCan } = useFeatureCan();
+  return React.useMemo(
     () => [
       {
         Header: intl.get('account_name'),
@@ -70,6 +73,17 @@ export const useManualJournalEntriesColumns = () =>
         disableSortBy: true,
         className: 'note',
       },
+      ...(featureCan(Features.Branches)
+        ? [
+            {
+              Header: intl.get('branch'),
+              width: 130,
+              accessor: 'branch.name',
+              disableSortBy: true,
+              className: 'branch',
+            },
+          ]
+        : []),
       {
         Header: intl.get('credit'),
         accessor: 'credit',
@@ -93,5 +107,6 @@ export const useManualJournalEntriesColumns = () =>
         align: 'right',
       },
     ],
-    [],
+    [featureCan],
   );
+};

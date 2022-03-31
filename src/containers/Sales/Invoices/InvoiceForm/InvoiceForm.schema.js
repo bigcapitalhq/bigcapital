@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import moment from 'moment';
 import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
 import { isBlank } from 'utils';
@@ -7,7 +8,15 @@ const getSchema = () =>
   Yup.object().shape({
     customer_id: Yup.string().label(intl.get('customer_name_')).required(),
     invoice_date: Yup.date().required().label(intl.get('invoice_date_')),
-    due_date: Yup.date().required().label(intl.get('due_date_')),
+    due_date: Yup.date()
+      .min(Yup.ref('invoice_date'), ({ path, min }) =>
+        intl.get('invoice.validation.due_date', {
+          path,
+          min: moment(min).format('YYYY/MM/DD'),
+        }),
+      )
+      .required()
+      .label(intl.get('due_date_')),
     invoice_no: Yup.string()
       .max(DATATYPES_LENGTH.STRING)
       .label(intl.get('invoice_no_')),

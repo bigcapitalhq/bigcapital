@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
-import { isEmpty } from 'lodash';
+import { isEmpty, sumBy } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from 'common/classes';
@@ -20,7 +20,7 @@ import WarehouseTransferFormDialog from './WarehouseTransferFormDialog';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
 
-import { AppToaster, } from 'components';
+import { AppToaster } from 'components';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
 import { WarehouseTransferObserveItemsCost } from './components';
@@ -119,7 +119,7 @@ function WarehouseTransferForm({
         .catch(onError);
     }
   };
-  
+
   return (
     <div
       className={classNames(
@@ -141,7 +141,7 @@ function WarehouseTransferForm({
           <WarehouseTransferFormFooter />
           <WarehouseTransferFormDialog />
           <WarehouseTransferFloatingActions />
-          <WarehouseTransferObserveItemsCost />          
+          <WarehouseTransferObserveItemsCost />
         </Form>
       </Formik>
     </div>

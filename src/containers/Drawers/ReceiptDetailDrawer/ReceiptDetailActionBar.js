@@ -92,9 +92,9 @@ function ReceiptDetailActionBar({
             intent={Intent.DANGER}
             onClick={safeCallback(onDeleteReceipt)}
           />
-          <NavbarDivider />
         </Can>
         <Can I={SaleReceiptAction.NotifyBySms} a={AbilitySubject.Receipt}>
+          <NavbarDivider />
           <MoreMenuItems
             payload={{
               onNotifyViaSMS: handleNotifyViaSMS,

@@ -183,20 +183,6 @@ function WarehouseTransferFormHeaderFields({
           </FormGroup>
         )}
       </FastField>
-      {/*------------ reason -----------*/}
-      <FastField name={'reason'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'reason'} />}
-            className={'form-group--reason'}
-            intent={inputIntent({ error, touched })}
-            inline={true}
-            helperText={<ErrorMessage name={'reason'} />}
-          >
-            <InputGroup minimal={true} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
     </div>
   );
 }

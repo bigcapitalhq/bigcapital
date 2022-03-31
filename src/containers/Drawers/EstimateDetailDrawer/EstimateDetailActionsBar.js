@@ -96,9 +96,9 @@ function EstimateDetailActionsBar({
             intent={Intent.DANGER}
             onClick={handleDeleteEstimate}
           />
-          <NavbarDivider />
         </Can>
         <Can I={SaleEstimateAction.NotifyBySms} a={AbilitySubject.Estimate}>
+          <NavbarDivider />
           <MoreMenuItems
             payload={{
               onNotifyViaSMS: handleNotifyViaSMS,

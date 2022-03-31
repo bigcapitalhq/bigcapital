@@ -7,14 +7,24 @@ export function PaymentReceiveFormFootetLeft() {
   return (
     <React.Fragment>
       {/* --------- Statement--------- */}
-      <TermsConditsFormGroup
-        name={'statement'}
-        label={<T id={'payment_receive_form.label.statement'} />}
-        hintText={'Will be displayed on the Payment'}
+      <PaymentMsgFormGroup
+        name={'message'}
+        label={<T id={'payment_receive_form.message.label'} />}
       >
         <FEditableText
-          name={'statement'}
-          placeholder={intl.get('payment_receive_form.statement.placeholder')}
+          name={'message'}
+          placeholder={intl.get('payment_receive_form.message.placeholder')}
+        />
+      </PaymentMsgFormGroup>
+
+      {/* --------- Internal Note--------- */}
+      <TermsConditsFormGroup
+        name={'internal_note'}
+        label={<T id={'payment_receive_form.label.note'} />}
+      >
+        <FEditableText
+          name={'internal_note'}
+          placeholder={intl.get('payment_receive_form.internal_note.placeholder')}
         />
       </TermsConditsFormGroup>
     </React.Fragment>
@@ -23,6 +33,20 @@ export function PaymentReceiveFormFootetLeft() {
 
 const TermsConditsFormGroup = styled(FFormGroup)`
   &.bp3-form-group {
+    .bp3-label {
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+    .bp3-form-content {
+      margin-left: 10px;
+    }
+  }
+`;
+
+const PaymentMsgFormGroup = styled(FFormGroup)`
+  &.bp3-form-group {
+    margin-bottom: 40px;
+
     .bp3-label {
       font-size: 12px;
       margin-bottom: 12px;

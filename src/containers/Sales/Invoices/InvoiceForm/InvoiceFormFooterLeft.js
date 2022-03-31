@@ -10,7 +10,6 @@ export function InvoiceFormFooterLeft() {
       <InvoiceMsgFormGroup
         name={'invoice_message'}
         label={<T id={'invoice_message'} />}
-        hintText={'Will be displayed on the invoice'}
       >
         <FEditableText
           name={'invoice_message'}
@@ -20,7 +19,7 @@ export function InvoiceFormFooterLeft() {
 
       {/* --------- Terms and conditions --------- */}
       <TermsConditsFormGroup
-        label={<T id={'invoice_form.label.invoice_message'} />}
+        label={<T id={'invoice_form.label.terms_conditions'} />}
         name={'terms_conditions'}
       >
         <FEditableText

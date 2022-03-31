@@ -55,10 +55,9 @@ function ItemDetailActionsBar({
             text={<T id={'edit_item'} />}
             onClick={handleEditItem}
           />
-
-          <NavbarDivider />
         </Can>
         <Can I={ItemAction.Delete} a={AbilitySubject.Item}>
+          <NavbarDivider />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}

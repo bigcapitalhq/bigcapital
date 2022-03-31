@@ -131,17 +131,17 @@ function CustomerDetailsActionsBar({
           />
         </Popover>
 
-        <NavbarDivider />
         <Can I={CustomerAction.Edit} a={AbilitySubject.Customer}>
+          <NavbarDivider />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
             text={intl.get('customer.drawer.action.edit')}
             onClick={handleEditContact}
           />
-          <NavbarDivider />
         </Can>
         <Can I={CustomerAction.Delete} a={AbilitySubject.Customer}>
+          <NavbarDivider />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}

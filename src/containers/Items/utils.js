@@ -64,7 +64,6 @@ export const transitionItemTypeKeyToLabel = (itemTypeKey) => {
   const table = {
     service: intl.get('service'),
     inventory: intl.get('inventory'),
-    'non-inventory': intl.get('non_inventory'),
   };
   return typeof table[itemTypeKey] === 'string' ? table[itemTypeKey] : '';
 };
@@ -101,6 +100,14 @@ export const handleDeleteErrors = (errors) => {
       message: intl.get(
         'cannot_change_item_type_to_inventory_with_item_has_associated_transactions',
       ),
+      intent: Intent.DANGER,
+    });
+  }
+  if (
+    errors.find((error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTIONS')
+  ) {
+    AppToaster.show({
+      message: intl.get('item.error.you_could_not_delete_item_has_associated'),
       intent: Intent.DANGER,
     });
   }

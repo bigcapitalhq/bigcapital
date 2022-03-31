@@ -21,7 +21,10 @@ export function ActionsCellRenderer({
 
   const exampleMenu = (
     <Menu>
-      <MenuItem onClick={onRemoveRole} text="Remove line" />
+      <MenuItem
+        onClick={onRemoveRole}
+        text={intl.get('warehouse_transfer.entries.remove_row')}
+      />
     </Menu>
   );
 
