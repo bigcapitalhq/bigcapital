@@ -20,7 +20,7 @@ const Schema = Yup.object().shape({
     Yup.object().shape({
       item_id: Yup.number().nullable(),
       description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
-      quantity: Yup.number().nullable().max(DATATYPES_LENGTH.INT_10),
+      quantity: Yup.number().min(1).max(DATATYPES_LENGTH.INT_10),
     }),
   ),
 });
