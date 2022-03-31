@@ -8,6 +8,7 @@ All notable changes to Bigcapital server-side will be in this file.
   - `BIG-141` Add inactive status to item drawer details.
   - `BIG-278` Add created at date on expense details.
   - `BIG-350` Add empty status content of warehouse transfers service.
+  - `BIG-344` Add branch details to manual journal and expense details.
 ## Fixed
   - `BIG-221` Remove Non-inventory radio choice on item form.
   - `BIG-236` Validate estimate expiration date should be equal or bigger than estimate date.
