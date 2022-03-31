@@ -71,6 +71,7 @@ function WarehouseTransferForm({
 
   // Handles form submit.
   const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
+    setSubmitting(true);
     // Transformes the values of the form to request.
     const form = {
       ...transformValueToRequest(values),

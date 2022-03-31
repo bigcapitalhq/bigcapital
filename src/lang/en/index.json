@@ -2006,6 +2006,5 @@
   "warehouse_transfer.empty_status.title": "Manage transfer orders between warehouses.",
   "warehouse_transfer.empty_status.description": "Business with multiply warehouses often transfers items from on warehouse to another when they are in immediate need of vendors.",
   "warehouse_transfer.form.reason.label": "Reason",
-  "warehouse_transfer.form.reason.placeholder": "Enter the reason behind the transfer order.",
-  "warehouse_transfer.quantity_cannot_be_zero_or_empty": "Quantity cannot be zero or empty."
+  "warehouse_transfer.form.reason.placeholder": "Enter the reason behind the transfer order."
 }
