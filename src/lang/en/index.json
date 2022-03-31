@@ -1756,6 +1756,7 @@
   "payment_made.drawer.subtitle": "Branch: {value}",
   "manual_journal.drawer.title": "Manual journal details ({number})",
   "expense.drawer.title": "Expense details",
+  "expense.drawer.subtitle": "Branch: {value}",
   "global_error.you_dont_have_permissions": "You do not have permissions to access this page.",
   "global_error.transactions_locked": "Transactions before {lockedToDate} has been locked. Hence action cannot be performed.",
   "global_error.authorized_user_inactive": "The authorized user is inactive.",
