@@ -50,7 +50,7 @@ export default function ItemFormFormik({
   // Handles the form submit.
   const handleFormSubmit = (values, form) => {
     const { setSubmitting, resetForm, setErrors } = form;
-    const formValues = { ...values };
+    const formValues = { ...values, type: values.type.toString() };
 
     setSubmitting(true);
 
@@ -96,7 +96,7 @@ export default function ItemFormFormik({
         validationSchema={isNewMode ? CreateItemFormSchema : EditItemFormSchema}
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
-      > 
+      >
         <Form>
           <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
             <ItemFormPrimarySection />

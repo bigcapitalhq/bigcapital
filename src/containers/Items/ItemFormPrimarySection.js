@@ -7,7 +7,12 @@ import {
   Radio,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
+import {
+  FormattedMessage as T,
+  FormattedHTMLMessage,
+  FCheckbox,
+  FFormGroup,
+} from 'components';
 import { ErrorMessage, FastField } from 'formik';
 import {
   CategoriesSelectList,
@@ -29,7 +34,7 @@ import { categoriesFieldShouldUpdate } from './utils';
 export default function ItemFormPrimarySection() {
   // Item form context.
   const { isNewMode, item, itemsCategories } = useItemFormContext();
-
+  console.log(item.type, 'XXX');
   const nameFieldRef = useRef(null);
 
   useEffect(() => {
@@ -53,7 +58,34 @@ export default function ItemFormPrimarySection() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
       {/*----------- Item type ----------*/}
-      <FastField name={'type'}>
+      <FFormGroup
+        name={'type'}
+        label={<T id={'item_type'} />}
+        labelInfo={
+          <span>
+            <FieldRequiredHint />
+            <Hint
+              content={itemTypeHintContent}
+              position={Position.BOTTOM_LEFT}
+            />
+          </span>
+        }
+        inline={true}
+      >
+        <FCheckbox
+          inline={true}
+          name="type"
+          label={<T id={'service'} />}
+          value="service"
+        />
+        <FCheckbox
+          inline={true}
+          name="type"
+          label={<T id={'inventory'} />}
+          value="inventory"
+        />
+      </FFormGroup>
+      {/* <FastField name={'type'}>
         {({ form, field: { value }, meta: { touched, error } }) => (
           <FormGroup
             medium={true}
@@ -85,7 +117,7 @@ export default function ItemFormPrimarySection() {
             </RadioGroup>
           </FormGroup>
         )}
-      </FastField>
+      </FastField> */}
 
       <Row>
         <Col xs={7}>
