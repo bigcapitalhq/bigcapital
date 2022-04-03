@@ -4,6 +4,7 @@ import {
   FormGroup,
   Position,
   ControlGroup,
+  Classes,
 } from '@blueprintjs/core';
 import { FastField, ErrorMessage } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
@@ -11,6 +12,8 @@ import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
+import { journalTypes } from '../../../common/journalTypes';
+import { FFormGroup } from '../../../components';
 import {
   momentFormatter,
   compose,
@@ -28,12 +31,13 @@ import {
 } from 'components';
 import withSettings from 'containers/Settings/withSettings';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
-import { JournalExchangeRateInputField } from './components';
+import { JournalExchangeRateInputField, JournalTypeSelect } from './components';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import {
   currenciesFieldShouldUpdate,
   useObserveJournalNoSettings,
 } from './utils';
+
 /**
  * Make journal entries header.
  */
@@ -169,21 +173,18 @@ function MakeJournalEntriesHeader({
       </FastField>
 
       {/*------------ Journal type  -----------*/}
-      <FastField name={'journal_type'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'journal_type'} />}
-            className={classNames('form-group--account-type', CLASSES.FILL)}
-            inline={true}
-          >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              fill={true}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'journal_type'}
+        label={<T id={'journal_type'} />}
+        inline={true}
+        className={classNames('form-group--select-list', Classes.FILL)}
+      >
+        <JournalTypeSelect
+          items={journalTypes}
+          name={'journal_type'}
+          popoverProps={{ minimal: true }}
+        />
+      </FFormGroup>
 
       {/*------------ Currency  -----------*/}
       <FastField

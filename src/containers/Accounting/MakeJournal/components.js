@@ -9,6 +9,7 @@ import {
   Icon,
   Hint,
   FormattedMessage as T,
+  FSelect,
 } from 'components';
 import {
   AccountsListFieldCell,
@@ -180,6 +181,74 @@ export function JournalExchangeRateInputField({ ...props }) {
       fromCurrency={values.currency_code}
       toCurrency={currentOrganization.base_currency}
       {...props}
+    />
+  );
+}
+
+/**
+ *
+ * @param {*} query
+ * @param {*} journal
+ * @param {*} _index
+ * @param {*} exactMatch
+ * @returns
+ */
+const itemPredicate = (query, journal, _index, exactMatch) => {
+  const normalizedTitle = journal.name.toLowerCase();
+  const normalizedQuery = query.toLowerCase();
+
+  if (exactMatch) {
+    return normalizedTitle === normalizedQuery;
+  } else {
+    return normalizedTitle.indexOf(normalizedQuery) >= 0;
+  }
+};
+
+/**
+ *
+ * @param {*} item
+ * @param {*} param1
+ * @returns
+ */
+const itemRenderer = (item, { handleClick, modifiers, query }) => {
+  return (
+    <MenuItem
+      active={modifiers.active}
+      disabled={modifiers.disabled}
+      text={item.name}
+      label={item.label}
+      key={item.id}
+      onClick={handleClick}
+    />
+  );
+};
+
+const itemSelectProps = {
+  itemPredicate: itemPredicate,
+  itemRenderer: itemRenderer,
+  valueAccessor: 'name',
+  labelAccessor: 'name',
+};
+
+export function JournalTypeSelect({ items, ...rest }) {
+  return (
+    <FSelect
+      {...itemSelectProps}
+      {...rest}
+      items={items}
+      input={itemSelectButton}
+    />
+  );
+}
+
+/**
+ * @param {*} label
+ * @returns
+ */
+function itemSelectButton({ label }) {
+  return (
+    <Button
+      text={label ? label : intl.get('make_journal.label.select_journal_type')}
     />
   );
 }

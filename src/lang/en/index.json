@@ -1989,6 +1989,7 @@
   "payment_made.form.internal_note.placeholder": "Internal note (Not visible to the vendor).",
   "make_journal.label.subtotal": "Subtotal",
   "make_journal.label.total": "TOTAL",
+  "make_journal.label.select_journal_type":"Select Journal Type",
   "expense.label.subtotal": "Subtotal",
   "expense.label.total": "TOTAL",
   "expense.branch_button.label": "Branch: {label}",

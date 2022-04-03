@@ -1989,6 +1989,7 @@
   "payment_made_form.label.total": "إجمالي",
   "make_journal.label.subtotal": "المجموع",
   "make_journal.label.total": "إجمالي",
+  "make_journal.label.select_journal_type":"حدد نوع القيد",
   "expense.label.subtotal": "المجموع",
   "expense.label.total": "إجمالي",
   "expense.branch_button.label": "الفرع: {label}",
