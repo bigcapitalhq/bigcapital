@@ -1960,6 +1960,7 @@
   "invoice_form.label.payment_amount": "مبلغ المدفوع",
   "invoice_form.label.invoice_message": "رسالة الفاتورة",
   "invoice_form.invoice_message.placeholder": "Thanks for your business and have a great day!",
+  "invoice_form.label.terms_conditions": "الشروط والأحكام",
   "invoice_form.terms_and_conditions.placeholder": "Enter the terms and conditions of your business to be displayed in your transaction",
   "receipt_form.label.total": "إجمالي",
   "receipt_form.label.subtotal": "المجموع",

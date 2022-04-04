@@ -43,7 +43,10 @@ export function ActionsCellRenderer({
 
   const exampleMenu = (
     <Menu>
-      <MenuItem onClick={onRemoveRole} text={'item_entries.remove_row'} />
+      <MenuItem
+        onClick={onRemoveRole}
+        text={<T id={'item_entries.remove_row'} />}
+      />
     </Menu>
   );
 
