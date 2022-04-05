@@ -147,7 +147,7 @@ function InvoiceFormHeaderFields({
           </FastField>
         </Col>
 
-        <Col className={'col--due-date'}>
+        <Col xs={6}>
           {/* ----------- Due date ----------- */}
           <FastField name={'due_date'}>
             {({ form, field: { value }, meta: { error, touched } }) => (
