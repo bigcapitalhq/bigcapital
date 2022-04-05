@@ -2,6 +2,12 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [1.7.2-rc.2] - 04-04-2022
+
+### Fixed
+  - Add the missing Arabic localization.
+  - Subscription plans modifications.
+
 ## [1.7.1-rc.2] - 30-03-2022
 
 ## Added
