@@ -28,7 +28,7 @@ export default function Sidebar({ dashboardContentRef }) {
  * @returns {React.JSX}
  */
 function SidebarFooterVersion() {
-  const { REACT_APP_VERSION: VERSION } = process.env;
+  const { VERSION } = process.env;
 
   if (!VERSION) {
     return null;

@@ -42,7 +42,10 @@ function AllocateLandedCostForm({
       .map((entry) => transformToForm(entry, defaultInitialValues.items[0]));
 
     if (entries.length <= 0) {
-      AppToaster.show({ message: 'Something wrong!', intent: Intent.DANGER });
+      AppToaster.show({
+        message: intl.get('something_wrong'),
+        intent: Intent.DANGER,
+      });
       return;
     }
     const form = {
@@ -69,13 +72,14 @@ function AllocateLandedCostForm({
         )
       ) {
         AppToaster.show({
-          message:
-            'The total located cost is bigger than the transaction line.',
+          message: intl.get(
+            'landed_cost.error.the_total_located_cost_is_bigger_than_the_transaction_line',
+          ),
           intent: Intent.DANGER,
         });
       } else {
         AppToaster.show({
-          message: 'Something went wrong!',
+          message: intl.get('something_went_wrong'),
           intent: Intent.DANGER,
         });
       }

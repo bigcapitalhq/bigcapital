@@ -36,7 +36,7 @@ function PaymentViaLicenseDialogContent({
     setSubmitting(true);
 
     const mutateValues = {
-      plan_slug: `${values.plan_slug}-${values.period}ly`,
+      plan_slug: `essentials-monthly`,
       license_code: values.license_code,
     };
     // Payment via voucher mutate.

@@ -37,7 +37,7 @@ function AllocateLandedCostFloatingActions({
       <DialogFooterActions alignment={'left'}>
         {costTransactionEntry && (
           <UnallocatedAmount>
-            Unallocated cost Amount:{' '}
+           <T id={'landed_cost.dialog.label_unallocated_cost_amount'}/>
             <strong>{formattedUnallocatedCostAmount}</strong>
           </UnallocatedAmount>
         )}

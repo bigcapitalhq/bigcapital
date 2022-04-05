@@ -57,9 +57,7 @@ function BillTransactionDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <T
-          id={`Once your delete this located landed cost, you won't be able to restore it later, Are your sure you want to delete this transaction?`}
-        />
+        <T id={`landed_cost.once_your_delete_this_located_landed_cost`} />
       </p>
     </Alert>
   );
