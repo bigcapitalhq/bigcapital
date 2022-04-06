@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import {
   Button,
   Popover,
+  Tooltip,
   PopoverInteractionKind,
   Position,
   MenuItem,
@@ -11,12 +12,14 @@ import {
   Intent,
   Tag,
 } from '@blueprintjs/core';
+import { getColumnWidth } from 'utils';
 import {
   FormatNumberCell,
   Icon,
   FormattedMessage as T,
   Choose,
   Can,
+  MODIFIER,
 } from 'components';
 import {
   SaleInvoiceAction,
@@ -24,24 +27,55 @@ import {
 } from '../../../common/abilityOption';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
+export function TooltipAccessor({ cell: { value } }) {
+  return (
+    <Tooltip
+      content={value}
+      position={Position.BOTTOM_LEFT}
+      boundary={'viewport'}
+      className={MODIFIER.SELECT_LIST_TOOLTIP_ITEMS} // block
+    >
+      {value}
+    </Tooltip>
+  );
+}
+
 /**
  * Retrieve invoice readonly details table columns.
  */
-export const useInvoiceReadonlyEntriesColumns = () =>
-  React.useMemo(
+export const useInvoiceReadonlyEntriesColumns = () => {
+  // Invoice details drawer context.
+  const {
+    invoice: { entries },
+  } = useInvoiceDetailDrawerContext();
+
+  return React.useMemo(
     () => [
       {
         Header: intl.get('product_and_service'),
         accessor: 'item.name',
-        width: 150,
+        Cell: TooltipAccessor,
+        width: getColumnWidth(entries, 'item.name', {
+          minWidth: 100,
+          maxWidth: 150,
+          magicSpacing: 5,
+        }),
         className: 'name',
         disableSortBy: true,
+        textOverview: true,
       },
       {
         Header: intl.get('description'),
         accessor: 'description',
+        // Cell: TooltipAccessor,
         className: 'description',
+        width: getColumnWidth(entries, 'description', {
+          minWidth: 100,
+          maxWidth: 150,
+          magicSpacing: 5,
+        }),
         disableSortBy: true,
+        textOverview: true,
       },
       {
         Header: intl.get('quantity'),
@@ -70,6 +104,7 @@ export const useInvoiceReadonlyEntriesColumns = () =>
     ],
     [],
   );
+};
 
 /**
  * Invoice details more actions menu.
