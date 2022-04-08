@@ -32,7 +32,7 @@ export const getDefaultGeneralLedgerQuery = () => {
     basis: 'accural',
     filterByOption: 'with-transactions',
     branchesIds: [],
-    accounts: [],
+    accountsIds: [],
   };
 };
 
@@ -49,8 +49,9 @@ const parseGeneralLedgerQuery = (locationQuery) => {
   return {
     ...transformed,
 
-    // Ensures the branches ids is always array.
+    // Ensures the branches, accounts ids is always array.
     branchesIds: castArray(transformed.branchesIds),
+    accountsIds: castArray(transformed.accountsIds),
   };
 };
 
