@@ -49,7 +49,6 @@ import DrawerHeaderContent from './Drawer/DrawerHeaderContent';
 import Postbox from './Postbox';
 import AccountsSuggestField from './AccountsSuggestField';
 import MaterialProgressBar from './MaterialProgressBar';
-import { MoneyFieldCell } from './DataTableCells';
 import AvaterCell from './AvaterCell';
 
 import { ItemsMultiSelect } from './Items';
@@ -105,6 +104,7 @@ export * from './Currencies';
 export * from './FormTopbar'
 export * from './Paper';
 export * from './Accounts'
+export * from './DataTableCells';
 
 const Hint = FieldHint;
 
@@ -167,7 +167,6 @@ export {
   Postbox,
   AccountsSuggestField,
   MaterialProgressBar,
-  MoneyFieldCell,
   ItemsMultiSelect,
   AvaterCell,
   MoreMenuItems,

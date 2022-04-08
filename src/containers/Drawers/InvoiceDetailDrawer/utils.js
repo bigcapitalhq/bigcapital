@@ -19,26 +19,13 @@ import {
   FormattedMessage as T,
   Choose,
   Can,
-  MODIFIER,
+  TextOverviewTooltipCell,
 } from 'components';
 import {
   SaleInvoiceAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
-
-export function TooltipAccessor({ cell: { value } }) {
-  return (
-    <Tooltip
-      content={value}
-      position={Position.BOTTOM_LEFT}
-      boundary={'viewport'}
-      className={MODIFIER.SELECT_LIST_TOOLTIP_ITEMS} // block
-    >
-      {value}
-    </Tooltip>
-  );
-}
 
 /**
  * Retrieve invoice readonly details table columns.
@@ -54,52 +41,54 @@ export const useInvoiceReadonlyEntriesColumns = () => {
       {
         Header: intl.get('product_and_service'),
         accessor: 'item.name',
-        Cell: TooltipAccessor,
-        width: getColumnWidth(entries, 'item.name', {
-          minWidth: 100,
-          maxWidth: 150,
-          magicSpacing: 5,
-        }),
-        className: 'name',
+        Cell: TextOverviewTooltipCell,
         disableSortBy: true,
         textOverview: true,
+        width: 150,
       },
       {
         Header: intl.get('description'),
         accessor: 'description',
-        // Cell: TooltipAccessor,
-        className: 'description',
-        width: getColumnWidth(entries, 'description', {
-          minWidth: 100,
-          maxWidth: 150,
-          magicSpacing: 5,
-        }),
+        Cell: TextOverviewTooltipCell,
         disableSortBy: true,
         textOverview: true,
+        width: 75,
       },
       {
         Header: intl.get('quantity'),
         accessor: 'quantity',
         Cell: FormatNumberCell,
-        width: 100,
         align: 'right',
         disableSortBy: true,
+        textOverview: true,
+        width: getColumnWidth(entries, 'quantity', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
       },
       {
         Header: intl.get('rate'),
         accessor: 'rate',
         Cell: FormatNumberCell,
-        width: 100,
         align: 'right',
         disableSortBy: true,
+        textOverview: true,
+        width: getColumnWidth(entries, 'rate', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
       },
       {
         Header: intl.get('amount'),
         accessor: 'amount',
         Cell: FormatNumberCell,
-        width: 100,
         align: 'right',
         disableSortBy: true,
+        textOverview: true,
+        width: getColumnWidth(entries, 'amount', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
       },
     ],
     [],
