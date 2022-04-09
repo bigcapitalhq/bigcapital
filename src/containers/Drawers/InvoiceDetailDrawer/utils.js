@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import {
   Button,
   Popover,
-  Tooltip,
   PopoverInteractionKind,
   Position,
   MenuItem,
@@ -52,7 +51,6 @@ export const useInvoiceReadonlyEntriesColumns = () => {
         Cell: TextOverviewTooltipCell,
         disableSortBy: true,
         textOverview: true,
-        width: 75,
       },
       {
         Header: intl.get('quantity'),
