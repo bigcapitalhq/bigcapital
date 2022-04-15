@@ -1,40 +1,58 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Tag } from '@blueprintjs/core';
+import { getColumnWidth } from 'utils';
+import { useWarehouseDetailDrawerContext } from './WarehouseTransferDetailDrawerProvider';
 
 import {
   FormattedMessage as T,
   FormatNumberCell,
+  TextOverviewTooltipCell,
   Choose,
 } from '../../../components';
 
-export const useWarehouseTransferReadOnlyEntriesColumns = () =>
-  React.useMemo(
+/**
+ * Retrieves the readonly warehouse transfer entries columns.
+ */
+export const useWarehouseTransferReadOnlyEntriesColumns = () => {
+  const {
+    warehouseTransfer: { entries },
+  } = useWarehouseDetailDrawerContext();
+
+  return React.useMemo(
     () => [
       {
         Header: intl.get('warehouse_transfer.column.item_name'),
         accessor: 'item.name',
-        width: 150,
+        Cell: TextOverviewTooltipCell,
+        width: 100,
         className: 'name',
         disableSortBy: true,
+        textOverview: true,
       },
       {
         Header: intl.get('warehouse_transfer.column.description'),
         accessor: 'description',
+        Cell: TextOverviewTooltipCell,
         className: 'description',
         disableSortBy: true,
+        textOverview: true,
       },
       {
         Header: intl.get('warehouse_transfer.column.transfer_quantity'),
         accessor: 'quantity',
         Cell: FormatNumberCell,
-        width: 100,
+        width: getColumnWidth(entries, 'quantity', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
         align: 'right',
         disableSortBy: true,
       },
     ],
     [],
   );
+};
 
 /**
  * Warehouses transfer details status.

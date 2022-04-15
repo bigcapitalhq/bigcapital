@@ -1,7 +1,6 @@
 import React from 'react';
-import { FormGroup, Classes } from '@blueprintjs/core';
+import { Classes } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
-import classNames from 'classnames';
 
 import { AccountMultiSelect, Row, Col } from 'components';
 import { FFormGroup } from '../../../components/Forms';
@@ -47,10 +46,10 @@ function GLHeaderGeneralPaneContent() {
         <Col xs={4}>
           <FFormGroup
             label={<T id={'specific_accounts'} />}
-            name={'accounts'}
+            name={'accountsIds'}
             className={Classes.FILL}
           >
-            <AccountMultiSelect name="accounts" accounts={accounts} />
+            <AccountMultiSelect name="accountsIds" accounts={accounts} />
           </FFormGroup>
         </Col>
       </Row>

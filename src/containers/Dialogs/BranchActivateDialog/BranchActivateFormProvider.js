@@ -9,7 +9,7 @@ const BranchActivateContext = React.createContext();
  * Branch activate form provider.
  */
 function BranchActivateFormProvider({ dialogName, ...props }) {
-  const { mutateAsync: activateBranches, isLoading } = useActivateBranches();
+  const { mutateAsync: activateBranches } = useActivateBranches();
 
   // State provider.
   const provider = {
@@ -18,7 +18,7 @@ function BranchActivateFormProvider({ dialogName, ...props }) {
   };
 
   return (
-    <DialogContent isLoading={isLoading}>
+    <DialogContent>
       <BranchActivateContext.Provider value={provider} {...props} />
     </DialogContent>
   );

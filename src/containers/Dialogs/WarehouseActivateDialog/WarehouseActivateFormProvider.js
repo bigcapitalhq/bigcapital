@@ -9,8 +9,7 @@ const WarehouseActivateContext = React.createContext();
  * warehouse activate form provider.
  */
 function WarehouseActivateFormProvider({ dialogName, ...props }) {
-  const { mutateAsync: activateWarehouses, isLoading } =
-    useActivateWarehouses();
+  const { mutateAsync: activateWarehouses } = useActivateWarehouses();
 
   // State provider.
   const provider = {
@@ -19,7 +18,7 @@ function WarehouseActivateFormProvider({ dialogName, ...props }) {
   };
 
   return (
-    <DialogContent isLoading={isLoading}>
+    <DialogContent>
       <WarehouseActivateContext.Provider value={provider} {...props} />
     </DialogContent>
   );
