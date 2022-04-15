@@ -2,6 +2,13 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [1.7.3-rc.2] - 15-04-2022
+
+### Fixed
+  - `BIG-372` Activate branches and warehouses dialog reloading once activating.
+  - `BIG-373` Issue general ledger report select specific account.
+  - `BIG-377` Make readonly details entries as oneline with tooltip for more details.
+
 ## [1.7.2-rc.2] - 04-04-2022
 
 ### Fixed
