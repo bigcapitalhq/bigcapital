@@ -11,7 +11,7 @@ export const CommercialDocHeader = styled.div`
 `;
 
 export const CommercialDocTopHeader = styled.div`
-  margin-bottom: 25px;
+  margin-bottom: 30px;
 `;
 
 export const CommercialDocEntriesTable = styled(DataTable)`

@@ -10,59 +10,82 @@ import {
   Tag,
   Intent,
 } from '@blueprintjs/core';
+import { getColumnWidth } from 'utils';
 import {
   Icon,
   FormattedMessage as T,
+  TextOverviewTooltipCell,
   FormatNumberCell,
   Choose,
 } from '../../../components';
+import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 
 /**
  * Retrieve vendor credit readonly details entries table columns.
  */
-export const useVendorCreditReadonlyEntriesTableColumns = () =>
-  React.useMemo(
+export const useVendorCreditReadonlyEntriesTableColumns = () => {
+  const {
+    vendorCredit: { entries },
+  } = useVendorCreditDetailDrawerContext();
+  return React.useMemo(
     () => [
       {
         Header: intl.get('product_and_service'),
         accessor: 'item.name',
+        Cell: TextOverviewTooltipCell,
         width: 150,
         className: 'item',
         disableSortBy: true,
+        textOverview: true,
       },
       {
         Header: intl.get('description'),
         accessor: 'description',
+        Cell: TextOverviewTooltipCell,
         className: 'description',
         disableSortBy: true,
+        textOverview: true,
       },
       {
         Header: intl.get('quantity'),
         accessor: 'quantity',
         Cell: FormatNumberCell,
-        width: 100,
+        width: getColumnWidth(entries, 'quantity', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
         align: 'right',
         disableSortBy: true,
+        textOverview: true,
       },
       {
         Header: intl.get('rate'),
         accessor: 'rate',
         Cell: FormatNumberCell,
-        width: 100,
+        width: getColumnWidth(entries, 'rate', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
         align: 'right',
         disableSortBy: true,
+        textOverview: true,
       },
       {
         Header: intl.get('amount'),
         accessor: 'amount',
         Cell: FormatNumberCell,
-        width: 100,
+        width: getColumnWidth(entries, 'amount', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
         align: 'right',
         disableSortBy: true,
+        textOverview: true,
       },
     ],
     [],
   );
+};
 
 /**
  * Vendor note more actions menu.

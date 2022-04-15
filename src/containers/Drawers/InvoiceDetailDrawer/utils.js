@@ -11,12 +11,14 @@ import {
   Intent,
   Tag,
 } from '@blueprintjs/core';
+import { getColumnWidth } from 'utils';
 import {
   FormatNumberCell,
   Icon,
   FormattedMessage as T,
   Choose,
   Can,
+  TextOverviewTooltipCell,
 } from 'components';
 import {
   SaleInvoiceAction,
@@ -27,49 +29,69 @@ import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 /**
  * Retrieve invoice readonly details table columns.
  */
-export const useInvoiceReadonlyEntriesColumns = () =>
-  React.useMemo(
+export const useInvoiceReadonlyEntriesColumns = () => {
+  // Invoice details drawer context.
+  const {
+    invoice: { entries },
+  } = useInvoiceDetailDrawerContext();
+
+  return React.useMemo(
     () => [
       {
         Header: intl.get('product_and_service'),
         accessor: 'item.name',
-        width: 150,
-        className: 'name',
+        Cell: TextOverviewTooltipCell,
         disableSortBy: true,
+        textOverview: true,
+        width: 150,
       },
       {
         Header: intl.get('description'),
         accessor: 'description',
-        className: 'description',
+        Cell: TextOverviewTooltipCell,
         disableSortBy: true,
+        textOverview: true,
       },
       {
         Header: intl.get('quantity'),
         accessor: 'quantity',
         Cell: FormatNumberCell,
-        width: 100,
         align: 'right',
         disableSortBy: true,
+        textOverview: true,
+        width: getColumnWidth(entries, 'quantity', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
       },
       {
         Header: intl.get('rate'),
         accessor: 'rate',
         Cell: FormatNumberCell,
-        width: 100,
         align: 'right',
         disableSortBy: true,
+        textOverview: true,
+        width: getColumnWidth(entries, 'rate', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
       },
       {
         Header: intl.get('amount'),
         accessor: 'amount',
         Cell: FormatNumberCell,
-        width: 100,
         align: 'right',
         disableSortBy: true,
+        textOverview: true,
+        width: getColumnWidth(entries, 'amount', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
       },
     ],
     [],
   );
+};
 
 /**
  * Invoice details more actions menu.

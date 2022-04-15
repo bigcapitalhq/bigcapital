@@ -10,6 +10,7 @@ import CheckBoxFieldCell from './CheckBoxFieldCell';
 import SwitchFieldCell from './SwitchFieldCell';
 import TextAreaCell from './TextAreaCell';
 import BranchesListFieldCell from './BranchesListFieldCell';
+import { TextOverviewTooltipCell } from './TextOverviewTooltipCell';
 
 export {
   AccountsListFieldCell,
@@ -25,4 +26,5 @@ export {
   SwitchFieldCell,
   TextAreaCell,
   BranchesListFieldCell,
+  TextOverviewTooltipCell,
 };
