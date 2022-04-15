@@ -11,6 +11,9 @@ import {
   Choose,
 } from '../../../components';
 
+/**
+ * Retrieves the readonly warehouse transfer entries columns.
+ */
 export const useWarehouseTransferReadOnlyEntriesColumns = () => {
   const {
     warehouseTransfer: { entries },
