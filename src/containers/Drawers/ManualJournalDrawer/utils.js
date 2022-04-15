@@ -1,28 +1,17 @@
 import intl from 'react-intl-universal';
 import React from 'react';
-import { Tag, Intent, Classes, Tooltip, Position } from '@blueprintjs/core';
+import { Tag, Intent } from '@blueprintjs/core';
 
-import { T, Choose, FormatNumberCell, If, Icon } from '../../../components';
+import {
+  T,
+  Choose,
+  FormatNumberCell,
+  TextOverviewTooltipCell,
+} from '../../../components';
 import { Features } from 'common';
+import { getColumnWidth } from 'utils';
 import { useFeatureCan } from 'hooks/state';
-
-/**
- * Note column accessor.
- */
-export function NoteAccessor(row) {
-  return (
-    <If condition={row.note}>
-      <Tooltip
-        className={Classes.TOOLTIP_INDICATOR}
-        content={row.note}
-        position={Position.LEFT_TOP}
-        hoverOpenDelay={50}
-      >
-        <Icon icon={'file-alt'} iconSize={16} />
-      </Tooltip>
-    </If>
-  );
-}
+import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 
 /**
  * Publish column accessor.
@@ -50,37 +39,45 @@ export function ManualJournalDetailsStatus({ manualJournal }) {
  */
 export const useManualJournalEntriesColumns = () => {
   const { featureCan } = useFeatureCan();
+
+  // manual journal details drawer context.
+  const {
+    manualJournal: { entries },
+  } = useManualJournalDrawerContext();
+
   return React.useMemo(
     () => [
       {
         Header: intl.get('account_name'),
+        Cell: TextOverviewTooltipCell,
         accessor: 'account.name',
         width: 130,
         disableSortBy: true,
-        className: 'account',
+        textOverview: true,
       },
       {
         Header: intl.get('contact'),
         accessor: 'contact.display_name',
-        width: 130,
+        Cell: TextOverviewTooltipCell,
+        width: 100,
         disableSortBy: true,
-        className: 'contact',
+        textOverview: true,
       },
       {
         Header: intl.get('note'),
-        accessor: NoteAccessor,
-        width: 80,
+        accessor: 'note',
+        Cell: TextOverviewTooltipCell,
         disableSortBy: true,
-        className: 'note',
+        textOverview: true,
+        width: 100,
       },
       ...(featureCan(Features.Branches)
         ? [
             {
               Header: intl.get('branch'),
-              width: 130,
+              width: 100,
               accessor: 'branch.name',
               disableSortBy: true,
-              className: 'branch',
             },
           ]
         : []),
@@ -88,25 +85,31 @@ export const useManualJournalEntriesColumns = () => {
         Header: intl.get('credit'),
         accessor: 'credit',
         Cell: FormatNumberCell,
-        width: 100,
+        width: getColumnWidth(entries, 'credit', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
         disableResizable: true,
         disableSortBy: true,
+        textOverview: true,
         formatNumber: { noZero: true },
-        className: 'credit',
         align: 'right',
       },
       {
         Header: intl.get('debit'),
         accessor: 'debit',
         Cell: FormatNumberCell,
-        width: 100,
+        width: getColumnWidth(entries, 'debit', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
         disableResizable: true,
+        textOverview: true,
         disableSortBy: true,
         formatNumber: { noZero: true },
-        className: 'debit',
         align: 'right',
       },
     ],
-    [featureCan],
+    [],
   );
 };

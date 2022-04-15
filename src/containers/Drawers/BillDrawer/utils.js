@@ -13,57 +13,81 @@ import {
 } from '@blueprintjs/core';
 import {
   FormatNumberCell,
+  TextOverviewTooltipCell,
   FormattedMessage as T,
   Choose,
   Icon,
 } from '../../../components';
+import { getColumnWidth } from 'utils';
+import { useBillDrawerContext } from './BillDrawerProvider';
 
 /**
  * Retrieve bill readonly details entries table columns.
  */
-export const useBillReadonlyEntriesTableColumns = () =>
-  React.useMemo(
+export const useBillReadonlyEntriesTableColumns = () => {
+  const {
+    bill: { entries },
+  } = useBillDrawerContext();
+
+  return React.useMemo(
     () => [
       {
         Header: intl.get('product_and_service'),
         accessor: 'item.name',
+        Cell: TextOverviewTooltipCell,
         width: 150,
         className: 'item',
         disableSortBy: true,
+        textOverview: true,
       },
       {
         Header: intl.get('description'),
         accessor: 'description',
+        Cell: TextOverviewTooltipCell,
         className: 'description',
         disableSortBy: true,
+        textOverview: true,
       },
       {
         Header: intl.get('quantity'),
         accessor: 'quantity',
         Cell: FormatNumberCell,
-        width: 100,
+        width: getColumnWidth(entries, 'quantity', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
         align: 'right',
         disableSortBy: true,
+        textOverview: true,
       },
       {
         Header: intl.get('rate'),
         accessor: 'rate',
         Cell: FormatNumberCell,
-        width: 100,
+        width: getColumnWidth(entries, 'rate', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
         align: 'right',
         disableSortBy: true,
+        textOverview: true,
       },
       {
         Header: intl.get('amount'),
         accessor: 'amount',
         Cell: FormatNumberCell,
-        width: 100,
+        width: getColumnWidth(entries, 'amount', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
         align: 'right',
         disableSortBy: true,
+        textOverview: true,
       },
     ],
     [],
   );
+};
 
 /**
  * Bill details status.
