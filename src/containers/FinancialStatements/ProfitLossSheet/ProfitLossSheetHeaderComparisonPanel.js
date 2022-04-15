@@ -1,11 +1,11 @@
 import React from 'react';
-import { FastField, Field } from 'formik';
+import { FastField } from 'formik';
 import { FormGroup, Checkbox } from '@blueprintjs/core';
 import styled from 'styled-components';
 
-import { FormattedMessage as T } from 'components';
+import { Flex, FlexItem, FormattedMessage as T } from 'components';
 
-import { Row, Col, FieldHint } from '../../../components';
+import { FieldHint } from '../../../components';
 import {
   handlePreviousYearCheckBoxChange,
   handlePreviousPeriodCheckBoxChange,
@@ -16,11 +16,12 @@ import {
 } from './utils';
 
 /**
- * ProfitLoss sheet header -comparison panel.
+ * Profit/loss comparisons panel fields.
+ * @returns {JSX.Element}
  */
-export default function ProfitLossSheetHeaderComparisonPanel() {
+function ProfitLossComaprsionPanelFields() {
   return (
-    <ProfitLossSheetComparisonWrap>
+    <>
       {/**----------- Previous Year -----------*/}
       <FastField name={'previousYear'} type={'checkbox'}>
         {({ form, field }) => (
@@ -35,8 +36,9 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
           </FormGroup>
         )}
       </FastField>
-      <Row>
-        <Col xs={3}>
+
+      <FlexSubFields>
+        <FlexItem col={6}>
           <FastField name={'previousYearAmountChange'} type={'checkbox'}>
             {({ form, field }) => (
               <FormGroup labelInfo={<FieldHint />}>
@@ -50,8 +52,8 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
               </FormGroup>
             )}
           </FastField>
-        </Col>
-        <Col xs={3}>
+        </FlexItem>
+        <FlexItem col={6}>
           <FastField name={'previousYearPercentageChange'} type={'checkbox'}>
             {({ form, field }) => (
               <FormGroup labelInfo={<FieldHint />}>
@@ -65,8 +67,9 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
               </FormGroup>
             )}
           </FastField>
-        </Col>
-      </Row>
+        </FlexItem>
+      </FlexSubFields>
+
       {/**----------- Previous Period (PP) -----------*/}
       <FastField name={'previousPeriod'} type={'checkbox'}>
         {({ form, field }) => (
@@ -81,8 +84,9 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
           </FormGroup>
         )}
       </FastField>
-      <Row>
-        <Col xs={3}>
+
+      <FlexSubFields>
+        <FlexItem col={6}>
           <FastField name={'previousPeriodAmountChange'} type={'checkbox'}>
             {({ form, field }) => (
               <FormGroup labelInfo={<FieldHint />}>
@@ -96,8 +100,8 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
               </FormGroup>
             )}
           </FastField>
-        </Col>
-        <Col xs={3}>
+        </FlexItem>
+        <FlexItem col={6}>
           <FastField name={'previousPeriodPercentageChange'} type={'checkbox'}>
             {({ form, field }) => (
               <FormGroup labelInfo={<FieldHint />}>
@@ -111,8 +115,9 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
               </FormGroup>
             )}
           </FastField>
-        </Col>
-      </Row>
+        </FlexItem>
+      </FlexSubFields>
+
       {/**----------- % of Column -----------*/}
       <FastField name={'percentageColumn'} type={'checkbox'}>
         {({ field }) => (
@@ -126,6 +131,7 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
           </FormGroup>
         )}
       </FastField>
+
       {/**----------- % of Row -----------*/}
       <FastField name={'percentageRow'} type={'checkbox'}>
         {({ field }) => (
@@ -139,6 +145,7 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
           </FormGroup>
         )}
       </FastField>
+
       {/**----------- % of Expense -----------*/}
       <FastField name={'percentageExpense'} type={'checkbox'}>
         {({ field }) => (
@@ -152,6 +159,7 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
           </FormGroup>
         )}
       </FastField>
+
       {/**----------- % of Income -----------*/}
       <FastField name={'percentageIncome'} type={'checkbox'}>
         {({ field }) => (
@@ -165,19 +173,33 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
           </FormGroup>
         )}
       </FastField>
+    </>
+  );
+}
+
+/**
+ * ProfitLoss sheet header -comparison panel.
+ */
+export default function ProfitLossSheetHeaderComparisonPanel() {
+  return (
+    <ProfitLossSheetComparisonWrap>
+      <ProfitLossComaprsionFieldsWrap>
+        <ProfitLossComaprsionPanelFields />
+      </ProfitLossComaprsionFieldsWrap>
     </ProfitLossSheetComparisonWrap>
   );
 }
 
 const ProfitLossSheetComparisonWrap = styled.div`
-  .row {
-    margin-left: 0.15rem;
-    .col {
-      min-width: 150px !important;
-      max-width: 190px !important;
-    }
-  }
   .bp3-form-group {
     margin-bottom: 3px;
   }
+`;
+
+const FlexSubFields = styled(Flex)`
+  padding-left: 20px;
+`;
+
+const ProfitLossComaprsionFieldsWrap = styled.div`
+  max-width: 400px;
 `;
