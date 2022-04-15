@@ -49,19 +49,19 @@ export const useManualJournalEntriesColumns = () => {
     () => [
       {
         Header: intl.get('account_name'),
+        Cell: TextOverviewTooltipCell,
         accessor: 'account.name',
         width: 130,
         disableSortBy: true,
         textOverview: true,
-        className: 'account',
       },
       {
         Header: intl.get('contact'),
         accessor: 'contact.display_name',
-        width: 130,
+        Cell: TextOverviewTooltipCell,
+        width: 100,
         disableSortBy: true,
         textOverview: true,
-        className: 'contact',
       },
       {
         Header: intl.get('note'),
@@ -69,16 +69,15 @@ export const useManualJournalEntriesColumns = () => {
         Cell: TextOverviewTooltipCell,
         disableSortBy: true,
         textOverview: true,
-        className: 'note',
+        width: 100,
       },
       ...(featureCan(Features.Branches)
         ? [
             {
               Header: intl.get('branch'),
-              width: 130,
+              width: 100,
               accessor: 'branch.name',
               disableSortBy: true,
-              className: 'branch',
             },
           ]
         : []),
@@ -94,7 +93,6 @@ export const useManualJournalEntriesColumns = () => {
         disableSortBy: true,
         textOverview: true,
         formatNumber: { noZero: true },
-        className: 'credit',
         align: 'right',
       },
       {
@@ -109,10 +107,9 @@ export const useManualJournalEntriesColumns = () => {
         textOverview: true,
         disableSortBy: true,
         formatNumber: { noZero: true },
-        className: 'debit',
         align: 'right',
       },
     ],
-    [featureCan],
+    [],
   );
 };

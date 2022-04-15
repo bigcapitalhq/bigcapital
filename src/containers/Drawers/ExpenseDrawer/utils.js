@@ -19,6 +19,7 @@ export const useExpenseReadEntriesColumns = () => {
       {
         Header: intl.get('expense_account'),
         accessor: 'expense_account.name',
+        Cell: TextOverviewTooltipCell,
         width: 110,
         disableSortBy: true,
         textOverview: true,
