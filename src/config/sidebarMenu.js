@@ -71,12 +71,58 @@ export const SidebarMenu = [
                 },
               },
               {
+                text: <T id={'sidebar_warehouse_transfer'} />,
+                href: '/warehouses-transfers',
+                type: ISidebarMenuItemType.Link,
+              },
+              {
                 text: <T id={'category_list'} />,
                 href: '/items/categories',
                 type: ISidebarMenuItemType.Link,
                 permission: {
                   subject: AbilitySubject.Item,
                   ability: ItemAction.View,
+                },
+              },
+            ],
+          },
+          {
+            text: <T id={'New tasks'} />,
+            type: ISidebarMenuItemType.Group,
+            children: [
+              {
+                text: <T id={'New inventory item'} />,
+                href: '/items/new',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Item,
+                  ability: ItemAction.Create,
+                },
+              },
+              {
+                text: (
+                  <T id={'warehouse_transfer.label.new_warehouse_transfer'} />
+                ),
+                href: '/warehouses-transfers/new',
+                type: ISidebarMenuItemType.Link,
+              },
+              {
+                text: <T id={'New service'} />,
+                href: '/items/new',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Item,
+                  ability: ItemAction.Create,
+                },
+              },
+              {
+                text: <T id={'New item category'} />,
+                href: '/items/categories/new',
+                type: ISidebarMenuItemType.Dialog,
+                dialogName: 'item-category-form',
+                permission: {
+                  subject: AbilitySubject.Item,
+                  ability: ItemAction.Create,
                 },
               },
             ],
