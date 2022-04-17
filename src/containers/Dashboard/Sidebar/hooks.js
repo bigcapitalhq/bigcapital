@@ -1,29 +1,31 @@
 import _, { isEmpty } from 'lodash';
 import React from 'react';
-import deepdash from 'deepdash';
 import * as R from 'ramda';
 import { useHistory } from 'react-router-dom';
 
 import { useAbilityContext } from 'hooks';
-import { useSidebarSubmenu } from 'hooks/state';
+import { useSidebarSubmenu, useFeatureCan } from 'hooks/state';
 import { SidebarMenu } from 'config/sidebarMenu';
 import { ISidebarMenuItemType } from './interfaces';
 import { useSidebarSubmnuActions, useDialogActions } from 'hooks/state';
-
-const deep = deepdash(_);
+import { filterValuesDeep, deepdash } from 'utils';
 
 const deepDashConfig = {
   childrenPath: 'children',
   pathFormat: 'array',
 };
+const ingoreTypesEmpty = [
+  ISidebarMenuItemType.Group,
+  ISidebarMenuItemType.Overlay,
+];
 
 /**
- *
- * @param  {*} menu
- * @returns
+ * Removes the all overlay items from the menu to the main-sidebar.
+ * @param   {ISidebarMenuItem[]} menu
+ * @returns {ISidebarMenuItem[]}
  */
 function removeSidebarOverlayChildren(menu) {
-  return deep.mapValuesDeep(
+  return deepdash.mapValuesDeep(
     menu,
     (item, key, parent, context) => {
       if (item.type === ISidebarMenuItemType.Overlay) {
@@ -38,33 +40,54 @@ function removeSidebarOverlayChildren(menu) {
 
 /**
  * Retrives the main sidebar pre-menu.
- * @returns
+ * @returns {ISidebarMenuItem[]}
  */
 export function getMainSidebarMenu() {
   return R.compose(removeSidebarOverlayChildren)(SidebarMenu);
 }
 
-/**
- * Retrieves the sub sidebar pre-menu.
- */
-export function getSubSidebarMenu() {}
+function useFilterSidebarItemFeaturePredicater() {
+  const { featureCan } = useFeatureCan();
 
-/**
- *
- * @param {*} menu
- * @returns
- */
-function useFilterSidebarMenuAbility(menu) {
+  return {
+    predicate: (item) => {
+      if (item.feature && !featureCan(item.feature)) {
+        return false;
+      }
+      return true;
+    },
+  };
+}
+
+function useFilterSidebarItemAbilityPredicater() {
   const ability = useAbilityContext();
 
-  return deep.filterDeep(
+  return {
+    predicate: (item) => {
+      if (
+        item.permission &&
+        !ability.can(item.permission.ability, item.permission.subject)
+      ) {
+        return false;
+      }
+      return true;
+    },
+  };
+}
+
+/**
+ * Filters sidebar menu items based on ability of the item permission.
+ * @param   {*} menu
+ * @returns {}
+ */
+function useFilterSidebarMenuAbility(menu) {
+  const { predicate: predFeature } = useFilterSidebarItemFeaturePredicater();
+  const { predicate: predAbility } = useFilterSidebarItemAbilityPredicater();
+
+  return deepdash.filterDeep(
     menu,
     (item) => {
-      return (
-        (item.permission &&
-          ability.can(item.permission.ability, item.permission.subject)) ||
-        !item.permission
-      );
+      return predFeature(item) && predAbility(item);
     },
     deepDashConfig,
   );
@@ -77,44 +100,103 @@ function useFilterSidebarMenuAbility(menu) {
  */
 function useFlatSidebarMenu(menu) {
   return React.useMemo(() => {
-    return deep.mapDeep(menu, (item) => item, deepDashConfig);
+    return deepdash.mapDeep(menu, (item) => item, deepDashConfig);
   }, [menu]);
 }
 
 /**
- *
- * @param  {*} menu
- * @returns
+ * Binds sidebar link item click action.
+ * @param   {ISidebarMenuItem} item
  */
-function useBindSidebarItemLinkClick(menu) {
+function useBindSidebarItemLinkClick() {
   const history = useHistory();
-  const { toggleSidebarSubmenu, closeSidebarSubmenu } =
-    useSidebarSubmnuActions();
+  const { closeSidebarSubmenu } = useSidebarSubmnuActions();
 
+  // Handle sidebar item click.
+  const onClick = (item) => (event) => {
+    closeSidebarSubmenu();
+    history.push(item.href);
+  };
+  return {
+    bindOnClick: (item) => {
+      return {
+        ...item,
+        onClick: onClick(item),
+      };
+    },
+  };
+}
+
+/**
+ * Bind sidebar dialog item click action. 
+ * @param   {ISidebarMenuItem} item
+ */
+function useBindSidebarItemDialogClick() {
+  const { closeSidebarSubmenu } = useSidebarSubmnuActions();
   const { openDialog } = useDialogActions();
 
   // Handle sidebar item click.
-  const handleClick = (item) => (event) => {
+  const onClick = (item) => (event) => {
     closeSidebarSubmenu();
-
-    //
-    if (item.type === ISidebarMenuItemType.Overlay) {
-      toggleSidebarSubmenu({ submenuId: item.overlayId });
-      //
-    } else if (item.type === ISidebarMenuItemType.Link) {
-      history.push(item.href);
-    } else if (item.type === ISidebarMenuItemType.Dialog) {
-      openDialog(item.dialogName, item.dialogPayload);
-    }
+    openDialog(item.dialogName, item.dialogPayload);
   };
+  return {
+    bindOnClick: (item) => {
+      return {
+        ...item,
+        onClick: onClick(item),
+      };
+    },
+  };
+}
+
+function useBindSidebarItemOverlayClick() {
+  const { toggleSidebarSubmenu, closeSidebarSubmenu } =
+    useSidebarSubmnuActions();
+
+  // Handle sidebar item click.
+  const onClick = (item) => (event) => {
+    closeSidebarSubmenu();
+    toggleSidebarSubmenu({ submenuId: item.overlayId });
+  };
+  return {
+    bindOnClick: (item) => {
+      return {
+        ...item,
+        onClick: onClick(item),
+      };
+    },
+  };
+}
+
+/**
+ *
+ * @param   {} menu
+ * @returns {}
+ */
+function useBindSidebarItemClick(menu) {
+  const { bindOnClick: bindLinkClickEvt } = useBindSidebarItemLinkClick();
+  const { bindOnClick: bindOverlayClickEvt } = useBindSidebarItemOverlayClick();
+  const { bindOnClick: bindItemDialogEvt } = useBindSidebarItemDialogClick();
+
   return React.useMemo(() => {
-    return deep.mapValuesDeep(
+    return deepdash.mapValuesDeep(
       menu,
       (item) => {
-        return {
-          ...item,
-          onClick: handleClick(item),
-        };
+        return R.compose(
+          R.when(
+            R.propSatisfies(R.equals(ISidebarMenuItemType.Link), 'type'),
+            bindLinkClickEvt,
+          ),
+          R.when(
+            R.propSatisfies(R.equals(ISidebarMenuItemType.Overlay), 'type'),
+            bindOverlayClickEvt,
+          ),
+          R.when(
+            R.propSatisfies(R.equals(ISidebarMenuItemType.Dialog), 'type'),
+            bindItemDialogEvt,
+          ),
+        )(item);
       },
       deepDashConfig,
     );
@@ -122,10 +204,13 @@ function useBindSidebarItemLinkClick(menu) {
 }
 
 /**
- *
+ * Finds the given overlay submenu id from the menu graph.
+ * @param   {ISidebarMenuOverlayIds}
+ * @param   {ISidebarMenuItem[]} menu -
+ * @returns {ISidebarMenuItem[]}
  */
 const findSubmenuBySubmenuId = R.curry((submenuId, menu) => {
-  const groupItem = deep.findDeep(
+  const groupItem = deepdash.findDeep(
     menu,
     (item) => {
       return (
@@ -140,25 +225,26 @@ const findSubmenuBySubmenuId = R.curry((submenuId, menu) => {
 
 /**
  * Retrieves the main sidebar post-menu.
+ * @returns {ISidebarMenuItem[]}
  */
 export function useMainSidebarMenu() {
   return R.compose(
-    useBindSidebarItemLinkClick,
+    useBindSidebarItemClick,
     useFlatSidebarMenu,
-
     removeSidebarOverlayChildren,
     useAssocSidebarItemHasChildren,
+    filterSidebarItemHasNoChildren,
     useFilterSidebarMenuAbility,
   )(SidebarMenu);
 }
 
 /**
  * Assoc `hasChildren` prop to sidebar menu items.
- * @param {*} items
- * @returns
+ * @param   {ISidebarMenuItem[]} items
+ * @returns {ISidebarMenuItem[]}
  */
 function useAssocSidebarItemHasChildren(items) {
-  return deep.mapValuesDeep(
+  return deepdash.mapValuesDeep(
     items,
     (item) => {
       return {
@@ -172,15 +258,16 @@ function useAssocSidebarItemHasChildren(items) {
 
 /**
  * Retrieves the sub-sidebar post-menu.
- * @param {*} submenuId
- * @returns
+ * @param   {ISidebarMenuOverlayIds} submenuId
+ * @returns {ISidebarMenuItem[]}
  */
 export function useSubSidebarMenu(submenuId) {
   if (!submenuId) return [];
 
   return R.compose(
-    useBindSidebarItemLinkClick,
+    useBindSidebarItemClick,
     useFlatSidebarMenu,
+    filterSidebarItemHasNoChildren,
     useFilterSidebarMenuAbility,
     findSubmenuBySubmenuId(submenuId),
   )(SidebarMenu);
@@ -202,8 +289,22 @@ export function useObserveSidebarExpendedBodyclass(sidebarExpended) {
  */
 export function useIsSidebarMenuItemActive(item) {
   const { submenuId } = useSidebarSubmenu();
-
   return (
     item.type === ISidebarMenuItemType.Overlay && submenuId === item.overlayId
   );
+}
+
+/**
+ * Filter sidebar specific items types that have no types.
+ * @param   {ISidebarMenuItem[]} items -
+ * @returns {ISidebarMenuItem[]}
+ */
+export function filterSidebarItemHasNoChildren(items) {
+  return filterValuesDeep((item) => {
+    // If it was group item and has no children items so discard that item.
+    if (ingoreTypesEmpty.indexOf(item.type) !== -1 && isEmpty(item.children)) {
+      return false;
+    }
+    return true;
+  }, items);
 }

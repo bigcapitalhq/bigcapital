@@ -14,6 +14,8 @@ import { isEqual } from 'lodash';
 
 import jsCookie from 'js-cookie';
 
+export * from './deep';
+
 export const getCookie = (name, defaultValue) =>
   _.defaultTo(jsCookie.get(name), defaultValue);
 

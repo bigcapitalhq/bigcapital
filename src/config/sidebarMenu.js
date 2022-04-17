@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormattedMessage as T } from 'components';
+import { Features } from '../common/features';
 import {
   ISidebarMenuItemType,
   ISidebarMenuOverlayIds,
@@ -74,6 +75,7 @@ export const SidebarMenu = [
                 text: <T id={'sidebar_warehouse_transfer'} />,
                 href: '/warehouses-transfers',
                 type: ISidebarMenuItemType.Link,
+                feature: Features.Warehouses
               },
               {
                 text: <T id={'category_list'} />,
@@ -105,6 +107,7 @@ export const SidebarMenu = [
                 ),
                 href: '/warehouses-transfers/new',
                 type: ISidebarMenuItemType.Link,
+                feature: Features.Warehouses
               },
               {
                 text: <T id={'New service'} />,
