@@ -1,4 +1,4 @@
-import _, { isEmpty } from 'lodash';
+import _, { isEmpty, includes } from 'lodash';
 import React from 'react';
 import * as R from 'ramda';
 import { useHistory } from 'react-router-dom';
@@ -6,8 +6,15 @@ import { useHistory } from 'react-router-dom';
 import { useAbilityContext } from 'hooks';
 import { useSidebarSubmenu, useFeatureCan } from 'hooks/state';
 import { SidebarMenu } from 'config/sidebarMenu';
-import { ISidebarMenuItemType } from './interfaces';
-import { useSidebarSubmnuActions, useDialogActions } from 'hooks/state';
+import {
+  ISidebarMenuItemType,
+  ISidebarSubscriptionAbility,
+} from './interfaces';
+import {
+  useSidebarSubmnuActions,
+  useDialogActions,
+  useSubscription,
+} from 'hooks/state';
 import { filterValuesDeep, deepdash } from 'utils';
 
 const deepDashConfig = {
@@ -76,6 +83,36 @@ function useFilterSidebarItemAbilityPredicater() {
 }
 
 /**
+ * Filters the sidebar item based on the subscription state.
+ */
+function useFilterSidebarItemSubscriptionPredicater() {
+  const { isSubscriptionActive, isSubscriptionInactive } = useSubscription();
+
+  return {
+    predicate: (item) => {
+      const { subscription } = item;
+
+      if (subscription) {
+        const isActive = includes(subscription, [
+          ISidebarSubscriptionAbility.Active,
+        ])
+          ? isSubscriptionActive
+          : true;
+
+        const isInactive = includes(subscription, [
+          ISidebarSubscriptionAbility.Inactive,
+        ])
+          ? isSubscriptionInactive
+          : true;
+
+        return isActive && isInactive;
+      }
+      return true;
+    },
+  };
+}
+
+/**
  * Filters sidebar menu items based on ability of the item permission.
  * @param   {*} menu
  * @returns {}
@@ -83,11 +120,13 @@ function useFilterSidebarItemAbilityPredicater() {
 function useFilterSidebarMenuAbility(menu) {
   const { predicate: predFeature } = useFilterSidebarItemFeaturePredicater();
   const { predicate: predAbility } = useFilterSidebarItemAbilityPredicater();
+  const { predicate: predSubscription } =
+    useFilterSidebarItemSubscriptionPredicater();
 
   return deepdash.filterDeep(
     menu,
     (item) => {
-      return predFeature(item) && predAbility(item);
+      return predFeature(item) && predAbility(item) && predSubscription(item);
     },
     deepDashConfig,
   );
@@ -128,7 +167,7 @@ function useBindSidebarItemLinkClick() {
 }
 
 /**
- * Bind sidebar dialog item click action. 
+ * Bind sidebar dialog item click action.
  * @param   {ISidebarMenuItem} item
  */
 function useBindSidebarItemDialogClick() {

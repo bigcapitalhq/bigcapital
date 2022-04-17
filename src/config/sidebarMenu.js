@@ -4,6 +4,7 @@ import { Features } from '../common/features';
 import {
   ISidebarMenuItemType,
   ISidebarMenuOverlayIds,
+  ISidebarSubscriptionAbility,
 } from '../containers/Dashboard/Sidebar/interfaces';
 import {
   ReportsAction,
@@ -75,7 +76,7 @@ export const SidebarMenu = [
                 text: <T id={'sidebar_warehouse_transfer'} />,
                 href: '/warehouses-transfers',
                 type: ISidebarMenuItemType.Link,
-                feature: Features.Warehouses
+                feature: Features.Warehouses,
               },
               {
                 text: <T id={'category_list'} />,
@@ -107,7 +108,7 @@ export const SidebarMenu = [
                 ),
                 href: '/warehouses-transfers/new',
                 type: ISidebarMenuItemType.Link,
-                feature: Features.Warehouses
+                feature: Features.Warehouses,
               },
               {
                 text: <T id={'New service'} />,
@@ -726,6 +727,10 @@ export const SidebarMenu = [
         text: <T id={'billing'} />,
         href: '/billing',
         type: ISidebarMenuItemType.Link,
+        subscription: [
+          ISidebarSubscriptionAbility.Expired,
+          ISidebarSubscriptionAbility.Active,
+        ],
         permission: {
           subject: AbilitySubject.SubscriptionBilling,
           ability: SubscriptionBillingAbility.View,

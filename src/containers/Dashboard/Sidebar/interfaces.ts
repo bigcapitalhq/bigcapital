@@ -68,5 +68,10 @@ export enum ISidebarMenuOverlayIds {
   Financial = 'Financial',
   Contacts = 'Contacts',
   Cashflow = 'Cashflow',
-  Expenses = 'Expenses'
+  Expenses = 'Expenses',
+}
+
+export enum ISidebarSubscriptionAbility {
+  Expired = 'SubscriptionExpired',
+  Active = 'SubscriptionActive',
 }
