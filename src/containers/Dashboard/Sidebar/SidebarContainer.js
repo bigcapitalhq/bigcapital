@@ -1,18 +1,20 @@
 import React, { useEffect } from 'react';
 import { Scrollbar } from 'react-scrollbars-custom';
 import classNames from 'classnames';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+
 import withDashboard from 'containers/Dashboard/withDashboard';
+import withSubscriptions from 'containers/Subscriptions/withSubscriptions';
 
+import { useObserveSidebarExpendedBodyclass } from './hooks';
 import { compose } from 'utils';
-import withSubscriptions from '../../containers/Subscriptions/withSubscriptions';
 
-function SidebarContainer({
+/**
+ * Sidebar container/
+ * @returns {JSX.Element}
+ */
+function SidebarContainerJSX({
   // #ownProps
   children,
-
-  // #withDashboardActions
-  toggleSidebarExpend,
 
   // #withDashboard
   sidebarExpended,
@@ -22,9 +24,10 @@ function SidebarContainer({
 }) {
   const sidebarScrollerRef = React.useRef();
 
-  useEffect(() => {
-    document.body.classList.toggle('has-mini-sidebar', !sidebarExpended);
+  // Toggles classname to body once sidebar expend/shrink.
+  useObserveSidebarExpendedBodyclass(sidebarExpended);
 
+  useEffect(() => {
     if (!sidebarExpended && sidebarScrollerRef.current) {
       sidebarScrollerRef.current.scrollTo({
         top: 0,
@@ -39,9 +42,9 @@ function SidebarContainer({
     }
   };
 
-  const scrollerElementRef = (ref) => {
+  const scrollerElementRef = React.useCallback((ref) => {
     sidebarScrollerRef.current = ref;
-  };
+  }, []);
 
   return (
     <div
@@ -64,8 +67,7 @@ function SidebarContainer({
   );
 }
 
-export default compose(
-  withDashboardActions,
+export const SidebarContainer = compose(
   withDashboard(({ sidebarExpended }) => ({
     sidebarExpended,
   })),
@@ -73,4 +75,4 @@ export default compose(
     ({ isSubscriptionActive }) => ({ isSubscriptionActive }),
     'main',
   ),
-)(SidebarContainer);
+)(SidebarContainerJSX);

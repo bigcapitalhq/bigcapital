@@ -1,9 +1,11 @@
 import React from 'react';
 import { Button, Popover, Menu, Position } from '@blueprintjs/core';
-import Icon from 'components/Icon';
+
+import { Icon } from 'components';
+
+import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import { useAuthenticatedAccount } from 'hooks/query';
 import { compose, firstLettersArgs } from 'utils';
-import withCurrentOrganization from '../../containers/Organization/withCurrentOrganization';
-import { useAuthenticatedAccount } from '../../hooks/query';
 
 // Popover modifiers.
 const POPOVER_MODIFIERS = {
@@ -13,7 +15,7 @@ const POPOVER_MODIFIERS = {
 /**
  * Sideabr head.
  */
-function SidebarHead({
+function SidebarHeadJSX({
   // #withCurrentOrganization
   organization,
 }) {
@@ -61,6 +63,6 @@ function SidebarHead({
   );
 }
 
-export default compose(
+export const SidebarHead = compose(
   withCurrentOrganization(({ organization }) => ({ organization })),
-)(SidebarHead);
+)(SidebarHeadJSX);

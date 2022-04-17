@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router';
 
 import 'style/pages/Dashboard/Dashboard.scss';
 
-import Sidebar from 'components/Sidebar/Sidebar';
+import { Sidebar } from 'containers/Dashboard/Sidebar/Sidebar';
 import DashboardContent from 'components/Dashboard/DashboardContent';
 import DialogsContainer from 'components/DialogsContainer';
 import PreferencesPage from 'components/Preferences/PreferencesPage';
