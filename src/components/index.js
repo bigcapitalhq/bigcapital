@@ -101,10 +101,12 @@ export * from './ExchangeRate';
 export * from './Branches';
 export * from './Warehouses';
 export * from './Currencies';
-export * from './FormTopbar'
+export * from './FormTopbar';
 export * from './Paper';
-export * from './Accounts'
+export * from './Accounts';
 export * from './DataTableCells';
+export * from './FlexGrid';
+export * from './MenuItem';
 
 const Hint = FieldHint;
 

@@ -1,14 +1,19 @@
 import React from 'react';
 
-import SidebarContainer from 'components/Sidebar/SidebarContainer';
-import SidebarHead from 'components/Sidebar/SidebarHead';
-import SidebarMenu from 'components/Sidebar/SidebarMenu';
-import { useGetSidebarMenu } from './utils';
+import { SidebarContainer } from './SidebarContainer';
+import { SidebarHead } from './SidebarHead';
+import { SidebarMenu } from './SidebarMenu';
+import { useMainSidebarMenu } from './hooks';
+import { SidebarOverlayBinded } from '../SidebarOverlay';
 
 import 'style/containers/Dashboard/Sidebar.scss';
 
-export default function Sidebar({ dashboardContentRef }) {
-  const menu = useGetSidebarMenu();
+/**
+ * Dashboard sidebar.
+ * @returns {JSX.Element}
+ */
+export function Sidebar() {
+  const menu = useMainSidebarMenu();
 
   return (
     <SidebarContainer>
@@ -17,14 +22,14 @@ export default function Sidebar({ dashboardContentRef }) {
       <div className="sidebar__menu">
         <SidebarMenu menu={menu} />
       </div>
-
+      <SidebarOverlayBinded />
       <SidebarFooterVersion />
     </SidebarContainer>
   );
 }
 
 /**
- * Sidebar footer version. 
+ * Sidebar footer version.
  * @returns {React.JSX}
  */
 function SidebarFooterVersion() {

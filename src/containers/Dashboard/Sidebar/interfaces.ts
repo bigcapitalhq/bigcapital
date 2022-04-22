@@ -2,7 +2,9 @@ export enum ISidebarMenuItemType {
   Label = 'label',
   Link = 'link',
   Group = 'group',
-  Overlay = 'overlay'
+  Overlay = 'overlay',
+  Dialog = 'dialog',
+  Drawer = 'drawer',
 }
 
 export interface ISidebarMenuItemOverlay extends ISidebarMenuItemCommon {
@@ -14,6 +16,18 @@ export interface ISidebarMenuItemLink extends ISidebarMenuItemCommon {
   href: string;
   type: ISidebarMenuItemType.Link;
   matchExact?: boolean;
+}
+
+export interface ISidebarMenuItemDialog extends ISidebarMenuItemCommon {
+  type: ISidebarMenuItemType.Dialog;
+  dialogName: string;
+  dialogPayload: any;
+}
+
+export interface ISidebarMenuItemDrawer extends ISidebarMenuItemCommon {
+  type: ISidebarMenuItemType.Drawer;
+  drawerName: string;
+  drawerPayload: any;
 }
 
 export interface ISidebarMenuItemLabel extends ISidebarMenuItemCommon {
@@ -42,4 +56,22 @@ export type ISidebarMenuItem =
   | ISidebarMenuItemLink
   | ISidebarMenuItemLabel
   | ISidebarMenuItemGroup
-  | ISidebarMenuItemOverlay;
+  | ISidebarMenuItemOverlay
+  | ISidebarMenuItemDialog
+  | ISidebarMenuItemDrawer;
+
+export enum ISidebarMenuOverlayIds {
+  Items = 'Items',
+  Reports = 'Reports',
+  Sales = 'Sales',
+  Purchases = 'Purchases',
+  Financial = 'Financial',
+  Contacts = 'Contacts',
+  Cashflow = 'Cashflow',
+  Expenses = 'Expenses',
+}
+
+export enum ISidebarSubscriptionAbility {
+  Expired = 'SubscriptionExpired',
+  Active = 'SubscriptionActive',
+}

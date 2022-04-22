@@ -4,7 +4,7 @@ import { FastField, Field } from 'formik';
 import { FormGroup, Checkbox } from '@blueprintjs/core';
 import styled from 'styled-components';
 
-import { Row, Col, FieldHint, FormattedMessage as T } from 'components';
+import { Flex, FlexItem, FieldHint, FormattedMessage as T } from 'components';
 import {
   handlePreviousYearCheckBoxChange,
   handlePreviousYearChangeCheckboxChange,
@@ -15,11 +15,11 @@ import {
 } from './utils';
 
 /**
- * Balance sheet header - Comparison panal.
+ * Balance sheet header - Comparison panal - Comparisons fields.
  */
-export default function BalanceSheetHeaderComparisonPanal() {
+function BalanceSheetHeaderComparisonPanalFields() {
   return (
-    <BalanceSheetComparisonWrap>
+    <>
       {/**----------- Previous Year -----------*/}
       <Field name={'previousYear'} type={'checkbox'}>
         {({ form, field }) => (
@@ -33,8 +33,9 @@ export default function BalanceSheetHeaderComparisonPanal() {
           </FormGroup>
         )}
       </Field>
-      <Row>
-        <Col xs={3}>
+
+      <FlexSubFields align={'left'}>
+        <FlexItem col={6}>
           <Field name={'previousYearAmountChange'} type={'checkbox'}>
             {({ form, field }) => (
               <FormGroup labelInfo={<FieldHint />}>
@@ -48,8 +49,9 @@ export default function BalanceSheetHeaderComparisonPanal() {
               </FormGroup>
             )}
           </Field>
-        </Col>
-        <Col xs={3}>
+        </FlexItem>
+
+        <FlexItem col={6}>
           <FastField name={'previousYearPercentageChange'} type={'checkbox'}>
             {({ form, field }) => (
               <FormGroup labelInfo={<FieldHint />}>
@@ -62,8 +64,9 @@ export default function BalanceSheetHeaderComparisonPanal() {
               </FormGroup>
             )}
           </FastField>
-        </Col>
-      </Row>
+        </FlexItem>
+      </FlexSubFields>
+
       {/*------------ Previous Period -----------*/}
       <FastField name={'previousPeriod'} type={'checkbox'}>
         {({ form, field }) => (
@@ -78,8 +81,9 @@ export default function BalanceSheetHeaderComparisonPanal() {
           </FormGroup>
         )}
       </FastField>
-      <Row>
-        <Col xs={3}>
+
+      <FlexSubFields>
+        <FlexItem col={6}>
           <FastField name={'previousPeriodAmountChange'} type={'checkbox'}>
             {({ form, field }) => (
               <FormGroup labelInfo={<FieldHint />}>
@@ -93,8 +97,9 @@ export default function BalanceSheetHeaderComparisonPanal() {
               </FormGroup>
             )}
           </FastField>
-        </Col>
-        <Col xs={3}>
+        </FlexItem>
+
+        <FlexItem col={6}>
           <FastField name={'previousPeriodPercentageChange'} type={'checkbox'}>
             {({ form, field }) => (
               <FormGroup labelInfo={<FieldHint />}>
@@ -107,8 +112,8 @@ export default function BalanceSheetHeaderComparisonPanal() {
               </FormGroup>
             )}
           </FastField>
-        </Col>
-      </Row>
+        </FlexItem>
+      </FlexSubFields>
 
       {/**----------- % of Column -----------*/}
       <FastField name={'percentageOfColumn'} type={'checkbox'}>
@@ -137,19 +142,33 @@ export default function BalanceSheetHeaderComparisonPanal() {
           </FormGroup>
         )}
       </FastField>
+    </>
+  );
+}
+
+/**
+ * Balance sheet header - Comparison panal.
+ */
+export default function BalanceSheetHeaderComparisonPanal() {
+  return (
+    <BalanceSheetComparisonWrap>
+      <BalanceSheetComparisonFieldsWrap>
+        <BalanceSheetHeaderComparisonPanalFields />
+      </BalanceSheetComparisonFieldsWrap>
     </BalanceSheetComparisonWrap>
   );
 }
 
 const BalanceSheetComparisonWrap = styled.div`
-  .row {
-    margin-left: 0.15rem;
-    .col {
-      min-width: 150px !important;
-      max-width: 190px !important;
-    }
-  }
   .bp3-form-group {
     margin-bottom: 3px;
   }
+`;
+
+const FlexSubFields = styled(Flex)`
+  padding-left: 20px;
+`;
+
+const BalanceSheetComparisonFieldsWrap = styled.div`
+  width: 400px;
 `;

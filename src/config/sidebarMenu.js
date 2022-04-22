@@ -1,5 +1,11 @@
 import React from 'react';
 import { FormattedMessage as T } from 'components';
+import { Features } from '../common/features';
+import {
+  ISidebarMenuItemType,
+  ISidebarMenuOverlayIds,
+  ISidebarSubscriptionAbility,
+} from '../containers/Dashboard/Sidebar/interfaces';
 import {
   ReportsAction,
   AbilitySubject,
@@ -18,819 +24,718 @@ import {
   ExpenseAction,
   CashflowAction,
   PreferencesAbility,
-  ExchangeRateAbility,
   SubscriptionBillingAbility,
 } from '../common/abilityOption';
 
-export default [
+export const SidebarMenu = [
+  // ---------------
+  // # Homepage
+  // ---------------
   {
     text: <T id={'homepage'} />,
+    type: ISidebarMenuItemType.Link,
     disabled: false,
     href: '/',
     matchExact: true,
   },
+  // ---------------
+  // # Sales & Inventory
+  // ---------------
   {
     text: <T id={'sales_inventory'} />,
-    label: true,
-    permission: [
-      {
-        subject: AbilitySubject.Item,
-        ability: ItemAction.View,
-      },
-      {
-        subject: AbilitySubject.InventoryAdjustment,
-        ability: InventoryAdjustmentAction.View,
-      },
-      {
-        subject: AbilitySubject.Estimate,
-        ability: SaleEstimateAction.View,
-      },
-      {
-        subject: AbilitySubject.Invoice,
-        ability: SaleInvoiceAction.View,
-      },
-      {
-        subject: AbilitySubject.Receipt,
-        ability: SaleReceiptAction.View,
-      },
-      {
-        subject: AbilitySubject.PaymentReceive,
-        ability: PaymentReceiveAction.View,
-      },
-    ],
-  },
-  {
-    text: <T id={'items'} />,
+    type: ISidebarMenuItemType.Group,
     children: [
       {
         text: <T id={'items'} />,
-        href: '/items',
-        permission: {
-          subject: AbilitySubject.Item,
-          ability: ItemAction.View,
-        },
-      },
-      {
-        text: <T id={'inventory_adjustments'} />,
-        href: '/inventory-adjustments',
-        permission: {
-          subject: AbilitySubject.InventoryAdjustment,
-          ability: InventoryAdjustmentAction.View,
-        },
-      },
-      {
-        text: <T id={'sidebar_warehouse_transfer'} />,
-        href: '/warehouses-transfers',
-      },
-      {
-        text: <T id={'category_list'} />,
-        href: '/items/categories',
-        permission: {
-          subject: AbilitySubject.Item,
-          ability: ItemAction.View,
-        },
-      },
-      {
-        text: <T id={'New tasks'} />,
-        label: true,
-        permission: [
+        type: ISidebarMenuItemType.Overlay,
+        overlayId: ISidebarMenuOverlayIds.Items,
+        children: [
           {
-            subject: AbilitySubject.Item,
-            ability: ItemAction.Create,
+            text: <T id={'items'} />,
+            type: ISidebarMenuItemType.Group,
+            children: [
+              {
+                text: <T id={'items'} />,
+                href: '/items',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Item,
+                  ability: ItemAction.View,
+                },
+              },
+              {
+                text: <T id={'inventory_adjustments'} />,
+                href: '/inventory-adjustments',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.InventoryAdjustment,
+                  ability: InventoryAdjustmentAction.View,
+                },
+              },
+              {
+                text: <T id={'sidebar_warehouse_transfer'} />,
+                href: '/warehouses-transfers',
+                type: ISidebarMenuItemType.Link,
+                feature: Features.Warehouses,
+              },
+              {
+                text: <T id={'category_list'} />,
+                href: '/items/categories',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Item,
+                  ability: ItemAction.View,
+                },
+              },
+            ],
+          },
+          {
+            text: <T id={'New tasks'} />,
+            type: ISidebarMenuItemType.Group,
+            children: [
+              {
+                text: <T id={'New inventory item'} />,
+                href: '/items/new',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Item,
+                  ability: ItemAction.Create,
+                },
+              },
+              {
+                text: (
+                  <T id={'warehouse_transfer.label.new_warehouse_transfer'} />
+                ),
+                href: '/warehouses-transfers/new',
+                type: ISidebarMenuItemType.Link,
+                feature: Features.Warehouses,
+              },
+              {
+                text: <T id={'New service'} />,
+                href: '/items/new',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Item,
+                  ability: ItemAction.Create,
+                },
+              },
+              {
+                text: <T id={'New item category'} />,
+                href: '/items/categories/new',
+                type: ISidebarMenuItemType.Dialog,
+                dialogName: 'item-category-form',
+                permission: {
+                  subject: AbilitySubject.Item,
+                  ability: ItemAction.Create,
+                },
+              },
+            ],
           },
         ],
-      },
-      {
-        divider: true,
-        permission: [
-          {
-            subject: AbilitySubject.Item,
-            ability: ItemAction.Create,
-          },
-        ],
-      },
-      {
-        text: <T id={'New inventory item'} />,
-        href: '/items/new',
-        permission: {
-          subject: AbilitySubject.Item,
-          ability: ItemAction.Create,
-        },
-      },
-      {
-        text: <T id={'warehouse_transfer.label.new_warehouse_transfer'} />,
-        href: '/warehouses-transfers/new',
-      },
-      {
-        text: <T id={'New service'} />,
-        href: '/items/new',
-        permission: {
-          subject: AbilitySubject.Item,
-          ability: ItemAction.Create,
-        },
-      },
-      {
-        text: <T id={'New item category'} />,
-        href: '/items/categories/new',
-        permission: {
-          subject: AbilitySubject.Item,
-          ability: ItemAction.Create,
-        },
       },
     ],
   },
+  // ---------------
+  // # Sales
+  // ---------------
   {
     text: <T id={'sales'} />,
+    type: ISidebarMenuItemType.Overlay,
+    overlayId: ISidebarMenuOverlayIds.Sales,
     children: [
       {
-        text: <T id={'estimates'} />,
-        href: '/estimates',
-        permission: {
-          subject: AbilitySubject.Estimate,
-          ability: SaleEstimateAction.View,
-        },
-      },
-      {
-        text: <T id={'invoices'} />,
-        href: '/invoices',
-        permission: {
-          subject: AbilitySubject.Invoice,
-          ability: SaleInvoiceAction.View,
-        },
-      },
-      {
-        text: <T id={'receipts'} />,
-        href: '/receipts',
-        permission: {
-          subject: AbilitySubject.Receipt,
-          ability: SaleReceiptAction.View,
-        },
-      },
-      {
-        text: <T id={'sidebar_credit_note'} />,
-        href: '/credit-notes',
-      },
-      {
-        text: <T id={'payment_receives'} />,
-        href: '/payment-receives',
-        permission: {
-          subject: AbilitySubject.PaymentReceive,
-          ability: PaymentReceiveAction.View,
-        },
+        text: <T id={'sales'} />,
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: <T id={'estimates'} />,
+            href: '/estimates',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Estimate,
+              ability: SaleEstimateAction.View,
+            },
+          },
+          {
+            text: <T id={'invoices'} />,
+            href: '/invoices',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Invoice,
+              ability: SaleInvoiceAction.View,
+            },
+          },
+          {
+            text: <T id={'receipts'} />,
+            href: '/receipts',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Receipt,
+              ability: SaleReceiptAction.View,
+            },
+          },
+          {
+            text: <T id={'sidebar_credit_note'} />,
+            href: '/credit-notes',
+            type: ISidebarMenuItemType.Link,
+          },
+          {
+            text: <T id={'payment_receives'} />,
+            href: '/payment-receives',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.PaymentReceive,
+              ability: PaymentReceiveAction.View,
+            },
+          },
+        ],
       },
       {
         text: <T id={'New tasks'} />,
-        label: true,
-        permission: [
+        type: ISidebarMenuItemType.Group,
+        children: [
           {
-            subject: AbilitySubject.Estimate,
-            ability: SaleEstimateAction.Create,
+            text: <T id={'new_estimate'} />,
+            href: '/estimates/new',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Estimate,
+              ability: SaleEstimateAction.Create,
+            },
           },
           {
-            subject: AbilitySubject.Invoice,
-            ability: SaleInvoiceAction.Create,
+            text: <T id={'new_invoice'} />,
+            href: '/invoices/new',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Invoice,
+              ability: SaleInvoiceAction.Create,
+            },
           },
           {
-            subject: AbilitySubject.Receipt,
-            ability: SaleReceiptAction.Create,
+            text: <T id={'new_receipt'} />,
+            href: '/receipts/new',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Receipt,
+              ability: SaleReceiptAction.Create,
+            },
           },
           {
-            subject: AbilitySubject.PaymentReceive,
-            ability: PaymentReceiveAction.Create,
+            text: <T id={'credit_note.label.new_credit_note'} />,
+            href: '/credit-notes/new',
+            type: ISidebarMenuItemType.Link,
+          },
+          {
+            text: <T id={'new_payment_receive'} />,
+            href: '/payment-receives/new',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.PaymentReceive,
+              ability: PaymentReceiveAction.Create,
+            },
           },
         ],
-      },
-      {
-        divider: true,
-        permission: [
-          {
-            subject: AbilitySubject.Estimate,
-            ability: SaleEstimateAction.Create,
-          },
-          {
-            subject: AbilitySubject.Invoice,
-            ability: SaleInvoiceAction.Create,
-          },
-          {
-            subject: AbilitySubject.Receipt,
-            ability: SaleReceiptAction.Create,
-          },
-          {
-            subject: AbilitySubject.PaymentReceive,
-            ability: PaymentReceiveAction.Create,
-          },
-        ],
-      },
-      {
-        text: <T id={'new_estimate'} />,
-        href: '/estimates/new',
-        permission: {
-          subject: AbilitySubject.Estimate,
-          ability: SaleEstimateAction.Create,
-        },
-      },
-      {
-        text: <T id={'new_invoice'} />,
-        href: '/invoices/new',
-        permission: {
-          subject: AbilitySubject.Invoice,
-          ability: SaleInvoiceAction.Create,
-        },
-      },
-      {
-        text: <T id={'new_receipt'} />,
-        href: '/receipts/new',
-        permission: {
-          subject: AbilitySubject.Receipt,
-          ability: SaleReceiptAction.Create,
-        },
-      },
-      {
-        text: <T id={'credit_note.label.new_credit_note'} />,
-        href: '/credit-notes/new',
-      },
-      {
-        text: <T id={'new_payment_receive'} />,
-        href: '/payment-receives/new',
-        permission: {
-          subject: AbilitySubject.PaymentReceive,
-          ability: PaymentReceiveAction.Create,
-        },
       },
     ],
   },
+  // ---------------
+  // # Purchases
+  // ---------------
   {
     text: <T id={'purchases'} />,
+    type: ISidebarMenuItemType.Overlay,
+    overlayId: ISidebarMenuOverlayIds.Purchases,
     children: [
       {
-        text: <T id={'bills'} />,
-        href: '/bills',
-        permission: {
-          subject: AbilitySubject.Bill,
-          ability: BillAction.View,
-        },
-      },
-      {
-        text: <T id={'sidebar_vendor_credits'} />,
-        href: '/vendor-credits',
-      },
-      {
-        text: <T id={'payment_mades'} />,
-        href: '/payment-mades',
-        newTabHref: '/payment-mades/new',
-        permission: {
-          subject: AbilitySubject.PaymentMade,
-          ability: PaymentMadeAction.View,
-        },
+        text: <T id={'purchases'} />,
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: <T id={'bills'} />,
+            href: '/bills',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Bill,
+              ability: BillAction.View,
+            },
+          },
+          {
+            text: <T id={'sidebar_vendor_credits'} />,
+            href: '/vendor-credits',
+            type: ISidebarMenuItemType.Link,
+          },
+          {
+            text: <T id={'payment_mades'} />,
+            href: '/payment-mades',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.PaymentMade,
+              ability: PaymentMadeAction.View,
+            },
+          },
+        ],
       },
       {
         text: <T id={'New tasks'} />,
-        label: true,
-        permission: [
+        type: ISidebarMenuItemType.Group,
+        children: [
           {
-            subject: AbilitySubject.Bill,
-            ability: BillAction.Create,
+            text: <T id={'New purchase invoice'} />,
+            href: '/bills/new',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Bill,
+              ability: BillAction.Create,
+            },
           },
           {
-            subject: AbilitySubject.PaymentMade,
-            ability: PaymentMadeAction.Create,
+            text: <T id={'vendor_credits.label.new_vendor_credit'} />,
+            href: '/vendor-credits/new',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Bill,
+              ability: BillAction.Create,
+            },
+          },
+          {
+            text: <T id={'new_payment_made'} />,
+            href: '/payment-mades/new',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.PaymentMade,
+              ability: PaymentMadeAction.Create,
+            },
           },
         ],
-      },
-      {
-        divider: true,
-        permission: [
-          {
-            subject: AbilitySubject.Bill,
-            ability: BillAction.Create,
-          },
-          {
-            subject: AbilitySubject.PaymentMade,
-            ability: PaymentMadeAction.Create,
-          },
-        ],
-      },
-      {
-        text: <T id={'New purchase invoice'} />,
-        href: '/bills/new',
-        permission: {
-          subject: AbilitySubject.Bill,
-          ability: BillAction.Create,
-        },
-      },
-      {
-        text: <T id={'vendor_credits.label.new_vendor_credit'} />,
-        href: '/vendor-credits/new',
-        permission: {
-          subject: AbilitySubject.Bill,
-          ability: BillAction.Create,
-        },
-      },
-      {
-        text: <T id={'new_payment_made'} />,
-        href: '/payment-mades/new',
-        permission: {
-          subject: AbilitySubject.PaymentMade,
-          ability: PaymentMadeAction.Create,
-        },
       },
     ],
   },
+  // ---------------
+  // # Contacts
+  // ---------------
   {
     text: <T id={'contacts'} />,
+    type: ISidebarMenuItemType.Overlay,
+    overlayId: ISidebarMenuOverlayIds.Contacts,
     children: [
       {
-        text: <T id={'customers'} />,
-        href: '/customers',
-        permission: {
-          subject: AbilitySubject.Customer,
-          ability: CustomerAction.View,
-        },
-      },
-      {
-        text: <T id={'vendors'} />,
-        href: '/vendors',
-        permission: {
-          subject: AbilitySubject.Vendor,
-          ability: VendorAction.Create,
-        },
+        text: <T id={'contacts'} />,
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: <T id={'customers'} />,
+            href: '/customers',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Customer,
+              ability: CustomerAction.View,
+            },
+          },
+          {
+            text: <T id={'vendors'} />,
+            href: '/vendors',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Vendor,
+              ability: VendorAction.Create,
+            },
+          },
+        ],
       },
       {
         text: <T id={'New tasks'} />,
-        label: true,
-        permission: [
+        type: ISidebarMenuItemType.Group,
+        children: [
           {
-            subject: AbilitySubject.Customer,
-            ability: CustomerAction.View,
+            text: <T id={'new_customer'} />,
+            href: '/customers/new',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Customer,
+              ability: CustomerAction.View,
+            },
           },
           {
-            subject: AbilitySubject.Vendor,
-            ability: VendorAction.View,
-          },
-        ],
-      },
-      {
-        divider: true,
-        permission: [
-          {
-            subject: AbilitySubject.Customer,
-            ability: CustomerAction.View,
-          },
-          {
-            subject: AbilitySubject.Vendor,
-            ability: VendorAction.View,
+            text: <T id={'new_vendor'} />,
+            href: '/vendors/new',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Vendor,
+              ability: VendorAction.View,
+            },
           },
         ],
-      },
-      {
-        text: <T id={'new_customer'} />,
-        href: '/customers/new',
-        permission: {
-          subject: AbilitySubject.Customer,
-          ability: CustomerAction.View,
-        },
-      },
-      {
-        text: <T id={'new_vendor'} />,
-        href: '/vendors/new',
-        permission: {
-          subject: AbilitySubject.Vendor,
-          ability: VendorAction.View,
-        },
       },
     ],
   },
+  // ---------------
+  // # Accounting
+  // ---------------
   {
     text: <T id={'accounting'} />,
-    label: true,
-    permission: [
-      {
-        subject: AbilitySubject.Account,
-        ability: AccountAction.View,
-      },
-      {
-        subject: AbilitySubject.ManualJournal,
-        ability: ManualJournalAction.View,
-      },
-    ],
-  },
-  {
-    text: <T id={'financial'} />,
+    type: ISidebarMenuItemType.Group,
     children: [
       {
-        text: <T id={'accounts_chart'} />,
-        href: '/accounts',
-        permission: {
-          subject: AbilitySubject.Account,
-          ability: AccountAction.View,
-        },
-      },
-      {
-        text: <T id={'manual_journals'} />,
-        href: '/manual-journals',
-        permission: {
-          subject: AbilitySubject.ManualJournal,
-          ability: ManualJournalAction.View,
-        },
-      },
-      {
-        text: <T id={'sidebar.transactions_locaking'} />,
-        href: '/transactions-locking',
-        // permission: {
-        //   subject: AbilitySubject.ManualJournal,
-        //   ability: ManualJournalAction.TransactionLocking,
-        // },
-      },
-      {
-        text: <T id={'exchange_rate'} />,
-        href: '/exchange-rates',
-        permission: {
-          subject: AbilitySubject.ExchangeRate,
-          ability: ExchangeRateAbility.View,
-        },
-      },
-      {
-        text: <T id={'New tasks'} />,
-        label: true,
-        permission: {
-          subject: AbilitySubject.ManualJournal,
-          ability: ManualJournalAction.Create,
-        },
-      },
-      {
-        divider: true,
-        permission: {
-          subject: AbilitySubject.ManualJournal,
-          ability: ManualJournalAction.Create,
-        },
-      },
-      {
-        text: <T id={'make_journal_entry'} />,
-        href: '/make-journal-entry',
-        permission: {
-          subject: AbilitySubject.ManualJournal,
-          ability: ManualJournalAction.Create,
-        },
+        text: <T id={'financial'} />,
+        type: ISidebarMenuItemType.Overlay,
+        overlayId: ISidebarMenuOverlayIds.Financial,
+        children: [
+          {
+            text: <T id={'financial'} />,
+            type: ISidebarMenuItemType.Group,
+            children: [
+              {
+                text: <T id={'accounts_chart'} />,
+                href: '/accounts',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Account,
+                  ability: AccountAction.View,
+                },
+              },
+              {
+                text: <T id={'manual_journals'} />,
+                href: '/manual-journals',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.ManualJournal,
+                  ability: ManualJournalAction.View,
+                },
+              },
+              {
+                text: <T id={'sidebar.transactions_locaking'} />,
+                href: '/transactions-locking',
+                type: ISidebarMenuItemType.Link,
+              },
+            ],
+          },
+          {
+            text: <T id={'New tasks'} />,
+            type: ISidebarMenuItemType.Group,
+            children: [
+              {
+                text: <T id={'make_journal_entry'} />,
+                href: '/make-journal-entry',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.ManualJournal,
+                  ability: ManualJournalAction.Create,
+                },
+              },
+            ],
+          },
+        ],
       },
     ],
   },
+  // ---------------
+  // # Cashflow
+  // ---------------
   {
     text: <T id={'siebar.cashflow'} />,
+    type: ISidebarMenuItemType.Overlay,
+    overlayId: ISidebarMenuOverlayIds.Cashflow,
     children: [
       {
-        text: <T id={'siebar.cashflow.label_cash_and_bank_accounts'} />,
-        href: '/cashflow-accounts',
-        permission: {
-          subject: AbilitySubject.Cashflow,
-          ability: CashflowAction.View,
-        },
+        text: <T id={'siebar.cashflow'} />,
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: <T id={'siebar.cashflow.label_cash_and_bank_accounts'} />,
+            href: '/cashflow-accounts',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Cashflow,
+              ability: CashflowAction.View,
+            },
+          },
+        ],
       },
       {
         text: <T id={'New tasks'} />,
-        label: true,
-        permission: [
-          {
-            subject: AbilitySubject.Cashflow,
-            ability: CashflowAction.Create,
-          },
-        ],
-      },
-      {
+        type: ISidebarMenuItemType.Group,
         divider: true,
-        permission: [
+        children: [
           {
-            subject: AbilitySubject.Cashflow,
-            ability: CashflowAction.Create,
+            text: <T id={'cash_flow.label.add_money_in'} />,
+            href: '/cashflow-accounts',
+            type: ISidebarMenuItemType.Dialog,
+            dialogName: 'money-in',
+            permission: {
+              subject: AbilitySubject.Cashflow,
+              ability: CashflowAction.Create,
+            },
+          },
+          {
+            text: <T id={'cash_flow.label.add_money_out'} />,
+            href: '/cashflow-accounts',
+            type: ISidebarMenuItemType.Dialog,
+            permission: {
+              subject: AbilitySubject.Cashflow,
+              ability: CashflowAction.Create,
+            },
+          },
+          {
+            text: <T id={'cash_flow.label.add_cash_account'} />,
+            href: '/cashflow-accounts',
+            type: ISidebarMenuItemType.Dialog,
+            permission: {
+              subject: AbilitySubject.Cashflow,
+              ability: CashflowAction.Create,
+            },
+          },
+          {
+            text: <T id={'cash_flow.label.add_bank_account'} />,
+            href: '/cashflow-accounts',
+            type: ISidebarMenuItemType.Dialog,
+            permission: {
+              subject: AbilitySubject.Cashflow,
+              ability: CashflowAction.Create,
+            },
           },
         ],
-      },
-      {
-        text: <T id={'cash_flow.label.add_money_in'} />,
-        href: '/cashflow-accounts',
-        permission: {
-          subject: AbilitySubject.Cashflow,
-          ability: CashflowAction.Create,
-        },
-      },
-      {
-        text: <T id={'cash_flow.label.add_money_out'} />,
-        href: '/cashflow-accounts',
-        permission: {
-          subject: AbilitySubject.Cashflow,
-          ability: CashflowAction.Create,
-        },
-      },
-      {
-        text: <T id={'cash_flow.label.add_cash_account'} />,
-        href: '/cashflow-accounts',
-        permission: {
-          subject: AbilitySubject.Cashflow,
-          ability: CashflowAction.Create,
-        },
-      },
-      {
-        text: <T id={'cash_flow.label.add_bank_account'} />,
-        href: '/cashflow-accounts',
-        permission: {
-          subject: AbilitySubject.Cashflow,
-          ability: CashflowAction.Create,
-        },
       },
     ],
   },
+  // ---------------
+  // # Expenses
+  // ---------------
   {
     text: <T id={'expenses'} />,
+    type: ISidebarMenuItemType.Overlay,
+    overlayId: ISidebarMenuOverlayIds.Expenses,
     children: [
       {
         text: <T id={'expenses'} />,
-        href: '/expenses',
-        permission: {
-          subject: AbilitySubject.Expense,
-          ability: ExpenseAction.View,
-        },
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: <T id={'expenses'} />,
+            href: '/expenses',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Expense,
+              ability: ExpenseAction.View,
+            },
+          },
+        ],
       },
       {
         text: <T id={'New tasks'} />,
-        label: true,
-        permission: {
-          subject: AbilitySubject.Expense,
-          ability: ExpenseAction.Create,
-        },
-      },
-      {
-        divider: true,
-        permission: {
-          subject: AbilitySubject.Expense,
-          ability: ExpenseAction.Create,
-        },
-      },
-      {
-        text: <T id={'new_expense'} />,
-        href: '/expenses/new',
-        permission: {
-          subject: AbilitySubject.Expense,
-          ability: ExpenseAction.Create,
-        },
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: <T id={'new_expense'} />,
+            href: '/expenses/new',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Expense,
+              ability: ExpenseAction.Create,
+            },
+          },
+        ],
       },
     ],
   },
+  // ---------------
+  // # Reports
+  // ---------------
   {
     text: <T id={'Reports'} />,
+    type: ISidebarMenuItemType.Overlay,
+    overlayId: ISidebarMenuOverlayIds.Reports,
     children: [
       {
-        text: <T id={'balance_sheet'} />,
-        href: '/financial-reports/balance-sheet',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_BALANCE_SHEET,
-        },
+        text: <T id={'Reports'} />,
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: <T id={'balance_sheet'} />,
+            href: '/financial-reports/balance-sheet',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_BALANCE_SHEET,
+            },
+          },
+          {
+            text: <T id={'trial_balance_sheet'} />,
+            href: '/financial-reports/trial-balance-sheet',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_TRIAL_BALANCE_SHEET,
+            },
+          },
+          {
+            text: <T id={'journal'} />,
+            href: '/financial-reports/journal-sheet',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_JOURNAL,
+            },
+          },
+          {
+            text: <T id={'general_ledger'} />,
+            href: '/financial-reports/general-ledger',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_GENERAL_LEDGET,
+            },
+          },
+          {
+            text: <T id={'profit_loss_sheet'} />,
+            href: '/financial-reports/profit-loss-sheet',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_PROFIT_LOSS,
+            },
+          },
+          {
+            text: <T id={'cash_flow_statement'} />,
+            href: '/financial-reports/cash-flow',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_CASHFLOW_ACCOUNT_TRANSACTION,
+            },
+          },
+          {
+            text: <T id={'AR_Aging_Summary'} />,
+            href: '/financial-reports/receivable-aging-summary',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_AR_AGING_SUMMARY,
+            },
+          },
+          {
+            text: <T id={'AP_Aging_Summary'} />,
+            href: '/financial-reports/payable-aging-summary',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_AP_AGING_SUMMARY,
+            },
+          },
+        ],
       },
-      {
-        text: <T id={'trial_balance_sheet'} />,
-        href: '/financial-reports/trial-balance-sheet',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_TRIAL_BALANCE_SHEET,
-        },
-      },
-      {
-        text: <T id={'journal'} />,
-        href: '/financial-reports/journal-sheet',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_JOURNAL,
-        },
-      },
-      {
-        text: <T id={'general_ledger'} />,
-        href: '/financial-reports/general-ledger',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_GENERAL_LEDGET,
-        },
-      },
-      {
-        text: <T id={'profit_loss_sheet'} />,
-        href: '/financial-reports/profit-loss-sheet',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_PROFIT_LOSS,
-        },
-      },
-      {
-        text: <T id={'cash_flow_statement'} />,
-        href: '/financial-reports/cash-flow',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_CASHFLOW_ACCOUNT_TRANSACTION,
-        },
-      },
-      {
-        text: <T id={'AR_Aging_Summary'} />,
-        href: '/financial-reports/receivable-aging-summary',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_AR_AGING_SUMMARY,
-        },
-      },
-      {
-        text: <T id={'AP_Aging_Summary'} />,
-        href: '/financial-reports/payable-aging-summary',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_AP_AGING_SUMMARY,
-        },
-      },
-      // {
-      //   text: <T id={'realized_gain_or_loss.label'} />,
-      //   href: '/financial-reports/realized-gain-loss',
-      // },
-      // {
-      //   text: <T id={'unrealized_gain_or_loss.label'} />,
-      //   href: '/financial-reports/unrealized-gain-loss',
-      // },
       {
         text: <T id={'Sales/Purchases'} />,
-        label: true,
-        permission: [
+        type: ISidebarMenuItemType.Group,
+        children: [
           {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_PURCHASES_BY_ITEMS,
+            text: <T id={'purchases_by_items'} />,
+            type: ISidebarMenuItemType.Link,
+            href: '/financial-reports/purchases-by-items',
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_PURCHASES_BY_ITEMS,
+            },
           },
           {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_SALES_BY_ITEMS,
+            text: <T id={'sales_by_items'} />,
+            href: '/financial-reports/sales-by-items',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_SALES_BY_ITEMS,
+            },
           },
           {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_CUSTOMERS_TRANSACTIONS,
+            text: <T id={'customers_transactions'} />,
+            href: '/financial-reports/transactions-by-customers',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_CUSTOMERS_TRANSACTIONS,
+            },
           },
           {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_VENDORS_TRANSACTIONS,
+            text: <T id={'vendors_transactions'} />,
+            href: '/financial-reports/transactions-by-vendors',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_VENDORS_TRANSACTIONS,
+            },
           },
           {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_CUSTOMERS_SUMMARY_BALANCE,
+            text: <T id={'customers_balance_summary'} />,
+            href: '/financial-reports/customers-balance-summary',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_CUSTOMERS_SUMMARY_BALANCE,
+            },
           },
           {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_VENDORS_SUMMARY_BALANCE,
+            text: <T id={'vendors_balance_summary'} />,
+            href: '/financial-reports/vendors-balance-summary',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_VENDORS_SUMMARY_BALANCE,
+            },
           },
         ],
-      },
-      {
-        divider: true,
-        permission: [
-          {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_PURCHASES_BY_ITEMS,
-          },
-          {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_SALES_BY_ITEMS,
-          },
-          {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_CUSTOMERS_TRANSACTIONS,
-          },
-          {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_VENDORS_TRANSACTIONS,
-          },
-          {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_CUSTOMERS_SUMMARY_BALANCE,
-          },
-          {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_VENDORS_SUMMARY_BALANCE,
-          },
-        ],
-      },
-      {
-        text: <T id={'purchases_by_items'} />,
-        href: '/financial-reports/purchases-by-items',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_PURCHASES_BY_ITEMS,
-        },
-      },
-      {
-        text: <T id={'sales_by_items'} />,
-        href: '/financial-reports/sales-by-items',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_SALES_BY_ITEMS,
-        },
-      },
-      {
-        text: <T id={'customers_transactions'} />,
-        href: '/financial-reports/transactions-by-customers',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_CUSTOMERS_TRANSACTIONS,
-        },
-      },
-      {
-        text: <T id={'vendors_transactions'} />,
-        href: '/financial-reports/transactions-by-vendors',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_VENDORS_TRANSACTIONS,
-        },
-      },
-      {
-        text: <T id={'customers_balance_summary'} />,
-        href: '/financial-reports/customers-balance-summary',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_CUSTOMERS_SUMMARY_BALANCE,
-        },
-      },
-      {
-        text: <T id={'vendors_balance_summary'} />,
-        href: '/financial-reports/vendors-balance-summary',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_VENDORS_SUMMARY_BALANCE,
-        },
       },
       {
         text: <T id={'inventory'} />,
-        label: true,
-        permission: [
+        type: ISidebarMenuItemType.Group,
+        children: [
           {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
+            text: <T id={'inventory_item_details'} />,
+            href: '/financial-reports/inventory-item-details',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
+            },
           },
           {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
-          },
-        ],
-      },
-      {
-        divider: true,
-        permission: [
-          {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
-          },
-          {
-            subject: AbilitySubject.Report,
-            ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
+            text: <T id={'inventory_valuation'} />,
+            href: '/financial-reports/inventory-valuation',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
+            },
           },
         ],
-      },
-      {
-        text: <T id={'inventory_item_details'} />,
-        href: '/financial-reports/inventory-item-details',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
-        },
-      },
-      {
-        text: <T id={'inventory_valuation'} />,
-        href: '/financial-reports/inventory-valuation',
-        permission: {
-          subject: AbilitySubject.Report,
-          ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
-        },
       },
     ],
   },
   {
     text: <T id={'system'} />,
-    enableBilling: true,
-    label: true,
-    permission: [
+    type: ISidebarMenuItemType.Group,
+    children: [
       {
-        subject: AbilitySubject.Preferences,
-        ability: PreferencesAbility.Mutate,
+        text: <T id={'preferences'} />,
+        href: '/preferences',
+        type: ISidebarMenuItemType.Link,
+        permission: {
+          subject: AbilitySubject.Preferences,
+          ability: PreferencesAbility.Mutate,
+        },
       },
       {
-        subject: AbilitySubject.SubscriptionBilling,
-        ability: SubscriptionBillingAbility.View,
+        text: <T id={'billing'} />,
+        href: '/billing',
+        type: ISidebarMenuItemType.Link,
+        subscription: [
+          ISidebarSubscriptionAbility.Expired,
+          ISidebarSubscriptionAbility.Active,
+        ],
+        permission: {
+          subject: AbilitySubject.SubscriptionBilling,
+          ability: SubscriptionBillingAbility.View,
+        },
       },
     ],
-  },
-  {
-    text: <T id={'preferences'} />,
-    href: '/preferences',
-    permission: {
-      subject: AbilitySubject.Preferences,
-      ability: PreferencesAbility.Mutate,
-    },
-  },
-  {
-    text: <T id={'billing'} />,
-    href: '/billing',
-    enableBilling: true,
-    permission: {
-      subject: AbilitySubject.SubscriptionBilling,
-      ability: SubscriptionBillingAbility.View,
-    },
   },
 ];
