@@ -104,7 +104,7 @@ import {
 //     textClassName?: string;
 // }
 
-export default class MenuItem extends AbstractPureComponent2 {
+export class MenuItem extends AbstractPureComponent2 {
     static get defaultProps() {
       return {
         disabled: false,

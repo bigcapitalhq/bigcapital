@@ -106,6 +106,7 @@ export * from './Paper';
 export * from './Accounts';
 export * from './DataTableCells';
 export * from './FlexGrid';
+export * from './MenuItem';
 
 const Hint = FieldHint;
 

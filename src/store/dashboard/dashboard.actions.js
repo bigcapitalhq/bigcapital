@@ -111,3 +111,16 @@ export const setFeatureDashboardMeta = ({ features }) => {
     },
   };
 };
+
+export function openSidebarSubmenu({ submenuId }) {
+  return {
+    type: t.SIDEBAR_SUBMENU_OPEN,
+    payload: { submenuId },
+  };
+}
+
+export function closeSidebarSubmenu() {
+  return {
+    type: t.SIDEBAR_SUBMENU_CLOSE,
+  };
+}

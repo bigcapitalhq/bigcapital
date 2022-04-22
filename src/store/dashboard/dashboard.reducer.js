@@ -20,10 +20,8 @@ const initialState = {
   splashScreenLoading: null,
   appIsLoading: true,
   appIntlIsLoading: true,
-  features: {
-    // branches: true,
-    // warehouses: true,
-  },
+  sidebarSubmenu: { isOpen: false, submenuId: null },
+  features: {},
 };
 
 const STORAGE_KEY = 'bigcapital:dashboard';
@@ -129,6 +127,16 @@ const reducerInstance = createReducer(initialState, {
   [t.SPLASH_STOP_LOADING]: (state) => {
     state.splashScreenLoading -= 1;
     state.splashScreenLoading = Math.max(state.splashScreenLoading, 0);
+  },
+
+  [t.SIDEBAR_SUBMENU_OPEN]: (state, action) => {
+    state.sidebarSubmenu.isOpen = true;
+    state.sidebarSubmenu.submenuId = action.payload.submenuId;
+  },
+
+  [t.SIDEBAR_SUBMENU_CLOSE]: (state, action) => {
+    state.sidebarSubmenu.isOpen = false;
+    state.sidebarSubmenu.submenuId = null;
   },
 
   [t.RESET]: () => {
