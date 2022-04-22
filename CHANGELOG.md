@@ -2,6 +2,11 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [1.7.4-rc.2] - 20-04-2022
+ - `BIG-374` Refactoring sidebar men with ability permissions and feature control on each item.
+ 
+### Fixed
+  - 
 ## [1.7.3-rc.2] - 15-04-2022
 
 ### Fixed
