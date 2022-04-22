@@ -35,6 +35,7 @@ SidebarMenuItem.ItemTypes = [
   ISidebarMenuItemType.Overlay,
   ISidebarMenuItemType.Dialog,
 ];
+
 /**
  * Detarmines which sidebar menu item type should display.
  * @returns {JSX.Element}

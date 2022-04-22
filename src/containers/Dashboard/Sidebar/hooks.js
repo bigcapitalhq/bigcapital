@@ -53,10 +53,14 @@ export function getMainSidebarMenu() {
   return R.compose(removeSidebarOverlayChildren)(SidebarMenu);
 }
 
+/**
+ * Predicates whether the sidebar item has feature ability.
+ */
 function useFilterSidebarItemFeaturePredicater() {
   const { featureCan } = useFeatureCan();
 
   return {
+    // Returns false if the item has `feature` prop and that feature has no ability.
     predicate: (item) => {
       if (item.feature && !featureCan(item.feature)) {
         return false;
@@ -66,10 +70,14 @@ function useFilterSidebarItemFeaturePredicater() {
   };
 }
 
+/**
+ * Predicates whether the sidebar item has permissio ability.
+ */
 function useFilterSidebarItemAbilityPredicater() {
   const ability = useAbilityContext();
 
   return {
+    // Retruns false if the item has `permission` prop and that permission has no ability.
     predicate: (item) => {
       if (
         item.permission &&
@@ -114,7 +122,7 @@ function useFilterSidebarItemSubscriptionPredicater() {
 
 /**
  * Filters sidebar menu items based on ability of the item permission.
- * @param   {*} menu
+ * @param   {} menu
  * @returns {}
  */
 function useFilterSidebarMenuAbility(menu) {
@@ -189,6 +197,9 @@ function useBindSidebarItemDialogClick() {
   };
 }
 
+/**
+ * Binds click action for the sidebar overlay item.
+ */
 function useBindSidebarItemOverlayClick() {
   const { toggleSidebarSubmenu, closeSidebarSubmenu } =
     useSidebarSubmnuActions();
@@ -209,9 +220,7 @@ function useBindSidebarItemOverlayClick() {
 }
 
 /**
- *
- * @param   {} menu
- * @returns {}
+ * Binds click action of the given sidebar menu for each item based on item type.
  */
 function useBindSidebarItemClick(menu) {
   const { bindOnClick: bindLinkClickEvt } = useBindSidebarItemLinkClick();
