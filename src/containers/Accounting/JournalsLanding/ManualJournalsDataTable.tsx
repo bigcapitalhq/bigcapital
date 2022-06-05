@@ -1,25 +1,25 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { DataTable, DashboardContentTable } from 'components';
-import { TABLES } from 'common/tables';
+import { DataTable, DashboardContentTable } from '@/components';
+import { TABLES } from '@/common/tables';
 
 import ManualJournalsEmptyStatus from './ManualJournalsEmptyStatus';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
+import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 import { ActionsMenu } from './components';
 
 import withManualJournals from './withManualJournals';
 import withManualJournalsActions from './withManualJournalsActions';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
-import withSettings from '../../Settings/withSettings';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { useManualJournalsContext } from './ManualJournalsListProvider';
-import { useMemorizedColumnsWidths } from 'hooks';
+import { useMemorizedColumnsWidths } from '@/hooks';
 import { useManualJournalsColumns } from './utils';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Manual journals data-table.

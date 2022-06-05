@@ -16,12 +16,11 @@ import {
   InputGroupCell,
   ContactsListFieldCell,
   BranchesListFieldCell,
-} from 'components/DataTableCells';
+} from '@/components/DataTableCells';
 
-import { CellType, Features, Align } from 'common';
+import { CellType, Features, Align } from '@/common';
 
-import { useFeatureCan } from 'hooks/state';
-import { useCurrentOrganization } from 'hooks/state';
+import { useCurrentOrganization, useFeatureCan } from '@/hooks/state';
 import { useJournalIsForeign } from './utils';
 
 /**

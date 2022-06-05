@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import clsx from 'classnames';
 import TableContext from './TableContext';
-import { Skeleton } from 'components';
+import { Skeleton } from '@/components';
 
 function TableHeaderCell({ column }) {
   const { skeletonWidthMax = 100, skeletonWidthMin = 40 } = column;

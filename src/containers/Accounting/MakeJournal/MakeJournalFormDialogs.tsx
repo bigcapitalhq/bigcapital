@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
-import JournalNumberDialog from 'containers/Dialogs/JournalNumberDialog';
+import JournalNumberDialog from '@/containers/Dialogs/JournalNumberDialog';
 
 /**
  * Make journal form dialogs.

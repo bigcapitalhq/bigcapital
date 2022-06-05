@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   getManualJournalsTableStateFactory,
   manualJournalTableStateChangedFactory,
-} from 'store/manualJournals/manualJournals.selectors';
+} from '@/store/manualJournals/manualJournals.selectors';
 
 export default (mapState) => {
   const getJournalsTableQuery = getManualJournalsTableStateFactory();

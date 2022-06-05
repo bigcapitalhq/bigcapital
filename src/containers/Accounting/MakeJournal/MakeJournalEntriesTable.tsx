@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataTableEditable } from 'components';
+import { DataTableEditable } from '@/components';
 import {
   compose,
   saveInvoke,
@@ -7,7 +7,7 @@ import {
   updateRemoveLineByIndex,
   updateAutoAddNewLine,
   updateTableCell,
-} from 'utils';
+} from '@/utils';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { useJournalTableEntriesColumns } from './components';
 import { updateAdjustEntries } from './utils';

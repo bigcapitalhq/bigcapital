@@ -2,8 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-import { CLASSES } from 'common/classes';
-import { Row, Col, Paper } from 'components';
+import { CLASSES } from '@/common/classes';
+import { Row, Col, Paper } from '@/components';
 import { MakeJournalFormFooterLeft } from './MakeJournalFormFooterLeft';
 import { MakeJournalFormFooterRight } from './MakeJournalFormFooterRight';
 

@@ -1,10 +1,10 @@
 import React from 'react';
 
-const JournalDeleteAlert = React.lazy(() =>
-  import('../../Alerts/ManualJournals/JournalDeleteAlert'),
+const JournalDeleteAlert = React.lazy(
+  () => import('@/containers/Alerts/ManualJournals/JournalDeleteAlert'),
 );
-const JournalPublishAlert = React.lazy(() =>
-  import('../../Alerts/ManualJournals/JournalPublishAlert'),
+const JournalPublishAlert = React.lazy(
+  () => import('@/containers/Alerts/ManualJournals/JournalPublishAlert'),
 );
 
 /**

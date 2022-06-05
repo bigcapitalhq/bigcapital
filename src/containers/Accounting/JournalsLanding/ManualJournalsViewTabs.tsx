@@ -3,14 +3,14 @@ import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
 import { pick } from 'lodash';
 
-import { DashboardViewsTabs } from 'components';
+import { DashboardViewsTabs } from '@/components';
 
 import { useManualJournalsContext } from './ManualJournalsListProvider';
 import withManualJournalsActions from './withManualJournalsActions';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withManualJournals from './withManualJournals';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Manual journal views tabs.

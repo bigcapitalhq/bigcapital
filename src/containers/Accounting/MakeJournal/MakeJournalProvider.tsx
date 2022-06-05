@@ -1,8 +1,7 @@
 import React, { createContext, useState } from 'react';
-import { isEqual, isUndefined } from 'lodash';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
+import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 import {
   useAccounts,
   useAutoCompleteContacts,
@@ -10,10 +9,9 @@ import {
   useJournal,
   useCreateJournal,
   useEditJournal,
-  useSettings,
   useBranches,
   useSettingsManualJournals,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const MakeJournalFormContext = createContext();
 

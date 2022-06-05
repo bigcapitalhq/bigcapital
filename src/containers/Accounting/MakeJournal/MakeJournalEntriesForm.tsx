@@ -7,7 +7,7 @@ import { defaultTo, isEmpty, omit } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import {
   CreateJournalSchema,
   EditJournalSchema,
@@ -19,12 +19,12 @@ import MakeJournalFormFooter from './MakeJournalFormFooter';
 import MakeJournalFormDialogs from './MakeJournalFormDialogs';
 import MakeJournalFormTopBar from './MakeJournalFormTopBar';
 
-import withSettings from 'containers/Settings/withSettings';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withSettings from '@/containers/Settings/withSettings';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
-import AppToaster from 'components/AppToaster';
-import withMediaActions from 'containers/Media/withMediaActions';
-import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
+import AppToaster from '@/components/AppToaster';
+import withMediaActions from '@/containers/Media/withMediaActions';
+import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 import {
   transformErrors,
   transformToEditForm,

@@ -9,11 +9,10 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
-import { useFormikContext } from 'formik';
-import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
-import { If, Icon } from 'components';
+import { useFormikContext } from 'formik';
+import { FormattedMessage as T, If, Icon } from '@/components';
+import { CLASSES } from '@/common/classes';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { useHistory } from 'react-router-dom';
 

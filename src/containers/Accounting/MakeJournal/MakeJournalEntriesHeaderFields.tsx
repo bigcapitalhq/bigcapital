@@ -7,17 +7,16 @@ import {
 } from '@blueprintjs/core';
 import { FastField, ErrorMessage } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from 'components';
 import classNames from 'classnames';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import {
   momentFormatter,
   compose,
   inputIntent,
   handleDateChange,
   tansformDateValue,
-} from 'utils';
+} from '@/utils';
 import {
   Hint,
   FieldHint,
@@ -25,11 +24,12 @@ import {
   Icon,
   InputPrependButton,
   CurrencySelectList,
-} from 'components';
-import withSettings from 'containers/Settings/withSettings';
+  FormattedMessage as T
+} from '@/components';
+import withSettings from '@/containers/Settings/withSettings';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { JournalExchangeRateInputField } from './components';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import {
   currenciesFieldShouldUpdate,
   useObserveJournalNoSettings,

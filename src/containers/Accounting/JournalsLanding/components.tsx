@@ -20,12 +20,12 @@ import {
   Money,
   If,
   Icon,
-} from 'components';
+} from '@/components';
 import {
   ManualJournalAction,
   AbilitySubject,
-} from '../../../common/abilityOption';
-import { safeCallback } from 'utils';
+} from "@/common/abilityOption";
+import { safeCallback } from '@/utils';
 
 /**
  * Amount accessor.

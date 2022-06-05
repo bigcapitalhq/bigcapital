@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
-import t from 'store/types';
+import t from '@/store/types';
 import {
   toggleExpendSidebar,
-} from 'store/dashboard/dashboard.actions';
-import { splashStartLoading, splashStopLoading } from '../../store/dashboard/dashboard.actions';
+} from '@/store/dashboard/dashboard.actions';
+import { splashStartLoading, splashStopLoading } from '@/store/dashboard/dashboard.actions';
 
 const mapActionsToProps = (dispatch) => ({
   changePageTitle: (pageTitle) =>

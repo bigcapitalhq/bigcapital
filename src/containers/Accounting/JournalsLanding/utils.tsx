@@ -2,8 +2,8 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
 
-import { CLASSES } from '../../../common/classes';
-import { FormatDateCell } from '../../../components';
+import { CLASSES } from '@/common/classes';
+import { FormatDateCell } from '@/components';
 import { NoteAccessor, StatusAccessor } from './components';
 
 /**

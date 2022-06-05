@@ -6,7 +6,7 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-} from 'components';
+} from '@/components';
 import { useJournalTotals } from './utils';
 
 export function MakeJournalFormFooterRight() {
@@ -28,7 +28,7 @@ export function MakeJournalFormFooterRight() {
   );
 }
 
-const MakeJouranlTotalLines = styled(TotalLines)`
+const MakeJouranlTotalLines =styled(TotalLines)`
   width: 100%;
   color: #555555;
 `;

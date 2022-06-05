@@ -1,9 +1,9 @@
 import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
 
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import { useResourceViews, useResourceMeta, useJournals } from 'hooks/query';
-import { getFieldsFromResourceMeta } from 'utils';
+import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { useResourceViews, useResourceMeta, useJournals } from '@/hooks/query';
+import { getFieldsFromResourceMeta } from '@/utils';
 
 const ManualJournalsContext = createContext();
 

@@ -1,18 +1,17 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Button, Alignment, NavbarGroup, Classes } from '@blueprintjs/core';
-import styled from 'styled-components';
 import { useSetPrimaryBranchToForm } from './utils';
-import { useFeatureCan } from 'hooks/state';
+import { useFeatureCan } from '@/hooks/state';
 import {
   Icon,
   BranchSelect,
   FeatureCan,
   FormTopbar,
   DetailsBarSkeletonBase,
-} from 'components';
+} from '@/components';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
-import { Features } from 'common';
+import { Features } from '@/common';
 
 /**
  * Make journal form topbar.

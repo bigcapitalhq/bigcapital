@@ -1,5 +1,4 @@
 import React from 'react';
-import Icon from 'components/Icon';
 import {
   Button,
   NavbarGroup,
@@ -10,28 +9,27 @@ import {
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import {
+  Icon,
   AdvancedFilterPopover,
   DashboardFilterButton,
   DashboardRowsHeightButton,
   FormattedMessage as T,
-} from 'components';
-
-import { useRefreshJournals } from 'hooks/query/manualJournals';
+  Can,
+  If,
+  DashboardActionViewsList,
+} from '@/components';
+import { useRefreshJournals } from '@/hooks/query/manualJournals';
 import { useManualJournalsContext } from './ManualJournalsListProvider';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withManualJournalsActions from './withManualJournalsActions';
 import withManualJournals from './withManualJournals';
-import withSettingsActions from '../../Settings/withSettingsActions';
-import withSettings from '../../Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withSettings from '@/containers/Settings/withSettings';
 
-import { Can, If, DashboardActionViewsList } from 'components';
-import {
-  ManualJournalAction,
-  AbilitySubject,
-} from '../../../common/abilityOption';
-import { compose } from 'utils';
+import { ManualJournalAction, AbilitySubject } from '@/common/abilityOption';
+import { compose } from '@/utils';
 
 /**
  * Manual journal actions bar.
