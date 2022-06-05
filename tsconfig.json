@@ -11,7 +11,11 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "jsx": "react",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["./*"],
+      "@public/*": ["../public/*"],
+    }
   },
   "include": ["src"]
 }
