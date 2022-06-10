@@ -538,6 +538,27 @@ export const SidebarMenu = [
       },
     ],
   },
+  // ---------------------
+  // # Projects Management
+  // ---------------------
+  {
+    text: 'Projects',
+    type: ISidebarMenuItemType.Overlay,
+    overlayId: ISidebarMenuOverlayIds.Projects,
+    children: [
+      {
+        text: 'Projects Management',
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: 'Projects',
+            href: '/projects',
+            type: ISidebarMenuItemType.Link,
+          },
+        ],
+      },
+    ],
+  },
   // ---------------
   // # Reports
   // ---------------
