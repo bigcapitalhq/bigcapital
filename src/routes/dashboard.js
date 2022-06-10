@@ -969,6 +969,13 @@ export const getDashboardRoutes = () => [
     ),
     pageTitle: intl.get('sidebar.transactions_locaking'),
   },
+  {
+    path: '/projects',
+    component: lazy(() =>
+      import('../containers/Projects/containers/ProjectsList'),
+    ),
+    pageTitle: 'Projects',
+  },
   // Homepage
   {
     path: `/`,

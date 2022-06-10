@@ -35,6 +35,7 @@ import plans from './plans/plans.reducer';
 import creditNotes from './CreditNote/creditNote.reducer';
 import vendorCredit from './VendorCredit/VendorCredit.reducer';
 import warehouseTransfers from './WarehouseTransfer/warehouseTransfer.reducer';
+import projects from './Project/projects.reducer';
 
 const appReducer = combineReducers({
   authentication,
@@ -70,6 +71,7 @@ const appReducer = combineReducers({
   creditNotes,
   vendorCredit,
   warehouseTransfers,
+  projects,
 });
 
 // Reset the state of a redux store
