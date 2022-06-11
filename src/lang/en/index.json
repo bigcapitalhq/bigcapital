@@ -2055,6 +2055,7 @@
   "projects.label.deadline": "Deadline",
   "projects.label.calculator_expenses": "Calculator from tasks & estimated expenses",
   "projects.label.cost_estimate": "Cost Estimate",
+  "projects.label.create": "Create",
   "task.label.new_task": "New Task",
   "task.label.task_name": "Task Name",
   "task.label.estimated_hours": "Task Name",

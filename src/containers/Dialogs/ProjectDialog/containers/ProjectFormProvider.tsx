@@ -26,6 +26,7 @@ function ProjectFormProvider({
   // State provider.
   const provider = {
     customers,
+    dialogName,
   };
 
   return (

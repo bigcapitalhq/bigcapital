@@ -16,7 +16,10 @@ function TaskFormProvider({
   ...props
 }) {
   // State provider.
-  const provider = {};
+  const provider = {
+    dialogName,
+  };
+
   return (
     <DialogContent>
       <TaskFormContext.Provider value={provider} {...props} />

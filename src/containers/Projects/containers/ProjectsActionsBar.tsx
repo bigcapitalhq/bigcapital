@@ -41,6 +41,9 @@ function ProjectsActionsBar({
   // #withProjectsActions
   setProjectsTableState,
 
+  // #withSettings
+  projectsTableSize,
+
   // #withSettingsActions
   addSetting,
 }) {
@@ -100,7 +103,7 @@ function ProjectsActionsBar({
         />
         <NavbarDivider />
         <DashboardRowsHeightButton
-          initialValue={'medium'}
+          initialValue={projectsTableSize}
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
@@ -122,5 +125,8 @@ export default compose(
   withSettingsActions,
   withProjects(({ projectsTableState }) => ({
     projectsFilterRoles: projectsTableState?.filterRoles,
+  })),
+  withSettings(({ projectSettings }) => ({
+    projectsTableSize: projectSettings?.tableSize,
   })),
 )(ProjectsActionsBar);

@@ -17,8 +17,7 @@ import { compose } from 'utils';
 const defaultInitialValues = {
   contact: '',
   project_name: '',
-  project_deadline: '',
-  // project_deadline: moment(new Date()).format('YYYY-MM-DD'),
+  project_deadline: moment(new Date()).format('YYYY-MM-DD'),
   project_state: false,
   project_cost: '',
 };

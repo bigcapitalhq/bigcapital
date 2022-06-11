@@ -38,7 +38,7 @@ function ProjectFormFloatingActions({
           style={{ minWidth: '75px' }}
           type="submit"
         >
-          Create
+          <T id={'projects.label.create'} />
         </Button>
       </div>
     </div>
