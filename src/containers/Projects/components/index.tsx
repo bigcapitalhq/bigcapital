@@ -22,17 +22,17 @@ export const ActionsMenu = ({
     <MenuDivider />
     <MenuItem
       icon={<Icon icon="pen-18" />}
-      text={'Edit Project'}
+      text={intl.get('projects.action.edit_project')}
       onClick={safeCallback(onEdit, original)}
     />
     <MenuItem
       icon={<Icon icon="plus" />}
-      text={'New Task'}
+      text={intl.get('projects.action.new_task')}
       onClick={safeCallback(onNewTask, original)}
     />
     <MenuDivider />
     <MenuItem
-      text={'Delete Project'}
+      text={intl.get('projects.action.delete_project')}
       icon={<Icon icon="trash-16" iconSize={16} />}
       intent={Intent.DANGER}
       onClick={safeCallback(onDelete, original)}

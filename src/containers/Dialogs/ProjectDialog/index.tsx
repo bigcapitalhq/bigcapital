@@ -16,7 +16,7 @@ function ProjectDialog({ dialogName, payload: { projectId = null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
-      title={'New Project'}
+      title={<T id={'projects.label.new_project'} />}
       isOpen={isOpen}
       autoFocus={true}
       canEscapeKeyClose={true}

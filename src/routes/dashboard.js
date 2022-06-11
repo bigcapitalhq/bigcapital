@@ -974,7 +974,7 @@ export const getDashboardRoutes = () => [
     component: lazy(() =>
       import('../containers/Projects/containers/ProjectsList'),
     ),
-    pageTitle: 'Projects',
+    pageTitle: intl.get('sidebar.projects'),
   },
   // Homepage
   {

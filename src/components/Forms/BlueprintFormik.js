@@ -9,6 +9,7 @@ import {
   TextArea,
 } from '@blueprintjs-formik/core';
 import { Select, MultiSelect } from '@blueprintjs-formik/select';
+import { DateInput } from '@blueprintjs-formik/datetime';
 
 export {
   FormGroup as FFormGroup,
@@ -21,4 +22,5 @@ export {
   MultiSelect as FMultiSelect,
   EditableText as FEditableText,
   TextArea as FTextArea,
+  DateInput as FDateInput,
 };

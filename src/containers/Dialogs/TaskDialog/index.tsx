@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
+import intl from 'react-intl-universal';
 import { Dialog, DialogSuspense, FormattedMessage as T } from 'components';
 import withDialogRedux from 'components/DialogReduxConnect';
 import { compose } from 'utils';
 
-const TaskDialogContent = React.lazy(() =>
-  import('./containers/TaskDialogContent'),
+const TaskDialogContent = React.lazy(
+  () => import('./containers/TaskDialogContent'),
 );
 
 /**
@@ -16,7 +17,7 @@ function TaskDialog({ dialogName, payload: { taskId = null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
-      title={'New Task'}
+      title={intl.get('task.label.new_task')}
       isOpen={isOpen}
       autoFocus={true}
       canEscapeKeyClose={true}

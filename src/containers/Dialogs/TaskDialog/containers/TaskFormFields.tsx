@@ -18,19 +18,22 @@ function TaskFormFields() {
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Task Name -----------*/}
-      <FFormGroup label={'Task Name'} name={'task_name'}>
+      <FFormGroup label={<T id={'task.label.task_name'} />} name={'task_name'}>
         <FInputGroup name="task_name" />
       </FFormGroup>
       {/*------------ Estimated Hours -----------*/}
       <Row>
         <Col xs={4}>
-          <FFormGroup label={'Estimated Hours'} name={'task_house'}>
+          <FFormGroup
+            label={<T id={'task.label.estimated_hours'} />}
+            name={'task_house'}
+          >
             <FInputGroup name="task_house" />
           </FFormGroup>
         </Col>
         {/*------------ Charge -----------*/}
         <Col xs={8}>
-          <FFormGroup label={'Charge'} name={'Charge'}>
+          <FFormGroup label={<T id={'task.label.charge'} />} name={'Charge'}>
             <ControlGroup>
               <FInputGroup name="change" />
               <FInputGroup name="change_amount" />
@@ -41,7 +44,7 @@ function TaskFormFields() {
       {/*------------ Estimated Amount -----------*/}
       <EstimatedAmountBase>
         <EstimatedAmountContent>
-          Estimated Amount:
+          <T id={'task.label.estimated_amount'} />
           <EstimateAmount>$100000</EstimateAmount>
         </EstimatedAmountContent>
       </EstimatedAmountBase>

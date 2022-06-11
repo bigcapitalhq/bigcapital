@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 
@@ -10,11 +11,11 @@ import {
   FFormGroup,
   FInputGroup,
   FCheckbox,
+  FDateInput,
   FMoneyInputGroup,
   InputPrependText,
   FormattedMessage as T,
   CustomerSelectField,
-  FCustomerSelectField,
 } from 'components';
 import {
   inputIntent,
@@ -22,24 +23,27 @@ import {
   tansformDateValue,
   handleDateChange,
 } from 'utils';
+import { useProjectFormContext } from './ProjectFormProvider';
 
 /**
  * Project form fields.
  * @returns
  */
 function ProjectFormFields() {
+  const { customers } = useProjectFormContext();
+
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Contact -----------*/}
       <FastField name={'contact'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
-            label={'Contact'}
+            label={intl.get('projects.label.contact')}
             className={classNames('form-group--select-list', Classes.FILL)}
             intent={inputIntent({ error, touched })}
           >
             <CustomerSelectField
-              contacts={[]}
+              contacts={customers}
               selectedContactId={value}
               defaultSelectText={'Select Contact Account'}
               onContactSelected={(customer) => {
@@ -51,22 +55,21 @@ function ProjectFormFields() {
           </FormGroup>
         )}
       </FastField>
-
       {/*------------ Project Name -----------*/}
-      <FFormGroup label={'Project Name'} name={'project_name'}>
+      <FFormGroup
+        label={intl.get('projects.label.project_name')}
+        name={'project_name'}
+      >
         <FInputGroup name="project_name" />
       </FFormGroup>
       {/*------------ DeadLine -----------*/}
       <FFormGroup
-        label={'DeadLine'}
+        label={intl.get('projects.label.deadline')}
         name={'project_deadline'}
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
-        <DateInput
-          {...momentFormatter('YYYY/MM/DD')}
-          // onChange={handleDateChange((formattedDate) => {
-          // })}
-          // value={tansformDateValue(value)}
+        <FDateInput
+          name="project_deadline"
           popoverProps={{
             position: Position.BOTTOM,
             minimal: true,
@@ -78,11 +81,14 @@ function ProjectFormFields() {
       <FFormGroup name={'project_state'}>
         <FCheckbox
           name="project_state"
-          label={'Calculato from tasks & estimated expenses'}
+          label={intl.get('projects.label.calculator_expenses')}
         />
       </FFormGroup>
       {/*------------ Cost Estimate -----------*/}
-      <FFormGroup name={'project_cost'} label={' Cost Estimate'}>
+      <FFormGroup
+        name={'project_cost'}
+        label={intl.get('projects.label.cost_estimate')}
+      >
         <ControlGroup>
           <InputPrependText text={'USD'} />
           <FMoneyInputGroup
