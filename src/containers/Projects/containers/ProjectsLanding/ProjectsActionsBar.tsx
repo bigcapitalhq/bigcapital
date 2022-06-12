@@ -6,7 +6,6 @@ import {
   NavbarDivider,
   Alignment,
 } from '@blueprintjs/core';
-
 import {
   Icon,
   AdvancedFilterPopover,
@@ -20,9 +19,8 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withProjects from './withProjects';
 import withProjectsActions from './withProjectsActions';
-
-import withSettings from '../../Settings/withSettings';
-import withSettingsActions from '../../Settings/withSettingsActions';
+import withSettings from '../../../Settings/withSettings';
+import withSettingsActions from '../../../Settings/withSettingsActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { compose } from 'utils';

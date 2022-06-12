@@ -2069,5 +2069,5 @@
   "task.schema.label.task_name": "Task name",
   "task.schema.label.task_house": "Task house",
   "task.schema.label.charge": "Charge",
-  "task.schema.label.amount": "Amount",
+  "task.schema.label.amount": "Amount"
 }

@@ -13,7 +13,7 @@ import { compose, transformTableStateToQuery } from 'utils';
 
 /**
  * Projects list.
- * @returns {React.TSX}
+ * @returns 
  */
 function ProjectsList({
   // #withProjects

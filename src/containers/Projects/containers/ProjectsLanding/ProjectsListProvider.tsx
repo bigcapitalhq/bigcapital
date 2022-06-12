@@ -1,7 +1,7 @@
 //@ts-nocheck
 import React from 'react';
 import { useResourceViews, useResourceMeta } from 'hooks/query';
-import DashboardInsider from '../../../components/Dashboard/DashboardInsider';
+import DashboardInsider from '../../../../components/Dashboard/DashboardInsider';
 
 const ProjectsListContext = React.createContext();
 

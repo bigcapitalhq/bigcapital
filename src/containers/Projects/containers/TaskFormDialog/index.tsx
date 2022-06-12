@@ -5,15 +5,15 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from 'components';
 import withDialogRedux from 'components/DialogReduxConnect';
 import { compose } from 'utils';
 
-const TaskDialogContent = React.lazy(
-  () => import('./containers/TaskDialogContent'),
+const TaskFormDialogContent = React.lazy(
+  () => import('./containers/TaskFormDialogContent'),
 );
 
 /**
- * Task dialog.
- * @returns {ReactNode}
+ * Task form dialog.
+ * @returns
  */
-function TaskDialog({ dialogName, payload: { taskId = null }, isOpen }) {
+function TaskFormDialog({ dialogName, payload: { taskId = null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -24,11 +24,11 @@ function TaskDialog({ dialogName, payload: { taskId = null }, isOpen }) {
       style={{ width: '500px' }}
     >
       <DialogSuspense>
-        <TaskDialogContent dialogName={dialogName} task={taskId} />
+        <TaskFormDialogContent dialogName={dialogName} task={taskId} />
       </DialogSuspense>
     </Dialog>
   );
 }
-export default compose(withDialogRedux())(TaskDialog);
+export default compose(withDialogRedux())(TaskFormDialog);
 
-const TaskDialogRoot = styled(Dialog)``;
+const TaskFormDialogRoot = styled(Dialog)``;

@@ -5,16 +5,16 @@ import withDialogRedux from 'components/DialogReduxConnect';
 import { compose } from 'utils';
 
 const ProjectDialogContent = React.lazy(
-  () => import('./containers/ProjectDialogContent'),
+  () => import('./containers/ProjectFormDialogContent'),
 );
 
 /**
- * Project dialog.
+ * Project form dialog.
  * @returns
  */
-function ProjectDialog({ dialogName, payload: { projectId = null }, isOpen }) {
+function ProjectFormDialog({ dialogName, payload: { projectId = null }, isOpen }) {
   return (
-    <ProjectDialogRoot
+    <ProjectFormDialogRoot
       name={dialogName}
       title={<T id={'projects.label.new_project'} />}
       isOpen={isOpen}
@@ -25,13 +25,13 @@ function ProjectDialog({ dialogName, payload: { projectId = null }, isOpen }) {
       <DialogSuspense>
         <ProjectDialogContent dialogName={dialogName} project={projectId} />
       </DialogSuspense>
-    </ProjectDialogRoot>
+    </ProjectFormDialogRoot>
   );
 }
 
-export default compose(withDialogRedux())(ProjectDialog);
+export default compose(withDialogRedux())(ProjectFormDialog);
 
-const ProjectDialogRoot = styled(Dialog)`
+const ProjectFormDialogRoot = styled(Dialog)`
   .bp3-dialog-body {
     .bp3-form-group {
       margin-bottom: 15px;

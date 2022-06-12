@@ -12,7 +12,7 @@ import { compose, transfromViewsToTabs } from 'utils';
 
 /**
  * Projects views tabs.
- * @returns {React.TSX}
+ * @returns
  */
 function ProjectsViewTabs({
   // #withProjects

@@ -1,18 +1,14 @@
 import React from 'react';
-
 import { DataTable } from 'components';
 import { TABLES } from 'common/tables';
-
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
-
 import { useProjectsListContext } from './ProjectsListProvider';
 import { useMemorizedColumnsWidths } from 'hooks';
-import { useProjectsListColumns, ActionsMenu } from '../components';
-
+import { useProjectsListColumns, ActionsMenu } from './components';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withProjectsActions from './withProjectsActions';
-import withSettings from '../../Settings/withSettings';
+import withSettings from '../../../Settings/withSettings';
 
 import { compose } from 'utils';
 

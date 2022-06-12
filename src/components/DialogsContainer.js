@@ -40,8 +40,8 @@ import BranchActivateDialog from '../containers/Dialogs/BranchActivateDialog';
 import WarehouseActivateDialog from '../containers/Dialogs/WarehouseActivateDialog';
 import CustomerOpeningBalanceDialog from '../containers/Dialogs/CustomerOpeningBalanceDialog';
 import VendorOpeningBalanceDialog from '../containers/Dialogs/VendorOpeningBalanceDialog';
-import ProjectDialog from '../containers/Dialogs/ProjectDialog';
-import TaskDialog from '../containers/Dialogs/TaskDialog';
+import ProjectFormDialog from '../containers/Projects/containers/ProjectFormDialog';
+import TaskFormDialog from '../containers/Projects/containers/TaskFormDialog';
 
 /**
  * Dialogs container.
@@ -92,8 +92,8 @@ export default function DialogsContainer() {
       <WarehouseActivateDialog dialogName={'warehouse-activate'} />
       <CustomerOpeningBalanceDialog dialogName={'customer-opening-balance'} />
       <VendorOpeningBalanceDialog dialogName={'vendor-opening-balance'} />
-      <ProjectDialog dialogName={'project-form'} />
-      <TaskDialog dialogName={'task-form'} />
+      <ProjectFormDialog dialogName={'project-form'} />
+      <TaskFormDialog dialogName={'task-form'} />
     </div>
   );
 }

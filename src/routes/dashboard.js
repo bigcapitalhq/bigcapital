@@ -972,7 +972,7 @@ export const getDashboardRoutes = () => [
   {
     path: '/projects',
     component: lazy(() =>
-      import('../containers/Projects/containers/ProjectsList'),
+      import('../containers/Projects/containers/ProjectsLanding/ProjectsList'),
     ),
     pageTitle: intl.get('sidebar.projects'),
   },

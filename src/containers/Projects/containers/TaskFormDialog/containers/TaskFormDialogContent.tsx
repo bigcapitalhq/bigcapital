@@ -3,9 +3,9 @@ import { TaskFormProvider } from './TaskFormProvider';
 import TaskForm from './TaskForm';
 
 /**
- * Task dialog content.
+ * Task form dialog content.
  */
-export default function TaskDialogContent({
+export default function TaskFormDialogContent({
   // #ownProps
   dialogName,
   task,

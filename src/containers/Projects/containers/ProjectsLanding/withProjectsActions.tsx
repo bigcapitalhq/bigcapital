@@ -1,10 +1,9 @@
 import { connect } from 'react-redux';
-// import type { Dispatch } from 'redux';
 
 import {
   setProjectsTableState,
   resetProjectsTableState,
-} from '../../../store/Project/projects.actions';
+} from '../../../../store/Project/projects.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   setProjectsTableState: (state) => dispatch(setProjectsTableState(state)),

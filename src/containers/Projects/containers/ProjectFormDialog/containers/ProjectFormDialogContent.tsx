@@ -4,10 +4,10 @@ import { ProjectFormProvider } from './ProjectFormProvider';
 import ProjectForm from './ProjectForm';
 
 /**
- * Project dialog content.
+ * Project form dialog content.
  * @returns {ReactNode}
  */
-export default function ProjectDialogContent({
+export default function ProjectFormDialogContent({
   // #ownProps
   dialogName,
   project,
