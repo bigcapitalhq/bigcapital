@@ -5,7 +5,7 @@ import withDialogRedux from 'components/DialogReduxConnect';
 import { compose } from 'utils';
 
 const ProjectDialogContent = React.lazy(
-  () => import('./containers/ProjectFormDialogContent'),
+  () => import('./ProjectFormDialogContent'),
 );
 
 /**

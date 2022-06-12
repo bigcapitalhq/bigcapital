@@ -6,7 +6,7 @@ import withDialogRedux from 'components/DialogReduxConnect';
 import { compose } from 'utils';
 
 const TaskFormDialogContent = React.lazy(
-  () => import('./containers/TaskFormDialogContent'),
+  () => import('./TaskFormDialogContent'),
 );
 
 /**
