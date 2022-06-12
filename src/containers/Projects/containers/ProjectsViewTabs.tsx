@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
@@ -5,6 +6,7 @@ import { DashboardViewsTabs } from 'components';
 
 import withProjects from './withProjects';
 import withProjectsActions from './withProjectsActions';
+import { useProjectsListContext } from './ProjectsListProvider';
 
 import { compose, transfromViewsToTabs } from 'utils';
 
@@ -19,8 +21,11 @@ function ProjectsViewTabs({
   // #withProjectsActions
   setProjectsTableState,
 }) {
+  // Projects list context.
+  const { projectsViews } = useProjectsListContext();
+
   // Projects views.
-  const tabs = transfromViewsToTabs([]);
+  const tabs = transfromViewsToTabs(projectsViews);
 
   // Handle tab change.
   const handleTabsChange = (viewSlug) => {
@@ -32,7 +37,7 @@ function ProjectsViewTabs({
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
           currentViewSlug={projectsCurrentView}
-          resourceName={''}
+          resourceName={'projects'}
           tabs={tabs}
           onChange={handleTabsChange}
         />
@@ -46,4 +51,4 @@ export default compose(
     projectsCurrentView: projectsTableState?.viewSlug,
   })),
   withProjectsActions,
-)();
+)(ProjectsViewTabs);

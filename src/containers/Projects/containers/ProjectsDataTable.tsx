@@ -54,6 +54,13 @@ function ProjectsDataTable({
   // Handle cell click.
   const handleCellClick = (cell, event) => {};
 
+  // Handle edit project.
+  const handleEditProject = (project) => {
+    openDialog('project-form', {
+      projectId: project.id,
+    });
+  };
+
   // Handle new task button click.
   const handleNewTaskButtonClick = () => {
     openDialog('task-form');
@@ -82,6 +89,7 @@ function ProjectsDataTable({
       onColumnResizing={handleColumnResizing}
       size={projectsTableSize}
       payload={{
+        onEdit: handleEditProject,
         onNewTask: handleNewTaskButtonClick,
       }}
     />

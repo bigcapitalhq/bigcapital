@@ -2,7 +2,7 @@ import React from 'react';
 import { DashboardPageContent, DashboardContentTable } from 'components';
 
 import ProjectsActionsBar from './ProjectsActionsBar';
-// import ProjectsViewTabs from './ProjectsViewTabs';
+import ProjectsViewTabs from './ProjectsViewTabs';
 import ProjectsDataTable from './ProjectsDataTable';
 
 import withProjects from './withProjects';
@@ -38,7 +38,7 @@ function ProjectsList({
     >
       <ProjectsActionsBar />
       <DashboardPageContent>
-        {/* <ProjectsViewTabs /> */}
+        <ProjectsViewTabs />
         <DashboardContentTable>
           <ProjectsDataTable />
         </DashboardContentTable>

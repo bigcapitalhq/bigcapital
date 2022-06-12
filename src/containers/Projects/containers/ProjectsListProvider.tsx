@@ -1,21 +1,27 @@
+//@ts-nocheck
 import React from 'react';
+import { useResourceViews, useResourceMeta } from 'hooks/query';
 import DashboardInsider from '../../../components/Dashboard/DashboardInsider';
 
-
-const ProjectsListContext = React.createContext({});
+const ProjectsListContext = React.createContext();
 
 /**
  * Projects list data provider.
  * @returns
  */
 function ProjectsListProvider({ query, tableStateChanged, ...props }) {
-  // provider payload.
+  // Fetch accounts resource views and fields.
+  const { data: projectsViews, isLoading: isViewsLoading } =
+    useResourceViews('projects');
 
-  const provider = {};
+  // provider payload.
+  const provider = {
+    projectsViews,
+  };
 
   return (
     <DashboardInsider
-      // loading={}
+      // loading={isViewsLoading}
       name={'projects'}
     >
       <ProjectsListContext.Provider value={provider} {...props} />
