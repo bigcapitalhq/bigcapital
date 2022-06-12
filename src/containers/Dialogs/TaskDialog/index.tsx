@@ -11,7 +11,7 @@ const TaskDialogContent = React.lazy(
 
 /**
  * Task dialog.
- * @returns
+ * @returns {ReactNode}
  */
 function TaskDialog({ dialogName, payload: { taskId = null }, isOpen }) {
   return (

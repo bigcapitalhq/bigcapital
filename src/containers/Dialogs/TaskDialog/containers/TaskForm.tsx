@@ -1,22 +1,19 @@
 //@ts-nocheck
 import React from 'react';
-
 import { Formik } from 'formik';
-
 import { CreateTaskFormSchema } from './TaskForm.schema';
 import { useTaskFormContext } from './TaskFormProvider';
-import TaskFormContent from './TaskFormContent';
-
 import { AppToaster } from 'components';
+import TaskFormContent from './TaskFormContent';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { compose } from 'utils';
 
 const defaultInitialValues = {
-  taks_name: '',
-  task_house: '00:00',
+  taksName: '',
+  taskHouse: '00:00',
   change: 'Hourly Rate',
-  change_amount: '100000000',
+  changeAmount: '100000000',
   amount: '',
 };
 

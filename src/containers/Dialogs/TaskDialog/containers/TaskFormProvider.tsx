@@ -1,6 +1,5 @@
 //@ts-nocheck
 import React from 'react';
-
 import { DialogContent } from 'components';
 
 const TaskFormContext = React.createContext();

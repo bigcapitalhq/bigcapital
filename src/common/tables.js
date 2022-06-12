@@ -16,8 +16,8 @@ export const TABLES = {
   CASHFLOW_Transactions: 'cashflow_transactions',
   CREDIT_NOTES: 'credit_notes',
   VENDOR_CREDITS: 'vendor_credits',
-  WAREHOUSE_TRANSFERS:'warehouse_transfers',
-  PROJECTS:'projects'
+  WAREHOUSE_TRANSFERS: 'warehouse_transfers',
+  PROJECTS: 'projects',
 };
 
 export const TABLE_SIZE = {

@@ -2,24 +2,21 @@
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
-
 import { Formik } from 'formik';
-
 import { AppToaster } from 'components';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-
 import ProjectFormContent from './ProjectFormContent';
 import { CreateProjectFormSchema } from './ProjectForm.schema';
 import { useProjectFormContext } from './ProjectFormProvider';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { compose } from 'utils';
 
 const defaultInitialValues = {
   contact: '',
-  project_name: '',
-  project_deadline: moment(new Date()).format('YYYY-MM-DD'),
-  project_state: false,
-  project_cost: '',
+  projectName: '',
+  projectDeadline: moment(new Date()).format('YYYY-MM-DD'),
+  projectState: true,
+  projectCost: '',
 };
 
 /**

@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-
 import { Classes, ControlGroup } from '@blueprintjs/core';
 import {
   FFormGroup,
@@ -19,16 +18,16 @@ function TaskFormFields() {
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Task Name -----------*/}
       <FFormGroup label={<T id={'task.label.task_name'} />} name={'task_name'}>
-        <FInputGroup name="task_name" />
+        <FInputGroup name="taskName" />
       </FFormGroup>
       {/*------------ Estimated Hours -----------*/}
       <Row>
         <Col xs={4}>
           <FFormGroup
             label={<T id={'task.label.estimated_hours'} />}
-            name={'task_house'}
+            name={'taskHouse'}
           >
-            <FInputGroup name="task_house" />
+            <FInputGroup name="taskHouse" />
           </FFormGroup>
         </Col>
         {/*------------ Charge -----------*/}
@@ -36,7 +35,7 @@ function TaskFormFields() {
           <FFormGroup label={<T id={'task.label.charge'} />} name={'Charge'}>
             <ControlGroup>
               <FInputGroup name="change" />
-              <FInputGroup name="change_amount" />
+              <FInputGroup name="changeAmount" />
             </ControlGroup>
           </FFormGroup>
         </Col>

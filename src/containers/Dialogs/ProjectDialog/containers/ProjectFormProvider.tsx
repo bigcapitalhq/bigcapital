@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React from 'react';
 import { useCustomers } from 'hooks/query';
-
 import { DialogContent } from 'components';
 
 const ProjectFormContext = React.createContext();
@@ -10,7 +9,6 @@ const ProjectFormContext = React.createContext();
  * Project form provider.
  * @returns
  */
-
 function ProjectFormProvider({
   // #ownProps
   dialogName,

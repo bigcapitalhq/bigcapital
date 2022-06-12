@@ -14,38 +14,37 @@ const ProjectDialogContent = React.lazy(
  */
 function ProjectDialog({ dialogName, payload: { projectId = null }, isOpen }) {
   return (
-    <Dialog
+    <ProjectDialogRoot
       name={dialogName}
       title={<T id={'projects.label.new_project'} />}
       isOpen={isOpen}
       autoFocus={true}
       canEscapeKeyClose={true}
-      className={'dialog--project-form'}
       style={{ width: '400px' }}
     >
       <DialogSuspense>
         <ProjectDialogContent dialogName={dialogName} project={projectId} />
       </DialogSuspense>
-    </Dialog>
+    </ProjectDialogRoot>
   );
 }
 
 export default compose(withDialogRedux())(ProjectDialog);
 
-// const ProjectDialogRoot = styled(Dialog)`
-//   .bp3-dialog-body {
-//     .bp3-form-group {
-//       margin-bottom: 15px;
-//       margin-top: 15px;
+const ProjectDialogRoot = styled(Dialog)`
+  .bp3-dialog-body {
+    .bp3-form-group {
+      margin-bottom: 15px;
+      margin-top: 15px;
 
-//       label.bp3-label {
-//         margin-bottom: 3px;
-//         font-size: 13px;
-//       }
-//     }
+      label.bp3-label {
+        margin-bottom: 3px;
+        font-size: 13px;
+      }
+    }
 
-//     .bp3-dialog-footer {
-//       padding-top: 10px;
-//     }
-//   }
-// `;
+    .bp3-dialog-footer {
+      padding-top: 10px;
+    }
+  }
+`;

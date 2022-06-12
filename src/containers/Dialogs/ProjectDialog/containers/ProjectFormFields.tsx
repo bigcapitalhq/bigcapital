@@ -4,7 +4,6 @@ import intl from 'react-intl-universal';
 
 import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
 import { FastField } from 'formik';
-import { DateInput } from '@blueprintjs/datetime';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
 import {
@@ -58,19 +57,19 @@ function ProjectFormFields() {
       {/*------------ Project Name -----------*/}
       <FFormGroup
         label={intl.get('projects.label.project_name')}
-        name={'project_name'}
+        name={'projectName'}
       >
-        <FInputGroup name="project_name" />
+        <FInputGroup name="projectName" />
       </FFormGroup>
       {/*------------ DeadLine -----------*/}
       <FFormGroup
         label={intl.get('projects.label.deadline')}
-        name={'project_deadline'}
+        name={'projectDeadline'}
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
         <FDateInput
           {...momentFormatter('YYYY/MM/DD')}
-          name="project_deadline"
+          name="projectDeadline"
           formatDate={(date) => date.toLocaleString()}
           popoverProps={{
             position: Position.BOTTOM,
@@ -80,20 +79,21 @@ function ProjectFormFields() {
       </FFormGroup>
 
       {/*------------ CheckBox -----------*/}
-      <FFormGroup name={'project_state'}>
+      <FFormGroup name={'projectState'}>
         <FCheckbox
-          name="project_state"
+          name="projectState"
           label={intl.get('projects.label.calculator_expenses')}
         />
       </FFormGroup>
       {/*------------ Cost Estimate -----------*/}
       <FFormGroup
-        name={'project_cost'}
+        name={'projectCost'}
         label={intl.get('projects.label.cost_estimate')}
       >
         <ControlGroup>
           <InputPrependText text={'USD'} />
           <FMoneyInputGroup
+            // disabled={true}
             name={'project_cost'}
             allowDecimals={true}
             allowNegativeValue={true}

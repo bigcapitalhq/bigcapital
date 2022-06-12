@@ -2060,5 +2060,14 @@
   "task.label.task_name": "Task Name",
   "task.label.estimated_hours": "Task Name",
   "task.label.charge": "Charge",
-  "task.label.estimated_amount": "Estimated Amount"
+  "task.label.estimated_amount": "Estimated Amount",
+  "project.schema.label.contact": "Contact",
+  "project.schema.label.project_name": "Project name",
+  "project.schema.label.deadline": "Deadline",
+  "project.schema.label.project_state": "Project state",
+  "project.schema.label.project_cost": "Project cost",
+  "task.schema.label.task_name": "Task name",
+  "task.schema.label.task_house": "Task house",
+  "task.schema.label.charge": "Charge",
+  "task.schema.label.amount": "Amount",
 }
