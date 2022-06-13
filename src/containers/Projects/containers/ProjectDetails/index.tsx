@@ -17,12 +17,12 @@ function ProjectTabs({
   changePageTitle,
 }) {
   const {
-    state: { original },
+    state: { name },
   } = useLocation();
 
   React.useEffect(() => {
-    changePageTitle(original.name);
-  }, [changePageTitle, original]);
+    changePageTitle(name);
+  }, [changePageTitle, name]);
 
   return (
     <ProjectDetailProvider>

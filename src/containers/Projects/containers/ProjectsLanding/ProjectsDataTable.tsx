@@ -53,7 +53,7 @@ function ProjectsDataTable({
   // Handle cell click.
   const handleCellClick = ({ row: { original } }) => {
     return history.push(`/projects/${original?.id}/details`, {
-      original,
+      name: original.name,
     });
   };
 
@@ -76,7 +76,7 @@ function ProjectsDataTable({
   // Handle view detail project.
   const handleViewDetailProject = (project) => {
     return history.push(`/projects/${project.id}/details`, {
-      original: project.name,
+      name: project.name,
     });
   };
 
