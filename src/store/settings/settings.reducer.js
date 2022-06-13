@@ -64,6 +64,9 @@ const initialState = {
     projects: {
       tableSize: 'medium',
     },
+    timeSheets: {
+      tableSize: 'medium',
+    },
   },
 };
 

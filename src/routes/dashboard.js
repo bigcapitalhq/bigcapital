@@ -969,6 +969,15 @@ export const getDashboardRoutes = () => [
     ),
     pageTitle: intl.get('sidebar.transactions_locaking'),
   },
+
+  {
+    path: '/projects/:id/details',
+    component: lazy(() =>
+      import('../containers/Projects/containers/ProjectDetails'),
+    ),
+    sidebarExpand: false,
+    backLink: true,
+  },
   {
     path: '/projects',
     component: lazy(() =>
@@ -976,6 +985,7 @@ export const getDashboardRoutes = () => [
     ),
     pageTitle: intl.get('sidebar.projects'),
   },
+
   // Homepage
   {
     path: `/`,

@@ -2069,5 +2069,18 @@
   "task.schema.label.task_name": "Task name",
   "task.schema.label.task_house": "Task house",
   "task.schema.label.charge": "Charge",
-  "task.schema.label.amount": "Amount"
+  "task.schema.label.amount": "Amount",
+  "projcet_details.action.new_transaction": "New Transaction",
+  "projcet_details.action.log_time": "Log Time",
+  "projcet_details.action.edit_project": "Edit Project",
+  "project_details.label.overview": "Overview",
+  "project_details.label.timesheet": "Timesheet",
+  "project_details.label.purchases": "Purchases",
+  "project_details.label.sales": "Sales",
+  "project_details.label.journals": "Journals",
+  "timesheets.column.date": "Date",
+  "timesheets.column.task": "Task",
+  "timesheets.column.user": "User",
+  "timesheets.column.time": "Time",
+  "timesheets.column.billing_status": "Billing Status"
 }

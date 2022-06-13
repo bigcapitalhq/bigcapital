@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { DataTable } from 'components';
 import { TABLES } from 'common/tables';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
@@ -44,11 +45,17 @@ function ProjectsDataTable({
   // #withSettings
   projectsTableSize,
 }) {
+  const history = useHistory();
+
   // Retrieve projects table columns.
   const columns = useProjectsListColumns();
 
   // Handle cell click.
-  const handleCellClick = (cell, event) => {};
+  const handleCellClick = ({ row: { original } }) => {
+    return history.push(`/projects/${original?.id}/details`, {
+      original,
+    });
+  };
 
   // Handle edit project.
   const handleEditProject = (project) => {
@@ -65,6 +72,13 @@ function ProjectsDataTable({
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.PROJECTS);
+
+  // Handle view detail project.
+  const handleViewDetailProject = (project) => {
+    return history.push(`/projects/${project.id}/details`, {
+      original: project.name,
+    });
+  };
 
   return (
     <DataTable
@@ -85,6 +99,7 @@ function ProjectsDataTable({
       onColumnResizing={handleColumnResizing}
       size={projectsTableSize}
       payload={{
+        onViewDetails: handleViewDetailProject,
         onEdit: handleEditProject,
         onNewTask: handleNewTaskButtonClick,
       }}
