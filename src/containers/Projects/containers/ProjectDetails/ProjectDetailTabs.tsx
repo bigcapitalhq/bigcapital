@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
 import { Tabs, Tab } from '@blueprintjs/core';
-import TimeSheetDataTable from './TimeSheet/TimeSheetDataTable';
+import TimeSheetDataTable from './TimeSheetDataTable';
 
 /**
  * Project detail tabs.
@@ -15,7 +15,7 @@ export default function ProjectDetailTabs() {
         animate={true}
         large={true}
         renderActiveTabPanelOnly={true}
-        defaultSelectedTabId={'overview'}
+        defaultSelectedTabId={'timesheet'}
       >
         <Tab id="overview" title={intl.get('project_details.label.overview')} />
         <Tab
@@ -37,16 +37,15 @@ export default function ProjectDetailTabs() {
 const ProjectTabsContent = styled.div`
   .bp3-tabs {
     .bp3-tab-list {
-      position: relative;
-      background-color: #fff;
       padding: 0 20px;
+      background-color: #fff;
       border-bottom: 1px solid #d2dce2;
 
       &.bp3-large > .bp3-tab {
-        font-size: 14px;
+        font-size: 15px;
         font-weight: 400;
-        color: #646a7d;
-        margin: 0 1rem;
+        color: #7f8596;
+        margin: 0 0.9rem;
 
         &[aria-selected='true'],
         &:not([aria-disabled='true']):hover {
@@ -59,7 +58,11 @@ const ProjectTabsContent = styled.div`
       }
     }
     .bp3-tab-panel {
-      margin-top: 0;
+      border: 2px solid #f0f0f0;
+      border-radius: 10px;
+      padding: 30px 18px;
+      margin: 30px 15px;
+      background: #fff;
     }
   }
 `;

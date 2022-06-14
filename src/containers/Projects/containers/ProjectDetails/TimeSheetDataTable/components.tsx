@@ -1,17 +1,33 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormatDateCell } from 'components';
+import { FormatDateCell, Icon } from 'components';
 import { Menu, MenuDivider, MenuItem, Intent } from '@blueprintjs/core';
+import { safeCallback } from 'utils';
 
 /**
  * Table actions cell.
  */
-export const ActionMenu = ({ row: { original }, payload: {} }) => <Menu></Menu>;
+
+export function ActionsMenu({
+  payload: { onDelete, onViewDetails },
+  row: { original },
+}) {
+  return (
+    <Menu>
+      <MenuItem
+        text={'Delete'}
+        intent={Intent.DANGER}
+        onClick={safeCallback(onDelete, original)}
+        icon={<Icon icon="trash-16" iconSize={16} />}
+      />
+    </Menu>
+  );
+}
 
 /**
  * Retrieve timesheet list columns columns.
  */
-export const useTimeSheetColumns = () => {
+export function useTimeSheetColumns() {
   return React.useMemo(
     () => [
       {
@@ -19,7 +35,7 @@ export const useTimeSheetColumns = () => {
         Header: intl.get('timesheets.column.date'),
         accessor: 'date',
         Cell: FormatDateCell,
-        width: 115,
+        width: 100,
         className: 'date',
         clickable: true,
         textOverview: true,
@@ -28,7 +44,7 @@ export const useTimeSheetColumns = () => {
         id: 'task',
         Header: intl.get('timesheets.column.task'),
         accessor: 'task',
-        width: 115,
+        width: 100,
         className: 'task',
         clickable: true,
         textOverview: true,
@@ -37,7 +53,7 @@ export const useTimeSheetColumns = () => {
         id: 'user',
         Header: intl.get('timesheets.column.user'),
         accessor: 'user',
-        width: 115,
+        width: 100,
         className: 'user',
         clickable: true,
         textOverview: true,
@@ -46,7 +62,7 @@ export const useTimeSheetColumns = () => {
         id: 'time',
         Header: intl.get('timesheets.column.time'),
         accessor: 'time',
-        width: 115,
+        width: 100,
         className: 'user',
         align: 'right',
         clickable: true,
@@ -56,7 +72,7 @@ export const useTimeSheetColumns = () => {
         id: 'billingStatus',
         Header: intl.get('timesheets.column.billing_status'),
         accessor: 'billing_status',
-        width: 160,
+        width: 140,
         className: 'billingStatus',
         clickable: true,
         textOverview: true,
@@ -64,4 +80,4 @@ export const useTimeSheetColumns = () => {
     ],
     [],
   );
-};
+}

@@ -44,6 +44,7 @@ function ProjectDetailActionsBar({
       <NavbarGroup>
         <Button
           className={Classes.MINIMAL}
+          icon={<Icon icon={'plus'} />}
           text={<T id={'projcet_details.action.new_transaction'} />}
           onClick={handleNewTransactionBtnClick}
         />
@@ -54,6 +55,7 @@ function ProjectDetailActionsBar({
         />
         <Button
           className={Classes.MINIMAL}
+          icon={<Icon icon="pen-18" />}
           text={<T id={'projcet_details.action.edit_project'} />}
           // onClick={}
         />

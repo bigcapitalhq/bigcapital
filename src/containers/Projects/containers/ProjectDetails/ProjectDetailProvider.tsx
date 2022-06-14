@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React from 'react';
+import DashboardInsider from '../../../../components/Dashboard/DashboardInsider';
 
 const ProjectDetailContext = React.createContext();
 
@@ -14,9 +15,9 @@ function ProjectDetailProvider({
   // State provider.
   const provider = {};
   return (
-    <React.Fragment>
+    <DashboardInsider class="timesheets">
       <ProjectDetailContext.Provider value={provider} {...props} />
-    </React.Fragment>
+    </DashboardInsider>
   );
 }
 
