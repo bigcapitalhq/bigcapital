@@ -14,6 +14,7 @@ import {
 } from 'components';
 import withSettings from '../../../Settings/withSettings';
 import withSettingsActions from '../../../Settings/withSettingsActions';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { compose } from 'utils';
 
@@ -22,6 +23,9 @@ import { compose } from 'utils';
  * @returns
  */
 function ProjectDetailActionsBar({
+  // #withDialogActions
+  openDialog,
+
   // #withSettings
   timesheetsTableSize,
 
@@ -34,6 +38,10 @@ function ProjectDetailActionsBar({
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
     addSetting('timesheets', 'tableSize', size);
+  };
+
+  const handleTimeEntryBtnClick = () => {
+    openDialog('time-entry-form');
   };
 
   // Handle the refresh button click.
@@ -51,7 +59,7 @@ function ProjectDetailActionsBar({
         <Button
           className={Classes.MINIMAL}
           text={<T id={'projcet_details.action.log_time'} />}
-          // onClick={}
+          onClick={handleTimeEntryBtnClick}
         />
         <Button
           className={Classes.MINIMAL}
@@ -94,6 +102,7 @@ function ProjectDetailActionsBar({
   );
 }
 export default compose(
+  withDialogActions,
   withSettingsActions,
   withSettings(({ timesheetsSettings }) => ({
     timesheetsTableSize: timesheetsSettings?.tableSize,

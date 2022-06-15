@@ -2082,5 +2082,18 @@
   "timesheets.column.task": "Task",
   "timesheets.column.user": "User",
   "timesheets.column.time": "Time",
-  "timesheets.column.billing_status": "Billing Status"
+  "timesheets.column.billing_status": "Billing Status",
+  "time_entry.dialog.label": "New time entry",
+  "time_entry.dialog.project": "Project",
+  "time_entry.dialog.task": "Task",
+  "time_entry.dialog.description": "Description",
+  "time_entry.dialog.duration": "Duration",
+  "time_entry.dialog.date": "Date",
+  "time_entry.dialog.create": "Create",
+  "time_entry.schema.label.project_name": "Project name",
+  "time_entry.schema.label.task_name": "Task name",
+  "time_entry.schema.label.duration": "Duration",
+  "time_entry.schema.label.date": "Date",
+  "find_or_choose_a_project": "Find or choose a project",
+  "choose_a_task": "Choose a task"
 }
