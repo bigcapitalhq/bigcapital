@@ -5,13 +5,13 @@ import { DataTable, TableFastCell } from 'components';
 import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
-import { useTimeSheetColumns, ActionsMenu } from './components';
+import { useTimesheetColumns, ActionsMenu } from './components';
 import { TableStyle } from '../../../../../common';
 import withSettings from '../../../../Settings/withSettings';
 
 import { compose } from 'utils';
 
-const TimeSheet = [
+const Timesheet = [
   {
     id: 1,
     data: '2020-01-01',
@@ -23,23 +23,23 @@ const TimeSheet = [
 ];
 
 /**
- * TimeSheet DataTable.
+ * Timesheet DataTable.
  * @returns
  */
-function TimeSheetDataTable({
+function TimesheetDataTable({
   // #withSettings
-  timeSheetsTableSize,
+  timesheetsTableSize,
 }) {
   // Retrieve timesheet table columns.
-  const columns = useTimeSheetColumns();
+  const columns = useTimesheetColumns();
 
   // Handle delete timesheet.
-  const handleDeleteTimeSheet = () => {};
+  const handleDeleteTimesheet = () => {};
 
   return (
-    <TimeSheetsTable
+    <TimesheetsTable
       columns={columns}
-      data={TimeSheet}
+      data={Timesheet}
       // loading={}
       // headerLoading={}
       noInitialFetch={true}
@@ -52,23 +52,23 @@ function TimeSheetDataTable({
       TableLoadingRenderer={TableSkeletonRows}
       TableRowsRenderer={TableVirtualizedListRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
-      vListrowHeight={timeSheetsTableSize === 'small' ? 32 : 40}
+      vListrowHeight={timesheetsTableSize === 'small' ? 32 : 40}
       vListOverscanRowCount={0}
       styleName={TableStyle.Constrant}
       payload={{
-        onDelete: handleDeleteTimeSheet,
+        onDelete: handleDeleteTimesheet,
       }}
     />
   );
 }
 
 export default compose(
-  withSettings(({ timeSheetsSettings }) => ({
-    timeSheetsTableSize: timeSheetsSettings?.tableSize,
+  withSettings(({ timesheetsSettings }) => ({
+    timesheetsTableSize: timesheetsSettings?.tableSize,
   })),
-)(TimeSheetDataTable);
+)(TimesheetDataTable);
 
-const TimeSheetsTable = styled(DataTable)`
+const TimesheetsTable = styled(DataTable)`
   .table .tbody {
     .tbody-inner .tr.no-results {
       .td {

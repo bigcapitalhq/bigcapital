@@ -27,7 +27,7 @@ export function ActionsMenu({
 /**
  * Retrieve timesheet list columns columns.
  */
-export function useTimeSheetColumns() {
+export function useTimesheetColumns() {
   return React.useMemo(
     () => [
       {

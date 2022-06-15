@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
 import { Tabs, Tab } from '@blueprintjs/core';
-import TimeSheetDataTable from './TimeSheetDataTable';
+import TimesheetDataTable from './TimesheetDataTable';
 
 /**
  * Project detail tabs.
@@ -21,7 +21,7 @@ export default function ProjectDetailTabs() {
         <Tab
           id="timesheet"
           title={intl.get('project_details.label.timesheet')}
-          panel={<TimeSheetDataTable />}
+          panel={<TimesheetDataTable />}
         />
         <Tab
           id="purchases"

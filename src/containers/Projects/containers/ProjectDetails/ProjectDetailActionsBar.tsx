@@ -23,7 +23,7 @@ import { compose } from 'utils';
  */
 function ProjectDetailActionsBar({
   // #withSettings
-  timeSheetsTableSize,
+  timesheetsTableSize,
 
   // #withSettingsActions
   addSetting,
@@ -33,7 +33,7 @@ function ProjectDetailActionsBar({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('timeSheets', 'tableSize', size);
+    addSetting('timesheets', 'tableSize', size);
   };
 
   // Handle the refresh button click.
@@ -77,7 +77,7 @@ function ProjectDetailActionsBar({
         />
         <NavbarDivider />
         <DashboardRowsHeightButton
-          initialValue={timeSheetsTableSize}
+          initialValue={timesheetsTableSize}
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
@@ -95,7 +95,7 @@ function ProjectDetailActionsBar({
 }
 export default compose(
   withSettingsActions,
-  withSettings(({ timeSheetsSettings }) => ({
-    timeSheetsTableSize: timeSheetsSettings?.tableSize,
+  withSettings(({ timesheetsSettings }) => ({
+    timesheetsTableSize: timesheetsSettings?.tableSize,
   })),
 )(ProjectDetailActionsBar);
