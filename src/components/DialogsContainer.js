@@ -42,7 +42,7 @@ import CustomerOpeningBalanceDialog from '../containers/Dialogs/CustomerOpeningB
 import VendorOpeningBalanceDialog from '../containers/Dialogs/VendorOpeningBalanceDialog';
 import ProjectFormDialog from '../containers/Projects/containers/ProjectFormDialog';
 import TaskFormDialog from '../containers/Projects/containers/TaskFormDialog';
-import TimeEntryFormDialog from '../containers/TimesheetsEntries/containers/TimeEntryFormDialog';
+import TimeEntryFormDialog from '../containers/Timesheets/containers/TimeEntryFormDialog';
 
 /**
  * Dialogs container.
