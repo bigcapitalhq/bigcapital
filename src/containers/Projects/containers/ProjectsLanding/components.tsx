@@ -19,30 +19,36 @@ import { safeCallback, firstLettersArgs, calculateStatus } from 'utils';
 export function ProjectStatus({ project }) {
   return (
     <ProjectStatusRoot>
-      {project.task_amount}
       <ProjectProgressBar
         animate={false}
-        intent={Intent.NONE}
+        stripes={false}
+        // intent={Intent.PRIMARY}
         value={calculateStatus(project.task_amount, project.cost_estimate)}
       />
+      <ProjectStatusTaskAmount>{project.task_amount}</ProjectStatusTaskAmount>
     </ProjectStatusRoot>
   );
 }
 
 /**
- * project status accessor.
+ * status accessor.
  */
-export const ProjectStatusAccessor = (row) => {
+export const StatusAccessor = (project) => {
   return (
     <Choose>
-      <Choose.When condition={row.is_in_process}>
-        <ProjectStatus project={row} />
+      <Choose.When condition={project.is_process}>
+        <ProjectStatus project={project} />
       </Choose.When>
-      <Choose.Otherwise>
+      <Choose.When condition={project.is_closed}>
+        <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
+          <T id={'closed'} />
+        </Tag>
+      </Choose.When>
+      <Choose.When condition={project.is_draft}>
         <Tag round={true} minimal={true}>
           <T id={'draft'} />
         </Tag>
-      </Choose.Otherwise>
+      </Choose.When>
     </Choose>
   );
 };
@@ -126,19 +132,18 @@ export const useProjectsListColumns = () => {
       },
       {
         id: 'name',
-        Header: 'Project Name',
+        Header: '',
         accessor: ProjectsAccessor,
-        width: 240,
+        width: 200,
         className: 'name',
         clickable: true,
       },
       {
         id: 'status',
-        Header: 'status',
-        accessor: ProjectStatusAccessor,
-        width: 80,
+        Header: '',
+        accessor: StatusAccessor,
+        width: 50,
         className: 'status',
-        clickable: true,
       },
     ],
     [],
@@ -150,10 +155,11 @@ const ProjectItemsWrap = styled.div``;
 const ProjectItemsHeader = styled.div`
   display: flex;
   align-items: baseline;
+  line-height: 1.3rem;
 `;
 
 const ProjectItemContactName = styled.div`
-  font-weight: 600;
+  font-weight: 500;
   padding-right: 4px;
 `;
 const ProjectItemProjectName = styled.div``;
@@ -162,23 +168,30 @@ const ProjectItemDescription = styled.div`
   display: inline-block;
   font-size: 13px;
   opacity: 0.75;
-  margin-top: 4px;
+  margin-top: 0.2rem;
+  line-height: 1;
 `;
 
 const ProjectStatusRoot = styled.div`
   display: flex;
   align-items: center;
-  flex-direction: row-reverse;
-  margin: 0 20px;
+  justify-content: flex-end;
+  /* margin-right: 0.8rem; */
+  /* flex-direction: row-reverse; */
+`;
+const ProjectStatusTaskAmount = styled.div`
+  text-align: right;
+  font-weight: 400;
+  line-height: 1.5rem;
+  margin-left: 20px;
 `;
 
 const ProjectProgressBar = styled(ProgressBar)`
   &.bp3-progress-bar {
-    margin-right: 20px;
+    display: block;
     flex-shrink: 0;
     height: 3px;
-    max-width: 130px;
-
+    max-width: 100px;
     &,
     .bp3-progress-meter {
       border-radius: 0;

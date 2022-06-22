@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
+import { useFormikContext } from 'formik';
 
 import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
 import { FastField } from 'formik';
@@ -14,6 +15,7 @@ import {
   FMoneyInputGroup,
   InputPrependText,
   FormattedMessage as T,
+  FieldRequiredHint,
   CustomerSelectField,
 } from 'components';
 import {
@@ -29,7 +31,11 @@ import { useProjectFormContext } from './ProjectFormProvider';
  * @returns
  */
 function ProjectFormFields() {
+  // project form dialog context.
   const { customers } = useProjectFormContext();
+
+  // Formik context.
+  const { values } = useFormikContext();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -38,6 +44,7 @@ function ProjectFormFields() {
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={intl.get('projects.dialog.contact')}
+            labelInfo={<FieldRequiredHint />}
             className={classNames('form-group--select-list', Classes.FILL)}
             intent={inputIntent({ error, touched })}
           >
@@ -93,7 +100,7 @@ function ProjectFormFields() {
         <ControlGroup>
           <InputPrependText text={'USD'} />
           <FMoneyInputGroup
-            // disabled={true}
+            disabled={values.projectState}
             name={'project_cost'}
             allowDecimals={true}
             allowNegativeValue={true}

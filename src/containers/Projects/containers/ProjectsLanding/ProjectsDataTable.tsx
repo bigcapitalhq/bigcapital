@@ -20,18 +20,22 @@ const projects = [
     name: 'Maroon Bronze',
     deadline: '2022-06-08T22:00:00.000Z',
     display_name: 'Kyrie Rearden',
-    cost_estimate: '4000',
-    task_amount: '1000',
-    is_in_process: true,
+    cost_estimate: '40000',
+    task_amount: '10000',
+    is_process: true,
+    is_closed: false,
+    is_draft: false,
   },
   {
     id: 2,
     name: 'Project Sherwood',
     deadline: '2022-06-08T22:00:00.000Z',
     display_name: 'Ella-Grace Miller',
-    cost_estimate: '0',
-    task_amount: '1000',
-    is_in_process: true,
+    cost_estimate: '700',
+    task_amount: '300',
+    is_process: true,
+    is_closed: false,
+    is_draft: false,
   },
 ];
 
@@ -54,7 +58,8 @@ function ProjectsDataTable({
   // Handle cell click.
   const handleCellClick = ({ row: { original } }) => {
     return history.push(`/projects/${original?.id}/details`, {
-      name: original.name,
+      projectId: original.id,
+      projectName: original.name,
     });
   };
 
@@ -77,7 +82,8 @@ function ProjectsDataTable({
   // Handle view detail project.
   const handleViewDetailProject = (project) => {
     return history.push(`/projects/${project.id}/details`, {
-      name: project.name,
+      projectId: project.id,
+      projectName: project.name,
     });
   };
 
@@ -119,7 +125,7 @@ export default compose(
 const ProjectsTable = styled(DataTable)`
   .tbody {
     .tr .td {
-      padding: 0.8rem;
+      padding: 0.5rem 0.8rem;
     }
 
     .avatar.td {

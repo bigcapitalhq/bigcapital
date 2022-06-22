@@ -12,7 +12,11 @@ const ProjectDialogContent = React.lazy(
  * Project form dialog.
  * @returns
  */
-function ProjectFormDialog({ dialogName, payload: { projectId = null }, isOpen }) {
+function ProjectFormDialog({
+  dialogName,
+  payload: { projectId = null },
+  isOpen,
+}) {
   return (
     <ProjectFormDialogRoot
       name={dialogName}
@@ -35,16 +39,14 @@ const ProjectFormDialogRoot = styled(Dialog)`
   .bp3-dialog-body {
     .bp3-form-group {
       margin-bottom: 15px;
-      margin-top: 15px;
 
       label.bp3-label {
         margin-bottom: 3px;
         font-size: 13px;
       }
     }
-
-    .bp3-dialog-footer {
-      padding-top: 10px;
-    }
+  }
+  .bp3-dialog-footer {
+    padding-top: 10px;
   }
 `;

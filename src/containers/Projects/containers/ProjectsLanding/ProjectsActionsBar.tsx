@@ -79,7 +79,7 @@ function ProjectsActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="plus" />}
-          text={'New Project'}
+          text={<T id={'projects.label.new_project'} />}
           onClick={handleNewProjectBtnClick}
         />
         {/* AdvancedFilterPopover */}

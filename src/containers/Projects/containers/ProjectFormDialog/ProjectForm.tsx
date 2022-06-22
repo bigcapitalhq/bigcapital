@@ -15,7 +15,7 @@ const defaultInitialValues = {
   contact: '',
   projectName: '',
   projectDeadline: moment(new Date()).format('YYYY-MM-DD'),
-  projectState: true,
+  projectState: false,
   projectCost: '',
 };
 
