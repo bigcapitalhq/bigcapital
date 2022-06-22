@@ -12,7 +12,11 @@ const TimeEntryFormDialogContent = React.lazy(
  * Time entry form dialog.
  * @returns
  */
-function TimeEntryFormDialog({ dialogName, isOpen, payload: { timeEntryId } }) {
+function TimeEntryFormDialog({
+  dialogName,
+  isOpen,
+  payload: { projectId = null, timeEntryId = null },
+}) {
   return (
     <TimeEntryFormDialogRoot
       name={dialogName}
@@ -25,6 +29,7 @@ function TimeEntryFormDialog({ dialogName, isOpen, payload: { timeEntryId } }) {
       <DialogSuspense>
         <TimeEntryFormDialogContent
           dialogName={dialogName}
+          project={projectId}
           timeEntry={timeEntryId}
         />
       </DialogSuspense>
@@ -38,14 +43,12 @@ const TimeEntryFormDialogRoot = styled(Dialog)`
   .bp3-dialog-body {
     .bp3-form-group {
       margin-bottom: 15px;
-      margin-top: 15px;
 
       label.bp3-label {
         margin-bottom: 3px;
         font-size: 13px;
       }
     }
-
     .form-group {
       &--description {
         .bp3-form-content {

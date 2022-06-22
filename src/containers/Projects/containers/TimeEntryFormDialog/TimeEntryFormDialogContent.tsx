@@ -9,10 +9,15 @@ import TimeEntryForm from './TimeEntryForm';
 export default function TimeEntryFormDialogContent({
   // #ownProps
   dialogName,
+  project,
   timeEntry,
 }) {
   return (
-    <TimeEntryFormProvider timeEntryId={timeEntry} dialogName={dialogName}>
+    <TimeEntryFormProvider
+      projectId={project}
+      timeEntryId={timeEntry}
+      dialogName={dialogName}
+    >
       <TimeEntryForm />
     </TimeEntryFormProvider>
   );

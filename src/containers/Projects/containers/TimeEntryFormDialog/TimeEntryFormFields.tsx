@@ -1,7 +1,8 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Classes, Position } from '@blueprintjs/core';
+import styled from 'styled-components';
+import { Classes, Intent, Position } from '@blueprintjs/core';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
 import {
@@ -9,10 +10,11 @@ import {
   FInputGroup,
   FDateInput,
   FTextArea,
+  FEditableText,
   FieldRequiredHint,
   FormattedMessage as T,
 } from 'components';
-import { ProjectSelect, TaskSelect } from '../../components';
+import { ProjectSelect, TaskSelect } from './components';
 import { momentFormatter } from 'utils';
 
 /**
@@ -30,11 +32,8 @@ function TimeEntryFormFields() {
         className={classNames('form-group--select-list', Classes.FILL)}
       >
         <ProjectSelect
-          name={'projectId'}
-          projects={[
-            { id: '1', name: 'Project 1' },
-            { id: '2', name: 'Project 2' },
-          ]}
+          name={'tesc'}
+          projects={[]}
           popoverProps={{ minimal: true }}
         />
       </FFormGroup>
@@ -47,34 +46,23 @@ function TimeEntryFormFields() {
       >
         <TaskSelect
           name={'taskId'}
-          tasks={[
-            { id: '1', name: 'Task 1' },
-            { id: '2', name: 'Task 2' },
-          ]}
+          tasks={[]}
           popoverProps={{ minimal: true }}
         />
       </FFormGroup>
-      {/*------------ Description -----------*/}
-      <FFormGroup
-        name={'description'}
-        label={intl.get('time_entry.dialog.description')}
-        className={'form-group--description'}
-      >
-        <FTextArea name={'description'} />
-      </FFormGroup>
+
       {/*------------ Duration -----------*/}
       <FFormGroup
         label={intl.get('time_entry.dialog.duration')}
         name={'duration'}
         labelInfo={<FieldRequiredHint />}
       >
-        <FInputGroup name="duration" />
+        <FInputGroup name="duration" inputProps={{}} />
       </FFormGroup>
       {/*------------ Date -----------*/}
       <FFormGroup
         label={intl.get('time_entry.dialog.date')}
         name={'date'}
-        labelInfo={<FieldRequiredHint />}
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
         <FDateInput
@@ -86,6 +74,21 @@ function TimeEntryFormFields() {
             minimal: true,
           }}
         />
+      </FFormGroup>
+      {/*------------ Description -----------*/}
+      <FFormGroup
+        name={'description'}
+        label={intl.get('time_entry.dialog.description')}
+        className={'form-group--description'}
+      >
+        <FTextArea name={'description'} />
+        {/* <FEditableText
+          multiline={true}
+          // minLines={1.78}
+          // maxLines={1.78}
+          name={'description'}
+          placeholder=""
+        /> */}
       </FFormGroup>
     </div>
   );

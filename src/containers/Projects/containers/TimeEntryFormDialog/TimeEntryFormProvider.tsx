@@ -11,6 +11,7 @@ const TimeEntryFormContext = React.createContext();
 function TimeEntryFormProvider({
   // #ownProps
   dialogName,
+  projectId,
   timeEntryId,
   ...props
 }) {
