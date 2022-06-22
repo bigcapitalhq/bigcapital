@@ -10,11 +10,10 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
 const defaultInitialValues = {
-  taksName: '',
+  taskName: '',
   taskHouse: '00:00',
-  change: 'Hourly Rate',
-  changeAmount: '100000000',
-  amount: '',
+  taskCharge: 'Hourly rate',
+  taskamount: '100000000',
 };
 
 /**

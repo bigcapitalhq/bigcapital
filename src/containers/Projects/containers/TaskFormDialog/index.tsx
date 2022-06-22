@@ -17,7 +17,7 @@ function TaskFormDialog({ dialogName, payload: { taskId = null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
-      title={intl.get('task.label.new_task')}
+      title={intl.get('task.dialog.new_task')}
       isOpen={isOpen}
       autoFocus={true}
       canEscapeKeyClose={true}
