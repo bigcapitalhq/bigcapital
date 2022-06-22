@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import { DataTable } from 'components';
 import { TABLES } from 'common/tables';
@@ -16,21 +17,21 @@ import { compose } from 'utils';
 const projects = [
   {
     id: 1,
-    name: 'Project 1',
-    description: 'Project 1 description',
-    status: 'Active',
+    name: 'Maroon Bronze',
+    deadline: '2022-06-08T22:00:00.000Z',
+    display_name: 'Kyrie Rearden',
+    cost_estimate: '4000',
+    task_amount: '1000',
+    is_in_process: true,
   },
   {
     id: 2,
-    name: 'Project 2',
-    description: 'Project 2 description',
-    status: 'Active',
-  },
-  {
-    id: 3,
-    name: 'Project 3',
-    description: 'Project 3 description',
-    status: 'Active',
+    name: 'Project Sherwood',
+    deadline: '2022-06-08T22:00:00.000Z',
+    display_name: 'Ella-Grace Miller',
+    cost_estimate: '0',
+    task_amount: '1000',
+    is_in_process: true,
   },
 ];
 
@@ -81,16 +82,16 @@ function ProjectsDataTable({
   };
 
   return (
-    <DataTable
+    <ProjectsTable
       columns={columns}
       data={projects}
       // loading={}
       // headerLoading={}
       // progressBarLoading={}
       manualSortBy={true}
-      selectionColumn={true}
       noInitialFetch={true}
       sticky={true}
+      hideTableHeader={true}
       TableLoadingRenderer={TableSkeletonRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       ContextMenu={ActionsMenu}
@@ -114,3 +115,40 @@ export default compose(
     projectsTableSize: projectSettings?.tableSize,
   })),
 )(ProjectsDataTable);
+
+const ProjectsTable = styled(DataTable)`
+  .tbody {
+    .tr .td {
+      padding: 0.8rem;
+    }
+
+    .avatar.td {
+      .avatar {
+        display: inline-block;
+        background: #adbcc9;
+        border-radius: 8%;
+        text-align: center;
+        font-weight: 400;
+        color: #fff;
+
+        &[data-size='medium'] {
+          height: 30px;
+          width: 30px;
+          line-height: 30px;
+          font-size: 14px;
+        }
+        &[data-size='small'] {
+          height: 25px;
+          width: 25px;
+          line-height: 25px;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+  .table-size--small {
+    .tbody .tr {
+      height: 45px;
+    }
+  }
+`;

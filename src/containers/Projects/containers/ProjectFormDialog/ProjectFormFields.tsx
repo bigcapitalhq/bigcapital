@@ -37,7 +37,7 @@ function ProjectFormFields() {
       <FastField name={'contact'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
-            label={intl.get('projects.label.contact')}
+            label={intl.get('projects.dialog.contact')}
             className={classNames('form-group--select-list', Classes.FILL)}
             intent={inputIntent({ error, touched })}
           >
@@ -56,14 +56,14 @@ function ProjectFormFields() {
       </FastField>
       {/*------------ Project Name -----------*/}
       <FFormGroup
-        label={intl.get('projects.label.project_name')}
+        label={intl.get('projects.dialog.project_name')}
         name={'projectName'}
       >
         <FInputGroup name="projectName" />
       </FFormGroup>
       {/*------------ DeadLine -----------*/}
       <FFormGroup
-        label={intl.get('projects.label.deadline')}
+        label={intl.get('projects.dialog.deadline')}
         name={'projectDeadline'}
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
@@ -82,13 +82,13 @@ function ProjectFormFields() {
       <FFormGroup name={'projectState'}>
         <FCheckbox
           name="projectState"
-          label={intl.get('projects.label.calculator_expenses')}
+          label={intl.get('projects.dialog.calculator_expenses')}
         />
       </FFormGroup>
       {/*------------ Cost Estimate -----------*/}
       <FFormGroup
         name={'projectCost'}
-        label={intl.get('projects.label.cost_estimate')}
+        label={intl.get('projects.dialog.cost_estimate')}
       >
         <ControlGroup>
           <InputPrependText text={'USD'} />
