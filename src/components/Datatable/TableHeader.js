@@ -80,24 +80,31 @@ function TableHeaderGroup({ headerGroup }) {
 export default function TableHeader() {
   const {
     table: { headerGroups, page },
-    props: { TableHeaderSkeletonRenderer, headerLoading, progressBarLoading },
+    props: {
+      TableHeaderSkeletonRenderer,
+      headerLoading,
+      progressBarLoading,
+      hideTableHeader,
+    },
   } = useContext(TableContext);
 
   if (headerLoading && TableHeaderSkeletonRenderer) {
     return <TableHeaderSkeletonRenderer />;
   }
   return (
-    <ScrollSyncPane>
-      <div className="thead">
-        <div className={'thead-inner'}>
-          {headerGroups.map((headerGroup, index) => (
-            <TableHeaderGroup key={index} headerGroup={headerGroup} />
-          ))}
-          <If condition={progressBarLoading}>
-            <MaterialProgressBar />
-          </If>
+    !hideTableHeader && (
+      <ScrollSyncPane>
+        <div className="thead">
+          <div className={'thead-inner'}>
+            {headerGroups.map((headerGroup, index) => (
+              <TableHeaderGroup key={index} headerGroup={headerGroup} />
+            ))}
+            <If condition={progressBarLoading}>
+              <MaterialProgressBar />
+            </If>
+          </div>
         </div>
-      </div>
-    </ScrollSyncPane>
+      </ScrollSyncPane>
+    )
   );
 }

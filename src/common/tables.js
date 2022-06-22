@@ -18,6 +18,7 @@ export const TABLES = {
   VENDOR_CREDITS: 'vendor_credits',
   WAREHOUSE_TRANSFERS: 'warehouse_transfers',
   PROJECTS: 'projects',
+  TIMESHEETS: 'timesheets',
 };
 
 export const TABLE_SIZE = {

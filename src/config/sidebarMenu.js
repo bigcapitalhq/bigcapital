@@ -557,6 +557,17 @@ export const SidebarMenu = [
           },
         ],
       },
+      {
+        text: <T id={'New tasks'} />,
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: <T id={'projects.label.new_project'} />,
+            type: ISidebarMenuItemType.Dialog,
+            dialogName: 'project-form',
+          },
+        ],
+      },
     ],
   },
   // ---------------
