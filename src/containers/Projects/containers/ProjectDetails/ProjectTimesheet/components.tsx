@@ -1,0 +1,120 @@
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { FormatDate, Icon, FormattedMessage as T } from 'components';
+import { Menu, MenuItem, Intent } from '@blueprintjs/core';
+import { safeCallback, firstLettersArgs } from 'utils';
+import { chain } from 'lodash';
+
+/**
+ * Table actions cell.
+ */
+
+export function ActionsMenu({
+  payload: { onDelete, onViewDetails },
+  row: { original },
+}) {
+  return (
+    <Menu>
+      <MenuItem
+        text={intl.get('timesheets.actions.delete_timesheet')}
+        intent={Intent.DANGER}
+        onClick={safeCallback(onDelete, original)}
+        icon={<Icon icon="trash-16" iconSize={16} />}
+      />
+    </Menu>
+  );
+}
+
+/**
+ * Avatar cell.
+ */
+export const AvatarCell = ({ row: { original }, size }) => (
+  <span className="avatar" data-size={size}>
+    {firstLettersArgs(original?.display_name, original?.name)}
+  </span>
+);
+
+/**
+ * Timesheet accessor.
+ */
+export const TimesheetAccessor = (timesheet) => (
+  <React.Fragment>
+    <TimesheetHeader>
+      <TimesheetTitle>{timesheet.display_name}</TimesheetTitle>
+      <TimesheetSubTitle>{timesheet.name}</TimesheetSubTitle>
+    </TimesheetHeader>
+    <TimesheetContent>
+      <FormatDate value={timesheet.date} />
+      <TimesheetDescription>{timesheet.description}</TimesheetDescription>
+    </TimesheetContent>
+  </React.Fragment>
+);
+
+const TimesheetHeader = styled.div`
+  display: flex;
+  align-items: baseline;
+  flex-flow: wrap;
+`;
+const TimesheetTitle = styled.span`
+  font-weight: 500;
+  margin-right: 12px;
+  line-height: 1.5rem;
+`;
+
+const TimesheetSubTitle = styled.span``;
+const TimesheetContent = styled.div`
+  display: block;
+  white-space: nowrap;
+  font-size: 13px;
+  opacity: 0.75;
+  margin-bottom: 0.1rem;
+  line-height: 1.2rem;
+`;
+
+const TimesheetDescription = styled.span`
+  &::before {
+    content: '•';
+    margin: 0.3rem;
+  }
+`;
+
+/**
+ * Retrieve timesheet list columns columns.
+ */
+export function useTimesheetColumns() {
+  return React.useMemo(
+    () => [
+      {
+        id: 'avatar',
+        Header: '',
+        Cell: AvatarCell,
+        className: 'avatar',
+        width: 45,
+        disableResizing: true,
+        disableSortBy: true,
+        clickable: true,
+      },
+      {
+        id: 'name',
+        Header: 'Header',
+        accessor: TimesheetAccessor,
+        width: 100,
+        className: 'name',
+        clickable: true,
+        textOverview: true,
+      },
+      {
+        id: 'duration',
+        Header: '',
+        accessor: 'duration',
+        width: 100,
+        className: 'duration',
+        align: 'right',
+        clickable: true,
+        textOverview: true,
+      },
+    ],
+    [],
+  );
+}

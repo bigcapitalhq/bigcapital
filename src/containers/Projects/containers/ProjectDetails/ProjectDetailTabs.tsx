@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
 import { Tabs, Tab } from '@blueprintjs/core';
-import TimesheetDataTable from './TimesheetDataTable';
+
+import ProjectTimesheet from './ProjectTimesheet';
 
 /**
  * Project detail tabs.
@@ -21,7 +22,7 @@ export default function ProjectDetailTabs() {
         <Tab
           id="timesheet"
           title={intl.get('project_details.label.timesheet')}
-          panel={<TimesheetDataTable />}
+          panel={<ProjectTimesheet />}
         />
         <Tab
           id="purchases"
@@ -58,11 +59,9 @@ const ProjectTabsContent = styled.div`
       }
     }
     .bp3-tab-panel {
-      border: 2px solid #f0f0f0;
-      border-radius: 10px;
-      padding: 30px 18px;
-      margin: 30px 15px;
-      background: #fff;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      padding: 0 25px;
     }
   }
 `;

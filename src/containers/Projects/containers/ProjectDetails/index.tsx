@@ -17,15 +17,15 @@ function ProjectTabs({
   changePageTitle,
 }) {
   const {
-    state: { name },
+    state: { projectName, projectId },
   } = useLocation();
 
   React.useEffect(() => {
-    changePageTitle(name);
-  }, [changePageTitle, name]);
+    changePageTitle(projectName);
+  }, [changePageTitle, projectName]);
 
   return (
-    <ProjectDetailProvider>
+    <ProjectDetailProvider projectId={projectId}>
       <ProjectDetailActionsBar />
       <DashboardPageContent>
         <ProjectDetailTabs />

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import {
   Button,
@@ -15,7 +16,7 @@ import {
 import withSettings from '../../../Settings/withSettings';
 import withSettingsActions from '../../../Settings/withSettingsActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-
+import { useProjectDetailContext } from './ProjectDetailProvider';
 import { compose } from 'utils';
 
 /**
@@ -32,16 +33,25 @@ function ProjectDetailActionsBar({
   // #withSettingsActions
   addSetting,
 }) {
+  const { projectId } = useProjectDetailContext();
+
   // Handle new transaction button click.
   const handleNewTransactionBtnClick = () => {};
 
+  const handleEditProjectBtnClick = () => {
+    openDialog('project-form', {
+      projectId,
+    });
+  };
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
     addSetting('timesheets', 'tableSize', size);
   };
 
   const handleTimeEntryBtnClick = () => {
-    openDialog('time-entry-form');
+    openDialog('time-entry-form', {
+      projectId,
+    });
   };
 
   // Handle the refresh button click.
@@ -58,14 +68,15 @@ function ProjectDetailActionsBar({
         />
         <Button
           className={Classes.MINIMAL}
-          text={<T id={'projcet_details.action.log_time'} />}
+          icon={<Icon icon={'time-24'} iconSize={16} />}
+          text={<T id={'projcet_details.action.time_entry'} />}
           onClick={handleTimeEntryBtnClick}
         />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="pen-18" />}
           text={<T id={'projcet_details.action.edit_project'} />}
-          // onClick={}
+          onClick={handleEditProjectBtnClick}
         />
         <NavbarDivider />
         <Button

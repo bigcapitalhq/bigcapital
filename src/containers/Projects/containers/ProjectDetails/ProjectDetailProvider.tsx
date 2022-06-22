@@ -9,11 +9,14 @@ const ProjectDetailContext = React.createContext();
  * @returns
  */
 function ProjectDetailProvider({
+  projectId,
   // #ownProps
   ...props
 }) {
   // State provider.
-  const provider = {};
+  const provider = {
+    projectId,
+  };
   return (
     <DashboardInsider class="timesheets">
       <ProjectDetailContext.Provider value={provider} {...props} />
