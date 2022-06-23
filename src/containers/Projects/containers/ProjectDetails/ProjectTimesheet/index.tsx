@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import TimesheetsTable from './TimesheetsTable';
-import ProjectFinancialSection from '../ProjectFinancialSection';
+import TimesheetsHeader from './TimesheetsHeader';
 
 /**
  * Project Timesheet.
@@ -11,8 +11,7 @@ import ProjectFinancialSection from '../ProjectFinancialSection';
 export default function ProjectTimesheet() {
   return (
     <React.Fragment>
-      <ProjectFinancialSection />
-
+      <TimesheetsHeader />
       <ProjectTimesheetTableCard>
         <TimesheetsTable />
       </ProjectTimesheetTableCard>
