@@ -19,13 +19,13 @@ import { safeCallback, firstLettersArgs, calculateStatus } from 'utils';
 export function ProjectStatus({ project }) {
   return (
     <ProjectStatusRoot>
+      <ProjectStatusTaskAmount>{project.task_amount}</ProjectStatusTaskAmount>
       <ProjectProgressBar
         animate={false}
         stripes={false}
         // intent={Intent.PRIMARY}
         value={calculateStatus(project.task_amount, project.cost_estimate)}
       />
-      <ProjectStatusTaskAmount>{project.task_amount}</ProjectStatusTaskAmount>
     </ProjectStatusRoot>
   );
 }
@@ -40,14 +40,14 @@ export const StatusAccessor = (project) => {
         <ProjectStatus project={project} />
       </Choose.When>
       <Choose.When condition={project.is_closed}>
-        <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
+        <StatusTag minimal={true} intent={Intent.SUCCESS} round={true}>
           <T id={'closed'} />
-        </Tag>
+        </StatusTag>
       </Choose.When>
       <Choose.When condition={project.is_draft}>
-        <Tag round={true} minimal={true}>
+        <StatusTag round={true} minimal={true}>
           <T id={'draft'} />
-        </Tag>
+        </StatusTag>
       </Choose.When>
     </Choose>
   );
@@ -134,7 +134,7 @@ export const useProjectsListColumns = () => {
         id: 'name',
         Header: '',
         accessor: ProjectsAccessor,
-        width: 200,
+        width: 240,
         className: 'name',
         clickable: true,
       },
@@ -175,9 +175,9 @@ const ProjectItemDescription = styled.div`
 const ProjectStatusRoot = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
   /* margin-right: 0.8rem; */
-  /* flex-direction: row-reverse; */
+  flex-direction: row-reverse;
 `;
 const ProjectStatusTaskAmount = styled.div`
   text-align: right;
@@ -191,10 +191,14 @@ const ProjectProgressBar = styled(ProgressBar)`
     display: block;
     flex-shrink: 0;
     height: 3px;
-    max-width: 100px;
+    max-width: 115px;
     &,
     .bp3-progress-meter {
       border-radius: 0;
     }
   }
+`;
+const StatusTag = styled(Tag)`
+  min-width: 65px;
+  text-align: center;
 `;
