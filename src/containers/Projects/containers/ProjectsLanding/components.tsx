@@ -176,7 +176,7 @@ const ProjectStatusRoot = styled.div`
   display: flex;
   align-items: center;
   /* justify-content: flex-end; */
-  /* margin-right: 0.8rem; */
+  margin-right: 0.5rem;
   flex-direction: row-reverse;
 `;
 const ProjectStatusTaskAmount = styled.div`
@@ -191,7 +191,7 @@ const ProjectProgressBar = styled(ProgressBar)`
     display: block;
     flex-shrink: 0;
     height: 3px;
-    max-width: 115px;
+    max-width: 110px;
     &,
     .bp3-progress-meter {
       border-radius: 0;
