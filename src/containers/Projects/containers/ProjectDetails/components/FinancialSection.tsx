@@ -27,14 +27,14 @@ export const FinancialProgressBar = ({ ...rest }) => {
   return <FinancialCardProgressBar animate={false} stripes={false} {...rest} />;
 };
 
-export const FinancialSectionWrap = styled.div`
+const FinancialSectionWrap = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin: 20px 20px 20px;
   gap: 10px;
 `;
 
-export const FinancialSectionCard = styled.div`
+const FinancialSectionCard = styled.div`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -45,27 +45,27 @@ export const FinancialSectionCard = styled.div`
   border: 1px solid #c8cad0; // #000a1e33 #f0f0f0
 `;
 
-export const FinancialSectionCardContent = styled.div`
+const FinancialSectionCardContent = styled.div`
   margin: 16px;
   /* flex-direction: column; */
 `;
 
-export const FinancialCardWrap = styled.div``;
+const FinancialCardWrap = styled.div``;
 
-export const FinancialCardTitle = styled.div`
+const FinancialCardTitle = styled.div`
   font-size: 15px;
   color: #000;
   white-space: nowrap;
   font-weight: 400;
   line-height: 1.5rem;
 `;
-export const FinancialCardValue = styled.div`
+const FinancialCardValue = styled.div`
   font-size: 21px;
   line-height: 2rem;
   font-weight: 700;
 `;
 
-export const FinancialCardStatus = styled.div``;
+const FinancialCardStatus = styled.div``;
 
 export const FinancialCardText = styled.div`
   font-size: 13px;

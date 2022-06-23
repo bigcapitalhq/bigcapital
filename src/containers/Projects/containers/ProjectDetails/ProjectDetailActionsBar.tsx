@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Button,
   Classes,
@@ -13,6 +14,7 @@ import {
   FormattedMessage as T,
   DashboardRowsHeightButton,
 } from 'components';
+import { TransactionSelect } from './components';
 import withSettings from '../../../Settings/withSettings';
 import withSettingsActions from '../../../Settings/withSettingsActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -33,10 +35,13 @@ function ProjectDetailActionsBar({
   // #withSettingsActions
   addSetting,
 }) {
+  const history = useHistory();
   const { projectId } = useProjectDetailContext();
 
   // Handle new transaction button click.
-  const handleNewTransactionBtnClick = () => {};
+  const handleNewTransactionBtnClick = ({ path }) => {
+    history.push(`/${path}`);
+  };
 
   const handleEditProjectBtnClick = () => {
     openDialog('project-form', {
@@ -60,11 +65,12 @@ function ProjectDetailActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'plus'} />}
-          text={<T id={'projcet_details.action.new_transaction'} />}
-          onClick={handleNewTransactionBtnClick}
+        <TransactionSelect
+          transactions={[
+            { name: 'Invoice', path: 'invoices/new' },
+            { name: 'Expenses', path: 'expenses/new' },
+          ]}
+          onItemSelect={handleNewTransactionBtnClick}
         />
         <Button
           className={Classes.MINIMAL}
