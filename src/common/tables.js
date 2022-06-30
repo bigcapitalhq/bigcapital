@@ -19,6 +19,8 @@ export const TABLES = {
   WAREHOUSE_TRANSFERS: 'warehouse_transfers',
   PROJECTS: 'projects',
   TIMESHEETS: 'timesheets',
+  PURCHASES: 'purchases',
+  SALES: 'sales',
 };
 
 export const TABLE_SIZE = {

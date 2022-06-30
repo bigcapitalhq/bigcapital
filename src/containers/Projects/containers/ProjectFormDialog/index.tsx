@@ -39,6 +39,7 @@ const ProjectFormDialogRoot = styled(Dialog)`
   .bp3-dialog-body {
     .bp3-form-group {
       margin-bottom: 15px;
+      margin-top: 15px;
 
       label.bp3-label {
         margin-bottom: 3px;

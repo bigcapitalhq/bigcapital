@@ -29,17 +29,17 @@ export const FinancialProgressBar = ({ ...rest }) => {
 
 const FinancialSectionWrap = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  margin: 20px 20px 20px;
+  /* flex-wrap: wrap; */
+  margin: 22px 32px;
   gap: 10px;
 `;
 
 const FinancialSectionCard = styled.div`
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
+  flex-shrink: 1;
   border-radius: 3px;
-  width: 220px;
+  width: 230px;
   height: 116px;
   background-color: #fff;
   border: 1px solid #c8cad0; // #000a1e33 #f0f0f0

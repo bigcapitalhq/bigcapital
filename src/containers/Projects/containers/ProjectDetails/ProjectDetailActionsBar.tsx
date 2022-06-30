@@ -40,7 +40,13 @@ function ProjectDetailActionsBar({
 
   // Handle new transaction button click.
   const handleNewTransactionBtnClick = ({ path }) => {
-    history.push(`/${path}`);
+    switch (path) {
+      case 'expense':
+        openDialog('expense-form', { projectId });
+        break;
+      case 'estimatedExpense':
+        openDialog('estimated-expense-form', { projectId });
+    }
   };
 
   const handleEditProjectBtnClick = () => {
@@ -50,7 +56,9 @@ function ProjectDetailActionsBar({
   };
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('timesheets', 'tableSize', size);
+    addSetting('timesheets', 'tableSize', size) &&
+      addSetting('sales', 'tableSize', size) &&
+      addSetting('purchases', 'tableSize', size);
   };
 
   const handleTimeEntryBtnClick = () => {
@@ -67,8 +75,8 @@ function ProjectDetailActionsBar({
       <NavbarGroup>
         <TransactionSelect
           transactions={[
-            { name: 'Invoice', path: 'invoices/new' },
-            { name: 'Expenses', path: 'expenses/new' },
+            { name: 'New Expense', path: 'expense' },
+            { name: 'New Estimated Expense', path: 'estimatedExpense' },
           ]}
           onItemSelect={handleNewTransactionBtnClick}
         />
@@ -105,8 +113,6 @@ function ProjectDetailActionsBar({
           initialValue={timesheetsTableSize}
           onChange={handleTableRowSizeChange}
         />
-        <NavbarDivider />
-        <Button icon={<Icon icon="more-vert" iconSize={16} />} minimal={true} />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
         <Button

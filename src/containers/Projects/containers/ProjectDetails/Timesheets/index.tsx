@@ -8,19 +8,19 @@ import TimesheetsHeader from './TimesheetsHeader';
  * Project Timesheet.
  * @returns
  */
-export default function ProjectTimesheet() {
+export default function TimeSheets() {
   return (
     <React.Fragment>
       <TimesheetsHeader />
-      <ProjectTimesheetTableCard>
+      <TimesheetTableCard>
         <TimesheetsTable />
-      </ProjectTimesheetTableCard>
+      </TimesheetTableCard>
     </React.Fragment>
   );
 }
 
-const ProjectTimesheetTableCard = styled.div`
-  margin: 20px;
+const TimesheetTableCard = styled.div`
+  margin: 22px 32px;
   border: 1px solid #c8cad0; // #000a1e33 #f0f0f0
   border-radius: 3px;
   background: #fff;

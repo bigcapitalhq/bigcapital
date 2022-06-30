@@ -4,12 +4,11 @@ import styled from 'styled-components';
 import { FormatDate, Icon, FormattedMessage as T } from 'components';
 import { Menu, MenuItem, Intent } from '@blueprintjs/core';
 import { safeCallback, firstLettersArgs } from 'utils';
-import { chain } from 'lodash';
+
 
 /**
  * Table actions cell.
  */
-
 export function ActionsMenu({
   payload: { onDelete, onViewDetails },
   row: { original },

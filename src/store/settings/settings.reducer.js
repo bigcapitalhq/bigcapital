@@ -67,6 +67,12 @@ const initialState = {
     timesheets: {
       tableSize: 'medium',
     },
+    purchases: {
+      tableSize: 'medium',
+    },
+    sales: {
+      tableSize: 'medium',
+    }
   },
 };
 

@@ -87,7 +87,7 @@ const TimesheetDataTable = styled(DataTable)`
 
     .tbody {
       .tr .td {
-        padding: 0.5rem 0.8rem;
+        /* padding: 0.5rem 0.8rem; */
       }
 
       .avatar.td {
@@ -114,11 +114,10 @@ const TimesheetDataTable = styled(DataTable)`
         }
       }
     }
-
-    .table-size--small {
-      .tbody .tr {
-        height: 45px;
-      }
+  }
+  .table-size--small {
+    .tbody .tr {
+      height: 45px;
     }
   }
 `;

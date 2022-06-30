@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
@@ -9,9 +10,8 @@ import {
   Row,
   FormattedMessage as T,
 } from 'components';
-import { modalChargeOptions } from '../../../../common/modalChargeOptions';
-
-import { TaskModalChargeSelect } from './components';
+import { taskChargeOptions } from 'common/modalChargeOptions';
+import { ChargeSelect } from '../../components';
 
 /**
  * Task form fields.
@@ -45,13 +45,16 @@ function TaskFormFields() {
             label={<T id={'task.dialog.charge'} />}
           >
             <ControlGroup>
-              <TaskModalChargeSelect
+              <ChargeSelect
                 name="taskCharge"
-                items={modalChargeOptions}
+                items={taskChargeOptions}
                 popoverProps={{ minimal: true }}
                 filterable={false}
               />
-              <FInputGroup name="taskamount" />
+              <FInputGroup
+                name="taskamount"
+                disabled={values?.taskCharge === 'Non-chargeable'}
+              />
             </ControlGroup>
           </FFormGroup>
         </Col>
