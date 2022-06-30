@@ -43,6 +43,8 @@ import VendorOpeningBalanceDialog from '../containers/Dialogs/VendorOpeningBalan
 import ProjectFormDialog from '../containers/Projects/containers/ProjectFormDialog';
 import TaskFormDialog from '../containers/Projects/containers/TaskFormDialog';
 import TimeEntryFormDialog from '../containers/Projects/containers/TimeEntryFormDialog';
+import ExpenseFormDialog from '../containers/Projects/containers/ExpenseFormDialog';
+import EstimatedExpenseFormDialog from '../containers/Projects/containers/EstimatedExpenseFormDialog';
 
 /**
  * Dialogs container.
@@ -96,6 +98,8 @@ export default function DialogsContainer() {
       <ProjectFormDialog dialogName={'project-form'} />
       <TaskFormDialog dialogName={'task-form'} />
       <TimeEntryFormDialog dialogName={'time-entry-form'} />
+      <ExpenseFormDialog dialogName={'expense-form'} />
+      <EstimatedExpenseFormDialog dialogName={'estimated-expense-form'} />
     </div>
   );
 }
