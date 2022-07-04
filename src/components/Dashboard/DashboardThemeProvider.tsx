@@ -3,7 +3,13 @@ import { ThemeProvider, StyleSheetManager } from 'styled-components';
 import rtlcss from 'stylis-rtlcss';
 import { useAppIntlContext } from '../AppIntlProvider';
 
-export function DashboardThemeProvider({ children }) {
+interface DashboardThemeProviderProps {
+  children: React.ReactNode;
+}
+
+export function DashboardThemeProvider({
+  children,
+}: DashboardThemeProviderProps) {
   const { direction } = useAppIntlContext();
 
   return (

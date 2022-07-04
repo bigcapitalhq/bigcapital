@@ -1,6 +1,6 @@
 import React from 'react';
 import { FastField } from 'formik';
-import classNames from 'classNames';
+import classNames from 'classnames';
 import { CLASSES } from '@/common/classes';
 import MakeJournalEntriesTable from './MakeJournalEntriesTable';
 import { entriesFieldShouldUpdate, defaultEntry, MIN_LINES_NUMBER } from './utils';

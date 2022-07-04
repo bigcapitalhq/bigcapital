@@ -9,10 +9,10 @@ import 'moment/locale/ar-ly';
 import 'moment/locale/es-us';
 
 import AppIntlLoader from './AppIntlLoader';
-import PrivateRoute from 'components/Guards/PrivateRoute';
-import GlobalErrors from 'containers/GlobalErrors/GlobalErrors';
-import DashboardPrivatePages from 'components/Dashboard/PrivatePages';
-import Authentication from 'components/Authentication';
+import PrivateRoute from '@/components/Guards/PrivateRoute';
+import GlobalErrors from '@/containers/GlobalErrors/GlobalErrors';
+import DashboardPrivatePages from '@/components/Dashboard/PrivatePages';
+import Authentication from '@/components/Authentication';
 
 import { SplashScreen, DashboardThemeProvider } from '../components';
 import { queryConfig } from '../hooks/query/base';

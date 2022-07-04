@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { getColumnWidth } from 'utils';
 import { FormatNumberCell, TextOverviewTooltipCell } from '../../../components';
-import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider.js';
+import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 
 export const useReceiptReadonlyEntriesTableColumns = () => {
   // Receipt details drawer context.

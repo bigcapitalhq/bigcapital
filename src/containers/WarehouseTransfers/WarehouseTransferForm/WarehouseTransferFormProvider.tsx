@@ -1,4 +1,5 @@
 import React from 'react';
+import { isEmpty } from 'lodash';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useItems,
@@ -10,8 +11,7 @@ import {
 } from 'hooks/query';
 import { Features } from 'common';
 import { useFeatureCan } from 'hooks/state';
-import { ITEMS_FILTER_ROLES_QUERY } from './utils.js';
-import { isEmpty } from 'lodash';
+import { ITEMS_FILTER_ROLES_QUERY } from './utils';
 
 const WarehouseFormContext = React.createContext();
 
