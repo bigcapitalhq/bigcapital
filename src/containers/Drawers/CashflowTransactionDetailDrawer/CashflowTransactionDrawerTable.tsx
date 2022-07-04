@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CommercialDocEntriesTable } from 'components';
+import { CommercialDocEntriesTable } from '@/components';
 
 import { useCashflowTransactionColumns } from './utils';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';

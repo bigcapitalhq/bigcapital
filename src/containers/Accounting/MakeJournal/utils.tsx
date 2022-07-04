@@ -13,7 +13,7 @@ import {
   formattedAmount,
   safeSumBy,
 } from 'utils';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import intl from 'react-intl-universal';
 import { useFormikContext } from 'formik';
 import { useMakeJournalFormContext } from './MakeJournalProvider';

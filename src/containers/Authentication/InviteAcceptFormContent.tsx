@@ -2,10 +2,10 @@ import React from 'react';
 import { Button, InputGroup, Intent, FormGroup } from '@blueprintjs/core';
 import { Form, ErrorMessage, FastField, useFormikContext } from 'formik';
 import { Link } from 'react-router-dom';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { inputIntent } from 'utils';
-import { Col, Row } from 'components';
+import { Col, Row } from '@/components';
 import { useInviteAcceptContext } from './InviteAcceptProvider';
 import { PasswordRevealer } from './components';
 /**

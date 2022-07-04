@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from 'components/Icon';
+import Icon from '@/components/Icon';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 

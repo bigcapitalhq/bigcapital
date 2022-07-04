@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from 'common/classes';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import PaymentMadeHeader from './PaymentMadeFormHeader';
 import PaymentMadeFloatingActions from './PaymentMadeFloatingActions';
 import PaymentMadeFooter from './PaymentMadeFooter';

@@ -13,10 +13,10 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import { CLASSES } from 'common/classes';
-import { Icon } from 'components';
+import { Icon } from '@/components';
 import { useVendorFormContext } from './VendorFormProvider';
 
 import { safeInvoke } from 'utils';

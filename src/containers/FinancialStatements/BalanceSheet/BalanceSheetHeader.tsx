@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Formik, Form } from 'formik';
 import styled from 'styled-components';
 
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';

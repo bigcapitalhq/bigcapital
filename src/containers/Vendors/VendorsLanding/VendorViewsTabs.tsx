@@ -3,7 +3,7 @@ import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { compose } from 'redux';
 
 import { useVendorsListContext } from './VendorsListProvider';
-import { DashboardViewsTabs } from 'components';
+import { DashboardViewsTabs } from '@/components';
 
 import withVendorsActions from './withVendorsActions';
 import withVendors from './withVendors';

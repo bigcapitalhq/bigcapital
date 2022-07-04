@@ -1,13 +1,13 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { DataTable } from 'components';
+import { DataTable } from '@/components';
 
 import styled from 'styled-components';
 import * as R from 'ramda';
 
-import { CurrencyTag } from 'components';
+import { CurrencyTag } from '@/components';
 import { TableStyle } from '../../common';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 import { useGLEntriesTableColumns } from './utils';

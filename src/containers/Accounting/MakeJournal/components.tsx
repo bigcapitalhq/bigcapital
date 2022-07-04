@@ -9,7 +9,7 @@ import {
   Icon,
   Hint,
   FormattedMessage as T,
-} from 'components';
+} from '@/components';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,

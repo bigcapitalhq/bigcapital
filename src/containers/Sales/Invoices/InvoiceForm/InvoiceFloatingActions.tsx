@@ -10,13 +10,13 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
 
 import { useInvoiceFormContext } from './InvoiceFormProvider';
-import { If, Icon } from 'components';
+import { If, Icon } from '@/components';
 
 /**
  * Invoice floating actions bar.

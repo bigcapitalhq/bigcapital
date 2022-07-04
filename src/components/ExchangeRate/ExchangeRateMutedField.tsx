@@ -9,7 +9,7 @@ import {
   Position,
   Classes,
 } from '@blueprintjs/core';
-import { ExchangeRateInputGroup, Icon } from 'components';
+import { ExchangeRateInputGroup, Icon } from '@/components';
 
 export function ExchangeRateMutedField({
   name,

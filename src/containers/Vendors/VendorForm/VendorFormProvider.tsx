@@ -1,7 +1,7 @@
 import React, { useState, createContext } from 'react';
 import { omit, pick } from 'lodash';
 import { useLocation } from 'react-router-dom';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 import {
   useVendor,
   useContact,

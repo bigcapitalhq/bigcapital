@@ -7,8 +7,8 @@ import { ErrorMessage, FastField } from 'formik';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { FormattedMessage as T } from 'components';
-import { ListSelect, FieldRequiredHint } from 'components';
+import { FormattedMessage as T } from '@/components';
+import { ListSelect, FieldRequiredHint } from '@/components';
 import { inputIntent } from 'utils';
 import { CLASSES } from 'common/classes';
 import { getCountries } from 'common/countries';

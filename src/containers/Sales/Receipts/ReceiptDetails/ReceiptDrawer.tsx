@@ -1,7 +1,7 @@
 import React, { lazy } from 'react';
 import withDrawers from 'containers/Drawer/withDrawers';
 
-import { Drawer, DrawerSuspense } from 'components';
+import { Drawer, DrawerSuspense } from '@/components';
 import { compose } from 'utils';
 
 const ReceiptDrawerContent = lazy(() => import('./ReceiptDrawerContent'));

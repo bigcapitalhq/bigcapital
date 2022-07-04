@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { FinancialStatement } from 'components';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import { FinancialStatement } from '@/components';
+import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 
 import RealizedGainOrLossHeader from './RealizedGainOrLossHeader';
 import RealizedGainOrLossActionsBar from './RealizedGainOrLossActionsBar';

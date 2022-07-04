@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FormGroup, Classes } from '@blueprintjs/core';
-import { BranchMultiSelect, WarehouseMultiSelect, Row, Col } from 'components';
+import { BranchMultiSelect, WarehouseMultiSelect, Row, Col } from '@/components';
 import {
   InventoryValuationHeaderDimensionsProvider,
   useInventoryValuationHeaderDimensionsPanelContext,

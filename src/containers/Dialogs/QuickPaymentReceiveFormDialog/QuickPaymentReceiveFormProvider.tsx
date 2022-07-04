@@ -1,6 +1,6 @@
 import React, { useContext, createContext } from 'react';
 import { pick } from 'lodash';
-import { DialogContent } from 'components';
+import { DialogContent } from '@/components';
 import { Features } from 'common';
 import { useFeatureCan } from 'hooks/state';
 import {

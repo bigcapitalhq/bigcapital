@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
-import { FormattedMessage as T, AppToaster } from 'components';
+import { FormattedMessage as T, AppToaster } from '@/components';
 
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';

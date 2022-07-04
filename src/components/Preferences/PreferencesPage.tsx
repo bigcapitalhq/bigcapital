@@ -5,10 +5,10 @@ import * as R from 'ramda';
 
 import { CLASSES } from 'common/classes';
 
-import PreferencesTopbar from 'components/Preferences/PreferencesTopbar';
-import PreferencesContentRoute from 'components/Preferences/PreferencesContentRoute';
-import DashboardErrorBoundary from 'components/Dashboard/DashboardErrorBoundary';
-import PreferencesSidebar from 'components/Preferences/PreferencesSidebar';
+import PreferencesTopbar from '@/components/Preferences/PreferencesTopbar';
+import PreferencesContentRoute from '@/components/Preferences/PreferencesContentRoute';
+import DashboardErrorBoundary from '@/components/Dashboard/DashboardErrorBoundary';
+import PreferencesSidebar from '@/components/Preferences/PreferencesSidebar';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 

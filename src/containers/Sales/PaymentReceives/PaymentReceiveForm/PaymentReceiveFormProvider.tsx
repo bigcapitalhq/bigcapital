@@ -2,7 +2,7 @@ import React, { createContext, useContext } from 'react';
 import { isEqual, isUndefined } from 'lodash';
 import { Features } from 'common';
 import { useFeatureCan } from 'hooks/state';
-import { DashboardInsider } from 'components';
+import { DashboardInsider } from '@/components';
 import {
   useSettingsPaymentReceives,
   usePaymentReceiveEditPage,

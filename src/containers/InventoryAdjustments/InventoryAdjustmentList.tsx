@@ -2,7 +2,7 @@ import React from 'react';
 
 import 'style/pages/InventoryAdjustments/List.scss';
 
-import { DashboardContentTable, DashboardPageContent } from 'components';
+import { DashboardContentTable, DashboardPageContent } from '@/components';
 
 import { InventoryAdjustmentsProvider } from './InventoryAdjustmentsProvider';
 import InventoryAdjustmentTable from './InventoryAdjustmentTable';

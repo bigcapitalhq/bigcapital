@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CommercialDocEntriesTable  } from 'components';
+import { CommercialDocEntriesTable  } from '@/components';
 import { useManualJournalEntriesColumns } from './utils';
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 

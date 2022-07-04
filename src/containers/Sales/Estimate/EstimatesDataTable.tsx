@@ -10,7 +10,7 @@ import {
   Tag,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import moment from 'moment';
 
@@ -18,8 +18,8 @@ import { CLASSES } from 'common/classes';
 import { compose, saveInvoke } from 'utils';
 import { useIsValuePassed } from 'hooks';
 
-import LoadingIndicator from 'components/LoadingIndicator';
-import { DataTable, Money, Choose, Icon, If } from 'components';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { DataTable, Money, Choose, Icon, If } from '@/components';
 import EstimatesEmptyStatus from './EstimatesEmptyStatus';
 import { statusAccessor } from './components';
 import withEstimates from './withEstimates';

@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import classNames from 'classnames';
 import { camelCase} from 'lodash';
 
-import { If, Skeleton } from 'components';
-import { useAppIntlContext } from 'components/AppIntlProvider';
+import { If, Skeleton } from '@/components';
+import { useAppIntlContext } from '@/components/AppIntlProvider';
 import TableContext from './TableContext';
 import { saveInvoke, ignoreEventFromSelectors } from 'utils';
 import { isCellLoading } from './utils';

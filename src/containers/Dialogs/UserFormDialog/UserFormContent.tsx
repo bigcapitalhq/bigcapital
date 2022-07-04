@@ -7,11 +7,11 @@ import {
   Button,
 } from '@blueprintjs/core';
 import { FastField, Form, useFormikContext, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
 import { inputIntent } from 'utils';
-import { ListSelect, FieldRequiredHint } from 'components';
+import { ListSelect, FieldRequiredHint } from '@/components';
 import { useUserFormContext } from './UserFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';

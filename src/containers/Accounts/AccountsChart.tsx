@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 import 'style/pages/Accounts/List.scss';
-import { DashboardPageContent, DashboardContentTable } from 'components';
+import { DashboardPageContent, DashboardContentTable } from '@/components';
 
 import { AccountsChartProvider } from './AccountsChartProvider';
 

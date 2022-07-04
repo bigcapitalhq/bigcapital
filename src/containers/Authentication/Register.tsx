@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { FormattedMessage as T } from 'components';
-import AppToaster from 'components/AppToaster';
+import { FormattedMessage as T } from '@/components';
+import AppToaster from '@/components/AppToaster';
 import AuthInsider from 'containers/Authentication/AuthInsider';
 import {
   useAuthLogin,

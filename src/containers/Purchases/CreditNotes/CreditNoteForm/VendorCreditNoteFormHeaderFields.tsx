@@ -19,7 +19,7 @@ import {
   Icon,
   FormattedMessage as T,
   VendorDrawerLink,
-} from 'components';
+} from '@/components';
 import {
   vendorsFieldShouldUpdate,
   useObserveVendorCreditNoSettings,

@@ -3,9 +3,9 @@ import * as Yup from 'yup';
 import intl from 'react-intl-universal';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { inputIntent } from 'utils';
-import { ListSelect, FieldRequiredHint } from 'components';
+import { ListSelect, FieldRequiredHint } from '@/components';
 import { Button, FormGroup, Intent, Classes } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { useHistory } from 'react-router-dom';
 import { useContactDuplicateFromContext } from './ContactDuplicateProvider';
 

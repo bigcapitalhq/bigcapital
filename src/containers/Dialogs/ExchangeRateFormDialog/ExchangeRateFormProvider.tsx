@@ -5,7 +5,7 @@ import {
   useCurrencies,
   useExchangeRates,
 } from 'hooks/query';
-import { DialogContent } from 'components';
+import { DialogContent } from '@/components';
 
 const ExchangeRateFormContext = createContext();
 

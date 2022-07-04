@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { isEqual } from 'lodash';
 import intl from 'react-intl-universal';
 import {
@@ -16,7 +16,7 @@ import { useAutofocus } from 'hooks';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { DateInput } from '@blueprintjs/datetime';
-import { FieldRequiredHint, Col, Row } from 'components';
+import { FieldRequiredHint, Col, Row } from '@/components';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
 import { Features } from 'common';
 import {
@@ -29,7 +29,7 @@ import {
   ExchangeRateMutedField,
   BranchSelect,
   BranchSelectButton,
-} from 'components';
+} from '@/components';
 import {
   inputIntent,
   momentFormatter,

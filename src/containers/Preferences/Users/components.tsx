@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import {
   Intent,
@@ -12,7 +12,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { safeCallback, firstLettersArgs } from 'utils';
-import { Icon, If } from 'components';
+import { Icon, If } from '@/components';
 
 /**
  * Avatar cell.

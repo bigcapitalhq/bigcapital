@@ -2,11 +2,11 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import CustomersEmptyStatus from './CustomersEmptyStatus';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
+import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
 import { TABLES } from 'common/tables';
-import { DataTable, DashboardContentTable } from 'components';
+import { DataTable, DashboardContentTable } from '@/components';
 import { ActionsMenu, useCustomersTableColumns } from './components';
 
 import withCustomers from './withCustomers';

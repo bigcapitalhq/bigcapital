@@ -1,5 +1,5 @@
 import React from 'react';
-import { Money } from 'components';
+import { Money } from '@/components';
 import intl from 'react-intl-universal';
 import { useContactDetailDrawerContext } from './ContactDetailDrawerProvider';
 import { DetailItem } from '../../../components/Details';

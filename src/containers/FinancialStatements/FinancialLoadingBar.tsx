@@ -1,5 +1,5 @@
 import React from 'react';
-import { MaterialProgressBar } from 'components';
+import { MaterialProgressBar } from '@/components';
 
 /**
  * Financnail progress bar.

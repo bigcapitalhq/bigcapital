@@ -2,9 +2,9 @@ import React from 'react';
 import { FastField, Field } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
 import { Classes, FormGroup, Position, Checkbox } from '@blueprintjs/core';
-import { ContactsMultiSelect, FormattedMessage as T } from 'components';
+import { ContactsMultiSelect, FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
-import { Row, Col, FieldHint } from 'components';
+import { Row, Col, FieldHint } from '@/components';
 import { filterCustomersOptions } from '../constants';
 
 import {

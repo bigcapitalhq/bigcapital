@@ -7,7 +7,7 @@ import {
   Radio,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
+import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { ErrorMessage, FastField } from 'formik';
 import {
   CategoriesSelectList,
@@ -15,7 +15,7 @@ import {
   Col,
   Row,
   FieldRequiredHint,
-} from 'components';
+} from '@/components';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 

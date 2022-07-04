@@ -1,7 +1,7 @@
 import React from 'react';
 import { compose } from 'utils';
 
-import { DashboardContentTable, DashboardPageContent } from 'components';
+import { DashboardContentTable, DashboardPageContent } from '@/components';
 
 import ExchangeRateTable from './ExchangeRateTable';
 import ExchangeRateActionsBar from './ExchangeRateActionsBar';

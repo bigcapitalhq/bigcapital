@@ -15,8 +15,8 @@ import {
   FeatureCan,
   Row,
   Col,
-} from 'components';
-import { FormattedMessage as T } from 'components';
+} from '@/components';
+import { FormattedMessage as T } from '@/components';
 
 import { useCustomerFormContext } from './CustomerFormProvider';
 import { useSetPrimaryBranchToForm } from './utils';

@@ -6,7 +6,7 @@ import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import InventoryItemDetailsHeaderGeneralPanel from './InventoryItemDetailsHeaderGeneralPanel';

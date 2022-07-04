@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import { DataTable, Money } from 'components';
+import { DataTable, Money } from '@/components';
 
 export default function DrawerTemplateTable({ tableData, currencyCode }) {
   const columns = useMemo(

@@ -20,7 +20,7 @@ import {
   Icon,
   FormattedMessage as T,
   If,
-} from 'components';
+} from '@/components';
 import {
   CreditNoteAction,
   AbilitySubject,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAccount, useAccountTransactions } from 'hooks/query';
-import { DrawerHeaderContent, DrawerLoading } from 'components';
+import { DrawerHeaderContent, DrawerLoading } from '@/components';
 
 const AccountDrawerContext = React.createContext();
 

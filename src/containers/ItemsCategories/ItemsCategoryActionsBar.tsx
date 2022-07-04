@@ -6,11 +6,11 @@ import {
   Classes,
   Intent,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
-import { If, Icon } from 'components';
+import { FormattedMessage as T } from '@/components';
+import { If, Icon } from '@/components';
 
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import { AdvancedFilterPopover, DashboardFilterButton } from 'components';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
+import { AdvancedFilterPopover, DashboardFilterButton } from '@/components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withItemCategories from './withItemCategories';

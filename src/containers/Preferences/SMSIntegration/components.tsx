@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { Intent, Button, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 
-import { SwitchFieldCell } from 'components/DataTableCells';
+import { SwitchFieldCell } from '@/components/DataTableCells';
 import { safeInvoke } from 'utils';
 
 /**

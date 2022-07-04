@@ -1,8 +1,8 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 
-import { If } from 'components';
-import { CellTextSpan } from 'components/Datatable/Cells';
+import { If } from '@/components';
+import { CellTextSpan } from '@/components/Datatable/Cells';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 

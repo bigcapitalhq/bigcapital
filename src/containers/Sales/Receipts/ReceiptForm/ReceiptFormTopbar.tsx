@@ -21,7 +21,7 @@ import {
   WarehouseSelect,
   FormTopbar,
   DetailsBarSkeletonBase,
-} from 'components';
+} from '@/components';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import { Features } from 'common';
 

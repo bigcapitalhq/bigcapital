@@ -4,7 +4,7 @@ import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
 import '../../../style/pages/ReconcileCreditNote/ReconcileCreditNoteForm.scss';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { CreateReconcileCreditNoteFormSchema } from './ReconcileCreditNoteForm.schema';
 import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
 import ReconcileCreditNoteFormContent from './ReconcileCreditNoteFormContent';

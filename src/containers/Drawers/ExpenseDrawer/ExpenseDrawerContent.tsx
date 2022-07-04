@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { DrawerBody } from 'components';
+import { DrawerBody } from '@/components';
 
 import { ExpenseDrawerProvider } from './ExpenseDrawerProvider';
 import ExpenseDrawerDetails from './ExpenseDrawerDetails';

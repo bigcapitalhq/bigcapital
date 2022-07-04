@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useEffect, useState } from 'react';
 import { MenuItem } from '@blueprintjs/core';
-import ListSelect from 'components/ListSelect';
+import ListSelect from '@/components/ListSelect';
 
 function ItemsListField({
   items,

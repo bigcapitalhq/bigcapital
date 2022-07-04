@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashboardContentTable, DashboardPageContent } from 'components';
+import { DashboardContentTable, DashboardPageContent } from '@/components';
 
 import 'style/pages/SaleReceipt/List.scss';
 

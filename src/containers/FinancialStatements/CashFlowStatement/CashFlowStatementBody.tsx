@@ -3,7 +3,7 @@ import * as R from 'ramda';
 
 import CashFlowStatementTable from './CashFlowStatementTable';
 import { FinancialReportBody } from '../FinancialReportPage';
-import { FinancialSheetSkeleton } from 'components/FinancialSheet';
+import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 
 import { useCashFlowStatementContext } from './CashFlowStatementProvider';
 import withCurrentOrganization from '../../Organization/withCurrentOrganization';

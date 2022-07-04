@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 
-import { If } from 'components';
-import { CellTextSpan } from 'components/Datatable/Cells';
+import { If } from '@/components';
+import { CellTextSpan } from '@/components/Datatable/Cells';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 

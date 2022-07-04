@@ -2,7 +2,7 @@ import React from 'react';
 
 import 'style/components/Drawers/ItemDrawer.scss';
 
-import { DrawerBody } from 'components';
+import { DrawerBody } from '@/components';
 import ItemContentDetails from './ItemContentDetails';
 import { ItemDetailDrawerProvider } from './ItemDetailDrawerProvider';
 

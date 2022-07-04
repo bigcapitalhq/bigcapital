@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import moment from 'moment';
 import { Button } from '@blueprintjs/core';
 
-import { Icon, If, FormattedMessage as T } from 'components';
+import { Icon, If, FormattedMessage as T } from '@/components';
 import { useJournalSheetContext } from './JournalProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 

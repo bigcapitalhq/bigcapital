@@ -5,7 +5,7 @@ import * as R from 'ramda';
 import { first } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import {
   defaultFastFieldShouldUpdate,
   transformToForm,

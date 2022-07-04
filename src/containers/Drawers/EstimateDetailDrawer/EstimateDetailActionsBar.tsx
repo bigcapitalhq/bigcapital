@@ -25,7 +25,7 @@ import {
   FormattedMessage as T,
   MoreMenuItems,
   Can,
-} from 'components';
+} from '@/components';
 
 import { compose } from 'utils';
 

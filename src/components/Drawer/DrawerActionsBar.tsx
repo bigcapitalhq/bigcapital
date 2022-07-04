@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 export function DrawerActionsBar({ ...props }) {
   return <DrawerActionsBarRoot {...props} />;

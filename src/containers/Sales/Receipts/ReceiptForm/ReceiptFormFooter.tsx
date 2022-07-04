@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import styled from 'styled-components';
 
 import { CLASSES } from 'common/classes';
-import { Paper, Row, Col } from 'components';
+import { Paper, Row, Col } from '@/components';
 import { ReceiptFormFooterLeft } from './ReceiptFormFooterLeft';
 import { ReceiptFormFooterRight } from './ReceiptFormFooterRight';
 

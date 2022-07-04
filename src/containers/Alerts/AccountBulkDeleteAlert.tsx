@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 
 import { handleDeleteErrors } from 'containers/Accounts/utils';
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 import '../../../../style/pages/CreditNote/List.scss';
 
-import { DashboardPageContent } from 'components';
+import { DashboardPageContent } from '@/components';
 import CreditNotesActionsBar from './CreditNotesActionsBar';
 import CreditNotesViewTabs from './CreditNotesViewTabs';
 import CreditNotesDataTable from './CreditNotesDataTable';

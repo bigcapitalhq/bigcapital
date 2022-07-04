@@ -11,7 +11,7 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-} from 'components';
+} from '@/components';
 import ReconcileVendorCreditEntriesTable from './ReconcileVendorCreditEntriesTable';
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
 import { formattedAmount } from 'utils';

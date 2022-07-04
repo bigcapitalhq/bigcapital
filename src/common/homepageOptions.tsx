@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import {
   SaleInvoiceAction,
   SaleEstimateAction,

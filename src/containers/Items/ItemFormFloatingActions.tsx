@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { FastField, useFormikContext } from 'formik';
 import classNames from 'classnames';
 
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import { CLASSES } from 'common/classes';
 import { useItemFormContext } from './ItemFormProvider';

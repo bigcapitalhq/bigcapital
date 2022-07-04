@@ -10,8 +10,8 @@ import {
   Position,
   Divider,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
-import { Icon } from 'components';
+import { FormattedMessage as T } from '@/components';
+import { Icon } from '@/components';
 
 /**
  * Dashboard action views list.

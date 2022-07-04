@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useFormikContext, FastField, ErrorMessage } from 'formik';
 import { Intent, Button, FormGroup, TextArea } from '@blueprintjs/core';
 
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
 

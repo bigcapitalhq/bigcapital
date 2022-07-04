@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { ReportDataTable, FinancialSheet } from 'components';
+import { ReportDataTable, FinancialSheet } from '@/components';
 
 import { useSalesByItemsContext } from './SalesByItemProvider';
 import { useSalesByItemsTableColumns } from './components';

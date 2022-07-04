@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { omit } from 'lodash';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { CreateBadDebtFormSchema } from './BadDebtForm.schema';
 import { transformErrors } from './utils';
 

@@ -6,7 +6,7 @@ import * as R from 'ramda';
 import intl from 'react-intl-universal';
 import { CLASSES } from 'common/classes';
 
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 

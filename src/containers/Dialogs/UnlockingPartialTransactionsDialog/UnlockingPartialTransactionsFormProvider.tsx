@@ -1,5 +1,5 @@
 import React from 'react';
-import { DialogContent } from 'components';
+import { DialogContent } from '@/components';
 import { useCreateUnlockingPartialTransactions } from 'hooks/query';
 
 const UnlockingPartialTransactionsContext = React.createContext();

@@ -29,7 +29,7 @@ import {
   BranchSelect,
   BranchSelectButton,
   FeatureCan,
-} from 'components';
+} from '@/components';
 import {
   inputIntent,
   momentFormatter,

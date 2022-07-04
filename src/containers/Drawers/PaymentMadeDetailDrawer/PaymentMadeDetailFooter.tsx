@@ -6,7 +6,7 @@ import {
   DetailsMenu,
   If,
   DetailItem,
-} from 'components';
+} from '@/components';
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
 
 /**

@@ -4,7 +4,7 @@ import { Field } from 'formik';
 import classNames from 'classnames';
 import { filterItemsOptions } from '../constants';
 
-import { Row, Col, ItemsMultiSelect, FormattedMessage as T } from 'components';
+import { Row, Col, ItemsMultiSelect, FormattedMessage as T } from '@/components';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import {

@@ -2,9 +2,9 @@ import React, { useMemo } from 'react';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
 import moment from 'moment';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import {
   CreateExchangeRateFormSchema,
   EditExchangeRateFormSchema,

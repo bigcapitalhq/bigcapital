@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import { omit, pick, first, sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import {
   defaultFastFieldShouldUpdate,

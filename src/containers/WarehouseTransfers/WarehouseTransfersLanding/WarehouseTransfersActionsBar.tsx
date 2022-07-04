@@ -15,8 +15,8 @@ import {
   DashboardFilterButton,
   DashboardRowsHeightButton,
   DashboardActionViewsList,
-} from 'components';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+} from '@/components';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
 

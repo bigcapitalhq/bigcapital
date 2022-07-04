@@ -19,7 +19,7 @@ import {
   Choose,
   Can,
   TextOverviewTooltipCell,
-} from 'components';
+} from '@/components';
 import {
   SaleInvoiceAction,
   AbilitySubject,

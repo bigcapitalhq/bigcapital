@@ -1,7 +1,7 @@
 import React from 'react';
 import { isEmpty } from 'lodash';
 import { Features } from 'common';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 import { useFeatureCan } from 'hooks/state';
 import {
   useResourceViews,

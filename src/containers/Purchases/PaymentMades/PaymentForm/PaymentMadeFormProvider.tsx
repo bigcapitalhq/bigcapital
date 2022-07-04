@@ -11,7 +11,7 @@ import {
   useCreatePaymentMade,
   useEditPaymentMade,
 } from 'hooks/query';
-import { DashboardInsider } from 'components';
+import { DashboardInsider } from '@/components';
 
 // Payment made form context.
 const PaymentMadeFormContext = createContext();

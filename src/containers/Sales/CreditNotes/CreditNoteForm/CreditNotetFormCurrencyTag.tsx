@@ -1,5 +1,5 @@
 import React from 'react';
-import { BaseCurrency, BaseCurrencyRoot } from 'components';
+import { BaseCurrency, BaseCurrencyRoot } from '@/components';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 
 /**

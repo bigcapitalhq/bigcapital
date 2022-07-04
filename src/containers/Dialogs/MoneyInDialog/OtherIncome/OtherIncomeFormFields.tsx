@@ -25,7 +25,7 @@ import {
   BranchSelectButton,
   InputPrependButton,
   ExchangeRateMutedField,
-} from 'components';
+} from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from 'hooks';
 import { ACCOUNT_TYPE } from 'common/accountTypes';

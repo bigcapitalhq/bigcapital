@@ -17,7 +17,7 @@ import {
   Icon,
   FormattedMessage as T,
   CustomerDrawerLink,
-} from 'components';
+} from '@/components';
 import {
   customerNameFieldShouldUpdate,
   useObserveCreditNoSettings,

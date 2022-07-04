@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from 'components/Icon';
+import Icon from '@/components/Icon';
 import {
   Button,
   Classes,
@@ -18,8 +18,8 @@ import {
   DashboardActionViewsList,
   DashboardFilterButton,
   DashboardRowsHeightButton,
-} from 'components';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+} from '@/components';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import withEstimatesActions from './withEstimatesActions';
 import withEstimates from './withEstimates';

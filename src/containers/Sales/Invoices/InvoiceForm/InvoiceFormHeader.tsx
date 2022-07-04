@@ -6,7 +6,7 @@ import intl from 'react-intl-universal';
 import { CLASSES } from 'common/classes';
 import InvoiceFormHeaderFields from './InvoiceFormHeaderFields';
 
-import { PageFormBigNumber } from 'components';
+import { PageFormBigNumber } from '@/components';
 import { useInvoiceTotal } from './utils';
 
 /**

@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { useCashflowTransaction } from 'hooks/query';
 
-import { DrawerLoading, DrawerHeaderContent } from 'components';
+import { DrawerLoading, DrawerHeaderContent } from '@/components';
 
 const CashflowTransactionDrawerContext = React.createContext();
 

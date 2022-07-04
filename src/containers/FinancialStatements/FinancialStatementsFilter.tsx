@@ -6,12 +6,12 @@ import {
   Position,
   FormGroup,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 import { FastField } from 'formik';
 
 import { CLASSES } from 'common/classes';
-import { ListSelect, MODIFIER } from 'components';
+import { ListSelect, MODIFIER } from '@/components';
 import { filterAccountsOptions } from './constants';
 
 export default function FinancialStatementsFilter({

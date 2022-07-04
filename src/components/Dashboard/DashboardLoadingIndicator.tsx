@@ -1,5 +1,5 @@
 import React from 'react';
-import { Choose } from 'components';
+import { Choose } from '@/components';
 import BigcapitalLoading from './BigcapitalLoading';
 
 /**

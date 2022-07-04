@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CommercialDocEntriesTable } from 'components';
+import { CommercialDocEntriesTable } from '@/components';
 
 import { usePaymentMadeEntriesColumns } from './utils';
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';

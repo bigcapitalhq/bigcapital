@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
-import { FFormGroup, FEditableText, FormattedMessage as T } from 'components';
+import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
 
 export function WarehouseTransferFormFooterLeft() {
   return (

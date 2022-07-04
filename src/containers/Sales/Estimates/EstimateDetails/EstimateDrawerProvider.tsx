@@ -1,6 +1,6 @@
 import React, { createContext } from 'react';
 import { useEstimate } from 'hooks/query';
-import { DrawerHeaderContent, DashboardInsider } from 'components';
+import { DrawerHeaderContent, DashboardInsider } from '@/components';
 
 const EstimateDrawerContext = createContext();
 

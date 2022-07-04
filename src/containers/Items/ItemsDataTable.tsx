@@ -1,12 +1,12 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
-import { DashboardContentTable, DataTable } from 'components';
+import { DashboardContentTable, DataTable } from '@/components';
 
 import ItemsEmptyStatus from './ItemsEmptyStatus';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
+import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
 import { TABLES } from 'common/tables';
 

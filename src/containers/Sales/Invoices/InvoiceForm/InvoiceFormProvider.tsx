@@ -3,7 +3,7 @@ import { isEmpty, pick } from 'lodash';
 import { useLocation } from 'react-router-dom';
 import { Features } from 'common';
 import { useFeatureCan } from 'hooks/state';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 import { transformToEditForm, ITEMS_FILTER_ROLES_QUERY } from './utils';
 import {
   useInvoice,

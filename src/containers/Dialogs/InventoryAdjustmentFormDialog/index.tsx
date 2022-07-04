@@ -1,7 +1,7 @@
 import React, { lazy } from 'react';
-import { FormattedMessage as T } from 'components';
-import { Dialog, DialogSuspense } from 'components';
-import withDialogRedux from 'components/DialogReduxConnect';
+import { FormattedMessage as T } from '@/components';
+import { Dialog, DialogSuspense } from '@/components';
+import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from 'redux';
 
 const InventoryAdjustmentFormDialogContent = lazy(() =>

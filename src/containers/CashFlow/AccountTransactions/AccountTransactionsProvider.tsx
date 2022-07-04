@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { flatten, map } from 'lodash';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import { IntersectionObserver } from 'components';
+import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { IntersectionObserver } from '@/components';
 import {
   useAccountTransactionsInfinity,
   useCashflowAccounts,

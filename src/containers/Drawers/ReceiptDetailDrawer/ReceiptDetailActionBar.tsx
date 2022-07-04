@@ -19,7 +19,7 @@ import {
   FormattedMessage as T,
   MoreMenuItems,
   DrawerActionsBar,
-} from 'components';
+} from '@/components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import {
   SaleReceiptAction,

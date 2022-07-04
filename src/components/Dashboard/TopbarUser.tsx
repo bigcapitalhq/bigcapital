@@ -8,7 +8,7 @@ import {
   Popover,
   Position,
 } from '@blueprintjs/core';
-import { If, FormattedMessage as T } from 'components';
+import { If, FormattedMessage as T } from '@/components';
 
 import { firstLettersArgs } from 'utils';
 import { useAuthActions } from 'hooks/state';

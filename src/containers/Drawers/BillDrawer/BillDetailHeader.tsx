@@ -13,7 +13,7 @@ import {
   CommercialDocTopHeader,
   VendorDrawerLink,
   ExchangeRateDetailItem,
-} from 'components';
+} from '@/components';
 
 import { useBillDrawerContext } from './BillDrawerProvider';
 import { BillDetailsStatus } from './utils';

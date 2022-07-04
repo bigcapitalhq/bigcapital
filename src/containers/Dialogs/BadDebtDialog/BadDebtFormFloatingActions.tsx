@@ -1,7 +1,7 @@
 import React from 'react';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import { useBadDebtContext } from './BadDebtFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';

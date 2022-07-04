@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 
 import WorkflowIcon from './WorkflowIcon';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import withOrganizationActions from 'containers/Organization/withOrganizationActions';
 import { compose } from 'utils';

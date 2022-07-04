@@ -22,7 +22,7 @@ import EstimtaeFormTopBar from './EstimtaeFormTopBar';
 import withSettings from 'containers/Settings/withSettings';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { compose, transactionNumber, orderingLinesIndexes } from 'utils';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import {

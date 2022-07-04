@@ -4,7 +4,7 @@ import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
 
 import { CLASSES } from 'common/classes';
-import { PageFormBigNumber } from 'components';
+import { PageFormBigNumber } from '@/components';
 import ReceiptFormHeaderFields from './ReceiptFormHeaderFields';
 
 import { getEntriesTotal } from 'containers/Entries/utils';

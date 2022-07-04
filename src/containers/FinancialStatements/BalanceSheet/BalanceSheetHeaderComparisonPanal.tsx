@@ -4,7 +4,7 @@ import { FastField, Field } from 'formik';
 import { FormGroup, Checkbox } from '@blueprintjs/core';
 import styled from 'styled-components';
 
-import { Flex, FlexItem, FieldHint, FormattedMessage as T } from 'components';
+import { Flex, FlexItem, FieldHint, FormattedMessage as T } from '@/components';
 import {
   handlePreviousYearCheckBoxChange,
   handlePreviousYearChangeCheckboxChange,

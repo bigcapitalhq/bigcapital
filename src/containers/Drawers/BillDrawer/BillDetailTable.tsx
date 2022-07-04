@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CommercialDocEntriesTable } from 'components';
+import { CommercialDocEntriesTable } from '@/components';
 
 import { useBillDrawerContext } from './BillDrawerProvider';
 import { useBillReadonlyEntriesTableColumns } from './utils';

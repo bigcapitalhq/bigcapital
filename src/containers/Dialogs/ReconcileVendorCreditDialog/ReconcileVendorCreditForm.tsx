@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 
 import '../../../style/pages/ReconcileVendorCredit/ReconcileVendorCreditForm.scss';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { CreateReconcileVendorCreditFormSchema } from './ReconcileVendorCreditForm.schema';
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
 import ReconcileVendorCreditFormContent from './ReconcileVendorCreditFormContent';

@@ -1,13 +1,13 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { DataTable, Card } from 'components';
+import { DataTable, Card } from '@/components';
 
 import { useBillPaymentTransactionsColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from '../BillDrawerProvider';
 import { useBillPaymentTransactions } from 'hooks/query';
 
 import { TableStyle } from '../../../../common';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';

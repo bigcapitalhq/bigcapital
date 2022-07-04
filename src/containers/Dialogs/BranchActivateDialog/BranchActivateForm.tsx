@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { useBranchActivateContext } from './BranchActivateFormProvider';
 import BranchActivateFormContent from './BranchActivateFormContent';
 

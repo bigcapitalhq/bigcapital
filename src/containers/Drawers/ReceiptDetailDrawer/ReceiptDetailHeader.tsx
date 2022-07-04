@@ -9,8 +9,8 @@ import {
   CommercialDocHeader,
   CommercialDocTopHeader,
   ExchangeRateDetailItem,
-} from 'components';
-import { Row, Col, FormatDate, DetailsMenu, DetailItem } from 'components';
+} from '@/components';
+import { Row, Col, FormatDate, DetailsMenu, DetailItem } from '@/components';
 
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import { ReceiptDetailsStatus } from './components';

@@ -20,7 +20,7 @@ import VendorCreditNoteFormTopBar from './VendorCreditNoteFormTopBar';
 
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { compose, safeSumBy, transactionNumber } from 'utils';
 import {
   defaultVendorsCreditNote,

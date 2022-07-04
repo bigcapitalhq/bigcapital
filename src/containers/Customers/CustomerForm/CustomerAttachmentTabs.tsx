@@ -5,8 +5,8 @@ import React, {
   useRef,
   useCallback,
 } from 'react';
-import Dragzone from 'components/Dragzone';
-import { FormattedMessage as T } from 'components';
+import Dragzone from '@/components/Dragzone';
+import { FormattedMessage as T } from '@/components';
 
 function CustomerAttachmentTabs() {
   return (

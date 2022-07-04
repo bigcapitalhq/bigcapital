@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, FastField, Field, ErrorMessage, useFormikContext } from 'formik';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import {
   Button,
   Classes,
@@ -18,7 +18,7 @@ import {
   AccountsSelectList,
   AccountsTypesSelect,
   CurrencySelect,
-} from 'components';
+} from '@/components';
 import withAccounts from 'containers/Accounts/withAccounts';
 
 import { inputIntent } from 'utils';

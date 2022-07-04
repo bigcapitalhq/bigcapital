@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { DataTable } from 'components';
+import { DataTable } from '@/components';
 
 /**
  * Editable datatable.

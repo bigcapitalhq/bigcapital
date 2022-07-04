@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 
-import { ListSelect } from 'components';
+import { ListSelect } from '@/components';
 
 export default function SalutationList({ ...restProps }) {
   const saluations = [

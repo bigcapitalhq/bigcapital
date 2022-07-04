@@ -1,6 +1,6 @@
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import { useAutofocus } from 'hooks';
 import {
@@ -20,7 +20,7 @@ import {
   InputPrependText,
   MoneyInputGroup,
   FieldRequiredHint,
-} from 'components';
+} from '@/components';
 
 import { useBadDebtContext } from './BadDebtFormProvider';
 

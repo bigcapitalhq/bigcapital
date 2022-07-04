@@ -7,7 +7,7 @@ import {
 } from '@blueprintjs/core';
 
 import { Select } from '@blueprintjs/select';
-import { Icon } from 'components';
+import { Icon } from '@/components';
 
 export const CashFlowMenuItems = ({
   text,

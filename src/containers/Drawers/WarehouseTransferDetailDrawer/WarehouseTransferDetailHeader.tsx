@@ -11,7 +11,7 @@ import {
   DetailItem,
   CommercialDocHeader,
   CommercialDocTopHeader,
-} from 'components';
+} from '@/components';
 import { WarehouseTransferDetailsStatus } from './utils';
 import { useWarehouseDetailDrawerContext } from './WarehouseTransferDetailDrawerProvider';
 

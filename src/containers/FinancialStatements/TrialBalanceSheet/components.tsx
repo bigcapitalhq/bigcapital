@@ -3,8 +3,8 @@ import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
 
 import { getColumnWidth } from 'utils';
-import { If, Icon, FormattedMessage as T } from 'components';
-import { CellTextSpan } from 'components/Datatable/Cells';
+import { If, Icon, FormattedMessage as T } from '@/components';
+import { CellTextSpan } from '@/components/Datatable/Cells';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 

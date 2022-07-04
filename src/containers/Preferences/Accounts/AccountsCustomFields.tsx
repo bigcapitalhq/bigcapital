@@ -18,7 +18,7 @@ import {connect} from 'react-redux';
 import {
   fetchResourceFields,
 } from 'store/customFields/customFields.actions';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 
 function AccountsCustomFields({ fetchResourceFields, fields }) {

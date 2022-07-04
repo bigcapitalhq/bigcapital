@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from 'components';
+import { Card } from '@/components';
 
 import { useCreditNoteDetailDrawerContext } from '../CreditNoteDetailDrawerProvider';
 import { useTransactionsByReference } from 'hooks/query';

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Classes, FormGroup, InputGroup } from '@blueprintjs/core';
 import { FastField } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
 import { useCurrencyFormContext } from './CurrencyFormProvider';
-import { ErrorMessage, FieldRequiredHint, ListSelect } from 'components';
+import { ErrorMessage, FieldRequiredHint, ListSelect } from '@/components';
 
 import { useAutofocus } from 'hooks';
 import { inputIntent, currenciesOptions } from 'utils';

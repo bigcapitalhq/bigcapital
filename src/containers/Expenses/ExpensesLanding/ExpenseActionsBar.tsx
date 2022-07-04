@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from 'components/Icon';
+import Icon from '@/components/Icon';
 import {
   Button,
   NavbarGroup,
@@ -10,7 +10,7 @@ import {
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import {
@@ -21,7 +21,7 @@ import {
   DashboardFilterButton,
   AdvancedFilterPopover,
   FormattedMessage as T,
-} from 'components';
+} from '@/components';
 
 import { ExpenseAction, AbilitySubject } from '../../../common/abilityOption';
 import { useRefreshExpenses } from 'hooks/query/expenses';

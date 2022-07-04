@@ -1,9 +1,9 @@
 import React from 'react';
 import { useHistory } from 'react-router';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
-import { DashboardViewsTabs } from 'components';
+import { DashboardViewsTabs } from '@/components';
 
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import withPaymentMadeActions from './withPaymentMadeActions';

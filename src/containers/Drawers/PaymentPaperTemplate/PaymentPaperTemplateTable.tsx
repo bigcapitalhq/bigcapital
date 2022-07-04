@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
-import { DataTable, Money } from 'components';
+import { DataTable, Money } from '@/components';
 
 export default function PaymentPaperTemplateTable({ tableData, currencyCode }) {
   const columns = React.useMemo(

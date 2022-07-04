@@ -1,8 +1,8 @@
 import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
-import { DashboardViewsTabs } from 'components';
+import { DashboardViewsTabs } from '@/components';
 
 import withWarehouseTransfers from './withWarehouseTransfers';
 import withWarehouseTransfersActions from './withWarehouseTransfersActions';

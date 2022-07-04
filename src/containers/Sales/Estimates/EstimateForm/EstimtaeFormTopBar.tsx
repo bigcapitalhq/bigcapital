@@ -20,7 +20,7 @@ import {
   WarehouseSelect,
   FormTopbar,
   DetailsBarSkeletonBase,
-} from 'components';
+} from '@/components';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import { Features } from 'common';
 

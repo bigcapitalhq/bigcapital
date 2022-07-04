@@ -1,5 +1,5 @@
 import React from 'react';
-import { DialogContent } from 'components';
+import { DialogContent } from '@/components';
 import ShortcutsTable from '../../KeyboardShortcuts/ShortcutsTable';
 import KeyboardShortcutsFooter from './KeyboardShortcutsFooter';
 

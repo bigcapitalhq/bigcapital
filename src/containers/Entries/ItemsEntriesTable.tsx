@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
-import { DataTableEditable } from 'components';
+import { DataTableEditable } from '@/components';
 
 import { useEditableItemsEntriesColumns } from './components';
 import {

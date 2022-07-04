@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from 'components/Icon';
+import Icon from '@/components/Icon';
 import { isEmpty } from 'lodash';
 import {
   Button,
@@ -11,7 +11,7 @@ import {
   Alignment,
 } from '@blueprintjs/core';
 
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import {
   AdvancedFilterPopover,
   If,
@@ -19,9 +19,9 @@ import {
   DashboardActionViewsList,
   DashboardFilterButton,
   DashboardRowsHeightButton,
-} from 'components';
+} from '@/components';
 
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { useRefreshAccounts } from 'hooks/query/accounts';
 import { useAccountsChartContext } from 'containers/Accounts/AccountsChartProvider';

@@ -16,7 +16,7 @@ import {
   AccountsSelectList,
   FieldRequiredHint,
   CardFooterActions,
-} from 'components';
+} from '@/components';
 import { handleStringChange, inputIntent } from 'utils';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
 

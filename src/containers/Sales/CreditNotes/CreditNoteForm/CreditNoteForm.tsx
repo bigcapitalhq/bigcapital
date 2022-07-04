@@ -18,7 +18,7 @@ import CreditNoteFloatingActions from './CreditNoteFloatingActions';
 import CreditNoteFormDialogs from './CreditNoteFormDialogs';
 import CreditNoteFormTopBar from './CreditNoteFormTopBar';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 import {

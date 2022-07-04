@@ -8,7 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import styled from 'styled-components';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
 import { useGetItemPaymentTransactionsMenu } from '../../../../common/itemPaymentTranactionsOption';
 

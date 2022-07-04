@@ -3,7 +3,7 @@ import { MenuItem } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
 import { formattedAmount } from 'utils';
-import { T, Icon, Choose, If } from 'components';
+import { T, Icon, Choose, If } from '@/components';
 
 import { RESOURCES_TYPES } from 'common/resourcesTypes';
 import withDrawerActions from '../../Drawer/withDrawerActions';

@@ -6,7 +6,7 @@ import intl from 'react-intl-universal';
 
 import '../../../style/pages/TransactionsLocking/TransactionsLockingDialog.scss';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { CreateUnLockingPartialTransactionsFormSchema } from './UnlockingPartialTransactionsForm.schema';
 
 import { useUnlockingPartialTransactionsContext } from './UnlockingPartialTransactionsFormProvider';

@@ -5,14 +5,14 @@ import styled from 'styled-components';
 
 import { useAccountDrawerContext } from './AccountDrawerProvider';
 
-import { Card, DataTable, If } from 'components';
+import { Card, DataTable, If } from '@/components';
 
 import { compose } from 'utils';
 import { useAccountReadEntriesColumns } from './utils';
 
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { TableStyle } from '../../../common';
-import { useAppIntlContext } from 'components/AppIntlProvider';
+import { useAppIntlContext } from '@/components/AppIntlProvider';
 
 /**
  * account drawer table.

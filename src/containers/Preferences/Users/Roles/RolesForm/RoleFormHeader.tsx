@@ -3,7 +3,7 @@ import { ErrorMessage, FastField } from 'formik';
 import { FormGroup, InputGroup, TextArea } from '@blueprintjs/core';
 
 import { inputIntent } from 'utils';
-import { FormattedMessage as T, FieldRequiredHint, Card } from 'components';
+import { FormattedMessage as T, FieldRequiredHint, Card } from '@/components';
 import { useAutofocus } from 'hooks';
 
 /**

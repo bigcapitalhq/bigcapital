@@ -3,7 +3,7 @@ import { Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { DrawerMainTabs } from 'components';
+import { DrawerMainTabs } from '@/components';
 import {
   PaymentMadeAction,
   AbilitySubject,

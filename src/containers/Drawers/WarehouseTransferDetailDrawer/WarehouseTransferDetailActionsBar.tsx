@@ -15,7 +15,7 @@ import {
   Icon,
   FormattedMessage as T,
   If,
-} from 'components';
+} from '@/components';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';

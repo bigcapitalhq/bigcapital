@@ -8,7 +8,7 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
   FormatNumber,
-} from 'components';
+} from '@/components';
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 
 /**

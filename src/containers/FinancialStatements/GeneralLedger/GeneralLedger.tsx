@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import moment from 'moment';
 
-import { FinancialStatement } from 'components';
+import { FinancialStatement } from '@/components';
 import GeneralLedgerHeader from './GeneralLedgerHeader';
 
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 import GeneralLedgerActionsBar from './GeneralLedgerActionsBar';
 import { GeneralLedgerProvider } from './GeneralLedgerProvider';
 import {

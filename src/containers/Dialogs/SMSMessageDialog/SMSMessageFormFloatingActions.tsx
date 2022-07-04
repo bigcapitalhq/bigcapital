@@ -6,7 +6,7 @@ import {
   DialogFooter,
   DialogFooterActions,
   FormattedMessage as T,
-} from 'components';
+} from '@/components';
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 

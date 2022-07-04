@@ -6,7 +6,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 import { FastField, ErrorMessage } from 'formik';
 import { CLASSES } from 'common/classes';
@@ -20,7 +20,7 @@ import {
   If,
   InputPrependButton,
   CustomerDrawerLink,
-} from 'components';
+} from '@/components';
 import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { ACCOUNT_TYPE } from 'common/accountTypes';

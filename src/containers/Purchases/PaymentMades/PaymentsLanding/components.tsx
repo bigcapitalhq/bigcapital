@@ -10,7 +10,7 @@ import {
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { Icon, Money, FormatDateCell, Can } from 'components';
+import { Icon, Money, FormatDateCell, Can } from '@/components';
 import {
   PaymentMadeAction,
   AbilitySubject,

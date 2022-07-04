@@ -1,5 +1,5 @@
 import React from 'react';
-import { CurrencyTag } from 'components';
+import { CurrencyTag } from '@/components';
 
 /**
  * base currecncy.

@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
-import { CloudLoadingIndicator } from 'components';
+import { CloudLoadingIndicator } from '@/components';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import { CLASSES } from 'common/classes';
-import { DataTableEditable } from 'components';
+import { DataTableEditable } from '@/components';
 import { usePaymentMadeEntriesTableColumns } from './components';
 
 import { usePaymentMadeInnerContext } from './PaymentMadeInnerProvider';

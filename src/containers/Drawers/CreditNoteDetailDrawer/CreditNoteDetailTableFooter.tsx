@@ -8,7 +8,7 @@ import {
   FormatNumber,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-} from 'components';
+} from '@/components';
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
 
 /**

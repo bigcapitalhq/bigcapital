@@ -11,7 +11,7 @@ import {
   If,
   Icon,
   Can,
-} from 'components';
+} from '@/components';
 import { safeCallback } from 'utils';
 import {
   VendorCreditAction,

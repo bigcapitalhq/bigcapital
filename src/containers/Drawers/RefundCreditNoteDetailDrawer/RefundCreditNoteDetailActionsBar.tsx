@@ -4,7 +4,7 @@ import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
 import { useRefundCreditNoteDrawerContext } from './RefundCreditNoteDrawerProvider';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
-import { Icon, DrawerActionsBar, FormattedMessage as T, Can } from 'components';
+import { Icon, DrawerActionsBar, FormattedMessage as T, Can } from '@/components';
 import {
   CreditNoteAction,
   AbilitySubject,

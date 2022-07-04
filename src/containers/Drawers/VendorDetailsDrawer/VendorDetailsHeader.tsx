@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import clsx from 'classnames';
 import { defaultTo } from 'lodash';
 
-import { T, DetailsMenu, DetailItem } from 'components';
+import { T, DetailsMenu, DetailItem } from '@/components';
 
 import { useVendorDetailsDrawerContext } from './VendorDetailsDrawerProvider';
 

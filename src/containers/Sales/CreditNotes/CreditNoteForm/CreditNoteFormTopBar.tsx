@@ -19,7 +19,7 @@ import {
   WarehouseSelect,
   FormTopbar,
   DetailsBarSkeletonBase,
-} from 'components';
+} from '@/components';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 import { Features } from 'common';
 

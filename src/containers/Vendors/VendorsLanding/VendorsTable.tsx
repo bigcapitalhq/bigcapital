@@ -3,9 +3,9 @@ import { useHistory } from 'react-router';
 
 import { TABLES } from 'common/tables';
 
-import { DataTable, DashboardContentTable } from 'components';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
+import { DataTable, DashboardContentTable } from '@/components';
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
+import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
 import VendorsEmptyStatus from './VendorsEmptyStatus';
 

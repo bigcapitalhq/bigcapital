@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
 import { useAbilityContext } from 'hooks/utils';
-import { DrawerMainTabs } from 'components';
+import { DrawerMainTabs } from '@/components';
 import VendorCreditDetailActionsBar from './VendorCreditDetailActionsBar';
 import VendorCreditDetailPanel from './VendorCreditDetailPanel';
 import RefundVendorCreditTransactionsTable from './RefundVendorCreditTransactions/RefundVendorCreditTransactionsTable';

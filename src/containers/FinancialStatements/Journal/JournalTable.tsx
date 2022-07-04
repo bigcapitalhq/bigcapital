@@ -2,9 +2,9 @@ import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { ReportDataTable, FinancialSheet } from 'components';
-import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
-import TableFastCell from 'components/Datatable/TableFastCell';
+import { ReportDataTable, FinancialSheet } from '@/components';
+import TableVirtualizedListRows from '@/components/Datatable/TableVirtualizedRows';
+import TableFastCell from '@/components/Datatable/TableFastCell';
 
 import { useJournalTableColumns } from './components';
 import { useJournalSheetContext } from './JournalProvider';

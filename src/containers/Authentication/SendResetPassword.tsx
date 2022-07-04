@@ -4,13 +4,13 @@ import { Link, useHistory } from 'react-router-dom';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { useAuthSendResetPassword } from 'hooks/query';
-import Toaster from 'components/AppToaster';
+import Toaster from '@/components/AppToaster';
 import SendResetPasswordForm from './SendResetPasswordForm';
 import { SendResetPasswordSchema, transformSendResetPassErrorsToToasts } from './utils';
 
-import AppToaster from 'components/AppToaster';
+import AppToaster from '@/components/AppToaster';
 import AuthInsider from 'containers/Authentication/AuthInsider';
 
 /**

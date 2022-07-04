@@ -9,7 +9,7 @@ import {
   Choose,
   If,
   Icon,
-} from 'components';
+} from '@/components';
 
 export function ActionsMenu({
   payload: { onEdit, onDelete, onViewDetails, onInitate, onTransfer },

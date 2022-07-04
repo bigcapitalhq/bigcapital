@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { defaultTo } from 'lodash';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { CreateCustomerOpeningBalanceFormSchema } from './CustomerOpeningBalanceForm.schema';
 import { useCustomerOpeningBalanceContext } from './CustomerOpeningBalanceFormProvider';
 

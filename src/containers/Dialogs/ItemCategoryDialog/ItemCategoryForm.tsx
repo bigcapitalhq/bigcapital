@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { useItemCategoryContext } from './ItemCategoryProvider';
 import { transformToForm } from 'utils';
 import {

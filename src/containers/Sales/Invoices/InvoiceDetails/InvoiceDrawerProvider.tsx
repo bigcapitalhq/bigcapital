@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { useInvoice } from 'hooks/query';
-import { DrawerHeaderContent, DashboardInsider } from 'components';
+import { DrawerHeaderContent, DashboardInsider } from '@/components';
 
 const InvoiceDrawerContext = createContext();
 

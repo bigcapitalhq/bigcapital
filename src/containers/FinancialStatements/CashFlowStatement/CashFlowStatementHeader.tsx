@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import moment from 'moment';
 import * as Yup from 'yup';

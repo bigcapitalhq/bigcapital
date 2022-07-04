@@ -19,7 +19,7 @@ import {
   If,
   Icon,
   Can,
-} from 'components';
+} from '@/components';
 import { formattedAmount, safeCallback, calculateStatus } from 'utils';
 import {
   SaleInvoiceAction,

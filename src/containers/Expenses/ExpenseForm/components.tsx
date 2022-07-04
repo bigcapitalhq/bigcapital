@@ -9,13 +9,13 @@ import {
   Hint,
   ExchangeRateInputGroup,
   FormattedMessage as T,
-} from 'components';
+} from '@/components';
 import {
   InputGroupCell,
   MoneyFieldCell,
   AccountsListFieldCell,
   CheckBoxFieldCell,
-} from 'components/DataTableCells';
+} from '@/components/DataTableCells';
 import { CellType, Align } from 'common';
 
 import { useCurrentOrganization } from 'hooks/state';

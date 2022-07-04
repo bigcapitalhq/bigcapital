@@ -1,6 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-import LoadingIndicator from 'components/LoadingIndicator';
+import LoadingIndicator from '@/components/LoadingIndicator';
 
 /**
  * Drawer inside.

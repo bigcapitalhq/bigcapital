@@ -2,7 +2,7 @@ import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { HTMLSelect, FormGroup, Intent, Position } from '@blueprintjs/core';
 import moment from 'moment';
-import { Row, Col, Hint } from 'components';
+import { Row, Col, Hint } from '@/components';
 import { momentFormatter, parseDateRangeQuery } from 'utils';
 import { DateInput } from '@blueprintjs/datetime';
 import intl from 'react-intl-universal';

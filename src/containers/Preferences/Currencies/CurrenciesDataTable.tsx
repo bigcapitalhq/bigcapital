@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import { compose } from 'utils';
 
-import { DataTable } from 'components';
+import { DataTable } from '@/components';
 
 import { useCurrenciesContext } from './CurrenciesProvider';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import { ActionMenuList, useCurrenciesTableColumns } from './components';
 

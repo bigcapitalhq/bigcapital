@@ -8,7 +8,7 @@ import {
   T,
   TotalLine,
   TotalLines,
-} from 'components';
+} from '@/components';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
 /**

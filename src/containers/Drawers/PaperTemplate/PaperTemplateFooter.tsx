@@ -1,5 +1,5 @@
 import React from 'react';
-import { If } from 'components';
+import { If } from '@/components';
 import intl from 'react-intl-universal';
 
 export default function PaperTemplateFooter({

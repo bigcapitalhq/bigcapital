@@ -2,7 +2,7 @@ import React from 'react';
 import { Field } from 'formik';
 import * as R from 'ramda';
 
-import { T, SubscriptionPeriods } from 'components';
+import { T, SubscriptionPeriods } from '@/components';
 
 import withPlan from '../../Subscriptions/withPlan';
 

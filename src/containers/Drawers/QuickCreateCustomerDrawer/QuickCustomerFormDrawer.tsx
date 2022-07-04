@@ -2,7 +2,7 @@ import React from 'react';
 import * as R from 'ramda';
 import styled from 'styled-components';
 
-import { Card, DrawerLoading } from 'components';
+import { Card, DrawerLoading } from '@/components';
 
 import {
   CustomerFormProvider,

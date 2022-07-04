@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CommercialDocBox } from 'components';
+import { CommercialDocBox } from '@/components';
 
 import PaymentMadeDetailHeader from './PaymentMadeDetailHeader';
 import PaymentMadeDetailTable from './PaymentMadeDetailTable';

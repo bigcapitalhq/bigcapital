@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 
-import { DataTable } from 'components';
+import { DataTable } from '@/components';
 import { TABLES } from 'common/tables';
 
 import { useInventoryAdjustmentsColumns, ActionsMenu } from './components';

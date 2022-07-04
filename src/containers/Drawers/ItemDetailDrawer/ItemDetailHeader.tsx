@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { defaultTo } from 'lodash';
 import classNames from 'classnames';
 
-import { If, DetailsMenu, DetailItem, Card } from 'components';
+import { If, DetailsMenu, DetailItem, Card } from '@/components';
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
 
 /**

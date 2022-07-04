@@ -1,8 +1,8 @@
 import React from 'react';
 import { Classes } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
-import { AccountMultiSelect, Row, Col } from 'components';
+import { AccountMultiSelect, Row, Col } from '@/components';
 import { FFormGroup } from '../../../components/Forms';
 
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';

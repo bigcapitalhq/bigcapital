@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Paragraph, FormattedMessage as T } from 'components';
+import { Paragraph, FormattedMessage as T } from '@/components';
 import { TransactionsLockingProvider } from './TransactionsLockingProvider';
 import { TransactionsLockingHeader } from './TransactionsLockingHeader';
 import { TransactionsLockingBody } from './TransactionsLockingBody';

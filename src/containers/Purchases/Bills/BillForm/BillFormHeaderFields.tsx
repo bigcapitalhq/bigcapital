@@ -6,7 +6,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { FastField, ErrorMessage } from 'formik';
 import classNames from 'classnames';
 import styled from 'styled-components';
@@ -18,7 +18,7 @@ import {
   FieldRequiredHint,
   Icon,
   VendorDrawerLink,
-} from 'components';
+} from '@/components';
 import { vendorsFieldShouldUpdate } from './utils';
 
 import { useBillFormContext } from './BillFormProvider';

@@ -6,7 +6,7 @@ import {
   useReconcileCreditNote,
   useReconcileCreditNotes,
 } from 'hooks/query';
-import { DrawerHeaderContent, DrawerLoading } from 'components';
+import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { Features } from 'common';
 import { useFeatureCan } from 'hooks/state';
 

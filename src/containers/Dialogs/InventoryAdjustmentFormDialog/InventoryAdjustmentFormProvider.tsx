@@ -1,5 +1,5 @@
 import React, { useState, createContext } from 'react';
-import { DialogContent } from 'components';
+import { DialogContent } from '@/components';
 import { Features } from 'common';
 import { useFeatureCan } from 'hooks/state';
 import {

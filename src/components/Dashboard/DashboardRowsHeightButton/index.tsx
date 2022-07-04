@@ -11,7 +11,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import clsx from 'classnames';
-import { Icon, T } from 'components';
+import { Icon, T } from '@/components';
 
 import Style from './style.module.scss';
 

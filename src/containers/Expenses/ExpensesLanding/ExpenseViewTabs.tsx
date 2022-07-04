@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
-import { DashboardViewsTabs } from 'components';
+import { DashboardViewsTabs } from '@/components';
 
 import { useExpensesListContext } from './ExpensesListProvider';
 import withExpenses from './withExpenses';

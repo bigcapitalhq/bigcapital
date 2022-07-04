@@ -20,7 +20,7 @@ import WarehouseTransferFormDialog from './WarehouseTransferFormDialog';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
 import { WarehouseTransferObserveItemsCost } from './components';

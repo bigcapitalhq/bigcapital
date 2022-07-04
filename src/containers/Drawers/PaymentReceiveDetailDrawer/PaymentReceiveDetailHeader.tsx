@@ -12,7 +12,7 @@ import {
   CommercialDocTopHeader,
   CustomerDrawerLink,
   ExchangeRateDetailItem,
-} from 'components';
+} from '@/components';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
 /**

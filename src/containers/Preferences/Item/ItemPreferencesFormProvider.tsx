@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import styled from 'styled-components';
 
 import { CLASSES } from 'common/classes';
-import { Card } from 'components';
+import { Card } from '@/components';
 import { useSettingsItems, useAccounts, useSaveSettings } from 'hooks/query';
 import PreferencesPageLoader from '../PreferencesPageLoader';
 

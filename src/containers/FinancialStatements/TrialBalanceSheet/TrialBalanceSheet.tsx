@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
 import moment from 'moment';
 
-import { FinancialStatement } from 'components';
+import { FinancialStatement } from '@/components';
 import { TrialBalanceSheetProvider } from './TrialBalanceProvider';
 import TrialBalanceActionsBar from './TrialBalanceActionsBar';
 import TrialBalanceSheetHeader from './TrialBalanceSheetHeader';
 
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 import {
   TrialBalanceSheetAlerts,
   TrialBalanceSheetLoadingBar,

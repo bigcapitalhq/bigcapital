@@ -1,5 +1,5 @@
 import React from 'react';
-import { T } from 'components';
+import { T } from '@/components';
 
 import { PaymentMethodTabs } from '../../Subscriptions/SubscriptionTabs';
 

@@ -3,7 +3,7 @@ import { ProgressBar, Intent } from '@blueprintjs/core';
 import * as R from 'ramda';
 
 import { useJob, useCurrentOrganization } from 'hooks/query';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import withOrganizationActions from 'containers/Organization/withOrganizationActions';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { pick } from 'lodash';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { CreateQuickPaymentMadeFormSchema } from './QuickPaymentMade.schema';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 import QuickPaymentMadeFormContent from './QuickPaymentMadeFormContent';

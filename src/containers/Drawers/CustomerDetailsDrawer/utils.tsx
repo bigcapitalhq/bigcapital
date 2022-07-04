@@ -7,7 +7,7 @@ import {
   MenuItem,
   Menu,
 } from '@blueprintjs/core';
-import { Icon, FormattedMessage as T } from 'components';
+import { Icon, FormattedMessage as T } from '@/components';
 
 /**
  *  Customer more actions menu items.

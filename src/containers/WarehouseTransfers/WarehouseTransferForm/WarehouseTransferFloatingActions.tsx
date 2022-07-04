@@ -10,12 +10,12 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { If, FormattedMessage as T } from 'components';
+import { If, FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { CLASSES } from 'common/classes';
 
-import { Icon } from 'components';
+import { Icon } from '@/components';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 
 /**

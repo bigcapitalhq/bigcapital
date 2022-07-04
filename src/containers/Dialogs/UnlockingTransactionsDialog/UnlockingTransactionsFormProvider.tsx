@@ -1,5 +1,5 @@
 import React from 'react';
-import { DialogContent } from 'components';
+import { DialogContent } from '@/components';
 import { useCancelLockingTransaction } from 'hooks/query';
 
 const UnlockingTransactionsContext = React.createContext();

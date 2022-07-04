@@ -8,8 +8,8 @@ import { useItemFormContext, ItemFormProvider } from './ItemFormProvider';
 
 import ItemFormFormik from './ItemFormFormik';
 
-import DashboardCard from 'components/Dashboard/DashboardCard';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import DashboardCard from '@/components/Dashboard/DashboardCard';
+import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 
 /**
  * Item form dashboard title.

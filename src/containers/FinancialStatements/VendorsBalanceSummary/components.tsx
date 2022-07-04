@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
 
-import { If } from 'components';
+import { If } from '@/components';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 

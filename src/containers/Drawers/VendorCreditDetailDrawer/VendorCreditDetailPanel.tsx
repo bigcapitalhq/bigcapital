@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CommercialDocBox } from 'components';
+import { CommercialDocBox } from '@/components';
 
 import VendorCreditDetailHeader from './VendorCreditDetailHeader';
 import VendorCreditDetailTable from './VendorCreditDetailTable';

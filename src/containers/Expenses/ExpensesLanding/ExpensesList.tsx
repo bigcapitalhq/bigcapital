@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import 'style/pages/Expense/List.scss';
 
-import { DashboardContentTable, DashboardPageContent } from 'components';
+import { DashboardContentTable, DashboardPageContent } from '@/components';
 
 import ExpenseActionsBar from './ExpenseActionsBar';
 import ExpenseViewTabs from './ExpenseViewTabs';

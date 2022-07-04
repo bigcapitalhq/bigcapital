@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 
-import { DataTableEditable } from 'components';
+import { DataTableEditable } from '@/components';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 import { useExpenseFormTableColumns } from './components';
 import {

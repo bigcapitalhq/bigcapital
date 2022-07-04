@@ -5,7 +5,7 @@ import {
   If,
   DetailsMenu,
   DetailItem,
-} from 'components';
+} from '@/components';
 
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 

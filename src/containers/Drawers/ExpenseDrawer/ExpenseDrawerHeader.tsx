@@ -13,7 +13,7 @@ import {
   FormatDate,
   ExchangeRateDetailItem,
   FormattedMessage as T,
-} from 'components';
+} from '@/components';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 import { ExpenseDetailsStatus } from './components';
 

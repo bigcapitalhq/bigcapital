@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
-import { FormikObserver } from 'components';
+import { FormikObserver } from '@/components';
 
 /**
  * Role form observer.

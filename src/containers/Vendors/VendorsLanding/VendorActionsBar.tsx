@@ -9,8 +9,8 @@ import {
   Alignment,
 } from '@blueprintjs/core';
 
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import Icon from 'components/Icon';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
+import Icon from '@/components/Icon';
 import {
   If,
   Can,
@@ -19,7 +19,7 @@ import {
   DashboardFilterButton,
   DashboardRowsHeightButton,
   AdvancedFilterPopover,
-} from 'components';
+} from '@/components';
 
 import { useRefreshVendors } from 'hooks/query/vendors';
 import { useVendorsListContext } from './VendorsListProvider';

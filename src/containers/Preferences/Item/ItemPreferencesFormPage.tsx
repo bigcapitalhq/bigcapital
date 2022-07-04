@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import intl from 'react-intl-universal';
 import { pick, omit } from 'lodash';
 import { ItemPreferencesSchema } from './ItemPreferences.schema';

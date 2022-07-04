@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
-import Toaster from 'components/AppToaster';
+import Toaster from '@/components/AppToaster';
 import AuthInsider from 'containers/Authentication/AuthInsider';
 import { useAuthLogin } from 'hooks/query';
 

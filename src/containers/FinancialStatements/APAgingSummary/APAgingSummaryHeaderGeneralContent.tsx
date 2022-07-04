@@ -15,7 +15,7 @@ import {
   Row,
   Col,
   FieldHint,
-} from 'components';
+} from '@/components';
 import { useAPAgingSummaryGeneralContext } from './APAgingSummaryGeneralProvider';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import { filterVendorsOptions } from './constants';

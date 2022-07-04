@@ -2,15 +2,15 @@ import React, {useEffect, useState, useCallback} from 'react';
 import { useAsync } from 'react-use';
 import { useParams } from 'react-router-dom';
 import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
+import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 import ViewForm from 'containers/Views/ViewForm';
 
-import AppToaster from 'components/AppToaster';
+import AppToaster from '@/components/AppToaster';
 import {compose} from 'utils';
-import { If } from 'components';
+import { If } from '@/components';
 
 import withResourcesActions from 'containers/Resources/withResourcesActions';
 import withViewsActions from 'containers/Views/withViewsActions';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tab } from '@blueprintjs/core';
 
-import { DrawerMainTabs, FormattedMessage as T } from 'components';
+import { DrawerMainTabs, FormattedMessage as T } from '@/components';
 import { ItemPaymentTransactions } from './ItemPaymentTransactions';
 import ItemDetailHeader from './ItemDetailHeader';
 import WarehousesLocationsTable from './WarehousesLocations';

@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from 'components/Icon';
+import Icon from '@/components/Icon';
 import {
   Button,
   Classes,
@@ -15,11 +15,11 @@ import {
   AdvancedFilterPopover,
   FormattedMessage as T,
   DashboardRowsHeightButton,
-} from 'components';
+} from '@/components';
 
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
-import { Can, If, DashboardActionViewsList } from 'components';
+import { Can, If, DashboardActionViewsList } from '@/components';
 
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withPaymentReceives from './withPaymentReceives';

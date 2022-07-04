@@ -14,7 +14,7 @@ import {
   CommercialDocTopHeader,
   VendorDrawerLink,
   ExchangeRateDetailItem,
-} from 'components';
+} from '@/components';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 import { VendorCreditDetailsStatus } from './utils';
 

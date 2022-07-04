@@ -24,7 +24,7 @@ import {
   FeatureCan,
   BranchSelect,
   BranchSelectButton,
-} from 'components';
+} from '@/components';
 import { Features } from 'common';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from 'hooks';

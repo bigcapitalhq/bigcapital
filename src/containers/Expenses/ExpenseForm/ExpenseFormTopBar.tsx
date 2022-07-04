@@ -9,7 +9,7 @@ import {
   FeatureCan,
   FormTopbar,
   DetailsBarSkeletonBase,
-} from 'components';
+} from '@/components';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 import { Features } from 'common';
 

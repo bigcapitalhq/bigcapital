@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { defaultTo, includes } from 'lodash';
 import { useHistory } from 'react-router-dom';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import {
   transformTableStateToQuery,
   defaultFastFieldShouldUpdate,

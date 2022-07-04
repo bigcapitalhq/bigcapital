@@ -1,6 +1,6 @@
 import React from 'react';
 import { chain } from 'lodash';
-import { FormikObserver } from 'components';
+import { FormikObserver } from '@/components';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 
 export function WarehouseTransferObserveItemsCost() {

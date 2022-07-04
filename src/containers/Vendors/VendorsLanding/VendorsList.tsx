@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import 'style/pages/Vendors/List.scss';
 
-import { DashboardContentTable, DashboardPageContent } from 'components';
+import { DashboardContentTable, DashboardPageContent } from '@/components';
 
 import { VendorsListProvider } from './VendorsListProvider';
 import VendorActionsBar from './VendorActionsBar';

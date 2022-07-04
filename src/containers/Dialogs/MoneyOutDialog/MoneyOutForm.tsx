@@ -7,7 +7,7 @@ import intl from 'react-intl-universal';
 
 import 'style/pages/CashFlow/CashflowTransactionForm.scss';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 
 import MoneyOutFormContent from './MoneyOutFormContent';
 import { CreateMoneyOutSchema } from './MoneyOutForm.schema';

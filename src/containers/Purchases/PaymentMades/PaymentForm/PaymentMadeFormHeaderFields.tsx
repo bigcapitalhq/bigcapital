@@ -9,7 +9,7 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { toSafeInteger } from 'lodash';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
@@ -26,7 +26,7 @@ import {
   Icon,
   VendorDrawerLink,
   MoneyInputGroup,
-} from 'components';
+} from '@/components';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { ACCOUNT_TYPE } from 'common/accountTypes';

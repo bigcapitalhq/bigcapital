@@ -1,6 +1,6 @@
 import React from 'react';
 import { Intent } from '@blueprintjs/core';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import intl from 'react-intl-universal';
 
 export const transformErrors = (errors) => {

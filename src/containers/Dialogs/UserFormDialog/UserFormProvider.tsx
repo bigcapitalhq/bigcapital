@@ -6,7 +6,7 @@ import {
   useAuthenticatedAccount,
 } from 'hooks/query';
 
-import { DialogContent } from 'components';
+import { DialogContent } from '@/components';
 
 const UserFormContext = createContext();
 

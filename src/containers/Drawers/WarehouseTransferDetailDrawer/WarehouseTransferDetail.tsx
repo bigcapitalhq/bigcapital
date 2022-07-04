@@ -2,7 +2,7 @@ import React from 'react';
 import { Tab } from '@blueprintjs/core';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
-import { DrawerMainTabs } from 'components';
+import { DrawerMainTabs } from '@/components';
 
 import WarehouseTransferDetailPanel from './WarehouseTransferDetailPanel';
 import WarehouseTransferDetailActionsBar from './WarehouseTransferDetailActionsBar';

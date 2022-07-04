@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T, FormattedHTMLMessage } from 'components';
+import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { transformErrors } from 'containers/Customers/utils';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';

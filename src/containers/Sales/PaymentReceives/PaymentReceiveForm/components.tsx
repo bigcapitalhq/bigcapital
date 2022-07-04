@@ -3,8 +3,8 @@ import moment from 'moment';
 import intl from 'react-intl-universal';
 import { useFormikContext } from 'formik';
 
-import { Money, ExchangeRateInputGroup } from 'components';
-import { MoneyFieldCell } from 'components/DataTableCells';
+import { Money, ExchangeRateInputGroup } from '@/components';
+import { MoneyFieldCell } from '@/components/DataTableCells';
 
 import { useCurrentOrganization } from 'hooks/state';
 import { useEstimateIsForeignCustomer } from './utils';

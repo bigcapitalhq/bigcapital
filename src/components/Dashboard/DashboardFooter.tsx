@@ -1,6 +1,6 @@
 import React from 'react';
 import { getFooterLinks } from 'config/footerLinks';
-import { For } from 'components';
+import { For } from '@/components';
 
 function FooterLinkItem({ title, link }) {
   return (

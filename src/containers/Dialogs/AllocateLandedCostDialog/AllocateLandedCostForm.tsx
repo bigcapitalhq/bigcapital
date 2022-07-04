@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 
 import 'style/pages/AllocateLandedCost/AllocateLandedCostForm.scss';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { AllocateLandedCostFormSchema } from './AllocateLandedCostForm.schema';
 import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogProvider';
 import AllocateLandedCostFormContent from './AllocateLandedCostFormContent';

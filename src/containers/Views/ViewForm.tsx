@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useFormik } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 
 import {useHistory } from 'react-router-dom';
@@ -20,10 +20,10 @@ import { Row, Col } from 'react-grid-system';
 import { ReactSortable } from 'react-sortablejs';
 import * as Yup from 'yup';
 import { pick, get } from 'lodash';
-import Icon from 'components/Icon';
-import ErrorMessage from 'components/ErrorMessage';
-import AppToaster from 'components/AppToaster';
-import { If } from 'components';
+import Icon from '@/components/Icon';
+import ErrorMessage from '@/components/ErrorMessage';
+import AppToaster from '@/components/AppToaster';
+import { If } from '@/components';
 import ViewFormContainer from 'containers/Views/ViewForm.container.js';
 
 function ViewForm({

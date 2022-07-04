@@ -1,7 +1,7 @@
 import React from 'react';
 
 // style..
-import { DashboardPageContent } from 'components';
+import { DashboardPageContent } from '@/components';
 import WarehouseTransfersActionsBar from './WarehouseTransfersActionsBar';
 import WarehouseTransfersViewTabs from './WarehouseTransfersViewTabs';
 import WarehouseTransfersDataTable from './WarehouseTransfersDataTable';

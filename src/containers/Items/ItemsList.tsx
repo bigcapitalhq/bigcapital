@@ -3,7 +3,7 @@ import { compose } from 'utils';
 
 import 'style/pages/Items/List.scss';
 
-import { DashboardPageContent } from 'components';
+import { DashboardPageContent } from '@/components';
 
 import ItemsActionsBar from './ItemsActionsBar';
 import ItemsViewsTabs from './ItemsViewsTabs';

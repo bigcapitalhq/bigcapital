@@ -2,7 +2,7 @@ import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { Icon } from 'components';
+import { Icon } from '@/components';
 
 import { RESOURCES_TYPES } from 'common/resourcesTypes';
 import withDrawerActions from '../../Drawer/withDrawerActions';

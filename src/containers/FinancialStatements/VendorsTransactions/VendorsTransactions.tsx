@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 
-import { FinancialStatement } from 'components';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import { FinancialStatement } from '@/components';
+import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 
 import VendorsTransactionsHeader from './VendorsTransactionsHeader';
 import VendorsTransactionsActionsBar from './VendorsTransactionsActionsBar';

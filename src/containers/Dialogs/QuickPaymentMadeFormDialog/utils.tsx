@@ -3,7 +3,7 @@ import moment from 'moment';
 import intl from 'react-intl-universal';
 import { first, isEqual } from 'lodash';
 import { Intent } from '@blueprintjs/core';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { useFormikContext } from 'formik';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 

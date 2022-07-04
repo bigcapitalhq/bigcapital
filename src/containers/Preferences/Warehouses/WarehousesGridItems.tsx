@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { ContextMenu2 } from '@blueprintjs/popover2';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { WarehouseContextMenu, WarehousesGridItemBox } from './components';
 import { useMarkWarehouseAsPrimary } from 'hooks/query';
 

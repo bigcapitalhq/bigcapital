@@ -9,7 +9,7 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { Icon } from 'components';
+import { Icon } from '@/components';
 import { safeCallback } from 'utils';
 
 /**

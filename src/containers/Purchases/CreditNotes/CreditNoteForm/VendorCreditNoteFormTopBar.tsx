@@ -20,7 +20,7 @@ import {
   WarehouseSelect,
   FormTopbar,
   DetailsBarSkeletonBase,
-} from 'components';
+} from '@/components';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 import { Features } from 'common';
 

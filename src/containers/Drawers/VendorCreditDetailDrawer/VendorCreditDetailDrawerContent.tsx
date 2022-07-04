@@ -1,5 +1,5 @@
 import React from 'react';
-import { DrawerBody } from 'components';
+import { DrawerBody } from '@/components';
 
 import VendorCreditDetail from './VendorCreditDetail';
 import { VendorCreditDetailDrawerProvider } from './VendorCreditDetailDrawerProvider';

@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react';
 import { isEqual, isUndefined } from 'lodash';
 
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 import {
   useEstimate,
   useCustomers,

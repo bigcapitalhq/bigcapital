@@ -16,7 +16,7 @@ import {
   BranchSelectButton,
   FeatureCan,
   InputPrependText,
-} from 'components';
+} from '@/components';
 import { FMoneyInputGroup, FFormGroup } from '../../../components/Forms';
 
 import { useVendorOpeningBalanceContext } from './VendorOpeningBalanceFormProvider';

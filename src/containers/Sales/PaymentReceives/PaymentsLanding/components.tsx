@@ -11,7 +11,7 @@ import {
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
 
-import { FormatDateCell, Money, Icon, Can } from 'components';
+import { FormatDateCell, Money, Icon, Can } from '@/components';
 import { safeCallback } from 'utils';
 import { CLASSES } from '../../../../common/classes';
 import {

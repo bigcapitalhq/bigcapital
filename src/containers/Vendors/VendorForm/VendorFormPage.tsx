@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import 'style/pages/Vendors/PageForm.scss';
 
-import { DashboardCard, DashboardInsider } from 'components';
+import { DashboardCard, DashboardInsider } from '@/components';
 import VendorFormFormik from './VendorFormFormik';
 
 import { VendorFormProvider, useVendorFormContext } from './VendorFormProvider';

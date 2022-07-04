@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
 
-import { T, Choose, Icon } from 'components';
+import { T, Choose, Icon } from '@/components';
 import { highlightText } from 'utils';
 
 import { RESOURCES_TYPES } from 'common/resourcesTypes';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage as T, Icon } from 'components';
+import { FormattedMessage as T, Icon } from '@/components';
 
 export default function DashboardErrorBoundary({}) {
   return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DrawerHeaderContent, DashboardInsider } from 'components';
+import { DrawerHeaderContent, DashboardInsider } from '@/components';
 import { useContact } from 'hooks/query';
 
 const ContactDetailDrawerContext = React.createContext();

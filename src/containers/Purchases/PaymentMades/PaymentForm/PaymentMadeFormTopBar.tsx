@@ -16,7 +16,7 @@ import {
   FeatureCan,
   FormTopbar,
   DetailsBarSkeletonBase,
-} from 'components';
+} from '@/components';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { Features } from 'common';
 

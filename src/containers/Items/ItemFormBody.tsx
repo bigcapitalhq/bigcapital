@@ -14,8 +14,8 @@ import {
   Row,
   Hint,
   InputPrependText,
-} from 'components';
-import { FormattedMessage as T } from 'components';
+} from '@/components';
+import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 
 import { useItemFormContext } from './ItemFormProvider';

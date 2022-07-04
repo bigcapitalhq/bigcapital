@@ -1,5 +1,5 @@
 import React from 'react';
-import { DialogContent } from 'components';
+import { DialogContent } from '@/components';
 import { pick } from 'lodash';
 import { Features } from 'common';
 import { useFeatureCan } from 'hooks/state';

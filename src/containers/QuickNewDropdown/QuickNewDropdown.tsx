@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, MenuItem } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { useHistory } from 'react-router-dom';
-import { Icon } from 'components';
+import { Icon } from '@/components';
 import { Position } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 

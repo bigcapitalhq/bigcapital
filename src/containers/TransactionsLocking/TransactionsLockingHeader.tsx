@@ -11,7 +11,7 @@ import {
   FormattedMessage as T,
   Alert,
   AlertDesc,
-} from 'components';
+} from '@/components';
 import {
   validateMoveToFullLocking,
   validateMoveToPartialLocking,

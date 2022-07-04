@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
-import { Choose, If } from 'components';
+import { Choose, If } from '@/components';
 import IncrementAdjustmentFields from './IncrementAdjustmentFields';
 import DecrementAdjustmentFields from './DecrementAdjustmentFields';
 

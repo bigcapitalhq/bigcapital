@@ -4,7 +4,7 @@ import { MenuItem, Menu, Button, Position } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
 import { Align, CellType } from 'common';
-import { Hint, Icon, FormattedMessage as T } from 'components';
+import { Hint, Icon, FormattedMessage as T } from '@/components';
 import { formattedAmount } from 'utils';
 import {
   InputGroupCell,
@@ -13,7 +13,7 @@ import {
   PercentFieldCell,
   NumericInputCell,
   CheckBoxFieldCell,
-} from 'components/DataTableCells';
+} from '@/components/DataTableCells';
 
 /**
  * Item header cell.

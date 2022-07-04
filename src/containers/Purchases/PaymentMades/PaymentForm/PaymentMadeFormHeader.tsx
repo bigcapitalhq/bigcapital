@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { sumBy } from 'lodash';
 import { CLASSES } from 'common/classes';
-import { Money } from 'components';
-import { FormattedMessage as T } from 'components';
+import { Money } from '@/components';
+import { FormattedMessage as T } from '@/components';
 
 import PaymentMadeFormHeaderFields from './PaymentMadeFormHeaderFields';
 

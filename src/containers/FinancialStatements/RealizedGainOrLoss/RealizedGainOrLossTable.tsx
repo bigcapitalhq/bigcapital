@@ -1,8 +1,8 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 
-import { DataTable } from 'components';
-import FinancialSheet from 'components/FinancialSheet';
+import { DataTable } from '@/components';
+import FinancialSheet from '@/components/FinancialSheet';
 
 /**
  * Realized Gain or Loss table.

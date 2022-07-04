@@ -4,7 +4,7 @@ import { Classes, FormGroup, TextArea, Position } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
-import { FieldRequiredHint, FormattedMessage as T } from 'components';
+import { FieldRequiredHint, FormattedMessage as T } from '@/components';
 import { useAutofocus } from 'hooks';
 import {
   inputIntent,

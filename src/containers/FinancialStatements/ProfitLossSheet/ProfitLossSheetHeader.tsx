@@ -5,7 +5,7 @@ import * as R from 'ramda';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import ProfitLossSheetHeaderGeneralPane from './ProfitLossSheetHeaderGeneralPane';
 import ProfitLossSheetHeaderComparisonPanel from './ProfitLossSheetHeaderComparisonPanel';

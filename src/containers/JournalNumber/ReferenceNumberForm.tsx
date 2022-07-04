@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 
 import 'style/pages/ReferenceNumber/ReferenceNumber.scss';
 
-import { FormObserver } from 'components';
+import { FormObserver } from '@/components';
 import ReferenceNumberFormContent from './ReferenceNumberFormContent';
 import { transformValuesToForm } from './utils';
 import { saveInvoke } from 'utils';

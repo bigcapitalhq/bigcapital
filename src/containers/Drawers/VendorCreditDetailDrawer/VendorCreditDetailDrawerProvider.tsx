@@ -5,7 +5,7 @@ import {
   useRefundVendorCredit,
   useReconcileVendorCredits,
 } from 'hooks/query';
-import { DrawerHeaderContent, DrawerLoading } from 'components';
+import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { useFeatureCan } from 'hooks/state';
 import { Features } from 'common';
 

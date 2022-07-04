@@ -7,7 +7,7 @@ import {
   FormatDate,
   DetailsMenu,
   DetailItem,
-} from 'components';
+} from '@/components';
 
 import { useRefundCreditNoteDrawerContext } from './RefundCreditNoteDrawerProvider';
 

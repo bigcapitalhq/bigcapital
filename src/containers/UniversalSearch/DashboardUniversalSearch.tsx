@@ -3,7 +3,7 @@ import { debounce } from 'lodash';
 import { isUndefined } from 'lodash';
 
 import { useUniversalSearch } from 'hooks/query';
-import { UniversalSearch } from 'components';
+import { UniversalSearch } from '@/components';
 
 import { RESOURCES_TYPES } from 'common/resourcesTypes';
 import { compose } from 'utils';

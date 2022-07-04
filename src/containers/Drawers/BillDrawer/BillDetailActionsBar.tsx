@@ -21,7 +21,7 @@ import {
   Icon,
   DrawerActionsBar,
   FormattedMessage as T,
-} from 'components';
+} from '@/components';
 import {
   BillAction,
   PaymentMadeAction,

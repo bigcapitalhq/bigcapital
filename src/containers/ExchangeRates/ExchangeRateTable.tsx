@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 
-import { DataTable } from 'components';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
+import { DataTable } from '@/components';
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
+import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
 import { useExchangeRatesContext } from './ExchangeRatesProvider';
 import { useExchangeRatesTableColumns, ActionMenuList } from './components';

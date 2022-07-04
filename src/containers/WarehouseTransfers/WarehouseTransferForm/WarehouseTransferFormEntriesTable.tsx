@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { DataTableEditable } from 'components';
+import { DataTableEditable } from '@/components';
 
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import { useWarehouseTransferTableColumns } from '../utils';

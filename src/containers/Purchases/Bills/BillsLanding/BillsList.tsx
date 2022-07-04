@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { DashboardPageContent } from 'components';
+import { DashboardPageContent } from '@/components';
 
 import 'style/pages/Bills/List.scss';
 

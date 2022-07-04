@@ -20,7 +20,7 @@ import {
   FormattedMessage as T,
   MoreMenuItems,
   DrawerActionsBar,
-} from 'components';
+} from '@/components';
 import {
   PaymentReceiveAction,
   AbilitySubject,

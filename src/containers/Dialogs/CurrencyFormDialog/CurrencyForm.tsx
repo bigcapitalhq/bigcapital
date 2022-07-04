@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import CurrencyFormContent from './CurrencyFormContent';
 
 import { useCurrencyFormContext } from './CurrencyFormProvider';

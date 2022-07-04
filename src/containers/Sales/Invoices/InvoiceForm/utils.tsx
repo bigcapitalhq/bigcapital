@@ -13,7 +13,7 @@ import intl from 'react-intl-universal';
 
 import { formattedAmount, defaultFastFieldShouldUpdate } from 'utils';
 import { ERROR } from 'common/errors';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { useCurrentOrganization } from 'hooks/state';
 import { getEntriesTotal } from 'containers/Entries/utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';

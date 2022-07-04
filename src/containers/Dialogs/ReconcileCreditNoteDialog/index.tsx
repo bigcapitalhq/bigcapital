@@ -1,6 +1,6 @@
 import React from 'react';
-import { FormattedMessage as T, Dialog, DialogSuspense } from 'components';
-import withDialogRedux from 'components/DialogReduxConnect';
+import { FormattedMessage as T, Dialog, DialogSuspense } from '@/components';
+import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from 'utils';
 
 const ReconcileCreditNoteDialogContent = React.lazy(() =>

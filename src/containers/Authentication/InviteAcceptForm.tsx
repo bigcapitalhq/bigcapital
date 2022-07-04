@@ -2,12 +2,12 @@ import React from 'react';
 import { Intent, Position } from '@blueprintjs/core';
 import { Formik } from 'formik';
 import { useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { isEmpty } from 'lodash';
 
 import { useInviteAcceptContext } from './InviteAcceptProvider';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { InviteAcceptSchema } from './utils';
 import InviteAcceptFormContent from './InviteAcceptFormContent';
 

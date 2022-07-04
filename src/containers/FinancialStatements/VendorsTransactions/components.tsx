@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 
-import { If } from 'components';
+import { If } from '@/components';
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { getColumnWidth } from 'utils';

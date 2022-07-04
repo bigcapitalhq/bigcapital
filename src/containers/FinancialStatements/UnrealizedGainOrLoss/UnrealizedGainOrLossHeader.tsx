@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import UnrealizedGainOrLossGeneralPanel from './UnrealizedGainOrLossGeneralPanel';

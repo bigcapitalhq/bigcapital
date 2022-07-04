@@ -1,8 +1,8 @@
 import React from 'react';
 import { defaultTo } from 'lodash';
 
-import { FormattedMessage as T } from 'components';
-import { Icon, Money, DetailsMenu, DetailItem } from 'components';
+import { FormattedMessage as T } from '@/components';
+import { Icon, Money, DetailsMenu, DetailItem } from '@/components';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
 
 /**

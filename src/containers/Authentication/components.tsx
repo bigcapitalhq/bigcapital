@@ -1,7 +1,7 @@
 import React from 'react';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import ContentLoader from 'react-content-loader';
-import { If, Icon } from 'components';
+import { If, Icon } from '@/components';
 import { saveInvoke } from 'utils';
 
 export function PasswordRevealer({ defaultShown = false, onChange }) {

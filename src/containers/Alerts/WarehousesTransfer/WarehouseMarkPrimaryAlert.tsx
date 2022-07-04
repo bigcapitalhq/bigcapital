@@ -1,10 +1,10 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import { useMarkWarehouseAsPrimary } from 'hooks/query';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 
 import withAlertActions from 'containers/Alert/withAlertActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';

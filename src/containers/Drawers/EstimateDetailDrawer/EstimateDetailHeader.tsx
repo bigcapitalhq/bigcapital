@@ -14,7 +14,7 @@ import {
   Col,
   CustomerDrawerLink,
   ExchangeRateDetailItem,
-} from 'components';
+} from '@/components';
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 import { EstimateDetailsStatus } from './components';
 

@@ -6,9 +6,9 @@ import SalesByItemsActionsBar from './SalesByItemsActionsBar';
 import SalesByItemsHeader from './SalesByItemsHeader';
 import { SalesByItemsBody } from './SalesByItemsBody';
 
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 import { SalesByItemsLoadingBar } from './components';
-import { FinancialStatement } from 'components';
+import { FinancialStatement } from '@/components';
 
 import withSalesByItemsActions from './withSalesByItemsActions';
 

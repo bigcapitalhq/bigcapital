@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Card } from 'components';
+import { Card } from '@/components';
 import { ItemManuTransaction } from './utils';
 import ItemPaymentTransactionContent from './ItemPaymentTransactionContent';
 

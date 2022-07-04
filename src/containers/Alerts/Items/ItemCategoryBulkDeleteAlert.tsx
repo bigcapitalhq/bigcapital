@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import intl from 'react-intl-universal';
-import {  FormattedMessage as T, FormattedHTMLMessage } from 'components';
+import {  FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { size } from 'lodash';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 
 import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';

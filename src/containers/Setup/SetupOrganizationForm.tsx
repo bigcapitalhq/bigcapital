@@ -11,10 +11,10 @@ import {
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import useAutofocus from 'hooks/useAutofocus'
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { getCountries } from 'common/countries';
 
-import { Col, Row, ListSelect } from 'components';
+import { Col, Row, ListSelect } from '@/components';
 import { inputIntent } from 'utils';
 
 import { getFiscalYear } from 'common/fiscalYearOptions';

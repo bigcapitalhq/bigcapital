@@ -7,7 +7,7 @@ import { CLASSES } from 'common/classes';
 import EstimateFormHeaderFields from './EstimateFormHeaderFields';
 
 import { getEntriesTotal } from 'containers/Entries/utils';
-import { PageFormBigNumber } from 'components';
+import { PageFormBigNumber } from '@/components';
 
 // Estimate form top header.
 function EstimateFormHeader() {

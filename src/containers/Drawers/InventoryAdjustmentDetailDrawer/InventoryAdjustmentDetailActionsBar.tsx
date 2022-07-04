@@ -5,7 +5,7 @@ import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawer
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
 
-import { Icon, DrawerActionsBar, FormattedMessage as T, Can } from 'components';
+import { Icon, DrawerActionsBar, FormattedMessage as T, Can } from '@/components';
 import {
   InventoryAdjustmentAction,
   AbilitySubject,

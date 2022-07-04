@@ -1,5 +1,5 @@
 import React from 'react';
-import { DialogContent } from 'components';
+import { DialogContent } from '@/components';
 import { useQuery, queryCache } from 'react-query';
 
 import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';

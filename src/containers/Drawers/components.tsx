@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, If, Money } from 'components';
+import { Icon, If, Money } from '@/components';
 import moment from 'moment';
 
 export const TemplateHeader = ({ defaultLabels }) => (

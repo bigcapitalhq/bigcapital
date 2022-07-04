@@ -7,7 +7,7 @@ import {
   Button,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T, If } from 'components';
+import { FormattedMessage as T, If } from '@/components';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 
 import { useAutofocus } from 'hooks';
@@ -33,7 +33,7 @@ import {
   CustomerDrawerLink,
   Hint,
   Money,
-} from 'components';
+} from '@/components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import { ACCOUNT_TYPE } from 'common/accountTypes';
 import { PaymentReceiveExchangeRateInputField } from './components';

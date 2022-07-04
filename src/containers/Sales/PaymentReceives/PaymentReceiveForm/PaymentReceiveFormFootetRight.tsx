@@ -6,7 +6,7 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-} from 'components';
+} from '@/components';
 import { usePaymentReceiveTotals } from './utils';
 
 export function PaymentReceiveFormFootetRight() {

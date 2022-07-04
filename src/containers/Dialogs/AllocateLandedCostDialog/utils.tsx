@@ -4,7 +4,7 @@ import * as R from 'ramda';
 import intl from 'react-intl-universal';
 
 import { defaultFastFieldShouldUpdate } from 'utils';
-import { MoneyFieldCell } from 'components';
+import { MoneyFieldCell } from '@/components';
 
 export const defaultInitialItem = {
   entry_id: '',

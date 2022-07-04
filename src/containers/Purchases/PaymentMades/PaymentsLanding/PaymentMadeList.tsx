@@ -2,7 +2,7 @@ import React from 'react';
 
 import 'style/pages/PaymentMade/List.scss';
 
-import { DashboardPageContent } from 'components';
+import { DashboardPageContent } from '@/components';
 import PaymentMadeActionsBar from './PaymentMadeActionsBar';
 import PaymentMadesTable from './PaymentMadesTable';
 import { PaymentMadesListProvider } from './PaymentMadesListProvider';

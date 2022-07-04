@@ -13,7 +13,7 @@ import {
 import { QueryList } from '@blueprintjs/select';
 import { CLASSES } from 'common/classes';
 
-import { Icon, If, ListSelect, FormattedMessage as T } from 'components';
+import { Icon, If, ListSelect, FormattedMessage as T } from '@/components';
 import {
   UniversalSearchProvider,
   useUniversalSearchContext,

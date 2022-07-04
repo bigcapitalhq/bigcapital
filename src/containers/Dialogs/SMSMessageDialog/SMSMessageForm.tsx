@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import { omit } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 
 import SMSMessageFormContent from './SMSMessageFormContent';
 import { CreateSMSMessageFormSchema } from './SMSMessageForm.schema';

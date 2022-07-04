@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { useReceipt } from 'hooks/query';
-import { DrawerHeaderContent, DashboardInsider } from 'components';
+import { DrawerHeaderContent, DashboardInsider } from '@/components';
 
 const ReceiptDrawerContext = createContext();
 

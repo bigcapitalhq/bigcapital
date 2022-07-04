@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataTable, Card } from 'components';
+import { DataTable, Card } from '@/components';
 
 import { TableStyle } from 'common';
 import withAlertsActions from 'containers/Alert/withAlertActions';

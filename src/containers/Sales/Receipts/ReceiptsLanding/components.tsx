@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import {
   Position,
@@ -15,7 +15,7 @@ import clsx from 'classnames';
 
 import { CLASSES } from '../../../../common/classes';
 import { safeCallback } from 'utils';
-import { FormatDateCell, Choose, Money, Icon, If, Can } from 'components';
+import { FormatDateCell, Choose, Money, Icon, If, Can } from '@/components';
 import {
   SaleReceiptAction,
   AbilitySubject,

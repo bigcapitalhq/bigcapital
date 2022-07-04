@@ -1,7 +1,7 @@
 import React from 'react';
 import { Intent, Tag } from '@blueprintjs/core';
 
-import { Choose, T } from 'components';
+import { Choose, T } from '@/components';
 
 /**
  * Receipt details status.

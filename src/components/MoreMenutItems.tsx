@@ -8,7 +8,7 @@ import {
   Menu,
 } from '@blueprintjs/core';
 
-import { Icon, FormattedMessage as T } from 'components';
+import { Icon, FormattedMessage as T } from '@/components';
 
 function MoreMenuItems({ payload: { onNotifyViaSMS } }) {
   return (

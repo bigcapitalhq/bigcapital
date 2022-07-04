@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import moment from 'moment';
 
-import { FinancialStatement } from 'components';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import { FinancialStatement } from '@/components';
+import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 
 import InventoryItemDetailsActionsBar from './InventoryItemDetailsActionsBar';
 import InventoryItemDetailsHeader from './InventoryItemDetailsHeader';

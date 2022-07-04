@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import 'style/pages/Customers/List.scss';
 
-import { DashboardPageContent } from 'components';
+import { DashboardPageContent } from '@/components';
 
 import CustomersActionsBar from './CustomersActionsBar';
 import CustomersViewsTabs from './CustomersViewsTabs';

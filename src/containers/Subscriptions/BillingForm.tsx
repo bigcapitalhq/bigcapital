@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import intl from 'react-intl-universal';
-import { If, Alert, T } from 'components';
+import { If, Alert, T } from '@/components';
 
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 
 import 'style/pages/Billing/BillingPage.scss';
 

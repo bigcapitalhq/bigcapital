@@ -6,7 +6,7 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-} from 'components';
+} from '@/components';
 import { useEstimateTotals } from './utils';
 
 export function EstimateFormFooterRight() {

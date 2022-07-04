@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { ReportsAction, AbilitySubject } from '../common/abilityOption';
 
 export const financialReportMenus = [

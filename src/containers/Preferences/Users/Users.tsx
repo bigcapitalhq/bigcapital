@@ -6,9 +6,9 @@ import styled from 'styled-components';
 
 import 'style/pages/Preferences/Users.scss';
 
-import { Card } from 'components';
+import { Card } from '@/components';
 import { CLASSES } from 'common/classes';
-import PreferencesSubContent from 'components/Preferences/PreferencesSubContent';
+import PreferencesSubContent from '@/components/Preferences/PreferencesSubContent';
 
 import withUserPreferences from 'containers/Preferences/Users/withUserPreferences';
 

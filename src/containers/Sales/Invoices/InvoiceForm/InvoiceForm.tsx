@@ -23,7 +23,7 @@ import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import {

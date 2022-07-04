@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import 'style/pages/Setup/Organization.scss';
 

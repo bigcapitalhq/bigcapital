@@ -3,7 +3,7 @@ import {
   DrawerHeaderContent,
   DrawerBody,
   FormattedMessage as T,
-} from 'components';
+} from '@/components';
 
 import QuickCreateItemDrawerForm from './QuickCreateItemDrawerForm';
 

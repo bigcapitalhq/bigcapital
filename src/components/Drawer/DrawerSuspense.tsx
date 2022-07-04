@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { DrawerLoading } from 'components';
+import { DrawerLoading } from '@/components';
 
 /**
  * Loading content.

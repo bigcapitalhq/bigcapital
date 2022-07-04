@@ -5,7 +5,7 @@ import { Tab, Tabs, Button, Intent } from '@blueprintjs/core';
 import * as Yup from 'yup';
 import styled from 'styled-components';
 
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import JournalSheetHeaderGeneral from './JournalSheetHeaderGeneral';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';

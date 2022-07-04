@@ -2,7 +2,7 @@ import React from 'react';
 import { Classes, FormGroup, InputGroup, Position } from '@blueprintjs/core';
 import { FastField } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import {
   momentFormatter,
   tansformDateValue,
@@ -13,7 +13,7 @@ import {
   ErrorMessage,
   FieldRequiredHint,
   CurrencySelectList,
-} from 'components';
+} from '@/components';
 import { useExchangeRateFromContext } from './ExchangeRateFormProvider';
 
 import classNames from 'classnames';

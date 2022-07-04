@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import moment from 'moment';
 
-import { FinancialStatement } from 'components';
+import { FinancialStatement } from '@/components';
 
 import { PurchasesByItemsProvider } from './PurchasesByItemsProvider';
 import PurchasesByItemsActionsBar from './PurchasesByItemsActionsBar';
 import PurchasesByItemsHeader from './PurchasesByItemsHeader';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 import { PurchasesByItemsLoadingBar } from './components';
 import { PurchasesByItemsBody } from './PurchasesByItemsBody';
 

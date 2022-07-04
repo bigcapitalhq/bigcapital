@@ -2,7 +2,7 @@ import React from 'react';
 import { useFormikContext } from 'formik';
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 /**
  * Number format footer.

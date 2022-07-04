@@ -6,7 +6,7 @@ import {
   ReportDataTable,
   FinancialSheet,
   FormattedMessage as T,
-} from 'components';
+} from '@/components';
 
 import { tableRowTypesToClassnames, defaultExpanderReducer } from 'utils';
 import { useProfitLossSheetColumns } from './hooks';

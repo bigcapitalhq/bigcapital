@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 import moment from 'moment';
 import { omit } from 'lodash';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { useRefundVendorCreditContext } from './RefundVendorCreditFormProvider';
 import { CreateVendorRefundCreditFormSchema } from './RefundVendorCreditForm.schema';
 import RefundVendorCreditFormContent from './RefundVendorCreditFormContent';

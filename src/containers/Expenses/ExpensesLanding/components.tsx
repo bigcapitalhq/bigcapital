@@ -22,7 +22,7 @@ import {
   Icon,
   If,
   Can,
-} from 'components';
+} from '@/components';
 import { safeCallback } from 'utils';
 
 /**

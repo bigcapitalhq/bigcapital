@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { FormGroup, Intent } from '@blueprintjs/core';
 
-import { MoneyInputGroup } from 'components';
+import { MoneyInputGroup } from '@/components';
 import { CLASSES } from 'common/classes';
 import { CellType } from 'common';
 

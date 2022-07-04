@@ -2,14 +2,14 @@ import React from 'react';
 import classNames from 'classnames';
 import { FormGroup, InputGroup, ControlGroup } from '@blueprintjs/core';
 import { FastField, Field, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import {
   Hint,
   FieldRequiredHint,
   SalutationList,
   DisplayNameList,
-} from 'components';
+} from '@/components';
 
 import { CLASSES } from 'common/classes';
 import { inputIntent } from 'utils';

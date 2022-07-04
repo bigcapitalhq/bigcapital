@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Card } from 'components';
+import { Card } from '@/components';
 
 import AccountDrawerActionBar from './AccountDrawerActionBar';
 import AccountDrawerHeader from './AccountDrawerHeader';

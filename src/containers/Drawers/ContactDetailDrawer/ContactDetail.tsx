@@ -1,7 +1,7 @@
 import React from 'react';
 import ContactDetailActionsBar from './ContactDetailActionsBar';
 import ContactDetailList from './ContactDetailList';
-import { Card } from 'components';
+import { Card } from '@/components';
 
 /**
  * contact detail.

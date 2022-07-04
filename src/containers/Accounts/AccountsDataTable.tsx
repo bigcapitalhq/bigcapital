@@ -1,15 +1,15 @@
 import React from 'react';
 
-import { TableFastCell, DataTable } from 'components';
+import { TableFastCell, DataTable } from '@/components';
 import { compose } from 'utils';
 
 import { useAccountsTableColumns, rowClassNames } from './utils';
 import { ActionsMenu } from './components';
 import { TABLES } from 'common/tables';
 
-import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
+import TableVirtualizedListRows from '@/components/Datatable/TableVirtualizedRows';
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
+import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 import withSettings from '../Settings/withSettings';
 
 import { useAccountsChartContext } from './AccountsChartProvider';

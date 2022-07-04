@@ -7,7 +7,7 @@ import { Intent } from '@blueprintjs/core';
 
 import 'style/pages/Preferences/Roles/Form.scss';
 
-import { AppToaster, FormattedMessage as T } from 'components';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import { CreateRolesFormSchema, EditRolesFormSchema } from './RolesForm.schema';
 import { useRolesFormContext } from './RolesFormProvider';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';

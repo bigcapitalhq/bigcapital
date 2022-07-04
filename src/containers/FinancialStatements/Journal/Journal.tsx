@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import moment from 'moment';
 
-import { FinancialStatement, DashboardPageContent } from 'components';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 
 import JournalHeader from './JournalHeader';
 import JournalActionsBar from './JournalActionsBar';

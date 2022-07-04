@@ -8,7 +8,7 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
   FormatNumber,
-} from 'components';
+} from '@/components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 
 /**

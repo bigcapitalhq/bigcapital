@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import 'style/pages/Items/Form.scss';
 
 import { CLASSES } from 'common/classes';
-import AppToaster from 'components/AppToaster';
+import AppToaster from '@/components/AppToaster';
 import ItemFormPrimarySection from './ItemFormPrimarySection';
 import ItemFormBody from './ItemFormBody';
 import ItemFormFloatingActions from './ItemFormFloatingActions';

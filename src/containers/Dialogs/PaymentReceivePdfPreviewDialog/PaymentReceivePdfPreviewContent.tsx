@@ -1,7 +1,7 @@
 import React from 'react';
 import { AnchorButton } from '@blueprintjs/core';
 
-import { DialogContent, PdfDocumentPreview, T } from 'components';
+import { DialogContent, PdfDocumentPreview, T } from '@/components';
 import { usePdfPaymentReceive } from 'hooks/query';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';

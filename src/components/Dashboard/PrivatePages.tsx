@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router';
 
-import Dashboard from 'components/Dashboard/Dashboard';
+import Dashboard from '@/components/Dashboard/Dashboard';
 import SetupWizardPage from 'containers/Setup/WizardSetupPage';
 
 import EnsureOrganizationIsReady from '../../components/Guards/EnsureOrganizationIsReady';

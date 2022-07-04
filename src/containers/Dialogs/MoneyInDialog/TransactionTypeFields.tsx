@@ -9,7 +9,7 @@ import {
   ListSelect,
   Col,
   Row,
-} from 'components';
+} from '@/components';
 
 import { inputIntent } from 'utils';
 import { CLASSES } from 'common/classes';

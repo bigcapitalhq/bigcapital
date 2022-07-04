@@ -1,8 +1,8 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
-import { Icon, If } from 'components';
-import { FormattedMessage as T } from 'components';
+import { Icon, If } from '@/components';
+import { FormattedMessage as T } from '@/components';
 
 import { getColumnWidth } from 'utils';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';

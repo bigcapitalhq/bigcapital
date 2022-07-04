@@ -8,7 +8,7 @@ import {
   MenuDivider,
   Intent,
 } from '@blueprintjs/core';
-import { Can, Icon, Money, If } from 'components';
+import { Can, Icon, Money, If } from '@/components';
 import intl from 'react-intl-universal';
 import { safeCallback } from 'utils';
 import { AbilitySubject, AccountAction } from '../../common/abilityOption';

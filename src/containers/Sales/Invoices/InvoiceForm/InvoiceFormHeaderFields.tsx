@@ -16,7 +16,7 @@ import {
   Col,
   Row,
   CustomerDrawerLink,
-} from 'components';
+} from '@/components';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 
 import {
@@ -29,7 +29,7 @@ import {
   FieldRequiredHint,
   Icon,
   InputPrependButton,
-} from 'components';
+} from '@/components';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { InvoiceExchangeRateInputField } from './components';
 

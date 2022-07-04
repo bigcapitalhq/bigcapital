@@ -2,7 +2,7 @@ import React from 'react';
 import { Menu } from '@blueprintjs/core';
 import * as R from 'ramda';
 
-import { MenuItem, MenuItemLabel } from 'components';
+import { MenuItem, MenuItemLabel } from '@/components';
 import { ISidebarMenuItemType } from 'containers/Dashboard/Sidebar/interfaces';
 import { useIsSidebarMenuItemActive } from './hooks';
 

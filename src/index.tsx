@@ -7,7 +7,7 @@ import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 
 import 'services/yup';
-import App from 'components/App';
+import App from '@/components/App';
 import * as serviceWorker from 'serviceWorker';
 import { store, persistor } from 'store/createStore';
 

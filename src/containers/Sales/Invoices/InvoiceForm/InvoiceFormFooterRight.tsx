@@ -7,7 +7,7 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-} from 'components';
+} from '@/components';
 import { useInvoiceTotals } from './utils';
 
 export function InvoiceFormFooterRight() {

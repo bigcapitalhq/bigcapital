@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataTable, Card, FormattedMessage as T } from 'components';
+import { DataTable, Card, FormattedMessage as T } from '@/components';
 
 import { useLocatedLandedCostColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from './BillDrawerProvider';
@@ -9,7 +9,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { TableStyle } from '../../../common';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import { compose } from 'utils';
 

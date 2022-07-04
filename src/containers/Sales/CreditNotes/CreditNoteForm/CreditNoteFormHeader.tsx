@@ -6,7 +6,7 @@ import { CLASSES } from 'common/classes';
 import CreditNoteFormHeaderFields from './CreditNoteFormHeaderFields';
 
 import { getEntriesTotal } from 'containers/Entries/utils';
-import { PageFormBigNumber } from 'components';
+import { PageFormBigNumber } from '@/components';
 
 /**
  * Credit note header.

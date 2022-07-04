@@ -10,7 +10,7 @@ import {
   FormattedMessage as T,
   CommercialDocHeader,
   CommercialDocTopHeader,
-} from 'components';
+} from '@/components';
 import { ManualJournalDetailsStatus } from './utils';
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 

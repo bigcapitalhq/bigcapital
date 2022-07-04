@@ -11,13 +11,13 @@ import {
   Alignment,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
 
-import { If } from 'components';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import Icon from 'components/Icon';
+import { If } from '@/components';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
+import Icon from '@/components/Icon';
 
 import { useRefreshExchangeRate } from 'hooks/query/exchangeRates';
 import withDialogActions from 'containers/Dialog/withDialogActions';

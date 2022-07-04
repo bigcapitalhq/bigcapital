@@ -6,7 +6,7 @@ import {
   TotalLines,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-} from 'components';
+} from '@/components';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 import { FormatNumber, TotalLine } from '../../../components';
 

@@ -4,8 +4,8 @@ import { useHistory } from 'react-router-dom';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { DataTable, AppToaster } from 'components';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+import { DataTable, AppToaster } from '@/components';
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import { useRolesTableColumns, ActionsMenu } from './components';
 import withAlertsActions from 'containers/Alert/withAlertActions';

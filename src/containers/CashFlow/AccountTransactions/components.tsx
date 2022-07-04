@@ -3,8 +3,8 @@ import intl from 'react-intl-universal';
 
 import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 
-import { MaterialProgressBar } from 'components';
-import { Can, FormatDateCell, If, Icon } from 'components';
+import { MaterialProgressBar } from '@/components';
+import { Can, FormatDateCell, If, Icon } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { TRANSACRIONS_TYPE } from 'common/cashflowOptions';
 import { AbilitySubject, CashflowAction } from '../../../common/abilityOption';

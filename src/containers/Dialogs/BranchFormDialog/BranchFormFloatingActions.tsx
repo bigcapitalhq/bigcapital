@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import { useBranchFormContext } from './BranchFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';

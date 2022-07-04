@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
-import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
+import DashboardTopbarUser from '@/components/Dashboard/TopbarUser';
 import UsersActions from 'containers/Preferences/Users/UsersActions';
 import CurrenciesActions from 'containers/Preferences/Currencies/CurrenciesActions';
 import WarehousesActions from '../../containers/Preferences/Warehouses/WarehousesActions';

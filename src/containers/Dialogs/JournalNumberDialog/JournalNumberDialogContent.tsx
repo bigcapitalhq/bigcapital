@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
-import { DialogContent } from 'components';
+import { DialogContent } from '@/components';
 import { useSaveSettings, useSettingsManualJournals } from 'hooks/query';
 
 import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';

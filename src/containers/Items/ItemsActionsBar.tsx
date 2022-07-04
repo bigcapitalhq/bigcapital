@@ -9,16 +9,16 @@ import {
   Switch,
   Alignment,
 } from '@blueprintjs/core';
-import { DashboardRowsHeightButton, FormattedMessage as T } from 'components';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import Icon from 'components/Icon';
+import { DashboardRowsHeightButton, FormattedMessage as T } from '@/components';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
+import Icon from '@/components/Icon';
 import {
   If,
   Can,
   DashboardActionViewsList,
   AdvancedFilterPopover,
   DashboardFilterButton,
-} from 'components';
+} from '@/components';
 
 import { useItemsListContext } from './ItemsListProvider';
 import { useRefreshItems } from 'hooks/query/items';

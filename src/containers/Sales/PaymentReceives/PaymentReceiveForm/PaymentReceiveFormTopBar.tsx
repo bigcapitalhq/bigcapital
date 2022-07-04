@@ -9,7 +9,7 @@ import {
   FeatureCan,
   FormTopbar,
   DetailsBarSkeletonBase,
-} from 'components';
+} from '@/components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import { Features } from 'common';
 

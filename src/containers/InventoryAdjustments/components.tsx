@@ -12,9 +12,9 @@ import {
 import intl from 'react-intl-universal';
 import moment from 'moment';
 
-import { FormattedMessage as T, Can } from 'components';
+import { FormattedMessage as T, Can } from '@/components';
 import { isNumber } from 'lodash';
-import { Icon, Money, If } from 'components';
+import { Icon, Money, If } from '@/components';
 import { isBlank, safeCallback } from 'utils';
 import {
   InventoryAdjustmentAction,

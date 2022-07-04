@@ -1,6 +1,6 @@
 import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 
 /**
  * Handle delete errors.

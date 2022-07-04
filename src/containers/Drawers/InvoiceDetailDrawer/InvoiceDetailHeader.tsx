@@ -14,7 +14,7 @@ import {
   CommercialDocTopHeader,
   CustomerDrawerLink,
   ExchangeRateDetailItem,
-} from 'components';
+} from '@/components';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 import { InvoiceDetailsStatus } from './utils';
 

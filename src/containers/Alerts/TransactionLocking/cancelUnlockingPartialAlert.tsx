@@ -1,8 +1,8 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 
 import { useCancelUnlockingPartialTransactions } from 'hooks/query';
 

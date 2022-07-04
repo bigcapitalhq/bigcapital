@@ -16,7 +16,7 @@ import {
   AdvancedFilterPopover,
   DashboardFilterButton,
   DashboardRowsHeightButton,
-} from 'components';
+} from '@/components';
 import DashboardActionsBar from '../../../../components/Dashboard/DashboardActionsBar';
 
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';

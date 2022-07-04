@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CommercialDocBox } from 'components';
+import { CommercialDocBox } from '@/components';
 
 import EstimateDetailHeader from './EstimateDetailHeader';
 import EstimateDetailTable from './EstimateDetailTable';

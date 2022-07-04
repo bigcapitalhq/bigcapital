@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field } from 'formik';
 
-import { T, SubscriptionPlans } from 'components';
+import { T, SubscriptionPlans } from '@/components';
 
 import { compose } from 'utils';
 import withPlans from '../../Subscriptions/withPlans';

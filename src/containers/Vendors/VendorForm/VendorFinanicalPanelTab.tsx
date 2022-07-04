@@ -15,8 +15,8 @@ import {
   FeatureCan,
   Row,
   Col,
-} from 'components';
-import { FormattedMessage as T } from 'components';
+} from '@/components';
+import { FormattedMessage as T } from '@/components';
 import { useSetPrimaryBranchToForm } from './utils';
 import { momentFormatter, tansformDateValue, inputIntent } from 'utils';
 import { useVendorFormContext } from './VendorFormProvider';

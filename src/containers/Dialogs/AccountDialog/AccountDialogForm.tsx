@@ -3,7 +3,7 @@ import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
 import intl from 'react-intl-universal';
 import { omit } from 'lodash';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 
 import AccountDialogFormContent from './AccountDialogFormContent';
 

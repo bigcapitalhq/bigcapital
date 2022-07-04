@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import moment from 'moment';
 
 import { BalanceSheetAlerts, BalanceSheetLoadingBar } from './components';
-import { FinancialStatement } from 'components';
+import { FinancialStatement } from '@/components';
 
 import BalanceSheetHeader from './BalanceSheetHeader';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 import BalanceSheetActionsBar from './BalanceSheetActionsBar';
 import { BalanceSheetProvider } from './BalanceSheetProvider';
 import { BalanceSheetBody } from './BalanceSheetBody';

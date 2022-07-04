@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
-import { ExchangeRateInputGroup } from 'components';
+import { ExchangeRateInputGroup } from '@/components';
 import { useCurrentOrganization } from 'hooks/state';
 import { useBillIsForeignCustomer } from './utils';
 

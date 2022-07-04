@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import { Intent, Button, Classes } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';

@@ -9,12 +9,12 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
-import { If, Icon } from 'components';
+import { If, Icon } from '@/components';
 import { useEstimateFormContext } from './EstimateFormProvider';
 
 /**

@@ -25,7 +25,7 @@ import {
   EditPaymentReceiveFormSchema,
   CreatePaymentReceiveFormSchema,
 } from './PaymentReceiveForm.schema';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { transactionNumber, compose } from 'utils';
 
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';

@@ -1,7 +1,7 @@
 import React from 'react';
 import * as R from 'ramda';
 
-import { FinancialSheetSkeleton } from 'components';
+import { FinancialSheetSkeleton } from '@/components';
 import { FinancialReportBody } from '../FinancialReportPage';
 import TrialBalanceSheetTable from './TrialBalanceSheetTable';
 

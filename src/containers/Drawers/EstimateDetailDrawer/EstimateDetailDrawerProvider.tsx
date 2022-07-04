@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useEstimate } from 'hooks/query';
-import { DrawerHeaderContent, DrawerLoading } from 'components';
+import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { Features } from 'common';
 import { useFeatureCan } from 'hooks/state';
 

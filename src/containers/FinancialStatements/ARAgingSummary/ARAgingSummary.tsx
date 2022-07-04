@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 
-import { FinancialStatement } from 'components';
+import { FinancialStatement } from '@/components';
 
 import ARAgingSummaryHeader from './ARAgingSummaryHeader';
 import ARAgingSummaryActionsBar from './ARAgingSummaryActionsBar';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 import { ARAgingSummaryProvider } from './ARAgingSummaryProvider';
 import { ARAgingSummarySheetLoadingBar } from './components';
 import { ARAgingSummaryBody } from './ARAgingSummaryBody';

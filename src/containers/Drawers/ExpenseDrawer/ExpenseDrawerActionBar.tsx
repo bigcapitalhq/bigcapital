@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import Icon from 'components/Icon';
+import Icon from '@/components/Icon';
 import {
   Button,
   Classes,
@@ -8,7 +8,7 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
-import { DrawerActionsBar, Can, FormattedMessage as T } from 'components';
+import { DrawerActionsBar, Can, FormattedMessage as T } from '@/components';
 
 import { ExpenseAction, AbilitySubject } from '../../../common/abilityOption';
 

@@ -8,7 +8,7 @@ import {
   Row,
   Col,
   CommercialDocHeader,
-} from 'components';
+} from '@/components';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 
 /**

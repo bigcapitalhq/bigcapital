@@ -7,7 +7,7 @@ import {
   getPermissionsSchema,
   ModulePermissionsStyle,
 } from 'common/permissionsSchema';
-import { Card, If, ButtonLink, Choose, T } from 'components';
+import { Card, If, ButtonLink, Choose, T } from '@/components';
 import {
   getSerivceColumnPermission,
   getServiceExtraPermissions,

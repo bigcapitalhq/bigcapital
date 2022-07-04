@@ -2,7 +2,7 @@ import React from 'react';
 import { useFormikContext } from 'formik';
 import { Classes } from '@blueprintjs/core';
 
-import { If } from 'components';
+import { If } from '@/components';
 
 import MoneyOutContentFields from './MoneyOutContentFields';
 import TransactionTypeFields from './TransactionTypeFields';

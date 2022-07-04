@@ -17,7 +17,7 @@ import {
   Choose,
   Money,
   Can,
-} from 'components';
+} from '@/components';
 import { formattedAmount, safeCallback, isBlank, calculateStatus } from 'utils';
 import {
   BillAction,

@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from 'react';
-import { ContextMenu } from 'components';
+import { ContextMenu } from '@/components';
 import classNames from 'classnames';
 import useContextMenu from 'react-use-context-menu';
 

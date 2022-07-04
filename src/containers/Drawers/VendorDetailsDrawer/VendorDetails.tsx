@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'classnames';
 
-import { Card } from 'components';
+import { Card } from '@/components';
 
 import VendorDetailsActionsBar from './VendorDetailsActionsBar';
 import VendorDetailsHeader from './VendorDetailsHeader';

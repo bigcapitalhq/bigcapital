@@ -9,7 +9,7 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-} from 'components';
+} from '@/components';
 import { subtract } from 'lodash';
 import { getEntriesTotal } from 'containers/Entries/utils';
 import ReconcileCreditNoteEntriesTable from './ReconcileCreditNoteEntriesTable';

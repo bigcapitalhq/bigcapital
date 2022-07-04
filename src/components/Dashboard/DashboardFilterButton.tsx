@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import intl from "react-intl-universal";
 import { Classes, Button } from '@blueprintjs/core';
-import { T, Icon } from 'components';
+import { T, Icon } from '@/components';
 
 /**
  * Dashboard advanced filter button.

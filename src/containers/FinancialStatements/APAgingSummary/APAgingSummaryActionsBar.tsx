@@ -9,12 +9,12 @@ import {
   Position,
 } from '@blueprintjs/core';
 
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import { Icon } from 'components';
-import NumberFormatDropdown from 'components/NumberFormatDropdown';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
+import { Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import withAPAgingSummary from './withAPAgingSummary';

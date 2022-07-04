@@ -4,9 +4,9 @@ import styled from 'styled-components';
 
 import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
 
-import { FinancialSheet, ReportDataTable } from 'components';
-import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
-import TableFastCell from 'components/Datatable/TableFastCell';
+import { FinancialSheet, ReportDataTable } from '@/components';
+import TableVirtualizedListRows from '@/components/Datatable/TableVirtualizedRows';
+import TableFastCell from '@/components/Datatable/TableFastCell';
 
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import { useGeneralLedgerTableColumns } from './components';

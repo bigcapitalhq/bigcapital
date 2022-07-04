@@ -9,7 +9,7 @@ import SMSMessageFormFields from './SMSMessageFormFields';
 import SMSMessageFormFloatingActions from './SMSMessageFormFloatingActions';
 
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
-import { SMSMessagePreview } from 'components';
+import { SMSMessagePreview } from '@/components';
 import { getSMSUnits } from '../../NotifyViaSMS/utils';
 
 /**

@@ -7,7 +7,7 @@ import {
   FieldRequiredHint,
   FormattedMessage as T,
   CardFooterActions
-} from 'components';
+} from '@/components';
 import { inputIntent } from 'utils';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from 'common/accountTypes';
 

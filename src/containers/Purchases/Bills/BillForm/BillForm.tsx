@@ -14,7 +14,7 @@ import BillFormFooter from './BillFormFooter';
 import BillItemsEntriesEditor from './BillItemsEntriesEditor';
 import BillFormTopBar from './BillFormTopBar';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 
 import { useBillFormContext } from './BillFormProvider';
 import { compose, safeSumBy } from 'utils';

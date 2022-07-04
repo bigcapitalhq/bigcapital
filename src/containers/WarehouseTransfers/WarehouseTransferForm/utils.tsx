@@ -9,7 +9,7 @@ import * as R from 'ramda';
 import { useWatch } from 'hooks/utils';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import {
   orderingLinesIndexes,
   updateAutoAddNewLine,

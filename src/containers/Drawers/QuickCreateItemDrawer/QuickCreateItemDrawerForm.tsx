@@ -2,7 +2,7 @@ import React from 'react';
 import * as R from 'ramda';
 import styled from 'styled-components';
 
-import { Card, DrawerLoading } from 'components';
+import { Card, DrawerLoading } from '@/components';
 
 import ItemFormFormik from '../../Items/ItemFormFormik';
 import {
@@ -13,7 +13,7 @@ import {
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withDashboardActions from '../../Dashboard/withDashboardActions';
 
-import { useDrawerContext } from 'components/Drawer/DrawerProvider';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 
 /**
  * Drawer item form loading.

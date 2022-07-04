@@ -1,11 +1,11 @@
 import React, { lazy } from 'react';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import {
   Dialog,
   DialogSuspense,
-} from 'components';
-import withDialogRedux from 'components/DialogReduxConnect';
+} from '@/components';
+import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from 'utils';
 
 const ExchangeRateFormDialogContent = lazy(() =>

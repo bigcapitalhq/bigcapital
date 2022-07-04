@@ -5,7 +5,7 @@ import * as R from 'ramda';
 import classNames from 'classnames';
 import intl from 'react-intl-universal'
 
-import { MenuItemNestedText, FormattedMessage as T } from 'components';
+import { MenuItemNestedText, FormattedMessage as T } from '@/components';
 import { filterAccountsByQuery } from './utils';
 import { nestedArrayToflatten } from 'utils';
 import { CLASSES } from 'common/classes';

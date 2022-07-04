@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import intl from 'react-intl-universal';
 
 import { useAbilityContext } from 'hooks/utils';
-import { DrawerMainTabs } from 'components';
+import { DrawerMainTabs } from '@/components';
 import {
   PaymentReceiveAction,
   AbilitySubject,

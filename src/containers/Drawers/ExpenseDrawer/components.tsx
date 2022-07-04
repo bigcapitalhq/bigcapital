@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tag, Intent } from '@blueprintjs/core';
 
-import { T } from 'components';
+import { T } from '@/components';
 
 /**
  * Expense details status.

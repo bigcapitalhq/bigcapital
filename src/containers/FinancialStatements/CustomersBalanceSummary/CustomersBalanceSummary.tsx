@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import * as R from 'ramda';
 
-import { FinancialStatement } from 'components';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import { FinancialStatement } from '@/components';
+import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 
 import CustomersBalanceSummaryActionsBar from './CustomersBalanceSummaryActionsBar';
 import CustomersBalanceSummaryHeader from './CustomersBalanceSummaryHeader';

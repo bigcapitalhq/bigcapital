@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import { Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import moment from 'moment';

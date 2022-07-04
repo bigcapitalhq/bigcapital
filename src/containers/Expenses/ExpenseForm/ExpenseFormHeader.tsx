@@ -2,12 +2,12 @@ import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 import { CLASSES } from 'common/classes';
 
 import ExpenseFormHeaderFields from './ExpenseFormHeaderFields';
-import { PageFormBigNumber } from 'components';
+import { PageFormBigNumber } from '@/components';
 
 // Expense form header.
 export default function ExpenseFormHeader() {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { Classes, FormGroup, TextArea } from '@blueprintjs/core';
-import { FieldRequiredHint, FormattedMessage as T } from 'components';
+import { FieldRequiredHint, FormattedMessage as T } from '@/components';
 import { useAutofocus } from 'hooks';
 import { inputIntent } from 'utils';
 

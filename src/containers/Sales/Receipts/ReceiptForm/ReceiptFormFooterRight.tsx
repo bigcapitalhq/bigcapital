@@ -7,7 +7,7 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-} from 'components';
+} from '@/components';
 import { useReceiptTotals } from './utils';
 
 export function ReceiptFormFooterRight() {

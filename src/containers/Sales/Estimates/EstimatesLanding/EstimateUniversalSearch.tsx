@@ -2,7 +2,7 @@ import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { Choose, T, Icon } from 'components';
+import { Choose, T, Icon } from '@/components';
 
 import { RESOURCES_TYPES } from "common/resourcesTypes";
 import { AbilitySubject, SaleEstimateAction } from '../../../../common/abilityOption';

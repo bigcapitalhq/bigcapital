@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Icon from 'components/Icon';
+import Icon from '@/components/Icon';
 import {
   Button,
   Classes,
@@ -11,7 +11,7 @@ import {
 
 import { useHistory } from 'react-router-dom';
 
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import {
   If,
   Can,
@@ -20,7 +20,7 @@ import {
   DashboardFilterButton,
   AdvancedFilterPopover,
   DashboardRowsHeightButton,
-} from 'components';
+} from '@/components';
 import { BillAction, AbilitySubject } from '../../../../common/abilityOption';
 
 import withBillsActions from './withBillsActions';

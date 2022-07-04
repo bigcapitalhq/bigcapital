@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 
 import { safeCallback } from 'utils';
-import { Icon, If } from 'components';
+import { Icon, If } from '@/components';
 
 /**
  * Context menu of Branches.

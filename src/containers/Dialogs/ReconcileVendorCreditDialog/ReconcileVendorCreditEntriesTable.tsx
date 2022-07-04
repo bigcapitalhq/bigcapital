@@ -5,7 +5,7 @@ import { defaultTo } from 'lodash';
 
 import { useDeepCompareEffect } from 'hooks/utils';
 
-import { DataTableEditable } from 'components';
+import { DataTableEditable } from '@/components';
 import { compose, updateTableCell } from 'utils';
 import {
   useReconcileVendorCreditTableColumns,

@@ -2,7 +2,7 @@ import React, { createContext, useState } from 'react';
 import { isEqual, isUndefined } from 'lodash';
 import { Features } from 'common';
 import { useFeatureCan } from 'hooks/state';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 import {
   useReceipt,
   useAccounts,

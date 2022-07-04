@@ -8,7 +8,7 @@ import {
   ListSelect,
   FieldRequiredHint,
   FormattedMessage as T,
-} from 'components';
+} from '@/components';
 import { CLASSES } from 'common/classes';
 import { inputIntent } from 'utils';
 

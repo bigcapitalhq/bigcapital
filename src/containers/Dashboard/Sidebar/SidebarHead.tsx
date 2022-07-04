@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Popover, Menu, Position } from '@blueprintjs/core';
 
-import { Icon } from 'components';
+import { Icon } from '@/components';
 
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
 import { useAuthenticatedAccount } from 'hooks/query';

@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 import { defaultTo } from 'lodash';
 import clsx from 'classnames';
 
-import { DetailsMenu, DetailItem, FormatDate } from 'components';
+import { DetailsMenu, DetailItem, FormatDate } from '@/components';
 import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawerProvider';
 
 import InventoryAdjustmentDrawerCls from 'style/components/Drawers/InventoryAdjustmentDrawer.module.scss';

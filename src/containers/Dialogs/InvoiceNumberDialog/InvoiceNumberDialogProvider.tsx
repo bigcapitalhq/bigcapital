@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { DialogContent } from 'components';
+import { DialogContent } from '@/components';
 import { useSettingsInvoices } from 'hooks/query';
 
 const InvoiceNumberDialogContext = createContext();

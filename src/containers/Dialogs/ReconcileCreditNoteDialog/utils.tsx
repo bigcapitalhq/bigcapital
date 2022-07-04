@@ -5,7 +5,7 @@ import * as R from 'ramda';
 import clsx from 'classnames';
 
 import { CLASSES } from 'common/classes';
-import { MoneyFieldCell, FormatDateCell, AppToaster, T } from 'components';
+import { MoneyFieldCell, FormatDateCell, AppToaster, T } from '@/components';
 
 export const transformErrors = (errors, { setErrors }) => {
   if (errors.some((e) => e.type === 'INVOICES_HAS_NO_REMAINING_AMOUNT')) {

@@ -21,7 +21,7 @@ import {
   FeatureCan,
   WarehouseSelect,
   FormTopbar,
-} from 'components';
+} from '@/components';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { Features } from 'common';
 

@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 import { CLASSES } from 'common/classes';
 import SMSMessagesDataTable from './SMSMessagesDataTable';
-import { Card } from 'components';
+import { Card } from '@/components';
 
 import '../../../style/pages/Preferences/SMSIntegration.scss';
 

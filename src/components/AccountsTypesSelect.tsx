@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import classNames from 'classnames';
-import { ListSelect } from 'components';
+import { ListSelect } from '@/components';
 import { CLASSES } from 'common/classes';
 
 export default function AccountsTypesSelect({

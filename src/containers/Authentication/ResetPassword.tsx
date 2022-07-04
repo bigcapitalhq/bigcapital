@@ -5,12 +5,12 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { Link, useParams, useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 
 import { useAuthResetPassword } from 'hooks/query';
 
-import AppToaster from 'components/AppToaster';
+import AppToaster from '@/components/AppToaster';
 import AuthInsider from 'containers/Authentication/AuthInsider';
 
 import ResetPasswordForm from './ResetPasswordForm';

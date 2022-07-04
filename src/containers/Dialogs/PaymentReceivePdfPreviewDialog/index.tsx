@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { T, Dialog, DialogSuspense } from 'components';
+import { T, Dialog, DialogSuspense } from '@/components';
 
-import withDialogRedux from 'components/DialogReduxConnect';
+import withDialogRedux from '@/components/DialogReduxConnect';
 
 import { CLASSES } from 'common/classes';
 import { compose } from 'utils';

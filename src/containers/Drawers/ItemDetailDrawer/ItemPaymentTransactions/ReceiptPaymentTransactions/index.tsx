@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DataTable } from '../../../../../components';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows'
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows'
 import { TableStyle } from 'common';
 
 import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';

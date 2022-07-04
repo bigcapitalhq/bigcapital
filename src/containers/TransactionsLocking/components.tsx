@@ -12,7 +12,7 @@ import {
 } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
-import { Hint, Icon, If, FormattedMessage as T } from 'components';
+import { Hint, Icon, If, FormattedMessage as T } from '@/components';
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
 import { safeInvoke } from 'utils';
 

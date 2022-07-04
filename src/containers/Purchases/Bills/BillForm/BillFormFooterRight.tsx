@@ -7,7 +7,7 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-} from 'components';
+} from '@/components';
 import { useBillTotals } from './utils';
 
 export function BillFormFooterRight() {

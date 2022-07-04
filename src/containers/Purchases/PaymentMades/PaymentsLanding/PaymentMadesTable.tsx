@@ -4,11 +4,11 @@ import { useHistory } from 'react-router-dom';
 import { compose } from 'utils';
 
 import { TABLES } from 'common/tables';
-import { DataTable, DashboardContentTable } from 'components';
+import { DataTable, DashboardContentTable } from '@/components';
 
 import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
+import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
 import withPaymentMadeActions from './withPaymentMadeActions';
 import withPaymentMade from './withPaymentMade';

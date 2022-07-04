@@ -3,8 +3,8 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { Intent } from '@blueprintjs/core';
 
-import { DataTable, AppToaster } from 'components';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+import { DataTable, AppToaster } from '@/components';
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import { useSMSIntegrationTableColumns, ActionsMenu } from './components';
 import { useSMSIntegrationContext } from './SMSIntegrationProvider';

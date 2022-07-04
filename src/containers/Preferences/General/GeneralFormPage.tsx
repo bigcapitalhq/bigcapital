@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 
 import 'style/pages/Preferences/GeneralForm.scss';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 import GeneralForm from './GeneralForm';
 import { PreferencesGeneralSchema } from './General.schema';
 import { useGeneralFormContext } from './GeneralFormProvider';

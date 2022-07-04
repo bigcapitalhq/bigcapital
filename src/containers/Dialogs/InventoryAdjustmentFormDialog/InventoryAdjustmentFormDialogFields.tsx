@@ -9,7 +9,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from 'hooks';
@@ -23,7 +23,7 @@ import {
   WarehouseSelect,
   BranchSelectButton,
   WarehouseSelectButton,
-} from 'components';
+} from '@/components';
 import {
   inputIntent,
   momentFormatter,
@@ -35,7 +35,7 @@ import { CLASSES } from 'common/classes';
 import { Features } from 'common';
 import adjustmentType from 'common/adjustmentType';
 
-import AccountsSuggestField from 'components/AccountsSuggestField';
+import AccountsSuggestField from '@/components/AccountsSuggestField';
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
 import {
   diffQuantity,

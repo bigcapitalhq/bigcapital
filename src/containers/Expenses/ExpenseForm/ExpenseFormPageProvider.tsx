@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 import { Features } from 'common';
 import { useFeatureCan } from 'hooks/state';
 import {

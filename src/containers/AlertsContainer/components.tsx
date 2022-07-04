@@ -8,7 +8,7 @@ import clsx from 'classnames';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 
 function AlertLazyFallbackMessage({ amount }) {
   return (

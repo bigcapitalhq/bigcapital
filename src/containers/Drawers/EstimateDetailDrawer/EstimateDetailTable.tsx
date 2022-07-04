@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CommercialDocEntriesTable } from 'components';
+import { CommercialDocEntriesTable } from '@/components';
 
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 import { useEstimateReadonlyEntriesColumns } from './utils';

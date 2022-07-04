@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { DataTable, DashboardContentTable } from 'components';
+import { DataTable, DashboardContentTable } from '@/components';
 import EstimatesEmptyStatus from './EstimatesEmptyStatus';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
+import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
+import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
 import withEstimatesActions from './withEstimatesActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';

@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { pick, snakeCase } from 'lodash';
 import intl from 'react-intl-universal';
-import { AppToaster } from 'components';
+import { AppToaster } from '@/components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 

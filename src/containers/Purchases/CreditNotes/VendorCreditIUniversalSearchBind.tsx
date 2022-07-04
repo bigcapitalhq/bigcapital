@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem, Intent } from '@blueprintjs/core';
 
-import { TextStatus, Icon, Choose, T } from 'components';
+import { TextStatus, Icon, Choose, T } from '@/components';
 
 import { RESOURCES_TYPES } from '../../../common/resourcesTypes';
 import withDrawerActions from '../../Drawer/withDrawerActions';

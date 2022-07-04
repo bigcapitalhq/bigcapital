@@ -6,7 +6,7 @@ import InventoryValuationActionsBar from './InventoryValuationActionsBar';
 import InventoryValuationHeader from './InventoryValuationHeader';
 import { InventoryValuationBody } from './InventoryValuationBody';
 
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 import { InventoryValuationLoadingBar } from './components';
 import withInventoryValuationActions from './withInventoryValuationActions';
 import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';

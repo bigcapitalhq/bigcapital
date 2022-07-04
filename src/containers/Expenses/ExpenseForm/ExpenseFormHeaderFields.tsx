@@ -8,7 +8,7 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
@@ -24,7 +24,7 @@ import {
   AccountsSelectList,
   FieldRequiredHint,
   Hint,
-} from 'components';
+} from '@/components';
 import { ExpensesExchangeRateInputField } from './components';
 import { ACCOUNT_PARENT_TYPE } from 'common/accountTypes';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';

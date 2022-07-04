@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
-import { DetailItem } from 'components';
+import { DetailItem } from '@/components';
 import { isEqual } from 'lodash';
 
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';

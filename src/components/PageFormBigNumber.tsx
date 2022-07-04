@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
   Money,
-} from 'components';
+} from '@/components';
 
 import 'style/components/BigAmount.scss';
 

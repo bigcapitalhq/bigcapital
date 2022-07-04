@@ -10,10 +10,10 @@ import {
   Icon,
   DashboardRowsHeightButton,
   FormattedMessage as T,
-} from 'components';
+} from '@/components';
 import { useRefreshCashflowTransactionsInfinity } from 'hooks/query';
 
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import { CashFlowMenuItems } from './utils';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form } from 'formik';
-import { Choose } from 'components';
+import { Choose } from '@/components';
 
 import ReconcileCreditNoteFormFields from './ReconcileCreditNoteFormFields';
 import ReconcileCreditNoteFormFloatingActions from './ReconcileCreditNoteFormFloatingActions';

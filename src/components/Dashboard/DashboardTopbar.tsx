@@ -9,12 +9,12 @@ import {
   Tooltip,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
-import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
-import DashboardBreadcrumbs from 'components/Dashboard/DashboardBreadcrumbs';
-import DashboardBackLink from 'components/Dashboard/DashboardBackLink';
-import { Icon, Hint, If } from 'components';
+import DashboardTopbarUser from '@/components/Dashboard/TopbarUser';
+import DashboardBreadcrumbs from '@/components/Dashboard/DashboardBreadcrumbs';
+import DashboardBackLink from '@/components/Dashboard/DashboardBackLink';
+import { Icon, Hint, If } from '@/components';
 
 import withUniversalSearchActions from 'containers/UniversalSearch/withUniversalSearchActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';

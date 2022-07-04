@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Icon from 'components/Icon';
+import Icon from '@/components/Icon';
 import {
   Button,
   Classes,
@@ -15,10 +15,10 @@ import {
   DashboardFilterButton,
   FormattedMessage as T,
   DashboardRowsHeightButton,
-} from 'components';
+} from '@/components';
 
-import { Can, If, DashboardActionViewsList } from 'components';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import { Can, If, DashboardActionViewsList } from '@/components';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import withReceiptsActions from './withReceiptsActions';
 import withReceipts from './withReceipts';

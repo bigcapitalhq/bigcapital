@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Intent, Button } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 
 /**
  * Role form floating actions.

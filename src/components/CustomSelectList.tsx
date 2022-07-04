@@ -10,7 +10,7 @@ import {
 import clsx from 'classnames';
 import { defaultTo } from 'lodash';
 import { Select } from '@blueprintjs/select';
-import { FormattedMessage as T, Icon } from 'components';
+import { FormattedMessage as T, Icon } from '@/components';
 
 /**
  *  warehouse & branches select list.

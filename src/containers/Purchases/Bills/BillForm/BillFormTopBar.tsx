@@ -19,7 +19,7 @@ import {
   WarehouseSelect,
   FormTopbar,
   DetailsBarSkeletonBase,
-} from 'components';
+} from '@/components';
 import { useBillFormContext } from './BillFormProvider';
 import { Features } from 'common';
 

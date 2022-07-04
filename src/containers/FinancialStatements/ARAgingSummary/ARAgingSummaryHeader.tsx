@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage as T } from 'components';
+import { FormattedMessage as T } from '@/components';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import moment from 'moment';
