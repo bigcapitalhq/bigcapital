@@ -5,11 +5,5 @@ module.exports = {
     alias: {
       '@': path.resolve(__dirname, 'src'),
     },
-    configure: (webpackConfig, { env, paths }) => {
-      webpackConfig.resolve.fallback = {
-        path: require.resolve('path-browserify'),
-      };
-      return webpackConfig;
-    },
   },
 };
