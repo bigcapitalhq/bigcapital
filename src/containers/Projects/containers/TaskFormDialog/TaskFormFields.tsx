@@ -63,7 +63,7 @@ function TaskFormFields() {
       <EstimatedAmountBase>
         <EstimatedAmountContent>
           <T id={'task.dialog.estimated_amount'} />
-          <EstimateAmount>$100000</EstimateAmount>
+          <EstimateAmount>0.00</EstimateAmount>
         </EstimatedAmountContent>
       </EstimatedAmountBase>
     </div>
@@ -75,8 +75,9 @@ export default TaskFormFields;
 const EstimatedAmountBase = styled.div`
   display: flex;
   justify-content: flex-end;
-  font-size: 12px;
-  /* opacity: 0.7; */
+  font-size: 14px;
+  line-height: 1.5rem;
+  opacity: 0.75;
 `;
 
 const EstimatedAmountContent = styled.span`
@@ -85,7 +86,7 @@ const EstimatedAmountContent = styled.span`
 `;
 
 const EstimateAmount = styled.span`
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   margin-left: 10px;
 `;

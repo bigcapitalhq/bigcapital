@@ -11,7 +11,7 @@ import {
   FDateInput,
   FormattedMessage as T,
 } from 'components';
-import { ExpenseSelect } from '../../components';
+import { ExpenseSelect, FInputGroupComponent } from '../../components';
 import ExpenseFormChargeFields from './ExpenseFormChargeFields';
 import { momentFormatter } from 'utils';
 import { useExpenseFormContext } from './ExpenseFormProvider';
@@ -66,17 +66,19 @@ export default function ExpenseFormFields() {
         label={intl.get('expenses.dialog.quantity')}
         name={'expenseQuantity'}
       >
-        <FInputGroup name="expenseQuantity" />
+        <FInputGroupComponent name="expenseQuantity" />
       </FFormGroup>
 
-      <MetaLineLabel>Cost to you</MetaLineLabel>
+      <MetaLineLabel>
+        <T id={'expenses.dialog.cost_to_you'} />
+      </MetaLineLabel>
       {/*------------ Unit Price -----------*/}
       <ControlGroup className={Classes.FILL}>
         <FFormGroup
           name={'unitPrice'}
           label={intl.get('expenses.dialog.unit_price')}
         >
-          <FInputGroup name="expenseUnitPrice" />
+          <FInputGroupComponent name="expenseUnitPrice" />
         </FFormGroup>
         <FFormGroup
           name={'expenseTotal'}
@@ -86,7 +88,9 @@ export default function ExpenseFormFields() {
         </FFormGroup>
       </ControlGroup>
 
-      <MetaLineLabel>What you'll charge</MetaLineLabel>
+      <MetaLineLabel>
+        <T id={'expenses.dialog.what_you_ll_charge'} />
+      </MetaLineLabel>
       {/*------------ Charge -----------*/}
       <FFormGroup
         name={'expenseCharge'}

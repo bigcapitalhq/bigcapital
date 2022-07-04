@@ -13,7 +13,7 @@ const defaultInitialValues = {
   taskName: '',
   taskHouse: '00:00',
   taskCharge: 'Hourly rate',
-  taskamount: '100000000',
+  taskamount: '',
 };
 
 /**

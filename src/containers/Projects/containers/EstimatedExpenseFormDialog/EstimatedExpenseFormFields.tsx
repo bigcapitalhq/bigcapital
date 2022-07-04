@@ -10,7 +10,7 @@ import {
   FormattedMessage as T,
   FieldRequiredHint,
 } from 'components';
-import { ExpenseSelect } from '../../components';
+import { ExpenseSelect, FInputGroupComponent } from '../../components';
 import { useEstimatedExpenseFormContext } from './EstimatedExpenseFormProvider';
 import EstimatedExpenseFormChargeFields from './EstimatedExpenseFormChargeFields';
 import { ChargeSelect } from '../../components';
@@ -41,27 +41,31 @@ export default function EstimatedExpenseFormFields() {
         label={intl.get('estimated_expenses.dialog.quantity')}
         name={'quantity'}
       >
-        <FInputGroup name="quantity" />
+        <FInputGroupComponent name="quantity" />
       </FFormGroup>
 
-      <MetaLineLabel>Cost to you</MetaLineLabel>
+      <MetaLineLabel>
+        <T id={'estimated_expenses.dialog.cost_to_you'} />
+      </MetaLineLabel>
       {/*------------ Unit Price -----------*/}
       <ControlGroup className={Classes.FILL}>
         <FFormGroup
           name={'unitPrice'}
           label={intl.get('estimated_expenses.dialog.unit_price')}
         >
-          <FInputGroup name="unitPrice" />
+          <FInputGroupComponent name="unitPrice" />
         </FFormGroup>
         <FFormGroup
           name={'unitPrice'}
           label={intl.get('estimated_expenses.dialog.total')}
         >
-          <FInputGroup label="Total" name="total" />
+          <FInputGroup name="expenseTotal" />
         </FFormGroup>
       </ControlGroup>
 
-      <MetaLineLabel>What you'll charge</MetaLineLabel>
+      <MetaLineLabel>
+        <T id={'estimated_expenses.dialog.what_you_ll_charge'} />
+      </MetaLineLabel>
       {/*------------ Charge -----------*/}
       <FFormGroup
         name={'charge'}

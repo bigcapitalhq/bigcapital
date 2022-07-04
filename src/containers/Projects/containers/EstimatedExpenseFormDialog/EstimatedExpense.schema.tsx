@@ -12,7 +12,7 @@ const Schema = Yup.object().shape({
   unitPrice: Yup.number().label(
     intl.get('estimated_expense.schema.label.unit_price'),
   ),
-  total: Yup.number(),
+  expenseTotal: Yup.number(),
   charge: Yup.string(),
 });
 
