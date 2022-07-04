@@ -1,5 +1,4 @@
 import If from './Utils/If';
-import Money from './Money';
 import Icon from './Icon';
 import Choose from './Utils/Choose';
 import For from './Utils/For';
@@ -56,6 +55,7 @@ import MoreMenuItems from './MoreMenutItems';
 import CustomSelectList from './CustomSelectList';
 import { ExchangeRateDetailItem } from './DetailExchangeRate';
 
+export * from './Money';
 export * from './Dialog';
 export * from './Menu';
 export * from './AdvancedFilter/AdvancedFilterDropdown';
@@ -120,7 +120,6 @@ export {
   FormattedMessage,
   FormattedHTMLMessage,
   T,
-  Money,
   ListSelect,
   // DynamicFilterValueField,
   // DynamicFilterCompatatorField,
