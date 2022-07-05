@@ -11,11 +11,12 @@ import {
   Alignment,
 } from '@blueprintjs/core';
 
-import { FormattedMessage as T } from '@/components';
+import {  } from '@/components';
 import {
   AdvancedFilterPopover,
   If,
   Can,
+  FormattedMessage as T,
   DashboardActionViewsList,
   DashboardFilterButton,
   DashboardRowsHeightButton,
@@ -23,15 +24,15 @@ import {
 
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
-import { useRefreshAccounts } from 'hooks/query/accounts';
-import { useAccountsChartContext } from 'containers/Accounts/AccountsChartProvider';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withAccounts from 'containers/Accounts/withAccounts';
-import withAlertActions from 'containers/Alert/withAlertActions';
+import { useRefreshAccounts } from '@/hooks/query/accounts';
+import { useAccountsChartContext } from '@/containers/Accounts/AccountsChartProvider';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAccounts from '@/containers/Accounts/withAccounts';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 import withAccountsTableActions from './withAccountsTableActions';
-import withSettings from '../Settings/withSettings';
-import withSettingsActions from '../Settings/withSettingsActions';
-import { AccountAction, AbilitySubject } from '../../common/abilityOption';
+import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import { AccountAction, AbilitySubject } from '@/common/abilityOption';
 
 import { compose } from 'utils';
 

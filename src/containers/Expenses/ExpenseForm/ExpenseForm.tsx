@@ -5,7 +5,7 @@ import { defaultTo, sumBy, isEmpty } from 'lodash';
 import { Formik, Form } from 'formik';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 import ExpenseFormHeader from './ExpenseFormHeader';
 import ExpenseFormBody from './ExpenseFormBody';
@@ -15,10 +15,10 @@ import ExpenseFormTopBar from './ExpenseFormTopBar';
 
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withMediaActions from 'containers/Media/withMediaActions';
-import withSettings from 'containers/Settings/withSettings';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import withMediaActions from '@/containers/Media/withMediaActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import AppToaster from '@/components/AppToaster';
 import {
@@ -31,7 +31,7 @@ import {
   transformToEditForm,
   transformFormValuesToRequest,
 } from './utils';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Expense form.

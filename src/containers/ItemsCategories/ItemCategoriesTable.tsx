@@ -7,10 +7,10 @@ import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
 
-import withAlertActions from 'containers/Alert/withAlertActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withAlertActions from '@/containers/Alert/withAlertActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Items categories table.

@@ -2,8 +2,8 @@ import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
 
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
-import { useExpenses, useResourceMeta, useResourceViews } from 'hooks/query';
-import { getFieldsFromResourceMeta } from 'utils';
+import { useExpenses, useResourceMeta, useResourceViews } from '@/hooks/query';
+import { getFieldsFromResourceMeta } from '@/utils';
 
 const ExpensesListContext = createContext();
 

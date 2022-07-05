@@ -12,12 +12,12 @@ import {
   ensureEntriesHasEmptyLine,
   formattedAmount,
   safeSumBy,
-} from 'utils';
+} from '@/utils';
 import { AppToaster } from '@/components';
 import intl from 'react-intl-universal';
 import { useFormikContext } from 'formik';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
-import { useCurrentOrganization } from 'hooks/state';
+import { useCurrentOrganization } from '@/hooks/state';
 
 const ERROR = {
   JOURNAL_NUMBER_ALREADY_EXISTS: 'JOURNAL.NUMBER.ALREADY.EXISTS',

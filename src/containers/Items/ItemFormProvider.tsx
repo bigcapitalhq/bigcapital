@@ -7,7 +7,7 @@ import {
   useCreateItem,
   useEditItem,
   useAccounts,
-} from 'hooks/query';
+} from '@/hooks/query';
 import { useWatchItemError } from './utils';
 
 const ItemFormContext = createContext();

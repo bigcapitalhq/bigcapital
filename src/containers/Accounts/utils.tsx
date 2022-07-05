@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 
 import { If, AppToaster } from '@/components';
 import { NormalCell, BalanceCell } from './components';
-import { transformTableStateToQuery, isBlank } from 'utils';
+import { transformTableStateToQuery, isBlank } from '@/utils';
 
 /**
  * Account name accessor.

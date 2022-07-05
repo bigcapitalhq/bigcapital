@@ -3,7 +3,7 @@ import { FastField, useFormikContext } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { FormGroup, InputGroup, Radio } from '@blueprintjs/core';
 import { If, Row, Col, ErrorMessage } from '@/components';
-import { inputIntent } from 'utils';
+import { inputIntent } from '@/utils';
 
 /**
  * Reference number form content.

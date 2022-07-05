@@ -7,7 +7,7 @@ import { useExpensesListContext } from './ExpensesListProvider';
 import withExpenses from './withExpenses';
 import withExpensesActions from './withExpensesActions';
 
-import { compose, transfromViewsToTabs } from 'utils';
+import { compose, transfromViewsToTabs } from '@/utils';
 
 /**
  * Expesne views tabs.

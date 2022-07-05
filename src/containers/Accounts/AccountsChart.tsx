@@ -5,13 +5,13 @@ import { DashboardPageContent, DashboardContentTable } from '@/components';
 
 import { AccountsChartProvider } from './AccountsChartProvider';
 
-import AccountsViewsTabs from 'containers/Accounts/AccountsViewsTabs';
-import AccountsActionsBar from 'containers/Accounts/AccountsActionsBar';
+import AccountsViewsTabs from '@/containers/Accounts/AccountsViewsTabs';
+import AccountsActionsBar from '@/containers/Accounts/AccountsActionsBar';
 import AccountsDataTable from './AccountsDataTable';
 
-import withAccounts from 'containers/Accounts/withAccounts';
+import withAccounts from '@/containers/Accounts/withAccounts';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 import { transformAccountsStateToQuery } from './utils';
 import withAccountsTableActions from './withAccountsTableActions';
 

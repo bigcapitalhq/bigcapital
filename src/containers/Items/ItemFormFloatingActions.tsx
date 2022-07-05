@@ -6,9 +6,9 @@ import classNames from 'classnames';
 
 import { FormattedMessage as T } from '@/components';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { useItemFormContext } from './ItemFormProvider';
-import { saveInvoke } from '../../utils';
+import { saveInvoke } from '@/utils';
 
 /**
  * Item form floating actions.

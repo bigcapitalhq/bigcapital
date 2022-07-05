@@ -21,17 +21,17 @@ import {
 } from '@/components';
 
 import { useItemsListContext } from './ItemsListProvider';
-import { useRefreshItems } from 'hooks/query/items';
+import { useRefreshItems } from '@/hooks/query/items';
 
-import withItems from 'containers/Items/withItems';
+import withItems from '@/containers/Items/withItems';
 import withItemsActions from './withItemsActions';
-import withAlertActions from 'containers/Alert/withAlertActions';
-import withSettings from '../Settings/withSettings';
+import withAlertActions from '@/containers/Alert/withAlertActions';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { compose } from 'utils';
-import withSettingsActions from '../Settings/withSettingsActions';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
-import { ItemAction, AbilitySubject } from '../../common/abilityOption';
+import { ItemAction, AbilitySubject } from '@/common/abilityOption';
 
 /**
  * Items actions bar.

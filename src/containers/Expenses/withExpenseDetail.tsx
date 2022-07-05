@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { getExpenseByIdFactory } from 'store/expenses/expenses.selectors';
+import { getExpenseByIdFactory } from '@/store/expenses/expenses.selectors';
 
 export default () => {
   const getExpenseById = getExpenseByIdFactory();

@@ -10,16 +10,16 @@ import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
 import { TABLES } from 'common/tables';
 
-import withItemsActions from 'containers/Items/withItemsActions';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
-import withSettings from '../Settings/withSettings';
+import withItemsActions from '@/containers/Items/withItemsActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { useItemsListContext } from './ItemsListProvider';
 import { useItemsTableColumns, ItemsActionMenuList } from './components';
-import { useMemorizedColumnsWidths } from 'hooks';
-import { compose } from 'utils';
+import { useMemorizedColumnsWidths } from '@/hooks';
+import { compose } from '@/utils';
 
 /**
  * Items datatable.

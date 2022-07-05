@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
-import { useItemsCategories, useResourceMeta } from 'hooks/query';
-import { transformTableStateToQuery, getFieldsFromResourceMeta } from 'utils';
+import { useItemsCategories, useResourceMeta } from '@/hooks/query';
+import { transformTableStateToQuery, getFieldsFromResourceMeta } from '@/utils';
 
 const ItemsCategoriesContext = createContext();
 

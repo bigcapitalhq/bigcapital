@@ -1,8 +1,8 @@
 import React, { createContext } from 'react';
-import { transformTableQueryToParams } from 'utils';
+import { transformTableQueryToParams } from '@/utils';
 
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
-import { useExchangeRates } from 'hooks/query';
+import { useExchangeRates } from '@/hooks/query';
 
 const ExchangesRatesContext = createContext();
 

@@ -1,5 +1,5 @@
-import { RESOURCES_TYPES } from 'common/resourcesTypes';
-import withDrawerActions from '../Drawer/withDrawerActions';
+import { RESOURCES_TYPES } from '@/common/resourcesTypes';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 
 /**

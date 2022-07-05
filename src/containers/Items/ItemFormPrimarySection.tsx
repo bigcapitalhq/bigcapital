@@ -17,10 +17,10 @@ import {
   FieldRequiredHint,
 } from '@/components';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 import { useItemFormContext } from './ItemFormProvider';
-import { handleStringChange, inputIntent } from 'utils';
+import { handleStringChange, inputIntent } from '@/utils';
 import { categoriesFieldShouldUpdate } from './utils';
 
 /**

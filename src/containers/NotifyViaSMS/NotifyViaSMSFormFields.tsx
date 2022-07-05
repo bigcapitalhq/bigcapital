@@ -9,7 +9,7 @@ import {
   FieldRequiredHint,
   FormattedMessage as T,
 } from '@/components';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { inputIntent } from 'utils';
 
 export default function NotifyViaSMSFormFields({ notificationTypes }) {

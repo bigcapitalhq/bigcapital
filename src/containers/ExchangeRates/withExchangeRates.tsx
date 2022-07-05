@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { getExchangeRatesTableStateFactory } from 'store/ExchangeRate/exchange.selector';
+import { getExchangeRatesTableStateFactory } from '@/store/ExchangeRate/exchange.selector';
 
 export default (mapState) => {
   const getExchangeRatesTableState = getExchangeRatesTableStateFactory();

@@ -1,8 +1,7 @@
 import React from 'react';
 import InventoryAdjustmentDataTable from './InventoryAdjustmentDataTable';
 
-import { useInventoryAdjustmentsContext } from './InventoryAdjustmentsProvider';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Inventory adjustments view page.

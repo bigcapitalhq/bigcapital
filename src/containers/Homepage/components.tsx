@@ -1,5 +1,5 @@
 import { isEmpty } from 'lodash';
-import { useAbilityContext } from '../../hooks';
+import { useAbilityContext } from '@/hooks';
 
 export const useFilterShortcutBoxesSection = (section) => {
   const ability = useAbilityContext();

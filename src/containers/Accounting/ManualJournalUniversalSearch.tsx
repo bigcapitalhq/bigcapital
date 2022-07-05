@@ -1,10 +1,7 @@
 import intl from 'react-intl-universal';
 import { RESOURCES_TYPES } from '@/common/resourcesTypes';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import {
-  AbilitySubject,
-  ManualJournalAction,
-} from '@/common/abilityOption';
+import { AbilitySubject, ManualJournalAction } from '@/common/abilityOption';
 
 /**
  * Universal search manual journal item select action.

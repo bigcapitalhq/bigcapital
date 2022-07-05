@@ -1,7 +1,7 @@
 import React from 'react';
 
-const ItemCategoryDeleteAlert = React.lazy(() =>
-  import('../Alerts/Items/ItemCategoryDeleteAlert'),
+const ItemCategoryDeleteAlert = React.lazy(
+  () => import('@/containers/Alerts/Items/ItemCategoryDeleteAlert'),
 );
 
 export default [

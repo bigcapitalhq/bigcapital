@@ -3,10 +3,10 @@ import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 
 import HomepageContent from './HomepageContent';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withCurrentOrganization from '../Organization/withCurrentOrganization';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Dashboard homepage.

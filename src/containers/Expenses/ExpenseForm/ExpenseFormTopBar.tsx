@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Button, Alignment, NavbarGroup, Classes } from '@blueprintjs/core';
 import { useSetPrimaryBranchToForm } from './utils';
-import { useFeatureCan } from 'hooks/state';
+import { useFeatureCan } from '@/hooks/state';
 import {
   Icon,
   BranchSelect,
@@ -11,7 +11,7 @@ import {
   DetailsBarSkeletonBase,
 } from '@/components';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
-import { Features } from 'common';
+import { Features } from '@/common';
 
 /**
  * Expenses form topbar.

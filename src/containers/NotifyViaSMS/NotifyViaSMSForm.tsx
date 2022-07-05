@@ -12,7 +12,7 @@ import NotifyViaSMSFormFields from './NotifyViaSMSFormFields';
 import NotifyViaSMSFormFloatingActions from './NotifyViaSMSFormFloatingActions';
 import { FormObserver, SMSMessagePreview } from '@/components';
 
-import { transformToForm, safeInvoke } from 'utils';
+import { transformToForm, safeInvoke } from '@/utils';
 import { getSMSUnits } from './utils';
 
 

@@ -5,13 +5,13 @@ import { defaultTo, includes } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { AppToaster } from '@/components';
 import {
+  transformToForm,
   transformTableStateToQuery,
   defaultFastFieldShouldUpdate,
-} from 'utils';
-import { transformToForm } from 'utils';
-import { useSettingsSelector } from '../../hooks/state';
+} from '@/utils';
+import { useSettingsSelector } from '@/hooks/state';
 import { transformItemFormData } from './ItemForm.schema';
-import { useWatch } from 'hooks/utils';
+import { useWatch } from '@/hooks/utils';
 
 const defaultInitialValues = {
   active: 1,

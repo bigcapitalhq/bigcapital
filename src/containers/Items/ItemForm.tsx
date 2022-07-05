@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { useDashboardPageTitle } from 'hooks/state';
+import { useDashboardPageTitle } from '@/hooks/state';
 import { useItemFormContext, ItemFormProvider } from './ItemFormProvider';
 
 import ItemFormFormik from './ItemFormFormik';

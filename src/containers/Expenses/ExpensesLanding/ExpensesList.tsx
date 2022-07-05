@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import 'style/pages/Expense/List.scss';
 
-import { DashboardContentTable, DashboardPageContent } from '@/components';
+import { DashboardPageContent } from '@/components';
 
 import ExpenseActionsBar from './ExpenseActionsBar';
 import ExpenseViewTabs from './ExpenseViewTabs';
@@ -11,7 +11,7 @@ import ExpenseDataTable from './ExpenseDataTable';
 import withExpenses from './withExpenses';
 import withExpensesActions from './withExpensesActions';
 
-import { compose, transformTableStateToQuery } from 'utils';
+import { compose, transformTableStateToQuery } from '@/utils';
 import { ExpensesListProvider } from './ExpensesListProvider';
 
 /**

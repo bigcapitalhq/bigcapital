@@ -2,18 +2,18 @@ import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 
 import { DataTable } from '@/components';
-import { TABLES } from 'common/tables';
+import { TABLES } from '@/common/tables';
 
 import { useInventoryAdjustmentsColumns, ActionsMenu } from './components';
-import { useMemorizedColumnsWidths } from 'hooks';
+import { useMemorizedColumnsWidths } from '@/hooks';
 import { useInventoryAdjustmentsContext } from './InventoryAdjustmentsProvider';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withInventoryAdjustmentActions from './withInventoryAdjustmentActions';
 import withInventoryAdjustments from './withInventoryAdjustments';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Inventory adjustments datatable.

@@ -3,9 +3,9 @@ import intl from 'react-intl-universal';
 import { MenuItem, Menu, Button, Position } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
-import { Align, CellType } from 'common';
+import { Align, CellType } from '@/common';
 import { Hint, Icon, FormattedMessage as T } from '@/components';
-import { formattedAmount } from 'utils';
+import { formattedAmount } from '@/utils';
 import {
   InputGroupCell,
   MoneyFieldCell,

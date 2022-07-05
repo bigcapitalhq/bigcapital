@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { setExchangeRateTableState } from 'store/ExchangeRate/exchange.actions';
+import { setExchangeRateTableState } from '@/store/ExchangeRate/exchange.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
   setExchangeRateTableState: (queries) =>

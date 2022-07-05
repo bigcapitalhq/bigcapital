@@ -9,7 +9,7 @@ import 'style/pages/ReferenceNumber/ReferenceNumber.scss';
 import { FormObserver } from '@/components';
 import ReferenceNumberFormContent from './ReferenceNumberFormContent';
 import { transformValuesToForm } from './utils';
-import { saveInvoke } from 'utils';
+import { saveInvoke } from '@/utils';
 
 /**
  * Reference number form.

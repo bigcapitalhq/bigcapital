@@ -9,7 +9,7 @@ import InventoryAdjustmentTable from './InventoryAdjustmentTable';
 
 import withInventoryAdjustments from './withInventoryAdjustments';
 
-import { compose, transformTableStateToQuery } from 'utils';
+import { compose, transformTableStateToQuery } from '@/utils';
 
 /**
  * Inventory Adjustment List.
