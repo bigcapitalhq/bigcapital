@@ -1,10 +1,10 @@
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import AppToaster from '@/components/AppToaster';
+import { AppToaster } from '@/components';
 
 import withGlobalErrors from './withGlobalErrors';
 import withGlobalErrorsActions from './withGlobalErrorsActions';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 let toastKeySessionExpired;
 let toastKeySomethingWrong;
