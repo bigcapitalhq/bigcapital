@@ -1,13 +1,13 @@
 import React from 'react';
 
 const CustomerDeleteAlert = React.lazy(() =>
-  import('../Alerts/Customers/CustomerDeleteAlert'),
+  import('@/containers/Alerts/Customers/CustomerDeleteAlert'),
 );
 const CustomerActivateAlert = React.lazy(() =>
-  import('../Alerts/Customers/CustomerActivateAlert'),
+  import('@/containers/Alerts/Customers/CustomerActivateAlert'),
 );
 const CustomerInactivateAlert = React.lazy(() =>
-  import('../Alerts/Customers/CustomerInactivateAlert'),
+  import('@/containers/Alerts/Customers/CustomerInactivateAlert'),
 );
 
 /**

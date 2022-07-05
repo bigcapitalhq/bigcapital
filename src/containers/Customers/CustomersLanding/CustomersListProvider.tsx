@@ -2,8 +2,8 @@ import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
 
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
-import { useResourceMeta, useResourceViews, useCustomers } from 'hooks/query';
-import { getFieldsFromResourceMeta } from 'utils';
+import { useResourceMeta, useResourceViews, useCustomers } from '@/hooks/query';
+import { getFieldsFromResourceMeta } from '@/utils';
 import { transformCustomersStateToQuery } from './utils';
 
 const CustomersListContext = createContext();

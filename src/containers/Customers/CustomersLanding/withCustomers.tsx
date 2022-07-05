@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   getCustomersTableStateFactory,
   customersTableStateChangedFactory,
-} from 'store/customers/customers.selectors';
+} from '@/store/customers/customers.selectors';
 
 
 export default (mapState) => {

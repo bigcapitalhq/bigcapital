@@ -15,11 +15,11 @@ import styled from 'styled-components';
 
 import { FormattedMessage as T } from '@/components';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { Icon } from '@/components';
 import { useCustomerFormContext } from './CustomerFormProvider';
 
-import { safeInvoke } from 'utils';
+import { safeInvoke } from '@/utils';
 
 /**
  * Customer floating actions bar.

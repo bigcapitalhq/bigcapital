@@ -13,9 +13,9 @@ import clsx from 'classnames';
 import intl from 'react-intl-universal';
 
 import { Can, Icon, Money, If, AvaterCell } from '@/components';
-import { CustomerAction, AbilitySubject } from '../../../common/abilityOption';
+import { CustomerAction, AbilitySubject } from '@/common/abilityOption';
 
-import { safeCallback } from 'utils';
+import { safeCallback } from '@/utils';
 
 /**
  * Actions menu.

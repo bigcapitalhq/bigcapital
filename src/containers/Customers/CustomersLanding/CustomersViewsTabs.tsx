@@ -5,10 +5,10 @@ import { DashboardViewsTabs } from '@/components';
 
 import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
 import { useCustomersListContext } from './CustomersListProvider';
-import { compose, transfromViewsToTabs } from 'utils';
+import { compose, transfromViewsToTabs } from '@/utils';
 
 /**
  * Customers views tabs.

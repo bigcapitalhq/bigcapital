@@ -4,7 +4,7 @@ import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import AppToaster from '@/components/AppToaster';
 
 import { CreateCustomerForm, EditCustomerForm } from './CustomerForm.schema';
@@ -14,9 +14,9 @@ import CustomerFormAfterPrimarySection from './CustomerFormAfterPrimarySection';
 import CustomersTabs from './CustomersTabs';
 import CustomerFloatingActions from './CustomerFloatingActions';
 
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
-import { compose, transformToForm, saveInvoke } from 'utils';
+import { compose, transformToForm, saveInvoke } from '@/utils';
 import { useCustomerFormContext } from './CustomerFormProvider';
 import { defaultInitialValues } from './utils';
 

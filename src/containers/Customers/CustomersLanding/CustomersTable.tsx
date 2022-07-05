@@ -5,21 +5,21 @@ import CustomersEmptyStatus from './CustomersEmptyStatus';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
-import { TABLES } from 'common/tables';
+import { TABLES } from '@/common/tables';
 import { DataTable, DashboardContentTable } from '@/components';
 import { ActionsMenu, useCustomersTableColumns } from './components';
 
 import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
-import withSettings from '../../Settings/withSettings';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { useCustomersListContext } from './CustomersListProvider';
-import { useMemorizedColumnsWidths } from 'hooks';
+import { useMemorizedColumnsWidths } from '@/hooks';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Customers table.

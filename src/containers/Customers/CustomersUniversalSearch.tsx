@@ -1,8 +1,8 @@
 import intl from 'react-intl-universal';
-import { AbilitySubject, CustomerAction } from '../../common/abilityOption';
+import { AbilitySubject, CustomerAction } from '@/common/abilityOption';
 
-import { RESOURCES_TYPES } from '../../common/resourcesTypes';
-import withDrawerActions from '../Drawer/withDrawerActions';
+import { RESOURCES_TYPES } from '@/common/resourcesTypes';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 function CustomerUniversalSearchSelectComponent({
   resourceType,

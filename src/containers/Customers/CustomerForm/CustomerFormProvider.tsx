@@ -7,9 +7,9 @@ import {
   useEditCustomer,
   useContact,
   useBranches,
-} from 'hooks/query';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+} from '@/hooks/query';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 
 const CustomerFormContext = createContext();
 

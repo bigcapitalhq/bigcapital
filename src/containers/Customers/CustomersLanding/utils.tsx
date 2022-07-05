@@ -1,4 +1,4 @@
-import { transformTableStateToQuery } from 'utils';
+import { transformTableStateToQuery } from '@/utils';
 
 export const transformCustomersStateToQuery = (tableState) => {
   return {

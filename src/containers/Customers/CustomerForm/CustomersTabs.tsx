@@ -8,8 +8,6 @@ import CustomerFinancialPanel from './CustomerFinancialPanel';
 import CustomerNotePanel from './CustomerNotePanel';
 
 export default function CustomersTabs() {
-  
-
   return (
     <div>
       <Tabs

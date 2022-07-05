@@ -12,7 +12,7 @@ import { CustomersListProvider } from './CustomersListProvider';
 import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Customers list.

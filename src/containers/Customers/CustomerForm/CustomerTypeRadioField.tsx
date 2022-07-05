@@ -5,7 +5,7 @@ import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { FastField } from 'formik';
 
-import { handleStringChange, saveInvoke } from 'utils';
+import { handleStringChange, saveInvoke } from '@/utils';
 
 /**
  * Customer type radio field.
