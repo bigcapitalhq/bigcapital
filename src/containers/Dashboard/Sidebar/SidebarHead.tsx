@@ -3,9 +3,9 @@ import { Button, Popover, Menu, Position } from '@blueprintjs/core';
 
 import { Icon } from '@/components';
 
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
-import { useAuthenticatedAccount } from 'hooks/query';
-import { compose, firstLettersArgs } from 'utils';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { useAuthenticatedAccount } from '@/hooks/query';
+import { compose, firstLettersArgs } from '@/utils';
 
 // Popover modifiers.
 const POPOVER_MODIFIERS = {

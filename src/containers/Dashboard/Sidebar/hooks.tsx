@@ -3,19 +3,21 @@ import React from 'react';
 import * as R from 'ramda';
 import { useHistory } from 'react-router-dom';
 
-import { useAbilityContext } from 'hooks';
-import { useSidebarSubmenu, useFeatureCan } from 'hooks/state';
-import { SidebarMenu } from 'config/sidebarMenu';
-import {
-  ISidebarMenuItemType,
-  ISidebarSubscriptionAbility,
-} from './interfaces';
+import { useAbilityContext } from '@/hooks';
 import {
   useSidebarSubmnuActions,
   useDialogActions,
   useSubscription,
-} from 'hooks/state';
-import { filterValuesDeep, deepdash } from 'utils';
+  useSidebarSubmenu,
+  useFeatureCan,
+} from '@/hooks/state';
+import { SidebarMenu } from '@/config/sidebarMenu';
+import {
+  ISidebarMenuItemType,
+  ISidebarSubscriptionAbility,
+} from './interfaces';
+import { filterValuesDeep, deepdash } from '@/utils';
+
 
 const deepDashConfig = {
   childrenPath: 'children',

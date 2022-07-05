@@ -3,10 +3,10 @@ import { Menu } from '@blueprintjs/core';
 import * as R from 'ramda';
 
 import { MenuItem, MenuItemLabel } from '@/components';
-import { ISidebarMenuItemType } from 'containers/Dashboard/Sidebar/interfaces';
+import { ISidebarMenuItemType } from '@/containers/Dashboard/Sidebar/interfaces';
 import { useIsSidebarMenuItemActive } from './hooks';
 
-import withSubscriptions from 'containers/Subscriptions/withSubscriptions';
+import withSubscriptions from '@/containers/Subscriptions/withSubscriptions';
 
 /**
  * Sidebar menu item.
