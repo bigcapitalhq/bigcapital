@@ -19,11 +19,11 @@ import { If } from '@/components';
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import Icon from '@/components/Icon';
 
-import { useRefreshExchangeRate } from 'hooks/query/exchangeRates';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withResourceDetail from 'containers/Resources/withResourceDetails';
+import { useRefreshExchangeRate } from '@/hooks/query/exchangeRates';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withResourceDetail from '@?containers/Resources/withResourceDetails';
 import withExchangeRatesActions from './withExchangeRatesActions';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Exchange rate actions bar.

@@ -11,7 +11,7 @@ import {
 import intl from 'react-intl-universal';
 import { Icon, Money } from '@/components';
 import moment from 'moment';
-import { safeCallback } from 'utils';
+import { safeCallback } from '@/utils';
 
 /**
  * Row actions menu list.

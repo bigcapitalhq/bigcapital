@@ -10,9 +10,9 @@ import { useExchangeRatesTableColumns, ActionMenuList } from './components';
 import withExchangeRates from './withExchangeRates';
 import withExchangeRatesActions from './withExchangeRatesActions';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withAlertActions from 'containers/Alert/withAlertActions';
-import { compose } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertActions from '@/containers/Alert/withAlertActions';
+import { compose } from '@/utils';
 
 /**
  * Exchange rates table.

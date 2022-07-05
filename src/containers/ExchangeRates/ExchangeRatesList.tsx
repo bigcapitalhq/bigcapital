@@ -1,5 +1,4 @@
 import React from 'react';
-import { compose } from 'utils';
 
 import { DashboardContentTable, DashboardPageContent } from '@/components';
 
@@ -8,7 +7,7 @@ import ExchangeRateActionsBar from './ExchangeRateActionsBar';
 
 import { ExchangeRatesProvider } from './ExchangeRatesProvider';
 import withExchangeRates from './withExchangeRates';
-import { transformTableStateToQuery } from 'utils';
+import { transformTableStateToQuery, compose } from '@/utils';
 
 /**
  * Exchange Rates list.
