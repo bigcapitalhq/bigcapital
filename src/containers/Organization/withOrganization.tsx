@@ -6,7 +6,7 @@ import {
   isOrganizationSubscribedFactory,
   isOrganizationCongratsFactory,
   isOrganizationBuildRunningFactory
-} from 'store/organizations/organizations.selectors';
+} from '@/store/organizations/organizations.selectors';
 
 export default (mapState) => {
   const getOrganizationById = getOrganizationByIdFactory();
