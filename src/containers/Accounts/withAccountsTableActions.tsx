@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   setAccountsTableState,
   resetAccountsTableState,
-} from 'store/accounts/accounts.actions';
+} from '@/store/accounts/accounts.actions';
 
 const mapActionsToProps = (dispatch) => ({
   setAccountsTableState: (queries) => dispatch(setAccountsTableState(queries)),

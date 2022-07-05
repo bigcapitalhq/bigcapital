@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
-import { useResourceViews, useResourceMeta, useAccounts } from 'hooks/query';
-import { getFieldsFromResourceMeta } from 'utils';
+import { useResourceViews, useResourceMeta, useAccounts } from '@/hooks/query';
+import { getFieldsFromResourceMeta } from '@/utils';
 
 const AccountsChartContext = createContext();
 

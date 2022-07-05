@@ -1,25 +1,25 @@
 import React from 'react';
 
 import { TableFastCell, DataTable } from '@/components';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 import { useAccountsTableColumns, rowClassNames } from './utils';
 import { ActionsMenu } from './components';
-import { TABLES } from 'common/tables';
+import { TABLES } from '@/common/tables';
 
 import TableVirtualizedListRows from '@/components/Datatable/TableVirtualizedRows';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
-import withSettings from '../Settings/withSettings';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { useAccountsChartContext } from './AccountsChartProvider';
-import { useMemorizedColumnsWidths } from '../../hooks';
+import { useMemorizedColumnsWidths } from '@/hooks';
 
-import { AccountDialogAction } from '../Dialogs/AccountDialog/utils';
+import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 /**
  * Accounts data-table.

@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   getAccountsTableStateFactory,
   accountsTableStateChangedFactory,
-} from 'store/accounts/accounts.selectors';
+} from '@/store/accounts/accounts.selectors';
 
 export default (mapState) => {
   const getAccountsTableState = getAccountsTableStateFactory();

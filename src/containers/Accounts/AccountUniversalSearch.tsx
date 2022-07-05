@@ -1,9 +1,9 @@
 import intl from 'react-intl-universal';
 
-import withDrawerActions from '../Drawer/withDrawerActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { AbilitySubject, AccountAction } from '../../common/abilityOption';
-import { RESOURCES_TYPES } from '../../common/resourcesTypes';
+import { AbilitySubject, AccountAction } from '@/common/abilityOption';
+import { RESOURCES_TYPES } from '@/common/resourcesTypes';
 
 function AccountUniversalSearchItemSelectComponent({
   // #ownProps
