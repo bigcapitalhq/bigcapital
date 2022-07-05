@@ -8,7 +8,7 @@ import {
 } from '@blueprintjs/core';
 import { Form, ErrorMessage, Field } from 'formik';
 import { T } from '@/components';
-import { inputIntent } from 'utils';
+import { inputIntent } from '@/utils';
 import { PasswordRevealer } from './components';
 
 /**

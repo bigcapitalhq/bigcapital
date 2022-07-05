@@ -8,10 +8,10 @@ import { Link, useParams, useHistory } from 'react-router-dom';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 
-import { useAuthResetPassword } from 'hooks/query';
+import { useAuthResetPassword } from '@/hooks/query';
 
 import AppToaster from '@/components/AppToaster';
-import AuthInsider from 'containers/Authentication/AuthInsider';
+import AuthInsider from '@/containers/Authentication/AuthInsider';
 
 import ResetPasswordForm from './ResetPasswordForm';
 import { ResetPasswordSchema } from './utils';

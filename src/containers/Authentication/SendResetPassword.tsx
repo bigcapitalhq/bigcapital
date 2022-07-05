@@ -5,13 +5,13 @@ import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
 import { FormattedMessage as T } from '@/components';
-import { useAuthSendResetPassword } from 'hooks/query';
+import { useAuthSendResetPassword } from '@/hooks/query';
 import Toaster from '@/components/AppToaster';
 import SendResetPasswordForm from './SendResetPasswordForm';
 import { SendResetPasswordSchema, transformSendResetPassErrorsToToasts } from './utils';
 
 import AppToaster from '@/components/AppToaster';
-import AuthInsider from 'containers/Authentication/AuthInsider';
+import AuthInsider from '@/containers/Authentication/AuthInsider';
 
 /**
  * Send reset password page.

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import InviteAcceptForm from './InviteAcceptForm';
-import AuthInsider from 'containers/Authentication/AuthInsider';
+import AuthInsider from '@/containers/Authentication/AuthInsider';
 import { InviteAcceptProvider } from './InviteAcceptProvider';
 
 /**

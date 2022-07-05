@@ -12,7 +12,7 @@ import intl from 'react-intl-universal';
 import { Link } from 'react-router-dom';
 import { Row, Col, If } from '@/components';
 import { PasswordRevealer } from './components';
-import { inputIntent } from 'utils';
+import { inputIntent } from '@/utils';
 
 /**
  * Register form.

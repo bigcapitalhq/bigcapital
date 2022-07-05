@@ -1,4 +1,4 @@
-import { isAuthenticated } from 'store/authentication/authentication.reducer';
+import { isAuthenticated } from '@/store/authentication/authentication.reducer';
 import { connect } from 'react-redux';
 
 export default (mapState) => {

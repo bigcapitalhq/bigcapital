@@ -1,9 +1,9 @@
 import React from 'react';
-import { Intent, Position } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { useHistory } from 'react-router-dom';
+import { Intent, Position } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
 import { isEmpty } from 'lodash';
 
 import { useInviteAcceptContext } from './InviteAcceptProvider';

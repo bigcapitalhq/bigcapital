@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { useInviteMetaByToken, useAuthInviteAccept } from 'hooks/query';
+import { useInviteMetaByToken, useAuthInviteAccept } from '@/hooks/query';
 import { InviteAcceptLoading } from './components';
 import { useHistory } from 'react-router-dom';
 

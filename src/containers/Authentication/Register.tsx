@@ -6,11 +6,11 @@ import intl from 'react-intl-universal';
 
 import { FormattedMessage as T } from '@/components';
 import AppToaster from '@/components/AppToaster';
-import AuthInsider from 'containers/Authentication/AuthInsider';
+import AuthInsider from '@/containers/Authentication/AuthInsider';
 import {
   useAuthLogin,
   useAuthRegister,
-} from '../../hooks/query/authentication';
+} from '@/hooks/query/authentication';
 
 import RegisterForm from './RegisterForm';
 import { RegisterSchema, transformRegisterErrorsToForm } from './utils';

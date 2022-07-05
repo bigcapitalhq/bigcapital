@@ -4,8 +4,8 @@ import { Formik } from 'formik';
 import { FormattedMessage as T } from '@/components';
 
 import Toaster from '@/components/AppToaster';
-import AuthInsider from 'containers/Authentication/AuthInsider';
-import { useAuthLogin } from 'hooks/query';
+import AuthInsider from '@/containers/Authentication/AuthInsider';
+import { useAuthLogin } from '@/hooks/query';
 
 import LoginForm from './LoginForm';
 import { LoginSchema, transformLoginErrorsToToasts } from './utils';
