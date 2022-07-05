@@ -1,9 +1,7 @@
 import React from 'react';
 import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
-import classNames from 'classnames';
 
-import { announcementLists } from 'common/homepageOptions';
+import { announcementLists } from '@/common/homepageOptions';
 
 function AnnouncementBox({ title, description }) {
   return (
