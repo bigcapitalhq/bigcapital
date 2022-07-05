@@ -4,7 +4,7 @@ import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { AppToaster } from '@/components';
-import { transformErrors } from '@containers/Vendors/utils';
+import { transformErrors } from '@/containers/Vendors/utils';
 import { useDeleteVendor } from '@/hooks/query';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';

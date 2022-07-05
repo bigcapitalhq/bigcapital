@@ -1,17 +1,14 @@
 import React from 'react';
 
-const AccountDeleteAlert = React.lazy(() =>
-  import('containers/Alerts/AccountDeleteAlert'),
+const AccountDeleteAlert = React.lazy(
+  () => import('@/containers/Alerts/Accounts/AccountDeleteAlert'),
 );
-const AccountInactivateAlert = React.lazy(() =>
-  import('containers/Alerts/AccountInactivateAlert'),
+const AccountInactivateAlert = React.lazy(
+  () => import('@/containers/Alerts/Accounts/AccountInactivateAlert'),
 );
-const AccountActivateAlert = React.lazy(() =>
-  import('containers/Alerts/AccountActivateAlert'),
+const AccountActivateAlert = React.lazy(
+  () => import('@/containers/Alerts/Accounts/AccountDeleteAlert'),
 );
-// import AccountBulkDeleteAlert from 'containers/Alerts/AccountBulkDeleteAlert';
-// import AccountBulkInactivateAlert from 'containers/Alerts/AccountBulkInactivateAlert';
-// import AccountBulkActivateAlert from 'containers/Alerts/AccountBulkActivateAlert';
 
 export default [
   { name: 'account-delete', component: AccountDeleteAlert },

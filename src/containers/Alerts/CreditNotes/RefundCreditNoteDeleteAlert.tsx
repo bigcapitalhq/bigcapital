@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
-import { useDeleteRefundCreditNote } from '@hooks/query';
+import { useDeleteRefundCreditNote } from '@/hooks/query';
 
 import withAlertActions from '@/containers/Alert/withAlertActions';
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';

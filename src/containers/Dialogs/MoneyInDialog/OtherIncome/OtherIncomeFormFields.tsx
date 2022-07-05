@@ -45,7 +45,7 @@ import {
   useForeignAccount,
   BranchRowDivider,
 } from '../utils';
-import withSettings from '@containers/Settings/withSettings';
+import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**

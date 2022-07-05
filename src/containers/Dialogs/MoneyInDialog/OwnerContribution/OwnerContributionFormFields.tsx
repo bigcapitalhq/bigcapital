@@ -28,7 +28,7 @@ import {
 } from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from '@/hooks';
-import { ACCOUNT_TYPE, CLASSES, Features } from '@common';
+import { ACCOUNT_TYPE, CLASSES, Features } from '@/common';
 import {
   inputIntent,
   momentFormatter,
