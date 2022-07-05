@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { DataTable } from '@/components';
 import intl from 'react-intl-universal';
-import { useKeywordShortcuts } from '../../hooks/dashboard';
+import { useKeywordShortcuts } from '@/hooks/dashboard';
 
 /**
  *  keyboard shortcuts table.
