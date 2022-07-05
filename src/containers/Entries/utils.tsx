@@ -2,7 +2,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { sumBy, isEmpty, last } from 'lodash';
 
-import { useItem } from 'hooks/query';
+import { useItem } from '@/hooks/query';
 import {
   toSafeNumber,
   saveInvoke,
@@ -11,7 +11,7 @@ import {
   updateAutoAddNewLine,
   orderingLinesIndexes,
   updateTableRow,
-} from 'utils';
+} from '@/utils';
 
 /**
  * Retrieve item entry total from the given rate, quantity and discount.

@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import classNames from 'classnames';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { DataTableEditable } from '@/components';
 
 import { useEditableItemsEntriesColumns } from './components';
@@ -10,7 +10,7 @@ import {
   compose,
   updateMinEntriesLines,
   updateRemoveLineByIndex,
-} from 'utils';
+} from '@/utils';
 import {
   useFetchItemRow,
   composeRowsOnNewRow,
