@@ -4,7 +4,7 @@ import {
   submitCurrencies,
   deleteCurrency,
   editCurrency,
-} from 'store/currencies/currencies.actions';
+} from '@/store/currencies/currencies.actions';
 
 
 export const mapDispatchToProps = (dispatch) => ({
