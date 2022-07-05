@@ -1,12 +1,10 @@
 import React from 'react';
-import classNames from 'classnames';
-
 import { T, Dialog, DialogSuspense } from '@/components';
-import { CLASSES } from 'common/classes';
-
+import classNames from 'classnames';
+import { CLASSES } from '@/common/classes';
 import withDialogRedux from '@/components/DialogReduxConnect';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 // Lazy loading the content.
 const PdfPreviewDialogContent = React.lazy(() =>

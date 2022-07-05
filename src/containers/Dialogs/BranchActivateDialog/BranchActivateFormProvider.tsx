@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { DialogContent } from '@/components';
-import { useActivateBranches } from 'hooks/query';
+import { useActivateBranches } from '@/hooks/query';
 
 const BranchActivateContext = React.createContext();
 

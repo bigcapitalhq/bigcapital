@@ -3,7 +3,7 @@ import { DialogContent } from '@/components';
 import {
   useSettingEditSMSNotification,
   useSettingSMSNotification,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const SMSMessageDialogContext = React.createContext();
 

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { DataTableEditable } from '@/components';
 
-import { compose, updateTableCell } from 'utils';
+import { compose, updateTableCell } from '@/utils';
 import { useAllocateLandedCostEntriesTableColumns } from './utils';
 
 /**

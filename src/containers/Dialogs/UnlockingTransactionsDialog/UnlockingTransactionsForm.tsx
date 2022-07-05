@@ -3,7 +3,7 @@ import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
 import intl from 'react-intl-universal';
 
-import '../../../style/pages/TransactionsLocking/TransactionsLockingDialog.scss';
+import 'style/pages/TransactionsLocking/TransactionsLockingDialog.scss';
 
 import { AppToaster } from '@/components';
 import { CreateUnlockingTransactionsFormSchema } from './UnlockingTransactionsForm.schema';
@@ -11,8 +11,8 @@ import { CreateUnlockingTransactionsFormSchema } from './UnlockingTransactionsFo
 import { useUnlockingTransactionsContext } from './UnlockingTransactionsFormProvider';
 import UnlockingTransactionsFormContent from './UnlockingTransactionsFormContent';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { compose } from '@/utils';
 
 const defaultInitialValues = {
   module: '',

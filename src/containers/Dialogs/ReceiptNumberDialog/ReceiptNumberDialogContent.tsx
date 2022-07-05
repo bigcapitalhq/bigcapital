@@ -3,17 +3,17 @@ import intl from 'react-intl-universal';
 
 import { DialogContent } from '@/components';
 
-import { useSettingsReceipts, useSaveSettings } from 'hooks/query';
-import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
+import { useSettingsReceipts, useSaveSettings } from '@/hooks/query';
+import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withSettings from 'containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withSettings from '@/containers/Settings/withSettings';
 
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke } from '@/utils';
 import {
   transformFormToSettings,
   transformSettingsToForm,
-} from 'containers/JournalNumber/utils';
+} from '@/containers/JournalNumber/utils';
 
 /**
  * Receipt number dialog's content.

@@ -19,12 +19,12 @@ import {
   AccountsTypesSelect,
   CurrencySelect,
 } from '@/components';
-import withAccounts from 'containers/Accounts/withAccounts';
+import withAccounts from '@/containers/Accounts/withAccounts';
 
 import { inputIntent } from 'utils';
 import { compose } from 'redux';
 import { useAutofocus } from 'hooks';
-import { FOREIGN_CURRENCY_ACCOUNTS } from '../../../common/accountTypes';
+import { FOREIGN_CURRENCY_ACCOUNTS } from '@/common/accountTypes';
 import { useAccountDialogContext } from './AccountDialogProvider';
 
 /**

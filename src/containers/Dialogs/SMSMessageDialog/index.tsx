@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 
-import { compose } from 'redux';
+import { compose } from '@/utils';
 
 const SMSMessageDialogContent = React.lazy(() =>
   import('./SMSMessageDialogContent'),

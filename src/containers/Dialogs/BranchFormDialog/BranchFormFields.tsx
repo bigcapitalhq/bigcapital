@@ -9,7 +9,7 @@ import {
   ControlGroup,
   Position,
 } from '@blueprintjs/core';
-import { inputIntent } from 'utils';
+import { inputIntent } from '@/utils';
 import { FieldRequiredHint, Col, Row, FormattedMessage as T } from '@/components';
 import { useBranchFormContext } from './BranchFormProvider';
 

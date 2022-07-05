@@ -1,6 +1,6 @@
 import React from 'react';
 import { DialogContent } from '@/components';
-import { useSettingsCreditNotes } from 'hooks/query';
+import { useSettingsCreditNotes } from '@/hooks/query';
 
 const CreditNoteNumberDialogContext = React.createContext();
 

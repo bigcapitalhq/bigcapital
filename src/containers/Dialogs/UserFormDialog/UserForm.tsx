@@ -5,14 +5,14 @@ import intl from 'react-intl-universal';
 import { pick, snakeCase } from 'lodash';
 import { AppToaster } from '@/components';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { UserFormSchema } from './UserForm.schema';
 import UserFormContent from './UserFormContent';
 import { useUserFormContext } from './UserFormProvider';
 import { transformErrors } from './utils';
 
-import { compose, objectKeysTransform } from 'utils';
+import { compose, objectKeysTransform } from '@/utils';
 
 /**
  * User form.

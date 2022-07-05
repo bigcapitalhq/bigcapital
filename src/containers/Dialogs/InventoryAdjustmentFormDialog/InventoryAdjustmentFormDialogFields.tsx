@@ -12,7 +12,7 @@ import classNames from 'classnames';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { DateInput } from '@blueprintjs/datetime';
-import { useAutofocus } from 'hooks';
+import { useAutofocus } from '@/hooks';
 import {
   ListSelect,
   FieldRequiredHint,
@@ -30,10 +30,8 @@ import {
   tansformDateValue,
   handleDateChange,
   toSafeNumber,
-} from 'utils';
-import { CLASSES } from 'common/classes';
-import { Features } from 'common';
-import adjustmentType from 'common/adjustmentType';
+} from '@/utils';
+import { Features, CLASSES, adjustmentType } from '@/common';
 
 import AccountsSuggestField from '@/components/AccountsSuggestField';
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
@@ -42,7 +40,7 @@ import {
   useSetPrimaryBranchToForm,
   useSetPrimaryWarehouseToForm,
 } from './utils';
-import { useFeatureCan } from 'hooks/state';
+import { useFeatureCan } from '@/hooks/state';
 import InventoryAdjustmentQuantityFields from './InventoryAdjustmentQuantityFields';
 
 /**

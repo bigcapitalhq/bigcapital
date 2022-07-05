@@ -1,11 +1,10 @@
 import React, { lazy } from 'react';
-import { FormattedMessage as T } from '@/components';
-import { Dialog, DialogSuspense } from '@/components';
+import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke } from '@/utils';
 
-const ReceiptNumberDialogContent = lazy(() =>
-  import('./ReceiptNumberDialogContent'),
+const ReceiptNumberDialogContent = lazy(
+  () => import('./ReceiptNumberDialogContent'),
 );
 
 /**

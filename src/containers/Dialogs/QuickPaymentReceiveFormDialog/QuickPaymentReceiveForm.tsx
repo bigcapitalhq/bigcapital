@@ -1,7 +1,7 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
 import { pick, defaultTo, omit } from 'lodash';
 
 import { AppToaster } from '@/components';
@@ -9,10 +9,10 @@ import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider
 import { CreateQuickPaymentReceiveFormSchema } from './QuickPaymentReceive.schema';
 import QuickPaymentReceiveFormContent from './QuickPaymentReceiveFormContent';
 
-import withSettings from 'containers/Settings/withSettings';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { defaultInitialValues, transformErrors } from './utils';
-import { compose, transactionNumber } from 'utils';
+import { compose, transactionNumber } from '@/utils';
 
 /**
  * Quick payment receive form.

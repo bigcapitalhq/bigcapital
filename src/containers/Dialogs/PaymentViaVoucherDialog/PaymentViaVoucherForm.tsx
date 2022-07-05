@@ -5,10 +5,10 @@ import { FormattedMessage as T } from '@/components';
 import { compose } from 'redux';
 
 import { CLASSES } from 'common/classes';
-import { inputIntent } from 'utils';
-import { useAutofocus } from 'hooks';
+import { inputIntent } from '@/utils';
+import { useAutofocus } from '@/hooks';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**
  * Payment via license form.

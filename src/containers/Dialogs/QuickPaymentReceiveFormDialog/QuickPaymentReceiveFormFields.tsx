@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
-import { useAutofocus } from 'hooks';
+import { FastField, ErrorMessage, useFormikContext } from 'formik';
+import { useAutofocus } from '@/hooks';
 import { isEqual } from 'lodash';
 import {
   Classes,
@@ -14,10 +13,13 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES, Features, ACCOUNT_TYPE } from '@/common';
 import { DateInput } from '@blueprintjs/datetime';
-import { FieldRequiredHint, Col, Row } from '@/components';
 import {
+  Row,
+  Col,
+  FieldRequiredHint,
+  FormattedMessage as T,
   AccountsSuggestField,
   InputPrependText,
   MoneyInputGroup,
@@ -28,20 +30,18 @@ import {
   BranchSelect,
   BranchSelectButton,
 } from '@/components';
-import { Features } from 'common';
-import { ACCOUNT_TYPE } from 'common/accountTypes';
 import {
   inputIntent,
   momentFormatter,
   tansformDateValue,
   handleDateChange,
   compose,
-} from 'utils';
+} from '@/utils';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
 
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
-import withSettings from 'containers/Settings/withSettings';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import withSettings from '@/containers/Settings/withSettings';
 
 /**
  * Quick payment receive form fields.

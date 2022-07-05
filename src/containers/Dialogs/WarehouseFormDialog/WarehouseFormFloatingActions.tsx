@@ -5,8 +5,8 @@ import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from '@/components';
 
 import { useWarehouseFormContext } from './WarehouseFormProvider';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { compose } from '@/utils';
 
 /**
  * Warehouse form floating actions.

@@ -2,10 +2,10 @@ import React from 'react';
 import { AnchorButton } from '@blueprintjs/core';
 
 import { DialogContent, PdfDocumentPreview, T } from '@/components';
-import { usePdfInvoice } from 'hooks/query';
+import { usePdfInvoice } from '@/hooks/query';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { compose } from '@/utils';
 
 function InvoicePdfPreviewDialogContent({
   subscriptionForm: { invoiceId },

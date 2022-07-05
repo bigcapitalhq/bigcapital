@@ -4,7 +4,7 @@ import { Classes } from '@blueprintjs/core';
 import { subtract } from 'lodash';
 import styled from 'styled-components';
 
-import { getEntriesTotal } from 'containers/Entries/utils';
+import { getEntriesTotal } from '@/containers/Entries/utils';
 import {
   T,
   TotalLines,
@@ -14,7 +14,7 @@ import {
 } from '@/components';
 import ReconcileVendorCreditEntriesTable from './ReconcileVendorCreditEntriesTable';
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
-import { formattedAmount } from 'utils';
+import { formattedAmount } from '@/utils';
 
 export default function ReconcileVendorCreditFormFields() {
   const {

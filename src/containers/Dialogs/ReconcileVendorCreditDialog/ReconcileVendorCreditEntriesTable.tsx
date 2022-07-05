@@ -3,15 +3,15 @@ import styled from 'styled-components';
 import * as R from 'ramda';
 import { defaultTo } from 'lodash';
 
-import { useDeepCompareEffect } from 'hooks/utils';
+import { useDeepCompareEffect } from '@/hooks/utils';
 
 import { DataTableEditable } from '@/components';
-import { compose, updateTableCell } from 'utils';
+import { compose, updateTableCell } from '@/utils';
 import {
   useReconcileVendorCreditTableColumns,
   maxAmountCreditFromRemaining,
 } from './utils';
-import { maxCreditNoteAmountEntries } from '../ReconcileCreditNoteDialog/utils';
+import { maxCreditNoteAmountEntries } from '@/containers/Dialogs/ReconcileCreditNoteDialog/utils';
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
 
 /**

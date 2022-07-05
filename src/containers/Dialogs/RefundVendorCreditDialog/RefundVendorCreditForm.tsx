@@ -10,8 +10,8 @@ import { useRefundVendorCreditContext } from './RefundVendorCreditFormProvider';
 import { CreateVendorRefundCreditFormSchema } from './RefundVendorCreditForm.schema';
 import RefundVendorCreditFormContent from './RefundVendorCreditFormContent';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose, transactionNumber } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { compose } from '@/utils';
 
 const defaultInitialValues = {
   deposit_account_id: '',

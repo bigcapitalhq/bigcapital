@@ -10,7 +10,7 @@ import SMSMessageFormFloatingActions from './SMSMessageFormFloatingActions';
 
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
 import { SMSMessagePreview } from '@/components';
-import { getSMSUnits } from '../../NotifyViaSMS/utils';
+import { getSMSUnits } from '@/containers/NotifyViaSMS/utils';
 
 /**
  * SMS message form content.

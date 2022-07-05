@@ -5,7 +5,7 @@ import {
   useBill,
   useCreateLandedCost,
   useLandedCostTransaction,
-} from 'hooks/query';
+} from '@/hooks/query';
 import {
   getEntriesByTransactionId,
   getCostTransactionById,

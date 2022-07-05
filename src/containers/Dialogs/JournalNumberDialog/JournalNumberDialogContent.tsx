@@ -1,17 +1,17 @@
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { DialogContent } from '@/components';
-import { useSaveSettings, useSettingsManualJournals } from 'hooks/query';
+import { useSaveSettings, useSettingsManualJournals } from '@/hooks/query';
 
-import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
+import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withSettings from 'containers/Settings/withSettings';
-import { saveInvoke, compose } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withSettings from '@/containers/Settings/withSettings';
+import { saveInvoke, compose } from '@/utils';
 import {
   transformFormToSettings,
   transformSettingsToForm,
-} from 'containers/JournalNumber/utils';
+} from '@/containers/JournalNumber/utils';
 
 import 'style/pages/ManualJournal/JournalNumberDialog.scss';
 

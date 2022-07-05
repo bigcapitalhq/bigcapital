@@ -5,10 +5,9 @@ import { FormattedMessage as T } from '@/components';
 
 import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Money out floating actions.
@@ -50,16 +49,7 @@ function MoneyOutFloatingActions({
         >
           <T id={'close'} />
         </Button>
-        {/* <Button
-          disabled={isSubmitting}
-          loading={isSubmitting && !submitPayload.publish}
-          style={{ minWidth: '75px' }}
-          type="submit"
-          onClick={handleSubmitDraftBtnClick}
-        >
-          {<T id={'save_as_draft'} />}
-        </Button> */}
-
+    
         <Button
           intent={Intent.PRIMARY}
           disabled={isSubmitting}

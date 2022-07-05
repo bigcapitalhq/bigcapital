@@ -1,6 +1,6 @@
 import React from 'react';
 import { DialogContent } from '@/components';
-import { useSettingsVendorCredits } from 'hooks/query';
+import { useSettingsVendorCredits } from '@/hooks/query';
 
 const VendorCreditNumberDialogContext = React.createContext();
 

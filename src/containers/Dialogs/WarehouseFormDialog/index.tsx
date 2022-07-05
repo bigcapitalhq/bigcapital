@@ -3,7 +3,7 @@ import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 const WarehouseFormDialogContent = React.lazy(() =>
   import('./WarehouseFormDialogContent'),

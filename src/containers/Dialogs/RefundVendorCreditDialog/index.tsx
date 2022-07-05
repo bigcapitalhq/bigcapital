@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from 'redux';
+import { compose } from '@/utils';
 
 const RefundVendorCreditDialogContent = React.lazy(() =>
   import('./RefundVendorCreditDialogContent'),

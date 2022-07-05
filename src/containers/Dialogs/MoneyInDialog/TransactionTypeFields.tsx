@@ -1,6 +1,6 @@
 import React from 'react';
 import { FastField, Field, ErrorMessage } from 'formik';
-import { Classes, FormGroup } from '@blueprintjs/core';
+import { FormGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import {
   FormattedMessage as T,
@@ -10,10 +10,8 @@ import {
   Col,
   Row,
 } from '@/components';
-
-import { inputIntent } from 'utils';
-import { CLASSES } from 'common/classes';
-import { addMoneyIn } from '../../../common/cashflowOptions';
+import { inputIntent } from '@/utils';
+import { CLASSES, addMoneyIn } from '@/common';
 
 import { useMoneyInDailogContext } from './MoneyInDialogProvider';
 

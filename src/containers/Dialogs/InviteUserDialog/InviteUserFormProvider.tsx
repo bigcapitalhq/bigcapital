@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import { useCreateInviteUser, useUsers, useRoles } from 'hooks/query';
+import { useCreateInviteUser, useUsers, useRoles } from '@/hooks/query';
 import { DialogContent } from '@/components';
 
 const InviteUserFormContext = createContext();

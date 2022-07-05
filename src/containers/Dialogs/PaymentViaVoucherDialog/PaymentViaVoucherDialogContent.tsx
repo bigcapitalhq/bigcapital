@@ -9,12 +9,12 @@ import Toaster from '@/components/AppToaster';
 
 import 'style/pages/Setup/PaymentViaVoucherDialog.scss';
 
-import { usePaymentByVoucher } from 'hooks/query';
+import { usePaymentByVoucher } from '@/hooks/query';
 import { DialogContent } from '@/components';
 import PaymentViaLicenseForm from './PaymentViaVoucherForm';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { compose } from '@/utils';
 
 /**
  * Payment via license dialog content.

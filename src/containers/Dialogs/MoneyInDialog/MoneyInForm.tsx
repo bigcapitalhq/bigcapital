@@ -14,11 +14,11 @@ import { CreateMoneyInFormSchema } from './MoneyInForm.schema';
 
 import { useMoneyInDailogContext } from './MoneyInDialogProvider';
 
-import withSettings from 'containers/Settings/withSettings';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withSettings from '@/containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
-import { compose, transactionNumber } from 'utils';
+import { compose, transactionNumber } from '@/utils';
 
 const defaultInitialValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),

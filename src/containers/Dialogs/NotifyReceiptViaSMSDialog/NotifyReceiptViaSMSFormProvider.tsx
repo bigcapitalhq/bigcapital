@@ -1,6 +1,6 @@
 import React from 'react';
 import { DialogContent } from '@/components';
-import { useCreateNotifyReceiptBySMS, useReceiptSMSDetail } from 'hooks/query';
+import { useCreateNotifyReceiptBySMS, useReceiptSMSDetail } from '@/hooks/query';
 
 const NotifyReceiptViaSMSContext = React.createContext();
 

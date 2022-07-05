@@ -4,8 +4,8 @@ import { Intent, Button, Classes } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { compose } from '@/utils';
 
 function ReconcileVendorCreditFloatingActions({
   // #withDialogActions

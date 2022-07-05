@@ -11,7 +11,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { DateInput } from '@blueprintjs/datetime';
 import { isEqual } from 'lodash';
 import {
@@ -35,13 +35,12 @@ import {
   tansformDateValue,
   handleDateChange,
   compose,
-} from 'utils';
-import { useAutofocus } from 'hooks';
-import { Features } from 'common';
-import { ACCOUNT_TYPE } from 'common/accountTypes';
+} from '@/utils';
+import { useAutofocus } from '@/hooks';
+import { Features, ACCOUNT_TYPE } from '@/common';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useRefundVendorCreditContext } from './RefundVendorCreditFormProvider';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Refund Vendor credit form fields.

@@ -11,10 +11,10 @@ import {
   TotalLineTextStyle,
 } from '@/components';
 import { subtract } from 'lodash';
-import { getEntriesTotal } from 'containers/Entries/utils';
+import { getEntriesTotal } from '@/containers/Entries/utils';
 import ReconcileCreditNoteEntriesTable from './ReconcileCreditNoteEntriesTable';
 import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
-import { formattedAmount } from 'utils';
+import { formattedAmount } from '@/utils';
 
 /**
  * Reconcile credit note form fields.

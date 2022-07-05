@@ -4,7 +4,7 @@ import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
 import intl from 'react-intl-universal';
 
-import '../../../style/pages/TransactionsLocking/TransactionsLockingDialog.scss';
+import 'style/pages/TransactionsLocking/TransactionsLockingDialog.scss';
 
 import { AppToaster } from '@/components';
 import { CreateUnLockingPartialTransactionsFormSchema } from './UnlockingPartialTransactionsForm.schema';
@@ -12,8 +12,8 @@ import { CreateUnLockingPartialTransactionsFormSchema } from './UnlockingPartial
 import { useUnlockingPartialTransactionsContext } from './UnlockingPartialTransactionsFormProvider';
 import UnlockingPartialTransactionsFormContent from './UnlockingPartialTransactionsFormContent';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { compose } from '@/utils';
 
 const defaultInitialValues = {
   module: '',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { DialogContent } from '@/components';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 import {
   useAccounts,
   useAccount,
@@ -9,7 +9,7 @@ import {
   useCreateCashflowTransaction,
   useCashflowAccounts,
   useSettingCashFlow,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const MoneyInDialogContent = React.createContext();
 

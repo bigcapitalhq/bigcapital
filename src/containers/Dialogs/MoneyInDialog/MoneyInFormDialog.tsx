@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 
-import TransactionNumberDialog from '../../Dialogs/TransactionNumberDialog';
+import TransactionNumberDialog from '@/containers/Dialogs/TransactionNumberDialog';
 
 /**
  * Moneny in / transaction number form dialog.

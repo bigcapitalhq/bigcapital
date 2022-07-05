@@ -6,7 +6,7 @@ import {
   DialogSuspense,
 } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 const ExchangeRateFormDialogContent = lazy(() =>
   import('./ExchangeRateFormDialogContent'),

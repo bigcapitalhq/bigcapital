@@ -2,12 +2,12 @@ import React from 'react';
 import { DialogContent } from '@/components';
 import { useQuery, queryCache } from 'react-query';
 
-import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
+import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withSettings from 'containers/Settings/withSettings';
-import withBillActions from 'containers/Purchases/Bill/withBillActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withBillActions from '@/containers/Purchases/Bills/BillsLanding/withBillsActions';
 
 import { compose, optionsMapToArray } from 'utils';
 

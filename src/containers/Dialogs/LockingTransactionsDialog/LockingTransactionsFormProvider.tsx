@@ -3,7 +3,7 @@ import { DialogContent } from '@/components';
 import {
   useCreateLockingTransactoin,
   useEditTransactionsLocking,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const LockingTransactionsContext = React.createContext();
 

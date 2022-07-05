@@ -5,15 +5,14 @@ import { Formik } from 'formik';
 
 import { AppToaster } from '@/components';
 import { useItemCategoryContext } from './ItemCategoryProvider';
-import { transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 import {
   CreateItemCategoryFormSchema,
   EditItemCategoryFormSchema,
 } from './itemCategoryForm.schema';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import ItemCategoryFormContent from './ItemCategoryFormContent';
-import { compose } from 'utils';
 
 const defaultInitialValues = {
   name: '',

@@ -4,7 +4,7 @@ import {
   useEdiExchangeRate,
   useCurrencies,
   useExchangeRates,
-} from 'hooks/query';
+} from '@/hooks/query';
 import { DialogContent } from '@/components';
 
 const ExchangeRateFormContext = createContext();

@@ -1,6 +1,6 @@
 import React from 'react';
 import { DialogContent } from '@/components';
-import { useSettingsWarehouseTransfers } from 'hooks/query';
+import { useSettingsWarehouseTransfers } from '@/hooks/query';
 
 const WarehouseTransferNumberDilaogContext = React.createContext();
 

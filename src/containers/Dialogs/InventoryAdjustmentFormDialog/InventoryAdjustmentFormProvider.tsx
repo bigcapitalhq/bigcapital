@@ -1,14 +1,14 @@
 import React, { useState, createContext } from 'react';
 import { DialogContent } from '@/components';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 import {
   useItem,
   useAccounts,
   useBranches,
   useWarehouses,
   useCreateInventoryAdjustment,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const InventoryAdjustmentContext = createContext();
 

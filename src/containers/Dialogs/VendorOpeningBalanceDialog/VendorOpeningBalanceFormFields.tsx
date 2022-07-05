@@ -3,8 +3,8 @@ import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { isEqual } from 'lodash';
 import { FastField, useFormikContext } from 'formik';
-import { momentFormatter, tansformDateValue, handleDateChange } from 'utils';
-import { Features } from 'common';
+import { momentFormatter, tansformDateValue, handleDateChange } from '@/utils';
+import { Features } from '@/common';
 import classNames from 'classnames';
 
 import {
@@ -17,13 +17,13 @@ import {
   FeatureCan,
   InputPrependText,
 } from '@/components';
-import { FMoneyInputGroup, FFormGroup } from '../../../components/Forms';
+import { FMoneyInputGroup, FFormGroup } from '@/components/Forms';
 
 import { useVendorOpeningBalanceContext } from './VendorOpeningBalanceFormProvider';
 import { useSetPrimaryBranchToForm } from './utils';
 
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
-import { compose } from 'utils';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { compose } from '@/utils';
 
 /**
  * Vendor Opening balance form fields.

@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
-import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
 import { AppToaster } from '@/components';
 import CurrencyFormContent from './CurrencyFormContent';
 
@@ -11,9 +10,9 @@ import {
   CreateCurrencyFormSchema,
   EditCurrencyFormSchema,
 } from './CurrencyForm.schema';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 
 const defaultInitialValues = {
   currency_name: '',

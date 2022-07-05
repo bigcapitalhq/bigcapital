@@ -4,7 +4,7 @@ import {
   useCreditNote,
   useReconcileCreditNote,
   useCreateReconcileCreditNote,
-} from 'hooks/query';
+} from '@/hooks/query';
 import { isEmpty } from 'lodash';
 
 const ReconcileCreditNoteDialogContext = React.createContext();

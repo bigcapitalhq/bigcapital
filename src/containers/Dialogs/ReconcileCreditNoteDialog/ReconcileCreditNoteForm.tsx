@@ -3,13 +3,13 @@ import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import '../../../style/pages/ReconcileCreditNote/ReconcileCreditNoteForm.scss';
+import 'style/pages/ReconcileCreditNote/ReconcileCreditNoteForm.scss';
 import { AppToaster } from '@/components';
 import { CreateReconcileCreditNoteFormSchema } from './ReconcileCreditNoteForm.schema';
 import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
 import ReconcileCreditNoteFormContent from './ReconcileCreditNoteFormContent';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose, transformToForm } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { compose, transformToForm } from '@/utils';
 import { transformErrors } from './utils';
 
 // Default form initial values.

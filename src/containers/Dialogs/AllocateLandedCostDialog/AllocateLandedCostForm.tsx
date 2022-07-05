@@ -9,8 +9,8 @@ import { AppToaster } from '@/components';
 import { AllocateLandedCostFormSchema } from './AllocateLandedCostForm.schema';
 import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogProvider';
 import AllocateLandedCostFormContent from './AllocateLandedCostFormContent';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose, transformToForm } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { compose, transformToForm } from '@/utils';
 import { defaultInitialValues } from './utils';
 
 /**

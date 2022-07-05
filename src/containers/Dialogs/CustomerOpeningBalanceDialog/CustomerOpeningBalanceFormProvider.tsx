@@ -4,9 +4,9 @@ import {
   useBranches,
   useCustomer,
   useEditCustomerOpeningBalance,
-} from 'hooks/query';
-import { useFeatureCan } from 'hooks/state';
-import { Features } from 'common';
+} from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/common';
 import { transfromCustomertoForm } from './utils';
 
 const CustomerOpeningBalanceContext = React.createContext();

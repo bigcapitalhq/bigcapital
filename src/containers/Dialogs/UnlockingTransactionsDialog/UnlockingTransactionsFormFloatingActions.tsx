@@ -4,8 +4,8 @@ import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from '@/components';
 
 import { useUnlockingTransactionsContext } from './UnlockingTransactionsFormProvider';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { compose } from '@/utils';
 
 /**
  * Unlocking transactions form floating actions.

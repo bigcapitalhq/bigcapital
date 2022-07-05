@@ -7,12 +7,12 @@ import { AppToaster } from '@/components';
 
 import AccountDialogFormContent from './AccountDialogFormContent';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import {
   EditAccountFormSchema,
   CreateAccountFormSchema,
 } from './AccountForm.schema';
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 import { transformApiErrors, transformAccountToForm } from './utils';
 
 import 'style/pages/Accounts/AccountFormDialog.scss';

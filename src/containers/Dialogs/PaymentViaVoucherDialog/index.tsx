@@ -4,7 +4,7 @@ import { FormattedMessage as T } from '@/components';
 
 import withDialogRedux from '@/components/DialogReduxConnect';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 // Lazy loading the content.
 const PaymentViaLicenseDialogContent = lazy(() =>

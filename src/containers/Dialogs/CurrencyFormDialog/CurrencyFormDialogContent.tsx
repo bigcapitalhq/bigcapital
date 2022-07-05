@@ -2,9 +2,9 @@ import React from 'react';
 import { CurrencyFormProvider } from './CurrencyFormProvider';
 
 import CurrencyForm from './CurrencyForm';
-import withCurrencyDetail from 'containers/Currencies/withCurrencyDetail';
+import withCurrencyDetail from '@/containers/Currencies/withCurrencyDetail';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 import 'style/pages/Currency/CurrencyFormDialog.scss';
 
 function CurrencyFormDialogContent({

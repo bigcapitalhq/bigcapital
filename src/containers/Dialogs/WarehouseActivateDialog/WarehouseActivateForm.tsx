@@ -8,9 +8,9 @@ import { AppToaster } from '@/components';
 import { useWarehouseActivateContext } from './WarehouseActivateFormProvider';
 import WarehouseActivateFormContent from './WarehouseActivateFormContent';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * warehouse activate form.

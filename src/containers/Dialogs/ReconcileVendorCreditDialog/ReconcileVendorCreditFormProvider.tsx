@@ -4,7 +4,7 @@ import {
   useVendorCredit,
   useReconcileVendorCredit,
   useCreateReconcileVendorCredit,
-} from 'hooks/query';
+} from '@/hooks/query';
 import { isEmpty } from 'lodash';
 
 const ReconcileVendorCreditFormContext = React.createContext();

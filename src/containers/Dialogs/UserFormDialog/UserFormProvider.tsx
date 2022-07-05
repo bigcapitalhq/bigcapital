@@ -4,7 +4,7 @@ import {
   useUser,
   useRoles,
   useAuthenticatedAccount,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 import { DialogContent } from '@/components';
 

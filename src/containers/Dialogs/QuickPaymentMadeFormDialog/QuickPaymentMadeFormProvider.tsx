@@ -5,11 +5,11 @@ import {
   useAccounts,
   useBranches,
   useCreatePaymentMade,
-} from 'hooks/query';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
-
+} from '@/hooks/query';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 import { pick } from 'lodash';
+
 
 const QuickPaymentMadeContext = React.createContext();
 

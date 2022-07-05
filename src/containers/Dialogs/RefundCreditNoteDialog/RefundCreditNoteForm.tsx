@@ -1,8 +1,8 @@
 import React from 'react';
+import moment from 'moment';
+import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
-import moment from 'moment';
 import { omit } from 'lodash';
 
 import { AppToaster } from '@/components';
@@ -10,8 +10,8 @@ import { useRefundCreditNoteContext } from './RefundCreditNoteFormProvider';
 import { CreateRefundCreditNoteFormSchema } from './RefundCreditNoteForm.schema';
 import RefundCreditNoteFormContent from './RefundCreditNoteFormContent';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { compose } from '@/utils';
 
 const defaultInitialValues = {
   from_account_id: '',

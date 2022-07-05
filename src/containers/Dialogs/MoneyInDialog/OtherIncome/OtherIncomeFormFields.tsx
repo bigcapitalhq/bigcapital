@@ -27,8 +27,8 @@ import {
   ExchangeRateMutedField,
 } from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
-import { useAutofocus } from 'hooks';
-import { ACCOUNT_TYPE } from 'common/accountTypes';
+import { useAutofocus } from '@/hooks';
+import { CLASSES, ACCOUNT_TYPE, Features } from '@/common';
 
 import {
   inputIntent,
@@ -37,8 +37,7 @@ import {
   handleDateChange,
   compose,
 } from 'utils';
-import { CLASSES } from 'common/classes';
-import { Features } from 'common';
+
 import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
 import {
   useObserveTransactionNoSettings,
@@ -46,8 +45,8 @@ import {
   useForeignAccount,
   BranchRowDivider,
 } from '../utils';
-import withSettings from 'containers/Settings/withSettings';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withSettings from '@containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**
  * Other income form fields.
@@ -69,7 +68,7 @@ function OtherIncomeFormFields({
   const amountFieldRef = useAutofocus();
 
   const isForeigAccount = useForeignAccount();
-  
+
   // Handle tranaction number changing.
   const handleTransactionNumberChange = () => {
     openDialog('transaction-number-form');

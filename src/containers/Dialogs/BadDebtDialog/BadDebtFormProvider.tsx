@@ -1,12 +1,7 @@
 import React from 'react';
 
 import { DialogContent } from '@/components';
-import {
-  useAccounts,
-  useInvoice,
-  useCreateBadDebt,
-  useCancelBadDebt,
-} from 'hooks/query';
+import { useAccounts, useInvoice, useCreateBadDebt } from '@/hooks/query';
 
 const BadDebtContext = React.createContext();
 

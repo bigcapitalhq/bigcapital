@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
-import { first, isEqual } from 'lodash';
+import { first } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 import { useFormikContext } from 'formik';
@@ -34,7 +34,9 @@ export const transformErrors = (errors, { setFieldError }) => {
   }
   if (getError('WITHDRAWAL_ACCOUNT_CURRENCY_INVALID')) {
     AppToaster.show({
-      message: intl.get('payment_made.error.withdrawal_account_currency_invalid'),
+      message: intl.get(
+        'payment_made.error.withdrawal_account_currency_invalid',
+      ),
       intent: Intent.DANGER,
     });
   }

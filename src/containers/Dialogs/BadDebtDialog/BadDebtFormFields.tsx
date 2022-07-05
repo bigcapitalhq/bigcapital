@@ -2,7 +2,7 @@ import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from '@/components';
 
-import { useAutofocus } from 'hooks';
+import { useAutofocus } from '@/hooks';
 import {
   Classes,
   FormGroup,
@@ -12,9 +12,9 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
-import { ACCOUNT_TYPE } from 'common/accountTypes';
-import { inputIntent } from 'utils';
+import { CLASSES } from '@/common/classes';
+import { ACCOUNT_TYPE } from '@/common/accountTypes';
+import { inputIntent } from '@/utils';
 import {
   AccountsSuggestField,
   InputPrependText,

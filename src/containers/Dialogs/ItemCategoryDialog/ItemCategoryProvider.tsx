@@ -4,7 +4,7 @@ import {
   useItemCategory,
   useEditItemCategory,
   useCreateItemCategory,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const ItemCategoryContext = createContext();
 

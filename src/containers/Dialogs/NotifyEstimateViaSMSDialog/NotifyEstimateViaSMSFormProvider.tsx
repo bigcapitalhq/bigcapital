@@ -3,7 +3,7 @@ import { DialogContent } from '@/components';
 import {
   useEstimateSMSDetail,
   useCreateNotifyEstimateBySMS,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const NotifyEstimateViaSMSContext = React.createContext();
 

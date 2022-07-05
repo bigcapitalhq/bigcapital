@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { FastField, Field, ErrorMessage } from 'formik';
 import {
   Classes,
@@ -9,11 +10,10 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { FormattedMessage as T, If } from '@/components';
-import intl from 'react-intl-universal';
-import { inputIntent, handleStringChange } from 'utils';
+import { inputIntent, handleStringChange } from '@/utils';
 import { FieldRequiredHint, ListSelect } from '@/components';
-import { CLASSES } from 'common/classes';
-import allocateLandedCostType from 'common/allocateLandedCostType';
+import { CLASSES } from '@/common/classes';
+import allocateLandedCostType from '@/common/allocateLandedCostType';
 
 import AllocateLandedCostFormBody from './AllocateLandedCostFormBody';
 import {

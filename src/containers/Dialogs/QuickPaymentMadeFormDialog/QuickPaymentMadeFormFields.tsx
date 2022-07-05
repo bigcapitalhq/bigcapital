@@ -14,11 +14,10 @@ import {
 } from '@blueprintjs/core';
 import { useAutofocus } from 'hooks';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES, ACCOUNT_TYPE, Features } from '@/common';
 import { DateInput } from '@blueprintjs/datetime';
 import { FieldRequiredHint, Col, Row } from '@/components';
-import { ACCOUNT_TYPE } from 'common/accountTypes';
-import { Features } from 'common';
+
 import {
   AccountsSuggestField,
   InputPrependText,
@@ -35,12 +34,12 @@ import {
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-} from 'utils';
-import { useSetPrimaryBranchToForm, useForeignAccount } from './utils';
+} from '@/utils';
+import { useSetPrimaryBranchToForm } from './utils';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
-import { compose } from 'utils';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { compose } from '@/utils';
 
 /**
  * Quick payment made form fields.

@@ -1,11 +1,10 @@
 import React, { lazy } from 'react';
-import { FormattedMessage as T } from '@/components';
-import { Dialog, DialogSuspense } from '@/components';
+import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { saveInvoke, compose } from 'utils';
+import { saveInvoke, compose } from '@/utils';
 
-const PaymentReceiveNumbereDialogContent = lazy(() =>
-  import('./PaymentReceiveNumberDialogContent'),
+const PaymentReceiveNumbereDialogContent = lazy(
+  () => import('./PaymentReceiveNumberDialogContent'),
 );
 
 /**
@@ -15,7 +14,7 @@ function PaymentReceiveNumberDialog({
   dialogName,
   payload: { initialFormValues },
   isOpen,
-  onConfirm
+  onConfirm,
 }) {
   return (
     <Dialog

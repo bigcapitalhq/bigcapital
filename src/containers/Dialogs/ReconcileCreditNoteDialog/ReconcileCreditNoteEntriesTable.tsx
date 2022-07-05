@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { defaultTo } from 'lodash';
 
 import { DataTableEditable } from '@/components';
-import { compose, updateTableCell } from 'utils';
-import { useDeepCompareEffect } from 'hooks/utils';
+import { compose, updateTableCell } from '@/utils';
+import { useDeepCompareEffect } from '@/hooks/utils';
 import {
   useReconcileCreditNoteTableColumns,
   maxAmountCreditFromRemaining,

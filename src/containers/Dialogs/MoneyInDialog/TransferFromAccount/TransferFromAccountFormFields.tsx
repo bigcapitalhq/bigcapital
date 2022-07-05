@@ -1,5 +1,6 @@
 import React from 'react';
 import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
+import { DateInput } from '@blueprintjs/datetime';
 import {
   Classes,
   FormGroup,
@@ -25,10 +26,8 @@ import {
   BranchSelect,
   BranchSelectButton,
 } from '@/components';
-import { Features } from 'common';
-import { DateInput } from '@blueprintjs/datetime';
-import { useAutofocus } from 'hooks';
-import { ACCOUNT_TYPE } from 'common/accountTypes';
+import { useAutofocus } from '@/hooks';
+import { CLASSES, ACCOUNT_TYPE, Features } from '@/common';
 
 import {
   inputIntent,
@@ -36,17 +35,16 @@ import {
   tansformDateValue,
   handleDateChange,
   compose,
-} from 'utils';
-import { CLASSES } from 'common/classes';
-import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
+} from '@/utils';
+import { useMoneyInDailogContext } from '@/containers/Dialogs/MoneyInDialog/MoneyInDialogProvider';
 import {
   useObserveTransactionNoSettings,
   useSetPrimaryBranchToForm,
   useForeignAccount,
   BranchRowDivider,
-} from '../utils';
-import withSettings from 'containers/Settings/withSettings';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+} from '@/containers/Dialogs/MoneyInDialog/utils';
+import withSettings from '@/containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**
  * Transfer from account form fields.

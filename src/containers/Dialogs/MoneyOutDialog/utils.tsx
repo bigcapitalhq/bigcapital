@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
-import { transactionNumber } from 'utils';
+import { transactionNumber } from '@/utils';
 import { first, isEqual, isNull } from 'lodash';
 
 import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';

@@ -5,7 +5,7 @@ import { pick, snakeCase } from 'lodash';
 import intl from 'react-intl-universal';
 import { AppToaster } from '@/components';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { InviteUserFormSchema } from './InviteUserDialog.schema';
 import InviteUserFormContent from './InviteUserFormContent';
@@ -13,7 +13,7 @@ import { useInviteUserFormContext } from './InviteUserFormProvider';
 
 import { transformApiErrors } from './utils';
 
-import { compose, objectKeysTransform } from 'utils';
+import { compose, objectKeysTransform } from '@/utils';
 
 function InviteUserForm({
   // #withDialogActions

@@ -6,13 +6,12 @@ import {
   FieldRequiredHint,
   FormattedMessage as T,
 } from '@/components';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import classNames from 'classnames';
-import { inputIntent } from 'utils';
+import { compose, inputIntent } from '@/utils';
 import { useInviteUserFormContext } from './InviteUserFormProvider';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 function InviteUserFormContent({
   // #withDialogActions

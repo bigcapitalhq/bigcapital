@@ -4,7 +4,7 @@ import {
   useCreateWarehouse,
   useEditWarehouse,
   useWarehouse,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const WarehouseFormContext = React.createContext();
 

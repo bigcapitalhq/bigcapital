@@ -8,10 +8,10 @@ import {
   FormGroup,
   InputGroup,
   ControlGroup,
-  Position,
 } from '@blueprintjs/core';
-import { inputIntent } from 'utils';
-import { FieldRequiredHint, Col, Row, FormattedMessage as T } from '@/components';
+import { inputIntent } from '@/utils';
+
+import { FieldRequiredHint, FormattedMessage as T } from '@/components';
 import { useWarehouseFormContext } from './WarehouseFormProvider';
 
 /**

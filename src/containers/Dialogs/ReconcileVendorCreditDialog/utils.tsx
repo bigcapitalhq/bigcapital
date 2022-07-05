@@ -3,9 +3,8 @@ import { Callout, Intent, Classes } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
 
-import { CLASSES } from 'common/classes';
-import { T } from '@/components';
-import { MoneyFieldCell, FormatDateCell } from '@/components';
+import { CLASSES } from '@/common/classes';
+import {T , MoneyFieldCell, FormatDateCell } from '@/components';
 
 export const transformErrors = (errors, { setErrors }) => {};
 

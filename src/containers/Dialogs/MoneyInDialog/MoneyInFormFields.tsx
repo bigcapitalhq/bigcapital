@@ -3,7 +3,6 @@ import { useFormikContext } from 'formik';
 import { Classes } from '@blueprintjs/core';
 
 import { If } from '@/components';
-
 import MoneyInContentFields from './MoneyInContentFields';
 import TransactionTypeFields from './TransactionTypeFields';
 import { useMoneyInDailogContext } from './MoneyInDialogProvider';

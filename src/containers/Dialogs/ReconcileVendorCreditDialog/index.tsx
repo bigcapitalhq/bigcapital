@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage as T, Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 const ReconcileVendorCreditDialogContent = React.lazy(() =>
   import('./ReconcileVendorCreditDialogContent'),

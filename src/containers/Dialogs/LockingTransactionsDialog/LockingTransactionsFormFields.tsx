@@ -3,15 +3,15 @@ import { FastField, ErrorMessage } from 'formik';
 import { Classes, FormGroup, TextArea, Position } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { FieldRequiredHint, FormattedMessage as T } from '@/components';
-import { useAutofocus } from 'hooks';
+import { useAutofocus } from '@/hooks';
 import {
   inputIntent,
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-} from 'utils';
+} from '@/utils';
 
 /**
  *  locking Transactions form fields.

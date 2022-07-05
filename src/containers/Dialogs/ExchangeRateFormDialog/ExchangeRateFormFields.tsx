@@ -3,12 +3,13 @@ import { Classes, FormGroup, InputGroup, Position } from '@blueprintjs/core';
 import { FastField } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from '@/components';
+import classNames from 'classnames';
 import {
   momentFormatter,
   tansformDateValue,
   handleDateChange,
   inputIntent,
-} from 'utils';
+} from '@/utils';
 import {
   ErrorMessage,
   FieldRequiredHint,
@@ -16,7 +17,6 @@ import {
 } from '@/components';
 import { useExchangeRateFromContext } from './ExchangeRateFormProvider';
 
-import classNames from 'classnames';
 
 export default function ExchangeRateFormFields() {
   const { action, currencies } = useExchangeRateFromContext();

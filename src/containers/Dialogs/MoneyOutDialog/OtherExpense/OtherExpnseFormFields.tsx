@@ -26,9 +26,8 @@ import {
   ExchangeRateMutedField,
 } from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
-import { useAutofocus } from 'hooks';
-import { ACCOUNT_TYPE } from 'common/accountTypes';
-import { Features } from 'common';
+import { useAutofocus } from '@/hooks';
+import { Features, ACCOUNT_TYPE } from '@/common';
 
 import {
   inputIntent,

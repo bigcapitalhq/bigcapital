@@ -3,7 +3,7 @@ import { DialogContent } from '@/components';
 import {
   useCreateNotifyPaymentReceiveBySMS,
   usePaymentReceiveSMSDetail,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const NotifyPaymentReceiveViaSMSContext = React.createContext();
 

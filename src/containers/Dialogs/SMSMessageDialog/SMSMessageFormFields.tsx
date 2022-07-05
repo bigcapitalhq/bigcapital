@@ -7,7 +7,7 @@ import { FormattedMessage as T } from '@/components';
 
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
 
-import { inputIntent } from 'utils';
+import { inputIntent } from '@/utils';
 
 /**
  *

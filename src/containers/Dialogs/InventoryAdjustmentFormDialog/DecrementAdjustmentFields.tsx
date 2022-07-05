@@ -1,12 +1,11 @@
 import React from 'react';
 import { Field, ErrorMessage, FastField } from 'formik';
 import { FormGroup, InputGroup } from '@blueprintjs/core';
-import { inputIntent } from 'utils';
+import { inputIntent, toSafeNumber } from '@/utils';
 import { Row, Col, MoneyInputGroup } from '@/components';
 import { FormattedMessage as T } from '@/components';
-import { useAutofocus } from 'hooks';
+import { useAutofocus } from '@/hooks';
 import { decrementQuantity } from './utils';
-import { toSafeNumber } from 'utils';
 
 /**
  * Decrement adjustment fields.

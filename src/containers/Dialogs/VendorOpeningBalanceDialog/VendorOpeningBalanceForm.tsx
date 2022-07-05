@@ -10,9 +10,9 @@ import { CreateVendorOpeningBalanceFormSchema } from './VendorOpeningBalanceForm
 import { useVendorOpeningBalanceContext } from './VendorOpeningBalanceFormProvider';
 
 import VendorOpeningBalanceFormContent from './VendorOpeningBalanceFormContent';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 const defaultInitialValues = {
   opening_balance: '0',

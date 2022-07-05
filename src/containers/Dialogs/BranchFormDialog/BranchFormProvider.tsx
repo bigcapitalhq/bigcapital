@@ -1,6 +1,6 @@
 import React from 'react';
 import { DialogContent } from '@/components';
-import { useCreateBranch, useEditBranch, useBranch } from 'hooks/query';
+import { useCreateBranch, useEditBranch, useBranch } from '@/hooks/query';
 
 const BranchFormContext = React.createContext();
 

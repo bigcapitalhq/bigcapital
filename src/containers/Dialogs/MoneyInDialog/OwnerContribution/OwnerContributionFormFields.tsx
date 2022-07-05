@@ -27,8 +27,8 @@ import {
   FeatureCan,
 } from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
-import { useAutofocus } from 'hooks';
-import { ACCOUNT_TYPE } from 'common/accountTypes';
+import { useAutofocus } from '@/hooks';
+import { ACCOUNT_TYPE, CLASSES, Features } from '@common';
 import {
   inputIntent,
   momentFormatter,
@@ -36,17 +36,15 @@ import {
   handleDateChange,
   compose,
 } from 'utils';
-import { Features } from 'common';
-import { CLASSES } from 'common/classes';
-import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
+import { useMoneyInDailogContext } from '@/containers/Dialogs/MoneyInDialog/MoneyInDialogProvider';
 import {
   useObserveTransactionNoSettings,
   useSetPrimaryBranchToForm,
   useForeignAccount,
   BranchRowDivider,
-} from '../utils';
-import withSettings from 'containers/Settings/withSettings';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+} from '@/containers/Dialogs/MoneyInDialog/utils';
+import withSettings from '@/containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**
 /**

@@ -12,8 +12,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
-import { Features } from 'common';
+import { CLASSES, Features } from '@/common';
 import { DateInput } from '@blueprintjs/datetime';
 import {
   Icon,
@@ -35,14 +34,14 @@ import {
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-} from 'utils';
-import { useAutofocus } from 'hooks';
-import { ACCOUNT_TYPE } from 'common/accountTypes';
+  compose,
+} from '@/utils';
+import { useAutofocus } from '@/hooks';
+import { ACCOUNT_TYPE } from '@/common/accountTypes';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useRefundCreditNoteContext } from './RefundCreditNoteFormProvider';
 
 import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
-import { compose } from 'utils';
 
 /**
  * Refund credit note form fields.
@@ -61,7 +60,6 @@ function RefundCreditNoteFormFields({
 
   return (
     <div className={Classes.DIALOG_BODY}>
-
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>

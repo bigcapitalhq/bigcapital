@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
+import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
-import moment from 'moment';
 import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
 import { AppToaster } from '@/components';
 import {
   CreateExchangeRateFormSchema,
@@ -11,9 +11,9 @@ import {
 } from './ExchangeRateForm.schema';
 import ExchangeRateFormContent from './ExchangeRateFormContent';
 import { useExchangeRateFromContext } from './ExchangeRateFormProvider';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 
 const defaultInitialValues = {
   exchange_rate: '',
