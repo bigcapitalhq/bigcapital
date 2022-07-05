@@ -3,7 +3,7 @@ import {
   optionsMapToArray,
   transfromToSnakeCase,
   transactionNumber,
-} from 'utils';
+} from '@/utils';
 
 export const defaultInvoiceNoSettings = {
   nextNumber: '',
