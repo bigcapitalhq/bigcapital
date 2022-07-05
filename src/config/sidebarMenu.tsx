@@ -1,11 +1,11 @@
 import React from 'react';
 import { FormattedMessage as T } from '@/components';
-import { Features } from '../common/features';
+import { Features } from '@/common/features';
 import {
   ISidebarMenuItemType,
   ISidebarMenuOverlayIds,
   ISidebarSubscriptionAbility,
-} from '../containers/Dashboard/Sidebar/interfaces';
+} from '@/containers/Dashboard/Sidebar/interfaces';
 import {
   ReportsAction,
   AbilitySubject,
@@ -25,7 +25,7 @@ import {
   CashflowAction,
   PreferencesAbility,
   SubscriptionBillingAbility,
-} from '../common/abilityOption';
+} from '@/common/abilityOption';
 
 export const SidebarMenu = [
   // ---------------
