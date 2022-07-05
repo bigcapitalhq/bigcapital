@@ -1,10 +1,10 @@
 import React from 'react';
 
-const ExpenseDeleteAlert = React.lazy(() =>
-  import('../Alerts/Expenses/ExpenseDeleteAlert'),
+const ExpenseDeleteAlert = React.lazy(
+  () => import('@/containers/Alerts/Expenses/ExpenseDeleteAlert'),
 );
-const ExpensePublishAlert = React.lazy(() =>
-  import('../Alerts/Expenses/ExpensePublishAlert'),
+const ExpensePublishAlert = React.lazy(
+  () => import('@/containers/Alerts/Expenses/ExpensePublishAlert'),
 );
 
 /**

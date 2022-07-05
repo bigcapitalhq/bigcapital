@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import intl from 'react-intl-universal';
-import { DATATYPES_LENGTH } from 'common/dataTypes';
-import { isBlank } from 'utils';
+import { DATATYPES_LENGTH } from '@/common/dataTypes';
+import { isBlank } from '@/utils';
 
 const Schema = Yup.object().shape({
   beneficiary: Yup.string().label(intl.get('beneficiary')),

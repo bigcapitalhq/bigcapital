@@ -10,7 +10,7 @@ import {
   updateMinEntriesLines,
   updateAutoAddNewLine,
   updateRemoveLineByIndex,
-} from 'utils';
+} from '@/utils';
 
 /**
  * Expenses form entries.

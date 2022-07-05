@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 import { useExpensesListContext } from './ExpensesListProvider';
-import { useMemorizedColumnsWidths } from 'hooks';
-import { TABLES } from 'common/tables';
+import { useMemorizedColumnsWidths } from '@/hooks';
+import { TABLES } from '@/common/tables';
 
 import { DashboardContentTable } from '@/components';
 import DataTable from '@/components/DataTable';
@@ -12,11 +12,11 @@ import ExpensesEmptyStatus from './ExpensesEmptyStatus';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withExpensesActions from './withExpensesActions';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
-import withSettings from '../../Settings/withSettings';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { ActionsMenu, useExpensesTableColumns } from './components';
 

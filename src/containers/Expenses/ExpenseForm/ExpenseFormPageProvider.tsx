@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 import {
   useCurrencies,
   useCustomers,
@@ -10,7 +10,7 @@ import {
   useBranches,
   useCreateExpense,
   useEditExpense,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const ExpenseFormPageContext = createContext();
 

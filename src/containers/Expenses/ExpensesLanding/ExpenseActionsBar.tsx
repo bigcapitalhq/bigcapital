@@ -11,7 +11,7 @@ import {
 import { useHistory } from 'react-router-dom';
 
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import {
   If,
@@ -23,17 +23,17 @@ import {
   FormattedMessage as T,
 } from '@/components';
 
-import { ExpenseAction, AbilitySubject } from '../../../common/abilityOption';
-import { useRefreshExpenses } from 'hooks/query/expenses';
+import { ExpenseAction, AbilitySubject } from '@/common/abilityOption';
+import { useRefreshExpenses } from '@/hooks/query/expenses';
 import { useExpensesListContext } from './ExpensesListProvider';
 
 import withExpensesActions from './withExpensesActions';
 import withExpenses from './withExpenses';
 
-import withSettingsActions from '../../Settings/withSettingsActions';
-import withSettings from '../../Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withSettings from '@/containers/Settings/withSettings';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Expenses actions bar.

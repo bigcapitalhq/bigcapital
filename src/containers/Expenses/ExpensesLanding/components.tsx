@@ -15,7 +15,7 @@ import intl from 'react-intl-universal';
 import clsx from 'classnames';
 
 import { CLASSES } from 'common/classes';
-import { ExpenseAction, AbilitySubject } from '../../../common/abilityOption';
+import { ExpenseAction, AbilitySubject } from '@types/ramdacommon/abilityOption';
 import {
   FormatDateCell,
   FormattedMessage as T,
@@ -23,7 +23,7 @@ import {
   If,
   Can,
 } from '@/components';
-import { safeCallback } from 'utils';
+import { safeCallback } from '@/utils';
 
 /**
  * Description accessor.

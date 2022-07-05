@@ -15,8 +15,8 @@ import {
   ensureEntriesHasEmptyLine,
   orderingLinesIndexes,
   formattedAmount,
-} from 'utils';
-import { useCurrentOrganization } from 'hooks/state';
+} from '@/utils';
+import { useCurrentOrganization } from '@/hooks/state';
 
 const ERROR = {
   EXPENSE_ALREADY_PUBLISHED: 'EXPENSE.ALREADY.PUBLISHED',

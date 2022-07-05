@@ -13,7 +13,7 @@ import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { useHistory } from 'react-router-dom';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import classNames from 'classnames';
 import { Icon, If } from '@/components';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
