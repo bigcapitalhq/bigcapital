@@ -7,7 +7,7 @@ import {
 import { transformItemsTableState } from './utils';
 
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
-import { useResourceViews, useResourceMeta, useItems } from 'hooks/query';
+import { useResourceViews, useResourceMeta, useItems } from '@/hooks/query';
 
 const ItemsContext = createContext();
 

@@ -13,12 +13,12 @@ import intl from 'react-intl-universal';
 import { isNumber } from 'lodash';
 
 import { FormattedMessage as T, Icon, Money, If, Can } from '@/components';
-import { isBlank, safeCallback } from 'utils';
+import { isBlank, safeCallback } from '@/utils';
 import {
   AbilitySubject,
   ItemAction,
   InventoryAdjustmentAction,
-} from '../../common/abilityOption';
+} from '@/common/abilityOption';
 
 /**
  * Publish accessor

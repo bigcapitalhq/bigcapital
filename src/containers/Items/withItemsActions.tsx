@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   setItemsTableState,
   resetItemsTableState,
-} from 'store/items/items.actions';
+} from '@/store/items/items.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
   setItemsTableState: (queries) => dispatch(setItemsTableState(queries)),

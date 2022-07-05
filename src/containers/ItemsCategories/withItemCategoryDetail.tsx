@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { getItemCategoryByIdFactory } from 'store/itemCategories/ItemsCategories.selectors';
+import { getItemCategoryByIdFactory } from '@/store/itemCategories/ItemsCategories.selectors';
 
 export default () => {
   const getCategoryId = getItemCategoryByIdFactory();

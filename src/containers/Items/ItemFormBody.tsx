@@ -19,10 +19,10 @@ import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 
 import { useItemFormContext } from './ItemFormProvider';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
-import { ACCOUNT_PARENT_TYPE } from 'common/accountTypes';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { ACCOUNT_PARENT_TYPE } from '@/common/accountTypes';
 
-import { compose, inputIntent } from 'utils';
+import { compose, inputIntent } from '@/utils';
 import {
   sellDescriptionFieldShouldUpdate,
   sellAccountFieldShouldUpdate,

@@ -6,18 +6,17 @@ import {
   Classes,
   Intent,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
-import { If, Icon } from '@/components';
+import { If, Icon, FormattedMessage as T } from '@/components';
 
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import { AdvancedFilterPopover, DashboardFilterButton } from '@/components';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withItemCategories from './withItemCategories';
 import withItemCategoriesActions from './withItemCategoriesActions';
-import withAlertActions from 'containers/Alert/withAlertActions';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
 
 /**
@@ -28,7 +27,7 @@ function ItemsCategoryActionsBar({
   itemCategoriesSelectedRows = [],
   categoriesFilterConditions,
 
-  // 
+  //
   setItemsCategoriesTableState,
 
   // #withDialog
@@ -49,8 +48,6 @@ function ItemsCategoryActionsBar({
       itemCategoriesIds: itemCategoriesSelectedRows,
     });
   };
-
-
 
   return (
     <DashboardActionsBar>
@@ -112,5 +109,5 @@ export default compose(
     }),
   ),
   withAlertActions,
-  withItemCategoriesActions
+  withItemCategoriesActions,
 )(ItemsCategoryActionsBar);

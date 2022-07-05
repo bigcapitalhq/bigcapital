@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { getItemById } from 'store/items/items.reducer';
+import { getItemById } from '@/store/items/items.reducer';
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
