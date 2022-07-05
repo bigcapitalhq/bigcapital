@@ -1,14 +1,13 @@
 import React from 'react';
-import { FormattedMessage as T } from '@/components';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
 
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
-import { useOpenBill } from 'hooks/query';
-import { compose } from 'utils';
+import { useOpenBill } from '@/hooks/query';
+import { compose } from '@/utils';
 
 /**
  * Bill open alert.
@@ -23,7 +22,6 @@ function BillOpenAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  
   const { isLoading, mutateAsync: openBillMutate } = useOpenBill();
 
   // Handle cancel open bill alert.

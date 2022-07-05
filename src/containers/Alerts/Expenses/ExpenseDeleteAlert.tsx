@@ -4,12 +4,12 @@ import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { useDeleteExpense } from 'hooks/query';
-import { compose } from 'utils';
+import { useDeleteExpense } from '@/hooks/query';
+import { compose } from '@/utils';
 
 /**
  * Expense delete alert.

@@ -5,14 +5,14 @@ import { Intent, Alert } from '@blueprintjs/core';
 
 import { AppToaster } from '@/components';
 
-import { handleDeleteErrors } from 'containers/Accounts/utils';
+import { handleDeleteErrors } from '@/containers/Accounts/utils';
 
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { useDeleteAccount } from 'hooks/query';
-import { compose } from 'utils';
+import { useDeleteAccount } from '@/hooks/query';
+import { compose } from '@/utils';
 
 /**
  * Account delete alerts.

@@ -5,13 +5,13 @@ import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { AppToaster } from '@/components';
 
-import { handleDeleteErrors } from 'containers/Accounts/utils';
+import { handleDeleteErrors } from '@/containers/Accounts/utils';
 
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
+import withAccountsActions from '@/containers/Accounts/withAccountsActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Account bulk delete alert.

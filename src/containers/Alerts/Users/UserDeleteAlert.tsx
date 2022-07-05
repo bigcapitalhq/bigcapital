@@ -3,13 +3,13 @@ import { Intent, Alert } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 
-import { useDeleteUser } from 'hooks/query';
+import { useDeleteUser } from '@/hooks/query';
 import { AppToaster } from '@/components';
 
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
-import { compose } from 'redux';
+import { compose } from '@/utils';
 
 /**
  * User delete alert.
@@ -25,7 +25,6 @@ function UserDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  
   const { mutateAsync: deleteUserMutate, isLoading } = useDeleteUser();
 
   const handleCancelUserDelete = () => {
@@ -41,15 +40,21 @@ function UserDeleteAlert({
         });
         closeAlert(name);
       })
-      .catch(({ response: { data: { errors } } }) => {
-        if (errors.find(e => e.type === 'CANNOT_DELETE_LAST_USER')) {
-          AppToaster.show({
-            message: 'Cannot delete the last user in the system.',
-            intent: Intent.DANGER,
-          });
-        }
-        closeAlert(name);
-      });
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          if (errors.find((e) => e.type === 'CANNOT_DELETE_LAST_USER')) {
+            AppToaster.show({
+              message: 'Cannot delete the last user in the system.',
+              intent: Intent.DANGER,
+            });
+          }
+          closeAlert(name);
+        },
+      );
   };
 
   return (

@@ -1,15 +1,13 @@
 import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import { AppToaster,FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
-import { usePublishJournal } from 'hooks/query';
+import { usePublishJournal } from '@/hooks/query';
 
-import { AppToaster } from '@/components';
+import withAlertActions from '@/containers/Alert/withAlertActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 
-import withAlertActions from 'containers/Alert/withAlertActions';
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Journal publish alert.

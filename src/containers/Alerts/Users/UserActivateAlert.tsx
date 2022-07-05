@@ -3,12 +3,12 @@ import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Alert, Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
-import { useActivateUser } from 'hooks/query';
+import { useActivateUser } from '@/hooks/query';
 
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * User inactivate alert.

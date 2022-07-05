@@ -6,12 +6,12 @@ import { AppToaster } from '@/components';
 
 import {
   useActivateItem,
-} from 'hooks/query';
+} from '@/hooks/query';
 
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  *  Item activate alert.

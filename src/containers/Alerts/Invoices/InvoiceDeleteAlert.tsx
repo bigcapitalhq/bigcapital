@@ -3,13 +3,13 @@ import intl from 'react-intl-universal';
 import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
-import { useDeleteInvoice } from 'hooks/query';
+import { useDeleteInvoice } from '@/hooks/query';
 
-import { handleDeleteErrors } from 'containers/Sales/Invoices/InvoicesLanding/components';
+import { handleDeleteErrors } from '@/containers/Sales/Invoices/InvoicesLanding/components';
 
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 

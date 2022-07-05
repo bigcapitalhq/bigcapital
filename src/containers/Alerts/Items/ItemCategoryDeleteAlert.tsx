@@ -3,13 +3,13 @@ import intl from 'react-intl-universal';
 import {  FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 
-import { useDeleteItemCategory } from 'hooks/query';
+import { useDeleteItemCategory } from '@/hooks/query';
 import { AppToaster } from '@/components';
 
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Item Category delete alerts.

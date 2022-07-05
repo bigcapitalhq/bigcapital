@@ -1,40 +1,41 @@
 import React, { useState } from 'react';
+import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
-import { FormattedMessage as T, AppToaster } from '@/components';
+import { AppToaster } from '@/components';
 
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
+import withAccountsActions from '@/containers/Accounts/withAccountsTableActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
-function AccountBulkActivateAlert({
+function AccountBulkInactivateAlert({
   name,
   isOpen,
   payload: { accountsIds },
 
-  // #withAlertActions
-  closeAlert,
+  // #withAccountsActions
+  requestBulkInactiveAccounts,
 
-  requestBulkActivateAccounts,
+  closeAlert,
 }) {
+  
   const [isLoading, setLoading] = useState(false);
   const selectedRowsCount = 0;
 
   // Handle alert cancel.
-  const handleClose = () => {
+  const handleCancel = () => {
     closeAlert(name);
   };
-
-  // Handle Bulk activate account confirm.
-  const handleConfirmBulkActivate = () => {
+  // Handle Bulk Inactive accounts confirm.
+  const handleConfirmBulkInactive = () => {
     setLoading(true);
-    requestBulkActivateAccounts(accountsIds)
+    requestBulkInactiveAccounts(accountsIds)
       .then(() => {
         AppToaster.show({
-          message: intl.get('the_accounts_has_been_successfully_activated'),
+          message: intl.get('the_accounts_have_been_successfully_inactivated'),
           intent: Intent.SUCCESS,
         });
         queryCache.invalidateQueries('accounts-table');
@@ -49,15 +50,15 @@ function AccountBulkActivateAlert({
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={`${intl.get('activate')} (${selectedRowsCount})`}
+      confirmButtonText={`${intl.get('inactivate')} (${selectedRowsCount})`}
       intent={Intent.WARNING}
       isOpen={isOpen}
-      onCancel={handleClose}
-      onConfirm={handleConfirmBulkActivate}
+      onCancel={handleCancel}
+      onConfirm={handleConfirmBulkInactive}
       loading={isLoading}
     >
       <p>
-        <T id={'are_sure_to_activate_this_accounts'} />
+        <T id={'are_sure_to_inactive_this_accounts'} />
       </p>
     </Alert>
   );
@@ -67,4 +68,4 @@ export default compose(
   withAlertStoreConnect(),
   withAlertActions,
   withAccountsActions,
-)(AccountBulkActivateAlert);
+)(AccountBulkInactivateAlert);

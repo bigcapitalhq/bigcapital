@@ -3,13 +3,13 @@ import intl from 'react-intl-universal';
 import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
-import { useDeleteWarehouse } from 'hooks/query';
-import { handleDeleteErrors } from '../../Preferences/Warehouses/utils';
+import { useDeleteWarehouse } from '@/hooks/query';
+import { handleDeleteErrors } from '@/containers/Preferences/Warehouses/utils';
 
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Warehouse delete alert

@@ -4,12 +4,12 @@ import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
-import { handleDeleteErrors } from '../../Purchases/CreditNotes/CreditNotesLanding/utils';
-import { useDeleteVendorCredit } from 'hooks/query';
-import { compose } from 'utils';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { handleDeleteErrors } from '@/containers/Purchases/CreditNotes/CreditNotesLanding/utils';
+import { useDeleteVendorCredit } from '@/hooks/query';
+import { compose } from '@/utils';
 
 /**
  * Vendor Credit delete alert.

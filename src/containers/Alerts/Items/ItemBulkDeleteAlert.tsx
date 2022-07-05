@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { FormattedMessage as T } from '@/components';
+import {AppToaster, FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { size } from 'lodash';
-import { AppToaster } from '@/components';
 
-import withItemsActions from 'containers/Items/withItemsActions';
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
+import withItemsActions from '@/containers/Items/withItemsActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Item bulk delete alert.

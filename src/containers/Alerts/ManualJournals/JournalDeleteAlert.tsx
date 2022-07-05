@@ -10,7 +10,7 @@ import withAlertActions from '@/containers/Alert/withAlertActions';
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Journal delete alert.

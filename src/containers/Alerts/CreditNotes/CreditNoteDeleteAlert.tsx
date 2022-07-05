@@ -4,13 +4,13 @@ import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { useDeleteCreditNote } from 'hooks/query';
-import { handleDeleteErrors } from '../../Sales/CreditNotes/CreditNotesLanding/utils';
-import { compose } from 'utils';
+import { useDeleteCreditNote } from '@/hooks/query';
+import { handleDeleteErrors } from '@/containers/Sales/CreditNotes/CreditNotesLanding/utils';
+import { compose } from '@/utils';
 
 /**
  * Credit note delete alert.

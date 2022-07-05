@@ -1,11 +1,10 @@
 import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
 
-import withAlertActions from 'containers/Alert/withAlertActions';
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 
-import { compose } from 'utils';
-import { saveInvoke } from '../../../utils';
+import { compose, saveInvoke } from '@/utils';
 
 /**
  * Changing full-amount alert in payment made form.
@@ -16,7 +15,7 @@ function ChangingFullAmountAlert({
 
   // #withAlertStoreConnect
   isOpen,
-  payload: {  },
+  payload: {},
 
   // #withAlertActions
   closeAlert,
@@ -29,7 +28,7 @@ function ChangingFullAmountAlert({
   // Handle confirm delete manual journal.
   const handleConfirm = (event) => {
     closeAlert(name);
-    saveInvoke(onConfirm, event)
+    saveInvoke(onConfirm, event);
   };
 
   return (

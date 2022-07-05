@@ -3,14 +3,14 @@ import intl from 'react-intl-universal';
 import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
-import { transformErrors } from 'containers/Customers/utils';
+import { transformErrors } from '@/containers/Customers/utils';
 
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { useDeleteCustomer } from 'hooks/query';
-import { compose } from 'utils';
+import { useDeleteCustomer } from '@/hooks/query';
+import { compose } from '@/utils';
 
 /**
  * Customer delete alert.

@@ -3,13 +3,13 @@ import intl from 'react-intl-universal';
 import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
-import { useDeleteRefundVendorCredit } from 'hooks/query';
+import { useDeleteRefundVendorCredit } from '@/hooks/query';
 
-import withAlertActions from 'containers/Alert/withAlertActions';
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertActions from '@/containers/Alert/withAlertActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Refund Vendor transactions delete alert.

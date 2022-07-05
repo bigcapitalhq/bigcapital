@@ -4,12 +4,12 @@ import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
-import withAlertActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import withAlertActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { useDeleteReconcileVendorCredit } from 'hooks/query';
-import { compose } from 'utils';
+import { useDeleteReconcileVendorCredit } from '@/hooks/query';
+import { compose } from '@/utils';
 
 /**
  * Reconcile vendor credit delete alert.
@@ -69,7 +69,9 @@ function ReconcileVendorCreditDeleteAlert({
     >
       <p>
         <FormattedHTMLMessage
-          id={'reconcile_vendor_credit.alert.once_you_delete_this_reconcile_vendor_credit'}
+          id={
+            'reconcile_vendor_credit.alert.once_you_delete_this_reconcile_vendor_credit'
+          }
         />
       </p>
     </Alert>
