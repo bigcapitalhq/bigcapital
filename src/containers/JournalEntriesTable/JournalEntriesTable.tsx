@@ -6,10 +6,10 @@ import styled from 'styled-components';
 import * as R from 'ramda';
 
 import { CurrencyTag } from '@/components';
-import { TableStyle } from '../../common';
+import { TableStyle } from '@/common';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import { useGLEntriesTableColumns } from './utils';
 
 /**
