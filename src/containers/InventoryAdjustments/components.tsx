@@ -15,11 +15,11 @@ import moment from 'moment';
 import { FormattedMessage as T, Can } from '@/components';
 import { isNumber } from 'lodash';
 import { Icon, Money, If } from '@/components';
-import { isBlank, safeCallback } from 'utils';
+import { isBlank, safeCallback } from '@/utils';
 import {
   InventoryAdjustmentAction,
   AbilitySubject,
-} from '../../common/abilityOption';
+} from '@/common/abilityOption';
 
 /**
  * Publish accessor

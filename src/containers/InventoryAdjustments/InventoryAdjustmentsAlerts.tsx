@@ -1,11 +1,11 @@
 import React from 'react';
 
-const InventoryAdjustmentDeleteAlert = React.lazy(() =>
-  import('../Alerts/Items/InventoryAdjustmentDeleteAlert'),
+const InventoryAdjustmentDeleteAlert = React.lazy(
+  () => import('@/containers/Alerts/Items/InventoryAdjustmentDeleteAlert'),
 );
 
-const InventoryAdjustmentPublishAlert = React.lazy(() =>
-  import('../Alerts/Items/InventoryAdjustmentPublishAlert'),
+const InventoryAdjustmentPublishAlert = React.lazy(
+  () => import('@/containers/Alerts/Items/InventoryAdjustmentPublishAlert'),
 );
 
 export default [

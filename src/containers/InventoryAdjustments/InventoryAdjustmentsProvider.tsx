@@ -1,6 +1,6 @@
 import React, { createContext } from 'react';
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
-import { useInventoryAdjustments } from 'hooks/query';
+import { useInventoryAdjustments } from '@/hooks/query';
 
 const InventoryAdjustmentsContext = createContext();
 
