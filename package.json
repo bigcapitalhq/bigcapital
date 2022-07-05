@@ -17,7 +17,6 @@
     "@reduxjs/toolkit": "^1.2.5",
     "@sentry/react": "^6.13.2",
     "@sentry/tracing": "^6.13.2",
-    "@svgr/webpack": "4.3.3",
     "@tanem/react-nprogress": "^3.0.24",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
@@ -52,7 +51,6 @@
     "flow-bin": "^0.123.0",
     "formik": "^2.2.5",
     "fs-extra": "^8.1.0",
-    "html-webpack-plugin": "4.0.0-beta.11",
     "http-proxy-middleware": "^1.0.0",
     "identity-obj-proxy": "3.0.0",
     "jest": "24.9.0",
@@ -63,16 +61,7 @@
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.33",
-    "node-sass": "^4.13.1",
     "path-browserify": "^1.0.1",
-    "pnp-webpack-plugin": "1.6.0",
-    "postcss-flexbugs-fixes": "4.1.0",
-    "postcss-loader": "3.0.0",
-    "postcss-normalize": "8.0.1",
-    "postcss-preset-env": "6.7.0",
-    "postcss-rtl": "^1.7.3",
-    "postcss-rtlcss": "^1.7.2",
-    "postcss-safe-parser": "4.0.1",
     "query-string": "^7.1.1",
     "ramda": "^0.27.1",
     "react": "^16.14.0",
@@ -169,7 +158,7 @@
       "/Users/ahmed/Documents/Ratteb/client/src"
     ],
     "moduleNameMapper": {
-      "^react-native$": "react-native-web",
+      "^react-native$": "react-native-b",
       "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
     },
     "moduleFileExtensions": [
