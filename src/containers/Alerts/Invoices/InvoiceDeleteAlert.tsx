@@ -11,7 +11,7 @@ import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Invoice delete alert.

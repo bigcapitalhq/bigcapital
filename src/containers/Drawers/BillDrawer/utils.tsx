@@ -18,7 +18,7 @@ import {
   Choose,
   Icon,
 } from '../../../components';
-import { getColumnWidth } from 'utils';
+import { getColumnWidth } from '@/utils';
 import { useBillDrawerContext } from './BillDrawerProvider';
 
 /**

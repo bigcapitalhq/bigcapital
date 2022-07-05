@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/pages/Branches/BranchFormDialog.scss';
+import '@/style/pages/Branches/BranchFormDialog.scss';
 
 import { BranchFormProvider } from './BranchFormProvider';
 import BranchForm from './BranchForm';

@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
-import { isAuthenticated } from 'store/authentication/authentication.reducer';
+import { isAuthenticated } from '@/store/authentication/authentication.reducer';
 import {
   setLogin,
-} from 'store/authentication/authentication.actions';
+} from '@/store/authentication/authentication.actions';
 import { useQueryClient } from 'react-query';
 import { removeCookie } from '../../utils';
 

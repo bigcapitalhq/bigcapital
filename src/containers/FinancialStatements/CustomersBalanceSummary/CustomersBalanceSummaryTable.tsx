@@ -7,8 +7,8 @@ import { ReportDataTable, FinancialSheet } from '@/components';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import { useCustomersSummaryColumns } from './components';
 
-import { TableStyle } from 'common';
-import { tableRowTypesToClassnames } from 'utils';
+import { TableStyle } from '@/common';
+import { tableRowTypesToClassnames } from '@/utils';
 
 /**
  * Customers balance summary table.

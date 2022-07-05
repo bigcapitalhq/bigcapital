@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/pages/BadDebt/BadDebtDialog.scss';
+import '@/style/pages/BadDebt/BadDebtDialog.scss';
 import { BadDebtFormProvider } from './BadDebtFormProvider';
 import BadDebtForm from './BadDebtForm';
 

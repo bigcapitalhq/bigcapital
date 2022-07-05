@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { useJournalSheet } from 'hooks/query';
+import { useJournalSheet } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const JournalSheetContext = createContext();

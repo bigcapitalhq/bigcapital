@@ -16,7 +16,7 @@ import withCurrentOrganization from '@/containers/Organization/withCurrentOrgani
 
 import { useBadDebtContext } from './BadDebtFormProvider';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 const defaultInitialValues = {
   expense_account_id: '',

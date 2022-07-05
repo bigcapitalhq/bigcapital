@@ -7,13 +7,13 @@ import styled from 'styled-components';
 
 import { FormattedMessage as T } from '@/components';
 
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
 import InventoryValuationHeaderGeneralPanel from './InventoryValuationHeaderGeneralPanel';
 import InventoryValuationHeaderDimensionsPanel from './InventoryValuationHeaderDimensionsPanel';
 import withInventoryValuation from './withInventoryValuation';
 import withInventoryValuationActions from './withInventoryValuationActions';
 
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 
 /**
  * inventory valuation header.

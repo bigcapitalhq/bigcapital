@@ -1,6 +1,6 @@
 import React from 'react';
 import { FastField } from 'formik';
-import { handleStringChange } from 'utils';
+import { handleStringChange } from '@/utils';
 import intl from 'react-intl-universal';
 import { RadioGroup, Radio } from '@blueprintjs/core';
 

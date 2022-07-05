@@ -1,5 +1,5 @@
-import { paginationLocationQuery } from 'store/selectors';
-import { createDeepEqualSelector } from 'utils';
+import { paginationLocationQuery } from '@/store/selectors';
+import { createDeepEqualSelector } from '@/utils';
 
 // Accounts table state selector
 const cashflowAccountsTableStateSelector = (state, props) =>

@@ -10,7 +10,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { useDeleteReconcileCredit } from '@/hooks/query';
 import { handleDeleteErrors } from '@/containers/Sales/CreditNotes/CreditNotesLanding/utils';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Reconcile credit note delete alert.

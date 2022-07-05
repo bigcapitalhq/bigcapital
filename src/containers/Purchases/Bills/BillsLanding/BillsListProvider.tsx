@@ -2,9 +2,9 @@ import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
 
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
-import { useResourceViews, useResourceMeta, useBills } from 'hooks/query';
+import { useResourceViews, useResourceMeta, useBills } from '@/hooks/query';
 
-import { getFieldsFromResourceMeta } from 'utils';
+import { getFieldsFromResourceMeta } from '@/utils';
 
 const BillsListContext = createContext();
 

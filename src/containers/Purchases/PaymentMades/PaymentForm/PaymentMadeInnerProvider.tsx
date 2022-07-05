@@ -1,6 +1,6 @@
 import { useFormikContext } from 'formik';
 import React, { createContext, useContext, useEffect } from 'react';
-import { usePaymentMadeNewPageEntries } from 'hooks/query';
+import { usePaymentMadeNewPageEntries } from '@/hooks/query';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { transformToNewPageEntries } from './utils';
 

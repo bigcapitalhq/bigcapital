@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
-import { useInventoryAdjustment } from 'hooks/query';
+import { useInventoryAdjustment } from '@/hooks/query';
 
 const InventoryAdjustmentDrawerContext = React.createContext();
 

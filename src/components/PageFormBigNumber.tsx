@@ -1,11 +1,11 @@
 import React from 'react';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import {
   Money,
 } from '@/components';
 
-import 'style/components/BigAmount.scss';
+import '@/style/components/BigAmount.scss';
 
 export default function PageFormBigNumber({ label, amount, currencyCode }) {
   return (

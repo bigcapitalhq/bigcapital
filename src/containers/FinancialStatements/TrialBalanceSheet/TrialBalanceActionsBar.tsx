@@ -17,7 +17,7 @@ import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
 import withTrialBalance from './withTrialBalance';
 import withTrialBalanceActions from './withTrialBalanceActions';
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke } from '@/utils';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 
 function TrialBalanceActionsBar({

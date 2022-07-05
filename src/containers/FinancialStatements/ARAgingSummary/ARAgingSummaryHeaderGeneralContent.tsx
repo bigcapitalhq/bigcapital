@@ -18,7 +18,7 @@ import {
   Col,
   FieldHint,
 } from '@/components';
-import { momentFormatter } from 'utils';
+import { momentFormatter } from '@/utils';
 import { useARAgingSummaryGeneralContext } from './ARAgingSummaryGeneralProvider';
 import { filterCustomersOptions } from './constants';
 

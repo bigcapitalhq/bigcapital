@@ -5,7 +5,7 @@ import { CommercialDocEntriesTable } from '@/components';
 import { usePaymentMadeEntriesColumns } from './utils';
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
 
-import { TableStyle } from 'common';
+import { TableStyle } from '@/common';
 
 /**
  * Payment made read-only details table.

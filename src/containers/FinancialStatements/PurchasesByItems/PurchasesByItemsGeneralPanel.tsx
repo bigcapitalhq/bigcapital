@@ -8,7 +8,7 @@ import {
   ItemsMultiSelect,
 } from '../../../components';
 import classNames from 'classnames';
-import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
+import FinancialStatementDateRange from '@/containers/FinancialStatements/FinancialStatementDateRange';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import { filterItemsOptions } from '../constants';
 

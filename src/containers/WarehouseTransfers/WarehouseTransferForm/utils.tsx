@@ -6,7 +6,7 @@ import { keyBy, omit } from 'lodash';
 import { useFormikContext } from 'formik';
 import * as R from 'ramda';
 
-import { useWatch } from 'hooks/utils';
+import { useWatch } from '@/hooks/utils';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 
 import { AppToaster } from '@/components';
@@ -14,7 +14,7 @@ import {
   orderingLinesIndexes,
   updateAutoAddNewLine,
   updateTableCell,
-} from 'utils';
+} from '@/utils';
 import {
   compose,
   transformToForm,
@@ -24,11 +24,11 @@ import {
   updateTableRow,
   updateMinEntriesLines,
   updateRemoveLineByIndex,
-} from 'utils';
+} from '@/utils';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
-} from 'containers/Entries/utils';
+} from '@/containers/Entries/utils';
 
 export const MIN_LINES_NUMBER = 1;
 

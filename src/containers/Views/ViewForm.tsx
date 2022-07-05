@@ -24,7 +24,7 @@ import Icon from '@/components/Icon';
 import ErrorMessage from '@/components/ErrorMessage';
 import AppToaster from '@/components/AppToaster';
 import { If } from '@/components';
-import ViewFormContainer from 'containers/Views/ViewForm.container.js';
+import ViewFormContainer from '@/containers/Views/ViewForm.container.js';
 
 function ViewForm({
   requestSubmitView,

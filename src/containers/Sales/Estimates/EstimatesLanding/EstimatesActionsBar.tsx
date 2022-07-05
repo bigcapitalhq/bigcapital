@@ -24,17 +24,17 @@ import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import withEstimatesActions from './withEstimatesActions';
 import withEstimates from './withEstimates';
 
-import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withSettings from 'containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
-import { useRefreshEstimates } from 'hooks/query/estimates';
+import { useRefreshEstimates } from '@/hooks/query/estimates';
 import {
   SaleEstimateAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Estimates list actions bar.

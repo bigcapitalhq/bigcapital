@@ -1,7 +1,7 @@
 import React from 'react';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
-import 'style/pages/Items/List.scss';
+import '@/style/pages/Items/List.scss';
 
 import { DashboardPageContent } from '@/components';
 

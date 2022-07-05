@@ -8,8 +8,8 @@ import {
   FormattedMessage as T,
   CardFooterActions
 } from '@/components';
-import { inputIntent } from 'utils';
-import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from 'common/accountTypes';
+import { inputIntent } from '@/utils';
+import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/common/accountTypes';
 
 import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
 

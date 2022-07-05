@@ -1,8 +1,8 @@
 import React, { createContext, useState } from 'react';
 import { isEmpty, pick } from 'lodash';
 import { useLocation } from 'react-router-dom';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 import { transformToEditForm, ITEMS_FILTER_ROLES_QUERY } from './utils';
 import {
@@ -15,7 +15,7 @@ import {
   useEditInvoice,
   useSettingsInvoices,
   useEstimate,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const InvoiceFormContext = createContext();
 

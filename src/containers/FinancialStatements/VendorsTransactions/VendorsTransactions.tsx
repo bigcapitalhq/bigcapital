@@ -13,7 +13,7 @@ import withVendorsTransactionsActions from './withVendorsTransactionsActions';
 import { VendorsTransactionsProvider } from './VendorsTransactionsProvider';
 import { VendorsTransactionsLoadingBar } from './components';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Vendors transactions.

@@ -34,7 +34,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import { AccountAction, AbilitySubject } from '@/common/abilityOption';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Accounts actions bar.

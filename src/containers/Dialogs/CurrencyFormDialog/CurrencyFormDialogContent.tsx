@@ -5,7 +5,7 @@ import CurrencyForm from './CurrencyForm';
 import withCurrencyDetail from '@/containers/Currencies/withCurrencyDetail';
 
 import { compose } from '@/utils';
-import 'style/pages/Currency/CurrencyFormDialog.scss';
+import '@/style/pages/Currency/CurrencyFormDialog.scss';
 
 function CurrencyFormDialogContent({
   // #ownProp

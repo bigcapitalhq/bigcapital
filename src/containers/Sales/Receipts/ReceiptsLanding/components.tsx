@@ -14,7 +14,7 @@ import {
 import clsx from 'classnames';
 
 import { CLASSES } from '../../../../common/classes';
-import { safeCallback } from 'utils';
+import { safeCallback } from '@/utils';
 import { FormatDateCell, Choose, Money, Icon, If, Can } from '@/components';
 import {
   SaleReceiptAction,

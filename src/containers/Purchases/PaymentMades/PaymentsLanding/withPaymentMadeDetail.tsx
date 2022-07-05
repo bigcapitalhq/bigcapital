@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { getPaymentMadeByIdFactory } from 'store/PaymentMades/paymentMade.selector';
+import { getPaymentMadeByIdFactory } from '@/store/PaymentMades/paymentMade.selector';
 
 export default () => {
   const getPaymentMadeById = getPaymentMadeByIdFactory();

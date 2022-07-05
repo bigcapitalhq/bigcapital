@@ -1,4 +1,4 @@
-import t from 'store/types';
+import t from '@/store/types';
 
 /**
  * Sets global table state of the table. 

@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { omit, get } from 'lodash';
 import intl from 'react-intl-universal';
 
-import 'style/pages/Items/ItemAdjustmentDialog.scss';
+import '@/style/pages/Items/ItemAdjustmentDialog.scss';
 
 import { AppToaster } from '@/components';
 import { CreateInventoryAdjustmentFormSchema } from './InventoryAdjustmentForm.schema';

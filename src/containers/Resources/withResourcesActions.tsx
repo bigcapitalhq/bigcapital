@@ -3,7 +3,7 @@ import {
   fetchResourceColumns,
   fetchResourceFields,
   fetchResourceData,
-} from 'store/resources/resources.actions';
+} from '@/store/resources/resources.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
   requestFetchResourceFields: (resourceSlug) => dispatch(fetchResourceFields({ resourceSlug })),

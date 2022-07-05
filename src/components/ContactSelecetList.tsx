@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 import { MenuItem, Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 export default function ContactSelecetList({
   contactsList,

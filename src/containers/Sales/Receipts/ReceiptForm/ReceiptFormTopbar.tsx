@@ -13,7 +13,7 @@ import {
   useSetPrimaryBranchToForm,
 } from './utils';
 
-import { useFeatureCan } from 'hooks/state';
+import { useFeatureCan } from '@/hooks/state';
 import {
   Icon,
   BranchSelect,
@@ -23,7 +23,7 @@ import {
   DetailsBarSkeletonBase,
 } from '@/components';
 import { useReceiptFormContext } from './ReceiptFormProvider';
-import { Features } from 'common';
+import { Features } from '@/common';
 
 /**
  * Receipt form topbar .

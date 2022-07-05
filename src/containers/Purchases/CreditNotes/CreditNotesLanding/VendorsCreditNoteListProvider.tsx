@@ -7,9 +7,9 @@ import {
   useResourceMeta,
   useVendorCredits,
   useRefreshVendorCredits,
-} from 'hooks/query';
+} from '@/hooks/query';
 
-import { getFieldsFromResourceMeta } from 'utils';
+import { getFieldsFromResourceMeta } from '@/utils';
 
 const VendorsCreditNoteListContext = React.createContext();
 

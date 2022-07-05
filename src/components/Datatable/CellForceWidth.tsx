@@ -1,7 +1,7 @@
 import React from 'react';
 import { get } from 'lodash';
 
-import { getForceWidth } from 'utils';
+import { getForceWidth } from '@/utils';
 
 export function CellForceWidth({
   value,

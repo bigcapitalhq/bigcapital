@@ -26,8 +26,8 @@ import {
   ExchangeRateMutedField,
 } from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
-import { useAutofocus } from 'hooks';
-import { ACCOUNT_TYPE } from 'common/accountTypes';
+import { useAutofocus } from '@/hooks';
+import { ACCOUNT_TYPE } from '@/common/accountTypes';
 
 import {
   inputIntent,
@@ -35,9 +35,9 @@ import {
   tansformDateValue,
   handleDateChange,
   compose,
-} from 'utils';
-import { Features } from 'common';
-import { CLASSES } from 'common/classes';
+} from '@/utils';
+import { Features } from '@/common';
+import { CLASSES } from '@/common/classes';
 import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
 import {
   useObserveTransactionNoSettings,
@@ -45,8 +45,8 @@ import {
   useForeignAccount,
   BranchRowDivider,
 } from '../utils';
-import withSettings from 'containers/Settings/withSettings';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**
  * Transfer to account form fields.

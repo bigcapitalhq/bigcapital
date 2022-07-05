@@ -2,16 +2,16 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DataTable } from '../../../../../components';
-import { TableStyle } from 'common';
+import { TableStyle } from '@/common';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows'
 
 import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
-import { useItemAssociatedBillTransactions } from 'hooks/query';
+import { useItemAssociatedBillTransactions } from '@/hooks/query';
 import { useBillTransactionsColumns, ActionsMenu } from './components';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Bill payment transactions data table.

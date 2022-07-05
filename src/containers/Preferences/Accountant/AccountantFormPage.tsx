@@ -6,16 +6,16 @@ import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 import intl from 'react-intl-universal';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withSettings from 'containers/Settings/withSettings';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import withSettings from '@/containers/Settings/withSettings';
 
 import AccountantForm from './AccountantForm';
 import { AccountantSchema } from './Accountant.schema';
 import { useAccountantFormContext } from './AccountantFormProvider';
 import { transformToOptions } from './utils';
-import { compose, transformGeneralSettings } from 'utils';
+import { compose, transformGeneralSettings } from '@/utils';
 
-import 'style/pages/Preferences/Accounting.scss';
+import '@/style/pages/Preferences/Accounting.scss';
 
 // Accountant preferences.
 function AccountantFormPage({

@@ -2,8 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 import { Classes, Switch, FormGroup, Intent } from '@blueprintjs/core';
 
-import { CellType } from 'common';
-import { safeInvoke } from 'utils';
+import { CellType } from '@/common';
+import { safeInvoke } from '@/utils';
 
 /**
  * Switch editable cell.

@@ -1,7 +1,7 @@
 import React from 'react';
 import * as R from 'ramda';
 
-import 'style/pages/ItemsCategories/List.scss';
+import '@/style/pages/ItemsCategories/List.scss';
 
 import { DashboardContentTable, DashboardPageContent } from '@/components';
 

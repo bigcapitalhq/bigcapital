@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
-import PaymentReceiveNumberDialog from 'containers/Dialogs/PaymentReceiveNumberDialog';
+import PaymentReceiveNumberDialog from '@/containers/Dialogs/PaymentReceiveNumberDialog';
 
 /**
  * Payment receive form dialogs.

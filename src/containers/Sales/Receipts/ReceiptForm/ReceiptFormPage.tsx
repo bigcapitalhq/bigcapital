@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import 'style/pages/SaleReceipt/PageForm.scss';
+import '@/style/pages/SaleReceipt/PageForm.scss';
 
 import ReceiptFrom from './ReceiptForm';
 import { ReceiptFormProvider } from './ReceiptFormProvider';

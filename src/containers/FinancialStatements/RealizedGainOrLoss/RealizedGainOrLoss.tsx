@@ -11,7 +11,7 @@ import { RealizedGainOrLossProvider } from './RealizedGainOrLossProvider';
 import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 import withRealizedGainOrLossActions from './withRealizedGainOrLossActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Realized Gain or Loss.

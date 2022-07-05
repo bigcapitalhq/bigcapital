@@ -18,7 +18,7 @@ import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import withCustomersBalanceSummary from './withCustomersBalanceSummary';
 import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryActions';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke } from '@/utils';
 
 /**
  * customer balance summary action bar.

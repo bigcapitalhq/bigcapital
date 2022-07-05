@@ -13,11 +13,11 @@ import {
   ColumnsDirective,
   ColumnDirective,
 } from '@syncfusion/ej2-react-grids';
-import useAsync from 'hooks/async';
+import useAsync from '@/hooks/async';
 import {connect} from 'react-redux';
 import {
   fetchResourceFields,
-} from 'store/customFields/customFields.actions';
+} from '@/store/customFields/customFields.actions';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 

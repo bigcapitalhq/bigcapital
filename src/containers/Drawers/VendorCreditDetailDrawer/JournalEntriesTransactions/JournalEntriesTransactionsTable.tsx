@@ -2,7 +2,7 @@ import React from 'react';
 import { DataTable, Card } from '@/components';
 
 import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerProvider';
-import { useTransactionsByReference } from 'hooks/query';
+import { useTransactionsByReference } from '@/hooks/query';
 import { useJournalEntriesTransactionsColumns } from './components';
 
 import JournalEntriesTable, {

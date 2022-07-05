@@ -3,7 +3,7 @@ import { isEmpty } from 'lodash';
 import {
   getFieldsFromResourceMeta,
   transformTableQueryToParams,
-} from 'utils';
+} from '@/utils';
 import { transformItemsTableState } from './utils';
 
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';

@@ -18,7 +18,7 @@ import {
   tansformDateValue,
   inputIntent,
   handleDateChange,
-} from 'utils';
+} from '@/utils';
 import { useVendorsBalanceSummaryGeneralPanelContext } from './VendorsBalanceSummaryHeaderGeneralProvider';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 

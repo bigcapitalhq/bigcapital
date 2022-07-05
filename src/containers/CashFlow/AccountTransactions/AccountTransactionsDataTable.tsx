@@ -17,7 +17,7 @@ import { useAccountTransactionsColumns, ActionsMenu } from './components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { handleCashFlowTransactionType } from './utils';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Account transactions data table.

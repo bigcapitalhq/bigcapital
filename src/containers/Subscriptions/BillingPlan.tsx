@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 
-import { saveInvoke } from 'utils';
+import { saveInvoke } from '@/utils';
 
 /**
  * Billing plan.

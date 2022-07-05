@@ -19,7 +19,7 @@ import { useCashFlowStatementContext } from './CashFlowStatementProvider';
 import withCashFlowStatement from './withCashFlowStatement';
 import withCashFlowStatementActions from './withCashFlowStatementActions';
 
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke } from '@/utils';
 
 /**
  * Cash flow statement actions bar.

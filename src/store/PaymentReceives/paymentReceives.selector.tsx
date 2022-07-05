@@ -3,8 +3,8 @@ import { isEqual } from 'lodash';
 
 import {
   paginationLocationQuery,
-} from 'store/selectors';
-import { createDeepEqualSelector } from 'utils';
+} from '@/store/selectors';
+import { createDeepEqualSelector } from '@/utils';
 import { defaultTableQuery } from './paymentReceives.reducer';
 
 const paymentReceiveTableState = (state) => state.paymentReceives.tableState;

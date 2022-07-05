@@ -6,7 +6,7 @@ import { sumBy, pick, defaultTo } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { AppToaster } from '@/components';
 import PaymentMadeHeader from './PaymentMadeFormHeader';
 import PaymentMadeFloatingActions from './PaymentMadeFloatingActions';
@@ -15,14 +15,14 @@ import PaymentMadeFormBody from './PaymentMadeFormBody';
 import PaymentMadeFormTopBar from './PaymentMadeFormTopBar';
 import { PaymentMadeInnerProvider } from './PaymentMadeInnerProvider';
 
-import withSettings from 'containers/Settings/withSettings';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withSettings from '@/containers/Settings/withSettings';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import {
   EditPaymentMadeFormSchema,
   CreatePaymentMadeFormSchema,
 } from './PaymentMadeForm.schema';
-import { compose, orderingLinesIndexes } from 'utils';
+import { compose, orderingLinesIndexes } from '@/utils';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import {
   defaultPaymentMade,

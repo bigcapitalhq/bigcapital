@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { usePurchasesByItems } from 'hooks/query';
+import { usePurchasesByItems } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const PurchasesByItemsContext = createContext();

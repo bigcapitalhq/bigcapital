@@ -1,8 +1,8 @@
 import React, { useEffect, Suspense } from 'react';
 // import { isUndefined } from 'lodash';
-import { CLASSES } from 'common/classes';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import { compose } from 'utils';
+import { CLASSES } from '@/common/classes';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { compose } from '@/utils';
 import { Spinner } from '@blueprintjs/core';
 
 // import withUniversalSearch from '../../containers/UniversalSearch/withUniversalSearch';

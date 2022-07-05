@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { pickItemsFromIds } from 'store/selectors';
+import { pickItemsFromIds } from '@/store/selectors';
 
 const resourceDataIdsSelector = (state, props) => {
   return state.resources.data.resources[props.resourceName]?.order;

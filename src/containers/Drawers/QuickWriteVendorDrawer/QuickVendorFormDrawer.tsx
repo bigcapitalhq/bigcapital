@@ -10,7 +10,7 @@ import {
 } from '../../Vendors/VendorForm/VendorFormProvider';
 import VendorFormFormik from '../../Vendors/VendorForm/VendorFormFormik';
 
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDashboardActions from '../../Dashboard/withDashboardActions';
 
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';

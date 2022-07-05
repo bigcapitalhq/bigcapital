@@ -14,7 +14,7 @@ import { APAgingSummarySheetLoadingBar } from './components';
 
 import withAPAgingSummaryActions from './withAPAgingSummaryActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * A/P aging summary report.

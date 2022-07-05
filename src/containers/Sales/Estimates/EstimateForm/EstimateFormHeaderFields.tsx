@@ -16,10 +16,10 @@ import {
   tansformDateValue,
   inputIntent,
   handleDateChange,
-} from 'utils';
+} from '@/utils';
 import { customersFieldShouldUpdate } from './utils';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import {
   CustomerSelectField,
   FieldRequiredHint,
@@ -28,8 +28,8 @@ import {
   CustomerDrawerLink,
 } from '@/components';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withSettings from 'containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withSettings from '@/containers/Settings/withSettings';
 import { useObserveEstimateNoSettings } from './utils';
 import { EstimateExchangeRateInputField } from './components';
 import { useEstimateFormContext } from './EstimateFormProvider';

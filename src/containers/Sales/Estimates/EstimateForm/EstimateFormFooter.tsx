@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { Row, Col, Paper } from '@/components';
 import { EstimateFormFooterLeft } from './EstimateFormFooterLeft';
 import { EstimateFormFooterRight } from './EstimateFormFooterRight';

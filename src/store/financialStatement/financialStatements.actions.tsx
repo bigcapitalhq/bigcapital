@@ -1,4 +1,4 @@
-import t from 'store/types';
+import t from '@/store/types';
 
 /**
  * Toggles display of the balance sheet filter drawer.

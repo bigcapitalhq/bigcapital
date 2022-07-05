@@ -16,7 +16,7 @@ import { GeneralLedgerBody } from './GeneralLedgerBody';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
 
 import { useGeneralLedgerQuery } from './common';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * General Ledger (GL) sheet.

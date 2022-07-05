@@ -2,13 +2,13 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
 
-import { getColumnWidth } from 'utils';
+import { getColumnWidth } from '@/utils';
 import { If, Icon, FormattedMessage as T } from '@/components';
 import { CellTextSpan } from '@/components/Datatable/Cells';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
-import { Align } from 'common';
+import { Align } from '@/common';
 
 /**
  * Retrieves the credit column.

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { toggleCustomersBalanceSummaryFilterDrawer } from 'store/financialStatement/financialStatements.actions';
+import { toggleCustomersBalanceSummaryFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
 
 const mapActionsToProps = (dispatch) => ({
   toggleCustomerBalanceFilterDrawer: (toggle) =>

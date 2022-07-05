@@ -6,8 +6,8 @@ import { ReportDataTable, FinancialSheet } from '@/components';
 import { useInventoryItemDetailsColumns } from './components';
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
 
-import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
-import { TableStyle } from 'common';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import { TableStyle } from '@/common';
 
 /**
  * Inventory item detail table.

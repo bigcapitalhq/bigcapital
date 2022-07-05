@@ -3,16 +3,16 @@ import intl from 'react-intl-universal';
 import { useSaveSettings } from '@/hooks/query';
 
 import { VendorCreditNumberDilaogProvider } from './VendorCreditNumberDilaogProvider';
-import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
+import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withSettings from 'containers/Settings/withSettings';
-import withSettingsActions from 'containers/Settings/withSettingsActions';
-import { compose } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import { compose } from '@/utils';
 import {
   transformFormToSettings,
   transformSettingsToForm,
-} from 'containers/JournalNumber/utils';
+} from '@/containers/JournalNumber/utils';
 
 /**
  * Vendor credit number dialog

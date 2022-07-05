@@ -28,7 +28,7 @@ import withItemsActions from './withItemsActions';
 import withAlertActions from '@/containers/Alert/withAlertActions';
 import withSettings from '@/containers/Settings/withSettings';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { ItemAction, AbilitySubject } from '@/common/abilityOption';

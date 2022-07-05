@@ -16,7 +16,7 @@ import {
 } from './components';
 
 import { useCashflowStatementQuery } from './utils';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Cash flow statement.

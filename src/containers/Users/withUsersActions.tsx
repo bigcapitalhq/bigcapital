@@ -6,7 +6,7 @@ import {
   inactiveUser,
   editUser,
   submitInvite
-} from 'store/users/users.actions';
+} from '@/store/users/users.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
   requestFetchUsers: () => dispatch(fetchUsers({})),

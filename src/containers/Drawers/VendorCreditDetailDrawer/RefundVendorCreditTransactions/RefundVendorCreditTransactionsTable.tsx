@@ -1,16 +1,16 @@
 import React from 'react';
 import { DataTable, Card } from '@/components';
 
-import { TableStyle } from 'common';
+import { TableStyle } from '@/common';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
 import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerProvider';
 import {
   useRefundCreditTransactionsTableColumns,
   ActionsMenu,
 } from './components';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Refund vendor transactions table.

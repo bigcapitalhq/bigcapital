@@ -12,7 +12,7 @@ import {
   useSetPrimaryBranchToForm,
   useSetPrimaryWarehouseToForm,
 } from './utils';
-import { useFeatureCan } from 'hooks/state';
+import { useFeatureCan } from '@/hooks/state';
 import {
   Icon,
   BranchSelect,
@@ -22,7 +22,7 @@ import {
   DetailsBarSkeletonBase,
 } from '@/components';
 import { useEstimateFormContext } from './EstimateFormProvider';
-import { Features } from 'common';
+import { Features } from '@/common';
 
 /**
  * Estimate form topbar .

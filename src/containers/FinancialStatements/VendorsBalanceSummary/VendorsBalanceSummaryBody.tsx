@@ -5,7 +5,7 @@ import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider
 import VendorsBalanceSummaryTable from './VendorsBalanceSummaryTable';
 import { FinancialReportBody } from '../FinancialReportPage';
 
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import { FinancialSheetSkeleton } from '../../../components/FinancialSheet';
 

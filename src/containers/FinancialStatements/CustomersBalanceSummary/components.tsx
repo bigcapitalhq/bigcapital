@@ -6,7 +6,7 @@ import { If } from '@/components';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 
-import { Align } from 'common';
+import { Align } from '@/common';
 
 /**
  * Retrieve customers balance summary columns.

@@ -4,10 +4,10 @@ import {
   useVendorCredit,
   useRefundVendorCredit,
   useReconcileVendorCredits,
-} from 'hooks/query';
+} from '@/hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
-import { useFeatureCan } from 'hooks/state';
-import { Features } from 'common';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/common';
 
 const VendorCreditDetailDrawerContext = React.createContext();
 

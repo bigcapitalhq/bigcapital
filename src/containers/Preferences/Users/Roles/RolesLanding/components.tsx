@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 
 import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import { safeCallback } from 'utils';
+import { safeCallback } from '@/utils';
 import { Icon } from '@/components';
 
 /**

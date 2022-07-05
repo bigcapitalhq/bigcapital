@@ -16,12 +16,12 @@ import DashboardBreadcrumbs from '@/components/Dashboard/DashboardBreadcrumbs';
 import DashboardBackLink from '@/components/Dashboard/DashboardBackLink';
 import { Icon, Hint, If } from '@/components';
 
-import withUniversalSearchActions from 'containers/UniversalSearch/withUniversalSearchActions';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withUniversalSearchActions from '@/containers/UniversalSearch/withUniversalSearchActions';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import withDashboard from '@/containers/Dashboard/withDashboard';
 
-import QuickNewDropdown from 'containers/QuickNewDropdown/QuickNewDropdown';
-import { compose } from 'utils';
+import QuickNewDropdown from '@/containers/QuickNewDropdown/QuickNewDropdown';
+import { compose } from '@/utils';
 import withSubscriptions from '../../containers/Subscriptions/withSubscriptions';
 import { useGetUniversalSearchTypeOptions } from '../../containers/UniversalSearch/utils';
 

@@ -1,18 +1,18 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 import DashboardTopbarUser from '@/components/Dashboard/TopbarUser';
-import UsersActions from 'containers/Preferences/Users/UsersActions';
-import CurrenciesActions from 'containers/Preferences/Currencies/CurrenciesActions';
+import UsersActions from '@/containers/Preferences/Users/UsersActions';
+import CurrenciesActions from '@/containers/Preferences/Currencies/CurrenciesActions';
 import WarehousesActions from '../../containers/Preferences/Warehouses/WarehousesActions';
 import BranchesActions from '../../containers/Preferences/Branches/BranchesActions';
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withDashboard from '@/containers/Dashboard/withDashboard';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
-import 'style/pages/Preferences/Topbar.scss';
+import '@/style/pages/Preferences/Topbar.scss';
 
 /**
  * Preferences topbar.

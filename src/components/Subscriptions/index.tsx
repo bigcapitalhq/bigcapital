@@ -2,10 +2,10 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { T } from '@/components';
-import { saveInvoke } from 'utils';
+import { saveInvoke } from '@/utils';
 
-import 'style/pages/Subscription/PlanRadio.scss';
-import 'style/pages/Subscription/PlanPeriodRadio.scss';
+import '@/style/pages/Subscription/PlanRadio.scss';
+import '@/style/pages/Subscription/PlanPeriodRadio.scss';
 
 export function SubscriptionPlans({ value, plans, onSelect }) {
   const handleSelect = (value) => {

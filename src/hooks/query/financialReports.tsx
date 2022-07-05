@@ -8,7 +8,7 @@ import {
   inventoryValuationReducer,
   purchasesByItemsReducer,
   salesByItemsReducer,
-} from 'containers/FinancialStatements/reducers';
+} from '@/containers/FinancialStatements/reducers';
 import t from './types';
 
 /**

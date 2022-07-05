@@ -4,7 +4,7 @@ import {
   getResourceMetadata,
   getResourceFieldsFactory,
   getResourceDataFactory,
-} from 'store/resources/resources.selectors';
+} from '@/store/resources/resources.selectors';
 
 export default (mapState) => {
   const getResourceFields = getResourceFieldsFactory();

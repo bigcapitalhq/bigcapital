@@ -3,7 +3,7 @@ import {
   FetchOptions,
   submitOptions,
   addSettings
-} from 'store/settings/settings.actions';
+} from '@/store/settings/settings.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
   requestSubmitOptions: (form) => dispatch(submitOptions({ form })),

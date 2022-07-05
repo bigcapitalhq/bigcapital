@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import { FormGroup, Classes, Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { CellType } from 'common';
-import { useCellAutoFocus } from 'hooks';
+import { CellType } from '@/common';
+import { useCellAutoFocus } from '@/hooks';
 import AccountsSuggestField from '@/components/AccountsSuggestField';
 
 /**

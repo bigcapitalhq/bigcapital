@@ -4,7 +4,7 @@ import { sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 import BillFormHeaderFields from './BillFormHeaderFields';
 import { PageFormBigNumber } from '@/components';

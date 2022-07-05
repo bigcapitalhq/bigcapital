@@ -5,7 +5,7 @@ import { FormattedMessage as T } from '@/components';
 import { AccountMultiSelect, Row, Col } from '@/components';
 import { FFormGroup } from '../../../components/Forms';
 
-import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
+import FinancialStatementDateRange from '@/containers/FinancialStatements/FinancialStatementDateRange';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import { GLHeaderGeneralPanelProvider } from './GLHeaderGeneralPaneProvider';

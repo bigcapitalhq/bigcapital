@@ -6,10 +6,10 @@ import { ReportDataTable, FinancialSheet } from '@/components';
 
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 
-import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 import { useBalanceSheetColumns } from './components';
 
-import { TableStyle } from 'common';
+import { TableStyle } from '@/common';
 
 /**
  * Balance sheet table.

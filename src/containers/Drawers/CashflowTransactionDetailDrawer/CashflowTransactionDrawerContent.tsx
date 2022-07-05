@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/components/Drawers/CashflowTransactionDrawer.scss';
+import '@/style/components/Drawers/CashflowTransactionDrawer.scss';
 
 import { DrawerBody } from '@/components';
 import { CashflowTransactionDrawerProvider } from './CashflowTransactionDrawerProvider';

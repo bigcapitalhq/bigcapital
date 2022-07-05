@@ -5,9 +5,9 @@ import { DataTableEditable } from '@/components';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import { useWarehouseTransferTableColumns } from '../utils';
 import { useFetchItemWarehouseQuantity } from './hooks';
-import { useDeepCompareEffect } from 'hooks/utils';
+import { useDeepCompareEffect } from '@/hooks/utils';
 
-import { saveInvoke } from 'utils';
+import { saveInvoke } from '@/utils';
 import { mutateTableCell, mutateTableRow, deleteTableRow } from './utils';
 
 /**

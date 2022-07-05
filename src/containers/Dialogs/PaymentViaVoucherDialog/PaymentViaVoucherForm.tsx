@@ -4,7 +4,7 @@ import { Form, FastField, ErrorMessage, useFormikContext } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { compose } from 'redux';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { inputIntent } from '@/utils';
 import { useAutofocus } from '@/hooks';
 

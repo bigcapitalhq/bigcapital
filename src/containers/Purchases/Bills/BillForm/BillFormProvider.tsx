@@ -1,7 +1,7 @@
 import React, { createContext, useState } from 'react';
 import { isEqual, isUndefined } from 'lodash';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 import {
   useAccounts,
@@ -13,7 +13,7 @@ import {
   useSettings,
   useCreateBill,
   useEditBill,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const BillFormContext = createContext();
 

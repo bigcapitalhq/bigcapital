@@ -8,7 +8,7 @@ import {
   PaymentMadeAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
-import { useAbilityContext } from 'hooks/utils';
+import { useAbilityContext } from '@/hooks/utils';
 import BillDetailTab from './BillDetailTab';
 import LocatedLandedCostTable from './LocatedLandedCostTable';
 import BillGLEntriesTable from './BillGLEntriesTable';

@@ -19,7 +19,7 @@ import { useCustomersTransactionsContext } from './CustomersTransactionsProvider
 import withCustomersTransactions from './withCustomersTransactions';
 import withCustomersTransactionsActions from './withCustomersTransactionsActions';
 
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke } from '@/utils';
 
 /**
  * Customers transactions actions bar.

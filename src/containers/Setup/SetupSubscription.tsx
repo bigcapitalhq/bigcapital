@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as R from 'ramda';
 
-import 'style/pages/Setup/Subscription.scss';
+import '@/style/pages/Setup/Subscription.scss';
 
 import SetupSubscriptionForm from './SetupSubscription/SetupSubscriptionForm';
 import { getSubscriptionFormSchema } from './SubscriptionForm.schema';

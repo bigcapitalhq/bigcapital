@@ -8,11 +8,11 @@ import { ItemPreferencesSchema } from './ItemPreferences.schema';
 import ItemPreferencesForm from './ItemPreferencesForm';
 
 import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withSettings from 'containers/Settings/withSettings';
-import { compose, optionsMapToArray, transformGeneralSettings } from 'utils';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import withSettings from '@/containers/Settings/withSettings';
+import { compose, optionsMapToArray, transformGeneralSettings } from '@/utils';
 
-import 'style/pages/Preferences/Accounting.scss';
+import '@/style/pages/Preferences/Accounting.scss';
 
 // item form page preferences.
 function ItemPreferencesFormPage({

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { toggleProfitLossFilterDrawer } from 'store/financialStatement/financialStatements.actions';
+import { toggleProfitLossFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
   toggleProfitLossFilterDrawer: (toggle) =>

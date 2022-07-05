@@ -1,15 +1,15 @@
 import React from 'react';
 import { DataTable, Card } from '@/components';
 
-import { TableStyle } from 'common';
-import withAlertsActions from 'containers/Alert/withAlertActions';
+import { TableStyle } from '@/common';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
 
 import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerProvider';
 import {
   useReconcileVendorCreditTransactionsTableColumns,
   ActionsMenu,
 } from './components';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Reconcile vendor credit transactions table.

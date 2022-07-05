@@ -9,7 +9,7 @@ import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withBillActions from '@/containers/Purchases/Bills/BillsLanding/withBillsActions';
 
-import { compose, optionsMapToArray } from 'utils';
+import { compose, optionsMapToArray } from '@/utils';
 
 /**
  * bill number dialog's content.

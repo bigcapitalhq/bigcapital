@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import t from 'store/types';
+import t from '@/store/types';
 
 export const mapStateToProps = (state, props) => {
   return {};

@@ -12,7 +12,7 @@ import withCustomersTransactionsActions from './withCustomersTransactionsActions
 import { CustomersTransactionsLoadingBar } from './components';
 import { CustomersTransactionsProvider } from './CustomersTransactionsProvider';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Customers transactions.

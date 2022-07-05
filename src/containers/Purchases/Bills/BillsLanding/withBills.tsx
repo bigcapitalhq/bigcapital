@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   getBillsTableStateFactory,
   billsTableStateChangedFactory,
-} from 'store/Bills/bills.selectors';
+} from '@/store/Bills/bills.selectors';
 
 export default (mapState) => {
   const getBillsTableState = getBillsTableStateFactory();

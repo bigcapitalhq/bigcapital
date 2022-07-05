@@ -6,10 +6,10 @@ import { PersistGate } from 'redux-persist/integration/react';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 
-import 'services/yup';
+import '@/services/yup';
 import App from '@/components/App';
-import * as serviceWorker from 'serviceWorker';
-import { store, persistor } from 'store/createStore';
+import * as serviceWorker from '@/serviceWorker';
+import { store, persistor } from '@/store/createStore';
 
 if (process.env.NODE_ENV === 'development') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render');

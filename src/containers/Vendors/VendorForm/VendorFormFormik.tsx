@@ -4,7 +4,7 @@ import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import AppToaster from '@/components/AppToaster';
 import {
   CreateVendorFormSchema,
@@ -16,14 +16,14 @@ import VendorFormAfterPrimarySection from './VendorFormAfterPrimarySection';
 import VendorTabs from './VendorsTabs';
 import VendorFloatingActions from './VendorFloatingActions';
 
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import { useVendorFormContext } from './VendorFormProvider';
-import { compose, transformToForm, safeInvoke } from 'utils';
+import { compose, transformToForm, safeInvoke } from '@/utils';
 
 import { defaultInitialValues } from './utils';
 
-import 'style/pages/Vendors/Form.scss';
+import '@/style/pages/Vendors/Form.scss';
 
 /**
  * Vendor form.

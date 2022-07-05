@@ -8,7 +8,7 @@ import { DashboardViewsTabs } from '@/components';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import withPaymentMadeActions from './withPaymentMadeActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 import { transformPaymentViewsToTabs } from './utils';
 
 import withPaymentMade from './withPaymentMade';

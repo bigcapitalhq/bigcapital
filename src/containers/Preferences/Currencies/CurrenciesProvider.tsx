@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { useCurrencies } from 'hooks/query';
+import { useCurrencies } from '@/hooks/query';
 
 const CurrenciesContext = createContext();
 

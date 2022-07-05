@@ -14,7 +14,7 @@ import {
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { ExpenseAction, AbilitySubject } from '@types/ramdacommon/abilityOption';
 import {
   FormatDateCell,

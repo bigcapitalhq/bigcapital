@@ -18,7 +18,7 @@ import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import withProfitLossActions from './withProfitLossActions';
 import withProfitLoss from './withProfitLoss';
 
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke } from '@/utils';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
 
 /**

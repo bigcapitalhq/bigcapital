@@ -6,8 +6,8 @@ import {
   useResourceViews,
   usePaymentMades,
   useResourceMeta,
-} from 'hooks/query';
-import { getFieldsFromResourceMeta } from 'utils';
+} from '@/hooks/query';
+import { getFieldsFromResourceMeta } from '@/utils';
 
 const PaymentMadesListContext = createContext();
 

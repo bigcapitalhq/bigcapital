@@ -1,5 +1,5 @@
 import React from 'react';
-import InvoiceNumberDialog from 'containers/Dialogs/InvoiceNumberDialog';
+import InvoiceNumberDialog from '@/containers/Dialogs/InvoiceNumberDialog';
 import { useFormikContext } from 'formik';
 
 /**

@@ -1,16 +1,16 @@
 import React from 'react';
 import { isEmpty } from 'lodash';
-import { Features } from 'common';
+import { Features } from '@/common';
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
-import { useFeatureCan } from 'hooks/state';
+import { useFeatureCan } from '@/hooks/state';
 import {
   useResourceViews,
   useResourceMeta,
   useWarehousesTransfers,
   useRefreshWarehouseTransfers,
-} from 'hooks/query';
+} from '@/hooks/query';
 
-import { getFieldsFromResourceMeta } from 'utils';
+import { getFieldsFromResourceMeta } from '@/utils';
 
 const WarehouseTransfersListContext = React.createContext();
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Card } from '@/components';
 
 import { useCreditNoteDetailDrawerContext } from '../CreditNoteDetailDrawerProvider';
-import { useTransactionsByReference } from 'hooks/query';
+import { useTransactionsByReference } from '@/hooks/query';
 import { useJournalEntriesTransactionsColumns } from './components';
 
 import JournalEntriesTable, {

@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { isUndefined, isNumber } from 'lodash';
-import t from 'store/types';
+import t from '@/store/types';
 import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { useDashboardMeta } from '../../hooks/query';

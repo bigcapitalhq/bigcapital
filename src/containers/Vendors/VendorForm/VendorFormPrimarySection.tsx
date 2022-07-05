@@ -11,10 +11,10 @@ import {
   DisplayNameList,
 } from '@/components';
 
-import { CLASSES } from 'common/classes';
-import { inputIntent } from 'utils';
+import { CLASSES } from '@/common/classes';
+import { inputIntent } from '@/utils';
 
-import { useAutofocus } from 'hooks';
+import { useAutofocus } from '@/hooks';
 
 /**
  * Vendor form primary section.

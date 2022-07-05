@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router';
 
-import { TABLES } from 'common/tables';
+import { TABLES } from '@/common/tables';
 
 import { DataTable, DashboardContentTable } from '@/components';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
@@ -10,18 +10,18 @@ import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 import VendorsEmptyStatus from './VendorsEmptyStatus';
 
 import { useVendorsListContext } from './VendorsListProvider';
-import { useMemorizedColumnsWidths } from 'hooks';
+import { useMemorizedColumnsWidths } from '@/hooks';
 
 import withVendorsActions from './withVendorsActions';
 import withVendors from './withVendors';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withSettings from '../../Settings/withSettings';
 
 import { ActionsMenu, useVendorsTableColumns } from './components';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Vendors table.

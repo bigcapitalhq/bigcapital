@@ -3,8 +3,8 @@ import { isEmpty } from 'lodash';
 
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 
-import { useResourceMeta, useResourceViews, useReceipts } from 'hooks/query';
-import { getFieldsFromResourceMeta } from 'utils';
+import { useResourceMeta, useResourceViews, useReceipts } from '@/hooks/query';
+import { getFieldsFromResourceMeta } from '@/utils';
 
 const ReceiptsListContext = createContext();
 

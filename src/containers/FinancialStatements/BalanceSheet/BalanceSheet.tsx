@@ -13,7 +13,7 @@ import { BalanceSheetBody } from './BalanceSheetBody';
 import withBalanceSheetActions from './withBalanceSheetActions';
 
 import { useBalanceSheetQuery } from './utils';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Balance sheet.

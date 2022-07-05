@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-import 'style/pages/Vendors/PageForm.scss';
+import '@/style/pages/Vendors/PageForm.scss';
 
 import { DashboardCard, DashboardInsider } from '@/components';
 import VendorFormFormik from './VendorFormFormik';

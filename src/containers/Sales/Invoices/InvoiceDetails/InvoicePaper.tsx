@@ -1,6 +1,6 @@
 import React from 'react';
 import { useInvoiceDrawerContext } from './InvoiceDrawerProvider';
-import PaperTemplate from 'containers/Drawers/PaperTemplate/PaperTemplate';
+import PaperTemplate from '@/containers/Drawers/PaperTemplate/PaperTemplate';
 import intl from 'react-intl-universal';
 
 export default function InvoicePaper() {

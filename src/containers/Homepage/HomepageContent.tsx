@@ -3,7 +3,7 @@ import AccountsReceivableSection from './AccountsReceivableSection';
 import AccountsPayableSection from './AccountsPayableSection';
 import FinancialAccountingSection from './FinancialAccountingSection';
 import ProductsServicesSection from './ProductsServicesSection';
-import 'style/pages/HomePage/HomePage.scss';
+import '@/style/pages/HomePage/HomePage.scss';
 
 function HomepageContent() {
   return (

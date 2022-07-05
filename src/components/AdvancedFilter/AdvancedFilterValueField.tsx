@@ -5,9 +5,9 @@ import moment from 'moment';
 import intl from 'react-intl-universal';
 import { isUndefined } from 'lodash';
 
-import { useAutofocus } from 'hooks';
+import { useAutofocus } from '@/hooks';
 import { T, Choose, ListSelect } from '@/components';
-import { momentFormatter } from 'utils';
+import { momentFormatter } from '@/utils';
 
 function AdvancedFilterEnumerationField({ options, value, ...rest }) {
   return (

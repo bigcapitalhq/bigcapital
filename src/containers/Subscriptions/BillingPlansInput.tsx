@@ -3,7 +3,7 @@ import { Field } from 'formik';
 import { T, SubscriptionPlans } from '@/components';
 
 import withPlans from './withPlans';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Billing plans.

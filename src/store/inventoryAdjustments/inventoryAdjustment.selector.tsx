@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import {
   paginationLocationQuery,
-} from 'store/selectors';
+} from '@/store/selectors';
 
 const inventoryAdjustmentTableState = (state) =>
   state.inventoryAdjustments.tableState;

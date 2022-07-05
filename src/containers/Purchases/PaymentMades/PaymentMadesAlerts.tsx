@@ -1,7 +1,7 @@
 import React from 'react';
 
 const PaymentMadeDeleteAlert = React.lazy(() =>
-  import('containers/Alerts/PaymentMades/PaymentMadeDeleteAlert'),
+  import('@/containers/Alerts/PaymentMades/PaymentMadeDeleteAlert'),
 );
 
 export default [

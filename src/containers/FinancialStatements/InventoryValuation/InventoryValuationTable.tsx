@@ -7,8 +7,8 @@ import { ReportDataTable, FinancialSheet } from '@/components';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
 import { useInventoryValuationTableColumns } from './components';
 
-import { tableRowTypesToClassnames } from 'utils';
-import { TableStyle } from 'common';
+import { tableRowTypesToClassnames } from '@/utils';
+import { TableStyle } from '@/common';
 
 /**
  * inventory valuation data table.

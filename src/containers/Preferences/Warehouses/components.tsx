@@ -10,7 +10,7 @@ import {
 } from '@blueprintjs/core';
 
 import { Icon, If } from '../../../components';
-import { safeCallback } from 'utils';
+import { safeCallback } from '@/utils';
 
 const WAREHOUSES_SKELETON_N = 4;
 

@@ -7,8 +7,8 @@ import { ReportDataTable, FinancialSheet } from '@/components';
 import { useVendorsBalanceColumns } from './components';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 
-import { TableStyle } from 'common';
-import { tableRowTypesToClassnames } from 'utils';
+import { TableStyle } from '@/common';
+import { tableRowTypesToClassnames } from '@/utils';
 
 /**
  * Vendors balance summary table.

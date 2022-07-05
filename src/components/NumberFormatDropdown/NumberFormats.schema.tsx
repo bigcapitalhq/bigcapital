@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { DATATYPES_LENGTH } from 'common/dataTypes';
+import { DATATYPES_LENGTH } from '@/common/dataTypes';
 import { defaultTo } from 'lodash';
 
 

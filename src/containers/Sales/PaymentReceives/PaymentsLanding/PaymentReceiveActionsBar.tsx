@@ -24,15 +24,15 @@ import { Can, If, DashboardActionViewsList } from '@/components';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withPaymentReceives from './withPaymentReceives';
 
-import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withSettings from 'containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withSettings from '@/containers/Settings/withSettings';
 import {
   PaymentReceiveAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
-import { useRefreshPaymentReceive } from 'hooks/query/paymentReceives';
+import { useRefreshPaymentReceive } from '@/hooks/query/paymentReceives';
 
 /**
  * Payment receives actions bar.

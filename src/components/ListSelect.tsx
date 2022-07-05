@@ -4,7 +4,7 @@ import { Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { FormattedMessage as T } from './FormattedMessage';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 export default function ListSelect({
   buttonProps,

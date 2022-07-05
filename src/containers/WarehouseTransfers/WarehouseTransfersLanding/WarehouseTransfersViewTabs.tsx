@@ -8,7 +8,7 @@ import withWarehouseTransfers from './withWarehouseTransfers';
 import withWarehouseTransfersActions from './withWarehouseTransfersActions';
 
 import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
-import { compose, transfromViewsToTabs } from 'utils';
+import { compose, transfromViewsToTabs } from '@/utils';
 
 /**
  * Warehouse transfer view tabs.

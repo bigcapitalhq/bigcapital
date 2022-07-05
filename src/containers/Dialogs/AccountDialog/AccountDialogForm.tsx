@@ -15,7 +15,7 @@ import {
 import { compose, transformToForm } from '@/utils';
 import { transformApiErrors, transformAccountToForm } from './utils';
 
-import 'style/pages/Accounts/AccountFormDialog.scss';
+import '@/style/pages/Accounts/AccountFormDialog.scss';
 import { useAccountDialogContext } from './AccountDialogProvider';
 
 // Default initial form values.

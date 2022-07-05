@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 import { FormattedMessage as T } from '@/components';
 
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
 import GeneralLedgerHeaderGeneralPane from './GeneralLedgerHeaderGeneralPane';
 import GeneralLedgerHeaderDimensionsPanel from './GeneralLedgerHeaderDimensionsPanel';
 
@@ -15,7 +15,7 @@ import withGeneralLedger from './withGeneralLedger';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
 
 import { getDefaultGeneralLedgerQuery } from './common';
-import { compose, transformToForm, saveInvoke } from 'utils';
+import { compose, transformToForm, saveInvoke } from '@/utils';
 
 /**
  * Geenral Ledger (GL) - Header.

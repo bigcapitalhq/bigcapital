@@ -4,11 +4,11 @@ import { Button } from '@blueprintjs/core';
 import { Icon, If } from '@/components';
 import { FormattedMessage as T } from '@/components';
 
-import { getColumnWidth } from 'utils';
+import { getColumnWidth } from '@/utils';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
-import { Align } from 'common';
+import { Align } from '@/common';
 
 /**
  * Retrieve the general ledger table columns.

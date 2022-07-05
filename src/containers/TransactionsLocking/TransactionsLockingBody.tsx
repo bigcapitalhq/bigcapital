@@ -7,8 +7,8 @@ import {
   TransactionLockingSkeletonList,
 } from './components';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
 
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
 

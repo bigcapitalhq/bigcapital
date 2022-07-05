@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { getEstimateByIdFactory } from 'store/Estimate/estimates.selectors';
+import { getEstimateByIdFactory } from '@/store/Estimate/estimates.selectors';
 
 export default () => {
   const getEstimateById = getEstimateByIdFactory();

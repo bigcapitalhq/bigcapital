@@ -17,7 +17,7 @@ import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import withGeneralLedger from './withGeneralLedger';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 
 /**

@@ -21,7 +21,7 @@ import {
   AdvancedFilterPopover,
 } from '@/components';
 
-import { useRefreshVendors } from 'hooks/query/vendors';
+import { useRefreshVendors } from '@/hooks/query/vendors';
 import { useVendorsListContext } from './VendorsListProvider';
 import { useHistory } from 'react-router-dom';
 
@@ -31,7 +31,7 @@ import withVendors from './withVendors';
 import withSettingsActions from '../../Settings/withSettingsActions';
 import withSettings from '../../Settings/withSettings';
 import { VendorAction, AbilitySubject } from '../../../common/abilityOption';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Vendors actions bar.

@@ -5,9 +5,9 @@ import {
 } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { persistStore } from 'redux-persist';
-import monitorReducerEnhancer from 'store/enhancers/monitorReducer';
-import loggerMiddleware from 'middleware/logger';
-import rootReducer from 'store/reducers';
+import monitorReducerEnhancer from '@/store/enhancers/monitorReducer';
+import loggerMiddleware from '@/middleware/logger';
+import rootReducer from '@/store/reducers';
 import ResetMiddleware from './ResetMiddleware';
 
 

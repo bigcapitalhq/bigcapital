@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 import { sumBy, isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import {
   getCreateInvoiceFormSchema,
   getEditInvoiceFormSchema,
@@ -18,13 +18,13 @@ import InvoiceFormFooter from './InvoiceFormFooter';
 import InvoiceFormDialogs from './InvoiceFormDialogs';
 import InvoiceFormTopBar from './InvoiceFormTopBar';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withMediaActions from 'containers/Media/withMediaActions';
-import withSettings from 'containers/Settings/withSettings';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import withMediaActions from '@/containers/Media/withMediaActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import { AppToaster } from '@/components';
-import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
+import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import {
   transformToEditForm,

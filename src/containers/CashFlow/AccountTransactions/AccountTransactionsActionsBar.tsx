@@ -22,7 +22,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import { addMoneyIn, addMoneyOut } from '@/common/cashflowOptions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 function AccountTransactionsActionsBar({
   // #withDialogActions

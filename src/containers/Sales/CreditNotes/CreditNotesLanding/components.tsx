@@ -12,7 +12,7 @@ import {
   Icon,
   Can,
 } from '@/components';
-import { safeCallback } from 'utils';
+import { safeCallback } from '@/utils';
 import {
   CreditNoteAction,
   AbilitySubject,

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
-import { useBranches } from 'hooks/query';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
+import { useBranches } from '@/hooks/query';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
 const APAgingSummaryHeaderDimensonsContext = React.createContext();

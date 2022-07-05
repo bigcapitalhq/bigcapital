@@ -19,7 +19,7 @@ import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
 import withInventoryItemDetails from './withInventoryItemDetails';
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
 
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke } from '@/utils';
 
 /**
  * Inventory item details actions bar.

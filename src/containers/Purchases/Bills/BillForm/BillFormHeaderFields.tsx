@@ -11,7 +11,7 @@ import { FastField, ErrorMessage } from 'formik';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import {
   FFormGroup,
   VendorSelectField,
@@ -23,14 +23,14 @@ import { vendorsFieldShouldUpdate } from './utils';
 
 import { useBillFormContext } from './BillFormProvider';
 import { BillExchangeRateInputField } from './components';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import {
   momentFormatter,
   compose,
   tansformDateValue,
   handleDateChange,
   inputIntent,
-} from 'utils';
+} from '@/utils';
 
 /**
  * Fill form header.

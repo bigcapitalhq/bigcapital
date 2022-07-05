@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntersectionObserver } from 'hooks/utils';
+import { useIntersectionObserver } from '@/hooks/utils';
 
 /**
  * Intersection observer.

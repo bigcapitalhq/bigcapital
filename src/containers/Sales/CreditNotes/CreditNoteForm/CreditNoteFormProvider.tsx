@@ -3,8 +3,8 @@ import { useLocation } from 'react-router-dom';
 import { isEmpty, pick, isEqual, isUndefined } from 'lodash';
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 import { transformToEditForm } from './utils';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 
 import {
   useCreditNote,
@@ -16,7 +16,7 @@ import {
   useBranches,
   useSettingsCreditNotes,
   useInvoice,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const CreditNoteFormContext = React.createContext();
 

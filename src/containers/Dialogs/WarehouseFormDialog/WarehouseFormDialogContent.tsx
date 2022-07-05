@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/pages/Warehouses/warehouseFormDialog.scss';
+import '@/style/pages/Warehouses/warehouseFormDialog.scss';
 import { WarehouseFormProvider } from './WarehouseFormProvider';
 import WarehouseForm from './WarehouseForm';
 

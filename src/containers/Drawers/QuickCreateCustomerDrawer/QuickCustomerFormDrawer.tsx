@@ -10,7 +10,7 @@ import {
 } from '../../Customers/CustomerForm/CustomerFormProvider';
 import CustomerFormFormik from '../../Customers/CustomerForm/CustomerFormFormik';
 
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 /**
  * Drawer customer form loading wrapper.

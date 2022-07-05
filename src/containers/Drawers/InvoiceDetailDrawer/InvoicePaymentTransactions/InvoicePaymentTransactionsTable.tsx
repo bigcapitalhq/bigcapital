@@ -7,15 +7,15 @@ import {
   ActionsMenu,
 } from './components';
 import { useInvoiceDetailDrawerContext } from '../InvoiceDetailDrawerProvider';
-import { useInvoicePaymentTransactions } from 'hooks/query';
+import { useInvoicePaymentTransactions } from '@/hooks/query';
 
 import { TableStyle } from '../../../../common';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Invoice payment transactions datatable.

@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import { If } from '@/components';
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-import { getColumnWidth } from 'utils';
+import { getColumnWidth } from '@/utils';
 
 /**
  * Retrieve vendors transactions columns.

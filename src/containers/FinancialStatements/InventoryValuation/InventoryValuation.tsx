@@ -12,7 +12,7 @@ import withInventoryValuationActions from './withInventoryValuationActions';
 import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
 
 import { useInventoryValuationQuery } from './utils';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Inventory valuation.

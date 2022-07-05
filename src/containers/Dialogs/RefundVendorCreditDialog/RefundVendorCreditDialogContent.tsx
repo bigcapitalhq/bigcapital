@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/pages/RefundVendorCredit/RefundVendorCredit.scss';
+import '@/style/pages/RefundVendorCredit/RefundVendorCredit.scss';
 
 import { RefundVendorCreditFormProvider } from './RefundVendorCreditFormProvider';
 import RefundVendorCreditForm from './RefundVendorCreditForm';

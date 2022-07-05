@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { TableStyle } from 'common';
+import { TableStyle } from '@/common';
 import {
   ReportDataTable,
   FinancialSheet,
   FormattedMessage as T,
 } from '@/components';
 
-import { tableRowTypesToClassnames, defaultExpanderReducer } from 'utils';
+import { tableRowTypesToClassnames, defaultExpanderReducer } from '@/utils';
 import { useProfitLossSheetColumns } from './hooks';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
 

@@ -7,12 +7,12 @@ import styled from 'styled-components';
 
 import { FormattedMessage as T } from '@/components';
 
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
 import withCustomersBalanceSummary from './withCustomersBalanceSummary';
 import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryActions';
 import CustomersBalanceSummaryGeneralPanel from './CustomersBalanceSummaryGeneralPanel';
 
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 
 /**
  * Customers balance summary.

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Card } from '@/components';
-import { useTransactionsByReference } from 'hooks/query';
+import { useTransactionsByReference } from '@/hooks/query';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 
 import JournalEntriesTable, {

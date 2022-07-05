@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/pages/InventoryAdjustments/List.scss';
+import '@/style/pages/InventoryAdjustments/List.scss';
 
 import { DashboardContentTable, DashboardPageContent } from '@/components';
 

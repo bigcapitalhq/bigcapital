@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import 'style/pages/Vendors/List.scss';
+import '@/style/pages/Vendors/List.scss';
 
 import { DashboardContentTable, DashboardPageContent } from '@/components';
 
@@ -12,7 +12,7 @@ import VendorsTable from './VendorsTable';
 import withVendors from './withVendors';
 import withVendorsActions from './withVendorsActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Vendors list page.

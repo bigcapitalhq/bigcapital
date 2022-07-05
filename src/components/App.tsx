@@ -4,7 +4,7 @@ import { createBrowserHistory } from 'history';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
-import 'style/App.scss';
+import '@/style/App.scss';
 import 'moment/locale/ar-ly';
 import 'moment/locale/es-us';
 

@@ -18,7 +18,7 @@ import { useRealizedGainOrLossContext } from './RealizedGainOrLossProvider';
 import withRealizedGainOrLoss from './withRealizedGainOrLoss';
 import withRealizedGainOrLossActions from './withRealizedGainOrLossActions';
 
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke } from '@/utils';
 
 /**
  * Realized Gain or Loss actions bar.

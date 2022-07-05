@@ -1,13 +1,13 @@
 import React from 'react';
 
-import AccountDrawer from 'containers/Drawers/AccountDrawer';
-import ManualJournalDrawer from 'containers/Drawers/ManualJournalDrawer';
-import ExpenseDrawer from 'containers/Drawers/ExpenseDrawer';
-import BillDrawer from 'containers/Drawers/BillDrawer';
-import InvoiceDetailDrawer from 'containers/Drawers/InvoiceDetailDrawer';
-import ReceiptDetailDrawer from 'containers/Drawers/ReceiptDetailDrawer';
-import PaymentReceiveDetailDrawer from 'containers/Drawers/PaymentReceiveDetailDrawer';
-import PaymentMadeDetailDrawer from 'containers/Drawers/PaymentMadeDetailDrawer';
+import AccountDrawer from '@/containers/Drawers/AccountDrawer';
+import ManualJournalDrawer from '@/containers/Drawers/ManualJournalDrawer';
+import ExpenseDrawer from '@/containers/Drawers/ExpenseDrawer';
+import BillDrawer from '@/containers/Drawers/BillDrawer';
+import InvoiceDetailDrawer from '@/containers/Drawers/InvoiceDetailDrawer';
+import ReceiptDetailDrawer from '@/containers/Drawers/ReceiptDetailDrawer';
+import PaymentReceiveDetailDrawer from '@/containers/Drawers/PaymentReceiveDetailDrawer';
+import PaymentMadeDetailDrawer from '@/containers/Drawers/PaymentMadeDetailDrawer';
 import EstimateDetailDrawer from '../containers/Drawers/EstimateDetailDrawer';
 import ItemDetailDrawer from '../containers/Drawers/ItemDetailDrawer';
 import CustomerDetailsDrawer from '../containers/Drawers/CustomerDetailsDrawer';
@@ -23,7 +23,7 @@ import RefundCreditNoteDetailDrawer from '../containers/Drawers/RefundCreditNote
 import RefundVendorCreditDetailDrawer from '../containers/Drawers/RefundVendorCreditDetailDrawer';
 import WarehouseTransferDetailDrawer from '../containers/Drawers/WarehouseTransferDetailDrawer'
 
-import { DRAWERS } from 'common/drawers';
+import { DRAWERS } from '@/common/drawers';
 
 /**
  * Drawers container of the dashboard.

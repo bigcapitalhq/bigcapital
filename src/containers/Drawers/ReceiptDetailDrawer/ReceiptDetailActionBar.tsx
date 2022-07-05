@@ -9,9 +9,9 @@ import {
   Intent,
 } from '@blueprintjs/core';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import {
   Can,
@@ -26,7 +26,7 @@ import {
   AbilitySubject,
 } from '../../../common/abilityOption';
 
-import { safeCallback, compose } from 'utils';
+import { safeCallback, compose } from '@/utils';
 
 /**
  * Receipt details actions bar.

@@ -9,7 +9,7 @@ import { AppToaster } from '@/components';
 import withAlertActions from '@/containers/Alert/withAlertActions';
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * branch mark primary alert.

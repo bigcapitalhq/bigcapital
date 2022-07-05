@@ -17,9 +17,9 @@ import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { useVendorDetailsDrawerContext } from './VendorDetailsDrawerProvider';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { Can, Icon, FormattedMessage as T } from '@/components';
 import { VendorMoreMenuItem } from './utils';
@@ -29,7 +29,7 @@ import {
   PaymentMadeAction,
   VendorAction,
 } from '../../../common/abilityOption';
-import { safeCallback, compose } from 'utils';
+import { safeCallback, compose } from '@/utils';
 
 /**
  * Vendor details actions bar.

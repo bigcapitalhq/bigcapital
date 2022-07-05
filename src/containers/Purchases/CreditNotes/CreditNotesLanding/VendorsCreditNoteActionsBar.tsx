@@ -31,7 +31,7 @@ import withSettingsActions from '../../../Settings/withSettingsActions';
 
 import withVendorActions from './withVendorActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Vendors Credit note  table actions bar.

@@ -19,7 +19,7 @@ import withVendorsBalanceSummary from './withVendorsBalanceSummary';
 import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 
-import { saveInvoke, compose } from 'utils';
+import { saveInvoke, compose } from '@/utils';
 
 /**
  * Vendors balance summary action bar.

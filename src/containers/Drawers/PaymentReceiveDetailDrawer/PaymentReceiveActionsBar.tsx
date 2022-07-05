@@ -10,9 +10,9 @@ import {
 
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import {
   Can,
@@ -26,7 +26,7 @@ import {
   AbilitySubject,
 } from '../../../common/abilityOption';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Payment receive actions bar.

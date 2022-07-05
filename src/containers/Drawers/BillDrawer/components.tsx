@@ -3,8 +3,8 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import clsx from 'classnames';
 import { Intent, MenuItem, Menu } from '@blueprintjs/core';
-import { safeCallback } from 'utils';
-import { CLASSES } from 'common/classes';
+import { safeCallback } from '@/utils';
+import { CLASSES } from '@/common/classes';
 import {  Icon } from '@/components';
 
 /**

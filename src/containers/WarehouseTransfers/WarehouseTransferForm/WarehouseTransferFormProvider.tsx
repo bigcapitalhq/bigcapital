@@ -8,9 +8,9 @@ import {
   useCreateWarehouseTransfer,
   useEditWarehouseTransfer,
   useItemInventoryCost,
-} from 'hooks/query';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+} from '@/hooks/query';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 import { ITEMS_FILTER_ROLES_QUERY } from './utils';
 
 const WarehouseFormContext = React.createContext();

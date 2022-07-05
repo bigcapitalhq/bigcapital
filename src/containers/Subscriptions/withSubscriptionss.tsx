@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   isSubscriptionsInactiveFactory,
   isSubscriptionsActiveFactory
-} from 'store/subscription/subscription.selectors';
+} from '@/store/subscription/subscription.selectors';
 
 export default (mapState) => {
   const isSubscriptionsInactive = isSubscriptionsInactiveFactory();

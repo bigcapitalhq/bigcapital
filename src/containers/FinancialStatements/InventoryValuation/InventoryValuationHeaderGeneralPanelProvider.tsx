@@ -1,6 +1,6 @@
 import React from 'react';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
-import { useItems } from 'hooks/query';
+import { useItems } from '@/hooks/query';
 
 const InventoryValuationGeneralPanelContext = React.createContext();
 

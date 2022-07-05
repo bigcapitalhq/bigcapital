@@ -7,8 +7,8 @@ import { ReportDataTable, FinancialSheet } from '@/components';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { useTrialBalanceTableColumns } from './components';
 
-import { tableRowTypesToClassnames } from 'utils';
-import { TableStyle } from 'common';
+import { tableRowTypesToClassnames } from '@/utils';
+import { TableStyle } from '@/common';
 
 /**
  * Trial Balance sheet data table.

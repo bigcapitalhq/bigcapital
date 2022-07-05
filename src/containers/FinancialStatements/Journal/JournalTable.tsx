@@ -9,8 +9,8 @@ import TableFastCell from '@/components/Datatable/TableFastCell';
 import { useJournalTableColumns } from './components';
 import { useJournalSheetContext } from './JournalProvider';
 
-import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
-import { TableStyle } from 'common';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import { TableStyle } from '@/common';
 
 /**
  * Journal sheet table.

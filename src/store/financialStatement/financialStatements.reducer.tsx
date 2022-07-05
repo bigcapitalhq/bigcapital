@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import t from 'store/types';
+import t from '@/store/types';
 
 // Initial state.
 const initialState = {

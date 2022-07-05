@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Money, ExchangeRateInputGroup } from '@/components';
 import { MoneyFieldCell } from '@/components/DataTableCells';
 import { useFormikContext } from 'formik';
-import { useCurrentOrganization } from 'hooks/state';
+import { useCurrentOrganization } from '@/hooks/state';
 import { usePaymentMadeIsForeignCustomer } from './utils';
 
 function BillNumberAccessor(row) {

@@ -7,7 +7,7 @@ import { Icon, If, FormattedMessage as T } from '@/components';
 import { useJournalSheetContext } from './JournalProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
-import { Align } from 'common';
+import { Align } from '@/common';
 
 /**
  * Retrieve the journal table columns.

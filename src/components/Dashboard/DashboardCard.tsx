@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 // Dashboard card.
 export default function DashboardCard({ children, page }) {

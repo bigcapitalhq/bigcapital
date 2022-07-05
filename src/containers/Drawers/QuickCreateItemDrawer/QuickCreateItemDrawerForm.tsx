@@ -10,7 +10,7 @@ import {
   useItemFormContext,
 } from '../../Items/ItemFormProvider';
 
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDashboardActions from '../../Dashboard/withDashboardActions';
 
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';

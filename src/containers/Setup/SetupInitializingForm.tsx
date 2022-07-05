@@ -2,14 +2,14 @@ import React from 'react';
 import { ProgressBar, Intent } from '@blueprintjs/core';
 import * as R from 'ramda';
 
-import { useJob, useCurrentOrganization } from 'hooks/query';
+import { useJob, useCurrentOrganization } from '@/hooks/query';
 import { FormattedMessage as T } from '@/components';
 
-import withOrganizationActions from 'containers/Organization/withOrganizationActions';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withOrganizationActions from '@/containers/Organization/withOrganizationActions';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import withOrganization from '../Organization/withOrganization';
 
-import 'style/pages/Setup/Initializing.scss';
+import '@/style/pages/Setup/Initializing.scss';
 
 /**
  * Setup initializing step form.

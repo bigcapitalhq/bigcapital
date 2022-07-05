@@ -3,7 +3,7 @@ import {
   isSubscriptionOnTrialFactory,
   isSubscriptionInactiveFactory,
   isSubscriptionActiveFactory,
-} from 'store/subscription/subscription.selectors';
+} from '@/store/subscription/subscription.selectors';
 
 export default (mapState, slug) => {
   const isSubscriptionOnTrial = isSubscriptionOnTrialFactory(slug);

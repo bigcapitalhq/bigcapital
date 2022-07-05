@@ -6,7 +6,7 @@ import JournalEntriesTable, {
   AmountDisplayedBaseCurrencyMessage,
 } from '../../JournalEntriesTable/JournalEntriesTable';
 
-import { useTransactionsByReference } from 'hooks/query';
+import { useTransactionsByReference } from '@/hooks/query';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
 /**

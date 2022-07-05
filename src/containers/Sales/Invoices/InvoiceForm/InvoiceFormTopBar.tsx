@@ -14,7 +14,7 @@ import {
   useSetPrimaryBranchToForm,
 } from './utils';
 
-import { useFeatureCan } from 'hooks/state';
+import { useFeatureCan } from '@/hooks/state';
 import {
   Icon,
   BranchSelect,
@@ -23,7 +23,7 @@ import {
   FormTopbar,
 } from '@/components';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
-import { Features } from 'common';
+import { Features } from '@/common';
 
 /**
  * Invoice form topbar .

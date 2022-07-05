@@ -7,8 +7,8 @@ import { ReportDataTable, FinancialSheet } from '@/components';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
 import { usePurchasesByItemsTableColumns } from './components';
 
-import { tableRowTypesToClassnames } from 'utils';
-import { TableStyle } from 'common';
+import { tableRowTypesToClassnames } from '@/utils';
+import { TableStyle } from '@/common';
 
 /**
  * Purchases by items data table.

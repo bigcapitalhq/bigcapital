@@ -11,7 +11,7 @@ import {
   Intent,
   Tag,
 } from '@blueprintjs/core';
-import { getColumnWidth } from 'utils';
+import { getColumnWidth } from '@/utils';
 import {
   FormatNumberCell,
   Icon,

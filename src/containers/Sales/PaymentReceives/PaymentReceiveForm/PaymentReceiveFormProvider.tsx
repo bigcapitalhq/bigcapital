@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react';
 import { isEqual, isUndefined } from 'lodash';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 import { DashboardInsider } from '@/components';
 import {
   useSettingsPaymentReceives,
@@ -11,7 +11,7 @@ import {
   useBranches,
   useCreatePaymentReceive,
   useEditPaymentReceive,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 // Payment receive form context.
 const PaymentReceiveFormContext = createContext();

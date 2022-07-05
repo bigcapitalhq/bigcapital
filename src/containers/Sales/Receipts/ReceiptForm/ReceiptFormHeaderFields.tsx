@@ -9,7 +9,7 @@ import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 import { FastField, ErrorMessage } from 'formik';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import styled from 'styled-components';
 
 import {
@@ -21,16 +21,16 @@ import {
   InputPrependButton,
   CustomerDrawerLink,
 } from '@/components';
-import withSettings from 'containers/Settings/withSettings';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { ACCOUNT_TYPE } from 'common/accountTypes';
+import withSettings from '@/containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { ACCOUNT_TYPE } from '@/common/accountTypes';
 import {
   momentFormatter,
   compose,
   tansformDateValue,
   handleDateChange,
   inputIntent,
-} from 'utils';
+} from '@/utils';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import {
   accountsFieldShouldUpdate,

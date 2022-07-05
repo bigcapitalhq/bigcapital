@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { createTableStateReducers } from 'store/tableState.reducer';
+import { createTableStateReducers } from '@/store/tableState.reducer';
 
 const initialState = {
   tableState: {

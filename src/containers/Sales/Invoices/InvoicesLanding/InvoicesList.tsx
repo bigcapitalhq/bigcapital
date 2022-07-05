@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/pages/SaleInvoice/List.scss';
+import '@/style/pages/SaleInvoice/List.scss';
 
 import { DashboardContentTable, DashboardPageContent } from '@/components';
 import InvoicesActionsBar from './InvoicesActionsBar';
@@ -11,9 +11,9 @@ import InvoicesDataTable from './InvoicesDataTable';
 
 import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
-import withAlertsActions from 'containers/Alert/withAlertActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
 
-import { transformTableStateToQuery, compose } from 'utils';
+import { transformTableStateToQuery, compose } from '@/utils';
 
 /**
  * Sale invoices list.

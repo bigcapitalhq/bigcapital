@@ -15,7 +15,7 @@ import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { Icon } from '@/components';
 
 /**

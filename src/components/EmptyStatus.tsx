@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import Style from 'style/components/DataTable/DataTableEmptyStatus.module.scss';
+import Style from '@/style/components/DataTable/DataTableEmptyStatus.module.scss';
 
 /**
  * Datatable empty status.

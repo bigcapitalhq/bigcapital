@@ -7,7 +7,7 @@ import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
 import { useWarehouseLocationsColumns } from './components';
-import { useItemWarehouseLocation } from 'hooks/query';
+import { useItemWarehouseLocation } from '@/hooks/query';
 
 /**
  * Warehouses locations table columns.

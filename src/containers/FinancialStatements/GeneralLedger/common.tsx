@@ -3,8 +3,8 @@ import intl from 'react-intl-universal';
 import moment from 'moment';
 import { castArray } from 'lodash';
 
-import { useAppQueryString } from 'hooks';
-import { transformToForm } from 'utils';
+import { useAppQueryString } from '@/hooks';
+import { transformToForm } from '@/utils';
 
 // Filters accounts options.
 export const filterAccountsOptions = [

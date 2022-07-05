@@ -3,10 +3,10 @@ import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import EstimateFormHeaderFields from './EstimateFormHeaderFields';
 
-import { getEntriesTotal } from 'containers/Entries/utils';
+import { getEntriesTotal } from '@/containers/Entries/utils';
 import { PageFormBigNumber } from '@/components';
 
 // Estimate form top header.

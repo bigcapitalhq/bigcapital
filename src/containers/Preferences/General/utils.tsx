@@ -1,4 +1,4 @@
-import { defaultFastFieldShouldUpdate } from 'utils';
+import { defaultFastFieldShouldUpdate } from '@/utils';
 
 export const shouldBaseCurrencyUpdate = (newProps, oldProps) => {
   return (

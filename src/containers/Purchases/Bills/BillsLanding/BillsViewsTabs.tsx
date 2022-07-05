@@ -8,7 +8,7 @@ import { useBillsListContext } from './BillsListProvider';
 import withBillActions from './withBillsActions';
 import withBills from './withBills';
 
-import { compose, transfromViewsToTabs } from 'utils';
+import { compose, transfromViewsToTabs } from '@/utils';
 
 /**
  * Bills view tabs.

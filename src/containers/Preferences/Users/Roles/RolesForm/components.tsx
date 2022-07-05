@@ -6,7 +6,7 @@ import { Field } from 'formik';
 import {
   getPermissionsSchema,
   ModulePermissionsStyle,
-} from 'common/permissionsSchema';
+} from '@/common/permissionsSchema';
 import { Card, If, ButtonLink, Choose, T } from '@/components';
 import {
   getSerivceColumnPermission,

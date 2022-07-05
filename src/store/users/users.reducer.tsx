@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { createTableQueryReducers } from 'store/queryReducers';
-import t from 'store/types';
+import { createTableQueryReducers } from '@/store/queryReducers';
+import t from '@/store/types';
 
 const initialState = {
   items: {},

@@ -4,15 +4,15 @@ import { DataTable, Card } from '@/components';
 
 import { useBillPaymentTransactionsColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from '../BillDrawerProvider';
-import { useBillPaymentTransactions } from 'hooks/query';
+import { useBillPaymentTransactions } from '@/hooks/query';
 
 import { TableStyle } from '../../../../common';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Bill payment transactions datatable.

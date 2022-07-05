@@ -2,7 +2,7 @@
 import {
   getReceiptsTableStateFactory,
   receiptsTableStateChangedFactory,
-} from 'store/receipts/receipts.selector';
+} from '@/store/receipts/receipts.selector';
 
 export default (mapState) => {
   const getReceiptsTableState = getReceiptsTableStateFactory();

@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
-import { useRefundCreditTransaction } from 'hooks/query';
+import { useRefundCreditTransaction } from '@/hooks/query';
 
 const RefundCreditNoteDrawerContext = React.createContext();
 

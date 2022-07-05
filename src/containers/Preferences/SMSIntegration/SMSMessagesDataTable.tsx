@@ -8,10 +8,10 @@ import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import { useSMSIntegrationTableColumns, ActionsMenu } from './components';
 import { useSMSIntegrationContext } from './SMSIntegrationProvider';
-import { useSettingEditSMSNotification } from 'hooks/query';
+import { useSettingEditSMSNotification } from '@/hooks/query';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { compose } from '@/utils';
 
 /**
  * SMS Message data table.

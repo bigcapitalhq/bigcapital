@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
 import { FinancialSheet, ReportDataTable } from '@/components';
 import TableVirtualizedListRows from '@/components/Datatable/TableVirtualizedRows';
@@ -11,7 +11,7 @@ import TableFastCell from '@/components/Datatable/TableFastCell';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import { useGeneralLedgerTableColumns } from './components';
 
-import { TableStyle } from 'common';
+import { TableStyle } from '@/common';
 
 /**
  * General ledger table.

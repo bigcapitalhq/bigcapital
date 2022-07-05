@@ -5,11 +5,11 @@ import { ContextMenu2 } from '@blueprintjs/popover2';
 
 import { AppToaster } from '@/components';
 import { WarehouseContextMenu, WarehousesGridItemBox } from './components';
-import { useMarkWarehouseAsPrimary } from 'hooks/query';
+import { useMarkWarehouseAsPrimary } from '@/hooks/query';
 
 import withAlertsActions from '../../Alert/withAlertActions';
 import withDialogActions from '../../Dialog/withDialogActions';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  *  warehouse grid item.

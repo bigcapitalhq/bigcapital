@@ -17,13 +17,13 @@ import {
   Row,
   CustomerDrawerLink,
 } from '@/components';
-import { momentFormatter, compose, tansformDateValue } from 'utils';
+import { momentFormatter, compose, tansformDateValue } from '@/utils';
 
 import {
   useObserveInvoiceNoSettings,
   customerNameFieldShouldUpdate,
 } from './utils';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import {
   CustomerSelectField,
   FieldRequiredHint,
@@ -33,9 +33,9 @@ import {
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { InvoiceExchangeRateInputField } from './components';
 
-import withSettings from 'containers/Settings/withSettings';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import { inputIntent, handleDateChange } from 'utils';
+import withSettings from '@/containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { inputIntent, handleDateChange } from '@/utils';
 
 /**
  * Invoice form header fields.

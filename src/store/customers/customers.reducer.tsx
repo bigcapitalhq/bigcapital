@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { createTableStateReducers } from 'store/tableState.reducer';
+import { createTableStateReducers } from '@/store/tableState.reducer';
 
 // Default table query state.
 export const defaultTableQueryState = {

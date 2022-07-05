@@ -4,13 +4,13 @@ import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-import 'style/pages/Preferences/Users.scss';
+import '@/style/pages/Preferences/Users.scss';
 
 import { Card } from '@/components';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import PreferencesSubContent from '@/components/Preferences/PreferencesSubContent';
 
-import withUserPreferences from 'containers/Preferences/Users/withUserPreferences';
+import withUserPreferences from '@/containers/Preferences/Users/withUserPreferences';
 
 /**
  * Preferences page - Users page.

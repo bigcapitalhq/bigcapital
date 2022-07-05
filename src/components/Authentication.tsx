@@ -6,7 +6,7 @@ import authenticationRoutes from '@/routes/authentication';
 import { FormattedMessage as T } from '@/components';
 import Icon from '@/components/Icon';
 import { useIsAuthenticated } from '@/hooks/state';
-import 'style/pages/Authentication/Auth.scss';
+import '@/style/pages/Authentication/Auth.scss';
 
 function PageFade(props) {
   return <CSSTransition {...props} classNames="authTransition" timeout={500} />;

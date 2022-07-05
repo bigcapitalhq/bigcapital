@@ -3,7 +3,7 @@ import { FormattedMessage as T } from '@/components';
 
 import { Intent, Button } from '@blueprintjs/core';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from 'redux';
 import { useFormikContext } from 'formik';
 

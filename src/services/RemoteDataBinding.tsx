@@ -1,4 +1,4 @@
-import ApiService from 'services/ApiService';
+import ApiService from '@/services/ApiService';
 
 export default class RemoteDataBinding {
 

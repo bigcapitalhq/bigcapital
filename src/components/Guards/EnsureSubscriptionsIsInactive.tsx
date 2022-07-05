@@ -1,7 +1,7 @@
 import React from 'react';
 import { includes } from 'lodash';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 import { Redirect } from 'react-router-dom';
 import withSubscriptions from '../../containers/Subscriptions/withSubscriptionss';
 

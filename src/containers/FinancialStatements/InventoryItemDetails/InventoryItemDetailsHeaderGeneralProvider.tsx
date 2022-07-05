@@ -1,5 +1,5 @@
 import React from 'react';
-import { useItems } from 'hooks/query';
+import { useItems } from '@/hooks/query';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
 const InventoryItemDetailsHeaderGeneralContext = React.createContext();

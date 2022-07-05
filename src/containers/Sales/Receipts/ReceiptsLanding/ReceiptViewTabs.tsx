@@ -5,7 +5,7 @@ import { DashboardViewsTabs } from '@/components';
 import withReceiptActions from './withReceiptsActions';
 import withReceipts from './withReceipts';
 
-import { compose, transfromViewsToTabs } from 'utils';
+import { compose, transfromViewsToTabs } from '@/utils';
 import { useReceiptsListContext } from './ReceiptsListProvider';
 
 /**

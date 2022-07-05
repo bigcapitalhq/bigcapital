@@ -7,12 +7,12 @@ import styled from 'styled-components';
 
 import { FormattedMessage as T } from '@/components';
 
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
 import withVendorsBalanceSummary from './withVendorsBalanceSummary';
 import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions';
 import VendorsBalanceSummaryHeaderGeneral from './VendorsBalanceSummaryHeaderGeneral';
 
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 
 /**
  * Vendors balance summary drawer header.

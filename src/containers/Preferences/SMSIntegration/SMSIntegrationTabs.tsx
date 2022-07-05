@@ -4,15 +4,15 @@ import { Tabs, Tab } from '@blueprintjs/core';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import SMSMessagesDataTable from './SMSMessagesDataTable';
 import { Card } from '@/components';
 
 import '../../../style/pages/Preferences/SMSIntegration.scss';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * SMS Integration Tabs.

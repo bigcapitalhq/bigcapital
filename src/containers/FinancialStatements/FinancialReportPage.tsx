@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { DashboardInsider } from '@/components';
 import styled from 'styled-components';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 /**
  * Financial report page.

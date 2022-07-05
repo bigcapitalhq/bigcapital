@@ -1,6 +1,6 @@
 import React from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { useInventoryItemDetailsReport } from 'hooks/query';
+import { useInventoryItemDetailsReport } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const InventoryItemDetailsContext = React.createContext();

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import {
   getGeneralLedgerFilterDrawer
-} from 'store/financialStatement/financialStatements.selectors';
+} from '@/store/financialStatement/financialStatements.selectors';
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {

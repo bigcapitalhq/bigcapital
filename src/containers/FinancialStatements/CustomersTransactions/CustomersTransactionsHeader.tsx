@@ -7,13 +7,13 @@ import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import styled from 'styled-components';
 
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
 import CustomersTransactionsHeaderGeneralPanel from './CustomersTransactionsHeaderGeneralPanel';
 
 import withCustomersTransactions from './withCustomersTransactions';
 import withCustomersTransactionsActions from './withCustomersTransactionsActions';
 
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 
 /**
  * Customers transactions header.

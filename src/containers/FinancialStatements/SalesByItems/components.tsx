@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 
-import { getColumnWidth } from 'utils';
+import { getColumnWidth } from '@/utils';
 import { If } from '@/components';
 import { CellTextSpan } from '@/components/Datatable/Cells';
 import { useSalesByItemsContext } from './SalesByItemProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
-import { Align } from 'common';
+import { Align } from '@/common';
 
 /**
  * Retrieve sales by items table columns.

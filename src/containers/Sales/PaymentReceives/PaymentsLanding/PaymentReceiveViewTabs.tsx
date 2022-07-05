@@ -10,7 +10,7 @@ import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Payment receive view tabs.

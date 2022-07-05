@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { useVendorsTransactionsReport } from 'hooks/query';
+import { useVendorsTransactionsReport } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const VendorsTransactionsContext = createContext();

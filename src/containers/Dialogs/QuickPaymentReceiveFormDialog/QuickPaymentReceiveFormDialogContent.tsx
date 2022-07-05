@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/pages/PaymentReceive/QuickPaymentReceiveDialog.scss';
+import '@/style/pages/PaymentReceive/QuickPaymentReceiveDialog.scss';
 
 import { QuickPaymentReceiveFormProvider } from './QuickPaymentReceiveFormProvider';
 import QuickPaymentReceiveForm from './QuickPaymentReceiveForm';

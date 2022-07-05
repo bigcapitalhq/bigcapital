@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { isEmpty } from 'lodash';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 import { EditBillFormSchema, CreateBillFormSchema } from './BillForm.schema';
 import BillFormHeader from './BillFormHeader';
@@ -17,7 +17,7 @@ import BillFormTopBar from './BillFormTopBar';
 import { AppToaster } from '@/components';
 
 import { useBillFormContext } from './BillFormProvider';
-import { compose, safeSumBy } from 'utils';
+import { compose, safeSumBy } from '@/utils';
 import {
   defaultBill,
   filterNonZeroEntries,
@@ -25,7 +25,7 @@ import {
   transformFormValuesToRequest,
   handleErrors,
 } from './utils';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Bill form.

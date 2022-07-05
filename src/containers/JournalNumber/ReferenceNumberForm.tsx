@@ -4,7 +4,7 @@ import { Formik, Form } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 
-import 'style/pages/ReferenceNumber/ReferenceNumber.scss';
+import '@/style/pages/ReferenceNumber/ReferenceNumber.scss';
 
 import { FormObserver } from '@/components';
 import ReferenceNumberFormContent from './ReferenceNumberFormContent';

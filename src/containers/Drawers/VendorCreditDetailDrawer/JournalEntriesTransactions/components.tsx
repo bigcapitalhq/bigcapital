@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { FormatDateCell } from '../../../../components';
 
-import 'style/pages/JournalEntries/List.scss';
+import '@/style/pages/JournalEntries/List.scss';
 
 /**
  * Retrieve journal entries transactions table columns.

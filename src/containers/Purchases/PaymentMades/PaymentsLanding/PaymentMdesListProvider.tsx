@@ -1,6 +1,6 @@
 import React, { createContext } from 'react';
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
-import { useResourceViews, useResourceFields, usePaymentMades } from 'hooks/query';
+import { useResourceViews, useResourceFields, usePaymentMades } from '@/hooks/query';
 
 const PaymentMadesContext = createContext();
 

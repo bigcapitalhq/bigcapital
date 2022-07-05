@@ -23,17 +23,17 @@ import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import withReceiptsActions from './withReceiptsActions';
 import withReceipts from './withReceipts';
 
-import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withSettings from 'containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
-import { useRefreshReceipts } from 'hooks/query/receipts';
+import { useRefreshReceipts } from '@/hooks/query/receipts';
 import {
   SaleReceiptAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Receipts actions bar.

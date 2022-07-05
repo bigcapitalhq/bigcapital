@@ -16,7 +16,7 @@ import {
 
 import { InventoryItemDetailsBody } from './InventoryItemDetailsBody';
 import { useInventoryValuationQuery } from './utils2';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * inventory item details.

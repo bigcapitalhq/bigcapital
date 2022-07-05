@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 
 import { RESOURCES_TYPES } from '../../../common/resourcesTypes';
 import withDrawerActions from '../../Drawer/withDrawerActions';
-import { highlightText } from 'utils';
+import { highlightText } from '@/utils';
 import { Icon } from '@/components';
 import {
   AbilitySubject,

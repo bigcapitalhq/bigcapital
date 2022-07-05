@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import 'style/components/Skeleton.scss';
+import '@/style/components/Skeleton.scss';
 
-import { randomNumber } from 'utils';
+import { randomNumber } from '@/utils';
 
 /**
  * Skeleton component.

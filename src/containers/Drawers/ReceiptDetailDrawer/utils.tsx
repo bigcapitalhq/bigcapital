@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { getColumnWidth } from 'utils';
+import { getColumnWidth } from '@/utils';
 import { FormatNumberCell, TextOverviewTooltipCell } from '../../../components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 

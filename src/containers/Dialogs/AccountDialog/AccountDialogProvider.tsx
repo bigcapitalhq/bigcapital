@@ -7,7 +7,7 @@ import {
   useAccount,
   useAccounts,
   useEditAccount,
-} from 'hooks/query';
+} from '@/hooks/query';
 import { AccountDialogAction, getDisabledFormFields } from './utils';
 
 const AccountDialogContext = createContext();

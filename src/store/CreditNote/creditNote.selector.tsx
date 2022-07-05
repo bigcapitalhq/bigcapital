@@ -1,6 +1,6 @@
 import { isEqual } from 'lodash';
-import { paginationLocationQuery } from 'store/selectors';
-import { createDeepEqualSelector } from 'utils';
+import { paginationLocationQuery } from '@/store/selectors';
+import { createDeepEqualSelector } from '@/utils';
 import { defaultTableQuery } from './creditNote.reducer';
 
 const creditsTableStateSelector = (state) => state.creditNotes.tableState;

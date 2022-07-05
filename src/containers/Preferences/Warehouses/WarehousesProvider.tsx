@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
-import { useWarehouses, useCashflowAccounts } from 'hooks/query';
+import { CLASSES } from '@/common/classes';
+import { useWarehouses, useCashflowAccounts } from '@/hooks/query';
 import { isEmpty } from 'lodash';
 
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 
 const WarehousesContext = React.createContext();
 

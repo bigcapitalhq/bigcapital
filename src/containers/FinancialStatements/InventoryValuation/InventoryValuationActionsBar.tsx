@@ -19,7 +19,7 @@ import withInventoryValuation from './withInventoryValuation';
 import withInventoryValuationActions from './withInventoryValuationActions';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
 
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke } from '@/utils';
 
 function InventoryValuationActionsBar({
   // #withInventoryValuation

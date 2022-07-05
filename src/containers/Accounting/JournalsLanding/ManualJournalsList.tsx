@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/pages/ManualJournal/List.scss';
+import '@/style/pages/ManualJournal/List.scss';
 
 import { DashboardPageContent } from '@/components';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { getSetupWizardSteps } from 'common/registerWizard';
+import { getSetupWizardSteps } from '@/common/registerWizard';
 
 function WizardSetupStep({ label, isActive = false }) {
   return (

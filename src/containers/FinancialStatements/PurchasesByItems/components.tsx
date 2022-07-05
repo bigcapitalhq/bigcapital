@@ -6,8 +6,8 @@ import { CellTextSpan } from '@/components/Datatable/Cells';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
-import { getColumnWidth } from 'utils';
-import { Align } from 'common';
+import { getColumnWidth } from '@/utils';
+import { Align } from '@/common';
 
 /**
  * Retrieve purchases by items table columns.

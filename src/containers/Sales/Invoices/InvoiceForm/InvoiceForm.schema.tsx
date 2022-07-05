@@ -1,8 +1,8 @@
 import * as Yup from 'yup';
 import moment from 'moment';
 import intl from 'react-intl-universal';
-import { DATATYPES_LENGTH } from 'common/dataTypes';
-import { isBlank } from 'utils';
+import { DATATYPES_LENGTH } from '@/common/dataTypes';
+import { isBlank } from '@/utils';
 
 const getSchema = () =>
   Yup.object().shape({

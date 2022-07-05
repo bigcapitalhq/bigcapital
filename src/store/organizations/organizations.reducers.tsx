@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { omit } from 'lodash';
-import t from 'store/types';
+import t from '@/store/types';
 
 const initialState = {
   data: {},

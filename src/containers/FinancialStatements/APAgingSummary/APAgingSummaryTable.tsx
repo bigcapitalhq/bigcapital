@@ -3,12 +3,12 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
 import { ReportDataTable, FinancialSheet } from '@/components';
-import { TableStyle } from 'common';
+import { TableStyle } from '@/common';
 
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import { useAPAgingSummaryColumns } from './components';
 
-import { tableRowTypesToClassnames } from 'utils';
+import { tableRowTypesToClassnames } from '@/utils';
 
 /**
  * AP aging summary table sheet.

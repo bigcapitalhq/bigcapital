@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { For } from '@/components';
 
-import 'style/pages/FinancialStatements/FinancialSheets.scss';
+import '@/style/pages/FinancialStatements/FinancialSheets.scss';
 import { useFilterShortcutBoxesSection } from './components';
 
 function ShortcutBox({ title, link, description }) {

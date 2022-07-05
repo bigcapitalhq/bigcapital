@@ -10,16 +10,16 @@ import {
   transactionNumber,
   formattedAmount,
   orderingLinesIndexes,
-} from 'utils';
+} from '@/utils';
 import { useFormikContext } from 'formik';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
-} from 'containers/Entries/utils';
-import { useCurrentOrganization } from 'hooks/state';
-import { getEntriesTotal } from 'containers/Entries/utils';
+} from '@/containers/Entries/utils';
+import { useCurrentOrganization } from '@/hooks/state';
+import { getEntriesTotal } from '@/containers/Entries/utils';
 
 export const MIN_LINES_NUMBER = 1;
 

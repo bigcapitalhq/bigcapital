@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import preferencesRoutes from 'routes/preferences';
+import preferencesRoutes from '@/routes/preferences';
 
 export default function DashboardContentRoute() {
   return (

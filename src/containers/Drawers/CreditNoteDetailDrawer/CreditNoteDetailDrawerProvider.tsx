@@ -5,10 +5,10 @@ import {
   useRefundCreditNote,
   useReconcileCreditNote,
   useReconcileCreditNotes,
-} from 'hooks/query';
+} from '@/hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 
 const CreditNoteDetailDrawerContext = React.createContext();
 

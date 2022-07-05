@@ -2,7 +2,7 @@ import React from 'react';
 import { Tooltip } from '@blueprintjs/core';
 import Icon from './Icon';
 
-import 'style/components/Hint.scss';
+import '@/style/components/Hint.scss';
 
 /**
  * Field hint.

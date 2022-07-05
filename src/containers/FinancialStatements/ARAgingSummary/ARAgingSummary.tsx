@@ -13,7 +13,7 @@ import { ARAgingSummaryBody } from './ARAgingSummaryBody';
 import withARAgingSummaryActions from './withARAgingSummaryActions';
 
 import { getDefaultARAgingSummaryQuery } from './common';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * A/R aging summary report.

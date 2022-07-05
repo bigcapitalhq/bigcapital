@@ -10,8 +10,8 @@ import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T, If } from '@/components';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 
-import { useAutofocus } from 'hooks';
-import { CLASSES } from 'common/classes';
+import { useAutofocus } from '@/hooks';
+import { CLASSES } from '@/common/classes';
 import classNames from 'classnames';
 import styled from 'styled-components';
 import {
@@ -21,7 +21,7 @@ import {
   tansformDateValue,
   handleDateChange,
   inputIntent,
-} from 'utils';
+} from '@/utils';
 import {
   AccountsSelectList,
   CustomerSelectField,
@@ -35,12 +35,12 @@ import {
   Money,
 } from '@/components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
-import { ACCOUNT_TYPE } from 'common/accountTypes';
+import { ACCOUNT_TYPE } from '@/common/accountTypes';
 import { PaymentReceiveExchangeRateInputField } from './components';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withSettings from 'containers/Settings/withSettings';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import {
   useObservePaymentNoSettings,

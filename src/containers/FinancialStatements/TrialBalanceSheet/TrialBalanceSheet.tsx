@@ -16,7 +16,7 @@ import { TrialBalanceSheetBody } from './TrialBalanceSheetBody';
 import withTrialBalanceActions from './withTrialBalanceActions';
 
 import { useTrialBalanceSheetQuery } from './utils';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Trial balance sheet.

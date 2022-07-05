@@ -8,7 +8,7 @@ import {
   Col,
   FormattedMessage as T,
 } from '../../../components';
-import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
+import FinancialStatementDateRange from '@/containers/FinancialStatements/FinancialStatementDateRange';
 
 import {
   InventoryItemDetailsHeaderGeneralProvider,

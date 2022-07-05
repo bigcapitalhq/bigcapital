@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/pages/PaymentReceive/List.scss';
+import '@/style/pages/PaymentReceive/List.scss';
 
 import { DashboardPageContent } from '@/components';
 import PaymentReceiveActionsBar from './PaymentReceiveActionsBar';
@@ -11,7 +11,7 @@ import PaymentReceivesTable from './PaymentReceivesTable';
 import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 
-import { compose, transformTableStateToQuery } from 'utils';
+import { compose, transformTableStateToQuery } from '@/utils';
 
 /**
  * Payment receives list.

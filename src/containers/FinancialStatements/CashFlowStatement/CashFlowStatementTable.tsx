@@ -7,8 +7,8 @@ import { DataTable, FinancialSheet } from '@/components';
 import { useCashFlowStatementColumns } from './components';
 import { useCashFlowStatementContext } from './CashFlowStatementProvider';
 
-import { TableStyle } from 'common';
-import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
+import { TableStyle } from '@/common';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
 /**
  * Cash flow statement table.

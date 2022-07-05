@@ -10,7 +10,7 @@ import {
   AbilitySubject,
   CreditNoteAction,
 } from '../../../common/abilityOption';
-import { DRAWERS } from 'common/drawers';
+import { DRAWERS } from '@/common/drawers';
 
 /**
  * Credit note universal search item select action.

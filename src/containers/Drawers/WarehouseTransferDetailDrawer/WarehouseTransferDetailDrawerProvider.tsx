@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useWarehouseTransfer } from 'hooks/query';
+import { useWarehouseTransfer } from '@/hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 
 const WarehouseTransferDetailDrawerContext = React.createContext();

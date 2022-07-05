@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import moment from 'moment';
 
 import { FormatNumberCell } from '../../../components';
-import { getColumnWidth } from 'utils';
+import { getColumnWidth } from '@/utils';
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
 
 export const usePaymentMadeEntriesColumns = () => {

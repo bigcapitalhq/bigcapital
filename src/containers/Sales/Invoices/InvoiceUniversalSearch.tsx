@@ -3,9 +3,9 @@ import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
 
 import { T, Choose, Icon } from '@/components';
-import { highlightText } from 'utils';
+import { highlightText } from '@/utils';
 
-import { RESOURCES_TYPES } from 'common/resourcesTypes';
+import { RESOURCES_TYPES } from '@/common/resourcesTypes';
 import {
   AbilitySubject,
   SaleInvoiceAction,

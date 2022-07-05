@@ -4,8 +4,8 @@ import intl from 'react-intl-universal';
 
 import { Choose, T, Icon } from '@/components';
 
-import { RESOURCES_TYPES } from "common/resourcesTypes";
-import { AbilitySubject, SaleEstimateAction } from '../../../../common/abilityOption';
+import { RESOURCES_TYPES } from "@/common/resourcesTypes";
+import { AbilitySubject, SaleEstimateAction } from '@/common/abilityOption';
 
 import withDrawerActions from "../../../Drawer/withDrawerActions";
 

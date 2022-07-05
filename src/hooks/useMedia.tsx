@@ -6,7 +6,7 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import AppToaster from '@/components/AppToaster';
-import { saveFilesInAsync } from 'utils';
+import { saveFilesInAsync } from '@/utils';
 
 const useMedia = ({ saveCallback, deleteCallback }) => {
   const [files, setFiles] = useState([]);

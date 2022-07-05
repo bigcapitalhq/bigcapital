@@ -16,7 +16,7 @@ import {
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
-import { safeCallback } from 'utils';
+import { safeCallback } from '@/utils';
 
 export function AmountAccessor(row) {
   return <Money amount={row.amount} currency={row.currency_code} />;

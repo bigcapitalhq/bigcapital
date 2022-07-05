@@ -35,8 +35,8 @@ import {
   tansformDateValue,
   handleDateChange,
   compose,
-} from 'utils';
-import { CLASSES } from 'common/classes';
+} from '@/utils';
+import { CLASSES } from '@/common/classes';
 import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
 import {
   useObserveTransactionNoSettings,
@@ -44,8 +44,8 @@ import {
   useForeignAccount,
   BranchRowDivider,
 } from '../utils';
-import withSettings from 'containers/Settings/withSettings';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**
  * Other expense form fields.

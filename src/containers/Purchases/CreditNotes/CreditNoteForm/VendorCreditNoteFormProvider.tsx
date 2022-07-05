@@ -3,8 +3,8 @@ import { useLocation } from 'react-router-dom';
 import { isEmpty, pick } from 'lodash';
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 import { transformToEditForm } from './utils';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 import {
   useCreateVendorCredit,
   useEditVendorCredit,
@@ -15,7 +15,7 @@ import {
   useVendors,
   useSettingsVendorCredits,
   useBill,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const VendorCreditNoteFormContext = React.createContext();
 

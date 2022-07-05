@@ -20,7 +20,7 @@ import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import withAPAgingSummary from './withAPAgingSummary';
 import withAPAgingSummaryActions from './withAPAgingSummaryActions';
 
-import { saveInvoke, compose } from 'utils';
+import { saveInvoke, compose } from '@/utils';
 
 /**
  * AP Aging summary sheet - Actions bar.

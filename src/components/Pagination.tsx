@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { range } from 'lodash';
 import { Icon } from '@/components';
 
-import 'style/components/DataTable/Pagination.scss';
+import '@/style/components/DataTable/Pagination.scss';
 
 const TYPE = {
   PAGE_CHANGE: 'PAGE_CHANGE',

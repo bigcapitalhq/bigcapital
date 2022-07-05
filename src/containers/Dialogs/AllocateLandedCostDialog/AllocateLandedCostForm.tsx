@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import 'style/pages/AllocateLandedCost/AllocateLandedCostForm.scss';
+import '@/style/pages/AllocateLandedCost/AllocateLandedCostForm.scss';
 
 import { AppToaster } from '@/components';
 import { AllocateLandedCostFormSchema } from './AllocateLandedCostForm.schema';

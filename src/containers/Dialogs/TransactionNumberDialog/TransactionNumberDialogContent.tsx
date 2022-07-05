@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useSaveSettings } from 'hooks/query';
+import { useSaveSettings } from '@/hooks/query';
 
 import { TransactionNumberDialogProvider } from './TransactionNumberDialogProvider';
 import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm';

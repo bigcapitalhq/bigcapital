@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Icon } from '@/components';
 
-import 'style/components/BigcapitalLoading.scss';
+import '@/style/components/BigcapitalLoading.scss';
 
 /**
  * Bigcapital logo loading.

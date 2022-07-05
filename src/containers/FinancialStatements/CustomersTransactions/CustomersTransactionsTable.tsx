@@ -7,8 +7,8 @@ import { DataTable, FinancialSheet } from '@/components';
 import { useCustomersTransactionsColumns } from './components';
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 
-import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
-import { TableStyle } from 'common';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import { TableStyle } from '@/common';
 
 /**
  * Customers transactions table.

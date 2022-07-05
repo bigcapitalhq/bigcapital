@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 import { FormattedMessage as T } from '@/components';
 
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
 import InventoryItemDetailsHeaderGeneralPanel from './InventoryItemDetailsHeaderGeneralPanel';
 import InventoryItemDetailsHeaderDimensionsPanel from './InventoryItemDetailsHeaderDimensionsPanel';
 
@@ -16,7 +16,7 @@ import withInventoryItemDetails from './withInventoryItemDetails';
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
 
 import { getInventoryItemDetailsDefaultQuery } from './utils2';
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 
 /**
  * Inventory item details header.

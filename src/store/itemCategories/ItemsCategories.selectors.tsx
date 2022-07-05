@@ -1,5 +1,5 @@
-import { paginationLocationQuery } from 'store/selectors';
-import { createDeepEqualSelector } from 'utils';
+import { paginationLocationQuery } from '@/store/selectors';
+import { createDeepEqualSelector } from '@/utils';
 
 // Items categories table state.
 const itemsCategoriesTableStateSelector = (state) =>

@@ -6,14 +6,14 @@ import moment from 'moment';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
 import CashFlowStatementGeneralPanel from './CashFlowStatementGeneralPanel';
 
 import withCashFlowStatement from './withCashFlowStatement';
 import withCashFlowStatementActions from './withCashFlowStatementActions';
 
 import { getDefaultCashFlowSheetQuery } from './utils';
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 import CashFlowStatementDimensionsPanel from './CashFlowStatementDimensionsPanel';
 
 /**

@@ -1,11 +1,11 @@
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useHistory } from 'react-router-dom';
-import { getDashboardRoutes } from 'routes/dashboard';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import { getDashboardRoutes } from '@/routes/dashboard';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 function GlobalHotkeys({
   // #withDashboardActions

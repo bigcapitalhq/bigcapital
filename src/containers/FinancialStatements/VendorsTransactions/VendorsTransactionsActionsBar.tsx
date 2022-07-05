@@ -19,7 +19,7 @@ import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 import withVendorsTransaction from './withVendorsTransaction';
 import withVendorsTransactionsActions from './withVendorsTransactionsActions';
 
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke } from '@/utils';
 
 /**
  * vendors transactions actions bar.

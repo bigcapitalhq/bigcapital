@@ -7,9 +7,9 @@ import {
   useResourceMeta,
   useCreditNotes,
   useRefreshCreditNotes,
-} from 'hooks/query';
+} from '@/hooks/query';
 
-import { getFieldsFromResourceMeta } from 'utils';
+import { getFieldsFromResourceMeta } from '@/utils';
 
 const CreditNoteListContext = React.createContext();
 

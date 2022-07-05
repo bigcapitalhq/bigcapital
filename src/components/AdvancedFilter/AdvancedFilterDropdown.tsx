@@ -10,7 +10,7 @@ import {
 import { get, first, defaultTo, isEqual, isEmpty } from 'lodash';
 import intl from 'react-intl-universal';
 import { Choose, Icon, FormattedMessage as T, ListSelect } from '@/components';
-import { useUpdateEffect } from 'hooks';
+import { useUpdateEffect } from '@/hooks';
 import {
   AdvancedFilterDropdownProvider,
   FilterConditionProvider,

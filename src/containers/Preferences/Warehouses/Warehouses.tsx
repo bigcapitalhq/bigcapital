@@ -4,8 +4,8 @@ import intl from 'react-intl-universal';
 import '../../../style/pages/Preferences/warehousesList.scss';
 
 import WarehousesGrid from './WarehousesGrid';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import { compose } from 'utils';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { compose } from '@/utils';
 
 /**
  * Warehouses.

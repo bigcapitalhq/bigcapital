@@ -17,7 +17,7 @@
 import classNames from "classnames";
 import * as React from "react";
 import { Classes } from '@blueprintjs/core';
-import IconSvgPaths from "static/json/icons";
+import IconSvgPaths from "@/static/json/icons";
 import PropTypes from 'prop-types';
 
 export default class Icon extends React.Component{

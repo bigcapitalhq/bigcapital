@@ -9,7 +9,7 @@ import {
 } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { useSetPrimaryBranchToForm } from './utils';
-import { useFeatureCan } from 'hooks/state';
+import { useFeatureCan } from '@/hooks/state';
 import {
   Icon,
   BranchSelect,
@@ -18,7 +18,7 @@ import {
   DetailsBarSkeletonBase,
 } from '@/components';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
-import { Features } from 'common';
+import { Features } from '@/common';
 
 /**
  * Payment made from top bar.

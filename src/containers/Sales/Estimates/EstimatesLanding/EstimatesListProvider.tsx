@@ -3,8 +3,8 @@ import { isEmpty } from 'lodash';
 
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 
-import { useResourceViews, useResourceMeta, useEstimates } from 'hooks/query';
-import { getFieldsFromResourceMeta } from 'utils';
+import { useResourceViews, useResourceMeta, useEstimates } from '@/hooks/query';
+import { getFieldsFromResourceMeta } from '@/utils';
 
 // Estimates list context.
 const EstimatesListContext = createContext();

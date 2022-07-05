@@ -15,13 +15,13 @@ import {
   VendorCreditAction,
   AbilitySubject,
 } from '../../../common/abilityOption';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { If, Icon, FormattedMessage as T, Can } from '@/components';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Vendor credit detail actions bar.

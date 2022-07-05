@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   setBillsTableState,
   resetBillsTableState,
-} from 'store/Bills/bills.actions';
+} from '@/store/Bills/bills.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   setBillsTableState: (queries) => dispatch(setBillsTableState(queries)),

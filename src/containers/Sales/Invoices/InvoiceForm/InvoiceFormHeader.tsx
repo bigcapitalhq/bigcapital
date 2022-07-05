@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import InvoiceFormHeaderFields from './InvoiceFormHeaderFields';
 
 import { PageFormBigNumber } from '@/components';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
-import EstimateNumberDialog from 'containers/Dialogs/EstimateNumberDialog';
+import EstimateNumberDialog from '@/containers/Dialogs/EstimateNumberDialog';
 
 /**
  * Estimate form dialogs.

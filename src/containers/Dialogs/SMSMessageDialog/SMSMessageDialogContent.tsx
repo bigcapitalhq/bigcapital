@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/pages/SMSMessage/SMSMessage.scss';
+import '@/style/pages/SMSMessage/SMSMessage.scss';
 import { SMSMessageDialogProvider } from './SMSMessageDialogProvider';
 import SMSMessageForm from './SMSMessageForm';
 

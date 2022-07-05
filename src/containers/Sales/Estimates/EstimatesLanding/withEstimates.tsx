@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   getEstimatesTableStateFactory,
   isEstimatesTableStateChangedFactory,
-} from 'store/Estimate/estimates.selectors';
+} from '@/store/Estimate/estimates.selectors';
 
 export default (mapState) => {
   const getEstimatesTableState = getEstimatesTableStateFactory();

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { toggleSalesByItemsFilterDrawer } from 'store/financialStatement/financialStatements.actions';
+import { toggleSalesByItemsFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
   toggleSalesByItemsFilterDrawer: (toggle) =>

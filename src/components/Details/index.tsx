@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import 'style/components/Details.scss';
+import '@/style/components/Details.scss';
 
 const DIRECTION = {
   VERTICAL: 'vertical',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEstimateDrawerContext } from './EstimateDrawerProvider';
-import PaperTemplate from 'containers/Drawers/PaperTemplate/PaperTemplate';
+import PaperTemplate from '@/containers/Drawers/PaperTemplate/PaperTemplate';
 
 /**
  *  Estimate paper.

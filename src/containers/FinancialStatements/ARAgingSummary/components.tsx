@@ -4,8 +4,8 @@ import intl from 'react-intl-universal';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import { If, FormattedMessage as T } from '@/components';
 
-import { getColumnWidth } from 'utils';
-import { Align } from 'common';
+import { getColumnWidth } from '@/utils';
+import { Align } from '@/common';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
 /**

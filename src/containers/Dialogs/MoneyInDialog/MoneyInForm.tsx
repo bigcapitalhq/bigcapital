@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { omit } from 'lodash';
 import intl from 'react-intl-universal';
 
-import 'style/pages/CashFlow/CashflowTransactionForm.scss';
+import '@/style/pages/CashFlow/CashflowTransactionForm.scss';
 
 import { AppToaster } from '@/components';
 

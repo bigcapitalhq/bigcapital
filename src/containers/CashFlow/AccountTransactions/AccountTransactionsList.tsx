@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import 'style/pages/CashFlow/AccountTransactions/List.scss';
+import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 
 import { DashboardPageContent } from '@/components';
 

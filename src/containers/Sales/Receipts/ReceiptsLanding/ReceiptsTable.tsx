@@ -1,24 +1,24 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 import { DataTable, DashboardContentTable } from '@/components';
-import { TABLES } from 'common/tables';
+import { TABLES } from '@/common/tables';
 
 import ReceiptsEmptyStatus from './ReceiptsEmptyStatus';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withReceipts from './withReceipts';
 import withReceiptsActions from './withReceiptsActions';
 import withSettings from '../../../Settings/withSettings';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useReceiptsTableColumns, ActionsMenu } from './components';
-import { useMemorizedColumnsWidths } from 'hooks';
+import { useMemorizedColumnsWidths } from '@/hooks';
 
 /**
  * Sale receipts datatable.

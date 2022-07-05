@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 import Toaster from '@/components/AppToaster';
 
-import 'style/pages/Setup/PaymentViaVoucherDialog.scss';
+import '@/style/pages/Setup/PaymentViaVoucherDialog.scss';
 
 import { usePaymentByVoucher } from '@/hooks/query';
 import { DialogContent } from '@/components';

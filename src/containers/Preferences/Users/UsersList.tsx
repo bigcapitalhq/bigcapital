@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 
 import { UsersListProvider } from './UsersProvider';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
 import UsersDataTable from './UsersDataTable';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Users list.

@@ -6,15 +6,15 @@ import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
-import ViewForm from 'containers/Views/ViewForm';
+import ViewForm from '@/containers/Views/ViewForm';
 
 import AppToaster from '@/components/AppToaster';
-import {compose} from 'utils';
+import {compose} from '@/utils';
 import { If } from '@/components';
 
-import withResourcesActions from 'containers/Resources/withResourcesActions';
-import withViewsActions from 'containers/Views/withViewsActions';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withResourcesActions from '@/containers/Resources/withResourcesActions';
+import withViewsActions from '@/containers/Views/withViewsActions';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
 
 // @flow

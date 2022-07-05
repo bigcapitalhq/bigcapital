@@ -2,11 +2,11 @@ import React from 'react';
 import { debounce } from 'lodash';
 import { isUndefined } from 'lodash';
 
-import { useUniversalSearch } from 'hooks/query';
+import { useUniversalSearch } from '@/hooks/query';
 import { UniversalSearch } from '@/components';
 
-import { RESOURCES_TYPES } from 'common/resourcesTypes';
-import { compose } from 'utils';
+import { RESOURCES_TYPES } from '@/common/resourcesTypes';
+import { compose } from '@/utils';
 import withUniversalSearchActions from './withUniversalSearchActions';
 import withUniversalSearch from './withUniversalSearch';
 

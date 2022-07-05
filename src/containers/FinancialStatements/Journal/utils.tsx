@@ -2,8 +2,8 @@ import React from 'react';
 import { castArray } from 'lodash';
 import moment from 'moment';
 
-import { useAppQueryString } from 'hooks';
-import { transformToForm } from 'utils';
+import { useAppQueryString } from '@/hooks';
+import { transformToForm } from '@/utils';
 
 /**
  * Retrieves the default journal report query.

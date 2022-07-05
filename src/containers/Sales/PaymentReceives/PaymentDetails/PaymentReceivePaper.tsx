@@ -1,5 +1,5 @@
 import React from 'react';
-import PaymentPaperTemplate from 'containers/Drawers/PaymentPaperTemplate/PaymentPaperTemplate';
+import PaymentPaperTemplate from '@/containers/Drawers/PaymentPaperTemplate/PaymentPaperTemplate';
 import { usePaymentReceiveDrawerContext } from './PaymentReceiveDrawerProvider';
 
 export default function PaymentReceivePaper() {

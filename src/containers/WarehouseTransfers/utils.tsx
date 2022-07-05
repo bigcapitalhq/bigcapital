@@ -4,7 +4,7 @@ import { find, get } from 'lodash';
 import { Button, Menu, MenuItem } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
-import { Align, CellType } from 'common';
+import { Align, CellType } from '@/common';
 import { MoneyFieldCell, Icon, T } from '@/components';
 import { InputGroupCell, ItemsListCell } from '@/components/DataTableCells';
 

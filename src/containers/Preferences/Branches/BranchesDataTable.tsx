@@ -3,18 +3,18 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { Intent } from '@blueprintjs/core';
 
-import 'style/pages/Preferences/branchesList.scss';
+import '@/style/pages/Preferences/branchesList.scss';
 
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import { DataTable, Card, AppToaster } from '@/components';
 import { useBranchesTableColumns, ActionsMenu } from './components';
 import { useBranchesContext } from './BranchesProvider';
-import { useMarkBranchAsPrimary } from 'hooks/query';
+import { useMarkBranchAsPrimary } from '@/hooks/query';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withAlertActions from 'containers/Alert/withAlertActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Branches data table.

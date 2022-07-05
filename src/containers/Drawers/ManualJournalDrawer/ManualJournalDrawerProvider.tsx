@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useJournal } from 'hooks/query';
+import { useJournal } from '@/hooks/query';
 import { DrawerLoading, DrawerHeaderContent } from '@/components';
 
 const ManualJournalDrawerContext = React.createContext();

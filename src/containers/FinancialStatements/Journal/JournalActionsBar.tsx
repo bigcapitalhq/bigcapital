@@ -17,7 +17,7 @@ import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import withJournalActions from './withJournalActions';
 import withJournal from './withJournal';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 import { useJournalSheetContext } from './JournalProvider';
 
 /**

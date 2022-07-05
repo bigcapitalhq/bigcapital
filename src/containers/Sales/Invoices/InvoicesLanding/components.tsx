@@ -20,7 +20,7 @@ import {
   Icon,
   Can,
 } from '@/components';
-import { formattedAmount, safeCallback, calculateStatus } from 'utils';
+import { formattedAmount, safeCallback, calculateStatus } from '@/utils';
 import {
   SaleInvoiceAction,
   PaymentReceiveAction,

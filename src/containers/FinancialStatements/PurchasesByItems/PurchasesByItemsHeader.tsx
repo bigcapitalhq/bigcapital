@@ -8,13 +8,13 @@ import styled from 'styled-components';
 
 import { FormattedMessage as T } from '@/components';
 
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
 import PurchasesByItemsGeneralPanel from './PurchasesByItemsGeneralPanel';
 
 import withPurchasesByItems from './withPurchasesByItems';
 import withPurchasesByItemsActions from './withPurchasesByItemsActions';
 
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 
 /**
  * Purchases by items header.

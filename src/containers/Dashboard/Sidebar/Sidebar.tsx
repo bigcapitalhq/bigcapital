@@ -6,7 +6,7 @@ import { SidebarMenu } from './SidebarMenu';
 import { useMainSidebarMenu } from './hooks';
 import { SidebarOverlayBinded } from '../SidebarOverlay';
 
-import 'style/containers/Dashboard/Sidebar.scss';
+import '@/style/containers/Dashboard/Sidebar.scss';
 
 /**
  * Dashboard sidebar.

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FastField } from 'formik';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import WarehouseTransferFormEntriesTable from './WarehouseTransferFormEntriesTable';
 import {

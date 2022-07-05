@@ -1,5 +1,5 @@
 import { useRequestQuery } from '../../useQueryRequest';
-import { RESOURCES_TYPES } from 'common/resourcesTypes';
+import { RESOURCES_TYPES } from '@/common/resourcesTypes';
 
 /**
  *

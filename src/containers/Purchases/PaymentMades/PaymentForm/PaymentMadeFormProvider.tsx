@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 import {
   useAccounts,
   useVendors,
@@ -10,7 +10,7 @@ import {
   useSettings,
   useCreatePaymentMade,
   useEditPaymentMade,
-} from 'hooks/query';
+} from '@/hooks/query';
 import { DashboardInsider } from '@/components';
 
 // Payment made form context.

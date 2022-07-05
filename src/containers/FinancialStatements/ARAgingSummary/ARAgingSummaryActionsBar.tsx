@@ -19,7 +19,7 @@ import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import withARAgingSummaryActions from './withARAgingSummaryActions';
 import withARAgingSummary from './withARAgingSummary';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
 
 /**

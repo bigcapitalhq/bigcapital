@@ -1,5 +1,5 @@
 import React from 'react';
-import keyboardShortcuts from 'common/keyboardShortcutsOptions';
+import keyboardShortcuts from '@/common/keyboardShortcutsOptions';
 import { useAbilitiesFilter } from '../utils/useAbilityContext';
 
 /**

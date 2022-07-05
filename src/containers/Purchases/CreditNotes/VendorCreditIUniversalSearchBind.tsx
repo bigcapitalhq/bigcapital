@@ -10,7 +10,7 @@ import {
   AbilitySubject,
   VendorCreditAction,
 } from '../../../common/abilityOption';
-import { DRAWERS } from 'common/drawers';
+import { DRAWERS } from '@/common/drawers';
 
 /**
  * Vendor credit universal search item select action.

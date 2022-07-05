@@ -14,9 +14,9 @@ import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import moment from 'moment';
 
-import { CLASSES } from 'common/classes';
-import { compose, saveInvoke } from 'utils';
-import { useIsValuePassed } from 'hooks';
+import { CLASSES } from '@/common/classes';
+import { compose, saveInvoke } from '@/utils';
+import { useIsValuePassed } from '@/hooks';
 
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { DataTable, Money, Choose, Icon, If } from '@/components';
@@ -24,7 +24,7 @@ import EstimatesEmptyStatus from './EstimatesEmptyStatus';
 import { statusAccessor } from './components';
 import withEstimates from './withEstimates';
 import withEstimateActions from './withEstimateActions';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 // Estimates transactions datatable.
 function EstimatesDataTable({

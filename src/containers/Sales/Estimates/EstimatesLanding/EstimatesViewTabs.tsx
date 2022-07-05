@@ -7,7 +7,7 @@ import withEstimatesActions from './withEstimatesActions';
 import withEstimates from './withEstimates';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
-import { compose, transfromViewsToTabs } from 'utils';
+import { compose, transfromViewsToTabs } from '@/utils';
 
 /**
  * Estimates views tabs.

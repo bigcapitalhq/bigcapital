@@ -1,5 +1,5 @@
 import React from 'react';
-import { formattedAmount } from 'utils';
+import { formattedAmount } from '@/utils';
 
 export function FormatNumber({ value, currency = '', noZero }) {
   return formattedAmount(value, currency, { noZero });

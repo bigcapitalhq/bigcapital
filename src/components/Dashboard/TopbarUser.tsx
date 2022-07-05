@@ -10,14 +10,14 @@ import {
 } from '@blueprintjs/core';
 import { If, FormattedMessage as T } from '@/components';
 
-import { firstLettersArgs } from 'utils';
-import { useAuthActions } from 'hooks/state';
+import { firstLettersArgs } from '@/utils';
+import { useAuthActions } from '@/hooks/state';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSubscriptions from '../../containers/Subscriptions/withSubscriptions';
 
-import { useAuthenticatedAccount } from 'hooks/query'
-import { compose } from 'utils';
+import { useAuthenticatedAccount } from '@/hooks/query'
+import { compose } from '@/utils';
 
 /**
  * Dashboard topbar user.

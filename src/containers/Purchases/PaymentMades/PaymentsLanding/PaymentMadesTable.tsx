@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
-import { TABLES } from 'common/tables';
+import { TABLES } from '@/common/tables';
 import { DataTable, DashboardContentTable } from '@/components';
 
 import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
@@ -12,15 +12,15 @@ import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
 import withPaymentMadeActions from './withPaymentMadeActions';
 import withPaymentMade from './withPaymentMade';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withSettings from '../../../Settings/withSettings';
 
 import { usePaymentMadesTableColumns, ActionsMenu } from './components';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
-import { useMemorizedColumnsWidths } from 'hooks';
+import { useMemorizedColumnsWidths } from '@/hooks';
 
 /**
  * Payment made datatable transactions.

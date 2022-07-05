@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import 'style/pages/Expense/List.scss';
+import '@/style/pages/Expense/List.scss';
 
 import { DashboardPageContent } from '@/components';
 

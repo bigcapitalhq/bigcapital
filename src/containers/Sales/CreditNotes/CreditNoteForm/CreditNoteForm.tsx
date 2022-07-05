@@ -5,7 +5,7 @@ import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import { isEmpty } from 'lodash';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import {
   CreateCreditNoteFormSchema,
   EditCreditNoteFormSchema,
@@ -33,10 +33,10 @@ import {
   orderingLinesIndexes,
   transactionNumber,
   safeSumBy,
-} from 'utils';
+} from '@/utils';
 
-import withSettings from 'containers/Settings/withSettings';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withSettings from '@/containers/Settings/withSettings';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Credit note form.

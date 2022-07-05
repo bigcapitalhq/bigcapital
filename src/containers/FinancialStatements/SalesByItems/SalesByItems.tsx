@@ -13,7 +13,7 @@ import { FinancialStatement } from '@/components';
 import withSalesByItemsActions from './withSalesByItemsActions';
 
 import { getDefaultSalesByItemsQuery } from './utils';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Sales by items.

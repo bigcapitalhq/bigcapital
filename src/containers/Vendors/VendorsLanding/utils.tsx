@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
-import { transformTableStateToQuery } from 'utils';
+import { transformTableStateToQuery } from '@/utils';
 
 // Transform API errors in toasts messages.
 export const transformErrors = (errors) => {

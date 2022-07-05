@@ -12,9 +12,9 @@ import {
   transformToForm,
   orderingLinesIndexes,
   formattedAmount,
-} from 'utils';
+} from '@/utils';
 import { getEntriesTotal } from '../../../Entries/utils';
-import { useCurrentOrganization } from 'hooks/state';
+import { useCurrentOrganization } from '@/hooks/state';
 
 export const ERRORS = {
   PAYMENT_NUMBER_NOT_UNIQUE: 'PAYMENT.NUMBER.NOT.UNIQUE',

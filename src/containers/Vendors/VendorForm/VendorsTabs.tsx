@@ -3,13 +3,13 @@ import { Tabs, Tab } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 import VendorFinanicalPanelTab from './VendorFinanicalPanelTab';
 import VendorAttahmentTab from './VendorAttahmentTab';
 
-import CustomerAddressTabs from 'containers/Customers/CustomerForm/CustomerAddressTabs';
-import CustomerNotePanel from 'containers/Customers/CustomerForm/CustomerNotePanel';
+import CustomerAddressTabs from '@/containers/Customers/CustomerForm/CustomerAddressTabs';
+import CustomerNotePanel from '@/containers/Customers/CustomerForm/CustomerNotePanel';
 
 /**
  * Vendor form tabs.

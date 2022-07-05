@@ -1,6 +1,6 @@
 import React from 'react';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
-import { useVendor } from 'hooks/query';
+import { useVendor } from '@/hooks/query';
 
 const VendorDetailDrawerContext = React.createContext();
 

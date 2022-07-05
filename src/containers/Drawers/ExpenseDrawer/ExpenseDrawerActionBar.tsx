@@ -12,12 +12,12 @@ import { DrawerActionsBar, Can, FormattedMessage as T } from '@/components';
 
 import { ExpenseAction, AbilitySubject } from '../../../common/abilityOption';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Expense drawer action bar.

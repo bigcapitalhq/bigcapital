@@ -12,7 +12,7 @@ import {
   tansformDateValue,
   inputIntent,
   handleDateChange,
-} from 'utils';
+} from '@/utils';
 import { useCustomersBalanceSummaryGeneralContext } from './CustomersBalanceSummaryGeneralProvider';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 

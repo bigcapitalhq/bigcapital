@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
-import { useSettings, useSettingSMSNotifications } from 'hooks/query';
+import { CLASSES } from '@/common/classes';
+import { useSettings, useSettingSMSNotifications } from '@/hooks/query';
 
 const SMSIntegrationContext = React.createContext();
 

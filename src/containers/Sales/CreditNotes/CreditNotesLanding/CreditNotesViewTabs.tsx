@@ -6,7 +6,7 @@ import { DashboardViewsTabs } from '@/components';
 import withCreditNotes from './withCreditNotes';
 import withCreditNotesActions from './withCreditNotesActions';
 
-import { compose, transfromViewsToTabs } from 'utils';
+import { compose, transfromViewsToTabs } from '@/utils';
 import { useCreditNoteListContext } from './CreditNotesListProvider';
 
 /**

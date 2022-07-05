@@ -7,7 +7,7 @@ import { FinancialReportBody } from '../FinancialReportPage';
 import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * @returns {React.JSX}

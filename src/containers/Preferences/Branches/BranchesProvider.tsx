@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
-import { useBranches } from 'hooks/query';
-import { useFeatureCan } from 'hooks/state';
-import { Features } from 'common';
+import { CLASSES } from '@/common/classes';
+import { useBranches } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/common';
 import { isEmpty } from 'lodash';
 
 const BranchesContext = React.createContext();

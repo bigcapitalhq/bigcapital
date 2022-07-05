@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import 'style/pages/ReconcileVendorCredit/ReconcileVendorCreditForm.scss';
+import '@/style/pages/ReconcileVendorCredit/ReconcileVendorCreditForm.scss';
 
 import { AppToaster } from '@/components';
 import { CreateReconcileVendorCreditFormSchema } from './ReconcileVendorCreditForm.schema';

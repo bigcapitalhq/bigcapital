@@ -1,11 +1,11 @@
 import React from 'react';
 
-import 'style/components/Drawers/DrawerTemplate.scss';
+import '@/style/components/Drawers/DrawerTemplate.scss';
 
 import PaperTemplateHeader from './PaperTemplateHeader';
 import PaperTemplateTable from './PaperTemplateTable';
 import PaperTemplateFooter from './PaperTemplateFooter';
-import { updateItemsEntriesTotal } from 'containers/Entries/utils';
+import { updateItemsEntriesTotal } from '@/containers/Entries/utils';
 import intl from 'react-intl-universal';
 
 

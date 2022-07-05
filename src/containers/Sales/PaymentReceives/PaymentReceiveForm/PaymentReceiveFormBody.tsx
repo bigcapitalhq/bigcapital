@@ -2,7 +2,7 @@ import React from 'react';
 import { FastField } from 'formik';
 import PaymentReceiveItemsTable from './PaymentReceiveItemsTable';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 /**
  * Payment Receive form body.

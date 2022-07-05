@@ -8,9 +8,9 @@ import {
   FormatNumberCell,
   TextOverviewTooltipCell,
 } from '../../../components';
-import { Features } from 'common';
-import { getColumnWidth } from 'utils';
-import { useFeatureCan } from 'hooks/state';
+import { Features } from '@/common';
+import { getColumnWidth } from '@/utils';
+import { useFeatureCan } from '@/hooks/state';
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 
 /**

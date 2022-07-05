@@ -5,12 +5,12 @@ import { Formik } from 'formik';
 import { isEmpty } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 
-import 'style/pages/Preferences/Roles/Form.scss';
+import '@/style/pages/Preferences/Roles/Form.scss';
 
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { CreateRolesFormSchema, EditRolesFormSchema } from './RolesForm.schema';
 import { useRolesFormContext } from './RolesFormProvider';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import RolesFormContent from './RolesFormContent';
 import {
   getNewRoleInitialValues,
@@ -18,7 +18,7 @@ import {
   transformToObject,
 } from './utils';
 import { handleDeleteErrors } from '../utils';
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 
 const defaultValues = {
   role_name: '',

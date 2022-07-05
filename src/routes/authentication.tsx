@@ -6,31 +6,31 @@ export default [
   {
     path: `${BASE_URL}/login`,
     component: LazyLoader({
-      loader: () => import('containers/Authentication/Login'),
+      loader: () => import('@/containers/Authentication/Login'),
     }),
   },
   {
     path: `${BASE_URL}/send_reset_password`,
     component: LazyLoader({
-      loader: () => import('containers/Authentication/SendResetPassword'),
+      loader: () => import('@/containers/Authentication/SendResetPassword'),
     }),
   },
   {
     path: `${BASE_URL}/reset_password/:token`,
     component: LazyLoader({
-      loader: () => import('containers/Authentication/ResetPassword'),
+      loader: () => import('@/containers/Authentication/ResetPassword'),
     }),
   },
   {
     path: `${BASE_URL}/invite/:token/accept`,
     component: LazyLoader({
-      loader: () => import('containers/Authentication/InviteAccept'),
+      loader: () => import('@/containers/Authentication/InviteAccept'),
     }),
   },
   {
     path: `${BASE_URL}/register`,
     component: LazyLoader({
-      loader: () => import('containers/Authentication/Register'),
+      loader: () => import('@/containers/Authentication/Register'),
     }),
   }
 ];

@@ -4,8 +4,8 @@ import moment from 'moment';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
 
-import { useAppQueryString } from 'hooks';
-import { transformToForm } from 'utils';
+import { useAppQueryString } from '@/hooks';
+import { transformToForm } from '@/utils';
 import { castArray } from 'lodash';
 
 /**

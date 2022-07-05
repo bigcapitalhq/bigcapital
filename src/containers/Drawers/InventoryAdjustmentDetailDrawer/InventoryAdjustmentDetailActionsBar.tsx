@@ -3,7 +3,7 @@ import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
 
 import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawerProvider';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
 
 import { Icon, DrawerActionsBar, FormattedMessage as T, Can } from '@/components';
 import {
@@ -11,7 +11,7 @@ import {
   AbilitySubject,
 } from '../../../common/abilityOption';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Inventory adjustment detail actions bar.

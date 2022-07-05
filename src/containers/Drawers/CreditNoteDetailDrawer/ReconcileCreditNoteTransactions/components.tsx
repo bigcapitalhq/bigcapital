@@ -2,7 +2,7 @@ import React from 'react';
 import { Intent, MenuItem, Menu } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import { Can, FormatDateCell, Icon } from '@/components';
-import { safeCallback } from 'utils';
+import { safeCallback } from '@/utils';
 import {
   CreditNoteAction,
   AbilitySubject,

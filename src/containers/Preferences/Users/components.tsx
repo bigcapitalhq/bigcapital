@@ -11,7 +11,7 @@ import {
   MenuItem,
   Position,
 } from '@blueprintjs/core';
-import { safeCallback, firstLettersArgs } from 'utils';
+import { safeCallback, firstLettersArgs } from '@/utils';
 import { Icon, If } from '@/components';
 
 /**

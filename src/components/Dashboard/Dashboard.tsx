@@ -1,18 +1,18 @@
 import React from 'react';
 import { Switch, Route } from 'react-router';
 
-import 'style/pages/Dashboard/Dashboard.scss';
+import '@/style/pages/Dashboard/Dashboard.scss';
 
-import { Sidebar } from 'containers/Dashboard/Sidebar/Sidebar';
+import { Sidebar } from '@/containers/Dashboard/Sidebar/Sidebar';
 import DashboardContent from '@/components/Dashboard/DashboardContent';
 import DialogsContainer from '@/components/DialogsContainer';
 import PreferencesPage from '@/components/Preferences/PreferencesPage';
-import DashboardUniversalSearch from 'containers/UniversalSearch/DashboardUniversalSearch';
+import DashboardUniversalSearch from '@/containers/UniversalSearch/DashboardUniversalSearch';
 import DashboardSplitPane from '@/components/Dashboard/DashboardSplitePane';
 import GlobalHotkeys from './GlobalHotkeys';
 import DashboardProvider from './DashboardProvider';
 import DrawersContainer from '@/components/DrawersContainer';
-import AlertsContainer from 'containers/AlertsContainer';
+import AlertsContainer from '@/containers/AlertsContainer';
 import EnsureSubscriptionIsActive from '../Guards/EnsureSubscriptionIsActive';
 
 /**

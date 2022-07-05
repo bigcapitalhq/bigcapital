@@ -8,10 +8,10 @@ import { DataTable, AppToaster } from '@/components';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import { useRolesTableColumns, ActionsMenu } from './components';
-import withAlertsActions from 'containers/Alert/withAlertActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
 import { useRolesContext } from './RolesListProvider';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Roles data table.

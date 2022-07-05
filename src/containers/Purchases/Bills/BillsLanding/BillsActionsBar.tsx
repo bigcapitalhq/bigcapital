@@ -25,12 +25,12 @@ import { BillAction, AbilitySubject } from '../../../../common/abilityOption';
 
 import withBillsActions from './withBillsActions';
 import withBills from './withBills';
-import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withSettings from 'containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { useBillsListContext } from './BillsListProvider';
-import { useRefreshBills } from 'hooks/query/bills';
-import { compose } from 'utils';
+import { useRefreshBills } from '@/hooks/query/bills';
+import { compose } from '@/utils';
 
 /**
  * Bills actions bar.

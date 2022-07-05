@@ -1,14 +1,14 @@
 import React from 'react';
 
 const BillOpenAlert = React.lazy(() =>
-  import('containers/Alerts/Bills/BillOpenAlert'),
+  import('@/containers/Alerts/Bills/BillOpenAlert'),
 );
 const BillDeleteAlert = React.lazy(() =>
-  import('containers/Alerts/Bills/BillDeleteAlert'),
+  import('@/containers/Alerts/Bills/BillDeleteAlert'),
 );
 
 const BillLocatedLandedCostDeleteAlert = React.lazy(() =>
-  import('containers/Alerts/Bills/BillLocatedLandedCostDeleteAlert'),
+  import('@/containers/Alerts/Bills/BillLocatedLandedCostDeleteAlert'),
 );
 
 export default [

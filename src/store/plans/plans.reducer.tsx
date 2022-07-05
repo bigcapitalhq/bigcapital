@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import intl from 'react-intl-universal';
-import t from 'store/types';
+import t from '@/store/types';
 
 const getSubscriptionPeriods = () => [
   {

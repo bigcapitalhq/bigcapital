@@ -11,9 +11,9 @@ import {
 
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import {
   SaleEstimateAction,
   AbilitySubject,
@@ -27,7 +27,7 @@ import {
   Can,
 } from '@/components';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Estimate read-only details actions bar of the drawer.

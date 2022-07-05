@@ -4,7 +4,7 @@ import { Formik, Form } from 'formik';
 import { isEmpty, sumBy } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import classNames from 'classnames';
 
 import {
@@ -17,12 +17,12 @@ import WarehouseTransferEditorField from './WarehouseTransferEditorField';
 import WarehouseTransferFormFooter from './WarehouseTransferFormFooter';
 import WarehouseTransferFloatingActions from './WarehouseTransferFloatingActions';
 import WarehouseTransferFormDialog from './WarehouseTransferFormDialog';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withSettings from 'containers/Settings/withSettings';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { AppToaster } from '@/components';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
-import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
+import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 import { WarehouseTransferObserveItemsCost } from './components';
 import {
   defaultWarehouseTransfer,

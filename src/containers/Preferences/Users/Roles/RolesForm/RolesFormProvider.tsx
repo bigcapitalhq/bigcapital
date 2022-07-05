@@ -1,13 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 import {
   useCreateRolePermissionSchema,
   useEditRolePermissionSchema,
   usePermissionsSchema,
   useRolePermission,
-} from 'hooks/query';
+} from '@/hooks/query';
 import PreferencesPageLoader from '../../../PreferencesPageLoader';
 
 const RolesFormContext = React.createContext();

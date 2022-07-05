@@ -18,7 +18,7 @@ import {
   Money,
   Can,
 } from '@/components';
-import { formattedAmount, safeCallback, isBlank, calculateStatus } from 'utils';
+import { formattedAmount, safeCallback, isBlank, calculateStatus } from '@/utils';
 import {
   BillAction,
   PaymentMadeAction,

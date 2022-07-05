@@ -3,8 +3,8 @@ import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import {
   createTableStateReducers,
-} from 'store/tableState.reducer';
-import t from 'store/types';
+} from '@/store/tableState.reducer';
+import t from '@/store/types';
 
 // Initial state.
 const initialState = {

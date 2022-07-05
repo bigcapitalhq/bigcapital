@@ -10,7 +10,7 @@ import withWarehouseTransfers from './withWarehouseTransfers';
 import withWarehouseTransfersActions from './withWarehouseTransfersActions';
 
 import { WarehouseTransfersListProvider } from './WarehouseTransfersListProvider';
-import { transformTableStateToQuery, compose } from 'utils';
+import { transformTableStateToQuery, compose } from '@/utils';
 
 function WarehouseTransfersList({
   // #withWarehouseTransfers

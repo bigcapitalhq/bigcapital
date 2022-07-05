@@ -7,8 +7,8 @@ import { DataTable, FinancialSheet } from '@/components';
 import { useVendorsTransactionsColumns } from './components';
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 
-import { defaultExpanderReducer, tableRowTypesToClassnames } from 'utils';
-import { TableStyle } from 'common';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import { TableStyle } from '@/common';
 
 /**
  * Vendors transactions table.

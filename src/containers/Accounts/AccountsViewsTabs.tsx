@@ -8,7 +8,7 @@ import { useAccountsChartContext } from '@/containers/Accounts/AccountsChartProv
 import withAccountsTableActions from './withAccountsTableActions';
 import withAccounts from './withAccounts';
 
-import { compose, transfromViewsToTabs } from 'utils';
+import { compose, transfromViewsToTabs } from '@/utils';
 
 /**
  * Accounts views tabs.

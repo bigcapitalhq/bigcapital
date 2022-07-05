@@ -1,6 +1,6 @@
 // @flow
 import { createSelector } from 'reselect';
-import { getItemById } from 'store/selectors';
+import { getItemById } from '@/store/selectors';
 
 const currenciesItemsSelector = (state) => state.currencies.data;
 const currenciesCodePropSelector = (state, props) => props.currencyId;

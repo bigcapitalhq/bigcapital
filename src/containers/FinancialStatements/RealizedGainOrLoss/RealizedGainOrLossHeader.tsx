@@ -6,13 +6,13 @@ import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
 import RealizedGainOrLossGeneralPanel from './RealizedGainOrLossGeneralPanel';
 
 import withRealizedGainOrLoss from './withRealizedGainOrLoss';
 import withRealizedGainOrLossActions from './withRealizedGainOrLossActions';
 
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 
 /**
  * Realized Gain or Loss.header.

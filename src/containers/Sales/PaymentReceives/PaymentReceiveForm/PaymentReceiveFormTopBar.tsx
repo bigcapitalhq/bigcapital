@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Alignment, NavbarGroup, Button, Classes } from '@blueprintjs/core';
 import { useSetPrimaryBranchToForm } from './utils';
-import { useFeatureCan } from 'hooks/state';
+import { useFeatureCan } from '@/hooks/state';
 import {
   Icon,
   BranchSelect,
@@ -11,7 +11,7 @@ import {
   DetailsBarSkeletonBase,
 } from '@/components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
-import { Features } from 'common';
+import { Features } from '@/common';
 
 /**
  * Payment receive from top bar.

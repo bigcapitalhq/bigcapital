@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   getPaymentMadesTableStateFactory,
   paymentsTableStateChangedFactory,
-} from 'store/PaymentMades/paymentMades.selector';
+} from '@/store/PaymentMades/paymentMades.selector';
 
 export default (mapState) => {
   const getPaymentMadesTableState = getPaymentMadesTableStateFactory();

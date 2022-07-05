@@ -29,7 +29,7 @@ import withCreditNotesActions from './withCreditNotesActions';
 import withSettings from '../../../Settings/withSettings';
 import withSettingsActions from '../../../Settings/withSettingsActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Credit note table actions bar.

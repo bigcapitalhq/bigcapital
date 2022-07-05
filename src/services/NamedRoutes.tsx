@@ -1,3 +1,3 @@
-import dashboard from 'routes/dashboard';
+import dashboard from '@/routes/dashboard';
 
 

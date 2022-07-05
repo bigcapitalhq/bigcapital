@@ -7,10 +7,10 @@ import intl from 'react-intl-universal'
 
 import { MenuItemNestedText, FormattedMessage as T } from '@/components';
 import { filterAccountsByQuery } from './utils';
-import { nestedArrayToflatten } from 'utils';
-import { CLASSES } from 'common/classes';
+import { nestedArrayToflatten } from '@/utils';
+import { CLASSES } from '@/common/classes';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 // Create new account renderer.
 const createNewItemRenderer = (query, active, handleClick) => {

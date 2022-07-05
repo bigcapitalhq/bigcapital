@@ -3,13 +3,13 @@ import classNames from 'classnames';
 import styled from 'styled-components';
 
 import { Card } from '@/components';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import {
   useCurrentOrganization,
   useUpdateOrganization,
   useDateFormats,
   useOrgBaseCurrencyMutateAbilities,
-} from 'hooks/query';
+} from '@/hooks/query';
 import PreferencesPageLoader from '../PreferencesPageLoader';
 
 const GeneralFormContext = createContext();

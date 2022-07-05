@@ -23,9 +23,9 @@ import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvide
 import withWarehouseTransfers from './withWarehouseTransfers';
 import withWarehouseTransfersActions from './withWarehouseTransfersActions';
 import withSettings from '../../Settings/withSettings';
-import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Warehouse Transfers actions bar.

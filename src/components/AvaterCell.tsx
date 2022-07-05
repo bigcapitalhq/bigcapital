@@ -1,5 +1,5 @@
 import React from 'react';
-import { firstLettersArgs } from 'utils';
+import { firstLettersArgs } from '@/utils';
 
 export default function AvatarCell({ row: { original }, size }) {
   return (

@@ -12,12 +12,12 @@ import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
 import { ItemAction, AbilitySubject } from '../../../common/abilityOption';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { Icon, FormattedMessage as T, Can } from '@/components';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Item action-bar of readonly details drawer.

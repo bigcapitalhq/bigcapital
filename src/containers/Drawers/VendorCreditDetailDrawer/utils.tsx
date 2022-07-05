@@ -10,7 +10,7 @@ import {
   Tag,
   Intent,
 } from '@blueprintjs/core';
-import { getColumnWidth } from 'utils';
+import { getColumnWidth } from '@/utils';
 import {
   Icon,
   FormattedMessage as T,

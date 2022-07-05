@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setOrganizations } from 'store/organizations/organizations.actions';
-import { getCurrentOrganizationFactory } from 'store/authentication/authentication.selectors';
+import { setOrganizations } from '@/store/organizations/organizations.actions';
+import { getCurrentOrganizationFactory } from '@/store/authentication/authentication.selectors';
 
 export const useSetOrganizations = () => {
   const dispatch = useDispatch();

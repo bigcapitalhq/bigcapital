@@ -2,17 +2,17 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DataTable } from '../../../../../components';
-import { TableStyle } from 'common';
+import { TableStyle } from '@/common';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
-import { useItemAssociatedEstimateTransactions } from 'hooks/query';
+import { useItemAssociatedEstimateTransactions } from '@/hooks/query';
 import { useEstimateTransactionsColumns, ActionsMenu } from './components';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Esimtate payment transactions.

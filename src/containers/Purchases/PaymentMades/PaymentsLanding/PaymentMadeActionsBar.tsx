@@ -25,17 +25,17 @@ import {
 import withPaymentMade from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
 
-import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withSettings from 'containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
-import { useRefreshPaymentMades } from 'hooks/query/paymentMades';
+import { useRefreshPaymentMades } from '@/hooks/query/paymentMades';
 import {
   PaymentMadeAction,
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Payment made actions bar.

@@ -4,11 +4,11 @@ import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from '@/components';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { usePaymentReceiveInnerContext } from './PaymentReceiveInnerProvider';
 import { DataTableEditable } from '@/components';
 import { usePaymentReceiveEntriesColumns } from './components';
-import { compose, updateTableCell } from 'utils';
+import { compose, updateTableCell } from '@/utils';
 
 /**
  * Payment receive items table.

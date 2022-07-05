@@ -13,7 +13,7 @@ import {
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
 
-import 'style/pages/ManualJournal/JournalNumberDialog.scss';
+import '@/style/pages/ManualJournal/JournalNumberDialog.scss';
 
 /**
  * Journal number dialog's content.

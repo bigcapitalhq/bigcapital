@@ -1,5 +1,5 @@
-import { createDeepEqualSelector } from 'utils';
-import { paginationLocationQuery } from 'store/selectors';
+import { createDeepEqualSelector } from '@/utils';
+import { paginationLocationQuery } from '@/store/selectors';
 
 const exchangeRateTableState = (state) => {
   return state.exchangeRates.tableState;

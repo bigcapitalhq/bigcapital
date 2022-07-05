@@ -8,7 +8,7 @@ import ItemsEmptyStatus from './ItemsEmptyStatus';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
-import { TABLES } from 'common/tables';
+import { TABLES } from '@/common/tables';
 
 import withItemsActions from '@/containers/Items/withItemsActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';

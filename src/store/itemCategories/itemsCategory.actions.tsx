@@ -1,4 +1,4 @@
-import t from 'store/types';
+import t from '@/store/types';
 
 /**
  * Sets the items categories table state.

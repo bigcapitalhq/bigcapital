@@ -4,14 +4,14 @@ import { DataTable, Card, FormattedMessage as T } from '@/components';
 import { useLocatedLandedCostColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from './BillDrawerProvider';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { TableStyle } from '../../../common';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 
 /**

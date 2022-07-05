@@ -3,10 +3,10 @@ import { Switch, Route } from 'react-router-dom';
 
 import PaymentMadeViewTabs from './PaymentMadeViewTabs';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Payment mades view page.

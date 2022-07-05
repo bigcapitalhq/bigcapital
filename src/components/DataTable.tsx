@@ -11,10 +11,10 @@ import {
 } from 'react-table';
 import { useSticky } from 'react-table-sticky';
 
-import { useUpdateEffect } from 'hooks';
-import { saveInvoke } from 'utils';
+import { useUpdateEffect } from '@/hooks';
+import { saveInvoke } from '@/utils';
 
-import 'style/components/DataTable/DataTable.scss';
+import '@/style/components/DataTable/DataTable.scss';
 
 import TableNoResultsRow from './Datatable/TableNoResultsRow';
 import TableLoadingRow from './Datatable/TableLoading';

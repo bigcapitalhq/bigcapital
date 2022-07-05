@@ -2,7 +2,7 @@ import React from 'react';
 import { ItemCategoryProvider } from './ItemCategoryProvider';
 import ItemCategoryForm from './ItemCategoryForm';
 
-import 'style/pages/ItemCategory/ItemCategoryDialog.scss';
+import '@/style/pages/ItemCategory/ItemCategoryDialog.scss';
 
 /**
  * Item Category form dialog content.

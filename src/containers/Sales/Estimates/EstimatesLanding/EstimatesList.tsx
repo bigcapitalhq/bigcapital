@@ -1,7 +1,7 @@
 import React from 'react';
 import { DashboardContentTable, DashboardPageContent } from '@/components';
 
-import 'style/pages/SaleEstimate/List.scss';
+import '@/style/pages/SaleEstimate/List.scss';
 
 import EstimatesActionsBar from './EstimatesActionsBar';
 import EstimatesViewTabs from './EstimatesViewTabs';
@@ -11,7 +11,7 @@ import withEstimates from './withEstimates';
 import withEstimatesActions from './withEstimatesActions';
 
 import { EstimatesListProvider } from './EstimatesListProvider';
-import { compose, transformTableStateToQuery } from 'utils';
+import { compose, transformTableStateToQuery } from '@/utils';
 
 /**
  * Sale estimates list page.

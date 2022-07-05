@@ -3,7 +3,7 @@ import React from 'react';
 import InviteUserForm from './InviteUserForm';
 import { InviteUserFormProvider } from './InviteUserFormProvider';
 
-import 'style/pages/Users/InviteFormDialog.scss';
+import '@/style/pages/Users/InviteFormDialog.scss';
 
 /**
  * Invite user dialog content.

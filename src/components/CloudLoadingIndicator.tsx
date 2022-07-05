@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Spinner } from '@blueprintjs/core';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import If from './Utils/If';
 
 export default function CloudLoadingIndicator({

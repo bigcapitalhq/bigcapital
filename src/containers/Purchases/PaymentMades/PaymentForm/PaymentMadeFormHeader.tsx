@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { sumBy } from 'lodash';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { Money } from '@/components';
 import { FormattedMessage as T } from '@/components';
 

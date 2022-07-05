@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Card } from '@/components';
 
-import { useTransactionsByReference } from 'hooks/query';
+import { useTransactionsByReference } from '@/hooks/query';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 import JournalEntriesTable, {

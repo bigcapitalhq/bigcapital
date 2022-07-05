@@ -6,13 +6,13 @@ import moment from 'moment';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
 import ARAgingSummaryHeaderGeneral from './ARAgingSummaryHeaderGeneral';
 
 import withARAgingSummary from './withARAgingSummary';
 import withARAgingSummaryActions from './withARAgingSummaryActions';
 
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 import ARAgingSummaryHeaderDimensions from './ARAgingSummaryHeaderDimensions';
 
 /**

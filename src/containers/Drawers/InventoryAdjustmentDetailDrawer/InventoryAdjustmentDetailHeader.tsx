@@ -8,7 +8,7 @@ import clsx from 'classnames';
 import { DetailsMenu, DetailItem, FormatDate } from '@/components';
 import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawerProvider';
 
-import InventoryAdjustmentDrawerCls from 'style/components/Drawers/InventoryAdjustmentDrawer.module.scss';
+import InventoryAdjustmentDrawerCls from '@/style/components/Drawers/InventoryAdjustmentDrawer.module.scss';
 
 /**
  * Inventory detail header.

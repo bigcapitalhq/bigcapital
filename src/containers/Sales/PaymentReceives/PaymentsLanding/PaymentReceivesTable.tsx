@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { compose } from 'utils';
-import { TABLES } from 'common/tables';
+import { compose } from '@/utils';
+import { TABLES } from '@/common/tables';
 
 import { DataTable, DashboardContentTable } from '@/components';
 import PaymentReceivesEmptyStatus from './PaymentReceivesEmptyStatus';
@@ -11,13 +11,13 @@ import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
 import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withSettings from '../../../Settings/withSettings';
 
 import { usePaymentReceivesColumns, ActionsMenu } from './components';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
-import { useMemorizedColumnsWidths } from 'hooks';
+import { useMemorizedColumnsWidths } from '@/hooks';
 
 /**
  * Payment receives datatable.

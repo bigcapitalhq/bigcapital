@@ -1,5 +1,5 @@
 import ApiService from "services/ApiService";
-import t from 'store/types';
+import t from '@/store/types';
 
 export const submitView = ({ form }) => {
   return (dispatch) => ApiService.post('views', form);

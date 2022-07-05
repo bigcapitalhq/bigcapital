@@ -14,7 +14,7 @@ import BalanceSheetHeaderComparisonPanal from './BalanceSheetHeaderComparisonPan
 import BalanceSheetHeaderDimensionsPanel from './BalanceSheetHeaderDimensionsPanel';
 import FinancialStatementHeader from '../../FinancialStatements/FinancialStatementHeader';
 
-import { compose, transformToForm } from 'utils';
+import { compose, transformToForm } from '@/utils';
 import {
   getBalanceSheetHeaderValidationSchema,
   getDefaultBalanceSheetQuery,

@@ -24,15 +24,15 @@ import {
   AbilitySubject,
 } from '../../../../common/abilityOption';
 
-import { useRefreshInvoices } from 'hooks/query/invoices';
+import { useRefreshInvoices } from '@/hooks/query/invoices';
 import { useInvoicesListContext } from './InvoicesListProvider';
 
-import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withSettings from 'containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withSettings from '@/containers/Settings/withSettings';
 import withInvoiceActions from './withInvoiceActions';
 import withInvoices from './withInvoices';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Invoices table actions bar.

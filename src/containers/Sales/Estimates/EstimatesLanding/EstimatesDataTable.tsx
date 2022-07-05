@@ -7,17 +7,17 @@ import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
 import withEstimatesActions from './withEstimatesActions';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '../../../Settings/withSettings';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
-import { useMemorizedColumnsWidths } from 'hooks';
+import { useMemorizedColumnsWidths } from '@/hooks';
 import { ActionsMenu, useEstiamtesTableColumns } from './components';
-import { TABLES } from 'common/tables';
+import { TABLES } from '@/common/tables';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Estimates datatable.

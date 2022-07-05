@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Features } from 'common';
-import { useBranches } from 'hooks/query';
-import { useFeatureCan } from 'hooks/state';
+import { Features } from '@/common';
+import { useBranches } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
 const ProfitLossSheetHeaderDimensionsPanelContext = React.createContext();

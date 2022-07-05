@@ -5,7 +5,7 @@ import { FinancialReportBody } from '../FinancialReportPage';
 import { FinancialSheetSkeleton } from '../../../components/FinancialSheet';
 import { JournalTable } from './JournalTable';
 
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import { useJournalSheetContext } from './JournalProvider';
 

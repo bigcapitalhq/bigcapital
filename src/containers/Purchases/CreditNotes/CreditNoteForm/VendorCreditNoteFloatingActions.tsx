@@ -12,7 +12,7 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { If, Icon, FormattedMessage as T } from '@/components';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import classNames from 'classnames';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 

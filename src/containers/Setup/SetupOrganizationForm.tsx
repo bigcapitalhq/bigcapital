@@ -10,16 +10,16 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
-import useAutofocus from 'hooks/useAutofocus'
+import useAutofocus from '@/hooks/useAutofocus'
 import { FormattedMessage as T } from '@/components';
-import { getCountries } from 'common/countries';
+import { getCountries } from '@/common/countries';
 
 import { Col, Row, ListSelect } from '@/components';
-import { inputIntent } from 'utils';
+import { inputIntent } from '@/utils';
 
-import { getFiscalYear } from 'common/fiscalYearOptions';
-import { getLanguages } from 'common/languagesOptions';
-import { getAllCurrenciesOptions } from 'common/currencies';
+import { getFiscalYear } from '@/common/fiscalYearOptions';
+import { getLanguages } from '@/common/languagesOptions';
+import { getAllCurrenciesOptions } from '@/common/currencies';
 
 /**
  * Setup organization form.

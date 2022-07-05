@@ -11,7 +11,7 @@ import {
   useSetPrimaryBranchToForm,
   useSetPrimaryWarehouseToForm,
 } from './utils';
-import { useFeatureCan } from 'hooks/state';
+import { useFeatureCan } from '@/hooks/state';
 import {
   Icon,
   BranchSelect,
@@ -21,7 +21,7 @@ import {
   DetailsBarSkeletonBase,
 } from '@/components';
 import { useBillFormContext } from './BillFormProvider';
-import { Features } from 'common';
+import { Features } from '@/common';
 
 /**
  * Bill form topbar .

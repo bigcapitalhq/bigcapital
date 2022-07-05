@@ -1,6 +1,6 @@
 import React from 'react';
  
-import 'style/pages/Items/ItemAdjustmentDialog.scss';
+import '@/style/pages/Items/ItemAdjustmentDialog.scss';
  
 import { InventoryAdjustmentFormProvider } from './InventoryAdjustmentFormProvider';
 import InventoryAdjustmentForm from './InventoryAdjustmentForm';

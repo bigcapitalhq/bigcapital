@@ -4,7 +4,7 @@ import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 
-import 'style/pages/Items/Form.scss';
+import '@/style/pages/Items/Form.scss';
 
 import { CLASSES } from '@/common/classes';
 import AppToaster from '@/components/AppToaster';

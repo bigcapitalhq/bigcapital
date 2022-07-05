@@ -2,8 +2,8 @@ import React from 'react';
 import { Icon, For } from '@/components';
 import { FormattedMessage as T } from '@/components';
 
-import { getFooterLinks } from 'config/footerLinks';
-import { useAuthActions } from 'hooks/state';
+import { getFooterLinks } from '@/config/footerLinks';
+import { useAuthActions } from '@/hooks/state';
 
 /**
  * Footer item link.

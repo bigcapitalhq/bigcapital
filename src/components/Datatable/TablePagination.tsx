@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from 'react';
 import { If, Pagination } from '@/components';
 import TableContext from './TableContext';
-import { saveInvoke } from 'utils';
+import { saveInvoke } from '@/utils';
 
 /**
  * Table pagination.

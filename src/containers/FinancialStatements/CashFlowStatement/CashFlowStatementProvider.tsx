@@ -1,6 +1,6 @@
 import React from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { useCashFlowStatementReport } from 'hooks/query';
+import { useCashFlowStatementReport } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const CashFLowStatementContext = React.createContext();

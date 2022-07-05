@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 import { DataTable } from '@/components';
 
@@ -8,8 +8,8 @@ import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import { ActionMenuList, useCurrenciesTableColumns } from './components';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withAlertActions from 'containers/Alert/withAlertActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
 /**
  * Currencies table.

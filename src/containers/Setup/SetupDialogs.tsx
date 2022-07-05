@@ -1,5 +1,5 @@
 import React from 'react';
-import PaymentViaVoucherDialog from 'containers/Dialogs/PaymentViaVoucherDialog';
+import PaymentViaVoucherDialog from '@/containers/Dialogs/PaymentViaVoucherDialog';
 
 /**
  * Setup dialogs.

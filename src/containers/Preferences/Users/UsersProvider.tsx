@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import { useUsers } from 'hooks/query';
+import { useUsers } from '@/hooks/query';
 
 const UsersListContext = createContext();
 

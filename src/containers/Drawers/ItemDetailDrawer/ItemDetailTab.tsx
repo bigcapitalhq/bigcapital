@@ -6,8 +6,8 @@ import { ItemPaymentTransactions } from './ItemPaymentTransactions';
 import ItemDetailHeader from './ItemDetailHeader';
 import WarehousesLocationsTable from './WarehousesLocations';
 
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 
 export default function ItemDetailTab() {
   const { featureCan } = useFeatureCan();

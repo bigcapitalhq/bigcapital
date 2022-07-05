@@ -1,7 +1,7 @@
 import React from 'react';
 import * as R from 'ramda';
 
-import 'style/pages/Subscription/BillingPlans.scss';
+import '@/style/pages/Subscription/BillingPlans.scss';
 
 import BillingPlansInput from './BillingPlansInput';
 import BillingPeriodsInput from './BillingPeriodsInput';

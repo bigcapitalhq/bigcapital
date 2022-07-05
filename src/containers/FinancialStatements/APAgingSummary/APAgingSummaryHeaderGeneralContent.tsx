@@ -24,7 +24,7 @@ import {
   tansformDateValue,
   inputIntent,
   handleDateChange,
-} from 'utils';
+} from '@/utils';
 
 /**
  * AP Aging Summary - Drawer Header - General panel - Content.

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/components/MaterialProgressBar.scss';
+import '@/style/components/MaterialProgressBar.scss';
 
 export default function MaterialProgressBar() {
   return (

@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   getInvoicesTableStateFactory,
   isInvoicesTableStateChangedFactory,
-} from 'store/Invoice/invoices.selector';
+} from '@/store/Invoice/invoices.selector';
 
 export default (mapState) => {
   const getInvoicesTableState = getInvoicesTableStateFactory();

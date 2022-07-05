@@ -12,12 +12,12 @@ import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { useContactDetailDrawerContext } from './ContactDetailDrawerProvider';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { Icon, FormattedMessage as T } from '@/components';
 
-import { safeCallback, compose } from 'utils';
+import { safeCallback, compose } from '@/utils';
 
 function ContactDetailActionsBar({
   // #withAlertsActions

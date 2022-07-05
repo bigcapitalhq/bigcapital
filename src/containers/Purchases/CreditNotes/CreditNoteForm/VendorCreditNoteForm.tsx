@@ -5,7 +5,7 @@ import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import { isEmpty, pick } from 'lodash';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import {
   CreateCreditNoteFormSchema,
   EditCreditNoteFormSchema,
@@ -21,7 +21,7 @@ import VendorCreditNoteFormTopBar from './VendorCreditNoteFormTopBar';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 
 import { AppToaster } from '@/components';
-import { compose, safeSumBy, transactionNumber } from 'utils';
+import { compose, safeSumBy, transactionNumber } from '@/utils';
 import {
   defaultVendorsCreditNote,
   filterNonZeroEntries,
@@ -29,8 +29,8 @@ import {
   transformFormValuesToRequest,
 } from './utils';
 
-import withSettings from 'containers/Settings/withSettings';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withSettings from '@/containers/Settings/withSettings';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Vendor Credit note form.

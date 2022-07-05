@@ -7,7 +7,7 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import classNames from 'classnames';
 import styled from 'styled-components';
 import {
@@ -24,8 +24,8 @@ import {
 } from './utils';
 
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
-import withSettings from 'containers/Settings/withSettings';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { CreditNoteExchangeRateInputField } from './components';
 import {
   momentFormatter,
@@ -33,7 +33,7 @@ import {
   tansformDateValue,
   inputIntent,
   handleDateChange,
-} from 'utils';
+} from '@/utils';
 
 /**
  * Credit note form header fields.

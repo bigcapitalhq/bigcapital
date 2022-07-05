@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react';
 
 import FinancialReportPage from '../FinancialReportPage';
-import { useBalanceSheet } from 'hooks/query';
+import { useBalanceSheet } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const BalanceSheetContext = createContext();

@@ -5,15 +5,15 @@ import { If, Alert, T } from '@/components';
 
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 
-import 'style/pages/Billing/BillingPage.scss';
+import '@/style/pages/Billing/BillingPage.scss';
 
 import { MasterBillingTabs } from './SubscriptionTabs';
 
 import withBillingActions from './withBillingActions';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withSubscriptionPlansActions from './withSubscriptionPlansActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 import { getBillingFormValidationSchema } from './utils';
 import withSubscriptions from './withSubscriptions';
 

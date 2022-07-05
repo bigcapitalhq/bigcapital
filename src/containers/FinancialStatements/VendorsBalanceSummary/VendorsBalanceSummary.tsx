@@ -13,9 +13,9 @@ import { VendorBalanceSummaryBody } from './VendorsBalanceSummaryBody';
 
 import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions';
 
-import { TableStyle } from 'common';
+import { TableStyle } from '@/common';
 import { getDefaultVendorsBalanceQuery } from './utils';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Vendors Balance summary.

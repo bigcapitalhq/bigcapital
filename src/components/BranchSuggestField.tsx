@@ -5,7 +5,7 @@ import { Suggest } from '@blueprintjs/select';
 import { FormattedMessage as T } from '@/components';
 
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 /**
  * branch suggest field.

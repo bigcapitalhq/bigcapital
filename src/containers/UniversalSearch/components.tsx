@@ -1,7 +1,7 @@
 import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
 
-import { highlightText } from 'utils';
+import { highlightText } from '@/utils';
 import { getUniversalSearchBind } from './utils';
 
 /**

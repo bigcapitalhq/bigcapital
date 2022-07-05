@@ -2,10 +2,10 @@ import React from 'react';
 import { FormattedMessage as T } from '@/components';
 import { Classes, Icon, H4, Button } from '@blueprintjs/core';
 
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import styled from 'styled-components';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Drawer header content.

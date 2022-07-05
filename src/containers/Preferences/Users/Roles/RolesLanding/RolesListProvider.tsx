@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
-import { useRoles } from 'hooks/query';
+import { CLASSES } from '@/common/classes';
+import { useRoles } from '@/hooks/query';
 
 const RolesListContext = React.createContext();
 

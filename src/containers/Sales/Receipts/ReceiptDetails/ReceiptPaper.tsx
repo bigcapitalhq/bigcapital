@@ -1,6 +1,6 @@
 import React from 'react';
 import { useReceiptDrawerContext } from './ReceiptDrawerProvider';
-import PaperTemplate from 'containers/Drawers/PaperTemplate/PaperTemplate';
+import PaperTemplate from '@/containers/Drawers/PaperTemplate/PaperTemplate';
 import intl from 'react-intl-universal';
 
 export default function ReceiptPaper() {

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { useWarehouses, useBranches } from 'hooks/query';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+import { useWarehouses, useBranches } from '@/hooks/query';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
 const InventoryValuationHeaderDimensionsPanelContext = React.createContext();

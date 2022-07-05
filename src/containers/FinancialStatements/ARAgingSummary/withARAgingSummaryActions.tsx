@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { toggleARAgingSummaryFilterDrawer } from 'store/financialStatement/financialStatements.actions';
+import { toggleARAgingSummaryFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
 
 const mapActionsToProps = (dispatch) => ({
   toggleARAgingSummaryFilterDrawer: (toggle) => 

@@ -13,7 +13,7 @@ import { PurchasesByItemsBody } from './PurchasesByItemsBody';
 import withPurchasesByItemsActions from './withPurchasesByItemsActions';
 
 import { getDefaultPurchasesByItemsQuery } from './utils';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Purchases by items.

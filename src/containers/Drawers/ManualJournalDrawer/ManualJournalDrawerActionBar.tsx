@@ -10,8 +10,8 @@ import {
 } from '@blueprintjs/core';
 import { DrawerActionsBar, Can, FormattedMessage as T } from '@/components';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 import {
@@ -19,7 +19,7 @@ import {
   AbilitySubject,
 } from '../../../common/abilityOption';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Manual journal action bar.

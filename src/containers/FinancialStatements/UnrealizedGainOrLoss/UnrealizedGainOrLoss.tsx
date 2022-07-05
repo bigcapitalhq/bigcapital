@@ -11,7 +11,7 @@ import withUnrealizedGainOrLossActions from './withUnrealizedGainOrLossActions';
 import { UnrealizedGainOrLossProvider } from './UnrealizedGainOrLossProvider';
 import { UnrealizedGainOrLossLoadingBar } from './components';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Unrealized Gain or Loss

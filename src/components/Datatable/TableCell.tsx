@@ -5,7 +5,7 @@ import { camelCase} from 'lodash';
 import { If, Skeleton } from '@/components';
 import { useAppIntlContext } from '@/components/AppIntlProvider';
 import TableContext from './TableContext';
-import { saveInvoke, ignoreEventFromSelectors } from 'utils';
+import { saveInvoke, ignoreEventFromSelectors } from '@/utils';
 import { isCellLoading } from './utils';
 
 const ROW_CLICK_SELECTORS_INGORED = ['.expand-toggle', '.selection-checkbox'];

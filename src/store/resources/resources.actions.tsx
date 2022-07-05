@@ -1,5 +1,5 @@
 import ApiService from "services/ApiService";
-import t from 'store/types';
+import t from '@/store/types';
 
 export const fetchResourceColumns = ({ resourceSlug }) => {
   return (dispatch) => new Promise((resolve, reject) => {

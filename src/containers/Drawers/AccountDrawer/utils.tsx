@@ -2,7 +2,7 @@ import intl from 'react-intl-universal';
 import React from 'react';
 
 import { FormatDateCell } from '../../../components';
-import { isBlank } from 'utils';
+import { isBlank } from '@/utils';
 
 /**
  * Debit/credit table cell.

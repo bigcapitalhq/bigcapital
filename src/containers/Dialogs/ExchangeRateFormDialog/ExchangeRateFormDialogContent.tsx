@@ -3,7 +3,7 @@ import React from 'react';
 import ExchangeRateForm from './ExchangeRateForm';
 import { ExchangeRateFormProvider } from './ExchangeRateFormProvider';
 
-import 'style/pages/ExchangeRate/ExchangeRateDialog.scss';
+import '@/style/pages/ExchangeRate/ExchangeRateDialog.scss';
 
 /**
  * Exchange rate form content.

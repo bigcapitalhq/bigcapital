@@ -12,12 +12,12 @@ import {
   repeatValue,
   orderingLinesIndexes,
   formattedAmount,
-} from 'utils';
+} from '@/utils';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
-} from 'containers/Entries/utils';
-import { useCurrentOrganization } from 'hooks/state';
+} from '@/containers/Entries/utils';
+import { useCurrentOrganization } from '@/hooks/state';
 import { isLandedCostDisabled, getEntriesTotal } from '../../../Entries/utils';
 import { useBillFormContext } from './BillFormProvider';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Field } from 'formik';
 import { Classes, FormGroup } from '@blueprintjs/core';
-import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
+import FinancialStatementDateRange from '@/containers/FinancialStatements/FinancialStatementDateRange';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import {
   Row,

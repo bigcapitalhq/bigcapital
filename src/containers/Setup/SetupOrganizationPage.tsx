@@ -2,14 +2,14 @@ import React from 'react';
 import { Formik } from 'formik';
 import { FormattedMessage as T } from '@/components';
 
-import 'style/pages/Setup/Organization.scss';
+import '@/style/pages/Setup/Organization.scss';
 
 import SetupOrganizationForm from './SetupOrganizationForm';
 
-import { useOrganizationSetup } from 'hooks/query';
-import withSettingsActions from 'containers/Settings/withSettingsActions';
+import { useOrganizationSetup } from '@/hooks/query';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
-import { setCookie, compose, transfromToSnakeCase } from 'utils';
+import { setCookie, compose, transfromToSnakeCase } from '@/utils';
 import { getSetupOrganizationValidation } from './SetupOrganization.schema';
 
 // Initial values.

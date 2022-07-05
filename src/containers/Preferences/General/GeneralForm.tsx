@@ -9,12 +9,12 @@ import styled from 'styled-components';
 
 import { FormattedMessage as T } from '@/components';
 import { ListSelect, FieldRequiredHint } from '@/components';
-import { inputIntent } from 'utils';
-import { CLASSES } from 'common/classes';
-import { getCountries } from 'common/countries';
-import { getAllCurrenciesOptions } from 'common/currencies';
-import { getFiscalYear } from 'common/fiscalYearOptions';
-import { getLanguages } from 'common/languagesOptions';
+import { inputIntent } from '@/utils';
+import { CLASSES } from '@/common/classes';
+import { getCountries } from '@/common/countries';
+import { getAllCurrenciesOptions } from '@/common/currencies';
+import { getFiscalYear } from '@/common/fiscalYearOptions';
+import { getLanguages } from '@/common/languagesOptions';
 import { useGeneralFormContext } from './GeneralFormProvider';
 
 import { shouldBaseCurrencyUpdate } from './utils';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/pages/PaymentMade/List.scss';
+import '@/style/pages/PaymentMade/List.scss';
 
 import { DashboardPageContent } from '@/components';
 import PaymentMadeActionsBar from './PaymentMadeActionsBar';
@@ -11,7 +11,7 @@ import PaymentMadeViewTabs from './PaymentMadeViewTabs';
 import withPaymentMades from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
 
-import { compose, transformTableStateToQuery } from 'utils';
+import { compose, transformTableStateToQuery } from '@/utils';
 
 /**
  * Payment mades list.

@@ -2,8 +2,8 @@ import React from 'react';
 import moment from 'moment';
 import { castArray } from 'lodash';
 
-import { transformToForm } from 'utils';
-import { useAppQueryString } from 'hooks';
+import { transformToForm } from '@/utils';
+import { useAppQueryString } from '@/hooks';
 
 /**
  * Retrieves the default cashflow sheet query.

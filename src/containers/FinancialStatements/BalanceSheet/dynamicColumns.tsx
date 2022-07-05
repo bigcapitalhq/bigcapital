@@ -1,9 +1,9 @@
 import * as R from 'ramda';
 import { isEmpty } from 'lodash';
 
-import { Align } from 'common';
+import { Align } from '@/common';
 import { CellTextSpan } from '@/components/Datatable/Cells';
-import { getColumnWidth } from 'utils';
+import { getColumnWidth } from '@/utils';
 
 const getTableCellValueAccessor = (index) => `cells[${index}].value`;
 

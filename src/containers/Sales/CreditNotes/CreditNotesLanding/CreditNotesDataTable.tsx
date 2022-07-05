@@ -3,23 +3,23 @@ import { useHistory } from 'react-router-dom';
 
 import CreditNoteEmptyStatus from './CreditNotesEmptyStatus';
 import { DataTable, DashboardContentTable } from '@/components';
-import { TABLES } from 'common/tables';
-import { useMemorizedColumnsWidths } from 'hooks';
+import { TABLES } from '@/common/tables';
+import { useMemorizedColumnsWidths } from '@/hooks';
 
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withCreditNotesActions from './withCreditNotesActions';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '../../../Settings/withSettings';
 
 import { useCreditNoteTableColumns, ActionsMenu } from './components';
 import { useCreditNoteListContext } from './CreditNotesListProvider';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Credit note data table.

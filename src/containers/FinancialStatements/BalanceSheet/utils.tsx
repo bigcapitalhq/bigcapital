@@ -5,8 +5,8 @@ import * as Yup from 'yup';
 import { castArray } from 'lodash';
 import intl from 'react-intl-universal';
 
-import { transformToForm } from 'utils';
-import { useAppQueryString } from 'hooks';
+import { transformToForm } from '@/utils';
+import { useAppQueryString } from '@/hooks';
 
 /**
  * Retrieves the default balance sheet query.

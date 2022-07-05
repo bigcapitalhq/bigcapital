@@ -4,10 +4,10 @@ import intl from 'react-intl-universal';
 
 import { Icon } from '@/components';
 
-import { RESOURCES_TYPES } from 'common/resourcesTypes';
+import { RESOURCES_TYPES } from '@/common/resourcesTypes';
 import withDrawerActions from '../../Drawer/withDrawerActions';
 
-import { highlightText } from 'utils';
+import { highlightText } from '@/utils';
 import { AbilitySubject, PaymentMadeAction } from '../../../common/abilityOption';
 
 /**

@@ -4,13 +4,13 @@ import { Suggest } from '@blueprintjs/select';
 import classNames from 'classnames';
 import * as R from 'ramda';
 import intl from 'react-intl-universal';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 import { FormattedMessage as T } from '@/components';
 
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { DRAWERS } from 'common/drawers';
+import { DRAWERS } from '@/common/drawers';
 
 // Creates a new item from query.
 const createNewItemFromQuery = (name) => {

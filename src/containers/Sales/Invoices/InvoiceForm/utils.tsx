@@ -7,20 +7,20 @@ import {
   transformToForm,
   repeatValue,
   transactionNumber,
-} from 'utils';
+} from '@/utils';
 import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
 
-import { formattedAmount, defaultFastFieldShouldUpdate } from 'utils';
-import { ERROR } from 'common/errors';
+import { formattedAmount, defaultFastFieldShouldUpdate } from '@/utils';
+import { ERROR } from '@/common/errors';
 import { AppToaster } from '@/components';
-import { useCurrentOrganization } from 'hooks/state';
-import { getEntriesTotal } from 'containers/Entries/utils';
+import { useCurrentOrganization } from '@/hooks/state';
+import { getEntriesTotal } from '@/containers/Entries/utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
-} from 'containers/Entries/utils';
+} from '@/containers/Entries/utils';
 
 export const MIN_LINES_NUMBER = 1;
 

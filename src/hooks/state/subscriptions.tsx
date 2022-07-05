@@ -1,11 +1,11 @@
 import { useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { setSubscriptions } from 'store/subscription/subscription.actions';
+import { setSubscriptions } from '@/store/subscription/subscription.actions';
 import {
   isSubscriptionOnTrialFactory,
   isSubscriptionInactiveFactory,
   isSubscriptionActiveFactory,
-} from 'store/subscription/subscription.selectors';
+} from '@/store/subscription/subscription.selectors';
 
 /**
  * Sets subscriptions.

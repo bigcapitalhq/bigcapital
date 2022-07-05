@@ -6,9 +6,9 @@ import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 import {
   financialReportMenus,
   SalesAndPurchasesReportMenus,
-} from 'config/financialReportsMenu';
+} from '@/config/financialReportsMenu';
 
-import 'style/pages/FinancialStatements/FinancialSheets.scss';
+import '@/style/pages/FinancialStatements/FinancialSheets.scss';
 
 function FinancialReportsItem({ title, desc, link }) {
   return (

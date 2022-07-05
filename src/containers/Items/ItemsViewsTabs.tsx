@@ -7,7 +7,7 @@ import withItemsActions from '@/containers/Items/withItemsActions';
 import withItems from '@/containers/Items/withItems';
 
 import { useItemsListContext } from './ItemsListProvider';
-import { compose, transfromViewsToTabs } from 'utils';
+import { compose, transfromViewsToTabs } from '@/utils';
 
 /**
  * Items views tabs.

@@ -35,7 +35,7 @@ import {
   tansformDateValue,
   handleDateChange,
   compose,
-} from 'utils';
+} from '@/utils';
 import { useMoneyInDailogContext } from '@/containers/Dialogs/MoneyInDialog/MoneyInDialogProvider';
 import {
   useObserveTransactionNoSettings,

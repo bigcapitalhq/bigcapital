@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   isDialogOpenFactory,
   getDialogPayloadFactory,
-} from 'store/dashboard/dashboard.selectors';
+} from '@/store/dashboard/dashboard.selectors';
 
 export default (mapState) => {
   const isDialogOpen = isDialogOpenFactory();

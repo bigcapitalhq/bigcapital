@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { getExpensesCurrentPageFactory } from 'store/users/users.selectors';
+import { getExpensesCurrentPageFactory } from '@/store/users/users.selectors';
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {

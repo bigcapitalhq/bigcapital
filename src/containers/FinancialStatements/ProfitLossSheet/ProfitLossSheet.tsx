@@ -7,7 +7,7 @@ import ProfitLossActionsBar from './ProfitLossActionsBar';
 
 import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withProfitLossActions from './withProfitLossActions';
 
 import { useProfitLossSheetQuery } from './utils';

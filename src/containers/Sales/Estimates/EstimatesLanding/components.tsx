@@ -17,7 +17,7 @@ import {
   If,
   Can,
 } from '@/components';
-import { safeCallback } from 'utils';
+import { safeCallback } from '@/utils';
 
 /**
  * Status accessor.

@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 
 import { FormatNumberCell, TextOverviewTooltipCell } from '../../../components';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
-import { getColumnWidth } from 'utils';
+import { getColumnWidth } from '@/utils';
 
 /**
  * Retrieve expense readonly details entries table columns.

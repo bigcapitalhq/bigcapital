@@ -6,7 +6,7 @@ import { sumBy, isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import {
   CreateEstimateFormSchema,
   EditEstimateFormSchema,
@@ -19,11 +19,11 @@ import EstimateFormFooter from './EstimateFormFooter';
 import EstimateFormDialogs from './EstimateFormDialogs';
 import EstimtaeFormTopBar from './EstimtaeFormTopBar';
 
-import withSettings from 'containers/Settings/withSettings';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withSettings from '@/containers/Settings/withSettings';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import { AppToaster } from '@/components';
-import { compose, transactionNumber, orderingLinesIndexes } from 'utils';
+import { compose, transactionNumber, orderingLinesIndexes } from '@/utils';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import {
   transformToEditForm,

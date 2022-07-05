@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'style/components/Drawers/DrawerTemplate.scss';
+import '@/style/components/Drawers/DrawerTemplate.scss';
 
 import PaymentPaperTemplateHeader from './PaymentPaperTemplateHeader';
 import PaymentPaperTemplateTable from './PaymentPaperTemplateTable';

@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   isDrawerOpenFactory,
   getDrawerPayloadFactory,
-} from 'store/dashboard/dashboard.selectors';
+} from '@/store/dashboard/dashboard.selectors';
 
 export default (mapState) => {
   const isDrawerOpen = isDrawerOpenFactory();

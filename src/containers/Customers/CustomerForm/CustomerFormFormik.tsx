@@ -20,7 +20,7 @@ import { compose, transformToForm, saveInvoke } from '@/utils';
 import { useCustomerFormContext } from './CustomerFormProvider';
 import { defaultInitialValues } from './utils';
 
-import 'style/pages/Customers/Form.scss';
+import '@/style/pages/Customers/Form.scss';
 
 /**
  * Customer form.

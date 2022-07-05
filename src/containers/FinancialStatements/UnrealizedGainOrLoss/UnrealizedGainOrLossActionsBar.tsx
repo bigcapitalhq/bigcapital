@@ -18,7 +18,7 @@ import { useUnrealizedGainOrLossContext } from './UnrealizedGainOrLossProvider';
 import withUnrealizedGainOrLoss from './withUnrealizedGainOrLoss';
 import withUnrealizedGainOrLossActions from './withUnrealizedGainOrLossActions';
 
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke } from '@/utils';
 
 /**
  * unrealized Gain or Loss actions bar.

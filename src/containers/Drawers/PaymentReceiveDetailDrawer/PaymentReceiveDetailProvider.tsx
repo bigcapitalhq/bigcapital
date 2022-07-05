@@ -1,9 +1,9 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
-import { usePaymentReceive } from 'hooks/query';
-import { Features } from 'common';
-import { useFeatureCan } from 'hooks/state';
+import { usePaymentReceive } from '@/hooks/query';
+import { Features } from '@/common';
+import { useFeatureCan } from '@/hooks/state';
 
 const PaymentReceiveDetailContext = React.createContext();
 

@@ -1,4 +1,4 @@
-import t from 'store/types';
+import t from '@/store/types';
 
 export const setBillsTableState = (queries) => {
   return {

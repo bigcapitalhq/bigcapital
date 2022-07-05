@@ -18,7 +18,7 @@ import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import withSalesByItems from './withSalesByItems';
 import withSalesByItemsActions from './withSalesByItemsActions';
 
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke } from '@/utils';
 import { useSalesByItemsContext } from './SalesByItemProvider';
 
 function SalesByItemsActionsBar({

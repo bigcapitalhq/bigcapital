@@ -15,7 +15,7 @@ import Icon from '@/components/Icon';
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke } from '@/utils';
 import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';
 import { useBalanceSheetContext } from './BalanceSheetProvider';

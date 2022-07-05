@@ -3,7 +3,7 @@ import { includes } from 'lodash';
 import { MenuItem } from '@blueprintjs/core';
 import { MultiSelect as MultiSelectBP } from '@blueprintjs/select';
 import { FormattedMessage as T } from '@/components';
-import { safeInvoke } from 'utils';
+import { safeInvoke } from '@/utils';
 
 /**
  * Items multi-select.

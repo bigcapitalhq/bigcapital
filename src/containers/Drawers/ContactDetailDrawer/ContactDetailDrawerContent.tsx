@@ -3,7 +3,7 @@ import React from 'react';
 import ContactDetail from './ContactDetail';
 import { ContactDetailDrawerProvider } from './ContactDetailDrawerProvider';
 
-import 'style/components/Drawers/ViewDetail/ViewDetail.scss';
+import '@/style/components/Drawers/ViewDetail/ViewDetail.scss';
 
 /**
  * Contact detail drawer content.

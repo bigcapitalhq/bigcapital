@@ -7,7 +7,7 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
@@ -33,10 +33,10 @@ import {
   tansformDateValue,
   inputIntent,
   handleDateChange,
-} from 'utils';
+} from '@/utils';
 
-import withSettings from 'containers/Settings/withSettings';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**
  * Vendor Credit note form header fields.

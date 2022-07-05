@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import styled from 'styled-components';
 
 import { Card } from '@/components';
-import { CLASSES } from 'common/classes';
-import { useAccounts, useSaveSettings, useSettings } from 'hooks/query';
+import { CLASSES } from '@/common/classes';
+import { useAccounts, useSaveSettings, useSettings } from '@/hooks/query';
 import PreferencesPageLoader from '../PreferencesPageLoader';
 
 const AccountantFormContext = React.createContext();

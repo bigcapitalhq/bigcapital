@@ -8,21 +8,21 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from '@/components';
-import { momentFormatter, compose, tansformDateValue } from 'utils';
+import { momentFormatter, compose, tansformDateValue } from '@/utils';
 import classNames from 'classnames';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import {
   AccountsSelectList,
   FieldRequiredHint,
   Icon,
   InputPrependButton,
 } from '@/components';
-import { inputIntent, handleDateChange } from 'utils';
+import { inputIntent, handleDateChange } from '@/utils';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import { useObserveTransferNoSettings } from './utils';
-import withSettings from 'containers/Settings/withSettings';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**
  * Warehouse transfer form header fields.

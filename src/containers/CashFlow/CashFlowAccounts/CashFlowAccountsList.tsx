@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { compose } from 'lodash/fp';
 
-import 'style/pages/CashFlow/CashFlowAccounts/List.scss';
+import '@/style/pages/CashFlow/CashFlowAccounts/List.scss';
 
 import { DashboardPageContent } from '@/components';
 import { CashFlowAccountsProvider } from './CashFlowAccountsProvider';

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import useContextMenu from 'react-use-context-menu';
 
 import TableContext from './TableContext';
-import { saveInvoke, ConditionalWrapper } from 'utils';
+import { saveInvoke, ConditionalWrapper } from '@/utils';
 
 /**
  * Table row context wrapper.

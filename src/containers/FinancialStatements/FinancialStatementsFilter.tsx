@@ -10,7 +10,7 @@ import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 import { FastField } from 'formik';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import { ListSelect, MODIFIER } from '@/components';
 import { filterAccountsOptions } from './constants';
 

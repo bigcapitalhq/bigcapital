@@ -3,7 +3,7 @@ import * as R from 'ramda';
 import styled from 'styled-components';
 import { CurrencyTag } from '@/components';
 
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * base currecncy.

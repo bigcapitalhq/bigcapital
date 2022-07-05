@@ -4,10 +4,10 @@ import { Button, Intent } from '@blueprintjs/core';
 import WorkflowIcon from './WorkflowIcon';
 import { FormattedMessage as T } from '@/components';
 
-import withOrganizationActions from 'containers/Organization/withOrganizationActions';
-import { compose } from 'utils';
+import withOrganizationActions from '@/containers/Organization/withOrganizationActions';
+import { compose } from '@/utils';
 
-import 'style/pages/Setup/Congrats.scss';
+import '@/style/pages/Setup/Congrats.scss';
 
 /**
  * Setup congrats page.

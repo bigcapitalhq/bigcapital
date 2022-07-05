@@ -1,6 +1,6 @@
 import React from 'react';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
-import { useCustomer } from 'hooks/query';
+import { useCustomer } from '@/hooks/query';
 
 const ContactDetailDrawerContext = React.createContext();
 

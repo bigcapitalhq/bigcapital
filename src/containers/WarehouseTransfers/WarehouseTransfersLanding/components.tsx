@@ -2,7 +2,7 @@ import React from 'react';
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { safeCallback } from 'utils';
+import { safeCallback } from '@/utils';
 import {
   FormatDateCell,
   FormattedMessage as T,

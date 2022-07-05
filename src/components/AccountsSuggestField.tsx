@@ -5,13 +5,13 @@ import intl from 'react-intl-universal';
 import * as R from 'ramda';
 
 import classNames from 'classnames';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 
 import { MenuItemNestedText, FormattedMessage as T } from '@/components';
 import { filterAccountsByQuery } from './utils';
-import { nestedArrayToflatten } from 'utils';
+import { nestedArrayToflatten } from '@/utils';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 // Create new account renderer.
 const createNewItemRenderer = (query, active, handleClick) => {

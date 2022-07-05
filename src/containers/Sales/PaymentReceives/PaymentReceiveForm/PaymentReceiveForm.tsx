@@ -6,9 +6,9 @@ import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
-import 'style/pages/PaymentReceive/PageForm.scss';
+import '@/style/pages/PaymentReceive/PageForm.scss';
 
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import PaymentReceiveHeader from './PaymentReceiveFormHeader';
 import PaymentReceiveFormBody from './PaymentReceiveFormBody';
 import PaymentReceiveFloatingActions from './PaymentReceiveFloatingActions';
@@ -18,15 +18,15 @@ import PaymentReceiveFormDialogs from './PaymentReceiveFormDialogs';
 import PaymentReceiveFormTopBar from './PaymentReceiveFormTopBar';
 import { PaymentReceiveInnerProvider } from './PaymentReceiveInnerProvider';
 
-import withSettings from 'containers/Settings/withSettings';
-import withCurrentOrganization from 'containers/Organization/withCurrentOrganization';
+import withSettings from '@/containers/Settings/withSettings';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import {
   EditPaymentReceiveFormSchema,
   CreatePaymentReceiveFormSchema,
 } from './PaymentReceiveForm.schema';
 import { AppToaster } from '@/components';
-import { transactionNumber, compose } from 'utils';
+import { transactionNumber, compose } from '@/utils';
 
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import {

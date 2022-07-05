@@ -1,8 +1,8 @@
 import React from 'react';
 import { DataTable, Card } from '@/components';
 
-import { TableStyle } from 'common';
-import withAlertsActions from 'containers/Alert/withAlertActions';
+import { TableStyle } from '@/common';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
 
 import { useCreditNoteDetailDrawerContext } from '../CreditNoteDetailDrawerProvider';
 import {
@@ -10,7 +10,7 @@ import {
   ActionsMenu,
 } from './components';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Reconcile credit transactions table.

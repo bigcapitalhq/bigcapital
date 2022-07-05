@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Intent, Button, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 
 import { SwitchFieldCell } from '@/components/DataTableCells';
-import { safeInvoke } from 'utils';
+import { safeInvoke } from '@/utils';
 
 /**
  * Notification accessor.

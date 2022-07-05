@@ -3,7 +3,7 @@ import {
   defaultFastFieldShouldUpdate,
   uniqueMultiProps,
   checkRequiredProperties,
-} from 'utils';
+} from '@/utils';
 
 // Conditions options.
 export const getConditionalsOptions = () => [

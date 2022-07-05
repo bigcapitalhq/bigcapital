@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
-import { transformPagination } from 'utils';
+import { transformPagination } from '@/utils';
 import useApiRequest from '../useRequest';
 import t from './types';
 

@@ -1,14 +1,14 @@
 import React, { useCallback } from 'react';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 import { DataTable } from '@/components';
-import { useResendInvitation } from 'hooks/query';
+import { useResendInvitation } from '@/hooks/query';
 import AppToaster from '@/components/AppToaster';
 
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withAlertActions from 'containers/Alert/withAlertActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
 import { ActionsMenu, useUsersListColumns } from './components';
 import { useUsersListContext } from './UsersProvider';

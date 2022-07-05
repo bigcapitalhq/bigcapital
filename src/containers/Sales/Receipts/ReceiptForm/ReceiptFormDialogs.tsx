@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
-import ReceiptNumberDialog from 'containers/Dialogs/ReceiptNumberDialog';
+import ReceiptNumberDialog from '@/containers/Dialogs/ReceiptNumberDialog';
 
 /**
  * Receipt form dialogs.

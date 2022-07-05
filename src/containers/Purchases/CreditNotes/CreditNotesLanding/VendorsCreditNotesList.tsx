@@ -11,7 +11,7 @@ import withVendorsCreditNotes from './withVendorsCreditNotes';
 import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
 
 import { VendorsCreditNoteListProvider } from './VendorsCreditNoteListProvider';
-import { transformTableStateToQuery, compose } from 'utils';
+import { transformTableStateToQuery, compose } from '@/utils';
 
 function VendorsCreditNotesList({
   // #withVendorsCreditNotes

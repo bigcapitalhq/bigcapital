@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { WindowScroller, AutoSizer, List } from 'react-virtualized';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/common/classes';
 import TableContext from './TableContext';
 
 /**

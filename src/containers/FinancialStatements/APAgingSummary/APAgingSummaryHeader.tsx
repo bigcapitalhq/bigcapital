@@ -6,7 +6,7 @@ import moment from 'moment';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
 import APAgingSummaryHeaderGeneral from './APAgingSummaryHeaderGeneral';
 import APAgingSummaryHeaderDimensions from './APAgingSummaryHeaderDimensions';
 
@@ -14,7 +14,7 @@ import withAPAgingSummary from './withAPAgingSummary';
 import withAPAgingSummaryActions from './withAPAgingSummaryActions';
 
 import { transformToForm } from '../../../utils';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * AP Aging Summary Report - Drawer Header.

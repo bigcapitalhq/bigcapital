@@ -11,9 +11,9 @@ import {
 
 import { useBillDrawerContext } from './BillDrawerProvider';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import {
   Can,
@@ -29,7 +29,7 @@ import {
 } from '../../../common/abilityOption';
 import { BillMenuItem } from './utils';
 
-import { safeCallback, compose } from 'utils';
+import { safeCallback, compose } from '@/utils';
 
 function BillDetailActionsBar({
   // #withDialogActions
