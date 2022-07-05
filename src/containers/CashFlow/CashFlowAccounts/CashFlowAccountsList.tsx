@@ -9,8 +9,8 @@ import { CashFlowAccountsProvider } from './CashFlowAccountsProvider';
 import CashFlowAccountsActionsBar from './CashFlowAccountsActionsBar';
 import CashflowAccountsGrid from './CashflowAccountsGrid';
 
-import withCashflowAccounts from '../AccountTransactions/withCashflowAccounts';
-import withCashflowAccountsTableActions from '../AccountTransactions/withCashflowAccountsTableActions';
+import withCashflowAccounts from '@/containers/CashFlow/AccountTransactions/withCashflowAccounts';
+import withCashflowAccountsTableActions from '@/containers/CashFlow/AccountTransactions/withCashflowAccountsTableActions';
 
 /**
  * Cashflow accounts list.

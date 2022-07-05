@@ -2,7 +2,7 @@ import React from 'react';
 
 import intl from 'react-intl-universal';
 import { Intent, Tag } from '@blueprintjs/core';
-import { isBlank } from 'utils';
+import { isBlank } from '@/utils';
 import { Link } from 'react-router-dom';
 
 /**

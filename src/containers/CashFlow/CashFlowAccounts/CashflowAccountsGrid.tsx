@@ -14,21 +14,21 @@ import {
   Icon,
   T,
   Can,
-} from '../../../components';
+} from '@/components';
 import {
   AccountAction,
   CashflowAction,
   AbilitySubject,
-} from '../../../common/abilityOption';
+} from '@/common/abilityOption';
 
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
 
-import withDrawerActions from '../../Drawer/withDrawerActions';
-import withAlertsActions from '../../Alert/withAlertActions';
-import withDialogActions from '../../Dialog/withDialogActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { safeCallback } from 'utils';
-import { addMoneyIn, addMoneyOut } from 'common/cashflowOptions';
+import { safeCallback } from '@/utils';
+import { addMoneyIn, addMoneyOut } from '@/common/cashflowOptions';
 
 const CASHFLOW_SKELETON_N = 4;
 

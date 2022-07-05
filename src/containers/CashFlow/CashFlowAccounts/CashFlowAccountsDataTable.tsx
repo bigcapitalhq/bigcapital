@@ -1,17 +1,17 @@
 import React from 'react';
 
 import { DataTable, TableFastCell } from '@/components';
-import { TABLES } from 'common/tables';
+import { TABLES } from '@/common/tables';
 
 import TableVirtualizedListRows from '@/components/Datatable/TableVirtualizedRows';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
-import withSettings from '../../Settings/withSettings';
+import withSettings from '@/containers/Settings/withSettings';
 
-import { useMemorizedColumnsWidths } from '../../../hooks';
+import { useMemorizedColumnsWidths } from '@/hooks';
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
 import { useCashFlowAccountsTableColumns } from './components';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Cash flow accounts data table.

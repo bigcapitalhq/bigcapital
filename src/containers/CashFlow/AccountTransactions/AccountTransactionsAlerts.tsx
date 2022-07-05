@@ -1,7 +1,7 @@
 import React from 'react';
 
 const AccountDeleteTransactionAlert = React.lazy(() =>
-  import('../../Alerts/CashFlow/AccountDeleteTransactionAlert'),
+  import('@/containers/Alerts/CashFlow/AccountDeleteTransactionAlert'),
 );
 
 /**

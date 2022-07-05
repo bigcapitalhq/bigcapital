@@ -11,16 +11,16 @@ import {
   DashboardRowsHeightButton,
   FormattedMessage as T,
 } from '@/components';
-import { useRefreshCashflowTransactionsInfinity } from 'hooks/query';
+import { useRefreshCashflowTransactionsInfinity } from '@/hooks/query';
 
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import { CashFlowMenuItems } from './utils';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withSettings from '../../Settings/withSettings';
-import withSettingsActions from '../../Settings/withSettingsActions';
-import { addMoneyIn, addMoneyOut } from '../../../common/cashflowOptions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import { addMoneyIn, addMoneyOut } from '@/common/cashflowOptions';
 
 import { compose } from 'utils';
 

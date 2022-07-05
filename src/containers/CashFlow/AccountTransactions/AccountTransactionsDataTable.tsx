@@ -2,17 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { DataTable, TableFastCell, FormattedMessage as T } from '@/components';
-import { TABLES } from 'common/tables';
+import { TABLES } from '@/common/tables';
 
 import TableVirtualizedListRows from '@/components/Datatable/TableVirtualizedRows';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
-import withSettings from '../../Settings/withSettings';
-import withAlertsActions from 'containers/Alert/withAlertActions';
-import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { useMemorizedColumnsWidths } from '../../../hooks';
+import { useMemorizedColumnsWidths } from '@/hooks';
 import { useAccountTransactionsColumns, ActionsMenu } from './components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { handleCashFlowTransactionType } from './utils';

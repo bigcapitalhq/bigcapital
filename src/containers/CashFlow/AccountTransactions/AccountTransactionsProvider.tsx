@@ -7,7 +7,7 @@ import {
   useAccountTransactionsInfinity,
   useCashflowAccounts,
   useAccount,
-} from 'hooks/query';
+} from '@/hooks/query';
 
 const AccountTransactionsContext = React.createContext();
 

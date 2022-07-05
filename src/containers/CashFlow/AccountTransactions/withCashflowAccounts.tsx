@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { getCashflowAccountsTableStateFactory } from 'store/CashflowAccounts/CashflowAccounts.selectors';
+import { getCashflowAccountsTableStateFactory } from '@/store/CashflowAccounts/CashflowAccounts.selectors';
 
 export default (mapState) => {
   const getCashflowAccountsTableState = getCashflowAccountsTableStateFactory();
