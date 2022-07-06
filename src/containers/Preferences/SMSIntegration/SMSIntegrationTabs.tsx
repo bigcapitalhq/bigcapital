@@ -8,7 +8,7 @@ import { CLASSES } from '@/common/classes';
 import SMSMessagesDataTable from './SMSMessagesDataTable';
 import { Card } from '@/components';
 
-import '../../../style/pages/Preferences/SMSIntegration.scss';
+import 'style/pages/Preferences/SMSIntegration.scss';
 
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 

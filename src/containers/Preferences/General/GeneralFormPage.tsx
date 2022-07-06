@@ -11,8 +11,7 @@ import { PreferencesGeneralSchema } from './General.schema';
 import { useGeneralFormContext } from './GeneralFormProvider';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
-import { compose } from '@/utils';
-import { transformToForm } from '../../../utils';
+import { compose, transformToForm } from '@/utils';
 
 const defaultValues = {
   name: '',
