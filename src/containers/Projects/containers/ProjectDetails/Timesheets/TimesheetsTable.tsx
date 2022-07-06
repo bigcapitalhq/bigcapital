@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import { DataTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
-import { useTimesheetColumns, ActionsMenu } from './components';
+import { ActionsMenu } from './components';
+import { useTimesheetColumns } from './hooks';
 import { TABLES } from 'common/tables';
 import { useMemorizedColumnsWidths } from 'hooks';
 import withSettings from '../../../../Settings/withSettings';
@@ -52,9 +53,6 @@ function TimesheetsTable({
     <TimesheetDataTable
       columns={columns}
       data={Timesheet}
-      // loading={}
-      // headerLoading={}
-      // progressBarLoading={}
       manualSortBy={true}
       noInitialFetch={true}
       sticky={true}
@@ -87,7 +85,6 @@ const TimesheetDataTable = styled(DataTable)`
 
     .tbody {
       .tr .td {
-        /* padding: 0.5rem 0.8rem; */
       }
 
       .avatar.td {

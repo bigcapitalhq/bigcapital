@@ -13,8 +13,8 @@ import {
 import { ExpenseSelect, FInputGroupComponent } from '../../components';
 import { useEstimatedExpenseFormContext } from './EstimatedExpenseFormProvider';
 import EstimatedExpenseFormChargeFields from './EstimatedExpenseFormChargeFields';
-import { ChargeSelect } from '../../components';
-import { expenseChargeOption } from 'common/modalChargeOptions';
+import { ChangeTypesSelect } from '../../components';
+import { expenseChargeOption } from 'containers/Projects/containers/common/modalChargeOptions';
 
 /**
  * Estimated expense form fields.
@@ -72,7 +72,7 @@ export default function EstimatedExpenseFormFields() {
         label={<T id={'estimated_expenses.dialog.charge'} />}
         className={classNames('form-group--select-list', Classes.FILL)}
       >
-        <ChargeSelect
+        <ChangeTypesSelect
           name="charge"
           items={expenseChargeOption}
           popoverProps={{ minimal: true }}

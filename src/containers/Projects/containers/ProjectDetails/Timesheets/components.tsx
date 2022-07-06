@@ -1,10 +1,9 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { FormatDate, Icon, FormattedMessage as T } from 'components';
+import { FormatDate, Icon } from 'components';
 import { Menu, MenuItem, Intent } from '@blueprintjs/core';
 import { safeCallback, firstLettersArgs } from 'utils';
-
 
 /**
  * Table actions cell.
@@ -77,43 +76,3 @@ const TimesheetDescription = styled.span`
     margin: 0.3rem;
   }
 `;
-
-/**
- * Retrieve timesheet list columns columns.
- */
-export function useTimesheetColumns() {
-  return React.useMemo(
-    () => [
-      {
-        id: 'avatar',
-        Header: '',
-        Cell: AvatarCell,
-        className: 'avatar',
-        width: 45,
-        disableResizing: true,
-        disableSortBy: true,
-        clickable: true,
-      },
-      {
-        id: 'name',
-        Header: 'Header',
-        accessor: TimesheetAccessor,
-        width: 100,
-        className: 'name',
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'duration',
-        Header: '',
-        accessor: 'duration',
-        width: 100,
-        className: 'duration',
-        align: 'right',
-        clickable: true,
-        textOverview: true,
-      },
-    ],
-    [],
-  );
-}

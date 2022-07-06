@@ -42,7 +42,7 @@ function ProjectDetailActionsBar({
   const handleNewTransactionBtnClick = ({ path }) => {
     switch (path) {
       case 'expense':
-        openDialog('expense-form', { projectId });
+        openDialog('project-expense-form', { projectId });
         break;
       case 'estimatedExpense':
         openDialog('estimated-expense-form', { projectId });
@@ -62,7 +62,7 @@ function ProjectDetailActionsBar({
   };
 
   const handleTimeEntryBtnClick = () => {
-    openDialog('time-entry-form', {
+    openDialog('project-time-entry-form', {
       projectId,
     });
   };

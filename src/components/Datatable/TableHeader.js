@@ -91,20 +91,24 @@ export default function TableHeader() {
   if (headerLoading && TableHeaderSkeletonRenderer) {
     return <TableHeaderSkeletonRenderer />;
   }
+
+  // Can't contiunue if the thead is disabled.
+  if (hideTableHeader) {
+    return null;
+  }
+
   return (
-    !hideTableHeader && (
-      <ScrollSyncPane>
-        <div className="thead">
-          <div className={'thead-inner'}>
-            {headerGroups.map((headerGroup, index) => (
-              <TableHeaderGroup key={index} headerGroup={headerGroup} />
-            ))}
-            <If condition={progressBarLoading}>
-              <MaterialProgressBar />
-            </If>
-          </div>
+    <ScrollSyncPane>
+      <div className="thead">
+        <div className={'thead-inner'}>
+          {headerGroups.map((headerGroup, index) => (
+            <TableHeaderGroup key={index} headerGroup={headerGroup} />
+          ))}
+          <If condition={progressBarLoading}>
+            <MaterialProgressBar />
+          </If>
         </div>
-      </ScrollSyncPane>
-    )
+      </div>
+    </ScrollSyncPane>
   );
 }

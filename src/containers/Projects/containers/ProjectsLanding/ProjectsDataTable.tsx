@@ -83,7 +83,7 @@ function ProjectsDataTable({
 
   // Handle new task button click.
   const handleNewTaskButtonClick = () => {
-    openDialog('task-form');
+    openDialog('project-task-form');
   };
 
   // Local storage memorizing columns widths.
@@ -163,6 +163,7 @@ const ProjectsTable = styled(DataTable)`
       }
     }
   }
+
   .table-size--small {
     .tbody .tr {
       height: 45px;

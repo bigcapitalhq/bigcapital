@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { MenuItem, Button } from '@blueprintjs/core';
-import { FSelect } from 'components';
+import { FSelect } from '../../../components';
 
 /**
  *
@@ -8,7 +9,7 @@ import { FSelect } from 'components';
  * @param {*} param1
  * @returns
  */
-const chargeItemRenderer = (item, { handleClick, modifiers, query }) => {
+const chargeTypeItemRenderer = (item, { handleClick, modifiers, query }) => {
   return (
     <MenuItem
       label={item.label}
@@ -19,8 +20,8 @@ const chargeItemRenderer = (item, { handleClick, modifiers, query }) => {
   );
 };
 
-const chargeItemSelectProps = {
-  itemRenderer: chargeItemRenderer,
+const chargeTypeSelectProps = {
+  itemRenderer: chargeTypeItemRenderer,
   valueAccessor: 'value',
   labelAccessor: 'name',
 };
@@ -30,13 +31,13 @@ const chargeItemSelectProps = {
  * @param param0
  * @returns
  */
-export function ChargeSelect({ items, ...rest }) {
+export function ChangeTypesSelect({ items, ...rest }) {
   return (
     <FSelect
-      {...chargeItemSelectProps}
+      {...chargeTypeSelectProps}
       {...rest}
       items={items}
-      input={ChargeSelectButton}
+      input={ChargeTypeSelectButton}
     />
   );
 }
@@ -45,6 +46,6 @@ export function ChargeSelect({ items, ...rest }) {
  * @param param0
  * @returns
  */
-function ChargeSelectButton({ label }) {
+function ChargeTypeSelectButton({ label }) {
   return <Button text={label} />;
 }

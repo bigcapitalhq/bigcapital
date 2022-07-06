@@ -43,10 +43,10 @@ export default function EstimatedExpenseFormChargeFields() {
   const { values } = useFormikContext();
   return (
     <Choose>
-      <Choose.When condition={values.charge === '% markup'}>
+      <Choose.When condition={values.charge === 'markup'}>
         <PercentageFormField />
       </Choose.When>
-      <Choose.When condition={values.charge === 'Custom Pirce'}>
+      <Choose.When condition={values.charge === 'custom_pirce'}>
         <CustomPirceField />
       </Choose.When>
     </Choose>

@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ProjectDetailActionsBar from './ProjectDetailActionsBar';
 import ProjectDetailTabs from './ProjectDetailTabs';
@@ -20,7 +20,7 @@ function ProjectTabs({
     state: { projectName, projectId },
   } = useLocation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     changePageTitle(projectName);
   }, [changePageTitle, projectName]);
 
