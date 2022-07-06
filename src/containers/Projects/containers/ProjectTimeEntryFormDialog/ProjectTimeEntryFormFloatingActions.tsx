@@ -3,20 +3,20 @@ import React from 'react';
 import { useFormikContext } from 'formik';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
-import { useTimeEntryFormContext } from './TimeEntryFormProvider';
+import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
 /**
- * Time entry form floating actions.
+ * Projcet time entry form floating actions.
  * @returns
  */
-function TimeEntryFormFloatingActions({
+function ProjectTimeEntryFormFloatingActions({
   // #withDialogActions
   closeDialog,
 }) {
   // time entry form dialog context.
-  const { dialogName } = useTimeEntryFormContext();
+  const { dialogName } = useProjectTimeEntryFormContext();
 
   // Formik context.
   const { isSubmitting } = useFormikContext();
@@ -45,4 +45,4 @@ function TimeEntryFormFloatingActions({
   );
 }
 
-export default compose(withDialogActions)(TimeEntryFormFloatingActions);
+export default compose(withDialogActions)(ProjectTimeEntryFormFloatingActions);

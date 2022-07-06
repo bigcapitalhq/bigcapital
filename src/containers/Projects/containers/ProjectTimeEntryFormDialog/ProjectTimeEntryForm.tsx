@@ -5,9 +5,9 @@ import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { AppToaster } from 'components';
 
-import TimeEntryFormContent from './TimeEntryFormContent';
-import { CreateTimeEntryFormSchema } from './TimeEntryForm.schema';
-import { useTimeEntryFormContext } from './TimeEntryFormProvider';
+import ProjectTimeEntryFormContent from './ProjectTimeEntryFormContent';
+import { CreateProjectTimeEntryFormSchema } from './ProjectTimeEntryForm.schema';
+import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { compose } from 'utils';
@@ -21,15 +21,15 @@ const defaultInitialValues = {
 };
 
 /**
- * Time entry form.
+ * Project Time entry form.
  * @returns
  */
-function TimeEntryForm({
+function ProjectTimeEntryForm({
   // #withDialogActions
   closeDialog,
 }) {
   // time entry form dialog context.
-  const { dialogName } = useTimeEntryFormContext();
+  const { dialogName } = useProjectTimeEntryFormContext();
 
   // Initial form values
   const initialValues = {
@@ -58,12 +58,12 @@ function TimeEntryForm({
 
   return (
     <Formik
-      validationSchema={CreateTimeEntryFormSchema}
+      validationSchema={CreateProjectTimeEntryFormSchema}
       initialValues={initialValues}
       onSubmit={handleFormSubmit}
-      component={TimeEntryFormContent}
+      component={ProjectTimeEntryFormContent}
     />
   );
 }
 
-export default compose(withDialogActions)(TimeEntryForm);
+export default compose(withDialogActions)(ProjectTimeEntryForm);

@@ -18,16 +18,16 @@ import { ProjectSelect, TaskSelect } from './components';
 import { momentFormatter } from 'utils';
 
 /**
- * Time entry form fields.
+ * Project time entry form fields.
  * @returns
  */
-function TimeEntryFormFields() {
+function ProjectTimeEntryFormFields() {
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Project -----------*/}
       <FFormGroup
         name={'projectId'}
-        label={<T id={'time_entry.dialog.project'} />}
+        label={<T id={'project_time_entry.dialog.project'} />}
         labelInfo={<FieldRequiredHint />}
         className={classNames('form-group--select-list', Classes.FILL)}
       >
@@ -40,7 +40,7 @@ function TimeEntryFormFields() {
       {/*------------ Task -----------*/}
       <FFormGroup
         name={'taskId'}
-        label={<T id={'time_entry.dialog.task'} />}
+        label={<T id={'project_time_entry.dialog.task'} />}
         labelInfo={<FieldRequiredHint />}
         className={classNames('form-group--select-list', Classes.FILL)}
       >
@@ -53,7 +53,7 @@ function TimeEntryFormFields() {
 
       {/*------------ Duration -----------*/}
       <FFormGroup
-        label={intl.get('time_entry.dialog.duration')}
+        label={intl.get('project_time_entry.dialog.duration')}
         name={'duration'}
         labelInfo={<FieldRequiredHint />}
       >
@@ -61,7 +61,7 @@ function TimeEntryFormFields() {
       </FFormGroup>
       {/*------------ Date -----------*/}
       <FFormGroup
-        label={intl.get('time_entry.dialog.date')}
+        label={intl.get('project_time_entry.dialog.date')}
         name={'date'}
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
@@ -78,20 +78,13 @@ function TimeEntryFormFields() {
       {/*------------ Description -----------*/}
       <FFormGroup
         name={'description'}
-        label={intl.get('time_entry.dialog.description')}
+        label={intl.get('project_time_entry.dialog.description')}
         className={'form-group--description'}
       >
         <FTextArea name={'description'} />
-        {/* <FEditableText
-          multiline={true}
-          // minLines={1.78}
-          // maxLines={1.78}
-          name={'description'}
-          placeholder=""
-        /> */}
       </FFormGroup>
     </div>
   );
 }
 
-export default TimeEntryFormFields;
+export default ProjectTimeEntryFormFields;
