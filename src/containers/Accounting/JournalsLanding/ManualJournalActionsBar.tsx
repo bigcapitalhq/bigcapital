@@ -18,17 +18,17 @@ import {
   If,
   DashboardActionViewsList,
 } from '@/components';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import { useRefreshJournals } from '@/hooks/query/manualJournals';
 import { useManualJournalsContext } from './ManualJournalsListProvider';
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
-
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withManualJournalsActions from './withManualJournalsActions';
-import withManualJournals from './withManualJournals';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import withSettings from '@/containers/Settings/withSettings';
-
 import { ManualJournalAction, AbilitySubject } from '@/common/abilityOption';
+
+import withManualJournals from './withManualJournals';
+import withManualJournalsActions from './withManualJournalsActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+
 import { compose } from '@/utils';
 
 /**

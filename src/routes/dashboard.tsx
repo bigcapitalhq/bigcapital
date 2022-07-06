@@ -8,7 +8,7 @@ const SUBSCRIPTION_TYPE = {
 // const BASE_URL = '/dashboard';
 
 export const getDashboardRoutes = () => [
-  // // Accounts.
+  // Accounts.
   {
     path: `/accounts`,
     component: lazy(() => import('@/containers/Accounts/AccountsChart')),
@@ -18,43 +18,43 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // // Accounting.
-  // {
-  //   path: `/make-journal-entry`,
-  //   component: lazy(() =>
-  //     import('@/containers/Accounting/MakeJournal/MakeJournalEntriesPage'),
-  //   ),
-  //   breadcrumb: intl.get('make_journal_entry'),
-  //   hotkey: 'ctrl+shift+m',
-  //   pageTitle: intl.get('new_journal'),
-  //   sidebarExpand: false,
-  //   backLink: true,
-  //   defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/manual-journals/:id/edit`,
-  //   component: lazy(() =>
-  //     import('@/containers/Accounting/MakeJournal/MakeJournalEntriesPage'),
-  //   ),
-  //   breadcrumb: intl.get('edit'),
-  //   pageTitle: intl.get('edit_journal'),
-  //   sidebarExpand: false,
-  //   backLink: true,
-  //   defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/manual-journals`,
-  //   component: lazy(() =>
-  //     import('@/containers/Accounting/JournalsLanding/ManualJournalsList'),
-  //   ),
-  //   breadcrumb: intl.get('manual_journals'),
-  //   hotkey: 'shift+m',
-  //   pageTitle: intl.get('manual_journals'),
-  //   defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  // Accounting.
+  {
+    path: `/make-journal-entry`,
+    component: lazy(() =>
+      import('@/containers/Accounting/MakeJournal/MakeJournalEntriesPage'),
+    ),
+    breadcrumb: intl.get('make_journal_entry'),
+    hotkey: 'ctrl+shift+m',
+    pageTitle: intl.get('new_journal'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/manual-journals/:id/edit`,
+    component: lazy(() =>
+      import('@/containers/Accounting/MakeJournal/MakeJournalEntriesPage'),
+    ),
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_journal'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/manual-journals`,
+    component: lazy(() =>
+      import('@/containers/Accounting/JournalsLanding/ManualJournalsList'),
+    ),
+    breadcrumb: intl.get('manual_journals'),
+    hotkey: 'shift+m',
+    pageTitle: intl.get('manual_journals'),
+    defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: `/items/categories`,
   //   component: lazy(() =>

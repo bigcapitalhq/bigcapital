@@ -1,8 +1,9 @@
 import React from 'react';
+import * as R from 'ramda';
+import moment from 'moment';
+import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { sumBy, setWith, toSafeInteger, get, first } from 'lodash';
-import moment from 'moment';
-import * as R from 'ramda';
 import {
   transactionNumber,
   updateTableCell,
@@ -14,7 +15,6 @@ import {
   safeSumBy,
 } from '@/utils';
 import { AppToaster } from '@/components';
-import intl from 'react-intl-universal';
 import { useFormikContext } from 'formik';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { useCurrentOrganization } from '@/hooks/state';

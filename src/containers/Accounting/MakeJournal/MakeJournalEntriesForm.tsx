@@ -12,6 +12,7 @@ import {
   CreateJournalSchema,
   EditJournalSchema,
 } from './MakeJournalEntries.schema';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
 import MakeJournalEntriesHeader from './MakeJournalEntriesHeader';
 import MakeJournalFormFloatingActions from './MakeJournalFormFloatingActions';
 import MakeJournalEntriesField from './MakeJournalEntriesField';
@@ -21,16 +22,15 @@ import MakeJournalFormTopBar from './MakeJournalFormTopBar';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+// import withMediaActions from '@/containers/Media/withMediaActions';
 
-import AppToaster from '@/components/AppToaster';
-import withMediaActions from '@/containers/Media/withMediaActions';
+import { AppToaster } from '@/components';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 import {
   transformErrors,
   transformToEditForm,
   defaultManualJournal,
 } from './utils';
-import { useMakeJournalFormContext } from './MakeJournalProvider';
 
 /**
  * Journal entries form.
@@ -186,7 +186,6 @@ function MakeJournalEntriesForm({
 }
 
 export default compose(
-  withMediaActions,
   withSettings(({ manualJournalsSettings }) => ({
     journalNextNumber: manualJournalsSettings?.nextNumber,
     journalNumberPrefix: manualJournalsSettings?.numberPrefix,

@@ -26,9 +26,9 @@ import {
   CurrencySelectList,
   FormattedMessage as T
 } from '@/components';
-import withSettings from '@/containers/Settings/withSettings';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { JournalExchangeRateInputField } from './components';
+import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import {
   currenciesFieldShouldUpdate,

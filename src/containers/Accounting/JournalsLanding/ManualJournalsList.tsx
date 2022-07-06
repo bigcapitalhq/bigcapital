@@ -3,14 +3,14 @@ import React from 'react';
 import '@/style/pages/ManualJournal/List.scss';
 
 import { DashboardPageContent } from '@/components';
+import { transformTableStateToQuery, compose } from '@/utils';
 
 import { ManualJournalsListProvider } from './ManualJournalsListProvider';
 import ManualJournalsViewTabs from './ManualJournalsViewTabs';
 import ManualJournalsDataTable from './ManualJournalsDataTable';
 import ManualJournalsActionsBar from './ManualJournalActionsBar';
-
 import withManualJournals from './withManualJournals';
-import { transformTableStateToQuery, compose } from '@/utils';
+
 
 /**
  * Manual journals table.

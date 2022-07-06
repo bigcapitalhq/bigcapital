@@ -2,9 +2,9 @@ import React from 'react';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { CLASSES } from '@/common/classes';
+import { safeSumBy } from '@/utils';
 import { PageFormBigNumber, FormattedMessage as T } from '@/components';
 import MakeJournalEntriesHeaderFields from './MakeJournalEntriesHeaderFields';
-import { safeSumBy } from '@/utils';
 
 export default function MakeJournalEntriesHeader() {
   const {
