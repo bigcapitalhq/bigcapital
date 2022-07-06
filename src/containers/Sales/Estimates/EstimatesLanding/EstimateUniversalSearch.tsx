@@ -4,13 +4,13 @@ import intl from 'react-intl-universal';
 
 import { Choose, T, Icon } from '@/components';
 
-import { RESOURCES_TYPES } from "@/common/resourcesTypes";
+import { RESOURCES_TYPES } from '@/common/resourcesTypes';
 import { AbilitySubject, SaleEstimateAction } from '@/common/abilityOption';
 
-import withDrawerActions from "../../../Drawer/withDrawerActions";
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 /**
- * Estimate universal search item select action. 
+ * Estimate universal search item select action.
  */
 function EstimateUniversalSearchSelectComponent({
   // #ownProps

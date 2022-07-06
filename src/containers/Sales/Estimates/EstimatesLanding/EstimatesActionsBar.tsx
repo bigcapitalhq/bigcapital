@@ -29,10 +29,7 @@ import withSettings from '@/containers/Settings/withSettings';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useRefreshEstimates } from '@/hooks/query/estimates';
-import {
-  SaleEstimateAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { SaleEstimateAction, AbilitySubject } from '@/common/abilityOption';
 
 import { compose } from '@/utils';
 

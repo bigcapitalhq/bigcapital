@@ -2,12 +2,9 @@ import React from 'react';
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
-import {
-  SaleEstimateAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { SaleEstimateAction, AbilitySubject } from '@/common/abilityOption';
 
-import { CLASSES } from '../../../../common/classes';
+import { CLASSES } from '@/common/classes';
 import {
   FormatDateCell,
   FormattedMessage as T,

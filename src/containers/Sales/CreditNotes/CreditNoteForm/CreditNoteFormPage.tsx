@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import '../../../../style/pages/CreditNote/PageForm.scss';
+import 'style/pages/CreditNote/PageForm.scss';
 
 import CreditNoteForm from './CreditNoteForm';
 import { CreditNoteFormProvider } from './CreditNoteFormProvider';

@@ -11,7 +11,11 @@ export default function ReceiptItemsEntriesEditor({ defaultReceipt }) {
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-      <FastField name={'entries'} items={items} shouldUpdate={entriesFieldShouldUpdate}>
+      <FastField
+        name={'entries'}
+        items={items}
+        shouldUpdate={entriesFieldShouldUpdate}
+      >
         {({
           form: { values, setFieldValue },
           field: { value },

@@ -28,10 +28,7 @@ import withSettings from '@/containers/Settings/withSettings';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useRefreshReceipts } from '@/hooks/query/receipts';
-import {
-  SaleReceiptAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { SaleReceiptAction, AbilitySubject } from '@/common/abilityOption';
 
 import { compose } from '@/utils';
 

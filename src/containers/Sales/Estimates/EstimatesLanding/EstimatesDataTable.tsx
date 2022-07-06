@@ -10,7 +10,7 @@ import withEstimatesActions from './withEstimatesActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '../../../Settings/withSettings';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';

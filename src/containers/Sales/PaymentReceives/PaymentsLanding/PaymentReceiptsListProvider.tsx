@@ -7,7 +7,7 @@ import {
   useResourceMeta,
   usePaymentReceives,
 } from '@/hooks/query';
-import { isTableEmptyStatus, getFieldsFromResourceMeta } from '@/utils';
+import { getFieldsFromResourceMeta } from '@/utils';
 
 const PaymentReceivesListContext = createContext();
 

@@ -4,7 +4,6 @@ import {
   Classes,
   NavbarDivider,
   NavbarGroup,
-  Intent,
   Alignment,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
@@ -17,17 +16,14 @@ import {
   DashboardFilterButton,
   DashboardRowsHeightButton,
 } from '@/components';
-import DashboardActionsBar from '../../../../components/Dashboard/DashboardActionsBar';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { useCreditNoteListContext } from './CreditNotesListProvider';
-import {
-  CreditNoteAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { CreditNoteAction, AbilitySubject } from '@/common/abilityOption';
 import withCreditNotes from './withCreditNotes';
 import withCreditNotesActions from './withCreditNotesActions';
-import withSettings from '../../../Settings/withSettings';
-import withSettingsActions from '../../../Settings/withSettingsActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { compose } from '@/utils';
 

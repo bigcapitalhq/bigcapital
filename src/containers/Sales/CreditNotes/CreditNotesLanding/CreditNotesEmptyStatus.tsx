@@ -3,10 +3,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from '@/components';
 import { Can, FormattedMessage as T } from '@/components';
-import {
-  CreditNoteAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { CreditNoteAction, AbilitySubject } from '@/common/abilityOption';
 
 export default function CreditNotesEmptyStatus() {
   const history = useHistory();

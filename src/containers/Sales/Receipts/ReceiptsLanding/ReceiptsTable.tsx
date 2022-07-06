@@ -14,7 +14,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withReceipts from './withReceipts';
 import withReceiptsActions from './withReceiptsActions';
-import withSettings from '../../../Settings/withSettings';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useReceiptsTableColumns, ActionsMenu } from './components';

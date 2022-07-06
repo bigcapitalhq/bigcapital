@@ -26,10 +26,7 @@ import withPaymentReceives from './withPaymentReceives';
 
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withSettings from '@/containers/Settings/withSettings';
-import {
-  PaymentReceiveAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { PaymentReceiveAction, AbilitySubject } from '@/common/abilityOption';
 import { compose } from '@/utils';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
 import { useRefreshPaymentReceive } from '@/hooks/query/paymentReceives';

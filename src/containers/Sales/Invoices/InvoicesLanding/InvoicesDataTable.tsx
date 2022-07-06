@@ -16,7 +16,7 @@ import withInvoiceActions from './withInvoiceActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '../../../Settings/withSettings';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { useInvoicesTableColumns, ActionsMenu } from './components';
 import { useInvoicesListContext } from './InvoicesListProvider';

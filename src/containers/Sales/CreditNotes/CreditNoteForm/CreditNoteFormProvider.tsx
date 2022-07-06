@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { isEmpty, pick, isEqual, isUndefined } from 'lodash';
+import { isEmpty, pick } from 'lodash';
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 import { transformToEditForm } from './utils';
 import { Features } from '@/common';
@@ -94,7 +94,6 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
       })
     : [];
 
-
   // Provider payload.
   const provider = {
     items,
@@ -102,7 +101,7 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     creditNote,
     branches,
     warehouses,
-    submitPayload, 
+    submitPayload,
     isNewMode,
     newCreditNote,
 
