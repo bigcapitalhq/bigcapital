@@ -11,7 +11,6 @@ import {
   Alignment,
 } from '@blueprintjs/core';
 
-import {  } from '@/components';
 import {
   AdvancedFilterPopover,
   If,
@@ -24,15 +23,15 @@ import {
 
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
+import { AccountAction, AbilitySubject } from '@/common/abilityOption';
 import { useRefreshAccounts } from '@/hooks/query/accounts';
-import { useAccountsChartContext } from '@/containers/Accounts/AccountsChartProvider';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAccounts from '@/containers/Accounts/withAccounts';
-import withAlertActions from '@/containers/Alert/withAlertActions';
+import { useAccountsChartContext } from './AccountsChartProvider';
+import withAccounts from './withAccounts';
 import withAccountsTableActions from './withAccountsTableActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import { AccountAction, AbilitySubject } from '@/common/abilityOption';
 
 import { compose } from '@/utils';
 

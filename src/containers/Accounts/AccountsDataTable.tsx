@@ -1,25 +1,23 @@
 import React from 'react';
 
 import { TableFastCell, DataTable } from '@/components';
-import { compose } from '@/utils';
-
+import { TABLES } from '@/common/tables';
 import { useAccountsTableColumns, rowClassNames } from './utils';
 import { ActionsMenu } from './components';
-import { TABLES } from '@/common/tables';
 
 import TableVirtualizedListRows from '@/components/Datatable/TableVirtualizedRows';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
-import withSettings from '@/containers/Settings/withSettings';
 
 import { useAccountsChartContext } from './AccountsChartProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
-
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 
+import withSettings from '@/containers/Settings/withSettings';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { compose } from '@/utils';
 
 /**
  * Accounts data-table.

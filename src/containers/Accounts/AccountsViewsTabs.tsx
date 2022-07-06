@@ -3,10 +3,10 @@ import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
 import { DashboardViewsTabs } from '@/components';
-import { useAccountsChartContext } from '@/containers/Accounts/AccountsChartProvider';
+import { useAccountsChartContext } from './AccountsChartProvider';
 
-import withAccountsTableActions from './withAccountsTableActions';
 import withAccounts from './withAccounts';
+import withAccountsTableActions from './withAccountsTableActions';
 
 import { compose, transfromViewsToTabs } from '@/utils';
 

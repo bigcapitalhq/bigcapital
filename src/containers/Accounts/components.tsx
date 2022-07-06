@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import {
   Position,
   Classes,
@@ -8,8 +9,7 @@ import {
   MenuDivider,
   Intent,
 } from '@blueprintjs/core';
-import { Can, Icon, Money, If } from '@/components';
-import intl from 'react-intl-universal';
+import { Can, Icon, If } from '@/components';
 import { safeCallback } from '@/utils';
 import { AbilitySubject, AccountAction } from '@/common/abilityOption';
 

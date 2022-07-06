@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardInsider } from '@/components';
 import { useResourceViews, useResourceMeta, useAccounts } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 
@@ -8,7 +8,7 @@ const AccountsChartContext = createContext();
 /**
  * Accounts chart data provider.
  */
-function AccountsChartProvider({ query, tableStateChanged,...props }) {
+function AccountsChartProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
   const { data: resourceViews, isLoading: isViewsLoading } =
     useResourceViews('accounts');

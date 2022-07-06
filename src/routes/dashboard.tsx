@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 import intl from 'react-intl-universal';
-// import { RESOURCES_TYPES } from '../common/resourcesTypes';
+import { RESOURCES_TYPES } from '@/common/resourcesTypes';
 
 const SUBSCRIPTION_TYPE = {
   MAIN: 'main',
@@ -9,15 +9,15 @@ const SUBSCRIPTION_TYPE = {
 
 export const getDashboardRoutes = () => [
   // // Accounts.
-  // {
-  //   path: `/accounts`,
-  //   component: lazy(() => import('@/containers/Accounts/AccountsChart')),
-  //   breadcrumb: intl.get('accounts_chart'),
-  //   hotkey: 'shift+a',
-  //   pageTitle: intl.get('accounts_chart'),
-  //   defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: `/accounts`,
+    component: lazy(() => import('@/containers/Accounts/AccountsChart')),
+    breadcrumb: intl.get('accounts_chart'),
+    hotkey: 'shift+a',
+    pageTitle: intl.get('accounts_chart'),
+    defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // // Accounting.
   // {
   //   path: `/make-journal-entry`,
