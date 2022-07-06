@@ -15,7 +15,7 @@ import withWarehouseTransfersActions from './withWarehouseTransfersActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withSettings from '../../Settings/withSettings';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { useWarehouseTransfersTableColumns, ActionsMenu } from './components';
 import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
