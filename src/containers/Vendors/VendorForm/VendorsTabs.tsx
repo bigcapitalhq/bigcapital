@@ -1,6 +1,5 @@
 import React from 'react';
 import { Tabs, Tab } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { CLASSES } from '@/common/classes';

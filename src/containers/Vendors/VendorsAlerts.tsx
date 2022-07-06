@@ -1,13 +1,13 @@
 import React from 'react';
 
-const VendorDeleteAlert = React.lazy(() =>
-  import('../Alerts/Vendors/VendorDeleteAlert'),
+const VendorDeleteAlert = React.lazy(
+  () => import('@/containers/Alerts/Vendors/VendorDeleteAlert'),
 );
-const VendorActivateAlert = React.lazy(() =>
-  import('../Alerts/Vendors/VendorActivateAlert'),
+const VendorActivateAlert = React.lazy(
+  () => import('@/containers/Alerts/Vendors/VendorActivateAlert'),
 );
-const VendorInactivateAlert = React.lazy(() =>
-  import('../Alerts/Vendors/VendorInactivateAlert'),
+const VendorInactivateAlert = React.lazy(
+  () => import('@/containers/Alerts/Vendors/VendorInactivateAlert'),
 );
 
 export default [

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { FormGroup, ControlGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
-import { FFormGroup } from '../../../components/Forms';
+import { FFormGroup } from '@/components/Forms';
 import { Features } from '@/common';
 import {
   MoneyInputGroup,

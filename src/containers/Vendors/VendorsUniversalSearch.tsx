@@ -1,8 +1,8 @@
 import intl from 'react-intl-universal';
 
-import { RESOURCES_TYPES } from '../../common/resourcesTypes';
-import { AbilitySubject, VendorAction } from '../../common/abilityOption';
-import withDrawerActions from '../Drawer/withDrawerActions';
+import { RESOURCES_TYPES } from '@/common/resourcesTypes';
+import { AbilitySubject, VendorAction } from '@/common/abilityOption';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 /**
  * Vendor univesal search item select action.
