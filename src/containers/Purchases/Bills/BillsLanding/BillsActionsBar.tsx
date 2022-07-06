@@ -21,7 +21,7 @@ import {
   AdvancedFilterPopover,
   DashboardRowsHeightButton,
 } from '@/components';
-import { BillAction, AbilitySubject } from '../../../../common/abilityOption';
+import { BillAction, AbilitySubject } from '@/common/abilityOption';
 
 import withBillsActions from './withBillsActions';
 import withBills from './withBills';

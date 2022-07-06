@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   getVendorCreditTableStateFactory,
   isVendorCreditTableStateChangedFactory,
-} from '../../../../store/VendorCredit/vendorCredit.selector';
+} from '@/store/VendorCredit/vendorCredit.selector';
 
 export default (mapState) => {
   const getVendorsCreditNoteTableState = getVendorCreditTableStateFactory();

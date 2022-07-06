@@ -6,8 +6,8 @@ import { formattedAmount } from '@/utils';
 import { T, Icon, Choose, If } from '@/components';
 
 import { RESOURCES_TYPES } from '@/common/resourcesTypes';
-import withDrawerActions from '../../Drawer/withDrawerActions';
-import { AbilitySubject, BillAction } from '../../../common/abilityOption';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { AbilitySubject, BillAction } from '@/common/abilityOption';
 
 /**
  * Universal search bill item select action.

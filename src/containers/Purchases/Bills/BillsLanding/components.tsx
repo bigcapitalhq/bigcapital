@@ -18,12 +18,17 @@ import {
   Money,
   Can,
 } from '@/components';
-import { formattedAmount, safeCallback, isBlank, calculateStatus } from '@/utils';
+import {
+  formattedAmount,
+  safeCallback,
+  isBlank,
+  calculateStatus,
+} from '@/utils';
 import {
   BillAction,
   PaymentMadeAction,
   AbilitySubject,
-} from '../../../../common/abilityOption';
+} from '@/common/abilityOption';
 
 /**
  * Actions menu.

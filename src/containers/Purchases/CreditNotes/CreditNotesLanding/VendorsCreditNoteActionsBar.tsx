@@ -17,17 +17,14 @@ import {
   DashboardFilterButton,
   DashboardRowsHeightButton,
 } from '@/components';
-import DashboardActionsBar from '../../../../components/Dashboard/DashboardActionsBar';
+import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
-import {
-  VendorCreditAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { VendorCreditAction, AbilitySubject } from '@/common/abilityOption';
 import withVendorsCreditNotes from './withVendorsCreditNotes';
 import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
-import withSettings from '../../../Settings/withSettings';
-import withSettingsActions from '../../../Settings/withSettingsActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import withVendorActions from './withVendorActions';
 

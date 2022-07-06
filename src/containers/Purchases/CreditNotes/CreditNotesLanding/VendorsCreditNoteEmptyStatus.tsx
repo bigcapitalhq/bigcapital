@@ -3,10 +3,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from '@/components';
 import { Can, FormattedMessage as T } from '@/components';
-import {
-  VendorCreditAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { VendorCreditAction, AbilitySubject } from '@/common/abilityOption';
 
 export default function VendorsCreditNoteEmptyStatus() {
   const history = useHistory();

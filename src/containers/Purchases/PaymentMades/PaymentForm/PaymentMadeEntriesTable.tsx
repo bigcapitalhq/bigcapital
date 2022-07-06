@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
-import { CloudLoadingIndicator } from '@/components';
+import { FormattedMessage as T CloudLoadingIndicator } from '@/components';
 import classNames from 'classnames';
-import { FormattedMessage as T } from '@/components';
 
 import { CLASSES } from '@/common/classes';
 import { DataTableEditable } from '@/components';

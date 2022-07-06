@@ -5,10 +5,10 @@ import intl from 'react-intl-universal';
 import { Icon } from '@/components';
 
 import { RESOURCES_TYPES } from '@/common/resourcesTypes';
-import withDrawerActions from '../../Drawer/withDrawerActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { highlightText } from '@/utils';
-import { AbilitySubject, PaymentMadeAction } from '../../../common/abilityOption';
+import { AbilitySubject, PaymentMadeAction } from '@/common/abilityOption';
 
 /**
  * Universal search bill item select action.

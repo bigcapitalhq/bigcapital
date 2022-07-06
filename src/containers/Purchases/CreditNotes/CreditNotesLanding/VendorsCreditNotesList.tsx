@@ -1,6 +1,6 @@
 import React from 'react';
 
-import '../../../../style/pages/VendorsCreditNote/List.scss';
+import 'style/pages/VendorsCreditNote/List.scss';
 
 import { DashboardPageContent } from '@/components';
 import VendorsCreditNoteActionsBar from './VendorsCreditNoteActionsBar';
