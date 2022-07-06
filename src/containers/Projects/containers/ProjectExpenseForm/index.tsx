@@ -4,41 +4,41 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from 'components';
 import withDialogRedux from 'components/DialogReduxConnect';
 import { compose } from 'utils';
 
-const ExpenseFormeDialogContent = React.lazy(
-  () => import('./ExpenseFormDialogContent'),
+const ProjectExpenseFormeDialogContent = React.lazy(
+  () => import('./ProjectExpenseFormDialogContent'),
 );
 
 /**
- * Expense form dialog.
+ * Project expense form dialog.
  * @returns
  */
-function ExpenseFormDialog({
+function ProjectExpenseFormDialog({
   dialogName,
   payload: { projectId = null },
   isOpen,
 }) {
   return (
-    <ExpenseFormDialogRoot
+    <ProjectExpenseFormDialogRoot
       name={dialogName}
-      title={<T id={'expenses.dialog.label'} />}
+      title={<T id={'project_expense.dialog.label'} />}
       isOpen={isOpen}
       autoFocus={true}
       canEscapeKeyClose={true}
       style={{ width: '400px' }}
     >
       <DialogSuspense>
-        <ExpenseFormeDialogContent
+        <ProjectExpenseFormeDialogContent
           dialogName={dialogName}
           expense={projectId}
         />
       </DialogSuspense>
-    </ExpenseFormDialogRoot>
+    </ProjectExpenseFormDialogRoot>
   );
 }
 
-export default compose(withDialogRedux())(ExpenseFormDialog);
+export default compose(withDialogRedux())(ProjectExpenseFormDialog);
 
-const ExpenseFormDialogRoot = styled(Dialog)`
+const ProjectExpenseFormDialogRoot = styled(Dialog)`
   .bp3-dialog-body {
     .bp3-form-group {
       margin-bottom: 15px;

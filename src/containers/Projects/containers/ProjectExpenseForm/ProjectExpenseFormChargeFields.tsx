@@ -44,10 +44,10 @@ export default function ExpenseFormChargeFields() {
 
   return (
     <Choose>
-      <Choose.When condition={values.expenseCharge === '% markup'}>
+      <Choose.When condition={values.expenseCharge === 'markup'}>
         <PercentageFormField />
       </Choose.When>
-      <Choose.When condition={values.expenseCharge === 'Custom Pirce'}>
+      <Choose.When condition={values.expenseCharge === 'custom_pirce'}>
         <CustomPirceField />
       </Choose.When>
     </Choose>

@@ -12,22 +12,22 @@ import {
   FormattedMessage as T,
 } from 'components';
 import { ExpenseSelect, FInputGroupComponent } from '../../components';
-import ExpenseFormChargeFields from './ExpenseFormChargeFields';
+import ExpenseFormChargeFields from './ProjectExpenseFormChargeFields';
 import { momentFormatter } from 'utils';
-import { useExpenseFormContext } from './ExpenseFormProvider';
-import { ChargeSelect } from '../../components';
-import { expenseChargeOption } from 'common/modalChargeOptions';
+import { useProjectExpenseFormContext } from './ProjectExpenseFormProvider';
+import { ChangeTypesSelect } from '../../components';
+import { expenseChargeOption } from 'containers/Projects/containers/common/modalChargeOptions';
 
 /**
- * Expense form fields.
+ * Project expense form fields.
  * @returns
  */
-export default function ExpenseFormFields() {
+export default function ProjectExpenseFormFields() {
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Expense Name -----------*/}
       <FFormGroup
-        label={intl.get('expenses.dialog.expense_name')}
+        label={intl.get('project_expense.dialog.expense_name')}
         name={'expenseName'}
       >
         <FInputGroup name="expenseName" />
@@ -35,7 +35,7 @@ export default function ExpenseFormFields() {
       {/*------------ Track to Expense -----------*/}
       <FFormGroup
         name={'estimatedExpense'}
-        label={intl.get('expenses.dialog.track_expense')}
+        label={intl.get('project_expense.dialog.track_expense')}
         className={classNames('form-group--select-list', Classes.FILL)}
       >
         <ExpenseSelect
@@ -47,7 +47,7 @@ export default function ExpenseFormFields() {
 
       {/*------------ Extimated Date -----------*/}
       <FFormGroup
-        label={intl.get('expenses.dialog.expense_date')}
+        label={intl.get('project_expense.dialog.expense_date')}
         name={'expemseDate'}
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
@@ -63,41 +63,41 @@ export default function ExpenseFormFields() {
       </FFormGroup>
       {/*------------ Quantity -----------*/}
       <FFormGroup
-        label={intl.get('expenses.dialog.quantity')}
+        label={intl.get('project_expense.dialog.quantity')}
         name={'expenseQuantity'}
       >
         <FInputGroupComponent name="expenseQuantity" />
       </FFormGroup>
 
       <MetaLineLabel>
-        <T id={'expenses.dialog.cost_to_you'} />
+        <T id={'project_expense.dialog.cost_to_you'} />
       </MetaLineLabel>
       {/*------------ Unit Price -----------*/}
       <ControlGroup className={Classes.FILL}>
         <FFormGroup
           name={'unitPrice'}
-          label={intl.get('expenses.dialog.unit_price')}
+          label={intl.get('project_expense.dialog.unit_price')}
         >
           <FInputGroupComponent name="expenseUnitPrice" />
         </FFormGroup>
         <FFormGroup
           name={'expenseTotal'}
-          label={intl.get('expenses.dialog.expense_total')}
+          label={intl.get('project_expense.dialog.expense_total')}
         >
           <FInputGroup name="expenseTotal" />
         </FFormGroup>
       </ControlGroup>
 
       <MetaLineLabel>
-        <T id={'expenses.dialog.what_you_ll_charge'} />
+        <T id={'project_expense.dialog.what_you_ll_charge'} />
       </MetaLineLabel>
       {/*------------ Charge -----------*/}
       <FFormGroup
         name={'expenseCharge'}
-        label={<T id={'expenses.dialog.charge'} />}
+        label={<T id={'project_expense.dialog.charge'} />}
         className={classNames('form-group--select-list', Classes.FILL)}
       >
-        <ChargeSelect
+        <ChangeTypesSelect
           name="expenseCharge"
           items={expenseChargeOption}
           popoverProps={{ minimal: true }}
@@ -111,7 +111,7 @@ export default function ExpenseFormFields() {
       {/*------------ Total -----------*/}
       <ExpenseTotalBase>
         <ExpenseTotalLabel>
-          <T id={'expenses.dialog.total'} />
+          <T id={'project_expense.dialog.total'} />
         </ExpenseTotalLabel>
         <ExpenseTotal>0.00</ExpenseTotal>
       </ExpenseTotalBase>

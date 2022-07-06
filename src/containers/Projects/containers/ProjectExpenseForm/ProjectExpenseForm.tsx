@@ -3,9 +3,9 @@ import moment from 'moment';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { AppToaster } from 'components';
-import { CreateExpenseFormSchema } from './ExpenseForm.schema';
-import ExpenseFormContent from './ExpenseFormContent';
-import { useExpenseFormContext } from './ExpenseFormProvider';
+import { CreateProjectExpenseFormSchema } from './ProjectExpenseForm.schema';
+import ProjectExpenseFormContent from './ProjectExpenseFormContent';
+import { useProjectExpenseFormContext } from './ProjectExpenseFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { compose } from 'utils';
@@ -22,10 +22,10 @@ const defaultInitialValues = {
 };
 
 /**
- * Expense form.
+ * Project expense form.
  * @returns
  */
-function ExpenseForm({
+function ProjectExpenseForm({
   //#withDialogActions
   closeDialog,
 }) {
@@ -53,12 +53,12 @@ function ExpenseForm({
   };
   return (
     <Formik
-      validationSchema={CreateExpenseFormSchema}
+      validationSchema={CreateProjectExpenseFormSchema}
       initialValues={initialValues}
       onSubmit={handleFormSubmit}
-      component={ExpenseFormContent}
+      component={ProjectExpenseFormContent}
     />
   );
 }
 
-export default compose(withDialogActions)(ExpenseForm);
+export default compose(withDialogActions)(ProjectExpenseForm);

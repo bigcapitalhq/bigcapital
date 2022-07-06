@@ -3,11 +3,11 @@ import React from 'react';
 import { useFormikContext } from 'formik';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
-import { useExpenseFormContext } from './ExpenseFormProvider';
+import { useProjectExpenseFormContext } from './ProjectExpenseFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
-function ExpneseFormFloatingActions({
+function ProjectExpneseFormFloatingActions({
   // #withDialogActions
   closeDialog,
 }) {
@@ -15,7 +15,7 @@ function ExpneseFormFloatingActions({
   const { isSubmitting } = useFormikContext();
 
   // expense form dialog context.
-  const { dialogName } = useExpenseFormContext();
+  const { dialogName } = useProjectExpenseFormContext();
 
   // Handle close button click.
   const handleCancelBtnClick = () => {
@@ -41,4 +41,4 @@ function ExpneseFormFloatingActions({
   );
 }
 
-export default compose(withDialogActions)(ExpneseFormFloatingActions);
+export default compose(withDialogActions)(ProjectExpneseFormFloatingActions);
