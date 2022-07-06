@@ -18,7 +18,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { DRAWERS } from '@/common/drawers';
 
-function VendorSelectField({
+function VendorSelectFieldComponent({
   // #withDrawerActions
   openDrawer,
 
@@ -112,4 +112,6 @@ function VendorSelectField({
   );
 }
 
-export default R.compose(withDrawerActions)(VendorSelectField);
+export const VendorSelectField = R.compose(withDrawerActions)(
+  VendorSelectFieldComponent,
+);

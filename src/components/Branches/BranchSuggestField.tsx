@@ -11,7 +11,7 @@ import { CLASSES } from '@/common/classes';
  * branch suggest field.
  * @returns
  */
-export default function BranchSuggestField({
+export function BranchSuggestField({
   branches,
   initialBranchId,
   selectedBranchId,

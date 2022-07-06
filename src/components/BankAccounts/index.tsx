@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { Classes } from '@blueprintjs/core';
 import clsx from 'classnames';
-import Icon from '../Icon';
+import { Icon } from '@/components';
 
 const ACCOUNT_TYPE = {
   CASH: 'cash',

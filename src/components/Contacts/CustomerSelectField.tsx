@@ -19,7 +19,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { DRAWERS } from '@/common/drawers';
 
-function CustomerSelectField({
+function CustomerSelectFieldComponent({
   // #withDrawerActions
   openDrawer,
 
@@ -113,4 +113,6 @@ function CustomerSelectField({
   );
 }
 
-export default R.compose(withDrawerActions)(CustomerSelectField);
+export const CustomerSelectField = R.compose(withDrawerActions)(
+  CustomerSelectFieldComponent,
+);

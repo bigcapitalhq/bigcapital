@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 
 import { MenuItem, Button } from '@blueprintjs/core';
-import { FSelect } from '../Forms';
+import { FSelect } from '@/components';
 
 /**
  *

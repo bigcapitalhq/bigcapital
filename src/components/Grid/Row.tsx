@@ -62,7 +62,7 @@ const propTypes = {
 const defaultProps = {
   noGutters: false,
 };
- 
+
 function Row ({
   bsPrefix,
   className,

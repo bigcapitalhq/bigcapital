@@ -63,7 +63,7 @@ import { QueryList } from '@blueprintjs/select';
 //     isOpen: boolean;
 // }
 
-export default class MultiSelect extends React.Component {
+export class MultiSelect extends React.Component {
   inputElement = null;
   handleInputRef = refHandler(
     this,
@@ -215,5 +215,5 @@ export default class MultiSelect extends React.Component {
     Utils.safeInvokeMember(this.props.popoverProps, 'onOpened', node);
   }
 
-  resetQuery = () => this.queryList && this.queryList.setQuery("", true);
+  resetQuery = () => this.queryList && this.queryList.setQuery('', true);
 }

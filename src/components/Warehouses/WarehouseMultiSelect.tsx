@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
-import { FMultiSelect } from '../Forms';
+import { FMultiSelect } from '@/components';
 
 /**
  *

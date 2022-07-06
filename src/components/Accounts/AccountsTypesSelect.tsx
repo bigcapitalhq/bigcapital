@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { ListSelect } from '@/components';
 import { CLASSES } from '@/common/classes';
 
-export default function AccountsTypesSelect({
+export function AccountsTypesSelect({
   accountsTypes,
   selectedTypeId,
   defaultSelectText = 'Select account type',

@@ -5,5 +5,7 @@ export function FormattedMessage({ id, values }) {
 }
 
 export function FormattedHTMLMessage({ ...args }) {
-  return intl.formatHTMLMessage({ ...args })
+  return intl.formatHTMLMessage({ ...args });
 }
+
+export const T = FormattedMessage;

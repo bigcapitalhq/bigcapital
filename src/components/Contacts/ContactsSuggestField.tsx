@@ -1,25 +1,25 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
-import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
+import { MenuItem } from '@blueprintjs/core';
+import { Suggest } from '@blueprintjs/select';
 
-import { MenuItem, Button } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
+import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 import { CLASSES } from '@/common/classes';
+import intl from 'react-intl-universal';
 
-export default function ContactSelecetList({
+export function ContactsSuggestField({
   contactsList,
   initialContactId,
   selectedContactId,
-  createNewItemFrom,
-  defaultSelectText = <T id={'select_contact'} />,
+  defaultTextSelect = intl.get('select_contact'),
   onContactSelected,
-  popoverFill = false,
-  disabled = false,
-  buttonProps,
 
-  ...restProps
+  selectedContactType = [],
+  popoverFill = false,
+
+  ...suggestProps
 }) {
+  // filteredContacts
   const contacts = useMemo(
     () =>
       contactsList.map((contact) => ({
@@ -40,18 +40,19 @@ export default function ContactSelecetList({
 
   useEffect(() => {
     if (typeof selectedContactId !== 'undefined') {
-      const account = selectedContactId
+      const contact = selectedContactId
         ? contacts.find((a) => a.id === selectedContactId)
         : null;
-      setSelectedContact(account);
+      setSelectedContact(contact);
     }
   }, [selectedContactId, contacts, setSelectedContact]);
 
-  const handleContactRenderer = useCallback(
+  const contactRenderer = useCallback(
     (contact, { handleClick }) => (
       <MenuItem
         key={contact.id}
         text={contact.display_name}
+        label={contact.formatted_contact_service}
         onClick={handleClick}
       />
     ),
@@ -66,8 +67,13 @@ export default function ContactSelecetList({
     [setSelectedContact, onContactSelected],
   );
 
-  // Filter Contact List
-  const itemPredicate = (query, contact, index, exactMatch) => {
+  const handleInputValueRenderer = (inputValue) => {
+    if (inputValue) {
+      return inputValue.display_name.toString();
+    }
+  };
+
+  const filterContacts = (query, contact, index, exactMatch) => {
     const normalizedTitle = contact.display_name.toLowerCase();
     const normalizedQuery = query.toLowerCase();
     if (exactMatch) {
@@ -81,30 +87,21 @@ export default function ContactSelecetList({
   };
 
   return (
-    <Select
+    <Suggest
       items={contacts}
       noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
-      itemRenderer={handleContactRenderer}
-      itemPredicate={itemPredicate}
-      filterable={true}
-      disabled={disabled}
+      itemRenderer={contactRenderer}
+      itemPredicate={filterContacts}
       onItemSelect={onContactSelect}
-      popoverProps={{ minimal: true, usePortal: !popoverFill }}
+      selectedItem={selecetedContact}
+      inputProps={{ placeholder: defaultTextSelect }}
+      resetOnClose={true}
+      popoverProps={{ minimal: true, boundary: 'window' }}
+      inputValueRenderer={handleInputValueRenderer}
       className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, {
         [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
       })}
-      inputProps={{
-        placeholder: intl.get('filter_'),
-      }}
-      {...restProps}
-    >
-      <Button
-        disabled={disabled}
-        text={
-          selecetedContact ? selecetedContact.display_name : defaultSelectText
-        }
-        {...buttonProps}
-      />
-    </Select>
+      {...suggestProps}
+    />
   );
 }

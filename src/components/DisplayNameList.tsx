@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import ListSelect from './ListSelect';
+import { ListSelect } from '@/components';
 
 export default function DisplayNameList({
   salutation,

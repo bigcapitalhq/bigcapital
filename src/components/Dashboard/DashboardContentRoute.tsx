@@ -2,8 +2,8 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import { getDashboardRoutes } from '@/routes/dashboard';
-import EnsureSubscriptionsIsActive from '../Guards/EnsureSubscriptionsIsActive';
-import EnsureSubscriptionsIsInactive from '../Guards/EnsureSubscriptionsIsInactive';
+import EnsureSubscriptionsIsActive from '@/components/Guards/EnsureSubscriptionsIsActive';
+import EnsureSubscriptionsIsInactive from '@/components/Guards/EnsureSubscriptionsIsInactive';
 import DashboardPage from './DashboardPage';
 
 /**

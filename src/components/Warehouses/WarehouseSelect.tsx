@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { MenuItem, Button } from '@blueprintjs/core';
-import { FSelect } from '../Forms';
+import { FSelect } from '@/components';
 
 /**
  *

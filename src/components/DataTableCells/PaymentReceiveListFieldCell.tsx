@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import classNames from 'classnames';
 import { FormGroup, Classes, Intent } from '@blueprintjs/core';
 
-import PaymentReceiveListField from '@/components/PaymentReceiveListField';
+import { PaymentReceiveListField } from '@/components';
 import { CellType } from '@/common';
 function PaymentReceiveListFieldCell({
   column: { id },

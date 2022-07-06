@@ -11,9 +11,9 @@ import DashboardUniversalSearch from '@/containers/UniversalSearch/DashboardUniv
 import DashboardSplitPane from '@/components/Dashboard/DashboardSplitePane';
 import GlobalHotkeys from './GlobalHotkeys';
 import DashboardProvider from './DashboardProvider';
-import DrawersContainer from '@/components/DrawersContainer';
+import DrawersContainer from '/DrawersContainer';
 import AlertsContainer from '@/containers/AlertsContainer';
-import EnsureSubscriptionIsActive from '../Guards/EnsureSubscriptionIsActive';
+import EnsureSubscriptionIsActive from '@/components/Guards/EnsureSubscriptionIsActive';
 
 /**
  * Dashboard preferences.

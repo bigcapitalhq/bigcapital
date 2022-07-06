@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Card } from '../Card';
-import DataTable from '../DataTable';
+import { DataTable } from '@/components';
 
 export const CommercialDocBox = styled(Card)`
   padding: 22px 20px;

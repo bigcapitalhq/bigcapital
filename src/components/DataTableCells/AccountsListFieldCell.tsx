@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 
 import { CellType } from '@/common';
 import { useCellAutoFocus } from '@/hooks';
-import AccountsSuggestField from '@/components/AccountsSuggestField';
+import { AccountsSuggestField } from '@/components';
 
 /**
  * Account cell renderer.

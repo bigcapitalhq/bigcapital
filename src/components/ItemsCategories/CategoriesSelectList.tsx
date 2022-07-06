@@ -6,7 +6,7 @@ import { saveInvoke } from '@/utils';
 import classNames from 'classnames';
 import { CLASSES } from '@/common/classes';
 
-export default function CategoriesSelectList({
+export function CategoriesSelectList({
   categories,
   selecetedCategoryId,
   defaultSelectText = <T id={'select_category'} />,
@@ -15,7 +15,6 @@ export default function CategoriesSelectList({
   className,
   ...restProps
 }) {
-  
   // Filter Items Category
   const filterItemCategory = (query, item, _index, exactMatch) => {
     const normalizedTitle = item.name.toLowerCase();
@@ -49,10 +48,14 @@ export default function CategoriesSelectList({
       onItemSelect={handleItemCategorySelected}
       itemPredicate={filterItemCategory}
       itemRenderer={categoryItem}
-      popoverProps={{ minimal: true,  usePortal: !popoverFill }}
-      className={classNames('form-group--select-list', {
-        [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
-      }, className)}
+      popoverProps={{ minimal: true, usePortal: !popoverFill }}
+      className={classNames(
+        'form-group--select-list',
+        {
+          [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
+        },
+        className,
+      )}
       {...restProps}
     />
   );

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { ControlGroup } from '@blueprintjs/core';
 
-import { FlagIcon } from '../Tags';
+import { FlagIcon } from '@/components';
 import { FMoneyInputGroup, FFormGroup } from '../Forms';
 
 export function ExchangeRateInputGroup({

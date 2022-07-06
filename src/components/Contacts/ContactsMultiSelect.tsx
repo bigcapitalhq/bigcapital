@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { MenuItem } from '@blueprintjs/core';
-import { MultiSelect } from '../components/MultiSelectTaggable';
+import { MultiSelect } from '@/components';
 
 /**
  * Contacts multi-select component.
  */
-export default function ContactsMultiSelect({ ...multiSelectProps }) {
+export function ContactsMultiSelect({ ...multiSelectProps }) {
   // Filters accounts items.
   const filterContactsPredicater = useCallback(
     (query, contact, _index, exactMatch) => {

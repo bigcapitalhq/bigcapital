@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThemeProvider, StyleSheetManager } from 'styled-components';
 import rtlcss from 'stylis-rtlcss';
-import { useAppIntlContext } from '../AppIntlProvider';
+import { useAppIntlContext } from '@/components/AppIntlProvider';
 
 interface DashboardThemeProviderProps {
   children: React.ReactNode;

@@ -1,13 +1,14 @@
+//@ts-ignore
+//@ts-nocheck
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { MenuItem, Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import * as R from 'ramda';
 import classNames from 'classnames';
-import intl from 'react-intl-universal'
+import intl from 'react-intl-universal';
 
 import { MenuItemNestedText, FormattedMessage as T } from '@/components';
-import { filterAccountsByQuery } from './utils';
-import { nestedArrayToflatten } from '@/utils';
+import { nestedArrayToflatten, filterAccountsByQuery } from '@/utils';
 import { CLASSES } from '@/common/classes';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -46,7 +47,7 @@ const filterAccountsPredicater = (query, account, _index, exactMatch) => {
 /**
  * Accounts select list.
  */
-function AccountsSelectList({
+function AccountSelectList({
   // #withDialogActions
   openDialog,
 
@@ -170,4 +171,5 @@ function AccountsSelectList({
   );
 }
 
-export default R.compose(withDialogActions)(AccountsSelectList);
+export const AccountsSelectList =
+  R.compose(withDialogActions)(AccountSelectList);

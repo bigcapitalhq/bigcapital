@@ -22,8 +22,8 @@ import withDashboard from '@/containers/Dashboard/withDashboard';
 
 import QuickNewDropdown from '@/containers/QuickNewDropdown/QuickNewDropdown';
 import { compose } from '@/utils';
-import withSubscriptions from '../../containers/Subscriptions/withSubscriptions';
-import { useGetUniversalSearchTypeOptions } from '../../containers/UniversalSearch/utils';
+import withSubscriptions from '@/containers/Subscriptions/withSubscriptions';
+import { useGetUniversalSearchTypeOptions } from '@/containers/UniversalSearch/utils';
 
 function DashboardTopbarSubscriptionMessage() {
   return (

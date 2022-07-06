@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashboardAbilityProvider } from '../../components';
+import { DashboardAbilityProvider } from '@/components';
 import { useDashboardMetaBoot } from './DashboardBoot';
 
 /**

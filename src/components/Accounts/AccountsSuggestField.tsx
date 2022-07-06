@@ -1,3 +1,5 @@
+//@ts-ignore
+//@ts-nocheck
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
@@ -8,8 +10,7 @@ import classNames from 'classnames';
 import { CLASSES } from '@/common/classes';
 
 import { MenuItemNestedText, FormattedMessage as T } from '@/components';
-import { filterAccountsByQuery } from './utils';
-import { nestedArrayToflatten } from '@/utils';
+import { nestedArrayToflatten, filterAccountsByQuery } from '@/utils';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
@@ -55,7 +56,7 @@ const filterAccountsPredicater = (query, account, _index, exactMatch) => {
 /**
  * Accounts suggest field.
  */
-function AccountsSuggestField({
+function AccountSuggestField({
   // #withDialogActions
   openDialog,
 
@@ -170,4 +171,5 @@ function AccountsSuggestField({
   );
 }
 
-export default R.compose(withDialogActions)(AccountsSuggestField);
+export const AccountsSuggestField =
+  R.compose(withDialogActions)(AccountSuggestField);

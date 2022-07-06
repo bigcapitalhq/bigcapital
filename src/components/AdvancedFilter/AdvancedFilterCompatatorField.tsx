@@ -1,6 +1,6 @@
 import React from 'react';
 import { Classes } from '@blueprintjs/core';
-import ListSelect from '../ListSelect';
+import { ListSelect } from '@/components';
 import { getConditionTypeCompatators } from './utils';
 
 export default function DynamicFilterCompatatorField({

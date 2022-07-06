@@ -5,7 +5,7 @@ import { Switch, Route } from 'react-router';
 import SetupWizardPage from '@/containers/Setup/WizardSetupPage';
 
 // import EnsureOrganizationIsReady from '../../components/Guards/EnsureOrganizationIsReady';
-import EnsureOrganizationIsNotReady from '../../components/Guards/EnsureOrganizationIsNotReady';
+import EnsureOrganizationIsNotReady from '@/components/Guards/EnsureOrganizationIsNotReady';
 import { PrivatePagesProvider } from './PrivatePagesProvider';
 
 import '@/style/pages/Dashboard/Dashboard.scss';

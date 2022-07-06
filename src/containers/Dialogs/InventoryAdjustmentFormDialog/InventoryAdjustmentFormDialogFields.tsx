@@ -34,7 +34,7 @@ import {
 import { Features, CLASSES } from '@/common';
 import adjustmentType from '@/common/adjustmentType';
 
-import AccountsSuggestField from '@/components/AccountsSuggestField';
+import AccountsSuggestField from '@/components/Accounts/AccountsSuggestField';
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
 import {
   diffQuantity,

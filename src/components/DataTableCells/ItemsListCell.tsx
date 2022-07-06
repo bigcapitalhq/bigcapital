@@ -4,7 +4,7 @@ import { FormGroup, Classes, Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
 import { CellType } from '@/common';
-import ItemsSuggestField from '@/components/ItemsSuggestField';
+import { ItemsSuggestField } from '@/components';
 
 import { useCellAutoFocus } from '@/hooks';
 

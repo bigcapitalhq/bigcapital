@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Align, TableStyle } from '@/common';
 import { SkeletonText } from '@/components';
-import DataTable from '../../components/DataTable'
+import DataTable from '@/components/DataTable'
 
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
