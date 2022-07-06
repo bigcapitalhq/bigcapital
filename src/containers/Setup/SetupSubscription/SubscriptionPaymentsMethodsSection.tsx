@@ -1,7 +1,7 @@
 import React from 'react';
 import { T } from '@/components';
 
-import { PaymentMethodTabs } from '../../Subscriptions/SubscriptionTabs';
+import { PaymentMethodTabs } from '@/containers/Subscriptions/SubscriptionTabs';
 
 export default ({ formik, title, description }) => {
   return (

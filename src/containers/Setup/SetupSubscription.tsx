@@ -6,7 +6,7 @@ import '@/style/pages/Setup/Subscription.scss';
 
 import SetupSubscriptionForm from './SetupSubscription/SetupSubscriptionForm';
 import { getSubscriptionFormSchema } from './SubscriptionForm.schema';
-import withSubscriptionPlansActions from '../Subscriptions/withSubscriptionPlansActions';
+import withSubscriptionPlansActions from '@/containers/Subscriptions/withSubscriptionPlansActions';
 
 /**
  * Subscription step of wizard setup.

@@ -4,7 +4,7 @@ import * as R from 'ramda';
 
 import { T, SubscriptionPeriods } from '@/components';
 
-import withPlan from '../../Subscriptions/withPlan';
+import withPlan from '@/containers/Subscriptions/withPlan';
 
 const SubscriptionPeriodsEnhanced = R.compose(
   withPlan(({ plan }) => ({ plan })),

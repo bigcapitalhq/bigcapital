@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { FormattedMessage as T CloudLoadingIndicator } from '@/components';
+import { FormattedMessage as T, CloudLoadingIndicator } from '@/components';
 import classNames from 'classnames';
 
 import { CLASSES } from '@/common/classes';

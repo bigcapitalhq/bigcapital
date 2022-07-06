@@ -3,7 +3,7 @@ import * as R from 'ramda';
 import React from 'react';
 
 import { universalSearchBinds } from './DashboardUniversalSearchBinds';
-import { useAbilitiesFilter } from '../../hooks/utils';
+import { useAbilitiesFilter } from '@/hooks/utils';
 
 /**
  *
