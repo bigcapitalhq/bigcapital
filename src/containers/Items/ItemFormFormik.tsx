@@ -7,9 +7,9 @@ import classNames from 'classnames';
 import '@/style/pages/Items/Form.scss';
 
 import { CLASSES } from '@/common/classes';
-import AppToaster from '@/components/AppToaster';
-import ItemFormPrimarySection from './ItemFormPrimarySection';
+import { AppToaster } from '@/components';
 import ItemFormBody from './ItemFormBody';
+import ItemFormPrimarySection from './ItemFormPrimarySection';
 import ItemFormFloatingActions from './ItemFormFloatingActions';
 import ItemFormInventorySection from './ItemFormInventorySection';
 
@@ -17,10 +17,9 @@ import {
   transformSubmitRequestErrors,
   useItemFormInitialValues,
 } from './utils';
-import { EditItemFormSchema, CreateItemFormSchema } from './ItemForm.schema';
-
 import { useItemFormContext } from './ItemFormProvider';
-import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
+import { EditItemFormSchema, CreateItemFormSchema } from './ItemForm.schema';
+import { safeInvoke } from '@/utils';
 
 /**
  * Item form.
@@ -96,7 +95,7 @@ export default function ItemFormFormik({
         validationSchema={isNewMode ? CreateItemFormSchema : EditItemFormSchema}
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
-      > 
+      >
         <Form>
           <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
             <ItemFormPrimarySection />

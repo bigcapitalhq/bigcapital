@@ -5,9 +5,9 @@ import {
   transformTableQueryToParams,
 } from '@/utils';
 import { transformItemsTableState } from './utils';
-
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardInsider } from '@/components';
 import { useResourceViews, useResourceMeta, useItems } from '@/hooks/query';
+
 
 const ItemsContext = createContext();
 
@@ -41,8 +41,7 @@ function ItemsListProvider({ tableState, tableStateChanged, ...props }) {
   );
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    !tableStateChanged && !isItemsLoading && isEmpty(items);
+  const isEmptyStatus = !tableStateChanged && !isItemsLoading && isEmpty(items);
 
   const state = {
     itemsViews,

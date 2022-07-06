@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import {
   Menu,
   Popover,
@@ -8,7 +9,6 @@ import {
   MenuDivider,
   Intent,
 } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
 import { Icon } from '@/components';
 import { safeCallback } from '@/utils';
 

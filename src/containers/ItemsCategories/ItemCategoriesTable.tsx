@@ -1,11 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 
-import { useItemsCategoriesTableColumns, ActionMenuList } from './components';
 import DataTable from '@/components/DataTable';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
+import { useItemsCategoriesTableColumns, ActionMenuList } from './components';
 
 import withAlertActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';

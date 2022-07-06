@@ -3,8 +3,8 @@ import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { DashboardViewsTabs } from '@/components';
 import { withRouter } from 'react-router-dom';
 
-import withItemsActions from '@/containers/Items/withItemsActions';
-import withItems from '@/containers/Items/withItems';
+import withItems from './withItems';
+import withItemsActions from './withItemsActions';
 
 import { useItemsListContext } from './ItemsListProvider';
 import { compose, transfromViewsToTabs } from '@/utils';

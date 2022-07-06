@@ -1,4 +1,6 @@
 import React from 'react';
+import intl from 'react-intl-universal';
+import { isNumber } from 'lodash';
 import {
   Menu,
   MenuDivider,
@@ -9,9 +11,6 @@ import {
   Button,
   Popover,
 } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
-import { isNumber } from 'lodash';
-
 import { FormattedMessage as T, Icon, Money, If, Can } from '@/components';
 import { isBlank, safeCallback } from '@/utils';
 import {

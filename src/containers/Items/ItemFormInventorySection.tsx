@@ -1,11 +1,14 @@
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { FormGroup } from '@blueprintjs/core';
-import { AccountsSelectList, Col, Row } from '@/components';
 import { CLASSES } from '@/common/classes';
-import { FormattedMessage as T } from '@/components';
+import {
+  AccountsSelectList,
+  FormattedMessage as T,
+  Col,
+  Row,
+} from '@/components';
 import classNames from 'classnames';
-
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import { accountsFieldShouldUpdate } from './utils';

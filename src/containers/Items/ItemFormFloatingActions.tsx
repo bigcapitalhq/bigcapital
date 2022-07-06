@@ -1,13 +1,12 @@
 import React from 'react';
-import { Button, Intent, FormGroup, Checkbox } from '@blueprintjs/core';
 import styled from 'styled-components';
-import { FastField, useFormikContext } from 'formik';
 import classNames from 'classnames';
-
-import { FormattedMessage as T } from '@/components';
-
+import { Button, Intent, FormGroup, Checkbox } from '@blueprintjs/core';
+import { FastField, useFormikContext } from 'formik';
 import { CLASSES } from '@/common/classes';
+
 import { useItemFormContext } from './ItemFormProvider';
+import { FormattedMessage as T } from '@/components';
 import { saveInvoke } from '@/utils';
 
 /**

@@ -7,17 +7,18 @@ import {
   Radio,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { ErrorMessage, FastField } from 'formik';
+import { CLASSES } from '@/common/classes';
 import {
   CategoriesSelectList,
   Hint,
   Col,
   Row,
   FieldRequiredHint,
+  FormattedMessage as T,
+  FormattedHTMLMessage,
 } from '@/components';
 import classNames from 'classnames';
-import { CLASSES } from '@/common/classes';
 
 import { useItemFormContext } from './ItemFormProvider';
 import { handleStringChange, inputIntent } from '@/utils';

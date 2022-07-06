@@ -4,12 +4,11 @@ import { compose } from '@/utils';
 import '@/style/pages/Items/List.scss';
 
 import { DashboardPageContent } from '@/components';
+import { ItemsListProvider } from './ItemsListProvider';
 
 import ItemsActionsBar from './ItemsActionsBar';
 import ItemsViewsTabs from './ItemsViewsTabs';
 import ItemsDataTable from './ItemsDataTable';
-
-import { ItemsListProvider } from './ItemsListProvider';
 
 import withItems from './withItems';
 import withItemsActions from './withItemsActions';
@@ -44,7 +43,6 @@ function ItemsList({
         <ItemsViewsTabs />
         <ItemsDataTable />
       </DashboardPageContent>
-
     </ItemsListProvider>
   );
 }

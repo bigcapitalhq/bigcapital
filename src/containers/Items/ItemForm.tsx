@@ -1,15 +1,13 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-
-import { useDashboardPageTitle } from '@/hooks/state';
-import { useItemFormContext, ItemFormProvider } from './ItemFormProvider';
+import { useHistory } from 'react-router-dom';
 
 import ItemFormFormik from './ItemFormFormik';
 
-import DashboardCard from '@/components/Dashboard/DashboardCard';
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { useDashboardPageTitle } from '@/hooks/state';
+import { useItemFormContext, ItemFormProvider } from './ItemFormProvider';
+import { DashboardInsider, DashboardCard } from '@/components';
 
 /**
  * Item form dashboard title.

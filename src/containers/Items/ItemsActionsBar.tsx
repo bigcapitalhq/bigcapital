@@ -11,27 +11,26 @@ import {
 } from '@blueprintjs/core';
 import { DashboardRowsHeightButton, FormattedMessage as T } from '@/components';
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
-import Icon from '@/components/Icon';
 import {
   If,
   Can,
+  Icon,
   DashboardActionViewsList,
   AdvancedFilterPopover,
   DashboardFilterButton,
 } from '@/components';
 
+import { ItemAction, AbilitySubject } from '@/common/abilityOption';
 import { useItemsListContext } from './ItemsListProvider';
 import { useRefreshItems } from '@/hooks/query/items';
 
-import withItems from '@/containers/Items/withItems';
+import withItems from './withItems';
 import withItemsActions from './withItemsActions';
 import withAlertActions from '@/containers/Alert/withAlertActions';
 import withSettings from '@/containers/Settings/withSettings';
-
-import { compose } from '@/utils';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
-import { ItemAction, AbilitySubject } from '@/common/abilityOption';
+import { compose } from '@/utils';
 
 /**
  * Items actions bar.

@@ -4,11 +4,10 @@ import * as R from 'ramda';
 import '@/style/pages/ItemsCategories/List.scss';
 
 import { DashboardContentTable, DashboardPageContent } from '@/components';
-
-import ItemsCategoryActionsBar from './ItemsCategoryActionsBar';
 import { ItemsCategoriesProvider } from './ItemsCategoriesProvider';
-import ItemCategoriesTable from './ItemCategoriesTable';
 
+import ItemCategoriesTable from './ItemCategoriesTable';
+import ItemsCategoryActionsBar from './ItemsCategoryActionsBar';
 import withItemsCategories from './withItemCategories';
 
 /**
