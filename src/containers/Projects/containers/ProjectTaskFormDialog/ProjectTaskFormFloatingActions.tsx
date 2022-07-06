@@ -3,7 +3,7 @@ import React from 'react';
 import { useFormikContext } from 'formik';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'components';
-import { useTaskFormContext } from './TaskFormProvider';
+import { useProjectTaskFormContext } from './ProjectTaskFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
@@ -11,7 +11,7 @@ import { compose } from 'utils';
  * Task form floating actions.
  * @returns
  */
-function TaskFormFloatingActions({
+function ProjectTaskFormFloatingActions({
   // #withDialogActions
   closeDialog,
 }) {
@@ -19,7 +19,7 @@ function TaskFormFloatingActions({
   const { isSubmitting } = useFormikContext();
 
   // Task form dialog context.
-  const { dialogName } = useTaskFormContext();
+  const { dialogName } = useProjectTaskFormContext();
 
   // Handle close button click.
   const handleCancelBtnClick = () => {
@@ -45,4 +45,4 @@ function TaskFormFloatingActions({
   );
 }
 
-export default compose(withDialogActions)(TaskFormFloatingActions);
+export default compose(withDialogActions)(ProjectTaskFormFloatingActions);

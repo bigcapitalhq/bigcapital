@@ -1,10 +1,10 @@
 //@ts-nocheck
 import React from 'react';
 import { Formik } from 'formik';
-import { CreateTaskFormSchema } from './TaskForm.schema';
-import { useTaskFormContext } from './TaskFormProvider';
+import { CreateProjectTaskFormSchema } from './ProjectTaskForm.schema';
+import { useProjectTaskFormContext } from './ProjectTaskFormProvider';
 import { AppToaster } from 'components';
-import TaskFormContent from './TaskFormContent';
+import ProjectTaskFormContent from './ProjectTaskFormContent';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { compose } from 'utils';
@@ -12,20 +12,20 @@ import { compose } from 'utils';
 const defaultInitialValues = {
   taskName: '',
   taskHouse: '00:00',
-  taskCharge: 'Hourly rate',
+  taskCharge: 'hourly_rate',
   taskamount: '',
 };
 
 /**
- * Task form.
+ * Project task form.
  * @returns
  */
-function TaskForm({
+function ProjectTaskForm({
   // #withDialogActions
   closeDialog,
 }) {
   // task form dialog context.
-  const { dialogName } = useTaskFormContext();
+  const { dialogName } = useProjectTaskFormContext();
 
   // Initial form values
   const initialValues = {
@@ -51,12 +51,12 @@ function TaskForm({
 
   return (
     <Formik
-      validationSchema={CreateTaskFormSchema}
+      validationSchema={CreateProjectTaskFormSchema}
       initialValues={initialValues}
       onSubmit={handleFormSubmit}
-      component={TaskFormContent}
+      component={ProjectTaskFormContent}
     />
   );
 }
 
-export default compose(withDialogActions)(TaskForm);
+export default compose(withDialogActions)(ProjectTaskForm);

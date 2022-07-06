@@ -10,28 +10,28 @@ import {
   Row,
   FormattedMessage as T,
 } from 'components';
-import { taskChargeOptions } from 'common/modalChargeOptions';
-import { ChargeSelect } from '../../components';
+import { taskChargeOptions } from 'containers/Projects/containers/common/modalChargeOptions';
+import { ChangeTypesSelect } from '../../components';
 
 /**
- * Task form fields.
+ * Project task form fields.
  * @returns
  */
-function TaskFormFields() {
+function ProjectTaskFormFields() {
   // Formik context.
   const { values } = useFormikContext();
 
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Task Name -----------*/}
-      <FFormGroup label={<T id={'task.dialog.task_name'} />} name={'taskName'}>
+      <FFormGroup label={<T id={'project_task.dialog.task_name'} />} name={'taskName'}>
         <FInputGroup name="taskName" />
       </FFormGroup>
       {/*------------ Estimated Hours -----------*/}
       <Row>
         <Col xs={4}>
           <FFormGroup
-            label={<T id={'task.dialog.estimated_hours'} />}
+            label={<T id={'project_task.dialog.estimated_hours'} />}
             name={'taskHouse'}
           >
             <FInputGroup name="taskHouse" />
@@ -42,10 +42,10 @@ function TaskFormFields() {
           <FFormGroup
             name={'taskCharge'}
             className={'form-group--select-list'}
-            label={<T id={'task.dialog.charge'} />}
+            label={<T id={'project_task.dialog.charge'} />}
           >
             <ControlGroup>
-              <ChargeSelect
+              <ChangeTypesSelect
                 name="taskCharge"
                 items={taskChargeOptions}
                 popoverProps={{ minimal: true }}
@@ -62,7 +62,7 @@ function TaskFormFields() {
       {/*------------ Estimated Amount -----------*/}
       <EstimatedAmountBase>
         <EstimatedAmountContent>
-          <T id={'task.dialog.estimated_amount'} />
+          <T id={'project_task.dialog.estimated_amount'} />
           <EstimateAmount>0.00</EstimateAmount>
         </EstimatedAmountContent>
       </EstimatedAmountBase>
@@ -70,7 +70,7 @@ function TaskFormFields() {
   );
 }
 
-export default TaskFormFields;
+export default ProjectTaskFormFields;
 
 const EstimatedAmountBase = styled.div`
   display: flex;

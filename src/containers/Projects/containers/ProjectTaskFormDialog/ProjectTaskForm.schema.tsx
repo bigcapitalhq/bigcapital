@@ -7,8 +7,10 @@ const Schema = Yup.object().shape({
     .label(intl.get('task.schema.label.task_name'))
     .required(),
   taskHouse: Yup.string().label(intl.get('task.schema.label.task_house')),
-  taskCharge: Yup.string().label(intl.get('task.schema.label.charge')).required(),
+  taskCharge: Yup.string()
+    .label(intl.get('task.schema.label.charge'))
+    .required(),
   taskamount: Yup.number().label(intl.get('task.schema.label.amount')),
 });
 
-export const CreateTaskFormSchema = Schema;
+export const CreateProjectTaskFormSchema = Schema;
