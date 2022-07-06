@@ -6,7 +6,7 @@ import {
   useSetGlobalErrors,
   useAuthToken,
 } from './state';
-import { getCookie } from '../utils';
+import { getCookie } from '@/utils';
 
 export default function useApiRequest() {
   const setGlobalErrors = useSetGlobalErrors();

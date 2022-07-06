@@ -1,5 +1,5 @@
 import React from 'react';
-import useApiRequest from '../useRequest';
+import useApiRequest from '@/hooks/useRequest';
 
 export const useRequestPdf = (url) => {
   const apiRequest = useApiRequest();

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { useRequestQuery } from '../useQueryRequest';
-import useApiRequest from '../useRequest';
+import { useRequestQuery } from '@/hooks/useQueryRequest';
+import useApiRequest from '@/hooks/useRequest';
 import t from './types';
 
 /**
@@ -68,7 +68,7 @@ export function useCurrencies(props) {
     {
       select: (res) => res.data.currencies,
       defaultData: [],
-      ...props
+      ...props,
     },
   );
 }

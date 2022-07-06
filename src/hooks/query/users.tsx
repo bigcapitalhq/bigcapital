@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-import { useQueryTenant, useRequestQuery } from '../useQueryRequest';
-import useApiRequest from '../useRequest';
+import { useQueryTenant, useRequestQuery } from '@/hooks/useQueryRequest';
+import useApiRequest from '@/hooks/useRequest';
 import { useSetFeatureDashboardMeta } from '../state/feature';
 import t from './types';
 
@@ -165,4 +165,3 @@ export const useDashboardMeta = (props) => {
   }, [state.isSuccess, state.data, setFeatureDashboardMeta]);
   return state;
 };
-

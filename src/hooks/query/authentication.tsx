@@ -1,6 +1,6 @@
 import { useMutation } from 'react-query';
-import useApiRequest from '../useRequest';
-import { setCookie } from '../../utils';
+import useApiRequest from '@/hooks/useRequest';
+import { setCookie } from '@/utils';
 
 /**
  * Saves the response data to cookies.

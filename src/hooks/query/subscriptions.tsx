@@ -1,8 +1,8 @@
-import { useEffect } from "react"
-import { useMutation, useQueryClient } from "react-query";
-import { useRequestQuery } from "../useQueryRequest";
-import useApiRequest from "../useRequest";
-import { useSetSubscriptions } from '../state/subscriptions';
+import { useEffect } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
+import { useRequestQuery } from '@/hooks/useQueryRequest';
+import useApiRequest from '@/hooks/useRequest';
+import { useSetSubscriptions } from '@/hooks/state/subscriptions';
 import T from './types';
 
 /**
@@ -21,9 +21,9 @@ export const usePaymentByVoucher = (props) => {
         queryClient.invalidateQueries(T.ORGANIZATIONS);
       },
       ...props,
-    }
+    },
   );
-}
+};
 
 /**
  * Fetches the organization subscriptions.
@@ -40,5 +40,5 @@ export const useOrganizationSubscriptions = (props) => {
     if (state.isSuccess) {
       setSubscriptions(state.data);
     }
-  }, [state.isSuccess, state.data, setSubscriptions])
+  }, [state.isSuccess, state.data, setSubscriptions]);
 };

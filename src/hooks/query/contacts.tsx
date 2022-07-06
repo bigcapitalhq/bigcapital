@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
-import useApiRequest from '../useRequest';
-import { useQueryTenant } from '../useQueryRequest';
+import useApiRequest from '@/hooks/useRequest';
+import { useQueryTenant } from '@/hooks/useQueryRequest';
 import t from './types';
 
 // Common invalidate queries.

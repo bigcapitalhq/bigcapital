@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { transformPagination, transformResponse } from '@/utils';
-import { useRequestQuery } from '../useQueryRequest';
-import useApiRequest from '../useRequest';
+import { useRequestQuery } from '@/hooks/useQueryRequest';
+import useApiRequest from '@/hooks/useRequest';
 import t from './types';
 
 const DEFAULT_PAGINATION = {
@@ -248,11 +248,11 @@ export function useItemWarehouseLocation(id, props) {
 }
 
 /**
- * 
- * @param {*} id 
- * @param {*} query 
- * @param {*} props 
- * @returns 
+ *
+ * @param {*} id
+ * @param {*} query
+ * @param {*} props
+ * @returns
  */
 export function useItemInventoryCost(query, props) {
   return useRequestQuery(
@@ -267,5 +267,5 @@ export function useItemInventoryCost(query, props) {
       defaultData: [],
       ...props,
     },
-  ); 
+  );
 }

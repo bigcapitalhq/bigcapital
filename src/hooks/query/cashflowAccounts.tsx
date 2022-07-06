@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient, useInfiniteQuery } from 'react-query';
-import { useRequestQuery } from '../useQueryRequest';
-import useApiRequest from '../useRequest';
+import { useRequestQuery } from '@/hooks/useQueryRequest';
+import useApiRequest from '@/hooks/useRequest';
 import t from './types';
 
 const commonInvalidateQueries = (queryClient) => {

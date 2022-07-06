@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { batch } from 'react-redux';
 import t from './types';
-import useApiRequest from '../useRequest';
-import { useRequestQuery } from '../useQueryRequest';
+import useApiRequest from '@/hooks/useRequest';
+import { useRequestQuery } from '@/hooks/useQueryRequest';
 import { useSetOrganizations, useSetSubscriptions } from '../state';
 import { omit } from 'lodash';
 

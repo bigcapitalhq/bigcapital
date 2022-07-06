@@ -5,7 +5,7 @@ import {
   setLogin,
 } from '@/store/authentication/authentication.actions';
 import { useQueryClient } from 'react-query';
-import { removeCookie } from '../../utils';
+import { removeCookie } from '@/utils';
 
 /**
  * Removes the authentication cookies.

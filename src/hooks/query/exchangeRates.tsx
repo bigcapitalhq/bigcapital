@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
-import { useQueryTenant } from '../useQueryRequest';
+import { useQueryTenant } from '@/hooks/useQueryRequest';
 import { transformPagination } from '@/utils';
-import useApiRequest from '../useRequest';
+import useApiRequest from '@/hooks/useRequest';
 
 const defaultPagination = {
   pageSize: 20,

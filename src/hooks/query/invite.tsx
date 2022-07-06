@@ -1,6 +1,6 @@
 import { useMutation } from 'react-query';
-import { useRequestQuery } from '../useQueryRequest';
-import useApiRequest from '../useRequest';
+import { useRequestQuery } from '@/hooks/useQueryRequest';
+import useApiRequest from '@/hooks/useRequest';
 
 /**
  * Authentication invite accept.
@@ -12,7 +12,7 @@ export const useAuthInviteAccept = (props) => {
     ([values, token]) => apiRequest.post(`invite/accept/${token}`, values),
     props,
   );
-}
+};
 
 /**
  * Retrieve the invite meta by the given token.
@@ -24,17 +24,16 @@ export const useInviteMetaByToken = (token, props) => {
     { method: 'get', url: `invite/invited/${token}` },
     {
       select: (res) => res.data,
-      ...props
-    }
+      ...props,
+    },
   );
-}
-
+};
 
 export const useResendInvitation = (props) => {
   const apiRequest = useApiRequest();
 
   return useMutation(
     (userId) => apiRequest.post(`invite/resend/${userId}`),
-    props
-  )
-}
+    props,
+  );
+};

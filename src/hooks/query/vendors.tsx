@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from 'react-query';
 import t from './types';
 import { transformPagination } from '@/utils';
-import useApiRequest from '../useRequest';
-import { useRequestQuery } from '../useQueryRequest';
+import useApiRequest from '@/hooks/useRequest';
+import { useRequestQuery } from '@/hooks/useQueryRequest';
 
 // Common invalidate queries.
 const commonInvalidateQueries = (queryClient) => {

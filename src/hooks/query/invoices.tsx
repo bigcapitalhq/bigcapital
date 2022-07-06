@@ -1,8 +1,8 @@
 import { useQueryClient, useMutation } from 'react-query';
-import { useRequestQuery } from '../useQueryRequest';
+import { useRequestQuery } from '@/hooks/useQueryRequest';
 import { transformPagination } from '@/utils';
-import useApiRequest from '../useRequest';
-import { useRequestPdf } from '../utils';
+import useApiRequest from '@/hooks/useRequest';
+import { useRequestPdf } from '@/hooks/utils';
 import t from './types';
 
 // Common invalidate queries.

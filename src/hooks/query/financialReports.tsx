@@ -1,4 +1,4 @@
-import { useRequestQuery } from '../useQueryRequest';
+import { useRequestQuery } from '@/hooks/useQueryRequest';
 import {
   trialBalanceSheetReducer,
   generalLedgerTableRowsReducer,

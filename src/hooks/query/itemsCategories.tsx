@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { useRequestQuery } from '../useQueryRequest';
-import useApiRequest from '../useRequest';
+import { useRequestQuery } from '@/hooks/useQueryRequest';
+import useApiRequest from '@/hooks/useRequest';
 import t from './types';
 
 const commonInvalidateQueries = (queryClient) => {
@@ -68,10 +68,9 @@ export function useDeleteItemCategory(props) {
   });
 }
 
-
 const transformCategories = (res) => ({
   itemsCategories: res.data.item_categories,
-  pagination: res.data.pagination,  
+  pagination: res.data.pagination,
 });
 
 /**
@@ -85,7 +84,7 @@ export function useItemsCategories(query, props) {
       select: transformCategories,
       defaultData: {
         itemsCategories: [],
-        pagination: {}
+        pagination: {},
       },
       ...props,
     },
