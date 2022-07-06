@@ -1,10 +1,10 @@
 import React from 'react';
 import { Switch, Route } from 'react-router';
 
-// import Dashboard from '@/components/Dashboard/Dashboard';
+import Dashboard from '@/components/Dashboard/Dashboard';
 import SetupWizardPage from '@/containers/Setup/WizardSetupPage';
 
-// import EnsureOrganizationIsReady from '../../components/Guards/EnsureOrganizationIsReady';
+import EnsureOrganizationIsReady from '../../components/Guards/EnsureOrganizationIsReady';
 import EnsureOrganizationIsNotReady from '../../components/Guards/EnsureOrganizationIsNotReady';
 import { PrivatePagesProvider } from './PrivatePagesProvider';
 
@@ -23,11 +23,11 @@ export default function DashboardPrivatePages() {
           </EnsureOrganizationIsNotReady>
         </Route>
 
-        {/* <Route path="/">
+        <Route path="/">
           <EnsureOrganizationIsReady>
             <Dashboard />
           </EnsureOrganizationIsReady>
-        </Route> */}
+        </Route>
       </Switch>
     </PrivatePagesProvider>
   );
