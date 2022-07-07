@@ -6,7 +6,7 @@ import { FinancialReportBody } from '../FinancialReportPage';
 import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 
 import { useCashFlowStatementContext } from './CashFlowStatementProvider';
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Cashflow stement body.

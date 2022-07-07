@@ -2,13 +2,12 @@ import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
+import { TableStyle } from '@/common';
 import { DataTable, FinancialSheet } from '@/components';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
 import { useCashFlowStatementColumns } from './components';
 import { useCashFlowStatementContext } from './CashFlowStatementProvider';
-
-import { TableStyle } from '@/common';
-import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
 /**
  * Cash flow statement table.

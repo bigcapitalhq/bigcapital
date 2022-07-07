@@ -377,20 +377,21 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // {
-  //   path: `/financial-reports/cash-flow`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/FinancialStatements/CashFlowStatement/CashFlowStatement'
-  //     ),
-  //   ),
-  //   breadcrumb: intl.get('cash_flow_statement'),
-  //   hint: intl.get('reports_inflow_and_outflow_of_cash_and_cash_equivalents'),
-  //   pageTitle: intl.get('cash_flow_statement'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: `/financial-reports/cash-flow`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/FinancialStatements/CashFlowStatement/CashFlowStatement'
+        ),
+    ),
+    breadcrumb: intl.get('cash_flow_statement'),
+    hint: intl.get('reports_inflow_and_outflow_of_cash_and_cash_equivalents'),
+    pageTitle: intl.get('cash_flow_statement'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: `/financial-reports/inventory-item-details`,
   //   component: lazy(() =>

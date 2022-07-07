@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react';
 import moment from 'moment';
 
-import { FinancialStatement } from '@/components';
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
+import { FinancialStatement, DashboardPageContent } from '@/components';
+import { CashFlowStatementBody } from './CashFlowStatementBody';
+import { CashFlowStatementProvider } from './CashFlowStatementProvider';
 
 import CashFlowStatementHeader from './CashFlowStatementHeader';
 import CashFlowStatementActionsBar from './CashFlowStatementActionsBar';
-import { CashFlowStatementBody } from './CashFlowStatementBody';
 
 import withCashFlowStatementActions from './withCashFlowStatementActions';
-import { CashFlowStatementProvider } from './CashFlowStatementProvider';
 import {
   CashFlowStatementLoadingBar,
   CashFlowStatementAlerts,

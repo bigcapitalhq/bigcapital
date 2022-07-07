@@ -1,8 +1,7 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 
-import { Icon, If } from '@/components';
-import { FormattedMessage as T } from '@/components';
+import { Icon, If, FormattedMessage as T } from '@/components';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
 import { dynamicColumns } from './dynamicColumns';
