@@ -5,9 +5,9 @@ import { FinancialStatement, DashboardPageContent } from '@/components';
 
 import JournalHeader from './JournalHeader';
 import JournalActionsBar from './JournalActionsBar';
+import { JournalBody } from './JournalBody';
 import { JournalSheetProvider } from './JournalProvider';
 import { JournalSheetLoadingBar, JournalSheetAlerts } from './components';
-import { JournalBody } from './JournalBody';
 
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withJournalActions from './withJournalActions';

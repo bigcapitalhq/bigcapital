@@ -246,19 +246,19 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // {
-  //   path: `/financial-reports/journal-sheet`,
-  //   component: lazy(() =>
-  //     import('@/containers/FinancialStatements/Journal/Journal'),
-  //   ),
-  //   breadcrumb: intl.get('journal_sheet'),
-  //   hint: intl.get('the_debit_and_credit_entries_of_system_transactions'),
-  //   hotkey: 'shift+3',
-  //   pageTitle: intl.get('journal_sheet'),
-  //   sidebarExpand: false,
-  //   backLink: true,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: `/financial-reports/journal-sheet`,
+    component: lazy(() =>
+      import('@/containers/FinancialStatements/Journal/Journal'),
+    ),
+    breadcrumb: intl.get('journal_sheet'),
+    hint: intl.get('the_debit_and_credit_entries_of_system_transactions'),
+    hotkey: 'shift+3',
+    pageTitle: intl.get('journal_sheet'),
+    sidebarExpand: false,
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: `/financial-reports/purchases-by-items`,
   //   component: lazy(() =>

@@ -10,8 +10,7 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import { FormattedMessage as T } from '@/components';
-import Icon from '@/components/Icon';
+import { FormattedMessage as T ,Icon } from '@/components';
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import withJournalActions from './withJournalActions';
