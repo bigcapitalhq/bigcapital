@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 
-import { FinancialStatement } from '@/components';
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 
-import VendorsBalanceSummaryActionsBar from './VendorsBalanceSummaryActionsBar';
 import VendorsBalanceSummaryHeader from './VendorsBalanceSummaryHeader';
+import VendorsBalanceSummaryActionsBar from './VendorsBalanceSummaryActionsBar';
 
 import { VendorsBalanceSummaryProvider } from './VendorsBalanceSummaryProvider';
 import { VendorsSummarySheetLoadingBar } from './components';
@@ -13,7 +12,6 @@ import { VendorBalanceSummaryBody } from './VendorsBalanceSummaryBody';
 
 import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions';
 
-import { TableStyle } from '@/common';
 import { getDefaultVendorsBalanceQuery } from './utils';
 import { compose } from '@/utils';
 

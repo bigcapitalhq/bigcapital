@@ -1,13 +1,12 @@
 import React from 'react';
 import * as R from 'ramda';
 
-import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 import VendorsBalanceSummaryTable from './VendorsBalanceSummaryTable';
+import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { FinancialReportBody } from '../FinancialReportPage';
+import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
-
-import { FinancialSheetSkeleton } from '../../../components/FinancialSheet';
 
 /**
  * Vendor balance summary body.

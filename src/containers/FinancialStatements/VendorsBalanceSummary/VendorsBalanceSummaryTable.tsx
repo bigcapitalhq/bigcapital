@@ -2,13 +2,12 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
+import { TableStyle } from '@/common';
 import { ReportDataTable, FinancialSheet } from '@/components';
-
+import { tableRowTypesToClassnames } from '@/utils';
 import { useVendorsBalanceColumns } from './components';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 
-import { TableStyle } from '@/common';
-import { tableRowTypesToClassnames } from '@/utils';
 
 /**
  * Vendors balance summary table.

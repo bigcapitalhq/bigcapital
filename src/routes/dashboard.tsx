@@ -328,20 +328,21 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // {
-  //   path: `/financial-reports/vendors-balance-summary`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/FinancialStatements/VendorsBalanceSummary/VendorsBalanceSummary'
-  //     ),
-  //   ),
-  //   breadcrumb: intl.get('vendors_balance_summary'),
-  //   hint: intl.get('summerize_the_total_amount_your_business_owes_each_vendor'),
-  //   pageTitle: intl.get('vendors_balance_summary'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: `/financial-reports/vendors-balance-summary`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/FinancialStatements/VendorsBalanceSummary/VendorsBalanceSummary'
+        ),
+    ),
+    breadcrumb: intl.get('vendors_balance_summary'),
+    hint: intl.get('summerize_the_total_amount_your_business_owes_each_vendor'),
+    pageTitle: intl.get('vendors_balance_summary'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: `/financial-reports/transactions-by-customers`,
   //   component: lazy(() =>

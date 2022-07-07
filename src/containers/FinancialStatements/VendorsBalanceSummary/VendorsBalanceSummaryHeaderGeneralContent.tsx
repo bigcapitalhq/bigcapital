@@ -10,7 +10,7 @@ import {
   Col,
   FieldHint,
   FormattedMessage as T,
-} from '../../../components';
+} from '@/components';
 import { filterVendorsOptions } from '../constants';
 
 import {

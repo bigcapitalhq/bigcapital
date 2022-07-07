@@ -3,10 +3,10 @@ import intl from 'react-intl-universal';
 import * as R from 'ramda';
 
 import { If } from '@/components';
-import FinancialLoadingBar from '../FinancialLoadingBar';
-import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
-
 import { Align } from '@/common';
+import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
+import FinancialLoadingBar from '../FinancialLoadingBar';
+
 
 /**
  * Retrieve vendors balance summary columns.

@@ -1,18 +1,17 @@
 import React from 'react';
 import * as Yup from 'yup';
-import { Formik, Form } from 'formik';
 import moment from 'moment';
-import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
+import { Formik, Form } from 'formik';
+import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 
 import { FormattedMessage as T } from '@/components';
+import { compose, transformToForm } from '@/utils';
 
-import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '../FinancialStatementHeader';
+import VendorsBalanceSummaryHeaderGeneral from './VendorsBalanceSummaryHeaderGeneral';
 import withVendorsBalanceSummary from './withVendorsBalanceSummary';
 import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions';
-import VendorsBalanceSummaryHeaderGeneral from './VendorsBalanceSummaryHeaderGeneral';
-
-import { compose, transformToForm } from '@/utils';
 
 /**
  * Vendors balance summary drawer header.
