@@ -21,8 +21,9 @@ export const getDashboardRoutes = () => [
   // Accounting.
   {
     path: `/make-journal-entry`,
-    component: lazy(() =>
-      import('@/containers/Accounting/MakeJournal/MakeJournalEntriesPage'),
+    component: lazy(
+      () =>
+        import('@/containers/Accounting/MakeJournal/MakeJournalEntriesPage'),
     ),
     breadcrumb: intl.get('make_journal_entry'),
     hotkey: 'ctrl+shift+m',
@@ -34,8 +35,9 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/manual-journals/:id/edit`,
-    component: lazy(() =>
-      import('@/containers/Accounting/MakeJournal/MakeJournalEntriesPage'),
+    component: lazy(
+      () =>
+        import('@/containers/Accounting/MakeJournal/MakeJournalEntriesPage'),
     ),
     breadcrumb: intl.get('edit'),
     pageTitle: intl.get('edit_journal'),
@@ -46,8 +48,9 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/manual-journals`,
-    component: lazy(() =>
-      import('@/containers/Accounting/JournalsLanding/ManualJournalsList'),
+    component: lazy(
+      () =>
+        import('@/containers/Accounting/JournalsLanding/ManualJournalsList'),
     ),
     breadcrumb: intl.get('manual_journals'),
     hotkey: 'shift+m',
@@ -57,8 +60,8 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/items/categories`,
-    component: lazy(() =>
-      import('@/containers/ItemsCategories/ItemCategoriesList'),
+    component: lazy(
+      () => import('@/containers/ItemsCategories/ItemCategoriesList'),
     ),
     breadcrumb: intl.get('categories'),
     pageTitle: intl.get('category_list'),
@@ -109,8 +112,8 @@ export const getDashboardRoutes = () => [
   // Inventory adjustments.
   {
     path: `/inventory-adjustments`,
-    component: lazy(() =>
-      import('@/containers/InventoryAdjustments/InventoryAdjustmentList'),
+    component: lazy(
+      () => import('@/containers/InventoryAdjustments/InventoryAdjustmentList'),
     ),
     breadcrumb: intl.get('inventory_adjustments'),
     pageTitle: intl.get('inventory_adjustment_list'),
@@ -118,42 +121,45 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
-  // // Warehouse Transfer.
-  // {
-  //   path: `/warehouses-transfers/:id/edit`,
-  //   component: lazy(() =>
-  //     import(
-  //       '../containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage'
-  //     ),
-  //   ),
-  //   name: 'warehouse-transfer-edit',
-  //   pageTitle: intl.get('warehouse_transfer.label.edit_warehouse_transfer'),
-  //   sidebarExpand: false,
-  //   backLink: true,
-  // },
-  // {
-  //   path: `/warehouses-transfers/new`,
-  //   component: lazy(() =>
-  //     import(
-  //       '../containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage'
-  //     ),
-  //   ),
-  //   name: 'warehouses-transfer-new',
-  //   pageTitle: intl.get('warehouse_transfer.label.new_warehouse_transfer'),
-  //   sidebarExpand: false,
-  //   backLink: true,
-  // },
-  // {
-  //   path: `/warehouses-transfers`,
-  //   component: lazy(() =>
-  //     import(
-  //       '../containers/WarehouseTransfers/WarehouseTransfersLanding/WarehouseTransfersList'
-  //     ),
-  //   ),
-  //   pageTitle: intl.get('warehouse_transfer.label.warehouse_transfer_list'),
-  //   // defaultSearchResource: RESOURCES_TYPES.ITEM,
-  //   // subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  // Warehouse Transfer.
+  {
+    path: `/warehouses-transfers/:id/edit`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage'
+        ),
+    ),
+    name: 'warehouse-transfer-edit',
+    pageTitle: intl.get('warehouse_transfer.label.edit_warehouse_transfer'),
+    sidebarExpand: false,
+    backLink: true,
+  },
+  {
+    path: `/warehouses-transfers/new`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage'
+        ),
+    ),
+    name: 'warehouses-transfer-new',
+    pageTitle: intl.get('warehouse_transfer.label.new_warehouse_transfer'),
+    sidebarExpand: false,
+    backLink: true,
+  },
+  {
+    path: `/warehouses-transfers`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/WarehouseTransfers/WarehouseTransfersLanding/WarehouseTransfersList'
+        ),
+    ),
+    pageTitle: intl.get('warehouse_transfer.label.warehouse_transfer_list'),
+    // defaultSearchResource: RESOURCES_TYPES.ITEM,
+    // subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
 
   // // Financial Reports.
   // {

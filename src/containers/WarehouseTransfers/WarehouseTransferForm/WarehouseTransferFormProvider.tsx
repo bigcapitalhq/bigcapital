@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardInsider } from '@/components';
 import {
   useItems,
   useWarehouses,
@@ -13,7 +13,7 @@ import { Features } from '@/common';
 import { useFeatureCan } from '@/hooks/state';
 import { ITEMS_FILTER_ROLES_QUERY } from './utils';
 
-const WarehouseFormContext = React.createContext();
+const WarehouseFormContext = createContext();
 
 /**
  * Warehouse transfer form provider.
@@ -57,7 +57,7 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
     data: inventoryItemsCost,
     isLoading: isItemsCostLoading,
     isFetching: isItemsCostFetching,
-    isSuccess: isItemsCostSuccess
+    isSuccess: isItemsCostSuccess,
   } = useItemInventoryCost(
     {
       date: itemCostQuery?.date,

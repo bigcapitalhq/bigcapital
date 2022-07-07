@@ -1,6 +1,6 @@
 import React from 'react';
-import WarehouseTransferNumberDialog from '../../Dialogs/WarehouseTransferNumberDialog';
-import { useFormikContext } from 'formik';
+import { useFormikContext } from 'formik'; 
+import WarehouseTransferNumberDialog from '@/containers/Dialogs/WarehouseTransferNumberDialog';
 
 /**
  * Warehouse transfer form dialog.

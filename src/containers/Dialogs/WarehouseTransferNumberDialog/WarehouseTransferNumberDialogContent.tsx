@@ -1,13 +1,13 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useSaveSettings } from '@/hooks/query';
 
-import { WarehouseTransferNumberDialogProvider } from './WarehouseTransferNumberDialogProvider';
 import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm';
+import { useSaveSettings } from '@/hooks/query';
+import { WarehouseTransferNumberDialogProvider } from './WarehouseTransferNumberDialogProvider';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 import {
   transformFormToSettings,

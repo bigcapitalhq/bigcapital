@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
-import { isEmpty, sumBy } from 'lodash';
+import { isEmpty } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from '@/common/classes';

@@ -1,7 +1,6 @@
 import React from 'react';
-import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-
+import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { safeCallback } from '@/utils';
 import {
   FormatDateCell,

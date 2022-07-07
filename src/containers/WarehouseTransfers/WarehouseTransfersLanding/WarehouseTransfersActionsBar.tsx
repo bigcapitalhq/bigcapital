@@ -5,7 +5,6 @@ import {
   Classes,
   NavbarDivider,
   NavbarGroup,
-  Intent,
   Alignment,
 } from '@blueprintjs/core';
 import {
@@ -19,11 +18,10 @@ import {
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
-
+import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withWarehouseTransfers from './withWarehouseTransfers';
 import withWarehouseTransfersActions from './withWarehouseTransfersActions';
-import withSettings from '../../Settings/withSettings';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { compose } from '@/utils';
 

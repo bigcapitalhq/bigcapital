@@ -1,24 +1,20 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-
-import WarehouseTransfersEmptyStatus from './WarehouseTransfersEmptyStatus';
-
 import { DataTable, DashboardContentTable } from '@/components';
 import { TABLES } from '@/common/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
+import { useWarehouseTransfersTableColumns, ActionsMenu } from './components';
+import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
 
+import WarehouseTransfersEmptyStatus from './WarehouseTransfersEmptyStatus';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
-
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withWarehouseTransfersActions from './withWarehouseTransfersActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withSettings from '../../Settings/withSettings';
-
-import { useWarehouseTransfersTableColumns, ActionsMenu } from './components';
-import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { compose } from '@/utils';
 

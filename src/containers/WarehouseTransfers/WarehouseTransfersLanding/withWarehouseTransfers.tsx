@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   getWarehouseTransfersTableStateFactory,
   isWarehouseTransferTableStateChangedFactory,
-} from '../../../store/WarehouseTransfer/warehouseTransfer.selector';
+} from '@/store/WarehouseTransfer/warehouseTransfer.selector';
 
 export default (mapState) => {
   const getWarehouseTransferTableState = getWarehouseTransfersTableStateFactory();

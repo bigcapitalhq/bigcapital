@@ -1,20 +1,14 @@
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
+import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
 import { keyBy, omit } from 'lodash';
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
 
 import { useWatch } from '@/hooks/utils';
-import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
-
 import { AppToaster } from '@/components';
-import {
-  orderingLinesIndexes,
-  updateAutoAddNewLine,
-  updateTableCell,
-} from '@/utils';
+import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import {
   compose,
   transformToForm,
@@ -24,6 +18,9 @@ import {
   updateTableRow,
   updateMinEntriesLines,
   updateRemoveLineByIndex,
+  orderingLinesIndexes,
+  updateAutoAddNewLine,
+  updateTableCell,
 } from '@/utils';
 import {
   updateItemsEntriesTotal,
