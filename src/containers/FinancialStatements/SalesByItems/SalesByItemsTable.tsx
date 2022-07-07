@@ -3,10 +3,8 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
 import { ReportDataTable, FinancialSheet } from '@/components';
-
 import { useSalesByItemsContext } from './SalesByItemProvider';
 import { useSalesByItemsTableColumns } from './components';
-
 import { tableRowTypesToClassnames } from '@/utils';
 import { TableStyle } from '@/common';
 

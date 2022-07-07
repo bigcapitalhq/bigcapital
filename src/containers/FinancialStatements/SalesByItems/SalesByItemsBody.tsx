@@ -2,11 +2,10 @@ import React from 'react';
 import * as R from 'ramda';
 
 import { FinancialReportBody } from '../FinancialReportPage';
-import { FinancialSheetSkeleton } from '../../../components/FinancialSheet';
+import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
+import { useSalesByItemsContext } from './SalesByItemProvider';
 
 import SalesByItemsTable from './SalesByItemsTable';
-
-import { useSalesByItemsContext } from './SalesByItemProvider';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**

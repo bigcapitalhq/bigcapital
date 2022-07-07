@@ -1,14 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import moment from 'moment';
 
+import { SalesByItemsBody } from './SalesByItemsBody';
 import { SalesByItemProvider } from './SalesByItemProvider';
+import { SalesByItemsLoadingBar } from './components';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 import SalesByItemsActionsBar from './SalesByItemsActionsBar';
 import SalesByItemsHeader from './SalesByItemsHeader';
-import { SalesByItemsBody } from './SalesByItemsBody';
-
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
-import { SalesByItemsLoadingBar } from './components';
-import { FinancialStatement } from '@/components';
 
 import withSalesByItemsActions from './withSalesByItemsActions';
 

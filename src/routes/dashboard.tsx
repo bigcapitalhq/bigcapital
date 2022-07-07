@@ -283,20 +283,21 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // {
-  //   path: `/financial-reports/sales-by-items`,
-  //   component: lazy(() =>
-  //     import('@/containers/FinancialStatements/SalesByItems/SalesByItems'),
-  //   ),
-  //   breadcrumb: intl.get('sales_by_items'),
-  //   pageTitle: intl.get('sales_by_items'),
-  //   hint: intl.get(
-  //     'summarize_the_business_s_sold_items_quantity_income_and_average_income_rate',
-  //   ),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: `/financial-reports/sales-by-items`,
+    component: lazy(
+      () =>
+        import('@/containers/FinancialStatements/SalesByItems/SalesByItems'),
+    ),
+    breadcrumb: intl.get('sales_by_items'),
+    pageTitle: intl.get('sales_by_items'),
+    hint: intl.get(
+      'summarize_the_business_s_sold_items_quantity_income_and_average_income_rate',
+    ),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: `/financial-reports/inventory-valuation`,
   //   component: lazy(() =>
