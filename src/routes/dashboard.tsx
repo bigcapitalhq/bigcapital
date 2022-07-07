@@ -178,19 +178,19 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.INVENTORY_ADJUSTMENT,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // {
-  //   path: `/financial-reports/balance-sheet`,
-  //   component: lazy(() =>
-  //     import('@/containers/FinancialStatements/BalanceSheet/BalanceSheet'),
-  //   ),
-  //   breadcrumb: intl.get('balance_sheet'),
-  //   hint: intl.get('reports_a_company_s_assets_liabilities_and_shareholders'),
-  //   hotkey: 'shift+1',
-  //   pageTitle: intl.get('balance_sheet'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: `/financial-reports/balance-sheet`,
+    component: lazy(() =>
+      import('@/containers/FinancialStatements/BalanceSheet/BalanceSheet'),
+    ),
+    breadcrumb: intl.get('balance_sheet'),
+    hint: intl.get('reports_a_company_s_assets_liabilities_and_shareholders'),
+    hotkey: 'shift+1',
+    pageTitle: intl.get('balance_sheet'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: `/financial-reports/trial-balance-sheet`,
   //   component: lazy(() =>

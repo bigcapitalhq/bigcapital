@@ -3,8 +3,8 @@ import { Button } from '@blueprintjs/core';
 
 import { FormattedMessage as T, Icon, If } from '@/components';
 
-import { useBalanceSheetContext } from './BalanceSheetProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
+import { useBalanceSheetContext } from './BalanceSheetProvider';
 import { FinancialComputeAlert } from '../FinancialReportPage';
 import { dynamicColumns } from './dynamicColumns';
 

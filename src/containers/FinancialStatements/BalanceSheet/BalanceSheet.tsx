@@ -2,18 +2,16 @@ import React, { useEffect } from 'react';
 import moment from 'moment';
 
 import { BalanceSheetAlerts, BalanceSheetLoadingBar } from './components';
-import { FinancialStatement } from '@/components';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 
 import BalanceSheetHeader from './BalanceSheetHeader';
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 import BalanceSheetActionsBar from './BalanceSheetActionsBar';
 import { BalanceSheetProvider } from './BalanceSheetProvider';
 import { BalanceSheetBody } from './BalanceSheetBody';
-
-import withBalanceSheetActions from './withBalanceSheetActions';
-
 import { useBalanceSheetQuery } from './utils';
 import { compose } from '@/utils';
+
+import withBalanceSheetActions from './withBalanceSheetActions';
 
 /**
  * Balance sheet.

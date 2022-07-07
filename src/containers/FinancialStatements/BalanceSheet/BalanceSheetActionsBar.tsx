@@ -8,17 +8,16 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
+import { FormattedMessage as T, Icon } from '@/components';
 
-import Icon from '@/components/Icon';
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
 import { compose, saveInvoke } from '@/utils';
+import { useBalanceSheetContext } from './BalanceSheetProvider';
 import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';
-import { useBalanceSheetContext } from './BalanceSheetProvider';
 
 /**
  * Balance sheet - actions bar.
@@ -126,6 +125,8 @@ function BalanceSheetActionsBar({
 }
 
 export default compose(
-  withBalanceSheet(({ balanceSheetDrawerFilter }) => ({ balanceSheetDrawerFilter })),
+  withBalanceSheet(({ balanceSheetDrawerFilter }) => ({
+    balanceSheetDrawerFilter,
+  })),
   withBalanceSheetActions,
 )(BalanceSheetActionsBar);

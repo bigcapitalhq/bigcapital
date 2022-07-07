@@ -2,14 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
 
-import { ReportDataTable, FinancialSheet } from '@/components';
-
-import { useBalanceSheetContext } from './BalanceSheetProvider';
-
-import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
-import { useBalanceSheetColumns } from './components';
-
 import { TableStyle } from '@/common';
+import { ReportDataTable, FinancialSheet } from '@/components';
+import { useBalanceSheetContext } from './BalanceSheetProvider';
+import { useBalanceSheetColumns } from './components';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+
 
 /**
  * Balance sheet table.

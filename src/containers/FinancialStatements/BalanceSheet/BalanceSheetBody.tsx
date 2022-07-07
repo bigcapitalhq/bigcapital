@@ -1,11 +1,11 @@
 import React from 'react';
 
 import BalanceSheetTable from './BalanceSheetTable';
-import { FinancialReportBody } from '../FinancialReportPage';
-
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+
+import { FinancialReportBody } from '../FinancialReportPage';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
-import { FinancialSheetSkeleton } from '../../../components/FinancialSheet';
+import { FinancialSheetSkeleton } from '@/components';
 import { compose } from '@/utils';
 
 /**
