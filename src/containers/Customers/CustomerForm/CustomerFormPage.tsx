@@ -2,8 +2,7 @@ import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { DashboardCard } from '@/components';
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardCard, DashboardInsider } from '@/components';
 
 import CustomerFormFormik from './CustomerFormFormik';
 import {

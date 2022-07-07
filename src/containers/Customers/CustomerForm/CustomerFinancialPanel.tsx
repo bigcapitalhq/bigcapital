@@ -1,12 +1,13 @@
 import React from 'react';
+import moment from 'moment';
 import classNames from 'classnames';
 import { FormGroup, Position, Classes, ControlGroup } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
-import { FFormGroup } from '@/components/Forms';
-import moment from 'moment';
 import { Features } from '@/common';
 import {
+  FFormGroup,
+  FormattedMessage as T,
   MoneyInputGroup,
   InputPrependText,
   CurrencySelectList,
@@ -16,8 +17,6 @@ import {
   Row,
   Col,
 } from '@/components';
-import { FormattedMessage as T } from '@/components';
-
 import { useCustomerFormContext } from './CustomerFormProvider';
 import { useSetPrimaryBranchToForm } from './utils';
 import { momentFormatter, tansformDateValue, inputIntent } from '@/utils';

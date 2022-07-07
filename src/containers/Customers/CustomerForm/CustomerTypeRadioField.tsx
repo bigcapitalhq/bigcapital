@@ -1,8 +1,8 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { RadioGroup, Radio, FormGroup } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
 import { FastField } from 'formik';
 
 import { handleStringChange, saveInvoke } from '@/utils';

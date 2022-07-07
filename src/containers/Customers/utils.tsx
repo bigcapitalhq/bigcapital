@@ -1,7 +1,7 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
-import intl from 'react-intl-universal';
 
 export const transformErrors = (errors) => {
   if (errors.some((e) => e.type === 'CUSTOMER.HAS.SALES_INVOICES')) {
