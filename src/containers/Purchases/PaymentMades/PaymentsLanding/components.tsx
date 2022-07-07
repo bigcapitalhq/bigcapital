@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import {
   Intent,
   Button,
@@ -8,13 +9,9 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
 
 import { Icon, Money, FormatDateCell, Can } from '@/components';
-import {
-  PaymentMadeAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { PaymentMadeAction, AbilitySubject } from '@/common/abilityOption';
 
 import { safeCallback } from '@/utils';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import VendorCreditNumberDialog from '../../../Dialogs/VendorCreditNumberDialog';
+import VendorCreditNumberDialog from '@/containers/Dialogs/VendorCreditNumberDialog';
 import { useFormikContext } from 'formik';
 
 /**

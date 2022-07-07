@@ -837,103 +837,107 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
-  // // Bills
-  // {
-  //   path: `/bills/:id/edit`,
-  //   component: lazy(() =>
-  //     import('@/containers/Purchases/Bills/BillForm/BillFormPage'),
-  //   ),
-  //   name: 'bill-edit',
-  //   breadcrumb: intl.get('edit'),
-  //   pageTitle: intl.get('edit_bill'),
-  //   sidebarExpand: false,
-  //   backLink: true,
-  //   defaultSearchResource: RESOURCES_TYPES.BILL,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/bills/new`,
-  //   component: lazy(() =>
-  //     import('@/containers/Purchases/Bills/BillForm/BillFormPage'),
-  //   ),
-  //   name: 'bill-new',
-  //   breadcrumb: intl.get('new_bill'),
-  //   hotkey: 'ctrl+shift+b',
-  //   pageTitle: intl.get('new_bill'),
-  //   sidebarExpand: false,
-  //   backLink: true,
-  //   defaultSearchResource: RESOURCES_TYPES.BILL,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/bills`,
-  //   component: lazy(() =>
-  //     import('@/containers/Purchases/Bills/BillsLanding/BillsList'),
-  //   ),
-  //   breadcrumb: intl.get('bills_list'),
-  //   hotkey: 'shift+b',
-  //   pageTitle: intl.get('bills_list'),
-  //   defaultSearchResource: RESOURCES_TYPES.BILL,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // //  Purchases Credit note.
-  // {
-  //   path: `/vendor-credits/:id/edit`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
-  //     ),
-  //   ),
-  //   name: 'vendor-credits-edit',
-  //   breadcrumb: intl.get('edit'),
-  //   pageTitle: intl.get('vendor_credits.label.edit_vendor_credit'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: '/vendor-credits/new/?from_bill_id=/:id',
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
-  //     ),
-  //   ),
-  //   name: 'vendor-credits-new',
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   breadcrumb: intl.get('vendor_credits.label.new_vendor_credit'),
-  //   pageTitle: intl.get('vendor_credits.label.new_vendor_credit'),
-  //   defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: '/vendor-credits/new',
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
-  //     ),
-  //   ),
-  //   name: 'vendor-credits-new',
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   breadcrumb: intl.get('vendor_credits.label.new_vendor_credit'),
-  //   pageTitle: intl.get('vendor_credits.label.new_vendor_credit'),
-  //   defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: '/vendor-credits',
-  //   component: lazy(() =>
-  //     import(
-  //       '../containers/Purchases/CreditNotes/CreditNotesLanding/VendorsCreditNotesList'
-  //     ),
-  //   ),
-  //   breadcrumb: intl.get('vendor_credits.lable_vendor_credit_list'),
-  //   pageTitle: intl.get('vendor_credits.lable_vendor_credit_list'),
-  //   defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  // Bills
+  {
+    path: `/bills/:id/edit`,
+    component: lazy(
+      () => import('@/containers/Purchases/Bills/BillForm/BillFormPage'),
+    ),
+    name: 'bill-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_bill'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.BILL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/bills/new`,
+    component: lazy(
+      () => import('@/containers/Purchases/Bills/BillForm/BillFormPage'),
+    ),
+    name: 'bill-new',
+    breadcrumb: intl.get('new_bill'),
+    hotkey: 'ctrl+shift+b',
+    pageTitle: intl.get('new_bill'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.BILL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/bills`,
+    component: lazy(
+      () => import('@/containers/Purchases/Bills/BillsLanding/BillsList'),
+    ),
+    breadcrumb: intl.get('bills_list'),
+    hotkey: 'shift+b',
+    pageTitle: intl.get('bills_list'),
+    defaultSearchResource: RESOURCES_TYPES.BILL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  //  Purchases Credit note.
+  {
+    path: `/vendor-credits/:id/edit`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
+        ),
+    ),
+    name: 'vendor-credits-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('vendor_credits.label.edit_vendor_credit'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/vendor-credits/new/?from_bill_id=/:id',
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
+        ),
+    ),
+    name: 'vendor-credits-new',
+    backLink: true,
+    sidebarExpand: false,
+    breadcrumb: intl.get('vendor_credits.label.new_vendor_credit'),
+    pageTitle: intl.get('vendor_credits.label.new_vendor_credit'),
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/vendor-credits/new',
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
+        ),
+    ),
+    name: 'vendor-credits-new',
+    backLink: true,
+    sidebarExpand: false,
+    breadcrumb: intl.get('vendor_credits.label.new_vendor_credit'),
+    pageTitle: intl.get('vendor_credits.label.new_vendor_credit'),
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/vendor-credits',
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Purchases/CreditNotes/CreditNotesLanding/VendorsCreditNotesList'
+        ),
+    ),
+    breadcrumb: intl.get('vendor_credits.lable_vendor_credit_list'),
+    pageTitle: intl.get('vendor_credits.lable_vendor_credit_list'),
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
 
   // // Subscription billing.
   // {
@@ -942,49 +946,52 @@ export const getDashboardRoutes = () => [
   //   breadcrumb: intl.get('new_billing'),
   //   subscriptionInactive: [SUBSCRIPTION_TYPE.MAIN],
   // },
-  // // Payment modes.
-  // {
-  //   path: `/payment-mades/:id/edit`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
-  //     ),
-  //   ),
-  //   name: 'payment-made-edit',
-  //   breadcrumb: intl.get('edit'),
-  //   pageTitle: intl.get('edit_payment_made'),
-  //   sidebarExpand: false,
-  //   backLink: true,
-  //   defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/payment-mades/new`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
-  //     ),
-  //   ),
-  //   name: 'payment-made-new',
-  //   breadcrumb: intl.get('new_payment_made'),
-  //   pageTitle: intl.get('new_payment_made'),
-  //   sidebarExpand: false,
-  //   backLink: true,
-  //   defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/payment-mades`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/Purchases/PaymentMades/PaymentsLanding/PaymentMadeList'
-  //     ),
-  //   ),
-  //   breadcrumb: intl.get('payment_made_list'),
-  //   pageTitle: intl.get('payment_made_list'),
-  //   defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  // Payment modes.
+  {
+    path: `/payment-mades/:id/edit`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
+        ),
+    ),
+    name: 'payment-made-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_payment_made'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/payment-mades/new`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
+        ),
+    ),
+    name: 'payment-made-new',
+    breadcrumb: intl.get('new_payment_made'),
+    pageTitle: intl.get('new_payment_made'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/payment-mades`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Purchases/PaymentMades/PaymentsLanding/PaymentMadeList'
+        ),
+    ),
+    breadcrumb: intl.get('payment_made_list'),
+    pageTitle: intl.get('payment_made_list'),
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // // Cash flow
   // {
   //   path: `/cashflow-accounts/:id/transactions`,

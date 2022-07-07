@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react';
-import { CloudLoadingIndicator } from '@/components';
 import classNames from 'classnames';
-import { FormattedMessage as T } from '@/components';
+import {
+  DataTableEditable,
+  CloudLoadingIndicator,
+  FormattedMessage as T,
+} from '@/components';
 
 import { CLASSES } from '@/common/classes';
-import { DataTableEditable } from '@/components';
 import { usePaymentMadeEntriesTableColumns } from './components';
-
 import { usePaymentMadeInnerContext } from './PaymentMadeInnerProvider';
 import { compose, updateTableCell } from '@/utils';
 import { useFormikContext } from 'formik';

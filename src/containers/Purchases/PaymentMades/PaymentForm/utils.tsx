@@ -13,7 +13,6 @@ import {
   orderingLinesIndexes,
   formattedAmount,
 } from '@/utils';
-import { getEntriesTotal } from '../../../Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
 
 export const ERRORS = {

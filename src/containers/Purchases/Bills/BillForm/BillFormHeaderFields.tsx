@@ -1,17 +1,12 @@
 import React from 'react';
-import {
-  FormGroup,
-  InputGroup,
-  Position,
-  ControlGroup,
-} from '@blueprintjs/core';
+import styled from 'styled-components';
+import classNames from 'classnames';
+import { FormGroup, InputGroup, Position } from '@blueprintjs/core';
+import { FastField, ErrorMessage } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from '@/components';
-import { FastField, ErrorMessage } from 'formik';
-import classNames from 'classnames';
-import styled from 'styled-components';
-
 import { CLASSES } from '@/common/classes';
+
 import {
   FFormGroup,
   VendorSelectField,
@@ -19,9 +14,9 @@ import {
   Icon,
   VendorDrawerLink,
 } from '@/components';
-import { vendorsFieldShouldUpdate } from './utils';
 
 import { useBillFormContext } from './BillFormProvider';
+import { vendorsFieldShouldUpdate } from './utils';
 import { BillExchangeRateInputField } from './components';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import {

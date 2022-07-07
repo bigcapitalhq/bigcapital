@@ -1,6 +1,5 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import styled from 'styled-components';
 import {
   Alignment,
   NavbarGroup,

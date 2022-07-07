@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { compose } from '@/utils';
-
 import { TABLES } from '@/common/tables';
 import { DataTable, DashboardContentTable } from '@/components';
 
@@ -10,13 +9,13 @@ import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
-import withPaymentMadeActions from './withPaymentMadeActions';
 import withPaymentMade from './withPaymentMade';
+import withPaymentMadeActions from './withPaymentMadeActions';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withSettings from '../../../Settings/withSettings';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { usePaymentMadesTableColumns, ActionsMenu } from './components';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';

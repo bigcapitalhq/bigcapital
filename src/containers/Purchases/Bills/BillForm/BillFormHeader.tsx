@@ -1,13 +1,12 @@
 import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
-import intl from 'react-intl-universal';
-
 import { CLASSES } from '@/common/classes';
+import { PageFormBigNumber } from '@/components';
 
 import BillFormHeaderFields from './BillFormHeaderFields';
-import { PageFormBigNumber } from '@/components';
 
 /**
  * Fill form header.

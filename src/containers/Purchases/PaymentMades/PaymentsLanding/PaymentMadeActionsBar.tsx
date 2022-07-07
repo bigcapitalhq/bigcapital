@@ -1,5 +1,4 @@
 import React from 'react';
-import Icon from '@/components/Icon';
 import {
   Button,
   Classes,
@@ -15,6 +14,7 @@ import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import {
   If,
   Can,
+  Icon,
   FormattedMessage as T,
   DashboardActionViewsList,
   DashboardFilterButton,
@@ -24,16 +24,12 @@ import {
 
 import withPaymentMade from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
-
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { useRefreshPaymentMades } from '@/hooks/query/paymentMades';
-import {
-  PaymentMadeAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { PaymentMadeAction, AbilitySubject } from '@/common/abilityOption';
 
 import { compose } from '@/utils';
 

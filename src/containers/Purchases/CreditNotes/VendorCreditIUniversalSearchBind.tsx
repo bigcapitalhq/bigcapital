@@ -3,14 +3,10 @@ import intl from 'react-intl-universal';
 import { MenuItem, Intent } from '@blueprintjs/core';
 
 import { TextStatus, Icon, Choose, T } from '@/components';
-
-import { RESOURCES_TYPES } from '../../../common/resourcesTypes';
-import withDrawerActions from '../../Drawer/withDrawerActions';
-import {
-  AbilitySubject,
-  VendorCreditAction,
-} from '../../../common/abilityOption';
+import { RESOURCES_TYPES } from '@/common/resourcesTypes';
+import { AbilitySubject, VendorCreditAction } from '@/common/abilityOption';
 import { DRAWERS } from '@/common/drawers';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 /**
  * Vendor credit universal search item select action.

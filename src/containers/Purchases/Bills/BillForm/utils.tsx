@@ -18,7 +18,7 @@ import {
   ensureEntriesHaveEmptyLine,
 } from '@/containers/Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
-import { isLandedCostDisabled, getEntriesTotal } from '../../../Entries/utils';
+import { isLandedCostDisabled, getEntriesTotal } from '@/containers/Entries/utils';
 import { useBillFormContext } from './BillFormProvider';
 
 export const MIN_LINES_NUMBER = 1;

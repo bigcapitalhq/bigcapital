@@ -1,13 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  Alignment,
-  Navbar,
-  NavbarGroup,
-  Button,
-  Classes,
-} from '@blueprintjs/core';
-import styled from 'styled-components';
+import { Alignment, NavbarGroup, Button, Classes } from '@blueprintjs/core';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useFeatureCan } from '@/hooks/state';
 import {

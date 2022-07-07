@@ -3,9 +3,9 @@ import React from 'react';
 import '@/style/pages/PaymentMade/List.scss';
 
 import { DashboardPageContent } from '@/components';
+import { PaymentMadesListProvider } from './PaymentMadesListProvider';
 import PaymentMadeActionsBar from './PaymentMadeActionsBar';
 import PaymentMadesTable from './PaymentMadesTable';
-import { PaymentMadesListProvider } from './PaymentMadesListProvider';
 import PaymentMadeViewTabs from './PaymentMadeViewTabs';
 
 import withPaymentMades from './withPaymentMade';

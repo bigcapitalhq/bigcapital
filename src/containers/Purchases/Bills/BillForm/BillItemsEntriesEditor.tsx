@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
+import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
 import { FastField } from 'formik';
 import { CLASSES } from '@/common/classes';
 import { useBillFormContext } from './BillFormProvider';
-import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
 import { entriesFieldShouldUpdate } from './utils';
 import { ITEM_TYPE } from '@/containers/Entries/utils';
 

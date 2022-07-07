@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
+import classNames from 'classnames';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import classNames from 'classnames';
-import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 import { CLASSES } from '@/common/classes';
@@ -15,7 +15,6 @@ import BillItemsEntriesEditor from './BillItemsEntriesEditor';
 import BillFormTopBar from './BillFormTopBar';
 
 import { AppToaster } from '@/components';
-
 import { useBillFormContext } from './BillFormProvider';
 import { compose, safeSumBy } from '@/utils';
 import {

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Icon from '@/components/Icon';
 import {
   Button,
   Classes,
@@ -15,18 +14,19 @@ import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import {
   If,
   Can,
+  Icon,
   FormattedMessage as T,
   DashboardActionViewsList,
   DashboardFilterButton,
   AdvancedFilterPopover,
   DashboardRowsHeightButton,
 } from '@/components';
-import { BillAction, AbilitySubject } from '../../../../common/abilityOption';
+import { BillAction, AbilitySubject } from '@/common/abilityOption';
 
-import withBillsActions from './withBillsActions';
 import withBills from './withBills';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withBillsActions from './withBillsActions';
 import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { useBillsListContext } from './BillsListProvider';
 import { useRefreshBills } from '@/hooks/query/bills';

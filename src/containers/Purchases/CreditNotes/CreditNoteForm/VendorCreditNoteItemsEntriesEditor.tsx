@@ -2,10 +2,9 @@ import React from 'react';
 import classNames from 'classnames';
 import { FastField } from 'formik';
 import { CLASSES } from '@/common/classes';
+import { entriesFieldShouldUpdate } from './utils';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
-import { entriesFieldShouldUpdate } from './utils';
-import { ITEM_TYPE } from '@/containers/Entries/utils';
 
 export default function VendorCreditNoteItemsEntriesEditor() {
   const { items } = useVendorCreditNoteFormContext();

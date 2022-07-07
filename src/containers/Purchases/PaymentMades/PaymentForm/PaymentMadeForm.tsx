@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
+import classNames from 'classnames';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
-import { sumBy, pick, defaultTo } from 'lodash';
-import classNames from 'classnames';
+import { sumBy, defaultTo } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from '@/common/classes';
@@ -13,7 +13,10 @@ import PaymentMadeFloatingActions from './PaymentMadeFloatingActions';
 import PaymentMadeFooter from './PaymentMadeFooter';
 import PaymentMadeFormBody from './PaymentMadeFormBody';
 import PaymentMadeFormTopBar from './PaymentMadeFormTopBar';
+
 import { PaymentMadeInnerProvider } from './PaymentMadeInnerProvider';
+import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
+import { compose, orderingLinesIndexes } from '@/utils';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
@@ -22,8 +25,6 @@ import {
   EditPaymentMadeFormSchema,
   CreatePaymentMadeFormSchema,
 } from './PaymentMadeForm.schema';
-import { compose, orderingLinesIndexes } from '@/utils';
-import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import {
   defaultPaymentMade,
   transformToEditForm,

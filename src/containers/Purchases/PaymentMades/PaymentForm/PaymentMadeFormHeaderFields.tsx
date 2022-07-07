@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+import styled from 'styled-components';
+import classNames from 'classnames';
 import {
   FormGroup,
   InputGroup,
@@ -11,9 +13,7 @@ import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { toSafeInteger } from 'lodash';
-import classNames from 'classnames';
 import { CLASSES } from '@/common/classes';
-import styled from 'styled-components';
 
 import {
   FFormGroup,

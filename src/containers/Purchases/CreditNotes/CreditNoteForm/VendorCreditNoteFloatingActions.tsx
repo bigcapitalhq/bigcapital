@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import {
@@ -13,7 +14,6 @@ import {
 } from '@blueprintjs/core';
 import { If, Icon, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/common/classes';
-import classNames from 'classnames';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 
 /**

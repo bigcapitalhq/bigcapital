@@ -1,10 +1,8 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import DataTable from '@/components/DataTable';
-
 import { TABLES } from '@/common/tables';
-import { DashboardContentTable } from '@/components';
+import { DashboardContentTable,DataTable } from '@/components';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
@@ -15,7 +13,7 @@ import withBillActions from './withBillsActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withSettings from '../../../Settings/withSettings';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { useBillsTableColumns, ActionsMenu } from './components';
 import { useBillsListContext } from './BillsListProvider';

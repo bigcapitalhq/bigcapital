@@ -1,17 +1,14 @@
 import React from 'react';
 import { useHistory } from 'react-router';
-import { FormattedMessage as T } from '@/components';
+import { DashboardViewsTabs, FormattedMessage as T } from '@/components';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
-import { DashboardViewsTabs } from '@/components';
-
-import { usePaymentMadesListContext } from './PaymentMadesListProvider';
-import withPaymentMadeActions from './withPaymentMadeActions';
-
 import { compose } from '@/utils';
+import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { transformPaymentViewsToTabs } from './utils';
 
 import withPaymentMade from './withPaymentMade';
+import withPaymentMadeActions from './withPaymentMadeActions';
 
 /**
  * Payment made views tabs.
