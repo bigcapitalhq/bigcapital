@@ -5,7 +5,7 @@ import InventoryValuationTable from './InventoryValuationTable';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
 
 import { FinancialReportBody } from '../FinancialReportPage';
-import { FinancialSheetSkeleton } from '../../../components/FinancialSheet';
+import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**

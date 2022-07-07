@@ -10,7 +10,7 @@ import {
   Row,
   Col,
   FieldHint,
-} from '../../../components';
+} from '@/components';
 import { filterInventoryValuationOptions } from '../constants';
 
 import {

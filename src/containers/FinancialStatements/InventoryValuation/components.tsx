@@ -2,12 +2,11 @@ import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 
 import { If } from '@/components';
+import { Align } from '@/common';
+import { getColumnWidth } from '@/utils';
 import { CellTextSpan } from '@/components/Datatable/Cells';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-
-import { getColumnWidth } from '@/utils';
-import { Align } from '@/common';
 
 /**
  * Retrieve inventory valuation table columns.

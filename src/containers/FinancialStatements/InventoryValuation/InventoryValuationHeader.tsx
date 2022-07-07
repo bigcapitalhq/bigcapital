@@ -1,9 +1,9 @@
 import React from 'react';
 import * as Yup from 'yup';
 import moment from 'moment';
+import styled from 'styled-components';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import styled from 'styled-components';
 
 import { FormattedMessage as T } from '@/components';
 

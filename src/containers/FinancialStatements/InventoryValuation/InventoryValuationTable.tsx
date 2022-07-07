@@ -2,13 +2,12 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
+import { TableStyle } from '@/common';
 import { ReportDataTable, FinancialSheet } from '@/components';
+import { tableRowTypesToClassnames } from '@/utils';
 
 import { useInventoryValuationContext } from './InventoryValuationProvider';
 import { useInventoryValuationTableColumns } from './components';
-
-import { tableRowTypesToClassnames } from '@/utils';
-import { TableStyle } from '@/common';
 
 /**
  * inventory valuation data table.

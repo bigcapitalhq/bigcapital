@@ -1,18 +1,18 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import moment from 'moment';
 
-import { InventoryValuationProvider } from './InventoryValuationProvider';
+import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 import InventoryValuationActionsBar from './InventoryValuationActionsBar';
 import InventoryValuationHeader from './InventoryValuationHeader';
+
+import { InventoryValuationProvider } from './InventoryValuationProvider';
 import { InventoryValuationBody } from './InventoryValuationBody';
-
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 import { InventoryValuationLoadingBar } from './components';
-import withInventoryValuationActions from './withInventoryValuationActions';
-import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
-
 import { useInventoryValuationQuery } from './utils';
 import { compose } from '@/utils';
+
+import withInventoryValuationActions from './withInventoryValuationActions';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Inventory valuation.

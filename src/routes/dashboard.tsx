@@ -298,20 +298,21 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // {
-  //   path: `/financial-reports/inventory-valuation`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/FinancialStatements/InventoryValuation/InventoryValuation'
-  //     ),
-  //   ),
-  //   breadcrumb: intl.get('inventory_valuation'),
-  //   hint: intl.get('summerize_your_transactions_for_each_inventory_item'),
-  //   pageTitle: intl.get('inventory_valuation'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: `/financial-reports/inventory-valuation`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/FinancialStatements/InventoryValuation/InventoryValuation'
+        ),
+    ),
+    breadcrumb: intl.get('inventory_valuation'),
+    hint: intl.get('summerize_your_transactions_for_each_inventory_item'),
+    pageTitle: intl.get('inventory_valuation'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: `/financial-reports/customers-balance-summary`,
   //   component: lazy(() =>
