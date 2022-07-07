@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+import moment from 'moment';
+import intl from 'react-intl-universal';
 import {
   Menu,
   Popover,
@@ -8,9 +10,7 @@ import {
   MenuDivider,
   Intent,
 } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
 import { Icon, Money } from '@/components';
-import moment from 'moment';
 import { safeCallback } from '@/utils';
 
 /**
@@ -20,8 +20,6 @@ export function ActionMenuList({
   row: { original },
   payload: { onEditExchangeRate, onDeleteExchangeRate },
 }) {
-  
-
   return (
     <Menu>
       <MenuItem
@@ -55,8 +53,6 @@ export function TableActionsCell(props) {
 }
 
 export function useExchangeRatesTableColumns() {
-  
-
   return useMemo(
     () => [
       {

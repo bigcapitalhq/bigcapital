@@ -1,7 +1,7 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { Button, Menu, MenuItem } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
-import intl from 'react-intl-universal';
 import { useFormikContext } from 'formik';
 
 import {
@@ -18,7 +18,7 @@ import {
 } from '@/components/DataTableCells';
 import { CellType, Align } from '@/common';
 
-import { useCurrentOrganization } from '@hooks/state';
+import { useCurrentOrganization } from '@/hooks/state';
 import { useExpensesIsForeign } from './utils';
 
 /**

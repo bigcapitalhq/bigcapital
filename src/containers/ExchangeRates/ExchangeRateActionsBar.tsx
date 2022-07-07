@@ -1,4 +1,6 @@
 import React, { useCallback, useState, useMemo } from 'react';
+import intl from 'react-intl-universal';
+import classNames from 'classnames';
 import {
   NavbarGroup,
   NavbarDivider,
@@ -10,18 +12,14 @@ import {
   PopoverInteractionKind,
   Alignment,
 } from '@blueprintjs/core';
-import classNames from 'classnames';
-import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
+import { Icon, If, FormattedMessage as T } from '@/components';
 import { connect } from 'react-redux';
 
-import { If } from '@/components';
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
-import Icon from '@/components/Icon';
 
 import { useRefreshExchangeRate } from '@/hooks/query/exchangeRates';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withResourceDetail from '@?containers/Resources/withResourceDetails';
+import withResourceDetail from '@/containers/Resources/withResourceDetails';
 import withExchangeRatesActions from './withExchangeRatesActions';
 import { compose } from '@/utils';
 

@@ -444,48 +444,50 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('all_financial_reports'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // // Exchange Rates
+  // Exchange Rates
   // {
   //   path: `/exchange-rates`,
-  //   component: lazy(() => import('@/containers/ExchangeRates/ExchangeRatesList')),
+  //   component: lazy(
+  //     () => import('@/containers/ExchangeRates/ExchangeRatesList'),
+  //   ),
   //   breadcrumb: intl.get('exchange_rates_list'),
   //   pageTitle: intl.get('exchange_rates_list'),
   //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   // },
-  // // Expenses.
-  // {
-  //   path: `/expenses/new`,
-  //   component: lazy(() =>
-  //     import('@/containers/Expenses/ExpenseForm/ExpenseFormPage'),
-  //   ),
-  //   breadcrumb: intl.get('expenses'),
-  //   hotkey: 'ctrl+shift+x',
-  //   pageTitle: intl.get('new_expense'),
-  //   sidebarExpand: false,
-  //   backLink: true,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/expenses/:id/edit`,
-  //   component: lazy(() =>
-  //     import('@/containers/Expenses/ExpenseForm/ExpenseFormPage'),
-  //   ),
-  //   breadcrumb: intl.get('edit'),
-  //   pageTitle: intl.get('edit_expense'),
-  //   sidebarExpand: false,
-  //   backLink: true,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/expenses`,
-  //   component: lazy(() =>
-  //     import('@/containers/Expenses/ExpensesLanding/ExpensesList'),
-  //   ),
-  //   breadcrumb: intl.get('expenses_list'),
-  //   pageTitle: intl.get('expenses_list'),
-  //   hotkey: 'shift+x',
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  // Expenses.
+  {
+    path: `/expenses/new`,
+    component: lazy(
+      () => import('@/containers/Expenses/ExpenseForm/ExpenseFormPage'),
+    ),
+    breadcrumb: intl.get('expenses'),
+    hotkey: 'ctrl+shift+x',
+    pageTitle: intl.get('new_expense'),
+    sidebarExpand: false,
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/expenses/:id/edit`,
+    component: lazy(
+      () => import('@/containers/Expenses/ExpenseForm/ExpenseFormPage'),
+    ),
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_expense'),
+    sidebarExpand: false,
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/expenses`,
+    component: lazy(
+      () => import('@/containers/Expenses/ExpensesLanding/ExpensesList'),
+    ),
+    breadcrumb: intl.get('expenses_list'),
+    pageTitle: intl.get('expenses_list'),
+    hotkey: 'shift+x',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
 
   // // Customers
   // {

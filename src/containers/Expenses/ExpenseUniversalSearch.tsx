@@ -1,7 +1,6 @@
 import { RESOURCES_TYPES } from '@/common/resourcesTypes';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-
 /**
  * Universal search bill item select action.
  */
@@ -20,5 +19,5 @@ function ExpenseUniversalSearchItemSelectComponent({
 }
 
 export const ExpenseUniversalSearchItemSelect = withDrawerActions(
-    ExpenseUniversalSearchItemSelectComponent,
+  ExpenseUniversalSearchItemSelectComponent,
 );

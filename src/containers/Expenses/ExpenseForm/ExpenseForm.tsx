@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react';
-import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import classNames from 'classnames';
+import { Intent } from '@blueprintjs/core';
 import { defaultTo, sumBy, isEmpty } from 'lodash';
 import { Formik, Form } from 'formik';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from '@/common/classes';
 
-import ExpenseFormHeader from './ExpenseFormHeader';
 import ExpenseFormBody from './ExpenseFormBody';
+import ExpenseFormHeader from './ExpenseFormHeader';
 import ExpenseFloatingFooter from './ExpenseFloatingActions';
 import ExpenseFormFooter from './ExpenseFormFooter';
 import ExpenseFormTopBar from './ExpenseFormTopBar';
@@ -16,7 +16,6 @@ import ExpenseFormTopBar from './ExpenseFormTopBar';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withMediaActions from '@/containers/Media/withMediaActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
@@ -157,7 +156,6 @@ function ExpenseForm({
 
 export default compose(
   withDashboardActions,
-  withMediaActions,
   withSettings(({ expenseSettings }) => ({
     preferredPaymentAccount: parseInt(
       expenseSettings?.preferredPaymentAccount,

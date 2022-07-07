@@ -6,8 +6,8 @@ import ExchangeRateTable from './ExchangeRateTable';
 import ExchangeRateActionsBar from './ExchangeRateActionsBar';
 
 import { ExchangeRatesProvider } from './ExchangeRatesProvider';
-import withExchangeRates from './withExchangeRates';
 import { transformTableStateToQuery, compose } from '@/utils';
+import withExchangeRates from './withExchangeRates';
 
 /**
  * Exchange Rates list.

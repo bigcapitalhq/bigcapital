@@ -27,9 +27,8 @@ import { ExpenseAction, AbilitySubject } from '@/common/abilityOption';
 import { useRefreshExpenses } from '@/hooks/query/expenses';
 import { useExpensesListContext } from './ExpensesListProvider';
 
-import withExpensesActions from './withExpensesActions';
 import withExpenses from './withExpenses';
-
+import withExpensesActions from './withExpensesActions';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withSettings from '@/containers/Settings/withSettings';
 

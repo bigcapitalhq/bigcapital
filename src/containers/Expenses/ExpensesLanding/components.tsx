@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import {
   Intent,
   Button,
@@ -11,11 +12,10 @@ import {
   Menu,
   MenuDivider,
 } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
 import clsx from 'classnames';
 
 import { CLASSES } from '@/common/classes';
-import { ExpenseAction, AbilitySubject } from '@types/ramdacommon/abilityOption';
+import { ExpenseAction, AbilitySubject } from '@/common/abilityOption';
 import {
   FormatDateCell,
   FormattedMessage as T,
