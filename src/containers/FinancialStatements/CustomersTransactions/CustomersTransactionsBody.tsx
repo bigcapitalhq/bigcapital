@@ -5,12 +5,12 @@ import withCurrentOrganization from '@/containers/Organization/withCurrentOrgani
 
 import CustomersTransactionsTable from './CustomersTransactionsTable';
 import { FinancialReportBody } from '../FinancialReportPage';
-import { FinancialSheetSkeleton } from '../../../components/FinancialSheet';
+import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 
 /**
- * Customers transactions body. 
+ * Customers transactions body.
  */
 function CustomersTransactionsBodyJSX({
   // #withCurrentOrganization

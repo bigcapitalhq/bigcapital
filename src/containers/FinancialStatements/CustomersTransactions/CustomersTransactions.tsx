@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 
-import { FinancialStatement } from '@/components';
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 
 import CustomersTransactionsHeader from './CustomersTransactionsHeader';
 import CustomersTransactionsActionsBar from './CustomersTransactionsActionsBar';
-import { CustomersTransactionsBody } from './CustomersTransactionsBody';
 
 import withCustomersTransactionsActions from './withCustomersTransactionsActions';
 import { CustomersTransactionsLoadingBar } from './components';
+import { CustomersTransactionsBody } from './CustomersTransactionsBody';
 import { CustomersTransactionsProvider } from './CustomersTransactionsProvider';
 
 import { compose } from '@/utils';

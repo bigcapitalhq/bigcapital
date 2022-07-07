@@ -343,22 +343,23 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // {
-  //   path: `/financial-reports/transactions-by-customers`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/FinancialStatements/CustomersTransactions/CustomersTransactions'
-  //     ),
-  //   ),
-  //   breadcrumb: intl.get('customers_transactions'),
-  //   hint: intl.get(
-  //     'reports_every_transaction_going_in_and_out_of_each_customer',
-  //   ),
-  //   pageTitle: intl.get('customers_transactions'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: `/financial-reports/transactions-by-customers`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/FinancialStatements/CustomersTransactions/CustomersTransactions'
+        ),
+    ),
+    breadcrumb: intl.get('customers_transactions'),
+    hint: intl.get(
+      'reports_every_transaction_going_in_and_out_of_each_customer',
+    ),
+    pageTitle: intl.get('customers_transactions'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: `/financial-reports/transactions-by-vendors`,
   //   component: lazy(() =>

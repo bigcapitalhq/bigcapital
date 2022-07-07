@@ -1,11 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { If } from '@/components';
+import { Align } from '@/common';
+import { getColumnWidth } from '@/utils';
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-import { getColumnWidth } from '@/utils';
 
-import { Align } from '@/common';
 
 /**
  * Retrieve customers transactions columns.
