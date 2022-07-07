@@ -392,33 +392,34 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // {
-  //   path: `/financial-reports/inventory-item-details`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/FinancialStatements/InventoryItemDetails/InventoryItemDetails'
-  //     ),
-  //   ),
-  //   breadcrumb: intl.get('inventory_item_details'),
-  //   hint: intl.get('reports_every_transaction_going_in_and_out_of_your_items'),
-  //   pageTitle: intl.get('inventory_item_details'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/financial-reports/realized-gain-loss`,
-  //   component: lazy(() =>
-  //     import(
-  //       '../containers/FinancialStatements/RealizedGainOrLoss/RealizedGainOrLoss'
-  //     ),
-  //   ),
-  //   breadcrumb: intl.get('realized_gain_or_loss.label'),
-  //   pageTitle: intl.get('realized_gain_or_loss.label'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: `/financial-reports/inventory-item-details`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/FinancialStatements/InventoryItemDetails/InventoryItemDetails'
+        ),
+    ),
+    breadcrumb: intl.get('inventory_item_details'),
+    hint: intl.get('reports_every_transaction_going_in_and_out_of_your_items'),
+    pageTitle: intl.get('inventory_item_details'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/realized-gain-loss`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/RealizedGainOrLoss/RealizedGainOrLoss'
+      ),
+    ),
+    breadcrumb: intl.get('realized_gain_or_loss.label'),
+    pageTitle: intl.get('realized_gain_or_loss.label'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: `/financial-reports/unrealized-gain-loss`,
   //   component: lazy(() =>

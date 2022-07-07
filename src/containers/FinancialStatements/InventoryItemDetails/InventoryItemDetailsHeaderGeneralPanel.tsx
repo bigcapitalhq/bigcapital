@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import { FormGroup, Classes } from '@blueprintjs/core';
 import { Field } from 'formik';
 import {
@@ -7,8 +6,9 @@ import {
   Row,
   Col,
   FormattedMessage as T,
-} from '../../../components';
-import FinancialStatementDateRange from '@/containers/FinancialStatements/FinancialStatementDateRange';
+} from '@/components';
+import classNames from 'classnames';
+import FinancialStatementDateRange from '../FinancialStatementDateRange';
 
 import {
   InventoryItemDetailsHeaderGeneralProvider,

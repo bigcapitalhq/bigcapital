@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 import { FormattedMessage as T } from '@/components';
 
-import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '../FinancialStatementHeader';
 import InventoryItemDetailsHeaderGeneralPanel from './InventoryItemDetailsHeaderGeneralPanel';
 import InventoryItemDetailsHeaderDimensionsPanel from './InventoryItemDetailsHeaderDimensionsPanel';
 
