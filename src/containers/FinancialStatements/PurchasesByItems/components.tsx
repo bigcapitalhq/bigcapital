@@ -2,12 +2,11 @@ import React from 'react';
 import intl from 'react-intl-universal';
 
 import { If } from '@/components';
+import { Align } from '@/common';
 import { CellTextSpan } from '@/components/Datatable/Cells';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
-import FinancialLoadingBar from '../FinancialLoadingBar';
-
 import { getColumnWidth } from '@/utils';
-import { Align } from '@/common';
+import FinancialLoadingBar from '../FinancialLoadingBar';
 
 /**
  * Retrieve purchases by items table columns.

@@ -1,25 +1,22 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import moment from 'moment';
 
-import { FinancialStatement } from '@/components';
-
-import { PurchasesByItemsProvider } from './PurchasesByItemsProvider';
 import PurchasesByItemsActionsBar from './PurchasesByItemsActionsBar';
 import PurchasesByItemsHeader from './PurchasesByItemsHeader';
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
+
+import { FinancialStatement, DashboardPageContent } from '@/components';
 import { PurchasesByItemsLoadingBar } from './components';
+import { PurchasesByItemsProvider } from './PurchasesByItemsProvider';
 import { PurchasesByItemsBody } from './PurchasesByItemsBody';
-
-import withPurchasesByItemsActions from './withPurchasesByItemsActions';
-
 import { getDefaultPurchasesByItemsQuery } from './utils';
 import { compose } from '@/utils';
+
+import withPurchasesByItemsActions from './withPurchasesByItemsActions';
 
 /**
  * Purchases by items.
  */
 function PurchasesByItems({
-
   // #withPurchasesByItemsActions
   togglePurchasesByItemsFilterDrawer,
 }) {

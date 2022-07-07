@@ -1,13 +1,12 @@
 import React from 'react';
 import * as R from 'ramda';
 
-import { FinancialReportBody } from '../FinancialReportPage';
-import { FinancialSheetSkeleton } from '../../../components/FinancialSheet';
 import PurchasesByItemsTable from './PurchasesByItemsTable';
-
+import { FinancialReportBody } from '../FinancialReportPage';
+import { FinancialSheetSkeleton } from '@/components';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
 
-import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Purchases by items.

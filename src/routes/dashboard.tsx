@@ -211,8 +211,11 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/profit-loss-sheet`,
-    component: lazy(() =>
-      import('@/containers/FinancialStatements/ProfitLossSheet/ProfitLossSheet'),
+    component: lazy(
+      () =>
+        import(
+          '@/containers/FinancialStatements/ProfitLossSheet/ProfitLossSheet'
+        ),
     ),
     breadcrumb: intl.get('profit_loss_sheet'),
     hint: intl.get('reports_the_revenues_costs_and_expenses'),
@@ -224,8 +227,11 @@ export const getDashboardRoutes = () => [
   },
   {
     path: '/financial-reports/receivable-aging-summary',
-    component: lazy(() =>
-      import('@/containers/FinancialStatements/ARAgingSummary/ARAgingSummary'),
+    component: lazy(
+      () =>
+        import(
+          '@/containers/FinancialStatements/ARAgingSummary/ARAgingSummary'
+        ),
     ),
     breadcrumb: intl.get('receivable_aging_summary'),
     hint: intl.get('summarize_total_unpaid_balances_of_customers_invoices'),
@@ -236,8 +242,11 @@ export const getDashboardRoutes = () => [
   },
   {
     path: '/financial-reports/payable-aging-summary',
-    component: lazy(() =>
-      import('@/containers/FinancialStatements/APAgingSummary/APAgingSummary'),
+    component: lazy(
+      () =>
+        import(
+          '@/containers/FinancialStatements/APAgingSummary/APAgingSummary'
+        ),
     ),
     breadcrumb: intl.get('payable_aging_summary'),
     hint: intl.get('summarize_total_unpaid_balances_of_vendors_purchase'),
@@ -248,8 +257,8 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/journal-sheet`,
-    component: lazy(() =>
-      import('@/containers/FinancialStatements/Journal/Journal'),
+    component: lazy(
+      () => import('@/containers/FinancialStatements/Journal/Journal'),
     ),
     breadcrumb: intl.get('journal_sheet'),
     hint: intl.get('the_debit_and_credit_entries_of_system_transactions'),
@@ -259,20 +268,21 @@ export const getDashboardRoutes = () => [
     backLink: true,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // {
-  //   path: `/financial-reports/purchases-by-items`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/FinancialStatements/PurchasesByItems/PurchasesByItems'
-  //     ),
-  //   ),
-  //   breadcrumb: intl.get('purchases_by_items'),
-  //   // hotkey: '',
-  //   pageTitle: intl.get('purchases_by_items'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: `/financial-reports/purchases-by-items`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/FinancialStatements/PurchasesByItems/PurchasesByItems'
+        ),
+    ),
+    breadcrumb: intl.get('purchases_by_items'),
+    // hotkey: '',
+    pageTitle: intl.get('purchases_by_items'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: `/financial-reports/sales-by-items`,
   //   component: lazy(() =>

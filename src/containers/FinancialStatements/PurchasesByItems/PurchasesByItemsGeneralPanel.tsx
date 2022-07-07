@@ -6,9 +6,9 @@ import {
   Col,
   FormattedMessage as T,
   ItemsMultiSelect,
-} from '../../../components';
+} from '@/components';
 import classNames from 'classnames';
-import FinancialStatementDateRange from '@/containers/FinancialStatements/FinancialStatementDateRange';
+import FinancialStatementDateRange from '../FinancialStatementDateRange';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import { filterItemsOptions } from '../constants';
 
