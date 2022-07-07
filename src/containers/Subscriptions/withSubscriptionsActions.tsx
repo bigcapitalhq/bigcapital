@@ -1,7 +1,5 @@
 import { connect } from 'react-redux';
-import { 
-  fetchSubscriptions,
-} from '@/store/subscription/subscription.actions'
+import { fetchSubscriptions } from '@/store/subscription/subscription.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   requestFetchSubscriptions: () => dispatch(fetchSubscriptions()),

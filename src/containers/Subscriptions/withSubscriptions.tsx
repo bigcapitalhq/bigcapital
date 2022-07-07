@@ -16,7 +16,7 @@ export default (mapState, slug) => {
       isSubscriptionInactive: isSubscriptionInactive(state, props),
       isSubscriptionActive: isSubscriptionActive(state, props),
     };
-    return (mapState) ? mapState(mapped, state, props) : mapped;
+    return mapState ? mapState(mapped, state, props) : mapped;
   };
   return connect(mapStateToProps);
 };

@@ -1,13 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
 import { get } from 'lodash';
-import { compose } from 'redux';
+
 
 import '@/style/pages/Subscription/PlanPeriodRadio.scss';
 
 import withPlan from '@/containers/Subscriptions/withPlan';
 
-import { saveInvoke } from '@/utils';
+import { saveInvoke, compose } from '@/utils';
 
 /**
  * Billing period.

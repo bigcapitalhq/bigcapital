@@ -1,20 +1,19 @@
 import React, { useEffect } from 'react';
-import { Formik, Form } from 'formik';
 import intl from 'react-intl-universal';
+import { Formik, Form } from 'formik';
 import { If, Alert, T } from '@/components';
 
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 
 import '@/style/pages/Billing/BillingPage.scss';
 
+import { compose } from '@/utils'; 
 import { MasterBillingTabs } from './SubscriptionTabs';
+import { getBillingFormValidationSchema } from './utils';
 
 import withBillingActions from './withBillingActions';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withSubscriptionPlansActions from './withSubscriptionPlansActions';
-
-import { compose } from '@/utils';
-import { getBillingFormValidationSchema } from './utils';
 import withSubscriptions from './withSubscriptions';
 
 /**

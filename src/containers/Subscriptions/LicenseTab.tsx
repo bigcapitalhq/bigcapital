@@ -1,11 +1,10 @@
 import React from 'react';
-import { FormattedMessage as T } from '@/components';
-
 import { Intent, Button } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import { FormattedMessage as T } from '@/components';
+import { compose } from '@/utils';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import { compose } from 'redux';
-import { useFormikContext } from 'formik';
 
 /**
  * Payment via license code tab.

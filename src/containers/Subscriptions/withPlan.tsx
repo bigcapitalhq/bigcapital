@@ -1,6 +1,3 @@
-
-
-
 import { connect } from 'react-redux';
 import { getPlanSelector } from '@/store/plans/plans.selectors';
 
@@ -11,7 +8,7 @@ export default (mapState) => {
     const mapped = {
       plan: getPlan(state, props),
     };
-    return (mapState) ? mapState(mapped, state, props) : mapped;
+    return mapState ? mapState(mapped, state, props) : mapped;
   };
   return connect(mapStateToProps);
 };

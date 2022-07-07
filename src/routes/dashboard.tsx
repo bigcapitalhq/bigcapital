@@ -939,13 +939,13 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
-  // // Subscription billing.
-  // {
-  //   path: `/billing`,
-  //   component: lazy(() => import('@/containers/Subscriptions/BillingForm')),
-  //   breadcrumb: intl.get('new_billing'),
-  //   subscriptionInactive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  // Subscription billing.
+  {
+    path: `/billing`,
+    component: lazy(() => import('@/containers/Subscriptions/BillingForm')),
+    breadcrumb: intl.get('new_billing'),
+    subscriptionInactive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // Payment modes.
   {
     path: `/payment-mades/:id/edit`,
@@ -995,8 +995,11 @@ export const getDashboardRoutes = () => [
   // Cash flow
   {
     path: `/cashflow-accounts/:id/transactions`,
-    component: lazy(() =>
-      import('@/containers/CashFlow/AccountTransactions/AccountTransactionsList'),
+    component: lazy(
+      () =>
+        import(
+          '@/containers/CashFlow/AccountTransactions/AccountTransactionsList'
+        ),
     ),
     sidebarExpand: false,
     backLink: true,
@@ -1006,8 +1009,9 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/cashflow-accounts`,
-    component: lazy(() =>
-      import('@/containers/CashFlow/CashFlowAccounts/CashFlowAccountsList'),
+    component: lazy(
+      () =>
+        import('@/containers/CashFlow/CashFlowAccounts/CashFlowAccountsList'),
     ),
     pageTitle: intl.get('siebar.cashflow.label_cash_and_bank_accounts'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],

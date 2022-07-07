@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import {
   isSubscriptionsInactiveFactory,
-  isSubscriptionsActiveFactory
+  isSubscriptionsActiveFactory,
 } from '@/store/subscription/subscription.selectors';
 
 export default (mapState) => {
@@ -13,7 +13,7 @@ export default (mapState) => {
       isSubscriptionsInactive: isSubscriptionsInactive(state, props),
       isSubscriptionsActive: isSubscriptionsActive(state, props),
     };
-    return (mapState) ? mapState(mapped, state, props) : mapped;
+    return mapState ? mapState(mapped, state, props) : mapped;
   };
   return connect(mapStateToProps);
 };

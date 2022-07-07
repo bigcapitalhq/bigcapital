@@ -1,6 +1,6 @@
 import React from 'react';
-import { Tabs, Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import { Tabs, Tab } from '@blueprintjs/core';
 import BillingTab from './BillingTab';
 import LicenseTab from './LicenseTab';
 
