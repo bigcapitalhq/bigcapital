@@ -360,22 +360,23 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // {
-  //   path: `/financial-reports/transactions-by-vendors`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/FinancialStatements/VendorsTransactions/VendorsTransactions'
-  //     ),
-  //   ),
-  //   breadcrumb: intl.get('vendors_transactions'),
-  //   hint: intl.get(
-  //     'reports_every_transaction_going_in_and_out_of_each_vendor_supplier',
-  //   ),
-  //   pageTitle: intl.get('vendors_transactions'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: `/financial-reports/transactions-by-vendors`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/FinancialStatements/VendorsTransactions/VendorsTransactions'
+        ),
+    ),
+    breadcrumb: intl.get('vendors_transactions'),
+    hint: intl.get(
+      'reports_every_transaction_going_in_and_out_of_each_vendor_supplier',
+    ),
+    pageTitle: intl.get('vendors_transactions'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: `/financial-reports/cash-flow`,
   //   component: lazy(() =>

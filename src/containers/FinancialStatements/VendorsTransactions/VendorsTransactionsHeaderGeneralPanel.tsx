@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field } from 'formik';
-import classNames from 'classnames';
 import { Classes, FormGroup } from '@blueprintjs/core';
+import classNames from 'classnames';
 
 import FinancialStatementDateRange from '../FinancialStatementDateRange';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
@@ -11,7 +11,7 @@ import {
   Col,
   ContactsMultiSelect,
   FormattedMessage as T,
-} from '../../../components';
+} from '@/components';
 import { filterVendorsOptions } from '../constants';
 
 import {

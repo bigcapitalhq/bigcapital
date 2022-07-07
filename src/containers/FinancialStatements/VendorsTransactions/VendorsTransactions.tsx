@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 
-import { FinancialStatement } from '@/components';
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
+import { FinancialStatement, DashboardPageContent } from '@/components';
+import { VendorsTransactionsBody } from './VendorsTransactionsBody';
+import { VendorsTransactionsProvider } from './VendorsTransactionsProvider';
+import { VendorsTransactionsLoadingBar } from './components';
 
 import VendorsTransactionsHeader from './VendorsTransactionsHeader';
 import VendorsTransactionsActionsBar from './VendorsTransactionsActionsBar';
-import { VendorsTransactionsBody } from './VendorsTransactionsBody';
 
 import withVendorsTransactionsActions from './withVendorsTransactionsActions';
-
-import { VendorsTransactionsProvider } from './VendorsTransactionsProvider';
-import { VendorsTransactionsLoadingBar } from './components';
 
 import { compose } from '@/utils';
 

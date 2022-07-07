@@ -1,12 +1,12 @@
 import React from 'react';
 import * as Yup from 'yup';
 import moment from 'moment';
+import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
 
-import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '../FinancialStatementHeader';
 import VendorsTransactionsHeaderGeneralPanel from './VendorsTransactionsHeaderGeneralPanel';
 
 import withVendorsTransaction from './withVendorsTransaction';

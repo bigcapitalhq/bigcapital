@@ -8,10 +8,9 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import { FormattedMessage as T, Icon } from '@/components';
 import classNames from 'classnames';
 
-import Icon from '@/components/Icon';
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
@@ -35,10 +34,8 @@ function VendorsTransactionsActionsBar({
   //#withVendorsTransactionsActions
   toggleVendorsTransactionsFilterDrawer,
 }) {
-  const {
-    isVendorsTransactionsLoading,
-    refetch,
-  } = useVendorsTransactionsContext();
+  const { isVendorsTransactionsLoading, refetch } =
+    useVendorsTransactionsContext();
 
   // Handle filter toggle click.
   const handleFilterToggleClick = () => {

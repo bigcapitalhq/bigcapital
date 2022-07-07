@@ -1,13 +1,12 @@
 import React from 'react';
 import * as R from 'ramda';
 
-import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
-
 import { FinancialReportBody } from '../FinancialReportPage';
-import { FinancialSheetSkeleton } from '../../../components/FinancialSheet';
+import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
+import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 import VendorsTransactionsTable from './VendorsTransactionsTable';
 
-import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Vendors transactions body.
