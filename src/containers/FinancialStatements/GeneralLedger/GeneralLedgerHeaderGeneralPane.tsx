@@ -1,17 +1,21 @@
 import React from 'react';
 import { Classes } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
 
-import { AccountMultiSelect, Row, Col } from '@/components';
-import { FFormGroup } from '../../../components/Forms';
+import {
+  AccountMultiSelect,
+  Row,
+  Col,
+  FormattedMessage as T,
+  FFormGroup,
+} from '@/components';
 
-import FinancialStatementDateRange from '@/containers/FinancialStatements/FinancialStatementDateRange';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
-import { GLHeaderGeneralPanelProvider } from './GLHeaderGeneralPaneProvider';
+import FinancialStatementDateRange from '../FinancialStatementDateRange';
 
 import { filterAccountsOptions } from './common';
 import { useGLGeneralPanelContext } from './GLHeaderGeneralPaneProvider';
+import { GLHeaderGeneralPanelProvider } from './GLHeaderGeneralPaneProvider';
 
 /**
  * General ledger (GL) - Header - General panel.

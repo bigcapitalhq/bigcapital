@@ -18,6 +18,7 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
+
   // Accounting.
   {
     path: `/make-journal-entry`,
@@ -68,6 +69,7 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.ITEM,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
+
   // Items.
   {
     path: `/items/:id/edit`,
@@ -161,21 +163,21 @@ export const getDashboardRoutes = () => [
     // subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
-  // // Financial Reports.
-  // {
-  //   path: `/financial-reports/general-ledger`,
-  //   component: lazy(() =>
-  //     import('@/containers/FinancialStatements/GeneralLedger/GeneralLedger'),
-  //   ),
-  //   breadcrumb: intl.get('general_ledger'),
-  //   hint: intl.get('reports_every_transaction_going_in_and_out_of_your'),
-  //   hotkey: 'shift+4',
-  //   pageTitle: intl.get('general_ledger'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   defaultSearchResource: RESOURCES_TYPES.INVENTORY_ADJUSTMENT,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  // Financial Reports.
+  {
+    path: `/financial-reports/general-ledger`,
+    component: lazy(() =>
+      import('@/containers/FinancialStatements/GeneralLedger/GeneralLedger'),
+    ),
+    breadcrumb: intl.get('general_ledger'),
+    hint: intl.get('reports_every_transaction_going_in_and_out_of_your'),
+    hotkey: 'shift+4',
+    pageTitle: intl.get('general_ledger'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.INVENTORY_ADJUSTMENT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: `/financial-reports/balance-sheet`,
   //   component: lazy(() =>

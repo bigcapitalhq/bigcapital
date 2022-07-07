@@ -8,17 +8,15 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
-
-import Icon from '@/components/Icon';
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
+
+import { FormattedMessage as T ,Icon } from '@/components';
+import { useGeneralLedgerContext } from './GeneralLedgerProvider';
+import { compose } from '@/utils';
 
 import withGeneralLedger from './withGeneralLedger';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
-
-import { compose } from '@/utils';
-import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 
 /**
  * General ledger - Actions bar.

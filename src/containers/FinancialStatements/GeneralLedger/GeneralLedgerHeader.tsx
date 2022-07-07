@@ -1,21 +1,20 @@
 import React from 'react';
 import moment from 'moment';
+import styled from 'styled-components';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import styled from 'styled-components';
 
 import { FormattedMessage as T } from '@/components';
+import { getDefaultGeneralLedgerQuery } from './common';
+import { compose, transformToForm, saveInvoke } from '@/utils';
 
-import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '../FinancialStatementHeader';
 import GeneralLedgerHeaderGeneralPane from './GeneralLedgerHeaderGeneralPane';
 import GeneralLedgerHeaderDimensionsPanel from './GeneralLedgerHeaderDimensionsPanel';
 
 import withGeneralLedger from './withGeneralLedger';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
-
-import { getDefaultGeneralLedgerQuery } from './common';
-import { compose, transformToForm, saveInvoke } from '@/utils';
 
 /**
  * Geenral Ledger (GL) - Header.
