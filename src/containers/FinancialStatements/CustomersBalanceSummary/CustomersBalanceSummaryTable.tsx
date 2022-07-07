@@ -2,13 +2,12 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
+import { TableStyle } from '@/common';
 import { ReportDataTable, FinancialSheet } from '@/components';
+import { tableRowTypesToClassnames } from '@/utils';
 
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import { useCustomersSummaryColumns } from './components';
-
-import { TableStyle } from '@/common';
-import { tableRowTypesToClassnames } from '@/utils';
 
 /**
  * Customers balance summary table.

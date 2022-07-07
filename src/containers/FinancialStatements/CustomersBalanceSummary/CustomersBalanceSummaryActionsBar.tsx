@@ -8,10 +8,9 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import { Icon, FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 
-import Icon from '@/components/Icon';
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
@@ -34,10 +33,8 @@ function CustomersBalanceSummaryActionsBar({
   //#withCustomersBalanceSummaryActions
   toggleCustomerBalanceFilterDrawer,
 }) {
-  const {
-    refetch,
-    isCustomersBalanceLoading,
-  } = useCustomersBalanceSummaryContext();
+  const { refetch, isCustomersBalanceLoading } =
+    useCustomersBalanceSummaryContext();
 
   // handle filter toggle click.
   const handleFilterToggleClick = () => {

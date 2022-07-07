@@ -3,10 +3,10 @@ import intl from 'react-intl-universal';
 import * as R from 'ramda';
 
 import { If } from '@/components';
+import { Align } from '@/common';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 
-import { Align } from '@/common';
 
 /**
  * Retrieve customers balance summary columns.

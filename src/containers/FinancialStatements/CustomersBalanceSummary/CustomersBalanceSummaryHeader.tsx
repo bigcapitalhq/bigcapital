@@ -1,13 +1,12 @@
 import React from 'react';
 import * as Yup from 'yup';
-import { Formik, Form } from 'formik';
-import moment from 'moment';
-import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
-
+import moment from 'moment';
+import { Formik, Form } from 'formik';
+import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 
-import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
+import FinancialStatementHeader from '../FinancialStatementHeader';
 import withCustomersBalanceSummary from './withCustomersBalanceSummary';
 import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryActions';
 import CustomersBalanceSummaryGeneralPanel from './CustomersBalanceSummaryGeneralPanel';

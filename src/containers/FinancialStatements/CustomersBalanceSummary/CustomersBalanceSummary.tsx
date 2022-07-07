@@ -2,18 +2,17 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import * as R from 'ramda';
 
-import { FinancialStatement } from '@/components';
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 
 import CustomersBalanceSummaryActionsBar from './CustomersBalanceSummaryActionsBar';
 import CustomersBalanceSummaryHeader from './CustomersBalanceSummaryHeader';
 
 import { CustomerBalanceSummaryBody } from './CustomerBalanceSummaryBody';
-import { CustomersBalanceLoadingBar } from './components';
 import { CustomersBalanceSummaryProvider } from './CustomersBalanceSummaryProvider';
+import { getDefaultCustomersBalanceQuery } from './utils';
+import { CustomersBalanceLoadingBar } from './components';
 import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryActions';
 
-import { getDefaultCustomersBalanceQuery } from './utils';
 
 /**
  * Customers Balance summary.

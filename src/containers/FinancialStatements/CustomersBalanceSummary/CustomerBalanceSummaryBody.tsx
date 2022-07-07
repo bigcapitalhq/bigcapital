@@ -2,13 +2,13 @@ import React from 'react';
 import * as R from 'ramda';
 
 import { FinancialReportBody } from '../FinancialReportPage';
-import CustomersBalanceSummaryTable from './CustomersBalanceSummaryTable';
-import { FinancialSheetSkeleton } from '../../../components/FinancialSheet';
+import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
+import CustomersBalanceSummaryTable from './CustomersBalanceSummaryTable';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**
- * Customer balance summary body. 
+ * Customer balance summary body.
  * @returns {JSX.Element}
  */
 function CustomerBalanceSummaryBodyJSX({

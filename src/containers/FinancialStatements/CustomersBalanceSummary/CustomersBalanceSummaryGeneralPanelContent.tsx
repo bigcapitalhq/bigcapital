@@ -2,10 +2,14 @@ import React from 'react';
 import { FastField, Field } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
 import { Classes, FormGroup, Position, Checkbox } from '@blueprintjs/core';
-import { ContactsMultiSelect, FormattedMessage as T } from '@/components';
+import {
+  ContactsMultiSelect,
+  FormattedMessage as T,
+  Row,
+  Col,
+  FieldHint,
+} from '@/components';
 import classNames from 'classnames';
-import { Row, Col, FieldHint } from '@/components';
-import { filterCustomersOptions } from '../constants';
 
 import {
   momentFormatter,
@@ -13,6 +17,7 @@ import {
   inputIntent,
   handleDateChange,
 } from '@/utils';
+import { filterCustomersOptions } from '../constants';
 import { useCustomersBalanceSummaryGeneralContext } from './CustomersBalanceSummaryGeneralProvider';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 
