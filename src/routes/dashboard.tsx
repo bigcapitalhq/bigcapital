@@ -106,17 +106,17 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
-  // // Inventory adjustments.
-  // {
-  //   path: `/inventory-adjustments`,
-  //   component: lazy(() =>
-  //     import('@/containers/InventoryAdjustments/InventoryAdjustmentList'),
-  //   ),
-  //   breadcrumb: intl.get('inventory_adjustments'),
-  //   pageTitle: intl.get('inventory_adjustment_list'),
-  //   defaultSearchResource: RESOURCES_TYPES.ITEM,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  // Inventory adjustments.
+  {
+    path: `/inventory-adjustments`,
+    component: lazy(() =>
+      import('@/containers/InventoryAdjustments/InventoryAdjustmentList'),
+    ),
+    breadcrumb: intl.get('inventory_adjustments'),
+    pageTitle: intl.get('inventory_adjustment_list'),
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
 
   // // Warehouse Transfer.
   // {
