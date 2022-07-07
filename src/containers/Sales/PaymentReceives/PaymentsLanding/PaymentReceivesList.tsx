@@ -3,10 +3,10 @@ import React from 'react';
 import '@/style/pages/PaymentReceive/List.scss';
 
 import { DashboardPageContent } from '@/components';
-import PaymentReceiveActionsBar from './PaymentReceiveActionsBar';
 import { PaymentReceivesListProvider } from './PaymentReceiptsListProvider';
 import PaymentReceiveViewTabs from './PaymentReceiveViewTabs';
 import PaymentReceivesTable from './PaymentReceivesTable';
+import PaymentReceiveActionsBar from './PaymentReceiveActionsBar';
 
 import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashboardContentTable, DashboardPageContent } from '@/components';
+import { DashboardPageContent } from '@/components';
 
 import '@/style/pages/SaleReceipt/List.scss';
 
@@ -44,7 +44,6 @@ function ReceiptsList({
           <ReceiptViewTabs />
           <ReceiptsTable />
         </DashboardPageContent>
-
       </DashboardPageContent>
     </ReceiptsListProvider>
   );

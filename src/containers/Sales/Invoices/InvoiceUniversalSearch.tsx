@@ -6,11 +6,8 @@ import { T, Choose, Icon } from '@/components';
 import { highlightText } from '@/utils';
 
 import { RESOURCES_TYPES } from '@/common/resourcesTypes';
-import {
-  AbilitySubject,
-  SaleInvoiceAction,
-} from '../../../common/abilityOption';
-import withDrawerActions from '../../Drawer/withDrawerActions';
+import { AbilitySubject, SaleInvoiceAction } from '@/common/abilityOption';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 /**
  * Universal search invoice item select action.

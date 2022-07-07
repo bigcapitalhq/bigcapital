@@ -1,9 +1,9 @@
 import React from 'react';
-import { useFormikContext } from 'formik';
-import moment from 'moment';
 import * as R from 'ramda';
-import { omit, first } from 'lodash';
 import intl from 'react-intl-universal';
+import moment from 'moment';
+import { useFormikContext } from 'formik';
+import { omit, first } from 'lodash';
 import {
   defaultFastFieldShouldUpdate,
   transactionNumber,

@@ -1,6 +1,6 @@
 import React from 'react';
-import { FastField } from 'formik';
 import classNames from 'classnames';
+import { FastField } from 'formik';
 import { CLASSES } from '@/common/classes';
 import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
 import { useInvoiceFormContext } from './InvoiceFormProvider';

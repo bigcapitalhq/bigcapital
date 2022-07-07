@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
+import classNames from 'classnames';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
 import { sumBy, isEmpty } from 'lodash';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from '@/common/classes';
 import {
@@ -19,7 +19,6 @@ import InvoiceFormDialogs from './InvoiceFormDialogs';
 import InvoiceFormTopBar from './InvoiceFormTopBar';
 
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withMediaActions from '@/containers/Media/withMediaActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
@@ -181,7 +180,6 @@ function InvoiceForm({
 
 export default compose(
   withDashboardActions,
-  withMediaActions,
   withSettings(({ invoiceSettings }) => ({
     invoiceNextNumber: invoiceSettings?.nextNumber,
     invoiceNumberPrefix: invoiceSettings?.numberPrefix,

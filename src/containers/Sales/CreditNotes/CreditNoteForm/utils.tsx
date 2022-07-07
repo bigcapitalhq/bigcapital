@@ -1,6 +1,6 @@
 import React from 'react';
-import * as R from 'ramda';
 import moment from 'moment';
+import * as R from 'ramda';
 import { first } from 'lodash';
 
 import {

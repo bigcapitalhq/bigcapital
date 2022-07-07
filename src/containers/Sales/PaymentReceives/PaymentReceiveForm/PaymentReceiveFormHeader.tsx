@@ -1,13 +1,12 @@
 import React, { useMemo } from 'react';
+import classNames from 'classnames';
 import { sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
-import classNames from 'classnames';
 import { Money } from '@/components';
 import { FormattedMessage as T } from '@/components';
 
 import { CLASSES } from '@/common/classes';
 import PaymentReceiveHeaderFields from './PaymentReceiveHeaderFields';
-
 
 /**
  * Payment receive form header.

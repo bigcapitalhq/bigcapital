@@ -1,7 +1,7 @@
 import React from 'react';
-import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
+import { useFormikContext } from 'formik';
 import { CLASSES } from '@/common/classes';
 import CreditNoteFormHeaderFields from './CreditNoteFormHeaderFields';
 

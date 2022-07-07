@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import { FastField } from 'formik';
-import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
 import { CLASSES } from '@/common/classes';
+import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import { entriesFieldShouldUpdate } from './utils';
 

@@ -2,12 +2,11 @@ import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
 import { DashboardViewsTabs } from '@/components';
+import { compose, transfromViewsToTabs } from '@/utils';
+import { useCreditNoteListContext } from './CreditNotesListProvider';
 
 import withCreditNotes from './withCreditNotes';
 import withCreditNotesActions from './withCreditNotesActions';
-
-import { compose, transfromViewsToTabs } from '@/utils';
-import { useCreditNoteListContext } from './CreditNotesListProvider';
 
 /**
  * Credit Note views tabs.

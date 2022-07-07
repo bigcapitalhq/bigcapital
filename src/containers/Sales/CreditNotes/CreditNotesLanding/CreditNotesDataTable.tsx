@@ -1,11 +1,11 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import CreditNoteEmptyStatus from './CreditNotesEmptyStatus';
-import { DataTable, DashboardContentTable } from '@/components';
 import { TABLES } from '@/common/tables';
+import { DataTable, DashboardContentTable } from '@/components';
 import { useMemorizedColumnsWidths } from '@/hooks';
 
+import CreditNoteEmptyStatus from './CreditNotesEmptyStatus';
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 

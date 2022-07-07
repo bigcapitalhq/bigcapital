@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { CloudLoadingIndicator } from '@/components';
 import classNames from 'classnames';
+import { CloudLoadingIndicator } from '@/components';
 import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from '@/components';
 

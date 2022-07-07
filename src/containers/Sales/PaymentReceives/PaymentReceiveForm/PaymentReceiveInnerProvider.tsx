@@ -3,7 +3,6 @@ import { useFormikContext } from 'formik';
 import { useDueInvoices } from '@/hooks/query';
 import { transformInvoicesNewPageEntries } from './utils';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
-import { isEmpty } from 'lodash';
 
 const PaymentReceiveInnerContext = createContext();
 

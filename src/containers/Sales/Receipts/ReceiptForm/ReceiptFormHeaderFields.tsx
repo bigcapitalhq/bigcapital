@@ -1,4 +1,6 @@
 import React, { useCallback } from 'react';
+import styled from 'styled-components';
+import classNames from 'classnames';
 import {
   FormGroup,
   InputGroup,
@@ -6,20 +8,17 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from '@/components';
-import classNames from 'classnames';
 import { FastField, ErrorMessage } from 'formik';
 import { CLASSES } from '@/common/classes';
-import styled from 'styled-components';
 
 import {
   AccountsSelectList,
   CustomerSelectField,
   FieldRequiredHint,
   Icon,
-  If,
   InputPrependButton,
   CustomerDrawerLink,
+  FormattedMessage as T,
 } from '@/components';
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';

@@ -1,5 +1,4 @@
 import React from 'react';
-import Icon from '@/components/Icon';
 import {
   Button,
   Classes,
@@ -11,29 +10,25 @@ import {
 import { useHistory } from 'react-router-dom';
 
 import {
-  Can,
   FormattedMessage as T,
   AdvancedFilterPopover,
   If,
+  Icon,
+  Can,
   DashboardActionViewsList,
   DashboardFilterButton,
   DashboardRowsHeightButton,
 } from '@/components';
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
-import withEstimatesActions from './withEstimatesActions';
 import withEstimates from './withEstimates';
-
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withEstimatesActions from './withEstimatesActions';
 import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useRefreshEstimates } from '@/hooks/query/estimates';
-import {
-  SaleEstimateAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
-
+import { SaleEstimateAction, AbilitySubject } from '@/common/abilityOption';
 import { compose } from '@/utils';
 
 /**

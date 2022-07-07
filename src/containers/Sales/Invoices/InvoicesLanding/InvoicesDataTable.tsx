@@ -3,20 +3,20 @@ import { useHistory } from 'react-router-dom';
 
 import InvoicesEmptyStatus from './InvoicesEmptyStatus';
 
-import { DataTable, DashboardContentTable } from '@/components';
 import { TABLES } from '@/common/tables';
+import { DataTable, DashboardContentTable } from '@/components';
 import { useMemorizedColumnsWidths } from '@/hooks';
 
 import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '../../../Settings/withSettings';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { useInvoicesTableColumns, ActionsMenu } from './components';
 import { useInvoicesListContext } from './InvoicesListProvider';

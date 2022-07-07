@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-import intl from 'react-intl-universal';
-
 import { CLASSES } from '@/common/classes';
+
 import EstimateFormHeaderFields from './EstimateFormHeaderFields';
 
 import { getEntriesTotal } from '@/containers/Entries/utils';
@@ -15,12 +15,8 @@ function EstimateFormHeader() {
     values: { entries, currency_code },
   } = useFormikContext();
 
-
   // Calculate the total due amount of bill entries.
-  const totalDueAmount = useMemo(
-    () => getEntriesTotal(entries),
-    [entries],
-  );
+  const totalDueAmount = useMemo(() => getEntriesTotal(entries), [entries]);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>

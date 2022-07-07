@@ -2,12 +2,12 @@ import React from 'react';
 
 import '@/style/pages/SaleInvoice/List.scss';
 
-import { DashboardContentTable, DashboardPageContent } from '@/components';
-import InvoicesActionsBar from './InvoicesActionsBar';
+import { DashboardPageContent } from '@/components';
 import { InvoicesListProvider } from './InvoicesListProvider';
 
 import InvoiceViewTabs from './InvoiceViewTabs';
 import InvoicesDataTable from './InvoicesDataTable';
+import InvoicesActionsBar from './InvoicesActionsBar';
 
 import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';

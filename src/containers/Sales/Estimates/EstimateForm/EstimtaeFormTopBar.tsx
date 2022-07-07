@@ -7,11 +7,11 @@ import {
   Button,
   Classes,
 } from '@blueprintjs/core';
-import styled from 'styled-components';
 import {
   useSetPrimaryBranchToForm,
   useSetPrimaryWarehouseToForm,
 } from './utils';
+import { Features } from '@/common';
 import { useFeatureCan } from '@/hooks/state';
 import {
   Icon,
@@ -22,7 +22,6 @@ import {
   DetailsBarSkeletonBase,
 } from '@/components';
 import { useEstimateFormContext } from './EstimateFormProvider';
-import { Features } from '@/common';
 
 /**
  * Estimate form topbar .

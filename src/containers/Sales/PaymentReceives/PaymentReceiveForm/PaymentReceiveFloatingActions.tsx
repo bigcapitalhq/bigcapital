@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import {
   Intent,
   Button,
@@ -9,13 +10,11 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import { Icon, FormattedMessage as T } from '@/components';
 import { useHistory } from 'react-router-dom';
-import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { CLASSES } from '@/common/classes';
 
-import { Icon } from '@/components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 
 /**

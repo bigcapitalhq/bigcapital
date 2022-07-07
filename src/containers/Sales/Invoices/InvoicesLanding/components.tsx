@@ -9,8 +9,7 @@ import {
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
-
-import { CLASSES } from '../../../../common/classes';
+import { CLASSES } from '@/common/classes';
 import {
   FormatDateCell,
   FormattedMessage as T,
@@ -25,7 +24,7 @@ import {
   SaleInvoiceAction,
   PaymentReceiveAction,
   AbilitySubject,
-} from '../../../../common/abilityOption';
+} from '@/common/abilityOption';
 
 export function InvoiceStatus({ invoice }) {
   return (

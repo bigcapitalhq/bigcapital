@@ -1,5 +1,4 @@
 import React from 'react';
-import Icon from '@/components/Icon';
 import {
   Button,
   Classes,
@@ -11,28 +10,26 @@ import {
 
 import { useHistory } from 'react-router-dom';
 import {
+  Icon,
+  Can,
+  If,
   DashboardFilterButton,
   AdvancedFilterPopover,
   FormattedMessage as T,
   DashboardRowsHeightButton,
+  DashboardActionViewsList,
 } from '@/components';
 
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
-import { Can, If, DashboardActionViewsList } from '@/components';
-
-import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withPaymentReceives from './withPaymentReceives';
-
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withSettings from '@/containers/Settings/withSettings';
-import {
-  PaymentReceiveAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
-import { compose } from '@/utils';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import { PaymentReceiveAction, AbilitySubject } from '@/common/abilityOption';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
 import { useRefreshPaymentReceive } from '@/hooks/query/paymentReceives';
+import { compose } from '@/utils';
 
 /**
  * Payment receives actions bar.

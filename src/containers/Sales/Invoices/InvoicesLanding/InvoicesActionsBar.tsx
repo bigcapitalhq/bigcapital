@@ -19,19 +19,15 @@ import {
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { Can, If, DashboardActionViewsList } from '@/components';
-import {
-  SaleInvoiceAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { SaleInvoiceAction, AbilitySubject } from '@/common/abilityOption';
 
 import { useRefreshInvoices } from '@/hooks/query/invoices';
 import { useInvoicesListContext } from './InvoicesListProvider';
 
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withInvoiceActions from './withInvoiceActions';
 import withInvoices from './withInvoices';
-
+import withInvoiceActions from './withInvoiceActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import { compose } from '@/utils';
 
 /**

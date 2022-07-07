@@ -1,10 +1,10 @@
 import React from 'react';
+import intl from 'react-intl-universal';
+import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
 import { isEmpty } from 'lodash';
-import classNames from 'classnames';
 import { CLASSES } from '@/common/classes';
 import {
   CreateCreditNoteFormSchema,

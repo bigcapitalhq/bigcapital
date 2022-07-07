@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { omit, first } from 'lodash';
@@ -9,7 +10,6 @@ import {
   transactionNumber,
 } from '@/utils';
 import { useFormikContext } from 'formik';
-import intl from 'react-intl-universal';
 
 import { formattedAmount, defaultFastFieldShouldUpdate } from '@/utils';
 import { ERROR } from '@/common/errors';

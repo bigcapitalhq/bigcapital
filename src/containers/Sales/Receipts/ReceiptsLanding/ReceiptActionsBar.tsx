@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Icon from '@/components/Icon';
 import {
   Button,
   Classes,
@@ -11,6 +10,7 @@ import {
 
 import { useHistory } from 'react-router-dom';
 import {
+  Icon,
   AdvancedFilterPopover,
   DashboardFilterButton,
   FormattedMessage as T,
@@ -20,18 +20,14 @@ import {
 import { Can, If, DashboardActionViewsList } from '@/components';
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
-import withReceiptsActions from './withReceiptsActions';
 import withReceipts from './withReceipts';
-
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withReceiptsActions from './withReceiptsActions';
 import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useRefreshReceipts } from '@/hooks/query/receipts';
-import {
-  SaleReceiptAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { SaleReceiptAction, AbilitySubject } from '@/common/abilityOption';
 
 import { compose } from '@/utils';
 

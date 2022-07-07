@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import {
   Intent,
   Button,
@@ -12,7 +13,6 @@ import {
 import { FormattedMessage as T } from '@/components';
 import { useFormikContext } from 'formik';
 import { useHistory } from 'react-router-dom';
-import classNames from 'classnames';
 import { CLASSES } from '@/common/classes';
 import { If, Icon } from '@/components';
 import { useReceiptFormContext } from './ReceiptFormProvider';

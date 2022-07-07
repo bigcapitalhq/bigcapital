@@ -589,242 +589,253 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
-  // // Estimates
-  // {
-  //   path: `/estimates/:id/edit`,
-  //   component: lazy(() =>
-  //     import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
-  //   ),
-  //   name: 'estimate-edit',
-  //   breadcrumb: intl.get('edit'),
-  //   pageTitle: intl.get('edit_estimate'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/invoices/new?from_estimate_id=/:id`,
-  //   component: lazy(() =>
-  //     import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
-  //   ),
-  //   name: 'convert-to-invoice',
-  //   breadcrumb: intl.get('new_estimate'),
-  //   pageTitle: intl.get('new_estimate'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   defaultSearchResource: RESOURCES_TYPES.INVOICE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/estimates/new`,
-  //   component: lazy(() =>
-  //     import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
-  //   ),
-  //   name: 'estimate-new',
-  //   breadcrumb: intl.get('new_estimate'),
-  //   hotkey: 'ctrl+shift+e',
-  //   pageTitle: intl.get('new_estimate'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/estimates`,
-  //   component: lazy(() =>
-  //     import('@/containers/Sales/Estimates/EstimatesLanding/EstimatesList'),
-  //   ),
-  //   name: 'estimates-list',
-  //   breadcrumb: intl.get('estimates_list'),
-  //   hotkey: 'shift+e',
-  //   pageTitle: intl.get('estimates_list'),
-  //   defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  // Estimates
+  {
+    path: `/estimates/:id/edit`,
+    component: lazy(
+      () =>
+        import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
+    ),
+    name: 'estimate-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_estimate'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/invoices/new?from_estimate_id=/:id`,
+    component: lazy(
+      () =>
+        import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
+    ),
+    name: 'convert-to-invoice',
+    breadcrumb: intl.get('new_estimate'),
+    pageTitle: intl.get('new_estimate'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/estimates/new`,
+    component: lazy(
+      () =>
+        import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
+    ),
+    name: 'estimate-new',
+    breadcrumb: intl.get('new_estimate'),
+    hotkey: 'ctrl+shift+e',
+    pageTitle: intl.get('new_estimate'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/estimates`,
+    component: lazy(
+      () =>
+        import('@/containers/Sales/Estimates/EstimatesLanding/EstimatesList'),
+    ),
+    name: 'estimates-list',
+    breadcrumb: intl.get('estimates_list'),
+    hotkey: 'shift+e',
+    pageTitle: intl.get('estimates_list'),
+    defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
 
-  // // Invoices.
-  // {
-  //   path: `/invoices/:id/edit`,
-  //   component: lazy(() =>
-  //     import('@/containers/Sales/Invoices/InvoiceForm/InvoiceFormPage'),
-  //   ),
-  //   name: 'invoice-edit',
-  //   breadcrumb: intl.get('edit'),
-  //   pageTitle: intl.get('edit_invoice'),
-  //   sidebarExpand: false,
-  //   backLink: true,
-  //   defaultSearchResource: RESOURCES_TYPES.INVOICE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/invoices/new`,
-  //   component: lazy(() =>
-  //     import('@/containers/Sales/Invoices/InvoiceForm/InvoiceFormPage'),
-  //   ),
-  //   name: 'invoice-new',
-  //   breadcrumb: intl.get('new_invoice'),
-  //   hotkey: 'ctrl+shift+i',
-  //   pageTitle: intl.get('new_invoice'),
-  //   sidebarExpand: false,
-  //   backLink: true,
-  //   defaultSearchResource: RESOURCES_TYPES.INVOICE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/invoices`,
-  //   component: lazy(() =>
-  //     import('@/containers/Sales/Invoices/InvoicesLanding/InvoicesList'),
-  //   ),
-  //   breadcrumb: intl.get('invoices_list'),
-  //   hotkey: 'shift+i',
-  //   pageTitle: intl.get('invoices_list'),
-  //   defaultSearchResource: RESOURCES_TYPES.INVOICE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  // Invoices.
+  {
+    path: `/invoices/:id/edit`,
+    component: lazy(
+      () => import('@/containers/Sales/Invoices/InvoiceForm/InvoiceFormPage'),
+    ),
+    name: 'invoice-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_invoice'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/invoices/new`,
+    component: lazy(
+      () => import('@/containers/Sales/Invoices/InvoiceForm/InvoiceFormPage'),
+    ),
+    name: 'invoice-new',
+    breadcrumb: intl.get('new_invoice'),
+    hotkey: 'ctrl+shift+i',
+    pageTitle: intl.get('new_invoice'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/invoices`,
+    component: lazy(
+      () => import('@/containers/Sales/Invoices/InvoicesLanding/InvoicesList'),
+    ),
+    breadcrumb: intl.get('invoices_list'),
+    hotkey: 'shift+i',
+    pageTitle: intl.get('invoices_list'),
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
 
-  // // Sales Receipts.
-  // {
-  //   path: `/receipts/:id/edit`,
-  //   component: lazy(() =>
-  //     import('@/containers/Sales/Receipts/ReceiptForm/ReceiptFormPage'),
-  //   ),
-  //   name: 'receipt-edit',
-  //   breadcrumb: intl.get('edit'),
-  //   pageTitle: intl.get('edit_receipt'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   defaultSearchResource: RESOURCES_TYPES.RECEIPT,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/receipts/new`,
-  //   component: lazy(() =>
-  //     import('@/containers/Sales/Receipts/ReceiptForm/ReceiptFormPage'),
-  //   ),
-  //   name: 'receipt-new',
-  //   breadcrumb: intl.get('new_receipt'),
-  //   hotkey: 'ctrl+shift+r',
-  //   pageTitle: intl.get('new_receipt'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   defaultSearchResource: RESOURCES_TYPES.RECEIPT,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/receipts`,
-  //   component: lazy(() =>
-  //     import('@/containers/Sales/Receipts/ReceiptsLanding/ReceiptsList'),
-  //   ),
-  //   breadcrumb: intl.get('receipts_list'),
-  //   hotkey: 'shift+r',
-  //   pageTitle: intl.get('receipts_list'),
-  //   defaultSearchResource: RESOURCES_TYPES.RECEIPT,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  // Sales Receipts.
+  {
+    path: `/receipts/:id/edit`,
+    component: lazy(
+      () => import('@/containers/Sales/Receipts/ReceiptForm/ReceiptFormPage'),
+    ),
+    name: 'receipt-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_receipt'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.RECEIPT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/receipts/new`,
+    component: lazy(
+      () => import('@/containers/Sales/Receipts/ReceiptForm/ReceiptFormPage'),
+    ),
+    name: 'receipt-new',
+    breadcrumb: intl.get('new_receipt'),
+    hotkey: 'ctrl+shift+r',
+    pageTitle: intl.get('new_receipt'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.RECEIPT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/receipts`,
+    component: lazy(
+      () => import('@/containers/Sales/Receipts/ReceiptsLanding/ReceiptsList'),
+    ),
+    breadcrumb: intl.get('receipts_list'),
+    hotkey: 'shift+r',
+    pageTitle: intl.get('receipts_list'),
+    defaultSearchResource: RESOURCES_TYPES.RECEIPT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
 
-  // // Sales Credit notes.
-  // {
-  //   path: `/credit-notes/:id/edit`,
-  //   component: lazy(() =>
-  //     import(
-  //       '../containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
-  //     ),
-  //   ),
-  //   name: 'credit-note-edit',
-  //   breadcrumb: intl.get('edit'),
-  //   pageTitle: intl.get('credit_note.label.edit_credit_note'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/credit-notes/new/?from_invoice_id=/:id`,
-  //   component: lazy(() =>
-  //     import(
-  //       '../containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
-  //     ),
-  //   ),
-  //   name: 'credit-note-new',
-  //   breadcrumb: intl.get('credit_note.label.new_credit_note'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   pageTitle: intl.get('credit_note.label.new_credit_note'),
-  //   defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: '/credit-notes/new',
-  //   component: lazy(() =>
-  //     import(
-  //       '../containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
-  //     ),
-  //   ),
-  //   name: 'credit-note-new',
-  //   breadcrumb: intl.get('credit_note.label.new_credit_note'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   pageTitle: intl.get('credit_note.label.new_credit_note'),
-  //   defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: '/credit-notes',
-  //   component: lazy(() =>
-  //     import(
-  //       '../containers/Sales/CreditNotes/CreditNotesLanding/CreditNotesList'
-  //     ),
-  //   ),
-  //   breadcrumb: intl.get('credit_note.label_create_note_list'),
-  //   pageTitle: intl.get('credit_note.label_create_note_list'),
-  //   defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  // Sales Credit notes.
+  {
+    path: `/credit-notes/:id/edit`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
+        ),
+    ),
+    name: 'credit-note-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('credit_note.label.edit_credit_note'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/credit-notes/new/?from_invoice_id=/:id`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
+        ),
+    ),
+    name: 'credit-note-new',
+    breadcrumb: intl.get('credit_note.label.new_credit_note'),
+    backLink: true,
+    sidebarExpand: false,
+    pageTitle: intl.get('credit_note.label.new_credit_note'),
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/credit-notes/new',
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
+        ),
+    ),
+    name: 'credit-note-new',
+    breadcrumb: intl.get('credit_note.label.new_credit_note'),
+    backLink: true,
+    sidebarExpand: false,
+    pageTitle: intl.get('credit_note.label.new_credit_note'),
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/credit-notes',
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Sales/CreditNotes/CreditNotesLanding/CreditNotesList'
+        ),
+    ),
+    breadcrumb: intl.get('credit_note.label_create_note_list'),
+    pageTitle: intl.get('credit_note.label_create_note_list'),
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
 
-  // // Payment receives
-  // {
-  //   path: `/payment-receives/:id/edit`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage'
-  //     ),
-  //   ),
-  //   name: 'payment-receive-edit',
-  //   breadcrumb: intl.get('edit'),
-  //   pageTitle: intl.get('edit_payment_receive'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/payment-receives/new`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage'
-  //     ),
-  //   ),
-  //   name: 'payment-receive-new',
-  //   breadcrumb: intl.get('new_payment_receive'),
-  //   pageTitle: intl.get('new_payment_receive'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/payment-receives`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/Sales/PaymentReceives/PaymentsLanding/PaymentReceivesList'
-  //     ),
-  //   ),
-  //   breadcrumb: intl.get('payment_receives_list'),
-  //   pageTitle: intl.get('payment_receives_list'),
-  //   defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  // Payment receives
+  {
+    path: `/payment-receives/:id/edit`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage'
+        ),
+    ),
+    name: 'payment-receive-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_payment_receive'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/payment-receives/new`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage'
+        ),
+    ),
+    name: 'payment-receive-new',
+    breadcrumb: intl.get('new_payment_receive'),
+    pageTitle: intl.get('new_payment_receive'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/payment-receives`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Sales/PaymentReceives/PaymentsLanding/PaymentReceivesList'
+        ),
+    ),
+    breadcrumb: intl.get('payment_receives_list'),
+    pageTitle: intl.get('payment_receives_list'),
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
 
   // // Bills
   // {

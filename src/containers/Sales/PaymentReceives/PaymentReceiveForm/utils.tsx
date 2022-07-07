@@ -15,7 +15,7 @@ import {
   formattedAmount,
 } from '@/utils';
 import { useCurrentOrganization } from '@/hooks/state';
-import { getEntriesTotal } from '@/containers/Entries/utils';
+
 
 // Default payment receive entry.
 export const defaultPaymentReceiveEntry = {

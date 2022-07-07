@@ -1,4 +1,6 @@
 import React from 'react';
+import styled from 'styled-components';
+import classNames from 'classnames';
 import {
   FormGroup,
   InputGroup,
@@ -7,8 +9,6 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
-import styled from 'styled-components';
-import classNames from 'classnames';
 
 import {
   FFormGroup,
@@ -16,26 +16,24 @@ import {
   Col,
   Row,
   CustomerDrawerLink,
-} from '@/components';
-import { momentFormatter, compose, tansformDateValue } from '@/utils';
-
-import {
-  useObserveInvoiceNoSettings,
-  customerNameFieldShouldUpdate,
-} from './utils';
-import { CLASSES } from '@/common/classes';
-import {
   CustomerSelectField,
   FieldRequiredHint,
   Icon,
   InputPrependButton,
 } from '@/components';
+import { momentFormatter, compose, tansformDateValue } from '@/utils';
+import { CLASSES } from '@/common/classes';
+import { inputIntent, handleDateChange } from '@/utils';
+import {
+  useObserveInvoiceNoSettings,
+  customerNameFieldShouldUpdate,
+} from './utils';
+
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { InvoiceExchangeRateInputField } from './components';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import { inputIntent, handleDateChange } from '@/utils';
 
 /**
  * Invoice form header fields.

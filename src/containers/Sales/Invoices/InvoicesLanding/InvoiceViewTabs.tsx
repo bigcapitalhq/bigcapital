@@ -3,12 +3,11 @@ import { useHistory } from 'react-router';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
 import { DashboardViewsTabs } from '@/components';
+import { compose, transfromViewsToTabs } from '@/utils';
+import { useInvoicesListContext } from './InvoicesListProvider';
 
 import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
-
-import { compose, transfromViewsToTabs } from '@/utils';
-import { useInvoicesListContext } from './InvoicesListProvider';
 
 /**
  * Invoices views tabs.

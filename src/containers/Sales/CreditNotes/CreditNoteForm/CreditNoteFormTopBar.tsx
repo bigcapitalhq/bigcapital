@@ -11,6 +11,7 @@ import {
   useSetPrimaryBranchToForm,
   useSetPrimaryWarehouseToForm,
 } from './utils';
+import { Features } from '@/common';
 import { useFeatureCan } from '@/hooks/state';
 import {
   Icon,
@@ -21,7 +22,6 @@ import {
   DetailsBarSkeletonBase,
 } from '@/components';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
-import { Features } from '@/common';
 
 /**
  * Credit note form topbar .

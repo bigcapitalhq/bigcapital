@@ -1,8 +1,8 @@
 import * as Yup from 'yup';
 import intl from 'react-intl-universal';
+import moment from 'moment';
 import { DATATYPES_LENGTH } from '@/common/dataTypes';
 import { isBlank } from '@/utils';
-import moment from 'moment';
 
 const Schema = Yup.object().shape({
   customer_id: Yup.number().label(intl.get('customer_name_')).required(),

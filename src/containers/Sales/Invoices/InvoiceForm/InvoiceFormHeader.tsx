@@ -1,11 +1,11 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-import intl from 'react-intl-universal';
 
-import { CLASSES } from '@/common/classes';
 import InvoiceFormHeaderFields from './InvoiceFormHeaderFields';
 
+import { CLASSES } from '@/common/classes';
 import { PageFormBigNumber } from '@/components';
 import { useInvoiceTotal } from './utils';
 

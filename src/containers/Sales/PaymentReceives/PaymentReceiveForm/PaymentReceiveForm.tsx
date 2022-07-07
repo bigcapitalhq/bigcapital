@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
-import { Formik, Form } from 'formik';
 import intl from 'react-intl-universal';
+import classNames from 'classnames';
+import { Formik, Form } from 'formik';
 import { omit, sumBy, pick, isEmpty, defaultTo } from 'lodash';
 import { Intent } from '@blueprintjs/core';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import '@/style/pages/PaymentReceive/PageForm.scss';

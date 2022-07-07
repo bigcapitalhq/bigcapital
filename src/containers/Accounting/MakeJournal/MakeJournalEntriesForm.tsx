@@ -22,7 +22,6 @@ import MakeJournalFormTopBar from './MakeJournalFormTopBar';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
-// import withMediaActions from '@/containers/Media/withMediaActions';
 
 import { AppToaster } from '@/components';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';

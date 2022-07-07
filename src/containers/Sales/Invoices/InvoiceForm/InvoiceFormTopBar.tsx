@@ -1,19 +1,20 @@
 import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
 import {
   Alignment,
-  Navbar,
   NavbarGroup,
   NavbarDivider,
   Button,
   Classes,
 } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
-import styled from 'styled-components';
 import {
   useSetPrimaryWarehouseToForm,
   useSetPrimaryBranchToForm,
 } from './utils';
 
+import { Features } from '@/common';
+import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { useFeatureCan } from '@/hooks/state';
 import {
   Icon,
@@ -22,8 +23,6 @@ import {
   WarehouseSelect,
   FormTopbar,
 } from '@/components';
-import { useInvoiceFormContext } from './InvoiceFormProvider';
-import { Features } from '@/common';
 
 /**
  * Invoice form topbar .

@@ -1,4 +1,6 @@
 import React from 'react';
+import classNames from 'classnames';
+import styled from 'styled-components';
 import {
   FormGroup,
   InputGroup,
@@ -8,8 +10,6 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
 import { CLASSES } from '@/common/classes';
-import classNames from 'classnames';
-import styled from 'styled-components';
 import {
   CustomerSelectField,
   FieldRequiredHint,

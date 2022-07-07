@@ -1,4 +1,6 @@
 import React from 'react';
+import intl from 'react-intl-universal';
+import clsx from 'classnames';
 import {
   Intent,
   Button,
@@ -8,16 +10,12 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
-import clsx from 'classnames';
 
 import { FormatDateCell, Money, Icon, Can } from '@/components';
 import { safeCallback } from '@/utils';
-import { CLASSES } from '../../../../common/classes';
-import {
-  PaymentReceiveAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { CLASSES } from '@/common/classes';
+import { PaymentReceiveAction, AbilitySubject } from '@/common/abilityOption';
+
 /**
  * Table actions menu.
  */

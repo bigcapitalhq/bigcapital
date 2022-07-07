@@ -3,13 +3,9 @@ import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
 
 import { Icon, Choose, T } from '@/components';
-
-import { RESOURCES_TYPES } from '../../../common/resourcesTypes';
-import withDrawerActions from '../../Drawer/withDrawerActions';
-import {
-  AbilitySubject,
-  SaleReceiptAction,
-} from '../../../common/abilityOption';
+import { RESOURCES_TYPES } from '@/common/resourcesTypes';
+import { AbilitySubject, SaleReceiptAction } from '@/common/abilityOption';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 /**
  * Receipt universal search item select action.
