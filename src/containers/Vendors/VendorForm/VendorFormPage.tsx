@@ -1,13 +1,12 @@
 import React from 'react';
-import { useParams, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { useParams, useHistory } from 'react-router-dom';
 
 import '@/style/pages/Vendors/PageForm.scss';
 
 import { DashboardCard, DashboardInsider } from '@/components';
-import VendorFormFormik from './VendorFormFormik';
-
 import { VendorFormProvider, useVendorFormContext } from './VendorFormProvider';
+import VendorFormFormik from './VendorFormFormik';
 
 /**
  * Vendor form page loading wrapper.

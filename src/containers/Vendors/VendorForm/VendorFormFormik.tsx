@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
 import classNames from 'classnames';
 
 import { CLASSES } from '@/common/classes';
@@ -11,16 +11,15 @@ import {
   EditVendorFormSchema,
 } from './VendorForm.schema';
 
+import VendorTabs from './VendorsTabs';
 import VendorFormPrimarySection from './VendorFormPrimarySection';
 import VendorFormAfterPrimarySection from './VendorFormAfterPrimarySection';
-import VendorTabs from './VendorsTabs';
 import VendorFloatingActions from './VendorFloatingActions';
 
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import { useVendorFormContext } from './VendorFormProvider';
 import { compose, transformToForm, safeInvoke } from '@/utils';
-
 import { defaultInitialValues } from './utils';
 
 import '@/style/pages/Vendors/Form.scss';

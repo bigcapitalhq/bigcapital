@@ -1,14 +1,12 @@
 import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { compose } from 'redux';
-
 import { useVendorsListContext } from './VendorsListProvider';
 import { DashboardViewsTabs } from '@/components';
 
 import withVendorsActions from './withVendorsActions';
 import withVendors from './withVendors';
 
-import { transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs, compose } from '@/utils';
 
 /**
  * Vendors views tabs.

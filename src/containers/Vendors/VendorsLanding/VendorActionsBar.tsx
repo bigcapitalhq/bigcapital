@@ -10,10 +10,10 @@ import {
 } from '@blueprintjs/core';
 
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
-import Icon from '@/components/Icon';
 import {
   If,
   Can,
+  Icon,
   FormattedMessage as T,
   DashboardActionViewsList,
   DashboardFilterButton,
@@ -22,15 +22,15 @@ import {
 } from '@/components';
 
 import { useRefreshVendors } from '@/hooks/query/vendors';
+import { VendorAction, AbilitySubject } from '@/common/abilityOption';
 import { useVendorsListContext } from './VendorsListProvider';
 import { useHistory } from 'react-router-dom';
 
-import withVendorsActions from './withVendorsActions';
 import withVendors from './withVendors';
+import withVendorsActions from './withVendorsActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
-import withSettingsActions from '../../Settings/withSettingsActions';
-import withSettings from '../../Settings/withSettings';
-import { VendorAction, AbilitySubject } from '../../../common/abilityOption';
 import { compose } from '@/utils';
 
 /**

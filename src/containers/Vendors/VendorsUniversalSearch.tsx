@@ -1,7 +1,7 @@
 import intl from 'react-intl-universal';
 
-import { RESOURCES_TYPES } from '../../common/resourcesTypes';
-import { AbilitySubject, VendorAction } from '../../common/abilityOption';
+import { RESOURCES_TYPES } from '@/common/resourcesTypes';
+import { AbilitySubject, VendorAction } from '@/common/abilityOption';
 import withDrawerActions from '../Drawer/withDrawerActions';
 
 /**

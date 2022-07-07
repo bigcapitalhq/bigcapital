@@ -492,8 +492,8 @@ export const getDashboardRoutes = () => [
   // Customers
   {
     path: `/customers/:id/edit`,
-    component: lazy(() =>
-      import('@/containers/Customers/CustomerForm/CustomerFormPage'),
+    component: lazy(
+      () => import('@/containers/Customers/CustomerForm/CustomerFormPage'),
     ),
     name: 'customer-edit',
     breadcrumb: intl.get('edit_customer'),
@@ -504,8 +504,8 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/customers/new`,
-    component: lazy(() =>
-      import('@/containers/Customers/CustomerForm/CustomerFormPage'),
+    component: lazy(
+      () => import('@/containers/Customers/CustomerForm/CustomerFormPage'),
     ),
     name: 'customer-new',
     breadcrumb: intl.get('new_customer'),
@@ -517,8 +517,8 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/customers`,
-    component: lazy(() =>
-      import('@/containers/Customers/CustomersLanding/CustomersList'),
+    component: lazy(
+      () => import('@/containers/Customers/CustomersLanding/CustomersList'),
     ),
     breadcrumb: intl.get('customers'),
     hotkey: 'shift+c',
@@ -528,8 +528,8 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/customers/contact_duplicate=/:id`,
-    component: lazy(() =>
-      import('@/containers/Customers/CustomerForm/CustomerFormPage'),
+    component: lazy(
+      () => import('@/containers/Customers/CustomerForm/CustomerFormPage'),
     ),
     name: 'duplicate-customer',
     breadcrumb: intl.get('duplicate_customer'),
@@ -539,55 +539,55 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
-  // // Vendors
-  // {
-  //   path: `/vendors/:id/edit`,
-  //   component: lazy(() =>
-  //     import('@/containers/Vendors/VendorForm/VendorFormPage'),
-  //   ),
-  //   name: 'vendor-edit',
-  //   breadcrumb: intl.get('edit_vendor'),
-  //   pageTitle: intl.get('edit_vendor'),
-  //   backLink: true,
-  //   defaultSearchResource: RESOURCES_TYPES.VENDOR,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/vendors/new`,
-  //   component: lazy(() =>
-  //     import('@/containers/Vendors/VendorForm/VendorFormPage'),
-  //   ),
-  //   name: 'vendor-new',
-  //   breadcrumb: intl.get('new_vendor'),
-  //   hotkey: 'ctrl+shift+v',
-  //   pageTitle: intl.get('new_vendor'),
-  //   backLink: true,
-  //   defaultSearchResource: RESOURCES_TYPES.VENDOR,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/vendors`,
-  //   component: lazy(() =>
-  //     import('@/containers/Vendors/VendorsLanding/VendorsList'),
-  //   ),
-  //   breadcrumb: intl.get('vendors'),
-  //   hotkey: 'shift+v',
-  //   pageTitle: intl.get('vendors_list'),
-  //   defaultSearchResource: RESOURCES_TYPES.VENDOR,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: `/vendors/contact_duplicate=/:id`,
-  //   component: lazy(() =>
-  //     import('@/containers/Vendors/VendorForm/VendorFormPage'),
-  //   ),
-  //   name: 'duplicate-vendor',
-  //   breadcrumb: intl.get('duplicate_vendor'),
-  //   pageTitle: intl.get('new_vendor'),
-  //   backLink: true,
-  //   defaultSearchResource: RESOURCES_TYPES.VENDOR,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  // Vendors
+  {
+    path: `/vendors/:id/edit`,
+    component: lazy(
+      () => import('@/containers/Vendors/VendorForm/VendorFormPage'),
+    ),
+    name: 'vendor-edit',
+    breadcrumb: intl.get('edit_vendor'),
+    pageTitle: intl.get('edit_vendor'),
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/vendors/new`,
+    component: lazy(
+      () => import('@/containers/Vendors/VendorForm/VendorFormPage'),
+    ),
+    name: 'vendor-new',
+    breadcrumb: intl.get('new_vendor'),
+    hotkey: 'ctrl+shift+v',
+    pageTitle: intl.get('new_vendor'),
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/vendors`,
+    component: lazy(
+      () => import('@/containers/Vendors/VendorsLanding/VendorsList'),
+    ),
+    breadcrumb: intl.get('vendors'),
+    hotkey: 'shift+v',
+    pageTitle: intl.get('vendors_list'),
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/vendors/contact_duplicate=/:id`,
+    component: lazy(
+      () => import('@/containers/Vendors/VendorForm/VendorFormPage'),
+    ),
+    name: 'duplicate-vendor',
+    breadcrumb: intl.get('duplicate_vendor'),
+    pageTitle: intl.get('new_vendor'),
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
 
   // // Estimates
   // {
