@@ -14,7 +14,6 @@ import classNames from 'classnames';
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
-import { useRealizedGainOrLossContext } from './RealizedGainOrLossProvider';
 import withRealizedGainOrLoss from './withRealizedGainOrLoss';
 import withRealizedGainOrLossActions from './withRealizedGainOrLossActions';
 

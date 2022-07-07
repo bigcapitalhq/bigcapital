@@ -1,9 +1,7 @@
 import React from 'react';
-import { Button } from '@blueprintjs/core';
-import { Icon, If } from '@/components';
-import { FormattedMessage as T } from '@/components';
 
-import { useRealizedGainOrLossContext } from './RealizedGainOrLossProvider';
+import { If } from '@/components';
+
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
 /**

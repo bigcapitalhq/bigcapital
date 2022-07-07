@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { getRealizedGainOrLossFilterDrawer } from '../../../store/financialStatement/financialStatements.selectors';
+import { getRealizedGainOrLossFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
