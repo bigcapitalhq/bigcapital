@@ -435,15 +435,15 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // {
-  //   path: '/financial-reports',
-  //   component: lazy(() =>
-  //     import('@/containers/FinancialStatements/FinancialReports'),
-  //   ),
-  //   breadcrumb: intl.get('financial_reports'),
-  //   pageTitle: intl.get('all_financial_reports'),
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: '/financial-reports',
+    component: lazy(
+      () => import('@/containers/FinancialStatements/FinancialReports'),
+    ),
+    breadcrumb: intl.get('financial_reports'),
+    pageTitle: intl.get('all_financial_reports'),
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // // Exchange Rates
   // {
   //   path: `/exchange-rates`,

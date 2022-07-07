@@ -1,4 +1,5 @@
 import React from 'react';
+import { FastField } from 'formik';
 import {
   PopoverInteractionKind,
   Tooltip,
@@ -6,13 +7,11 @@ import {
   Position,
   FormGroup,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
-import classNames from 'classnames';
-import { FastField } from 'formik';
-
+import { ListSelect, MODIFIER, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/common/classes';
-import { ListSelect, MODIFIER } from '@/components';
 import { filterAccountsOptions } from './constants';
+
+import classNames from 'classnames';
 
 export default function FinancialStatementsFilter({
   items = filterAccountsOptions,

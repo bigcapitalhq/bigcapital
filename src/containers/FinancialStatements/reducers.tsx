@@ -1,6 +1,6 @@
 import React from 'react';
-import { chain } from 'lodash';
 import moment from 'moment';
+import { chain } from 'lodash';
 import { FormattedMessage as T } from '@/components';
 
 export const trialBalanceSheetReducer = (sheet) => {

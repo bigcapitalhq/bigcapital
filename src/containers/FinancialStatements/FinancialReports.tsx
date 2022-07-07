@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { For } from '@/components';
+import { For, DashboardInsider } from '@/components';
 import useFilterFinancialReports from './FilterFinancialReports';
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+
 import {
   financialReportMenus,
   SalesAndPurchasesReportMenus,

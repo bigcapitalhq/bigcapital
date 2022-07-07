@@ -1,5 +1,5 @@
 import { isEmpty } from 'lodash';
-import { useAbilityContext } from '../../hooks';
+import { useAbilityContext } from '@/hooks';
 
 function useFilterFinancialReports(financialSection) {
   const ability = useAbilityContext();

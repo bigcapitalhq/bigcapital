@@ -1,8 +1,7 @@
 import React from 'react';
 import { FormGroup } from '@blueprintjs/core';
-import { FastField  } from 'formik';
-import { FormattedMessage as T } from '@/components';
-import { Row, Col, ListSelect } from '@/components';
+import { FastField } from 'formik';
+import { Row, Col, ListSelect, FormattedMessage as T } from '@/components';
 import { displayColumnsByOptions } from './constants';
 
 /**

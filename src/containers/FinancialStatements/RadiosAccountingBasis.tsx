@@ -1,7 +1,7 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { FastField } from 'formik';
 import { handleStringChange } from '@/utils';
-import intl from 'react-intl-universal';
 import { RadioGroup, Radio } from '@blueprintjs/core';
 
 export default function RadiosAccountingBasis(props) {
