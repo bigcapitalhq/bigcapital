@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { toggleUnrealizedGainOrLossFilterDrawer } from '../../../store/financialStatement/financialStatements.actions';
+import { toggleUnrealizedGainOrLossFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   toggleUnrealizedGainOrLossFilterDrawer: (toggle) =>

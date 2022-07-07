@@ -1,15 +1,14 @@
 import React from 'react';
 
-import { FinancialStatement } from '@/components';
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
+import { FinancialStatement, DashboardPageContent } from '@/components';
+import { UnrealizedGainOrLossProvider } from './UnrealizedGainOrLossProvider';
+import { UnrealizedGainOrLossLoadingBar } from './components';
 
 import UnrealizedGainOrLossHeader from './UnrealizedGainOrLossHeader';
 import UnrealizedGainOrLossActionsBar from './UnrealizedGainOrLossActionsBar';
 
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import withUnrealizedGainOrLossActions from './withUnrealizedGainOrLossActions';
-import { UnrealizedGainOrLossProvider } from './UnrealizedGainOrLossProvider';
-import { UnrealizedGainOrLossLoadingBar } from './components';
 
 import { compose } from '@/utils';
 
