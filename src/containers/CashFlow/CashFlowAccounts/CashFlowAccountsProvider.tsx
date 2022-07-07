@@ -2,7 +2,6 @@ import React from 'react';
 import DashboardInsider from '@/components/Dashboard/DashboardInsider';
 
 import { useCashflowAccounts } from '@/hooks/query';
-
 import { transformAccountsStateToQuery } from './utils';
 
 const CashFlowAccountsContext = React.createContext();

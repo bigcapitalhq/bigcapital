@@ -6,8 +6,8 @@ import '@/style/pages/CashFlow/CashFlowAccounts/List.scss';
 import { DashboardPageContent } from '@/components';
 import { CashFlowAccountsProvider } from './CashFlowAccountsProvider';
 
-import CashFlowAccountsActionsBar from './CashFlowAccountsActionsBar';
 import CashflowAccountsGrid from './CashflowAccountsGrid';
+import CashFlowAccountsActionsBar from './CashFlowAccountsActionsBar';
 
 import withCashflowAccounts from '@/containers/CashFlow/AccountTransactions/withCashflowAccounts';
 import withCashflowAccountsTableActions from '@/containers/CashFlow/AccountTransactions/withCashflowAccountsTableActions';

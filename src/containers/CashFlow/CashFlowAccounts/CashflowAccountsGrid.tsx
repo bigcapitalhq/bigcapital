@@ -1,20 +1,13 @@
 import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
 import { isNull, isEmpty } from 'lodash';
 import { compose, curry } from 'lodash/fp';
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { ContextMenu2 } from '@blueprintjs/popover2';
 import { Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
 
-import {
-  BankAccountsList,
-  BankAccount,
-  If,
-  Icon,
-  T,
-  Can,
-} from '@/components';
+import { BankAccountsList, BankAccount, If, Icon, T, Can } from '@/components';
 import {
   AccountAction,
   CashflowAction,

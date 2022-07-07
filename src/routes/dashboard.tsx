@@ -992,27 +992,27 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // // Cash flow
-  // {
-  //   path: `/cashflow-accounts/:id/transactions`,
-  //   component: lazy(() =>
-  //     import('@/containers/CashFlow/AccountTransactions/AccountTransactionsList'),
-  //   ),
-  //   sidebarExpand: false,
-  //   backLink: true,
-  //   pageTitle: intl.get('cash_flow.label_account_transcations'),
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  //   defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
-  // },
-  // {
-  //   path: `/cashflow-accounts`,
-  //   component: lazy(() =>
-  //     import('@/containers/CashFlow/CashFlowAccounts/CashFlowAccountsList'),
-  //   ),
-  //   pageTitle: intl.get('siebar.cashflow.label_cash_and_bank_accounts'),
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  //   defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
-  // },
+  // Cash flow
+  {
+    path: `/cashflow-accounts/:id/transactions`,
+    component: lazy(() =>
+      import('@/containers/CashFlow/AccountTransactions/AccountTransactionsList'),
+    ),
+    sidebarExpand: false,
+    backLink: true,
+    pageTitle: intl.get('cash_flow.label_account_transcations'),
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
+  },
+  {
+    path: `/cashflow-accounts`,
+    component: lazy(() =>
+      import('@/containers/CashFlow/CashFlowAccounts/CashFlowAccountsList'),
+    ),
+    pageTitle: intl.get('siebar.cashflow.label_cash_and_bank_accounts'),
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
+  },
   {
     path: `/transactions-locking`,
     component: lazy(

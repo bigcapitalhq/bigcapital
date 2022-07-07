@@ -5,9 +5,9 @@ import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 
 import { DashboardPageContent } from '@/components';
 
-import { AccountTransactionsProvider } from './AccountTransactionsProvider';
 import AccountTransactionsActionsBar from './AccountTransactionsActionsBar';
 import AccountTransactionsDataTable from './AccountTransactionsDataTable';
+import { AccountTransactionsProvider } from './AccountTransactionsProvider';
 import { AccountTransactionsDetailsBar } from './AccountTransactionsDetailsBar';
 import { AccountTransactionsProgressBar } from './components';
 

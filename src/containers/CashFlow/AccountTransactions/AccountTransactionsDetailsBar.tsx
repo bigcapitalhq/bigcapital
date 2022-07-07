@@ -9,10 +9,10 @@ import {
   MenuItem,
   Classes,
 } from '@blueprintjs/core';
+import { Icon } from '@/components';
 import { useHistory } from 'react-router-dom';
 import { curry } from 'lodash/fp';
 
-import { Icon } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 
 function AccountSwitchButton() {
