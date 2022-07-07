@@ -166,8 +166,9 @@ export const getDashboardRoutes = () => [
   // Financial Reports.
   {
     path: `/financial-reports/general-ledger`,
-    component: lazy(() =>
-      import('@/containers/FinancialStatements/GeneralLedger/GeneralLedger'),
+    component: lazy(
+      () =>
+        import('@/containers/FinancialStatements/GeneralLedger/GeneralLedger'),
     ),
     breadcrumb: intl.get('general_ledger'),
     hint: intl.get('reports_every_transaction_going_in_and_out_of_your'),
@@ -180,8 +181,9 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/balance-sheet`,
-    component: lazy(() =>
-      import('@/containers/FinancialStatements/BalanceSheet/BalanceSheet'),
+    component: lazy(
+      () =>
+        import('@/containers/FinancialStatements/BalanceSheet/BalanceSheet'),
     ),
     breadcrumb: intl.get('balance_sheet'),
     hint: intl.get('reports_a_company_s_assets_liabilities_and_shareholders'),
@@ -191,21 +193,22 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // {
-  //   path: `/financial-reports/trial-balance-sheet`,
-  //   component: lazy(() =>
-  //     import(
-  //       'containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
-  //     ),
-  //   ),
-  //   breadcrumb: intl.get('trial_balance_sheet'),
-  //   hint: intl.get('summarizes_the_credit_and_debit_balance_of_each_account'),
-  //   hotkey: 'shift+5',
-  //   pageTitle: intl.get('trial_balance_sheet'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: `/financial-reports/trial-balance-sheet`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
+        ),
+    ),
+    breadcrumb: intl.get('trial_balance_sheet'),
+    hint: intl.get('summarizes_the_credit_and_debit_balance_of_each_account'),
+    hotkey: 'shift+5',
+    pageTitle: intl.get('trial_balance_sheet'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: `/financial-reports/profit-loss-sheet`,
   //   component: lazy(() =>

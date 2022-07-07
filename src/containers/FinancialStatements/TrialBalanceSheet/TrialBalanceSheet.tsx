@@ -1,21 +1,20 @@
 import React, { useCallback, useEffect } from 'react';
 import moment from 'moment';
 
-import { FinancialStatement } from '@/components';
+import { FinancialStatement, DashboardPageContent } from '@/components';
+import { TrialBalanceSheetBody } from './TrialBalanceSheetBody';
 import { TrialBalanceSheetProvider } from './TrialBalanceProvider';
+import { useTrialBalanceSheetQuery } from './utils';
 import TrialBalanceActionsBar from './TrialBalanceActionsBar';
 import TrialBalanceSheetHeader from './TrialBalanceSheetHeader';
 
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 import {
   TrialBalanceSheetAlerts,
   TrialBalanceSheetLoadingBar,
 } from './components';
-import { TrialBalanceSheetBody } from './TrialBalanceSheetBody';
 
 import withTrialBalanceActions from './withTrialBalanceActions';
 
-import { useTrialBalanceSheetQuery } from './utils';
 import { compose } from '@/utils';
 
 /**

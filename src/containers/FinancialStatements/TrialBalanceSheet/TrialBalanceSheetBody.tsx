@@ -3,10 +3,10 @@ import * as R from 'ramda';
 
 import { FinancialSheetSkeleton } from '@/components';
 import { FinancialReportBody } from '../FinancialReportPage';
+import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import TrialBalanceSheetTable from './TrialBalanceSheetTable';
 
-import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Trial balance sheet body.

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Row, Col } from '../../../components';
-import FinancialStatementDateRange from '@/containers/FinancialStatements/FinancialStatementDateRange';
+import { Row, Col } from '@/components';
+import FinancialStatementDateRange from '../FinancialStatementDateRange';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 
