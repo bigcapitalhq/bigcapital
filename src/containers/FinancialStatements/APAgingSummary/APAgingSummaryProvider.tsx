@@ -1,7 +1,7 @@
 import React, { useMemo, createContext, useContext } from 'react';
 
 import FinancialReportPage from '../FinancialReportPage';
-import { useAPAgingSummaryReport } from '../../../hooks/query';
+import { useAPAgingSummaryReport } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const APAgingSummaryContext = createContext();

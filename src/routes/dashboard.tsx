@@ -222,30 +222,30 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // {
-  //   path: '/financial-reports/receivable-aging-summary',
-  //   component: lazy(() =>
-  //     import('@/containers/FinancialStatements/ARAgingSummary/ARAgingSummary'),
-  //   ),
-  //   breadcrumb: intl.get('receivable_aging_summary'),
-  //   hint: intl.get('summarize_total_unpaid_balances_of_customers_invoices'),
-  //   pageTitle: intl.get('receivable_aging_summary'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
-  // {
-  //   path: '/financial-reports/payable-aging-summary',
-  //   component: lazy(() =>
-  //     import('@/containers/FinancialStatements/APAgingSummary/APAgingSummary'),
-  //   ),
-  //   breadcrumb: intl.get('payable_aging_summary'),
-  //   hint: intl.get('summarize_total_unpaid_balances_of_vendors_purchase'),
-  //   pageTitle: intl.get('payable_aging_summary'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: '/financial-reports/receivable-aging-summary',
+    component: lazy(() =>
+      import('@/containers/FinancialStatements/ARAgingSummary/ARAgingSummary'),
+    ),
+    breadcrumb: intl.get('receivable_aging_summary'),
+    hint: intl.get('summarize_total_unpaid_balances_of_customers_invoices'),
+    pageTitle: intl.get('receivable_aging_summary'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/financial-reports/payable-aging-summary',
+    component: lazy(() =>
+      import('@/containers/FinancialStatements/APAgingSummary/APAgingSummary'),
+    ),
+    breadcrumb: intl.get('payable_aging_summary'),
+    hint: intl.get('summarize_total_unpaid_balances_of_vendors_purchase'),
+    pageTitle: intl.get('payable_aging_summary'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: `/financial-reports/journal-sheet`,
   //   component: lazy(() =>

@@ -1,13 +1,13 @@
 import React from 'react';
 import * as R from 'ramda';
 
-import { FinancialReportBody } from '../FinancialReportPage';
 import APAgingSummaryTable from './APAgingSummaryTable';
-import { FinancialSheetSkeleton } from '../../../components/FinancialSheet';
-
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
-
+import { FinancialReportBody } from '../FinancialReportPage';
+import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
+
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+
 
 /**
  * AP aging summary body.

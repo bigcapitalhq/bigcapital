@@ -1,6 +1,6 @@
 import React, { useMemo, createContext, useContext } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { useARAgingSummaryReport, useCustomers } from '@/hooks/query';
+import { useARAgingSummaryReport } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const ARAgingSummaryContext = createContext();

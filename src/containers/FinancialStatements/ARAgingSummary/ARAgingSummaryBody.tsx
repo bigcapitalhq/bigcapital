@@ -3,10 +3,10 @@ import * as R from 'ramda';
 
 import ARAgingSummaryTable from './ARAgingSummaryTable';
 import { FinancialReportBody } from '../FinancialReportPage';
-import { FinancialSheetSkeleton } from '../../../components';
-
-import withCurrentOrganization from '../../../containers/Organization/withCurrentOrganization';
+import { FinancialSheetSkeleton } from '@/components';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
+
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * A/R Aging summary body.

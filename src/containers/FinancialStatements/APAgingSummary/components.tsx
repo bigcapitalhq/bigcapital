@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
+import { If, FormattedMessage as T } from '@/components';
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import { getColumnWidth } from '@/utils';
-import { FormattedMessage as T } from '@/components';
-import { If } from '@/components';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
 /**

@@ -8,19 +8,18 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import { FormattedMessage as T, Icon } from '@/components';
 import classNames from 'classnames';
 
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
-import Icon from '@/components/Icon';
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
+import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import withARAgingSummaryActions from './withARAgingSummaryActions';
 import withARAgingSummary from './withARAgingSummary';
 
 import { compose } from '@/utils';
-import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
 
 /**
  * A/R Aging summary sheet - Actions bar.
@@ -123,5 +122,5 @@ export default compose(
   withARAgingSummaryActions,
   withARAgingSummary(({ ARAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: ARAgingSummaryFilterDrawer,
-  }))
+  })),
 )(ARAgingSummaryActionsBar);

@@ -2,8 +2,8 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/common';
+import { ReportDataTable, FinancialSheet } from '@/components';
 
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import { useARAgingSummaryColumns } from './components';

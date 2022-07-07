@@ -2,13 +2,12 @@ import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 
 import { getDefaultAPAgingSummaryQuery } from './common';
-import { FinancialStatement } from '@/components';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 
 import APAgingSummaryHeader from './APAgingSummaryHeader';
 import APAgingSummaryActionsBar from './APAgingSummaryActionsBar';
-import { APAgingSummaryBody } from './APAgingSummaryBody';
 
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
+import { APAgingSummaryBody } from './APAgingSummaryBody';
 import { APAgingSummaryProvider } from './APAgingSummaryProvider';
 import { APAgingSummarySheetLoadingBar } from './components';
 
