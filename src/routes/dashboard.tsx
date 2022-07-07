@@ -209,19 +209,19 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // {
-  //   path: `/financial-reports/profit-loss-sheet`,
-  //   component: lazy(() =>
-  //     import('@/containers/FinancialStatements/ProfitLossSheet/ProfitLossSheet'),
-  //   ),
-  //   breadcrumb: intl.get('profit_loss_sheet'),
-  //   hint: intl.get('reports_the_revenues_costs_and_expenses'),
-  //   hotkey: 'shift+2',
-  //   pageTitle: intl.get('profit_loss_sheet'),
-  //   backLink: true,
-  //   sidebarExpand: false,
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
+  {
+    path: `/financial-reports/profit-loss-sheet`,
+    component: lazy(() =>
+      import('@/containers/FinancialStatements/ProfitLossSheet/ProfitLossSheet'),
+    ),
+    breadcrumb: intl.get('profit_loss_sheet'),
+    hint: intl.get('reports_the_revenues_costs_and_expenses'),
+    hotkey: 'shift+2',
+    pageTitle: intl.get('profit_loss_sheet'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // {
   //   path: '/financial-reports/receivable-aging-summary',
   //   component: lazy(() =>

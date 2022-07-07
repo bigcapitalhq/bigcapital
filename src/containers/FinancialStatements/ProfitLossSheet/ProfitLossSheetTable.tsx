@@ -8,9 +8,9 @@ import {
   FormattedMessage as T,
 } from '@/components';
 
-import { tableRowTypesToClassnames, defaultExpanderReducer } from '@/utils';
 import { useProfitLossSheetColumns } from './hooks';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
+import { tableRowTypesToClassnames, defaultExpanderReducer } from '@/utils';
 
 export default function ProfitLossSheetTable({
   // #ownProps

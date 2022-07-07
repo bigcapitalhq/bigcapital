@@ -1,11 +1,10 @@
 import React from 'react';
+import styled from 'styled-components';
 import { FastField } from 'formik';
 import { FormGroup, Checkbox } from '@blueprintjs/core';
-import styled from 'styled-components';
 
-import { Flex, FlexItem, FormattedMessage as T } from '@/components';
+import { Flex, FlexItem, FieldHint, FormattedMessage as T } from '@/components';
 
-import { FieldHint } from '../../../components';
 import {
   handlePreviousYearCheckBoxChange,
   handlePreviousPeriodCheckBoxChange,

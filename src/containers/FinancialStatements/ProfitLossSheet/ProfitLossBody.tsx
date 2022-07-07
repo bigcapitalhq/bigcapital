@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { FinancialSheetSkeleton } from '../../../components/FinancialSheet';
 import ProfitLossSheetTable from './ProfitLossSheetTable';
+import { FinancialSheetSkeleton } from '@/components';
 import { FinancialReportBody } from '../FinancialReportPage';
-
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
+
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import { compose } from '@/utils';
 
