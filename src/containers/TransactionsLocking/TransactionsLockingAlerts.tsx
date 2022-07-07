@@ -1,7 +1,10 @@
 import React from 'react';
 
-const cancelUnlockingPartialAlert = React.lazy(() =>
-  import('../Alerts/TransactionLocking/cancelUnlockingPartialAlert'),
+const cancelUnlockingPartialAlert = React.lazy(
+  () =>
+    import(
+      '@/containers/Alerts/TransactionLocking/cancelUnlockingPartialAlert'
+    ),
 );
 
 /**

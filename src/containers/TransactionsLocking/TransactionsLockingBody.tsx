@@ -1,6 +1,5 @@
 import React from 'react';
 import * as R from 'ramda';
-
 import {
   TransactionsLockingList,
   TransactionsLockingFull,

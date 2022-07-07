@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
+import { Intent } from '@blueprintjs/core';
 
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
 import {

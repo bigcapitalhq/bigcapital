@@ -1013,13 +1013,13 @@ export const getDashboardRoutes = () => [
   //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   //   defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   // },
-  // {
-  //   path: `/transactions-locking`,
-  //   component: lazy(() =>
-  //     import('../containers/TransactionsLocking/TransactionsLockingPage'),
-  //   ),
-  //   pageTitle: intl.get('sidebar.transactions_locaking'),
-  // },
+  {
+    path: `/transactions-locking`,
+    component: lazy(
+      () => import('@/containers/TransactionsLocking/TransactionsLockingPage'),
+    ),
+    pageTitle: intl.get('sidebar.transactions_locaking'),
+  },
   // Homepage
   {
     path: `/`,
