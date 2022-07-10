@@ -1,16 +1,12 @@
 import React, { useMemo } from 'react';
 import { Formik } from 'formik';
-import {
-  Intent,
-  Position,
-} from '@blueprintjs/core';
+import { Intent, Position } from '@blueprintjs/core';
 import { Link, useParams, useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from '@/components';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 
 import { useAuthResetPassword } from '@/hooks/query';
 
-import AppToaster from '@/components/AppToaster';
 import AuthInsider from '@/containers/Authentication/AuthInsider';
 
 import ResetPasswordForm from './ResetPasswordForm';
@@ -19,7 +15,6 @@ import { ResetPasswordSchema } from './utils';
  * Reset password page.
  */
 export default function ResetPassword() {
-  
   const { token } = useParams();
   const history = useHistory();
 
@@ -47,17 +42,23 @@ export default function ResetPassword() {
         history.push('/auth/login');
         setSubmitting(false);
       })
-      .catch(({ response: { data: { errors } } }) => {
-        if (errors.find((e) => e.type === 'TOKEN_INVALID')) {
-          AppToaster.show({
-            message: intl.get('an_unexpected_error_occurred'),
-            intent: Intent.DANGER,
-            position: Position.BOTTOM,
-          });
-          history.push('/auth/login');
-        }
-        setSubmitting(false);
-      });
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          if (errors.find((e) => e.type === 'TOKEN_INVALID')) {
+            AppToaster.show({
+              message: intl.get('an_unexpected_error_occurred'),
+              intent: Intent.DANGER,
+              position: Position.BOTTOM,
+            });
+            history.push('/auth/login');
+          }
+          setSubmitting(false);
+        },
+      );
   };
 
   return (

@@ -10,7 +10,7 @@ import { compose, transformToForm, saveInvoke } from '@/utils';
 import { useCustomerFormContext } from './CustomerFormProvider';
 import { defaultInitialValues } from './utils';
 
-import AppToaster from '@/components/AppToaster';
+import { AppToaster } from '@/components';
 import CustomerFormPrimarySection from './CustomerFormPrimarySection';
 import CustomerFormAfterPrimarySection from './CustomerFormAfterPrimarySection';
 import CustomersTabs from './CustomersTabs';

@@ -5,12 +5,10 @@ import intl from 'react-intl-universal';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
 
-import Toaster from '@/components/AppToaster';
-
 import '@/style/pages/Setup/PaymentViaVoucherDialog.scss';
 
 import { usePaymentByVoucher } from '@/hooks/query';
-import { DialogContent } from '@/components';
+import { AppToaster as Toaster, DialogContent } from '@/components';
 import PaymentViaLicenseForm from './PaymentViaVoucherForm';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';

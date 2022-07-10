@@ -1,9 +1,9 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 
-import { ListSelect } from '@/components';
+import { ListSelect } from './ListSelect';
 
-export default function SalutationList({ ...restProps }) {
+export function SalutationList({ ...restProps }) {
   const saluations = [
     intl.get('mr'),
     intl.get('mrs'),

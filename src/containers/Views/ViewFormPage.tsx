@@ -3,6 +3,8 @@ import { useAsync } from 'react-use';
 import { useParams } from 'react-router-dom';
 import { Intent, Alert } from '@blueprintjs/core';
 import {
+  If,
+  AppToaster,
   DashboardInsider,
   DashboardPageContent,
   FormattedMessage as T,
@@ -11,9 +13,7 @@ import {
 
 import ViewForm from '@/containers/Views/ViewForm';
 
-import AppToaster from '@/components/AppToaster';
 import { compose } from '@/utils';
-import { If } from '@/components';
 
 import withResourcesActions from '@/containers/Resources/withResourcesActions';
 import withViewsActions from '@/containers/Views/withViewsActions';

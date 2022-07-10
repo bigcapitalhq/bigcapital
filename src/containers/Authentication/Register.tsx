@@ -4,13 +4,9 @@ import { Link } from 'react-router-dom';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { FormattedMessage as T } from '@/components';
-import AppToaster from '@/components/AppToaster';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import AuthInsider from '@/containers/Authentication/AuthInsider';
-import {
-  useAuthLogin,
-  useAuthRegister,
-} from '@/hooks/query/authentication';
+import { useAuthLogin, useAuthRegister } from '@/hooks/query/authentication';
 
 import RegisterForm from './RegisterForm';
 import { RegisterSchema, transformRegisterErrorsToForm } from './utils';

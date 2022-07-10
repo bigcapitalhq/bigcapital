@@ -20,8 +20,7 @@ import { ReactSortable } from 'react-sortablejs';
 import * as Yup from 'yup';
 import { pick, get } from 'lodash';
 import ErrorMessage from '@/components/ErrorMessage';
-import AppToaster from '@/components/AppToaster';
-import { If, Icon } from '@/components';
+import { If, Icon, AppToaster } from '@/components';
 import ViewFormContainer from '@/containers/Views/ViewForm.container.js';
 
 function ViewForm({

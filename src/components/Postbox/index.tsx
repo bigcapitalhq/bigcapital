@@ -5,7 +5,7 @@ import classNames from 'classnames';
 /**
  * Postbox.
  */
-export default function Postbox({
+export function Postbox({
   defaultOpen = true,
   toggable = true,
   title,

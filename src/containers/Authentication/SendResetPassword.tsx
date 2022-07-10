@@ -4,13 +4,15 @@ import { Link, useHistory } from 'react-router-dom';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import { FormattedMessage as T } from '@/components';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import { useAuthSendResetPassword } from '@/hooks/query';
-import Toaster from '@/components/AppToaster';
-import SendResetPasswordForm from './SendResetPasswordForm';
-import { SendResetPasswordSchema, transformSendResetPassErrorsToToasts } from './utils';
 
-import AppToaster from '@/components/AppToaster';
+import SendResetPasswordForm from './SendResetPasswordForm';
+import {
+  SendResetPasswordSchema,
+  transformSendResetPassErrorsToToasts,
+} from './utils';
+
 import AuthInsider from '@/containers/Authentication/AuthInsider';
 
 /**
@@ -40,14 +42,20 @@ export default function SendResetPassword({ requestSendResetPassword }) {
         history.push('/auth/login');
         setSubmitting(false);
       })
-      .catch(({ response: { data: { errors } } }) => {
-        const toastBuilders = transformSendResetPassErrorsToToasts(errors);
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          const toastBuilders = transformSendResetPassErrorsToToasts(errors);
 
-        toastBuilders.forEach((builder) => {
-          Toaster.show(builder);
-        });
-        setSubmitting(false);
-      });
+          toastBuilders.forEach((builder) => {
+            AppToaster.show(builder);
+          });
+          setSubmitting(false);
+        },
+      );
   };
 
   return (

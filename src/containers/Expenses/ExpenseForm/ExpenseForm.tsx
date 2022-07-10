@@ -19,7 +19,7 @@ import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
-import AppToaster from '@/components/AppToaster';
+import { AppToaster } from '@/components';
 import {
   CreateExpenseFormSchema,
   EditExpenseFormSchema,

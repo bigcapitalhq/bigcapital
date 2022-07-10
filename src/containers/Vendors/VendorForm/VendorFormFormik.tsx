@@ -5,7 +5,7 @@ import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 
 import { CLASSES } from '@/common/classes';
-import AppToaster from '@/components/AppToaster';
+import { AppToaster } from '@/components';
 import {
   CreateVendorFormSchema,
   EditVendorFormSchema,

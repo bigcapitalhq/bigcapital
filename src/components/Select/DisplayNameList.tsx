@@ -1,8 +1,8 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { ListSelect } from './Select';
+import { ListSelect } from './ListSelect';
 
-export default function DisplayNameList({
+export function DisplayNameList({
   salutation,
   firstName,
   lastName,

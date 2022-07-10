@@ -1,9 +1,8 @@
 import React, { useCallback } from 'react';
 
 import { compose } from '@/utils';
-import { DataTable, TableSkeletonRows } from '@/components';
+import { DataTable, TableSkeletonRows, AppToaster } from '@/components';
 import { useResendInvitation } from '@/hooks/query';
-import AppToaster from '@/components/AppToaster';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertActions from '@/containers/Alert/withAlertActions';
