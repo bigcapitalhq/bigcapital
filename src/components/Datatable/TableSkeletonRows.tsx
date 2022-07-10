@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import clsx from 'classnames';
 import TableContext from './TableContext';
-import { Skeleton } from '@/components';
+import { Skeleton } from '../Skeleton';
 
 /**
  * Table header cell.

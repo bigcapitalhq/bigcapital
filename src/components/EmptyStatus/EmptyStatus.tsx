@@ -6,7 +6,7 @@ import Style from '@/style/components/DataTable/DataTableEmptyStatus.module.scss
 /**
  * Datatable empty status.
  */
-export default function EmptyStatus({ title, description, action, children }) {
+export function EmptyStatus({ title, description, action, children }) {
   return (
     <div className={classNames(Style.root)}>
       <h1 className={classNames(Style.root_title)}>{title}</h1>

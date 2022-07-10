@@ -1,6 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import { LoadingIndicator } from '../Indicator';
 
 /**
  * Drawer inside.
@@ -13,13 +13,18 @@ export function DrawerInsider({
   className,
 }) {
   return (
-    <div className={classnames({
-      'drawer__insider': true,
-      'drawer__insider--loading': loading,
-      [`drawer__insider--${name}`]: !!name,
-    }, className)}>
+    <div
+      className={classnames(
+        {
+          drawer__insider: true,
+          'drawer__insider--loading': loading,
+          [`drawer__insider--${name}`]: !!name,
+        },
+        className,
+      )}
+    >
       <LoadingIndicator loading={loading} mount={mount}>
-        { children }
+        {children}
       </LoadingIndicator>
     </div>
   );

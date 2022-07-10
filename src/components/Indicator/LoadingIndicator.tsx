@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Spinner } from '@blueprintjs/core';
 
-export default function LoadingIndicator({
+export function LoadingIndicator({
   loading,
   spinnerSize = 40,
   children,

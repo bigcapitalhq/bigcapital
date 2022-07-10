@@ -1,6 +1,6 @@
 import React from 'react';
 import { Classes } from '@blueprintjs/core';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import { LoadingIndicator } from '../Indicator';
 
 export function DrawerLoading({ loading, mount = false, children }) {
   return (

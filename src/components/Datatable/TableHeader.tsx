@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
 import classNames from 'classnames';
 import { ScrollSyncPane } from 'react-scroll-sync';
-import { If } from '@/components';
+import { If, MaterialProgressBar } from '@/components';
 import TableContext from './TableContext';
-import MaterialProgressBar from '@/components/MaterialProgressBar';
 
 function TableHeaderCell({ column, index }) {
   const {

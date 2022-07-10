@@ -2,9 +2,9 @@ import React from 'react';
 import classNames from 'classnames';
 import { Spinner } from '@blueprintjs/core';
 import { CLASSES } from '@/common/classes';
-import { If } from './Utils/If';
+import { If } from '../Utils/If';
 
-export default function CloudLoadingIndicator({ isLoading, children }) {
+export function CloudLoadingIndicator({ isLoading, children }) {
   return (
     <div
       className={classNames(CLASSES.CLOUD_SPINNER, {
