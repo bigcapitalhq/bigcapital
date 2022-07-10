@@ -1,5 +1,4 @@
 import React from 'react';
-import Icon from '@/components/Icon';
 import {
   Button,
   Classes,
@@ -10,6 +9,7 @@ import {
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import {
+  Icon,
   FormattedMessage as T,
   AdvancedFilterPopover,
   DashboardFilterButton,

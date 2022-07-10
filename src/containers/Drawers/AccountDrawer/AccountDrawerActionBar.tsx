@@ -1,5 +1,4 @@
 import React from 'react';
-import Icon from '@/components/Icon';
 import {
   Button,
   Classes,
@@ -7,9 +6,8 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
-import { Can, FormattedMessage as T } from '@/components';
-
-import { AccountAction, AbilitySubject } from '../../../common/abilityOption';
+import { Icon, Can, FormattedMessage as T } from '@/components';
+import { AccountAction, AbilitySubject } from '@/common/abilityOption';
 import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';

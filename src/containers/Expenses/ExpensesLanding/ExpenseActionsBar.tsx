@@ -1,5 +1,4 @@
 import React from 'react';
-import Icon from '@/components/Icon';
 import {
   Button,
   NavbarGroup,
@@ -16,6 +15,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import {
   If,
   Can,
+  Icon,
   DashboardRowsHeightButton,
   DashboardActionViewsList,
   DashboardFilterButton,

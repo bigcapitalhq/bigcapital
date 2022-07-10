@@ -1,9 +1,9 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Classes } from '@blueprintjs/core';
 import clsx from 'classnames';
-import Icon from '../Icon';
+import { Classes } from '@blueprintjs/core';
+import { Icon } from '@/components/Icon';
 
 const ACCOUNT_TYPE = {
   CASH: 'cash',

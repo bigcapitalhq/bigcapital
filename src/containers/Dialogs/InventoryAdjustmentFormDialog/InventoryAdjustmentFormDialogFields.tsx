@@ -23,6 +23,7 @@ import {
   WarehouseSelect,
   BranchSelectButton,
   WarehouseSelectButton,
+  AccountsSuggestField,
 } from '@/components';
 import {
   inputIntent,
@@ -34,7 +35,6 @@ import {
 import { Features, CLASSES } from '@/common';
 import adjustmentType from '@/common/adjustmentType';
 
-import AccountsSuggestField from '@/components/AccountsSuggestField';
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
 import {
   diffQuantity,

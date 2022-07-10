@@ -2,9 +2,8 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import { Icon, FormattedMessage as T } from '@/components';
 
-import Icon from '@/components/Icon';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 

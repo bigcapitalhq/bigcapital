@@ -1,14 +1,13 @@
-import React, { useCallback, useState, useEffect, useMemo } from 'react';
-import { MenuItem, Button } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import * as R from 'ramda';
+import intl from 'react-intl-universal';
 import classNames from 'classnames';
-import intl from 'react-intl-universal'
+import { MenuItem } from '@blueprintjs/core';
+import { Suggest } from '@blueprintjs/select';
 
-import { MenuItemNestedText, FormattedMessage as T } from '@/components';
-import { filterAccountsByQuery } from './utils';
-import { nestedArrayToflatten } from '@/utils';
 import { CLASSES } from '@/common/classes';
+import { MenuItemNestedText, FormattedMessage as T } from '@/components';
+import { nestedArrayToflatten, filterAccountsByQuery } from '@/utils';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
@@ -31,6 +30,14 @@ const createNewItemFromQuery = (name) => {
   };
 };
 
+// Handle input value renderer.
+const handleInputValueRenderer = (inputValue) => {
+  if (inputValue) {
+    return inputValue.name.toString();
+  }
+  return '';
+};
+
 // Filters accounts items.
 const filterAccountsPredicater = (query, account, _index, exactMatch) => {
   const normalizedTitle = account.name.toLowerCase();
@@ -44,9 +51,9 @@ const filterAccountsPredicater = (query, account, _index, exactMatch) => {
 };
 
 /**
- * Accounts select list.
+ * Accounts suggest field.
  */
-function AccountsSelectList({
+function AccountsSuggestFieldRoot({
   // #withDialogActions
   openDialog,
 
@@ -54,19 +61,18 @@ function AccountsSelectList({
   accounts,
   initialAccountId,
   selectedAccountId,
-  defaultSelectText = 'Select account',
-  onAccountSelected,
-  disabled = false,
+  defaultSelectText = intl.formatMessage({ id: 'select_account' }),
   popoverFill = false,
+  onAccountSelected,
 
-  filterByParentTypes,
-  filterByTypes,
+  filterByParentTypes = [],
+  filterByTypes = [],
   filterByNormal,
-  filterByRootTypes,
+  filterByRootTypes = [],
 
   allowCreate,
 
-  buttonProps = {},
+  ...suggestProps
 }) {
   const flattenAccounts = useMemo(
     () => nestedArrayToflatten(accounts),
@@ -96,7 +102,6 @@ function AccountsSelectList({
     [initialAccountId, filteredAccounts],
   );
 
-  // Select account item.
   const [selectedAccount, setSelectedAccount] = useState(
     initialAccount || null,
   );
@@ -122,7 +127,6 @@ function AccountsSelectList({
     );
   }, []);
 
-  // Handle the account item select.
   const handleAccountSelect = useCallback(
     (account) => {
       if (account.id) {
@@ -142,32 +146,28 @@ function AccountsSelectList({
     : null;
 
   return (
-    <Select
+    <Suggest
       items={filteredAccounts}
       noResults={<MenuItem disabled={true} text={<T id={'no_accounts'} />} />}
       itemRenderer={accountItem}
       itemPredicate={filterAccountsPredicater}
-      popoverProps={{
-        minimal: true,
-        usePortal: !popoverFill,
-        inline: popoverFill,
-      }}
-      filterable={true}
       onItemSelect={handleAccountSelect}
-      disabled={disabled}
-      className={classNames('form-group--select-list', {
+      selectedItem={selectedAccount}
+      inputProps={{ placeholder: defaultSelectText }}
+      resetOnClose={true}
+      fill={true}
+      popoverProps={{ minimal: true, boundary: 'window' }}
+      inputValueRenderer={handleInputValueRenderer}
+      className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, {
         [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
       })}
       createNewItemRenderer={maybeCreateNewItemRenderer}
       createNewItemFromQuery={maybeCreateNewItemFromQuery}
-    >
-      <Button
-        disabled={disabled}
-        text={selectedAccount ? selectedAccount.name : defaultSelectText}
-        {...buttonProps}
-      />
-    </Select>
+      {...suggestProps}
+    />
   );
 }
 
-export default R.compose(withDialogActions)(AccountsSelectList);
+export const AccountsSuggestField = R.compose(withDialogActions)(
+  AccountsSuggestFieldRoot,
+);

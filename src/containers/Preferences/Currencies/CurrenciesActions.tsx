@@ -1,9 +1,8 @@
 import React, { useCallback } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
-import Icon from '@/components/Icon';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
-import { FormattedMessage as T } from '@/components';
+import { Icon,FormattedMessage as T } from '@/components';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 function CurrenciesActions({ openDialog }) {
   const handleClickNewCurrency = useCallback(() => {

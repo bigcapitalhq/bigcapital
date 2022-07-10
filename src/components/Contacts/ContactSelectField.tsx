@@ -9,7 +9,7 @@ import { CLASSES } from '@/common/classes';
 
 import { itemPredicate, handleContactRenderer } from './utils';
 
-export default function ContactSelectField({
+export function ContactSelectField({
   contacts,
   initialContactId,
   selectedContactId,

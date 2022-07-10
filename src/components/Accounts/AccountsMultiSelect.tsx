@@ -1,8 +1,8 @@
 import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
-import { MultiSelect } from './MultiSelectTaggable';
+import { MultiSelect } from '../MultiSelectTaggable';
 
-export default function AccountsMultiSelect({ ...multiSelectProps }) {
+export function AccountsMultiSelect({ ...multiSelectProps }) {
   return (
     <MultiSelect
       itemRenderer={(

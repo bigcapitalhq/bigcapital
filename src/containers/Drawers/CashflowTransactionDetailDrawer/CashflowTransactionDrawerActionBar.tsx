@@ -1,11 +1,14 @@
 import React from 'react';
-import Icon from '@/components/Icon';
 import { Button, Classes, NavbarGroup, Intent } from '@blueprintjs/core';
-
-import { Can, FormattedMessage as T, DrawerActionsBar } from '@/components';
-import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
+import {
+  Can,
+  FormattedMessage as T,
+  DrawerActionsBar,
+  Icon,
+} from '@/components';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
-import { AbilitySubject, CashflowAction } from '../../../common/abilityOption';
+import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
+import { AbilitySubject, CashflowAction } from '@/common/abilityOption';
 import { compose } from '@/utils';
 
 /**

@@ -11,14 +11,15 @@ import { CLASSES } from '@/common/classes';
 import {
   itemPredicate,
   handleContactRenderer,
-  createNewItemFromQuery,
   createNewItemRenderer,
+  createNewItemFromQuery,
 } from './utils';
+
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { DRAWERS } from '@/common/drawers';
 
-function VendorSelectField({
+function CustomerSelectFieldRoot({
   // #withDrawerActions
   openDrawer,
 
@@ -68,7 +69,7 @@ function VendorSelectField({
         setSelectedContact({ ...contact });
         onContactSelected && onContactSelected(contact);
       } else {
-        openDrawer(DRAWERS.QUICK_WRITE_VENDOR);
+        openDrawer(DRAWERS.QUICK_CREATE_CUSTOMER);
       }
     },
     [setSelectedContact, onContactSelected, openDrawer],
@@ -112,4 +113,6 @@ function VendorSelectField({
   );
 }
 
-export default R.compose(withDrawerActions)(VendorSelectField);
+export const CustomerSelectField = R.compose(withDrawerActions)(
+  CustomerSelectFieldRoot,
+);

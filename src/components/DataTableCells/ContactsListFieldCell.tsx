@@ -3,7 +3,7 @@ import { FormGroup, Intent, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
 
 import { CellType } from '@/common';
-import ContactsSuggestField from '@/components/ContactsSuggestField';
+import { ContactsSuggestField } from '@/components';
 export default function ContactsListCellRenderer({
   column: { id },
   row: { index, original },

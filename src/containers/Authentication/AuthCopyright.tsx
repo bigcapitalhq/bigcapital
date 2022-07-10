@@ -1,7 +1,7 @@
 import React from 'react';
-import Icon from '@/components/Icon';
 import moment from 'moment';
 import intl from 'react-intl-universal';
+import { Icon } from '@/components/Icon';
 
 export default function AuthCopyright() {
   return (

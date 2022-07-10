@@ -1,5 +1,4 @@
 import React from 'react';
-import Icon from '@/components/Icon';
 import { isEmpty } from 'lodash';
 import {
   Button,
@@ -15,6 +14,7 @@ import {
   AdvancedFilterPopover,
   If,
   Can,
+  Icon,
   FormattedMessage as T,
   DashboardActionViewsList,
   DashboardFilterButton,

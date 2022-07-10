@@ -1,6 +1,5 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import Icon from '@/components/Icon';
 import {
   Button,
   Classes,
@@ -8,16 +7,18 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
-import { DrawerActionsBar, Can, FormattedMessage as T } from '@/components';
+import {
+  Icon,
+  DrawerActionsBar,
+  Can,
+  FormattedMessage as T,
+} from '@/components';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
-import {
-  ManualJournalAction,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { ManualJournalAction, AbilitySubject } from '@/common/abilityOption';
 
 import { compose } from '@/utils';
 

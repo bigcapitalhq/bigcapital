@@ -1,15 +1,13 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { MenuItem } from '@blueprintjs/core';
-import { Suggest } from '@blueprintjs/select';
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import intl from 'react-intl-universal';
+import classNames from 'classnames';
+import { MenuItem, Button } from '@blueprintjs/core';
+import { Select } from '@blueprintjs/select';
 import * as R from 'ramda';
 
-import classNames from 'classnames';
-import { CLASSES } from '@/common/classes';
-
 import { MenuItemNestedText, FormattedMessage as T } from '@/components';
-import { filterAccountsByQuery } from './utils';
-import { nestedArrayToflatten } from '@/utils';
+import { nestedArrayToflatten, filterAccountsByQuery } from '@/utils';
+import { CLASSES } from '@/common/classes';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
@@ -32,14 +30,6 @@ const createNewItemFromQuery = (name) => {
   };
 };
 
-// Handle input value renderer.
-const handleInputValueRenderer = (inputValue) => {
-  if (inputValue) {
-    return inputValue.name.toString();
-  }
-  return '';
-};
-
 // Filters accounts items.
 const filterAccountsPredicater = (query, account, _index, exactMatch) => {
   const normalizedTitle = account.name.toLowerCase();
@@ -53,9 +43,9 @@ const filterAccountsPredicater = (query, account, _index, exactMatch) => {
 };
 
 /**
- * Accounts suggest field.
+ * Accounts select list.
  */
-function AccountsSuggestField({
+function AccountsSelectListRoot({
   // #withDialogActions
   openDialog,
 
@@ -63,18 +53,19 @@ function AccountsSuggestField({
   accounts,
   initialAccountId,
   selectedAccountId,
-  defaultSelectText = intl.formatMessage({ id: 'select_account' }),
-  popoverFill = false,
+  defaultSelectText = 'Select account',
   onAccountSelected,
+  disabled = false,
+  popoverFill = false,
 
-  filterByParentTypes = [],
-  filterByTypes = [],
+  filterByParentTypes,
+  filterByTypes,
   filterByNormal,
-  filterByRootTypes = [],
+  filterByRootTypes,
 
   allowCreate,
 
-  ...suggestProps
+  buttonProps = {},
 }) {
   const flattenAccounts = useMemo(
     () => nestedArrayToflatten(accounts),
@@ -104,6 +95,7 @@ function AccountsSuggestField({
     [initialAccountId, filteredAccounts],
   );
 
+  // Select account item.
   const [selectedAccount, setSelectedAccount] = useState(
     initialAccount || null,
   );
@@ -129,6 +121,7 @@ function AccountsSuggestField({
     );
   }, []);
 
+  // Handle the account item select.
   const handleAccountSelect = useCallback(
     (account) => {
       if (account.id) {
@@ -148,26 +141,34 @@ function AccountsSuggestField({
     : null;
 
   return (
-    <Suggest
+    <Select
       items={filteredAccounts}
       noResults={<MenuItem disabled={true} text={<T id={'no_accounts'} />} />}
       itemRenderer={accountItem}
       itemPredicate={filterAccountsPredicater}
+      popoverProps={{
+        minimal: true,
+        usePortal: !popoverFill,
+        inline: popoverFill,
+      }}
+      filterable={true}
       onItemSelect={handleAccountSelect}
-      selectedItem={selectedAccount}
-      inputProps={{ placeholder: defaultSelectText }}
-      resetOnClose={true}
-      fill={true}
-      popoverProps={{ minimal: true, boundary: 'window' }}
-      inputValueRenderer={handleInputValueRenderer}
-      className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, {
+      disabled={disabled}
+      className={classNames('form-group--select-list', {
         [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
       })}
       createNewItemRenderer={maybeCreateNewItemRenderer}
       createNewItemFromQuery={maybeCreateNewItemFromQuery}
-      {...suggestProps}
-    />
+    >
+      <Button
+        disabled={disabled}
+        text={selectedAccount ? selectedAccount.name : defaultSelectText}
+        {...buttonProps}
+      />
+    </Select>
   );
 }
 
-export default R.compose(withDialogActions)(AccountsSuggestField);
+export const AccountsSelectList = R.compose(withDialogActions)(
+  AccountsSelectListRoot,
+);

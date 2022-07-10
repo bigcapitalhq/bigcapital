@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import classNames from "classnames";
-import * as React from "react";
+import classNames from 'classnames';
+import * as React from 'react';
 import { Classes } from '@blueprintjs/core';
-import IconSvgPaths from "@/static/json/icons";
+import IconSvgPaths from '@/static/json/icons';
 import PropTypes from 'prop-types';
 
-export default class Icon extends React.Component{
+export class Icon extends React.Component {
   static displayName = `af.Icon`;
 
   static SIZE_STANDARD = 16;
@@ -28,9 +28,9 @@ export default class Icon extends React.Component{
 
   render() {
     const { icon } = this.props;
-    if (icon == null || typeof icon === "boolean") {
+    if (icon == null || typeof icon === 'boolean') {
       return null;
-    } else if (typeof icon !== "string") {
+    } else if (typeof icon !== 'string') {
       return icon;
     }
 
@@ -43,20 +43,28 @@ export default class Icon extends React.Component{
       width,
       intent,
       title = icon,
-      tagName = "span",
+      tagName = 'span',
       ...htmlprops
     } = this.props;
 
     // choose which pixel grid is most appropriate for given icon size
-    const pixelGridSize = iconSize >= Icon.SIZE_LARGE ? Icon.SIZE_LARGE : Icon.SIZE_STANDARD;
+    const pixelGridSize =
+      iconSize >= Icon.SIZE_LARGE ? Icon.SIZE_LARGE : Icon.SIZE_STANDARD;
     const iconPath = this.getSvgPath(icon);
 
-    if (!iconPath){ return null; }
+    if (!iconPath) {
+      return null;
+    }
 
     // render path elements, or nothing if icon name is unknown.
     const paths = this.renderSvgPaths(iconPath.path);
 
-    const classes = classNames(Classes.ICON, Classes.iconClass(icon), Classes.intentClass(intent), className);
+    const classes = classNames(
+      Classes.ICON,
+      Classes.iconClass(icon),
+      Classes.intentClass(intent),
+      className,
+    );
     const viewBox = iconPath.viewBox;
 
     const computedHeight = height || iconSize;
@@ -69,7 +77,13 @@ export default class Icon extends React.Component{
         className: classes,
         title: htmlTitle,
       },
-      <svg fill={color} data-icon={icon} width={computedWidth} height={computedHeight} viewBox={viewBox}>
+      <svg
+        fill={color}
+        data-icon={icon}
+        width={computedWidth}
+        height={computedHeight}
+        viewBox={viewBox}
+      >
         {title && <desc>{title}</desc>}
         {paths}
       </svg>,
@@ -88,7 +102,9 @@ export default class Icon extends React.Component{
     if (pathStrings == null) {
       return null;
     }
-    return pathStrings.map((d, i) => <path key={i} d={d} className={`path-${i + 1}`} fillRule="evenodd" />);
+    return pathStrings.map((d, i) => (
+      <path key={i} d={d} className={`path-${i + 1}`} fillRule="evenodd" />
+    ));
   }
 }
 
@@ -148,4 +164,4 @@ Icon.propTypes = {
    * explicit falsy value to disable.
    */
   title: PropTypes.string,
-}
+};

@@ -3,7 +3,7 @@ import { FormGroup, Intent, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
 
 import { CellType } from '@/common';
-import BranchSuggestField from '../BranchSuggestField';
+import { BranchSuggestField } from '../Branches';
 
 /**
  * Branches list field cell.
