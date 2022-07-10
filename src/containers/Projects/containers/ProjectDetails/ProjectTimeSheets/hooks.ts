@@ -3,9 +3,9 @@ import intl from 'react-intl-universal';
 import { AvatarCell, TimesheetAccessor } from './components';
 
 /**
- * Retrieve timesheet list columns columns.
+ * Retrieve project timesheet list columns.
  */
-export function useTimesheetColumns() {
+export function useProjectTimesheetColumns() {
   return React.useMemo(
     () => [
       {

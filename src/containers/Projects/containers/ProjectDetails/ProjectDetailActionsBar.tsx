@@ -14,10 +14,11 @@ import {
   FormattedMessage as T,
   DashboardRowsHeightButton,
 } from 'components';
-import { TransactionSelect } from './components';
+import { ProjectTransactionsSelect } from './components';
 import withSettings from '../../../Settings/withSettings';
 import withSettingsActions from '../../../Settings/withSettingsActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import { projectTranslations } from './common';
 import { useProjectDetailContext } from './ProjectDetailProvider';
 import { compose } from 'utils';
 
@@ -44,7 +45,7 @@ function ProjectDetailActionsBar({
       case 'expense':
         openDialog('project-expense-form', { projectId });
         break;
-      case 'estimatedExpense':
+      case 'estimated_expense':
         openDialog('estimated-expense-form', { projectId });
     }
   };
@@ -73,11 +74,8 @@ function ProjectDetailActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <TransactionSelect
-          transactions={[
-            { name: 'New Expense', path: 'expense' },
-            { name: 'New Estimated Expense', path: 'estimatedExpense' },
-          ]}
+        <ProjectTransactionsSelect
+          transactions={projectTranslations}
           onItemSelect={handleNewTransactionBtnClick}
         />
         <Button

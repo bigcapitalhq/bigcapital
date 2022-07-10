@@ -1,34 +1,15 @@
-import React from 'react';
-import styled from 'styled-components';
+import { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
 import { CLASSES } from 'common/classes';
-import { FormatDateCell, Icon, FormattedMessage as T } from 'components';
-import { Menu, MenuItem, Intent } from '@blueprintjs/core';
-import { safeCallback } from 'utils';
+import { FormatDateCell } from 'components';
 
-/**
- * Table actions cell.
- */
-export function ActionMenu({ payload: { onDelete }, row: { original } }) {
-  return (
-    <Menu>
-      <MenuItem
-        text={intl.get('purchases.action.delete')}
-        intent={Intent.DANGER}
-        onClick={safeCallback(onDelete, original)}
-        icon={<Icon icon="trash-16" iconSize={16} />}
-      />
-    </Menu>
-  );
-}
-
-export function usePurchasesColumns() {
-  return React.useMemo(
+export function useProjectSalesColumns() {
+  return useMemo(
     () => [
       {
         id: 'date',
-        Header: intl.get('purchases.column.date'),
+        Header: intl.get('sales.column.date'),
         accessor: 'date',
         Cell: FormatDateCell,
         width: 120,
@@ -38,7 +19,7 @@ export function usePurchasesColumns() {
       },
       {
         id: 'type',
-        Header: intl.get('purchases.column.type'),
+        Header: intl.get('sales.column.type'),
         accessor: 'type',
         width: 120,
         className: 'type',
@@ -47,13 +28,13 @@ export function usePurchasesColumns() {
       },
       {
         id: 'transaction_no',
-        Header: intl.get('purchases.column.transaction_no'),
+        Header: intl.get('sales.column.transaction_no'),
         accessor: 'transaction_no',
         width: 120,
       },
       {
         id: 'due_date',
-        Header: intl.get('purchases.column.due_date'),
+        Header: intl.get('sales.column.due_date'),
         accessor: 'due_date',
         Cell: FormatDateCell,
         width: 120,
@@ -63,7 +44,7 @@ export function usePurchasesColumns() {
       },
       {
         id: 'balance',
-        Header: intl.get('purchases.column.balance'),
+        Header: intl.get('sales.column.balance'),
         accessor: 'balance',
         width: 120,
         clickable: true,
@@ -72,7 +53,7 @@ export function usePurchasesColumns() {
       },
       {
         id: 'total',
-        Header: intl.get('purchases.column.total'),
+        Header: intl.get('sales.column.total'),
         accessor: 'total',
         align: 'right',
         width: 120,
@@ -80,7 +61,7 @@ export function usePurchasesColumns() {
       },
       {
         id: 'status',
-        Header: intl.get('purchases.column.status'),
+        Header: intl.get('sales.column.status'),
         accessor: 'status',
         width: 120,
         className: 'status',

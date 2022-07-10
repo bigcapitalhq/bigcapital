@@ -86,9 +86,9 @@ function ProjectFormFields() {
       </FFormGroup>
 
       {/*------------ CheckBox -----------*/}
-      <FFormGroup name={'projectState'}>
+      <FFormGroup name={'published'}>
         <FCheckbox
-          name="projectState"
+          name="published"
           label={intl.get('projects.dialog.calculator_expenses')}
         />
       </FFormGroup>
@@ -100,7 +100,7 @@ function ProjectFormFields() {
         <ControlGroup>
           <InputPrependText text={'USD'} />
           <FMoneyInputGroup
-            disabled={values.projectState}
+            disabled={values.published}
             name={'project_cost'}
             allowDecimals={true}
             allowNegativeValue={true}

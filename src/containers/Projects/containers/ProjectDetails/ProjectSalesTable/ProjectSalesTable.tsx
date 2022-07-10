@@ -1,53 +1,38 @@
-// @ts-nocheck
+//@ts-nocheck
 import React from 'react';
-import styled from 'styled-components';
 import { DataTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 import { TABLES } from 'common/tables';
 import { useMemorizedColumnsWidths } from 'hooks';
-import { usePurchasesColumns, ActionMenu } from './components';
+import { ActionMenu } from './components';
+import { useProjectSalesColumns } from './hooks';
 import withSettings from '../../../../Settings/withSettings';
 
 import { compose } from 'utils';
 
-const Purchases = [
-  {
-    id: 1,
-    date: '2022-06-08T22:00:00.000Z',
-    type: 'Invoice',
-    transaction_no: 'Inv-12345',
-    due_date: '2022-06-08T22:00:00.000Z',
-    balance: '$100.00',
-    status: 'Paid',
-    total: '$100.00',
-  },
-];
 /**
- * Purchases DataTable.
+ * Porject sales datatable.
  * @returns
  */
-function PurchasesTable({
+function ProjectSalesTableRoot({
   // #withSettings
-  purchasesTableSize,
+  salesTableSize,
 }) {
-  // Retrieve purchases table columns.
-  const columns = usePurchasesColumns();
+  // Retrieve project sales table columns.
+  const columns = useProjectSalesColumns();
 
-  // Handle delete purchase.
-  const handleDeletePurchase = () => {};
+  // Handle delete sale.
+  const handleDeleteSale = () => {};
 
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.PURCHASES);
+    useMemorizedColumnsWidths(TABLES.SALES);
 
   return (
     <DataTable
       columns={columns}
-      data={Purchases}
-      // loading={}
-      // headerLoading={}
-      // progressBarLoading={}
+      data={[]}
       manualSortBy={true}
       selectionColumn={true}
       noInitialFetch={true}
@@ -57,15 +42,15 @@ function PurchasesTable({
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
-      size={purchasesTableSize}
+      size={salesTableSize}
       payload={{
-        onDelete: handleDeletePurchase,
+        onDelete: handleDeleteSale,
       }}
     />
   );
 }
-export default compose(
-  withSettings(({ purchasesSettings }) => ({
-    purchasesTableSize: purchasesSettings?.tableSize,
+export const ProjectSalesTable = compose(
+  withSettings(({ salesSettings }) => ({
+    salesTableSize: salesSettings?.tableSize,
   })),
-)(PurchasesTable);
+)(ProjectSalesTableRoot);

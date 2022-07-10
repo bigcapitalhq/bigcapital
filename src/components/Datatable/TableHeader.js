@@ -88,13 +88,13 @@ export default function TableHeader() {
     },
   } = useContext(TableContext);
 
-  if (headerLoading && TableHeaderSkeletonRenderer) {
-    return <TableHeaderSkeletonRenderer />;
-  }
-
   // Can't contiunue if the thead is disabled.
   if (hideTableHeader) {
     return null;
+  }
+
+  if (headerLoading && TableHeaderSkeletonRenderer) {
+    return <TableHeaderSkeletonRenderer />;
   }
 
   return (

@@ -138,32 +138,32 @@ const ProjectsTable = styled(DataTable)`
     .tr .td {
       padding: 0.5rem 0.8rem;
     }
-
     .avatar.td {
-      .avatar {
-        display: inline-block;
-        background: #adbcc9;
-        border-radius: 8%;
-        text-align: center;
-        font-weight: 400;
-        color: #fff;
+      .cell-inner {
+        .avatar {
+          display: inline-block;
+          background: #adbcc9;
+          border-radius: 8%;
+          text-align: center;
+          font-weight: 400;
+          color: #fff;
 
-        &[data-size='medium'] {
-          height: 30px;
-          width: 30px;
-          line-height: 30px;
-          font-size: 14px;
-        }
-        &[data-size='small'] {
-          height: 25px;
-          width: 25px;
-          line-height: 25px;
-          font-size: 12px;
+          &[data-size='medium'] {
+            height: 30px;
+            width: 30px;
+            line-height: 30px;
+            font-size: 14px;
+          }
+          &[data-size='small'] {
+            height: 25px;
+            width: 25px;
+            line-height: 25px;
+            font-size: 12px;
+          }
         }
       }
     }
   }
-
   .table-size--small {
     .tbody .tr {
       height: 45px;

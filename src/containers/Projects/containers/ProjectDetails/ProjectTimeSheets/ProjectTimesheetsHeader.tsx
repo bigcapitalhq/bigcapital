@@ -13,10 +13,10 @@ import {
 import { calculateStatus } from 'utils';
 
 /**
- * Timesheets header
+ * Project Timesheets header
  * @returns
  */
-export default function TimesheetsHeader() {
+export function ProjectTimesheetsHeader() {
   return (
     <DetailFinancialSection>
       <DetailFinancialCard label={'Project estimate'} value={'3.14'} />

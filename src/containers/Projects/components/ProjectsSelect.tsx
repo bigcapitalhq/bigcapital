@@ -11,7 +11,7 @@ import { FSelect } from 'components';
  * @param {*} exactMatch
  * @returns
  */
-const projectItemPredicate = (query, project, _index, exactMatch) => {
+const projectsItemPredicate = (query, project, _index, exactMatch) => {
   const normalizedTitle = project.name.toLowerCase();
   const normalizedQuery = query.toLowerCase();
 
@@ -28,7 +28,7 @@ const projectItemPredicate = (query, project, _index, exactMatch) => {
  * @param {*} param1
  * @returns
  */
-const projectItemRenderer = (project, { handleClick, modifiers, query }) => {
+const projectsItemRenderer = (project, { handleClick, modifiers, query }) => {
   return (
     <MenuItem
       active={modifiers.active}
@@ -41,13 +41,13 @@ const projectItemRenderer = (project, { handleClick, modifiers, query }) => {
 };
 
 const projectSelectProps = {
-  itemPredicate: projectItemPredicate,
-  itemRenderer: projectItemRenderer,
+  itemPredicate: projectsItemPredicate,
+  itemRenderer: projectsItemRenderer,
   valueAccessor: 'id',
   labelAccessor: 'name',
 };
 
-export function ProjectSelect({ projects, ...rest }) {
+export function ProjectsSelect({ projects, ...rest }) {
   return (
     <FSelect
       items={projects}

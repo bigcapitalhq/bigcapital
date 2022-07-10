@@ -175,10 +175,10 @@ const ProjectItemDescription = styled.div`
 const ProjectStatusRoot = styled.div`
   display: flex;
   align-items: center;
-  /* justify-content: flex-end; */
   margin-right: 0.5rem;
   flex-direction: row-reverse;
 `;
+
 const ProjectStatusTaskAmount = styled.div`
   text-align: right;
   font-weight: 400;
@@ -198,6 +198,7 @@ const ProjectProgressBar = styled(ProgressBar)`
     }
   }
 `;
+
 const StatusTag = styled(Tag)`
   min-width: 65px;
   text-align: center;

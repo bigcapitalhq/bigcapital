@@ -14,7 +14,7 @@ import {
   FieldRequiredHint,
   FormattedMessage as T,
 } from 'components';
-import { ProjectSelect, TaskSelect } from './components';
+import { TaskSelect, ProjectsSelect } from '../../components';
 import { momentFormatter } from 'utils';
 
 /**
@@ -31,8 +31,8 @@ function ProjectTimeEntryFormFields() {
         labelInfo={<FieldRequiredHint />}
         className={classNames('form-group--select-list', Classes.FILL)}
       >
-        <ProjectSelect
-          name={'tesc'}
+        <ProjectsSelect
+          name={'projectId'}
           projects={[]}
           popoverProps={{ minimal: true }}
         />

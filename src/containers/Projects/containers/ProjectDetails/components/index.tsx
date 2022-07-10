@@ -1,3 +1,2 @@
-export * from './ProjectSelect';
-export * from './TransactionSelect';
+export * from './ProjectTransactionsSelect';
 export * from './FinancialSection';

@@ -15,7 +15,7 @@ import { Icon, FormattedMessage as T } from 'components';
  * @param {*} param1
  * @returns
  */
-const transactionItemRenderer = (
+const projectTransactionItemRenderer = (
   transaction,
   { handleClick, modifiers, query },
 ) => {
@@ -29,8 +29,8 @@ const transactionItemRenderer = (
   );
 };
 
-const transactionSelectProps = {
-  itemRenderer: transactionItemRenderer,
+const projectTransactionSelectProps = {
+  itemRenderer: projectTransactionItemRenderer,
   filterable: false,
   popoverProps: {
     minimal: true,
@@ -43,13 +43,13 @@ const transactionSelectProps = {
 };
 
 /**
- *
+ * Project transactions select
  * @param
  * @returns
  */
-export function TransactionSelect({ transactions, ...rest }) {
+export function ProjectTransactionsSelect({ transactions, ...rest }) {
   return (
-    <Select {...transactionSelectProps} items={transactions} {...rest}>
+    <Select {...projectTransactionSelectProps} items={transactions} {...rest}>
       <Button
         minimal={true}
         icon={<Icon icon={'plus'} />}

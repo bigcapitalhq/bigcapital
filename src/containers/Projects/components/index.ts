@@ -1,3 +1,5 @@
 export * from './ExpenseSelect';
 export * from './ChangeTypesSelect';
-export * from './FInputGroupComponent'
+export * from './TaskSelect';
+export * from './ProjectsSelect';
+export * from './FInputGroupComponent';

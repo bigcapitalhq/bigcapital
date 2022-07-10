@@ -10,7 +10,7 @@ const Schema = Yup.object().shape({
   projectDeadline: Yup.date()
     .label(intl.get('project.schema.label.deadline'))
     .required(),
-  projectState: Yup.boolean().label(
+    published: Yup.boolean().label(
     intl.get('project.schema.label.project_state'),
   ),
   projectCost: Yup.number().label(
