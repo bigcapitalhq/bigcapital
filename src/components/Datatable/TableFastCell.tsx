@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import TableCell from './TableCell';
 
-function TableFastCell({ cell, row, index }) {
+export function TableFastCell({ cell, row, index }) {
   return <TableCell cell={cell} row={row} index={index} />;
 }
 

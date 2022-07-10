@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import DataTable from '../DataTable';
+import { DataTable } from '../Datatable';
 
 export const ReportDataTable = styled(DataTable)`
   .table .tbody .tr.no-results:last-of-type .td {

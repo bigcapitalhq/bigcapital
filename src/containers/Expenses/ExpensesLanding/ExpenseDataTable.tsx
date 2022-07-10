@@ -4,13 +4,15 @@ import { useHistory } from 'react-router-dom';
 import { compose } from '@/utils';
 import { useExpensesListContext } from './ExpensesListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { DashboardContentTable, DataTable } from '@/components';
+import {
+  DashboardContentTable,
+  DataTable,
+  TableSkeletonRows,
+  TableSkeletonHeader,
+} from '@/components';
 import { TABLES } from '@/common/tables';
 
-
 import ExpensesEmptyStatus from './ExpensesEmptyStatus';
-import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withExpensesActions from './withExpensesActions';

@@ -1,11 +1,9 @@
 import React, { useCallback } from 'react';
 
 import { compose } from '@/utils';
-import { DataTable } from '@/components';
+import { DataTable, TableSkeletonRows } from '@/components';
 import { useResendInvitation } from '@/hooks/query';
 import AppToaster from '@/components/AppToaster';
-
-import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertActions from '@/containers/Alert/withAlertActions';
@@ -36,42 +34,49 @@ function UsersDataTable({
     (user) => {
       openAlert('user-inactivate', { userId: user.id });
     },
-    [openAlert]
+    [openAlert],
   );
   // Handle activate user action.
   const handleActivateuser = useCallback(
     (user) => {
       openAlert('user-activate', { userId: user.id });
     },
-    [openAlert]
+    [openAlert],
   );
   // Handle delete user action.
   const handleDeleteUser = useCallback(
     (user) => {
       openAlert('user-delete', { userId: user.id });
     },
-    [openAlert]
+    [openAlert],
   );
 
   const { mutateAsync: resendInviation } = useResendInvitation();
 
-  const handleResendInvitation = useCallback(
-    (user) => {
-      resendInviation(user.id).then(() => {
+  const handleResendInvitation = useCallback((user) => {
+    resendInviation(user.id)
+      .then(() => {
         AppToaster.show({
           message: 'User invitation has been re-sent to the user.',
-          intent: Intent.SUCCESS
+          intent: Intent.SUCCESS,
         });
-      }).catch(({ response: { data: { errors } } }) => {
-        if (errors.find(e => e.type === 'USER_RECENTLY_INVITED')) {
-          AppToaster.show({
-            message: 'This person was recently invited. No need to invite them again just yet.',
-            intent: Intent.DANGER
-          });
-        }
-      });
-    }
-  )
+      })
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          if (errors.find((e) => e.type === 'USER_RECENTLY_INVITED')) {
+            AppToaster.show({
+              message:
+                'This person was recently invited. No need to invite them again just yet.',
+              intent: Intent.DANGER,
+            });
+          }
+        },
+      );
+  });
   // Users list columns.
   const columns = useUsersListColumns();
 
@@ -93,13 +98,10 @@ function UsersDataTable({
         onActivate: handleActivateuser,
         onInactivate: handleInactivateUser,
         onDelete: handleDeleteUser,
-        onResendInvitation: handleResendInvitation
+        onResendInvitation: handleResendInvitation,
       }}
     />
   );
 }
 
-export default compose(
-  withDialogActions,
-  withAlertActions
-)(UsersDataTable);
+export default compose(withDialogActions, withAlertActions)(UsersDataTable);

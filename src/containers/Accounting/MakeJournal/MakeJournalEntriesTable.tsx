@@ -30,7 +30,6 @@ export default function MakeJournalEntriesTable({
   // Memorized data table columns.
   const columns = useJournalTableEntriesColumns();
 
-
   // Handles update datatable data.
   const handleUpdateData = (rowIndex, columnId, value) => {
     const newRows = compose(

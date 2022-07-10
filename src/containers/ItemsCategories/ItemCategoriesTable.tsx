@@ -1,8 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 
-import DataTable from '@/components/DataTable';
-import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
+import { DataTable, TableSkeletonRows } from '@/components';
 
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
 import { useItemsCategoriesTableColumns, ActionMenuList } from './components';

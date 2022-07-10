@@ -5,8 +5,7 @@ import { Intent } from '@blueprintjs/core';
 
 import '@/style/pages/Preferences/branchesList.scss';
 
-import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
-import { DataTable, Card, AppToaster } from '@/components';
+import { DataTable, Card, AppToaster, TableSkeletonRows } from '@/components';
 import { useBranchesTableColumns, ActionsMenu } from './components';
 import { useBranchesContext } from './BranchesProvider';
 import { useMarkBranchAsPrimary } from '@/hooks/query';

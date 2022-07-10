@@ -2,11 +2,14 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { TABLES } from '@/common/tables';
 import { FormattedMessage as T } from '@/components';
-import { DashboardContentTable, DataTable } from '@/components';
+import {
+  DashboardContentTable,
+  DataTable,
+  TableSkeletonRows,
+  TableSkeletonHeader,
+} from '@/components';
 
 import ItemsEmptyStatus from './ItemsEmptyStatus';
-import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
 import withItemsActions from './withItemsActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';

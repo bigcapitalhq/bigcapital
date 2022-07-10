@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { DataTable, CommercialDocEntriesTable, Card } from '@/components';
-import { TableStyle } from '../../../../common';
-import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
+import { DataTable, TableSkeletonRows, Card } from '@/components';
+import { TableStyle } from '@/common';
 
 import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
 import { useWarehouseLocationsColumns } from './components';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { DataTable, Card } from '@/components';
+import { DataTable, Card, TableSkeletonRows } from '@/components';
 
 import {
   useInvoicePaymentTransactionsColumns,
@@ -9,8 +9,7 @@ import {
 import { useInvoiceDetailDrawerContext } from '../InvoiceDetailDrawerProvider';
 import { useInvoicePaymentTransactions } from '@/hooks/query';
 
-import { TableStyle } from '../../../../common';
-import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
+import { TableStyle } from '@/common';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';

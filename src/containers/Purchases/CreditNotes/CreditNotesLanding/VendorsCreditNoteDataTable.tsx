@@ -2,12 +2,14 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import VendorsCreditNoteEmptyStatus from './VendorsCreditNoteEmptyStatus';
-import { DataTable, DashboardContentTable } from '@/components';
+import {
+  DataTable,
+  DashboardContentTable,
+  TableSkeletonRows,
+  TableSkeletonHeader,
+} from '@/components';
 import { TABLES } from '@/common/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
-
-import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';

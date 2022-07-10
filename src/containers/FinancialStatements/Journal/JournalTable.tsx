@@ -3,8 +3,12 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
 import { TableStyle } from '@/common';
-import { ReportDataTable, FinancialSheet, TableFastCell } from '@/components';
-import TableVirtualizedListRows from '@/components/Datatable/TableVirtualizedRows';
+import {
+  ReportDataTable,
+  FinancialSheet,
+  TableFastCell,
+  TableVirtualizedListRows,
+} from '@/components';
 
 import { useJournalTableColumns } from './components';
 import { useJournalSheetContext } from './JournalProvider';

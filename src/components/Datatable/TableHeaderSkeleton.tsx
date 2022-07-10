@@ -26,7 +26,7 @@ function TableHeaderCell({ column }) {
 /**
  * Table skeleton rows.
  */
-export default function TableSkeletonHeader({}) {
+export function TableSkeletonHeader({}) {
   const {
     table: { headerGroups },
   } = useContext(TableContext);

@@ -1,12 +1,16 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { DataTable, DashboardContentTable } from '@/components';
+import {
+  DataTable,
+  DashboardContentTable,
+  TableSkeletonRows,
+  TableSkeletonHeader,
+} from '@/components';
 import { TABLES } from '@/common/tables';
 
 import ManualJournalsEmptyStatus from './ManualJournalsEmptyStatus';
-import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
+
 import { ActionsMenu } from './components';
 
 import withManualJournals from './withManualJournals';

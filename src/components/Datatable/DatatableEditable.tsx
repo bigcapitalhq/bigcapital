@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { DataTable } from '@/components';
+import { DataTable } from './DataTable';
 
 /**
  * Editable datatable.
  */
-export default function DatatableEditable({
+export function DataTableEditable({
   totalRow = false,
   actions,
   name,
@@ -32,7 +32,7 @@ const DatatableEditableRoot = styled.div`
     .td {
       border-left: 1px solid #e2e2e2;
 
-      &:first-of-type{
+      &:first-of-type {
         border-left: 0;
       }
     }
@@ -59,7 +59,7 @@ const DatatableEditableRoot = styled.div`
         padding: 4px 14px;
 
         &.td-field-type,
-        &.td-button-type{
+        &.td-button-type {
           padding: 2px;
         }
       }

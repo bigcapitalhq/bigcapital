@@ -1,10 +1,9 @@
 import React, { useCallback } from 'react';
 import { compose } from '@/utils';
 
-import { DataTable } from '@/components';
+import { DataTable, TableSkeletonRows } from '@/components';
 
 import { useCurrenciesContext } from './CurrenciesProvider';
-import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
 
 import { ActionMenuList, useCurrenciesTableColumns } from './components';
 
@@ -44,7 +43,7 @@ function CurrenciesDataTable({
   const handleDeleteCurrency = ({ currency_code }) => {
     openAlert('currency-delete', { currency_code: currency_code });
   };
-  
+
   return (
     <DataTable
       columns={columns}

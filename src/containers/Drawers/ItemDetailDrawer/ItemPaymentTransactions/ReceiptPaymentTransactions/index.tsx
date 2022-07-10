@@ -1,8 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { DataTable } from '../../../../../components';
-import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows'
+import { DataTable, TableSkeletonRows } from '@/components';
+
 import { TableStyle } from '@/common';
 
 import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
@@ -38,20 +38,20 @@ function ReceiptPaymentTransactions({
   } = useItemAssociatedReceiptTransactions(itemId, {
     enabled: !!itemId,
   });
-  
-    // Handles delete payment transactions.
-    const handleDeletePaymentTransactons = ({ receipt_id }) => {
-      openAlert('receipt-delete', {
-        receiptId: receipt_id,
-      });
-    };
-  
-    // Handles edit payment transactions.
-    const handleEditPaymentTransactions = ({ receipt_id }) => {
-      history.push(`/receipts/${receipt_id}/edit`);
-      closeDrawer('item-detail-drawer');
-    };
-  
+
+  // Handles delete payment transactions.
+  const handleDeletePaymentTransactons = ({ receipt_id }) => {
+    openAlert('receipt-delete', {
+      receiptId: receipt_id,
+    });
+  };
+
+  // Handles edit payment transactions.
+  const handleEditPaymentTransactions = ({ receipt_id }) => {
+    history.push(`/receipts/${receipt_id}/edit`);
+    closeDrawer('item-detail-drawer');
+  };
+
   return (
     <DataTable
       columns={columns}

@@ -6,12 +6,7 @@ import TableContext from './TableContext';
 /**
  * Table virtualized list row.
  */
-function TableVirtualizedListRow({
-  index,
-  isScrolling,
-  isVisible,
-  style,
-}) {
+function TableVirtualizedListRow({ index, isScrolling, isVisible, style }) {
   const {
     table: { page, prepareRow },
     props: { TableRowRenderer },
@@ -20,26 +15,28 @@ function TableVirtualizedListRow({
   const row = page[index];
   prepareRow(row);
 
-  return (<TableRowRenderer row={row} style={style} />);
+  return <TableRowRenderer row={row} style={style} />;
 }
 
 /**
  * Table virtualized list rows.
  */
-export default function TableVirtualizedListRows() {
+export function TableVirtualizedListRows() {
   const {
     table: { page },
     props: { vListrowHeight, vListOverscanRowCount },
   } = useContext(TableContext);
 
   // Dashboard content pane.
-  const dashboardContentPane = React.useMemo(()=> document.querySelector(
-    `.${CLASSES.DASHBOARD_CONTENT_PANE}`,
-  ), []);
+  const dashboardContentPane = React.useMemo(
+    () => document.querySelector(`.${CLASSES.DASHBOARD_CONTENT_PANE}`),
+    [],
+  );
 
-  const rowRenderer = React.useCallback(({ key, ...args }) => (
-    <TableVirtualizedListRow {...args} key={key} />
-  ), []);
+  const rowRenderer = React.useCallback(
+    ({ key, ...args }) => <TableVirtualizedListRow {...args} key={key} />,
+    [],
+  );
 
   return (
     <WindowScroller scrollElement={dashboardContentPane}>

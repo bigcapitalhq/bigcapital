@@ -16,28 +16,28 @@ import { saveInvoke } from '@/utils';
 
 import '@/style/components/DataTable/DataTable.scss';
 
-import TableNoResultsRow from './Datatable/TableNoResultsRow';
-import TableLoadingRow from './Datatable/TableLoading';
-import TableHeader from './Datatable/TableHeader';
-import TablePage from './Datatable/TablePage';
-import TableFooter from './Datatable/TableFooter';
-import TableRow from './Datatable/TableRow';
-import TableRows from './Datatable/TableRows';
-import TableCell from './Datatable/TableCell';
-import TableTBody from './Datatable/TableTBody';
-import TableContext from './Datatable/TableContext';
-import TablePagination from './Datatable/TablePagination';
-import TableWrapper from './Datatable/TableWrapper';
+import TableNoResultsRow from './TableNoResultsRow';
+import TableLoadingRow from './TableLoading';
+import TableHeader from './TableHeader';
+import TablePage from './TablePage';
+import TableFooter from './TableFooter';
+import TableRow from './TableRow';
+import TableRows from './TableRows';
+import TableCell from './TableCell';
+import TableTBody from './TableTBody';
+import TableContext from './TableContext';
+import TablePagination from './TablePagination';
+import TableWrapper from './TableWrapper';
 
-import TableIndeterminateCheckboxRow from './Datatable/TableIndeterminateCheckboxRow';
-import TableIndeterminateCheckboxHeader from './Datatable/TableIndeterminateCheckboxHeader';
+import TableIndeterminateCheckboxRow from './TableIndeterminateCheckboxRow';
+import TableIndeterminateCheckboxHeader from './TableIndeterminateCheckboxHeader';
 
-import { useResizeObserver } from './Datatable/utils';
+import { useResizeObserver } from './utils';
 
 /**
  * Datatable component.
  */
-export default function DataTable(props) {
+export function DataTable(props) {
   const {
     columns,
     data,

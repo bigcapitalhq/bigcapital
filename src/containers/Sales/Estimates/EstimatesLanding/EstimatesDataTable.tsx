@@ -2,8 +2,6 @@ import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import EstimatesEmptyStatus from './EstimatesEmptyStatus';
-import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 
 import withEstimatesActions from './withEstimatesActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
@@ -12,7 +10,12 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { TABLES } from '@/common/tables';
-import { DataTable, DashboardContentTable } from '@/components';
+import {
+  DataTable,
+  DashboardContentTable,
+  TableSkeletonRows,
+  TableSkeletonHeader,
+} from '@/components';
 import { ActionsMenu, useEstiamtesTableColumns } from './components';
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';

@@ -1,10 +1,13 @@
 import React from 'react';
 
 import { TABLES } from '@/common/tables';
-import { DataTable, TableFastCell } from '@/components';
+import {
+  DataTable,
+  TableFastCell,
+  TableSkeletonRows,
+  TableSkeletonHeader,
+} from '@/components';
 
-import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
@@ -47,7 +50,6 @@ function CashFlowAccountsDataTable({
       expandToggleColumn={2}
       selectionColumnWidth={45}
       TableCellRenderer={TableFastCell}
-      
       TableLoadingRenderer={TableSkeletonRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       initialColumnsWidths={initialColumnsWidths}

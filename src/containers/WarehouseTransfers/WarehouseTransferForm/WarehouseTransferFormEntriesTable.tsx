@@ -24,12 +24,8 @@ export default function WarehouseTransferFormEntriesTable({
   sourceWarehouseId,
 }) {
   // Fetch the table row.
-  const {
-    newRowMeta,
-    setTableRow,
-    resetTableRow,
-    cellsLoading,
-  } = useFetchItemWarehouseQuantity();
+  const { newRowMeta, setTableRow, resetTableRow, cellsLoading } =
+    useFetchItemWarehouseQuantity();
 
   // Warehouse transfer provider context.
   const { isItemsCostFetching } = useWarehouseTransferFormContext();

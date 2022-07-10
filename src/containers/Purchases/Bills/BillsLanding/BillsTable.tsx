@@ -2,9 +2,12 @@ import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { TABLES } from '@/common/tables';
-import { DashboardContentTable,DataTable } from '@/components';
-import TableSkeletonRows from '@/components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from '@/components/Datatable/TableHeaderSkeleton';
+import {
+  DataTable,
+  DashboardContentTable,
+  TableSkeletonRows,
+  TableSkeletonHeader,
+} from '@/components';
 
 import BillsEmptyStatus from './BillsEmptyStatus';
 
