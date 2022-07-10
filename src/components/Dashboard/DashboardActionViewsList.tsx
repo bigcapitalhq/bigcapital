@@ -16,7 +16,7 @@ import { Icon } from '@/components';
 /**
  * Dashboard action views list.
  */
-export default function DashboardActionViewsList({
+export function DashboardActionViewsList({
   resourceName,
   allMenuItem,
   allMenuItemText,

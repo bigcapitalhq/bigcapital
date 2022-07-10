@@ -8,7 +8,6 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
 
@@ -16,7 +15,12 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { Can, Icon, FormattedMessage as T } from '@/components';
+import {
+  DashboardActionsBar,
+  Can,
+  Icon,
+  FormattedMessage as T,
+} from '@/components';
 import {
   PaymentMadeAction,
   AbilitySubject,

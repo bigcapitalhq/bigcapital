@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'classnames';
 import { Navbar } from '@blueprintjs/core';
 
-export default function DashboardActionsBar({ className, children, name }) {
+export function DashboardActionsBar({ className, children, name }) {
   return (
     <div
       className={clsx(

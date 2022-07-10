@@ -12,9 +12,8 @@ import {
   FormattedMessage as T,
   AdvancedFilterPopover,
   DashboardFilterButton,
+  DashboardActionsBar
 } from '@/components';
-
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import withItemCategories from './withItemCategories';
 import withItemCategoriesActions from './withItemCategoriesActions';

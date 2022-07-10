@@ -9,15 +9,13 @@ import {
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-
 import {
   If,
   Can,
   Icon,
   DashboardRowsHeightButton,
   DashboardActionViewsList,
+  DashboardActionsBar,
   DashboardFilterButton,
   AdvancedFilterPopover,
   FormattedMessage as T,
@@ -30,6 +28,7 @@ import { useExpensesListContext } from './ExpensesListProvider';
 import withExpenses from './withExpenses';
 import withExpensesActions from './withExpensesActions';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { compose } from '@/utils';

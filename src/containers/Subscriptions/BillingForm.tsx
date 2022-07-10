@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
-import { If, Alert, T } from '@/components';
-
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardInsider, If, Alert, T } from '@/components';
 
 import '@/style/pages/Billing/BillingPage.scss';
 
-import { compose } from '@/utils'; 
+import { compose } from '@/utils';
 import { MasterBillingTabs } from './SubscriptionTabs';
 import { getBillingFormValidationSchema } from './utils';
 

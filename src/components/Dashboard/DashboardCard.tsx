@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { CLASSES } from '@/common/classes';
 
 // Dashboard card.
-export default function DashboardCard({ children, page }) {
+export function DashboardCard({ children, page }) {
   return (
     <div
       className={classNames(CLASSES.DASHBOARD_CARD, {

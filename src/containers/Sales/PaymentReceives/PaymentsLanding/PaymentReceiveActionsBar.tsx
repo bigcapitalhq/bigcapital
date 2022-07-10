@@ -18,9 +18,8 @@ import {
   FormattedMessage as T,
   DashboardRowsHeightButton,
   DashboardActionViewsList,
+  DashboardActionsBar,
 } from '@/components';
-
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';

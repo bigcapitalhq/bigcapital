@@ -7,11 +7,14 @@ import {
   Alignment,
   Switch,
 } from '@blueprintjs/core';
-import { Can, Icon, FormattedMessage as T } from '@/components';
+import {
+  DashboardActionsBar,
+  Can,
+  Icon,
+  FormattedMessage as T,
+} from '@/components';
 import { useRefreshCashflowAccounts } from '@/hooks/query';
 import { CashflowAction, AbilitySubject } from '@/common/abilityOption';
-
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withCashflowAccountsTableActions from '../AccountTransactions/withCashflowAccountsTableActions';

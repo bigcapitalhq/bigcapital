@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
 
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardInsider } from '@/components';
 import { useResourceMeta, useResourceViews, useCustomers } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import { transformCustomersStateToQuery } from './utils';
@@ -53,7 +53,7 @@ function CustomersListProvider({ tableState, tableStateChanged, ...props }) {
 
   return (
     <DashboardInsider
-      loading={isViewsLoading || isResourceMetaLoading }
+      loading={isViewsLoading || isResourceMetaLoading}
       name={'customers-list'}
     >
       <CustomersListContext.Provider value={state} {...props} />

@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
 
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardInsider } from '@/components/Dashboard';
 import { useResourceViews, useResourceMeta, useBills } from '@/hooks/query';
 
 import { getFieldsFromResourceMeta } from '@/utils';
@@ -31,8 +31,7 @@ function BillsListProvider({ query, tableStateChanged, ...props }) {
   } = useBills(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    isEmpty(bills) && !isBillsLoading && !tableStateChanged;
+  const isEmptyStatus = isEmpty(bills) && !isBillsLoading && !tableStateChanged;
 
   // Provider payload.
   const provider = {

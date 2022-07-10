@@ -10,7 +10,6 @@ import {
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import {
   If,
   Icon,
@@ -20,6 +19,7 @@ import {
   AdvancedFilterPopover,
   DashboardFilterButton,
   DashboardRowsHeightButton,
+  DashboardActionsBar,
 } from '@/components';
 
 import { useCustomersListContext } from './CustomersListProvider';

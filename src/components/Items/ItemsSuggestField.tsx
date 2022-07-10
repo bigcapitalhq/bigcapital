@@ -62,7 +62,7 @@ const handleInputValueRenderer = (inputValue) => {
   return '';
 };
 
-function ItemsSuggestField({
+function ItemsSuggestFieldRoot({
   items,
   initialItemId,
   selectedItemId,
@@ -151,4 +151,5 @@ function ItemsSuggestField({
   );
 }
 
-export default R.compose(withDrawerActions)(ItemsSuggestField);
+export const ItemsSuggestField =
+  R.compose(withDrawerActions)(ItemsSuggestFieldRoot);

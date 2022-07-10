@@ -1,7 +1,7 @@
 import React, { createContext, useState } from 'react';
 import { Features } from '@/common';
 import { useFeatureCan } from '@/hooks/state';
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardInsider } from '@/components/Dashboard';
 import {
   useAccounts,
   useVendors,

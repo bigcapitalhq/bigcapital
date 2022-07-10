@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { MenuItem, Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 
-export default function CurrencySelectList({
+export function CurrencySelectList({
   currenciesList,
   selectedCurrencyCode,
   defaultSelectText = <T id={'select_currency_code'} />,

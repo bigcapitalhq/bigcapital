@@ -5,6 +5,8 @@ import { CLASSES } from '@/common/classes';
 /**
  * Dashboard content table.
  */
-export default function DashboardContentTable({ children }) {
-  return (<div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>{ children }</div>)
+export function DashboardContentTable({ children }) {
+  return (
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>{children}</div>
+  );
 }

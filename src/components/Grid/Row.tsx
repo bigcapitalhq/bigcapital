@@ -63,7 +63,7 @@ const defaultProps = {
   noGutters: false,
 };
  
-function Row ({
+export function Row ({
   bsPrefix,
   className,
   noGutters,
@@ -107,5 +107,3 @@ function Row ({
 Row.displayName = 'Row';
 Row.propTypes = propTypes;
 Row.defaultProps = defaultProps;
-
-export default Row;

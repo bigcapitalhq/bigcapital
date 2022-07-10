@@ -17,8 +17,12 @@ import {
   DashboardRowsHeightButton,
 } from '@/components';
 
-import { Can, If, DashboardActionViewsList } from '@/components';
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
+import {
+  Can,
+  If,
+  DashboardActionsBar,
+  DashboardActionViewsList,
+} from '@/components';
 
 import withReceipts from './withReceipts';
 import withReceiptsActions from './withReceiptsActions';

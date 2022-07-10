@@ -6,9 +6,13 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
-import { Icon, Can, FormattedMessage as T } from '@/components';
+import {
+  DashboardActionsBar,
+  Icon,
+  Can,
+  FormattedMessage as T,
+} from '@/components';
 import { AccountAction, AbilitySubject } from '@/common/abilityOption';
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';

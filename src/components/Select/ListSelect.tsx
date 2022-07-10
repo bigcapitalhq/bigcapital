@@ -1,12 +1,11 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import { FormattedMessage as T } from './FormattedMessage';
+import { FormattedMessage as T } from '../FormattedMessage';
 import classNames from 'classnames';
 import { CLASSES } from '@/common/classes';
 
-export default function ListSelect({
+export function ListSelect({
   buttonProps,
   defaultText,
   noResultsText = <T id="no_results" />,

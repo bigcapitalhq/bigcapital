@@ -1,21 +1,23 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useAsync } from 'react-use';
 import { useParams } from 'react-router-dom';
 import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
+import {
+  DashboardInsider,
+  DashboardPageContent,
+  FormattedMessage as T,
+  FormattedHTMLMessage,
+} from '@/components';
 
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
 import ViewForm from '@/containers/Views/ViewForm';
 
 import AppToaster from '@/components/AppToaster';
-import {compose} from '@/utils';
+import { compose } from '@/utils';
 import { If } from '@/components';
 
 import withResourcesActions from '@/containers/Resources/withResourcesActions';
 import withViewsActions from '@/containers/Views/withViewsActions';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-
 
 // @flow
 function ViewFormPage({
@@ -33,19 +35,17 @@ function ViewFormPage({
   const { resource_slug: resourceSlug, view_id: viewId } = useParams();
   const [stateDeleteView, setStateDeleteView] = useState(null);
 
-    
-
   const fetchHook = useAsync(async () => {
     return Promise.all([
-      ...(resourceSlug) ? [
-        requestFetchResourceColumns(resourceSlug),
-        requestFetchResourceFields(resourceSlug),
-      ] : (viewId) ? [
-        requestFetchViewResource(viewId),
-      ] : [],
-      ...(viewId) ? [
-        requestFetchView(viewId),
-      ] : [],
+      ...(resourceSlug
+        ? [
+            requestFetchResourceColumns(resourceSlug),
+            requestFetchResourceFields(resourceSlug),
+          ]
+        : viewId
+        ? [requestFetchViewResource(viewId)]
+        : []),
+      ...(viewId ? [requestFetchView(viewId)] : []),
     ]);
   }, []);
 
@@ -59,7 +59,6 @@ function ViewFormPage({
       changePageTitle('');
     };
   }, [viewId, changePageTitle]);
-
 
   // Handle delete view button click.
   const handleDeleteView = useCallback((view) => {
@@ -79,46 +78,52 @@ function ViewFormPage({
         message: intl.get('the_custom_view_has_been_deleted_successfully'),
         intent: Intent.SUCCESS,
       });
-    })
+    });
   }, [requestDeleteView, stateDeleteView]);
 
   return (
     <DashboardInsider
       name={'view-form'}
       loading={fetchHook.loading}
-      mount={false}>
+      mount={false}
+    >
       <DashboardPageContent>
         <If condition={fetchHook.value}>
           <ViewForm
             viewId={viewId}
             resourceName={resourceSlug}
-            onDelete={handleDeleteView} />
+            onDelete={handleDeleteView}
+          />
 
           <Alert
-            cancelButtonText={<T id={'cancel'}/>}
-            confirmButtonText={<T id={'delete'}/>}
+            cancelButtonText={<T id={'cancel'} />}
+            confirmButtonText={<T id={'delete'} />}
             icon="trash"
             intent={Intent.DANGER}
             isOpen={stateDeleteView}
             onCancel={handleCancelDeleteView}
-            onConfirm={handleConfirmDeleteView}>
+            onConfirm={handleConfirmDeleteView}
+          >
             <p>
               <FormattedHTMLMessage
-                id={'once_delete_these_views_you_will_not_able_restore_them'} />
+                id={'once_delete_these_views_you_will_not_able_restore_them'}
+              />
             </p>
           </Alert>
         </If>
 
         <If condition={fetchHook.error}>
-          <h4><T id={'something_wrong'}/></h4>
+          <h4>
+            <T id={'something_wrong'} />
+          </h4>
         </If>
       </DashboardPageContent>
-    </DashboardInsider>   
+    </DashboardInsider>
   );
 }
 
 export default compose(
   withDashboardActions,
   withViewsActions,
-  withResourcesActions
+  withResourcesActions,
 )(ViewFormPage);

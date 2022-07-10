@@ -9,8 +9,11 @@ import {
   Switch,
   Alignment,
 } from '@blueprintjs/core';
-import { DashboardRowsHeightButton, FormattedMessage as T } from '@/components';
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
+import {
+  DashboardActionsBar,
+  DashboardRowsHeightButton,
+  FormattedMessage as T,
+} from '@/components';
 import {
   If,
   Can,

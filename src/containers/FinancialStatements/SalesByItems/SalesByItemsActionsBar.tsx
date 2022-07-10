@@ -9,9 +9,8 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { Icon, FormattedMessage as T } from '@/components';
+import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
 
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
 import withSalesByItems from './withSalesByItems';

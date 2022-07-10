@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardInsider } from '@/components/Dashboard';
 
 import HomepageContent from './HomepageContent';
 

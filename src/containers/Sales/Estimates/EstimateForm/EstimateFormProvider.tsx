@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardInsider } from '@/components/Dashboard';
 import {
   useEstimate,
   useCustomers,

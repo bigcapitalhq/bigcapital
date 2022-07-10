@@ -1,7 +1,7 @@
 import React from 'react';
 import { isEmpty } from 'lodash';
 
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardInsider } from '@/components/Dashboard';
 import {
   useResourceViews,
   useResourceMeta,
@@ -49,7 +49,6 @@ function VendorsCreditNoteListProvider({ query, tableStateChanged, ...props }) {
     VendorCreditsViews,
     refresh,
 
-    
     resourceMeta,
     fields: getFieldsFromResourceMeta(resourceMeta.fields),
     isResourceLoading,

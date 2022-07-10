@@ -1,5 +1,5 @@
 import React from 'react';
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardInsider } from '@/components/Dashboard';
 import { useTransactionsLocking } from '@/hooks/query';
 import { useWatchImmediate } from '@/hooks/utils/useWatch';
 

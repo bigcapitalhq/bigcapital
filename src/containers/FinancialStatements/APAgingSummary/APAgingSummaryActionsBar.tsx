@@ -10,10 +10,9 @@ import {
 } from '@blueprintjs/core';
 
 import classNames from 'classnames';
-import { FormattedMessage as T ,Icon} from '@/components';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
 import withAPAgingSummary from './withAPAgingSummary';
@@ -39,17 +38,17 @@ function APAgingSummaryActionsBar({
 
   const handleFilterToggleClick = () => {
     toggleFilterDrawerDisplay();
-  }
+  };
 
   // handle recalculate report button.
-  const handleRecalculateReport = () => { 
+  const handleRecalculateReport = () => {
     refetch();
-  }
+  };
 
   // handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
     saveInvoke(onNumberFormatSubmit, numberFormat);
-  }
+  };
 
   return (
     <DashboardActionsBar>
@@ -119,6 +118,6 @@ function APAgingSummaryActionsBar({
 export default compose(
   withAPAgingSummaryActions,
   withAPAgingSummary(({ APAgingSummaryFilterDrawer }) => ({
-    isFilterDrawerOpen: APAgingSummaryFilterDrawer
-  }))
+    isFilterDrawerOpen: APAgingSummaryFilterDrawer,
+  })),
 )(APAgingSummaryActionsBar);

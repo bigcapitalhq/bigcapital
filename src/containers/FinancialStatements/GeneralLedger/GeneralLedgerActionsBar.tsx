@@ -9,9 +9,8 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
-import { FormattedMessage as T ,Icon } from '@/components';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import { compose } from '@/utils';
 

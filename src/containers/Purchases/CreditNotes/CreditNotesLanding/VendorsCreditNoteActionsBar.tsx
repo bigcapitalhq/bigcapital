@@ -16,8 +16,8 @@ import {
   AdvancedFilterPopover,
   DashboardFilterButton,
   DashboardRowsHeightButton,
+  DashboardActionsBar,
 } from '@/components';
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
 import { VendorCreditAction, AbilitySubject } from '@/common/abilityOption';

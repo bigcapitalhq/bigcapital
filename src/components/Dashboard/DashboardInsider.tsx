@@ -2,7 +2,7 @@ import React from 'react';
 import classnames from 'classnames';
 import LoadingIndicator from '@/components/LoadingIndicator';
 
-export default function DashboardInsider({
+export function DashboardInsider({
   loading,
   children,
   name,
@@ -10,13 +10,18 @@ export default function DashboardInsider({
   className,
 }) {
   return (
-    <div className={classnames({
-      'dashboard__insider': true,
-      'dashboard__insider--loading': loading,
-      [`dashboard__insider--${name}`]: !!name,
-    }, className)}>
+    <div
+      className={classnames(
+        {
+          dashboard__insider: true,
+          'dashboard__insider--loading': loading,
+          [`dashboard__insider--${name}`]: !!name,
+        },
+        className,
+      )}
+    >
       <LoadingIndicator loading={loading} mount={mount}>
-        { children }
+        {children}
       </LoadingIndicator>
     </div>
   );

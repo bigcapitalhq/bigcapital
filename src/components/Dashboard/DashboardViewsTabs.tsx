@@ -10,7 +10,7 @@ import { saveInvoke } from '@/utils';
 /**
  * Dashboard views tabs.
  */
-export default function DashboardViewsTabs({
+export function DashboardViewsTabs({
   initialViewSlug = 0,
   currentViewSlug,
   tabs,

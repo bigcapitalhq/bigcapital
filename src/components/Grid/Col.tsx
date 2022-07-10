@@ -64,7 +64,7 @@ const defaultProps = {
 };
 
 
-function Row ({
+export function Col ({
   bsPrefix,
   className,
   noGutters,
@@ -106,8 +106,7 @@ function Row ({
   );
 }
 
-Row.displayName = 'Row';
-Row.propTypes = propTypes;
-Row.defaultProps = defaultProps;
+Col.displayName = 'Col';
+Col.propTypes = propTypes;
+Col.defaultProps = defaultProps;
 
-export default Row;

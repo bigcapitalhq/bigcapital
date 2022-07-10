@@ -9,7 +9,6 @@ import {
   Alignment,
 } from '@blueprintjs/core';
 
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import {
   If,
   Can,
@@ -17,6 +16,7 @@ import {
   FormattedMessage as T,
   DashboardActionViewsList,
   DashboardFilterButton,
+  DashboardActionsBar,
   DashboardRowsHeightButton,
   AdvancedFilterPopover,
 } from '@/components';

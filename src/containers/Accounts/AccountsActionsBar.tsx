@@ -19,9 +19,8 @@ import {
   DashboardActionViewsList,
   DashboardFilterButton,
   DashboardRowsHeightButton,
+  DashboardActionsBar
 } from '@/components';
-
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { AccountAction, AbilitySubject } from '@/common/abilityOption';
 import { useRefreshAccounts } from '@/hooks/query/accounts';

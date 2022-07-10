@@ -5,7 +5,7 @@ import * as R from 'ramda';
 import ProfitLossSheetHeader from './ProfitLossSheetHeader';
 import ProfitLossActionsBar from './ProfitLossActionsBar';
 
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
+import { DashboardPageContent } from '@/components';
 
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withProfitLossActions from './withProfitLossActions';

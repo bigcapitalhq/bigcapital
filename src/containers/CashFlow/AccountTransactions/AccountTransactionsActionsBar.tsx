@@ -8,11 +8,11 @@ import {
 } from '@blueprintjs/core';
 import {
   Icon,
+  DashboardActionsBar,
   DashboardRowsHeightButton,
   FormattedMessage as T,
 } from '@/components';
 
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import { CashFlowMenuItems } from './utils';
 import { addMoneyIn, addMoneyOut } from '@/common/cashflowOptions';
 import { useRefreshCashflowTransactionsInfinity } from '@/hooks/query';

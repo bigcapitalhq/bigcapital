@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
 
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardInsider } from '@/components/Dashboard';
 import {
   useResourceViews,
   useResourceMeta,
@@ -16,10 +16,8 @@ const PaymentReceivesListContext = createContext();
  */
 function PaymentReceivesListProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
-  const {
-    data: paymentReceivesViews,
-    isFetching: isViewsLoading,
-  } = useResourceViews('payment_receives');
+  const { data: paymentReceivesViews, isFetching: isViewsLoading } =
+    useResourceViews('payment_receives');
 
   // Fetch the accounts resource fields.
   const {
@@ -53,7 +51,7 @@ function PaymentReceivesListProvider({ query, tableStateChanged, ...props }) {
     isResourceFetching,
     isResourceLoading,
     isPaymentReceivesLoading,
-    isPaymentReceivesFetching
+    isPaymentReceivesFetching,
   };
 
   return (

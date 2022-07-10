@@ -10,7 +10,6 @@ import {
 
 import { useHistory } from 'react-router-dom';
 
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import {
   If,
   Can,
@@ -20,6 +19,7 @@ import {
   DashboardFilterButton,
   AdvancedFilterPopover,
   DashboardRowsHeightButton,
+  DashboardActionsBar,
 } from '@/components';
 import { BillAction, AbilitySubject } from '@/common/abilityOption';
 

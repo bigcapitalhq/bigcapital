@@ -1,7 +1,7 @@
 import React from 'react';
 import { isEmpty } from 'lodash';
 
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardInsider } from '@/components/Dashboard';
 import {
   useResourceViews,
   useResourceMeta,
@@ -39,7 +39,8 @@ function CreditNotesListProvider({ query, tableStateChanged, ...props }) {
   } = useCreditNotes(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.S
-  const isEmptyStatus = isEmpty(creditNotes) && !isCreditNotesLoading && !tableStateChanged;
+  const isEmptyStatus =
+    isEmpty(creditNotes) && !isCreditNotesLoading && !tableStateChanged;
 
   // Provider payload.
   const provider = {

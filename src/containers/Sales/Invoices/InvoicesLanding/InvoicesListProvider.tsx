@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
 
-import DashboardInsider from '@/components/Dashboard/DashboardInsider';
+import { DashboardInsider } from '@/components/Dashboard';
 import { useResourceViews, useResourceMeta, useInvoices } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 

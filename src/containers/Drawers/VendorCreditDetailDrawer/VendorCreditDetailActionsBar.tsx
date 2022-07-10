@@ -8,7 +8,6 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 import { VendorCreditMenuItem } from './utils';
 import {
@@ -19,7 +18,13 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { If, Icon, FormattedMessage as T, Can } from '@/components';
+import {
+  If,
+  Icon,
+  FormattedMessage as T,
+  DashboardActionsBar,
+  Can,
+} from '@/components';
 
 import { compose } from '@/utils';
 

@@ -12,10 +12,13 @@ import {
   PopoverInteractionKind,
   Alignment,
 } from '@blueprintjs/core';
-import { Icon, If, FormattedMessage as T } from '@/components';
+import {
+  Icon,
+  If,
+  DashboardActionsBar,
+  FormattedMessage as T,
+} from '@/components';
 import { connect } from 'react-redux';
-
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { useRefreshExchangeRate } from '@/hooks/query/exchangeRates';
 import withDialogActions from '@/containers/Dialog/withDialogActions';

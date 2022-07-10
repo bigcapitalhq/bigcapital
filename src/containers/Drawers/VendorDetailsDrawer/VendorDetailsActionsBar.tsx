@@ -13,7 +13,6 @@ import {
   Popover,
 } from '@blueprintjs/core';
 import clsx from 'classnames';
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { useVendorDetailsDrawerContext } from './VendorDetailsDrawerProvider';
 
@@ -21,7 +20,12 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { Can, Icon, FormattedMessage as T } from '@/components';
+import {
+  Can,
+  Icon,
+  DashboardActionsBar,
+  FormattedMessage as T,
+} from '@/components';
 import { VendorMoreMenuItem } from './utils';
 import {
   AbilitySubject,

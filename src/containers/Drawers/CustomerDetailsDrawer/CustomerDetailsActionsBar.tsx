@@ -14,7 +14,6 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import clsx from 'classnames';
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { useCustomerDetailsDrawerContext } from './CustomerDetailsDrawerProvider';
 
@@ -22,7 +21,12 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { Can, Icon, FormattedMessage as T } from '@/components';
+import {
+  DashboardActionsBar,
+  Can,
+  Icon,
+  FormattedMessage as T,
+} from '@/components';
 import { CustomerMoreMenuItem } from './utils';
 import {
   AbilitySubject,

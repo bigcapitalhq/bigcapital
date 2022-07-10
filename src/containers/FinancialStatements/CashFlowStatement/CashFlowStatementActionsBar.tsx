@@ -8,10 +8,9 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { Icon, FormattedMessage as T } from '@/components';
+import { Icon, FormattedMessage as T, DashboardActionsBar } from '@/components';
 import classNames from 'classnames';
 
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
 import { useCashFlowStatementContext } from './CashFlowStatementProvider';

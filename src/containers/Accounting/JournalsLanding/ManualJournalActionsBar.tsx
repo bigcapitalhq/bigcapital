@@ -17,8 +17,8 @@ import {
   Can,
   If,
   DashboardActionViewsList,
+  DashboardActionsBar
 } from '@/components';
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 import { useRefreshJournals } from '@/hooks/query/manualJournals';
 import { useManualJournalsContext } from './ManualJournalsListProvider';
 import { ManualJournalAction, AbilitySubject } from '@/common/abilityOption';

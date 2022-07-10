@@ -18,8 +18,8 @@ import {
   DashboardActionViewsList,
   DashboardFilterButton,
   DashboardRowsHeightButton,
+  DashboardActionsBar,
 } from '@/components';
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import withEstimates from './withEstimates';
 import withEstimatesActions from './withEstimatesActions';

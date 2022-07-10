@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import moment from 'moment';
 
-import DashboardPageContent from '@/components/Dashboard/DashboardPageContent';
+import { DashboardPageContent } from '@/components';
 import InventoryValuationActionsBar from './InventoryValuationActionsBar';
 import InventoryValuationHeader from './InventoryValuationHeader';
 

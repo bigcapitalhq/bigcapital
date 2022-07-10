@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import If from './If';
+import { If } from './If';
 
-const Choose = (props) => {
+export const Choose = (props) => {
   let when = null;
   let otherwise = null;
 
@@ -29,5 +29,3 @@ Choose.Otherwise.propTypes = {
   children: PropTypes.node,
   render: PropTypes.func,
 };
-
-export default Choose;

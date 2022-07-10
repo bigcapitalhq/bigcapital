@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useEffect, useState } from 'react';
 import { MenuItem } from '@blueprintjs/core';
-import ListSelect from '@/components/ListSelect';
+import { ListSelect, T } from '@/components';
 
-function ItemsListField({
+export function ItemsListField({
   items,
   initialItemId,
   selectedItemId,
@@ -22,11 +22,12 @@ function ItemsListField({
       filteredItems = filteredItems.filter((item) => item.purchasable);
     }
     return filteredItems;
-  }, [items, sellable, purchasable])
+  }, [items, sellable, purchasable]);
 
-  const initialItem = useMemo(() => filteredItems.find((a) => a.id === initialItemId), [
-    initialItemId,
-  ]);
+  const initialItem = useMemo(
+    () => filteredItems.find((a) => a.id === initialItemId),
+    [initialItemId],
+  );
 
   const [selectedItem, setSelectedItem] = useState(initialItem || null);
 
@@ -49,7 +50,12 @@ function ItemsListField({
 
   const itemRenderer = useCallback(
     (item, { handleClick }) => (
-      <MenuItem key={item.id} text={item.name} label={item.code} onClick={handleClick} />
+      <MenuItem
+        key={item.id}
+        text={item.name}
+        label={item.code}
+        onClick={handleClick}
+      />
     ),
     [],
   );
@@ -80,5 +86,3 @@ function ItemsListField({
     />
   );
 }
-
-export default ItemsListField;

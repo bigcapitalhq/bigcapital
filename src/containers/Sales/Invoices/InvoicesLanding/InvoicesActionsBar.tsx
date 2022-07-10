@@ -14,9 +14,8 @@ import {
   AdvancedFilterPopover,
   DashboardFilterButton,
   DashboardRowsHeightButton,
+  DashboardActionsBar,
 } from '@/components';
-
-import DashboardActionsBar from '@/components/Dashboard/DashboardActionsBar';
 
 import { Can, If, DashboardActionViewsList } from '@/components';
 import { SaleInvoiceAction, AbilitySubject } from '@/common/abilityOption';
