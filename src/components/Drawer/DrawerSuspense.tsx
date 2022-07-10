@@ -8,6 +8,6 @@ function LoadingContent() {
   return <DrawerLoading loading={true} />;
 }
 
-export default function DrawerSuspense({ children }) {
+export function DrawerSuspense({ children }) {
   return <Suspense fallback={<LoadingContent />}>{children}</Suspense>;
 }

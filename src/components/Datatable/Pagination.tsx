@@ -82,7 +82,7 @@ const reducer = (state, action) => {
   }
 };
 
-function Pagination({
+export function Pagination({
   currentPage,
   total,
   size,
@@ -227,5 +227,3 @@ Pagination.defaultProps = {
   currentPage: 1,
   size: 25,
 };
-
-export default Pagination;

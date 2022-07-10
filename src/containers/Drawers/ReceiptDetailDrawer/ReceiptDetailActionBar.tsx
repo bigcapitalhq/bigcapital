@@ -12,19 +12,15 @@ import {
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-
+import { ReceiptMoreMenuItems } from './components';
 import {
   Can,
   Icon,
   FormattedMessage as T,
-  MoreMenuItems,
   DrawerActionsBar,
 } from '@/components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
-import {
-  SaleReceiptAction,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { SaleReceiptAction, AbilitySubject } from '@/common/abilityOption';
 
 import { safeCallback, compose } from '@/utils';
 
@@ -95,7 +91,7 @@ function ReceiptDetailActionBar({
         </Can>
         <Can I={SaleReceiptAction.NotifyBySms} a={AbilitySubject.Receipt}>
           <NavbarDivider />
-          <MoreMenuItems
+          <ReceiptMoreMenuItems
             payload={{
               onNotifyViaSMS: handleNotifyViaSMS,
             }}

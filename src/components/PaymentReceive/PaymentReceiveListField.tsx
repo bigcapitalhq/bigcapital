@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { ListSelect, FormattedMessage as T } from '@/components';
 
-function PaymentReceiveListField({
+export function PaymentReceiveListField({
   invoices,
   selectedInvoiceId,
   onInvoiceSelected,
@@ -33,5 +33,3 @@ function PaymentReceiveListField({
     />
   );
 }
-
-export default PaymentReceiveListField;

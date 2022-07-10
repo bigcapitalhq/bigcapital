@@ -10,7 +10,7 @@ import { compose } from '@/utils';
 /**
  * Drawer header content.
  */
-function DrawerHeaderContent(props) {
+function DrawerHeaderContentRoot(props) {
   const {
     icon,
     title = <T id={'view_paper'} />,
@@ -48,7 +48,9 @@ function DrawerHeaderContent(props) {
   );
 }
 
-export default compose(withDrawerActions)(DrawerHeaderContent);
+export const DrawerHeaderContent = compose(withDrawerActions)(
+  DrawerHeaderContentRoot,
+);
 
 /**
  * SubTitle Drawer header.

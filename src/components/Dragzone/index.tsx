@@ -11,7 +11,7 @@ import intl from 'react-intl-universal';
 //   uploaded: boolean,
 // };
 
-export default function Dropzone({
+export function Dragzone({
   text = intl.get('drag_drop_files_here_or_click_here'),
   onDrop,
   initialFiles = [],

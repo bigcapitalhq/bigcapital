@@ -14,16 +14,12 @@ import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import {
-  SaleEstimateAction,
-  AbilitySubject,
-} from '../../../common/abilityOption';
-
+import { SaleEstimateAction, AbilitySubject } from '@/common/abilityOption';
+import { EstimateMoreMenuItems } from './components';
 import {
   DrawerActionsBar,
   Icon,
   FormattedMessage as T,
-  MoreMenuItems,
   Can,
 } from '@/components';
 
@@ -99,7 +95,7 @@ function EstimateDetailActionsBar({
         </Can>
         <Can I={SaleEstimateAction.NotifyBySms} a={AbilitySubject.Estimate}>
           <NavbarDivider />
-          <MoreMenuItems
+          <EstimateMoreMenuItems
             payload={{
               onNotifyViaSMS: handleNotifyViaSMS,
             }}

@@ -13,18 +13,14 @@ import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-
+import { PaymentReceiveMoreMenuItems } from './utils';
 import {
   Can,
   Icon,
   FormattedMessage as T,
-  MoreMenuItems,
   DrawerActionsBar,
 } from '@/components';
-import {
-  PaymentReceiveAction,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { PaymentReceiveAction, AbilitySubject } from '@/common/abilityOption';
 
 import { compose } from '@/utils';
 
@@ -101,7 +97,7 @@ function PaymentReceiveActionsBar({
           a={AbilitySubject.PaymentReceive}
         >
           <NavbarDivider />
-          <MoreMenuItems
+          <PaymentReceiveMoreMenuItems
             payload={{
               onNotifyViaSMS: handleNotifyViaSMS,
             }}

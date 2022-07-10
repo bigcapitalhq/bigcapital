@@ -1,6 +1,5 @@
 import React from 'react';
-import Dragzone from '@/components/Dragzone';
-import { FormattedMessage as T } from '@/components';
+import { Dragzone, FormattedMessage as T } from '@/components';
 
 /**
  * Vendor Attahment Tab.

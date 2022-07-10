@@ -1,7 +1,15 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
-import { FormatNumberCell } from '../../../components';
+import {
+  Button,
+  Popover,
+  PopoverInteractionKind,
+  Position,
+  MenuItem,
+  Menu,
+} from '@blueprintjs/core';
+import { Icon, FormatNumberCell } from '@/components';
 import { getColumnWidth } from '@/utils';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
@@ -68,3 +76,26 @@ export const usePaymentReceiveEntriesColumns = () => {
     [],
   );
 };
+
+export function PaymentReceiveMoreMenuItems({ payload: { onNotifyViaSMS } }) {
+  return (
+    <Popover
+      minimal={true}
+      content={
+        <Menu>
+          <MenuItem
+            onClick={onNotifyViaSMS}
+            text={intl.get('notify_via_sms.dialog.notify_via_sms')}
+          />
+        </Menu>
+      }
+      interactionKind={PopoverInteractionKind.CLICK}
+      position={Position.BOTTOM_LEFT}
+      modifiers={{
+        offset: { offset: '0, 4' },
+      }}
+    >
+      <Button icon={<Icon icon="more-vert" iconSize={16} />} minimal={true} />
+    </Popover>
+  );
+}

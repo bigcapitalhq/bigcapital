@@ -33,4 +33,5 @@ function DrawerComponent(props) {
   );
 }
 
-export default compose(withDrawerActions)(DrawerComponent);
+const DrawerRoot = compose(withDrawerActions)(DrawerComponent);
+export { DrawerRoot as Drawer };
