@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Link, useHistory } from 'react-router-dom';
 import { Intent } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
 
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { useAuthSendResetPassword } from '@/hooks/query';

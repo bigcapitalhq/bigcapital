@@ -1,8 +1,8 @@
 import React from 'react';
-import { Formik } from 'formik';
-import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import moment from 'moment';
+import { Formik } from 'formik';
+import { Intent } from '@blueprintjs/core';
 import { omit } from 'lodash';
 
 import { AppToaster } from '@/components';

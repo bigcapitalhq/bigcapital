@@ -1,7 +1,6 @@
 import React from 'react';
-import { Form, FastField, Field, ErrorMessage, useFormikContext } from 'formik';
 import classNames from 'classnames';
-import { FormattedMessage as T } from '@/components';
+import { Form, FastField, Field, ErrorMessage, useFormikContext } from 'formik';
 import {
   Button,
   Classes,
@@ -18,11 +17,11 @@ import {
   AccountsSelectList,
   AccountsTypesSelect,
   CurrencySelect,
+  FormattedMessage as T,
 } from '@/components';
 import withAccounts from '@/containers/Accounts/withAccounts';
 
-import { inputIntent } from '@/utils';
-import { compose } from 'redux';
+import { inputIntent, compose } from '@/utils';
 import { useAutofocus } from '@/hooks';
 import { FOREIGN_CURRENCY_ACCOUNTS } from '@/common/accountTypes';
 import { useAccountDialogContext } from './AccountDialogProvider';

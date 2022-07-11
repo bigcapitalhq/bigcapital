@@ -7,7 +7,6 @@ import {
   TextArea,
   Position,
   ControlGroup,
-  Button,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import {

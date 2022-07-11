@@ -1,8 +1,8 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Callout, Intent, Classes } from '@blueprintjs/core';
 import * as R from 'ramda';
 import clsx from 'classnames';
+import { Callout, Intent, Classes } from '@blueprintjs/core';
 
 import { CLASSES } from '@/common/classes';
 import { MoneyFieldCell, FormatDateCell, AppToaster, T } from '@/components';
@@ -10,7 +10,8 @@ import { MoneyFieldCell, FormatDateCell, AppToaster, T } from '@/components';
 export const transformErrors = (errors, { setErrors }) => {
   if (errors.some((e) => e.type === 'INVOICES_HAS_NO_REMAINING_AMOUNT')) {
     AppToaster.show({
-      message: 'The amount credit from the given invoice has no remaining amount.',
+      message:
+        'The amount credit from the given invoice has no remaining amount.',
       intent: Intent.DANGER,
     });
   }

@@ -35,13 +35,13 @@ import {
   handleDateChange,
   compose,
 } from '@/utils';
-import { useMoneyOutDialogContext } from '@/containers/Dialogs/MoneyOutDialog/MoneyOutDialogProvider';
+import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
 import {
   useObserveTransactionNoSettings,
   useSetPrimaryBranchToForm,
   useForeignAccount,
   BranchRowDivider,
-} from '@/containers/Dialogs/MoneyOutDialog/utils';
+} from '../../MoneyOutDialog/utils';
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 

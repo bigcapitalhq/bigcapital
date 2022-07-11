@@ -1,15 +1,10 @@
 import React, { lazy } from 'react';
-import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
-import {
-  Dialog,
-  DialogSuspense,
-} from '@/components';
+import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const ExchangeRateFormDialogContent = lazy(() =>
-  import('./ExchangeRateFormDialogContent'),
+const ExchangeRateFormDialogContent = lazy(
+  () => import('./ExchangeRateFormDialogContent'),
 );
 
 /**
@@ -17,7 +12,7 @@ const ExchangeRateFormDialogContent = lazy(() =>
  */
 function ExchangeRateFormDialog({
   dialogName,
-  payload = { action: '', id: null , exchangeRate:"" },
+  payload = { action: '', id: null, exchangeRate: '' },
   isOpen,
 }) {
   return (

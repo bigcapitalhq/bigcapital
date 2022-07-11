@@ -3,7 +3,6 @@ import intl from 'react-intl-universal';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
-import { FormattedMessage as T } from '@/components';
 import { AppToaster } from '@/components';
 import {
   CreateExchangeRateFormSchema,

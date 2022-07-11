@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Form, useFormikContext } from 'formik';
 import styled from 'styled-components';
+import { Form, useFormikContext } from 'formik';
 import { Classes } from '@blueprintjs/core';
 import { castArray } from 'lodash';
 

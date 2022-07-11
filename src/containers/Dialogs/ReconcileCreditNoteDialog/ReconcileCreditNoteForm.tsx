@@ -1,7 +1,7 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
 
 import '@/style/pages/ReconcileCreditNote/ReconcileCreditNoteForm.scss';
 import { AppToaster } from '@/components';

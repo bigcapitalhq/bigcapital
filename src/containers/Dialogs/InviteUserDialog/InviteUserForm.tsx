@@ -1,8 +1,8 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { pick, snakeCase } from 'lodash';
-import intl from 'react-intl-universal';
 import { AppToaster } from '@/components';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -19,14 +19,8 @@ function InviteUserForm({
   // #withDialogActions
   closeDialog,
 }) {
-  
-
-  const {
-    dialogName,
-    isEditMode,
-    inviteUserMutate,
-    userId,
-  } = useInviteUserFormContext();
+  const { dialogName, isEditMode, inviteUserMutate, userId } =
+    useInviteUserFormContext();
 
   const initialValues = {
     status: 1,
@@ -59,7 +53,7 @@ function InviteUserForm({
           data: { errors },
         },
       } = error;
-      
+
       const errorsTransformed = transformApiErrors(errors);
 
       setErrors({ ...errorsTransformed });

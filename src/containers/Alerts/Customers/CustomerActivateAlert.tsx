@@ -1,8 +1,7 @@
 import React from 'react';
-import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
+import { AppToaster, FormattedMessage as T } from '@/components';
 
 import { useActivateContact } from '@/hooks/query';
 
@@ -56,7 +55,9 @@ function CustomerActivateAlert({
       loading={isLoading}
       onConfirm={handleConfirmCustomerActivate}
     >
-      <p>{intl.get('customer.alert.are_you_sure_want_to_activate_this_customer')}</p>
+      <p>
+        {intl.get('customer.alert.are_you_sure_want_to_activate_this_customer')}
+      </p>
     </Alert>
   );
 }

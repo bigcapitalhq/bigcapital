@@ -1,9 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import {  FormattedMessage as T, FormattedHTMLMessage } from '@/components';
+import {
+  AppToaster,
+  FormattedMessage as T,
+  FormattedHTMLMessage,
+} from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
-
-import { AppToaster } from '@/components';
 
 import { useDeleteCurrency } from '@/hooks/query';
 
@@ -25,7 +27,6 @@ function CurrencyDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  
   const { mutateAsync: deleteCurrency, isLoading } = useDeleteCurrency();
 
   // handle cancel delete currency alert.
@@ -41,15 +42,21 @@ function CurrencyDeleteAlert({
         });
         closeAlert(name);
       })
-      .catch(({ response: { data: { errors } } }) => {
-        if (errors.find(e => e.type === 'CANNOT_DELETE_BASE_CURRENCY')) {
-          AppToaster.show({
-            intent: Intent.DANGER,
-            message: 'Cannot delete the base currency.'
-          });
-        }
-        closeAlert(name);
-      });
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          if (errors.find((e) => e.type === 'CANNOT_DELETE_BASE_CURRENCY')) {
+            AppToaster.show({
+              intent: Intent.DANGER,
+              message: 'Cannot delete the base currency.',
+            });
+          }
+          closeAlert(name);
+        },
+      );
   };
 
   return (

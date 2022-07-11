@@ -2,8 +2,7 @@ import React from 'react';
 import { Field, ErrorMessage, FastField } from 'formik';
 import { FormGroup, InputGroup } from '@blueprintjs/core';
 import { inputIntent, toSafeNumber } from '@/utils';
-import { Row, Col, MoneyInputGroup } from '@/components';
-import { FormattedMessage as T } from '@/components';
+import { Row, Col, MoneyInputGroup, FormattedMessage as T } from '@/components';
 import { useAutofocus } from '@/hooks';
 import { decrementQuantity } from './utils';
 

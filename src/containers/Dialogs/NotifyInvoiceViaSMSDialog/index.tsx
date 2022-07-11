@@ -1,12 +1,11 @@
 import React from 'react';
 
-import { FormattedMessage as T } from '@/components';
-import { Dialog, DialogSuspense } from '@/components';
+import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const NotifyInvoiceViaSMSDialogContent = React.lazy(() =>
-  import('./NotifyInvoiceViaSMSDialogContent'),
+const NotifyInvoiceViaSMSDialogContent = React.lazy(
+  () => import('./NotifyInvoiceViaSMSDialogContent'),
 );
 
 function NotifyInvoiceViaSMSDialog({

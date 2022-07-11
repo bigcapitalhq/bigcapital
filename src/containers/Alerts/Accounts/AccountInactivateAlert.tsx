@@ -1,8 +1,7 @@
 import React from 'react';
-import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
@@ -23,27 +22,24 @@ function AccountInactivateAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  
-  const {
-    mutateAsync: inactivateAccount,
-    isLoading
-  } = useInactivateAccount();
+  const { mutateAsync: inactivateAccount, isLoading } = useInactivateAccount();
 
   const handleCancelInactiveAccount = () => {
     closeAlert('account-inactivate');
   };
 
   const handleConfirmAccountActive = () => {
-    inactivateAccount(accountId).then(() => {
-      AppToaster.show({
-        message: intl.get('the_account_has_been_successfully_inactivated'),
-        intent: Intent.SUCCESS,
+    inactivateAccount(accountId)
+      .then(() => {
+        AppToaster.show({
+          message: intl.get('the_account_has_been_successfully_inactivated'),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(() => {})
+      .finally(() => {
+        closeAlert('account-inactivate');
       });
-    }).catch(() => {
-
-    }).finally(() => {
-      closeAlert('account-inactivate');
-    });
   };
 
   return (

@@ -1,9 +1,9 @@
 import React, { Suspense } from 'react';
+import styled from 'styled-components';
+import clsx from 'classnames';
 import * as R from 'ramda';
 import { Intent, Classes, ProgressBar } from '@blueprintjs/core';
 import { debounce } from 'lodash';
-import styled from 'styled-components';
-import clsx from 'classnames';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';

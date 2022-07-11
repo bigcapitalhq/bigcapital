@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
-import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import { Intent } from '@blueprintjs/core';
 
 export const LOGIN_ERRORS = {
   INVALID_DETAILS: 'INVALID_DETAILS',

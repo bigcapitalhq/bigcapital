@@ -1,11 +1,10 @@
 import React, { useCallback } from 'react';
-import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 
 import { useApproveEstimate } from '@/hooks/query';
-import { AppToaster } from '@/components';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
@@ -25,11 +24,8 @@ function EstimateApproveAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  
-  const {
-    mutateAsync: deliverEstimateMutate,
-    isLoading,
-  } = useApproveEstimate();
+  const { mutateAsync: deliverEstimateMutate, isLoading } =
+    useApproveEstimate();
 
   // handle cancel approve alert.
   const handleCancelApproveEstimate = () => {

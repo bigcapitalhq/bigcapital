@@ -1,7 +1,7 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster,FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
 import { usePublishJournal } from '@/hooks/query';
 
 import withAlertActions from '@/containers/Alert/withAlertActions';

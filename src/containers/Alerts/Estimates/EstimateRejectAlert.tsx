@@ -1,9 +1,8 @@
 import React from 'react';
-import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 
-import { AppToaster } from '@/components';
 import { useRejectEstimate } from '@/hooks/query';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';

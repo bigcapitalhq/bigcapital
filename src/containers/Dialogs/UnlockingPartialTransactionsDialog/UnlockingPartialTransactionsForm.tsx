@@ -1,8 +1,8 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
-import intl from 'react-intl-universal';
 
 import '@/style/pages/TransactionsLocking/TransactionsLockingDialog.scss';
 

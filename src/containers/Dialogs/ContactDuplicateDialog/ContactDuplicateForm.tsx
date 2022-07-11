@@ -1,6 +1,6 @@
 import React from 'react';
-import * as Yup from 'yup';
 import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { inputIntent } from '@/utils';
 import { ListSelect, FieldRequiredHint } from '@/components';

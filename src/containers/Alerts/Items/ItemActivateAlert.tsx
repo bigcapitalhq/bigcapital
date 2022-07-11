@@ -1,12 +1,9 @@
 import React from 'react';
-import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
 
-import {
-  useActivateItem,
-} from '@/hooks/query';
+import { useActivateItem } from '@/hooks/query';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
@@ -26,9 +23,8 @@ function ItemActivateAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  
-  const { mutateAsync: activateItem, isLoading }  = useActivateItem();
-  
+  const { mutateAsync: activateItem, isLoading } = useActivateItem();
+
   // Handle activate item alert cancel.
   const handleCancelActivateItem = () => {
     closeAlert(name);

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Formik } from 'formik';
-import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { Formik } from 'formik';
+import { Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 
 import '@/style/pages/Setup/PaymentViaVoucherDialog.scss';

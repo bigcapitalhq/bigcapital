@@ -1,9 +1,8 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
 import { isEqual } from 'lodash';
-import intl from 'react-intl-universal';
 import {
   Classes,
   FormGroup,
@@ -16,9 +15,12 @@ import { useAutofocus } from '@/hooks';
 import classNames from 'classnames';
 import { CLASSES, ACCOUNT_TYPE, Features } from '@/common';
 import { DateInput } from '@blueprintjs/datetime';
-import { FieldRequiredHint, Col, Row } from '@/components';
 
 import {
+  FieldRequiredHint,
+  Col,
+  Row,
+  FormattedMessage as T,
   AccountsSuggestField,
   InputPrependText,
   MoneyInputGroup,

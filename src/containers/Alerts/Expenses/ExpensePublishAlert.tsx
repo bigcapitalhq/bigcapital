@@ -1,8 +1,7 @@
 import React from 'react';
-import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
+import { AppToaster, FormattedMessage as T } from '@/components';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
@@ -21,7 +20,6 @@ function ExpensePublishAlert({
   payload: { expenseId },
   isOpen,
 }) {
-  
   const { mutateAsync: publishExpenseMutate, isLoading } = usePublishExpense();
 
   const handleCancelPublishExpense = () => {
@@ -36,10 +34,10 @@ function ExpensePublishAlert({
           message: intl.get('the_expense_has_been_published'),
           intent: Intent.SUCCESS,
         });
-        closeAlert(name)
+        closeAlert(name);
       })
       .catch((error) => {
-        closeAlert(name)
+        closeAlert(name);
       });
   };
 

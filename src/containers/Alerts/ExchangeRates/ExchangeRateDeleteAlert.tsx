@@ -1,8 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import {  FormattedMessage as T, FormattedHTMLMessage } from '@/components';
+import {
+  AppToaster,
+  FormattedMessage as T,
+  FormattedHTMLMessage,
+} from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
 
 import { useDeleteExchangeRate } from '@/hooks/query';
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
@@ -23,11 +26,8 @@ function ExchangeRateDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const {
-    mutateAsync: deleteExchangeRate,
-    isLoading,
-  } = useDeleteExchangeRate();
-  
+  const { mutateAsync: deleteExchangeRate, isLoading } =
+    useDeleteExchangeRate();
 
   // Handle cancel delete exchange rate alert.
   const handleCancelExchangeRateDelete = () => closeAlert(name);

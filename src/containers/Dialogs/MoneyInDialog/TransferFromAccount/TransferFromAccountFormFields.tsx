@@ -36,13 +36,13 @@ import {
   handleDateChange,
   compose,
 } from '@/utils';
-import { useMoneyInDailogContext } from '@/containers/Dialogs/MoneyInDialog/MoneyInDialogProvider';
+import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
 import {
   useObserveTransactionNoSettings,
   useSetPrimaryBranchToForm,
   useForeignAccount,
   BranchRowDivider,
-} from '@/containers/Dialogs/MoneyInDialog/utils';
+} from '../../MoneyInDialog/utils';
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 

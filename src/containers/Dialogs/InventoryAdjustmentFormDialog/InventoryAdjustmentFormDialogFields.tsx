@@ -1,5 +1,7 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import classNames from 'classnames';
 import { FastField, ErrorMessage, Field } from 'formik';
 import {
   Classes,
@@ -8,9 +10,7 @@ import {
   TextArea,
   Position,
 } from '@blueprintjs/core';
-import classNames from 'classnames';
 import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from '@/hooks';
 import {

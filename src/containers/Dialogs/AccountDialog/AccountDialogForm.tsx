@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
+import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
-import intl from 'react-intl-universal';
 import { omit } from 'lodash';
 import { AppToaster } from '@/components';
 

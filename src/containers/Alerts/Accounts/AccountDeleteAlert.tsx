@@ -1,9 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
-
-import { AppToaster } from '@/components';
+import {
+  AppToaster,
+  FormattedMessage as T,
+  FormattedHTMLMessage,
+} from '@/components';
 
 import { handleDeleteErrors } from '@/containers/Accounts/utils';
 

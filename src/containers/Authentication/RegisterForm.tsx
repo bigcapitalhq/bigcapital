@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import {
   Button,
   InputGroup,
@@ -8,7 +9,6 @@ import {
 } from '@blueprintjs/core';
 import { ErrorMessage, Field, Form } from 'formik';
 import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
 import { Link } from 'react-router-dom';
 import { Row, Col, If } from '@/components';
 import { PasswordRevealer } from './components';

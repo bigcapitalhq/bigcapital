@@ -1,10 +1,9 @@
 import React from 'react';
-import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
+import { Intent, Alert } from '@blueprintjs/core';
+import { AppToaster, FormattedMessage as T } from '@/components';
 
 import { useDeleteUser } from '@/hooks/query';
-import { AppToaster } from '@/components';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';

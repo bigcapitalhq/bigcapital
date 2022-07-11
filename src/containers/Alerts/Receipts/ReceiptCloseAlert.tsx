@@ -1,10 +1,9 @@
 import React from 'react';
-import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { useCloseReceipt } from '@/hooks/query';
-import { AppToaster } from '@/components';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
@@ -24,7 +23,6 @@ function ReceiptCloseAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  
   const { mutateAsync: closeReceiptMutate, isLoading } = useCloseReceipt();
 
   // handle cancel delete alert.

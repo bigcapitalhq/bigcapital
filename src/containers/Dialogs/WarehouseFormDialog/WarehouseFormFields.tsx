@@ -1,8 +1,7 @@
 import React from 'react';
-
 import intl from 'react-intl-universal';
-import { FastField, ErrorMessage, Field } from 'formik';
 import styled from 'styled-components';
+import { FastField, ErrorMessage } from 'formik';
 import {
   Classes,
   FormGroup,
@@ -12,7 +11,6 @@ import {
 import { inputIntent } from '@/utils';
 
 import { FieldRequiredHint, FormattedMessage as T } from '@/components';
-import { useWarehouseFormContext } from './WarehouseFormProvider';
 
 /**
  * Warehouse form fields.

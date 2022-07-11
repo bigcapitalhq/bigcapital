@@ -1,17 +1,15 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FastField, ErrorMessage, Field } from 'formik';
 import styled from 'styled-components';
+import { FastField, ErrorMessage, Field } from 'formik';
 import {
   Classes,
   FormGroup,
   InputGroup,
   ControlGroup,
-  Position,
 } from '@blueprintjs/core';
 import { inputIntent } from '@/utils';
-import { FieldRequiredHint, Col, Row, FormattedMessage as T } from '@/components';
-import { useBranchFormContext } from './BranchFormProvider';
+import { FieldRequiredHint, FormattedMessage as T } from '@/components';
 
 /**
  * Branch form dialog fields.

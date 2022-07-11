@@ -1,8 +1,7 @@
 import React from 'react';
-import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Alert, Intent } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import { useActivateUser } from '@/hooks/query';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
@@ -24,8 +23,6 @@ function UserActivateAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  
-
   const { mutateAsync: userActivateMutate } = useActivateUser();
 
   const handleConfirmActivate = () => {

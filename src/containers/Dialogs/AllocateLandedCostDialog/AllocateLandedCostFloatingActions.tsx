@@ -1,7 +1,7 @@
 import React from 'react';
+import styled from 'styled-components';
 import { Intent, Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import styled from 'styled-components';
 import {
   DialogFooter,
   DialogFooterActions,

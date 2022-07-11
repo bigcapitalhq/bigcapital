@@ -1,7 +1,7 @@
 import React from 'react';
+import styled from 'styled-components';
 import { FastField, useFormikContext } from 'formik';
 import { Classes } from '@blueprintjs/core';
-import styled from 'styled-components';
 
 import {
   T,
