@@ -1,14 +1,17 @@
-import { Form } from 'formik';
 import React from 'react';
-import { Button, FormGroup, InputGroup, Intent } from '@blueprintjs/core';
+import styled from 'styled-components';
 import classNames from 'classnames';
+import { Form } from 'formik';
+import { Button, FormGroup, InputGroup, Intent } from '@blueprintjs/core';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { ErrorMessage, FastField } from 'formik';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components';
 
-import { FormattedMessage as T } from '@/components';
-import { ListSelect, FieldRequiredHint } from '@/components';
+import {
+  ListSelect,
+  FieldRequiredHint,
+  FormattedMessage as T,
+} from '@/components';
 import { inputIntent } from '@/utils';
 import { CLASSES } from '@/common/classes';
 import { getCountries } from '@/common/countries';
@@ -152,7 +155,7 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
             <ListSelect
               items={FiscalYear}
               onItemSelect={(option) => {
-                form.setFieldValue('fiscal_year', option.key)
+                form.setFieldValue('fiscal_year', option.key);
               }}
               selectedItem={value}
               selectedItemProp={'key'}
@@ -263,7 +266,7 @@ const CardFooterActions = styled.div`
   .bp3-button {
     min-width: 70px;
 
-    + .bp3-button{
+    + .bp3-button {
       margin-left: 10px;
     }
   }

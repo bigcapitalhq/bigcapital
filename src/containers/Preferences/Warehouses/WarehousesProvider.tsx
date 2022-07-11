@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { CLASSES } from '@/common/classes';
-import { useWarehouses, useCashflowAccounts } from '@/hooks/query';
+import { useWarehouses } from '@/hooks/query';
 import { isEmpty } from 'lodash';
 
 import { Features } from '@/common';

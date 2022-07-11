@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { Form, FastField, useFormikContext } from 'formik';
 import {
   FormGroup,
@@ -9,7 +10,6 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-import intl from 'react-intl-universal';
 
 import {
   FormattedMessage as T,

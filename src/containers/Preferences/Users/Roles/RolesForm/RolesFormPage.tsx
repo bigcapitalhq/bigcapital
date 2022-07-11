@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import RolesForm from './RolesForm';
 import { RolesFormProvider } from './RolesFormProvider';
+import RolesForm from './RolesForm';
 
 /**
  * Roles Form page.

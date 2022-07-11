@@ -15,9 +15,7 @@ function CurrenciesProvider({ ...props }) {
     isCurrenciesLoading,
   };
 
-  return (
-    <CurrenciesContext.Provider value={state} {...props} />  
-  );
+  return <CurrenciesContext.Provider value={state} {...props} />;
 }
 
 const useCurrenciesContext = () => useContext(CurrenciesContext);

@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-
-import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 
 import { CurrenciesProvider } from './CurrenciesProvider';

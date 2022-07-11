@@ -1,6 +1,6 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import intl from 'react-intl-universal';
+import { useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash';
 import { Intent } from '@blueprintjs/core';

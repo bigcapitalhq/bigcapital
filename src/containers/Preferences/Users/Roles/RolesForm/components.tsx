@@ -1,7 +1,7 @@
 import React from 'react';
-import { Checkbox, Popover } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { Field } from 'formik';
+import { Checkbox, Popover } from '@blueprintjs/core';
 
 import {
   getPermissionsSchema,

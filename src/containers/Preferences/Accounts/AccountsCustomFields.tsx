@@ -6,7 +6,7 @@ import {
   MenuDivider,
   MenuItem,
   Position,
-  Icon
+  Icon,
 } from '@blueprintjs/core';
 import {
   GridComponent,
@@ -14,12 +14,9 @@ import {
   ColumnDirective,
 } from '@syncfusion/ej2-react-grids';
 import useAsync from '@/hooks/async';
-import {connect} from 'react-redux';
-import {
-  fetchResourceFields,
-} from '@/store/customFields/customFields.actions';
+import { connect } from 'react-redux';
+import { fetchResourceFields } from '@/store/customFields/customFields.actions';
 import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
 
 function AccountsCustomFields({ fetchResourceFields, fields }) {
   const fetchHook = useAsync(async () => {
@@ -28,44 +25,49 @@ function AccountsCustomFields({ fetchResourceFields, fields }) {
     ]);
   }, false);
 
-  useEffect(() => { fetchHook.execute(); }, []);
+  useEffect(() => {
+    fetchHook.execute();
+  }, []);
 
   const actionMenuList = (column) => (
     <Menu>
-      <MenuItem text={<T id={'view_details'}/>} />
+      <MenuItem text={<T id={'view_details'} />} />
       <MenuDivider />
-      <MenuItem text={<T id={'edit_account'}/>} />
-      <MenuItem text={<T id={'new_account'}/>} />
+      <MenuItem text={<T id={'edit_account'} />} />
+      <MenuItem text={<T id={'new_account'} />} />
       <MenuDivider />
-      <MenuItem text={<T id={'inactivate_account'}/>} />
-      <MenuItem text={<T id={'delete_account'}/>} />
+      <MenuItem text={<T id={'inactivate_account'} />} />
+      <MenuItem text={<T id={'delete_account'} />} />
     </Menu>
   );
 
   const statusRowTemplate = (column) => {
-    return ('Active');
+    return 'Active';
   };
   const actionsRowTemplate = (column) => (
     <Popover content={actionMenuList(column)} position={Position.RIGHT_BOTTOM}>
       <Button icon={<Icon icon="ellipsis-h" />} />
     </Popover>
   );
- 
+
   const columns = [
-    {field: 'label_name', headerText: 'Field Label'},
-    {field: 'data_type', headerText: 'Type'},
-    {template: statusRowTemplate, headerText: 'Status'},
-    {template: actionsRowTemplate, headerText: ''},
+    { field: 'label_name', headerText: 'Field Label' },
+    { field: 'data_type', headerText: 'Type' },
+    { template: statusRowTemplate, headerText: 'Status' },
+    { template: actionsRowTemplate, headerText: '' },
   ];
   return (
     <div class="preferences__inside-content-tab preferences__inside-content-tab--custom-fields">
       <GridComponent dataSource={fields}>
         <ColumnsDirective>
           {columns.map((column) => {
-            return (<ColumnDirective
-              field={column.field}
-              headerText={column.headerText}
-              template={column.template} />);
+            return (
+              <ColumnDirective
+                field={column.field}
+                headerText={column.headerText}
+                template={column.template}
+              />
+            );
           })}
         </ColumnsDirective>
       </GridComponent>
@@ -77,7 +79,11 @@ const mapStateToProps = (state) => ({
   fields: state.fields.custom_fields['accounts'] || [],
 });
 const mapDispatchToProps = (dispatch) => ({
-  fetchResourceFields: (resourceSlug) => dispatch(fetchResourceFields({ resourceSlug })),
+  fetchResourceFields: (resourceSlug) =>
+    dispatch(fetchResourceFields({ resourceSlug })),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AccountsCustomFields);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AccountsCustomFields);

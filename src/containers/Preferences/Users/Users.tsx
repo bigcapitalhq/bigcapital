@@ -1,8 +1,8 @@
 import React from 'react';
-import { Tabs, Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import styled from 'styled-components';
+import { Tabs, Tab } from '@blueprintjs/core';
 
 import '@/style/pages/Preferences/Users.scss';
 

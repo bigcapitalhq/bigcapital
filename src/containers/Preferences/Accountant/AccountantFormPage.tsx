@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
+import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { pick } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 
 import { AppToaster } from '@/components';
-import intl from 'react-intl-universal';
 
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withSettings from '@/containers/Settings/withSettings';

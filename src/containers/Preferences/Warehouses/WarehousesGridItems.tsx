@@ -7,8 +7,8 @@ import { AppToaster } from '@/components';
 import { WarehouseContextMenu, WarehousesGridItemBox } from './components';
 import { useMarkWarehouseAsPrimary } from '@/hooks/query';
 
-import withAlertsActions from '../../Alert/withAlertActions';
-import withDialogActions from '../../Dialog/withDialogActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 /**
