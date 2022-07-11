@@ -17,7 +17,7 @@ import {
   FormattedMessage as T,
   Choose,
   Icon,
-} from '../../../components';
+} from '@/components';
 import { getColumnWidth } from '@/utils';
 import { useBillDrawerContext } from './BillDrawerProvider';
 

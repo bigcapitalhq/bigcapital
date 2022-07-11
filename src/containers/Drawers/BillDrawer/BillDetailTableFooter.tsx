@@ -8,7 +8,7 @@ import {
   T,
   TotalLines,
   TotalLine,
-} from '../../../components';
+} from '@/components';
 import { useBillDrawerContext } from './BillDrawerProvider';
 
 /**

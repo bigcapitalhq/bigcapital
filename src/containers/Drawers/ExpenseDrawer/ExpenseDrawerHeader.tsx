@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
-import { defaultTo } from 'lodash';
 import styled from 'styled-components';
+import { defaultTo } from 'lodash';
 
 import {
   CommercialDocHeader,

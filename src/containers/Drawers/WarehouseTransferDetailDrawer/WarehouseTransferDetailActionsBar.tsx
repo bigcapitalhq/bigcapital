@@ -9,13 +9,7 @@ import {
 } from '@blueprintjs/core';
 
 import { useWarehouseDetailDrawerContext } from './WarehouseTransferDetailDrawerProvider';
-import {
-  DrawerActionsBar,
-  Can,
-  Icon,
-  FormattedMessage as T,
-  If,
-} from '@/components';
+import { DrawerActionsBar, Icon, FormattedMessage as T } from '@/components';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';

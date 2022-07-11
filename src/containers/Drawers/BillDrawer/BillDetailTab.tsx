@@ -1,11 +1,10 @@
 import React from 'react';
 
-import { CommercialDocBox } from '@/components';
-
 import BillDetailHeader from './BillDetailHeader';
 import BillDetailTable from './BillDetailTable';
-import { BillDetailTableFooter } from './BillDetailTableFooter';
 import BillDetailFooter from './BillDetailFooter';
+import { CommercialDocBox } from '@/components';
+import { BillDetailTableFooter } from './BillDetailTableFooter';
 
 /**
  * Bill detail panel tab.

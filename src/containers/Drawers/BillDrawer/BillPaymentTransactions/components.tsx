@@ -1,14 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import clsx from 'classnames';
-import { CLASSES } from '../../../../common/classes';
-import { Can, FormatDateCell, Icon } from '../../../../components';
+import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { safeCallback } from '@/utils';
-import {
-  PaymentMadeAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { Can, FormatDateCell, Icon } from '@/components';
+import { CLASSES } from '@/common/classes';
+import { PaymentMadeAction, AbilitySubject } from '@/common/abilityOption';
 
 /**
  * Table actions menu.

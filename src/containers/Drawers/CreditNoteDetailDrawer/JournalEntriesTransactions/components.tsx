@@ -1,6 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormatDateCell, Icon } from '../../../../components';
+import { FormatDateCell } from '@/components';
 
 import '@/style/pages/JournalEntries/List.scss';
 

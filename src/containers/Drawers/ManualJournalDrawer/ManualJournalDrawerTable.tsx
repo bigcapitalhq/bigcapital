@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { CommercialDocEntriesTable  } from '@/components';
+import { CommercialDocEntriesTable } from '@/components';
 import { useManualJournalEntriesColumns } from './utils';
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 
-import { TableStyle } from '../../../common';
+import { TableStyle } from '@/common';
 
 /**
  * Manual journal drawer table.

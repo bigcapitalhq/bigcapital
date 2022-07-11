@@ -4,8 +4,8 @@ import {
   universalSearchResetResourceType,
   universalSearchSetResourceType,
   universalSearchSetSelectedItem,
-  universalSearchResetSelectedItem
-} from '../../store/search/search.actions';
+  universalSearchResetSelectedItem,
+} from '@/store/search/search.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
   openGlobalSearch: () => dispatch({ type: t.OPEN_SEARCH }),
@@ -17,10 +17,10 @@ export const mapDispatchToProps = (dispatch) => ({
   resetResourceTypeUniversalSearch: () =>
     dispatch(universalSearchResetResourceType()),
 
-  setSelectedItemUniversalSearch: (resourceType, resourceId) => 
+  setSelectedItemUniversalSearch: (resourceType, resourceId) =>
     dispatch(universalSearchSetSelectedItem(resourceType, resourceId)),
 
-  resetSelectedItemUniversalSearch: () => 
+  resetSelectedItemUniversalSearch: () =>
     dispatch(universalSearchResetSelectedItem()),
 });
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import { DrawerBody } from '@/components';
 
-import InventoryAdjustmentDetail from './InventoryAdjustmentDetail';
+import { DrawerBody } from '@/components';
 import { InventoryAdjustmentDrawerProvider } from './InventoryAdjustmentDrawerProvider';
+import InventoryAdjustmentDetail from './InventoryAdjustmentDetail';
 
 /**
  * Inventory adjustment drawer content.

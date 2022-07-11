@@ -5,7 +5,7 @@ import {
   If,
   DetailsMenu,
   DetailItem,
-} from '../../../components';
+} from '@/components';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 
 export function VendorCreditDetailFooter() {

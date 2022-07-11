@@ -4,11 +4,8 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
 import { DrawerMainTabs } from '@/components';
-import {
-  PaymentMadeAction,
-  AbilitySubject,
-} from '../../../common/abilityOption';
 import { useAbilityContext } from '@/hooks/utils';
+import { PaymentMadeAction, AbilitySubject } from '@/common/abilityOption';
 import BillDetailTab from './BillDetailTab';
 import LocatedLandedCostTable from './LocatedLandedCostTable';
 import BillGLEntriesTable from './BillGLEntriesTable';

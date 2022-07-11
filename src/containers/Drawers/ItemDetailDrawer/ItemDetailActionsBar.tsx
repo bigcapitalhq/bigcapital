@@ -9,7 +9,7 @@ import {
 } from '@blueprintjs/core';
 
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
-import { ItemAction, AbilitySubject } from '../../../common/abilityOption';
+import { ItemAction, AbilitySubject } from '@/common/abilityOption';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';

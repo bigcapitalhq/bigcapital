@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import {
   Button,
   MenuItem,
@@ -7,10 +8,9 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import styled from 'styled-components';
 import { FormattedMessage as T } from '@/components';
 import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
-import { useGetItemPaymentTransactionsMenu } from '../../../../common/itemPaymentTranactionsOption';
+import { useGetItemPaymentTransactionsMenu } from '@/common/itemPaymentTranactionsOption';
 
 export const ItemManuTransaction = ({ onChange }) => {
   const { value, setValue } = useItemDetailDrawerContext();

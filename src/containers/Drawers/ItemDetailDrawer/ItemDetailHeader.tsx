@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { defaultTo } from 'lodash';
 import classNames from 'classnames';
+import { defaultTo } from 'lodash';
 
 import { If, DetailsMenu, DetailItem, Card } from '@/components';
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
@@ -34,7 +34,10 @@ export default function ItemDetailHeader() {
         </DetailsMenu>
 
         <DetailsMenu direction={'horizantal'}>
-          <DetailItem label={intl.get('item_type')} children={item.type_formatted} />
+          <DetailItem
+            label={intl.get('item_type')}
+            children={item.type_formatted}
+          />
           <DetailItem
             label={intl.get('item_code')}
             children={defaultTo(item.code, '-')}

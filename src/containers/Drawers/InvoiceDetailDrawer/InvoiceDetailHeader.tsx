@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { defaultTo } from 'lodash';
 import styled from 'styled-components';
+import { defaultTo } from 'lodash';
 
 import {
   ButtonLink,

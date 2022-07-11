@@ -17,7 +17,7 @@ import {
   TextOverviewTooltipCell,
   FormatNumberCell,
   Choose,
-} from '../../../components';
+} from '@/components';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 
 /**

@@ -1,7 +1,7 @@
 import intl from 'react-intl-universal';
 import React from 'react';
 
-import { FormatDateCell } from '../../../components';
+import { FormatDateCell } from '@/components';
 import { isBlank } from '@/utils';
 
 /**

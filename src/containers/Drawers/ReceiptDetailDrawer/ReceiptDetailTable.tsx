@@ -5,7 +5,7 @@ import { CommercialDocEntriesTable } from '@/components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import { useReceiptReadonlyEntriesTableColumns } from './utils';
 
-import { TableStyle } from '../../../common';
+import { TableStyle } from '@/common';
 
 /**
  * Receipt readonly details table columns.

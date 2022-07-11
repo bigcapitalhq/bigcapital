@@ -4,7 +4,6 @@ import clsx from 'classnames';
 import { defaultTo } from 'lodash';
 
 import { DetailsMenu, DetailItem, T } from '@/components';
-
 import { useCustomerDetailsDrawerContext } from './CustomerDetailsDrawerProvider';
 
 import Style from './CustomerDetailsDrawer.module.scss';

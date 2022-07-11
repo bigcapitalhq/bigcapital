@@ -21,10 +21,7 @@ import {
   FormattedMessage as T,
   If,
 } from '@/components';
-import {
-  CreditNoteAction,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { CreditNoteAction, AbilitySubject } from '@/common/abilityOption';
 
 import { compose } from '@/utils';
 import { CreditNoteMenuItem } from './utils';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
-import { T, FormatNumber } from '../../../components';
+import { T, FormatNumber } from '@/components';
 
 export default function CashflowTransactionDrawerFooter() {
   const {

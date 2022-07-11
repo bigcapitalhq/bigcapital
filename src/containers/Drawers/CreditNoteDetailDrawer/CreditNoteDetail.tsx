@@ -1,7 +1,7 @@
 import React from 'react';
-import { Tab } from '@blueprintjs/core';
-import styled from 'styled-components';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { Tab } from '@blueprintjs/core';
 
 import { useAbilityContext } from '@/hooks/utils';
 import { DrawerMainTabs } from '@/components';
@@ -10,10 +10,7 @@ import CreditNoteDetailPanel from './CreditNoteDetailPanel';
 import RefundCreditNoteTransactionsTable from './RefundCreditNoteTransactions/RefundCreditNoteTransactionsTable';
 import ReconcileCreditNoteTransactionsTable from './ReconcileCreditNoteTransactions/ReconcileCreditNoteTransactionsTable';
 import { CreditNoteGLEntriesTable } from './JournalEntriesTransactions/JournalEntriesTransactionsTable';
-import {
-  CreditNoteAction,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { CreditNoteAction, AbilitySubject } from '@/common/abilityOption';
 
 /**
  * Credit Note view detail.

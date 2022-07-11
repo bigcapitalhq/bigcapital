@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { defaultTo } from 'lodash';
 import styled from 'styled-components';
+import { defaultTo } from 'lodash';
 
 import {
   ButtonLink,
@@ -9,8 +9,12 @@ import {
   CommercialDocHeader,
   CommercialDocTopHeader,
   ExchangeRateDetailItem,
+  Row,
+  Col,
+  FormatDate,
+  DetailsMenu,
+  DetailItem,
 } from '@/components';
-import { Row, Col, FormatDate, DetailsMenu, DetailItem } from '@/components';
 
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import { ReceiptDetailsStatus } from './components';

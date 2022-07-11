@@ -7,7 +7,7 @@ import { useJournalEntriesTransactionsColumns } from './components';
 
 import JournalEntriesTable, {
   AmountDisplayedBaseCurrencyMessage,
-} from '../../../JournalEntriesTable/JournalEntriesTable';
+} from '@/containers/JournalEntriesTable/JournalEntriesTable';
 
 /**
  * Journal entries table.

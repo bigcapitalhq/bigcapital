@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
+import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
 
 import '@/style/pages/Preferences/GeneralForm.scss';
 
@@ -11,8 +11,7 @@ import { PreferencesGeneralSchema } from './General.schema';
 import { useGeneralFormContext } from './GeneralFormProvider';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
-import { compose } from '@/utils';
-import { transformToForm } from '../../../utils';
+import { compose, transformToForm } from '@/utils';
 
 const defaultValues = {
   name: '',

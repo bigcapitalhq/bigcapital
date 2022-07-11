@@ -1,7 +1,7 @@
 import React from 'react';
-import { Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { Tab } from '@blueprintjs/core';
 
 import { DrawerMainTabs } from '@/components';
 

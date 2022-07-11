@@ -10,10 +10,7 @@ import {
 } from '@blueprintjs/core';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 import { VendorCreditMenuItem } from './utils';
-import {
-  VendorCreditAction,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { VendorCreditAction, AbilitySubject } from '@/common/abilityOption';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';

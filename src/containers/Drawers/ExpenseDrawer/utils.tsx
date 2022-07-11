@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 
-import { FormatNumberCell, TextOverviewTooltipCell } from '../../../components';
+import { FormatNumberCell, TextOverviewTooltipCell } from '@/components';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 import { getColumnWidth } from '@/utils';
 

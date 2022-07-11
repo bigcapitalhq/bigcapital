@@ -7,9 +7,9 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
+  FormatNumber,
 } from '@/components';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
-import { FormatNumber } from '../../../components';
 
 /**
  * Vendor Credit detail panel footer.

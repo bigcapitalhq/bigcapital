@@ -2,9 +2,8 @@ import { createReducer } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import purgeStoredState from 'redux-persist/es/purgeStoredState';
 import storage from 'redux-persist/lib/storage';
-import { getCookie, setCookie } from '@/utils';
+import { getCookie } from '@/utils';
 import t from '@/store/types';
-import { removeCookie } from '../../utils';
 
 // Read stored data in cookies and merge it with the initial state.
 const initialState = {

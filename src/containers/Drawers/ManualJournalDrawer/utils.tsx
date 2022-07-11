@@ -7,7 +7,7 @@ import {
   Choose,
   FormatNumberCell,
   TextOverviewTooltipCell,
-} from '../../../components';
+} from '@/components';
 import { Features } from '@/common';
 import { getColumnWidth } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';

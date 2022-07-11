@@ -2,11 +2,10 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { DataTable, Card, TableSkeletonRows } from '@/components';
 
+import { TableStyle } from '@/common';
 import { useBillPaymentTransactionsColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from '../BillDrawerProvider';
 import { useBillPaymentTransactions } from '@/hooks/query';
-
-import { TableStyle } from '@/common';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';

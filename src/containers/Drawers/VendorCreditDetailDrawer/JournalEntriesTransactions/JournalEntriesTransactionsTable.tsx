@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataTable, Card } from '@/components';
+import { Card } from '@/components';
 
 import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerProvider';
 import { useTransactionsByReference } from '@/hooks/query';
@@ -7,7 +7,7 @@ import { useJournalEntriesTransactionsColumns } from './components';
 
 import JournalEntriesTable, {
   AmountDisplayedBaseCurrencyMessage,
-} from '../../../JournalEntriesTable/JournalEntriesTable';
+} from '@/containers/JournalEntriesTable/JournalEntriesTable';
 
 /**
  * Journal entries vendor credit transactions table.

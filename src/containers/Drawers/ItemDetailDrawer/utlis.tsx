@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Intent, Tag } from '@blueprintjs/core';
-import { Choose, FormattedMessage as T } from '../../../components';
+import { Choose, FormattedMessage as T } from '@/components';
 
 /**
  * items inactive status.

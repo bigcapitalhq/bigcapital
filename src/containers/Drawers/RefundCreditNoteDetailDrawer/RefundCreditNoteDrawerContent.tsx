@@ -1,8 +1,8 @@
 import React from 'react';
-import { DrawerBody } from '@/components';
 
-import RefundCreditNoteDetail from './RefundCreditNoteDetail';
+import { DrawerBody } from '@/components';
 import { RefundCreditNoteDrawerProvider } from './RefundCreditNoteDrawerProvider';
+import RefundCreditNoteDetail from './RefundCreditNoteDetail';
 
 /**
  * Refund credit note drawer content.

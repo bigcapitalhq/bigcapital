@@ -21,10 +21,7 @@ import {
   Icon,
   FormattedMessage as T,
 } from '@/components';
-import {
-  PaymentMadeAction,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { PaymentMadeAction, AbilitySubject } from '@/common/abilityOption';
 import { compose } from '@/utils';
 
 /**

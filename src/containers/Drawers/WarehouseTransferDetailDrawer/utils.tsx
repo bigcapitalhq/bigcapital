@@ -9,7 +9,7 @@ import {
   FormatNumberCell,
   TextOverviewTooltipCell,
   Choose,
-} from '../../../components';
+} from '@/components';
 
 /**
  * Retrieves the readonly warehouse transfer entries columns.

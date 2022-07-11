@@ -20,10 +20,7 @@ import {
   Can,
   TextOverviewTooltipCell,
 } from '@/components';
-import {
-  SaleInvoiceAction,
-  AbilitySubject,
-} from '../../../common/abilityOption';
+import { SaleInvoiceAction, AbilitySubject } from '@/common/abilityOption';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 /**

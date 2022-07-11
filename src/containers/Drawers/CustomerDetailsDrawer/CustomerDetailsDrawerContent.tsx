@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { DrawerBody } from '@/components';
-import CustomerDetails from './CustomerDetails';
 import { CustomerDetailsDrawerProvider } from './CustomerDetailsDrawerProvider';
+import CustomerDetails from './CustomerDetails';
 
 /**
  * Contact detail drawer content.

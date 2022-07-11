@@ -11,7 +11,7 @@ import {
 import VendorFormFormik from '../../Vendors/VendorForm/VendorFormFormik';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withDashboardActions from '../../Dashboard/withDashboardActions';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 

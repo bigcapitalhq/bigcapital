@@ -1,5 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import clsx from 'classnames';
 import { useHistory } from 'react-router-dom';
 import {
   Button,
@@ -13,7 +14,6 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import clsx from 'classnames';
 
 import { useCustomerDetailsDrawerContext } from './CustomerDetailsDrawerProvider';
 

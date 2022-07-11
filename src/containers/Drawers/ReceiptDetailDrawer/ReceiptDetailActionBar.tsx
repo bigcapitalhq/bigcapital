@@ -12,16 +12,15 @@ import {
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import { ReceiptMoreMenuItems } from './components';
 import {
   Can,
   Icon,
   FormattedMessage as T,
   DrawerActionsBar,
 } from '@/components';
+import { ReceiptMoreMenuItems } from './components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import { SaleReceiptAction, AbilitySubject } from '@/common/abilityOption';
-
 import { safeCallback, compose } from '@/utils';
 
 /**

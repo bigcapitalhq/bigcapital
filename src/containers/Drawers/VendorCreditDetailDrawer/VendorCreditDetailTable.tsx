@@ -5,7 +5,7 @@ import { CommercialDocEntriesTable } from '@/components';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 import { useVendorCreditReadonlyEntriesTableColumns } from './utils';
 
-import { TableStyle } from '../../../common';
+import { TableStyle } from '@/common';
 
 /**
  * Vendor Credit detail table.

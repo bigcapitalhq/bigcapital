@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { CommercialDocBox } from '../../../components';
+import { CommercialDocBox } from '@/components';
 
 import ManualJournalDrawerActionBar from './ManualJournalDrawerActionBar';
 import ManualJournalDrawerHeader from './ManualJournalDrawerHeader';

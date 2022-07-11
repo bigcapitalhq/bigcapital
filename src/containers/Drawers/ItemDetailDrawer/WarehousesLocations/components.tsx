@@ -1,7 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormatNumberCell, FormattedMessage as T } from '../../../../components';
-
+import { FormatNumberCell, FormattedMessage as T } from '@/components';
 
 /**
  * Warehouse locations columns

@@ -1,10 +1,9 @@
 import React from 'react';
 import moment from 'moment';
-
 import intl from 'react-intl-universal';
-import { defaultTo } from 'lodash';
 import clsx from 'classnames';
 
+import { defaultTo } from 'lodash';
 import { DetailsMenu, DetailItem, FormatDate } from '@/components';
 import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawerProvider';
 

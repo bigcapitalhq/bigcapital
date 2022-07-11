@@ -5,7 +5,7 @@ import { CommercialDocEntriesTable } from '@/components';
 import { useBillDrawerContext } from './BillDrawerProvider';
 import { useBillReadonlyEntriesTableColumns } from './utils';
 
-import { TableStyle } from '../../../common';
+import { TableStyle } from '@/common';
 
 export default function BillDetailTable() {
   const {

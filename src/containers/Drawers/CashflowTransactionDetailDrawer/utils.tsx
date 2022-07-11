@@ -1,8 +1,7 @@
 import intl from 'react-intl-universal';
 import React from 'react';
-import { Classes, Tooltip, Position } from '@blueprintjs/core';
 
-import { FormatNumberCell, If, Icon } from '../../../components';
+import { FormatNumberCell } from '@/components';
 
 /**
  * Retrieve cashflow transaction entries columns.

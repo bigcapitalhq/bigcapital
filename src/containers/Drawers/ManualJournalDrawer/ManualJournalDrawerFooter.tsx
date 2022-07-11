@@ -9,7 +9,7 @@ import {
   FormatNumber,
   Table,
   TD,
-} from '../../../components';
+} from '@/components';
 
 /**
  * Manual journal readonly details footer.

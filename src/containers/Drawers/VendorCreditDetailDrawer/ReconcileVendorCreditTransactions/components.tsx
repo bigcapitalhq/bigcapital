@@ -1,12 +1,9 @@
 import React from 'react';
-import { Intent, MenuItem, Menu } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import { Intent, MenuItem, Menu } from '@blueprintjs/core';
 import { Can, FormatDateCell, Icon } from '@/components';
 import { safeCallback } from '@/utils';
-import {
-  VendorCreditAction,
-  AbilitySubject,
-} from '../../../../common/abilityOption';
+import { VendorCreditAction, AbilitySubject } from '@/common/abilityOption';
 
 /**
  * Actions menu.

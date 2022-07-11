@@ -8,7 +8,7 @@ import {
   TotalLineTextStyle,
 } from '@/components';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
-import { FormatNumber, TotalLine } from '../../../components';
+import { FormatNumber, TotalLine } from '@/components';
 
 /**
  * Footer details of expense readonly details.
