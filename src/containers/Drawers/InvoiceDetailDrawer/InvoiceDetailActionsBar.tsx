@@ -25,7 +25,7 @@ import {
   SaleInvoiceAction,
   PaymentReceiveAction,
   AbilitySubject,
-} from '../../../common/abilityOption';
+} from '../../../constants/abilityOption';
 
 import { compose } from '@/utils';
 import { BadDebtMenuItem } from './utils';

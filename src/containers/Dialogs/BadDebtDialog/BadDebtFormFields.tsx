@@ -12,8 +12,8 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { CLASSES } from '@/common/classes';
-import { ACCOUNT_TYPE } from '@/common/accountTypes';
+import { CLASSES } from '@/constants/classes';
+import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { inputIntent } from '@/utils';
 import {
   AccountsSuggestField,

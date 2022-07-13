@@ -8,7 +8,7 @@ import {
 } from '@/components';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
-import { AbilitySubject, CashflowAction } from '@/common/abilityOption';
+import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
 import { compose } from '@/utils';
 
 /**

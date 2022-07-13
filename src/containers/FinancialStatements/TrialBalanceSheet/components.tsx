@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
 
-import { Align } from '@/common';
+import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 import { CellTextSpan } from '@/components/Datatable/Cells';
 import { If, Icon, FormattedMessage as T } from '@/components';

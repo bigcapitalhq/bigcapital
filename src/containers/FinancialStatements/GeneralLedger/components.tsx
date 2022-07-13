@@ -7,7 +7,7 @@ import { getColumnWidth } from '@/utils';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
-import { Align } from '@/common';
+import { Align } from '@/constants';
 
 /**
  * Retrieve the general ledger table columns.

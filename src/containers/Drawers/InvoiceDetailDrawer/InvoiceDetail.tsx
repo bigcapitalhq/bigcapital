@@ -5,7 +5,7 @@ import { Tab } from '@blueprintjs/core';
 
 import { useAbilityContext } from '@/hooks/utils';
 import { DrawerMainTabs } from '@/components';
-import { PaymentReceiveAction, AbilitySubject } from '@/common/abilityOption';
+import { PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption';
 import InvoiceDetailActionsBar from './InvoiceDetailActionsBar';
 import InvoiceGLEntriesTable from './InvoiceGLEntriesTable';
 import InvoicePaymentTransactionsTable from './InvoicePaymentTransactions/InvoicePaymentTransactionsTable';

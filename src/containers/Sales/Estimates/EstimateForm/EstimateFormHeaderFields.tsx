@@ -19,7 +19,7 @@ import {
   handleDateChange,
 } from '@/utils';
 import { customersFieldShouldUpdate } from './utils';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import {
   CustomerSelectField,
   FieldRequiredHint,

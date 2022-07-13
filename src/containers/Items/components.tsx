@@ -17,7 +17,7 @@ import {
   AbilitySubject,
   ItemAction,
   InventoryAdjustmentAction,
-} from '@/common/abilityOption';
+} from '@/constants/abilityOption';
 
 /**
  * Publish accessor

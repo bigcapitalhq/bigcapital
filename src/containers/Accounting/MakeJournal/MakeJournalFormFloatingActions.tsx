@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import classNames from 'classnames';
 import { Icon, If, FormattedMessage as T } from '@/components';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 
 /**

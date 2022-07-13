@@ -1,6 +1,6 @@
 import React, { useState, createContext } from 'react';
 import { DialogContent } from '@/components';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
   useItem,

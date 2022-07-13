@@ -13,7 +13,7 @@ import {
   useSetPrimaryBranchToForm,
 } from './utils';
 
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { useFeatureCan } from '@/hooks/state';
 import {

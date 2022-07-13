@@ -22,7 +22,7 @@ import {
   DashboardActionsBar
 } from '@/components';
 
-import { AccountAction, AbilitySubject } from '@/common/abilityOption';
+import { AccountAction, AbilitySubject } from '@/constants/abilityOption';
 import { useRefreshAccounts } from '@/hooks/query/accounts';
 import { useAccountsChartContext } from './AccountsChartProvider';
 import withAccounts from './withAccounts';

@@ -8,7 +8,7 @@ import {
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
-import { TABLES } from '@/common/tables';
+import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
 
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';

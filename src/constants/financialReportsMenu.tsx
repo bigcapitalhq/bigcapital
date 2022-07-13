@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage as T } from '@/components';
-import { ReportsAction, AbilitySubject } from '@/common/abilityOption';
+import { ReportsAction, AbilitySubject } from '@/constants/abilityOption';
 
 export const financialReportMenus = [
   {

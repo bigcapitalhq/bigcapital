@@ -5,8 +5,8 @@ import { MenuItem } from '@blueprintjs/core';
 import { formattedAmount } from '@/utils';
 import { T, Icon, Choose, If } from '@/components';
 
-import { RESOURCES_TYPES } from '@/common/resourcesTypes';
-import { AbilitySubject, BillAction } from '@/common/abilityOption';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { AbilitySubject, BillAction } from '@/constants/abilityOption';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 /**

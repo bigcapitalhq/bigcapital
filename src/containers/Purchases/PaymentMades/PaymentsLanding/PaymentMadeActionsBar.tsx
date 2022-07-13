@@ -29,7 +29,7 @@ import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { useRefreshPaymentMades } from '@/hooks/query/paymentMades';
-import { PaymentMadeAction, AbilitySubject } from '@/common/abilityOption';
+import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
 

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { compose } from '@/utils';
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 import { Card, DataTable, If } from '@/components';
 import { useAccountReadEntriesColumns } from './utils';
 import { useAppIntlContext } from '@/components/AppIntlProvider';

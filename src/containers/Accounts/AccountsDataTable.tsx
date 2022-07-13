@@ -7,7 +7,7 @@ import {
   TableSkeletonHeader,
   TableVirtualizedListRows,
 } from '@/components';
-import { TABLES } from '@/common/tables';
+import { TABLES } from '@/constants/tables';
 import { useAccountsTableColumns, rowClassNames } from './utils';
 import { ActionsMenu } from './components';
 

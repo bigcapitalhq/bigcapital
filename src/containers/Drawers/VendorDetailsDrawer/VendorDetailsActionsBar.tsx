@@ -32,7 +32,7 @@ import {
   SaleInvoiceAction,
   PaymentMadeAction,
   VendorAction,
-} from '../../../common/abilityOption';
+} from '../../../constants/abilityOption';
 import { safeCallback, compose } from '@/utils';
 
 /**

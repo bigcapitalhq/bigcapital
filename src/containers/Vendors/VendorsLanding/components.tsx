@@ -13,7 +13,7 @@ import {
 } from '@blueprintjs/core';
 
 import { Can, Icon, Money, If, AvaterCell } from '@/components';
-import { VendorAction, AbilitySubject } from '@/common/abilityOption';
+import { VendorAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback, firstLettersArgs } from '@/utils';
 
 /**

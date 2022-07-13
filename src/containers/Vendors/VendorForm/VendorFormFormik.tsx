@@ -4,7 +4,7 @@ import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { AppToaster } from '@/components';
 import {
   CreateVendorFormSchema,

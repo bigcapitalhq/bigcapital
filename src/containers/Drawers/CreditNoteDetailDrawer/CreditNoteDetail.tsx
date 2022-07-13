@@ -10,7 +10,7 @@ import CreditNoteDetailPanel from './CreditNoteDetailPanel';
 import RefundCreditNoteTransactionsTable from './RefundCreditNoteTransactions/RefundCreditNoteTransactionsTable';
 import ReconcileCreditNoteTransactionsTable from './ReconcileCreditNoteTransactions/ReconcileCreditNoteTransactionsTable';
 import { CreditNoteGLEntriesTable } from './JournalEntriesTransactions/JournalEntriesTransactionsTable';
-import { CreditNoteAction, AbilitySubject } from '@/common/abilityOption';
+import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
 
 /**
  * Credit Note view detail.

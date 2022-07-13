@@ -27,7 +27,7 @@ import {
   ExchangeRateMutedField,
 } from '@/components';
 import { useAutofocus } from '@/hooks';
-import { CLASSES, Features, ACCOUNT_TYPE } from '@/common';
+import { CLASSES, Features, ACCOUNT_TYPE } from '@/constants';
 import {
   inputIntent,
   momentFormatter,

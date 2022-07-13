@@ -9,7 +9,7 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import {
   CustomerSelectField,
   FieldRequiredHint,

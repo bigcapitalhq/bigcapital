@@ -9,8 +9,8 @@ import {
   MaterialProgressBar,
 } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
-import { TRANSACRIONS_TYPE } from '@/common/cashflowOptions';
-import { AbilitySubject, CashflowAction } from '@/common/abilityOption';
+import { TRANSACRIONS_TYPE } from '@/constants/cashflowOptions';
+import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
 
 export function ActionsMenu({

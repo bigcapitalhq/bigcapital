@@ -26,7 +26,7 @@ import {
   BillAction,
   PaymentMadeAction,
   AbilitySubject,
-} from '../../../common/abilityOption';
+} from '../../../constants/abilityOption';
 import { BillMenuItem } from './utils';
 
 import { safeCallback, compose } from '@/utils';

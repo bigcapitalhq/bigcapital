@@ -14,7 +14,7 @@ import { Icon, FormattedMessage as T } from '@/components';
 import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 
 

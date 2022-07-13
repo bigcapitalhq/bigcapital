@@ -13,7 +13,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 
 import { compose } from '@/utils';
 

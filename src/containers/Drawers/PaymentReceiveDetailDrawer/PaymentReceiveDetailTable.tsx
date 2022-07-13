@@ -5,7 +5,7 @@ import { CommercialDocEntriesTable } from '@/components';
 import { usePaymentReceiveEntriesColumns } from './utils';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 
 /**
  * Payment receive readonly details table.

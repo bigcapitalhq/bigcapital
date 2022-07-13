@@ -4,7 +4,7 @@ import { CommercialDocEntriesTable } from '@/components';
 import { useManualJournalEntriesColumns } from './utils';
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 
 /**
  * Manual journal drawer table.

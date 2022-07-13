@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
-import { AbilitySubject, ExpenseAction } from '@/common/abilityOption';
+import { AbilitySubject, ExpenseAction } from '@/constants/abilityOption';
 
 export default function InvoicesEmptyStatus() {
   const history = useHistory();

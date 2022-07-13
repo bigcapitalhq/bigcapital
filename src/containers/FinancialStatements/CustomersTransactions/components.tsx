@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { If } from '@/components';
-import { Align } from '@/common';
+import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';

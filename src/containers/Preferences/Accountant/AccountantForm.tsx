@@ -18,7 +18,7 @@ import {
   CardFooterActions,
 } from '@/components';
 import { handleStringChange, inputIntent } from '@/utils';
-import { ACCOUNT_TYPE } from '@/common/accountTypes';
+import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 
 import { useAccountantFormContext } from './AccountantFormProvider';
 

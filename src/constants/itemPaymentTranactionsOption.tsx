@@ -5,7 +5,7 @@ import {
   SaleReceiptAction,
   SaleInvoiceAction,
   BillAction,
-} from '../common/abilityOption';
+} from './abilityOption';
 import { useAbilitiesFilter } from '../hooks';
 
 export const getItemPaymentTransactions = () => [

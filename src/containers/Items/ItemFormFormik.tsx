@@ -6,7 +6,7 @@ import classNames from 'classnames';
 
 import '@/style/pages/Items/Form.scss';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { AppToaster } from '@/components';
 import ItemFormBody from './ItemFormBody';
 import ItemFormPrimarySection from './ItemFormPrimarySection';

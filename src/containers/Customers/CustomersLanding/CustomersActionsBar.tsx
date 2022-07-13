@@ -30,7 +30,7 @@ import withCustomersActions from './withCustomersActions';
 import withAlertActions from '@/containers/Alert/withAlertActions';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withSettings from '@/containers/Settings/withSettings';
-import { CustomerAction, AbilitySubject } from '@/common/abilityOption';
+import { CustomerAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
 

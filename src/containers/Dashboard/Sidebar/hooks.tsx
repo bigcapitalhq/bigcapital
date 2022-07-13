@@ -11,7 +11,7 @@ import {
   useSidebarSubmenu,
   useFeatureCan,
 } from '@/hooks/state';
-import { SidebarMenu } from '@/config/sidebarMenu';
+import { SidebarMenu } from '@/constants/sidebarMenu';
 import {
   ISidebarMenuItemType,
   ISidebarSubscriptionAbility,

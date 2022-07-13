@@ -11,7 +11,7 @@ import {
   DetailsBarSkeletonBase,
 } from '@/components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 
 /**
  * Payment receive from top bar.

@@ -11,7 +11,7 @@ import {
 } from '@blueprintjs/core';
 
 import { Can, Icon, Money, If, AvaterCell } from '@/components';
-import { CustomerAction, AbilitySubject } from '@/common/abilityOption';
+import { CustomerAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
 
 /**

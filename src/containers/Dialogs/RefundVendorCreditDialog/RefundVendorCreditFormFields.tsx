@@ -11,7 +11,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { DateInput } from '@blueprintjs/datetime';
 import { isEqual } from 'lodash';
 import {
@@ -37,7 +37,7 @@ import {
   compose,
 } from '@/utils';
 import { useAutofocus } from '@/hooks';
-import { Features, ACCOUNT_TYPE } from '@/common';
+import { Features, ACCOUNT_TYPE } from '@/constants';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useRefundVendorCreditContext } from './RefundVendorCreditFormProvider';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';

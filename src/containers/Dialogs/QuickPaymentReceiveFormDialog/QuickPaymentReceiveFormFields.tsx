@@ -13,7 +13,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { CLASSES, Features, ACCOUNT_TYPE } from '@/common';
+import { CLASSES, Features, ACCOUNT_TYPE } from '@/constants';
 import { DateInput } from '@blueprintjs/datetime';
 import {
   Row,

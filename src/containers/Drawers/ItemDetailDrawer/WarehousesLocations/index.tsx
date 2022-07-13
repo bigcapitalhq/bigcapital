@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 import { DataTable, TableSkeletonRows, Card } from '@/components';
 
 import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';

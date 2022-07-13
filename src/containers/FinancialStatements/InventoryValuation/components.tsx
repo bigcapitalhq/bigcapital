@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 
 import { If } from '@/components';
-import { Align } from '@/common';
+import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 import { CellTextSpan } from '@/components/Datatable/Cells';
 import { useInventoryValuationContext } from './InventoryValuationProvider';

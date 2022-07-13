@@ -9,7 +9,7 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 import {
   AccountsSelectList,
@@ -22,7 +22,7 @@ import {
 } from '@/components';
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import { ACCOUNT_TYPE } from '@/common/accountTypes';
+import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import {
   momentFormatter,
   compose,

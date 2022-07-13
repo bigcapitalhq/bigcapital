@@ -4,7 +4,7 @@ import { Formik, Form } from 'formik';
 import { isEmpty } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import classNames from 'classnames';
 
 import {

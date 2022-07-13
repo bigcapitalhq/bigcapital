@@ -11,7 +11,7 @@ import {
   Row,
 } from '@/components';
 import { inputIntent } from '@/utils';
-import { CLASSES, addMoneyIn } from '@/common';
+import { CLASSES, addMoneyIn } from '@/constants';
 
 import { useMoneyInDailogContext } from './MoneyInDialogProvider';
 

@@ -8,7 +8,7 @@ import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
 import { usePurchasesByItemsTableColumns } from './components';
 
 import { tableRowTypesToClassnames } from '@/utils';
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 
 /**
  * Purchases by items data table.

@@ -20,7 +20,7 @@ import {
   FormattedMessage as T,
   DrawerActionsBar,
 } from '@/components';
-import { PaymentReceiveAction, AbilitySubject } from '@/common/abilityOption';
+import { PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
 

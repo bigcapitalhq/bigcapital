@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Classes, Switch, FormGroup, Intent } from '@blueprintjs/core';
 
-import { CellType } from '@/common';
+import { CellType } from '@/constants';
 import { safeInvoke } from '@/utils';
 
 /**

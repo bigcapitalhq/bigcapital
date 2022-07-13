@@ -11,7 +11,7 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import CustomerTypeRadioField from './CustomerTypeRadioField';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { inputIntent } from '@/utils';
 import { useAutofocus } from '@/hooks';
 

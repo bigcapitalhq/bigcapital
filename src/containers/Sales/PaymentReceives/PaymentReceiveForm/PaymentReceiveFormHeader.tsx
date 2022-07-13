@@ -5,7 +5,7 @@ import { useFormikContext } from 'formik';
 import { Money } from '@/components';
 import { FormattedMessage as T } from '@/components';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import PaymentReceiveHeaderFields from './PaymentReceiveHeaderFields';
 
 /**

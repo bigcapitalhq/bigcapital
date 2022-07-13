@@ -21,7 +21,7 @@ import {
   DetailsBarSkeletonBase,
 } from '@/components';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 
 /**
  * Vendor Credit note form topbar .

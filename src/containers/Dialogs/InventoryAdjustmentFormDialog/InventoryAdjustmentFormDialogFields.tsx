@@ -32,8 +32,8 @@ import {
   handleDateChange,
   toSafeNumber,
 } from '@/utils';
-import { Features, CLASSES } from '@/common';
-import adjustmentType from '@/common/adjustmentType';
+import { Features, CLASSES } from '@/constants';
+import adjustmentType from '@/constants/adjustmentType';
 
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
 import {

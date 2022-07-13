@@ -1,5 +1,5 @@
 import React from 'react';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { useBranches } from '@/hooks/query';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';

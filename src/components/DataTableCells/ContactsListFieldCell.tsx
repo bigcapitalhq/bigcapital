@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { FormGroup, Intent, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import { CellType } from '@/common';
+import { CellType } from '@/constants';
 import { ContactsSuggestField } from '@/components';
 export default function ContactsListCellRenderer({
   column: { id },

@@ -21,7 +21,7 @@ import {
   DashboardRowsHeightButton,
   DashboardActionsBar,
 } from '@/components';
-import { BillAction, AbilitySubject } from '@/common/abilityOption';
+import { BillAction, AbilitySubject } from '@/constants/abilityOption';
 
 import withBills from './withBills';
 import withBillsActions from './withBillsActions';

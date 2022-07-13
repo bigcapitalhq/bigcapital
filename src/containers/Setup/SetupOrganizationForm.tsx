@@ -12,14 +12,14 @@ import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import useAutofocus from '@/hooks/useAutofocus'
 import { FormattedMessage as T } from '@/components';
-import { getCountries } from '@/common/countries';
+import { getCountries } from '@/constants/countries';
 
 import { Col, Row, ListSelect } from '@/components';
 import { inputIntent } from '@/utils';
 
-import { getFiscalYear } from '@/common/fiscalYearOptions';
-import { getLanguages } from '@/common/languagesOptions';
-import { getAllCurrenciesOptions } from '@/common/currencies';
+import { getFiscalYear } from '@/constants/fiscalYearOptions';
+import { getLanguages } from '@/constants/languagesOptions';
+import { getAllCurrenciesOptions } from '@/constants/currencies';
 
 /**
  * Setup organization form.

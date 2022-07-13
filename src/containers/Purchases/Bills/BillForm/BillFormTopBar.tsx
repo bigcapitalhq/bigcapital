@@ -21,7 +21,7 @@ import {
   DetailsBarSkeletonBase,
 } from '@/components';
 import { useBillFormContext } from './BillFormProvider';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 
 /**
  * Bill form topbar .

@@ -3,9 +3,9 @@ import intl from 'react-intl-universal';
 import { MenuItem, Intent } from '@blueprintjs/core';
 
 import { TextStatus, Icon, Choose, T } from '@/components';
-import { RESOURCES_TYPES } from '@/common/resourcesTypes';
-import { AbilitySubject, VendorCreditAction } from '@/common/abilityOption';
-import { DRAWERS } from '@/common/drawers';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { AbilitySubject, VendorCreditAction } from '@/constants/abilityOption';
+import { DRAWERS } from '@/constants/drawers';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 /**

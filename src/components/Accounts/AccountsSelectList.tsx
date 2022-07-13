@@ -7,7 +7,7 @@ import * as R from 'ramda';
 
 import { MenuItemNestedText, FormattedMessage as T } from '@/components';
 import { nestedArrayToflatten, filterAccountsByQuery } from '@/utils';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 

@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import InvoicesEmptyStatus from './InvoicesEmptyStatus';
 
-import { TABLES } from '@/common/tables';
+import { TABLES } from '@/constants/tables';
 import {
   DataTable,
   DashboardContentTable,

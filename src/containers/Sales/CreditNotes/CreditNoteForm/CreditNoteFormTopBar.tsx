@@ -11,7 +11,7 @@ import {
   useSetPrimaryBranchToForm,
   useSetPrimaryWarehouseToForm,
 } from './utils';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
   Icon,

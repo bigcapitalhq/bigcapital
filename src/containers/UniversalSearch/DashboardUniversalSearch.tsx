@@ -5,7 +5,7 @@ import { isUndefined } from 'lodash';
 import { useUniversalSearch } from '@/hooks/query';
 import { UniversalSearch } from '@/components';
 
-import { RESOURCES_TYPES } from '@/common/resourcesTypes';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { compose } from '@/utils';
 import withUniversalSearchActions from './withUniversalSearchActions';
 import withUniversalSearch from './withUniversalSearch';

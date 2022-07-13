@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Align, TableStyle } from '@/common';
+import { Align, TableStyle } from '@/constants';
 import { SkeletonText } from '@/components';
 import {
   DataTable,

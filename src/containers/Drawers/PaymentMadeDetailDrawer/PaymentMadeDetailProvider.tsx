@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { usePaymentMade } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 
 const PaymentMadeDetailContext = React.createContext();
 

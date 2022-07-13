@@ -22,7 +22,7 @@ import {
 } from '@/components';
 
 import { useRefreshVendors } from '@/hooks/query/vendors';
-import { VendorAction, AbilitySubject } from '@/common/abilityOption';
+import { VendorAction, AbilitySubject } from '@/constants/abilityOption';
 import { useVendorsListContext } from './VendorsListProvider';
 import { useHistory } from 'react-router-dom';
 

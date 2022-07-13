@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import { Tabs, Tab } from '@blueprintjs/core';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import SMSMessagesDataTable from './SMSMessagesDataTable';
 import { Card } from '@/components';
 

@@ -11,7 +11,7 @@ import { FormattedMessage as T } from '@/components';
 import { momentFormatter, compose, tansformDateValue } from '@/utils';
 import classNames from 'classnames';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import {
   AccountsSelectList,
   FieldRequiredHint,

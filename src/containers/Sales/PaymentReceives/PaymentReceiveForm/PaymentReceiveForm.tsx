@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 
 import '@/style/pages/PaymentReceive/PageForm.scss';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import PaymentReceiveHeader from './PaymentReceiveFormHeader';
 import PaymentReceiveFormBody from './PaymentReceiveFormBody';
 import PaymentReceiveFloatingActions from './PaymentReceiveFloatingActions';

@@ -4,7 +4,7 @@ import { CloudLoadingIndicator } from '@/components';
 import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from '@/components';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { usePaymentReceiveInnerContext } from './PaymentReceiveInnerProvider';
 import { DataTableEditable } from '@/components';
 import { usePaymentReceiveEntriesColumns } from './components';

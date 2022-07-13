@@ -27,7 +27,7 @@ import {
 } from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from '@/hooks';
-import { ACCOUNT_TYPE } from '@/common/accountTypes';
+import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 
 import {
   inputIntent,
@@ -36,8 +36,8 @@ import {
   handleDateChange,
   compose,
 } from '@/utils';
-import { Features } from '@/common';
-import { CLASSES } from '@/common/classes';
+import { Features } from '@/constants';
+import { CLASSES } from '@/constants/classes';
 import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
 import {
   useObserveTransactionNoSettings,

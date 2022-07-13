@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import classNames from 'classnames';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { DataTableEditable } from '@/components';
 
 import { useEditableItemsEntriesColumns } from './components';

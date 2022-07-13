@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 import { DataTable, TableSkeletonRows } from '@/components';
 import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
 import { useItemAssociatedReceiptTransactions } from '@/hooks/query';

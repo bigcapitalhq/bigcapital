@@ -5,7 +5,7 @@ import { T, Dialog, DialogSuspense } from '@/components';
 
 import withDialogRedux from '@/components/DialogReduxConnect';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 
 const PdfPreviewDialogContent = React.lazy(() =>

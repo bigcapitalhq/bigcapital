@@ -1,8 +1,7 @@
 import React from 'react';
-import { Icon, For } from '@/components';
-import { FormattedMessage as T } from '@/components';
+import { Icon, For, FormattedMessage as T } from '@/components';
 
-import { getFooterLinks } from '@/config/footerLinks';
+import { getFooterLinks } from '@/constants/footerLinks';
 import { useAuthActions } from '@/hooks/state';
 
 /**

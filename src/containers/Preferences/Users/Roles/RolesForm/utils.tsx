@@ -5,7 +5,7 @@ import {
   getPermissionsSchema,
   getPermissionsSchemaService,
   getPermissionsSchemaServices,
-} from '@/common/permissionsSchema';
+} from '@/constants/permissionsSchema';
 
 export const FULL_ACCESS_CHECKBOX_STATE = {
   INDETARMINE: -1,

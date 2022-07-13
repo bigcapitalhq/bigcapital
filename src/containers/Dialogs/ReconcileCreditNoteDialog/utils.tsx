@@ -4,7 +4,7 @@ import * as R from 'ramda';
 import clsx from 'classnames';
 import { Callout, Intent, Classes } from '@blueprintjs/core';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { MoneyFieldCell, FormatDateCell, AppToaster, T } from '@/components';
 
 export const transformErrors = (errors, { setErrors }) => {

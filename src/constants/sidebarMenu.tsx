@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage as T } from '@/components';
-import { Features } from '@/common/features';
+import { Features } from '@/constants/features';
 import {
   ISidebarMenuItemType,
   ISidebarMenuOverlayIds,
@@ -25,7 +25,7 @@ import {
   CashflowAction,
   PreferencesAbility,
   SubscriptionBillingAbility,
-} from '@/common/abilityOption';
+} from '@/constants/abilityOption';
 
 export const SidebarMenu = [
   // ---------------

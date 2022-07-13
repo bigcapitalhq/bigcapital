@@ -11,7 +11,7 @@ import {
 } from '@blueprintjs/core';
 
 import { Icon, Money, FormatDateCell, Can } from '@/components';
-import { PaymentMadeAction, AbilitySubject } from '@/common/abilityOption';
+import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { safeCallback } from '@/utils';
 

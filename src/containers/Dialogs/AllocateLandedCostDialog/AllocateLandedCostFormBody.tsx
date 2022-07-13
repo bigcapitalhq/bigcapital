@@ -1,6 +1,6 @@
 import React from 'react';
 import { FastField } from 'formik';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import classNames from 'classnames';
 import AllocateLandedCostEntriesTable from './AllocateLandedCostEntriesTable';
 

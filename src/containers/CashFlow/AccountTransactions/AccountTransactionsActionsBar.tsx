@@ -14,7 +14,7 @@ import {
 } from '@/components';
 
 import { CashFlowMenuItems } from './utils';
-import { addMoneyIn, addMoneyOut } from '@/common/cashflowOptions';
+import { addMoneyIn, addMoneyOut } from '@/constants/cashflowOptions';
 import { useRefreshCashflowTransactionsInfinity } from '@/hooks/query';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 

@@ -5,7 +5,7 @@ import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { sumBy, isEmpty } from 'lodash';
 import { useHistory } from 'react-router-dom';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 import {
   CreateEstimateFormSchema,

@@ -6,7 +6,7 @@ import { Icon } from '@/components';
 import { Position } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 
-import { useGetQuickNewMenu } from '@/common/quickNewOptions';
+import { useGetQuickNewMenu } from '@/constants/quickNewOptions';
 
 /**
  * Quick New Dropdown.

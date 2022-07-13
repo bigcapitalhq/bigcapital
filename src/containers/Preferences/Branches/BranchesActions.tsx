@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { FeatureCan, FormattedMessage as T, Icon } from '@/components';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';

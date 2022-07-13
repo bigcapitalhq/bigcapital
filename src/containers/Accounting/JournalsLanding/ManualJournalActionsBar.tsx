@@ -21,7 +21,7 @@ import {
 } from '@/components';
 import { useRefreshJournals } from '@/hooks/query/manualJournals';
 import { useManualJournalsContext } from './ManualJournalsListProvider';
-import { ManualJournalAction, AbilitySubject } from '@/common/abilityOption';
+import { ManualJournalAction, AbilitySubject } from '@/constants/abilityOption';
 
 import withManualJournals from './withManualJournals';
 import withManualJournalsActions from './withManualJournalsActions';

@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import CreditNoteFormHeaderFields from './CreditNoteFormHeaderFields';
 
 import { getEntriesTotal } from '@/containers/Entries/utils';

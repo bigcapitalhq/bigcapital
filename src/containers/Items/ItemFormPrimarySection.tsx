@@ -8,7 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { ErrorMessage, FastField } from 'formik';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import {
   CategoriesSelectList,
   Hint,

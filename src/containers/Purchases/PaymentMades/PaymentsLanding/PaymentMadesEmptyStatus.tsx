@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
-import { PaymentMadeAction, AbilitySubject } from '@/common/abilityOption';
+import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 
 export default function PaymentMadesEmptyStatus() {
   const history = useHistory();

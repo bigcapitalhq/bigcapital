@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { Paper, Row, Col } from '@/components';
 import { BillFormFooterLeft } from './BillFormFooterLeft';
 import { BillFormFooterRight } from './BillFormFooterRight';

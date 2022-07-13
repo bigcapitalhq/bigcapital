@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { MenuItemNestedText, FormattedMessage as T } from '@/components';
 import { nestedArrayToflatten, filterAccountsByQuery } from '@/utils';
 

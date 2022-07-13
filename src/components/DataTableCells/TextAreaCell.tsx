@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import { Classes, TextArea, FormGroup, Intent } from '@blueprintjs/core';
-import { CellType } from '@/common';
+import { CellType } from '@/constants';
 
 const TextAreaEditableCell = ({
   row: { index },

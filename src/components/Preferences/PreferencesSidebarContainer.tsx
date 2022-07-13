@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Scrollbar } from 'react-scrollbars-custom';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 export default function PreferencesSidebarContainer({ children }) {
   return (

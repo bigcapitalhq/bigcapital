@@ -5,7 +5,7 @@ import { CommercialDocEntriesTable } from '@/components';
 import { useInvoiceReadonlyEntriesColumns } from './utils';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 
 /**
  * Invoice readonly details entries table columns.

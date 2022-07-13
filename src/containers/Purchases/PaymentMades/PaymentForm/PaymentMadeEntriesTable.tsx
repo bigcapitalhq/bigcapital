@@ -6,7 +6,7 @@ import {
   FormattedMessage as T,
 } from '@/components';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { usePaymentMadeEntriesTableColumns } from './components';
 import { usePaymentMadeInnerContext } from './PaymentMadeInnerProvider';
 import { compose, updateTableCell } from '@/utils';

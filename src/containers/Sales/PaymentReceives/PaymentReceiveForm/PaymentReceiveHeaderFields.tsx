@@ -13,7 +13,7 @@ import { FormattedMessage as T } from '@/components';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 
 import { useAutofocus } from '@/hooks';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import {
   compose,
   safeSumBy,
@@ -35,7 +35,7 @@ import {
   Money,
 } from '@/components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
-import { ACCOUNT_TYPE } from '@/common/accountTypes';
+import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { PaymentReceiveExchangeRateInputField } from './components';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';

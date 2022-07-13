@@ -6,7 +6,7 @@ import useFilterFinancialReports from './FilterFinancialReports';
 import {
   financialReportMenus,
   SalesAndPurchasesReportMenus,
-} from '@/config/financialReportsMenu';
+} from '@/constants/financialReportsMenu';
 
 import '@/style/pages/FinancialStatements/FinancialSheets.scss';
 

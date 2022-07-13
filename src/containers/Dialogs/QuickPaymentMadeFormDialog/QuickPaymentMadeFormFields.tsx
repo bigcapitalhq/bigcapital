@@ -13,7 +13,7 @@ import {
 } from '@blueprintjs/core';
 import { useAutofocus } from '@/hooks';
 import classNames from 'classnames';
-import { CLASSES, ACCOUNT_TYPE, Features } from '@/common';
+import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
 import { DateInput } from '@blueprintjs/datetime';
 
 import {

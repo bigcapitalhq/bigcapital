@@ -14,7 +14,7 @@ import {
 import {
   InventoryAdjustmentAction,
   AbilitySubject,
-} from '@/common/abilityOption';
+} from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
 

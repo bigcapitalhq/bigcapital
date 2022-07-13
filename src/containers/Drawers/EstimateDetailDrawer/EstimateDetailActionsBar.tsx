@@ -14,7 +14,7 @@ import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import { SaleEstimateAction, AbilitySubject } from '@/common/abilityOption';
+import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
 import { EstimateMoreMenuItems } from './components';
 import {
   DrawerActionsBar,

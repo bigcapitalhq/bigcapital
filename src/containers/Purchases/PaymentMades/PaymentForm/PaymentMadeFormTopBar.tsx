@@ -11,7 +11,7 @@ import {
   DetailsBarSkeletonBase,
 } from '@/components';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 
 /**
  * Payment made from top bar.

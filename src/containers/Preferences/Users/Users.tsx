@@ -7,7 +7,7 @@ import { Tabs, Tab } from '@blueprintjs/core';
 import '@/style/pages/Preferences/Users.scss';
 
 import { Card } from '@/components';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import PreferencesSubContent from '@/components/Preferences/PreferencesSubContent';
 
 import withUserPreferences from '@/containers/Preferences/Users/withUserPreferences';

@@ -13,7 +13,7 @@ import {
 import { If, Icon, FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 

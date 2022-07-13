@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 import intl from 'react-intl-universal';
-import { RESOURCES_TYPES } from '@/common/resourcesTypes';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 
 const SUBSCRIPTION_TYPE = {
   MAIN: 'main',

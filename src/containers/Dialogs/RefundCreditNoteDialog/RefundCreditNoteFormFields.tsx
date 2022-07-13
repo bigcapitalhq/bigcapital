@@ -12,7 +12,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { CLASSES, Features } from '@/common';
+import { CLASSES, Features } from '@/constants';
 import { DateInput } from '@blueprintjs/datetime';
 import {
   Icon,
@@ -37,7 +37,7 @@ import {
   compose,
 } from '@/utils';
 import { useAutofocus } from '@/hooks';
-import { ACCOUNT_TYPE } from '@/common/accountTypes';
+import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useRefundCreditNoteContext } from './RefundCreditNoteFormProvider';
 

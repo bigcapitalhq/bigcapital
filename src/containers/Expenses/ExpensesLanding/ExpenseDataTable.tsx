@@ -10,7 +10,7 @@ import {
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
-import { TABLES } from '@/common/tables';
+import { TABLES } from '@/constants/tables';
 
 import ExpensesEmptyStatus from './ExpensesEmptyStatus';
 

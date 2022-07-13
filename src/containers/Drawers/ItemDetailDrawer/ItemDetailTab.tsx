@@ -6,7 +6,7 @@ import { ItemPaymentTransactions } from './ItemPaymentTransactions';
 import ItemDetailHeader from './ItemDetailHeader';
 import WarehousesLocationsTable from './WarehousesLocations';
 
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 
 export default function ItemDetailTab() {

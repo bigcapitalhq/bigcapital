@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 import {
   ReportDataTable,
   FinancialSheet,

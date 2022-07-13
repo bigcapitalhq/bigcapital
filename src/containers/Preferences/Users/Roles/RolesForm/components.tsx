@@ -6,7 +6,7 @@ import { Checkbox, Popover } from '@blueprintjs/core';
 import {
   getPermissionsSchema,
   ModulePermissionsStyle,
-} from '@/common/permissionsSchema';
+} from '@/constants/permissionsSchema';
 import { Card, If, ButtonLink, Choose, T } from '@/components';
 import {
   getSerivceColumnPermission,

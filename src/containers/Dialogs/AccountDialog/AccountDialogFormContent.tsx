@@ -23,7 +23,7 @@ import withAccounts from '@/containers/Accounts/withAccounts';
 
 import { inputIntent, compose } from '@/utils';
 import { useAutofocus } from '@/hooks';
-import { FOREIGN_CURRENCY_ACCOUNTS } from '@/common/accountTypes';
+import { FOREIGN_CURRENCY_ACCOUNTS } from '@/constants/accountTypes';
 import { useAccountDialogContext } from './AccountDialogProvider';
 
 /**

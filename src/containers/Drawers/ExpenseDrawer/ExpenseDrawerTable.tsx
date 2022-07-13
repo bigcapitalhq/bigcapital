@@ -5,7 +5,7 @@ import { CommercialDocEntriesTable } from '@/components';
 import { useExpenseReadEntriesColumns } from './utils';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 
 /**
  * Expense details table.

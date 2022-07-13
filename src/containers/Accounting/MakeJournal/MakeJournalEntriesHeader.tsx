@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { safeSumBy } from '@/utils';
 import { PageFormBigNumber, FormattedMessage as T } from '@/components';
 import MakeJournalEntriesHeaderFields from './MakeJournalEntriesHeaderFields';

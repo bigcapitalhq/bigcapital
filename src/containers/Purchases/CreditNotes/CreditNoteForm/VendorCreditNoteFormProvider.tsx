@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { isEmpty, pick } from 'lodash';
 import { DashboardInsider } from '@/components/Dashboard';
 import { transformToEditForm } from './utils';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
   useCreateVendorCredit,

@@ -5,7 +5,7 @@ import { Can, FormattedMessage as T, EmptyStatus } from '@/components';
 import {
   AbilitySubject,
   ManualJournalAction,
-} from '@/common/abilityOption';
+} from '@/constants/abilityOption';
 
 export default function ManualJournalsEmptyStatus() {
   const history = useHistory();

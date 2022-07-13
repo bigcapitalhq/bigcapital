@@ -12,8 +12,8 @@ import {
 } from '@/components';
 
 import { inputIntent } from '@/utils';
-import { CLASSES } from '@/common/classes';
-import { addMoneyOut } from '@/common/cashflowOptions';
+import { CLASSES } from '@/constants/classes';
+import { addMoneyOut } from '@/constants/cashflowOptions';
 
 import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
 

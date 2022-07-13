@@ -1,7 +1,7 @@
 import React, { createContext, useState } from 'react';
 import { isEmpty, pick } from 'lodash';
 import { useLocation } from 'react-router-dom';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { DashboardInsider } from '@/components/Dashboard';
 import { transformToEditForm, ITEMS_FILTER_ROLES_QUERY } from './utils';

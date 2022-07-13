@@ -9,7 +9,7 @@ import { FastField, ErrorMessage } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
 import classNames from 'classnames';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import {
   momentFormatter,
   compose,

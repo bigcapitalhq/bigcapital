@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { FastField } from 'formik';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { entriesFieldShouldUpdate } from './utils';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';

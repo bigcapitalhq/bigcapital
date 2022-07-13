@@ -9,7 +9,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 
-import { TABLES } from '@/common/tables';
+import { TABLES } from '@/constants/tables';
 import {
   DataTable,
   DashboardContentTable,

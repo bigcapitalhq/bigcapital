@@ -5,7 +5,7 @@ import { CommercialDocEntriesTable } from '@/components';
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 import { useEstimateReadonlyEntriesColumns } from './utils';
 
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 
 /**
  * Estimate detail table.

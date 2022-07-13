@@ -5,7 +5,7 @@ import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { isEmpty } from 'lodash';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 import { EditBillFormSchema, CreateBillFormSchema } from './BillForm.schema';
 import BillFormHeader from './BillFormHeader';

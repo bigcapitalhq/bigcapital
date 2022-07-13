@@ -6,7 +6,7 @@ import * as R from 'ramda';
 import { MenuItem, Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import classNames from 'classnames';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 import {
   itemPredicate,
@@ -17,7 +17,7 @@ import {
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import { DRAWERS } from '@/common/drawers';
+import { DRAWERS } from '@/constants/drawers';
 
 function CustomerSelectFieldRoot({
   // #withDrawerActions

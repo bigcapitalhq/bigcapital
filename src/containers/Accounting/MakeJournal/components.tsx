@@ -18,7 +18,7 @@ import {
   BranchesListFieldCell,
 } from '@/components/DataTableCells';
 
-import { CellType, Features, Align } from '@/common';
+import { CellType, Features, Align } from '@/constants';
 
 import { useCurrentOrganization, useFeatureCan } from '@/hooks/state';
 import { useJournalIsForeign } from './utils';

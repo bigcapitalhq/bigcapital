@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import classNames from 'classnames';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 import DashboardTopbarUser from '@/components/Dashboard/TopbarUser';
 import UsersActions from '@/containers/Preferences/Users/UsersActions';

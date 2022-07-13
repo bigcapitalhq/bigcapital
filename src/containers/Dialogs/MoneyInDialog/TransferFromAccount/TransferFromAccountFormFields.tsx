@@ -27,7 +27,7 @@ import {
   BranchSelectButton,
 } from '@/components';
 import { useAutofocus } from '@/hooks';
-import { CLASSES, ACCOUNT_TYPE, Features } from '@/common';
+import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
 
 import {
   inputIntent,

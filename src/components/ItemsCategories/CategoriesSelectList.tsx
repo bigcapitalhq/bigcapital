@@ -4,7 +4,7 @@ import { ListSelect } from '@/components';
 import { MenuItem } from '@blueprintjs/core';
 import { saveInvoke } from '@/utils';
 import classNames from 'classnames';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 export function CategoriesSelectList({
   categories,

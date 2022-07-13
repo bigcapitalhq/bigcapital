@@ -9,7 +9,7 @@ import { FormattedMessage as T } from '@/components';
 import { useHistory } from 'react-router-dom';
 import { useContactDuplicateFromContext } from './ContactDuplicateProvider';
 
-import Contacts from '@/common/contactsOptions';
+import Contacts from '@/constants/contactsOptions';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';

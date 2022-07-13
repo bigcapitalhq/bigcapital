@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import {
   CreateCreditNoteFormSchema,
   EditCreditNoteFormSchema,

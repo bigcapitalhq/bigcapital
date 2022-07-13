@@ -2,8 +2,8 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { FormGroup, Intent } from '@blueprintjs/core';
 
 import { MoneyInputGroup } from '@/components';
-import { CLASSES } from '@/common/classes';
-import { CellType } from '@/common';
+import { CLASSES } from '@/constants/classes';
+import { CellType } from '@/constants';
 
 // Input form cell renderer.
 const MoneyFieldCellRenderer = ({

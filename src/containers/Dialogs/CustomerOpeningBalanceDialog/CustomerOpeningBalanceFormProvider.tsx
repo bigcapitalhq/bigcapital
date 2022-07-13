@@ -6,7 +6,7 @@ import {
   useEditCustomerOpeningBalance,
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { transfromCustomertoForm } from './utils';
 
 const CustomerOpeningBalanceContext = React.createContext();

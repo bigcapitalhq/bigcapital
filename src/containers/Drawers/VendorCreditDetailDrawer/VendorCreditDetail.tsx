@@ -10,7 +10,7 @@ import VendorCreditDetailPanel from './VendorCreditDetailPanel';
 import RefundVendorCreditTransactionsTable from './RefundVendorCreditTransactions/RefundVendorCreditTransactionsTable';
 import ReconcileVendorCreditTransactionsTable from './ReconcileVendorCreditTransactions/ReconcileVendorCreditTransactionsTable';
 import { VendorCreditGLEntriesTable } from './JournalEntriesTransactions/JournalEntriesTransactionsTable';
-import { VendorCreditAction, AbilitySubject } from '@/common/abilityOption';
+import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 
 /**
  * Vendor credit view detail.

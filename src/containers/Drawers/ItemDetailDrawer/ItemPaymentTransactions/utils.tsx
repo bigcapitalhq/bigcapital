@@ -10,7 +10,7 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
-import { useGetItemPaymentTransactionsMenu } from '@/common/itemPaymentTranactionsOption';
+import { useGetItemPaymentTransactionsMenu } from '@/constants/itemPaymentTranactionsOption';
 
 export const ItemManuTransaction = ({ onChange }) => {
   const { value, setValue } = useItemDetailDrawerContext();

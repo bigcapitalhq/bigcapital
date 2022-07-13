@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { useInvoice } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 

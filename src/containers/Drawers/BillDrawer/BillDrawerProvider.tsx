@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { useBill, useBillLocatedLandedCost } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 
 const BillDrawerContext = React.createContext();
 

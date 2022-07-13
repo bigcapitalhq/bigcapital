@@ -20,7 +20,7 @@ import {
 } from '@/components';
 
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
-import { VendorCreditAction, AbilitySubject } from '@/common/abilityOption';
+import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withVendorsCreditNotes from './withVendorsCreditNotes';

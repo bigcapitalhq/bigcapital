@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { FormGroup, Classes, Intent } from '@blueprintjs/core';
 
 import { PaymentReceiveListField } from '@/components';
-import { CellType } from '@/common';
+import { CellType } from '@/constants';
 function PaymentReceiveListFieldCell({
   column: { id },
   row: { index },

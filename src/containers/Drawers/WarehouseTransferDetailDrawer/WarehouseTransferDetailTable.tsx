@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 import { CommercialDocEntriesTable } from '@/components';
 import { useWarehouseTransferReadOnlyEntriesColumns } from './utils';
 import { useWarehouseDetailDrawerContext } from './WarehouseTransferDetailDrawerProvider';

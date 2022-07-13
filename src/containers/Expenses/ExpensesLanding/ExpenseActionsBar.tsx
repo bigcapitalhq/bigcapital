@@ -21,7 +21,7 @@ import {
   FormattedMessage as T,
 } from '@/components';
 
-import { ExpenseAction, AbilitySubject } from '@/common/abilityOption';
+import { ExpenseAction, AbilitySubject } from '@/constants/abilityOption';
 import { useRefreshExpenses } from '@/hooks/query/expenses';
 import { useExpensesListContext } from './ExpensesListProvider';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { FormGroup } from '@blueprintjs/core';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import {
   AccountsSelectList,
   FormattedMessage as T,
@@ -13,7 +13,7 @@ import withCurrentOrganization from '@/containers/Organization/withCurrentOrgani
 
 import { accountsFieldShouldUpdate } from './utils';
 import { compose, inputIntent } from '@/utils';
-import { ACCOUNT_TYPE } from '@/common/accountTypes';
+import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { useItemFormContext } from './ItemFormProvider';
 
 /**

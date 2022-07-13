@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { useExpense } from '@/hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 
 const ExpenseDrawerDrawerContext = React.createContext();

@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { Button, Alignment, NavbarGroup, Classes } from '@blueprintjs/core';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import {
   Icon,
   BranchSelect,

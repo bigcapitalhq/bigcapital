@@ -16,7 +16,7 @@ import {
   AccountsListFieldCell,
   CheckBoxFieldCell,
 } from '@/components/DataTableCells';
-import { CellType, Align } from '@/common';
+import { CellType, Align } from '@/constants';
 
 import { useCurrentOrganization } from '@/hooks/state';
 import { useExpensesIsForeign } from './utils';

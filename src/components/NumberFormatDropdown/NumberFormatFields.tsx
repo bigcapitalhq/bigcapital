@@ -1,7 +1,7 @@
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { FormGroup, Checkbox, Switch } from '@blueprintjs/core';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { ListSelect } from '@/components';
 import { FormattedMessage as T } from '@/components';
 import { inputIntent } from '@/utils';
@@ -9,7 +9,7 @@ import {
   moneyFormat,
   negativeFormat,
   decimalPlaces,
-} from '@/common/numberFormatsOptions';
+} from '@/constants/numberFormatsOptions';
 import classNames from 'classnames';
 
 /**

@@ -9,7 +9,7 @@ import {
   useInvoicePaymentTransactionsColumns,
   ActionsMenu,
 } from './components';
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';

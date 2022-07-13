@@ -13,7 +13,7 @@ import {
   Can,
   FormattedMessage as T,
 } from '@/components';
-import { ExpenseAction, AbilitySubject } from '@/common/abilityOption';
+import { ExpenseAction, AbilitySubject } from '@/constants/abilityOption';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';

@@ -13,7 +13,7 @@ import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { toSafeInteger } from 'lodash';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 import {
   FFormGroup,
@@ -29,7 +29,7 @@ import {
 } from '@/components';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
-import { ACCOUNT_TYPE } from '@/common/accountTypes';
+import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { PaymentMadeExchangeRateInputField } from './components';
 import {
   momentFormatter,

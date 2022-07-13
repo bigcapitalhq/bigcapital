@@ -13,8 +13,8 @@ import {
 
 import { FormatDateCell, Money, Icon, Can } from '@/components';
 import { safeCallback } from '@/utils';
-import { CLASSES } from '@/common/classes';
-import { PaymentReceiveAction, AbilitySubject } from '@/common/abilityOption';
+import { CLASSES } from '@/constants/classes';
+import { PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption';
 
 /**
  * Table actions menu.

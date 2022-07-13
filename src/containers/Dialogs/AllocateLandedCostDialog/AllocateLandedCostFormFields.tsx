@@ -12,8 +12,8 @@ import classNames from 'classnames';
 import { FormattedMessage as T, If } from '@/components';
 import { inputIntent, handleStringChange } from '@/utils';
 import { FieldRequiredHint, ListSelect } from '@/components';
-import { CLASSES } from '@/common/classes';
-import allocateLandedCostType from '@/common/allocateLandedCostType';
+import { CLASSES } from '@/constants/classes';
+import allocateLandedCostType from '@/constants/allocateLandedCostType';
 
 import AllocateLandedCostFormBody from './AllocateLandedCostFormBody';
 import {

@@ -18,7 +18,7 @@ import { isBlank, safeCallback } from '@/utils';
 import {
   InventoryAdjustmentAction,
   AbilitySubject,
-} from '@/common/abilityOption';
+} from '@/constants/abilityOption';
 
 /**
  * Publish accessor

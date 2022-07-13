@@ -9,7 +9,7 @@ import {
   CardFooterActions
 } from '@/components';
 import { inputIntent } from '@/utils';
-import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/common/accountTypes';
+import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/constants/accountTypes';
 
 import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
 

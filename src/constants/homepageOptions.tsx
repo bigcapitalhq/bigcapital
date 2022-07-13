@@ -15,7 +15,7 @@ import {
   ExpenseAction,
   ItemAction,
   ReportsAction,
-} from '../common/abilityOption';
+} from './abilityOption';
 
 export const accountsReceivable = [
   {

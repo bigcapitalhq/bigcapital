@@ -14,13 +14,13 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import { useRefreshCashflowAccounts } from '@/hooks/query';
-import { CashflowAction, AbilitySubject } from '@/common/abilityOption';
+import { CashflowAction, AbilitySubject } from '@/constants/abilityOption';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withCashflowAccountsTableActions from '../AccountTransactions/withCashflowAccountsTableActions';
 
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
-import { ACCOUNT_TYPE } from '@/common';
+import { ACCOUNT_TYPE } from '@/constants';
 
 import { compose } from '@/utils';
 

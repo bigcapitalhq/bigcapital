@@ -20,7 +20,7 @@ import {
 } from '@/components';
 import { ReceiptMoreMenuItems } from './components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
-import { SaleReceiptAction, AbilitySubject } from '@/common/abilityOption';
+import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback, compose } from '@/utils';
 
 /**

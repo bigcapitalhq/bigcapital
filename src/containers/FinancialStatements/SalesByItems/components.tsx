@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 
 import { getColumnWidth } from '@/utils';
 import { If } from '@/components';
-import { Align } from '@/common';
+import { Align } from '@/constants';
 import { CellTextSpan } from '@/components/Datatable/Cells';
 import { useSalesByItemsContext } from './SalesByItemProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';

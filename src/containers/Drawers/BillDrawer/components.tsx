@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import clsx from 'classnames';
 import { Intent, MenuItem, Menu } from '@blueprintjs/core';
 import { safeCallback } from '@/utils';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import {  Icon } from '@/components';
 
 /**

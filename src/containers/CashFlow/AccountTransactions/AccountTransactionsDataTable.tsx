@@ -9,7 +9,7 @@ import {
   TableVirtualizedListRows,
   FormattedMessage as T,
 } from '@/components';
-import { TABLES } from '@/common/tables';
+import { TABLES } from '@/constants/tables';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withAlertsActions from '@/containers/Alert/withAlertActions';

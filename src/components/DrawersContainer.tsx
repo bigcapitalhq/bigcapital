@@ -23,7 +23,7 @@ import RefundCreditNoteDetailDrawer from '../containers/Drawers/RefundCreditNote
 import RefundVendorCreditDetailDrawer from '../containers/Drawers/RefundVendorCreditDetailDrawer';
 import WarehouseTransferDetailDrawer from '../containers/Drawers/WarehouseTransferDetailDrawer'
 
-import { DRAWERS } from '@/common/drawers';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Drawers container of the dashboard.

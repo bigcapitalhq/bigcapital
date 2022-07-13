@@ -6,7 +6,7 @@ import {
   VendorAction,
   ManualJournalAction,
   ExpenseAction,
-} from '../common/abilityOption';
+} from './abilityOption';
 import { useAbilitiesFilter } from '../hooks';
 
 export const getQuickNewActions = () => [

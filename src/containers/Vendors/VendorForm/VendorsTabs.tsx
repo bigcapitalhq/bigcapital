@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { Tabs, Tab } from '@blueprintjs/core';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 import VendorFinanicalPanelTab from './VendorFinanicalPanelTab';
 import VendorAttahmentTab from './VendorAttahmentTab';

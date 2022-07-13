@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataTable, Card } from '@/components';
 
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 
 import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerProvider';

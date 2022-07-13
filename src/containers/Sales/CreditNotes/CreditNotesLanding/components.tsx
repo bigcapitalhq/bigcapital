@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import {
   FormatDateCell,
   FormattedMessage as T,
@@ -12,7 +12,7 @@ import {
   Can,
 } from '@/components';
 import { safeCallback } from '@/utils';
-import { CreditNoteAction, AbilitySubject } from '@/common/abilityOption';
+import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
 
 export function ActionsMenu({
   payload: { onEdit, onDelete, onRefund, onOpen, onReconcile, onViewDetails },

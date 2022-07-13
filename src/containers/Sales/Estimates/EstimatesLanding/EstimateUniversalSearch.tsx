@@ -3,8 +3,8 @@ import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
 
 import { Choose, T, Icon } from '@/components';
-import { RESOURCES_TYPES } from '@/common/resourcesTypes';
-import { AbilitySubject, SaleEstimateAction } from '@/common/abilityOption';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { AbilitySubject, SaleEstimateAction } from '@/constants/abilityOption';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 

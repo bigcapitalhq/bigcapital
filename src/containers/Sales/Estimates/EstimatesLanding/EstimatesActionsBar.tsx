@@ -28,7 +28,7 @@ import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useRefreshEstimates } from '@/hooks/query/estimates';
-import { SaleEstimateAction, AbilitySubject } from '@/common/abilityOption';
+import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
 import { compose } from '@/utils';
 
 /**

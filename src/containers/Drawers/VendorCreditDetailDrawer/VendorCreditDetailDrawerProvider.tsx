@@ -7,7 +7,7 @@ import {
 } from '@/hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 
 const VendorCreditDetailDrawerContext = React.createContext();
 

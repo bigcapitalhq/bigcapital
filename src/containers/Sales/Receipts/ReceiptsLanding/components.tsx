@@ -13,10 +13,10 @@ import {
   Button,
 } from '@blueprintjs/core';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { safeCallback } from '@/utils';
 import { FormatDateCell, Choose, Money, Icon, If, Can } from '@/components';
-import { SaleReceiptAction, AbilitySubject } from '@/common/abilityOption';
+import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 
 /**
  * Receipts table row actions menu.

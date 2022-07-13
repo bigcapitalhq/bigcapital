@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { Money } from '@/components';
 
 import '@/style/components/BigAmount.scss';

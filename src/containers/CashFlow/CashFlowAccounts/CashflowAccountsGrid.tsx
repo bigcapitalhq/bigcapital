@@ -12,7 +12,7 @@ import {
   AccountAction,
   CashflowAction,
   AbilitySubject,
-} from '@/common/abilityOption';
+} from '@/constants/abilityOption';
 
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
 
@@ -21,7 +21,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { safeCallback } from '@/utils';
-import { addMoneyIn, addMoneyOut } from '@/common/cashflowOptions';
+import { addMoneyIn, addMoneyOut } from '@/constants/cashflowOptions';
 
 const CASHFLOW_SKELETON_N = 4;
 

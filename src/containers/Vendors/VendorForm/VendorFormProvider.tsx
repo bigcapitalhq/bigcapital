@@ -9,7 +9,7 @@ import {
   useEditVendor,
   useBranches,
 } from '@/hooks/query';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 
 const VendorFormContext = createContext();

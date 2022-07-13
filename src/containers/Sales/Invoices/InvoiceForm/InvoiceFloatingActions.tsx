@@ -10,7 +10,7 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { useFormikContext } from 'formik';
 import { If, Icon, FormattedMessage as T } from '@/components';
 import { useHistory } from 'react-router-dom';

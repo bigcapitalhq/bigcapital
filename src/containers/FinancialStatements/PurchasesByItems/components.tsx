@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 
 import { If } from '@/components';
-import { Align } from '@/common';
+import { Align } from '@/constants';
 import { CellTextSpan } from '@/components/Datatable/Cells';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
 import { getColumnWidth } from '@/utils';

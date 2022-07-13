@@ -12,7 +12,7 @@ import {
   Can,
   FormattedMessage as T,
 } from '@/components';
-import { AccountAction, AbilitySubject } from '@/common/abilityOption';
+import { AccountAction, AbilitySubject } from '@/constants/abilityOption';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';

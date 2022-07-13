@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import clsx from 'classnames';
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import {
   FormatDateCell,
   FormattedMessage as T,
@@ -13,7 +13,7 @@ import {
   Can,
 } from '@/components';
 import { safeCallback } from '@/utils';
-import { VendorCreditAction, AbilitySubject } from '@/common/abilityOption';
+import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 
 /**
  * Actions menu.

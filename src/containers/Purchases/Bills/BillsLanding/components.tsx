@@ -28,7 +28,7 @@ import {
   BillAction,
   PaymentMadeAction,
   AbilitySubject,
-} from '@/common/abilityOption';
+} from '@/constants/abilityOption';
 
 /**
  * Actions menu.

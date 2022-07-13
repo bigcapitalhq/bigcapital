@@ -2,10 +2,10 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
 import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { FormatDateCell, Icon, Can } from '@/components';
 import { safeCallback } from '@/utils';
-import { PaymentReceiveAction, AbilitySubject } from '@/common/abilityOption';
+import { PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption';
 
 /**
  * Table actions menu.

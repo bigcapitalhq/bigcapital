@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import { isEmpty } from 'lodash';
 
-import { Align } from '@/common';
+import { Align } from '@/constants';
 import { CellTextSpan } from '@/components/Datatable/Cells';
 import { getColumnWidth } from '@/utils';
 

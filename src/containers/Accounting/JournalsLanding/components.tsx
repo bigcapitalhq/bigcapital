@@ -24,7 +24,7 @@ import {
 import {
   ManualJournalAction,
   AbilitySubject,
-} from "@/common/abilityOption";
+} from "@/constants/abilityOption";
 import { safeCallback } from '@/utils';
 
 /**

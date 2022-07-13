@@ -14,8 +14,8 @@ import {
 } from '@blueprintjs/core';
 import clsx from 'classnames';
 
-import { CLASSES } from '@/common/classes';
-import { ExpenseAction, AbilitySubject } from '@/common/abilityOption';
+import { CLASSES } from '@/constants/classes';
+import { ExpenseAction, AbilitySubject } from '@/constants/abilityOption';
 import {
   FormatDateCell,
   FormattedMessage as T,

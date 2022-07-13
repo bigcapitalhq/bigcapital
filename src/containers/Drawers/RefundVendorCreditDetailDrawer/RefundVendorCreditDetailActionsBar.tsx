@@ -9,7 +9,7 @@ import {
   FormattedMessage as T,
   Can,
 } from '@/components';
-import { VendorCreditAction, AbilitySubject } from '@/common/abilityOption';
+import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
 

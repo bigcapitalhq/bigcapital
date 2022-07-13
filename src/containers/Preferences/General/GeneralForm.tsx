@@ -13,11 +13,11 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import { inputIntent } from '@/utils';
-import { CLASSES } from '@/common/classes';
-import { getCountries } from '@/common/countries';
-import { getAllCurrenciesOptions } from '@/common/currencies';
-import { getFiscalYear } from '@/common/fiscalYearOptions';
-import { getLanguages } from '@/common/languagesOptions';
+import { CLASSES } from '@/constants/classes';
+import { getCountries } from '@/constants/countries';
+import { getAllCurrenciesOptions } from '@/constants/currencies';
+import { getFiscalYear } from '@/constants/fiscalYearOptions';
+import { getLanguages } from '@/constants/languagesOptions';
 import { useGeneralFormContext } from './GeneralFormProvider';
 
 import { shouldBaseCurrencyUpdate } from './utils';

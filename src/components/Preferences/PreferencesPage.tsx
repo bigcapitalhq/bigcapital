@@ -3,7 +3,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import classNames from 'classnames';
 import * as R from 'ramda';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 import PreferencesTopbar from '@/components/Preferences/PreferencesTopbar';
 import PreferencesContentRoute from '@/components/Preferences/PreferencesContentRoute';

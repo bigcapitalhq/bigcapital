@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 
 import { DataTable } from '@/components';
-import { TABLES } from '@/common/tables';
+import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useInventoryAdjustmentsColumns, ActionsMenu } from './components';
 import { useInventoryAdjustmentsContext } from './InventoryAdjustmentsProvider';

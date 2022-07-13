@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { DataTable, Card, TableSkeletonRows } from '@/components';
 
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 import { useBillPaymentTransactionsColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from '../BillDrawerProvider';
 import { useBillPaymentTransactions } from '@/hooks/query';

@@ -6,7 +6,7 @@ import {
   FieldRequiredHint,
   FormattedMessage as T,
 } from '@/components';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import classNames from 'classnames';
 import { compose, inputIntent } from '@/utils';
 import { useInviteUserFormContext } from './InviteUserFormProvider';

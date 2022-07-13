@@ -2,8 +2,8 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
 
-import { RESOURCES_TYPES } from '@/common/resourcesTypes';
-import { AbilitySubject, PaymentReceiveAction } from '@/common/abilityOption';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { AbilitySubject, PaymentReceiveAction } from '@/constants/abilityOption';
 import { highlightText } from '@/utils';
 import { Icon } from '@/components';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';

@@ -18,7 +18,7 @@ import {
 } from '@/components';
 
 import { Can, If, DashboardActionViewsList } from '@/components';
-import { SaleInvoiceAction, AbilitySubject } from '@/common/abilityOption';
+import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { useRefreshInvoices } from '@/hooks/query/invoices';
 import { useInvoicesListContext } from './InvoicesListProvider';

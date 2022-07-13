@@ -19,7 +19,7 @@ import {
 } from '@/components';
 
 import { useCreditNoteListContext } from './CreditNotesListProvider';
-import { CreditNoteAction, AbilitySubject } from '@/common/abilityOption';
+import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
 import withCreditNotes from './withCreditNotes';
 import withCreditNotesActions from './withCreditNotesActions';
 import withSettings from '@/containers/Settings/withSettings';

@@ -1,4 +1,4 @@
-import { RESOURCES_TYPES } from '@/common/resourcesTypes';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 /**

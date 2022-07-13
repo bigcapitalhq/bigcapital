@@ -23,7 +23,7 @@ import {
   DashboardFilterButton,
 } from '@/components';
 
-import { ItemAction, AbilitySubject } from '@/common/abilityOption';
+import { ItemAction, AbilitySubject } from '@/constants/abilityOption';
 import { useItemsListContext } from './ItemsListProvider';
 import { useRefreshItems } from '@/hooks/query/items';
 

@@ -5,7 +5,7 @@ import { Intent } from '@blueprintjs/core';
 import { defaultTo, sumBy, isEmpty } from 'lodash';
 import { Formik, Form } from 'formik';
 import { useHistory } from 'react-router-dom';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 import ExpenseFormBody from './ExpenseFormBody';
 import ExpenseFormHeader from './ExpenseFormHeader';

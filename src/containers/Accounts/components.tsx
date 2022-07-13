@@ -11,7 +11,7 @@ import {
 } from '@blueprintjs/core';
 import { Can, Icon, If } from '@/components';
 import { safeCallback } from '@/utils';
-import { AbilitySubject, AccountAction } from '@/common/abilityOption';
+import { AbilitySubject, AccountAction } from '@/constants/abilityOption';
 
 /**
  * Accounts table actions menu.

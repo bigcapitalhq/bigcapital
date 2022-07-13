@@ -18,7 +18,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
-import { ManualJournalAction, AbilitySubject } from '@/common/abilityOption';
+import { ManualJournalAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
 import { FastField } from 'formik';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { useBillFormContext } from './BillFormProvider';
 import { entriesFieldShouldUpdate } from './utils';
 import { ITEM_TYPE } from '@/containers/Entries/utils';

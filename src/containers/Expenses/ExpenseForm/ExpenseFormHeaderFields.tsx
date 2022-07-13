@@ -4,7 +4,7 @@ import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import {
   momentFormatter,
   tansformDateValue,
@@ -20,7 +20,7 @@ import {
   Hint,
 } from '@/components';
 import { ExpensesExchangeRateInputField } from './components';
-import { ACCOUNT_PARENT_TYPE } from '@/common/accountTypes';
+import { ACCOUNT_PARENT_TYPE } from '@/constants/accountTypes';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 
 /**

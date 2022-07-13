@@ -22,7 +22,7 @@ import {
   InputPrependButton,
 } from '@/components';
 import { momentFormatter, compose, tansformDateValue } from '@/utils';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { inputIntent, handleDateChange } from '@/utils';
 import {
   useObserveInvoiceNoSettings,

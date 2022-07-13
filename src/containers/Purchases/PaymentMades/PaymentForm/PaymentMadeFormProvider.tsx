@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
   useAccounts,

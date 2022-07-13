@@ -4,8 +4,8 @@ import clsx from 'classnames';
 import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { safeCallback } from '@/utils';
 import { Can, FormatDateCell, Icon } from '@/components';
-import { CLASSES } from '@/common/classes';
-import { PaymentMadeAction, AbilitySubject } from '@/common/abilityOption';
+import { CLASSES } from '@/constants/classes';
+import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 
 /**
  * Table actions menu.

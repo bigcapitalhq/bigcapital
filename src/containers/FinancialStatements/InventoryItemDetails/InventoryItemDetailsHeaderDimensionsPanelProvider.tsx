@@ -3,7 +3,7 @@ import React from 'react';
 import { useWarehouses, useBranches } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 
 const InventoryItemDetailsHeaderDimensionsPanelContext = React.createContext();
 

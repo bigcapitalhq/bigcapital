@@ -1,5 +1,5 @@
 export * from './accountTypes';
-export * from './TableStyle';
+export * from './tableStyle';
 export * from './features';
 export * from './cellTypes';
 export * from './classes';

@@ -8,7 +8,7 @@ import {
 } from '@blueprintjs/core';
 import { FastField, Form, useFormikContext, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from '@/components';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import classNames from 'classnames';
 import { inputIntent } from '@/utils';
 import { ListSelect, FieldRequiredHint } from '@/components';

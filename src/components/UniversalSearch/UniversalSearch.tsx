@@ -11,7 +11,7 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import { QueryList } from '@blueprintjs/select';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 import { Icon, If, ListSelect, FormattedMessage as T } from '@/components';
 import {
@@ -19,7 +19,7 @@ import {
   useUniversalSearchContext,
 } from './UniversalSearchProvider';
 import { filterItemsByResourceType } from './utils';
-import { RESOURCES_TYPES } from '../../common/resourcesTypes';
+import { RESOURCES_TYPES } from '../../constants/resourcesTypes';
 
 /**
  * Universal search input action.

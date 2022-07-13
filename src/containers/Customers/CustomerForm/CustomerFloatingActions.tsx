@@ -13,7 +13,7 @@ import {
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { Icon, FormattedMessage as T } from '@/components';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { useCustomerFormContext } from './CustomerFormProvider';
 import { safeInvoke } from '@/utils';
 

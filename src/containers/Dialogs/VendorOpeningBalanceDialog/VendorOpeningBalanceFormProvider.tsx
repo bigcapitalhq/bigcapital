@@ -6,7 +6,7 @@ import {
   useEditVendorOpeningBalance,
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { transfromVendorToForm } from './utils';
 
 const VendorOpeningBalanceContext = React.createContext();

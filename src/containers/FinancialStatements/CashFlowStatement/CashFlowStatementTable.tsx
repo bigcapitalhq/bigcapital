@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 import { DataTable, FinancialSheet } from '@/components';
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 

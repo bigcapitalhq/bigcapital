@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { DrawerMainTabs } from '@/components';
 import { useAbilityContext } from '@/hooks/utils';
-import { PaymentMadeAction, AbilitySubject } from '@/common/abilityOption';
+import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 import BillDetailTab from './BillDetailTab';
 import LocatedLandedCostTable from './LocatedLandedCostTable';
 import BillGLEntriesTable from './BillGLEntriesTable';

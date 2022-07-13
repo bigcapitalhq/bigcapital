@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { useWarehouses } from '@/hooks/query';
 import { isEmpty } from 'lodash';
 
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 
 const WarehousesContext = React.createContext();

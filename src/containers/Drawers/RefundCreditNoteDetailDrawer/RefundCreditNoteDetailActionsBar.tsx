@@ -10,7 +10,7 @@ import {
   FormattedMessage as T,
   Can,
 } from '@/components';
-import { CreditNoteAction, AbilitySubject } from '@/common/abilityOption';
+import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
 

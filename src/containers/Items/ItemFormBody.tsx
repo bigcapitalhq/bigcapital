@@ -20,7 +20,7 @@ import classNames from 'classnames';
 
 import { useItemFormContext } from './ItemFormProvider';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
-import { ACCOUNT_PARENT_TYPE } from '@/common/accountTypes';
+import { ACCOUNT_PARENT_TYPE } from '@/constants/accountTypes';
 import {
   sellDescriptionFieldShouldUpdate,
   sellAccountFieldShouldUpdate,

@@ -5,7 +5,7 @@ import { useFormikContext } from 'formik';
 
 import InvoiceFormHeaderFields from './InvoiceFormHeaderFields';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { PageFormBigNumber } from '@/components';
 import { useInvoiceTotal } from './utils';
 

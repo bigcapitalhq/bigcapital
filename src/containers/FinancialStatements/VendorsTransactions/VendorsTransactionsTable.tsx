@@ -8,7 +8,7 @@ import { useVendorsTransactionsColumns } from './components';
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 
 /**
  * Vendors transactions table.

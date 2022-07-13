@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 import { CreateCustomerForm, EditCustomerForm } from './CustomerForm.schema';
 import { compose, transformToForm, saveInvoke } from '@/utils';
 import { useCustomerFormContext } from './CustomerFormProvider';

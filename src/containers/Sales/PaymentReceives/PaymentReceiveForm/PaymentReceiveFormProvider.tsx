@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { isEqual, isUndefined } from 'lodash';
-import { Features } from '@/common';
+import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { DashboardInsider } from '@/components';
 import {

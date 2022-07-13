@@ -12,7 +12,7 @@ import {
 import { useFormikContext } from 'formik';
 
 import { formattedAmount, defaultFastFieldShouldUpdate } from '@/utils';
-import { ERROR } from '@/common/errors';
+import { ERROR } from '@/constants/errors';
 import { AppToaster } from '@/components';
 import { useCurrentOrganization } from '@/hooks/state';
 import { getEntriesTotal } from '@/containers/Entries/utils';

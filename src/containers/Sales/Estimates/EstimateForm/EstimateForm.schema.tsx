@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import intl from 'react-intl-universal';
 import moment from 'moment';
-import { DATATYPES_LENGTH } from '@/common/dataTypes';
+import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 import { isBlank } from '@/utils';
 
 const Schema = Yup.object().shape({

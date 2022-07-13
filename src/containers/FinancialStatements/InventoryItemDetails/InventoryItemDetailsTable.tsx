@@ -7,7 +7,7 @@ import { useInventoryItemDetailsColumns } from './components';
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
 
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
-import { TableStyle } from '@/common';
+import { TableStyle } from '@/constants';
 
 /**
  * Inventory item detail table.

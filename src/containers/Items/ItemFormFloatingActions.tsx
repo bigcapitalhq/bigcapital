@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import { Button, Intent, FormGroup, Checkbox } from '@blueprintjs/core';
 import { FastField, useFormikContext } from 'formik';
-import { CLASSES } from '@/common/classes';
+import { CLASSES } from '@/constants/classes';
 
 import { useItemFormContext } from './ItemFormProvider';
 import { FormattedMessage as T } from '@/components';
