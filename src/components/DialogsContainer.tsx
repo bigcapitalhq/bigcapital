@@ -16,30 +16,32 @@ import QuickPaymentMadeFormDialog from '@/containers/Dialogs/QuickPaymentMadeFor
 import AllocateLandedCostDialog from '@/containers/Dialogs/AllocateLandedCostDialog';
 import InvoicePdfPreviewDialog from '@/containers/Dialogs/InvoicePdfPreviewDialog';
 import EstimatePdfPreviewDialog from '@/containers/Dialogs/EstimatePdfPreviewDialog';
-import ReceiptPdfPreviewDialog from '../containers/Dialogs/ReceiptPdfPreviewDialog';
-import MoneyInDialog from '../containers/Dialogs/MoneyInDialog';
-import MoneyOutDialog from '../containers/Dialogs/MoneyOutDialog';
-import BadDebtDialog from '../containers/Dialogs/BadDebtDialog';
-import NotifyInvoiceViaSMSDialog from '../containers/Dialogs/NotifyInvoiceViaSMSDialog';
-import NotifyReceiptViaSMSDialog from '../containers/Dialogs/NotifyReceiptViaSMSDialog';
-import NotifyEstimateViaSMSDialog from '../containers/Dialogs/NotifyEstimateViaSMSDialog';
-import NotifyPaymentReceiveViaSMSDialog from '../containers/Dialogs/NotifyPaymentReceiveViaSMSDialog';
-import SMSMessageDialog from '../containers/Dialogs/SMSMessageDialog';
-import RefundCreditNoteDialog from '../containers/Dialogs/RefundCreditNoteDialog';
-import RefundVendorCreditDialog from '../containers/Dialogs/RefundVendorCreditDialog';
-import ReconcileCreditNoteDialog from '../containers/Dialogs/ReconcileCreditNoteDialog';
-import ReconcileVendorCreditDialog from '../containers/Dialogs/ReconcileVendorCreditDialog';
-import LockingTransactionsDialog from '../containers/Dialogs/LockingTransactionsDialog';
-import UnlockingTransactionsDialog from '../containers/Dialogs/UnlockingTransactionsDialog';
-import UnlockingPartialTransactionsDialog from '../containers/Dialogs/UnlockingPartialTransactionsDialog';
-import CreditNotePdfPreviewDialog from '../containers/Dialogs/CreditNotePdfPreviewDialog';
-import PaymentReceivePdfPreviewDialog from '../containers/Dialogs/PaymentReceivePdfPreviewDialog';
-import WarehouseFormDialog from '../containers/Dialogs/WarehouseFormDialog';
-import BranchFormDialog from '../containers/Dialogs/BranchFormDialog';
-import BranchActivateDialog from '../containers/Dialogs/BranchActivateDialog';
-import WarehouseActivateDialog from '../containers/Dialogs/WarehouseActivateDialog';
-import CustomerOpeningBalanceDialog from '../containers/Dialogs/CustomerOpeningBalanceDialog';
-import VendorOpeningBalanceDialog from '../containers/Dialogs/VendorOpeningBalanceDialog';
+import ReceiptPdfPreviewDialog from '@/containers/Dialogs/ReceiptPdfPreviewDialog';
+import MoneyInDialog from '@/containers/Dialogs/MoneyInDialog';
+import MoneyOutDialog from '@/containers/Dialogs/MoneyOutDialog';
+import BadDebtDialog from '@/containers/Dialogs/BadDebtDialog';
+import NotifyInvoiceViaSMSDialog from '@/containers/Dialogs/NotifyInvoiceViaSMSDialog';
+import NotifyReceiptViaSMSDialog from '@/containers/Dialogs/NotifyReceiptViaSMSDialog';
+import NotifyEstimateViaSMSDialog from '@/containers/Dialogs/NotifyEstimateViaSMSDialog';
+import NotifyPaymentReceiveViaSMSDialog from '@/containers/Dialogs/NotifyPaymentReceiveViaSMSDialog';
+import SMSMessageDialog from '@/containers/Dialogs/SMSMessageDialog';
+import RefundCreditNoteDialog from '@/containers/Dialogs/RefundCreditNoteDialog';
+import RefundVendorCreditDialog from '@/containers/Dialogs/RefundVendorCreditDialog';
+import ReconcileCreditNoteDialog from '@/containers/Dialogs/ReconcileCreditNoteDialog';
+import ReconcileVendorCreditDialog from '@/containers/Dialogs/ReconcileVendorCreditDialog';
+import LockingTransactionsDialog from '@/containers/Dialogs/LockingTransactionsDialog';
+import UnlockingTransactionsDialog from '@/containers/Dialogs/UnlockingTransactionsDialog';
+import UnlockingPartialTransactionsDialog from '@/containers/Dialogs/UnlockingPartialTransactionsDialog';
+import CreditNotePdfPreviewDialog from '@/containers/Dialogs/CreditNotePdfPreviewDialog';
+import PaymentReceivePdfPreviewDialog from '@/containers/Dialogs/PaymentReceivePdfPreviewDialog';
+import WarehouseFormDialog from '@/containers/Dialogs/WarehouseFormDialog';
+import BranchFormDialog from '@/containers/Dialogs/BranchFormDialog';
+import BranchActivateDialog from '@/containers/Dialogs/BranchActivateDialog';
+import WarehouseActivateDialog from '@/containers/Dialogs/WarehouseActivateDialog';
+import CustomerOpeningBalanceDialog from '@/containers/Dialogs/CustomerOpeningBalanceDialog';
+import VendorOpeningBalanceDialog from '@/containers/Dialogs/VendorOpeningBalanceDialog';
+
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Dialogs container.
@@ -47,49 +49,73 @@ import VendorOpeningBalanceDialog from '../containers/Dialogs/VendorOpeningBalan
 export default function DialogsContainer() {
   return (
     <div>
-      <AccountDialog dialogName={'account-form'} />
-      <CurrencyFormDialog dialogName={'currency-form'} />
-      <InviteUserDialog dialogName={'invite-user'} />
-      <UserFormDialog dialogName={'user-form'} />
-      <ExchangeRateFormDialog dialogName={'exchangeRate-form'} />
-      <ItemCategoryDialog dialogName={'item-category-form'} />
-      <InventoryAdjustmentDialog dialogName={'inventory-adjustment'} />
-      <PaymentViaVoucherDialog dialogName={'payment-via-voucher'} />
-      <KeyboardShortcutsDialog dialogName={'keyboard-shortcuts'} />
-      <ContactDuplicateDialog dialogName={'contact-duplicate'} />
-      <QuickPaymentReceiveFormDialog dialogName={'quick-payment-receive'} />
-      <QuickPaymentMadeFormDialog dialogName={'quick-payment-made'} />
-      <AllocateLandedCostDialog dialogName={'allocate-landed-cost'} />
-      <InvoicePdfPreviewDialog dialogName={'invoice-pdf-preview'} />
-      <EstimatePdfPreviewDialog dialogName={'estimate-pdf-preview'} />
-      <ReceiptPdfPreviewDialog dialogName={'receipt-pdf-preview'} />
-      <MoneyInDialog dialogName={'money-in'} />
-      <MoneyOutDialog dialogName={'money-out'} />
-
-      <NotifyInvoiceViaSMSDialog dialogName={'notify-invoice-via-sms'} />
-      <NotifyReceiptViaSMSDialog dialogName={'notify-receipt-via-sms'} />
-      <NotifyEstimateViaSMSDialog dialogName={'notify-estimate-via-sms'} />
-      <NotifyPaymentReceiveViaSMSDialog dialogName={'notify-payment-via-sms'} />
-
-      <BadDebtDialog dialogName={'write-off-bad-debt'} />
-      <SMSMessageDialog dialogName={'sms-message-form'} />
-      <RefundCreditNoteDialog dialogName={'refund-credit-note'} />
-      <RefundVendorCreditDialog dialogName={'refund-vendor-credit'} />
-      <ReconcileCreditNoteDialog dialogName={'reconcile-credit-note'} />
-      <ReconcileVendorCreditDialog dialogName={'reconcile-vendor-credit'} />
-      <LockingTransactionsDialog dialogName={'locking-transactions'} />
-      <UnlockingTransactionsDialog dialogName={'unlocking-transactions'} />
-      <UnlockingPartialTransactionsDialog
-        dialogName={'unlocking-partial-transactions'}
+      <AccountDialog dialogName={DialogsName.AccountForm} />
+      <CurrencyFormDialog dialogName={DialogsName.CurrencyForm} />
+      <InviteUserDialog dialogName={DialogsName.InviteForm} />
+      <UserFormDialog dialogName={DialogsName.UserForm} />
+      <ExchangeRateFormDialog dialogName={DialogsName.ExchangeRateForm} />
+      <ItemCategoryDialog dialogName={DialogsName.ItemCategoryForm} />
+      <InventoryAdjustmentDialog
+        dialogName={DialogsName.InventoryAdjustmentForm}
       />
-      <CreditNotePdfPreviewDialog dialogName={'credit-note-pdf-preview'} />
-      <PaymentReceivePdfPreviewDialog dialogName={'payment-pdf-preview'} />
-      <WarehouseFormDialog dialogName={'warehouse-form'} />
-      <BranchFormDialog dialogName={'branch-form'} />
-      <BranchActivateDialog dialogName={'branch-activate'} />
-      <WarehouseActivateDialog dialogName={'warehouse-activate'} />
-      <CustomerOpeningBalanceDialog dialogName={'customer-opening-balance'} />
-      <VendorOpeningBalanceDialog dialogName={'vendor-opening-balance'} />
+      <PaymentViaVoucherDialog dialogName={DialogsName.PaymentViaVoucherForm} />
+      <KeyboardShortcutsDialog dialogName={DialogsName.KeyboardShortcutForm} />
+      <ContactDuplicateDialog dialogName={DialogsName.ContactDuplicateForm} />
+      <QuickPaymentReceiveFormDialog
+        dialogName={DialogsName.QuickPaymentReceiveForm}
+      />
+      <QuickPaymentMadeFormDialog
+        dialogName={DialogsName.QuickPaymentMadeForm}
+      />
+      <AllocateLandedCostDialog
+        dialogName={DialogsName.AllocateLandedCostForm}
+      />
+      <InvoicePdfPreviewDialog dialogName={DialogsName.InvoicePdfForm} />
+      <EstimatePdfPreviewDialog dialogName={DialogsName.EstimatePdfForm} />
+      <ReceiptPdfPreviewDialog dialogName={DialogsName.ReceiptPdfForm} />
+      <MoneyInDialog dialogName={DialogsName.MoneyInForm} />
+      <MoneyOutDialog dialogName={DialogsName.MoneyOutForm} />
+
+      <NotifyInvoiceViaSMSDialog
+        dialogName={DialogsName.NotifyInvoiceViaForm}
+      />
+      <NotifyReceiptViaSMSDialog
+        dialogName={DialogsName.NotifyReceiptViaForm}
+      />
+      <NotifyEstimateViaSMSDialog
+        dialogName={DialogsName.NotifyEstimateViaForm}
+      />
+      <NotifyPaymentReceiveViaSMSDialog
+        dialogName={DialogsName.NotifyPaymentViaForm}
+      />
+
+      <BadDebtDialog dialogName={DialogsName.BadDebtForm} />
+      <SMSMessageDialog dialogName={DialogsName.SMSMessageForm} />
+      <RefundCreditNoteDialog dialogName={DialogsName.RefundCreditNote} />
+      <RefundVendorCreditDialog dialogName={DialogsName.RefundVendorCredit} />
+      <ReconcileCreditNoteDialog dialogName={DialogsName.ReconcileCreditNote} />
+      <ReconcileVendorCreditDialog
+        dialogName={DialogsName.ReconcileVendorCredit}
+      />
+      <LockingTransactionsDialog dialogName={DialogsName.TransactionsLocking} />
+      <UnlockingTransactionsDialog
+        dialogName={DialogsName.TransactionsUnlocking}
+      />
+      <UnlockingPartialTransactionsDialog
+        dialogName={DialogsName.PartialTransactionsUnlocking}
+      />
+      <CreditNotePdfPreviewDialog dialogName={DialogsName.CreditNotePdfForm} />
+      <PaymentReceivePdfPreviewDialog dialogName={DialogsName.PaymentPdfForm} />
+      <WarehouseFormDialog dialogName={DialogsName.WarehouseForm} />
+      <BranchFormDialog dialogName={DialogsName.BranchForm} />
+      <BranchActivateDialog dialogName={DialogsName.BranchActivateForm} />
+      <WarehouseActivateDialog dialogName={DialogsName.WarehouseActivateForm} />
+      <CustomerOpeningBalanceDialog
+        dialogName={DialogsName.CustomerOpeningBalanceForm}
+      />
+      <VendorOpeningBalanceDialog
+        dialogName={DialogsName.VendorOpeningBalanceForm}
+      />
     </div>
   );
 }
