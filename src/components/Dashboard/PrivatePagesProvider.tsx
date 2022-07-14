@@ -1,5 +1,5 @@
 import React from 'react';
-import { useApplicationBoot } from '../../components';
+import { useApplicationBoot } from '@/components';
 
 /**
  * Private pages provider.

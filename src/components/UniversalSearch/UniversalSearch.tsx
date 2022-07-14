@@ -19,7 +19,7 @@ import {
   useUniversalSearchContext,
 } from './UniversalSearchProvider';
 import { filterItemsByResourceType } from './utils';
-import { RESOURCES_TYPES } from '../../constants/resourcesTypes';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 
 /**
  * Universal search input action.

@@ -1,4 +1,4 @@
-import { getUniversalSearchBind } from '../../../containers/UniversalSearch/utils';
+import { getUniversalSearchBind } from '@/containers/UniversalSearch/utils';
 import { useResourceData } from '../GenericResource';
 
 /**

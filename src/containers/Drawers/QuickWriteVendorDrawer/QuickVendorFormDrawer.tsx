@@ -7,8 +7,8 @@ import { Card, DrawerLoading } from '@/components';
 import {
   VendorFormProvider,
   useVendorFormContext,
-} from '../../Vendors/VendorForm/VendorFormProvider';
-import VendorFormFormik from '../../Vendors/VendorForm/VendorFormFormik';
+} from '@/containers/Vendors/VendorForm/VendorFormProvider';
+import VendorFormFormik from '@/containers/Vendors/VendorForm/VendorFormFormik';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';

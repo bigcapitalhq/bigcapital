@@ -9,7 +9,7 @@ import {
   closeSidebarSubmenu,
   openDialog,
   closeDialog,
-} from '../../store/dashboard/dashboard.actions';
+} from '@/store/dashboard/dashboard.actions';
 
 export const useDispatchAction = (action) => {
   const dispatch = useDispatch();

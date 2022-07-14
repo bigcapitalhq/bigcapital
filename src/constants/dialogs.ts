@@ -7,7 +7,7 @@ export enum DialogsName {
   ItemCategoryForm = 'item-category-form',
   InventoryAdjustmentForm = 'inventory-adjustment',
   PaymentViaVoucherForm = 'payment-via-voucher',
-  KeyboardShortcutForm = 'keyboard-shortcut',
+  KeyboardShortcutForm = 'keyboard-shortcuts',
   ContactDuplicateForm = 'contact-duplicate',
   QuickPaymentReceiveForm = 'quick-payment-receive',
   QuickPaymentMadeForm = 'quick-payment-made',

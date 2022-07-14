@@ -7,8 +7,8 @@ import { Card, DrawerLoading } from '@/components';
 import {
   CustomerFormProvider,
   useCustomerFormContext,
-} from '../../Customers/CustomerForm/CustomerFormProvider';
-import CustomerFormFormik from '../../Customers/CustomerForm/CustomerFormFormik';
+} from '@/containers/Customers/CustomerForm/CustomerFormProvider';
+import CustomerFormFormik from '@/containers/Customers/CustomerForm/CustomerFormFormik';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 

@@ -35,7 +35,7 @@ import {
   SaleReceiptAction,
   PaymentReceiveAction,
   CustomerAction,
-} from '../../../constants/abilityOption';
+} from '@/constants/abilityOption';
 import { compose } from '@/utils';
 
 /**

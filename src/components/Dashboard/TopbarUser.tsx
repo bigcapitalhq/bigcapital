@@ -14,9 +14,9 @@ import { firstLettersArgs } from '@/utils';
 import { useAuthActions } from '@/hooks/state';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSubscriptions from '../../containers/Subscriptions/withSubscriptions';
+import withSubscriptions from '@/containers/Subscriptions/withSubscriptions';
 
-import { useAuthenticatedAccount } from '@/hooks/query'
+import { useAuthenticatedAccount } from '@/hooks/query';
 import { compose } from '@/utils';
 
 /**
@@ -26,7 +26,7 @@ function DashboardTopbarUser({
   openDialog,
 
   // #withSubscriptions
-  isSubscriptionActive
+  isSubscriptionActive,
 }) {
   const history = useHistory();
   const { setLogout } = useAuthActions();

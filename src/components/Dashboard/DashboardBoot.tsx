@@ -3,11 +3,11 @@ import {
   useAuthenticatedAccount,
   useCurrentOrganization,
   useDashboardMeta,
-} from '../../hooks/query';
-import { useSplashLoading } from '../../hooks/state';
-import { useWatch, useWatchImmediate, useWhen } from '../../hooks';
-import { useSubscription } from '../../hooks/state';
-import { setCookie, getCookie } from '../../utils';
+} from '@/hooks/query';
+import { useSplashLoading } from '@/hooks/state';
+import { useWatch, useWatchImmediate, useWhen } from '@/hooks';
+import { useSubscription } from '@/hooks/state';
+import { setCookie, getCookie } from '@/utils';
 
 /**
  * Dashboard meta async booting.
@@ -40,7 +40,7 @@ export function useDashboardMetaBoot() {
   return {
     meta: dashboardMeta,
     isLoading: isDashboardMetaLoading,
-    isSuccess: isDashboardMetaSuccess
+    isSuccess: isDashboardMetaSuccess,
   };
 }
 

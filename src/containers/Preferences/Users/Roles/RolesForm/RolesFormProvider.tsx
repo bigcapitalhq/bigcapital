@@ -8,7 +8,7 @@ import {
   usePermissionsSchema,
   useRolePermission,
 } from '@/hooks/query';
-import PreferencesPageLoader from '../../../PreferencesPageLoader';
+import PreferencesPageLoader from '@/containers/Preferences/PreferencesPageLoader';
 
 const RolesFormContext = React.createContext();
 
