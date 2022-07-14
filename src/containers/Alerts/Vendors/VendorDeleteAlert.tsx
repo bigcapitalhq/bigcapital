@@ -47,7 +47,7 @@ function VendorDeleteAlert({
           message: intl.get('the_vendor_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('vendor-details-drawer');
+        closeDrawer('vendor-detail-drawer');
       })
       .catch(
         ({

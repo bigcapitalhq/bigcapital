@@ -57,22 +57,22 @@ function CustomerDetailsActionsBar({
   // Handle new invoice button click.
   const handleNewInvoiceClick = () => {
     history.push('invoices/new');
-    closeDrawer('customer-details-drawer');
+    closeDrawer('customer-detail-drawer');
   };
   // Handle new receipt button click.
   const handleNewReceiptClick = () => {
     history.push('receipts/new');
-    closeDrawer('customer-details-drawer');
+    closeDrawer('customer-detail-drawer');
   };
   // Handle new payment receive button click.
   const handleNewPaymentClick = () => {
     history.push('payment-receives/new');
-    closeDrawer('customer-details-drawer');
+    closeDrawer('customer-detail-drawer');
   };
   // Handle new estimate button click.
   const handleNewEstimateClick = () => {
     history.push('estimates/new');
-    closeDrawer('customer-details-drawer');
+    closeDrawer('customer-detail-drawer');
   };
 
   const handleDeleteCustomer = () => {

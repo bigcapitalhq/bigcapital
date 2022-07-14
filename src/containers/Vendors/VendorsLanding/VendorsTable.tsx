@@ -92,12 +92,12 @@ function VendorsTable({
 
   // Handle view detail item.
   const handleViewDetailVendor = ({ id }) => {
-    openDrawer('vendor-details-drawer', { vendorId: id });
+    openDrawer('vendor-detail-drawer', { vendorId: id });
   };
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('vendor-details-drawer', { vendorId: cell.row.original.id });
+    openDrawer('vendor-detail-drawer', { vendorId: cell.row.original.id });
   };
 
   // Local storage memorizing columns widths.

@@ -25,7 +25,7 @@ function CustomerDetailsDrawerProvider({ customerId, ...props }) {
   return (
     <DrawerLoading loading={isCustomerLoading}>
       <DrawerHeaderContent
-        name="customer-details-drawer"
+        name="customer-detail-drawer"
         title={customer?.display_name}
       />
       <ContactDetailDrawerContext.Provider value={provider} {...props} />

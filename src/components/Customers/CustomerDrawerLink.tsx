@@ -15,7 +15,7 @@ function CustomerDrawerLinkComponent({
 }) {
   // Handle view customer drawer.
   const handleCustomerDrawer = (event) => {
-    openDrawer('customer-details-drawer', { customerId });
+    openDrawer('customer-detail-drawer', { customerId });
     event.preventDefault();
   };
 

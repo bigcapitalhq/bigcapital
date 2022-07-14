@@ -1,7 +1,7 @@
 export enum DialogsName {
   AccountForm = 'account-form',
   CurrencyForm = 'currency-form',
-  InviteForm = 'invite-form',
+  InviteForm = 'invite-user',
   UserForm = 'user-form',
   ExchangeRateForm = 'exchangeRate-form',
   ItemCategoryForm = 'item-category-form',

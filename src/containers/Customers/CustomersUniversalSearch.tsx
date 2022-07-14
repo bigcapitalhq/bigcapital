@@ -13,7 +13,7 @@ function CustomerUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.CUSTOMER) {
-    openDrawer('customer-details-drawer', { customerId: resourceId });
+    openDrawer('customer-detail-drawer', { customerId: resourceId });
     onAction && onAction();
   }
   return null;

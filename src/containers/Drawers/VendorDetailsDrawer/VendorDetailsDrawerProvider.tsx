@@ -22,7 +22,7 @@ function VendorDetailsDrawerProvider({ vendorId, ...props }) {
   return (
     <DrawerLoading loading={isVendorLoading}>
       <DrawerHeaderContent
-        name="vendor-details-drawer"
+        name="vendor-detail-drawer"
         title={vendor?.display_name}
       />
       <VendorDetailDrawerContext.Provider value={provider} {...props} />

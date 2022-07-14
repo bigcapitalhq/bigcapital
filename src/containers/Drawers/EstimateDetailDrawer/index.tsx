@@ -14,6 +14,7 @@ function EstimateDetailDrawer({
   isOpen,
   payload: { estimateId },
 }) {
+ 
   return (
     <Drawer
       isOpen={isOpen}

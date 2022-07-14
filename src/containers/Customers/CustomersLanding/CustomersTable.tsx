@@ -107,12 +107,12 @@ function CustomersTable({
 
   // Handle view detail contact.
   const handleViewDetailCustomer = ({ id }) => {
-    openDrawer('customer-details-drawer', { customerId: id });
+    openDrawer('customer-detail-drawer', { customerId: id });
   };
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('customer-details-drawer', { customerId: cell.row.original.id });
+    openDrawer('customer-detail-drawer', { customerId: cell.row.original.id });
   };
 
   if (isEmptyStatus) {

@@ -46,7 +46,7 @@ function CustomerDeleteAlert({
           message: intl.get('the_customer_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('customer-details-drawer');
+        closeDrawer('customer-detail-drawer');
       })
       .catch(
         ({

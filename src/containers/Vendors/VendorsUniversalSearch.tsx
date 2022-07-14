@@ -16,7 +16,7 @@ function VendorUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.VENDOR) {
-    openDrawer('vendor-details-drawer', { vendorId: resourceId });
+    openDrawer('vendor-detail-drawer', { vendorId: resourceId });
     onAction && onAction();
   }
   return null;

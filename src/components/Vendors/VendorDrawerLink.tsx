@@ -15,11 +15,17 @@ function VendorDrawerLinkComponent({
 }) {
   // Handle view customer drawer.
   const handleVendorDrawer = (event) => {
-    openDrawer('vendor-details-drawer', { vendorId });
+    openDrawer('vendor-detail-drawer', { vendorId });
     event.preventDefault();
   };
 
-  return <ButtonLink className={className} onClick={handleVendorDrawer}>{children}</ButtonLink>;
+  return (
+    <ButtonLink className={className} onClick={handleVendorDrawer}>
+      {children}
+    </ButtonLink>
+  );
 }
 
-export const VendorDrawerLink = R.compose(withDrawerActions)(VendorDrawerLinkComponent);
+export const VendorDrawerLink = R.compose(withDrawerActions)(
+  VendorDrawerLinkComponent,
+);

@@ -54,7 +54,7 @@ function VendorDetailsActionsBar({
   // Handle edit vendor.
   const onEditContact = () => {
     history.push(`/vendors/${vendorId}/edit`);
-    closeDrawer('vendor-details-drawer');
+    closeDrawer('vendor-detail-drawer');
   };
 
   // Handle delete vendor.
@@ -64,12 +64,12 @@ function VendorDetailsActionsBar({
 
   const handleNewInvoiceClick = () => {
     history.push('bills/new');
-    closeDrawer('vendor-details-drawer');
+    closeDrawer('vendor-detail-drawer');
   };
 
   const handleNewPaymentClick = () => {
     history.push('payment-mades/new');
-    closeDrawer('vendor-details-drawer');
+    closeDrawer('vendor-detail-drawer');
   };
 
   const handleEditOpeningBalance = () => {
