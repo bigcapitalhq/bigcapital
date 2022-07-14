@@ -40,7 +40,7 @@ function ProjectFormFields() {
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Contact -----------*/}
-      <FastField name={'contact'}>
+      <FastField name={'contact_id'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={intl.get('projects.dialog.contact')}
@@ -53,7 +53,7 @@ function ProjectFormFields() {
               selectedContactId={value}
               defaultSelectText={'Select Contact Account'}
               onContactSelected={(customer) => {
-                form.setFieldValue('contact', customer.id);
+                form.setFieldValue('contact_id', customer.id);
               }}
               allowCreate={true}
               popoverFill={true}
@@ -64,19 +64,19 @@ function ProjectFormFields() {
       {/*------------ Project Name -----------*/}
       <FFormGroup
         label={intl.get('projects.dialog.project_name')}
-        name={'projectName'}
+        name={'name'}
       >
-        <FInputGroup name="projectName" />
+        <FInputGroup name="name" />
       </FFormGroup>
       {/*------------ DeadLine -----------*/}
       <FFormGroup
         label={intl.get('projects.dialog.deadline')}
-        name={'projectDeadline'}
+        name={'deadline'}
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
         <FDateInput
           {...momentFormatter('YYYY/MM/DD')}
-          name="projectDeadline"
+          name="deadline"
           formatDate={(date) => date.toLocaleString()}
           popoverProps={{
             position: Position.BOTTOM,
@@ -94,14 +94,14 @@ function ProjectFormFields() {
       </FFormGroup>
       {/*------------ Cost Estimate -----------*/}
       <FFormGroup
-        name={'projectCost'}
+        name={'cost_estimate'}
         label={intl.get('projects.dialog.cost_estimate')}
       >
         <ControlGroup>
           <InputPrependText text={'USD'} />
           <FMoneyInputGroup
             disabled={values.published}
-            name={'project_cost'}
+            name={'cost_estimate'}
             allowDecimals={true}
             allowNegativeValue={true}
           />

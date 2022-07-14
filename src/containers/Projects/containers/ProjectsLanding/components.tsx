@@ -102,13 +102,15 @@ export const ActionsMenu = ({
 export const ProjectsAccessor = (row) => (
   <ProjectItemsWrap>
     <ProjectItemsHeader>
-      <ProjectItemContactName>{row.display_name}</ProjectItemContactName>
+      <ProjectItemContactName>
+        {row.contact_display_name}
+      </ProjectItemContactName>
       <ProjectItemProjectName>{row.name}</ProjectItemProjectName>
     </ProjectItemsHeader>
     <ProjectItemDescription>
-      <FormatDate value={row.deadline} />
+      <FormatDate value={row.deadline_formatted} />
       {intl.get('projects.label.cost_estimate', {
-        value: row.cost_estimate,
+        value: row.cost_estimate_formatted,
       })}
     </ProjectItemDescription>
   </ProjectItemsWrap>

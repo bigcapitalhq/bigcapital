@@ -23,6 +23,7 @@ import TransactionsLockingAlerts from '../TransactionsLocking/TransactionsLockin
 import WarehousesAlerts from '../Preferences/Warehouses/WarehousesAlerts';
 import WarehousesTransfersAlerts from '../WarehouseTransfers/WarehousesTransfersAlerts';
 import BranchesAlerts from '../Preferences/Branches/BranchesAlerts';
+import ProjectAlerts from '../../containers/Projects/containers/ProjectAlerts';
 
 export default [
   ...AccountsAlerts,
@@ -50,4 +51,5 @@ export default [
   ...WarehousesAlerts,
   ...WarehousesTransfersAlerts,
   ...BranchesAlerts,
+  ...ProjectAlerts,
 ];
