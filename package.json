@@ -59,7 +59,7 @@
     "jest-watch-typeahead": "0.4.2",
     "js-money": "^0.6.3",
     "lodash": "^4.17.15",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.33",
     "path-browserify": "^1.0.1",
     "query-string": "^7.1.1",
