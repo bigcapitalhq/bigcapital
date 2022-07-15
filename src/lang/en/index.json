@@ -2059,6 +2059,8 @@
   "projects.label.cost_estimate": " • Estimate {value}",
   "projects.dialog.success_message": "The project has been created successfully.",
   "projects.dialog.edit_success_message": "The project has been edited successfully.",
+  "projects.dialog.new_project": "New Project",
+  "projects.dialog.edit_project": "Edit Project",
   "projects.alert.delete_message": "The deleted project has been deleted successfully.",
   "projects.alert.once_delete_this_project": "Once you delete this project, you won't be able to restore it later. Are you sure you want to delete this project?",
   "projects.empty_status.title":"",

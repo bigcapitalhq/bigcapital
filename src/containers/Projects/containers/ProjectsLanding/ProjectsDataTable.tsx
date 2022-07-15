@@ -57,6 +57,7 @@ function ProjectsDataTable({
   const handleEditProject = (project) => {
     openDialog('project-form', {
       projectId: project.id,
+      action: 'edit',
     });
   };
 

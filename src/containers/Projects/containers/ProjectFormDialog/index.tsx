@@ -14,13 +14,19 @@ const ProjectDialogContent = React.lazy(
  */
 function ProjectFormDialog({
   dialogName,
-  payload: { projectId = null },
+  payload: { projectId = null, action },
   isOpen,
 }) {
   return (
     <ProjectFormDialogRoot
       name={dialogName}
-      title={<T id={'projects.label.new_project'} />}
+      title={
+        action === 'edit' ? (
+          <T id="projects.dialog.edit_project" />
+        ) : (
+          <T id={'projects.dialog.new_project'} />
+        )
+      }
       isOpen={isOpen}
       autoFocus={true}
       canEscapeKeyClose={true}
