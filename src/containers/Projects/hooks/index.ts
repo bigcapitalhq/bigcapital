@@ -84,7 +84,7 @@ export function useProject(projectId, props, requestProps) {
     [t.PROJECT, projectId],
     { method: 'get', url: `projects/${projectId}`, ...requestProps },
     {
-      select: (res) => res.data.projects,
+      select: (res) => res.data.project,
       defaultData: {},
       ...props,
     },

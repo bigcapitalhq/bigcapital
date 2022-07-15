@@ -65,6 +65,7 @@ function ProjectFormFields() {
       <FFormGroup
         label={intl.get('projects.dialog.project_name')}
         name={'name'}
+        labelInfo={<FieldRequiredHint />}
       >
         <FInputGroup name="name" />
       </FFormGroup>
@@ -96,6 +97,7 @@ function ProjectFormFields() {
       <FFormGroup
         name={'cost_estimate'}
         label={intl.get('projects.dialog.cost_estimate')}
+        labelInfo={<FieldRequiredHint />}
       >
         <ControlGroup>
           <InputPrependText text={'USD'} />

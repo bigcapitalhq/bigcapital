@@ -3,6 +3,7 @@ import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
+import { Intent } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 import ProjectFormContent from './ProjectFormContent';
 import { CreateProjectFormSchema } from './ProjectForm.schema';

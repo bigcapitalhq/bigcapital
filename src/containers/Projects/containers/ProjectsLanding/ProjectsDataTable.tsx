@@ -6,6 +6,7 @@ import { DataTable } from 'components';
 import { TABLES } from 'common/tables';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
+import ProjectsEmptyStatus from './ProjectsEmptyStatus';
 import { useProjectsListContext } from './ProjectsListProvider';
 import { useMemorizedColumnsWidths } from 'hooks';
 import { useProjectsListColumns, ActionsMenu } from './components';
@@ -76,6 +77,11 @@ function ProjectsDataTable({
     });
   };
 
+  // Display project empty status instead of the table.
+  if (isEmptyStatus) {
+    return <ProjectsEmptyStatus />;
+  }
+
   return (
     <ProjectsTable
       columns={columns}
@@ -97,7 +103,7 @@ function ProjectsDataTable({
       payload={{
         onViewDetails: handleViewDetailProject,
         onEdit: handleEditProject,
-        onDelete:handleDeleteProject,
+        onDelete: handleDeleteProject,
         onNewTask: handleNewTaskButtonClick,
       }}
     />
