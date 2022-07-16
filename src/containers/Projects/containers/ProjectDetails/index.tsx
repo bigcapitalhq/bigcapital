@@ -1,12 +1,11 @@
-//@ts-nocheck
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ProjectDetailActionsBar from './ProjectDetailActionsBar';
 import ProjectDetailTabs from './ProjectDetailTabs';
-import { DashboardPageContent } from 'components';
+import { DashboardPageContent } from '@/components';
 import { ProjectDetailProvider } from './ProjectDetailProvider';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import { compose } from 'utils';
+import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { compose } from '@/utils';
 
 /**
  * Project tabs.
@@ -20,7 +19,7 @@ function ProjectTabs({
     state: { projectName, projectId },
   } = useLocation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     changePageTitle(projectName);
   }, [changePageTitle, projectName]);
 

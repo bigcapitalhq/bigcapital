@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Dialog, DialogSuspense, FormattedMessage as T } from 'components';
-import withDialogRedux from 'components/DialogReduxConnect';
-import { compose } from 'utils';
+import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
+import withDialogRedux from '@/components/DialogReduxConnect';
+import { compose } from '@/utils';
 
 const ProjectDialogContent = React.lazy(
   () => import('./ProjectFormDialogContent'),
@@ -14,13 +14,19 @@ const ProjectDialogContent = React.lazy(
  */
 function ProjectFormDialog({
   dialogName,
-  payload: { projectId = null },
+  payload: { projectId = null, action },
   isOpen,
 }) {
   return (
     <ProjectFormDialogRoot
       name={dialogName}
-      title={<T id={'projects.label.new_project'} />}
+      title={
+        action === 'edit' ? (
+          <T id="projects.dialog.edit_project" />
+        ) : (
+          <T id={'projects.dialog.new_project'} />
+        )
+      }
       isOpen={isOpen}
       autoFocus={true}
       canEscapeKeyClose={true}
@@ -39,6 +45,7 @@ const ProjectFormDialogRoot = styled(Dialog)`
   .bp3-dialog-body {
     .bp3-form-group {
       margin-bottom: 15px;
+      margin-top: 15px;
 
       label.bp3-label {
         margin-bottom: 3px;

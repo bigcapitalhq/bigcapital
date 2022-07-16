@@ -1,6 +1,6 @@
 import { isEqual } from 'lodash';
-import { createDeepEqualSelector } from 'utils';
-import { paginationLocationQuery } from 'store/selectors';
+import { createDeepEqualSelector } from '@/utils';
+import { paginationLocationQuery } from '@/store/selectors';
 import { defaultTableQuery } from './projects.reducer';
 
 const projectsTableState = (state) => state.projects.tableState;

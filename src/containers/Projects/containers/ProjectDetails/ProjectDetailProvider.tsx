@@ -1,6 +1,5 @@
-// @ts-nocheck
 import React from 'react';
-import DashboardInsider from '../../../../components/Dashboard/DashboardInsider';
+import { DashboardInsider } from '@/components';
 
 const ProjectDetailContext = React.createContext();
 
@@ -18,7 +17,7 @@ function ProjectDetailProvider({
     projectId,
   };
   return (
-    <DashboardInsider class="timesheets">
+    <DashboardInsider className="timesheets">
       <ProjectDetailContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import {
@@ -8,18 +7,19 @@ import {
   NavbarGroup,
   Alignment,
 } from '@blueprintjs/core';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import {
   Icon,
   FormattedMessage as T,
   DashboardRowsHeightButton,
-} from 'components';
-import { TransactionSelect } from './components';
-import withSettings from '../../../Settings/withSettings';
-import withSettingsActions from '../../../Settings/withSettingsActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+  DashboardActionsBar,
+} from '@/components';
+import { ProjectTransactionsSelect } from './components';
+import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { projectTranslations } from './common';
 import { useProjectDetailContext } from './ProjectDetailProvider';
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Project detail actions bar.
@@ -40,7 +40,13 @@ function ProjectDetailActionsBar({
 
   // Handle new transaction button click.
   const handleNewTransactionBtnClick = ({ path }) => {
-    history.push(`/${path}`);
+    switch (path) {
+      case 'expense':
+        openDialog('project-expense-form', { projectId });
+        break;
+      case 'estimated_expense':
+        openDialog('estimated-expense-form', { projectId });
+    }
   };
 
   const handleEditProjectBtnClick = () => {
@@ -50,11 +56,13 @@ function ProjectDetailActionsBar({
   };
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('timesheets', 'tableSize', size);
+    addSetting('timesheets', 'tableSize', size) &&
+      addSetting('sales', 'tableSize', size) &&
+      addSetting('purchases', 'tableSize', size);
   };
 
   const handleTimeEntryBtnClick = () => {
-    openDialog('time-entry-form', {
+    openDialog('project-time-entry-form', {
       projectId,
     });
   };
@@ -65,11 +73,8 @@ function ProjectDetailActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <TransactionSelect
-          transactions={[
-            { name: 'Invoice', path: 'invoices/new' },
-            { name: 'Expenses', path: 'expenses/new' },
-          ]}
+        <ProjectTransactionsSelect
+          transactions={projectTranslations}
           onItemSelect={handleNewTransactionBtnClick}
         />
         <Button
@@ -105,8 +110,6 @@ function ProjectDetailActionsBar({
           initialValue={timesheetsTableSize}
           onChange={handleTableRowSizeChange}
         />
-        <NavbarDivider />
-        <Button icon={<Icon icon="more-vert" iconSize={16} />} minimal={true} />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
         <Button

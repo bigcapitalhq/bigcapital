@@ -1,11 +1,10 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useFormikContext } from 'formik';
 
 import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
 import { FastField } from 'formik';
-import { CLASSES } from 'common/classes';
+import { CLASSES } from '@/constants/classes';
 import classNames from 'classnames';
 import {
   FFormGroup,
@@ -17,13 +16,13 @@ import {
   FormattedMessage as T,
   FieldRequiredHint,
   CustomerSelectField,
-} from 'components';
+} from '@/components';
 import {
   inputIntent,
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-} from 'utils';
+} from '@/utils';
 import { useProjectFormContext } from './ProjectFormProvider';
 
 /**
@@ -40,7 +39,7 @@ function ProjectFormFields() {
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Contact -----------*/}
-      <FastField name={'contact'}>
+      <FastField name={'contact_id'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={intl.get('projects.dialog.contact')}
@@ -53,7 +52,7 @@ function ProjectFormFields() {
               selectedContactId={value}
               defaultSelectText={'Select Contact Account'}
               onContactSelected={(customer) => {
-                form.setFieldValue('contact', customer.id);
+                form.setFieldValue('contact_id', customer.id);
               }}
               allowCreate={true}
               popoverFill={true}
@@ -64,19 +63,20 @@ function ProjectFormFields() {
       {/*------------ Project Name -----------*/}
       <FFormGroup
         label={intl.get('projects.dialog.project_name')}
-        name={'projectName'}
+        name={'name'}
+        labelInfo={<FieldRequiredHint />}
       >
-        <FInputGroup name="projectName" />
+        <FInputGroup name="name" />
       </FFormGroup>
       {/*------------ DeadLine -----------*/}
       <FFormGroup
         label={intl.get('projects.dialog.deadline')}
-        name={'projectDeadline'}
+        name={'deadline'}
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
         <FDateInput
           {...momentFormatter('YYYY/MM/DD')}
-          name="projectDeadline"
+          name="deadline"
           formatDate={(date) => date.toLocaleString()}
           popoverProps={{
             position: Position.BOTTOM,
@@ -86,22 +86,23 @@ function ProjectFormFields() {
       </FFormGroup>
 
       {/*------------ CheckBox -----------*/}
-      <FFormGroup name={'projectState'}>
+      <FFormGroup name={'published'}>
         <FCheckbox
-          name="projectState"
+          name="published"
           label={intl.get('projects.dialog.calculator_expenses')}
         />
       </FFormGroup>
       {/*------------ Cost Estimate -----------*/}
       <FFormGroup
-        name={'projectCost'}
+        name={'cost_estimate'}
         label={intl.get('projects.dialog.cost_estimate')}
+        labelInfo={<FieldRequiredHint />}
       >
         <ControlGroup>
           <InputPrependText text={'USD'} />
           <FMoneyInputGroup
-            disabled={values.projectState}
-            name={'project_cost'}
+            disabled={values.published}
+            name={'cost_estimate'}
             allowDecimals={true}
             allowNegativeValue={true}
           />

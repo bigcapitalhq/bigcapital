@@ -538,6 +538,38 @@ export const SidebarMenu = [
       },
     ],
   },
+  // ---------------------
+  // # Projects Management
+  // ---------------------
+  {
+    text: 'Projects',
+    type: ISidebarMenuItemType.Overlay,
+    overlayId: ISidebarMenuOverlayIds.Projects,
+    children: [
+      {
+        text: 'Projects Management',
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: 'Projects',
+            href: '/projects',
+            type: ISidebarMenuItemType.Link,
+          },
+        ],
+      },
+      {
+        text: <T id={'New tasks'} />,
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: <T id={'projects.label.new_project'} />,
+            type: ISidebarMenuItemType.Dialog,
+            dialogName: 'project-form',
+          },
+        ],
+      },
+    ],
+  },
   // ---------------
   // # Reports
   // ---------------

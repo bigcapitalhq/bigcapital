@@ -13,17 +13,16 @@ import {
   DashboardFilterButton,
   DashboardRowsHeightButton,
   FormattedMessage as T,
-} from 'components';
-
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+  DashboardActionsBar,
+} from '@/components';
 
 import withProjects from './withProjects';
 import withProjectsActions from './withProjectsActions';
-import withSettings from '../../../Settings/withSettings';
-import withSettingsActions from '../../../Settings/withSettingsActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
 
 /**
  * Projects actions bar.

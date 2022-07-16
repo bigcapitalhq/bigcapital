@@ -10,8 +10,8 @@ import {
   Intent,
   ProgressBar,
 } from '@blueprintjs/core';
-import { Icon, FormatDate, Choose, FormattedMessage as T } from 'components';
-import { safeCallback, firstLettersArgs, calculateStatus } from 'utils';
+import { Icon, FormatDate, Choose, FormattedMessage as T } from '@/components';
+import { safeCallback, firstLettersArgs, calculateStatus } from '@/utils';
 
 /**
  * project status.
@@ -58,7 +58,7 @@ export const StatusAccessor = (project) => {
  */
 export const AvatarCell = ({ row: { original }, size }) => (
   <span className="avatar" data-size={size}>
-    {firstLettersArgs(original?.display_name, original?.name)}
+    {firstLettersArgs(original?.contact_display_name, original?.name)}
   </span>
 );
 
@@ -102,13 +102,15 @@ export const ActionsMenu = ({
 export const ProjectsAccessor = (row) => (
   <ProjectItemsWrap>
     <ProjectItemsHeader>
-      <ProjectItemContactName>{row.display_name}</ProjectItemContactName>
+      <ProjectItemContactName>
+        {row.contact_display_name}
+      </ProjectItemContactName>
       <ProjectItemProjectName>{row.name}</ProjectItemProjectName>
     </ProjectItemsHeader>
     <ProjectItemDescription>
-      <FormatDate value={row.deadline} />
+      <FormatDate value={row.deadline_formatted} />
       {intl.get('projects.label.cost_estimate', {
-        value: row.cost_estimate,
+        value: row.cost_estimate_formatted,
       })}
     </ProjectItemDescription>
   </ProjectItemsWrap>
@@ -175,10 +177,10 @@ const ProjectItemDescription = styled.div`
 const ProjectStatusRoot = styled.div`
   display: flex;
   align-items: center;
-  /* justify-content: flex-end; */
   margin-right: 0.5rem;
   flex-direction: row-reverse;
 `;
+
 const ProjectStatusTaskAmount = styled.div`
   text-align: right;
   font-weight: 400;
@@ -198,6 +200,7 @@ const ProjectProgressBar = styled(ProgressBar)`
     }
   }
 `;
+
 const StatusTag = styled(Tag)`
   min-width: 65px;
   text-align: center;

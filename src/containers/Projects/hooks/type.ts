@@ -1,0 +1,11 @@
+const CUSTOMERS = {
+  CUSTOMERS: 'CUSTOMERS',
+  CUSTOMER: 'CUSTOMER',
+};
+
+const PROJECTS = {
+  PROJECT: 'PROJECT',
+  PROJECTS: 'PROJECTS',
+};
+
+export default { ...PROJECTS, ...CUSTOMERS };
