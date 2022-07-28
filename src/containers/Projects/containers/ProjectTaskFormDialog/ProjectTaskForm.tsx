@@ -1,18 +1,21 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import { Formik } from 'formik';
+import { Intent } from '@blueprintjs/core';
+import { AppToaster } from '@/components';
 import { CreateProjectTaskFormSchema } from './ProjectTaskForm.schema';
 import { useProjectTaskFormContext } from './ProjectTaskFormProvider';
-import { AppToaster } from '@/components';
 import ProjectTaskFormContent from './ProjectTaskFormContent';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { compose } from '@/utils';
+import { compose, transformToForm } from '@/utils';
 
 const defaultInitialValues = {
-  taskName: '',
-  taskHouse: '00:00',
-  taskCharge: 'hourly_rate',
-  taskamount: '',
+  name: '',
+  charge_type: 'fixed_price',
+  estimate_minutes: '',
+  cost_estimate: '',
+  rate: '0.00',
 };
 
 /**
@@ -24,19 +27,39 @@ function ProjectTaskForm({
   closeDialog,
 }) {
   // task form dialog context.
-  const { dialogName } = useProjectTaskFormContext();
+  const {
+    taskId,
+    projectId,
+    isNewMode,
+    dialogName,
+    projectTask,
+    createProjectTaskMutate,
+    editProjectTaskMutate,
+  } = useProjectTaskFormContext();
 
   // Initial form values
   const initialValues = {
     ...defaultInitialValues,
+    ...transformToForm(projectTask, defaultInitialValues),
   };
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    const form = {};
+    const form = { ...values };
 
     // Handle request response success.
-    const onSuccess = (response) => {};
+    const onSuccess = (response) => {
+      AppToaster.show({
+        message: intl.get(
+          isNewMode
+            ? 'project_task.dialog.success_message'
+            : 'project_task.dialog.edit_success_message',
+        ),
+
+        intent: Intent.SUCCESS,
+      });
+      closeDialog(dialogName);
+    };
 
     // Handle request response errors.
     const onError = ({
@@ -44,8 +67,13 @@ function ProjectTaskForm({
         data: { errors },
       },
     }) => {
-      setSubmitting(false);
+    setSubmitting(false);
     };
+    if (isNewMode) {
+      createProjectTaskMutate([projectId, form]).then(onSuccess).catch(onError);
+    } else {
+      editProjectTaskMutate([taskId, form]).then(onSuccess).catch(onError);
+    }
   };
 
   return (

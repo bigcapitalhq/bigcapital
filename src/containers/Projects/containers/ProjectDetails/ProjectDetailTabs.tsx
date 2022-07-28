@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import intl from 'react-intl-universal';
 import { Tabs, Tab } from '@blueprintjs/core';
 import ProjectTimeSheets from './ProjectTimeSheets';
+import ProjectTasks from './ProjectTasks';
 import ProjectPurchasesTable from './ProjectPurchasesTable';
 import ProjectSalesTable from './ProjectSalesTable';
 
@@ -17,9 +18,14 @@ export default function ProjectDetailTabs() {
         animate={true}
         large={true}
         renderActiveTabPanelOnly={true}
-        defaultSelectedTabId={'purchases'}
+        defaultSelectedTabId={'tasks'}
       >
         <Tab id="overview" title={intl.get('project_details.label.overview')} />
+        <Tab
+          id="tasks"
+          title={intl.get('project_details.label.tasks')}
+          panel={<ProjectTasks />}
+        />
         <Tab
           id="timesheet"
           title={intl.get('project_details.label.timesheet')}

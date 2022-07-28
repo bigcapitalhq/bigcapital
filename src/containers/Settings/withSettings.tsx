@@ -23,6 +23,7 @@ export default (mapState) => {
       vendorsCreditNoteSetting: state.settings.data.vendorCredit,
       warehouseTransferSettings: state.settings.data.warehouseTransfers,
       projectSettings:state.settings.data.projects,
+      projectTasksSettings:state.settings.data.projectTasks,
       timesheetsSettings:state.settings.data.timesheets
     };
     return mapState ? mapState(mapped, state, props) : mapped;

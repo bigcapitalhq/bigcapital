@@ -58,7 +58,8 @@ function ProjectDetailActionsBar({
   const handleTableRowSizeChange = (size) => {
     addSetting('timesheets', 'tableSize', size) &&
       addSetting('sales', 'tableSize', size) &&
-      addSetting('purchases', 'tableSize', size);
+      addSetting('purchases', 'tableSize', size) &&
+      addSetting('project_tasks', 'tableSize', size);
   };
 
   const handleTimeEntryBtnClick = () => {

@@ -61,6 +61,9 @@ const initialState = {
     warehouseTransfer: {
       tableSize: 'medium',
     },
+    projectTasks: {
+      tableSize: 'medium',
+    },
   },
 };
 

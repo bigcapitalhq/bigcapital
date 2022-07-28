@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import { useFormikContext } from 'formik';
 import { Classes, ControlGroup } from '@blueprintjs/core';
 import {
@@ -9,6 +8,7 @@ import {
   Row,
   FormattedMessage as T,
 } from '@/components';
+import { EstimateAmount } from './utils';
 import { taskChargeOptions } from '../common/modalChargeOptions';
 import { ChangeTypesSelect } from '../../components';
 
@@ -23,69 +23,48 @@ function ProjectTaskFormFields() {
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Task Name -----------*/}
-      <FFormGroup label={<T id={'project_task.dialog.task_name'} />} name={'taskName'}>
-        <FInputGroup name="taskName" />
+      <FFormGroup
+        label={<T id={'project_task.dialog.task_name'} />}
+        name={'taskName'}
+      >
+        <FInputGroup name="name" />
       </FFormGroup>
       {/*------------ Estimated Hours -----------*/}
       <Row>
         <Col xs={4}>
           <FFormGroup
             label={<T id={'project_task.dialog.estimated_hours'} />}
-            name={'taskHouse'}
+            name={'estimate_minutes'}
           >
-            <FInputGroup name="taskHouse" />
+            <FInputGroup name="estimate_minutes" />
           </FFormGroup>
         </Col>
         {/*------------ Charge -----------*/}
         <Col xs={8}>
           <FFormGroup
-            name={'taskCharge'}
+            name={'charge_type'}
             className={'form-group--select-list'}
             label={<T id={'project_task.dialog.charge'} />}
           >
             <ControlGroup>
               <ChangeTypesSelect
-                name="taskCharge"
+                name="charge_type"
                 items={taskChargeOptions}
                 popoverProps={{ minimal: true }}
                 filterable={false}
               />
               <FInputGroup
-                name="taskamount"
-                disabled={values?.taskCharge === 'Non-chargeable'}
+                name="rate"
+                disabled={values?.charge_type === 'non_chargeable'}
               />
             </ControlGroup>
           </FFormGroup>
         </Col>
       </Row>
       {/*------------ Estimated Amount -----------*/}
-      <EstimatedAmountBase>
-        <EstimatedAmountContent>
-          <T id={'project_task.dialog.estimated_amount'} />
-          <EstimateAmount>0.00</EstimateAmount>
-        </EstimatedAmountContent>
-      </EstimatedAmountBase>
+      <EstimateAmount />
     </div>
   );
 }
 
 export default ProjectTaskFormFields;
-
-const EstimatedAmountBase = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  font-size: 14px;
-  line-height: 1.5rem;
-  opacity: 0.75;
-`;
-
-const EstimatedAmountContent = styled.span`
-  background-color: #fffdf5;
-  padding: 0.1rem 0;
-`;
-
-const EstimateAmount = styled.span`
-  font-size: 15px;
-  font-weight: 700;
-  margin-left: 10px;
-`;

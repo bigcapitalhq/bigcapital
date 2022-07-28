@@ -8,4 +8,9 @@ const PROJECTS = {
   PROJECTS: 'PROJECTS',
 };
 
-export default { ...PROJECTS, ...CUSTOMERS };
+const PROJECT_TASKS ={
+  PROJECT_TASKS:'PROJECT_TASKS',
+  PROJECT_TASK:'PROJECT_TASK',
+}
+
+export default { ...PROJECTS, ...CUSTOMERS,...PROJECT_TASKS };

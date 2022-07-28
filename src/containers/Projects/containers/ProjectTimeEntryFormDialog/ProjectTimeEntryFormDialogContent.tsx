@@ -10,14 +10,9 @@ export default function ProjectTimeEntryFormDialogContent({
   // #ownProps
   dialogName,
   project,
-  timeEntry,
 }) {
   return (
-    <ProjectTimeEntryFormProvider
-      projectId={project}
-      timeEntryId={timeEntry}
-      dialogName={dialogName}
-    >
+    <ProjectTimeEntryFormProvider projectId={project} dialogName={dialogName}>
       <ProjectTimeEntryForm />
     </ProjectTimeEntryFormProvider>
   );

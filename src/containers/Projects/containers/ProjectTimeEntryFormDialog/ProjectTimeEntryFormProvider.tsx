@@ -11,7 +11,6 @@ function ProjectTimeEntryFormProvider({
   // #ownProps
   dialogName,
   projectId,
-  timeEntryId,
   ...props
 }) {
   const provider = {

@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import intl from 'react-intl-universal';
+import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 
 const Schema = Yup.object().shape({
   date: Yup.date()

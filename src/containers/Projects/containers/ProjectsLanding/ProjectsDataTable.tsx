@@ -1,7 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import { DataTable,TableSkeletonRows ,TableSkeletonHeader } from '@/components';
+import {
+  DataTable,
+  TableSkeletonRows,
+  TableSkeletonHeader,
+} from '@/components';
 import { TABLES } from '@/constants/tables';
 import ProjectsEmptyStatus from './ProjectsEmptyStatus';
 import { useProjectsListContext } from './ProjectsListProvider';
@@ -59,8 +63,10 @@ function ProjectsDataTable({
   };
 
   // Handle new task button click.
-  const handleNewTaskButtonClick = () => {
-    openDialog('project-task-form');
+  const handleNewTaskButtonClick = (project) => {
+    openDialog('project-task-form', {
+      projectId: project.id,
+    });
   };
 
   // Local storage memorizing columns widths.

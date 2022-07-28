@@ -1,6 +1,4 @@
 import React from 'react';
-import intl from 'react-intl-universal';
-import styled from 'styled-components';
 import { Intent } from '@blueprintjs/core';
 import { FormatDate } from '@/components';
 import {
@@ -12,10 +10,10 @@ import {
 import { calculateStatus } from '@/utils';
 
 /**
- * Project Timesheets header
+ * Project Tasks header.
  * @returns
  */
-export function ProjectTimesheetsHeader() {
+export function ProjectTasksHeader() {
   return (
     <DetailFinancialSection>
       <DetailFinancialCard label={'Project estimate'} value={'3.14'} />

@@ -2,14 +2,19 @@ import * as Yup from 'yup';
 import intl from 'react-intl-universal';
 
 const Schema = Yup.object().shape({
-  taskName: Yup.string()
-    .label(intl.get('task.schema.label.task_name'))
+  name: Yup.string()
+    .label(intl.get('project_task.schema.label.task_name'))
     .required(),
-  taskHouse: Yup.string().label(intl.get('task.schema.label.task_house')),
-  taskCharge: Yup.string()
-    .label(intl.get('task.schema.label.charge'))
+  charge_type: Yup.string()
+    .label(intl.get('project_task.schema.label.charge_type'))
     .required(),
-  taskamount: Yup.number().label(intl.get('task.schema.label.amount')),
+  rate: Yup.number()
+    .label(intl.get('project_task.schema.label.rate'))
+    .required(),
+  cost_estimate: Yup.number().required(),
+  estimate_minutes: Yup.string().label(
+    intl.get('project_task.schema.label.task_house'),
+  ),
 });
 
 export const CreateProjectTaskFormSchema = Schema;

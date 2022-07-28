@@ -9,9 +9,14 @@ export default function ProjectTaskFormDialogContent({
   // #ownProps
   dialogName,
   task,
+  project,
 }) {
   return (
-    <ProjectTaskFormProvider taskId={task} dialogName={dialogName}>
+    <ProjectTaskFormProvider
+      taskId={task}
+      projectId={project}
+      dialogName={dialogName}
+    >
       <ProjectTaskForm />
     </ProjectTaskFormProvider>
   );

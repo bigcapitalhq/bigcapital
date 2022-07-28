@@ -15,7 +15,7 @@ const ProjectTimeEntryFormDialogContent = React.lazy(
 function ProjectTimeEntryFormDialog({
   dialogName,
   isOpen,
-  payload: { projectId = null, timeEntryId = null },
+  payload: { projectId },
 }) {
   return (
     <ProjectTimeEntryFormDialogRoot
@@ -30,7 +30,6 @@ function ProjectTimeEntryFormDialog({
         <ProjectTimeEntryFormDialogContent
           dialogName={dialogName}
           project={projectId}
-          timeEntry={timeEntryId}
         />
       </DialogSuspense>
     </ProjectTimeEntryFormDialogRoot>
