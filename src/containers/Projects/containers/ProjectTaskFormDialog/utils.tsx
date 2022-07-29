@@ -32,6 +32,28 @@ export function EstimateAmount() {
   );
 }
 
+export function transformToValue(values) {
+  switch (values.charge_type) {
+    case 'hourly_rate': {
+      return {
+        ...values,
+        cost_estimate: values.estimate_minutes * values.rate,
+      };
+    }
+    case 'fixed_price': {
+      return {
+        ...values,
+        cost_estimate: values.rate,
+      };
+    }
+    default: {
+      return {
+        ...values,
+      };
+    }
+  }
+}
+
 const EstimatedAmountBase = styled.div`
   display: flex;
   justify-content: flex-end;

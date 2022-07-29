@@ -7,6 +7,7 @@ import {
   FinancialProgressBar,
   FinancialCardText,
 } from '../components';
+import { useProjectTaskContext } from './ProjectTaskProvider';
 import { calculateStatus } from '@/utils';
 
 /**
@@ -14,9 +15,14 @@ import { calculateStatus } from '@/utils';
  * @returns
  */
 export function ProjectTasksHeader() {
+  const { project } = useProjectTaskContext();
+
   return (
     <DetailFinancialSection>
-      <DetailFinancialCard label={'Project estimate'} value={'3.14'} />
+      <DetailFinancialCard
+        label={'Project estimate'}
+        value={project.cost_estimate_formatted}
+      />
       <DetailFinancialCard label={'Invoiced'} value={'0.00'}>
         <FinancialCardText>0% of project estimate</FinancialCardText>
         <FinancialProgressBar intent={Intent.NONE} value={0} />

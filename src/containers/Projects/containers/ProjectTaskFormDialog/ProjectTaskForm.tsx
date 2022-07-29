@@ -7,14 +7,14 @@ import { CreateProjectTaskFormSchema } from './ProjectTaskForm.schema';
 import { useProjectTaskFormContext } from './ProjectTaskFormProvider';
 import ProjectTaskFormContent from './ProjectTaskFormContent';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-
+import { transformToValue } from './utils';
 import { compose, transformToForm } from '@/utils';
 
 const defaultInitialValues = {
   name: '',
   charge_type: 'fixed_price',
   estimate_minutes: '',
-  cost_estimate: '',
+  cost_estimate: 0,
   rate: '0.00',
 };
 
@@ -45,7 +45,7 @@ function ProjectTaskForm({
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    const form = { ...values };
+    const form = transformToValue(values);
 
     // Handle request response success.
     const onSuccess = (response) => {
@@ -67,7 +67,7 @@ function ProjectTaskForm({
         data: { errors },
       },
     }) => {
-    setSubmitting(false);
+      setSubmitting(false);
     };
     if (isNewMode) {
       createProjectTaskMutate([projectId, form]).then(onSuccess).catch(onError);

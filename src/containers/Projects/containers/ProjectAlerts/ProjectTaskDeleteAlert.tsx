@@ -37,7 +37,7 @@ function ProjectTaskDeleteAlert({
     deleteProjectTaskMutate(taskId)
       .then(() => {
         AppToaster.show({
-          message: intl.get('projects.alert.delete_message'),
+          message: intl.get('project_task.alert.delete_message'),
           intent: Intent.SUCCESS,
         });
       })
@@ -65,7 +65,7 @@ function ProjectTaskDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage id={'projects.alert.once_delete_this_project'} />
+        <FormattedHTMLMessage id={'project_task.alert.once_delete_this_project'} />
       </p>
     </Alert>
   );
