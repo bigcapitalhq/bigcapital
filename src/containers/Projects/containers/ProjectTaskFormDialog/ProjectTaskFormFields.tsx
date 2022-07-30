@@ -11,12 +11,17 @@ import {
 import { EstimateAmount } from './utils';
 import { taskChargeOptions } from '../common/modalChargeOptions';
 import { ChangeTypesSelect } from '../../components';
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { compose } from '@/utils';
 
 /**
  * Project task form fields.
  * @returns
  */
-function ProjectTaskFormFields() {
+function ProjectTaskFormFields({
+  // #withCurrentOrganization
+  organization: { base_currency },
+}) {
   // Formik context.
   const { values } = useFormikContext();
 
@@ -62,9 +67,9 @@ function ProjectTaskFormFields() {
         </Col>
       </Row>
       {/*------------ Estimated Amount -----------*/}
-      <EstimateAmount />
+      <EstimateAmount baseCurrency={base_currency} />
     </div>
   );
 }
 
-export default ProjectTaskFormFields;
+export default compose(withCurrentOrganization())(ProjectTaskFormFields);

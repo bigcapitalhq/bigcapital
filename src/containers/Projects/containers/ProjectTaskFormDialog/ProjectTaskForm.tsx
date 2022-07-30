@@ -5,10 +5,10 @@ import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 import { CreateProjectTaskFormSchema } from './ProjectTaskForm.schema';
 import { useProjectTaskFormContext } from './ProjectTaskFormProvider';
-import ProjectTaskFormContent from './ProjectTaskFormContent';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { transformToValue } from './utils';
 import { compose, transformToForm } from '@/utils';
+import ProjectTaskFormContent from './ProjectTaskFormContent';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 const defaultInitialValues = {
   name: '',

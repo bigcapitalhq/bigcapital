@@ -2,9 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import { useFormikContext } from 'formik';
 import styled from 'styled-components';
-import { Choose, FormattedMessage as T } from '@/components';
+import { Choose, Money, FormattedMessage as T } from '@/components';
 
-export function EstimateAmount() {
+export function EstimateAmount({ baseCurrency }) {
   const { values } = useFormikContext();
 
   // Calculate estimate amount.
@@ -16,15 +16,21 @@ export function EstimateAmount() {
         <Choose>
           <Choose.When condition={values?.charge_type === 'hourly_rate'}>
             <T id={'project_task.dialog.estimated_amount'} />
-            <EstimatedAmount>{estimatedAmount}</EstimatedAmount>
+            <EstimatedAmount>
+              <Money amount={estimatedAmount} currency={baseCurrency} />
+            </EstimatedAmount>
           </Choose.When>
           <Choose.When condition={values?.charge_type === 'fixed_price'}>
             <T id={'project_task.dialog.total'} />
-            <EstimatedAmount>{values.rate}</EstimatedAmount>
+            <EstimatedAmount>
+              <Money amount={values.rate} currency={baseCurrency} />
+            </EstimatedAmount>
           </Choose.When>
           <Choose.Otherwise>
             <T id={'project_task.dialog.total'} />
-            <EstimatedAmount>0.00</EstimatedAmount>
+            <EstimatedAmount>
+              <Money amount={0.0} currency={baseCurrency} />
+            </EstimatedAmount>
           </Choose.Otherwise>
         </Choose>
       </EstimatedAmountContent>
