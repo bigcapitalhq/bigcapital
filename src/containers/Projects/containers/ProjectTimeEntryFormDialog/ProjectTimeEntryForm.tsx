@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
+import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
 import { AppToaster } from '@/components';
 
@@ -13,7 +14,7 @@ import { compose } from '@/utils';
 
 const defaultInitialValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
-  projectId: '',
+  // projectId: '',
   taskId: '',
   description: '',
   duration: '',
@@ -28,7 +29,11 @@ function ProjectTimeEntryForm({
   closeDialog,
 }) {
   // time entry form dialog context.
-  const { dialogName } = useProjectTimeEntryFormContext();
+  const {
+    dialogName,
+    createProjectTimeEntryMutate,
+    editProjectTimeEntryMutate,
+  } = useProjectTimeEntryFormContext();
 
   // Initial form values
   const initialValues = {
@@ -37,11 +42,21 @@ function ProjectTimeEntryForm({
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    const form = {};
+    const form = {
+      ...values,
+    };
 
     // Handle request response success.
     const onSuccess = (response) => {
-      AppToaster.show({});
+      AppToaster.show({
+        message: intl.get(
+          true
+            ? 'project_time_entry.success_message'
+            : 'project_time_entry.dialog.edit_success_message',
+        ),
+
+        intent: Intent.SUCCESS,
+      });
       closeDialog(dialogName);
     };
 
@@ -53,6 +68,9 @@ function ProjectTimeEntryForm({
     }) => {
       setSubmitting(false);
     };
+    createProjectTimeEntryMutate([values.taskId, form])
+      .then(onSuccess)
+      .catch(onError);
   };
 
   return (

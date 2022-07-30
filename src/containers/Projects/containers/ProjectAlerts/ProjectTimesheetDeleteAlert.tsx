@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
-import { useDeleteProjectTask } from '../../hooks';
+import { useDeleteProjectTimeEntry } from '../../hooks';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
@@ -11,33 +11,33 @@ import withAlertActions from '@/containers/Alert/withAlertActions';
 import { compose } from '@/utils';
 
 /**
- * Project tasks delete alert.
+ * Project timesheet delete alert.
  * @returns
  */
-function ProjectTaskDeleteAlert({
+function ProjectTimesheetDeleteAlert({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { taskId },
+  payload: { timesheetId },
 
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: deleteProjectTaskMutate, isLoading } =
-    useDeleteProjectTask();
+  const { mutateAsync: deleteProjectTimeEntryMutate, isLoading } =
+    useDeleteProjectTimeEntry();
 
   // handle cancel delete alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  // handleConfirm delete project task
-  const handleConfirmProjectTaskDelete = () => {
-    deleteProjectTaskMutate(taskId)
+  // handleConfirm delete project time sheet.
+  const handleConfirmProjectTimesheetDelete = () => {
+    deleteProjectTimeEntryMutate(timesheetId)
       .then(() => {
         AppToaster.show({
-          message: intl.get('project_task.alert.delete_message'),
+          message: intl.get('project_time_entry.alert.delete_message'),
           intent: Intent.SUCCESS,
         });
       })
@@ -61,17 +61,18 @@ function ProjectTaskDeleteAlert({
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancelDeleteAlert}
-      onConfirm={handleConfirmProjectTaskDelete}
+      onConfirm={handleConfirmProjectTimesheetDelete}
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage id={'project_task.alert.once_delete_this_project'} />
+        <FormattedHTMLMessage
+          id={'project_time_entry.alert.once_delete_this_project'}
+        />
       </p>
     </Alert>
   );
 }
-
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-)(ProjectTaskDeleteAlert);
+)(ProjectTimesheetDeleteAlert);

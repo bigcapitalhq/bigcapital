@@ -35,7 +35,6 @@ function ProjectDetailActionsBar({
   // #withSettingsActions
   addSetting,
 }) {
-  const history = useHistory();
   const { projectId } = useProjectDetailContext();
 
   // Handle new transaction button click.

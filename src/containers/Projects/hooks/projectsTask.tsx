@@ -40,18 +40,15 @@ export function useEditProjectTask(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`tasks/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific project task.
-        queryClient.invalidateQueries([t.PROJECT_TASK, id]);
+  return useMutation(([id, values]) => apiRequest.post(`tasks/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific project task.
+      queryClient.invalidateQueries([t.PROJECT_TASK, id]);
 
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -83,7 +80,7 @@ export function useDeleteProjectTask(props) {
  */
 export function useProjectTask(taskId, props, requestProps) {
   return useRequestQuery(
-    [t.PROJECT, taskId],
+    [t.PROJECT_TASK, taskId],
     { method: 'get', url: `tasks/${taskId}`, ...requestProps },
     {
       select: (res) => res.data.task,

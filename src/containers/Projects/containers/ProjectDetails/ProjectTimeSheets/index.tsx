@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { ProjectTimesheetsTable } from './ProjectTimesheetsTable';
 import { ProjectTimesheetsHeader } from './ProjectTimesheetsHeader';
+import { ProjectTimesheetsProvider } from './ProjectTimesheetsProvider';
 
 /**
  * Project Timesheets.
@@ -10,12 +11,12 @@ import { ProjectTimesheetsHeader } from './ProjectTimesheetsHeader';
  */
 export default function ProjectTimeSheets() {
   return (
-    <React.Fragment>
+    <ProjectTimesheetsProvider>
       <ProjectTimesheetsHeader />
       <ProjectTimesheetTableCard>
         <ProjectTimesheetsTable />
       </ProjectTimesheetTableCard>
-    </React.Fragment>
+    </ProjectTimesheetsProvider>
   );
 }
 

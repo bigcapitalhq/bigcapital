@@ -9,10 +9,10 @@ import {
   FInputGroup,
   FDateInput,
   FTextArea,
-  FEditableText,
   FieldRequiredHint,
   FormattedMessage as T,
 } from '@/components';
+import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
 import { TaskSelect, ProjectsSelect } from '../../components';
 import { momentFormatter } from '@/utils';
 
@@ -21,6 +21,9 @@ import { momentFormatter } from '@/utils';
  * @returns
  */
 function ProjectTimeEntryFormFields() {
+  // time entry form dialog context.
+  const { projectTasks } = useProjectTimeEntryFormContext();
+
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Project -----------*/}
@@ -45,7 +48,7 @@ function ProjectTimeEntryFormFields() {
       >
         <TaskSelect
           name={'taskId'}
-          tasks={[]}
+          tasks={projectTasks}
           popoverProps={{ minimal: true }}
         />
       </FFormGroup>
