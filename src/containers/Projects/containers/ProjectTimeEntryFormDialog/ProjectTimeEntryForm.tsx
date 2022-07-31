@@ -14,7 +14,7 @@ import { compose } from '@/utils';
 
 const defaultInitialValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
-  // projectId: '',
+  projectId: '',
   taskId: '',
   description: '',
   duration: '',

@@ -5,6 +5,7 @@ import { Classes, Intent, Position } from '@blueprintjs/core';
 import { CLASSES } from '@/constants/classes';
 import classNames from 'classnames';
 import {
+  If,
   FFormGroup,
   FInputGroup,
   FDateInput,
@@ -15,6 +16,7 @@ import {
 import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
 import { TaskSelect, ProjectsSelect } from '../../components';
 import { momentFormatter } from '@/utils';
+import { useSetProjectToForm } from './utils';
 
 /**
  * Project time entry form fields.
@@ -22,23 +24,29 @@ import { momentFormatter } from '@/utils';
  */
 function ProjectTimeEntryFormFields() {
   // time entry form dialog context.
-  const { projectTasks } = useProjectTimeEntryFormContext();
+  const { projectTasks, projects, projectId } =
+    useProjectTimeEntryFormContext();
+
+  // Sets the project id.
+  useSetProjectToForm();
 
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Project -----------*/}
-      <FFormGroup
-        name={'projectId'}
-        label={<T id={'project_time_entry.dialog.project'} />}
-        labelInfo={<FieldRequiredHint />}
-        className={classNames('form-group--select-list', Classes.FILL)}
-      >
-        <ProjectsSelect
+      <If condition={!projectId}>
+        <FFormGroup
           name={'projectId'}
-          projects={[]}
-          popoverProps={{ minimal: true }}
-        />
-      </FFormGroup>
+          label={<T id={'project_time_entry.dialog.project'} />}
+          labelInfo={<FieldRequiredHint />}
+          className={classNames('form-group--select-list', Classes.FILL)}
+        >
+          <ProjectsSelect
+            name={'projectId'}
+            projects={projects}
+            popoverProps={{ minimal: true }}
+          />
+        </FFormGroup>
+      </If>
       {/*------------ Task -----------*/}
       <FFormGroup
         name={'taskId'}

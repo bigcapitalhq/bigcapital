@@ -566,6 +566,11 @@ export const SidebarMenu = [
             type: ISidebarMenuItemType.Dialog,
             dialogName: 'project-form',
           },
+          {
+            text: <T id={'projects.label.new_time_entry'} />,
+            type: ISidebarMenuItemType.Dialog,
+            dialogName: 'project-time-entry-form',
+          },
         ],
       },
     ],

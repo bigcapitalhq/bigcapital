@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  useProjects,
   useProjectTasks,
   useCreateProjectTimeEntry,
   useEditProjectTimeEntry,
@@ -18,6 +19,9 @@ function ProjectTimeEntryFormProvider({
   projectId,
   ...props
 }) {
+  // project payload.
+  const [project, setProjectPayload] = React.useState(projectId);
+
   // Create and edit project time entry mutations.
   const { mutateAsync: createProjectTimeEntryMutate } =
     useCreateProjectTimeEntry();
@@ -26,22 +30,34 @@ function ProjectTimeEntryFormProvider({
   // Handle fetch project tasks.
   const {
     data: { projectTasks },
-    isLoading: isProjectTasksLoading,
-  } = useProjectTasks(projectId, {
-    enabled: !!projectId,
+  } = useProjectTasks(project, {
+    enabled: !!project,
   });
+
+  // Fetch project list data table or list
+  const {
+    data: { projects },
+    isLoading: isProjectsLoading,
+    isSuccess: isProjectsSuccess,
+  } = useProjects();
 
   // provider payload.
   const provider = {
     dialogName,
+    projects,
     projectId,
     projectTasks,
+    setProjectPayload,
+    isProjectsSuccess,
     createProjectTimeEntryMutate,
     editProjectTimeEntryMutate,
   };
 
   return (
-    <DialogContent name={'project-time-entry-form'}>
+    <DialogContent
+      isLoading={isProjectsLoading}
+      name={'project-time-entry-form'}
+    >
       <ProjecctTimeEntryFormContext.Provider value={provider} {...props} />
     </DialogContent>
   );

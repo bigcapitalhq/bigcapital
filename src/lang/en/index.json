@@ -2050,6 +2050,7 @@
   "projects.action.new_task": "New Task",
   "projects.action.delete_project": "Delete Project",
   "projects.label.new_project": "New Project",
+  "projects.label.new_time_entry":"New Time Entry",
   "projects.dialog.contact": "Contact",
   "projects.dialog.project_name": "Project Name",
   "projects.dialog.deadline": "Deadline",
