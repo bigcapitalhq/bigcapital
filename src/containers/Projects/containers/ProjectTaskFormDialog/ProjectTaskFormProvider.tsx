@@ -31,9 +31,6 @@ function ProjectTaskFormProvider({
     },
   );
 
-  console.log(taskId, 'XX');
-  console.log(projectTask, 'XX');
-
   const isNewMode = !taskId;
   // State provider.
   const provider = {

@@ -19,9 +19,7 @@ function ProjectTimeEntryFormFloatingActions({
 
   // Formik context.
   const { isSubmitting, values, errors } = useFormikContext();
-  console.log(values, 'XX');
-  console.log(errors, 'XX');
-  
+
   // Handle close button click.
   const handleCancelBtnClick = () => {
     closeDialog(dialogName);
