@@ -43,6 +43,10 @@ function ProjectsDataTable({
     openAlert('project-delete', { projectId: id });
   };
 
+  const handleProjectStatus = ({ id, status_formatted }) => {
+    openAlert('project-status', { projectId: id, status: status_formatted });
+  };
+
   // Retrieve projects table columns.
   const columns = useProjectsListColumns();
 
@@ -109,6 +113,7 @@ function ProjectsDataTable({
         onEdit: handleEditProject,
         onDelete: handleDeleteProject,
         onNewTask: handleNewTaskButtonClick,
+        onStatus: handleProjectStatus,
       }}
     />
   );

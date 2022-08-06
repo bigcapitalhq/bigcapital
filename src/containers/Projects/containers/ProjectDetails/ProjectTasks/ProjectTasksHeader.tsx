@@ -35,7 +35,7 @@ export function ProjectTasksHeader() {
       <DetailFinancialCard label={'To be invoiced'} value={'3.14'} />
       <DetailFinancialCard
         label={'Deadline'}
-        value={<FormatDate value={'2022-06-08T22:00:00.000Z'} />}
+        value={<FormatDate value={project.deadline_formatted} />}
       >
         <FinancialCardText>4 days to go</FinancialCardText>
       </DetailFinancialCard>

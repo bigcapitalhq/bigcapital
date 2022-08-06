@@ -113,7 +113,30 @@ export function useProjects(query, props) {
   );
 }
 
-export function useRefreshInvoices() {
+/**
+ *
+ * @param props
+ * @returns
+ */
+export function useProjectStatus(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) => apiRequest.patch(`projects/${id}/status`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Invalidate specific project.
+        queryClient.invalidateQueries([t.PROJECT, id]);
+
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useRefreshProjects() {
   const queryClient = useQueryClient();
 
   return {

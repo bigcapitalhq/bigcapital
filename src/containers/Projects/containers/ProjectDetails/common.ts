@@ -1,9 +1,9 @@
 import intl from 'react-intl-universal';
 
 export const projectTranslations = [
-  { name: intl.get('project_details.new_expenses'), path: 'expense' },
+  { name: intl.get('project_details.new_expense'), path: 'expense' },
   {
-    name: intl.get('project_details.new_estimated_expenses'),
+    name: intl.get('project_details.new_estimated_expense'),
     path: 'estimated_expense',
   },
 ];

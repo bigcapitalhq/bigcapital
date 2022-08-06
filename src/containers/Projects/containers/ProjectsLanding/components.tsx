@@ -10,21 +10,27 @@ import {
   Intent,
   ProgressBar,
 } from '@blueprintjs/core';
-import { Icon, FormatDate, Choose, FormattedMessage as T } from '@/components';
+import {
+  Icon,
+  FormatDate,
+  Choose,
+  If,
+  FormattedMessage as T,
+} from '@/components';
 import { safeCallback, firstLettersArgs, calculateStatus } from '@/utils';
 
 /**
  * project status.
  */
-export function ProjectStatus({ project }) {
+export function ProjectStatus({ row }) {
   return (
     <ProjectStatusRoot>
-      <ProjectStatusTaskAmount>{project.task_amount}</ProjectStatusTaskAmount>
+      <ProjectStatusTaskAmount>{row.cost_estimate}</ProjectStatusTaskAmount>
       <ProjectProgressBar
         animate={false}
         stripes={false}
-        // intent={Intent.PRIMARY}
-        value={calculateStatus(project.task_amount, project.cost_estimate)}
+        intent={Intent.PRIMARY}
+        value={calculateStatus(100, row.cost_estimate)}
       />
     </ProjectStatusRoot>
   );
@@ -33,22 +39,22 @@ export function ProjectStatus({ project }) {
 /**
  * status accessor.
  */
-export const StatusAccessor = (project) => {
+export const StatusAccessor = (row) => {
   return (
     <Choose>
-      <Choose.When condition={project.is_process}>
-        <ProjectStatus project={project} />
+      <Choose.When condition={row.status_formatted === 'InProgress'}>
+        <ProjectStatus row={row} />
       </Choose.When>
-      <Choose.When condition={project.is_closed}>
+      <Choose.When condition={row.status_formatted === 'Closed'}>
         <StatusTag minimal={true} intent={Intent.SUCCESS} round={true}>
-          <T id={'closed'} />
+          {row.status_formatted}
         </StatusTag>
       </Choose.When>
-      <Choose.When condition={project.is_draft}>
-        <StatusTag round={true} minimal={true}>
+      <Choose.Otherwise>
+        <StatusTag minimal={true} round={true}>
           <T id={'draft'} />
         </StatusTag>
-      </Choose.When>
+      </Choose.Otherwise>
     </Choose>
   );
 };
@@ -67,7 +73,7 @@ export const AvatarCell = ({ row: { original }, size }) => (
  */
 export const ActionsMenu = ({
   row: { original },
-  payload: { onEdit, onDelete, onViewDetails, onNewTask },
+  payload: { onEdit, onDelete, onViewDetails, onNewTask, onStatus },
 }) => (
   <Menu>
     <MenuItem
@@ -86,6 +92,19 @@ export const ActionsMenu = ({
       text={intl.get('projects.action.new_task')}
       onClick={safeCallback(onNewTask, original)}
     />
+
+    <MenuItem text={'Status'} icon={<Icon icon="plus" />}>
+      <If condition={original.status !== 'InProgress'}>
+        <MenuItem
+          text={'InProgress'}
+          onClick={safeCallback(onStatus, original)}
+        />
+      </If>
+      <If condition={original.status !== 'Closed'}>
+        <MenuItem text={'Closed'} onClick={safeCallback(onStatus, original)} />
+      </If>
+    </MenuItem>
+
     <MenuDivider />
     <MenuItem
       text={intl.get('projects.action.delete_project')}
