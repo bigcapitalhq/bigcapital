@@ -87,7 +87,7 @@ export function useProjectTimeEntry(timeId, props, requestProps) {
     [t.PROJECT_TIME_ENTRY, timeId],
     { method: 'get', url: `projects/times/${timeId}`, ...requestProps },
     {
-      select: (res) => res.data.time,
+      select: (res) => res.data.time_entry,
       defaultData: {},
       ...props,
     },
@@ -95,20 +95,20 @@ export function useProjectTimeEntry(timeId, props, requestProps) {
 }
 
 const transformProjectTimeEntries = (res) => ({
-  projectTasks: res.data.times,
+  projectTimeEntries: res.data.timeline,
 });
 
 /**
- * 
+ *
  * @param taskId - Task id.
- * @param props 
- * @param requestProps 
- * @returns 
+ * @param props
+ * @param requestProps
+ * @returns
  */
-export function useProjectTimeEntries(taskId, props, requestProps) {
+export function useProjectTimeEntries(id, props, requestProps) {
   return useRequestQuery(
-    [t.PROJECT_TIME_ENTRIES, taskId],
-    { method: 'get', url: `projects/tasks/${taskId}/times`, ...requestProps },
+    [t.PROJECT_TIME_ENTRIES, id],
+    { method: 'get', url: `projects/${id}/times`, ...requestProps },
     {
       select: transformProjectTimeEntries,
       defaultData: {

@@ -31,7 +31,7 @@ export function useProjectTimesheetColumns() {
         id: 'duration',
         Header: '',
         accessor: 'duration',
-        width: 100,
+        width: 120,
         className: 'duration',
         align: 'right',
         clickable: true,

@@ -9,13 +9,18 @@ import { safeCallback, firstLettersArgs } from '@/utils';
  * Table actions cell.
  */
 export function ActionsMenu({
-  payload: { onDelete, onViewDetails },
+  payload: { onDelete, onEdit },
   row: { original },
 }) {
   return (
     <Menu>
       <MenuItem
-        text={intl.get('timesheets.actions.delete_timesheet')}
+        icon={<Icon icon="pen-18" />}
+        text={intl.get('timesheets.action.edit_timesheet')}
+        onClick={safeCallback(onEdit, original)}
+      />
+      <MenuItem
+        text={intl.get('timesheets.action.delete_timesheet')}
         intent={Intent.DANGER}
         onClick={safeCallback(onDelete, original)}
         icon={<Icon icon="trash-16" iconSize={16} />}

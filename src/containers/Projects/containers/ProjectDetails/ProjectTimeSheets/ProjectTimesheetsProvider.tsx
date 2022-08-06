@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useProject } from '../../../hooks';
+import { useProject, useProjectTimeEntries } from '../../../hooks';
 
 const ProjectTimesheetContext = React.createContext();
 
@@ -12,6 +12,14 @@ function ProjectTimesheetsProvider({ ...props }) {
   const { id } = useParams();
   const projectId = parseInt(id, 10);
 
+  // fetch project time entries.
+const {
+    data: { projectTimeEntries },
+    isLoading: isProjectTimeEntriesLoading,
+  } = useProjectTimeEntries(projectId, {
+    enabled: !!projectId,
+  });
+
   // Handle fetch project detail.
   const { data: project } = useProject(projectId, {
     enabled: !!projectId,
@@ -21,6 +29,8 @@ function ProjectTimesheetsProvider({ ...props }) {
   const provider = {
     projectId,
     project,
+    projectTimeEntries,
+    isProjectTimeEntriesLoading,
   };
 
   return <ProjectTimesheetContext.Provider value={provider} {...props} />;

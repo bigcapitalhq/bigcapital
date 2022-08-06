@@ -6,10 +6,13 @@ import {
   TableSkeletonHeader,
 } from '@/components';
 import { ActionsMenu } from './components';
-import { useProjectTimesheetColumns } from './hooks';
 import { TABLES } from '@/constants/tables';
+import { useProjectTimesheetColumns } from './hooks';
 import { useMemorizedColumnsWidths } from '@/hooks';
+import { useProjectTimesheetContext } from './ProjectTimesheetsProvider';
 import withSettings from '@/containers/Settings/withSettings';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
 
@@ -20,12 +23,25 @@ import { compose } from '@/utils';
 function ProjectTimesheetsTableRoot({
   // #withSettings
   timesheetsTableSize,
+
+  // #withDialog
+  openDialog,
+  // #withAlertsActions
+  openAlert,
 }) {
+  const { projectTimeEntries } = useProjectTimesheetContext();
+
   // Retrieve project timesheet table columns.
   const columns = useProjectTimesheetColumns();
 
   // Handle delete timesheet.
-  const handleDeleteTimesheet = () => {};
+  const handleDeleteTimesheet = ({ id }) => {
+    openAlert('project-timesheet-delete', { timesheetId: id });
+  };
+
+  const handleEditTimesheet = ({ id }) => {
+    openDialog('project-time-entry-form', { timesheetId: id, action: 'edit' });
+  };
 
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
@@ -34,7 +50,7 @@ function ProjectTimesheetsTableRoot({
   return (
     <ProjectTimesheetDataTable
       columns={columns}
-      data={[]}
+      data={projectTimeEntries}
       manualSortBy={true}
       noInitialFetch={true}
       sticky={true}
@@ -47,11 +63,14 @@ function ProjectTimesheetsTableRoot({
       size={timesheetsTableSize}
       payload={{
         onDelete: handleDeleteTimesheet,
+        onEdit: handleEditTimesheet,
       }}
     />
   );
 }
 export const ProjectTimesheetsTable = compose(
+  withAlertsActions,
+  withDialogActions,
   withSettings(({ timesheetsSettings }) => ({
     timesheetsTableSize: timesheetsSettings?.tableSize,
   })),
