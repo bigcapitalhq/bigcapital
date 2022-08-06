@@ -36,6 +36,7 @@ function ProjectTaskFormProvider({
   const provider = {
     dialogName,
     isNewMode,
+    taskId,
     projectId,
     projectTask,
     createProjectTaskMutate,

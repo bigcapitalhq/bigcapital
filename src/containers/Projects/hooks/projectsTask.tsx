@@ -42,10 +42,11 @@ export function useEditProjectTask(props) {
 
   return useMutation(([id, values]) => apiRequest.post(`tasks/${id}`, values), {
     onSuccess: (res, [id, values]) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
+
       // Invalidate specific project task.
       queryClient.invalidateQueries([t.PROJECT_TASK, id]);
-
-      commonInvalidateQueries(queryClient);
     },
     ...props,
   });
