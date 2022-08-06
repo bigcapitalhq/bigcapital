@@ -73,7 +73,7 @@ function ProjectTimeEntryForm({
       setSubmitting(false);
     };
     if (isNewMode) {
-      createProjectTimeEntryMutate([values.taskId, form])
+      createProjectTimeEntryMutate([values.task_id, form])
         .then(onSuccess)
         .catch(onError);
     } else {

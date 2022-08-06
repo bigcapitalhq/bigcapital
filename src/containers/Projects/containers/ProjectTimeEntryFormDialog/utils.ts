@@ -1,14 +1,15 @@
 import React from 'react';
+import { isNull } from 'lodash';
 import { useFormikContext } from 'formik';
 import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
 
 export const useSetProjectToForm = () => {
   const { values } = useFormikContext();
-  const { setProjectPayload } = useProjectTimeEntryFormContext();
+  const { setProjectPayload, projectId } = useProjectTimeEntryFormContext();
 
   React.useEffect(() => {
-    if (values.project_id) {
+    if (isNull(projectId)) {
       setProjectPayload(values.project_id);
     }
-  }, [values.projectId]);
+  }, [values.project_id]);
 };
