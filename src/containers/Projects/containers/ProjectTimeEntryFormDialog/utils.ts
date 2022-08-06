@@ -4,12 +4,11 @@ import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
 
 export const useSetProjectToForm = () => {
   const { values } = useFormikContext();
-  const { setProjectPayload, isProjectsSuccess } =
-    useProjectTimeEntryFormContext();
+  const { setProjectPayload } = useProjectTimeEntryFormContext();
 
   React.useEffect(() => {
-    if (isProjectsSuccess) {
-      setProjectPayload(values.projectId);
+    if (values.project_id) {
+      setProjectPayload(values.project_id);
     }
   }, [values.projectId]);
 };

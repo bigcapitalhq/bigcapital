@@ -4,6 +4,7 @@ import {
   useProjectTasks,
   useCreateProjectTimeEntry,
   useEditProjectTimeEntry,
+  useProjectTimeEntry,
 } from '../../hooks';
 import { DialogContent } from '@/components';
 
@@ -17,6 +18,7 @@ function ProjectTimeEntryFormProvider({
   // #ownProps
   dialogName,
   projectId,
+  timesheetId,
   ...props
 }) {
   // project payload.
@@ -34,28 +36,37 @@ function ProjectTimeEntryFormProvider({
     enabled: !!project,
   });
 
+  // Handle fetch project time entry detail.
+  const { data: projectTimeEntry, isLoading: isProjectTimeEntryLoading } =
+    useProjectTimeEntry(timesheetId, {
+      enabled: !!timesheetId,
+    });
+
   // Fetch project list data table or list
   const {
     data: { projects },
     isLoading: isProjectsLoading,
-    isSuccess: isProjectsSuccess,
   } = useProjects();
+
+  const isNewMode = !timesheetId;
 
   // provider payload.
   const provider = {
     dialogName,
     projects,
     projectId,
+    timesheetId,
     projectTasks,
+    isNewMode,
     setProjectPayload,
-    isProjectsSuccess,
+    projectTimeEntry,
     createProjectTimeEntryMutate,
     editProjectTimeEntryMutate,
   };
 
   return (
     <DialogContent
-      isLoading={isProjectsLoading}
+      isLoading={isProjectsLoading || isProjectTimeEntryLoading}
       name={'project-time-entry-form'}
     >
       <ProjecctTimeEntryFormContext.Provider value={provider} {...props} />

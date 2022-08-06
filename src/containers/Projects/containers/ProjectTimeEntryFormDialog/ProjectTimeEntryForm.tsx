@@ -10,12 +10,12 @@ import { CreateProjectTimeEntryFormSchema } from './ProjectTimeEntryForm.schema'
 import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { compose } from '@/utils';
+import { compose, transformToForm } from '@/utils';
 
 const defaultInitialValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
-  projectId: '',
-  taskId: '',
+  task_id: '',
+  project_id: '',
   description: '',
   duration: '',
 };
@@ -31,6 +31,9 @@ function ProjectTimeEntryForm({
   // time entry form dialog context.
   const {
     dialogName,
+    isNewMode,
+    timesheetId,
+    projectTimeEntry,
     createProjectTimeEntryMutate,
     editProjectTimeEntryMutate,
   } = useProjectTimeEntryFormContext();
@@ -38,6 +41,7 @@ function ProjectTimeEntryForm({
   // Initial form values
   const initialValues = {
     ...defaultInitialValues,
+    ...transformToForm(projectTimeEntry, defaultInitialValues),
   };
 
   // Handles the form submit.
@@ -50,7 +54,7 @@ function ProjectTimeEntryForm({
     const onSuccess = (response) => {
       AppToaster.show({
         message: intl.get(
-          true
+          isNewMode
             ? 'project_time_entry.success_message'
             : 'project_time_entry.dialog.edit_success_message',
         ),
@@ -68,9 +72,15 @@ function ProjectTimeEntryForm({
     }) => {
       setSubmitting(false);
     };
-    createProjectTimeEntryMutate([values.taskId, form])
-      .then(onSuccess)
-      .catch(onError);
+    if (isNewMode) {
+      createProjectTimeEntryMutate([values.taskId, form])
+        .then(onSuccess)
+        .catch(onError);
+    } else {
+      editProjectTimeEntryMutate([timesheetId, form])
+        .then(onSuccess)
+        .catch(onError);
+    }
   };
 
   return (

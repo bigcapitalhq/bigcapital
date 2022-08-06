@@ -35,13 +35,13 @@ function ProjectTimeEntryFormFields() {
       {/*------------ Project -----------*/}
       <If condition={!projectId}>
         <FFormGroup
-          name={'projectId'}
+          name={'project_id'}
           label={<T id={'project_time_entry.dialog.project'} />}
           labelInfo={<FieldRequiredHint />}
           className={classNames('form-group--select-list', Classes.FILL)}
         >
           <ProjectsSelect
-            name={'projectId'}
+            name={'project_id'}
             projects={projects}
             popoverProps={{ minimal: true }}
           />
@@ -49,13 +49,13 @@ function ProjectTimeEntryFormFields() {
       </If>
       {/*------------ Task -----------*/}
       <FFormGroup
-        name={'taskId'}
+        name={'task_id'}
         label={<T id={'project_time_entry.dialog.task'} />}
         labelInfo={<FieldRequiredHint />}
         className={classNames('form-group--select-list', Classes.FILL)}
       >
         <TaskSelect
-          name={'taskId'}
+          name={'task_id'}
           tasks={projectTasks}
           popoverProps={{ minimal: true }}
         />

@@ -15,12 +15,18 @@ const ProjectTimeEntryFormDialogContent = React.lazy(
 function ProjectTimeEntryFormDialog({
   dialogName,
   isOpen,
-  payload: { projectId },
+  payload: { timesheetId = null, projectId = null, action },
 }) {
   return (
     <ProjectTimeEntryFormDialogRoot
       name={dialogName}
-      title={<T id={'project_time_entry.dialog.label'} />}
+      title={
+        action === 'edit' ? (
+          <T id={'project_time_entry.dialog.edit_time_entry'} />
+        ) : (
+          <T id={'project_time_entry.dialog.new_time_entry'} />
+        )
+      }
       isOpen={isOpen}
       autoFocus={true}
       canEscapeKeyClose={true}
@@ -29,6 +35,7 @@ function ProjectTimeEntryFormDialog({
       <DialogSuspense>
         <ProjectTimeEntryFormDialogContent
           dialogName={dialogName}
+          timeEntry={timesheetId}
           project={projectId}
         />
       </DialogSuspense>
