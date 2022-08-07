@@ -14,7 +14,11 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
-import { TaskSelect, ProjectsSelect } from '../../components';
+import {
+  TaskSelect,
+  ProjectsSelect,
+  ProjectSelectButton,
+} from '../../components';
 import { momentFormatter } from '@/utils';
 import { useSetProjectToForm } from './utils';
 
@@ -43,6 +47,7 @@ function ProjectTimeEntryFormFields() {
           <ProjectsSelect
             name={'project_id'}
             projects={projects}
+            input={ProjectSelectButton}
             popoverProps={{ minimal: true }}
           />
         </FFormGroup>

@@ -47,17 +47,24 @@ const projectSelectProps = {
   labelAccessor: 'name',
 };
 
+/**
+ *
+ * @param {*} param0
+ * @returns
+ */
 export function ProjectsSelect({ projects, ...rest }) {
+  return <FSelect {...projectSelectProps} items={projects} {...rest} />;
+}
+/**
+ *
+ * @param {*} param0
+ * @returns
+ */
+export function ProjectSelectButton({ label, ...rest }) {
   return (
-    <FSelect
-      items={projects}
-      {...projectSelectProps}
+    <Button
+      text={label ? label : intl.get('find_or_choose_a_project')}
       {...rest}
-      input={ProjectSelectButton}
     />
   );
-}
-
-function ProjectSelectButton({ label }) {
-  return <Button text={label ? label : intl.get('find_or_choose_a_project')} />;
 }
