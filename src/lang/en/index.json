@@ -2184,5 +2184,11 @@
   "sales.column.balance": "Balance",
   "sales.column.total": "Total",
   "sales.column.status": "Status",
-  "sales.action.delete": "Delete"
+  "sales.action.delete": "Delete",
+  "invoice.project_name.label":"Project Name",
+  "estimate.project_name.label":"Project Name",
+  "receipt.project_name.label":"Project Name",
+  "bill.project_name.label":"Project Name",
+  "payment_receive.project_name.label":"Project Name",
+  "select_project": "Select Project"
 }

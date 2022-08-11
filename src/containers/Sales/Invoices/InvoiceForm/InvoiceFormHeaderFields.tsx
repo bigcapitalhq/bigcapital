@@ -5,6 +5,7 @@ import {
   FormGroup,
   InputGroup,
   Position,
+  Classes,
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
@@ -30,7 +31,11 @@ import {
 } from './utils';
 
 import { useInvoiceFormContext } from './InvoiceFormProvider';
-import { InvoiceExchangeRateInputField } from './components';
+import {
+  InvoiceExchangeRateInputField,
+  InvoiceProjectSelectButton,
+} from './components';
+import { ProjectsSelect } from '@/containers/Projects/components';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -48,7 +53,7 @@ function InvoiceFormHeaderFields({
   invoiceNextNumber,
 }) {
   // Invoice form context.
-  const { customers } = useInvoiceFormContext();
+  const { customers, projects } = useInvoiceFormContext();
 
   // Handle invoice number changing.
   const handleInvoiceNumberChange = () => {
@@ -224,6 +229,21 @@ function InvoiceFormHeaderFields({
           </FormGroup>
         )}
       </FastField>
+
+      {/*------------ Project name -----------*/}
+      <FFormGroup
+        name={'project_id'}
+        label={<T id={'invoice.project_name.label'} />}
+        inline={true}
+        className={classNames('form-group--select-list', Classes.FILL)}
+      >
+        <ProjectsSelect
+          name={'project_id'}
+          projects={projects}
+          input={InvoiceProjectSelectButton}
+          popoverFill={true}
+        />
+      </FFormGroup>
     </div>
   );
 }

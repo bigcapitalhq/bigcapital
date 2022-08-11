@@ -1,8 +1,8 @@
 import React, { createContext, useContext } from 'react';
-import { isEqual, isUndefined } from 'lodash';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { DashboardInsider } from '@/components';
+import { useProjects } from '@/containers/Projects/hooks';
 import {
   useSettingsPaymentReceives,
   usePaymentReceiveEditPage,
@@ -57,6 +57,12 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
     isSuccess: isBranchesSuccess,
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
+  // Fetches the projects list.
+  const {
+    data: { projects },
+    isLoading: isProjectsLoading,
+  } = useProjects();
+
   // Detarmines whether the new mode.
   const isNewMode = !paymentReceiveId;
 
@@ -74,7 +80,8 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
     accounts,
     customers,
     branches,
-
+    projects,
+    
     isPaymentLoading,
     isAccountsLoading,
     isPaymentFetching,

@@ -13,6 +13,7 @@ import {
   useCreateReceipt,
   useEditReceipt,
 } from '@/hooks/query';
+import { useProjects } from '@/containers/Projects/hooks';
 
 const ReceiptFormContext = createContext();
 
@@ -83,6 +84,12 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     stringified_filter_roles: stringifiedFilterRoles,
   });
 
+  // Fetch project list.
+  const {
+    data: { projects },
+    isLoading: isProjectsLoading,
+  } = useProjects();
+
   // Fetch receipt settings.
   const { isLoading: isSettingLoading } = useSettingsReceipts();
 
@@ -103,6 +110,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     items,
     branches,
     warehouses,
+    projects,
     submitPayload,
 
     isNewMode,

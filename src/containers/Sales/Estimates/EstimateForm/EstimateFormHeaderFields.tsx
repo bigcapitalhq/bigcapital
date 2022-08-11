@@ -5,10 +5,11 @@ import {
   FormGroup,
   InputGroup,
   Position,
+  Classes,
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from '@/components';
+import { FFormGroup, FormattedMessage as T } from '@/components';
 import { FastField, Field, ErrorMessage } from 'formik';
 
 import {
@@ -30,8 +31,13 @@ import {
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
+import { ProjectsSelect } from '@/containers/Projects/components';
+import {
+  EstimateExchangeRateInputField,
+  EstimateProjectSelectButton,
+} from './components';
+
 import { useObserveEstimateNoSettings } from './utils';
-import { EstimateExchangeRateInputField } from './components';
 import { useEstimateFormContext } from './EstimateFormProvider';
 
 /**
@@ -46,7 +52,7 @@ function EstimateFormHeader({
   estimateNumberPrefix,
   estimateNextNumber,
 }) {
-  const { customers } = useEstimateFormContext();
+  const { customers, projects } = useEstimateFormContext();
 
   const handleEstimateNumberBtnClick = () => {
     openDialog('estimate-number-form', {});
@@ -219,6 +225,21 @@ function EstimateFormHeader({
           </FormGroup>
         )}
       </FastField>
+
+      {/*------------ Project name -----------*/}
+      <FFormGroup
+        name={'project_id'}
+        label={<T id={'estimate.project_name.label'} />}
+        inline={true}
+        className={classNames('form-group--select-list', Classes.FILL)}
+      >
+        <ProjectsSelect
+          name={'project_id'}
+          projects={projects}
+          input={EstimateProjectSelectButton}
+          popoverFill={true}
+        />
+      </FFormGroup>
     </div>
   );
 }

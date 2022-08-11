@@ -1,4 +1,6 @@
 import React from 'react';
+import intl from 'react-intl-universal';
+import { Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { ExchangeRateInputGroup } from '@/components';
 import { useCurrentOrganization } from '@/hooks/state';
@@ -26,4 +28,12 @@ import { useEstimateIsForeignCustomer } from './utils';
       {...props}
     />
   );
+}
+
+/**
+ * Estimate project select.
+ * @returns {JSX.Element}
+ */
+ export function EstimateProjectSelectButton({ label }) {
+  return <Button text={label ?? intl.get('select_project')} />;
 }

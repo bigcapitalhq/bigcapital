@@ -12,6 +12,7 @@ import {
   useEditEstimate,
 } from '@/hooks/query';
 import { Features } from '@/constants';
+import { useProjects } from '@/containers/Projects/hooks';
 import { useFeatureCan } from '@/hooks/state';
 import { ITEMS_FILTER_ROLES } from './utils';
 
@@ -45,7 +46,6 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
   // Handle fetch customers data table or list
   const {
     data: { customers },
-    isFetch: isCustomersFetching,
     isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
@@ -62,6 +62,12 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
   } = useBranches(query, { enabled: isBranchFeatureCan });
+
+  // Fetches the projects list.
+  const {
+    data: { projects },
+    isLoading: isProjectsLoading,
+  } = useProjects();
 
   // Handle fetch settings.
   useSettingsEstimates();
@@ -86,6 +92,7 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
     customers,
     branches,
     warehouses,
+    projects,
     isNewMode,
 
     isItemsFetching,

@@ -2,6 +2,7 @@ import React, { createContext, useState } from 'react';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { DashboardInsider } from '@/components/Dashboard';
+import { useProjects } from '@/containers/Projects/hooks';
 import {
   useAccounts,
   useVendors,
@@ -80,6 +81,12 @@ function BillFormProvider({ billId, ...props }) {
     isSuccess: isBranchesSuccess,
   } = useBranches({}, { enabled: isBranchFeatureCan });
 
+  // Fetches the projects list.
+  const {
+    data: { projects },
+    isLoading: isProjectsLoading,
+  } = useProjects();
+
   // Handle fetching bill settings.
   const { isFetching: isSettingLoading } = useSettings();
 
@@ -102,6 +109,7 @@ function BillFormProvider({ billId, ...props }) {
     bill,
     warehouses,
     branches,
+    projects,
     submitPayload,
     isNewMode,
 

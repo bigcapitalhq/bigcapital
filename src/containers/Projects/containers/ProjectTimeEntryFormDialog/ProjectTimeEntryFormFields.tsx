@@ -48,7 +48,6 @@ function ProjectTimeEntryFormFields() {
             name={'project_id'}
             projects={projects}
             input={ProjectSelectButton}
-            popoverProps={{ minimal: true }}
           />
         </FFormGroup>
       </If>

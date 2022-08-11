@@ -2,6 +2,8 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem, Button } from '@blueprintjs/core';
 import { FSelect } from '@/components';
+import { CLASSES } from '@/constants/classes';
+import classNames from 'classnames';
 
 /**
  *
@@ -31,7 +33,6 @@ const projectsItemPredicate = (query, project, _index, exactMatch) => {
 const projectsItemRenderer = (project, { handleClick, modifiers, query }) => {
   return (
     <MenuItem
-      active={modifiers.active}
       disabled={modifiers.disabled}
       key={project.id}
       onClick={handleClick}
@@ -52,8 +53,18 @@ const projectSelectProps = {
  * @param {*} param0
  * @returns
  */
-export function ProjectsSelect({ projects, ...rest }) {
-  return <FSelect {...projectSelectProps} items={projects} {...rest} />;
+export function ProjectsSelect({ projects, popoverFill, ...rest }) {
+  return (
+    <FSelect
+      {...projectSelectProps}
+      items={projects}
+      popoverProps={{ minimal: true, usePortal: !popoverFill }}
+      className={classNames('form-group--select-list', {
+        [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
+      })}
+      {...rest}
+    />
+  );
 }
 /**
  *
