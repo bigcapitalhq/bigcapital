@@ -81,6 +81,10 @@ export const unrealizedGainOrLossFilterDrawerSelector = (state) => {
   return filterDrawerByTypeSelector('unrealizedGainOrLoss')(state);
 };
 
+export const projectProfitabilitySummaryFilterDrawerSelector = (state) => {
+  return filterDrawerByTypeSelector('projectProfitabilitySummary')(state);
+};
+
 /**
  * Retrieve balance sheet filter drawer.
  */
@@ -262,6 +266,13 @@ export const getRealizedGainOrLossFilterDrawer = createSelector(
  */
 export const getUnrealizedGainOrLossFilterDrawer = createSelector(
   unrealizedGainOrLossFilterDrawerSelector,
+  (isOpen) => {
+    return isOpen;
+  },
+);
+
+export const getProjectProfitabilitySummaryFilterDrawer = createSelector(
+  projectProfitabilitySummaryFilterDrawerSelector,
   (isOpen) => {
     return isOpen;
   },

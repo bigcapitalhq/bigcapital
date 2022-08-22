@@ -659,6 +659,11 @@ export const SidebarMenu = [
               ability: ReportsAction.READ_AP_AGING_SUMMARY,
             },
           },
+          {
+            text: <T id={'project_profitability_summary'} />,
+            href: '/financial-reports/project-profitability-summary',
+            type: ISidebarMenuItemType.Link,
+          },
         ],
       },
       {

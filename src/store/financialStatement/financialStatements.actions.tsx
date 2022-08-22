@@ -230,3 +230,16 @@ export function toggleUnrealizedGainOrLossFilterDrawer(toggle) {
     },
   };
 }
+
+/**
+ * Toggle display of the project Profitability summary filter drawer.
+ * @param {boolean} toggle
+ */
+export function toggleProjectProfitabilitySummaryFilterDrawer(toggle) {
+  return {
+    type: `${t.PROJECT_PROFITABILITY_SUMMARY}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle,
+    },
+  };
+}

@@ -436,6 +436,18 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
+    path: `/financial-reports/project-profitability-summary`,
+    component: lazy(
+      () =>
+        import('@/containers/FinancialStatements/ProjectProfitabilitySummary/ProjectProfitabilitySummary'),
+    ),
+    breadcrumb: intl.get('project_profitability_summary'),
+    pageTitle: intl.get('project_profitability_summary'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: '/financial-reports',
     component: lazy(
       () => import('@/containers/FinancialStatements/FinancialReports'),
