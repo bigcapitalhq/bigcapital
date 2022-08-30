@@ -32,6 +32,7 @@ const Schema = Yup.object().shape({
         }),
       contact_id: Yup.number().nullable(),
       contact_type: Yup.string().nullable(),
+      project_id: Yup.number().nullable(),
       note: Yup.string().max(DATATYPES_LENGTH.TEXT).nullable(),
     }),
   ),

@@ -16,6 +16,7 @@ import {
   InputGroupCell,
   ContactsListFieldCell,
   BranchesListFieldCell,
+  ProjectsListFieldCell,
 } from '@/components/DataTableCells';
 
 import { CellType, Features, Align } from '@/constants';
@@ -127,6 +128,21 @@ export const useJournalTableEntriesColumns = () => {
         disableSortBy: true,
         width: 120,
       },
+
+      ...(featureCan(Features.Branches)
+        ? [
+            {
+              Header: intl.get('project'),
+              id: 'project_id',
+              accessor: 'project_id',
+              Cell: ProjectsListFieldCell,
+              className: 'project_id',
+              disableSortBy: true,
+              width: 120,
+            },
+          ]
+        : []),
+
       ...(featureCan(Features.Branches)
         ? [
             {
