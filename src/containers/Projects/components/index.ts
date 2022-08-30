@@ -4,3 +4,4 @@ export * from './TaskSelect';
 export * from './ProjectsSelect';
 export * from './ProjectMultiSelect'
 export * from './FInputGroupComponent';
+export * from './ProjectSuggestField'
