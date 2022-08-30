@@ -26,7 +26,7 @@ export default function ExpenseFormEntriesTable({
   minLines,
 }) {
   // Expense form context.
-  const { accounts } = useExpenseFormContext();
+  const { accounts, projects } = useExpenseFormContext();
 
   // Memorized data table columns.
   const columns = useExpenseFormTableColumns({ landedCost });
@@ -69,11 +69,12 @@ export default function ExpenseFormEntriesTable({
       sticky={true}
       payload={{
         accounts: accounts,
+        projects: projects,
         errors: error,
         updateData: handleUpdateData,
         removeRow: handleRemoveRow,
         autoFocus: ['expense_account_id', 0],
-        currencyCode
+        currencyCode,
       }}
     />
   );
@@ -81,4 +82,4 @@ export default function ExpenseFormEntriesTable({
 
 ExpenseFormEntriesTable.defaultProps = {
   minLines: 1,
-}
+};

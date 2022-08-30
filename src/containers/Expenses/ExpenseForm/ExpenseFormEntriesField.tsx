@@ -9,12 +9,13 @@ import { defaultExpenseEntry, accountsFieldShouldUpdate } from './utils';
  */
 export default function ExpenseFormEntriesField({ linesNumber = 4 }) {
   // Expense form context.
-  const { accounts } = useExpenseFormContext();
+  const { accounts, projects } = useExpenseFormContext();
 
   return (
     <FastField
       name={'categories'}
       accounts={accounts}
+      projects={projects}
       shouldUpdate={accountsFieldShouldUpdate}
     >
       {({

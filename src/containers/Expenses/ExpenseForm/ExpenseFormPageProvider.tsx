@@ -11,6 +11,7 @@ import {
   useCreateExpense,
   useEditExpense,
 } from '@/hooks/query';
+import { useProjects } from '@/containers/Projects/hooks';
 
 const ExpenseFormPageContext = createContext();
 
@@ -45,6 +46,12 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
   // Fetch accounts list.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
+  // Fetch the  projects list.
+  const {
+    data: { projects },
+    isLoading: isProjectsLoading,
+  } = useProjects();
+
   // Create and edit expense mutate.
   const { mutateAsync: createExpenseMutate } = useCreateExpense();
   const { mutateAsync: editExpenseMutate } = useEditExpense();
@@ -66,7 +73,8 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
     expense,
     accounts,
     branches,
-
+    projects,
+    
     isCurrenciesLoading,
     isExpenseLoading,
     isCustomersLoading,
@@ -84,7 +92,8 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
         isCurrenciesLoading ||
         isExpenseLoading ||
         isCustomersLoading ||
-        isAccountsLoading
+        isAccountsLoading ||
+        isProjectsLoading
       }
       name={'expense-form'}
     >

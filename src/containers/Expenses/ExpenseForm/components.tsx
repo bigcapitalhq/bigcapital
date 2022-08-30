@@ -14,11 +14,12 @@ import {
   InputGroupCell,
   MoneyFieldCell,
   AccountsListFieldCell,
+  ProjectsListFieldCell,
   CheckBoxFieldCell,
 } from '@/components/DataTableCells';
-import { CellType, Align } from '@/constants';
+import { CellType, Features, Align } from '@/constants';
 
-import { useCurrentOrganization } from '@/hooks/state';
+import { useCurrentOrganization, useFeatureCan } from '@/hooks/state';
 import { useExpensesIsForeign } from './utils';
 
 /**
@@ -90,6 +91,8 @@ export function ExpenseAmountHeaderCell({ payload: { currencyCode } }) {
  * Retrieve expense form table entries columns.
  */
 export function useExpenseFormTableColumns({ landedCost }) {
+  const { featureCan } = useFeatureCan();
+
   return React.useMemo(
     () => [
       {
@@ -118,6 +121,20 @@ export function useExpenseFormTableColumns({ landedCost }) {
         disableSortBy: true,
         width: 100,
       },
+      ...(featureCan(Features.Branches)
+        ? [
+            {
+              Header: intl.get('project'),
+              id: 'project_id',
+              accessor: 'project_id',
+              Cell: ProjectsListFieldCell,
+              className: 'project_id',
+              disableSortBy: true,
+              width: 40,
+            },
+          ]
+        : []),
+
       ...(landedCost
         ? [
             {
