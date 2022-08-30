@@ -8,6 +8,7 @@ import {
 } from '@blueprintjs/core';
 import {
   Icon,
+  Can,
   AdvancedFilterPopover,
   DashboardActionViewsList,
   DashboardFilterButton,
@@ -15,6 +16,7 @@ import {
   FormattedMessage as T,
   DashboardActionsBar,
 } from '@/components';
+import { ProjectAction, AbilitySubject } from '@/constants/abilityOption';
 
 import withProjects from './withProjects';
 import withProjectsActions from './withProjectsActions';
@@ -75,12 +77,14 @@ function ProjectsActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="plus" />}
-          text={<T id={'projects.label.new_project'} />}
-          onClick={handleNewProjectBtnClick}
-        />
+        <Can I={ProjectAction.Create} a={AbilitySubject.Project}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="plus" />}
+            text={<T id={'projects.label.new_project'} />}
+            onClick={handleNewProjectBtnClick}
+          />
+        </Can>
         {/* AdvancedFilterPopover */}
 
         <Button

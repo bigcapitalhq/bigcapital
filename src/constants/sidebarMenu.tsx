@@ -23,6 +23,7 @@ import {
   ManualJournalAction,
   ExpenseAction,
   CashflowAction,
+  ProjectAction,
   PreferencesAbility,
   SubscriptionBillingAbility,
 } from '@/constants/abilityOption';
@@ -554,6 +555,10 @@ export const SidebarMenu = [
             text: 'Projects',
             href: '/projects',
             type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Project,
+              ability: ProjectAction.View,
+            },
           },
         ],
       },
@@ -565,6 +570,10 @@ export const SidebarMenu = [
             text: <T id={'projects.label.new_project'} />,
             type: ISidebarMenuItemType.Dialog,
             dialogName: 'project-form',
+            permission: {
+              subject: AbilitySubject.Project,
+              ability: ProjectAction.Create,
+            },
           },
           {
             text: <T id={'projects.label.new_time_entry'} />,

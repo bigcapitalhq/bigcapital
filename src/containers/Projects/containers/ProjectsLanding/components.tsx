@@ -13,10 +13,12 @@ import {
 import {
   Icon,
   FormatDate,
+  Can,
   Choose,
   If,
   FormattedMessage as T,
 } from '@/components';
+import { ProjectAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback, firstLettersArgs, calculateStatus } from '@/utils';
 
 /**
@@ -81,37 +83,46 @@ export const ActionsMenu = ({
       text={intl.get('view_details')}
       onClick={safeCallback(onViewDetails, original)}
     />
-    <MenuDivider />
-    <MenuItem
-      icon={<Icon icon="pen-18" />}
-      text={intl.get('projects.action.edit_project')}
-      onClick={safeCallback(onEdit, original)}
-    />
-    <MenuItem
-      icon={<Icon icon="plus" />}
-      text={intl.get('projects.action.new_task')}
-      onClick={safeCallback(onNewTask, original)}
-    />
-
-    <MenuItem text={'Status'} icon={<Icon icon="plus" />}>
-      <If condition={original.status !== 'InProgress'}>
-        <MenuItem
-          text={'InProgress'}
-          onClick={safeCallback(onStatus, original)}
-        />
-      </If>
-      <If condition={original.status !== 'Closed'}>
-        <MenuItem text={'Closed'} onClick={safeCallback(onStatus, original)} />
-      </If>
-    </MenuItem>
-
-    <MenuDivider />
-    <MenuItem
-      text={intl.get('projects.action.delete_project')}
-      icon={<Icon icon="trash-16" iconSize={16} />}
-      intent={Intent.DANGER}
-      onClick={safeCallback(onDelete, original)}
-    />
+    <Can I={ProjectAction.Edit} a={AbilitySubject.Project}>
+      <MenuDivider />
+      <MenuItem
+        icon={<Icon icon="pen-18" />}
+        text={intl.get('projects.action.edit_project')}
+        onClick={safeCallback(onEdit, original)}
+      />
+    </Can>
+    <Can I={ProjectAction.Create} a={AbilitySubject.Project}>
+      <MenuItem
+        icon={<Icon icon="plus" />}
+        text={intl.get('projects.action.new_task')}
+        onClick={safeCallback(onNewTask, original)}
+      />
+    </Can>
+    <Can I={ProjectAction.View} a={AbilitySubject.Project}>
+      <MenuItem text={'Status'} icon={<Icon icon="plus" />}>
+        <If condition={original.status !== 'InProgress'}>
+          <MenuItem
+            text={'InProgress'}
+            onClick={safeCallback(onStatus, original)}
+          />
+        </If>
+        <If condition={original.status !== 'Closed'}>
+          <MenuItem
+            text={'Closed'}
+            onClick={safeCallback(onStatus, original)}
+          />
+        </If>
+      </MenuItem>
+    </Can>
+    <Can I={ProjectAction.Delete} a={AbilitySubject.Project}>
+      <MenuDivider />
+      <MenuItem
+        text={intl.get('projects.action.delete_project')}
+        icon={<Icon icon="trash-16" iconSize={16} />}
+        intent={Intent.DANGER}
+        onClick={safeCallback(onDelete, original)}
+      />
+    </Can>
   </Menu>
 );
 

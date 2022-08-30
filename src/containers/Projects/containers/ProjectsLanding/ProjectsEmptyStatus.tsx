@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
-import { EmptyStatus, FormattedMessage as T } from '@/components';
+import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
+import { ProjectAction, AbilitySubject } from '@/constants/abilityOption';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
@@ -24,16 +25,18 @@ function ProjectsEmptyStatus({
       }
       action={
         <React.Fragment>
-          <Button
-            intent={Intent.PRIMARY}
-            large={true}
-            onClick={handleNewProjectClick}
-          >
-            <T id="projects.empty_status.action" />
-          </Button>
-          <Button intent={Intent.NONE} large={true}>
-            <T id={'learn_more'} />
-          </Button>
+          <Can I={ProjectAction.Create} a={AbilitySubject.Project}>
+            <Button
+              intent={Intent.PRIMARY}
+              large={true}
+              onClick={handleNewProjectClick}
+            >
+              <T id="projects.empty_status.action" />
+            </Button>
+            <Button intent={Intent.NONE} large={true}>
+              <T id={'learn_more'} />
+            </Button>
+          </Can>
         </React.Fragment>
       }
     />
