@@ -40,6 +40,9 @@ function ProjectDetailActionsBar({
   // Handle new transaction button click.
   const handleNewTransactionBtnClick = ({ path }) => {
     switch (path) {
+      case 'invoincing':
+        openDialog('project-invoicing-form');
+        break;
       case 'expense':
         openDialog('project-expense-form', { projectId });
         break;

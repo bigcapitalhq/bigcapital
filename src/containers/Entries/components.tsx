@@ -13,6 +13,7 @@ import {
   PercentFieldCell,
   NumericInputCell,
   CheckBoxFieldCell,
+  ProjectInvoicingCell,
 } from '@/components/DataTableCells';
 
 /**
@@ -152,6 +153,15 @@ export function useEditableItemsEntriesColumns({ landedCost }) {
             },
           ]
         : []),
+      {
+        Header: '',
+        accessor: 'invoicing',
+        Cell: ProjectInvoicingCell,
+        disableSortBy: true,
+        disableResizing: true,
+        width: 45,
+        align: Align.Center,
+      },
       {
         Header: '',
         accessor: 'action',
