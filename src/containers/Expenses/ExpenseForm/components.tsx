@@ -121,7 +121,7 @@ export function useExpenseFormTableColumns({ landedCost }) {
         disableSortBy: true,
         width: 100,
       },
-      ...(featureCan(Features.Branches)
+      ...(featureCan(Features.Projects)
         ? [
             {
               Header: intl.get('project'),

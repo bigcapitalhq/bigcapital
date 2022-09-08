@@ -45,6 +45,7 @@ import ProjectTaskFormDialog from '@/containers/Projects/containers/ProjectTaskF
 import ProjectTimeEntryFormDialog from '@/containers/Projects/containers/ProjectTimeEntryFormDialog';
 import ProjectExpenseForm from '@/containers/Projects/containers/ProjectExpenseForm';
 import EstimatedExpenseFormDialog from '@/containers/Projects/containers/EstimatedExpenseFormDialog';
+import ProjectInvoicingFormDialog from '@/containers/Projects/containers/ProjectInvoicingFormDialog';
 
 import { DialogsName } from '@/constants/dialogs';
 
@@ -129,6 +130,9 @@ export default function DialogsContainer() {
       <ProjectExpenseForm dialogName={DialogsName.ProjectExpenseForm} />
       <EstimatedExpenseFormDialog
         dialogName={DialogsName.EstimateExpenseForm}
+      />
+      <ProjectInvoicingFormDialog
+        dialogName={DialogsName.ProjectInvoicingForm}
       />
     </div>
   );

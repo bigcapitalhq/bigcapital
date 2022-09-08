@@ -2108,6 +2108,7 @@
   "project_details.label.purchases": "Purchases",
   "project_details.label.sales": "Sales",
   "project_details.label.journals": "Journals",
+  "project_details.new_invoicing": "New Invoicing",
   "project_details.new_expense": "New Expense",
   "project_details.new_estimated_expense": "New Estimated Expense",
   "timesheets.action.delete_timesheet": "Delete",
@@ -2191,8 +2192,8 @@
   "bill.project_name.label": "Project Name",
   "payment_receive.project_name.label": "Project Name",
   "select_project": "Select project",
-  "project":"Project",
-  "projects_multi_select.label":"Projects",
+  "project": "Project",
+  "projects_multi_select.label": "Projects",
   "projects_multi_select.placeholder": "Filter by projects…",
   "project_profitability_summary": "Project Profitability Summary",
   "project_profitability_summary.filter_projects.all_projects": "All Projects",
@@ -2201,5 +2202,11 @@
   "project_profitability_summary.filter_projects.without_zero_balance.hint": "Include projects that onces have transactions on the given date period only.",
   "project_profitability_summary.filter_projects.with_transactions": "Projects with transactions",
   "project_profitability_summary.filter_projects.with_transactions.hint": "Include projects that onces have transactions on the given date period only.",
-  "project_profitability_summary.filter_options.label": "Filter projects"
+  "project_profitability_summary.filter_options.label": "Filter projects",
+  "project_invoicing.label.add": "Add",
+  "project_invoicing.dialog.project_invoicing": "Project Invoicing",
+  "project_invoicing.dialog.all_time_entries": "All time entries",
+  "project_invoicing.dialog.all_unbilled_expenses": "All unbilled expenses",
+  "project_invoicing.dialog.all_bills": "All bills",
+  "project_invoicing.dialog.bill_to": "Bill To"
 }

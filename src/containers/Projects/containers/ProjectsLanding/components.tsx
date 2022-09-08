@@ -174,7 +174,7 @@ export const useProjectsListColumns = () => {
         id: 'status',
         Header: '',
         accessor: StatusAccessor,
-        width: 50,
+        width: 40,
         className: 'status',
       },
     ],
