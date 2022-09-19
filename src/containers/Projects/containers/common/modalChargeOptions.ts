@@ -2,9 +2,9 @@
 import intl from 'react-intl-universal';
 
 export const taskChargeOptions = [
-  { name: intl.get('project_task.dialog.hourly_rate'), value: 'time' },
-  { name: intl.get('project_task.dialog.fixed_price'), value: 'fixed' },
-  { name: intl.get('project_task.dialog.non_chargeable'), value: 'non_chargable' },
+  { name: intl.get('project_task.dialog.hourly_rate'), value: 'TIME' },
+  { name: intl.get('project_task.dialog.fixed_price'), value: 'FIXED' },
+  { name: intl.get('project_task.dialog.non_chargeable'), value: 'NON_CHARGABLE' },
 ];
 
 export const expenseChargeOption = [

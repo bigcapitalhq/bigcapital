@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { ProjectBillableEntriesFormProvider } from './ProjectBillableEntriesFormProvider';
 import ProjectBillableEntriesForm from './ProjectBillableEntriesForm';

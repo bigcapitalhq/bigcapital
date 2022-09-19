@@ -87,6 +87,7 @@ const ProjectTimesheetDataTable = styled(DataTable)`
 
     .tbody {
       .tr .td {
+        padding: 0.4rem 0.8rem;
       }
 
       .avatar.td {

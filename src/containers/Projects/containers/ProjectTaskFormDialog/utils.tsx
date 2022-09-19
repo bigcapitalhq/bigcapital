@@ -15,13 +15,13 @@ export function EstimateAmount({ baseCurrency }) {
     <EstimatedAmountBase>
       <EstimatedAmountContent>
         <Choose>
-          <Choose.When condition={values?.charge_type === 'hourly_rate'}>
+          <Choose.When condition={values?.charge_type === 'TIME'}>
             <T id={'project_task.dialog.estimated_amount'} />
             <EstimatedAmount>
               <Money amount={estimatedAmount} currency={baseCurrency} />
             </EstimatedAmount>
           </Choose.When>
-          <Choose.When condition={values?.charge_type === 'fixed_price'}>
+          <Choose.When condition={values?.charge_type === 'FIXED'}>
             <T id={'project_task.dialog.total'} />
             <EstimatedAmount>
               <Money amount={values.rate} currency={baseCurrency} />

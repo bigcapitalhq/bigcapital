@@ -35,7 +35,7 @@ export function ActionsMenu({
  */
 export const AvatarCell = ({ row: { original }, size }) => (
   <span className="avatar" data-size={size}>
-    {firstLettersArgs(original?.display_name, original?.name)}
+    {firstLettersArgs(original?.display_name, original?.task_name)}
   </span>
 );
 
@@ -46,11 +46,13 @@ export const TimesheetAccessor = (timesheet) => (
   <React.Fragment>
     <TimesheetHeader>
       <TimesheetTitle>{timesheet.display_name}</TimesheetTitle>
-      <TimesheetSubTitle>{timesheet.name}</TimesheetSubTitle>
+      <TimesheetSubTitle>{timesheet.task_name}</TimesheetSubTitle>
     </TimesheetHeader>
     <TimesheetContent>
       <FormatDate value={timesheet.date} />
-      <TimesheetDescription>{timesheet.description}</TimesheetDescription>
+      {timesheet.description && (
+        <TimesheetDescription>{timesheet.description}</TimesheetDescription>
+      )}
     </TimesheetContent>
   </React.Fragment>
 );

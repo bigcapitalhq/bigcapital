@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from 'react';
 import { useProjectBillableEntries } from '../../hooks';
 import { DialogContent } from '@/components';

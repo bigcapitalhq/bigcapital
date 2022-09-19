@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
