@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { defaultFastFieldShouldUpdate } from '@/utils';
 
 export const shouldBaseCurrencyUpdate = (newProps, oldProps) => {

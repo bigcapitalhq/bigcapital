@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';

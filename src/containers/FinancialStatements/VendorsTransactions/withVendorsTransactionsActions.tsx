@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { connect } from 'react-redux';
 import { toggleVendorsTransactionsFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
 

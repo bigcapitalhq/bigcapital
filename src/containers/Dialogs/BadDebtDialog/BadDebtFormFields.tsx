@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from '@/components';

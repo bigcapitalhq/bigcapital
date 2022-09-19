@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FormGroup, InputGroup, ControlGroup } from '@blueprintjs/core';

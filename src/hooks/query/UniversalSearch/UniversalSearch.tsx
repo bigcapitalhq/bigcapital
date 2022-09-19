@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { getUniversalSearchBind } from '@/containers/UniversalSearch/utils';
 import { useResourceData } from '../GenericResource';
 

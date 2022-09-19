@@ -1,3 +1,4 @@
+// @ts-nocheck
 export default (next) => (reducer, initialState, enhancer) => {
   let resetType = 'RESET'
   let resetData = 'state'

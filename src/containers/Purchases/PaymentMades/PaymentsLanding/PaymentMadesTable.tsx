@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 

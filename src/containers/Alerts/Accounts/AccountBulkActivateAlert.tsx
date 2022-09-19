@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';

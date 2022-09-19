@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { connect } from 'react-redux';
 import { getSalesByItemsFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
 

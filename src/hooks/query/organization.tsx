@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useMutation, useQueryClient } from 'react-query';
 import { batch } from 'react-redux';
 import t from './types';

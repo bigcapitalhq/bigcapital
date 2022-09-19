@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useContext } from 'react';
 import classNames from 'classnames';
 import TableContext from './TableContext';

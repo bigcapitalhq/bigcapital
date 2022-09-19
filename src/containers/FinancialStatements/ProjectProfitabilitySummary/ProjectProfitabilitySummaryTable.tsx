@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';

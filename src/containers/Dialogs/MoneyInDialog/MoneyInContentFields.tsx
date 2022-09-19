@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import OwnerContributionFormFields from './OwnerContribution/OwnerContributionFormFields';
 import OtherIncomeFormFields from './OtherIncome/OtherIncomeFormFields';

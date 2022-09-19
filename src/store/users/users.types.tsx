@@ -1,3 +1,4 @@
+// @ts-nocheck
 export default {
   USERS_LIST_SET: 'USERS_LIST_SET',
   USERS_TABLE_LOADING: 'USERS_TABLE_LOADING',

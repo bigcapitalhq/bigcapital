@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@blueprintjs-formik/core": "^0.2.1",
+    "@blueprintjs-formik/datetime": "^0.3.4",
     "@blueprintjs-formik/select": "^0.1.4",
     "@blueprintjs/core": "^3.50.2",
     "@blueprintjs/datetime": "^3.23.12",
@@ -17,7 +18,6 @@
     "@reduxjs/toolkit": "^1.2.5",
     "@sentry/react": "^6.13.2",
     "@sentry/tracing": "^6.13.2",
-    "@tanem/react-nprogress": "^3.0.24",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
@@ -41,18 +41,12 @@
     "basscss": "^8.0.2",
     "camelcase": "^5.3.1",
     "cross-env": "^7.0.2",
-    "css-loader": "3.4.2",
     "deep-map-keys": "^2.0.1",
     "deepdash": "^5.3.9",
     "dependency-graph": "^0.11.0",
-    "dotenv": "8.2.0",
-    "dotenv-expand": "5.1.0",
     "fast-deep-equal": "^3.1.3",
-    "flow-bin": "^0.123.0",
     "formik": "^2.2.5",
-    "fs-extra": "^8.1.0",
     "http-proxy-middleware": "^1.0.0",
-    "identity-obj-proxy": "3.0.0",
     "jest": "24.9.0",
     "jest-environment-jsdom-fourteen": "1.0.1",
     "jest-resolve": "24.9.0",
@@ -61,6 +55,7 @@
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.33",
+    "node-sass": "^4.14.1",
     "path-browserify": "^1.0.1",
     "query-string": "^7.1.1",
     "ramda": "^0.27.1",
@@ -95,13 +90,12 @@
     "redux-devtools": "^3.5.0",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
-    "resolve": "1.15.0",
     "rtl-detect": "^1.0.3",
     "semver": "6.3.0",
     "style-loader": "0.23.1",
     "styled-components": "^5.3.1",
     "stylis-rtlcss": "^2.1.1",
-    "typescript": "^4.1.2",
+    "typescript": "^4.8.3",
     "yup": "^0.28.1"
   },
   "scripts": {
@@ -111,8 +105,9 @@
     "storybook": "start-storybook -p 6006",
     "preinstall": "npx npm-force-resolutions"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "proxy": "http://localhost:3000/",
+  "devDependencies": {
+    "@types/react-dom": "^16.9.16"
   },
   "browserslist": {
     "production": [
@@ -125,66 +120,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "jest": {
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/src/setupTests.js"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "jest-environment-jsdom-fourteen",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "modulePaths": [
-      "/Users/ahmed/Documents/Ratteb/client/src"
-    ],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-b",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "watchPlugins": [
-      "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
-    ]
-  },
-  "proxy": "http://localhost:3000/",
-  "devDependencies": {
-    "@types/react-dom": "^16.9.16"
   }
 }

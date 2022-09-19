@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';

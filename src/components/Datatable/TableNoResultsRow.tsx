@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useContext } from 'react';
 import intl from 'react-intl-universal';
 import TableContext from './TableContext';

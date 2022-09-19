@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import ShortcutBoxesSection from './ShortcutBoxesSection';
 import { productsServices } from '@/constants/homepageOptions';

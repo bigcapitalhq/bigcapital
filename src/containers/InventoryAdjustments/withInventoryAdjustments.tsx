@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { connect } from 'react-redux';
 import { getInventroyAdjsTableStateFactory } from '@/store/inventoryAdjustments/inventoryAdjustment.selector';
 

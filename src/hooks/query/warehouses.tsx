@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useQueryClient, useMutation } from 'react-query';
 import { transformPagination } from '@/utils';
 import { useRequestQuery } from '../useQueryRequest';

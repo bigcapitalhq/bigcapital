@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { InputGroup, FormGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';

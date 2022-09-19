@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { createContext, useMemo, useContext } from 'react';
 
 import FinancialReportPage from '../FinancialReportPage';

@@ -37,7 +37,6 @@ const useCustomCompareEffect = <TDeps extends DependencyList>(
   if (!ref.current || !depsEqual(deps, ref.current)) {
     ref.current = deps;
   }
-
   useEffect(effect, ref.current);
 };
 

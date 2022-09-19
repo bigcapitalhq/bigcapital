@@ -1,3 +1,4 @@
+// @ts-nocheck
 export * from './CellForceWidth';
 export * from './DataTable';
 export * from './DatatableEditable';

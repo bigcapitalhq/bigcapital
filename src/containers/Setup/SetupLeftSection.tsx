@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Icon, For, FormattedMessage as T } from '@/components';
 

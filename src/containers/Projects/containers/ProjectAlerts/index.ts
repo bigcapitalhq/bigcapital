@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 
 const ProjectDeleteAlert = React.lazy(() => import('./ProjectDeleteAlert'));

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createReducer } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import purgeStoredState from 'redux-persist/es/purgeStoredState';

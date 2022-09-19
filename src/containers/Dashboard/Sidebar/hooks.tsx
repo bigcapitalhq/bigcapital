@@ -1,3 +1,4 @@
+// @ts-nocheck
 import _, { isEmpty, includes } from 'lodash';
 import React from 'react';
 import * as R from 'ramda';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { FastField } from 'formik';
 import {
@@ -7,11 +8,10 @@ import {
   Position,
   FormGroup,
 } from '@blueprintjs/core';
+import classNames from 'classnames';
 import { ListSelect, MODIFIER, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { filterAccountsOptions } from './constants';
-
-import classNames from 'classnames';
 
 export default function FinancialStatementsFilter({
   items = filterAccountsOptions,

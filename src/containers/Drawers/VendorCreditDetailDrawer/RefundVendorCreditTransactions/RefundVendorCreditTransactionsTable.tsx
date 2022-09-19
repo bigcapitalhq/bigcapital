@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { DataTable, Card } from '@/components';
 

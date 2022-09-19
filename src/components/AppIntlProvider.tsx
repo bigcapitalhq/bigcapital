@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { createContext } from 'react';
 
 const AppIntlContext = createContext();

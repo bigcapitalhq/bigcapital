@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { omit, chain } from 'lodash';
 import moment from 'moment';
 

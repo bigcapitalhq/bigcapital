@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, createContext } from 'react';
 import { omit } from 'lodash';
 import { useLocation } from 'react-router-dom';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 

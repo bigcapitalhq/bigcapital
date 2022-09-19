@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';

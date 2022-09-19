@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback } from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import intl from 'react-intl-universal';

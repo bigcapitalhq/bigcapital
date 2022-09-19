@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { connect } from 'react-redux';
 import { toggleProfitLossFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
 

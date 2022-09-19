@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 
 import { DashboardInsider } from '@/components/Dashboard';

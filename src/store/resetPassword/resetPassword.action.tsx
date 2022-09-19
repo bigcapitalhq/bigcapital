@@ -1,3 +1,4 @@
+// @ts-nocheck
 import ApiService from '@/services/ApiService';
 
 export const submitResetPassword = (password) => {

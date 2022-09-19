@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 import { useInventoryValuation } from '@/hooks/query';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 export enum DRAWERS {
   ACCOUNT = 'account-drawer',
   JOURNAL = 'journal-drawer',

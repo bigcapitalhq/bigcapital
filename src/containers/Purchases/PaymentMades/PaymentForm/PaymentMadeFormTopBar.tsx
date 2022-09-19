@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Alignment, NavbarGroup, Button, Classes } from '@blueprintjs/core';

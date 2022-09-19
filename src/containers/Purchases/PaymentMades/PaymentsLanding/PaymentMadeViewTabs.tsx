@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router';
 import { DashboardViewsTabs, FormattedMessage as T } from '@/components';

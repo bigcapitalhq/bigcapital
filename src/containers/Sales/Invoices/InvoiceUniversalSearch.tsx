@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';

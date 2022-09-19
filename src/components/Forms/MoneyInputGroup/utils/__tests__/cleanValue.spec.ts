@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { cleanValue } from '../cleanValue';
 
 describe('cleanValue', () => {

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import { Classes, InputGroup, FormGroup, Intent } from '@blueprintjs/core';

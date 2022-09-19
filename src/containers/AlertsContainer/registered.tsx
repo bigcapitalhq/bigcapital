@@ -1,3 +1,4 @@
+// @ts-nocheck
 import AccountsAlerts from '@/containers/Accounts/AccountsAlerts';
 import ItemsAlerts from '@/containers/Items/ItemsAlerts';
 import ItemsCategoriesAlerts from '@/containers/ItemsCategories/ItemsCategoriesAlerts';

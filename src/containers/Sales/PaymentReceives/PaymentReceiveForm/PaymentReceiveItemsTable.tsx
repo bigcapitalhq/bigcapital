@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback } from 'react';
 import classNames from 'classnames';
 import { CloudLoadingIndicator } from '@/components';

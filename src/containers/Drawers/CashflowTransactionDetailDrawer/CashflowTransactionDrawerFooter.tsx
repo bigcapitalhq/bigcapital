@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 import { T, FormatNumber } from '@/components';

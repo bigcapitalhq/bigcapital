@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Escape regex char
  *

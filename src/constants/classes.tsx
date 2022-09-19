@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Classes } from '@blueprintjs/core';
 
 const CLASSES = {

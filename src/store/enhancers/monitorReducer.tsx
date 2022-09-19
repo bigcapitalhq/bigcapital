@@ -1,3 +1,4 @@
+// @ts-nocheck
 const round = number => Math.round(number * 100) / 100
 const monitorReducerEnhancer = createStore => (
   reducer,

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { T, Dialog, DialogSuspense } from '@/components';
 import classNames from 'classnames';

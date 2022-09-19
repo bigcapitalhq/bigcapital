@@ -1,3 +1,4 @@
+// @ts-nocheck
 import MODIFIER from './modifiers';
 import ContextMenu from './ContextMenu';
 import AvaterCell from './AvaterCell';
