@@ -10,7 +10,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FastField, Field, ErrorMessage } from 'formik';
+import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
 
 import {
   FFormGroup,
@@ -56,6 +56,8 @@ function InvoiceFormHeaderFields({
   // Invoice form context.
   const { customers, projects } = useInvoiceFormContext();
 
+  const { values } = useFormikContext();
+
   // Handle invoice number changing.
   const handleInvoiceNumberChange = () => {
     openDialog('invoice-number-form');
@@ -76,6 +78,14 @@ function InvoiceFormHeaderFields({
   // Syncs invoice number settings with form.
   useObserveInvoiceNoSettings(invoiceNumberPrefix, invoiceNextNumber);
 
+  React.useEffect(() => {
+    if (values.project_id) {
+      openDialog('project-billable-entries', {
+        projectId: values.project_id,
+      });
+    }
+  }, [values]);
+  
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ----------- Customer name ----------- */}
