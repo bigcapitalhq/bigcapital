@@ -1,3 +1,4 @@
+// @ts-nocheck
 import intl from 'react-intl-universal';
 
 // handle delete errors.

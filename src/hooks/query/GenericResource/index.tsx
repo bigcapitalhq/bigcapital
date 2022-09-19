@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useRequestQuery } from '../../useQueryRequest';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 

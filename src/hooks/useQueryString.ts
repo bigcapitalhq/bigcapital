@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import {
   ParseOptions,

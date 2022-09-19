@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { connect } from 'react-redux';
 import { getTrialBalanceSheetFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
 

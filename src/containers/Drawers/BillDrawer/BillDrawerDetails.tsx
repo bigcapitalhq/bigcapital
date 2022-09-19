@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Tab } from '@blueprintjs/core';
 import intl from 'react-intl-universal';

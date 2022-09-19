@@ -1,3 +1,4 @@
+// @ts-nocheck
 import intl from 'react-intl-universal';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, ManualJournalAction } from '@/constants/abilityOption';

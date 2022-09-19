@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { useCustomer } from '@/hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 export default {
   INVOICES_TABLE_STATE_SET: 'INVOICES/TABLE_STATE_SET',

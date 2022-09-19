@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import AccountantFormPage from './AccountantFormPage';
 import { AccountantFormProvider } from './AccountantFormProvider';

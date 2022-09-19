@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback, useContext } from 'react';
 import { ContextMenu } from '@/components';
 import classNames from 'classnames';

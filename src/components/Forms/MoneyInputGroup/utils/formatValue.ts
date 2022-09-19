@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { addSeparators } from './addSeparators';
 
 type Props = {

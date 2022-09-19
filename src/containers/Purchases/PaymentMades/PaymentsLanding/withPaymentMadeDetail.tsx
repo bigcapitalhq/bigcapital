@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { connect } from 'react-redux';
 import { getPaymentMadeByIdFactory } from '@/store/PaymentMades/paymentMade.selector';
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createReducer } from '@reduxjs/toolkit';
 import { createTableStateReducers } from '@/store/tableState.reducer';
 

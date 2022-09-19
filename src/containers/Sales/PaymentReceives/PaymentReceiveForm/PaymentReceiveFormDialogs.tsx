@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { useFormikContext } from 'formik';
 import PaymentReceiveNumberDialog from '@/containers/Dialogs/PaymentReceiveNumberDialog';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import CreditNoteNumberDialog from '@/containers/Dialogs/CreditNoteNumberDialog';
 import { useFormikContext } from 'formik';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useHistory } from 'react-router-dom';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 export default {
   ACCOUNTS_TABLE_STATE_SET: 'ACCOUNTS/TABLE_STATE_SET',

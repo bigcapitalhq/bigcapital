@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';

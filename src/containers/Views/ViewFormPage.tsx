@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState, useCallback } from 'react';
 import { useAsync } from 'react-use';
 import { useParams } from 'react-router-dom';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useFormik } from 'formik';
 import { FormattedMessage as T } from '@/components';

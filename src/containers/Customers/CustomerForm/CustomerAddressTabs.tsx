@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { FormGroup, InputGroup, TextArea } from '@blueprintjs/core';
 import { Row, Col } from '@/components';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback, useMemo, useEffect, useState } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { ListSelect, T } from '@/components';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { ARAgingSummaryGeneralProvider } from './ARAgingSummaryGeneralProvider';
 import ARAgingSummaryHeaderGeneralContent from './ARAgingSummaryHeaderGeneralContent';

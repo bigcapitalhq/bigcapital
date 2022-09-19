@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useRef, useState, useEffect } from 'react';
 import { FormattedMessage as T } from '@/components';
 import PropTypes from 'prop-types';

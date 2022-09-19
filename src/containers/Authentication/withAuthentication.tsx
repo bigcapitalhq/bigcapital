@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { isAuthenticated } from '@/store/authentication/authentication.reducer';
 import { connect } from 'react-redux';
 

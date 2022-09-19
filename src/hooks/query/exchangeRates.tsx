@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useMutation, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
 import { useQueryTenant } from '../useQueryRequest';

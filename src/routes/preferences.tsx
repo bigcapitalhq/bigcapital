@@ -1,3 +1,4 @@
+// @ts-nocheck
 import General from '@/containers/Preferences/General/General';
 import Users from '../containers/Preferences/Users/Users';
 import Roles from '../containers/Preferences/Users/Roles/RolesForm/RolesFormPage';

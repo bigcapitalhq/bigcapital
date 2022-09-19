@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useContext } from 'react';
 import { ScrollSyncPane } from 'react-scroll-sync';
 import TableContext from './TableContext';

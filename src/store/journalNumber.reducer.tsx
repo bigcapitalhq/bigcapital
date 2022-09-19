@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 export const journalNumberChangedReducer = (type) => ({
   [type]: (state, action) => {

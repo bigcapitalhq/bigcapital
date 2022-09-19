@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { FastField } from 'formik';
 import React from 'react';
 import ExpenseFormEntriesTable from './ExpenseFormEntriesTable';

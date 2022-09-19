@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { lazy } from 'react';
 import classNames from 'classnames';
 

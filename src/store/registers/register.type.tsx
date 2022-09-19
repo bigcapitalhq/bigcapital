@@ -1,3 +1,4 @@
+// @ts-nocheck
 export default {
   REGISTER_SET: 'REGISTER_SUCCESS',
   REGISTER_CLEAR_ERRORS: 'REGISTER_CLEAR_ERRORS',

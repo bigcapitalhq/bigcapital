@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { compose } from '@/utils';

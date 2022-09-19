@@ -1,3 +1,4 @@
+// @ts-nocheck
 import printValue from '../printValue';
 
 export const locale = {

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { createContext } from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';

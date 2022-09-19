@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 
 import '@/style/pages/Warehouses/warehouseFormDialog.scss';

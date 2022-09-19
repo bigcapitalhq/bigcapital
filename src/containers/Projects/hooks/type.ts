@@ -1,3 +1,4 @@
+// @ts-nocheck
 const CUSTOMERS = {
   CUSTOMERS: 'CUSTOMERS',
   CUSTOMER: 'CUSTOMER',

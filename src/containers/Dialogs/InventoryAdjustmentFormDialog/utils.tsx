@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { useFormikContext } from 'formik';
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';

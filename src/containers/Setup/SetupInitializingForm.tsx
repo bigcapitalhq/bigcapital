@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { ProgressBar, Intent } from '@blueprintjs/core';
 import * as R from 'ramda';

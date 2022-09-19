@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';

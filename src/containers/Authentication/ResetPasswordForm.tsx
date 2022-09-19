@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Button, InputGroup, Intent, FormGroup } from '@blueprintjs/core';
 import { Form, ErrorMessage, FastField } from 'formik';

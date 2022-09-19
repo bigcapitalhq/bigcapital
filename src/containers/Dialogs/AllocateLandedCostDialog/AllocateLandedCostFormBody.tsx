@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { FastField } from 'formik';
 import { CLASSES } from '@/constants/classes';

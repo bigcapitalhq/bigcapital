@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Field } from 'formik';
 import { T, SubscriptionPlans } from '@/components';

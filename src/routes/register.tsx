@@ -1,3 +1,4 @@
+// @ts-nocheck
 import LazyLoader from '@/components/LazyLoader';
 
 export default [

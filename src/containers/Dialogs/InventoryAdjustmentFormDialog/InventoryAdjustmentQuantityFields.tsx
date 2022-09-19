@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { useFormikContext } from 'formik';
 import { Choose, If } from '@/components';

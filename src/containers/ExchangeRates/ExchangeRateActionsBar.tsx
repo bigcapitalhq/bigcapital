@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback, useState, useMemo } from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';

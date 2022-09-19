@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { FInputGroup } from '@/components';
 import { useFormikContext } from 'formik';

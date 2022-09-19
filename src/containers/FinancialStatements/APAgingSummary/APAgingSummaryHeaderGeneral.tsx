@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { APAgingSummaryGeneralProvider } from './APAgingSummaryGeneralProvider';
 import APAgingSummaryHeaderGeneralContent from './APAgingSummaryHeaderGeneralContent';

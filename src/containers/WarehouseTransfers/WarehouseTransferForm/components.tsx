@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { chain } from 'lodash';
 import { FormikObserver } from '@/components';

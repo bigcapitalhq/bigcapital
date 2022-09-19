@@ -1,3 +1,4 @@
+// @ts-nocheck
 export default {
   BALANCE_SHEET: 'BALANCE_SHEET',
   TRIAL_BALANCE_SHEET: 'TRIAL_BALANCE_SHEET',

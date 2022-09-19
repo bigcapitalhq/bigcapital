@@ -1,3 +1,4 @@
+// @ts-nocheck
 //@ts-nocheck
 import React from 'react';
 import { Overlay, OverlayProps } from '@blueprintjs/core';

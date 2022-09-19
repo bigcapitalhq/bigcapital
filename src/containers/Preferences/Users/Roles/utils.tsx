@@ -1,3 +1,4 @@
+// @ts-nocheck
 import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';

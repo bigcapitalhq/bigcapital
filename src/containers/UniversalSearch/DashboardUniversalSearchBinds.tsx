@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { universalSearchInvoiceBind } from '../Sales/Invoices/InvoiceUniversalSearch';
 import { universalSearchReceiptBind } from '../Sales/Receipts/ReceiptUniversalSearch';
 import { universalSearchBillBind } from '../Purchases/Bills/BillUniversalSearch';

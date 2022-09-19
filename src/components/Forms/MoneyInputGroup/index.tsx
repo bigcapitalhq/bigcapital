@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { FC, useState, useEffect, useRef } from 'react';
 import { InputGroup } from '@blueprintjs/core';
 import { CurrencyInputProps } from './CurrencyInputProps';

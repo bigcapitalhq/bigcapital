@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import { Scrollbar } from 'react-scrollbars-custom';

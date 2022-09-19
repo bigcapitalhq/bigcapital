@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
