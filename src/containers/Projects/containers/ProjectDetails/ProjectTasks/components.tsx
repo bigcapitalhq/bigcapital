@@ -36,11 +36,11 @@ export function TaskAccessor(row) {
         <TaskTitle>{row.name}</TaskTitle>
       </TaskHeader>
       <TaskContent>
-        {row.charge_type === 'hourly_rate'
+        {row.charge_type === 'TIME'
           ? intl.get('project_task.rate', {
               rate: row.rate,
             })
-          : intl.get(row.charge_type)}
+          : row.charge_type}
         <TaskDescription>
           {row.estimate_minutes &&
             intl.get('project_task.estimate_minutes', {

@@ -12,7 +12,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 const defaultInitialValues = {
   name: '',
-  charge_type: 'fixed_price',
+  charge_type: 'fixed',
   estimate_minutes: '',
   cost_estimate: 0,
   rate: '0.00',

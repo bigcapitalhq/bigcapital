@@ -2108,6 +2108,7 @@
   "project_details.label.purchases": "Purchases",
   "project_details.label.sales": "Sales",
   "project_details.label.journals": "Journals",
+  "project_details.new_task": "New Task",
   "project_details.new_invoicing": "New Invoicing",
   "project_details.new_expense": "New Expense",
   "project_details.new_estimated_expense": "New Estimated Expense",
@@ -2208,5 +2209,8 @@
   "project_invoicing.dialog.all_time_entries": "All time entries",
   "project_invoicing.dialog.all_unbilled_expenses": "All unbilled expenses",
   "project_invoicing.dialog.all_bills": "All bills",
-  "project_invoicing.dialog.bill_to": "Bill To"
+  "project_invoicing.dialog.bill_to": "Bill To",
+  "project_billable_entries.dialog.label": "Add Project Entries",
+  "project_billable_entries.dialog.filter_by_date": "Filter by Date",
+  "project_billable_entries.dialog.filter_by_type":"Filter by Type"
 }

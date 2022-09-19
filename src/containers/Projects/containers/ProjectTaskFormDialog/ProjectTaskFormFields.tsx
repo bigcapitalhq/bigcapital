@@ -60,7 +60,7 @@ function ProjectTaskFormFields({
               />
               <FInputGroup
                 name="rate"
-                disabled={values?.charge_type === 'non_chargeable'}
+                disabled={values?.charge_type === 'non_chargable'}
               />
             </ControlGroup>
           </FFormGroup>
