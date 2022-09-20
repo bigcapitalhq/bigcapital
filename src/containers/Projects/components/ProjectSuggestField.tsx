@@ -48,15 +48,13 @@ export function ProjectSuggestField({
    */
   const projectsItemRenderer = (project, { handleClick, modifiers, query }) => {
     return (
-      <MenuContent>
-        <MenuItem
-          icon={<AvatarSelect text={project} />}
-          disabled={modifiers.disabled}
-          key={project.id}
-          text={project.name}
-          onClick={handleClick}
-        />
-      </MenuContent>
+      <MenuItem
+        icon={<AvatarSelect text={project} />}
+        disabled={modifiers.disabled}
+        key={project.id}
+        text={project.name}
+        onClick={handleClick}
+      />
     );
   };
 
@@ -133,20 +131,14 @@ const AvatarSelect = ({ text }) => {
   return <AvaterContent>{firstLettersArgs(text?.name)}</AvaterContent>;
 };
 
-const MenuContent = styled(Menu)`
-  .bp3-menu {
-    margin: 5px;
-  }
-`;
-
 const AvaterContent = styled.div`
   display: inline-block;
   background: #adbcc9;
   text-align: center;
   font-weight: 400;
   color: #fff;
-  height: 25px;
-  width: 25px;
-  line-height: 25px;
+  height: 22px;
+  width: 22px;
+  line-height: 22px;
   font-size: 12px;
 `;
