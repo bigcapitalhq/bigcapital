@@ -9,6 +9,8 @@ import {
   FieldRequiredHint,
   FormattedMessage as T,
 } from '@/components';
+import { ProjectBillableSuggestField } from '../../components';
+import { billableTypeOption } from '../common';
 import { ProjectRowDivider, ProjectEntiresBox } from './components';
 import { useProjectBillableEntriesFormContext } from './ProjectBillableEntriesFormProvider';
 
@@ -19,8 +21,6 @@ import { useProjectBillableEntriesFormContext } from './ProjectBillableEntriesFo
 export default function ProjectBillableEntriesFormFields() {
   // Formik context.
   const { values } = useFormikContext();
-
-  const { billableEntries } = useProjectBillableEntriesFormContext();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -37,14 +37,14 @@ export default function ProjectBillableEntriesFormFields() {
 
       {/*------------ Filter by Type -----------*/}
       <FFormGroup
-        name={'type'}
+        name={'billableType'}
         label={<T id={'project_billable_entries.dialog.filter_by_type'} />}
         labelInfo={<FieldRequiredHint />}
       >
-        <FInputGroup name="type" placeholder={'Placeholder Type'} />
+        <ProjectBillableSuggestField billableType={billableTypeOption} />
       </FFormGroup>
 
-      <ProjectEntiresBox billableEntries={billableEntries} />
+      <ProjectEntiresBox billableEntries={[]} />
     </div>
   );
 }

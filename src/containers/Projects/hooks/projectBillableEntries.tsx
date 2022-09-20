@@ -12,7 +12,7 @@ import t from './type';
  */
 export function useProjectBillableEntries(projectId, query, props) {
   return useRequestQuery(
-    [t.PROJECT_BILLABLE_ENTRIES, projectId],
+    [t.PROJECT_BILLABLE_ENTRIES, projectId, query],
     {
       method: 'get',
       url: `projects/${projectId}/billable/entries`,
@@ -20,9 +20,7 @@ export function useProjectBillableEntries(projectId, query, props) {
     },
     {
       select: (res) => res.data.billable_entries,
-      defaultData: {
-        billableEntries: [],
-      },
+      defaultData: {},
       ...props,
     },
   );

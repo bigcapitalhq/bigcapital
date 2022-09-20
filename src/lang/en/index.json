@@ -2212,5 +2212,8 @@
   "project_invoicing.dialog.bill_to": "Bill To",
   "project_billable_entries.dialog.label": "Add Project Entries",
   "project_billable_entries.dialog.filter_by_date": "Filter by Date",
-  "project_billable_entries.dialog.filter_by_type":"Filter by Type"
+  "project_billable_entries.dialog.filter_by_type": "Filter by Type",
+  "project_billable_entries.dialog.expense": "Expense",
+  "project_billable_entries.dialog.task": "Task",
+  "project_billable_entries.dialog.bill": "Bill"
 }
