@@ -51,6 +51,7 @@ export const defaultInvoice = {
   currency_code: '',
   branch_id: '',
   warehouse_id: '',
+  project_id: '',
   entries: [...repeatValue(defaultInvoiceEntry, MIN_LINES_NUMBER)],
 };
 

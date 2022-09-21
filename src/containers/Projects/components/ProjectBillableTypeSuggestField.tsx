@@ -61,10 +61,10 @@ const billableTypeInputValueRenderer = (inputValue) => {
 };
 
 /**
- * Project billable suggest field.
+ * Project billable type suggest field.
  * @param
  */
-export function ProjectBillableSuggestField({
+export function ProjectBillableTypeSuggestField({
   billableType,
   initialBillableTypeId,
   selectedBillableTypeId,

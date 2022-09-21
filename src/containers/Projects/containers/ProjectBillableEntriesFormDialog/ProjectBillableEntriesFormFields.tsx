@@ -9,7 +9,7 @@ import {
   FieldRequiredHint,
   FormattedMessage as T,
 } from '@/components';
-import { ProjectBillableSuggestField } from '../../components';
+import { ProjectBillableTypeSuggestField } from '../../components';
 import { billableTypeOption } from '../common';
 import { ProjectRowDivider, ProjectEntiresBox } from './components';
 import { useProjectBillableEntriesFormContext } from './ProjectBillableEntriesFormProvider';
@@ -41,7 +41,10 @@ export default function ProjectBillableEntriesFormFields() {
         label={<T id={'project_billable_entries.dialog.filter_by_type'} />}
         labelInfo={<FieldRequiredHint />}
       >
-        <ProjectBillableSuggestField billableType={billableTypeOption} />
+        <ProjectBillableTypeSuggestField
+          billableType={billableTypeOption}
+          // onBillableTypeSelected={()=>}
+        />
       </FFormGroup>
 
       <ProjectEntiresBox billableEntries={[]} />

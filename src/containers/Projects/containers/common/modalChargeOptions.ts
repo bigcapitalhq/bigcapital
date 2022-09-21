@@ -21,9 +21,18 @@ export const expenseChargeOption = [
 ];
 
 export const billableTypeOption = [
-  { name: intl.get('project_billable_entries.dialog.task'), value: 'Task' },
-  { name: intl.get('project_billable_entries.dialog.bill'), value: 'Bill' },
   {
+    id: 1,
+    name: intl.get('project_billable_entries.dialog.task'),
+    value: 'Task',
+  },
+  {
+    id: 2,
+    name: intl.get('project_billable_entries.dialog.bill'),
+    value: 'Bill',
+  },
+  {
+    id: 3,
     name: intl.get('project_billable_entries.dialog.expense'),
     value: 'Expense',
   },

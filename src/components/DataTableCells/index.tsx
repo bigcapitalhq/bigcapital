@@ -12,7 +12,7 @@ import SwitchFieldCell from './SwitchFieldCell';
 import TextAreaCell from './TextAreaCell';
 import BranchesListFieldCell from './BranchesListFieldCell';
 import { ProjectsListFieldCell } from './ProjectsListFieldCell';
-import { ProjectInvoicingCell } from './ProjectInvoicingCell';
+import { ProjectBillableEntriesCell } from './ProjectBillableEntriesCell';
 import { TextOverviewTooltipCell } from './TextOverviewTooltipCell';
 
 export {
@@ -30,6 +30,6 @@ export {
   TextAreaCell,
   BranchesListFieldCell,
   ProjectsListFieldCell,
-  ProjectInvoicingCell,
+  ProjectBillableEntriesCell,
   TextOverviewTooltipCell,
 };

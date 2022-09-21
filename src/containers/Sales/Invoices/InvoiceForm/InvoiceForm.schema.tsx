@@ -37,6 +37,7 @@ const getSchema = () =>
     exchange_rate: Yup.number(),
     branch_id: Yup.string(),
     warehouse_id: Yup.string(),
+    project_id: Yup.string(),
     entries: Yup.array().of(
       Yup.object().shape({
         quantity: Yup.number()
