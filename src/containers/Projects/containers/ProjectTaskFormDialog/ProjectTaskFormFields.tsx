@@ -11,7 +11,7 @@ import {
 } from '@/components';
 import { EstimateAmount } from './utils';
 import { taskChargeOptions } from '../common/modalChargeOptions';
-import { ChangeTypesSelect } from '../../components';
+import { ProjectTaskChargeTypeSelect } from '../../components';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import { compose } from '@/utils';
 
@@ -40,9 +40,9 @@ function ProjectTaskFormFields({
         <Col xs={4}>
           <FFormGroup
             label={<T id={'project_task.dialog.estimated_hours'} />}
-            name={'estimate_minutes'}
+            name={'estimate_hours'}
           >
-            <FInputGroup name="estimate_minutes" />
+            <FInputGroup name="estimate_hours" />
           </FFormGroup>
         </Col>
         {/*------------ Charge -----------*/}
@@ -53,7 +53,7 @@ function ProjectTaskFormFields({
             label={<T id={'project_task.dialog.charge'} />}
           >
             <ControlGroup>
-              <ChangeTypesSelect
+              <ProjectTaskChargeTypeSelect
                 name="charge_type"
                 items={taskChargeOptions}
                 popoverProps={{ minimal: true }}

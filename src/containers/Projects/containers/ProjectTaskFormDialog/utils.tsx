@@ -9,7 +9,7 @@ export function EstimateAmount({ baseCurrency }) {
   const { values } = useFormikContext();
 
   // Calculate estimate amount.
-  const estimatedAmount = _.multiply(values.rate, values.estimate_minutes);
+  const estimatedAmount = _.multiply(values.rate, values.estimate_hours);
 
   return (
     <EstimatedAmountBase>
@@ -37,28 +37,6 @@ export function EstimateAmount({ baseCurrency }) {
       </EstimatedAmountContent>
     </EstimatedAmountBase>
   );
-}
-
-export function transformToValue(values) {
-  switch (values.charge_type) {
-    case 'hourly_rate': {
-      return {
-        ...values,
-        cost_estimate: values.estimate_minutes * values.rate,
-      };
-    }
-    case 'fixed_price': {
-      return {
-        ...values,
-        cost_estimate: values.rate,
-      };
-    }
-    default: {
-      return {
-        ...values,
-      };
-    }
-  }
 }
 
 const EstimatedAmountBase = styled.div`

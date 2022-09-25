@@ -6,16 +6,14 @@ import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 import { CreateProjectTaskFormSchema } from './ProjectTaskForm.schema';
 import { useProjectTaskFormContext } from './ProjectTaskFormProvider';
-import { transformToValue } from './utils';
 import { compose, transformToForm } from '@/utils';
 import ProjectTaskFormContent from './ProjectTaskFormContent';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 const defaultInitialValues = {
   name: '',
-  charge_type: 'fixed',
-  estimate_minutes: '',
-  cost_estimate: 0,
+  charge_type: 'TIME',
+  estimate_hours: '',
   rate: '0.00',
 };
 
@@ -46,7 +44,7 @@ function ProjectTaskForm({
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    const form = transformToValue(values);
+    const form = {...values};
 
     // Handle request response success.
     const onSuccess = (response) => {

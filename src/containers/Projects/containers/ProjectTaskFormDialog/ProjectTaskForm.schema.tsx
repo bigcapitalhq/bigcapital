@@ -12,10 +12,9 @@ const Schema = Yup.object().shape({
   rate: Yup.number()
     .label(intl.get('project_task.schema.label.rate'))
     .required(),
-  cost_estimate: Yup.number().required(),
-  estimate_minutes: Yup.string().label(
-    intl.get('project_task.schema.label.task_house'),
-  ),
+  estimate_hours: Yup.string()
+    .label(intl.get('project_task.schema.label.estimate_hours'))
+    .nullable(),
 });
 
 export const CreateProjectTaskFormSchema = Schema;
