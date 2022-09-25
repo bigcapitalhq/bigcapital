@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { useFormikContext } from 'formik';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
+import { useProjectBillableEntriesFormContext } from './ProjectBillableEntriesFormProvider';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
@@ -17,7 +18,9 @@ function ProjectEntriesFormFloatingActions({
   closeDialog,
 }) {
   // Formik context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting, values } = useFormikContext();
+
+  const { dialogName } = useProjectBillableEntriesFormContext();
 
   // Handle close button click.
   const handleCancelBtnClick = () => {
@@ -32,8 +35,11 @@ function ProjectEntriesFormFloatingActions({
           loading={isSubmitting}
           type="submit"
         >
-          Save
+          <T id={'save'} />
         </SaveButton>
+        <Button onClick={handleCancelBtnClick} disabled={isSubmitting}>
+          <T id={'cancel'} />
+        </Button>
       </div>
     </div>
   );
@@ -43,8 +49,6 @@ export default compose(withDialogActions)(ProjectEntriesFormFloatingActions);
 
 const SaveButton = styled(Button)`
   &.bp3-button {
-    min-width: 80px;
-    border-radius: 16px;
     margin-left: 0px;
   }
 `;
