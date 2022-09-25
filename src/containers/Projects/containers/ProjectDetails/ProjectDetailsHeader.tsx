@@ -25,6 +25,13 @@ export function ProjectDetailHeader() {
 
   const { percentageOfInvoice, percentageOfExpense } = useCalculateProject();
 
+  // function getDiff() {
+  let start = moment(new Date());
+  let end = moment(project.deadline);
+  let duration = moment.duration(start.diff(end, 'days'));
+
+  console.log(duration, 'XX');
+
   return (
     <DetailFinancialSection>
       <DetailFinancialCard
