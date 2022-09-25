@@ -36,7 +36,10 @@ import {
   InvoiceExchangeRateInputField,
   InvoiceProjectSelectButton,
 } from './components';
-import { ProjectsSelect } from '@/containers/Projects/components';
+import {
+  ProjectsSelect,
+  ProjectBillableEntriesLink,
+} from '@/containers/Projects/components';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -56,6 +59,7 @@ function InvoiceFormHeaderFields({
   // Invoice form context.
   const { customers, projects } = useInvoiceFormContext();
 
+  // Formik context.
   const { values } = useFormikContext();
 
   // Handle invoice number changing.
@@ -78,14 +82,6 @@ function InvoiceFormHeaderFields({
   // Syncs invoice number settings with form.
   useObserveInvoiceNoSettings(invoiceNumberPrefix, invoiceNextNumber);
 
-  React.useEffect(() => {
-    if (values.project_id) {
-      openDialog('project-billable-entries', {
-        projectId: values.project_id,
-      });
-    }
-  }, [values]);
-  
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ----------- Customer name ----------- */}
@@ -254,6 +250,11 @@ function InvoiceFormHeaderFields({
           input={InvoiceProjectSelectButton}
           popoverFill={true}
         />
+        {values?.project_id && (
+          <ProjectBillableEntriesLink projectId={values?.project_id}>
+            <T id={'add_billable_entries'} />
+          </ProjectBillableEntriesLink>
+        )}
       </FFormGroup>
     </div>
   );
