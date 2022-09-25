@@ -16,8 +16,8 @@ import {
 } from '@/components';
 import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
 import {
-  TaskSelect,
   ProjectsSelect,
+  ProjectTaskSelect,
   ProjectSelectButton,
 } from '../../components';
 import { momentFormatter } from '@/utils';
@@ -59,7 +59,7 @@ function ProjectTimeEntryFormFields() {
         labelInfo={<FieldRequiredHint />}
         className={classNames('form-group--select-list', Classes.FILL)}
       >
-        <TaskSelect
+        <ProjectTaskSelect
           name={'task_id'}
           tasks={projectTasks}
           popoverProps={{ minimal: true }}

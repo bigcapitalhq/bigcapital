@@ -48,7 +48,12 @@ const taskSelectProps = {
   labelAccessor: 'name',
 };
 
-export function TaskSelect({ tasks, ...rest }) {
+/**
+ * 
+ * @param param0 
+ * @returns 
+ */
+export function ProjectTaskSelect({ tasks, ...rest }) {
   return (
     <FSelect
       items={tasks}

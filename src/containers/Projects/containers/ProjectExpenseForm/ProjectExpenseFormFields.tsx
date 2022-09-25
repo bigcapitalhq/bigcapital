@@ -14,7 +14,7 @@ import {
 import {
   ExpenseSelect,
   FInputGroupComponent,
-  ChangeTypesSelect,
+  ProjectTaskChargeTypeSelect,
 } from '../../components';
 import ExpenseFormChargeFields from './ProjectExpenseFormChargeFields';
 import { momentFormatter } from '@/utils';
@@ -100,7 +100,7 @@ export default function ProjectExpenseFormFields() {
         label={<T id={'project_expense.dialog.charge'} />}
         className={classNames('form-group--select-list', Classes.FILL)}
       >
-        <ChangeTypesSelect
+        <ProjectTaskChargeTypeSelect
           name="expenseCharge"
           items={expenseChargeOption}
           popoverProps={{ minimal: true }}

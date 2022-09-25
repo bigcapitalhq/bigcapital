@@ -2,8 +2,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { ProjectDetailHeader } from '../ProjectDetailsHeader';
 import { ProjectTimesheetsTable } from './ProjectTimesheetsTable';
-import { ProjectTimesheetsHeader } from './ProjectTimesheetsHeader';
 import { ProjectTimesheetsProvider } from './ProjectTimesheetsProvider';
 
 /**
@@ -13,7 +13,7 @@ import { ProjectTimesheetsProvider } from './ProjectTimesheetsProvider';
 export default function ProjectTimeSheets() {
   return (
     <ProjectTimesheetsProvider>
-      <ProjectTimesheetsHeader />
+      <ProjectDetailHeader />
       <ProjectTimesheetTableCard>
         <ProjectTimesheetsTable />
       </ProjectTimesheetTableCard>

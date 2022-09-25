@@ -2,7 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Icon } from '@/components';
+import { Icon, If, Choose, FormattedMessage as T } from '@/components';
 import { Menu, MenuItem, Intent } from '@blueprintjs/core';
 import { safeCallback } from '@/utils';
 
@@ -30,22 +30,39 @@ export function ActionsMenu({
   );
 }
 
-export function TaskAccessor(row) {
+/**
+ *
+ * @returns
+ */
+function TaskChrageType({ values: { charge_type, rate } }) {
+  return (
+    <Choose>
+      <Choose.When condition={charge_type === 'TIME'}>
+        <T id={'project_task.rate'} values={{ rate: rate }} />
+      </Choose.When>
+      <Choose.When condition={charge_type === 'FIXED'}>
+        <T id={'project_task.fixed_price'} />
+      </Choose.When>
+      <Choose.When condition={charge_type === 'NON_CHARGABLE'}>
+        <T id={'project_task.non_chargable'} />
+      </Choose.When>
+    </Choose>
+  );
+}
+
+export function TaskAccessor(task) {
   return (
     <TaskRoot>
       <TaskHeader>
-        <TaskTitle>{row.name}</TaskTitle>
+        <TaskTitle>{task.name}</TaskTitle>
       </TaskHeader>
       <TaskContent>
-        {row.charge_type === 'TIME'
-          ? intl.get('project_task.rate', {
-              rate: row.rate,
-            })
-          : row.charge_type}
+        <TaskChrageType values={task} />
+
         <TaskDescription>
-          {row.estimate_minutes &&
-            intl.get('project_task.estimate_minutes', {
-              estimate_minutes: row.estimate_minutes,
+          {task.estimate_hours &&
+            intl.get('project_task.estimate_hours', {
+              estimate_hours: task.estimate_hours,
             })}
         </TaskDescription>
       </TaskContent>

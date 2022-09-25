@@ -2,14 +2,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { ProjectTasksHeader } from './ProjectTasksHeader';
+import { ProjectDetailHeader } from '../ProjectDetailsHeader';
 import { ProjectTasksTable } from './ProjectTasksTable';
 import { ProjectTaskProvider } from './ProjectTaskProvider';
 
 export default function ProjectTasks() {
   return (
     <ProjectTaskProvider>
-      <ProjectTasksHeader />
+      <ProjectDetailHeader />
       <ProjectTasksTableCard>
         <ProjectTasksTable />
       </ProjectTasksTableCard>

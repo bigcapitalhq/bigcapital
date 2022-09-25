@@ -31,7 +31,7 @@ const chargeTypeSelectProps = {
  * @param param0
  * @returns
  */
-export function ChangeTypesSelect({ items, ...rest }) {
+export function ProjectTaskChargeTypeSelect({ items, ...rest }) {
   return (
     <FSelect
       {...chargeTypeSelectProps}

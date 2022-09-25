@@ -49,14 +49,18 @@ export const StatusAccessor = (row) => {
         <ProjectStatus row={row} />
       </Choose.When>
       <Choose.When condition={row.status_formatted === 'Closed'}>
-        <StatusTag minimal={true} intent={Intent.SUCCESS} round={true}>
-          {row.status_formatted}
-        </StatusTag>
+        <StatusTagWrap>
+          <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
+            {row.status_formatted}
+          </Tag>
+        </StatusTagWrap>
       </Choose.When>
       <Choose.Otherwise>
-        <StatusTag minimal={true} round={true}>
-          <T id={'draft'} />
-        </StatusTag>
+        <StatusTagWrap>
+          <Tag minimal={true} round={true}>
+            <T id={'draft'} />
+          </Tag>
+        </StatusTagWrap>
       </Choose.Otherwise>
     </Choose>
   );
@@ -167,7 +171,7 @@ export const useProjectsListColumns = () => {
         id: 'name',
         Header: '',
         accessor: ProjectsAccessor,
-        width: 240,
+        width: 140,
         className: 'name',
         clickable: true,
       },
@@ -232,7 +236,11 @@ const ProjectProgressBar = styled(ProgressBar)`
   }
 `;
 
-const StatusTag = styled(Tag)`
-  min-width: 65px;
-  text-align: center;
+const StatusTagWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  .tag {
+    min-width: 65px;
+    text-align: center;
+  }
 `;
