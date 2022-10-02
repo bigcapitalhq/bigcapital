@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { TaskAccessor } from './components';
+import { TaskAccessor, TaskTimeAccessor } from './components';
 
 /**
  * Retrieve project tasks list columns.
@@ -17,6 +17,15 @@ export function useProjectTaskColumns() {
         clickable: true,
         textOverview: true,
       },
+      {
+        id: 'actions',
+        Header: 'Header',
+        accessor: TaskTimeAccessor,
+        width: 100,
+        className: 'name',
+        clickable: true,
+        textOverview: true,
+      }
     ],
     [],
   );

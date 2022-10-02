@@ -21,7 +21,6 @@ export default function ProjectDetailTabs() {
         renderActiveTabPanelOnly={true}
         defaultSelectedTabId={'tasks'}
       >
-        <Tab id="overview" title={intl.get('project_details.label.overview')} />
         <Tab
           id="tasks"
           title={intl.get('project_details.label.tasks')}

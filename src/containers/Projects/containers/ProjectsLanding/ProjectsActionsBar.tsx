@@ -10,9 +10,7 @@ import {
 import {
   Icon,
   Can,
-  AdvancedFilterPopover,
   DashboardActionViewsList,
-  DashboardFilterButton,
   DashboardRowsHeightButton,
   FormattedMessage as T,
   DashboardActionsBar,
@@ -86,8 +84,6 @@ function ProjectsActionsBar({
             onClick={handleNewProjectBtnClick}
           />
         </Can>
-        {/* AdvancedFilterPopover */}
-
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}

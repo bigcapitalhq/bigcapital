@@ -84,6 +84,7 @@ function ProjectDetailActionsBar({
           transactions={projectTranslations}
           onItemSelect={handleNewTransactionBtnClick}
         />
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'time-24'} iconSize={16} />}

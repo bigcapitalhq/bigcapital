@@ -8,10 +8,9 @@ import {
   Col,
   Row,
   FormattedMessage as T,
+  InputPrependText,
 } from '@/components';
 import { EstimateAmount } from './utils';
-import { taskChargeOptions } from '../common/modalChargeOptions';
-import { ProjectTaskChargeTypeSelect } from '../../components';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import { compose } from '@/utils';
 
@@ -48,17 +47,12 @@ function ProjectTaskFormFields({
         {/*------------ Charge -----------*/}
         <Col xs={8}>
           <FFormGroup
-            name={'charge_type'}
+            name={'rate'}
             className={'form-group--select-list'}
             label={<T id={'project_task.dialog.charge'} />}
           >
             <ControlGroup>
-              <ProjectTaskChargeTypeSelect
-                name="charge_type"
-                items={taskChargeOptions}
-                popoverProps={{ minimal: true }}
-                filterable={false}
-              />
+              <InputPrependText text={'Hourly Price'} />
               <FInputGroup
                 name="rate"
                 disabled={values?.charge_type === 'non_chargable'}

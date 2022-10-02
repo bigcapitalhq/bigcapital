@@ -12,7 +12,6 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 const defaultInitialValues = {
   name: '',
-  charge_type: 'TIME',
   estimate_hours: '',
   rate: '0.00',
 };

@@ -40,6 +40,7 @@ function ProjectsList({
       <ProjectsActionsBar />
       <DashboardPageContent>
         <ProjectsViewTabs />
+
         <DashboardContentTable>
           <ProjectsDataTable />
         </DashboardContentTable>

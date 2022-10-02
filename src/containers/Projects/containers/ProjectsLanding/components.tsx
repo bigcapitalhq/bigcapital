@@ -28,12 +28,12 @@ import { safeCallback, firstLettersArgs, calculateStatus } from '@/utils';
 export function ProjectStatus({ row }) {
   return (
     <ProjectStatusRoot>
-      <ProjectStatusTaskAmount>{row.cost_estimate}</ProjectStatusTaskAmount>
+      <ProjectStatusTaskAmount>{row.total_expenses_formatted}</ProjectStatusTaskAmount>
       <ProjectProgressBar
         animate={false}
         stripes={false}
         intent={Intent.PRIMARY}
-        value={calculateStatus(100, row.cost_estimate)}
+        value={calculateStatus(row.total_expenses, row.cost_estimate)}
       />
     </ProjectStatusRoot>
   );
@@ -44,36 +44,9 @@ export function ProjectStatus({ row }) {
  */
 export const StatusAccessor = (row) => {
   return (
-    <Choose>
-      <Choose.When condition={row.status_formatted === 'InProgress'}>
-        <ProjectStatus row={row} />
-      </Choose.When>
-      <Choose.When condition={row.status_formatted === 'Closed'}>
-        <StatusTagWrap>
-          <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
-            {row.status_formatted}
-          </Tag>
-        </StatusTagWrap>
-      </Choose.When>
-      <Choose.Otherwise>
-        <StatusTagWrap>
-          <Tag minimal={true} round={true}>
-            <T id={'draft'} />
-          </Tag>
-        </StatusTagWrap>
-      </Choose.Otherwise>
-    </Choose>
+    <ProjectStatus row={row} />
   );
 };
-
-/**
- * Avatar cell.
- */
-export const AvatarCell = ({ row: { original }, size }) => (
-  <span className="avatar" data-size={size}>
-    {firstLettersArgs(original?.contact_display_name, original?.name)}
-  </span>
-);
 
 /**
  * Table actions cell.
@@ -135,20 +108,27 @@ export const ActionsMenu = ({
  * Projects accessor.
  */
 export const ProjectsAccessor = (row) => (
-  <ProjectItemsWrap>
-    <ProjectItemsHeader>
-      <ProjectItemContactName>
-        {row.contact_display_name}
-      </ProjectItemContactName>
-      <ProjectItemProjectName>{row.name}</ProjectItemProjectName>
-    </ProjectItemsHeader>
-    <ProjectItemDescription>
-      <FormatDate value={row.deadline_formatted} />
-      {intl.get('projects.label.cost_estimate', {
-        value: row.cost_estimate_formatted,
-      })}
-    </ProjectItemDescription>
-  </ProjectItemsWrap>
+  <ProjectName>
+    <ProjectAvatar data-size="medium">
+      {firstLettersArgs(row?.contact_display_name, row?.name)}
+    </ProjectAvatar>
+
+    <ProjectItemsWrap>
+      <ProjectItemsHeader>
+        <ProjectItemContactName>
+          {row.contact_display_name}
+        </ProjectItemContactName>
+        <ProjectItemProjectName>{row.name}</ProjectItemProjectName>
+      </ProjectItemsHeader>
+
+      <ProjectItemDescription>
+        <FormatDate value={row.deadline_formatted} />
+        {intl.get('projects.label.cost_estimate', {
+          value: row.cost_estimate_formatted,
+        })}
+      </ProjectItemDescription>
+    </ProjectItemsWrap>
+  </ProjectName>
 );
 
 /**
@@ -157,16 +137,6 @@ export const ProjectsAccessor = (row) => (
 export const useProjectsListColumns = () => {
   return React.useMemo(
     () => [
-      {
-        id: 'avatar',
-        Header: '',
-        Cell: AvatarCell,
-        className: 'avatar',
-        width: 45,
-        disableResizing: true,
-        disableSortBy: true,
-        clickable: true,
-      },
       {
         id: 'name',
         Header: '',
@@ -196,16 +166,18 @@ const ProjectItemsHeader = styled.div`
 `;
 
 const ProjectItemContactName = styled.div`
-  font-weight: 500;
-  padding-right: 4px;
+  font-weight: 600;
+  padding-right: 10px;
 `;
-const ProjectItemProjectName = styled.div``;
+const ProjectItemProjectName = styled.div`
+  color: #595b66;
+`;
 
 const ProjectItemDescription = styled.div`
   display: inline-block;
   font-size: 13px;
   opacity: 0.75;
-  margin-top: 0.2rem;
+  margin-top: 0.3rem;
   line-height: 1;
 `;
 
@@ -218,8 +190,7 @@ const ProjectStatusRoot = styled.div`
 
 const ProjectStatusTaskAmount = styled.div`
   text-align: right;
-  font-weight: 400;
-  line-height: 1.5rem;
+  font-size: 15px;
   margin-left: 20px;
 `;
 
@@ -243,4 +214,37 @@ const StatusTagWrap = styled.div`
     min-width: 65px;
     text-align: center;
   }
+`;
+
+export const ProjectName = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+`;
+
+export const Avatar = styled.div`
+  display: inline-block;
+  background: #adbcc9;
+  border-radius: 8%;
+  text-align: center;
+  font-weight: 400;
+  color: #fff;
+
+  &[data-size='medium'] {
+    height: 32px;
+    width: 32px;
+    line-height: 32px;
+    font-size: 14px;
+  }
+  &[data-size='small'] {
+    height: 25px;
+    width: 25px;
+    line-height: 25px;
+    font-size: 12px;
+  }
+`;
+
+export const ProjectAvatar = styled(Avatar)`
+  margin-top: auto;
+  margin-bottom: auto;
 `;

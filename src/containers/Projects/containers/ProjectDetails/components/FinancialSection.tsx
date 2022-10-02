@@ -1,28 +1,37 @@
 // @ts-nocheck
 import React from 'react';
+import { isUndefined } from 'lodash';
 import styled from 'styled-components';
-import { ProgressBar } from '@blueprintjs/core';
+import { Intent, ProgressBar } from '@blueprintjs/core';
 
 export function DetailFinancialSection({ children }) {
   return <FinancialSectionWrap>{children}</FinancialSectionWrap>;
 }
 
-export function DetailFinancialCard({ label, value, children }) {
+interface DetailFinancialCardProps {
+  label: string;
+  value: number;
+  description: string | JSX.Element;
+  progressValue: number;
+}
+
+export function DetailFinancialCard({
+  label,
+  value,
+  description,
+  progressValue,
+}: DetailFinancialCardProps) {
   return (
-    <React.Fragment>
-      <FinancialSectionCard>
-        <FinancialSectionCardContent>
-          <FinancialCardTitle>{label}</FinancialCardTitle>
-          <FinancialCardValue>{value}</FinancialCardValue>
-          {children}
-        </FinancialSectionCardContent>
-      </FinancialSectionCard>
-    </React.Fragment>
+    <FinancialSectionCard>
+      <FinancialCardTitle>{label}</FinancialCardTitle>
+      <FinancialCardValue>{value}</FinancialCardValue>
+      {description && <FinancialCartDesc>{description}</FinancialCartDesc>}
+      {!isUndefined(progressValue) && (
+        <FinancialProgressBar intent={Intent.NONE} value={progressValue} />
+      )}
+    </FinancialSectionCard>
   );
 }
-export const FinancialDescription = ({ childern }) => {
-  return <FinancialCardText>{childern}</FinancialCardText>;
-};
 
 export const FinancialProgressBar = ({ ...rest }) => {
   return <FinancialCardProgressBar animate={false} stripes={false} {...rest} />;
@@ -41,34 +50,30 @@ const FinancialSectionCard = styled.div`
   border-radius: 3px;
   width: 230px;
   height: 116px;
+  padding: 16px;
   background-color: #fff;
-  border: 1px solid #c8cad0; // #000a1e33 #f0f0f0
+  border: 1px solid #c8cad0;
+  gap: 6px;
 `;
-
-const FinancialSectionCardContent = styled.div`
-  margin: 16px;
-`;
-
-const FinancialCardWrap = styled.div``;
 
 const FinancialCardTitle = styled.div`
-  font-size: 15px;
-  color: #000;
+  font-size: 14px;
+  color: #203252;
   white-space: nowrap;
   font-weight: 400;
-  line-height: 1.5rem;
 `;
 const FinancialCardValue = styled.div`
-  font-size: 21px;
-  line-height: 2rem;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 600;
 `;
 
-const FinancialCardStatus = styled.div``;
+const FinancialCartDesc = styled.div`
+  font-size: 12px;
+`;
 
 export const FinancialCardText = styled.div`
   font-size: 13px;
-  line-height: 1.5rem;
+  color: #7b8195;
 `;
 export const FinancialCardProgressBar = styled(ProgressBar)`
   &.bp3-progress-bar {

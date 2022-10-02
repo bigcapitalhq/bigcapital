@@ -107,7 +107,11 @@
   },
   "proxy": "http://localhost:3000/",
   "devDependencies": {
-    "@types/react-dom": "^16.9.16"
+    "@types/react-dom": "^16.9.16",
+    "react-error-overlay": "^6.0.9"
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   },
   "browserslist": {
     "production": [

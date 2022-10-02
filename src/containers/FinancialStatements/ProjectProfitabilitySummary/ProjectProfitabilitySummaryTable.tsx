@@ -54,12 +54,11 @@ const ProjectProfitabilitySummaryDataTable = styled(ReportDataTable)`
         padding-top: 0.32rem;
         padding-bottom: 0.32rem;
       }
-      .tr.row_type--total .td {
+      &.row_type--TOTAL .td {
         border-top: 1px solid #bbb;
         font-weight: 500;
         border-bottom: 3px double #000;
       }
-
       &:last-of-type .td {
         border-bottom: 1px solid #bbb;
       }

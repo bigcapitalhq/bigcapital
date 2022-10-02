@@ -66,14 +66,12 @@ function ProjectsDataTable({
       action: 'edit',
     });
   };
-
   // Handle new task button click.
   const handleNewTaskButtonClick = (project) => {
     openDialog('project-task-form', {
       projectId: project.id,
     });
   };
-
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.PROJECTS);
@@ -132,32 +130,7 @@ export default compose(
 const ProjectsTable = styled(DataTable)`
   .tbody {
     .tr .td {
-      padding: 0.5rem 0.8rem;
-    }
-    .avatar.td {
-      .cell-inner {
-        .avatar {
-          display: inline-block;
-          background: #adbcc9;
-          border-radius: 8%;
-          text-align: center;
-          font-weight: 400;
-          color: #fff;
-
-          &[data-size='medium'] {
-            height: 30px;
-            width: 30px;
-            line-height: 30px;
-            font-size: 14px;
-          }
-          &[data-size='small'] {
-            height: 25px;
-            width: 25px;
-            line-height: 25px;
-            font-size: 12px;
-          }
-        }
-      }
+      padding: 0.75rem 0.8rem;
     }
   }
   .table-size--small {

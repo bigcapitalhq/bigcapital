@@ -84,5 +84,21 @@ const ProjectTaksDataTable = styled(DataTable)`
         display: none;
       }
     }
+
+    .tbody .tr .td{
+      padding-top: 0.7rem;
+      padding-bottom: 0.7rem;
+
+      &:first-of-type{
+        padding-left: 1rem;
+      }
+      &.td-actions{
+        padding-right: 1rem;
+      }
+    }
+
+    .tbody .tr:last-of-type .td {
+      border-bottom: 0;
+    }
   }
 `;

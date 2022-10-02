@@ -3,7 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { Icon, If, Choose, FormattedMessage as T } from '@/components';
-import { Menu, MenuItem, Intent } from '@blueprintjs/core';
+import { Menu, MenuItem, Intent, ProgressBar } from '@blueprintjs/core';
 import { safeCallback } from '@/utils';
 
 /**
@@ -70,25 +70,72 @@ export function TaskAccessor(task) {
   );
 }
 
-const TaskRoot = styled.div`
-  margin-left: 12px;
+export function TaskTimeAccessor(task) {
+  return (
+    <TaskTimeRoot>
+      <TaskTimeMinutesRoot>
+        <TaskTimeMinutes>00:00</TaskTimeMinutes>
+        <TaskTimeFull>17h 30m</TaskTimeFull>
+      </TaskTimeMinutesRoot>
+
+      <TaskProgressBar
+        animate={false}
+        stripes={false}
+        intent={Intent.NONE}
+        value={100}
+      />
+    </TaskTimeRoot>
+  );
+}
+
+const TaskTimeRoot = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
 `;
+
+const TaskTimeMinutesRoot = styled.div`
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  text-align: right;
+`;
+
+const TaskTimeMinutes = styled.div``;
+const TaskTimeFull = styled.div`
+  font-size: 12px;
+  color: #5b5c62;
+`;
+
+const TaskProgressBar = styled(ProgressBar)`
+  &.bp3-progress-bar {
+    display: block;
+    flex-shrink: 0;
+    height: 4px;
+    max-width: 150px;
+    &,
+    .bp3-progress-meter {
+      border-radius: 4px;
+    }
+  }
+`;
+
+const TaskRoot = styled.div``;
 const TaskHeader = styled.div`
   display: flex;
   align-items: baseline;
   flex-flow: wrap;
 `;
 const TaskTitle = styled.span`
-  font-weight: 500;
-  line-height: 1.5rem;
+  font-weight: 600;
 `;
 const TaskContent = styled.div`
   display: block;
   white-space: nowrap;
   font-size: 13px;
   opacity: 0.75;
-  margin-bottom: 0.1rem;
-  line-height: 1.2rem;
+  margin-top: 0.25rem;
 `;
 const TaskDescription = styled.span`
   margin: 0.3rem;

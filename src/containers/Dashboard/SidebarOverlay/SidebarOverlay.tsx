@@ -1,5 +1,4 @@
 // @ts-nocheck
-//@ts-nocheck
 import React from 'react';
 import { Overlay, OverlayProps } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
@@ -19,7 +18,7 @@ export interface ISidebarOverlayProps {
 
 export interface ISidebarOverlayItemProps {
   text: string | JSX.Element;
-  href?: string;
+  href: string;
   onClick?: any;
 }
 
@@ -85,7 +84,7 @@ function SidebarOverlayItem({ item }: SidebarOverlayItemProps) {
   ) : //
   item.type === ISidebarMenuItemType.Link ||
     item.type === ISidebarMenuItemType.Dialog ? (
-    <SidebarOverlayItemLink text={item.text} onClick={item.onClick} />
+    <SidebarOverlayItemLink text={item.text} href={item.href} onClick={item.onClick} />
   ) : null;
 }
 

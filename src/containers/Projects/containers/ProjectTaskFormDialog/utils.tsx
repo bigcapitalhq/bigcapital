@@ -14,26 +14,12 @@ export function EstimateAmount({ baseCurrency }) {
   return (
     <EstimatedAmountBase>
       <EstimatedAmountContent>
-        <Choose>
-          <Choose.When condition={values?.charge_type === 'TIME'}>
-            <T id={'project_task.dialog.estimated_amount'} />
-            <EstimatedAmount>
-              <Money amount={estimatedAmount} currency={baseCurrency} />
-            </EstimatedAmount>
-          </Choose.When>
-          <Choose.When condition={values?.charge_type === 'FIXED'}>
-            <T id={'project_task.dialog.total'} />
-            <EstimatedAmount>
-              <Money amount={values.rate} currency={baseCurrency} />
-            </EstimatedAmount>
-          </Choose.When>
-          <Choose.Otherwise>
-            <T id={'project_task.dialog.total'} />
-            <EstimatedAmount>
-              <Money amount={0.0} currency={baseCurrency} />
-            </EstimatedAmount>
-          </Choose.Otherwise>
-        </Choose>
+        <EstimatedText>
+          <T id={'project_task.dialog.estimated_amount'} />
+        </EstimatedText>
+        <EstimatedAmount>
+          <Money amount={estimatedAmount} currency={baseCurrency} />
+        </EstimatedAmount>
       </EstimatedAmountContent>
     </EstimatedAmountBase>
   );
@@ -42,9 +28,7 @@ export function EstimateAmount({ baseCurrency }) {
 const EstimatedAmountBase = styled.div`
   display: flex;
   justify-content: flex-end;
-  font-size: 14px;
-  line-height: 1.5rem;
-  opacity: 0.75;
+  margin-bottom: 2rem;
 `;
 
 const EstimatedAmountContent = styled.span`
@@ -53,7 +37,11 @@ const EstimatedAmountContent = styled.span`
 `;
 
 const EstimatedAmount = styled.span`
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 600;
   margin-left: 10px;
+`;
+
+const EstimatedText = styled.span`
+  color: #607090;
 `;

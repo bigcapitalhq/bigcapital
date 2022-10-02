@@ -583,6 +583,17 @@ export const SidebarMenu = [
           },
         ],
       },
+      {
+        text: <T id={'Reports'} />,
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: <T id={'project_profitability_summary'} />,
+            href: '/financial-reports/project-profitability-summary',
+            type: ISidebarMenuItemType.Link,
+          },
+        ],
+      },
     ],
   },
   // ---------------
@@ -668,11 +679,6 @@ export const SidebarMenu = [
               subject: AbilitySubject.Report,
               ability: ReportsAction.READ_AP_AGING_SUMMARY,
             },
-          },
-          {
-            text: <T id={'project_profitability_summary'} />,
-            href: '/financial-reports/project-profitability-summary',
-            type: ISidebarMenuItemType.Link,
           },
         ],
       },
