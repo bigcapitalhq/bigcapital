@@ -39,17 +39,22 @@ function ProjectsDataTable({
   const { projects, isEmptyStatus, isProjectsLoading, isProjectsFetching } =
     useProjectsListContext();
 
+  // Retrieve projects table columns.
+  const columns = useProjectsListColumns();
+
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.PROJECTS);
+
   // Handle delete project.
   const handleDeleteProject = ({ id }) => {
     openAlert('project-delete', { projectId: id });
   };
 
+  // Handle project's status button click.
   const handleProjectStatus = ({ id, status_formatted }) => {
     openAlert('project-status', { projectId: id, status: status_formatted });
   };
-
-  // Retrieve projects table columns.
-  const columns = useProjectsListColumns();
 
   // Handle cell click.
   const handleCellClick = ({ row: { original } }) => {
@@ -72,10 +77,6 @@ function ProjectsDataTable({
       projectId: project.id,
     });
   };
-  // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.PROJECTS);
-
   // Handle view detail project.
   const handleViewDetailProject = (project) => {
     return history.push(`/projects/${project.id}/details`, {

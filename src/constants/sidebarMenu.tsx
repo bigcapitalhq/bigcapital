@@ -549,7 +549,7 @@ export const SidebarMenu = [
     overlayId: ISidebarMenuOverlayIds.Projects,
     children: [
       {
-        text: 'Projects Management',
+        text: 'Projects',
         type: ISidebarMenuItemType.Group,
         children: [
           {

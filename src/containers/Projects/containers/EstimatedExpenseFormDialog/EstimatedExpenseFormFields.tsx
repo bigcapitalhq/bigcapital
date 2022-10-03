@@ -8,7 +8,6 @@ import {
   FFormGroup,
   FInputGroup,
   FormattedMessage as T,
-  FieldRequiredHint,
 } from '@/components';
 import {
   ExpenseSelect,
@@ -100,7 +99,6 @@ const MetaLineLabel = styled.div`
   font-weight: 500;
   margin-bottom: 8px;
 `;
-
 const EstimatedAmountWrap = styled.div`
   display: block;
   text-align: right;

@@ -24,6 +24,7 @@ import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Projects actions bar.
@@ -62,7 +63,7 @@ function ProjectsActionsBar({
 
   // Handle new project button click.
   const handleNewProjectBtnClick = () => {
-    openDialog('project-form');
+    openDialog(DialogsName.ProjectForm);
   };
 
   return (

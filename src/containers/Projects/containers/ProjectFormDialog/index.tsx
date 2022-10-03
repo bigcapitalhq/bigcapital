@@ -45,8 +45,7 @@ export default compose(withDialogRedux())(ProjectFormDialog);
 const ProjectFormDialogRoot = styled(Dialog)`
   .bp3-dialog-body {
     .bp3-form-group {
-      margin-bottom: 15px;
-      margin-top: 15px;
+      margin-bottom: 0;
 
       label.bp3-label {
         margin-bottom: 3px;

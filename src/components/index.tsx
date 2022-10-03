@@ -63,5 +63,6 @@ export * from './Indicator';
 export * from './EmptyStatus';
 export * from './Postbox';
 export * from './AppToaster';
+export * from './Layout';
 
 export { MODIFIER, ContextMenu, AvaterCell };

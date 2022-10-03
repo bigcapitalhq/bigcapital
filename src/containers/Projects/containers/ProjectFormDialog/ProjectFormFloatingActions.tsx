@@ -18,24 +18,13 @@ function ProjectFormFloatingActions({
   // Formik context.
   const { isSubmitting } = useFormikContext();
 
-  // project form dialog context.
-  const { dialogName } = useProjectFormContext();
-
-  // Handle close button click.
-  const handleCancelBtnClick = () => {
-    closeDialog(dialogName);
-  };
-
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-        <Button onClick={handleCancelBtnClick} style={{ minWidth: '85px' }}>
-          <T id={'cancel'} />
-        </Button>
         <Button
           intent={Intent.PRIMARY}
           loading={isSubmitting}
-          style={{ minWidth: '75px' }}
+          style={{ minWidth: '100px' }}
           type="submit"
         >
           <T id={'projects.label.create'} />
