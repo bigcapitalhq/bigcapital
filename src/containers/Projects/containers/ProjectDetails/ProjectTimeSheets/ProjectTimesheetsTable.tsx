@@ -16,6 +16,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Timesheet DataTable.
@@ -39,11 +40,10 @@ function ProjectTimesheetsTableRoot({
   const handleDeleteTimesheet = ({ id }) => {
     openAlert('project-timesheet-delete', { timesheetId: id });
   };
-
+  // Handle edit timesheet.
   const handleEditTimesheet = ({ id }) => {
     openDialog('project-time-entry-form', { timesheetId: id, action: 'edit' });
   };
-
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.TIMESHEETS);
@@ -87,33 +87,19 @@ const ProjectTimesheetDataTable = styled(DataTable)`
 
     .tbody {
       .tr .td {
-        padding: 0.4rem 0.8rem;
+        padding-top: 0.7rem;
+        padding-bottom: 0.7rem;
+
+        &.td-name {
+          padding-left: 1rem;
+        }
+        &.td-actions{
+          padding-right: 1rem;
+        }
       }
 
-      .avatar.td {
-        .cell-inner {
-          .avatar {
-            display: inline-block;
-            background: #adbcc9;
-            border-radius: 50%;
-            text-align: center;
-            font-weight: 400;
-            color: #fff;
-
-            &[data-size='medium'] {
-              height: 30px;
-              width: 30px;
-              line-height: 30px;
-              font-size: 14px;
-            }
-            &[data-size='small'] {
-              height: 25px;
-              width: 25px;
-              line-height: 25px;
-              font-size: 12px;
-            }
-          }
-        }
+      .tr:last-of-type .td{
+        border-bottom: 0;
       }
     }
   }

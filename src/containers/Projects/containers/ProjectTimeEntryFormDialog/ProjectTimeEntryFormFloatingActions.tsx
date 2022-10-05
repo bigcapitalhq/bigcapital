@@ -29,13 +29,10 @@ function ProjectTimeEntryFormFloatingActions({
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-        <Button onClick={handleCancelBtnClick} style={{ minWidth: '75px' }}>
-          <T id={'cancel'} />
-        </Button>
         <Button
           intent={Intent.PRIMARY}
           loading={isSubmitting}
-          style={{ minWidth: '75px' }}
+          style={{ minWidth: '95px' }}
           type="submit"
         >
           <T id={'project_time_entry.dialog.create'} />

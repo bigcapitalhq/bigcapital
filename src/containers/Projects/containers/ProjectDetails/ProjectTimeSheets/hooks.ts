@@ -10,16 +10,6 @@ export function useProjectTimesheetColumns() {
   return React.useMemo(
     () => [
       {
-        id: 'avatar',
-        Header: '',
-        Cell: AvatarCell,
-        className: 'avatar',
-        width: 45,
-        disableResizing: true,
-        disableSortBy: true,
-        clickable: true,
-      },
-      {
         id: 'name',
         Header: 'Header',
         accessor: TimesheetAccessor,

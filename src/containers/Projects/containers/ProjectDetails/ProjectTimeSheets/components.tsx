@@ -31,21 +31,12 @@ export function ActionsMenu({
 }
 
 /**
- * Avatar cell.
- */
-export const AvatarCell = ({ row: { original }, size }) => (
-  <span className="avatar" data-size={size}>
-    {firstLettersArgs(original?.display_name, original?.task_name)}
-  </span>
-);
-
-/**
  * Timesheet accessor.
  */
 export const TimesheetAccessor = (timesheet) => (
   <React.Fragment>
     <TimesheetHeader>
-      <TimesheetTitle>{timesheet.display_name}</TimesheetTitle>
+      <TimesheetTitle>{timesheet.customer_name}</TimesheetTitle>
       <TimesheetSubTitle>{timesheet.task_name}</TimesheetSubTitle>
     </TimesheetHeader>
     <TimesheetContent>
@@ -63,19 +54,19 @@ const TimesheetHeader = styled.div`
   flex-flow: wrap;
 `;
 const TimesheetTitle = styled.span`
-  font-weight: 500;
-  margin-right: 12px;
-  line-height: 1.5rem;
+  font-weight: 600;
+  margin-right: 8px;
 `;
-
-const TimesheetSubTitle = styled.span``;
+const TimesheetSubTitle = styled.span`
+  font-size: 13px;
+  opacity: 0.9;
+`;
 const TimesheetContent = styled.div`
   display: block;
   white-space: nowrap;
   font-size: 13px;
-  opacity: 0.75;
-  margin-bottom: 0.1rem;
-  line-height: 1.2rem;
+  color: #5D5E71;
+  margin-top: 0.25rem;
 `;
 
 const TimesheetDescription = styled.span`

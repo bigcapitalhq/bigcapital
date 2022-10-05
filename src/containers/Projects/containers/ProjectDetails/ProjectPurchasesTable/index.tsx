@@ -2,7 +2,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ProjectPurchasesTable } from './ProjectPurchasesTable';
-import { DashboardContentTable } from '@/components';
+import { Box, DashboardContentTable } from '@/components';
+import { ProjectDetailHeader } from '../ProjectDetailsHeader';
 
 /**
  *
@@ -10,8 +11,11 @@ import { DashboardContentTable } from '@/components';
  */
 export default function ProjectPurchasesTableRoot() {
   return (
-    <DashboardContentTable>
-      <ProjectPurchasesTable />
-    </DashboardContentTable>
+    <Box>
+      <ProjectDetailHeader />
+      <DashboardContentTable>
+        <ProjectPurchasesTable />
+      </DashboardContentTable>
+    </Box>
   );
 }
