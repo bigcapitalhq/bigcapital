@@ -75,7 +75,7 @@
     "react-redux": "^7.1.3",
     "react-router-breadcrumbs-hoc": "^3.2.10",
     "react-router-dom": "^5.3.3",
-    "react-scripts": "^3.4.4",
+    "react-scripts": "^5.0.1",
     "react-scroll-sync": "^0.7.1",
     "react-scrollbars-custom": "^4.0.21",
     "react-sortablejs": "^2.0.11",
