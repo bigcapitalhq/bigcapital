@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { paginationLocationQuery } from '@/store/selectors';
 import { createDeepEqualSelector } from '@/utils';
 

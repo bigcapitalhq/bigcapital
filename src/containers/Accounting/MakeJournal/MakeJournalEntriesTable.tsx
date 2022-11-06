@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { DataTableEditable } from '@/components';
 import {
@@ -25,7 +26,8 @@ export default function MakeJournalEntriesTable({
   minLinesNumber = 1,
   currencyCode,
 }) {
-  const { accounts, contacts, branches } = useMakeJournalFormContext();
+  const { accounts, contacts, branches, projects } =
+    useMakeJournalFormContext();
 
   // Memorized data table columns.
   const columns = useJournalTableEntriesColumns();
@@ -69,6 +71,7 @@ export default function MakeJournalEntriesTable({
         removeRow: handleRemoveRow,
         contacts,
         branches,
+        projects,
         autoFocus: ['account_id', 0],
         currencyCode,
       }}

@@ -3,20 +3,21 @@ import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
-import { AppToaster } from 'components';
+import { Intent } from '@blueprintjs/core';
+import { AppToaster } from '@/components';
 import ProjectFormContent from './ProjectFormContent';
 import { CreateProjectFormSchema } from './ProjectForm.schema';
 import { useProjectFormContext } from './ProjectFormProvider';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from '@/utils';
 
 const defaultInitialValues = {
-  contact: '',
-  projectName: '',
-  projectDeadline: moment(new Date()).format('YYYY-MM-DD'),
-  projectState: false,
-  projectCost: '',
+  contact_id: '',
+  name: '',
+  deadline: moment(new Date()).format('YYYY-MM-DD'),
+  published: false,
+  cost_estimate: '',
 };
 
 /**
@@ -28,20 +29,37 @@ function ProjectForm({
   closeDialog,
 }) {
   // project form dialog context.
-  const { dialogName } = useProjectFormContext();
+  const {
+    dialogName,
+    project,
+    isNewMode,
+    projectId,
+    createProjectMutate,
+    editProjectMutate,
+  } = useProjectFormContext();
 
   // Initial form values
   const initialValues = {
     ...defaultInitialValues,
+    ...transformToForm(project, defaultInitialValues),
   };
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    const form = {};
+    setSubmitting(true);
+    const form = { ...values };
 
     // Handle request response success.
     const onSuccess = (response) => {
-      AppToaster.show({});
+      AppToaster.show({
+        message: intl.get(
+          isNewMode
+            ? 'projects.dialog.success_message'
+            : 'projects.dialog.edit_success_message',
+        ),
+
+        intent: Intent.SUCCESS,
+      });
       closeDialog(dialogName);
     };
 
@@ -53,6 +71,12 @@ function ProjectForm({
     }) => {
       setSubmitting(false);
     };
+
+    if (isNewMode) {
+      createProjectMutate(form).then(onSuccess).catch(onError);
+    } else {
+      editProjectMutate([projectId, form]).then(onSuccess).catch(onError);
+    }
   };
 
   return (

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { lazy } from 'react';
 import intl from 'react-intl-universal';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
@@ -431,6 +432,18 @@ export const getDashboardRoutes = () => [
     ),
     breadcrumb: intl.get('unrealized_gain_or_loss.label'),
     pageTitle: intl.get('unrealized_gain_or_loss.label'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/project-profitability-summary`,
+    component: lazy(
+      () =>
+        import('@/containers/FinancialStatements/ProjectProfitabilitySummary/ProjectProfitabilitySummary'),
+    ),
+    breadcrumb: intl.get('project_profitability_summary'),
+    pageTitle: intl.get('project_profitability_summary'),
     backLink: true,
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
@@ -1023,6 +1036,22 @@ export const getDashboardRoutes = () => [
       () => import('@/containers/TransactionsLocking/TransactionsLockingPage'),
     ),
     pageTitle: intl.get('sidebar.transactions_locaking'),
+  },
+  {
+    path: '/projects/:id/details',
+    component: lazy(
+      () => import('@/containers/Projects/containers/ProjectDetails'),
+    ),
+    sidebarExpand: false,
+    backLink: true,
+  },
+  {
+    path: '/projects',
+    component: lazy(
+      () =>
+        import('@/containers/Projects/containers/ProjectsLanding/ProjectsList'),
+    ),
+    pageTitle: intl.get('sidebar.projects'),
   },
   // Homepage
   {

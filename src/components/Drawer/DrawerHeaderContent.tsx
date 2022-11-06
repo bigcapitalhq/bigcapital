@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { FormattedMessage as T } from '@/components';
 import { Classes, Icon, H4, Button } from '@blueprintjs/core';

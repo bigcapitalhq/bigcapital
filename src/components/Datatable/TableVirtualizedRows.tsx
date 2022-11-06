@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useContext } from 'react';
 import { WindowScroller, AutoSizer, List } from 'react-virtualized';
 import { CLASSES } from '@/constants/classes';

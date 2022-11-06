@@ -1,3 +1,4 @@
+// @ts-nocheck
 export default {
   'balance-scale': {
     path: [
@@ -531,6 +532,12 @@ export default {
   'branch-16': {
     path: [
       'M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z',
+    ],
+    viewBox: '0 0 24 24',
+  },
+  'case-16': {
+    path: [
+      'M8 6V4q0-.825.588-1.413Q9.175 2 10 2h4q.825 0 1.413.587Q16 3.175 16 4v2h4q.825 0 1.413.588Q22 7.175 22 8v11q0 .825-.587 1.413Q20.825 21 20 21H4q-.825 0-1.412-.587Q2 19.825 2 19V8q0-.825.588-1.412Q3.175 6 4 6Zm2 0h4V4h-4Zm10 9h-5v2H9v-2H4v4h16Zm-9 0h2v-2h-2Zm-7-2h5v-2h6v2h5V8H4Zm8 1Z',
     ],
     viewBox: '0 0 24 24',
   },

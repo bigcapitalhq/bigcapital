@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import * as R from 'ramda';

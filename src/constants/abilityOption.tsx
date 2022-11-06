@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const AbilitySubject = {
   Item: 'Item',
   InventoryAdjustment: 'InventoryAdjustment',
@@ -19,6 +20,7 @@ export const AbilitySubject = {
   SubscriptionBilling: 'SubscriptionBilling',
   CreditNote: 'CreditNote',
   VendorCredit: 'VendorCredit',
+  Project:'Project'
 };
 
 export const ItemAction = {
@@ -73,7 +75,7 @@ export const CreditNoteAction = {
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
-  Refund: 'Refund'
+  Refund: 'Refund',
 };
 
 export const VendorCreditAction = {
@@ -81,7 +83,7 @@ export const VendorCreditAction = {
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
-  Refund: 'Refund'
+  Refund: 'Refund',
 };
 export const BillAction = {
   View: 'View',
@@ -138,6 +140,13 @@ export const ExpenseAction = {
 export const CashflowAction = {
   View: 'View',
   Create: 'Create',
+  Delete: 'Delete',
+};
+
+export const ProjectAction = {
+  View: 'View',
+  Create: 'Create',
+  Edit: 'Edit',
   Delete: 'Delete',
 };
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import axios from 'axios';
 import {
@@ -66,7 +67,7 @@ export default function useApiRequest() {
           if (lockedError) {
             setGlobalErrors({ transactionsLocked: { ...lockedError.data } });
           }
-          if (data.errors.find(e => e.type === 'USER_INACTIVE')) {
+          if (data.errors.find((e) => e.type === 'USER_INACTIVE')) {
             setGlobalErrors({ userInactive: true });
             setLogout();
           }
@@ -95,6 +96,10 @@ export default function useApiRequest() {
 
       put(resource, params) {
         return http.put(`/api/${resource}`, params);
+      },
+
+      patch(resource, params, config) {
+        return http.patch(`/api/${resource}`, params, config);
       },
 
       delete(resource, params) {

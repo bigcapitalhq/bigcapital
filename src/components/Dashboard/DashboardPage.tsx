@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, Suspense } from 'react';
 import { CLASSES } from '@/constants/classes';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';

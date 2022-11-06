@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { connect } from 'react-redux';
 import { getUserDetails } from '@/store/users/users.reducer';
 import { getDialogPayload } from '@/store/dashboard/dashboard.reducer';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useReducer, useEffect } from 'react';
 import classNames from 'classnames';
 import { Button, ButtonGroup, Intent, HTMLSelect } from '@blueprintjs/core';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import VendorsBalanceSummaryHeaderGeneralContent from './VendorsBalanceSummaryHeaderGeneralContent';
 import { VendorsBalanceSummaryGeneralPanelProvider } from './VendorsBalanceSummaryHeaderGeneralProvider';

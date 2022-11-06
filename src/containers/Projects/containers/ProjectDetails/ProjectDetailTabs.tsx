@@ -1,9 +1,12 @@
+// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
 import { Tabs, Tab } from '@blueprintjs/core';
-
-import ProjectTimesheet from './ProjectTimesheet';
+import ProjectTimeSheets from './ProjectTimeSheets';
+import ProjectTasks from './ProjectTasks';
+import ProjectPurchasesTable from './ProjectPurchasesTable';
+import ProjectSalesTable from './ProjectSalesTable';
 
 /**
  * Project detail tabs.
@@ -16,19 +19,28 @@ export default function ProjectDetailTabs() {
         animate={true}
         large={true}
         renderActiveTabPanelOnly={true}
-        defaultSelectedTabId={'timesheet'}
+        defaultSelectedTabId={'tasks'}
       >
-        <Tab id="overview" title={intl.get('project_details.label.overview')} />
+        <Tab
+          id="tasks"
+          title={intl.get('project_details.label.tasks')}
+          panel={<ProjectTasks />}
+        />
         <Tab
           id="timesheet"
           title={intl.get('project_details.label.timesheet')}
-          panel={<ProjectTimesheet />}
+          panel={<ProjectTimeSheets />}
         />
         <Tab
           id="purchases"
           title={intl.get('project_details.label.purchases')}
+          panel={<ProjectPurchasesTable />}
         />
-        <Tab id="sales" title={intl.get('project_details.label.sales')} />
+        <Tab
+          id="sales"
+          title={intl.get('project_details.label.sales')}
+          panel={<ProjectSalesTable />}
+        />
         <Tab id="journals" title={intl.get('project_details.label.journals')} />
       </Tabs>
     </ProjectTabsContent>
@@ -41,6 +53,10 @@ const ProjectTabsContent = styled.div`
       padding: 0 20px;
       background-color: #fff;
       border-bottom: 1px solid #d2dce2;
+
+      > *:not(:last-child) {
+        margin-right: 0;
+      }
 
       &.bp3-large > .bp3-tab {
         font-size: 15px;
@@ -59,9 +75,11 @@ const ProjectTabsContent = styled.div`
       }
     }
     .bp3-tab-panel {
-      margin-top: 20px;
+      /* margin: 20px 32px; */
+      /* margin: 20px; */
+      /* margin-top: 20px;
       margin-bottom: 20px;
-      padding: 0 25px;
+      padding: 0 25px; */
     }
   }
 `;

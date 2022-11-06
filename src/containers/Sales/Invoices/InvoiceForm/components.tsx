@@ -1,4 +1,7 @@
+// @ts-nocheck
 import React from 'react';
+import intl from 'react-intl-universal';
+import { Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { ExchangeRateInputGroup } from '@/components';
 import { useCurrentOrganization } from '@/hooks/state';
@@ -25,4 +28,12 @@ export function InvoiceExchangeRateInputField({ ...props }) {
       {...props}
     />
   );
+}
+
+/**
+ * Invoice project select.
+ * @returns {JSX.Element}
+ */
+export function InvoiceProjectSelectButton({ label }) {
+  return <Button text={label ?? intl.get('select_project')} />;
 }

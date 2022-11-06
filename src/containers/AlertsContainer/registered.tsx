@@ -1,3 +1,4 @@
+// @ts-nocheck
 import AccountsAlerts from '@/containers/Accounts/AccountsAlerts';
 import ItemsAlerts from '@/containers/Items/ItemsAlerts';
 import ItemsCategoriesAlerts from '@/containers/ItemsCategories/ItemsCategoriesAlerts';
@@ -23,6 +24,7 @@ import TransactionsLockingAlerts from '@/containers/TransactionsLocking/Transact
 import WarehousesAlerts from '@/containers/Preferences/Warehouses/WarehousesAlerts';
 import WarehousesTransfersAlerts from '@/containers/WarehouseTransfers/WarehousesTransfersAlerts';
 import BranchesAlerts from '@/containers/Preferences/Branches/BranchesAlerts';
+import ProjectAlerts from '@/containers/Projects/containers/ProjectAlerts';
 
 export default [
   ...AccountsAlerts,
@@ -50,4 +52,5 @@ export default [
   ...WarehousesAlerts,
   ...WarehousesTransfersAlerts,
   ...BranchesAlerts,
+  ...ProjectAlerts,
 ];

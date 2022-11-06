@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Classes } from '@blueprintjs/core';
 import { LoadingIndicator } from '../Indicator';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 export enum DialogsName {
   AccountForm = 'account-form',
   CurrencyForm = 'currency-form',
@@ -38,4 +39,11 @@ export enum DialogsName {
   WarehouseActivateForm = 'warehouse-activate',
   CustomerOpeningBalanceForm = 'customer-opening-balance',
   VendorOpeningBalanceForm = 'vendor-opening-balance',
+  ProjectForm = 'project-form',
+  ProjectTaskForm = 'project-task-form',
+  ProjectTimeEntryForm = 'project-time-entry-form',
+  ProjectExpenseForm = 'project-expense-form',
+  EstimateExpenseForm = 'estimate-expense-form',
+  ProjectInvoicingForm = 'project-invoicing-form',
+  ProjectBillableEntriesForm = 'project-billable-entries',
 }

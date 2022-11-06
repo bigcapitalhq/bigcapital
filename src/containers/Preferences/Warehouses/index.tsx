@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { WarehousesProvider } from './WarehousesProvider';
 import Warehouses from './Warehouses';

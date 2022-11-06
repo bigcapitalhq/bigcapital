@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { sumBy } from 'lodash';

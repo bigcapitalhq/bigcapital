@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 import moment from 'moment';
@@ -39,6 +40,7 @@ export const defaultEntry = {
   debit: '',
   contact_id: '',
   branch_id: '',
+  project_id: '',
   note: '',
 };
 

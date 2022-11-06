@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 import { useItems } from '@/hooks/query';

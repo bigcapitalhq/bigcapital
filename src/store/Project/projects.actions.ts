@@ -1,4 +1,5 @@
-import t from 'store/types';
+// @ts-nocheck
+import t from '@/store/types';
 
 export const setProjectsTableState = (queries) => {
   return {

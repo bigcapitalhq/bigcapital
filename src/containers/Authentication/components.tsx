@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import ContentLoader from 'react-content-loader';
 import { If, Icon, FormattedMessage as T } from '@/components';

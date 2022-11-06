@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { useHistory, useLocation } from 'react-router-dom';

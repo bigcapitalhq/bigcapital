@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { useAbility } from '@casl/react';
 import { AbilityContext } from '@/components';

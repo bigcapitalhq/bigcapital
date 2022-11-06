@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setOrganizations } from '@/store/organizations/organizations.actions';

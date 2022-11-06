@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
 import { castArray } from 'lodash';
 

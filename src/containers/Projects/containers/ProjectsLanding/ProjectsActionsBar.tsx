@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import {
   Button,
@@ -8,22 +9,22 @@ import {
 } from '@blueprintjs/core';
 import {
   Icon,
-  AdvancedFilterPopover,
+  Can,
   DashboardActionViewsList,
-  DashboardFilterButton,
   DashboardRowsHeightButton,
   FormattedMessage as T,
-} from 'components';
-
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+  DashboardActionsBar,
+} from '@/components';
+import { ProjectAction, AbilitySubject } from '@/constants/abilityOption';
 
 import withProjects from './withProjects';
 import withProjectsActions from './withProjectsActions';
-import withSettings from '../../../Settings/withSettings';
-import withSettingsActions from '../../../Settings/withSettingsActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withSettings from '@/containers/Settings/withSettings';
+import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { compose } from 'utils';
+import { compose } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Projects actions bar.
@@ -62,7 +63,7 @@ function ProjectsActionsBar({
 
   // Handle new project button click.
   const handleNewProjectBtnClick = () => {
-    openDialog('project-form');
+    openDialog(DialogsName.ProjectForm);
   };
 
   return (
@@ -76,14 +77,14 @@ function ProjectsActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="plus" />}
-          text={<T id={'projects.label.new_project'} />}
-          onClick={handleNewProjectBtnClick}
-        />
-        {/* AdvancedFilterPopover */}
-
+        <Can I={ProjectAction.Create} a={AbilitySubject.Project}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="plus" />}
+            text={<T id={'projects.label.new_project'} />}
+            onClick={handleNewProjectBtnClick}
+          />
+        </Can>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}

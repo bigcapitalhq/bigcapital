@@ -1,7 +1,8 @@
+// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { FormGroup, InputGroup, Position } from '@blueprintjs/core';
+import { FormGroup, InputGroup, Classes, Position } from '@blueprintjs/core';
 import { FastField, ErrorMessage } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from '@/components';
@@ -17,7 +18,11 @@ import {
 
 import { useBillFormContext } from './BillFormProvider';
 import { vendorsFieldShouldUpdate } from './utils';
-import { BillExchangeRateInputField } from './components';
+import {
+  BillExchangeRateInputField,
+  BillProjectSelectButton,
+} from './components';
+import { ProjectsSelect } from '@/containers/Projects/components';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import {
   momentFormatter,
@@ -32,7 +37,7 @@ import {
  */
 function BillFormHeader() {
   // Bill form context.
-  const { vendors } = useBillFormContext();
+  const { vendors, projects } = useBillFormContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -163,6 +168,21 @@ function BillFormHeader() {
           </FormGroup>
         )}
       </FastField>
+
+      {/*------------ Project name -----------*/}
+      <FFormGroup
+        name={'project_id'}
+        label={<T id={'bill.project_name.label'} />}
+        inline={true}
+        className={classNames('form-group--select-list', Classes.FILL)}
+      >
+        <ProjectsSelect
+          name={'project_id'}
+          projects={projects}
+          input={BillProjectSelectButton}
+          popoverFill={true}
+        />
+      </FFormGroup>
     </div>
   );
 }

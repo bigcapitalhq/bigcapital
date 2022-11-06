@@ -1,3 +1,4 @@
+// @ts-nocheck
 import t from '@/store/types';
 
 /**
@@ -225,6 +226,19 @@ export function toggleRealizedGainOrLossFilterDrawer(toggle) {
 export function toggleUnrealizedGainOrLossFilterDrawer(toggle) {
   return {
     type: `${t.UNREALIZED_GAIN_OR_LOSS}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle,
+    },
+  };
+}
+
+/**
+ * Toggle display of the project Profitability summary filter drawer.
+ * @param {boolean} toggle
+ */
+export function toggleProjectProfitabilitySummaryFilterDrawer(toggle) {
+  return {
+    type: `${t.PROJECT_PROFITABILITY_SUMMARY}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
     payload: {
       toggle,
     },

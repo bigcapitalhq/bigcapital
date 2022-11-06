@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 import { sumBy, isEmpty, last } from 'lodash';

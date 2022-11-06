@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { useCurrencies } from '@/hooks/query';
 

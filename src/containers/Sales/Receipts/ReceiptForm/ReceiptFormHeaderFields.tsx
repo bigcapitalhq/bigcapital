@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
@@ -5,6 +6,7 @@ import {
   FormGroup,
   InputGroup,
   Position,
+  Classes,
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
@@ -12,6 +14,7 @@ import { FastField, ErrorMessage } from 'formik';
 import { CLASSES } from '@/constants/classes';
 
 import {
+  FFormGroup,
   AccountsSelectList,
   CustomerSelectField,
   FieldRequiredHint,
@@ -23,6 +26,7 @@ import {
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
+import { ProjectsSelect } from '@/containers/Projects/components';
 import {
   momentFormatter,
   compose,
@@ -36,7 +40,10 @@ import {
   customersFieldShouldUpdate,
   useObserveReceiptNoSettings,
 } from './utils';
-import { ReceiptExchangeRateInputField } from './components';
+import {
+  ReceiptExchangeRateInputField,
+  ReceiptProjectSelectButton,
+} from './components';
 
 /**
  * Receipt form header fields.
@@ -50,7 +57,7 @@ function ReceiptFormHeader({
   receiptNextNumber,
   receiptNumberPrefix,
 }) {
-  const { accounts, customers } = useReceiptFormContext();
+  const { accounts, customers, projects } = useReceiptFormContext();
 
   const handleReceiptNumberChange = useCallback(() => {
     openDialog('receipt-number-form', {});
@@ -229,6 +236,21 @@ function ReceiptFormHeader({
           </FormGroup>
         )}
       </FastField>
+
+      {/*------------ Project name -----------*/}
+      <FFormGroup
+        name={'project_id'}
+        label={<T id={'receipt.project_name.label'} />}
+        inline={true}
+        className={classNames('form-group--select-list', Classes.FILL)}
+      >
+        <ProjectsSelect
+          name={'project_id'}
+          projects={projects}
+          input={ReceiptProjectSelectButton}
+          popoverFill={true}
+        />
+      </FFormGroup>
     </div>
   );
 }

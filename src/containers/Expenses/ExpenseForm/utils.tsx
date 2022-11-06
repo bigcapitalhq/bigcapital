@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 import intl from 'react-intl-universal';
@@ -31,6 +32,7 @@ export const defaultExpenseEntry = {
   expense_account_id: '',
   description: '',
   landed_cost: 0,
+  project_id: '',
 };
 
 export const defaultExpense = {

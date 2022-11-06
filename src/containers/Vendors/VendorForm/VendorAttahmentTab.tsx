@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Dragzone, FormattedMessage as T } from '@/components';
 

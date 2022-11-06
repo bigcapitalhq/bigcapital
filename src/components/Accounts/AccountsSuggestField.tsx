@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import * as R from 'ramda';
 import intl from 'react-intl-universal';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Checkbox } from '@blueprintjs/core';
 

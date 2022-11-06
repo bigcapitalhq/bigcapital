@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useRef } from 'react';
 import {
   useTable,
@@ -197,6 +198,7 @@ export function DataTable(props) {
 DataTable.defaultProps = {
   pagination: false,
   hidePaginationNoPages: true,
+  hideTableHeader: false,
 
   size: null,
   spinnerProps: { size: 30 },

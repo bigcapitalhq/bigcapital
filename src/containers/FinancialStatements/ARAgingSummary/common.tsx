@@ -1,3 +1,4 @@
+// @ts-nocheck
 import moment from 'moment';
 import { transformToCamelCase, flatObject } from '@/utils';
 

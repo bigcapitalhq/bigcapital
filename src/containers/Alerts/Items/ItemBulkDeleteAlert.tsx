@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import {AppToaster, FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';

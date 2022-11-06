@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { connect } from 'react-redux';
 import { getCustomerById } from '@/store/customers/customers.reducer';
 

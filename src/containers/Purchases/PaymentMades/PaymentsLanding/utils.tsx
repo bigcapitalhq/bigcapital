@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { pick } from 'lodash';
 
 export const transformPaymentViewsToTabs = (paymentMadeViews) => {

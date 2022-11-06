@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useQuery } from 'react-query';
 import { castArray, defaultTo } from 'lodash';
 import { useAuthOrganizationId } from './state';

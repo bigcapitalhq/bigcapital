@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
@@ -5,6 +6,7 @@ import {
   FormGroup,
   InputGroup,
   Position,
+  Classes,
   ControlGroup,
   Button,
 } from '@blueprintjs/core';
@@ -23,6 +25,7 @@ import {
   inputIntent,
 } from '@/utils';
 import {
+  FFormGroup,
   AccountsSelectList,
   CustomerSelectField,
   FieldRequiredHint,
@@ -36,7 +39,11 @@ import {
 } from '@/components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
-import { PaymentReceiveExchangeRateInputField } from './components';
+import { ProjectsSelect } from '@/containers/Projects/components';
+import {
+  PaymentReceiveExchangeRateInputField,
+  PaymentReceiveProjectSelectButton,
+} from './components';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
@@ -68,7 +75,8 @@ function PaymentReceiveHeaderFields({
   paymentReceiveNextNumber,
 }) {
   // Payment receive form context.
-  const { customers, accounts, isNewMode } = usePaymentReceiveFormContext();
+  const { customers, accounts, projects, isNewMode } =
+    usePaymentReceiveFormContext();
 
   // Formik form context.
   const {
@@ -331,6 +339,21 @@ function PaymentReceiveHeaderFields({
           </FormGroup>
         )}
       </FastField>
+
+      {/*------------ Project name -----------*/}
+      <FFormGroup
+        name={'project_id'}
+        label={<T id={'payment_receive.project_name.label'} />}
+        inline={true}
+        className={classNames('form-group--select-list', Classes.FILL)}
+      >
+        <ProjectsSelect
+          name={'project_id'}
+          projects={projects}
+          input={PaymentReceiveProjectSelectButton}
+          popoverFill={true}
+        />
+      </FFormGroup>
     </div>
   );
 }

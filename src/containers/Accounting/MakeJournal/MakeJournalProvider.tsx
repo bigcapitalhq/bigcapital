@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { createContext, useState } from 'react';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
@@ -12,6 +13,7 @@ import {
   useBranches,
   useSettingsManualJournals,
 } from '@/hooks/query';
+import { useProjects } from '@/containers/Projects/hooks';
 
 const MakeJournalFormContext = createContext();
 
@@ -54,6 +56,12 @@ function MakeJournalProvider({ journalId, query, ...props }) {
     isSuccess: isBranchesSuccess,
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
+  // Fetch the projects list.
+  const {
+    data: { projects },
+    isLoading: isProjectsLoading,
+  } = useProjects();
+
   // Submit form payload.
   const [submitPayload, setSubmitPayload] = useState({});
 
@@ -65,7 +73,7 @@ function MakeJournalProvider({ journalId, query, ...props }) {
     contacts,
     currencies,
     manualJournal,
-
+    projects,
     branches,
 
     createJournalMutate,
@@ -91,7 +99,8 @@ function MakeJournalProvider({ journalId, query, ...props }) {
         isAccountsLoading ||
         isCurrenciesLoading ||
         isContactsLoading ||
-        isSettingsLoading
+        isSettingsLoading ||
+        isProjectsLoading
       }
       name={'make-journal-page'}
     >

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { getFooterLinks } from '@/constants/footerLinks';
 import { For } from '@/components';

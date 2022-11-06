@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { AlertLazy } from './components'
 import registered from './registered';

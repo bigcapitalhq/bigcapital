@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem, Menu, Button, Position } from '@blueprintjs/core';
@@ -13,6 +14,7 @@ import {
   PercentFieldCell,
   NumericInputCell,
   CheckBoxFieldCell,
+  ProjectBillableEntriesCell,
 } from '@/components/DataTableCells';
 
 /**
@@ -152,6 +154,15 @@ export function useEditableItemsEntriesColumns({ landedCost }) {
             },
           ]
         : []),
+      {
+        Header: '',
+        accessor: 'invoicing',
+        Cell: ProjectBillableEntriesCell,
+        disableSortBy: true,
+        disableResizing: true,
+        width: 45,
+        align: Align.Center,
+      },
       {
         Header: '',
         accessor: 'action',

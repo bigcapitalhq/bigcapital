@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { setSubscriptions } from '@/store/subscription/subscription.actions';

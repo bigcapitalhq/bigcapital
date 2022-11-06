@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';

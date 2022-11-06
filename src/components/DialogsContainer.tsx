@@ -40,7 +40,13 @@ import BranchActivateDialog from '@/containers/Dialogs/BranchActivateDialog';
 import WarehouseActivateDialog from '@/containers/Dialogs/WarehouseActivateDialog';
 import CustomerOpeningBalanceDialog from '@/containers/Dialogs/CustomerOpeningBalanceDialog';
 import VendorOpeningBalanceDialog from '@/containers/Dialogs/VendorOpeningBalanceDialog';
-
+import ProjectFormDialog from '@/containers/Projects/containers/ProjectFormDialog';
+import ProjectTaskFormDialog from '@/containers/Projects/containers/ProjectTaskFormDialog';
+import ProjectTimeEntryFormDialog from '@/containers/Projects/containers/ProjectTimeEntryFormDialog';
+import ProjectExpenseForm from '@/containers/Projects/containers/ProjectExpenseForm';
+import EstimatedExpenseFormDialog from '@/containers/Projects/containers/EstimatedExpenseFormDialog';
+import ProjectInvoicingFormDialog from '@/containers/Projects/containers/ProjectInvoicingFormDialog';
+import ProjectBillableEntriesFormDialog from '@/containers/Projects/containers/ProjectBillableEntriesFormDialog';
 import { DialogsName } from '@/constants/dialogs';
 
 /**
@@ -116,6 +122,19 @@ export default function DialogsContainer() {
       <VendorOpeningBalanceDialog
         dialogName={DialogsName.VendorOpeningBalanceForm}
       />
+      <ProjectFormDialog dialogName={DialogsName.ProjectForm} />
+      <ProjectTaskFormDialog dialogName={DialogsName.ProjectTaskForm} />
+      <ProjectTimeEntryFormDialog
+        dialogName={DialogsName.ProjectTimeEntryForm}
+      />
+      <ProjectExpenseForm dialogName={DialogsName.ProjectExpenseForm} />
+      <EstimatedExpenseFormDialog
+        dialogName={DialogsName.EstimateExpenseForm}
+      />
+      <ProjectInvoicingFormDialog
+        dialogName={DialogsName.ProjectInvoicingForm}
+      />
+      <ProjectBillableEntriesFormDialog dialogName={DialogsName.ProjectBillableEntriesForm}/>
     </div>
   );
 }

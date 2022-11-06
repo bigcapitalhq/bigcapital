@@ -1,3 +1,3 @@
-export * from './ProjectSelect';
-export * from './TransactionSelect';
+// @ts-nocheck
+export * from './ProjectTransactionsSelect';
 export * from './FinancialSection';

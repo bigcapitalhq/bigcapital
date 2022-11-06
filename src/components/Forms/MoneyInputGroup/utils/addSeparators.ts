@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Add group separator to value eg. 1000 > 1,000
  */

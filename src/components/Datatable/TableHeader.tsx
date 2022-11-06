@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useContext } from 'react';
 import classNames from 'classnames';
 import { ScrollSyncPane } from 'react-scroll-sync';
@@ -79,8 +80,18 @@ function TableHeaderGroup({ headerGroup }) {
 export default function TableHeader() {
   const {
     table: { headerGroups, page },
-    props: { TableHeaderSkeletonRenderer, headerLoading, progressBarLoading },
+    props: {
+      TableHeaderSkeletonRenderer,
+      headerLoading,
+      progressBarLoading,
+      hideTableHeader,
+    },
   } = useContext(TableContext);
+
+  // Can't contiunue if the thead is disabled.
+  if (hideTableHeader) {
+    return null;
+  }
 
   if (headerLoading && TableHeaderSkeletonRenderer) {
     return <TableHeaderSkeletonRenderer />;

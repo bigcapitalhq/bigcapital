@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';

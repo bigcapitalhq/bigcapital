@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { connect } from 'react-redux';
 import { getExpenseByIdFactory } from '@/store/expenses/expenses.selectors';
 

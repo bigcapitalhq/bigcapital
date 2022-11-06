@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants/features';
@@ -23,6 +24,7 @@ import {
   ManualJournalAction,
   ExpenseAction,
   CashflowAction,
+  ProjectAction,
   PreferencesAbility,
   SubscriptionBillingAbility,
 } from '@/constants/abilityOption';
@@ -533,6 +535,62 @@ export const SidebarMenu = [
               subject: AbilitySubject.Expense,
               ability: ExpenseAction.Create,
             },
+          },
+        ],
+      },
+    ],
+  },
+  // ---------------------
+  // # Projects Management
+  // ---------------------
+  {
+    text: 'Projects',
+    type: ISidebarMenuItemType.Overlay,
+    overlayId: ISidebarMenuOverlayIds.Projects,
+    children: [
+      {
+        text: 'Projects',
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: 'Projects',
+            href: '/projects',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Project,
+              ability: ProjectAction.View,
+            },
+          },
+        ],
+      },
+      {
+        text: <T id={'New tasks'} />,
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: <T id={'projects.label.new_project'} />,
+            type: ISidebarMenuItemType.Dialog,
+            dialogName: 'project-form',
+            permission: {
+              subject: AbilitySubject.Project,
+              ability: ProjectAction.Create,
+            },
+          },
+          {
+            text: <T id={'projects.label.new_time_entry'} />,
+            type: ISidebarMenuItemType.Dialog,
+            dialogName: 'project-time-entry-form',
+          },
+        ],
+      },
+      {
+        text: <T id={'Reports'} />,
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: <T id={'project_profitability_summary'} />,
+            href: '/financial-reports/project-profitability-summary',
+            type: ISidebarMenuItemType.Link,
           },
         ],
       },

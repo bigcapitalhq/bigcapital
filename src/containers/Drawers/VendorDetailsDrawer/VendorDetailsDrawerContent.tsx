@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 
 import { VendorDetailsDrawerProvider } from './VendorDetailsDrawerProvider';

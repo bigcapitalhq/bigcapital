@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createSelector } from 'reselect';
 
 // Financial Statements selectors.
@@ -79,6 +80,10 @@ export const realizedGainOrLossFilterDrawerSelector = (state) => {
 
 export const unrealizedGainOrLossFilterDrawerSelector = (state) => {
   return filterDrawerByTypeSelector('unrealizedGainOrLoss')(state);
+};
+
+export const projectProfitabilitySummaryFilterDrawerSelector = (state) => {
+  return filterDrawerByTypeSelector('projectProfitabilitySummary')(state);
 };
 
 /**
@@ -262,6 +267,13 @@ export const getRealizedGainOrLossFilterDrawer = createSelector(
  */
 export const getUnrealizedGainOrLossFilterDrawer = createSelector(
   unrealizedGainOrLossFilterDrawerSelector,
+  (isOpen) => {
+    return isOpen;
+  },
+);
+
+export const getProjectProfitabilitySummaryFilterDrawer = createSelector(
+  projectProfitabilitySummaryFilterDrawerSelector,
   (isOpen) => {
     return isOpen;
   },

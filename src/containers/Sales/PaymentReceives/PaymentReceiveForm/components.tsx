@@ -1,6 +1,8 @@
+// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
+import { Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 
 import { Money, ExchangeRateInputGroup, MoneyFieldCell } from '@/components';
@@ -101,4 +103,12 @@ export function PaymentReceiveExchangeRateInputField({ ...props }) {
       {...props}
     />
   );
+}
+
+/**
+ * payment receive project select.
+ * @returns {JSX.Element}
+ */
+ export function PaymentReceiveProjectSelectButton({ label }) {
+  return <Button text={label ?? intl.get('select_project')} />;
 }

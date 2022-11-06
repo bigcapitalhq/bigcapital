@@ -1,3 +1,4 @@
+// @ts-nocheck
 import t from '@/store/types';
 import { createReducer } from '@reduxjs/toolkit';
 

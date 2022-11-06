@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createReducer } from '@reduxjs/toolkit';
 import t from '@/store/types';
 
@@ -57,6 +58,9 @@ const initialState = {
   unrealizedGainOrLoss: {
     displayFilterDrawer: false,
   },
+  projectProfitabilitySummary: {
+    dispalyFilterDrawer: false,
+  },
 };
 
 /**
@@ -108,7 +112,16 @@ export default createReducer(initialState, {
     t.INVENTORY_ITEM_DETAILS,
     'inventoryItemDetails',
   ),
-  ...financialStatementFilterToggle(t.REALIZED_GAIN_OR_LOSS, 'realizedGainOrLoss'),
-  ...financialStatementFilterToggle(t.UNREALIZED_GAIN_OR_LOSS, 'unrealizedGainOrLoss'),
-
+  ...financialStatementFilterToggle(
+    t.REALIZED_GAIN_OR_LOSS,
+    'realizedGainOrLoss',
+  ),
+  ...financialStatementFilterToggle(
+    t.UNREALIZED_GAIN_OR_LOSS,
+    'unrealizedGainOrLoss',
+  ),
+  ...financialStatementFilterToggle(
+    t.PROJECT_PROFITABILITY_SUMMARY,
+    'projectProfitabilitySummary',
+  ),
 });

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -10,21 +11,29 @@ import {
   Intent,
   ProgressBar,
 } from '@blueprintjs/core';
-import { Icon, FormatDate, Choose, FormattedMessage as T } from 'components';
-import { safeCallback, firstLettersArgs, calculateStatus } from 'utils';
+import {
+  Icon,
+  FormatDate,
+  Can,
+  Choose,
+  If,
+  FormattedMessage as T,
+} from '@/components';
+import { ProjectAction, AbilitySubject } from '@/constants/abilityOption';
+import { safeCallback, firstLettersArgs, calculateStatus } from '@/utils';
 
 /**
  * project status.
  */
-export function ProjectStatus({ project }) {
+export function ProjectStatus({ row }) {
   return (
     <ProjectStatusRoot>
-      <ProjectStatusTaskAmount>{project.task_amount}</ProjectStatusTaskAmount>
+      <ProjectStatusTaskAmount>{row.total_expenses_formatted}</ProjectStatusTaskAmount>
       <ProjectProgressBar
         animate={false}
         stripes={false}
-        // intent={Intent.PRIMARY}
-        value={calculateStatus(project.task_amount, project.cost_estimate)}
+        intent={Intent.PRIMARY}
+        value={calculateStatus(row.total_expenses, row.cost_estimate)}
       />
     </ProjectStatusRoot>
   );
@@ -33,41 +42,18 @@ export function ProjectStatus({ project }) {
 /**
  * status accessor.
  */
-export const StatusAccessor = (project) => {
+export const StatusAccessor = (row) => {
   return (
-    <Choose>
-      <Choose.When condition={project.is_process}>
-        <ProjectStatus project={project} />
-      </Choose.When>
-      <Choose.When condition={project.is_closed}>
-        <StatusTag minimal={true} intent={Intent.SUCCESS} round={true}>
-          <T id={'closed'} />
-        </StatusTag>
-      </Choose.When>
-      <Choose.When condition={project.is_draft}>
-        <StatusTag round={true} minimal={true}>
-          <T id={'draft'} />
-        </StatusTag>
-      </Choose.When>
-    </Choose>
+    <ProjectStatus row={row} />
   );
 };
-
-/**
- * Avatar cell.
- */
-export const AvatarCell = ({ row: { original }, size }) => (
-  <span className="avatar" data-size={size}>
-    {firstLettersArgs(original?.display_name, original?.name)}
-  </span>
-);
 
 /**
  * Table actions cell.
  */
 export const ActionsMenu = ({
   row: { original },
-  payload: { onEdit, onDelete, onViewDetails, onNewTask },
+  payload: { onEdit, onDelete, onViewDetails, onNewTask, onStatus },
 }) => (
   <Menu>
     <MenuItem
@@ -75,24 +61,46 @@ export const ActionsMenu = ({
       text={intl.get('view_details')}
       onClick={safeCallback(onViewDetails, original)}
     />
-    <MenuDivider />
-    <MenuItem
-      icon={<Icon icon="pen-18" />}
-      text={intl.get('projects.action.edit_project')}
-      onClick={safeCallback(onEdit, original)}
-    />
-    <MenuItem
-      icon={<Icon icon="plus" />}
-      text={intl.get('projects.action.new_task')}
-      onClick={safeCallback(onNewTask, original)}
-    />
-    <MenuDivider />
-    <MenuItem
-      text={intl.get('projects.action.delete_project')}
-      icon={<Icon icon="trash-16" iconSize={16} />}
-      intent={Intent.DANGER}
-      onClick={safeCallback(onDelete, original)}
-    />
+    <Can I={ProjectAction.Edit} a={AbilitySubject.Project}>
+      <MenuDivider />
+      <MenuItem
+        icon={<Icon icon="pen-18" />}
+        text={intl.get('projects.action.edit_project')}
+        onClick={safeCallback(onEdit, original)}
+      />
+    </Can>
+    <Can I={ProjectAction.Create} a={AbilitySubject.Project}>
+      <MenuItem
+        icon={<Icon icon="plus" />}
+        text={intl.get('projects.action.new_task')}
+        onClick={safeCallback(onNewTask, original)}
+      />
+    </Can>
+    <Can I={ProjectAction.View} a={AbilitySubject.Project}>
+      <MenuItem text={'Status'} icon={<Icon icon="plus" />}>
+        <If condition={original.status !== 'InProgress'}>
+          <MenuItem
+            text={'InProgress'}
+            onClick={safeCallback(onStatus, original)}
+          />
+        </If>
+        <If condition={original.status !== 'Closed'}>
+          <MenuItem
+            text={'Closed'}
+            onClick={safeCallback(onStatus, original)}
+          />
+        </If>
+      </MenuItem>
+    </Can>
+    <Can I={ProjectAction.Delete} a={AbilitySubject.Project}>
+      <MenuDivider />
+      <MenuItem
+        text={intl.get('projects.action.delete_project')}
+        icon={<Icon icon="trash-16" iconSize={16} />}
+        intent={Intent.DANGER}
+        onClick={safeCallback(onDelete, original)}
+      />
+    </Can>
   </Menu>
 );
 
@@ -100,18 +108,27 @@ export const ActionsMenu = ({
  * Projects accessor.
  */
 export const ProjectsAccessor = (row) => (
-  <ProjectItemsWrap>
-    <ProjectItemsHeader>
-      <ProjectItemContactName>{row.display_name}</ProjectItemContactName>
-      <ProjectItemProjectName>{row.name}</ProjectItemProjectName>
-    </ProjectItemsHeader>
-    <ProjectItemDescription>
-      <FormatDate value={row.deadline} />
-      {intl.get('projects.label.cost_estimate', {
-        value: row.cost_estimate,
-      })}
-    </ProjectItemDescription>
-  </ProjectItemsWrap>
+  <ProjectName>
+    <ProjectAvatar data-size="medium">
+      {firstLettersArgs(row?.contact_display_name, row?.name)}
+    </ProjectAvatar>
+
+    <ProjectItemsWrap>
+      <ProjectItemsHeader>
+        <ProjectItemContactName>
+          {row.contact_display_name}
+        </ProjectItemContactName>
+        <ProjectItemProjectName>{row.name}</ProjectItemProjectName>
+      </ProjectItemsHeader>
+
+      <ProjectItemDescription>
+        <FormatDate value={row.deadline_formatted} />
+        {intl.get('projects.label.cost_estimate', {
+          value: row.cost_estimate_formatted,
+        })}
+      </ProjectItemDescription>
+    </ProjectItemsWrap>
+  </ProjectName>
 );
 
 /**
@@ -121,20 +138,10 @@ export const useProjectsListColumns = () => {
   return React.useMemo(
     () => [
       {
-        id: 'avatar',
-        Header: '',
-        Cell: AvatarCell,
-        className: 'avatar',
-        width: 45,
-        disableResizing: true,
-        disableSortBy: true,
-        clickable: true,
-      },
-      {
         id: 'name',
         Header: '',
         accessor: ProjectsAccessor,
-        width: 240,
+        width: 140,
         className: 'name',
         clickable: true,
       },
@@ -142,7 +149,7 @@ export const useProjectsListColumns = () => {
         id: 'status',
         Header: '',
         accessor: StatusAccessor,
-        width: 50,
+        width: 40,
         className: 'status',
       },
     ],
@@ -159,30 +166,31 @@ const ProjectItemsHeader = styled.div`
 `;
 
 const ProjectItemContactName = styled.div`
-  font-weight: 500;
-  padding-right: 4px;
+  font-weight: 600;
+  padding-right: 10px;
 `;
-const ProjectItemProjectName = styled.div``;
+const ProjectItemProjectName = styled.div`
+  color: #595b66;
+`;
 
 const ProjectItemDescription = styled.div`
   display: inline-block;
   font-size: 13px;
   opacity: 0.75;
-  margin-top: 0.2rem;
+  margin-top: 0.3rem;
   line-height: 1;
 `;
 
 const ProjectStatusRoot = styled.div`
   display: flex;
   align-items: center;
-  /* justify-content: flex-end; */
   margin-right: 0.5rem;
   flex-direction: row-reverse;
 `;
+
 const ProjectStatusTaskAmount = styled.div`
   text-align: right;
-  font-weight: 400;
-  line-height: 1.5rem;
+  font-size: 15px;
   margin-left: 20px;
 `;
 
@@ -198,7 +206,45 @@ const ProjectProgressBar = styled(ProgressBar)`
     }
   }
 `;
-const StatusTag = styled(Tag)`
-  min-width: 65px;
+
+const StatusTagWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  .tag {
+    min-width: 65px;
+    text-align: center;
+  }
+`;
+
+export const ProjectName = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+`;
+
+export const Avatar = styled.div`
+  display: inline-block;
+  background: #adbcc9;
+  border-radius: 8%;
   text-align: center;
+  font-weight: 400;
+  color: #fff;
+
+  &[data-size='medium'] {
+    height: 32px;
+    width: 32px;
+    line-height: 32px;
+    font-size: 14px;
+  }
+  &[data-size='small'] {
+    height: 25px;
+    width: 25px;
+    line-height: 25px;
+    font-size: 12px;
+  }
+`;
+
+export const ProjectAvatar = styled(Avatar)`
+  margin-top: auto;
+  margin-bottom: auto;
 `;

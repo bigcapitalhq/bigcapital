@@ -1,5 +1,6 @@
+// @ts-nocheck
 import React from 'react';
-import { DashboardPageContent, DashboardContentTable } from 'components';
+import { DashboardPageContent, DashboardContentTable } from '@/components';
 
 import ProjectsActionsBar from './ProjectsActionsBar';
 import ProjectsViewTabs from './ProjectsViewTabs';
@@ -9,7 +10,7 @@ import withProjects from './withProjects';
 import withProjectsActions from './withProjectsActions';
 
 import { ProjectsListProvider } from './ProjectsListProvider';
-import { compose, transformTableStateToQuery } from 'utils';
+import { compose, transformTableStateToQuery } from '@/utils';
 
 /**
  * Projects list.
@@ -39,6 +40,7 @@ function ProjectsList({
       <ProjectsActionsBar />
       <DashboardPageContent>
         <ProjectsViewTabs />
+
         <DashboardContentTable>
           <ProjectsDataTable />
         </DashboardContentTable>

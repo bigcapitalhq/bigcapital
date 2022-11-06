@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as Yup from 'yup';
 import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
@@ -32,6 +33,7 @@ const Schema = Yup.object().shape({
         }),
       contact_id: Yup.number().nullable(),
       contact_type: Yup.string().nullable(),
+      project_id: Yup.number().nullable(),
       note: Yup.string().max(DATATYPES_LENGTH.TEXT).nullable(),
     }),
   ),

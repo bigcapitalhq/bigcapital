@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   createStore as createReduxStore,
   applyMiddleware,

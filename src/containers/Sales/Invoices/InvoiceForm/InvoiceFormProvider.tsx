@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { createContext, useState } from 'react';
 import { isEmpty, pick } from 'lodash';
 import { useLocation } from 'react-router-dom';
@@ -16,6 +17,7 @@ import {
   useSettingsInvoices,
   useEstimate,
 } from '@/hooks/query';
+import { useProjects } from '@/containers/Projects/hooks';
 
 const InvoiceFormContext = createContext();
 
@@ -34,6 +36,12 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
     enabled: !!invoiceId,
   });
+
+  // Fetch project list.
+  const {
+    data: { projects },
+    isLoading: isProjectsLoading,
+  } = useProjects();
 
   // Fetches the estimate by the given id.
   const { data: estimate, isLoading: isEstimateLoading } = useEstimate(
@@ -102,6 +110,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     submitPayload,
     branches,
     warehouses,
+    projects,
 
     isInvoiceLoading,
     isItemsLoading,

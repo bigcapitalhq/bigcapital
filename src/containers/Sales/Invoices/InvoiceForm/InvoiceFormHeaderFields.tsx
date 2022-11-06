@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
@@ -5,10 +6,11 @@ import {
   FormGroup,
   InputGroup,
   Position,
+  Classes,
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FastField, Field, ErrorMessage } from 'formik';
+import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
 
 import {
   FFormGroup,
@@ -30,7 +32,14 @@ import {
 } from './utils';
 
 import { useInvoiceFormContext } from './InvoiceFormProvider';
-import { InvoiceExchangeRateInputField } from './components';
+import {
+  InvoiceExchangeRateInputField,
+  InvoiceProjectSelectButton,
+} from './components';
+import {
+  ProjectsSelect,
+  ProjectBillableEntriesLink,
+} from '@/containers/Projects/components';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -48,7 +57,10 @@ function InvoiceFormHeaderFields({
   invoiceNextNumber,
 }) {
   // Invoice form context.
-  const { customers } = useInvoiceFormContext();
+  const { customers, projects } = useInvoiceFormContext();
+
+  // Formik context.
+  const { values } = useFormikContext();
 
   // Handle invoice number changing.
   const handleInvoiceNumberChange = () => {
@@ -224,6 +236,26 @@ function InvoiceFormHeaderFields({
           </FormGroup>
         )}
       </FastField>
+
+      {/*------------ Project name -----------*/}
+      <FFormGroup
+        name={'project_id'}
+        label={<T id={'invoice.project_name.label'} />}
+        inline={true}
+        className={classNames('form-group--select-list', Classes.FILL)}
+      >
+        <ProjectsSelect
+          name={'project_id'}
+          projects={projects}
+          input={InvoiceProjectSelectButton}
+          popoverFill={true}
+        />
+        {values?.project_id && (
+          <ProjectBillableEntriesLink projectId={values?.project_id}>
+            <T id={'add_billable_entries'} />
+          </ProjectBillableEntriesLink>
+        )}
+      </FFormGroup>
     </div>
   );
 }

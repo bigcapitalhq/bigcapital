@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useRef, useEffect, useMemo } from 'react';
 import { useLocation, useHistory } from 'react-router';
 import useAutofocus from './useAutofocus';

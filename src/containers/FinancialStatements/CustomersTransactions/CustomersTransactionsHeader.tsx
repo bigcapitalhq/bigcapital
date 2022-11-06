@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import * as Yup from 'yup';
 import intl from 'react-intl-universal';

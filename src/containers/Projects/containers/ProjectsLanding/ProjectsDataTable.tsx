@@ -1,54 +1,23 @@
+// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import { DataTable } from 'components';
-import { TABLES } from 'common/tables';
-import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
-import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
+import {
+  DataTable,
+  TableSkeletonRows,
+  TableSkeletonHeader,
+} from '@/components';
+import { TABLES } from '@/constants/tables';
+import ProjectsEmptyStatus from './ProjectsEmptyStatus';
 import { useProjectsListContext } from './ProjectsListProvider';
-import { useMemorizedColumnsWidths } from 'hooks';
+import { useMemorizedColumnsWidths } from '@/hooks';
 import { useProjectsListColumns, ActionsMenu } from './components';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertsActions from '@/containers/Alert/withAlertActions';
+import withSettings from '@/containers/Settings/withSettings';
 import withProjectsActions from './withProjectsActions';
-import withSettings from '../../../Settings/withSettings';
 
-import { compose } from 'utils';
-
-const projects = [
-  {
-    id: 1,
-    name: 'Maroon Bronze',
-    deadline: '2022-06-08T22:00:00.000Z',
-    display_name: 'Kyrie Rearden',
-    cost_estimate: '40000',
-    task_amount: '0',
-    is_process: true,
-    is_closed: false,
-    is_draft: false,
-  },
-  {
-    id: 2,
-    name: 'Project Sherwood',
-    deadline: '2022-06-08T22:00:00.000Z',
-    display_name: 'Ella-Grace Miller',
-    cost_estimate: '700',
-    task_amount: '300',
-    is_process: false,
-    is_closed: false,
-    is_draft: true,
-  },
-  {
-    id: 3,
-    name: 'Tax Compliance',
-    deadline: '2022-06-23T22:00:00.000Z',
-    display_name: 'Abby & Wells',
-    cost_estimate: '3000',
-    task_amount: '0',
-    is_process: true,
-    is_closed: false,
-    is_draft: false,
-  },
-];
+import { compose } from '@/utils';
 
 /**
  * Projects list datatable.
@@ -58,13 +27,34 @@ function ProjectsDataTable({
   // #withDial
   openDialog,
 
+  // #withAlertsActions
+  openAlert,
+
   // #withSettings
   projectsTableSize,
 }) {
   const history = useHistory();
 
+  // Projects list context.
+  const { projects, isEmptyStatus, isProjectsLoading, isProjectsFetching } =
+    useProjectsListContext();
+
   // Retrieve projects table columns.
   const columns = useProjectsListColumns();
+
+  // Local storage memorizing columns widths.
+  const [initialColumnsWidths, , handleColumnResizing] =
+    useMemorizedColumnsWidths(TABLES.PROJECTS);
+
+  // Handle delete project.
+  const handleDeleteProject = ({ id }) => {
+    openAlert('project-delete', { projectId: id });
+  };
+
+  // Handle project's status button click.
+  const handleProjectStatus = ({ id, status_formatted }) => {
+    openAlert('project-status', { projectId: id, status: status_formatted });
+  };
 
   // Handle cell click.
   const handleCellClick = ({ row: { original } }) => {
@@ -78,18 +68,15 @@ function ProjectsDataTable({
   const handleEditProject = (project) => {
     openDialog('project-form', {
       projectId: project.id,
+      action: 'edit',
     });
   };
-
   // Handle new task button click.
-  const handleNewTaskButtonClick = () => {
-    openDialog('task-form');
+  const handleNewTaskButtonClick = (project) => {
+    openDialog('project-task-form', {
+      projectId: project.id,
+    });
   };
-
-  // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.PROJECTS);
-
   // Handle view detail project.
   const handleViewDetailProject = (project) => {
     return history.push(`/projects/${project.id}/details`, {
@@ -98,13 +85,18 @@ function ProjectsDataTable({
     });
   };
 
+  // Display project empty status instead of the table.
+  if (isEmptyStatus) {
+    return <ProjectsEmptyStatus />;
+  }
+
   return (
     <ProjectsTable
       columns={columns}
       data={projects}
-      // loading={}
-      // headerLoading={}
-      // progressBarLoading={}
+      loading={isProjectsLoading}
+      headerLoading={isProjectsLoading}
+      progressBarLoading={isProjectsFetching}
       manualSortBy={true}
       noInitialFetch={true}
       sticky={true}
@@ -119,7 +111,9 @@ function ProjectsDataTable({
       payload={{
         onViewDetails: handleViewDetailProject,
         onEdit: handleEditProject,
+        onDelete: handleDeleteProject,
         onNewTask: handleNewTaskButtonClick,
+        onStatus: handleProjectStatus,
       }}
     />
   );
@@ -127,6 +121,7 @@ function ProjectsDataTable({
 
 export default compose(
   withDialogActions,
+  withAlertsActions,
   withProjectsActions,
   withSettings(({ projectSettings }) => ({
     projectsTableSize: projectSettings?.tableSize,
@@ -136,31 +131,7 @@ export default compose(
 const ProjectsTable = styled(DataTable)`
   .tbody {
     .tr .td {
-      padding: 0.5rem 0.8rem;
-    }
-
-    .avatar.td {
-      .avatar {
-        display: inline-block;
-        background: #adbcc9;
-        border-radius: 8%;
-        text-align: center;
-        font-weight: 400;
-        color: #fff;
-
-        &[data-size='medium'] {
-          height: 30px;
-          width: 30px;
-          line-height: 30px;
-          font-size: 14px;
-        }
-        &[data-size='small'] {
-          height: 25px;
-          width: 25px;
-          line-height: 25px;
-          font-size: 12px;
-        }
-      }
+      padding: 0.75rem 0.8rem;
     }
   }
   .table-size--small {

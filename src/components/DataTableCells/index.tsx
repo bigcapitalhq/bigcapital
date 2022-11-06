@@ -1,3 +1,4 @@
+// @ts-nocheck
 import AccountsListFieldCell from './AccountsListFieldCell';
 import MoneyFieldCell from './MoneyFieldCell';
 import InputGroupCell from './InputGroupCell';
@@ -10,6 +11,8 @@ import CheckBoxFieldCell from './CheckBoxFieldCell';
 import SwitchFieldCell from './SwitchFieldCell';
 import TextAreaCell from './TextAreaCell';
 import BranchesListFieldCell from './BranchesListFieldCell';
+import { ProjectsListFieldCell } from './ProjectsListFieldCell';
+import { ProjectBillableEntriesCell } from './ProjectBillableEntriesCell';
 import { TextOverviewTooltipCell } from './TextOverviewTooltipCell';
 
 export {
@@ -26,5 +29,7 @@ export {
   SwitchFieldCell,
   TextAreaCell,
   BranchesListFieldCell,
+  ProjectsListFieldCell,
+  ProjectBillableEntriesCell,
   TextOverviewTooltipCell,
 };
