@@ -33,7 +33,7 @@ export const useGLEntriesTableColumns = () => {
         accessor: ({ credit }) => credit.formatted_amount,
         width: 100,
         className: 'credit',
-        textAligment: 'right',
+        align: 'right',
         textOverview: true,
       },
       {
@@ -42,6 +42,7 @@ export const useGLEntriesTableColumns = () => {
         width: 100,
         className: 'debit',
         textOverview: true,
+        align: 'right',
       },
     ],
     [],

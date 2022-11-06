@@ -12,55 +12,58 @@ const initialState = {
       name: 'Bigcapital, LLC',
     },
     manualJournals: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     bills: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     billPayments: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     paymentReceives: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     salesEstimates: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     items: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     salesInvoices: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     salesReceipts: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     expenses: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     customers: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     vendors: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     accounts: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     cashflowAccounts: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     cashflowTransactions: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     creditNote: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     vendorCredit: {
-      tableSize: 'medium',
+      tableSize: 'small',
     },
     warehouseTransfer: {
-      tableSize: 'medium',
+      tableSize: 'small',
+    },
+    projectTasks: {
+      tableSize: 'small',
     },
     projectTasks: {
       tableSize: 'medium',
