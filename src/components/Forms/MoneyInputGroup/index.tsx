@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { FC, useState, useEffect, useRef } from 'react';
 import { InputGroup } from '@blueprintjs/core';
 import { CurrencyInputProps } from './CurrencyInputProps';
@@ -73,7 +74,10 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
 
   const onFocus = (): number => (stateValue ? stateValue.length : 0);
 
-  const processChange = (value: string, selectionStart?: number | null): void => {
+  const processChange = (
+    value: string,
+    selectionStart?: number | null,
+  ): void => {
     const valueOnly = cleanValue({ value, ...cleanValueOptions });
 
     if (!valueOnly) {
@@ -92,11 +96,15 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
       return;
     }
 
-    const formattedValue = formatValue({ value: valueOnly, ...formatValueOptions });
+    const formattedValue = formatValue({
+      value: valueOnly,
+      ...formatValueOptions,
+    });
 
     /* istanbul ignore next */
     if (selectionStart !== undefined && selectionStart !== null) {
-      const cursor = selectionStart + (formattedValue.length - value.length) || 1;
+      const cursor =
+        selectionStart + (formattedValue.length - value.length) || 1;
       setCursor(cursor);
     }
 
@@ -111,7 +119,9 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
     processChange(value, selectionStart);
   };
 
-  const handleOnBlur = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleOnBlur = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLInputElement>): void => {
     const valueOnly = cleanValue({ value, ...cleanValueOptions });
 
     if (valueOnly === '-' || !valueOnly) {
@@ -120,14 +130,25 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
       return;
     }
 
-    const fixedDecimals = fixedDecimalValue(valueOnly, decimalSeparator, fixedDecimalLength);
+    const fixedDecimals = fixedDecimalValue(
+      valueOnly,
+      decimalSeparator,
+      fixedDecimalLength,
+    );
 
     // Add padding or trim value to precision
-    const newValue = padTrimValue(fixedDecimals, decimalSeparator, precision || fixedDecimalLength);
+    const newValue = padTrimValue(
+      fixedDecimals,
+      decimalSeparator,
+      precision || fixedDecimalLength,
+    );
     onChange && onChange(newValue, name);
     onBlurValue && onBlurValue(newValue, name);
 
-    const formattedValue = formatValue({ value: newValue, ...formatValueOptions });
+    const formattedValue = formatValue({
+      value: newValue,
+      ...formatValueOptions,
+    });
     setStateValue(formattedValue);
   };
 
@@ -137,7 +158,7 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
         Number(
           userValue !== undefined
             ? userValue
-            : cleanValue({ value: stateValue, ...cleanValueOptions })
+            : cleanValue({ value: stateValue, ...cleanValueOptions }),
         ) || 0;
       const newValue =
         key === 'ArrowUp'
@@ -159,7 +180,7 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
     userValue !== undefined
       ? formatValue({ value: String(userValue), ...formatValueOptions })
       : undefined;
-  
+
   const handleInputRef = (ref: HTMLInputElement | null) => {
     inputRef.current = ref;
     return null;
@@ -179,7 +200,9 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
       placeholder={placeholder}
       disabled={disabled}
       value={
-        formattedPropsValue !== undefined && stateValue !== '-' ? formattedPropsValue : stateValue
+        formattedPropsValue !== undefined && stateValue !== '-'
+          ? formattedPropsValue
+          : stateValue
       }
       inputRef={handleInputRef}
       {...props}
@@ -187,4 +210,4 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
   );
 };
 
-export default CurrencyInput;
+export { CurrencyInput as MoneyInputGroup };

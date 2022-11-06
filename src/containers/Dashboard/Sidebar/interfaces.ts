@@ -1,3 +1,4 @@
+// @ts-nocheck
 export enum ISidebarMenuItemType {
   Label = 'label',
   Link = 'link',
@@ -69,6 +70,7 @@ export enum ISidebarMenuOverlayIds {
   Contacts = 'Contacts',
   Cashflow = 'Cashflow',
   Expenses = 'Expenses',
+  Projects = 'Projects',
 }
 
 export enum ISidebarSubscriptionAbility {
