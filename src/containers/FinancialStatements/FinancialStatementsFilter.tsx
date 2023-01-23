@@ -13,16 +13,18 @@ import { ListSelect, MODIFIER, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { filterAccountsOptions } from './constants';
 
+const SUBMENU_POPOVER_MODIFIERS = {
+  flip: { boundariesElement: 'viewport', padding: 20 },
+  offset: { offset: '0, 10' },
+  preventOverflow: { boundariesElement: 'viewport', padding: 40 },
+};
+
+
 export default function FinancialStatementsFilter({
   items = filterAccountsOptions,
   label = <T id={'filter_accounts'} />,
   ...restProps
 }) {
-  const SUBMENU_POPOVER_MODIFIERS = {
-    flip: { boundariesElement: 'viewport', padding: 20 },
-    offset: { offset: '0, 10' },
-    preventOverflow: { boundariesElement: 'viewport', padding: 40 },
-  };
 
   const filterRenderer = (item, { handleClick, modifiers, query }) => {
     return (

@@ -16,6 +16,8 @@ import GeneralLedgerHeaderDimensionsPanel from './GeneralLedgerHeaderDimensionsP
 
 import withGeneralLedger from './withGeneralLedger';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/constants';
 
 /**
  * Geenral Ledger (GL) - Header.
@@ -63,6 +65,10 @@ function GeneralLedgerHeader({
   const handleDrawerClose = () => {
     toggleDisplayFilterDrawer(false);
   };
+  // Detarmines the feature whether is enabled.
+  const { featureCan } = useFeatureCan();
+
+  const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (
     <GeneralLedgerDrawerHeader
@@ -81,11 +87,13 @@ function GeneralLedgerHeader({
               title={<T id={'general'} />}
               panel={<GeneralLedgerHeaderGeneralPane />}
             />
-            <Tab
-              id="dimensions"
-              title={<T id={'dimensions'} />}
-              panel={<GeneralLedgerHeaderDimensionsPanel />}
-            />
+            {isBranchesFeatureCan && (
+              <Tab
+                id="dimensions"
+                title={<T id={'dimensions'} />}
+                panel={<GeneralLedgerHeaderDimensionsPanel />}
+              />
+            )}
           </Tabs>
 
           <div class="financial-header-drawer__footer">

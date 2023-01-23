@@ -16,6 +16,8 @@ import withProfitLoss from './withProfitLoss';
 import withProfitLossActions from './withProfitLossActions';
 
 import { useProfitLossHeaderValidationSchema } from './utils';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/constants';
 
 /**
  * Profit/loss header.
@@ -55,6 +57,10 @@ function ProfitLossHeader({
     toggleFilterDrawer(false);
   };
 
+  const { featureCan } = useFeatureCan();
+
+  const isBranchesFeatureCan = featureCan(Features.Branches);
+
   return (
     <ProfitLossSheetHeader
       isOpen={profitLossDrawerFilter}
@@ -77,11 +83,13 @@ function ProfitLossHeader({
               title={<T id={'profit_loss_sheet.comparisons'} />}
               panel={<ProfitLossSheetHeaderComparisonPanel />}
             />
-            <Tab
-              id="dimensions"
-              title={<T id={'profit_loss_sheet.dimensions'} />}
-              panel={<ProfitLossSheetHeaderDimensionsPanel />}
-            />
+            {isBranchesFeatureCan && (
+              <Tab
+                id="dimensions"
+                title={<T id={'profit_loss_sheet.dimensions'} />}
+                panel={<ProfitLossSheetHeaderDimensionsPanel />}
+              />
+            )}
           </Tabs>
 
           <div class="financial-header-drawer__footer">

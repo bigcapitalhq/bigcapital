@@ -6,6 +6,8 @@ import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form } from 'formik';
 
 import { FormattedMessage as T } from '@/components';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/constants';
 
 import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';
@@ -56,16 +58,18 @@ function BalanceSheetHeader({
     toggleFilterDrawer(false);
     actions.setSubmitting(false);
   };
-
   // Handle cancel button click.
   const handleCancelClick = () => {
     toggleFilterDrawer(false);
   };
-
   // Handle drawer close action.
   const handleDrawerClose = () => {
     toggleFilterDrawer(false);
   };
+  // Detarmines the given feature whether is enabled.
+  const { featureCan } = useFeatureCan();
+
+  const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (
     <BalanceSheetFinancialHeader
@@ -91,11 +95,13 @@ function BalanceSheetHeader({
               title={<T id={'balance_sheet.comparisons'} />}
               panel={<BalanceSheetHeaderComparisonPanal />}
             />
-            <Tab
-              id="dimensions"
-              title={<T id={'balance_sheet.dimensions'} />}
-              panel={<BalanceSheetHeaderDimensionsPanel />}
-            />
+            {isBranchesFeatureCan && (
+              <Tab
+                id="dimensions"
+                title={<T id={'balance_sheet.dimensions'} />}
+                panel={<BalanceSheetHeaderDimensionsPanel />}
+              />
+            )}
           </Tabs>
 
           <div class="financial-header-drawer__footer">

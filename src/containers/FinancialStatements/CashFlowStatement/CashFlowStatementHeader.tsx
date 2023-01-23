@@ -16,6 +16,8 @@ import withCashFlowStatementActions from './withCashFlowStatementActions';
 
 import { getDefaultCashFlowSheetQuery } from './utils';
 import { compose, transformToForm } from '@/utils';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/constants';
 
 /**
  * Cash flow statement header.
@@ -43,7 +45,6 @@ function CashFlowStatementHeader({
     },
     defaultValues,
   );
-
   // Validation schema.
   const validationSchema = Yup.object().shape({
     dateRange: Yup.string().optional(),
@@ -67,6 +68,10 @@ function CashFlowStatementHeader({
     toggleCashFlowStatementFilterDrawer(false);
   };
 
+  const { featureCan } = useFeatureCan();
+
+  const isBranchesFeatureCan = featureCan(Features.Branches);
+
   return (
     <FinancialStatementHeader
       isOpen={isFilterDrawerOpen}
@@ -84,11 +89,13 @@ function CashFlowStatementHeader({
               title={<T id={'general'} />}
               panel={<CashFlowStatementGeneralPanel />}
             />
-            <Tab
-              id="dimensions"
-              title={<T id={'dimensions'} />}
-              panel={<CashFlowStatementDimensionsPanel />}
-            />
+            {isBranchesFeatureCan && (
+              <Tab
+                id="dimensions"
+                title={<T id={'dimensions'} />}
+                panel={<CashFlowStatementDimensionsPanel />}
+              />
+            )}
           </Tabs>
 
           <div class="financial-header-drawer__footer">

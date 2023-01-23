@@ -71,7 +71,6 @@ function CashFlowAccountsActionsBar({
             text={<T id={'cash_flow.label.add_cash_account'} />}
             onClick={handleAddBankAccount}
           />
-
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus-24'} iconSize={20} />}

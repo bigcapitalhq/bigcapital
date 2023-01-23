@@ -7,6 +7,8 @@ import {
   BalanceSheetHeaderDimensionsProvider,
   useBalanceSheetHeaderDimensionsPanelContext,
 } from './BalanceSheetHeaderDimensionsProvider';
+import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
 
 /**
  * Balance sheet header dismension panel.
@@ -26,16 +28,21 @@ export default function BalanceSheetHeaderDimensionsPanel() {
  */
 function BalanceSheetHeaderDimensionsPanelContent() {
   const { branches } = useBalanceSheetHeaderDimensionsPanelContext();
-  
+  const { featureCan } = useFeatureCan();
+
+  const isBranchesFeatureCan = featureCan(Features.Branches);
+
   return (
     <Row>
       <Col xs={4}>
-        <FormGroup
-          label={intl.get('branches_multi_select.label')}
-          className={Classes.FILL}
-        >
-          <BranchMultiSelect name={'branchesIds'} branches={branches} />
-        </FormGroup>
+        {isBranchesFeatureCan && (
+          <FormGroup
+            label={intl.get('branches_multi_select.label')}
+            className={Classes.FILL}
+          >
+            <BranchMultiSelect name={'branchesIds'} branches={branches} />
+          </FormGroup>
+        )}
       </Col>
     </Row>
   );

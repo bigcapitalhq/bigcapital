@@ -7,10 +7,12 @@ import {
   TrialBLHeaderDimensionsPanelProvider,
   useTrialBalanceSheetPanelContext,
 } from './TrialBalanceSheetHeaderDimensionsPanelProvider';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/constants';
 
 /**
  * Trial balance sheet header dismension panel.
- * @returns
+ * @returns {JSX.Element}
  */
 export default function TrialBalanceSheetHeaderDimensionsPanel() {
   return (
@@ -21,21 +23,26 @@ export default function TrialBalanceSheetHeaderDimensionsPanel() {
 }
 
 /**
- * trial balance sheet header dismension panel content.
- * @returns
+ * Trial balance sheet header dismension panel content.
+ * @returns {JSX.Element}
  */
 function TrialBLSheetHeaderDimensionsPanelContent() {
   const { branches } = useTrialBalanceSheetPanelContext();
+  const { featureCan } = useFeatureCan();
+
+  const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (
     <Row>
       <Col xs={4}>
-        <FormGroup
-          label={intl.get('branches_multi_select.label')}
-          className={Classes.FILL}
-        >
-          <BranchMultiSelect name={'branchesIds'} branches={branches} />
-        </FormGroup>
+        {isBranchesFeatureCan && (
+          <FormGroup
+            label={intl.get('branches_multi_select.label')}
+            className={Classes.FILL}
+          >
+            <BranchMultiSelect name={'branchesIds'} branches={branches} />
+          </FormGroup>
+        )}
       </Col>
     </Row>
   );

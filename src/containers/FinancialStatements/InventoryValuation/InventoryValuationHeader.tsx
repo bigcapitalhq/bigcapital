@@ -15,6 +15,8 @@ import withInventoryValuation from './withInventoryValuation';
 import withInventoryValuationActions from './withInventoryValuationActions';
 
 import { compose, transformToForm } from '@/utils';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/constants';
 
 /**
  * inventory valuation header.
@@ -58,16 +60,19 @@ function InventoryValuationHeader({
     toggleInventoryValuationFilterDrawer(false);
     setSubmitting(false);
   };
-
   // Handle drawer close action.
   const handleDrawerClose = () => {
     toggleInventoryValuationFilterDrawer(false);
   };
-
   // Handle cancel button click.
   const handleCancelClick = () => {
     toggleInventoryValuationFilterDrawer(false);
   };
+  // Detarmines the given feature whether is enabled.
+  const { featureCan } = useFeatureCan();
+
+  const isBranchesFeatureCan = featureCan(Features.Branches);
+  const isWarehousesFeatureCan = featureCan(Features.Warehouses);
 
   return (
     <InventoryValuationDrawerHeader
@@ -86,11 +91,13 @@ function InventoryValuationHeader({
               title={<T id={'general'} />}
               panel={<InventoryValuationHeaderGeneralPanel />}
             />
-            <Tab
-              id="dimensions"
-              title={<T id={'dimensions'} />}
-              panel={<InventoryValuationHeaderDimensionsPanel />}
-            />
+            {(isBranchesFeatureCan || isWarehousesFeatureCan) && (
+              <Tab
+                id="dimensions"
+                title={<T id={'dimensions'} />}
+                panel={<InventoryValuationHeaderDimensionsPanel />}
+              />
+            )}
           </Tabs>
           <div class="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>

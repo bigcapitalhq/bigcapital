@@ -18,6 +18,8 @@ import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
 
 import { getInventoryItemDetailsDefaultQuery } from './utils2';
 import { compose, transformToForm } from '@/utils';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/constants';
 
 /**
  * Inventory item details header.
@@ -58,11 +60,15 @@ function InventoryItemDetailsHeader({
     toggleFilterDrawer(false);
     setSubmitting(false);
   };
-
   // Handle drawer close action.
   const handleDrawerClose = () => {
     toggleFilterDrawer(false);
   };
+  // Detarmines the given feature whether is enabled.
+  const { featureCan } = useFeatureCan();
+
+  const isBranchesFeatureCan = featureCan(Features.Branches);
+  const isWarehousesFeatureCan = featureCan(Features.Warehouses);
 
   return (
     <InventoryItemDetailsDrawerHeader
@@ -81,11 +87,13 @@ function InventoryItemDetailsHeader({
               title={<T id={'general'} />}
               panel={<InventoryItemDetailsHeaderGeneralPanel />}
             />
-            <Tab
-              id="dimensions"
-              title={<T id={'dimensions'} />}
-              panel={<InventoryItemDetailsHeaderDimensionsPanel />}
-            />
+            {(isBranchesFeatureCan || isWarehousesFeatureCan) && (
+              <Tab
+                id="dimensions"
+                title={<T id={'dimensions'} />}
+                panel={<InventoryItemDetailsHeaderDimensionsPanel />}
+              />
+            )}
           </Tabs>
           <div class="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>

@@ -17,6 +17,8 @@ import withTrialBalance from './withTrialBalance';
 import withTrialBalanceActions from './withTrialBalanceActions';
 
 import { compose, transformToForm } from '@/utils';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/constants';
 
 /**
  * Trial balance sheet header.
@@ -40,6 +42,10 @@ function TrialBalanceSheetHeader({
       .required()
       .label(intl.get('to_date')),
   });
+  // Detarmines whether the feature is enabled.
+  const { featureCan } = useFeatureCan();
+
+  const isBranchesFeatureCan = featureCan(Features.Branches);
 
   // Default values.
   const defaultValues = {
@@ -90,11 +96,13 @@ function TrialBalanceSheetHeader({
               title={<T id={'general'} />}
               panel={<TrialBalanceSheetHeaderGeneralPanel />}
             />
-            <Tab
-              id="dimensions"
-              title={<T id={'dimensions'} />}
-              panel={<TrialBalanceSheetHeaderDimensionsPanel />}
-            />
+            {isBranchesFeatureCan && (
+              <Tab
+                id="dimensions"
+                title={<T id={'dimensions'} />}
+                panel={<TrialBalanceSheetHeaderDimensionsPanel />}
+              />
+            )}
           </Tabs>
 
           <div class="financial-header-drawer__footer">

@@ -15,6 +15,8 @@ import withARAgingSummary from './withARAgingSummary';
 import withARAgingSummaryActions from './withARAgingSummaryActions';
 
 import { compose, transformToForm } from '@/utils';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/constants';
 
 /**
  * AR Aging Summary Report - Drawer Header.
@@ -76,6 +78,10 @@ function ARAgingSummaryHeader({
   const handleDrawerClose = () => {
     toggleFilterDrawerDisplay(false);
   };
+  // Detarmines the feature whether is enabled.
+  const { featureCan } = useFeatureCan();
+
+  const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (
     <ARAgingDrawerHeader
@@ -94,11 +100,13 @@ function ARAgingSummaryHeader({
               title={<T id={'general'} />}
               panel={<ARAgingSummaryHeaderGeneral />}
             />
-            <Tab
-              id="dimensions"
-              title={<T id={'dimensions'} />}
-              panel={<ARAgingSummaryHeaderDimensions />}
-            />
+            {isBranchesFeatureCan && (
+              <Tab
+                id="dimensions"
+                title={<T id={'dimensions'} />}
+                panel={<ARAgingSummaryHeaderDimensions />}
+              />
+            )}
           </Tabs>
 
           <div class="financial-header-drawer__footer">

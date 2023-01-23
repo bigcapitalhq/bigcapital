@@ -15,6 +15,8 @@ import withAPAgingSummary from './withAPAgingSummary';
 import withAPAgingSummaryActions from './withAPAgingSummaryActions';
 
 import { transformToForm, compose } from '@/utils';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/constants';
 
 /**
  * AP Aging Summary Report - Drawer Header.
@@ -68,11 +70,14 @@ function APAgingSummaryHeader({
   const handleCancelClick = () => {
     toggleFilterDrawerDisplay(false);
   };
-
   // Handle the drawer closing.
   const handleDrawerClose = () => {
     toggleFilterDrawerDisplay(false);
   };
+  // Detarmines the feature whether is enabled.
+  const { featureCan } = useFeatureCan();
+
+  const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (
     <APAgingDrawerHeader
@@ -91,11 +96,13 @@ function APAgingSummaryHeader({
               title={<T id={'general'} />}
               panel={<APAgingSummaryHeaderGeneral />}
             />
-            <Tab
-              id="dimensions"
-              title={<T id={'dimensions'} />}
-              panel={<APAgingSummaryHeaderDimensions />}
-            />
+            {isBranchesFeatureCan && (
+              <Tab
+                id="dimensions"
+                title={<T id={'dimensions'} />}
+                panel={<APAgingSummaryHeaderDimensions />}
+              />
+            )}
           </Tabs>
           <div className={'financial-header-drawer__footer'}>
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>

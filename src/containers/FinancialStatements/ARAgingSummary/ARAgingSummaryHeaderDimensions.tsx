@@ -10,7 +10,7 @@ import {
 
 /**
  * ARAging summary header dimensions.
- * @returns
+ * @returns {JSX.Element}
  */
 export default function ARAgingSummaryHeaderDimensions() {
   return (
@@ -22,20 +22,27 @@ export default function ARAgingSummaryHeaderDimensions() {
 
 /**
  * ARAging summary header dimensions content.
- * @returns
+ * @returns {JSX.Element}
  */
 function ARAgingSummaryHeaderDimensionsContent() {
   const { branches } = useARAgingSummaryHeaderDimensonsContext();
 
+  // Detarmines the feature whether is enabled.
+  const { featureCan } = useFeatureCan();
+
+  const isBranchesFeatureCan = featureCan(Features.Branches);
+
   return (
     <Row>
       <Col xs={4}>
-        <FormGroup
-          label={intl.get('branches_multi_select.label')}
-          className={Classes.FILL}
-        >
-          <BranchMultiSelect name={'branchesIds'} branches={branches} />
-        </FormGroup>
+        {isBranchesFeatureCan && (
+          <FormGroup
+            label={intl.get('branches_multi_select.label')}
+            className={Classes.FILL}
+          >
+            <BranchMultiSelect name={'branchesIds'} branches={branches} />
+          </FormGroup>
+        )}
       </Col>
     </Row>
   );

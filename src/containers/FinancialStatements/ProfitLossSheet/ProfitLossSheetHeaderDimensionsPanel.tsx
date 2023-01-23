@@ -7,10 +7,12 @@ import {
   ProfitLossSheetHeaderDimensionsProvider,
   useProfitLossSheetPanelContext,
 } from './ProfitLossSheetHeaderDimensionsProvider';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/constants';
 
 /**
  * profit loss Sheet Header dimensions panel.
- * @returns
+ * @returns {JSX.Element}
  */
 export default function ProfitLossSheetHeaderDimensionsPanel() {
   return (
@@ -21,21 +23,26 @@ export default function ProfitLossSheetHeaderDimensionsPanel() {
 }
 
 /**
- * profit loss Sheet Header dimensions panel content.
- * @returns
+ * Profit/Loss Sheet Header dimensions panel content.
+ * @returns {JSX.Element}
  */
 function ProfitLossSheetHeaderDimensionsPanelContent() {
   const { branches } = useProfitLossSheetPanelContext();
+  const { featureCan } = useFeatureCan();
+
+  const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (
     <Row>
       <Col xs={4}>
-        <FormGroup
-          label={intl.get('branches_multi_select.label')}
-          className={Classes.FILL}
-        >
-          <BranchMultiSelect name={'branchesIds'} branches={branches} />
-        </FormGroup>
+        {isBranchesFeatureCan && (
+          <FormGroup
+            label={intl.get('branches_multi_select.label')}
+            className={Classes.FILL}
+          >
+            <BranchMultiSelect name={'branchesIds'} branches={branches} />
+          </FormGroup>
+        )}
       </Col>
     </Row>
   );
