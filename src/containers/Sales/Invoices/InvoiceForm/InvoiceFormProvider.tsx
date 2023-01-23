@@ -32,6 +32,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
   const isBranchFeatureCan = featureCan(Features.Branches);
+  const isProjectsFeatureCan = featureCan(Features.Projects);
 
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
     enabled: !!invoiceId,
@@ -41,7 +42,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   const {
     data: { projects },
     isLoading: isProjectsLoading,
-  } = useProjects();
+  } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
   // Fetches the estimate by the given id.
   const { data: estimate, isLoading: isEstimateLoading } = useEstimate(
@@ -98,7 +99,8 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   const isNewMode = !invoiceId;
 
   // Determines whether the warehouse and branches are loading.
-  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+  const isFeatureLoading =
+    isWarehouesLoading || isBranchesLoading || isProjectsLoading;
 
   const provider = {
     invoice,

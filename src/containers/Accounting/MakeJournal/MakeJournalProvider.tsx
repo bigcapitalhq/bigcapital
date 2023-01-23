@@ -24,6 +24,7 @@ function MakeJournalProvider({ journalId, query, ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
+  const isProjectFeatureCan = featureCan(Features.Projects);
 
   // Load the accounts list.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
@@ -60,7 +61,7 @@ function MakeJournalProvider({ journalId, query, ...props }) {
   const {
     data: { projects },
     isLoading: isProjectsLoading,
-  } = useProjects();
+  } = useProjects({}, { enabled: !!isProjectFeatureCan });
 
   // Submit form payload.
   const [submitPayload, setSubmitPayload] = useState({});

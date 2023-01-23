@@ -23,6 +23,7 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
+  const isProjectsFeatureCan = featureCan(Features.Projects);
 
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 
@@ -51,7 +52,7 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
   const {
     data: { projects },
     isLoading: isProjectsLoading,
-  } = useProjects();
+  } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
   // Create and edit expense mutate.
   const { mutateAsync: createExpenseMutate } = useCreateExpense();
@@ -75,7 +76,7 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
     accounts,
     branches,
     projects,
-    
+
     isCurrenciesLoading,
     isExpenseLoading,
     isCustomersLoading,

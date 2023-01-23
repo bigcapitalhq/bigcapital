@@ -26,6 +26,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
   const isBranchFeatureCan = featureCan(Features.Branches);
+  const isProjectsFeatureCan = featureCan(Features.Projects);
 
   // Fetch sale receipt details.
   const { data: receipt, isLoading: isReceiptLoading } = useReceipt(receiptId, {
@@ -89,7 +90,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   const {
     data: { projects },
     isLoading: isProjectsLoading,
-  } = useProjects();
+  } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
   // Fetch receipt settings.
   const { isLoading: isSettingLoading } = useSettingsReceipts();

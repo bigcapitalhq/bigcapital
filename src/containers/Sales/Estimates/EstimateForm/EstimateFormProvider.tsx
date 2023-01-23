@@ -27,6 +27,7 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
   const isBranchFeatureCan = featureCan(Features.Branches);
+  const isProjectsFeatureCan = featureCan(Features.Projects);
 
   const {
     data: estimate,
@@ -68,7 +69,7 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
   const {
     data: { projects },
     isLoading: isProjectsLoading,
-  } = useProjects();
+  } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
   // Handle fetch settings.
   useSettingsEstimates();
@@ -83,7 +84,8 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
   const isNewMode = !estimateId;
 
   // Determines whether the warehouse and branches are loading.
-  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+  const isFeatureLoading =
+    isWarehouesLoading || isBranchesLoading || isProjectsLoading;
 
   // Provider payload.
   const provider = {

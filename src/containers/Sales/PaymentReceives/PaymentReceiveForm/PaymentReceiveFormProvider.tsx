@@ -27,6 +27,7 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
+  const isProjectsFeatureCan = featureCan(Features.Projects);
 
   // Fetches payment recevie details.
   const {
@@ -62,7 +63,7 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
   const {
     data: { projects },
     isLoading: isProjectsLoading,
-  } = useProjects();
+  } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
   // Detarmines whether the new mode.
   const isNewMode = !paymentReceiveId;
@@ -82,7 +83,7 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
     customers,
     branches,
     projects,
-    
+
     isPaymentLoading,
     isAccountsLoading,
     isPaymentFetching,

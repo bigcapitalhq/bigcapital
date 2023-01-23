@@ -44,6 +44,7 @@ function BillFormProvider({ billId, ...props }) {
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
   const isBranchFeatureCan = featureCan(Features.Branches);
+  const isProjectsFeatureCan = featureCan(Features.Projects);
 
   // Handle fetch accounts.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
@@ -86,7 +87,7 @@ function BillFormProvider({ billId, ...props }) {
   const {
     data: { projects },
     isLoading: isProjectsLoading,
-  } = useProjects();
+  } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
   // Handle fetching bill settings.
   const { isFetching: isSettingLoading } = useSettings();
@@ -101,7 +102,8 @@ function BillFormProvider({ billId, ...props }) {
   const isNewMode = !billId;
 
   // Determines whether the warehouse and branches are loading.
-  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+  const isFeatureLoading =
+    isWarehouesLoading || isBranchesLoading || isProjectsLoading;
 
   const provider = {
     accounts,
