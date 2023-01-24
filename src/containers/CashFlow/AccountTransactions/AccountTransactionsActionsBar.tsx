@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Button,
   NavbarGroup,
@@ -15,7 +15,10 @@ import {
 } from '@/components';
 
 import { CashFlowMenuItems } from './utils';
-import { addMoneyIn, addMoneyOut } from '@/constants/cashflowOptions';
+import {
+  getAddMoneyOutOptions,
+  getAddMoneyInOptions,
+} from '@/constants/cashflowOptions';
 import { useRefreshCashflowTransactionsInfinity } from '@/hooks/query';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 
@@ -40,6 +43,10 @@ function AccountTransactionsActionsBar({
     addSetting('cashflowTransactions', 'tableSize', size);
   };
   const { accountId } = useAccountTransactionsContext();
+
+  // Retrieves the money in/out buttons options.
+  const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);
+  const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
 
   // Handle money in form
   const handleMoneyInFormTransaction = (account) => {
@@ -69,7 +76,7 @@ function AccountTransactionsActionsBar({
     <DashboardActionsBar>
       <NavbarGroup>
         <CashFlowMenuItems
-          items={addMoneyIn}
+          items={addMoneyInOptions}
           onItemSelect={handleMoneyInFormTransaction}
           text={<T id={'cash_flow.label.add_money_in'} />}
           buttonProps={{
@@ -77,7 +84,7 @@ function AccountTransactionsActionsBar({
           }}
         />
         <CashFlowMenuItems
-          items={addMoneyOut}
+          items={addMoneyOutOptions}
           onItemSelect={handlMoneyOutFormTransaction}
           text={<T id={'cash_flow.label.add_money_out'} />}
           buttonProps={{

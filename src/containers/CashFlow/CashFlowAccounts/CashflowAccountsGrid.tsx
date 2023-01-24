@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { isNull, isEmpty } from 'lodash';
@@ -22,7 +22,10 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { safeCallback } from '@/utils';
-import { addMoneyIn, addMoneyOut } from '@/constants/cashflowOptions';
+import {
+  getAddMoneyInOptions,
+  getAddMoneyOutOptions,
+} from '@/constants/cashflowOptions';
 
 const CASHFLOW_SKELETON_N = 4;
 
@@ -183,8 +186,10 @@ function CashflowAccountMoneyInContextMenu({ onClick }) {
   const handleItemClick = curry((transactionType, event) => {
     onClick && onClick(transactionType, event);
   });
+  // Retreives the add money in button options.
+  const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);
 
-  return addMoneyIn.map((option) => (
+  return addMoneyInOptions.map((option) => (
     <MenuItem text={option.name} onClick={handleItemClick(option.value)} />
   ));
 }
@@ -196,8 +201,10 @@ function CashflowAccountMoneyOutContextMenu({ onClick }) {
   const handleItemClick = curry((transactionType, event) => {
     onClick && onClick(transactionType, event);
   });
+  // Retreives the add money out button options.
+  const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
 
-  return addMoneyOut.map((option) => (
+  return addMoneyOutOptions.map((option) => (
     <MenuItem text={option.name} onClick={handleItemClick(option.value)} />
   ));
 }
