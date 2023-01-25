@@ -22,6 +22,7 @@ import {
   InputPrependButton,
   CustomerDrawerLink,
   FormattedMessage as T,
+  FeatureCan,
 } from '@/components';
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -44,6 +45,7 @@ import {
   ReceiptExchangeRateInputField,
   ReceiptProjectSelectButton,
 } from './components';
+import { Features } from '@/constants';
 
 /**
  * Receipt form header fields.
@@ -238,19 +240,21 @@ function ReceiptFormHeader({
       </FastField>
 
       {/*------------ Project name -----------*/}
-      <FFormGroup
-        name={'project_id'}
-        label={<T id={'receipt.project_name.label'} />}
-        inline={true}
-        className={classNames('form-group--select-list', Classes.FILL)}
-      >
-        <ProjectsSelect
+      <FeatureCan feature={Features.Projects}>
+        <FFormGroup
           name={'project_id'}
-          projects={projects}
-          input={ReceiptProjectSelectButton}
-          popoverFill={true}
-        />
-      </FFormGroup>
+          label={<T id={'receipt.project_name.label'} />}
+          inline={true}
+          className={classNames('form-group--select-list', Classes.FILL)}
+        >
+          <ProjectsSelect
+            name={'project_id'}
+            projects={projects}
+            input={ReceiptProjectSelectButton}
+            popoverFill={true}
+          />
+        </FFormGroup>
+      </FeatureCan>
     </div>
   );
 }
