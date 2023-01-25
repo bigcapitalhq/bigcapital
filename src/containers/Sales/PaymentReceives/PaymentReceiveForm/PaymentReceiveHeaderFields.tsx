@@ -11,7 +11,8 @@ import {
   Button,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from '@/components';
+import { toSafeInteger } from 'lodash';
+import { FeatureCan, FormattedMessage as T } from '@/components';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 
 import { useAutofocus } from '@/hooks';
@@ -56,8 +57,7 @@ import {
   customersFieldShouldUpdate,
   accountsFieldShouldUpdate,
 } from './utils';
-
-import { toSafeInteger } from 'lodash';
+import { Features } from '@/constants';
 
 /**
  * Payment receive header fields.
@@ -341,19 +341,21 @@ function PaymentReceiveHeaderFields({
       </FastField>
 
       {/*------------ Project name -----------*/}
-      <FFormGroup
-        name={'project_id'}
-        label={<T id={'payment_receive.project_name.label'} />}
-        inline={true}
-        className={classNames('form-group--select-list', Classes.FILL)}
-      >
-        <ProjectsSelect
+      <FeatureCan feature={Features.Projects}>
+        <FFormGroup
           name={'project_id'}
-          projects={projects}
-          input={PaymentReceiveProjectSelectButton}
-          popoverFill={true}
-        />
-      </FFormGroup>
+          label={<T id={'payment_receive.project_name.label'} />}
+          inline={true}
+          className={classNames('form-group--select-list', Classes.FILL)}
+        >
+          <ProjectsSelect
+            name={'project_id'}
+            projects={projects}
+            input={PaymentReceiveProjectSelectButton}
+            popoverFill={true}
+          />
+        </FFormGroup>
+      </FeatureCan>
     </div>
   );
 }

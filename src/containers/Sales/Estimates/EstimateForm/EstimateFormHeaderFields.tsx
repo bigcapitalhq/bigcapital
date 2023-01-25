@@ -10,7 +10,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FFormGroup, FormattedMessage as T } from '@/components';
+import { FeatureCan, FFormGroup, FormattedMessage as T } from '@/components';
 import { FastField, Field, ErrorMessage } from 'formik';
 
 import {
@@ -22,6 +22,7 @@ import {
 } from '@/utils';
 import { customersFieldShouldUpdate } from './utils';
 import { CLASSES } from '@/constants/classes';
+import { Features } from '@/constants';
 import {
   CustomerSelectField,
   FieldRequiredHint,
@@ -58,7 +59,6 @@ function EstimateFormHeader({
   const handleEstimateNumberBtnClick = () => {
     openDialog('estimate-number-form', {});
   };
-
   const handleEstimateNoBlur = (form, field) => (event) => {
     const newValue = event.target.value;
 
@@ -71,7 +71,6 @@ function EstimateFormHeader({
       });
     }
   };
-
   // Syncs estimate number settings with the form.
   useObserveEstimateNoSettings(estimateNumberPrefix, estimateNextNumber);
 
@@ -228,19 +227,21 @@ function EstimateFormHeader({
       </FastField>
 
       {/*------------ Project name -----------*/}
-      <FFormGroup
-        name={'project_id'}
-        label={<T id={'estimate.project_name.label'} />}
-        inline={true}
-        className={classNames('form-group--select-list', Classes.FILL)}
-      >
-        <ProjectsSelect
+      <FeatureCan feature={Features.Projects}>
+        <FFormGroup
           name={'project_id'}
-          projects={projects}
-          input={EstimateProjectSelectButton}
-          popoverFill={true}
-        />
-      </FFormGroup>
+          label={<T id={'estimate.project_name.label'} />}
+          inline={true}
+          className={classNames('form-group--select-list', Classes.FILL)}
+        >
+          <ProjectsSelect
+            name={'project_id'}
+            projects={projects}
+            input={EstimateProjectSelectButton}
+            popoverFill={true}
+          />
+        </FFormGroup>
+      </FeatureCan>
     </div>
   );
 }
