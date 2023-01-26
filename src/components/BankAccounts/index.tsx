@@ -126,6 +126,7 @@ const BankAccountTitle = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0px;
+  padding-right: 24px;
 `;
 
 const BnakAccountCode = styled.div`

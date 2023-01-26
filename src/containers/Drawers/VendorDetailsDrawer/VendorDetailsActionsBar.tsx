@@ -64,12 +64,12 @@ function VendorDetailsActionsBar({
   };
 
   const handleNewInvoiceClick = () => {
-    history.push('bills/new');
+    history.push('/bills/new');
     closeDrawer('vendor-detail-drawer');
   };
 
   const handleNewPaymentClick = () => {
-    history.push('payment-mades/new');
+    history.push('/payment-mades/new');
     closeDrawer('vendor-detail-drawer');
   };
 

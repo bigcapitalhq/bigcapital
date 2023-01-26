@@ -57,34 +57,34 @@ function CustomerDetailsActionsBar({
 
   // Handle new invoice button click.
   const handleNewInvoiceClick = () => {
-    history.push('invoices/new');
+    history.push('/invoices/new');
     closeDrawer('customer-detail-drawer');
   };
   // Handle new receipt button click.
   const handleNewReceiptClick = () => {
-    history.push('receipts/new');
+    history.push('/receipts/new');
     closeDrawer('customer-detail-drawer');
   };
   // Handle new payment receive button click.
   const handleNewPaymentClick = () => {
-    history.push('payment-receives/new');
+    history.push('/payment-receives/new');
     closeDrawer('customer-detail-drawer');
   };
   // Handle new estimate button click.
   const handleNewEstimateClick = () => {
-    history.push('estimates/new');
+    history.push('/estimates/new');
     closeDrawer('customer-detail-drawer');
   };
-
+  // Handles delete customer click.
   const handleDeleteCustomer = () => {
     openAlert(`customer-delete`, { contactId: customerId });
   };
-
+  // Handles edit customer click.
   const handleEditContact = () => {
     history.push(`/customers/${customerId}/edit`);
     closeDrawer('customer-details-drawer');
   };
-
+  // Handle edit opening balance click.
   const handleEditOpeningBalance = () => {
     openDialog('customer-opening-balance', { customerId });
   };
