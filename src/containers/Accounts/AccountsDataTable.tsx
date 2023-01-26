@@ -8,13 +8,15 @@ import {
   TableSkeletonHeader,
   TableVirtualizedListRows,
 } from '@/components';
-import { TABLES } from '@/constants/tables';
 import { useAccountsTableColumns, rowClassNames } from './utils';
 import { ActionsMenu } from './components';
+import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 
 import { useAccountsChartContext } from './AccountsChartProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
+
+import { TABLES } from '@/constants/tables';
+import { DialogsName } from '@/constants/dialogs';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
@@ -61,9 +63,9 @@ function AccountsDataTable({
 
   // Handle edit account action.
   const handleEditAccount = (account) => {
-    openDialog('account-form', {
+    openDialog(DialogsName.AccountForm, {
       action: AccountDialogAction.Edit,
-      id: account.id,
+      accountId: account.id,
     });
   };
 
@@ -74,7 +76,7 @@ function AccountsDataTable({
 
   // Handle new child button click.
   const handleNewChildAccount = (account) => {
-    openDialog('account-form', {
+    openDialog(DialogsName.AccountForm, {
       action: AccountDialogAction.NewChild,
       parentAccountId: account.id,
       accountType: account.account_type,

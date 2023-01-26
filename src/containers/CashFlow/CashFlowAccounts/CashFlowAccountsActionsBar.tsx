@@ -21,7 +21,9 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withCashflowAccountsTableActions from '../AccountTransactions/withCashflowAccountsTableActions';
 
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
+
 import { ACCOUNT_TYPE } from '@/constants';
+import { DialogsName } from '@/constants/dialogs';
 
 import { compose } from '@/utils';
 
@@ -43,14 +45,14 @@ function CashFlowAccountsActionsBar({
   };
   // Handle add bank account.
   const handleAddBankAccount = () => {
-    openDialog('account-form', {
+    openDialog(DialogsName.AccountForm, {
       action: AccountDialogAction.NewDefinedType,
       accountType: ACCOUNT_TYPE.CASH,
     });
   };
   // Handle add cash account.
   const handleAddCashAccount = () => {
-    openDialog('account-form', {
+    openDialog(DialogsName.AccountForm, {
       action: AccountDialogAction.NewDefinedType,
       accountType: ACCOUNT_TYPE.BANK,
     });

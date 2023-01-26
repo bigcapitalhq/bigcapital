@@ -24,8 +24,11 @@ import {
 } from '@/components';
 
 import { AccountAction, AbilitySubject } from '@/constants/abilityOption';
+import { DialogsName } from '@/constants/dialogs';
+
 import { useRefreshAccounts } from '@/hooks/query/accounts';
 import { useAccountsChartContext } from './AccountsChartProvider';
+
 import withAccounts from './withAccounts';
 import withAccountsTableActions from './withAccountsTableActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -65,7 +68,7 @@ function AccountsActionsBar({
   const { resourceViews, fields } = useAccountsChartContext();
 
   const onClickNewAccount = () => {
-    openDialog('account-form', {});
+    openDialog(DialogsName.AccountForm, {});
   };
 
   // Accounts refresh action.

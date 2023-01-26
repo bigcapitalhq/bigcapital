@@ -8,7 +8,9 @@ import * as R from 'ramda';
 
 import { MenuItemNestedText, FormattedMessage as T } from '@/components';
 import { nestedArrayToflatten, filterAccountsByQuery } from '@/utils';
+
 import { CLASSES } from '@/constants/classes';
+import { DialogsName } from '@/constants/dialogs';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
@@ -129,7 +131,7 @@ function AccountsSelectListRoot({
         setSelectedAccount({ ...account });
         onAccountSelected && onAccountSelected(account);
       } else {
-        openDialog('account-form');
+        openDialog(DialogsName.AccountForm);
       }
     },
     [setSelectedAccount, onAccountSelected, openDialog],
