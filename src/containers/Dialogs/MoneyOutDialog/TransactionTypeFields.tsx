@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FastField, Field, ErrorMessage } from 'formik';
 import { FormGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
@@ -14,7 +14,7 @@ import {
 
 import { inputIntent } from '@/utils';
 import { CLASSES } from '@/constants/classes';
-import { addMoneyOut } from '@/constants/cashflowOptions';
+import { getAddMoneyOutOptions } from '@/constants/cashflowOptions';
 
 import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
 
@@ -24,6 +24,8 @@ import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
 function TransactionTypeFields() {
   // Money in dialog context.
   const { cashflowAccounts } = useMoneyOutDialogContext();
+
+  const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
 
   return (
     <div className="trasnaction-type-fileds">
@@ -75,7 +77,7 @@ function TransactionTypeFields() {
                 )}
               >
                 <ListSelect
-                  items={addMoneyOut}
+                  items={addMoneyOutOptions}
                   onItemSelect={(type) => {
                     setFieldValue('transaction_type', type.value);
                   }}

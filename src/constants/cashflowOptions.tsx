@@ -1,7 +1,7 @@
 // @ts-nocheck
 import intl from 'react-intl-universal';
 
-export const addMoneyIn = [
+export const getAddMoneyInOptions = () => [
   {
     name: intl.get('cash_flow.owner_contribution'),
     value: 'owner_contribution',
@@ -16,7 +16,7 @@ export const addMoneyIn = [
   },
 ];
 
-export const addMoneyOut = [
+export const getAddMoneyOutOptions = () => [
   {
     name: intl.get('cash_flow.owner_drawings'),
     value: 'OwnerDrawing',
