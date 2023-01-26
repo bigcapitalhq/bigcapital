@@ -13,7 +13,9 @@ import {
   Can,
   FormattedMessage as T,
 } from '@/components';
+
 import { AccountAction, AbilitySubject } from '@/constants/abilityOption';
+import { DialogsName } from '@/constants/dialogs';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
@@ -37,7 +39,7 @@ function AccountDrawerActionBar({
 
   // Handle new child button click.
   const onNewChildAccount = () => {
-    openDialog('account-form', {
+    openDialog(DialogsName.AccountForm, {
       action: AccountDialogAction.NewChild,
       parentAccountId: account.id,
       accountType: account.account_type,
@@ -45,9 +47,9 @@ function AccountDrawerActionBar({
   };
   // Handle edit account action.
   const onEditAccount = () => {
-    openDialog('account-form', {
+    openDialog(DialogsName.AccountForm, {
       action: AccountDialogAction.Edit,
-      id: account.id,
+      accountId: account.id,
     });
   };
   // Handle delete action account.

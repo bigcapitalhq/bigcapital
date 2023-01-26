@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import { MenuItem, Menu, Button, Position } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
-import { Align, CellType } from '@/constants';
+import { Align, CellType, Features } from '@/constants';
 import { Hint, Icon, FormattedMessage as T } from '@/components';
 import { formattedAmount } from '@/utils';
 import {
@@ -16,6 +16,7 @@ import {
   CheckBoxFieldCell,
   ProjectBillableEntriesCell,
 } from '@/components/DataTableCells';
+import { useFeatureCan } from '@/hooks/state';
 
 /**
  * Item header cell.
@@ -88,6 +89,9 @@ const LandedCostHeaderCell = () => {
  * Retrieve editable items entries columns.
  */
 export function useEditableItemsEntriesColumns({ landedCost }) {
+  const { featureCan } = useFeatureCan();
+  const isProjectsFeatureEnabled = featureCan(Features.Projects);
+
   return React.useMemo(
     () => [
       {
@@ -154,15 +158,19 @@ export function useEditableItemsEntriesColumns({ landedCost }) {
             },
           ]
         : []),
-      {
-        Header: '',
-        accessor: 'invoicing',
-        Cell: ProjectBillableEntriesCell,
-        disableSortBy: true,
-        disableResizing: true,
-        width: 45,
-        align: Align.Center,
-      },
+      ...(isProjectsFeatureEnabled
+        ? [
+            {
+              Header: '',
+              accessor: 'invoicing',
+              Cell: ProjectBillableEntriesCell,
+              disableSortBy: true,
+              disableResizing: true,
+              width: 45,
+              align: Align.Center,
+            },
+          ]
+        : []),
       {
         Header: '',
         accessor: 'action',

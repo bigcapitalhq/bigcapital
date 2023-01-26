@@ -8,24 +8,26 @@ import { Link } from 'react-router-dom';
 import { ContextMenu2 } from '@blueprintjs/popover2';
 import { Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
 
-import { BankAccountsList, BankAccount, If, Icon, T, Can } from '@/components';
 import {
   AccountAction,
   CashflowAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
+import { DialogsName } from '@/constants/dialogs';
+import {
+  getAddMoneyInOptions,
+  getAddMoneyOutOptions,
+} from '@/constants/cashflowOptions';
 
+import { BankAccountsList, BankAccount, If, Icon, T, Can } from '@/components';
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
+import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { safeCallback } from '@/utils';
-import {
-  getAddMoneyInOptions,
-  getAddMoneyOutOptions,
-} from '@/constants/cashflowOptions';
 
 const CASHFLOW_SKELETON_N = 4;
 
@@ -77,7 +79,10 @@ function CashflowBankAccount({
   };
   // Handle edit account action.
   const handleEditAccount = () => {
-    openDialog('account-form', { action: 'edit', id: account.id });
+    openDialog(DialogsName.AccountForm, {
+      action: AccountDialogAction.Edit,
+      id: account.id,
+    });
   };
   // Handle money in menu item actions.
   const handleMoneyInClick = (transactionType) => {

@@ -22,6 +22,7 @@ import {
   FieldRequiredHint,
   Icon,
   InputPrependButton,
+  FeatureCan,
 } from '@/components';
 import { momentFormatter, compose, tansformDateValue } from '@/utils';
 import { CLASSES } from '@/constants/classes';
@@ -40,6 +41,7 @@ import {
   ProjectsSelect,
   ProjectBillableEntriesLink,
 } from '@/containers/Projects/components';
+import { Features } from '@/constants';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -238,24 +240,26 @@ function InvoiceFormHeaderFields({
       </FastField>
 
       {/*------------ Project name -----------*/}
-      <FFormGroup
-        name={'project_id'}
-        label={<T id={'invoice.project_name.label'} />}
-        inline={true}
-        className={classNames('form-group--select-list', Classes.FILL)}
-      >
-        <ProjectsSelect
+      <FeatureCan feature={Features.Projects}>
+        <FFormGroup
           name={'project_id'}
-          projects={projects}
-          input={InvoiceProjectSelectButton}
-          popoverFill={true}
-        />
-        {values?.project_id && (
-          <ProjectBillableEntriesLink projectId={values?.project_id}>
-            <T id={'add_billable_entries'} />
-          </ProjectBillableEntriesLink>
-        )}
-      </FFormGroup>
+          label={<T id={'invoice.project_name.label'} />}
+          inline={true}
+          className={classNames('form-group--select-list', Classes.FILL)}
+        >
+          <ProjectsSelect
+            name={'project_id'}
+            projects={projects}
+            input={InvoiceProjectSelectButton}
+            popoverFill={true}
+          />
+          {values?.project_id && (
+            <ProjectBillableEntriesLink projectId={values?.project_id}>
+              <T id={'add_billable_entries'} />
+            </ProjectBillableEntriesLink>
+          )}
+        </FFormGroup>
+      </FeatureCan>
     </div>
   );
 }

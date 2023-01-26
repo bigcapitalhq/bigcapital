@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { FormGroup, InputGroup, Classes, Position } from '@blueprintjs/core';
 import { FastField, ErrorMessage } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormattedMessage as T } from '@/components';
+import { FeatureCan, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
 
 import {
@@ -31,6 +31,7 @@ import {
   handleDateChange,
   inputIntent,
 } from '@/utils';
+import { Features } from '@/constants';
 
 /**
  * Fill form header.
@@ -170,19 +171,21 @@ function BillFormHeader() {
       </FastField>
 
       {/*------------ Project name -----------*/}
-      <FFormGroup
-        name={'project_id'}
-        label={<T id={'bill.project_name.label'} />}
-        inline={true}
-        className={classNames('form-group--select-list', Classes.FILL)}
-      >
-        <ProjectsSelect
+      <FeatureCan feature={Features.Projects}>
+        <FFormGroup
           name={'project_id'}
-          projects={projects}
-          input={BillProjectSelectButton}
-          popoverFill={true}
-        />
-      </FFormGroup>
+          label={<T id={'bill.project_name.label'} />}
+          inline={true}
+          className={classNames('form-group--select-list', Classes.FILL)}
+        >
+          <ProjectsSelect
+            name={'project_id'}
+            projects={projects}
+            input={BillProjectSelectButton}
+            popoverFill={true}
+          />
+        </FFormGroup>
+      </FeatureCan>
     </div>
   );
 }

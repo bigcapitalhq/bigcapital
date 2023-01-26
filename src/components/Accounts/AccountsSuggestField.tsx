@@ -7,6 +7,8 @@ import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 
 import { CLASSES } from '@/constants/classes';
+import { DialogsName } from '@/constants/dialogs';
+
 import { MenuItemNestedText, FormattedMessage as T } from '@/components';
 import { nestedArrayToflatten, filterAccountsByQuery } from '@/utils';
 
@@ -134,7 +136,7 @@ function AccountsSuggestFieldRoot({
         setSelectedAccount({ ...account });
         onAccountSelected && onAccountSelected(account);
       } else {
-        openDialog('account-form');
+        openDialog(DialogsName.AccountForm);
       }
     },
     [setSelectedAccount, onAccountSelected, openDialog],

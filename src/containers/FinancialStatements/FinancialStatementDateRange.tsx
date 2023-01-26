@@ -1,14 +1,16 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
 import { FastField, ErrorMessage } from 'formik';
 import { HTMLSelect, FormGroup, Intent, Position } from '@blueprintjs/core';
+import { DateInput } from '@blueprintjs/datetime';
+
 import { Row, Col, Hint } from '@/components';
 import { momentFormatter, parseDateRangeQuery } from '@/utils';
-import { DateInput } from '@blueprintjs/datetime';
 import { dateRangeOptions } from './constants';
 
+const FINANCIAL_REPORT_MAX_DATE = moment().add(5, 'years').toDate();
 
 /**
  * Financial statement - Date range select.
@@ -19,10 +21,7 @@ export default function FinancialStatementDateRange() {
       <Row>
         <Col xs={4}>
           <FastField name={'date_range'}>
-            {({
-              form: { setFieldValue },
-              field: { value },
-            }) => (
+            {({ form: { setFieldValue }, field: { value } }) => (
               <FormGroup
                 label={intl.get('report_date_range')}
                 labelInfo={<Hint />}
@@ -40,8 +39,14 @@ export default function FinancialStatementDateRange() {
                       const dateRange = parseDateRangeQuery(newValue);
 
                       if (dateRange) {
-                        setFieldValue('fromDate', moment(dateRange.fromDate).toDate());
-                        setFieldValue('toDate', moment(dateRange.toDate).toDate());
+                        setFieldValue(
+                          'fromDate',
+                          moment(dateRange.fromDate).toDate(),
+                        );
+                        setFieldValue(
+                          'toDate',
+                          moment(dateRange.toDate).toDate(),
+                        );
                       }
                     }
                     setFieldValue('dateRange', newValue);
@@ -78,6 +83,7 @@ export default function FinancialStatementDateRange() {
                   canClearSelection={false}
                   minimal={true}
                   fill={true}
+                  maxDate={FINANCIAL_REPORT_MAX_DATE}
                 />
               </FormGroup>
             )}
@@ -109,6 +115,7 @@ export default function FinancialStatementDateRange() {
                   fill={true}
                   minimal={true}
                   intent={error && Intent.DANGER}
+                  maxDate={FINANCIAL_REPORT_MAX_DATE}
                 />
               </FormGroup>
             )}

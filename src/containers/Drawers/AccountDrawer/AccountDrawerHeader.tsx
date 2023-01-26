@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { defaultTo } from 'lodash';
+import { isEmpty } from 'lodash';
 
 import {
   Icon,
@@ -15,6 +15,7 @@ import { useAccountDrawerContext } from './AccountDrawerProvider';
  */
 export default function AccountDrawerHeader() {
   const { account } = useAccountDrawerContext();
+
   return (
     <div className={'account-drawer__content-header'}>
       <DetailsMenu>
@@ -50,7 +51,7 @@ export default function AccountDrawerHeader() {
 
       <DetailsMenu direction={'horizantal'}>
         <DetailItem name={'description'} label={<T id={'description'} />}>
-          {defaultTo(account.description, '--')}
+          {!isEmpty(account.description) ? account.description : '--'}
         </DetailItem>
       </DetailsMenu>
     </div>
