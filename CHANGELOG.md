@@ -2,6 +2,14 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [1.8.5-rc.2] - 15-01-2022
+ - `BIG-401` Fix the edit account the initial values do not fill up.
+ - `BIG-403` Fix labels of add money in/out buttons disappeared.
+ - `BIG-405` Fix out of range date filtering inputs of financial reports 
+ - `BIG-408` Fix hide the project name entry if the feature was not enabled.
+ - `BIG-407` Fix disappear the filtering by branches if the feature was not enabled.
+ - `BIG-414` Fix validate and control max nested accounts to be 6 levels max.
+
 ## [1.7.4-rc.2] - 20-04-2022
 
 ### Fixed
