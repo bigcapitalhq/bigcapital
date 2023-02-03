@@ -109,7 +109,7 @@ export default class Mail {
    * Retrieve view content from the view directory.
    */
   private getViewContent(): string {
-    const filePath = path.join(global.__root, `../views/${this.view}`);
+    const filePath = path.join(global.__root_dir, `../views/${this.view}`);
     return fs.readFileSync(filePath, 'utf8');
   }
 }
