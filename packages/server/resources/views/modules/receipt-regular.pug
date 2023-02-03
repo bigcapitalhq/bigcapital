@@ -1,0 +1,77 @@
+extends ../PaperTemplateLayout.pug
+
+block head 
+  style
+    if (isRtl)
+      include ../../css/modules/receipt-rtl.css
+    else
+      include ../../css/modules/receipt.css
+
+block content 
+ div.receipt
+  div.receipt__header
+    div.paper
+      h1.title #{__("receipt.paper.receipt")}
+      span.receiptNumber #{saleReceipt.receiptNumber}
+
+    div.organization
+      h3.title #{organizationName}
+
+  div.receipt__receipt-amount
+    div.label #{__('receipt.paper.receipt_amount')}
+    div.amount #{saleReceipt.formattedAmount}
+
+  div.receipt__meta
+   div.receipt__meta-item.receipt__meta-item--billed-to
+    span.label #{__("receipt.paper.billed_to")}
+    span.value #{saleReceipt.customer.displayName}
+
+   div.receipt__meta-item.receipt__meta-item--invoice-date
+    span.label #{__("receipt.paper.receipt_date")}
+    span.value #{saleReceipt.formattedReceiptDate}
+
+   if saleReceipt.receiptNumber
+    div.receipt__meta-item.receipt__meta-item--invoice-number
+     span.label #{__("receipt.paper.receipt_number")}
+     span.value #{saleReceipt.receiptNumber}
+
+  div.receipt__table
+   table 
+    thead 
+     tr
+      th.item #{__("item_entry.paper.item_name")}
+      th.rate #{__("item_entry.paper.rate")}
+      th.quantity #{__("item_entry.paper.quantity")}
+      th.total #{__("item_entry.paper.total")}
+     tbody
+      each entry in saleReceipt.entries
+       tr
+        td.item=entry.item.name
+        td.rate=entry.rate
+        td.quantity=entry.quantity
+        td.total=entry.amount
+ 
+  div.receipt__table-after
+    div.receipt__table-total
+      table 
+        tbody
+          tr.total
+            td #{__('receipt.paper.total')}
+            td #{saleReceipt.formattedAmount}
+          tr.payment-amount
+            td #{__('receipt.paper.payment_amount')}
+            td #{saleReceipt.formattedAmount}
+          tr.blanace-due
+            td #{__('receipt.paper.balance_due')}
+            td #{'$0'}
+
+  div.receipt__footer
+    if saleReceipt.statement
+      div.receipt__conditions
+        h3 #{__("receipt.paper.statement")}
+        p #{saleReceipt.statement}
+
+    if saleReceipt.receiptMessage
+      div.receipt__notes
+        h3 #{__("receipt.paper.notes")}
+        p #{saleReceipt.receiptMessage}

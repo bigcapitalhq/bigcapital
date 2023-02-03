@@ -1,0 +1,14 @@
+
+services:  
+    mysql:
+        image: mysql/mysql-server:5.7
+        ports:
+            - "3306:3306"
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=moosher_test
+            - MYSQL_USER=moosher
+            - MYSQL_PASSWORD=moosher
+        tmpfs:
+            - /var/lib/mysql/:rw,noexec,nosuid,size=600m
+            - /tmp/:rw,noexec,nosuid,size=50m
