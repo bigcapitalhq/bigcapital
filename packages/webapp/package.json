@@ -1,5 +1,5 @@
 {
-  "name": "@bigcapital/webpack",
+  "name": "@bigcapital/webapp",
   "version": "1.7.1",
   "private": true,
   "dependencies": {
@@ -102,8 +102,7 @@
     "dev": "craco start",
     "build": "craco build",
     "test": "node scripts/test.js",
-    "storybook": "start-storybook -p 6006",
-    "preinstall": "npx npm-force-resolutions"
+    "storybook": "start-storybook -p 6006"
   },
   "proxy": "http://localhost:3000/",
   "devDependencies": {

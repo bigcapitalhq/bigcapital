@@ -2,10 +2,13 @@
   "name": "bigcapital-monorepo",
   "private": true,
   "scripts": {
+    "bootstrap": "lerna exec npm install",
     "dev": "lerna run dev",
     "build": "lerna run build",
     "dev:webapp": "lerna run dev --scope \"@bigcapital/webapp\"",
-    "build:webapp": "lerna run dev --scope \"@bigcapital/webapp\""
+    "build:webapp": "lerna run dev --scope \"@bigcapital/webapp\"",
+    "dev:server": "lerna run dev --scope \"@bigcapital/server\"",
+    "build:server": "lerna run dev --scope \"@bigcapital/server\""
   },
   "workspaces": [
     "packages/*"
