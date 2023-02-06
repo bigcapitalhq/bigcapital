@@ -2,40 +2,43 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
-## [1.8.5-rc.2] - 15-01-2022
- - `BIG-401` Fix the edit account the initial values do not fill up.
- - `BIG-403` Fix labels of add money in/out buttons disappeared.
- - `BIG-405` Fix out of range date filtering inputs of financial reports 
- - `BIG-408` Fix hide the project name entry if the feature was not enabled.
- - `BIG-407` Fix disappear the filtering by branches if the feature was not enabled.
- - `BIG-414` Fix validate and control max nested accounts to be 6 levels max.
-
 ## [1.7.4-rc.2] - 20-04-2022
+
+`@bigcapital/webapp`
 
 ### Fixed
  - `BIG-374` Refactoring sidebar men with ability permissions and feature control on each item.
 
+---
 ## [1.7.3-rc.2] - 15-04-2022
+
+`@bigcapital/webapp`
 
 ### Fixed
   - `BIG-372` Activate branches and warehouses dialog reloading once activating.
   - `BIG-373` Issue general ledger report select specific account.
   - `BIG-377` Make readonly details entries as oneline with tooltip for more details.
 
+----
 ## [1.7.2-rc.2] - 04-04-2022
+
+`@bigcapital/webapp`
 
 ### Fixed
   - Add the missing Arabic localization.
   - Subscription plans modifications.
 
+---
 ## [1.7.1-rc.2] - 30-03-2022
 
-## Added
+`@bigcapital/webapp`
+
+### Added
   - `BIG-141` Add inactive status to item drawer details.
   - `BIG-278` Add created at date on expense details.
   - `BIG-350` Add empty status content of warehouse transfers service.
   - `BIG-344` Add branch details to manual journal and expense details.
-## Fixed
+### Fixed
   - `BIG-221` Remove Non-inventory radio choice on item form.
   - `BIG-236` Validate estimate expiration date should be equal or bigger than estimate date.
   - `BIG-237` Validate invoice due date should be equal or bigger than invoice date.
@@ -49,9 +52,20 @@ All notable changes to Bigcapital server-side will be in this file.
   - `BIG-352` Fix terms and notes fields on footer of all services.
   - `BIG-354` Validate the warehouse transfer quantity should be above zero.
 
+`@bigcapital/server`
+
+### Fixed
+  - `BIG-354` Validate the warehouse transfer quantity should be above zero.
+  - `BIG-358` Refactoring customers/vendors services for smaller classes.
+  - `BIG-341` Refactoring expenses services for smaller classes.
+  - `BIG-342` Assign default currency as base currency when create customer, vendor or expense transaction.
+
+----
 ## [1.7.0-rc.1] - 24-03-2022
 
-## Added 
+`@bigcapital/webapp`
+
+### Added 
  - Multiply currencies with foreign currencies.
  - Multiply warehouses to track inventory items.
  - Multiply branches to track organization transactions.
@@ -59,7 +73,7 @@ All notable changes to Bigcapital server-side will be in this file.
  - Integrate financial reports with multiply branches.
  - Integrate inventory reports with multiply warehouses.
 
-## Changes
+### Changes
  - Optimize style of sale invoice form.
  - Optimize style of sale receipt form.
  - Optimize style of credit note form.
@@ -69,17 +83,35 @@ All notable changes to Bigcapital server-side will be in this file.
  - Optimize style of manual journal form.
  - Optimize style of expense form.
 
+`@bigcapital/server`
+
+### Added
+ - Multiply currencies with foreign currencies.
+ - Multiply warehouses to track inventory items.
+ - Multiply branches to track organization transactions.
+ - Transfer orders between warehouses.
+ - Integrate financial reports with multiply branches.
+ - Integrate inventory reports with multiply warehouses.
+
+----
+
 ## [1.6.3] - 21-02-2022
+
+`@bigcapital/webapp`
 
 ### Fixed
  - `BIG-337` Display billing page once the organization subscription is inactive.
 
+---
 ## [1.6.2] - 19-02-2022
 
 ### Fixed
  - fix syled components dependency with imported as default components.
 
+----
 ## [1.6.0] - 18-02-2022
+
+`@bigcapital/webapp`
 
 ### Added
 - Balance sheet comparison of previous period (PP).
@@ -89,28 +121,47 @@ All notable changes to Bigcapital server-side will be in this file.
 - Profit & loss sheet comparison of previous year (PY).
 - Profit & loss sheet percentage analysis columns, rows, income and expenses basis.
 
+---
 ## [1.5.8] - 13-01-2022
+
+`@bigcapital/webapp`
 
 ### Added
 - Add payment receive PDF print.
 - Add credit note PDF print.
 
 ### Fixed
-- fix: Payment receive initial loading state depends on request loading state instead fetching.
-- fix: Balance sheet report alert positioning.
-- fix: Separate customer and vendor inactivate and activate alerts.
-- fix: Hide convert to invoice button if the invoice is already converted.
-- fix: Customer and vendor balance summary percentage of column option.
-- fix: Remove duplicated details in sales and purchases details drawers.
+- Payment receive initial loading state depends on request loading state instead fetching.
+- Balance sheet report alert positioning.
+- Separate customer and vendor inactivate and activate alerts.
+- Hide convert to invoice button if the invoice is already converted.
+- Customer and vendor balance summary percentage of column option.
+- Remove duplicated details in sales and purchases details drawers.
 
+`@bigcapital/server`
+
+### Fixed
+- Balance sheet comparison of previous period (PP).
+- Balance sheet comparison of previous year (PY).
+- Balance sheet percentage analysis columns and rows basis.
+- Profit & loss sheet comparison of preivous period (PP).
+- Profit & loss sheet comparison of previous year (PY).
+- Profit & loss sheet percentage analysis columns, rows, income and expenses basis.
+
+---
 ## [1.5.3] - 03-01-2020
+
+`@bigcapital/webapp`
 
 ### Fixed
 
 - Localize the global errors.
 - Expand account name column on trial balance sheet.
 
+---
 ## [1.5.0] - 20-12-2021
+
+`@bigcapital/webapp`
 
 ### Added
 
@@ -130,7 +181,10 @@ All notable changes to Bigcapital server-side will be in this file.
 - Dashboard meta boot and authenticated user request query.
 - Optimize Arabic localization.
 
+----
 ## [1.4.0] - 11-09-2021
+
+`@bigcapital/webapp`
 
 ### Added
 
@@ -149,7 +203,10 @@ fix: BIG-144 - Typo adjustment dialog success message.
 fix: BIG-148 - Items entries ordered by index.
 fix: BIG-132 AR/AP aging summary report filter by none transactions/zero contacts.
 
+---
 ## [1.2.0-RC] - 03-09-2021
+
+`@bigcapital/webapp`
 
 Here we write upgrading notes for brands. It's a team effort to make them as
 straightforward as possible.
