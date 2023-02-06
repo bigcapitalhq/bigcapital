@@ -15,5 +15,8 @@
   ],
   "devDependencies": {
     "lerna": "^6.4.1"
+  },
+  "engines": {
+    "node": ">=14.20"
   }
 }
