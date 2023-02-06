@@ -1,0 +1,35 @@
+@import "./normalize.scss";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+th {
+    text-align: inherit; // 2
+    text-align: -webkit-match-parent; // 3
+}
+
+thead,
+tbody,
+tfoot,
+tr,
+td,
+th {
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+}
+
+body{
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  direction: ltr;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}

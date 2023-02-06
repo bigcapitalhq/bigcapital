@@ -1,0 +1,81 @@
+extends ../PaperTemplateLayout.pug
+
+block head 
+  style
+    if (isRtl)
+      include ../../css/modules/credit-rtl.css
+    else
+      include ../../css/modules/credit.css
+
+block content
+ div.credit
+  div.credit__header
+    div.paper
+      h1.title #{__('credit.paper.credit_note')}
+      if creditNote.creditNoteNumber
+       span.creditNoteNumber #{creditNote.creditNoteNumber}
+
+    div.organization
+      h3.title #{organizationName}
+      if organizationEmail
+       span.email #{organizationEmail}
+
+  div.credit__full-amount
+    div.label #{__('credit.paper.amount')}
+    div.amount #{creditNote.formattedAmount}
+
+  div.credit__meta
+   div.credit__meta-item.credit__meta-item--amount
+    span.label #{__('credit.paper.remaining')}
+    span.value #{creditNote.formattedCreditsRemaining}
+
+   div.credit__meta-item.credit__meta-item--billed-to
+    span.label #{__("credit.paper.billed_to")}
+    span.value #{creditNote.customer.displayName}
+
+   div.credit__meta-item.credit__meta-item--credit-date
+    span.label #{__("credit.paper.credit_date")}
+    span.value #{creditNote.formattedCreditNoteDate}
+
+  div.credit__table
+   table 
+    thead 
+     tr
+       th.item #{__("item_entry.paper.item_name")}
+       th.rate #{__("item_entry.paper.rate")}
+       th.quantity #{__("item_entry.paper.quantity")}
+       th.total #{__("item_entry.paper.total")}
+    tbody
+      each entry in creditNote.entries
+       tr
+        td.item
+         div.title=entry.item.name
+         span.description=entry.description
+        td.rate=entry.rate
+        td.quantity=entry.quantity
+        td.total=entry.amount
+
+  div.credit__table-after
+    div.credit__table-total
+      table 
+        tbody
+          tr.total
+            td #{__('credit.paper.total')}
+            td #{creditNote.formattedAmount}
+          tr.payment-amount
+            td #{__('credit.paper.credits_used')}
+            td #{creditNote.formattedCreditsUsed}
+          tr.blanace-due
+            td #{__('credit.paper.credits_remaining')}
+            td #{creditNote.formattedCreditsRemaining}
+
+  div.credit__footer        
+    if creditNote.termsConditions
+     div.credit__conditions
+      h3 #{__("credit.paper.terms_conditions")}
+      p #{creditNote.termsConditions}
+
+    if creditNote.note
+     div.credit__notes
+      h3 #{__("credit.paper.notes")}
+      p #{creditNote.note}

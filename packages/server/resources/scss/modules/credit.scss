@@ -1,0 +1,193 @@
+@import "../layouts/paper-layout.scss";
+
+.credit {
+  text-align: left;
+  padding: 45px 40px;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 0 0 30px;
+
+    .organization {
+      .title {
+        margin: 0 0 4px;
+      }
+
+      .creditNumber {
+        font-size: 12px;
+      }
+    }
+
+    .paper {
+
+      .title {
+        font-weight: 400;
+        text-transform: uppercase;
+        margin: 0 0 2px;
+        font-size: 32px;
+        line-height: 1;
+      }
+    }
+  }
+
+
+  &__full-amount {
+    margin-bottom: 18px;
+
+    .label {
+      font-size: 12px;
+    }
+
+    .amount {
+      font-size: 18px;
+      font-weight: 800;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    font-size: 13px;
+
+    &-item {
+      padding-right: 10px;
+      font-weight: 400;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: row;
+
+      .value {
+        color: #000;
+      }
+
+      .label {
+        color: #444;
+        margin-bottom: 2px;
+        width: 180px;
+      }
+    }
+  }
+
+  &__table {
+    display: flex;
+    flex-direction: column;
+
+    table {
+      font-size: 12px;
+      color: #000;
+      text-align: left;
+      border-spacing: 0;
+
+      thead th,
+      tbody tr td {
+        margin-bottom: 15px;
+        background: transparent;
+      }
+
+      thead th {
+        font-weight: 400;
+        border-bottom: none;
+        padding: 8px;
+        color: #fff;
+        background-color: #333;
+      }
+
+      tbody tr td {
+        padding: 8px;
+        border-bottom: 1px solid #cecbcb;
+      }
+
+      thead tr th,
+      tbody tr td {
+        &.item {
+          width: 45%;
+        }
+
+        &.rate {
+          width: 18%;
+          text-align: right;
+        }
+
+        &.quantity {
+          width: 16%;
+          text-align: right;
+        }
+
+        &.total {
+          width: 21%;
+          text-align: right;
+        }
+      }
+
+      .description {
+        color: #666;
+      }
+    }
+  }
+
+  &__table-after {
+    display: flex;
+  }
+
+  &__table-total {
+    margin-bottom: 20px;
+    width: 50%;
+    float: right;
+    margin-left: auto;
+
+    table {
+      border-spacing: 0;
+      width: 100%;
+      font-size: 12px;
+
+      tbody tr td {
+        padding: 8px 10px 8px 0;
+        border-top: 1px solid #d5d5d5;
+
+        &:last-child {
+          width: 140px;
+          text-align: right;
+        }
+      }
+
+      tbody tr:first-child td {
+        border-top: 0;
+      }
+
+      tbody tr.payment-amount td:last-child {
+        color: red
+      }
+
+      tbody tr.blanace-due td {
+        border-top: 3px double #666;
+        font-weight: bold;
+      }
+    }
+  }
+
+  &__footer {
+    font-size: 12px;
+  }
+
+  &__conditions,
+  &__notes {
+
+    h3 {
+      color: #666;
+      font-size: 12px;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  &__conditions+&__notes {
+    margin-top: 20px;
+  }
+}
