@@ -1,9 +1,3 @@
-
-
-
-
 export default class TenantAlreadySeeded {
-  constructor() {
-    
-  }
+  constructor() {}
 }

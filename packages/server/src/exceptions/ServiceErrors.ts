@@ -1,6 +1,5 @@
 import ServiceError from './ServiceError';
 
-
 export default class ServiceErrors {
   errors: ServiceError[];
 
@@ -9,7 +8,8 @@ export default class ServiceErrors {
   }
 
   hasType(errorType: string) {
-    return this.errors
-      .some((error: ServiceError) => error.errorType === errorType);
+    return this.errors.some(
+      (error: ServiceError) => error.errorType === errorType
+    );
   }
 }

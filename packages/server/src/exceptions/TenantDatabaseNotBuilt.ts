@@ -1,7 +1,3 @@
-
-
 export default class TenantDatabaseNotBuilt {
-  constructor() {
-    
-  }
+  constructor() {}
 }

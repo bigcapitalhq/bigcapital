@@ -1,7 +1,3 @@
-
-
 export default class TenantAlreadyInitialized {
-  constructor() {
-    
-  }
+  constructor() {}
 }
