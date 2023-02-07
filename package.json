@@ -8,15 +8,27 @@
     "dev:webapp": "lerna run dev --scope \"@bigcapital/webapp\"",
     "build:webapp": "lerna run dev --scope \"@bigcapital/webapp\"",
     "dev:server": "lerna run dev --scope \"@bigcapital/server\"",
-    "build:server": "lerna run dev --scope \"@bigcapital/server\""
+    "build:server": "lerna run dev --scope \"@bigcapital/server\"",
+    "prepare": "husky install"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "shared/*"
   ],
   "devDependencies": {
-    "lerna": "^6.4.1"
+    "@commitlint/config-conventional": "^17.4.2",
+    "@commitlint/config-lerna-scopes": "^17.4.2",
+    "husky": "^8.0.3",
+    "lerna": "^6.4.1",
+    "@commitlint/cli": "^17.4.2"
   },
   "engines": {
     "node": ">=14.20"
-  }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "dependencies": {}
 }

@@ -1,5 +1,5 @@
 {
-  "name": "bigcapital-server",
+  "name": "@bigcapital/server",
   "version": "1.7.1",
   "description": "",
   "main": "src/server.ts",
