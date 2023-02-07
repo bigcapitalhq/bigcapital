@@ -4,6 +4,6 @@
   "installCommand": "npm install && npm run bootstrap",
   "outputDirectory": "packages/webapp/build",
   "env": {
-    "CI": false
+    "CI": "false"
   }
 }
