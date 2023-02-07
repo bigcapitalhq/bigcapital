@@ -23,7 +23,7 @@
     "@commitlint/cli": "^17.4.2"
   },
   "engines": {
-    "node": ">=14.20"
+    "node": "14.x"
   },
   "husky": {
     "hooks": {
