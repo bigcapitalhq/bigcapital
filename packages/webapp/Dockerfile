@@ -8,8 +8,7 @@ COPY package.json ./
 # COPY package-lock.json ./
 COPY lerna.json ./
 
-COPY ./packages/webapp/package.json ./packages/webapp
-# COPY ./packages/webapp/package-lock.json ./packages/webapp
+COPY ./packages/webapp ./packages/webapp
 
 RUN npm install
 RUN npm run bootstrap
