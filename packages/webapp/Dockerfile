@@ -13,7 +13,7 @@ COPY ./packages/webapp/package.json ./packages/webapp/package.json
 RUN npm install
 RUN npm run bootstrap
 
-COPY ./packages/webapp ./packages/webapp
+COPY ./packages/webapp /app/packages/webapp
 RUN npm run build:webapp
 
 # # FROM nginx
