@@ -10,7 +10,7 @@ RUN npm install
 RUN npm run bootstrap
 RUN npm run build:webapp
 
-FROM nginx
+# FROM nginx
 
-COPY ./packages/webapp/nginx/sites/default.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/packages/webapp/build /usr/share/nginx/html
+# COPY ./packages/webapp/nginx/sites/default.conf /etc/nginx/conf.d/default.conf
+# COPY --from=build /app/packages/webapp/build /usr/share/nginx/html
