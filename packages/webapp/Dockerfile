@@ -13,6 +13,9 @@ COPY ./packages/webapp/package.json ./packages/webapp
 
 RUN npm install
 RUN npm run bootstrap
+
+COPY ./packages/webapp ./packages/webapp
+COPY ./shared ./shared
 RUN npm run build:webapp
 
 # FROM nginx
