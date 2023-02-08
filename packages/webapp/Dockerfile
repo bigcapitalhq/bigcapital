@@ -8,15 +8,14 @@ COPY package.json ./
 # COPY package-lock.json ./
 COPY lerna.json ./
 
-COPY ./packages/webapp ./packages/webapp
+COPY ./packages/webapp/package.json ./packages/webapp/package.json
 
 RUN npm install
 RUN npm run bootstrap
 
-# COPY . .
+COPY ./packages/webapp ./packages/webapp
 RUN npm run build:webapp
 
 # FROM nginx
-
-# COPY ./packages/webapp/nginx/sites/default.conf /etc/nginx/conf.d/default.conf
-# COPY --from=build /app/packages/webapp/build /usr/share/nginx/html
+COPY ./packages/webapp/nginx/sites/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/packages/webapp/build /usr/share/nginx/html
