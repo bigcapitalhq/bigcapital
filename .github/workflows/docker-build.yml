@@ -49,7 +49,8 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
       with:
-          context: ./packages/webapp
+          context: .
+          file: ./packages/webapp/Dockerfile
           push: true
           tags: ghcr.io/bigcapitalhq/client:latest
           labels: ${{ steps.meta.outputs.labels }}
