@@ -19,4 +19,4 @@ RUN npm run build:webapp
 
 # FROM nginx
 COPY ./packages/webapp/nginx/sites/default.conf /etc/nginx/conf.d/default.conf
-# COPY ./packages/webapp/build /usr/share/nginx/html
+COPY ./packages/webapp/build /usr/share/nginx/html
