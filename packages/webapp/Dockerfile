@@ -11,11 +11,9 @@ COPY lerna.json ./
 COPY ./packages/webapp/package.json ./packages/webapp
 # COPY ./packages/webapp/package-lock.json ./packages/webapp
 
-RUN npm install
-RUN npm run bootstrap
+RUN npx lerna bootstrap --hoist --ignore-scripts -- --production --no-optional
 
-COPY ./packages/webapp ./packages/webapp
-COPY ./shared ./shared
+COPY . .
 RUN npm run build:webapp
 
 # FROM nginx
