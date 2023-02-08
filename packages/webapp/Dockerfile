@@ -17,6 +17,6 @@ RUN npm run bootstrap
 COPY ./packages/webapp /app/packages/webapp
 RUN npm run build:webapp
 
-# # FROM nginx
-COPY ./packages/webapp/nginx/sites/default.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/packages/webapp/build /usr/share/nginx/html
+# # # FROM nginx
+# COPY ./packages/webapp/nginx/sites/default.conf /etc/nginx/conf.d/default.conf
+# COPY --from=build /app/packages/webapp/build /usr/share/nginx/html
