@@ -50,6 +50,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
           context: .
+          file: ./packages/webapp/Dockerfile
           push: true
           tags: ghcr.io/bigcapitalhq/client:latest
           labels: ${{ steps.meta.outputs.labels }}
