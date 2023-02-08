@@ -4,7 +4,7 @@ USER root
 
 WORKDIR /app
 
-COPY . ../../
+COPY . .
 
 RUN npm install
 RUN npm run bootstrap
