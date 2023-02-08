@@ -4,17 +4,13 @@ USER root
 
 WORKDIR /app
 
-COPY ./package.json /app/package.json
-COPY ./package-lock.json /app/package-lock.json
+COPY ../../ .
 
 RUN npm install
-
-COPY . .
-
-RUN npm run build
+RUN npm run bootstrap
+RUN npm run build:webapp
 
 FROM nginx
 
-COPY ./nginx/sites/default.conf /etc/nginx/conf.d/default.conf
-
-COPY --from=build /app/build /usr/share/nginx/html
+COPY ./packages/webapp/nginx/sites/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/packages/webapp/build /usr/share/nginx/html
