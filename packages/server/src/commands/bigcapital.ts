@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-const commander = require('commander');
-const color = require('colorette');
-const argv = require('getopts');
-const Knex = require('knex');
-const { knexSnakeCaseMappers } = require('objection');
-const config = require('../src/config');
+import commander from 'commander';
+import color from 'colorette';
+import argv from 'getopts';
+import Knex from 'knex';
+import { knexSnakeCaseMappers } from 'objection';
+import config from '../config';
 
 function initSystemKnex() {
   return Knex({
@@ -279,4 +279,4 @@ commander
       exit(error);
     }
   });
-commander.parse();
+
