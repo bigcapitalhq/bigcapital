@@ -5,6 +5,9 @@ import './before';
 import express from 'express';
 import loadersFactory from 'loaders';
 
+
+console.log("asdfasf");
+
 async function startServer() {
   const app = express();
 
