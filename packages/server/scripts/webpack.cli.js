@@ -1,8 +1,8 @@
 const { getCommonWebpackOptions } = require('./webpack.common');
 
-const inputEntry = './src/server.ts';
+const inputEntry = './src/commands/index.ts';
 const outputDir = '../build';
-const outputFilename = 'index.js';
+const outputFilename = 'commands.js';
 
 module.exports = getCommonWebpackOptions({
   inputEntry,
