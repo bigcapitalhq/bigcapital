@@ -72,6 +72,7 @@ export default function TableCell({ cell, row, index }) {
           [`td-${cell.column.id}`]: cell.column.id,
           [`td-${cellType}-type`]: !!cellType,
         }),
+        tabindex: 0,
         onClick: handleCellClick,
       })}
     >

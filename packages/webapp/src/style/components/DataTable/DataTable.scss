@@ -10,7 +10,7 @@
     display: block;
 
     .thead .thead-inner,
-    .tbody .tbody-inner{
+    .tbody .tbody-inner {
       min-width: fit-content;
     }
 
@@ -25,7 +25,7 @@
         font-weight: 400;
         border-bottom: 1px solid #d2dde2;
 
-        >div {
+        > div {
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
@@ -208,6 +208,11 @@
             width: 100%;
           }
         }
+
+        &:focus {
+          outline: rgba(0, 82, 204, 0.6) auto 1px;
+          outline-offset: 1px;
+        }
       }
 
       .tr:hover .td {
@@ -357,13 +362,9 @@
       position: sticky;
     }
 
-    [data-sticky-last-left-td] {
+    [data-sticky-last-left-td] {}
 
-    }
-
-    [data-sticky-first-right-td] {
-
-    }
+    [data-sticky-first-right-td] {}
   }
 
   &.has-virtualized-rows {
