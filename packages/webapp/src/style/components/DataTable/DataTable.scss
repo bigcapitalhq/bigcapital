@@ -208,10 +208,9 @@
             width: 100%;
           }
         }
-
         &:focus {
-          outline: rgba(0, 82, 204, 0.6) auto 1px;
-          outline-offset: 1px;
+          outline: 1px solid rgba(0, 82, 204, 0.7);
+          outline-offset: -1px;
         }
       }
 

@@ -3,7 +3,7 @@ import TenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
 import { IAccountDTO, IAccount, IAccountCreateDTO } from '@/interfaces';
 import AccountTypesUtils from '@/lib/AccountTypes';
-import { ERRORS } from './constants';
+import { ERRORS, MAX_ACCOUNTS_CHART_DEPTH } from './constants';
 
 @Service()
 export class CommandAccountValidators {
@@ -154,13 +154,13 @@ export class CommandAccountValidators {
    * parent account.
    * @param  {IAccountCreateDTO} accountDTO
    * @param  {IAccount} parentAccount
-   * @param  {string} baseCurrency - 
+   * @param  {string} baseCurrency -
    * @throws {ServiceError(ERRORS.ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT)}
    */
   public validateCurrentSameParentAccount = (
     accountDTO: IAccountCreateDTO,
     parentAccount: IAccount,
-    baseCurrency: string,
+    baseCurrency: string
   ) => {
     // If the account DTO currency not assigned and the parent account has no base currency.
     if (
@@ -207,5 +207,25 @@ export class CommandAccountValidators {
       throw new ServiceError(ERRORS.ACCOUNT_NOT_FOUND);
     }
     return account;
+  }
+
+  /**
+   * Validates the max depth level of accounts chart.
+   * @param {numebr} tenantId - Tenant id.
+   * @param {number} parentAccountId - Parent account id.
+   */
+  public async validateMaxParentAccountDepthLevels(
+    tenantId: number,
+    parentAccountId: number
+  ) {
+    const { accountRepository } = this.tenancy.repositories(tenantId);
+
+    const accountsGraph = await accountRepository.getDependencyGraph();
+
+    const parentDependantsIds = accountsGraph.dependantsOf(parentAccountId);
+
+    if (parentDependantsIds.length >= MAX_ACCOUNTS_CHART_DEPTH) {
+      throw new ServiceError(ERRORS.PARENT_ACCOUNT_EXCEEDED_THE_DEPTH_LEVEL);
+    }
   }
 }

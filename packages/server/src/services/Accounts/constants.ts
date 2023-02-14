@@ -13,8 +13,12 @@ export const ERRORS = {
   CLOSE_ACCOUNT_AND_TO_ACCOUNT_NOT_SAME_TYPE:
     'close_account_and_to_account_not_same_type',
   ACCOUNTS_NOT_FOUND: 'accounts_not_found',
-  ACCOUNT_TYPE_NOT_SUPPORTS_MULTI_CURRENCY: 'ACCOUNT_TYPE_NOT_SUPPORTS_MULTI_CURRENCY',
-  ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT: 'ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT',
+  ACCOUNT_TYPE_NOT_SUPPORTS_MULTI_CURRENCY:
+    'ACCOUNT_TYPE_NOT_SUPPORTS_MULTI_CURRENCY',
+  ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT:
+    'ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT',
+  PARENT_ACCOUNT_EXCEEDED_THE_DEPTH_LEVEL:
+    'PARENT_ACCOUNT_EXCEEDED_THE_DEPTH_LEVEL',
 };
 
 // Default views columns.
@@ -26,6 +30,8 @@ export const DEFAULT_VIEW_COLUMNS = [
   { key: 'amount', label: 'Balance' },
   { key: 'currencyCode', label: 'Currency' },
 ];
+
+export const MAX_ACCOUNTS_CHART_DEPTH = 5;
 
 // Accounts default views.
 export const DEFAULT_VIEWS = [
@@ -43,7 +49,12 @@ export const DEFAULT_VIEWS = [
     slug: 'liabilities',
     rolesLogicExpression: '1',
     roles: [
-      { fieldKey: 'root_type', index: 1, comparator: 'equals', value: 'liability' },
+      {
+        fieldKey: 'root_type',
+        index: 1,
+        comparator: 'equals',
+        value: 'liability',
+      },
     ],
     columns: DEFAULT_VIEW_COLUMNS,
   },
@@ -52,7 +63,12 @@ export const DEFAULT_VIEWS = [
     slug: 'equity',
     rolesLogicExpression: '1',
     roles: [
-      { fieldKey: 'root_type', index: 1, comparator: 'equals', value: 'equity' },
+      {
+        fieldKey: 'root_type',
+        index: 1,
+        comparator: 'equals',
+        value: 'equity',
+      },
     ],
     columns: DEFAULT_VIEW_COLUMNS,
   },
@@ -61,7 +77,12 @@ export const DEFAULT_VIEWS = [
     slug: 'income',
     rolesLogicExpression: '1',
     roles: [
-      { fieldKey: 'root_type', index: 1, comparator: 'equals', value: 'income' },
+      {
+        fieldKey: 'root_type',
+        index: 1,
+        comparator: 'equals',
+        value: 'income',
+      },
     ],
     columns: DEFAULT_VIEW_COLUMNS,
   },
@@ -70,7 +91,12 @@ export const DEFAULT_VIEWS = [
     slug: 'expenses',
     rolesLogicExpression: '1',
     roles: [
-      { fieldKey: 'root_type', index: 1, comparator: 'equals', value: 'expense' },
+      {
+        fieldKey: 'root_type',
+        index: 1,
+        comparator: 'equals',
+        value: 'expense',
+      },
     ],
     columns: DEFAULT_VIEW_COLUMNS,
   },
