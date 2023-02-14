@@ -9,6 +9,7 @@ import DynamicListingService from '@/services/DynamicListing/DynamicListService'
 import { DATATYPES_LENGTH } from '@/data/DataTypes';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AccountsApplication } from '@/services/Accounts/AccountsApplication';
+import { MAX_ACCOUNTS_CHART_DEPTH } from 'services/Accounts/constants';
 
 @Service()
 export default class AccountsController extends BaseController {
@@ -490,6 +491,22 @@ export default class AccountsController extends BaseController {
           {
             errors: [
               { type: 'ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT', code: 1400 },
+            ],
+          }
+        );
+      }
+      if (error.errorType === 'PARENT_ACCOUNT_EXCEEDED_THE_DEPTH_LEVEL') {
+        return res.boom.badRequest(
+          'The parent account exceeded the depth level of accounts chart.',
+          {
+            errors: [
+              {
+                type: 'PARENT_ACCOUNT_EXCEEDED_THE_DEPTH_LEVEL',
+                code: 1500,
+                data: {
+                  maxDepth: MAX_ACCOUNTS_CHART_DEPTH,
+                },
+              },
             ],
           }
         );

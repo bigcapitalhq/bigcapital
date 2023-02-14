@@ -70,6 +70,11 @@ export class CreateAccount {
         parentAccount,
         baseCurrency
       );
+      // Validates the max depth level of accounts chart.
+      await this.validator.validateMaxParentAccountDepthLevels(
+        tenantId,
+        accountDTO.parentAccountId
+      );
     }
     // Validates the given account type supports the multi-currency.
     this.validator.validateAccountTypeSupportCurrency(accountDTO, baseCurrency);
