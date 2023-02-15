@@ -3,7 +3,6 @@ import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
-import { omit } from 'lodash';
 import { AppToaster } from '@/components';
 
 import AccountDialogFormContent from './AccountDialogFormContent';
@@ -14,7 +13,11 @@ import {
   CreateAccountFormSchema,
 } from './AccountForm.schema';
 import { compose, transformToForm } from '@/utils';
-import { transformApiErrors, transformAccountToForm } from './utils';
+import {
+  transformApiErrors,
+  transformAccountToForm,
+  transformFormToReq,
+} from './utils';
 
 import '@/style/pages/Accounts/AccountFormDialog.scss';
 import { useAccountDialogContext } from './AccountDialogProvider';
@@ -26,7 +29,7 @@ const defaultInitialValues = {
   name: '',
   code: '',
   description: '',
-  currency_code:'',
+  currency_code: '',
   subaccount: false,
 };
 
@@ -43,7 +46,6 @@ function AccountFormDialogContent({
     createAccountMutate,
     account,
 
-    accountId,
     payload,
     isNewMode,
     dialogName,
@@ -56,7 +58,7 @@ function AccountFormDialogContent({
 
   // Callbacks handles form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    const form = omit(values, ['subaccount']);
+    const form = transformFormToReq(values);
     const toastAccountName = values.code
       ? `${values.code} - ${values.name}`
       : values.name;
@@ -90,8 +92,8 @@ function AccountFormDialogContent({
       setErrors({ ...errorsTransformed });
       setSubmitting(false);
     };
-    if (accountId) {
-      editAccountMutate([accountId, form])
+    if (payload.accountId) {
+      editAccountMutate([payload.accountId, form])
         .then(handleSuccess)
         .catch(handleError);
     } else {
@@ -113,7 +115,6 @@ function AccountFormDialogContent({
       defaultInitialValues,
     ),
   };
-
   // Handles dialog close.
   const handleClose = useCallback(() => {
     closeDialog(dialogName);
