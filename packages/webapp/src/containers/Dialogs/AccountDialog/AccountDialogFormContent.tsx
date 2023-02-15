@@ -26,6 +26,7 @@ import { inputIntent, compose } from '@/utils';
 import { useAutofocus } from '@/hooks';
 import { FOREIGN_CURRENCY_ACCOUNTS } from '@/constants/accountTypes';
 import { useAccountDialogContext } from './AccountDialogProvider';
+import { parentAccountShouldUpdate } from './utils';
 
 /**
  * Account form dialogs fields.
@@ -115,12 +116,7 @@ function AccountFormDialogFields({
             >
               <Checkbox
                 inline={true}
-                label={
-                  <>
-                    <T id={'sub_account'} />
-                    <Hint />
-                  </>
-                }
+                label={<T id={'sub_account'} />}
                 name={'subaccount'}
                 {...field}
               />
@@ -128,37 +124,36 @@ function AccountFormDialogFields({
           )}
         </Field>
 
-        <If condition={values.subaccount}>
-          <FastField name={'parent_account_id'}>
-            {({
-              form: { values, setFieldValue },
-              field: { value },
-              meta: { error, touched },
-            }) => (
-              <FormGroup
-                label={<T id={'parent_account'} />}
-                className={classNames(
-                  'form-group--parent-account',
-                  Classes.FILL,
-                )}
-                inline={true}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="parent_account_id" />}
-              >
-                <AccountsSelectList
-                  accounts={accounts}
-                  onAccountSelected={(account) => {
-                    setFieldValue('parent_account_id', account.id);
-                  }}
-                  defaultSelectText={<T id={'select_parent_account'} />}
-                  selectedAccountId={value}
-                  popoverFill={true}
-                  filterByTypes={values.account_type}
-                />
-              </FormGroup>
-            )}
-          </FastField>
-        </If>
+        <FastField
+          name={'parent_account_id'}
+          shouldUpdate={parentAccountShouldUpdate}
+        >
+          {({
+            form: { values, setFieldValue },
+            field: { value },
+            meta: { error, touched },
+          }) => (
+            <FormGroup
+              label={<T id={'parent_account'} />}
+              className={classNames('form-group--parent-account', Classes.FILL)}
+              inline={true}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name="parent_account_id" />}
+            >
+              <AccountsSelectList
+                accounts={accounts}
+                onAccountSelected={(account) => {
+                  setFieldValue('parent_account_id', account.id);
+                }}
+                defaultSelectText={<T id={'select_parent_account'} />}
+                selectedAccountId={value}
+                popoverFill={true}
+                filterByTypes={values.account_type}
+                disabled={!values.subaccount}
+              />
+            </FormGroup>
+          )}
+        </FastField>
 
         <If condition={FOREIGN_CURRENCY_ACCOUNTS.includes(values.account_type)}>
           {/*------------ Currency  -----------*/}

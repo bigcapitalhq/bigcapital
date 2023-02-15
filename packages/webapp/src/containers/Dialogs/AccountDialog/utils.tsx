@@ -2,6 +2,7 @@
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
 import { isUndefined } from 'lodash';
+import { defaultFastFieldShouldUpdate } from '@/utils';
 
 export const AccountDialogAction = {
   Edit: 'edit',
@@ -33,7 +34,7 @@ export const transformApiErrors = (errors) => {
 /**
  * Payload transformer in account edit mode.
  */
-function tranformNewChildAccountPayload(payload) {
+function tranformNewChildAccountPayload(account, payload) {
   return {
     parent_account_id: payload.parentAccountId || '',
     account_type: payload.accountType || '',
@@ -44,7 +45,7 @@ function tranformNewChildAccountPayload(payload) {
 /**
  * Payload transformer in new account with defined type.
  */
-function transformNewDefinedTypePayload(payload) {
+function transformNewDefinedTypePayload(account, payload) {
   return {
     account_type: payload.accountType || '',
   };
@@ -63,7 +64,9 @@ const mergeWithAccount = R.curry((transformed, account) => {
 /**
  * Default account payload transformer.
  */
-const defaultPayloadTransform = () => ({});
+const defaultPayloadTransform = (account, payload) => ({
+  subaccount: !!account.parent_account_id,
+});
 
 /**
  * Defined payload transformers.
@@ -89,7 +92,7 @@ export const transformAccountToForm = (account, payload) => {
 
     return [
       condition[0] === payload.action ? R.T : R.F,
-      mergeWithAccount(transformer(payload)),
+      mergeWithAccount(transformer(account, payload)),
     ];
   });
   return R.cond(results)(account);
@@ -105,4 +108,30 @@ export const getDisabledFormFields = (account, payload) => {
       payload.action === AccountDialogAction.NewChild ||
       payload.action === AccountDialogAction.NewDefinedType,
   };
+};
+
+/**
+ * Detarmines whether should update the parent account field.
+ * @param newProps
+ * @param oldProps
+ * @returns {boolean}
+ */
+export const parentAccountShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.formik.values.subaccount !== oldProps.formik.values.subaccount ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
+};
+
+/**
+ * Transformes the form values to the request.
+ */
+export const transformFormToReq = (form) => {
+  return R.compose(
+    R.omit(['subaccount']),
+    R.when(
+      R.propSatisfies(R.equals(R.__, false), 'subaccount'),
+      R.assoc(['parent_account_id'], ''),
+    ),
+  )(form);
 };

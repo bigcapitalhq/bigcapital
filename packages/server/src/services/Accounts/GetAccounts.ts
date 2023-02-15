@@ -5,6 +5,7 @@ import TenancyService from '@/services/Tenancy/TenancyService';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { AccountTransformer } from './AccountTransform';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { flatToNestedArray } from '@/utils';
 
 @Service()
 export class GetAccounts {
@@ -53,11 +54,17 @@ export class GetAccounts {
       builder.modify('inactiveMode', filter.inactiveMode);
     });
     // Retrievs the formatted accounts collection.
-    const transformedAccounts = await this.transformer.transform(
+    const preTransformedAccounts = await this.transformer.transform(
       tenantId,
       accounts,
       new AccountTransformer()
     );
+    // Transform accounts to nested array.
+    const transformedAccounts = flatToNestedArray(preTransformedAccounts, {
+      id: 'id',
+      parentId: 'parentAccountId',
+    });
+
     return {
       accounts: transformedAccounts,
       filterMeta: dynamicList.getResponseMeta(),
