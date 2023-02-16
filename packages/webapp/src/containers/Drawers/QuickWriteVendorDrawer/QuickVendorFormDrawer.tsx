@@ -4,12 +4,13 @@ import * as R from 'ramda';
 import styled from 'styled-components';
 
 import { Card, DrawerLoading } from '@/components';
-
 import {
   VendorFormProvider,
   useVendorFormContext,
 } from '@/containers/Vendors/VendorForm/VendorFormProvider';
-import VendorFormFormik from '@/containers/Vendors/VendorForm/VendorFormFormik';
+import VendorFormFormik, {
+  VendorFormHeaderPrimary,
+} from '@/containers/Vendors/VendorForm/VendorFormFormik';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
@@ -75,12 +76,18 @@ export default R.compose(
 
 const VendorFormCard = styled(Card)`
   margin: 15px;
+  padding: 25px;
   margin-bottom: calc(15px + 65px);
 
+  ${VendorFormHeaderPrimary} {
+    padding-top: 0;
+  }
   .page-form {
+    padding: 0;
+
     &__floating-actions {
-      margin-left: -36px;
-      margin-right: -36px;
+      margin-left: -41px;
+      margin-right: -41px;
     }
   }
 `;

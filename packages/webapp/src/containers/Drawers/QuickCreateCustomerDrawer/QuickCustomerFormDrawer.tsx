@@ -4,12 +4,13 @@ import * as R from 'ramda';
 import styled from 'styled-components';
 
 import { Card, DrawerLoading } from '@/components';
-
 import {
   CustomerFormProvider,
   useCustomerFormContext,
 } from '@/containers/Customers/CustomerForm/CustomerFormProvider';
-import CustomerFormFormik from '@/containers/Customers/CustomerForm/CustomerFormFormik';
+import CustomerFormFormik, {
+  CustomerFormHeaderPrimary,
+} from '@/containers/Customers/CustomerForm/CustomerFormFormik';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
@@ -55,12 +56,18 @@ export default R.compose(withDrawerActions)(QuickCustomerFormDrawer);
 
 const CustomerFormCard = styled(Card)`
   margin: 15px;
+  padding: 25px;
   margin-bottom: calc(15px + 65px);
 
+  ${CustomerFormHeaderPrimary} {
+    padding-top: 0;
+  }
   .page-form {
+    padding: 0;
+
     &__floating-actions {
-      margin-left: -36px;
-      margin-right: -36px;
+      margin-left: -41px;
+      margin-right: -41px;
     }
   }
 `;

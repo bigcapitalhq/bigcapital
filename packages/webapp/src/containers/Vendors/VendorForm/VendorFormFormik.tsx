@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
+import styled from 'styled-components';
 
 import { CLASSES } from '@/constants/classes';
 import { AppToaster } from '@/components';
@@ -115,9 +116,9 @@ function VendorFormFormik({
         onSubmit={handleFormSubmit}
       >
         <Form>
-          <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
+          <VendorFormHeaderPrimary>
             <VendorFormPrimarySection />
-          </div>
+          </VendorFormHeaderPrimary>
 
           <div className={'page-form__after-priamry-section'}>
             <VendorFormAfterPrimarySection />
@@ -133,5 +134,13 @@ function VendorFormFormik({
     </div>
   );
 }
+
+export const VendorFormHeaderPrimary = styled.div`
+  padding: 10px 0 0;
+  margin: 0 0 20px;
+  overflow: hidden;
+  border-bottom: 1px solid #e4e4e4;
+  max-width: 1000px;
+`;
 
 export default compose(withCurrentOrganization())(VendorFormFormik);

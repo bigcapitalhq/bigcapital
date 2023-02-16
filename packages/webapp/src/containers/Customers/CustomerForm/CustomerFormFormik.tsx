@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
+import styled from 'styled-components';
 
 import { CLASSES } from '@/constants/classes';
 import { CreateCustomerForm, EditCustomerForm } from './CustomerForm.schema';
@@ -104,9 +105,9 @@ function CustomerFormFormik({
         onSubmit={handleFormSubmit}
       >
         <Form>
-          <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
+          <CustomerFormHeaderPrimary>
             <CustomerFormPrimarySection />
-          </div>
+          </CustomerFormHeaderPrimary>
 
           <div className={'page-form__after-priamry-section'}>
             <CustomerFormAfterPrimarySection />
@@ -122,5 +123,13 @@ function CustomerFormFormik({
     </div>
   );
 }
+
+export const CustomerFormHeaderPrimary = styled.div`
+  padding: 10px 0 0;
+  margin: 0 0 20px;
+  overflow: hidden;
+  border-bottom: 1px solid #e4e4e4;
+  max-width: 1000px;
+`;
 
 export default compose(withCurrentOrganization())(CustomerFormFormik);
