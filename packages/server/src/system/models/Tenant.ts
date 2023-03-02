@@ -1,10 +1,8 @@
 import moment from 'moment';
 import { Model } from 'objection';
 import uniqid from 'uniqid';
-import SubscriptionPeriod from '@/services/Subscription/SubscriptionPeriod';
 import BaseModel from 'models/Model';
 import TenantMetadata from './TenantMetadata';
-import PlanSubscription from './Subscriptions/PlanSubscription';
 
 export default class Tenant extends BaseModel {
   /**
@@ -50,32 +48,12 @@ export default class Tenant extends BaseModel {
   }
 
   /**
-   * Query modifiers.
-   */
-  static modifiers() {
-    return {
-      subscriptions(builder) {
-        builder.withGraphFetched('subscriptions');
-      },
-    };
-  }
-
-  /**
    * Relations mappings.
    */
   static get relationMappings() {
-    const PlanSubscription = require('./Subscriptions/PlanSubscription');
     const TenantMetadata = require('./TenantMetadata');
 
     return {
-      subscriptions: {
-        relation: Model.HasManyRelation,
-        modelClass: PlanSubscription.default,
-        join: {
-          from: 'tenants.id',
-          to: 'subscription_plan_subscriptions.tenantId',
-        },
-      },
       metadata: {
         relation: Model.HasOneRelation,
         modelClass: TenantMetadata.default,
@@ -86,55 +64,6 @@ export default class Tenant extends BaseModel {
       },
     };
   }
-
-  /**
-   * Retrieve the subscribed plans ids.
-   * @return {number[]}
-   */
-  async subscribedPlansIds() {
-    const { subscriptions } = this;
-    return chain(subscriptions).map('planId').unq();
-  }
-
-  /**
-   * 
-   * @param {*} planId 
-   * @param {*} invoiceInterval 
-   * @param {*} invoicePeriod 
-   * @param {*} subscriptionSlug 
-   * @returns 
-   */
-  newSubscription(planId, invoiceInterval, invoicePeriod, subscriptionSlug) {
-    return Tenant.newSubscription(
-      this.id,
-      planId,
-      invoiceInterval,
-      invoicePeriod,
-      subscriptionSlug,
-    );
-  }
-
-  /**
-   * Records a new subscription for the associated tenant.
-   */
-  static newSubscription(
-    tenantId,
-    planId,
-    invoiceInterval,
-    invoicePeriod,
-    subscriptionSlug
-  ) {
-    const period = new SubscriptionPeriod(invoiceInterval, invoicePeriod);
-
-    return PlanSubscription.query().insert({
-      tenantId,
-      slug: subscriptionSlug,
-      planId,
-      startsAt: period.getStartDate(),
-      endsAt: period.getEndDate(),
-    });
-  }
-
   /**
    * Creates a new tenant with random organization id.
    */
@@ -185,9 +114,9 @@ export default class Tenant extends BaseModel {
 
   /**
    * Marks the given tenant as upgrading.
-   * @param {number} tenantId 
-   * @param {string} upgradeJobId 
-   * @returns 
+   * @param {number} tenantId
+   * @param {string} upgradeJobId
+   * @returns
    */
   static markAsUpgrading(tenantId, upgradeJobId) {
     return this.query().update({ upgradeJobId }).where({ id: tenantId });
@@ -195,8 +124,8 @@ export default class Tenant extends BaseModel {
 
   /**
    * Markes the given tenant as upgraded.
-   * @param {number} tenantId 
-   * @returns 
+   * @param {number} tenantId
+   * @returns
    */
   static markAsUpgraded(tenantId) {
     return this.query().update({ upgradeJobId: null }).where({ id: tenantId });
