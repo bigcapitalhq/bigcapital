@@ -23,9 +23,6 @@ function SetupRightSection({
   // #withSetupWizard
   setupStepId,
   setupStepIndex,
-
-  // #withSubscriptions
-  isSubscriptionActive,
 }) {
   return (
     <section className={'setup-page__right-section'}>
@@ -56,12 +53,6 @@ export default compose(
       isOrganizationSetupCompleted,
       isOrganizationBuildRunning,
     }),
-  ),
-  withSubscriptions(
-    ({ isSubscriptionActive }) => ({
-      isSubscriptionActive,
-    }),
-    'main',
   ),
   withSetupWizard(({ setupStepId, setupStepIndex }) => ({
     setupStepId,
