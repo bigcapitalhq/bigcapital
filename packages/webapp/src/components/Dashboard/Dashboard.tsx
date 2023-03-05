@@ -14,19 +14,16 @@ import GlobalHotkeys from './GlobalHotkeys';
 import DashboardProvider from './DashboardProvider';
 import DrawersContainer from '@/components/DrawersContainer';
 import AlertsContainer from '@/containers/AlertsContainer';
-import EnsureSubscriptionIsActive from '../Guards/EnsureSubscriptionIsActive';
 
 /**
  * Dashboard preferences.
  */
 function DashboardPreferences() {
   return (
-    <EnsureSubscriptionIsActive>
-      <DashboardSplitPane>
-        <Sidebar />
-        <PreferencesPage />
-      </DashboardSplitPane>
-    </EnsureSubscriptionIsActive>
+    <DashboardSplitPane>
+      <Sidebar />
+      <PreferencesPage />
+    </DashboardSplitPane>
   );
 }
 

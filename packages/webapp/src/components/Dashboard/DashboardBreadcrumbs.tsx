@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   CollapsibleList,
   MenuItem,
@@ -7,29 +8,29 @@ import {
   Boundary,
 } from '@blueprintjs/core';
 import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
-import { getDashboardRoutes } from '@/routes/dashboard';
-import { useHistory } from 'react-router-dom';
 
-function DashboardBreadcrumbs({ breadcrumbs }){
+function DashboardBreadcrumbs({ breadcrumbs }) {
   const history = useHistory();
 
-  return(
+  return (
     <CollapsibleList
-     className={Classes.BREADCRUMBS}
-     dropdownTarget={<span className={Classes.BREADCRUMBS_COLLAPSED} />}
-     collapseFrom={Boundary.START}
-     visibleItemCount={0}>
-     {
-      breadcrumbs.map(({ breadcrumb,match })=>{
-        return (<MenuItem
-          key={match.url}
-          icon={'folder-close'}
-          text={breadcrumb}
-          onClick={() => history.push(match.url) } />)
-        })
-     }
+      className={Classes.BREADCRUMBS}
+      dropdownTarget={<span className={Classes.BREADCRUMBS_COLLAPSED} />}
+      collapseFrom={Boundary.START}
+      visibleItemCount={0}
+    >
+      {breadcrumbs.map(({ breadcrumb, match }) => {
+        return (
+          <MenuItem
+            key={match.url}
+            icon={'folder-close'}
+            text={breadcrumb}
+            onClick={() => history.push(match.url)}
+          />
+        );
+      })}
     </CollapsibleList>
-  )
+  );
 }
 
-export default withBreadcrumbs([])(DashboardBreadcrumbs)
+export default withBreadcrumbs([])(DashboardBreadcrumbs);
