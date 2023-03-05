@@ -3,7 +3,6 @@
   "devCommand": "npm run dev:webapp",
   "installCommand": "npm install && npm run bootstrap",
   "outputDirectory": "packages/webapp/build",
-  "ignoreCommand": "git diff HEAD^ HEAD --quiet ./packages/webapp/",
   "env": {
     "CI": "false"
   }
