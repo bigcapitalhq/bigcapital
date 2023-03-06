@@ -27,13 +27,6 @@ function SetupLeftSectionFooter() {
 
   return (
     <div className={'content__footer'}>
-      <div className={'content__contact-info'}>
-        <p>
-          <T id={'setup.left_side.footer_help'} />{' '}
-          <span>{'+21892-738-1987'}</span>
-        </p>
-      </div>
-
       <div className={'content__links'}>
         <For render={FooterLinkItem} of={footerLinks} />
       </div>
