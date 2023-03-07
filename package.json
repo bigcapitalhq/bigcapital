@@ -8,7 +8,7 @@
     "dev:webapp": "lerna run dev --scope \"@bigcapital/webapp\"",
     "build:webapp": "lerna run build --scope \"@bigcapital/webapp\"",
     "dev:server": "lerna run dev --scope \"@bigcapital/server\"",
-    "build:server": "lerna run build --scope \"@bigcapital/server\"",
+    "build:server": "lerna run build --scope \"@bigcapital/server\""
   },
   "workspaces": [
     "packages/*",
