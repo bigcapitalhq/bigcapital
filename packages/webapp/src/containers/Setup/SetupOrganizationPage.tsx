@@ -54,15 +54,6 @@ function SetupOrganizationPage({ wizard }) {
 
   return (
     <div className={'setup-organization'}>
-      <div className={'setup-organization__title-wrap'}>
-        <h1>
-          <T id={'setup.organization.title'} />
-        </h1>
-        <p class="paragraph">
-          <T id={'setup.organization.description'} />
-        </p>
-      </div>
-
       <Formik
         validationSchema={validationSchema}
         initialValues={initialValues}
