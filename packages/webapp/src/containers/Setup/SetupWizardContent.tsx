@@ -4,7 +4,6 @@ import React from 'react';
 import SetupSteps from './SetupSteps';
 import WizardSetupSteps from './WizardSetupSteps';
 
-// import SetupSubscription from './SetupSubscription';
 import SetupOrganizationPage from './SetupOrganizationPage';
 import SetupInitializingForm from './SetupInitializingForm';
 import SetupCongratsPage from './SetupCongratsPage';

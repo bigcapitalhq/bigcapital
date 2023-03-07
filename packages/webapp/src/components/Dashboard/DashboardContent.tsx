@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import DashboardTopbar from '@/components/Dashboard/DashboardTopbar/DashboardTopbar';
+import DashboardTopbar from '@/components/Dashboard/DashboardTopbar';
 import DashboardContentRoutes from '@/components/Dashboard/DashboardContentRoute';
 import DashboardErrorBoundary from './DashboardErrorBoundary';
 
