@@ -19,7 +19,6 @@ import {
 } from './interfaces';
 import { filterValuesDeep, deepdash } from '@/utils';
 
-
 const deepDashConfig = {
   childrenPath: 'children',
   pathFormat: 'array',
@@ -136,9 +135,7 @@ function useFilterSidebarMenuAbility(menu) {
 
   return deepdash.filterDeep(
     menu,
-    (item) => {
-      return predFeature(item) && predAbility(item) && predSubscription(item);
-    },
+    (item) => predFeature(item) && predAbility(item),
     deepDashConfig,
   );
 }

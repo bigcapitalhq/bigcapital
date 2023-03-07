@@ -3,15 +3,13 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import { getDashboardRoutes } from '@/routes/dashboard';
-import EnsureSubscriptionsIsActive from '../Guards/EnsureSubscriptionsIsActive';
-import EnsureSubscriptionsIsInactive from '../Guards/EnsureSubscriptionsIsInactive';
 import DashboardPage from './DashboardPage';
 
 /**
  * Dashboard inner route content.
  */
 function DashboardContentRouteContent({ route }) {
-  const content = (
+  return (
     <DashboardPage
       name={route.name}
       Component={route.component}
@@ -22,21 +20,6 @@ function DashboardContentRouteContent({ route }) {
       pageType={route.pageType}
       defaultSearchResource={route.defaultSearchResource}
     />
-  );
-  return route.subscriptionActive ? (
-    <EnsureSubscriptionsIsInactive
-      subscriptionTypes={route.subscriptionActive}
-      children={content}
-      redirectTo={'/billing'}
-    />
-  ) : route.subscriptionInactive ? (
-    <EnsureSubscriptionsIsActive
-      subscriptionTypes={route.subscriptionInactive}
-      children={content}
-      redirectTo={'/'}
-    />
-  ) : (
-    content
   );
 }
 

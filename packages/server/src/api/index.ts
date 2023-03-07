@@ -4,7 +4,6 @@ import { Container } from 'typedi';
 // Middlewares
 import JWTAuth from '@/api/middleware/jwtAuth';
 import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
-import SubscriptionMiddleware from '@/api/middleware/SubscriptionMiddleware';
 import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
 import EnsureTenantIsInitialized from '@/api/middleware/EnsureTenantIsInitialized';
 import SettingsMiddleware from '@/api/middleware/SettingsMiddleware';
@@ -37,8 +36,6 @@ import Resources from './controllers/Resources';
 import ExchangeRates from '@/api/controllers/ExchangeRates';
 import Media from '@/api/controllers/Media';
 import Ping from '@/api/controllers/Ping';
-import Subscription from '@/api/controllers/Subscription';
-import Licenses from '@/api/controllers/Subscription/Licenses';
 import InventoryAdjustments from '@/api/controllers/Inventory/InventoryAdjustments';
 import asyncRenderMiddleware from './middleware/AsyncRenderMiddleware';
 import Jobs from './controllers/Jobs';
@@ -69,8 +66,6 @@ export default () => {
 
   app.use('/auth', Container.get(Authentication).router());
   app.use('/invite', Container.get(InviteUsers).nonAuthRouter());
-  app.use('/licenses', Container.get(Licenses).router());
-  app.use('/subscription', Container.get(Subscription).router());
   app.use('/organization', Container.get(Organization).router());
   app.use('/ping', Container.get(Ping).router());
   app.use('/jobs', Container.get(Jobs).router());
@@ -83,7 +78,6 @@ export default () => {
   dashboard.use(JWTAuth);
   dashboard.use(AttachCurrentTenantUser);
   dashboard.use(TenancyMiddleware);
-  dashboard.use(SubscriptionMiddleware('main'));
   dashboard.use(EnsureTenantIsInitialized);
   dashboard.use(SettingsMiddleware);
   dashboard.use(I18nAuthenticatedMiddlware);

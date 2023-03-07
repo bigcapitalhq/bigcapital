@@ -7,26 +7,20 @@ import {
 } from '@/hooks/query';
 import { useSplashLoading } from '@/hooks/state';
 import { useWatch, useWatchImmediate, useWhen } from '@/hooks';
-import { useSubscription } from '@/hooks/state';
 import { setCookie, getCookie } from '@/utils';
 
 /**
  * Dashboard meta async booting.
- *  - Fetches the dashboard meta only if the organization subscribe is active.
- *  - Once the dashboard meta query is loading display dashboard splash screen.
+ *  - Fetches the dashboard meta in booting state.
+ *  - Once the dashboard meta query started loading display dashboard splash screen.
  */
 export function useDashboardMetaBoot() {
-  const { isSubscriptionActive } = useSubscription();
-
   const {
     data: dashboardMeta,
     isLoading: isDashboardMetaLoading,
     isSuccess: isDashboardMetaSuccess,
   } = useDashboardMeta({
     keepPreviousData: true,
-
-    // Avoid run the query if the organization subscription is not active.
-    enabled: isSubscriptionActive,
   });
   const [startLoading, stopLoading] = useSplashLoading();
 

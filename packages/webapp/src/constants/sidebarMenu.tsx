@@ -5,7 +5,6 @@ import { Features } from '@/constants/features';
 import {
   ISidebarMenuItemType,
   ISidebarMenuOverlayIds,
-  ISidebarSubscriptionAbility,
 } from '@/containers/Dashboard/Sidebar/interfaces';
 import {
   ReportsAction,
@@ -24,9 +23,7 @@ import {
   ManualJournalAction,
   ExpenseAction,
   CashflowAction,
-  ProjectAction,
   PreferencesAbility,
-  SubscriptionBillingAbility,
 } from '@/constants/abilityOption';
 
 export const SidebarMenu = [
@@ -779,19 +776,6 @@ export const SidebarMenu = [
         permission: {
           subject: AbilitySubject.Preferences,
           ability: PreferencesAbility.Mutate,
-        },
-      },
-      {
-        text: <T id={'billing'} />,
-        href: '/billing',
-        type: ISidebarMenuItemType.Link,
-        subscription: [
-          ISidebarSubscriptionAbility.Expired,
-          ISidebarSubscriptionAbility.Active,
-        ],
-        permission: {
-          subject: AbilitySubject.SubscriptionBilling,
-          ability: SubscriptionBillingAbility.View,
         },
       },
     ],

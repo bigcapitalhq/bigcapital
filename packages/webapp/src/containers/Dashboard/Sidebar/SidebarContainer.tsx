@@ -4,7 +4,6 @@ import { Scrollbar } from 'react-scrollbars-custom';
 import classNames from 'classnames';
 
 import withDashboard from '@/containers/Dashboard/withDashboard';
-import withSubscriptions from '@/containers/Subscriptions/withSubscriptions';
 
 import { useObserveSidebarExpendedBodyclass } from './hooks';
 import { compose } from '@/utils';
@@ -19,9 +18,6 @@ function SidebarContainerJSX({
 
   // #withDashboard
   sidebarExpended,
-
-  // #withSubscription
-  isSubscriptionActive,
 }) {
   const sidebarScrollerRef = React.useRef();
 
@@ -51,7 +47,6 @@ function SidebarContainerJSX({
     <div
       className={classNames('sidebar', {
         'sidebar--mini-sidebar': !sidebarExpended,
-        'is-subscription-inactive': !isSubscriptionActive,
       })}
       id="sidebar"
       onMouseLeave={handleSidebarMouseLeave}
@@ -72,8 +67,4 @@ export const SidebarContainer = compose(
   withDashboard(({ sidebarExpended }) => ({
     sidebarExpended,
   })),
-  withSubscriptions(
-    ({ isSubscriptionActive }) => ({ isSubscriptionActive }),
-    'main',
-  ),
 )(SidebarContainerJSX);
