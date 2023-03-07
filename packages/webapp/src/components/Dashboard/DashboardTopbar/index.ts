@@ -1,1 +1,3 @@
-export * from './DashboardTopbar';
+import DashboardTopbar from './DashboardTopbar';
+
+export default DashboardTopbar;
