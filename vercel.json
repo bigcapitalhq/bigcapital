@@ -1,9 +1,0 @@
-{
-  "buildCommand": "npm run build:webapp",
-  "devCommand": "npm run dev:webapp",
-  "installCommand": "yarn install && yarn bootstrap",
-  "outputDirectory": "packages/webapp/build",
-  "env": {
-    "CI": "false"
-  }
-}
