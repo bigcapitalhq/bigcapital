@@ -1,13 +1,10 @@
 // @ts-nocheck
 import React from 'react';
 import { Menu } from '@blueprintjs/core';
-import * as R from 'ramda';
 
 import { MenuItem, MenuItemLabel } from '@/components';
 import { ISidebarMenuItemType } from '@/containers/Dashboard/Sidebar/interfaces';
 import { useIsSidebarMenuItemActive } from './hooks';
-
-import withSubscriptions from '@/containers/Subscriptions/withSubscriptions';
 
 /**
  * Sidebar menu item.
@@ -55,7 +52,7 @@ function SidebarMenuItemComposer({ item, index }) {
  * Sidebar menu.
  * @returns {JSX.Element}
  */
-function SidebarMenuJSX({ menu }) {
+export function SidebarMenu({ menu }) {
   return (
     <div>
       <Menu className="sidebar-menu">
@@ -66,10 +63,3 @@ function SidebarMenuJSX({ menu }) {
     </div>
   );
 }
-
-export const SidebarMenu = R.compose(
-  withSubscriptions(
-    ({ isSubscriptionActive }) => ({ isSubscriptionActive }),
-    'main',
-  ),
-)(SidebarMenuJSX);

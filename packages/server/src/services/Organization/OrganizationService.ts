@@ -150,7 +150,6 @@ export default class OrganizationService {
   public async currentOrganization(tenantId: number): Promise<ITenant> {
     const tenant = await Tenant.query()
       .findById(tenantId)
-      .withGraphFetched('subscriptions')
       .withGraphFetched('metadata');
 
     this.throwIfTenantNotExists(tenant);

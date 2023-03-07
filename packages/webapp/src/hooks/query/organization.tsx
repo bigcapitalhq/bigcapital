@@ -1,11 +1,11 @@
 // @ts-nocheck
+import { omit } from 'lodash';
 import { useMutation, useQueryClient } from 'react-query';
 import { batch } from 'react-redux';
 import t from './types';
 import useApiRequest from '../useRequest';
 import { useRequestQuery } from '../useQueryRequest';
-import { useSetOrganizations, useSetSubscriptions } from '../state';
-import { omit } from 'lodash';
+import { useSetOrganizations } from '../state';
 
 /**
  * Retrieve organizations of the authenticated user.
@@ -32,7 +32,6 @@ export function useOrganizations(props) {
  */
 export function useCurrentOrganization(props) {
   const setOrganizations = useSetOrganizations();
-  const setSubscriptions = useSetSubscriptions();
 
   return useRequestQuery(
     [t.ORGANIZATION_CURRENT],
@@ -44,9 +43,6 @@ export function useCurrentOrganization(props) {
         const organization = omit(data, ['subscriptions']);
 
         batch(() => {
-          // Sets subscriptions.
-          setSubscriptions(data.subscriptions);
-
           // Sets organizations.
           setOrganizations([organization]);
         });
