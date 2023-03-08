@@ -1,0 +1,8 @@
+{
+  "installCommand": "npm install && npm run bootstrap",
+  "buildCommand": "CI='' npm run build:webapp",
+  "outputDirectory": "packages/webapp/build",
+  "rootDirectory": null,
+  "directoryListing": false,
+  "nodeVersion": "14.x"
+}
