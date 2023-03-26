@@ -4,6 +4,8 @@ All notable changes to Bigcapital server-side will be in this file.
 
 ## [1.7.6-rc.2] - 23-04-2022
 
+`@bigcapital/webapp`
+
 ### Fixed
 
 - `BIG-374` Refactoring sidebar men with ability permissions and feature control on each item.
@@ -16,6 +18,8 @@ All notable changes to Bigcapital server-side will be in this file.
 
 ## [1.7.3-rc.2] - 15-04-2022
 
+`@bigcapital/webapp`
+
 ### Fixed
 
 - `BIG-372` Activate branches and warehouses dialog reloading once activating.
@@ -24,6 +28,8 @@ All notable changes to Bigcapital server-side will be in this file.
 
 ## [1.7.2-rc.2] - 04-04-2022
 
+`@bigcapital/webapp`
+
 ### Fixed
 
 - Add the missing Arabic localization.
@@ -31,51 +37,70 @@ All notable changes to Bigcapital server-side will be in this file.
 
 ## [1.7.1-rc.2] - 30-03-2022
 
-## Added
+`@bigcapital/webapp`
 
-- `BIG-141` Add inactive status to item drawer details.
-- `BIG-278` Add created at date on expense details.
-- `BIG-350` Add empty status content of warehouse transfers service.
-- `BIG-344` Add branch details to manual journal and expense details.
+### Added
+  - `BIG-141` Add inactive status to item drawer details.
+  - `BIG-278` Add created at date on expense details.
+  - `BIG-350` Add empty status content of warehouse transfers service.
+  - `BIG-344` Add branch details to manual journal and expense details.
+### Fixed
+  - `BIG-221` Remove Non-inventory radio choice on item form.
+  - `BIG-236` Validate estimate expiration date should be equal or bigger than estimate date.
+  - `BIG-237` Validate invoice due date should be equal or bigger than invoice date.
+  - `BIG-238` Validate bill due date should be equal or bigger than bill date.
+  - `BIG-280` Optimize style of multi-select accounts menu.
+  - `BIG-284` Cashflow statement loading bar.
+  - `BIG-296` Creating a new child account from accounts list.
+  - `BIG-301` Navigation bar divider on actions bar hide with permissions control.
+  - `BIG-304` Adding cash or bank account from cash flow service.
+  - `BIG-351` Invalid date in the inventory adjustment detail.
+  - `BIG-352` Fix terms and notes fields on footer of all services.
+  - `BIG-354` Validate the warehouse transfer quantity should be above zero.
 
-## Fixed
+`@bigcapital/server`
 
-- `BIG-221` Remove Non-inventory radio choice on item form.
-- `BIG-236` Validate estimate expiration date should be equal or bigger than estimate date.
-- `BIG-237` Validate invoice due date should be equal or bigger than invoice date.
-- `BIG-238` Validate bill due date should be equal or bigger than bill date.
-- `BIG-280` Optimize style of multi-select accounts menu.
-- `BIG-284` Cashflow statement loading bar.
-- `BIG-296` Creating a new child account from accounts list.
-- `BIG-301` Navigation bar divider on actions bar hide with permissions control.
-- `BIG-304` Adding cash or bank account from cash flow service.
-- `BIG-351` Invalid date in the inventory adjustment detail.
-- `BIG-352` Fix terms and notes fields on footer of all services.
-- `BIG-354` Validate the warehouse transfer quantity should be above zero.
+### Fixed
+  - `BIG-354` Validate the warehouse transfer quantity should be above zero.
+  - `BIG-358` Refactoring customers/vendors services for smaller classes.
+  - `BIG-341` Refactoring expenses services for smaller classes.
+  - `BIG-342` Assign default currency as base currency when create customer, vendor or expense transaction.
 
 ## [1.7.0-rc.1] - 24-03-2022
 
-## Added
+`@bigcapital/webapp`
 
-- Multiply currencies with foreign currencies.
-- Multiply warehouses to track inventory items.
-- Multiply branches to track organization transactions.
-- Transfer orders between warehouses.
-- Integrate financial reports with multiply branches.
-- Integrate inventory reports with multiply warehouses.
+### Added 
+ - Multiply currencies with foreign currencies.
+ - Multiply warehouses to track inventory items.
+ - Multiply branches to track organization transactions.
+ - Transfer orders between warehouses.
+ - Integrate financial reports with multiply branches.
+ - Integrate inventory reports with multiply warehouses.
 
-## Changes
+### Changes
+ - Optimize style of sale invoice form.
+ - Optimize style of sale receipt form.
+ - Optimize style of credit note form.
+ - Optimize style of payment receive form.
+ - Optimize style of bill form.
+ - Optimize style of payment made form.
+ - Optimize style of manual journal form.
+ - Optimize style of expense form.
 
-- Optimize style of sale invoice form.
-- Optimize style of sale receipt form.
-- Optimize style of credit note form.
-- Optimize style of payment receive form.
-- Optimize style of bill form.
-- Optimize style of payment made form.
-- Optimize style of manual journal form.
-- Optimize style of expense form.
+`@bigcapital/server`
+
+### Added
+ - Multiply currencies with foreign currencies.
+ - Multiply warehouses to track inventory items.
+ - Multiply branches to track organization transactions.
+ - Transfer orders between warehouses.
+ - Integrate financial reports with multiply branches.
+ - Integrate inventory reports with multiply warehouses.
 
 ## [1.6.3] - 21-02-2022
+
+`@bigcapital/webapp`
 
 ### Fixed
 
@@ -89,6 +114,8 @@ All notable changes to Bigcapital server-side will be in this file.
 
 ## [1.6.0] - 18-02-2022
 
+`@bigcapital/webapp`
+
 ### Added
 
 - Balance sheet comparison of previous period (PP).
@@ -100,21 +127,34 @@ All notable changes to Bigcapital server-side will be in this file.
 
 ## [1.5.8] - 13-01-2022
 
+`@bigcapital/webapp`
+
 ### Added
 
 - Add payment receive PDF print.
 - Add credit note PDF print.
 
 ### Fixed
+- Payment receive initial loading state depends on request loading state instead fetching.
+- Balance sheet report alert positioning.
+- Separate customer and vendor inactivate and activate alerts.
+- Hide convert to invoice button if the invoice is already converted.
+- Customer and vendor balance summary percentage of column option.
+- Remove duplicated details in sales and purchases details drawers.
 
-- fix: Payment receive initial loading state depends on request loading state instead fetching.
-- fix: Balance sheet report alert positioning.
-- fix: Separate customer and vendor inactivate and activate alerts.
-- fix: Hide convert to invoice button if the invoice is already converted.
-- fix: Customer and vendor balance summary percentage of column option.
-- fix: Remove duplicated details in sales and purchases details drawers.
+`@bigcapital/server`
+
+### Fixed
+- Balance sheet comparison of previous period (PP).
+- Balance sheet comparison of previous year (PY).
+- Balance sheet percentage analysis columns and rows basis.
+- Profit & loss sheet comparison of preivous period (PP).
+- Profit & loss sheet comparison of previous year (PY).
+- Profit & loss sheet percentage analysis columns, rows, income and expenses basis.
 
 ## [1.5.3] - 03-01-2020
+
+`@bigcapital/webapp`
 
 ### Fixed
 
@@ -122,6 +162,8 @@ All notable changes to Bigcapital server-side will be in this file.
 - Expand account name column on trial balance sheet.
 
 ## [1.5.0] - 20-12-2021
+
+`@bigcapital/webapp`
 
 ### Added
 
@@ -143,6 +185,8 @@ All notable changes to Bigcapital server-side will be in this file.
 
 ## [1.4.0] - 11-09-2021
 
+`@bigcapital/webapp`
+
 ### Added
 
 - Add SMS notification on sale invoice, receipt, customers payments modules.
@@ -161,6 +205,8 @@ fix: BIG-148 - Items entries ordered by index.
 fix: BIG-132 AR/AP aging summary report filter by none transactions/zero contacts.
 
 ## [1.2.0-RC] - 03-09-2021
+
+`@bigcapital/webapp`
 
 Here we write upgrading notes for brands. It's a team effort to make them as
 straightforward as possible.

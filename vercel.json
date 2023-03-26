@@ -1,0 +1,5 @@
+{
+  "installCommand": "npm install && npm run bootstrap",
+  "buildCommand": "CI='' npm run build:webapp",
+  "outputDirectory": "packages/webapp/build"
+}

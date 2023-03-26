@@ -1,0 +1,34 @@
+version: '3.3'
+
+services:
+  mysql:
+    build:
+      context: ./docker/mysql
+      args:
+        - MYSQL_DATABASE=bigcapital_system
+        - MYSQL_USER=default_user
+        - MYSQL_PASSWORD=secret
+        - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./data/mysql/:/var/lib/mysql
+    expose:
+      - '3306'
+    ports:
+      - '3306:3306'
+
+  mongo:
+    build: ./docker/mongo
+    expose:
+      - '27017'
+    volumes:
+      - ./data/mongo/:/var/lib/mongodb
+    ports:
+      - '27017:27017'
+
+  redis:
+    build:
+      context: ./docker/redis
+    expose:
+      - "6379"
+    volumes:
+      - ./data/redis:/data

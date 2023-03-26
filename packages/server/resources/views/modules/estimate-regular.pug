@@ -1,0 +1,82 @@
+extends ../PaperTemplateLayout.pug
+
+block head 
+  style
+    if (isRtl)
+      include ../../css/modules/estimate-rtl.css
+    else
+      include ../../css/modules/estimate.css
+
+block content 
+ div.estimate
+  div.estimate__header
+    div.paper
+      h1.title #{__("estimate.paper.estimate")}
+      span.email #{saleEstimate.estimateNumber}
+
+    div.organization 
+      h3.title #{organizationName}
+      if organizationEmail
+       span.email #{organizationEmail}
+
+  div.estimate__estimate-amount
+    div.label #{__('estimate.paper.estimate_amount')}
+    div.amount #{saleEstimate.formattedAmount}
+
+  div.estimate__meta
+    if saleEstimate.estimateNumber
+      div.estimate__meta-item.estimate__meta-item--estimate-number
+        span.label #{__("estimate.paper.estimate_number")}
+        span.value #{saleEstimate.estimateNumber}
+
+    div.estimate__meta-item.estimate__meta-item--billed-to
+      span.label #{__("estimate.paper.billed_to")}
+      span.value #{saleEstimate.customer.displayName}
+
+    div.estimate__meta-item.estimate__meta-item--estimate-date
+      span.label #{__("estimate.paper.estimate_date")}
+      span.value #{saleEstimate.formattedEstimateDate}
+
+    div.estimate__meta-item.estimate__meta-item--due-date
+      span.label #{__("estimate.paper.expiration_date")}
+      span.value #{saleEstimate.formattedExpirationDate}
+
+  div.estimate__table
+   table 
+     thead 
+      tr
+        th.item #{__("item_entry.paper.item_name")}
+        th.rate #{__("item_entry.paper.rate")}
+        th.quantity #{__("item_entry.paper.quantity")}
+        th.total #{__("item_entry.paper.total")}
+      tbody
+        each entry in saleEstimate.entries
+         tr
+           td.item
+            div.title=entry.item.name
+            span.description=entry.description
+           td.rate=entry.rate
+           td.quantity=entry.quantity
+           td.total=entry.amount
+
+  div.estimate__table-after
+    div.estimate__table-total 
+      table
+        tbody
+          tr.subtotal 
+            td #{__('estimate.paper.subtotal')}
+            td #{saleEstimate.formattedAmount}
+          tr.total 
+            td #{__('estimate.paper.total')}
+            td #{saleEstimate.formattedAmount}
+
+  div.estimate__footer
+    if saleEstimate.termsConditions
+      div.estimate__conditions
+        h3 #{__("estimate.paper.conditions_title")}
+        p #{saleEstimate.termsConditions}
+
+    if saleEstimate.note
+      div.estimate__notes
+        h3 #{__("estimate.paper.notes_title")}
+        p #{saleEstimate.note}

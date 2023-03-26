@@ -1,0 +1,60 @@
+
+.setup-organization {
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 45px 25px 20px;
+
+  form {
+    h3 {
+      color: #868f9f;
+      margin-bottom: 2rem;
+      font-weight: 600;
+    }
+  }
+  .bp3-form-group {
+    margin-bottom: 24px;
+
+    .bp3-input-group {
+      .bp3-input {
+        height: 38px;
+      }
+
+    }
+    .bp3-input,
+    .form-group--select-list .bp3-button{
+      font-size: 15px;
+    }
+  }
+
+  label.bp3-label{
+    color: #20242e;
+  }
+
+  .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
+    width: 100%;
+    height: 38px;
+    padding: 8px;
+  }
+
+  .bp3-text-muted {
+    color: #000000;
+  }
+
+  .register-org-note {
+    font-size: 13px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e1e1e1;
+    margin-bottom: 1.75rem;
+    color: #666;
+  }
+
+  .register-org-button {
+    .bp3-button {
+      background-color: #1c2448;
+      height: 40px;
+      font-size: 15px;
+      width: 100%;
+    }
+  }
+}

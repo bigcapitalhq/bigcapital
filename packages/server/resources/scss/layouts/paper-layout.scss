@@ -1,0 +1,19 @@
+@import "../base.scss";
+@import "../fonts.scss";
+
+body {
+  background: #f8f9fa;
+  text-align: left;
+  -webkit-print-color-adjust: exact;
+
+  html[lang^='ar'] & {
+    font-family: "Segoe UI";
+  }
+  html[lang^='en'] & {
+    font-family: "Noto Sans";
+  }
+
+  @media print {
+    background: #fff;
+  }
+}

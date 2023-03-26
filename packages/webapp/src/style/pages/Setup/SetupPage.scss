@@ -1,0 +1,213 @@
+@import "../../Base.scss";
+
+.setup-page {
+  max-width: 1600px;
+
+  &__right-section {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    &:before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 1px;
+      max-width: 600px;
+      min-width: 600px;
+
+      @media only screen and (max-width: 1200px) {
+        min-width: 500px;
+        max-width: 500px;
+      }
+
+      @media only screen and (max-width: 1024px) {
+        min-width: 400px;
+        max-width: 400px;
+      }
+    }
+
+    h1 {
+      font-size: 22px;
+    }
+
+    h1,
+    h3 {
+      font-weight: 500;
+      color: #6b7382;
+    }
+  }
+
+  &__content {
+    width: 100%;
+    padding-bottom: 40px;
+  }
+
+  &__left-section {
+    position: fixed;
+    background-color: #2f3d6f;
+    overflow: auto;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    width: 600px;
+
+    @media only screen and (max-width: 1200px) {
+      width: 500px;
+    }
+    @media only screen and (max-width: 1024px) {
+      width: 400px;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      color: #ffffff;
+      padding: 25px;
+      margin: 0px auto;
+      border: none;
+      height: 100%;
+
+      &__logo {
+        opacity: 0.75;
+        margin-bottom: 60px;
+        padding-left: 10px;
+      }
+
+      &__title {
+        font-size: 50px;
+        font-weight: 100;
+        line-height: normal;
+        margin-bottom: 14px;
+        margin-top: 14px;
+        color: rgba(255, 255, 255, 0.75);
+
+        @media only screen and (max-width: 1024px) {
+          font-size: 45px;
+        }
+      }
+
+      &__text {
+        font-size: 18px;
+        opacity: 0.75;
+        margin-bottom: 10px;
+        font-weight: 200;
+      }
+
+      &__organization {
+        font-size: 16px;
+        opacity: 0.75;
+
+        span>a {
+          text-decoration: underline;
+          color: #ffffff;
+          margin-top: 6px;
+          display: inline-block;
+        }
+      }
+
+      &__divider {
+        height: 1px;
+        width: 60%;
+        background: rgba(255, 255, 255, 0.25);
+        margin: 18px 0;
+      }
+
+      &__footer {
+        margin-top: auto;
+        border-top: 1px solid rgba(255, 255, 255, 0.25);
+        padding-top: 20px;
+      }
+
+      &__links {
+        text-align: left;
+        opacity: 0.65;
+
+        >div {
+          font-size: 13px;
+          margin-right: 15px;
+          display: inline;
+
+          a {
+            color: #fff;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.setup-page-steps {
+  &-container {
+    margin: 0 auto;
+    padding: 50px 0 0;
+  }
+
+  ul {
+    display: flex;
+    padding: 0 20px;
+    justify-content: center;
+  }
+
+  li {
+    position: relative;
+    list-style-type: none;
+    width: 33%;
+    text-align: center;
+    color: #333;
+    font-size: 16px;
+
+    &::before {
+      width: 11px;
+      height: 11px;
+      content: '';
+      line-height: 30px;
+      display: block;
+      text-align: center;
+      margin: 0 auto 10px auto;
+      border-radius: 50%;
+      background-color: #75859c;
+    }
+
+    &::after {
+      width: 100%;
+      height: 2px;
+      content: '';
+      position: absolute;
+      background-color: #75859c;
+      top: 5px;
+      left: -50%;
+      z-index: -1;
+    }
+
+    &:first-child::after {
+      display: none;
+    }
+
+    &.is-active {
+      text-decoration: underline;
+
+      &::before {
+        background-color: #75859c;
+      }
+
+      ~li {
+
+        &:before,
+        &:after {
+          background: #e0e0e0;
+        }
+      }
+
+      p.wizard-info {
+        color: #004dd0;
+      }
+    }
+  }
+}

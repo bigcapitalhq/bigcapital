@@ -1,0 +1,40 @@
+import { Service, Inject } from 'typedi';
+import events from '@/subscribers/events';
+import PaymentReceiveNotifyBySms from '@/services/Sales/PaymentReceives/PaymentReceiveSmsNotify';
+import { IPaymentReceiveCreatedPayload } from '@/interfaces';
+import { runAfterTransaction } from '@/services/UnitOfWork/TransactionsHooks';
+
+@Service()
+export default class SendSmsNotificationPaymentReceive {
+  @Inject()
+  paymentReceiveSmsNotify: PaymentReceiveNotifyBySms;
+
+  /**
+   * Attach events.
+   */
+  public attach(bus) {
+    bus.subscribe(
+      events.paymentReceive.onCreated,
+      this.handleNotifyViaSmsOncePaymentPublish
+    );
+  }
+
+  /**
+   * Handles send SMS notification after payment transaction creation.
+   */
+  private handleNotifyViaSmsOncePaymentPublish = ({
+    tenantId,
+    paymentReceiveId,
+    trx,
+  }: IPaymentReceiveCreatedPayload) => {
+    // Notify via Sms after transactions complete running.
+    runAfterTransaction(trx, async () => {
+      try {
+        await this.paymentReceiveSmsNotify.notifyViaSmsNotificationAfterCreation(
+          tenantId,
+          paymentReceiveId
+        );
+      } catch (error) {}
+    });
+  };
+}

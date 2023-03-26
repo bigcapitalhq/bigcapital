@@ -19,7 +19,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: abouhuolia/bigcapital-client
+  IMAGE_NAME: abouhuolia/bigcapital-webapp
 
 jobs:
   setup-build-publish-deploy:
@@ -50,8 +50,9 @@ jobs:
       uses: docker/build-push-action@v2
       with:
           context: .
+          file: ./packages/webapp/Dockerfile
           push: true
-          tags: ghcr.io/bigcapitalhq/client:latest
+          tags: ghcr.io/bigcapitalhq/webapp:latest
           labels: ${{ steps.meta.outputs.labels }}
     # Send notification to Slack channel.
     - name: Slack Notification built and published successfully.
