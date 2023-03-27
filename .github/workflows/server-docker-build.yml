@@ -1,0 +1,21 @@
+name: push
+
+jobs:
+  image-build-and-push-webapp:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Login to Container registry.
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
+
+      # Install and boostrap Lerna.
+      - name: Install and boostrap Lerna
+        working-directory: ./
+        run: npm install -g lerna && npm run bootstrap
