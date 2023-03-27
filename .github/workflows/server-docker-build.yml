@@ -1,5 +1,14 @@
 name: push
 
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: abouhuolia/bigcapital-webapp
+
 jobs:
   image-build-and-push-webapp:
     runs-on: ubuntu-latest
