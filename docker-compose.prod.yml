@@ -1,0 +1,116 @@
+# This is a production version of the Bigcapital docker-compose.yml file.
+
+version: '3.3'
+
+services:
+  nginx:
+    container_name: bigcapital-nginx-gateway
+    build:
+      context: ./docker/nginx
+      args:
+        - SERVER_PROXY_PORT=3000
+        - WEB_SSL=false
+        - SELF_SIGNED=false
+    volumes:
+      - ./data/logs/nginx/:/var/log/nginx
+      - ./docker/certbot/certs/:/var/certs
+    ports:
+      - "80:80"
+      - "443:443"
+    tty: true
+    depends_on:
+      - server
+      - webapp
+
+  webapp: 
+    container_name: bigcapital-webapp
+    image: ghcr.io/bigcapitalhq/webapp:latest
+
+  server:
+    container_name: bigcapital-server
+    image: ghcr.io/bigcapitalhq/server:latest
+    links:
+      - mysql
+      - mongo
+      - redis
+    depends_on:
+      - mysql
+      - mongo
+      - redis
+    environment:
+      # Mail
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_USERNAME=${MAIL_USERNAM}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_SECURE=${MAIL_SECURE}
+      - MAIL_FROM_NAME=${MAIL_FROM_NAME}
+      - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
+
+      # Database
+      - DB_HOST=mysql
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_CHARSET=${DB_CHARSET}
+
+      # System database
+      - SYSTEM_DB_NAME=${SYSTEM_DB_NAME}
+
+      # Tenants databases
+      - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
+
+      # Authentication
+      - JWT_SECRET=${JWT_SECRET}
+
+      # MongoDB 
+      - MONGODB_DATABASE_URL=mongodb://mongo/bigcapital
+
+      # Application
+      - BASE_URL=${BASE_URL}
+
+      # Agendash
+      - AGENDASH_AUTH_USER=${AGENDASH_AUTH_USER}
+      - AGENDASH_AUTH_PASSWORD=${AGENDASH_AUTH_PASSWORD}
+
+  database_migration:
+    container_name: bigcapital-database-migration
+    build:
+      context: ./
+      dockerfile: docker/migration/Dockerfile
+      args:
+        - DB_HOST=mysql
+        - DB_USER=${DB_USER}
+        - DB_PASSWORD=${DB_PASSWORD}
+        - DB_CHARSET=${DB_CHARSET}
+        - SYSTEM_DB_NAME=${SYSTEM_DB_NAME}
+
+  mysql:
+    container_name: bigcapital-mysql
+    build:
+      context: ./docker/mysql
+      args:
+        - MYSQL_DATABASE=${SYSTEM_DB_NAME}
+        - MYSQL_USER=${DB_NAME}
+        - MYSQL_PASSWORD=${DB_PASSWORD}
+        - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ./data/mysql/:/var/lib/mysql
+    expose:
+      - '3306'
+
+  mongo:
+    container_name: bigcapital-mongo 
+    build: ./docker/mongo
+    expose:
+      - '27017'
+    volumes:
+      - ./data/mongo/:/var/lib/mongodb
+
+  redis:
+    container_name: bigcapital-redis
+    build:
+      context: ./docker/redis
+    expose:
+      - "6379"
+    volumes:
+      - ./data/redis:/data

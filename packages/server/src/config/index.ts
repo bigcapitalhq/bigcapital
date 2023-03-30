@@ -1,13 +1,8 @@
 import dotenv from 'dotenv';
 
-// Set the NODE_ENV to 'development' by default
-// process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-
-const envFound = dotenv.config();
-if (envFound.error) {
-  // This error should crash whole process
-  throw new Error("⚠️  Couldn't find .env file  ⚠️");
-}
+dotenv.config({
+  path: '../../.env',
+});
 
 module.exports = {
   /**
@@ -19,36 +14,38 @@ module.exports = {
    * System database configuration.
    */
   system: {
-    db_client: process.env.SYSTEM_DB_CLIENT,
-    db_host: process.env.SYSTEM_DB_HOST,
-    db_user: process.env.SYSTEM_DB_USER,
-    db_password: process.env.SYSTEM_DB_PASSWORD,
+    db_client: process.env.SYSTEM_DB_CLIENT || process.env.DB_CLIENT || 'mysql',
+    db_host: process.env.SYSTEM_DB_HOST || process.env.DB_HOST,
+    db_user: process.env.SYSTEM_DB_USER || process.env.DB_USER,
+    db_password: process.env.SYSTEM_DB_PASSWORD || process.env.DB_PASSWORD,
     db_name: process.env.SYSTEM_DB_NAME,
-    charset: process.env.SYSTEM_DB_CHARSET,
-    migrations_dir: process.env.SYSTEM_MIGRATIONS_DIR,
-    seeds_dir: process.env.SYSTEM_SEEDS_DIR,
+    charset: process.env.SYSTEM_DB_CHARSET || process.env.DB_CHARSET,
+    migrations_dir:
+      process.env.SYSTEM_MIGRATIONS_DIR || './src/system/migrations',
+    seeds_dir: process.env.SYSTEM_SEEDS_DIR || './src/system/seeds',
   },
 
   /**
    * Tenant database configuration.
    */
   tenant: {
-    db_client: process.env.TENANT_DB_CLIENT,
+    db_client: process.env.TENANT_DB_CLIENT || process.env.DB_CLIENT || 'mysql',
     db_name_prefix: process.env.TENANT_DB_NAME_PERFIX,
-    db_host: process.env.TENANT_DB_HOST,
-    db_user: process.env.TENANT_DB_USER,
-    db_password: process.env.TENANT_DB_PASSWORD,
-    charset: process.env.TENANT_DB_CHARSET,
-    migrations_dir: process.env.TENANT_MIGRATIONS_DIR,
-    seeds_dir: process.env.TENANT_SEEDS_DIR,
+    db_host: process.env.TENANT_DB_HOST || process.env.DB_HOST,
+    db_user: process.env.TENANT_DB_USER || process.env.DB_USER,
+    db_password: process.env.TENANT_DB_PASSWORD || process.env.DB_PASSWORD,
+    charset: process.env.TENANT_DB_CHARSET || process.env.DB_CHARSET,
+    migrations_dir:
+      process.env.TENANT_MIGRATIONS_DIR || './src/database/migrations',
+    seeds_dir: process.env.TENANT_SEEDS_DIR || './src/database/seeds/core',
   },
 
   /**
    * Databases manager config.
    */
   manager: {
-    superUser: process.env.DB_MANAGER_SUPER_USER,
-    superPassword: process.env.DB_MANAGER_SUPER_PASSWORD,
+    superUser: process.env.SYSTEM_DB_USER || process.env.DB_USER,
+    superPassword: process.env.SYSTEM_DB_PASSWORD || process.env.DB_PASSWORD,
   },
 
   /**
@@ -117,14 +114,6 @@ module.exports = {
    */
   api: {
     prefix: '/api',
-  },
-
-  /**
-   * Licenses api basic authentication.
-   */
-  licensesAuth: {
-    user: process.env.LICENSES_AUTH_USER,
-    password: process.env.LICENSES_AUTH_PASSWORD,
   },
 
   /**

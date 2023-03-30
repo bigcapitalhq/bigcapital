@@ -1,0 +1,16 @@
+server {
+  listen 80 default_server;
+
+  location /api {
+    proxy_pass http://server:${SERVER_PROXY_PORT};
+  }
+
+  location / {
+    proxy_pass http://webapp;
+  }
+
+  location /.well-known/acme-challenge/ {
+    root /var/www/letsencrypt/;
+    log_not_found off;
+  }
+}
