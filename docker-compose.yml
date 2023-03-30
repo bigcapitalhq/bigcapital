@@ -1,3 +1,8 @@
+# WARNING!
+# This is a development version of THE Bigcapital docker-compose.yml file.
+# Avoid using this file in your production environment.
+# We're exposing here sensitive ports and mounting code volumes for rapid development and debugging of the server stack.
+
 version: '3.3'
 
 services:
@@ -5,10 +10,10 @@ services:
     build:
       context: ./docker/mysql
       args:
-        - MYSQL_DATABASE=bigcapital_system
-        - MYSQL_USER=default_user
-        - MYSQL_PASSWORD=secret
-        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_DATABASE=${SYSTEM_DB_NAME}
+        - MYSQL_USER=${DB_NAME}
+        - MYSQL_PASSWORD=${DB_PASSWORD}
+        - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     volumes:
       - ./data/mysql/:/var/lib/mysql
     expose:
