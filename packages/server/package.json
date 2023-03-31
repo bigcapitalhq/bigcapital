@@ -11,6 +11,7 @@
     "build:app": "cross-env NODE_ENV=production webpack --config scripts/webpack.config.js",
     "build:commands": "cross-env NODE_ENV=production webpack --config scripts/webpack.cli.js",
     "build": "npm-run-all build:*",
+    "serve": "node ./build/index.js",
     "lint:fix": "eslint --fix ./**/*.ts"
   },
   "author": "Ahmed Bouhuolia, <a.bouhuolia@gmail.com>",
