@@ -1,8 +1,7 @@
 import dotenv from 'dotenv';
+import path from 'path';
 
-dotenv.config({
-  path: '../../.env',
-});
+dotenv.config();
 
 module.exports = {
   /**
@@ -20,9 +19,8 @@ module.exports = {
     db_password: process.env.SYSTEM_DB_PASSWORD || process.env.DB_PASSWORD,
     db_name: process.env.SYSTEM_DB_NAME,
     charset: process.env.SYSTEM_DB_CHARSET || process.env.DB_CHARSET,
-    migrations_dir:
-      process.env.SYSTEM_MIGRATIONS_DIR || './src/system/migrations',
-    seeds_dir: process.env.SYSTEM_SEEDS_DIR || './src/system/seeds',
+    migrations_dir: path.join(global.__root_dir, './src/system/migrations'),
+    seeds_dir: path.join(global.__root_dir, './src/system/seeds'),
   },
 
   /**
@@ -35,9 +33,8 @@ module.exports = {
     db_user: process.env.TENANT_DB_USER || process.env.DB_USER,
     db_password: process.env.TENANT_DB_PASSWORD || process.env.DB_PASSWORD,
     charset: process.env.TENANT_DB_CHARSET || process.env.DB_CHARSET,
-    migrations_dir:
-      process.env.TENANT_MIGRATIONS_DIR || './src/database/migrations',
-    seeds_dir: process.env.TENANT_SEEDS_DIR || './src/database/seeds/core',
+    migrations_dir: path.join(global.__root_dir, './src/database/migrations'),
+    seeds_dir: path.join(global.__root_dir, './src/database/seeds/core'),
   },
 
   /**

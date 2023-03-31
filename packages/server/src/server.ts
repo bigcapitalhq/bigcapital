@@ -1,6 +1,6 @@
 import 'reflect-metadata'; // We need this in order to use @Decorators
-import '@/config';
 import './before';
+import '@/config';
 
 import express from 'express';
 import loadersFactory from 'loaders';
