@@ -2,8 +2,6 @@ FROM mysql:5.7
 
 ADD my.cnf /etc/mysql/conf.d/my.cnf
 
-RUN chown -R mysql:root /var/lib/mysql/
-
 ARG MYSQL_DATABASE=default_database
 ARG MYSQL_USER=default_user
 ARG MYSQL_PASSWORD=secret

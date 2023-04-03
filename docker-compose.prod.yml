@@ -94,7 +94,7 @@ services:
         - MYSQL_PASSWORD=${DB_PASSWORD}
         - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     volumes:
-      - ./data/mysql/:/var/lib/mysql
+      - mysql:/var/lib/mysql
     expose:
       - '3306'
 
@@ -104,7 +104,7 @@ services:
     expose:
       - '27017'
     volumes:
-      - ./data/mongo/:/var/lib/mongodb
+      - mongo:/var/lib/mongodb
 
   redis:
     container_name: bigcapital-redis
@@ -113,4 +113,18 @@ services:
     expose:
       - "6379"
     volumes:
-      - ./data/redis:/data
+      - redis:/data
+
+# Volumes
+volumes:
+  mysql:
+    name: bigcapital_prod_mysql
+    driver: local
+
+  mongo:
+    name: bigcapital_prod_mongo
+    driver: local
+
+  redis:
+    name: bigcapital_prod_redis
+    driver: local
