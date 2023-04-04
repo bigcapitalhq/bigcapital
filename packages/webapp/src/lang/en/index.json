@@ -38,6 +38,7 @@
   "register_a_new_organization": "Register a New Organization.",
   "organization_name": "Organization Name",
   "email": "Email",
+  "email_address": "Email Address",
   "register": "Register",
   "password_successfully_updated": "The Password for your account was successfully updated.",
   "choose_a_new_password": "Choose a new password",

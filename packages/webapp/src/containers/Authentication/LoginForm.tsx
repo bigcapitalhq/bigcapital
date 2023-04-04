@@ -32,7 +32,7 @@ export default function LoginForm({ isSubmitting }) {
 
   return (
     <Form>
-      <FFormGroup name={'crediential'} label={<T id={'email'} />}>
+      <FFormGroup name={'crediential'} label={<T id={'email_address'} />}>
         <FInputGroup name={'crediential'} large={true} />
       </FFormGroup>
 

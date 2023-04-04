@@ -18,10 +18,7 @@ export default function SendResetPasswordForm({ isSubmitting }) {
         a link to reset your password.
       </TopParagraph>
 
-      <FFormGroup
-        name={'crediential'}
-        label={<T id={'email_or_phone_number'} />}
-      >
+      <FFormGroup name={'crediential'} label={<T id={'email_address'} />}>
         <FInputGroup name={'crediential'} large={true} />
       </FFormGroup>
 

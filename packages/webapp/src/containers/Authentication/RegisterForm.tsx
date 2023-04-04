@@ -40,7 +40,7 @@ export default function RegisterForm({ isSubmitting }) {
   );
 
   return (
-    <Form className={'authentication-page__form'}>
+    <RegisterFormRoot>
       <Row className={'name-section'}>
         <Col md={6}>
           <FFormGroup name={'first_name'} label={<T id={'first_name'} />}>
@@ -87,11 +87,15 @@ export default function RegisterForm({ isSubmitting }) {
       </AuthSubmitButton>
 
       {isSubmitting && <AuthenticationLoadingOverlay />}
-    </Form>
+    </RegisterFormRoot>
   );
 }
 
 const TermsConditionsText = styled.p`
   opacity: 0.8;
   margin-bottom: 1.4rem;
+`;
+
+const RegisterFormRoot = styled(Form)`
+  position: relative;
 `;
