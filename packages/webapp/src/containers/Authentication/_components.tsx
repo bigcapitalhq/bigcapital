@@ -63,7 +63,14 @@ export const AuthFooterLink = styled.p`
 `;
 
 export const AuthSubmitButton = styled(Button)`
-  background-color: #0052cc;
-  min-height: 45px;
   margin-top: 20px;
+
+  &.bp3-intent-primary {
+    background-color: #0052cc;
+
+    &:disabled,
+    &.bp3-disabled {
+      background-color: rgba(0, 82, 204, 0.4);
+    }
+  }
 `;
