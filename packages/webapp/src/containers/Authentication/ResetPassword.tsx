@@ -4,14 +4,23 @@ import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent, Position } from '@blueprintjs/core';
 import { Link, useParams, useHistory } from 'react-router-dom';
-import { AppToaster, FormattedMessage as T } from '@/components';
 
+import { AppToaster } from '@/components';
 import { useAuthResetPassword } from '@/hooks/query';
-
 import AuthInsider from '@/containers/Authentication/AuthInsider';
 
+import {
+  AuthFooterLink,
+  AuthFooterLinks,
+  AuthInsiderCard,
+} from './_components';
 import ResetPasswordForm from './ResetPasswordForm';
 import { ResetPasswordSchema } from './utils';
+
+const initialValues = {
+  password: '',
+  confirm_password: '',
+};
 /**
  * Reset password page.
  */
@@ -21,15 +30,6 @@ export default function ResetPassword() {
 
   // Authentication reset password.
   const { mutateAsync: authResetPasswordMutate } = useAuthResetPassword();
-
-  // Initial values of the form.
-  const initialValues = useMemo(
-    () => ({
-      password: '',
-      confirm_password: '',
-    }),
-    [],
-  );
 
   // Handle the form submitting.
   const handleSubmit = (values, { setSubmitting }) => {
@@ -64,24 +64,30 @@ export default function ResetPassword() {
 
   return (
     <AuthInsider>
-      <div className={'submit-np-form'}>
-        <div className={'authentication-page__label-section'}>
-          <h3>
-            <T id={'choose_a_new_password'} />
-          </h3>
-          <T id={'you_remembered_your_password'} />{' '}
-          <Link to="/auth/login">
-            <T id={'login'} />
-          </Link>
-        </div>
-
+      <AuthInsiderCard>
         <Formik
           initialValues={initialValues}
           validationSchema={ResetPasswordSchema}
           onSubmit={handleSubmit}
           component={ResetPasswordForm}
         />
-      </div>
+      </AuthInsiderCard>
+
+      <ResetPasswordFooterLinks />
     </AuthInsider>
+  );
+}
+
+function ResetPasswordFooterLinks() {
+  return (
+    <AuthFooterLinks>
+      <AuthFooterLink>
+        Don't have an account? <Link to={'/auth/register'}>Sign up</Link>
+      </AuthFooterLink>
+
+      <AuthFooterLink>
+        Return to <Link to={'/auth/login'}>Sign In</Link>
+      </AuthFooterLink>
+    </AuthFooterLinks>
   );
 }

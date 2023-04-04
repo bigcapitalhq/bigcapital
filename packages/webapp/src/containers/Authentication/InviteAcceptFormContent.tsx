@@ -1,13 +1,14 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Button, InputGroup, Intent, FormGroup } from '@blueprintjs/core';
-import { Form, ErrorMessage, FastField, useFormikContext } from 'formik';
+import { InputGroup, Intent } from '@blueprintjs/core';
+import { Form, useFormikContext } from 'formik';
 import { Link } from 'react-router-dom';
-import { Col, Row, FormattedMessage as T } from '@/components';
-import { inputIntent } from '@/utils';
+
+import { Col, FFormGroup, Row, FormattedMessage as T } from '@/components';
 import { useInviteAcceptContext } from './InviteAcceptProvider';
 import { PasswordRevealer } from './components';
+import { AuthSubmitButton } from './_components';
 
 /**
  * Invite user form.
@@ -34,75 +35,25 @@ export default function InviteUserFormContent() {
     <Form>
       <Row>
         <Col md={6}>
-          <FastField name={'first_name'}>
-            {({ form, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'first_name'} />}
-                className={'form-group--first_name'}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'first_name'} />}
-              >
-                <InputGroup
-                  intent={inputIntent({ error, touched })}
-                  {...field}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup name={'first_name'} label={<T id={'first_name'} />}>
+            <InputGroup name={'first_name'} />
+          </FFormGroup>
         </Col>
 
         <Col md={6}>
-          <FastField name={'last_name'}>
-            {({ form, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'last_name'} />}
-                className={'form-group--last_name'}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'last_name'} />}
-              >
-                <InputGroup
-                  intent={inputIntent({ error, touched })}
-                  {...field}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup name={'last_name'} label={<T id={'last_name'} />}>
+            <InputGroup name={'last_name'} />
+          </FFormGroup>
         </Col>
       </Row>
 
-      <FastField name={'phone_number'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'phone_number'} />}
-            className={'form-group--phone_number'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'phone_number'} />}
-          >
-            <InputGroup intent={inputIntent({ error, touched })} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
-
-      <FastField name={'password'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'password'} />}
-            labelInfo={
-              <PasswordRevealer onChange={handlePasswordRevealerChange} />
-            }
-            className={'form-group--password has-password-revealer'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'password'} />}
-          >
-            <InputGroup
-              lang={true}
-              type={passwordType}
-              intent={inputIntent({ error, touched })}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'password'}
+        label={<T id={'password'} />}
+        labelInfo={<PasswordRevealer onChange={handlePasswordRevealerChange} />}
+      >
+        <InputGroup name={'password'} />
+      </FFormGroup>
 
       <div className={'invite-form__statement-section'}>
         <p>
@@ -117,16 +68,14 @@ export default function InviteUserFormContent() {
         </p>
       </div>
 
-      <div className={'authentication-page__submit-button-wrap'}>
-        <Button
-          intent={Intent.PRIMARY}
-          type="submit"
-          fill={true}
-          loading={isSubmitting}
-        >
-          <T id={'create_account'} />
-        </Button>
-      </div>
+      <AuthSubmitButton
+        intent={Intent.PRIMARY}
+        type="submit"
+        fill={true}
+        loading={isSubmitting}
+      >
+        <T id={'create_account'} />
+      </AuthSubmitButton>
     </Form>
   );
 }

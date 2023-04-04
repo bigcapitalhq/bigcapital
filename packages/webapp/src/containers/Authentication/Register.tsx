@@ -11,6 +11,18 @@ import { useAuthLogin, useAuthRegister } from '@/hooks/query/authentication';
 
 import RegisterForm from './RegisterForm';
 import { RegisterSchema, transformRegisterErrorsToForm } from './utils';
+import {
+  AuthFooterLinks,
+  AuthFooterLink,
+  AuthInsiderCard,
+} from './_components';
+
+const initialValues = {
+  first_name: '',
+  last_name: '',
+  email: '',
+  password: '',
+};
 
 /**
  * Register form.
@@ -18,18 +30,6 @@ import { RegisterSchema, transformRegisterErrorsToForm } from './utils';
 export default function RegisterUserForm() {
   const { mutateAsync: authLoginMutate } = useAuthLogin();
   const { mutateAsync: authRegisterMutate } = useAuthRegister();
-
-  const initialValues = useMemo(
-    () => ({
-      first_name: '',
-      last_name: '',
-      email: '',
-      phone_number: '',
-      password: '',
-      country: 'LY',
-    }),
-    [],
-  );
 
   const handleSubmit = (values, { setSubmitting, setErrors }) => {
     authRegisterMutate(values)
@@ -66,24 +66,32 @@ export default function RegisterUserForm() {
 
   return (
     <AuthInsider>
-      <div className={'register-form'}>
-        <div className={'authentication-page__label-section'}>
-          <h3>
-            <T id={'register_a_new_organization'} />
-          </h3>
-          <T id={'you_have_a_bigcapital_account'} />
-          <Link to="/auth/login">
-            <T id={'login'} />
-          </Link>
-        </div>
-
+      <AuthInsiderCard>
         <Formik
           initialValues={initialValues}
           validationSchema={RegisterSchema}
           onSubmit={handleSubmit}
           component={RegisterForm}
         />
-      </div>
+      </AuthInsiderCard>
+
+      <RegisterFooterLinks />
     </AuthInsider>
+  );
+}
+
+function RegisterFooterLinks() {
+  return (
+    <AuthFooterLinks>
+      <AuthFooterLink>
+        Return to <Link to={'/auth/login'}>Sign In</Link>
+      </AuthFooterLink>
+
+      <AuthFooterLink>
+        <Link to={'/auth/send_reset_password'}>
+          <T id={'forget_my_password'} />
+        </Link>
+      </AuthFooterLink>
+    </AuthFooterLinks>
   );
 }

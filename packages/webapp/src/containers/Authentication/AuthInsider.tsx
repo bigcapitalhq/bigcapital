@@ -1,6 +1,8 @@
 // @ts-nocheck
 import React from 'react';
+import styled from 'styled-components';
 import AuthCopyright from './AuthCopyright';
+import { AuthInsiderContent, AuthInsiderCopyright } from './_components';
 
 /**
  * Authentication insider page.
@@ -9,16 +11,21 @@ export default function AuthInsider({
   logo = true,
   copyright = true,
   children,
+  classNames,
 }) {
   return (
-    <div class="authentication-insider__content">
-      <div class="authentication-insider__form">
-        { children }
-      </div>
+    <AuthInsiderContent>
+      <AuthInsiderContentWrap className={classNames?.content}>
+        {children}
+      </AuthInsiderContentWrap>
 
-      <div class="authentication-insider__footer">
-        <AuthCopyright />
-      </div>
-    </div>
+      {copyright && (
+        <AuthInsiderCopyright className={classNames?.copyrightWrap}>
+          <AuthCopyright />
+        </AuthInsiderCopyright>
+      )}
+    </AuthInsiderContent>
   );
 }
+
+const AuthInsiderContentWrap = styled.div``;

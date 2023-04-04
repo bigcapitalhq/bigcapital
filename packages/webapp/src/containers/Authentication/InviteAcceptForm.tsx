@@ -11,6 +11,7 @@ import { useInviteAcceptContext } from './InviteAcceptProvider';
 import { AppToaster } from '@/components';
 import { InviteAcceptSchema } from './utils';
 import InviteAcceptFormContent from './InviteAcceptFormContent';
+import { AuthInsiderCard } from './_components';
 
 export default function InviteAcceptForm() {
   const history = useHistory();
@@ -80,23 +81,13 @@ export default function InviteAcceptForm() {
   };
 
   return (
-    <div className={'invite-form'}>
-      <div className={'authentication-page__label-section'}>
-        <h3>
-          <T id={'welcome_to_bigcapital'} />
-        </h3>
-        <p>
-          <T id={'enter_your_personal_information'} />{' '}
-          <b>{inviteValue.organization_name}</b> <T id={'organization'} />
-        </p>
-      </div>
-
+    <AuthInsiderCard>
       <Formik
         validationSchema={InviteAcceptSchema}
         initialValues={inviteValue}
         onSubmit={handleSubmit}
         component={InviteAcceptFormContent}
       />
-    </div>
+    </AuthInsiderCard>
   );
 }

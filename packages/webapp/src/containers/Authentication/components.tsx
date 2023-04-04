@@ -16,15 +16,9 @@ export function PasswordRevealer({ defaultShown = false, onChange }) {
     <span class="password-revealer" onClick={handleClick}>
       <If condition={shown}>
         <Icon icon="eye-slash" />{' '}
-        <span class="text">
-          <T id={'hide'} />
-        </span>
       </If>
       <If condition={!shown}>
         <Icon icon="eye" />{' '}
-        <span class="text">
-          <T id={'show'} />
-        </span>
       </If>
     </span>
   );

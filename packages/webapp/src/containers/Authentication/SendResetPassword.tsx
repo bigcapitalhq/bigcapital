@@ -5,32 +5,31 @@ import { Formik } from 'formik';
 import { Link, useHistory } from 'react-router-dom';
 import { Intent } from '@blueprintjs/core';
 
-import { AppToaster, FormattedMessage as T } from '@/components';
+import { AppToaster } from '@/components';
 import { useAuthSendResetPassword } from '@/hooks/query';
 
 import SendResetPasswordForm from './SendResetPasswordForm';
 import {
+  AuthFooterLink,
+  AuthFooterLinks,
+  AuthInsiderCard,
+} from './_components';
+import {
   SendResetPasswordSchema,
   transformSendResetPassErrorsToToasts,
 } from './utils';
-
 import AuthInsider from '@/containers/Authentication/AuthInsider';
+
+const initialValues = {
+  crediential: '',
+};
 
 /**
  * Send reset password page.
  */
 export default function SendResetPassword({ requestSendResetPassword }) {
   const history = useHistory();
-
   const { mutateAsync: sendResetPasswordMutate } = useAuthSendResetPassword();
-
-  // Initial values.
-  const initialValues = useMemo(
-    () => ({
-      crediential: '',
-    }),
-    [],
-  );
 
   // Handle form submitting.
   const handleSubmit = (values, { setSubmitting }) => {
@@ -61,28 +60,30 @@ export default function SendResetPassword({ requestSendResetPassword }) {
 
   return (
     <AuthInsider>
-      <div className="reset-form">
-        <div className={'authentication-page__label-section'}>
-          <h3>
-            <T id={'you_can_t_login'} />
-          </h3>
-          <p>
-            <T id={'we_ll_send_a_recovery_link_to_your_email'} />
-          </p>
-        </div>
-
+      <AuthInsiderCard>
         <Formik
           initialValues={initialValues}
           onSubmit={handleSubmit}
           validationSchema={SendResetPasswordSchema}
           component={SendResetPasswordForm}
         />
-        <div class="authentication-page__footer-links">
-          <Link to="/auth/login">
-            <T id={'return_to_log_in'} />
-          </Link>
-        </div>
-      </div>
+      </AuthInsiderCard>
+
+      <SendResetPasswordFooterLinks />
     </AuthInsider>
+  );
+}
+
+function SendResetPasswordFooterLinks() {
+  return (
+    <AuthFooterLinks>
+      <AuthFooterLink>
+        Don't have an account? <Link to={'/auth/register'}>Sign up</Link>
+      </AuthFooterLink>
+
+      <AuthFooterLink>
+        Return to <Link to={'/auth/login'}>Sign In</Link>
+      </AuthFooterLink>
+    </AuthFooterLinks>
   );
 }
