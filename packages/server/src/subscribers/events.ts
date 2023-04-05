@@ -4,8 +4,11 @@ export default {
    */
   auth: {
     login: 'onLogin',
+    logining: 'onLogining',
     register: 'onRegister',
+    registering: 'onAuthRegistering',
     sendResetPassword: 'onSendResetPassword',
+    sendingResetPassword: 'onSendingResetPassword',
     resetPassword: 'onResetPassword',
   },
 

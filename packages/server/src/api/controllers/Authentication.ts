@@ -1,26 +1,23 @@
 import { Request, Response, Router } from 'express';
 import { check, ValidationChain } from 'express-validator';
 import { Service, Inject } from 'typedi';
-import countries from 'country-codes-list';
-import parsePhoneNumber from 'libphonenumber-js';
 import BaseController from '@/api/controllers/BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import AuthenticationService from '@/services/Authentication';
 import { ILoginDTO, ISystemUser, IRegisterDTO } from '@/interfaces';
 import { ServiceError, ServiceErrors } from '@/exceptions';
 import { DATATYPES_LENGTH } from '@/data/DataTypes';
 import LoginThrottlerMiddleware from '@/api/middleware/LoginThrottlerMiddleware';
-import config from '@/config';
+import AuthenticationApplication from '@/services/Authentication/AuthApplication';
 
 @Service()
 export default class AuthenticationController extends BaseController {
   @Inject()
-  authService: AuthenticationService;
+  private authApplication: AuthenticationApplication;
 
   /**
    * Constructor method.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.post(
@@ -56,9 +53,10 @@ export default class AuthenticationController extends BaseController {
   }
 
   /**
-   * Login schema.
+   * Login validation schema.
+   * @returns {ValidationChain[]}
    */
-  get loginSchema(): ValidationChain[] {
+  private get loginSchema(): ValidationChain[] {
     return [
       check('crediential').exists().isEmail(),
       check('password').exists().isLength({ min: 5 }),
@@ -66,9 +64,10 @@ export default class AuthenticationController extends BaseController {
   }
 
   /**
-   * Register schema.
+   * Register validation schema.
+   * @returns {ValidationChain[]}
    */
-  get registerSchema(): ValidationChain[] {
+  private get registerSchema(): ValidationChain[] {
     return [
       check('first_name')
         .exists()
@@ -89,71 +88,20 @@ export default class AuthenticationController extends BaseController {
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('phone_number')
-        .exists()
-        .isString()
-        .trim()
-        .escape()
-        .custom(this.phoneNumberValidator)
-        .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('password')
         .exists()
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('country')
-        .exists()
-        .isString()
-        .trim()
-        .escape()
-        .custom(this.countryValidator)
-        .isLength({ max: DATATYPES_LENGTH.STRING }),
     ];
   }
 
   /**
-   * Country validator.
-   */
-  countryValidator(value, { req }) {
-    const {
-      countries: { whitelist, blacklist },
-    } = config.registration;
-    const foundCountry = countries.findOne('countryCode', value);
-
-    if (!foundCountry) {
-      throw new Error('The country code is invalid.');
-    }
-    if (
-      // Focus with me! In case whitelist is not empty and the given coutry is not
-      // in whitelist throw the error.
-      //
-      // Or in case the blacklist is not empty and the given country exists
-      // in the blacklist throw the goddamn error.
-      (whitelist.length > 0 && whitelist.indexOf(value) === -1) ||
-      (blacklist.length > 0 && blacklist.indexOf(value) !== -1)
-    ) {
-      throw new Error('The country code is not supported yet.');
-    }
-    return true;
-  }
-
-  /**
-   * Phone number validator.
-   */
-  phoneNumberValidator(value, { req }) {
-    const phoneNumber = parsePhoneNumber(value, req.body.country);
-
-    if (!phoneNumber || !phoneNumber.isValid()) {
-      throw new Error('Phone number is invalid with the given country code.');
-    }
-    return true;
-  }
-
-  /**
    * Reset password schema.
+   * @returns {ValidationChain[]}
    */
-  get resetPasswordSchema(): ValidationChain[] {
+  private get resetPasswordSchema(): ValidationChain[] {
     return [
       check('password')
         .exists()
@@ -170,8 +118,9 @@ export default class AuthenticationController extends BaseController {
 
   /**
    * Send reset password validation schema.
+   * @returns {ValidationChain[]}
    */
-  get sendResetPasswordSchema(): ValidationChain[] {
+  private get sendResetPasswordSchema(): ValidationChain[] {
     return [check('email').exists().isEmail().trim().escape()];
   }
 
@@ -180,11 +129,11 @@ export default class AuthenticationController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async login(req: Request, res: Response, next: Function): Response {
+  private async login(req: Request, res: Response, next: Function): Response {
     const userDTO: ILoginDTO = this.matchedBodyData(req);
 
     try {
-      const { token, user, tenant } = await this.authService.signIn(
+      const { token, user, tenant } = await this.authApplication.signIn(
         userDTO.crediential,
         userDTO.password
       );
@@ -199,14 +148,13 @@ export default class AuthenticationController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async register(req: Request, res: Response, next: Function) {
+  private async register(req: Request, res: Response, next: Function) {
     const registerDTO: IRegisterDTO = this.matchedBodyData(req);
 
     try {
-      const registeredUser: ISystemUser = await this.authService.register(
+      const registeredUser: ISystemUser = await this.authApplication.signUp(
         registerDTO
       );
-
       return res.status(200).send({
         type: 'success',
         code: 'REGISTER.SUCCESS',
@@ -222,11 +170,11 @@ export default class AuthenticationController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async sendResetPassword(req: Request, res: Response, next: Function) {
+  private async sendResetPassword(req: Request, res: Response, next: Function) {
     const { email } = this.matchedBodyData(req);
 
     try {
-      await this.authService.sendResetPassword(email);
+      await this.authApplication.sendResetPassword(email);
 
       return res.status(200).send({
         code: 'SEND_RESET_PASSWORD_SUCCESS',
@@ -244,12 +192,12 @@ export default class AuthenticationController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async resetPassword(req: Request, res: Response, next: Function) {
+  private async resetPassword(req: Request, res: Response, next: Function) {
     const { token } = req.params;
     const { password } = req.body;
 
     try {
-      await this.authService.resetPassword(token, password);
+      await this.authApplication.resetPassword(token, password);
 
       return res.status(200).send({
         type: 'RESET_PASSWORD_SUCCESS',
@@ -263,7 +211,7 @@ export default class AuthenticationController extends BaseController {
   /**
    * Handles the service errors.
    */
-  handlerErrors(error, req: Request, res: Response, next: Function) {
+  private handlerErrors(error, req: Request, res: Response, next: Function) {
     if (error instanceof ServiceError) {
       if (
         ['INVALID_DETAILS', 'invalid_password'].indexOf(error.errorType) !== -1
