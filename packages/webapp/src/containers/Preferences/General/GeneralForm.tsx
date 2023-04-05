@@ -15,14 +15,15 @@ import {
 } from '@/components';
 import { inputIntent } from '@/utils';
 import { CLASSES } from '@/constants/classes';
-import { getCountries } from '@/constants/countries';
 import { getAllCurrenciesOptions } from '@/constants/currencies';
 import { getFiscalYear } from '@/constants/fiscalYearOptions';
 import { getLanguages } from '@/constants/languagesOptions';
 import { useGeneralFormContext } from './GeneralFormProvider';
+import { getAllCountries } from '@/utils/countries';
 
 import { shouldBaseCurrencyUpdate } from './utils';
 
+const Countries = getAllCountries();
 /**
  * Preferences general form.
  */
@@ -30,7 +31,6 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
   const history = useHistory();
 
   const FiscalYear = getFiscalYear();
-  const Countries = getCountries();
   const Languages = getLanguages();
   const Currencies = getAllCurrenciesOptions();
 

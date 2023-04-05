@@ -152,9 +152,8 @@ export default class AuthenticationController extends BaseController {
     const registerDTO: IRegisterDTO = this.matchedBodyData(req);
 
     try {
-      const registeredUser: ISystemUser = await this.authApplication.signUp(
-        registerDTO
-      );
+      await this.authApplication.signUp(registerDTO);
+
       return res.status(200).send({
         type: 'success',
         code: 'REGISTER.SUCCESS',
@@ -243,18 +242,10 @@ export default class AuthenticationController extends BaseController {
           errors: [{ type: 'EMAIL.NOT.REGISTERED', code: 500 }],
         });
       }
-    }
-    if (error instanceof ServiceErrors) {
-      const errorReasons = [];
-
-      if (error.hasType('PHONE_NUMBER_EXISTS')) {
-        errorReasons.push({ type: 'PHONE_NUMBER_EXISTS', code: 100 });
-      }
-      if (error.hasType('EMAIL_EXISTS')) {
-        errorReasons.push({ type: 'EMAIL.EXISTS', code: 200 });
-      }
-      if (errorReasons.length > 0) {
-        return res.boom.badRequest(null, { errors: errorReasons });
+      if (error.errorType === 'EMAIL_EXISTS') {
+        return res.status(400).send({
+          errors: [{ type: 'EMAIL.EXISTS', code: 600 }],
+        });
       }
     }
     next(error);

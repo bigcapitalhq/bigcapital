@@ -14,8 +14,6 @@ export const DATE_FORMATS = [
   'MMMM dd, YYYY',
   'EEE, MMMM dd, YYYY',
 ];
-export const ACCEPTED_CURRENCIES = Object.keys(currencies);
-
 export const MONTHS = [
   'january',
   'february',

@@ -39,7 +39,7 @@ export class AuthSignupService {
     const hashedPassword = await hashPassword(signupDTO.password);
 
     // Triggers signin up event.
-    await this.eventPublisher.emitAsync(events.auth.registering, {
+    await this.eventPublisher.emitAsync(events.auth.signingUp, {
       signupDTO,
     } as IAuthSigningUpEventPayload);
 
@@ -52,7 +52,7 @@ export class AuthSignupService {
       inviteAcceptedAt: moment().format('YYYY-MM-DD'),
     });
     // Triggers signed up event.
-    await this.eventPublisher.emitAsync(events.auth.register, {
+    await this.eventPublisher.emitAsync(events.auth.signUp, {
       signupDTO,
       tenant,
       user: registeredUser,

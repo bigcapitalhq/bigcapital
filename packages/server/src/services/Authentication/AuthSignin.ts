@@ -2,6 +2,7 @@ import { Container, Inject } from 'typedi';
 import { cloneDeep } from 'lodash';
 import { Tenant } from '@/system/models';
 import {
+  IAuthSignedInEventPayload,
   IAuthSigningInEventPayload,
   IAuthSignInPOJO,
   ISystemUser,
@@ -22,9 +23,9 @@ export class AuthSigninService {
 
   /**
    * Validates the given email and password.
-   * @param {ISystemUser} user 
-   * @param {string} email 
-   * @param {string} password 
+   * @param {ISystemUser} user
+   * @param {string} email
+   * @param {string} password
    */
   public async validateSignIn(
     user: ISystemUser,
@@ -69,7 +70,7 @@ export class AuthSigninService {
     await this.validateSignIn(user, email, password);
 
     // Triggers on signing-in event.
-    await this.eventPublisher.emitAsync(events.auth.logining, {
+    await this.eventPublisher.emitAsync(events.auth.signingIn, {
       email,
       password,
       user,
@@ -80,12 +81,13 @@ export class AuthSigninService {
     // Update the last login at of the user.
     await systemUserRepository.patchLastLoginAt(user.id);
 
-    // Triggers `onLogin` event.
-    await this.eventPublisher.emitAsync(events.auth.login, {
+    // Triggers `onSignIn` event.
+    await this.eventPublisher.emitAsync(events.auth.signIn, {
       email,
       password,
       user,
-    });
+    } as IAuthSignedInEventPayload);
+
     const tenant = await Tenant.query()
       .findById(user.tenantId)
       .withGraphFetched('metadata');
