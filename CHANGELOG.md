@@ -2,6 +2,32 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [0.8.3] - 06-04-2023
+
+`@bigcaptial/monorepo`
+
+- Switch to AGPL license to protect application's networks. by @abouolia
+
+`@bigcapital/webapp`
+
+### Added
+
+- Improve the style of authentication pages. by @abouolia
+- Remove the phone number field from the authentication pages. by @abouolia
+- Remove the phone number field from the users management. by @abouolia
+- Add all countries options to the setup page. by @abouolia
+
+### Fixed
+
+- Fix intent type of reset password success toast.
+
+`@bigcapital/server`
+
+### Added
+
+- Remove the phone number field from the authentication service. by @abouolia
+- Remove the phone number field from the users service. by @abouolia
+
 ## [0.8.1] - 26-03-2023
 
 `@bigcaptial/monorepo`
