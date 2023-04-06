@@ -4,6 +4,7 @@ import color from 'colorette';
 import argv from 'getopts';
 import Knex from 'knex';
 import { knexSnakeCaseMappers } from 'objection';
+import '../before';
 import config from '../config';
 
 function initSystemKnex() {
