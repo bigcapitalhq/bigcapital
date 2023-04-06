@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React from 'react';
-import { Button, InputGroup, Intent, FormGroup } from '@blueprintjs/core';
-import { Form, ErrorMessage, FastField } from 'formik';
-import { FormattedMessage as T } from '@/components';
-import { inputIntent } from '@/utils';
+import { Intent } from '@blueprintjs/core';
+import { Form } from 'formik';
+import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
+import { AuthSubmitButton } from './_components';
 
 /**
  * Reset password form.
@@ -11,54 +11,23 @@ import { inputIntent } from '@/utils';
 export default function ResetPasswordForm({ isSubmitting }) {
   return (
     <Form>
-      <FastField name={'password'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'new_password'} />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'password'} />}
-            className={'form-group--password'}
-          >
-            <InputGroup
-              lang={true}
-              type={'password'}
-              intent={inputIntent({ error, touched })}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup name={'password'} label={<T id={'new_password'} />}>
+        <FInputGroup name={'password'} type={'password'} large={true} />
+      </FFormGroup>
 
-      <FastField name={'confirm_password'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'new_password'} />}
-            labelInfo={'(again):'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'confirm_password'} />}
-            className={'form-group--confirm-password'}
-          >
-            <InputGroup
-              lang={true}
-              type={'password'}
-              intent={inputIntent({ error, touched })}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup name={'confirm_password'} label={<T id={'new_password'} />}>
+        <FInputGroup name={'confirm_password'} type={'password'} large={true} />
+      </FFormGroup>
 
-      <div className={'authentication-page__submit-button-wrap'}>
-        <Button
-          fill={true}
-          className={'btn-new'}
-          intent={Intent.PRIMARY}
-          type="submit"
-          loading={isSubmitting}
-        >
-          <T id={'submit'} />
-        </Button>
-      </div>
+      <AuthSubmitButton
+        fill={true}
+        intent={Intent.PRIMARY}
+        type="submit"
+        loading={isSubmitting}
+        large={true}
+      >
+        <T id={'submit'} />
+      </AuthSubmitButton>
     </Form>
   );
 }

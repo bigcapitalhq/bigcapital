@@ -13,7 +13,7 @@ import AppIntlLoader from './AppIntlLoader';
 import PrivateRoute from '@/components/Guards/PrivateRoute';
 import GlobalErrors from '@/containers/GlobalErrors/GlobalErrors';
 import DashboardPrivatePages from '@/components/Dashboard/PrivatePages';
-import Authentication from '@/components/Authentication';
+import { Authentication } from '@/containers/Authentication/Authentication';
 
 import { SplashScreen, DashboardThemeProvider } from '../components';
 import { queryConfig } from '../hooks/query/base';

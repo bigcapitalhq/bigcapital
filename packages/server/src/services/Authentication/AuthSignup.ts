@@ -1,0 +1,77 @@
+import { omit } from 'lodash';
+import moment from 'moment';
+import { ServiceError } from '@/exceptions';
+import {
+  IAuthSignedUpEventPayload,
+  IAuthSigningUpEventPayload,
+  IRegisterDTO,
+  ISystemUser,
+} from '@/interfaces';
+import { ERRORS } from './_constants';
+import { Inject } from 'typedi';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import TenantsManagerService from '../Tenancy/TenantsManager';
+import events from '@/subscribers/events';
+import { hashPassword } from '@/utils';
+
+export class AuthSignupService {
+  @Inject()
+  private eventPublisher: EventPublisher;
+
+  @Inject('repositories')
+  private sysRepositories: any;
+
+  @Inject()
+  private tenantsManager: TenantsManagerService;
+
+  /**
+   * Registers a new tenant with user from user input.
+   * @throws {ServiceErrors}
+   * @param {IRegisterDTO} signupDTO
+   * @returns {Promise<ISystemUser>}
+   */
+  public async signUp(signupDTO: IRegisterDTO): Promise<ISystemUser> {
+    const { systemUserRepository } = this.sysRepositories;
+
+    // Validates the given email uniqiness.
+    await this.validateEmailUniqiness(signupDTO.email);
+
+    const hashedPassword = await hashPassword(signupDTO.password);
+
+    // Triggers signin up event.
+    await this.eventPublisher.emitAsync(events.auth.signingUp, {
+      signupDTO,
+    } as IAuthSigningUpEventPayload);
+
+    const tenant = await this.tenantsManager.createTenant();
+    const registeredUser = await systemUserRepository.create({
+      ...omit(signupDTO, 'country'),
+      active: true,
+      password: hashedPassword,
+      tenantId: tenant.id,
+      inviteAcceptedAt: moment().format('YYYY-MM-DD'),
+    });
+    // Triggers signed up event.
+    await this.eventPublisher.emitAsync(events.auth.signUp, {
+      signupDTO,
+      tenant,
+      user: registeredUser,
+    } as IAuthSignedUpEventPayload);
+
+    return registeredUser;
+  }
+
+  /**
+   * Validates email uniqiness on the storage.
+   * @throws {ServiceErrors}
+   * @param  {string} email - Email address
+   */
+  private async validateEmailUniqiness(email: string) {
+    const { systemUserRepository } = this.sysRepositories;
+    const isEmailExists = await systemUserRepository.findOneByEmail(email);
+
+    if (isEmailExists) {
+      throw new ServiceError(ERRORS.EMAIL_EXISTS);
+    }
+  }
+}

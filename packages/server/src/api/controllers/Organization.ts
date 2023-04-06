@@ -8,17 +8,11 @@ import JWTAuth from '@/api/middleware/jwtAuth';
 import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
 import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
 import OrganizationService from '@/services/Organization/OrganizationService';
-import {
-  ACCEPTED_CURRENCIES,
-  MONTHS,
-  ACCEPTED_LOCALES,
-} from '@/services/Organization/constants';
+import { MONTHS, ACCEPTED_LOCALES } from '@/services/Organization/constants';
 import { DATE_FORMATS } from '@/services/Miscellaneous/DateFormats/constants';
 
 import { ServiceError } from '@/exceptions';
 import BaseController from '@/api/controllers/BaseController';
-
-const ACCEPTED_LOCATIONS = ['libya'];
 
 @Service()
 export default class OrganizationController extends BaseController {
@@ -65,8 +59,8 @@ export default class OrganizationController extends BaseController {
     return [
       check('name').exists().trim(),
       check('industry').optional().isString(),
-      check('location').exists().isString().isIn(ACCEPTED_LOCATIONS),
-      check('base_currency').exists().isIn(ACCEPTED_CURRENCIES),
+      check('location').exists().isString().isISO31661Alpha2(),
+      check('base_currency').exists().isISO4217(),
       check('timezone').exists().isIn(moment.tz.names()),
       check('fiscal_year').exists().isIn(MONTHS),
       check('language').exists().isString().isIn(ACCEPTED_LOCALES),

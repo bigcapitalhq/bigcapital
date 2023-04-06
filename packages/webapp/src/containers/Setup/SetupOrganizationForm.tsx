@@ -5,15 +5,12 @@ import {
   Button,
   Intent,
   FormGroup,
-  InputGroup,
   MenuItem,
   Classes,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
-import useAutofocus from '@/hooks/useAutofocus'
-import { FormattedMessage as T } from '@/components';
-import { getCountries } from '@/constants/countries';
+import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
 
 import { Col, Row, ListSelect } from '@/components';
 import { inputIntent } from '@/utils';
@@ -21,6 +18,9 @@ import { inputIntent } from '@/utils';
 import { getFiscalYear } from '@/constants/fiscalYearOptions';
 import { getLanguages } from '@/constants/languagesOptions';
 import { getAllCurrenciesOptions } from '@/constants/currencies';
+import { getAllCountries } from '@/utils/countries';
+
+const countries = getAllCountries();
 
 /**
  * Setup organization form.
@@ -29,9 +29,6 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
   const FiscalYear = getFiscalYear();
   const Languages = getLanguages();
   const currencies = getAllCurrenciesOptions();
-  const countries = getCountries();
-
-  const accountRef = useAutofocus();
 
   return (
     <Form>
@@ -40,22 +37,9 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       </h3>
 
       {/* ---------- Organization name ----------  */}
-      <FastField name={'name'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'legal_organization_name'} />}
-            className={'form-group--name'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'name'} />}
-          >
-            <InputGroup
-              {...field}
-              intent={inputIntent({ error, touched })}
-              inputRef={accountRef}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup name={'name'} label={<T id={'legal_organization_name'} />}>
+        <FInputGroup name={'name'} />
+      </FFormGroup>
 
       {/* ---------- Location ---------- */}
       <FastField name={'location'}>
@@ -71,11 +55,11 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
           >
             <ListSelect
               items={countries}
-              onItemSelect={({ value }) => {
-                form.setFieldValue('location', value);
+              onItemSelect={({ countryCode }) => {
+                form.setFieldValue('location', countryCode);
               }}
               selectedItem={value}
-              selectedItemProp={'value'}
+              selectedItemProp={'countryCode'}
               defaultText={<T id={'select_business_location'} />}
               textProp={'name'}
               popoverProps={{ minimal: true }}

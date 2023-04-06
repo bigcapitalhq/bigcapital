@@ -3,10 +3,17 @@ export default {
    * Authentication service.
    */
   auth: {
-    login: 'onLogin',
-    register: 'onRegister',
+    signIn: 'onSignIn',
+    signingIn: 'onSigningIn',
+
+    signUp: 'onSignUp',
+    signingUp: 'onSigningUp',
+
+    sendingResetPassword: 'onSendingResetPassword',
     sendResetPassword: 'onSendResetPassword',
+
     resetPassword: 'onResetPassword',
+    resetingPassword: 'onResetingPassword'
   },
 
   /**

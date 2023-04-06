@@ -8,9 +8,10 @@ import {
   Button,
 } from '@blueprintjs/core';
 import { FastField, Form, useFormikContext, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from '@/components';
-import { CLASSES } from '@/constants/classes';
 import classNames from 'classnames';
+
+import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
+import { CLASSES } from '@/constants/classes';
 import { inputIntent } from '@/utils';
 import { ListSelect, FieldRequiredHint } from '@/components';
 import { useUserFormContext } from './UserFormProvider';
@@ -23,6 +24,7 @@ import { UserFormCalloutAlerts } from './components';
  */
 function UserFormContent({
   calloutCode,
+
   // #withDialogActions
   closeDialog,
 }) {
@@ -39,60 +41,20 @@ function UserFormContent({
         <UserFormCalloutAlerts calloutCodes={calloutCode} />
 
         {/* ----------- Email ----------- */}
-        <FastField name={'email'}>
-          {({ field, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'email'} />}
-              labelInfo={<FieldRequiredHint />}
-              className={classNames('form-group--email', CLASSES.FILL)}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name="email" />}
-            >
-              <InputGroup medium={true} {...field} />
-            </FormGroup>
-          )}
-        </FastField>
+        <FFormGroup name={'email'} label={<T id={'email'} />}>
+          <FInputGroup name={'email'} />
+        </FFormGroup>
 
         {/* ----------- First name ----------- */}
-        <FastField name={'first_name'}>
-          {({ form, field, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'first_name'} />}
-              labelInfo={<FieldRequiredHint />}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name={'first_name'} />}
-            >
-              <InputGroup intent={inputIntent({ error, touched })} {...field} />
-            </FormGroup>
-          )}
-        </FastField>
+        <FFormGroup name={'first_name'} label={<T id={'first_name'} />}>
+          <FInputGroup name={'first_name'} />
+        </FFormGroup>
 
         {/* ----------- Last name ----------- */}
-        <FastField name={'last_name'}>
-          {({ form, field, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'last_name'} />}
-              labelInfo={<FieldRequiredHint />}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name={'last_name'} />}
-            >
-              <InputGroup intent={inputIntent({ error, touched })} {...field} />
-            </FormGroup>
-          )}
-        </FastField>
-        {/* ----------- Phone name ----------- */}
-        <FastField name={'phone_number'}>
-          {({ form, field, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'phone_number'} />}
-              labelInfo={<FieldRequiredHint />}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name={'phone_number'} />}
-            >
-              <InputGroup intent={inputIntent({ error, touched })} {...field} />
-            </FormGroup>
-          )}
-        </FastField>
+        <FFormGroup name={'last_name'} label={<T id={'last_name'} />}>
+          <FInputGroup name={'last_name'} />
+        </FFormGroup>
+
         {/* ----------- Role name ----------- */}
         <FastField name={'role_id'}>
           {({ form, field: { value }, meta: { error, touched } }) => (
@@ -127,7 +89,12 @@ function UserFormContent({
             <T id={'cancel'} />
           </Button>
 
-          <Button intent={Intent.PRIMARY} type="submit" disabled={isSubmitting}>
+          <Button
+            intent={Intent.PRIMARY}
+            type="submit"
+            disabled={isSubmitting}
+            loading={isSubmitting}
+          >
             <T id={'edit'} />
           </Button>
         </div>

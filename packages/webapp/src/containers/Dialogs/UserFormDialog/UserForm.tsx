@@ -13,7 +13,14 @@ import UserFormContent from './UserFormContent';
 import { useUserFormContext } from './UserFormProvider';
 import { transformErrors } from './utils';
 
-import { compose, objectKeysTransform } from '@/utils';
+import { compose, objectKeysTransform, transformToForm } from '@/utils';
+
+const initialValues = {
+  first_name: '',
+  last_name: '',
+  email: '',
+  role_id: '',
+};
 
 /**
  * User form.
@@ -27,12 +34,9 @@ function UserForm({
   const { dialogName, user, userId, isEditMode, EditUserMutate } =
     useUserFormContext();
 
-  const initialValues = {
-    ...(isEditMode &&
-      pick(
-        objectKeysTransform(user, snakeCase),
-        Object.keys(UserFormSchema.fields),
-      )),
+  const initialFormValues = {
+    ...initialValues,
+    ...(isEditMode && transformToForm(user, initialValues)),
   };
 
   const handleSubmit = (values, { setSubmitting, setErrors }) => {
@@ -68,7 +72,7 @@ function UserForm({
   return (
     <Formik
       validationSchema={UserFormSchema}
-      initialValues={initialValues}
+      initialValues={initialFormValues}
       onSubmit={handleSubmit}
     >
       <UserFormContent calloutCode={calloutCode} />

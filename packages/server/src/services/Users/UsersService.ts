@@ -17,20 +17,17 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
 @Service()
 export default class UsersService {
-  @Inject('logger')
-  logger: any;
-
   @Inject('repositories')
-  repositories: any;
+  private repositories: any;
 
   @Inject()
-  rolesService: RolesService;
+  private rolesService: RolesService;
 
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   @Inject()
-  eventPublisher: EventPublisher;
+  private eventPublisher: EventPublisher;
 
   /**
    * Creates a new user.
@@ -46,7 +43,7 @@ export default class UsersService {
     authorizedUser: ISystemUser
   ): Promise<any> {
     const { User } = this.tenancy.models(tenantId);
-    const { email, phoneNumber } = editUserDTO;
+    const { email } = editUserDTO;
 
     // Retrieve the tenant user or throw not found service error.
     const oldTenantUser = await this.getTenantUserOrThrowError(
@@ -61,9 +58,6 @@ export default class UsersService {
     );
     // Validate user email should be unique.
     await this.validateUserEmailUniquiness(tenantId, email, userId);
-
-    // Validate user phone number should be unique.
-    await this.validateUserPhoneNumberUniqiness(tenantId, phoneNumber, userId);
 
     // Retrieve the given role or throw not found service error.
     const role = await this.rolesService.getRoleOrThrowError(
@@ -292,27 +286,6 @@ export default class UsersService {
 
     if (userByEmail) {
       throw new ServiceError(ERRORS.EMAIL_ALREADY_EXISTS);
-    }
-  };
-
-  /**
-   * Validate user phone number should be unique.
-   * @param {string} phoneNumber -
-   * @param {number} userId -
-   */
-  private validateUserPhoneNumberUniqiness = async (
-    tenantId: number,
-    phoneNumber: string,
-    userId: number
-  ) => {
-    const { User } = this.tenancy.models(tenantId);
-
-    const userByPhoneNumber = await User.query()
-      .findOne('phone_number', phoneNumber)
-      .whereNot('id', userId);
-
-    if (userByPhoneNumber) {
-      throw new ServiceError(ERRORS.PHONE_NUMBER_ALREADY_EXIST);
     }
   };
 

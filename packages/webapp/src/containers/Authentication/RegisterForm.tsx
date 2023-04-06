@@ -1,148 +1,101 @@
 // @ts-nocheck
 import React from 'react';
+import { Form } from 'formik';
 import intl from 'react-intl-universal';
-import {
-  Button,
-  InputGroup,
-  Intent,
-  FormGroup,
-  Spinner,
-} from '@blueprintjs/core';
-import { ErrorMessage, Field, Form } from 'formik';
-import { FormattedMessage as T } from '@/components';
+import { Intent, Button } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
-import { Row, Col, If } from '@/components';
-import { PasswordRevealer } from './components';
-import { inputIntent } from '@/utils';
+import { Tooltip2 } from '@blueprintjs/popover2';
+import styled from 'styled-components';
+
+import {
+  FFormGroup,
+  FInputGroup,
+  Row,
+  Col,
+  FormattedMessage as T,
+} from '@/components';
+import { AuthSubmitButton, AuthenticationLoadingOverlay } from './_components';
 
 /**
  * Register form.
  */
 export default function RegisterForm({ isSubmitting }) {
-  const [passwordType, setPasswordType] = React.useState('password');
+  const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
   // Handle password revealer changing.
-  const handlePasswordRevealerChange = React.useCallback(
-    (shown) => {
-      const type = shown ? 'text' : 'password';
-      setPasswordType(type);
-    },
-    [setPasswordType],
+  const handleLockClick = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const lockButton = (
+    <Tooltip2 content={`${showPassword ? 'Hide' : 'Show'} Password`}>
+      <Button
+        icon={showPassword ? 'unlock' : 'lock'}
+        intent={Intent.WARNING}
+        minimal={true}
+        onClick={handleLockClick}
+        small={true}
+      />
+    </Tooltip2>
   );
 
   return (
-    <Form className={'authentication-page__form'}>
+    <RegisterFormRoot>
       <Row className={'name-section'}>
         <Col md={6}>
-          <Field name={'first_name'}>
-            {({ form, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'first_name'} />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'first_name'} />}
-                className={'form-group--first-name'}
-              >
-                <InputGroup
-                  intent={inputIntent({ error, touched })}
-                  {...field}
-                />
-              </FormGroup>
-            )}
-          </Field>
+          <FFormGroup name={'first_name'} label={<T id={'first_name'} />}>
+            <FInputGroup name={'first_name'} large={true} />
+          </FFormGroup>
         </Col>
 
         <Col md={6}>
-          <Field name={'last_name'}>
-            {({ form, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'last_name'} />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'last_name'} />}
-                className={'form-group--last-name'}
-              >
-                <InputGroup
-                  intent={inputIntent({ error, touched })}
-                  {...field}
-                />
-              </FormGroup>
-            )}
-          </Field>
+          <FFormGroup name={'last_name'} label={<T id={'last_name'} />}>
+            <FInputGroup name={'last_name'} large={true} />
+          </FFormGroup>
         </Col>
       </Row>
 
-      <Field name={'phone_number'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'phone_number'} />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'phone_number'} />}
-            className={'form-group--phone-number'}
-          >
-            <InputGroup intent={inputIntent({ error, touched })} {...field} />
-          </FormGroup>
-        )}
-      </Field>
+      <FFormGroup name={'email'} label={<T id={'email'} />}>
+        <FInputGroup name={'email'} large={true} />
+      </FFormGroup>
 
-      <Field name={'email'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'email'} />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'email'} />}
-            className={'form-group--email'}
-          >
-            <InputGroup intent={inputIntent({ error, touched })} {...field} />
-          </FormGroup>
-        )}
-      </Field>
+      <FFormGroup name={'password'} label={<T id={'password'} />}>
+        <FInputGroup
+          name={'password'}
+          type={showPassword ? 'text' : 'password'}
+          rightElement={lockButton}
+          large={true}
+        />
+      </FFormGroup>
 
-      <Field name={'password'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'password'} />}
-            labelInfo={
-              <PasswordRevealer onChange={handlePasswordRevealerChange} />
-            }
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'password'} />}
-            className={'form-group--password has-password-revealer'}
-          >
-            <InputGroup
-              lang={true}
-              type={passwordType}
-              intent={inputIntent({ error, touched })}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </Field>
+      <TermsConditionsText>
+        {intl.getHTML('signing_in_or_creating', {
+          terms: (msg) => <Link>{msg}</Link>,
+          privacy: (msg) => <Link>{msg}</Link>,
+        })}
+      </TermsConditionsText>
 
-      <div className={'register-form__agreement-section'}>
-        <p>
-          {intl.getHTML('signing_in_or_creating', {
-            terms: (msg) => <Link>{msg}</Link>,
-            privacy: (msg) => <Link>{msg}</Link>,
-          })}
-        </p>
-      </div>
+      <AuthSubmitButton
+        className={'btn-register'}
+        intent={Intent.PRIMARY}
+        type="submit"
+        fill={true}
+        large={true}
+        loading={isSubmitting}
+      >
+        <T id={'register'} />
+      </AuthSubmitButton>
 
-      <div className={'authentication-page__submit-button-wrap'}>
-        <Button
-          className={'btn-register'}
-          intent={Intent.PRIMARY}
-          type="submit"
-          fill={true}
-          loading={isSubmitting}
-        >
-          <T id={'register'} />
-        </Button>
-      </div>
-
-      <If condition={isSubmitting}>
-        <div class="authentication-page__loading-overlay">
-          <Spinner size={50} />
-        </div>
-      </If>
-    </Form>
+      {isSubmitting && <AuthenticationLoadingOverlay />}
+    </RegisterFormRoot>
   );
 }
+
+const TermsConditionsText = styled.p`
+  opacity: 0.8;
+  margin-bottom: 1.4rem;
+`;
+
+const RegisterFormRoot = styled(Form)`
+  position: relative;
+`;
