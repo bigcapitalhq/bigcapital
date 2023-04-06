@@ -42,10 +42,6 @@ export const SendResetPasswordSchema = Yup.object().shape({
 export const InviteAcceptSchema = Yup.object().shape({
   first_name: Yup.string().required().label(intl.get('first_name_')),
   last_name: Yup.string().required().label(intl.get('last_name_')),
-  phone_number: Yup.string()
-    .matches()
-    .required()
-    .label(intl.get('phone_number')),
   password: Yup.string().min(4).required().label(intl.get('password')),
 });
 

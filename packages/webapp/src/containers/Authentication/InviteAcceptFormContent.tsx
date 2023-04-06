@@ -1,34 +1,45 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useState } from 'react';
 import intl from 'react-intl-universal';
-import { InputGroup, Intent } from '@blueprintjs/core';
+import { Button, InputGroup, Intent } from '@blueprintjs/core';
 import { Form, useFormikContext } from 'formik';
 import { Link } from 'react-router-dom';
+import { Tooltip2 } from '@blueprintjs/popover2';
+import styled from 'styled-components';
 
-import { Col, FFormGroup, Row, FormattedMessage as T } from '@/components';
+import {
+  Col,
+  FFormGroup,
+  FInputGroup,
+  Row,
+  FormattedMessage as T,
+} from '@/components';
 import { useInviteAcceptContext } from './InviteAcceptProvider';
-import { PasswordRevealer } from './components';
 import { AuthSubmitButton } from './_components';
 
 /**
  * Invite user form.
  */
 export default function InviteUserFormContent() {
-  // Invite accept context.
-  const { inviteMeta } = useInviteAcceptContext();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  // Formik context.
+  const { inviteMeta } = useInviteAcceptContext();
   const { isSubmitting } = useFormikContext();
 
-  const [passwordType, setPasswordType] = React.useState('password');
-
   // Handle password revealer changing.
-  const handlePasswordRevealerChange = React.useCallback(
-    (shown) => {
-      const type = shown ? 'text' : 'password';
-      setPasswordType(type);
-    },
-    [setPasswordType],
+  const handleLockClick = () => {
+    setShowPassword(!showPassword);
+  };
+  const lockButton = (
+    <Tooltip2 content={`${showPassword ? 'Hide' : 'Show'} Password`}>
+      <Button
+        icon={showPassword ? 'unlock' : 'lock'}
+        intent={Intent.WARNING}
+        minimal={true}
+        onClick={handleLockClick}
+        small={true}
+      />
+    </Tooltip2>
   );
 
   return (
@@ -36,26 +47,27 @@ export default function InviteUserFormContent() {
       <Row>
         <Col md={6}>
           <FFormGroup name={'first_name'} label={<T id={'first_name'} />}>
-            <InputGroup name={'first_name'} />
+            <FInputGroup name={'first_name'} large={true} />
           </FFormGroup>
         </Col>
 
         <Col md={6}>
           <FFormGroup name={'last_name'} label={<T id={'last_name'} />}>
-            <InputGroup name={'last_name'} />
+            <FInputGroup name={'last_name'} large={true} />
           </FFormGroup>
         </Col>
       </Row>
 
-      <FFormGroup
-        name={'password'}
-        label={<T id={'password'} />}
-        labelInfo={<PasswordRevealer onChange={handlePasswordRevealerChange} />}
-      >
-        <InputGroup name={'password'} />
+      <FFormGroup name={'password'} label={<T id={'password'} />}>
+        <FInputGroup
+          name={'password'}
+          large={true}
+          rightElement={lockButton}
+          type={showPassword ? 'text' : 'password'}
+        />
       </FFormGroup>
 
-      <div className={'invite-form__statement-section'}>
+      <InviteAcceptFooterParagraphs>
         <p>
           <T id={'you_email_address_is'} /> <b>{inviteMeta.email},</b> <br />
           <T id={'you_will_use_this_address_to_sign_in_to_bigcapital'} />
@@ -66,16 +78,25 @@ export default function InviteUserFormContent() {
             privacy: (msg) => <Link>{msg}</Link>,
           })}
         </p>
-      </div>
+      </InviteAcceptFooterParagraphs>
 
-      <AuthSubmitButton
+      <InviteAuthSubmitButton
         intent={Intent.PRIMARY}
         type="submit"
         fill={true}
+        large={true}
         loading={isSubmitting}
       >
         <T id={'create_account'} />
-      </AuthSubmitButton>
+      </InviteAuthSubmitButton>
     </Form>
   );
 }
+
+const InviteAcceptFooterParagraphs = styled.div`
+  opacity: 0.8;
+`;
+
+const InviteAuthSubmitButton = styled(AuthSubmitButton)`
+  margin-top: 1.6rem;
+`;

@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useInviteMetaByToken, useAuthInviteAccept } from '@/hooks/query';
 import { InviteAcceptLoading } from './components';
-import { useHistory } from 'react-router-dom';
 
 const InviteAcceptContext = createContext();
 
@@ -22,11 +22,10 @@ function InviteAcceptProvider({ token, ...props }) {
   const { mutateAsync: inviteAcceptMutate } = useAuthInviteAccept({
     retry: false,
   });
-
   // History context.
   const history = useHistory();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (inviteMetaError) { history.push('/auth/login'); }
   }, [history, inviteMetaError]);
 

@@ -4,7 +4,6 @@ import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { Intent, Position } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
 import { isEmpty } from 'lodash';
 
 import { useInviteAcceptContext } from './InviteAcceptProvider';
@@ -13,6 +12,14 @@ import { InviteAcceptSchema } from './utils';
 import InviteAcceptFormContent from './InviteAcceptFormContent';
 import { AuthInsiderCard } from './_components';
 
+const initialValues = {
+  organization_name: '',
+  invited_email: '',
+  first_name: '',
+  last_name: '',
+  password: '',
+};
+
 export default function InviteAcceptForm() {
   const history = useHistory();
 
@@ -20,9 +27,8 @@ export default function InviteAcceptForm() {
   const { inviteAcceptMutate, inviteMeta, token } = useInviteAcceptContext();
 
   // Invite value.
-  const inviteValue = {
-    organization_name: '',
-    invited_email: '',
+  const inviteFormValue = {
+    ...initialValues,
     ...(!isEmpty(inviteMeta)
       ? {
           invited_email: inviteMeta.email,
@@ -34,19 +40,17 @@ export default function InviteAcceptForm() {
   // Handle form submitting.
   const handleSubmit = (values, { setSubmitting, setErrors }) => {
     inviteAcceptMutate([values, token])
-      .then((response) => {
+      .then(() => {
         AppToaster.show({
           message: intl.getHTML(
             'congrats_your_account_has_been_created_and_invited',
             {
-              organization_name: inviteValue.organization_name,
+              organization_name: inviteMeta.organizationName,
             },
           ),
-
           intent: Intent.SUCCESS,
         });
         history.push('/auth/login');
-        setSubmitting(false);
       })
       .catch(
         ({
@@ -84,7 +88,7 @@ export default function InviteAcceptForm() {
     <AuthInsiderCard>
       <Formik
         validationSchema={InviteAcceptSchema}
-        initialValues={inviteValue}
+        initialValues={inviteFormValue}
         onSubmit={handleSubmit}
         component={InviteAcceptFormContent}
       />
