@@ -47,7 +47,6 @@ export default class UsersController extends BaseController {
         check('first_name').exists(),
         check('last_name').exists(),
         check('email').exists().isEmail(),
-        check('phone_number').optional().isMobilePhone(),
         check('role_id').exists().isNumeric().toInt(),
       ],
       this.validationResult,

@@ -9,7 +9,6 @@ export interface ISystemUser extends Model {
   active: boolean;
   password: string;
   email: string;
-  phoneNumber: string;
 
   roleId: number;
   tenantId: number;
@@ -26,7 +25,6 @@ export interface ISystemUserDTO {
   firstName: string;
   lastName: string;
   password: string;
-  phoneNumber: string;
   active: boolean;
   email: string;
   roleId?: number;
@@ -35,7 +33,6 @@ export interface ISystemUserDTO {
 export interface IEditUserDTO {
   firstName: string;
   lastName: string;
-  phoneNumber: string;
   active: boolean;
   email: string;
   roleId: number;
@@ -44,7 +41,6 @@ export interface IEditUserDTO {
 export interface IInviteUserInput {
   firstName: string;
   lastName: string;
-  phoneNumber: string;
   password: string;
 }
 export interface IUserInvite {
@@ -111,7 +107,6 @@ export interface ITenantUser {
   id?: number;
   firstName: string;
   lastName: string;
-  phoneNumber: string;
   active: boolean;
   email: string;
   roleId?: number;

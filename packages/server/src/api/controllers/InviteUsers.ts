@@ -11,10 +11,10 @@ import AcceptInviteUserService from '@/services/InviteUsers/AcceptInviteUser';
 @Service()
 export default class InviteUsersController extends BaseController {
   @Inject()
-  inviteUsersService: InviteTenantUserService;
+  private inviteUsersService: InviteTenantUserService;
 
   @Inject()
-  acceptInviteService: AcceptInviteUserService;
+  private acceptInviteService: AcceptInviteUserService;
 
   /**
    * Routes that require authentication.
@@ -68,13 +68,13 @@ export default class InviteUsersController extends BaseController {
 
   /**
    * Invite DTO schema validation.
+   * @returns {ValidationChain[]}
    */
-  get inviteUserDTO() {
+  private get inviteUserDTO() {
     return [
       check('first_name').exists().trim().escape(),
       check('last_name').exists().trim().escape(),
-      check('phone_number').exists().trim().escape(),
-      check('password').exists().trim().escape(),
+      check('password').exists().trim().escape().isLength({ min: 5 }),
       param('token').exists().trim().escape(),
     ];
   }
@@ -85,17 +85,13 @@ export default class InviteUsersController extends BaseController {
    * @param {Response} res - Response object.
    * @param {NextFunction} next - Next function.
    */
-  async sendInvite(req: Request, res: Response, next: Function) {
+  private async sendInvite(req: Request, res: Response, next: Function) {
     const sendInviteDTO = this.matchedBodyData(req);
     const { tenantId } = req;
     const { user } = req;
 
     try {
-      const { invite } = await this.inviteUsersService.sendInvite(
-        tenantId,
-        sendInviteDTO,
-        user
-      );
+      await this.inviteUsersService.sendInvite(tenantId, sendInviteDTO, user);
       return res.status(200).send({
         type: 'success',
         code: 'INVITE.SENT.SUCCESSFULLY',
@@ -112,7 +108,7 @@ export default class InviteUsersController extends BaseController {
    * @param {Response} res - Response object.
    * @param {NextFunction} next - Next function.
    */
-  async resendInvite(req: Request, res: Response, next: NextFunction) {
+  private async resendInvite(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const { userId } = req.params;
 
@@ -135,7 +131,7 @@ export default class InviteUsersController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  async accept(req: Request, res: Response, next: Function) {
+  private async accept(req: Request, res: Response, next: Function) {
     const inviteUserInput: IInviteUserInput = this.matchedBodyData(req, {
       locations: ['body'],
       includeOptionals: true,
@@ -161,7 +157,7 @@ export default class InviteUsersController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  async invited(req: Request, res: Response, next: Function) {
+  private async invited(req: Request, res: Response, next: Function) {
     const { token } = req.params;
 
     try {
@@ -181,7 +177,12 @@ export default class InviteUsersController extends BaseController {
   /**
    * Handles the service error.
    */
-  handleServicesError(error, req: Request, res: Response, next: Function) {
+  private handleServicesError(
+    error,
+    req: Request,
+    res: Response,
+    next: Function
+  ) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'EMAIL_EXISTS') {
         return res.status(400).send({

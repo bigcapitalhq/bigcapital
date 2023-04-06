@@ -3,8 +3,6 @@ import moment from 'moment';
 import { ServiceError } from '@/exceptions';
 import { Invite, SystemUser, Tenant } from '@/system/models';
 import { hashPassword } from 'utils';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import InviteUsersMailMessages from '@/services/InviteUsers/InviteUsersMailMessages';
 import events from '@/subscribers/events';
 import {
   IAcceptInviteEventPayload,
@@ -12,29 +10,13 @@ import {
   ICheckInviteEventPayload,
   IUserInvite,
 } from '@/interfaces';
-import TenantsManagerService from '@/services/Tenancy/TenantsManager';
 import { ERRORS } from './constants';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
 @Service()
 export default class AcceptInviteUserService {
   @Inject()
-  eventPublisher: EventPublisher;
-
-  @Inject()
-  tenancy: TenancyService;
-
-  @Inject('logger')
-  logger: any;
-
-  @Inject()
-  mailMessages: InviteUsersMailMessages;
-
-  @Inject('repositories')
-  sysRepositories: any;
-
-  @Inject()
-  tenantsManager: TenantsManagerService;
+  private eventPublisher: EventPublisher;
 
   /**
    * Accept the received invite.
@@ -49,9 +31,6 @@ export default class AcceptInviteUserService {
   ): Promise<void> {
     // Retrieve the invite token or throw not found error.
     const inviteToken = await this.getInviteTokenOrThrowError(token);
-
-    // Validates the user phone number.
-    await this.validateUserPhoneNumberNotExists(inviteUserDTO.phoneNumber);
 
     // Hash the given password.
     const hashedPassword = await hashPassword(inviteUserDTO.password);
