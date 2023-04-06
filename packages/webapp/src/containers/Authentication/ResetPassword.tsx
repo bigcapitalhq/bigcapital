@@ -37,7 +37,7 @@ export default function ResetPassword() {
       .then((response) => {
         AppToaster.show({
           message: intl.get('password_successfully_updated'),
-          intent: Intent.DANGER,
+          intent: Intent.SUCCESS,
           position: Position.BOTTOM,
         });
         history.push('/auth/login');
