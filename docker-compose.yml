@@ -9,11 +9,11 @@ services:
   mysql:
     build:
       context: ./docker/mysql
-      args:
-        - MYSQL_DATABASE=${SYSTEM_DB_NAME}
-        - MYSQL_USER=${DB_NAME}
-        - MYSQL_PASSWORD=${DB_PASSWORD}
-        - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    environment:
+      - MYSQL_DATABASE=${SYSTEM_DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     volumes:
       - mysql:/var/lib/mysql
     expose:
