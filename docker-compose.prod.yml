@@ -77,22 +77,24 @@ services:
     build:
       context: ./
       dockerfile: docker/migration/Dockerfile
-      args:
-        - DB_HOST=mysql
-        - DB_USER=${DB_USER}
-        - DB_PASSWORD=${DB_PASSWORD}
-        - DB_CHARSET=${DB_CHARSET}
-        - SYSTEM_DB_NAME=${SYSTEM_DB_NAME}
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_CHARSET=${DB_CHARSET}
+      - SYSTEM_DB_NAME=${SYSTEM_DB_NAME}
+    depends_on:
+      - mysql
 
   mysql:
     container_name: bigcapital-mysql
     build:
       context: ./docker/mysql
-      args:
-        - MYSQL_DATABASE=${SYSTEM_DB_NAME}
-        - MYSQL_USER=${DB_NAME}
-        - MYSQL_PASSWORD=${DB_PASSWORD}
-        - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    environment:
+      - MYSQL_DATABASE=${SYSTEM_DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     volumes:
       - mysql:/var/lib/mysql
     expose:
