@@ -40,7 +40,7 @@ services:
     environment:
       # Mail
       - MAIL_HOST=${MAIL_HOST}
-      - MAIL_USERNAME=${MAIL_USERNAM}
+      - MAIL_USERNAME=${MAIL_USERNAME}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
       - MAIL_PORT=${MAIL_PORT}
       - MAIL_SECURE=${MAIL_SECURE}
