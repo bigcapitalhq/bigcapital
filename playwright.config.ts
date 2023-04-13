@@ -24,7 +24,7 @@ const config: PlaywrightTestConfig = {
     // contextOptions: {
     //   ignoreHTTPSErrors: true,
     // },
-    baseURL: 'http://localhost:4000',
+    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:4000',
   },
   projects: [
     {
