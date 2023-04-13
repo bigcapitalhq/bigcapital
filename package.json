@@ -10,6 +10,7 @@
     "dev:server": "lerna run dev --scope \"@bigcapital/server\"",
     "build:server": "lerna run build --scope \"@bigcapital/server\"",
     "serve:server": "lerna run serve --scope \"@bigcapital/server\"",
+    "test:e2e": "playwright test",
     "prepare": "husky install"
   },
   "workspaces": [
@@ -21,7 +22,8 @@
     "@commitlint/config-lerna-scopes": "^17.4.2",
     "husky": "^8.0.3",
     "lerna": "^6.4.1",
-    "@commitlint/cli": "^17.4.2"
+    "@commitlint/cli": "^17.4.2",
+    "@playwright/test": "^1.32.3"
   },
   "engines": {
     "node": "14.x"
@@ -30,6 +32,5 @@
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
-  },
-  "dependencies": {}
+  }
 }
