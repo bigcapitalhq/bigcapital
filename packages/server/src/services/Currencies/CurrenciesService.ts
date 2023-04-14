@@ -1,18 +1,15 @@
 import { Inject, Service } from 'typedi';
-import { uniq } from 'lodash';
-
 import {
   ICurrencyEditDTO,
   ICurrencyDTO,
   ICurrenciesService,
   ICurrency,
 } from '@/interfaces';
-import {
-  EventDispatcher,
-  EventDispatcherInterface,
-} from 'decorators/eventDispatcher';
 import { ServiceError } from '@/exceptions';
 import TenancyService from '@/services/Tenancy/TenancyService';
+import { Tenant } from '@/system/models';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { CurrencyTransformer } from './CurrencyTransformer';
 
 const ERRORS = {
   CURRENCY_NOT_FOUND: 'currency_not_found',
@@ -23,14 +20,11 @@ const ERRORS = {
 
 @Service()
 export default class CurrenciesService implements ICurrenciesService {
-  @Inject('logger')
-  logger: any;
-
-  @EventDispatcher()
-  eventDispatcher: EventDispatcherInterface;
+  @Inject()
+  private tenancy: TenancyService;
 
   @Inject()
-  tenancy: TenancyService;
+  private transformer: TransformerInjectable;
 
   /**
    * Retrieve currency by given currency code or throw not found error.
@@ -105,7 +99,7 @@ export default class CurrenciesService implements ICurrenciesService {
    */
   public async newCurrency(tenantId: number, currencyDTO: ICurrencyDTO) {
     const { Currency } = this.tenancy.models(tenantId);
-  
+
     // Validate currency code uniquiness.
     await this.validateCurrencyCodeUniquiness(
       tenantId,
@@ -141,13 +135,15 @@ export default class CurrenciesService implements ICurrenciesService {
    * @param {number} tenantId
    * @param {string} currencyCode
    */
-  validateCannotDeleteBaseCurrency(tenantId: number, currencyCode: string) {
-    const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-    if (baseCurrency === currencyCode) {
+  private async validateCannotDeleteBaseCurrency(
+    tenantId: number,
+    currencyCode: string
+  ) {
+    const tenant = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
+
+    if (tenant.metadata.baseCurrency === currencyCode) {
       throw new ServiceError(ERRORS.CANNOT_DELETE_BASE_CURRENCY);
     }
   }
@@ -156,7 +152,7 @@ export default class CurrenciesService implements ICurrenciesService {
    * Delete the given currency code.
    * @param {number} tenantId
    * @param {string} currencyCode
-   * @return {Promise<}
+   * @return {Promise<void>}
    */
   public async deleteCurrency(
     tenantId: number,
@@ -180,19 +176,13 @@ export default class CurrenciesService implements ICurrenciesService {
   public async listCurrencies(tenantId: number): Promise<ICurrency[]> {
     const { Currency } = this.tenancy.models(tenantId);
 
-    const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
     const currencies = await Currency.query().onBuild((query) => {
       query.orderBy('createdAt', 'ASC');
     });
-    const formattedCurrencies = currencies.map((currency) => ({
-      isBaseCurrency: baseCurrency === currency.currencyCode,
-      ...currency,
-    }));
-    return formattedCurrencies;
+    return this.transformer.transform(
+      tenantId,
+      currencies,
+      new CurrencyTransformer()
+    );
   }
 }
