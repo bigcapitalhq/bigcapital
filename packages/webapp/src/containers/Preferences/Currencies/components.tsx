@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 import {
   Menu,
   Popover,
@@ -9,6 +10,7 @@ import {
   MenuItem,
   MenuDivider,
   Intent,
+  Tag,
 } from '@blueprintjs/core';
 import { Icon } from '@/components';
 import { safeCallback } from '@/utils';
@@ -52,12 +54,25 @@ export const ActionsCell = (props) => {
   );
 };
 
+export const CurrencyNameAccessor = (value) => {
+  return (
+    <CurrencyNameRoot>
+      {value.currency_name} {value.is_base_currency && <Tag>Base Currency</Tag>}
+    </CurrencyNameRoot>
+  );
+};
+
+const CurrencyNameRoot = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
 export function useCurrenciesTableColumns() {
   return useMemo(
     () => [
       {
         Header: intl.get('currency_name'),
-        accessor: 'currency_name',
+        accessor: CurrencyNameAccessor,
         width: 150,
       },
       {

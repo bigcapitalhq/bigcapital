@@ -132,15 +132,9 @@ export const useUsersListColumns = () => {
       {
         id: 'role_name',
         Header: intl.get('users.column.role_name'),
-        accessor: 'role.name',
+        accessor: 'role_name',
         width: 120,
       },
-      // {
-      //   id: 'phone_number',
-      //   Header: intl.get('phone_number'),
-      //   accessor: 'phone_number',
-      //   width: 120,
-      // },
       {
         id: 'status',
         Header: intl.get('status'),

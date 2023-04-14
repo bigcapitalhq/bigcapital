@@ -41,17 +41,29 @@ function UserFormContent({
         <UserFormCalloutAlerts calloutCodes={calloutCode} />
 
         {/* ----------- Email ----------- */}
-        <FFormGroup name={'email'} label={<T id={'email'} />}>
+        <FFormGroup
+          name={'email'}
+          label={<T id={'email'} />}
+          labelInfo={<FieldRequiredHint />}
+        >
           <FInputGroup name={'email'} />
         </FFormGroup>
 
         {/* ----------- First name ----------- */}
-        <FFormGroup name={'first_name'} label={<T id={'first_name'} />}>
+        <FFormGroup
+          name={'first_name'}
+          label={<T id={'first_name'} />}
+          labelInfo={<FieldRequiredHint />}
+        >
           <FInputGroup name={'first_name'} />
         </FFormGroup>
 
         {/* ----------- Last name ----------- */}
-        <FFormGroup name={'last_name'} label={<T id={'last_name'} />}>
+        <FFormGroup
+          name={'last_name'}
+          label={<T id={'last_name'} />}
+          labelInfo={<FieldRequiredHint />}
+        >
           <FInputGroup name={'last_name'} />
         </FFormGroup>
 
@@ -94,6 +106,7 @@ function UserFormContent({
             type="submit"
             disabled={isSubmitting}
             loading={isSubmitting}
+            style={{ minWidth: '85px' }}
           >
             <T id={'edit'} />
           </Button>

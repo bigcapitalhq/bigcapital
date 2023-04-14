@@ -22,6 +22,14 @@ function UsersDataTable({
   // #withAlertActions
   openAlert,
 }) {
+  const { mutateAsync: resendInviation } = useResendInvitation();
+
+  // Users list columns.
+  const columns = useUsersListColumns();
+
+  // Users list context.
+  const { users, isUsersLoading, isUsersFetching } = useUsersListContext();
+
   // Handle edit user action.
   const handleEditUserAction = useCallback(
     (user) => {
@@ -50,9 +58,6 @@ function UsersDataTable({
     },
     [openAlert],
   );
-
-  const { mutateAsync: resendInviation } = useResendInvitation();
-
   const handleResendInvitation = useCallback((user) => {
     resendInviation(user.id)
       .then(() => {
@@ -71,17 +76,12 @@ function UsersDataTable({
             AppToaster.show({
               message:
                 'This person was recently invited. No need to invite them again just yet.',
-              intent: Intent.DANGER,
+              intent: Intent.WARNING,
             });
           }
         },
       );
   });
-  // Users list columns.
-  const columns = useUsersListColumns();
-
-  // Users list context.
-  const { users, isUsersLoading, isUsersFetching } = useUsersListContext();
 
   return (
     <DataTable
