@@ -8,7 +8,7 @@ import { Inject, Service } from 'typedi';
 @Service()
 export default class InviteSendMainNotificationSubscribe {
   @Inject('agenda')
-  agenda: any;
+  private agenda: any;
 
   /**
    * Attaches events with handlers.

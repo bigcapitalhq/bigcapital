@@ -25,6 +25,7 @@ import SyncSystemSendInvite from '@/services/InviteUsers/SyncSystemSendInvite';
 import InviteSendMainNotification from '@/services/InviteUsers/InviteSendMailNotification';
 import SyncTenantAcceptInvite from '@/services/InviteUsers/SyncTenantAcceptInvite';
 import SyncTenantUserMutate from '@/services/Users/SyncTenantUserSaved';
+import { SyncTenantUserDelete } from '@/services/Users/SyncTenantUserDeleted';
 import OrgSyncTenantAdminUserSubscriber from '@/subscribers/Organization/SyncTenantAdminUser';
 import OrgBuildSmsNotificationSubscriber from '@/subscribers/Organization/BuildSmsNotification';
 import PurgeUserAbilityCache from '@/services/Users/PurgeUserAbilityCache';
@@ -113,6 +114,7 @@ export const susbcribers = () => {
     SyncTenantAcceptInvite,
     InviteSendMainNotification,
     SyncTenantUserMutate,
+    SyncTenantUserDelete,
     OrgSyncTenantAdminUserSubscriber,
     OrgBuildSmsNotificationSubscriber,
     PurgeUserAbilityCache,

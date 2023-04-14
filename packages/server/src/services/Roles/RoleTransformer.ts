@@ -10,18 +10,18 @@ export class RoleTransformer extends Transformer {
   };
 
   /**
-   * 
+   * Retrieves the localized role name if is predefined or stored name.
    * @param role 
-   * @returns 
+   * @returns {string}
    */
   public name(role) {
     return role.predefined ? this.context.i18n.__(role.name) : role.name;
   }
 
   /**
-   * 
+   * Retrieves the localized role description if is predefined or stored description.
    * @param role 
-   * @returns 
+   * @returns {string}
    */
   public description(role) {
     return role.predefined
