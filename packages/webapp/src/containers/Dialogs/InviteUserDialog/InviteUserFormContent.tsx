@@ -6,6 +6,8 @@ import {
   ListSelect,
   FieldRequiredHint,
   FormattedMessage as T,
+  FFormGroup,
+  FInputGroup,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import classNames from 'classnames';
@@ -32,19 +34,13 @@ function InviteUserFormContent({
           <T id={'your_access_to_your_team'} />
         </p>
         {/* ----------- Email ----------- */}
-        <FastField name={'email'}>
-          {({ field, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'email'} />}
-              labelInfo={<FieldRequiredHint />}
-              className={classNames('form-group--email', CLASSES.FILL)}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name="email" />}
-            >
-              <InputGroup medium={true} {...field} />
-            </FormGroup>
-          )}
-        </FastField>
+        <FFormGroup
+          name={'email'}
+          label={<T id={'invite_user.label.email'} />}
+          labelInfo={<FieldRequiredHint />}
+        >
+          <FInputGroup name={'email'} />
+        </FFormGroup>
         {/* ----------- Role name ----------- */}
         <FastField name={'role_id'}>
           {({ form, field: { value }, meta: { error, touched } }) => (
@@ -78,7 +74,13 @@ function InviteUserFormContent({
             <T id={'cancel'} />
           </Button>
 
-          <Button intent={Intent.PRIMARY} type="submit" disabled={isSubmitting}>
+          <Button
+            intent={Intent.PRIMARY}
+            type="submit"
+            disabled={isSubmitting}
+            loading={isSubmitting}
+            style={{ minWidth: '95px' }}
+          >
             {isEditMode ? <T id={'edit'} /> : <T id={'invite'} />}
           </Button>
         </div>

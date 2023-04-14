@@ -2228,5 +2228,8 @@
   "project_billable_entries.dialog.show": "Show",
   "project_billable_entries.alert.there_is_no_billable_entries": "There is no billable entries for that project.",
   "project_billable_entries.billable_type": "Billable {value}",
-  "add_billable_entries": "Add Billable Entries"
+  "add_billable_entries": "Add Billable Entries",
+
+  "invite_user.label.email": "Email",
+  "invite_user.label.role_name": "Role name"
 }

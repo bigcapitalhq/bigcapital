@@ -16,6 +16,11 @@ import { transformApiErrors } from './utils';
 
 import { compose, objectKeysTransform } from '@/utils';
 
+const initialValues = {
+  email: '',
+  role_id: ''
+}
+
 function InviteUserForm({
   // #withDialogActions
   closeDialog,
@@ -23,7 +28,8 @@ function InviteUserForm({
   const { dialogName, isEditMode, inviteUserMutate, userId } =
     useInviteUserFormContext();
 
-  const initialValues = {
+  const initialFormValues = {
+    ...initialValues,
     status: 1,
     ...(isEditMode &&
       pick(
@@ -66,7 +72,7 @@ function InviteUserForm({
   return (
     <Formik
       validationSchema={InviteUserFormSchema}
-      initialValues={initialValues}
+      initialValues={initialFormValues}
       onSubmit={handleSubmit}
     >
       <InviteUserFormContent />
