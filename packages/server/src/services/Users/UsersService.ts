@@ -14,12 +14,11 @@ import RolesService from '@/services/Roles/RolesService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ERRORS } from './constants';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { UserTransformer } from './UserTransformer';
 
 @Service()
 export default class UsersService {
-  @Inject('repositories')
-  private repositories: any;
-
   @Inject()
   private rolesService: RolesService;
 
@@ -28,6 +27,9 @@ export default class UsersService {
 
   @Inject()
   private eventPublisher: EventPublisher;
+
+  @Inject()
+  private transformer: TransformerInjectable;
 
   /**
    * Creates a new user.
@@ -91,9 +93,10 @@ export default class UsersService {
     // Retrieve user details or throw not found service error.
     const tenantUser = await this.getTenantUserOrThrowError(tenantId, userId);
 
-    // Validate the delete user should not be the last user.
-    await this.validateNotLastUserDelete(tenantId);
-
+    // Validate the delete user should not be the last active user.
+    if (tenantUser.isInviteAccepted) {
+      await this.validateNotLastUserDelete(tenantId);
+    }
     // Delete user from the storage.
     await User.query().findById(userId).delete();
 
@@ -183,7 +186,7 @@ export default class UsersService {
 
     const users = await User.query().withGraphFetched('role');
 
-    return users;
+    return this.transformer.transform(tenantId, users, new UserTransformer());
   }
 
   /**
@@ -223,11 +226,13 @@ export default class UsersService {
    * @param {number} tenantId
    */
   private async validateNotLastUserDelete(tenantId: number) {
-    const { systemUserRepository } = this.repositories;
+    const { User } = this.tenancy.models(tenantId);
 
-    const usersFound = await systemUserRepository.find({ tenantId });
+    const inviteAcceptedUsers = await User.query()
+      .select(['id'])
+      .whereNotNull('invite_accepted_at');
 
-    if (usersFound.length === 1) {
+    if (inviteAcceptedUsers.length === 1) {
       throw new ServiceError(ERRORS.CANNOT_DELETE_LAST_USER);
     }
   }
@@ -291,9 +296,9 @@ export default class UsersService {
 
   /**
    * Validate the authorized user cannot mutate its role.
-   * @param {ITenantUser} oldTenantUser 
-   * @param {IEditUserDTO} editUserDTO 
-   * @param {ISystemUser} authorizedUser 
+   * @param {ITenantUser} oldTenantUser
+   * @param {IEditUserDTO} editUserDTO
+   * @param {ISystemUser} authorizedUser
    */
   validateMutateRoleNotAuthorizedUser(
     oldTenantUser: ITenantUser,
@@ -307,5 +312,4 @@ export default class UsersService {
       throw new ServiceError(ERRORS.CANNOT_AUTHORIZED_USER_MUTATE_ROLE);
     }
   }
-
 }

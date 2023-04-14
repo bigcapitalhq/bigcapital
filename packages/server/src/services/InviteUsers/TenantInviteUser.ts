@@ -3,7 +3,6 @@ import uniqid from 'uniqid';
 import moment from 'moment';
 import { ServiceError } from '@/exceptions';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import InviteUsersMailMessages from '@/services/InviteUsers/InviteUsersMailMessages';
 import events from '@/subscribers/events';
 import {
   ISystemUser,
@@ -13,7 +12,6 @@ import {
   IUserInvitedEventPayload,
   IUserInviteResendEventPayload,
 } from '@/interfaces';
-import TenantsManagerService from '@/services/Tenancy/TenantsManager';
 import { ERRORS } from './constants';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import RolesService from '@/services/Roles/RolesService';
@@ -21,25 +19,13 @@ import RolesService from '@/services/Roles/RolesService';
 @Service()
 export default class InviteTenantUserService implements IInviteUserService {
   @Inject()
-  eventPublisher: EventPublisher;
+  private eventPublisher: EventPublisher;
 
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject('logger')
-  logger: any;
+  private tenancy: TenancyService;
 
   @Inject()
-  mailMessages: InviteUsersMailMessages;
-
-  @Inject('repositories')
-  sysRepositories: any;
-
-  @Inject()
-  tenantsManager: TenantsManagerService;
-
-  @Inject()
-  rolesService: RolesService;
+  private rolesService: RolesService;
 
   /**
    * Sends invite mail to the given email from the given tenant and user.
@@ -99,8 +85,6 @@ export default class InviteTenantUserService implements IInviteUserService {
   ): Promise<{
     user: ITenantUser;
   }> {
-    const { User } = this.tenancy.models(tenantId);
-
     // Retrieve the user by id or throw not found service error.
     const user = await this.getUserByIdOrThrowError(tenantId, userId);
 

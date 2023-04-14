@@ -92,6 +92,7 @@ export default class InviteUsersController extends BaseController {
 
     try {
       await this.inviteUsersService.sendInvite(tenantId, sendInviteDTO, user);
+
       return res.status(200).send({
         type: 'success',
         code: 'INVITE.SENT.SUCCESSFULLY',
