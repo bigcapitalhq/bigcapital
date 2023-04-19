@@ -177,7 +177,7 @@ export default class ItemsController extends BaseController {
   /**
    * Validate list query schema.
    */
-  get validateListQuerySchema() {
+  private get validateListQuerySchema() {
     return [
       query('column_sort_by').optional().trim().escape(),
       query('sort_order').optional().isIn(['desc', 'asc']),
@@ -194,31 +194,19 @@ export default class ItemsController extends BaseController {
   }
 
   /**
-   * Validate autocomplete list query schema.
-   */
-  get autocompleteQuerySchema() {
-    return [
-      query('column_sort_by').optional().trim().escape(),
-      query('sort_order').optional().isIn(['desc', 'asc']),
-
-      query('stringified_filter_roles').optional().isJSON(),
-      query('limit').optional().isNumeric().toInt(),
-
-      query('keyword').optional().isString().trim().escape(),
-    ];
-  }
-
-  /**
    * Stores the given item details to the storage.
    * @param {Request} req
    * @param {Response} res
    */
-  async newItem(req: Request, res: Response, next: NextFunction) {
+  private async newItem(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const itemDTO: IItemDTO = this.matchedBodyData(req);
 
     try {
-      const storedItem = await this.itemsApplication.createItem(tenantId, itemDTO);
+      const storedItem = await this.itemsApplication.createItem(
+        tenantId,
+        itemDTO
+      );
 
       return res.status(200).send({
         id: storedItem.id,
@@ -234,7 +222,7 @@ export default class ItemsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async editItem(req: Request, res: Response, next: NextFunction) {
+  private async editItem(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const itemId: number = req.params.id;
     const item: IItemDTO = this.matchedBodyData(req);
@@ -257,7 +245,7 @@ export default class ItemsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async activateItem(req: Request, res: Response, next: NextFunction) {
+  private async activateItem(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const itemId: number = req.params.id;
 
@@ -279,7 +267,11 @@ export default class ItemsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async inactivateItem(req: Request, res: Response, next: NextFunction) {
+  private async inactivateItem(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const itemId: number = req.params.id;
 
@@ -300,7 +292,7 @@ export default class ItemsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async deleteItem(req: Request, res: Response, next: NextFunction) {
+  private async deleteItem(req: Request, res: Response, next: NextFunction) {
     const itemId: number = req.params.id;
     const { tenantId } = req;
 
@@ -322,7 +314,7 @@ export default class ItemsController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  async getItem(req: Request, res: Response, next: NextFunction) {
+  private async getItem(req: Request, res: Response, next: NextFunction) {
     const itemId: number = req.params.id;
     const { tenantId } = req;
 
@@ -342,7 +334,7 @@ export default class ItemsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async getItemsList(req: Request, res: Response, next: NextFunction) {
+  private async getItemsList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
 
     const filter = {

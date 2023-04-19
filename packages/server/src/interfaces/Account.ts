@@ -42,6 +42,7 @@ export enum AccountNormal {
 
 export interface IAccountsTransactionsFilter {
   accountId?: number;
+  limit?: number;
 }
 
 export interface IAccountTransaction {
