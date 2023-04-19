@@ -4,23 +4,24 @@ import intl from 'react-intl-universal';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { compose } from '@/utils';
 import { TableStyle } from '@/constants';
 import { Card, DataTable, If } from '@/components';
+import { AccountDrawerTableOptionsProvider } from './AccountDrawerTableOptionsProvider';
+import { AccountDrawerTableHeader } from './AccountDrawerTableHeader';
+
 import { useAccountReadEntriesColumns } from './utils';
 import { useAppIntlContext } from '@/components/AppIntlProvider';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
+import { compose } from '@/utils';
+
 /**
  * account drawer table.
  */
 function AccountDrawerTable({ closeDrawer }) {
-  const { account, accounts, drawerName } = useAccountDrawerContext();
-
-  // Account read-only entries table columns.
-  const columns = useAccountReadEntriesColumns();
+  const { accounts, drawerName } = useAccountDrawerContext();
 
   // Handle view more link click.
   const handleLinkClick = () => {
@@ -31,24 +32,38 @@ function AccountDrawerTable({ closeDrawer }) {
 
   return (
     <Card>
-      <DataTable
-        columns={columns}
-        data={accounts}
-        payload={{ account }}
-        styleName={TableStyle.Constrant}
-      />
+      <AccountDrawerTableOptionsProvider>
+        <AccountDrawerTableHeader />
+        <AccountDrawerDataTable />
 
-      <If condition={accounts.length > 0}>
-        <TableFooter>
-          <Link
-            to={`/financial-reports/general-ledger`}
-            onClick={handleLinkClick}
-          >
-            {isRTL ? '→' : '←'} {intl.get('view_more_transactions')}
-          </Link>
-        </TableFooter>
-      </If>
+        <If condition={accounts.length > 0}>
+          <TableFooter>
+            <Link
+              to={`/financial-reports/general-ledger`}
+              onClick={handleLinkClick}
+            >
+              {isRTL ? '→' : '←'} {intl.get('view_more_transactions')}
+            </Link>
+          </TableFooter>
+        </If>
+      </AccountDrawerTableOptionsProvider>
     </Card>
+  );
+}
+
+function AccountDrawerDataTable() {
+  const { account, accounts } = useAccountDrawerContext();
+
+  // Account read-only entries table columns.
+  const columns = useAccountReadEntriesColumns();
+
+  return (
+    <DataTable
+      columns={columns}
+      data={accounts}
+      payload={{ account }}
+      styleName={TableStyle.Constrant}
+    />
   );
 }
 
