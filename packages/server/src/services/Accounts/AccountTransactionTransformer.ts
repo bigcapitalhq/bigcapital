@@ -106,7 +106,7 @@ export default class AccountTransactionTransformer extends Transformer {
    * @returns {string}
    */
   protected formattedFcCredit(transaction: IAccountTransaction) {
-    return this.formatMoney(this.fcDebit(transaction), {
+    return this.formatMoney(this.fcCredit(transaction), {
       currencyCode: transaction.currencyCode,
       excerptZero: true,
     });
@@ -117,7 +117,7 @@ export default class AccountTransactionTransformer extends Transformer {
    * @returns {string}
    */
   protected formattedFcDebit(transaction: IAccountTransaction) {
-    return this.formatMoney(this.fcCredit(transaction), {
+    return this.formatMoney(this.fcDebit(transaction), {
       currencyCode: transaction.currencyCode,
       excerptZero: true,
     });
