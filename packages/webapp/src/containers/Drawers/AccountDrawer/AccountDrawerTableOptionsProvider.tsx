@@ -3,7 +3,7 @@ import React, { useState, useCallback } from 'react';
 interface AccountDrawerTableOptionsContextValue {
   setFYCCurrencyType: () => void;
   setBCYCurrencyType: () => void;
-  isFYCCurrencyType: boolean;
+  isFCYCurrencyType: boolean;
   isBCYCurrencyType: boolean;
   currencyType: ForeignCurrencyType;
 }
@@ -13,20 +13,20 @@ const AccountDrawerTableOptionsContext = React.createContext(
 );
 
 enum ForeignCurrencyTypes {
-  FYC = 'FYC',
+  FCY = 'FCY',
   BCY = 'BCY',
 }
-type ForeignCurrencyType = ForeignCurrencyTypes.FYC | ForeignCurrencyTypes.BCY;
+type ForeignCurrencyType = ForeignCurrencyTypes.FCY | ForeignCurrencyTypes.BCY;
 
 function AccountDrawerTableOptionsProvider({
-  initialCurrencyType = ForeignCurrencyTypes.FYC,
+  initialCurrencyType = ForeignCurrencyTypes.FCY,
   ...props
 }) {
   const [currencyType, setCurrentType] =
     useState<ForeignCurrencyType>(initialCurrencyType);
 
   const setFYCCurrencyType = useCallback(
-    () => setCurrentType(ForeignCurrencyTypes.FYC),
+    () => setCurrentType(ForeignCurrencyTypes.FCY),
     [setCurrentType],
   );
   const setBCYCurrencyType = useCallback(
@@ -38,7 +38,7 @@ function AccountDrawerTableOptionsProvider({
   const provider = {
     setFYCCurrencyType,
     setBCYCurrencyType,
-    isFYCCurrencyType: currencyType === ForeignCurrencyTypes.FYC,
+    isFCYCurrencyType: currencyType === ForeignCurrencyTypes.FCY,
     isBCYCurrencyType: currencyType === ForeignCurrencyTypes.BCY,
     currencyType,
   };

@@ -8,7 +8,7 @@ export function AccountDrawerTableHeader() {
     setBCYCurrencyType,
     setFYCCurrencyType,
     isBCYCurrencyType,
-    isFYCCurrencyType,
+    isFCYCurrencyType,
   } = useAccountDrawerTableOptionsContext();
 
   const handleBCYBtnClick = () => {
@@ -25,7 +25,7 @@ export function AccountDrawerTableHeader() {
           small
           outlined
           onClick={handleFCYBtnClick}
-          active={isFYCCurrencyType}
+          active={isFCYCurrencyType}
         >
           FCY
         </Button>

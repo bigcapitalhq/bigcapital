@@ -9,7 +9,7 @@ import { useAccountDrawerTableOptionsContext } from './AccountDrawerTableOptions
  * Retrieve entries columns of read-only account view.
  */
 export const useAccountReadEntriesColumns = () => {
-  const { isFYCCurrencyType } = useAccountDrawerTableOptionsContext();
+  const { isFCYCurrencyType } = useAccountDrawerTableOptionsContext();
 
   return React.useMemo(
     () => [
@@ -28,7 +28,7 @@ export const useAccountReadEntriesColumns = () => {
       },
       {
         Header: intl.get('credit'),
-        accessor: isFYCCurrencyType
+        accessor: isFCYCurrencyType
           ? 'formatted_fc_credit'
           : 'formatted_credit',
         width: 80,
@@ -38,13 +38,13 @@ export const useAccountReadEntriesColumns = () => {
       },
       {
         Header: intl.get('debit'),
-        accessor: isFYCCurrencyType ? 'formatted_fc_debit' : 'formatted_debit',
+        accessor: isFCYCurrencyType ? 'formatted_fc_debit' : 'formatted_debit',
         width: 80,
         className: 'debit',
         align: 'right',
         textOverview: true,
       },
     ],
-    [isFYCCurrencyType],
+    [isFCYCurrencyType],
   );
 };
