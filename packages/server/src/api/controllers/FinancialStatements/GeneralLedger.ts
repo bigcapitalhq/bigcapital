@@ -67,6 +67,7 @@ export default class GeneralLedgerReportController extends BaseFinancialReportCo
     try {
       const { data, query, meta } =
         await this.generalLedgetService.generalLedger(tenantId, filter);
+
       return res.status(200).send({
         meta: this.transfromToResponse(meta),
         data: this.transfromToResponse(data),

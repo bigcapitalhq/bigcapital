@@ -22,15 +22,19 @@ export class GetAccount {
    */
   public getAccount = async (tenantId: number, accountId: number) => {
     const { Account } = this.tenancy.models(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
     // Find the given account or throw not found error.
     const account = await Account.query().findById(accountId).throwIfNotFound();
+
+    const accountsGraph = await accountRepository.getDependencyGraph();
 
     // Transformes the account model to POJO.
     const transformed = await this.transformer.transform(
       tenantId,
       account,
-      new AccountTransformer()
+      new AccountTransformer(),
+      { accountsGraph }
     );
     return this.i18nService.i18nApply(
       [['accountTypeLabel'], ['accountNormalFormatted']],

@@ -79,9 +79,15 @@ export interface IAccountTransaction {
 }
 export interface IAccountResponse extends IAccount {}
 
+export enum IAccountsStructureType {
+  Tree = 'tree',
+  Flat = 'flat',
+}
+
 export interface IAccountsFilter extends IDynamicListFilterDTO {
   stringifiedFilterRoles?: string;
   onlyInactive: boolean;
+  structure?: IAccountsStructureType;
 }
 
 export interface IAccountType {
