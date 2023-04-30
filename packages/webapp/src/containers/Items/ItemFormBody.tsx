@@ -9,15 +9,15 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import {
-  AccountsSelectList,
+  AccountsSelect,
   MoneyInputGroup,
   Col,
   Row,
   Hint,
   InputPrependText,
+  FFormGroup,
 } from '@/components';
 import { FormattedMessage as T } from '@/components';
-import classNames from 'classnames';
 
 import { useItemFormContext } from './ItemFormProvider';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
@@ -91,42 +91,27 @@ function ItemFormBody({ organization: { base_currency } }) {
           </FastField>
 
           {/*------------- Selling account ------------- */}
-          <FastField
+          <FFormGroup
+            label={<T id={'account'} />}
             name={'sell_account_id'}
+            labelInfo={
+              <Hint content={<T id={'item.field.sell_account.hint'} />} />
+            }
+            inline={true}
+            items={accounts}
             sellable={values.sellable}
-            accounts={accounts}
             shouldUpdate={sellAccountFieldShouldUpdate}
           >
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'account'} />}
-                labelInfo={
-                  <Hint content={<T id={'item.field.sell_account.hint'} />} />
-                }
-                inline={true}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="sell_account_id" />}
-                className={classNames(
-                  'form-group--sell-account',
-                  'form-group--select-list',
-                  Classes.FILL,
-                )}
-              >
-                <AccountsSelectList
-                  accounts={accounts}
-                  onAccountSelected={(account) => {
-                    form.setFieldValue('sell_account_id', account.id);
-                  }}
-                  defaultSelectText={<T id={'select_account'} />}
-                  selectedAccountId={value}
-                  disabled={!form.values.sellable}
-                  filterByParentTypes={[ACCOUNT_PARENT_TYPE.INCOME]}
-                  popoverFill={true}
-                  allowCreate={true}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+            <AccountsSelect
+              name={'sell_account_id'}
+              items={accounts}
+              placeholder={<T id={'select_account'} />}
+              disabled={!values.sellable}
+              filterByParentTypes={[ACCOUNT_PARENT_TYPE.INCOME]}
+              fill={true}
+              allowCreate={true}
+            />
+          </FFormGroup>
 
           <FastField
             name={'sell_description'}
@@ -200,42 +185,31 @@ function ItemFormBody({ organization: { base_currency } }) {
           </FastField>
 
           {/*------------- Cost account ------------- */}
-          <FastField
+          <FFormGroup
             name={'cost_account_id'}
             purchasable={values.purchasable}
-            accounts={accounts}
+            items={accounts}
             shouldUpdate={costAccountFieldShouldUpdate}
+            label={<T id={'account'} />}
+            labelInfo={
+              <Hint content={<T id={'item.field.cost_account.hint'} />} />
+            }
+            inline={true}
+            fastField={true}
           >
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'account'} />}
-                labelInfo={
-                  <Hint content={<T id={'item.field.cost_account.hint'} />} />
-                }
-                inline={true}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="cost_account_id" />}
-                className={classNames(
-                  'form-group--cost-account',
-                  'form-group--select-list',
-                  Classes.FILL,
-                )}
-              >
-                <AccountsSelectList
-                  accounts={accounts}
-                  onAccountSelected={(account) => {
-                    form.setFieldValue('cost_account_id', account.id);
-                  }}
-                  defaultSelectText={<T id={'select_account'} />}
-                  selectedAccountId={value}
-                  disabled={!form.values.purchasable}
-                  filterByParentTypes={[ACCOUNT_PARENT_TYPE.EXPENSE]}
-                  popoverFill={true}
-                  allowCreate={true}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+            <AccountsSelect
+              name={'cost_account_id'}
+              items={accounts}
+              placeholder={<T id={'select_account'} />}
+              filterByParentTypes={[ACCOUNT_PARENT_TYPE.EXPENSE]}
+              popoverFill={true}
+              allowCreate={true}
+              fastField={true}
+              disabled={!values.purchasable}
+              purchasable={values.purchasable}
+              shouldUpdate={costAccountFieldShouldUpdate}
+            />
+          </FFormGroup>
 
           <FastField
             name={'purchase_description'}

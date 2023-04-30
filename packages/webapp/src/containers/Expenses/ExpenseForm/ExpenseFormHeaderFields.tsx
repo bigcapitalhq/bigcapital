@@ -16,7 +16,8 @@ import { customersFieldShouldUpdate, accountsFieldShouldUpdate } from './utils';
 import {
   CurrencySelectList,
   CustomerSelectField,
-  AccountsSelectList,
+  FFormGroup,
+  AccountsSelect,
   FieldRequiredHint,
   Hint,
 } from '@/components';
@@ -54,37 +55,26 @@ export default function ExpenseFormHeader() {
         )}
       </FastField>
 
-      <FastField
+      <FFormGroup
         name={'payment_account_id'}
-        accounts={accounts}
+        items={accounts}
+        label={<T id={'payment_account'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline={true}
+        fastField={true}
         shouldUpdate={accountsFieldShouldUpdate}
       >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'payment_account'} />}
-            className={classNames(
-              'form-group--payment_account',
-              'form-group--select-list',
-              Classes.FILL,
-            )}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'payment_account_id'} />}
-            inline={true}
-          >
-            <AccountsSelectList
-              accounts={accounts}
-              onAccountSelected={(account) => {
-                form.setFieldValue('payment_account_id', account.id);
-              }}
-              defaultSelectText={<T id={'select_payment_account'} />}
-              selectedAccountId={value}
-              filterByParentTypes={[ACCOUNT_PARENT_TYPE.CURRENT_ASSET]}
-              allowCreate={true}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+        <AccountsSelect
+          name={'payment_account_id'}
+          items={accounts}
+          placeholder={<T id={'select_payment_account'} />}
+          filterByParentTypes={[ACCOUNT_PARENT_TYPE.CURRENT_ASSET]}
+          allowCreate={true}
+          fastField={true}
+          shouldUpdate={accountsFieldShouldUpdate}
+          fill={true}
+        />
+      </FFormGroup>
 
       <FastField name={'currency_code'}>
         {({ form, field: { value }, meta: { error, touched } }) => (

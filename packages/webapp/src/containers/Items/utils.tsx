@@ -119,7 +119,7 @@ export const handleDeleteErrors = (errors) => {
  */
 export const accountsFieldShouldUpdate = (newProps, oldProps) => {
   return (
-    newProps.accounts !== oldProps.accounts ||
+    newProps.items !== oldProps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
@@ -149,7 +149,7 @@ export const sellPriceFieldShouldUpdate = (newProps, oldProps) => {
  */
 export const sellAccountFieldShouldUpdate = (newProps, oldProps) => {
   return (
-    newProps.accounts !== oldProps.accounts ||
+    newProps.items !== oldProps.items ||
     newProps.sellable !== oldProps.sellable ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );

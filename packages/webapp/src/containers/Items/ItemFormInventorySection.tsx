@@ -1,21 +1,18 @@
 // @ts-nocheck
 import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
-import { FormGroup } from '@blueprintjs/core';
-import { CLASSES } from '@/constants/classes';
 import {
-  AccountsSelectList,
+  AccountsSelect,
+  FFormGroup,
   FormattedMessage as T,
   Col,
   Row,
 } from '@/components';
-import classNames from 'classnames';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
+import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import { accountsFieldShouldUpdate } from './utils';
-import { compose, inputIntent } from '@/utils';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { useItemFormContext } from './ItemFormProvider';
+import { compose } from '@/utils';
 
 /**
  * Item form inventory sections.
@@ -31,36 +28,24 @@ function ItemFormInventorySection({ organization: { base_currency } }) {
 
       <Row>
         <Col xs={6}>
-          {/*------------- Inventory account ------------- */}
-          <FastField
+          {/*------------- Inventory Account ------------- */}
+          <FFormGroup
+            label={<T id={'inventory_account'} />}
             name={'inventory_account_id'}
-            accounts={accounts}
+            items={accounts}
+            fastField={true}
             shouldUpdate={accountsFieldShouldUpdate}
+            inline={true}
           >
-            {({ form, field: { value }, meta: { touched, error } }) => (
-              <FormGroup
-                label={<T id={'inventory_account'} />}
-                inline={true}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="inventory_account_id" />}
-                className={classNames(
-                  'form-group--item-inventory_account',
-                  'form-group--select-list',
-                  CLASSES.FILL,
-                )}
-              >
-                <AccountsSelectList
-                  accounts={accounts}
-                  onAccountSelected={(account) => {
-                    form.setFieldValue('inventory_account_id', account.id);
-                  }}
-                  defaultSelectText={<T id={'select_account'} />}
-                  selectedAccountId={value}
-                  filterByTypes={[ACCOUNT_TYPE.INVENTORY]}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+            <AccountsSelect
+              name={'inventory_account_id'}
+              items={accounts}
+              placeholder={<T id={'select_account'} />}
+              filterByTypes={[ACCOUNT_TYPE.INVENTORY]}
+              fastField={true}
+              shouldUpdate={accountsFieldShouldUpdate}
+            />
+          </FFormGroup>
         </Col>
       </Row>
     </div>

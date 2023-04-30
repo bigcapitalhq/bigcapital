@@ -27,7 +27,7 @@ import {
 } from '@/utils';
 import {
   FFormGroup,
-  AccountsSelectList,
+  AccountsSelect,
   CustomerSelectField,
   FieldRequiredHint,
   Icon,
@@ -285,41 +285,30 @@ function PaymentReceiveHeaderFields({
       </FastField>
 
       {/* ------------ Deposit account ------------ */}
-      <FastField
+      <FFormGroup
         name={'deposit_account_id'}
-        accounts={accounts}
+        label={<T id={'deposit_to'} />}
+        inline={true}
+        labelInfo={<FieldRequiredHint />}
+        items={accounts}
         shouldUpdate={accountsFieldShouldUpdate}
+        fastField={true}
       >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'deposit_to'} />}
-            className={classNames(
-              'form-group--deposit_account_id',
-              'form-group--select-list',
-              CLASSES.FILL,
-            )}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'deposit_account_id'} />}
-          >
-            <AccountsSelectList
-              accounts={accounts}
-              labelInfo={<FieldRequiredHint />}
-              onAccountSelected={(account) => {
-                form.setFieldValue('deposit_account_id', account.id);
-              }}
-              defaultSelectText={<T id={'select_deposit_account'} />}
-              selectedAccountId={value}
-              filterByTypes={[
-                ACCOUNT_TYPE.CASH,
-                ACCOUNT_TYPE.BANK,
-                ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
-              ]}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+        <AccountsSelect
+          name={'deposit_account_id'}
+          items={accounts}
+          labelInfo={<FieldRequiredHint />}
+          placeholder={<T id={'select_deposit_account'} />}
+          filterByTypes={[
+            ACCOUNT_TYPE.CASH,
+            ACCOUNT_TYPE.BANK,
+            ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+          ]}
+          shouldUpdate={accountsFieldShouldUpdate}
+          fastField={true}
+          fill={true}
+        />
+      </FFormGroup>
 
       {/* ------------ Reference No. ------------ */}
       <FastField name={'reference_no'}>

@@ -15,7 +15,7 @@ import { CLASSES } from '@/constants/classes';
 
 import {
   FFormGroup,
-  AccountsSelectList,
+  AccountsSelect,
   CustomerSelectField,
   FieldRequiredHint,
   Icon,
@@ -125,38 +125,27 @@ function ReceiptFormHeader({
       />
 
       {/* ----------- Deposit account ----------- */}
-      <FastField
+      <FFormGroup
+        label={<T id={'deposit_account'} />}
+        inline={true}
+        labelInfo={<FieldRequiredHint />}
         name={'deposit_account_id'}
-        accounts={accounts}
+        items={accounts}
         shouldUpdate={accountsFieldShouldUpdate}
       >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'deposit_account'} />}
-            className={classNames('form-group--deposit-account', CLASSES.FILL)}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'deposit_account_id'} />}
-          >
-            <AccountsSelectList
-              accounts={accounts}
-              onAccountSelected={(account) => {
-                form.setFieldValue('deposit_account_id', account.id);
-              }}
-              defaultSelectText={<T id={'select_deposit_account'} />}
-              selectedAccountId={value}
-              popoverFill={true}
-              filterByTypes={[
-                ACCOUNT_TYPE.CASH,
-                ACCOUNT_TYPE.BANK,
-                ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
-              ]}
-              allowCreate={true}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+        <AccountsSelect
+          items={accounts}
+          name={'deposit_account_id'}
+          placeholder={<T id={'select_deposit_account'} />}
+          filterByTypes={[
+            ACCOUNT_TYPE.CASH,
+            ACCOUNT_TYPE.BANK,
+            ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+          ]}
+          allowCreate={true}
+          fill={true}
+        />
+      </FFormGroup>
 
       {/* ----------- Receipt date ----------- */}
       <FastField name={'receipt_date'}>
