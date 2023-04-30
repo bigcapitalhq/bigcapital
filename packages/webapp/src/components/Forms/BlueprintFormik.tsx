@@ -10,22 +10,9 @@ import {
   EditableText,
   TextArea,
 } from '@blueprintjs-formik/core';
-import { Button } from '@blueprintjs/core';
-import { Select, MultiSelect } from '@blueprintjs-formik/select';
+import { MultiSelect } from '@blueprintjs-formik/select';
 import { DateInput } from '@blueprintjs-formik/datetime';
-
-function FSelect({ ...props }) {
-  const input = ({ activeItem, text, label, value }) => {
-    return (
-      <Button
-        text={text || props.placeholder || 'Select an item ...'}
-        rightIcon="double-caret-vertical"
-        {...props.buttonProps}
-      />
-    );
-  };
-  return <Select input={input} {...props} />;
-}
+import { FSelect } from './Select';
 
 export {
   FormGroup as FFormGroup,

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { Form, ErrorMessage, useFormikContext } from 'formik';
+import { Form, useFormikContext } from 'formik';
 import { Button, Classes, FormGroup, Intent } from '@blueprintjs/core';
 import {
   If,
@@ -17,11 +17,13 @@ import {
 } from '@/components';
 import withAccounts from '@/containers/Accounts/withAccounts';
 
-import { compose } from '@/utils';
-import { useAutofocus } from '@/hooks';
 import { FOREIGN_CURRENCY_ACCOUNTS } from '@/constants/accountTypes';
+
+import { useAutofocus } from '@/hooks';
 import { useAccountDialogContext } from './AccountDialogProvider';
+
 import { parentAccountShouldUpdate } from './utils';
+import { compose } from '@/utils';
 
 /**
  * Account form dialogs fields.
@@ -58,6 +60,7 @@ function AccountFormDialogFields({
             disabled={fieldsDisabled.accountType}
             popoverProps={{ minimal: true }}
             fastField={true}
+            fill={true}
           />
         </FFormGroup>
 
@@ -65,7 +68,6 @@ function AccountFormDialogFields({
           name={'name'}
           label={<T id={'account_name'} />}
           labelInfo={<FieldRequiredHint />}
-          helperText={<ErrorMessage name="name" />}
           inline={true}
           fastField={true}
         >
@@ -80,7 +82,6 @@ function AccountFormDialogFields({
         <FFormGroup
           label={<T id={'account_code'} />}
           name={'code'}
-          helperText={<ErrorMessage name="code" />}
           labelInfo={<Hint content={<T id="account_code_hint" />} />}
           inline={true}
           fastField={true}
@@ -118,6 +119,7 @@ function AccountFormDialogFields({
               filterByTypes={values.account_type}
               buttonProps={{ disabled: !values.subaccount }}
               fastField={true}
+              fill={true}
             />
           </FFormGroup>
         )}
@@ -135,6 +137,7 @@ function AccountFormDialogFields({
               currencies={currencies}
               popoverProps={{ minimal: true }}
               fastField={true}
+              fill={true}
             />
           </FFormGroup>
         </If>
@@ -149,6 +152,7 @@ function AccountFormDialogFields({
             name={'description'}
             growVertically={true}
             height={280}
+            fill={true}
             fastField={true}
           />
         </FFormGroup>
