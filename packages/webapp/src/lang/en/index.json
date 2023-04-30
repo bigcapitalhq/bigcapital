@@ -242,7 +242,7 @@
   "organization": "Organization.",
   "check_your_email_for_a_link_to_reset": "Check your email for a link to reset your password.If it doesn’t appear within a few minutes, check your spam folder.",
   "we_couldn_t_find_your_account_with_that_email": "We couldn't find your account with that email.",
-  "select_parent_account": "Select Parent Account",
+  "select_parent_account": "Select Parent Account...",
   "the_exchange_rate_has_been_edited_successfully": "The exchange rate has been edited successfully",
   "the_exchange_rate_has_been_created_successfully": "The exchange rate has been created successfully",
   "the_user_details_has_been_updated": "The user details has been updated",

@@ -45,13 +45,6 @@ const currencyItemRenderer = (currency, { handleClick, modifiers, query }) => {
   );
 };
 
-const currencySelectProps = {
-  itemPredicate: currencyItemPredicate,
-  itemRenderer: currencyItemRenderer,
-  valueAccessor: 'currency_code',
-  labelAccessor: 'currency_code',
-};
-
 /**
  *
  * @param {*} currencies
@@ -60,7 +53,10 @@ const currencySelectProps = {
 export function CurrencySelect({ currencies, ...rest }) {
   return (
     <FSelect
-      {...currencySelectProps}
+      itemPredicate={currencyItemPredicate}
+      itemRenderer={currencyItemRenderer}
+      valueAccessor={'currency_code'}
+      labelAccessor={'currency_code'}
       {...rest}
       items={currencies}
       input={CurrnecySelectButton}

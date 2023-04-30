@@ -3,7 +3,7 @@ import React from 'react';
 import { Classes } from '@blueprintjs/core';
 
 import {
-  AccountMultiSelect,
+  AccountsMultiSelect,
   Row,
   Col,
   FormattedMessage as T,
@@ -54,7 +54,7 @@ function GLHeaderGeneralPaneContent() {
             name={'accountsIds'}
             className={Classes.FILL}
           >
-            <AccountMultiSelect name="accountsIds" accounts={accounts} />
+            <AccountsMultiSelect name="accountsIds" items={accounts} />
           </FFormGroup>
         </Col>
       </Row>
