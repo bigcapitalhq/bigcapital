@@ -3,8 +3,8 @@ import React, { useMemo } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { FMultiSelect } from '../Forms';
 import { accountPredicate } from './_components';
-import { filterAccountsByQuery, nestedArrayToflatten } from '@/utils';
 import { MenuItemNestedText } from '../Menu';
+import { usePreprocessingAccounts } from './_hooks';
 
 /**
  * Default account item renderer of the list.
@@ -45,23 +45,13 @@ export function AccountsMultiSelect({
 
   ...rest
 }) {
-  // Filters accounts based on the given filter props.
-  const filteredAccounts = useMemo(() => {
-    const flattenAccounts = nestedArrayToflatten(items);
-
-    return filterAccountsByQuery(flattenAccounts, {
-      filterByRootTypes,
-      filterByParentTypes,
-      filterByTypes,
-      filterByNormal,
-    });
-  }, [
-    items,
-    filterByRootTypes,
+  // Filters accounts based on filter props.
+  const filteredAccounts = usePreprocessingAccounts(accounts, {
     filterByParentTypes,
     filterByTypes,
     filterByNormal,
-  ]);
+    filterByRootTypes,
+  });
 
   return (
     <FMultiSelect

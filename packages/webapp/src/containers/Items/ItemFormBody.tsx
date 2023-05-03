@@ -101,6 +101,7 @@ function ItemFormBody({ organization: { base_currency } }) {
             items={accounts}
             sellable={values.sellable}
             shouldUpdate={sellAccountFieldShouldUpdate}
+            fastField={true}
           >
             <AccountsSelect
               name={'sell_account_id'}
@@ -110,6 +111,7 @@ function ItemFormBody({ organization: { base_currency } }) {
               filterByParentTypes={[ACCOUNT_PARENT_TYPE.INCOME]}
               fill={true}
               allowCreate={true}
+              fastField={true}  
             />
           </FFormGroup>
 

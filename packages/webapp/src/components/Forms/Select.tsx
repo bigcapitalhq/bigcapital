@@ -1,15 +1,16 @@
 // @ts-nocheck
 import React from 'react';
-import styled from 'styled-components';
-import clsx from 'classnames';
 import { Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs-formik/select';
+import styled from 'styled-components';
+import clsx from 'classnames';
 
 export function FSelect({ ...props }) {
   const input = ({ activeItem, text, label, value }) => {
     return (
       <SelectButton
         text={text || props.placeholder || 'Select an item ...'}
+        disabled={props.disabled || false}
         {...props.buttonProps}
         className={clsx({ 'is-selected': !!text }, props.className)}
       />
@@ -45,7 +46,6 @@ const SelectButton = styled(Button)`
     margin-right: 12px;
     border-radius: 1px;
   }
-
   &:not([class*='bp3-intent-']) {
     &,
     &:hover {

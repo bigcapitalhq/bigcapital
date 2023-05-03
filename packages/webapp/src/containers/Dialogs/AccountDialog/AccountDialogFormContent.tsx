@@ -120,6 +120,7 @@ function AccountFormDialogFields({
               buttonProps={{ disabled: !values.subaccount }}
               fastField={true}
               fill={true}
+              allowCreate={true}
             />
           </FFormGroup>
         )}

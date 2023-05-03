@@ -131,6 +131,7 @@ function ReceiptFormHeader({
         labelInfo={<FieldRequiredHint />}
         name={'deposit_account_id'}
         items={accounts}
+        fastField={true}
         shouldUpdate={accountsFieldShouldUpdate}
       >
         <AccountsSelect
@@ -144,6 +145,8 @@ function ReceiptFormHeader({
           ]}
           allowCreate={true}
           fill={true}
+          fastField={true}
+          shouldUpdate={accountsFieldShouldUpdate}
         />
       </FFormGroup>
 

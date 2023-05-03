@@ -1,7 +1,5 @@
+// @ts-nocheck
 import React from 'react';
-import { MenuItem } from '@blueprintjs/core';
-import { MenuItemNestedText } from '../Menu';
-
 
 // Filters accounts items.
 export const accountPredicate = (query, account, _index, exactMatch) => {

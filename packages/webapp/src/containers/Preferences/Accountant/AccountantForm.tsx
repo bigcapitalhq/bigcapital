@@ -2,6 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Form, FastField, useFormikContext } from 'formik';
+import styled from 'styled-components';
 import {
   FormGroup,
   RadioGroup,
@@ -21,7 +22,6 @@ import {
 } from '@/components';
 import { handleStringChange, inputIntent } from '@/utils';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/constants/accountTypes';
-
 import { useAccountantFormContext } from './AccountantFormProvider';
 
 /**
@@ -118,7 +118,7 @@ export default function AccountantForm() {
       </FastField>
 
       {/* ----------- Deposit customer account ----------- */}
-      <FFormGroup
+      <AccountantFormGroup
         name={'preferred_deposit_account'}
         label={
           <strong>
@@ -133,6 +133,7 @@ export default function AccountantForm() {
           />
         }
         labelInfo={<FieldRequiredHint />}
+        fastField={true}
       >
         <AccountsSelect
           name={'preferred_deposit_account'}
@@ -143,11 +144,12 @@ export default function AccountantForm() {
             ACCOUNT_TYPE.BANK,
             ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
           ]}
+          fastField={true}
         />
-      </FFormGroup>
+      </AccountantFormGroup>
 
       {/* ----------- Withdrawal vendor account ----------- */}
-      <FFormGroup
+      <AccountantFormGroup
         name={'withdrawal_account'}
         label={
           <strong>
@@ -162,6 +164,7 @@ export default function AccountantForm() {
           />
         }
         labelInfo={<FieldRequiredHint />}
+        fastField={true}
       >
         <AccountsSelect
           name={'withdrawal_account'}
@@ -172,11 +175,12 @@ export default function AccountantForm() {
             ACCOUNT_TYPE.BANK,
             ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
           ]}
+          fastField={true}
         />
-      </FFormGroup>
+      </AccountantFormGroup>
 
       {/* ----------- Withdrawal customer account ----------- */}
-      <FFormGroup
+      <AccountantFormGroup
         name={'preferred_advance_deposit'}
         label={
           <strong>
@@ -191,14 +195,16 @@ export default function AccountantForm() {
           />
         }
         labelInfo={<FieldRequiredHint />}
+        fastField={true}
       >
         <AccountsSelect
           name={'preferred_advance_deposit'}
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
           filterByParentTypes={[ACCOUNT_PARENT_TYPE.CURRENT_ASSET]}
+          fastField={true}
         />
-      </FFormGroup>
+      </AccountantFormGroup>
 
       <CardFooterActions>
         <Button intent={Intent.PRIMARY} loading={isSubmitting} type="submit">
@@ -211,3 +217,7 @@ export default function AccountantForm() {
     </Form>
   );
 }
+
+const AccountantFormGroup = styled(FFormGroup)`
+  width: 450px;
+`;

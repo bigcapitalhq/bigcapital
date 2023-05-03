@@ -1,16 +1,12 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
+import React from 'react';
 import * as R from 'ramda';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
-import {
-  MenuItemNestedText,
-  FormattedMessage as T,
-  FSelect,
-} from '@/components';
-import { filterAccountsByQuery, nestedArrayToflatten } from '@/utils';
+import { MenuItemNestedText, FSelect } from '@/components';
 import { accountPredicate } from './_components';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { usePreprocessingAccounts } from './_hooks';
 
 // Create new account renderer.
 const createNewItemRenderer = (query, active, handleClick) => {
@@ -25,11 +21,7 @@ const createNewItemRenderer = (query, active, handleClick) => {
 };
 
 // Create new item from the given query string.
-const createNewItemFromQuery = (name) => {
-  return {
-    name,
-  };
-};
+const createNewItemFromQuery = (name) => ({ name });
 
 /**
  * Default account item renderer.
@@ -61,6 +53,7 @@ function AccountsSelectRoot({
 
   // #ownProps
   items,
+  allowCreate,
 
   filterByParentTypes,
   filterByTypes,
@@ -70,23 +63,17 @@ function AccountsSelectRoot({
   ...restProps
 }) {
   // Filters accounts based on filter props.
-  const filteredAccounts = useMemo(() => {
-    const flattenAccounts = nestedArrayToflatten(items);
-
-    const filteredAccounts = filterAccountsByQuery(flattenAccounts, {
-      filterByRootTypes,
-      filterByParentTypes,
-      filterByTypes,
-      filterByNormal,
-    });
-    return filteredAccounts;
-  }, [
-    items,
-    filterByRootTypes,
+  const filteredAccounts = usePreprocessingAccounts(items, {
     filterByParentTypes,
     filterByTypes,
     filterByNormal,
-  ]);
+    filterByRootTypes,
+  });
+  // Maybe inject new item props to select component.
+  const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
+  const maybeCreateNewItemFromQuery = allowCreate
+    ? createNewItemFromQuery
+    : null;
 
   return (
     <FSelect
@@ -97,6 +84,8 @@ function AccountsSelectRoot({
       popoverProps={{ minimal: true, usePortal: true, inline: false }}
       itemPredicate={accountPredicate}
       itemRenderer={accountRenderer}
+      createNewItemRenderer={maybeCreateNewItemRenderer}
+      createNewItemFromQuery={maybeCreateNewItemFromQuery}
       {...restProps}
     />
   );
