@@ -1,4 +1,5 @@
 // @ts-nocheck
+import React from 'react';
 import {
   FormGroup,
   InputGroup,
@@ -9,8 +10,9 @@ import {
   EditableText,
   TextArea,
 } from '@blueprintjs-formik/core';
-import { Select, MultiSelect } from '@blueprintjs-formik/select';
+import { MultiSelect } from '@blueprintjs-formik/select';
 import { DateInput } from '@blueprintjs-formik/datetime';
+import { FSelect } from './Select';
 
 export {
   FormGroup as FFormGroup,
@@ -19,7 +21,7 @@ export {
   Checkbox as FCheckbox,
   RadioGroup as FRadioGroup,
   Switch as FSwitch,
-  Select as FSelect,
+  FSelect,
   MultiSelect as FMultiSelect,
   EditableText as FEditableText,
   TextArea as FTextArea,

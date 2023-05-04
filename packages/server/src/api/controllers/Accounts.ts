@@ -3,7 +3,12 @@ import { check, param, query } from 'express-validator';
 import { Service, Inject } from 'typedi';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from '@/api/controllers/BaseController';
-import { AbilitySubject, AccountAction, IAccountDTO } from '@/interfaces';
+import {
+  AbilitySubject,
+  AccountAction,
+  IAccountDTO,
+  IAccountsStructureType,
+} from '@/interfaces';
 import { ServiceError } from '@/exceptions';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { DATATYPES_LENGTH } from '@/data/DataTypes';
@@ -172,6 +177,11 @@ export default class AccountsController extends BaseController {
 
       query('inactive_mode').optional().isBoolean().toBoolean(),
       query('search_keyword').optional({ nullable: true }).isString().trim(),
+
+      query('structure')
+        .optional()
+        .isString()
+        .isIn([IAccountsStructureType.Tree, IAccountsStructureType.Flat]),
     ];
   }
 
@@ -341,6 +351,7 @@ export default class AccountsController extends BaseController {
       sortOrder: 'desc',
       columnSortBy: 'created_at',
       inactiveMode: false,
+      structure: IAccountsStructureType.Tree,
       ...this.matchedQueryData(req),
     };
 

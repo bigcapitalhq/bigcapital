@@ -101,7 +101,7 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
  */
 export const accountsFieldShouldUpdate = (newProps, oldProps) => {
   return (
-    newProps.accounts !== oldProps.accounts ||
+    newProps.items !== oldProps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };

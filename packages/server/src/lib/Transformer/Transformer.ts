@@ -2,6 +2,7 @@ import moment from 'moment';
 import * as R from 'ramda';
 import { includes, isFunction, isObject, isUndefined, omit } from 'lodash';
 import { formatNumber } from 'utils';
+import { isArrayLikeObject } from 'lodash/fp';
 
 export class Transformer {
   public context: any;
@@ -41,10 +42,31 @@ export class Transformer {
 
   /**
    *
+   * @param object
+   * @returns
+   */
+  protected preCollectionTransform = (object: any) => {
+    return object;
+  };
+
+  /**
+   *
+   * @param object
+   * @returns
+   */
+  protected postCollectionTransform = (object: any) => {
+    return object;
+  };
+
+  /**
+   *
    */
   public work = (object: any) => {
     if (Array.isArray(object)) {
-      return object.map(this.getTransformation);
+      const preTransformed = this.preCollectionTransform(object);
+      const transformed = preTransformed.map(this.getTransformation);
+
+      return this.postCollectionTransform(transformed);
     } else if (isObject(object)) {
       return this.getTransformation(object);
     }

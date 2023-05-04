@@ -2,6 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Form, FastField, useFormikContext } from 'formik';
+import styled from 'styled-components';
 import {
   FormGroup,
   RadioGroup,
@@ -14,13 +15,13 @@ import { useHistory } from 'react-router-dom';
 
 import {
   FormattedMessage as T,
-  AccountsSelectList,
+  AccountsSelect,
   FieldRequiredHint,
   CardFooterActions,
+  FFormGroup,
 } from '@/components';
 import { handleStringChange, inputIntent } from '@/utils';
-import { ACCOUNT_TYPE } from '@/constants/accountTypes';
-
+import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { useAccountantFormContext } from './AccountantFormProvider';
 
 /**
@@ -28,14 +29,13 @@ import { useAccountantFormContext } from './AccountantFormProvider';
  */
 export default function AccountantForm() {
   const history = useHistory();
+  const { accounts } = useAccountantFormContext();
 
   const { isSubmitting } = useFormikContext();
 
   const handleCloseClick = () => {
     history.go(-1);
   };
-
-  const { accounts } = useAccountantFormContext();
 
   return (
     <Form>
@@ -48,7 +48,7 @@ export default function AccountantForm() {
         }
         className={'accounts-checkbox'}
       >
-        {/*------------ account code required -----------*/}
+        {/*------------ Account code (required) -----------*/}
         <FastField name={'account_code_required'} type={'checkbox'}>
           {({ field }) => (
             <FormGroup inline={true}>
@@ -65,7 +65,8 @@ export default function AccountantForm() {
             </FormGroup>
           )}
         </FastField>
-        {/*------------ account code unique -----------*/}
+
+        {/*------------ Account code (unique) -----------*/}
         <FastField name={'account_code_unique'} type={'checkbox'}>
           {({ field }) => (
             <FormGroup inline={true}>
@@ -85,6 +86,7 @@ export default function AccountantForm() {
           )}
         </FastField>
       </FormGroup>
+
       {/* ----------- Accounting basis ----------- */}
       <FastField name={'accounting_basis'}>
         {({
@@ -116,120 +118,93 @@ export default function AccountantForm() {
       </FastField>
 
       {/* ----------- Deposit customer account ----------- */}
-      <FastField name={'preferred_deposit_account'}>
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
-          <FormGroup
-            label={
-              <strong>
-                <T id={'deposit_customer_account'} />
-              </strong>
+      <AccountantFormGroup
+        name={'preferred_deposit_account'}
+        label={
+          <strong>
+            <T id={'deposit_customer_account'} />
+          </strong>
+        }
+        helperText={
+          <T
+            id={
+              'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'
             }
-            helperText={
-              <T
-                id={
-                  'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'
-                }
-              />
-            }
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-          >
-            <AccountsSelectList
-              accounts={accounts}
-              onAccountSelected={({ id }) => {
-                setFieldValue('preferred_deposit_account', id);
-              }}
-              selectedAccountId={value}
-              defaultSelectText={<T id={'select_payment_account'} />}
-              filterByTypes={[
-                ACCOUNT_TYPE.CASH,
-                ACCOUNT_TYPE.BANK,
-                ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
-              ]}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+          />
+        }
+        labelInfo={<FieldRequiredHint />}
+        fastField={true}
+      >
+        <AccountsSelect
+          name={'preferred_deposit_account'}
+          items={accounts}
+          placeholder={<T id={'select_payment_account'} />}
+          filterByTypes={[
+            ACCOUNT_TYPE.CASH,
+            ACCOUNT_TYPE.BANK,
+            ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+          ]}
+          fastField={true}
+        />
+      </AccountantFormGroup>
 
       {/* ----------- Withdrawal vendor account ----------- */}
-      <FastField name={'withdrawal_account'}>
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
-          <FormGroup
-            label={
-              <strong>
-                <T id={'withdrawal_vendor_account'} />
-              </strong>
+      <AccountantFormGroup
+        name={'withdrawal_account'}
+        label={
+          <strong>
+            <T id={'withdrawal_vendor_account'} />
+          </strong>
+        }
+        helperText={
+          <T
+            id={
+              'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'
             }
-            helperText={
-              <T
-                id={
-                  'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'
-                }
-              />
-            }
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-          >
-            <AccountsSelectList
-              accounts={accounts}
-              onAccountSelected={({ id }) => {
-                setFieldValue('withdrawal_account', id);
-              }}
-              selectedAccountId={value}
-              defaultSelectText={<T id={'select_payment_account'} />}
-              filterByTypes={[
-                ACCOUNT_TYPE.CASH,
-                ACCOUNT_TYPE.BANK,
-                ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
-              ]}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+          />
+        }
+        labelInfo={<FieldRequiredHint />}
+        fastField={true}
+      >
+        <AccountsSelect
+          name={'withdrawal_account'}
+          items={accounts}
+          placeholder={<T id={'select_payment_account'} />}
+          filterByTypes={[
+            ACCOUNT_TYPE.CASH,
+            ACCOUNT_TYPE.BANK,
+            ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+          ]}
+          fastField={true}
+        />
+      </AccountantFormGroup>
 
       {/* ----------- Withdrawal customer account ----------- */}
-      <FastField name={'preferred_advance_deposit'}>
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
-          <FormGroup
-            label={
-              <strong>
-                <T id={'customer_advance_deposit'} />
-              </strong>
+      <AccountantFormGroup
+        name={'preferred_advance_deposit'}
+        label={
+          <strong>
+            <T id={'customer_advance_deposit'} />
+          </strong>
+        }
+        helperText={
+          <T
+            id={
+              'select_a_preferred_account_to_deposit_into_it_vendor_advanced_deposits'
             }
-            helperText={
-              <T
-                id={
-                  'select_a_preferred_account_to_deposit_into_it_vendor_advanced_deposits'
-                }
-              />
-            }
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-          >
-            <AccountsSelectList
-              accounts={accounts}
-              onAccountSelected={({ id }) => {
-                setFieldValue('preferred_advance_deposit', id);
-              }}
-              selectedAccountId={value}
-              defaultSelectText={<T id={'select_payment_account'} />}
-              // filterByParentTypes={[ACCOUNT_PARENT_TYPE.CURRENT_ASSET]}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+          />
+        }
+        labelInfo={<FieldRequiredHint />}
+        fastField={true}
+      >
+        <AccountsSelect
+          name={'preferred_advance_deposit'}
+          items={accounts}
+          placeholder={<T id={'select_payment_account'} />}
+          filterByParentTypes={[ACCOUNT_PARENT_TYPE.CURRENT_ASSET]}
+          fastField={true}
+        />
+      </AccountantFormGroup>
 
       <CardFooterActions>
         <Button intent={Intent.PRIMARY} loading={isSubmitting} type="submit">
@@ -242,3 +217,7 @@ export default function AccountantForm() {
     </Form>
   );
 }
+
+const AccountantFormGroup = styled(FFormGroup)`
+  width: 450px;
+`;

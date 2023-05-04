@@ -1,6 +1,11 @@
 import { Inject, Service } from 'typedi';
 import * as R from 'ramda';
-import { IAccountsFilter, IAccountResponse, IFilterMeta } from '@/interfaces';
+import {
+  IAccountsFilter,
+  IAccountResponse,
+  IFilterMeta,
+  IAccountsStructureType,
+} from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { AccountTransformer } from './AccountTransform';
@@ -38,6 +43,7 @@ export class GetAccounts {
     filterDTO: IAccountsFilter
   ): Promise<{ accounts: IAccountResponse[]; filterMeta: IFilterMeta }> => {
     const { Account } = this.tenancy.models(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
     // Parses the stringified filter roles.
     const filter = this.parseListFilterDTO(filterDTO);
@@ -53,17 +59,16 @@ export class GetAccounts {
       dynamicList.buildQuery()(builder);
       builder.modify('inactiveMode', filter.inactiveMode);
     });
-    // Retrievs the formatted accounts collection.
-    const preTransformedAccounts = await this.transformer.transform(
+
+    const accountsGraph = await accountRepository.getDependencyGraph();
+
+    // Retrieves the transformed accounts collection.
+    const transformedAccounts = await this.transformer.transform(
       tenantId,
       accounts,
-      new AccountTransformer()
+      new AccountTransformer(),
+      { accountsGraph, structure: filterDTO.structure }
     );
-    // Transform accounts to nested array.
-    const transformedAccounts = flatToNestedArray(preTransformedAccounts, {
-      id: 'id',
-      parentId: 'parentAccountId',
-    });
 
     return {
       accounts: transformedAccounts,

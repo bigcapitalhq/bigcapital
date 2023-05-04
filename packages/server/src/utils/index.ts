@@ -419,6 +419,54 @@ export const parseDate = (date: string) => {
   return date ? moment(date).utcOffset(0).format('YYYY-MM-DD') : '';
 };
 
+const nestedArrayToFlatten = (
+  collection,
+  property = 'children',
+  parseItem = (a, level) => a,
+  level = 1
+) => {
+  const parseObject = (obj) =>
+    parseItem(
+      {
+        ..._.omit(obj, [property]),
+      },
+      level
+    );
+
+  return collection.reduce((items, currentValue, index) => {
+    let localItems = [...items];
+    const parsedItem = parseObject(currentValue, level);
+    localItems.push(parsedItem);
+
+    if (Array.isArray(currentValue[property])) {
+      const flattenArray = nestedArrayToFlatten(
+        currentValue[property],
+        property,
+        parseItem,
+        level + 1
+      );
+      localItems = _.concat(localItems, flattenArray);
+    }
+    return localItems;
+  }, []);
+};
+
+const assocDepthLevelToObjectTree = (
+  objects,
+  level = 1,
+  propertyName = 'level'
+) => {
+  for (let i = 0; i < objects.length; i++) {
+    const object = objects[i];
+    object[propertyName] = level;
+
+    if (object.children) {
+      assocDepthLevelToObjectTree(object.children, level + 1, propertyName);
+    }
+  }
+  return objects;
+};
+
 export {
   templateRender,
   accumSum,
@@ -449,4 +497,6 @@ export {
   dateRangeFromToCollection,
   transformToMapKeyValue,
   mergeObjectsBykey,
+  nestedArrayToFlatten,
+  assocDepthLevelToObjectTree,
 };

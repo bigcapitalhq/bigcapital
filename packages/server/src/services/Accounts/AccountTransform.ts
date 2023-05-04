@@ -1,6 +1,11 @@
-import { IAccount } from '@/interfaces';
+import { IAccount, IAccountsStructureType } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { formatNumber } from 'utils';
+import {
+  assocDepthLevelToObjectTree,
+  flatToNestedArray,
+  formatNumber,
+  nestedArrayToFlatten,
+} from 'utils';
 
 export class AccountTransformer extends Transformer {
   /**
@@ -8,7 +13,23 @@ export class AccountTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['formattedAmount'];
+    return ['formattedAmount', 'flattenName'];
+  };
+
+  /**
+   * Retrieves the flatten name with all dependants accounts names.
+   * @param {IAccount} account -
+   * @returns {string}
+   */
+  public flattenName = (account: IAccount): string => {
+    const parentDependantsIds = this.options.accountsGraph.dependantsOf(
+      account.id
+    );
+    const prefixAccounts = parentDependantsIds.map((dependId) => {
+      const node = this.options.accountsGraph.getNodeData(dependId);
+      return `${node.name}: `;
+    });
+    return `${prefixAccounts}${account.name}`;
   };
 
   /**
@@ -17,8 +38,28 @@ export class AccountTransformer extends Transformer {
    * @returns {string}
    */
   protected formattedAmount = (account: IAccount): string => {
-    return formatNumber(account.amount, {
-      currencyCode: account.currencyCode,
+    return formatNumber(account.amount, { currencyCode: account.currencyCode });
+  };
+
+  /**
+   * Transformes the accounts collection to flat or nested array.
+   * @param {IAccount[]}
+   * @returns {IAccount[]}
+   */
+  protected postCollectionTransform = (accounts: IAccount[]) => {
+    // Transfom the flatten to accounts tree.
+    const transformed = flatToNestedArray(accounts, {
+      id: 'id',
+      parentId: 'parentAccountId',
     });
+    // Associate `accountLevel` attr to indicate object depth.
+    const transformed2 = assocDepthLevelToObjectTree(
+      transformed,
+      1,
+      'accountLevel'
+    );
+    return this.options.structure === IAccountsStructureType.Flat
+      ? nestedArrayToFlatten(transformed2)
+      : transformed2;
   };
 }

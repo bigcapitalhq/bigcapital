@@ -1,9 +1,12 @@
 // @ts-nocheck
 import React from 'react';
+import * as R from 'ramda';
+import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
-import { FMultiSelect } from '../Forms';
+import { MenuItemNestedText, FSelect } from '@/components';
 import { accountPredicate } from './_components';
-import { MenuItemNestedText } from '../Menu';
+import { DialogsName } from '@/constants/dialogs';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { usePreprocessingAccounts } from './_hooks';
 
 // Create new account renderer.
@@ -18,15 +21,14 @@ const createNewItemRenderer = (query, active, handleClick) => {
   );
 };
 
+// Create new item from the given query string.
+const createNewItemFromQuery = (name) => ({ name });
+
 /**
- * Default account item renderer of the list.
+ * Default account item renderer.
  * @returns {JSX.Element}
  */
-const accountRenderer = (
-  item,
-  { handleClick, modifiers, query },
-  { isSelected },
-) => {
+const accountRenderer = (item, { handleClick, modifiers, query }) => {
   if (!modifiers.matchesPredicate) {
     return null;
   }
@@ -34,31 +36,32 @@ const accountRenderer = (
     <MenuItem
       active={modifiers.active}
       disabled={modifiers.disabled}
-      text={<MenuItemNestedText level={item.account_level} text={item.name} />}
+      label={item.code}
       key={item.id}
+      text={<MenuItemNestedText level={item.account_level} text={item.name} />}
       onClick={handleClick}
-      icon={isSelected ? 'tick' : 'blank'}
     />
   );
 };
 
-// Create new item from the given query string.
-const createNewItemFromQuery = (name) => ({ name });
-
 /**
- * Accounts multi-select field binded with Formik form.
+ * Accounts select field binded with Formik form.
  * @returns {JSX.Element}
  */
-export function AccountsMultiSelect({
+function AccountsSelectRoot({
+  // #withDialogActions
+  openDialog,
+
+  // #ownProps
   items,
   allowCreate,
 
-  filterByRootTypes,
   filterByParentTypes,
   filterByTypes,
   filterByNormal,
+  filterByRootTypes,
 
-  ...rest
+  ...restProps
 }) {
   // Filters accounts based on filter props.
   const filteredAccounts = usePreprocessingAccounts(items, {
@@ -79,19 +82,20 @@ export function AccountsMultiSelect({
   };
 
   return (
-    <FMultiSelect
+    <FSelect
       items={filteredAccounts}
-      valueAccessor={'id'}
       textAccessor={'name'}
       labelAccessor={'code'}
-      tagAccessor={'name'}
-      popoverProps={{ minimal: true }}
+      valueAccessor={'id'}
+      popoverProps={{ minimal: true, usePortal: true, inline: false }}
       itemPredicate={accountPredicate}
       itemRenderer={accountRenderer}
       createNewItemRenderer={maybeCreateNewItemRenderer}
       createNewItemFromQuery={maybeCreateNewItemFromQuery}
       onCreateItemSelect={handleCreateItemClick}
-      {...rest}
+      {...restProps}
     />
   );
 }
+
+export const AccountsSelect = R.compose(withDialogActions)(AccountsSelectRoot);

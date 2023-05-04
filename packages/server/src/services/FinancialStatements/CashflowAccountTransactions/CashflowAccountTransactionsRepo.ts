@@ -5,7 +5,7 @@ import { ICashflowAccountTransactionsQuery, IPaginationMeta } from '@/interfaces
 @Service()
 export default class CashflowAccountTransactionsRepo {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   /**
    * Retrieve the cashflow account transactions.

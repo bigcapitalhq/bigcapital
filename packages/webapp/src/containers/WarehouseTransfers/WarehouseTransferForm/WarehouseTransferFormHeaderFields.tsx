@@ -8,13 +8,13 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from '@/components';
+import { FFormGroup, FormattedMessage as T } from '@/components';
 import { momentFormatter, compose, tansformDateValue } from '@/utils';
 import classNames from 'classnames';
 
 import { CLASSES } from '@/constants/classes';
 import {
-  AccountsSelectList,
+  AccountsSelect,
   FieldRequiredHint,
   Icon,
   InputPrependButton,
@@ -91,6 +91,7 @@ function WarehouseTransferFormHeaderFields({
           </FormGroup>
         )}
       </FastField>
+
       {/* ----------- Transfer number ----------- */}
       <Field name={'transaction_number'}>
         {({ form, field, meta: { error, touched } }) => (
@@ -130,60 +131,39 @@ function WarehouseTransferFormHeaderFields({
           </FormGroup>
         )}
       </Field>
+
       {/* ----------- Form Warehouse ----------- */}
-      <FastField name={'from_warehouse_id'} accounts={warehouses}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'warehouse_transfer.label.from_warehouse'} />}
-            className={classNames(
-              'form-group--warehouse-transfer',
-              CLASSES.FILL,
-            )}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'from_warehouse_id'} />}
-          >
-            <AccountsSelectList
-              accounts={warehouses}
-              onAccountSelected={(account) => {
-                form.setFieldValue('from_warehouse_id', account.id);
-              }}
-              defaultSelectText={<T id={'select_warehouse_transfer'} />}
-              selectedAccountId={value}
-              popoverFill={true}
-              allowCreate={true}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'from_warehouse_id'}
+        items={warehouses}
+        label={<T id={'warehouse_transfer.label.from_warehouse'} />}
+        inline={true}
+        labelInfo={<FieldRequiredHint />}
+      >
+        <AccountsSelect
+          name={'from_warehouse_id'}
+          items={warehouses}
+          placeholder={<T id={'select_warehouse_transfer'} />}
+          allowCreate={true}
+          fill={true}
+        />
+      </FFormGroup>
+
       {/* ----------- To Warehouse ----------- */}
-      <FastField name={'to_warehouse_id'} accounts={warehouses}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'warehouse_transfer.label.to_warehouse'} />}
-            className={classNames(
-              'form-group--warehouse-transfer',
-              CLASSES.FILL,
-            )}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'to_warehouse_id'} />}
-          >
-            <AccountsSelectList
-              accounts={warehouses}
-              onAccountSelected={(account) => {
-                form.setFieldValue('to_warehouse_id', account.id);
-              }}
-              defaultSelectText={<T id={'select_warehouse_transfer'} />}
-              selectedAccountId={value}
-              popoverFill={true}
-              allowCreate={true}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'to_warehouse_id'}
+        label={<T id={'warehouse_transfer.label.to_warehouse'} />}
+        inline={true}
+        labelInfo={<FieldRequiredHint />}
+      >
+        <AccountsSelect
+          name={'to_warehouse_id'}
+          items={warehouses}
+          placeholder={<T id={'select_warehouse_transfer'} />}
+          fill={true}
+          allowCreate={true}
+        />
+      </FFormGroup>
     </div>
   );
 }

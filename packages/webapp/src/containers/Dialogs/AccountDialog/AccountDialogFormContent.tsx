@@ -1,32 +1,29 @@
 // @ts-nocheck
 import React from 'react';
-import classNames from 'classnames';
-import { Form, FastField, Field, ErrorMessage, useFormikContext } from 'formik';
-import {
-  Button,
-  Classes,
-  FormGroup,
-  InputGroup,
-  Intent,
-  TextArea,
-  Checkbox,
-} from '@blueprintjs/core';
+import { Form, useFormikContext } from 'formik';
+import { Button, Classes, FormGroup, Intent } from '@blueprintjs/core';
 import {
   If,
   FieldRequiredHint,
   Hint,
-  AccountsSelectList,
+  AccountsSelect,
   AccountsTypesSelect,
   CurrencySelect,
   FormattedMessage as T,
+  FFormGroup,
+  FInputGroup,
+  FCheckbox,
+  FTextArea,
 } from '@/components';
 import withAccounts from '@/containers/Accounts/withAccounts';
 
-import { inputIntent, compose } from '@/utils';
-import { useAutofocus } from '@/hooks';
 import { FOREIGN_CURRENCY_ACCOUNTS } from '@/constants/accountTypes';
+
+import { useAutofocus } from '@/hooks';
 import { useAccountDialogContext } from './AccountDialogProvider';
+
 import { parentAccountShouldUpdate } from './utils';
+import { compose } from '@/utils';
 
 /**
  * Account form dialogs fields.
@@ -36,7 +33,7 @@ function AccountFormDialogFields({
   onClose,
   action,
 }) {
-  const { values, isSubmitting } = useFormikContext();
+  const { values, isSubmitting, setFieldValue } = useFormikContext();
   const accountNameFieldRef = useAutofocus();
 
   // Account form context.
@@ -46,146 +43,120 @@ function AccountFormDialogFields({
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
-        <Field name={'account_type'}>
-          {({ form, field: { value }, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'account_type'} />}
-              labelInfo={<FieldRequiredHint />}
-              className={classNames('form-group--account-type', Classes.FILL)}
-              inline={true}
-              helperText={<ErrorMessage name="account_type" />}
-              intent={inputIntent({ error, touched })}
-            >
-              <AccountsTypesSelect
-                accountsTypes={accountsTypes}
-                selectedTypeId={value}
-                defaultSelectText={<T id={'select_account_type'} />}
-                onTypeSelected={(accountType) => {
-                  form.setFieldValue('account_type', accountType.key);
-                  form.setFieldValue('currency_code', '');
-                }}
-                disabled={fieldsDisabled.accountType}
-                popoverProps={{ minimal: true }}
-                popoverFill={true}
-              />
-            </FormGroup>
-          )}
-        </Field>
-
-        <FastField name={'name'}>
-          {({ field, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'account_name'} />}
-              labelInfo={<FieldRequiredHint />}
-              className={'form-group--account-name'}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name="name" />}
-              inline={true}
-            >
-              <InputGroup
-                medium={true}
-                inputRef={(ref) => (accountNameFieldRef.current = ref)}
-                {...field}
-              />
-            </FormGroup>
-          )}
-        </FastField>
-
-        <FastField name={'code'}>
-          {({ form, field, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'account_code'} />}
-              className={'form-group--account-code'}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name="code" />}
-              inline={true}
-              labelInfo={<Hint content={<T id="account_code_hint" />} />}
-            >
-              <InputGroup medium={true} {...field} />
-            </FormGroup>
-          )}
-        </FastField>
-
-        <Field name={'subaccount'} type={'checkbox'}>
-          {({ field, meta: { error, touched } }) => (
-            <FormGroup
-              label={' '}
-              className={classNames('form-group--subaccount')}
-              intent={inputIntent({ error, touched })}
-              inline={true}
-            >
-              <Checkbox
-                inline={true}
-                label={<T id={'sub_account'} />}
-                name={'subaccount'}
-                {...field}
-              />
-            </FormGroup>
-          )}
-        </Field>
-
-        <FastField
-          name={'parent_account_id'}
-          shouldUpdate={parentAccountShouldUpdate}
+        <FFormGroup
+          inline={true}
+          label={<T id={'account_type'} />}
+          labelInfo={<FieldRequiredHint />}
+          name={'account_type'}
+          fastField={true}
         >
-          {({
-            form: { values, setFieldValue },
-            field: { value },
-            meta: { error, touched },
-          }) => (
-            <FormGroup
-              label={<T id={'parent_account'} />}
-              className={classNames('form-group--parent-account', Classes.FILL)}
-              inline={true}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name="parent_account_id" />}
-            >
-              <AccountsSelectList
-                accounts={accounts}
-                onAccountSelected={(account) => {
-                  setFieldValue('parent_account_id', account.id);
-                }}
-                defaultSelectText={<T id={'select_parent_account'} />}
-                selectedAccountId={value}
-                popoverFill={true}
-                filterByTypes={values.account_type}
-                disabled={!values.subaccount}
-              />
-            </FormGroup>
-          )}
-        </FastField>
+          <AccountsTypesSelect
+            name={'account_type'}
+            items={accountsTypes}
+            onItemSelect={(accountType) => {
+              setFieldValue('account_type', accountType.key);
+              setFieldValue('currency_code', '');
+            }}
+            disabled={fieldsDisabled.accountType}
+            popoverProps={{ minimal: true }}
+            fastField={true}
+            fill={true}
+          />
+        </FFormGroup>
+
+        <FFormGroup
+          name={'name'}
+          label={<T id={'account_name'} />}
+          labelInfo={<FieldRequiredHint />}
+          inline={true}
+          fastField={true}
+        >
+          <FInputGroup
+            medium={true}
+            inputRef={(ref) => (accountNameFieldRef.current = ref)}
+            name={'name'}
+            fastField={true}
+          />
+        </FFormGroup>
+
+        <FFormGroup
+          label={<T id={'account_code'} />}
+          name={'code'}
+          labelInfo={<Hint content={<T id="account_code_hint" />} />}
+          inline={true}
+          fastField={true}
+        >
+          <FInputGroup medium={true} name={'code'} fastField={true} />
+        </FFormGroup>
+
+        <FFormGroup
+          label={' '}
+          name={'subaccount'}
+          inline={true}
+          fastField={true}
+        >
+          <FCheckbox
+            inline={true}
+            label={<T id={'sub_account'} />}
+            name={'subaccount'}
+            fastField={true}
+          />
+        </FFormGroup>
+
+        {values.subaccount && (
+          <FFormGroup
+            name={'parent_account_id'}
+            shouldUpdate={parentAccountShouldUpdate}
+            label={<T id={'parent_account'} />}
+            inline={true}
+            fastField={true}
+          >
+            <AccountsSelect
+              name={'parent_account_id'}
+              items={accounts}
+              shouldUpdate={parentAccountShouldUpdate}
+              placeholder={<T id={'select_parent_account'} />}
+              filterByTypes={values.account_type}
+              buttonProps={{ disabled: !values.subaccount }}
+              fastField={true}
+              fill={true}
+              allowCreate={true}
+            />
+          </FFormGroup>
+        )}
 
         <If condition={FOREIGN_CURRENCY_ACCOUNTS.includes(values.account_type)}>
           {/*------------ Currency  -----------*/}
-          <FastField name={'currency_code'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'currency'} />}
-                className={classNames('form-group--select-list', Classes.FILL)}
-                inline={true}
-              >
-                <CurrencySelect
-                  name={'currency_code'}
-                  currencies={currencies}
-                  popoverProps={{ minimal: true }}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            label={<T id={'currency'} />}
+            name={'currency_code'}
+            inline={true}
+            fastField={true}
+          >
+            <CurrencySelect
+              name={'currency_code'}
+              currencies={currencies}
+              popoverProps={{ minimal: true }}
+              fastField={true}
+              fill={true}
+            />
+          </FFormGroup>
         </If>
-        <FastField name={'description'}>
-          {({ field, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'description'} />}
-              className={'form-group--description'}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name={'description'} />}
-              inline={true}
-            >
-              <TextArea growVertically={true} height={280} {...field} />
-            </FormGroup>
-          )}
-        </FastField>
+
+        <FFormGroup
+          label={<T id={'description'} />}
+          name={'description'}
+          inline={true}
+          fastField={true}
+        >
+          <FTextArea
+            name={'description'}
+            growVertically={true}
+            height={280}
+            fill={true}
+            fastField={true}
+          />
+        </FFormGroup>
       </div>
 
       <div className={Classes.DIALOG_FOOTER}>

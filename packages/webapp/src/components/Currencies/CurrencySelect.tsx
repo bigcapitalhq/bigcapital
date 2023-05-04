@@ -2,7 +2,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 
-import { MenuItem, Button } from '@blueprintjs/core';
 import { FSelect } from '../Forms';
 
 /**
@@ -29,30 +28,6 @@ const currencyItemPredicate = (query, currency, _index, exactMatch) => {
 };
 
 /**
- * @param {*} currency
- * @returns
- */
-const currencyItemRenderer = (currency, { handleClick, modifiers, query }) => {
-  return (
-    <MenuItem
-      active={modifiers.active}
-      disabled={modifiers.disabled}
-      text={currency.currency_name}
-      label={currency.currency_code.toString()}
-      key={currency.id}
-      onClick={handleClick}
-    />
-  );
-};
-
-const currencySelectProps = {
-  itemPredicate: currencyItemPredicate,
-  itemRenderer: currencyItemRenderer,
-  valueAccessor: 'currency_code',
-  labelAccessor: 'currency_code',
-};
-
-/**
  *
  * @param {*} currencies
  * @returns
@@ -60,18 +35,13 @@ const currencySelectProps = {
 export function CurrencySelect({ currencies, ...rest }) {
   return (
     <FSelect
-      {...currencySelectProps}
+      itemPredicate={currencyItemPredicate}
+      valueAccessor={'currency_code'}
+      textAccessor={'currency_name'}
+      labelAccessor={'currency_code'}
       {...rest}
       items={currencies}
-      input={CurrnecySelectButton}
+      placeholder={intl.get('select_currency_code')}
     />
   );
-}
-
-/**
- * @param {*} label
- * @returns
- */
-function CurrnecySelectButton({ label }) {
-  return <Button text={label ? label : intl.get('select_currency_code')} />;
 }
