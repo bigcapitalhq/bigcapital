@@ -12,9 +12,12 @@ import {
 } from '@/interfaces';
 import { ERRORS } from './constants';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { IAcceptInviteUserService } from '@/interfaces';
 
 @Service()
-export default class AcceptInviteUserService {
+export default class AcceptInviteUserService
+  implements IAcceptInviteUserService
+{
   @Inject()
   private eventPublisher: EventPublisher;
 

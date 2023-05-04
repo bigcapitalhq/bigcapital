@@ -74,17 +74,15 @@ export default class InviteTenantUserService implements IInviteUserService {
 
   /**
    * Re-send user invite.
-   * @param  {number} tenantId -
-   * @param  {string} email    -
+   * @param {number} tenantId -
+   * @param {string} email -
    * @return {Promise<{ invite: IUserInvite }>}
    */
   public async resendInvite(
     tenantId: number,
     userId: number,
     authorizedUser: ISystemUser
-  ): Promise<{
-    user: ITenantUser;
-  }> {
+  ): Promise<{ user: ITenantUser }> {
     // Retrieve the user by id or throw not found service error.
     const user = await this.getUserByIdOrThrowError(tenantId, userId);
 

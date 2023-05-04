@@ -1,12 +1,12 @@
+import path from 'path';
 import { ISystemUser } from '@/interfaces';
-import TenancyService from '@/services/Tenancy/TenancyService';
 import Mail from '@/lib/Mail';
-import { Service, Container } from 'typedi';
-import config from '@/config';
+import { Service } from 'typedi';
 import { Tenant } from '@/system/models';
+import config from '@/config';
 
 @Service()
-export default class InviteUsersMailMessages {
+export default class SendInviteUsersMailMessage {
   /**
    * Sends invite mail to the given email.
    * @param user
@@ -18,7 +18,7 @@ export default class InviteUsersMailMessages {
       .findById(tenantId)
       .withGraphFetched('metadata');
 
-    const root = __dirname + '/../../../views/images/bigcapital.png';
+    const root = path.join(global.__views_dir, '/images/bigcapital.png');
 
     const mail = new Mail()
       .setSubject(`${fromUser.firstName} has invited you to join a Bigcapital`)

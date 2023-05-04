@@ -22,7 +22,7 @@ import SaleInvoiceAutoIncrementSubscriber from '@/subscribers/SaleInvoices/AutoI
 import SaleInvoiceConvertFromEstimateSubscriber from '@/subscribers/SaleInvoices/ConvertFromEstimate';
 import PaymentReceiveAutoSerialSubscriber from '@/subscribers/PaymentReceive/AutoSerialIncrement';
 import SyncSystemSendInvite from '@/services/InviteUsers/SyncSystemSendInvite';
-import InviteSendMainNotification from '@/services/InviteUsers/InviteSendMailNotification';
+import InviteSendMainNotification from '@/services/InviteUsers/InviteSendMailNotificationSubscribe';
 import SyncTenantAcceptInvite from '@/services/InviteUsers/SyncTenantAcceptInvite';
 import SyncTenantUserMutate from '@/services/Users/SyncTenantUserSaved';
 import { SyncTenantUserDelete } from '@/services/Users/SyncTenantUserDeleted';

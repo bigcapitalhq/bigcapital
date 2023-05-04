@@ -1,6 +1,7 @@
 import { AnyObject } from '@casl/ability/dist/types/types';
 import { ITenant } from '@/interfaces';
 import { Model } from 'objection';
+import { Tenant } from '@/system/models';
 
 export interface ISystemUser extends Model {
   id: number;
@@ -54,20 +55,52 @@ export interface IUserInvite {
 
 export interface IInviteUserService {
   acceptInvite(token: string, inviteUserInput: IInviteUserInput): Promise<void>;
+
+  /**
+   * Re-send user invite.
+   * @param {number} tenantId -
+   * @param {string} email    -
+   * @return {Promise<{ invite: IUserInvite }>}
+   */
   resendInvite(
     tenantId: number,
     userId: number,
     authorizedUser: ISystemUser
   ): Promise<{
-    invite: IUserInvite;
+    user: ITenantUser;
   }>;
+
+  /**
+   * Sends invite mail to the given email from the given tenant and user.
+   * @param {number} tenantId -
+   * @param {string} email -
+   * @param {IUser} authorizedUser -
+   * @return {Promise<IUserInvite>}
+   */
   sendInvite(
     tenantId: number,
-    email: string,
+    sendInviteDTO: IUserSendInviteDTO,
     authorizedUser: ISystemUser
   ): Promise<{
-    invite: IUserInvite;
+    invitedUser: ITenantUser;
   }>;
+}
+
+export interface IAcceptInviteUserService {
+  /**
+   * Accept the received invite.
+   * @param {string} token
+   * @param {IInviteUserInput} inviteUserInput
+   * @throws {ServiceErrors}
+   * @returns {Promise<void>}
+   */
+  acceptInvite(token: string, inviteUserDTO: IInviteUserInput): Promise<void>;
+
+  /**
+   * Validate the given invite token.
+   * @param {string} token - the given token string.
+   * @throws {ServiceError}
+   */
   checkInvite(
     token: string
   ): Promise<{ inviteToken: IUserInvite; orgName: object }>;
@@ -121,7 +154,7 @@ export interface IUserInvitedEventPayload {
   tenantId: number;
   user: ITenantUser;
 }
-export interface IUserInviteTenantSyncedEventPayload{
+export interface IUserInviteTenantSyncedEventPayload {
   invite: IUserInvite;
   authorizedUser: ISystemUser;
   tenantId: number;
@@ -143,7 +176,7 @@ export interface IAcceptInviteEventPayload {
 
 export interface ICheckInviteEventPayload {
   inviteToken: IUserInvite;
-  tenant: ITenant
+  tenant: Tenant;
 }
 
 export interface IUserSendInviteDTO {
