@@ -5,6 +5,7 @@ import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
 import { MenuItemNestedText, FSelect } from '@/components';
 import { accountPredicate } from './_components';
+import { DialogsName } from '@/constants/dialogs';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { usePreprocessingAccounts } from './_hooks';
 
@@ -75,6 +76,11 @@ function AccountsSelectRoot({
     ? createNewItemFromQuery
     : null;
 
+  // Handles the create item click.
+  const handleCreateItemClick = () => {
+    openDialog(DialogsName.AccountForm);
+  };
+
   return (
     <FSelect
       items={filteredAccounts}
@@ -86,6 +92,7 @@ function AccountsSelectRoot({
       itemRenderer={accountRenderer}
       createNewItemRenderer={maybeCreateNewItemRenderer}
       createNewItemFromQuery={maybeCreateNewItemFromQuery}
+      onCreateItemSelect={handleCreateItemClick}
       {...restProps}
     />
   );
