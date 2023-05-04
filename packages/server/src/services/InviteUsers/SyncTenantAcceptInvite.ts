@@ -8,7 +8,7 @@ import { IAcceptInviteEventPayload } from '@/interfaces';
 @Service()
 export default class SyncTenantAcceptInvite {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   /**
    * Attaches events with handlers.

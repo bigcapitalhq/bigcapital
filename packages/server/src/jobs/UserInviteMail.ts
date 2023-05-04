@@ -1,5 +1,6 @@
 import { Container, Inject } from 'typedi';
 import InviteUserService from '@/services/InviteUsers/AcceptInviteUser';
+import SendInviteUsersMailMessage from '@/services/InviteUsers/SendInviteUsersMailMessage';
 
 export default class UserInviteMailJob {
   /**
@@ -21,24 +22,17 @@ export default class UserInviteMailJob {
    */
   public async handler(job, done: Function): Promise<void> {
     const { invite, authorizedUser, tenantId } = job.attrs.data;
-
-    const Logger = Container.get('logger');
-    const inviteUsersService = Container.get(InviteUserService);
-
-    Logger.info(`Send invite user mail - started: ${job.attrs.data}`);
+    const sendInviteMailMessage = Container.get(SendInviteUsersMailMessage);
 
     try {
-      await inviteUsersService.mailMessages.sendInviteMail(
+      await sendInviteMailMessage.sendInviteMail(
         tenantId,
         authorizedUser,
         invite
       );
-      Logger.info(`Send invite user mail - finished: ${job.attrs.data}`);
       done();
     } catch (error) {
-      Logger.info(
-        `Send invite user mail - error: ${job.attrs.data}, error: ${error}`
-      );
+      console.log(error);
       done(error);
     }
   }

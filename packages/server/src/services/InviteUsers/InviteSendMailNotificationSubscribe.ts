@@ -1,7 +1,4 @@
-import {
-  IUserInvitedEventPayload,
-  IUserInviteTenantSyncedEventPayload,
-} from '@/interfaces';
+import { IUserInviteTenantSyncedEventPayload } from '@/interfaces';
 import events from '@/subscribers/events';
 import { Inject, Service } from 'typedi';
 
