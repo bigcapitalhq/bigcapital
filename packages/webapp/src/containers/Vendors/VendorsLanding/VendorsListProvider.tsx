@@ -20,16 +20,16 @@ function VendorsListProvider({ tableState, tableStateChanged, ...props }) {
     isFetching: isVendorsFetching,
   } = useVendors(tableQuery, { keepPreviousData: true });
 
-  // Fetch customers resource views and fields.
+  // Fetch vendors resource views and fields.
   const { data: vendorsViews, isLoading: isVendorsViewsLoading } =
     useResourceViews('vendors');
 
-  // Fetch the customers resource fields.
+  // Fetch the vendors resource fields.
   const {
     data: resourceMeta,
     isLoading: isResourceMetaLoading,
     isFetching: isResourceMetaFetching,
-  } = useResourceMeta('customers');
+  } = useResourceMeta('vendors');
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =

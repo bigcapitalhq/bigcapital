@@ -16,21 +16,21 @@ function InvoicesListProvider({ query, tableStateChanged, ...props }) {
   const { data: invoicesViews, isLoading: isViewsLoading } =
     useResourceViews('sale_invoices');
 
-  // Fetch the accounts resource fields.
+  // Fetch resource fields of the sale invoices.
   const {
     data: resourceMeta,
     isLoading: isResourceLoading,
     isFetching: isResourceFetching,
   } = useResourceMeta('sale_invoices');
 
-  // Fetch accounts list according to the given custom view id.
+  // Fetch sale invoices of the given query.
   const {
     data: { invoices, pagination, filterMeta },
     isFetching: isInvoicesFetching,
     isLoading: isInvoicesLoading,
   } = useInvoices(query, { keepPreviousData: true });
 
-  // Detarmines the datatable empty status.
+  // Detarmines whether the table should show empty state.
   const isEmptyStatus =
     isEmpty(invoices) && !tableStateChanged && !isInvoicesLoading;
 
