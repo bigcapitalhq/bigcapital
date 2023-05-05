@@ -1417,6 +1417,7 @@
   "siebar.cashflow": "Cash flow",
   "siebar.cashflow.label_cash_and_bank_accounts": "Cash & Bank Accounts",
   "cash_flow.label_account_transcations": "Account Transcations",
+  "cash_flow.transactions_for_review": "Transactions for review",
   "cash_flow.label.deposit": "Deposit",
   "cash_flow.label.withdrawal": "Withdrawal",
   "cash_flow.label.running_balance": "Running balance",

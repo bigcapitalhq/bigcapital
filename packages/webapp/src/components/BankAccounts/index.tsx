@@ -77,11 +77,13 @@ export function BankAccount({
       </BankAccountHeader>
 
       <BankAccountMeta>
-        <BankAccountMetaLine
-          title={intl.get('cash_flow.label_account_transcations')}
-          value={2}
-          className={clsx({ [Classes.SKELETON]: loading })}
-        />
+        {false && (
+          <BankAccountMetaLine
+            title={intl.get('cash_flow.transactions_for_review')}
+            value={'0'}
+            className={clsx({ [Classes.SKELETON]: loading })}
+          />
+        )}
         <BankAccountMetaLine
           title={updatedBeforeText}
           className={clsx({ [Classes.SKELETON]: loading })}
