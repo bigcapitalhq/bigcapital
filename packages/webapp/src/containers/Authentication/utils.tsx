@@ -98,15 +98,7 @@ export const transformRegisterErrorsToForm = (errors) => {
 export const transformRegisterToastMessages = (errors) => {
   const toastErrors = [];
 
-  if (errors.some((e) => e.type === 'SIGNUP_NOT_ALLOWED_EMAIL_DOMAIN')) {
-    toastErrors.push({
-      message:
-        'The sign-up is restricted, the given email domain is not allowed to sign-up.',
-      intent: Intent.DANGER,
-    });
-  } else if (
-    errors.some((e) => e.type === 'SIGNUP_NOT_ALLOWED_EMAIL_ADDRESS')
-  ) {
+  if (errors.some((e) => e.type === 'SIGNUP_RESTRICTED_NOT_ALLOWED')) {
     toastErrors.push({
       message:
         'The sign-up is restricted, the given email address is not allowed to sign-up.',
