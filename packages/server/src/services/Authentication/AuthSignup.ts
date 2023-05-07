@@ -1,4 +1,4 @@
-import { omit } from 'lodash';
+import { isEmpty, omit } from 'lodash';
 import moment from 'moment';
 import { ServiceError } from '@/exceptions';
 import {
@@ -13,6 +13,7 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import TenantsManagerService from '../Tenancy/TenantsManager';
 import events from '@/subscribers/events';
 import { hashPassword } from '@/utils';
+import config from '@/config';
 
 export class AuthSignupService {
   @Inject()
@@ -32,6 +33,9 @@ export class AuthSignupService {
    */
   public async signUp(signupDTO: IRegisterDTO): Promise<ISystemUser> {
     const { systemUserRepository } = this.sysRepositories;
+
+    // Validates the signup disable restrictions.
+    await this.validateSignupRestrictions(signupDTO.email);
 
     // Validates the given email uniqiness.
     await this.validateEmailUniqiness(signupDTO.email);
@@ -72,6 +76,42 @@ export class AuthSignupService {
 
     if (isEmailExists) {
       throw new ServiceError(ERRORS.EMAIL_EXISTS);
+    }
+  }
+
+  /**
+   * Validate sign-up disable restrictions.
+   * @param {string} email
+   */
+  private async validateSignupRestrictions(email: string) {
+    // Can't continue if the signup is not disabled.
+    if (!config.signupRestrictions.disabled) return;
+
+    // Validate the allowed domains.
+    if (!isEmpty(config.signupRestrictions.allowedDomains)) {
+      const emailDomain = email.split('@').pop();
+      const isAllowed = config.signupRestrictions.allowedDomains.some(
+        (domain) => emailDomain === domain
+      );
+      if (!isAllowed) {
+        throw new ServiceError(ERRORS.SIGNUP_NOT_ALLOWED_EMAIL_DOMAIN);
+      }
+    }
+    // Validate the allowed email addresses.
+    if (!isEmpty(config.signupRestrictions.allowedEmails)) {
+      const isAllowed =
+        config.signupRestrictions.allowedEmails.indexOf(email) !== -1;
+
+      if (!isAllowed) {
+        throw new ServiceError(ERRORS.SIGNUP_NOT_ALLOWED_EMAIL_ADDRESS);
+      }
+    }
+    // Throw error if the signup is disabled with no exceptions.
+    if (
+      isEmpty(config.signupRestrictions.allowedDomains) &&
+      isEmpty(config.signupRestrictions.allowedEmails)
+    ) {
+      throw new ServiceError(ERRORS.SIGNUP_RESTRICTED);
     }
   }
 }

@@ -49,6 +49,7 @@ export default class AuthenticationController extends BaseController {
       asyncMiddleware(this.resetPassword.bind(this)),
       this.handlerErrors
     );
+    router.get('/meta', asyncMiddleware(this.getAuthMeta.bind(this)));
     return router;
   }
 
@@ -208,6 +209,23 @@ export default class AuthenticationController extends BaseController {
   }
 
   /**
+   * Retrieves the authentication meta for SPA.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
+   * @returns {Response|void}
+   */
+  private async getAuthMeta(req: Request, res: Response, next: Function) {
+    try {
+      const meta = await this.authApplication.getAuthMeta();
+
+      return res.status(200).send({ meta });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Handles the service errors.
    */
   private handlerErrors(error, req: Request, res: Response, next: Function) {
@@ -245,6 +263,42 @@ export default class AuthenticationController extends BaseController {
       if (error.errorType === 'EMAIL_EXISTS') {
         return res.status(400).send({
           errors: [{ type: 'EMAIL.EXISTS', code: 600 }],
+        });
+      }
+      if (error.errorType === 'SIGNUP_RESTRICTED') {
+        return res.status(400).send({
+          errors: [
+            {
+              type: 'SIGNUP_RESTRICTED',
+              message:
+                'Sign-up is restricted no one can sign-up to the system.',
+              code: 700,
+            },
+          ],
+        });
+      }
+      if (error.errorType === 'SIGNUP_NOT_ALLOWED_EMAIL_DOMAIN') {
+        return res.status(400).send({
+          errors: [
+            {
+              type: 'SIGNUP_NOT_ALLOWED_EMAIL_DOMAIN',
+              message:
+                'Sign-up is restricted the given email domain is not allowed to sign-up.',
+              code: 710,
+            },
+          ],
+        });
+      }
+      if (error.errorType === 'SIGNUP_NOT_ALLOWED_EMAIL_ADDRESS') {
+        return res.status(400).send({
+          errors: [
+            {
+              type: 'SIGNUP_NOT_ALLOWED_EMAIL_ADDRESS',
+              message:
+                'The sign-up restricted the given email address is not allowed to sign-up.',
+              code: 720,
+            },
+          ],
         });
       }
     }

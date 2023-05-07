@@ -1,8 +1,14 @@
 import { Service, Inject, Container } from 'typedi';
-import { IRegisterDTO, ISystemUser, IPasswordReset } from '@/interfaces';
+import {
+  IRegisterDTO,
+  ISystemUser,
+  IPasswordReset,
+  IAuthGetMetaPOJO,
+} from '@/interfaces';
 import { AuthSigninService } from './AuthSignin';
 import { AuthSignupService } from './AuthSignup';
 import { AuthSendResetPassword } from './AuthSendResetPassword';
+import { GetAuthMeta } from './GetAuthMeta';
 
 @Service()
 export default class AuthenticationApplication {
@@ -14,6 +20,9 @@ export default class AuthenticationApplication {
 
   @Inject()
   private authResetPasswordService: AuthSendResetPassword;
+
+  @Inject()
+  private authGetMeta: GetAuthMeta;
 
   /**
    * Signin and generates JWT token.
@@ -52,5 +61,13 @@ export default class AuthenticationApplication {
    */
   public async resetPassword(token: string, password: string): Promise<void> {
     return this.authResetPasswordService.resetPassword(token, password);
+  }
+
+  /**
+   * Retrieves the authentication meta for SPA.
+   * @returns {Promise<IAuthGetMetaPOJO>}
+   */
+  public async getAuthMeta(): Promise<IAuthGetMetaPOJO> {
+    return this.authGetMeta.getAuthMeta();
   }
 }

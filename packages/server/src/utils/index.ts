@@ -467,6 +467,10 @@ const assocDepthLevelToObjectTree = (
   return objects;
 };
 
+const castCommaListEnvVarToArray = (envVar: string): Array<string> => {
+  return envVar ? envVar?.split(',')?.map(_.trim) : [];
+};
+
 export {
   templateRender,
   accumSum,
@@ -499,4 +503,5 @@ export {
   mergeObjectsBykey,
   nestedArrayToFlatten,
   assocDepthLevelToObjectTree,
+  castCommaListEnvVarToArray
 };
