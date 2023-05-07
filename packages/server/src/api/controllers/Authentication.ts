@@ -277,26 +277,14 @@ export default class AuthenticationController extends BaseController {
           ],
         });
       }
-      if (error.errorType === 'SIGNUP_NOT_ALLOWED_EMAIL_DOMAIN') {
+      if (error.errorType === 'SIGNUP_RESTRICTED_NOT_ALLOWED') {
         return res.status(400).send({
           errors: [
             {
-              type: 'SIGNUP_NOT_ALLOWED_EMAIL_DOMAIN',
+              type: 'SIGNUP_RESTRICTED_NOT_ALLOWED',
               message:
-                'Sign-up is restricted the given email domain is not allowed to sign-up.',
+                'Sign-up is restricted the given email address is not allowed to sign-up.',
               code: 710,
-            },
-          ],
-        });
-      }
-      if (error.errorType === 'SIGNUP_NOT_ALLOWED_EMAIL_ADDRESS') {
-        return res.status(400).send({
-          errors: [
-            {
-              type: 'SIGNUP_NOT_ALLOWED_EMAIL_ADDRESS',
-              message:
-                'The sign-up restricted the given email address is not allowed to sign-up.',
-              code: 720,
             },
           ],
         });

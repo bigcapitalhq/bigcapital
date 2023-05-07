@@ -87,30 +87,24 @@ export class AuthSignupService {
     // Can't continue if the signup is not disabled.
     if (!config.signupRestrictions.disabled) return;
 
-    // Validate the allowed domains.
-    if (!isEmpty(config.signupRestrictions.allowedDomains)) {
+    // Validate the allowed email addresses and domains.
+    if (
+      !isEmpty(config.signupRestrictions.allowedEmails) ||
+      !isEmpty(config.signupRestrictions.allowedDomains)
+    ) {
       const emailDomain = email.split('@').pop();
-      const isAllowed = config.signupRestrictions.allowedDomains.some(
-        (domain) => emailDomain === domain
-      );
-      if (!isAllowed) {
-        throw new ServiceError(ERRORS.SIGNUP_NOT_ALLOWED_EMAIL_DOMAIN);
-      }
-    }
-    // Validate the allowed email addresses.
-    if (!isEmpty(config.signupRestrictions.allowedEmails)) {
-      const isAllowed =
+      const isAllowedEmail =
         config.signupRestrictions.allowedEmails.indexOf(email) !== -1;
 
-      if (!isAllowed) {
-        throw new ServiceError(ERRORS.SIGNUP_NOT_ALLOWED_EMAIL_ADDRESS);
+      const isAllowedDomain = config.signupRestrictions.allowedDomains.some(
+        (domain) => emailDomain === domain
+      );
+
+      if (!isAllowedEmail && !isAllowedDomain) {
+        throw new ServiceError(ERRORS.SIGNUP_RESTRICTED_NOT_ALLOWED);
       }
-    }
-    // Throw error if the signup is disabled with no exceptions.
-    if (
-      isEmpty(config.signupRestrictions.allowedDomains) &&
-      isEmpty(config.signupRestrictions.allowedEmails)
-    ) {
+      // Throw error if the signup is disabled with no exceptions.
+    } else {
       throw new ServiceError(ERRORS.SIGNUP_RESTRICTED);
     }
   }
