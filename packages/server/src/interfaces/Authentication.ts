@@ -75,3 +75,7 @@ export interface IAuthSendedResetPassword {
   user: ISystemUser,
   token: string;
 }
+
+export interface IAuthGetMetaPOJO  {
+  signupDisabled: boolean;
+}

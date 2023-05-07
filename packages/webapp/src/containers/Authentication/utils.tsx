@@ -94,3 +94,29 @@ export const transformRegisterErrorsToForm = (errors) => {
   }
   return formErrors;
 };
+
+export const transformRegisterToastMessages = (errors) => {
+  const toastErrors = [];
+
+  if (errors.some((e) => e.type === 'SIGNUP_NOT_ALLOWED_EMAIL_DOMAIN')) {
+    toastErrors.push({
+      message:
+        'The sign-up is restricted, the given email domain is not allowed to sign-up.',
+      intent: Intent.DANGER,
+    });
+  } else if (
+    errors.some((e) => e.type === 'SIGNUP_NOT_ALLOWED_EMAIL_ADDRESS')
+  ) {
+    toastErrors.push({
+      message:
+        'The sign-up is restricted, the given email address is not allowed to sign-up.',
+      intent: Intent.DANGER,
+    });
+  } else if (errors.find((e) => e.type === 'SIGNUP_RESTRICTED')) {
+    toastErrors.push({
+      message: 'Sign-up is disabled, and no new accounts can be created.',
+      intent: Intent.DANGER,
+    });
+  }
+  return toastErrors;
+};

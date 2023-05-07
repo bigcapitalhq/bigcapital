@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import { castCommaListEnvVarToArray, parseBoolean } from '@/utils';
 
 dotenv.config();
 
@@ -144,6 +145,19 @@ module.exports = {
       whitelist: ['LY'],
       blacklist: [],
     },
+  },
+
+  /**
+   * Sign-up restrictions
+   */
+  signupRestrictions: {
+    disabled: parseBoolean<boolean>(process.env.SIGNUP_DISABLED, false),
+    allowedDomains: castCommaListEnvVarToArray(
+      process.env.SIGNUP_ALLOWED_DOMAINS
+    ),
+    allowedEmails: castCommaListEnvVarToArray(
+      process.env.SIGNUP_ALLOWED_EMAILS
+    ),
   },
 
   /**

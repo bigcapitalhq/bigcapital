@@ -72,6 +72,11 @@ services:
       - AGENDASH_AUTH_USER=${AGENDASH_AUTH_USER}
       - AGENDASH_AUTH_PASSWORD=${AGENDASH_AUTH_PASSWORD}
 
+      # Sign-up restrictions
+      - SIGNUP_DISABLED=${SIGNUP_DISABLED}
+      - SIGNUP_ALLOWED_DOMAINS=${SIGNUP_ALLOWED_DOMAINS}
+      - SIGNUP_ALLOWED_EMAILS=${SIGNUP_ALLOWED_EMAILS}
+
   database_migration:
     container_name: bigcapital-database-migration
     build:
