@@ -2,6 +2,8 @@
 import { useMutation } from 'react-query';
 import useApiRequest from '../useRequest';
 import { setCookie } from '../../utils';
+import { useRequestQuery } from '../useQueryRequest';
+import t from './types';
 
 /**
  * Saves the response data to cookies.
@@ -70,3 +72,21 @@ export const useAuthResetPassword = (props) => {
     props,
   );
 };
+
+/**
+ * Fetches the authentication page metadata.
+ */
+export const useAuthMetadata = (props) => {
+  return useRequestQuery(
+    [t.AUTH_METADATA_PAGE,],
+    {
+      method: 'get',
+      url: `auth/meta`,
+    },
+    {
+      select: (res) => res.data,
+      defaultData: {},
+      ...props,
+    },
+  ); 
+}

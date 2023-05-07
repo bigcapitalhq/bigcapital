@@ -14,11 +14,12 @@ import {
   AuthFooterLink,
   AuthInsiderCard,
 } from './_components';
+import { useAuthMetaBoot } from './AuthMetaBoot';
 
 const initialValues = {
   crediential: '',
   password: '',
-  keepLoggedIn: false
+  keepLoggedIn: false,
 };
 
 /**
@@ -64,12 +65,15 @@ export default function Login() {
 }
 
 function LoginFooterLinks() {
+  const { signupDisabled } = useAuthMetaBoot();
+
   return (
     <AuthFooterLinks>
-      <AuthFooterLink>
-        Don't have an account? <Link to={'/auth/register'}>Sign up</Link>
-      </AuthFooterLink>
-
+      {!signupDisabled && (
+        <AuthFooterLink>
+          Don't have an account? <Link to={'/auth/register'}>Sign up</Link>
+        </AuthFooterLink>
+      )}
       <AuthFooterLink>
         <Link to={'/auth/send_reset_password'}>
           <T id={'forget_my_password'} />

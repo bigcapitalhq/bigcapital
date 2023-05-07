@@ -19,6 +19,7 @@ import {
   transformSendResetPassErrorsToToasts,
 } from './utils';
 import AuthInsider from '@/containers/Authentication/AuthInsider';
+import { useAuthMetaBoot } from './AuthMetaBoot';
 
 const initialValues = {
   crediential: '',
@@ -27,7 +28,7 @@ const initialValues = {
 /**
  * Send reset password page.
  */
-export default function SendResetPassword({ requestSendResetPassword }) {
+export default function SendResetPassword() {
   const history = useHistory();
   const { mutateAsync: sendResetPasswordMutate } = useAuthSendResetPassword();
 
@@ -75,12 +76,15 @@ export default function SendResetPassword({ requestSendResetPassword }) {
 }
 
 function SendResetPasswordFooterLinks() {
+  const { signupDisabled } = useAuthMetaBoot();
+
   return (
     <AuthFooterLinks>
-      <AuthFooterLink>
-        Don't have an account? <Link to={'/auth/register'}>Sign up</Link>
-      </AuthFooterLink>
-
+      {!signupDisabled && (
+        <AuthFooterLink>
+          Don't have an account? <Link to={'/auth/register'}>Sign up</Link>
+        </AuthFooterLink>
+      )}
       <AuthFooterLink>
         Return to <Link to={'/auth/login'}>Sign In</Link>
       </AuthFooterLink>

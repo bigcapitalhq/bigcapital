@@ -10,7 +10,7 @@ import AuthInsider from '@/containers/Authentication/AuthInsider';
 import { useAuthLogin, useAuthRegister } from '@/hooks/query/authentication';
 
 import RegisterForm from './RegisterForm';
-import { RegisterSchema, transformRegisterErrorsToForm } from './utils';
+import { RegisterSchema, transformRegisterErrorsToForm, transformRegisterToastMessages } from './utils';
 import {
   AuthFooterLinks,
   AuthFooterLink,
@@ -57,7 +57,11 @@ export default function RegisterUserForm() {
           },
         }) => {
           const formErrors = transformRegisterErrorsToForm(errors);
+          const toastMessages = transformRegisterToastMessages(errors);
 
+          toastMessages.forEach((toastMessage) => {
+            AppToaster.show(toastMessage);
+          });
           setErrors(formErrors);
           setSubmitting(false);
         },

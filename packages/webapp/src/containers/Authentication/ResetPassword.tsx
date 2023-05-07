@@ -16,6 +16,7 @@ import {
 } from './_components';
 import ResetPasswordForm from './ResetPasswordForm';
 import { ResetPasswordSchema } from './utils';
+import { useAuthMetaBoot } from './AuthMetaBoot';
 
 const initialValues = {
   password: '',
@@ -79,12 +80,15 @@ export default function ResetPassword() {
 }
 
 function ResetPasswordFooterLinks() {
+  const { signupDisabled } = useAuthMetaBoot();
+
   return (
     <AuthFooterLinks>
-      <AuthFooterLink>
-        Don't have an account? <Link to={'/auth/register'}>Sign up</Link>
-      </AuthFooterLink>
-
+      {!signupDisabled && (
+        <AuthFooterLink>
+          Don't have an account? <Link to={'/auth/register'}>Sign up</Link>
+        </AuthFooterLink>
+      )}
       <AuthFooterLink>
         Return to <Link to={'/auth/login'}>Sign In</Link>
       </AuthFooterLink>

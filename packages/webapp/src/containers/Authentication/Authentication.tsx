@@ -10,12 +10,11 @@ import { Icon, FormattedMessage as T } from '@/components';
 import { useIsAuthenticated } from '@/hooks/state';
 
 import '@/style/pages/Authentication/Auth.scss';
+import { AuthMetaBootProvider } from './AuthMetaBoot';
 
 export function Authentication() {
   const to = { pathname: '/' };
-  const location = useLocation();
   const isAuthenticated = useIsAuthenticated();
-  const locationKey = location.pathname;
 
   if (isAuthenticated) {
     return <Redirect to={to} />;
@@ -28,27 +27,38 @@ export function Authentication() {
             <Icon icon="bigcapital" height={37} width={214} />
           </AuthLogo>
 
-          <TransitionGroup>
-            <CSSTransition
-              timeout={500}
-              key={locationKey}
-              classNames="authTransition"
-            >
-              <Switch>
-                {authenticationRoutes.map((route, index) => (
-                  <Route
-                    key={index}
-                    path={route.path}
-                    exact={route.exact}
-                    component={route.component}
-                  />
-                ))}
-              </Switch>
-            </CSSTransition>
-          </TransitionGroup>
+          <AuthMetaBootProvider>
+            <AuthenticationRoutes />
+          </AuthMetaBootProvider>
         </AuthInsider>
       </AuthPage>
     </BodyClassName>
+  );
+}
+
+function AuthenticationRoutes() {
+  const location = useLocation();
+  const locationKey = location.pathname;
+
+  return (
+    <TransitionGroup>
+      <CSSTransition
+        timeout={500}
+        key={locationKey}
+        classNames="authTransition"
+      >
+        <Switch>
+          {authenticationRoutes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              exact={route.exact}
+              component={route.component}
+            />
+          ))}
+        </Switch>
+      </CSSTransition>
+    </TransitionGroup>
   );
 }
 
