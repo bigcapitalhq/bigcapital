@@ -23,6 +23,7 @@ function GeneralFormProvider({ ...props }) {
   const { isLoading: isOrganizationLoading, data: organization } =
     useCurrentOrganization();
 
+  // Fetch date format options.
   const { data: dateFormats, isLoading: isDateFormatsLoading } =
     useDateFormats();
 

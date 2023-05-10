@@ -10,6 +10,7 @@ import { ActionMenuList, useCurrenciesTableColumns } from './components';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertActions from '@/containers/Alert/withAlertActions';
+import styled from 'styled-components';
 
 /**
  * Currencies table.
@@ -46,7 +47,7 @@ function CurrenciesDataTable({
   };
 
   return (
-    <DataTable
+    <CurrencieDataTable
       columns={columns}
       data={currencies}
       loading={isCurrenciesLoading}
@@ -68,3 +69,11 @@ export default compose(
   withDialogActions,
   withAlertActions,
 )(CurrenciesDataTable);
+
+const CurrencieDataTable = styled(DataTable)`
+  .table .th,
+  .table .td {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
+`;

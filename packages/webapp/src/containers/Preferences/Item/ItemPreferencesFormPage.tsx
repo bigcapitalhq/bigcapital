@@ -11,9 +11,20 @@ import ItemPreferencesForm from './ItemPreferencesForm';
 import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withSettings from '@/containers/Settings/withSettings';
-import { compose, optionsMapToArray, transformGeneralSettings } from '@/utils';
+import {
+  compose,
+  optionsMapToArray,
+  transformGeneralSettings,
+  transformToForm,
+} from '@/utils';
 
 import '@/style/pages/Preferences/Accounting.scss';
+
+const defaultFormValues = {
+  preferred_sell_account: '',
+  preferred_cost_account: '',
+  preferred_inventory_account: '',
+};
 
 // item form page preferences.
 function ItemPreferencesFormPage({
@@ -25,16 +36,13 @@ function ItemPreferencesFormPage({
 }) {
   const { saveSettingMutate } = useItemPreferencesFormContext();
 
-  const itemPerferencesSettings = {
-    ...omit(itemsSettings, ['tableSize']),
-  };
-
   // Initial values.
   const initialValues = {
-    preferred_sell_account: '',
-    preferred_cost_account: '',
-    preferred_inventory_account: '',
-    ...transformGeneralSettings(itemPerferencesSettings),
+    ...defaultFormValues,
+    ...transformToForm(
+      transformGeneralSettings(itemsSettings),
+      defaultFormValues,
+    ),
   };
 
   useEffect(() => {

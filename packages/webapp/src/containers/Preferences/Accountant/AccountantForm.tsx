@@ -1,16 +1,9 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Form, FastField, useFormikContext } from 'formik';
+import { Form, useFormikContext } from 'formik';
 import styled from 'styled-components';
-import {
-  FormGroup,
-  RadioGroup,
-  Radio,
-  Checkbox,
-  Button,
-  Intent,
-} from '@blueprintjs/core';
+import { FormGroup, Radio, Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -19,8 +12,9 @@ import {
   FieldRequiredHint,
   CardFooterActions,
   FFormGroup,
+  FCheckbox,
+  FRadioGroup,
 } from '@/components';
-import { handleStringChange, inputIntent } from '@/utils';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { useAccountantFormContext } from './AccountantFormProvider';
 
@@ -30,7 +24,6 @@ import { useAccountantFormContext } from './AccountantFormProvider';
 export default function AccountantForm() {
   const history = useHistory();
   const { accounts } = useAccountantFormContext();
-
   const { isSubmitting } = useFormikContext();
 
   const handleCloseClick = () => {
@@ -48,78 +41,54 @@ export default function AccountantForm() {
         }
         className={'accounts-checkbox'}
       >
-        {/*------------ Account code (required) -----------*/}
-        <FastField name={'account_code_required'} type={'checkbox'}>
-          {({ field }) => (
-            <FormGroup inline={true}>
-              <Checkbox
-                inline={true}
-                label={
-                  <T
-                    id={'make_account_code_required_when_create_a_new_accounts'}
-                  />
-                }
-                name={'account_code_required'}
-                {...field}
-              />
-            </FormGroup>
-          )}
-        </FastField>
+        {/*------------ Account Code (required) -----------*/}
+        <FFormGroup inline={true} name={'accounts.accountCodeRequired'}>
+          <FCheckbox
+            inline={true}
+            label={
+              <T id={'make_account_code_required_when_create_a_new_accounts'} />
+            }
+            name={'accounts.accountCodeRequired'}
+          />
+        </FFormGroup>
 
-        {/*------------ Account code (unique) -----------*/}
-        <FastField name={'account_code_unique'} type={'checkbox'}>
-          {({ field }) => (
-            <FormGroup inline={true}>
-              <Checkbox
-                inline={true}
-                label={
-                  <T
-                    id={
-                      'should_account_code_be_unique_when_create_a_new_account'
-                    }
-                  />
-                }
-                name={'account_code_unique'}
-                {...field}
+        {/*------------ Account Code (unique) -----------*/}
+        <FFormGroup
+          name={'accounts.accountCodeUnique'}
+          type={'checkbox'}
+          inline={true}
+        >
+          <FCheckbox
+            inline={true}
+            label={
+              <T
+                id={'should_account_code_be_unique_when_create_a_new_account'}
               />
-            </FormGroup>
-          )}
-        </FastField>
+            }
+            name={'accounts.accountCodeUnique'}
+          />
+        </FFormGroup>
       </FormGroup>
 
-      {/* ----------- Accounting basis ----------- */}
-      <FastField name={'accounting_basis'}>
-        {({
-          form: { setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
-          <FormGroup
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            label={
-              <strong>
-                <T id={'accounting_basis_'} />
-              </strong>
-            }
-          >
-            <RadioGroup
-              inline={true}
-              selectedValue={value}
-              onChange={handleStringChange((_value) => {
-                setFieldValue('accounting_basis', _value);
-              })}
-            >
-              <Radio label={intl.get('cash')} value="cash" />
-              <Radio label={intl.get('accrual')} value="accrual" />
-            </RadioGroup>
-          </FormGroup>
-        )}
-      </FastField>
+      {/* ----------- Accounting Basis ----------- */}
+      <FormGroup
+        name={'organization.accountingBasis'}
+        labelInfo={<FieldRequiredHint />}
+        label={
+          <strong>
+            <T id={'accounting_basis_'} />
+          </strong>
+        }
+      >
+        <FRadioGroup name={'organization.accountingBasis'} inline={true}>
+          <Radio label={intl.get('cash')} value="cash" />
+          <Radio label={intl.get('accrual')} value="accrual" />
+        </FRadioGroup>
+      </FormGroup>
 
-      {/* ----------- Deposit customer account ----------- */}
+      {/* ----------- Deposit Customer Account ----------- */}
       <AccountantFormGroup
-        name={'preferred_deposit_account'}
+        name={'paymentReceives.preferredDepositAccount'}
         label={
           <strong>
             <T id={'deposit_customer_account'} />
@@ -136,7 +105,7 @@ export default function AccountantForm() {
         fastField={true}
       >
         <AccountsSelect
-          name={'preferred_deposit_account'}
+          name={'paymentReceives.preferredDepositAccount'}
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
           filterByTypes={[
@@ -148,9 +117,9 @@ export default function AccountantForm() {
         />
       </AccountantFormGroup>
 
-      {/* ----------- Withdrawal vendor account ----------- */}
+      {/* ----------- Withdrawal Vendor Account ----------- */}
       <AccountantFormGroup
-        name={'withdrawal_account'}
+        name={'billPayments.withdrawalAccount'}
         label={
           <strong>
             <T id={'withdrawal_vendor_account'} />
@@ -167,7 +136,7 @@ export default function AccountantForm() {
         fastField={true}
       >
         <AccountsSelect
-          name={'withdrawal_account'}
+          name={'billPayments.withdrawalAccount'}
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
           filterByTypes={[
@@ -179,9 +148,9 @@ export default function AccountantForm() {
         />
       </AccountantFormGroup>
 
-      {/* ----------- Withdrawal customer account ----------- */}
+      {/* ----------- Withdrawal Customer Account ----------- */}
       <AccountantFormGroup
-        name={'preferred_advance_deposit'}
+        name={'paymentReceives.preferredAdvanceDeposit'}
         label={
           <strong>
             <T id={'customer_advance_deposit'} />
@@ -198,7 +167,7 @@ export default function AccountantForm() {
         fastField={true}
       >
         <AccountsSelect
-          name={'preferred_advance_deposit'}
+          name={'paymentReceives.preferredAdvanceDeposit'}
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
           filterByParentTypes={[ACCOUNT_PARENT_TYPE.CURRENT_ASSET]}

@@ -3,7 +3,7 @@
   "version": "1.7.1",
   "private": true,
   "dependencies": {
-    "@blueprintjs-formik/core": "^0.2.1",
+    "@blueprintjs-formik/core": "^0.3.3",
     "@blueprintjs-formik/datetime": "^0.3.4",
     "@blueprintjs-formik/select": "^0.2.3",
     "@blueprintjs/core": "^3.50.2",
@@ -45,6 +45,7 @@
     "deepdash": "^5.3.9",
     "dependency-graph": "^0.11.0",
     "fast-deep-equal": "^3.1.3",
+    "flat": "^5.0.2",
     "formik": "^2.2.5",
     "http-proxy-middleware": "^1.0.0",
     "jest": "24.9.0",

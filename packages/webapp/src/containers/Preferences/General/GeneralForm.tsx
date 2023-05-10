@@ -9,9 +9,11 @@ import { ErrorMessage, FastField } from 'formik';
 import { useHistory } from 'react-router-dom';
 
 import {
-  ListSelect,
   FieldRequiredHint,
   FormattedMessage as T,
+  FFormGroup,
+  FInputGroup,
+  FSelect,
 } from '@/components';
 import { inputIntent } from '@/utils';
 import { CLASSES } from '@/constants/classes';
@@ -46,153 +48,108 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
   return (
     <Form>
       {/* ---------- Organization name ----------  */}
-      <FastField name={'name'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'organization_name'} />}
-            labelInfo={<FieldRequiredHint />}
-            inline={true}
-            intent={inputIntent({ error, touched })}
-            className={'form-group--org-name'}
-            helperText={<T id={'shown_on_sales_forms_and_purchase_orders'} />}
-          >
-            <InputGroup medium={'true'} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'name'}
+        label={<T id={'organization_name'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline={true}
+        helperText={<T id={'shown_on_sales_forms_and_purchase_orders'} />}
+      >
+        <FInputGroup medium={'true'} name={'name'} />
+      </FFormGroup>
 
       {/* ---------- Industry ----------  */}
-      <FastField name={'industry'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'organization_industry'} />}
-            inline={true}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="industry" />}
-            className={'form-group--org-industry'}
-          >
-            <InputGroup medium={'true'} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'industry'}
+        label={<T id={'organization_industry'} />}
+        inline={true}
+      >
+        <FInputGroup name={'industry'} medium={'true'} />
+      </FFormGroup>
 
       {/* ---------- Location ---------- */}
-      <FastField name={'location'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'business_location'} />}
-            className={classNames(
-              'form-group--business-location',
-              CLASSES.FILL,
-            )}
-            inline={true}
-            helperText={<ErrorMessage name="location" />}
-            intent={inputIntent({ error, touched })}
-          >
-            <ListSelect
-              items={Countries}
-              onItemSelect={({ value }) => {
-                form.setFieldValue('location', value);
-              }}
-              selectedItem={value}
-              selectedItemProp={'value'}
-              defaultText={<T id={'select_business_location'} />}
-              textProp={'name'}
-              popoverProps={{ minimal: true }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'location'}
+        label={<T id={'business_location'} />}
+        inline={true}
+      >
+        <FSelect
+          name={'location'}
+          items={Countries}
+          valueAccessor={'countryCode'}
+          labelAccessor={'countryCode'}
+          textAccessor={'name'}
+          placeholder={<T id={'select_business_location'} />}
+          popoverProps={{ minimal: true }}
+        />
+      </FFormGroup>
 
       {/* ----------  Base currency ----------  */}
-      <FastField
+      <FFormGroup
         name={'base_currency'}
         baseCurrencyDisabled={baseCurrencyDisabled}
+        label={<T id={'base_currency'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline={true}
+        helperText={
+          <T
+            id={'you_can_t_change_the_base_currency_as_there_are_transactions'}
+          />
+        }
+        fastField={true}
         shouldUpdate={shouldBaseCurrencyUpdate}
       >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'base_currency'} />}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames('form-group--base-currency', CLASSES.FILL)}
-            inline={true}
-            intent={inputIntent({ error, touched })}
-            helperText={
-              <T
-                id={
-                  'you_can_t_change_the_base_currency_as_there_are_transactions'
-                }
-              />
-            }
-          >
-            <ListSelect
-              items={Currencies}
-              onItemSelect={(currency) => {
-                form.setFieldValue('base_currency', currency.key);
-              }}
-              selectedItem={value}
-              selectedItemProp={'key'}
-              defaultText={<T id={'select_base_currency'} />}
-              textProp={'name'}
-              labelProp={'key'}
-              popoverProps={{ minimal: true }}
-              disabled={baseCurrencyDisabled}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+        <FSelect
+          name={'base_currency'}
+          items={Currencies}
+          valueAccessor={'key'}
+          textAccessor={'name'}
+          labelAccessor={'key'}
+          placeholder={<T id={'select_base_currency'} />}
+          popoverProps={{ minimal: true }}
+          disabled={baseCurrencyDisabled}
+          fastField={true}
+        />
+      </FFormGroup>
 
       {/* --------- Fiscal Year ----------- */}
-      <FastField name={'fiscal_year'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'fiscal_year'} />}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames('form-group--fiscal-year', CLASSES.FILL)}
-            inline={true}
-            intent={inputIntent({ error, touched })}
-            helperText={<T id={'for_reporting_you_can_specify_any_month'} />}
-          >
-            <ListSelect
-              items={FiscalYear}
-              onItemSelect={(option) => {
-                form.setFieldValue('fiscal_year', option.key);
-              }}
-              selectedItem={value}
-              selectedItemProp={'key'}
-              defaultText={<T id={'select_fiscal_year'} />}
-              textProp={'name'}
-              popoverProps={{ minimal: true }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'fiscal_year'}
+        label={<T id={'fiscal_year'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline={true}
+        helperText={<T id={'for_reporting_you_can_specify_any_month'} />}
+        fastField={true}
+      >
+        <FSelect
+          name={'fiscal_year'}
+          items={FiscalYear}
+          valueAccessor={'key'}
+          textAccessor={'name'}
+          placeholder={<T id={'select_fiscal_year'} />}
+          popoverProps={{ minimal: true }}
+          fastField={true}
+        />
+      </FFormGroup>
 
       {/* ---------- Language ---------- */}
-      <FastField name={'language'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'language'} />}
-            labelInfo={<FieldRequiredHint />}
-            inline={true}
-            className={classNames('form-group--language', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="language" />}
-          >
-            <ListSelect
-              items={Languages}
-              selectedItemProp={'value'}
-              textProp={'name'}
-              defaultText={<T id={'select_language'} />}
-              selectedItem={value}
-              onItemSelect={(item) =>
-                form.setFieldValue('language', item.value)
-              }
-              popoverProps={{ minimal: true }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FormGroup
+        name={'language'}
+        label={<T id={'language'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline={true}
+        fastField={true}
+      >
+        <FSelect
+          name={'language'}
+          items={Languages}
+          valueAccessor={'value'}
+          textAccessor={'name'}
+          placeholder={<T id={'select_language'} />}
+          popoverProps={{ minimal: true }}
+          fastField={true}
+        />
+      </FormGroup>
 
       {/* ----------  Time zone ----------  */}
       <FastField name={'timezone'}>
@@ -222,30 +179,24 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
       </FastField>
 
       {/* --------- Data format ----------- */}
-      <FastField name={'date_format'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'date_format'} />}
-            labelInfo={<FieldRequiredHint />}
-            inline={true}
-            className={classNames('form-group--date-format', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="date_format" />}
-          >
-            <ListSelect
-              items={dateFormats}
-              onItemSelect={(dateFormat) => {
-                form.setFieldValue('date_format', dateFormat.key);
-              }}
-              selectedItem={value}
-              selectedItemProp={'key'}
-              defaultText={<T id={'select_date_format'} />}
-              textProp={'label'}
-              popoverProps={{ minimal: true }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'date_format'}
+        label={<T id={'date_format'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline={true}
+        helperText={<ErrorMessage name="date_format" />}
+        fastField={true}
+      >
+        <FSelect
+          name={'date_format'}
+          items={dateFormats}
+          valueAccessor={'key'}
+          textAccessor={'label'}
+          placeholder={<T id={'select_date_format'} />}
+          popoverProps={{ minimal: true }}
+          fastField={true}
+        />
+      </FFormGroup>
 
       <CardFooterActions>
         <Button loading={isSubmitting} intent={Intent.PRIMARY} type="submit">
