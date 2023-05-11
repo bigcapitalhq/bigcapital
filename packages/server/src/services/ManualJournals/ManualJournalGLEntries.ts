@@ -3,25 +3,20 @@ import * as R from 'ramda';
 import {
   IManualJournal,
   IManualJournalEntry,
-  IAccount,
   ILedgerEntry,
 } from '@/interfaces';
 import { Knex } from 'knex';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { LedgerRevert } from '@/services/Accounting/LedgerStorageRevert';
 
 @Service()
 export class ManualJournalGLEntries {
   @Inject()
-  ledgerStorage: LedgerStorageService;
+  private ledgerStorage: LedgerStorageService;
 
   @Inject()
-  ledgerRevert: LedgerRevert;
-
-  @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   /**
    * Create manual journal GL entries.
@@ -77,7 +72,7 @@ export class ManualJournalGLEntries {
     manualJournalId: number,
     trx?: Knex.Transaction
   ): Promise<void> => {
-    return this.ledgerRevert.revertGLEntries(
+    return this.ledgerStorage.deleteByReference(
       tenantId,
       manualJournalId,
       'Journal',
@@ -86,7 +81,7 @@ export class ManualJournalGLEntries {
   };
 
   /**
-   *
+   * Retrieves the ledger of the given manual journal.
    * @param   {IManualJournal} manualJournal
    * @returns {Ledger}
    */
@@ -97,11 +92,13 @@ export class ManualJournalGLEntries {
   };
 
   /**
-   *
+   * Retrieves the common entry details of the manual journal
    * @param   {IManualJournal} manualJournal
-   * @returns {}
+   * @returns {Partial<ILedgerEntry>}
    */
-  private getManualJournalCommonEntry = (manualJournal: IManualJournal) => {
+  private getManualJournalCommonEntry = (
+    manualJournal: IManualJournal
+  ): Partial<ILedgerEntry> => {
     return {
       transactionNumber: manualJournal.journalNumber,
       referenceNumber: manualJournal.reference,
@@ -118,7 +115,8 @@ export class ManualJournalGLEntries {
   };
 
   /**
-   *
+   * Retrieves the ledger entry of the given manual journal and
+   * its associated entry.
    * @param   {IManualJournal} manualJournal -
    * @param   {IManualJournalEntry} entry -
    * @returns {ILedgerEntry}
@@ -149,7 +147,7 @@ export class ManualJournalGLEntries {
   );
 
   /**
-   *
+   * Retrieves the ledger of the given manual journal.
    * @param   {IManualJournal} manualJournal
    * @returns {ILedgerEntry[]}
    */

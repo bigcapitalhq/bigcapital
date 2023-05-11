@@ -1,11 +1,10 @@
-import { difference, sumBy, omit, map } from 'lodash';
+import { difference } from 'lodash';
 import { Service, Inject } from 'typedi';
 import { ServiceError } from '@/exceptions';
 import {
   IManualJournalDTO,
   IManualJournalEntry,
   IManualJournal,
-  IManualJournalEntryDTO,
 } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import { ERRORS } from './constants';
@@ -286,7 +285,7 @@ export class CommandManualJournalValidators {
   public validateJournalCurrencyWithAccountsCurrency = async (
     tenantId: number,
     manualJournalDTO: IManualJournalDTO,
-    baseCurrency: string,
+    baseCurrency: string
   ) => {
     const { Account } = this.tenancy.models(tenantId);
 
