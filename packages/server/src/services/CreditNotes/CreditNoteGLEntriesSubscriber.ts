@@ -5,18 +5,13 @@ import {
   ICreditNoteDeletedPayload,
   ICreditNoteEditedPayload,
   ICreditNoteOpenedPayload,
-  IRefundCreditNoteOpenedPayload,
 } from '@/interfaces';
 import CreditNoteGLEntries from './CreditNoteGLEntries';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export default class CreditNoteGLEntriesSubscriber {
   @Inject()
-  creditNoteGLEntries: CreditNoteGLEntries;
-
-  @Inject()
-  tenancy: HasTenancyService;
+  private creditNoteGLEntries: CreditNoteGLEntries;
 
   /**
    * Attaches events with handlers.

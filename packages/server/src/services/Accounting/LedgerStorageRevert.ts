@@ -10,7 +10,7 @@ export class LedgerRevert {
   private tenancy: HasTenancyService;
 
   @Inject()
-  ledgerStorage: LedgerStorageService;
+  private ledgerStorage: LedgerStorageService;
 
   /**
    * Reverts the jouranl entries.
