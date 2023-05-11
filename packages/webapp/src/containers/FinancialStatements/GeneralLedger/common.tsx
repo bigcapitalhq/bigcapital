@@ -30,7 +30,7 @@ export const getDefaultGeneralLedgerQuery = () => {
   return {
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
-    basis: 'accural',
+    basis: 'accrual',
     filterByOption: 'with-transactions',
     branchesIds: [],
     accountsIds: [],

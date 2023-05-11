@@ -20,7 +20,7 @@ import '@/style/pages/Preferences/Accounting.scss';
 
 const defaultFormValues = flatten({
   organization: {
-    accountingBasis: '',
+    accountingBasis: 'accrual',
   },
   accounts: {
     accountCodeRequired: false,
