@@ -58,7 +58,7 @@ export default class OrganizationController extends BaseController {
   private get organizationValidationSchema(): ValidationChain[] {
     return [
       check('name').exists().trim(),
-      check('industry').optional().isString(),
+      check('industry').optional({ nullable: true }).isString().trim().escape(),
       check('location').exists().isString().isISO31661Alpha2(),
       check('base_currency').exists().isISO4217(),
       check('timezone').exists().isIn(moment.tz.names()),

@@ -41,7 +41,7 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
   get balanceSheetValidationSchema(): ValidationChain[] {
     return [
       ...this.sheetNumberFormatValidationSchema,
-      query('accounting_method').optional().isIn(['cash', 'accural']),
+      query('accounting_method').optional().isIn(['cash', 'accrual']),
 
       query('from_date').optional(),
       query('to_date').optional(),

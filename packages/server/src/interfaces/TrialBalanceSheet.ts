@@ -4,7 +4,7 @@ export interface ITrialBalanceSheetQuery {
   fromDate: Date | string;
   toDate: Date | string;
   numberFormat: INumberFormatQuery;
-  basis: 'cash' | 'accural';
+  basis: 'cash' | 'accrual';
   noneZero: boolean;
   noneTransactions: boolean;
   onlyActive: boolean;

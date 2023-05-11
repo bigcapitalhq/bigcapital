@@ -8,7 +8,7 @@ export default class SeedSettings extends TenantSeeder {
   up() {
     const settings = [
       // Orgnization settings.
-      { group: 'organization', key: 'accounting_basis', value: 'accural' },
+      { group: 'organization', key: 'accounting_basis', value: 'accrual' },
 
       // Accounts settings.
       { group: 'accounts', key: 'account_code_unique', value: true },

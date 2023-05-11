@@ -35,7 +35,7 @@ export default class TrialBalanceSheetService extends FinancialSheet {
         formatMoney: 'total',
         precision: 2,
       },
-      basis: 'accural',
+      basis: 'accrual',
       noneZero: false,
       noneTransactions: true,
       onlyActive: false,
