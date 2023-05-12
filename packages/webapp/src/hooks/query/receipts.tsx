@@ -33,6 +33,9 @@ const commonInvalidateQueries = (queryClient) => {
 
   // Invalidate the settings.
   queryClient.invalidateQueries([t.SETTING, t.SETTING_RECEIPTS]);
+
+  // Invalidate mutate base currency abilities.
+  queryClient.invalidateQueries(t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES);
 };
 
 /**
