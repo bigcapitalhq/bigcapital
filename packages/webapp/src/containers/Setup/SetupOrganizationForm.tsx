@@ -1,18 +1,17 @@
 // @ts-nocheck
 import React from 'react';
 import { FastField, Form, ErrorMessage } from 'formik';
-import {
-  Button,
-  Intent,
-  FormGroup,
-  MenuItem,
-  Classes,
-} from '@blueprintjs/core';
+import { Button, Intent, FormGroup, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
-import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
+import {
+  FFormGroup,
+  FInputGroup,
+  FSelect,
+  FormattedMessage as T,
+} from '@/components';
 
-import { Col, Row, ListSelect } from '@/components';
+import { Col, Row } from '@/components';
 import { inputIntent } from '@/utils';
 
 import { getFiscalYear } from '@/constants/fiscalYearOptions';
@@ -35,152 +34,88 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       <h3>
         <T id={'organization_details'} />
       </h3>
-
       {/* ---------- Organization name ----------  */}
-      <FFormGroup name={'name'} label={<T id={'legal_organization_name'} />}>
-        <FInputGroup name={'name'} />
+      <FFormGroup
+        name={'name'}
+        label={<T id={'legal_organization_name'} />}
+        fastField={true}
+      >
+        <FInputGroup name={'name'} fastField={true} />
       </FFormGroup>
 
       {/* ---------- Location ---------- */}
-      <FastField name={'location'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'business_location'} />}
-            className={classNames(
-              'form-group--business-location',
-              Classes.FILL,
-            )}
-            helperText={<ErrorMessage name="location" />}
-            intent={inputIntent({ error, touched })}
-          >
-            <ListSelect
-              items={countries}
-              onItemSelect={({ countryCode }) => {
-                form.setFieldValue('location', countryCode);
-              }}
-              selectedItem={value}
-              selectedItemProp={'countryCode'}
-              defaultText={<T id={'select_business_location'} />}
-              textProp={'name'}
-              popoverProps={{ minimal: true }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'location'}
+        label={<T id={'business_location'} />}
+        fastField={true}
+      >
+        <FSelect
+          name={'location'}
+          items={countries}
+          valueAccessor={'countryCode'}
+          textAccessor={'name'}
+          placeholder={<T id={'select_business_location'} />}
+          popoverProps={{ minimal: true }}
+          fastField={true}
+        />
+      </FFormGroup>
 
       <Row>
         <Col xs={6}>
           {/* ----------  Base currency ----------  */}
-          <FastField name={'baseCurrency'}>
-            {({
-              form: { setFieldValue },
-              field: { value },
-              meta: { error, touched },
-            }) => (
-              <FormGroup
-                label={<T id={'base_currency'} />}
-                className={classNames(
-                  'form-group--base-currency',
-                  'form-group--select-list',
-                  Classes.FILL,
-                )}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'baseCurrency'} />}
-              >
-                <ListSelect
-                  items={currencies}
-                  noResults={
-                    <MenuItem disabled={true} text={<T id={'no_results'} />} />
-                  }
-                  popoverProps={{ minimal: true }}
-                  onItemSelect={(item) => {
-                    setFieldValue('baseCurrency', item.key);
-                  }}
-                  selectedItemProp={'key'}
-                  textProp={'name'}
-                  defaultText={<T id={'select_base_currency'} />}
-                  selectedItem={value}
-                  intent={inputIntent({ error, touched })}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'baseCurrency'}
+            label={<T id={'base_currency'} />}
+            fastField={true}
+          >
+            <FSelect
+              name={'baseCurrency'}
+              items={currencies}
+              popoverProps={{ minimal: true }}
+              valueAccessor={'key'}
+              textAccessor={'name'}
+              placeholder={<T id={'select_base_currency'} />}
+              fastField={true}
+            />
+          </FFormGroup>
         </Col>
 
         {/* ---------- Language ---------- */}
         <Col xs={6}>
-          <FastField name={'language'}>
-            {({
-              form: { setFieldValue },
-              field: { value },
-              meta: { error, touched },
-            }) => (
-              <FormGroup
-                label={<T id={'language'} />}
-                className={classNames(
-                  'form-group--language',
-                  'form-group--select-list',
-                  Classes.FILL,
-                )}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'language'} />}
-              >
-                <ListSelect
-                  items={Languages}
-                  noResults={
-                    <MenuItem disabled={true} text={<T id={'no_results'} />} />
-                  }
-                  onItemSelect={(item) => {
-                    setFieldValue('language', item.value);
-                  }}
-                  selectedItem={value}
-                  textProp={'name'}
-                  selectedItemProp={'value'}
-                  defaultText={<T id={'select_language'} />}
-                  popoverProps={{ minimal: true }}
-                  filterable={false}
-                  intent={inputIntent({ error, touched })}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'language'}
+            label={<T id={'language'} />}
+            fastField={true}
+          >
+            <FSelect
+              name={'language'}
+              items={Languages}
+              valueAccessor={'value'}
+              textAccessor={'name'}
+              placeholder={<T id={'select_language'} />}
+              popoverProps={{ minimal: true }}
+              fastField={true}
+            />
+          </FFormGroup>
         </Col>
       </Row>
+
       {/* --------- Fiscal Year ----------- */}
-      <FastField name={'fiscalYear'}>
-        {({
-          form: { setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
-          <FormGroup
-            label={<T id={'fiscal_year'} />}
-            className={classNames(
-              'form-group--fiscal_year',
-              'form-group--select-list',
-              Classes.FILL,
-            )}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'fiscalYear'} />}
-          >
-            <ListSelect
-              items={FiscalYear}
-              noResults={
-                <MenuItem disabled={true} text={<T id={'no_results'} />} />
-              }
-              selectedItem={value}
-              selectedItemProp={'key'}
-              textProp={'name'}
-              defaultText={<T id={'select_fiscal_year'} />}
-              popoverProps={{ minimal: true }}
-              onItemSelect={(item) => {
-                setFieldValue('fiscalYear', item.key);
-              }}
-              filterable={false}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'fiscalYear'}
+        label={<T id={'fiscal_year'} />}
+        fastField={true}
+      >
+        <FSelect
+          name={'fiscalYear'}
+          items={FiscalYear}
+          valueAccessor={'key'}
+          textAccessor={'name'}
+          placeholder={<T id={'select_fiscal_year'} />}
+          popoverProps={{ minimal: true }}
+          fastField={true}
+        />
+      </FFormGroup>
 
       {/* ----------  Time zone ----------  */}
       <FastField name={'timezone'}>

@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { Form } from 'formik';
-import { Button, FormGroup, InputGroup, Intent } from '@blueprintjs/core';
+import { Button, FormGroup, Intent } from '@blueprintjs/core';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { ErrorMessage, FastField } from 'formik';
 import { useHistory } from 'react-router-dom';
@@ -54,8 +54,9 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
         labelInfo={<FieldRequiredHint />}
         inline={true}
         helperText={<T id={'shown_on_sales_forms_and_purchase_orders'} />}
+        fastField={true}
       >
-        <FInputGroup medium={'true'} name={'name'} />
+        <FInputGroup medium={'true'} name={'name'} fastField={true} />
       </FFormGroup>
 
       {/* ---------- Industry ----------  */}
@@ -63,8 +64,9 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
         name={'industry'}
         label={<T id={'organization_industry'} />}
         inline={true}
+        fastField={true}
       >
-        <FInputGroup name={'industry'} medium={'true'} />
+        <FInputGroup name={'industry'} medium={'true'} fastField={true} />
       </FFormGroup>
 
       {/* ---------- Location ---------- */}
@@ -72,6 +74,7 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
         name={'location'}
         label={<T id={'business_location'} />}
         inline={true}
+        fastField={true}
       >
         <FSelect
           name={'location'}
@@ -81,6 +84,7 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
           textAccessor={'name'}
           placeholder={<T id={'select_business_location'} />}
           popoverProps={{ minimal: true }}
+          fastField={true}
         />
       </FFormGroup>
 
@@ -109,6 +113,8 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
           popoverProps={{ minimal: true }}
           disabled={baseCurrencyDisabled}
           fastField={true}
+          shouldUpdate={shouldBaseCurrencyUpdate}
+          baseCurrencyDisabled={baseCurrencyDisabled}
         />
       </FFormGroup>
 
