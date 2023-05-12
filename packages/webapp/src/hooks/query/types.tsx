@@ -1,7 +1,7 @@
 // @ts-nocheck
 const Authentication = {
-  AUTH_METADATA_PAGE: 'AUTH_META_PAGE'
-}
+  AUTH_METADATA_PAGE: 'AUTH_META_PAGE',
+};
 
 const ACCOUNTS = {
   ACCOUNT: 'ACCOUNT',
@@ -220,6 +220,10 @@ const DASHBOARD = {
   DASHBOARD_META: 'DASHBOARD_META',
 };
 
+const ORGANIZATION = {
+  ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES: 'ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES',
+};
+
 export default {
   ...Authentication,
   ...ACCOUNTS,
@@ -252,4 +256,5 @@ export default {
   ...WAREHOUSE_TRANSFERS,
   ...BRANCHES,
   ...DASHBOARD,
+  ...ORGANIZATION,
 };

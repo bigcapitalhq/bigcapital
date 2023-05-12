@@ -30,6 +30,9 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate landed cost.
   queryClient.invalidateQueries(t.LANDED_COST);
   queryClient.invalidateQueries(t.LANDED_COST_TRANSACTION);
+
+  // Invalidate mutate base currency abilities.
+  queryClient.invalidateQueries(t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES);
 };
 
 const transformExpenses = (response) => ({

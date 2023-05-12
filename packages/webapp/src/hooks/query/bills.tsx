@@ -37,6 +37,9 @@ const commonInvalidateQueries = (queryClient) => {
 
   // Invalidate item warehouses.
   queryClient.invalidateQueries(t.ITEM_WAREHOUSES_LOCATION);
+
+  // Invalidate mutate base currency abilities.
+  queryClient.invalidateQueries(t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES);
 };
 
 /**

@@ -42,6 +42,9 @@ const commonInvalidateQueries = (queryClient) => {
 
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
+
+  // Invalidate mutate base currency abilities.
+  queryClient.invalidateQueries(t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES);
 };
 
 /**
