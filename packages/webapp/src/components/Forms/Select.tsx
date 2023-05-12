@@ -46,7 +46,7 @@ const SelectButton = styled(Button)`
     margin-right: 12px;
     border-radius: 1px;
   }
-  &:not([class*='bp3-intent-']) {
+  &:not([class*='bp3-intent-']):not(.bp3-disabled) {
     &,
     &:hover {
       background: #fff;

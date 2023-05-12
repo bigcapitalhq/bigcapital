@@ -17,7 +17,7 @@ function AccountantFormProvider({ ...props }) {
   // Fetches the accounts list.
   const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
 
-  //Fetches Organization Settings.
+  // Fetches Organization Settings.
   const { isLoading: isSettingsLoading } = useSettings();
 
   // Save Organization Settings.
@@ -29,7 +29,7 @@ function AccountantFormProvider({ ...props }) {
     isAccountsLoading,
     saveSettingMutate,
   };
-
+  // Detarmines whether if any query is loading.
   const isLoading = isSettingsLoading || isAccountsLoading;
 
   return (

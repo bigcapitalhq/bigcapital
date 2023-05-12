@@ -1,8 +1,9 @@
 // @ts-nocheck
 import React from 'react';
 import { Form, useFormikContext } from 'formik';
-import { FormGroup, Button, Intent } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 import {
   AccountsSelect,
   FieldRequiredHint,
@@ -30,7 +31,7 @@ export default function ItemForm() {
   return (
     <Form>
       {/* ----------- Preferred Sell Account ----------- */}
-      <FormGroup
+      <ItemFormGroup
         name={'preferred_sell_account'}
         label={
           <strong>
@@ -53,10 +54,10 @@ export default function ItemForm() {
           placeholder={<T id={'select_payment_account'} />}
           filterByParentTypes={[ACCOUNT_PARENT_TYPE.INCOME]}
         />
-      </FormGroup>
+      </ItemFormGroup>
 
       {/* ----------- Preferred Cost Account ----------- */}
-      <FFormGroup
+      <ItemFormGroup
         name={'preferred_cost_account'}
         label={
           <strong>
@@ -79,10 +80,10 @@ export default function ItemForm() {
           placeholder={<T id={'select_payment_account'} />}
           filterByParentTypes={[ACCOUNT_PARENT_TYPE.EXPENSE]}
         />
-      </FFormGroup>
+      </ItemFormGroup>
 
       {/* ----------- Preferred Inventory Account ----------- */}
-      <FFormGroup
+      <ItemFormGroup
         name={'preferred_inventory_account'}
         label={
           <strong>
@@ -105,7 +106,7 @@ export default function ItemForm() {
           placeholder={<T id={'select_payment_account'} />}
           filterByTypes={[ACCOUNT_TYPE.INVENTORY]}
         />
-      </FFormGroup>
+      </ItemFormGroup>
 
       <CardFooterActions>
         <Button intent={Intent.PRIMARY} loading={isSubmitting} type="submit">
@@ -118,3 +119,7 @@ export default function ItemForm() {
     </Form>
   );
 }
+
+const ItemFormGroup = styled(FFormGroup)`
+  max-width: 400px;
+`;

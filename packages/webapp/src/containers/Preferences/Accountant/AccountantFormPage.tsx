@@ -1,22 +1,39 @@
 // @ts-nocheck
 import React, { useEffect } from 'react';
+import * as R from 'ramda';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
-import { pick } from 'lodash';
 import { Intent } from '@blueprintjs/core';
+import { flatten, unflatten } from 'flat';
 
 import { AppToaster } from '@/components';
-
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withSettings from '@/containers/Settings/withSettings';
 
 import AccountantForm from './AccountantForm';
 import { AccountantSchema } from './Accountant.schema';
 import { useAccountantFormContext } from './AccountantFormProvider';
-import { transformToOptions } from './utils';
-import { compose, transformGeneralSettings } from '@/utils';
+import { transferObjectOptionsToArray } from './utils';
+import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
 
 import '@/style/pages/Preferences/Accounting.scss';
+
+const defaultFormValues = flatten({
+  organization: {
+    accountingBasis: 'accrual',
+  },
+  accounts: {
+    accountCodeRequired: false,
+    accountCodeUnique: false,
+  },
+  billPayments: {
+    withdrawalAccount: '',
+  },
+  paymentReceives: {
+    preferredDepositAccount: '',
+    preferredAdvanceDeposit: '',
+  },
+});
 
 // Accountant preferences.
 function AccountantFormPage({
@@ -24,32 +41,26 @@ function AccountantFormPage({
   changePreferencesPageTitle,
 
   // #withSettings
-  organizationSettings,
-  paymentReceiveSettings,
-  accountsSettings,
-  billPaymentSettings,
+  allSettings,
 }) {
   const { saveSettingMutate } = useAccountantFormContext();
-
-  const accountantSettings = {
-    ...billPaymentSettings,
-    ...accountsSettings,
-    ...pick(organizationSettings, ['accountingBasis']),
-    ...pick(paymentReceiveSettings, ['preferredDepositAccount', 'preferredAdvanceDeposit']),
-  };
-
-  const initialValues = {
-    ...transformGeneralSettings(accountantSettings),
-  };
 
   useEffect(() => {
     changePreferencesPageTitle(intl.get('accountant'));
   }, [changePreferencesPageTitle]);
 
+  const initialValues = unflatten({
+    ...defaultFormValues,
+    ...transformToForm(flatten(allSettings), defaultFormValues),
+  });
+  // Handle the form submitting.
   const handleFormSubmit = (values, { setSubmitting }) => {
-    const options = transformToOptions(values);
-
+    const options = R.compose(
+      transferObjectOptionsToArray,
+      transfromToSnakeCase,
+    )(values);
     setSubmitting(true);
+
     const onSuccess = () => {
       AppToaster.show({
         message: intl.get('the_accountant_preferences_has_been_saved'),
@@ -57,8 +68,7 @@ function AccountantFormPage({
       });
       setSubmitting(false);
     };
-
-    const onError = (errors) => {
+    const onError = () => {
       setSubmitting(false);
     };
     saveSettingMutate({ options }).then(onSuccess).catch(onError);
@@ -75,18 +85,8 @@ function AccountantFormPage({
 }
 
 export default compose(
-  withSettings(
-    ({
-      organizationSettings,
-      paymentReceiveSettings,
-      accountsSettings,
-      billPaymentSettings,
-    }) => ({
-      organizationSettings,
-      paymentReceiveSettings,
-      accountsSettings,
-      billPaymentSettings,
-    }),
-  ),
+  withSettings(({ allSettings }) => ({
+    allSettings,
+  })),
   withDashboardActions,
 )(AccountantFormPage);

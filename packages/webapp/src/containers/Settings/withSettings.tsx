@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
+      allSettings: state.settings.data,
       organizationSettings: state.settings.data.organization,
       manualJournalsSettings: state.settings.data.manualJournals,
       billPaymentSettings: state.settings.data.billPayments,

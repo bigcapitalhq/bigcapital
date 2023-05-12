@@ -27,7 +27,7 @@ export default function RadiosAccountingBasis(props) {
           {...rest}
         >
           <Radio label={intl.get('cash')} value="cash" />
-          <Radio label={intl.get('accrual')} value="accural" />
+          <Radio label={intl.get('accrual')} value="accrual" />
         </RadioGroup>
       )}
     </FastField>

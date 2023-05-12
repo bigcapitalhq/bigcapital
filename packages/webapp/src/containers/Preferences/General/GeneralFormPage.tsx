@@ -40,6 +40,7 @@ function GeneralFormPage({
 
   // Initial values.
   const initialValues = {
+    ...defaultValues,
     ...transformToForm(organization.metadata, defaultValues),
   };
   // Handle the form submit.

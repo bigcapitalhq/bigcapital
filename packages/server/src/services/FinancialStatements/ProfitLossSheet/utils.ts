@@ -17,7 +17,7 @@ export const getDefaultPLQuery = (): IProfitLossSheetQuery => ({
     formatMoney: 'total',
     precision: 2,
   },
-  basis: 'accural',
+  basis: 'accrual',
 
   noneZero: false,
   noneTransactions: false,
