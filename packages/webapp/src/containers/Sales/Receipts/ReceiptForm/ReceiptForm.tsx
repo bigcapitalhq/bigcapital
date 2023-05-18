@@ -34,6 +34,7 @@ import {
   handleErrors,
   transformFormValuesToRequest,
 } from './utils';
+import { ReceiptSyncIncrementSettingsToForm } from './components';
 
 /**
  * Receipt form.
@@ -164,8 +165,8 @@ function ReceiptForm({
           <ReceiptItemsEntriesEditor />
           <ReceiptFormFooter />
           <ReceiptFormFloatingActions />
-
           <ReceiptFormDialogs />
+          <ReceiptSyncIncrementSettingsToForm />
         </Form>
       </Formik>
     </div>

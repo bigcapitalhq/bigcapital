@@ -174,15 +174,6 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
   }
 };
 
-export const useObserveJournalNoSettings = (prefix, nextNumber) => {
-  const { setFieldValue } = useFormikContext();
-
-  React.useEffect(() => {
-    const journalNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('journal_number', journalNo);
-  }, [setFieldValue, prefix, nextNumber]);
-};
-
 /**
  * Detarmines entries fast field should update.
  */

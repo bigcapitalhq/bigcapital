@@ -32,6 +32,7 @@ import {
   transfromsFormValuesToRequest,
   handleErrors,
 } from './utils';
+import { EstimateIncrementSyncSettingsToForm } from './components';
 
 /**
  * Estimate form.
@@ -160,8 +161,8 @@ function EstimateForm({
           <EstimateItemsEntriesField />
           <EstimateFormFooter />
           <EstimateFloatingActions />
-
           <EstimateFormDialogs />
+          <EstimateIncrementSyncSettingsToForm />
         </Form>
       </Formik>
     </div>

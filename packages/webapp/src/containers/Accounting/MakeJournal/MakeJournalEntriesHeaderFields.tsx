@@ -25,30 +25,24 @@ import {
   Icon,
   InputPrependButton,
   CurrencySelectList,
-  FormattedMessage as T
+  FormattedMessage as T,
 } from '@/components';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { JournalExchangeRateInputField } from './components';
+import { currenciesFieldShouldUpdate } from './utils';
+
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import {
-  currenciesFieldShouldUpdate,
-  useObserveJournalNoSettings,
-} from './utils';
+
 /**
  * Make journal entries header.
  */
 function MakeJournalEntriesHeader({
-  // #ownProps
-  onJournalNumberChanged,
-
   // #withDialog
   openDialog,
 
   // #withSettings
   journalAutoIncrement,
-  journalNextNumber,
-  journalNumberPrefix,
 }) {
   const { currencies } = useMakeJournalFormContext();
 
@@ -70,8 +64,6 @@ function MakeJournalEntriesHeader({
       });
     }
   };
-
-  useObserveJournalNoSettings(journalNumberPrefix, journalNextNumber);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -224,7 +216,5 @@ export default compose(
   withDialogActions,
   withSettings(({ manualJournalsSettings }) => ({
     journalAutoIncrement: manualJournalsSettings?.autoIncrement,
-    journalNextNumber: manualJournalsSettings?.nextNumber,
-    journalNumberPrefix: manualJournalsSettings?.numberPrefix,
   })),
 )(MakeJournalEntriesHeader);

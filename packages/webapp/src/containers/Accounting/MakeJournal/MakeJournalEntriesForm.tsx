@@ -4,7 +4,7 @@ import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
-import { defaultTo, isEmpty, omit } from 'lodash';
+import { isEmpty, omit } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
@@ -31,6 +31,7 @@ import {
   transformToEditForm,
   defaultManualJournal,
 } from './utils';
+import { JournalSyncIncrementSettingsToForm } from './components';
 
 /**
  * Journal entries form.
@@ -40,6 +41,7 @@ function MakeJournalEntriesForm({
   journalNextNumber,
   journalNumberPrefix,
   journalAutoIncrement,
+
   // #withCurrentOrganization
   organization: { base_currency },
 }) {
@@ -179,6 +181,9 @@ function MakeJournalEntriesForm({
 
           {/* --------- Dialogs --------- */}
           <MakeJournalFormDialogs />
+
+          {/* --------- Effects --------- */}
+          <JournalSyncIncrementSettingsToForm />
         </Form>
       </Formik>
     </div>

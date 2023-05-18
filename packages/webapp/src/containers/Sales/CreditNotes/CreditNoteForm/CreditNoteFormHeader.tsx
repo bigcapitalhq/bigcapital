@@ -13,6 +13,19 @@ import { PageFormBigNumber } from '@/components';
  * Credit note header.
  */
 function CreditNoteFormHeader() {
+  return (
+    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+      <CreditNoteFormHeaderFields />
+      <CreditNoteFormBigNumber />
+    </div>
+  );
+}
+
+/**
+ * Big total number of credit note form header.
+ * @returns {React.ReactNode}
+ */
+function CreditNoteFormBigNumber() {
   const {
     values: { entries, currency_code },
   } = useFormikContext();
@@ -21,14 +34,11 @@ function CreditNoteFormHeader() {
   const totalAmount = React.useMemo(() => getEntriesTotal(entries), [entries]);
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
-      <CreditNoteFormHeaderFields />
-      <PageFormBigNumber
-        label={intl.get('credit_note.label_amount_to_credit')}
-        amount={totalAmount}
-        currencyCode={currency_code}
-      />
-    </div>
+    <PageFormBigNumber
+      label={intl.get('credit_note.label_amount_to_credit')}
+      amount={totalAmount}
+      currencyCode={currency_code}
+    />
   );
 }
 

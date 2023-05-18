@@ -14,7 +14,7 @@ export const defaultInvoiceNoSettings = {
 
 export const transformSettingsToForm = (settings) => ({
   ...settings,
-  incrementMode: settings.autoIncrement === 'true' ? 'auto' : 'manual',
+  incrementMode: settings.autoIncrement ? 'auto' : 'manual',
 });
 
 export const transformFormToSettings = (values, group) => {

@@ -32,6 +32,7 @@ import {
   transformErrors,
   transformValueToRequest,
 } from './utils';
+import { InvoiceNoSyncSettingsToForm } from './components';
 
 /**
  * Invoice form.
@@ -64,23 +65,19 @@ function InvoiceForm({
     invoiceNextNumber,
   );
   // Form initial values.
-  const initialValues = useMemo(
-    () => ({
-      ...(!isEmpty(invoice)
-        ? { ...transformToEditForm(invoice) }
-        : {
-            ...defaultInvoice,
-            ...(invoiceIncrementMode && {
+  const initialValues = {
+    ...(!isEmpty(invoice)
+      ? { ...transformToEditForm(invoice) }
+      : {
+          ...defaultInvoice,
+          ...(invoiceIncrementMode && {
               invoice_no: invoiceNumber,
             }),
             entries: orderingLinesIndexes(defaultInvoice.entries),
             currency_code: base_currency,
-            ...newInvoice,
-          }),
-    }),
-    [invoice, newInvoice, invoiceNumber, invoiceIncrementMode, base_currency],
-  );
-
+          ...newInvoice,
+        }),
+  };
   // Handles form submit.
   const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
     setSubmitting(true);
@@ -105,7 +102,6 @@ function InvoiceForm({
       delivered: submitPayload.deliver,
       from_estimate_id: estimateId,
     };
-
     // Handle the request success.
     const onSuccess = () => {
       AppToaster.show({
@@ -173,6 +169,7 @@ function InvoiceForm({
           <InvoiceFormFooter />
           <InvoiceFloatingActions />
           <InvoiceFormDialogs />
+          <InvoiceNoSyncSettingsToForm />
         </Form>
       </Formik>
     </div>

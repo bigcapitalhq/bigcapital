@@ -39,7 +39,6 @@ import { useReceiptFormContext } from './ReceiptFormProvider';
 import {
   accountsFieldShouldUpdate,
   customersFieldShouldUpdate,
-  useObserveReceiptNoSettings,
 } from './utils';
 import {
   ReceiptExchangeRateInputField,
@@ -56,8 +55,6 @@ function ReceiptFormHeader({
 
   // #withSettings
   receiptAutoIncrement,
-  receiptNextNumber,
-  receiptNumberPrefix,
 }) {
   const { accounts, customers, projects } = useReceiptFormContext();
 
@@ -77,9 +74,6 @@ function ReceiptFormHeader({
       });
     }
   };
-
-  // Synsc receipt number settings with the form.
-  useObserveReceiptNoSettings(receiptNumberPrefix, receiptNextNumber);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -255,8 +249,6 @@ export default compose(
   withDialogActions,
   withSettings(({ receiptSettings }) => ({
     receiptAutoIncrement: receiptSettings?.autoIncrement,
-    receiptNextNumber: receiptSettings?.nextNumber,
-    receiptNumberPrefix: receiptSettings?.numberPrefix,
   })),
 )(ReceiptFormHeader);
 

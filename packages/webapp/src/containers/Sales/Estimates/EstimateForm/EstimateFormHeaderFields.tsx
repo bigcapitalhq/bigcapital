@@ -39,7 +39,6 @@ import {
   EstimateProjectSelectButton,
 } from './components';
 
-import { useObserveEstimateNoSettings } from './utils';
 import { useEstimateFormContext } from './EstimateFormProvider';
 
 /**
@@ -71,8 +70,7 @@ function EstimateFormHeader({
       });
     }
   };
-  // Syncs estimate number settings with the form.
-  useObserveEstimateNoSettings(estimateNumberPrefix, estimateNextNumber);
+
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>

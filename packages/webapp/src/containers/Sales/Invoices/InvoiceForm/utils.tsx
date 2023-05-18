@@ -109,18 +109,6 @@ export const transformErrors = (errors, { setErrors }) => {
 };
 
 /**
- * Syncs invoice no. settings with form.
- */
-export const useObserveInvoiceNoSettings = (prefix, nextNumber) => {
-  const { setFieldValue } = useFormikContext();
-
-  React.useEffect(() => {
-    const invoiceNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('invoice_no', invoiceNo);
-  }, [setFieldValue, prefix, nextNumber]);
-};
-
-/**
  * Detarmines customer name field when should update.
  */
 export const customerNameFieldShouldUpdate = (newProps, oldProps) => {

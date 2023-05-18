@@ -16,10 +16,10 @@ import { saveInvoke } from '@/utils';
  * Reference number form.
  */
 export default function ReferenceNumberForm({
-  onSubmit,
-  onClose,
   initialValues,
   description,
+  onSubmit,
+  onClose,
   onChange,
 }) {
   // Validation schema.

@@ -21,6 +21,9 @@ const commonInvalidateQueries = (client) => {
   client.invalidateQueries(t.ACCOUNTS);
   client.invalidateQueries(t.ACCOUNT);
 
+  // Invalidate settings.
+  client.invalidateQueries([t.SETTING, t.SETTING_MANUAL_JOURNALS]);
+
   // Invalidate financial reports.
   client.invalidateQueries(t.FINANCIAL_REPORT);
 

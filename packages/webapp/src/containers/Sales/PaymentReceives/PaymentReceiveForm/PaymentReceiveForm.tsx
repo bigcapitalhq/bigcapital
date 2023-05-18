@@ -36,6 +36,7 @@ import {
   transformFormToRequest,
   transformErrors,
 } from './utils';
+import { PaymentReceiveSyncIncrementSettingsToForm } from './components';
 
 /**
  * Payment Receive form.
@@ -175,6 +176,8 @@ function PaymentReceiveForm({
             <PaymentReceiveFormBody />
             <PaymentReceiveFormFooter />
             <PaymentReceiveFloatingActions />
+
+            <PaymentReceiveSyncIncrementSettingsToForm />
 
             {/* ------- Alerts & Dialogs ------- */}
             <PaymentReceiveFormAlerts />

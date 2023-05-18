@@ -75,18 +75,6 @@ export const transformToEditForm = (estimate) => {
 };
 
 /**
- * Syncs estimate number of the settings with the context form.
- */
-export const useObserveEstimateNoSettings = (prefix, nextNumber) => {
-  const { setFieldValue } = useFormikContext();
-
-  React.useEffect(() => {
-    const estimateNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('estimate_number', estimateNo);
-  }, [setFieldValue, prefix, nextNumber]);
-};
-
-/**
  * Detarmines customers fast field when update.
  */
 export const customersFieldShouldUpdate = (newProps, oldProps) => {

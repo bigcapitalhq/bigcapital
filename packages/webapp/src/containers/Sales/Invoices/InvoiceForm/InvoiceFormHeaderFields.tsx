@@ -28,7 +28,6 @@ import { momentFormatter, compose, tansformDateValue } from '@/utils';
 import { CLASSES } from '@/constants/classes';
 import { inputIntent, handleDateChange } from '@/utils';
 import {
-  useObserveInvoiceNoSettings,
   customerNameFieldShouldUpdate,
 } from './utils';
 
@@ -42,6 +41,7 @@ import {
   ProjectBillableEntriesLink,
 } from '@/containers/Projects/components';
 import { Features } from '@/constants';
+import { DialogsName } from '@/constants/dialogs';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -55,8 +55,6 @@ function InvoiceFormHeaderFields({
 
   // #withSettings
   invoiceAutoIncrement,
-  invoiceNumberPrefix,
-  invoiceNextNumber,
 }) {
   // Invoice form context.
   const { customers, projects } = useInvoiceFormContext();
@@ -66,14 +64,14 @@ function InvoiceFormHeaderFields({
 
   // Handle invoice number changing.
   const handleInvoiceNumberChange = () => {
-    openDialog('invoice-number-form');
+    openDialog(DialogsName.InvoiceNumberSettings);
   };
   // Handle invoice no. field blur.
   const handleInvoiceNoBlur = (form, field) => (event) => {
     const newValue = event.target.value;
 
     if (field.value !== newValue && invoiceAutoIncrement) {
-      openDialog('invoice-number-form', {
+      openDialog(DialogsName.InvoiceNumberSettings, {
         initialFormValues: {
           manualTransactionNo: newValue,
           incrementMode: 'manual-transaction',
@@ -81,8 +79,6 @@ function InvoiceFormHeaderFields({
       });
     }
   };
-  // Syncs invoice number settings with form.
-  useObserveInvoiceNoSettings(invoiceNumberPrefix, invoiceNextNumber);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -268,8 +264,6 @@ export default compose(
   withDialogActions,
   withSettings(({ invoiceSettings }) => ({
     invoiceAutoIncrement: invoiceSettings?.autoIncrement,
-    invoiceNextNumber: invoiceSettings?.nextNumber,
-    invoiceNumberPrefix: invoiceSettings?.numberPrefix,
   })),
 )(InvoiceFormHeaderFields);
 

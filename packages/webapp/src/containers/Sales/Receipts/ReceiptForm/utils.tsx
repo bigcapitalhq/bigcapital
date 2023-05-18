@@ -77,15 +77,6 @@ export const transformToEditForm = (receipt) => {
   };
 };
 
-export const useObserveReceiptNoSettings = (prefix, nextNumber) => {
-  const { setFieldValue } = useFormikContext();
-
-  React.useEffect(() => {
-    const receiptNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('receipt_number', receiptNo);
-  }, [setFieldValue, prefix, nextNumber]);
-};
-
 /**
  * Detarmines entries fast field should update.
  */

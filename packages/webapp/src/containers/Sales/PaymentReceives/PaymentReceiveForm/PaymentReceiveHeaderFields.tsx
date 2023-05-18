@@ -51,7 +51,6 @@ import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import {
-  useObservePaymentNoSettings,
   amountPaymentEntries,
   fullAmountPaymentEntries,
   customersFieldShouldUpdate,
@@ -71,8 +70,6 @@ function PaymentReceiveHeaderFields({
 
   // #withSettings
   paymentReceiveAutoIncrement,
-  paymentReceiveNumberPrefix,
-  paymentReceiveNextNumber,
 }) {
   // Payment receive form context.
   const { customers, accounts, projects, isNewMode } =
@@ -122,12 +119,6 @@ function PaymentReceiveHeaderFields({
       });
     }
   };
-
-  // Syncs payment receive number from settings to the form.
-  useObservePaymentNoSettings(
-    paymentReceiveNumberPrefix,
-    paymentReceiveNextNumber,
-  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -351,8 +342,6 @@ function PaymentReceiveHeaderFields({
 
 export default compose(
   withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
-    paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
     paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
   })),
   withDialogActions,

@@ -13,6 +13,15 @@ import BillFormHeaderFields from './BillFormHeaderFields';
  * Fill form header.
  */
 function BillFormHeader() {
+  return (
+    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+      <BillFormHeaderFields />
+      <BillFormBigTotal />
+    </div>
+  );
+}
+
+function BillFormBigTotal() {
   const {
     values: { currency_code, entries },
   } = useFormikContext();
@@ -21,14 +30,12 @@ function BillFormHeader() {
   const totalDueAmount = useMemo(() => sumBy(entries, 'amount'), [entries]);
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
-      <BillFormHeaderFields />
-      <PageFormBigNumber
-        label={intl.get('due_amount')}
-        amount={totalDueAmount}
-        currencyCode={currency_code}
-      />
-    </div>
+    <PageFormBigNumber
+      label={intl.get('due_amount')}
+      amount={totalDueAmount}
+      currencyCode={currency_code}
+    />
   );
 }
+
 export default BillFormHeader;

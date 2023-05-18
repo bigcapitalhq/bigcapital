@@ -21,7 +21,6 @@ import {
 } from '@/components';
 import {
   customerNameFieldShouldUpdate,
-  useObserveCreditNoSettings,
 } from './utils';
 
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
@@ -45,8 +44,6 @@ function CreditNoteFormHeaderFields({
 
   // #withSettings
   creditAutoIncrement,
-  creditNumberPrefix,
-  creditNextNumber,
 }) {
   // Credit note form context.
   const { customers } = useCreditNoteFormContext();
@@ -69,9 +66,6 @@ function CreditNoteFormHeaderFields({
       });
     }
   };
-
-  // Syncs credit number settings with form.
-  useObserveCreditNoSettings(creditNumberPrefix, creditNextNumber);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
