@@ -11,6 +11,7 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
+import * as R from 'ramda';
 
 import {
   FFormGroup,
@@ -23,13 +24,16 @@ import {
   Icon,
   InputPrependButton,
   FeatureCan,
+  FInputGroup,
 } from '@/components';
-import { momentFormatter, compose, tansformDateValue } from '@/utils';
-import { CLASSES } from '@/constants/classes';
-import { inputIntent, handleDateChange } from '@/utils';
 import {
-  customerNameFieldShouldUpdate,
-} from './utils';
+  momentFormatter,
+  tansformDateValue,
+  inputIntent,
+  handleDateChange,
+} from '@/utils';
+import { CLASSES } from '@/constants/classes';
+import { customerNameFieldShouldUpdate } from './utils';
 
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import {
@@ -47,38 +51,86 @@ import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**
+ * Invoice number field of invoice form.
+ */
+const InvoiceFormInvoiceNumberField = R.compose(
+  withDialogActions,
+  withSettings(({ invoiceSettings }) => ({
+    invoiceAutoIncrement: invoiceSettings?.autoIncrement,
+  })),
+)(
+  ({
+    // #withDialogActions
+    openDialog,
+
+    // #withSettings
+    invoiceAutoIncrement,
+  }) => {
+    // Formik context.
+    const { values, setFieldValue } = useFormikContext();
+
+    // Handle invoice number changing.
+    const handleInvoiceNumberChange = () => {
+      openDialog(DialogsName.InvoiceNumberSettings);
+    };
+    // Handle invoice no. field blur.
+    const handleInvoiceNoBlur = (event) => {
+      const newValue = event.target.value;
+
+      if (values.invoice_no.value !== newValue && invoiceAutoIncrement) {
+        openDialog(DialogsName.InvoiceNumberSettings, {
+          initialFormValues: {
+            onceManualNumber: newValue,
+            incrementMode: 'manual-transaction',
+          },
+        });
+      }
+      if (!invoiceAutoIncrement) {
+        setFieldValue('invoice_no', newValue);
+        setFieldValue('invoice_no_manually', newValue);
+      }
+    };
+
+    return (
+      <FFormGroup
+        name={'invoice_no'}
+        label={<T id={'invoice_no'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline={true}
+        fastField={true}
+      >
+        <ControlGroup fill={true}>
+          <FInputGroup
+            name={'invoice_no'}
+            minimal={true}
+            asyncControl={true}
+            onBlur={handleInvoiceNoBlur}
+            fastField={true}
+          />
+          <InputPrependButton
+            buttonProps={{
+              onClick: handleInvoiceNumberChange,
+              icon: <Icon icon={'settings-18'} />,
+            }}
+            tooltip={true}
+            tooltipProps={{
+              content: <T id={'setting_your_auto_generated_invoice_number'} />,
+              position: Position.BOTTOM_LEFT,
+            }}
+          />
+        </ControlGroup>
+      </FFormGroup>
+    );
+  },
+);
+
+/**
  * Invoice form header fields.
  */
-function InvoiceFormHeaderFields({
-  // #withDialogActions
-  openDialog,
-
-  // #withSettings
-  invoiceAutoIncrement,
-}) {
+export default function InvoiceFormHeaderFields() {
   // Invoice form context.
   const { customers, projects } = useInvoiceFormContext();
-
-  // Formik context.
   const { values } = useFormikContext();
-
-  // Handle invoice number changing.
-  const handleInvoiceNumberChange = () => {
-    openDialog(DialogsName.InvoiceNumberSettings);
-  };
-  // Handle invoice no. field blur.
-  const handleInvoiceNoBlur = (form, field) => (event) => {
-    const newValue = event.target.value;
-
-    if (field.value !== newValue && invoiceAutoIncrement) {
-      openDialog(DialogsName.InvoiceNumberSettings, {
-        initialFormValues: {
-          manualTransactionNo: newValue,
-          incrementMode: 'manual-transaction',
-        },
-      });
-    }
-  };
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -185,40 +237,7 @@ function InvoiceFormHeaderFields({
       </Row>
 
       {/* ----------- Invoice number ----------- */}
-      <Field name={'invoice_no'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'invoice_no'} />}
-            labelInfo={<FieldRequiredHint />}
-            inline={true}
-            className={classNames('form-group--invoice-no', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="invoice_no" />}
-          >
-            <ControlGroup fill={true}>
-              <InputGroup
-                minimal={true}
-                value={field.value}
-                asyncControl={true}
-                onBlur={handleInvoiceNoBlur(form, field)}
-              />
-              <InputPrependButton
-                buttonProps={{
-                  onClick: handleInvoiceNumberChange,
-                  icon: <Icon icon={'settings-18'} />,
-                }}
-                tooltip={true}
-                tooltipProps={{
-                  content: (
-                    <T id={'setting_your_auto_generated_invoice_number'} />
-                  ),
-                  position: Position.BOTTOM_LEFT,
-                }}
-              />
-            </ControlGroup>
-          </FormGroup>
-        )}
-      </Field>
+      <InvoiceFormInvoiceNumberField />
 
       {/* ----------- Reference ----------- */}
       <FastField name={'reference_no'}>
@@ -259,13 +278,6 @@ function InvoiceFormHeaderFields({
     </div>
   );
 }
-
-export default compose(
-  withDialogActions,
-  withSettings(({ invoiceSettings }) => ({
-    invoiceAutoIncrement: invoiceSettings?.autoIncrement,
-  })),
-)(InvoiceFormHeaderFields);
 
 const CustomerButtonLink = styled(CustomerDrawerLink)`
   font-size: 11px;

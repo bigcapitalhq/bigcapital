@@ -118,7 +118,6 @@ function MakeJournalEntriesForm({
       entries: R.compose(orderingLinesIndexes)(entries),
       publish: submitPayload.publish,
     };
-
     // Handle the request error.
     const handleError = ({
       response: {
@@ -149,7 +148,6 @@ function MakeJournalEntriesForm({
         resetForm();
       }
     };
-
     if (isNewMode) {
       createJournalMutate(form).then(handleSuccess).catch(handleError);
     } else {

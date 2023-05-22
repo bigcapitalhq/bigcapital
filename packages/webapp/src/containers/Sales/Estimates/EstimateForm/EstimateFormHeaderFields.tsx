@@ -10,12 +10,13 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
+import * as R from 'ramda';
+import { FastField, ErrorMessage, useFormikContext } from 'formik';
+
 import { FeatureCan, FFormGroup, FormattedMessage as T } from '@/components';
-import { FastField, Field, ErrorMessage } from 'formik';
 
 import {
   momentFormatter,
-  compose,
   tansformDateValue,
   inputIntent,
   handleDateChange,
@@ -41,36 +42,78 @@ import {
 
 import { useEstimateFormContext } from './EstimateFormProvider';
 
+const EstimateFormEstimateNumberField = R.compose(
+  withDialogActions,
+  withSettings(({ estimatesSettings }) => ({
+    estimateNextNumber: estimatesSettings?.nextNumber,
+    estimateNumberPrefix: estimatesSettings?.numberPrefix,
+    estimateAutoIncrement: estimatesSettings?.autoIncrement,
+  })),
+)(
+  ({
+    // #withDialogActions
+    openDialog,
+
+    // #withSettings
+    estimateAutoIncrement,
+  }) => {
+    const { values, setFieldValue } = useFormikContext();
+
+    const handleEstimateNumberBtnClick = () => {
+      openDialog('estimate-number-form', {});
+    };
+    const handleEstimateNoBlur = (event) => {
+      const newValue = event.target.value;
+
+      if (values.estimate_number !== newValue && estimateAutoIncrement) {
+        openDialog('estimate-number-form', {
+          initialFormValues: {
+            onceManualNumber: newValue,
+            incrementMode: 'manual-transaction',
+          },
+        });
+      }
+      if (!estimateAutoIncrement) {
+        setFieldValue('estimate_number', newValue);
+        setFieldValue('estimate_number_manually', newValue);
+      }
+    };
+
+    return (
+      <FFormGroup
+        name={'estimate_number'}
+        label={<T id={'estimate'} />}
+        inline={true}
+      >
+        <ControlGroup fill={true}>
+          <InputGroup
+            minimal={true}
+            value={values.estimate_number}
+            asyncControl={true}
+            onBlur={handleEstimateNoBlur}
+          />
+          <InputPrependButton
+            buttonProps={{
+              onClick: handleEstimateNumberBtnClick,
+              icon: <Icon icon={'settings-18'} />,
+            }}
+            tooltip={true}
+            tooltipProps={{
+              content: <T id={'setting_your_auto_generated_estimate_number'} />,
+              position: Position.BOTTOM_LEFT,
+            }}
+          />
+        </ControlGroup>
+      </FFormGroup>
+    );
+  },
+);
+
 /**
  * Estimate form header.
  */
-function EstimateFormHeader({
-  // #withDialogActions
-  openDialog,
-
-  // #withSettings
-  estimateAutoIncrement,
-  estimateNumberPrefix,
-  estimateNextNumber,
-}) {
+export default function EstimateFormHeader() {
   const { customers, projects } = useEstimateFormContext();
-
-  const handleEstimateNumberBtnClick = () => {
-    openDialog('estimate-number-form', {});
-  };
-  const handleEstimateNoBlur = (form, field) => (event) => {
-    const newValue = event.target.value;
-
-    if (field.value !== newValue && estimateAutoIncrement) {
-      openDialog('estimate-number-form', {
-        initialFormValues: {
-          manualTransactionNo: newValue,
-          incrementMode: 'manual-transaction',
-        },
-      });
-    }
-  };
-
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -174,40 +217,7 @@ function EstimateFormHeader({
       </FastField>
 
       {/* ----------- Estimate number ----------- */}
-      <Field name={'estimate_number'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'estimate'} />}
-            inline={true}
-            className={('form-group--estimate-number', CLASSES.FILL)}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="estimate_number" />}
-          >
-            <ControlGroup fill={true}>
-              <InputGroup
-                minimal={true}
-                value={field.value}
-                asyncControl={true}
-                onBlur={handleEstimateNoBlur(form, field)}
-              />
-              <InputPrependButton
-                buttonProps={{
-                  onClick: handleEstimateNumberBtnClick,
-                  icon: <Icon icon={'settings-18'} />,
-                }}
-                tooltip={true}
-                tooltipProps={{
-                  content: (
-                    <T id={'setting_your_auto_generated_estimate_number'} />
-                  ),
-                  position: Position.BOTTOM_LEFT,
-                }}
-              />
-            </ControlGroup>
-          </FormGroup>
-        )}
-      </Field>
+      <EstimateFormEstimateNumberField />
 
       {/* ----------- Reference ----------- */}
       <FastField name={'reference'}>
@@ -243,15 +253,6 @@ function EstimateFormHeader({
     </div>
   );
 }
-
-export default compose(
-  withDialogActions,
-  withSettings(({ estimatesSettings }) => ({
-    estimateNextNumber: estimatesSettings?.nextNumber,
-    estimateNumberPrefix: estimatesSettings?.numberPrefix,
-    estimateAutoIncrement: estimatesSettings?.autoIncrement,
-  })),
-)(EstimateFormHeader);
 
 const CustomerButtonLink = styled(CustomerDrawerLink)`
   font-size: 11px;

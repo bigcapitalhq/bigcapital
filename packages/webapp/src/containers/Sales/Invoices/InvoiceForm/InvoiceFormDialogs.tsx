@@ -11,9 +11,9 @@ export default function InvoiceFormDialogs() {
   const { setFieldValue } = useFormikContext();
 
   // Update the form once the invoice number form submit confirm.
-  const handleInvoiceNumberFormConfirm = ({ incrementNumber, manually }) => {
-    setFieldValue('invoice_no', incrementNumber || '');
-    setFieldValue('invoice_no_manually', manually);
+  const handleInvoiceNumberFormConfirm = (settings) => {
+    setFieldValue('invoice_no', settings.transactionNumber);
+    setFieldValue('invoice_no_manually', settings.transactionNumber);
   };
 
   return (

@@ -12,13 +12,13 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { toSafeInteger } from 'lodash';
-import { FeatureCan, FormattedMessage as T } from '@/components';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
+import * as R from 'ramda';
 
+import { FeatureCan, FormattedMessage as T } from '@/components';
 import { useAutofocus } from '@/hooks';
 import { CLASSES } from '@/constants/classes';
 import {
-  compose,
   safeSumBy,
   momentFormatter,
   tansformDateValue,
@@ -48,7 +48,6 @@ import {
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import {
   amountPaymentEntries,
@@ -59,18 +58,85 @@ import {
 import { Features } from '@/constants';
 
 /**
+ * Payment receive number field.
+ */
+const PaymentReceivePaymentNoField = R.compose(
+  withSettings(({ paymentReceiveSettings }) => ({
+    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
+  })),
+  withDialogActions,
+)(
+  ({
+    // #withDialogActions
+    openDialog,
+
+    // #withSettings
+    paymentReceiveAutoIncrement,
+  }) => {
+    const { values, setFieldValue } = useFormikContext();
+
+    // Handle click open payment receive number dialog.
+    const handleClickOpenDialog = () => {
+      openDialog('payment-receive-number-form');
+    };
+    // Handle payment number field blur.
+    const handlePaymentNoBlur = (event) => {
+      const newValue = event.target.value;
+
+      if (
+        values.payment_receive_no !== newValue &&
+        paymentReceiveAutoIncrement
+      ) {
+        openDialog('payment-receive-number-form', {
+          initialFormValues: {
+            onceManualNumber: newValue,
+            incrementMode: 'manual-transaction',
+          },
+        });
+      }
+      if (!paymentReceiveAutoIncrement) {
+        setFieldValue('payment_receive_no', newValue);
+        setFieldValue('payment_receive_no_manually', newValue);
+      }
+    };
+    return (
+      <FormGroup
+        name={'payment_receive_no'}
+        label={<T id={'payment_receive_no'} />}
+        inline={true}
+        labelInfo={<FieldRequiredHint />}
+        helperText={<ErrorMessage name="payment_receive_no" />}
+      >
+        <ControlGroup fill={true}>
+          <InputGroup
+            minimal={true}
+            value={values.payment_receive_no}
+            asyncControl={true}
+            onBlur={handlePaymentNoBlur}
+          />
+          <InputPrependButton
+            buttonProps={{
+              onClick: handleClickOpenDialog,
+              icon: <Icon icon={'settings-18'} />,
+            }}
+            tooltip={true}
+            tooltipProps={{
+              content: (
+                <T id={'setting_your_auto_generated_payment_receive_number'} />
+              ),
+              position: Position.BOTTOM_LEFT,
+            }}
+          />
+        </ControlGroup>
+      </FormGroup>
+    );
+  },
+);
+
+/**
  * Payment receive header fields.
  */
-function PaymentReceiveHeaderFields({
-  // #withCurrentOrganization
-  organization: { base_currency },
-
-  // #withDialogActions
-  openDialog,
-
-  // #withSettings
-  paymentReceiveAutoIncrement,
-}) {
+export default function PaymentReceiveHeaderFields({}) {
   // Payment receive form context.
   const { customers, accounts, projects, isNewMode } =
     usePaymentReceiveFormContext();
@@ -100,24 +166,6 @@ function PaymentReceiveHeaderFields({
   const onFullAmountBlur = (value) => {
     const newEntries = amountPaymentEntries(toSafeInteger(value), entries);
     setFieldValue('entries', newEntries);
-  };
-  // Handle click open payment receive number dialog.
-  const handleClickOpenDialog = () => {
-    openDialog('payment-receive-number-form');
-  };
-
-  // Handle payment number field blur.
-  const handlePaymentNoBlur = (form, field) => (event) => {
-    const newValue = event.target.value;
-
-    if (field.value !== newValue && paymentReceiveAutoIncrement) {
-      openDialog('payment-receive-number-form', {
-        initialFormValues: {
-          manualTransactionNo: newValue,
-          incrementMode: 'manual-transaction',
-        },
-      });
-    }
   };
 
   return (
@@ -237,43 +285,7 @@ function PaymentReceiveHeaderFields({
       </Field>
 
       {/* ------------ Payment receive no. ------------ */}
-      <FastField name={'payment_receive_no'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'payment_receive_no'} />}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            className={('form-group--payment_receive_no', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="payment_receive_no" />}
-          >
-            <ControlGroup fill={true}>
-              <InputGroup
-                intent={inputIntent({ error, touched })}
-                minimal={true}
-                value={field.value}
-                asyncControl={true}
-                onBlur={handlePaymentNoBlur(form, field)}
-              />
-              <InputPrependButton
-                buttonProps={{
-                  onClick: handleClickOpenDialog,
-                  icon: <Icon icon={'settings-18'} />,
-                }}
-                tooltip={true}
-                tooltipProps={{
-                  content: (
-                    <T
-                      id={'setting_your_auto_generated_payment_receive_number'}
-                    />
-                  ),
-                  position: Position.BOTTOM_LEFT,
-                }}
-              />
-            </ControlGroup>
-          </FormGroup>
-        )}
-      </FastField>
+      <PaymentReceivePaymentNoField />
 
       {/* ------------ Deposit account ------------ */}
       <FFormGroup
@@ -339,14 +351,6 @@ function PaymentReceiveHeaderFields({
     </div>
   );
 }
-
-export default compose(
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
-  })),
-  withDialogActions,
-  withCurrentOrganization(),
-)(PaymentReceiveHeaderFields);
 
 const CustomerButtonLink = styled(CustomerDrawerLink)`
   font-size: 11px;

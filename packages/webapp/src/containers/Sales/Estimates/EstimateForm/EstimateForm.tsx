@@ -161,7 +161,11 @@ function EstimateForm({
           <EstimateItemsEntriesField />
           <EstimateFormFooter />
           <EstimateFloatingActions />
+
+          {/*------- Dialogs -------*/}
           <EstimateFormDialogs />
+
+          {/*------- Effects -------*/}
           <EstimateIncrementSyncSettingsToForm />
         </Form>
       </Formik>

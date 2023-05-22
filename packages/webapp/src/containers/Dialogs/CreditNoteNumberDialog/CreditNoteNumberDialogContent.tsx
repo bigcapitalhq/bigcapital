@@ -65,7 +65,6 @@ function CreditNoteNumberDialogContent({
   const handleChange = (values) => {
     setReferenceFormValues(values);
   };
-
   // Description.
   const description =
     referenceFormValues?.incrementMode === 'auto'

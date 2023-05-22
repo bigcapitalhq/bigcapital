@@ -10,9 +10,9 @@ export default function MakeJournalFormDialogs() {
   const { setFieldValue } = useFormikContext();
 
   // Update the form once the journal number form submit confirm.
-  const handleConfirm = ({ manually, incrementNumber }) => {
-    setFieldValue('journal_number', incrementNumber || '');
-    setFieldValue('journal_number_manually', manually);
+  const handleConfirm = (settings) => {
+    setFieldValue('journal_number', settings.transactionNumber);
+    setFieldValue('journal_number_manually', settings.transactionNumber);
   };
 
   return (

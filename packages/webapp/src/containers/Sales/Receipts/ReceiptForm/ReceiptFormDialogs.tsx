@@ -10,9 +10,9 @@ export default function ReceiptFormDialogs() {
   const { setFieldValue } = useFormikContext();
 
   // Update the form once the receipt number form submit confirm.
-  const handleReceiptNumberFormConfirm = ({ incrementNumber, manually }) => {
-    setFieldValue('receipt_number', incrementNumber || '');
-    setFieldValue('receipt_number_manually', manually);
+  const handleReceiptNumberFormConfirm = (settings) => {
+    setFieldValue('receipt_number', settings.transactionNumber);
+    setFieldValue('receipt_number_manually', settings.transactionNumber);
   };
 
   return (

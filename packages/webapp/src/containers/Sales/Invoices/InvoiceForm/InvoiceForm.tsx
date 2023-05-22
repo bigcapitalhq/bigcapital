@@ -71,10 +71,10 @@ function InvoiceForm({
       : {
           ...defaultInvoice,
           ...(invoiceIncrementMode && {
-              invoice_no: invoiceNumber,
-            }),
-            entries: orderingLinesIndexes(defaultInvoice.entries),
-            currency_code: base_currency,
+            invoice_no: invoiceNumber,
+          }),
+          entries: orderingLinesIndexes(defaultInvoice.entries),
+          currency_code: base_currency,
           ...newInvoice,
         }),
   };
@@ -140,7 +140,6 @@ function InvoiceForm({
       createInvoiceMutate(form).then(onSuccess).catch(onError);
     }
   };
-
   // Create invoice form schema.
   const CreateInvoiceFormSchema = getCreateInvoiceFormSchema();
 
@@ -168,7 +167,11 @@ function InvoiceForm({
           <InvoiceItemsEntriesEditorField />
           <InvoiceFormFooter />
           <InvoiceFloatingActions />
+
+          {/*---------- Dialogs ----------*/}
           <InvoiceFormDialogs />
+
+          {/*---------- Effects ----------*/}
           <InvoiceNoSyncSettingsToForm />
         </Form>
       </Formik>

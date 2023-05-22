@@ -177,6 +177,7 @@ function PaymentReceiveForm({
             <PaymentReceiveFormFooter />
             <PaymentReceiveFloatingActions />
 
+            {/* ------- Effects ------- */}
             <PaymentReceiveSyncIncrementSettingsToForm />
 
             {/* ------- Alerts & Dialogs ------- */}

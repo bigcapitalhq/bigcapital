@@ -5,6 +5,7 @@ import {
   transfromToSnakeCase,
   transactionNumber,
 } from '@/utils';
+import { omit } from 'lodash';
 
 export const defaultInvoiceNoSettings = {
   nextNumber: '',
@@ -13,7 +14,7 @@ export const defaultInvoiceNoSettings = {
 };
 
 export const transformSettingsToForm = (settings) => ({
-  ...settings,
+  ...omit(settings, ['autoIncrement']),
   incrementMode: settings.autoIncrement ? 'auto' : 'manual',
 });
 
@@ -25,13 +26,21 @@ export const transformFormToSettings = (values, group) => {
   return optionsMapToArray(options).map((option) => ({ ...option, group }));
 };
 
+/**
+ * Transaction number returns auto-increment if the increment mode is auto or
+ * returns empty string if the increment mode is manually or returns the entered 
+ * manual text if the increment mode is manual once just in this transaction.  
+ */
 export const transformValuesToForm = (values) => {
-  const incrementNumber =
+  const autoIncrementNumber = transactionNumber(
+    values.numberPrefix,
+    values.nextNumber,
+  );
+  const _transactionNumber =
     values.incrementMode === 'auto'
-      ? transactionNumber(values.numberPrefix, values.nextNumber)
-      : values.manualTransactionNo;
-
-  const manually = values.incrementMode === 'auto' ? false : true;
-
-  return { incrementNumber, manually };
+      ? autoIncrementNumber
+      : values.incrementMode === 'manual-transaction'
+      ? values.onceManualNumber
+      : '';
+  return { transactionNumber: _transactionNumber };
 };

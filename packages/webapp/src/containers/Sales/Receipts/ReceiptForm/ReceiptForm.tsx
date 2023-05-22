@@ -165,7 +165,11 @@ function ReceiptForm({
           <ReceiptItemsEntriesEditor />
           <ReceiptFormFooter />
           <ReceiptFormFloatingActions />
+
+          {/*---------- Dialogs ---------*/}
           <ReceiptFormDialogs />
+
+          {/*---------- Effects ---------*/}
           <ReceiptSyncIncrementSettingsToForm />
         </Form>
       </Formik>
