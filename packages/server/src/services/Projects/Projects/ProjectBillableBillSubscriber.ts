@@ -23,8 +23,11 @@ export class ProjectBillableBillSubscriber {
       events.saleInvoice.onCreated,
       this.handleIncreaseBillableBill
     );
-    bus.subscribe(events.saleInvoice.onEdited, this.handleDecreaseBillableBill);
-    bus.subscribe(events.saleInvoice.onDeleted, this.handleEditBillableBill);
+    bus.subscribe(events.saleInvoice.onEdited, this.handleEditBillableBill);
+    bus.subscribe(
+      events.saleInvoice.onDeleted,
+      this.handleDecreaseBillableBill
+    );
   }
 
   /**

@@ -21,13 +21,10 @@ export class ProjectBillableExpensesSubscriber {
       events.saleInvoice.onCreated,
       this.handleIncreaseBillableExpenses
     );
-    bus.subscribe(
-      events.saleInvoice.onEdited,
-      this.handleDecreaseBillableExpenses
-    );
+    bus.subscribe(events.saleInvoice.onEdited, this.handleEditBillableExpenses);
     bus.subscribe(
       events.saleInvoice.onDeleted,
-      this.handleEditBillableExpenses
+      this.handleDecreaseBillableExpenses
     );
   }
 

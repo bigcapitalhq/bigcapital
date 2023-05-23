@@ -1,7 +1,11 @@
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import async from 'async';
-import { ISaleInvoice, ISaleInvoiceDTO, ProjectLinkRefType } from '@/interfaces';
+import {
+  ISaleInvoice,
+  ISaleInvoiceDTO,
+  ProjectLinkRefType,
+} from '@/interfaces';
 import { ProjectBillableExpense } from './ProjectBillableExpense';
 import { filterEntriesByRefType } from './_utils';
 
