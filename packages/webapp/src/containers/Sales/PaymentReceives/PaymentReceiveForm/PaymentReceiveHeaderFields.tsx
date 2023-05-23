@@ -109,6 +109,7 @@ const PaymentReceivePaymentNoField = R.compose(
       >
         <ControlGroup fill={true}>
           <InputGroup
+            name={'payment_receive_no'}
             minimal={true}
             value={values.payment_receive_no}
             asyncControl={true}
@@ -136,7 +137,7 @@ const PaymentReceivePaymentNoField = R.compose(
 /**
  * Payment receive header fields.
  */
-export default function PaymentReceiveHeaderFields({}) {
+export default function PaymentReceiveHeaderFields() {
   // Payment receive form context.
   const { customers, accounts, projects, isNewMode } =
     usePaymentReceiveFormContext();

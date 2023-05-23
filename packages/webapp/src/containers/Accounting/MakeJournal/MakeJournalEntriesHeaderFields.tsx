@@ -26,6 +26,7 @@ import {
   InputPrependButton,
   CurrencySelectList,
   FormattedMessage as T,
+  FInputGroup,
 } from '@/components';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { JournalExchangeRateInputField } from './components';
@@ -52,11 +53,9 @@ const MakeJournalTransactionNoField = R.compose(
   }) => {
     const { setFieldValue, values } = useFormikContext();
 
-    // Handle journal number change.
     const handleJournalNumberChange = () => {
       openDialog('journal-number-form');
     };
-    // Handle journal number blur.
     const handleJournalNoBlur = (event) => {
       const newValue = event.target.value;
 
@@ -86,13 +85,16 @@ const MakeJournalTransactionNoField = R.compose(
         }
         fill={true}
         inline={true}
+        fastField={true}
       >
         <ControlGroup fill={true}>
-          <InputGroup
+          <FInputGroup
+            name={'journal_number'}
             fill={true}
             value={values.journal_number}
             asyncControl={true}
             onBlur={handleJournalNoBlur}
+            fastField={true}
           />
           <InputPrependButton
             buttonProps={{

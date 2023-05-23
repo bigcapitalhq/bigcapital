@@ -9,6 +9,7 @@ import { useCurrentOrganization } from '@/hooks/state';
 import { useEstimateIsForeignCustomer } from './utils';
 import withSettings from '@/containers/Settings/withSettings';
 import { transactionNumber } from '@/utils';
+import { useUpdateEffect } from '@/hooks';
 
 /**
  * Estimate exchange rate input field.
@@ -54,7 +55,7 @@ export const EstimateIncrementSyncSettingsToForm = R.compose(
 )(({ estimateNextNumber, estimateNumberPrefix, estimateAutoIncrement }) => {
   const { setFieldValue } = useFormikContext();
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     if (!estimateAutoIncrement) return null;
 
     const estimateNo = transactionNumber(
@@ -62,7 +63,12 @@ export const EstimateIncrementSyncSettingsToForm = R.compose(
       estimateNextNumber,
     );
     setFieldValue('estimate_number', estimateNo);
-  }, [setFieldValue, estimateNumberPrefix, estimateNextNumber]);
+  }, [
+    setFieldValue,
+    estimateNumberPrefix,
+    estimateNextNumber,
+    estimateAutoIncrement,
+  ]);
 
   return null;
 });

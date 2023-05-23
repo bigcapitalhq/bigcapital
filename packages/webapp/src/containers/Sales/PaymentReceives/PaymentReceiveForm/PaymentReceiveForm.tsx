@@ -1,11 +1,11 @@
 // @ts-nocheck
 import React, { useMemo } from 'react';
+import { sumBy, isEmpty, defaultTo } from 'lodash';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { Formik, Form } from 'formik';
-import { omit, sumBy, pick, isEmpty, defaultTo } from 'lodash';
-import { Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
+import { Intent } from '@blueprintjs/core';
 
 import '@/style/pages/PaymentReceive/PageForm.scss';
 
@@ -69,7 +69,6 @@ function PaymentReceiveForm({
     paymentReceiveNumberPrefix,
     paymentReceiveNextNumber,
   );
-
   // Form initial values.
   const initialValues = useMemo(
     () => ({
@@ -114,7 +113,8 @@ function PaymentReceiveForm({
     const form = transformFormToRequest(values);
 
     // Handle request response success.
-    const onSaved = (response) => {
+    const onSaved = () => {
+      setSubmitting(false);
       AppToaster.show({
         message: intl.get(
           paymentReceiveId
@@ -123,7 +123,6 @@ function PaymentReceiveForm({
         ),
         intent: Intent.SUCCESS,
       });
-      setSubmitting(false);
 
       if (submitPayload.redirect) {
         history.push('/payment-receives');

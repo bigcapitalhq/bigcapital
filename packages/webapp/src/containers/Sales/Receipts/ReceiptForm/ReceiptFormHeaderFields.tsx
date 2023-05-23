@@ -14,6 +14,8 @@ import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import * as R from 'ramda';
 
 import { CLASSES } from '@/constants/classes';
+import { ACCOUNT_TYPE } from '@/constants/accountTypes';
+import { Features } from '@/constants';
 import {
   FFormGroup,
   AccountsSelect,
@@ -24,8 +26,8 @@ import {
   CustomerDrawerLink,
   FormattedMessage as T,
   FeatureCan,
+  FInputGroup,
 } from '@/components';
-import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { ProjectsSelect } from '@/containers/Projects/components';
 import {
   momentFormatter,
@@ -39,10 +41,13 @@ import {
   ReceiptExchangeRateInputField,
   ReceiptProjectSelectButton,
 } from './components';
-import { Features } from '@/constants';
+
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
+/**
+ * Receipt number field of receipt form.
+ */
 const ReceiptFormReceiptNumberField = R.compose(
   withDialogActions,
   withSettings(({ receiptSettings }) => ({
@@ -50,7 +55,7 @@ const ReceiptFormReceiptNumberField = R.compose(
   })),
 )(
   ({
-    //#withDialogActions
+    // #withDialogActions
     openDialog,
 
     // #withSettings
@@ -58,9 +63,9 @@ const ReceiptFormReceiptNumberField = R.compose(
   }) => {
     const { values, setFieldValue } = useFormikContext();
 
-    const handleReceiptNumberChange = useCallback(() => {
+    const handleReceiptNumberChange = () => {
       openDialog('receipt-number-form', {});
-    }, [openDialog]);
+    };
 
     const handleReceiptNoBlur = (event) => {
       const newValue = event.target.value;
@@ -87,7 +92,8 @@ const ReceiptFormReceiptNumberField = R.compose(
         labelInfo={<FieldRequiredHint />}
       >
         <ControlGroup fill={true}>
-          <InputGroup
+          <FInputGroup
+            name={'receipt_number'}
             minimal={true}
             value={values.receipt_number}
             asyncControl={true}

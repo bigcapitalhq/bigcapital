@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React from 'react';
+import * as R from 'ramda';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import {
@@ -10,11 +11,19 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import * as R from 'ramda';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
 
-import { FeatureCan, FFormGroup, FormattedMessage as T } from '@/components';
-
+import {
+  FeatureCan,
+  FFormGroup,
+  FInputGroup,
+  FormattedMessage as T,
+  CustomerSelectField,
+  FieldRequiredHint,
+  Icon,
+  InputPrependButton,
+  CustomerDrawerLink,
+} from '@/components';
 import {
   momentFormatter,
   tansformDateValue,
@@ -24,24 +33,20 @@ import {
 import { customersFieldShouldUpdate } from './utils';
 import { CLASSES } from '@/constants/classes';
 import { Features } from '@/constants';
-import {
-  CustomerSelectField,
-  FieldRequiredHint,
-  Icon,
-  InputPrependButton,
-  CustomerDrawerLink,
-} from '@/components';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
+
 import { ProjectsSelect } from '@/containers/Projects/components';
 import {
   EstimateExchangeRateInputField,
   EstimateProjectSelectButton,
 } from './components';
-
 import { useEstimateFormContext } from './EstimateFormProvider';
 
+/**
+ * Estimate number field of estimate form.
+ */
 const EstimateFormEstimateNumberField = R.compose(
   withDialogActions,
   withSettings(({ estimatesSettings }) => ({
@@ -86,11 +91,12 @@ const EstimateFormEstimateNumberField = R.compose(
         inline={true}
       >
         <ControlGroup fill={true}>
-          <InputGroup
+          <FInputGroup
+            name={'estimate_number'}
             minimal={true}
-            value={values.estimate_number}
             asyncControl={true}
             onBlur={handleEstimateNoBlur}
+            fastField={true}
           />
           <InputPrependButton
             buttonProps={{
@@ -154,13 +160,12 @@ export default function EstimateFormHeader() {
         )}
       </FastField>
 
-      {/* ----------- Exchange rate ----------- */}
+      {/* ----------- Exchange Rate ----------- */}
       <EstimateExchangeRateInputField
         name={'exchange_rate'}
         formGroupProps={{ label: ' ', inline: true }}
       />
-
-      {/* ----------- Estimate date ----------- */}
+      {/* ----------- Estimate Date ----------- */}
       <FastField name={'estimate_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup

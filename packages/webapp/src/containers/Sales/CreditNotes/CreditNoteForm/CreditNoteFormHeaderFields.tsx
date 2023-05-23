@@ -10,7 +10,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
+import { FastField, ErrorMessage, useFormikContext } from 'formik';
 
 import { CLASSES } from '@/constants/classes';
 import {
@@ -21,6 +21,7 @@ import {
   FormattedMessage as T,
   CustomerDrawerLink,
   FFormGroup,
+  FInputGroup,
 } from '@/components';
 import { customerNameFieldShouldUpdate } from './utils';
 
@@ -85,7 +86,8 @@ const CreditNoteTransactionNoField = R.compose(
         inline={true}
       >
         <ControlGroup fill={true}>
-          <InputGroup
+          <FInputGroup
+            name={'credit_note_number'}
             minimal={true}
             value={values.credit_note_number}
             asyncControl={true}
