@@ -11,12 +11,9 @@ export default function MoneyInFormDialog() {
   const { setFieldValue } = useFormikContext();
 
   // Update the form once the transaction number form submit confirm.
-  const handleTransactionNumberFormConfirm = ({
-    incrementNumber,
-    manually,
-  }) => {
-    setFieldValue('transaction_number', incrementNumber || '');
-    setFieldValue('transaction_number_manually', manually);
+  const handleTransactionNumberFormConfirm = (settings) => {
+    setFieldValue('transaction_number', settings.transactionNumber);
+    setFieldValue('transaction_number_manually', settings.transactionNumber);
   };
   return (
     <React.Fragment>

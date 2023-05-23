@@ -17,11 +17,9 @@ import {
   InputPrependText,
   MoneyInputGroup,
   FieldRequiredHint,
-  Icon,
   Col,
   Row,
   If,
-  InputPrependButton,
   ExchangeRateMutedField,
   FeatureCan,
   BranchSelect,
@@ -35,30 +33,20 @@ import {
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-  compose,
 } from '@/utils';
 import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
 import {
-  useObserveTransactionNoSettings,
   useSetPrimaryBranchToForm,
   useForeignAccount,
   BranchRowDivider,
 } from '../../MoneyInDialog/utils';
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+
+import { MoneyInOutTransactionNoField } from '../../_components';
 
 /**
  * Transfer from account form fields.
  */
-function TransferFromAccountFormFields({
-  // #withDialogActions
-  openDialog,
-
-  // #withSettings
-  transactionAutoIncrement,
-  transactionNumberPrefix,
-  transactionNextNumber,
-}) {
+export default function TransferFromAccountFormFields() {
   // Money in dialog context.
   const { accounts, account, branches } = useMoneyInDailogContext();
 
@@ -67,33 +55,9 @@ function TransferFromAccountFormFields({
 
   const { values } = useFormikContext();
 
-  // Handle tranaction number changing.
-  const handleTransactionNumberChange = () => {
-    openDialog('transaction-number-form');
-  };
-
-  // Handle transaction no. field blur.
-  const handleTransactionNoBlur = (form, field) => (event) => {
-    const newValue = event.target.value;
-
-    if (field.value !== newValue && transactionAutoIncrement) {
-      openDialog('transaction-number-form', {
-        initialFormValues: {
-          manualTransactionNo: newValue,
-          incrementMode: 'manual-transaction',
-        },
-      });
-    }
-  };
-
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
 
-  // Syncs transaction number settings with form.
-  useObserveTransactionNoSettings(
-    transactionNumberPrefix,
-    transactionNextNumber,
-  );
   return (
     <React.Fragment>
       <FeatureCan feature={Features.Branches}>
@@ -145,42 +109,7 @@ function TransferFromAccountFormFields({
         </Col>
         <Col xs={5}>
           {/*------------ Transaction number -----------*/}
-          <Field name={'transaction_number'}>
-            {({ form, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'transaction_number'} />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="transaction_number" />}
-                className={'form-group--transaction_number'}
-              >
-                <ControlGroup fill={true}>
-                  <InputGroup
-                    minimal={true}
-                    value={field.value}
-                    asyncControl={true}
-                    onBlur={handleTransactionNoBlur(form, field)}
-                  />
-                  <InputPrependButton
-                    buttonProps={{
-                      onClick: handleTransactionNumberChange,
-                      icon: <Icon icon={'settings-18'} />,
-                    }}
-                    tooltip={true}
-                    tooltipProps={{
-                      content: (
-                        <T
-                          id={
-                            'cash_flow.setting_your_auto_generated_transaction_number'
-                          }
-                        />
-                      ),
-                      position: Position.BOTTOM_LEFT,
-                    }}
-                  />
-                </ControlGroup>
-              </FormGroup>
-            )}
-          </Field>
+          <MoneyInOutTransactionNoField />
         </Col>
       </Row>
       {/*------------ amount -----------*/}
@@ -296,12 +225,3 @@ function TransferFromAccountFormFields({
     </React.Fragment>
   );
 }
-
-export default compose(
-  withDialogActions,
-  withSettings(({ cashflowSetting }) => ({
-    transactionAutoIncrement: cashflowSetting?.autoIncrement,
-    transactionNextNumber: cashflowSetting?.nextNumber,
-    transactionNumberPrefix: cashflowSetting?.numberPrefix,
-  })),
-)(TransferFromAccountFormFields);

@@ -10,7 +10,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
+import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import * as R from 'ramda';
 
 import {
