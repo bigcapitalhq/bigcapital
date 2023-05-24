@@ -269,3 +269,14 @@ export const useInvoiceIsForeignCustomer = () => {
   );
   return isForeignCustomer;
 };
+
+export const resetFormState = ({ initialValues, values, resetForm }) => {
+  resetForm({
+    values: {
+      // Reset the all values except the warehouse and brand id.
+      ...initialValues,
+      warehouse_id: values.warehouse_id,
+      brand_id: values.brand_id,
+    },
+  });
+};

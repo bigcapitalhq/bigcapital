@@ -124,18 +124,6 @@ export const fullAmountPaymentEntries = (entries) => {
 };
 
 /**
- * Syncs payment receive number settings with form.
- */
-export const useObservePaymentNoSettings = (prefix, nextNumber) => {
-  const { setFieldValue } = useFormikContext();
-
-  React.useEffect(() => {
-    const invoiceNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('payment_receive_no', invoiceNo);
-  }, [setFieldValue, prefix, nextNumber]);
-};
-
-/**
  * Detarmines the customers fast-field should update.
  */
 export const customersFieldShouldUpdate = (newProps, oldProps) => {

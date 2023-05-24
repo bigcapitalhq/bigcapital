@@ -31,6 +31,7 @@ import {
   defaultInvoice,
   transformErrors,
   transformValueToRequest,
+  resetFormState,
 } from './utils';
 import { InvoiceNoSyncSettingsToForm } from './components';
 
@@ -119,10 +120,9 @@ function InvoiceForm({
         history.push('/invoices');
       }
       if (submitPayload.resetForm) {
-        resetForm();
+        resetFormState({ resetForm, initialValues, values });
       }
     };
-
     // Handle the request error.
     const onError = ({
       response: {
