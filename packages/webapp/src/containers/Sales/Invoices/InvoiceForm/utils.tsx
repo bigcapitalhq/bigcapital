@@ -43,7 +43,7 @@ export const defaultInvoice = {
   due_date: moment().format('YYYY-MM-DD'),
   delivered: '',
   invoice_no: '',
-  invoice_no_manually: false,
+  invoice_no_manually: '',
   reference_no: '',
   invoice_message: '',
   terms_conditions: '',
@@ -154,6 +154,8 @@ export function transformValueToRequest(values) {
   );
   return {
     ...omit(values, ['invoice_no', 'invoice_no_manually']),
+    // The `invoice_no_manually` will be presented just in case the auto-increment
+    // is disable, always both attributes hold the same value in manual mode.
     ...(values.invoice_no_manually && {
       invoice_no: values.invoice_no,
     }),

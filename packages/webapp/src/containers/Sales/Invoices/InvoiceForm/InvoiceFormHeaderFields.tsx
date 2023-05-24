@@ -77,7 +77,9 @@ const InvoiceFormInvoiceNumberField = R.compose(
     const handleInvoiceNoBlur = (event) => {
       const newValue = event.target.value;
 
-      if (values.invoice_no.value !== newValue && invoiceAutoIncrement) {
+      // Show the confirmation dialog if the value has changed and auto-increment
+      // mode is enabled.
+      if (values.invoice_no !== newValue && invoiceAutoIncrement) {
         openDialog(DialogsName.InvoiceNumberSettings, {
           initialFormValues: {
             onceManualNumber: newValue,
@@ -85,6 +87,8 @@ const InvoiceFormInvoiceNumberField = R.compose(
           },
         });
       }
+      // Setting the invoice number to the form will be manually in case
+      // auto-increment is disable.
       if (!invoiceAutoIncrement) {
         setFieldValue('invoice_no', newValue);
         setFieldValue('invoice_no_manually', newValue);
@@ -105,7 +109,7 @@ const InvoiceFormInvoiceNumberField = R.compose(
             minimal={true}
             asyncControl={true}
             onBlur={handleInvoiceNoBlur}
-            fastField={true}
+            onChange={() => {}}
           />
           <InputPrependButton
             buttonProps={{
@@ -123,6 +127,7 @@ const InvoiceFormInvoiceNumberField = R.compose(
     );
   },
 );
+InvoiceFormInvoiceNumberField.displayName = 'InvoiceFormInvoiceNumberField';
 
 /**
  * Invoice form header fields.

@@ -55,11 +55,13 @@ export const InvoiceNoSyncSettingsToForm = R.compose(
   const { setFieldValue } = useFormikContext();
 
   useUpdateEffect(() => {
-    // Do not update if the invoice auto-increment is disabled.
+    // Do not update if the invoice auto-increment mode is disabled.
     if (!invoiceAutoIncrement) return null;
 
-    const invoiceNo = transactionNumber(invoiceNumberPrefix, invoiceNextNumber);
-    setFieldValue('invoice_no', invoiceNo);
+    setFieldValue(
+      'invoice_no',
+      transactionNumber(invoiceNumberPrefix, invoiceNextNumber),
+    );
   }, [setFieldValue, invoiceNumberPrefix, invoiceNextNumber]);
 
   return null;
