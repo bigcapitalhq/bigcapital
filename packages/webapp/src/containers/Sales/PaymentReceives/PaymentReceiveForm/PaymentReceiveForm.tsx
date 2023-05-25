@@ -35,6 +35,7 @@ import {
   transformToEditForm,
   transformFormToRequest,
   transformErrors,
+  resetFormState,
 } from './utils';
 import { PaymentReceiveSyncIncrementSettingsToForm } from './components';
 
@@ -76,10 +77,12 @@ function PaymentReceiveForm({
         ? transformToEditForm(paymentReceiveEditPage, paymentEntriesEditPage)
         : {
             ...defaultPaymentReceive,
+            // If the auto-increment mode is enabled, take the next payment
+            // number from the settings.
             ...(paymentReceiveAutoIncrement && {
               payment_receive_no: nextPaymentNumber,
-              deposit_account_id: defaultTo(preferredDepositAccount, ''),
             }),
+            deposit_account_id: defaultTo(preferredDepositAccount, ''),
             currency_code: base_currency,
           }),
     }),
@@ -128,7 +131,7 @@ function PaymentReceiveForm({
         history.push('/payment-receives');
       }
       if (submitPayload.resetForm) {
-        resetForm();
+        resetFormState({ resetForm, initialValues, values });
       }
     };
     // Handle request response errors.

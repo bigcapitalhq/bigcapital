@@ -36,6 +36,7 @@ export const defaultEstimate = {
   estimate_date: moment(new Date()).format('YYYY-MM-DD'),
   expiration_date: moment(new Date()).format('YYYY-MM-DD'),
   estimate_number: '',
+  // Holds the estimate number that entered manually only.
   estimate_number_manually: '',
   delivered: '',
   reference: '',

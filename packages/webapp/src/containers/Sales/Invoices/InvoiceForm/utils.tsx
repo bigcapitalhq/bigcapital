@@ -43,6 +43,7 @@ export const defaultInvoice = {
   due_date: moment().format('YYYY-MM-DD'),
   delivered: '',
   invoice_no: '',
+  // Holds the invoice number that entered manually only.
   invoice_no_manually: '',
   reference_no: '',
   invoice_message: '',

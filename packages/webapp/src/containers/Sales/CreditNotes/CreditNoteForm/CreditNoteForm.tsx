@@ -106,7 +106,7 @@ function CreditNoteForm({
       open: submitPayload.open,
     };
     // Handle the request success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode

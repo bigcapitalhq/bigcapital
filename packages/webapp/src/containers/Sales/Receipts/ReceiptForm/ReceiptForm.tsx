@@ -33,6 +33,7 @@ import {
   defaultReceipt,
   handleErrors,
   transformFormValuesToRequest,
+  resetFormState,
 } from './utils';
 import { ReceiptSyncIncrementSettingsToForm } from './components';
 
@@ -122,7 +123,7 @@ function ReceiptForm({
         history.push('/receipts');
       }
       if (submitPayload.resetForm) {
-        resetForm();
+        resetFormState();
       }
     };
 

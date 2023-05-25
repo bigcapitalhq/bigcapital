@@ -15,7 +15,7 @@ import { toSafeInteger } from 'lodash';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 import * as R from 'ramda';
 
-import { FeatureCan, FormattedMessage as T } from '@/components';
+import { FInputGroup, FeatureCan, FormattedMessage as T } from '@/components';
 import { useAutofocus } from '@/hooks';
 import { CLASSES } from '@/constants/classes';
 import {
@@ -83,6 +83,8 @@ const PaymentReceivePaymentNoField = R.compose(
     const handlePaymentNoBlur = (event) => {
       const newValue = event.target.value;
 
+      // Show the confirmation dialog if the value has changed and auto-increment
+      // mode is enabled.
       if (
         values.payment_receive_no !== newValue &&
         paymentReceiveAutoIncrement
@@ -94,26 +96,28 @@ const PaymentReceivePaymentNoField = R.compose(
           },
         });
       }
+      // Setting the payment number to the form will be manually in case
+      // auto-increment is disable.
       if (!paymentReceiveAutoIncrement) {
         setFieldValue('payment_receive_no', newValue);
         setFieldValue('payment_receive_no_manually', newValue);
       }
     };
     return (
-      <FormGroup
+      <FFormGroup
         name={'payment_receive_no'}
         label={<T id={'payment_receive_no'} />}
         inline={true}
         labelInfo={<FieldRequiredHint />}
-        helperText={<ErrorMessage name="payment_receive_no" />}
       >
         <ControlGroup fill={true}>
-          <InputGroup
+          <FInputGroup
             name={'payment_receive_no'}
             minimal={true}
             value={values.payment_receive_no}
             asyncControl={true}
             onBlur={handlePaymentNoBlur}
+            onChange={() => {}}
           />
           <InputPrependButton
             buttonProps={{
@@ -129,7 +133,7 @@ const PaymentReceivePaymentNoField = R.compose(
             }}
           />
         </ControlGroup>
-      </FormGroup>
+      </FFormGroup>
     );
   },
 );

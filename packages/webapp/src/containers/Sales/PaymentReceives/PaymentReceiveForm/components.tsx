@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
@@ -134,14 +134,13 @@ export const PaymentReceiveSyncIncrementSettingsToForm = R.compose(
   }) => {
     const { setFieldValue } = useFormikContext();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       if (!paymentReceiveAutoIncrement) return;
 
-      const paymentReceiveNo = transactionNumber(
-        paymentReceiveNumberPrefix,
-        paymentReceiveNextNumber,
+      setFieldValue(
+        'payment_receive_no',
+        transactionNumber(paymentReceiveNumberPrefix, paymentReceiveNextNumber),
       );
-      setFieldValue('payment_receive_no', paymentReceiveNo);
     }, [
       setFieldValue,
       paymentReceiveNumberPrefix,
