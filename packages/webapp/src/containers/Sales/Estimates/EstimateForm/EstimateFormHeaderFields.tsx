@@ -67,9 +67,12 @@ const EstimateFormEstimateNumberField = R.compose(
     const handleEstimateNumberBtnClick = () => {
       openDialog('estimate-number-form', {});
     };
+    // Handle estimate no. field blur.
     const handleEstimateNoBlur = (event) => {
       const newValue = event.target.value;
 
+      // Show the confirmation dialog if the value has changed and auto-increment
+      // mode is enabled.
       if (values.estimate_number !== newValue && estimateAutoIncrement) {
         openDialog('estimate-number-form', {
           initialFormValues: {
@@ -78,6 +81,8 @@ const EstimateFormEstimateNumberField = R.compose(
           },
         });
       }
+      // Setting the estimate number to the form will be manually in case
+      // auto-increment is disable.
       if (!estimateAutoIncrement) {
         setFieldValue('estimate_number', newValue);
         setFieldValue('estimate_number_manually', newValue);
@@ -96,7 +101,7 @@ const EstimateFormEstimateNumberField = R.compose(
             minimal={true}
             asyncControl={true}
             onBlur={handleEstimateNoBlur}
-            fastField={true}
+            onChange={() => {}}
           />
           <InputPrependButton
             buttonProps={{

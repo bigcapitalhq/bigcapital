@@ -56,13 +56,13 @@ export const EstimateIncrementSyncSettingsToForm = R.compose(
   const { setFieldValue } = useFormikContext();
 
   useUpdateEffect(() => {
+    // Do not update if the estimate auto-increment mode is disabled.
     if (!estimateAutoIncrement) return null;
 
-    const estimateNo = transactionNumber(
-      estimateNumberPrefix,
-      estimateNextNumber,
+    setFieldValue(
+      'estimate_number',
+      transactionNumber(estimateNumberPrefix, estimateNextNumber),
     );
-    setFieldValue('estimate_number', estimateNo);
   }, [
     setFieldValue,
     estimateNumberPrefix,

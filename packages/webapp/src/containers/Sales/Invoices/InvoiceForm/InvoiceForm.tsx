@@ -42,7 +42,7 @@ function InvoiceForm({
   // #withSettings
   invoiceNextNumber,
   invoiceNumberPrefix,
-  invoiceIncrementMode,
+  invoiceAutoIncrementMode,
 
   // #withCurrentOrganization
   organization: { base_currency },
@@ -71,7 +71,9 @@ function InvoiceForm({
       ? { ...transformToEditForm(invoice) }
       : {
           ...defaultInvoice,
-          ...(invoiceIncrementMode && {
+          // If the auto-increment mode is enabled, take the next invoice 
+          // number from the settings.
+          ...(invoiceAutoIncrementMode && {
             invoice_no: invoiceNumber,
           }),
           entries: orderingLinesIndexes(defaultInvoice.entries),
@@ -184,7 +186,7 @@ export default compose(
   withSettings(({ invoiceSettings }) => ({
     invoiceNextNumber: invoiceSettings?.nextNumber,
     invoiceNumberPrefix: invoiceSettings?.numberPrefix,
-    invoiceIncrementMode: invoiceSettings?.autoIncrement,
+    invoiceAutoIncrementMode: invoiceSettings?.autoIncrement,
   })),
   withCurrentOrganization(),
 )(InvoiceForm);

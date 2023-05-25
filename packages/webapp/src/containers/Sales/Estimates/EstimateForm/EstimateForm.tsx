@@ -19,6 +19,7 @@ import EstimateFloatingActions from './EstimateFloatingActions';
 import EstimateFormFooter from './EstimateFormFooter';
 import EstimateFormDialogs from './EstimateFormDialogs';
 import EstimtaeFormTopBar from './EstimtaeFormTopBar';
+import { EstimateIncrementSyncSettingsToForm } from './components';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
@@ -31,8 +32,8 @@ import {
   defaultEstimate,
   transfromsFormValuesToRequest,
   handleErrors,
+  resetFormState,
 } from './utils';
-import { EstimateIncrementSyncSettingsToForm } from './components';
 
 /**
  * Estimate form.
@@ -41,7 +42,7 @@ function EstimateForm({
   // #withSettings
   estimateNextNumber,
   estimateNumberPrefix,
-  estimateIncrementMode,
+  estimateAutoIncrementMode,
 
   // #withCurrentOrganization
   organization: { base_currency },
@@ -67,14 +68,16 @@ function EstimateForm({
         ? { ...transformToEditForm(estimate) }
         : {
             ...defaultEstimate,
-            ...(estimateIncrementMode && {
+            // If the auto-increment mode is enabled, take the next estimate
+            // number from the settings.
+            ...(estimateAutoIncrementMode && {
               estimate_number: estimateNumber,
             }),
             entries: orderingLinesIndexes(defaultEstimate.entries),
             currency_code: base_currency,
           }),
     }),
-    [estimate, estimateNumber, estimateIncrementMode, base_currency],
+    [estimate, estimateNumber, estimateAutoIncrementMode, base_currency],
   );
 
   // Handles form submit.
@@ -119,7 +122,7 @@ function EstimateForm({
         history.push('/estimates');
       }
       if (submitPayload.resetForm) {
-        resetForm();
+        resetFormState({ resetForm, initialValues, values });
       }
     };
     // Handle the request error.
@@ -177,7 +180,7 @@ export default compose(
   withSettings(({ estimatesSettings }) => ({
     estimateNextNumber: estimatesSettings?.nextNumber,
     estimateNumberPrefix: estimatesSettings?.numberPrefix,
-    estimateIncrementMode: estimatesSettings?.autoIncrement,
+    estimateAutoIncrementMode: estimatesSettings?.autoIncrement,
   })),
   withCurrentOrganization(),
 )(EstimateForm);

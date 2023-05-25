@@ -7,7 +7,6 @@ import { useFormikContext } from 'formik';
 import { omit, first } from 'lodash';
 import {
   defaultFastFieldShouldUpdate,
-  transactionNumber,
   repeatValue,
   transformToForm,
   formattedAmount,
@@ -37,6 +36,7 @@ export const defaultEstimate = {
   estimate_date: moment(new Date()).format('YYYY-MM-DD'),
   expiration_date: moment(new Date()).format('YYYY-MM-DD'),
   estimate_number: '',
+  estimate_number_manually: '',
   delivered: '',
   reference: '',
   note: '',
@@ -142,6 +142,8 @@ export const transfromsFormValuesToRequest = (values) => {
   );
   return {
     ...omit(values, ['estimate_number_manually', 'estimate_number']),
+    // The `estimate_number_manually` will be presented just if the auto-increment
+    // is disable, always both attributes hold the same value in manual mode.
     ...(values.estimate_number_manually && {
       estimate_number: values.estimate_number,
     }),
@@ -222,4 +224,18 @@ export const useEstimateIsForeignCustomer = () => {
     [values.currency_code, currentOrganization.base_currency],
   );
   return isForeignCustomer;
+};
+
+/**
+ * Resets the form values.
+ */
+export const resetFormState = ({ initialValues, values, resetForm }) => {
+  resetForm({
+    values: {
+      // Reset the all values except the warehouse and brand id.
+      ...initialValues,
+      warehouse_id: values.warehouse_id,
+      brand_id: values.brand_id,
+    },
+  });
 };

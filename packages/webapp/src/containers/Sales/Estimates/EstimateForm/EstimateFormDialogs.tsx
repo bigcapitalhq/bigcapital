@@ -9,10 +9,14 @@ import EstimateNumberDialog from '@/containers/Dialogs/EstimateNumberDialog';
 export default function EstimateFormDialogs() {
   const { setFieldValue } = useFormikContext();
 
-  // Update the form once the invoice number form submit confirm.
+  // Update the form once the estimate number form submit confirm.
   const handleEstimateNumberFormConfirm = (settings) => {
     setFieldValue('estimate_number', settings.transactionNumber);
-    setFieldValue('estimate_number_manually', settings.transactionNumber);
+    setFieldValue('estimate_number_manually', '');
+
+    if (settings.incrementMode !== 'auto') {
+      setFieldValue('estimate_number_manually', settings.transactionNumber);
+    }
   };
 
   return (
