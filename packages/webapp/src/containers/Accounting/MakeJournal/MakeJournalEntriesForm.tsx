@@ -71,6 +71,8 @@ function MakeJournalEntriesForm({
           }
         : {
             ...defaultManualJournal,
+            // If the auto-increment mode is enabled, take the next journal
+            // number from the settings.
             ...(journalAutoIncrement && {
               journal_number: journalNumber,
             }),
@@ -127,7 +129,6 @@ function MakeJournalEntriesForm({
       transformErrors(errors, { setErrors });
       setSubmitting(false);
     };
-
     // Handle the request success.
     const handleSuccess = (errors) => {
       AppToaster.show({

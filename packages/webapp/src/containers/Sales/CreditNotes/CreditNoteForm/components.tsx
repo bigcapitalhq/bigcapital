@@ -45,10 +45,13 @@ export const CreditNoteSyncIncrementSettingsToForm = R.compose(
   const { setFieldValue } = useFormikContext();
 
   useEffect(() => {
+    // Do not update if the credit note auto-increment mode is disabled.
     if (!creditAutoIncrement) return;
 
-    const creditNo = transactionNumber(creditNumberPrefix, creditNextNumber);
-    setFieldValue('credit_note_number', creditNo);
+    setFieldValue(
+      'credit_note_number',
+      transactionNumber(creditNumberPrefix, creditNextNumber),
+    );
   }, [setFieldValue, creditNumberPrefix, creditNextNumber]);
 
   return null;

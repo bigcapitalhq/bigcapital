@@ -218,10 +218,13 @@ export const JournalSyncIncrementSettingsToForm = R.compose(
   const { setFieldValue } = useFormikContext();
 
   useUpdateEffect(() => {
+    // Do not update if the journal auto-increment mode is disabled.
     if (!journalAutoIncrement) return null;
 
-    const journalNo = transactionNumber(journalNumberPrefix, journalNextNumber);
-    setFieldValue('journal_number', journalNo);
+    setFieldValue(
+      'journal_number',
+      transactionNumber(journalNumberPrefix, journalNextNumber),
+    );
   }, [
     setFieldValue,
     journalNumberPrefix,

@@ -70,6 +70,8 @@ const ReceiptFormReceiptNumberField = R.compose(
     const handleReceiptNoBlur = (event) => {
       const newValue = event.target.value;
 
+      // Show the confirmation dialog if the value has changed and auto-increment
+      // mode is enabled.
       if (values.receipt_number !== newValue && receiptAutoIncrement) {
         openDialog('receipt-number-form', {
           initialFormValues: {
@@ -78,6 +80,8 @@ const ReceiptFormReceiptNumberField = R.compose(
           },
         });
       }
+      // Setting the receipt number to the form will be manually in case
+      // auto-increment is disable.
       if (!receiptAutoIncrement) {
         setFieldValue('receipt_number', newValue);
         setFieldValue('receipt_number_manually', newValue);
@@ -98,6 +102,7 @@ const ReceiptFormReceiptNumberField = R.compose(
             value={values.receipt_number}
             asyncControl={true}
             onBlur={handleReceiptNoBlur}
+            onChange={() => {}}
           />
           <InputPrependButton
             buttonProps={{

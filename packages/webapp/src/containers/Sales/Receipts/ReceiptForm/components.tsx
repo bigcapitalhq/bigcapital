@@ -57,10 +57,13 @@ export const ReceiptSyncIncrementSettingsToForm = R.compose(
   const { setFieldValue } = useFormikContext();
 
   useUpdateEffect(() => {
+    // Do not update if the receipt auto-increment mode is disabled.
     if (!receiptAutoIncrement) return;
 
-    const receiptNo = transactionNumber(receiptNumberPrefix, receiptNextNumber);
-    setFieldValue('receipt_number', receiptNo);
+    setFieldValue(
+      'receipt_number',
+      transactionNumber(receiptNumberPrefix, receiptNextNumber),
+    );
   }, [
     setFieldValue,
     receiptNumberPrefix,

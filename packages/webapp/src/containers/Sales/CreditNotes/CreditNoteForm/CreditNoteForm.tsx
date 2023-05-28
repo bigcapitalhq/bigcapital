@@ -162,7 +162,11 @@ function CreditNoteForm({
           <CreditNoteItemsEntriesEditorField />
           <CreditNoteFormFooter />
           <CreditNoteFloatingActions />
+
+          {/*-------- Dialogs --------*/}
           <CreditNoteFormDialogs />
+
+          {/*-------- Effects --------*/}
           <CreditNoteSyncIncrementSettingsToForm />
         </Form>
       </Formik>

@@ -36,6 +36,8 @@ export const defaultReceipt = {
   customer_id: '',
   deposit_account_id: '',
   receipt_number: '',
+  // Holds the receipt number that entered manually only.
+  receipt_number_manually: '',
   receipt_date: moment(new Date()).format('YYYY-MM-DD'),
   reference_no: '',
   receipt_message: '',

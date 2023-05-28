@@ -27,6 +27,7 @@ import {
   CurrencySelectList,
   FormattedMessage as T,
   FInputGroup,
+  FFormGroup,
 } from '@/components';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { JournalExchangeRateInputField } from './components';
@@ -74,7 +75,7 @@ const MakeJournalTransactionNoField = R.compose(
     };
 
     return (
-      <FormGroup
+      <FFormGroup
         name={'journal_number'}
         label={<T id={'journal_no'} />}
         labelInfo={
@@ -91,10 +92,10 @@ const MakeJournalTransactionNoField = R.compose(
           <FInputGroup
             name={'journal_number'}
             fill={true}
-            value={values.journal_number}
             asyncControl={true}
             onBlur={handleJournalNoBlur}
             fastField={true}
+            onChange={() => {}}
           />
           <InputPrependButton
             buttonProps={{
@@ -108,7 +109,7 @@ const MakeJournalTransactionNoField = R.compose(
             }}
           />
         </ControlGroup>
-      </FormGroup>
+      </FFormGroup>
     );
   },
 );

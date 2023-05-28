@@ -40,7 +40,8 @@ export const defaultCreditNote = {
   customer_id: '',
   credit_note_date: moment(new Date()).format('YYYY-MM-DD'),
   credit_note_number: '',
-  credit_note_no_manually: false,
+  // Holds the credit note number that entered manually only.
+  credit_note_number_manually: false,
   open: '',
   reference_no: '',
   note: '',

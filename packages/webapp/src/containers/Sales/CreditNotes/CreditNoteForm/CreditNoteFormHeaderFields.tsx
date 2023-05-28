@@ -60,10 +60,12 @@ const CreditNoteTransactionNoField = R.compose(
     const handleCreditNumberChange = () => {
       openDialog('credit-number-form');
     };
-    // Handle credit no. field blur.
+    // Handle credit note no. field blur.
     const handleCreditNoBlur = (event) => {
       const newValue = event.target.value;
 
+      // Show the confirmation dialog if the value has changed and auto-increment
+      // mode is enabled.
       if (values.credit_note_no !== newValue && creditAutoIncrement) {
         openDialog('credit-number-form', {
           initialFormValues: {
@@ -72,6 +74,8 @@ const CreditNoteTransactionNoField = R.compose(
           },
         });
       }
+      // Setting the credit note number to the form will be manually in case
+      // auto-increment is disable.
       if (!creditAutoIncrement) {
         setFieldValue('credit_note_number', newValue);
         setFieldValue('credit_note_number_manually', newValue);
@@ -92,6 +96,7 @@ const CreditNoteTransactionNoField = R.compose(
             value={values.credit_note_number}
             asyncControl={true}
             onBlur={handleCreditNoBlur}
+            onChange={() => {}}
           />
           <InputPrependButton
             buttonProps={{
@@ -165,7 +170,6 @@ export default function CreditNoteFormHeaderFields({}) {
         name={'exchange_rate'}
         formGroupProps={{ label: ' ', inline: true }}
       />
-
       {/* ----------- Credit note date ----------- */}
       <FastField name={'credit_note_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
