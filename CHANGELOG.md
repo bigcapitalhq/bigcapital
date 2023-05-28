@@ -2,6 +2,24 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [0.9.1] - 28-06-2023
+
+`@bigcapital/server`
+- fix: deleting ledger entries of manual journal.
+- fix: base currency should be enabled.
+- fix: delete invoice transaction issue.
+
+`@bigcapital/webapp`
+- fix: general, accoutant and items preferences.
+- fix: auto-increment sale invoices, estiamtes, credit notes, payments and manual journals.
+- refactor: the setup organization form to use binded Formik components.
+
+## [0.9.0] - 06-06-2023
+
+`@bigcapital/server`
+
+- [Sign-up restrictions](https://docs.bigcapital.ly/docs/deployment/signup_restriction) for self-hosting instances to disable signup or control the allowed email addresses and domains that can sign-up.
+
 ## [0.8.3] - 06-04-2023
 
 `@bigcaptial/monorepo`
