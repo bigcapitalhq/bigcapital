@@ -14,6 +14,19 @@ import { useInvoiceTotal } from './utils';
  * Invoice form header section.
  */
 function InvoiceFormHeader() {
+  return (
+    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+      <InvoiceFormHeaderFields />
+      <InvoiceFormBigTotal />
+    </div>
+  );
+}
+
+/**
+ * Big total of invoice form header.
+ * @returns {React.ReactNode}
+ */
+function InvoiceFormBigTotal() {
   const {
     values: { currency_code },
   } = useFormikContext();
@@ -22,14 +35,11 @@ function InvoiceFormHeader() {
   const totalDueAmount = useInvoiceTotal();
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
-      <InvoiceFormHeaderFields />
-      <PageFormBigNumber
-        label={intl.get('due_amount')}
-        amount={totalDueAmount}
-        currencyCode={currency_code}
-      />
-    </div>
+    <PageFormBigNumber
+      label={intl.get('due_amount')}
+      amount={totalDueAmount}
+      currencyCode={currency_code}
+    />
   );
 }
 export default InvoiceFormHeader;

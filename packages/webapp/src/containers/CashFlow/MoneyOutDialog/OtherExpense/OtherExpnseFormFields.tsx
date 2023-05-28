@@ -16,83 +16,45 @@ import {
   InputPrependText,
   MoneyInputGroup,
   FieldRequiredHint,
-  Icon,
   Col,
   Row,
   If,
   FeatureCan,
   BranchSelect,
   BranchSelectButton,
-  InputPrependButton,
   ExchangeRateMutedField,
 } from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from '@/hooks';
-import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
+import { Features, ACCOUNT_TYPE } from '@/constants';
 
 import {
   inputIntent,
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-  compose,
 } from '@/utils';
-
-import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
+import { CLASSES } from '@/constants/classes';
+import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
 import {
-  useObserveTransactionNoSettings,
   useSetPrimaryBranchToForm,
   useForeignAccount,
   BranchRowDivider,
 } from '../utils';
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+
+import { MoneyInOutTransactionNoField } from '../../_components';
 
 /**
- * Other income form fields.
+ * Other expense form fields.
  */
-function OtherIncomeFormFields({
-  // #withDialogActions
-  openDialog,
-
-  // #withSettings
-  transactionAutoIncrement,
-  transactionNumberPrefix,
-  transactionNextNumber,
-}) {
+export default function OtherExpnseFormFields() {
   // Money in dialog context.
-  const { accounts, account, branches } = useMoneyInDailogContext();
+  const { accounts, account, branches } = useMoneyOutDialogContext();
 
+  const isForeigAccount = useForeignAccount();
   const { values } = useFormikContext();
 
   const amountFieldRef = useAutofocus();
-
-  const isForeigAccount = useForeignAccount();
-
-  // Handle tranaction number changing.
-  const handleTransactionNumberChange = () => {
-    openDialog('transaction-number-form');
-  };
-
-  // Handle transaction no. field blur.
-  const handleTransactionNoBlur = (form, field) => (event) => {
-    const newValue = event.target.value;
-
-    if (field.value !== newValue && transactionAutoIncrement) {
-      openDialog('transaction-number-form', {
-        initialFormValues: {
-          manualTransactionNo: newValue,
-          incrementMode: 'manual-transaction',
-        },
-      });
-    }
-  };
-
-  // Syncs transaction number settings with form.
-  useObserveTransactionNoSettings(
-    transactionNumberPrefix,
-    transactionNextNumber,
-  );
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
@@ -117,7 +79,6 @@ function OtherIncomeFormFields({
         </Row>
         <BranchRowDivider />
       </FeatureCan>
-
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -149,42 +110,7 @@ function OtherIncomeFormFields({
         </Col>
         <Col xs={5}>
           {/*------------ Transaction number -----------*/}
-          <Field name={'transaction_number'}>
-            {({ form, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'transaction_number'} />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="transaction_number" />}
-                className={'form-group--transaction_number'}
-              >
-                <ControlGroup fill={true}>
-                  <InputGroup
-                    minimal={true}
-                    value={field.value}
-                    asyncControl={true}
-                    onBlur={handleTransactionNoBlur(form, field)}
-                  />
-                  <InputPrependButton
-                    buttonProps={{
-                      onClick: handleTransactionNumberChange,
-                      icon: <Icon icon={'settings-18'} />,
-                    }}
-                    tooltip={true}
-                    tooltipProps={{
-                      content: (
-                        <T
-                          id={
-                            'cash_flow.setting_your_auto_generated_transaction_number'
-                          }
-                        />
-                      ),
-                      position: Position.BOTTOM_LEFT,
-                    }}
-                  />
-                </ControlGroup>
-              </FormGroup>
-            )}
-          </Field>
+          <MoneyInOutTransactionNoField />
         </Col>
       </Row>
       {/*------------ amount -----------*/}
@@ -217,7 +143,6 @@ function OtherIncomeFormFields({
           </FormGroup>
         )}
       </FastField>
-
       <If condition={isForeigAccount}>
         {/*------------ exchange rate -----------*/}
         <ExchangeRateMutedField
@@ -231,11 +156,11 @@ function OtherIncomeFormFields({
       </If>
       <Row>
         <Col xs={5}>
-          {/*------------ other income account -----------*/}
+          {/*------------ other expense account -----------*/}
           <FastField name={'credit_account_id'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
-                label={<T id={'cash_flow_transaction.other_income_account'} />}
+                label={<T id={'cash_flow_transaction.label_expense_account'} />}
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="credit_account_id" />}
@@ -247,8 +172,8 @@ function OtherIncomeFormFields({
                     form.setFieldValue('credit_account_id', id)
                   }
                   filterByTypes={[
-                    ACCOUNT_TYPE.INCOME,
-                    ACCOUNT_TYPE.OTHER_INCOME,
+                    ACCOUNT_TYPE.EXPENSE,
+                    ACCOUNT_TYPE.OTHER_EXPENSE,
                   ]}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
@@ -277,6 +202,7 @@ function OtherIncomeFormFields({
           </FastField>
         </Col>
       </Row>
+
       {/*------------ description -----------*/}
       <FastField name={'description'}>
         {({ field, meta: { error, touched } }) => (
@@ -298,12 +224,3 @@ function OtherIncomeFormFields({
     </React.Fragment>
   );
 }
-
-export default compose(
-  withDialogActions,
-  withSettings(({ cashflowSetting }) => ({
-    transactionAutoIncrement: cashflowSetting?.autoIncrement,
-    transactionNextNumber: cashflowSetting?.nextNumber,
-    transactionNumberPrefix: cashflowSetting?.numberPrefix,
-  })),
-)(OtherIncomeFormFields);

@@ -1,11 +1,11 @@
 // @ts-nocheck
 import React, { useMemo } from 'react';
+import { sumBy, isEmpty, defaultTo } from 'lodash';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { Formik, Form } from 'formik';
-import { omit, sumBy, pick, isEmpty, defaultTo } from 'lodash';
-import { Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
+import { Intent } from '@blueprintjs/core';
 
 import '@/style/pages/PaymentReceive/PageForm.scss';
 
@@ -35,7 +35,9 @@ import {
   transformToEditForm,
   transformFormToRequest,
   transformErrors,
+  resetFormState,
 } from './utils';
+import { PaymentReceiveSyncIncrementSettingsToForm } from './components';
 
 /**
  * Payment Receive form.
@@ -68,7 +70,6 @@ function PaymentReceiveForm({
     paymentReceiveNumberPrefix,
     paymentReceiveNextNumber,
   );
-
   // Form initial values.
   const initialValues = useMemo(
     () => ({
@@ -76,10 +77,12 @@ function PaymentReceiveForm({
         ? transformToEditForm(paymentReceiveEditPage, paymentEntriesEditPage)
         : {
             ...defaultPaymentReceive,
+            // If the auto-increment mode is enabled, take the next payment
+            // number from the settings.
             ...(paymentReceiveAutoIncrement && {
               payment_receive_no: nextPaymentNumber,
-              deposit_account_id: defaultTo(preferredDepositAccount, ''),
             }),
+            deposit_account_id: defaultTo(preferredDepositAccount, ''),
             currency_code: base_currency,
           }),
     }),
@@ -113,7 +116,8 @@ function PaymentReceiveForm({
     const form = transformFormToRequest(values);
 
     // Handle request response success.
-    const onSaved = (response) => {
+    const onSaved = () => {
+      setSubmitting(false);
       AppToaster.show({
         message: intl.get(
           paymentReceiveId
@@ -122,13 +126,12 @@ function PaymentReceiveForm({
         ),
         intent: Intent.SUCCESS,
       });
-      setSubmitting(false);
 
       if (submitPayload.redirect) {
         history.push('/payment-receives');
       }
       if (submitPayload.resetForm) {
-        resetForm();
+        resetFormState({ resetForm, initialValues, values });
       }
     };
     // Handle request response errors.
@@ -175,6 +178,9 @@ function PaymentReceiveForm({
             <PaymentReceiveFormBody />
             <PaymentReceiveFormFooter />
             <PaymentReceiveFloatingActions />
+
+            {/* ------- Effects ------- */}
+            <PaymentReceiveSyncIncrementSettingsToForm />
 
             {/* ------- Alerts & Dialogs ------- */}
             <PaymentReceiveFormAlerts />

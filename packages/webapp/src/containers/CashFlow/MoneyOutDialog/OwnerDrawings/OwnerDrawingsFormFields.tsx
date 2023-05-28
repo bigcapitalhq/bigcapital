@@ -17,8 +17,6 @@ import {
   InputPrependText,
   MoneyInputGroup,
   FieldRequiredHint,
-  InputPrependButton,
-  Icon,
   If,
   Col,
   Row,
@@ -34,61 +32,25 @@ import {
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-  compose,
 } from '@/utils';
 import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
 import {
-  useObserveTransactionNoSettings,
   useSetPrimaryBranchToForm,
   useForeignAccount,
   BranchRowDivider,
 } from '../../MoneyOutDialog/utils';
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { MoneyInOutTransactionNoField } from '../../_components';
 
 /**
  * Owner drawings form fields.
  */
-function OwnerDrawingsFormFields({
-  // #withDialogActions
-  openDialog,
-
-  // #withSettings
-  transactionAutoIncrement,
-  transactionNumberPrefix,
-  transactionNextNumber,
-}) {
+export default function OwnerDrawingsFormFields() {
   // Money out dialog context.
   const { accounts, account, branches } = useMoneyOutDialogContext();
   const { values } = useFormikContext();
   const isForeigAccount = useForeignAccount();
 
   const amountFieldRef = useAutofocus();
-
-  // Handle tranaction number changing.
-  const handleTransactionNumberChange = () => {
-    openDialog('transaction-number-form');
-  };
-
-  // Handle transaction no. field blur.
-  const handleTransactionNoBlur = (form, field) => (event) => {
-    const newValue = event.target.value;
-
-    if (field.value !== newValue && transactionAutoIncrement) {
-      openDialog('transaction-number-form', {
-        initialFormValues: {
-          manualTransactionNo: newValue,
-          incrementMode: 'manual-transaction',
-        },
-      });
-    }
-  };
-
-  // Syncs transaction number settings with form.
-  useObserveTransactionNoSettings(
-    transactionNumberPrefix,
-    transactionNextNumber,
-  );
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
@@ -144,42 +106,7 @@ function OwnerDrawingsFormFields({
         </Col>
         <Col xs={5}>
           {/*------------ Transaction number -----------*/}
-          <Field name={'transaction_number'}>
-            {({ form, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'transaction_number'} />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="transaction_number" />}
-                className={'form-group--transaction_number'}
-              >
-                <ControlGroup fill={true}>
-                  <InputGroup
-                    minimal={true}
-                    value={field.value}
-                    asyncControl={true}
-                    onBlur={handleTransactionNoBlur(form, field)}
-                  />
-                  <InputPrependButton
-                    buttonProps={{
-                      onClick: handleTransactionNumberChange,
-                      icon: <Icon icon={'settings-18'} />,
-                    }}
-                    tooltip={true}
-                    tooltipProps={{
-                      content: (
-                        <T
-                          id={
-                            'cash_flow.setting_your_auto_generated_transaction_number'
-                          }
-                        />
-                      ),
-                      position: Position.BOTTOM_LEFT,
-                    }}
-                  />
-                </ControlGroup>
-              </FormGroup>
-            )}
-          </Field>
+          <MoneyInOutTransactionNoField />
         </Col>
       </Row>
       {/*------------ amount -----------*/}
@@ -291,12 +218,3 @@ function OwnerDrawingsFormFields({
     </React.Fragment>
   );
 }
-
-export default compose(
-  withDialogActions,
-  withSettings(({ cashflowSetting }) => ({
-    transactionAutoIncrement: cashflowSetting?.autoIncrement,
-    transactionNextNumber: cashflowSetting?.nextNumber,
-    transactionNumberPrefix: cashflowSetting?.numberPrefix,
-  })),
-)(OwnerDrawingsFormFields);

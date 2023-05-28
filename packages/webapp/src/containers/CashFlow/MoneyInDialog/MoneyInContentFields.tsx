@@ -1,9 +1,15 @@
 // @ts-nocheck
 import React from 'react';
+
 import OwnerContributionFormFields from './OwnerContribution/OwnerContributionFormFields';
 import OtherIncomeFormFields from './OtherIncome/OtherIncomeFormFields';
 import TransferFromAccountFormFields from './TransferFromAccount/TransferFromAccountFormFields';
 
+/**
+ *
+ * @param param0
+ * @returns
+ */
 export default function MoneyInContentFields({ accountType }) {
   const handleTransactionType = () => {
     switch (accountType) {
@@ -19,6 +25,5 @@ export default function MoneyInContentFields({ accountType }) {
         break;
     }
   };
-
   return <React.Fragment>{handleTransactionType()}</React.Fragment>;
 }

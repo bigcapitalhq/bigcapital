@@ -10,88 +10,51 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+
 import {
   FormattedMessage as T,
   AccountsSuggestField,
   InputPrependText,
   MoneyInputGroup,
   FieldRequiredHint,
-  Icon,
   Col,
   Row,
   If,
-  InputPrependButton,
-  FeatureCan,
+  ExchangeRateMutedField,
   BranchSelect,
   BranchSelectButton,
-  ExchangeRateMutedField,
+  FeatureCan,
 } from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from '@/hooks';
-import { Features, ACCOUNT_TYPE } from '@/constants';
-
+import { ACCOUNT_TYPE, CLASSES, Features } from '@/constants';
 import {
   inputIntent,
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-  compose,
 } from '@/utils';
-import { CLASSES } from '@/constants/classes';
-import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
+import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
 import {
-  useObserveTransactionNoSettings,
   useSetPrimaryBranchToForm,
   useForeignAccount,
   BranchRowDivider,
-} from '../utils';
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+} from '../../MoneyInDialog/utils';
+import { MoneyInOutTransactionNoField } from '../../_components';
 
 /**
- * Other expense form fields.
+/**
+ * Owner contribution form fields.
  */
-function OtherExpnseFormFields({
-  // #withDialogActions
-  openDialog,
-
-  // #withSettings
-  transactionAutoIncrement,
-  transactionNumberPrefix,
-  transactionNextNumber,
-}) {
+export default function OwnerContributionFormFields() {
   // Money in dialog context.
-  const { accounts, account, branches } = useMoneyOutDialogContext();
+  const { accounts, account, branches } = useMoneyInDailogContext();
 
-  const isForeigAccount = useForeignAccount();
   const { values } = useFormikContext();
 
   const amountFieldRef = useAutofocus();
 
-  // Handle tranaction number changing.
-  const handleTransactionNumberChange = () => {
-    openDialog('transaction-number-form');
-  };
-
-  // Handle transaction no. field blur.
-  const handleTransactionNoBlur = (form, field) => (event) => {
-    const newValue = event.target.value;
-
-    if (field.value !== newValue && transactionAutoIncrement) {
-      openDialog('transaction-number-form', {
-        initialFormValues: {
-          manualTransactionNo: newValue,
-          incrementMode: 'manual-transaction',
-        },
-      });
-    }
-  };
-
-  // Syncs transaction number settings with form.
-  useObserveTransactionNoSettings(
-    transactionNumberPrefix,
-    transactionNextNumber,
-  );
+  const isForeigAccount = useForeignAccount();
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
@@ -147,46 +110,11 @@ function OtherExpnseFormFields({
         </Col>
         <Col xs={5}>
           {/*------------ Transaction number -----------*/}
-          <Field name={'transaction_number'}>
-            {({ form, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'transaction_number'} />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="transaction_number" />}
-                className={'form-group--transaction_number'}
-              >
-                <ControlGroup fill={true}>
-                  <InputGroup
-                    minimal={true}
-                    value={field.value}
-                    asyncControl={true}
-                    onBlur={handleTransactionNoBlur(form, field)}
-                  />
-                  <InputPrependButton
-                    buttonProps={{
-                      onClick: handleTransactionNumberChange,
-                      icon: <Icon icon={'settings-18'} />,
-                    }}
-                    tooltip={true}
-                    tooltipProps={{
-                      content: (
-                        <T
-                          id={
-                            'cash_flow.setting_your_auto_generated_transaction_number'
-                          }
-                        />
-                      ),
-                      position: Position.BOTTOM_LEFT,
-                    }}
-                  />
-                </ControlGroup>
-              </FormGroup>
-            )}
-          </Field>
+          <MoneyInOutTransactionNoField />
         </Col>
       </Row>
       {/*------------ amount -----------*/}
-      <FastField name={'amount'}>
+      <Field name={'amount'}>
         {({
           form: { values, setFieldValue },
           field: { value },
@@ -200,7 +128,7 @@ function OtherExpnseFormFields({
             className={'form-group--amount'}
           >
             <ControlGroup>
-              <InputPrependText text={account.currency_code} />
+              <InputPrependText text={account?.currency_code} />
 
               <MoneyInputGroup
                 value={value}
@@ -214,7 +142,7 @@ function OtherExpnseFormFields({
             </ControlGroup>
           </FormGroup>
         )}
-      </FastField>
+      </Field>
       <If condition={isForeigAccount}>
         {/*------------ exchange rate -----------*/}
         <ExchangeRateMutedField
@@ -228,11 +156,11 @@ function OtherExpnseFormFields({
       </If>
       <Row>
         <Col xs={5}>
-          {/*------------ other expense account -----------*/}
+          {/*------------ equity account -----------*/}
           <FastField name={'credit_account_id'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
-                label={<T id={'cash_flow_transaction.label_expense_account'} />}
+                label={<T id={'cash_flow_transaction.label_equity_account'} />}
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="credit_account_id" />}
@@ -240,13 +168,11 @@ function OtherExpnseFormFields({
               >
                 <AccountsSuggestField
                   accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('credit_account_id', id)
-                  }
-                  filterByTypes={[
-                    ACCOUNT_TYPE.EXPENSE,
-                    ACCOUNT_TYPE.OTHER_EXPENSE,
-                  ]}
+                  onAccountSelected={(account) => {
+                    form.setFieldValue('credit_account_id', account.id);
+                    form.setFieldValue('currency_code', account.currency_code);
+                  }}
+                  filterByTypes={ACCOUNT_TYPE.EQUITY}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
                   }}
@@ -274,7 +200,6 @@ function OtherExpnseFormFields({
           </FastField>
         </Col>
       </Row>
-
       {/*------------ description -----------*/}
       <FastField name={'description'}>
         {({ field, meta: { error, touched } }) => (
@@ -296,12 +221,3 @@ function OtherExpnseFormFields({
     </React.Fragment>
   );
 }
-
-export default compose(
-  withDialogActions,
-  withSettings(({ cashflowSetting }) => ({
-    transactionAutoIncrement: cashflowSetting?.autoIncrement,
-    transactionNextNumber: cashflowSetting?.nextNumber,
-    transactionNumberPrefix: cashflowSetting?.numberPrefix,
-  })),
-)(OtherExpnseFormFields);

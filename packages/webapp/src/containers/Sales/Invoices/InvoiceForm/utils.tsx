@@ -43,7 +43,8 @@ export const defaultInvoice = {
   due_date: moment().format('YYYY-MM-DD'),
   delivered: '',
   invoice_no: '',
-  invoice_no_manually: false,
+  // Holds the invoice number that entered manually only.
+  invoice_no_manually: '',
   reference_no: '',
   invoice_message: '',
   terms_conditions: '',
@@ -109,18 +110,6 @@ export const transformErrors = (errors, { setErrors }) => {
 };
 
 /**
- * Syncs invoice no. settings with form.
- */
-export const useObserveInvoiceNoSettings = (prefix, nextNumber) => {
-  const { setFieldValue } = useFormikContext();
-
-  React.useEffect(() => {
-    const invoiceNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('invoice_no', invoiceNo);
-  }, [setFieldValue, prefix, nextNumber]);
-};
-
-/**
  * Detarmines customer name field when should update.
  */
 export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
@@ -166,6 +155,8 @@ export function transformValueToRequest(values) {
   );
   return {
     ...omit(values, ['invoice_no', 'invoice_no_manually']),
+    // The `invoice_no_manually` will be presented just if the auto-increment
+    // is disable, always both attributes hold the same value in manual mode.
     ...(values.invoice_no_manually && {
       invoice_no: values.invoice_no,
     }),
@@ -278,4 +269,15 @@ export const useInvoiceIsForeignCustomer = () => {
     [values.currency_code, currentOrganization.base_currency],
   );
   return isForeignCustomer;
+};
+
+export const resetFormState = ({ initialValues, values, resetForm }) => {
+  resetForm({
+    values: {
+      // Reset the all values except the warehouse and brand id.
+      ...initialValues,
+      warehouse_id: values.warehouse_id,
+      brand_id: values.brand_id,
+    },
+  });
 };

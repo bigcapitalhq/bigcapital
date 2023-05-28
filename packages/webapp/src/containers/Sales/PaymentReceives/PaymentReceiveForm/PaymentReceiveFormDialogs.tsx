@@ -9,17 +9,21 @@ import PaymentReceiveNumberDialog from '@/containers/Dialogs/PaymentReceiveNumbe
 export default function PaymentReceiveFormDialogs() {
   const { setFieldValue } = useFormikContext();
 
-  const handleUpdatePaymentNumber = ({ incrementNumber, manually }) => {
-    setFieldValue('payment_receive_no', incrementNumber);
-    setFieldValue('payment_receive_no_manually', manually)
+  const handleUpdatePaymentNumber = (settings) => {
+    // Set the payment transaction no. that cames from dialog to the form.
+    // the `payment_receive_no_manually` will be empty except the increment mode is not auto.
+    setFieldValue('payment_receive_no', settings.transactionNumber);
+    setFieldValue('payment_receive_no_manually', '');
+
+    if (settings.incrementMode !== 'auto') {
+      setFieldValue('payment_receive_no_manually', settings.transactionNumber);
+    }
   };
 
   return (
-    <>
-      <PaymentReceiveNumberDialog
-        dialogName={'payment-receive-number-form'}
-        onConfirm={handleUpdatePaymentNumber}
-      />
-    </>
+    <PaymentReceiveNumberDialog
+      dialogName={'payment-receive-number-form'}
+      onConfirm={handleUpdatePaymentNumber}
+    />
   );
 }

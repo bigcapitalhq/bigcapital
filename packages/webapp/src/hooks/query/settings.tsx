@@ -4,6 +4,7 @@ import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import { useSetSettings } from '@/hooks/state';
 import t from './types';
+import { useEffect } from 'react';
 
 /**
  * Saves the settings.
@@ -23,18 +24,23 @@ export function useSaveSettings(props) {
 function useSettingsQuery(key, query, props) {
   const setSettings = useSetSettings();
 
-  return useRequestQuery(
+  const settingsQuery = useRequestQuery(
     key,
     { method: 'get', url: 'settings', params: query },
     {
       select: (res) => res.data.settings,
       defaultData: [],
-      onSuccess: (settings) => {
-        setSettings(settings);
-      },
       ...props,
     },
   );
+  useEffect(() => {
+    // Sync to Redux state if the reqeust success and is not fetching.
+    if (!settingsQuery.isFetching && settingsQuery.isSuccess) {
+      setSettings(settingsQuery.data);
+    }
+  }, [settingsQuery.isFetching, settingsQuery.isSuccess, settingsQuery.data]);
+
+  return settingsQuery;
 }
 
 /**

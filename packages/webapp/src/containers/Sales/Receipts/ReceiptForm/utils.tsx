@@ -36,6 +36,8 @@ export const defaultReceipt = {
   customer_id: '',
   deposit_account_id: '',
   receipt_number: '',
+  // Holds the receipt number that entered manually only.
+  receipt_number_manually: '',
   receipt_date: moment(new Date()).format('YYYY-MM-DD'),
   reference_no: '',
   receipt_message: '',
@@ -75,15 +77,6 @@ export const transformToEditForm = (receipt) => {
     ...transformToForm(receipt, defaultReceipt),
     entries,
   };
-};
-
-export const useObserveReceiptNoSettings = (prefix, nextNumber) => {
-  const { setFieldValue } = useFormikContext();
-
-  React.useEffect(() => {
-    const receiptNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('receipt_number', receiptNo);
-  }, [setFieldValue, prefix, nextNumber]);
 };
 
 /**
@@ -247,4 +240,15 @@ export const useReceiptIsForeignCustomer = () => {
     [values.currency_code, currentOrganization.base_currency],
   );
   return isForeignCustomer;
+};
+
+export const resetFormState = ({ initialValues, values, resetForm }) => {
+  resetForm({
+    values: {
+      // Reset the all values except the warehouse and brand id.
+      ...initialValues,
+      warehouse_id: values.warehouse_id,
+      brand_id: values.brand_id,
+    },
+  });
 };

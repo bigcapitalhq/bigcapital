@@ -8,6 +8,19 @@ import { PageFormBigNumber, FormattedMessage as T } from '@/components';
 import MakeJournalEntriesHeaderFields from './MakeJournalEntriesHeaderFields';
 
 export default function MakeJournalEntriesHeader() {
+  return (
+    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+      <MakeJournalEntriesHeaderFields />
+      <MakeJournalHeaderBigNumber />
+    </div>
+  );
+}
+
+/**
+ * Big total number of make journal header.
+ * @returns {React.ReactNode}
+ */
+function MakeJournalHeaderBigNumber() {
   const {
     values: { entries, currency_code },
   } = useFormikContext();
@@ -17,14 +30,10 @@ export default function MakeJournalEntriesHeader() {
   const total = Math.max(totalCredit, totalDebit);
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
-      <MakeJournalEntriesHeaderFields />
-
-      <PageFormBigNumber
-        label={<T id={'amount'} />}
-        amount={total}
-        currencyCode={currency_code}
-      />
-    </div>
+    <PageFormBigNumber
+      label={<T id={'amount'} />}
+      amount={total}
+      currencyCode={currency_code}
+    />
   );
 }

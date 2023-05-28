@@ -7,7 +7,6 @@ import { useFormikContext } from 'formik';
 import { omit, first } from 'lodash';
 import {
   defaultFastFieldShouldUpdate,
-  transactionNumber,
   repeatValue,
   transformToForm,
   formattedAmount,
@@ -37,6 +36,8 @@ export const defaultEstimate = {
   estimate_date: moment(new Date()).format('YYYY-MM-DD'),
   expiration_date: moment(new Date()).format('YYYY-MM-DD'),
   estimate_number: '',
+  // Holds the estimate number that entered manually only.
+  estimate_number_manually: '',
   delivered: '',
   reference: '',
   note: '',
@@ -72,18 +73,6 @@ export const transformToEditForm = (estimate) => {
     ...transformToForm(estimate, defaultEstimate),
     entries,
   };
-};
-
-/**
- * Syncs estimate number of the settings with the context form.
- */
-export const useObserveEstimateNoSettings = (prefix, nextNumber) => {
-  const { setFieldValue } = useFormikContext();
-
-  React.useEffect(() => {
-    const estimateNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('estimate_number', estimateNo);
-  }, [setFieldValue, prefix, nextNumber]);
 };
 
 /**
@@ -154,6 +143,8 @@ export const transfromsFormValuesToRequest = (values) => {
   );
   return {
     ...omit(values, ['estimate_number_manually', 'estimate_number']),
+    // The `estimate_number_manually` will be presented just if the auto-increment
+    // is disable, always both attributes hold the same value in manual mode.
     ...(values.estimate_number_manually && {
       estimate_number: values.estimate_number,
     }),
@@ -234,4 +225,18 @@ export const useEstimateIsForeignCustomer = () => {
     [values.currency_code, currentOrganization.base_currency],
   );
   return isForeignCustomer;
+};
+
+/**
+ * Resets the form values.
+ */
+export const resetFormState = ({ initialValues, values, resetForm }) => {
+  resetForm({
+    values: {
+      // Reset the all values except the warehouse and brand id.
+      ...initialValues,
+      warehouse_id: values.warehouse_id,
+      brand_id: values.brand_id,
+    },
+  });
 };

@@ -1,14 +1,17 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as R from 'ramda';
 
 import { Money, ExchangeRateInputGroup, MoneyFieldCell } from '@/components';
 
 import { useCurrentOrganization } from '@/hooks/state';
 import { useEstimateIsForeignCustomer } from './utils';
+import { transactionNumber } from '@/utils';
+import withSettings from '@/containers/Settings/withSettings';
 
 /**
  * Invoice date cell.
@@ -109,6 +112,41 @@ export function PaymentReceiveExchangeRateInputField({ ...props }) {
  * payment receive project select.
  * @returns {JSX.Element}
  */
- export function PaymentReceiveProjectSelectButton({ label }) {
+export function PaymentReceiveProjectSelectButton({ label }) {
   return <Button text={label ?? intl.get('select_project')} />;
 }
+
+/**
+ * Syncs the auto-increment settings to payment receive form.
+ * @returns {React.ReactNode}
+ */
+export const PaymentReceiveSyncIncrementSettingsToForm = R.compose(
+  withSettings(({ paymentReceiveSettings }) => ({
+    paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
+    paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
+    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
+  })),
+)(
+  ({
+    paymentReceiveNextNumber,
+    paymentReceiveNumberPrefix,
+    paymentReceiveAutoIncrement,
+  }) => {
+    const { setFieldValue } = useFormikContext();
+
+    useLayoutEffect(() => {
+      if (!paymentReceiveAutoIncrement) return;
+
+      setFieldValue(
+        'payment_receive_no',
+        transactionNumber(paymentReceiveNumberPrefix, paymentReceiveNextNumber),
+      );
+    }, [
+      setFieldValue,
+      paymentReceiveNumberPrefix,
+      paymentReceiveNextNumber,
+      paymentReceiveAutoIncrement,
+    ]);
+    return null;
+  },
+);

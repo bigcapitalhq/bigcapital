@@ -38,6 +38,7 @@ import {
 
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { CreditNoteSyncIncrementSettingsToForm } from './components';
 
 /**
  * Credit note form.
@@ -105,7 +106,7 @@ function CreditNoteForm({
       open: submitPayload.open,
     };
     // Handle the request success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -161,7 +162,12 @@ function CreditNoteForm({
           <CreditNoteItemsEntriesEditorField />
           <CreditNoteFormFooter />
           <CreditNoteFloatingActions />
+
+          {/*-------- Dialogs --------*/}
           <CreditNoteFormDialogs />
+
+          {/*-------- Effects --------*/}
+          <CreditNoteSyncIncrementSettingsToForm />
         </Form>
       </Formik>
     </div>

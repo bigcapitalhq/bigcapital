@@ -14,6 +14,7 @@ import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * invoice number dialog's content.
@@ -39,7 +40,7 @@ function InvoiceNumberDialogContent({
     // Handle the form success.
     const handleSuccess = () => {
       setSubmitting(false);
-      closeDialog('invoice-number-form');
+      closeDialog(DialogsName.InvoiceNumberSettings);
       onConfirm(values);
     };
     // Handle the form errors.
@@ -56,10 +57,9 @@ function InvoiceNumberDialogContent({
     // Save the settings.
     saveSettings({ options }).then(handleSuccess).catch(handleErrors);
   };
-
   // Handle the dialog close.
   const handleClose = () => {
-    closeDialog('invoice-number-form');
+    closeDialog(DialogsName.InvoiceNumberSettings);
   };
   // Handle form change.
   const handleChange = (values) => {
@@ -71,17 +71,19 @@ function InvoiceNumberDialogContent({
       ? intl.get('invoice.auto_increment.auto')
       : intl.get('invoice.auto_increment.manually');
 
+  const initialFormValues = {
+    ...transformSettingsToForm({
+      nextNumber,
+      numberPrefix,
+      autoIncrement,
+    }),
+    ...initialValues,
+  };
+
   return (
     <InvoiceNumberDialogProvider>
       <ReferenceNumberForm
-        initialValues={{
-          ...transformSettingsToForm({
-            nextNumber,
-            numberPrefix,
-            autoIncrement,
-          }),
-          ...initialValues,
-        }}
+        initialValues={initialFormValues}
         description={description}
         onSubmit={handleSubmitForm}
         onClose={handleClose}

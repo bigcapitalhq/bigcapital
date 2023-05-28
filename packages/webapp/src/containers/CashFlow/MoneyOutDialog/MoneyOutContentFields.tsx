@@ -20,7 +20,6 @@ function MoneyOutContentFields({ accountType }) {
         break;
     }
   };
-
   return <React.Fragment>{handleTransactionType()}</React.Fragment>;
 }
 

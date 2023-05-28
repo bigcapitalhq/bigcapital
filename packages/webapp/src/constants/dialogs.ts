@@ -46,4 +46,5 @@ export enum DialogsName {
   EstimateExpenseForm = 'estimate-expense-form',
   ProjectInvoicingForm = 'project-invoicing-form',
   ProjectBillableEntriesForm = 'project-billable-entries',
+  InvoiceNumberSettings = 'InvoiceNumberSettings'
 }

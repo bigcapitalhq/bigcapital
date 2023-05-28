@@ -6,7 +6,6 @@ import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { sumBy, setWith, toSafeInteger, get, first } from 'lodash';
 import {
-  transactionNumber,
   updateTableCell,
   repeatValue,
   transformToForm,
@@ -46,7 +45,7 @@ export const defaultEntry = {
 
 export const defaultManualJournal = {
   journal_number: '',
-  journal_number_manually: false,
+  journal_number_manually: '',
   journal_type: 'Journal',
   date: moment(new Date()).format('YYYY-MM-DD'),
   description: '',
@@ -172,15 +171,6 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
       intent: Intent.DANGER,
     });
   }
-};
-
-export const useObserveJournalNoSettings = (prefix, nextNumber) => {
-  const { setFieldValue } = useFormikContext();
-
-  React.useEffect(() => {
-    const journalNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('journal_number', journalNo);
-  }, [setFieldValue, prefix, nextNumber]);
 };
 
 /**

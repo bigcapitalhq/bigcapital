@@ -1,9 +1,10 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { Menu, MenuItem, Position, Button } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import { useFormikContext } from 'formik';
+import * as R from 'ramda';
 
 import {
   ExchangeRateInputGroup,
@@ -24,6 +25,9 @@ import { CellType, Features, Align } from '@/constants';
 
 import { useCurrentOrganization, useFeatureCan } from '@/hooks/state';
 import { useJournalIsForeign } from './utils';
+import withSettings from '@/containers/Settings/withSettings';
+import { transactionNumber } from '@/utils';
+import { useUpdateEffect } from '@/hooks';
 
 /**
  * Contact header cell.
@@ -199,3 +203,37 @@ export function JournalExchangeRateInputField({ ...props }) {
     />
   );
 }
+
+/**
+ * Syncs journal auto-increment settings to form.
+ * @return {React.ReactNode}
+ */
+export const JournalSyncIncrementSettingsToForm = R.compose(
+  withSettings(({ manualJournalsSettings }) => ({
+    journalAutoIncrement: manualJournalsSettings?.autoIncrement,
+    journalNextNumber: manualJournalsSettings?.nextNumber,
+    journalNumberPrefix: manualJournalsSettings?.numberPrefix,
+  })),
+)(({ journalAutoIncrement, journalNextNumber, journalNumberPrefix }) => {
+  const { setFieldValue } = useFormikContext();
+
+  useUpdateEffect(() => {
+    // Do not update if the journal auto-increment mode is disabled.
+    if (!journalAutoIncrement) return null;
+
+    setFieldValue(
+      'journal_number',
+      transactionNumber(journalNumberPrefix, journalNextNumber),
+    );
+  }, [
+    setFieldValue,
+    journalNumberPrefix,
+    journalNextNumber,
+    journalAutoIncrement,
+  ]);
+
+  return null;
+});
+
+JournalSyncIncrementSettingsToForm.displayName =
+  'JournalSyncIncrementSettingsToForm';

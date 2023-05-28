@@ -2,49 +2,49 @@
 import React, { useMemo } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
-import { FormattedMessage as T } from '@/components';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 
 import '@/style/pages/ReferenceNumber/ReferenceNumber.scss';
 
-import { FormObserver } from '@/components';
+import { FormattedMessage as T, FormObserver } from '@/components';
 import ReferenceNumberFormContent from './ReferenceNumberFormContent';
 import { transformValuesToForm } from './utils';
-import { saveInvoke } from '@/utils';
+import { saveInvoke, transformToForm } from '@/utils';
+
+const initialFormValues = {
+  incrementMode: 'auto',
+  numberPrefix: '',
+  nextNumber: '',
+  onceManualNumber: '',
+};
+
+// Validation schema.
+const validationSchema = Yup.object().shape({
+  incrementMode: Yup.string(),
+  numberPrefix: Yup.string(),
+  nextNumber: Yup.number(),
+  onceManualNumber: Yup.string(),
+});
 
 /**
  * Reference number form.
  */
 export default function ReferenceNumberForm({
-  onSubmit,
-  onClose,
   initialValues,
   description,
+  onSubmit,
+  onClose,
   onChange,
 }) {
-  // Validation schema.
-  const validationSchema = Yup.object().shape({
-    incrementMode: Yup.string(),
-    numberPrefix: Yup.string(),
-    nextNumber: Yup.number(),
-    manualTransactionNo: Yup.string(),
-  });
   // Initial values.
-  const formInitialValues = useMemo(
-    () => ({
-      ...initialValues,
-      incrementMode:
-        initialValues.incrementMode === 'auto' &&
-        initialValues.manualTransactionNo
-          ? 'manual-transaction'
-          : initialValues.incrementMode,
-    }),
-    [initialValues],
-  );
+  const formInitialValues = {
+    ...initialFormValues,
+    ...transformToForm(initialValues, initialFormValues),
+  };
   // Handle the form submit.
   const handleSubmit = (values, methods) => {
     const parsed = transformValuesToForm(values);
-    saveInvoke(onSubmit, { ...parsed, ...values }, methods);
+    saveInvoke(onSubmit, { ...values, ...parsed }, methods);
   };
 
   return (

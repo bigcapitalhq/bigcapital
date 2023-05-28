@@ -17,7 +17,6 @@ import {
 } from '@/utils';
 import { useCurrentOrganization } from '@/hooks/state';
 
-
 // Default payment receive entry.
 export const defaultPaymentReceiveEntry = {
   index: '',
@@ -37,8 +36,10 @@ export const defaultPaymentReceive = {
   payment_date: moment(new Date()).format('YYYY-MM-DD'),
   reference_no: '',
   payment_receive_no: '',
+  // Holds the payment number that entered manually only.
+  payment_receive_no_manually: '',
   statement: '',
-  full_amount: '',
+  full_amount: '', 
   currency_code: '',
   branch_id: '',
   exchange_rate: 1,
@@ -124,18 +125,6 @@ export const fullAmountPaymentEntries = (entries) => {
 };
 
 /**
- * Syncs payment receive number settings with form.
- */
-export const useObservePaymentNoSettings = (prefix, nextNumber) => {
-  const { setFieldValue } = useFormikContext();
-
-  React.useEffect(() => {
-    const invoiceNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('payment_receive_no', invoiceNo);
-  }, [setFieldValue, prefix, nextNumber]);
-};
-
-/**
  * Detarmines the customers fast-field should update.
  */
 export const customersFieldShouldUpdate = (newProps, oldProps) => {
@@ -168,6 +157,8 @@ export const transformFormToRequest = (form) => {
 
   return {
     ...omit(form, ['payment_receive_no_manually', 'payment_receive_no']),
+    // The `payment_receive_no_manually` will be presented just if the auto-increment
+    // is disable, always both attributes hold the same value in manual mode.
     ...(form.payment_receive_no_manually && {
       payment_receive_no: form.payment_receive_no,
     }),
@@ -263,4 +254,14 @@ export const useEstimateIsForeignCustomer = () => {
     [values.currency_code, currentOrganization.base_currency],
   );
   return isForeignCustomer;
+};
+
+export const resetFormState = ({ initialValues, values, resetForm }) => {
+  resetForm({
+    values: {
+      // Reset the all values except the brand id.
+      ...initialValues,
+      brand_id: values.brand_id,
+    },
+  });
 };

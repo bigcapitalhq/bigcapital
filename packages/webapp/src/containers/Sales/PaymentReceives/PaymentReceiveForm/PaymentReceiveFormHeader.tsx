@@ -13,6 +13,21 @@ import PaymentReceiveHeaderFields from './PaymentReceiveHeaderFields';
  * Payment receive form header.
  */
 function PaymentReceiveFormHeader() {
+  return (
+    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+      <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
+        <PaymentReceiveHeaderFields />
+        <PaymentReceiveFormBigTotal />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Big total amount of payment receive form.
+ * @returns {React.ReactNode}
+ */
+function PaymentReceiveFormBigTotal() {
   // Formik form context.
   const {
     values: { currency_code, entries },
@@ -25,20 +40,14 @@ function PaymentReceiveFormHeader() {
   );
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
-      <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
-        <PaymentReceiveHeaderFields />
-
-        <div className={classNames(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>
-          <div class="big-amount">
-            <span class="big-amount__label">
-              <T id={'amount_received'} />
-            </span>
-            <h1 class="big-amount__number">
-              <Money amount={paymentFullAmount} currency={currency_code} />
-            </h1>
-          </div>
-        </div>
+    <div className={classNames(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>
+      <div class="big-amount">
+        <span class="big-amount__label">
+          <T id={'amount_received'} />
+        </span>
+        <h1 class="big-amount__number">
+          <Money amount={paymentFullAmount} currency={currency_code} />
+        </h1>
       </div>
     </div>
   );

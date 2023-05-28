@@ -1,17 +1,15 @@
 // @ts-nocheck
 import React from 'react';
 import { FastField, useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
 import { FormGroup, InputGroup, Radio } from '@blueprintjs/core';
-import { If, Row, Col, ErrorMessage } from '@/components';
+
+import { FormattedMessage as T, Row, Col, ErrorMessage } from '@/components';
 import { inputIntent } from '@/utils';
 
 /**
  * Reference number form content.
  */
 export default function ReferenceNumberFormContent() {
-  const { values } = useFormikContext();
-
   return (
     <>
       {/* ------------- Auto increment mode ------------- */}
@@ -27,54 +25,13 @@ export default function ReferenceNumberFormContent() {
           />
         )}
       </FastField>
-
-      <If condition={values.incrementMode === 'auto'}>
-        <Row>
-          {/* ------------- Prefix ------------- */}
-          <Col xs={4}>
-            <FastField name={'numberPrefix'}>
-              {({ form, field, meta: { error, touched } }) => (
-                <FormGroup
-                  label={<T id={'prefix'} />}
-                  className={'form-group--'}
-                  intent={inputIntent({ error, touched })}
-                  helperText={<ErrorMessage name={'numberPrefix'} />}
-                >
-                  <InputGroup
-                    intent={inputIntent({ error, touched })}
-                    {...field}
-                  />
-                </FormGroup>
-              )}
-            </FastField>
-          </Col>
-
-          {/* ------------- Next number ------------- */}
-          <Col xs={6}>
-            <FastField name={'nextNumber'}>
-              {({ form, field, meta: { error, touched } }) => (
-                <FormGroup
-                  label={<T id={'next_number'} />}
-                  className={'form-group--next-number'}
-                  intent={inputIntent({ error, touched })}
-                  helperText={<ErrorMessage name={'nextNumber'} />}
-                >
-                  <InputGroup
-                    intent={inputIntent({ error, touched })}
-                    {...field}
-                  />
-                </FormGroup>
-              )}
-            </FastField>
-          </Col>
-        </Row>
-      </If>
+      <ReferenceNumberAutoIncrement />
 
       {/* ------------- Manual increment mode ------------- */}
       <FastField name={'incrementMode'}>
         {({ form, field, meta: { error, touched } }) => (
           <Radio
-            label={<T id={'auto_increment.field.manual_this_transaction'} />}
+            label={<T id={'auto_increment.field.manually'} />}
             value="manual"
             onChange={() => {
               form.setFieldValue('incrementMode', 'manual');
@@ -85,20 +42,70 @@ export default function ReferenceNumberFormContent() {
       </FastField>
 
       {/* ------------- Transaction manual increment mode ------------- */}
-      <If condition={values.manualTransactionNo}>
-        <FastField name={'incrementMode'}>
+      <ReferenceNumberManualOnce />
+    </>
+  );
+}
+
+function ReferenceNumberAutoIncrement() {
+  const { values } = useFormikContext();
+  if (!values.incrementMode === 'auto') return null;
+
+  return (
+    <Row>
+      {/* ------------- Prefix ------------- */}
+      <Col xs={4}>
+        <FastField name={'numberPrefix'}>
           {({ form, field, meta: { error, touched } }) => (
-            <Radio
-              label={<T id={'auto_increment.field.manually'} />}
-              value="manual"
-              onChange={() => {
-                form.setFieldValue('incrementMode', 'manual-transaction');
-              }}
-              checked={field.value === 'manual-transaction'}
-            />
+            <FormGroup
+              label={<T id={'prefix'} />}
+              className={'form-group--'}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name={'numberPrefix'} />}
+            >
+              <InputGroup intent={inputIntent({ error, touched })} {...field} />
+            </FormGroup>
           )}
         </FastField>
-      </If>
-    </>
+      </Col>
+
+      {/* ------------- Next number ------------- */}
+      <Col xs={6}>
+        <FastField name={'nextNumber'}>
+          {({ form, field, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'next_number'} />}
+              className={'form-group--next-number'}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name={'nextNumber'} />}
+            >
+              <InputGroup intent={inputIntent({ error, touched })} {...field} />
+            </FormGroup>
+          )}
+        </FastField>
+      </Col>
+    </Row>
+  );
+}
+
+function ReferenceNumberManualOnce() {
+  const { values } = useFormikContext();
+
+  // Do not show the field if the one manual transaction number is not presented.
+  if (!values.onceManualNumber) return null;
+
+  return (
+    <FastField name={'incrementMode'}>
+      {({ form, field, meta: { error, touched } }) => (
+        <Radio
+          label={<T id={'auto_increment.field.manual_this_transaction'} />}
+          value="manual"
+          onChange={() => {
+            form.setFieldValue('incrementMode', 'manual-transaction');
+          }}
+          checked={field.value === 'manual-transaction'}
+        />
+      )}
+    </FastField>
   );
 }

@@ -33,7 +33,9 @@ import {
   defaultReceipt,
   handleErrors,
   transformFormValuesToRequest,
+  resetFormState,
 } from './utils';
+import { ReceiptSyncIncrementSettingsToForm } from './components';
 
 /**
  * Receipt form.
@@ -121,7 +123,7 @@ function ReceiptForm({
         history.push('/receipts');
       }
       if (submitPayload.resetForm) {
-        resetForm();
+        resetFormState();
       }
     };
 
@@ -165,7 +167,11 @@ function ReceiptForm({
           <ReceiptFormFooter />
           <ReceiptFormFloatingActions />
 
+          {/*---------- Dialogs ---------*/}
           <ReceiptFormDialogs />
+
+          {/*---------- Effects ---------*/}
+          <ReceiptSyncIncrementSettingsToForm />
         </Form>
       </Formik>
     </div>

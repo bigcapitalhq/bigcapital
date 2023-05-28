@@ -17,6 +17,21 @@ function ReceiptFormHeader({
   // #ownProps
   onReceiptNumberChanged,
 }) {
+  return (
+    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+      <ReceiptFormHeaderFields
+        onReceiptNumberChanged={onReceiptNumberChanged}
+      />
+      <ReceiptFormHeaderBigTotal />
+    </div>
+  );
+}
+
+/**
+ * The big total amount of receipt form.
+ * @returns {React.ReactNode}
+ */
+function ReceiptFormHeaderBigTotal() {
   const {
     values: { currency_code, entries },
   } = useFormikContext();
@@ -25,16 +40,11 @@ function ReceiptFormHeader({
   const totalDueAmount = useMemo(() => getEntriesTotal(entries), [entries]);
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
-      <ReceiptFormHeaderFields
-        onReceiptNumberChanged={onReceiptNumberChanged}
-      />
-      <PageFormBigNumber
-        label={intl.get('due_amount')}
-        amount={totalDueAmount}
-        currencyCode={currency_code}
-      />
-    </div>
+    <PageFormBigNumber
+      label={intl.get('due_amount')}
+      amount={totalDueAmount}
+      currencyCode={currency_code}
+    />
   );
 }
 

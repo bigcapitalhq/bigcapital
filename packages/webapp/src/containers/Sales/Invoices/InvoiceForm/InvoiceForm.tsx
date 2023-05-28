@@ -31,7 +31,9 @@ import {
   defaultInvoice,
   transformErrors,
   transformValueToRequest,
+  resetFormState,
 } from './utils';
+import { InvoiceNoSyncSettingsToForm } from './components';
 
 /**
  * Invoice form.
@@ -40,7 +42,7 @@ function InvoiceForm({
   // #withSettings
   invoiceNextNumber,
   invoiceNumberPrefix,
-  invoiceIncrementMode,
+  invoiceAutoIncrementMode,
 
   // #withCurrentOrganization
   organization: { base_currency },
@@ -64,23 +66,21 @@ function InvoiceForm({
     invoiceNextNumber,
   );
   // Form initial values.
-  const initialValues = useMemo(
-    () => ({
-      ...(!isEmpty(invoice)
-        ? { ...transformToEditForm(invoice) }
-        : {
-            ...defaultInvoice,
-            ...(invoiceIncrementMode && {
-              invoice_no: invoiceNumber,
-            }),
-            entries: orderingLinesIndexes(defaultInvoice.entries),
-            currency_code: base_currency,
-            ...newInvoice,
+  const initialValues = {
+    ...(!isEmpty(invoice)
+      ? { ...transformToEditForm(invoice) }
+      : {
+          ...defaultInvoice,
+          // If the auto-increment mode is enabled, take the next invoice 
+          // number from the settings.
+          ...(invoiceAutoIncrementMode && {
+            invoice_no: invoiceNumber,
           }),
-    }),
-    [invoice, newInvoice, invoiceNumber, invoiceIncrementMode, base_currency],
-  );
-
+          entries: orderingLinesIndexes(defaultInvoice.entries),
+          currency_code: base_currency,
+          ...newInvoice,
+        }),
+  };
   // Handles form submit.
   const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
     setSubmitting(true);
@@ -105,7 +105,6 @@ function InvoiceForm({
       delivered: submitPayload.deliver,
       from_estimate_id: estimateId,
     };
-
     // Handle the request success.
     const onSuccess = () => {
       AppToaster.show({
@@ -123,10 +122,9 @@ function InvoiceForm({
         history.push('/invoices');
       }
       if (submitPayload.resetForm) {
-        resetForm();
+        resetFormState({ resetForm, initialValues, values });
       }
     };
-
     // Handle the request error.
     const onError = ({
       response: {
@@ -144,7 +142,6 @@ function InvoiceForm({
       createInvoiceMutate(form).then(onSuccess).catch(onError);
     }
   };
-
   // Create invoice form schema.
   const CreateInvoiceFormSchema = getCreateInvoiceFormSchema();
 
@@ -172,7 +169,12 @@ function InvoiceForm({
           <InvoiceItemsEntriesEditorField />
           <InvoiceFormFooter />
           <InvoiceFloatingActions />
+
+          {/*---------- Dialogs ----------*/}
           <InvoiceFormDialogs />
+
+          {/*---------- Effects ----------*/}
+          <InvoiceNoSyncSettingsToForm />
         </Form>
       </Formik>
     </div>
@@ -184,7 +186,7 @@ export default compose(
   withSettings(({ invoiceSettings }) => ({
     invoiceNextNumber: invoiceSettings?.nextNumber,
     invoiceNumberPrefix: invoiceSettings?.numberPrefix,
-    invoiceIncrementMode: invoiceSettings?.autoIncrement,
+    invoiceAutoIncrementMode: invoiceSettings?.autoIncrement,
   })),
   withCurrentOrganization(),
 )(InvoiceForm);

@@ -16,11 +16,9 @@ import {
   InputPrependText,
   MoneyInputGroup,
   FieldRequiredHint,
-  Icon,
   Col,
   Row,
   If,
-  InputPrependButton,
   FeatureCan,
   BranchSelect,
   BranchSelectButton,
@@ -28,70 +26,32 @@ import {
 } from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from '@/hooks';
-import { ACCOUNT_TYPE } from '@/constants/accountTypes';
+import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
 
 import {
   inputIntent,
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-  compose,
 } from '@/utils';
-import { Features } from '@/constants';
-import { CLASSES } from '@/constants/classes';
-import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
+
+import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
 import {
-  useObserveTransactionNoSettings,
   useSetPrimaryBranchToForm,
   useForeignAccount,
   BranchRowDivider,
 } from '../utils';
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { MoneyInOutTransactionNoField } from '../../_components';
 
 /**
- * Transfer to account form fields.
+ * Other income form fields.
  */
-function TransferToAccountFormFields({
-  // #withDialogActions
-  openDialog,
-
-  // #withSettings
-  transactionAutoIncrement,
-  transactionNumberPrefix,
-  transactionNextNumber,
-}) {
+export default function OtherIncomeFormFields() {
   // Money in dialog context.
-  const { accounts, account, branches } = useMoneyOutDialogContext();
+  const { accounts, account, branches } = useMoneyInDailogContext();
   const { values } = useFormikContext();
+  const amountFieldRef = useAutofocus();
   const isForeigAccount = useForeignAccount();
-
-  const accountRef = useAutofocus();
-
-  // Handle tranaction number changing.
-  const handleTransactionNumberChange = () => {
-    openDialog('transaction-number-form');
-  };
-
-  // Handle transaction no. field blur.
-  const handleTransactionNoBlur = (form, field) => (event) => {
-    const newValue = event.target.value;
-
-    if (field.value !== newValue && transactionAutoIncrement) {
-      openDialog('transaction-number-form', {
-        initialFormValues: {
-          manualTransactionNo: newValue,
-          incrementMode: 'manual-transaction',
-        },
-      });
-    }
-  };
-
-  // Syncs transaction number settings with form.
-  useObserveTransactionNoSettings(
-    transactionNumberPrefix,
-    transactionNextNumber,
-  );
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
@@ -116,6 +76,7 @@ function TransferToAccountFormFields({
         </Row>
         <BranchRowDivider />
       </FeatureCan>
+
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -147,42 +108,7 @@ function TransferToAccountFormFields({
         </Col>
         <Col xs={5}>
           {/*------------ Transaction number -----------*/}
-          <Field name={'transaction_number'}>
-            {({ form, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'transaction_number'} />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="transaction_number" />}
-                className={'form-group--transaction_number'}
-              >
-                <ControlGroup fill={true}>
-                  <InputGroup
-                    minimal={true}
-                    value={field.value}
-                    asyncControl={true}
-                    onBlur={handleTransactionNoBlur(form, field)}
-                  />
-                  <InputPrependButton
-                    buttonProps={{
-                      onClick: handleTransactionNumberChange,
-                      icon: <Icon icon={'settings-18'} />,
-                    }}
-                    tooltip={true}
-                    tooltipProps={{
-                      content: (
-                        <T
-                          id={
-                            'cash_flow.setting_your_auto_generated_transaction_number'
-                          }
-                        />
-                      ),
-                      position: Position.BOTTOM_LEFT,
-                    }}
-                  />
-                </ControlGroup>
-              </FormGroup>
-            )}
-          </Field>
+          <MoneyInOutTransactionNoField />
         </Col>
       </Row>
       {/*------------ amount -----------*/}
@@ -208,19 +134,20 @@ function TransferToAccountFormFields({
                 onChange={(amount) => {
                   setFieldValue('amount', amount);
                 }}
-                inputRef={accountRef}
+                inputRef={(ref) => (amountFieldRef.current = ref)}
                 intent={inputIntent({ error, touched })}
               />
             </ControlGroup>
           </FormGroup>
         )}
       </FastField>
+
       <If condition={isForeigAccount}>
         {/*------------ exchange rate -----------*/}
         <ExchangeRateMutedField
           name={'exchange_rate'}
-          fromCurrency={values?.currency_code}
-          toCurrency={account?.currency_code}
+          fromCurrency={values.currency_code}
+          toCurrency={account.currency_code}
           formGroupProps={{ label: '', inline: false }}
           date={values.date}
           exchangeRate={values.exchange_rate}
@@ -228,13 +155,11 @@ function TransferToAccountFormFields({
       </If>
       <Row>
         <Col xs={5}>
-          {/*------------ transfer from account -----------*/}
+          {/*------------ other income account -----------*/}
           <FastField name={'credit_account_id'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
-                label={
-                  <T id={'cash_flow_transaction.label_transfer_to_account'} />
-                }
+                label={<T id={'cash_flow_transaction.other_income_account'} />}
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="credit_account_id" />}
@@ -246,9 +171,8 @@ function TransferToAccountFormFields({
                     form.setFieldValue('credit_account_id', id)
                   }
                   filterByTypes={[
-                    ACCOUNT_TYPE.CASH,
-                    ACCOUNT_TYPE.BANK,
-                    ACCOUNT_TYPE.CREDIT_CARD,
+                    ACCOUNT_TYPE.INCOME,
+                    ACCOUNT_TYPE.OTHER_INCOME,
                   ]}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
@@ -298,11 +222,3 @@ function TransferToAccountFormFields({
     </React.Fragment>
   );
 }
-export default compose(
-  withDialogActions,
-  withSettings(({ cashflowSetting }) => ({
-    transactionAutoIncrement: cashflowSetting?.autoIncrement,
-    transactionNextNumber: cashflowSetting?.nextNumber,
-    transactionNumberPrefix: cashflowSetting?.numberPrefix,
-  })),
-)(TransferToAccountFormFields);

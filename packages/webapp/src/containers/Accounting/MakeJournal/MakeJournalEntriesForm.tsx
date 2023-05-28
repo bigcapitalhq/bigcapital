@@ -4,7 +4,7 @@ import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
-import { defaultTo, isEmpty, omit } from 'lodash';
+import { isEmpty, omit } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
@@ -31,6 +31,7 @@ import {
   transformToEditForm,
   defaultManualJournal,
 } from './utils';
+import { JournalSyncIncrementSettingsToForm } from './components';
 
 /**
  * Journal entries form.
@@ -40,6 +41,7 @@ function MakeJournalEntriesForm({
   journalNextNumber,
   journalNumberPrefix,
   journalAutoIncrement,
+
   // #withCurrentOrganization
   organization: { base_currency },
 }) {
@@ -69,6 +71,8 @@ function MakeJournalEntriesForm({
           }
         : {
             ...defaultManualJournal,
+            // If the auto-increment mode is enabled, take the next journal
+            // number from the settings.
             ...(journalAutoIncrement && {
               journal_number: journalNumber,
             }),
@@ -116,7 +120,6 @@ function MakeJournalEntriesForm({
       entries: R.compose(orderingLinesIndexes)(entries),
       publish: submitPayload.publish,
     };
-
     // Handle the request error.
     const handleError = ({
       response: {
@@ -126,7 +129,6 @@ function MakeJournalEntriesForm({
       transformErrors(errors, { setErrors });
       setSubmitting(false);
     };
-
     // Handle the request success.
     const handleSuccess = (errors) => {
       AppToaster.show({
@@ -147,7 +149,6 @@ function MakeJournalEntriesForm({
         resetForm();
       }
     };
-
     if (isNewMode) {
       createJournalMutate(form).then(handleSuccess).catch(handleError);
     } else {
@@ -179,6 +180,9 @@ function MakeJournalEntriesForm({
 
           {/* --------- Dialogs --------- */}
           <MakeJournalFormDialogs />
+
+          {/* --------- Effects --------- */}
+          <JournalSyncIncrementSettingsToForm />
         </Form>
       </Formik>
     </div>

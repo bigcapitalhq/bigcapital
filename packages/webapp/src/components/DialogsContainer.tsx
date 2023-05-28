@@ -17,8 +17,8 @@ import AllocateLandedCostDialog from '@/containers/Dialogs/AllocateLandedCostDia
 import InvoicePdfPreviewDialog from '@/containers/Dialogs/InvoicePdfPreviewDialog';
 import EstimatePdfPreviewDialog from '@/containers/Dialogs/EstimatePdfPreviewDialog';
 import ReceiptPdfPreviewDialog from '@/containers/Dialogs/ReceiptPdfPreviewDialog';
-import MoneyInDialog from '@/containers/Dialogs/MoneyInDialog';
-import MoneyOutDialog from '@/containers/Dialogs/MoneyOutDialog';
+import MoneyInDialog from '@/containers/CashFlow/MoneyInDialog';
+import MoneyOutDialog from '@/containers/CashFlow/MoneyOutDialog';
 import BadDebtDialog from '@/containers/Dialogs/BadDebtDialog';
 import NotifyInvoiceViaSMSDialog from '@/containers/Dialogs/NotifyInvoiceViaSMSDialog';
 import NotifyReceiptViaSMSDialog from '@/containers/Dialogs/NotifyReceiptViaSMSDialog';

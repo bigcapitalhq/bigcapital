@@ -12,6 +12,19 @@ import { PageFormBigNumber } from '@/components';
 
 // Estimate form top header.
 function EstimateFormHeader() {
+  return (
+    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+      <EstimateFormHeaderFields />
+      <EstimateFormBigTotal />
+    </div>
+  );
+}
+
+/**
+ * Big total of estimate form header.
+ * @returns {React.ReactNode}
+ */
+function EstimateFormBigTotal() {
   const {
     values: { entries, currency_code },
   } = useFormikContext();
@@ -20,15 +33,11 @@ function EstimateFormHeader() {
   const totalDueAmount = useMemo(() => getEntriesTotal(entries), [entries]);
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
-      <EstimateFormHeaderFields />
-
-      <PageFormBigNumber
-        label={intl.get('amount')}
-        amount={totalDueAmount}
-        currencyCode={currency_code}
-      />
-    </div>
+    <PageFormBigNumber
+      label={intl.get('amount')}
+      amount={totalDueAmount}
+      currencyCode={currency_code}
+    />
   );
 }
 

@@ -10,9 +10,12 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FastField, ErrorMessage } from 'formik';
-import { CLASSES } from '@/constants/classes';
+import { FastField, ErrorMessage, useFormikContext } from 'formik';
+import * as R from 'ramda';
 
+import { CLASSES } from '@/constants/classes';
+import { ACCOUNT_TYPE } from '@/constants/accountTypes';
+import { Features } from '@/constants';
 import {
   FFormGroup,
   AccountsSelect,
@@ -23,63 +26,111 @@ import {
   CustomerDrawerLink,
   FormattedMessage as T,
   FeatureCan,
+  FInputGroup,
 } from '@/components';
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { ProjectsSelect } from '@/containers/Projects/components';
 import {
   momentFormatter,
-  compose,
   tansformDateValue,
   handleDateChange,
   inputIntent,
 } from '@/utils';
 import { useReceiptFormContext } from './ReceiptFormProvider';
-import {
-  accountsFieldShouldUpdate,
-  customersFieldShouldUpdate,
-  useObserveReceiptNoSettings,
-} from './utils';
+import { accountsFieldShouldUpdate, customersFieldShouldUpdate } from './utils';
 import {
   ReceiptExchangeRateInputField,
   ReceiptProjectSelectButton,
 } from './components';
-import { Features } from '@/constants';
+
+import withSettings from '@/containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+
+/**
+ * Receipt number field of receipt form.
+ */
+const ReceiptFormReceiptNumberField = R.compose(
+  withDialogActions,
+  withSettings(({ receiptSettings }) => ({
+    receiptAutoIncrement: receiptSettings?.autoIncrement,
+  })),
+)(
+  ({
+    // #withDialogActions
+    openDialog,
+
+    // #withSettings
+    receiptAutoIncrement,
+  }) => {
+    const { values, setFieldValue } = useFormikContext();
+
+    const handleReceiptNumberChange = () => {
+      openDialog('receipt-number-form', {});
+    };
+
+    const handleReceiptNoBlur = (event) => {
+      const newValue = event.target.value;
+
+      // Show the confirmation dialog if the value has changed and auto-increment
+      // mode is enabled.
+      if (values.receipt_number !== newValue && receiptAutoIncrement) {
+        openDialog('receipt-number-form', {
+          initialFormValues: {
+            onceManualNumber: newValue,
+            incrementMode: 'manual-transaction',
+          },
+        });
+      }
+      // Setting the receipt number to the form will be manually in case
+      // auto-increment is disable.
+      if (!receiptAutoIncrement) {
+        setFieldValue('receipt_number', newValue);
+        setFieldValue('receipt_number_manually', newValue);
+      }
+    };
+
+    return (
+      <FFormGroup
+        name={'receipt_number'}
+        label={<T id={'receipt'} />}
+        inline={true}
+        labelInfo={<FieldRequiredHint />}
+      >
+        <ControlGroup fill={true}>
+          <FInputGroup
+            name={'receipt_number'}
+            minimal={true}
+            value={values.receipt_number}
+            asyncControl={true}
+            onBlur={handleReceiptNoBlur}
+            onChange={() => {}}
+          />
+          <InputPrependButton
+            buttonProps={{
+              onClick: handleReceiptNumberChange,
+              icon: <Icon icon={'settings-18'} />,
+            }}
+            tooltip={true}
+            tooltipProps={{
+              content: (
+                <T id={'setting_your_auto_generated_payment_receive_number'} />
+              ),
+              position: Position.BOTTOM_LEFT,
+            }}
+            inputProps={{
+              leftIcon: <Icon icon={'date-range'} />,
+            }}
+          />
+        </ControlGroup>
+      </FFormGroup>
+    );
+  },
+);
 
 /**
  * Receipt form header fields.
  */
-function ReceiptFormHeader({
-  //#withDialogActions
-  openDialog,
-
-  // #withSettings
-  receiptAutoIncrement,
-  receiptNextNumber,
-  receiptNumberPrefix,
-}) {
+export default function ReceiptFormHeader() {
   const { accounts, customers, projects } = useReceiptFormContext();
-
-  const handleReceiptNumberChange = useCallback(() => {
-    openDialog('receipt-number-form', {});
-  }, [openDialog]);
-
-  const handleReceiptNoBlur = (form, field) => (event) => {
-    const newValue = event.target.value;
-
-    if (field.value !== newValue && receiptAutoIncrement) {
-      openDialog('receipt-number-form', {
-        initialFormValues: {
-          manualTransactionNo: newValue,
-          incrementMode: 'manual-transaction',
-        },
-      });
-    }
-  };
-
-  // Synsc receipt number settings with the form.
-  useObserveReceiptNoSettings(receiptNumberPrefix, receiptNextNumber);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -176,45 +227,7 @@ function ReceiptFormHeader({
       </FastField>
 
       {/* ----------- Receipt number ----------- */}
-      <FastField name={'receipt_number'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'receipt'} />}
-            inline={true}
-            className={('form-group--receipt_number', CLASSES.FILL)}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="receipt_number" />}
-          >
-            <ControlGroup fill={true}>
-              <InputGroup
-                minimal={true}
-                value={field.value}
-                asyncControl={true}
-                onBlur={handleReceiptNoBlur(form, field)}
-              />
-              <InputPrependButton
-                buttonProps={{
-                  onClick: handleReceiptNumberChange,
-                  icon: <Icon icon={'settings-18'} />,
-                }}
-                tooltip={true}
-                tooltipProps={{
-                  content: (
-                    <T
-                      id={'setting_your_auto_generated_payment_receive_number'}
-                    />
-                  ),
-                  position: Position.BOTTOM_LEFT,
-                }}
-                inputProps={{
-                  leftIcon: <Icon icon={'date-range'} />,
-                }}
-              />
-            </ControlGroup>
-          </FormGroup>
-        )}
-      </FastField>
+      <ReceiptFormReceiptNumberField />
 
       {/* ----------- Reference ----------- */}
       <FastField name={'reference_no'}>
@@ -250,15 +263,6 @@ function ReceiptFormHeader({
     </div>
   );
 }
-
-export default compose(
-  withDialogActions,
-  withSettings(({ receiptSettings }) => ({
-    receiptAutoIncrement: receiptSettings?.autoIncrement,
-    receiptNextNumber: receiptSettings?.nextNumber,
-    receiptNumberPrefix: receiptSettings?.numberPrefix,
-  })),
-)(ReceiptFormHeader);
 
 const CustomerButtonLink = styled(CustomerDrawerLink)`
   font-size: 11px;
