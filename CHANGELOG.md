@@ -2,7 +2,7 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
-## [0.9.1] - 28-06-2023
+## [0.9.1] - 28-05-2023
 
 `@bigcapital/server`
 - fix: deleting ledger entries of manual journal.
@@ -14,7 +14,7 @@ All notable changes to Bigcapital server-side will be in this file.
 - fix: auto-increment sale invoices, estiamtes, credit notes, payments and manual journals.
 - refactor: the setup organization form to use binded Formik components.
 
-## [0.9.0] - 06-06-2023
+## [0.9.0] - 06-05-2023
 
 `@bigcapital/server`
 
