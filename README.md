@@ -26,6 +26,6 @@ Bigcapital is a smart and open-source accounting and inventory software, Bigcapi
 - [Bug Tracker](https://github.com/bigcapitalhq/bigcapital/issues) - Notify us new bugs.
 - [Source Code](https://github.com/bigcapitalhq/bigcapital) - Github repo.
 
-# Changlog
+# Changelog
 
 Please see [Releases](https://github.com/bigcapitalhq/bigcapital/releases) for more information what has changed recently.
