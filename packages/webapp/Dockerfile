@@ -5,10 +5,10 @@ USER root
 WORKDIR /app
 
 # Install dependencies
-COPY package.json ./
+COPY package*.json ./
 COPY lerna.json ./
 
-COPY ./packages/webapp/package.json /app/packages/webapp/package.json
+COPY ./packages/webapp/package*.json /app/packages/webapp/
 
 RUN npm install
 RUN npm run bootstrap
