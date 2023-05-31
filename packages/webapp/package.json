@@ -16,8 +16,6 @@
     "@casl/react": "^2.3.0",
     "@craco/craco": "^5.9.0",
     "@reduxjs/toolkit": "^1.2.5",
-    "@sentry/react": "^6.13.2",
-    "@sentry/tracing": "^6.13.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",

@@ -20,24 +20,6 @@
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <% if (process.env.NODE_ENV === 'production') { %>
-    <!-- Hotjar Tracking Code for https://app.bigcapital.ly/ -->
-    <script>
-      (function (h, o, t, j, a, r) {
-        h.hj =
-          h.hj ||
-          function () {
-            (h.hj.q = h.hj.q || []).push(arguments);
-          };
-        h._hjSettings = { hjid: 2774528, hjsv: 6 };
-        a = o.getElementsByTagName('head')[0];
-        r = o.createElement('script');
-        r.async = 1;
-        r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
-        a.appendChild(r);
-      })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
-    </script>
-    <% } %>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -69,7 +51,5 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css"
       type="text/css"
     />
-    <!-- <link href="https://cdn.syncfusion.com/ej2/material.css" rel="stylesheet"> -->
-    <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" /> -->
   </body>
 </html>
