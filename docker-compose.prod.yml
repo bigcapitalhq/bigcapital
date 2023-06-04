@@ -94,12 +94,12 @@ services:
   mysql:
     container_name: bigcapital-mysql
     build:
-      context: ./docker/mysql
+      context: ./docker/mariadb
     environment:
       - MYSQL_DATABASE=${SYSTEM_DB_NAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     volumes:
       - mysql:/var/lib/mysql
     expose:
