@@ -1,1 +1,1 @@
-docker/nginx/build-nginx.sh text eol=lf
+docker/nginx/scripts/build-nginx.sh text eol=lf
