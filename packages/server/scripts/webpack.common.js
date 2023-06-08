@@ -65,6 +65,9 @@ exports.getCommonWebpackOptions = ({
         },
       ],
     },
+    optimization: {
+      minimize: false,
+    },
   };
 
   if (isDev) {
