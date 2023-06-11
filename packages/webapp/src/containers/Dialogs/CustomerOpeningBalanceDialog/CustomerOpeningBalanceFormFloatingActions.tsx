@@ -8,7 +8,6 @@ import { useCustomerOpeningBalanceContext } from './CustomerOpeningBalanceFormPr
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-
 /**
  * Customer Opening balance floating actions.
  * @returns
@@ -31,6 +30,9 @@ function CustomerOpeningBalanceFormFloatingActions({
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+        <Button onClick={handleCancelBtnClick} style={{ minWidth: '75px' }}>
+          <T id={'cancel'} />
+        </Button>
         <Button
           intent={Intent.PRIMARY}
           loading={isSubmitting}
@@ -38,9 +40,6 @@ function CustomerOpeningBalanceFormFloatingActions({
           type="submit"
         >
           {<T id={'edit'} />}
-        </Button>
-        <Button onClick={handleCancelBtnClick} style={{ minWidth: '75px' }}>
-          <T id={'cancel'} />
         </Button>
       </div>
     </div>
