@@ -38,7 +38,6 @@ export function ActionsMenu({
       />
       <Can I={CustomerAction.Edit} a={AbilitySubject.Customer}>
         <MenuDivider />
-
         <MenuItem
           icon={<Icon icon="pen-18" />}
           text={intl.get('edit_customer')}
@@ -47,7 +46,7 @@ export function ActionsMenu({
       </Can>
       <Can I={CustomerAction.Create} a={AbilitySubject.Customer}>
         <MenuItem
-          icon={<Icon icon="duplicate-16" />}
+          icon={<Icon icon="content-copy" iconSize={16} />}
           text={intl.get('duplicate')}
           onClick={safeCallback(onDuplicate, original)}
         />
