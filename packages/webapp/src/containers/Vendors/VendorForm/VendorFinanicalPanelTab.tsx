@@ -18,7 +18,11 @@ import {
   ExchangeRateInputGroup,
   FDateInput,
 } from '@/components';
-import { useIsVendorForeignCurrency, useSetPrimaryBranchToForm } from './utils';
+import {
+  openingBalanceFieldShouldUpdate,
+  useIsVendorForeignCurrency,
+  useSetPrimaryBranchToForm,
+} from './utils';
 import { useVendorFormContext } from './VendorFormProvider';
 import { useCurrentOrganization } from '@/hooks/state';
 
@@ -87,6 +91,10 @@ export default function VendorFinanicalPanelTab() {
   );
 }
 
+/**
+ * Vendor opening balance field.
+ * @returns {JSX.Element}
+ */
 function VendorOpeningBalanceField() {
   const { vendorId } = useVendorFormContext();
   const { values } = useFormikContext();
@@ -99,6 +107,9 @@ function VendorOpeningBalanceField() {
       name={'opening_balance'}
       label={<T id={'opening_balance'} />}
       inline={true}
+      shouldUpdate={openingBalanceFieldShouldUpdate}
+      shouldUpdateDeps={{ currencyCode: values.currency_code }}
+      FastField={true}
     >
       <ControlGroup>
         <InputPrependText text={values.currency_code} />
@@ -111,6 +122,10 @@ function VendorOpeningBalanceField() {
   );
 }
 
+/**
+ * Vendor opening balance at date field.
+ * @returns {JSX.Element}
+ */
 function VendorOpeningBalanceAtField() {
   const { vendorId } = useVendorFormContext();
 
@@ -136,6 +151,10 @@ function VendorOpeningBalanceAtField() {
   );
 }
 
+/**
+ * Vendor opening balance exchange rate field if the vendor has foreign currency.
+ * @returns {JSX.Element}
+ */
 function VendorOpeningBalanceExchangeRateField() {
   const { values } = useFormikContext();
   const { vendorId } = useVendorFormContext();
@@ -146,7 +165,6 @@ function VendorOpeningBalanceExchangeRateField() {
   if (!isForeignVendor || vendorId) {
     return null;
   }
-
   return (
     <FFormGroup
       label={' '}

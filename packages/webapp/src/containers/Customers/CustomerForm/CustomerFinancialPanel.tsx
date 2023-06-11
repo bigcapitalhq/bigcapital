@@ -141,6 +141,7 @@ function CustomerOpeningBalanceField() {
       inline={true}
       shouldUpdate={openingBalanceFieldShouldUpdate}
       shouldUpdateDeps={{ currencyCode: values.currency_code }}
+      fastField={true}
     >
       <ControlGroup>
         <InputPrependText text={values.currency_code} />
