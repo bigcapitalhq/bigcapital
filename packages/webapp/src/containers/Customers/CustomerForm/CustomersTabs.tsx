@@ -32,11 +32,6 @@ export default function CustomersTabs() {
           title={intl.get('notes')}
           panel={<CustomerNotePanel />}
         />
-        <Tab
-          id={'attachement'}
-          title={intl.get('attachement')}
-          panel={<CustomerAttachmentTabs />}
-        />
       </Tabs>
     </div>
   );

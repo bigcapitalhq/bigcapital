@@ -5,6 +5,7 @@ import { useFormikContext } from 'formik';
 import { first } from 'lodash';
 
 import { useCustomerFormContext } from './CustomerFormProvider';
+import { useCurrentOrganization } from '@/hooks/state';
 
 export const defaultInitialValues = {
   customer_type: 'business',
@@ -37,9 +38,11 @@ export const defaultInitialValues = {
   shipping_address_postcode: '',
   shipping_address_phone: '',
 
-  opening_balance: '',
   currency_code: '',
+
+  opening_balance: '',
   opening_balance_at: moment(new Date()).format('YYYY-MM-DD'),
+  opening_balance_exchange_rate: '',
   opening_balance_branch_id: '',
 };
 
@@ -56,4 +59,26 @@ export const useSetPrimaryBranchToForm = () => {
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+/**
+ * Detarmines whether the current customer has foreign currency. 
+ * @returns {boolean}
+ */
+export const useIsCustomerForeignCurrency = () => {
+  const currentOrganization = useCurrentOrganization();
+  const { values } = useFormikContext();
+
+  return currentOrganization.base_currency !== values.currency_code;
+};
+
+/**
+ * Detarmines the exchange opening balance field when should update.
+ */
+export const openingBalanceFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.shouldUpdateDeps.currencyCode !==
+      oldProps.shouldUpdateDeps.currencyCode ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
 };

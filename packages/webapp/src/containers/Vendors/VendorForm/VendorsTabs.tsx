@@ -10,6 +10,7 @@ import VendorAttahmentTab from './VendorAttahmentTab';
 
 import CustomerAddressTabs from '@/containers/Customers/CustomerForm/CustomerAddressTabs';
 import CustomerNotePanel from '@/containers/Customers/CustomerForm/CustomerNotePanel';
+import styled from 'styled-components';
 
 /**
  * Vendor form tabs.
@@ -18,7 +19,7 @@ export default function VendorTabs() {
   
   return (
     <div className={classNames(CLASSES.PAGE_FORM_TABS)}>
-      <Tabs
+      <VendorTabsRoot
         animate={true}
         id={'vendor-tabs'}
         large={true}
@@ -39,12 +40,9 @@ export default function VendorTabs() {
           title={intl.get('notes')}
           panel={<CustomerNotePanel />}
         />
-        <Tab
-          id={'attachement'}
-          title={intl.get('attachement')}
-          panel={<VendorAttahmentTab />}
-        />
-      </Tabs>
+      </VendorTabsRoot>
     </div>
   );
 }
+
+const VendorTabsRoot = styled(Tabs)``;
