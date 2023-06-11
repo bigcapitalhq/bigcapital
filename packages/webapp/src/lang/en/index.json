@@ -703,6 +703,7 @@
   "email_is_already_used": "The email is already used.",
   "the_item_categories_has_been_deleted_successfully": "The item categories has been deleted successfully .",
   "receivable_accounts_should_assign_with_customers": "Receivable accounts should assign with customers.",
+  "make_journal.errors.should_add_accounts_in_same_currency_or_base_currency": "You can only add accounts that have the same selected currency or base currency.",
   "delivered": "Delivered",
   "save_and_deliver": "Save & Deliver",
   "deliver_and_new": "Deliver and new",
