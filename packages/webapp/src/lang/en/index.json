@@ -658,7 +658,7 @@
   "opening_balance_at": "Opening balance at",
   "opening_balance": "Opening balance",
   "balance_currency": "Balance currency",
-  "financial_details": "Financial details",
+  "financial_details": "Financial",
   "are_you_sure_you_want_to_clear_this_transaction": "Are you sure you want to clear this transaction?",
   "clearing_the_table_lines_will_delete_all_credits": "Clearing the table lines will delete all credits and payment were applied, Is this okay?",
   "changing_full_amount_will_change_all_credits_and_payment": "  Changing full amount will change all credits and payment were applied, Is this okay?",

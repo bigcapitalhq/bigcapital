@@ -6,7 +6,6 @@ import { Tabs, Tab } from '@blueprintjs/core';
 import { CLASSES } from '@/constants/classes';
 
 import VendorFinanicalPanelTab from './VendorFinanicalPanelTab';
-import VendorAttahmentTab from './VendorAttahmentTab';
 
 import CustomerAddressTabs from '@/containers/Customers/CustomerForm/CustomerAddressTabs';
 import CustomerNotePanel from '@/containers/Customers/CustomerForm/CustomerNotePanel';
@@ -15,7 +14,6 @@ import CustomerNotePanel from '@/containers/Customers/CustomerForm/CustomerNoteP
  * Vendor form tabs.
  */
 export default function VendorTabs() {
-  
   return (
     <div className={classNames(CLASSES.PAGE_FORM_TABS)}>
       <Tabs
@@ -27,7 +25,7 @@ export default function VendorTabs() {
         <Tab
           id={'financial'}
           title={intl.get('financial_details')}
-          panel={<VendorFinanicalPanelTab  />}
+          panel={<VendorFinanicalPanelTab />}
         />
         <Tab
           id={'address'}
@@ -38,11 +36,6 @@ export default function VendorTabs() {
           id="notes"
           title={intl.get('notes')}
           panel={<CustomerNotePanel />}
-        />
-        <Tab
-          id={'attachement'}
-          title={intl.get('attachement')}
-          panel={<VendorAttahmentTab />}
         />
       </Tabs>
     </div>

@@ -142,15 +142,8 @@
       > *:not(:last-child) {
         margin-right: 25px;
       }
-
       &.bp3-large > .bp3-tab {
         font-size: 15px;
-        color: #555;
-
-        &[aria-selected='true'],
-        &:not([aria-disabled='true']):hover {
-          color: $pt-link-color;
-        }
       }
     }
   }
