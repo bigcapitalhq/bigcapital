@@ -28,6 +28,8 @@ const ERROR = {
   CREDIT_DEBIT_SUMATION_SHOULD_NOT_EQUAL_ZERO:
     'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
   ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
+  COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS:
+    'COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS',
 };
 
 export const MIN_LINES_NUMBER = 1;
@@ -159,6 +161,15 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
       newErrors,
       'journal_number',
       intl.get('journal_number_is_already_used'),
+    );
+  }
+  if (
+    (error = getError(ERROR.COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS))
+  ) {
+    toastMessages.push(
+      intl.get(
+        'make_journal.errors.should_add_accounts_in_same_currency_or_base_currency',
+      ),
     );
   }
   setErrors({ ...newErrors });
