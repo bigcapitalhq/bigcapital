@@ -55,7 +55,7 @@ export class CreateCustomer {
       } as ICustomerEventCreatingPayload);
 
       // Creates a new contact as customer.
-      const customer = await Contact.query().insertAndFetch({
+      const customer = await Contact.query(trx).insertAndFetch({
         ...customerObj,
       });
       // Triggers `onCustomerCreated` event.
