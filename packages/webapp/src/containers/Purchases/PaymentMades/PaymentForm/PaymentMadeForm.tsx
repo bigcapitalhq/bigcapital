@@ -87,18 +87,19 @@ function PaymentMadeForm({
         message: intl.get('you_cannot_make_payment_with_zero_total_amount'),
         intent: Intent.DANGER,
       });
+      setSubmitting(false);
       return;
     }
     // Transformes the form values to request body.
     const form = transformFormToRequest(values);
 
     // Triggers once the save request success.
-    const onSaved = (response) => {
+    const onSaved = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
-            ? 'the_payment_made_has_been_edited_successfully'
-            : 'the_payment_made_has_been_created_successfully',
+            ? 'the_payment_made_has_been_created_successfully'
+            : 'the_payment_made_has_been_edited_successfully',
         ),
         intent: Intent.SUCCESS,
       });
@@ -116,7 +117,6 @@ function PaymentMadeForm({
       if (errors) {
         transformErrors(errors, { setFieldError });
       }
-
       setSubmitting(false);
     };
 

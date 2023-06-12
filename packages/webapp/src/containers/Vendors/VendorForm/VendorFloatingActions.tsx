@@ -32,7 +32,6 @@ export default function VendorFloatingActions({ onCancel }) {
   // Handle the submit button.
   const handleSubmitBtnClick = (event) => {
     setSubmitPayload({ noRedirect: false });
-    submitForm();
   };
 
   // Handle the submit & new button click.

@@ -34,25 +34,20 @@ export default function PaymentReceiveFormFloatingActions() {
   // Handle submit button click.
   const handleSubmitBtnClick = (event) => {
     setSubmitPayload({ redirect: true });
-    submitForm();
   };
-
   // Handle clear button click.
   const handleClearBtnClick = (event) => {
     resetForm();
   };
-
   // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
     history.goBack();
   };
-
   // Handle submit & new button click.
   const handleSubmitAndNewClick = (event) => {
     setSubmitPayload({ redirect: false, resetForm: true });
     submitForm();
   };
-
   // Handle submit & continue editing button click.
   const handleSubmitContinueEditingBtnClick = (event) => {
     setSubmitPayload({ redirect: false, publish: true });

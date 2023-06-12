@@ -35,7 +35,6 @@ export default function WarehouseTransferFloatingActions() {
   // Handle submit initiate button click.
   const handleSubmitInitiateBtnClick = (event) => {
     setSubmitPayload({ redirect: true, initiate: true, deliver: false });
-    submitForm();
   };
 
   // Handle submit transferred button click.

@@ -27,7 +27,7 @@ export default function PaymentMadeFloatingActions() {
   const history = useHistory();
 
   // Formik context.
-  const { isSubmitting, resetForm } = useFormikContext();
+  const { isSubmitting, resetForm, submitForm } = useFormikContext();
 
   // Payment made form context.
   const { setSubmitPayload, paymentMadeId } = usePaymentMadeFormContext();
@@ -50,12 +50,15 @@ export default function PaymentMadeFloatingActions() {
   // Handle submit & new button click.
   const handleSubmitAndNewClick = (event) => {
     setSubmitPayload({ redirect: false, resetForm: true });
+    submitForm();
   };
 
-  // handle submit & continue editing button click.
+  // Handle submit & continue editing button click.
   const handleSubmitContinueEditingBtnClick = (event) => {
     setSubmitPayload({ redirect: false, publish: true });
+    submitForm()
   };
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save and New ----------- */}
