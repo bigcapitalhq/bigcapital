@@ -1,6 +1,6 @@
 {
   "name": "@bigcapital/webapp",
-  "version": "1.7.1",
+  "version": "0.9.5",
   "private": true,
   "dependencies": {
     "@blueprintjs-formik/core": "^0.3.3",
@@ -42,6 +42,7 @@
     "deep-map-keys": "^2.0.1",
     "deepdash": "^5.3.9",
     "dependency-graph": "^0.11.0",
+    "dotenv-webpack": "^8.0.1",
     "fast-deep-equal": "^3.1.3",
     "flat": "^5.0.2",
     "formik": "^2.2.5",
