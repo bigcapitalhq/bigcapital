@@ -31,7 +31,6 @@ function InventoryAdjustmentFloatingActions({
   // Handle submit make adjustment button click.
   const handleSubmitMakeAdjustmentBtnClick = (event) => {
     setSubmitPayload({ publish: true });
-    submitForm();
   };
 
   // Handle close button click.
@@ -53,7 +52,6 @@ function InventoryAdjustmentFloatingActions({
         <Button
           loading={isSubmitting && !submitPayload.publish}
           style={{ minWidth: '75px' }}
-          type="submit"
           onClick={handleSubmitDraftBtnClick}
         >
           {<T id={'save_as_draft'} />}

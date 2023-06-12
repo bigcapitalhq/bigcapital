@@ -27,13 +27,10 @@ function MoneyInFloatingActions({
     setSubmitPayload({ publish: false });
     submitForm();
   };
-
   // Handle submit  button click.
   const handleSubmittBtnClick = (event) => {
     setSubmitPayload({ publish: true });
-    submitForm();
   };
-
   // Handle close button click.
   const handleCloseBtnClick = (event) => {
     closeDialog(dialogName);

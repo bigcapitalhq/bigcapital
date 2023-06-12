@@ -18,7 +18,7 @@ export default function ItemFormFloatingActions({ onCancel }) {
   const { setSubmitPayload, isNewMode } = useItemFormContext();
 
   // Formik context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting, submitForm } = useFormikContext();
 
   // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
@@ -33,6 +33,7 @@ export default function ItemFormFloatingActions({ onCancel }) {
   // Handle submit & new button click.
   const handleSubmitAndNewBtnClick = (event) => {
     setSubmitPayload({ redirect: false });
+    submitForm();
   };
 
   return (
@@ -52,7 +53,6 @@ export default function ItemFormFloatingActions({ onCancel }) {
         className={classNames('ml1', 'btn--submit-new')}
         disabled={isSubmitting}
         onClick={handleSubmitAndNewBtnClick}
-        type="submit"
       >
         <T id={'save_new'} />
       </Button>

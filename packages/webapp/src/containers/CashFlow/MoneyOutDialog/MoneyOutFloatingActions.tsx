@@ -32,7 +32,6 @@ function MoneyOutFloatingActions({
   // Handle submit  button click.
   const handleSubmittBtnClick = (event) => {
     setSubmitPayload({ publish: true });
-    submitForm();
   };
 
   // Handle close button click.
