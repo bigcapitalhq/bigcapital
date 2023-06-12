@@ -7,6 +7,24 @@
   <p align="center">
     Simple, smart online accounting software for small and medium businesses.
   </p>
+
+  <p align="center">
+    <a href="https://github.com/bigcapitalhq/bigcapital/commits/develop">
+      <img src="https://img.shields.io/github/commit-activity/m/bigcapitalhq/bigcapital/develop" />
+    </a>
+    <a href="https://discord.com/invite/c8nPBJafeb">
+      <img src="https://img.shields.io/discord/1066514716752625725?label=Discord" alt="" />
+    </a>
+    <a href="https://github.com/bigcapitalhq/bigcapital/graphs/contributors">
+      <img src="https://img.shields.io/github/contributors/bigcapitalhq/bigcapital" alt="" />
+    </a>
+    <a href="https://github.com/bigcapitalhq/bigcapital/blob/develop/LICENSE">
+      <img src="https://img.shields.io/github/license/bigcapitalhq/bigcapital" alt="" />
+    </a>
+    <a href="https://twitter.com/bigcapitalhq"> 
+      <img src="https://img.shields.io/twitter/follow/bigcapitalhq?style=social" alt="twitter" />
+    </a>
+  </p>
 </p>
 
 # What's Bigcapital?
@@ -22,9 +40,9 @@ Bigcapital is a smart and open-source accounting and inventory software, Bigcapi
 # Resources
 
 - [Documentation](https://docs.bigcapital.ly/) - Learn how to use.
+- [Contribution](https://github.com/bigcapitalhq/bigcapital/blob/develop/CONTRIBUTING.md) - Welcome to any contributions.
 - [Discord](https://discord.com/invite/c8nPBJafeb) - Ask for help.
 - [Bug Tracker](https://github.com/bigcapitalhq/bigcapital/issues) - Notify us new bugs.
-- [Source Code](https://github.com/bigcapitalhq/bigcapital) - Github repo.
 
 # Changelog
 
