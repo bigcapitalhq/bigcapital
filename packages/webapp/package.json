@@ -1,6 +1,6 @@
 {
   "name": "@bigcapital/webapp",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "private": true,
   "dependencies": {
     "@blueprintjs-formik/core": "^0.3.3",
