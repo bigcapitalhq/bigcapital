@@ -9,7 +9,6 @@ import events from '@/subscribers/events';
 import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import { CommandExpenseValidator } from './CommandExpenseValidator';
-import { ExpenseCategory } from 'models';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
@@ -37,7 +36,7 @@ export class DeleteExpense {
     expenseId: number,
     authorizedUser: ISystemUser
   ): Promise<void> => {
-    const { Expense } = this.tenancy.models(tenantId);
+    const { Expense, ExpenseCategory } = this.tenancy.models(tenantId);
 
     // Retrieves the expense transaction with associated entries or
     // throw not found error.
@@ -60,7 +59,7 @@ export class DeleteExpense {
       } as IExpenseDeletingPayload);
 
       // Deletes expense associated entries.
-      await ExpenseCategory.query(trx).findById(expenseId).delete();
+      await ExpenseCategory.query(trx).where('expenseId', expenseId).delete();
 
       // Deletes expense transactions.
       await Expense.query(trx).findById(expenseId).delete();
