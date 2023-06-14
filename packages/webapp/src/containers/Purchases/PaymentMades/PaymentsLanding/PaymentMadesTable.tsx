@@ -13,7 +13,6 @@ import {
 
 import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
 
-import withPaymentMade from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
@@ -24,6 +23,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import { usePaymentMadesTableColumns, ActionsMenu } from './components';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Payment made datatable transactions.
@@ -31,9 +31,6 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 function PaymentMadesTable({
   // #withPaymentMadeActions
   setPaymentMadesTableState,
-
-  // #withPaymentMade
-  paymentMadesTableState,
 
   // #withAlerts
   openAlert,
@@ -71,12 +68,12 @@ function PaymentMadesTable({
 
   // Handle view detail  payment made.
   const handleViewDetailPaymentMade = ({ id }) => {
-    openDrawer('payment-made-detail-drawer', { paymentMadeId: id });
+    openDrawer(DRAWERS.PAYMENT_MADE, { paymentMadeId: id });
   };
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('payment-made-detail-drawer', {
+    openDrawer(DRAWERS.PAYMENT_MADE, {
       paymentMadeId: cell.row.original.id,
     });
   };
@@ -134,7 +131,6 @@ function PaymentMadesTable({
 
 export default compose(
   withPaymentMadeActions,
-  withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
   withAlertsActions,
   withDrawerActions,
   withCurrentOrganization(),
