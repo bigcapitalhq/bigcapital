@@ -16,6 +16,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Invoice payment transactions.
@@ -52,7 +53,7 @@ function InvoicePaymentTransactions({
   // Handles edit payment transactions.
   const handleEditPaymentTransactions = ({ invoice_id }) => {
     history.push(`/invoices/${invoice_id}/edit`);
-    closeDrawer('item-detail-drawer');
+    closeDrawer(DRAWERS.ITEM_DETAILS);
   };
   return (
     <DataTable

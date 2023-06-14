@@ -21,6 +21,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Warehouse transfers datatable.
@@ -78,7 +79,7 @@ function WarehouseTransfersDataTable({
 
   // Handle view detail.
   const handleViewDetailWarehouseTransfer = ({ id }) => {
-    openDrawer('warehouse-transfer-detail-drawer', { warehouseTransferId: id });
+    openDrawer(DRAWERS.WAREHOUSE_TRANSFER_DETAILS, { warehouseTransferId: id });
   };
 
   // Handle edit warehouse transfer.
@@ -102,7 +103,7 @@ function WarehouseTransfersDataTable({
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('warehouse-transfer-detail-drawer', {
+    openDrawer(DRAWERS.WAREHOUSE_TRANSFER_DETAILS, {
       warehouseTransferId: cell.row.original.id,
     });
   };

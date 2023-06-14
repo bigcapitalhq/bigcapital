@@ -5,6 +5,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { AbilitySubject, AccountAction } from '@/constants/abilityOption';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { DRAWERS } from '@/constants/drawers';
 
 function AccountUniversalSearchItemSelectComponent({
   // #ownProps
@@ -16,7 +17,7 @@ function AccountUniversalSearchItemSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.ACCOUNT) {
-    openDrawer('account-drawer', { accountId: resourceId });
+    openDrawer(DRAWERS.ACCOUNT_DETAILS, { accountId: resourceId });
     onAction && onAction();
   }
   return null;
@@ -28,8 +29,8 @@ export const AccountUniversalSearchItemSelect = withDrawerActions(
 
 /**
  * Transformes account item to search item.
- * @param {*} account 
- * @returns 
+ * @param {*} account
+ * @returns
  */
 const accountToSearch = (account) => ({
   id: account.id,

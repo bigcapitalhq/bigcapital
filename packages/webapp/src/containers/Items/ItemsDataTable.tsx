@@ -22,6 +22,7 @@ import { useItemsListContext } from './ItemsListProvider';
 import { useItemsTableColumns, ItemsActionMenuList } from './components';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Items datatable.
@@ -108,7 +109,7 @@ function ItemsDataTable({
 
   // Handle view detail item.
   const handleViewDetailItem = ({ id }) => {
-    openDrawer('item-detail-drawer', { itemId: id });
+    openDrawer(DRAWERS.ITEM_DETAILS, { itemId: id });
   };
 
   // Cannot continue in case the items has empty status.
@@ -118,7 +119,7 @@ function ItemsDataTable({
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('item-detail-drawer', { itemId: cell.row.original.id });
+    openDrawer(DRAWERS.ITEM_DETAILS, { itemId: cell.row.original.id });
   };
 
   return (

@@ -4,6 +4,7 @@ import * as R from 'ramda';
 
 import { ButtonLink } from '../Button';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { DRAWERS } from '@/constants/drawers';
 
 function VendorDrawerLinkComponent({
   // #ownProps
@@ -16,7 +17,7 @@ function VendorDrawerLinkComponent({
 }) {
   // Handle view customer drawer.
   const handleVendorDrawer = (event) => {
-    openDrawer('vendor-detail-drawer', { vendorId });
+    openDrawer(DRAWERS.VENDOR_DETAILS, { vendorId });
     event.preventDefault();
   };
 

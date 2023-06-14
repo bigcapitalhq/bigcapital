@@ -13,6 +13,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Esimtate payment transactions.
@@ -26,6 +27,7 @@ function EstimatePaymentTransactions({
 }) {
   const history = useHistory();
 
+  // Estimate transactions table columns.
   const columns = useEstimateTransactionsColumns();
 
   const { itemId } = useItemDetailDrawerContext();
@@ -49,7 +51,7 @@ function EstimatePaymentTransactions({
   // Handles edit payment transactions.
   const handleEditPaymentTransactions = ({ estimate_id }) => {
     history.push(`/estimates/${estimate_id}/edit`);
-    closeDrawer('item-detail-drawer');
+    closeDrawer(DRAWERS.ITEM_DETAILS);
   };
 
   return (

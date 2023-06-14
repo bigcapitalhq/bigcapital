@@ -16,6 +16,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Invoice payment transactions datatable.
@@ -54,7 +55,7 @@ function InvoicePaymentTransactionsTable({
   // Handles edit payment transactions.
   const handleEditPaymentTransactions = ({ payment_receive_id }) => {
     history.push(`/payment-receives/${payment_receive_id}/edit`);
-    closeDrawer('invoice-detail-drawer');
+    closeDrawer(DRAWERS.INVOICE_DETAILS);
   };
   return (
     <Card>

@@ -16,6 +16,7 @@ import withAlertActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Vendor delete alert.
@@ -48,7 +49,7 @@ function VendorDeleteAlert({
           message: intl.get('the_vendor_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('vendor-detail-drawer');
+        closeDrawer(DRAWERS.VENDOR_DETAILS);
       })
       .catch(
         ({

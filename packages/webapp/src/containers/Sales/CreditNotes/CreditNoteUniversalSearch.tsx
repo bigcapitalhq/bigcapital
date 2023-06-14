@@ -23,7 +23,7 @@ function CreditNoteUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.CREDIT_NOTE) {
-    openDrawer(DRAWERS.CREDIT_NOTE_DETAIL_DRAWER, { creditNoteId: resourceId });
+    openDrawer(DRAWERS.CREDIT_NOTE_DETAILS, { creditNoteId: resourceId });
     onAction && onAction();
   }
   return null;

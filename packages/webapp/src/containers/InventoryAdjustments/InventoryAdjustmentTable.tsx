@@ -14,6 +14,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Inventory adjustments datatable.
@@ -53,7 +54,7 @@ function InventoryAdjustmentDataTable({
   };
   // Handle view detail inventory adjustment.
   const handleViewDetailInventoryAdjustment = ({ id }) => {
-    openDrawer('inventory-adjustment-drawer', { inventoryId: id });
+    openDrawer(DRAWERS.INVENTORY_ADJUSTMENT_DETAILS, { inventoryId: id });
   };
 
   // Inventory adjustments columns.
@@ -75,7 +76,7 @@ function InventoryAdjustmentDataTable({
   );
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('inventory-adjustment-drawer', {
+    openDrawer(DRAWERS.INVENTORY_ADJUSTMENT_DETAILS, {
       inventoryId: cell.row.original.id,
     });
   };

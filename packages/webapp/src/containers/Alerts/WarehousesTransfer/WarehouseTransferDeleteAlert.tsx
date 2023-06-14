@@ -14,6 +14,7 @@ import withAlertActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Warehouse transfer delete alert
@@ -48,7 +49,7 @@ function WarehouseTransferDeleteAlert({
           message: intl.get('warehouse_transfer.alert.delete_message'),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('warehouse-transfer-detail-drawer');
+        closeDrawer(DRAWERS.WAREHOUSE_TRANSFER_DETAILS);
       })
       .catch(
         ({

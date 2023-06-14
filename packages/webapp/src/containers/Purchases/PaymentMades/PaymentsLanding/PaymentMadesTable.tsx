@@ -16,7 +16,6 @@ import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
 import withPaymentMade from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
-
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withSettings from '@/containers/Settings/withSettings';
@@ -24,6 +23,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import { usePaymentMadesTableColumns, ActionsMenu } from './components';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Payment made datatable transactions.
@@ -71,12 +71,12 @@ function PaymentMadesTable({
 
   // Handle view detail  payment made.
   const handleViewDetailPaymentMade = ({ id }) => {
-    openDrawer('payment-made-detail-drawer', { paymentMadeId: id });
+    openDrawer(DRAWERS.PAYMENT_MADE_DETAILS, { paymentMadeId: id });
   };
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('payment-made-detail-drawer', {
+    openDrawer(DRAWERS.PAYMENT_MADE_DETAILS, {
       paymentMadeId: cell.row.original.id,
     });
   };

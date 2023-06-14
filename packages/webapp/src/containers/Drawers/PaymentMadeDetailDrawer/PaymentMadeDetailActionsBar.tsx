@@ -24,6 +24,7 @@ import {
 } from '@/components';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Payment made - Details panel - actions bar.
@@ -42,7 +43,7 @@ function PaymentMadeDetailActionsBar({
   // Handle edit payment made.
   const handleEditPaymentMade = () => {
     history.push(`/payment-mades/${paymentMadeId}/edit`);
-    closeDrawer('payment-made-detail-drawer');
+    closeDrawer(DRAWERS.PAYMENT_MADE_DETAILS);
   };
 
   // Handle delete payment made.

@@ -9,6 +9,7 @@ import { T, Icon, Choose, If } from '@/components';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, BillAction } from '@/constants/abilityOption';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Universal search bill item select action.
@@ -23,7 +24,7 @@ function BillUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.BILL) {
-    openDrawer('bill-drawer', { billId: resourceId });
+    openDrawer(DRAWERS.BILL_DETAILS, { billId: resourceId });
     onAction && onAction();
   }
   return null;

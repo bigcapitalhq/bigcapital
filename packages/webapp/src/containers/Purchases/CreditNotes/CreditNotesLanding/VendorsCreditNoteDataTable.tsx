@@ -23,6 +23,7 @@ import { useVendorsCreditNoteTableColumns, ActionsMenu } from './components';
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Vendors Credit note data table.
@@ -78,8 +79,9 @@ function VendorsCreditNoteDataTable({
     return <VendorsCreditNoteEmptyStatus />;
   }
 
+  // Handle view vendor credit details.
   const handleViewDetailVendorCredit = ({ id }) => {
-    openDrawer('vendor-credit-detail-drawer', { vendorCreditId: id });
+    openDrawer(DRAWERS.VENDOR_CREDIT_DETAILS, { vendorCreditId: id });
   };
 
   // Handle delete credit note.
@@ -94,7 +96,7 @@ function VendorsCreditNoteDataTable({
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('vendor-credit-detail-drawer', {
+    openDrawer(DRAWERS.VENDOR_CREDIT_DETAILS, {
       vendorCreditId: cell.row.original.id,
     });
   };

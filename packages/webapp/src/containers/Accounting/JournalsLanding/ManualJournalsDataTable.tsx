@@ -25,6 +25,7 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 import { useManualJournalsColumns } from './utils';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Manual journals data-table.
@@ -79,14 +80,16 @@ function ManualJournalsDataTable({
 
   // Handle view detail journal.
   const handleViewDetailJournal = ({ id }) => {
-    openDrawer('journal-drawer', {
+    openDrawer(DRAWERS.JOURNAL_DETAILS, {
       manualJournalId: id,
     });
   };
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('journal-drawer', { manualJournalId: cell.row.original.id });
+    openDrawer(DRAWERS.JOURNAL_DETAILS, {
+      manualJournalId: cell.row.original.id,
+    });
   };
 
   // Local storage memorizing columns widths.

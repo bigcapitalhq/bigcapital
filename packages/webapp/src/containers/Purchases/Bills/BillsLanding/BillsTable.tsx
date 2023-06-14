@@ -24,6 +24,7 @@ import { useBillsListContext } from './BillsListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Bills transactions datatable.
@@ -99,12 +100,12 @@ function BillsDataTable({
 
   // Handle view detail bill.
   const handleViewDetailBill = ({ id }) => {
-    openDrawer('bill-drawer', { billId: id });
+    openDrawer(DRAWERS.BILL_DETAILS, { billId: id });
   };
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('bill-drawer', { billId: cell.row.original.id });
+    openDrawer(DRAWERS.BILL_DETAILS, { billId: cell.row.original.id });
   };
 
   // Local storage memorizing columns widths.

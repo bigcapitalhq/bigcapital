@@ -16,6 +16,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Drawer vendor form loading wrapper.
@@ -41,7 +42,7 @@ function QuickVendorFormDrawer({
   // Handle the form submit request success.
   const handleSubmitSuccess = (values, form, submitPayload, response) => {
     if (!submitPayload.noRedirect) {
-      closeDrawer('quick-write-vendor');
+      closeDrawer(DRAWERS.QUICK_WRITE_VENDOR);
     }
     if (payload.quickActionEvent) {
       addQuickActionEvent(payload.quickActionEvent, {
@@ -51,7 +52,7 @@ function QuickVendorFormDrawer({
   };
   // Handle the form cancel action.
   const handleCancelForm = () => {
-    closeDrawer('quick-write-vendor');
+    closeDrawer(DRAWERS.QUICK_WRITE_VENDOR);
   };
 
   return (

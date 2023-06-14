@@ -14,6 +14,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { handleDeleteErrors } from '@/containers/Purchases/CreditNotes/CreditNotesLanding/utils';
 import { useDeleteVendorCredit } from '@/hooks/query';
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Vendor Credit delete alert.
@@ -45,7 +46,7 @@ function VendorCreditDeleteAlert({
           message: intl.get('vendor_credits.alert.delete_message'),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('vendor-credit-detail-drawer');
+        closeDrawer(DRAWERS.VENDOR_CREDIT_DETAILS);
       })
       .catch(
         ({

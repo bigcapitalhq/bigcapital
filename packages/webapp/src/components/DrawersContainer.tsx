@@ -31,28 +31,28 @@ import { DRAWERS } from '@/constants/drawers';
 export default function DrawersContainer() {
   return (
     <div>
-      <AccountDrawer name={DRAWERS.ACCOUNT} />
-      <ManualJournalDrawer name={DRAWERS.JOURNAL} />
-      <ExpenseDrawer name={DRAWERS.EXPENSE} />
-      <BillDrawer name={DRAWERS.BILL} />
-      <InvoiceDetailDrawer name={DRAWERS.INVOICE} />
-      <EstimateDetailDrawer name={DRAWERS.ESTIMATE} />
-      <ReceiptDetailDrawer name={DRAWERS.RECEIPT} />
-      <PaymentReceiveDetailDrawer name={DRAWERS.PAYMENT_RECEIVE} />
-      <PaymentMadeDetailDrawer name={DRAWERS.PAYMENT_MADE} />
-      <ItemDetailDrawer name={DRAWERS.ITEM} />
-      <CustomerDetailsDrawer name={DRAWERS.CUSTOMER} />
-      <VendorDetailsDrawer name={DRAWERS.VENDOR} />
-      <InventoryAdjustmentDetailDrawer name={DRAWERS.INVENTORY_ADJUSTMENT} />
-      <CashflowTransactionDetailDrawer name={DRAWERS.CASHFLOW_TRNASACTION} />
+      <AccountDrawer name={DRAWERS.ACCOUNT_DETAILS} />
+      <ManualJournalDrawer name={DRAWERS.JOURNAL_DETAILS} />
+      <ExpenseDrawer name={DRAWERS.EXPENSE_DETAILS} />
+      <BillDrawer name={DRAWERS.BILL_DETAILS} />
+      <InvoiceDetailDrawer name={DRAWERS.INVOICE_DETAILS} />
+      <EstimateDetailDrawer name={DRAWERS.ESTIMATE_DETAILS} />
+      <ReceiptDetailDrawer name={DRAWERS.RECEIPT_DETAILS} />
+      <PaymentReceiveDetailDrawer name={DRAWERS.PAYMENT_RECEIVE_DETAILS} />
+      <PaymentMadeDetailDrawer name={DRAWERS.PAYMENT_MADE_DETAILS} />
+      <ItemDetailDrawer name={DRAWERS.ITEM_DETAILS} />
+      <CustomerDetailsDrawer name={DRAWERS.CUSTOMER_DETAILS} />
+      <VendorDetailsDrawer name={DRAWERS.VENDOR_DETAILS} />
+      <InventoryAdjustmentDetailDrawer name={DRAWERS.INVENTORY_ADJUSTMENT_DETAILS} />
+      <CashflowTransactionDetailDrawer name={DRAWERS.CASHFLOW_TRNASACTION_DETAILS} />
       <QuickCreateCustomerDrawer name={DRAWERS.QUICK_CREATE_CUSTOMER} />
       <QuickCreateItemDrawer name={DRAWERS.QUICK_CREATE_ITEM} />
       <QuickWriteVendorDrawer name={DRAWERS.QUICK_WRITE_VENDOR} />
-      <CreditNoteDetailDrawer name={DRAWERS.CREDIT_NOTE} />
-      <VendorCreditDetailDrawer name={DRAWERS.VENDOR_CREDIT} />
-      <RefundCreditNoteDetailDrawer name={DRAWERS.REFUND_CREDIT_NOTE} />
-      <RefundVendorCreditDetailDrawer name={DRAWERS.REFUND_VENDOR_CREDIT} />
-      <WarehouseTransferDetailDrawer name={DRAWERS.WAREHOUSE_TRANSFER} />
+      <CreditNoteDetailDrawer name={DRAWERS.CREDIT_NOTE_DETAILS} />
+      <VendorCreditDetailDrawer name={DRAWERS.VENDOR_CREDIT_DETAILS} />
+      <RefundCreditNoteDetailDrawer name={DRAWERS.REFUND_CREDIT_NOTE_DETAILS} />
+      <RefundVendorCreditDetailDrawer name={DRAWERS.REFUND_VENDOR_CREDIT_DETAILS} />
+      <WarehouseTransferDetailDrawer name={DRAWERS.WAREHOUSE_TRANSFER_DETAILS} />
     </div>
   );
 }

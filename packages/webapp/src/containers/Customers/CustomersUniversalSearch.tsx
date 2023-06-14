@@ -2,8 +2,10 @@
 import intl from 'react-intl-universal';
 import { AbilitySubject, CustomerAction } from '@/constants/abilityOption';
 
-import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { DRAWERS } from '@/constants/drawers';
 
 function CustomerUniversalSearchSelectComponent({
   resourceType,
@@ -14,7 +16,7 @@ function CustomerUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.CUSTOMER) {
-    openDrawer('customer-detail-drawer', { customerId: resourceId });
+    openDrawer(DRAWERS.CUSTOMER_DETAILS, { customerId: resourceId });
     onAction && onAction();
   }
   return null;

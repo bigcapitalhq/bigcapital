@@ -24,6 +24,7 @@ import { useCustomersListContext } from './CustomersListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Customers table.
@@ -108,12 +109,12 @@ function CustomersTable({
 
   // Handle view detail contact.
   const handleViewDetailCustomer = ({ id }) => {
-    openDrawer('customer-detail-drawer', { customerId: id });
+    openDrawer(DRAWERS.CUSTOMER_DETAILS, { customerId: id });
   };
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('customer-detail-drawer', { customerId: cell.row.original.id });
+    openDrawer(DRAWERS.CUSTOMER_DETAILS, { customerId: cell.row.original.id });
   };
 
   if (isEmptyStatus) {

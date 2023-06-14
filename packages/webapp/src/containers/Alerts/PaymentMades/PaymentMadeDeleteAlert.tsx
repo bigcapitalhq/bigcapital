@@ -11,6 +11,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { useDeletePaymentMade } from '@/hooks/query';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Payment made delete alert.
@@ -44,7 +45,7 @@ function PaymentMadeDeleteAlert({
           message: intl.get('the_payment_made_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('payment-made-detail-drawer');
+        closeDrawer(DRAWERS.PAYMENT_MADE_DETAILS);
       })
       .finally(() => {
         closeAlert(name);
