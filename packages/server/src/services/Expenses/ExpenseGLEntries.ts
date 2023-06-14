@@ -46,7 +46,7 @@ export class ExpenseGLEntries {
       ...commonEntry,
       credit: expense.localAmount,
       accountId: expense.paymentAccountId,
-      accountNormal: AccountNormal.CREDIT,
+      accountNormal: AccountNormal.DEBIT,
       index: 1,
     };
   };
