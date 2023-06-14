@@ -31,6 +31,7 @@ import {
 import { BillMenuItem } from './utils';
 
 import { safeCallback, compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 function BillDetailActionsBar({
   // #withDialogActions
@@ -49,7 +50,7 @@ function BillDetailActionsBar({
   // Handle edit bill.
   const onEditBill = () => {
     history.push(`/bills/${billId}/edit`);
-    closeDrawer('bill-drawer');
+    closeDrawer(DRAWERS.BILL_DETAILS);
   };
 
   // Handle convert to vendor credit.
@@ -57,7 +58,7 @@ function BillDetailActionsBar({
     history.push(`/vendor-credits/new?from_bill_id=${billId}`, {
       billId: billId,
     });
-    closeDrawer('bill-drawer');
+    closeDrawer(DRAWERS.BILL_DETAILS);
   };
 
   // Handle delete bill.

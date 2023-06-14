@@ -21,6 +21,7 @@ import { ActionsMenu, useEstiamtesTableColumns } from './components';
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Estimates datatable.
@@ -86,7 +87,7 @@ function EstimatesDataTable({
 
   // Handle view detail estimate.
   const handleViewDetailEstimate = ({ id }) => {
-    openDrawer('estimate-detail-drawer', { estimateId: id });
+    openDrawer(DRAWERS.ESTIMATE_DETAILS, { estimateId: id });
   };
 
   // Handle print estimate.
@@ -96,7 +97,7 @@ function EstimatesDataTable({
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('estimate-detail-drawer', { estimateId: cell.row.original.id });
+    openDrawer(DRAWERS.ESTIMATE_DETAILS, { estimateId: cell.row.original.id });
   };
 
   // Local storage memorizing columns widths.

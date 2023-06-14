@@ -15,6 +15,7 @@ import withAlertActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Account delete transaction alert.
@@ -48,7 +49,7 @@ function AccountDeleteTransactionAlert({
           message: intl.get('cash_flow_transaction.delete.alert_message'),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('cashflow-transaction-drawer');
+        closeDrawer(DRAWERS.CASHFLOW_TRNASACTION_DETAILS);
       })
       .catch(
         ({

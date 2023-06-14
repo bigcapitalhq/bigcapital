@@ -21,6 +21,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Expense drawer action bar.
@@ -40,7 +41,7 @@ function ExpenseDrawerActionBar({
   // Handle the expense edit action.
   const handleEditExpense = () => {
     history.push(`/expenses/${expense.id}/edit`);
-    closeDrawer('expense-drawer');
+    closeDrawer(DRAWERS.EXPENSE_DETAILS);
   };
 
   // Handle the expense delete action.

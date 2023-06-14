@@ -15,6 +15,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Drawer item form loading.
@@ -43,7 +44,7 @@ function QuickCreateItemDrawerForm({
   // Handle the form submit request success.
   const handleSubmitSuccess = (values, form, submitPayload, response) => {
     if (submitPayload.redirect) {
-      closeDrawer('quick-create-item');
+      closeDrawer(DRAWERS.QUICK_CREATE_ITEM);
     }
     if (payload.quickActionEvent) {
       addQuickActionEvent(payload.quickActionEvent, {
@@ -53,7 +54,7 @@ function QuickCreateItemDrawerForm({
   };
   // Handle the form cancel.
   const handleFormCancel = () => {
-    closeDrawer('quick-create-item');
+    closeDrawer(DRAWERS.QUICK_CREATE_ITEM);
   };
 
   return (

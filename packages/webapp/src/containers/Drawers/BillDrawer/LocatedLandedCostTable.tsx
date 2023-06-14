@@ -11,12 +11,12 @@ import { useLocatedLandedCostColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from './BillDrawerProvider';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { TableStyle } from '@/constants';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Located landed cost table.
@@ -24,9 +24,6 @@ import { compose } from '@/utils';
 function LocatedLandedCostTable({
   // #withAlertsActions
   openAlert,
-
-  // #withDialogActions
-  openDialog,
 
   // #withDrawerActions
   openDrawer,
@@ -48,12 +45,12 @@ function LocatedLandedCostTable({
 
     switch (from_transaction_type) {
       case 'Expense':
-        openDrawer('expense-drawer', { expenseId: from_transaction_id });
+        openDrawer(DRAWERS.EXPENSE_DETAILS, { expenseId: from_transaction_id });
         break;
 
       case 'Bill':
       default:
-        openDrawer('bill-drawer', { billId: from_transaction_id });
+        openDrawer(DRAWERS.BILL_DETAILS, { billId: from_transaction_id });
         break;
     }
   };
@@ -79,6 +76,5 @@ function LocatedLandedCostTable({
 
 export default compose(
   withAlertsActions,
-  withDialogActions,
   withDrawerActions,
 )(LocatedLandedCostTable);

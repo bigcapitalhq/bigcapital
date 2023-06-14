@@ -5,6 +5,7 @@ import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { useReceipt } from '@/hooks/query';
+import { DRAWERS } from '@/constants/drawers';
 
 // useTransactionsByReference
 const ReceiptDetailDrawerContext = React.createContext();
@@ -33,7 +34,7 @@ function ReceiptDetailDrawerProvider({ receiptId, ...props }) {
   return (
     <DrawerLoading loading={isReceiptLoading}>
       <DrawerHeaderContent
-        name="receipt-detail-drawer"
+        name={DRAWERS.RECEIPT_DETAILS}
         title={intl.get('receipt.drawer.title', {
           number: receipt.receipt_number,
         })}

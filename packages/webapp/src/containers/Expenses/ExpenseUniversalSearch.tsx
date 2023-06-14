@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
@@ -14,7 +15,7 @@ function ExpenseUniversalSearchItemSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.EXPENSE) {
-    openDrawer('expense-drawer', { expenseId: resourceId });
+    openDrawer(DRAWERS.EXPENSE_DETAILS, { expenseId: resourceId });
   }
   return null;
 }

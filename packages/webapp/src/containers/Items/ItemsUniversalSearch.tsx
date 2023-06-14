@@ -4,6 +4,8 @@ import intl from 'react-intl-universal';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { DRAWERS } from '@/constants/drawers';
+
 import { AbilitySubject, ItemAction } from '@/constants/abilityOption';
 
 /**
@@ -19,7 +21,7 @@ function ItemUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.ITEM) {
-    openDrawer('item-detail-drawer', { itemId: resourceId });
+    openDrawer(DRAWERS.ITEM_DETAILS, { itemId: resourceId });
     onAction && onAction();
   }
   return null;

@@ -11,6 +11,7 @@ import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Refund credit transactions delete alert
@@ -42,7 +43,7 @@ function RefundCreditNoteDeleteAlert({
           message: intl.get('refund_credit_transactions.alert.delete_message'),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('refund-credit-detail-drawer');
+        closeDrawer(DRAWERS.REFUND_CREDIT_NOTE_DETAILS);
       })
       .catch(() => {})
       .finally(() => {

@@ -25,6 +25,7 @@ import {
 } from '@/components';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Vendor credit detail actions bar.
@@ -39,14 +40,13 @@ function VendorCreditDetailActionsBar({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { vendorCreditId, vendorCredit } = useVendorCreditDetailDrawerContext();
-
   const history = useHistory();
+  const { vendorCreditId, vendorCredit } = useVendorCreditDetailDrawerContext();
 
   // Handle edit credit note.
   const handleEditVendorCredit = () => {
     history.push(`/vendor-credits/${vendorCreditId}/edit`);
-    closeDrawer('vendor-credit-detail-drawer');
+    closeDrawer(DRAWERS.VENDOR_CREDIT_DETAILS);
   };
 
   // Handle delete credit note.

@@ -16,6 +16,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { useDeleteAccount } from '@/hooks/query';
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Account delete alerts.
@@ -48,7 +49,7 @@ function AccountDeleteAlert({
           intent: Intent.SUCCESS,
         });
         closeAlert(name);
-        closeDrawer('account-drawer');
+        closeDrawer(DRAWERS.ACCOUNT_DETAILS);
       })
       .catch(
         ({

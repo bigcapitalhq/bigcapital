@@ -10,6 +10,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { useDeleteExpense } from '@/hooks/query';
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Expense delete alert.
@@ -42,7 +43,7 @@ function ExpenseDeleteAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('expense-drawer');
+        closeDrawer(DRAWERS.EXPENSE_DETAILS);
       })
       .catch(
         ({

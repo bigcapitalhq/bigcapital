@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import { useCashflowTransaction } from '@/hooks/query';
 
 import { DrawerLoading, DrawerHeaderContent } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
 
 const CashflowTransactionDrawerContext = React.createContext();
 
@@ -32,7 +33,7 @@ function CashflowTransactionDrawerProvider({ referenceId, ...props }) {
   return (
     <DrawerLoading loading={isCashflowTransactionLoading}>
       <DrawerHeaderContent
-        name={'cashflow-transaction-drawer'}
+        name={DRAWERS.CASHFLOW_TRNASACTION_DETAILS}
         title={intl.get('cash_flow.drawer.label_transaction', {
           number: cashflowTransaction?.transaction_number,
         })}

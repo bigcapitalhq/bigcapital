@@ -4,10 +4,14 @@ import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
 
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
-import { AbilitySubject, PaymentReceiveAction } from '@/constants/abilityOption';
+import {
+  AbilitySubject,
+  PaymentReceiveAction,
+} from '@/constants/abilityOption';
 import { highlightText } from '@/utils';
 import { Icon } from '@/components';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Payment receive universal search item select action.
@@ -21,7 +25,7 @@ function PaymentReceiveUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.PAYMENT_RECEIVE) {
-    openDrawer('payment-receive-detail-drawer', {
+    openDrawer(DRAWERS.PAYMENT_RECEIVE_DETAILS, {
       paymentReceiveId: resourceId,
     });
   }

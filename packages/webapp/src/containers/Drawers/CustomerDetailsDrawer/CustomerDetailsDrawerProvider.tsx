@@ -2,6 +2,7 @@
 import React from 'react';
 import { useCustomer } from '@/hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
 
 const ContactDetailDrawerContext = React.createContext();
 
@@ -26,7 +27,7 @@ function CustomerDetailsDrawerProvider({ customerId, ...props }) {
   return (
     <DrawerLoading loading={isCustomerLoading}>
       <DrawerHeaderContent
-        name="customer-detail-drawer"
+        name={DRAWERS.CUSTOMER_DETAILS}
         title={customer?.display_name}
       />
       <ContactDetailDrawerContext.Provider value={provider} {...props} />

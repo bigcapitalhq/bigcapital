@@ -13,6 +13,7 @@ import CustomerFormFormik, {
 } from '@/containers/Customers/CustomerForm/CustomerFormFormik';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Drawer customer form loading wrapper.
@@ -30,11 +31,11 @@ function DrawerCustomerFormLoading({ children }) {
 function QuickCustomerFormDrawer({ displayName, closeDrawer, customerId }) {
   // Handle the form submit request success.
   const handleSubmitSuccess = () => {
-    closeDrawer('quick-create-customer');
+    closeDrawer(DRAWERS.QUICK_CREATE_CUSTOMER);
   };
   // Handle the form cancel action.
   const handleCancelForm = () => {
-    closeDrawer('quick-create-customer');
+    closeDrawer(DRAWERS.QUICK_CREATE_CUSTOMER);
   };
 
   return (

@@ -12,6 +12,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Bill payment transactions data table.
@@ -48,7 +49,7 @@ function BillPaymentTransactions({
   // Handles edit payment transactions.
   const handleEditPaymentTransactions = ({ bill_id }) => {
     history.push(`/bills/${bill_id}/edit`);
-    closeDrawer('item-detail-drawer');
+    closeDrawer(DRAWERS.ITEM_DETAILS);
   };
   return (
     <DataTable

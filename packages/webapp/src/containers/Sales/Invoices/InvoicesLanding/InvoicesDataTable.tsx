@@ -25,6 +25,7 @@ import { useInvoicesTableColumns, ActionsMenu } from './components';
 import { useInvoicesListContext } from './InvoicesListProvider';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Invoices datatable.
@@ -89,7 +90,7 @@ function InvoicesDataTable({
 
   // Handle view detail invoice.
   const handleViewDetailInvoice = ({ id }) => {
-    openDrawer('invoice-detail-drawer', { invoiceId: id });
+    openDrawer(DRAWERS.INVOICE_DETAILS, { invoiceId: id });
   };
 
   // Handle print invoices.
@@ -99,7 +100,7 @@ function InvoicesDataTable({
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('invoice-detail-drawer', { invoiceId: cell.row.original.id });
+    openDrawer(DRAWERS.INVOICE_DETAILS, { invoiceId: cell.row.original.id });
   };
 
   // Local storage memorizing columns widths.

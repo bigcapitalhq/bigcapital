@@ -30,6 +30,7 @@ import {
 
 import { compose } from '@/utils';
 import { BadDebtMenuItem } from './utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Invoice details action bar.
@@ -52,7 +53,7 @@ function InvoiceDetailActionsBar({
   // Handle edit sale invoice.
   const handleEditInvoice = () => {
     history.push(`/invoices/${invoiceId}/edit`);
-    closeDrawer('invoice-detail-drawer');
+    closeDrawer(DRAWERS.INVOICE_DETAILS);
   };
 
   // Handle convert to invoice.
@@ -60,7 +61,7 @@ function InvoiceDetailActionsBar({
     history.push(`/credit-notes/new?from_invoice_id=${invoiceId}`, {
       invoiceId: invoiceId,
     });
-    closeDrawer('invoice-detail-drawer');
+    closeDrawer(DRAWERS.INVOICE_DETAILS);
   };
 
   // Handle delete sale invoice.

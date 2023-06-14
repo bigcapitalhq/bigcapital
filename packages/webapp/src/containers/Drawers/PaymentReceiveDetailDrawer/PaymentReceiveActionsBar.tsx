@@ -21,9 +21,13 @@ import {
   FormattedMessage as T,
   DrawerActionsBar,
 } from '@/components';
-import { PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption';
+import {
+  PaymentReceiveAction,
+  AbilitySubject,
+} from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Payment receive actions bar.
@@ -46,7 +50,7 @@ function PaymentReceiveActionsBar({
   // Handle edit payment receive.
   const handleEditPaymentReceive = () => {
     history.push(`/payment-receives/${paymentReceiveId}/edit`);
-    closeDrawer('payment-receive-detail-drawer');
+    closeDrawer(DRAWERS.PAYMENT_RECEIVE_DETAILS);
   };
 
   // Handle delete payment receive.

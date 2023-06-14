@@ -10,6 +10,7 @@ import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Journal delete alert.
@@ -45,7 +46,7 @@ function JournalDeleteAlert({
           intent: Intent.SUCCESS,
         });
         closeAlert(name);
-        closeDrawer('journal-drawer');
+        closeDrawer(DRAWERS.JOURNAL_DETAILS);
       })
       .catch(() => {
         closeAlert(name);

@@ -23,6 +23,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Vendors table.
@@ -93,12 +94,12 @@ function VendorsTable({
 
   // Handle view detail item.
   const handleViewDetailVendor = ({ id }) => {
-    openDrawer('vendor-detail-drawer', { vendorId: id });
+    openDrawer(DRAWERS.VENDOR_DETAILS, { vendorId: id });
   };
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('vendor-detail-drawer', { vendorId: cell.row.original.id });
+    openDrawer(DRAWERS.VENDOR_DETAILS, { vendorId: cell.row.original.id });
   };
 
   // Local storage memorizing columns widths.

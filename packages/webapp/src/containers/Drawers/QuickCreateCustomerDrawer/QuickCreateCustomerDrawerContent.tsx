@@ -7,6 +7,7 @@ import {
 } from '@/components';
 
 import QuickCustomerFormDrawer from './QuickCustomerFormDrawer';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Quick create/edit customer drawer.
@@ -15,7 +16,7 @@ export default function QuickCreateCustomerDrawerContent({ displayName }) {
   return (
     <React.Fragment>
       <DrawerHeaderContent
-        name="quick-create-customer"
+        name={DRAWERS.QUICK_CREATE_CUSTOMER}
         title={<T id={'create_a_new_customer'} />}
       />
       <DrawerBody>

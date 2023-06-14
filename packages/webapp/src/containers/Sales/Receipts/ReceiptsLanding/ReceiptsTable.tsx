@@ -23,6 +23,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useReceiptsTableColumns, ActionsMenu } from './components';
 import { useMemorizedColumnsWidths } from '@/hooks';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Sale receipts datatable.
@@ -77,7 +78,7 @@ function ReceiptsDataTable({
 
   // Handle view detail receipt.
   const handleViewDetailReceipt = ({ id }) => {
-    openDrawer('receipt-detail-drawer', { receiptId: id });
+    openDrawer(DRAWERS.RECEIPT_DETAILS, { receiptId: id });
   };
 
   // Handle print receipt.
@@ -106,7 +107,7 @@ function ReceiptsDataTable({
   }
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('receipt-detail-drawer', { receiptId: cell.row.original.id });
+    openDrawer(DRAWERS.RECEIPT_DETAILS, { receiptId: cell.row.original.id });
   };
 
   return (

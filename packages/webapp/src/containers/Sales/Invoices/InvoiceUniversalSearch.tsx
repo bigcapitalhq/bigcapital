@@ -9,6 +9,7 @@ import { highlightText } from '@/utils';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, SaleInvoiceAction } from '@/constants/abilityOption';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Universal search invoice item select action.
@@ -22,7 +23,7 @@ function InvoiceUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.INVOICE) {
-    openDrawer('invoice-detail-drawer', { invoiceId: resourceId });
+    openDrawer(DRAWERS.INVOICE_DETAILS, { invoiceId: resourceId });
   }
   return null;
 }

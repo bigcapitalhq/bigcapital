@@ -12,6 +12,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Receipt payment transactions.
@@ -48,7 +49,7 @@ function ReceiptPaymentTransactions({
   // Handles edit payment transactions.
   const handleEditPaymentTransactions = ({ receipt_id }) => {
     history.push(`/receipts/${receipt_id}/edit`);
-    closeDrawer('item-detail-drawer');
+    closeDrawer(DRAWERS.ITEM_DETAILS);
   };
 
   return (

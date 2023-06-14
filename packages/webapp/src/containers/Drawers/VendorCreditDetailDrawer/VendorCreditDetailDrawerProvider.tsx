@@ -9,6 +9,7 @@ import {
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
+import { DRAWERS } from '@/constants/drawers';
 
 const VendorCreditDetailDrawerContext = React.createContext();
 
@@ -61,7 +62,7 @@ function VendorCreditDetailDrawerProvider({ vendorCreditId, ...props }) {
       }
     >
       <DrawerHeaderContent
-        name="vendor-credit-detail-drawer"
+        name={DRAWERS.VENDOR_CREDIT_DETAILS}
         title={intl.get('vendor_credit.drawer_vendor_credit_detail', {
           vendorNumber: vendorCredit.vendor_credit_number,
         })}

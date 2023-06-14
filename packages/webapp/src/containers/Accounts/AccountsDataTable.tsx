@@ -23,6 +23,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Accounts data-table.
@@ -71,7 +72,7 @@ function AccountsDataTable({
 
   // Handle view detail account.
   const handleViewDetailAccount = ({ id }) => {
-    openDrawer('account-drawer', { accountId: id });
+    openDrawer(DRAWERS.ACCOUNT_DETAILS, { accountId: id });
   };
 
   // Handle new child button click.
@@ -84,7 +85,7 @@ function AccountsDataTable({
   };
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('account-drawer', { accountId: cell.row.original.id });
+    openDrawer(DRAWERS.ACCOUNT_DETAILS, { accountId: cell.row.original.id });
   };
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =

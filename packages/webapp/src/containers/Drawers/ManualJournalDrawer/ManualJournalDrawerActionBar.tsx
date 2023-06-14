@@ -22,6 +22,7 @@ import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 import { ManualJournalAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Manual journal action bar.
@@ -39,7 +40,7 @@ function ManualJournalDrawerActionBar({
   // Handle edit manual journal action.
   const handleEditManualJournal = () => {
     history.push(`/manual-journals/${manualJournalId}/edit`);
-    closeDrawer('journal-drawer');
+    closeDrawer(DRAWERS.JOURNAL_DETAILS);
   };
 
   // Handle manual journal delete action.

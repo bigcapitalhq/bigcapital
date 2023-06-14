@@ -25,6 +25,7 @@ import {
 } from '@/components';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Estimate read-only details actions bar of the drawer.
@@ -48,7 +49,7 @@ function EstimateDetailActionsBar({
   // Handle edit sale estimate.
   const handleEditEstimate = () => {
     history.push(`/estimates/${estimateId}/edit`);
-    closeDrawer('estimate-detail-drawer');
+    closeDrawer(DRAWERS.ESTIMATE_DETAILS);
   };
 
   // Handle delete sale estimate.

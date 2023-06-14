@@ -28,6 +28,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { safeCallback } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 const CASHFLOW_SKELETON_N = 4;
 
@@ -63,7 +64,7 @@ function CashflowBankAccount({
 }) {
   // Handle view detail account.
   const handleViewClick = () => {
-    openDrawer('account-drawer', { accountId: account.id });
+    openDrawer(DRAWERS.ACCOUNT_DETAILS, { accountId: account.id });
   };
   // Handle delete action account.
   const handleDeleteClick = () => {

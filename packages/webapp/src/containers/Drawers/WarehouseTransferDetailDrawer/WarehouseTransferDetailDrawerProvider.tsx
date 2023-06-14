@@ -3,6 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { useWarehouseTransfer } from '@/hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
 
 const WarehouseTransferDetailDrawerContext = React.createContext();
 
@@ -27,7 +28,7 @@ function WarehouseTransferDetailDrawerProvider({
   return (
     <DrawerLoading loading={isWarehouseTransferLoading}>
       <DrawerHeaderContent
-        name="warehouse-transfer-detail-drawer"
+        name={DRAWERS.WAREHOUSE_TRANSFER_DETAILS}
         title={intl.get('warehouse_transfer.drawer.title', {
           number: warehouseTransfer.transaction_number
             ? `(${warehouseTransfer.transaction_number})`

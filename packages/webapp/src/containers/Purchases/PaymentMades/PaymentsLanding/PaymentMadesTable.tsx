@@ -68,12 +68,12 @@ function PaymentMadesTable({
 
   // Handle view detail  payment made.
   const handleViewDetailPaymentMade = ({ id }) => {
-    openDrawer(DRAWERS.PAYMENT_MADE, { paymentMadeId: id });
+    openDrawer(DRAWERS.PAYMENT_MADE_DETAILS, { paymentMadeId: id });
   };
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer(DRAWERS.PAYMENT_MADE, {
+    openDrawer(DRAWERS.PAYMENT_MADE_DETAILS, {
       paymentMadeId: cell.row.original.id,
     });
   };

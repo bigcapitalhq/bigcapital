@@ -17,6 +17,7 @@ import withItemsActions from '@/containers/Items/withItemsActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Item delete alerts.
@@ -54,7 +55,7 @@ function ItemDeleteAlert({
         });
         // Reset to page number one.
         setItemsTableState({ page: 1 });
-        closeDrawer('item-detail-drawer');
+        closeDrawer(DRAWERS.ITEM_DETAILS);
       })
       .catch(
         ({

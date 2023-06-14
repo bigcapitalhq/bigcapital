@@ -2,6 +2,7 @@
 import React from 'react';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { useVendor } from '@/hooks/query';
+import { DRAWERS } from '@/constants/drawers';
 
 const VendorDetailDrawerContext = React.createContext();
 
@@ -23,7 +24,7 @@ function VendorDetailsDrawerProvider({ vendorId, ...props }) {
   return (
     <DrawerLoading loading={isVendorLoading}>
       <DrawerHeaderContent
-        name="vendor-detail-drawer"
+        name={DRAWERS.VENDOR_DETAILS}
         title={vendor?.display_name}
       />
       <VendorDetailDrawerContext.Provider value={provider} {...props} />

@@ -15,6 +15,7 @@ import withAlertActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Estimate delete alert.
@@ -47,7 +48,7 @@ function EstimateDeleteAlert({
           message: intl.get('the_estimate_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('estimate-detail-drawer');
+        closeDrawer(DRAWERS.ESTIMATE_DETAILS);
       })
       .catch(
         ({

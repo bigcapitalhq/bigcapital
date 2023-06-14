@@ -10,6 +10,7 @@ import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Refund Vendor transactions delete alert.
@@ -43,7 +44,7 @@ function RefundVendorCreditDeleteAlert({
           ),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('refund-vendor-detail-drawer');
+        closeDrawer(DRAWERS.REFUND_VENDOR_CREDIT_DETAILS);
       })
       .catch(() => {})
       .finally(() => {

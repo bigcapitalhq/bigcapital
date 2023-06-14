@@ -35,6 +35,7 @@ import {
   VendorAction,
 } from '../../../constants/abilityOption';
 import { safeCallback, compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Vendor details actions bar.
@@ -55,7 +56,7 @@ function VendorDetailsActionsBar({
   // Handle edit vendor.
   const onEditContact = () => {
     history.push(`/vendors/${vendorId}/edit`);
-    closeDrawer('vendor-detail-drawer');
+    closeDrawer(DRAWERS.VENDOR_DETAILS);
   };
 
   // Handle delete vendor.
@@ -63,14 +64,15 @@ function VendorDetailsActionsBar({
     openAlert(`vendor-delete`, { contactId: vendorId });
   };
 
+  // Handles clicking on new invoice button.
   const handleNewInvoiceClick = () => {
     history.push('/bills/new');
-    closeDrawer('vendor-detail-drawer');
+    closeDrawer(DRAWERS.VENDOR_DETAILS);
   };
 
   const handleNewPaymentClick = () => {
     history.push('/payment-mades/new');
-    closeDrawer('vendor-detail-drawer');
+    closeDrawer(DRAWERS.VENDOR_DETAILS);
   };
 
   const handleEditOpeningBalance = () => {
