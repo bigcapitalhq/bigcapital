@@ -11,6 +11,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { handleDeleteErrors } from '@/containers/Purchases/Bills/BillForm/utils';
 import { useDeleteBill } from '@/hooks/query';
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Bill delete alert.
@@ -43,8 +44,7 @@ function BillDeleteAlert({
           message: intl.get('the_bill_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-
-        closeDrawer('bill-drawer');
+        closeDrawer(DRAWERS.BILL_DETAILS);
       })
       .catch(
         ({

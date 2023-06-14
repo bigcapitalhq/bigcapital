@@ -15,6 +15,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { useDeleteCustomer } from '@/hooks/query';
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Customer delete alert.
@@ -47,7 +48,7 @@ function CustomerDeleteAlert({
           message: intl.get('the_customer_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('customer-detail-drawer');
+        closeDrawer(DRAWERS.CUSTOMER_DETAILS);
       })
       .catch(
         ({

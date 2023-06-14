@@ -5,6 +5,7 @@ import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { useBill, useBillLocatedLandedCost } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
+import { DRAWERS } from '@/constants/drawers';
 
 const BillDrawerContext = React.createContext();
 
@@ -38,7 +39,7 @@ function BillDrawerProvider({ billId, ...props }) {
   return (
     <DrawerLoading loading={loading}>
       <DrawerHeaderContent
-        name="bill-drawer"
+        name={DRAWERS.BILL_DETAILS}
         title={intl.get('bill.drawer.title', {
           number: bill.bill_number ? `(${bill.bill_number})` : null,
         })}

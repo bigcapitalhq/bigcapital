@@ -23,6 +23,7 @@ import { ReceiptMoreMenuItems } from './components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback, compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Receipt details actions bar.
@@ -44,7 +45,7 @@ function ReceiptDetailActionBar({
   // Handle edit sale receipt.
   const onEditReceipt = () => {
     history.push(`/receipts/${receiptId}/edit`);
-    closeDrawer('receipt-detail-drawer');
+    closeDrawer(DRAWERS.RECEIPT_DETAILS);
   };
 
   // Handle delete sale receipt.

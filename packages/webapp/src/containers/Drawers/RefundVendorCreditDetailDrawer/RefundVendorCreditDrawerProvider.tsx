@@ -3,6 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { useRefundVendorCreditTransaction } from '@/hooks/query';
+import { DRAWERS } from '@/constants/drawers';
 
 const RefundVendorCreditDrawerContent = React.createContext();
 
@@ -27,7 +28,7 @@ function RefundVendorCreditDrawerProvider({ refundTransactionId, ...props }) {
   return (
     <DrawerLoading loading={isRefundVendorTransaction}>
       <DrawerHeaderContent
-        name="refund-vendor-detail-drawer"
+        name={DRAWERS.REFUND_VENDOR_CREDIT_DETAILS}
         title={intl.get('refund_vendor_credit.drawer.title')}
       />
       <RefundVendorCreditDrawerContent.Provider value={provider} {...props} />

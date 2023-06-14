@@ -10,6 +10,7 @@ import {
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
 
 const CreditNoteDetailDrawerContext = React.createContext();
 
@@ -72,7 +73,7 @@ function CreditNoteDetailDrawerProvider({ creditNoteId, ...props }) {
       }
     >
       <DrawerHeaderContent
-        name="credit-note-detail-drawer"
+        name={DRAWERS.CREDIT_NOTE_DETAILS}
         title={intl.get('credit_note.drawer.title', {
           number: creditNote.credit_note_number,
         })}

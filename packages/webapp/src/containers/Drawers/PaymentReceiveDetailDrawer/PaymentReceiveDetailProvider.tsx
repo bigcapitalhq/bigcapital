@@ -5,6 +5,7 @@ import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { usePaymentReceive } from '@/hooks/query';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
+import { DRAWERS } from '@/constants/drawers';
 
 const PaymentReceiveDetailContext = React.createContext();
 
@@ -34,7 +35,7 @@ function PaymentReceiveDetailProvider({ paymentReceiveId, ...props }) {
   return (
     <DrawerLoading loading={isPaymentLoading}>
       <DrawerHeaderContent
-        name="payment-receive-detail-drawer"
+        name={DRAWERS.PAYMENT_RECEIVE_DETAILS}
         title={intl.get('payment_receive.drawer.title', {
           number: paymentReceive.payment_receive_no,
         })}

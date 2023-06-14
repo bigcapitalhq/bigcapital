@@ -15,6 +15,7 @@ import withAlertActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Payment receive delete alert.
@@ -50,7 +51,7 @@ function PaymentReceiveDeleteAlert({
           ),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('payment-receive-detail-drawer');
+        closeDrawer(DRAWERS.PAYMENT_RECEIVE_DETAILS);
       })
       .catch(() => {})
       .finally(() => {

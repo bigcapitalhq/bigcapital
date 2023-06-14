@@ -23,6 +23,7 @@ import {
 } from '@/components';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Item action-bar of readonly details drawer.
@@ -42,7 +43,7 @@ function ItemDetailActionsBar({
   // Handle edit item.
   const handleEditItem = () => {
     history.push(`/items/${itemId}/edit`);
-    closeDrawer('item-detail-drawer');
+    closeDrawer(DRAWERS.ITEM_DETAILS);
   };
 
   // Handle delete item.

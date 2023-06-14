@@ -5,6 +5,7 @@ import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { Features } from '@/constants';
 import { useInvoice } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
+import { DRAWERS } from '@/constants/drawers';
 
 const InvoiceDetailDrawerContext = React.createContext();
 /**
@@ -28,7 +29,7 @@ function InvoiceDetailDrawerProvider({ invoiceId, ...props }) {
   return (
     <DrawerLoading loading={isInvoiceLoading}>
       <DrawerHeaderContent
-        name="invoice-detail-drawer"
+        name={DRAWERS.INVOICE_DETAILS}
         title={intl.get('invoice_details.drawer.title', {
           invoiceNumber: invoice.invoice_no,
         })}

@@ -5,6 +5,7 @@ import { Features } from '@/constants';
 import { useEstimate } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
 
 const EstimateDetailDrawerContext = React.createContext();
 
@@ -29,7 +30,7 @@ function EstimateDetailDrawerProvider({ estimateId, ...props }) {
   return (
     <DrawerLoading loading={isEstimateLoading}>
       <DrawerHeaderContent
-        name="estimate-detail-drawer"
+        name={DRAWERS.ESTIMATE_DETAILS}
         title={intl.get('estimate.drawer.title', {
           number: estimate.estimate_number,
         })}

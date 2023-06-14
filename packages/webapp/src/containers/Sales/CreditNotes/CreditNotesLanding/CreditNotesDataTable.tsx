@@ -24,6 +24,7 @@ import { useCreditNoteTableColumns, ActionsMenu } from './components';
 import { useCreditNoteListContext } from './CreditNotesListProvider';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Credit note data table.
@@ -80,7 +81,7 @@ function CreditNotesDataTable({
   }
 
   const handleViewDetailCreditNote = ({ id }) => {
-    openDrawer('credit-note-detail-drawer', { creditNoteId: id });
+    openDrawer(DRAWERS.CREDIT_NOTE_DETAILS, { creditNoteId: id });
   };
 
   // Handle delete credit note.
@@ -95,7 +96,7 @@ function CreditNotesDataTable({
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('credit-note-detail-drawer', {
+    openDrawer(DRAWERS.CREDIT_NOTE_DETAILS, {
       creditNoteId: cell.row.original.id,
     });
   };

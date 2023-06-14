@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, VendorAction } from '@/constants/abilityOption';
 import withDrawerActions from '../Drawer/withDrawerActions';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Vendor univesal search item select action.
@@ -17,7 +18,7 @@ function VendorUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.VENDOR) {
-    openDrawer('vendor-detail-drawer', { vendorId: resourceId });
+    openDrawer(DRAWERS.VENDOR_DETAILS, { vendorId: resourceId });
     onAction && onAction();
   }
   return null;

@@ -8,6 +8,7 @@ import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, SaleEstimateAction } from '@/constants/abilityOption';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Estimate universal search item select action.
@@ -21,7 +22,7 @@ function EstimateUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.ESTIMATE) {
-    openDrawer('estimate-detail-drawer', { estimateId: resourceId });
+    openDrawer(DRAWERS.ESTIMATE_DETAILS, { estimateId: resourceId });
   }
   return null;
 }

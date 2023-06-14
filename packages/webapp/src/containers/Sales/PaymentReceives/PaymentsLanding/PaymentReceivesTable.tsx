@@ -22,6 +22,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import { usePaymentReceivesColumns, ActionsMenu } from './components';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Payment receives datatable.
@@ -69,12 +70,12 @@ function PaymentReceivesDataTable({
 
   // Handle view detail  payment receive..
   const handleViewDetailPaymentReceive = ({ id }) => {
-    openDrawer('payment-receive-detail-drawer', { paymentReceiveId: id });
+    openDrawer(DRAWERS.PAYMENT_RECEIVE_DETAILS, { paymentReceiveId: id });
   };
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('payment-receive-detail-drawer', {
+    openDrawer(DRAWERS.PAYMENT_RECEIVE_DETAILS, {
       paymentReceiveId: cell.row.original.id,
     });
   };

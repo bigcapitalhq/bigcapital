@@ -16,6 +16,7 @@ import withAlertActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Invoice delete alert.
@@ -48,7 +49,7 @@ function InvoiceDeleteAlert({
           message: intl.get('the_invoice_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('invoice-detail-drawer');
+        closeDrawer(DRAWERS.INVOICE_DETAILS);
       })
       .catch(
         ({

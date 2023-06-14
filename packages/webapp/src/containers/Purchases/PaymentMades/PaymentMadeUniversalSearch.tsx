@@ -9,7 +9,6 @@ import { highlightText } from '@/utils';
 import { AbilitySubject, PaymentMadeAction } from '@/constants/abilityOption';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-
 /**
  * Universal search bill item select action.
  */
@@ -22,7 +21,7 @@ function PaymentMadeUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.PAYMENT_MADE) {
-    openDrawer('payment-made-detail-drawer', { paymentMadeId: resourceId });
+    openDrawer(DRAWERS.PAYMENT_MADE_DETAILS, { paymentMadeId: resourceId });
   }
   return null;
 }

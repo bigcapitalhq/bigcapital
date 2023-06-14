@@ -22,6 +22,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { ActionsMenu, useExpensesTableColumns } from './components';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Expenses datatable.
@@ -87,14 +88,14 @@ function ExpensesDataTable({
 
   // Handle view detail expense.
   const handleViewDetailExpense = ({ id }) => {
-    openDrawer('expense-drawer', {
+    openDrawer(DRAWERS.EXPENSE_DETAILS, {
       expenseId: id,
     });
   };
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer('expense-drawer', { expenseId: cell.row.original.id });
+    openDrawer(DRAWERS.EXPENSE_DETAILS, { expenseId: cell.row.original.id });
   };
 
   // Display empty status instead of the table.

@@ -11,10 +11,12 @@ import {
 
 import { useWarehouseDetailDrawerContext } from './WarehouseTransferDetailDrawerProvider';
 import { DrawerActionsBar, Icon, FormattedMessage as T } from '@/components';
+
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
+import { DRAWERS } from '@/constants/drawers';
 import { compose } from '@/utils';
 
 /**
@@ -34,7 +36,7 @@ function WarehouseTransferDetailActionsBar({
   // Handle edit warehosue transfer.
   const handleEditWarehosueTransfer = () => {
     history.push(`/warehouses-transfers/${warehouseTransferId}/edit`);
-    closeDrawer('warehouse-transfer-detail-drawer');
+    closeDrawer(DRAWERS.WAREHOUSE_TRANSFER_DETAILS);
   };
 
   // Handle delete warehouse transfer.

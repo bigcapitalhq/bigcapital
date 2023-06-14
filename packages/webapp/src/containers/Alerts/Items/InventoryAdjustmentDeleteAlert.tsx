@@ -14,6 +14,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { useDeleteInventoryAdjustment } from '@/hooks/query';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Inventory Adjustment delete alerts.
@@ -49,7 +50,7 @@ function InventoryAdjustmentDeleteAlert({
           ),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('inventory-adjustment-drawer');
+        closeDrawer(DRAWERS.INVENTORY_ADJUSTMENT_DETAILS);
       })
       .catch((errors) => {})
       .finally(() => {

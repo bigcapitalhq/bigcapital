@@ -15,6 +15,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { useDeleteCreditNote } from '@/hooks/query';
 import { handleDeleteErrors } from '@/containers/Sales/CreditNotes/CreditNotesLanding/utils';
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Credit note delete alert.
@@ -46,7 +47,7 @@ function CreditNoteDeleteAlert({
           message: intl.get('credit_note.alert.delete_message'),
           intent: Intent.SUCCESS,
         });
-        closeDrawer('credit-note-detail-drawer');
+        closeDrawer(DRAWERS.CREDIT_NOTE_DETAILS);
       })
       .catch(
         ({

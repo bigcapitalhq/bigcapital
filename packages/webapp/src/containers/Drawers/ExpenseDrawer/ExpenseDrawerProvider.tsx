@@ -5,6 +5,7 @@ import { useExpense } from '@/hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
+import { DRAWERS } from '@/constants/drawers';
 
 const ExpenseDrawerDrawerContext = React.createContext();
 
@@ -36,7 +37,7 @@ function ExpenseDrawerProvider({ expenseId, ...props }) {
   return (
     <DrawerLoading loading={isExpenseLoading}>
       <DrawerHeaderContent
-        name="expense-drawer"
+        name={DRAWERS.EXPENSE_DETAILS}
         title={intl.get('expense.drawer.title')}
         subTitle={
           featureCan(Features.Branches)

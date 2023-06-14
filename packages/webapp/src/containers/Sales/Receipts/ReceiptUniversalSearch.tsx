@@ -7,6 +7,7 @@ import { Icon, Choose, T } from '@/components';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, SaleReceiptAction } from '@/constants/abilityOption';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Receipt universal search item select action.
@@ -21,7 +22,7 @@ function ReceiptUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.RECEIPT) {
-    openDrawer('receipt-detail-drawer', { receiptId: resourceId });
+    openDrawer(DRAWERS.RECEIPT_DETAILS, { receiptId: resourceId });
     onAction && onAction();
   }
   return null;

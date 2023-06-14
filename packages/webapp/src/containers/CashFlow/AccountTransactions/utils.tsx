@@ -9,6 +9,7 @@ import {
 
 import { Select } from '@blueprintjs/select';
 import { Icon } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
 
 export const CashFlowMenuItems = ({
   text,
@@ -53,40 +54,40 @@ export const CashFlowMenuItems = ({
 export const handleCashFlowTransactionType = (reference, openDrawer) => {
   switch (reference.reference_type) {
     case 'SaleReceipt':
-      return openDrawer('receipt-detail-drawer', {
+      return openDrawer(DRAWERS.RECEIPT_DETAILS, {
         receiptId: reference.reference_id,
       });
     case 'Journal':
-      return openDrawer('journal-drawer', {
+      return openDrawer(DRAWERS.JOURNAL_DETAILS, {
         manualJournalId: reference.reference_id,
       });
     case 'Expense':
-      return openDrawer('expense-drawer', {
+      return openDrawer(DRAWERS.EXPENSE_DETAILS, {
         expenseId: reference.reference_id,
       });
     case 'PaymentReceive':
-      return openDrawer('payment-receive-detail-drawer', {
+      return openDrawer(DRAWERS.PAYMENT_RECEIVE_DETAILS, {
         paymentReceiveId: reference.reference_id,
       });
     case 'BillPayment':
-      return openDrawer('payment-made-detail-drawer', {
+      return openDrawer(DRAWERS.PAYMENT_MADE_DETAILS, {
         paymentMadeId: reference.reference_id,
       });
     case 'RefundCreditNote':
-      return openDrawer('refund-credit-detail-drawer', {
+      return openDrawer(DRAWERS.REFUND_CREDIT_NOTE_DETAILS, {
         refundTransactionId: reference.reference_id,
       });
     case 'RefundVendorCredit':
-      return openDrawer('refund-vendor-detail-drawer', {
+      return openDrawer(DRAWERS.REFUND_VENDOR_CREDIT_DETAILS, {
         refundTransactionId: reference.reference_id,
       });
     case 'InventoryAdjustment':
-      return openDrawer('inventory-adjustment-drawer', {
+      return openDrawer(DRAWERS.INVENTORY_ADJUSTMENT_DETAILS, {
         inventoryId: reference.reference_id,
       });
 
     default:
-      return openDrawer('cashflow-transaction-drawer', {
+      return openDrawer(DRAWERS.CASHFLOW_TRNASACTION_DETAILS, {
         referenceId: reference.reference_id,
       });
   }

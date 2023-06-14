@@ -26,6 +26,7 @@ import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
 import { CreditNoteMenuItem } from './utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Credit note detail actions bar.
@@ -47,7 +48,7 @@ function CreditNoteDetailActionsBar({
   // Handle edit credit note.
   const handleEditCreditNote = () => {
     history.push(`/credit-notes/${creditNoteId}/edit`);
-    closeDrawer('credit-note-detail-drawer');
+    closeDrawer(DRAWERS.CREDIT_NOTE_DETAILS);
   };
 
   const handleRefundCreditNote = () => {

@@ -38,6 +38,7 @@ import {
   CustomerAction,
 } from '@/constants/abilityOption';
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Customer details actions bar.
@@ -58,22 +59,22 @@ function CustomerDetailsActionsBar({
   // Handle new invoice button click.
   const handleNewInvoiceClick = () => {
     history.push('/invoices/new');
-    closeDrawer('customer-detail-drawer');
+    closeDrawer(DRAWERS.CUSTOMER_DETAILS);
   };
   // Handle new receipt button click.
   const handleNewReceiptClick = () => {
     history.push('/receipts/new');
-    closeDrawer('customer-detail-drawer');
+    closeDrawer(DRAWERS.CUSTOMER_DETAILS);
   };
   // Handle new payment receive button click.
   const handleNewPaymentClick = () => {
     history.push('/payment-receives/new');
-    closeDrawer('customer-detail-drawer');
+    closeDrawer(DRAWERS.CUSTOMER_DETAILS);
   };
   // Handle new estimate button click.
   const handleNewEstimateClick = () => {
     history.push('/estimates/new');
-    closeDrawer('customer-detail-drawer');
+    closeDrawer(DRAWERS.CUSTOMER_DETAILS);
   };
   // Handles delete customer click.
   const handleDeleteCustomer = () => {
@@ -82,7 +83,7 @@ function CustomerDetailsActionsBar({
   // Handles edit customer click.
   const handleEditContact = () => {
     history.push(`/customers/${customerId}/edit`);
-    closeDrawer('customer-details-drawer');
+    closeDrawer(DRAWERS.CUSTOMER_DETAILS);
   };
   // Handle edit opening balance click.
   const handleEditOpeningBalance = () => {

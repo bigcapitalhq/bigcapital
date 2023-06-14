@@ -2,6 +2,7 @@
 import React from 'react';
 import { useAccount, useAccountTransactions } from '@/hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
 
 const AccountDrawerContext = React.createContext();
 
@@ -33,7 +34,7 @@ function AccountDrawerProvider({ accountId, name, ...props }) {
 
   return (
     <DrawerLoading loading={isAccountLoading || isAccountsLoading}>
-      <DrawerHeaderContent name={'account-drawer'} title={drawerTitle} />
+      <DrawerHeaderContent name={DRAWERS.ACCOUNT_DETAILS} title={drawerTitle} />
       <AccountDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>
   );

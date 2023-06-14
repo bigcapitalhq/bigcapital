@@ -3,6 +3,7 @@ import intl from 'react-intl-universal';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, ManualJournalAction } from '@/constants/abilityOption';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Universal search manual journal item select action.
@@ -17,7 +18,7 @@ function JournalUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.MANUAL_JOURNAL) {
-    openDrawer('journal-drawer', { manualJournalId: resourceId });
+    openDrawer(DRAWERS.JOURNAL_DETAILS, { manualJournalId: resourceId });
     onAction && onAction();
   }
   return null;

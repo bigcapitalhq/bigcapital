@@ -3,6 +3,7 @@ import React from 'react';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { useItem } from '@/hooks/query';
 import { inactiveStatus } from './utlis';
+import { DRAWERS } from '@/constants/drawers';
 
 const ItemDetailDrawerContext = React.createContext();
 
@@ -30,7 +31,7 @@ function ItemDetailDrawerProvider({ itemId, ...props }) {
   return (
     <DrawerLoading loading={isItemLoading}>
       <DrawerHeaderContent
-        name="item-detail-drawer"
+        name={DRAWERS.ITEM_DETAILS}
         title={inactiveStatus(item)}
       />
       <ItemDetailDrawerContext.Provider value={provider} {...props} />
