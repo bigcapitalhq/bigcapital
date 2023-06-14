@@ -2,6 +2,46 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [0.9.6] - 12-06-2023
+
+`@bigcapital/webapp`
+
+* fix: remove duplicated form submitting by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/138
+* feat: add monorepo version on the application sidebar by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/136
+
+## [0.9.5] - 11-06-2023
+
+`@bigcapital/server`
+
+* fix: filter ledger entries that effect contact balance to AR/AP accounts only by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/132
+
+`@bigcapital/webapp`
+
+* fix: catch journal error when create a journal with accounts have different currency by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/135
+* fix: add duplicate icon to context menu of customers and vendors table by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/133
+* fix: customer/vendor opening balance with exchange rate by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/134
+
+## [0.9.4] - 08-06-2023
+
+`@bigcapital/monorepo`
+- fixed: docker-compose line-ending issue on Windows by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/130
+
+`@bigcapital/server`
+- fixed: Disable Webpack minification for JS class name reading.
+
+## [0.9.3] -04-06-2023
+
+`@bigcapital/monorepo`
+* Added: Add env variable to customize the proxy public ports by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/125
+* Added: Migrate the server database to MariaDB by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/128
+
+## [0.9.2] - 31-05-2023
+
+`@bigcapital/webapp`
+
+- fixed: move `packaeg-lock.json` inside docker container.
+- fixed: remove Sentry from the web client.
+
 ## [0.9.1] - 28-05-2023
 
 `@bigcapital/server`
