@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
-import { Menu, MenuItem, Position, Button } from '@blueprintjs/core';
+import { Menu, MenuItem, Position, Button, Intent } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import { useFormikContext } from 'formik';
 import * as R from 'ramda';
@@ -74,6 +74,7 @@ export const ActionsCellRenderer = ({
   const exampleMenu = (
     <Menu>
       <MenuItem
+        intent={Intent.DANGER}
         onClick={handleClickRemoveRole}
         text={intl.get('make_journal.entries.remove_row')}
       />
