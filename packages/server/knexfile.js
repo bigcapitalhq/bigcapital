@@ -1,6 +1,6 @@
 const { knexSnakeCaseMappers } = require('objection');
 
-module.exports = {
+export default {
   client: 'mysql',
   connection: {
     host: '127.0.0.1',

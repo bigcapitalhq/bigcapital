@@ -4,7 +4,7 @@ import { castCommaListEnvVarToArray, parseBoolean } from '@/utils';
 
 dotenv.config();
 
-module.exports = {
+export default {
   /**
    * Your favorite port
    */

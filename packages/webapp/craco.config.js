@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const dotenv = require('dotenv-webpack');
 
-module.exports = {
+export default {
   webpack: {
     plugins: [
       new dotenv(),
