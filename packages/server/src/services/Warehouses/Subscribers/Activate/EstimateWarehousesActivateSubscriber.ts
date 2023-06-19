@@ -14,7 +14,7 @@ export class EstimatesActivateWarehousesSubscriber {
   public attach(bus) {
     bus.subscribe(
       events.warehouse.onActivated,
-      this.updateEstimatessWithWarehouseOnActivated
+      this.updateEstimatesWithWarehouseOnActivated
     );
     return bus;
   }
@@ -24,7 +24,7 @@ export class EstimatesActivateWarehousesSubscriber {
    * multi-warehouses feature is activated.
    * @param {IWarehousesActivatedPayload}
    */
-  private updateEstimatessWithWarehouseOnActivated = async ({
+  private updateEstimatesWithWarehouseOnActivated = async ({
     tenantId,
     primaryWarehouse,
   }: IWarehousesActivatedPayload) => {
