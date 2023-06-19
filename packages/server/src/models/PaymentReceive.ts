@@ -41,7 +41,7 @@ export default class PaymentReceive extends mixin(TenantModel, [
   }
 
   /**
-   * Resourcable model.
+   * Resourceable model.
    */
   static get resourceable() {
     return true;
