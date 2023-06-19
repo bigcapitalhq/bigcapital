@@ -88,7 +88,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   };
 
   /**
-   * Fitlers the accounts nodes.
+   * Filters the accounts nodes.
    * @param {ITrialBalanceAccount[]} accountsNodes
    * @returns {ITrialBalanceAccount[]}
    */
