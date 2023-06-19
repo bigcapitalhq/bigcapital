@@ -56,7 +56,7 @@ export default class DeleteCreditNote extends BaseCreditNotes {
         oldCreditNote
       } as ICreditNoteDeletingPayload);
 
-      // Delets the associated credit note entries.
+      // Deletes the associated credit note entries.
       await ItemEntry.query(trx)
         .where('reference_id', creditNoteId)
         .where('reference_type', 'CreditNote')

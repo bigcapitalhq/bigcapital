@@ -381,7 +381,7 @@ export default class PaymentReceivesController extends BaseController {
   };
 
   /**
-   * Delets the given payment receive id.
+   * Deletes the given payment receive id.
    * @param {Request} req
    * @param {Response} res
    */

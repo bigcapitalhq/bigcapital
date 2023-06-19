@@ -73,7 +73,7 @@ export class DeleteWarehouse extends CRUDWarehouse {
         events.warehouse.onDelete,
         eventPayload
       );
-      // Delets the given warehouse from the storage.
+      // Deletes the given warehouse from the storage.
       await Warehouse.query().findById(warehouseId).delete();
 
       // Triggers `onWarehouseCreated`.
