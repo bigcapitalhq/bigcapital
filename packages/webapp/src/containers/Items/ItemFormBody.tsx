@@ -43,7 +43,7 @@ function ItemFormBody({ organization: { base_currency } }) {
     <div class="page-form__section page-form__section--selling-cost">
       <Row>
         <Col xs={6}>
-          {/*------------- Purchasable checbox ------------- */}
+          {/*------------- Purchasable checkbox ------------- */}
           <FastField name={'sellable'} type="checkbox">
             {({ form, field }) => (
               <FormGroup inline={true} className={'form-group--sellable'}>
