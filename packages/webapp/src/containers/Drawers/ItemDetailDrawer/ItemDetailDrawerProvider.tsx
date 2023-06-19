@@ -2,7 +2,7 @@
 import React from 'react';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { useItem } from '@/hooks/query';
-import { inactiveStatus } from './utlis';
+import { inactiveStatus } from './utils';
 import { DRAWERS } from '@/constants/drawers';
 
 const ItemDetailDrawerContext = React.createContext();
