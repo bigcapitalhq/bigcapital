@@ -8,7 +8,7 @@ import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
 import EnsureTenantIsInitialized from '@/api/middleware/EnsureTenantIsInitialized';
 import SettingsMiddleware from '@/api/middleware/SettingsMiddleware';
 import I18nMiddleware from '@/api/middleware/I18nMiddleware';
-import I18nAuthenticatedMiddlware from '@/api/middleware/I18nAuthenticatedMiddlware';
+import I18nAuthenticatedMiddleware from '@/api/middleware/I18nAuthenticatedMiddleware';
 import EnsureTenantIsSeeded from '@/api/middleware/EnsureTenantIsSeeded';
 
 // Routes
@@ -80,7 +80,7 @@ export default () => {
   dashboard.use(TenancyMiddleware);
   dashboard.use(EnsureTenantIsInitialized);
   dashboard.use(SettingsMiddleware);
-  dashboard.use(I18nAuthenticatedMiddlware);
+  dashboard.use(I18nAuthenticatedMiddleware);
   dashboard.use(EnsureTenantIsSeeded);
   dashboard.use(AuthorizationMiddleware);
 
