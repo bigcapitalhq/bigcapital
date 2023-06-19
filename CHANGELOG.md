@@ -258,7 +258,7 @@ All notable changes to Bigcapital server-side will be in this file.
 - Balance sheet comparison of previous period (PP).
 - Balance sheet comparison of previous year (PY).
 - Balance sheet percentage analysis columns and rows basis.
-- Profit & loss sheet comparison of preivous period (PP).
+- Profit & loss sheet comparison of previous period (PP).
 - Profit & loss sheet comparison of previous year (PY).
 - Profit & loss sheet percentage analysis columns, rows, income and expenses basis.
 
@@ -285,7 +285,7 @@ All notable changes to Bigcapital server-side will be in this file.
 - Balance sheet comparison of previous period (PP).
 - Balance sheet comparison of previous year (PY).
 - Balance sheet percentage analysis columns and rows basis.
-- Profit & loss sheet comparison of preivous period (PP).
+- Profit & loss sheet comparison of previous period (PP).
 - Profit & loss sheet comparison of previous year (PY).
 - Profit & loss sheet percentage analysis columns, rows, income and expenses basis.
 

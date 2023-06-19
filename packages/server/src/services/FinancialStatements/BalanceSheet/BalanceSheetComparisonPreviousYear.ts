@@ -193,7 +193,7 @@ export const BalanceSheetComparisonPreviousYear = (Base: any) =>
     );
 
     /**
-     * Assoc preivous year to account horizontal total node.
+     * Assoc previous year to account horizontal total node.
      * @param   {IBalanceSheetAccountNode} node
      * @returns {}
      */

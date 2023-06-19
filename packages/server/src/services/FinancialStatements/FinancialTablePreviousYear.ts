@@ -101,7 +101,7 @@ export const FinancialTablePreviousYear = (Base) =>
     };
 
     /**
-     * Retrieves previous previous year change horizontal column accessor.
+     * Retrieves previous year change horizontal column accessor.
      * @param   {number} index
      * @returns {ITableColumnAccessor}
      */

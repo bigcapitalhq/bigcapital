@@ -162,7 +162,7 @@ export const ProfitLossSheetPreviousYear = (Base) =>
     // # Horizontal Nodes - Account
     // ----------------------------------
     /**
-     * Assoc preivous year to account horizontal total node.
+     * Assoc previous year to account horizontal total node.
      * @param   {IProfitLossSheetAccountNode} node
      * @returns
      */

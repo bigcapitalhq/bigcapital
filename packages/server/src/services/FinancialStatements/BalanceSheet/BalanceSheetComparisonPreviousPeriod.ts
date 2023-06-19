@@ -44,7 +44,7 @@ export const BalanceSheetComparisonPreviousPeriod = (Base: any) =>
       return R.compose(
         R.when(
           this.isNodeHasHorizTotals,
-          this.assocPreivousPeriodAccountHorizNodeComposer
+          this.assocPreviousPeriodAccountHorizNodeComposer
         ),
         R.when(
           this.query.isPreviousPeriodPercentageActive,
@@ -132,7 +132,7 @@ export const BalanceSheetComparisonPreviousPeriod = (Base: any) =>
     );
 
     /**
-     * Assoc preivous period to account horizontal total node.
+     * Assoc previous period to account horizontal total node.
      * @param   {IBalanceSheetAccountNode} node
      * @returns {}
      */
@@ -186,7 +186,7 @@ export const BalanceSheetComparisonPreviousPeriod = (Base: any) =>
      * @param {IBalanceSheetAccountNode} node
      * @returns
      */
-    private assocPreivousPeriodAccountHorizNodeComposer = (
+    private assocPreviousPeriodAccountHorizNodeComposer = (
       node: IBalanceSheetAccountNode
     ) => {
       const horizontalTotals = R.map(

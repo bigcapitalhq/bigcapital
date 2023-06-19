@@ -160,7 +160,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Determines wether the preivous period percentage is active.
+   * Determines wether the previous period percentage is active.
    * @returns {boolean}
    */
   public isPreviousPeriodPercentageActive = (): boolean => {

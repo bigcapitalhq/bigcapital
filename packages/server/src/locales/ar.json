@@ -596,7 +596,7 @@
   "balance_sheet.percentage_of_column": "٪ التغير العمودي",
   "balance_sheet.percentage_of_row": "٪ التغير الأفقي",
 
-  "financial_sheet.previoud_period_date": "(ف.س) {{date}}",
+  "financial_sheet.previous_period_date": "(ف.س) {{date}}",
   "financial_sheet.previous_period_change": "التغيرات (ف.س)",
   "financial_sheet.previous_period_percentage": "٪ التغير (ف.س)",
 

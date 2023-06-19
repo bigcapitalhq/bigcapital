@@ -8,7 +8,7 @@ import {
   handlePreviousYearCheckBoxChange,
   handlePreviousYearChangeCheckboxChange,
   handlePreviousPeriodCheckBoxChange,
-  handlePreivousPeriodPercentageCheckboxChange,
+  handlePreviousPeriodPercentageCheckboxChange,
   handlePreviousYearPercentageCheckboxChange,
   handlePreviousPeriodChangeCheckboxChange,
 } from './utils';
@@ -106,7 +106,7 @@ function BalanceSheetHeaderComparisonPanelFields() {
                   inline={true}
                   label={<T id={'balance_sheet.change'} />}
                   {...field}
-                  onChange={handlePreivousPeriodPercentageCheckboxChange(form)}
+                  onChange={handlePreviousPeriodPercentageCheckboxChange(form)}
                 />
               </FormGroup>
             )}

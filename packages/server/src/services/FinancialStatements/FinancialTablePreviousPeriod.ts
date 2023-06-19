@@ -24,7 +24,7 @@ export const FinancialTablePreviousPeriod = (Base) =>
 
       return {
         key: 'previous_period',
-        label: this.i18n.__(`financial_sheet.previoud_period_date`, {
+        label: this.i18n.__(`financial_sheet.previous_period_date`, {
           date: PPFormatted,
         }),
       };
