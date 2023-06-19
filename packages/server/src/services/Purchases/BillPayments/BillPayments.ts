@@ -613,7 +613,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
   }
 
   /**
-   * Retrieve bill payment paginted and filterable list.
+   * Retrieve bill payment paginated and filterable list.
    * @param {number} tenantId
    * @param {IBillPaymentsFilter} billPaymentsFilter
    */
