@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItem, Menu, Button, Position } from '@blueprintjs/core';
+import { MenuItem, Menu, Button, Position, Intent } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
 import { Align, CellType, Features } from '@/constants';
@@ -47,6 +47,7 @@ export function ActionsCellRenderer({
   const exampleMenu = (
     <Menu>
       <MenuItem
+        intent={Intent.DANGER}
         onClick={onRemoveRole}
         text={<T id={'item_entries.remove_row'} />}
       />

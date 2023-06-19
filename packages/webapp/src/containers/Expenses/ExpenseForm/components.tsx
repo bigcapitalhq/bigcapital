@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Button, Menu, MenuItem } from '@blueprintjs/core';
+import { Button, Intent, Menu, MenuItem } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import { useFormikContext } from 'formik';
 
@@ -51,6 +51,7 @@ const ActionsCellRenderer = ({
   const exampleMenu = (
     <Menu>
       <MenuItem
+        intent={Intent.DANGER}
         onClick={handleClickRemoveRole}
         text={intl.get('expense.entries.remove_row')}
       />
