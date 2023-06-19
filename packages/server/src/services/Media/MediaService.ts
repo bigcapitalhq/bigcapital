@@ -8,7 +8,7 @@ import { difference } from 'lodash';
 const fsPromises = fs.promises;
 
 const ERRORS = {
-  MINETYPE_NOT_SUPPORTED: 'MINETYPE_NOT_SUPPORTED',
+  MIMETYPE_NOT_SUPPORTED: 'MIMETYPE_NOT_SUPPORTED',
   MEDIA_NOT_FOUND: 'MEDIA_NOT_FOUND',
   MODEL_NAME_HAS_NO_MEDIA: 'MODEL_NAME_HAS_NO_MEDIA',
   MODEL_ID_NOT_FOUND: 'MODEL_ID_NOT_FOUND',
@@ -197,7 +197,7 @@ export default class MediaService implements IMediaService {
 
     // Validate the attachment.
     if (attachment && attachmentsMimes.indexOf(attachment.mimetype) === -1) {
-      throw new ServiceError(ERRORS.MINETYPE_NOT_SUPPORTED);
+      throw new ServiceError(ERRORS.MIMETYPE_NOT_SUPPORTED);
     }
     if (modelName && modelId) {
       await this.validateModelNameAndIdExistence(tenantId, modelName, modelId);
