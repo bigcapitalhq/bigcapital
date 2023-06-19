@@ -25,7 +25,7 @@ function WarehouseTransfersViewTabs({
   // Handles click a new view tab.
   const handleClickNewView = () => {};
 
-  // Handles the active tab chaing.
+  // Handles the active tab change.
   const handleTabsChange = (viewSlug) => {
     setWarehouseTransferTableState({ viewSlug });
   };
