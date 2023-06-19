@@ -33,7 +33,7 @@ export function useCreateLockingTransactoin(props) {
 }
 
 /**
- * Create cancle locking transactions
+ * Create cancel locking transactions
  */
 export function useCancelLockingTransaction(props) {
   const queryClient = useQueryClient();
@@ -70,7 +70,7 @@ export function useCreateUnlockingPartialTransactions(props) {
 }
 
 /**
- * Create cancle unlocking partial transactions.
+ * Create cancel unlocking partial transactions.
  */
 export function useCancelUnlockingPartialTransactions(props) {
   const queryClient = useQueryClient();

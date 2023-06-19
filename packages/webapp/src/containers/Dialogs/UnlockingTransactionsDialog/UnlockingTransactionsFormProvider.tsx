@@ -13,7 +13,7 @@ function UnlockingTransactionsFormProvider({
   dialogName,
   ...props
 }) {
-  // Cancle locking transactions mutations.
+  // Cancel locking transactions mutations.
   const { mutateAsync: cancelLockingTransactionMutate } =
     useCancelLockingTransaction();
 
