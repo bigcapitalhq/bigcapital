@@ -77,7 +77,7 @@ export function useDeleteProjectTimeEntry(props) {
 }
 
 /**
- * Retrive the given project time entry.
+ * Retrieve the given project time entry.
  * @param timeId
  * @param props
  * @param requestProps

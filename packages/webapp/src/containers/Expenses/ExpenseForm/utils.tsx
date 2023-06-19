@@ -156,7 +156,7 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Retreives the Journal totals.
+ * Retrieves the Journal totals.
  */
 export const useExpensesTotals = () => {
   const {

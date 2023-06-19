@@ -45,7 +45,7 @@ export default class MediaService implements IMediaService {
   }
 
   /**
-   * Retreive media models by the given ids or throw not found error.
+   * Retrieve media models by the given ids or throw not found error.
    * @param {number} tenantId 
    * @param {number[]} mediaIds 
    */

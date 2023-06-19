@@ -125,13 +125,13 @@ export default class GeneralLedgerService {
     const contacts = await contactRepository.all();
     const contactsByIdMap = transformToMap(contacts, 'id');
 
-    // Retreive journal transactions from/to the given date.
+    // Retrieve journal transactions from/to the given date.
     const transactions = await transactionsRepository.journal({
       fromDate: filter.fromDate,
       toDate: filter.toDate,
       branchesIds: filter.branchesIds
     });
-    // Retreive opening balance credit/debit sumation.
+    // Retrieve opening balance credit/debit sumation.
     const openingBalanceTrans = await transactionsRepository.journal({
       toDate: moment(filter.fromDate).subtract(1, 'day'),
       sumationCreditDebit: true,

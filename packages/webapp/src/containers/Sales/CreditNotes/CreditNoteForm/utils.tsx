@@ -163,7 +163,7 @@ export const useSetPrimaryWarehouseToForm = () => {
 };
 
 /**
- * Retreives the credit note totals.
+ * Retrieves the credit note totals.
  */
 export const useCreditNoteTotals = () => {
   const {

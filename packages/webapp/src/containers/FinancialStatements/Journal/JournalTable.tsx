@@ -27,7 +27,7 @@ export function JournalTable({ companyName }) {
     isLoading,
   } = useJournalSheetContext();
 
-  // Retreive the journal table columns.
+  // Retrieve the journal table columns.
   const columns = useJournalTableColumns();
 
   // Default expanded rows of general journal table.

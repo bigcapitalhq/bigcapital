@@ -245,7 +245,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
     const balance = sumBy(saleInvoiceDTO.entries, (e) =>
       ItemEntry.calcAmount(e)
     );
-    // Retreive the next invoice number.
+    // Retrieve the next invoice number.
     const autoNextNumber = this.getNextInvoiceNumber(tenantId);
 
     // Invoice number.

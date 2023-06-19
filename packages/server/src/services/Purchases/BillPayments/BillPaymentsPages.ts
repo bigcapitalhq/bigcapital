@@ -82,7 +82,7 @@ export default class BillPaymentsPages {
   }
 
   /**
-   * Retrive edit page invoices entries from the given sale invoices models.
+   * Retrieve edit page invoices entries from the given sale invoices models.
    * @param  {ISaleInvoice[]} invoices - Invoices.
    * @return {IPaymentReceiveEditPageEntry}
    */

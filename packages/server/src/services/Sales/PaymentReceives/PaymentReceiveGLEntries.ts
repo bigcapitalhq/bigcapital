@@ -42,7 +42,7 @@ export class PaymentReceiveGLEntries {
       .findById(paymentReceiveId)
       .withGraphFetched('entries.invoice');
 
-    // Retrives the payment receive ledger.
+    // Retrieves the payment receive ledger.
     const ledger = await this.getPaymentReceiveGLedger(
       tenantId,
       paymentReceive,

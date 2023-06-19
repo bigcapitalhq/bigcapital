@@ -177,7 +177,7 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Retreives the Receipt totals.
+ * Retrieves the Receipt totals.
  */
 export const useReceiptTotals = () => {
   const {
@@ -200,7 +200,7 @@ export const useReceiptTotals = () => {
   // Retrieves the payment total.
   const paymentTotal = React.useMemo(() => 0, []);
 
-  // Retireves the formatted payment total.
+  // Retrieves the formatted payment total.
   const formattedPaymentTotal = React.useMemo(
     () => formattedAmount(paymentTotal, currencyCode),
     [paymentTotal, currencyCode],

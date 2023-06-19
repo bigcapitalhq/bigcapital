@@ -10,7 +10,7 @@ export const FinancialTablePreviousYear = (Base) =>
     // # Columns.
     // ------------------------------------
     /**
-     * Retrive previous year total column.
+     * Retrieve previous year total column.
      * @param   {DateRange} previousYear -
      * @returns {ITableColumn}
      */

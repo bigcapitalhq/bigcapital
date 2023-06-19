@@ -21,7 +21,7 @@ export default class GetCreditNoteAssociatedAppliedInvoices extends BaseCreditNo
   ): Promise<ISaleInvoice[]> => {
     const { CreditNoteAppliedInvoice } = this.tenancy.models(tenantId);
 
-    // Retireve credit note or throw not found service error.
+    // Retrieve credit note or throw not found service error.
     const creditNote = await this.getCreditNoteOrThrowError(
       tenantId,
       creditNoteId

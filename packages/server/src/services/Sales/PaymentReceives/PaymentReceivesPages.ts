@@ -22,7 +22,7 @@ export default class PaymentReceivesPages {
   logger: any;
 
   /**
-   * Retrive page invoices entries from the given sale invoices models.
+   * Retrieve page invoices entries from the given sale invoices models.
    * @param  {ISaleInvoice[]} invoices - Invoices.
    * @return {IPaymentReceivePageEntry}
    */

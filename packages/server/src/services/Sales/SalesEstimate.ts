@@ -159,7 +159,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
     saleEstimateDTO: ISaleEstimateDTO,
     oldSaleEstimate?: ISaleEstimate
   ): string {
-    // Retreive the next invoice number.
+    // Retrieve the next invoice number.
     const autoNextNumber = this.getNextEstimateNumber(tenantId);
 
     if (saleEstimateDTO.estimateNumber) {
@@ -184,10 +184,10 @@ export default class SaleEstimateService implements ISalesEstimatesService {
 
     const amount = sumBy(estimateDTO.entries, (e) => ItemEntry.calcAmount(e));
 
-    // Retreive the next invoice number.
+    // Retrieve the next invoice number.
     const autoNextNumber = this.getNextEstimateNumber(tenantId);
 
-    // Retreive the next estimate number.
+    // Retrieve the next estimate number.
     const estimateNumber =
       estimateDTO.estimateNumber ||
       oldSaleEstimate?.estimateNumber ||

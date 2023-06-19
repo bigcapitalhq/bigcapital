@@ -94,7 +94,7 @@ export default class CreditNoteGLEntries {
       .findById(creditNoteId)
       .withGraphFetched('entries.item');
 
-    // Retreive the the `accounts receivable` account based on the given currency.
+    // Retrieve the the `accounts receivable` account based on the given currency.
     const ARAccount = await accountRepository.findOrCreateAccountReceivable(
       creditNoteWithItems.currencyCode
     );

@@ -147,7 +147,7 @@ export function usePaymentMadeEditPage(id, props) {
 }
 
 /**
- * Retreive payment made new page entries.
+ * Retrieve payment made new page entries.
  * @param {number} vendorId -
  */
 export function usePaymentMadeNewPageEntries(vendorId, props) {

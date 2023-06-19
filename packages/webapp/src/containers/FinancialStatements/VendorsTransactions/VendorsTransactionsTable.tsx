@@ -26,7 +26,7 @@ export default function VendorsTransactionsTable({
     query,
   } = useVendorsTransactionsContext();
 
-  // Retireve vendor transactions table columns.
+  // Retrieve vendor transactions table columns.
   const columns = useVendorsTransactionsColumns();
 
   const expandedRows = useMemo(

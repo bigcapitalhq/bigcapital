@@ -210,7 +210,7 @@ export const transformErrors = (errors, { setFieldError }) => {
 };
 
 /**
- * Retreives the payment receive totals.
+ * Retrieves the payment receive totals.
  */
 export const usePaymentReceiveTotals = () => {
   const {

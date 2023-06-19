@@ -171,7 +171,7 @@ export class ProfitProfitabilitySummary extends FinancialSheet {
   };
 
   /**
-   * Retreives the all projects profit total node.
+   * Retrieves the all projects profit total node.
    * @param {IProjectProfitabilitySummaryProjectNode[]} projects
    * @returns {IProjectProfitabilitySummaryTotal}
    */

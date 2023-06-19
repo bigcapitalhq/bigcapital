@@ -12,7 +12,7 @@ export default class DynamicListCustomView extends DynamicListAbstract {
   tenancy: HasTenancyService;
 
   /**
-   * Retreive custom view or throws error not found.
+   * Retrieve custom view or throws error not found.
    * @param  {number} tenantId
    * @param  {number} viewId
    * @return {Promise<IView>}

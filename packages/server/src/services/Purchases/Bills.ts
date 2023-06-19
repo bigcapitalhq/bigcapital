@@ -139,7 +139,7 @@ export default class BillsService
   private async validateBillHasNoEntries(tenantId, billId: number) {
     const { BillPaymentEntry } = this.tenancy.models(tenantId);
 
-    // Retireve the bill associate payment made entries.
+    // Retrieve the bill associate payment made entries.
     const entries = await BillPaymentEntry.query().where('bill_id', billId);
 
     if (entries.length > 0) {
@@ -683,7 +683,7 @@ export default class BillsService
   ): Promise<void> {
     const { Bill } = this.tenancy.models(tenantId);
 
-    // Retireve bill with associated entries and allocated cost entries.
+    // Retrieve bill with associated entries and allocated cost entries.
     const bill = await Bill.query(trx)
       .findById(billId)
       .withGraphFetched('entries.allocatedCostEntries');

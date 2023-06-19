@@ -54,7 +54,7 @@ export default class BaseVendorCredit {
       ...entry,
       referenceType: 'VendorCredit',
     }));
-    // Retreive the next vendor credit number.
+    // Retrieve the next vendor credit number.
     const autoNextNumber = this.getNextCreditNumber(tenantId);
 
     // Determines the credit note number.

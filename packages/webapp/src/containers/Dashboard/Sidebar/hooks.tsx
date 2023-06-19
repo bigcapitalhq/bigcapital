@@ -48,7 +48,7 @@ function removeSidebarOverlayChildren(menu) {
 }
 
 /**
- * Retrives the main sidebar pre-menu.
+ * Retrieves the main sidebar pre-menu.
  * @returns {ISidebarMenuItem[]}
  */
 export function getMainSidebarMenu() {

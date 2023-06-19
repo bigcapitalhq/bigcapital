@@ -184,7 +184,7 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Retreives the estimate totals.
+ * Retrieves the estimate totals.
  */
 export const useEstimateTotals = () => {
   const {

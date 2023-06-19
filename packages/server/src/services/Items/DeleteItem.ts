@@ -34,7 +34,7 @@ export class DeleteItem {
   public async deleteItem(tenantId: number, itemId: number) {
     const { Item } = this.tenancy.models(tenantId);
 
-    // Retreive the given item or throw not found service error.
+    // Retrieve the given item or throw not found service error.
     const oldItem = await Item.query()
       .findById(itemId)
       .throwIfNotFound()

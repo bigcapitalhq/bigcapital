@@ -206,7 +206,7 @@ export const useInvoiceTotal = () => {
 };
 
 /**
- * Retreives the invoice totals.
+ * Retrieves the invoice totals.
  */
 export const useInvoiceTotals = () => {
   const {
@@ -229,7 +229,7 @@ export const useInvoiceTotals = () => {
   // Retrieves the payment total.
   const paymentTotal = React.useMemo(() => 0, []);
 
-  // Retireves the formatted payment total.
+  // Retrieves the formatted payment total.
   const formattedPaymentTotal = React.useMemo(
     () => formattedAmount(paymentTotal, currencyCode),
     [paymentTotal, currencyCode],

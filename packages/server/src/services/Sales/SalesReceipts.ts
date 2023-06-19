@@ -189,10 +189,10 @@ export default class SalesReceiptService implements ISalesReceiptsService {
     const amount = sumBy(saleReceiptDTO.entries, (e) =>
       ItemEntry.calcAmount(e)
     );
-    // Retreive the next invoice number.
+    // Retrieve the next invoice number.
     const autoNextNumber = this.getNextReceiptNumber(tenantId);
 
-    // Retreive the receipt number.
+    // Retrieve the receipt number.
     const receiptNumber =
       saleReceiptDTO.receiptNumber ||
       oldSaleReceipt?.receiptNumber ||
@@ -244,7 +244,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
   ): Promise<ISaleReceipt> {
     const { SaleReceipt, Contact } = this.tenancy.models(tenantId);
 
-    // Retireves the payment customer model.
+    // Retrieves the payment customer model.
     const paymentCustomer = await Contact.query()
       .modify('customer')
       .findById(saleReceiptDTO.customerId)

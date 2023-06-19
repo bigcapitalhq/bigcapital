@@ -29,7 +29,7 @@ export default class ContactTransfromer extends Transformer {
   };
 
   /**
-   * Retriecve formatted date.
+   * Retrieve formatted date.
    * @param {IExpense} expense
    * @returns {string}
    */

@@ -47,7 +47,7 @@ export default class BaseCreditNotes {
       ...entry,
       referenceType: 'CreditNote',
     }));
-    // Retreive the next credit note number.
+    // Retrieve the next credit note number.
     const autoNextNumber = this.getNextCreditNumber(tenantId);
 
     // Determines the credit note number.

@@ -28,7 +28,7 @@ export function getLockTableName(tableName: string): string {
 }
 
 /**
- * Retireve the lock table name from given migration table name with schema.
+ * Retrieve the lock table name from given migration table name with schema.
  * @param {string} tableName
  * @param {string} schemaName
  * @returns {string}

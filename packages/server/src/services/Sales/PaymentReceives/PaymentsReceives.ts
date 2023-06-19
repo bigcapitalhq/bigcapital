@@ -357,7 +357,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
   ): Promise<IPaymentReceive> {
     const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
 
-    // Retreive the next invoice number.
+    // Retrieve the next invoice number.
     const autoNextNumber = this.getNextPaymentReceiveNumber(tenantId);
 
     // Retrieve the next payment receive number.
@@ -645,7 +645,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
     const { PaymentReceive, PaymentReceiveEntry } =
       this.tenancy.models(tenantId);
 
-    // Retreive payment receive or throw not found service error.
+    // Retrieve payment receive or throw not found service error.
     const oldPaymentReceive = await this.getPaymentReceiveOrThrowError(
       tenantId,
       paymentReceiveId

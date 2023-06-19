@@ -89,7 +89,7 @@ export function useCancelUnlockingPartialTransactions(props) {
 }
 
 /**
- * Retrive the transactions locking.
+ * Retrieve the transactions locking.
  */
 export function useTransactionsLocking(query, props) {
   return useRequestQuery(

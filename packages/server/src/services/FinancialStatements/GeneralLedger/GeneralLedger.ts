@@ -181,7 +181,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
   }
 
   /**
-   * Retreive general ledger accounts sections.
+   * Retrieve general ledger accounts sections.
    * @param {IAccount} account
    * @return {IGeneralLedgerSheetAccount}
    */

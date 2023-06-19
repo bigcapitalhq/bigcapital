@@ -230,7 +230,7 @@ function determineCheckboxState(isFullChecked, isFullUnchecked) {
 }
 
 /**
- * Retreive the service all permissions paths.
+ * Retrieve the service all permissions paths.
  * @param {string} subject
  * @returns {string[]}
  */

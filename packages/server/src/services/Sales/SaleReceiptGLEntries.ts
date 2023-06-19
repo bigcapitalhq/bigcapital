@@ -94,7 +94,7 @@ export class SaleReceiptGLEntries {
   };
 
   /**
-   * Retireves the income GL common entry.
+   * Retrieves the income GL common entry.
    * @param {ISaleReceipt} saleReceipt -
    */
   private getIncomeGLCommonEntry = (saleReceipt: ISaleReceipt) => {
