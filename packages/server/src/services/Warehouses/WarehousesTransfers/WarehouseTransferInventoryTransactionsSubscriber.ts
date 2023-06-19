@@ -61,7 +61,7 @@ export class WarehouseTransferInventoryTransactionsSubscriber {
         false,
         trx
       );
-      // Write initiate inventory transaction if warehouse transfer initited and transferred yet.
+      // Write initiate inventory transaction if warehouse transfer initiated and transferred yet.
     } else if (warehouseTransfer.isInitiated) {
       await this.warehouseTransferInventoryTransactions.writeInitiateInventoryTransactions(
         tenantId,
@@ -92,7 +92,7 @@ export class WarehouseTransferInventoryTransactionsSubscriber {
         true,
         trx
       );
-      // Write initiate inventory transaction if warehouse transfer initited and transferred yet.
+      // Write initiate inventory transaction if warehouse transfer initiated and transferred yet.
     } else if (warehouseTransfer.isInitiated) {
       await this.warehouseTransferInventoryTransactions.writeInitiateInventoryTransactions(
         tenantId,

@@ -486,7 +486,7 @@ export default {
     onDeleted: 'onWarehouseTransferDeleted',
 
     onInitiate: 'onWarehouseTransferInitiate',
-    onInitiated: 'onWarehouseTransferInitated',
+    onInitiated: 'onWarehouseTransferInitiated',
 
     onTransfer: 'onWarehouseTransferInitiate',
     onTransferred: 'onWarehouseTransferTransferred',
