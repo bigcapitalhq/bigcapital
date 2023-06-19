@@ -61,7 +61,7 @@ describe('routes: `/financial_statements`', () => {
   });
  
   describe('routes: `financial_statements/balance_sheet`', () => {
-    it('Should response unauthorzied in case the user was not authorized.', async () => {
+    it('Should response unauthorized in case the user was not authorized.', async () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .send();
