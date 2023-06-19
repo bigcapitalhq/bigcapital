@@ -59,7 +59,7 @@ const initialState = {
     displayFilterDrawer: false,
   },
   projectProfitabilitySummary: {
-    dispalyFilterDrawer: false,
+    displayFilterDrawer: false,
   },
 };
 
