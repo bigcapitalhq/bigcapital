@@ -31,7 +31,7 @@ describe('routes: `/financial_statements`', () => {
       referenceId: 1, ...accountTransactionMixied,
     });
 
-    // Jounral
+    // Journal
     // 4000 Credit - Opening balance account.
     //     2000 Debit - Bank account
     //     2000 Debit - Bank account

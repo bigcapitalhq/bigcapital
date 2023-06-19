@@ -59,7 +59,7 @@ function ExpensesDataTable({
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.EXPENSES);
 
-  // Handle fetch data of manual jouranls datatable.
+  // Handle fetch data of manual journals datatable.
   const handleFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
       setExpensesTableState({

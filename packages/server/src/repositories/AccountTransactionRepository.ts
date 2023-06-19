@@ -80,7 +80,7 @@ export default class AccountTransactionsRepository extends TenantRepository {
   }
 
   /**
-   * Reverts the jouranl entries.
+   * Reverts the journal entries.
    * @param {number|number[]} referenceId - Reference id.
    * @param {string} referenceType - Reference type.
    */

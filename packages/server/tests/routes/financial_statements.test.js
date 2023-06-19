@@ -48,7 +48,7 @@ describe('routes: `/financial_statements`', () => {
       referenceId: 1, ...accountTransactionMixied,
     });
 
-    // Jounral
+    // Journal
     // 4000 Credit - liability account.
     //     2000 Debit - Asset account
     //     2000 Debit - Asset account

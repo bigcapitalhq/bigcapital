@@ -31,7 +31,7 @@ export const getDefaultJournalQuery = () => {
 };
 
 /**
- * Retrieves the jorunal sheet query.
+ * Retrieves the journal sheet query.
  */
 export const useJournalQuery = () => {
   // Retrieves location query.

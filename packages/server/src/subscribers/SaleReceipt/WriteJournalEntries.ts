@@ -53,7 +53,7 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
   };
 
   /**
-   * Handles sale receipt revert jouranl entries once be deleted.
+   * Handles sale receipt revert journal entries once be deleted.
    * @param {ISaleReceiptEventDeletedPayload} payload -
    */
   public handleRevertReceiptJournalEntriesOnDeleted = async ({

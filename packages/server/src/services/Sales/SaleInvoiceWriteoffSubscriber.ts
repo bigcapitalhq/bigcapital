@@ -41,7 +41,7 @@ export default class SaleInvoiceWriteoffSubscriber {
   };
 
   /**
-   * Reverts the written-of sale invoice jounral entries.
+   * Reverts the written-of sale invoice journal entries.
    * @param {ISaleInvoiceWrittenOffCanceledPayload}
    */
   private revertJournalEntriesOnce = async ({

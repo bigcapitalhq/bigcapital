@@ -51,7 +51,7 @@ export class ManualJournalsApplication {
   };
 
   /**
-   * Edits jouranl entries.
+   * Edits journal entries.
    * @param {number} tenantId
    * @param {number} manualJournalId
    * @param {IMakeJournalDTO} manualJournalDTO

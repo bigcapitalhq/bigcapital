@@ -13,7 +13,7 @@ export class LedgerRevert {
   private ledgerStorage: LedgerStorageService;
 
   /**
-   * Reverts the jouranl entries.
+   * Reverts the journal entries.
    * @param {number|number[]} referenceId - Reference id.
    * @param {string} referenceType - Reference type.
    */

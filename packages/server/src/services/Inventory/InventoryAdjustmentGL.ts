@@ -143,7 +143,7 @@ export default class InventoryAdjustmentsGL {
   /**
    * Writes increment inventory adjustment GL entries.
    * @param   {InventoryAdjustment} inventoryAdjustment -
-   * @param   {JournalPoster} jorunal -
+   * @param   {JournalPoster} journal -
    * @returns {ILedgerEntry[]}
    */
   public getIncrementAdjustmentGLEntries(

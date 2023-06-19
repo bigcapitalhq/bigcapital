@@ -40,7 +40,7 @@ export class CreateManualJournalService {
 
   /**
    * Transform the new manual journal DTO to upsert graph operation.
-   * @param {IManualJournalDTO} manualJournalDTO - Manual jorunal DTO.
+   * @param {IManualJournalDTO} manualJournalDTO - Manual journal DTO.
    * @param {ISystemUser} authorizedUser
    */
   private transformNewDTOToModel(

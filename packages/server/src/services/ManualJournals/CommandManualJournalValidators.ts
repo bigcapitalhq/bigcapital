@@ -256,7 +256,7 @@ export class CommandManualJournalValidators {
   };
 
   /**
-   * Filters the not published manual jorunals.
+   * Filters the not published manual journals.
    * @param {IManualJournal[]} manualJournal - Manual journal.
    * @return {IManualJournal[]}
    */

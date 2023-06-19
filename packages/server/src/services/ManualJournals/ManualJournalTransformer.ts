@@ -16,9 +16,9 @@ export class ManualJournalTransfromer extends Transformer {
    * @param {IManualJournal} manualJournal
    * @returns {string}
    */
-  protected formattedAmount = (manualJorunal: IManualJournal): string => {
-    return formatNumber(manualJorunal.amount, {
-      currencyCode: manualJorunal.currencyCode,
+  protected formattedAmount = (manualJournal: IManualJournal): string => {
+    return formatNumber(manualJournal.amount, {
+      currencyCode: manualJournal.currencyCode,
     });
   };
 
@@ -27,8 +27,8 @@ export class ManualJournalTransfromer extends Transformer {
    * @param {IManualJournal} manualJournal
    * @returns {string}
    */
-  protected formattedDate = (manualJorunal: IManualJournal): string => {
-    return this.formatDate(manualJorunal.date);
+  protected formattedDate = (manualJournal: IManualJournal): string => {
+    return this.formatDate(manualJournal.date);
   };
 
   /**
@@ -36,7 +36,7 @@ export class ManualJournalTransfromer extends Transformer {
    * @param {IManualJournal} manualJournal
    * @returns {string}
    */
-  protected formattedPublishedAt = (manualJorunal: IManualJournal): string => {
-    return this.formatDate(manualJorunal.publishedAt);
+  protected formattedPublishedAt = (manualJournal: IManualJournal): string => {
+    return this.formatDate(manualJournal.publishedAt);
   };
 }
