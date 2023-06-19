@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 
 import { useAbilityContext } from '@/hooks';
 import {
-  useSidebarSubmnuActions,
+  useSidebarSubmenuActions,
   useDialogActions,
   useSubscription,
   useSidebarSubmenu,
@@ -157,7 +157,7 @@ function useFlatSidebarMenu(menu) {
  */
 function useBindSidebarItemLinkClick() {
   const history = useHistory();
-  const { closeSidebarSubmenu } = useSidebarSubmnuActions();
+  const { closeSidebarSubmenu } = useSidebarSubmenuActions();
 
   // Handle sidebar item click.
   const onClick = (item) => (event) => {
@@ -179,7 +179,7 @@ function useBindSidebarItemLinkClick() {
  * @param   {ISidebarMenuItem} item
  */
 function useBindSidebarItemDialogClick() {
-  const { closeSidebarSubmenu } = useSidebarSubmnuActions();
+  const { closeSidebarSubmenu } = useSidebarSubmenuActions();
   const { openDialog } = useDialogActions();
 
   // Handle sidebar item click.
@@ -202,7 +202,7 @@ function useBindSidebarItemDialogClick() {
  */
 function useBindSidebarItemOverlayClick() {
   const { toggleSidebarSubmenu, closeSidebarSubmenu } =
-    useSidebarSubmnuActions();
+    useSidebarSubmenuActions();
 
   // Handle sidebar item click.
   const onClick = (item) => (event) => {
