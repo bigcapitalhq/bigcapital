@@ -134,7 +134,7 @@ export default class PaymentReceiveNotifyBySms {
   };
 
   /**
-   * Formats the payment details sms notification messafge.
+   * Formats the payment details sms notification message.
    * @param {string} smsMessage
    * @param {IPaymentReceive} payment
    * @param {ICustomer} customer
