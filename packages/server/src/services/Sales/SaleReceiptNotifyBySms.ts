@@ -47,7 +47,7 @@ export default class SaleReceiptNotifyBySms {
       .findById(saleReceiptId)
       .withGraphFetched('customer');
 
-    // Validates the receipt receipt existence.
+    // Validates the receipt existence.
     this.validateSaleReceiptExistence(saleReceipt);
 
     // Validate the customer phone number.
@@ -180,7 +180,7 @@ export default class SaleReceiptNotifyBySms {
       .findById(saleReceiptId)
       .withGraphFetched('customer');
 
-    // Validates the receipt receipt existence.
+    // Validates the receipt existence.
     this.validateSaleReceiptExistence(saleReceipt);
 
     // Current tenant metadata.
@@ -200,7 +200,7 @@ export default class SaleReceiptNotifyBySms {
   };
 
   /**
-   * Validates the receipt receipt existence.
+   * Validates the receipt existence.
    * @param {ISaleReceipt|null} saleReceipt
    */
   private validateSaleReceiptExistence(saleReceipt: ISaleReceipt | null) {

@@ -62,7 +62,7 @@ export class ItemReceiptTransactionTransformer extends Transformer {
     return {
       receiptId: entry.receipt.id,
 
-      receipNumber: entry.receipt.receiptNumber,
+      receiptNumber: entry.receipt.receiptNumber,
       referenceNumber: entry.receipt.referenceNo,
 
       receiptDate: entry.receipt.receiptDate,
