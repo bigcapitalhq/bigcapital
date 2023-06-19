@@ -14,7 +14,7 @@ export function SkeletonText({
     () => (charsLength ? charsLength : randomNumber(minChars, maxChars)),
     [charsLength, minChars, maxChars],
   );
-  const randamText = 'X'.repeat(computedCharLength);
+  const randomText = 'X'.repeat(computedCharLength);
 
-  return <Tag className={'skeleton'}>{randamText}</Tag>;
+  return <Tag className={'skeleton'}>{randomText}</Tag>;
 }
