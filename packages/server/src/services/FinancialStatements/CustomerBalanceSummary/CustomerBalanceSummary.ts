@@ -89,7 +89,7 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
       R.when(this.isCustomersPostFilter, this.contactsFilter),
       R.when(
         R.always(this.filter.percentageColumn),
-        this.contactCamparsionPercentageOfColumn
+        this.contactComparisonPercentageOfColumn
       ),
       this.customersMapper
     )(customers);

@@ -19,7 +19,7 @@ import {
  * Profit/loss comparisons panel fields.
  * @returns {JSX.Element}
  */
-function ProfitLossComaprsionPanelFields() {
+function ProfitLossComparisonPanelFields() {
   return (
     <>
       {/**----------- Previous Year -----------*/}
@@ -183,9 +183,9 @@ function ProfitLossComaprsionPanelFields() {
 export default function ProfitLossSheetHeaderComparisonPanel() {
   return (
     <ProfitLossSheetComparisonWrap>
-      <ProfitLossComaprsionFieldsWrap>
-        <ProfitLossComaprsionPanelFields />
-      </ProfitLossComaprsionFieldsWrap>
+      <ProfitLossComparisonFieldsWrap>
+        <ProfitLossComparisonPanelFields />
+      </ProfitLossComparisonFieldsWrap>
     </ProfitLossSheetComparisonWrap>
   );
 }
@@ -200,6 +200,6 @@ const FlexSubFields = styled(Flex)`
   padding-left: 20px;
 `;
 
-const ProfitLossComaprsionFieldsWrap = styled.div`
+const ProfitLossComparisonFieldsWrap = styled.div`
   max-width: 400px;
 `;

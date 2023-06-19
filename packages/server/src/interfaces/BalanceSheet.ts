@@ -159,7 +159,7 @@ export interface IBalanceSheetDatePeriods {
   initDateRangeCollection(): void;
 }
 
-export interface IBalanceSheetComparsions {
+export interface IBalanceSheetComparisons {
   assocPreviousYearAccountNode(node);
   hasPreviousPeriod(): boolean;
   hasPreviousYear(): boolean;

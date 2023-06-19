@@ -59,14 +59,14 @@ export default class ProfitLossSheetController extends BaseFinancialReportContro
       query('percentage_expense').optional().isBoolean().toBoolean(),
       query('percentage_income').optional().isBoolean().toBoolean(),
 
-      // Camparsion periods periods.
+      // Comparison periods periods.
       query('previous_period').optional().isBoolean().toBoolean(),
       query('previous_period_amount_change').optional().isBoolean().toBoolean(),
       query('previous_period_percentage_change')
         .optional()
         .isBoolean()
         .toBoolean(),
-      // Camparsion periods periods.
+      // Comparison periods periods.
       query('previous_year').optional().isBoolean().toBoolean(),
       query('previous_year_amount_change').optional().isBoolean().toBoolean(),
       query('previous_year_percentage_change')

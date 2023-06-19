@@ -16,8 +16,8 @@ import {
 } from '../../../interfaces';
 import { BalanceSheetSchema } from './BalanceSheetSchema';
 import { BalanceSheetPercentage } from './BalanceSheetPercentage';
-import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
-import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
+import { BalanceSheetComparisonPreviousPeriod } from './BalanceSheetComparisonPreviousPeriod';
+import { BalanceSheetComparisonPreviousYear } from './BalanceSheetComparisonPreviousYear';
 import { BalanceSheetDatePeriods } from './BalanceSheetDatePeriods';
 import { BalanceSheetBase } from './BalanceSheetBase';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
@@ -28,8 +28,8 @@ import { BalanceSheetFiltering } from './BalanceSheetFiltering';
 export default class BalanceSheet extends R.compose(
   BalanceSheetFiltering,
   BalanceSheetDatePeriods,
-  BalanceSheetComparsionPreviousPeriod,
-  BalanceSheetComparsionPreviousYear,
+  BalanceSheetComparisonPreviousPeriod,
+  BalanceSheetComparisonPreviousYear,
   BalanceSheetPercentage,
   BalanceSheetSchema,
   BalanceSheetBase,

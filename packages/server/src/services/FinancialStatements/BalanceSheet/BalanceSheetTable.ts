@@ -11,9 +11,9 @@ import {
 } from '@/interfaces';
 import { tableRowMapper } from 'utils';
 import FinancialSheet from '../FinancialSheet';
-import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
+import { BalanceSheetComparisonPreviousYear } from './BalanceSheetComparisonPreviousYear';
 import { IROW_TYPE, DISPLAY_COLUMNS_BY } from './constants';
-import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
+import { BalanceSheetComparisonPreviousPeriod } from './BalanceSheetComparisonPreviousPeriod';
 import { BalanceSheetPercentage } from './BalanceSheetPercentage';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import { BalanceSheetBase } from './BalanceSheetBase';
@@ -29,8 +29,8 @@ export default class BalanceSheetTable extends R.compose(
   BalanceSheetTablePreviousYear,
   BalanceSheetTableDatePeriods,
   BalanceSheetTablePercentage,
-  BalanceSheetComparsionPreviousYear,
-  BalanceSheetComparsionPreviousPeriod,
+  BalanceSheetComparisonPreviousYear,
+  BalanceSheetComparisonPreviousPeriod,
   BalanceSheetPercentage,
   FinancialSheetStructure,
   FinancialTable,

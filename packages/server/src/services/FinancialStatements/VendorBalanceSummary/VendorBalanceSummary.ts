@@ -85,7 +85,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
       R.when(this.isVendorsPostFilter, this.contactsFilter),
       R.when(
         R.always(this.filter.percentageColumn),
-        this.contactCamparsionPercentageOfColumn
+        this.contactComparisonPercentageOfColumn
       ),
       this.vendorsMapper
     )(vendors);

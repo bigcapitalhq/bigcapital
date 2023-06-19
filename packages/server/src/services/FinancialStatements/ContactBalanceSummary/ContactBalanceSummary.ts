@@ -80,7 +80,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    * @param   {IContactBalanceSummaryContact} contact
    * @returns {IContactBalanceSummaryContact}
    */
-  private contactCamparsionPercentageOfColumnMapper = (
+  private contactComparisonPercentageOfColumnMapper = (
     total: number,
     contact: IContactBalanceSummaryContact
   ): IContactBalanceSummaryContact => {
@@ -99,15 +99,15 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    * @param  {IContactBalanceSummaryContact[]} contacts -
    * @return {IContactBalanceSummaryContact[]}
    */
-  protected contactCamparsionPercentageOfColumn = (
+  protected contactComparisonPercentageOfColumn = (
     contacts: IContactBalanceSummaryContact[]
   ): IContactBalanceSummaryContact[] => {
     const customersTotal = this.getContactsTotal(contacts);
-    const camparsionPercentageOfColumn = R.curry(
-      this.contactCamparsionPercentageOfColumnMapper
+    const comparisonPercentageOfColumn = R.curry(
+      this.contactComparisonPercentageOfColumnMapper
     )(customersTotal);
 
-    return contacts.map(camparsionPercentageOfColumn);
+    return contacts.map(comparisonPercentageOfColumn);
   };
 
   /**

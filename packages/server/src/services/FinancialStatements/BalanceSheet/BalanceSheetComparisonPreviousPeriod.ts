@@ -10,10 +10,10 @@ import {
 import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
 import { FinancialHorizTotals } from '../FinancialHorizTotals';
 
-export const BalanceSheetComparsionPreviousPeriod = (Base: any) =>
+export const BalanceSheetComparisonPreviousPeriod = (Base: any) =>
   class
     extends R.compose(FinancialPreviousPeriod, FinancialHorizTotals)(Base)
-    implements IBalanceSheetComparsions
+    implements IBalanceSheetComparisons
   {
     // ------------------------------
     // # Account
