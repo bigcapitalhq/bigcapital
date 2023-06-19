@@ -28,9 +28,9 @@ export default class HasTenancyService {
   singletonService(tenantId: number, key: string, callback: Function) {
     const container = this.tenantContainer(tenantId);
     const Logger = Container.get('logger');
-    const hasServiceInstnace = container.has(key);
+    const hasServiceInstance = container.has(key);
 
-    if (!hasServiceInstnace) {
+    if (!hasServiceInstance) {
       const serviceInstance = callback();
 
       container.set(key, serviceInstance);
