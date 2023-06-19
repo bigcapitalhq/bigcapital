@@ -10,7 +10,7 @@ import { compose } from '@/utils';
 
 
 /**
- * Bad bebt form floating actions.
+ * Bad debt form floating actions.
  */
 function BadDebtFormFloatingActions({
   // #withDialogActions
