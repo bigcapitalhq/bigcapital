@@ -17,7 +17,7 @@ export default class BillWriteGLEntriesSubscriber {
   billsService: BillsService;
 
   /**
-   * Attachs events with handles.
+   * Attaches events with handles.
    */
   attach(bus) {
     bus.subscribe(
