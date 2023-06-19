@@ -28,7 +28,7 @@ import { compose } from '@/utils';
  */
 function AccountTransactionsDataTable({
   // #withSettings
-  cashflowTansactionsTableSize,
+  cashflowTransactionsTableSize,
 
   // #withAlertsActions
   openAlert,
@@ -80,7 +80,7 @@ function AccountTransactionsDataTable({
       ContextMenu={ActionsMenu}
       onCellClick={handleCellClick}
       // #TableVirtualizedListRows props.
-      vListrowHeight={cashflowTansactionsTableSize == 'small' ? 32 : 40}
+      vListrowHeight={cashflowTransactionsTableSize == 'small' ? 32 : 40}
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
@@ -96,7 +96,7 @@ function AccountTransactionsDataTable({
 
 export default compose(
   withSettings(({ cashflowTransactionsSettings }) => ({
-    cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
+    cashflowTransactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
   withAlertsActions,
   withDrawerActions,

@@ -214,7 +214,7 @@ export default class InventoryDetails extends FinancialSheet {
     return {
       nodeType: INodeTypes.TRANSACTION,
       date: this.getDateMeta(transaction.date),
-      transactionType: this.i18n.__(transaction.transcationTypeFormatted),
+      transactionType: this.i18n.__(transaction.transactionTypeFormatted),
       transactionNumber: transaction?.meta?.transactionNumber,
       direction: transaction.direction,
 
@@ -236,7 +236,7 @@ export default class InventoryDetails extends FinancialSheet {
   }
 
   /**
-   * Retrieve the inventory transcations by item id.
+   * Retrieve the inventory transactions by item id.
    * @param {number} itemId
    * @returns {IInventoryTransaction[]}
    */

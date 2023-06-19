@@ -101,7 +101,7 @@ export default class CashFlowRepository {
   }
 
   /**
-   * Retrieve the net income tranasctions.
+   * Retrieve the net income transactions.
    * @param {number} tenantId -
    * @param {ICashFlowStatementQuery} query -
    * @return {Promise<IAccountTransaction[]>}

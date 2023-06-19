@@ -1016,7 +1016,7 @@ export const getDashboardRoutes = () => [
     ),
     sidebarExpand: false,
     backLink: true,
-    pageTitle: intl.get('cash_flow.label_account_transcations'),
+    pageTitle: intl.get('cash_flow.label_account_transactions'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },

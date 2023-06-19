@@ -37,7 +37,7 @@ export default class GetCashflowTransactionsService {
       .withGraphFetched('transactions.account')
       .throwIfNotFound();
 
-    this.throwErrorCashflowTranscationNotFound(cashflowTransaction);
+    this.throwErrorCashflowTransactionNotFound(cashflowTransaction);
 
     // Transformes the cashflow transaction model to POJO.
     return this.transfromer.transform(
@@ -51,7 +51,7 @@ export default class GetCashflowTransactionsService {
    * Throw not found error if the given cashflow undefined.
    * @param {ICashflowTransaction} cashflowTransaction -
    */
-  private throwErrorCashflowTranscationNotFound = (
+  private throwErrorCashflowTransactionNotFound = (
     cashflowTransaction: ICashflowTransaction
   ) => {
     if (!cashflowTransaction) {

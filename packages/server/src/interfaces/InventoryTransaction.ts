@@ -13,7 +13,7 @@ export interface IInventoryTransaction {
   quantity: number | null;
   rate: number;
   transactionType: string;
-  transcationTypeFormatted?: string;
+  transactionTypeFormatted?: string;
   transactionId: number;
   costAccountId?: number;
   entryId: number;

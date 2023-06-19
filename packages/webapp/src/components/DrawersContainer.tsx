@@ -44,7 +44,7 @@ export default function DrawersContainer() {
       <CustomerDetailsDrawer name={DRAWERS.CUSTOMER_DETAILS} />
       <VendorDetailsDrawer name={DRAWERS.VENDOR_DETAILS} />
       <InventoryAdjustmentDetailDrawer name={DRAWERS.INVENTORY_ADJUSTMENT_DETAILS} />
-      <CashflowTransactionDetailDrawer name={DRAWERS.CASHFLOW_TRNASACTION_DETAILS} />
+      <CashflowTransactionDetailDrawer name={DRAWERS.CASHFLOW_TRANSACTION_DETAILS} />
       <QuickCreateCustomerDrawer name={DRAWERS.QUICK_CREATE_CUSTOMER} />
       <QuickCreateItemDrawer name={DRAWERS.QUICK_CREATE_ITEM} />
       <QuickWriteVendorDrawer name={DRAWERS.QUICK_WRITE_VENDOR} />

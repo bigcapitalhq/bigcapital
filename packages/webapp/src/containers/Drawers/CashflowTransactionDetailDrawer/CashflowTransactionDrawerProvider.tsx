@@ -33,7 +33,7 @@ function CashflowTransactionDrawerProvider({ referenceId, ...props }) {
   return (
     <DrawerLoading loading={isCashflowTransactionLoading}>
       <DrawerHeaderContent
-        name={DRAWERS.CASHFLOW_TRNASACTION_DETAILS}
+        name={DRAWERS.CASHFLOW_TRANSACTION_DETAILS}
         title={intl.get('cash_flow.drawer.label_transaction', {
           number: cashflowTransaction?.transaction_number,
         })}

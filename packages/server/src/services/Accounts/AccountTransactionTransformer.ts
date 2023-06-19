@@ -50,7 +50,7 @@ export default class AccountTransactionTransformer extends Transformer {
   }
 
   /**
-   * Retrieves the tranasction type.
+   * Retrieves the transaction type.
    * @returns {string}
    */
   public transactionType(transaction: IAccountTransaction) {

@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
-import TransactionLandedCost from './TransctionLandedCost';
+import TransactionLandedCost from './TransactionLandedCost';
 import { CONFIG } from './utils';
 
 @Service()

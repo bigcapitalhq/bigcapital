@@ -14,7 +14,7 @@ export function ItemPaymentTransactions() {
   return (
     <Card>
       <ItemTransactionsHeader />
-      <ItemPaymentTransactionContent tansactionType={value} />
+      <ItemPaymentTransactionContent transactionType={value} />
     </Card>
   );
 }

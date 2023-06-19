@@ -54,7 +54,7 @@ export default class VendorBalanceSummaryRepository {
     const payableAccountsIds = map(payableAccounts, 'id');
 
     // Retrieve the customers transactions of A/R accounts.
-    const customersTranasctions = await AccountTransaction.query().onBuild(
+    const customersTransactions = await AccountTransaction.query().onBuild(
       (query) => {
         query.whereIn('accountId', payableAccountsIds);
         query.modify('filterDateRange', null, asDate);
@@ -64,6 +64,6 @@ export default class VendorBalanceSummaryRepository {
         query.select('contactId');
       }
     );
-    return customersTranasctions;
+    return customersTransactions;
   }
 }

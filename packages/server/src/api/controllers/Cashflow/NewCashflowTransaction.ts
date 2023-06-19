@@ -10,7 +10,7 @@ import { AbilitySubject, CashflowAction } from '@/interfaces';
 @Service()
 export default class NewCashflowTransactionController extends BaseController {
   @Inject()
-  private newCashflowTranscationService: NewCashflowTransactionService;
+  private newCashflowTransactionService: NewCashflowTransactionService;
 
   /**
    * Router constructor.
@@ -71,7 +71,7 @@ export default class NewCashflowTransactionController extends BaseController {
 
     try {
       const { cashflowTransaction } =
-        await this.newCashflowTranscationService.newCashflowTransaction(
+        await this.newCashflowTransactionService.newCashflowTransaction(
           tenantId,
           ownerContributionDTO,
           userId

@@ -53,7 +53,7 @@ export class SaleInvoiceWriteoffGLStorage {
    * Rewrites the invoice write-off GL entries.
    * @param   {number} tenantId
    * @param   {number} saleInvoiceId
-   * @param   {Knex.Transactio} actiontrx
+   * @param   {Knex.Transaction} actiontrx
    * @returns {Promise<void>}
    */
   public rewriteInvoiceWriteoffEntries = async (

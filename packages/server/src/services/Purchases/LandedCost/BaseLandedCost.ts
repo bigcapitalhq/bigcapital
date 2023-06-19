@@ -12,7 +12,7 @@ import {
   ILandedCostTransactionEntry,
 } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import TransactionLandedCost from './TransctionLandedCost';
+import TransactionLandedCost from './TransactionLandedCost';
 import { ERRORS } from './utils';
 import { CONFIG } from './utils';
 

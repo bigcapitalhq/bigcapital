@@ -8,7 +8,7 @@ import { CashflowTransactionDrawerProvider } from './CashflowTransactionDrawerPr
 import CashflowTransactionDrawerDetails from './CashflowTransactionDrawerDetails';
 
 /**
- * Cash flow transction drawer content.
+ * Cash flow transaction drawer content.
  */
 export default function CashflowTransactionDrawerContent({
   // #ownProp

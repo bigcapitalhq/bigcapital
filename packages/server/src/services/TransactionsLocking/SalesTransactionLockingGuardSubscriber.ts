@@ -203,7 +203,7 @@ export default class SalesTransactionLockingGuardSubscriber {
   };
 
   /**
-   * Transaciton locking guard on canceling written-off invoice.
+   * Transaction locking guard on canceling written-off invoice.
    * @param {ISaleInvoiceWrittenOffCancelPayload} payload
    */
   private transactionLockingGuardOnInvoiceWritingoffCanceling = async ({

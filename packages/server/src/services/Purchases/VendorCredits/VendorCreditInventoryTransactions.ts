@@ -41,7 +41,7 @@ export default class VendorCreditInventoryTransactions {
       warehouseId: vendorCredit.warehouseId,
       createdAt: vendorCredit.createdAt,
     };
-    // Writes inventory tranactions.
+    // Writes inventory transactions.
     await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
       tenantId,
       transaction,

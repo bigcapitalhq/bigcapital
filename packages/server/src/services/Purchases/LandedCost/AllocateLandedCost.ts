@@ -77,7 +77,7 @@ export default class AllocateLandedCost extends BaseLandedCostService {
       costTransaction,
       costTransactionEntry
     );
-    // Saves landed cost transactions with associated tranasctions under
+    // Saves landed cost transactions with associated transactions under
     // unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Save the bill landed cost model.

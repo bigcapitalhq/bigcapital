@@ -317,7 +317,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
   }
 
   /**
-   * Creates a new bill payment transcations and store it to the storage
+   * Creates a new bill payment transactions and store it to the storage
    * with associated bills entries and journal transactions.
    *
    * Procedures:-
@@ -375,7 +375,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       vendor.currencyCode,
       tenantMeta.baseCurrency
     );
-    // Writes bill payment transacation with associated transactions
+    // Writes bill payment transaction with associated transactions
     // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBillPaymentCreating` event.

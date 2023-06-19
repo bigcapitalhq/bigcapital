@@ -29,11 +29,11 @@ export function ActionsMenu({ row: { original }, payload: { onDelete } }) {
  */
 export function FromTransactionCell({
   row: { original },
-  payload: { onFromTranscationClick },
+  payload: { onFromTransactionClick },
 }) {
   // Handle the link click
   const handleAnchorClick = () => {
-    onFromTranscationClick && onFromTranscationClick(original);
+    onFromTransactionClick && onFromTransactionClick(original);
   };
 
   return (

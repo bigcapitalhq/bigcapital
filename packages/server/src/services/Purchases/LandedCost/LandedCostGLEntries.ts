@@ -204,14 +204,14 @@ export default class LandedCostGLEntries extends BaseLandedCostService {
   ) => {
     const { BillLandedCost } = this.tenancy.models(tenantId);
 
-    // Retrieve the bill landed cost transacion with associated
+    // Retrieve the bill landed cost transaction with associated
     // allocated entries and items.
     const allocatedLandedCost = await BillLandedCost.query(trx)
       .findById(billLandedCostId)
       .withGraphFetched('bill')
       .withGraphFetched('allocateEntries.itemEntry.item');
 
-    // Retrieve the allocated from transactione entry.
+    // Retrieve the allocated from transaction entry.
     const transactionEntry = await this.getLandedCostEntry(
       tenantId,
       allocatedLandedCost.fromTransactionType,

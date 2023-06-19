@@ -18,7 +18,7 @@ export default class CreditNoteInventoryTransactionsSubscriber {
   attach(bus) {
     bus.subscribe(
       events.creditNote.onCreated,
-      this.writeInventoryTranscationsOnceCreated
+      this.writeInventoryTransactionsOnceCreated
     );
     bus.subscribe(
       events.creditNote.onEdited,
@@ -30,7 +30,7 @@ export default class CreditNoteInventoryTransactionsSubscriber {
     );
     bus.subscribe(
       events.creditNote.onOpened,
-      this.writeInventoryTranscationsOnceCreated
+      this.writeInventoryTransactionsOnceCreated
     );
   }
 
@@ -38,7 +38,7 @@ export default class CreditNoteInventoryTransactionsSubscriber {
    * Writes inventory transactions once credit note created.
    * @param {ICreditNoteCreatedPayload} payload -
    */
-  public writeInventoryTranscationsOnceCreated = async ({
+  public writeInventoryTransactionsOnceCreated = async ({
     tenantId,
     creditNote,
     trx,

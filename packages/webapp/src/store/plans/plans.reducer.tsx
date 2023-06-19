@@ -77,7 +77,7 @@ const getSubscriptionPlans = () => [
       intl.get('plan.feature.purchase_invoices'),
       intl.get('plan.feature.inventory_tracking'),
       intl.get('plan.feature.custom_roles'),
-      intl.get('plan.feature.multiply_currency_transcations'),
+      intl.get('plan.feature.multiply_currency_transactions'),
       intl.get('plan.feature.inventory_reports'),
       intl.get('plan.feature.landed_cost'),
     ],

@@ -16,7 +16,7 @@ function flattenInfinityPages(data) {
 }
 
 /**
- * Account transctions provider.
+ * Account transactions provider.
  */
 function AccountTransactionsProvider({ query, ...props }) {
   const { id } = useParams();

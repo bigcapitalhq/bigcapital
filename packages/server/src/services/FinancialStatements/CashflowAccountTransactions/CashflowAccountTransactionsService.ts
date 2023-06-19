@@ -78,12 +78,12 @@ export default class CashflowAccountTransactionsService extends FinancialSheet {
       openingBalance,
       parsedQuery
     );
-    const reportTranasctions = report.reportData();
+    const reportTransactions = report.reportData();
 
     return {
       transactions: this.i18nService.i18nApply(
         [[qim.$each, 'formattedTransactionType']],
-        reportTranasctions,
+        reportTransactions,
         tenantId
       ),
       pagination,

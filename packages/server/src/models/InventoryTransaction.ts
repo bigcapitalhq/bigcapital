@@ -22,7 +22,7 @@ export default class InventoryTransaction extends TenantModel {
    * Retrieve formatted reference type.
    * @return {string}
    */
-  get transcationTypeFormatted() {
+  get transactionTypeFormatted() {
     return InventoryTransaction.getReferenceTypeFormatted(this.transactionType);
   }
 

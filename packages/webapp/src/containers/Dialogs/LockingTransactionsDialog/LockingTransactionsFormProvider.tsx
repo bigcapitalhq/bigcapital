@@ -2,7 +2,7 @@
 import React from 'react';
 import { DialogContent } from '@/components';
 import {
-  useCreateLockingTransactoin,
+  useCreateLockingTransaction,
   useEditTransactionsLocking,
 } from '@/hooks/query';
 
@@ -19,7 +19,7 @@ function LockingTransactionsFormProvider({
 }) {
   // Create locking transactions mutations.
   const { mutateAsync: createLockingTransactionMutate } =
-    useCreateLockingTransactoin();
+    useCreateLockingTransaction();
 
   const { data: transactionLocking, isLoading: isTransactionsLockingLoading } =
     useEditTransactionsLocking(moduleName, {

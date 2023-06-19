@@ -73,7 +73,7 @@ export default class GetCashflowAccounts extends BaseController {
     if (error instanceof ServiceError) {
       if (error.errorType === 'CASHFLOW_TRANSACTION_NOT_FOUND') {
         return res.boom.badRequest(
-          'The given cashflow tranasction not found.',
+          'The given cashflow transaction not found.',
           {
             errors: [{ type: 'CASHFLOW_TRANSACTION_NOT_FOUND', code: 200 }],
           }

@@ -8,13 +8,13 @@ import {
   ILandedCostTransactionEntry,
   ILandedCostTransactionEntryDOJO,
 } from '@/interfaces';
-import TransactionLandedCost from './TransctionLandedCost';
+import TransactionLandedCost from './TransactionLandedCost';
 import BillsService from '../Bills';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { formatNumber } from 'utils';
 
 @Service()
-export default class LandedCostTranasctions {
+export default class LandedCostTransactions {
   @Inject()
   transactionLandedCost: TransactionLandedCost;
 

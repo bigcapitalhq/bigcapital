@@ -39,7 +39,7 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
     this.costLotsTransactions= [];
     // Collect inventory transactions by item id.
     this.inventoryByItem = {};
-    // Collection `IN` inventory tranaction by transaction id.
+    // Collection `IN` inventory transaction by transaction id.
     this.inventoryINTrans = {};
     // Collects `IN` transactions.
     this.inTransactions = [];
@@ -252,7 +252,7 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
         if (moment(_invINTransaction.date).isAfter(transaction.date)) {
           return true;
         }
-        // Determines the 'OUT' lot tranasctions whether bigger than 'IN' remaining transaction.
+        // Determines the 'OUT' lot transactions whether bigger than 'IN' remaining transaction.
         const biggerThanRemaining = (_invINTransaction.remaining - transaction.quantity) > 0;
         const decrement = (biggerThanRemaining) ? transaction.quantity : _invINTransaction.remaining;
         const maxDecrement = Math.min(decrement, invRemaining);

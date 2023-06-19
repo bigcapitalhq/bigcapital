@@ -357,7 +357,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
         saleReceiptId
       );
     }
-    // Edits the sale receipt tranasctions with associated transactions under UOW env.
+    // Edits the sale receipt transactions with associated transactions under UOW env.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleReceiptsEditing` event.
       await this.eventPublisher.emitAsync(events.saleReceipt.onEditing, {

@@ -272,13 +272,13 @@ export default class InventoryService {
       return;
     }
     // Inventory transactions.
-    const inventoryTranscations =
+    const inventoryTransactions =
       this.transformItemEntriesToInventory(transaction);
 
     // Records the inventory transactions of the given sale invoice.
     await this.recordInventoryTransactions(
       tenantId,
-      inventoryTranscations,
+      inventoryTransactions,
       override,
       trx
     );

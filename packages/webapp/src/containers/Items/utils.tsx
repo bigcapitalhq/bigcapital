@@ -87,7 +87,7 @@ export const handleDeleteErrors = (errors) => {
   ) {
     AppToaster.show({
       message: intl.get(
-        'you_could_not_delete_item_that_has_associated_inventory_adjustments_transacions',
+        'you_could_not_delete_item_that_has_associated_inventory_adjustments_transactions',
       ),
       intent: Intent.DANGER,
     });

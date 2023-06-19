@@ -28,7 +28,7 @@ export class ActivateWarehousesSubscriber {
   }
 
   /**
-   * Updates inventory transactiont to primary warehouse once
+   * Updates inventory transaction to primary warehouse once
    * multi-warehouses activated.
    * @param {IWarehousesActivatedPayload}
    */

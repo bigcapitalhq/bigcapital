@@ -205,7 +205,7 @@ export default class Expense extends mixin(TenantModel, [
       },
 
       /**
-       * Expense transction may belongs to a branch.
+       * Expense transaction may belongs to a branch.
        */
       branch: {
         relation: Model.BelongsToOneRelation,

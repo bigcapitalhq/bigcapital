@@ -36,7 +36,7 @@ export default class InventoryAverageCostMethod
    * Computes items costs from the given date using average cost method.
    * ----------
    * - Calculate the items average cost in the given date.
-   * - Remove the journal entries that associated to the inventory transacions
+   * - Remove the journal entries that associated to the inventory transactions
    *   after the given date.
    * - Re-compute the inventory transactions and re-write the journal entries
    *   after the given date.

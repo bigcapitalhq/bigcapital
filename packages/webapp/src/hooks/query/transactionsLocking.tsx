@@ -16,7 +16,7 @@ const commonInvalidateQueries = (queryClient) => {
 /**
  * Create a locking transactions.
  */
-export function useCreateLockingTransactoin(props) {
+export function useCreateLockingTransaction(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 

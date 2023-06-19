@@ -435,7 +435,7 @@ export default class InventoryAdjustmentService {
   ) {
     const { InventoryAdjustment } = this.tenancy.models(tenantId);
 
-    // Retrieve inventory adjustment transation with associated models.
+    // Retrieve inventory adjustment transaction with associated models.
     const inventoryAdjustment = await InventoryAdjustment.query()
       .findById(inventoryAdjustmentId)
       .withGraphFetched('entries.item')

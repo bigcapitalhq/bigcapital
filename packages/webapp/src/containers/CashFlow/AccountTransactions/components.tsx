@@ -40,7 +40,7 @@ export function ActionsMenu({
   );
 }
 /**
- * Retrieve account transctions table columns.
+ * Retrieve account transactions table columns.
  */
 export function useAccountTransactionsColumns() {
   return React.useMemo(

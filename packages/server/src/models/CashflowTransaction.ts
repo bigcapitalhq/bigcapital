@@ -133,7 +133,7 @@ export default class CashflowTransaction extends TenantModel {
       },
 
       /**
-       * Cashflow transcation may has associated to credit account.
+       * Cashflow transaction may has associated to credit account.
        */
       creditAccount: {
         relation: Model.BelongsToOneRelation,

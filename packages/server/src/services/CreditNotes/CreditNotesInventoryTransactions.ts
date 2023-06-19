@@ -39,7 +39,7 @@ export default class CreditNoteInventoryTransactions {
       createdAt: creditNote.createdAt,
       warehouseId: creditNote.warehouseId,
     };
-    // Writes inventory tranactions.
+    // Writes inventory transactions.
     await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
       tenantId,
       transaction,

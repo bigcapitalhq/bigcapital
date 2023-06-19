@@ -16,13 +16,13 @@ export default class SalesTransactionsLocking {
     tenantId: number,
     transactionDate: Date
   ) => {
-    // Validates the all transcation locking.
+    // Validates the all transaction locking.
     this.transactionLockingValidator.validateTransactionsLocking(
       tenantId,
       transactionDate,
       TransactionsLockingGroup.All
     );
-    // Validates the partial sales transcation locking.
+    // Validates the partial sales transaction locking.
     // this.transactionLockingValidator.validateTransactionsLocking(
     //   tenantId,
     //   transactionDate,

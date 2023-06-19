@@ -33,7 +33,7 @@ function AccountTransactionsActionsBar({
   openDialog,
 
   // #withSettings
-  cashflowTansactionsTableSize,
+  cashflowTransactionsTableSize,
 
   // #withSettingsActions
   addSetting,
@@ -109,7 +109,7 @@ function AccountTransactionsActionsBar({
         />
         <NavbarDivider />
         <DashboardRowsHeightButton
-          initialValue={cashflowTansactionsTableSize}
+          initialValue={cashflowTransactionsTableSize}
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
@@ -130,6 +130,6 @@ export default compose(
   withDialogActions,
   withSettingsActions,
   withSettings(({ cashflowTransactionsSettings }) => ({
-    cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
+    cashflowTransactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
 )(AccountTransactionsActionsBar);
