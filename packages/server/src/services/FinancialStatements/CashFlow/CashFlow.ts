@@ -347,7 +347,7 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Evauluate equation string with the given scope table.
+   * Evaluate equation string with the given scope table.
    * @param  {string} equation -
    * @param  {{ [key: string]: number }} scope -
    * @return {number}
