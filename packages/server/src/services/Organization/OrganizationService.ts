@@ -82,7 +82,7 @@ export default class OrganizationService {
       systemUser,
     } as IOrganizationBuildEventPayload);
 
-    // Markes the tenant as completed builing.
+    // Markes the tenant as completed building.
     await Tenant.markAsBuilt(tenantId);
     await Tenant.markAsBuildCompleted(tenantId);
 
