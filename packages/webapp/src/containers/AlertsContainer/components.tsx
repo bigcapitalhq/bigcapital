@@ -62,17 +62,17 @@ function AlertLazyFallback({}) {
   };
 
   // Debounce the trigger.
-  const dobounceTrigger = React.useRef(
+  const doBounceTrigger = React.useRef(
     debounce(() => {
       triggerProgressToast();
     }, 500),
   );
   React.useEffect(() => {
-    dobounceTrigger.current();
+    doBounceTrigger.current();
 
     return () => {
       hideProgressToast();
-      dobounceTrigger.current.cancel();
+      doBounceTrigger.current.cancel();
     };
   });
 
