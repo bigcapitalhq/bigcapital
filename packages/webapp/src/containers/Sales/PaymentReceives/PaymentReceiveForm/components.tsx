@@ -28,7 +28,7 @@ function InvNumberCellAccessor(row) {
 }
 
 /**
- * Mobey table cell.
+ * Money table cell.
  */
 function MoneyTableCell({ row: { original }, value }) {
   return <Money amount={value} currency={original.currency_code} />;
