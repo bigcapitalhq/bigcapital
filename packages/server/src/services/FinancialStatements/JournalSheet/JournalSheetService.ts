@@ -21,7 +21,7 @@ export default class JournalSheetService {
   logger: any;
 
   /**
-   * Default journal sheet filter queyr.
+   * Default journal sheet filter query.
    */
   get defaultQuery() {
     return {
