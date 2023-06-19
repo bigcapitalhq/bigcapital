@@ -2,7 +2,7 @@ import moment from 'moment';
 import { Service, Inject } from 'typedi';
 import {
   IInventoryDetailsQuery,
-  IInvetoryItemDetailDOO,
+  IInventoryItemDetailDOO,
   IInventoryItemDetailMeta,
 } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
@@ -77,12 +77,12 @@ export default class InventoryDetailsService extends FinancialSheet {
    * Retrieve the inventory details report data.
    * @param {number} tenantId -
    * @param {IInventoryDetailsQuery} query -
-   * @return {Promise<IInvetoryItemDetailDOO>}
+   * @return {Promise<IInventoryItemDetailDOO>}
    */
   public async inventoryDetails(
     tenantId: number,
     query: IInventoryDetailsQuery
-  ): Promise<IInvetoryItemDetailDOO> {
+  ): Promise<IInventoryItemDetailDOO> {
     const i18n = this.tenancy.i18n(tenantId);
 
     const tenant = await Tenant.query()

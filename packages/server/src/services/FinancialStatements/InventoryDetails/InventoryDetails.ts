@@ -188,7 +188,7 @@ export default class InventoryDetails extends FinancialSheet {
   /**
    * Mappes the item transaction to inventory item transaction node.
    * @param {IItem} item
-   * @param {IInvetoryTransaction} transaction
+   * @param {IInventoryTransaction} transaction
    * @returns {IInventoryDetailsItemTransaction}
    */
   private itemTransactionMapper(

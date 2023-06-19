@@ -87,7 +87,7 @@ export interface IInventoryItemDetailMeta {
   baseCurrency: string;
 }
 
-export interface IInvetoryItemDetailDOO {
+export interface IInventoryItemDetailDOO {
   data: IInventoryDetailsData;
   query: IInventoryDetailsQuery;
   meta: IInventoryItemDetailMeta;
