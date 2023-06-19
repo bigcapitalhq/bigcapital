@@ -13,7 +13,7 @@ import {
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 
 /**
- * Cashlflow transaction drawer detail Header.
+ * Cashflow transaction drawer detail Header.
  */
 export default function CashflowTransactionDrawerHeader() {
   const { cashflowTransaction } = useCashflowTransactionDrawerContext();

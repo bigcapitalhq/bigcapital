@@ -158,7 +158,7 @@ export function useRefreshCashflowAccounts() {
 }
 
 /**
- * Refresh the cshflow account transactions.
+ * Refresh the cashflow account transactions.
  */
 export function useRefreshCashflowTransactions() {
   const query = useQueryClient();

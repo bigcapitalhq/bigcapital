@@ -64,8 +64,8 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
    * Retrieve the cashflow account transactions statment to json response.
    * @param {ICashFlowStatement} cashFlow -
    */
-  private transformJsonResponse(casahflowAccountTransactions) {
-    const { transactions, pagination } = casahflowAccountTransactions;
+  private transformJsonResponse(cashflowAccountTransactions) {
+    const { transactions, pagination } = cashflowAccountTransactions;
 
     return {
       transactions: this.transfromToResponse(transactions),

@@ -15,7 +15,7 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { CASHFLOW_TRANSACTION_TYPE } from './constants';
 import { transformCashflowTransactionType } from './utils';
 import events from '@/subscribers/events';
-import { CommandCashflowValidator } from './CommandCasflowValidator';
+import { CommandCashflowValidator } from './CommandCashflowValidator';
 import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import { CashflowTransactionAutoIncrement } from './CashflowTransactionAutoIncrement';
