@@ -469,7 +469,7 @@
   "sms_notification.estimate.var.customer_name": "References to estimate customer name.",
   "sms_notification.estimate.var.amount": "References to estimate amount.",
   "sms_notification.estimate.var.company_name": "References to company name.",
-  "sms_notification.estimate.var.expiration_date": "References to estimate expirtaion date.",
+  "sms_notification.estimate.var.expiration_date": "References to estimate expiration date.",
   "sms_notification.estimate.var.estimate_date": "References to estimate date.",
 
   "sms_notification.customer.var.customer_name": "References to customer name.",
