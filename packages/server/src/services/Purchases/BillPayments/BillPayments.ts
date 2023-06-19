@@ -271,7 +271,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
   }
 
   /**
-   * Validates the payment account currency code. The deposit account curreny
+   * Validates the payment account currency code. The deposit account currency
    * should be equals the customer currency code or the base currency.
    * @param  {string} paymentAccountCurrency
    * @param  {string} customerCurrency

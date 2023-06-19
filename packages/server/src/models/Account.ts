@@ -171,7 +171,7 @@ export default class Account extends mixin(TenantModel, [
       /**
        *
        * @param {*} query
-       * @param {*} baseCyrrency
+       * @param {*} baseCurrency
        */
       preventMutateBaseCurrency(query) {
         const accountsTypes = getAccountsSupportsMultiCurrency();
