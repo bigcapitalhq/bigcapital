@@ -79,13 +79,13 @@ export class Transformer {
    * @returns
    */
   protected getTransformation = (item) => {
-    const normlizedItem = this.normalizeModelItem(item);
+    const normalizedItem = this.normalizeModelItem(item);
 
     return R.compose(
       this.transform,
       R.when(this.hasExcludeAttributes, this.excludeAttributesTransformed),
       this.includeAttributesTransformed
-    )(normlizedItem);
+    )(normalizedItem);
   };
 
   /**
