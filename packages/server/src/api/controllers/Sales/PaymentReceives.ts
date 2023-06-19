@@ -15,7 +15,7 @@ import DynamicListingService from '@/services/DynamicListing/DynamicListService'
 import { ServiceError } from '@/exceptions';
 import PaymentReceiveNotifyBySms from '@/services/Sales/PaymentReceives/PaymentReceiveSmsNotify';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import GetPaymentReceivePdf from '@/services/Sales/PaymentReceives/GetPaymentReeceivePdf';
+import GetPaymentReceivePdf from '@/services/Sales/PaymentReceives/GetPaymentReceivePdf';
 
 /**
  * Payments receives controller.

@@ -29,7 +29,7 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
   const isBranchFeatureCan = featureCan(Features.Branches);
   const isProjectsFeatureCan = featureCan(Features.Projects);
 
-  // Fetches payment recevie details.
+  // Fetches payment receive details.
   const {
     data: {
       paymentReceive: paymentReceiveEditPage,

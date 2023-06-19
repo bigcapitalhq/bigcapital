@@ -18,7 +18,7 @@ const notificationType = {
 };
 
 /**
- * Notify Payment Recive Via SMS Form.
+ * Notify Payment Receive Via SMS Form.
  */
 function NotifyPaymentReceiveViaSMSForm({
   // #withDialogActions

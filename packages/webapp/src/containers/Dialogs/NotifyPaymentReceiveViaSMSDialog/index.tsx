@@ -8,7 +8,7 @@ const NotifyPaymentReceiveViaSMSDialogContent = React.lazy(
   () => import('./NotifyPaymentReceiveViaSMSContent'),
 );
 
-function NotifyPaymentReciveViaSMSDialog({
+function NotifyPaymentReceiveViaSMSDialog({
   dialogName,
   payload: { paymentReceiveId },
   isOpen,
@@ -31,4 +31,4 @@ function NotifyPaymentReciveViaSMSDialog({
     </Dialog>
   );
 }
-export default compose(withDialogRedux())(NotifyPaymentReciveViaSMSDialog);
+export default compose(withDialogRedux())(NotifyPaymentReceiveViaSMSDialog);
