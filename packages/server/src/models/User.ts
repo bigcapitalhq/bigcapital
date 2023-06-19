@@ -24,7 +24,7 @@ export default class User extends TenantModel {
   }
 
   /**
-   * Determines whether the user ivnite is accept.
+   * Determines whether the user invite is accept.
    */
   get isInviteAccepted() {
     return !!this.inviteAcceptedAt;
