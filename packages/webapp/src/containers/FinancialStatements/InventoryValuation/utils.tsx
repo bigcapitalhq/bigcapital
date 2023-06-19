@@ -20,7 +20,7 @@ export const getInventoryValuationQuery = () => {
 };
 
 /**
- * Parses inventory valiation location query to report query.
+ * Parses inventory validation location query to report query.
  */
 const parseInventoryValuationQuery = (locationQuery) => {
   const defaultQuery = getInventoryValuationQuery();
