@@ -122,7 +122,7 @@ export default {
    * @param {*} group
    */
   removeAllMeta(group = 'default') {
-    this.metdata.map((meta) => ({
+    this.metadata.map((meta) => ({
       ...(meta.group !== group) ? { markAsDeleted: true } : {},
       ...meta,
     }));
