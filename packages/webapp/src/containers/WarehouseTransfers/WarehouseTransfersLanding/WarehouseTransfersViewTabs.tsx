@@ -5,7 +5,7 @@ import { DashboardViewsTabs } from '@/components';
 
 import withWarehouseTransfers from './withWarehouseTransfers';
 import withWarehouseTransfersActions from './withWarehouseTransfersActions';
-import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
+import { useWarehouseTransfersListContext } from './WarehouseTransfersListProvider';
 import { compose, transfromViewsToTabs } from '@/utils';
 
 /**
@@ -18,7 +18,7 @@ function WarehouseTransfersViewTabs({
   // #withWarehouseTransfersActions
   setWarehouseTransferTableState,
 }) {
-  const { WarehouseTransferView } = useWarehouseTranfersListContext();
+  const { WarehouseTransferView } = useWarehouseTransfersListContext();
 
   const tabs = transfromViewsToTabs(WarehouseTransferView);
 

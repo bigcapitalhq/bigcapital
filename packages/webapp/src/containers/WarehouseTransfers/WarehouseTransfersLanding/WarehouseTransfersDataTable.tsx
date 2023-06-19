@@ -10,7 +10,7 @@ import {
 import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useWarehouseTransfersTableColumns, ActionsMenu } from './components';
-import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
+import { useWarehouseTransfersListContext } from './WarehouseTransfersListProvider';
 
 import WarehouseTransfersEmptyStatus from './WarehouseTransfersEmptyStatus';
 import withWarehouseTransfersActions from './withWarehouseTransfersActions';
@@ -51,7 +51,7 @@ function WarehouseTransfersDataTable({
     isEmptyStatus,
     isWarehouseTransfersLoading,
     isWarehouseTransfersFetching,
-  } = useWarehouseTranfersListContext();
+  } = useWarehouseTransfersListContext();
 
   // Invoices table columns.
   const columns = useWarehouseTransfersTableColumns();

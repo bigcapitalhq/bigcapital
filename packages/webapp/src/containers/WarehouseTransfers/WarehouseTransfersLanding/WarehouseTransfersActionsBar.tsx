@@ -18,7 +18,7 @@ import {
   DashboardActionsBar,
 } from '@/components';
 
-import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
+import { useWarehouseTransfersListContext } from './WarehouseTransfersListProvider';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withWarehouseTransfers from './withWarehouseTransfers';
@@ -46,7 +46,7 @@ function WarehouseTransfersActionsBar({
 
   // credit note list context.
   const { WarehouseTransferView, fields, refresh } =
-    useWarehouseTranfersListContext();
+    useWarehouseTransfersListContext();
 
   // Handle new warehouse transfer button click.
   const handleClickNewWarehouseTransfer = () => {

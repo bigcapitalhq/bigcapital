@@ -77,7 +77,7 @@ function WarehouseTransfersListProvider({
   );
 }
 
-const useWarehouseTranfersListContext = () =>
+const useWarehouseTransfersListContext = () =>
   React.useContext(WarehouseTransfersListContext);
 
-export { WarehouseTransfersListProvider, useWarehouseTranfersListContext };
+export { WarehouseTransfersListProvider, useWarehouseTransfersListContext };
