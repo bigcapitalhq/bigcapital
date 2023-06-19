@@ -70,7 +70,7 @@ export default class Vendor extends mixin(TenantModel, [
   }
 
   /**
-   * Retrieve the contact noraml;
+   * Retrieve the contact normal;
    */
   get contactNormal() {
     return 'debit';
