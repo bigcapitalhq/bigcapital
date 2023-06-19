@@ -2,17 +2,17 @@ import { Service, Inject } from 'typedi';
 
 
 export class WarehousesTransfersService {
-  createWarehouseTranser = (
+  createWarehouseTransfer = (
     tenantId: number,
     createWarehouseTransfer: ICreateWarehouseTransferDTO
   ) => {};
 
-  editWarehouseTranser = (
+  editWarehouseTransfer = (
     tenantId: number,
     editWarehouseTransfer: IEditWarehouseTransferDTO
   ) => {};
 
-  deleteWarehouseTranser = (
+  deleteWarehouseTransfer = (
     tenantId: number,
     warehouseTransferId: number
   ) => {};

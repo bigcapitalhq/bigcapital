@@ -28,7 +28,7 @@ export default function WarehouseTransferFloatingActions() {
   // Formik form context.
   const { isSubmitting, submitForm, resetForm } = useFormikContext();
 
-  // Warehouse tansfer form context.
+  // Warehouse transfer form context.
   const { warehouseTransfer, setSubmitPayload } =
     useWarehouseTransferFormContext();
 

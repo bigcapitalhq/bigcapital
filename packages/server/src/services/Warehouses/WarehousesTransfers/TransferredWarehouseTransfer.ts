@@ -40,7 +40,7 @@ export class TransferredWarehouseTransfer extends CommandWarehouseTransfer {
    * Validate the warehouse transfer should be initiated.
    * @param {IWarehouseTransfer} warehouseTransfer
    */
-  private validateWarehouseTranbsferShouldInitiated = (
+  private validateWarehouseTransferShouldInitiated = (
     warehouseTransfer: IWarehouseTransfer
   ) => {
     if (!warehouseTransfer.transferInitiatedAt) {
@@ -69,7 +69,7 @@ export class TransferredWarehouseTransfer extends CommandWarehouseTransfer {
     this.validateWarehouseTransferNotTransferred(oldWarehouseTransfer);
 
     // Validate the warehouse transfer should be initiated.
-    this.validateWarehouseTranbsferShouldInitiated(oldWarehouseTransfer);
+    this.validateWarehouseTransferShouldInitiated(oldWarehouseTransfer);
 
     // Edits warehouse transfer transaction under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {

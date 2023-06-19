@@ -12,7 +12,7 @@ import {
 } from './utils';
 
 /**
- * Warehouse transafer editor field.
+ * Warehouse transfer editor field.
  */
 export default function WarehouseTransferEditorField() {
   const { items } = useWarehouseTransferFormContext();

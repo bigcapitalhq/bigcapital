@@ -49,7 +49,7 @@ export const DEFAULT_VIEWS = [
         index: 1,
         fieldKey: 'status',
         comparator: 'equals',
-        value: 'tansferred',
+        value: 'transferred',
       },
     ],
     columns: [],
