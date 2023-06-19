@@ -84,7 +84,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
   private transformer: TransformerInjectable;
 
   /**
-   * Validate whether sale invoice number unqiue on the storage.
+   * Validate whether sale invoice number unique on the storage.
    */
   async validateInvoiceNumberUnique(
     tenantId: number,

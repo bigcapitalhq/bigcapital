@@ -382,7 +382,7 @@ export default class BillsPayments extends BaseController {
           ],
         });
       }
-      if (error.errorType === 'BILL_PAYMENT_NUMBER_NOT_UNQIUE') {
+      if (error.errorType === 'BILL_PAYMENT_NUMBER_NOT_UNIQUE') {
         return res.status(400).send({
           errors: [{ type: 'PAYMENT.NUMBER.NOT.UNIQUE', code: 400 }],
         });

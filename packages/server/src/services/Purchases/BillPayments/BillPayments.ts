@@ -137,7 +137,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
     );
 
     if (foundBillPayment) {
-      throw new ServiceError(ERRORS.BILL_PAYMENT_NUMBER_NOT_UNQIUE);
+      throw new ServiceError(ERRORS.BILL_PAYMENT_NUMBER_NOT_UNIQUE);
     }
     return foundBillPayment;
   }

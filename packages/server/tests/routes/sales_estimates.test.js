@@ -167,7 +167,7 @@ describe('route: `/sales/estimates`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 300,
+        type: 'ESTIMATE.NUMBER.IS.NOT.UNIQUE', code: 300,
       });
     });
 
@@ -360,7 +360,7 @@ describe('route: `/sales/estimates`', () => {
         });
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 300,
+        type: 'ESTIMATE.NUMBER.IS.NOT.UNIQUE', code: 300,
       });
     });
 

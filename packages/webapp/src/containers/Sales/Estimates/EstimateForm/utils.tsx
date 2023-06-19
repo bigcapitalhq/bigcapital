@@ -50,7 +50,7 @@ export const defaultEstimate = {
 };
 
 const ERRORS = {
-  ESTIMATE_NUMBER_IS_NOT_UNQIUE: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE',
+  ESTIMATE_NUMBER_IS_NOT_UNIQUE: 'ESTIMATE.NUMBER.IS.NOT.UNIQUE',
   SALE_ESTIMATE_NO_IS_REQUIRED: 'SALE_ESTIMATE_NO_IS_REQUIRED',
 };
 
@@ -118,9 +118,9 @@ export const ITEMS_FILTER_ROLES = JSON.stringify([
  * @param {*} param1
  */
 export const handleErrors = (errors, { setErrors }) => {
-  if (errors.some((e) => e.type === ERRORS.ESTIMATE_NUMBER_IS_NOT_UNQIUE)) {
+  if (errors.some((e) => e.type === ERRORS.ESTIMATE_NUMBER_IS_NOT_UNIQUE)) {
     setErrors({
-      estimate_number: intl.get('estimate_number_is_not_unqiue'),
+      estimate_number: intl.get('estimate_number_is_not_unique'),
     });
   }
   if (

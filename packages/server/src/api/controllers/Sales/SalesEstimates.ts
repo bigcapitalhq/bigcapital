@@ -504,7 +504,7 @@ export default class SalesEstimatesController extends BaseController {
       }
       if (error.errorType === 'SALE_ESTIMATE_NUMBER_EXISTENCE') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 700 }],
+          errors: [{ type: 'ESTIMATE.NUMBER.IS.NOT.UNIQUE', code: 700 }],
         });
       }
       if (error.errorType === 'NOT_SELL_ABLE_ITEMS') {

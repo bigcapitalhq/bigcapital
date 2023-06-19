@@ -412,7 +412,7 @@ export default class AccountsController extends BaseController {
           errors: [{ type: 'ACCOUNT.NOT.FOUND', code: 100 }],
         });
       }
-      if (error.errorType === 'account_name_not_unqiue') {
+      if (error.errorType === 'account_name_not_unique') {
         return res.boom.badRequest('The given account not unique.', {
           errors: [{ type: 'ACCOUNT.NAME.NOT.UNIQUE', code: 150 }],
         });
