@@ -43,7 +43,7 @@ export default class CashFlowRepository {
   }
 
   /**
-   * Retrieve total of csah at beginning transactions.
+   * Retrieve total of cash at beginning transactions.
    * @param {number} tenantId -
    * @param {ICashFlowStatementQuery} filter -
    * @return {Promise<IAccountTransaction[]>}
