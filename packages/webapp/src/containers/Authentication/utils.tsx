@@ -23,11 +23,11 @@ export const RegisterSchema = Yup.object().shape({
   first_name: Yup.string().required().label(intl.get('first_name_')),
   last_name: Yup.string().required().label(intl.get('last_name_')),
   email: Yup.string().email().required().label(intl.get('email')),
-  password: Yup.string().min(4).required().label(intl.get('password')),
+  password: Yup.string().min(6).required().label(intl.get('password')),
 });
 
 export const ResetPasswordSchema = Yup.object().shape({
-  password: Yup.string().min(4).required().label(intl.get('password')),
+  password: Yup.string().min(6).required().label(intl.get('password')),
   confirm_password: Yup.string()
     .oneOf([Yup.ref('password'), null])
     .required()
