@@ -1647,7 +1647,7 @@
   "bills.error.you_couldn_t_delete_bill_has_reconciled_with_vendor_credit": "لا يمكنك حذف فاتورة شراء تمت تسويتها مع معاملة إشعار المدين.",
   "vendor_credit_opened.alert.success_message": "تم فتح المدين بنجاح.",
   "vendor_credit_opened.are_sure_to_open_this_credit": "هل أنت متأكد أنك تريد فتح هذا إشعار؟",
-  "sidebar.transactions_locaking": "قفل المعاملات",
+  "sidebar.transactions_locking": "قفل المعاملات",
   "locking_transactions.dialog.label": "قفل المعاملات ",
   "locking_transactions.dialog.locking_date": "تاريخ القفل ",
   "locking_transactions.dialog.reason": "سبب القفل ",

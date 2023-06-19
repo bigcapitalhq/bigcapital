@@ -44,11 +44,11 @@ export default class SalesTransactionLockingGuardSubscriber {
     );
     bus.subscribe(
       events.saleInvoice.onWriteoff,
-      this.transactionLockinGuardOnInvoiceWritingoff
+      this.transactionLockingGuardOnInvoiceWritingoff
     );
     bus.subscribe(
       events.saleInvoice.onWrittenoffCancel,
-      this.transactionLockinGuardOnInvoiceWritingoffCanceling
+      this.transactionLockingGuardOnInvoiceWritingoffCanceling
     );
     bus.subscribe(
       events.saleInvoice.onDeleting,
@@ -192,7 +192,7 @@ export default class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on invoice writingoff.
    * @param {ISaleInvoiceWriteoffCreatePayload} payload
    */
-  private transactionLockinGuardOnInvoiceWritingoff = async ({
+  private transactionLockingGuardOnInvoiceWritingoff = async ({
     tenantId,
     saleInvoice,
   }: ISaleInvoiceWriteoffCreatePayload) => {
@@ -206,7 +206,7 @@ export default class SalesTransactionLockingGuardSubscriber {
    * Transaciton locking guard on canceling written-off invoice.
    * @param {ISaleInvoiceWrittenOffCancelPayload} payload
    */
-  private transactionLockinGuardOnInvoiceWritingoffCanceling = async ({
+  private transactionLockingGuardOnInvoiceWritingoffCanceling = async ({
     tenantId,
     saleInvoice,
   }: ISaleInvoiceWrittenOffCancelPayload) => {

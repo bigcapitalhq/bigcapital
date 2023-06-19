@@ -401,7 +401,7 @@ export const SidebarMenu = [
                 },
               },
               {
-                text: <T id={'sidebar.transactions_locaking'} />,
+                text: <T id={'sidebar.transactions_locking'} />,
                 href: '/transactions-locking',
                 type: ISidebarMenuItemType.Link,
               },
