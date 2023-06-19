@@ -8,7 +8,7 @@ export class CreditNoteAppliedInvoiceTransformer extends Transformer {
    */
   public includeAttributes = (): string[] => {
     return [
-      'formttedAmount',
+      'formattedAmount',
       'creditNoteNumber',
       'creditNoteDate',
       'invoiceNumber',
@@ -25,7 +25,7 @@ export class CreditNoteAppliedInvoiceTransformer extends Transformer {
     return ['saleInvoice', 'creditNote'];
   };
 
-  formttedAmount = (item) => {
+  formattedAmount = (item) => {
     return formatNumber(item.amount, {
       currencyCode: item.creditNote.currencyCode,
     });

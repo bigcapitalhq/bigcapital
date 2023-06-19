@@ -45,7 +45,7 @@ export function useReconcileCreditTransactionsTableColumns() {
       },
       {
         Header: intl.get('amount'),
-        accessor: 'formtted_amount',
+        accessor: 'formatted_amount',
         width: 100,
         className: 'amount',
         align: 'right',

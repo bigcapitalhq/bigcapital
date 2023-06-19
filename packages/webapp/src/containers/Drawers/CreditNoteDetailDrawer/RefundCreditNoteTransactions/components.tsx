@@ -36,7 +36,7 @@ export function useRefundCreditTransactionsTableColumns() {
       },
       {
         Header: intl.get('refund_credit_transactions.column.amount_refunded'),
-        accessor: 'formtted_amount',
+        accessor: 'formatted_amount',
         width: 100,
         className: 'amount',
         align: 'right',

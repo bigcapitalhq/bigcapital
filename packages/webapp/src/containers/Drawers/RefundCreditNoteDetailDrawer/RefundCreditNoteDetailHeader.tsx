@@ -25,7 +25,7 @@ export default function RefundCreditNoteDetailHeader() {
           }
         />
         <DetailItem label={intl.get('refund_credit.drawer.label.amount')}>
-          <strong>{refundCreditTransaction.formtted_amount}</strong>
+          <strong>{refundCreditTransaction.formatted_amount}</strong>
         </DetailItem>
         <DetailItem
           label={intl.get('refund_credit.drawer.label.credit_note_no')}

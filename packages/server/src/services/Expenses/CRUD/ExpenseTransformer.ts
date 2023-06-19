@@ -50,7 +50,7 @@ export class ExpenseTransfromer extends Transformer {
   };
 
   /**
-   * Retriecve fromatted date.
+   * Retriecve formatted date.
    * @param {IExpense} expense
    * @returns {string}
    */
