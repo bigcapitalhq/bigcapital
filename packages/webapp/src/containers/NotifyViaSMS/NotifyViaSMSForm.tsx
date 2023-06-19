@@ -121,7 +121,7 @@ function NotifyViaSMSAlerts({ calloutCodes }) {
   return [
     includes(calloutCodes, 100) && (
       <Callout icon={null} intent={Intent.DANGER}>
-        {intl.get('notify_Via_sms.dialog.customer_phone_number_does_not_eixst')}
+        {intl.get('notify_Via_sms.dialog.customer_phone_number_does_not_exist')}
       </Callout>
     ),
     includes(calloutCodes, 200) && (
