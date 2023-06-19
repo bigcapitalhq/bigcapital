@@ -88,7 +88,7 @@ function InvoiceDetailActionsBar({
     openDialog('notify-invoice-via-sms', { invoiceId });
   };
 
-  // Handle cancele write-off invoice.
+  // Handle canceled write-off invoice.
   const handleCancelBadDebtInvoice = () => {
     openAlert('cancel-bad-debt', { invoiceId });
   };
