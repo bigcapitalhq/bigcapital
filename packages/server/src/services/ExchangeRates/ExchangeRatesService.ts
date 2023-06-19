@@ -163,7 +163,7 @@ export default class ExchangeRatesService implements IExchangeRatesService {
   }
 
   /**
-   * Validate the given echange rate id existance.
+   * Validate the given exchange rate id existance.
    * @param {number} tenantId - Tenant id.
    * @param {number} exchangeRateId - Exchange rate id.
    * @returns {Promise<void>}
