@@ -58,7 +58,7 @@ export default class Expense extends mixin(TenantModel, [
   }
 
   /**
-   * Rertieves the local landed cost amount of expense.
+   * Retrieves the local landed cost amount of expense.
    * @returns {number}
    */
   get localLandedCostAmount() {
