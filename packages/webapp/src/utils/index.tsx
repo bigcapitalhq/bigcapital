@@ -599,7 +599,7 @@ export function globalTableStateToTable(globalState) {
 }
 
 /**
- * Transformes the pagination meta repsonse.
+ * Transformes the pagination meta response.
  */
 export function transformPagination(pagination) {
   const transformed = transformResponse(pagination);
