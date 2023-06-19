@@ -47,7 +47,7 @@ export default class ProjectProfitabilityController extends BaseFinancialReportC
   }
 
   /**
-   * Balance sheet validation schecma.
+   * Balance sheet validation schema.
    * @returns {ValidationChain[]}
    */
   get validationSchema(): ValidationChain[] {

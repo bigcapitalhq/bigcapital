@@ -35,7 +35,7 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
   }
 
   /**
-   * Balance sheet validation schecma.
+   * Balance sheet validation schema.
    * @returns {ValidationChain[]}
    */
   get balanceSheetValidationSchema(): ValidationChain[] {

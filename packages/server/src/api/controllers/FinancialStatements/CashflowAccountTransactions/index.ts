@@ -48,7 +48,7 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
   }
 
   /**
-   * Cashflow account transactions validation schecma.
+   * Cashflow account transactions validation schema.
    * @returns {ValidationChain[]}
    */
   get validationSchema(): ValidationChain[] {

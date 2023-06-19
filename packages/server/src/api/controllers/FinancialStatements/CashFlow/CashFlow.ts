@@ -44,7 +44,7 @@ export default class CashFlowController extends BaseFinancialReportController {
   }
 
   /**
-   * Balance sheet validation schecma.
+   * Balance sheet validation schema.
    * @returns {ValidationChain[]}
    */
   get cashflowValidationSchema(): ValidationChain[] {

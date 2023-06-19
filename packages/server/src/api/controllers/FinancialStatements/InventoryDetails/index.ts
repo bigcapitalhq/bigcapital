@@ -42,7 +42,7 @@ export default class InventoryDetailsController extends BaseController {
   }
 
   /**
-   * Balance sheet validation schecma.
+   * Balance sheet validation schema.
    * @returns {ValidationChain[]}
    */
   get validationSchema(): ValidationChain[] {
