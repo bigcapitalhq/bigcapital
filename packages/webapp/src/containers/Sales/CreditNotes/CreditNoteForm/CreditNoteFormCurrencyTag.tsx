@@ -7,7 +7,7 @@ import { useCreditNoteFormContext } from './CreditNoteFormProvider';
  * Credit note from currency tag.
  * @returns
  */
-export default function CreditNotetFormCurrencyTag() {
+export default function CreditNoteFormCurrencyTag() {
   const { isForeignCustomer, selectCustomer } = useCreditNoteFormContext();
 
   if (!isForeignCustomer) {
