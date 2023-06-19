@@ -63,7 +63,7 @@ All notable changes to Bigcapital server-side will be in this file.
 
 `@bigcapital/webapp`
 
-- fixed: move `packaeg-lock.json` inside docker container.
+- fixed: move `package-lock.json` inside docker container.
 - fixed: remove Sentry from the web client.
 
 ## [0.9.1] - 28-05-2023
