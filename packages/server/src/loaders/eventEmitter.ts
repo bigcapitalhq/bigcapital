@@ -31,7 +31,6 @@ import OrgBuildSmsNotificationSubscriber from '@/subscribers/Organization/BuildS
 import PurgeUserAbilityCache from '@/services/Users/PurgeUserAbilityCache';
 import ResetLoginThrottleSubscriber from '@/subscribers/Authentication/ResetLoginThrottle';
 import AuthenticationSubscriber from '@/subscribers/Authentication/SendResetPasswordMail';
-import AuthSendWelcomeMailSubscriber from '@/subscribers/Authentication/SendWelcomeMail';
 import PurgeAuthorizedUserOnceRoleMutate from '@/services/Roles/PurgeAuthorizedUser';
 import SendSmsNotificationToCustomer from '@/subscribers/SaleInvoices/SendSmsNotificationToCustomer';
 import SendSmsNotificationSaleReceipt from '@/subscribers/SaleReceipt/SendSmsNotificationToCustomer';
@@ -120,7 +119,6 @@ export const susbcribers = () => {
     PurgeUserAbilityCache,
     ResetLoginThrottleSubscriber,
     AuthenticationSubscriber,
-    AuthSendWelcomeMailSubscriber,
     PurgeAuthorizedUserOnceRoleMutate,
     SendSmsNotificationToCustomer,
     SendSmsNotificationSaleReceipt,

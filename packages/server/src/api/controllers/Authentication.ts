@@ -92,6 +92,7 @@ export default class AuthenticationController extends BaseController {
       check('password')
         .exists()
         .isString()
+        .isLength({ min: 6 })
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
@@ -106,7 +107,7 @@ export default class AuthenticationController extends BaseController {
     return [
       check('password')
         .exists()
-        .isLength({ min: 5 })
+        .isLength({ min: 6 })
         .custom((value, { req }) => {
           if (value !== req.body.confirm_password) {
             throw new Error("Passwords don't match");
