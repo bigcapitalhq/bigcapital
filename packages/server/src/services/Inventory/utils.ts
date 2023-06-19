@@ -1,7 +1,7 @@
 import { chain } from 'lodash';
 
 /**
- * Grpups by transaction type and id the inventory transactions.
+ * Groups by transaction type and id the inventory transactions.
  * @param {IInventoryTransaction} invTransactions
  * @returns
  */
