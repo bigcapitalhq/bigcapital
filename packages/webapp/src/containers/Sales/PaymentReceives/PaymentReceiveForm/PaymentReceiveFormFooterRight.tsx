@@ -10,7 +10,7 @@ import {
 } from '@/components';
 import { usePaymentReceiveTotals } from './utils';
 
-export function PaymentReceiveFormFootetRight() {
+export function PaymentReceiveFormFooterRight() {
   const { formattedSubtotal, formattedTotal } = usePaymentReceiveTotals();
 
   return (

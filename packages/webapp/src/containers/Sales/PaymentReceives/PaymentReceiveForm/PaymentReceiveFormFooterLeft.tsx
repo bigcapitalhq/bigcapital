@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
 
-export function PaymentReceiveFormFootetLeft() {
+export function PaymentReceiveFormFooterLeft() {
   return (
     <React.Fragment>
       {/* --------- Statement--------- */}
