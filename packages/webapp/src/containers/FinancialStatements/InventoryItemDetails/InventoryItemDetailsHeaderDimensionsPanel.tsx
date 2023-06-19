@@ -14,7 +14,7 @@ import {
 } from './InventoryItemDetailsHeaderDimensionsPanelProvider';
 
 /**
- * Inventory Item detail header dismension panel.
+ * Inventory Item detail header dimension panel.
  * @returns {JSX.Element}
  */
 export default function InventoryItemDetailsHeaderDimensionsPanel() {
@@ -26,7 +26,7 @@ export default function InventoryItemDetailsHeaderDimensionsPanel() {
 }
 
 /**
- * Inventory Valuation header dismension panel content.
+ * Inventory Valuation header dimension panel content.
  * @returns {JSX.Element}
  */
 function InventoryItemDetailsHeaderDimensionsPanelContent() {

@@ -8,7 +8,7 @@ import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleto
 const APAgingSummaryHeaderDimensonsContext = React.createContext();
 
 /**
- * APAging summary header dismensions provider.
+ * APAging summary header dimensions provider.
  * @returns
  */
 function APAgingSummaryHeaderDimensionsProvider({ query, ...props }) {

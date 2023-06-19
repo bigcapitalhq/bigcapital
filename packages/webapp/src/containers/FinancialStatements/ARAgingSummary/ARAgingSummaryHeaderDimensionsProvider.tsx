@@ -8,7 +8,7 @@ import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleto
 const ARAgingSummaryHeaderDimensonsContext = React.createContext();
 
 /**
- * ARAging summary header dismensions provider.
+ * ARAging summary header dimensions provider.
  * @returns
  */
 function ARAgingSummaryHeaderDimensionsProvider({ query, ...props }) {

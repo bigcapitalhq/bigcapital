@@ -11,7 +11,7 @@ import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 
 /**
- * Balance sheet header dismension panel.
+ * Balance sheet header dimension panel.
  * @returns
  */
 export default function BalanceSheetHeaderDimensionsPanel() {
@@ -23,7 +23,7 @@ export default function BalanceSheetHeaderDimensionsPanel() {
 }
 
 /**
- * Balance sheet header dismension panel content.
+ * Balance sheet header dimension panel content.
  * @returns
  */
 function BalanceSheetHeaderDimensionsPanelContent() {

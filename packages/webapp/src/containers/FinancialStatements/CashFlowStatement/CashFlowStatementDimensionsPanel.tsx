@@ -11,7 +11,7 @@ import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 
 /**
- * Cash flow statement dismension panel.
+ * Cash flow statement dimension panel.
  * @returns
  */
 export default function CashFlowStatementDimensionsPanel() {
@@ -23,7 +23,7 @@ export default function CashFlowStatementDimensionsPanel() {
 }
 
 /**
- * Cash flow statement dismension panel content.
+ * Cash flow statement dimension panel content.
  * @returns
  */
 function CashFlowStatementDimensionsPanelContent() {
