@@ -169,10 +169,10 @@ export default class PaymentReceiveNotifyBySms {
    * @returns {string}
    */
   private stringifyPaymentInvoicesNumber(payment: IPaymentReceive) {
-    const invoicesNumberes = payment.entries.map(
+    const invoicesNumbers = payment.entries.map(
       (entry: IPaymentReceiveEntry) => entry.invoice.invoiceNo
     );
-    return invoicesNumberes.join(', ');
+    return invoicesNumbers.join(', ');
   }
 
   /**
