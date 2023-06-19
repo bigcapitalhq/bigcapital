@@ -88,7 +88,7 @@ export const useCreditNoteReadOnlyEntriesColumns = () => {
 };
 
 /**
- * Credit note more actions mneu.
+ * Credit note more actions menu.
  * @returns {React.JSX}
  */
 export function CreditNoteMenuItem({ payload: { onReconcile } }) {
