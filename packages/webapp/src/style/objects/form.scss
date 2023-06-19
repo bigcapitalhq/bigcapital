@@ -392,7 +392,7 @@ label.bp3-label {
 
     @mixin indicator-inline-icon($icon) {
       &::before {
-        // embed SVG icon image as backgroud-image above gradient.
+        // embed SVG icon image as background-image above gradient.
         // the SVG image content is inlined into the CSS, so use this sparingly.
         height: 100%;
         width: 100%;
