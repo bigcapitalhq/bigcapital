@@ -63,7 +63,7 @@ function ModulePermissionsServiceProvider({ service, children }) {
  * @returns {React.JSX}
  */
 function PermissionBodyColumn({ column }) {
-  // Module permssions service context.
+  // Module permissions service context.
   const { service } = useModulePermissionsServiceProvider();
 
   // Retrieve the related permission of the given column key.
