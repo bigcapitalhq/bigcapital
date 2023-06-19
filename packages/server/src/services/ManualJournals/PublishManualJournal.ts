@@ -69,7 +69,7 @@ export class PublishManualJournal {
       await ManualJournal.query(trx).findById(manualJournalId).patch({
         publishedAt: moment().toMySqlDateTime(),
       });
-      // Retrieve the manual journal with enrties after modification.
+      // Retrieve the manual journal with entries after modification.
       const manualJournal = await ManualJournal.query()
         .findById(manualJournalId)
         .withGraphFetched('entries');

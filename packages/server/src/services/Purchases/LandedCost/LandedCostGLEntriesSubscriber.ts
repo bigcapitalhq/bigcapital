@@ -18,7 +18,7 @@ export default class LandedCostGLEntriesSubscriber {
     );
     bus.subscribe(
       events.billLandedCost.onDeleted,
-      this.revertGLEnteriesOnceLandedCostDeleted
+      this.revertGLEntriesOnceLandedCostDeleted
     );
   }
 
@@ -42,7 +42,7 @@ export default class LandedCostGLEntriesSubscriber {
    * Reverts GL entries associated to landed cost transaction once deleted.
    * @param {IAllocatedLandedCostDeletedPayload} payload -
    */
-  private revertGLEnteriesOnceLandedCostDeleted = async ({
+  private revertGLEntriesOnceLandedCostDeleted = async ({
     tenantId,
     oldBillLandedCost,
     billId,

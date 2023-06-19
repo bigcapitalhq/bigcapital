@@ -60,7 +60,7 @@ export class LedgerContactsBalanceStorage {
    * @param {Knex.Transaction} trx
    * @returns {Promise<(entry: ILedgerEntry) => boolean>}
    */
-  private filterARAPLedgerEntris = async (
+  private filterARAPLedgerEntries = async (
     tenantId: number,
     trx?: Knex.Transaction
   ): Promise<(entry: ILedgerEntry) => boolean> => {
@@ -100,7 +100,7 @@ export class LedgerContactsBalanceStorage {
     const isForeignContact = contact.currencyCode !== tenantMeta.baseCurrency;
 
     // Filters the ledger base on the given contact id.
-    const filterARAPLedgerEntris = await this.filterARAPLedgerEntris(
+    const filterARAPLedgerEntries = await this.filterARAPLedgerEntries(
       tenantId,
       trx
     );
@@ -108,7 +108,7 @@ export class LedgerContactsBalanceStorage {
       // Filter entries only that have contact id.
       .whereContactId(contactId)
       // Filter entries on AR/AP accounts.
-      .filter(filterARAPLedgerEntris);
+      .filter(filterARAPLedgerEntries);
 
     const closingBalance = isForeignContact
       ? contactLedger

@@ -48,7 +48,7 @@ export default class VendorBalanceSummaryService
   }
 
   /**
-   * Retrieve the vendors ledger entrjes.
+   * Retrieve the vendors ledger entries.
    * @param {number} tenantId -
    * @param {Date|string} date -
    * @returns {Promise<ILedgerEntry>}

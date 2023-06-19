@@ -404,7 +404,7 @@ export default class BillsPayments extends BaseController {
       }
       if (error.errorType === 'BILL_PAYMENT_ENTRIES_NOT_FOUND') {
         return res.status(400).send({
-          errors: [{ type: 'ENTEIES.IDS.NOT.FOUND', code: 800 }],
+          errors: [{ type: 'ENTRIES.IDS.NOT.FOUND', code: 800 }],
         });
       }
       if (error.errorType === 'INVALID_BILL_PAYMENT_AMOUNT') {

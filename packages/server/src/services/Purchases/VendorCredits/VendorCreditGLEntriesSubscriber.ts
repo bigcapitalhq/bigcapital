@@ -23,7 +23,7 @@ export default class VendorCreditGlEntriesSubscriber {
     );
     bus.subscribe(
       events.vendorCredit.onOpened,
-      this.writeGLEntgriesOnceVendorCreditOpened
+      this.writeGLEntriesOnceVendorCreditOpened
     );
     bus.subscribe(
       events.vendorCredit.onEdited,
@@ -58,7 +58,7 @@ export default class VendorCreditGlEntriesSubscriber {
    * Writes Gl entries of vendor credit once the transaction opened.
    * @param {IVendorCreditOpenedPayload} payload -
    */
-  private writeGLEntgriesOnceVendorCreditOpened = async ({
+  private writeGLEntriesOnceVendorCreditOpened = async ({
     tenantId,
     vendorCreditId,
     trx,

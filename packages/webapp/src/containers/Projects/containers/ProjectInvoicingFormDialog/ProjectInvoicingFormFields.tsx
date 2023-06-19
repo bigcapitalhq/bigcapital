@@ -38,7 +38,7 @@ function ProjectInvoicingFormFields() {
       </FFormGroup>
 
       <FFormGroup name={'time'}>
-        {/*------------ All time entreis -----------*/}
+        {/*------------ All time entries -----------*/}
         <FCheckbox
           name="time"
           label={intl.get('project_invoicing.dialog.all_time_entries')}
