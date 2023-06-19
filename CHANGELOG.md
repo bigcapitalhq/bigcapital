@@ -2,6 +2,30 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+# [0.9.8] - 19-06-2023
+
+`bigcapitalhq/webapp`
+
+* add: Inventory Adjustment option to the item drawer by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/158
+* fix: use all drawers names from common enum object by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/157
+* fix: adjustment type options do not show up by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/159
+* fix: change the remove line text to be red to intent as a danger action by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/162
+* fix: rename sidebar localization keys names to be keyword path by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/161
+* fix: manual journal placeholder text by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/160
+* fix: warehouses select component by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/168
+
+`bigcapitalhq/server`
+
+* fix: sending emails on reset password and registration by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/167
+
+## [0.9.7] - 14-06-2023
+
+`@bigcapital/webapp`
+* fix: change the footer links of onboarding pages by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/139
+
+`@bigcapital/server`
+* fix: expense transaction journal entries by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/155
+
 ## [0.9.6] - 12-06-2023
 
 `@bigcapital/webapp`
