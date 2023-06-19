@@ -51,7 +51,7 @@ import { WarehousesController } from './controllers/Warehouses';
 import { WarehousesTransfers } from './controllers/Warehouses/WarehouseTransfers';
 import { WarehousesItemController } from './controllers/Warehouses/WarehousesItem';
 import { BranchIntegrationErrorsMiddleware } from '@/services/Branches/BranchIntegrationErrorsMiddleware';
-import { InventoryItemsCostController } from './controllers/Inventory/InventortyItemsCosts';
+import { InventoryItemsCostController } from './controllers/Inventory/InventoryItemsCosts';
 import { ProjectsController } from './controllers/Projects/Projects';
 import { ProjectTasksController } from './controllers/Projects/Tasks';
 import { ProjectTimesController } from './controllers/Projects/Times';

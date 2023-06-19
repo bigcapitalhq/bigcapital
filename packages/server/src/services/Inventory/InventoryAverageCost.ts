@@ -60,14 +60,14 @@ export default class InventoryAverageCostMethod
         .where('item_id', this.itemId)
         .withGraphFetched('item');
 
-    // Tracking inventroy transactions and retrieve cost transactions based on
+    // Tracking inventory transactions and retrieve cost transactions based on
     // average rate cost method.
     const costTransactions = this.trackingCostTransactions(
       afterInvTransactions,
       openingQuantity,
       openingCost
     );
-    // Revert the inveout out lots transactions
+    // Revert the inventory out lots transactions
     await this.revertTheInventoryOutLotTrans();
 
     // Store inventory lots cost transactions.

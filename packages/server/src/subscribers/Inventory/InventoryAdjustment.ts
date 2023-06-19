@@ -92,7 +92,7 @@ export default class InventoryAdjustmentsSubscriber {
   };
 
   /**
-   * Handles reverting invetory transactions once the inventory adjustment deleted.
+   * Handles reverting inventory transactions once the inventory adjustment deleted.
    * @param {IInventoryAdjustmentEventDeletedPayload} payload -
    */
   private handleRevertInventoryTransactionsOnceDeleted = async ({

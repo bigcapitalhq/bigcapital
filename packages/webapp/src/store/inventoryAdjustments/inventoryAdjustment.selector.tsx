@@ -10,7 +10,7 @@ const inventoryAdjustmentTableState = (state) =>
 /**
  * Retrieve the inventory adjustments table state.
  */
-export const getInventroyAdjsTableStateFactory = () =>
+export const getInventoryAdjsTableStateFactory = () =>
   createSelector(
     paginationLocationQuery,
     inventoryAdjustmentTableState,

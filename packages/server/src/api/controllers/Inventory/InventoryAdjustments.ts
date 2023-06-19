@@ -272,7 +272,7 @@ export default class InventoryAdjustmentsController extends BaseController {
         );
 
       return res.status(200).send({
-        inventoy_adjustments: inventoryAdjustments,
+        inventory_adjustments: inventoryAdjustments,
         pagination: this.transfromToResponse(pagination),
       });
     } catch (error) {

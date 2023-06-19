@@ -141,7 +141,7 @@ export default class InventoryAdjustmentsGL {
   );
 
   /**
-   * Writes increment inventroy adjustment GL entries.
+   * Writes increment inventory adjustment GL entries.
    * @param   {InventoryAdjustment} inventoryAdjustment -
    * @param   {JournalPoster} jorunal -
    * @returns {ILedgerEntry[]}

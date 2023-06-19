@@ -204,7 +204,7 @@ export class ItemsValidators {
    * @param {IItemDTO} newItemDTO
    * @returns
    */
-  async validateItemInvnetoryAccountModified(
+  async validateItemInventoryAccountModified(
     tenantId: number,
     oldItem: IItem,
     newItemDTO: IItemDTO

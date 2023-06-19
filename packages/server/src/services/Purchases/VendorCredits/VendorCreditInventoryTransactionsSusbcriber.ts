@@ -23,7 +23,7 @@ export default class VendorCreditInventoryTransactionsSubscriber {
     );
     bus.subscribe(
       events.vendorCredit.onEdited,
-      this.rewriteInventroyTransactionsOnceEdited
+      this.rewriteInventoryTransactionsOnceEdited
     );
     bus.subscribe(
       events.vendorCredit.onDeleted,
@@ -51,7 +51,7 @@ export default class VendorCreditInventoryTransactionsSubscriber {
    * Rewrites inventory transactions once vendor credit edited.
    * @param {IVendorCreditEditedPayload} payload -
    */
-  private rewriteInventroyTransactionsOnceEdited = async ({
+  private rewriteInventoryTransactionsOnceEdited = async ({
     tenantId,
     vendorCreditId,
     vendorCredit,

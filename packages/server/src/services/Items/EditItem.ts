@@ -78,7 +78,7 @@ export class EditItem {
     }
     // Validate inventory account should be modified in inventory item
     // has inventory transactions.
-    await this.validators.validateItemInvnetoryAccountModified(
+    await this.validators.validateItemInventoryAccountModified(
       tenantId,
       oldItem,
       itemDTO

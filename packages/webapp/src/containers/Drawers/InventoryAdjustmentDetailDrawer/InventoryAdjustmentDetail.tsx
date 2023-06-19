@@ -23,7 +23,7 @@ export default function InventoryAdjustmentDetail() {
 }
 
 /**
- * Invenoty adjustment details tabs.
+ * Inventory adjustment details tabs.
  * @returns {React.JSX}
  */
 function InventoryAdjustmentDetailTabs() {
