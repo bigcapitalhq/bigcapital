@@ -94,7 +94,7 @@ export class ManualJournalWriteGLSubscriber {
   };
 
   /**
-   * Handles writing journal entries once the manula journal publish.
+   * Handles writing journal entries once the manual journal publish.
    * @param {IManualJournalEventPublishedPayload} payload -
    */
   private handleWriteJournalEntriesOnPublished = async ({
