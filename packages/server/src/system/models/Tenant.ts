@@ -82,7 +82,7 @@ export default class Tenant extends BaseModel {
   }
 
   /**
-   * Mark the the given organization as initialized.
+   * Mark the given organization as initialized.
    * @param {string} organizationId
    */
   static markAsInitialized(tenantId) {

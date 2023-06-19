@@ -460,7 +460,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
         saleInvoiceDTO,
       } as ISaleInvoiceEditingPayload);
 
-      // Upsert the the invoice graph to the storage.
+      // Upsert the invoice graph to the storage.
       const saleInvoice: ISaleInvoice =
         await SaleInvoice.query().upsertGraphAndFetch({
           id: saleInvoiceId,
