@@ -197,7 +197,7 @@ export default class CashFlowStatement extends compose(
       code: account.code,
       label: account.name,
       accountType: account.accountType,
-      adjusmentType: relation.direction,
+      adjustmentType: relation.direction,
       total: this.getAmountMeta(closingBalance),
       sectionType: ICashFlowStatementSectionType.ACCOUNT,
     };
@@ -421,7 +421,7 @@ export default class CashFlowStatement extends compose(
       code: account.code,
       label: account.name,
       accountType: account.accountType,
-      adjusmentType: relation.direction,
+      adjustmentType: relation.direction,
       total: this.getAmountMeta(closingBalance),
       sectionType: ICashFlowStatementSectionType.ACCOUNT,
     };

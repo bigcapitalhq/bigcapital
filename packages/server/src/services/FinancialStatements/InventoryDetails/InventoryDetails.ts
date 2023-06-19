@@ -160,8 +160,8 @@ export default class InventoryDetails extends FinancialSheet {
     const initial = this.getNumberMeta(0);
 
     const mapAccumAppender = (a, b) => {
-      const adjusmtent = b.direction === 'OUT' ? -1 : 1;
-      const total = a.runningValuation.number + b.cost.number * adjusmtent;
+      const adjustment = b.direction === 'OUT' ? -1 : 1;
+      const total = a.runningValuation.number + b.cost.number * adjustment;
       const totalMeta = this.getNumberMeta(total, { excerptZero: false });
       const accum = { ...b, runningValuation: totalMeta };
 

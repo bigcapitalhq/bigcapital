@@ -165,7 +165,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
         .whereAccountId(node.id)
         .getClosingBalance();
 
-      return this.amountAdjustment(node.adjusmentType, closingBalance);
+      return this.amountAdjustment(node.adjustmentType, closingBalance);
     };
 
     /**
