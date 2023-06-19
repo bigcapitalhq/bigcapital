@@ -26,7 +26,7 @@ function RefundCreditNoteTransactionsTable({
   // Reconcile credit transactions table columns.
   const columns = useReconcileCreditTransactionsTableColumns();
 
-  // Handle delete reconile credit.
+  // Handle delete reconcile credit.
   const handleDeleteReconcileCreditNote = ({ id }) => {
     openAlert('reconcile-credit-delete', { creditNoteId: id });
   };

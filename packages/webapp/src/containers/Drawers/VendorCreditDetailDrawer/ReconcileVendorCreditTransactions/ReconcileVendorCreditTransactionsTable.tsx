@@ -23,7 +23,7 @@ function ReconcileVendorCreditTransactionsTable({
 
   const { reconcileVendorCredits } = useVendorCreditDetailDrawerContext();
 
-  // Handle delete reconile credit.
+  // Handle delete reconcile credit.
   const handleDeleteReconcileVendorCredit = ({ id }) => {
     openAlert('reconcile-vendor-delete', { vendorCreditId: id });
   };
