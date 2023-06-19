@@ -29,7 +29,7 @@ function SetupSubscription({
   // Handle form submit.
   const handleSubmit = (values) => {};
 
-  // Retrieve momerized subscription form schema.
+  // Retrieve memorized subscription form schema.
   const SubscriptionFormSchema = React.useMemo(
     () => getSubscriptionFormSchema(),
     [],
