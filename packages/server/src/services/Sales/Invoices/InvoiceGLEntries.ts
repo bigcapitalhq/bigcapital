@@ -18,7 +18,7 @@ export class SaleInvoiceGLEntries {
   private tenancy: HasTenancyService;
 
   @Inject()
-  private ledegrRepository: LedgerStorageService;
+  private ledgerRepository: LedgerStorageService;
 
   /**
    * Writes a sale invoice GL entries.
@@ -46,7 +46,7 @@ export class SaleInvoiceGLEntries {
     const ledger = this.getInvoiceGLedger(saleInvoice, ARAccount.id);
 
     // Commits the ledger entries to the storage as UOW.
-    await this.ledegrRepository.commit(tenantId, ledger, trx);
+    await this.ledgerRepository.commit(tenantId, ledger, trx);
   };
 
   /**
@@ -78,7 +78,7 @@ export class SaleInvoiceGLEntries {
     saleInvoiceId: number,
     trx?: Knex.Transaction
   ) => {
-    await this.ledegrRepository.deleteByReference(
+    await this.ledgerRepository.deleteByReference(
       tenantId,
       saleInvoiceId,
       'SaleInvoice',

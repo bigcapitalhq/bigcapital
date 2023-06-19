@@ -7,7 +7,7 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TenantMetadata } from '@/system/models';
 
 @Service()
-export class LedegrAccountsStorage {
+export class LedgerAccountsStorage {
   @Inject()
   tenancy: HasTenancyService;
 

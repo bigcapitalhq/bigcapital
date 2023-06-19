@@ -14,7 +14,7 @@ export default class Ledger implements ILedger {
   }
 
   /**
-   * Filters the ledegr entries.
+   * Filters the ledger entries.
    * @param callback
    * @returns {ILedger}
    */

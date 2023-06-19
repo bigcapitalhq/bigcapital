@@ -10,7 +10,7 @@ export class CustomerGLEntriesStorage {
   private tenancy: HasTenancyService;
 
   @Inject()
-  private ledegrRepository: LedgerStorageService;
+  private ledgerRepository: LedgerStorageService;
 
   @Inject()
   private customerGLEntries: CustomerGLEntries;
@@ -48,7 +48,7 @@ export class CustomerGLEntriesStorage {
       customer
     );
     // Commits the ledger entries to the storage.
-    await this.ledegrRepository.commit(tenantId, ledger, trx);
+    await this.ledgerRepository.commit(tenantId, ledger, trx);
   };
 
   /**
@@ -62,7 +62,7 @@ export class CustomerGLEntriesStorage {
     customerId: number,
     trx?: Knex.Transaction
   ) => {
-    await this.ledegrRepository.deleteByReference(
+    await this.ledgerRepository.deleteByReference(
       tenantId,
       customerId,
       'CustomerOpeningBalance',

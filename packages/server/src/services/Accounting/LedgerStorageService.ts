@@ -2,7 +2,7 @@ import { Service, Inject } from 'typedi';
 import { Knex } from 'knex';
 import { ILedger } from '@/interfaces';
 import { LedgerContactsBalanceStorage } from './LedgerContactStorage';
-import { LedegrAccountsStorage } from './LedgetAccountStorage';
+import { LedgerAccountsStorage } from './LedgetAccountStorage';
 import { LedgerEntriesStorage } from './LedgerEntriesStorage';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import Ledger from './Ledger';
@@ -15,7 +15,7 @@ export default class LedgerStorageService {
   private ledgerContactsBalance: LedgerContactsBalanceStorage;
 
   @Inject()
-  private ledgerAccountsBalance: LedegrAccountsStorage;
+  private ledgerAccountsBalance: LedgerAccountsStorage;
 
   @Inject()
   private tenancy: HasTenancyService;

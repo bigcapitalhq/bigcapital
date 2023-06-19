@@ -10,7 +10,7 @@ export class VendorGLEntriesStorage {
   private tenancy: HasTenancyService;
 
   @Inject()
-  private ledegrRepository: LedgerStorageService;
+  private ledgerRepository: LedgerStorageService;
 
   @Inject()
   private vendorGLEntries: VendorGLEntries;
@@ -48,7 +48,7 @@ export class VendorGLEntriesStorage {
       vendor
     );
     // Commits the ledger entries to the storage.
-    await this.ledegrRepository.commit(tenantId, ledger, trx);
+    await this.ledgerRepository.commit(tenantId, ledger, trx);
   };
 
   /**
@@ -62,7 +62,7 @@ export class VendorGLEntriesStorage {
     vendorId: number,
     trx?: Knex.Transaction
   ) => {
-    await this.ledegrRepository.deleteByReference(
+    await this.ledgerRepository.deleteByReference(
       tenantId,
       vendorId,
       'VendorOpeningBalance',
