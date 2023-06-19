@@ -406,14 +406,14 @@ function ViewForm({
 
         <H5 className={'mb2'}>Columns Preferences</H5>
 
-        <div class="dragable-columns">
+        <div class="draggable-columns">
           <Row gutterWidth={14}>
-            <Col sm={4} className="dragable-columns__column">
-              <H6 className="dragable-columns__title">Available Columns</H6>
+            <Col sm={4} className="draggable-columns__column">
+              <H6 className="draggable-columns__title">Available Columns</H6>
 
               <InputGroup placeholder={intl.get('search')} leftIcon="search" />
 
-              <div class="dragable-columns__items">
+              <div class="draggable-columns__items">
                 <Menu>
                   <ReactSortable
                     list={availableColumns}
@@ -429,7 +429,7 @@ function ViewForm({
             </Col>
 
             <Col sm={1}>
-              <div class="dragable-columns__arrows">
+              <div class="draggable-columns__arrows">
                 <div>
                   <Icon
                     icon="arrow-circle-left"
@@ -447,11 +447,11 @@ function ViewForm({
               </div>
             </Col>
 
-            <Col sm={4} className="dragable-columns__column">
-              <H6 className="dragable-columns__title">Selected Columns</H6>
+            <Col sm={4} className="draggable-columns__column">
+              <H6 className="draggable-columns__title">Selected Columns</H6>
               <InputGroup placeholder={intl.get('search')} leftIcon="search" />
 
-              <div class="dragable-columns__items">
+              <div class="draggable-columns__items">
                 <Menu>
                   <ReactSortable
                     list={draggedColumns}
