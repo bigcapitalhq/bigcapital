@@ -278,7 +278,7 @@ export default class UsersController extends BaseController {
         });
       }
       if (error.errorType === 'CANNOT_AUTHORIZED_USER_MUTATE_ROLE') {
-        return res.boom.badRequest('Cannout mutate authorized user role.', {
+        return res.boom.badRequest('Cannot mutate authorized user role.', {
           errors: [{ type: 'CANNOT_AUTHORIZED_USER_MUTATE_ROLE', code: 700 }],
         });
       }

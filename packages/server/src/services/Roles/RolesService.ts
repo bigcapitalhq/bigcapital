@@ -285,7 +285,7 @@ export default class RolesService {
 
     // Throw service error if the role has associated users.
     if (userAssociatedRole.length > 0) {
-      throw new ServiceError(ERRORS.CANNT_DELETE_ROLE_ASSOCIATED_TO_USERS);
+      throw new ServiceError(ERRORS.CANNOT_DELETE_ROLE_ASSOCIATED_TO_USERS);
     }
   };
 }

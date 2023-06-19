@@ -237,7 +237,7 @@ export default class RolesController extends BaseController {
           ],
         });
       }
-      if (error.errorType === 'CANNT_DELETE_ROLE_ASSOCIATED_TO_USERS') {
+      if (error.errorType === 'CANNOT_DELETE_ROLE_ASSOCIATED_TO_USERS') {
         return res.status(400).send({
           errors: [
             {
