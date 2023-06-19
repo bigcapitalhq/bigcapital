@@ -9,7 +9,7 @@ import {T , MoneyFieldCell, FormatDateCell } from '@/components';
 
 export const transformErrors = (errors, { setErrors }) => {};
 
-export function EmptyStatuCallout() {
+export function EmptyStatusCallout() {
   return (
     <div className={Classes.DIALOG_BODY}>
       <Callout intent={Intent.PRIMARY}>

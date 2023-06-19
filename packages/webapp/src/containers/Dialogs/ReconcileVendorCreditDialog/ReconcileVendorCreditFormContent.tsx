@@ -3,7 +3,7 @@ import React from 'react';
 import { Form } from 'formik';
 import { Choose } from '@/components';
 
-import { EmptyStatuCallout } from './utils';
+import { EmptyStatusCallout } from './utils';
 import ReconcileVendorCreditFormFields from './ReconcileVendorCreditFormFields';
 import ReconcileVendorCreditFloatingActions from './ReconcileVendorCreditFloatingActions';
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
@@ -14,7 +14,7 @@ export default function ReconcileVendorCreditFormContent() {
   return (
     <Choose>
       <Choose.When condition={isEmptyStatus}>
-        <EmptyStatuCallout />
+        <EmptyStatusCallout />
       </Choose.When>
       <Choose.Otherwise>
         <Form>
