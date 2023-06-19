@@ -383,7 +383,7 @@ straightforward as possible.
 
 ### Fixed
 
-- fix: disable submit buttons in pereferences pages.
+- fix: disable submit buttons in preferences pages.
 - fix: inventory adjustment cost field max/min range to avoid out of range error.
 - fix: transactions by customers/vendors report localization.
 - fix: Datatable head progressbar with right-to-left direction.
