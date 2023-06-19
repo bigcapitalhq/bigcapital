@@ -23,7 +23,7 @@ function SMSMessageFormFloatingActions({
   // Formik context.
   const { isSubmitting } = useFormikContext();
 
-  // SMS Message dialog contxt.
+  // SMS Message dialog context.
   const { dialogName } = useSMSMessageDialogContext();
 
   // Handle close button click.

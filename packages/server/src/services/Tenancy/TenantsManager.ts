@@ -177,7 +177,7 @@ export default class TenantsManagerService implements ITenantManager {
   }
 
   /**
-   * Initialize seed migration contxt.
+   * Initialize seed migration context.
    * @param {ITenant} tenant
    * @returns
    */
