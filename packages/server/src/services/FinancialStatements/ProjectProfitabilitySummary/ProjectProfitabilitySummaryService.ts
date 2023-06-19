@@ -15,7 +15,7 @@ export class ProjectProfitabilitySummaryService {
   private tenancy: HasTenancyService;
 
   /**
-   * Retrieves the project profitiability summary report.
+   * Retrieves the project profitability summary report.
    * @param {number} tenantId
    * @param {ProjectProfitabilitySummaryQuery} query
    * @returns {Promise<IProjectProfitabilitySummaryPOJO>}
