@@ -47,7 +47,7 @@ function CurrenciesDataTable({
   };
 
   return (
-    <CurrencieDataTable
+    <CurrenciesDataTable
       columns={columns}
       data={currencies}
       loading={isCurrenciesLoading}
@@ -70,7 +70,7 @@ export default compose(
   withAlertActions,
 )(CurrenciesDataTable);
 
-const CurrencieDataTable = styled(DataTable)`
+const CurrenciesDataTable = styled(DataTable)`
   .table .th,
   .table .td {
     padding-top: 0.4rem;
