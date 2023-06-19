@@ -8,7 +8,7 @@ export class BranchTransactionDTOTransform {
   branchesSettings: BranchesSettings;
 
   /**
-   * Excludes DTO branch id when mutli-warehouses feature is inactive.
+   * Excludes DTO branch id when multi-warehouses feature is inactive.
    * @param   {number} tenantId
    * @returns {any}
    */

@@ -307,9 +307,9 @@ export class BranchesController extends BaseController {
           errors: [{ type: 'BRANCH_NOT_FOUND', code: 100 }],
         });
       }
-      if (error.errorType === 'MUTLI_BRANCHES_ALREADY_ACTIVATED') {
+      if (error.errorType === 'MULTI_BRANCHES_ALREADY_ACTIVATED') {
         return res.status(400).send({
-          errors: [{ type: 'MUTLI_BRANCHES_ALREADY_ACTIVATED', code: 100 }],
+          errors: [{ type: 'MULTI_BRANCHES_ALREADY_ACTIVATED', code: 100 }],
         });
       }
       if (error.errorType === 'COULD_NOT_DELETE_ONLY_BRANCH') {

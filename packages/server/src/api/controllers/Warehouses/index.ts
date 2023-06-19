@@ -309,9 +309,9 @@ export class WarehousesController extends BaseController {
           errors: [{ type: 'WAREHOUSE_NOT_FOUND', code: 100 }],
         });
       }
-      if (error.errorType === 'MUTLI_WAREHOUSES_ALREADY_ACTIVATED') {
+      if (error.errorType === 'MULTI_WAREHOUSES_ALREADY_ACTIVATED') {
         return res.status(400).send({
-          errors: [{ type: 'MUTLI_WAREHOUSES_ALREADY_ACTIVATED', code: 200 }],
+          errors: [{ type: 'MULTI_WAREHOUSES_ALREADY_ACTIVATED', code: 200 }],
         });
       }
       if (error.errorType === 'COULD_NOT_DELETE_ONLY_WAERHOUSE') {

@@ -9,7 +9,7 @@ export class WarehouseTransactionDTOTransform {
   private warehousesSettings: WarehousesSettings;
 
   /**
-   * Excludes DTO warehouse id when mutli-warehouses feature is inactive.
+   * Excludes DTO warehouse id when multi-warehouses feature is inactive.
    * @param   {number} tenantId
    * @returns {Promise<Omit<T, 'warehouseId'> | T>}
    */

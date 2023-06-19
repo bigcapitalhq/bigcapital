@@ -56,7 +56,7 @@ const branchSelectProps = {
 };
 
 /**
- * branches mulit select.
+ * branches multi select.
  * @param {*} param0
  * @returns {JSX.Element}
  */
