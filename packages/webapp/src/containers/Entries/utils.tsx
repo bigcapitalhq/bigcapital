@@ -115,7 +115,7 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
           ? item.purchase_description
           : item.sell_description;
 
-      // Detarmines whether the landed cost checkbox should be disabled.
+      // Determines whether the landed cost checkbox should be disabled.
       const landedCostDisabled = isLandedCostDisabled(item);
 
       // The new row.

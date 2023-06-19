@@ -102,7 +102,7 @@ export const filterConditionRoles = (
 };
 
 /**
- * Detarmines the value field when should update.
+ * Determines the value field when should update.
  * @returns {boolean}
  */
 export const shouldFilterValueFieldUpdate = (newProps, oldProps) => {

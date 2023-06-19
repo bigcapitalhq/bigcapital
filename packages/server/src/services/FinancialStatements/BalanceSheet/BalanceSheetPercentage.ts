@@ -211,7 +211,7 @@ export const BalanceSheetPercentage = (Base: any) =>
     };
 
     /**
-     * Detarmines whether the given node has horizontal total.
+     * Determines whether the given node has horizontal total.
      * @param   {IBalanceSheetDataNode} node
      * @returns {boolean}
      */

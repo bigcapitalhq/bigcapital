@@ -65,7 +65,7 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
     isLoading: isProjectsLoading,
   } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
-  // Detarmines whether the new mode.
+  // Determines whether the new mode.
   const isNewMode = !paymentReceiveId;
 
   const isFeatureLoading = isBranchesLoading;

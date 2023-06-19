@@ -295,7 +295,7 @@ export default class InventoryDetails extends FinancialSheet {
   }
 
   /**
-   * Detarmines the given item has opening balance transaction.
+   * Determines the given item has opening balance transaction.
    * @param {number} itemId - Item id.
    * @return {boolean}
    */
@@ -363,7 +363,7 @@ export default class InventoryDetails extends FinancialSheet {
   }
 
   /**
-   * Detarmines the given node equals the given type.
+   * Determines the given node equals the given type.
    * @param {string} nodeType
    * @param {IItem} node
    * @returns {boolean}
@@ -376,7 +376,7 @@ export default class InventoryDetails extends FinancialSheet {
   }
 
   /**
-   * Detarmines whether the given item node has transactions.
+   * Determines whether the given item node has transactions.
    * @param {IInventoryDetailsItem} item
    * @returns {boolean}
    */
@@ -385,7 +385,7 @@ export default class InventoryDetails extends FinancialSheet {
   }
 
   /**
-   * Detarmines the filter
+   * Determines the filter
    * @param {IInventoryDetailsItem} item
    * @return {boolean}
    */

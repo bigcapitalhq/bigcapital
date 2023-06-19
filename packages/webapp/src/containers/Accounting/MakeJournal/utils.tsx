@@ -185,7 +185,7 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
 };
 
 /**
- * Detarmines entries fast field should update.
+ * Determines entries fast field should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -197,7 +197,7 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines currencies fast field should update.
+ * Determines currencies fast field should update.
  */
 export const currenciesFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -252,7 +252,7 @@ export const useJournalTotals = () => {
 };
 
 /**
- * Detarmines whether the expenses has foreign .
+ * Determines whether the expenses has foreign .
  * @returns {boolean}
  */
 export const useJournalIsForeign = () => {

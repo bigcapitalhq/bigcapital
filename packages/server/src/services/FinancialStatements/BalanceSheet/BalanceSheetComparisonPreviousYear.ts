@@ -260,7 +260,7 @@ export const BalanceSheetComparisonPreviousYear = (Base: any) =>
     // ------------------------------
 
     /**
-     * Detarmines whether the given node has horizontal totals.
+     * Determines whether the given node has horizontal totals.
      * @param   {IBalanceSheetCommonNode} node
      * @returns {boolean}
      */

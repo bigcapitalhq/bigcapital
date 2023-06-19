@@ -115,7 +115,7 @@ export const handleDeleteErrors = (errors) => {
 };
 
 /**
- * Detarmines accounts fast field should update.
+ * Determines accounts fast field should update.
  */
 export const accountsFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -125,7 +125,7 @@ export const accountsFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines categories fast field should update.
+ * Determines categories fast field should update.
  */
 export const categoriesFieldShouldUpdate = (newProps, oldProps) => {
   return (

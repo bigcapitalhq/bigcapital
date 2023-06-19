@@ -4,7 +4,7 @@ import { isEmpty } from 'lodash';
 export const FinancialFilter = (Base) =>
   class extends Base {
     /**
-     * Detarmines whether the given node has children.
+     * Determines whether the given node has children.
      * @param   {IBalanceSheetCommonNode} node
      * @returns {boolean}
      */
@@ -12,7 +12,7 @@ export const FinancialFilter = (Base) =>
       !isEmpty(node.children);
 
     /**
-     * Detarmines whether the given node has no zero amount.
+     * Determines whether the given node has no zero amount.
      * @param   {IBalanceSheetCommonNode} node
      * @returns {boolean}
      */

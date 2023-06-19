@@ -35,7 +35,7 @@ function InventoryValuationHeaderDimensionsPanelContent() {
   const { warehouses, branches } =
     useInventoryValuationHeaderDimensionsPanelContext();
 
-  // Detarmines the given feature whether is enabled.
+  // Determines the given feature whether is enabled.
   const { featureCan } = useFeatureCan();
 
   const isBranchesFeatureCan = featureCan(Features.Branches);

@@ -36,7 +36,7 @@ export default class TenantDBManager implements ITenantDBManager {
   }
 
   /**
-   * Detarmines the tenant database weather exists.
+   * Determines the tenant database weather exists.
    * @return {Promise<boolean>}
    */
   public async databaseExists(tenant: ITenant) {

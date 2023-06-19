@@ -40,7 +40,7 @@ export default class ManualJournal extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the invoice is published.
+   * Determines whether the invoice is published.
    * @return {boolean}
    */
   get isPublished() {

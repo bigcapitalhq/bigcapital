@@ -114,7 +114,7 @@ export class LedegrAccountsStorage {
     // Retrieves the given tenant metadata.
     const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
 
-    // Detarmines whether the account has foreign currency.
+    // Determines whether the account has foreign currency.
     const isAccountForeign = account.currencyCode !== tenantMeta.baseCurrency;
 
     // Calculates the closing foreign balance by the given currency if account was has

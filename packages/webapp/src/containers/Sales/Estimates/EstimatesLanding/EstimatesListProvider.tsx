@@ -32,7 +32,7 @@ function EstimatesListProvider({ query, tableStateChanged, ...props }) {
     isFetching: isEstimatesFetching,
   } = useEstimates(query, { keepPreviousData: true });
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus =
     !isEstimatesLoading && !tableStateChanged && isEmpty(estimates);
 

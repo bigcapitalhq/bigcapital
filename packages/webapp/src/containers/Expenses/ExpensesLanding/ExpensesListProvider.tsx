@@ -30,7 +30,7 @@ function ExpensesListProvider({ query, tableStateChanged, ...props }) {
     isFetching: isResourceMetaFetching,
   } = useResourceMeta('expenses');
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus =
     isEmpty(expenses) && !isExpensesLoading && !tableStateChanged;
 

@@ -352,7 +352,7 @@ const dateRangeColumn = R.curry((data, column) => {
 });
 
 /**
- * Detarmines the given string starts with `date-range` string.
+ * Determines the given string starts with `date-range` string.
  */
 const isMatchesDateRange = (r) => R.match(/^date-range/g, r).length > 0;
 

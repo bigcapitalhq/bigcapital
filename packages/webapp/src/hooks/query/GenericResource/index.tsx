@@ -117,7 +117,7 @@ const transformVendorCredits = (response) => ({
 });
 
 /**
- * Detarmines the transformer based on the given resource type.
+ * Determines the transformer based on the given resource type.
  * @param {string} type - Resource type.
  */
 const transformResourceData = (type) => (response) => {

@@ -125,7 +125,7 @@ export const fullAmountPaymentEntries = (entries) => {
 };
 
 /**
- * Detarmines the customers fast-field should update.
+ * Determines the customers fast-field should update.
  */
 export const customersFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -135,7 +135,7 @@ export const customersFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines the accounts fast-field should update.
+ * Determines the accounts fast-field should update.
  */
 export const accountsFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -242,7 +242,7 @@ export const usePaymentReceiveTotals = () => {
 };
 
 /**
- * Detarmines whether the payment has foreign customer.
+ * Determines whether the payment has foreign customer.
  * @returns {boolean}
  */
 export const useEstimateIsForeignCustomer = () => {

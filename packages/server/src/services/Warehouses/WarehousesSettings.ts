@@ -17,7 +17,7 @@ export class WarehousesSettings {
   };
 
   /**
-   * Detarmines multi-warehouses is active.
+   * Determines multi-warehouses is active.
    * @param   {number} tenantId
    * @returns {boolean}
    */

@@ -90,7 +90,7 @@ export default class Expense extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the expense is published.
+   * Determines whether the expense is published.
    * @returns {boolean}
    */
   get isPublished() {

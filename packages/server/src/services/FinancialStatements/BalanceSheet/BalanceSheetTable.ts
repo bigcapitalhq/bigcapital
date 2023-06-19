@@ -65,7 +65,7 @@ export default class BalanceSheetTable extends R.compose(
   }
 
   /**
-   * Detarmines the node type of the given schema node.
+   * Determines the node type of the given schema node.
    * @param  {IBalanceSheetStructureSection} node -
    * @param  {string} type -
    * @return {boolean}

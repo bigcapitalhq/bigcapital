@@ -31,7 +31,7 @@ function VendorsListProvider({ tableState, tableStateChanged, ...props }) {
     isFetching: isResourceMetaFetching,
   } = useResourceMeta('vendors');
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus =
     isEmpty(vendors) && !isVendorsLoading && !tableStateChanged;
 

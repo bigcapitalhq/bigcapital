@@ -23,7 +23,7 @@ function ItemCategoryProvider({ itemCategoryId, dialogName, ...props }) {
   const { mutateAsync: createItemCategoryMutate } = useCreateItemCategory();
   const { mutateAsync: editItemCategoryMutate } = useEditItemCategory();
 
-  // Detarmines whether the new mode form.
+  // Determines whether the new mode form.
   const isNewMode = !itemCategoryId;
   const isEditMode = !isNewMode;
 

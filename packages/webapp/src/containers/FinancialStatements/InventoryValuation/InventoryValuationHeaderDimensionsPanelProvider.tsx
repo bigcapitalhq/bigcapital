@@ -16,10 +16,10 @@ function InventoryValuationHeaderDimensionsProvider({ ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
 
-  // Detarmines whether the warehouses feature is accessible.
+  // Determines whether the warehouses feature is accessible.
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
 
-  // Detarmines whether the branches feature is accessible.
+  // Determines whether the branches feature is accessible.
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Fetches the warehouses list.

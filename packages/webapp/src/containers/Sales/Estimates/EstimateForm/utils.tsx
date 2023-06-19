@@ -76,7 +76,7 @@ export const transformToEditForm = (estimate) => {
 };
 
 /**
- * Detarmines customers fast field when update.
+ * Determines customers fast field when update.
  */
 export const customersFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -86,7 +86,7 @@ export const customersFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines entries fast field should update.
+ * Determines entries fast field should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -213,7 +213,7 @@ export const useEstimateTotals = () => {
 };
 
 /**
- * Detarmines whether the estimate has foreign customer.
+ * Determines whether the estimate has foreign customer.
  * @returns {boolean}
  */
 export const useEstimateIsForeignCustomer = () => {

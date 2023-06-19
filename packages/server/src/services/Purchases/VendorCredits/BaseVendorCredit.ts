@@ -57,7 +57,7 @@ export default class BaseVendorCredit {
     // Retreive the next vendor credit number.
     const autoNextNumber = this.getNextCreditNumber(tenantId);
 
-    // Detarmines the credit note number.
+    // Determines the credit note number.
     const vendorCreditNumber =
       vendorCreditDTO.vendorCreditNumber ||
       oldVendorCredit?.vendorCreditNumber ||

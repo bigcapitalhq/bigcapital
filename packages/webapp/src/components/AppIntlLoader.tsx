@@ -131,7 +131,7 @@ function AppIntlLoader({ children }) {
   // Retrieve the current locale.
   const currentLocale = getCurrentLocal();
 
-  // Detarmines the document direction based on the given locale.
+  // Determines the document direction based on the given locale.
   const isRTL = rtlDetect.isRtlLang(currentLocale);
 
   // Modifies the html document direction
@@ -144,7 +144,7 @@ function AppIntlLoader({ children }) {
   // Loads application locales of the given locale.
   const { isLoading: isAppLocalesLoading } = useAppLoadLocales(currentLocale);
 
-  // Detarmines whether the app locales loading.
+  // Determines whether the app locales loading.
   const isLoading = isAppYupLocalesLoading || isAppLocalesLoading;
 
   return (

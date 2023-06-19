@@ -25,7 +25,7 @@ export class Transformer {
   };
 
   /**
-   * Detarmines whether to exclude all attributes except the include attributes.
+   * Determines whether to exclude all attributes except the include attributes.
    * @returns {boolean}
    */
   public isExcludeAllAttributes = () => {

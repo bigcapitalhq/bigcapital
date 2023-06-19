@@ -70,7 +70,7 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
   };
 
   /**
-   * Detarmines whether the customers post filter is active.
+   * Determines whether the customers post filter is active.
    * @returns {boolean}
    */
   private isCustomersPostFilter = () => {

@@ -109,7 +109,7 @@ export const transformFormValuesToRequest = (values) => {
 };
 
 /**
- * Detarmines vendors fast field should update
+ * Determines vendors fast field should update
  */
 export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -119,7 +119,7 @@ export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines entries fast field should update.
+ * Determines entries fast field should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -198,7 +198,7 @@ export const useVendorCreditNoteTotals = () => {
 };
 
 /**
- * Detarmines whether the vendor note has foreign customer.
+ * Determines whether the vendor note has foreign customer.
  * @returns {boolean}
  */
 export const useVendorNoteIsForeignCustomer = () => {

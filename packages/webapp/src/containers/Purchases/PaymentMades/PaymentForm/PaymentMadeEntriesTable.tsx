@@ -42,7 +42,7 @@ export default function PaymentMadeEntriesTable({
     },
     [onUpdateData, entries],
   );
-  // Detarmines the right no results message before selecting vendor and after
+  // Determines the right no results message before selecting vendor and after
   // selecting vendor id.
   const noResultsMessage = vendor_id ? (
     <T

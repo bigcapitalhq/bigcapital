@@ -29,7 +29,7 @@ export default function GeneralLedgerHeaderDimensionsPanel() {
 function GeneralLedgerHeaderDimensionsPanelContent() {
   const { branches } = useGeneralLedgerHeaderDimensionsContext();
 
-  // Detarmines the feature whether is enabled.
+  // Determines the feature whether is enabled.
   const { featureCan } = useFeatureCan();
 
   const isBranchesFeatureCan = featureCan(Features.Branches);

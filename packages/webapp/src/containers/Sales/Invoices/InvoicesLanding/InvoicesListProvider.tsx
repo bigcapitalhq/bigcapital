@@ -30,7 +30,7 @@ function InvoicesListProvider({ query, tableStateChanged, ...props }) {
     isLoading: isInvoicesLoading,
   } = useInvoices(query, { keepPreviousData: true });
 
-  // Detarmines whether the table should show empty state.
+  // Determines whether the table should show empty state.
   const isEmptyStatus =
     isEmpty(invoices) && !tableStateChanged && !isInvoicesLoading;
 

@@ -539,7 +539,7 @@ export const createDeepEqualSelector = createSelectorCreator(
 );
 
 /**
- * Detarmines whether the table has empty status.
+ * Determines whether the table has empty status.
  */
 export const isTableEmptyStatus = ({ data, pagination, filterMeta }) => {
   return [

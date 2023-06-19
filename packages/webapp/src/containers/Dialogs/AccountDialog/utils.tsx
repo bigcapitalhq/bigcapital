@@ -99,7 +99,7 @@ export const transformAccountToForm = (account, payload) => {
 };
 
 /**
- * Detarmines whether the for fields are disabled.
+ * Determines whether the for fields are disabled.
  */
 export const getDisabledFormFields = (account, payload) => {
   return {
@@ -111,7 +111,7 @@ export const getDisabledFormFields = (account, payload) => {
 };
 
 /**
- * Detarmines whether should update the parent account field.
+ * Determines whether should update the parent account field.
  * @param newProps
  * @param oldProps
  * @returns {boolean}

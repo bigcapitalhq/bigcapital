@@ -4,7 +4,7 @@ const { promisify } = require('util');
 const readFile = promisify(fs.readFile);
 
 /**
- * Detarmines the module type of the given file path.
+ * Determines the module type of the given file path.
  * @param {string} filepath
  * @returns {boolean}
  */

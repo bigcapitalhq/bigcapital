@@ -192,7 +192,7 @@ export const useCreditNoteTotals = () => {
 };
 
 /**
- * Detarmines whether the receipt has foreign customer.
+ * Determines whether the receipt has foreign customer.
  * @returns {boolean}
  */
 export const useCreditNoteIsForeignCustomer = () => {

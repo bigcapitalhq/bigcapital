@@ -107,7 +107,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
   };
 
   /**
-   * Detarmines whether the given vendor node is none zero.
+   * Determines whether the given vendor node is none zero.
    * @param {IAPAgingSummaryVendor} vendorNode
    * @returns {boolean}
    */
@@ -142,7 +142,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
   };
 
   /**
-   * Detarmines whether vendors nodes filter enabled.
+   * Determines whether vendors nodes filter enabled.
    * @returns {boolean}
    */
   private isVendorNodesFilter = (): boolean => {

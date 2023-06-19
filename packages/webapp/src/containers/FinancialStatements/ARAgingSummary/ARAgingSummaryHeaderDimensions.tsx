@@ -27,7 +27,7 @@ export default function ARAgingSummaryHeaderDimensions() {
 function ARAgingSummaryHeaderDimensionsContent() {
   const { branches } = useARAgingSummaryHeaderDimensonsContext();
 
-  // Detarmines the feature whether is enabled.
+  // Determines the feature whether is enabled.
   const { featureCan } = useFeatureCan();
 
   const isBranchesFeatureCan = featureCan(Features.Branches);

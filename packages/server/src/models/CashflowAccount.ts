@@ -85,7 +85,7 @@ export default class CashflowAccount extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the given type equals the account type.
+   * Determines whether the given type equals the account type.
    * @param {string} accountType
    * @return {boolean}
    */
@@ -95,7 +95,7 @@ export default class CashflowAccount extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmine whether the given parent type equals the account type.
+   * Determine whether the given parent type equals the account type.
    * @param {string} parentType
    * @return {boolean}
    */

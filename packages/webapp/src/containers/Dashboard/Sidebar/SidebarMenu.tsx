@@ -11,7 +11,7 @@ import { useIsSidebarMenuItemActive } from './hooks';
  * @returns {JSX.Element}
  */
 function SidebarMenuItem({ item, index }) {
-  // Detarmine whether the item is active.
+  // Determine whether the item is active.
   const isActive = useIsSidebarMenuItemActive(item);
 
   return (
@@ -35,7 +35,7 @@ SidebarMenuItem.ItemTypes = [
 ];
 
 /**
- * Detarmines which sidebar menu item type should display.
+ * Determines which sidebar menu item type should display.
  * @returns {JSX.Element}
  */
 function SidebarMenuItemComposer({ item, index }) {

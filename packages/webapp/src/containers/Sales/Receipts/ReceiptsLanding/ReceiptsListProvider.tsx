@@ -28,7 +28,7 @@ function ReceiptsListProvider({ query, tableStateChanged, ...props }) {
     isFetching: isReceiptsFetching,
   } = useReceipts(query, { keepPreviousData: true });
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus =
     isEmpty(receipts) && !tableStateChanged && !isReceiptsLoading;
 

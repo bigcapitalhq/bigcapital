@@ -95,7 +95,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = useState();
 
-  // Detarmines whether the form in new mode.
+  // Determines whether the form in new mode.
   const isNewMode = !invoiceId;
 
   // Determines whether the warehouse and branches are loading.

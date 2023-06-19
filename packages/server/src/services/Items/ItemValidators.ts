@@ -56,7 +56,7 @@ export class ItemsValidators {
     if (!foundAccount) {
       throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_FOUMD);
 
-      // Detarmines the cost of goods sold account.
+      // Determines the cost of goods sold account.
     } else if (!foundAccount.isParentType(ACCOUNT_PARENT_TYPE.EXPENSE)) {
       throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_COGS);
     }

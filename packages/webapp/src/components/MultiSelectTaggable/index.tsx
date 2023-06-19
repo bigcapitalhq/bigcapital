@@ -17,7 +17,7 @@ export function MultiSelect({
 }) {
   const [localSelected, setLocalSelected] = useState(initialSelectedItems);
 
-  // Detarmines whether the given id is selected.
+  // Determines whether the given id is selected.
   const isItemSelected = useCallback(
     (item) => includes(localSelected, item),
     [localSelected],

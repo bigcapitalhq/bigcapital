@@ -69,7 +69,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
   // # Columns Type/By.
   // ---------------------------
   /**
-   * Detarmines the given display columns type.
+   * Determines the given display columns type.
    * @param   {string} displayColumnsBy
    * @returns {boolean}
    */
@@ -78,7 +78,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines the given display columns by type.
+   * Determines the given display columns by type.
    * @param   {string} displayColumnsBy
    * @returns {boolean}
    */
@@ -87,7 +87,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines whether the columns type is date periods.
+   * Determines whether the columns type is date periods.
    * @returns {boolean}
    */
   public isDatePeriodsColumnsType = (): boolean => {
@@ -95,7 +95,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines whether the columns type is total.
+   * Determines whether the columns type is total.
    * @returns {boolean}
    */
   public isTotalColumnType = (): boolean => {
@@ -106,7 +106,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
   // # Percentage column/row.
   // ---------------------------
   /**
-   * Detarmines whether the percentage of column active.
+   * Determines whether the percentage of column active.
    * @returns {boolean}
    */
   public isColumnsPercentageActive = (): boolean => {
@@ -114,7 +114,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines whether the percentage of row active.
+   * Determines whether the percentage of row active.
    * @returns {boolean}
    */
   public isRowsPercentageActive = (): boolean => {
@@ -125,7 +125,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
   // # Previous Year (PY)
   // ---------------------------
   /**
-   * Detarmines the report query has previous year enabled.
+   * Determines the report query has previous year enabled.
    * @returns {boolean}
    */
   public isPreviousYearActive = (): boolean => {
@@ -133,7 +133,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines the report query has previous year percentage change active.
+   * Determines the report query has previous year percentage change active.
    * @returns {boolean}
    */
   public isPreviousYearPercentageActive = (): boolean => {
@@ -141,7 +141,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines the report query has previous year change active.
+   * Determines the report query has previous year change active.
    * @returns {boolean}
    */
   public isPreviousYearChangeActive = (): boolean => {
@@ -152,7 +152,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
   // # Previous Period (PP).
   // ---------------------------
   /**
-   * Detarmines the report query has previous period enabled.
+   * Determines the report query has previous period enabled.
    * @returns {boolean}
    */
   public isPreviousPeriodActive = (): boolean => {
@@ -160,7 +160,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines wether the preivous period percentage is active.
+   * Determines wether the preivous period percentage is active.
    * @returns {boolean}
    */
   public isPreviousPeriodPercentageActive = (): boolean => {
@@ -168,7 +168,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines wether the previous period change is active.
+   * Determines wether the previous period change is active.
    * @returns {boolean}
    */
   public isPreviousPeriodChangeActive = (): boolean => {

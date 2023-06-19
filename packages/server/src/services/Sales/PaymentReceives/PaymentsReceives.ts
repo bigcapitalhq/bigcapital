@@ -138,7 +138,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
     if (!depositAccount) {
       throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_NOT_FOUND);
     }
-    // Detarmines whether the account is cash, bank or other current asset.
+    // Determines whether the account is cash, bank or other current asset.
     if (
       !depositAccount.isAccountType([
         ACCOUNT_TYPE.CASH,

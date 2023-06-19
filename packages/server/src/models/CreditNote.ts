@@ -49,7 +49,7 @@ export default class CreditNote extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the credit note is draft.
+   * Determines whether the credit note is draft.
    * @returns {boolean}
    */
   get isDraft() {
@@ -57,7 +57,7 @@ export default class CreditNote extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether vendor credit is published.
+   * Determines whether vendor credit is published.
    * @returns {boolean}
    */
   get isPublished() {
@@ -65,7 +65,7 @@ export default class CreditNote extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the credit note is open.
+   * Determines whether the credit note is open.
    * @return {boolean}
    */
   get isOpen() {
@@ -73,7 +73,7 @@ export default class CreditNote extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the credit note is closed.
+   * Determines whether the credit note is closed.
    * @return {boolean}
    */
   get isClosed() {

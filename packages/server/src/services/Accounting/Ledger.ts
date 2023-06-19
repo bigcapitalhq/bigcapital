@@ -150,7 +150,7 @@ export default class Ledger implements ILedger {
   }
 
   /**
-   * Detarmines whether the ledger has no entries.
+   * Determines whether the ledger has no entries.
    * @returns {boolean}
    */
   public isEmpty(): boolean {

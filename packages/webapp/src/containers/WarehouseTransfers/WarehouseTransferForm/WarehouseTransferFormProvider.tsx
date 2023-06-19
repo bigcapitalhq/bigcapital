@@ -49,7 +49,7 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
   // Inventory items cost query.
   const [itemCostQuery, setItemCostQuery] = React.useState(null);
 
-  // Detarmines whether the inventory items cost query is enabled.
+  // Determines whether the inventory items cost query is enabled.
   const isItemsCostQueryEnabled =
     !isEmpty(itemCostQuery?.date) && !isEmpty(itemCostQuery?.itemsIds);
 
@@ -74,7 +74,7 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
   const { mutateAsync: editWarehouseTransferMutate } =
     useEditWarehouseTransfer();
 
-  // Detarmines whether the form in new mode.
+  // Determines whether the form in new mode.
   const isNewMode = !warehouseTransferId;
 
   // Form submit payload.

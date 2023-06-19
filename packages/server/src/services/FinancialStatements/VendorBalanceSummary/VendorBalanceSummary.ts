@@ -68,7 +68,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
   };
 
   /**
-   * Detarmines whether the vendors post filter is active.
+   * Determines whether the vendors post filter is active.
    * @returns {boolean}
    */
   private isVendorsPostFilter = (): boolean => {

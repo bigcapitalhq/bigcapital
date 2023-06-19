@@ -96,7 +96,7 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Detarmines the given display columns by type.
+   * Determines the given display columns by type.
    * @param {string} displayColumnsBy
    * @returns {boolean}
    */
@@ -278,7 +278,7 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Detarmines the schema section type.
+   * Determines the schema section type.
    * @param   {string} type
    * @param   {ICashFlowSchemaSection} section
    * @returns {boolean}
@@ -590,7 +590,7 @@ export default class CashFlowStatement extends compose(
   // REPORT FILTERING
   // --------------------------------------------
   /**
-   * Detarmines the given section has children and not empty.
+   * Determines the given section has children and not empty.
    * @param   {ICashFlowStatementSection} section
    * @returns {boolean}
    */
@@ -601,7 +601,7 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Detarmines whether the section has no zero amount.
+   * Determines whether the section has no zero amount.
    * @param   {ICashFlowStatementSection} section
    * @returns {boolean}
    */
@@ -610,7 +610,7 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Detarmines whether the parent accounts sections has children.
+   * Determines whether the parent accounts sections has children.
    * @param   {ICashFlowStatementSection} section
    * @returns {boolean}
    */
@@ -625,7 +625,7 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Detarmines the account section has no zero otherwise returns true.
+   * Determines the account section has no zero otherwise returns true.
    * @param   {ICashFlowStatementSection} section
    * @returns {boolean}
    */

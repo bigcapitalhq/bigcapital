@@ -110,7 +110,7 @@ export const transformErrors = (errors, { setErrors }) => {
 };
 
 /**
- * Detarmines customer name field when should update.
+ * Determines customer name field when should update.
  */
 export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -120,7 +120,7 @@ export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines invoice entries field when should update.
+ * Determines invoice entries field when should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -257,7 +257,7 @@ export const useInvoiceTotals = () => {
 };
 
 /**
- * Detarmines whether the invoice has foreign customer.
+ * Determines whether the invoice has foreign customer.
  * @returns {boolean}
  */
 export const useInvoiceIsForeignCustomer = () => {

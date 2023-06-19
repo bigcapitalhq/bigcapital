@@ -25,7 +25,7 @@ function WarehousesProvider({ query, ...props }) {
     { enabled: isWarehouseFeatureCan },
   );
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus = isEmpty(warehouses) || !isWarehouseFeatureCan;
 
   // Provider state.

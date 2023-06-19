@@ -100,7 +100,7 @@ export const transformToEditForm = (
 };
 
 /**
- * Detarmine customers fast-field should update.
+ * Determine customers fast-field should update.
  */
 export const customersFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -110,7 +110,7 @@ export const customersFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmine accounts fast-field should update.
+ * Determine accounts fast-field should update.
  */
 export const accountsFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -183,7 +183,7 @@ export const useExpensesTotals = () => {
 };
 
 /**
- * Detarmines whether the expenses has foreign .
+ * Determines whether the expenses has foreign .
  * @returns {boolean}
  */
 export const useExpensesIsForeign = () => {

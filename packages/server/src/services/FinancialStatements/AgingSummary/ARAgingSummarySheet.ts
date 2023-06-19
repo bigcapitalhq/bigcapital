@@ -133,7 +133,7 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
   };
 
   /**
-   * Detarmines the customers nodes filter is enabled.
+   * Determines the customers nodes filter is enabled.
    * @returns {boolean}
    */
   private isCustomersFilterEnabled = (): boolean => {

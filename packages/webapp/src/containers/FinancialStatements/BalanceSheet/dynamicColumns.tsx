@@ -46,7 +46,7 @@ const assocColumnsToTotalColumn = R.curry((data, column, columnAccessor) => {
 });
 
 /**
- * Detarmines whether the given column has children columns.
+ * Determines whether the given column has children columns.
  * @returns {boolean}
  */
 const isColumnHasColumns = (column) => !isEmpty(column.children);
@@ -307,7 +307,7 @@ const totalColumnsComposer = R.curry((data, column) => {
 });
 
 /**
- * Detarmines the given string starts with `date-range` string.
+ * Determines the given string starts with `date-range` string.
  */
 const isMatchesDateRange = (r) => R.match(/^date-range/g, r).length > 0;
 

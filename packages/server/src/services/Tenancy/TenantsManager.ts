@@ -75,7 +75,7 @@ export default class TenantsManagerService implements ITenantManager {
   }
 
   /**
-   * Detarmines the tenant has database.
+   * Determines the tenant has database.
    * @param   {ITenant} tenant
    * @returns {Promise<boolean>}
    */

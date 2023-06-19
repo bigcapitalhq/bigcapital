@@ -93,7 +93,7 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
-   * Detarmines the ledger is empty.
+   * Determines the ledger is empty.
    */
   public isEmpty() {
     return this.entries.length === 0;

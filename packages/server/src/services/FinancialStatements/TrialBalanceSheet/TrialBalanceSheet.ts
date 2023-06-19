@@ -78,7 +78,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   private accountFilter = (accountNode: ITrialBalanceAccount): boolean => {
     const { noneTransactions, noneZero, onlyActive } = this.query;
 
-    // Conditions pair filter detarminer.
+    // Conditions pair filter determiner.
     const condsPairFilters = [
       [noneTransactions, this.filterNoneTransactions],
       [noneZero, this.filterNoneZero],
@@ -110,7 +110,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   };
 
   /**
-   * Detarmines whether the given account node is not none transactions.
+   * Determines whether the given account node is not none transactions.
    * @param {ITrialBalanceAccount} accountNode
    * @returns {boolean}
    */
@@ -124,7 +124,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   };
 
   /**
-   * Detarmines whether the given account none zero.
+   * Determines whether the given account none zero.
    * @param {ITrialBalanceAccount} accountNode
    * @returns {boolean}
    */
@@ -133,7 +133,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   };
 
   /**
-   * Detarmines whether the given account is active.
+   * Determines whether the given account is active.
    * @param {ITrialBalanceAccount} accountNode
    * @returns {boolean}
    */

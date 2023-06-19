@@ -39,7 +39,7 @@ export class ManualJournalBranchValidateSubscriber {
     manualJournalDTO,
     tenantId,
   }: IManualJournalCreatingPayload) => {
-    // Detarmines whether the multi-branches is accessible by tenant.
+    // Determines whether the multi-branches is accessible by tenant.
     const isAccessible = await this.featuresManager.accessible(
       tenantId,
       Features.BRANCHES
@@ -61,7 +61,7 @@ export class ManualJournalBranchValidateSubscriber {
     tenantId,
     manualJournalDTO,
   }: IManualJournalEditingPayload) => {
-    // Detarmines whether the multi-branches is accessible by tenant.
+    // Determines whether the multi-branches is accessible by tenant.
     const isAccessible = await this.featuresManager.accessible(
       tenantId,
       Features.BRANCHES

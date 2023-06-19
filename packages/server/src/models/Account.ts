@@ -309,7 +309,7 @@ export default class Account extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the given type equals the account type.
+   * Determines whether the given type equals the account type.
    * @param {string} accountType
    * @return {boolean}
    */
@@ -319,7 +319,7 @@ export default class Account extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the given root type equals the account type.
+   * Determines whether the given root type equals the account type.
    * @param {string} rootType
    * @return {boolean}
    */
@@ -328,7 +328,7 @@ export default class Account extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmine whether the given parent type equals the account type.
+   * Determine whether the given parent type equals the account type.
    * @param {string} parentType
    * @return {boolean}
    */
@@ -340,7 +340,7 @@ export default class Account extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the account is balance sheet account.
+   * Determines whether the account is balance sheet account.
    * @return {boolean}
    */
   isBalanceSheet() {
@@ -348,7 +348,7 @@ export default class Account extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the account is profit/loss account.
+   * Determines whether the account is profit/loss account.
    * @return {boolean}
    */
   isProfitLossSheet() {
@@ -356,7 +356,7 @@ export default class Account extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the account is income statement account
+   * Determines whether the account is income statement account
    * @return {boolean}
    */
   isIncomeSheet() {

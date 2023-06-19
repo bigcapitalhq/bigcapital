@@ -50,7 +50,7 @@ export default class SaleEstimate extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the sale estimate converted to sale invoice.
+   * Determines whether the sale estimate converted to sale invoice.
    * @return {boolean}
    */
   get isConvertedToInvoice() {
@@ -58,7 +58,7 @@ export default class SaleEstimate extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the estimate is delivered.
+   * Determines whether the estimate is delivered.
    * @return {boolean}
    */
   get isDelivered() {
@@ -66,7 +66,7 @@ export default class SaleEstimate extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the estimate is expired.
+   * Determines whether the estimate is expired.
    * @return {boolean}
    */
   get isExpired() {
@@ -78,7 +78,7 @@ export default class SaleEstimate extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the estimate is approved.
+   * Determines whether the estimate is approved.
    * @return {boolean}
    */
   get isApproved() {
@@ -86,7 +86,7 @@ export default class SaleEstimate extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the estimate is reject.
+   * Determines whether the estimate is reject.
    * @return {boolean}
    */
   get isRejected() {

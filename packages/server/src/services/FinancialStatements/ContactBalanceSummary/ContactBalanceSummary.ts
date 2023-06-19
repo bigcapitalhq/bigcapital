@@ -183,7 +183,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
   private contactNodeFilter = (contact: IContactBalanceSummaryContact) => {
     const { noneTransactions, noneZero } = this.filter;
 
-    // Conditions pair filter detarminer.
+    // Conditions pair filter determiner.
     const condsPairFilters = [
       [noneTransactions, this.filterContactNoneTransactions],
       [noneZero, this.filterContactNoneZero],

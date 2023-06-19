@@ -46,7 +46,7 @@ export default class CashflowTransaction extends TenantModel {
   }
 
   /**
-   * Detarmines whether the cashflow transaction is published.
+   * Determines whether the cashflow transaction is published.
    * @return {boolean}
    */
   get isPublished() {
@@ -65,7 +65,7 @@ export default class CashflowTransaction extends TenantModel {
   }
 
   /**
-   * Detarmines whether the cashflow transaction cash credit type.
+   * Determines whether the cashflow transaction cash credit type.
    * @returns {boolean}
    */
   get isCashCredit() {
@@ -73,7 +73,7 @@ export default class CashflowTransaction extends TenantModel {
   }
 
   /**
-   * Detarmines whether the cashflow transaction cash debit type.
+   * Determines whether the cashflow transaction cash debit type.
    * @returns {boolean}
    */
   get isCashDebit() {

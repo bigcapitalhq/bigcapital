@@ -62,7 +62,7 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Detarmines whether the current customer has foreign currency. 
+ * Determines whether the current customer has foreign currency. 
  * @returns {boolean}
  */
 export const useIsCustomerForeignCurrency = () => {
@@ -73,7 +73,7 @@ export const useIsCustomerForeignCurrency = () => {
 };
 
 /**
- * Detarmines the exchange opening balance field when should update.
+ * Determines the exchange opening balance field when should update.
  */
 export const openingBalanceFieldShouldUpdate = (newProps, oldProps) => {
   return (

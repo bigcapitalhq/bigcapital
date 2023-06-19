@@ -26,7 +26,7 @@ export default class OrganizationBaseCurrencyLocking {
   };
 
   /**
-   * Detarmines the mutation base currency model is locked.
+   * Determines the mutation base currency model is locked.
    * @param   {Model} Model
    * @returns {Promise<MutateBaseCurrencyLockMeta | false>}
    */
@@ -72,7 +72,7 @@ export default class OrganizationBaseCurrencyLocking {
   }
 
   /**
-   * Detarmines the base currency mutation locked.
+   * Determines the base currency mutation locked.
    * @param   {number} tenantId
    * @returns {Promise<boolean>}
    */

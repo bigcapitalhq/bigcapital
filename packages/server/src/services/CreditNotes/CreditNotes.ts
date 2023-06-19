@@ -50,7 +50,7 @@ export default class BaseCreditNotes {
     // Retreive the next credit note number.
     const autoNextNumber = this.getNextCreditNumber(tenantId);
 
-    // Detarmines the credit note number.
+    // Determines the credit note number.
     const creditNoteNumber =
       creditNoteDTO.creditNoteNumber ||
       oldCreditNote?.creditNoteNumber ||

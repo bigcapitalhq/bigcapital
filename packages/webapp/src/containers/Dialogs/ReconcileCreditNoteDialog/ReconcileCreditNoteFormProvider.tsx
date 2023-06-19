@@ -36,7 +36,7 @@ function ReconcileCreditNoteFormProvider({
   const { mutateAsync: createReconcileCreditNoteMutate } =
     useCreateReconcileCreditNote();
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus = isEmpty(reconcileCreditNotes);
 
   // provider payload.

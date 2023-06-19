@@ -15,7 +15,7 @@ export default class TransactionsLockingGuard {
   transactionsLockingRepo: TransactionsLockingRepository;
 
   /**
-   * Detarmines whether the transaction date between the locking date period.
+   * Determines whether the transaction date between the locking date period.
    * @param {number} tenantId
    * @param {Date} transactionDate
    * @param {TransactionsLockingGroup} lockingGroup

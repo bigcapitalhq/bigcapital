@@ -39,7 +39,7 @@ function VendorsCreditNoteListProvider({ query, tableStateChanged, ...props }) {
     isFetching: isVendorCreditsFetching,
   } = useVendorCredits(query, { keepPreviousData: true });
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus =
     isEmpty(vendorCredits) && !isVendorCreditsLoading && !tableStateChanged;
 

@@ -185,7 +185,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
   private itemFilter = (valuationItem: IInventoryValuationItem): boolean => {
     const { noneTransactions, noneZero, onlyActive } = this.query;
 
-    // Conditions pair filter detarminer.
+    // Conditions pair filter determiner.
     const condsPairFilters = [
       [noneTransactions, this.filterNoneTransactions],
       [noneZero, this.filterNoneZero],
@@ -215,7 +215,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
   };
 
   /**
-   * Detarmines whether the items post filter is active.
+   * Determines whether the items post filter is active.
    */
   private isItemsPostFilter = (): boolean => {
     return isEmpty(this.query.itemsIds);

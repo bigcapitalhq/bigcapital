@@ -83,7 +83,7 @@ export default class SalesByItemsReport extends FinancialSheet {
   };
 
   /**
-   * Detarmines whether the given sale node is has transactions.
+   * Determines whether the given sale node is has transactions.
    * @param {ISalesByItemsItem} node -
    * @returns {boolean}
    */
@@ -92,7 +92,7 @@ export default class SalesByItemsReport extends FinancialSheet {
   };
 
   /**
-   * Detarmines whether the given sale by item node is active.
+   * Determines whether the given sale by item node is active.
    * @param {ISalesByItemsItem} node
    * @returns {boolean}
    */

@@ -61,7 +61,7 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
   // Submit form payload.
   const [submitPayload, setSubmitPayload] = React.useState({});
 
-  // Detarmines whether the form in new mode.
+  // Determines whether the form in new mode.
   const isNewMode = !expenseId;
 
   // Provider payload.

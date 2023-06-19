@@ -31,7 +31,7 @@ function BillsListProvider({ query, tableStateChanged, ...props }) {
     isFetching: isBillsFetching,
   } = useBills(query, { keepPreviousData: true });
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus = isEmpty(bills) && !isBillsLoading && !tableStateChanged;
 
   // Provider payload.

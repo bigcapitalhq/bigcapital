@@ -33,7 +33,7 @@ export default function TableCell({ cell, row, index }) {
   // Application intl context.
   const { isRTL } = useAppIntlContext();
 
-  // Detarmines whether the current cell is loading.
+  // Determines whether the current cell is loading.
   const cellLoading = isCellLoading(
     cellsLoading,
     cellsLoadingCoords,

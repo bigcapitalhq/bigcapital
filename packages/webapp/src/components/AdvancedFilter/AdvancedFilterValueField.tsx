@@ -40,7 +40,7 @@ function tansformDateValue(date, defaultValue = null) {
   return date ? moment(date).toDate() : defaultValue;
 }
 /**
- * Advanced filter value field detarminer.
+ * Advanced filter value field determiner.
  */
 export default function AdvancedFilterValueField2({
   value,

@@ -93,7 +93,7 @@ export const useObserveTransferNoSettings = (prefix, nextNumber) => {
 };
 
 /**
- * Detarmines warehouse entries field when should update.
+ * Determines warehouse entries field when should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (

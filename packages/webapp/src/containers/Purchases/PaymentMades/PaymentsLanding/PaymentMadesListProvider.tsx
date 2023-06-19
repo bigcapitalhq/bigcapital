@@ -34,7 +34,7 @@ function PaymentMadesListProvider({ query, tableStateChanged, ...props }) {
     isFetching: isPaymentsFetching,
   } = usePaymentMades(query, { keepPreviousData: true });
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus =
     isEmpty(paymentMades) && !isPaymentsLoading && !tableStateChanged;
 

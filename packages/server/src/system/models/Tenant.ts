@@ -41,7 +41,7 @@ export default class Tenant extends BaseModel {
   }
 
   /**
-   * Detarmines the tenant whether is upgrade currently running.
+   * Determines the tenant whether is upgrade currently running.
    */
   get isUpgradeRunning() {
     return !!this.upgradeJobId;

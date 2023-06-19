@@ -49,7 +49,7 @@ export default function TablePagination() {
     [gotoPage, setPageSize, triggerOnPaginationChange],
   );
 
-  // Detarmines when display the pagination.
+  // Determines when display the pagination.
   const showPagination =
     pagination &&
     ((hidePaginationNoPages && pageCount > 1) || !hidePaginationNoPages) &&
