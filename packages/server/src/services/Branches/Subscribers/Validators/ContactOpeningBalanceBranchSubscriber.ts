@@ -27,7 +27,7 @@ export class ContactBranchValidateSubscriber {
     );
     bus.subscribe(
       events.vendors.onCreating,
-      this.validateBranchExistanceonVendorCreating
+      this.validateBranchExistenceOnVendorCreating
     );
     bus.subscribe(
       events.vendors.onOpeningBalanceChanging,
@@ -73,7 +73,7 @@ export class ContactBranchValidateSubscriber {
    * Validates the branch existence on vendor creating.
    * @param {IVendorEventCreatingPayload} payload -
    */
-  private validateBranchExistanceonVendorCreating = async ({
+  private validateBranchExistenceOnVendorCreating = async ({
     vendorDTO,
     tenantId,
   }: IVendorEventCreatingPayload) => {
