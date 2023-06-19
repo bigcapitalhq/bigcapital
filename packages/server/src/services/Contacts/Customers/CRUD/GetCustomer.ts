@@ -26,7 +26,7 @@ export class GetCustomer {
       .findById(customerId)
       .throwIfNotFound();
 
-    // Retrieves the transformered customers.
+    // Retrieves the transformed customers.
     return this.transformer.transform(
       tenantId,
       customer,
