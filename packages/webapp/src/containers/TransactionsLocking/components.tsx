@@ -85,7 +85,7 @@ export function TransactionLockingSkeletonList() {
  */
 export const TransactionLockingItemSkeleton = ({}) => {
   return (
-    <TransactionLockingWrapp>
+    <TransactionLockingWrap>
       <TransLockingInner>
         <TransLockingIcon>
           <Icon icon="lock" iconSize={24} />
@@ -101,7 +101,7 @@ export const TransactionLockingItemSkeleton = ({}) => {
           </TransLockingItemDesc>
         </TransLockingContent>
       </TransLockingInner>
-    </TransactionLockingWrapp>
+    </TransactionLockingWrap>
   );
 };
 
@@ -139,7 +139,7 @@ export const TransactionLockingContent = (props) => {
 
   return (
     <TransactionsLockingItemContext.Provider value={props}>
-      <TransactionLockingWrapp isEnabled={isEnabled}>
+      <TransactionLockingWrap isEnabled={isEnabled}>
         <TransLockingInner>
           <TransLockingIcon>
             <Icon icon="lock" iconSize={24} />
@@ -148,7 +148,7 @@ export const TransactionLockingContent = (props) => {
           <TransactionsLockingItemContent />
           <TransactionsLockingItemActions />
         </TransLockingInner>
-      </TransactionLockingWrapp>
+      </TransactionLockingWrap>
     </TransactionsLockingItemContext.Provider>
   );
 };
@@ -325,7 +325,7 @@ function TransactionsLockingItemActions() {
   );
 }
 
-const TransactionLockingWrapp = styled.div`
+const TransactionLockingWrap = styled.div`
   display: flex;
   align-items: center;
   border-radius: 6px;
