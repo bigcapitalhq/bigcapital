@@ -56,7 +56,7 @@ export default class HasTenancyService {
   }
 
   /**
-   * Retrieve models of the givne tenant id.
+   * Retrieve models of the given tenant id.
    * @param {number} tenantId - The tenant id.
    */
   models(tenantId: number) {

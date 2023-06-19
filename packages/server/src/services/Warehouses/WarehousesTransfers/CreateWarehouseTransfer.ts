@@ -40,7 +40,7 @@ export class CreateWarehouseTransfer extends CommandWarehouseTransfer {
   private autoIncrementOrders: WarehouseTransferAutoIncrement;
 
   /**
-   * Transformes the givne new warehouse transfer DTO to model.
+   * Transformes the given new warehouse transfer DTO to model.
    * @param   {ICreateWarehouseTransferDTO} warehouseTransferDTO
    * @returns {IWarehouseTransfer}
    */

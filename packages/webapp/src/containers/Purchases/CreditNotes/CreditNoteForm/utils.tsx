@@ -89,7 +89,7 @@ export const transformEntriesToSubmit = (entries) => {
 };
 
 /**
- * Filters the givne non-zero entries.
+ * Filters the given non-zero entries.
  */
 export const filterNonZeroEntries = (entries) => {
   return entries.filter((item) => item.item_id && item.quantity);

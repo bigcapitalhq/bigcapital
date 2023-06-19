@@ -529,7 +529,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
       tenantId,
       estimateId
     );
-    // Marks the estimate as converted from the givne invoice.
+    // Marks the estimate as converted from the given invoice.
     await SaleEstimate.query(trx).where('id', estimateId).patch({
       convertedToInvoiceId: invoiceId,
       convertedToInvoiceAt: moment().toMySqlDateTime(),

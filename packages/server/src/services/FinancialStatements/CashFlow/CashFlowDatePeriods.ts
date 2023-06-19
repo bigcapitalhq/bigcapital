@@ -301,7 +301,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
     };
 
     /**
-     * Associates the total periods of total equation to the ginve total node..
+     * Associates the total periods of total equation to the given total node..
      * @param {ICashFlowSchemaTotalSection} totalSection -
      * @return {ICashFlowStatementTotalSection}
      */

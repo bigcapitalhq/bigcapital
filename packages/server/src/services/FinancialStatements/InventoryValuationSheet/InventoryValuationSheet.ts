@@ -62,7 +62,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
   }
 
   /**
-   * Retrieve the cost and quantity of the givne item from `IN` transactions.
+   * Retrieve the cost and quantity of the given item from `IN` transactions.
    * @param {number} itemId -
    */
   private getItemINTransaction(itemId: number): {

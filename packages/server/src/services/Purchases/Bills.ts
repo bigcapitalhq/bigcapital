@@ -495,7 +495,7 @@ export default class BillsService
     // Retrieve the given bill or throw not found error.
     const oldBill = await this.getBillOrThrowError(tenantId, billId);
 
-    // Validate the givne bill has no associated landed cost transactions.
+    // Validate the given bill has no associated landed cost transactions.
     await this.validateBillHasNoLandedCost(tenantId, billId);
 
     // Validate the purchase bill has no associated payments transactions.

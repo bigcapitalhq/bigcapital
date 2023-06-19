@@ -124,7 +124,7 @@ export default class InventoryDetailsTable {
   };
 
   /**
-   * Determines the ginve inventory details node type.
+   * Determines the given inventory details node type.
    * @param {string} type
    * @param {IInventoryDetailsNode} node
    * @returns {boolean}
