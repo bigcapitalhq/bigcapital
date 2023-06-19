@@ -48,7 +48,7 @@ export default function OwnerDrawingsFormFields() {
   // Money out dialog context.
   const { accounts, account, branches } = useMoneyOutDialogContext();
   const { values } = useFormikContext();
-  const isForeigAccount = useForeignAccount();
+  const isForeignAccount = useForeignAccount();
 
   const amountFieldRef = useAutofocus();
 
@@ -140,7 +140,7 @@ export default function OwnerDrawingsFormFields() {
         )}
       </Field>
 
-      <If condition={isForeigAccount}>
+      <If condition={isForeignAccount}>
         {/*------------ exchange rate -----------*/}
         <ExchangeRateMutedField
           name={'exchange_rate'}

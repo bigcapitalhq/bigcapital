@@ -51,7 +51,7 @@ export default function OtherIncomeFormFields() {
   const { accounts, account, branches } = useMoneyInDialogContext();
   const { values } = useFormikContext();
   const amountFieldRef = useAutofocus();
-  const isForeigAccount = useForeignAccount();
+  const isForeignAccount = useForeignAccount();
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
@@ -142,7 +142,7 @@ export default function OtherIncomeFormFields() {
         )}
       </FastField>
 
-      <If condition={isForeigAccount}>
+      <If condition={isForeignAccount}>
         {/*------------ exchange rate -----------*/}
         <ExchangeRateMutedField
           name={'exchange_rate'}

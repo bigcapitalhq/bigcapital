@@ -54,7 +54,7 @@ export default function OwnerContributionFormFields() {
 
   const amountFieldRef = useAutofocus();
 
-  const isForeigAccount = useForeignAccount();
+  const isForeignAccount = useForeignAccount();
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
@@ -143,7 +143,7 @@ export default function OwnerContributionFormFields() {
           </FormGroup>
         )}
       </Field>
-      <If condition={isForeigAccount}>
+      <If condition={isForeignAccount}>
         {/*------------ exchange rate -----------*/}
         <ExchangeRateMutedField
           name={'exchange_rate'}

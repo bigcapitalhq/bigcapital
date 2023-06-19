@@ -51,7 +51,7 @@ export default function OtherExpenseFormFields() {
   // Money in dialog context.
   const { accounts, account, branches } = useMoneyOutDialogContext();
 
-  const isForeigAccount = useForeignAccount();
+  const isForeignAccount = useForeignAccount();
   const { values } = useFormikContext();
 
   const amountFieldRef = useAutofocus();
@@ -143,7 +143,7 @@ export default function OtherExpenseFormFields() {
           </FormGroup>
         )}
       </FastField>
-      <If condition={isForeigAccount}>
+      <If condition={isForeignAccount}>
         {/*------------ exchange rate -----------*/}
         <ExchangeRateMutedField
           name={'exchange_rate'}
