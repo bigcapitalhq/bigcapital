@@ -44,7 +44,7 @@ export default class RefundSyncCreditNoteBalanceSubscriber {
   };
 
   /**
-   * Decrement credit note refunded amount once associated refuned transaction deleted.
+   * Decrement credit note refunded amount once associated refunded transaction deleted.
    * @param {IRefundCreditNoteDeletedPayload} payload -
    */
   private decrementRefundedAmountOnceRefundDeleted = async ({
