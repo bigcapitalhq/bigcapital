@@ -42,8 +42,8 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
   // Fetch warehouses list.
   const {
     data: warehouses,
-    isFetching: isWarehouesFetching,
-    isLoading: isWarehouesLoading,
+    isFetching: isWarehousesFetching,
+    isLoading: isWarehousesLoading,
   } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
   // Inventory items cost query.
@@ -87,7 +87,7 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
     warehouseTransfer,
 
     isItemsFetching,
-    isWarehouesFetching,
+    isWarehousesFetching,
 
     isNewMode,
     submitPayload,
@@ -106,7 +106,7 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
   return (
     <DashboardInsider
       loading={
-        isItemsLoading || isWarehouesLoading || isWarehouseTransferLoading
+        isItemsLoading || isWarehousesLoading || isWarehouseTransferLoading
       }
       name={'warehouse-transfer-form'}
     >

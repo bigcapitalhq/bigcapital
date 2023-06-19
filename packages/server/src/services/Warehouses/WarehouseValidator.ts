@@ -22,7 +22,7 @@ export class WarehouseValidator {
     const warehouses = await Warehouse.query().whereNot('id', warehouseId);
 
     if (warehouses.length === 0) {
-      throw new ServiceError(ERRORS.COULD_NOT_DELETE_ONLY_WAERHOUSE);
+      throw new ServiceError(ERRORS.COULD_NOT_DELETE_ONLY_WAREHOUSE);
     }
   };
 

@@ -20,7 +20,7 @@ function WarehousesProvider({ query, ...props }) {
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
 
   // Fetch warehouses list.
-  const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses(
+  const { data: warehouses, isLoading: isWarehousesLoading } = useWarehouses(
     query,
     { enabled: isWarehouseFeatureCan },
   );
@@ -31,7 +31,7 @@ function WarehousesProvider({ query, ...props }) {
   // Provider state.
   const provider = {
     warehouses,
-    isWarehouesLoading,
+    isWarehousesLoading,
     isEmptyStatus,
   };
 

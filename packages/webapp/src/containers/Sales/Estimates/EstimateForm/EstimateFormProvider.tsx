@@ -54,7 +54,7 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
   // Fetch warehouses list.
   const {
     data: warehouses,
-    isLoading: isWarehouesLoading,
+    isLoading: isWarehousesLoading,
     isSuccess: isWarehousesSuccess,
   } = useWarehouses(query, { enabled: isWarehouseFeatureCan });
 
@@ -85,7 +85,7 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading =
-    isWarehouesLoading || isBranchesLoading || isProjectsLoading;
+    isWarehousesLoading || isBranchesLoading || isProjectsLoading;
 
   // Provider payload.
   const provider = {

@@ -78,9 +78,9 @@ function CreditNoteFormSelectBranch() {
 
 function CreditFormSelectWarehouse() {
   // Credit note form context.
-  const { warehouses, isWarehouesLoading } = useCreditNoteFormContext();
+  const { warehouses, isWarehousesLoading } = useCreditNoteFormContext();
 
-  return isWarehouesLoading ? (
+  return isWarehousesLoading ? (
     <DetailsBarSkeletonBase className={Classes.SKELETON} />
   ) : (
     <WarehouseSelect

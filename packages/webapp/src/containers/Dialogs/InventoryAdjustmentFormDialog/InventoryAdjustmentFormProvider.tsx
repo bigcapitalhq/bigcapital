@@ -31,7 +31,7 @@ function InventoryAdjustmentFormProvider({ itemId, dialogName, ...props }) {
   // Fetch warehouses list.
   const {
     data: warehouses,
-    isLoading: isWarehouesLoading,
+    isLoading: isWarehousesLoading,
     isSuccess: isWarehousesSuccess,
   } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
@@ -49,7 +49,7 @@ function InventoryAdjustmentFormProvider({ itemId, dialogName, ...props }) {
   const [submitPayload, setSubmitPayload] = useState({});
 
   // Determines whether the warehouse and branches are loading.
-  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+  const isFeatureLoading = isWarehousesLoading || isBranchesLoading;
 
   // State provider.
   const provider = {
@@ -67,7 +67,7 @@ function InventoryAdjustmentFormProvider({ itemId, dialogName, ...props }) {
     isAccountsLoading,
     isItemLoading,
     isFeatureLoading,
-    isWarehouesLoading,
+    isWarehousesLoading,
     isBranchesLoading,
 
     createInventoryAdjMutate,

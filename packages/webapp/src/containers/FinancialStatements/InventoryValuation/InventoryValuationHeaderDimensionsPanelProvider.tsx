@@ -23,7 +23,7 @@ function InventoryValuationHeaderDimensionsProvider({ ...props }) {
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Fetches the warehouses list.
-  const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses(
+  const { data: warehouses, isLoading: isWarehousesLoading } = useWarehouses(
     null,
     { enabled: isWarehouseFeatureCan, keepPreviousData: true },
   );
@@ -38,11 +38,11 @@ function InventoryValuationHeaderDimensionsProvider({ ...props }) {
   const provider = {
     warehouses,
     branches,
-    isWarehouesLoading,
+    isWarehousesLoading,
     isBranchLoading,
   };
 
-  return isWarehouesLoading || isBranchLoading ? (
+  return isWarehousesLoading || isBranchLoading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
     <InventoryValuationHeaderDimensionsPanelContext.Provider

@@ -88,9 +88,9 @@ function ReceiptFormSelectBranch() {
  */
 function ReceiptFormSelectWarehouse() {
   // Receipt form context.
-  const { warehouses, isWarehouesLoading } = useReceiptFormContext();
+  const { warehouses, isWarehousesLoading } = useReceiptFormContext();
 
-  return isWarehouesLoading ? (
+  return isWarehousesLoading ? (
     <DetailsBarSkeletonBase className={Classes.SKELETON} />
   ) : (
     <WarehouseSelect

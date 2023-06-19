@@ -78,9 +78,9 @@ function EstimateFormSelectBranch() {
 
 function EstimateFormSelectWarehouse() {
   // Estimate form context.
-  const { warehouses, isWarehouesLoading } = useEstimateFormContext();
+  const { warehouses, isWarehousesLoading } = useEstimateFormContext();
 
-  return isWarehouesLoading ? (
+  return isWarehousesLoading ? (
     <DetailsBarSkeletonBase className={Classes.SKELETON} />
   ) : (
     <WarehouseSelect

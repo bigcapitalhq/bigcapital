@@ -1854,7 +1854,7 @@
   "warehouses.activate_button": "Activate Warehouses",
   "warehouse.alert.delete_message": "The warehouse has been deleted successfully",
   "warehouse.once_delete_this_warehouse": "Once you delete this warehouse, you won't be able to restore it later. Are you sure you want to delete this warehouse?",
-  "warehouse.error.could_not_delete_only_waerhouse": "You could not delete the only warehouse.",
+  "warehouse.error.could_not_delete_only_warehouse": "You could not delete the only warehouse.",
   "sidebar_warehouse_transfer": "Warehouse Transfers",
   "warehouse_transfer.label.transfer_no": "Transfer No",
   "warehouse_transfer.label.from_warehouse": "From Warehouse",

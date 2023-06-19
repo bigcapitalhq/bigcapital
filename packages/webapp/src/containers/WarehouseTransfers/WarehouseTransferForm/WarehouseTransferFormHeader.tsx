@@ -6,7 +6,7 @@ import { CLASSES } from '@/constants/classes';
 import WarehouseTransferFormHeaderFields from './WarehouseTransferFormHeaderFields';
 
 /**
- * Warehose transfer form header section.
+ * Warehouse transfer form header section.
  */
 function WarehouseTransferFormHeader() {
   return (

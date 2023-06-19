@@ -1831,7 +1831,7 @@
   "warehouses.activate_button": "تفعيل المخازن ",
   "warehouse.alert.delete_message": "تم حذف المخزن بنجاح.",
   "warehouse.once_delete_this_warehouse": "بمجرد حذف هذا المخزن، لن تتمكن من استعادته لاحقًا. هل أنت متأكد أنك تريد حذف؟.",
-  "warehouse.error.could_not_delete_only_waerhouse": "لا يمكنك حذف المخزن الاخير.",
+  "warehouse.error.could_not_delete_only_warehouse": "لا يمكنك حذف المخزن الاخير.",
   "sidebar_warehouse_transfer": "عمليات نقل المخازن",
   "warehouse_transfer.label.transfer_no": "رقم عملية النقل",
   "warehouse_transfer.label.from_warehouse": "من المخزن",

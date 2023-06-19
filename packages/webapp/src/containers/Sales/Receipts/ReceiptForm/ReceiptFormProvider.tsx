@@ -44,7 +44,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   // Fetch warehouses list.
   const {
     data: warehouses,
-    isLoading: isWarehouesLoading,
+    isLoading: isWarehousesLoading,
     isSuccess: isWarehousesSuccess,
   } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
@@ -102,7 +102,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
 
   const isNewMode = !receiptId;
 
-  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+  const isFeatureLoading = isWarehousesLoading || isBranchesLoading;
 
   const provider = {
     receiptId,
@@ -120,7 +120,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     isAccountsLoading,
     isCustomersLoading,
     isItemsLoading,
-    isWarehouesLoading,
+    isWarehousesLoading,
     isBranchesLoading,
     isFeatureLoading,
     isSettingLoading,

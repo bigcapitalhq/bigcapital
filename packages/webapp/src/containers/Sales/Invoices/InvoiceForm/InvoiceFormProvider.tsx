@@ -74,7 +74,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   // Fetch warehouses list.
   const {
     data: warehouses,
-    isLoading: isWarehouesLoading,
+    isLoading: isWarehousesLoading,
     isSuccess: isWarehousesSuccess,
   } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
@@ -100,7 +100,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading =
-    isWarehouesLoading || isBranchesLoading || isProjectsLoading;
+    isWarehousesLoading || isBranchesLoading || isProjectsLoading;
 
   const provider = {
     invoice,
@@ -118,7 +118,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     isItemsLoading,
     isCustomersLoading,
     isSettingsLoading,
-    isWarehouesLoading,
+    isWarehousesLoading,
     isBranchesLoading,
     isFeatureLoading,
     isBranchesSuccess,

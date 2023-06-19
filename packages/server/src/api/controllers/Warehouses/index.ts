@@ -314,9 +314,9 @@ export class WarehousesController extends BaseController {
           errors: [{ type: 'MULTI_WAREHOUSES_ALREADY_ACTIVATED', code: 200 }],
         });
       }
-      if (error.errorType === 'COULD_NOT_DELETE_ONLY_WAERHOUSE') {
+      if (error.errorType === 'COULD_NOT_DELETE_ONLY_WAREHOUSE') {
         return res.status(400).send({
-          errors: [{ type: 'COULD_NOT_DELETE_ONLY_WAERHOUSE', code: 300 }],
+          errors: [{ type: 'COULD_NOT_DELETE_ONLY_WAREHOUSE', code: 300 }],
         });
       }
       if (error.errorType === 'WAREHOUSE_CODE_NOT_UNIQUE') {

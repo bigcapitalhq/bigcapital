@@ -78,9 +78,9 @@ function InvoiceFormSelectBranch() {
 
 function InvoiceFormSelectWarehouse() {
   // Invoice form context.
-  const { warehouses, isWarehouesLoading } = useInvoiceFormContext();
+  const { warehouses, isWarehousesLoading } = useInvoiceFormContext();
 
-  return isWarehouesLoading ? (
+  return isWarehousesLoading ? (
     <DetailsBarSkeletonBase className={Classes.SKELETON} />
   ) : (
     <WarehouseSelect
