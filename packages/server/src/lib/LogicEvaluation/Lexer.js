@@ -85,7 +85,7 @@ export class Lexer {
   }
 
   /**
-   * read next token, the index param can set next step, default go foward 1 step
+   * read next token, the index param can set next step, default go forward 1 step
    *
    * @param index next postion
    */
