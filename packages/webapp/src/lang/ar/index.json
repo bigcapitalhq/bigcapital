@@ -1825,7 +1825,7 @@
   "warehouse.dialog.success_message": "تم إنشاء مخزن بنجاح.",
   "warehouses.action.edit_warehouse": "تعديل المخزن",
   "warehouses.action.delete_warehouse": "حذف المخزن ",
-  "warehouses.action.make_as_parimary": "وضع علامة كأساسي ",
+  "warehouses.action.make_as_primary": "وضع علامة كأساسي ",
   "warehouses.empty_status.title": "إدارة مخازن مؤسستك.",
   "warehouses.empty_status.description": "إدارة وتتبع مخزون مؤسستك عبر مخازن متعددة. ",
   "warehouses.activate_button": "تفعيل المخازن ",

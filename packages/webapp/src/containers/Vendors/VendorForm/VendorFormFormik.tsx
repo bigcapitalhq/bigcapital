@@ -120,7 +120,7 @@ function VendorFormFormik({
             <VendorFormPrimarySection />
           </VendorFormHeaderPrimary>
 
-          <div className={'page-form__after-priamry-section'}>
+          <div className={'page-form__after-primary-section'}>
             <VendorFormAfterPrimarySection />
           </div>
 

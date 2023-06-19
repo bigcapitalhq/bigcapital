@@ -8,7 +8,7 @@ export class InventoryTransactionsWarehouses {
   tenancy: HasTenancyService;
 
   /**
-   * Updates all accounts transctions with the priamry branch.
+   * Updates all accounts transctions with the primary branch.
    * @param tenantId
    * @param primaryBranchId
    */

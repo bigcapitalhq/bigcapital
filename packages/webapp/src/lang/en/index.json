@@ -1848,7 +1848,7 @@
   "warehouse_locations.column.warehouse_code": "Warehouse code",
   "warehouses.action.edit_warehouse": "Edit Warehouse",
   "warehouses.action.delete_warehouse": "Delete Warehouse",
-  "warehouses.action.make_as_parimary": "Mark as Primary",
+  "warehouses.action.make_as_primary": "Mark as Primary",
   "warehouses.empty_status.title": "Manage your organization's warehouses.",
   "warehouses.empty_status.description": "Manage and track your organization's inventory across multiple warehouses.",
   "warehouses.activate_button": "Activate Warehouses",

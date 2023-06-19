@@ -109,7 +109,7 @@ function CustomerFormFormik({
             <CustomerFormPrimarySection />
           </CustomerFormHeaderPrimary>
 
-          <div className={'page-form__after-priamry-section'}>
+          <div className={'page-form__after-primary-section'}>
             <CustomerFormAfterPrimarySection />
           </div>
 
