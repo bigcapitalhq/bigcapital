@@ -20,7 +20,7 @@ import React from "react";
 
 // import {
   // ,
-  //  } from "@bluprintjs/core/src/components/common";
+  //  } from "@blueprintjs/core/src/components/common";
 // import { DISPLAYNAME_PREFIX } from "../../common/props";
 import {
   Icon,
