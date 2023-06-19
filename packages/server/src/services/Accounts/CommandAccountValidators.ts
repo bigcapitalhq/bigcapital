@@ -11,7 +11,7 @@ export class CommandAccountValidators {
   private tenancy: TenancyService;
 
   /**
-   * Throws error if the account was prefined.
+   * Throws error if the account was predefined.
    * @param {IAccount} account
    */
   public throwErrorIfAccountPredefined(account: IAccount) {

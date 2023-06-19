@@ -219,7 +219,7 @@ export default class RolesService {
    */
   private validateRoleNotPredefined(role: IRole) {
     if (role.predefined) {
-      throw new ServiceError(ERRORS.ROLE_PREFINED);
+      throw new ServiceError(ERRORS.ROLE_PREDEFINED);
     }
   }
 
