@@ -12,8 +12,8 @@ import { Features } from '@/constants';
 import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';
 
-import BalanceSheetHeaderGeneralPanal from './BalanceSheetHeaderGeneralPanal';
-import BalanceSheetHeaderComparisonPanal from './BalanceSheetHeaderComparisonPanal';
+import BalanceSheetHeaderGeneralPanel from './BalanceSheetHeaderGeneralPanel';
+import BalanceSheetHeaderComparisonPanel from './BalanceSheetHeaderComparisonPanel';
 import BalanceSheetHeaderDimensionsPanel from './BalanceSheetHeaderDimensionsPanel';
 import FinancialStatementHeader from '../../FinancialStatements/FinancialStatementHeader';
 
@@ -88,12 +88,12 @@ function BalanceSheetHeader({
             <Tab
               id="general"
               title={<T id={'general'} />}
-              panel={<BalanceSheetHeaderGeneralPanal />}
+              panel={<BalanceSheetHeaderGeneralPanel />}
             />
             <Tab
               id="comparison"
               title={<T id={'balance_sheet.comparisons'} />}
-              panel={<BalanceSheetHeaderComparisonPanal />}
+              panel={<BalanceSheetHeaderComparisonPanel />}
             />
             {isBranchesFeatureCan && (
               <Tab

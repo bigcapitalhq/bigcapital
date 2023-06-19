@@ -9,7 +9,7 @@ import FinancialStatementDateRange from '../FinancialStatementDateRange';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 
 /**
- * Balance sheet header - General panal.
+ * Balance sheet header - General panel.
  */
 export default function BalanceSheetHeaderGeneralTab({}) {
   return (

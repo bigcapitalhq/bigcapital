@@ -13,9 +13,9 @@ import RadiosAccountingBasis from '../RadiosAccountingBasis';
 import { useProjectProfitabilitySummaryContext } from './ProjectProfitabilitySummaryProvider';
 
 /**
- * Project profitability summary header - General panal.
+ * Project profitability summary header - General panel.
  */
-export default function ProjectProfitabilitySummaryHeaderGeneralPanal() {
+export default function ProjectProfitabilitySummaryHeaderGeneralPanel() {
   const { projects } = useProjectProfitabilitySummaryContext();
 
   return (

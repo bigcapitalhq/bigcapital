@@ -14,9 +14,9 @@ import {
 } from './utils';
 
 /**
- * Balance sheet header - Comparison panal - Comparisons fields.
+ * Balance sheet header - Comparison panel - Comparisons fields.
  */
-function BalanceSheetHeaderComparisonPanalFields() {
+function BalanceSheetHeaderComparisonPanelFields() {
   return (
     <>
       {/**----------- Previous Year -----------*/}
@@ -146,13 +146,13 @@ function BalanceSheetHeaderComparisonPanalFields() {
 }
 
 /**
- * Balance sheet header - Comparison panal.
+ * Balance sheet header - Comparison panel.
  */
-export default function BalanceSheetHeaderComparisonPanal() {
+export default function BalanceSheetHeaderComparisonPanel() {
   return (
     <BalanceSheetComparisonWrap>
       <BalanceSheetComparisonFieldsWrap>
-        <BalanceSheetHeaderComparisonPanalFields />
+        <BalanceSheetHeaderComparisonPanelFields />
       </BalanceSheetComparisonFieldsWrap>
     </BalanceSheetComparisonWrap>
   );

@@ -9,7 +9,7 @@ import { FormattedMessage as T } from '@/components';
 import withProjectProfitabilitySummary from './withProjectProfitabilitySummary';
 import withProjectProfitabilitySummaryActions from './withProjectProfitabilitySummaryActions';
 
-import ProjectProfitabilitySummaryHeaderGeneralPanal from './ProjectProfitabilitySummaryHeaderGeneralPanal';
+import ProjectProfitabilitySummaryHeaderGeneralPanel from './ProjectProfitabilitySummaryHeaderGeneralPanel';
 import FinancialStatementHeader from '../FinancialStatementHeader';
 
 import {
@@ -82,7 +82,7 @@ function ProjectProfitabilitySummaryHeader({
             <Tab
               id="general"
               title={<T id={'general'} />}
-              panel={<ProjectProfitabilitySummaryHeaderGeneralPanal />}
+              panel={<ProjectProfitabilitySummaryHeaderGeneralPanel />}
             />
           </Tabs>
           <div className="financial-header-drawer__footer">
