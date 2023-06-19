@@ -66,7 +66,7 @@ function ManualJournalActionsBar({
 
   // Handle tab change.
   const handleTabChange = (view) => {
-    setManualJournalsTableState({ viewSlug: view ? view.slig : null });
+    setManualJournalsTableState({ viewSlug: view ? view.slug : null });
   };
   // Handle click a refresh Journals
   const handleRefreshBtnClick = () => {
