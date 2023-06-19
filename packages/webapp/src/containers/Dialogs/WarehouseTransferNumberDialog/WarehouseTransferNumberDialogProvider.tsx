@@ -6,7 +6,7 @@ import { useSettingsWarehouseTransfers } from '@/hooks/query';
 const WarehouseTransferNumberDialogContext = createContext();
 
 /**
- * Warehouse transfer number dialog provier.
+ * Warehouse transfer number dialog provider.
  */
 function WarehouseTransferNumberDialogProvider({ query, ...props }) {
   const { isLoading: isSettingsLoading } = useSettingsWarehouseTransfers();
