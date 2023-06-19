@@ -2,7 +2,7 @@ import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
 import { IWarehousesActivatedPayload } from '@/interfaces';
 import { UpdateInventoryTransactionsWithWarehouse } from './UpdateInventoryTransactionsWithWarehouse';
-import { CreateInitialWarehousesItemsQuantity } from './CreateInitialWarehousesitemsQuantity';
+import { CreateInitialWarehousesItemsQuantity } from './CreateInitialWarehousesItemsQuantity';
 
 @Service()
 export class ActivateWarehousesSubscriber {
