@@ -86,7 +86,7 @@ All notable changes to Bigcapital server-side will be in this file.
 
 ## [0.8.3] - 06-04-2023
 
-`@bigcaptial/monorepo`
+`@bigcapital/monorepo`
 
 - Switch to AGPL license to protect application's networks. by @abouolia
 
@@ -112,7 +112,7 @@ All notable changes to Bigcapital server-side will be in this file.
 
 ## [0.8.1] - 26-03-2023
 
-`@bigcaptial/monorepo`
+`@bigcapital/monorepo`
 
 ### Added 
 * add docker compose for development env. by @abouolia

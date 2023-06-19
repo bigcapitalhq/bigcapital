@@ -89,7 +89,7 @@ npm run dev:server
 - Clone the `bigcapital` repository and cd into `bigcapital` directory.
 
 ```
-git clone https://github.com/bigcapital/bigcapital.git && cd bigcaptial
+git clone https://github.com/bigcapital/bigcapital.git && cd bigcapital
 ```
 
 - Install all npm dependencies of the monorepo, you don't have to change directory to the `frontend` package. just hit that command and will install all packages across all application.
