@@ -425,7 +425,7 @@
   "city_town": "City/Town",
   "state": "State",
   "zip_code": "ZIP/Code",
-  "streat": "Streat",
+  "street": "Street",
   "edit_customer": "Edit Customer",
   "delete_customer": "Delete Customer",
   "billing_address": "Billing Address",

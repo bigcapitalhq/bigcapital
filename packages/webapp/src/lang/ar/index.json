@@ -428,7 +428,7 @@
   "city_town": "المدينة / البلدة",
   "state": "ولاية",
   "zip_code": "الرمز البريدي",
-  "streat": "الشارع",
+  "street": "الشارع",
   "edit_customer": "تعديل الزبون",
   "delete_customer": "حذف الزبون",
   "billing_address": "عنوان وصول الفواتير",
