@@ -43,7 +43,7 @@ function ItemsEntriesTable({
     }
   }, [entries, rows]);
 
-  // Editiable items entries columns.
+  // Editable items entries columns.
   const columns = useEditableItemsEntriesColumns({ landedCost });
 
   // Handle the fetch item row details.
