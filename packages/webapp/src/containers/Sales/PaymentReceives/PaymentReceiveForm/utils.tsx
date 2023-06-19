@@ -145,7 +145,7 @@ export const accountsFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Tranformes form values to request.
+ * Transformers form values to request.
  */
 export const transformFormToRequest = (form) => {
   // Filters entries that have no `invoice_id` and `payment_amount`.

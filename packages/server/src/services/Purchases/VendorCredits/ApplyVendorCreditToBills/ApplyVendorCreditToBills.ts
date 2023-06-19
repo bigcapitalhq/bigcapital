@@ -49,7 +49,7 @@ export default class ApplyVendorCreditToBills extends VendorCredit {
       tenantId,
       vendorCreditId
     );
-    // Transfomes credit apply to bills DTO to model object.
+    // Transformers credit apply to bills DTO to model object.
     const vendorCreditAppliedModel = this.transformApplyDTOToModel(
       applyCreditToBillsDTO,
       vendorCredit
