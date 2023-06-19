@@ -90,7 +90,7 @@ function VendorsCreditNoteDataTable({
   };
 
   // Handle edit credit note.
-  const hanldeEditVendorCreditNote = (vendorCredit) => {
+  const handleEditVendorCreditNote = (vendorCredit) => {
     history.push(`/vendor-credits/${vendorCredit.id}/edit`);
   };
 
@@ -140,7 +140,7 @@ function VendorsCreditNoteDataTable({
         payload={{
           onViewDetails: handleViewDetailVendorCredit,
           onDelete: handleDeleteVendorCreditNote,
-          onEdit: hanldeEditVendorCreditNote,
+          onEdit: handleEditVendorCreditNote,
           onRefund: handleRefundCreditVendor,
           onOpen: handleOpenCreditNote,
           onReconcile: handleReconcileVendorCredit,

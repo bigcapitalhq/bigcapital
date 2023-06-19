@@ -20,7 +20,7 @@ export default class SendSmsNotificationToCustomer {
   }
 
   /**
-   * Hnadle sending SMS notification after invoice transaction creation.
+   * Handle sending SMS notification after invoice transaction creation.
    */
   private sendSmsNotificationAfterInvoiceCreation = async ({
     tenantId,

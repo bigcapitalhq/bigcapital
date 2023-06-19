@@ -32,7 +32,7 @@ function BranchMarkPrimaryAlert({
     closeAlert(name);
   };
 
-  // andle cancel mark primary confirm.
+  // handle cancel mark primary confirm.
   const handleConfirmMarkPrimaryBranch = () => {
     markPrimaryBranchMutate(branchId)
       .then(() => {

@@ -57,7 +57,7 @@ function AccountTransactionsActionsBar({
     });
   };
   // Handle money out form
-  const handlMoneyOutFormTransaction = (account) => {
+  const handleMoneyOutFormTransaction = (account) => {
     openDialog('money-out', {
       account_id: accountId,
       account_type: account.value,
@@ -85,7 +85,7 @@ function AccountTransactionsActionsBar({
         />
         <CashFlowMenuItems
           items={addMoneyOutOptions}
-          onItemSelect={handlMoneyOutFormTransaction}
+          onItemSelect={handleMoneyOutFormTransaction}
           text={<T id={'cash_flow.label.add_money_out'} />}
           buttonProps={{
             icon: <Icon icon={'arrow-upward'} iconSize={20} />,
