@@ -22,7 +22,7 @@ export default class WriteInvoicesJournalEntries {
   }
 
   /**
-   * Handle the job execuation.
+   * Handle the job execution.
    */
   public async handler(job, done: Function): Promise<void> {
     const { startingDate, tenantId } = job.attrs.data;

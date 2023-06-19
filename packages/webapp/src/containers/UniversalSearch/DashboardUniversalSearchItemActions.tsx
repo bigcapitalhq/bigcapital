@@ -19,7 +19,7 @@ function DashboardUniversalSearchItemActions({
 }) {
   const components = getUniversalSearchItemsActions();
 
-  // Handle action execuation.
+  // Handle action execution.
   const handleActionExec = React.useCallback(() => {
     resetSelectedItemUniversalSearch();
   }, [resetSelectedItemUniversalSearch]);
