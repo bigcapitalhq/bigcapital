@@ -219,7 +219,7 @@ export default class EntityRepository {
    * @param options
    */
   upsertGraph(graph, options) {
-    // Keep the input grpah immutable
+    // Keep the input graph immutable
     const graphCloned = cloneDeep(graph);
     return this.model.query().upsertGraph(graphCloned, options);
   }
