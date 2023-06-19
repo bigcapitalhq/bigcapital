@@ -82,7 +82,7 @@ function MakeJournalEntriesForm({
     [manualJournal, base_currency, journalNumber, journalAutoIncrement],
   );
 
-  // Handle the form submiting.
+  // Handle the form submitting.
   const handleSubmit = (values, { setErrors, setSubmitting, resetForm }) => {
     setSubmitting(true);
     const entries = values.entries.filter(
