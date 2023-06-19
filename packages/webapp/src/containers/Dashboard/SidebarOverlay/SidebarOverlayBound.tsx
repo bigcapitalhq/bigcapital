@@ -12,7 +12,7 @@ import { useSubSidebarMenu } from '../Sidebar/hooks';
  * Dashboard sidebar menu.
  * @returns {JSX.Element}
  */
-function SidebarOverlayBindedRoot({
+function SidebarOverlayBoundRoot({
   // #withDashboardSidebar
   sidebarSubmenuOpen,
   sidebarSubmenuId,
@@ -25,7 +25,7 @@ function SidebarOverlayBindedRoot({
   }, []);
 
   return (
-    <SidebarOverlayBindedRouter
+    <SidebarOverlayBoundRouter
       sidebarSubmenuId={sidebarSubmenuId}
       isOpen={sidebarSubmenuOpen}
       onClose={handleSidebarClosing}
@@ -36,19 +36,19 @@ function SidebarOverlayBindedRoot({
 /**
  * Dashboard sidebar submenu router.
  */
-function SidebarOverlayBindedRouter({ sidebarSubmenuId, ...rest }) {
+function SidebarOverlayBoundRouter({ sidebarSubmenuId, ...rest }) {
   const sidebarItems = useSubSidebarMenu(sidebarSubmenuId);
 
   return <SidebarOverlay items={sidebarItems} {...rest} />;
 }
 
 /**
- * Sidebar overlay binded with redux.
+ * Sidebar overlay bound with redux.
  */
-export const SidebarOverlayBinded = R.compose(
+export const SidebarOverlayBound = R.compose(
   withDashboardSidebar(({ sidebarSubmenuOpen, sidebarSubmenuId }) => ({
     sidebarSubmenuOpen,
     sidebarSubmenuId,
   })),
   withDashboardSidebarActions,
-)(SidebarOverlayBindedRoot);
+)(SidebarOverlayBoundRoot);

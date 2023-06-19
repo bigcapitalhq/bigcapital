@@ -70,7 +70,7 @@ const login = async (tenantWebsite, givenUser) => {
 };
 
 const bindTenantModel = (tenantDb) => {
-  TenantModel.knexBinded = tenantDb;
+  TenantModel.knexBound = tenantDb;
 };
 
 const systemFactory = createSystemFactory();

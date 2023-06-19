@@ -46,7 +46,7 @@ const accountRenderer = (
 const createNewItemFromQuery = (name) => ({ name });
 
 /**
- * Accounts multi-select field binded with Formik form.
+ * Accounts multi-select field bound with Formik form.
  * @returns {JSX.Element}
  */
 export function AccountsMultiSelect({

@@ -9,11 +9,11 @@ export default class ModelBase extends mixin(Model, [DateSession]) {
     return [];
   }
 
-  static get knexBinded() {
+  static get knexBound() {
     return this.knexBindInstance;
   }
 
-  static set knexBinded(knex) {
+  static set knexBound(knex) {
     this.knexBindInstance = knex;
   }
 
@@ -35,7 +35,7 @@ export default class ModelBase extends mixin(Model, [DateSession]) {
   }
 
   static relationBindKnex(model) {
-    return this.knexBinded ? model.bindKnex(this.knexBinded) : model;
+    return this.knexBound ? model.bindKnex(this.knexBound) : model;
   }
 
   static changeAmount(whereAttributes, attribute, amount, trx) {
