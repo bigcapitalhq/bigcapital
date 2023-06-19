@@ -75,7 +75,7 @@ export class Lexer {
       // we must move the pos forward
       // so here we should throw error, for example `1 & 2`
       if (pos === this.currentIndex && tok !== undefined) {
-        const err = new Error(`unkonw token ${tok} from input string ${this.input}`);
+        const err = new Error(`unknown token ${tok} from input string ${this.input}`);
         err.name = 'UnknowToken';
         throw err;
       }
