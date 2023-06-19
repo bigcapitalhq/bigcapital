@@ -1361,7 +1361,7 @@
   "vendor.drawer.action.edit_opening_balance": "Edit Opening Balance",
   "manual_journals.empty_status.description": "Manual journals can be used to record financial transactions manually, used by accountants to work with the ledger.",
   "manual_journals.empty_status.title": "Create your first journal entries on accounts chart.",
-  "expenses.empty_status.description": "Create and manage expeses that are part of your organization's operating costs.",
+  "expenses.empty_status.description": "Create and manage expenses that are part of your organization's operating costs.",
   "expenses.empty_status.title": "Create and manage your organization's expenses",
   "expense.column.multi_categories": "- Multi Categories -",
   "item.field.cost_account.hint": "Enter price at which you purchased this item.",
