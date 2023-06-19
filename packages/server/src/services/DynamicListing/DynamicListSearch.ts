@@ -1,11 +1,11 @@
 import { Service } from 'typedi';
 import { IFilterRole, IModel } from '@/interfaces';
-import DynamicListAbstruct from './DynamicListAbstruct';
+import DynamicListAbstract from './DynamicListAbstract';
 import DynamicFilterFilterRoles from '@/lib/DynamicFilter/DynamicFilterFilterRoles';
 import DynamicFilterSearch from '@/lib/DynamicFilter/DynamicFilterSearch';
 
 @Service()
-export default class DynamicListSearch extends DynamicListAbstruct {
+export default class DynamicListSearch extends DynamicListAbstract {
   /**
    * Dynamic list filter roles.
    * @param {IModel} model

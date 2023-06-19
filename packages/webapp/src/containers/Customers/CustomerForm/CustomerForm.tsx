@@ -4,7 +4,7 @@ import { CustomerFormProvider } from './CustomerFormProvider';
 import CustomerFormFormik from './CustomerFormFormik';
 
 /**
- * Abstructed customer form.
+ * Abstracted customer form.
  */
 export default function CustomerForm({ customerId }) {
   return (

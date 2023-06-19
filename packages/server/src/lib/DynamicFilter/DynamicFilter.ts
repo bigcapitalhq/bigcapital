@@ -1,8 +1,8 @@
 import { forEach, uniqBy } from 'lodash';
-import DynamicFilterAbstructor from './DynamicFilterAbstructor';
+import DynamicFilterAbstractor from './DynamicFilterAbstractor';
 import { IDynamicFilter, IFilterRole, IModel } from '@/interfaces';
 
-export default class DynamicFilter extends DynamicFilterAbstructor{
+export default class DynamicFilter extends DynamicFilterAbstractor{
   private model: IModel;
   private tableName: string;
   private dynamicFilters: IDynamicFilter[];

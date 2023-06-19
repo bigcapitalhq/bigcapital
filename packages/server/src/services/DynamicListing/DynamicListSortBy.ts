@@ -1,12 +1,12 @@
 import { Service } from 'typedi';
-import DynamicListAbstruct from './DynamicListAbstruct';
+import DynamicListAbstract from './DynamicListAbstract';
 import DynamicFilterSortBy from '@/lib/DynamicFilter/DynamicFilterSortBy';
 import { IModel, ISortOrder } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
 import { ERRORS } from './constants';
 
 @Service()
-export default class DynamicListSortBy extends DynamicListAbstruct {
+export default class DynamicListSortBy extends DynamicListAbstract {
   /**
    * Dynamic list sort by.
    * @param {IModel} model

@@ -1,4 +1,4 @@
-import DynamicFilterRoleAbstructor from '@/lib/DynamicFilter/DynamicFilterRoleAbstructor';
+import DynamicFilterRoleAbstractor from '@/lib/DynamicFilter/DynamicFilterRoleAbstractor';
 import { FIELD_TYPE } from './constants';
 
 interface ISortRole {
@@ -6,7 +6,7 @@ interface ISortRole {
   order: string;
 }
 
-export default class DynamicFilterSortBy extends DynamicFilterRoleAbstructor {
+export default class DynamicFilterSortBy extends DynamicFilterRoleAbstractor {
   private sortRole: ISortRole = {};
 
   /**
