@@ -341,7 +341,7 @@ export default class CashFlowTable implements ICashFlowTable {
 
   /**
    * Determines the given column type is the current.
-   * @reutrns {boolean}
+   * @returns {boolean}
    */
   private isDisplayColumnsBy = (displayColumnsType: string): Boolean => {
     return this.report.query.displayColumnsType === displayColumnsType;
