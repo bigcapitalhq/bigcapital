@@ -48,7 +48,7 @@ export default function ProjectExpenseFormFields() {
         />
       </FFormGroup>
 
-      {/*------------ Extimated Date -----------*/}
+      {/*------------ Estimated Date -----------*/}
       <FFormGroup
         label={intl.get('project_expense.dialog.expense_date')}
         name={'expemseDate'}
