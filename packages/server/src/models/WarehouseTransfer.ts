@@ -34,7 +34,7 @@ export default class WarehouseTransfer extends mixin(TenantModel, [
 
   /**
    * Determines whether the warehouse transfer initiated.
-   * @retruns {boolean}
+   * @returns {boolean}
    */
   get isInitiated() {
     return !!this.transferInitiatedAt;

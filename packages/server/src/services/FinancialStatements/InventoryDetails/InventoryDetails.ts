@@ -92,7 +92,7 @@ export default class InventoryDetails extends FinancialSheet {
    * Retrieve the total number meta.
    * @param {number} number -
    * @param {IFormatNumberSettings} settings -
-   * @retrun {IInventoryDetailsNumber}
+   * @return {IInventoryDetailsNumber}
    */
   private getTotalNumberMeta(
     number: number,

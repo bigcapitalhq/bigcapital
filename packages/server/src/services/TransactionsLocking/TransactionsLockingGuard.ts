@@ -41,7 +41,7 @@ export default class TransactionsLockingGuard {
           moment(transactionDate).isSameOrBefore(unlockFromDate)
         : false;
 
-    // Retruns true in case the transaction date between locking date
+    // Returns true in case the transaction date between locking date
     // and not between unlocking date.
     return !!(isEnabled && inLockingDate && !inUnlockDate);
   };

@@ -79,7 +79,7 @@ function useFilterSidebarItemAbilityPredicater() {
   const ability = useAbilityContext();
 
   return {
-    // Retruns false if the item has `permission` prop and that permission has no ability.
+    // Returns false if the item has `permission` prop and that permission has no ability.
     predicate: (item) => {
       if (
         item.permission &&

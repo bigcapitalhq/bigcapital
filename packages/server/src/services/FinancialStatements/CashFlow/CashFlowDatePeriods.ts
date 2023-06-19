@@ -109,7 +109,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
     /**
      * Retrieve the net income of date period.
      * @param {IDateRange} dateRange -
-     * @retrun {ICashFlowDatePeriod}
+     * @return {ICashFlowDatePeriod}
      */
     private getNetIncomeDatePeriod = (dateRange): ICashFlowDatePeriod => {
       const total = this.getNetIncomeDateRange(

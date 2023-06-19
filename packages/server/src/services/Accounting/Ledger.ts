@@ -64,7 +64,7 @@ export default class Ledger implements ILedger {
   }
 
   /**
-   * Filters ledger entries that after the given date and retruns a new ledger.
+   * Filters ledger entries that after the given date and returns a new ledger.
    * @param   {Date|string} toDate
    * @returns {ILedger}
    */

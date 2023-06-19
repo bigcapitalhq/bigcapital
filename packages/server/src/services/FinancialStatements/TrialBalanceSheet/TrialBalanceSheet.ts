@@ -194,7 +194,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
 
   /**
    * Retrieve trial balance sheet statement data.
-   * Note: Retruns null in case there is no transactions between the given date periods.
+   * Note: Returns null in case there is no transactions between the given date periods.
    *
    * @return {ITrialBalanceSheetData}
    */

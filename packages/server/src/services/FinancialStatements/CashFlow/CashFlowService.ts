@@ -58,7 +58,7 @@ export default class CashFlowStatementService
    * Retrieve cash at beginning transactions.
    * @param {number} tenantId -
    * @param {ICashFlowStatementQuery} filter -
-   * @retrun {Promise<IAccountTransaction[]>}
+   * @return {Promise<IAccountTransaction[]>}
    */
   private async cashAtBeginningTransactions(
     tenantId: number,
