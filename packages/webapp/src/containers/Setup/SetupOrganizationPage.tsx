@@ -47,7 +47,7 @@ function SetupOrganizationPage({ wizard }) {
         setCookie('locale', values.language);
         wizard.next();
       })
-      .catch((erros) => {
+      .catch((errors) => {
         setSubmitting(false);
       });
   };
