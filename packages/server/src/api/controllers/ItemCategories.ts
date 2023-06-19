@@ -275,7 +275,7 @@ export default class ItemsCategoriesController extends BaseController {
           errors: [{ type: 'CATEGORY_NAME_EXISTS', code: 300 }],
         });
       }
-      if (error.errorType === 'COST_ACCOUNT_NOT_FOUMD') {
+      if (error.errorType === 'COST_ACCOUNT_NOT_FOUND') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'COST.ACCOUNT.NOT.FOUND', code: 400 }],
         });

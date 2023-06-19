@@ -185,7 +185,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     const foundAccount = await accountRepository.findOneById(costAccountId);
 
     if (!foundAccount) {
-      throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_FOUMD);
+      throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_FOUND);
     } else if (!foundAccount.isRootType(ACCOUNT_ROOT_TYPE.EXPENSE)) {
       throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_COGS);
     }

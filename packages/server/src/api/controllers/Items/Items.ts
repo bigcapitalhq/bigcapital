@@ -394,7 +394,7 @@ export default class ItemsController extends BaseController {
           errors: [{ type: 'ITEM.NAME.ALREADY.EXISTS', code: 210 }],
         });
       }
-      if (error.errorType === 'COST_ACCOUNT_NOT_FOUMD') {
+      if (error.errorType === 'COST_ACCOUNT_NOT_FOUND') {
         return res.status(400).send({
           errors: [{ type: 'COST.ACCOUNT.NOT.FOUND', code: 120 }],
         });
@@ -414,7 +414,7 @@ export default class ItemsController extends BaseController {
           errors: [{ type: 'SELL.ACCOUNT.NOT.INCOME.TYPE', code: 230 }],
         });
       }
-      if (error.errorType === 'COST_ACCOUNT_NOT_FOUMD') {
+      if (error.errorType === 'COST_ACCOUNT_NOT_FOUND') {
         return res.status(400).send({
           errors: [{ type: 'COST.ACCOUNT.NOT.FOUND', code: 120 }],
         });

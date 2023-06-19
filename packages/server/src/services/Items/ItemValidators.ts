@@ -54,7 +54,7 @@ export class ItemsValidators {
     const foundAccount = await accountRepository.findOneById(costAccountId);
 
     if (!foundAccount) {
-      throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_FOUMD);
+      throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_FOUND);
 
       // Determines the cost of goods sold account.
     } else if (!foundAccount.isParentType(ACCOUNT_PARENT_TYPE.EXPENSE)) {
