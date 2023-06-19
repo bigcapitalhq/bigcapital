@@ -48,7 +48,7 @@ export default class ApplyVendorCreditSyncBillsSubscriber {
 
   /**
    * Decrement credited amount of applied bills once the vendor credit
-   * transaction delted.
+   * transaction deleted.
    * @param {IVendorCreditApplyToBillDeletedPayload} payload
    */
   private decrementAppliedBillsOnceCreditDeleted = async ({
