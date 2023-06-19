@@ -35,7 +35,7 @@ export function ContactsSuggestField({
     [initialContactId, contacts],
   );
 
-  const [selecetedContact, setSelectedContact] = useState(
+  const [selectedContact, setSelectedContact] = useState(
     initialContact || null,
   );
 
@@ -94,7 +94,7 @@ export function ContactsSuggestField({
       itemRenderer={contactRenderer}
       itemPredicate={filterContacts}
       onItemSelect={onContactSelect}
-      selectedItem={selecetedContact}
+      selectedItem={selectedContact}
       inputProps={{ placeholder: defaultTextSelect }}
       resetOnClose={true}
       popoverProps={{ minimal: true, boundary: 'window' }}

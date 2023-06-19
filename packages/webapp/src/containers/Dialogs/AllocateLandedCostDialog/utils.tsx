@@ -108,7 +108,7 @@ export function getCostTransactionById(id, transactions) {
 }
 
 /**
- * Determines the transactions selet field when should update.
+ * Determines the transactions select field when should update.
  */
 export function transactionsSelectShouldUpdate(newProps, oldProps) {
   return (

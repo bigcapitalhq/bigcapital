@@ -8,7 +8,7 @@ import { Select } from '@blueprintjs/select';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 
-export function ContactSelecetList({
+export function ContactSelectList({
   contactsList,
   initialContactId,
   selectedContactId,
@@ -35,7 +35,7 @@ export function ContactSelecetList({
     [initialContactId, contacts],
   );
 
-  const [selecetedContact, setSelectedContact] = useState(
+  const [selectedContact, setSelectedContact] = useState(
     initialContact || null,
   );
 
@@ -102,7 +102,7 @@ export function ContactSelecetList({
       <Button
         disabled={disabled}
         text={
-          selecetedContact ? selecetedContact.display_name : defaultSelectText
+          selectedContact ? selectedContact.display_name : defaultSelectText
         }
         {...buttonProps}
       />

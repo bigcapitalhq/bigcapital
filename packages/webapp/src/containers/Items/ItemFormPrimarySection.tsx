@@ -147,7 +147,7 @@ export default function ItemFormPrimarySection() {
               >
                 <CategoriesSelectList
                   categories={itemsCategories}
-                  selecetedCategoryId={value}
+                  selectedCategoryId={value}
                   onCategorySelected={(category) => {
                     form.setFieldValue('category_id', category.id);
                   }}
