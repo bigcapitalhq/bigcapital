@@ -50,7 +50,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   private accountTransformer = (
     account: IAccount & { type: IAccountType }
   ): ITrialBalanceAccount => {
-    const trial = this.journalFinancial.getTrialBalanceWithDepands(account.id);
+    const trial = this.journalFinancial.getTrialBalanceWithDepends(account.id);
 
     return {
       id: account.id,
@@ -117,7 +117,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   private filterNoneTransactions = (
     accountNode: ITrialBalanceAccount
   ): boolean => {
-    const entries = this.journalFinancial.getAccountEntriesWithDepents(
+    const entries = this.journalFinancial.getAccountEntriesWithDepends(
       accountNode.id
     );
     return entries.length > 0;

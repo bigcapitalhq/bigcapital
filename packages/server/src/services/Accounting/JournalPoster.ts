@@ -594,7 +594,7 @@ export default class JournalPoster implements IJournalPoster {
    * @return {Number}
    */
 
-  getTrialBalanceWithDepands(
+  getTrialBalanceWithDepends(
     accountId: number,
     closingDate: Date,
     dateType: string
@@ -704,10 +704,10 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
-   * Retrieve account entries with depents accounts.
+   * Retrieve account entries with depends accounts.
    * @param {number} accountId - 
    */
-  getAccountEntriesWithDepents(accountId: number) {
+  getAccountEntriesWithDepends(accountId: number) {
     const depAccountsIds = this.accountsDepGraph.dependenciesOf(accountId);
     const accountsIds = [accountId, ...depAccountsIds];
 
