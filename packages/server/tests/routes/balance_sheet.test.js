@@ -476,7 +476,7 @@ describe('routes: `/financial_statements`', () => {
       });
     });
     
-    it('Should parent account balance sumation of total balance all children accounts.', async () => {
+    it('Should parent account balance summation of total balance all children accounts.', async () => {
       const childAccount = await tenantFactory.create('account', {
         parent_account_id: debitAccount.id,
         account_type_id: 1
@@ -499,7 +499,7 @@ describe('routes: `/financial_statements`', () => {
       expect(res.body.accounts[0].children[0].total.formatted_amount).equals(6000);
     });
 
-    it('Should parent account balance sumation of total periods amounts all children accounts.', async () => {
+    it('Should parent account balance summation of total periods amounts all children accounts.', async () => {
       const childAccount = await tenantFactory.create('account', {
         parent_account_id: debitAccount.id,
         account_type_id: 1

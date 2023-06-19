@@ -113,12 +113,12 @@ export const FinancialPreviousPeriod = (Base) =>
     );
 
     /**
-     * Retrieves PP total sumation of the given horiz index node.
+     * Retrieves PP total summation of the given horiz index node.
      * @param {number} index
      * @param node
      * @returns {number}
      */
-    protected getPPHorizNodesTotalSumation = (index: number, node): number => {
+    protected getPPHorizNodesTotalSummation = (index: number, node): number => {
       return sumBy(
         node.children,
         `horizontalTotals[${index}].previousPeriod.amount`

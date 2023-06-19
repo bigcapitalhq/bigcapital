@@ -131,10 +131,10 @@ export default class GeneralLedgerService {
       toDate: filter.toDate,
       branchesIds: filter.branchesIds
     });
-    // Retrieve opening balance credit/debit sumation.
+    // Retrieve opening balance credit/debit summation.
     const openingBalanceTrans = await transactionsRepository.journal({
       toDate: moment(filter.fromDate).subtract(1, 'day'),
-      sumationCreditDebit: true,
+      summationCreditDebit: true,
       branchesIds: filter.branchesIds
     });
     // Transform array transactions to journal collection.

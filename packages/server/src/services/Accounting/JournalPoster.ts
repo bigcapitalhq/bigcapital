@@ -555,7 +555,7 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
-   * Retrieve the credit/debit sumation for the given account and date.
+   * Retrieve the credit/debit summation for the given account and date.
    * @param {Number} account -
    * @param {Date|String} closingDate -
    */

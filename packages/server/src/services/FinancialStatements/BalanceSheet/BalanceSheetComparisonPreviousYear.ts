@@ -109,7 +109,7 @@ export const BalanceSheetComparisonPreviousYear = (Base: any) =>
      */
     private assocPreviousYearAggregateHorizTotalNode = R.curry(
       (node, index, totalNode) => {
-        const total = this.getPYHorizNodesTotalSumation(index, node);
+        const total = this.getPYHorizNodesTotalSummation(index, node);
 
         return R.assoc(
           'previousYear',

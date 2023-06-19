@@ -206,7 +206,7 @@ export const BalanceSheetComparisonPreviousPeriod = (Base: any) =>
      */
     private assocPreviousPeriodAggregateHorizTotalNode = R.curry(
       (node, index: number, totalNode) => {
-        const total = this.getPPHorizNodesTotalSumation(index, node);
+        const total = this.getPPHorizNodesTotalSummation(index, node);
 
         return R.assoc(
           'previousPeriod',

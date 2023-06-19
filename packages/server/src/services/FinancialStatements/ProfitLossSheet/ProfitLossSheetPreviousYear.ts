@@ -234,7 +234,7 @@ export const ProfitLossSheetPreviousYear = (Base) =>
      */
     private assocPreviousYearAggregateHorizTotal = R.curry(
       (node, index, totalNode) => {
-        const total = this.getPYHorizNodesTotalSumation(index, node);
+        const total = this.getPYHorizNodesTotalSummation(index, node);
 
         return R.assoc(
           'previousYear',

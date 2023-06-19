@@ -740,7 +740,7 @@ describe('routes: `/financial_statements`', () => {
       expect(res.body.profitLoss.income.accounts[0].total.date).equals(toDate);
     });
 
-    it('Should retrieve credit sumation of income accounts.', async () => {
+    it('Should retrieve credit summation of income accounts.', async () => {
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
         .set('x-access-token', loginRes.body.token)
@@ -757,7 +757,7 @@ describe('routes: `/financial_statements`', () => {
       expect(res.body.profitLoss.income.total.date).equals('2021-01-01');
     });
 
-    it('Should retrieve debit sumation of expenses accounts.', async () => {
+    it('Should retrieve debit summation of expenses accounts.', async () => {
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
         .set('x-access-token', loginRes.body.token)
@@ -888,7 +888,7 @@ describe('routes: `/financial_statements`', () => {
       expect(res.body.profitLoss.income.accounts[0].children[0].id).equals(childAccount.id);
     });
 
-    it('Should parent account credit/debit sumation of total periods amounts all children accounts.', async () => {
+    it('Should parent account credit/debit summation of total periods amounts all children accounts.', async () => {
       const childAccount = await tenantFactory.create('account', {
         parent_account_id: incomeAccount.id,
         account_type_id: 7,
@@ -913,7 +913,7 @@ describe('routes: `/financial_statements`', () => {
       });
     });
 
-    it('Should parent account credit/debit sumation of total date periods.', async () => {
+    it('Should parent account credit/debit summation of total date periods.', async () => {
       const childAccount = await tenantFactory.create('account', {
         parent_account_id: incomeAccount.id,
         account_type_id: 7,

@@ -107,7 +107,7 @@ export default class TrialBalanceSheetService extends FinancialSheet {
     const transactions = await transactionsRepository.journal({
       fromDate: query.fromDate,
       toDate: query.toDate,
-      sumationCreditDebit: true,
+      summationCreditDebit: true,
       branchesIds: query.branchesIds
     });
     // Transform transactions array to journal collection.

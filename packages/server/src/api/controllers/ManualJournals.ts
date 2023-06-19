@@ -375,7 +375,7 @@ export default class ManualJournalsController extends BaseController {
           {
             errors: [
               {
-                type: 'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
+                type: 'CREDIT.DEBIT.SUMMATION.SHOULD.NOT.EQUAL.ZERO',
                 code: 200,
               },
             ],

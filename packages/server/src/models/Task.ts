@@ -85,7 +85,7 @@ export default class Task extends mixin(TenantModel, [
   static get modifiers() {
     return {
       /**
-       * Sumation of total actual hours.
+       * Summation of total actual hours.
        * @param builder
        */
       sumTotalActualHours(builder) {
@@ -93,7 +93,7 @@ export default class Task extends mixin(TenantModel, [
       },
 
       /**
-       * Sumation total estimate hours.
+       * Summation total estimate hours.
        * @param builder
        */
       sumTotalEstimateHours(builder) {
@@ -101,7 +101,7 @@ export default class Task extends mixin(TenantModel, [
       },
 
       /**
-       * Sumation of total invoiced hours.
+       * Summation of total invoiced hours.
        * @param builder
        */
       sumTotalInvoicedHours(builder) {
@@ -109,7 +109,7 @@ export default class Task extends mixin(TenantModel, [
       },
 
       /**
-       * Sumation of total actual amount.
+       * Summation of total actual amount.
        * @param builder
        */
       sumTotalActualAmount(builder) {
@@ -118,7 +118,7 @@ export default class Task extends mixin(TenantModel, [
       },
 
       /**
-       * Sumation of total invoiced amount.
+       * Summation of total invoiced amount.
        * @param builder
        */
       sumTotalInvoicedAmount(builder) {
@@ -127,7 +127,7 @@ export default class Task extends mixin(TenantModel, [
       },
 
       /**
-       * Sumation of total estimate amount.
+       * Summation of total estimate amount.
        * @param builder
        */
       sumTotalEstimateAmount(builder) {

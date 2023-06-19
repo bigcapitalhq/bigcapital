@@ -56,7 +56,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
   // Payment made form context.
   const { accounts } = usePaymentMadeFormContext();
 
-  // Sumation of payable full-amount.
+  // Summation of payable full-amount.
   const payableFullAmount = useMemo(
     () => safeSumBy(entries, 'due_amount'),
     [entries],

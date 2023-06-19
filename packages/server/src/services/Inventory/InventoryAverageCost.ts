@@ -94,24 +94,24 @@ export default class InventoryAverageCostMethod
       builder.first();
     };
     // Calculates the total inventory total quantity and rate `IN` transactions.
-    const inInvSumationOper: Promise<any> = InventoryCostLotTracker.query()
+    const inInvSummationOper: Promise<any> = InventoryCostLotTracker.query()
       .onBuild(commonBuilder)
       .where('direction', 'IN');
 
     // Calculates the total inventory total quantity and rate `OUT` transactions.
-    const outInvSumationOper: Promise<any> = InventoryCostLotTracker.query()
+    const outInvSummationOper: Promise<any> = InventoryCostLotTracker.query()
       .onBuild(commonBuilder)
       .where('direction', 'OUT');
 
-    const [inInvSumation, outInvSumation] = await Promise.all([
-      inInvSumationOper,
-      outInvSumationOper,
+    const [inInvSummation, outInvSummation] = await Promise.all([
+      inInvSummationOper,
+      outInvSummationOper,
     ]);
     return this.computeItemAverageCost(
-      inInvSumation?.cost || 0,
-      inInvSumation?.quantity || 0,
-      outInvSumation?.cost || 0,
-      outInvSumation?.quantity || 0
+      inInvSummation?.cost || 0,
+      inInvSummation?.quantity || 0,
+      outInvSummation?.cost || 0,
+      outInvSummation?.quantity || 0
     );
   }
 

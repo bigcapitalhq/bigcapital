@@ -73,7 +73,7 @@ export class ProjectProfitabilitySummaryRepository {
   };
 
   /**
-   * Retrieves the sumation of grouped entries by account and project id.
+   * Retrieves the summation of grouped entries by account and project id.
    * @param {number[]} accountsIds
    * @param {string} accountNormal -
    * @returns {}
@@ -124,7 +124,7 @@ export class ProjectProfitabilitySummaryRepository {
   };
 
   /**
-   * Retrieves the sumation of grouped entries by income accounts and projects.
+   * Retrieves the summation of grouped entries by income accounts and projects.
    * @returns {}
    */
   public getIncomeAccountsGroupedEntries = async () => {
@@ -135,7 +135,7 @@ export class ProjectProfitabilitySummaryRepository {
   };
 
   /**
-   * Retrieves the sumation of grouped entries by expenses accounts and projects.
+   * Retrieves the summation of grouped entries by expenses accounts and projects.
    * @returns {}
    */
   public getExpenseAccountsGroupedEntries = async () => {
