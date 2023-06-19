@@ -320,7 +320,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
    * Creates a new bill payment transcations and store it to the storage
    * with associated bills entries and journal transactions.
    *
-   * Precedures:-
+   * Procedures:-
    * ------
    * - Records the bill payment transaction.
    * - Records the bill payment associated entries.
@@ -405,7 +405,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
   /**
    * Edits the details of the given bill payment.
    *
-   * Preceducres:
+   * Procedures:
    * ------
    * - Update the bill payment transaction.
    * - Insert the new bill payment entries that have no ids.

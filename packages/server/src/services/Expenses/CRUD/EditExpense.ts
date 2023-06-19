@@ -88,7 +88,7 @@ export class EditExpense {
   };
 
   /**
-   * Precedures.
+   * Procedures.
    * ---------
    * 1. Validate expense existence.
    * 2. Validate payment account existence on the storage.

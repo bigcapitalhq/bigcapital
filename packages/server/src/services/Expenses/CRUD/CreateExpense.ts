@@ -72,7 +72,7 @@ export class CreateExpense {
   };
 
   /**
-   * Precedures.
+   * Procedures.
    * ---------
    * 1. Validate payment account existence on the storage.
    * 2. Validate expense accounts exist on the storage.

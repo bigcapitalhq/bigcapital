@@ -310,7 +310,7 @@ export default class BillsService
   /**
    * Creates a new bill and stored it to the storage.
    * ----
-   * Precedures.
+   * Procedures.
    * ----
    * - Insert bill transactions to the storage.
    * - Insert bill entries to the storage.
@@ -387,7 +387,7 @@ export default class BillsService
   /**
    * Edits details of the given bill id with associated entries.
    *
-   * Precedures:
+   * Procedures:
    * -------
    * - Update the bill transaction on the storage.
    * - Update the bill entries on the storage and insert the not have id and delete
