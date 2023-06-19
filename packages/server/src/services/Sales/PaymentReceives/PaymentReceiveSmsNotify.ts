@@ -35,14 +35,14 @@ export default class PaymentReceiveNotifyBySms {
   /**
    * Notify customer via sms about payment receive details.
    * @param {number} tenantId - Tenant id.
-   * @param {number} paymentReceiveid - Payment receive id.
+   * @param {number} paymentReceived - Payment receive id.
    */
-  public async notifyBySms(tenantId: number, paymentReceiveid: number) {
+  public async notifyBySms(tenantId: number, paymentReceived: number) {
     const { PaymentReceive } = this.tenancy.models(tenantId);
 
     // Retrieve the payment receive or throw not found service error.
     const paymentReceive = await PaymentReceive.query()
-      .findById(paymentReceiveid)
+      .findById(paymentReceived)
       .withGraphFetched('customer')
       .withGraphFetched('entries.invoice');
 
@@ -178,17 +178,17 @@ export default class PaymentReceiveNotifyBySms {
   /**
    * Retrieve the SMS details of the given invoice.
    * @param {number} tenantId - Tenant id.
-   * @param {number} paymentReceiveid - Payment receive id.
+   * @param {number} paymentReceived - Payment receive id.
    */
   public smsDetails = async (
     tenantId: number,
-    paymentReceiveid: number
+    paymentReceived: number
   ): Promise<IPaymentReceiveSmsDetails> => {
     const { PaymentReceive } = this.tenancy.models(tenantId);
 
     // Retrieve the payment receive or throw not found service error.
     const paymentReceive = await PaymentReceive.query()
-      .findById(paymentReceiveid)
+      .findById(paymentReceived)
       .withGraphFetched('customer')
       .withGraphFetched('entries.invoice');
 
