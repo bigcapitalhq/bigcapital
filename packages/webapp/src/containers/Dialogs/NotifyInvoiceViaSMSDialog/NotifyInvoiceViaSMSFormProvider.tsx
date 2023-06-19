@@ -23,7 +23,7 @@ function NotifyInvoiceViaSMSFormProvider({ invoiceId, dialogName, ...props }) {
         keepPreviousData: true,
       },
     );
-  // Create notfiy invoice by sms mutations.
+  // Create notify invoice by sms mutations.
   const { mutateAsync: createNotifyInvoiceBySMSMutate } =
     useCreateNotifyInvoiceBySMS();
 

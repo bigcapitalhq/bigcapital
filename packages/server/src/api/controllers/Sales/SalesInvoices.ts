@@ -522,7 +522,7 @@ export default class SaleInvoicesController extends BaseController {
   };
 
   /**
-   * Sale invoice notfiy customer by sms.
+   * Sale invoice notify customer by sms.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next

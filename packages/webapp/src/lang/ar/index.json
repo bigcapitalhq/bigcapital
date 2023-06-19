@@ -1461,7 +1461,7 @@
   "notify_via_sms.dialog.message_text": "نص الرسالة ",
   "notify_via_sms.dialog.notification_type": "نوع الإشعار",
   "notify_via_sms.dialog.notify_via_sms": "إشعار عبر رسائل قصيرة",
-  "notiify_via_sms.dialog.sms_note": "<strong>ملاحظة :</strong> يمكن أن تحتوي رسالة قصيرة الواحدة على 160 حرفًا كحد أقصى <strong>{value}</strong>. سيتم استخدام وحدات الرسائل القصيرة لإرسال هذا  إشعار عبر الرسائل القصيرة. ",
+  "notify_via_sms.dialog.sms_note": "<strong>ملاحظة :</strong> يمكن أن تحتوي رسالة قصيرة الواحدة على 160 حرفًا كحد أقصى <strong>{value}</strong>. سيتم استخدام وحدات الرسائل القصيرة لإرسال هذا  إشعار عبر الرسائل القصيرة. ",
   "notify_Via_sms.dialog.customer_phone_number_does_not_exist": "رقم هاتف الزبون غير موجود ، يرجى  إدخال رقم هاتف للعميل. ",
   "notify_Via_sms.dialog.customer_phone_number_invalid": "رقم هاتف الزبون غير صالح ، يرجى  إدخال رقم هاتف صحيح للعميل. ",
   "notify_via_sms.dialog.phone_invalid_error_message": "لا يمكن إرسال إشعار الرسائل القصيرة ، رقم الهاتف للعميل غير صالح ، يرجى إدخال رقم صالح والمحاولة مرة أخرى.",

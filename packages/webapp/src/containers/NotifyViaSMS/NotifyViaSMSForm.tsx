@@ -40,7 +40,7 @@ function SMSMessagePreviewSection() {
       <SMSMessagePreview message={sms_message} />
       <SMSPreviewSectionNote>
         {intl.formatHTMLMessage(
-          { id: 'notiify_via_sms.dialog.sms_note' },
+          { id: 'notify_via_sms.dialog.sms_note' },
           {
             value: messagesUnits,
           },

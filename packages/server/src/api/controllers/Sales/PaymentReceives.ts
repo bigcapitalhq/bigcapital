@@ -440,7 +440,7 @@ export default class PaymentReceivesController extends BaseController {
   }
 
   /**
-   * Payment receive notfiy customer by sms.
+   * Payment receive notify customer by sms.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next

@@ -18,7 +18,7 @@ function NotifyEstimateViaSMSFormProvider({
       enabled: !!estimateId,
     });
 
-  // Create notfiy estimate by sms mutations.
+  // Create notify estimate by sms mutations.
   const { mutateAsync: createNotifyEstimateBySMSMutate } =
     useCreateNotifyEstimateBySMS();
 

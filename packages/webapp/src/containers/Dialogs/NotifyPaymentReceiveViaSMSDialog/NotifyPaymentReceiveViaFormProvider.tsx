@@ -13,7 +13,7 @@ function NotifyPaymentReceiveViaFormProvider({
   dialogName,
   ...props
 }) {
-  // Create notfiy receipt via sms mutations.
+  // Create notify receipt via sms mutations.
   const { mutateAsync: createNotifyPaymentReceivetBySMSMutate } =
     useCreateNotifyPaymentReceiveBySMS();
 
