@@ -21,11 +21,11 @@ export default class RolePermissionsSchema {
     const $abilities = (f) => (f.abilities ? f : undefined);
     const $extraAbilities = (f) => (f.extraAbilities ? f : undefined);
 
-    const naviagations = [
+    const navigations = [
       [qim.$each, 'subjectLabel'],
       [qim.$each, $abilities, 'abilities', qim.$each, 'label'],
       [qim.$each, $extraAbilities, 'extraAbilities', qim.$each, 'label'],
     ];
-    return this.i18nService.i18nApply(naviagations, AbilitySchema, tenantId);
+    return this.i18nService.i18nApply(navigations, AbilitySchema, tenantId);
   }
 }
