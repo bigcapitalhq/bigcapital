@@ -127,7 +127,7 @@ export default class InviteUsersController extends BaseController {
   }
 
   /**
-   * Accept the inviation.
+   * Accept the invitation.
    * @param {Request} req -
    * @param {Response} res -
    * @param {NextFunction} next -
