@@ -4,7 +4,7 @@ import { isEmpty, map } from 'lodash';
 import Project from 'models/Project';
 import Ledger from '@/services/Accounting/Ledger';
 
-export class ProjectProfitabilitySummaryRespository {
+export class ProjectProfitabilitySummaryRepository {
   /**
    * Tenant models.
    */

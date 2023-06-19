@@ -5,20 +5,20 @@ import {
   IProjectProfitabilitySummaryTotal,
 } from '@/interfaces';
 import Project from 'models/Project';
-import { ProjectProfitabilitySummaryRespository } from './ProjectProfitabilitySummaryRepository';
+import { ProjectProfitabilitySummaryRepository } from './ProjectProfitabilitySummaryRepository';
 import FinancialSheet from '../FinancialSheet';
 
 export class ProfitProfitabilitySummary extends FinancialSheet {
-  private readonly repository: ProjectProfitabilitySummaryRespository;
+  private readonly repository: ProjectProfitabilitySummaryRepository;
   private readonly baseCurrency: string;
 
   /**
    * Constructor method.
-   * @param {ProjectProfitabilitySummaryRespository} repository
+   * @param {ProjectProfitabilitySummaryRepository} repository
    * @param {string} baseCurrency
    */
   constructor(
-    repository: ProjectProfitabilitySummaryRespository,
+    repository: ProjectProfitabilitySummaryRepository,
     baseCurrency: string
   ) {
     super();
