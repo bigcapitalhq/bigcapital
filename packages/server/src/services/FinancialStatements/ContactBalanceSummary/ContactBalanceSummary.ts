@@ -103,11 +103,11 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
     contacts: IContactBalanceSummaryContact[]
   ): IContactBalanceSummaryContact[] => {
     const customersTotal = this.getContactsTotal(contacts);
-    const camparsionPercentageOfColummn = R.curry(
+    const camparsionPercentageOfColumn = R.curry(
       this.contactCamparsionPercentageOfColumnMapper
     )(customersTotal);
 
-    return contacts.map(camparsionPercentageOfColummn);
+    return contacts.map(camparsionPercentageOfColumn);
   };
 
   /**
