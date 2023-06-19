@@ -192,7 +192,7 @@ export default class ContactsService {
   }
 
   /**
-   * Parsees accounts list filter DTO.
+   * Parses accounts list filter DTO.
    * @param filterDTO
    */
   private parseAutocompleteListFilterDTO(filterDTO) {

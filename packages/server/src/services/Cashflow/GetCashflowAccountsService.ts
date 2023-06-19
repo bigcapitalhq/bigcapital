@@ -28,7 +28,7 @@ export default class GetCashflowAccountsService {
   ): Promise<{ cashflowAccounts: ICashflowAccount[] }> {
     const { CashflowAccount } = this.tenancy.models(tenantId);
 
-    // Parsees accounts list filter DTO.
+    // Parses accounts list filter DTO.
     const filter = this.dynamicListService.parseStringifiedFilter(filterDTO);
 
     // Dynamic list service.
