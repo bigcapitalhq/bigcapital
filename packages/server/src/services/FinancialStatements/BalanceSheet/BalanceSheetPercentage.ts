@@ -117,7 +117,7 @@ export const BalanceSheetPercentage = (Base: any) =>
 
         return R.compose(
           R.when(
-            this.isNodeHasHorizoTotals,
+            this.isNodeHasHorizontalTotals,
             this.assocColumnPercentageHorizTotals(parentNode)
           ),
           this.assocReportNodeColumnPercentage(parentTotal)
@@ -135,7 +135,7 @@ export const BalanceSheetPercentage = (Base: any) =>
 
       return R.compose(
         R.when(
-          this.isNodeHasHorizoTotals,
+          this.isNodeHasHorizontalTotals,
           this.assocRowPercentageHorizTotals(total)
         ),
         this.assocReportNodeRowPercentage(total)
@@ -164,7 +164,7 @@ export const BalanceSheetPercentage = (Base: any) =>
 
       return R.compose(
         R.when(
-          this.isNodeHasHorizoTotals,
+          this.isNodeHasHorizontalTotals,
           this.assocColumnPercentageHorizTotals(parentNode)
         ),
         this.assocReportNodeColumnPercentage(parentTotal),
@@ -215,7 +215,7 @@ export const BalanceSheetPercentage = (Base: any) =>
      * @param   {IBalanceSheetDataNode} node
      * @returns {boolean}
      */
-    protected isNodeHasHorizoTotals = (
+    protected isNodeHasHorizontalTotals = (
       node: IBalanceSheetDataNode
     ): boolean => {
       return (

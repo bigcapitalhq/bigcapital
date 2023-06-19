@@ -30,7 +30,7 @@ export default function CashflowTransactionDrawerHeader() {
 
       <Row>
         <Col xs={6}>
-          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+          <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
             <DetailItem
               name={'transaction_type'}
               label={<T id={'cash_flow_drawer.label_transaction_type'} />}

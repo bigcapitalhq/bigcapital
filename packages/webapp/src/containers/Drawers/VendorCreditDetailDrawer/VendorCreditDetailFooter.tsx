@@ -14,7 +14,7 @@ export function VendorCreditDetailFooter() {
 
   return (
     <CommercialDocFooter>
-      <DetailsMenu direction={'horizantal'} minLabelSize={'150px'}>
+      <DetailsMenu direction={'horizontal'} minLabelSize={'150px'}>
         <If condition={vendorCredit.note}>
           <DetailItem label={<T id={'note'} />} children={vendorCredit.note} />
         </If>

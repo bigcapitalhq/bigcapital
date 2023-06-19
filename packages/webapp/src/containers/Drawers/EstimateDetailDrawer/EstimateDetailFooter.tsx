@@ -19,7 +19,7 @@ export default function EstimateDetailFooter() {
   
   return (
     <CommercialDocFooter>
-      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+      <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
         <If condition={estimate.terms_conditions}>
           <DetailItem label={<T id={'estimate.details.terms_conditions'} />}>
             {estimate.terms_conditions}

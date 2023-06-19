@@ -224,7 +224,7 @@ export const BalanceSheetComparisonPreviousPeriod = (Base: any) =>
     private previousPeriodAggregateHorizNodeComposer = R.curry(
       (
         node: IBalanceSheetCommonNode,
-        horiontalTotalNode: IBalanceSheetTotal,
+        horizontalTotalNode: IBalanceSheetTotal,
         index: number
       ): IBalanceSheetTotal => {
         return R.compose(
@@ -246,7 +246,7 @@ export const BalanceSheetComparisonPreviousPeriod = (Base: any) =>
               this.query.displayColumnsBy
             )
           )
-        )(horiontalTotalNode);
+        )(horizontalTotalNode);
       }
     );
 

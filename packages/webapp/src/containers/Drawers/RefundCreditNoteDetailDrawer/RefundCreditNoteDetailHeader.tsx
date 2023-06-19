@@ -17,7 +17,7 @@ export default function RefundCreditNoteDetailHeader() {
 
   return (
     <CommercialDocHeader>
-      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+      <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
         <DetailItem
           label={intl.get('date')}
           children={

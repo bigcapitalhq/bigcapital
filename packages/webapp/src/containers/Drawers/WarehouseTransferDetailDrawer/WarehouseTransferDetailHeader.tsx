@@ -35,7 +35,7 @@ export default function WarehouseTransferDetailHeader() {
       </CommercialDocTopHeader>
       <Row>
         <Col xs={6}>
-          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+          <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
             <DetailItem label={intl.get('date')}>
               <FormatDate value={warehouseTransfer.formatted_date} />
             </DetailItem>

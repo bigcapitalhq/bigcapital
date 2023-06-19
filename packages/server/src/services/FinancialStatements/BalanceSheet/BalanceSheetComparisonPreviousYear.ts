@@ -127,7 +127,7 @@ export const BalanceSheetComparisonPreviousYear = (Base: any) =>
     private previousYearAggregateHorizNodeComposer = R.curry(
       (
         node: IBalanceSheetCommonNode,
-        horiontalTotalNode: IBalanceSheetTotal,
+        horizontalTotalNode: IBalanceSheetTotal,
         index: number
       ): IBalanceSheetTotal => {
         return R.compose(
@@ -147,7 +147,7 @@ export const BalanceSheetComparisonPreviousYear = (Base: any) =>
             this.query.isPreviousYearActive,
             this.assocPreviousYearHorizNodeFromToDates
           )
-        )(horiontalTotalNode);
+        )(horizontalTotalNode);
       }
     );
 

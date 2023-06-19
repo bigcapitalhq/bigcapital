@@ -18,7 +18,7 @@ export function PaymentMadeDetailFooter() {
 
   return (
     <CommercialDocFooter>
-      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+      <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
         <If condition={paymentMade.statement}>
           <DetailItem label={<T id={'payment_made.details.statement'} />}>
             {paymentMade.statement}
