@@ -33,7 +33,7 @@ export class GetCustomers {
   /**
    * Retrieve customers paginated list.
    * @param {number} tenantId - Tenant id.
-   * @param {ICustomersFilter} filter - Cusotmers filter.
+   * @param {ICustomersFilter} filter - Customers filter.
    */
   public async getCustomersList(
     tenantId: number,

@@ -424,7 +424,7 @@
 
   "sms_notification.invoice_details.description": "SMS notification will be sent to your customer once invoice created and published or when notify customer via SMS about the invoice.",
   "sms_notification.payment_receive.description": "Payment thank you message notification will be sent to customer once the payment created and published or notify customer about payment manually.",
-  "sms_notification.receipt_details.description": "SMS notification will be sent to your cusotmer once receipt created and published or when notify customer about the receipt manually.",
+  "sms_notification.receipt_details.description": "SMS notification will be sent to your customer once receipt created and published or when notify customer about the receipt manually.",
   "sms_notification.customer_balance.description": "Send SMS to notify customers about their current outstanding balance.",
   "sms_notification.estimate_details.description": "SMS notification will be sent to your customer once estimate publish or notify customer about estimate manually.",
   "sms_notification.invoice_reminder.description": "SMS notification will be sent to remind the customer to pay earliest, either automatically or manually.",

@@ -100,7 +100,7 @@ export const transformToEditForm = (
 };
 
 /**
- * Detarmine cusotmers fast-field should update.
+ * Detarmine customers fast-field should update.
  */
 export const customersFieldShouldUpdate = (newProps, oldProps) => {
   return (
