@@ -362,7 +362,7 @@ export function AdvancedFilterDropdown({
   const [prevConditions, setPrevConditions] = React.useState(initialConditions);
 
   // Handle the filter dropdown form submit.
-  const handleFitlerDropdownSubmit = (values) => {
+  const handleFilterDropdownSubmit = (values) => {
     const conditions = filterConditionRoles(values.conditions);
 
     // Compare the current conditions with previous conditions, if they were equal
@@ -390,7 +390,7 @@ export function AdvancedFilterDropdown({
           initialValues={initialValues}
           validationSchema={validationSchema}
           component={AdvancedFilterDropdownForm}
-          onSubmit={handleFitlerDropdownSubmit}
+          onSubmit={handleFilterDropdownSubmit}
         />
       </AdvancedFilterDropdownProvider>
     </div>

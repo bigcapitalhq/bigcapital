@@ -131,7 +131,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
   };
 
   /**
-   * Filtesr the given report vendors nodes.
+   * Filter the given report vendors nodes.
    * @param {IAPAgingSummaryVendor[]} vendorNodes
    * @returns {IAPAgingSummaryVendor[]}
    */
