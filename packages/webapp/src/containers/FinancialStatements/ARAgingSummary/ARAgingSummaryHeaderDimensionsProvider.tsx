@@ -5,7 +5,7 @@ import { useFeatureCan } from '@/hooks/state';
 import { useBranches } from '@/hooks/query';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
-const ARAgingSummaryHeaderDimensonsContext = React.createContext();
+const ARAgingSummaryHeaderDimensionsContext = React.createContext();
 
 /**
  * ARAging summary header dimensions provider.
@@ -31,17 +31,17 @@ function ARAgingSummaryHeaderDimensionsProvider({ query, ...props }) {
   return isBranchesLoading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <ARAgingSummaryHeaderDimensonsContext.Provider
+    <ARAgingSummaryHeaderDimensionsContext.Provider
       value={provider}
       {...props}
     />
   );
 }
 
-const useARAgingSummaryHeaderDimensonsContext = () =>
-  React.useContext(ARAgingSummaryHeaderDimensonsContext);
+const useARAgingSummaryHeaderDimensionsContext = () =>
+  React.useContext(ARAgingSummaryHeaderDimensionsContext);
 
 export {
   ARAgingSummaryHeaderDimensionsProvider,
-  useARAgingSummaryHeaderDimensonsContext,
+  useARAgingSummaryHeaderDimensionsContext,
 };

@@ -5,7 +5,7 @@ import { useFeatureCan } from '@/hooks/state';
 import { useBranches } from '@/hooks/query';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
-const APAgingSummaryHeaderDimensonsContext = React.createContext();
+const APAgingSummaryHeaderDimensionsContext = React.createContext();
 
 /**
  * APAging summary header dimensions provider.
@@ -31,17 +31,17 @@ function APAgingSummaryHeaderDimensionsProvider({ query, ...props }) {
   return isBranchesLoading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <APAgingSummaryHeaderDimensonsContext.Provider
+    <APAgingSummaryHeaderDimensionsContext.Provider
       value={provider}
       {...props}
     />
   );
 }
 
-const useAPAgingSummaryHeaderDimensonsContext = () =>
-  React.useContext(APAgingSummaryHeaderDimensonsContext);
+const useAPAgingSummaryHeaderDimensionsContext = () =>
+  React.useContext(APAgingSummaryHeaderDimensionsContext);
 
 export {
   APAgingSummaryHeaderDimensionsProvider,
-  useAPAgingSummaryHeaderDimensonsContext,
+  useAPAgingSummaryHeaderDimensionsContext,
 };
