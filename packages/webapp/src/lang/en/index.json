@@ -1733,7 +1733,7 @@
   "permissions.items_inventory": "Items & Inventory",
   "permissions.inventory_adjustment": "Inventory Adjustment",
   "permissions.items": "Items",
-  "permissions.caontacts": "Contacts",
+  "permissions.contacts": "Contacts",
   "permissions.customers": "Customers",
   "permissions.vendors": "Vendors",
   "permissions.sales": "Sales",
