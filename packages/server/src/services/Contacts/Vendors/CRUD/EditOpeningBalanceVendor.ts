@@ -41,7 +41,7 @@ export class EditOpeningBalanceVendor {
 
     // Mutates the customer opening balance under unit-of-work.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onVendorOpeingBalanceChanging` event.
+      // Triggers `onVendorOpeningBalanceChanging` event.
       await this.eventPublisher.emitAsync(
         events.vendors.onOpeningBalanceChanging,
         {
@@ -55,7 +55,7 @@ export class EditOpeningBalanceVendor {
       const vendor = await Vendor.query().patchAndFetchById(vendorId, {
         ...openingBalanceEditDTO,
       });
-      // Triggers `onVendorOpeingBalanceChanged` event.
+      // Triggers `onVendorOpeningBalanceChanged` event.
       await this.eventPublisher.emitAsync(
         events.vendors.onOpeningBalanceChanged,
         {

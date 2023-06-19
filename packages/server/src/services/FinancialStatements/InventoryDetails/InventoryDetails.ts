@@ -278,7 +278,7 @@ export default class InventoryDetails extends FinancialSheet {
     | IInventoryDetailsClosing
   )[] {
     const transactions = this.getItemTransactions(item);
-    const openingValuation = this.getItemOpeingValuation(item);
+    const openingValuation = this.getItemOpeningValuation(item);
     const closingValuation = this.getItemClosingValuation(
       item,
       transactions,
@@ -308,7 +308,7 @@ export default class InventoryDetails extends FinancialSheet {
    * @param {IItem} item -
    * @returns {IInventoryDetailsOpening}
    */
-  private getItemOpeingValuation(item: IItem): IInventoryDetailsOpening {
+  private getItemOpeningValuation(item: IItem): IInventoryDetailsOpening {
     const openingBalance = this.openingBalanceTransactions.get(item.id);
     const quantity = defaultTo(get(openingBalance, 'quantity'), 0);
     const value = defaultTo(get(openingBalance, 'value'), 0);

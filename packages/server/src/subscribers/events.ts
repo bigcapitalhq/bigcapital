@@ -254,7 +254,7 @@ export default {
     onBulkDeleted: 'onBulkDeleted',
 
     onOpeningBalanceChanging: 'onCustomerOpeningBalanceChanging',
-    onOpeningBalanceChanged: 'onCustomerOpeingBalanceChanged',
+    onOpeningBalanceChanged: 'onCustomerOpeningBalanceChanged',
 
     onActivating: 'onCustomerActivating',
     onActivated: 'onCustomerActivated',
@@ -273,8 +273,8 @@ export default {
     onDeleted: 'onVendorDeleted',
     onDeleting: 'onVendorDeleting',
 
-    onOpeningBalanceChanging: 'onVendorOpeingBalanceChanging',
-    onOpeningBalanceChanged: 'onVendorOpeingBalanceChanged',
+    onOpeningBalanceChanging: 'onVendorOpeningBalanceChanging',
+    onOpeningBalanceChanged: 'onVendorOpeningBalanceChanged',
 
     onActivating: 'onVendorActivating',
     onActivated: 'onVendorActivated',

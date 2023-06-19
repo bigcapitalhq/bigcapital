@@ -210,7 +210,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
   }
 
   /**
-   * Retrieve mapped accounts with general ledger transactions and opeing/closing balance.
+   * Retrieve mapped accounts with general ledger transactions and opening/closing balance.
    * @param {IAccount[]} accounts -
    * @return {IGeneralLedgerSheetAccount[]}
    */
