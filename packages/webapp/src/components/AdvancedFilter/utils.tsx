@@ -45,7 +45,7 @@ export const getOptionsComparators = () => [
   { value: 'is_not', label: intl.get('is_not') },
 ];
 
-export const getNumberCampatators = () => [
+export const getNumberComparators = () => [
   { value: 'equal', label: intl.get('equals') },
   { value: 'not_equal', label: intl.get('not_equal') },
   { value: 'bigger_than', label: intl.get('bigger_than') },
