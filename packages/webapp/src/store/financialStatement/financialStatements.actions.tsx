@@ -31,7 +31,7 @@ export function toggleTrialBalanceSheetFilterDrawer(toggle) {
  * Toggles display of the journal sheet filter drawer.
  * @param {boolean} toggle
  */
-export function toggleJournalSheeetFilterDrawer(toggle) {
+export function toggleJournalSheetFilterDrawer(toggle) {
   return {
     type: `${t.JOURNAL}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
     payload: {

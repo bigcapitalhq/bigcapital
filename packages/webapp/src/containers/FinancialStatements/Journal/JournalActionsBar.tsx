@@ -20,7 +20,7 @@ import { compose } from '@/utils';
 import { useJournalSheetContext } from './JournalProvider';
 
 /**
- * Journal sheeet - Actions bar.
+ * Journal sheet - Actions bar.
  */
 function JournalActionsBar({
   // #withJournal

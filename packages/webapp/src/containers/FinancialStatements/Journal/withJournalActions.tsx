@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { toggleJournalSheeetFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
+import { toggleJournalSheetFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
   toggleJournalSheetFilter: (toggle) =>
-    dispatch(toggleJournalSheeetFilterDrawer(toggle)),
+    dispatch(toggleJournalSheetFilterDrawer(toggle)),
 });
 
 export default connect(null, mapDispatchToProps);
