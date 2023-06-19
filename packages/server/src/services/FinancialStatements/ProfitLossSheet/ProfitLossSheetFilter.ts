@@ -140,11 +140,11 @@ export const ProfitLossSheetFilter = (Base) =>
     };
 
     /**
-     * Supress nodes when total accounts range transactions is empty.
+     * Suppress nodes when total accounts range transactions is empty.
      * @param   {IProfitLossSheetNode[]} nodes
      * @returns {IProfitLossSheetNode[]}
      */
-    private supressNodesWhenRangeTransactionsEmpty = (
+    private suppressNodesWhenRangeTransactionsEmpty = (
       nodes: IProfitLossSheetNode[]
     ) => {
       return this.repository.totalAccountsLedger.isEmpty() ? [] : nodes;
@@ -159,7 +159,7 @@ export const ProfitLossSheetFilter = (Base) =>
       nodes: IProfitLossSheetNode[]
     ): IProfitLossSheetNode[] => {
       return R.compose(
-        this.supressNodesWhenRangeTransactionsEmpty,
+        this.suppressNodesWhenRangeTransactionsEmpty,
         R.when(() => this.query.noneZero, this.filterNoneZeroNodesCompose),
         R.when(
           () => this.query.noneTransactions,

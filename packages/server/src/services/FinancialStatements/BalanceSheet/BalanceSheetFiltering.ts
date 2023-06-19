@@ -139,11 +139,11 @@ export const BalanceSheetFiltering = (Base) =>
     };
 
     /**
-     * Supress nodes when accounts transactions ledger is empty.
+     * Suppress nodes when accounts transactions ledger is empty.
      * @param   {IBalanceSheetDataNode[]} nodes
      * @returns {IBalanceSheetDataNode[]}
      */
-    private supressNodesWhenAccountsTransactionsEmpty = (
+    private suppressNodesWhenAccountsTransactionsEmpty = (
       nodes: IBalanceSheetDataNode[]
     ): IBalanceSheetDataNode[] => {
       return this.repository.totalAccountsLedger.isEmpty() ? [] : nodes;
@@ -156,7 +156,7 @@ export const BalanceSheetFiltering = (Base) =>
      */
     protected reportFilterPlugin = (nodes: IBalanceSheetDataNode[]) => {
       return R.compose(
-        this.supressNodesWhenAccountsTransactionsEmpty,
+        this.suppressNodesWhenAccountsTransactionsEmpty,
         R.when(R.always(this.query.noneZero), this.filterNoneZeroNodesCompose),
         R.when(
           R.always(this.query.noneTransactions),
