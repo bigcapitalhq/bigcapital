@@ -10,7 +10,7 @@ const BranchFormDialogContent = React.lazy(
 );
 
 /**
- * Branch form form dialog.
+ * Branch form dialog.
  */
 function BranchFormDialog({
   dialogName,

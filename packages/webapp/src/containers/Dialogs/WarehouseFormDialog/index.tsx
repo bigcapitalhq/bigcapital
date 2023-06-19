@@ -10,7 +10,7 @@ const WarehouseFormDialogContent = React.lazy(
 );
 
 /**
- * Warehouse form form dialog.
+ * Warehouse form dialog.
  */
 function WarehouseFormDialog({
   dialogName,
