@@ -106,7 +106,7 @@ export default class SalesTransactionLockingGuardSubscriber {
     );
     bus.subscribe(
       events.creditNote.onRefundDeleting,
-      this.transactionLockingGuardOnCreditRefundDeleteing
+      this.transactionLockingGuardOnCreditRefundDeleting
     );
 
     // Sale Estimate
@@ -358,7 +358,7 @@ export default class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on payment deleting.
    * @param {IRefundCreditNoteDeletingPayload} paylaod -
    */
-  private transactionLockingGuardOnCreditRefundDeleteing = async ({
+  private transactionLockingGuardOnCreditRefundDeleting = async ({
     tenantId,
     oldRefundCredit,
   }: IRefundCreditNoteDeletingPayload) => {
