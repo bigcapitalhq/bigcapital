@@ -16,7 +16,7 @@ export const expenseChargeOption = [
     value: 'markup',
   },
   { name: intl.get('expenses.dialog.pass_cost_on'), value: 'pass_cost_on' },
-  { name: intl.get('expenses.dialog.custom_pirce'), value: 'custom_pirce' },
+  { name: intl.get('expenses.dialog.custom_price'), value: 'custom_price' },
   { name: intl.get('expenses.dialog.non_chargeable'), value: 'non_chargeable' },
 ];
 

@@ -16,7 +16,7 @@ function PercentageFormField() {
   );
 }
 
-function CustomPirceField() {
+function CustomPriceField() {
   return (
     <ControlGroup className={Classes.FILL}>
       <FFormGroup
@@ -47,8 +47,8 @@ export default function ExpenseFormChargeFields() {
       <Choose.When condition={values.expenseCharge === 'markup'}>
         <PercentageFormField />
       </Choose.When>
-      <Choose.When condition={values.expenseCharge === 'custom_pirce'}>
-        <CustomPirceField />
+      <Choose.When condition={values.expenseCharge === 'custom_price'}>
+        <CustomPriceField />
       </Choose.When>
     </Choose>
   );
