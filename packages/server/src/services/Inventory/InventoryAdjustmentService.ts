@@ -139,7 +139,7 @@ export default class InventoryAdjustmentService {
   /**
    * Creates a quick inventory adjustment for specific item.
    * @param {number} tenantId - Tenant id.
-   * @param {IQuickInventoryAdjustmentDTO} quickAdjustmentDTO - qucik adjustment DTO.
+   * @param {IQuickInventoryAdjustmentDTO} quickAdjustmentDTO - quick adjustment DTO.
    */
   public async createQuickAdjustment(
     tenantId: number,
