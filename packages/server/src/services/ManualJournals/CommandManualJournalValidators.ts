@@ -247,10 +247,10 @@ export class CommandManualJournalValidators {
     journalNumber: string
   ) => {
     // Retrieve the next manual journal number.
-    const autoIncrmenetEnabled =
+    const autoIncrementEnabled =
       this.autoIncrement.autoIncrementEnabled(tenantId);
 
-    if (!journalNumber || !autoIncrmenetEnabled) {
+    if (!journalNumber || !autoIncrementEnabled) {
       throw new ServiceError(ERRORS.MANUAL_JOURNAL_NO_REQUIRED);
     }
   };
