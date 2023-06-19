@@ -285,7 +285,7 @@ function AdvancedFilterDropdownConditions({ push, remove, replace, form }) {
   };
 
   return (
-    <div className="filter-dropdonw__conditions-wrap">
+    <div className="filter-dropdown__conditions-wrap">
       <div className={'filter-dropdown__conditions'}>
         {form.values.conditions.map((condition, index) => (
           <AdvancedFilterDropdownCondition
