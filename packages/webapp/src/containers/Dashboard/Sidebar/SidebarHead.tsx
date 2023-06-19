@@ -14,7 +14,7 @@ const POPOVER_MODIFIERS = {
 };
 
 /**
- * Sideabr head.
+ * Sidebar head.
  */
 function SidebarHeadJSX({
   // #withCurrentOrganization

@@ -430,12 +430,12 @@ export const SidebarMenu = [
   // # Cashflow
   // ---------------
   {
-    text: <T id={'siebar.cashflow'} />,
+    text: <T id={'sidebar.cashflow'} />,
     type: ISidebarMenuItemType.Overlay,
     overlayId: ISidebarMenuOverlayIds.Cashflow,
     children: [
       {
-        text: <T id={'siebar.cashflow'} />,
+        text: <T id={'sidebar.cashflow'} />,
         type: ISidebarMenuItemType.Group,
         children: [
           {

@@ -1026,7 +1026,7 @@ export const getDashboardRoutes = () => [
       () =>
         import('@/containers/CashFlow/CashFlowAccounts/CashFlowAccountsList'),
     ),
-    pageTitle: intl.get('siebar.cashflow.label_cash_and_bank_accounts'),
+    pageTitle: intl.get('sidebar.cashflow.label_cash_and_bank_accounts'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },
