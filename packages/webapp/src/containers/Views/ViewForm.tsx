@@ -198,7 +198,7 @@ function ViewForm({
     [],
   );
 
-  // Compatotors items.
+  // Competitors items.
   const comparatorsItems = useMemo(
     () => [
       { value: '', label: 'Comparator' },
