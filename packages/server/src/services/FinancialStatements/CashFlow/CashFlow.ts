@@ -347,7 +347,7 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Evauluate equaation string with the given scope table.
+   * Evauluate equation string with the given scope table.
    * @param  {string} equation -
    * @param  {{ [key: string]: number }} scope -
    * @return {number}
@@ -360,7 +360,7 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Retrieve the total section from the eqauation parser.
+   * Retrieve the total section from the equation parser.
    * @param   {ICashFlowSchemaTotalSection} sectionSchema
    * @param   {ICashFlowSchemaSection[]} accumulatedSections
    * @returns {ICashFlowStatementTotalSection}

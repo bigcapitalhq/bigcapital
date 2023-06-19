@@ -7,7 +7,7 @@ import { FinancialSheetStructure } from './FinancialSheetStructure';
 export const FinancialEvaluateEquation = (Base) =>
   class extends compose(FinancialSheetStructure)(Base) {
     /**
-     * Evauluate equaation string with the given scope table.
+     * Evauluate equation string with the given scope table.
      * @param {string} equation -
      * @param {{ [key: string]: number }} scope -
      * @return {number}
