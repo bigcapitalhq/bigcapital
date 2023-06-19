@@ -44,7 +44,7 @@ function ProjectDetailActionsBar({
       case 'project_task':
         openDialog('project-task-form', { projectId });
         break;
-      case 'invoincing':
+      case 'invoicing':
         openDialog('project-invoicing-form');
         break;
       case 'expense':
