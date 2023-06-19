@@ -805,7 +805,7 @@ export function getFilterableFieldsFromFields(fields) {
   return fields.filter((field) => field.filterable !== false);
 }
 
-export const RESORUCE_TYPE = {
+export const RESOURCE_TYPE = {
   ACCOUNTS: 'account',
   ITEMS: 'items',
 };

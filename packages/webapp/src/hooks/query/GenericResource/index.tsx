@@ -71,14 +71,14 @@ const transformPaymentReceives = (response) => ({
 });
 
 /**
- * Transformes customers to resoruce data.
+ * Transformes customers to resource data.
  */
 const transformCustomers = (response) => ({
   items: response.data.customers,
 });
 
 /**
- * Transformes customers to resoruce data.
+ * Transformes customers to resource data.
  */
 const transformVendors = (response) => ({
   items: response.data.vendors,
