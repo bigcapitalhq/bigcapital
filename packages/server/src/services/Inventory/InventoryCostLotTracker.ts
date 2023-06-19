@@ -79,7 +79,7 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
 
   /**
    * Fetched inventory transactions that has date from the starting date and
-   * fetches availiable IN LOTs transactions that has remaining bigger than zero.
+   * fetches available IN LOTs transactions that has remaining bigger than zero.
    * @private
    */
   private async fetchInvINTransactions() {
@@ -97,7 +97,7 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
         .orderBy('lot_number', (this.costMethod === 'LIFO') ? 'DESC' : 'ASC')
         .withGraphFetched('item');
 
-    const availiableINLots: IInventoryLotCost[] = 
+    const availableINLots: IInventoryLotCost[] = 
       await InventoryLotCostTracker.query()
         .modify('filterDateRange', null, this.startingDate)
         .orderBy('date', 'ASC')
@@ -107,7 +107,7 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
         .whereNot('remaining', 0);
 
     this.inTransactions = [
-      ...availiableINLots.map((trans) => ({ lotTransId: trans.id, ...trans })),
+      ...availableINLots.map((trans) => ({ lotTransId: trans.id, ...trans })),
       ...afterInvTransactions.map((trans) => ({ invTransId: trans.id, ...trans })),
     ];
   }
