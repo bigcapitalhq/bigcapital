@@ -17,7 +17,7 @@ import {
 import { useAuthMetaBoot } from './AuthMetaBoot';
 
 const initialValues = {
-  crediential: '',
+  credential: '',
   password: '',
   keepLoggedIn: false,
 };
@@ -30,7 +30,7 @@ export default function Login() {
 
   const handleSubmit = (values, { setSubmitting }) => {
     loginMutate({
-      crediential: values.crediential,
+      credential: values.credential,
       password: values.password,
     }).catch(
       ({

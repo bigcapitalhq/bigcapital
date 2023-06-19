@@ -22,7 +22,7 @@ import AuthInsider from '@/containers/Authentication/AuthInsider';
 import { useAuthMetaBoot } from './AuthMetaBoot';
 
 const initialValues = {
-  crediential: '',
+  credential: '',
 };
 
 /**
@@ -34,7 +34,7 @@ export default function SendResetPassword() {
 
   // Handle form submitting.
   const handleSubmit = (values, { setSubmitting }) => {
-    sendResetPasswordMutate({ email: values.crediential })
+    sendResetPasswordMutate({ email: values.credential })
       .then((response) => {
         AppToaster.show({
           message: intl.get('check_your_email_for_a_link_to_reset'),

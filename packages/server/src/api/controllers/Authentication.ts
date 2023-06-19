@@ -59,7 +59,7 @@ export default class AuthenticationController extends BaseController {
    */
   private get loginSchema(): ValidationChain[] {
     return [
-      check('crediential').exists().isEmail(),
+      check('credential').exists().isEmail(),
       check('password').exists().isLength({ min: 5 }),
     ];
   }
@@ -136,7 +136,7 @@ export default class AuthenticationController extends BaseController {
 
     try {
       const { token, user, tenant } = await this.authApplication.signIn(
-        userDTO.crediential,
+        userDTO.credential,
         userDTO.password
       );
       return res.status(200).send({ token, user, tenant });

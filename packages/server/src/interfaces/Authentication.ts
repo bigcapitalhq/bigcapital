@@ -11,7 +11,7 @@ export interface IRegisterDTO {
 }
 
 export interface ILoginDTO {
-  crediential: string;
+  credential: string;
   password: string;
 }
 

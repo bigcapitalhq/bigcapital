@@ -15,7 +15,7 @@ const REGISTER_ERRORS = {
 };
 
 export const LoginSchema = Yup.object().shape({
-  crediential: Yup.string().required().email().label(intl.get('email')),
+  credential: Yup.string().required().email().label(intl.get('email')),
   password: Yup.string().required().min(4).label(intl.get('password')),
 });
 
@@ -36,7 +36,7 @@ export const ResetPasswordSchema = Yup.object().shape({
 
 // Validation schema.
 export const SendResetPasswordSchema = Yup.object().shape({
-  crediential: Yup.string().required().email().label(intl.get('email')),
+  credential: Yup.string().required().email().label(intl.get('email')),
 });
 
 export const InviteAcceptSchema = Yup.object().shape({

@@ -12,18 +12,18 @@ export default class SystemUserRepository extends SystemRepository {
   }
 
   /**
-   * Finds system user by crediential.
-   * @param  {string} crediential - Phone number or email.
+   * Finds system user by credential.
+   * @param  {string} credential - Phone number or email.
    * @return {ISystemUser}
    * @return {Promise<ISystemUser>}
    */
-  findByCrediential(crediential: string): Promise<ISystemUser> {
-    const cacheKey = this.getCacheKey('findByCrediential', crediential);
+  findByCredential(credential: string): Promise<ISystemUser> {
+    const cacheKey = this.getCacheKey('findByCredential', credential);
 
     return this.cache.get(cacheKey, () => {
       return this.model.query()
-        .findOne('email', crediential)
-        .orWhere('phone_number', crediential);
+        .findOne('email', credential)
+        .orWhere('phone_number', credential);
     });
   }
 

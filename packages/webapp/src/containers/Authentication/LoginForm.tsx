@@ -32,8 +32,8 @@ export default function LoginForm({ isSubmitting }) {
 
   return (
     <Form>
-      <FFormGroup name={'crediential'} label={<T id={'email_address'} />}>
-        <FInputGroup name={'crediential'} large={true} />
+      <FFormGroup name={'credential'} label={<T id={'email_address'} />}>
+        <FInputGroup name={'credential'} large={true} />
       </FFormGroup>
 
       <FFormGroup name={'password'} label={<T id={'password'} />}>
