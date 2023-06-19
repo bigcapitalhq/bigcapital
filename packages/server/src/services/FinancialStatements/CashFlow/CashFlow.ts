@@ -362,14 +362,14 @@ export default class CashFlowStatement extends compose(
   /**
    * Retrieve the total section from the eqauation parser.
    * @param   {ICashFlowSchemaTotalSection} sectionSchema
-   * @param   {ICashFlowSchemaSection[]} accumlatedSections
+   * @param   {ICashFlowSchemaSection[]} accumulatedSections
    * @returns {ICashFlowStatementTotalSection}
    */
   private totalEquationSectionParser = (
-    accumlatedSections: ICashFlowSchemaSection[],
+    accumulatedSections: ICashFlowSchemaSection[],
     sectionSchema: ICashFlowSchemaTotalSection
   ): ICashFlowStatementTotalSection => {
-    const mappedSectionsById = this.transformSectionsToMap(accumlatedSections);
+    const mappedSectionsById = this.transformSectionsToMap(accumulatedSections);
     const nodesTotalById = this.sectionsMapToTotal(mappedSectionsById);
 
     const total = this.evaluateEquation(sectionSchema.equation, nodesTotalById);
@@ -524,7 +524,7 @@ export default class CashFlowStatement extends compose(
    * @param   {ICashFlowSchemaSection | ICashFlowStatementSection} section
    * @param   {number} key
    * @param   {ICashFlowSchemaSection[]} parentValue
-   * @param   {(ICashFlowSchemaSection | ICashFlowStatementSection)[]} accumlatedSections
+   * @param   {(ICashFlowSchemaSection | ICashFlowStatementSection)[]} accumulatedSections
    * @returns {ICashFlowSchemaSection}
    */
   private schemaSectionTotalParser = (
@@ -532,13 +532,13 @@ export default class CashFlowStatement extends compose(
     key: number,
     parentValue: ICashFlowSchemaSection[],
     context,
-    accumlatedSections: (ICashFlowSchemaSection | ICashFlowStatementSection)[]
+    accumulatedSections: (ICashFlowSchemaSection | ICashFlowStatementSection)[]
   ): ICashFlowSchemaSection | ICashFlowStatementSection => {
     return R.compose(
       // Total equation section.
       R.when(
         this.isSchemaSectionType(ICashFlowStatementSectionType.TOTAL),
-        R.curry(this.totalEquationSectionParser)(accumlatedSections)
+        R.curry(this.totalEquationSectionParser)(accumulatedSections)
       )
     )(section);
   };
