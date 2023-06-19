@@ -47,7 +47,7 @@ import { MoneyInOutTransactionNoField } from '../../_components';
 /**
  * Other expense form fields.
  */
-export default function OtherExpnseFormFields() {
+export default function OtherExpenseFormFields() {
   // Money in dialog context.
   const { accounts, account, branches } = useMoneyOutDialogContext();
 

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Form } from 'formik';
 import ProjectExpenseFormFields from './ProjectExpenseFormFields';
-import ProjectExpneseFormFloatingActions from './ProjectExpneseFormFloatingActions';
+import ProjectExpenseFormFloatingActions from './ProjectExpenseFormFloatingActions';
 
 /**
  * Expense form content.
@@ -12,7 +12,7 @@ export default function ProjectExpenseFormContent() {
   return (
     <Form>
       <ProjectExpenseFormFields />
-      <ProjectExpneseFormFloatingActions />
+      <ProjectExpenseFormFloatingActions />
     </Form>
   );
 }

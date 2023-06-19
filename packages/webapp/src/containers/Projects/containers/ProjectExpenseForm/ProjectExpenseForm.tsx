@@ -14,7 +14,7 @@ import { compose } from '@/utils';
 const defaultInitialValues = {
   expenseName: '',
   estimatedExpense: '',
-  expemseDate: moment(new Date()).format('YYYY-MM-DD'),
+  expenseDate: moment(new Date()).format('YYYY-MM-DD'),
   expenseUnitPrice: '',
   expenseQuantity: 1,
   expenseCharge: '% markup',

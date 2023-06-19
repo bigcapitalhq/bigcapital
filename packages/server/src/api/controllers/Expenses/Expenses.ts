@@ -308,7 +308,7 @@ export class ExpensesController extends BaseController {
   }
 
   /**
-   * Retrieve expneses list.
+   * Retrieve expenses list.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next

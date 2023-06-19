@@ -41,7 +41,7 @@ export const ACCOUNT_ROOT_TYPE = {
   ASSET: 'asset',
   LIABILITY: 'liability',
   EQUITY: 'equity',
-  EXPENSE: 'expene',
+  EXPENSE: 'expense',
   INCOME: 'income',
 };
 

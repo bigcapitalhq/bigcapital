@@ -7,7 +7,7 @@ import { useProjectExpenseFormContext } from './ProjectExpenseFormProvider';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-function ProjectExpneseFormFloatingActions({
+function ProjectExpenseFormFloatingActions({
   // #withDialogActions
   closeDialog,
 }) {
@@ -41,4 +41,4 @@ function ProjectExpneseFormFloatingActions({
   );
 }
 
-export default compose(withDialogActions)(ProjectExpneseFormFloatingActions);
+export default compose(withDialogActions)(ProjectExpenseFormFloatingActions);

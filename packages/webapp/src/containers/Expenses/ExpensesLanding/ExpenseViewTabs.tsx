@@ -11,7 +11,7 @@ import withExpensesActions from './withExpensesActions';
 import { compose, transfromViewsToTabs } from '@/utils';
 
 /**
- * Expesne views tabs.
+ * Expense views tabs.
  */
 function ExpenseViewTabs({
   // #withExpensesActions

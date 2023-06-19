@@ -9,7 +9,7 @@ const Schema = Yup.object().shape({
   estimatedExpense: Yup.number().label(
     intl.get('project_expense.schema.label.estimated_expense'),
   ),
-  expemseDate: Yup.date(),
+  expenseDate: Yup.date(),
   expenseQuantity: Yup.number().label(
     intl.get('project_expense.schema.label.quantity'),
   ),
