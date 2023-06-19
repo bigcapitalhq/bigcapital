@@ -1,6 +1,6 @@
 const gulp = require('gulp');
 const sass = require('sass');
-const gulpSass = require('gulp-sass')(sass); // Gulp pluign for Sass compilation.
+const gulpSass = require('gulp-sass')(sass); // Gulp plugin for Sass compilation.
 const mergeStream = require('merge-stream');
 
 const rename = require('gulp-rename'); // Renames files E.g. style.css -> style.min.css
