@@ -13,7 +13,7 @@ export default class SendInviteUsersMailMessage {
    * @param invite
    */
   async sendInviteMail(tenantId: number, fromUser: ISystemUser, invite: any) {
-    // Retreive tenant orgnaization name.
+    // Retreive tenant organization name.
     const tenant = await Tenant.query()
       .findById(tenantId)
       .withGraphFetched('metadata');

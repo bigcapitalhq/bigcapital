@@ -7,7 +7,7 @@ export class MutateBaseCurrencyAccounts {
   tenancy: HasTenancyService;
 
   /**
-   * Mutates the all accounts or the organziation.
+   * Mutates the all accounts or the organization.
    * @param {number} tenantId
    * @param {string} currencyCode
    */
