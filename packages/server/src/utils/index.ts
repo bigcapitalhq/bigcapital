@@ -274,7 +274,7 @@ const formatNumber = (
   }
 ) => {
   const formattedSymbol = getCurrencySign(currencyCode);
-  const negForamt = getNegativeFormat(negativeFormat);
+  const negFormat = getNegativeFormat(negativeFormat);
   const format = '%s%v';
 
   let formattedBalance = parseFloat(balance);
@@ -290,7 +290,7 @@ const formatNumber = (
     decimal,
     {
       pos: format,
-      neg: negForamt,
+      neg: negFormat,
       zero: excerptZero ? zeroSign : format,
     }
   );
