@@ -3,7 +3,7 @@ import { formatNumber } from 'utils';
 
 export class RefundVendorCreditTransformer extends Transformer {
   /**
-   * Includeded attributes.
+   * Included attributes.
    * @returns {string[]}
    */
   public includeAttributes = (): string[] => {

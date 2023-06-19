@@ -9,7 +9,7 @@ export class Transformer {
   public options: Record<string, any>;
 
   /**
-   * Includeded attributes.
+   * Included attributes.
    * @returns {string[]}
    */
   public includeAttributes = (): string[] => {
