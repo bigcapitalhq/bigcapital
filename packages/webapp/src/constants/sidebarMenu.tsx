@@ -263,8 +263,8 @@ export const SidebarMenu = [
             type: ISidebarMenuItemType.Link,
           },
           {
-            text: <T id={'payment_mades'} />,
-            href: '/payment-mades',
+            text: <T id={'payments_made'} />,
+            href: '/payments-made',
             type: ISidebarMenuItemType.Link,
             permission: {
               subject: AbilitySubject.PaymentMade,
@@ -297,7 +297,7 @@ export const SidebarMenu = [
           },
           {
             text: <T id={'sidebar.new_payment_made'} />,
-            href: '/payment-mades/new',
+            href: '/payments-made/new',
             type: ISidebarMenuItemType.Link,
             permission: {
               subject: AbilitySubject.PaymentMade,

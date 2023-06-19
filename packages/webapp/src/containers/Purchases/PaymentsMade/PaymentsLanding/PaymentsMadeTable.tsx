@@ -11,7 +11,7 @@ import {
   TableSkeletonHeader,
 } from '@/components';
 
-import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
+import PaymentsMadeEmptyStatus from './PaymentsMadeEmptyStatus';
 
 import withPaymentMade from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
@@ -20,20 +20,20 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withSettings from '@/containers/Settings/withSettings';
 
-import { usePaymentMadesTableColumns, ActionsMenu } from './components';
-import { usePaymentMadesListContext } from './PaymentMadesListProvider';
+import { usePaymentsMadeTableColumns, ActionsMenu } from './components';
+import { usePaymentsMadeListContext } from './PaymentsMadeListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Payment made datatable transactions.
  */
-function PaymentMadesTable({
+function PaymentsMadeTable({
   // #withPaymentMadeActions
-  setPaymentMadesTableState,
+  setPaymentsMadeTableState,
 
   // #withPaymentMade
-  paymentMadesTableState,
+  paymentsMadeTableState,
 
   // #withAlerts
   openAlert,
@@ -42,26 +42,26 @@ function PaymentMadesTable({
   openDrawer,
 
   // #withSettings
-  paymentMadesTableSize,
+  paymentsMadeTableSize,
 }) {
-  // Payment mades table columns.
-  const columns = usePaymentMadesTableColumns();
+  // Payments made table columns.
+  const columns = usePaymentsMadeTableColumns();
 
-  // Payment mades list context.
+  // Payments made list context.
   const {
-    paymentMades,
+    paymentsMade,
     pagination,
     isEmptyStatus,
     isPaymentsLoading,
     isPaymentsFetching,
-  } = usePaymentMadesListContext();
+  } = usePaymentsMadeListContext();
 
   // History context.
   const history = useHistory();
 
   // Handles the edit payment made action.
   const handleEditPaymentMade = (paymentMade) => {
-    history.push(`/payment-mades/${paymentMade.id}/edit`);
+    history.push(`/payments-made/${paymentMade.id}/edit`);
   };
 
   // Handles the delete payment made action.
@@ -83,26 +83,26 @@ function PaymentMadesTable({
 
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.PAYMENT_MADES);
+    useMemorizedColumnsWidths(TABLES.PAYMENTS_MADE);
 
   // Handle datatable fetch data once the table state change.
   const handleDataTableFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
-      setPaymentMadesTableState({ pageIndex, pageSize, sortBy });
+      setPaymentsMadeTableState({ pageIndex, pageSize, sortBy });
     },
-    [setPaymentMadesTableState],
+    [setPaymentsMadeTableState],
   );
 
   // Display empty status instead of the table.
   if (isEmptyStatus) {
-    return <PaymentMadesEmptyStatus />;
+    return <PaymentsMadeEmptyStatus />;
   }
 
   return (
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={paymentMades}
+        data={paymentsMade}
         onFetchData={handleDataTableFetchData}
         loading={isPaymentsLoading}
         headerLoading={isPaymentsLoading}
@@ -121,7 +121,7 @@ function PaymentMadesTable({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
-        size={paymentMadesTableSize}
+        size={paymentsMadeTableSize}
         payload={{
           onEdit: handleEditPaymentMade,
           onDelete: handleDeletePaymentMade,
@@ -134,11 +134,11 @@ function PaymentMadesTable({
 
 export default compose(
   withPaymentMadeActions,
-  withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
+  withPaymentMade(({ paymentsMadeTableState }) => ({ paymentsMadeTableState })),
   withAlertsActions,
   withDrawerActions,
   withCurrentOrganization(),
   withSettings(({ billPaymentSettings }) => ({
-    paymentMadesTableSize: billPaymentSettings?.tableSize,
+    paymentsMadeTableSize: billPaymentSettings?.tableSize,
   })),
-)(PaymentMadesTable);
+)(PaymentsMadeTable);

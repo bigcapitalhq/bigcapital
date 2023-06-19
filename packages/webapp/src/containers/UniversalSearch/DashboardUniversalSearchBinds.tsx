@@ -4,7 +4,7 @@ import { universalSearchReceiptBind } from '../Sales/Receipts/ReceiptUniversalSe
 import { universalSearchBillBind } from '../Purchases/Bills/BillUniversalSearch';
 import { universalSearchEstimateBind } from '../Sales/Estimates/EstimatesLanding/EstimateUniversalSearch';
 import { universalSearchPaymentReceiveBind } from '../Sales/PaymentReceives/PaymentReceiveUniversalSearch';
-import { universalSearchPaymentMadeBind } from '../Purchases/PaymentMades/PaymentMadeUniversalSearch';
+import { universalSearchPaymentMadeBind } from '../Purchases/PaymentsMade/PaymentMadeUniversalSearch';
 import { universalSearchItemBind } from '../Items/ItemsUniversalSearch';
 import { universalSearchCustomerBind } from '../Customers/CustomersUniversalSearch';
 import { universalSearchJournalBind } from '../Accounting/ManualJournalUniversalSearch';

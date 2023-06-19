@@ -5,19 +5,19 @@ import { isEmpty } from 'lodash';
 import { DashboardInsider } from '@/components/Dashboard';
 import {
   useResourceViews,
-  usePaymentMades,
+  usePaymentsMade,
   useResourceMeta,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 
-const PaymentMadesListContext = createContext();
+const PaymentsMadeListContext = createContext();
 
 /**
  * Accounts chart data provider.
  */
-function PaymentMadesListProvider({ query, tableStateChanged, ...props }) {
+function PaymentsMadeListProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: paymentMadesViews, isLoading: isViewsLoading } =
+  const { data: paymentsMadeViews, isLoading: isViewsLoading } =
     useResourceViews('bill_payments');
 
   // Fetch the accounts resource fields.
@@ -29,21 +29,21 @@ function PaymentMadesListProvider({ query, tableStateChanged, ...props }) {
 
   // Fetch accounts list according to the given custom view id.
   const {
-    data: { paymentMades, pagination, filterMeta },
+    data: { paymentsMade, pagination, filterMeta },
     isLoading: isPaymentsLoading,
     isFetching: isPaymentsFetching,
-  } = usePaymentMades(query, { keepPreviousData: true });
+  } = usePaymentsMade(query, { keepPreviousData: true });
 
   // Determines the datatable empty status.
   const isEmptyStatus =
-    isEmpty(paymentMades) && !isPaymentsLoading && !tableStateChanged;
+    isEmpty(paymentsMade) && !isPaymentsLoading && !tableStateChanged;
 
   // Provider payload.
   const provider = {
-    paymentMades,
+    paymentsMade,
     pagination,
     filterMeta,
-    paymentMadesViews,
+    paymentsMadeViews,
 
     fields: getFieldsFromResourceMeta(resourceMeta.fields),
     resourceMeta,
@@ -59,14 +59,14 @@ function PaymentMadesListProvider({ query, tableStateChanged, ...props }) {
   return (
     <DashboardInsider
       loading={isViewsLoading || isResourceMetaLoading}
-      name={'payment-mades-list'}
+      name={'payments-made-list'}
     >
-      <PaymentMadesListContext.Provider value={provider} {...props} />
+      <PaymentsMadeListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
 }
 
-const usePaymentMadesListContext = () =>
-  React.useContext(PaymentMadesListContext);
+const usePaymentsMadeListContext = () =>
+  React.useContext(PaymentsMadeListContext);
 
-export { PaymentMadesListProvider, usePaymentMadesListContext };
+export { PaymentsMadeListProvider, usePaymentsMadeListContext };

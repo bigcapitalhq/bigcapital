@@ -37,7 +37,7 @@ export default class PurchasesTransactionLockingGuardSubscriber {
       events.bill.onDeleting,
       this.transactionLockingGuardOnBillDeleting
     );
-    // Payment mades.
+    // Payments made.
     bus.subscribe(
       events.billPayment.onCreating,
       this.transactionLockingGuardOnPaymentCreating
@@ -75,7 +75,7 @@ export default class PurchasesTransactionLockingGuardSubscriber {
 
   /**
    * ---------------------------------------------
-   * PAYMENT MADES.
+   * PAYMENTS MADE.
    * ---------------------------------------------
    */
 

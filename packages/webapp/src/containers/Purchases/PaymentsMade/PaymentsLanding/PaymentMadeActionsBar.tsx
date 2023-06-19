@@ -28,8 +28,8 @@ import withPaymentMadeActions from './withPaymentMadeActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
-import { usePaymentMadesListContext } from './PaymentMadesListProvider';
-import { useRefreshPaymentMades } from '@/hooks/query/paymentMades';
+import { usePaymentsMadeListContext } from './PaymentsMadeListProvider';
+import { useRefreshPaymentsMade } from '@/hooks/query/paymentsMade';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
@@ -38,14 +38,14 @@ import { compose } from '@/utils';
  * Payment made actions bar.
  */
 function PaymentMadeActionsBar({
-  // #withPaymentMadesActions
-  setPaymentMadesTableState,
+  // #withPaymentsMadeActions
+  setPaymentsMadeTableState,
 
-  // #withPaymentMades
-  paymentMadesFilterConditions,
+  // #withPaymentsMade
+  paymentsMadeFilterConditions,
 
   // #withSettings
-  paymentMadesTableSize,
+  paymentsMadeTableSize,
 
   // #withSettingsActions
   addSetting,
@@ -53,19 +53,19 @@ function PaymentMadeActionsBar({
   const history = useHistory();
 
   // Payment receives list context.
-  const { paymentMadesViews, fields } = usePaymentMadesListContext();
+  const { paymentsMadeViews, fields } = usePaymentsMadeListContext();
 
   // Payment receive refresh action.
-  const { refresh } = useRefreshPaymentMades();
+  const { refresh } = useRefreshPaymentsMade();
 
   // Handle new payment made button click.
   const handleClickNewPaymentMade = () => {
-    history.push('/payment-mades/new');
+    history.push('/payments-made/new');
   };
 
   // Handle tab changing.
   const handleTabChange = (viewSlug) => {
-    setPaymentMadesTableState({ viewSlug });
+    setPaymentsMadeTableState({ viewSlug });
   };
 
   // Handle click a refresh payment receives.
@@ -83,7 +83,7 @@ function PaymentMadeActionsBar({
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'bill_payments'}
-          views={paymentMadesViews}
+          views={paymentsMadeViews}
           onChange={handleTabChange}
         />
         <NavbarDivider />
@@ -97,16 +97,16 @@ function PaymentMadeActionsBar({
         </Can>
         <AdvancedFilterPopover
           advancedFilterProps={{
-            conditions: paymentMadesFilterConditions,
+            conditions: paymentsMadeFilterConditions,
             defaultFieldKey: 'payment_number',
             fields: fields,
             onFilterChange: (filterConditions) => {
-              setPaymentMadesTableState({ filterRoles: filterConditions });
+              setPaymentsMadeTableState({ filterRoles: filterConditions });
             },
           }}
         >
           <DashboardFilterButton
-            conditionsCount={paymentMadesFilterConditions.length}
+            conditionsCount={paymentsMadeFilterConditions.length}
           />
         </AdvancedFilterPopover>
 
@@ -137,7 +137,7 @@ function PaymentMadeActionsBar({
 
         <NavbarDivider />
         <DashboardRowsHeightButton
-          initialValue={paymentMadesTableSize}
+          initialValue={paymentsMadeTableSize}
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
@@ -156,10 +156,10 @@ function PaymentMadeActionsBar({
 export default compose(
   withPaymentMadeActions,
   withSettingsActions,
-  withPaymentMade(({ paymentMadesTableState }) => ({
-    paymentMadesFilterConditions: paymentMadesTableState.filterRoles,
+  withPaymentMade(({ paymentsMadeTableState }) => ({
+    paymentsMadeFilterConditions: paymentsMadeTableState.filterRoles,
   })),
   withSettings(({ billPaymentSettings }) => ({
-    paymentMadesTableSize: billPaymentSettings?.tableSize,
+    paymentsMadeTableSize: billPaymentSettings?.tableSize,
   })),
 )(PaymentMadeActionsBar);

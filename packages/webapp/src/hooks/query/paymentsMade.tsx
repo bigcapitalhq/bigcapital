@@ -6,8 +6,8 @@ import useApiRequest from '../useRequest';
 import t from './types';
 
 const commonInvalidateQueries = (client) => {
-  // Invalidate payment mades.
-  client.invalidateQueries(t.PAYMENT_MADES);
+  // Invalidate payments made.
+  client.invalidateQueries(t.PAYMENTS_MADE);
 
   // Invalidate payment made new entries.
   client.invalidateQueries(t.PAYMENT_MADE_NEW_ENTRIES);
@@ -37,20 +37,20 @@ const commonInvalidateQueries = (client) => {
 };
 
 /**
- * Retrieve payment mades list.
+ * Retrieve payments made list.
  */
-export function usePaymentMades(query, props) {
+export function usePaymentsMade(query, props) {
   return useRequestQuery(
-    [t.PAYMENT_MADES, query],
+    [t.PAYMENTS_MADE, query],
     { url: 'purchases/bill_payments', params: query },
     {
       select: (res) => ({
-        paymentMades: res.data.bill_payments,
+        paymentsMade: res.data.bill_payments,
         pagination: transformPagination(res.data.pagination),
         filterMeta: res.data.filter_meta,
       }),
       defaultData: {
-        paymentMades: [],
+        paymentsMade: [],
         pagination: {},
         filterMeta: {},
       },
@@ -166,12 +166,12 @@ export function usePaymentMadeNewPageEntries(vendorId, props) {
   );
 }
 
-export function useRefreshPaymentMades() {
+export function useRefreshPaymentsMade() {
   const queryClient = useQueryClient();
 
   return {
     refresh: () => {
-      queryClient.invalidateQueries(t.PAYMENT_MADES);
+      queryClient.invalidateQueries(t.PAYMENTS_MADE);
     },
   };
 }

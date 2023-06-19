@@ -77,7 +77,7 @@ const paymentMadeToSearch = (payment) => ({
  */
 export const universalSearchPaymentMadeBind = () => ({
   resourceType: RESOURCES_TYPES.PAYMENT_MADE,
-  optionItemLabel: intl.get('payment_mades'),
+  optionItemLabel: intl.get('payments_made'),
   selectItemAction: PaymentMadeUniversalSearchSelect,
   itemRenderer: PaymentMadeUniversalSearchItem,
   itemSelect: paymentMadeToSearch,

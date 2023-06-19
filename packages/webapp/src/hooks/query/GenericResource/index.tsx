@@ -84,7 +84,7 @@ const transformVendors = (response) => ({
   items: response.data.vendors,
 });
 
-const transformPaymentMades = (response) => ({
+const transformPaymentsMade = (response) => ({
   items: response.data.bill_payments,
 });
 
@@ -127,7 +127,7 @@ const transformResourceData = (type) => (response) => {
     [RESOURCES_TYPES.RECEIPT]: transformSaleReceipts,
     [RESOURCES_TYPES.ITEM]: transformItems,
     [RESOURCES_TYPES.PAYMENT_RECEIVE]: transformPaymentReceives,
-    [RESOURCES_TYPES.PAYMENT_MADE]: transformPaymentMades,
+    [RESOURCES_TYPES.PAYMENT_MADE]: transformPaymentsMade,
     [RESOURCES_TYPES.CUSTOMER]: transformCustomers,
     [RESOURCES_TYPES.VENDOR]: transformVendors,
     [RESOURCES_TYPES.BILL]: transformBills,

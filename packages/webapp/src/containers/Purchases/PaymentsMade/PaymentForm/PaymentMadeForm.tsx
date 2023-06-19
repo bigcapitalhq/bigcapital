@@ -105,7 +105,7 @@ function PaymentMadeForm({
       });
       setSubmitting(false);
 
-      submitPayload.redirect && history.push('/payment-mades');
+      submitPayload.redirect && history.push('/payments-made');
       submitPayload.resetForm && resetForm();
     };
 

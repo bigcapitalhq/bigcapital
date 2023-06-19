@@ -24,7 +24,7 @@ import receipts from './receipts/receipts.type';
 import bills from './Bills/bills.type';
 import vendors from './vendors/vendors.types';
 import paymentReceives from './PaymentReceives/paymentReceives.type';
-import paymentMades from './PaymentMades/paymentMades.type';
+import paymentsMade from './PaymentsMade/paymentsMade.type';
 import organizations from './organizations/organizations.types';
 import subscription from './subscription/subscription.types';
 import inventoryAdjustments from './inventoryAdjustments/inventoryAdjustment.type';
@@ -60,7 +60,7 @@ export default {
   ...receipts,
   ...bills,
   ...paymentReceives,
-  ...paymentMades,
+  ...paymentsMade,
   ...organizations,
   ...subscription,
   ...inventoryAdjustments,

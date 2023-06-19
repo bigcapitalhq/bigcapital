@@ -109,9 +109,9 @@ export default class Branch extends TenantModel {
       },
 
       /**
-       * Branch may belongs to associated payment mades.
+       * Branch may belongs to associated payments made.
        */
-      paymentMades: {
+      paymentsMade: {
         relation: Model.HasManyRelation,
         modelClass: PaymentMade.default,
         join: {

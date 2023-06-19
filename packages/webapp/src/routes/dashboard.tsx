@@ -961,11 +961,11 @@ export const getDashboardRoutes = () => [
   },
   // Payment modes.
   {
-    path: `/payment-mades/:id/edit`,
+    path: `/payments-made/:id/edit`,
     component: lazy(
       () =>
         import(
-          '@/containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
+          '@/containers/Purchases/PaymentsMade/PaymentForm/PaymentMadeFormPage'
         ),
     ),
     name: 'payment-made-edit',
@@ -977,11 +977,11 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-mades/new`,
+    path: `/payments-made/new`,
     component: lazy(
       () =>
         import(
-          '@/containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
+          '@/containers/Purchases/PaymentsMade/PaymentForm/PaymentMadeFormPage'
         ),
     ),
     name: 'payment-made-new',
@@ -993,11 +993,11 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-mades`,
+    path: `/payments-made`,
     component: lazy(
       () =>
         import(
-          '@/containers/Purchases/PaymentMades/PaymentsLanding/PaymentMadeList'
+          '@/containers/Purchases/PaymentsMade/PaymentsLanding/PaymentMadeList'
         ),
     ),
     breadcrumb: intl.get('payment_made_list'),

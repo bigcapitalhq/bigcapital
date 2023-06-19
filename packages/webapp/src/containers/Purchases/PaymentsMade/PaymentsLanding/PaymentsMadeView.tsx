@@ -10,9 +10,9 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 /**
- * Payment mades view page.
+ * Payments made view page.
  */
-function PaymentMadesViewPage({
+function PaymentsMadeViewPage({
   // #withAlertActions
   openAlert,
 }) {
@@ -20,7 +20,7 @@ function PaymentMadesViewPage({
     <Switch>
       <Route
         exact={true}
-        path={['/payment-mades/:custom_view_id/custom_view', '/payment-mades']}
+        path={['/payments-made/:custom_view_id/custom_view', '/payments-made']}
       >
         
         {/* <PaymentMadeDataTable
@@ -36,4 +36,4 @@ function PaymentMadesViewPage({
 export default compose(
   withAlertsActions,
   withDialogActions,
-)(PaymentMadesViewPage);
+)(PaymentsMadeViewPage);

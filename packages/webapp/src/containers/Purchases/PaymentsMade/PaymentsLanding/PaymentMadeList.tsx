@@ -4,53 +4,53 @@ import React from 'react';
 import '@/style/pages/PaymentMade/List.scss';
 
 import { DashboardPageContent } from '@/components';
-import { PaymentMadesListProvider } from './PaymentMadesListProvider';
+import { PaymentsMadeListProvider } from './PaymentsMadeListProvider';
 import PaymentMadeActionsBar from './PaymentMadeActionsBar';
-import PaymentMadesTable from './PaymentMadesTable';
+import PaymentsMadeTable from './PaymentsMadeTable';
 import PaymentMadeViewTabs from './PaymentMadeViewTabs';
 
-import withPaymentMades from './withPaymentMade';
+import withPaymentsMade from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
 
 import { compose, transformTableStateToQuery } from '@/utils';
 
 /**
- * Payment mades list.
+ * Payments made list.
  */
 function PaymentMadeList({
-  // #withPaymentMades
-  paymentMadesTableState,
+  // #withPaymentsMade
+  paymentsMadeTableState,
   paymentsTableStateChanged,
 
   // #withPaymentMadeActions
-  resetPaymentMadesTableState,
+  resetPaymentsMadeTableState,
 }) {
   // Resets the invoices table state once the page unmount.
   React.useEffect(
     () => () => {
-      resetPaymentMadesTableState();
+      resetPaymentsMadeTableState();
     },
-    [resetPaymentMadesTableState],
+    [resetPaymentsMadeTableState],
   );
 
   return (
-    <PaymentMadesListProvider
-      query={transformTableStateToQuery(paymentMadesTableState)}
+    <PaymentsMadeListProvider
+      query={transformTableStateToQuery(paymentsMadeTableState)}
       tableStateChanged={paymentsTableStateChanged}
     >
       <PaymentMadeActionsBar />
 
       <DashboardPageContent>
         <PaymentMadeViewTabs />
-        <PaymentMadesTable />
+        <PaymentsMadeTable />
       </DashboardPageContent>
-    </PaymentMadesListProvider>
+    </PaymentsMadeListProvider>
   );
 }
 
 export default compose(
-  withPaymentMades(({ paymentMadesTableState, paymentsTableStateChanged }) => ({
-    paymentMadesTableState,
+  withPaymentsMade(({ paymentsMadeTableState, paymentsTableStateChanged }) => ({
+    paymentsMadeTableState,
     paymentsTableStateChanged,
   })),
   withPaymentMadeActions,

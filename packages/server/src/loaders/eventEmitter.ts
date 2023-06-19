@@ -3,7 +3,7 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import ItemSubscriber from '@/subscribers/Items/ItemSubscriber';
 import InventoryAdjustmentsSubscriber from '@/subscribers/Inventory/InventoryAdjustment';
 import BillWriteInventoryTransactionsSubscriber from '@/subscribers/Bills/WriteInventoryTransactions';
-import PaymentSyncBillBalance from '@/subscribers/PaymentMades/PaymentSyncBillBalance';
+import PaymentSyncBillBalance from '@/subscribers/PaymentsMade/PaymentSyncBillBalance';
 import SaleReceiptInventoryTransactionsSubscriber from '@/subscribers/SaleReceipt/WriteInventoryTransactions';
 import SaleInvoiceWriteInventoryTransactions from '@/subscribers/SaleInvoices/WriteInventoryTransactions';
 import SaleInvoiceWriteGLEntriesSubscriber from '@/subscribers/SaleInvoices/WriteJournalEntries';

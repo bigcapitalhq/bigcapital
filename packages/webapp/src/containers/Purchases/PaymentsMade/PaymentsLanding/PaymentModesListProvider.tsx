@@ -4,15 +4,15 @@ import { DashboardInsider } from '@/components/Dashboard';
 import {
   useResourceViews,
   useResourceFields,
-  usePaymentMades,
+  usePaymentsMade,
 } from '@/hooks/query';
 
-const PaymentMadesContext = createContext();
+const PaymentsMadeContext = createContext();
 
 /**
  * Accounts chart data provider.
  */
-function PaymentMadesProvider({ query, ...props }) {
+function PaymentsMadeProvider({ query, ...props }) {
   // Fetch accounts resource views and fields.
   const { data: paymentsViews, isLoading: isViewsLoading } =
     useResourceViews('bill_payments');
@@ -23,13 +23,13 @@ function PaymentMadesProvider({ query, ...props }) {
 
   // Fetch accounts list according to the given custom view id.
   const {
-    data: { paymentMades, pagination },
+    data: { paymentsMade, pagination },
     isLoading: isPaymentsLoading,
-  } = usePaymentMades(query);
+  } = usePaymentsMade(query);
 
   // Provider payload.
   const provider = {
-    paymentMades,
+    paymentsMade,
     pagination,
     paymentsFields,
     paymentsViews,
@@ -44,11 +44,11 @@ function PaymentMadesProvider({ query, ...props }) {
       loading={isViewsLoading || isFieldsLoading}
       name={'payment_made'}
     >
-      <PaymentMadesContext.Provider value={provider} {...props} />
+      <PaymentsMadeContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
 }
 
-const usePaymentMadesContext = () => React.useContext(PaymentMadesContext);
+const usePaymentsMadeContext = () => React.useContext(PaymentsMadeContext);
 
-export { PaymentMadesProvider, usePaymentMadesContext };
+export { PaymentsMadeProvider, usePaymentsMadeContext };

@@ -1,17 +1,17 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
 import {
-  getPaymentMadesTableStateFactory,
+  getPaymentsMadeTableStateFactory,
   paymentsTableStateChangedFactory,
-} from '@/store/PaymentMades/paymentMades.selector';
+} from '@/store/PaymentsMade/paymentsMade.selector';
 
 export default (mapState) => {
-  const getPaymentMadesTableState = getPaymentMadesTableStateFactory();
+  const getPaymentsMadeTableState = getPaymentsMadeTableStateFactory();
   const paymentsTableStateChanged = paymentsTableStateChangedFactory();
 
   const mapStateToProps = (state, props) => {
     const mapped = {
-      paymentMadesTableState: getPaymentMadesTableState(state, props),
+      paymentsMadeTableState: getPaymentsMadeTableState(state, props),
       paymentsTableStateChanged: paymentsTableStateChanged(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;

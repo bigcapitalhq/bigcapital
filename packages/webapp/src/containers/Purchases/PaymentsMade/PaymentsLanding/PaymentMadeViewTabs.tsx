@@ -5,7 +5,7 @@ import { DashboardViewsTabs, FormattedMessage as T } from '@/components';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
 import { compose } from '@/utils';
-import { usePaymentMadesListContext } from './PaymentMadesListProvider';
+import { usePaymentsMadeListContext } from './PaymentsMadeListProvider';
 import { transformPaymentViewsToTabs } from './utils';
 
 import withPaymentMade from './withPaymentMade';
@@ -15,36 +15,36 @@ import withPaymentMadeActions from './withPaymentMadeActions';
  * Payment made views tabs.
  */
 function PaymentMadeViewTabs({
-  // #withPaymentMadesActions
-  setPaymentMadesTableState,
+  // #withPaymentsMadeActions
+  setPaymentsMadeTableState,
 
   // #withPaymentMade
-  paymentMadesTableState,
+  paymentsMadeTableState,
 }) {
   const history = useHistory();
 
   // Payment receives list context.
-  const { paymentMadesViews } = usePaymentMadesListContext();
+  const { paymentsMadeViews } = usePaymentsMadeListContext();
 
   // Handle the active tab changing.
   const handleTabsChange = (viewSlug) => {
-    setPaymentMadesTableState({ viewSlug });
+    setPaymentsMadeTableState({ viewSlug });
   };
   // Transformes payment views to tabs.
   const tabs = React.useMemo(
-    () => transformPaymentViewsToTabs(paymentMadesViews),
-    [paymentMadesViews],
+    () => transformPaymentViewsToTabs(paymentsMadeViews),
+    [paymentsMadeViews],
   );
 
   const handleClickNewView = () => {
-    history.push('/custom_views/payment-mades/new');
+    history.push('/custom_views/payments-made/new');
   };
 
   return (
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          customViewId={paymentMadesTableState.customViewId}
+          customViewId={paymentsMadeTableState.customViewId}
           defaultTabText={<T id={'all_payments'} />}
           tabs={tabs}
           onNewViewTabClick={handleClickNewView}
@@ -57,5 +57,5 @@ function PaymentMadeViewTabs({
 
 export default compose(
   withPaymentMadeActions,
-  withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
+  withPaymentMade(({ paymentsMadeTableState }) => ({ paymentsMadeTableState })),
 )(PaymentMadeViewTabs);

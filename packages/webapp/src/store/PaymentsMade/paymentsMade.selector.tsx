@@ -3,15 +3,15 @@ import { isEqual } from 'lodash';
 
 import { paginationLocationQuery } from '@/store/selectors';
 import { createDeepEqualSelector } from '@/utils';
-import { defaultTableQuery } from './paymentMades.reducer';
+import { defaultTableQuery } from './paymentsMade.reducer';
 
-const paymentMadesTableStateSelector = (state) => state.paymentMades.tableState;
+const paymentsMadeTableStateSelector = (state) => state.paymentsMade.tableState;
 
-// Get payment mades table state marged with location query.
-export const getPaymentMadesTableStateFactory = () =>
+// Get payments made table state marged with location query.
+export const getPaymentsMadeTableStateFactory = () =>
   createDeepEqualSelector(
     paginationLocationQuery,
-    paymentMadesTableStateSelector,
+    paymentsMadeTableStateSelector,
     (locationQuery, tableState) => {
       return {
         ...locationQuery,
@@ -21,6 +21,6 @@ export const getPaymentMadesTableStateFactory = () =>
   );
 
 export const paymentsTableStateChangedFactory = () =>
-  createDeepEqualSelector(paymentMadesTableStateSelector, (tableState) => {
+  createDeepEqualSelector(paymentsMadeTableStateSelector, (tableState) => {
     return !isEqual(tableState, defaultTableQuery);
   });

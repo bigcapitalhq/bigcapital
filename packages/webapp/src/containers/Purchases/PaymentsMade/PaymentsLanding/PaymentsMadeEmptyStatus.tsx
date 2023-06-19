@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 
-export default function PaymentMadesEmptyStatus() {
+export default function PaymentsMadeEmptyStatus() {
   const history = useHistory();
 
   return (
@@ -23,7 +23,7 @@ export default function PaymentMadesEmptyStatus() {
               intent={Intent.PRIMARY}
               large={true}
               onClick={() => {
-                history.push('/payment-mades/new');
+                history.push('/payments-made/new');
               }}
             >
               <T id={'new_bill_payment'} />

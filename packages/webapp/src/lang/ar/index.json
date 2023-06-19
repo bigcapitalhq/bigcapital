@@ -583,7 +583,7 @@
   "the_payment_receive_transaction_has_been_edited": "تم تعديل معاملة سند الزبون بنجاح.",
   "once_delete_this_payment_receive_you_will_able_to_restore_it": "بمجرد حذف هذا السند ، لن تتمكن من استعادتها لاحقًا. هل أنت متأكد أنك تريد حذف هذه المعاملة؟",
   "select_invoice": "حدد الفاتورة",
-  "payment_mades": "سندات الموردين",
+  "payments_made": "سندات الموردين",
   "subscription": "الاشتراك",
   "plan_slug": "سبيكة خطة",
   "billing": "الاشتراك",
