@@ -3,9 +3,9 @@ import React from 'react';
 import { Dragzone, FormattedMessage as T } from '@/components';
 
 /**
- * Vendor Attahment Tab.
+ * Vendor Attachment Tab.
  */
-function VendorAttahmentTab() {
+function VendorAttachmentTab() {
   return (
     <div>
       <Dragzone
@@ -18,4 +18,4 @@ function VendorAttahmentTab() {
   );
 }
 
-export default VendorAttahmentTab;
+export default VendorAttachmentTab;
