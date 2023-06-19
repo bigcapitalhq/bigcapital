@@ -3,7 +3,7 @@ import { Container } from 'typedi';
 import { Ability } from '@casl/ability';
 import LruCache from 'lru-cache';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { IRole, IRolePremission, ISystemUser } from '@/interfaces';
+import { IRole, IRolePermission, ISystemUser } from '@/interfaces';
 
 // store abilities of 1000 most active users
 export const ABILITIES_CACHE = new LruCache(1000);
@@ -42,13 +42,13 @@ function getSuperAdminRules() {
 
 /**
  * Retrieve CASL rules from role permissions.
- * @param {IRolePremission[]} permissions -
+ * @param {IRolePermission[]} permissions -
  * @returns {}
  */
-function getRulesFromRolePermissions(permissions: IRolePremission[]) {
+function getRulesFromRolePermissions(permissions: IRolePermission[]) {
   return permissions
-    .filter((permission: IRolePremission) => permission.value)
-    .map((permission: IRolePremission) => {
+    .filter((permission: IRolePermission) => permission.value)
+    .map((permission: IRolePermission) => {
       return {
         action: permission.ability,
         subject: permission.subject,

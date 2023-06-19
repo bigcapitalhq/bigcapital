@@ -73,7 +73,7 @@ function useFilterSidebarItemFeaturePredicater() {
 }
 
 /**
- * Predicates whether the sidebar item has permissio ability.
+ * Predicates whether the sidebar item has permission ability.
  */
 function useFilterSidebarItemAbilityPredicater() {
   const ability = useAbilityContext();
