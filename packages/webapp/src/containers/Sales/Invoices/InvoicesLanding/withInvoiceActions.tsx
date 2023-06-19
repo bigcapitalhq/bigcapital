@@ -5,9 +5,9 @@ import {
   resetInvoicesTableState
 } from '@/store/Invoice/invoices.actions';
 
-const mapDipatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch) => ({
   setInvoicesTableState: (queries) => dispatch(setInvoicesTableState(queries)),
   resetInvoicesTableState: () => dispatch(resetInvoicesTableState()),
 });
 
-export default connect(null, mapDipatchToProps);
+export default connect(null, mapDispatchToProps);

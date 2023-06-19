@@ -5,10 +5,10 @@ import {
   resetWarehouseTransferTableState,
 } from '@/store/WarehouseTransfer/warehouseTransfer.actions';
 
-const mapDipatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch) => ({
   setWarehouseTransferTableState: (queries) =>
     dispatch(setWarehouseTransferTableState(queries)),
   resetWarehouseTransferTableState: () => dispatch(resetWarehouseTransferTableState()),
 });
 
-export default connect(null, mapDipatchToProps);
+export default connect(null, mapDispatchToProps);

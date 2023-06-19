@@ -5,10 +5,10 @@ import {
   resetVendorCreditTableState,
 } from '@/store/VendorCredit/vendorCredit.actions';
 
-const mapDipatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch) => ({
   setVendorCreditsTableState: (queries) =>
     dispatch(setVendorCreditTableState(queries)),
   resetVendorCreditsTableState: () => dispatch(resetVendorCreditTableState()),
 });
 
-export default connect(null, mapDipatchToProps);
+export default connect(null, mapDispatchToProps);
