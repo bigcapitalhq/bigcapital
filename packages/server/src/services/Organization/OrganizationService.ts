@@ -43,7 +43,7 @@ export default class OrganizationService {
 
   /**
    * Builds the database schema and seed data of the given organization id.
-   * @param  {srting} organizationId
+   * @param  {string} organizationId
    * @return {Promise<void>}
    */
   public async build(
