@@ -398,7 +398,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
     };
 
     /**
-     * Associates `periods` propery to cash at beginning account node.
+     * Associates `periods` property to cash at beginning account node.
      * @param {ICashFlowStatementSection} node -
      * @return {ICashFlowStatementSection}
      */

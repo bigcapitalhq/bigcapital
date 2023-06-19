@@ -23,7 +23,7 @@ export default class BaseController {
     const data = matchedData(req, {
       locations: ['body'],
       includeOptionals: true,
-      ...omit(options, ['locations']), // override any propery except locations.
+      ...omit(options, ['locations']), // override any property except locations.
     });
     return this.dataToCamelCase(data);
   }
