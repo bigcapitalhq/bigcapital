@@ -160,7 +160,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
    * @param {ITrialBalanceAccount[]} accountsBalances
    * @return {ITrialBalanceTotal}
    */
-  private tatalSection(
+  private totalSection(
     accountsBalances: ITrialBalanceAccount[]
   ): ITrialBalanceTotal {
     const credit = sumBy(accountsBalances, 'credit');
@@ -207,7 +207,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
     const accounts = this.accountsSection(this.accounts);
 
     // Retrieve account node.
-    const total = this.tatalSection(accounts);
+    const total = this.totalSection(accounts);
 
     return { accounts, total };
   }
