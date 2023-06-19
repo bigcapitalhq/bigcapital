@@ -25,7 +25,7 @@ export default class DynamicFilterSortBy extends DynamicFilterRoleAbstractor {
   }
 
   /**
-   * On initialize the dyanmic sort by.
+   * On initialize the dynamic sort by.
    */
   public onInitialize() {
     this.setRelationIfRelationField(this.sortRole.fieldKey);
