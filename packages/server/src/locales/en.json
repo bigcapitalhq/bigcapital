@@ -434,7 +434,7 @@
   "sms_notification.estimate.default_message": "Hi, {CustomerName}, We have created an estimate - {EstimateNumber} for you. Please take a look and accept it to proceed further. Looking forward to hearing from you. - {CompanyName}",
 
   "sms_notification.invoice_details.default_message": "Hi, {CustomerName}, You have an outstanding amount of {DueAmount} for the invoice {InvoiceNumber}. - {CompanyName}",
-  "sms_notification.receipt_details.default_message": "Hi, {CustomerName}, We have created receipt - {ReceiptNumber} for you. we look forward to serveing you again. Thank your - {CompanyName}",
+  "sms_notification.receipt_details.default_message": "Hi, {CustomerName}, We have created receipt - {ReceiptNumber} for you. we look forward to serving you again. Thank your - {CompanyName}",
   "sms_notification.invoice_reminder.default_message": "Dear {CustomerName}, The payment towards the invoice - {InvoiceNumber} is due. Please pay before {DueDate}. Thank you. - {CompanyName}",
 
   "module.sale_invoices.label": "Sale invoices",
