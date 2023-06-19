@@ -1929,7 +1929,7 @@
   "branch.alert.mark_primary_message": "The branch has been marked as primary.",
   "branch.alert.are_you_sure_you_want_to_make": "Are you sure you want to make a primary branch?",
   "branch.error.could_not_delete_only_branch": "You could not delete the only branch.",
-  "warehouse_actviate.dialog.label": "Warehouses Activation",
+  "warehouse_activate.dialog.label": "Warehouses Activation",
   "warehouse_activate.dialog_success_message": "Multi-branches feature has been activated successfully.",
   "warehouse_activate.dialog_paragraph": "Once you enable <strong>Multiple Warehouses</strong>, you will not be able to disable it. However, you can delete the warehouse or mark it inactive.",
   "warehouse_activate.dialog_paragraph.line_1": "The current organization will be considered as the Head Office or Primary warehouse.",

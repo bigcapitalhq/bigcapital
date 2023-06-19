@@ -1906,7 +1906,7 @@
   "branch.alert.mark_primary_message": "تم تحديد الفرع على أنه أساسي.",
   "branch.error.could_not_delete_only_branch": "لا يمكنك حذف الفرع الاخير.",
   "warehouse_activate.dialog_success_message": "تم تفعيل خاصية تعدد المخازن بنجاح.",
-  "warehouse_actviate.dialog.label": "تفعيل المخازن",
+  "warehouse_activate.dialog.label": "تفعيل المخازن",
   "warehouse_activate.dialog_paragraph": "بمجرد تفعيل خاصية <strong>تعدد المخازن</strong>, لن تتمكن من تعطيلها. ومع ذلك ، يمكنك حذف المخزن أو وضع علامة على أنه غير نشط.",
   "warehouse_activate.dialog_paragraph.line_1": "سيتم اعتبار المنشأة الحالية بمثابة المكتب الرئيسي أو الفرع الرئيسي.",
   "warehouse_activate.dialog_paragraph.line_2": "سيتم اعتبار جميع معاملات الحسابات بمثابة المكتب الرئيسي. ",
