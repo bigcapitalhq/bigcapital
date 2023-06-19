@@ -4,7 +4,7 @@ import { IOrganizationBuildEventPayload } from '@/interfaces';
 import { InitialCurrenciesSeed } from '../InitialCurrenciesSeed';
 
 @Service()
-export class SeedInitialCurrenciesOnSetupSubsriber {
+export class SeedInitialCurrenciesOnSetupSubscriber {
   @Inject()
   seedInitialCurrencies: InitialCurrenciesSeed;
 

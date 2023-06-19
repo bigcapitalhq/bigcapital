@@ -10,7 +10,7 @@ import Cache from '@/services/Cache';
 import config from '@/config'
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import rateLimiterLoaders from './rateLimiterLoader';
-import eventEmitter, { susbcribers } from './eventEmitter';
+import eventEmitter, { subscribers } from './eventEmitter';
 
 export default ({ mongoConnection, knex }) => {
   try {
@@ -48,7 +48,7 @@ export default ({ mongoConnection, knex }) => {
 
     const emitter = Container.get(EventPublisher);
 
-    emitter.loadSubscribers(susbcribers());
+    emitter.loadSubscribers(subscribers());
 
 
     return { agenda: agendaInstance };
