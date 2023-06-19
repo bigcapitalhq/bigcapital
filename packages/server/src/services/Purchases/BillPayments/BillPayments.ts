@@ -409,7 +409,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
    * ------
    * - Update the bill payment transaction.
    * - Insert the new bill payment entries that have no ids.
-   * - Update the bill paymeny entries that have ids.
+   * - Update the bill payment entries that have ids.
    * - Delete the bill payment entries that not presented.
    * - Re-insert the journal transactions and update the diff accounts balance.
    * - Update the diff vendor balance.
@@ -581,12 +581,12 @@ export default class BillPaymentsService implements IBillPaymentsService {
   /**
    * Retrieve bill payment.
    * @param {number} tenantId
-   * @param {number} billPyamentId
+   * @param {number} billPaymentId
    * @return {Promise<IBillPayment>}
    */
   public async getBillPayment(
     tenantId: number,
-    billPyamentId: number
+    billPaymentId: number
   ): Promise<IBillPayment> {
     const { BillPayment } = this.tenancy.models(tenantId);
 
@@ -596,7 +596,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       .withGraphFetched('paymentAccount')
       .withGraphFetched('transactions')
       .withGraphFetched('branch')
-      .findById(billPyamentId);
+      .findById(billPaymentId);
 
     if (!billPayment) {
       throw new ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND);

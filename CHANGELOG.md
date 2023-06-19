@@ -308,7 +308,7 @@ All notable changes to Bigcapital server-side will be in this file.
 - Add vendor credit on purchases module.
 - Optimize landed costs on purchase invoices.
 - Display associated payment transactions on sale invoice drawer.
-- Display associated pamyment transactions on purchase invoice drawer.
+- Display associated payment transactions on purchase invoice drawer.
 - Display item associate invoice, bill, estimate and receipt transactions.
 - Transactions locking on all transactions or individual modules.
 - Roles and permissions access control module.
