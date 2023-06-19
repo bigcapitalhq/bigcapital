@@ -465,7 +465,7 @@
   "the_accounts_have_been_successfully_inactivated": "The accounts have been successfully inactivated.",
   "account_code_is_not_unique": "Account code is not unqiue.",
   "are_sure_to_publish_this_expense": "Are you sure you want to publish this expense?",
-  "once_delete_these_journals_you_will_not_able_restore_them": "Once you delete these journalss, you won't be able to retrieve them later. Are you sure you want to delete them?",
+  "once_delete_these_journals_you_will_not_able_restore_them": "Once you delete these journals, you won't be able to retrieve them later. Are you sure you want to delete them?",
   "once_delete_this_journal_you_will_able_to_restore_it": "Once you delete this journal, you won't be able to restore it later. Are you sure you want to delete ?",
   "the_expense_is_already_published": "The expense is already published.",
   "accounts_without_zero_balance": "Accounts without zero-balance",
