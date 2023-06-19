@@ -17,7 +17,7 @@ export interface QueryStringResult {
 type NavigateCallback = (
   pathnameWithParams: string,
   pathname: string,
-  stringifedParams: string,
+  stringifiedParams: string,
 ) => void;
 
 /**
@@ -42,10 +42,10 @@ export function useQueryString(
       isFirst.current = false;
     } else {
       const pathname = location.pathname;
-      const stringifedParams = stringify(state, stringifyOptions);
-      const pathnameWithParams = pathname + '?' + stringifedParams;
+      const stringifiedParams = stringify(state, stringifyOptions);
+      const pathnameWithParams = pathname + '?' + stringifiedParams;
 
-      navigate(pathnameWithParams, pathname, stringifedParams);
+      navigate(pathnameWithParams, pathname, stringifiedParams);
     }
   }, [state]);
 
