@@ -21,6 +21,7 @@ import {
   FormattedMessage as T,
   Can,
 } from '@/components';
+import { ItemDetailActionsMoreBtn } from './ItemDetailActionsMoreBtn';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
@@ -72,6 +73,7 @@ function ItemDetailActionsBar({
             onClick={handleDeleteItem}
           />
         </Can>
+        <ItemDetailActionsMoreBtn />
       </NavbarGroup>
     </DashboardActionsBar>
   );
