@@ -79,7 +79,7 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
-   * Async initialize acccounts dependency graph.
+   * Async initialize accounts dependency graph.
    * @private
    * @returns {Promise<void>}
    */

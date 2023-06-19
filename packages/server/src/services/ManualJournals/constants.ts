@@ -2,7 +2,7 @@ export const ERRORS = {
   NOT_FOUND: 'manual_journal_not_found',
   CREDIT_DEBIT_NOT_EQUAL_ZERO: 'credit_debit_not_equal_zero',
   CREDIT_DEBIT_NOT_EQUAL: 'credit_debit_not_equal',
-  ACCCOUNTS_IDS_NOT_FOUND: 'acccounts_ids_not_found',
+  ACCOUNTS_IDS_NOT_FOUND: 'accounts_ids_not_found',
   JOURNAL_NUMBER_EXISTS: 'journal_number_exists',
   ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
   CONTACTS_NOT_FOUND: 'contacts_not_found',

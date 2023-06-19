@@ -59,7 +59,7 @@ export class CommandManualJournalValidators {
     const storedAccountsIds = accounts.map((account) => account.id);
 
     if (difference(manualAccountsIds, storedAccountsIds).length > 0) {
-      throw new ServiceError(ERRORS.ACCCOUNTS_IDS_NOT_FOUND);
+      throw new ServiceError(ERRORS.ACCOUNTS_IDS_NOT_FOUND);
     }
   }
 

@@ -129,9 +129,9 @@ export class ProjectProfitabilitySummaryRespository {
    */
   public getIncomeAccountsGroupedEntries = async () => {
     const incomeAccounts = await this.getIncomeAccounts();
-    const incomeAcountssIds = map(incomeAccounts, 'id');
+    const incomeAccountsIds = map(incomeAccounts, 'id');
 
-    return this.getAccountsGroupedEntries(incomeAcountssIds);
+    return this.getAccountsGroupedEntries(incomeAccountsIds);
   };
 
   /**
