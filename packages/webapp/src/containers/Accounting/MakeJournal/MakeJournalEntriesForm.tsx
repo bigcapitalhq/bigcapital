@@ -96,7 +96,7 @@ function MakeJournalEntriesForm({
     const totalCredit = getTotal('credit');
     const totalDebit = getTotal('debit');
 
-    // Validate the total credit should be eqials total debit.
+    // Validate the total credit should be equals total debit.
     if (totalCredit !== totalDebit) {
       AppToaster.show({
         message: intl.get('should_total_of_credit_and_debit_be_equal'),
