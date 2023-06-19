@@ -135,7 +135,7 @@ describe('routes: /auth/', () => {
       expect(res.body.code).equals('validation_error');
     });
 
-    it('Should response unproccessable if the email address was invalid.', async () => {
+    it('Should response unprocessable if the email address was invalid.', async () => {
       const res = await request().post('/api/auth/send_reset_password').send({
         email: 'invalid_email',
       });
@@ -144,7 +144,7 @@ describe('routes: /auth/', () => {
       expect(res.body.code).equals('validation_error');
     });
 
-    it('Should response unproccessable if the email address was not exist.', async () => {
+    it('Should response unprocessable if the email address was not exist.', async () => {
       const res = await request().post('/api/auth/send_reset_password').send({
         email: 'admin@admin.com',
       });
