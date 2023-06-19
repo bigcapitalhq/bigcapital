@@ -6,7 +6,7 @@ import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
 import {
   IWarehouseTransfer,
-  IWarehouseTransferTransferingPayload,
+  IWarehouseTransferTransferringPayload,
   IWarehouseTransferTransferredPayload,
 } from '@/interfaces';
 import { CommandWarehouseTransfer } from './CommandWarehouseTransfer';
@@ -78,7 +78,7 @@ export class TransferredWarehouseTransfer extends CommandWarehouseTransfer {
         tenantId,
         oldWarehouseTransfer,
         trx,
-      } as IWarehouseTransferTransferingPayload);
+      } as IWarehouseTransferTransferringPayload);
 
       // Updates warehouse transfer graph on the storage.
       const warehouseTransferUpdated = await WarehouseTransfer.query(trx)
